@@ -1,3 +1,4 @@
+import 'package:fnm/domain/services/federation/sponsor_industries.dart';
 import 'package:fnm/domain/services/federation/sponsors.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -59,9 +60,55 @@ String _sponsorBrandName(AppLocalizations l, SponsorBrand b) => switch (b) {
 /// industry of the built-in brand it names; one this build does not know
 /// (a newer game's, flagged in the editor) reads as nothing.
 String sponsorIndustryLabel(AppLocalizations l, Sponsor s) {
-  final b = s.builtIn ?? SponsorBrand.byName(s.added?.industry ?? '');
-  return b == null ? '' : _sponsorIndustryLabel(l, b);
+  if (s.builtIn case final b?) return _sponsorIndustryLabel(l, b);
+  return addedIndustryLabel(l, s.added?.industry ?? '');
 }
+
+/// The label of the industry an added sponsor stores as [industry]: a
+/// `SponsorBrand.name` (the trade of that brand) or a [SponsorIndustry] id;
+/// '' for anything this build does not know.
+String addedIndustryLabel(AppLocalizations l, String industry) {
+  if (SponsorBrand.byName(industry) case final b?) {
+    return _sponsorIndustryLabel(l, b);
+  }
+  return switch (SponsorIndustry.byId(industry)) {
+    final i? => extraIndustryLabel(l, i),
+    null => '',
+  };
+}
+
+/// The label of a picker-only trade.
+String extraIndustryLabel(AppLocalizations l, SponsorIndustry i) => switch (i) {
+  SponsorIndustry.sportswear => l.sponsorIndustryExtraSportswear,
+  SponsorIndustry.airline => l.sponsorIndustryExtraAirline,
+  SponsorIndustry.railway => l.sponsorIndustryExtraRailway,
+  SponsorIndustry.hotels => l.sponsorIndustryExtraHotels,
+  SponsorIndustry.coffee => l.sponsorIndustryExtraCoffee,
+  SponsorIndustry.chocolate => l.sponsorIndustryExtraChocolate,
+  SponsorIndustry.mineralWater => l.sponsorIndustryExtraMineralWater,
+  SponsorIndustry.pharmacy => l.sponsorIndustryExtraPharmacy,
+  SponsorIndustry.fashion => l.sponsorIndustryExtraFashion,
+  SponsorIndustry.watches => l.sponsorIndustryExtraWatches,
+  SponsorIndustry.electronics => l.sponsorIndustryExtraElectronics,
+  SponsorIndustry.software => l.sponsorIndustryExtraSoftware,
+  SponsorIndustry.streaming => l.sponsorIndustryExtraStreaming,
+  SponsorIndustry.socialNetwork => l.sponsorIndustryExtraSocialNetwork,
+  SponsorIndustry.furniture => l.sponsorIndustryExtraFurniture,
+  SponsorIndustry.tyres => l.sponsorIndustryExtraTyres,
+  SponsorIndustry.shipping => l.sponsorIndustryExtraShipping,
+  SponsorIndustry.lottery => l.sponsorIndustryExtraLottery,
+  SponsorIndustry.tourism => l.sponsorIndustryExtraTourism,
+  SponsorIndustry.cosmetics => l.sponsorIndustryExtraCosmetics,
+  SponsorIndustry.petFood => l.sponsorIndustryExtraPetFood,
+  SponsorIndustry.bakery => l.sponsorIndustryExtraBakery,
+  SponsorIndustry.supermarket => l.sponsorIndustryExtraSupermarket,
+  SponsorIndustry.sportsNutrition => l.sponsorIndustryExtraSportsNutrition,
+  SponsorIndustry.wine => l.sponsorIndustryExtraWine,
+  SponsorIndustry.tea => l.sponsorIndustryExtraTea,
+  SponsorIndustry.realEstate => l.sponsorIndustryExtraRealEstate,
+  SponsorIndustry.fitness => l.sponsorIndustryExtraFitness,
+  SponsorIndustry.newspaper => l.sponsorIndustryExtraNewspaper,
+};
 
 String _sponsorIndustryLabel(AppLocalizations l, SponsorBrand b) => switch (b) {
   SponsorBrand.agrofart => l.sponsorIndustryAgrofart,

@@ -16752,4 +16752,91 @@ class AppLocalizationsHr extends AppLocalizations {
   @override
   String get yReactionAcceptance8 =>
       'Ista razina kao prošli put. Sljedeći ciklus treba korak naprijed.';
+
+  @override
+  String get sponsorIndustryExtraSportswear => 'Sportska odjeća';
+
+  @override
+  String get sponsorIndustryExtraAirline => 'Zrakoplovna kompanija pune usluge';
+
+  @override
+  String get sponsorIndustryExtraRailway => 'Željeznica';
+
+  @override
+  String get sponsorIndustryExtraHotels => 'Hotelski lanac';
+
+  @override
+  String get sponsorIndustryExtraCoffee => 'Lanac kafića';
+
+  @override
+  String get sponsorIndustryExtraChocolate => 'Čokolada';
+
+  @override
+  String get sponsorIndustryExtraMineralWater => 'Mineralna voda';
+
+  @override
+  String get sponsorIndustryExtraPharmacy => 'Lanac ljekarni';
+
+  @override
+  String get sponsorIndustryExtraFashion => 'Moda';
+
+  @override
+  String get sponsorIndustryExtraWatches => 'Urar';
+
+  @override
+  String get sponsorIndustryExtraElectronics => 'Elektronika';
+
+  @override
+  String get sponsorIndustryExtraSoftware => 'Softver';
+
+  @override
+  String get sponsorIndustryExtraStreaming => 'Streaming usluga';
+
+  @override
+  String get sponsorIndustryExtraSocialNetwork => 'Društvena mreža';
+
+  @override
+  String get sponsorIndustryExtraFurniture => 'Namještaj';
+
+  @override
+  String get sponsorIndustryExtraTyres => 'Gume';
+
+  @override
+  String get sponsorIndustryExtraShipping => 'Brodarska kompanija';
+
+  @override
+  String get sponsorIndustryExtraLottery => 'Lutrija';
+
+  @override
+  String get sponsorIndustryExtraTourism => 'Turistička zajednica';
+
+  @override
+  String get sponsorIndustryExtraCosmetics => 'Kozmetika';
+
+  @override
+  String get sponsorIndustryExtraPetFood => 'Hrana za kućne ljubimce';
+
+  @override
+  String get sponsorIndustryExtraBakery => 'Pekara';
+
+  @override
+  String get sponsorIndustryExtraSupermarket => 'Supermarket';
+
+  @override
+  String get sponsorIndustryExtraSportsNutrition => 'Sportska prehrana';
+
+  @override
+  String get sponsorIndustryExtraWine => 'Vino';
+
+  @override
+  String get sponsorIndustryExtraTea => 'Čaj';
+
+  @override
+  String get sponsorIndustryExtraRealEstate => 'Nekretnine';
+
+  @override
+  String get sponsorIndustryExtraFitness => 'Fitness klubovi';
+
+  @override
+  String get sponsorIndustryExtraNewspaper => 'Novine';
 }

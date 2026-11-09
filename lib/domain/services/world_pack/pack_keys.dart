@@ -1,6 +1,7 @@
 import '../competition/continental_cups.dart';
 import '../competition/nations_cups.dart';
 import '../competition/trophies.dart';
+import '../federation/sponsor_industries.dart';
 import '../federation/sponsors.dart';
 import '../press/y_feed.dart';
 import 'pack_rules.dart';
@@ -75,6 +76,7 @@ class PackGameKeys {
     competitionNames: competitionNames,
     trophyKeys: trophyKeys,
     sponsorBrands: sponsorBrands,
+    sponsorIndustries: {for (final i in SponsorIndustry.values) i.id},
     yAccounts: yAccounts,
     countryCodes: countryCodes,
     fringeRanges: fringeRanges,

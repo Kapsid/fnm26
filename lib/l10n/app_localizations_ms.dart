@@ -16375,4 +16375,92 @@ class AppLocalizationsMs extends AppLocalizations {
   @override
   String get yReactionAcceptance8 =>
       'Tahap yang sama seperti dulu. Perlu naik setingkat kitaran depan.';
+
+  @override
+  String get sponsorIndustryExtraSportswear => 'Pakaian sukan';
+
+  @override
+  String get sponsorIndustryExtraAirline =>
+      'Syarikat penerbangan perkhidmatan penuh';
+
+  @override
+  String get sponsorIndustryExtraRailway => 'Kereta api';
+
+  @override
+  String get sponsorIndustryExtraHotels => 'Rangkaian hotel';
+
+  @override
+  String get sponsorIndustryExtraCoffee => 'Rangkaian kedai kopi';
+
+  @override
+  String get sponsorIndustryExtraChocolate => 'Coklat';
+
+  @override
+  String get sponsorIndustryExtraMineralWater => 'Air mineral';
+
+  @override
+  String get sponsorIndustryExtraPharmacy => 'Rangkaian farmasi';
+
+  @override
+  String get sponsorIndustryExtraFashion => 'Fesyen';
+
+  @override
+  String get sponsorIndustryExtraWatches => 'Pembuat jam';
+
+  @override
+  String get sponsorIndustryExtraElectronics => 'Elektronik';
+
+  @override
+  String get sponsorIndustryExtraSoftware => 'Perisian';
+
+  @override
+  String get sponsorIndustryExtraStreaming => 'Perkhidmatan penstriman';
+
+  @override
+  String get sponsorIndustryExtraSocialNetwork => 'Rangkaian sosial';
+
+  @override
+  String get sponsorIndustryExtraFurniture => 'Perabot';
+
+  @override
+  String get sponsorIndustryExtraTyres => 'Tayar';
+
+  @override
+  String get sponsorIndustryExtraShipping => 'Syarikat perkapalan';
+
+  @override
+  String get sponsorIndustryExtraLottery => 'Loteri';
+
+  @override
+  String get sponsorIndustryExtraTourism => 'Lembaga pelancongan';
+
+  @override
+  String get sponsorIndustryExtraCosmetics => 'Kosmetik';
+
+  @override
+  String get sponsorIndustryExtraPetFood => 'Makanan haiwan';
+
+  @override
+  String get sponsorIndustryExtraBakery => 'Kedai roti';
+
+  @override
+  String get sponsorIndustryExtraSupermarket => 'Pasar raya';
+
+  @override
+  String get sponsorIndustryExtraSportsNutrition => 'Pemakanan sukan';
+
+  @override
+  String get sponsorIndustryExtraWine => 'Wain';
+
+  @override
+  String get sponsorIndustryExtraTea => 'Teh';
+
+  @override
+  String get sponsorIndustryExtraRealEstate => 'Hartanah';
+
+  @override
+  String get sponsorIndustryExtraFitness => 'Kelab kecergasan';
+
+  @override
+  String get sponsorIndustryExtraNewspaper => 'Akhbar';
 }

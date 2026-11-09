@@ -16492,4 +16492,91 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String get yReactionAcceptance8 =>
       'Sama taso kuin viimeksi. Seuraavalla kierroksella pitää ottaa askel ylöspäin.';
+
+  @override
+  String get sponsorIndustryExtraSportswear => 'Urheiluvaatteet';
+
+  @override
+  String get sponsorIndustryExtraAirline => 'Täyden palvelun lentoyhtiö';
+
+  @override
+  String get sponsorIndustryExtraRailway => 'Rautatie';
+
+  @override
+  String get sponsorIndustryExtraHotels => 'Hotelliketju';
+
+  @override
+  String get sponsorIndustryExtraCoffee => 'Kahvilaketju';
+
+  @override
+  String get sponsorIndustryExtraChocolate => 'Suklaa';
+
+  @override
+  String get sponsorIndustryExtraMineralWater => 'Kivennäisvesi';
+
+  @override
+  String get sponsorIndustryExtraPharmacy => 'Apteekkiketju';
+
+  @override
+  String get sponsorIndustryExtraFashion => 'Muoti';
+
+  @override
+  String get sponsorIndustryExtraWatches => 'Kellovalmistaja';
+
+  @override
+  String get sponsorIndustryExtraElectronics => 'Elektroniikka';
+
+  @override
+  String get sponsorIndustryExtraSoftware => 'Ohjelmistot';
+
+  @override
+  String get sponsorIndustryExtraStreaming => 'Suoratoistopalvelu';
+
+  @override
+  String get sponsorIndustryExtraSocialNetwork => 'Sosiaalinen media';
+
+  @override
+  String get sponsorIndustryExtraFurniture => 'Huonekalut';
+
+  @override
+  String get sponsorIndustryExtraTyres => 'Renkaat';
+
+  @override
+  String get sponsorIndustryExtraShipping => 'Varustamo';
+
+  @override
+  String get sponsorIndustryExtraLottery => 'Arpajaiset';
+
+  @override
+  String get sponsorIndustryExtraTourism => 'Matkailuvirasto';
+
+  @override
+  String get sponsorIndustryExtraCosmetics => 'Kosmetiikka';
+
+  @override
+  String get sponsorIndustryExtraPetFood => 'Lemmikkiruoka';
+
+  @override
+  String get sponsorIndustryExtraBakery => 'Leipomo';
+
+  @override
+  String get sponsorIndustryExtraSupermarket => 'Supermarketti';
+
+  @override
+  String get sponsorIndustryExtraSportsNutrition => 'Urheiluravinto';
+
+  @override
+  String get sponsorIndustryExtraWine => 'Viini';
+
+  @override
+  String get sponsorIndustryExtraTea => 'Tee';
+
+  @override
+  String get sponsorIndustryExtraRealEstate => 'Kiinteistöt';
+
+  @override
+  String get sponsorIndustryExtraFitness => 'Kuntosalit';
+
+  @override
+  String get sponsorIndustryExtraNewspaper => 'Sanomalehti';
 }

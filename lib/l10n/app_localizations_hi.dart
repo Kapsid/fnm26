@@ -16328,4 +16328,91 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get yReactionAcceptance8 =>
       'पिछली बार जैसा ही स्तर। अगले चक्र में एक क़दम ऊपर चाहिए।';
+
+  @override
+  String get sponsorIndustryExtraSportswear => 'खेल परिधान';
+
+  @override
+  String get sponsorIndustryExtraAirline => 'पूर्ण सेवा एयरलाइन';
+
+  @override
+  String get sponsorIndustryExtraRailway => 'रेलवे';
+
+  @override
+  String get sponsorIndustryExtraHotels => 'होटल श्रृंखला';
+
+  @override
+  String get sponsorIndustryExtraCoffee => 'कॉफ़ी श्रृंखला';
+
+  @override
+  String get sponsorIndustryExtraChocolate => 'चॉकलेट';
+
+  @override
+  String get sponsorIndustryExtraMineralWater => 'मिनरल वाटर';
+
+  @override
+  String get sponsorIndustryExtraPharmacy => 'दवा दुकान श्रृंखला';
+
+  @override
+  String get sponsorIndustryExtraFashion => 'फ़ैशन';
+
+  @override
+  String get sponsorIndustryExtraWatches => 'घड़ी निर्माता';
+
+  @override
+  String get sponsorIndustryExtraElectronics => 'इलेक्ट्रॉनिक्स';
+
+  @override
+  String get sponsorIndustryExtraSoftware => 'सॉफ़्टवेयर';
+
+  @override
+  String get sponsorIndustryExtraStreaming => 'स्ट्रीमिंग सेवा';
+
+  @override
+  String get sponsorIndustryExtraSocialNetwork => 'सोशल नेटवर्क';
+
+  @override
+  String get sponsorIndustryExtraFurniture => 'फ़र्नीचर';
+
+  @override
+  String get sponsorIndustryExtraTyres => 'टायर';
+
+  @override
+  String get sponsorIndustryExtraShipping => 'शिपिंग कंपनी';
+
+  @override
+  String get sponsorIndustryExtraLottery => 'लॉटरी';
+
+  @override
+  String get sponsorIndustryExtraTourism => 'पर्यटन बोर्ड';
+
+  @override
+  String get sponsorIndustryExtraCosmetics => 'सौंदर्य प्रसाधन';
+
+  @override
+  String get sponsorIndustryExtraPetFood => 'पालतू भोजन';
+
+  @override
+  String get sponsorIndustryExtraBakery => 'बेकरी';
+
+  @override
+  String get sponsorIndustryExtraSupermarket => 'सुपरमार्केट';
+
+  @override
+  String get sponsorIndustryExtraSportsNutrition => 'खेल पोषण';
+
+  @override
+  String get sponsorIndustryExtraWine => 'वाइन';
+
+  @override
+  String get sponsorIndustryExtraTea => 'चाय';
+
+  @override
+  String get sponsorIndustryExtraRealEstate => 'रियल एस्टेट';
+
+  @override
+  String get sponsorIndustryExtraFitness => 'फिटनेस क्लब';
+
+  @override
+  String get sponsorIndustryExtraNewspaper => 'समाचार पत्र';
 }

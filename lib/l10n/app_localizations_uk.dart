@@ -16731,4 +16731,91 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get yReactionAcceptance8 =>
       'Той самий рівень, що й минулого разу. Наступного циклу потрібен крок угору.';
+
+  @override
+  String get sponsorIndustryExtraSportswear => 'Спортивний одяг';
+
+  @override
+  String get sponsorIndustryExtraAirline => 'Авіакомпанія повного сервісу';
+
+  @override
+  String get sponsorIndustryExtraRailway => 'Залізниця';
+
+  @override
+  String get sponsorIndustryExtraHotels => 'Готельна мережа';
+
+  @override
+  String get sponsorIndustryExtraCoffee => 'Мережа кав\'ярень';
+
+  @override
+  String get sponsorIndustryExtraChocolate => 'Шоколад';
+
+  @override
+  String get sponsorIndustryExtraMineralWater => 'Мінеральна вода';
+
+  @override
+  String get sponsorIndustryExtraPharmacy => 'Мережа аптек';
+
+  @override
+  String get sponsorIndustryExtraFashion => 'Мода';
+
+  @override
+  String get sponsorIndustryExtraWatches => 'Годинникар';
+
+  @override
+  String get sponsorIndustryExtraElectronics => 'Електроніка';
+
+  @override
+  String get sponsorIndustryExtraSoftware => 'Програмне забезпечення';
+
+  @override
+  String get sponsorIndustryExtraStreaming => 'Стримінговий сервіс';
+
+  @override
+  String get sponsorIndustryExtraSocialNetwork => 'Соціальна мережа';
+
+  @override
+  String get sponsorIndustryExtraFurniture => 'Меблі';
+
+  @override
+  String get sponsorIndustryExtraTyres => 'Шини';
+
+  @override
+  String get sponsorIndustryExtraShipping => 'Судноплавна компанія';
+
+  @override
+  String get sponsorIndustryExtraLottery => 'Лотерея';
+
+  @override
+  String get sponsorIndustryExtraTourism => 'Туристична рада';
+
+  @override
+  String get sponsorIndustryExtraCosmetics => 'Косметика';
+
+  @override
+  String get sponsorIndustryExtraPetFood => 'Корм для тварин';
+
+  @override
+  String get sponsorIndustryExtraBakery => 'Пекарня';
+
+  @override
+  String get sponsorIndustryExtraSupermarket => 'Супермаркет';
+
+  @override
+  String get sponsorIndustryExtraSportsNutrition => 'Спортивне харчування';
+
+  @override
+  String get sponsorIndustryExtraWine => 'Вино';
+
+  @override
+  String get sponsorIndustryExtraTea => 'Чай';
+
+  @override
+  String get sponsorIndustryExtraRealEstate => 'Нерухомість';
+
+  @override
+  String get sponsorIndustryExtraFitness => 'Фітнес-клуби';
+
+  @override
+  String get sponsorIndustryExtraNewspaper => 'Газета';
 }

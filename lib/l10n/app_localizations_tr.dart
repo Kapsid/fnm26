@@ -16329,4 +16329,91 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get yReactionAcceptance8 =>
       'Geçen seferle aynı seviye. Gelecek dönemde bir adım öne çıkmak lazım.';
+
+  @override
+  String get sponsorIndustryExtraSportswear => 'Spor giyim';
+
+  @override
+  String get sponsorIndustryExtraAirline => 'Tam hizmet havayolu';
+
+  @override
+  String get sponsorIndustryExtraRailway => 'Demiryolu';
+
+  @override
+  String get sponsorIndustryExtraHotels => 'Otel zinciri';
+
+  @override
+  String get sponsorIndustryExtraCoffee => 'Kahve zinciri';
+
+  @override
+  String get sponsorIndustryExtraChocolate => 'Çikolata';
+
+  @override
+  String get sponsorIndustryExtraMineralWater => 'Maden suyu';
+
+  @override
+  String get sponsorIndustryExtraPharmacy => 'Eczane zinciri';
+
+  @override
+  String get sponsorIndustryExtraFashion => 'Moda';
+
+  @override
+  String get sponsorIndustryExtraWatches => 'Saat üreticisi';
+
+  @override
+  String get sponsorIndustryExtraElectronics => 'Elektronik';
+
+  @override
+  String get sponsorIndustryExtraSoftware => 'Yazılım';
+
+  @override
+  String get sponsorIndustryExtraStreaming => 'Yayın platformu';
+
+  @override
+  String get sponsorIndustryExtraSocialNetwork => 'Sosyal ağ';
+
+  @override
+  String get sponsorIndustryExtraFurniture => 'Mobilya';
+
+  @override
+  String get sponsorIndustryExtraTyres => 'Lastik';
+
+  @override
+  String get sponsorIndustryExtraShipping => 'Denizcilik hattı';
+
+  @override
+  String get sponsorIndustryExtraLottery => 'Piyango';
+
+  @override
+  String get sponsorIndustryExtraTourism => 'Turizm kurulu';
+
+  @override
+  String get sponsorIndustryExtraCosmetics => 'Kozmetik';
+
+  @override
+  String get sponsorIndustryExtraPetFood => 'Evcil hayvan maması';
+
+  @override
+  String get sponsorIndustryExtraBakery => 'Fırın';
+
+  @override
+  String get sponsorIndustryExtraSupermarket => 'Süpermarket';
+
+  @override
+  String get sponsorIndustryExtraSportsNutrition => 'Spor beslenmesi';
+
+  @override
+  String get sponsorIndustryExtraWine => 'Şarap';
+
+  @override
+  String get sponsorIndustryExtraTea => 'Çay';
+
+  @override
+  String get sponsorIndustryExtraRealEstate => 'Gayrimenkul';
+
+  @override
+  String get sponsorIndustryExtraFitness => 'Spor salonları';
+
+  @override
+  String get sponsorIndustryExtraNewspaper => 'Gazete';
 }

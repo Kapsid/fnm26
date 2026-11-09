@@ -24763,6 +24763,180 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Same level as last time. Need a step up next cycle.'**
   String get yReactionAcceptance8;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Sportswear'**
+  String get sponsorIndustryExtraSportswear;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Full-service airline'**
+  String get sponsorIndustryExtraAirline;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Railway'**
+  String get sponsorIndustryExtraRailway;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Hotel chain'**
+  String get sponsorIndustryExtraHotels;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Coffee chain'**
+  String get sponsorIndustryExtraCoffee;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Chocolate'**
+  String get sponsorIndustryExtraChocolate;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Mineral water'**
+  String get sponsorIndustryExtraMineralWater;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Pharmacy chain'**
+  String get sponsorIndustryExtraPharmacy;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Fashion'**
+  String get sponsorIndustryExtraFashion;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Watchmaker'**
+  String get sponsorIndustryExtraWatches;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Electronics'**
+  String get sponsorIndustryExtraElectronics;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Software'**
+  String get sponsorIndustryExtraSoftware;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Streaming service'**
+  String get sponsorIndustryExtraStreaming;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Social network'**
+  String get sponsorIndustryExtraSocialNetwork;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Furniture'**
+  String get sponsorIndustryExtraFurniture;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Tyres'**
+  String get sponsorIndustryExtraTyres;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipping line'**
+  String get sponsorIndustryExtraShipping;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Lottery'**
+  String get sponsorIndustryExtraLottery;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Tourist board'**
+  String get sponsorIndustryExtraTourism;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Cosmetics'**
+  String get sponsorIndustryExtraCosmetics;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Pet food'**
+  String get sponsorIndustryExtraPetFood;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Bakery'**
+  String get sponsorIndustryExtraBakery;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Supermarket'**
+  String get sponsorIndustryExtraSupermarket;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Sports nutrition'**
+  String get sponsorIndustryExtraSportsNutrition;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Wine'**
+  String get sponsorIndustryExtraWine;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Tea'**
+  String get sponsorIndustryExtraTea;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Real estate'**
+  String get sponsorIndustryExtraRealEstate;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Fitness clubs'**
+  String get sponsorIndustryExtraFitness;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Newspaper'**
+  String get sponsorIndustryExtraNewspaper;
 }
 
 class _AppLocalizationsDelegate

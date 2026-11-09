@@ -16119,4 +16119,91 @@ class AppLocalizationsTh extends AppLocalizations {
   @override
   String get yReactionAcceptance8 =>
       'ระดับเดิมเหมือนครั้งก่อน รอบหน้าต้องก้าวขึ้นอีกขั้น';
+
+  @override
+  String get sponsorIndustryExtraSportswear => 'เสื้อผ้ากีฬา';
+
+  @override
+  String get sponsorIndustryExtraAirline => 'สายการบินบริการเต็มรูปแบบ';
+
+  @override
+  String get sponsorIndustryExtraRailway => 'การรถไฟ';
+
+  @override
+  String get sponsorIndustryExtraHotels => 'เครือโรงแรม';
+
+  @override
+  String get sponsorIndustryExtraCoffee => 'เครือร้านกาแฟ';
+
+  @override
+  String get sponsorIndustryExtraChocolate => 'ช็อกโกแลต';
+
+  @override
+  String get sponsorIndustryExtraMineralWater => 'น้ำแร่';
+
+  @override
+  String get sponsorIndustryExtraPharmacy => 'เครือร้านขายยา';
+
+  @override
+  String get sponsorIndustryExtraFashion => 'แฟชั่น';
+
+  @override
+  String get sponsorIndustryExtraWatches => 'ผู้ผลิตนาฬิกา';
+
+  @override
+  String get sponsorIndustryExtraElectronics => 'อุปกรณ์อิเล็กทรอนิกส์';
+
+  @override
+  String get sponsorIndustryExtraSoftware => 'ซอฟต์แวร์';
+
+  @override
+  String get sponsorIndustryExtraStreaming => 'บริการสตรีมมิ่ง';
+
+  @override
+  String get sponsorIndustryExtraSocialNetwork => 'เครือข่ายสังคม';
+
+  @override
+  String get sponsorIndustryExtraFurniture => 'เฟอร์นิเจอร์';
+
+  @override
+  String get sponsorIndustryExtraTyres => 'ยางรถยนต์';
+
+  @override
+  String get sponsorIndustryExtraShipping => 'บริษัทเดินเรือ';
+
+  @override
+  String get sponsorIndustryExtraLottery => 'ลอตเตอรี่';
+
+  @override
+  String get sponsorIndustryExtraTourism => 'การท่องเที่ยว';
+
+  @override
+  String get sponsorIndustryExtraCosmetics => 'เครื่องสำอาง';
+
+  @override
+  String get sponsorIndustryExtraPetFood => 'อาหารสัตว์เลี้ยง';
+
+  @override
+  String get sponsorIndustryExtraBakery => 'ร้านเบเกอรี่';
+
+  @override
+  String get sponsorIndustryExtraSupermarket => 'ซูเปอร์มาร์เก็ต';
+
+  @override
+  String get sponsorIndustryExtraSportsNutrition => 'โภชนาการกีฬา';
+
+  @override
+  String get sponsorIndustryExtraWine => 'ไวน์';
+
+  @override
+  String get sponsorIndustryExtraTea => 'ชา';
+
+  @override
+  String get sponsorIndustryExtraRealEstate => 'อสังหาริมทรัพย์';
+
+  @override
+  String get sponsorIndustryExtraFitness => 'ฟิตเนส';
+
+  @override
+  String get sponsorIndustryExtraNewspaper => 'หนังสือพิมพ์';
 }

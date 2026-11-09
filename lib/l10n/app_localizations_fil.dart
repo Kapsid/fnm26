@@ -16427,4 +16427,91 @@ class AppLocalizationsFil extends AppLocalizations {
   @override
   String get yReactionAcceptance8 =>
       'Parehong antas noong nakaraan. Kailangang umangat sa susunod na cycle.';
+
+  @override
+  String get sponsorIndustryExtraSportswear => 'Pamplakasan na damit';
+
+  @override
+  String get sponsorIndustryExtraAirline => 'Full-service na airline';
+
+  @override
+  String get sponsorIndustryExtraRailway => 'Riles ng tren';
+
+  @override
+  String get sponsorIndustryExtraHotels => 'Hotel chain';
+
+  @override
+  String get sponsorIndustryExtraCoffee => 'Coffee chain';
+
+  @override
+  String get sponsorIndustryExtraChocolate => 'Tsokolate';
+
+  @override
+  String get sponsorIndustryExtraMineralWater => 'Mineral na tubig';
+
+  @override
+  String get sponsorIndustryExtraPharmacy => 'Chain ng botika';
+
+  @override
+  String get sponsorIndustryExtraFashion => 'Fashion';
+
+  @override
+  String get sponsorIndustryExtraWatches => 'Gumagawa ng relo';
+
+  @override
+  String get sponsorIndustryExtraElectronics => 'Electronics';
+
+  @override
+  String get sponsorIndustryExtraSoftware => 'Software';
+
+  @override
+  String get sponsorIndustryExtraStreaming => 'Streaming service';
+
+  @override
+  String get sponsorIndustryExtraSocialNetwork => 'Social network';
+
+  @override
+  String get sponsorIndustryExtraFurniture => 'Muwebles';
+
+  @override
+  String get sponsorIndustryExtraTyres => 'Gulong';
+
+  @override
+  String get sponsorIndustryExtraShipping => 'Kumpanya ng pagpapadala';
+
+  @override
+  String get sponsorIndustryExtraLottery => 'Loterya';
+
+  @override
+  String get sponsorIndustryExtraTourism => 'Lupon ng turismo';
+
+  @override
+  String get sponsorIndustryExtraCosmetics => 'Kosmetiko';
+
+  @override
+  String get sponsorIndustryExtraPetFood => 'Pagkain ng alagang hayop';
+
+  @override
+  String get sponsorIndustryExtraBakery => 'Panaderya';
+
+  @override
+  String get sponsorIndustryExtraSupermarket => 'Supermarket';
+
+  @override
+  String get sponsorIndustryExtraSportsNutrition => 'Sports nutrition';
+
+  @override
+  String get sponsorIndustryExtraWine => 'Alak';
+
+  @override
+  String get sponsorIndustryExtraTea => 'Tsaa';
+
+  @override
+  String get sponsorIndustryExtraRealEstate => 'Real estate';
+
+  @override
+  String get sponsorIndustryExtraFitness => 'Mga gym';
+
+  @override
+  String get sponsorIndustryExtraNewspaper => 'Pahayagan';
 }

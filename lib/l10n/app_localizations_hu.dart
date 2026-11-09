@@ -16363,4 +16363,91 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get yReactionAcceptance8 =>
       'Ugyanaz a szint, mint legutóbb. A következő ciklusban előre kell lépni.';
+
+  @override
+  String get sponsorIndustryExtraSportswear => 'Sportruházat';
+
+  @override
+  String get sponsorIndustryExtraAirline => 'Hagyományos légitársaság';
+
+  @override
+  String get sponsorIndustryExtraRailway => 'Vasút';
+
+  @override
+  String get sponsorIndustryExtraHotels => 'Szállodalánc';
+
+  @override
+  String get sponsorIndustryExtraCoffee => 'Kávéházlánc';
+
+  @override
+  String get sponsorIndustryExtraChocolate => 'Csokoládé';
+
+  @override
+  String get sponsorIndustryExtraMineralWater => 'Ásványvíz';
+
+  @override
+  String get sponsorIndustryExtraPharmacy => 'Gyógyszertárlánc';
+
+  @override
+  String get sponsorIndustryExtraFashion => 'Divat';
+
+  @override
+  String get sponsorIndustryExtraWatches => 'Óragyártó';
+
+  @override
+  String get sponsorIndustryExtraElectronics => 'Elektronika';
+
+  @override
+  String get sponsorIndustryExtraSoftware => 'Szoftver';
+
+  @override
+  String get sponsorIndustryExtraStreaming => 'Streaming szolgáltató';
+
+  @override
+  String get sponsorIndustryExtraSocialNetwork => 'Közösségi hálózat';
+
+  @override
+  String get sponsorIndustryExtraFurniture => 'Bútor';
+
+  @override
+  String get sponsorIndustryExtraTyres => 'Gumiabroncs';
+
+  @override
+  String get sponsorIndustryExtraShipping => 'Hajózási társaság';
+
+  @override
+  String get sponsorIndustryExtraLottery => 'Lottó';
+
+  @override
+  String get sponsorIndustryExtraTourism => 'Turisztikai hivatal';
+
+  @override
+  String get sponsorIndustryExtraCosmetics => 'Kozmetikum';
+
+  @override
+  String get sponsorIndustryExtraPetFood => 'Állateledel';
+
+  @override
+  String get sponsorIndustryExtraBakery => 'Pékség';
+
+  @override
+  String get sponsorIndustryExtraSupermarket => 'Szupermarket';
+
+  @override
+  String get sponsorIndustryExtraSportsNutrition => 'Sporttáplálék';
+
+  @override
+  String get sponsorIndustryExtraWine => 'Bor';
+
+  @override
+  String get sponsorIndustryExtraTea => 'Tea';
+
+  @override
+  String get sponsorIndustryExtraRealEstate => 'Ingatlan';
+
+  @override
+  String get sponsorIndustryExtraFitness => 'Fitneszklubok';
+
+  @override
+  String get sponsorIndustryExtraNewspaper => 'Napilap';
 }

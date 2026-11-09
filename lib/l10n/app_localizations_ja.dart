@@ -15831,4 +15831,91 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get yReactionAcceptance8 => '前回と同じレベル。次のサイクルでは一段上が必要だ。';
+
+  @override
+  String get sponsorIndustryExtraSportswear => 'スポーツウェア';
+
+  @override
+  String get sponsorIndustryExtraAirline => 'フルサービス航空会社';
+
+  @override
+  String get sponsorIndustryExtraRailway => '鉄道';
+
+  @override
+  String get sponsorIndustryExtraHotels => 'ホテルチェーン';
+
+  @override
+  String get sponsorIndustryExtraCoffee => 'コーヒーチェーン';
+
+  @override
+  String get sponsorIndustryExtraChocolate => 'チョコレート';
+
+  @override
+  String get sponsorIndustryExtraMineralWater => 'ミネラルウォーター';
+
+  @override
+  String get sponsorIndustryExtraPharmacy => '薬局チェーン';
+
+  @override
+  String get sponsorIndustryExtraFashion => 'ファッション';
+
+  @override
+  String get sponsorIndustryExtraWatches => '時計メーカー';
+
+  @override
+  String get sponsorIndustryExtraElectronics => '家電・電子機器';
+
+  @override
+  String get sponsorIndustryExtraSoftware => 'ソフトウェア';
+
+  @override
+  String get sponsorIndustryExtraStreaming => '配信サービス';
+
+  @override
+  String get sponsorIndustryExtraSocialNetwork => 'SNS';
+
+  @override
+  String get sponsorIndustryExtraFurniture => '家具';
+
+  @override
+  String get sponsorIndustryExtraTyres => 'タイヤ';
+
+  @override
+  String get sponsorIndustryExtraShipping => '海運会社';
+
+  @override
+  String get sponsorIndustryExtraLottery => '宝くじ';
+
+  @override
+  String get sponsorIndustryExtraTourism => '観光局';
+
+  @override
+  String get sponsorIndustryExtraCosmetics => '化粧品';
+
+  @override
+  String get sponsorIndustryExtraPetFood => 'ペットフード';
+
+  @override
+  String get sponsorIndustryExtraBakery => 'パン屋';
+
+  @override
+  String get sponsorIndustryExtraSupermarket => 'スーパーマーケット';
+
+  @override
+  String get sponsorIndustryExtraSportsNutrition => 'スポーツ栄養';
+
+  @override
+  String get sponsorIndustryExtraWine => 'ワイン';
+
+  @override
+  String get sponsorIndustryExtraTea => 'お茶';
+
+  @override
+  String get sponsorIndustryExtraRealEstate => '不動産';
+
+  @override
+  String get sponsorIndustryExtraFitness => 'フィットネスクラブ';
+
+  @override
+  String get sponsorIndustryExtraNewspaper => '新聞';
 }

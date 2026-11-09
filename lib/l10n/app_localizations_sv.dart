@@ -16403,4 +16403,91 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get yReactionAcceptance8 =>
       'Samma nivå som förra gången. Det behövs ett kliv nästa cykel.';
+
+  @override
+  String get sponsorIndustryExtraSportswear => 'Sportkläder';
+
+  @override
+  String get sponsorIndustryExtraAirline => 'Traditionellt flygbolag';
+
+  @override
+  String get sponsorIndustryExtraRailway => 'Järnväg';
+
+  @override
+  String get sponsorIndustryExtraHotels => 'Hotellkedja';
+
+  @override
+  String get sponsorIndustryExtraCoffee => 'Kaffekedja';
+
+  @override
+  String get sponsorIndustryExtraChocolate => 'Choklad';
+
+  @override
+  String get sponsorIndustryExtraMineralWater => 'Mineralvatten';
+
+  @override
+  String get sponsorIndustryExtraPharmacy => 'Apotekskedja';
+
+  @override
+  String get sponsorIndustryExtraFashion => 'Mode';
+
+  @override
+  String get sponsorIndustryExtraWatches => 'Urtillverkare';
+
+  @override
+  String get sponsorIndustryExtraElectronics => 'Elektronik';
+
+  @override
+  String get sponsorIndustryExtraSoftware => 'Programvara';
+
+  @override
+  String get sponsorIndustryExtraStreaming => 'Streamingtjänst';
+
+  @override
+  String get sponsorIndustryExtraSocialNetwork => 'Socialt nätverk';
+
+  @override
+  String get sponsorIndustryExtraFurniture => 'Möbler';
+
+  @override
+  String get sponsorIndustryExtraTyres => 'Däck';
+
+  @override
+  String get sponsorIndustryExtraShipping => 'Rederi';
+
+  @override
+  String get sponsorIndustryExtraLottery => 'Lotteri';
+
+  @override
+  String get sponsorIndustryExtraTourism => 'Turistråd';
+
+  @override
+  String get sponsorIndustryExtraCosmetics => 'Kosmetika';
+
+  @override
+  String get sponsorIndustryExtraPetFood => 'Djurmat';
+
+  @override
+  String get sponsorIndustryExtraBakery => 'Bageri';
+
+  @override
+  String get sponsorIndustryExtraSupermarket => 'Stormarknad';
+
+  @override
+  String get sponsorIndustryExtraSportsNutrition => 'Sportnutrition';
+
+  @override
+  String get sponsorIndustryExtraWine => 'Vin';
+
+  @override
+  String get sponsorIndustryExtraTea => 'Te';
+
+  @override
+  String get sponsorIndustryExtraRealEstate => 'Fastigheter';
+
+  @override
+  String get sponsorIndustryExtraFitness => 'Gym';
+
+  @override
+  String get sponsorIndustryExtraNewspaper => 'Tidning';
 }

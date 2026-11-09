@@ -16689,4 +16689,91 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get yReactionAcceptance8 =>
       'Stejná úroveň jako minule. Příště to chce krok nahoru.';
+
+  @override
+  String get sponsorIndustryExtraSportswear => 'Sportovní oblečení';
+
+  @override
+  String get sponsorIndustryExtraAirline => 'Letecká společnost';
+
+  @override
+  String get sponsorIndustryExtraRailway => 'Železnice';
+
+  @override
+  String get sponsorIndustryExtraHotels => 'Hotelový řetězec';
+
+  @override
+  String get sponsorIndustryExtraCoffee => 'Kavárenský řetězec';
+
+  @override
+  String get sponsorIndustryExtraChocolate => 'Čokoláda';
+
+  @override
+  String get sponsorIndustryExtraMineralWater => 'Minerální voda';
+
+  @override
+  String get sponsorIndustryExtraPharmacy => 'Řetězec lékáren';
+
+  @override
+  String get sponsorIndustryExtraFashion => 'Móda';
+
+  @override
+  String get sponsorIndustryExtraWatches => 'Hodinář';
+
+  @override
+  String get sponsorIndustryExtraElectronics => 'Elektronika';
+
+  @override
+  String get sponsorIndustryExtraSoftware => 'Software';
+
+  @override
+  String get sponsorIndustryExtraStreaming => 'Streamovací služba';
+
+  @override
+  String get sponsorIndustryExtraSocialNetwork => 'Sociální síť';
+
+  @override
+  String get sponsorIndustryExtraFurniture => 'Nábytek';
+
+  @override
+  String get sponsorIndustryExtraTyres => 'Pneumatiky';
+
+  @override
+  String get sponsorIndustryExtraShipping => 'Námořní doprava';
+
+  @override
+  String get sponsorIndustryExtraLottery => 'Loterie';
+
+  @override
+  String get sponsorIndustryExtraTourism => 'Turistická centrála';
+
+  @override
+  String get sponsorIndustryExtraCosmetics => 'Kosmetika';
+
+  @override
+  String get sponsorIndustryExtraPetFood => 'Krmivo pro zvířata';
+
+  @override
+  String get sponsorIndustryExtraBakery => 'Pekárna';
+
+  @override
+  String get sponsorIndustryExtraSupermarket => 'Supermarket';
+
+  @override
+  String get sponsorIndustryExtraSportsNutrition => 'Sportovní výživa';
+
+  @override
+  String get sponsorIndustryExtraWine => 'Víno';
+
+  @override
+  String get sponsorIndustryExtraTea => 'Čaj';
+
+  @override
+  String get sponsorIndustryExtraRealEstate => 'Reality';
+
+  @override
+  String get sponsorIndustryExtraFitness => 'Fitness centra';
+
+  @override
+  String get sponsorIndustryExtraNewspaper => 'Deník';
 }

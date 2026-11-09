@@ -15870,4 +15870,91 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get yReactionAcceptance8 => '지난번과 같은 수준이다. 다음 주기엔 한 단계 올라서야 한다.';
+
+  @override
+  String get sponsorIndustryExtraSportswear => '스포츠웨어';
+
+  @override
+  String get sponsorIndustryExtraAirline => '일반 항공사';
+
+  @override
+  String get sponsorIndustryExtraRailway => '철도';
+
+  @override
+  String get sponsorIndustryExtraHotels => '호텔 체인';
+
+  @override
+  String get sponsorIndustryExtraCoffee => '커피 체인';
+
+  @override
+  String get sponsorIndustryExtraChocolate => '초콜릿';
+
+  @override
+  String get sponsorIndustryExtraMineralWater => '생수';
+
+  @override
+  String get sponsorIndustryExtraPharmacy => '약국 체인';
+
+  @override
+  String get sponsorIndustryExtraFashion => '패션';
+
+  @override
+  String get sponsorIndustryExtraWatches => '시계 제조사';
+
+  @override
+  String get sponsorIndustryExtraElectronics => '전자제품';
+
+  @override
+  String get sponsorIndustryExtraSoftware => '소프트웨어';
+
+  @override
+  String get sponsorIndustryExtraStreaming => '스트리밍 서비스';
+
+  @override
+  String get sponsorIndustryExtraSocialNetwork => '소셜 네트워크';
+
+  @override
+  String get sponsorIndustryExtraFurniture => '가구';
+
+  @override
+  String get sponsorIndustryExtraTyres => '타이어';
+
+  @override
+  String get sponsorIndustryExtraShipping => '해운사';
+
+  @override
+  String get sponsorIndustryExtraLottery => '복권';
+
+  @override
+  String get sponsorIndustryExtraTourism => '관광청';
+
+  @override
+  String get sponsorIndustryExtraCosmetics => '화장품';
+
+  @override
+  String get sponsorIndustryExtraPetFood => '반려동물 사료';
+
+  @override
+  String get sponsorIndustryExtraBakery => '제과점';
+
+  @override
+  String get sponsorIndustryExtraSupermarket => '슈퍼마켓';
+
+  @override
+  String get sponsorIndustryExtraSportsNutrition => '스포츠 영양';
+
+  @override
+  String get sponsorIndustryExtraWine => '와인';
+
+  @override
+  String get sponsorIndustryExtraTea => '차';
+
+  @override
+  String get sponsorIndustryExtraRealEstate => '부동산';
+
+  @override
+  String get sponsorIndustryExtraFitness => '피트니스 클럽';
+
+  @override
+  String get sponsorIndustryExtraNewspaper => '신문';
 }

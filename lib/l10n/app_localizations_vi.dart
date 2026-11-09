@@ -16264,4 +16264,91 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get yReactionAcceptance8 =>
       'Vẫn trình độ như lần trước. Chu kỳ tới cần tiến thêm một bước.';
+
+  @override
+  String get sponsorIndustryExtraSportswear => 'Quần áo thể thao';
+
+  @override
+  String get sponsorIndustryExtraAirline => 'Hãng hàng không đầy đủ dịch vụ';
+
+  @override
+  String get sponsorIndustryExtraRailway => 'Đường sắt';
+
+  @override
+  String get sponsorIndustryExtraHotels => 'Chuỗi khách sạn';
+
+  @override
+  String get sponsorIndustryExtraCoffee => 'Chuỗi cà phê';
+
+  @override
+  String get sponsorIndustryExtraChocolate => 'Sô cô la';
+
+  @override
+  String get sponsorIndustryExtraMineralWater => 'Nước khoáng';
+
+  @override
+  String get sponsorIndustryExtraPharmacy => 'Chuỗi nhà thuốc';
+
+  @override
+  String get sponsorIndustryExtraFashion => 'Thời trang';
+
+  @override
+  String get sponsorIndustryExtraWatches => 'Hãng đồng hồ';
+
+  @override
+  String get sponsorIndustryExtraElectronics => 'Điện tử';
+
+  @override
+  String get sponsorIndustryExtraSoftware => 'Phần mềm';
+
+  @override
+  String get sponsorIndustryExtraStreaming => 'Dịch vụ phát trực tuyến';
+
+  @override
+  String get sponsorIndustryExtraSocialNetwork => 'Mạng xã hội';
+
+  @override
+  String get sponsorIndustryExtraFurniture => 'Nội thất';
+
+  @override
+  String get sponsorIndustryExtraTyres => 'Lốp xe';
+
+  @override
+  String get sponsorIndustryExtraShipping => 'Hãng vận tải biển';
+
+  @override
+  String get sponsorIndustryExtraLottery => 'Xổ số';
+
+  @override
+  String get sponsorIndustryExtraTourism => 'Cục du lịch';
+
+  @override
+  String get sponsorIndustryExtraCosmetics => 'Mỹ phẩm';
+
+  @override
+  String get sponsorIndustryExtraPetFood => 'Thức ăn thú cưng';
+
+  @override
+  String get sponsorIndustryExtraBakery => 'Tiệm bánh';
+
+  @override
+  String get sponsorIndustryExtraSupermarket => 'Siêu thị';
+
+  @override
+  String get sponsorIndustryExtraSportsNutrition => 'Dinh dưỡng thể thao';
+
+  @override
+  String get sponsorIndustryExtraWine => 'Rượu vang';
+
+  @override
+  String get sponsorIndustryExtraTea => 'Trà';
+
+  @override
+  String get sponsorIndustryExtraRealEstate => 'Bất động sản';
+
+  @override
+  String get sponsorIndustryExtraFitness => 'Phòng tập thể hình';
+
+  @override
+  String get sponsorIndustryExtraNewspaper => 'Báo chí';
 }

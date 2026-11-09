@@ -16506,4 +16506,92 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get yReactionAcceptance8 =>
       'Ίδιο επίπεδο με την προηγούμενη φορά. Χρειάζεται ένα βήμα παραπάνω στον επόμενο κύκλο.';
+
+  @override
+  String get sponsorIndustryExtraSportswear => 'Αθλητικά ρούχα';
+
+  @override
+  String get sponsorIndustryExtraAirline =>
+      'Αεροπορική εταιρεία πλήρους εξυπηρέτησης';
+
+  @override
+  String get sponsorIndustryExtraRailway => 'Σιδηρόδρομοι';
+
+  @override
+  String get sponsorIndustryExtraHotels => 'Αλυσίδα ξενοδοχείων';
+
+  @override
+  String get sponsorIndustryExtraCoffee => 'Αλυσίδα καφέ';
+
+  @override
+  String get sponsorIndustryExtraChocolate => 'Σοκολάτα';
+
+  @override
+  String get sponsorIndustryExtraMineralWater => 'Μεταλλικό νερό';
+
+  @override
+  String get sponsorIndustryExtraPharmacy => 'Αλυσίδα φαρμακείων';
+
+  @override
+  String get sponsorIndustryExtraFashion => 'Μόδα';
+
+  @override
+  String get sponsorIndustryExtraWatches => 'Ωρολογοποιός';
+
+  @override
+  String get sponsorIndustryExtraElectronics => 'Ηλεκτρονικά';
+
+  @override
+  String get sponsorIndustryExtraSoftware => 'Λογισμικό';
+
+  @override
+  String get sponsorIndustryExtraStreaming => 'Υπηρεσία streaming';
+
+  @override
+  String get sponsorIndustryExtraSocialNetwork => 'Κοινωνικό δίκτυο';
+
+  @override
+  String get sponsorIndustryExtraFurniture => 'Έπιπλα';
+
+  @override
+  String get sponsorIndustryExtraTyres => 'Ελαστικά';
+
+  @override
+  String get sponsorIndustryExtraShipping => 'Ναυτιλιακή εταιρεία';
+
+  @override
+  String get sponsorIndustryExtraLottery => 'Λαχείο';
+
+  @override
+  String get sponsorIndustryExtraTourism => 'Οργανισμός τουρισμού';
+
+  @override
+  String get sponsorIndustryExtraCosmetics => 'Καλλυντικά';
+
+  @override
+  String get sponsorIndustryExtraPetFood => 'Τροφές κατοικίδιων';
+
+  @override
+  String get sponsorIndustryExtraBakery => 'Αρτοποιείο';
+
+  @override
+  String get sponsorIndustryExtraSupermarket => 'Σούπερ μάρκετ';
+
+  @override
+  String get sponsorIndustryExtraSportsNutrition => 'Αθλητική διατροφή';
+
+  @override
+  String get sponsorIndustryExtraWine => 'Κρασί';
+
+  @override
+  String get sponsorIndustryExtraTea => 'Τσάι';
+
+  @override
+  String get sponsorIndustryExtraRealEstate => 'Ακίνητα';
+
+  @override
+  String get sponsorIndustryExtraFitness => 'Γυμναστήρια';
+
+  @override
+  String get sponsorIndustryExtraNewspaper => 'Εφημερίδα';
 }

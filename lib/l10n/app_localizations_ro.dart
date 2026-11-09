@@ -16830,4 +16830,91 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get yReactionAcceptance8 =>
       'Același nivel ca data trecută. E nevoie de un pas înainte în ciclul următor.';
+
+  @override
+  String get sponsorIndustryExtraSportswear => 'Îmbrăcăminte sport';
+
+  @override
+  String get sponsorIndustryExtraAirline => 'Companie aeriană full-service';
+
+  @override
+  String get sponsorIndustryExtraRailway => 'Căi ferate';
+
+  @override
+  String get sponsorIndustryExtraHotels => 'Lanț hotelier';
+
+  @override
+  String get sponsorIndustryExtraCoffee => 'Lanț de cafenele';
+
+  @override
+  String get sponsorIndustryExtraChocolate => 'Ciocolată';
+
+  @override
+  String get sponsorIndustryExtraMineralWater => 'Apă minerală';
+
+  @override
+  String get sponsorIndustryExtraPharmacy => 'Lanț de farmacii';
+
+  @override
+  String get sponsorIndustryExtraFashion => 'Modă';
+
+  @override
+  String get sponsorIndustryExtraWatches => 'Ceasornicar';
+
+  @override
+  String get sponsorIndustryExtraElectronics => 'Electronice';
+
+  @override
+  String get sponsorIndustryExtraSoftware => 'Software';
+
+  @override
+  String get sponsorIndustryExtraStreaming => 'Serviciu de streaming';
+
+  @override
+  String get sponsorIndustryExtraSocialNetwork => 'Rețea socială';
+
+  @override
+  String get sponsorIndustryExtraFurniture => 'Mobilier';
+
+  @override
+  String get sponsorIndustryExtraTyres => 'Anvelope';
+
+  @override
+  String get sponsorIndustryExtraShipping => 'Companie de transport maritim';
+
+  @override
+  String get sponsorIndustryExtraLottery => 'Loterie';
+
+  @override
+  String get sponsorIndustryExtraTourism => 'Oficiul de turism';
+
+  @override
+  String get sponsorIndustryExtraCosmetics => 'Cosmetice';
+
+  @override
+  String get sponsorIndustryExtraPetFood => 'Hrană pentru animale';
+
+  @override
+  String get sponsorIndustryExtraBakery => 'Brutărie';
+
+  @override
+  String get sponsorIndustryExtraSupermarket => 'Supermarket';
+
+  @override
+  String get sponsorIndustryExtraSportsNutrition => 'Nutriție sportivă';
+
+  @override
+  String get sponsorIndustryExtraWine => 'Vin';
+
+  @override
+  String get sponsorIndustryExtraTea => 'Ceai';
+
+  @override
+  String get sponsorIndustryExtraRealEstate => 'Imobiliare';
+
+  @override
+  String get sponsorIndustryExtraFitness => 'Cluburi de fitness';
+
+  @override
+  String get sponsorIndustryExtraNewspaper => 'Ziar';
 }
