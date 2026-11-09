@@ -20,6 +20,8 @@ class _MatchTabletLayout extends StatelessWidget {
     required this.overlays,
     this.pitchView,
     this.feed,
+    this.tvHeader,
+    this.tvOverlays = const [],
   });
 
   /// The share of the width each side column takes, within these bounds.
@@ -50,6 +52,14 @@ class _MatchTabletLayout extends StatelessWidget {
 
   /// Pitch mode: the commentary feed (null while the picture is built).
   final Widget? feed;
+
+  /// Pitch mode: the broadcast header across the top of the picture, in
+  /// place of the scoreboard (see [MatchTvHeader]).
+  final Widget? tvHeader;
+
+  /// Pitch mode: what the TV puts over the picture (the goal's banner, the
+  /// moment feed down its right edge).
+  final List<Widget> tvOverlays;
 
   bool get _pitchMode => pitchView != null;
 
@@ -133,7 +143,8 @@ class _MatchTabletLayout extends StatelessWidget {
 
   /// The momentum over the score, then the shootout if there is one, then
   /// the commentary filling the rest. In Pitch mode the momentum is on the
-  /// left and the picture fills what the commentary would.
+  /// left and the picture fills what the commentary would, under the TV's
+  /// broadcast header (which stands for the scoreboard there).
   Widget _centre(AppLocalizations l) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
@@ -142,21 +153,12 @@ class _MatchTabletLayout extends StatelessWidget {
         PanelBox(child: momentum!),
         const SizedBox(height: AppSpacing.sm),
       ],
-      scoreboard,
+      if (!_pitchMode) scoreboard,
       ?shootout,
-      const SizedBox(height: AppSpacing.sm),
+      if (!_pitchMode || shootout != null)
+        const SizedBox(height: AppSpacing.sm),
       if (_pitchMode)
-        Expanded(
-          child: Center(
-            child: AspectRatio(
-              aspectRatio: kPitchModeAspect,
-              child: ClipRRect(
-                borderRadius: AppRadii.baseAll,
-                child: pitchView,
-              ),
-            ),
-          ),
-        )
+        Expanded(child: _tv())
       else
         Expanded(
           child: Panel(
@@ -167,6 +169,39 @@ class _MatchTabletLayout extends StatelessWidget {
           ),
         ),
     ],
+  );
+
+  /// Pitch mode: the TV as one set, the broadcast header across the top of
+  /// the picture and as wide as it, the goal's banner and the moment feed
+  /// over the picture. As big as the column allows.
+  Widget _tv() => LayoutBuilder(
+    builder: (context, c) {
+      const header = MatchTvHeader.height;
+      final w = math.max<double>(
+        0,
+        math.min(c.maxWidth, (c.maxHeight - header) * kPitchModeAspect),
+      );
+      return Center(
+        child: ClipRRect(
+          borderRadius: AppRadii.baseAll,
+          child: SizedBox(
+            width: w,
+            height: header + w / kPitchModeAspect,
+            child: Column(
+              children: [
+                SizedBox(height: header, child: tvHeader),
+                Expanded(
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [?pitchView, ...tvOverlays],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
   );
 
   /// Both line-ups, with the manager's own shape on the pitch a tab away

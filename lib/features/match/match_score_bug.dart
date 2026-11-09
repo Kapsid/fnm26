@@ -112,8 +112,125 @@ class _ScoreBug extends StatelessWidget {
         ? null
         : (goal.minute, goal.stoppage, goal.playerId, homeScore + awayScore);
     final theme = this.theme;
-    final bar = Container(
-      height: barHeight,
+    final bar = _ScoreBugBar(
+      homeCode: homeCode,
+      awayCode: awayCode,
+      homeScore: homeScore,
+      awayScore: awayScore,
+      clock: clock,
+      live: live,
+      still: still,
+      homeColor: homeColor,
+      awayColor: awayColor,
+      goal: goal,
+      goalForHome: goalForHome,
+      goalId: goalId,
+      theme: theme,
+    );
+    return Padding(
+      // Two px above and below: stripe and margin together stay the 32 px
+      // the Pitch layout below was measured for.
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.marginMobile,
+        vertical: 2,
+      ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          bar,
+          ..._banners(theme, still, goalId),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _banners(ScoreBugTheme? theme, bool still, Object? goalId) {
+    final goal = this.goal;
+    return [
+      if (goal == null && notice != null)
+        Positioned(
+          top: barHeight,
+          left: AppSpacing.sm,
+          right: AppSpacing.sm,
+          child: _EventBanner(
+            key: ValueKey((
+              'notice',
+              notice!.minute,
+              notice!.stoppage,
+              notice!.playerId,
+              notice!.type,
+            )),
+            event: notice!,
+            code: noticeForHome ? homeCode : awayCode,
+            color: (noticeForHome ? homeColor : awayColor) ?? AppColors.primary,
+            still: still,
+            theme: theme,
+          ),
+        ),
+      if (goal != null)
+        Positioned(
+          top: barHeight,
+          left: AppSpacing.sm,
+          right: AppSpacing.sm,
+          child: _GoalBanner(
+            key: ValueKey(('banner', goalId)),
+            event: goal,
+            code: goalForHome ? homeCode : awayCode,
+            color: (goalForHome ? homeColor : awayColor) ?? AppColors.primary,
+            still: still,
+            theme: theme,
+          ),
+        ),
+    ];
+  }
+}
+
+/// The bug's one bar: each side's kit, flag and code against the score on
+/// its silver plate, the clock on the end. The phone draws it in the corner
+/// of the 2D TV; the tablet's broadcast header draws it larger.
+class _ScoreBugBar extends StatelessWidget {
+  const _ScoreBugBar({
+    required this.homeCode,
+    required this.awayCode,
+    required this.homeScore,
+    required this.awayScore,
+    required this.clock,
+    required this.live,
+    required this.still,
+    this.homeColor,
+    this.awayColor,
+    this.goal,
+    this.goalForHome = false,
+    this.goalId,
+    this.theme,
+    this.clockMaxWidth = 88,
+  });
+
+  final String homeCode;
+  final String awayCode;
+  final int homeScore;
+  final int awayScore;
+  final String clock;
+  final bool live;
+  final bool still;
+  final Color? homeColor;
+  final Color? awayColor;
+  final MatchEvent? goal;
+  final bool goalForHome;
+
+  /// The goal being celebrated, for the sweep of light across the plate.
+  final Object? goalId;
+
+  /// The most the clock segment widens to.
+  final double clockMaxWidth;
+  final ScoreBugTheme? theme;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = this.theme;
+    final goal = this.goal;
+    return Container(
+      height: _ScoreBug.barHeight,
       decoration: BoxDecoration(
         gradient: theme == null ? _kBugBody : _plates(theme),
         borderRadius: AppRadii.smAll,
@@ -152,60 +269,14 @@ class _ScoreBug extends StatelessWidget {
             Expanded(
               child: _BugSide(code: awayCode, color: awayColor),
             ),
-            _BugClock(clock: clock, live: live, theme: theme),
+            _BugClock(
+              clock: clock,
+              live: live,
+              theme: theme,
+              maxWidth: clockMaxWidth,
+            ),
           ],
         ),
-      ),
-    );
-    return Padding(
-      // Two px above and below: stripe and margin together stay the 32 px
-      // the Pitch layout below was measured for.
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.marginMobile,
-        vertical: 2,
-      ),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          bar,
-          if (goal == null && notice != null)
-            Positioned(
-              top: barHeight,
-              left: AppSpacing.sm,
-              right: AppSpacing.sm,
-              child: _EventBanner(
-                key: ValueKey((
-                  'notice',
-                  notice!.minute,
-                  notice!.stoppage,
-                  notice!.playerId,
-                  notice!.type,
-                )),
-                event: notice!,
-                code: noticeForHome ? homeCode : awayCode,
-                color:
-                    (noticeForHome ? homeColor : awayColor) ??
-                    AppColors.primary,
-                still: still,
-                theme: theme,
-              ),
-            ),
-          if (goal != null)
-            Positioned(
-              top: barHeight,
-              left: AppSpacing.sm,
-              right: AppSpacing.sm,
-              child: _GoalBanner(
-                key: ValueKey(('banner', goalId)),
-                event: goal,
-                code: goalForHome ? homeCode : awayCode,
-                color:
-                    (goalForHome ? homeColor : awayColor) ?? AppColors.primary,
-                still: still,
-                theme: theme,
-              ),
-            ),
-        ],
       ),
     );
   }
@@ -443,11 +514,19 @@ class _BugScore extends StatelessWidget {
 /// The clock's segment on the end of the bug: the minute, and stoppage time
 /// as a "+N" tab set apart beside it.
 class _BugClock extends StatelessWidget {
-  const _BugClock({required this.clock, required this.live, this.theme});
+  const _BugClock({
+    required this.clock,
+    required this.live,
+    this.theme,
+    this.maxWidth = 88,
+  });
 
   final String clock;
   final bool live;
   final ScoreBugTheme? theme;
+
+  /// The most the segment widens to (a full-time wording scales down in it).
+  final double maxWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -467,7 +546,7 @@ class _BugClock extends StatelessWidget {
       },
     );
     return Container(
-      constraints: const BoxConstraints(minWidth: 44, maxWidth: 88),
+      constraints: BoxConstraints(minWidth: 44, maxWidth: maxWidth),
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
       decoration: const BoxDecoration(
         gradient: LinearGradient(

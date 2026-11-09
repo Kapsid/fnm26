@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/match/pitch/pitch_match_view.dart';
@@ -20,8 +21,9 @@ import '../helpers/seeded_save.dart';
 Future<SeededSave> _open(
   WidgetTester tester,
   MatchViewMode? mode,
-  Size size,
-) async {
+  Size size, {
+  Locale locale = const Locale('en'),
+}) async {
   final save = await seedSave(tester, formFactor: FormFactor.tablet);
   // seedSave stores Timeline; a manager who never chose has nothing stored.
   if (mode == null) SharedPreferences.setMockInitialValues(<String, Object>{});
@@ -43,6 +45,7 @@ Future<SeededSave> _open(
     save,
     '${Routes.match}?careerId=${save.careerId}',
     size: size,
+    locale: locale,
   );
   return save;
 }
@@ -59,10 +62,13 @@ void main() {
       expect(find.byKey(MatchScreen.tabletLayoutKey), findsOneWidget);
       expect(find.byType(PitchMatchView), findsOneWidget);
       expect(find.byType(PitchCommentaryFeed), findsOneWidget);
-      // The picture is the big thing in the middle.
+      // The picture is the big thing in the middle, under the TV's
+      // broadcast header (which stands for the scoreboard), as wide as it.
       final pitch = tester.getRect(find.byType(PitchMatchView));
-      final score = tester.getRect(find.byType(MatchScoreboard));
-      expect(pitch.top, greaterThanOrEqualTo(score.bottom));
+      expect(find.byType(MatchScoreboard), findsNothing);
+      final header = tester.getRect(find.byType(MatchTvHeader));
+      expect(pitch.top, closeTo(header.bottom, 0.5));
+      expect(pitch.width, closeTo(header.width, 0.5));
       expect(pitch.width, greaterThan(size.width * 0.4));
       // Stats and momentum on the left, the feed and line-ups on the right.
       expect(
@@ -85,6 +91,79 @@ void main() {
       expect(find.byType(PitchCommentaryLine), findsNothing);
       await tester.pumpWidget(const SizedBox());
     });
+  }
+
+  // The 2D TV's broadcast dress: the header over the picture, a goal's
+  // banner centred on it and the moment feed down its right edge, none of
+  // it overflowing, in a short language and a long one.
+  for (final size in const [Size(1366, 1024), Size(1180, 820)]) {
+    for (final lang in const ['en', 'de']) {
+      testWidgets('the 2D TV header, goal banner and moment feed fit at '
+          '${size.width.toInt()}x${size.height.toInt()} ($lang)', (
+        tester,
+      ) async {
+        await _open(
+          tester,
+          MatchViewMode.pitch,
+          size,
+          locale: Locale(lang),
+        );
+        await tester.tap(find.byIcon(Icons.pause_rounded));
+        await tester.pump();
+        final screen = _screen(tester);
+        final pb = screen.pitchMode.playback!;
+        final r = screen.result!;
+        expect(find.byKey(matchTvHeaderKey), findsOneWidget);
+        expect(find.byKey(matchMomentFeedKey), findsNothing);
+        // The first goal goes in: its banner, over the picture.
+        final gi = r.events.indexWhere((e) => e.type == MatchEventType.goal);
+        expect(gi, isNonNegative, reason: 'the seeded match has a goal');
+        final goal = r.events[gi];
+        screen.seekPitch(
+          Duration(microseconds: ((pb.revealAt(gi) + 0.05) * 1e6).round()),
+        );
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 600));
+        expect(tester.takeException(), isNull);
+        final pitch = tester.getRect(find.byType(PitchMatchView));
+        final banner = find.byKey(matchTvGoalBannerKey);
+        expect(banner, findsOneWidget);
+        expect(
+          find.descendant(of: banner, matching: find.text(goal.playerName)),
+          findsOneWidget,
+        );
+        final b = tester.getRect(banner);
+        expect(b.top, greaterThanOrEqualTo(pitch.top));
+        expect(b.left, greaterThanOrEqualTo(pitch.left));
+        expect(b.right, lessThanOrEqualTo(pitch.right));
+        expect((b.center.dx - pitch.center.dx).abs(), lessThan(1));
+        // The moments so far down the right edge, newest on top, under the
+        // banner.
+        final feed = find.byKey(matchMomentFeedKey);
+        expect(feed, findsOneWidget);
+        final f = tester.getRect(feed);
+        expect(f.right, lessThanOrEqualTo(pitch.right));
+        expect(f.left, greaterThan(pitch.center.dx));
+        expect(f.top, greaterThan(b.bottom));
+        expect(
+          find.descendant(
+            of: feed,
+            matching: find.textContaining(surnameOf(goal.playerName)),
+          ),
+          findsWidgets,
+        );
+        // The banner goes with the goal's flash; the feed fades a few
+        // seconds later.
+        await tester.pump(kGoalFlashHold);
+        await tester.pump();
+        expect(banner, findsNothing);
+        await tester.pump(kMomentFeedLife);
+        await tester.pump();
+        expect(find.byKey(matchMomentFeedKey), findsNothing);
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox());
+      });
+    }
   }
 
   testWidgets('commentary feed lists lines in order, newest first', (
@@ -232,6 +311,10 @@ void main() {
   ) async {
     Future<(Rect, List<String>)> column(MatchViewMode mode) async {
       await _open(tester, mode, kTabletSize);
+      // Held still: settling with the match running would play it on to
+      // half time, whose card covers the column.
+      await tester.tap(find.byIcon(Icons.pause_rounded));
+      await tester.pump();
       await tester.tap(find.text(enL.matchTabLineups));
       await tester.pumpAndSettle();
       final panel = find.ancestor(
