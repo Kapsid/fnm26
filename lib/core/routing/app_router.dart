@@ -1,4 +1,5 @@
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/data/data_providers.dart';
@@ -1134,7 +1135,9 @@ final routerProvider = Provider<GoRouter>((ref) {
           ? proLockRedirect(ref, state.uri)
           : entering.then((_) => proLockRedirect(ref, state.uri));
     },
-    routes: formFactor == FormFactor.tablet ? _tabletRoutes(routes) : routes,
+    routes: formFactor == FormFactor.tablet
+        ? _tabletRoutes(routes)
+        : [for (final r in routes) _fadeIfDock(r)],
   );
   // The career on screen decides the names on screen (a custom world's
   // nations and competitions), in the app's language. The label functions,
@@ -1207,6 +1210,32 @@ List<RouteBase> _tabletRoutes(List<GoRoute> routes) => [
     if (Routes.fullScreen.contains(r.path))
       if (tabletReadyPaths.contains(r.path)) r else _phoneFramed(r),
 ];
+
+/// The screens that carry the floating bottom dock. Changing tab crossfades
+/// them instead of sliding, so the identical docks stay put on screen.
+const Set<String> _dockPaths = {
+  Routes.hub,
+  Routes.tactics,
+  Routes.tournaments,
+  Routes.ranking,
+  Routes.careers,
+};
+
+/// Phone only: [route] as a short crossfade when it carries the dock, else
+/// unchanged. (The tablet path keeps `builder`, which its frames call.)
+GoRoute _fadeIfDock(GoRoute route) => _dockPaths.contains(route.path)
+    ? GoRoute(
+        path: route.path,
+        pageBuilder: (context, state) => CustomTransitionPage<void>(
+          key: state.pageKey,
+          transitionDuration: const Duration(milliseconds: 180),
+          reverseTransitionDuration: const Duration(milliseconds: 180),
+          child: route.builder!(context, state),
+          transitionsBuilder: (context, animation, secondary, child) =>
+              FadeTransition(opacity: animation, child: child),
+        ),
+      )
+    : route;
 
 /// [route] with its screen drawn through [FullScreenPhoneFrame].
 GoRoute _phoneFramed(GoRoute route) => GoRoute(
