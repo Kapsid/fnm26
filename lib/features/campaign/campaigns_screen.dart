@@ -81,10 +81,10 @@ class CampaignsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    const body = CampaignList();
     if (useTabletLayout(context, ref)) {
-      return const _CampaignsTabletLayout(body: body);
+      return const _CampaignsTabletLayout(body: CampaignList(squares: true));
     }
+    const body = CampaignList();
     final l = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -108,10 +108,17 @@ class CampaignsScreen extends ConsumerWidget {
 /// out; a filter that empties them all says so. The filter and the scroll
 /// position live in providers, so they survive a visit to a brief.
 class CampaignList extends ConsumerStatefulWidget {
-  const CampaignList({super.key});
+  const CampaignList({this.squares = false, super.key});
+
+  /// The tablet's look: every campaign a square tile, as the nation pick
+  /// lays its nations out, as many to a row as fit.
+  final bool squares;
 
   /// The narrowest a tile gets before the grid drops a column.
   static const double minTileWidth = 320;
+
+  /// The narrowest a square tile gets before a row drops one.
+  static const double minSquareWidth = 196;
 
   @override
   ConsumerState<CampaignList> createState() => _CampaignListState();
@@ -161,10 +168,12 @@ class _CampaignListState extends ConsumerState<CampaignList> {
         const pad = AppSpacing.marginMobile;
         const gap = AppSpacing.md;
         final inner = constraints.maxWidth - 2 * pad;
-        final columns = (inner / CampaignList.minTileWidth).floor().clamp(
-          1,
-          3,
-        );
+        final squares = widget.squares;
+        final columns = squares
+            ? ((inner + gap) / (CampaignList.minSquareWidth + gap))
+                  .floor()
+                  .clamp(1, 12)
+            : (inner / CampaignList.minTileWidth).floor().clamp(1, 3);
         final tileWidth = (inner - gap * (columns - 1)) / columns;
         return ListView(
           controller: _scroll,
@@ -225,12 +234,13 @@ class _CampaignListState extends ConsumerState<CampaignList> {
                 ),
                 Wrap(
                   spacing: gap,
-                  runSpacing: AppSpacing.sm,
+                  runSpacing: squares ? gap : AppSpacing.sm,
                   children: [
                     for (final def in defs)
                       SizedBox(
                         width: tileWidth,
-                        child: CampaignTile(def: def),
+                        height: squares ? tileWidth : null,
+                        child: CampaignTile(def: def, square: squares),
                       ),
                   ],
                 ),
@@ -262,9 +272,12 @@ class _CampaignListState extends ConsumerState<CampaignList> {
 /// opens the brief, for every campaign: a Pro one shows its story to a
 /// manager without Pro too, and only the brief's Start asks him to pay.
 class CampaignTile extends ConsumerWidget {
-  const CampaignTile({required this.def, super.key});
+  const CampaignTile({required this.def, this.square = false, super.key});
 
   final CampaignDef def;
+
+  /// The tablet's square tile (see [CampaignSquare]) instead of the row.
+  final bool square;
 
   static Key keyFor(String id) => Key('campaign.tile.$id');
   static const Key proBadgeKey = Key('campaign.proBadge');
@@ -281,6 +294,15 @@ class CampaignTile extends ConsumerWidget {
     final running =
         ref.watch(campaignRunsProvider).valueOrNull?.containsKey(def.id) ??
         false;
+    if (square) {
+      return CampaignSquare(
+        key: keyFor(def.id),
+        def: def,
+        flagCode: nation?.code,
+        best: best,
+        running: running,
+      );
+    }
     return AppCard(
       key: keyFor(def.id),
       padding: const EdgeInsets.all(AppSpacing.sm + AppSpacing.xs),
@@ -348,6 +370,167 @@ class CampaignTile extends ConsumerWidget {
             color: AppColors.onSurfaceVariant,
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// A campaign as a square tile, in the nation pick's tablet tile look: the
+/// earned stars top right, the enamelled flag, the title, then the badges
+/// (length, difficulty, Free or Pro, a run in progress). A tap opens the
+/// brief, as the phone's row does.
+class CampaignSquare extends StatelessWidget {
+  const CampaignSquare({
+    required this.def,
+    required this.flagCode,
+    required this.best,
+    required this.running,
+    super.key,
+  });
+
+  final CampaignDef def;
+  final String? flagCode;
+  final int? best;
+  final bool running;
+
+  static const double _flag = 56;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final words = campaignWords(l, def);
+    final difficulty = campaignDifficulty(l, def);
+    final best = this.best;
+    final code = flagCode;
+    return Semantics(
+      button: true,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () => context.go('${Routes.campaignBrief}?id=${def.id}'),
+          borderRadius: AppRadii.mdAll,
+          child: Ink(
+            decoration: BoxDecoration(
+              borderRadius: AppRadii.mdAll,
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  AppColors.surfaceContainerHigh,
+                  AppColors.surfaceContainerLow,
+                ],
+              ),
+              border: Border.all(
+                color: running
+                    ? AppColors.primary
+                    : AppColors.surfaceContainerHighest,
+                width: running ? 2 : 1,
+              ),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x4D000000),
+                  offset: Offset(0, 3),
+                  blurRadius: 6,
+                ),
+              ],
+            ),
+            child: Stack(
+              children: [
+                if (best != null)
+                  Positioned(
+                    top: 9,
+                    right: 9,
+                    child: CampaignEarnedStars(
+                      key: CampaignTile.starsKey,
+                      best: best,
+                    ),
+                  ),
+                Positioned.fill(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 22, 10, 10),
+                    child: Column(
+                      children: [
+                        if (code != null) ...[
+                          Container(
+                            width: _flag,
+                            height: _flag,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0x80000000),
+                                  offset: Offset(0, 2),
+                                  blurRadius: 6,
+                                ),
+                              ],
+                            ),
+                            foregroundDecoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: const Color(0x2EFFFFFF),
+                                width: 2,
+                              ),
+                            ),
+                            child: FlagDisc(code, size: _flag),
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                        ],
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              words.title,
+                              textAlign: TextAlign.center,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTypography.titleMedium.copyWith(
+                                fontSize: 14,
+                                height: 1.2,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.xs),
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: AppSpacing.xs,
+                          runSpacing: AppSpacing.xs,
+                          children: [
+                            CampaignBadge(
+                              label: l.campaignCycles(def.cycles),
+                              color: AppColors.onSurfaceVariant,
+                            ),
+                            CampaignBadge(
+                              label: difficulty.label,
+                              color: difficulty.color,
+                            ),
+                            if (def.needsPro)
+                              CampaignBadge(
+                                key: CampaignTile.proBadgeKey,
+                                label: l.campaignPro,
+                                color: AppColors.warning,
+                                icon: Icons.lock,
+                              )
+                            else
+                              CampaignBadge(
+                                label: l.campaignFree,
+                                color: AppColors.positive,
+                              ),
+                            if (running)
+                              CampaignBadge(
+                                key: CampaignTile.inProgressKey,
+                                label: l.campaignFilterInProgress,
+                                color: AppColors.primary,
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

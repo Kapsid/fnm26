@@ -536,6 +536,60 @@ void main() {
       expect(b.dx, greaterThan(a.dx));
       expect(tester.takeException(), isNull);
     });
+
+    // Square tiles, like the nation pick's, several to a row; every tile
+    // built on the way down (an overflow anywhere fails), in long languages.
+    for (final size in [const Size(1366, 1024), const Size(1180, 820)]) {
+      for (final locale in ['en', 'de', 'hu']) {
+        testWidgets('tablet tiles are squares at ${size.width.toInt()} in '
+            '$locale', (tester) async {
+          final save = await seedSave(
+            tester,
+            overrides: overrides,
+            formFactor: FormFactor.tablet,
+          );
+          await tester.runAsync(
+            () => save.container
+                .read(campaignRecordStoreProvider)
+                .record('c0', 2),
+          );
+          await pumpRoute(
+            tester,
+            save,
+            Routes.campaigns,
+            size: size,
+            locale: Locale(locale),
+          );
+          expect(find.byKey(CampaignsScreen.tabletLayoutKey), findsOneWidget);
+          final first = tester.getRect(tile('c0'));
+          expect(first.width, closeTo(first.height, 0.5));
+          expect(
+            first.width,
+            greaterThanOrEqualTo(CampaignList.minSquareWidth),
+          );
+          expect(find.byType(CampaignSquare), findsWidgets);
+          // At least four to a row.
+          final tops = [
+            for (final e in find.byType(CampaignSquare).evaluate())
+              tester.getTopLeft(find.byWidget(e.widget)).dy,
+          ];
+          expect(
+            tops.where((t) => t == tops.first).length,
+            greaterThanOrEqualTo(4),
+          );
+          expect(
+            find.descendant(
+              of: tile('c0'),
+              matching: find.byKey(CampaignTile.starsKey),
+            ),
+            findsOneWidget,
+          );
+          await tester.scrollUntilVisible(tile('c23'), 300);
+          await tester.pumpAndSettle();
+          expect(tester.takeException(), isNull);
+        });
+      }
+    }
   });
 
   for (final locale in ['de', 'fi', 'hu', 'el', 'pt']) {
