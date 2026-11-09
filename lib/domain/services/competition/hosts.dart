@@ -109,6 +109,14 @@ abstract final class WorldCupHosts {
     return out;
   }
 
+  /// Whether [cycle]'s editions are decided under the host rules v2 (the
+  /// stadium bars, `HostStadiumRules`): some nation carries
+  /// `HostBidding.rules2Key(cycle)`.
+  static bool isV2(int cycle, List<Nation> nations) {
+    final key = HostBidding.rules2Key(cycle);
+    return nations.any((n) => n.hostBids.containsKey(key));
+  }
+
   /// The manager's nation for [cycle] under the current rules, or null when
   /// [cycle] keeps the legacy ones (no marker at or before it).
   static int? _managerFor(Map<int, int> managers, int cycle) {

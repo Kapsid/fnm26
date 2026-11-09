@@ -139,6 +139,30 @@ abstract final class HostBidding {
     return (cycle: cycle, nationId: nationId);
   }
 
+  /// Prefix of the host-rules v2 markers. `hostRules2:` does not start with
+  /// [rulesPrefix] (`hostRules:`), so [decodeRules] and the nation read of
+  /// the v1 markers never see one.
+  static const String rules2Prefix = 'hostRules2:';
+
+  /// Stamped (row cycle = [cycle]) beside [rulesKind] when [cycle]'s hosts
+  /// are decided under the stadium bars (`HostStadiumRules`): at creation
+  /// for cycle 0 and at the rollover after. An edition that already holds a
+  /// pledge or bid of an older build is not stamped. An edition without it
+  /// is decided, and its venues built, exactly as before.
+  static String rules2Kind(int cycle) => '$rules2Prefix$cycle';
+
+  /// The cycle a v2 rules marker names, or null for any other kind.
+  static int? decodeRules2(String kind) {
+    if (!kind.startsWith(rules2Prefix)) return null;
+    return int.tryParse(kind.substring(rules2Prefix.length));
+  }
+
+  /// `Nation.hostBids` key carrying a v2 rules marker, on the manager's
+  /// nation of that cycle (see [managerKey]): how the host draw, which sees
+  /// only the nations, learns which editions follow the stadium bars. Not
+  /// `mgr:` (read as a manager marker), and not a bid key (`wc:` / `cont:`).
+  static String rules2Key(int cycle) => 'r2:$cycle';
+
   /// `Nation.hostBids` key carrying a rules marker on the nation it names:
   /// how the host draw (`WorldCupHosts`), which sees only the nations, learns
   /// which editions follow the current rules and whose nation is the
