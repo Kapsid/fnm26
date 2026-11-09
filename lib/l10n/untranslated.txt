@@ -1,5 +1,6 @@
 {
   "bg": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -65,6 +66,7 @@
   ],
 
   "da": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -130,6 +132,7 @@
   ],
 
   "de": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -195,6 +198,7 @@
   ],
 
   "el": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -260,6 +264,7 @@
   ],
 
   "es": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -325,6 +330,7 @@
   ],
 
   "fi": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -390,6 +396,7 @@
   ],
 
   "fil": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -455,6 +462,7 @@
   ],
 
   "fr": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -520,6 +528,7 @@
   ],
 
   "hi": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -585,6 +594,7 @@
   ],
 
   "hr": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -650,6 +660,7 @@
   ],
 
   "hu": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -715,6 +726,7 @@
   ],
 
   "id": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -780,6 +792,7 @@
   ],
 
   "it": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -845,6 +858,7 @@
   ],
 
   "ja": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -910,6 +924,7 @@
   ],
 
   "ko": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -975,6 +990,7 @@
   ],
 
   "ms": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -1040,6 +1056,7 @@
   ],
 
   "nb": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -1105,6 +1122,7 @@
   ],
 
   "nl": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -1170,6 +1188,7 @@
   ],
 
   "pl": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -1235,6 +1254,7 @@
   ],
 
   "pt": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -1300,6 +1320,7 @@
   ],
 
   "ro": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -1365,6 +1386,7 @@
   ],
 
   "sv": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -1430,6 +1452,7 @@
   ],
 
   "th": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -1495,6 +1518,7 @@
   ],
 
   "tr": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -1560,6 +1584,7 @@
   ],
 
   "uk": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",
@@ -1625,6 +1650,7 @@
   ],
 
   "vi": [
+    "hostBidBelowBar",
     "mgrNewsSacked",
     "mgrNewsResigned",
     "mgrNewsPoached",

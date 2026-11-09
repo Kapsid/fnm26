@@ -108,13 +108,10 @@ extension SeasonRollover on SeasonService {
           HostBidding.rulesKind(next, moveTo ?? career.nationId),
         );
         // And under the stadium bars (host rules v2), unless the edition
-        // already holds a bid or pledge of an older build: that one is
-        // decided under the rules it was made under. Read before the
-        // pledges are settled below (a pledge then becomes its bid).
-        if (!HostBidding.hasLegacyBid(
-          await hostBidKinds(_comp, careerId),
-          next,
-        )) {
+        // already holds a bid or pledge of an older build (that one is
+        // decided under the rules it was made under) or the save was made
+        // without them. Read before the pledges are settled below.
+        if (await stadiumRulesFor(_comp, careerId, next)) {
           await _comp.markDrawWatched(
             careerId,
             next,

@@ -12106,6 +12106,10 @@ class AppLocalizationsTh extends AppLocalizations {
   String get hostBidRecentHost => 'คุณเป็นเจ้าภาพหนึ่งในสามครั้งล่าสุด';
 
   @override
+  String get hostBidBelowBar =>
+      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+
+  @override
   String get hostBidRulesPending =>
       'จะรู้ว่าเสนอตัวได้หรือไม่เมื่อประกาศเจ้าภาพของรอบนี้แล้ว';
 

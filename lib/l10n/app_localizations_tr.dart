@@ -12254,6 +12254,10 @@ class AppLocalizationsTr extends AppLocalizations {
       'Son üç turnuvadan birine ev sahipliği yaptınız.';
 
   @override
+  String get hostBidBelowBar =>
+      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+
+  @override
   String get hostBidRulesPending =>
       'Aday olup olamayacağınız, bu dönemin ev sahipleri açıklandığında belli olacak.';
 

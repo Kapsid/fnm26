@@ -12339,6 +12339,10 @@ class AppLocalizationsDa extends AppLocalizations {
       'Du var vært for en af de tre seneste udgaver.';
 
   @override
+  String get hostBidBelowBar =>
+      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+
+  @override
   String get hostBidRulesPending =>
       'Om du kan søge, bliver klart, når værterne for denne cyklus er offentliggjort.';
 

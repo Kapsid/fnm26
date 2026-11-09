@@ -18801,6 +18801,12 @@ abstract class AppLocalizations {
   /// **'You hosted one of the last three editions.'**
   String get hostBidRecentHost;
 
+  /// Hosting-bids card: under the stadium requirements, the nation's grounds fall short, so it may not bid.
+  ///
+  /// In en, this message translates to:
+  /// **'Your grounds don\'t meet this tournament\'s stadium requirements.'**
+  String get hostBidBelowBar;
+
   /// Hosting-bids card: this cycle's hosts are not revealed yet, and the next editions' rules depend on them. Shown to every nation alike, so it never hints at who hosts.
   ///
   /// In en, this message translates to:

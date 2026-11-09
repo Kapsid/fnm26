@@ -12443,6 +12443,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Sie waren Gastgeber einer der letzten drei Ausgaben.';
 
   @override
+  String get hostBidBelowBar =>
+      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+
+  @override
   String get hostBidRulesPending =>
       'Ob Sie sich bewerben können, steht fest, sobald die Gastgeber dieses Zyklus bekanntgegeben sind.';
 

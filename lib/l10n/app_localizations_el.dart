@@ -12407,6 +12407,10 @@ class AppLocalizationsEl extends AppLocalizations {
       'Διοργανώσατε μία από τις τρεις τελευταίες διοργανώσεις.';
 
   @override
+  String get hostBidBelowBar =>
+      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+
+  @override
   String get hostBidRulesPending =>
       'Αν μπορείτε να είστε υποψήφιοι θα φανεί μόλις ανακοινωθούν οι διοργανωτές αυτού του κύκλου.';
 

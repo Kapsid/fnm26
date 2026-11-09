@@ -11928,6 +11928,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get hostBidRecentHost => '최근 3개 대회 중 하나를 개최했습니다.';
 
   @override
+  String get hostBidBelowBar =>
+      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+
+  @override
   String get hostBidRulesPending => '유치 신청 가능 여부는 이번 주기 개최국이 발표되면 알 수 있습니다.';
 
   @override

@@ -12463,6 +12463,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Vous avez organisé l\'une des trois dernières éditions.';
 
   @override
+  String get hostBidBelowBar =>
+      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+
+  @override
   String get hostBidRulesPending =>
       'Vous saurez si vous pouvez être candidat une fois les pays hôtes de ce cycle annoncés.';
 

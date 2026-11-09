@@ -12423,6 +12423,10 @@ class AppLocalizationsBg extends AppLocalizations {
       'Бяхте домакин на едно от последните три издания.';
 
   @override
+  String get hostBidBelowBar =>
+      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+
+  @override
   String get hostBidRulesPending =>
       'Дали можете да кандидатствате, ще стане ясно, когато бъдат обявени домакините на този цикъл.';
 

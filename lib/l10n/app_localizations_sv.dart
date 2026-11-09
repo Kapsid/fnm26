@@ -12332,6 +12332,10 @@ class AppLocalizationsSv extends AppLocalizations {
       'Du var värd för en av de tre senaste upplagorna.';
 
   @override
+  String get hostBidBelowBar =>
+      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+
+  @override
   String get hostBidRulesPending =>
       'Om du kan söka blir klart när den här cykelns värdar har tillkännagetts.';
 

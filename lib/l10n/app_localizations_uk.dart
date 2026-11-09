@@ -12617,6 +12617,10 @@ class AppLocalizationsUk extends AppLocalizations {
       'Ви приймали один із трьох останніх турнірів.';
 
   @override
+  String get hostBidBelowBar =>
+      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+
+  @override
   String get hostBidRulesPending =>
       'Чи можете ви подати заявку, стане ясно, коли оголосять господарів цього циклу.';
 

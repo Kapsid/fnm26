@@ -12261,6 +12261,10 @@ class AppLocalizationsHi extends AppLocalizations {
       'आपने पिछले तीन संस्करणों में से एक की मेज़बानी की थी।';
 
   @override
+  String get hostBidBelowBar =>
+      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+
+  @override
   String get hostBidRulesPending =>
       'आप दावेदारी कर सकते हैं या नहीं, यह इस चक्र के मेज़बानों की घोषणा के बाद साफ़ होगा।';
 

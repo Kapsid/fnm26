@@ -428,8 +428,9 @@ abstract final class WorldCupHosts {
   /// (never the world's), delivers one ground fewer and is barred from the
   /// next two editions.
   ///
-  /// No plan (the edition is staged as without the bars) when the winners
-  /// fall short of the bar: a bid lodged outside them won.
+  /// Winners that fall short of the bar (a lodged bid, which the bid offer
+  /// and the rollover both refuse when short) still get a plan: an edition
+  /// under the bars is never staged in tiny grounds, only in fewer.
   static ({HostGroundPlan? plan, Set<int> broken}) _settle(
     List<int> hosts,
     _Bars bars,
@@ -441,11 +442,6 @@ abstract final class WorldCupHosts {
     final promised = {
       for (final h in hosts) h: ?bars.planned[h],
     };
-    final seats = [
-      for (final h in hosts) ..._seatsOf(h),
-      for (final p in promised.values) ...p,
-    ];
-    if (!HostStadiumRules.meets(seats, bar)) return none;
     final broken = <int>{};
     final delivered = <int, List<int>>{};
     promised.forEach((h, p) {

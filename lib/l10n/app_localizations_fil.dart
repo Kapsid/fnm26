@@ -12331,6 +12331,10 @@ class AppLocalizationsFil extends AppLocalizations {
       'Nag-host ka ng isa sa huling tatlong edisyon.';
 
   @override
+  String get hostBidBelowBar =>
+      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+
+  @override
   String get hostBidRulesPending =>
       'Malalaman kung puwede kang mag-bid kapag naianunsyo na ang mga host ng cycle na ito.';
 

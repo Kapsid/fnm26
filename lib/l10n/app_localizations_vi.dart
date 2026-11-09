@@ -12211,6 +12211,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get hostBidRecentHost => 'Bạn đã đăng cai một trong ba kỳ gần nhất.';
 
   @override
+  String get hostBidBelowBar =>
+      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+
+  @override
   String get hostBidRulesPending =>
       'Bạn có thể ứng cử hay không sẽ rõ khi các nước chủ nhà của chu kỳ này được công bố.';
 

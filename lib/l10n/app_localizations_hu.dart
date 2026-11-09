@@ -12280,6 +12280,10 @@ class AppLocalizationsHu extends AppLocalizations {
       'A legutóbbi három torna egyikét te rendezted.';
 
   @override
+  String get hostBidBelowBar =>
+      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+
+  @override
   String get hostBidRulesPending =>
       'Hogy pályázhatsz-e, akkor derül ki, amikor bejelentik e ciklus rendezőit.';
 

@@ -12666,6 +12666,10 @@ class AppLocalizationsHr extends AppLocalizations {
       'Bili ste domaćin jednog od posljednja tri izdanja.';
 
   @override
+  String get hostBidBelowBar =>
+      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+
+  @override
   String get hostBidRulesPending =>
       'Možete li se kandidirati, bit će jasno kad se objave domaćini ovog ciklusa.';
 

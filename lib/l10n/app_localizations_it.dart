@@ -12401,6 +12401,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get hostBidRecentHost => 'Hai ospitato una delle ultime tre edizioni.';
 
   @override
+  String get hostBidBelowBar =>
+      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+
+  @override
   String get hostBidRulesPending =>
       'Saprai se puoi candidarti quando saranno annunciati i paesi ospitanti di questo ciclo.';
 

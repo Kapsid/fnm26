@@ -70,6 +70,9 @@ Future<_World> _world({
   required int seed,
   bool premium = true,
   Nation? nation,
+  // These cover the bid flow as it was before the stadium bars
+  // (host_bid_v2_gate_test covers it under them).
+  bool stadiumHostRules = false,
 }) async {
   SharedPreferences.setMockInitialValues(<String, Object>{});
   final db = createTestDatabase();
@@ -93,6 +96,7 @@ Future<_World> _world({
                 nationId: (nation ?? _bidder).id,
                 managerName: 'M',
                 rngSeed: seed,
+                stadiumHostRules: stadiumHostRules,
               ))
           .valueOrNull!;
   return (c: c, careerId: career.id);

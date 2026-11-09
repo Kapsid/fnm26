@@ -12342,6 +12342,10 @@ class AppLocalizationsNb extends AppLocalizations {
       'Du var vert for en av de tre siste utgavene.';
 
   @override
+  String get hostBidBelowBar =>
+      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+
+  @override
   String get hostBidRulesPending =>
       'Om du kan søke, blir klart når vertene for denne syklusen er kunngjort.';
 

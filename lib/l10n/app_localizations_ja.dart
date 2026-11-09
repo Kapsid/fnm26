@@ -11899,6 +11899,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get hostBidRecentHost => '直近3大会のいずれかを開催しています。';
 
   @override
+  String get hostBidBelowBar =>
+      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+
+  @override
   String get hostBidRulesPending => '招致できるかどうかは、このサイクルの開催国が発表されれば分かります。';
 
   @override

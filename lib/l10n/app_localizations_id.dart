@@ -12243,6 +12243,10 @@ class AppLocalizationsId extends AppLocalizations {
       'Anda menjadi tuan rumah salah satu dari tiga edisi terakhir.';
 
   @override
+  String get hostBidBelowBar =>
+      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+
+  @override
   String get hostBidRulesPending =>
       'Bisa tidaknya Anda mencalonkan diri akan jelas setelah tuan rumah siklus ini diumumkan.';
 

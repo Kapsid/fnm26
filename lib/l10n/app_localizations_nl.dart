@@ -12405,6 +12405,10 @@ class AppLocalizationsNl extends AppLocalizations {
       'Je was gastland van een van de laatste drie edities.';
 
   @override
+  String get hostBidBelowBar =>
+      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+
+  @override
   String get hostBidRulesPending =>
       'Of je je kandidaat kunt stellen, wordt duidelijk zodra de gastlanden van deze cyclus bekend zijn.';
 

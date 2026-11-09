@@ -19011,6 +19011,10 @@
   "@hostBidRecentHost": {
     "description": "Hosting-bids card: the nation hosted one of the last three editions, so it may not bid."
   },
+  "hostBidBelowBar": "Your grounds don't meet this tournament's stadium requirements.",
+  "@hostBidBelowBar": {
+    "description": "Hosting-bids card: under the stadium requirements, the nation's grounds fall short, so it may not bid."
+  },
   "hostBidRulesPending": "Whether you can bid will be clear once this cycle's hosts are announced.",
   "@hostBidRulesPending": {
     "description": "Hosting-bids card: this cycle's hosts are not revealed yet, and the next editions' rules depend on them. Shown to every nation alike, so it never hints at who hosts."

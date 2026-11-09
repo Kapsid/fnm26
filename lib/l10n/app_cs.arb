@@ -4118,5 +4118,6 @@
   "editorManagerName": "Jméno trenéra",
   "editorManagerNationality": "Národnost",
   "editorIssueManagerName": "Trenér potřebuje jméno o 1 až {max} znacích, které hra umí zobrazit",
-  "editorIssueManagerNationality": "Vyber trenérovi národnost ze seznamu"
+  "editorIssueManagerNationality": "Vyber trenérovi národnost ze seznamu",
+  "hostBidBelowBar": "Vaše stadiony nesplňují požadavky tohoto turnaje."
 }

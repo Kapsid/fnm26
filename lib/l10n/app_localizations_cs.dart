@@ -12600,6 +12600,10 @@ class AppLocalizationsCs extends AppLocalizations {
       'Pořádali jste jeden z posledních tří ročníků.';
 
   @override
+  String get hostBidBelowBar =>
+      'Vaše stadiony nesplňují požadavky tohoto turnaje.';
+
+  @override
   String get hostBidRulesPending =>
       'Zda můžete kandidovat, bude jasné, až budou oznámeni pořadatelé tohoto cyklu.';
 

@@ -260,10 +260,10 @@ class CareerService {
     /// to start a world as an older save decided it.
     bool? currentHostRules,
 
-    /// Whether, under the current host rules, its cycle-0 hosts are also held
-    /// to the stadium bars (`HostBidding.rules2Kind`). Defaults to true. A
-    /// test passes false to start a world as the build before them decided
-    /// it.
+    /// Whether, under the current host rules, its hosts are also held to the
+    /// stadium bars (`HostBidding.rules2Kind`), from cycle 0 and at every
+    /// rollover. Defaults to true. A test passes false to play a world as
+    /// the build before them decided it (`HostBidding.rules2OffKind`).
     bool stadiumHostRules = true,
 
     /// Whether its world includes the nations every career created from
@@ -370,6 +370,9 @@ class CareerService {
         // bid of an older build.
         if (stadiumHostRules) {
           await comp.markDrawWatched(career.id, 0, HostBidding.rules2Kind(0));
+        } else {
+          // Its rollovers keep to the creation's choice.
+          await comp.markDrawWatched(career.id, 0, HostBidding.rules2OffKind);
         }
       }
       if (pack != null) {

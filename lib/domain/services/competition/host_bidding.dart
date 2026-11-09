@@ -163,17 +163,42 @@ abstract final class HostBidding {
   /// `mgr:` (read as a manager marker), and not a bid key (`wc:` / `cont:`).
   static String rules2Key(int cycle) => 'r2:$cycle';
 
-  /// Whether [kinds] (a career's marker kinds) hold a bid or a pledge in the
-  /// format of an older build (`hostBid:` / `hostBidPledge:`) for an edition
-  /// of [editionCycle]: such an edition is not stamped with [rules2Kind], so
-  /// the bid is decided under the rules it was made under.
-  static bool hasLegacyBid(Iterable<String> kinds, int editionCycle) =>
-      kinds.any(
-        (k) =>
-            (HostBidMarker.decode(k) ?? HostBidMarker.decodePledge(k))
-                ?.editionCycle ==
-            editionCycle,
-      );
+  /// Whether [kinds] (a career's marker kinds) hold a bid or a pledge lodged
+  /// by an older build for an edition of [editionCycle]: such an edition is
+  /// not stamped with [rules2Kind], so the bid is decided under the rules it
+  /// was made under.
+  ///
+  /// Every build writes its bids as `hostBid:` / `hostBidPledge:`; this one
+  /// also writes [newBuildKind] beside each pledge, and a bid or pledge that
+  /// has one is not an older build's.
+  static bool hasLegacyBid(Iterable<String> kinds, int editionCycle) {
+    final all = kinds.toSet();
+    return all.any((k) {
+      final m = HostBidMarker.decode(k) ?? HostBidMarker.decodePledge(k);
+      return m != null &&
+          m.editionCycle == editionCycle &&
+          !all.contains(newBuildKind(m.comp, m.editionCycle, m.nationId));
+    });
+  }
+
+  /// Prefix of the marker this build writes beside each pledge (see
+  /// [hasLegacyBid]). It is not [HostBidMarker.prefix] nor
+  /// [HostBidMarker.pledgePrefix], so no read of the bids ever sees one.
+  static const String newBuildPrefix = 'hostBidNew:';
+
+  /// Written beside the pledge of [nationId] for [comp]'s [editionCycle]: the
+  /// pledge was lodged by a build that holds bids to the stadium bars, so
+  /// its edition is stamped with [rules2Kind] like any other.
+  static String newBuildKind(
+    HostBidComp comp,
+    int editionCycle,
+    int nationId,
+  ) => '$newBuildPrefix${comp.code}:$editionCycle:$nationId';
+
+  /// Stamped at cycle 0 on a save created without the stadium bars (a test
+  /// world started as the build before them decided it): its rollovers then
+  /// stamp no [rules2Kind] either. Not [rulesPrefix] nor [rules2Prefix].
+  static const String rules2OffKind = 'stadiumRulesOff';
 
   /// `Nation.hostBids` key carrying a rules marker on the nation it names:
   /// how the host draw (`WorldCupHosts`), which sees only the nations, learns

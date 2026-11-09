@@ -150,6 +150,60 @@ void main() {
     offer: open ? _offer(comp: comp) : null,
   );
 
+  testWidgets(
+    'under the stadium bars a nation short of the bar is told why and '
+    'cannot confirm a bid',
+    (tester) async {
+      tester.view.physicalSize = phone;
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final below = HostBidStatus(
+        comp: HostBidComp.continental,
+        editionCycle: 1,
+        year: 2032,
+        nation: _nation,
+        requirement: HostingRequirements.of(
+          HostBidComp.continental,
+          Confederation.europe,
+        ),
+        shortfall: (grounds: 0, bigGrounds: 0),
+        barredConfederation: null,
+        recentHost: false,
+        lodged: false,
+        declined: false,
+        windowOpen: true,
+        offer: null,
+        belowBar: true,
+      );
+      expect(below.eligible, isFalse);
+      await tester.pumpApp(
+        const HostBidScreen(careerId: 1, comp: HostBidComp.continental),
+        overrides: [
+          hostBidOfferProvider((
+            careerId: 1,
+            nationId: null,
+            comp: HostBidComp.continental,
+          )).overrideWith((ref) async => null),
+          hostBidStatusProvider((
+            careerId: 1,
+            nationId: null,
+          )).overrideWith((ref) async => [below]),
+        ],
+      );
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      expect(
+        find.text(
+          "Your grounds don't meet this tournament's stadium "
+          'requirements.',
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('Submit bid'), findsNothing);
+      expect(find.byType(HostBidForm), findsNothing);
+    },
+  );
+
   for (final code in ['en', 'de', 'fi', 'hu', 'el', 'pt', 'cs', 'fil']) {
     testWidgets('the hosting card fits at 360 wide, text 1.4 ($code)', (
       tester,

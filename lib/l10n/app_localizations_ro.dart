@@ -12697,6 +12697,10 @@ class AppLocalizationsRo extends AppLocalizations {
       'Ați găzduit una dintre ultimele trei ediții.';
 
   @override
+  String get hostBidBelowBar =>
+      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+
+  @override
   String get hostBidRulesPending =>
       'Dacă puteți candida va fi clar după ce sunt anunțate gazdele acestui ciclu.';
 

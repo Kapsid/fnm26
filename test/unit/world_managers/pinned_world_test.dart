@@ -25,7 +25,12 @@ void main() {
       c.dispose();
       await db.close();
     });
-    final d = await StoryDriver.start(c, 42);
+    final d = await StoryDriver.start(
+      c,
+      42,
+      // Hosts as the build before the stadium bars decided them.
+      stadiumHostRules: false,
+    );
     for (var i = 0; i < 120; i++) {
       await d.step();
     }

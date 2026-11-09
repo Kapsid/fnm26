@@ -12409,6 +12409,10 @@ class AppLocalizationsFi extends AppLocalizations {
   String get hostBidRecentHost => 'Isännöit yhtä kolmesta viime turnauksesta.';
 
   @override
+  String get hostBidBelowBar =>
+      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+
+  @override
   String get hostBidRulesPending =>
       'Voitko hakea, selviää kun tämän kauden isännät on julkistettu.';
 
