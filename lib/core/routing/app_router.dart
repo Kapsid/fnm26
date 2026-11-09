@@ -293,7 +293,8 @@ abstract final class Routes {
   static const editorPack = '/editor/pack';
 
   /// A database's sections (see `EditorSection`). Each expects `?id=` (the
-  /// pack); the per-nation ones ([editorPlayers], [editorNameLists]) take
+  /// pack); the per-nation ones ([editorPlayers], [editorNameLists],
+  /// [editorManagers]) take
   /// `&nation=` to open on one nation.
   static const editorPlayers = '/editor/pack/players';
   static const editorClubs = '/editor/pack/clubs';
@@ -302,6 +303,7 @@ abstract final class Routes {
   static const editorY = '/editor/pack/y';
   static const editorPress = '/editor/pack/press';
   static const editorNameLists = '/editor/pack/name-lists';
+  static const editorManagers = '/editor/pack/managers';
   static const editorSponsors = '/editor/pack/sponsors';
   static const editorTrophies = '/editor/pack/trophies';
 
@@ -322,6 +324,7 @@ abstract final class Routes {
     editorY,
     editorPress,
     editorNameLists,
+    editorManagers,
     editorSponsors,
     editorTrophies,
   };

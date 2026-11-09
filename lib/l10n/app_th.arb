@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "กู้คืนสำเนาจากก่อนการอัปเดต",
   "saveUpgradeRestoreFailed": "ไม่สามารถกู้คืนสำเนาได้ เซฟของคุณยังคงเหมือนเดิม",
   "saveOpenFailedTitle": "ไม่สามารถเปิดเซฟของคุณได้",
-  "saveOpenFailedBody": "ไม่สามารถเปิดเซฟของคุณได้ ไม่มีสิ่งใดถูกลบ ลองอีกครั้งในอีกสักครู่"
+  "saveOpenFailedBody": "ไม่สามารถเปิดเซฟของคุณได้ ไม่มีสิ่งใดถูกลบ ลองอีกครั้งในอีกสักครู่",
+  "editorSectionManagers": "ผู้จัดการทีม",
+  "editorAboutManagers": "ใครคุมทีมชาติแต่ละทีมในวันแรก",
+  "editorManagersHint": "เลือกเมื่อเริ่มอาชีพ",
+  "editorManagerName": "ชื่อผู้จัดการทีม",
+  "editorManagerNationality": "สัญชาติ",
+  "editorIssueManagerName": "ชื่อผู้จัดการทีมต้องมี 1 ถึง {max} ตัวอักษรที่เกมแสดงได้",
+  "editorIssueManagerNationality": "เลือกสัญชาติของผู้จัดการทีมจากรายการ"
 }

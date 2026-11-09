@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "Güncellemeden önceki kopyayı geri yükle",
   "saveUpgradeRestoreFailed": "Kopya geri yüklenemedi. Kaydın olduğu gibi bırakıldı.",
   "saveOpenFailedTitle": "Kayıtların açılamadı",
-  "saveOpenFailedBody": "Kayıtların açılamadı. Hiçbir şey silinmedi. Birazdan tekrar dene."
+  "saveOpenFailedBody": "Kayıtların açılamadı. Hiçbir şey silinmedi. Birazdan tekrar dene.",
+  "editorSectionManagers": "Teknik direktörler",
+  "editorAboutManagers": "İlk gün her milli takımı kim çalıştırıyor",
+  "editorManagersHint": "Kariyer başlarken seçilir",
+  "editorManagerName": "Teknik direktörün adı",
+  "editorManagerNationality": "Uyruk",
+  "editorIssueManagerName": "Teknik direktörün adı, oyunun gösterebildiği 1 ile {max} karakter arasında olmalı",
+  "editorIssueManagerNationality": "Teknik direktör için listeden bir uyruk seç"
 }

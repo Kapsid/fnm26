@@ -16581,4 +16581,28 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get mgrListEmptyCurrent =>
       'Managers appear after the next season rollover.';
+
+  @override
+  String get editorSectionManagers => 'Bondscoaches';
+
+  @override
+  String get editorAboutManagers => 'Wie elk land op dag één leidt';
+
+  @override
+  String get editorManagersHint => 'Gekozen bij de start van een carrière';
+
+  @override
+  String get editorManagerName => 'Naam van de bondscoach';
+
+  @override
+  String get editorManagerNationality => 'Nationaliteit';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'De bondscoach heeft een naam nodig van 1 tot $max tekens die het spel kan tonen';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Kies een nationaliteit voor de bondscoach uit de lijst';
 }

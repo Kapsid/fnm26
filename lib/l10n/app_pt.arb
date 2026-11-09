@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "Restaurar a cópia de antes da atualização",
   "saveUpgradeRestoreFailed": "Não foi possível restaurar a cópia. Seu jogo salvo ficou como estava.",
   "saveOpenFailedTitle": "Não foi possível abrir seus jogos salvos",
-  "saveOpenFailedBody": "Não foi possível abrir seus jogos salvos. Nada foi apagado. Tente de novo daqui a pouco."
+  "saveOpenFailedBody": "Não foi possível abrir seus jogos salvos. Nada foi apagado. Tente de novo daqui a pouco.",
+  "editorSectionManagers": "Selecionadores",
+  "editorAboutManagers": "Quem comanda cada seleção no primeiro dia",
+  "editorManagersHint": "Escolhido ao começar uma carreira",
+  "editorManagerName": "Nome do selecionador",
+  "editorManagerNationality": "Nacionalidade",
+  "editorIssueManagerName": "O selecionador precisa de um nome de 1 a {max} caracteres que o jogo mostre",
+  "editorIssueManagerNationality": "Escolha na lista uma nacionalidade para o selecionador"
 }

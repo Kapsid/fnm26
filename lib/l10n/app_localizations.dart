@@ -24907,6 +24907,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Managers appear after the next season rollover.'**
   String get mgrListEmptyCurrent;
+
+  /// Database section: the national team managers in charge on day one.
+  ///
+  /// In en, this message translates to:
+  /// **'Managers'**
+  String get editorSectionManagers;
+
+  /// One-line description of the Managers section.
+  ///
+  /// In en, this message translates to:
+  /// **'Who is in charge of each nation on day one'**
+  String get editorAboutManagers;
+
+  /// Managers section: shown for a nation whose day-one manager the database leaves to the game (he depends on the career's seed).
+  ///
+  /// In en, this message translates to:
+  /// **'Chosen when a career starts'**
+  String get editorManagersHint;
+
+  /// Managers section: label of the manager's name field.
+  ///
+  /// In en, this message translates to:
+  /// **'Manager name'**
+  String get editorManagerName;
+
+  /// Managers section: label of the manager's nationality picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Nationality'**
+  String get editorManagerNationality;
+
+  /// A day-one manager's name is empty, too long or has characters the game cannot show.
+  ///
+  /// In en, this message translates to:
+  /// **'The manager needs a name of 1 to {max} characters the game can show'**
+  String editorIssueManagerName(int max);
+
+  /// A day-one manager's nationality is not one of the game's nations.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a nationality for the manager from the list'**
+  String get editorIssueManagerNationality;
 }
 
 class _AppLocalizationsDelegate

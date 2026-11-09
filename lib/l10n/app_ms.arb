@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "Pulihkan salinan dari sebelum kemas kini",
   "saveUpgradeRestoreFailed": "Salinan tidak dapat dipulihkan. Simpanan anda dibiarkan seperti asal.",
   "saveOpenFailedTitle": "Simpanan anda tidak dapat dibuka",
-  "saveOpenFailedBody": "Simpanan anda tidak dapat dibuka. Tiada apa-apa dipadam. Cuba lagi sebentar nanti."
+  "saveOpenFailedBody": "Simpanan anda tidak dapat dibuka. Tiada apa-apa dipadam. Cuba lagi sebentar nanti.",
+  "editorSectionManagers": "Pengurus",
+  "editorAboutManagers": "Siapa mengendalikan setiap pasukan kebangsaan pada hari pertama",
+  "editorManagersHint": "Dipilih apabila kerjaya bermula",
+  "editorManagerName": "Nama pengurus",
+  "editorManagerNationality": "Kewarganegaraan",
+  "editorIssueManagerName": "Nama pengurus mesti 1 hingga {max} aksara yang boleh dipaparkan",
+  "editorIssueManagerNationality": "Pilih kewarganegaraan pengurus daripada senarai"
 }

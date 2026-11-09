@@ -16527,4 +16527,29 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get mgrListEmptyCurrent =>
       'Managers appear after the next season rollover.';
+
+  @override
+  String get editorSectionManagers => 'Managers';
+
+  @override
+  String get editorAboutManagers =>
+      'Who is in charge of each nation on day one';
+
+  @override
+  String get editorManagersHint => 'Chosen when a career starts';
+
+  @override
+  String get editorManagerName => 'Manager name';
+
+  @override
+  String get editorManagerNationality => 'Nationality';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'The manager needs a name of 1 to $max characters the game can show';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Pick a nationality for the manager from the list';
 }

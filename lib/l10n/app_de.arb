@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "Kopie von vor dem Update wiederherstellen",
   "saveUpgradeRestoreFailed": "Die Kopie konnte nicht wiederhergestellt werden. Dein Spielstand ist unverändert.",
   "saveOpenFailedTitle": "Deine Spielstände konnten nicht geöffnet werden",
-  "saveOpenFailedBody": "Deine Spielstände konnten nicht geöffnet werden. Nichts wurde gelöscht. Versuch es gleich noch einmal."
+  "saveOpenFailedBody": "Deine Spielstände konnten nicht geöffnet werden. Nichts wurde gelöscht. Versuch es gleich noch einmal.",
+  "editorSectionManagers": "Nationaltrainer",
+  "editorAboutManagers": "Wer jede Nation am ersten Tag trainiert",
+  "editorManagersHint": "Wird beim Start einer Karriere gewählt",
+  "editorManagerName": "Name des Trainers",
+  "editorManagerNationality": "Nationalität",
+  "editorIssueManagerName": "Der Trainer braucht einen Namen mit 1 bis {max} darstellbaren Zeichen",
+  "editorIssueManagerNationality": "Wähle eine Nationalität für den Trainer aus der Liste"
 }

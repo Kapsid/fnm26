@@ -16777,4 +16777,28 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get mgrListEmptyCurrent =>
       'Trenéři se objeví po přechodu do další sezóny.';
+
+  @override
+  String get editorSectionManagers => 'Trenéři';
+
+  @override
+  String get editorAboutManagers => 'Kdo vede kterou reprezentaci na začátku';
+
+  @override
+  String get editorManagersHint => 'Vybere se při startu kariéry';
+
+  @override
+  String get editorManagerName => 'Jméno trenéra';
+
+  @override
+  String get editorManagerNationality => 'Národnost';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'Trenér potřebuje jméno o 1 až $max znacích, které hra umí zobrazit';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Vyber trenérovi národnost ze seznamu';
 }

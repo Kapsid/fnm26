@@ -88,6 +88,7 @@ List<BadField> _bad(WorldPack p) =>
     PackRules.issues(p).whereType<BadField>().toList();
 
 void main() {
+  _managerRules();
   test('a complete pack has no issues', () {
     expect(PackRules.isComplete(_pack()), isTrue);
   });
@@ -897,6 +898,82 @@ void main() {
       final abroad = ClubService.leagueClubs('eng').first;
       expect(clash(abroad), ClubNameClash.gameElsewhere);
       expect(clash('Nobody FC'), isNull);
+    });
+  });
+}
+
+void _managerRules() {
+  group('managers', () {
+    const codes = {1: 'CZE', 2: 'SVK'};
+    WorldPack withManagers(Map<int, ({String name, String nationality})> m) =>
+        _pack().copyWith(managers: m);
+    List<BadField> bad(WorldPack p) => [
+      for (final i in PackRules.issues(p, baseCodes: codes))
+        if (i is BadField && i.path.startsWith('managers.')) i,
+    ];
+
+    test('a manager name over 40 chars is refused', () {
+      final ok = withManagers({1: (name: 'A' * 40, nationality: 'CZE')});
+      expect(bad(ok), isEmpty);
+      expect(PackCodec.fieldsOk(ok, baseCodes: codes), isTrue);
+
+      final long = withManagers({1: (name: 'A' * 41, nationality: 'CZE')});
+      expect(
+        bad(long).map((b) => (b.path, b.reason)),
+        [('managers.1.name', FieldReason.tooLong)],
+      );
+      // A pack that breaks it is refused as bad data.
+      expect(PackCodec.fieldsOk(long, baseCodes: codes), isFalse);
+
+      expect(
+        bad(withManagers({1: (name: '   ', nationality: 'CZE')})).map(
+          (b) => (b.path, b.reason),
+        ),
+        [('managers.1.name', FieldReason.empty)],
+      );
+    });
+
+    test('an unknown nationality is refused', () {
+      expect(
+        bad(withManagers({1: (name: 'Ota Brnak', nationality: 'SVK')})),
+        isEmpty,
+      );
+      // The case a file writes it in does not matter.
+      expect(
+        bad(withManagers({1: (name: 'Ota Brnak', nationality: 'svk')})),
+        isEmpty,
+      );
+      final unknown = withManagers({
+        1: (name: 'Ota Brnak', nationality: 'ZZZ'),
+      });
+      expect(
+        bad(unknown).map((b) => (b.path, b.reason)),
+        [('managers.1.nationality', FieldReason.outOfRange)],
+      );
+      expect(PackCodec.fieldsOk(unknown, baseCodes: codes), isFalse);
+    });
+
+    test('an unknown nation id is refused', () {
+      List<PackIssue> compat(WorldPack p) => PackRules.compatibility(
+        p,
+        nationIds: codes.keys.toSet(),
+        competitionNames: const {},
+        trophyKeys: const {},
+        sponsorBrands: const {},
+        yAccounts: const {},
+        countryCodes: {for (final c in codes.values) c.toLowerCase()},
+        fringeRanges: const {},
+      );
+      expect(
+        compat(withManagers({2: (name: 'Ota Brnak', nationality: 'CZE')})),
+        isEmpty,
+      );
+      expect(
+        compat(
+          withManagers({99: (name: 'Ota Brnak', nationality: 'CZE')}),
+        ).map((i) => i.where),
+        ['managers.99'],
+      );
     });
   });
 }

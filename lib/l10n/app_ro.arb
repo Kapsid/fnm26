@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "Restaurează copia de dinaintea actualizării",
   "saveUpgradeRestoreFailed": "Copia nu a putut fi restaurată. Salvarea ta a rămas neschimbată.",
   "saveOpenFailedTitle": "Salvările nu au putut fi deschise",
-  "saveOpenFailedBody": "Salvările tale nu au putut fi deschise. Nu s-a șters nimic. Încearcă din nou peste câteva momente."
+  "saveOpenFailedBody": "Salvările tale nu au putut fi deschise. Nu s-a șters nimic. Încearcă din nou peste câteva momente.",
+  "editorSectionManagers": "Selecționeri",
+  "editorAboutManagers": "Cine conduce fiecare echipă națională în prima zi",
+  "editorManagersHint": "Ales la începutul carierei",
+  "editorManagerName": "Numele selecționerului",
+  "editorManagerNationality": "Naționalitate",
+  "editorIssueManagerName": "Selecționerul are nevoie de un nume de 1 până la {max} caractere afișabile",
+  "editorIssueManagerNationality": "Alege din listă o naționalitate pentru selecționer"
 }

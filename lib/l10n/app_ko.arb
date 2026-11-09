@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "업데이트 전 사본 복원",
   "saveUpgradeRestoreFailed": "사본을 복원하지 못했습니다. 저장 데이터는 그대로입니다.",
   "saveOpenFailedTitle": "저장 데이터를 열지 못했습니다",
-  "saveOpenFailedBody": "저장 데이터를 열지 못했습니다. 삭제된 것은 없습니다. 잠시 후 다시 시도해 주세요."
+  "saveOpenFailedBody": "저장 데이터를 열지 못했습니다. 삭제된 것은 없습니다. 잠시 후 다시 시도해 주세요.",
+  "editorSectionManagers": "감독",
+  "editorAboutManagers": "첫날 각 대표팀을 이끄는 감독",
+  "editorManagersHint": "커리어를 시작할 때 정해집니다",
+  "editorManagerName": "감독 이름",
+  "editorManagerNationality": "국적",
+  "editorIssueManagerName": "감독 이름은 표시 가능한 1~{max}자여야 합니다",
+  "editorIssueManagerNationality": "목록에서 감독의 국적을 고르세요"
 }

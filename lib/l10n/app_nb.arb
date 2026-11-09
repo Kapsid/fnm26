@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "Gjenopprett kopien fra før oppdateringen",
   "saveUpgradeRestoreFailed": "Kopien kunne ikke gjenopprettes. Det lagrede spillet ble latt være som det var.",
   "saveOpenFailedTitle": "De lagrede spillene kunne ikke åpnes",
-  "saveOpenFailedBody": "De lagrede spillene dine kunne ikke åpnes. Ingenting er slettet. Prøv igjen om litt."
+  "saveOpenFailedBody": "De lagrede spillene dine kunne ikke åpnes. Ingenting er slettet. Prøv igjen om litt.",
+  "editorSectionManagers": "Landslagstrenere",
+  "editorAboutManagers": "Hvem som leder hvert landslag fra start",
+  "editorManagersHint": "Velges når en karriere starter",
+  "editorManagerName": "Trenerens navn",
+  "editorManagerNationality": "Nasjonalitet",
+  "editorIssueManagerName": "Treneren trenger et navn på 1 til {max} tegn som spillet kan vise",
+  "editorIssueManagerNationality": "Velg en nasjonalitet for treneren fra listen"
 }

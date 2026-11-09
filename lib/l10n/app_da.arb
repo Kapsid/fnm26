@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "Gendan kopien fra før opdateringen",
   "saveUpgradeRestoreFailed": "Kopien kunne ikke gendannes. Dit gemte spil er uændret.",
   "saveOpenFailedTitle": "Dine gemte spil kunne ikke åbnes",
-  "saveOpenFailedBody": "Dine gemte spil kunne ikke åbnes. Intet er slettet. Prøv igen om lidt."
+  "saveOpenFailedBody": "Dine gemte spil kunne ikke åbnes. Intet er slettet. Prøv igen om lidt.",
+  "editorSectionManagers": "Landstrænere",
+  "editorAboutManagers": "Hvem der leder hvert landshold fra start",
+  "editorManagersHint": "Vælges, når en karriere starter",
+  "editorManagerName": "Trænerens navn",
+  "editorManagerNationality": "Nationalitet",
+  "editorIssueManagerName": "Træneren skal have et navn på 1 til {max} tegn, som spillet kan vise",
+  "editorIssueManagerNationality": "Vælg en nationalitet til træneren fra listen"
 }

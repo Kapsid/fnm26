@@ -432,10 +432,37 @@ abstract final class PackRules {
         }
       }
     }
+    _managers(p, out, baseCodes);
     _added(p, out, name, countryCities);
     _localized(p, out);
     _yLanguageClashes(p, out);
     return out;
+  }
+
+  /// The day-one managers (format 4): each name 1 to [nameMax] characters
+  /// that can be shown, each nationality three letters, and (when the game's
+  /// codes [baseCodes] are known) one of them, in any case. Whether the
+  /// nation itself is the game's is [compatibility]'s.
+  static void _managers(
+    WorldPack p,
+    List<PackIssue> out,
+    Map<int, String> baseCodes,
+  ) {
+    final codes = {for (final c in baseCodes.values) c.toUpperCase()};
+    for (final id in p.managers.keys.toList()..sort()) {
+      final m = p.managers[id]!;
+      if (checkName(m.name) case final r?) {
+        out.add(BadField('managers.$id.name', r));
+      }
+      final code = m.nationality.trim().toUpperCase();
+      if (!_code.hasMatch(code)) {
+        out.add(
+          BadField('managers.$id.nationality', FieldReason.badCharacters),
+        );
+      } else if (codes.isNotEmpty && !codes.contains(code)) {
+        out.add(BadField('managers.$id.nationality', FieldReason.outOfRange));
+      }
+    }
   }
 
   /// The pools beyond [poolIssues]: every pool id in the fringe space
@@ -838,6 +865,7 @@ abstract final class PackRules {
       }
     }
     ids('nameLists', p.nameLists.keys);
+    ids('managers', p.managers.keys);
     names('competitions', p.competitions.keys, competitionNames);
     names('yAccounts', p.yAccounts.keys, yAccounts);
     names('sponsors', p.sponsors.keys, sponsorBrands);

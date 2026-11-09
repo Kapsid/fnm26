@@ -16448,4 +16448,29 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get mgrListEmptyCurrent =>
       'Managers appear after the next season rollover.';
+
+  @override
+  String get editorSectionManagers => 'Szövetségi kapitányok';
+
+  @override
+  String get editorAboutManagers =>
+      'Ki irányítja az egyes válogatottakat az első napon';
+
+  @override
+  String get editorManagersHint => 'A karrier indulásakor dől el';
+
+  @override
+  String get editorManagerName => 'A kapitány neve';
+
+  @override
+  String get editorManagerNationality => 'Állampolgárság';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'A kapitány nevének 1 és $max megjeleníthető karakter között kell lennie';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Válassz a listából állampolgárságot a kapitánynak';
 }

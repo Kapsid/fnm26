@@ -16656,4 +16656,29 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get mgrListEmptyCurrent =>
       'Managers appear after the next season rollover.';
+
+  @override
+  String get editorSectionManagers => 'Sélectionneurs';
+
+  @override
+  String get editorAboutManagers =>
+      'Qui dirige chaque sélection au premier jour';
+
+  @override
+  String get editorManagersHint => 'Choisi au début d’une carrière';
+
+  @override
+  String get editorManagerName => 'Nom du sélectionneur';
+
+  @override
+  String get editorManagerNationality => 'Nationalité';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'Le sélectionneur doit avoir un nom de 1 à $max caractères affichables';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Choisissez une nationalité pour le sélectionneur dans la liste';
 }

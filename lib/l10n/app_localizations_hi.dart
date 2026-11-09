@@ -16415,4 +16415,29 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get mgrListEmptyCurrent =>
       'Managers appear after the next season rollover.';
+
+  @override
+  String get editorSectionManagers => 'मैनेजर';
+
+  @override
+  String get editorAboutManagers =>
+      'पहले दिन हर राष्ट्रीय टीम का मैनेजर कौन है';
+
+  @override
+  String get editorManagersHint => 'करियर शुरू होने पर चुना जाता है';
+
+  @override
+  String get editorManagerName => 'मैनेजर का नाम';
+
+  @override
+  String get editorManagerNationality => 'राष्ट्रीयता';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'मैनेजर के नाम में 1 से $max ऐसे अक्षर हों जिन्हें गेम दिखा सके';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'सूची से मैनेजर की राष्ट्रीयता चुनें';
 }

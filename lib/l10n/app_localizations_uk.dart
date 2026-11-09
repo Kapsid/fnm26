@@ -16815,4 +16815,28 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get mgrListEmptyCurrent =>
       'Managers appear after the next season rollover.';
+
+  @override
+  String get editorSectionManagers => 'Головні тренери';
+
+  @override
+  String get editorAboutManagers => 'Хто очолює кожну збірну в перший день';
+
+  @override
+  String get editorManagersHint => 'Обирається на старті кар’єри';
+
+  @override
+  String get editorManagerName => 'Ім’я тренера';
+
+  @override
+  String get editorManagerNationality => 'Громадянство';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'Ім’я тренера має містити від 1 до $max символів, які гра може показати';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Обери громадянство тренера зі списку';
 }

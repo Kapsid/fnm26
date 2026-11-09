@@ -16458,4 +16458,29 @@ class AppLocalizationsMs extends AppLocalizations {
   @override
   String get mgrListEmptyCurrent =>
       'Managers appear after the next season rollover.';
+
+  @override
+  String get editorSectionManagers => 'Pengurus';
+
+  @override
+  String get editorAboutManagers =>
+      'Siapa mengendalikan setiap pasukan kebangsaan pada hari pertama';
+
+  @override
+  String get editorManagersHint => 'Dipilih apabila kerjaya bermula';
+
+  @override
+  String get editorManagerName => 'Nama pengurus';
+
+  @override
+  String get editorManagerNationality => 'Kewarganegaraan';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'Nama pengurus mesti 1 hingga $max aksara yang boleh dipaparkan';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Pilih kewarganegaraan pengurus daripada senarai';
 }

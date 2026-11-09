@@ -16627,4 +16627,28 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get mgrListEmptyCurrent =>
       'Managers appear after the next season rollover.';
+
+  @override
+  String get editorSectionManagers => 'Nationaltrainer';
+
+  @override
+  String get editorAboutManagers => 'Wer jede Nation am ersten Tag trainiert';
+
+  @override
+  String get editorManagersHint => 'Wird beim Start einer Karriere gewählt';
+
+  @override
+  String get editorManagerName => 'Name des Trainers';
+
+  @override
+  String get editorManagerNationality => 'Nationalität';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'Der Trainer braucht einen Namen mit 1 bis $max darstellbaren Zeichen';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Wähle eine Nationalität für den Trainer aus der Liste';
 }

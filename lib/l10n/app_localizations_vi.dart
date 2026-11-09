@@ -16349,4 +16349,28 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get mgrListEmptyCurrent =>
       'Managers appear after the next season rollover.';
+
+  @override
+  String get editorSectionManagers => 'Huấn luyện viên';
+
+  @override
+  String get editorAboutManagers => 'Ai dẫn dắt mỗi đội tuyển vào ngày đầu';
+
+  @override
+  String get editorManagersHint => 'Được chọn khi bắt đầu sự nghiệp';
+
+  @override
+  String get editorManagerName => 'Tên huấn luyện viên';
+
+  @override
+  String get editorManagerNationality => 'Quốc tịch';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'Tên huấn luyện viên cần từ 1 đến $max ký tự hiển thị được';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Chọn quốc tịch cho huấn luyện viên từ danh sách';
 }

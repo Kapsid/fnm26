@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "Restaurar la copia de antes de la actualización",
   "saveUpgradeRestoreFailed": "No se pudo restaurar la copia. Tu partida se ha quedado como estaba.",
   "saveOpenFailedTitle": "No se pudieron abrir tus partidas",
-  "saveOpenFailedBody": "No se pudieron abrir tus partidas guardadas. No se ha borrado nada. Vuelve a intentarlo en un momento."
+  "saveOpenFailedBody": "No se pudieron abrir tus partidas guardadas. No se ha borrado nada. Vuelve a intentarlo en un momento.",
+  "editorSectionManagers": "Seleccionadores",
+  "editorAboutManagers": "Quién dirige cada selección el primer día",
+  "editorManagersHint": "Se elige al empezar una carrera",
+  "editorManagerName": "Nombre del seleccionador",
+  "editorManagerNationality": "Nacionalidad",
+  "editorIssueManagerName": "El seleccionador necesita un nombre de 1 a {max} caracteres que el juego pueda mostrar",
+  "editorIssueManagerNationality": "Elige de la lista una nacionalidad para el seleccionador"
 }

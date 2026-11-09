@@ -16489,4 +16489,28 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get mgrListEmptyCurrent =>
       'Managers appear after the next season rollover.';
+
+  @override
+  String get editorSectionManagers => 'Förbundskaptener';
+
+  @override
+  String get editorAboutManagers => 'Vem som leder varje landslag från start';
+
+  @override
+  String get editorManagersHint => 'Väljs när en karriär startar';
+
+  @override
+  String get editorManagerName => 'Förbundskaptenens namn';
+
+  @override
+  String get editorManagerNationality => 'Nationalitet';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'Förbundskaptenen behöver ett namn på 1 till $max tecken som spelet kan visa';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Välj en nationalitet för förbundskaptenen i listan';
 }

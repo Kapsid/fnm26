@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "更新前のコピーを復元",
   "saveUpgradeRestoreFailed": "コピーを復元できませんでした。セーブデータはそのままです。",
   "saveOpenFailedTitle": "セーブデータを開けませんでした",
-  "saveOpenFailedBody": "セーブデータを開けませんでした。何も削除されていません。少し待ってからもう一度お試しください。"
+  "saveOpenFailedBody": "セーブデータを開けませんでした。何も削除されていません。少し待ってからもう一度お試しください。",
+  "editorSectionManagers": "監督",
+  "editorAboutManagers": "初日に各代表を率いる監督",
+  "editorManagersHint": "キャリア開始時に決まります",
+  "editorManagerName": "監督の名前",
+  "editorManagerNationality": "国籍",
+  "editorIssueManagerName": "監督名は表示できる1〜{max}文字にしてください",
+  "editorIssueManagerNationality": "リストから監督の国籍を選んでください"
 }

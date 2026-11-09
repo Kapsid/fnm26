@@ -365,6 +365,7 @@ class _PackView {
       EditorSection.yAccounts ||
       EditorSection.press ||
       EditorSection.nameLists ||
+      EditorSection.managers ||
       EditorSection.sponsors => _nameCount(l, NameSection.of(s)!, pack),
       EditorSection.trophies => l.editorCountTrophies(pack.trophies.length),
       EditorSection.none => '',

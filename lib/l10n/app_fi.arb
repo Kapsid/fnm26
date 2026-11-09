@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "Palauta kopio ajalta ennen päivitystä",
   "saveUpgradeRestoreFailed": "Kopiota ei voitu palauttaa. Tallennuksesi jäi ennalleen.",
   "saveOpenFailedTitle": "Tallennuksia ei voitu avata",
-  "saveOpenFailedBody": "Tallennuksiasi ei voitu avata. Mitään ei poistettu. Yritä hetken päästä uudelleen."
+  "saveOpenFailedBody": "Tallennuksiasi ei voitu avata. Mitään ei poistettu. Yritä hetken päästä uudelleen.",
+  "editorSectionManagers": "Päävalmentajat",
+  "editorAboutManagers": "Kuka valmentaa kutakin maajoukkuetta alussa",
+  "editorManagersHint": "Valitaan uran alkaessa",
+  "editorManagerName": "Valmentajan nimi",
+  "editorManagerNationality": "Kansallisuus",
+  "editorIssueManagerName": "Valmentajan nimen pitää olla 1 ja {max} näytettävän merkin välillä",
+  "editorIssueManagerNationality": "Valitse valmentajalle kansallisuus listalta"
 }

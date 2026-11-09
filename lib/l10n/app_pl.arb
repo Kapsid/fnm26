@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "Przywróć kopię sprzed aktualizacji",
   "saveUpgradeRestoreFailed": "Nie udało się przywrócić kopii. Zapis gry pozostał bez zmian.",
   "saveOpenFailedTitle": "Nie udało się otworzyć zapisów",
-  "saveOpenFailedBody": "Nie udało się otworzyć zapisów gry. Nic nie zostało usunięte. Spróbuj ponownie za chwilę."
+  "saveOpenFailedBody": "Nie udało się otworzyć zapisów gry. Nic nie zostało usunięte. Spróbuj ponownie za chwilę.",
+  "editorSectionManagers": "Selekcjonerzy",
+  "editorAboutManagers": "Kto prowadzi każdą reprezentację na starcie",
+  "editorManagersHint": "Wybierany na starcie kariery",
+  "editorManagerName": "Imię i nazwisko selekcjonera",
+  "editorManagerNationality": "Narodowość",
+  "editorIssueManagerName": "Selekcjoner potrzebuje nazwiska od 1 do {max} znaków, które gra wyświetli",
+  "editorIssueManagerNationality": "Wybierz z listy narodowość selekcjonera"
 }

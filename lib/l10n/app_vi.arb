@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "Khôi phục bản sao từ trước khi cập nhật",
   "saveUpgradeRestoreFailed": "Không thể khôi phục bản sao. Bản lưu của bạn vẫn được giữ nguyên.",
   "saveOpenFailedTitle": "Không thể mở các bản lưu",
-  "saveOpenFailedBody": "Không thể mở các bản lưu của bạn. Không có gì bị xóa. Hãy thử lại sau giây lát."
+  "saveOpenFailedBody": "Không thể mở các bản lưu của bạn. Không có gì bị xóa. Hãy thử lại sau giây lát.",
+  "editorSectionManagers": "Huấn luyện viên",
+  "editorAboutManagers": "Ai dẫn dắt mỗi đội tuyển vào ngày đầu",
+  "editorManagersHint": "Được chọn khi bắt đầu sự nghiệp",
+  "editorManagerName": "Tên huấn luyện viên",
+  "editorManagerNationality": "Quốc tịch",
+  "editorIssueManagerName": "Tên huấn luyện viên cần từ 1 đến {max} ký tự hiển thị được",
+  "editorIssueManagerNationality": "Chọn quốc tịch cho huấn luyện viên từ danh sách"
 }

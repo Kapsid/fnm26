@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "Ibalik ang kopya mula bago ang update",
   "saveUpgradeRestoreFailed": "Hindi maibalik ang kopya. Hindi ginalaw ang save mo.",
   "saveOpenFailedTitle": "Hindi mabuksan ang mga save mo",
-  "saveOpenFailedBody": "Hindi mabuksan ang mga save mo. Walang nabura. Subukan ulit maya-maya."
+  "saveOpenFailedBody": "Hindi mabuksan ang mga save mo. Walang nabura. Subukan ulit maya-maya.",
+  "editorSectionManagers": "Mga manager",
+  "editorAboutManagers": "Sino ang humahawak sa bawat pambansang koponan sa unang araw",
+  "editorManagersHint": "Pinipili pagsimula ng career",
+  "editorManagerName": "Pangalan ng manager",
+  "editorManagerNationality": "Nasyonalidad",
+  "editorIssueManagerName": "Kailangan ng manager ng pangalang may 1 hanggang {max} karakter na kayang ipakita ng laro",
+  "editorIssueManagerNationality": "Pumili ng nasyonalidad para sa manager mula sa listahan"
 }

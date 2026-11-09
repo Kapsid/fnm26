@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "अपडेट से पहले की कॉपी रिस्टोर करें",
   "saveUpgradeRestoreFailed": "कॉपी रिस्टोर नहीं हो सकी। आपका सेव जैसा था वैसा ही है।",
   "saveOpenFailedTitle": "आपके सेव खुल नहीं सके",
-  "saveOpenFailedBody": "आपके सेव खुल नहीं सके। कुछ भी डिलीट नहीं हुआ। थोड़ी देर में फिर से कोशिश करें।"
+  "saveOpenFailedBody": "आपके सेव खुल नहीं सके। कुछ भी डिलीट नहीं हुआ। थोड़ी देर में फिर से कोशिश करें।",
+  "editorSectionManagers": "मैनेजर",
+  "editorAboutManagers": "पहले दिन हर राष्ट्रीय टीम का मैनेजर कौन है",
+  "editorManagersHint": "करियर शुरू होने पर चुना जाता है",
+  "editorManagerName": "मैनेजर का नाम",
+  "editorManagerNationality": "राष्ट्रीयता",
+  "editorIssueManagerName": "मैनेजर के नाम में 1 से {max} ऐसे अक्षर हों जिन्हें गेम दिखा सके",
+  "editorIssueManagerNationality": "सूची से मैनेजर की राष्ट्रीयता चुनें"
 }

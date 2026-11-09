@@ -16414,4 +16414,28 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get mgrListEmptyCurrent =>
       'Managers appear after the next season rollover.';
+
+  @override
+  String get editorSectionManagers => 'Teknik direktörler';
+
+  @override
+  String get editorAboutManagers => 'İlk gün her milli takımı kim çalıştırıyor';
+
+  @override
+  String get editorManagersHint => 'Kariyer başlarken seçilir';
+
+  @override
+  String get editorManagerName => 'Teknik direktörün adı';
+
+  @override
+  String get editorManagerNationality => 'Uyruk';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'Teknik direktörün adı, oyunun gösterebildiği 1 ile $max karakter arasında olmalı';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Teknik direktör için listeden bir uyruk seç';
 }

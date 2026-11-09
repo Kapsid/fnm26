@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "Vrati kopiju od prije ažuriranja",
   "saveUpgradeRestoreFailed": "Kopiju nije bilo moguće vratiti. Tvoja spremljena igra ostala je kakva je bila.",
   "saveOpenFailedTitle": "Spremljene igre nije bilo moguće otvoriti",
-  "saveOpenFailedBody": "Tvoje spremljene igre nije bilo moguće otvoriti. Ništa nije obrisano. Pokušaj ponovno za trenutak."
+  "saveOpenFailedBody": "Tvoje spremljene igre nije bilo moguće otvoriti. Ništa nije obrisano. Pokušaj ponovno za trenutak.",
+  "editorSectionManagers": "Izbornici",
+  "editorAboutManagers": "Tko vodi koju reprezentaciju prvog dana",
+  "editorManagersHint": "Bira se na početku karijere",
+  "editorManagerName": "Ime izbornika",
+  "editorManagerNationality": "Državljanstvo",
+  "editorIssueManagerName": "Ime izbornika mora imati od 1 do {max} prikazivih znakova",
+  "editorIssueManagerNationality": "Odaberi izborniku državljanstvo s popisa"
 }

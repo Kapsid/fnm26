@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "A frissítés előtti másolat visszaállítása",
   "saveUpgradeRestoreFailed": "A másolatot nem sikerült visszaállítani. A mentésed változatlan maradt.",
   "saveOpenFailedTitle": "A mentéseket nem sikerült megnyitni",
-  "saveOpenFailedBody": "A mentéseidet nem sikerült megnyitni. Semmi sem törlődött. Próbáld újra egy kicsit később."
+  "saveOpenFailedBody": "A mentéseidet nem sikerült megnyitni. Semmi sem törlődött. Próbáld újra egy kicsit később.",
+  "editorSectionManagers": "Szövetségi kapitányok",
+  "editorAboutManagers": "Ki irányítja az egyes válogatottakat az első napon",
+  "editorManagersHint": "A karrier indulásakor dől el",
+  "editorManagerName": "A kapitány neve",
+  "editorManagerNationality": "Állampolgárság",
+  "editorIssueManagerName": "A kapitány nevének 1 és {max} megjeleníthető karakter között kell lennie",
+  "editorIssueManagerNationality": "Válassz a listából állampolgárságot a kapitánynak"
 }

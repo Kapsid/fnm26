@@ -165,11 +165,10 @@ abstract final class PackCodec {
     } on Object {
       return const PackRejected(PackRejection.badData);
     }
-    if (!fieldsOk(pack, baseCodes: baseCodes)) {
-      return const PackRejected(PackRejection.badData);
-    }
-    // A day-one manager the game cannot use is dropped alone, never the
-    // pack (checked only against a known world).
+    // A day-one manager the game cannot use (a blank name, an unknown
+    // nationality or nation) is dropped alone, never the pack (checked only
+    // against a known world). What is left must pass [fieldsOk]: a name too
+    // long or unshowable refuses the file like any other.
     if (baseCodes.isNotEmpty && pack.managers.isNotEmpty) {
       pack = pack.copyWith(
         managers: WorldPack.usableManagers(
@@ -180,6 +179,9 @@ abstract final class PackCodec {
               AppLog.info('pack-import', 'manager of nation $id dropped: $why'),
         ),
       );
+    }
+    if (!fieldsOk(pack, baseCodes: baseCodes)) {
+      return const PackRejected(PackRejection.badData);
     }
 
     final trophies = <String, Uint8List>{};

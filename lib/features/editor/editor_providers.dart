@@ -41,6 +41,9 @@ enum EditorSection {
   yAccounts(Routes.editorY),
   press(Routes.editorPress),
   nameLists(Routes.editorNameLists),
+
+  /// The managers in charge of the nations on day one (format 4).
+  managers(Routes.editorManagers),
   sponsors(Routes.editorSponsors),
   trophies(Routes.editorTrophies),
 
@@ -53,7 +56,8 @@ enum EditorSection {
   const EditorSection(this.route);
 
   /// The route of this section's screen (empty for [none]). Expects `?id=`
-  /// (the pack), and for [players] and [nameLists] optionally `&nation=`.
+  /// (the pack), and for [players], [nameLists] and [managers] optionally
+  /// `&nation=`.
   final String route;
 
   /// The sections the home lists, in order: all but [none].
@@ -79,6 +83,7 @@ enum EditorSection {
     'yAccounts' || 'addedYAccounts' => yAccounts,
     'reporters' => press,
     'nameLists' => nameLists,
+    'managers' => managers,
     'sponsors' || 'addedSponsors' => sponsors,
     'trophies' => trophies,
     'localized' when path.contains('.') => ofPath(
@@ -520,8 +525,8 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
   /// [p] without exactly the entry the [UnknownId] path [path] names, or
   /// [p] itself (identical) when it names nothing the pack has:
   ///
-  /// - a nation's squad, nation entry, name list or pool, a stadium,
-  ///   competition, Y account or sponsor rename;
+  /// - a nation's squad, nation entry, name list, day-one manager or pool, a
+  ///   stadium, competition, Y account or sponsor rename;
   /// - a pool player (`pools.<n>.<id>`);
   /// - an added club, sponsor or Y account, with every `localized` name of
   ///   it (`addedClubs.<id>`, and for a sponsor its description's too), as
@@ -647,6 +652,8 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
         return p.copyWith(nations: without(p.nations, id));
       case 'nameLists' when id != null && p.nameLists.containsKey(id):
         return p.copyWith(nameLists: without(p.nameLists, id));
+      case 'managers' when id != null && p.managers.containsKey(id):
+        return p.copyWith(managers: without(p.managers, id));
       case 'stadiums' when p.stadiums.containsKey(key):
         return p.copyWith(stadiums: without(p.stadiums, key));
       case 'competitions' when p.competitions.containsKey(key):

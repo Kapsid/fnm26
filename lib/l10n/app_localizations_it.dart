@@ -16578,4 +16578,28 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get mgrListEmptyCurrent =>
       'Managers appear after the next season rollover.';
+
+  @override
+  String get editorSectionManagers => 'Commissari tecnici';
+
+  @override
+  String get editorAboutManagers => 'Chi guida ogni nazionale al primo giorno';
+
+  @override
+  String get editorManagersHint => 'Scelto all’inizio di una carriera';
+
+  @override
+  String get editorManagerName => 'Nome del CT';
+
+  @override
+  String get editorManagerNationality => 'Nazionalità';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'Il CT deve avere un nome da 1 a $max caratteri visualizzabili';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Scegli dalla lista una nazionalità per il CT';
 }

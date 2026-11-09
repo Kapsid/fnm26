@@ -16839,4 +16839,28 @@ class AppLocalizationsHr extends AppLocalizations {
   @override
   String get mgrListEmptyCurrent =>
       'Managers appear after the next season rollover.';
+
+  @override
+  String get editorSectionManagers => 'Izbornici';
+
+  @override
+  String get editorAboutManagers => 'Tko vodi koju reprezentaciju prvog dana';
+
+  @override
+  String get editorManagersHint => 'Bira se na početku karijere';
+
+  @override
+  String get editorManagerName => 'Ime izbornika';
+
+  @override
+  String get editorManagerNationality => 'Državljanstvo';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'Ime izbornika mora imati od 1 do $max prikazivih znakova';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Odaberi izborniku državljanstvo s popisa';
 }

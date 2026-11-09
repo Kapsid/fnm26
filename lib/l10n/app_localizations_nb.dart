@@ -16499,4 +16499,28 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get mgrListEmptyCurrent =>
       'Managers appear after the next season rollover.';
+
+  @override
+  String get editorSectionManagers => 'Landslagstrenere';
+
+  @override
+  String get editorAboutManagers => 'Hvem som leder hvert landslag fra start';
+
+  @override
+  String get editorManagersHint => 'Velges når en karriere starter';
+
+  @override
+  String get editorManagerName => 'Trenerens navn';
+
+  @override
+  String get editorManagerNationality => 'Nasjonalitet';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'Treneren trenger et navn på 1 til $max tegn som spillet kan vise';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Velg en nasjonalitet for treneren fra listen';
 }

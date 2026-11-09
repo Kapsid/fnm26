@@ -37,6 +37,7 @@ enum NameSection {
   yAccounts(EditorSection.yAccounts),
   press(EditorSection.press),
   nameLists(EditorSection.nameLists),
+  managers(EditorSection.managers),
   sponsors(EditorSection.sponsors);
 
   const NameSection(this.editorSection);
@@ -56,6 +57,7 @@ enum NameSection {
     yAccounts => 'yAccounts',
     press => 'reporters',
     nameLists => 'nameLists',
+    managers => 'managers',
     sponsors => 'sponsors',
   };
 
@@ -71,8 +73,13 @@ enum NameSection {
   bool get paired => this == press;
 
   /// Whether its names can differ per language (the editor's language
-  /// picker): every section but the name lists.
-  bool get perLanguage => this != nameLists;
+  /// picker): every section but the name lists and the managers (a
+  /// manager's name is never translated).
+  bool get perLanguage => this != nameLists && this != managers;
+
+  /// Whether its rows are the nations, one each (a jump to a nation picks
+  /// its row).
+  bool get perNation => this == nameLists || this == managers;
 
   /// Whether its rows are grouped under their country.
   bool get grouped => this == clubs || this == stadiums;
@@ -160,6 +167,13 @@ typedef NameGroup = ({
 /// overrides them.
 typedef NameOverride = ({String name, String second});
 
+/// The FIFA codes a day-one manager's nationality is picked from: the
+/// nations a career starts with ([PackGameKeys.countryCodes], upper-case
+/// as [WorldPack.managers] keeps them), by their name.
+List<({String code, String name})> managerNationalities(List<Nation> world) => [
+  for (final n in world) (code: n.code.toUpperCase(), name: n.name),
+]..sort((a, b) => searchFold(a.name).compareTo(searchFold(b.name)));
+
 /// Each nation's game name lists, by nation id: what the Name lists section
 /// starts from, as [namePoolOf] pools them.
 final AutoDisposeFutureProvider<Map<int, NameLists>> editorNameListsProvider =
@@ -211,6 +225,19 @@ List<NameGroup> nameGroups(
             flagCode: n.code,
             firstNames: pools[n.id]?.first ?? const [],
             surnames: pools[n.id]?.sur ?? const [],
+            fold: fold([n.name, n.englishName, n.code]),
+          ),
+      ]);
+    case NameSection.managers:
+      // The game's own man is picked when a career starts (he depends on
+      // its seed), so a row shows only what the database names.
+      return one([
+        for (final n in nations)
+          NameEntry(
+            key: '${n.id}',
+            original: n.name,
+            nationId: n.id,
+            flagCode: n.code,
             fold: fold([n.name, n.englishName, n.code]),
           ),
       ]);
@@ -362,6 +389,9 @@ NameOverride? nameOverride(NameSection section, WorldPack pack, NameEntry e) {
       return r == null ? null : (name: r.name, second: r.outlet);
     case NameSection.nameLists:
       return null;
+    case NameSection.managers:
+      final m = pack.managers[int.tryParse(e.key)];
+      return m == null ? null : (name: m.name, second: m.nationality);
     case NameSection.clubs ||
         NameSection.stadiums ||
         NameSection.competitions ||
@@ -425,6 +455,8 @@ abstract final class NameEdits {
         );
       case NameSection.nameLists:
         throw ArgumentError('name lists are set with withLists');
+      case NameSection.managers:
+        throw ArgumentError('managers are set with withManager');
       case NameSection.clubs ||
           NameSection.stadiums ||
           NameSection.competitions ||
@@ -444,6 +476,7 @@ abstract final class NameEdits {
     if (section == NameSection.nameLists) {
       return withLists(pack, e, const [], const []);
     }
+    if (section == NameSection.managers) return withManager(pack, e, '', '');
     final main = rename(section, pack, e, '');
     final paths = pathsOf(section, e);
     if (!paths.any(main.localized.containsKey)) return main;
@@ -496,7 +529,7 @@ abstract final class NameEdits {
           PackPaths.reporterName(int.parse(e.key)),
           PackPaths.reporterOutlet(int.parse(e.key)),
         ],
-        NameSection.nameLists => const [],
+        NameSection.nameLists || NameSection.managers => const [],
       };
 
   /// [pack] with [e]'s own name in language [lang] set to [value] (and a
@@ -617,6 +650,31 @@ abstract final class NameEdits {
     final l? => (first: l.first, sur: l.sur),
     null => (first: e.firstNames, sur: e.surnames),
   };
+
+  /// [pack] with nation [e]'s day-one manager named [name] (trimmed), of
+  /// nationality [nationality] (a FIFA code, kept upper-case). A blank name
+  /// is no manager of the database's: the entry goes, and the game picks
+  /// him when a career starts.
+  static WorldPack withManager(
+    WorldPack pack,
+    NameEntry e,
+    String name,
+    String nationality,
+  ) {
+    final id = int.parse(e.key);
+    final n = name.trim();
+    final next = n.isEmpty
+        ? null
+        : (name: n, nationality: nationality.trim().toUpperCase());
+    if (pack.managers[id] == next) return pack;
+    return pack.copyWith(
+      managers: {
+        for (final x in pack.managers.entries)
+          if (x.key != id) x.key: x.value,
+        id: ?next,
+      },
+    );
+  }
 
   /// [pack] with nation [e]'s name lists set to [first] and [sur]. Both
   /// empty, or both the game's, is no override. A list under the minimum
@@ -759,7 +817,7 @@ Map<String, int> issuesByKey(
     if (!path.startsWith('$root.')) continue;
     final rest = path.substring(root.length + 1);
     switch (section) {
-      case NameSection.press || NameSection.nameLists:
+      case NameSection.press || NameSection.nameLists || NameSection.managers:
         add(rest.split('.').first);
       case NameSection.clubs ||
           NameSection.stadiums ||
@@ -784,6 +842,7 @@ int changedCount(NameSection section, WorldPack pack) {
           if (text(e.value.name) || text(e.value.outlet)) '${e.key}',
       ],
       NameSection.nameLists => [for (final k in pack.nameLists.keys) '$k'],
+      NameSection.managers => [for (final k in pack.managers.keys) '$k'],
       NameSection.clubs ||
       NameSection.stadiums ||
       NameSection.competitions ||

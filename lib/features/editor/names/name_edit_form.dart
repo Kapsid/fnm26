@@ -13,8 +13,9 @@ import 'package:fnm/features/editor/names/name_sections.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
-/// Edits one row of a name section: its name (and a reporter's outlet), or
-/// a nation's two name lists.
+/// Edits one row of a name section: its name (and a reporter's outlet), a
+/// nation's two name lists, or a nation's day-one manager (his name and
+/// nationality; a blank name leaves him to the game).
 ///
 /// Under a [language] it edits that language's own name: left empty, or
 /// typed as the main name, there is none and the main name shows; "Use the
@@ -40,6 +41,10 @@ class NameEditForm extends ConsumerStatefulWidget {
   static const Key outletKey = Key('editorNames.form.outlet');
   static const Key firstNamesKey = Key('editorNames.form.first');
   static const Key surnamesKey = Key('editorNames.form.sur');
+  static const Key managerNameKey = Key('editorNames.form.managerName');
+  static const Key managerNationalityKey = Key(
+    'editorNames.form.managerNationality',
+  );
   static const Key resetKey = Key('editorNames.form.reset');
   static const Key doneKey = Key('editorNames.form.done');
 
@@ -67,6 +72,10 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
   final _first = TextEditingController();
   final _sur = TextEditingController();
 
+  /// The day-one manager's nationality as picked (managers only): kept
+  /// while the name is blank, written with it.
+  String _nationality = '';
+
   /// This opening's undo group: everything typed here is one undo step.
   Object _group = Object();
 
@@ -75,6 +84,10 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
 
   NameSection get _section => widget.section;
   NameEntry get _e => widget.entry;
+
+  /// The nation's own code: a new manager's nationality until another is
+  /// picked.
+  String get _ownCode => (_e.flagCode ?? '').toUpperCase();
 
   /// Whether the row has a second text: a reporter's outlet, an added
   /// sponsor's description.
@@ -108,6 +121,12 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
       final lists = NameEdits.listsOf(pack, _e);
       _set(_first, lists.first.join(', '));
       _set(_sur, lists.sur.join(', '));
+      return;
+    }
+    if (_section == NameSection.managers) {
+      final m = pack.managers[int.tryParse(_e.key)];
+      _set(_name, m?.name ?? '');
+      _nationality = m?.nationality.toUpperCase() ?? _ownCode;
       return;
     }
     if (_lang case final lang?) {
@@ -238,6 +257,14 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
       );
       return;
     }
+    if (_section == NameSection.managers) {
+      if (_managerNameProblem(l) != null) return;
+      _write(
+        (p) => NameEdits.withManager(p, _e, _name.text, _nationality),
+        group: _group,
+      );
+      return;
+    }
     final errors = _errors(l, pack);
     if (errors.name != null || errors.second != null) return;
     _write(_edited, group: _group);
@@ -287,6 +314,7 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
     final inLanguage = lang == null ? null : valueIn(_section, pack, _e, lang);
     final changed = switch (_section) {
       NameSection.nameLists => pack.nameLists.containsKey(int.tryParse(_e.key)),
+      NameSection.managers => pack.managers.containsKey(int.tryParse(_e.key)),
       _ when inLanguage != null =>
         inLanguage.name.own != null || inLanguage.second?.own != null,
       _ =>
@@ -294,9 +322,11 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
             languagesOf(_section, pack, _e).isNotEmpty,
     };
 
-    final fields = _section == NameSection.nameLists
-        ? _listFields(l)
-        : _nameFields(l, _errors(l, pack), inLanguage);
+    final fields = switch (_section) {
+      NameSection.nameLists => _listFields(l),
+      NameSection.managers => _managerFields(l),
+      _ => _nameFields(l, _errors(l, pack), inLanguage),
+    };
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -417,6 +447,78 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
           ),
         ),
       ],
+    ];
+  }
+
+  /// What is wrong with the manager's name as typed, in words; a blank one
+  /// is fine (it leaves him to the game).
+  String? _managerNameProblem(AppLocalizations l) {
+    if (_name.text.trim().isEmpty) return null;
+    return switch (PackRules.checkName(_name.text)) {
+      FieldReason.tooLong => l.editorNameTooLong(PackRules.nameMax),
+      FieldReason.badCharacters => l.editorNameBadCharacters,
+      _ => null,
+    };
+  }
+
+  List<Widget> _managerFields(AppLocalizations l) {
+    final style = AppTypography.bodyLarge.copyWith(color: AppColors.onSurface);
+    final choices = managerNationalities(widget.world);
+    final picked = choices.any((c) => c.code == _nationality)
+        ? _nationality
+        : null;
+    return [
+      TextField(
+        key: NameEditForm.managerNameKey,
+        controller: _name,
+        maxLength: PackRules.nameMax,
+        textCapitalization: TextCapitalization.words,
+        style: style,
+        onChanged: (_) => _changed(),
+        onSubmitted: (_) => widget.onDone?.call(),
+        decoration: InputDecoration(
+          labelText: l.editorManagerName,
+          hintText: l.editorManagersHint,
+          errorText: _managerNameProblem(l),
+          errorMaxLines: 2,
+        ),
+      ),
+      const SizedBox(height: AppSpacing.sm),
+      // Keyed by the pick, so an undo that changes it shows it.
+      KeyedSubtree(
+        key: ValueKey('editorNames.form.nationality.$picked'),
+        child: DropdownButtonFormField<String>(
+          key: NameEditForm.managerNationalityKey,
+          initialValue: picked,
+          isExpanded: true,
+          menuMaxHeight: 360,
+          decoration: InputDecoration(labelText: l.editorManagerNationality),
+          items: [
+            for (final c in choices)
+              DropdownMenuItem(
+                value: c.code,
+                child: Row(
+                  children: [
+                    FlagDisc(c.code, size: 20),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: Text(
+                        c.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+          onChanged: (code) {
+            if (code == null) return;
+            _nationality = code;
+            _changed();
+          },
+        ),
+      ),
     ];
   }
 
@@ -542,7 +644,10 @@ class _Header extends StatelessWidget {
             children: [
               Text(
                 // An added item has no game name: its main one heads it.
-                entry.added
+                // A manager's row is his nation, named as it is.
+                section == NameSection.managers
+                    ? entry.original
+                    : entry.added
                     ? l.editorLanguageMainName(entry.original)
                     : l.editorNamesGameName(v?.game ?? entry.original),
                 style: AppTypography.labelLarge,

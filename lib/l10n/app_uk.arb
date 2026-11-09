@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "Відновити копію до оновлення",
   "saveUpgradeRestoreFailed": "Не вдалося відновити копію. Ваше збереження залишилося без змін.",
   "saveOpenFailedTitle": "Не вдалося відкрити збереження",
-  "saveOpenFailedBody": "Не вдалося відкрити ваші збереження. Нічого не видалено. Спробуйте ще раз за хвилину."
+  "saveOpenFailedBody": "Не вдалося відкрити ваші збереження. Нічого не видалено. Спробуйте ще раз за хвилину.",
+  "editorSectionManagers": "Головні тренери",
+  "editorAboutManagers": "Хто очолює кожну збірну в перший день",
+  "editorManagersHint": "Обирається на старті кар’єри",
+  "editorManagerName": "Ім’я тренера",
+  "editorManagerNationality": "Громадянство",
+  "editorIssueManagerName": "Ім’я тренера має містити від 1 до {max} символів, які гра може показати",
+  "editorIssueManagerNationality": "Обери громадянство тренера зі списку"
 }

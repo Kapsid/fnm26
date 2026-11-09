@@ -410,6 +410,17 @@ void main() {
       },
     );
 
+    test('a usable manager with too long a name refuses the file', () async {
+      final r = await PackCodec.decode(
+        PackCodec.encode(
+          _pack().copyWith(managers: {1: (name: 'A' * 41, nationality: 'AAA')}),
+          const {},
+        ),
+        baseCodes: const {1: 'AAA'},
+      );
+      expect((r as PackRejected).reason, PackRejection.badData);
+    });
+
     test('a pack with every new part decodes whole', () async {
       final p = _pack().copyWith(
         pools: {

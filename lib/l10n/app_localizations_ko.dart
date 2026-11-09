@@ -15960,4 +15960,27 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get mgrListEmptyCurrent =>
       'Managers appear after the next season rollover.';
+
+  @override
+  String get editorSectionManagers => '감독';
+
+  @override
+  String get editorAboutManagers => '첫날 각 대표팀을 이끄는 감독';
+
+  @override
+  String get editorManagersHint => '커리어를 시작할 때 정해집니다';
+
+  @override
+  String get editorManagerName => '감독 이름';
+
+  @override
+  String get editorManagerNationality => '국적';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return '감독 이름은 표시 가능한 1~$max자여야 합니다';
+  }
+
+  @override
+  String get editorIssueManagerNationality => '목록에서 감독의 국적을 고르세요';
 }

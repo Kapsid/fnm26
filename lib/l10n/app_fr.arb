@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "Restaurer la copie d'avant la mise à jour",
   "saveUpgradeRestoreFailed": "La copie n'a pas pu être restaurée. Votre sauvegarde est restée telle quelle.",
   "saveOpenFailedTitle": "Impossible d'ouvrir vos sauvegardes",
-  "saveOpenFailedBody": "Vos sauvegardes n'ont pas pu être ouvertes. Rien n'a été supprimé. Réessayez dans un instant."
+  "saveOpenFailedBody": "Vos sauvegardes n'ont pas pu être ouvertes. Rien n'a été supprimé. Réessayez dans un instant.",
+  "editorSectionManagers": "Sélectionneurs",
+  "editorAboutManagers": "Qui dirige chaque sélection au premier jour",
+  "editorManagersHint": "Choisi au début d’une carrière",
+  "editorManagerName": "Nom du sélectionneur",
+  "editorManagerNationality": "Nationalité",
+  "editorIssueManagerName": "Le sélectionneur doit avoir un nom de 1 à {max} caractères affichables",
+  "editorIssueManagerNationality": "Choisissez une nationalité pour le sélectionneur dans la liste"
 }

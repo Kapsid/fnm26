@@ -16575,4 +16575,29 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String get mgrListEmptyCurrent =>
       'Managers appear after the next season rollover.';
+
+  @override
+  String get editorSectionManagers => 'Päävalmentajat';
+
+  @override
+  String get editorAboutManagers =>
+      'Kuka valmentaa kutakin maajoukkuetta alussa';
+
+  @override
+  String get editorManagersHint => 'Valitaan uran alkaessa';
+
+  @override
+  String get editorManagerName => 'Valmentajan nimi';
+
+  @override
+  String get editorManagerNationality => 'Kansallisuus';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'Valmentajan nimen pitää olla 1 ja $max näytettävän merkin välillä';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Valitse valmentajalle kansallisuus listalta';
 }

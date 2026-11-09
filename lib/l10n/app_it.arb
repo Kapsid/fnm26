@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "Ripristina la copia di prima dell'aggiornamento",
   "saveUpgradeRestoreFailed": "Non è stato possibile ripristinare la copia. Il salvataggio è rimasto com’era.",
   "saveOpenFailedTitle": "Impossibile aprire i salvataggi",
-  "saveOpenFailedBody": "Non è stato possibile aprire i salvataggi. Non è stato eliminato nulla. Riprova tra un momento."
+  "saveOpenFailedBody": "Non è stato possibile aprire i salvataggi. Non è stato eliminato nulla. Riprova tra un momento.",
+  "editorSectionManagers": "Commissari tecnici",
+  "editorAboutManagers": "Chi guida ogni nazionale al primo giorno",
+  "editorManagersHint": "Scelto all’inizio di una carriera",
+  "editorManagerName": "Nome del CT",
+  "editorManagerNationality": "Nazionalità",
+  "editorIssueManagerName": "Il CT deve avere un nome da 1 a {max} caratteri visualizzabili",
+  "editorIssueManagerNationality": "Scegli dalla lista una nazionalità per il CT"
 }

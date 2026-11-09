@@ -25551,5 +25551,39 @@
   "mgrListEmptyCurrent": "Managers appear after the next season rollover.",
   "@mgrListEmptyCurrent": {
     "description": "Managers screen, Current tab: this season has no world managers yet."
+  },
+  "editorSectionManagers": "Managers",
+  "@editorSectionManagers": {
+    "description": "Database section: the national team managers in charge on day one."
+  },
+  "editorAboutManagers": "Who is in charge of each nation on day one",
+  "@editorAboutManagers": {
+    "description": "One-line description of the Managers section."
+  },
+  "editorManagersHint": "Chosen when a career starts",
+  "@editorManagersHint": {
+    "description": "Managers section: shown for a nation whose day-one manager the database leaves to the game (he depends on the career's seed)."
+  },
+  "editorManagerName": "Manager name",
+  "@editorManagerName": {
+    "description": "Managers section: label of the manager's name field."
+  },
+  "editorManagerNationality": "Nationality",
+  "@editorManagerNationality": {
+    "description": "Managers section: label of the manager's nationality picker."
+  },
+  "editorIssueManagerName": "The manager needs a name of 1 to {max} characters the game can show",
+  "@editorIssueManagerName": {
+    "description": "A day-one manager's name is empty, too long or has characters the game cannot show.",
+    "placeholders": {
+      "max": {
+        "type": "int",
+        "example": "40"
+      }
+    }
+  },
+  "editorIssueManagerNationality": "Pick a nationality for the manager from the list",
+  "@editorIssueManagerNationality": {
+    "description": "A day-one manager's nationality is not one of the game's nations."
   }
 }

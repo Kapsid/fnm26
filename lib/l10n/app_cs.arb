@@ -4111,5 +4111,12 @@
   "mgrListSortReputation": "Reputace",
   "mgrListSortName": "Jméno",
   "mgrListEmptyMoves": "Za poslední dva roky žádné změny.",
-  "mgrListEmptyCurrent": "Trenéři se objeví po přechodu do další sezóny."
+  "mgrListEmptyCurrent": "Trenéři se objeví po přechodu do další sezóny.",
+  "editorSectionManagers": "Trenéři",
+  "editorAboutManagers": "Kdo vede kterou reprezentaci na začátku",
+  "editorManagersHint": "Vybere se při startu kariéry",
+  "editorManagerName": "Jméno trenéra",
+  "editorManagerNationality": "Národnost",
+  "editorIssueManagerName": "Trenér potřebuje jméno o 1 až {max} znacích, které hra umí zobrazit",
+  "editorIssueManagerNationality": "Vyber trenérovi národnost ze seznamu"
 }

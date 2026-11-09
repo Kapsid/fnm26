@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "De kopie van vóór de update terugzetten",
   "saveUpgradeRestoreFailed": "De kopie kon niet worden teruggezet. Je opgeslagen spel is gebleven zoals het was.",
   "saveOpenFailedTitle": "Je opgeslagen spellen konden niet worden geopend",
-  "saveOpenFailedBody": "Je opgeslagen spellen konden niet worden geopend. Er is niets verwijderd. Probeer het zo opnieuw."
+  "saveOpenFailedBody": "Je opgeslagen spellen konden niet worden geopend. Er is niets verwijderd. Probeer het zo opnieuw.",
+  "editorSectionManagers": "Bondscoaches",
+  "editorAboutManagers": "Wie elk land op dag één leidt",
+  "editorManagersHint": "Gekozen bij de start van een carrière",
+  "editorManagerName": "Naam van de bondscoach",
+  "editorManagerNationality": "Nationaliteit",
+  "editorIssueManagerName": "De bondscoach heeft een naam nodig van 1 tot {max} tekens die het spel kan tonen",
+  "editorIssueManagerNationality": "Kies een nationaliteit voor de bondscoach uit de lijst"
 }

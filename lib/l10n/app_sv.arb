@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "Återställ kopian från före uppdateringen",
   "saveUpgradeRestoreFailed": "Kopian kunde inte återställas. Ditt sparade spel lämnades som det var.",
   "saveOpenFailedTitle": "Dina sparade spel kunde inte öppnas",
-  "saveOpenFailedBody": "Dina sparade spel kunde inte öppnas. Inget har raderats. Försök igen om en stund."
+  "saveOpenFailedBody": "Dina sparade spel kunde inte öppnas. Inget har raderats. Försök igen om en stund.",
+  "editorSectionManagers": "Förbundskaptener",
+  "editorAboutManagers": "Vem som leder varje landslag från start",
+  "editorManagersHint": "Väljs när en karriär startar",
+  "editorManagerName": "Förbundskaptenens namn",
+  "editorManagerNationality": "Nationalitet",
+  "editorIssueManagerName": "Förbundskaptenen behöver ett namn på 1 till {max} tecken som spelet kan visa",
+  "editorIssueManagerNationality": "Välj en nationalitet för förbundskaptenen i listan"
 }

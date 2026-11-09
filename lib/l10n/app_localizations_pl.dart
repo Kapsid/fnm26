@@ -16673,4 +16673,29 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get mgrListEmptyCurrent =>
       'Managers appear after the next season rollover.';
+
+  @override
+  String get editorSectionManagers => 'Selekcjonerzy';
+
+  @override
+  String get editorAboutManagers =>
+      'Kto prowadzi każdą reprezentację na starcie';
+
+  @override
+  String get editorManagersHint => 'Wybierany na starcie kariery';
+
+  @override
+  String get editorManagerName => 'Imię i nazwisko selekcjonera';
+
+  @override
+  String get editorManagerNationality => 'Narodowość';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'Selekcjoner potrzebuje nazwiska od 1 do $max znaków, które gra wyświetli';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Wybierz z listy narodowość selekcjonera';
 }

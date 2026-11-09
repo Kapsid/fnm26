@@ -32,9 +32,9 @@ export 'package:fnm/features/editor/names/name_sections.dart' show NameSection;
 part 'name_section_tablet_layout.dart';
 
 /// A name section of a database (clubs, stadiums, competitions, Y accounts,
-/// press, name lists, sponsors): every name the game uses there, with the
-/// database's own beside it, a search, and an editor for the picked one (a
-/// sheet on the phone, beside the list on a tablet).
+/// press, name lists, managers, sponsors): every name the game uses there,
+/// with the database's own beside it, a search, and an editor for the
+/// picked one (a sheet on the phone, beside the list on a tablet).
 ///
 /// Every section but the name lists follows the editor's language
 /// ([editorLanguageProvider], picked from the [EditorLanguageChip] in the
@@ -240,7 +240,7 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
     if (nation == null) return;
     _search.text = nation.name;
     _query = nation.name;
-    if (_section == NameSection.nameLists) _picked = '$id';
+    if (_section.perNation) _picked = '$id';
   }
 
   void _open(
@@ -374,7 +374,7 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
   String _searchHint(AppLocalizations l) => switch (_section) {
     NameSection.clubs => l.editorNamesSearchClubs,
     NameSection.stadiums => l.editorNamesSearchStadiums,
-    NameSection.nameLists => l.editorNamesSearchNations,
+    NameSection.nameLists || NameSection.managers => l.editorNamesSearchNations,
     _ => l.editorNamesSearch,
   };
 
@@ -782,6 +782,15 @@ class _NameTile extends StatelessWidget {
       changed = pack.nameLists.containsKey(int.tryParse(entry.key));
       name = entry.original;
       about = [l.editorNamesListCounts(lists.first.length, lists.sur.length)];
+    } else if (section == NameSection.managers) {
+      // The game's own man depends on the career's seed: only the
+      // database's is known here.
+      final m = pack.managers[int.tryParse(entry.key)];
+      changed = m != null;
+      name = entry.original;
+      about = [
+        if (m == null) l.editorManagersHint else '${m.name} · ${m.nationality}',
+      ];
     } else if (lang != null) {
       // In one language: its own name, else the main one (the same in every
       // language), else the game's there.

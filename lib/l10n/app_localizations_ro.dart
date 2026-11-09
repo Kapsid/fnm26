@@ -16917,4 +16917,29 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get mgrListEmptyCurrent =>
       'Managers appear after the next season rollover.';
+
+  @override
+  String get editorSectionManagers => 'Selecționeri';
+
+  @override
+  String get editorAboutManagers =>
+      'Cine conduce fiecare echipă națională în prima zi';
+
+  @override
+  String get editorManagersHint => 'Ales la începutul carierei';
+
+  @override
+  String get editorManagerName => 'Numele selecționerului';
+
+  @override
+  String get editorManagerNationality => 'Naționalitate';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'Selecționerul are nevoie de un nume de 1 până la $max caractere afișabile';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Alege din listă o naționalitate pentru selecționer';
 }

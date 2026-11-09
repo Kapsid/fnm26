@@ -16591,4 +16591,29 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get mgrListEmptyCurrent =>
       'Managers appear after the next season rollover.';
+
+  @override
+  String get editorSectionManagers => 'Ομοσπονδιακοί προπονητές';
+
+  @override
+  String get editorAboutManagers =>
+      'Ποιος κοουτσάρει κάθε εθνική την πρώτη μέρα';
+
+  @override
+  String get editorManagersHint => 'Επιλέγεται όταν ξεκινά μια καριέρα';
+
+  @override
+  String get editorManagerName => 'Όνομα προπονητή';
+
+  @override
+  String get editorManagerNationality => 'Εθνικότητα';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'Το όνομα του προπονητή πρέπει να έχει 1 έως $max εμφανίσιμους χαρακτήρες';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Διάλεξε εθνικότητα για τον προπονητή από τη λίστα';
 }

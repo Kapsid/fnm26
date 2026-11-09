@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "Pulihkan salinan dari sebelum pembaruan",
   "saveUpgradeRestoreFailed": "Salinan tidak bisa dipulihkan. Simpananmu dibiarkan seperti semula.",
   "saveOpenFailedTitle": "Simpanan tidak bisa dibuka",
-  "saveOpenFailedBody": "Simpanan permainanmu tidak bisa dibuka. Tidak ada yang dihapus. Coba lagi sebentar lagi."
+  "saveOpenFailedBody": "Simpanan permainanmu tidak bisa dibuka. Tidak ada yang dihapus. Coba lagi sebentar lagi.",
+  "editorSectionManagers": "Pelatih",
+  "editorAboutManagers": "Siapa yang menangani tiap timnas di hari pertama",
+  "editorManagersHint": "Dipilih saat karier dimulai",
+  "editorManagerName": "Nama pelatih",
+  "editorManagerNationality": "Kewarganegaraan",
+  "editorIssueManagerName": "Nama pelatih harus 1 sampai {max} karakter yang bisa ditampilkan",
+  "editorIssueManagerNationality": "Pilih kewarganegaraan pelatih dari daftar"
 }

@@ -4049,5 +4049,12 @@
   "saveUpgradeRestoreButton": "Възстанови копието отпреди обновяването",
   "saveUpgradeRestoreFailed": "Копието не можа да бъде възстановено. Записаната ви игра остана непроменена.",
   "saveOpenFailedTitle": "Записите не можаха да бъдат отворени",
-  "saveOpenFailedBody": "Записаните ви игри не можаха да бъдат отворени. Нищо не е изтрито. Опитайте отново след малко."
+  "saveOpenFailedBody": "Записаните ви игри не можаха да бъдат отворени. Нищо не е изтрито. Опитайте отново след малко.",
+  "editorSectionManagers": "Селекционери",
+  "editorAboutManagers": "Кой води всеки национален отбор в първия ден",
+  "editorManagersHint": "Избира се в началото на кариерата",
+  "editorManagerName": "Име на селекционера",
+  "editorManagerNationality": "Националност",
+  "editorIssueManagerName": "Името на селекционера трябва да е от 1 до {max} показуеми знака",
+  "editorIssueManagerNationality": "Избери националност за селекционера от списъка"
 }

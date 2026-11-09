@@ -16207,4 +16207,28 @@ class AppLocalizationsTh extends AppLocalizations {
   @override
   String get mgrListEmptyCurrent =>
       'Managers appear after the next season rollover.';
+
+  @override
+  String get editorSectionManagers => 'ผู้จัดการทีม';
+
+  @override
+  String get editorAboutManagers => 'ใครคุมทีมชาติแต่ละทีมในวันแรก';
+
+  @override
+  String get editorManagersHint => 'เลือกเมื่อเริ่มอาชีพ';
+
+  @override
+  String get editorManagerName => 'ชื่อผู้จัดการทีม';
+
+  @override
+  String get editorManagerNationality => 'สัญชาติ';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'ชื่อผู้จัดการทีมต้องมี 1 ถึง $max ตัวอักษรที่เกมแสดงได้';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'เลือกสัญชาติของผู้จัดการทีมจากรายการ';
 }
