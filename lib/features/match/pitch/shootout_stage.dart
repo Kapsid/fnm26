@@ -27,8 +27,22 @@ import 'package:fnm/features/match/pitch/stadium_painter.dart';
 import 'package:fnm/features/match/pitch/token_painter.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
 
+/// What the shootout's close-up draws: one kick, how far into it, and its
+/// men. A shootout's own kicks ([ShootoutStageController]) and a penalty in
+/// the match ([PenaltyCloseUp]) are both shown through it.
+abstract interface class ShootoutView implements Listenable {
+  /// The kick on show; null shows nothing.
+  StagedShootoutKick? get kick;
+
+  /// How far into [kick], in seconds (see [ShootoutStaging.frameAt]).
+  double get seconds;
+
+  /// The two sides' keepers and every shirt number.
+  ShootoutCast get cast;
+}
+
 /// Runs a shootout's kicks on a ticker. Repaints its listeners every frame.
-class ShootoutStageController extends ChangeNotifier {
+class ShootoutStageController extends ChangeNotifier implements ShootoutView {
   ShootoutStageController({
     required TickerProvider vsync,
     required this.kicks,
@@ -40,6 +54,7 @@ class ShootoutStageController extends ChangeNotifier {
   }
 
   final List<StagedShootoutKick> kicks;
+  @override
   final ShootoutCast cast;
 
   /// A kick's result has landed (the ball is in, saved, wide or off the
@@ -63,7 +78,9 @@ class ShootoutStageController extends ChangeNotifier {
 
   /// The kick on show, and how far into it (seconds).
   int get index => _index;
+  @override
   double get seconds => _seconds;
+  @override
   StagedShootoutKick? get kick => _index < kicks.length ? kicks[_index] : null;
   bool get running => _ticker.isActive;
 
@@ -138,6 +155,57 @@ class ShootoutStageController extends ChangeNotifier {
   }
 }
 
+/// A penalty given in the match, shown in the shootout's close-up while
+/// the clock is on it ([InMatchPenalty.from] to [InMatchPenalty.to]); the
+/// pitch is drawn again either side of it. Follows the clock, so a pause,
+/// a seek or a goal's held flash hold the close-up where it is.
+class PenaltyCloseUp extends ChangeNotifier implements ShootoutView {
+  PenaltyCloseUp(this.penalties);
+
+  /// The match's penalties, from [InMatchPenalty.of].
+  final List<InMatchPenalty> penalties;
+
+  /// Whether the close-up is up: the clock is on one of the [penalties].
+  final ValueNotifier<bool> active = ValueNotifier(false);
+
+  InMatchPenalty? _on;
+  double _seconds = 0;
+
+  /// The penalty on show.
+  InMatchPenalty? get on => _on;
+
+  @override
+  StagedShootoutKick? get kick => _on?.kick;
+
+  @override
+  double get seconds => _seconds;
+
+  @override
+  ShootoutCast get cast => (_on ?? penalties.first).cast;
+
+  /// The clock is at screen second [t].
+  void update(double t) {
+    InMatchPenalty? on;
+    for (final p in penalties) {
+      if (t >= p.from - 1e-9 && t < p.to) {
+        on = p;
+        break;
+      }
+    }
+    final was = _on;
+    _on = on;
+    _seconds = on == null ? 0 : on.secondsAt(t);
+    active.value = on != null;
+    if (on != null || was != null) notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    active.dispose();
+    super.dispose();
+  }
+}
+
 /// A shootout kick seen from behind the taker: the goal mouth large and
 /// face-on with its net, the six lanes (left, centre, right, low and high)
 /// faintly marked and the one the ball goes to lit, the keeper diving into
@@ -155,7 +223,7 @@ class ShootoutPainter extends CustomPainter {
     _away = ActorsPainter.dressOf(kits.away);
   }
 
-  final ShootoutStageController stage;
+  final ShootoutView stage;
   final ({KitPair home, KitPair away}) kits;
   final Map<int, String> names;
   final PitchLight Function(int minute, {int stoppage}) lightAt;

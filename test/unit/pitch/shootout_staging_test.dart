@@ -1,7 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
+import 'package:fnm/domain/services/match/match_moments.dart';
 import 'package:fnm/domain/services/match/pitch/moment_staging.dart';
+import 'package:fnm/domain/services/match/pitch/pitch_pacer.dart';
+
+import '../../helpers/pitch_match_lab.dart';
 
 /// A real drawn shootout for [seed], with named takers on both sides.
 KnockoutOutcome _shootout(int seed) => WorldCupFinals.decideShootout(
@@ -109,5 +113,58 @@ void main() {
       final end = ShootoutStaging.tally(kicks, kicks.length);
       expect(end, (o.homePens, o.awayPens));
     }
+  });
+
+  test('a penalty in the match plays in the close-up as the match had it', () {
+    var seen = 0;
+    final kinds = <KickResult>{};
+    for (var seed = 0; seed < 80; seed++) {
+      final s = labScript(
+        labMatch(seed),
+        PitchSpeed.values[seed % 3],
+        seed: seed,
+      );
+      final pens = [
+        for (final w in s.windows)
+          for (final m in w.moments)
+            if (m is ShotMoment && m.origin == ShotOrigin.penalty) m,
+      ];
+      final shown = InMatchPenalty.of(s);
+      expect(shown.length, pens.length, reason: 'match $seed');
+      for (var k = 0; k < pens.length; k++) {
+        final m = pens[k];
+        final p = shown[k];
+        seen++;
+        final kick = p.kick.kick;
+        kinds.add(kick.result);
+        expect(kick.takerId, m.shooterId);
+        expect(p.kick.home, m.teamNationId == s.homeNationId);
+        expect(kick.result, switch (m.outcome) {
+          ShotOutcome.goal => KickResult.scored,
+          ShotOutcome.saved || ShotOutcome.blocked => KickResult.saved,
+          ShotOutcome.wide => KickResult.wide,
+          ShotOutcome.woodwork => KickResult.post,
+        });
+        // A save is in the keeper's lane; a goal never is; a miss is wide
+        // of a post.
+        if (kick.result == KickResult.saved) {
+          expect(kick.diveLane, kick.lane);
+        } else {
+          expect(kick.diveLane, isNot(kick.lane));
+        }
+        if (kick.result == KickResult.wide || kick.result == KickResult.post) {
+          expect(kick.lane % 3, isNot(1));
+        }
+        // The keeper is the one the taker faces.
+        final keeper = p.cast.keeperFacing(home: p.kick.home);
+        if (m.keeperId != null) expect(keeper, m.keeperId);
+        // The close-up strikes when the script does, inside the moment.
+        expect(p.secondsAt(p.strike), closeTo(ShootoutStaging.strikeAt, 1e-9));
+        expect(p.from, lessThan(p.strike));
+        expect(p.to, greaterThan(p.strike + ShootoutStaging.flight));
+      }
+    }
+    expect(seen, greaterThan(5));
+    expect(kinds, contains(KickResult.scored));
   });
 }

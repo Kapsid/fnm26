@@ -330,3 +330,133 @@ abstract final class ShootoutStaging {
     );
   }
 }
+
+/// A penalty given in the match itself (normal or extra time), shown in
+/// the shootout's close-up: the camera behind the taker, the goal face-on,
+/// taker against keeper. The kick is the script's own, read off the ball
+/// it strikes: where it goes, where the keeper dives and how it ends are
+/// what the match decided. The close-up takes over from [from] to [to]
+/// (screen seconds) and the pitch picks up again after it.
+class InMatchPenalty {
+  const InMatchPenalty({
+    required this.strike,
+    required this.kick,
+    required this.cast,
+  });
+
+  /// The screen second the ball is struck from the spot.
+  final double strike;
+  final StagedShootoutKick kick;
+
+  /// The taker's side and the keeper he faces, with every shirt number.
+  final ShootoutCast cast;
+
+  /// How far into a shootout kick the close-up opens: the taker nearly
+  /// set behind the ball, the run-up still to come.
+  static const double opensAt = 1.0;
+
+  /// The close-up's own seconds (as [ShootoutStaging.frameAt] takes them)
+  /// at screen second [t].
+  double secondsAt(double t) => t - strike + ShootoutStaging.strikeAt;
+
+  /// The screen seconds the close-up is up between.
+  double get from => strike - ShootoutStaging.strikeAt + opensAt;
+  double get to =>
+      strike - ShootoutStaging.strikeAt + ShootoutStaging.kickSeconds;
+
+  /// Every penalty [s] plays in the match, in order, each with the kick it
+  /// shows. A penalty struck before the script starts (a resume after it)
+  /// is left out.
+  static List<InMatchPenalty> of(PitchScript s) {
+    final out = <InMatchPenalty>[];
+    for (final w in s.windows) {
+      for (final m in w.moments) {
+        if (m is! ShotMoment || m.origin != ShotOrigin.penalty) continue;
+        final p = _read(s, w, m);
+        if (p != null) out.add(p);
+      }
+    }
+    return out;
+  }
+
+  static InMatchPenalty? _read(PitchScript s, StagedWindow w, ShotMoment m) {
+    final shooter = s.actorIndexOf(m.shooterId);
+    if (shooter == null) return null;
+    FlightPhase? kick;
+    for (final p in s.ballPhases) {
+      if (p is! FlightPhase || p.pass || p.resting) continue;
+      if (p.fromActor != shooter) continue;
+      if (p.t0 < w.start - 1e-6 || p.t0 > w.end + 3) continue;
+      kick = p;
+      break;
+    }
+    if (kick == null || kick.t0 < s.start) return null;
+    // Which goal: the one the ball is struck at. Lateral as the taker faces
+    // it (negative to his left), as a shootout's lanes are.
+    final dir = kick.to.x >= PitchDims.length / 2 ? 1 : -1;
+    double lat(Offset2 q) => (q.y - PitchDims.width / 2) * dir;
+    int column(double l) => l < -1.25 ? 0 : (l > 1.25 ? 2 : 1);
+    final result = switch (m.outcome) {
+      ShotOutcome.goal => KickResult.scored,
+      ShotOutcome.saved || ShotOutcome.blocked => KickResult.saved,
+      ShotOutcome.wide => KickResult.wide,
+      ShotOutcome.woodwork => KickResult.post,
+    };
+    final l = lat(kick.to);
+    var col = column(l);
+    // Wide of the goal or off a post: always one side or the other.
+    if (result == KickResult.wide || result == KickResult.post) {
+      col = l < 0 ? 0 : 2;
+    }
+    final row = kick.toHeight > 1.15 ? 1 : 0;
+    final lane = row * 3 + col;
+    // The keeper the kick is taken against, and where his dive took him.
+    final home = s.actorList[shooter].teamNationId == s.homeNationId;
+    var keeperId = m.keeperId;
+    if (keeperId == null || s.actorIndexOf(keeperId) == null) {
+      for (final id in s.keepersAt(kick.t0)) {
+        final i = s.actorIndexOf(id)!;
+        if ((s.actorList[i].teamNationId == s.homeNationId) != home) {
+          keeperId = id;
+        }
+      }
+    }
+    // Low, in the middle, when there is no keeper to read.
+    var dive = 1;
+    final ki = keeperId == null ? null : s.actorIndexOf(keeperId);
+    if (ki != null) {
+      final (at, _) = s.actorAt(ki, kick.t1 + 0.25);
+      dive = column(lat(at));
+    }
+    var diveLane = dive;
+    if (result == KickResult.saved) {
+      diveLane = lane;
+    } else if (diveLane == lane) {
+      // A goal (or a miss) past a keeper who went the right way: he got
+      // nowhere near it, so he is drawn standing in the middle.
+      diveLane = col == 1 ? (l < 0 ? 2 : 0) : 1;
+    }
+    final kid = keeperId ?? 0;
+    return InMatchPenalty(
+      strike: kick.t0,
+      kick: StagedShootoutKick(
+        index: 0,
+        home: home,
+        sideIndex: 0,
+        kick: ShootoutKick(
+          takerId: m.shooterId,
+          result: result,
+          lane: lane,
+          diveLane: diveLane,
+        ),
+      ),
+      cast: ShootoutCast(
+        homeNationId: s.homeNationId,
+        homeKeeperId: home ? 0 : kid,
+        awayKeeperId: home ? kid : 0,
+        shirts: {for (final a in s.actorList) a.playerId: a.shirt},
+        teams: {for (final a in s.actorList) a.playerId: a.teamNationId},
+      ),
+    );
+  }
+}
