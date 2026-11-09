@@ -15625,4 +15625,32 @@ class AppLocalizationsJa extends AppLocalizations {
   String matchSubOn(String name) {
     return 'イン: $name';
   }
+
+  @override
+  String get editorFilterToFix => '要修正';
+
+  @override
+  String get editorNothingToFix => 'ここで修正が必要なものはありません。';
+
+  @override
+  String get editorPromoteTooltip => 'チームに入れる';
+
+  @override
+  String editorPromoted(String name) {
+    return '$nameをチームに入れました';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'チームがいっぱいです';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'チームは最大$max人までです。代わりにプールへ戻す選手を選んでください。';
+  }
+
+  @override
+  String get editorTrophyGallery => '写真から選ぶ';
+
+  @override
+  String get editorTrophyFile => 'ファイルを選ぶ';
 }

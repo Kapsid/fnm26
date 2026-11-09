@@ -4031,5 +4031,13 @@
   "matchWeatherFog": "Туман",
   "matchWeatherWindy": "Вітряно",
   "matchWeatherDustStorm": "Пилова буря",
-  "matchWeatherFrostyNight": "Морозна ніч"
+  "matchWeatherFrostyNight": "Морозна ніч",
+  "editorFilterToFix": "Потребує виправлення",
+  "editorNothingToFix": "Тут нічого виправляти.",
+  "editorPromoteTooltip": "Перемістити до складу",
+  "editorPromoted": "{name} переміщено до складу",
+  "editorPromoteFullTitle": "Склад заповнений",
+  "editorPromoteFullBody": "У складі може бути щонайбільше {max} гравців. Виберіть гравця, який повернеться до резерву замість нього.",
+  "editorTrophyGallery": "Вибрати з ваших фото",
+  "editorTrophyFile": "Вибрати файл"
 }

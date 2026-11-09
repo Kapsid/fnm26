@@ -16288,4 +16288,32 @@ class AppLocalizationsBg extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Влиза: $name';
   }
+
+  @override
+  String get editorFilterToFix => 'За поправяне';
+
+  @override
+  String get editorNothingToFix => 'Тук няма нищо за поправяне.';
+
+  @override
+  String get editorPromoteTooltip => 'Премести в състава';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name е преместен в състава';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Съставът е пълен';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Съставът може да има най-много $max играчи. Изберете играча, който се връща в групата на негово място.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Избор от снимките ви';
+
+  @override
+  String get editorTrophyFile => 'Избор на файл';
 }

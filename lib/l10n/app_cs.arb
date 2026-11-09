@@ -4031,5 +4031,13 @@
   "matchWeatherFog": "Mlha",
   "matchWeatherWindy": "Větrno",
   "matchWeatherDustStorm": "Prachová bouře",
-  "matchWeatherFrostyNight": "Mrazivá noc"
+  "matchWeatherFrostyNight": "Mrazivá noc",
+  "editorFilterToFix": "K opravě",
+  "editorNothingToFix": "Tady není co opravovat.",
+  "editorPromoteTooltip": "Přesunout do kádru",
+  "editorPromoted": "Hráč {name} přesunut do kádru",
+  "editorPromoteFullTitle": "Kádr je plný",
+  "editorPromoteFullBody": "Kádr může mít nejvýše {max} hráčů. Vyberte hráče, který se místo něj vrátí do širšího kádru.",
+  "editorTrophyGallery": "Vybrat z fotek",
+  "editorTrophyFile": "Vybrat soubor"
 }

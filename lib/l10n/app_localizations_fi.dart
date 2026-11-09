@@ -16277,4 +16277,32 @@ class AppLocalizationsFi extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Sisään: $name';
   }
+
+  @override
+  String get editorFilterToFix => 'Korjattavat';
+
+  @override
+  String get editorNothingToFix => 'Täällä ei ole mitään korjattavaa.';
+
+  @override
+  String get editorPromoteTooltip => 'Siirrä joukkueeseen';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name siirretty joukkueeseen';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Joukkue on täynnä';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Joukkueessa on enintään $max pelaajaa. Valitse pelaaja, joka palaa varantoon hänen tilalleen.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Valitse omista kuvistasi';
+
+  @override
+  String get editorTrophyFile => 'Valitse tiedosto';
 }

@@ -4031,5 +4031,13 @@
   "matchWeatherFog": "कोहरा",
   "matchWeatherWindy": "तेज़ हवा",
   "matchWeatherDustStorm": "धूल भरी आंधी",
-  "matchWeatherFrostyNight": "पाले वाली रात"
+  "matchWeatherFrostyNight": "पाले वाली रात",
+  "editorFilterToFix": "ठीक करना बाकी",
+  "editorNothingToFix": "यहाँ ठीक करने के लिए कुछ नहीं है।",
+  "editorPromoteTooltip": "दस्ते में लाएँ",
+  "editorPromoted": "{name} को दस्ते में लाया गया",
+  "editorPromoteFullTitle": "दस्ता भरा हुआ है",
+  "editorPromoteFullBody": "एक दस्ते में अधिकतम {max} खिलाड़ी हो सकते हैं। उसकी जगह जो खिलाड़ी पूल में लौटेगा, उसे चुनें।",
+  "editorTrophyGallery": "अपनी फ़ोटो में से चुनें",
+  "editorTrophyFile": "फ़ाइल चुनें"
 }

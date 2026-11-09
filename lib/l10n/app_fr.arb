@@ -4031,5 +4031,13 @@
   "matchWeatherFog": "Brouillard",
   "matchWeatherWindy": "Venteux",
   "matchWeatherDustStorm": "Tempête de sable",
-  "matchWeatherFrostyNight": "Nuit glaciale"
+  "matchWeatherFrostyNight": "Nuit glaciale",
+  "editorFilterToFix": "À corriger",
+  "editorNothingToFix": "Rien à corriger ici.",
+  "editorPromoteTooltip": "Passer dans l’effectif",
+  "editorPromoted": "{name} passe dans l’effectif",
+  "editorPromoteFullTitle": "L’effectif est complet",
+  "editorPromoteFullBody": "Un effectif compte au plus {max} joueurs. Choisissez le joueur qui retourne dans le vivier à sa place.",
+  "editorTrophyGallery": "Choisir dans vos photos",
+  "editorTrophyFile": "Choisir un fichier"
 }

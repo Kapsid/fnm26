@@ -16211,4 +16211,32 @@ class AppLocalizationsFil extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Pasok: $name';
   }
+
+  @override
+  String get editorFilterToFix => 'Kailangang ayusin';
+
+  @override
+  String get editorNothingToFix => 'Walang kailangang ayusin dito.';
+
+  @override
+  String get editorPromoteTooltip => 'Ilipat sa squad';
+
+  @override
+  String editorPromoted(String name) {
+    return 'Inilipat si $name sa squad';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Puno na ang squad';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Ang isang squad ay may pinakamarami na $max manlalaro. Piliin ang manlalarong babalik sa pool bilang kapalit niya.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Pumili mula sa iyong mga larawan';
+
+  @override
+  String get editorTrophyFile => 'Pumili ng file';
 }

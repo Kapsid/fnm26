@@ -4031,5 +4031,13 @@
   "matchWeatherFog": "Ceață",
   "matchWeatherWindy": "Vânt puternic",
   "matchWeatherDustStorm": "Furtună de praf",
-  "matchWeatherFrostyNight": "Noapte geroasă"
+  "matchWeatherFrostyNight": "Noapte geroasă",
+  "editorFilterToFix": "De corectat",
+  "editorNothingToFix": "Aici nu e nimic de corectat.",
+  "editorPromoteTooltip": "Mută în lot",
+  "editorPromoted": "{name} a fost mutat în lot",
+  "editorPromoteFullTitle": "Lotul este plin",
+  "editorPromoteFullBody": "Un lot are cel mult {max} jucători. Alegeți jucătorul care se întoarce în rezervă în locul lui.",
+  "editorTrophyGallery": "Alege din fotografiile tale",
+  "editorTrophyFile": "Alege un fișier"
 }

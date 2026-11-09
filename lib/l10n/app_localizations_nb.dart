@@ -16200,4 +16200,32 @@ class AppLocalizationsNb extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Inn: $name';
   }
+
+  @override
+  String get editorFilterToFix => 'Må rettes';
+
+  @override
+  String get editorNothingToFix => 'Ingenting må rettes her.';
+
+  @override
+  String get editorPromoteTooltip => 'Flytt til troppen';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name flyttet til troppen';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Troppen er full';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'En tropp har høyst $max spillere. Velg spilleren som går tilbake til puljen i hans sted.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Velg fra bildene dine';
+
+  @override
+  String get editorTrophyFile => 'Velg en fil';
 }

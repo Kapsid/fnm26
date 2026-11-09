@@ -15910,4 +15910,32 @@ class AppLocalizationsTh extends AppLocalizations {
   String matchSubOn(String name) {
     return 'เข้า: $name';
   }
+
+  @override
+  String get editorFilterToFix => 'ต้องแก้ไข';
+
+  @override
+  String get editorNothingToFix => 'ไม่มีอะไรต้องแก้ไขที่นี่';
+
+  @override
+  String get editorPromoteTooltip => 'ย้ายเข้าทีม';
+
+  @override
+  String editorPromoted(String name) {
+    return 'ย้าย $name เข้าทีมแล้ว';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'ทีมเต็มแล้ว';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'ทีมมีผู้เล่นได้สูงสุด $max คน เลือกผู้เล่นที่จะกลับไปอยู่ในกลุ่มสำรองแทน';
+  }
+
+  @override
+  String get editorTrophyGallery => 'เลือกจากรูปภาพของคุณ';
+
+  @override
+  String get editorTrophyFile => 'เลือกไฟล์';
 }

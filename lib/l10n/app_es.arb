@@ -4031,5 +4031,13 @@
   "matchWeatherFog": "Niebla",
   "matchWeatherWindy": "Viento fuerte",
   "matchWeatherDustStorm": "Tormenta de arena",
-  "matchWeatherFrostyNight": "Noche helada"
+  "matchWeatherFrostyNight": "Noche helada",
+  "editorFilterToFix": "Por arreglar",
+  "editorNothingToFix": "Aquí no hay nada que arreglar.",
+  "editorPromoteTooltip": "Pasar a la plantilla",
+  "editorPromoted": "{name} pasa a la plantilla",
+  "editorPromoteFullTitle": "La plantilla está completa",
+  "editorPromoteFullBody": "Una plantilla tiene como máximo {max} jugadores. Elige al jugador que vuelve a los disponibles en su lugar.",
+  "editorTrophyGallery": "Elegir de tus fotos",
+  "editorTrophyFile": "Elegir un archivo"
 }

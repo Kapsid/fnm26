@@ -4031,5 +4031,13 @@
   "matchWeatherFog": "Ομίχλη",
   "matchWeatherWindy": "Δυνατός άνεμος",
   "matchWeatherDustStorm": "Αμμοθύελλα",
-  "matchWeatherFrostyNight": "Παγωμένη νύχτα"
+  "matchWeatherFrostyNight": "Παγωμένη νύχτα",
+  "editorFilterToFix": "Προς διόρθωση",
+  "editorNothingToFix": "Δεν υπάρχει τίποτα προς διόρθωση εδώ.",
+  "editorPromoteTooltip": "Μετακίνηση στην ομάδα",
+  "editorPromoted": "Ο {name} μετακινήθηκε στην ομάδα",
+  "editorPromoteFullTitle": "Η ομάδα είναι γεμάτη",
+  "editorPromoteFullBody": "Μια ομάδα έχει το πολύ {max} παίκτες. Διαλέξτε τον παίκτη που θα γυρίσει στη δεξαμενή στη θέση του.",
+  "editorTrophyGallery": "Επιλογή από τις φωτογραφίες σας",
+  "editorTrophyFile": "Επιλογή αρχείου"
 }

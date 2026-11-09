@@ -16280,4 +16280,32 @@ class AppLocalizationsIt extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Entra: $name';
   }
+
+  @override
+  String get editorFilterToFix => 'Da sistemare';
+
+  @override
+  String get editorNothingToFix => 'Qui non c’è niente da sistemare.';
+
+  @override
+  String get editorPromoteTooltip => 'Sposta in rosa';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name spostato in rosa';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'La rosa è al completo';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Una rosa può avere al massimo $max giocatori. Scegli il giocatore che torna nel bacino al suo posto.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Scegli dalle tue foto';
+
+  @override
+  String get editorTrophyFile => 'Scegli un file';
 }

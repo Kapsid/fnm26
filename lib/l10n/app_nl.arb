@@ -4031,5 +4031,13 @@
   "matchWeatherFog": "Mist",
   "matchWeatherWindy": "Harde wind",
   "matchWeatherDustStorm": "Zandstorm",
-  "matchWeatherFrostyNight": "IJzige nacht"
+  "matchWeatherFrostyNight": "IJzige nacht",
+  "editorFilterToFix": "Te herstellen",
+  "editorNothingToFix": "Hier hoeft niets hersteld te worden.",
+  "editorPromoteTooltip": "Naar de selectie",
+  "editorPromoted": "{name} naar de selectie verplaatst",
+  "editorPromoteFullTitle": "De selectie zit vol",
+  "editorPromoteFullBody": "Een selectie heeft maximaal {max} spelers. Kies de speler die in zijn plaats terug naar de pool gaat.",
+  "editorTrophyGallery": "Kies uit je foto’s",
+  "editorTrophyFile": "Kies een bestand"
 }

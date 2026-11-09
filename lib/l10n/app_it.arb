@@ -4031,5 +4031,13 @@
   "matchWeatherFog": "Nebbia",
   "matchWeatherWindy": "Ventoso",
   "matchWeatherDustStorm": "Tempesta di sabbia",
-  "matchWeatherFrostyNight": "Notte gelida"
+  "matchWeatherFrostyNight": "Notte gelida",
+  "editorFilterToFix": "Da sistemare",
+  "editorNothingToFix": "Qui non c’è niente da sistemare.",
+  "editorPromoteTooltip": "Sposta in rosa",
+  "editorPromoted": "{name} spostato in rosa",
+  "editorPromoteFullTitle": "La rosa è al completo",
+  "editorPromoteFullBody": "Una rosa può avere al massimo {max} giocatori. Scegli il giocatore che torna nel bacino al suo posto.",
+  "editorTrophyGallery": "Scegli dalle tue foto",
+  "editorTrophyFile": "Scegli un file"
 }

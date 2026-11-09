@@ -16357,4 +16357,32 @@ class AppLocalizationsFr extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Entre : $name';
   }
+
+  @override
+  String get editorFilterToFix => 'À corriger';
+
+  @override
+  String get editorNothingToFix => 'Rien à corriger ici.';
+
+  @override
+  String get editorPromoteTooltip => 'Passer dans l’effectif';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name passe dans l’effectif';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'L’effectif est complet';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Un effectif compte au plus $max joueurs. Choisissez le joueur qui retourne dans le vivier à sa place.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Choisir dans vos photos';
+
+  @override
+  String get editorTrophyFile => 'Choisir un fichier';
 }

@@ -4031,5 +4031,13 @@
   "matchWeatherFog": "Hamog",
   "matchWeatherWindy": "Mahangin",
   "matchWeatherDustStorm": "Bagyong alikabok",
-  "matchWeatherFrostyNight": "Napakalamig na gabi"
+  "matchWeatherFrostyNight": "Napakalamig na gabi",
+  "editorFilterToFix": "Kailangang ayusin",
+  "editorNothingToFix": "Walang kailangang ayusin dito.",
+  "editorPromoteTooltip": "Ilipat sa squad",
+  "editorPromoted": "Inilipat si {name} sa squad",
+  "editorPromoteFullTitle": "Puno na ang squad",
+  "editorPromoteFullBody": "Ang isang squad ay may pinakamarami na {max} manlalaro. Piliin ang manlalarong babalik sa pool bilang kapalit niya.",
+  "editorTrophyGallery": "Pumili mula sa iyong mga larawan",
+  "editorTrophyFile": "Pumili ng file"
 }

@@ -16281,4 +16281,32 @@ class AppLocalizationsNl extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Erin: $name';
   }
+
+  @override
+  String get editorFilterToFix => 'Te herstellen';
+
+  @override
+  String get editorNothingToFix => 'Hier hoeft niets hersteld te worden.';
+
+  @override
+  String get editorPromoteTooltip => 'Naar de selectie';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name naar de selectie verplaatst';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'De selectie zit vol';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Een selectie heeft maximaal $max spelers. Kies de speler die in zijn plaats terug naar de pool gaat.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Kies uit je foto’s';
+
+  @override
+  String get editorTrophyFile => 'Kies een bestand';
 }

@@ -4031,5 +4031,13 @@
   "matchWeatherFog": "Nevoeiro",
   "matchWeatherWindy": "Ventania",
   "matchWeatherDustStorm": "Tempestade de areia",
-  "matchWeatherFrostyNight": "Noite gelada"
+  "matchWeatherFrostyNight": "Noite gelada",
+  "editorFilterToFix": "A corrigir",
+  "editorNothingToFix": "Não há nada a corrigir aqui.",
+  "editorPromoteTooltip": "Mover para o elenco",
+  "editorPromoted": "{name} movido para o elenco",
+  "editorPromoteFullTitle": "O elenco está cheio",
+  "editorPromoteFullBody": "Um elenco tem no máximo {max} jogadores. Escolha o jogador que volta para o grupo no lugar dele.",
+  "editorTrophyGallery": "Escolher das suas fotos",
+  "editorTrophyFile": "Escolher um arquivo"
 }

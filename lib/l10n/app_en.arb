@@ -25056,5 +25056,47 @@
         "type": "String"
       }
     }
+  },
+  "editorFilterToFix": "Needs a fix",
+  "@editorFilterToFix": {
+    "description": "Chip that lists only the items that still need a fix."
+  },
+  "editorNothingToFix": "Nothing needs fixing here.",
+  "@editorNothingToFix": {
+    "description": "Empty list when the fix filter is on and nothing needs fixing."
+  },
+  "editorPromoteTooltip": "Move to the squad",
+  "@editorPromoteTooltip": {
+    "description": "Tooltip of the button on a pool row that moves the player into the squad."
+  },
+  "editorPromoted": "{name} moved to the squad",
+  "@editorPromoted": {
+    "description": "Snackbar after a pool player is moved into the squad; it offers Undo.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "editorPromoteFullTitle": "The squad is full",
+  "@editorPromoteFullTitle": {
+    "description": "Title of the dialog shown when the squad is full and a pool player is moved up: pick who goes back."
+  },
+  "editorPromoteFullBody": "A squad holds at most {max} players. Pick the player who goes back to the pool in his place.",
+  "@editorPromoteFullBody": {
+    "description": "Body of the dialog shown when the squad is full and a pool player is moved up: the squad cap, then the list of squad players to send back to the pool.",
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "editorTrophyGallery": "Choose from your photos",
+  "@editorTrophyGallery": {
+    "description": "Main button on a trophy: pick its picture from the phone's photo gallery."
+  },
+  "editorTrophyFile": "Choose a file instead",
+  "@editorTrophyFile": {
+    "description": "Secondary button on a trophy: pick its picture from a file instead of the photo gallery."
   }
 }

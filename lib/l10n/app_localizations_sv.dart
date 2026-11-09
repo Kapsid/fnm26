@@ -16190,4 +16190,32 @@ class AppLocalizationsSv extends AppLocalizations {
   String matchSubOn(String name) {
     return 'In: $name';
   }
+
+  @override
+  String get editorFilterToFix => 'Att åtgärda';
+
+  @override
+  String get editorNothingToFix => 'Inget behöver åtgärdas här.';
+
+  @override
+  String get editorPromoteTooltip => 'Flytta till truppen';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name flyttad till truppen';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Truppen är full';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'En trupp har högst $max spelare. Välj spelaren som går tillbaka till poolen i hans ställe.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Välj bland dina foton';
+
+  @override
+  String get editorTrophyFile => 'Välj en fil';
 }

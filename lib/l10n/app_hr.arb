@@ -4031,5 +4031,13 @@
   "matchWeatherFog": "Magla",
   "matchWeatherWindy": "Vjetrovito",
   "matchWeatherDustStorm": "Pješčana oluja",
-  "matchWeatherFrostyNight": "Mrazna noć"
+  "matchWeatherFrostyNight": "Mrazna noć",
+  "editorFilterToFix": "Za popraviti",
+  "editorNothingToFix": "Ovdje nema ničega za popraviti.",
+  "editorPromoteTooltip": "Premjesti u momčad",
+  "editorPromoted": "{name} premješten u momčad",
+  "editorPromoteFullTitle": "Momčad je popunjena",
+  "editorPromoteFullBody": "Momčad ima najviše {max} igrača. Odaberite igrača koji se umjesto njega vraća u zalihu.",
+  "editorTrophyGallery": "Odaberi iz svojih fotografija",
+  "editorTrophyFile": "Odaberi datoteku"
 }

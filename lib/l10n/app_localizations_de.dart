@@ -16327,4 +16327,32 @@ class AppLocalizationsDe extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Rein: $name';
   }
+
+  @override
+  String get editorFilterToFix => 'Zu beheben';
+
+  @override
+  String get editorNothingToFix => 'Hier muss nichts behoben werden.';
+
+  @override
+  String get editorPromoteTooltip => 'In den Kader holen';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name in den Kader geholt';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Der Kader ist voll';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Ein Kader hat höchstens $max Spieler. Wählen Sie den Spieler, der dafür zurück in den Pool geht.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Aus deinen Fotos wählen';
+
+  @override
+  String get editorTrophyFile => 'Datei wählen';
 }
