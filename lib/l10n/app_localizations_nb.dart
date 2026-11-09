@@ -14929,6 +14929,26 @@ class AppLocalizationsNb extends AppLocalizations {
   String get editorSquadReady => 'Troppen er klar til å spille.';
 
   @override
+  String get editorSquadFill => 'Fyll inn manglende spillere';
+
+  @override
+  String get editorSquadFillAbout =>
+      'Legger til nasjonens egne genererte spillere, de sterkeste først, til troppen har den størrelsen og de posisjonene en karriere krever.';
+
+  @override
+  String editorSquadFilled(int count) {
+    return 'Spillere lagt til: $count';
+  }
+
+  @override
+  String get editorCommunityTitle =>
+      'Fans deler databasene sine på Discorden vår';
+
+  @override
+  String get editorCommunityAbout =>
+      'Delt av fellesskapet. Vi hoster eller kontrollerer ikke disse databasene.';
+
+  @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
     return '$min til $max spillere, med minst $gk keepere, $def forsvarere, $mid midtbanespillere og $fwd spisser.';
   }

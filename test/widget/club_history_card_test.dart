@@ -81,37 +81,40 @@ void main() {
     expect(find.byType(Card), findsNothing);
   });
 
-  testWidgets('the history rows carry no stars: the current club shows them above', (
-    tester,
-  ) async {
-    final semantics = tester.ensureSemantics();
-    await tester.pumpApp(
-      const Scaffold(body: ClubHistoryCard(careerId: 1, playerId: 42)),
-      overrides: [
-        withSpells(const [
-          (
-            club: 'Prague Green',
-            country: 'cze',
-            fromYear: 2026,
-            toYear: 2028,
-            stars: 2,
-          ),
-          (
-            club: 'Man Blue',
-            country: 'eng',
-            fromYear: 2029,
-            toYear: 2031,
-            stars: 5,
-          ),
-        ]),
-      ],
-    );
-    await tester.pumpAndSettle();
+  testWidgets(
+    'the history rows carry no stars: the current club shows them above',
+    (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      await tester.pumpApp(
+        const Scaffold(body: ClubHistoryCard(careerId: 1, playerId: 42)),
+        overrides: [
+          withSpells(const [
+            (
+              club: 'Prague Green',
+              country: 'cze',
+              fromYear: 2026,
+              toYear: 2028,
+              stars: 2,
+            ),
+            (
+              club: 'Man Blue',
+              country: 'eng',
+              fromYear: 2029,
+              toYear: 2031,
+              stars: 5,
+            ),
+          ]),
+        ],
+      );
+      await tester.pumpAndSettle();
 
-    expect(find.text('Man Blue'), findsOneWidget);
-    expect(find.byType(ClubStars), findsNothing);
-    semantics.dispose();
-  });
+      expect(find.text('Man Blue'), findsOneWidget);
+      expect(find.byType(ClubStars), findsNothing);
+      semantics.dispose();
+    },
+  );
 
   testWidgets('no stars for a club whose strength is not known', (
     tester,

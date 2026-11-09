@@ -15238,6 +15238,26 @@ class AppLocalizationsUk extends AppLocalizations {
   String get editorSquadReady => 'Цей склад готовий до гри.';
 
   @override
+  String get editorSquadFill => 'Доповнити відсутніх гравців';
+
+  @override
+  String get editorSquadFillAbout =>
+      'Додає згенерованих гравців цієї збірної, починаючи з найсильніших, доки склад не матиме розміру й позицій, потрібних для кар\'єри.';
+
+  @override
+  String editorSquadFilled(int count) {
+    return 'Додано гравців: $count';
+  }
+
+  @override
+  String get editorCommunityTitle =>
+      'Фанати діляться своїми базами даних у нашому Discord';
+
+  @override
+  String get editorCommunityAbout =>
+      'Ділиться спільнота. Ми не хостимо й не перевіряємо ці бази даних.';
+
+  @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
     return 'Від $min до $max гравців, серед них щонайменше воротарів: $gk, захисників: $def, півзахисників: $mid, нападників: $fwd.';
   }

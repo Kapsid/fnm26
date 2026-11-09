@@ -15021,6 +15021,26 @@ class AppLocalizationsEs extends AppLocalizations {
   String get editorSquadReady => 'Esta plantilla está lista para jugar.';
 
   @override
+  String get editorSquadFill => 'Completar jugadores que faltan';
+
+  @override
+  String get editorSquadFillAbout =>
+      'Añade los jugadores generados de la selección, los más fuertes primero, hasta que la plantilla tenga el tamaño y las posiciones que necesita una carrera.';
+
+  @override
+  String editorSquadFilled(int count) {
+    return 'Jugadores añadidos: $count';
+  }
+
+  @override
+  String get editorCommunityTitle =>
+      'Los aficionados comparten sus bases de datos en nuestro Discord';
+
+  @override
+  String get editorCommunityAbout =>
+      'Compartidas por la comunidad. No alojamos ni revisamos estas bases de datos.';
+
+  @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
     return 'De $min a $max jugadores, con al menos $gk porteros, $def defensas, $mid centrocampistas y $fwd delanteros.';
   }

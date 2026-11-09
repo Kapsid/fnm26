@@ -15005,6 +15005,26 @@ class AppLocalizationsIt extends AppLocalizations {
   String get editorSquadReady => 'Questa rosa è pronta per giocare.';
 
   @override
+  String get editorSquadFill => 'Completa i giocatori mancanti';
+
+  @override
+  String get editorSquadFillAbout =>
+      'Aggiunge i giocatori generati della nazione, i più forti per primi, finché la rosa non ha la dimensione e i ruoli richiesti da una carriera.';
+
+  @override
+  String editorSquadFilled(int count) {
+    return 'Giocatori aggiunti: $count';
+  }
+
+  @override
+  String get editorCommunityTitle =>
+      'I tifosi condividono i loro database sul nostro Discord';
+
+  @override
+  String get editorCommunityAbout =>
+      'Condivisi dalla community. Non ospitiamo né controlliamo questi database.';
+
+  @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
     return 'Da $min a $max giocatori, con almeno $gk portieri, $def difensori, $mid centrocampisti e $fwd attaccanti.';
   }

@@ -47,6 +47,9 @@ class SquadScreen extends ConsumerStatefulWidget {
   static const Key undoKey = Key('editorSquad.undo');
   static const Key summaryKey = Key('editorSquad.summary');
 
+  /// The summary's Fill missing players button (only while players lack).
+  static const Key fillKey = Key('editorSquad.fill');
+
   /// The tablet header's menu for the player edited beside the list, and
   /// its Delete.
   static const Key menuKey = Key('editorSquad.menu');
@@ -170,6 +173,28 @@ class _SquadScreenState extends ConsumerState<SquadScreen>
   }
 
   void _unpick() => setState(() => _picked = null);
+
+  /// Fill missing players: the squad's gaps filled from the nation's
+  /// generated players, as one undoable edit ([SquadEdits.fillMissing]).
+  void _fill() {
+    final l = AppLocalizations.of(context);
+    final pack = ref.read(packEditorProvider(_id)).valueOrNull;
+    if (pack == null) return;
+    final shown = shownPlayers(ref, pack, _key, pool: true, listen: false);
+    var added = 0;
+    _editor.update((p) {
+      final now = shownPlayers(ref, p, _key, pool: true, listen: false);
+      final next = SquadEdits.fillMissing(p, _nation, now ?? shown);
+      if (next == null) return p;
+      added =
+          (next.squads[_nation]?.length ?? 0) -
+          (p.squads[_nation]?.length ?? 0);
+      return next;
+    });
+    if (added > 0) {
+      showUndoSnackBar(context, _editor, l.editorSquadFilled(added));
+    }
+  }
 
   void _say(String message) => ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
@@ -458,12 +483,16 @@ class _SquadScreenState extends ConsumerState<SquadScreen>
       for (final i in editor.squadIssues(_nation))
         describePackIssue(l, i, pack, world).detail,
     ];
+    final pool0 = shownPlayers(ref, pack, _key, pool: true);
     final view = (
       pack: pack,
       squad: squad,
       lines: _lines(squad),
       issues: issues,
       duplicates: SquadEdits.duplicateNames(squad),
+      onFill: pool0 != null && SquadEdits.missingCount(squad) > 0
+          ? _fill
+          : null,
     );
     // The generated pool is watched even once the pool is fixed, so it
     // stays read: "Back to generated", or an undo of the first edit, shows
@@ -656,6 +685,10 @@ typedef _SquadView = ({
   List<_Line> lines,
   List<String> issues,
   Set<String> duplicates,
+
+  /// Fills the squad's gaps; null when it lacks no one (or the pool, which
+  /// the players come from, is not read yet).
+  VoidCallback? onFill,
 });
 
 /// The summary, then the players by position group: built as it scrolls.
@@ -1152,6 +1185,23 @@ class _Summary extends StatelessWidget {
                 style: AppTypography.labelSmall.copyWith(color: color),
               ),
             ),
+          if (view.onFill case final fill?) ...[
+            const SizedBox(height: AppSpacing.sm),
+            FilledButton.tonalIcon(
+              key: SquadScreen.fillKey,
+              onPressed: fill,
+              style: FilledButton.styleFrom(minimumSize: const Size(0, 40)),
+              icon: const Icon(Icons.auto_awesome_outlined),
+              label: Text(l.editorSquadFill),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              l.editorSquadFillAbout,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+          ],
           const SizedBox(height: AppSpacing.sm),
           Text(
             l.editorSquadRules(

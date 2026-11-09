@@ -14647,6 +14647,26 @@ class AppLocalizationsTh extends AppLocalizations {
   String get editorSquadReady => 'ทีมนี้พร้อมลงเล่นแล้ว';
 
   @override
+  String get editorSquadFill => 'เติมผู้เล่นที่ขาด';
+
+  @override
+  String get editorSquadFillAbout =>
+      'เพิ่มผู้เล่นที่สร้างขึ้นของชาตินี้ โดยเริ่มจากคนที่เก่งที่สุด จนทีมมีจำนวนและตำแหน่งครบตามที่อาชีพต้องการ';
+
+  @override
+  String editorSquadFilled(int count) {
+    return 'เพิ่มผู้เล่นแล้ว: $count';
+  }
+
+  @override
+  String get editorCommunityTitle =>
+      'แฟนบอลแชร์ฐานข้อมูลของตนใน Discord ของเรา';
+
+  @override
+  String get editorCommunityAbout =>
+      'แชร์โดยชุมชน เราไม่ได้โฮสต์หรือตรวจสอบฐานข้อมูลเหล่านี้';
+
+  @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
     return 'ผู้เล่น $min ถึง $max คน โดยมีผู้รักษาประตูอย่างน้อย $gk คน กองหลัง $def คน กองกลาง $mid คน และกองหน้า $fwd คน';
   }

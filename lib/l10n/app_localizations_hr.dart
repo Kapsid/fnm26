@@ -15267,6 +15267,26 @@ class AppLocalizationsHr extends AppLocalizations {
   String get editorSquadReady => 'Ovaj je sastav spreman za igru.';
 
   @override
+  String get editorSquadFill => 'Dopuni igrače koji nedostaju';
+
+  @override
+  String get editorSquadFillAbout =>
+      'Dodaje generirane igrače te reprezentacije, najjače prvo, dok sastav ne dobije veličinu i položaje koje karijera traži.';
+
+  @override
+  String editorSquadFilled(int count) {
+    return 'Dodano igrača: $count';
+  }
+
+  @override
+  String get editorCommunityTitle =>
+      'Navijači dijele svoje baze podataka na našem Discordu';
+
+  @override
+  String get editorCommunityAbout =>
+      'Dijeli zajednica. Ove baze podataka ne hostamo niti provjeravamo.';
+
+  @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
     return 'Od $min do $max igrača, od toga barem vratara: $gk, braniča: $def, veznih: $mid, napadača: $fwd.';
   }

@@ -22951,6 +22951,32 @@
   "@editorSquadReady": {
     "description": "A squad with nothing missing."
   },
+  "editorSquadFill": "Fill missing players",
+  "@editorSquadFill": {
+    "description": "Button on a nation's squad summary that adds the players the squad still lacks."
+  },
+  "editorSquadFillAbout": "Adds the nation's own generated players, strongest first, until the squad has the size and positions a career needs.",
+  "@editorSquadFillAbout": {
+    "description": "One line under the Fill missing players button."
+  },
+  "editorSquadFilled": "Players added: {count}",
+  "@editorSquadFilled": {
+    "description": "Snackbar after Fill missing players, with Undo.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "4"
+      }
+    }
+  },
+  "editorCommunityTitle": "Fans share their databases on our Discord",
+  "@editorCommunityTitle": {
+    "description": "Line on a database's home: fans share their databases on the Discord."
+  },
+  "editorCommunityAbout": "Shared by the community. We do not host or check these databases.",
+  "@editorCommunityAbout": {
+    "description": "Under it: community sharing only, not official content."
+  },
   "editorSquadRules": "{min} to {max} players, with at least {gk} goalkeepers, {def} defenders, {mid} midfielders and {fwd} forwards.",
   "@editorSquadRules": {
     "description": "What a squad needs to be ready.",

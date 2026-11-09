@@ -15014,6 +15014,26 @@ class AppLocalizationsBg extends AppLocalizations {
   String get editorSquadReady => 'Този състав е готов за игра.';
 
   @override
+  String get editorSquadFill => 'Попълни липсващите играчи';
+
+  @override
+  String get editorSquadFillAbout =>
+      'Добавя генерираните играчи на националния отбор, започвайки от най-силните, докато съставът достигне нужния за кариера брой и позиции.';
+
+  @override
+  String editorSquadFilled(int count) {
+    return 'Добавени играчи: $count';
+  }
+
+  @override
+  String get editorCommunityTitle =>
+      'Феновете споделят базите си данни в нашия Discord';
+
+  @override
+  String get editorCommunityAbout =>
+      'Споделя се от общността. Ние не хостваме и не проверяваме тези бази данни.';
+
+  @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
     return 'От $min до $max играчи, с поне $gk вратари, $def защитници, $mid полузащитници и $fwd нападатели.';
   }

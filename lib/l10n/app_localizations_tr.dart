@@ -14843,6 +14843,26 @@ class AppLocalizationsTr extends AppLocalizations {
   String get editorSquadReady => 'Bu kadro oynamaya hazır.';
 
   @override
+  String get editorSquadFill => 'Eksik oyuncuları tamamla';
+
+  @override
+  String get editorSquadFillAbout =>
+      'Ülkenin üretilmiş oyuncularını, en güçlüden başlayarak, kadro bir kariyerin gerektirdiği boyuta ve mevkilere ulaşana kadar ekler.';
+
+  @override
+  String editorSquadFilled(int count) {
+    return 'Eklenen oyuncular: $count';
+  }
+
+  @override
+  String get editorCommunityTitle =>
+      'Hayranlar veritabanlarını Discord\'umuzda paylaşıyor';
+
+  @override
+  String get editorCommunityAbout =>
+      'Topluluk tarafından paylaşılır. Bu veritabanlarını barındırmıyor ve denetlemiyoruz.';
+
+  @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
     return '$min ile $max arası oyuncu; en az $gk kaleci, $def defans oyuncusu, $mid orta saha ve $fwd forvet.';
   }

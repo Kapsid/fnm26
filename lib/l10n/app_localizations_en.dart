@@ -14955,6 +14955,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editorSquadReady => 'This squad is ready to play.';
 
   @override
+  String get editorSquadFill => 'Fill missing players';
+
+  @override
+  String get editorSquadFillAbout =>
+      'Adds the nation\'s own generated players, strongest first, until the squad has the size and positions a career needs.';
+
+  @override
+  String editorSquadFilled(int count) {
+    return 'Players added: $count';
+  }
+
+  @override
+  String get editorCommunityTitle =>
+      'Fans share their databases on our Discord';
+
+  @override
+  String get editorCommunityAbout =>
+      'Shared by the community. We do not host or check these databases.';
+
+  @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
     return '$min to $max players, with at least $gk goalkeepers, $def defenders, $mid midfielders and $fwd forwards.';
   }

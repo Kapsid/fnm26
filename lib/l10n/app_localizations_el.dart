@@ -15010,6 +15010,26 @@ class AppLocalizationsEl extends AppLocalizations {
   String get editorSquadReady => 'Η αποστολή είναι έτοιμη για παιχνίδι.';
 
   @override
+  String get editorSquadFill => 'Συμπλήρωση παικτών που λείπουν';
+
+  @override
+  String get editorSquadFillAbout =>
+      'Προσθέτει τους παραγόμενους παίκτες της χώρας, τους ισχυρότερους πρώτα, ώσπου η ομάδα να έχει το μέγεθος και τις θέσεις που χρειάζεται μια καριέρα.';
+
+  @override
+  String editorSquadFilled(int count) {
+    return 'Προστέθηκαν παίκτες: $count';
+  }
+
+  @override
+  String get editorCommunityTitle =>
+      'Οι οπαδοί μοιράζονται τις βάσεις δεδομένων τους στο Discord μας';
+
+  @override
+  String get editorCommunityAbout =>
+      'Μοιράζονται από την κοινότητα. Δεν φιλοξενούμε ούτε ελέγχουμε αυτές τις βάσεις δεδομένων.';
+
+  @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
     return '$min έως $max παίκτες, με τουλάχιστον $gk τερματοφύλακες, $def αμυντικούς, $mid μέσους και $fwd επιθετικούς.';
   }

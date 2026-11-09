@@ -14835,6 +14835,26 @@ class AppLocalizationsId extends AppLocalizations {
   String get editorSquadReady => 'Skuad ini siap dimainkan.';
 
   @override
+  String get editorSquadFill => 'Lengkapi pemain yang kurang';
+
+  @override
+  String get editorSquadFillAbout =>
+      'Menambahkan pemain buatan game milik negara ini, dari yang terkuat, sampai skuad memiliki jumlah dan posisi yang dibutuhkan sebuah karier.';
+
+  @override
+  String editorSquadFilled(int count) {
+    return 'Pemain ditambahkan: $count';
+  }
+
+  @override
+  String get editorCommunityTitle =>
+      'Para penggemar berbagi database mereka di Discord kami';
+
+  @override
+  String get editorCommunityAbout =>
+      'Dibagikan oleh komunitas. Kami tidak meng-host atau memeriksa database ini.';
+
+  @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
     return '$min sampai $max pemain, dengan minimal $gk kiper, $def bek, $mid gelandang, dan $fwd penyerang.';
   }

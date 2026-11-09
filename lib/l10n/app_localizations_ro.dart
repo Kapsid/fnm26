@@ -15343,6 +15343,26 @@ class AppLocalizationsRo extends AppLocalizations {
   String get editorSquadReady => 'Acest lot este gata de joc.';
 
   @override
+  String get editorSquadFill => 'Completează jucătorii lipsă';
+
+  @override
+  String get editorSquadFillAbout =>
+      'Adaugă jucătorii generați ai națiunii, cei mai puternici primii, până când lotul are mărimea și posturile de care are nevoie o carieră.';
+
+  @override
+  String editorSquadFilled(int count) {
+    return 'Jucători adăugați: $count';
+  }
+
+  @override
+  String get editorCommunityTitle =>
+      'Fanii își împărtășesc bazele de date pe Discordul nostru';
+
+  @override
+  String get editorCommunityAbout =>
+      'Partajate de comunitate. Nu găzduim și nu verificăm aceste baze de date.';
+
+  @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
     return 'Între $min și $max jucători, cu cel puțin $gk portari, $def fundași, $mid mijlocași și $fwd atacanți.';
   }

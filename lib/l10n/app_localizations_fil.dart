@@ -14932,6 +14932,26 @@ class AppLocalizationsFil extends AppLocalizations {
   String get editorSquadReady => 'Handa nang maglaro ang squad na ito.';
 
   @override
+  String get editorSquadFill => 'Punan ang mga kulang na manlalaro';
+
+  @override
+  String get editorSquadFillAbout =>
+      'Nagdaragdag ng mga nabuong manlalaro ng bansa, pinakamalakas muna, hanggang sa makuha ng koponan ang laki at mga posisyong kailangan ng isang karera.';
+
+  @override
+  String editorSquadFilled(int count) {
+    return 'Mga manlalarong naidagdag: $count';
+  }
+
+  @override
+  String get editorCommunityTitle =>
+      'Ibinabahagi ng mga fan ang kanilang mga database sa aming Discord';
+
+  @override
+  String get editorCommunityAbout =>
+      'Ibinahagi ng komunidad. Hindi namin ito ino-host o sinusuri.';
+
+  @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
     return '$min hanggang $max manlalaro, may hindi bababa sa $gk goalkeeper, $def defender, $mid midfielder at $fwd forward.';
   }
