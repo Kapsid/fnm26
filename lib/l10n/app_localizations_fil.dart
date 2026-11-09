@@ -8198,7 +8198,7 @@ class AppLocalizationsFil extends AppLocalizations {
   String get matchGoalShout => 'GOAL!';
 
   @override
-  String get matchRedCardShout => 'RED CARD';
+  String get matchRedCardShout => 'PULANG KARD';
 
   @override
   String matchShootoutScore(int home, int away) {
