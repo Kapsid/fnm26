@@ -178,8 +178,8 @@ nationNowProvider = FutureProvider.autoDispose
 
 FormChip _chip(Fixture f, int nationId) {
   final home = f.homeNationId == nationId;
-  final gf = (home ? f.homeScore : f.awayScore)!;
-  final ga = (home ? f.awayScore : f.homeScore)!;
+  final gf = (home ? f.shownHomeScore : f.shownAwayScore)!;
+  final ga = (home ? f.shownAwayScore : f.shownHomeScore)!;
   var outcome = gf > ga ? 'W' : (gf < ga ? 'L' : 'D');
   if (outcome == 'D' && f.wentToShootout) {
     final pf = (home ? f.homePenalties : f.awayPenalties)!;

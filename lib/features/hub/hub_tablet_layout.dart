@@ -415,7 +415,8 @@ class _FormPanel extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '${f.homeScore}-${f.awayScore}',
+                          '${f.shownHomeScore}-${f.shownAwayScore}'
+                          '${f.wentToShootout ? ' ${l.hubPens}' : ''}',
                           style: TabletText.cellNumeric,
                         ),
                       ],

@@ -477,7 +477,9 @@ class _TournamentBracketState extends State<TournamentBracket> {
               child: Column(
                 children: [
                   Text(
-                    decided ? '${f.homeScore} - ${f.awayScore}' : 'vs',
+                    decided
+                        ? '${f.shownHomeScore} - ${f.shownAwayScore}'
+                        : 'vs',
                     style: AppTypography.labelMedium,
                   ),
                   // How it was settled, under the score rather than beside it:
