@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -26,6 +28,7 @@ abstract final class ShareKeys {
   static const sheet = Key('share.sheet');
   static Key format(ShareFormat f) => Key('share.format.${f.name}');
   static Key action(ShareAction a) => Key('share.action.${a.name}');
+  static Key preview(ShareFormat f) => Key('share.preview.${f.name}');
 }
 
 /// Asks for a format (square or story) and what to do with it (share, or
@@ -48,7 +51,13 @@ Future<void> shareCard(
   final saver = container.read(shareImageSaverProvider);
   final choice = await showAdaptiveSheet<(ShareFormat, ShareAction)>(
     context: context,
+    // As tall as the preview needs, up to the screen: the sheet scrolls the
+    // rest and keeps its buttons pinned.
+    isScrollControlled: true,
     builder: (sheetContext) => _FormatSheet(
+      card: card,
+      flagCodes: flagCodes,
+      images: images,
       onPick: (f, a) => Navigator.of(sheetContext).pop((f, a)),
     ),
   );
@@ -84,11 +93,26 @@ Future<void> shareCard(
   }
 }
 
-/// The format to draw (square selected to begin with) and the two things to
-/// do with it.
+/// The format to draw (square selected to begin with), a preview of the very
+/// image that will go out, and the two things to do with it.
+///
+/// The preview is the card itself, scaled down, so what the manager sees is
+/// what he shares. It waits behind a placeholder for the same warm-up the
+/// capture waits for, so it never shows a card with its flags missing.
+///
+/// The title, the formats and the preview scroll; the two buttons stay
+/// pinned under them, so they are in reach on the smallest phone.
 class _FormatSheet extends StatefulWidget {
-  const _FormatSheet({required this.onPick});
+  const _FormatSheet({
+    required this.card,
+    required this.flagCodes,
+    required this.images,
+    required this.onPick,
+  });
 
+  final ShareCardBuilder card;
+  final Iterable<String> flagCodes;
+  final Iterable<Uint8List> images;
   final void Function(ShareFormat format, ShareAction action) onPick;
 
   @override
@@ -97,6 +121,26 @@ class _FormatSheet extends StatefulWidget {
 
 class _FormatSheetState extends State<_FormatSheet> {
   ShareFormat _format = ShareFormat.square;
+  bool _warm = false;
+  bool _warming = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Once, here rather than in initState: precaching reads the context's
+    // MediaQuery.
+    if (_warming) return;
+    _warming = true;
+    unawaited(
+      warmShareArt(
+        context,
+        flagCodes: widget.flagCodes,
+        images: widget.images,
+      ).then((_) {
+        if (mounted) setState(() => _warm = true);
+      }),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,36 +148,55 @@ class _FormatSheetState extends State<_FormatSheet> {
     return SafeArea(
       key: ShareKeys.sheet,
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.lg,
+          AppSpacing.md,
+          AppSpacing.lg,
+          AppSpacing.lg,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              l.shareSheetTitle,
-              textAlign: TextAlign.center,
-              style: AppTypography.titleMedium,
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            Row(
-              children: [
-                for (final f in ShareFormat.values) ...[
-                  if (f != ShareFormat.values.first)
-                    const SizedBox(width: AppSpacing.md),
-                  Expanded(
-                    child: _FormatTile(
-                      format: f,
-                      selected: f == _format,
-                      label: f.isStory
-                          ? l.shareFormatStory
-                          : l.shareFormatSquare,
-                      onTap: () => setState(() => _format = f),
+            Flexible(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      l.shareSheetTitle,
+                      textAlign: TextAlign.center,
+                      style: AppTypography.titleMedium,
                     ),
-                  ),
-                ],
-              ],
+                    const SizedBox(height: AppSpacing.md),
+                    Row(
+                      children: [
+                        for (final f in ShareFormat.values) ...[
+                          if (f != ShareFormat.values.first)
+                            const SizedBox(width: AppSpacing.md),
+                          Expanded(
+                            child: _FormatTile(
+                              format: f,
+                              selected: f == _format,
+                              label: f.isStory
+                                  ? l.shareFormatStory
+                                  : l.shareFormatSquare,
+                              onTap: () => setState(() => _format = f),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    _Preview(
+                      format: _format,
+                      card: _warm ? widget.card(_format) : null,
+                    ),
+                  ],
+                ),
+              ),
             ),
-            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: AppSpacing.md),
             Row(
               children: [
                 Expanded(
@@ -175,7 +238,73 @@ class _FormatSheetState extends State<_FormatSheet> {
   }
 }
 
-/// One format: its shape drawn to scale, and its name; ringed when chosen.
+/// The card in [format], scaled to fit: never wider than the sheet, and
+/// never taller than a share of the screen (a story is tall), its aspect
+/// kept. A spinner in the same frame until [card] is ready (null).
+class _Preview extends StatelessWidget {
+  const _Preview({required this.format, required this.card});
+
+  final ShareFormat format;
+  final Widget? card;
+
+  /// The tallest the preview may stand, as a share of the screen's height.
+  static double heightShare(ShareFormat f) => f.isStory ? 0.46 : 0.36;
+
+  @override
+  Widget build(BuildContext context) {
+    final screen = MediaQuery.sizeOf(context).height;
+    final aspect = format.size.width / format.size.height;
+    return LayoutBuilder(
+      builder: (context, c) {
+        final maxH = screen * heightShare(format);
+        final w = math.min(c.maxWidth, maxH * aspect);
+        final h = w / aspect;
+        final card = this.card;
+        return Center(
+          child: Container(
+            key: ShareKeys.preview(format),
+            width: w,
+            height: h,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: AppColors.primary.withValues(alpha: 0.25),
+              ),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x73000000),
+                  blurRadius: 24,
+                  offset: Offset(0, 3),
+                ),
+              ],
+              color: AppColors.surfaceContainerLowest,
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(9),
+              child: card == null
+                  ? const Center(
+                      child: SizedBox.square(
+                        dimension: 28,
+                        child: CircularProgressIndicator(strokeWidth: 2.5),
+                      ),
+                    )
+                  // The card at its own 1080-wide size, scaled down whole:
+                  // the preview is the image, not a lookalike.
+                  : FittedBox(
+                      child: SizedBox.fromSize(
+                        size: format.size,
+                        child: card,
+                      ),
+                    ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// One format: its shape drawn to scale beside its name; ringed when chosen.
 class _FormatTile extends StatelessWidget {
   const _FormatTile({
     required this.format,
@@ -191,7 +320,7 @@ class _FormatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const h = 96.0;
+    const h = 36.0;
     final w = h * format.size.width / format.size.height;
     return Material(
       color: selected
@@ -209,34 +338,37 @@ class _FormatTile extends StatelessWidget {
         borderRadius: AppRadii.mdAll,
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-          child: Column(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.sm,
+            vertical: AppSpacing.sm,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                height: h,
-                child: Center(
-                  child: Container(
-                    width: w,
-                    height: format.isStory ? h : w,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: AppColors.primary, width: 1.5),
-                      gradient: const LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [Color(0xFF2A2E33), Color(0xFF111316)],
-                      ),
-                    ),
-                    child: const Icon(
-                      Icons.emoji_events_outlined,
-                      size: 20,
-                      color: AppColors.primary,
-                    ),
+              Container(
+                width: w,
+                height: format.isStory ? h : w,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(
+                    color: selected ? AppColors.primary : AppColors.outline,
+                    width: 1.5,
                   ),
                 ),
               ),
-              const SizedBox(height: AppSpacing.sm),
-              Text(label, style: AppTypography.labelLarge),
+              const SizedBox(width: AppSpacing.sm),
+              // Shrinks rather than cuts: a 320-wide phone and a long
+              // language must still read the whole word.
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    style: AppTypography.labelLarge,
+                  ),
+                ),
+              ),
             ],
           ),
         ),

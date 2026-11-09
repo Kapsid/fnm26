@@ -4,8 +4,11 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_theme.dart';
+import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/match/score_bug_theme.dart';
 import 'package:fnm/features/share/cabinet_share_card.dart';
@@ -13,6 +16,7 @@ import 'package:fnm/features/share/match_share_card.dart';
 import 'package:fnm/features/share/share_capture.dart';
 import 'package:fnm/features/share/share_card_kit.dart';
 import 'package:fnm/features/share/share_data.dart';
+import 'package:fnm/features/share/share_sheet.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
 /// The share cards at their real size (1080 px square, 1080 x 1920 story),
@@ -45,6 +49,104 @@ void main() {
           '$out/cabinet_${name}_${format.name}.png',
         );
       });
+    }
+  }
+
+  // The share sheet as a phone shows it (iPhone 17 Pro, 402 x 874 at 3x,
+  // and an iPhone SE, 320 x 568 at 2x), with the preview of each format.
+  for (final (device, size, dpr, top, bottom) in const [
+    ('', Size(402, 874), 3.0, 62.0, 34.0),
+    ('se_', Size(320, 568), 2.0, 20.0, 0.0),
+  ]) {
+    for (final (what, card, flags)
+        in <(String, ShareCardBuilder, List<String>)>[
+          (
+            'match',
+            (f) => MatchShareCard(data: _matches.first.$2, format: f),
+            matchShareFlags(_matches.first.$2).toList(),
+          ),
+          (
+            'cabinet',
+            (f) => CabinetShareCard(data: _cabinets[1].$2, format: f),
+            cabinetShareFlags(_cabinets[1].$2).toList(),
+          ),
+        ]) {
+      for (final format in ShareFormat.values) {
+        final name = 'sheet_$device${what}_${format.name}';
+        testWidgets(name, (tester) async {
+          tester.view
+            ..physicalSize = size * dpr
+            ..devicePixelRatio = dpr
+            ..padding = FakeViewPadding(top: top * dpr, bottom: bottom * dpr)
+            ..viewPadding = FakeViewPadding(
+              top: top * dpr,
+              bottom: bottom * dpr,
+            );
+          addTearDown(tester.view.reset);
+          const root = Key('sheet.root');
+          await tester.pumpWidget(
+            RepaintBoundary(
+              key: root,
+              child: ProviderScope(
+                child: MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  theme: AppTheme.theme,
+                  localizationsDelegates:
+                      AppLocalizations.localizationsDelegates,
+                  supportedLocales: AppLocalizations.supportedLocales,
+                  home: Scaffold(
+                    appBar: AppBar(
+                      centerTitle: true,
+                      title: Text(
+                        'MANAGER CAREER',
+                        style: AppTypography.labelMedium.copyWith(
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                    body: Center(
+                      child: ShareCardButton(
+                        card: card,
+                        fileStem: 'preview',
+                        flagCodes: flags,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+          await tester.tap(find.byKey(ShareKeys.button));
+          for (var i = 0; i < 40; i++) {
+            await tester.runAsync(
+              () => Future<void>.delayed(const Duration(milliseconds: 40)),
+            );
+            await tester.pump(const Duration(milliseconds: 60));
+          }
+          await tester.tap(find.byKey(ShareKeys.format(format)));
+          for (var i = 0; i < 12; i++) {
+            await tester.runAsync(
+              () => Future<void>.delayed(const Duration(milliseconds: 40)),
+            );
+            await tester.pump(const Duration(milliseconds: 60));
+          }
+          expect(find.byKey(ShareKeys.preview(format)), findsOneWidget);
+          expect(tester.takeException(), isNull);
+          final boundary = tester.renderObject<RenderRepaintBoundary>(
+            find.byKey(root),
+          );
+          await tester.runAsync(() async {
+            final image = await boundary.toImage(pixelRatio: dpr);
+            final data = await image.toByteData(
+              format: ui.ImageByteFormat.png,
+            );
+            File('$out/$name.png')
+              ..createSync(recursive: true)
+              ..writeAsBytesSync(data!.buffer.asUint8List());
+            image.dispose();
+          });
+        });
+      }
     }
   }
 
