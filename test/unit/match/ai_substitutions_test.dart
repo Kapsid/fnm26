@@ -26,14 +26,14 @@ void main() {
       ),
   ];
 
-  test('plans 2-3 subs within the second-half window', () {
+  test('plans 2-5 subs within the second-half window', () {
     final subs = AiSubstitutions.plan(
       nationId: 1,
       xi: xi,
       bench: bench,
       rng: SeededRng.forFixture(9, 3),
     );
-    expect(subs.length, inInclusiveRange(2, 3));
+    expect(subs.length, inInclusiveRange(2, 5));
     expect(subs.every((s) => s.minute >= 58 && s.minute <= 82), isTrue);
     expect(subs.every((s) => s.teamNationId == 1), isTrue);
     // Minutes are non-decreasing (subs don't stack out of order).
@@ -66,6 +66,69 @@ void main() {
       rng: rng,
     ).map((s) => '${s.minute}:${s.offId}:${s.on.id}').toList();
     expect(keys(SeededRng.forFixture(7, 2)), keys(SeededRng.forFixture(7, 2)));
+  });
+
+  test('the count varies, and a friendly uses more of the bench', () {
+    final comp = <int>[];
+    for (var seed = 0; seed < 400; seed++) {
+      comp.add(
+        AiSubstitutions.drawCount(
+          SeededRng.forFixture(seed, 9),
+          friendly: false,
+        ),
+      );
+    }
+    expect(comp.toSet(), {2, 3, 4, 5});
+    final friendlies = <int>[];
+    for (var seed = 0; seed < 400; seed++) {
+      friendlies.add(
+        AiSubstitutions.drawCount(
+          SeededRng.forFixture(seed, 9),
+          friendly: true,
+        ),
+      );
+    }
+    expect(friendlies.toSet(), {3, 4, 5, 6, 7, 8});
+    double avg(List<int> xs) => xs.reduce((a, b) => a + b) / xs.length;
+    expect(avg(friendlies), greaterThan(avg(comp) + 1));
+  });
+
+  test('a friendly plans its changes from half time', () {
+    final counts = <int>{};
+    final bigBench = [
+      ...bench,
+      for (var i = 0; i < 3; i++)
+        player(
+          id: 300 + i,
+          nationId: 1,
+          position:
+              PlayerPosition.values[(i + 2) % PlayerPosition.values.length],
+          attributes: flatAttributes(64),
+        ),
+    ];
+    for (var seed = 0; seed < 60; seed++) {
+      final subs = AiSubstitutions.plan(
+        nationId: 1,
+        xi: xi,
+        bench: bigBench,
+        rng: SeededRng.forFixture(seed, 5),
+        friendly: true,
+      );
+      counts.add(subs.length);
+      expect(subs.every((s) => s.minute >= 46 && s.minute <= 80), isTrue);
+    }
+    expect(counts.length, greaterThan(2));
+  });
+
+  test('a short bench caps a friendly at what is there', () {
+    final subs = AiSubstitutions.plan(
+      nationId: 1,
+      xi: xi,
+      bench: bench.take(2).toList(),
+      rng: SeededRng.forFixture(3, 3),
+      friendly: true,
+    );
+    expect(subs.length, lessThanOrEqualTo(2));
   });
 
   test('an empty bench yields no subs', () {
