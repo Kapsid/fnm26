@@ -34,8 +34,8 @@ Future<void> showPendingAchievementUnlocks(
 /// Shows a celebratory dialog listing achievements the player just unlocked.
 /// Returns once dismissed. A no-op when [defs] is empty.
 ///
-/// [compact] is the tablet's: a small card in the tablet kit's style, low on
-/// the right, instead of a dialog across the screen. Same content, and
+/// [compact] is the tablet's: a small card in the tablet kit's style, centred
+/// like the news popups, instead of a dialog across the screen. Same content, and
 /// dismissed the same ways (its button, or a tap outside it).
 Future<void> showAchievementsUnlocked(
   BuildContext context,
@@ -125,7 +125,7 @@ class _CompactUnlocked extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     return Dialog(
-      alignment: Alignment.bottomRight,
+      alignment: Alignment.center,
       insetPadding: const EdgeInsets.all(AppSpacing.lg),
       backgroundColor: AppColors.surfaceContainerLow,
       surfaceTintColor: Colors.transparent,

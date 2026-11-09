@@ -49,11 +49,11 @@ Future<void> _open(WidgetTester tester, {required bool compact}) async {
         .first,
   );
   if (compact) {
-    // A small card low on the right, not a dialog across the screen.
+    // A small card centred like the news, not a dialog across the screen.
     expect(card.width, inInclusiveRange(360, 420));
     expect(card.height, lessThan(kTabletSize.height / 2));
-    expect(card.center.dx, greaterThan(kTabletSize.width / 2));
-    expect(card.center.dy, greaterThan(kTabletSize.height / 2));
+    expect(card.center.dx, closeTo(kTabletSize.width / 2, 2));
+    expect(card.center.dy, closeTo(kTabletSize.height / 2, 2));
   } else {
     expect(card.width, greaterThan(420));
   }
