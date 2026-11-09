@@ -16160,4 +16160,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'İyi oyuncular güçlü kulüplere gider. Varsayılan: ligine göre 5 üzerinden $stars.';
   }
+
+  @override
+  String get editorCountryAll => 'Tüm ülkeler';
+
+  @override
+  String get editorCountryFilterTitle => 'Ülkeye göre filtrele';
 }

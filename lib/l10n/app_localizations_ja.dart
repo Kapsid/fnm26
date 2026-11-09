@@ -15669,4 +15669,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return '強いクラブほど良い選手が集まります。デフォルト: リーグに応じて5段階中$stars。';
   }
+
+  @override
+  String get editorCountryAll => 'すべての国';
+
+  @override
+  String get editorCountryFilterTitle => '国で絞り込む';
 }

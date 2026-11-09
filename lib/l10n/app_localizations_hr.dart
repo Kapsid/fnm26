@@ -16585,4 +16585,10 @@ class AppLocalizationsHr extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Bolji igrači odlaze u jače klubove. Zadano: $stars od 5, prema njegovoj ligi.';
   }
+
+  @override
+  String get editorCountryAll => 'Sve države';
+
+  @override
+  String get editorCountryFilterTitle => 'Filtriraj po državi';
 }

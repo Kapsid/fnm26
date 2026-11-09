@@ -16562,4 +16562,10 @@ class AppLocalizationsUk extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Кращі гравці переходять до сильніших клубів. Типово: $stars з 5 за його лігою.';
   }
+
+  @override
+  String get editorCountryAll => 'Усі країни';
+
+  @override
+  String get editorCountryFilterTitle => 'Фільтр за країною';
 }

@@ -16321,4 +16321,10 @@ class AppLocalizationsFi extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Paremmat pelaajat siirtyvät vahvempiin seuroihin. Oletus: $stars/5 sarjan mukaan.';
   }
+
+  @override
+  String get editorCountryAll => 'Kaikki maat';
+
+  @override
+  String get editorCountryFilterTitle => 'Suodata maan mukaan';
 }

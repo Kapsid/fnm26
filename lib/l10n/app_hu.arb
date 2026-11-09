@@ -4043,5 +4043,7 @@
   "clubStrengthOf": "Klub erőssége: {stars} az 5-ből",
   "editorClubStrength": "Erősség",
   "editorClubStrengthDefault": "Alapértelmezett",
-  "editorClubStrengthHelp": "A jobb játékosok erősebb klubokba igazolnak. Alapértelmezett: {stars} az 5-ből, a bajnoksága szerint."
+  "editorClubStrengthHelp": "A jobb játékosok erősebb klubokba igazolnak. Alapértelmezett: {stars} az 5-ből, a bajnoksága szerint.",
+  "editorCountryAll": "Minden ország",
+  "editorCountryFilterTitle": "Szűrés ország szerint"
 }

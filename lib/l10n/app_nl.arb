@@ -4043,5 +4043,7 @@
   "clubStrengthOf": "Clubsterkte: {stars} van 5",
   "editorClubStrength": "Sterkte",
   "editorClubStrengthDefault": "Standaard",
-  "editorClubStrengthHelp": "Betere spelers gaan naar sterkere clubs. Standaard: {stars} van 5, volgens de competitie."
+  "editorClubStrengthHelp": "Betere spelers gaan naar sterkere clubs. Standaard: {stars} van 5, volgens de competitie.",
+  "editorCountryAll": "Alle landen",
+  "editorCountryFilterTitle": "Filter op land"
 }

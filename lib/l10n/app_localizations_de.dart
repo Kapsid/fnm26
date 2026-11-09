@@ -16371,4 +16371,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Bessere Spieler wechseln zu stärkeren Vereinen. Standard: $stars von 5, nach seiner Liga.';
   }
+
+  @override
+  String get editorCountryAll => 'Alle Länder';
+
+  @override
+  String get editorCountryFilterTitle => 'Nach Land filtern';
 }

@@ -16194,4 +16194,10 @@ class AppLocalizationsHu extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'A jobb játékosok erősebb klubokba igazolnak. Alapértelmezett: $stars az 5-ből, a bajnoksága szerint.';
   }
+
+  @override
+  String get editorCountryAll => 'Minden ország';
+
+  @override
+  String get editorCountryFilterTitle => 'Szűrés ország szerint';
 }

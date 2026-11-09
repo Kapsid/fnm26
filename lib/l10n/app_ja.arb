@@ -4043,5 +4043,7 @@
   "clubStrengthOf": "クラブの強さ: 5段階中{stars}",
   "editorClubStrength": "強さ",
   "editorClubStrengthDefault": "デフォルト",
-  "editorClubStrengthHelp": "強いクラブほど良い選手が集まります。デフォルト: リーグに応じて5段階中{stars}。"
+  "editorClubStrengthHelp": "強いクラブほど良い選手が集まります。デフォルト: リーグに応じて5段階中{stars}。",
+  "editorCountryAll": "すべての国",
+  "editorCountryFilterTitle": "国で絞り込む"
 }

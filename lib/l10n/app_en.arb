@@ -25124,5 +25124,13 @@
         "type": "int"
       }
     }
+  },
+  "editorCountryAll": "All countries",
+  "@editorCountryAll": {
+    "description": "Editor, clubs and stadiums list: the country filter's choice that lists every country."
+  },
+  "editorCountryFilterTitle": "Filter by country",
+  "@editorCountryFilterTitle": {
+    "description": "Editor, clubs and stadiums list: title of the sheet that picks a country to list."
   }
 }

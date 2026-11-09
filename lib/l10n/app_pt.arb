@@ -4043,5 +4043,7 @@
   "clubStrengthOf": "Força do clube: {stars} de 5",
   "editorClubStrength": "Força",
   "editorClubStrengthDefault": "Padrão",
-  "editorClubStrengthHelp": "Os melhores jogadores vão para os clubes mais fortes. Padrão: {stars} de 5, conforme a sua liga."
+  "editorClubStrengthHelp": "Os melhores jogadores vão para os clubes mais fortes. Padrão: {stars} de 5, conforme a sua liga.",
+  "editorCountryAll": "Todos os países",
+  "editorCountryFilterTitle": "Filtrar por país"
 }

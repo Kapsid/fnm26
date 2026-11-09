@@ -16332,4 +16332,10 @@ class AppLocalizationsBg extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'По-добрите играчи отиват в по-силни клубове. По подразбиране: $stars от 5 според лигата му.';
   }
+
+  @override
+  String get editorCountryAll => 'Всички държави';
+
+  @override
+  String get editorCountryFilterTitle => 'Филтър по държава';
 }

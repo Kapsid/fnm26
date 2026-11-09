@@ -24499,6 +24499,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Better players join stronger clubs. Default: {stars} of 5, set by its league.'**
   String editorClubStrengthHelp(int stars);
+
+  /// Editor, clubs and stadiums list: the country filter's choice that lists every country.
+  ///
+  /// In en, this message translates to:
+  /// **'All countries'**
+  String get editorCountryAll;
+
+  /// Editor, clubs and stadiums list: title of the sheet that picks a country to list.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by country'**
+  String get editorCountryFilterTitle;
 }
 
 class _AppLocalizationsDelegate

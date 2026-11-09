@@ -342,6 +342,16 @@ int clubStarsIn(WorldPack pack, NameEntry e) {
   return pack.clubStrengths[e.key] ?? clubDefaultStars(e);
 }
 
+/// Whether the database sets club row [e]'s strength (against the game's).
+bool clubStarsSet(WorldPack pack, NameEntry e) {
+  final id = e.addedId;
+  if (id != null) {
+    return pack.addedClubs.where((c) => c.id == id).firstOrNull?.strength !=
+        null;
+  }
+  return pack.clubStrengths.containsKey(e.key);
+}
+
 /// The stars club row [e] has when the database leaves it at Default.
 int clubDefaultStars(NameEntry e) {
   final code = e.clubCountry;

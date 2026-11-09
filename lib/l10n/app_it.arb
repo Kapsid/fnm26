@@ -4043,5 +4043,7 @@
   "clubStrengthOf": "Forza del club: {stars} su 5",
   "editorClubStrength": "Forza",
   "editorClubStrengthDefault": "Predefinita",
-  "editorClubStrengthHelp": "I giocatori migliori vanno nei club più forti. Predefinita: {stars} su 5, in base al suo campionato."
+  "editorClubStrengthHelp": "I giocatori migliori vanno nei club più forti. Predefinita: {stars} su 5, in base al suo campionato.",
+  "editorCountryAll": "Tutti i paesi",
+  "editorCountryFilterTitle": "Filtra per paese"
 }

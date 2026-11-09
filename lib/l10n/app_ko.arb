@@ -4043,5 +4043,7 @@
   "clubStrengthOf": "클럽 전력: 5점 중 {stars}점",
   "editorClubStrength": "전력",
   "editorClubStrengthDefault": "기본값",
-  "editorClubStrengthHelp": "더 좋은 선수는 더 강한 클럽으로 갑니다. 기본값: 리그에 따라 5점 중 {stars}점."
+  "editorClubStrengthHelp": "더 좋은 선수는 더 강한 클럽으로 갑니다. 기본값: 리그에 따라 5점 중 {stars}점.",
+  "editorCountryAll": "모든 국가",
+  "editorCountryFilterTitle": "국가별 필터"
 }

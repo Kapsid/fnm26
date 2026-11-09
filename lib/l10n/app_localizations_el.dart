@@ -16337,4 +16337,10 @@ class AppLocalizationsEl extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Οι καλύτεροι παίκτες πάνε σε ισχυρότερους συλλόγους. Προεπιλογή: $stars στα 5, βάσει του πρωταθλήματός του.';
   }
+
+  @override
+  String get editorCountryAll => 'Όλες οι χώρες';
+
+  @override
+  String get editorCountryFilterTitle => 'Φιλτράρισμα ανά χώρα';
 }

@@ -4043,5 +4043,7 @@
   "clubStrengthOf": "Lakas ng club: {stars} sa 5",
   "editorClubStrength": "Lakas",
   "editorClubStrengthDefault": "Default",
-  "editorClubStrengthHelp": "Sa mas malalakas na club pumupunta ang mas magagaling na manlalaro. Default: {stars} sa 5, ayon sa liga nito."
+  "editorClubStrengthHelp": "Sa mas malalakas na club pumupunta ang mas magagaling na manlalaro. Default: {stars} sa 5, ayon sa liga nito.",
+  "editorCountryAll": "Lahat ng bansa",
+  "editorCountryFilterTitle": "I-filter ayon sa bansa"
 }

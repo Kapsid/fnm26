@@ -16095,4 +16095,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Cầu thủ giỏi hơn gia nhập câu lạc bộ mạnh hơn. Mặc định: $stars/5, theo giải đấu của đội.';
   }
+
+  @override
+  String get editorCountryAll => 'Tất cả quốc gia';
+
+  @override
+  String get editorCountryFilterTitle => 'Lọc theo quốc gia';
 }

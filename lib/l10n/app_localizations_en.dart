@@ -16273,4 +16273,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Better players join stronger clubs. Default: $stars of 5, set by its league.';
   }
+
+  @override
+  String get editorCountryAll => 'All countries';
+
+  @override
+  String get editorCountryFilterTitle => 'Filter by country';
 }

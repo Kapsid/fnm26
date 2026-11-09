@@ -16663,4 +16663,10 @@ class AppLocalizationsRo extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Jucătorii mai buni ajung la cluburi mai puternice. Implicit: $stars din 5, după liga sa.';
   }
+
+  @override
+  String get editorCountryAll => 'Toate țările';
+
+  @override
+  String get editorCountryFilterTitle => 'Filtrează după țară';
 }

@@ -4043,5 +4043,7 @@
   "clubStrengthOf": "Forța clubului: {stars} din 5",
   "editorClubStrength": "Forță",
   "editorClubStrengthDefault": "Implicit",
-  "editorClubStrengthHelp": "Jucătorii mai buni ajung la cluburi mai puternice. Implicit: {stars} din 5, după liga sa."
+  "editorClubStrengthHelp": "Jucătorii mai buni ajung la cluburi mai puternice. Implicit: {stars} din 5, după liga sa.",
+  "editorCountryAll": "Toate țările",
+  "editorCountryFilterTitle": "Filtrează după țară"
 }

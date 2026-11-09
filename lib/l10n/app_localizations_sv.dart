@@ -16234,4 +16234,10 @@ class AppLocalizationsSv extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Bättre spelare går till starkare klubbar. Standard: $stars av 5, utifrån dess liga.';
   }
+
+  @override
+  String get editorCountryAll => 'Alla länder';
+
+  @override
+  String get editorCountryFilterTitle => 'Filtrera efter land';
 }

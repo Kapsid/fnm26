@@ -4043,5 +4043,7 @@
   "clubStrengthOf": "Сила на клуба: {stars} от 5",
   "editorClubStrength": "Сила",
   "editorClubStrengthDefault": "По подразбиране",
-  "editorClubStrengthHelp": "По-добрите играчи отиват в по-силни клубове. По подразбиране: {stars} от 5 според лигата му."
+  "editorClubStrengthHelp": "По-добрите играчи отиват в по-силни клубове. По подразбиране: {stars} от 5 според лигата му.",
+  "editorCountryAll": "Всички държави",
+  "editorCountryFilterTitle": "Филтър по държава"
 }

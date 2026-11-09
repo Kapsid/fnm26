@@ -16244,4 +16244,10 @@ class AppLocalizationsNb extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Bedre spillere går til sterkere klubber. Standard: $stars av 5, ut fra ligaen.';
   }
+
+  @override
+  String get editorCountryAll => 'Alle land';
+
+  @override
+  String get editorCountryFilterTitle => 'Filtrer etter land';
 }

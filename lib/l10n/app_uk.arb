@@ -4043,5 +4043,7 @@
   "clubStrengthOf": "Сила клубу: {stars} з 5",
   "editorClubStrength": "Сила",
   "editorClubStrengthDefault": "Типово",
-  "editorClubStrengthHelp": "Кращі гравці переходять до сильніших клубів. Типово: {stars} з 5 за його лігою."
+  "editorClubStrengthHelp": "Кращі гравці переходять до сильніших клубів. Типово: {stars} з 5 за його лігою.",
+  "editorCountryAll": "Усі країни",
+  "editorCountryFilterTitle": "Фільтр за країною"
 }

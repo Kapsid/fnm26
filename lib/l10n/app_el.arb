@@ -4043,5 +4043,7 @@
   "clubStrengthOf": "Δύναμη συλλόγου: {stars} στα 5",
   "editorClubStrength": "Δύναμη",
   "editorClubStrengthDefault": "Προεπιλογή",
-  "editorClubStrengthHelp": "Οι καλύτεροι παίκτες πάνε σε ισχυρότερους συλλόγους. Προεπιλογή: {stars} στα 5, βάσει του πρωταθλήματός του."
+  "editorClubStrengthHelp": "Οι καλύτεροι παίκτες πάνε σε ισχυρότερους συλλόγους. Προεπιλογή: {stars} στα 5, βάσει του πρωταθλήματός του.",
+  "editorCountryAll": "Όλες οι χώρες",
+  "editorCountryFilterTitle": "Φιλτράρισμα ανά χώρα"
 }

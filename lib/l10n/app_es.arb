@@ -4043,5 +4043,7 @@
   "clubStrengthOf": "Nivel del club: {stars} de 5",
   "editorClubStrength": "Nivel",
   "editorClubStrengthDefault": "Predeterminado",
-  "editorClubStrengthHelp": "Los mejores jugadores fichan por los clubes más fuertes. Predeterminado: {stars} de 5, según su liga."
+  "editorClubStrengthHelp": "Los mejores jugadores fichan por los clubes más fuertes. Predeterminado: {stars} de 5, según su liga.",
+  "editorCountryAll": "Todos los países",
+  "editorCountryFilterTitle": "Filtrar por país"
 }

@@ -16255,4 +16255,10 @@ class AppLocalizationsFil extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Sa mas malalakas na club pumupunta ang mas magagaling na manlalaro. Default: $stars sa 5, ayon sa liga nito.';
   }
+
+  @override
+  String get editorCountryAll => 'Lahat ng bansa';
+
+  @override
+  String get editorCountryFilterTitle => 'I-filter ayon sa bansa';
 }

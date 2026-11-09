@@ -4043,5 +4043,7 @@
   "clubStrengthOf": "Snaga kluba: {stars} od 5",
   "editorClubStrength": "Snaga",
   "editorClubStrengthDefault": "Zadano",
-  "editorClubStrengthHelp": "Bolji igrači odlaze u jače klubove. Zadano: {stars} od 5, prema njegovoj ligi."
+  "editorClubStrengthHelp": "Bolji igrači odlaze u jače klubove. Zadano: {stars} od 5, prema njegovoj ligi.",
+  "editorCountryAll": "Sve države",
+  "editorCountryFilterTitle": "Filtriraj po državi"
 }

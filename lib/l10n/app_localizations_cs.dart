@@ -16523,4 +16523,10 @@ class AppLocalizationsCs extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Lepší hráči chodí do silnějších klubů. Výchozí: $stars z 5 podle jeho ligy.';
   }
+
+  @override
+  String get editorCountryAll => 'Všechny země';
+
+  @override
+  String get editorCountryFilterTitle => 'Filtr podle země';
 }

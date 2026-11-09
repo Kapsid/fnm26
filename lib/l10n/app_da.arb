@@ -4043,5 +4043,7 @@
   "clubStrengthOf": "Klubbens styrke: {stars} ud af 5",
   "editorClubStrength": "Styrke",
   "editorClubStrengthDefault": "Standard",
-  "editorClubStrengthHelp": "Bedre spillere går til stærkere klubber. Standard: {stars} ud af 5 ud fra ligaen."
+  "editorClubStrengthHelp": "Bedre spillere går til stærkere klubber. Standard: {stars} ud af 5 ud fra ligaen.",
+  "editorCountryAll": "Alle lande",
+  "editorCountryFilterTitle": "Filtrer efter land"
 }

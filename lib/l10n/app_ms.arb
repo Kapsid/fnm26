@@ -4043,5 +4043,7 @@
   "clubStrengthOf": "Kekuatan kelab: {stars} daripada 5",
   "editorClubStrength": "Kekuatan",
   "editorClubStrengthDefault": "Lalai",
-  "editorClubStrengthHelp": "Pemain yang lebih baik menyertai kelab yang lebih kuat. Lalai: {stars} daripada 5, mengikut liganya."
+  "editorClubStrengthHelp": "Pemain yang lebih baik menyertai kelab yang lebih kuat. Lalai: {stars} daripada 5, mengikut liganya.",
+  "editorCountryAll": "Semua negara",
+  "editorCountryFilterTitle": "Tapis mengikut negara"
 }

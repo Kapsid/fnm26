@@ -15708,4 +15708,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return '더 좋은 선수는 더 강한 클럽으로 갑니다. 기본값: 리그에 따라 5점 중 $stars점.';
   }
+
+  @override
+  String get editorCountryAll => '모든 국가';
+
+  @override
+  String get editorCountryFilterTitle => '국가별 필터';
 }

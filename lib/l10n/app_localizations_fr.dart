@@ -16401,4 +16401,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Les meilleurs joueurs rejoignent les clubs les plus forts. Par défaut : $stars sur 5, selon son championnat.';
   }
+
+  @override
+  String get editorCountryAll => 'Tous les pays';
+
+  @override
+  String get editorCountryFilterTitle => 'Filtrer par pays';
 }

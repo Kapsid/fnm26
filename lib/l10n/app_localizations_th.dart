@@ -15954,4 +15954,10 @@ class AppLocalizationsTh extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'นักเตะที่เก่งกว่าจะย้ายไปสโมสรที่แข็งแกร่งกว่า ค่าเริ่มต้น: $stars จาก 5 ตามลีกของสโมสร';
   }
+
+  @override
+  String get editorCountryAll => 'ทุกประเทศ';
+
+  @override
+  String get editorCountryFilterTitle => 'กรองตามประเทศ';
 }

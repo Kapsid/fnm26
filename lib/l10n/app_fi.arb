@@ -4043,5 +4043,7 @@
   "clubStrengthOf": "Seuran vahvuus: {stars}/5",
   "editorClubStrength": "Vahvuus",
   "editorClubStrengthDefault": "Oletus",
-  "editorClubStrengthHelp": "Paremmat pelaajat siirtyvät vahvempiin seuroihin. Oletus: {stars}/5 sarjan mukaan."
+  "editorClubStrengthHelp": "Paremmat pelaajat siirtyvät vahvempiin seuroihin. Oletus: {stars}/5 sarjan mukaan.",
+  "editorCountryAll": "Kaikki maat",
+  "editorCountryFilterTitle": "Suodata maan mukaan"
 }

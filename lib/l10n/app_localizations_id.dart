@@ -16155,4 +16155,10 @@ class AppLocalizationsId extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Pemain yang lebih baik bergabung dengan klub yang lebih kuat. Bawaan: $stars dari 5, menurut liganya.';
   }
+
+  @override
+  String get editorCountryAll => 'Semua negara';
+
+  @override
+  String get editorCountryFilterTitle => 'Filter menurut negara';
 }
