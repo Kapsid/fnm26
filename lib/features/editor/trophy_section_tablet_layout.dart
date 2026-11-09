@@ -50,6 +50,9 @@ class _TrophySectionTabletLayout extends StatelessWidget {
                         key: ValueKey('editorTrophies.detail.${shown.key}'),
                         trophy: shown,
                         onChoose: () => unawaited(state._choose(shown)),
+                        onGallery: () => unawaited(
+                          state._choose(shown, gallery: true),
+                        ),
                         onReset: () => unawaited(state._reset(shown)),
                       ),
                     ),

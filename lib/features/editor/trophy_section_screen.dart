@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
@@ -37,6 +38,7 @@ class TrophySectionScreen extends ConsumerStatefulWidget {
 
   static const Key tabletLayoutKey = Key('editorTrophies.tabletLayout');
   static const Key chooseKey = Key('editorTrophies.choose');
+  static const Key galleryKey = Key('editorTrophies.gallery');
   static const Key resetKey = Key('editorTrophies.reset');
   static const Key resetConfirmKey = Key('editorTrophies.resetConfirm');
 
@@ -133,6 +135,10 @@ class _TrophySectionScreenState extends ConsumerState<TrophySectionScreen> {
                     Navigator.of(sheet).pop();
                     unawaited(_choose(now));
                   },
+                  onGallery: () {
+                    Navigator.of(sheet).pop();
+                    unawaited(_choose(now, gallery: true));
+                  },
                   onReset: () {
                     Navigator.of(sheet).pop();
                     unawaited(_reset(now));
@@ -146,13 +152,17 @@ class _TrophySectionScreenState extends ConsumerState<TrophySectionScreen> {
     );
   }
 
-  /// Picks a picture for [t], has it framed and previewed, and stores it.
-  Future<void> _choose(_Trophy t) async {
+  /// Picks a picture for [t] (from the photo gallery with [gallery], else
+  /// from the device's files), has it framed and previewed, and stores it.
+  Future<void> _choose(_Trophy t, {bool gallery = false}) async {
     final l = AppLocalizations.of(context);
-    final pick = ref.read(editorFilePickerProvider);
     final String? path;
     try {
-      path = await pick(extensions: TrophySectionScreen.extensions);
+      path = gallery
+          ? await ref.read(editorGalleryPickerProvider)()
+          : await ref.read(editorFilePickerProvider)(
+              extensions: TrophySectionScreen.extensions,
+            );
     } on Object catch (e, st) {
       AppLog.error('editor-trophy-pick', e, st);
       if (mounted) _say(l.editorPickFailed);
@@ -521,13 +531,24 @@ class _TrophyDetail extends StatelessWidget {
   const _TrophyDetail({
     required this.trophy,
     required this.onChoose,
+    required this.onGallery,
     required this.onReset,
     super.key,
   });
 
   final _Trophy trophy;
+
+  /// Choose a file from the device.
   final VoidCallback onChoose;
+
+  /// Choose from the photo gallery (offered on a phone or tablet only).
+  final VoidCallback onGallery;
   final VoidCallback onReset;
+
+  /// Whether this device has a photo gallery to pick from.
+  static bool get hasGallery =>
+      defaultTargetPlatform == TargetPlatform.android ||
+      defaultTargetPlatform == TargetPlatform.iOS;
 
   @override
   Widget build(BuildContext context) {
@@ -569,12 +590,29 @@ class _TrophyDetail extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.lg),
-        PrimaryButton(
-          key: TrophySectionScreen.chooseKey,
-          label: custom ? l.editorTrophyReplace : l.editorTrophyChoose,
-          icon: Icons.add_photo_alternate_outlined,
-          onPressed: onChoose,
-        ),
+        // On a phone the photo gallery is the obvious way; a file stays
+        // one tap further down. Elsewhere (a desktop) files are all there is.
+        if (hasGallery) ...[
+          PrimaryButton(
+            key: TrophySectionScreen.galleryKey,
+            label: l.editorTrophyGallery,
+            icon: Icons.photo_library_outlined,
+            onPressed: onGallery,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          OutlinedButton.icon(
+            key: TrophySectionScreen.chooseKey,
+            onPressed: onChoose,
+            icon: const Icon(Icons.folder_open_outlined),
+            label: Text(l.editorTrophyFile),
+          ),
+        ] else
+          PrimaryButton(
+            key: TrophySectionScreen.chooseKey,
+            label: custom ? l.editorTrophyReplace : l.editorTrophyChoose,
+            icon: Icons.add_photo_alternate_outlined,
+            onPressed: onChoose,
+          ),
         if (custom) ...[
           const SizedBox(height: AppSpacing.sm),
           TextButton.icon(

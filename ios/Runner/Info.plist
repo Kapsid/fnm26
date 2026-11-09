@@ -144,7 +144,7 @@
 		</dict>
 	</array>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>FNM only opens your files when you choose a save backup to restore. It never reads your photos.</string>
+	<string>FNM opens your photo library only when you choose a picture for a trophy in the database editor. It never reads your photos otherwise.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>FNM does not use the camera. The file picker it uses to restore a save backup can offer it, but the game never takes photos.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
