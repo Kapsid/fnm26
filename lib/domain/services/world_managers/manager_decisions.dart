@@ -194,6 +194,10 @@ abstract final class ManagerDecisions {
       // trims leaves behind. An expired contract stays expired, so the next
       // decision point looks at him again rather than handing him years.
       final held = net == s.briefNet ? null : _withTerms(s, briefNet: net);
+      // A contract is judged on this window's score; a nation with no window
+      // (nothing played since the last point, as at a rollover) is judged on
+      // the score its spell has carried so far.
+      final contractScore = win == null ? net.toDouble() : score;
 
       SpellEnd? why;
       if (!guarded) {
@@ -205,11 +209,16 @@ abstract final class ManagerDecisions {
         if (!shielded && r.sack < p) {
           why = SpellEnd.sacked;
         } else if (!shielded &&
+            !ctx.rollover &&
             score < bigSackBelow &&
             (win?.anyBriefSettled ?? false) &&
             r.resign < resignChance) {
+          // Rule 3, "a finals brief was settled": every decision point but
+          // the rollover is a finals point, so a brief settled there is the
+          // finals brief. A met finals brief keeps him safe, so the shield
+          // blocks walking out as well as the sack.
           why = SpellEnd.resigned;
-        } else if (expired && score < 0) {
+        } else if (expired && contractScore < 0) {
           why = SpellEnd.contractEnd;
         }
       }
@@ -221,7 +230,7 @@ abstract final class ManagerDecisions {
           nation: n,
           spell: s,
           why: why,
-          score: score,
+          score: why == SpellEnd.contractEnd ? contractScore : score,
           net: net,
           held: held,
         ));

@@ -155,7 +155,8 @@ void main() {
     }
   });
 
-  test('cap trims the worst scores first and fills forced vacancies', () {
+  test("cap keeps the worst scores' changes, trims the mildest and fills "
+      'forced vacancies', () {
     // 12 AI nations: at most 3 change at once. Nation 12 is vacant (forced),
     // nations 1 to 4 are out of contract with small negative scores (no sack
     // roll), so two of the four contract ends may go: the worst two.
@@ -464,7 +465,13 @@ void main() {
     final s = hire(world(ManagerOrigin.fresh, 2, 'AAA')).opened.single;
     expect(s.fromDate, _d);
     final years = s.contractUntil.year - _d.year;
-    expect(years, inInclusiveRange(2, 6));
+    expect(
+      years,
+      inInclusiveRange(
+        ManagerDecisions.contractMinYears,
+        ManagerDecisions.contractMaxYears,
+      ),
+    );
   });
 
   test('renewal when score >= 0', () {
@@ -478,7 +485,13 @@ void main() {
     expect(keep.closed, isEmpty);
     final r = keep.renewed.single;
     expect(r.briefNet, 2);
-    expect(r.contractUntil.year - _d.year, inInclusiveRange(2, 6));
+    expect(
+      r.contractUntil.year - _d.year,
+      inInclusiveRange(
+        ManagerDecisions.contractMinYears,
+        ManagerDecisions.contractMaxYears,
+      ),
+    );
     expect(r.contractUntil.month, _d.month);
 
     final go = ManagerDecisions.decide(w(), {
@@ -486,6 +499,25 @@ void main() {
     }, _ctx(nations: 1));
     expect(go.closed.single.endReason, SpellEnd.contractEnd);
     expect(go.moves.single.incomingId, 2);
+
+    // With no window, the contract is judged on the carried score.
+    ManagerWorld carried(int net) => ManagerWorld(
+      managers: [_m(1), _m(2)],
+      spells: [_s(1, 1, 1, until: DateTime(_d.year - 1), briefNet: net)],
+    );
+    final ends = ManagerDecisions.decide(
+      carried(-1),
+      const {},
+      _ctx(nations: 1, rollover: true),
+    );
+    expect(ends.closed.single.endReason, SpellEnd.contractEnd);
+    final stays = ManagerDecisions.decide(
+      carried(0),
+      const {},
+      _ctx(nations: 1, rollover: true),
+    );
+    expect(stays.closed, isEmpty);
+    expect(stays.renewed.single.contractUntil.isAfter(_d), isTrue);
 
     // A score still under contract is stored on the spell.
     final mid = ManagerDecisions.decide(

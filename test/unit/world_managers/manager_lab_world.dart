@@ -7,7 +7,12 @@ import 'package:fnm/domain/services/world_managers/manager_decisions.dart';
 
 /// What one lab run measured.
 typedef LabStats = ({
+  /// Manager-years observed in the run (ongoing spells included) over the
+  /// spells that ended in it: the censoring-free mean, `1 / yearly share`.
   double meanTenureYears,
+
+  /// The same manager-years over every spell observed, ended or not.
+  double yearsPerObservedSpell,
   double yearlyChangeShare,
   double postFinalsShare,
   double maxPointShare,
@@ -80,6 +85,8 @@ LabStats runManagerLab({
   // The six confederations, sized as the real world (the last one takes the
   // rest), dealt from a shuffle so each holds strong and weak nations.
   const sizes = [55, 54, 46, 35, 10];
+  // How many of each confederation reach its finals (the last: 8 of 9).
+  const finalsSlots = [24, 24, 24, 16, 10, 8];
   final dealt = rng.shuffled(all.toList());
   final confeds = <Set<int>>[];
   var at = 0;
@@ -97,16 +104,20 @@ LabStats runManagerLab({
     String key, {
     required bool rollover,
     Set<int>? scope,
+    int finalists = 0,
   }) {
     final inScope = scope ?? all;
     final windows = <int, NationWindow>{};
     if (!rollover) {
+      // The best-ranked [finalists] of the scope played the finals, so only
+      // they settle a finals brief; the rest settle a qualifying brief.
+      final atFinals = ([...inScope]..sort()).take(finalists).toSet();
       for (final n in inScope) {
         final b = normal(1.2).round();
         windows[n] = (
           briefNet: b,
           surpriseSum: normal(1.5),
-          settledFinalsBriefMet: b >= 0,
+          settledFinalsBriefMet: atFinals.contains(n) && b >= 0,
           anyBriefSettled: true,
         );
       }
@@ -162,25 +173,34 @@ LabStats runManagerLab({
         'cont:$c:$cy',
         rollover: false,
         scope: confeds[c],
+        finalists: finalsSlots[c],
       );
     }
-    step(DateTime(y + 4, 7, 19), 'wc:$cy', rollover: false);
+    step(DateTime(y + 4, 7, 19), 'wc:$cy', rollover: false, finalists: 48);
     step(DateTime(y + 4, 8, 20), 'roll:$cy', rollover: true);
   }
 
-  final ended = [
-    for (final s in world.spells)
-      if (s.toDate case final to?) to.difference(s.fromDate).inDays / 365.25,
-  ];
+  // Every spell's time in post inside the run, ongoing spells included.
+  final end = DateTime(start.year + 4 * cycles, 8, 20);
+  var exposure = 0.0;
+  var observed = 0;
+  var ended = 0;
+  for (final s in world.spells) {
+    final from = s.fromDate.isBefore(start) ? start : s.fromDate;
+    final to = s.toDate ?? end;
+    if (to.isBefore(from)) continue;
+    observed++;
+    if (s.toDate != null) ended++;
+    exposure += to.difference(from).inDays / 365.25;
+  }
   return (
-    meanTenureYears: ended.isEmpty
-        ? 0
-        : ended.reduce((a, b) => a + b) / ended.length,
+    meanTenureYears: ended == 0 ? 0 : exposure / ended,
+    yearsPerObservedSpell: observed == 0 ? 0 : exposure / observed,
     yearlyChangeShare: changes / (nations * cycles * 4),
     postFinalsShare: changes == 0 ? 0 : finalsChanges / changes,
     maxPointShare: maxShare,
     changes: changes,
-    completedSpells: ended.length,
+    completedSpells: ended,
   );
 }
 

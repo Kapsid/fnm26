@@ -9,16 +9,15 @@ abstract final class ManagerReputation {
   /// `clamp(0, 100, 20 + Σ spells (years × (211 − rank) / 211 × 6)
   /// + honours × 8 + Σ briefNet × 4)`.
   ///
-  /// A spell still open is counted up to [asOf]; without one, up to the
-  /// latest date [w] knows of, so the answer never depends on the clock.
+  /// A spell still open is counted up to [asOf], so the answer never depends
+  /// on the clock.
   static int of(
     int managerId,
     ManagerWorld w,
     Map<int, int> rankById,
     Map<int, int> honoursByManager, {
-    DateTime? asOf,
+    required DateTime asOf,
   }) {
-    final end = asOf ?? _latest(w);
     return score(
       [
         for (final s in w.spells)
@@ -26,7 +25,7 @@ abstract final class ManagerReputation {
       ],
       rankById,
       honoursByManager[managerId] ?? 0,
-      end,
+      asOf,
     );
   }
 
@@ -47,15 +46,5 @@ abstract final class ManagerReputation {
       r += s.briefNet * 4;
     }
     return r.round().clamp(0, 100);
-  }
-
-  static DateTime _latest(ManagerWorld w) {
-    var d = DateTime(1900);
-    for (final s in w.spells) {
-      if (s.fromDate.isAfter(d)) d = s.fromDate;
-      final to = s.toDate;
-      if (to != null && to.isAfter(d)) d = to;
-    }
-    return d;
   }
 }

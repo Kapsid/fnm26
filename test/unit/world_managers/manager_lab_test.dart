@@ -19,6 +19,7 @@ void main() {
         // ignore: avoid_print, the lab's whole point is its printout.
         print(
           'seed ${i + 1}: tenure ${f(s.meanTenureYears)}y '
+          'perObserved ${f(s.yearsPerObservedSpell)}y '
           'yearly ${f(s.yearlyChangeShare)} '
           'postFinals ${f(s.postFinalsShare)} '
           'maxPoint ${f(s.maxPointShare)} '
