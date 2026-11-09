@@ -10,13 +10,15 @@ import '../press/y_feed.dart';
 /// Current on-disk format of a world pack. Format 2 (editor 2) adds
 /// [WorldPack.pools], the added clubs, sponsors and Y accounts,
 /// [WorldPack.localized] and [PackPlayer.traits]; format 3 (clubs) adds
-/// club strength ([WorldPack.clubStrengths], [PackClub.strength]).
-/// [WorldPack.migrate] lifts a format-1 or format-2 pack to it.
+/// club strength ([WorldPack.clubStrengths], [PackClub.strength]); format 4
+/// (world managers) adds [WorldPack.managers]. [WorldPack.migrate] lifts a
+/// format-1, 2 or 3 pack to it, step by step.
 ///
-/// A file is always written in this format (`PackCodec.encode`), so a build
-/// that reads only an older one says the file is from a newer version
-/// rather than calling it broken.
-const int kPackFormatVersion = 3;
+/// A pack is written in the oldest format that holds it ([WorldPack.asWritten]):
+/// format 3 when it names no managers, so a 1.1.x build without managers still
+/// reads it, and this format when it does. A build that reads only an older
+/// format says the file is from a newer version rather than calling it broken.
+const int kPackFormatVersion = 4;
 
 /// Ids at or above this belong to players created in a pack.
 const int kPackPlayerIdBase = 800000000;
@@ -475,6 +477,7 @@ class WorldPack {
     this.addedSponsors = const [],
     this.addedYAccounts = const [],
     this.localized = const {},
+    this.managers = const {},
   });
 
   final String uuid;
@@ -523,6 +526,45 @@ class WorldPack {
   /// Path (see `PackPaths`) -> language code -> value.
   final Map<String, Map<String, String>> localized;
 
+  /// nationId -> the name and nationality (upper-case FIFA code) of the
+  /// manager in charge on day one. Renames only the seeded incumbent; every
+  /// later manager is the game's own.
+  final Map<int, ({String name, String nationality})> managers;
+
+  /// This pack in the oldest format that holds it, as every writer stores
+  /// and exports it: format 3 (which a 1.1.x build without managers reads)
+  /// when it names no managers, [kPackFormatVersion] when it does.
+  WorldPack get asWritten =>
+      copyWith(formatVersion: managers.isEmpty ? 3 : kPackFormatVersion);
+
+  /// [managers] without the entries a game cannot use: a blank name, a
+  /// nationality that is not one of [codes] (upper-case FIFA codes), or a
+  /// nation id not in [nationIds]. Each one dropped is passed to [dropped].
+  /// Light on purpose: a bad entry costs only itself, never the pack.
+  static Map<int, ({String name, String nationality})> usableManagers(
+    Map<int, ({String name, String nationality})> managers, {
+    required Set<int> nationIds,
+    required Set<String> codes,
+    void Function(int nationId, String why)? dropped,
+  }) {
+    final out = <int, ({String name, String nationality})>{};
+    for (final MapEntry(key: id, value: m) in managers.entries) {
+      final why = m.name.trim().isEmpty
+          ? 'blank name'
+          : !codes.contains(m.nationality.trim().toUpperCase())
+          ? 'unknown nationality "${m.nationality}"'
+          : !nationIds.contains(id)
+          ? 'unknown nation'
+          : null;
+      if (why == null) {
+        out[id] = m;
+      } else {
+        dropped?.call(id, why);
+      }
+    }
+    return out;
+  }
+
   WorldPack copyWith({
     String? uuid,
     String? name,
@@ -545,6 +587,7 @@ class WorldPack {
     List<PackSponsor>? addedSponsors,
     List<PackYAccount>? addedYAccounts,
     Map<String, Map<String, String>>? localized,
+    Map<int, ({String name, String nationality})>? managers,
   }) => WorldPack(
     uuid: uuid ?? this.uuid,
     name: name ?? this.name,
@@ -567,6 +610,7 @@ class WorldPack {
     addedSponsors: addedSponsors ?? this.addedSponsors,
     addedYAccounts: addedYAccounts ?? this.addedYAccounts,
     localized: localized ?? this.localized,
+    managers: managers ?? this.managers,
   );
 
   Map<String, Object?> toJson() => {
@@ -606,6 +650,16 @@ class WorldPack {
     'localized': {
       for (final e in localized.entries) e.key: {...e.value},
     },
+    // Written from format 4 on (see [asWritten]): a format-3 reader knows
+    // no such key.
+    if (formatVersion >= 4 || managers.isNotEmpty)
+      'managers': {
+        for (final e in managers.entries)
+          '${e.key}': {
+            'name': e.value.name,
+            'nationality': e.value.nationality,
+          },
+      },
   };
 
   static const _keys = {
@@ -630,6 +684,7 @@ class WorldPack {
     'addedSponsors',
     'addedYAccounts',
     'localized',
+    'managers',
   };
 
   /// Strict reader: any wrong type or unknown key throws [FormatException].
@@ -694,10 +749,14 @@ class WorldPack {
         for (final e in _map(json['localized'], 'localized').entries)
           e.key: _strMap(e.value, 'localized'),
       },
+      managers: {
+        for (final e in _map(json['managers'], 'managers').entries)
+          _intKey(e.key): _manager(e.value),
+      },
     );
   }
 
-  /// Upgrades older JSON step by step to [kPackFormatVersion]. Identity at v3.
+  /// Upgrades older JSON step by step to [kPackFormatVersion]. Identity at v4.
   /// Throws [FormatException] for a missing or newer version. Never changes
   /// [json] itself.
   static Map<String, Object?> migrate(Map<String, Object?> json) {
@@ -716,6 +775,7 @@ class WorldPack {
     var out = json;
     if (v == 1) out = _from1To2(out);
     if (v <= 2) out = _from2To3(out);
+    if (v <= 3) out = _from3To4(out, v);
     return out;
   }
 
@@ -755,6 +815,27 @@ class WorldPack {
       }
     }
     return {...json, ...added, 'formatVersion': 2};
+  }
+
+  /// Format 3 to 4: no managers, so the world's day-one managers are all the
+  /// game's own. A pack of format [from] (1, 2 or 3) that already holds
+  /// `managers` is not a file of that format.
+  static Map<String, Object?> _from3To4(Map<String, Object?> json, int from) {
+    if (json.containsKey('managers')) {
+      throw FormatException(
+        'Format $from pack has the format 4 key "managers"',
+      );
+    }
+    return {...json, 'managers': <String, Object?>{}, 'formatVersion': 4};
+  }
+
+  static ({String name, String nationality}) _manager(Object? raw) {
+    final m = _map(raw, 'manager');
+    _only(m, const {'name', 'nationality'}, 'manager');
+    return (
+      name: _str(m['name'], 'name'),
+      nationality: _str(m['nationality'], 'nationality'),
+    );
   }
 
   static ({String name, String code}) _nation(Object? raw) {

@@ -125,13 +125,29 @@ class _WorldRankingTabletLayoutState
                             padding: const EdgeInsets.fromLTRB(12, 8, 4, 0),
                             child: TabletScreenHeader(
                               title: l.tourSharedWorldRankingTitle,
-                              trailing: IconButton(
-                                tooltip: l.rankingCentreOnMe,
-                                icon: const Icon(
-                                  Icons.my_location_rounded,
-                                  color: AppColors.primary,
-                                ),
-                                onPressed: () => _centre(player, animate: true),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    tooltip: l.mgrListTitle,
+                                    icon: const Icon(
+                                      Icons.badge_outlined,
+                                      color: AppColors.primary,
+                                    ),
+                                    onPressed: () => context.go(
+                                      '${Routes.managers}?careerId=$careerId',
+                                    ),
+                                  ),
+                                  IconButton(
+                                    tooltip: l.rankingCentreOnMe,
+                                    icon: const Icon(
+                                      Icons.my_location_rounded,
+                                      color: AppColors.primary,
+                                    ),
+                                    onPressed: () =>
+                                        _centre(player, animate: true),
+                                  ),
+                                ],
                               ),
                             ),
                           ),

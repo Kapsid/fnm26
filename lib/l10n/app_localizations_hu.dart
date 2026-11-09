@@ -11971,6 +11971,28 @@ class AppLocalizationsHu extends AppLocalizations {
   String get backupSafetyShare => 'MEGOSZTÁS';
 
   @override
+  String get saveUpgradeFailedTitle => 'A mentést nem sikerült frissíteni';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'A mentésedet nem sikerült frissíteni. Semmi sem törlődött, és egy frissítés előtti másolat megvan ezen a telefonon.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'A frissítés előtti másolat visszaállítása';
+
+  @override
+  String get saveUpgradeRestoreFailed =>
+      'A másolatot nem sikerült visszaállítani. A mentésed változatlan maradt.';
+
+  @override
+  String get saveOpenFailedTitle => 'A mentéseket nem sikerült megnyitni';
+
+  @override
+  String get saveOpenFailedBody =>
+      'A mentéseidet nem sikerült megnyitni. Semmi sem törlődött. Próbáld újra egy kicsit később.';
+
+  @override
   String get backupCloudNoDetails => 'A részletek még úton vannak.';
 
   @override
@@ -12256,6 +12278,10 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get hostBidRecentHost =>
       'A legutóbbi három torna egyikét te rendezted.';
+
+  @override
+  String get hostBidBelowBar =>
+      'A stadionjaid nem felelnek meg e torna követelményeinek.';
 
   @override
   String get hostBidRulesPending =>
@@ -16194,6 +16220,263 @@ class AppLocalizationsHu extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'A jobb játékosok erősebb klubokba igazolnak. Alapértelmezett: $stars az 5-ből, a bajnoksága szerint.';
   }
+
+  @override
+  String mgrNewsSacked(String nation, String name) {
+    return '$nation: $name menesztve';
+  }
+
+  @override
+  String mgrNewsResigned(String nation, String name) {
+    return '$nation: $name lemondott';
+  }
+
+  @override
+  String mgrNewsPoached(String nation, String name) {
+    return '$nation: $name egy másik válogatotthoz távozik';
+  }
+
+  @override
+  String mgrNewsRetired(String nation, String name) {
+    return '$nation: $name visszavonul az edzősködéstől';
+  }
+
+  @override
+  String mgrNewsContractEnd(String nation, String name) {
+    return '$nation: $name távozik, lejár a szerződése';
+  }
+
+  @override
+  String mgrNewsReplacedByPlayer(String nation, String name) {
+    return '$nation: $name átadja neked a helyét';
+  }
+
+  @override
+  String mgrNewsAppointed(String nation, String name) {
+    return '$nation: $name az új kapitány';
+  }
+
+  @override
+  String mgrNewsAppointedBody(String nation, String name) {
+    return '$name átveszi a(z) $nation irányítását.';
+  }
+
+  @override
+  String pressBeatOpposingManager(String manager) {
+    return 'Neked és $manager közt van egy közös múlt. Mondanál valamit róla?';
+  }
+
+  @override
+  String get pressAnswerHitBackAtManager =>
+      'Foglalkozzon inkább a saját csapatával.';
+
+  @override
+  String get pressAnswerRespectManager => 'Nagyon tisztelem őt.';
+
+  @override
+  String yMgrTie1(String manager) {
+    return 'A másik kispadon $manager ül majd. Van múltja a kapitányunkkal, alig várom.';
+  }
+
+  @override
+  String yMgrTie2(String manager) {
+    return 'Következik $manager a másik kispadon. Ő és a kapitányunk régóta ismerik egymást.';
+  }
+
+  @override
+  String yMgrTie3(String manager) {
+    return 'Már megint $manager. A kapitányunk jobban teszi, ha nem csinál ebből személyes ügyet.';
+  }
+
+  @override
+  String yMgrTie4(String manager) {
+    return 'Kezdődik. $manager az oldalvonalnál, a kapitányunk meg egy vitát próbál megnyerni meccs helyett.';
+  }
+
+  @override
+  String get mgrRowLabel => 'Kapitány';
+
+  @override
+  String mgrRowDetail(int age, String date) {
+    return '$age éves, $date óta';
+  }
+
+  @override
+  String mgrRecordWdl(int won, int drawn, int lost) {
+    return '$won Gy, $drawn D, $lost V';
+  }
+
+  @override
+  String mgrRowRecord(String record) {
+    return 'Az ő irányításával: $record';
+  }
+
+  @override
+  String get mgrTieNeutral => 'Nincs múlt';
+
+  @override
+  String get mgrTieRespect => 'Tisztelet';
+
+  @override
+  String get mgrTieRival => 'Rivális';
+
+  @override
+  String get mgrTieGrudge => 'Neheztelés';
+
+  @override
+  String get mgrTieSuccessor => 'Utód';
+
+  @override
+  String get mgrTieProtege => 'Védenc';
+
+  @override
+  String get mgrTieFormerPlayer => 'Volt játékos';
+
+  @override
+  String get mgrEndSacked => 'Menesztették';
+
+  @override
+  String get mgrEndResigned => 'Lemondott';
+
+  @override
+  String get mgrEndPoached => 'Másik válogatotthoz távozott';
+
+  @override
+  String get mgrEndRetired => 'Visszavonult az edzősködéstől';
+
+  @override
+  String get mgrEndContractEnd => 'Lejárt a szerződése';
+
+  @override
+  String get mgrEndReplacedByPlayer => 'Te váltottad le';
+
+  @override
+  String get mgrProfileSpells => 'Pályafutás';
+
+  @override
+  String mgrProfileSpellNow(String nation, String from) {
+    return '$nation, $from óta';
+  }
+
+  @override
+  String mgrProfileSpellRange(String nation, String from, String to) {
+    return '$nation, $from és $to között';
+  }
+
+  @override
+  String mgrProfileSpellEnded(String range, String reason) {
+    return '$range, $reason';
+  }
+
+  @override
+  String get mgrProfileRecordVsYou => 'Mérleg ellened';
+
+  @override
+  String get mgrProfileNoMeetings => 'Még nem találkoztatok';
+
+  @override
+  String get mgrProfileReputation => 'Hírnév';
+
+  @override
+  String get mgrProfileAge => 'Kor';
+
+  @override
+  String get mgrProfileAppointed => 'Kinevezve';
+
+  @override
+  String get mgrProfileStyle => 'Stílus';
+
+  @override
+  String get mgrProfileTie => 'Köztetek';
+
+  @override
+  String mgrPreviewLine(String name) {
+    return 'Az ő kapitányuk: $name';
+  }
+
+  @override
+  String mgrDossierStyle(String style) {
+    return 'A kapitány stílusa: $style';
+  }
+
+  @override
+  String mgrDossierRecord(String record) {
+    return 'A te mérleged ellene: $record';
+  }
+
+  @override
+  String get mgrStylePossession => 'Labdabirtoklás';
+
+  @override
+  String get mgrStyleHighPress => 'Magas letámadás';
+
+  @override
+  String get mgrStyleDefensive => 'Védekező';
+
+  @override
+  String get mgrStyleDirect => 'Direkt';
+
+  @override
+  String get mgrStyleCounter => 'Kontra';
+
+  @override
+  String get mgrStyleFlair => 'Technikás';
+
+  @override
+  String get mgrStylePhysical => 'Fizikai';
+
+  @override
+  String get mgrStyleBalanced => 'Kiegyensúlyozott';
+
+  @override
+  String get mgrListTitle => 'Szövetségi kapitányok';
+
+  @override
+  String get mgrListCurrent => 'Jelenlegi';
+
+  @override
+  String get mgrListRecentMoves => 'Legutóbbi változások';
+
+  @override
+  String get mgrListFilterAll => 'Mind';
+
+  @override
+  String get mgrListSortReputation => 'Hírnév';
+
+  @override
+  String get mgrListSortName => 'Név';
+
+  @override
+  String get mgrListEmptyMoves => 'Nem történt változás az elmúlt két évben.';
+
+  @override
+  String get mgrListEmptyCurrent =>
+      'A kapitányok a következő szezonváltás után jelennek meg.';
+
+  @override
+  String get editorSectionManagers => 'Szövetségi kapitányok';
+
+  @override
+  String get editorAboutManagers =>
+      'Ki irányítja az egyes válogatottakat az első napon';
+
+  @override
+  String get editorManagersHint => 'A karrier indulásakor dől el';
+
+  @override
+  String get editorManagerName => 'A kapitány neve';
+
+  @override
+  String get editorManagerNationality => 'Állampolgárság';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'A kapitány nevének 1 és $max megjeleníthető karakter között kell lennie';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Válassz a listából állampolgárságot a kapitánynak';
 
   @override
   String get shareButton => 'Megosztás';

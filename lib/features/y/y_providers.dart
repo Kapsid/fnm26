@@ -26,6 +26,7 @@ import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/domain/services/press/y_locals.dart';
 import 'package:fnm/domain/services/press/y_tournaments.dart';
 import 'package:fnm/domain/services/squad/camp_scandal.dart';
+import 'package:fnm/domain/services/world_managers/manager_relation.dart';
 import 'package:fnm/data/repositories/world_pack_repository.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart'
@@ -45,6 +46,7 @@ import 'package:fnm/features/squad/grievance_providers.dart';
 import 'package:fnm/features/squad/international_retirement_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart'
     show squadDataProvider;
+import 'package:fnm/features/world_managers/world_manager_providers.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart'
     show worldPackRepositoryProvider;
 
@@ -177,6 +179,116 @@ final AutoDisposeFutureProviderFamily<YTimeline, int> yFeedProvider =
     });
 
 const YTimeline _emptyFeed = (posts: <YPost>[], reserveFrom: null);
+
+/// How far ahead a match against a manager with a history gets its post.
+const int yManagerTieDays = 21;
+
+/// The posts before the player's upcoming matches whose opposing manager has
+/// a history with him (see [YFeed.forOpponentManager]): one per match in the
+/// next [yManagerTieDays] days, and only when that manager's tie label on
+/// the match date is not neutral.
+///
+/// Kept OUT of [yFeedProvider] on purpose: the feed is on the hub's load
+/// path (its unread count is the hub's Y badge, and the tablet hub shows
+/// its newest posts), and no hub read may touch a manager table. Only the
+/// Y screen watches this, and merges it in ([withManagerTiePosts]); the
+/// hub's badge and preview never count it.
+///
+/// Cheap: one read of the player's fixtures, and only for a match inside the
+/// window in a cycle run by world managers, the man in charge (two indexed
+/// rows) and his relation (his spells, the ties, the fixtures of the
+/// nations he ran). Nothing is seeded from here.
+final AutoDisposeFutureProviderFamily<List<YPost>, int>
+yManagerTiePostsProvider = FutureProvider.autoDispose.family<List<YPost>, int>((
+  ref,
+  careerId,
+) async {
+  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+  if (career == null) return const [];
+  final today = career.inGameDate;
+  final until = today.add(const Duration(days: yManagerTieDays));
+  final upcoming =
+      [
+        for (final f
+            in await ref
+                .watch(competitionRepositoryProvider)
+                .fixturesForNation(careerId, career.nationId))
+          if (!f.hasResult && !f.date.isBefore(today) && f.date.isBefore(until))
+            f,
+      ]..sort((a, b) {
+        final c = a.date.compareTo(b.date);
+        return c != 0 ? c : a.id.compareTo(b.id);
+      });
+  if (upcoming.isEmpty) return const [];
+  final service = ref.watch(worldManagerServiceProvider);
+  final repo = ref.watch(worldManagerRepositoryProvider);
+  final marked = [
+    for (final f in upcoming)
+      if (await service.cycleHasManagers(careerId, f.date)) f,
+  ];
+  if (marked.isEmpty || !await repo.hasManagers(careerId)) return const [];
+  // The name the feed's own casts are drawn for.
+  final nation = (await ref.watch(nationRepositoryProvider).forCareer(careerId))
+      .where((n) => n.id == career.nationId)
+      .map((n) => n.name)
+      .firstOrNull;
+  if (nation == null) return const [];
+  final posts = <YPost>[];
+  for (final f in marked) {
+    final opponent = f.homeNationId == career.nationId
+        ? f.awayNationId
+        : f.homeNationId;
+    final spell = await repo.inChargeOn(careerId, opponent, f.date);
+    if (spell == null) continue;
+    final relation = await ref.watch(
+      managerRelationProvider((
+        careerId: careerId,
+        managerId: spell.managerId,
+      )).future,
+    );
+    if (relation.label == TieLabel.neutral) continue;
+    final manager = await repo.managerById(careerId, spell.managerId);
+    if (manager == null) continue;
+    posts.addAll(
+      YFeed.forOpponentManager(
+        manager: manager.name,
+        label: relation.label,
+        date: today,
+        // ':' and never '|': the detail view groups a conversation by
+        // the part before the first pipe.
+        key: 'mgrTie:${f.id}:${manager.managerId}',
+        nation: nation,
+        seed: career.rngSeed,
+      ),
+    );
+  }
+  if (posts.isEmpty) return const [];
+  // In the career world's accounts and names, as the feed itself is.
+  final added = await careerYForDisplay(
+    ref.watch(worldPackRepositoryProvider),
+    career,
+  );
+  return YAccountsScope.run(
+    added.accounts,
+    () => YFeed.renamedIn(
+      (posts: posts, reserveFrom: null),
+      ref.watch(localizedWorldProvider),
+      added: YAccountsScope.current,
+      addedWorld: added.world,
+    ).posts,
+  );
+});
+
+/// [feed] with the [extra] posts on top: dated today, they are the newest,
+/// and the reserve's seam moves down past them.
+YTimeline withManagerTiePosts(YTimeline feed, List<YPost> extra) {
+  if (extra.isEmpty) return feed;
+  final seam = feed.reserveFrom;
+  return (
+    posts: [...extra, ...feed.posts],
+    reserveFrom: seam == null ? null : seam + extra.length,
+  );
+}
 
 /// The Y accounts career [career]'s own world added that post in its
 /// nation's feed: the ones bound to its nation and the ones bound to none

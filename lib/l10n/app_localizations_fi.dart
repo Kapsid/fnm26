@@ -12103,6 +12103,28 @@ class AppLocalizationsFi extends AppLocalizations {
   String get backupSafetyShare => 'JAA';
 
   @override
+  String get saveUpgradeFailedTitle => 'Tallennusta ei voitu päivittää';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Tallennustasi ei voitu päivittää. Mitään ei poistettu, ja kopio ajalta ennen päivitystä on tallessa tässä puhelimessa.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Palauta kopio ajalta ennen päivitystä';
+
+  @override
+  String get saveUpgradeRestoreFailed =>
+      'Kopiota ei voitu palauttaa. Tallennuksesi jäi ennalleen.';
+
+  @override
+  String get saveOpenFailedTitle => 'Tallennuksia ei voitu avata';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Tallennuksiasi ei voitu avata. Mitään ei poistettu. Yritä hetken päästä uudelleen.';
+
+  @override
   String get backupCloudNoDetails => 'Tiedot ovat vielä tulossa.';
 
   @override
@@ -12385,6 +12407,10 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get hostBidRecentHost => 'Isännöit yhtä kolmesta viime turnauksesta.';
+
+  @override
+  String get hostBidBelowBar =>
+      'Stadionisi eivät täytä tämän turnauksen vaatimuksia.';
 
   @override
   String get hostBidRulesPending =>
@@ -16321,6 +16347,263 @@ class AppLocalizationsFi extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Paremmat pelaajat siirtyvät vahvempiin seuroihin. Oletus: $stars/5 sarjan mukaan.';
   }
+
+  @override
+  String mgrNewsSacked(String nation, String name) {
+    return '$nation erottaa $name';
+  }
+
+  @override
+  String mgrNewsResigned(String nation, String name) {
+    return '$nation: $name eroaa';
+  }
+
+  @override
+  String mgrNewsPoached(String nation, String name) {
+    return '$nation: $name siirtyy toiseen maajoukkueeseen';
+  }
+
+  @override
+  String mgrNewsRetired(String nation, String name) {
+    return '$nation: $name jättää valmennustyöt';
+  }
+
+  @override
+  String mgrNewsContractEnd(String nation, String name) {
+    return '$nation: $name lähtee sopimuksen päättyessä';
+  }
+
+  @override
+  String mgrNewsReplacedByPlayer(String nation, String name) {
+    return '$nation: $name väistyy sinun tieltäsi';
+  }
+
+  @override
+  String mgrNewsAppointed(String nation, String name) {
+    return '$nation palkkaa $name';
+  }
+
+  @override
+  String mgrNewsAppointedBody(String nation, String name) {
+    return '$name ottaa $nation haltuunsa.';
+  }
+
+  @override
+  String pressBeatOpposingManager(String manager) {
+    return 'Sinulla ja valmentajalla $manager on yhteistä historiaa. Haluatko sanoa hänestä jotain?';
+  }
+
+  @override
+  String get pressAnswerHitBackAtManager =>
+      'Hänen kannattaa murehtia omaa joukkuettaan.';
+
+  @override
+  String get pressAnswerRespectManager => 'Arvostan häntä suuresti.';
+
+  @override
+  String yMgrTie1(String manager) {
+    return 'Vastapuolen penkillä on seuraavaksi $manager. Hänellä ja valmentajallamme on yhteistä historiaa, enkä malta odottaa.';
+  }
+
+  @override
+  String yMgrTie2(String manager) {
+    return 'Seuraavaksi vastapuolen penkillä on $manager. Hän ja valmentajamme tuntevat toisensa jo pitkältä ajalta.';
+  }
+
+  @override
+  String yMgrTie3(String manager) {
+    return 'Taas $manager. Toivottavasti valmentajamme ei tee tästä henkilökohtaista.';
+  }
+
+  @override
+  String yMgrTie4(String manager) {
+    return 'No niin. $manager sivurajalla, ja valmentajamme yrittää voittaa kaunan ottelun sijaan.';
+  }
+
+  @override
+  String get mgrRowLabel => 'Valmentaja';
+
+  @override
+  String mgrRowDetail(int age, String date) {
+    return '$age-vuotias, aloittanut $date';
+  }
+
+  @override
+  String mgrRecordWdl(int won, int drawn, int lost) {
+    return '$won V, $drawn T, $lost H';
+  }
+
+  @override
+  String mgrRowRecord(String record) {
+    return 'Hänen johdollaan: $record';
+  }
+
+  @override
+  String get mgrTieNeutral => 'Ei historiaa';
+
+  @override
+  String get mgrTieRespect => 'Kunnioitus';
+
+  @override
+  String get mgrTieRival => 'Kilpailija';
+
+  @override
+  String get mgrTieGrudge => 'Kauna';
+
+  @override
+  String get mgrTieSuccessor => 'Seuraaja';
+
+  @override
+  String get mgrTieProtege => 'Suojatti';
+
+  @override
+  String get mgrTieFormerPlayer => 'Entinen pelaaja';
+
+  @override
+  String get mgrEndSacked => 'Erotettu';
+
+  @override
+  String get mgrEndResigned => 'Erosi';
+
+  @override
+  String get mgrEndPoached => 'Siirtyi toiseen maajoukkueeseen';
+
+  @override
+  String get mgrEndRetired => 'Lopetti valmentajana';
+
+  @override
+  String get mgrEndContractEnd => 'Sopimus päättyi';
+
+  @override
+  String get mgrEndReplacedByPlayer => 'Sinä korvasit hänet';
+
+  @override
+  String get mgrProfileSpells => 'Ura';
+
+  @override
+  String mgrProfileSpellNow(String nation, String from) {
+    return '$nation, alkaen $from';
+  }
+
+  @override
+  String mgrProfileSpellRange(String nation, String from, String to) {
+    return '$nation, $from ja $to välillä';
+  }
+
+  @override
+  String mgrProfileSpellEnded(String range, String reason) {
+    return '$range, $reason';
+  }
+
+  @override
+  String get mgrProfileRecordVsYou => 'Tulokset sinua vastaan';
+
+  @override
+  String get mgrProfileNoMeetings => 'Ette ole vielä kohdanneet';
+
+  @override
+  String get mgrProfileReputation => 'Maine';
+
+  @override
+  String get mgrProfileAge => 'Ikä';
+
+  @override
+  String get mgrProfileAppointed => 'Nimitetty';
+
+  @override
+  String get mgrProfileStyle => 'Tyyli';
+
+  @override
+  String get mgrProfileTie => 'Teidän välillänne';
+
+  @override
+  String mgrPreviewLine(String name) {
+    return 'Heidän valmentajansa: $name';
+  }
+
+  @override
+  String mgrDossierStyle(String style) {
+    return 'Valmentajan tyyli: $style';
+  }
+
+  @override
+  String mgrDossierRecord(String record) {
+    return 'Tuloksesi häntä vastaan: $record';
+  }
+
+  @override
+  String get mgrStylePossession => 'Pallonhallinta';
+
+  @override
+  String get mgrStyleHighPress => 'Korkea prässi';
+
+  @override
+  String get mgrStyleDefensive => 'Puolustava';
+
+  @override
+  String get mgrStyleDirect => 'Suora';
+
+  @override
+  String get mgrStyleCounter => 'Vastahyökkäys';
+
+  @override
+  String get mgrStyleFlair => 'Taidokas';
+
+  @override
+  String get mgrStylePhysical => 'Fyysinen';
+
+  @override
+  String get mgrStyleBalanced => 'Tasapainoinen';
+
+  @override
+  String get mgrListTitle => 'Päävalmentajat';
+
+  @override
+  String get mgrListCurrent => 'Nykyiset';
+
+  @override
+  String get mgrListRecentMoves => 'Viimeisimmät muutokset';
+
+  @override
+  String get mgrListFilterAll => 'Kaikki';
+
+  @override
+  String get mgrListSortReputation => 'Maine';
+
+  @override
+  String get mgrListSortName => 'Nimi';
+
+  @override
+  String get mgrListEmptyMoves => 'Ei muutoksia kahteen viime vuoteen.';
+
+  @override
+  String get mgrListEmptyCurrent =>
+      'Valmentajat ilmestyvät seuraavan kauden vaihtuessa.';
+
+  @override
+  String get editorSectionManagers => 'Päävalmentajat';
+
+  @override
+  String get editorAboutManagers =>
+      'Kuka valmentaa kutakin maajoukkuetta alussa';
+
+  @override
+  String get editorManagersHint => 'Valitaan uran alkaessa';
+
+  @override
+  String get editorManagerName => 'Valmentajan nimi';
+
+  @override
+  String get editorManagerNationality => 'Kansallisuus';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'Valmentajan nimen pitää olla 1 ja $max näytettävän merkin välillä';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Valitse valmentajalle kansallisuus listalta';
 
   @override
   String get shareButton => 'Jaa';

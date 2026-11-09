@@ -8,6 +8,7 @@ import 'package:fnm/app.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/shared/widgets/app_crash_box.dart';
+import 'package:fnm/shared/widgets/save_open_gate.dart';
 
 void main() {
   // Everything runs inside one guarded zone so an async error with no `await`
@@ -89,7 +90,7 @@ class _FnmRootState extends State<FnmRoot> {
     builder: (_, generation, _) => ProviderScope(
       key: ValueKey(generation),
       overrides: [formFactorProvider.overrideWithValue(widget.formFactor)],
-      child: const FnmApp(),
+      child: const SaveOpenGate(onRetry: FnmRoot.restart, child: FnmApp()),
     ),
   );
 }

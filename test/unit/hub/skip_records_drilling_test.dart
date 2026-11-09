@@ -21,6 +21,7 @@ import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
+import 'package:fnm/features/world_managers/world_manager_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../helpers/test_database.dart';
@@ -62,6 +63,10 @@ void main() {
         seedSourceProvider.overrideWithValue(
           InMemorySeedSource(nationList: nations, playerList: players),
         ),
+        // The seeds here were found on the world before world managers:
+        // their style would move his results, and the extra-time knockout
+        // seed 80 was found for.
+        worldManagerStyleEnabledProvider.overrideWithValue(false),
       ],
     );
     addTearDown(() async {
@@ -83,7 +88,12 @@ void main() {
       final career =
           (await w.c
                   .read(careerServiceProvider)
-                  .create(nationId: czechia, managerName: 'M', rngSeed: 77))
+                  .create(
+                    nationId: czechia,
+                    managerName: 'M',
+                    rngSeed: 77,
+                    stadiumHostRules: false,
+                  ))
               .valueOrNull!;
       await w.c.read(tacticServiceProvider).setFormation(career.id, shape);
       await w.c.read(tacticServiceProvider).setInstructions(career.id, plan);
@@ -95,7 +105,12 @@ void main() {
       final refCareer =
           (await ref.c
                   .read(careerServiceProvider)
-                  .create(nationId: czechia, managerName: 'M', rngSeed: 77))
+                  .create(
+                    nationId: czechia,
+                    managerName: 'M',
+                    rngSeed: 77,
+                    stadiumHostRules: false,
+                  ))
               .valueOrNull!;
       final refFam = ref.c.read(tacticFamiliarityRepositoryProvider);
 
@@ -155,7 +170,12 @@ void main() {
       final career =
           (await w.c
                   .read(careerServiceProvider)
-                  .create(nationId: czechia, managerName: 'M', rngSeed: 78))
+                  .create(
+                    nationId: czechia,
+                    managerName: 'M',
+                    rngSeed: 78,
+                    stadiumHostRules: false,
+                  ))
               .valueOrNull!;
       await w.c.read(tacticServiceProvider).setFormation(career.id, shape);
       await w.c.read(tacticServiceProvider).setInstructions(career.id, plan);
@@ -177,7 +197,12 @@ void main() {
       final refCareer =
           (await ref.c
                   .read(careerServiceProvider)
-                  .create(nationId: czechia, managerName: 'M', rngSeed: 78))
+                  .create(
+                    nationId: czechia,
+                    managerName: 'M',
+                    rngSeed: 78,
+                    stadiumHostRules: false,
+                  ))
               .valueOrNull!;
       final refFam = ref.c.read(tacticFamiliarityRepositoryProvider);
       await refFam.recordMatch(
@@ -212,6 +237,7 @@ void main() {
                     managerName: 'M',
                     rngSeed: 135,
                     startingRanks: legacySeedRanking,
+                    stadiumHostRules: false,
                   ))
               .valueOrNull!;
       await w.c.read(tacticServiceProvider).setFormation(career.id, shape);
@@ -227,6 +253,7 @@ void main() {
                     managerName: 'M',
                     rngSeed: 135,
                     startingRanks: legacySeedRanking,
+                    stadiumHostRules: false,
                   ))
               .valueOrNull!;
       final refFam = ref.c.read(tacticFamiliarityRepositoryProvider);
@@ -274,7 +301,12 @@ void main() {
       final career =
           (await w.c
                   .read(careerServiceProvider)
-                  .create(nationId: czechia, managerName: 'M', rngSeed: 78))
+                  .create(
+                    nationId: czechia,
+                    managerName: 'M',
+                    rngSeed: 78,
+                    stadiumHostRules: false,
+                  ))
               .valueOrNull!;
       await w.c.read(tacticServiceProvider).setFormation(career.id, shape);
       await w.c.read(tacticServiceProvider).setInstructions(career.id, plan);

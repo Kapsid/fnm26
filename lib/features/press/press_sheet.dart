@@ -63,16 +63,30 @@ class _PressSheetState extends ConsumerState<PressSheet> {
   late final List<PressReporter> _room = Press.roomFor(_seed);
   late final Beat? _throwback = ConferenceBuilder.throwback(_c.facts);
 
+  /// The question about the opposing manager, when he has a history with
+  /// him: asked last, once.
+  late final Beat? _managerBeat = ConferenceBuilder.opposingManagerBeat(
+    _c.facts,
+  );
+
+  /// The post-match questions before the manager's: two, or three when an
+  /// old statement is due.
+  int get _resultBeats => _throwback == null ? 2 : 3;
+
   bool get _isPreview => _c.facts.preview != null;
 
-  /// Fixed up front: two questions, or three when an old statement is due. A
-  /// preview's beats are all known before the first is asked.
+  /// Fixed up front: two questions, or three when an old statement is due,
+  /// and one more about the opposing manager when there is one. A preview's
+  /// beats are all known before the first is asked.
   late final int _length = _isPreview
       ? _beats.length
-      : (_throwback == null ? 2 : 3);
+      : _resultBeats + (_managerBeat == null ? 0 : 1);
 
   late final List<Beat> _beats = _isPreview
-      ? ConferenceBuilder.previewBeats(_c.facts)
+      ? [
+          ...ConferenceBuilder.previewBeats(_c.facts),
+          ?_managerBeat,
+        ]
       : [ConferenceBuilder.opening(_c.facts)];
   final List<AnswerKind> _said = [];
   PressEffect _total = (morale: 0, board: 0);
@@ -106,6 +120,11 @@ class _PressSheetState extends ConsumerState<PressSheet> {
           _beats.add(ConferenceBuilder.reaction(_c.facts, a));
         } else if (_said.length == 2 && _throwback != null) {
           _beats.add(_throwback);
+        }
+        if (!_isPreview &&
+            _said.length == _resultBeats &&
+            _managerBeat != null) {
+          _beats.add(_managerBeat);
         }
       });
     } finally {

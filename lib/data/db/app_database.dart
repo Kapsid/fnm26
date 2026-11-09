@@ -69,6 +69,9 @@ const int _newgenIdBase = 1000000000;
     WorldPackTrophies,
     CareerWorlds,
     CareerWorldTrophies,
+    WorldManagers,
+    ManagerSpells,
+    ManagerTies,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -89,7 +92,7 @@ class AppDatabase extends _$AppDatabase {
   /// full set of upgrade paths from it — see `schema_migration_test.dart`.
   /// A hand-written list of paths is a step somebody forgets on the bump that
   /// matters.
-  static const int currentSchemaVersion = 54;
+  static const int currentSchemaVersion = 55;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -324,6 +327,23 @@ class AppDatabase extends _$AppDatabase {
         // the number makes 1.1.0 refuse this build's backups as "made by a
         // newer version" instead of restoring packs it would break.
         from53To54: (m, schema) async {},
+        // 54 -> 55 adds the world's managers, their spells in charge and the
+        // ties they form. Three new tables and nothing else moves: an upgraded
+        // career has no managers on record, seeds them lazily when it first
+        // needs one, and until then plays exactly as it did.
+        //
+        // Every statement is IF NOT EXISTS, so a step cut short re-runs
+        // cleanly. The index is written out rather than taken from
+        // `schema.managerSpellsNation`, whose generated CREATE INDEX lacks it.
+        from54To55: (m, schema) async {
+          await m.createTable(schema.worldManagers);
+          await m.createTable(schema.managerSpells);
+          await m.createTable(schema.managerTies);
+          await m.database.customStatement(
+            'CREATE INDEX IF NOT EXISTS manager_spells_nation '
+            'ON manager_spells (career_id, nation_id)',
+          );
+        },
       )(m, from, to);
     },
   );

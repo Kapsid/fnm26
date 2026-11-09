@@ -11631,6 +11631,26 @@ class AppLocalizationsKo extends AppLocalizations {
   String get backupSafetyShare => '공유';
 
   @override
+  String get saveUpgradeFailedTitle => '저장 데이터를 업데이트하지 못했습니다';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      '저장 데이터를 업데이트하지 못했습니다. 삭제된 것은 없으며, 업데이트 전 사본이 이 휴대폰에 보관되어 있습니다.';
+
+  @override
+  String get saveUpgradeRestoreButton => '업데이트 전 사본 복원';
+
+  @override
+  String get saveUpgradeRestoreFailed => '사본을 복원하지 못했습니다. 저장 데이터는 그대로입니다.';
+
+  @override
+  String get saveOpenFailedTitle => '저장 데이터를 열지 못했습니다';
+
+  @override
+  String get saveOpenFailedBody =>
+      '저장 데이터를 열지 못했습니다. 삭제된 것은 없습니다. 잠시 후 다시 시도해 주세요.';
+
+  @override
   String get backupCloudNoDetails => '세부 정보를 아직 불러오는 중입니다.';
 
   @override
@@ -11906,6 +11926,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get hostBidRecentHost => '최근 3개 대회 중 하나를 개최했습니다.';
+
+  @override
+  String get hostBidBelowBar => '경기장이 이 대회의 요건을 충족하지 않습니다.';
 
   @override
   String get hostBidRulesPending => '유치 신청 가능 여부는 이번 주기 개최국이 발표되면 알 수 있습니다.';
@@ -15708,6 +15731,259 @@ class AppLocalizationsKo extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return '더 좋은 선수는 더 강한 클럽으로 갑니다. 기본값: 리그에 따라 5점 중 $stars점.';
   }
+
+  @override
+  String mgrNewsSacked(String nation, String name) {
+    return '$nation, $name 감독 경질';
+  }
+
+  @override
+  String mgrNewsResigned(String nation, String name) {
+    return '$nation: $name 감독 사임';
+  }
+
+  @override
+  String mgrNewsPoached(String nation, String name) {
+    return '$nation: $name 감독, 다른 대표팀으로 이동';
+  }
+
+  @override
+  String mgrNewsRetired(String nation, String name) {
+    return '$nation: $name 감독 은퇴';
+  }
+
+  @override
+  String mgrNewsContractEnd(String nation, String name) {
+    return '$nation: $name 감독, 계약 만료로 떠남';
+  }
+
+  @override
+  String mgrNewsReplacedByPlayer(String nation, String name) {
+    return '$nation: $name 감독이 자리를 내어줌';
+  }
+
+  @override
+  String mgrNewsAppointed(String nation, String name) {
+    return '$nation, $name 감독 선임';
+  }
+
+  @override
+  String mgrNewsAppointedBody(String nation, String name) {
+    return '$name 감독이 $nation을(를) 맡습니다.';
+  }
+
+  @override
+  String pressBeatOpposingManager(String manager) {
+    return '당신과 $manager 감독 사이에는 사연이 있습니다. 그에 대해 하실 말씀이 있나요?';
+  }
+
+  @override
+  String get pressAnswerHitBackAtManager => '자기 팀 걱정이나 하라고 하세요.';
+
+  @override
+  String get pressAnswerRespectManager => '그분을 매우 존경합니다.';
+
+  @override
+  String yMgrTie1(String manager) {
+    return '다음 상대 벤치에는 $manager 감독. 우리 감독과 사연이 있어서 정말 기대된다.';
+  }
+
+  @override
+  String yMgrTie2(String manager) {
+    return '다음은 상대 벤치의 $manager 감독. 우리 감독과는 꽤 오래된 사이다.';
+  }
+
+  @override
+  String yMgrTie3(String manager) {
+    return '또 $manager 감독이다. 우리 감독이 이걸 개인 감정 싸움으로 만들지 않았으면.';
+  }
+
+  @override
+  String yMgrTie4(String manager) {
+    return '또 시작이다. 터치라인에는 $manager 감독, 우리 감독은 경기 대신 감정싸움에서 이기려 한다.';
+  }
+
+  @override
+  String get mgrRowLabel => '감독';
+
+  @override
+  String mgrRowDetail(int age, String date) {
+    return '$age세, $date부터';
+  }
+
+  @override
+  String mgrRecordWdl(int won, int drawn, int lost) {
+    return '$won승 $drawn무 $lost패';
+  }
+
+  @override
+  String mgrRowRecord(String record) {
+    return '재임 성적: $record';
+  }
+
+  @override
+  String get mgrTieNeutral => '인연 없음';
+
+  @override
+  String get mgrTieRespect => '존중';
+
+  @override
+  String get mgrTieRival => '라이벌';
+
+  @override
+  String get mgrTieGrudge => '앙금';
+
+  @override
+  String get mgrTieSuccessor => '후임';
+
+  @override
+  String get mgrTieProtege => '제자';
+
+  @override
+  String get mgrTieFormerPlayer => '전 선수';
+
+  @override
+  String get mgrEndSacked => '경질';
+
+  @override
+  String get mgrEndResigned => '사임';
+
+  @override
+  String get mgrEndPoached => '다른 대표팀으로 이동';
+
+  @override
+  String get mgrEndRetired => '지도자 은퇴';
+
+  @override
+  String get mgrEndContractEnd => '계약 만료';
+
+  @override
+  String get mgrEndReplacedByPlayer => '당신이 교체';
+
+  @override
+  String get mgrProfileSpells => '경력';
+
+  @override
+  String mgrProfileSpellNow(String nation, String from) {
+    return '$nation, $from부터';
+  }
+
+  @override
+  String mgrProfileSpellRange(String nation, String from, String to) {
+    return '$nation, $from부터 $to까지';
+  }
+
+  @override
+  String mgrProfileSpellEnded(String range, String reason) {
+    return '$range, $reason';
+  }
+
+  @override
+  String get mgrProfileRecordVsYou => '당신과의 전적';
+
+  @override
+  String get mgrProfileNoMeetings => '아직 만난 적 없음';
+
+  @override
+  String get mgrProfileReputation => '평판';
+
+  @override
+  String get mgrProfileAge => '나이';
+
+  @override
+  String get mgrProfileAppointed => '선임';
+
+  @override
+  String get mgrProfileStyle => '스타일';
+
+  @override
+  String get mgrProfileTie => '두 사람 사이';
+
+  @override
+  String mgrPreviewLine(String name) {
+    return '상대 감독: $name';
+  }
+
+  @override
+  String mgrDossierStyle(String style) {
+    return '감독 스타일: $style';
+  }
+
+  @override
+  String mgrDossierRecord(String record) {
+    return '그와의 전적: $record';
+  }
+
+  @override
+  String get mgrStylePossession => '점유';
+
+  @override
+  String get mgrStyleHighPress => '하이 프레스';
+
+  @override
+  String get mgrStyleDefensive => '수비적';
+
+  @override
+  String get mgrStyleDirect => '직선적';
+
+  @override
+  String get mgrStyleCounter => '역습';
+
+  @override
+  String get mgrStyleFlair => '기교파';
+
+  @override
+  String get mgrStylePhysical => '피지컬';
+
+  @override
+  String get mgrStyleBalanced => '균형';
+
+  @override
+  String get mgrListTitle => '감독';
+
+  @override
+  String get mgrListCurrent => '현재';
+
+  @override
+  String get mgrListRecentMoves => '최근 변동';
+
+  @override
+  String get mgrListFilterAll => '전체';
+
+  @override
+  String get mgrListSortReputation => '평판';
+
+  @override
+  String get mgrListSortName => '이름';
+
+  @override
+  String get mgrListEmptyMoves => '최근 2년간 변동이 없습니다.';
+
+  @override
+  String get mgrListEmptyCurrent => '감독은 다음 시즌 전환 후에 표시됩니다.';
+
+  @override
+  String get editorSectionManagers => '감독';
+
+  @override
+  String get editorAboutManagers => '첫날 각 대표팀을 이끄는 감독';
+
+  @override
+  String get editorManagersHint => '커리어를 시작할 때 정해집니다';
+
+  @override
+  String get editorManagerName => '감독 이름';
+
+  @override
+  String get editorManagerNationality => '국적';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return '감독 이름은 표시 가능한 1~$max자여야 합니다';
+  }
+
+  @override
+  String get editorIssueManagerNationality => '목록에서 감독의 국적을 고르세요';
 
   @override
   String get shareButton => '공유';

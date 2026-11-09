@@ -4,6 +4,7 @@ import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/services/competition/host_cities.dart';
 import 'package:fnm/domain/services/competition/national_stadium_data.dart';
 import 'package:fnm/domain/services/competition/stadium_capacity.dart';
+import 'package:fnm/domain/services/federation/national_stadiums.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 
 /// A tournament venue: the `stadium`, its host `city`, and the stadium's
@@ -11,6 +12,21 @@ import 'package:fnm/domain/services/world_pack/active_world.dart';
 /// and tapers down the city list, so the marquee grounds are in the biggest
 /// cities and a small country has small ones.
 typedef Venue = ({String city, String stadium, int capacity});
+
+/// The grounds of an edition decided under the host rules v2 (the stadium
+/// bars, `HostStadiumRules`), as the host draw worked them out:
+///
+/// - `minSeats`: the smallest ground that counts (the bar's other seats);
+/// - `promised`: the new grounds each AI host counted to reach the bar (their
+///   seats, by host id);
+/// - `planned`: the ones it delivers. A broken promise delivers one fewer.
+///
+/// Null wherever an edition keeps the rules it was decided under.
+typedef HostGroundPlan = ({
+  int minSeats,
+  Map<int, List<int>> promised,
+  Map<int, List<int>> planned,
+});
 
 /// How a finals' grounds are chosen.
 ///
@@ -157,14 +173,33 @@ abstract final class VenueGenerator {
   /// the manager's nation when it hosts. A host not listed keeps the static
   /// grounds. Nothing here is stored, so this only ever shapes what is shown
   /// and the crowds of matches still to be played.
+  ///
+  /// [qualifyingOnly] stages an edition decided under the host rules v2 (see
+  /// [HostGroundPlan]): only the grounds that count toward its bar (seed
+  /// grounds, or estate grounds, of [minSeats] or more) and the [planned]
+  /// new grounds each host delivers, up to [count] in all and never padded
+  /// with a generated city. [rules] is then not read.
   static Map<int, List<Venue>> forHosts({
     required List<int> hostIds,
     Map<int, List<String>> citiesByHost = const {},
     int count = 8,
     Map<int, List<Venue>> estates = const {},
     VenueRules rules = VenueRules.original,
+    bool qualifyingOnly = false,
+    int minSeats = 0,
+    Map<int, List<int>> planned = const {},
   }) {
     if (hostIds.isEmpty) return const {};
+    if (qualifyingOnly) {
+      return _qualifyingForHosts(
+        hostIds,
+        citiesByHost,
+        count,
+        estates,
+        minSeats,
+        planned,
+      );
+    }
     if (rules == VenueRules.scaled) {
       return _scaledForHosts(hostIds, citiesByHost, count, estates);
     }
@@ -238,6 +273,103 @@ abstract final class VenueGenerator {
       for (var i = 0; i < hostIds.length; i++)
         hostIds[i]: grounds[i].take(take[i]).toList(),
     };
+  }
+
+  /// [forHosts] with `qualifyingOnly`: each host's qualifying grounds and
+  /// delivered planned ones (biggest first), [count] of them in all, shared
+  /// out by size as under [VenueRules.scaled].
+  static Map<int, List<Venue>> _qualifyingForHosts(
+    List<int> hostIds,
+    Map<int, List<String>> citiesByHost,
+    int count,
+    Map<int, List<Venue>> estates,
+    int minSeats,
+    Map<int, List<int>> planned,
+  ) {
+    final grounds = [
+      for (final h in hostIds)
+        _qualifyingGrounds(
+          h,
+          citiesByHost[h],
+          estates[h],
+          minSeats,
+          planned[h] ?? const [],
+        ),
+    ];
+    final take = scaledShares(
+      count: count,
+      grounds: [
+        for (final g in grounds)
+          (
+            available: g.length,
+            seats: g.take(count).fold<int>(0, (s, v) => s + v.capacity),
+          ),
+      ],
+    );
+    return {
+      for (var i = 0; i < hostIds.length; i++)
+        hostIds[i]: grounds[i].take(take[i]).toList(),
+    };
+  }
+
+  /// The grounds of [hostId] that count toward a v2 bar, biggest first.
+  ///
+  /// Its seed grounds ([nationalStadiumData]) of [minSeats] or more, named
+  /// as [forHost] names them; for the manager's nation its [estate] instead,
+  /// less any ground in a generated city of the finals pool (a seed site or
+  /// a built ground counts, a padding city never does). Then a ground of
+  /// each [planned] size, in the host's first cities that hold no ground
+  /// yet, named [NationalStadiums.newStadiumName].
+  static List<Venue> _qualifyingGrounds(
+    int hostId,
+    List<String>? cities,
+    List<Venue>? estate,
+    int minSeats,
+    List<int> planned,
+  ) {
+    final seed = nationalStadiumData[hostId] ?? const <(String, int)>[];
+    final seedCities = {for (final g in seed) g.$1};
+    final pool = cities == null || cities.isEmpty
+        ? _cities
+        : _realCities(hostId, cities, finals: true);
+    final List<Venue> held;
+    if (estate != null && estate.isNotEmpty) {
+      final generated = {
+        for (final c in pool)
+          if (!seedCities.contains(c)) c,
+      };
+      held = [
+        for (final v in estate)
+          if (v.capacity >= minSeats && !generated.contains(v.city)) v,
+      ];
+    } else {
+      final seen = <String, int>{};
+      held = [
+        for (final (city, seats) in seed)
+          if (seen.update(city, (n) => n + 1, ifAbsent: () => 0) case final nth
+              when seats >= minSeats)
+            (
+              city: city,
+              stadium: _groundName(hostId, city, nth),
+              capacity: seats,
+            ),
+      ];
+    }
+    final taken = {for (final v in held) v.city, ...seedCities};
+    final free = [
+      for (final c in [...pool, ..._cities])
+        if (taken.add(c)) c,
+    ];
+    final built = <Venue>[
+      for (var i = 0; i < planned.length && i < free.length; i++)
+        (
+          city: free[i],
+          stadium: NationalStadiums.newStadiumName(free[i]),
+          capacity: planned[i],
+        ),
+    ];
+    return [...held, ...built]
+      ..sort((a, b) => b.capacity.compareTo(a.capacity));
   }
 
   /// How many of [count] grounds each host stages under [VenueRules.scaled],

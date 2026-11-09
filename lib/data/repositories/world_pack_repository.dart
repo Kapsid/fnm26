@@ -15,6 +15,7 @@ typedef _Added = ({
   String? world,
   List<PackSponsor> sponsors,
   List<PackYAccount> yAccounts,
+  Map<int, ({String name, String nationality})> managers,
 });
 
 /// The custom databases (world packs) on this device, and the copy a career
@@ -144,7 +145,7 @@ class WorldPackRepository {
               WorldPacksCompanion.insert(
                 uuid: p.uuid,
                 name: p.name,
-                json: jsonEncode(p.toJson()),
+                json: jsonEncode(p.asWritten.toJson()),
                 updatedAt: _clock(),
               ),
             );
@@ -159,7 +160,7 @@ class WorldPackRepository {
       WorldPacksCompanion(
         uuid: Value(p.uuid),
         name: Value(p.name),
-        json: Value(jsonEncode(p.toJson())),
+        json: Value(jsonEncode(p.asWritten.toJson())),
         updatedAt: Value(_clock()),
       ),
     );
@@ -238,7 +239,7 @@ class WorldPackRepository {
           CareerWorldsCompanion.insert(
             careerId: Value(careerId),
             packName: pack.name,
-            json: jsonEncode(pack.toJson()),
+            json: jsonEncode(pack.asWritten.toJson()),
           ),
         );
     await (_db.delete(
@@ -330,8 +331,16 @@ class WorldPackRepository {
     return (world: added.world, yAccounts: added.yAccounts);
   }
 
+  /// The day-one managers career [careerId]'s world names, by nation id;
+  /// none for the default world. See [_addedFor]; a world that cannot be
+  /// read throws.
+  Future<Map<int, ({String name, String nationality})>> managersFor(
+    int careerId,
+  ) async => (await _addedFor(careerId)).managers;
+
   /// What career [careerId]'s world added that the career reads outside its
-  /// player reads: its sponsors and Y accounts, with the world's uuid.
+  /// player reads: its sponsors, Y accounts and day-one managers, with the
+  /// world's uuid.
   ///
   /// Read wherever the sponsor round is (the hub, the finances, the cycle's
   /// close) and on every Y feed build, so it is cheap on a repeat: a
@@ -348,6 +357,9 @@ class WorldPackRepository {
       world: pack.uuid,
       sponsors: List<PackSponsor>.unmodifiable(pack.addedSponsors),
       yAccounts: List<PackYAccount>.unmodifiable(pack.addedYAccounts),
+      managers: Map<int, ({String name, String nationality})>.unmodifiable(
+        pack.managers,
+      ),
     );
     _added[careerId] = (pack: pack, value: value);
     return value;
@@ -357,6 +369,7 @@ class WorldPackRepository {
     world: null,
     sponsors: <PackSponsor>[],
     yAccounts: <PackYAccount>[],
+    managers: <int, ({String name, String nationality})>{},
   );
 
   final Map<int, ({WorldPack pack, _Added value})> _added = {};

@@ -34,6 +34,8 @@ import 'package:fnm/features/player/player_detail_screen.dart'
 import 'package:fnm/features/records/head_to_head_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/tournaments/wc_host_theme.dart';
+import 'package:fnm/features/world_managers/manager_row.dart';
+import 'package:fnm/features/world_managers/world_manager_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -305,6 +307,7 @@ class _PreviewParts {
       preview.playerIsHome ? preview.awayTeam.xi : preview.homeTeam.xi,
     ),
     saveSeed: preview.saveSeed,
+    fixtureDate: fixture.date,
   );
 
   Widget groundTitle() => Text(
@@ -391,9 +394,14 @@ class OpponentBriefing extends StatefulWidget {
     required this.keyMen,
     required this.saveSeed,
     this.oppNickname,
+    this.fixtureDate,
     this.capitals = false,
     super.key,
   });
+
+  /// The day of the fixture, which names the manager the opponent has on it
+  /// (see [opponentManagerProvider]). Null reads no manager.
+  final DateTime? fixtureDate;
 
   /// The opponent's nickname, when it has one to show (see
   /// `NationIdentity.nicknameFor`).
@@ -446,6 +454,12 @@ class _OpponentBriefingState extends State<OpponentBriefing> {
               ),
             ],
           ),
+          if (widget.fixtureDate case final date?)
+            OpponentManagerLine(
+              careerId: widget.careerId,
+              nationId: widget.oppNationId,
+              date: date,
+            ),
           const SizedBox(height: AppSpacing.md),
           if (_tab == 0)
             _H2HBody(
@@ -463,6 +477,7 @@ class _OpponentBriefingState extends State<OpponentBriefing> {
               oppNickname: widget.oppNickname,
               keyMen: widget.keyMen,
               saveSeed: widget.saveSeed,
+              fixtureDate: widget.fixtureDate,
             ),
         ],
       ),
@@ -688,8 +703,10 @@ class _DossierBody extends ConsumerWidget {
     required this.keyMen,
     required this.saveSeed,
     this.oppNickname,
+    this.fixtureDate,
   });
 
+  final DateTime? fixtureDate;
   final int careerId;
   final int oppNationId;
   final String oppName;
@@ -787,6 +804,12 @@ class _DossierBody extends ConsumerWidget {
           nationId: oppNationId,
           seed: saveSeed ^ oppNationId,
         ),
+        if (fixtureDate case final date?)
+          OpponentManagerDossier(
+            careerId: careerId,
+            nationId: oppNationId,
+            date: date,
+          ),
         if (keyMen.isNotEmpty) ...[
           const SizedBox(height: AppSpacing.md),
           Text(

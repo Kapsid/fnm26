@@ -38,8 +38,10 @@ enum BundleRejection {
 /// different set of saves.
 ///
 /// The awkward part, and the reason this is more than a `SELECT *`: the save is
-/// not cleanly partitioned by career. Twenty-seven tables carry `career_id`
-/// and can be filtered directly, but `qualifying_groups` belongs to a career
+/// not cleanly partitioned by career. Thirty-five tables carry `career_id`
+/// and can be filtered directly (the world's managers, their spells and ties
+/// among them, keyed by career and their own numbers, so they travel with no
+/// renumbering), but `qualifying_groups` belongs to a career
 /// only through its competition and `group_members` only through its group.
 /// And the ids of competitions, groups and fixtures are referenced by other
 /// rows, so importing has to renumber them and rewrite every reference — a

@@ -116,7 +116,13 @@ void main() {
         c.dispose();
         await db.close();
       });
-      final d = await StoryDriver.start(c, seed, nationId: bidder().id);
+      final d = await StoryDriver.start(
+        c,
+        seed,
+        nationId: bidder().id,
+        // The bid flow of the build before the stadium bars.
+        stadiumHostRules: false,
+      );
       final kinds = await toRollover(d);
       // The rollover was reached as its own event, not stepped past.
       expect(kinds.last, HubEventKind.cycleRollover);
@@ -230,7 +236,12 @@ void main() {
         c.dispose();
         await db.close();
       });
-      final d = await StoryDriver.start(c, hostSeed, nationId: host);
+      final d = await StoryDriver.start(
+        c,
+        hostSeed,
+        nationId: host,
+        stadiumHostRules: false,
+      );
       final kinds = await toRollover(d);
       expect(kinds, contains(HubEventKind.friendlies));
       expect(kinds.last, HubEventKind.cycleRollover);

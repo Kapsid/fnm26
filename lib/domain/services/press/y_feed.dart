@@ -8,6 +8,7 @@ import 'package:fnm/domain/services/press/persona.dart';
 import 'package:fnm/domain/services/press/statement.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/squad/camp_scandal.dart';
+import 'package:fnm/domain/services/world_managers/manager_relation.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart'
@@ -340,6 +341,10 @@ enum YTemplate {
   /// horse (see `PunditPredictions`).
   punditPick,
 
+  /// Before a match against a manager with a history with ours (see
+  /// [YFeed.forOpponentManager]): four wordings, banded by the speaker's
+  /// tone.
+  managerTieLooms,
   /// Out of a finals further on than anybody expected (see
   /// `YTournaments.proudExit`): proud of the run, not angry it ended. The
   /// mirror of [exitHeartbreak]. Tester feedback: Montenegro reached the last
@@ -2207,6 +2212,45 @@ abstract final class YFeed {
     );
   }
 
+  /// …and about the man in the other dugout: one post before a match against
+  /// [manager] when the player has a tie with him ([label] not neutral),
+  /// none otherwise. No thread under it: it is a line, not a story.
+  ///
+  /// One of the fans says it, in his own tone (see [YCast.toneFor]): the
+  /// tie decides that there is a post, the speaker decides how it sounds.
+  /// [nation] is the player's nation, whose fans these are; [manager] is a
+  /// name and is never translated.
+  static List<YPost> forOpponentManager({
+    required String manager,
+    required TieLabel label,
+    required DateTime date,
+    required String key,
+    required String nation,
+    required int seed,
+    ResultStanding standing = ResultStanding.par,
+  }) {
+    if (label == TieLabel.neutral || manager.trim().isEmpty) return const [];
+    const voice = YVoice.fan;
+    final persona = personaFor(voice, nation, seed, key);
+    return [
+      _post(
+        voice: voice,
+        template: YTemplate.managerTieLooms,
+        args: [manager],
+        date: date,
+        key: key,
+        nation: nation,
+        seed: seed,
+        tone: YCast.toneFor(
+          persona,
+          standing,
+          YCast.stance(persona, const []),
+        ),
+        as: persona,
+      ),
+    ];
+  }
+
   /// One subject, said by each of [voices] in its own persona's tone, with the
   /// thread the loudest of them draws.
   ///
@@ -2606,6 +2650,7 @@ abstract final class YFeed {
     YTemplate.debut => YMood.elation,
     YTemplate.drought => YMood.fury,
     YTemplate.rivalryLooms => YMood.relief,
+    YTemplate.managerTieLooms => YMood.relief,
     // He said it on the record. Delivering it is a good day; failing to is
     // the room turning on him, like a grievance aired in public.
     YTemplate.statementKept => YMood.elation,

@@ -1181,6 +1181,7 @@ extension SeasonCycle on SeasonService {
     // Every other confederation's championship is decided in the same window,
     // so record them now rather than two years later after the World Cup.
     await _simulateContinentalCups(careerId, year + 2);
+    await _managersAfterContinentalFinal(careerId, conf, f);
   }
 
   /// Records the World Cup roll-of-honour entry once the final is played.
@@ -1192,7 +1193,14 @@ extension SeasonCycle on SeasonService {
     if (finals.isEmpty || !finals.first.hasResult) return;
     final f = finals.first;
     final year = f.date.year;
-    if (await _comp.hasHonour(careerId, 'World Championship', year)) return;
+    if (await _comp.hasHonour(careerId, 'World Championship', year)) {
+      // The managers' decision still runs, once: a run cut short between
+      // the honour and the managers picks it up here. (A continental point
+      // missed that way is caught up by this one: its window takes in every
+      // final whose own point never ran.)
+      await _managersAfterWorldFinal(careerId, f);
+      return;
+    }
 
     final thirds = await _comp.fixturesByRound(careerId, WorldCupFinals.third);
     final nations = await _nationsById(careerId);
@@ -1254,6 +1262,60 @@ extension SeasonCycle on SeasonService {
     await _settleWorldCupRanking(careerId);
 
     await _simulateContinentalCups(careerId, year);
+    await _managersAfterWorldFinal(careerId, f);
+  }
+
+  /// The world managers' decision point after the World Championship
+  /// [final_]: every nation's brief has settled. Runs after everything else
+  /// the final settles; a no-op in a cycle not run by world managers, and
+  /// once it has run.
+  Future<void> _managersAfterWorldFinal(int careerId, Fixture final_) =>
+      _managersAfterFinal(
+        careerId,
+        ManagerWindows.worldKey(final_.date.year),
+        final_.date,
+        (_) => true,
+      );
+
+  /// [conf]'s twin of [_managersAfterWorldFinal]: only that confederation's
+  /// briefs settle at its championship's [final_].
+  Future<void> _managersAfterContinentalFinal(
+    int careerId,
+    Confederation conf,
+    Fixture final_,
+  ) => _managersAfterFinal(
+    careerId,
+    ManagerWindows.continentalKey(conf, final_.date.year),
+    final_.date,
+    (n) => n.confederation == conf,
+  );
+
+  /// One finals decision point. Gated before the nations are read, and
+  /// caught: a manager pass must never stop the season (a failed one leaves
+  /// its marker unset, and its brief is caught up by the next point).
+  Future<void> _managersAfterFinal(
+    int careerId,
+    String key,
+    DateTime date,
+    bool Function(Nation n) inScope,
+  ) async {
+    try {
+      final service = _ref.read(worldManagerServiceProvider);
+      if (!await service.finalsPending(careerId, key: key, date: date)) {
+        return;
+      }
+      await service.afterFinals(
+        careerId,
+        key: key,
+        scope: {
+          for (final n in (await _nationsById(careerId)).values)
+            if (inScope(n)) n.id,
+        },
+        date: date,
+      );
+    } on Object catch (e, st) {
+      AppLog.error('mgr-pass $key', e, st);
+    }
   }
 
   /// A BACKSTOP for any confederation whose championship never got played.

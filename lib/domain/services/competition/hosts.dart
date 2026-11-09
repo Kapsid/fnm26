@@ -1,7 +1,10 @@
 import 'package:fnm/core/rng/seeded_rng.dart';
+import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/host_bidding.dart';
+import 'package:fnm/domain/services/competition/host_stadium_rules.dart';
+import 'package:fnm/domain/services/competition/venues.dart';
 import 'package:fnm/domain/services/nation/nation_geography.dart';
 
 /// A candidature: one nation standing alone, or two or three bidding jointly.
@@ -49,10 +52,45 @@ typedef ContBidStanding = ({
 /// One host decision of the chain (see [WorldCupHosts._chainTo]): the
 /// candidatures as the ceremony shows them, and the winning bid.
 class _Draw {
-  const _Draw({required this.bids, required this.hosts});
+  const _Draw({
+    required this.bids,
+    required this.hosts,
+    this.plan,
+    this.broken = const {},
+  });
 
   final List<HostBid> bids;
   final List<int> hosts;
+
+  /// Its grounds when it was decided under the stadium bars (host rules v2),
+  /// else null.
+  final HostGroundPlan? plan;
+
+  /// The hosts that broke their promise of new grounds: barred from the next
+  /// two editions of the tournament.
+  final Set<int> broken;
+}
+
+/// The stadium bars at work on one host race of an edition decided under the
+/// host rules v2 (`HostStadiumRules`): a bid stands only when its hosts'
+/// grounds reach the bar, and an AI nation of the top 30 may count planned
+/// grounds to reach it alone. See [WorldCupHosts._settle].
+class _Bars {
+  _Bars(this.comp, this.cycle);
+
+  final HostBidComp comp;
+  final int cycle;
+
+  /// Nations already standing in a bid of this race.
+  final Set<int> used = {};
+
+  /// The planned grounds (their seats) each solo bidder counted.
+  final Map<int, List<int>> planned = {};
+
+  /// The qualifying seats of the race's eligible pool, for the joint bids.
+  final Map<int, List<int>> seats = {};
+
+  HostBar barOf(Nation n) => HostStadiumRules.of(comp, n.confederation);
 }
 
 /// Every host decision of a career from cycle 0 on: each confederation's
@@ -107,6 +145,14 @@ abstract final class WorldCupHosts {
       }
     }
     return out;
+  }
+
+  /// Whether [cycle]'s editions are decided under the host rules v2 (the
+  /// stadium bars, `HostStadiumRules`): some nation carries
+  /// `HostBidding.rules2Key(cycle)`.
+  static bool isV2(int cycle, List<Nation> nations) {
+    final key = HostBidding.rules2Key(cycle);
+    return nations.any((n) => n.hostBids.containsKey(key));
   }
 
   /// The manager's nation for [cycle] under the current rules, or null when
@@ -224,6 +270,11 @@ abstract final class WorldCupHosts {
       // The continental championships: none of the last three hosts of the
       // same championship, nobody who hosted the World Championship just
       // played, and not the manager's nation unless it bid.
+      // An edition stamped with the host rules v2 also holds every bid to
+      // its stadium bar, and bars a host that broke its promise of new
+      // grounds from the next two editions. Without the stamp, nothing
+      // below differs from the current rules.
+      final v2 = isV2(c, nations);
       final cross = <int>{if (c > 0) ...chain.wc[c - 1].hosts};
       final lodgedC = _lodgedCont(c, nations);
       final mine = <int>{if (lodgedC?.nationId != m) m};
@@ -234,40 +285,59 @@ abstract final class WorldCupHosts {
             ...?chain.cont[c - k][conf]?.hosts,
         };
         final last = <int>{if (c > 0) ...?chain.cont[c - 1][conf]?.hosts};
+        final broke = <int>{
+          if (v2)
+            for (var k = 1; k <= 2 && c - k >= 0; k++)
+              ...?chain.cont[c - k][conf]?.broken,
+        };
         // A small confederation can run out of candidates: the older
         // editions are let go first, then everything but the manager rule.
         final tiers = [
-          {...perType, ...cross, ...mine},
-          {...last, ...cross, ...mine},
+          {...perType, ...cross, ...mine, ...broke},
+          {...last, ...cross, ...mine, ...broke},
           mine,
           <int>{},
         ];
         var bids = const <HostBid>[];
         var exclude = <int>{};
-        for (final t in tiers) {
-          exclude = t;
-          bids = _continentalBids(
-            confederation: conf,
-            cycle: c,
-            seed: seed,
-            nations: nations,
-            exclude: t,
-          );
+        _Bars? bars;
+        // Under the bars, a world where no bid reaches them (a custom one
+        // whose grounds are unknown) is decided as without them.
+        for (final withBars in v2 ? const [true, false] : const [false]) {
+          for (final t in tiers) {
+            exclude = t;
+            bars = withBars ? _Bars(HostBidComp.continental, c) : null;
+            bids = _continentalBids(
+              confederation: conf,
+              cycle: c,
+              seed: seed,
+              nations: nations,
+              exclude: t,
+              bars: bars,
+            );
+            if (bids.isNotEmpty) break;
+          }
           if (bids.isNotEmpty) break;
         }
         final eligible =
             lodgedC != null &&
             _contEligible(lodgedC.nationId, nations, conf, exclude);
+        final hosts = bids.isEmpty
+            ? const <int>[]
+            : _decide(
+                bids,
+                _contSeed(conf, c, seed),
+                lodgedC,
+                eligible: eligible,
+              );
+        final settled = bars == null
+            ? null
+            : _settle(hosts, bars, HostStadiumRules.continental(conf), seed);
         contDraws[conf] = _Draw(
           bids: _withLodged(bids, lodgedC, eligible: eligible),
-          hosts: bids.isEmpty
-              ? const []
-              : _decide(
-                  bids,
-                  _contSeed(conf, c, seed),
-                  lodgedC,
-                  eligible: eligible,
-                ),
+          hosts: hosts,
+          plan: settled?.plan,
+          broken: settled?.broken ?? const {},
         );
       }
       chain.cont.add(contDraws);
@@ -285,26 +355,36 @@ abstract final class WorldCupHosts {
       final recent = <int>{
         for (var k = 1; k <= 3 && c - k >= 0; k++) ...chain.wc[c - k].hosts,
       };
+      final brokeW = <int>{
+        if (v2)
+          for (var k = 1; k <= 2 && c - k >= 0; k++) ...chain.wc[c - k].broken,
+      };
       final wcTiers = <(Confederation?, Set<int>)>[
-        (barred, {...recent, ...summer, ...mineW}),
-        (barred, {...prevHosts, ...summer, ...mineW}),
-        (null, {...summer, ...mineW}),
+        (barred, {...recent, ...summer, ...mineW, ...brokeW}),
+        (barred, {...prevHosts, ...summer, ...mineW, ...brokeW}),
+        (null, {...summer, ...mineW, ...brokeW}),
         (null, mineW),
         (null, <int>{}),
       ];
       var wcBids = const <HostBid>[];
       Confederation? usedBarred;
       var usedExclude = <int>{};
-      for (final (b, ex) in wcTiers) {
-        usedBarred = b;
-        usedExclude = ex;
-        wcBids = _worldCupBidsFor(
-          year: year,
-          nations: nations,
-          seed: seed,
-          barredConfederation: b,
-          excludeIds: ex,
-        );
+      _Bars? wcBars;
+      for (final withBars in v2 ? const [true, false] : const [false]) {
+        for (final (b, ex) in wcTiers) {
+          usedBarred = b;
+          usedExclude = ex;
+          wcBars = withBars ? _Bars(HostBidComp.worldChampionship, c) : null;
+          wcBids = _worldCupBidsFor(
+            year: year,
+            nations: nations,
+            seed: seed,
+            barredConfederation: b,
+            excludeIds: ex,
+            bars: wcBars,
+          );
+          if (wcBids.isNotEmpty) break;
+        }
         if (wcBids.isNotEmpty) break;
       }
       final wcEligible =
@@ -315,6 +395,7 @@ abstract final class WorldCupHosts {
         final all = [...nations]
           ..sort((a, b) => a.ranking.compareTo(b.ranking));
         wcHosts = all.isEmpty ? const [] : [all.first.id];
+        wcBars = null;
       } else {
         wcHosts = _decide(
           wcBids,
@@ -323,15 +404,69 @@ abstract final class WorldCupHosts {
           eligible: wcEligible,
         );
       }
+      final wcSettled = wcBars == null
+          ? null
+          : _settle(wcHosts, wcBars, HostStadiumRules.worldChampionship, seed);
       chain.wc.add(
         _Draw(
           bids: _withLodged(wcBids, lodgedW, eligible: wcEligible),
           hosts: wcHosts,
+          plan: wcSettled?.plan,
+          broken: wcSettled?.broken ?? const {},
         ),
       );
     }
     return chain;
   }
+
+  /// The chance an AI host breaks its promise of new grounds.
+  static const double _brokenPromiseChance = 0.10;
+
+  /// The grounds plan of [hosts], the winners of a race run under [bars]
+  /// against [bar]: the planned grounds each host promised, and the ones it
+  /// delivers. A host breaks its promise on a deterministic roll of its own
+  /// (never the world's), delivers one ground fewer and is barred from the
+  /// next two editions.
+  ///
+  /// Winners that fall short of the bar (a lodged bid, which the bid offer
+  /// and the rollover both refuse when short) still get a plan: an edition
+  /// under the bars is never staged in tiny grounds, only in fewer.
+  static ({HostGroundPlan? plan, Set<int> broken}) _settle(
+    List<int> hosts,
+    _Bars bars,
+    HostBar bar,
+    int seed,
+  ) {
+    const none = (plan: null, broken: <int>{});
+    if (hosts.isEmpty) return none;
+    final promised = {
+      for (final h in hosts) h: ?bars.planned[h],
+    };
+    final broken = <int>{};
+    final delivered = <int, List<int>>{};
+    promised.forEach((h, p) {
+      final roll = SeededRng(
+        varietySeed('host2:promise:$seed:${bars.comp.code}:${bars.cycle}:$h'),
+      ).nextDouble();
+      if (roll < _brokenPromiseChance) {
+        broken.add(h);
+        delivered[h] = p.sublist(0, p.length - 1);
+      } else {
+        delivered[h] = p;
+      }
+    });
+    return (
+      plan: (minSeats: bar.otherSeats, promised: promised, planned: delivered),
+      broken: broken,
+    );
+  }
+
+  /// The seats of each nation's seed grounds, biggest first (see
+  /// `HostStadiumRules.qualifyingSeats`): fixed data, read once.
+  static final Map<int, List<int>> _seedSeats = {};
+
+  static List<int> _seatsOf(int nationId) => _seedSeats[nationId] ??=
+      HostStadiumRules.qualifyingSeats(nationId: nationId, editionCycle: 0);
 
   /// The chain draw of the World Championship in [year], or null when that
   /// edition keeps the legacy rules.
@@ -369,6 +504,24 @@ abstract final class WorldCupHosts {
   }) =>
       _wcDraw(year, nations, seed)?.bids ??
       _legacyWorldCupBids(year: year, nations: nations, seed: seed);
+
+  /// The grounds of the World Championship in [year] when it was decided
+  /// under the stadium bars (an edition stamped with `HostBidding.rules2Kind`):
+  /// what `VenueGenerator.forHosts` stages it in with `qualifyingOnly`. Null
+  /// for every other edition, whose grounds are staged as before.
+  static HostGroundPlan? worldCupGroundPlan({
+    required int year,
+    required List<Nation> nations,
+    required int seed,
+  }) => _wcDraw(year, nations, seed)?.plan;
+
+  /// [worldCupGroundPlan] for [confederation]'s championship in [cycle].
+  static HostGroundPlan? continentalGroundPlan({
+    required Confederation confederation,
+    required int cycle,
+    required int seed,
+    required List<Nation> nations,
+  }) => _contDraw(confederation, cycle, nations, seed)?.plan;
 
   /// Every host of the World Cup in [year] — the winning bid, which is usually
   /// one nation but is sometimes a joint candidature of two or three. Hosts all
@@ -476,12 +629,19 @@ abstract final class WorldCupHosts {
     final recent = <int>{
       for (var k = 1; k <= 3 && c - k >= 0; k++) ...chain.wc[c - k].hosts,
     };
+    final v2 = isV2(c, world);
     final bids = _worldCupBidsFor(
       year: year,
       nations: world,
       seed: seed,
       barredConfederation: barred,
-      excludeIds: {...recent, ...summer},
+      excludeIds: {
+        ...recent,
+        ...summer,
+        if (v2)
+          for (var k = 1; k <= 2 && c - k >= 0; k++) ...chain.wc[c - k].broken,
+      },
+      bars: v2 ? _Bars(HostBidComp.worldChampionship, c) : null,
     );
     return (
       eligible: true,
@@ -541,12 +701,20 @@ abstract final class WorldCupHosts {
       for (var k = 1; k <= 3 && cycle - k >= 0; k++)
         ...?chain.cont[cycle - k][confederation]?.hosts,
     };
+    final v2 = isV2(cycle, world);
     final bids = _continentalBids(
       confederation: confederation,
       cycle: cycle,
       seed: seed,
       nations: world,
-      exclude: {...perType, ...cross},
+      exclude: {
+        ...perType,
+        ...cross,
+        if (v2)
+          for (var k = 1; k <= 2 && cycle - k >= 0; k++)
+            ...?chain.cont[cycle - k][confederation]?.broken,
+      },
+      bars: v2 ? _Bars(HostBidComp.continental, cycle) : null,
     );
     return (
       eligible: true,
@@ -596,6 +764,23 @@ abstract final class WorldCupHosts {
     required int seed,
     int count = _shortlistSize,
     Set<int> exclude = const {},
+  }) => _hostBids(
+    confederation: confederation,
+    nations: nations,
+    seed: seed,
+    count: count,
+    exclude: exclude,
+  );
+
+  /// [hostBids], held to the stadium [bars] when given (see
+  /// [_bidsFromShortlist]).
+  static List<HostBid> _hostBids({
+    required Confederation confederation,
+    required List<Nation> nations,
+    required int seed,
+    int count = _shortlistSize,
+    Set<int> exclude = const {},
+    _Bars? bars,
   }) {
     final ranked =
         nations
@@ -606,19 +791,118 @@ abstract final class WorldCupHosts {
             .toList()
           ..sort((a, b) => a.ranking.compareTo(b.ranking));
     if (ranked.isEmpty) return const [];
-    return _bidsFrom(ranked, count, seed);
+    return _bidsFrom(ranked, count, seed, bars);
   }
 
   /// The candidatures for a ranking-sorted eligible [ranked] pool: the joint
   /// and solo bids of its strongest [count] members, plus — now and again —
   /// one outsider standing alone at the bottom of the ballot.
-  static List<HostBid> _bidsFrom(List<Nation> ranked, int count, int seed) {
+  ///
+  /// Under the stadium [bars] the same rolls form the same bids, and each is
+  /// then held to its bar (see [_settleBid]); the outsider stands only if it
+  /// reaches the bar alone.
+  static List<HostBid> _bidsFrom(
+    List<Nation> ranked,
+    int count,
+    int seed, [
+    _Bars? bars,
+  ]) {
     final shortlist = ranked.take(count).toList();
     if (shortlist.isEmpty) return const [];
-    final bids = _bidsFromShortlist(shortlist, SeededRng(seed ^ 0x81D5));
+    if (bars != null) {
+      for (final n in ranked) {
+        bars.seats[n.id] = _seatsOf(n.id);
+      }
+    }
+    final bids = _bidsFromShortlist(
+      shortlist,
+      SeededRng(seed ^ 0x81D5),
+      bars,
+      ranked,
+    );
     final outsider = _outsider(ranked, count, SeededRng(seed ^ 0x0DDBA11));
-    if (outsider != null) bids.add([outsider.id]);
+    if (outsider != null) {
+      if (bars == null) {
+        bids.add([outsider.id]);
+      } else if (!bars.used.contains(outsider.id)) {
+        final solo = _settleSolo(outsider, bars);
+        if (solo != null) bids.add(solo);
+      }
+    }
     return bids;
+  }
+
+  /// The bid [primary] stands in under the stadium [bars], or null when it
+  /// is dropped from the race: the bid the rolls formed ([rolled] are its
+  /// partners) when every host brings its share and together they reach the
+  /// bar; else the smallest joint bid with neighbours from [pool] that does
+  /// (`HostStadiumRules.jointBid`); else, for a nation of the top 30, a solo
+  /// bid counting planned grounds. The holder of the biggest ground leads.
+  static List<int>? _settleBid(
+    Nation primary,
+    List<Nation> rolled,
+    List<Nation> pool,
+    _Bars bars,
+  ) {
+    final bar = bars.barOf(primary);
+    bool brings(int id) =>
+        _seatsOf(id).where((s) => s >= bar.otherSeats).length >=
+        HostStadiumRules.minGroundsPerCoHost;
+    final ids = [primary.id, for (final p in rolled) p.id];
+    List<int>? out;
+    if (rolled.isEmpty) {
+      if (HostStadiumRules.meets(_seatsOf(primary.id), bar)) out = ids;
+    } else if (rolled.every((p) => p.confederation == primary.confederation) &&
+        ids.every(brings) &&
+        HostStadiumRules.meets([for (final id in ids) ..._seatsOf(id)], bar)) {
+      out = _finalFirst(ids);
+    }
+    out ??= HostStadiumRules.jointBid(
+      lead: primary,
+      candidates: [
+        for (final n in pool)
+          if (n.id != primary.id && !bars.used.contains(n.id)) n,
+      ],
+      seatsById: bars.seats,
+      bar: bar,
+    );
+    if (out == null) return _settleSolo(primary, bars);
+    bars.used.addAll(out);
+    return out;
+  }
+
+  /// [nation] standing alone under the stadium [bars]: on its own grounds,
+  /// or (top 30 only) counting planned ones; null when it cannot.
+  static List<int>? _settleSolo(Nation nation, _Bars bars) {
+    final bar = bars.barOf(nation);
+    final seats = _seatsOf(nation.id);
+    if (!HostStadiumRules.meets(seats, bar)) {
+      final planned = HostStadiumRules.plannedAi(
+        worldRank: nation.ranking,
+        comp: bars.comp,
+        seats: seats,
+        bar: bar,
+      );
+      if (planned.isEmpty) return null;
+      bars.planned[nation.id] = planned;
+    }
+    bars.used.add(nation.id);
+    return [nation.id];
+  }
+
+  /// [ids] with the holder of the biggest seed ground first (the earliest on
+  /// a tie); the rest keep their order.
+  static List<int> _finalFirst(List<int> ids) {
+    int top(int id) => _seatsOf(id).fold<int>(0, (a, b) => a > b ? a : b);
+    var best = 0;
+    for (var i = 1; i < ids.length; i++) {
+      if (top(ids[i]) > top(ids[best])) best = i;
+    }
+    return [
+      ids[best],
+      for (var i = 0; i < ids.length; i++)
+        if (i != best) ids[i],
+    ];
   }
 
   /// An unfancied country putting its hand up, or null (the usual answer).
@@ -650,15 +934,26 @@ abstract final class WorldCupHosts {
   /// fires, its partner(s) are drawn as geographic neighbours 95% of the time
   /// (same subregion, nearest-ranked), else a nearest-ranked partner of any
   /// origin. Deterministic in [rng].
+  ///
+  /// Under the stadium [bars] each bid is then held to its bar
+  /// ([_settleBid]) against the eligible [pool]: partners it does not keep
+  /// go back on the shortlist in their places, and partners it takes from
+  /// the shortlist leave it. The rolls are drawn exactly as without bars.
   static List<HostBid> _bidsFromShortlist(
     List<Nation> shortlist,
-    SeededRng rng,
-  ) {
+    SeededRng rng, [
+    _Bars? bars,
+    List<Nation> pool = const [],
+  ]) {
     final remaining = [...shortlist];
+    final order = {
+      for (var i = 0; i < shortlist.length; i++) shortlist[i].id: i,
+    };
     final bids = <HostBid>[];
     while (remaining.isNotEmpty) {
       final primary = remaining.removeAt(0);
       final bid = <int>[primary.id];
+      final rolled = <Nation>[];
       final roll = rng.nextDouble();
       if (roll < _coHostChance && remaining.isNotEmpty) {
         final want = roll < _tripleHostChance ? 2 : 1;
@@ -681,9 +976,23 @@ abstract final class WorldCupHosts {
           }
           remaining.remove(partner);
           bid.add(partner.id);
+          rolled.add(partner);
         }
       }
-      bids.add(bid);
+      if (bars == null) {
+        bids.add(bid);
+        continue;
+      }
+      final settled = _settleBid(primary, rolled, pool, bars);
+      final taken = settled?.toSet() ?? const <int>{};
+      remaining
+        ..removeWhere((n) => taken.contains(n.id))
+        ..addAll([
+          for (final p in rolled)
+            if (!taken.contains(p.id)) p,
+        ])
+        ..sort((a, b) => order[a.id]!.compareTo(order[b.id]!));
+      if (settled != null) bids.add(settled);
     }
     return bids;
   }
@@ -911,6 +1220,7 @@ abstract final class WorldCupHosts {
     required int seed,
     required Confederation? barredConfederation,
     required Set<int> excludeIds,
+    _Bars? bars,
   }) {
     final ranked =
         nations
@@ -922,7 +1232,7 @@ abstract final class WorldCupHosts {
             .toList()
           ..sort((a, b) => a.ranking.compareTo(b.ranking));
     if (ranked.isEmpty) return const [];
-    return _bidsFrom(ranked, _shortlistSize, _wcSeed(year, seed));
+    return _bidsFrom(ranked, _shortlistSize, _wcSeed(year, seed), bars);
   }
 
   /// The two exclusions for [year], derived from the deterministic host chain up
@@ -1136,11 +1446,13 @@ abstract final class WorldCupHosts {
     required int seed,
     required List<Nation> nations,
     required Set<int> exclude,
-  }) => hostBids(
+    _Bars? bars,
+  }) => _hostBids(
     confederation: confederation,
     nations: nations,
     seed: _contSeed(confederation, cycle, seed),
     exclude: exclude,
+    bars: bars,
   );
 
   /// The nations that hosted this confederation's championship in the previous

@@ -92,6 +92,11 @@ String beatQuestion(
     ),
     BeatKind.rival => _pick(_rival(l, tone, rivalName), seed),
     BeatKind.keyPlayer => _pick(_keyPlayer(l, tone, player), seed),
+    // A name, never translated.
+    BeatKind.opposingManager => _pick(
+      _beat(l, beat.kind, tone, c.facts.opposingManager?.name ?? ''),
+      seed,
+    ),
   };
 }
 
@@ -193,6 +198,8 @@ String answerLabel(
       l.pressReplyRespectRival2,
     ],
     AnswerKind.teamFirst => [l.pressReplyTeamFirst1, l.pressReplyTeamFirst2],
+    AnswerKind.hitBackAtManager => [l.pressAnswerHitBackAtManager],
+    AnswerKind.respectManager => [l.pressAnswerRespectManager],
   };
   return _pick(variants, seed);
 }
@@ -479,6 +486,8 @@ List<String> _beat(
     l.pressBeatStrugglerHostile1(player),
     l.pressBeatStrugglerHostile2(player),
   ],
+  // [player] is the opposing manager's name here.
+  (BeatKind.opposingManager, _) => [l.pressBeatOpposingManager(player)],
   (BeatKind.moment, _) ||
   (BeatKind.throwback, _) ||
   (BeatKind.aim, _) ||

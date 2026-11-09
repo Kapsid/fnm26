@@ -14,6 +14,8 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/features/nations/nation_now_providers.dart';
 import 'package:fnm/features/shell/detail_pane_host.dart';
+import 'package:fnm/features/world_managers/manager_row.dart';
+import 'package:fnm/features/world_managers/world_manager_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -52,6 +54,7 @@ class NationNowCard extends ConsumerWidget {
   static const Key nextKey = Key('nationNow.next');
   static const Key squadKey = Key('nationNow.squad');
   static const Key againstYouKey = Key('nationNow.againstYou');
+  static const Key managerKey = Key('nationNow.manager');
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -145,6 +148,29 @@ class NationNowCard extends ConsumerWidget {
                   ),
               ],
             ),
+          ),
+          Consumer(
+            builder: (context, ref, _) {
+              // Its own provider: the "now" block above never waits on it.
+              final has = ref
+                  .watch(
+                    nationManagerProvider(
+                      (careerId: careerId, nationId: nationId),
+                    ),
+                  )
+                  .valueOrNull;
+              if (has == null) return const SizedBox.shrink();
+              return Column(
+                children: [
+                  divider,
+                  _Section(
+                    key: managerKey,
+                    label: l.mgrRowLabel,
+                    child: ManagerRow(careerId: careerId, nationId: nationId),
+                  ),
+                ],
+              );
+            },
           ),
           if (now.againstYou case final against?) ...[
             divider,

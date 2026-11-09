@@ -234,6 +234,7 @@ class StoryDriver {
     Map<int, int> startingRanks = const {},
     bool currentHostRules = true,
     bool? newCareerNations,
+    bool stadiumHostRules = true,
   }) async {
     await c.read(seedLoaderProvider).ensureSeeded();
     final career =
@@ -246,6 +247,7 @@ class StoryDriver {
                   startingRanks: startingRanks,
                   currentHostRules: currentHostRules,
                   newCareerNations: newCareerNations,
+                  stadiumHostRules: stadiumHostRules,
                 ))
             .valueOrNull!;
     return StoryDriver(c, career.id);

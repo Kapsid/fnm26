@@ -330,6 +330,118 @@ void main() {
     expect(row.viceCaptain2PlayerId, isNull);
   });
 
+  test('manager rows keep their ids through a round trip', () async {
+    final original = await aCareerNamed('Managers');
+    final on = DateTime.utc(2030, 7);
+    for (final id in const [501, 502]) {
+      await db
+          .into(db.worldManagers)
+          .insert(
+            WorldManagersCompanion.insert(
+              careerId: original,
+              managerId: id,
+              name: 'Manager $id',
+              nationality: 'CZE',
+              birthYear: 1975,
+              style: 'balanced',
+              origin: 'seeded',
+              enteredAt: on,
+            ),
+          );
+    }
+    for (final (spell, manager, nation) in const [
+      (1, 501, 10),
+      (2, 502, 11),
+      (3, 501, 12),
+    ]) {
+      await db
+          .into(db.managerSpells)
+          .insert(
+            ManagerSpellsCompanion.insert(
+              careerId: original,
+              spellNo: spell,
+              managerId: manager,
+              nationId: nation,
+              fromDate: on,
+              contractUntil: DateTime.utc(2034),
+            ),
+          );
+    }
+    await db
+        .into(db.managerTies)
+        .insert(
+          ManagerTiesCompanion.insert(
+            careerId: original,
+            tieNo: 7,
+            managerId: 502,
+            kind: 'grudge',
+            delta: -2,
+            date: on,
+          ),
+        );
+
+    final bundle = CareerBundle.decode(
+      CareerBundle.encode(await CareerBundle.export(db, original)),
+    ).bundle!;
+    final imported = await CareerBundle.import(db, bundle);
+
+    expect(imported, isNot(original));
+    final managers = await (db.select(
+      db.worldManagers,
+    )..where((t) => t.careerId.equals(imported))).get();
+    expect(managers.map((m) => m.managerId).toSet(), {501, 502});
+    final spells = await (db.select(
+      db.managerSpells,
+    )..where((t) => t.careerId.equals(imported))).get();
+    expect(
+      {for (final s in spells) (s.spellNo, s.managerId, s.nationId)},
+      {(1, 501, 10), (2, 502, 11), (3, 501, 12)},
+    );
+    final ties = await (db.select(
+      db.managerTies,
+    )..where((t) => t.careerId.equals(imported))).get();
+    expect(ties.single.tieNo, 7);
+    expect(ties.single.managerId, 502);
+    expect(ties.single.delta, -2);
+  });
+
+  test('a bundle from 54 imports with no manager rows', () async {
+    final original = await aCareerNamed('Pre55');
+    final bundle = await CareerBundle.export(db, original);
+    // What a schema-54 build wrote: no manager tables at all.
+    bundle['schemaVersion'] = 54;
+    (bundle['tables']! as Map)
+      ..remove('world_managers')
+      ..remove('manager_spells')
+      ..remove('manager_ties');
+
+    final decoded = CareerBundle.decode(CareerBundle.encode(bundle));
+    expect(decoded.rejection, isNull);
+    final imported = await CareerBundle.import(db, decoded.bundle!);
+
+    for (final table in const [
+      'world_managers',
+      'manager_spells',
+      'manager_ties',
+    ]) {
+      final n = await db
+          .customSelect(
+            'SELECT COUNT(*) AS n FROM $table WHERE career_id = ?',
+            variables: [Variable<int>(imported)],
+          )
+          .map((r) => r.read<int>('n'))
+          .getSingle();
+      expect(n, 0, reason: '$table should be empty');
+    }
+    final name =
+        await (db.select(
+              db.careers,
+            )..where((t) => t.id.equals(imported)))
+            .map((c) => c.managerName)
+            .getSingle();
+    expect(name, 'Pre55');
+  });
+
   test('importing leaves the career it was exported from alone', () async {
     final original = await aCareerNamed('Untouched');
     final bundle = await CareerBundle.export(db, original);

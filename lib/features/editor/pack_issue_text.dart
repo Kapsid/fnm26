@@ -109,7 +109,8 @@ PackIssueText describePackIssue(
         _ => switch (section) {
           EditorSection.players ||
           EditorSection.none ||
-          EditorSection.nameLists when id != null => nation(id),
+          EditorSection.nameLists ||
+          EditorSection.managers when id != null => nation(id),
           EditorSection.stadiums => key.substring(key.indexOf(':') + 1),
           _ => key,
         },
@@ -236,6 +237,18 @@ PackIssueText _badField(
         title: nationId == null ? sectionTitle : nation(nationId),
         detail: detail,
         section: EditorSection.nameLists,
+        nationId: nationId,
+      );
+    case 'managers':
+      // `managers.<nationId>.name` or `.nationality`, under the nation.
+      final nationId = idAt(1);
+      final field = parts.length > 2 ? parts[2] : '';
+      return (
+        title: nationId == null ? sectionTitle : nation(nationId),
+        detail: field == 'nationality'
+            ? l.editorIssueManagerNationality
+            : l.editorIssueManagerName(PackRules.nameMax),
+        section: EditorSection.managers,
         nationId: nationId,
       );
     case 'reporters':

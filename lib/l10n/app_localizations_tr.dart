@@ -11947,6 +11947,28 @@ class AppLocalizationsTr extends AppLocalizations {
   String get backupSafetyShare => 'PAYLAŞ';
 
   @override
+  String get saveUpgradeFailedTitle => 'Kaydın güncellenemedi';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Kaydın güncellenemedi. Hiçbir şey silinmedi; güncellemeden önceki bir kopya bu telefonda duruyor.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Güncellemeden önceki kopyayı geri yükle';
+
+  @override
+  String get saveUpgradeRestoreFailed =>
+      'Kopya geri yüklenemedi. Kaydın olduğu gibi bırakıldı.';
+
+  @override
+  String get saveOpenFailedTitle => 'Kayıtların açılamadı';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Kayıtların açılamadı. Hiçbir şey silinmedi. Birazdan tekrar dene.';
+
+  @override
   String get backupCloudNoDetails => 'Ayrıntılar hâlâ yolda.';
 
   @override
@@ -12230,6 +12252,10 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get hostBidRecentHost =>
       'Son üç turnuvadan birine ev sahipliği yaptınız.';
+
+  @override
+  String get hostBidBelowBar =>
+      'Stadyumların bu turnuvanın şartlarını karşılamıyor.';
 
   @override
   String get hostBidRulesPending =>
@@ -16160,6 +16186,261 @@ class AppLocalizationsTr extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'İyi oyuncular güçlü kulüplere gider. Varsayılan: ligine göre 5 üzerinden $stars.';
   }
+
+  @override
+  String mgrNewsSacked(String nation, String name) {
+    return '$nation: $name görevden alındı';
+  }
+
+  @override
+  String mgrNewsResigned(String nation, String name) {
+    return '$nation: $name istifa etti';
+  }
+
+  @override
+  String mgrNewsPoached(String nation, String name) {
+    return '$nation: $name başka bir milli takıma geçti';
+  }
+
+  @override
+  String mgrNewsRetired(String nation, String name) {
+    return '$nation: $name teknik direktörlüğü bırakıyor';
+  }
+
+  @override
+  String mgrNewsContractEnd(String nation, String name) {
+    return '$nation: $name sözleşmesi bitince ayrılıyor';
+  }
+
+  @override
+  String mgrNewsReplacedByPlayer(String nation, String name) {
+    return '$nation: $name yerini sana bırakıyor';
+  }
+
+  @override
+  String mgrNewsAppointed(String nation, String name) {
+    return '$nation, $name ile anlaştı';
+  }
+
+  @override
+  String mgrNewsAppointedBody(String nation, String name) {
+    return '$name, $nation takımının başına geçti.';
+  }
+
+  @override
+  String pressBeatOpposingManager(String manager) {
+    return 'Sen ve $manager arasında geçmiş var. Onun hakkında söyleyeceğin bir şey var mı?';
+  }
+
+  @override
+  String get pressAnswerHitBackAtManager => 'Kendi takımının derdine düşsün.';
+
+  @override
+  String get pressAnswerRespectManager => 'Ona büyük saygım var.';
+
+  @override
+  String yMgrTie1(String manager) {
+    return 'Karşı kenarda $manager var. Hocamızla geçmişleri var, sabırsızlanıyorum.';
+  }
+
+  @override
+  String yMgrTie2(String manager) {
+    return 'Sıradaki rakip, karşı kenarda $manager. O ve hocamız birbirini uzun zamandır tanıyor.';
+  }
+
+  @override
+  String yMgrTie3(String manager) {
+    return 'Yine $manager. Hocamız bunu kişisel bir meseleye çevirmesin de.';
+  }
+
+  @override
+  String yMgrTie4(String manager) {
+    return 'Başlıyoruz. Çizgide $manager var, hocamız da maç yerine bir kavgayı kazanmaya çalışıyor.';
+  }
+
+  @override
+  String get mgrRowLabel => 'Teknik direktör';
+
+  @override
+  String mgrRowDetail(int age, String date) {
+    return '$age yaşında, $date tarihinden beri';
+  }
+
+  @override
+  String mgrRecordWdl(int won, int drawn, int lost) {
+    return '$won G, $drawn B, $lost M';
+  }
+
+  @override
+  String mgrRowRecord(String record) {
+    return 'Yönetiminde: $record';
+  }
+
+  @override
+  String get mgrTieNeutral => 'Geçmiş yok';
+
+  @override
+  String get mgrTieRespect => 'Saygı';
+
+  @override
+  String get mgrTieRival => 'Rakip';
+
+  @override
+  String get mgrTieGrudge => 'Kin';
+
+  @override
+  String get mgrTieSuccessor => 'Halef';
+
+  @override
+  String get mgrTieProtege => 'Öğrenci';
+
+  @override
+  String get mgrTieFormerPlayer => 'Eski oyuncu';
+
+  @override
+  String get mgrEndSacked => 'Görevden alındı';
+
+  @override
+  String get mgrEndResigned => 'İstifa etti';
+
+  @override
+  String get mgrEndPoached => 'Başka milli takıma geçti';
+
+  @override
+  String get mgrEndRetired => 'Teknik direktörlüğü bıraktı';
+
+  @override
+  String get mgrEndContractEnd => 'Sözleşme bitti';
+
+  @override
+  String get mgrEndReplacedByPlayer => 'Yerine sen geldin';
+
+  @override
+  String get mgrProfileSpells => 'Kariyer';
+
+  @override
+  String mgrProfileSpellNow(String nation, String from) {
+    return '$nation, $from tarihinden beri';
+  }
+
+  @override
+  String mgrProfileSpellRange(String nation, String from, String to) {
+    return '$nation, $from ile $to arası';
+  }
+
+  @override
+  String mgrProfileSpellEnded(String range, String reason) {
+    return '$range, $reason';
+  }
+
+  @override
+  String get mgrProfileRecordVsYou => 'Sana karşı sicil';
+
+  @override
+  String get mgrProfileNoMeetings => 'Henüz karşılaşmadınız';
+
+  @override
+  String get mgrProfileReputation => 'İtibar';
+
+  @override
+  String get mgrProfileAge => 'Yaş';
+
+  @override
+  String get mgrProfileAppointed => 'Atandı';
+
+  @override
+  String get mgrProfileStyle => 'Tarz';
+
+  @override
+  String get mgrProfileTie => 'Aranızda';
+
+  @override
+  String mgrPreviewLine(String name) {
+    return 'Teknik direktörleri: $name';
+  }
+
+  @override
+  String mgrDossierStyle(String style) {
+    return 'Teknik direktörün tarzı: $style';
+  }
+
+  @override
+  String mgrDossierRecord(String record) {
+    return 'Ona karşı sicilin: $record';
+  }
+
+  @override
+  String get mgrStylePossession => 'Top kontrolü';
+
+  @override
+  String get mgrStyleHighPress => 'Yüksek pres';
+
+  @override
+  String get mgrStyleDefensive => 'Defansif';
+
+  @override
+  String get mgrStyleDirect => 'Direkt';
+
+  @override
+  String get mgrStyleCounter => 'Kontra atak';
+
+  @override
+  String get mgrStyleFlair => 'Yetenekli';
+
+  @override
+  String get mgrStylePhysical => 'Fiziksel';
+
+  @override
+  String get mgrStyleBalanced => 'Dengeli';
+
+  @override
+  String get mgrListTitle => 'Teknik direktörler';
+
+  @override
+  String get mgrListCurrent => 'Mevcut';
+
+  @override
+  String get mgrListRecentMoves => 'Son değişiklikler';
+
+  @override
+  String get mgrListFilterAll => 'Hepsi';
+
+  @override
+  String get mgrListSortReputation => 'İtibar';
+
+  @override
+  String get mgrListSortName => 'İsim';
+
+  @override
+  String get mgrListEmptyMoves => 'Son iki yılda değişiklik yok.';
+
+  @override
+  String get mgrListEmptyCurrent =>
+      'Teknik direktörler bir sonraki sezon geçişinden sonra görünür.';
+
+  @override
+  String get editorSectionManagers => 'Teknik direktörler';
+
+  @override
+  String get editorAboutManagers => 'İlk gün her milli takımı kim çalıştırıyor';
+
+  @override
+  String get editorManagersHint => 'Kariyer başlarken seçilir';
+
+  @override
+  String get editorManagerName => 'Teknik direktörün adı';
+
+  @override
+  String get editorManagerNationality => 'Uyruk';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'Teknik direktörün adı, oyunun gösterebildiği 1 ile $max karakter arasında olmalı';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Teknik direktör için listeden bir uyruk seç';
 
   @override
   String get shareButton => 'Paylaş';

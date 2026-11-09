@@ -12289,6 +12289,29 @@ class AppLocalizationsCs extends AppLocalizations {
   String get backupSafetyShare => 'SDÍLET';
 
   @override
+  String get saveUpgradeFailedTitle =>
+      'Uloženou hru se nepodařilo aktualizovat';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Uloženou hru se nepodařilo aktualizovat. Nic nebylo smazáno a kopie z doby před aktualizací zůstala v tomto telefonu.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Obnovit kopii z doby před aktualizací';
+
+  @override
+  String get saveUpgradeRestoreFailed =>
+      'Kopii se nepodařilo obnovit. Uložená hra zůstala, jak byla.';
+
+  @override
+  String get saveOpenFailedTitle => 'Uložené hry se nepodařilo otevřít';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Uložené hry se nepodařilo otevřít. Nic nebylo smazáno. Zkuste to za chvíli znovu.';
+
+  @override
   String get backupCloudNoDetails => 'Podrobnosti jsou ještě na cestě.';
 
   @override
@@ -12575,6 +12598,10 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get hostBidRecentHost =>
       'Pořádali jste jeden z posledních tří ročníků.';
+
+  @override
+  String get hostBidBelowBar =>
+      'Vaše stadiony nesplňují požadavky tohoto turnaje.';
 
   @override
   String get hostBidRulesPending =>
@@ -16523,6 +16550,261 @@ class AppLocalizationsCs extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Lepší hráči chodí do silnějších klubů. Výchozí: $stars z 5 podle jeho ligy.';
   }
+
+  @override
+  String mgrNewsSacked(String nation, String name) {
+    return '$nation: trenér $name odvolán';
+  }
+
+  @override
+  String mgrNewsResigned(String nation, String name) {
+    return '$nation: trenér $name rezignoval';
+  }
+
+  @override
+  String mgrNewsPoached(String nation, String name) {
+    return '$nation: trenér $name odchází k jiné reprezentaci';
+  }
+
+  @override
+  String mgrNewsRetired(String nation, String name) {
+    return '$nation: trenér $name končí s trénováním';
+  }
+
+  @override
+  String mgrNewsContractEnd(String nation, String name) {
+    return '$nation: trenérovi $name vypršela smlouva';
+  }
+
+  @override
+  String mgrNewsReplacedByPlayer(String nation, String name) {
+    return '$nation: trenér $name vám uvolňuje místo';
+  }
+
+  @override
+  String mgrNewsAppointed(String nation, String name) {
+    return '$nation: novým trenérem je $name';
+  }
+
+  @override
+  String mgrNewsAppointedBody(String nation, String name) {
+    return '$nation: lavičku přebírá $name.';
+  }
+
+  @override
+  String pressBeatOpposingManager(String manager) {
+    return 'Vy a $manager máte svou historii. Chcete k němu něco říct?';
+  }
+
+  @override
+  String get pressAnswerHitBackAtManager => 'Ať se stará o svůj tým.';
+
+  @override
+  String get pressAnswerRespectManager => 'Mám k němu velký respekt.';
+
+  @override
+  String yMgrTie1(String manager) {
+    return 'Příště na druhé lavičce $manager. S naším trenérem mají svou historii a já se nemůžu dočkat.';
+  }
+
+  @override
+  String yMgrTie2(String manager) {
+    return 'Příště proti nám $manager. S naším trenérem se znají už nějakou dobu.';
+  }
+
+  @override
+  String yMgrTie3(String manager) {
+    return 'Zase $manager. Ať z toho náš trenér zase nedělá osobní souboj.';
+  }
+
+  @override
+  String yMgrTie4(String manager) {
+    return 'A je to tady. U lajny $manager a náš trenér bude zase řešit osobní spor místo zápasu.';
+  }
+
+  @override
+  String get mgrRowLabel => 'Trenér';
+
+  @override
+  String mgrRowDetail(int age, String date) {
+    return '$age let, od $date';
+  }
+
+  @override
+  String mgrRecordWdl(int won, int drawn, int lost) {
+    return '$won V, $drawn R, $lost P';
+  }
+
+  @override
+  String mgrRowRecord(String record) {
+    return 'Pod jeho vedením: $record';
+  }
+
+  @override
+  String get mgrTieNeutral => 'Bez společné historie';
+
+  @override
+  String get mgrTieRespect => 'Respekt';
+
+  @override
+  String get mgrTieRival => 'Rival';
+
+  @override
+  String get mgrTieGrudge => 'Zášť';
+
+  @override
+  String get mgrTieSuccessor => 'Nástupce';
+
+  @override
+  String get mgrTieProtege => 'Chráněnec';
+
+  @override
+  String get mgrTieFormerPlayer => 'Bývalý hráč';
+
+  @override
+  String get mgrEndSacked => 'Odvolán';
+
+  @override
+  String get mgrEndResigned => 'Rezignoval';
+
+  @override
+  String get mgrEndPoached => 'Odešel k jiné reprezentaci';
+
+  @override
+  String get mgrEndRetired => 'Skončil s trénováním';
+
+  @override
+  String get mgrEndContractEnd => 'Vypršela smlouva';
+
+  @override
+  String get mgrEndReplacedByPlayer => 'Nahrazen vámi';
+
+  @override
+  String get mgrProfileSpells => 'Kariéra';
+
+  @override
+  String mgrProfileSpellNow(String nation, String from) {
+    return '$nation, od $from';
+  }
+
+  @override
+  String mgrProfileSpellRange(String nation, String from, String to) {
+    return '$nation, $from až $to';
+  }
+
+  @override
+  String mgrProfileSpellEnded(String range, String reason) {
+    return '$range, $reason';
+  }
+
+  @override
+  String get mgrProfileRecordVsYou => 'Bilance proti vám';
+
+  @override
+  String get mgrProfileNoMeetings => 'Zatím jste se nepotkali';
+
+  @override
+  String get mgrProfileReputation => 'Reputace';
+
+  @override
+  String get mgrProfileAge => 'Věk';
+
+  @override
+  String get mgrProfileAppointed => 'Jmenován';
+
+  @override
+  String get mgrProfileStyle => 'Styl';
+
+  @override
+  String get mgrProfileTie => 'Mezi vámi';
+
+  @override
+  String mgrPreviewLine(String name) {
+    return 'Jejich trenér: $name';
+  }
+
+  @override
+  String mgrDossierStyle(String style) {
+    return 'Styl trenéra: $style';
+  }
+
+  @override
+  String mgrDossierRecord(String record) {
+    return 'Vaše bilance proti němu: $record';
+  }
+
+  @override
+  String get mgrStylePossession => 'Držení míče';
+
+  @override
+  String get mgrStyleHighPress => 'Vysoký presink';
+
+  @override
+  String get mgrStyleDefensive => 'Defenzivní';
+
+  @override
+  String get mgrStyleDirect => 'Přímočarý';
+
+  @override
+  String get mgrStyleCounter => 'Brejky';
+
+  @override
+  String get mgrStyleFlair => 'Technický';
+
+  @override
+  String get mgrStylePhysical => 'Fyzický';
+
+  @override
+  String get mgrStyleBalanced => 'Vyvážený';
+
+  @override
+  String get mgrListTitle => 'Trenéři';
+
+  @override
+  String get mgrListCurrent => 'Současní';
+
+  @override
+  String get mgrListRecentMoves => 'Poslední změny';
+
+  @override
+  String get mgrListFilterAll => 'Vše';
+
+  @override
+  String get mgrListSortReputation => 'Reputace';
+
+  @override
+  String get mgrListSortName => 'Jméno';
+
+  @override
+  String get mgrListEmptyMoves => 'Za poslední dva roky žádné změny.';
+
+  @override
+  String get mgrListEmptyCurrent =>
+      'Trenéři se objeví po přechodu do další sezóny.';
+
+  @override
+  String get editorSectionManagers => 'Trenéři';
+
+  @override
+  String get editorAboutManagers => 'Kdo vede kterou reprezentaci na začátku';
+
+  @override
+  String get editorManagersHint => 'Vybere se při startu kariéry';
+
+  @override
+  String get editorManagerName => 'Jméno trenéra';
+
+  @override
+  String get editorManagerNationality => 'Národnost';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'Trenér potřebuje jméno o 1 až $max znacích, které hra umí zobrazit';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Vyber trenérovi národnost ze seznamu';
 
   @override
   String get shareButton => 'Sdílet';

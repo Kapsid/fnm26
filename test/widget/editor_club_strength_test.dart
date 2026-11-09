@@ -45,7 +45,10 @@ void main() {
     test('a game club\'s strength is set and cleared', () {
       final p = NameEdits.withClubStrength(pack, 'Man Blue', 2);
       expect(p.clubStrengths, {'Man Blue': 2});
-      expect(NameEdits.withClubStrength(p, 'Man Blue', null).clubStrengths, isEmpty);
+      expect(
+        NameEdits.withClubStrength(p, 'Man Blue', null).clubStrengths,
+        isEmpty,
+      );
       expect(
         identical(NameEdits.withClubStrength(p, 'Man Blue', 2), p),
         isTrue,

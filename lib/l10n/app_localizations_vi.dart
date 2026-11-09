@@ -11905,6 +11905,28 @@ class AppLocalizationsVi extends AppLocalizations {
   String get backupSafetyShare => 'CHIA SẺ';
 
   @override
+  String get saveUpgradeFailedTitle => 'Không thể cập nhật bản lưu';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Không thể cập nhật bản lưu của bạn. Không có gì bị xóa, và một bản sao từ trước khi cập nhật vẫn được giữ trên điện thoại này.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Khôi phục bản sao từ trước khi cập nhật';
+
+  @override
+  String get saveUpgradeRestoreFailed =>
+      'Không thể khôi phục bản sao. Bản lưu của bạn vẫn được giữ nguyên.';
+
+  @override
+  String get saveOpenFailedTitle => 'Không thể mở các bản lưu';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Không thể mở các bản lưu của bạn. Không có gì bị xóa. Hãy thử lại sau giây lát.';
+
+  @override
   String get backupCloudNoDetails => 'Thông tin chi tiết vẫn đang được tải về.';
 
   @override
@@ -12187,6 +12209,10 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get hostBidRecentHost => 'Bạn đã đăng cai một trong ba kỳ gần nhất.';
+
+  @override
+  String get hostBidBelowBar =>
+      'Các sân của bạn chưa đáp ứng yêu cầu của giải này.';
 
   @override
   String get hostBidRulesPending =>
@@ -16095,6 +16121,262 @@ class AppLocalizationsVi extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Cầu thủ giỏi hơn gia nhập câu lạc bộ mạnh hơn. Mặc định: $stars/5, theo giải đấu của đội.';
   }
+
+  @override
+  String mgrNewsSacked(String nation, String name) {
+    return '$nation sa thải $name';
+  }
+
+  @override
+  String mgrNewsResigned(String nation, String name) {
+    return '$nation: $name từ chức';
+  }
+
+  @override
+  String mgrNewsPoached(String nation, String name) {
+    return '$nation: $name sang dẫn dắt đội tuyển khác';
+  }
+
+  @override
+  String mgrNewsRetired(String nation, String name) {
+    return '$nation: $name giải nghệ huấn luyện viên';
+  }
+
+  @override
+  String mgrNewsContractEnd(String nation, String name) {
+    return '$nation: $name rời đi khi hết hợp đồng';
+  }
+
+  @override
+  String mgrNewsReplacedByPlayer(String nation, String name) {
+    return '$nation: $name nhường chỗ cho bạn';
+  }
+
+  @override
+  String mgrNewsAppointed(String nation, String name) {
+    return '$nation bổ nhiệm $name';
+  }
+
+  @override
+  String mgrNewsAppointedBody(String nation, String name) {
+    return '$name nhận dẫn dắt $nation.';
+  }
+
+  @override
+  String pressBeatOpposingManager(String manager) {
+    return 'Bạn và $manager có chút chuyện cũ. Bạn muốn nói gì về ông ấy không?';
+  }
+
+  @override
+  String get pressAnswerHitBackAtManager =>
+      'Ông ấy nên lo cho đội của mình thì hơn.';
+
+  @override
+  String get pressAnswerRespectManager => 'Tôi rất kính trọng ông ấy.';
+
+  @override
+  String yMgrTie1(String manager) {
+    return 'Băng ghế đối diện lần tới là $manager. Ông ấy với thầy mình có chuyện cũ, và tôi nóng lòng chờ.';
+  }
+
+  @override
+  String yMgrTie2(String manager) {
+    return 'Tiếp theo, $manager ngồi ở băng ghế đối diện. Ông ấy và thầy ta quen nhau khá lâu rồi.';
+  }
+
+  @override
+  String yMgrTie3(String manager) {
+    return 'Lại là $manager. Mong thầy ta đừng biến chuyện này thành chuyện cá nhân.';
+  }
+
+  @override
+  String yMgrTie4(String manager) {
+    return 'Lại bắt đầu rồi. $manager bên đường biên, còn thầy ta muốn thắng một mối thù thay vì một trận đấu.';
+  }
+
+  @override
+  String get mgrRowLabel => 'Huấn luyện viên';
+
+  @override
+  String mgrRowDetail(int age, String date) {
+    return '$age tuổi, từ $date';
+  }
+
+  @override
+  String mgrRecordWdl(int won, int drawn, int lost) {
+    return '$won T, $drawn H, $lost B';
+  }
+
+  @override
+  String mgrRowRecord(String record) {
+    return 'Dưới thời ông: $record';
+  }
+
+  @override
+  String get mgrTieNeutral => 'Chưa có gì';
+
+  @override
+  String get mgrTieRespect => 'Kính trọng';
+
+  @override
+  String get mgrTieRival => 'Đối thủ';
+
+  @override
+  String get mgrTieGrudge => 'Hiềm khích';
+
+  @override
+  String get mgrTieSuccessor => 'Người kế nhiệm';
+
+  @override
+  String get mgrTieProtege => 'Học trò';
+
+  @override
+  String get mgrTieFormerPlayer => 'Cựu cầu thủ';
+
+  @override
+  String get mgrEndSacked => 'Bị sa thải';
+
+  @override
+  String get mgrEndResigned => 'Từ chức';
+
+  @override
+  String get mgrEndPoached => 'Sang đội tuyển khác';
+
+  @override
+  String get mgrEndRetired => 'Giải nghệ huấn luyện';
+
+  @override
+  String get mgrEndContractEnd => 'Hết hợp đồng';
+
+  @override
+  String get mgrEndReplacedByPlayer => 'Bạn thay thế';
+
+  @override
+  String get mgrProfileSpells => 'Sự nghiệp';
+
+  @override
+  String mgrProfileSpellNow(String nation, String from) {
+    return '$nation, từ $from';
+  }
+
+  @override
+  String mgrProfileSpellRange(String nation, String from, String to) {
+    return '$nation, từ $from đến $to';
+  }
+
+  @override
+  String mgrProfileSpellEnded(String range, String reason) {
+    return '$range, $reason';
+  }
+
+  @override
+  String get mgrProfileRecordVsYou => 'Thành tích đối đầu với bạn';
+
+  @override
+  String get mgrProfileNoMeetings => 'Hai bên chưa gặp nhau';
+
+  @override
+  String get mgrProfileReputation => 'Danh tiếng';
+
+  @override
+  String get mgrProfileAge => 'Tuổi';
+
+  @override
+  String get mgrProfileAppointed => 'Bổ nhiệm';
+
+  @override
+  String get mgrProfileStyle => 'Phong cách';
+
+  @override
+  String get mgrProfileTie => 'Giữa hai bên';
+
+  @override
+  String mgrPreviewLine(String name) {
+    return 'Huấn luyện viên đối thủ: $name';
+  }
+
+  @override
+  String mgrDossierStyle(String style) {
+    return 'Phong cách của huấn luyện viên: $style';
+  }
+
+  @override
+  String mgrDossierRecord(String record) {
+    return 'Thành tích của bạn khi gặp ông ấy: $record';
+  }
+
+  @override
+  String get mgrStylePossession => 'Kiểm soát bóng';
+
+  @override
+  String get mgrStyleHighPress => 'Pressing cao';
+
+  @override
+  String get mgrStyleDefensive => 'Phòng ngự';
+
+  @override
+  String get mgrStyleDirect => 'Trực diện';
+
+  @override
+  String get mgrStyleCounter => 'Phản công';
+
+  @override
+  String get mgrStyleFlair => 'Kỹ thuật';
+
+  @override
+  String get mgrStylePhysical => 'Thể lực';
+
+  @override
+  String get mgrStyleBalanced => 'Cân bằng';
+
+  @override
+  String get mgrListTitle => 'Huấn luyện viên';
+
+  @override
+  String get mgrListCurrent => 'Hiện tại';
+
+  @override
+  String get mgrListRecentMoves => 'Thay đổi gần đây';
+
+  @override
+  String get mgrListFilterAll => 'Tất cả';
+
+  @override
+  String get mgrListSortReputation => 'Danh tiếng';
+
+  @override
+  String get mgrListSortName => 'Tên';
+
+  @override
+  String get mgrListEmptyMoves => 'Không có thay đổi nào trong hai năm qua.';
+
+  @override
+  String get mgrListEmptyCurrent =>
+      'Huấn luyện viên sẽ xuất hiện sau lần chuyển mùa giải tới.';
+
+  @override
+  String get editorSectionManagers => 'Huấn luyện viên';
+
+  @override
+  String get editorAboutManagers => 'Ai dẫn dắt mỗi đội tuyển vào ngày đầu';
+
+  @override
+  String get editorManagersHint => 'Được chọn khi bắt đầu sự nghiệp';
+
+  @override
+  String get editorManagerName => 'Tên huấn luyện viên';
+
+  @override
+  String get editorManagerNationality => 'Quốc tịch';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'Tên huấn luyện viên cần từ 1 đến $max ký tự hiển thị được';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Chọn quốc tịch cho huấn luyện viên từ danh sách';
 
   @override
   String get shareButton => 'Chia sẻ';

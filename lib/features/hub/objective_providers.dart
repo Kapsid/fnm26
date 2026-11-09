@@ -772,7 +772,7 @@ Future<({int ordinal, bool over})> continentalRun({
         confederation: confederation,
       );
   return (
-    ordinal: _finishOrdinal(fixtures, nationId, prefix: 'C'),
+    ordinal: continentalFinishOrdinal(fixtures, nationId),
     over: decided,
   );
 }
@@ -804,6 +804,11 @@ Future<({int ordinal, bool over})> worldRun({
 /// (0 not in the finals, 2 group … 7 champions), as the board reads it.
 int worldFinishOrdinal(List<Fixture> fixtures, int nationId) =>
     _finishOrdinal(fixtures, nationId);
+
+/// [nationId]'s deepest continental finals finish in [fixtures] as an ordinal,
+/// read the same way as [worldFinishOrdinal] off the `C`-prefixed rounds.
+int continentalFinishOrdinal(List<Fixture> fixtures, int nationId) =>
+    _finishOrdinal(fixtures, nationId, prefix: 'C');
 
 /// Whether the manager's nation has FINISHED with the tournament whose rounds
 /// carry [prefix] — won it, been knocked out of it, or never qualified for it.

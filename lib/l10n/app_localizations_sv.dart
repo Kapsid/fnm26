@@ -12023,6 +12023,29 @@ class AppLocalizationsSv extends AppLocalizations {
   String get backupSafetyShare => 'DELA';
 
   @override
+  String get saveUpgradeFailedTitle =>
+      'Ditt sparade spel kunde inte uppdateras';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Ditt sparade spel kunde inte uppdateras. Inget har raderats, och en kopia från före uppdateringen finns kvar på den här telefonen.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Återställ kopian från före uppdateringen';
+
+  @override
+  String get saveUpgradeRestoreFailed =>
+      'Kopian kunde inte återställas. Ditt sparade spel lämnades som det var.';
+
+  @override
+  String get saveOpenFailedTitle => 'Dina sparade spel kunde inte öppnas';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Dina sparade spel kunde inte öppnas. Inget har raderats. Försök igen om en stund.';
+
+  @override
   String get backupCloudNoDetails => 'Detaljerna är fortfarande på väg.';
 
   @override
@@ -12307,6 +12330,9 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get hostBidRecentHost =>
       'Du var värd för en av de tre senaste upplagorna.';
+
+  @override
+  String get hostBidBelowBar => 'Dina arenor uppfyller inte turneringens krav.';
 
   @override
   String get hostBidRulesPending =>
@@ -16234,6 +16260,262 @@ class AppLocalizationsSv extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Bättre spelare går till starkare klubbar. Standard: $stars av 5, utifrån dess liga.';
   }
+
+  @override
+  String mgrNewsSacked(String nation, String name) {
+    return '$nation sparkar $name';
+  }
+
+  @override
+  String mgrNewsResigned(String nation, String name) {
+    return '$nation: $name avgår';
+  }
+
+  @override
+  String mgrNewsPoached(String nation, String name) {
+    return '$nation: $name lämnar för ett annat landslag';
+  }
+
+  @override
+  String mgrNewsRetired(String nation, String name) {
+    return '$nation: $name slutar som tränare';
+  }
+
+  @override
+  String mgrNewsContractEnd(String nation, String name) {
+    return '$nation: $name lämnar när kontraktet går ut';
+  }
+
+  @override
+  String mgrNewsReplacedByPlayer(String nation, String name) {
+    return '$nation: $name lämnar plats åt dig';
+  }
+
+  @override
+  String mgrNewsAppointed(String nation, String name) {
+    return '$nation utser $name';
+  }
+
+  @override
+  String mgrNewsAppointedBody(String nation, String name) {
+    return '$name tar över $nation.';
+  }
+
+  @override
+  String pressBeatOpposingManager(String manager) {
+    return 'Du och $manager har en historia. Har du något att säga om honom?';
+  }
+
+  @override
+  String get pressAnswerHitBackAtManager =>
+      'Han borde oroa sig för sitt eget lag.';
+
+  @override
+  String get pressAnswerRespectManager => 'Jag har stor respekt för honom.';
+
+  @override
+  String yMgrTie1(String manager) {
+    return '$manager på andra bänken härnäst. Det finns en historia med vår förbundskapten, och jag kan inte vänta.';
+  }
+
+  @override
+  String yMgrTie2(String manager) {
+    return 'Härnäst står $manager på andra bänken. Han och vår förbundskapten har känt varandra länge.';
+  }
+
+  @override
+  String yMgrTie3(String manager) {
+    return '$manager igen. Vår förbundskapten bör inte göra en personlig sak av det.';
+  }
+
+  @override
+  String yMgrTie4(String manager) {
+    return 'Nu kör vi. $manager vid sidlinjen, och vår förbundskapten försöker vinna en fejd i stället för en match.';
+  }
+
+  @override
+  String get mgrRowLabel => 'Förbundskapten';
+
+  @override
+  String mgrRowDetail(int age, String date) {
+    return '$age år, sedan $date';
+  }
+
+  @override
+  String mgrRecordWdl(int won, int drawn, int lost) {
+    return '$won V, $drawn O, $lost F';
+  }
+
+  @override
+  String mgrRowRecord(String record) {
+    return 'Under honom: $record';
+  }
+
+  @override
+  String get mgrTieNeutral => 'Ingen historia';
+
+  @override
+  String get mgrTieRespect => 'Respekt';
+
+  @override
+  String get mgrTieRival => 'Rival';
+
+  @override
+  String get mgrTieGrudge => 'Agg';
+
+  @override
+  String get mgrTieSuccessor => 'Efterträdare';
+
+  @override
+  String get mgrTieProtege => 'Skyddsling';
+
+  @override
+  String get mgrTieFormerPlayer => 'Före detta spelare';
+
+  @override
+  String get mgrEndSacked => 'Avskedad';
+
+  @override
+  String get mgrEndResigned => 'Avgick';
+
+  @override
+  String get mgrEndPoached => 'Lämnade för ett annat landslag';
+
+  @override
+  String get mgrEndRetired => 'Slutade som tränare';
+
+  @override
+  String get mgrEndContractEnd => 'Kontraktet gick ut';
+
+  @override
+  String get mgrEndReplacedByPlayer => 'Ersatt av dig';
+
+  @override
+  String get mgrProfileSpells => 'Karriär';
+
+  @override
+  String mgrProfileSpellNow(String nation, String from) {
+    return '$nation, sedan $from';
+  }
+
+  @override
+  String mgrProfileSpellRange(String nation, String from, String to) {
+    return '$nation, $from till $to';
+  }
+
+  @override
+  String mgrProfileSpellEnded(String range, String reason) {
+    return '$range, $reason';
+  }
+
+  @override
+  String get mgrProfileRecordVsYou => 'Facit mot dig';
+
+  @override
+  String get mgrProfileNoMeetings => 'Ni har inte mötts än';
+
+  @override
+  String get mgrProfileReputation => 'Rykte';
+
+  @override
+  String get mgrProfileAge => 'Ålder';
+
+  @override
+  String get mgrProfileAppointed => 'Utsedd';
+
+  @override
+  String get mgrProfileStyle => 'Stil';
+
+  @override
+  String get mgrProfileTie => 'Mellan er';
+
+  @override
+  String mgrPreviewLine(String name) {
+    return 'Deras förbundskapten: $name';
+  }
+
+  @override
+  String mgrDossierStyle(String style) {
+    return 'Förbundskaptenens stil: $style';
+  }
+
+  @override
+  String mgrDossierRecord(String record) {
+    return 'Ditt facit mot honom: $record';
+  }
+
+  @override
+  String get mgrStylePossession => 'Bollinnehav';
+
+  @override
+  String get mgrStyleHighPress => 'Högt press';
+
+  @override
+  String get mgrStyleDefensive => 'Defensiv';
+
+  @override
+  String get mgrStyleDirect => 'Direkt';
+
+  @override
+  String get mgrStyleCounter => 'Kontring';
+
+  @override
+  String get mgrStyleFlair => 'Teknisk';
+
+  @override
+  String get mgrStylePhysical => 'Fysisk';
+
+  @override
+  String get mgrStyleBalanced => 'Balanserad';
+
+  @override
+  String get mgrListTitle => 'Förbundskaptener';
+
+  @override
+  String get mgrListCurrent => 'Nuvarande';
+
+  @override
+  String get mgrListRecentMoves => 'Senaste byten';
+
+  @override
+  String get mgrListFilterAll => 'Alla';
+
+  @override
+  String get mgrListSortReputation => 'Rykte';
+
+  @override
+  String get mgrListSortName => 'Namn';
+
+  @override
+  String get mgrListEmptyMoves => 'Inga förändringar de senaste två åren.';
+
+  @override
+  String get mgrListEmptyCurrent =>
+      'Förbundskaptener visas efter nästa säsongsbyte.';
+
+  @override
+  String get editorSectionManagers => 'Förbundskaptener';
+
+  @override
+  String get editorAboutManagers => 'Vem som leder varje landslag från start';
+
+  @override
+  String get editorManagersHint => 'Väljs när en karriär startar';
+
+  @override
+  String get editorManagerName => 'Förbundskaptenens namn';
+
+  @override
+  String get editorManagerNationality => 'Nationalitet';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'Förbundskaptenen behöver ett namn på 1 till $max tecken som spelet kan visa';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Välj en nationalitet för förbundskaptenen i listan';
 
   @override
   String get shareButton => 'Dela';

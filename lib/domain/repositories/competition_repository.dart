@@ -279,6 +279,10 @@ abstract interface class CompetitionRepository {
   /// A nation's fixtures, ordered by date.
   Future<List<Fixture>> fixturesForNation(int careerId, int nationId);
 
+  /// Every fixture of any of [nationIds], ordered by date: one query, for a
+  /// reader that needs all the nations a manager has led at once.
+  Future<List<Fixture>> fixturesForNations(int careerId, Set<int> nationIds);
+
   /// A nation's fixtures **in the current cycle only**, ordered by date.
   ///
   /// A career is endless, so the all-time list above answers "every game this
@@ -294,12 +298,46 @@ abstract interface class CompetitionRepository {
   /// Every fixture in the save, ordered by matchday then date.
   Future<List<Fixture>> allFixtures(int careerId);
 
+  /// Every fixture of [cycle]'s competitions, with each competition's kind
+  /// and confederation keyed by its id: one read of the competitions and one
+  /// of the fixtures (the world managers' decision points read a cycle so).
+  Future<
+    ({
+      Map<int, ({CompetitionKind kind, Confederation confederation})>
+      competitions,
+      List<Fixture> fixtures,
+    })
+  >
+  cycleFixtures(int careerId, int cycle);
+
+  /// How many games [playerId] played for [nationId] in fixtures dated on
+  /// or after [from] and before [to]: his `player_ratings` rows for that
+  /// nation, joined to their fixtures. Each call scans the fixtures table
+  /// once (it has no index but its rowid) and probes each match's rating
+  /// row by primary key: for a few calls per rollover, not a hot path.
+  Future<int> capsUnder(
+    int careerId,
+    int playerId,
+    int nationId,
+    DateTime from,
+    DateTime to,
+  );
+
   /// The fixtures in the save dated on or after [from] and before [until]
   /// (played or not), e.g. one international window's matches.
   Future<List<Fixture>> fixturesBetween(
     int careerId,
     DateTime from,
     DateTime until,
+  );
+
+  /// [nationId]'s fixtures dated on or after [from] and before [until]
+  /// ([until] null: no end), oldest first.
+  Future<List<Fixture>> fixturesForNationBetween(
+    int careerId,
+    int nationId,
+    DateTime from,
+    DateTime? until,
   );
 
   /// All unplayed fixtures in the save due on or before [date]. When

@@ -50,6 +50,8 @@ void main() {
         // A campaign run's world: no Belarus (DormantNations.forNewCareers),
         // or the two calendars part ways and the comparison means nothing.
         newCareerNations: false,
+        // A campaign run's hosts: drawn without the stadium bars.
+        stadiumHostRules: false,
       );
       // Less the general sponsor's stops: a campaign run has no sponsor (it
       // is played on the money it was set), and declining one changes

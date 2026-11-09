@@ -25,6 +25,7 @@ void main() {
       rivalNationId: rival,
       keyPlayerId: key,
     ),
+    opposingManager: null,
   );
 
   group('which fixture opens which campaign', () {

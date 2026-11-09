@@ -54,6 +54,7 @@ class ContinentalData {
     this.hostCities = const {},
     this.hostEstates = const {},
     this.venueRules = VenueRules.original,
+    this.groundPlan,
     this.qualDrawWatched = true,
     this.finalsDrawWatched = true,
     this.identity,
@@ -96,6 +97,10 @@ class ContinentalData {
 
   /// The rules this edition's grounds follow (see `hostVenuesV2Kind`).
   final VenueRules venueRules;
+
+  /// The edition's grounds when it was decided under the stadium bars (see
+  /// `WorldCupHosts.worldCupGroundPlan`); null otherwise.
+  final HostGroundPlan? groundPlan;
 
   /// Whether this is the player's region (the only one played in detail; other
   /// regions are simulated in the background and only appear in History).
@@ -756,6 +761,12 @@ continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, 
     playerNames: playerNames,
     hostCities: hostCities,
     venueRules: await venueRulesFor(comp, key.careerId, career.cyclePointer),
+    groundPlan: WorldCupHosts.continentalGroundPlan(
+      confederation: key.confederation,
+      cycle: career.cyclePointer,
+      seed: career.rngSeed,
+      nations: nations.values.toList(),
+    ),
     hostEstates: await hostEstatesFor(ref, key.careerId, hostIds),
     qualDrawWatched: qualDrawWatched,
     finalsDrawWatched: finalsDrawWatched,

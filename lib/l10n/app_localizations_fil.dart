@@ -12022,6 +12022,28 @@ class AppLocalizationsFil extends AppLocalizations {
   String get backupSafetyShare => 'IBAHAGI';
 
   @override
+  String get saveUpgradeFailedTitle => 'Hindi ma-update ang save mo';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Hindi ma-update ang save mo. Walang nabura, at may kopya mula bago ang update na nakatabi sa phone na ito.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Ibalik ang kopya mula bago ang update';
+
+  @override
+  String get saveUpgradeRestoreFailed =>
+      'Hindi maibalik ang kopya. Hindi ginalaw ang save mo.';
+
+  @override
+  String get saveOpenFailedTitle => 'Hindi mabuksan ang mga save mo';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Hindi mabuksan ang mga save mo. Walang nabura. Subukan ulit maya-maya.';
+
+  @override
   String get backupCloudNoDetails => 'Paparating pa ang mga detalye.';
 
   @override
@@ -12307,6 +12329,10 @@ class AppLocalizationsFil extends AppLocalizations {
   @override
   String get hostBidRecentHost =>
       'Nag-host ka ng isa sa huling tatlong edisyon.';
+
+  @override
+  String get hostBidBelowBar =>
+      'Hindi tumutugon ang mga istadyum mo sa mga kinakailangan ng torneong ito.';
 
   @override
   String get hostBidRulesPending =>
@@ -16255,6 +16281,264 @@ class AppLocalizationsFil extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Sa mas malalakas na club pumupunta ang mas magagaling na manlalaro. Default: $stars sa 5, ayon sa liga nito.';
   }
+
+  @override
+  String mgrNewsSacked(String nation, String name) {
+    return 'Sinibak ng $nation si $name';
+  }
+
+  @override
+  String mgrNewsResigned(String nation, String name) {
+    return '$nation: nagbitiw si $name';
+  }
+
+  @override
+  String mgrNewsPoached(String nation, String name) {
+    return '$nation: aalis si $name para sa ibang pambansang koponan';
+  }
+
+  @override
+  String mgrNewsRetired(String nation, String name) {
+    return '$nation: magreretiro si $name sa pagma-manage';
+  }
+
+  @override
+  String mgrNewsContractEnd(String nation, String name) {
+    return '$nation: aalis si $name sa pagtatapos ng kontrata';
+  }
+
+  @override
+  String mgrNewsReplacedByPlayer(String nation, String name) {
+    return '$nation: nagbibigay-daan si $name sa iyo';
+  }
+
+  @override
+  String mgrNewsAppointed(String nation, String name) {
+    return 'Itinalaga ng $nation si $name';
+  }
+
+  @override
+  String mgrNewsAppointedBody(String nation, String name) {
+    return 'Si $name na ang hahawak sa $nation.';
+  }
+
+  @override
+  String pressBeatOpposingManager(String manager) {
+    return 'May kasaysayan kayo ni $manager. May gusto ka bang sabihin tungkol sa kanya?';
+  }
+
+  @override
+  String get pressAnswerHitBackAtManager =>
+      'Dapat ang sarili niyang koponan ang inaalala niya.';
+
+  @override
+  String get pressAnswerRespectManager => 'Malaki ang respeto ko sa kanya.';
+
+  @override
+  String yMgrTie1(String manager) {
+    return 'Si $manager ang nasa kabilang bench sa susunod. May kasaysayan sila ng boss natin, at excited na ako.';
+  }
+
+  @override
+  String yMgrTie2(String manager) {
+    return 'Susunod, si $manager sa kabilang bench. Matagal na silang magkakilala ng manager natin.';
+  }
+
+  @override
+  String yMgrTie3(String manager) {
+    return 'Si $manager ulit. Sana hindi gawing personal ng boss natin ito.';
+  }
+
+  @override
+  String yMgrTie4(String manager) {
+    return 'Heto na naman. Si $manager sa gilid ng field, at sinusubukan ng manager natin na manalo sa away sa halip na sa laro.';
+  }
+
+  @override
+  String get mgrRowLabel => 'Manager';
+
+  @override
+  String mgrRowDetail(int age, String date) {
+    return '$age taong gulang, mula $date';
+  }
+
+  @override
+  String mgrRecordWdl(int won, int drawn, int lost) {
+    return '$won Panalo, $drawn Tabla, $lost Talo';
+  }
+
+  @override
+  String mgrRowRecord(String record) {
+    return 'Sa ilalim niya: $record';
+  }
+
+  @override
+  String get mgrTieNeutral => 'Walang kasaysayan';
+
+  @override
+  String get mgrTieRespect => 'Respeto';
+
+  @override
+  String get mgrTieRival => 'Karibal';
+
+  @override
+  String get mgrTieGrudge => 'Sama ng loob';
+
+  @override
+  String get mgrTieSuccessor => 'Kapalit';
+
+  @override
+  String get mgrTieProtege => 'Alagad';
+
+  @override
+  String get mgrTieFormerPlayer => 'Dating manlalaro';
+
+  @override
+  String get mgrEndSacked => 'Sinibak';
+
+  @override
+  String get mgrEndResigned => 'Nagbitiw';
+
+  @override
+  String get mgrEndPoached => 'Lumipat sa ibang pambansang koponan';
+
+  @override
+  String get mgrEndRetired => 'Nagretiro sa pagma-manage';
+
+  @override
+  String get mgrEndContractEnd => 'Natapos ang kontrata';
+
+  @override
+  String get mgrEndReplacedByPlayer => 'Pinalitan mo';
+
+  @override
+  String get mgrProfileSpells => 'Karera';
+
+  @override
+  String mgrProfileSpellNow(String nation, String from) {
+    return '$nation, mula $from';
+  }
+
+  @override
+  String mgrProfileSpellRange(String nation, String from, String to) {
+    return '$nation, $from hanggang $to';
+  }
+
+  @override
+  String mgrProfileSpellEnded(String range, String reason) {
+    return '$range, $reason';
+  }
+
+  @override
+  String get mgrProfileRecordVsYou => 'Rekord laban sa iyo';
+
+  @override
+  String get mgrProfileNoMeetings => 'Hindi pa kayo nagkakaharap';
+
+  @override
+  String get mgrProfileReputation => 'Reputasyon';
+
+  @override
+  String get mgrProfileAge => 'Edad';
+
+  @override
+  String get mgrProfileAppointed => 'Itinalaga';
+
+  @override
+  String get mgrProfileStyle => 'Estilo';
+
+  @override
+  String get mgrProfileTie => 'Sa pagitan ninyo';
+
+  @override
+  String mgrPreviewLine(String name) {
+    return 'Ang manager nila: $name';
+  }
+
+  @override
+  String mgrDossierStyle(String style) {
+    return 'Estilo ng manager: $style';
+  }
+
+  @override
+  String mgrDossierRecord(String record) {
+    return 'Rekord mo laban sa kanya: $record';
+  }
+
+  @override
+  String get mgrStylePossession => 'Possession';
+
+  @override
+  String get mgrStyleHighPress => 'Mataas na pressing';
+
+  @override
+  String get mgrStyleDefensive => 'Depensibo';
+
+  @override
+  String get mgrStyleDirect => 'Diretso';
+
+  @override
+  String get mgrStyleCounter => 'Kontra-atake';
+
+  @override
+  String get mgrStyleFlair => 'Teknikal';
+
+  @override
+  String get mgrStylePhysical => 'Pisikal';
+
+  @override
+  String get mgrStyleBalanced => 'Balanse';
+
+  @override
+  String get mgrListTitle => 'Mga manager';
+
+  @override
+  String get mgrListCurrent => 'Kasalukuyan';
+
+  @override
+  String get mgrListRecentMoves => 'Mga kamakailang pagbabago';
+
+  @override
+  String get mgrListFilterAll => 'Lahat';
+
+  @override
+  String get mgrListSortReputation => 'Reputasyon';
+
+  @override
+  String get mgrListSortName => 'Pangalan';
+
+  @override
+  String get mgrListEmptyMoves =>
+      'Walang pagbabago sa nakaraang dalawang taon.';
+
+  @override
+  String get mgrListEmptyCurrent =>
+      'Lalabas ang mga manager pagkatapos ng susunod na season rollover.';
+
+  @override
+  String get editorSectionManagers => 'Mga manager';
+
+  @override
+  String get editorAboutManagers =>
+      'Sino ang humahawak sa bawat pambansang koponan sa unang araw';
+
+  @override
+  String get editorManagersHint => 'Pinipili pagsimula ng career';
+
+  @override
+  String get editorManagerName => 'Pangalan ng manager';
+
+  @override
+  String get editorManagerNationality => 'Nasyonalidad';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'Kailangan ng manager ng pangalang may 1 hanggang $max karakter na kayang ipakita ng laro';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Pumili ng nasyonalidad para sa manager mula sa listahan';
 
   @override
   String get shareButton => 'Ibahagi';

@@ -941,3 +941,78 @@ class CareerWorldTrophies extends Table {
   @override
   Set<Column> get primaryKey => {careerId, key};
 }
+
+/// The managers of the world's national sides, one row per person, kept from
+/// the day they enter the game until long after they retire. Stored once and
+/// never renamed. No row for a career means it has not needed one yet: the
+/// world is seeded lazily, so a save upgraded from before schema 55 starts
+/// with none and carries on exactly as it did.
+///
+/// No `id` column, on purpose: a career bundle drops `id` from every row it
+/// imports, and [managerId] has to survive the trip.
+@DataClassName('WorldManagerRow')
+class WorldManagers extends Table {
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  IntColumn get managerId => integer()();
+  TextColumn get name => text()();
+
+  /// FIFA code, upper case.
+  TextColumn get nationality => text()();
+  IntColumn get birthYear => integer()();
+
+  /// A `NationStyle` name.
+  TextColumn get style => text()();
+
+  /// A `ManagerOrigin` name.
+  TextColumn get origin => text()();
+  DateTimeColumn get enteredAt => dateTime()();
+  DateTimeColumn get retiredAt => dateTime().nullable()();
+
+  /// The player id of an ex-international, or the staff candidate id of an
+  /// ex-assistant; null for anybody else.
+  IntColumn get sourceId => integer().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {careerId, managerId};
+}
+
+/// One manager's time in charge of one nation, numbered within the career.
+/// An open spell ([toDate] null) is the nation's manager today.
+@DataClassName('ManagerSpellRow')
+@TableIndex(name: 'manager_spells_nation', columns: {#careerId, #nationId})
+class ManagerSpells extends Table {
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  IntColumn get spellNo => integer()();
+  IntColumn get managerId => integer()();
+  IntColumn get nationId => integer()();
+  DateTimeColumn get fromDate => dateTime()();
+  DateTimeColumn get toDate => dateTime().nullable()();
+
+  /// A `SpellEnd` name; null while the spell runs.
+  TextColumn get endReason => text().nullable()();
+  DateTimeColumn get contractUntil => dateTime()();
+  IntColumn get briefNet => integer().withDefault(const Constant(0))();
+
+  @override
+  Set<Column> get primaryKey => {careerId, spellNo};
+}
+
+/// A tie a manager has formed, one row per event that moved it ([delta]),
+/// numbered within the career.
+@DataClassName('ManagerTieRow')
+class ManagerTies extends Table {
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  IntColumn get tieNo => integer()();
+  IntColumn get managerId => integer()();
+
+  /// A `TieKind` name.
+  TextColumn get kind => text()();
+  IntColumn get delta => integer()();
+  DateTimeColumn get date => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {careerId, tieNo};
+}

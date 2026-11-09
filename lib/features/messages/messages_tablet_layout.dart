@@ -14,6 +14,7 @@ InboxFilter? inboxGroupOf(String category) => switch (category) {
   'qualify' ||
   'eliminated' ||
   'champion' ||
+  'manager' ||
   'triumph' ||
   'ranking' => InboxFilter.competitions,
   'aging' ||

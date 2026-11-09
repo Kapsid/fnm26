@@ -101,7 +101,8 @@ class DriftNationRepository implements NationRepository {
 
   /// [world] with the career's host bids attached to the nations that lodged
   /// them (see `Nation.hostBids`), and its host-rules markers to the nations
-  /// they name (see `HostBidding.rulesKind`). Not cached: a bid is placed
+  /// they name (see `HostBidding.rulesKind`, and `HostBidding.rules2Kind` on
+  /// the manager's nation of its cycle). Not cached: a bid is placed
   /// mid-career and must be seen by the very next read. A career with
   /// neither marker comes back untouched.
   Future<List<Nation>> _withHostBids(int careerId, List<Nation> world) async {
@@ -110,20 +111,45 @@ class DriftNationRepository implements NationRepository {
               (t) =>
                   t.careerId.equals(careerId) &
                   (t.kind.like('${HostBidMarker.prefix}%') |
-                      t.kind.like('${HostBidding.rulesPrefix}%')),
+                      t.kind.like('${HostBidding.rulesPrefix}%') |
+                      t.kind.like('${HostBidding.rules2Prefix}%')),
             ))
             .get();
     if (rows.isEmpty) return world;
     final byNation = <int, Map<String, int>>{};
+    final managers = <int, int>{};
+    final rules2 = <int>[];
     for (final r in rows) {
       if (HostBidding.decodeRules(r.kind) case final rule?) {
         (byNation[rule.nationId] ??= {})[HostBidding.managerKey(rule.cycle)] =
             1;
+        managers[rule.cycle] = rule.nationId;
+        continue;
+      }
+      if (HostBidding.decodeRules2(r.kind) case final cycle?) {
+        rules2.add(cycle);
         continue;
       }
       final m = HostBidMarker.decode(r.kind);
       if (m == null) continue;
       (byNation[m.nationId] ??= {})[m.nationKey] = m.permille;
+    }
+    // A v2 marker rides on the manager's nation of its cycle (the latest
+    // rules marker at or before it), else on the first nation: the host
+    // draw only asks whether any nation carries it.
+    for (final cycle in rules2) {
+      var at = -1;
+      int? holder;
+      managers.forEach((c, id) {
+        if (c <= cycle && c > at) {
+          at = c;
+          holder = id;
+        }
+      });
+      holder ??= world.isEmpty ? null : world.first.id;
+      if (holder case final id?) {
+        (byNation[id] ??= {})[HostBidding.rules2Key(cycle)] = 1;
+      }
     }
     if (byNation.isEmpty) return world;
     return [

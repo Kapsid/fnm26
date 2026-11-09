@@ -658,6 +658,7 @@ class HostBidStatusRow extends StatelessWidget {
         ));
       }
       if (s.recentHost) lines.add((l.hostBidRecentHost, AppColors.warning));
+      if (s.belowBar) lines.add((l.hostBidBelowBar, AppColors.warning));
       if (s.backToBack) lines.add((l.hostBidBackToBack, AppColors.warning));
       if (s.shortfall.bigGrounds > 0) {
         lines.add((

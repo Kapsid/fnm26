@@ -637,6 +637,11 @@ String yPostBody(AppLocalizations l, YPost p) {
     (YTemplate.rivalryLooms, 3) => l.yRivalryLooms3(a0, n1),
     (YTemplate.rivalryLooms, 4) => l.yRivalryLooms4(a0, n1),
     (YTemplate.rivalryLooms, 5) => l.yRivalryLooms5(a0, n1),
+    // The manager's name, never translated; generous, neutral, then sour.
+    (YTemplate.managerTieLooms, 0) => l.yMgrTie1(a0),
+    (YTemplate.managerTieLooms, 1) => l.yMgrTie2(a0),
+    (YTemplate.managerTieLooms, 2) => l.yMgrTie3(a0),
+    (YTemplate.managerTieLooms, 3) => l.yMgrTie4(a0),
     // A reply's words come from its MOOD, not from what happened — one set of
     (YTemplate.againstThemAgain, 0) => l.yAgainstThemAgain0(a0, n1),
     (YTemplate.againstThemAgain, 1) => l.yAgainstThemAgain1(a0, n1),
@@ -917,10 +922,18 @@ class _YScreenState extends ConsumerState<YScreen> {
   Widget build(BuildContext context) {
     final careerId = widget.careerId;
     final l = AppLocalizations.of(context);
-    final async = ref.watch(yFeedProvider(careerId));
+    final feed = ref.watch(yFeedProvider(careerId));
+    // The posts about an opposing manager with a history are read here, by
+    // the screen, and never by the feed the hub loads (see
+    // [yManagerTiePostsProvider]); one that fails or is still loading is
+    // simply not there yet.
+    final managerPosts =
+        ref.watch(yManagerTiePostsProvider(careerId)).valueOrNull ??
+        const <YPost>[];
+    final async = feed.whenData((f) => withManagerTiePosts(f, managerPosts));
     // Opening the feed IS reading it: the badge counts what has been said
     // since, not what has been tapped.
-    final shown = async.valueOrNull;
+    final shown = feed.valueOrNull;
     if (shown != null && !identical(shown, _markedFeed)) {
       _markedFeed = shown;
       unawaited(ref.read(yReadServiceProvider).markRead(careerId));

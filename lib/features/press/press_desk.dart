@@ -5,10 +5,12 @@ import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/press/conference.dart';
 import 'package:fnm/domain/services/press/expectation.dart';
 import 'package:fnm/domain/services/press/statement.dart';
+import 'package:fnm/domain/services/world_managers/manager_relation.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
+import 'package:fnm/features/world_managers/world_manager_providers.dart';
 
 /// The press's side of the season: after the manager's matches are in, judge
 /// what he said and decide whether the room is called. Idempotent, and called
@@ -227,6 +229,59 @@ class PressDesk {
       reason: reason,
       fixtureId: latest.id,
       triggeredOn: latest.date,
+    );
+  }
+
+  /// [c] with the manager of its match's opponent filled in
+  /// (`ConferenceFacts.opposingManager`) when the player has a tie with him
+  /// that is not neutral, so the sheet asks about him last
+  /// ([ConferenceBuilder.opposingManagerBeat]). Called once, when the
+  /// conference is opened: it neither calls a conference nor counts toward
+  /// the cap, and no hub read reaches it.
+  ///
+  /// [c] as it was when the cycle is not run by world managers, or the
+  /// career has none yet (nothing is seeded from here).
+  Future<PendingConference> withOpposingManager(
+    int careerId,
+    PendingConference c,
+  ) async {
+    if (c.facts.opposingManager != null) return c;
+    final on = c.row.triggeredOn;
+    final managers = _ref.read(worldManagerServiceProvider);
+    if (!await managers.cycleHasManagers(careerId, on)) return c;
+    final repo = _ref.read(worldManagerRepositoryProvider);
+    if (!await repo.hasManagers(careerId)) return c;
+    final spell = await repo.inChargeOn(careerId, c.opponentNationId, on);
+    if (spell == null) return c;
+    final manager = await repo.managerById(careerId, spell.managerId);
+    if (manager == null || manager.name.trim().isEmpty) return c;
+    final relation = await _ref.read(
+      managerRelationProvider((
+        careerId: careerId,
+        managerId: manager.managerId,
+      )).future,
+    );
+    if (relation.label == TieLabel.neutral) return c;
+    final f = c.facts;
+    return (
+      row: c.row,
+      facts: (
+        reason: f.reason,
+        bestPlayerId: f.bestPlayerId,
+        worstPlayerId: f.worstPlayerId,
+        hasOpenWinNext: f.hasOpenWinNext,
+        hasOpenJob: f.hasOpenJob,
+        playersWithOpenStatement: f.playersWithOpenStatement,
+        throwback: f.throwback,
+        preview: f.preview,
+        opposingManager: (
+          managerId: manager.managerId,
+          name: manager.name,
+          label: relation.label,
+        ),
+      ),
+      credibility: c.credibility,
+      opponentNationId: c.opponentNationId,
     );
   }
 }

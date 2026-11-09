@@ -9,6 +9,7 @@ import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
+import 'package:fnm/features/world_managers/world_manager_providers.dart';
 
 /// The scout's report on `nationId` for the manager of `careerId`: the "how
 /// they play" section of the pre-match dossier (see [OpponentScouting]).
@@ -21,7 +22,9 @@ import 'package:fnm/features/ranking/world_ranking_providers.dart';
 /// read off today's pools (a side two years on is not the side it was), and
 /// the replay is the posture alone, without the counter it may have bent
 /// towards the manager in his own meetings with it. That counter is hidden on
-/// purpose, and the report must not hint at it.
+/// purpose, and the report must not hint at it. Each replay reads the world
+/// manager in charge on that fixture's day (`WorldManagerService.styleOn`),
+/// as the match did.
 final AutoDisposeFutureProviderFamily<
   ScoutReport?,
   ({int careerId, int nationId})
@@ -63,6 +66,7 @@ scoutReportProvider = FutureProvider.autoDispose
         for (final f in fixtures)
           if (f.hasResult) f,
       ]..sort((a, b) => b.date.compareTo(a.date)); // newest first
+      final managers = ref.read(worldManagerServiceProvider);
       final recentSetups = <AiSetup>[];
       for (final f in recent.take(OpponentScouting.recentMatches)) {
         final otherId = f.homeNationId == key.nationId
@@ -79,6 +83,14 @@ scoutReportProvider = FutureProvider.autoDispose
               rngSeed: career.rngSeed,
             ),
             style: style,
+            // The manager in charge on THAT fixture's day, as the match
+            // itself read him: a side replayed from before a change of
+            // manager plays the old man's way.
+            managerStyle: await managers.styleOn(
+              key.careerId,
+              key.nationId,
+              f.date,
+            ),
           ),
         );
       }
@@ -99,6 +111,12 @@ scoutReportProvider = FutureProvider.autoDispose
           opponentStrength: strength,
           playerStrength: myStrength,
           style: style,
+          // What the side typically does now: under today's manager.
+          managerStyle: await managers.styleOn(
+            key.careerId,
+            key.nationId,
+            career.inGameDate,
+          ),
         ),
         xiFor: xiFor,
         opponentStrength: strength,

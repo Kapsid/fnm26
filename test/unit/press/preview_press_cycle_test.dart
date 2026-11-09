@@ -55,7 +55,12 @@ void main() {
     final career =
         (await container
                 .read(careerServiceProvider)
-                .create(nationId: europe[18].id, managerName: 'M', rngSeed: 7))
+                .create(
+                  nationId: europe[18].id,
+                  managerName: 'M',
+                  rngSeed: 7,
+                  stadiumHostRules: false,
+                ))
             .valueOrNull!;
     final comp = container.read(competitionRepositoryProvider);
     final season = container.read(seasonServiceProvider);

@@ -11,6 +11,7 @@ import 'package:fnm/domain/services/achievements/achievements.dart'
     show worldCupHonourName;
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/host_bidding.dart';
+import 'package:fnm/domain/services/competition/host_stadium_rules.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/venues.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
@@ -142,6 +143,7 @@ class HostBidStatus {
     this.backToBack = false,
     this.rulesPending = false,
     this.otherBidLodged = false,
+    this.belowBar = false,
     this.pledge,
   });
 
@@ -196,8 +198,14 @@ class HostBidStatus {
   /// The bid open now, or null.
   final HostBidOffer? offer;
 
+  /// The edition is held to the stadium bars (host rules v2) and the
+  /// nation's qualifying grounds, as they will stand for it, fall short of
+  /// its bar (`HostStadiumRules`): it may not bid.
+  final bool belowBar;
+
   /// The grounds are big enough.
-  bool get estateOk => shortfall.grounds == 0 && shortfall.bigGrounds == 0;
+  bool get estateOk =>
+      shortfall.grounds == 0 && shortfall.bigGrounds == 0 && !belowBar;
 
   /// No rotation rule the manager knows of bars the nation.
   bool get rulesOk => barredConfederation == null && !recentHost && !backToBack;
@@ -325,6 +333,60 @@ int _pledged(List<String> kinds, int editionCycle, int nationId) {
     }
   }
   return euros;
+}
+
+/// Whether [careerId]'s editions of [editionCycle] are held to the stadium
+/// bars (host rules v2): stamped already, or to be stamped by the rollover
+/// that opens that cycle (see `SeasonRollover`). Not when a bid or pledge of
+/// an older build holds that edition back, nor in a save made without the
+/// bars (`HostBidding.rules2OffKind`).
+Future<bool> stadiumRulesFor(
+  CompetitionRepository comp,
+  int careerId,
+  int editionCycle,
+) async {
+  if (await comp.hasWatchedDraw(
+    careerId,
+    editionCycle,
+    HostBidding.rules2Kind(editionCycle),
+  )) {
+    return true;
+  }
+  if (await comp.hasWatchedDraw(careerId, 0, HostBidding.rules2OffKind)) {
+    return false;
+  }
+  return !HostBidding.hasLegacyBid(
+    await hostBidKinds(comp, careerId),
+    editionCycle,
+  );
+}
+
+/// Whether [nation]'s qualifying grounds fall short of [comp]'s stadium bar
+/// in [editionCycle]: its seed grounds and the grounds the career has built
+/// or resized, as they will stand by then (see
+/// `HostStadiumRules.qualifyingSeats`).
+Future<bool> belowHostBar(
+  Ref ref,
+  int careerId,
+  Nation nation,
+  HostBidComp comp,
+  int editionCycle,
+) async {
+  final estate = await careerStadiumsFor(
+    ref,
+    careerId,
+    nation.id,
+    atCycle: editionCycle,
+  );
+  final seats = HostStadiumRules.qualifyingSeats(
+    nationId: nation.id,
+    editionCycle: editionCycle,
+    estate: estate,
+  );
+  return !HostStadiumRules.meets(
+    seats,
+    HostStadiumRules.of(comp, nation.confederation),
+  );
 }
 
 /// Every host-bid marker kind [careerId] carries (bids, pledges, results,
@@ -460,6 +522,13 @@ hostBidStatusProvider = FutureProvider.autoDispose
         atCycle: edition,
       );
       final seats = [for (final s in stadiums) s.capacity];
+      // Under the stadium bars a nation short of the bar may not bid.
+      final barred2 = await stadiumRulesFor(comp, careerId, edition)
+          ? {
+              for (final c in HostBidComp.values)
+                c: await belowHostBar(ref, careerId, me, c, edition),
+            }
+          : const <HostBidComp, bool>{};
       final size = HostBidOdds.sizeScore(
         await nationStadiumsFor(ref, careerId, me.id, atCycle: edition),
       );
@@ -486,9 +555,11 @@ hostBidStatusProvider = FutureProvider.autoDispose
         final settled = _settled(kinds, c, edition, me.id);
         final other = HostBidComp.values.firstWhere((o) => o != c);
         final otherLodged = !lodged && _lodged(kinds, other, edition, me.id);
+        final below = barred2[c] ?? false;
         final ok =
             short.grounds == 0 &&
             short.bigGrounds == 0 &&
+            !below &&
             standing.eligible &&
             !otherLodged;
         return HostBidStatus(
@@ -503,6 +574,7 @@ hostBidStatusProvider = FutureProvider.autoDispose
           backToBack: backToBack,
           rulesPending: pending && barred == null && !recent && !backToBack,
           otherBidLodged: otherLodged,
+          belowBar: below,
           lodged: lodged,
           pledge: lodged ? _bidOf(kinds, c, edition, me.id) : null,
           declined: _declined(kinds, c, edition, me.id),
@@ -773,10 +845,31 @@ class HostBidService {
           money.wages -
           _pledged(kinds, offer.editionCycle, offer.nation.id);
       if (free < cost) return;
+      // Under the stadium bars, never a bid whose grounds fall short.
+      if (await stadiumRulesFor(comp, careerId, offer.editionCycle) &&
+          await belowHostBar(
+            _ref,
+            careerId,
+            offer.nation,
+            offer.comp,
+            offer.editionCycle,
+          )) {
+        return;
+      }
       await comp.markDrawWatched(
         careerId,
         offer.editionCycle,
         marker.encodePledge(),
+      );
+      // Lodged by this build: the edition is still held to the bars.
+      await comp.markDrawWatched(
+        careerId,
+        offer.editionCycle,
+        HostBidding.newBuildKind(
+          offer.comp,
+          offer.editionCycle,
+          offer.nation.id,
+        ),
       );
       pledged = true;
     });
@@ -833,8 +926,24 @@ class HostBidService {
         n.id: n,
     };
     final l = _ref.read(appLocalizationsProvider);
+    final bars = await stadiumRulesFor(comp, careerId, editionCycle);
     var left = budget;
     for (final p in pledges) {
+      // Under the stadium bars a bid whose grounds fall short never stands
+      // (the offer refuses one; this is the backstop): it lapses quietly,
+      // nothing charged, and its grounds never stage the finals.
+      final pledger = nations[p.nationId];
+      if (bars &&
+          pledger != null &&
+          p.nationId == nationId &&
+          await belowHostBar(_ref, careerId, pledger, p.comp, editionCycle)) {
+        await comp.markDrawWatched(
+          careerId,
+          editionCycle,
+          HostBidding.lapsedKind(p.comp, editionCycle),
+        );
+        continue;
+      }
       // A bid already paid for this edition (an old save's) stands alone.
       final paid = kinds.any((k) {
         final m = HostBidMarker.decode(k);

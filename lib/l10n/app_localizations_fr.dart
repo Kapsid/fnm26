@@ -12149,6 +12149,29 @@ class AppLocalizationsFr extends AppLocalizations {
   String get backupSafetyShare => 'PARTAGER';
 
   @override
+  String get saveUpgradeFailedTitle =>
+      'Impossible de mettre à jour votre sauvegarde';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Votre sauvegarde n\'a pas pu être mise à jour. Rien n\'a été supprimé, et une copie d\'avant la mise à jour est conservée sur ce téléphone.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Restaurer la copie d\'avant la mise à jour';
+
+  @override
+  String get saveUpgradeRestoreFailed =>
+      'La copie n\'a pas pu être restaurée. Votre sauvegarde est restée telle quelle.';
+
+  @override
+  String get saveOpenFailedTitle => 'Impossible d\'ouvrir vos sauvegardes';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Vos sauvegardes n\'ont pas pu être ouvertes. Rien n\'a été supprimé. Réessayez dans un instant.';
+
+  @override
   String get backupCloudNoDetails => 'Les détails sont encore en route.';
 
   @override
@@ -12438,6 +12461,10 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get hostBidRecentHost =>
       'Vous avez organisé l\'une des trois dernières éditions.';
+
+  @override
+  String get hostBidBelowBar =>
+      'Vos stades ne répondent pas aux exigences de ce tournoi.';
 
   @override
   String get hostBidRulesPending =>
@@ -16401,6 +16428,263 @@ class AppLocalizationsFr extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Les meilleurs joueurs rejoignent les clubs les plus forts. Par défaut : $stars sur 5, selon son championnat.';
   }
+
+  @override
+  String mgrNewsSacked(String nation, String name) {
+    return '$nation limoge $name';
+  }
+
+  @override
+  String mgrNewsResigned(String nation, String name) {
+    return '$nation : $name démissionne';
+  }
+
+  @override
+  String mgrNewsPoached(String nation, String name) {
+    return '$nation : $name part pour une autre sélection';
+  }
+
+  @override
+  String mgrNewsRetired(String nation, String name) {
+    return '$nation : $name met fin à sa carrière d’entraîneur';
+  }
+
+  @override
+  String mgrNewsContractEnd(String nation, String name) {
+    return '$nation : $name s’en va, son contrat arrive à terme';
+  }
+
+  @override
+  String mgrNewsReplacedByPlayer(String nation, String name) {
+    return '$nation : $name vous laisse la place';
+  }
+
+  @override
+  String mgrNewsAppointed(String nation, String name) {
+    return '$nation nomme $name';
+  }
+
+  @override
+  String mgrNewsAppointedBody(String nation, String name) {
+    return '$name prend les rênes de $nation.';
+  }
+
+  @override
+  String pressBeatOpposingManager(String manager) {
+    return 'Vous et $manager, c’est une longue histoire. Quelque chose à dire sur lui ?';
+  }
+
+  @override
+  String get pressAnswerHitBackAtManager =>
+      'Il ferait mieux de s’occuper de son équipe.';
+
+  @override
+  String get pressAnswerRespectManager => 'J’ai beaucoup de respect pour lui.';
+
+  @override
+  String yMgrTie1(String manager) {
+    return '$manager sur l’autre banc au prochain match. Il y a de l’histoire avec notre coach, et j’ai hâte.';
+  }
+
+  @override
+  String yMgrTie2(String manager) {
+    return 'Au prochain match, $manager sera sur l’autre banc. Lui et notre sélectionneur se connaissent depuis un moment.';
+  }
+
+  @override
+  String yMgrTie3(String manager) {
+    return 'Encore $manager. Que notre sélectionneur n’en fasse pas une affaire personnelle.';
+  }
+
+  @override
+  String yMgrTie4(String manager) {
+    return 'C’est reparti. $manager au bord du terrain, et notre sélectionneur qui veut gagner une querelle plutôt qu’un match.';
+  }
+
+  @override
+  String get mgrRowLabel => 'Sélectionneur';
+
+  @override
+  String mgrRowDetail(int age, String date) {
+    return '$age ans, depuis le $date';
+  }
+
+  @override
+  String mgrRecordWdl(int won, int drawn, int lost) {
+    return '$won V, $drawn N, $lost D';
+  }
+
+  @override
+  String mgrRowRecord(String record) {
+    return 'Sous sa direction : $record';
+  }
+
+  @override
+  String get mgrTieNeutral => 'Sans passif';
+
+  @override
+  String get mgrTieRespect => 'Estime';
+
+  @override
+  String get mgrTieRival => 'Rival';
+
+  @override
+  String get mgrTieGrudge => 'Rancune';
+
+  @override
+  String get mgrTieSuccessor => 'Successeur';
+
+  @override
+  String get mgrTieProtege => 'Protégé';
+
+  @override
+  String get mgrTieFormerPlayer => 'Ancien joueur';
+
+  @override
+  String get mgrEndSacked => 'Limogé';
+
+  @override
+  String get mgrEndResigned => 'A démissionné';
+
+  @override
+  String get mgrEndPoached => 'Parti dans une autre sélection';
+
+  @override
+  String get mgrEndRetired => 'A pris sa retraite';
+
+  @override
+  String get mgrEndContractEnd => 'Contrat arrivé à terme';
+
+  @override
+  String get mgrEndReplacedByPlayer => 'Remplacé par vous';
+
+  @override
+  String get mgrProfileSpells => 'Carrière';
+
+  @override
+  String mgrProfileSpellNow(String nation, String from) {
+    return '$nation, depuis $from';
+  }
+
+  @override
+  String mgrProfileSpellRange(String nation, String from, String to) {
+    return '$nation, de $from à $to';
+  }
+
+  @override
+  String mgrProfileSpellEnded(String range, String reason) {
+    return '$range, $reason';
+  }
+
+  @override
+  String get mgrProfileRecordVsYou => 'Bilan contre vous';
+
+  @override
+  String get mgrProfileNoMeetings => 'Vous ne vous êtes pas encore croisés';
+
+  @override
+  String get mgrProfileReputation => 'Réputation';
+
+  @override
+  String get mgrProfileAge => 'Âge';
+
+  @override
+  String get mgrProfileAppointed => 'Nommé';
+
+  @override
+  String get mgrProfileStyle => 'Style';
+
+  @override
+  String get mgrProfileTie => 'Entre vous';
+
+  @override
+  String mgrPreviewLine(String name) {
+    return 'Leur sélectionneur : $name';
+  }
+
+  @override
+  String mgrDossierStyle(String style) {
+    return 'Style du sélectionneur : $style';
+  }
+
+  @override
+  String mgrDossierRecord(String record) {
+    return 'Votre bilan contre lui : $record';
+  }
+
+  @override
+  String get mgrStylePossession => 'Possession';
+
+  @override
+  String get mgrStyleHighPress => 'Pressing haut';
+
+  @override
+  String get mgrStyleDefensive => 'Défensif';
+
+  @override
+  String get mgrStyleDirect => 'Direct';
+
+  @override
+  String get mgrStyleCounter => 'Contre-attaque';
+
+  @override
+  String get mgrStyleFlair => 'Technique';
+
+  @override
+  String get mgrStylePhysical => 'Physique';
+
+  @override
+  String get mgrStyleBalanced => 'Équilibré';
+
+  @override
+  String get mgrListTitle => 'Sélectionneurs';
+
+  @override
+  String get mgrListCurrent => 'Actuels';
+
+  @override
+  String get mgrListRecentMoves => 'Derniers mouvements';
+
+  @override
+  String get mgrListFilterAll => 'Tout';
+
+  @override
+  String get mgrListSortReputation => 'Réputation';
+
+  @override
+  String get mgrListSortName => 'Nom';
+
+  @override
+  String get mgrListEmptyMoves => 'Aucun changement ces deux dernières années.';
+
+  @override
+  String get mgrListEmptyCurrent =>
+      'Les sélectionneurs apparaissent après le prochain changement de saison.';
+
+  @override
+  String get editorSectionManagers => 'Sélectionneurs';
+
+  @override
+  String get editorAboutManagers =>
+      'Qui dirige chaque sélection au premier jour';
+
+  @override
+  String get editorManagersHint => 'Choisi au début d’une carrière';
+
+  @override
+  String get editorManagerName => 'Nom du sélectionneur';
+
+  @override
+  String get editorManagerNationality => 'Nationalité';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'Le sélectionneur doit avoir un nom de 1 à $max caractères affichables';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Choisissez une nationalité pour le sélectionneur dans la liste';
 
   @override
   String get shareButton => 'Partager';

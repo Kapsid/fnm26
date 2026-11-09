@@ -530,7 +530,8 @@ List<NameGroup> withAddedRows(
     case NameSection.stadiums ||
         NameSection.competitions ||
         NameSection.press ||
-        NameSection.nameLists:
+        NameSection.nameLists ||
+        NameSection.managers:
       return groups;
   }
 }

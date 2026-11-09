@@ -18345,6 +18345,42 @@ abstract class AppLocalizations {
   /// **'SHARE'**
   String get backupSafetyShare;
 
+  /// Launch: heading shown instead of the app when the save could not be upgraded.
+  ///
+  /// In en, this message translates to:
+  /// **'Your save could not be updated'**
+  String get saveUpgradeFailedTitle;
+
+  /// Launch: shown instead of the app when the save could not be upgraded and a copy from before the update exists.
+  ///
+  /// In en, this message translates to:
+  /// **'Your save could not be updated. Nothing was deleted, and a copy from before the update is kept on this phone.'**
+  String get saveUpgradeFailedBody;
+
+  /// Launch: button on that screen that puts the copy from before the update back.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore the copy from before the update'**
+  String get saveUpgradeRestoreButton;
+
+  /// Launch: shown on that screen when the copy from before the update could not be put back.
+  ///
+  /// In en, this message translates to:
+  /// **'The copy could not be restored. Your save was left as it was.'**
+  String get saveUpgradeRestoreFailed;
+
+  /// Launch: heading shown instead of the app when the saves would not open and there is no copy from before an update.
+  ///
+  /// In en, this message translates to:
+  /// **'Your saves could not be opened'**
+  String get saveOpenFailedTitle;
+
+  /// Launch: what to do when the saves would not open and there is no copy from before an update.
+  ///
+  /// In en, this message translates to:
+  /// **'Your saves could not be opened. Nothing was deleted. Try again in a moment.'**
+  String get saveOpenFailedBody;
+
   /// Cloud restore list: a backup whose details have not downloaded yet.
   ///
   /// In en, this message translates to:
@@ -18764,6 +18800,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You hosted one of the last three editions.'**
   String get hostBidRecentHost;
+
+  /// Hosting-bids card: under the stadium requirements, the nation's grounds fall short, so it may not bid.
+  ///
+  /// In en, this message translates to:
+  /// **'Your grounds don\'t meet this tournament\'s stadium requirements.'**
+  String get hostBidBelowBar;
 
   /// Hosting-bids card: this cycle's hosts are not revealed yet, and the next editions' rules depend on them. Shown to every nation alike, so it never hints at who hosts.
   ///
@@ -24499,6 +24541,420 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Better players join stronger clubs. Default: {stars} of 5, set by its league.'**
   String editorClubStrengthHelp(int stars);
+
+  /// Inbox news: a nation sacks its manager. {name} is the fictional manager.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} sack {name}'**
+  String mgrNewsSacked(String nation, String name);
+
+  /// Inbox news: a national team manager resigns.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation}: {name} resigns'**
+  String mgrNewsResigned(String nation, String name);
+
+  /// Inbox news: another national team lures a manager away.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation}: {name} leaves for another national team'**
+  String mgrNewsPoached(String nation, String name);
+
+  /// Inbox news: a national team manager retires from management.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation}: {name} retires from management'**
+  String mgrNewsRetired(String nation, String name);
+
+  /// Inbox news: a national team manager leaves when his contract runs out.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation}: {name} leaves as his contract runs out'**
+  String mgrNewsContractEnd(String nation, String name);
+
+  /// Inbox news: the manager of the nation the player has just taken over loses his job to the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation}: {name} makes way for you'**
+  String mgrNewsReplacedByPlayer(String nation, String name);
+
+  /// Inbox news title: a nation appoints a new manager.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} appoint {name}'**
+  String mgrNewsAppointed(String nation, String name);
+
+  /// Inbox news body: who takes charge of the nation now.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} takes charge of {nation}.'**
+  String mgrNewsAppointedBody(String nation, String name);
+
+  /// Press conference: a question about the opposing manager, who has a history with the player (a rival, a grudge, a former assistant...). {manager} is his fictional name.
+  ///
+  /// In en, this message translates to:
+  /// **'You and {manager} have some history. Anything to say about him?'**
+  String pressBeatOpposingManager(String manager);
+
+  /// Press conference: the manager's answer, hitting back at the opposing manager.
+  ///
+  /// In en, this message translates to:
+  /// **'He should worry about his own team.'**
+  String get pressAnswerHitBackAtManager;
+
+  /// Press conference: the manager's answer, showing respect for the opposing manager.
+  ///
+  /// In en, this message translates to:
+  /// **'I have a lot of respect for him.'**
+  String get pressAnswerRespectManager;
+
+  /// Y feed post before a match against a manager with a history with ours. Warm tone.
+  ///
+  /// In en, this message translates to:
+  /// **'{manager} in the other dugout next. History there with our boss, and I cannot wait.'**
+  String yMgrTie1(String manager);
+
+  /// Y feed post before a match against a manager with a history with ours. Neutral tone.
+  ///
+  /// In en, this message translates to:
+  /// **'Next up, {manager} in the other dugout. He and our manager go back a while.'**
+  String yMgrTie2(String manager);
+
+  /// Y feed post before a match against a manager with a history with ours. Sour tone.
+  ///
+  /// In en, this message translates to:
+  /// **'{manager} again. Our boss had better not turn this into a personal thing.'**
+  String yMgrTie3(String manager);
+
+  /// Y feed post before a match against a manager with a history with ours. Sour tone.
+  ///
+  /// In en, this message translates to:
+  /// **'Here we go. {manager} on the touchline, and our manager trying to win a feud instead of a match.'**
+  String yMgrTie4(String manager);
+
+  /// Label of the nation page row naming the nation's national team manager.
+  ///
+  /// In en, this message translates to:
+  /// **'Manager'**
+  String get mgrRowLabel;
+
+  /// Nation page manager row: his age and the date he took charge.
+  ///
+  /// In en, this message translates to:
+  /// **'{age} years old, since {date}'**
+  String mgrRowDetail(int age, String date);
+
+  /// A record in wins, draws and losses.
+  ///
+  /// In en, this message translates to:
+  /// **'{won} W, {drawn} D, {lost} L'**
+  String mgrRecordWdl(int won, int drawn, int lost);
+
+  /// Nation page manager row: the nation's record under him. {record} is already worded as wins, draws and losses.
+  ///
+  /// In en, this message translates to:
+  /// **'In charge: {record}'**
+  String mgrRowRecord(String record);
+
+  /// Tie chip: the player has no history with this manager.
+  ///
+  /// In en, this message translates to:
+  /// **'No history'**
+  String get mgrTieNeutral;
+
+  /// Tie chip: mutual respect with a manager.
+  ///
+  /// In en, this message translates to:
+  /// **'Respect'**
+  String get mgrTieRespect;
+
+  /// Tie chip: a manager the player has knocked out or beaten repeatedly.
+  ///
+  /// In en, this message translates to:
+  /// **'Rival'**
+  String get mgrTieRival;
+
+  /// Tie chip: a manager who holds a grudge against the player.
+  ///
+  /// In en, this message translates to:
+  /// **'Grudge'**
+  String get mgrTieGrudge;
+
+  /// Tie chip: the manager who took over from the player.
+  ///
+  /// In en, this message translates to:
+  /// **'Successor'**
+  String get mgrTieSuccessor;
+
+  /// Tie chip: a former assistant of the player who now manages.
+  ///
+  /// In en, this message translates to:
+  /// **'Protege'**
+  String get mgrTieProtege;
+
+  /// Tie chip: a manager who once played under the player.
+  ///
+  /// In en, this message translates to:
+  /// **'Former player'**
+  String get mgrTieFormerPlayer;
+
+  /// End of a spell: the manager was sacked.
+  ///
+  /// In en, this message translates to:
+  /// **'Sacked'**
+  String get mgrEndSacked;
+
+  /// End of a spell: the manager resigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Resigned'**
+  String get mgrEndResigned;
+
+  /// End of a spell: the manager took another national team job.
+  ///
+  /// In en, this message translates to:
+  /// **'Left for another national team'**
+  String get mgrEndPoached;
+
+  /// End of a spell: the manager retired.
+  ///
+  /// In en, this message translates to:
+  /// **'Retired from management'**
+  String get mgrEndRetired;
+
+  /// End of a spell: the contract was not renewed.
+  ///
+  /// In en, this message translates to:
+  /// **'Contract ran out'**
+  String get mgrEndContractEnd;
+
+  /// End of a spell: the player took the job.
+  ///
+  /// In en, this message translates to:
+  /// **'Replaced by you'**
+  String get mgrEndReplacedByPlayer;
+
+  /// Manager profile heading: his spells in charge of nations.
+  ///
+  /// In en, this message translates to:
+  /// **'Career'**
+  String get mgrProfileSpells;
+
+  /// Manager profile: a spell that is still running.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation}, since {from}'**
+  String mgrProfileSpellNow(String nation, String from);
+
+  /// Manager profile: a finished spell with how it ended.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation}, {from} to {to}'**
+  String mgrProfileSpellRange(String nation, String from, String to);
+
+  /// Manager profile: a finished spell line, the dates then why it ended.
+  ///
+  /// In en, this message translates to:
+  /// **'{range}, {reason}'**
+  String mgrProfileSpellEnded(String range, String reason);
+
+  /// Manager profile heading: how your sides fared against his.
+  ///
+  /// In en, this message translates to:
+  /// **'Record against you'**
+  String get mgrProfileRecordVsYou;
+
+  /// Manager profile: no meetings with the player yet.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not met'**
+  String get mgrProfileNoMeetings;
+
+  /// Manager profile heading: his standing from 0 to 100.
+  ///
+  /// In en, this message translates to:
+  /// **'Reputation'**
+  String get mgrProfileReputation;
+
+  /// Manager profile heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Age'**
+  String get mgrProfileAge;
+
+  /// Manager profile heading: the date he took charge.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointed'**
+  String get mgrProfileAppointed;
+
+  /// Manager profile heading: how his sides play.
+  ///
+  /// In en, this message translates to:
+  /// **'Style'**
+  String get mgrProfileStyle;
+
+  /// Manager profile heading: the tie with the player.
+  ///
+  /// In en, this message translates to:
+  /// **'Between you'**
+  String get mgrProfileTie;
+
+  /// Match preview: the opposing national team manager.
+  ///
+  /// In en, this message translates to:
+  /// **'Their manager: {name}'**
+  String mgrPreviewLine(String name);
+
+  /// Scouting dossier: how the opposing manager sets his side up.
+  ///
+  /// In en, this message translates to:
+  /// **'Manager\'s style: {style}'**
+  String mgrDossierStyle(String style);
+
+  /// Scouting dossier: the player's record against the opposing manager. {record} is wins, draws and losses.
+  ///
+  /// In en, this message translates to:
+  /// **'Your record against him: {record}'**
+  String mgrDossierRecord(String record);
+
+  /// Manager style.
+  ///
+  /// In en, this message translates to:
+  /// **'Possession'**
+  String get mgrStylePossession;
+
+  /// Manager style.
+  ///
+  /// In en, this message translates to:
+  /// **'High press'**
+  String get mgrStyleHighPress;
+
+  /// Manager style.
+  ///
+  /// In en, this message translates to:
+  /// **'Defensive'**
+  String get mgrStyleDefensive;
+
+  /// Manager style.
+  ///
+  /// In en, this message translates to:
+  /// **'Direct'**
+  String get mgrStyleDirect;
+
+  /// Manager style.
+  ///
+  /// In en, this message translates to:
+  /// **'Counter-attack'**
+  String get mgrStyleCounter;
+
+  /// Manager style.
+  ///
+  /// In en, this message translates to:
+  /// **'Flair'**
+  String get mgrStyleFlair;
+
+  /// Manager style.
+  ///
+  /// In en, this message translates to:
+  /// **'Physical'**
+  String get mgrStylePhysical;
+
+  /// Manager style.
+  ///
+  /// In en, this message translates to:
+  /// **'Balanced'**
+  String get mgrStyleBalanced;
+
+  /// Managers screen title.
+  ///
+  /// In en, this message translates to:
+  /// **'Managers'**
+  String get mgrListTitle;
+
+  /// Managers screen tab: who is in charge of each nation now.
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get mgrListCurrent;
+
+  /// Managers screen tab: sackings, resignations and appointments of the last two years.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent moves'**
+  String get mgrListRecentMoves;
+
+  /// Managers screen filter chip: every confederation.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get mgrListFilterAll;
+
+  /// Managers screen sort chip: highest reputation first.
+  ///
+  /// In en, this message translates to:
+  /// **'Reputation'**
+  String get mgrListSortReputation;
+
+  /// Managers screen sort chip: alphabetical.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get mgrListSortName;
+
+  /// Managers screen, Recent moves tab: nothing has happened.
+  ///
+  /// In en, this message translates to:
+  /// **'No changes in the last two years.'**
+  String get mgrListEmptyMoves;
+
+  /// Managers screen, Current tab: this season has no world managers yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Managers appear after the next season rollover.'**
+  String get mgrListEmptyCurrent;
+
+  /// Database section: the national team managers in charge on day one.
+  ///
+  /// In en, this message translates to:
+  /// **'Managers'**
+  String get editorSectionManagers;
+
+  /// One-line description of the Managers section.
+  ///
+  /// In en, this message translates to:
+  /// **'Who is in charge of each nation on day one'**
+  String get editorAboutManagers;
+
+  /// Managers section: shown for a nation whose day-one manager the database leaves to the game (he depends on the career's seed).
+  ///
+  /// In en, this message translates to:
+  /// **'Chosen when a career starts'**
+  String get editorManagersHint;
+
+  /// Managers section: label of the manager's name field.
+  ///
+  /// In en, this message translates to:
+  /// **'Manager name'**
+  String get editorManagerName;
+
+  /// Managers section: label of the manager's nationality picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Nationality'**
+  String get editorManagerNationality;
+
+  /// A day-one manager's name is empty, too long or has characters the game cannot show.
+  ///
+  /// In en, this message translates to:
+  /// **'The manager needs a name of 1 to {max} characters the game can show'**
+  String editorIssueManagerName(int max);
+
+  /// A day-one manager's nationality is not one of the game's nations.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a nationality for the manager from the list'**
+  String get editorIssueManagerNationality;
 
   /// Button that shares a match result or the trophy cabinet as an image (Instagram etc.).
   ///

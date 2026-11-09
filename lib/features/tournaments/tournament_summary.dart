@@ -22,6 +22,7 @@ class TournamentSummaryTab extends StatelessWidget {
     required this.teamCount,
     this.hostEstates = const {},
     this.venueRules = VenueRules.original,
+    this.groundPlan,
     this.identity,
     this.trophyAsset,
     super.key,
@@ -36,6 +37,11 @@ class TournamentSummaryTab extends StatelessWidget {
 
   /// The rules this edition's grounds follow (see [VenueRules]).
   final VenueRules venueRules;
+
+  /// The edition's grounds when it was decided under the stadium bars (host
+  /// rules v2): only grounds that count toward the bar are shown. Null for
+  /// every other edition.
+  final HostGroundPlan? groundPlan;
   final TournamentIdentity? identity;
 
   /// The finals field size; a bigger field is played in more cities (see
@@ -68,6 +74,9 @@ class TournamentSummaryTab extends StatelessWidget {
       count: VenueGenerator.countForField(teamCount),
       estates: hostEstates,
       rules: venueRules,
+      qualifyingOnly: groundPlan != null,
+      minSeats: groundPlan?.minSeats ?? 0,
+      planned: groundPlan?.planned ?? const {},
     );
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),

@@ -1027,6 +1027,44 @@ class DriftPlayerRepository implements PlayerRepository {
         final p => (first: p.first, sur: p.sur),
       };
 
+  @override
+  Future<Map<String, NamePoolLists>> namePoolsFor(
+    int careerId, {
+    bool worldLists = true,
+  }) async {
+    final era = await _poolEra(careerId);
+    final pools = await (await _readsRichPools(careerId)
+        ? _richPools(era: era)
+        : _pools(era: era));
+    final codes = _codes ??= {
+      for (final n in await _db.select(_db.nations).get()) n.id: n.code,
+    };
+    final lists = worldLists
+        ? (await _worldFor(careerId))?.pack.nameLists ?? const {}
+        : const <int, PackNameLists>{};
+    return {
+      for (final MapEntry(key: id, value: pool) in pools.entries)
+        if (codes[id] case final code?)
+          code.toUpperCase(): switch (lists[id]) {
+            final l? when l.first.isNotEmpty && l.sur.isNotEmpty => (
+              first: l.first,
+              sur: l.sur,
+            ),
+            _ => (
+              first: pool.first,
+              sur: pool.surLate.isEmpty
+                  ? pool.sur
+                  : [...pool.sur, ...pool.surLate],
+            ),
+          },
+      // A world's lists for a nation the pools do not cover.
+      for (final MapEntry(key: id, value: l) in lists.entries)
+        if (!pools.containsKey(id) && l.first.isNotEmpty && l.sur.isNotEmpty)
+          if (codes[id] case final code?)
+            code.toUpperCase(): (first: l.first, sur: l.sur),
+    };
+  }
+
   /// Whether [careerId] reads the richer pools (see [namePoolsV2Kind]).
   Future<bool> _readsRichPools(int? careerId) =>
       _carriesMark(careerId, namePoolsV2Kind, _richCareers);

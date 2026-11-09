@@ -40,6 +40,7 @@ import 'package:fnm/features/hub/objective_providers.dart'
 import 'package:fnm/features/tournaments/city_providers.dart'
     show hostVenuesV2Kind;
 import 'package:fnm/features/y/y_providers.dart' show yUnreadCountProvider;
+import 'package:fnm/features/world_managers/world_manager_markers.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart'
     show
         activeWorldSyncProvider,
@@ -128,6 +129,13 @@ class CareerService {
   /// The World Cup year for a given cycle (clean cadence: 2030, 2034, …).
   static int worldCupYear(int cycle) => cycleStart.year + 4 * (cycle + 1);
 
+  /// The cycle whose World Cup year is [year] or the first one after it
+  /// (never below 0).
+  static int cycleForYear(int year) {
+    final c = ((year - worldCupYear(0)) / 4).ceil();
+    return c < 0 ? 0 : c;
+  }
+
   /// The continental championships' year for a given cycle: two years before
   /// its World Cup (2028, 2032, …). The calendar builds them there, and every
   /// reader that names the edition asks here rather than redoing the sum.
@@ -138,6 +146,16 @@ class CareerService {
   /// `startNextCycle`).
   static DateTime cycleOpens(int cycle) =>
       cycle == 0 ? cycleStart : DateTime(worldCupYear(cycle - 1), 9);
+
+  /// The cycle open on [d]: the largest one whose [cycleOpens] is on or
+  /// before it (0 for a date before the save's start).
+  static int cycleAt(DateTime d) {
+    var c = 0;
+    while (!cycleOpens(c + 1).isAfter(d)) {
+      c++;
+    }
+    return c;
+  }
 
   /// Whether an honour won in [year] is one THIS career could have won.
   ///
@@ -242,6 +260,12 @@ class CareerService {
     /// to start a world as an older save decided it.
     bool? currentHostRules,
 
+    /// Whether, under the current host rules, its hosts are also held to the
+    /// stadium bars (`HostBidding.rules2Kind`), from cycle 0 and at every
+    /// rollover. Defaults to true. A test passes false to play a world as
+    /// the build before them decided it (`HostBidding.rules2OffKind`).
+    bool stadiumHostRules = true,
+
     /// Whether its world includes the nations every career created from
     /// 1.0.9 on has (`DormantNations.forNewCareers`: Belarus). Defaults to
     /// [countsTowardSlots]: an ordinary career, whichever way it was started,
@@ -342,6 +366,14 @@ class CareerService {
           0,
           HostBidding.rulesKind(0, nationId),
         );
+        // And under the stadium bars (host rules v2): a new save holds no
+        // bid of an older build.
+        if (stadiumHostRules) {
+          await comp.markDrawWatched(career.id, 0, HostBidding.rules2Kind(0));
+        } else {
+          // Its rollovers keep to the creation's choice.
+          await comp.markDrawWatched(career.id, 0, HostBidding.rules2OffKind);
+        }
       }
       if (pack != null) {
         await packs.copyToCareer(worldPackId!, career.id);
@@ -408,6 +440,9 @@ class CareerService {
     // (see hostVenuesV2Kind).
     await comp.markDrawWatched(career.id, 0, hostVenuesV2Kind);
     await comp.markDrawWatched(career.id, 0, fluidWindowsKind);
+    // Its national teams have managers of their own (see worldManagersKind),
+    // seeded the first time something asks for them, never here.
+    await comp.markDrawWatched(career.id, 0, worldManagersKind);
     // Its caps log credits a naturalised man to the nation he plays for now
     // (see capsFollowNationKind).
     await comp.markDrawWatched(career.id, 0, capsFollowNationKind);

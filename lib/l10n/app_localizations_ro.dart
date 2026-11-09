@@ -12383,6 +12383,28 @@ class AppLocalizationsRo extends AppLocalizations {
   String get backupSafetyShare => 'PARTAJAȚI';
 
   @override
+  String get saveUpgradeFailedTitle => 'Salvarea nu a putut fi actualizată';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Salvarea ta nu a putut fi actualizată. Nu s-a șters nimic, iar o copie de dinaintea actualizării este păstrată pe acest telefon.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Restaurează copia de dinaintea actualizării';
+
+  @override
+  String get saveUpgradeRestoreFailed =>
+      'Copia nu a putut fi restaurată. Salvarea ta a rămas neschimbată.';
+
+  @override
+  String get saveOpenFailedTitle => 'Salvările nu au putut fi deschise';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Salvările tale nu au putut fi deschise. Nu s-a șters nimic. Încearcă din nou peste câteva momente.';
+
+  @override
   String get backupCloudNoDetails => 'Detaliile sunt încă pe drum.';
 
   @override
@@ -12673,6 +12695,10 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get hostBidRecentHost =>
       'Ați găzduit una dintre ultimele trei ediții.';
+
+  @override
+  String get hostBidBelowBar =>
+      'Stadioanele tale nu îndeplinesc cerințele acestui turneu.';
 
   @override
   String get hostBidRulesPending =>
@@ -16663,6 +16689,263 @@ class AppLocalizationsRo extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Jucătorii mai buni ajung la cluburi mai puternice. Implicit: $stars din 5, după liga sa.';
   }
+
+  @override
+  String mgrNewsSacked(String nation, String name) {
+    return '$nation îl demite pe $name';
+  }
+
+  @override
+  String mgrNewsResigned(String nation, String name) {
+    return '$nation: $name demisionează';
+  }
+
+  @override
+  String mgrNewsPoached(String nation, String name) {
+    return '$nation: $name pleacă la altă națională';
+  }
+
+  @override
+  String mgrNewsRetired(String nation, String name) {
+    return '$nation: $name se retrage din antrenorat';
+  }
+
+  @override
+  String mgrNewsContractEnd(String nation, String name) {
+    return '$nation: $name pleacă la expirarea contractului';
+  }
+
+  @override
+  String mgrNewsReplacedByPlayer(String nation, String name) {
+    return '$nation: $name îți face loc';
+  }
+
+  @override
+  String mgrNewsAppointed(String nation, String name) {
+    return '$nation îl numește pe $name';
+  }
+
+  @override
+  String mgrNewsAppointedBody(String nation, String name) {
+    return '$name preia $nation.';
+  }
+
+  @override
+  String pressBeatOpposingManager(String manager) {
+    return 'Tu și $manager aveți o istorie. Ai ceva de spus despre el?';
+  }
+
+  @override
+  String get pressAnswerHitBackAtManager =>
+      'Să se îngrijoreze pentru echipa lui.';
+
+  @override
+  String get pressAnswerRespectManager => 'Am mult respect pentru el.';
+
+  @override
+  String yMgrTie1(String manager) {
+    return 'Pe banca adversă va fi $manager. Are o istorie cu selecționerul nostru și abia aștept.';
+  }
+
+  @override
+  String yMgrTie2(String manager) {
+    return 'Urmează $manager pe banca adversă. El și selecționerul nostru se cunosc de ceva vreme.';
+  }
+
+  @override
+  String yMgrTie3(String manager) {
+    return 'Iar $manager. Să nu facă selecționerul nostru din asta o chestiune personală.';
+  }
+
+  @override
+  String yMgrTie4(String manager) {
+    return 'Iar începe. $manager la margine, iar selecționerul nostru încearcă să câștige o ceartă, nu un meci.';
+  }
+
+  @override
+  String get mgrRowLabel => 'Selecționer';
+
+  @override
+  String mgrRowDetail(int age, String date) {
+    return '$age ani, din $date';
+  }
+
+  @override
+  String mgrRecordWdl(int won, int drawn, int lost) {
+    return '$won V, $drawn E, $lost Î';
+  }
+
+  @override
+  String mgrRowRecord(String record) {
+    return 'Sub conducerea lui: $record';
+  }
+
+  @override
+  String get mgrTieNeutral => 'Fără istoric';
+
+  @override
+  String get mgrTieRespect => 'Stimă';
+
+  @override
+  String get mgrTieRival => 'Rival';
+
+  @override
+  String get mgrTieGrudge => 'Ranchiună';
+
+  @override
+  String get mgrTieSuccessor => 'Succesor';
+
+  @override
+  String get mgrTieProtege => 'Protejat';
+
+  @override
+  String get mgrTieFormerPlayer => 'Fost jucător';
+
+  @override
+  String get mgrEndSacked => 'Demis';
+
+  @override
+  String get mgrEndResigned => 'A demisionat';
+
+  @override
+  String get mgrEndPoached => 'A plecat la altă națională';
+
+  @override
+  String get mgrEndRetired => 'S-a retras din antrenorat';
+
+  @override
+  String get mgrEndContractEnd => 'Contract expirat';
+
+  @override
+  String get mgrEndReplacedByPlayer => 'Înlocuit de tine';
+
+  @override
+  String get mgrProfileSpells => 'Carieră';
+
+  @override
+  String mgrProfileSpellNow(String nation, String from) {
+    return '$nation, din $from';
+  }
+
+  @override
+  String mgrProfileSpellRange(String nation, String from, String to) {
+    return '$nation, din $from până în $to';
+  }
+
+  @override
+  String mgrProfileSpellEnded(String range, String reason) {
+    return '$range, $reason';
+  }
+
+  @override
+  String get mgrProfileRecordVsYou => 'Bilanț împotriva ta';
+
+  @override
+  String get mgrProfileNoMeetings => 'Nu v-ați întâlnit încă';
+
+  @override
+  String get mgrProfileReputation => 'Reputație';
+
+  @override
+  String get mgrProfileAge => 'Vârstă';
+
+  @override
+  String get mgrProfileAppointed => 'Numit';
+
+  @override
+  String get mgrProfileStyle => 'Stil';
+
+  @override
+  String get mgrProfileTie => 'Între voi';
+
+  @override
+  String mgrPreviewLine(String name) {
+    return 'Selecționerul lor: $name';
+  }
+
+  @override
+  String mgrDossierStyle(String style) {
+    return 'Stilul selecționerului: $style';
+  }
+
+  @override
+  String mgrDossierRecord(String record) {
+    return 'Bilanțul tău împotriva lui: $record';
+  }
+
+  @override
+  String get mgrStylePossession => 'Posesie';
+
+  @override
+  String get mgrStyleHighPress => 'Presing sus';
+
+  @override
+  String get mgrStyleDefensive => 'Defensiv';
+
+  @override
+  String get mgrStyleDirect => 'Direct';
+
+  @override
+  String get mgrStyleCounter => 'Contraatac';
+
+  @override
+  String get mgrStyleFlair => 'Tehnic';
+
+  @override
+  String get mgrStylePhysical => 'Fizic';
+
+  @override
+  String get mgrStyleBalanced => 'Echilibrat';
+
+  @override
+  String get mgrListTitle => 'Selecționeri';
+
+  @override
+  String get mgrListCurrent => 'Actuali';
+
+  @override
+  String get mgrListRecentMoves => 'Schimbări recente';
+
+  @override
+  String get mgrListFilterAll => 'Tot';
+
+  @override
+  String get mgrListSortReputation => 'Reputație';
+
+  @override
+  String get mgrListSortName => 'Nume';
+
+  @override
+  String get mgrListEmptyMoves => 'Nicio schimbare în ultimii doi ani.';
+
+  @override
+  String get mgrListEmptyCurrent =>
+      'Selecționerii apar după următoarea trecere la sezonul nou.';
+
+  @override
+  String get editorSectionManagers => 'Selecționeri';
+
+  @override
+  String get editorAboutManagers =>
+      'Cine conduce fiecare echipă națională în prima zi';
+
+  @override
+  String get editorManagersHint => 'Ales la începutul carierei';
+
+  @override
+  String get editorManagerName => 'Numele selecționerului';
+
+  @override
+  String get editorManagerNationality => 'Naționalitate';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'Selecționerul are nevoie de un nume de 1 până la $max caractere afișabile';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Alege din listă o naționalitate pentru selecționer';
 
   @override
   String get shareButton => 'Distribuie';

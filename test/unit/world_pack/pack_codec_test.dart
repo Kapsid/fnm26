@@ -223,7 +223,7 @@ void main() {
     Map<String, Object?> rawPack(WorldPack p) =>
         _raw(p)['pack']! as Map<String, Object?>;
 
-    test('v1 file imports and reads as v3', () async {
+    test('v1 file imports and reads as the current format', () async {
       final json = _pack().toJson()
         ..['formatVersion'] = 1
         ..remove('clubStrengths')
@@ -231,18 +231,21 @@ void main() {
         ..remove('addedClubs')
         ..remove('addedSponsors')
         ..remove('addedYAccounts')
-        ..remove('localized');
+        ..remove('localized')
+        ..remove('managers');
       final r = await PackCodec.decode(
         _file({'format': 1, 'pack': json, 'trophies': <String, Object?>{}}),
       );
       final d = r as PackDecoded;
-      expect(d.pack.formatVersion, 3);
+      expect(d.pack.formatVersion, kPackFormatVersion);
+      expect(d.pack.clubStrengths, isEmpty);
+      expect(d.pack.managers, isEmpty);
       expect(d.pack.squads, _pack().squads);
       expect(d.pack.pools, isEmpty);
       expect(d.pack.localized, isEmpty);
     });
 
-    test('export writes format 3', () {
+    test('export writes format 3 while the pack names no managers', () {
       final bytes = PackCodec.encode(
         _pack().copyWith(formatVersion: 1),
         const {},
@@ -250,7 +253,10 @@ void main() {
       final top =
           jsonDecode(utf8.decode(gzip.decode(bytes))) as Map<String, Object?>;
       expect(top['format'], 3);
-      expect((top['pack']! as Map)['formatVersion'], 3);
+      final pack = top['pack']! as Map<String, Object?>;
+      expect(pack['formatVersion'], 3);
+      // A format-3 (1.1.x clubs) reader refuses any key it does not know.
+      expect(pack.containsKey('managers'), isFalse);
       // A build that reads format 2 at most compares this number first, so
       // it says "made with a newer version" instead of "broken file".
       expect(top['format']! as int, greaterThan(2));
@@ -267,12 +273,38 @@ void main() {
       raw['format'] = 2;
       raw['pack'] = (rawPack(p)
         ..['formatVersion'] = 2
-        ..remove('clubStrengths'));
+        ..remove('clubStrengths')
+        ..remove('managers'));
       final r = await PackCodec.decode(_file(raw));
       final d = r as PackDecoded;
-      expect(d.pack.formatVersion, 3);
+      expect(d.pack.formatVersion, kPackFormatVersion);
       expect(d.pack.clubStrengths, isEmpty);
       expect(d.pack.addedClubs.single.strength, isNull);
+      expect(d.pack.managers, isEmpty);
+    });
+
+    test('a format-3 file (1.1.x clubs, no managers) imports with no '
+        'managers', () async {
+      final p = _pack().copyWith(clubStrengths: const {'Man Blue': 4});
+      final raw = _raw(p);
+      raw['format'] = 3;
+      raw['pack'] = (rawPack(p)
+        ..['formatVersion'] = 3
+        ..remove('managers'));
+      final d = await PackCodec.decode(_file(raw)) as PackDecoded;
+      expect(d.pack.formatVersion, kPackFormatVersion);
+      expect(d.pack.clubStrengths, {'Man Blue': 4});
+      expect(d.pack.managers, isEmpty);
+    });
+
+    test('a format-3 file that holds managers -> badData', () async {
+      final p = _pack().copyWith(
+        managers: {1: (name: 'Ota Brnak', nationality: 'AAA')},
+      );
+      final raw = _raw(p);
+      raw['format'] = 3;
+      raw['pack'] = (rawPack(p)..['formatVersion'] = 3);
+      expect(await reason(_file(raw)), PackRejection.badData);
     });
 
     test('a format-3 file with strengths round-trips', () async {
@@ -329,6 +361,64 @@ void main() {
       final raw = _raw(_pack());
       raw['format'] = kPackFormatVersion + 1;
       expect(await reason(_file(raw)), PackRejection.newerFormat);
+    });
+
+    test('export writes format 4 once the pack names a manager', () async {
+      final p = _pack().copyWith(
+        managers: {1: (name: 'Ota Brnak', nationality: 'AAA')},
+      );
+      final bytes = PackCodec.encode(p, const {});
+      final top =
+          jsonDecode(utf8.decode(gzip.decode(bytes))) as Map<String, Object?>;
+      expect(top['format'], 4);
+      expect((top['pack']! as Map)['formatVersion'], 4);
+      expect((top['pack']! as Map)['managers'], {
+        '1': {'name': 'Ota Brnak', 'nationality': 'AAA'},
+      });
+      final d =
+          await PackCodec.decode(bytes, baseCodes: const {1: 'AAA'})
+              as PackDecoded;
+      expect(d.pack.managers, p.managers);
+    });
+
+    test(
+      'an unusable manager entry is dropped on import, the pack kept',
+      () async {
+        final p = _pack().copyWith(
+          managers: {
+            1: (name: 'Ota Brnak', nationality: 'bbb'),
+            2: (name: '  ', nationality: 'AAA'),
+            3: (name: 'Lew Ward', nationality: 'AAA'),
+          },
+        );
+        final r = await PackCodec.decode(
+          PackCodec.encode(p, const {}),
+          baseCodes: const {1: 'AAA', 2: 'BBB'},
+        );
+        expect(r, isA<PackDecoded>());
+        expect((r as PackDecoded).pack.managers, {
+          1: (name: 'Ota Brnak', nationality: 'bbb'),
+        });
+        final unknownCode = await PackCodec.decode(
+          PackCodec.encode(
+            _pack().copyWith(managers: {1: (name: 'X Y', nationality: 'ZZZ')}),
+            const {},
+          ),
+          baseCodes: const {1: 'AAA'},
+        );
+        expect((unknownCode as PackDecoded).pack.managers, isEmpty);
+      },
+    );
+
+    test('a usable manager with too long a name refuses the file', () async {
+      final r = await PackCodec.decode(
+        PackCodec.encode(
+          _pack().copyWith(managers: {1: (name: 'A' * 41, nationality: 'AAA')}),
+          const {},
+        ),
+        baseCodes: const {1: 'AAA'},
+      );
+      expect((r as PackRejected).reason, PackRejection.badData);
     });
 
     test('a pack with every new part decodes whole', () async {
@@ -801,7 +891,8 @@ void main() {
             ..remove('addedClubs')
             ..remove('addedSponsors')
             ..remove('addedYAccounts')
-            ..remove('localized')),
+            ..remove('localized')
+            ..remove('managers')),
       );
       final r = await PackCodec.decode(
         file,

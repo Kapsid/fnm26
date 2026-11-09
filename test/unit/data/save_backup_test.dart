@@ -4,7 +4,10 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/db/save_backup.dart';
+import 'package:path/path.dart' as p;
 import 'package:sqlite3/sqlite3.dart';
+
+import '../../helpers/save_fixtures.dart';
 
 /// Exporting and restoring a whole save file.
 ///
@@ -186,5 +189,280 @@ void main() {
       await SaveBackup.replaceLive(junk),
       BackupRejection.unreadable,
     );
+  });
+
+  group('the copy taken before an upgrade', () {
+    test(
+      'a v54 file gets a pre-upgrade copy that opens at v54 with its careers',
+      () async {
+        // A real save written by the build before schema 55. If the upgrade
+        // that follows goes wrong, this copy is how the player gets it back.
+        final live = await unpackFixture('pre55', 'mid_cycle');
+        addTearDown(() => live.parent.delete(recursive: true));
+        expect(fileSchemaVersion(live.path), 54);
+        final careersBefore = sqlite3.open(live.path, mode: OpenMode.readOnly);
+        final names = [
+          for (final r in careersBefore.select(
+            'SELECT manager_name FROM careers ORDER BY id',
+          ))
+            r['manager_name'],
+        ];
+        careersBefore.close();
+        expect(names, isNotEmpty);
+
+        final copy = await SaveBackup.writePreUpgradeCopy(
+          live,
+          fromVersion: AppDatabase.firstManagedVersion,
+          into: dir,
+        );
+
+        expect(copy, isNotNull);
+        expect(p.dirname(copy!.path), dir.path);
+        expect(p.basename(copy.path), 'before-update-v54.fnmsave');
+        expect(SaveBackup.safetyCopiesIn(dir), [
+          isA<File>().having((f) => f.path, 'path', copy.path),
+        ], reason: 'the Settings restore list must offer it');
+        expect(SaveBackup.inspect(copy.path).rejection, isNull);
+        final read = sqlite3.open(copy.path, mode: OpenMode.readOnly);
+        addTearDown(read.close);
+        expect(read.select('PRAGMA user_version').first.values.first, 54);
+        expect([
+          for (final r in read.select(
+            'SELECT manager_name FROM careers ORDER BY id',
+          ))
+            r['manager_name'],
+        ], names);
+        expect(
+          fileSchemaVersion(live.path),
+          54,
+          reason: 'taking the copy must not touch the save itself',
+        );
+      },
+      timeout: const Timeout(Duration(minutes: 2)),
+    );
+
+    test('a current file gets none', () async {
+      final path = await aSaveWith('Current');
+      final copy = await SaveBackup.writePreUpgradeCopy(
+        File(path),
+        fromVersion: AppDatabase.firstManagedVersion,
+        into: dir,
+      );
+      expect(copy, isNull);
+      expect(SaveBackup.safetyCopiesIn(dir), isEmpty);
+    });
+
+    /// The careers' manager names in the database file at [path].
+    List<Object?> managersIn(String path) {
+      final db = sqlite3.open(path, mode: OpenMode.readOnly);
+      try {
+        return [
+          for (final r in db.select(
+            'SELECT manager_name FROM careers ORDER BY id',
+          ))
+            r['manager_name'],
+        ];
+      } finally {
+        db.close();
+      }
+    }
+
+    /// What a failed, untransacted upgrade can leave: the file still at its
+    /// old version, with rows already gone.
+    void halfMigrate(String path) {
+      final db = sqlite3.open(path);
+      try {
+        db.execute("UPDATE careers SET manager_name = 'Half migrated'");
+      } finally {
+        db.close();
+      }
+    }
+
+    test(
+      'a retry after a failed upgrade keeps the copy from before it',
+      () async {
+        final live = await unpackFixture('pre55', 'mid_cycle');
+        addTearDown(() => live.parent.delete(recursive: true));
+        final clean = managersIn(live.path);
+
+        final first = await SaveBackup.writePreUpgradeCopy(
+          live,
+          fromVersion: AppDatabase.firstManagedVersion,
+          into: dir,
+        );
+        final bytes = await first!.readAsBytes();
+        halfMigrate(live.path);
+        final second = await SaveBackup.writePreUpgradeCopy(
+          live,
+          fromVersion: AppDatabase.firstManagedVersion,
+          into: dir,
+        );
+
+        expect(second!.path, first.path);
+        expect(await second.readAsBytes(), bytes, reason: 'never rewritten');
+        expect(managersIn(second.path), clean);
+        expect(SaveBackup.safetyCopiesIn(dir), hasLength(1));
+      },
+      timeout: const Timeout(Duration(minutes: 2)),
+    );
+
+    test('pruning after restores never removes a pre-upgrade copy', () async {
+      final keep = File('${dir.path}/${SaveBackup.preUpgradeCopyName(54)}')
+        ..writeAsStringSync('copy')
+        ..setLastModifiedSync(DateTime(2020));
+      for (var i = 0; i < SaveBackup.safetyCopiesKept + 2; i++) {
+        File('${dir.path}/before-restore-$i.${SaveBackup.extension}')
+          ..writeAsStringSync('$i')
+          ..setLastModifiedSync(DateTime(2030, 1, 1 + i));
+      }
+
+      await SaveBackup.pruneSafetyCopies(dir);
+
+      expect(keep.existsSync(), isTrue);
+      expect(
+        SaveBackup.safetyCopiesIn(dir),
+        hasLength(SaveBackup.safetyCopiesKept + 1),
+      );
+    });
+
+    test(
+      'the copy is found for a save still at its old version, and restored',
+      () async {
+        final live = await unpackFixture('pre55', 'mid_cycle');
+        addTearDown(() => live.parent.delete(recursive: true));
+        final clean = managersIn(live.path);
+        expect(SaveBackup.preUpgradeCopyFor(live, dir), isNull);
+        final copy = await SaveBackup.writePreUpgradeCopy(
+          live,
+          fromVersion: AppDatabase.firstManagedVersion,
+          into: dir,
+        );
+        halfMigrate(live.path);
+
+        final found = SaveBackup.preUpgradeCopyFor(live, dir);
+        expect(found?.path, copy!.path);
+        final aside = await SaveBackup.restorePreUpgradeCopy(live, found!);
+
+        expect(managersIn(live.path), clean);
+        expect(fileSchemaVersion(live.path), 54);
+        expect(
+          p.basename(aside.path),
+          startsWith('${p.basename(live.path)}.failed-upgrade-'),
+        );
+        expect(managersIn(aside.path).toSet(), {'Half migrated'});
+        expect(copy.existsSync(), isTrue, reason: 'kept for another go');
+      },
+      timeout: const Timeout(Duration(minutes: 2)),
+    );
+
+    test(
+      'a restore killed between its two renames finishes at the next launch',
+      () async {
+        final live = await unpackFixture('pre55', 'mid_cycle');
+        addTearDown(() => live.parent.delete(recursive: true));
+        final clean = managersIn(live.path);
+        final copy = await SaveBackup.writePreUpgradeCopy(
+          live,
+          fromVersion: AppDatabase.firstManagedVersion,
+          into: dir,
+        );
+        halfMigrate(live.path);
+
+        // The kill: the failed file is already set aside, the staged copy
+        // not yet renamed into place.
+        await expectLater(
+          SaveBackup.restorePreUpgradeCopy(
+            live,
+            copy!,
+            interruptAfterSetAside: () async => throw StateError('killed'),
+          ),
+          throwsStateError,
+        );
+        expect(live.existsSync(), isFalse, reason: 'the window under test');
+        final incoming = File('${live.path}${SaveBackup.incomingSuffix}');
+        expect(incoming.existsSync(), isTrue);
+        expect(
+          File('${live.path}${SaveBackup.restoringSuffix}').existsSync(),
+          isTrue,
+        );
+
+        // The next launch.
+        expect(await SaveBackup.recoverAt(live), isTrue);
+
+        expect(managersIn(live.path), clean);
+        expect(fileSchemaVersion(live.path), 54);
+        expect(incoming.existsSync(), isFalse);
+        expect(
+          File('${live.path}${SaveBackup.restoringSuffix}').existsSync(),
+          isFalse,
+        );
+        final aside = live.parent.listSync().whereType<File>().where(
+          (f) => p.basename(f.path).contains(SaveBackup.failedUpgradeInfix),
+        );
+        expect(aside, hasLength(1), reason: 'the failed save is kept');
+        expect(managersIn(aside.single.path).toSet(), {'Half migrated'});
+      },
+      timeout: const Timeout(Duration(minutes: 2)),
+    );
+
+    test('a damaged copy is never swapped in', () async {
+      final live = await unpackFixture('pre55', 'mid_cycle');
+      addTearDown(() => live.parent.delete(recursive: true));
+      final copy = await SaveBackup.writePreUpgradeCopy(
+        live,
+        fromVersion: AppDatabase.firstManagedVersion,
+        into: dir,
+      );
+      halfMigrate(live.path);
+      // Damage the middle of the copy, past the schema page [inspect] reads,
+      // so only SQLite's own check can tell.
+      final raf = copy!.openSync(mode: FileMode.append);
+      final pages = raf.lengthSync() ~/ 4096;
+      raf
+        ..setPositionSync((pages ~/ 2) * 4096)
+        ..writeFromSync(List<int>.filled(4096 * 4, 0xA5))
+        ..closeSync();
+      expect(SaveBackup.inspect(copy.path).rejection, isNull);
+
+      await expectLater(
+        SaveBackup.restorePreUpgradeCopy(live, copy),
+        throwsA(isA<FileSystemException>()),
+      );
+
+      expect(managersIn(live.path).toSet(), {'Half migrated'});
+      expect(
+        File('${live.path}${SaveBackup.incomingSuffix}').existsSync(),
+        isFalse,
+      );
+      expect(
+        File('${live.path}${SaveBackup.restoringSuffix}').existsSync(),
+        isFalse,
+      );
+    }, timeout: const Timeout(Duration(minutes: 2)));
+
+    test('a save that upgraded is never offered an old copy', () async {
+      final live = await unpackFixture('pre55', 'mid_cycle');
+      addTearDown(() => live.parent.delete(recursive: true));
+      await SaveBackup.writePreUpgradeCopy(
+        live,
+        fromVersion: AppDatabase.firstManagedVersion,
+        into: dir,
+      );
+      sqlite3.open(live.path)
+        ..execute('PRAGMA user_version = ${AppDatabase.currentSchemaVersion}')
+        ..close();
+
+      expect(SaveBackup.preUpgradeCopyFor(live, dir), isNull);
+    });
+
+    test('a missing file gets none', () async {
+      final copy = await SaveBackup.writePreUpgradeCopy(
+        File('${dir.path}/nothing.sqlite'),
+        fromVersion: AppDatabase.firstManagedVersion,
+        into: dir,
+      );
+      expect(copy, isNull);
+      expect(File('${dir.path}/nothing.sqlite').existsSync(), isFalse);
+    });
   });
 }

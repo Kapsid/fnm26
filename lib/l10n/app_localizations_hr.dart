@@ -12356,6 +12356,28 @@ class AppLocalizationsHr extends AppLocalizations {
   String get backupSafetyShare => 'PODIJELI';
 
   @override
+  String get saveUpgradeFailedTitle =>
+      'Spremljenu igru nije bilo moguće ažurirati';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Tvoju spremljenu igru nije bilo moguće ažurirati. Ništa nije obrisano, a kopija od prije ažuriranja čuva se na ovom telefonu.';
+
+  @override
+  String get saveUpgradeRestoreButton => 'Vrati kopiju od prije ažuriranja';
+
+  @override
+  String get saveUpgradeRestoreFailed =>
+      'Kopiju nije bilo moguće vratiti. Tvoja spremljena igra ostala je kakva je bila.';
+
+  @override
+  String get saveOpenFailedTitle => 'Spremljene igre nije bilo moguće otvoriti';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Tvoje spremljene igre nije bilo moguće otvoriti. Ništa nije obrisano. Pokušaj ponovno za trenutak.';
+
+  @override
   String get backupCloudNoDetails => 'Pojedinosti su još na putu.';
 
   @override
@@ -12642,6 +12664,10 @@ class AppLocalizationsHr extends AppLocalizations {
   @override
   String get hostBidRecentHost =>
       'Bili ste domaćin jednog od posljednja tri izdanja.';
+
+  @override
+  String get hostBidBelowBar =>
+      'Vaši stadioni ne ispunjavaju uvjete ovog turnira.';
 
   @override
   String get hostBidRulesPending =>
@@ -16585,6 +16611,261 @@ class AppLocalizationsHr extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Bolji igrači odlaze u jače klubove. Zadano: $stars od 5, prema njegovoj ligi.';
   }
+
+  @override
+  String mgrNewsSacked(String nation, String name) {
+    return '$nation otpušta $name';
+  }
+
+  @override
+  String mgrNewsResigned(String nation, String name) {
+    return '$nation: $name podnio ostavku';
+  }
+
+  @override
+  String mgrNewsPoached(String nation, String name) {
+    return '$nation: $name odlazi u drugu reprezentaciju';
+  }
+
+  @override
+  String mgrNewsRetired(String nation, String name) {
+    return '$nation: $name završava trenersku karijeru';
+  }
+
+  @override
+  String mgrNewsContractEnd(String nation, String name) {
+    return '$nation: $name odlazi kad mu istekne ugovor';
+  }
+
+  @override
+  String mgrNewsReplacedByPlayer(String nation, String name) {
+    return '$nation: $name ustupa mjesto vama';
+  }
+
+  @override
+  String mgrNewsAppointed(String nation, String name) {
+    return '$nation imenuje $name';
+  }
+
+  @override
+  String mgrNewsAppointedBody(String nation, String name) {
+    return '$name preuzima $nation.';
+  }
+
+  @override
+  String pressBeatOpposingManager(String manager) {
+    return 'Vi i $manager imate prošlost. Želite li nešto reći o njemu?';
+  }
+
+  @override
+  String get pressAnswerHitBackAtManager => 'Neka se brine za vlastitu momčad.';
+
+  @override
+  String get pressAnswerRespectManager => 'Imam veliko poštovanje prema njemu.';
+
+  @override
+  String yMgrTie1(String manager) {
+    return 'Na suprotnoj klupi je $manager. S našim izbornikom ima prošlosti i jedva čekam.';
+  }
+
+  @override
+  String yMgrTie2(String manager) {
+    return 'Sljedeći je $manager na suprotnoj klupi. On i naš izbornik poznaju se već neko vrijeme.';
+  }
+
+  @override
+  String yMgrTie3(String manager) {
+    return 'Opet $manager. Bolje da naš izbornik od ovoga ne pravi osobnu stvar.';
+  }
+
+  @override
+  String yMgrTie4(String manager) {
+    return 'Eto nas opet. $manager uz aut-liniju, a naš izbornik pokušava dobiti svađu umjesto utakmice.';
+  }
+
+  @override
+  String get mgrRowLabel => 'Izbornik';
+
+  @override
+  String mgrRowDetail(int age, String date) {
+    return '$age god., od $date';
+  }
+
+  @override
+  String mgrRecordWdl(int won, int drawn, int lost) {
+    return '$won P, $drawn N, $lost I';
+  }
+
+  @override
+  String mgrRowRecord(String record) {
+    return 'Pod njegovim vodstvom: $record';
+  }
+
+  @override
+  String get mgrTieNeutral => 'Bez prošlosti';
+
+  @override
+  String get mgrTieRespect => 'Poštovanje';
+
+  @override
+  String get mgrTieRival => 'Rival';
+
+  @override
+  String get mgrTieGrudge => 'Zamjerka';
+
+  @override
+  String get mgrTieSuccessor => 'Nasljednik';
+
+  @override
+  String get mgrTieProtege => 'Štićenik';
+
+  @override
+  String get mgrTieFormerPlayer => 'Bivši igrač';
+
+  @override
+  String get mgrEndSacked => 'Otpušten';
+
+  @override
+  String get mgrEndResigned => 'Podnio ostavku';
+
+  @override
+  String get mgrEndPoached => 'Otišao u drugu reprezentaciju';
+
+  @override
+  String get mgrEndRetired => 'Završio trenersku karijeru';
+
+  @override
+  String get mgrEndContractEnd => 'Istekao ugovor';
+
+  @override
+  String get mgrEndReplacedByPlayer => 'Zamijenili ste ga';
+
+  @override
+  String get mgrProfileSpells => 'Karijera';
+
+  @override
+  String mgrProfileSpellNow(String nation, String from) {
+    return '$nation, od $from';
+  }
+
+  @override
+  String mgrProfileSpellRange(String nation, String from, String to) {
+    return '$nation, od $from do $to';
+  }
+
+  @override
+  String mgrProfileSpellEnded(String range, String reason) {
+    return '$range, $reason';
+  }
+
+  @override
+  String get mgrProfileRecordVsYou => 'Omjer protiv vas';
+
+  @override
+  String get mgrProfileNoMeetings => 'Još se niste susreli';
+
+  @override
+  String get mgrProfileReputation => 'Ugled';
+
+  @override
+  String get mgrProfileAge => 'Dob';
+
+  @override
+  String get mgrProfileAppointed => 'Imenovan';
+
+  @override
+  String get mgrProfileStyle => 'Stil';
+
+  @override
+  String get mgrProfileTie => 'Među vama';
+
+  @override
+  String mgrPreviewLine(String name) {
+    return 'Njihov izbornik: $name';
+  }
+
+  @override
+  String mgrDossierStyle(String style) {
+    return 'Stil izbornika: $style';
+  }
+
+  @override
+  String mgrDossierRecord(String record) {
+    return 'Vaš omjer protiv njega: $record';
+  }
+
+  @override
+  String get mgrStylePossession => 'Posjed lopte';
+
+  @override
+  String get mgrStyleHighPress => 'Visoki pritisak';
+
+  @override
+  String get mgrStyleDefensive => 'Defanzivan';
+
+  @override
+  String get mgrStyleDirect => 'Direktan';
+
+  @override
+  String get mgrStyleCounter => 'Kontranapad';
+
+  @override
+  String get mgrStyleFlair => 'Tehnički';
+
+  @override
+  String get mgrStylePhysical => 'Fizički';
+
+  @override
+  String get mgrStyleBalanced => 'Uravnoteženo';
+
+  @override
+  String get mgrListTitle => 'Izbornici';
+
+  @override
+  String get mgrListCurrent => 'Trenutni';
+
+  @override
+  String get mgrListRecentMoves => 'Nedavne promjene';
+
+  @override
+  String get mgrListFilterAll => 'Sve';
+
+  @override
+  String get mgrListSortReputation => 'Ugled';
+
+  @override
+  String get mgrListSortName => 'Ime';
+
+  @override
+  String get mgrListEmptyMoves => 'Nema promjena u posljednje dvije godine.';
+
+  @override
+  String get mgrListEmptyCurrent =>
+      'Izbornici se pojavljuju nakon sljedećeg prijelaza u novu sezonu.';
+
+  @override
+  String get editorSectionManagers => 'Izbornici';
+
+  @override
+  String get editorAboutManagers => 'Tko vodi koju reprezentaciju prvog dana';
+
+  @override
+  String get editorManagersHint => 'Bira se na početku karijere';
+
+  @override
+  String get editorManagerName => 'Ime izbornika';
+
+  @override
+  String get editorManagerNationality => 'Državljanstvo';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'Ime izbornika mora imati od 1 do $max prikazivih znakova';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Odaberi izborniku državljanstvo s popisa';
 
   @override
   String get shareButton => 'Podijeli';

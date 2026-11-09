@@ -353,8 +353,11 @@ void main() {
       await _until(tester, () => _ready(tester) && _clock(tester).playing);
       final r = _result(tester);
       final gi = r.events.indexWhere((e) => e.type == MatchEventType.goal);
-      expect(_count(_buzz) + _count(_heavy) + _count(_alert), 0,
-          reason: 'no goal yet');
+      expect(
+        _count(_buzz) + _count(_heavy) + _count(_alert),
+        0,
+        reason: 'no goal yet',
+      );
       await _seek(tester, _secs(_pb(tester).revealAt(gi) - 0.3));
       await _until(tester, () => _shout(tester));
       await tester.pump(const Duration(milliseconds: 1));

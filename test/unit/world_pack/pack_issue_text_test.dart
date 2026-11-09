@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/seed/pool_generator.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/federation/sponsors.dart';
@@ -187,5 +188,62 @@ void main() {
         describePackIssue(l, UnknownId(path), pack, const {}).detail;
     expect(said('squads.1.7.traits'), l.editorIssueUnknownEntry('Pool 7'));
     expect(said('addedSponsors.$_a.deal'), l.editorIssueUnknownEntry('Brand'));
+  });
+
+  test('a day-one manager\'s problems open the Managers section on the '
+      'nation', () {
+    final pack = WorldPack(
+      uuid: 'u',
+      name: 'Mine',
+      author: '',
+      formatVersion: kPackFormatVersion,
+      madeWithVersion: '1.1.0',
+      managers: {
+        1: (name: 'A' * 41, nationality: 'ZZZ'),
+        99: (name: 'Ota Brnak', nationality: 'CZE'),
+      },
+    );
+    final issues = [
+      ...PackRules.issues(pack, baseCodes: const {1: 'CZE'}),
+      ...PackRules.compatibility(
+        pack,
+        nationIds: {1},
+        competitionNames: const {},
+        trophyKeys: const {},
+        sponsorBrands: const {},
+        yAccounts: const {},
+        countryCodes: {'cze'},
+        fringeRanges: const {},
+      ),
+    ];
+    final world = {
+      for (final n in [
+        const Nation(
+          id: 1,
+          name: 'Czechia',
+          code: 'CZE',
+          confederation: Confederation.europe,
+          ranking: 40,
+        ),
+      ])
+        n.id: n,
+    };
+    final said = {
+      for (final i in issues) i.where: describePackIssue(l, i, pack, world),
+    };
+    final name = said['managers.1.name']!;
+    expect(name.detail, l.editorIssueManagerName(PackRules.nameMax));
+    expect(name.title, 'Czechia');
+    expect(name.section, EditorSection.managers);
+    expect(name.nationId, 1);
+    final nationality = said['managers.1.nationality']!;
+    expect(nationality.detail, l.editorIssueManagerNationality);
+    expect(nationality.section, EditorSection.managers);
+    // An unknown nation is removed by Remove.
+    expect(said['managers.99']!.section, EditorSection.managers);
+    expect(
+      PackEditor.dropUnknown(pack, 'managers.99').managers.keys,
+      [1],
+    );
   });
 }

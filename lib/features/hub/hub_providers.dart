@@ -129,6 +129,9 @@ import 'package:fnm/features/tournaments/tournaments_providers.dart';
 import 'package:fnm/features/tournaments/playoff_paths.dart';
 import 'package:fnm/features/tournaments/wc_host_theme.dart';
 import 'package:fnm/features/tournaments/wc_host_berths.dart';
+import 'package:fnm/features/world_managers/manager_windows.dart';
+import 'package:fnm/features/world_managers/world_manager_markers.dart';
+import 'package:fnm/features/world_managers/world_manager_providers.dart';
 import 'package:fnm/features/y/y_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
@@ -1241,6 +1244,7 @@ class SeasonService {
       xi: homeXi,
       opponent: away,
       fixtureId: f.id,
+      date: f.date,
     );
     final asAway = await _withManagerTactics(
       f.careerId,
@@ -1249,6 +1253,7 @@ class SeasonService {
       xi: awayXi,
       opponent: home,
       fixtureId: f.id,
+      date: f.date,
     );
     final homeStrength = asHome?.strength ?? homeBase;
     final awayStrength = asAway?.strength ?? awayBase;
@@ -1620,6 +1625,7 @@ class SeasonService {
     required List<Player> xi,
     required Nation opponent,
     required int fixtureId,
+    required DateTime date,
   }) async {
     final setup = await _ensureManagerSetup(careerId);
     if (setup == null || setup.nationId != nationId) return null;
@@ -1631,6 +1637,11 @@ class SeasonService {
     final oppAvailable = selectable(oppPool, await _ensureAbsences(careerId));
     final oppStrength = AiTactics.readStrength(oppAvailable);
     final oppStyle = NationIdentity.styleOf(opponent.code);
+    // The opponent's manager on the fixture's day, as the live match reads
+    // him.
+    final oppManagerStyle = await _ref
+        .read(worldManagerServiceProvider)
+        .styleOn(careerId, opponent.id, date);
     final ai = AiCounter.forFixture(
       base: AiTactics.forOpponent(
         opponentStrength: oppStrength,
@@ -1641,6 +1652,7 @@ class SeasonService {
           rngSeed: setup.rngSeed,
         ),
         style: oppStyle,
+        managerStyle: oppManagerStyle,
       ),
       drilling: setup.drilling,
       opponentStrength: oppStrength,

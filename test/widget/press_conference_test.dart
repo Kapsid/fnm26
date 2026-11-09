@@ -83,6 +83,7 @@ void main() {
               )
               as PressStatement?,
       preview: null,
+      opposingManager: null,
     ),
     credibility: 50,
     opponentNationId: 2,
@@ -253,6 +254,7 @@ void main() {
           rivalNationId: 30,
           keyPlayerId: 9,
         ),
+        opposingManager: null,
       ),
       credibility: 50,
       opponentNationId: 2,
@@ -332,7 +334,11 @@ void main() {
   // Players, 1.1.0: "If  is not at his best, does the side have anything?"
   // A key man whose name cannot be read (missing, or blank in a custom
   // world) is never asked about: the preview ends after the draw.
-  for (final names in const [<int, String>{}, {9: ''}, {9: '   '}]) {
+  for (final names in const [
+    <int, String>{},
+    {9: ''},
+    {9: '   '},
+  ]) {
     testWidgets('a key man with no name ($names) is not asked about', (
       tester,
     ) async {
@@ -366,6 +372,7 @@ void main() {
                   rivalNationId: 30,
                   keyPlayerId: 9,
                 ),
+                opposingManager: null,
               ),
               credibility: 20,
               opponentNationId: 2,
@@ -428,6 +435,7 @@ void main() {
                   rivalNationId: 30,
                   keyPlayerId: 9,
                 ),
+                opposingManager: null,
               ),
               credibility: 50,
               opponentNationId: 2,

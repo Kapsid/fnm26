@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/entities/world_manager.dart';
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/domain/services/federation/sponsors.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
@@ -294,6 +295,10 @@ pendingConferenceProvider = FutureProvider.autoDispose
             },
             throwback: null,
             preview: await _previewFacts(ref, careerId, campaign),
+            // Read when he opens it (PressDesk.withOpposingManager): the
+            // hub watches this provider, and no hub read touches a manager
+            // table.
+            opposingManager: null,
           ),
           credibility: await ref.watch(credibilityProvider(careerId).future),
           opponentNationId: opponent,
@@ -348,6 +353,7 @@ pendingConferenceProvider = FutureProvider.autoDispose
           },
           throwback: due.isEmpty ? null : due.last,
           preview: null,
+          opposingManager: null,
         ),
         credibility: await ref.watch(credibilityProvider(careerId).future),
         opponentNationId: fixture.homeNationId == career.nationId
@@ -463,6 +469,32 @@ class ConferenceService {
     }
     if (beat.kind == BeatKind.throwback && c.facts.throwback != null) {
       await repo.markThrownBack(c.facts.throwback!.id);
+    }
+    // A word about the opposing manager is a word he hears: it moves the tie.
+    final manager = c.facts.opposingManager;
+    if (beat.kind == BeatKind.opposingManager && manager != null) {
+      final tie = switch (a) {
+        AnswerKind.hitBackAtManager => (
+          kind: TieKind.pressDig,
+          delta: ConferenceBuilder.hitBackTieDelta,
+        ),
+        AnswerKind.respectManager => (
+          kind: TieKind.pressRespect,
+          delta: ConferenceBuilder.respectTieDelta,
+        ),
+        _ => null,
+      };
+      if (tie != null) {
+        await _ref
+            .read(worldManagerRepositoryProvider)
+            .addTie(
+              careerId,
+              managerId: manager.managerId,
+              kind: tie.kind,
+              delta: tie.delta,
+              date: career.inGameDate,
+            );
+      }
     }
     // A statement on the record shifts a named player's condition.
     _ref

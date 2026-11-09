@@ -33,8 +33,9 @@ void main() {
     final variants = allQuestionVariants(l);
     // 33 moments (three wordings for a big win, a big loss and a crisis, two
     // for a job verdict), 30 reaction and player questions, 30 throwbacks,
-    // and the preview's 12 aim, 6 rival and 6 key-player questions.
-    expect(variants, hasLength(117));
+    // the preview's 12 aim, 6 rival and 6 key-player questions, and the
+    // opposing manager's one question in each of the three tones.
+    expect(variants, hasLength(120));
     for (final (reason, kind, text) in variants) {
       final allowed =
           kind == BeatKind.moment &&

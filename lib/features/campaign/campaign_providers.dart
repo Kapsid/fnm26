@@ -647,6 +647,10 @@ class CampaignService {
           // 1.0.6 ranking keep that one: their snapshot already holds it, or
           // the seed loader freezes it.
           freezeStartingRanks: true,
+          // A run's world is the one its seed was searched on: its hosts are
+          // drawn as they were before the stadium bars, or the curated
+          // groups and paths move (see campaign_seeds_test).
+          stadiumHostRules: false,
           // Never a worldPackId (create refuses one for a run): the run
           // plays the default world its seed was searched on.
         );

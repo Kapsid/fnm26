@@ -115,6 +115,22 @@ class DriftCompetitionRepository implements CompetitionRepository {
   }
 
   @override
+  Future<List<Fixture>> fixturesForNations(
+    int careerId,
+    Set<int> nationIds,
+  ) async {
+    if (nationIds.isEmpty) return const [];
+    final query = _db.select(_db.fixtures)
+      ..where(
+        (t) =>
+            t.careerId.equals(careerId) &
+            (t.homeNationId.isIn(nationIds) | t.awayNationId.isIn(nationIds)),
+      )
+      ..orderBy([(t) => OrderingTerm(expression: t.date)]);
+    return (await query.get()).map((r) => r.toDomain()).toList();
+  }
+
+  @override
   Future<List<Fixture>> cycleFixturesForNation(
     int careerId,
     int nationId,
@@ -152,6 +168,102 @@ class DriftCompetitionRepository implements CompetitionRepository {
         (t) => OrderingTerm(expression: t.matchday),
         (t) => OrderingTerm(expression: t.date),
       ]);
+    return (await query.get()).map((r) => r.toDomain()).toList();
+  }
+
+  @override
+  Future<
+    ({
+      Map<int, ({CompetitionKind kind, Confederation confederation})>
+      competitions,
+      List<Fixture> fixtures,
+    })
+  >
+  cycleFixtures(int careerId, int cycle) async {
+    final comps = await (_db.select(
+      _db.competitions,
+    )..where((t) => t.careerId.equals(careerId) & t.cycle.equals(cycle))).get();
+    if (comps.isEmpty) {
+      return (
+        competitions:
+            <int, ({CompetitionKind kind, Confederation confederation})>{},
+        fixtures: <Fixture>[],
+      );
+    }
+    final rows =
+        await (_db.select(_db.fixtures)..where(
+              (t) =>
+                  t.careerId.equals(careerId) &
+                  t.competitionId.isIn([for (final c in comps) c.id]),
+            ))
+            .get();
+    return (
+      competitions: {
+        for (final c in comps)
+          c.id: (kind: c.kind, confederation: c.confederation),
+      },
+      fixtures: [for (final r in rows) r.toDomain()],
+    );
+  }
+
+  @override
+  Future<int> capsUnder(
+    int careerId,
+    int playerId,
+    int nationId,
+    DateTime from,
+    DateTime to,
+  ) async {
+    // The ratings table holds a row per player per fixture of the whole
+    // world, so it is never scanned: CROSS JOIN keeps `fixtures` as the
+    // outer loop, and each matching fixture's rating row is then a
+    // primary-key probe (career, fixture, player). `fixtures` has no index
+    // but its rowid, so every call is one full scan of it (every career in
+    // the database). Affordable because a rollover makes only a handful of
+    // calls; an index would be a schema change.
+    final row = await _db
+        .customSelect(
+          'SELECT COUNT(*) AS n FROM fixtures f '
+          'CROSS JOIN player_ratings r '
+          'ON r.career_id = f.career_id AND r.fixture_id = f.id '
+          'AND r.player_id = ? '
+          'WHERE f.career_id = ? '
+          'AND (f.home_nation_id = ? OR f.away_nation_id = ?) '
+          'AND f.date >= ? AND f.date < ? AND r.nation_id = ?',
+          variables: [
+            Variable<int>(playerId),
+            Variable<int>(careerId),
+            Variable<int>(nationId),
+            Variable<int>(nationId),
+            Variable<DateTime>(from),
+            Variable<DateTime>(to),
+            Variable<int>(nationId),
+          ],
+          readsFrom: {_db.fixtures, _db.playerRatings},
+        )
+        .getSingle();
+    return row.read<int>('n');
+  }
+
+  @override
+  Future<List<Fixture>> fixturesForNationBetween(
+    int careerId,
+    int nationId,
+    DateTime from,
+    DateTime? until,
+  ) async {
+    final query = _db.select(_db.fixtures)
+      ..where(
+        (t) =>
+            t.careerId.equals(careerId) &
+            (t.homeNationId.equals(nationId) |
+                t.awayNationId.equals(nationId)) &
+            t.date.isBiggerOrEqualValue(from) &
+            (until == null
+                ? const Constant(true)
+                : t.date.isSmallerThanValue(until)),
+      )
+      ..orderBy([(t) => OrderingTerm(expression: t.date)]);
     return (await query.get()).map((r) => r.toDomain()).toList();
   }
 

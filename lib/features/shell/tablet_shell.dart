@@ -23,6 +23,7 @@ const Set<String> tabletReadyPaths = <String>{
   Routes.messages,
   Routes.tactics,
   Routes.ranking,
+  Routes.managers,
   Routes.nationVitrine,
   Routes.results,
   Routes.cup,

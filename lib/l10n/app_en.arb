@@ -18550,6 +18550,30 @@
   "@backupSafetyShare": {
     "description": "Settings Backups: shares one of those copies."
   },
+  "saveUpgradeFailedTitle": "Your save could not be updated",
+  "@saveUpgradeFailedTitle": {
+    "description": "Launch: heading shown instead of the app when the save could not be upgraded."
+  },
+  "saveUpgradeFailedBody": "Your save could not be updated. Nothing was deleted, and a copy from before the update is kept on this phone.",
+  "@saveUpgradeFailedBody": {
+    "description": "Launch: shown instead of the app when the save could not be upgraded and a copy from before the update exists."
+  },
+  "saveUpgradeRestoreButton": "Restore the copy from before the update",
+  "@saveUpgradeRestoreButton": {
+    "description": "Launch: button on that screen that puts the copy from before the update back."
+  },
+  "saveUpgradeRestoreFailed": "The copy could not be restored. Your save was left as it was.",
+  "@saveUpgradeRestoreFailed": {
+    "description": "Launch: shown on that screen when the copy from before the update could not be put back."
+  },
+  "saveOpenFailedTitle": "Your saves could not be opened",
+  "@saveOpenFailedTitle": {
+    "description": "Launch: heading shown instead of the app when the saves would not open and there is no copy from before an update."
+  },
+  "saveOpenFailedBody": "Your saves could not be opened. Nothing was deleted. Try again in a moment.",
+  "@saveOpenFailedBody": {
+    "description": "Launch: what to do when the saves would not open and there is no copy from before an update."
+  },
   "backupCloudNoDetails": "Details are still on their way.",
   "@backupCloudNoDetails": {
     "description": "Cloud restore list: a backup whose details have not downloaded yet."
@@ -18986,6 +19010,10 @@
   "hostBidRecentHost": "You hosted one of the last three editions.",
   "@hostBidRecentHost": {
     "description": "Hosting-bids card: the nation hosted one of the last three editions, so it may not bid."
+  },
+  "hostBidBelowBar": "Your grounds don't meet this tournament's stadium requirements.",
+  "@hostBidBelowBar": {
+    "description": "Hosting-bids card: under the stadium requirements, the nation's grounds fall short, so it may not bid."
   },
   "hostBidRulesPending": "Whether you can bid will be clear once this cycle's hosts are announced.",
   "@hostBidRulesPending": {
@@ -25124,6 +25152,443 @@
         "type": "int"
       }
     }
+  },
+  "mgrNewsSacked": "{nation} sack {name}",
+  "@mgrNewsSacked": {
+    "description": "Inbox news: a nation sacks its manager. {name} is the fictional manager.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrNewsResigned": "{nation}: {name} resigns",
+  "@mgrNewsResigned": {
+    "description": "Inbox news: a national team manager resigns.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrNewsPoached": "{nation}: {name} leaves for another national team",
+  "@mgrNewsPoached": {
+    "description": "Inbox news: another national team lures a manager away.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrNewsRetired": "{nation}: {name} retires from management",
+  "@mgrNewsRetired": {
+    "description": "Inbox news: a national team manager retires from management.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrNewsContractEnd": "{nation}: {name} leaves as his contract runs out",
+  "@mgrNewsContractEnd": {
+    "description": "Inbox news: a national team manager leaves when his contract runs out.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrNewsReplacedByPlayer": "{nation}: {name} makes way for you",
+  "@mgrNewsReplacedByPlayer": {
+    "description": "Inbox news: the manager of the nation the player has just taken over loses his job to the player.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrNewsAppointed": "{nation} appoint {name}",
+  "@mgrNewsAppointed": {
+    "description": "Inbox news title: a nation appoints a new manager.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrNewsAppointedBody": "{name} takes charge of {nation}.",
+  "@mgrNewsAppointedBody": {
+    "description": "Inbox news body: who takes charge of the nation now.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatOpposingManager": "You and {manager} have some history. Anything to say about him?",
+  "@pressBeatOpposingManager": {
+    "description": "Press conference: a question about the opposing manager, who has a history with the player (a rival, a grudge, a former assistant...). {manager} is his fictional name.",
+    "placeholders": {
+      "manager": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAnswerHitBackAtManager": "He should worry about his own team.",
+  "@pressAnswerHitBackAtManager": {
+    "description": "Press conference: the manager's answer, hitting back at the opposing manager."
+  },
+  "pressAnswerRespectManager": "I have a lot of respect for him.",
+  "@pressAnswerRespectManager": {
+    "description": "Press conference: the manager's answer, showing respect for the opposing manager."
+  },
+  "yMgrTie1": "{manager} in the other dugout next. History there with our boss, and I cannot wait.",
+  "@yMgrTie1": {
+    "description": "Y feed post before a match against a manager with a history with ours. Warm tone.",
+    "placeholders": {
+      "manager": {
+        "type": "String"
+      }
+    }
+  },
+  "yMgrTie2": "Next up, {manager} in the other dugout. He and our manager go back a while.",
+  "@yMgrTie2": {
+    "description": "Y feed post before a match against a manager with a history with ours. Neutral tone.",
+    "placeholders": {
+      "manager": {
+        "type": "String"
+      }
+    }
+  },
+  "yMgrTie3": "{manager} again. Our boss had better not turn this into a personal thing.",
+  "@yMgrTie3": {
+    "description": "Y feed post before a match against a manager with a history with ours. Sour tone.",
+    "placeholders": {
+      "manager": {
+        "type": "String"
+      }
+    }
+  },
+  "yMgrTie4": "Here we go. {manager} on the touchline, and our manager trying to win a feud instead of a match.",
+  "@yMgrTie4": {
+    "description": "Y feed post before a match against a manager with a history with ours. Sour tone.",
+    "placeholders": {
+      "manager": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrRowLabel": "Manager",
+  "@mgrRowLabel": {
+    "description": "Label of the nation page row naming the nation's national team manager."
+  },
+  "mgrRowDetail": "{age} years old, since {date}",
+  "@mgrRowDetail": {
+    "description": "Nation page manager row: his age and the date he took charge.",
+    "placeholders": {
+      "age": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrRecordWdl": "{won} W, {drawn} D, {lost} L",
+  "@mgrRecordWdl": {
+    "description": "A record in wins, draws and losses.",
+    "placeholders": {
+      "won": {
+        "type": "int"
+      },
+      "drawn": {
+        "type": "int"
+      },
+      "lost": {
+        "type": "int"
+      }
+    }
+  },
+  "mgrRowRecord": "In charge: {record}",
+  "@mgrRowRecord": {
+    "description": "Nation page manager row: the nation's record under him. {record} is already worded as wins, draws and losses.",
+    "placeholders": {
+      "record": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrTieNeutral": "No history",
+  "@mgrTieNeutral": {
+    "description": "Tie chip: the player has no history with this manager."
+  },
+  "mgrTieRespect": "Respect",
+  "@mgrTieRespect": {
+    "description": "Tie chip: mutual respect with a manager."
+  },
+  "mgrTieRival": "Rival",
+  "@mgrTieRival": {
+    "description": "Tie chip: a manager the player has knocked out or beaten repeatedly."
+  },
+  "mgrTieGrudge": "Grudge",
+  "@mgrTieGrudge": {
+    "description": "Tie chip: a manager who holds a grudge against the player."
+  },
+  "mgrTieSuccessor": "Successor",
+  "@mgrTieSuccessor": {
+    "description": "Tie chip: the manager who took over from the player."
+  },
+  "mgrTieProtege": "Protege",
+  "@mgrTieProtege": {
+    "description": "Tie chip: a former assistant of the player who now manages."
+  },
+  "mgrTieFormerPlayer": "Former player",
+  "@mgrTieFormerPlayer": {
+    "description": "Tie chip: a manager who once played under the player."
+  },
+  "mgrEndSacked": "Sacked",
+  "@mgrEndSacked": {
+    "description": "End of a spell: the manager was sacked."
+  },
+  "mgrEndResigned": "Resigned",
+  "@mgrEndResigned": {
+    "description": "End of a spell: the manager resigned."
+  },
+  "mgrEndPoached": "Left for another national team",
+  "@mgrEndPoached": {
+    "description": "End of a spell: the manager took another national team job."
+  },
+  "mgrEndRetired": "Retired from management",
+  "@mgrEndRetired": {
+    "description": "End of a spell: the manager retired."
+  },
+  "mgrEndContractEnd": "Contract ran out",
+  "@mgrEndContractEnd": {
+    "description": "End of a spell: the contract was not renewed."
+  },
+  "mgrEndReplacedByPlayer": "Replaced by you",
+  "@mgrEndReplacedByPlayer": {
+    "description": "End of a spell: the player took the job."
+  },
+  "mgrProfileSpells": "Career",
+  "@mgrProfileSpells": {
+    "description": "Manager profile heading: his spells in charge of nations."
+  },
+  "mgrProfileSpellNow": "{nation}, since {from}",
+  "@mgrProfileSpellNow": {
+    "description": "Manager profile: a spell that is still running.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrProfileSpellRange": "{nation}, {from} to {to}",
+  "@mgrProfileSpellRange": {
+    "description": "Manager profile: a finished spell with how it ended.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrProfileSpellEnded": "{range}, {reason}",
+  "@mgrProfileSpellEnded": {
+    "description": "Manager profile: a finished spell line, the dates then why it ended.",
+    "placeholders": {
+      "range": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrProfileRecordVsYou": "Record against you",
+  "@mgrProfileRecordVsYou": {
+    "description": "Manager profile heading: how your sides fared against his."
+  },
+  "mgrProfileNoMeetings": "You have not met",
+  "@mgrProfileNoMeetings": {
+    "description": "Manager profile: no meetings with the player yet."
+  },
+  "mgrProfileReputation": "Reputation",
+  "@mgrProfileReputation": {
+    "description": "Manager profile heading: his standing from 0 to 100."
+  },
+  "mgrProfileAge": "Age",
+  "@mgrProfileAge": {
+    "description": "Manager profile heading."
+  },
+  "mgrProfileAppointed": "Appointed",
+  "@mgrProfileAppointed": {
+    "description": "Manager profile heading: the date he took charge."
+  },
+  "mgrProfileStyle": "Style",
+  "@mgrProfileStyle": {
+    "description": "Manager profile heading: how his sides play."
+  },
+  "mgrProfileTie": "Between you",
+  "@mgrProfileTie": {
+    "description": "Manager profile heading: the tie with the player."
+  },
+  "mgrPreviewLine": "Their manager: {name}",
+  "@mgrPreviewLine": {
+    "description": "Match preview: the opposing national team manager.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrDossierStyle": "Manager's style: {style}",
+  "@mgrDossierStyle": {
+    "description": "Scouting dossier: how the opposing manager sets his side up.",
+    "placeholders": {
+      "style": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrDossierRecord": "Your record against him: {record}",
+  "@mgrDossierRecord": {
+    "description": "Scouting dossier: the player's record against the opposing manager. {record} is wins, draws and losses.",
+    "placeholders": {
+      "record": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrStylePossession": "Possession",
+  "@mgrStylePossession": {
+    "description": "Manager style."
+  },
+  "mgrStyleHighPress": "High press",
+  "@mgrStyleHighPress": {
+    "description": "Manager style."
+  },
+  "mgrStyleDefensive": "Defensive",
+  "@mgrStyleDefensive": {
+    "description": "Manager style."
+  },
+  "mgrStyleDirect": "Direct",
+  "@mgrStyleDirect": {
+    "description": "Manager style."
+  },
+  "mgrStyleCounter": "Counter-attack",
+  "@mgrStyleCounter": {
+    "description": "Manager style."
+  },
+  "mgrStyleFlair": "Flair",
+  "@mgrStyleFlair": {
+    "description": "Manager style."
+  },
+  "mgrStylePhysical": "Physical",
+  "@mgrStylePhysical": {
+    "description": "Manager style."
+  },
+  "mgrStyleBalanced": "Balanced",
+  "@mgrStyleBalanced": {
+    "description": "Manager style."
+  },
+  "mgrListTitle": "Managers",
+  "@mgrListTitle": {
+    "description": "Managers screen title."
+  },
+  "mgrListCurrent": "Current",
+  "@mgrListCurrent": {
+    "description": "Managers screen tab: who is in charge of each nation now."
+  },
+  "mgrListRecentMoves": "Recent moves",
+  "@mgrListRecentMoves": {
+    "description": "Managers screen tab: sackings, resignations and appointments of the last two years."
+  },
+  "mgrListFilterAll": "All",
+  "@mgrListFilterAll": {
+    "description": "Managers screen filter chip: every confederation."
+  },
+  "mgrListSortReputation": "Reputation",
+  "@mgrListSortReputation": {
+    "description": "Managers screen sort chip: highest reputation first."
+  },
+  "mgrListSortName": "Name",
+  "@mgrListSortName": {
+    "description": "Managers screen sort chip: alphabetical."
+  },
+  "mgrListEmptyMoves": "No changes in the last two years.",
+  "@mgrListEmptyMoves": {
+    "description": "Managers screen, Recent moves tab: nothing has happened."
+  },
+  "mgrListEmptyCurrent": "Managers appear after the next season rollover.",
+  "@mgrListEmptyCurrent": {
+    "description": "Managers screen, Current tab: this season has no world managers yet."
+  },
+  "editorSectionManagers": "Managers",
+  "@editorSectionManagers": {
+    "description": "Database section: the national team managers in charge on day one."
+  },
+  "editorAboutManagers": "Who is in charge of each nation on day one",
+  "@editorAboutManagers": {
+    "description": "One-line description of the Managers section."
+  },
+  "editorManagersHint": "Chosen when a career starts",
+  "@editorManagersHint": {
+    "description": "Managers section: shown for a nation whose day-one manager the database leaves to the game (he depends on the career's seed)."
+  },
+  "editorManagerName": "Manager name",
+  "@editorManagerName": {
+    "description": "Managers section: label of the manager's name field."
+  },
+  "editorManagerNationality": "Nationality",
+  "@editorManagerNationality": {
+    "description": "Managers section: label of the manager's nationality picker."
+  },
+  "editorIssueManagerName": "The manager needs a name of 1 to {max} characters the game can show",
+  "@editorIssueManagerName": {
+    "description": "A day-one manager's name is empty, too long or has characters the game cannot show.",
+    "placeholders": {
+      "max": {
+        "type": "int",
+        "example": "40"
+      }
+    }
+  },
+  "editorIssueManagerNationality": "Pick a nationality for the manager from the list",
+  "@editorIssueManagerNationality": {
+    "description": "A day-one manager's nationality is not one of the game's nations."
   },
   "shareButton": "Share",
   "@shareButton": {

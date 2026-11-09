@@ -1,6 +1,7 @@
 import 'package:fnm/domain/services/press/expectation.dart';
 import 'package:fnm/domain/services/press/press.dart' show PressEffect;
 import 'package:fnm/domain/services/press/statement.dart';
+import 'package:fnm/domain/services/world_managers/manager_relation.dart';
 
 /// Why the season called a press conference.
 ///
@@ -90,6 +91,11 @@ enum BeatKind {
 
   /// A preview's question about his best player.
   keyPlayer,
+
+  /// The opposing manager, who has a history with him (see
+  /// [ConferenceBuilder.opposingManagerBeat]). Last, as the enums here are
+  /// stored by name and only ever grow at the end.
+  opposingManager,
 }
 
 enum AnswerKind {
@@ -113,6 +119,11 @@ enum AnswerKind {
   fearNobody,
   respectRival,
   teamFirst,
+
+  /// Answers about an opposing manager with a history: each writes a tie
+  /// (see `ConferenceService.answer`).
+  hitBackAtManager,
+  respectManager,
 }
 
 typedef ConferenceFacts = ({
@@ -126,6 +137,12 @@ typedef ConferenceFacts = ({
 
   /// Set for a [ConferenceReason.preview] only.
   PreviewFacts? preview,
+
+  /// The manager of the match's opponent, when he has a tie with the player
+  /// that is not neutral; null otherwise, and always null in a cycle not run
+  /// by world managers. Filled when the conference is opened (see
+  /// `PressDesk.withOpposingManager`), never on the hub's own reads.
+  ({int managerId, String name, TieLabel label})? opposingManager,
 });
 
 typedef Beat = ({
@@ -222,7 +239,28 @@ abstract final class ConferenceBuilder {
     AnswerKind.fearNobody: (morale: 3, board: 0),
     AnswerKind.respectRival: (morale: 1, board: 1),
     AnswerKind.teamFirst: (morale: 2, board: 0),
+    AnswerKind.hitBackAtManager: (morale: 2, board: -1),
+    AnswerKind.respectManager: (morale: 0, board: 1),
   };
+
+  /// What answering [AnswerKind.hitBackAtManager] and
+  /// [AnswerKind.respectManager] does to the tie (spec section 3).
+  static const int hitBackTieDelta = -15;
+  static const int respectTieDelta = 10;
+
+  /// The question about the opposing manager, or null when there is none to
+  /// ask: no manager, or one he has no tie with. The desk puts it last in
+  /// the conference, once.
+  static Beat? opposingManagerBeat(ConferenceFacts f) {
+    final m = f.opposingManager;
+    if (m == null || m.label == TieLabel.neutral) return null;
+    if (m.name.trim().isEmpty) return null;
+    return (
+      kind: BeatKind.opposingManager,
+      answers: const [AnswerKind.hitBackAtManager, AnswerKind.respectManager],
+      playerId: null,
+    );
+  }
 
   static PressEffect effectOf(AnswerKind a, int credibility) {
     final b = _base[a]!;
@@ -384,6 +422,10 @@ abstract final class ConferenceBuilder {
               rivalNationId: p.rivalNationId,
               keyPlayerId: keep(p.keyPlayerId),
             ),
+      // A manager whose name cannot be read is never asked about.
+      opposingManager: (f.opposingManager?.name.trim().isNotEmpty ?? false)
+          ? f.opposingManager
+          : null,
     );
   }
 
@@ -415,7 +457,10 @@ abstract final class ConferenceBuilder {
     AnswerKind.promiseQualify ||
     AnswerKind.fearNobody ||
     AnswerKind.respectRival ||
-    AnswerKind.teamFirst => _otherAnswerReaction(f),
+    AnswerKind.teamFirst ||
+    // The opposing manager's beat comes last; nothing reacts to it.
+    AnswerKind.hitBackAtManager ||
+    AnswerKind.respectManager => _otherAnswerReaction(f),
   };
 
   static Beat _demandMoreReaction(ConferenceFacts f) {

@@ -59,6 +59,7 @@ import 'package:fnm/features/nations/nation_select_screen.dart';
 import 'package:fnm/features/nations/nation_vitrine_screen.dart';
 import 'package:fnm/features/player/player_detail_screen.dart';
 import 'package:fnm/features/ranking/world_ranking_screen.dart';
+import 'package:fnm/features/world_managers/managers_screen.dart';
 import 'package:fnm/features/records/all_time_records_screen.dart';
 import 'package:fnm/features/records/h2h_meetings_screen.dart';
 import 'package:fnm/features/records/head_to_head_screen.dart';
@@ -135,6 +136,9 @@ abstract final class Routes {
 
   /// World ranking. Expects `?careerId=`.
   static const ranking = '/ranking';
+
+  /// World managers (current and recent moves). Expects `?careerId=`.
+  static const managers = '/managers';
 
   /// World Cup finals draw ceremony. Expects `?careerId=`.
   static const finalsDraw = '/finals-draw';
@@ -290,7 +294,8 @@ abstract final class Routes {
   static const editorPack = '/editor/pack';
 
   /// A database's sections (see `EditorSection`). Each expects `?id=` (the
-  /// pack); the per-nation ones ([editorPlayers], [editorNameLists]) take
+  /// pack); the per-nation ones ([editorPlayers], [editorNameLists],
+  /// [editorManagers]) take
   /// `&nation=` to open on one nation.
   static const editorPlayers = '/editor/pack/players';
   static const editorClubs = '/editor/pack/clubs';
@@ -299,6 +304,7 @@ abstract final class Routes {
   static const editorY = '/editor/pack/y';
   static const editorPress = '/editor/pack/press';
   static const editorNameLists = '/editor/pack/name-lists';
+  static const editorManagers = '/editor/pack/managers';
   static const editorSponsors = '/editor/pack/sponsors';
   static const editorTrophies = '/editor/pack/trophies';
 
@@ -319,6 +325,7 @@ abstract final class Routes {
     editorY,
     editorPress,
     editorNameLists,
+    editorManagers,
     editorSponsors,
     editorTrophies,
   };
@@ -1045,6 +1052,17 @@ final routerProvider = Provider<GoRouter>((ref) {
             ) ??
             0;
         return WorldRankingScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.managers,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return ManagersScreen(careerId: id);
       },
     ),
     GoRoute(

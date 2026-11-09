@@ -11805,6 +11805,27 @@ class AppLocalizationsTh extends AppLocalizations {
   String get backupSafetyShare => 'แชร์';
 
   @override
+  String get saveUpgradeFailedTitle => 'ไม่สามารถอัปเดตเซฟของคุณได้';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'ไม่สามารถอัปเดตเซฟของคุณได้ ไม่มีสิ่งใดถูกลบ และมีสำเนาจากก่อนการอัปเดตเก็บไว้ในโทรศัพท์เครื่องนี้';
+
+  @override
+  String get saveUpgradeRestoreButton => 'กู้คืนสำเนาจากก่อนการอัปเดต';
+
+  @override
+  String get saveUpgradeRestoreFailed =>
+      'ไม่สามารถกู้คืนสำเนาได้ เซฟของคุณยังคงเหมือนเดิม';
+
+  @override
+  String get saveOpenFailedTitle => 'ไม่สามารถเปิดเซฟของคุณได้';
+
+  @override
+  String get saveOpenFailedBody =>
+      'ไม่สามารถเปิดเซฟของคุณได้ ไม่มีสิ่งใดถูกลบ ลองอีกครั้งในอีกสักครู่';
+
+  @override
   String get backupCloudNoDetails => 'รายละเอียดกำลังตามมา';
 
   @override
@@ -12083,6 +12104,10 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get hostBidRecentHost => 'คุณเป็นเจ้าภาพหนึ่งในสามครั้งล่าสุด';
+
+  @override
+  String get hostBidBelowBar =>
+      'สนามของคุณยังไม่ตรงตามเงื่อนไขของทัวร์นาเมนต์นี้';
 
   @override
   String get hostBidRulesPending =>
@@ -15954,6 +15979,261 @@ class AppLocalizationsTh extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'นักเตะที่เก่งกว่าจะย้ายไปสโมสรที่แข็งแกร่งกว่า ค่าเริ่มต้น: $stars จาก 5 ตามลีกของสโมสร';
   }
+
+  @override
+  String mgrNewsSacked(String nation, String name) {
+    return '$nation ปลด $name';
+  }
+
+  @override
+  String mgrNewsResigned(String nation, String name) {
+    return '$nation: $name ลาออก';
+  }
+
+  @override
+  String mgrNewsPoached(String nation, String name) {
+    return '$nation: $name ย้ายไปคุมทีมชาติอื่น';
+  }
+
+  @override
+  String mgrNewsRetired(String nation, String name) {
+    return '$nation: $name ประกาศเลิกคุมทีม';
+  }
+
+  @override
+  String mgrNewsContractEnd(String nation, String name) {
+    return '$nation: $name ออกเมื่อสัญญาหมดลง';
+  }
+
+  @override
+  String mgrNewsReplacedByPlayer(String nation, String name) {
+    return '$nation: $name หลีกทางให้คุณ';
+  }
+
+  @override
+  String mgrNewsAppointed(String nation, String name) {
+    return '$nation แต่งตั้ง $name';
+  }
+
+  @override
+  String mgrNewsAppointedBody(String nation, String name) {
+    return '$name เข้ารับตำแหน่งคุม $nation';
+  }
+
+  @override
+  String pressBeatOpposingManager(String manager) {
+    return 'คุณกับ $manager มีเรื่องราวต่อกัน มีอะไรจะพูดถึงเขาไหม';
+  }
+
+  @override
+  String get pressAnswerHitBackAtManager => 'เขาควรห่วงทีมของตัวเองมากกว่า';
+
+  @override
+  String get pressAnswerRespectManager => 'ผมเคารพเขามาก';
+
+  @override
+  String yMgrTie1(String manager) {
+    return 'ม้านั่งอีกฝั่งคือ $manager เขากับโค้ชเรามีเรื่องราวกัน รอไม่ไหวแล้ว';
+  }
+
+  @override
+  String yMgrTie2(String manager) {
+    return 'ต่อไปม้านั่งอีกฝั่งคือ $manager เขากับผู้จัดการทีมเรารู้จักกันมานานแล้ว';
+  }
+
+  @override
+  String yMgrTie3(String manager) {
+    return '$manager อีกแล้ว หวังว่าโค้ชเราจะไม่เอาเรื่องนี้มาเป็นเรื่องส่วนตัว';
+  }
+
+  @override
+  String yMgrTie4(String manager) {
+    return 'เอาอีกแล้ว $manager ยืนข้างสนาม ส่วนโค้ชเรากำลังพยายามชนะความแค้นแทนที่จะชนะแมตช์';
+  }
+
+  @override
+  String get mgrRowLabel => 'ผู้จัดการทีม';
+
+  @override
+  String mgrRowDetail(int age, String date) {
+    return 'อายุ $age ปี ตั้งแต่ $date';
+  }
+
+  @override
+  String mgrRecordWdl(int won, int drawn, int lost) {
+    return 'ชนะ $won เสมอ $drawn แพ้ $lost';
+  }
+
+  @override
+  String mgrRowRecord(String record) {
+    return 'ภายใต้การคุม: $record';
+  }
+
+  @override
+  String get mgrTieNeutral => 'ไม่มีประวัติ';
+
+  @override
+  String get mgrTieRespect => 'นับถือ';
+
+  @override
+  String get mgrTieRival => 'คู่ปรับ';
+
+  @override
+  String get mgrTieGrudge => 'ผูกใจเจ็บ';
+
+  @override
+  String get mgrTieSuccessor => 'ผู้สืบทอด';
+
+  @override
+  String get mgrTieProtege => 'ลูกศิษย์';
+
+  @override
+  String get mgrTieFormerPlayer => 'อดีตนักเตะ';
+
+  @override
+  String get mgrEndSacked => 'ถูกปลด';
+
+  @override
+  String get mgrEndResigned => 'ลาออก';
+
+  @override
+  String get mgrEndPoached => 'ย้ายไปทีมชาติอื่น';
+
+  @override
+  String get mgrEndRetired => 'เลิกเป็นโค้ช';
+
+  @override
+  String get mgrEndContractEnd => 'หมดสัญญา';
+
+  @override
+  String get mgrEndReplacedByPlayer => 'คุณมาแทนที่';
+
+  @override
+  String get mgrProfileSpells => 'เส้นทางอาชีพ';
+
+  @override
+  String mgrProfileSpellNow(String nation, String from) {
+    return '$nation ตั้งแต่ $from';
+  }
+
+  @override
+  String mgrProfileSpellRange(String nation, String from, String to) {
+    return '$nation $from ถึง $to';
+  }
+
+  @override
+  String mgrProfileSpellEnded(String range, String reason) {
+    return '$range ($reason)';
+  }
+
+  @override
+  String get mgrProfileRecordVsYou => 'สถิติเจอคุณ';
+
+  @override
+  String get mgrProfileNoMeetings => 'ยังไม่เคยเจอกัน';
+
+  @override
+  String get mgrProfileReputation => 'ชื่อเสียง';
+
+  @override
+  String get mgrProfileAge => 'อายุ';
+
+  @override
+  String get mgrProfileAppointed => 'แต่งตั้ง';
+
+  @override
+  String get mgrProfileStyle => 'สไตล์';
+
+  @override
+  String get mgrProfileTie => 'ระหว่างคุณสองคน';
+
+  @override
+  String mgrPreviewLine(String name) {
+    return 'ผู้จัดการทีมคู่แข่ง: $name';
+  }
+
+  @override
+  String mgrDossierStyle(String style) {
+    return 'สไตล์ผู้จัดการทีม: $style';
+  }
+
+  @override
+  String mgrDossierRecord(String record) {
+    return 'สถิติของคุณเมื่อเจอเขา: $record';
+  }
+
+  @override
+  String get mgrStylePossession => 'ครองบอล';
+
+  @override
+  String get mgrStyleHighPress => 'เพรสซิ่งสูง';
+
+  @override
+  String get mgrStyleDefensive => 'เน้นรับ';
+
+  @override
+  String get mgrStyleDirect => 'ไดเร็กต์';
+
+  @override
+  String get mgrStyleCounter => 'เกมสวนกลับ';
+
+  @override
+  String get mgrStyleFlair => 'เน้นฝีมือ';
+
+  @override
+  String get mgrStylePhysical => 'เน้นร่างกาย';
+
+  @override
+  String get mgrStyleBalanced => 'สมดุล';
+
+  @override
+  String get mgrListTitle => 'ผู้จัดการทีม';
+
+  @override
+  String get mgrListCurrent => 'ปัจจุบัน';
+
+  @override
+  String get mgrListRecentMoves => 'ความเคลื่อนไหวล่าสุด';
+
+  @override
+  String get mgrListFilterAll => 'ทั้งหมด';
+
+  @override
+  String get mgrListSortReputation => 'ชื่อเสียง';
+
+  @override
+  String get mgrListSortName => 'ชื่อ';
+
+  @override
+  String get mgrListEmptyMoves => 'ไม่มีการเปลี่ยนแปลงในสองปีที่ผ่านมา';
+
+  @override
+  String get mgrListEmptyCurrent =>
+      'ผู้จัดการทีมจะปรากฏหลังเปลี่ยนซีซันครั้งหน้า';
+
+  @override
+  String get editorSectionManagers => 'ผู้จัดการทีม';
+
+  @override
+  String get editorAboutManagers => 'ใครคุมทีมชาติแต่ละทีมในวันแรก';
+
+  @override
+  String get editorManagersHint => 'เลือกเมื่อเริ่มอาชีพ';
+
+  @override
+  String get editorManagerName => 'ชื่อผู้จัดการทีม';
+
+  @override
+  String get editorManagerNationality => 'สัญชาติ';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'ชื่อผู้จัดการทีมต้องมี 1 ถึง $max ตัวอักษรที่เกมแสดงได้';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'เลือกสัญชาติของผู้จัดการทีมจากรายการ';
 
   @override
   String get shareButton => 'แชร์';

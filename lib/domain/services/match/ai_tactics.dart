@@ -56,16 +56,17 @@ abstract final class AiTactics {
       : _underdog;
 
   /// Every posture [forOpponent] could pick for this strength gap and
-  /// [style], with the style's shift applied and no jitter: what such a side
-  /// TYPICALLY does against such an opponent, not what it does in any one
-  /// fixture. The scout's report falls back to it when a side has no recent
-  /// matches to read.
+  /// [style] (blended with [managerStyle], as there), with the style's shift
+  /// applied and no jitter: what such a side TYPICALLY does against such an
+  /// opponent, not what it does in any one fixture. The scout's report falls
+  /// back to it when a side has no recent matches to read.
   static List<AiSetup> typicalSetups({
     required double opponentStrength,
     required double playerStrength,
     NationStyle style = NationStyle.balanced,
+    NationStyle? managerStyle,
   }) {
-    final (dm, dp, dt, dw, dl, dd) = _styleShift(style);
+    final (dm, dp, dt, dw, dl, dd) = _shift(style, managerStyle);
     int shift(int v, int d) => (v + d).clamp(8, 92);
     return [
       for (final a in _bandFor(opponentStrength - playerStrength))
@@ -83,11 +84,18 @@ abstract final class AiTactics {
     ];
   }
 
+  /// The side's setup for one fixture, from [seed]. [style] is the nation's
+  /// own; [managerStyle] is the style of the world manager in charge of it
+  /// on the fixture's day, null when none is read (a cycle from before world
+  /// managers). A manager moves the six instruction shifts only, each to the
+  /// rounded mean of his and the nation's ([_shift]); the posture pick and
+  /// every jitter draw are the same with or without him.
   static AiSetup forOpponent({
     required double opponentStrength,
     required double playerStrength,
     required int seed,
     NationStyle style = NationStyle.balanced,
+    NationStyle? managerStyle,
   }) {
     final band = _bandFor(opponentStrength - playerStrength);
 
@@ -101,7 +109,7 @@ abstract final class AiTactics {
     // The strength band sets the base posture; the national style then stamps
     // its signature on top (Italy sit deeper, the Dutch press higher), and a
     // small per-field jitter keeps two same-band teams from being identical.
-    final (dm, dp, dt, dw, dl, dd) = _styleShift(style);
+    final (dm, dp, dt, dw, dl, dd) = _shift(style, managerStyle);
     int nudge(int v, int spread, int styleDelta) =>
         (v + styleDelta + rnd(spread * 2 + 1) - spread).clamp(8, 92);
     final base = pick.instructions;
@@ -130,6 +138,28 @@ abstract final class AiTactics {
     NationStyle.flair => 0.5,
     NationStyle.defensive || NationStyle.highPress => 0.4,
   };
+
+  /// The shifts a side of [nation] plays to under a manager of [manager]:
+  /// each the rounded mean of the two styles' own, so a manager bends the
+  /// side's identity without replacing it. The nation's alone when there is
+  /// no manager (or he shares its style).
+  static (int, int, int, int, int, int) _shift(
+    NationStyle nation,
+    NationStyle? manager,
+  ) {
+    if (manager == null || manager == nation) return _styleShift(nation);
+    final (nm, np, nt, nw, nl, nd) = _styleShift(nation);
+    final (mm, mp, mt, mw, ml, md) = _styleShift(manager);
+    int mean(int a, int b) => ((a + b) / 2).round();
+    return (
+      mean(nm, mm),
+      mean(np, mp),
+      mean(nt, mt),
+      mean(nw, mw),
+      mean(nl, ml),
+      mean(nd, md),
+    );
+  }
 
   /// Per-style instruction shifts (mentality, pressing, tempo, width,
   /// defensiveLine, directness) layered on top of the strength-chosen posture.

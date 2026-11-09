@@ -11821,6 +11821,956 @@ final class Schema54 extends i0.VersionedSchema {
   );
 }
 
+final class Schema55 extends i0.VersionedSchema {
+  Schema55({required super.database}) : super(version: 55);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [
+    nations,
+    players,
+    careers,
+    competitions,
+    qualifyingGroups,
+    groupMembers,
+    fixtures,
+    tactics,
+    lineupSlots,
+    callUps,
+    callUpDrafts,
+    trainingCampChoices,
+    goalEvents,
+    matchIncidents,
+    honours,
+    drawsWatched,
+    playerAbsences,
+    rankPoints,
+    seedRankings,
+    rankingReleases,
+    achievements,
+    appearances,
+    tournamentAppearances,
+    messages,
+    careerStints,
+    playerRatings,
+    federationInvestments,
+    matchTeamStats,
+    nationsCupTiers,
+    naturalizedPlayers,
+    tacticFamiliarities,
+    pressAnswers,
+    pressStatements,
+    pressConferences,
+    playerHonours,
+    tacticLibrary,
+    worldPacks,
+    worldPackTrophies,
+    careerWorlds,
+    careerWorldTrophies,
+    worldManagers,
+    managerSpells,
+    managerTies,
+    managerSpellsNation,
+  ];
+  late final Shape0 nations = Shape0(
+    source: i0.VersionedTable(
+      entityName: 'nations',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_2,
+        _column_3,
+        _column_4,
+        _column_5,
+        _column_6,
+        _column_7,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape1 players = Shape1(
+    source: i0.VersionedTable(
+      entityName: 'players',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_8,
+        _column_1,
+        _column_9,
+        _column_10,
+        _column_11,
+        _column_12,
+        _column_13,
+        _column_14,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape44 careers = Shape44(
+    source: i0.VersionedTable(
+      entityName: 'careers',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [
+        _column_15,
+        _column_16,
+        _column_17,
+        _column_18,
+        _column_19,
+        _column_20,
+        _column_21,
+        _column_22,
+        _column_23,
+        _column_24,
+        _column_122,
+        _column_123,
+        _column_124,
+        _column_125,
+        _column_126,
+        _column_127,
+        _column_128,
+        _column_129,
+        _column_130,
+        _column_132,
+        _column_133,
+        _column_134,
+        _column_136,
+        _column_152,
+        _column_153,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape3 competitions = Shape3(
+    source: i0.VersionedTable(
+      entityName: 'competitions',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [
+        _column_15,
+        _column_25,
+        _column_3,
+        _column_1,
+        _column_26,
+        _column_27,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape4 qualifyingGroups = Shape4(
+    source: i0.VersionedTable(
+      entityName: 'qualifying_groups',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [_column_15, _column_28, _column_1],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape5 groupMembers = Shape5(
+    source: i0.VersionedTable(
+      entityName: 'group_members',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(group_id, nation_id)'],
+      columns: [_column_29, _column_30],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape6 fixtures = Shape6(
+    source: i0.VersionedTable(
+      entityName: 'fixtures',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [
+        _column_15,
+        _column_25,
+        _column_31,
+        _column_32,
+        _column_33,
+        _column_34,
+        _column_35,
+        _column_36,
+        _column_37,
+        _column_38,
+        _column_39,
+        _column_40,
+        _column_41,
+        _column_42,
+        _column_43,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape7 tactics = Shape7(
+    source: i0.VersionedTable(
+      entityName: 'tactics',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id)'],
+      columns: [
+        _column_25,
+        _column_44,
+        _column_45,
+        _column_46,
+        _column_47,
+        _column_48,
+        _column_49,
+        _column_50,
+        _column_51,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape8 lineupSlots = Shape8(
+    source: i0.VersionedTable(
+      entityName: 'lineup_slots',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id, slot)'],
+      columns: [_column_25, _column_52, _column_53],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape9 callUps = Shape9(
+    source: i0.VersionedTable(
+      entityName: 'call_ups',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id, player_id)'],
+      columns: [_column_25, _column_54],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape10 callUpDrafts = Shape10(
+    source: i0.VersionedTable(
+      entityName: 'call_up_drafts',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id, draft_key, player_id)'],
+      columns: [_column_25, _column_55, _column_54],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape11 trainingCampChoices = Shape11(
+    source: i0.VersionedTable(
+      entityName: 'training_camp_choices',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id, cycle, tournament)'],
+      columns: [_column_25, _column_56, _column_57, _column_58, _column_59],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape12 goalEvents = Shape12(
+    source: i0.VersionedTable(
+      entityName: 'goal_events',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [
+        _column_15,
+        _column_25,
+        _column_31,
+        _column_60,
+        _column_30,
+        _column_54,
+        _column_61,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape38 matchIncidents = Shape38(
+    source: i0.VersionedTable(
+      entityName: 'match_incidents',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [
+        _column_15,
+        _column_25,
+        _column_60,
+        _column_30,
+        _column_54,
+        _column_61,
+        _column_138,
+        _column_139,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape37 honours = Shape37(
+    source: i0.VersionedTable(
+      entityName: 'honours',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [
+        _column_15,
+        _column_25,
+        _column_62,
+        _column_63,
+        _column_64,
+        _column_65,
+        _column_66,
+        _column_67,
+        _column_68,
+        _column_137,
+        _column_69,
+        _column_70,
+        _column_71,
+        _column_72,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape14 drawsWatched = Shape14(
+    source: i0.VersionedTable(
+      entityName: 'draws_watched',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id, cycle, kind)'],
+      columns: [_column_25, _column_56, _column_73],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape15 playerAbsences = Shape15(
+    source: i0.VersionedTable(
+      entityName: 'player_absences',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id, player_id)'],
+      columns: [_column_25, _column_54, _column_74, _column_75, _column_76],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape16 rankPoints = Shape16(
+    source: i0.VersionedTable(
+      entityName: 'rank_points',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id, nation_id)'],
+      columns: [_column_25, _column_30, _column_77],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape17 seedRankings = Shape17(
+    source: i0.VersionedTable(
+      entityName: 'seed_rankings',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id, cycle, nation_id)'],
+      columns: [_column_25, _column_56, _column_30, _column_78],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape18 rankingReleases = Shape18(
+    source: i0.VersionedTable(
+      entityName: 'ranking_releases',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id, published_on)'],
+      columns: [
+        _column_25,
+        _column_79,
+        _column_27,
+        _column_80,
+        _column_81,
+        _column_82,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape19 achievements = Shape19(
+    source: i0.VersionedTable(
+      entityName: 'achievements',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id, achievement_id)'],
+      columns: [_column_25, _column_83, _column_84],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape20 appearances = Shape20(
+    source: i0.VersionedTable(
+      entityName: 'appearances',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id, player_id)'],
+      columns: [_column_25, _column_30, _column_54, _column_85],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape21 tournamentAppearances = Shape21(
+    source: i0.VersionedTable(
+      entityName: 'tournament_appearances',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id, competition_id, player_id)'],
+      columns: [
+        _column_25,
+        _column_86,
+        _column_30,
+        _column_54,
+        _column_87,
+        _column_88,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape39 messages = Shape39(
+    source: i0.VersionedTable(
+      entityName: 'messages',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['UNIQUE(career_id, dedup_key)'],
+      columns: [
+        _column_15,
+        _column_25,
+        _column_89,
+        _column_90,
+        _column_91,
+        _column_92,
+        _column_140,
+        _column_62,
+        _column_93,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape23 careerStints = Shape23(
+    source: i0.VersionedTable(
+      entityName: 'career_stints',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id, cycle)'],
+      columns: [_column_25, _column_56, _column_30],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape24 playerRatings = Shape24(
+    source: i0.VersionedTable(
+      entityName: 'player_ratings',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id, fixture_id, player_id)'],
+      columns: [
+        _column_25,
+        _column_60,
+        _column_54,
+        _column_80,
+        _column_94,
+        _column_95,
+        _column_96,
+        _column_97,
+        _column_98,
+        _column_74,
+        _column_99,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape25 federationInvestments = Shape25(
+    source: i0.VersionedTable(
+      entityName: 'federation_investments',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id, cycle)'],
+      columns: [
+        _column_25,
+        _column_56,
+        _column_100,
+        _column_101,
+        _column_102,
+        _column_103,
+        _column_104,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape26 matchTeamStats = Shape26(
+    source: i0.VersionedTable(
+      entityName: 'match_team_stats',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id, fixture_id)'],
+      columns: [
+        _column_25,
+        _column_60,
+        _column_105,
+        _column_106,
+        _column_107,
+        _column_108,
+        _column_109,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape27 nationsCupTiers = Shape27(
+    source: i0.VersionedTable(
+      entityName: 'nations_cup_tiers',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id, nation_id)'],
+      columns: [_column_25, _column_30, _column_110],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape28 naturalizedPlayers = Shape28(
+    source: i0.VersionedTable(
+      entityName: 'naturalized_players',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id, player_id)'],
+      columns: [_column_25, _column_54, _column_111, _column_56, _column_112],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape29 tacticFamiliarities = Shape29(
+    source: i0.VersionedTable(
+      entityName: 'tactic_familiarities',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id, formation)'],
+      columns: [_column_25, _column_44, _column_113, _column_114, _column_115],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape30 pressAnswers = Shape30(
+    source: i0.VersionedTable(
+      entityName: 'press_answers',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [
+        _column_15,
+        _column_25,
+        _column_56,
+        _column_116,
+        _column_117,
+        _column_118,
+        _column_119,
+        _column_120,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape42 pressStatements = Shape42(
+    source: i0.VersionedTable(
+      entityName: 'press_statements',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [
+        _column_15,
+        _column_25,
+        _column_56,
+        _column_30,
+        _column_73,
+        _column_53,
+        _column_141,
+        _column_142,
+        _column_143,
+        _column_144,
+        _column_145,
+        _column_149,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape41 pressConferences = Shape41(
+    source: i0.VersionedTable(
+      entityName: 'press_conferences',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [
+        _column_15,
+        _column_25,
+        _column_56,
+        _column_146,
+        _column_147,
+        _column_148,
+        _column_112,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape31 playerHonours = Shape31(
+    source: i0.VersionedTable(
+      entityName: 'player_honours',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(career_id, kind, competition, year, player_id)',
+      ],
+      columns: [
+        _column_25,
+        _column_54,
+        _column_30,
+        _column_73,
+        _column_121,
+        _column_62,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape43 tacticLibrary = Shape43(
+    source: i0.VersionedTable(
+      entityName: 'tactic_library',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [_column_15, _column_1, _column_150, _column_151],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape45 worldPacks = Shape45(
+    source: i0.VersionedTable(
+      entityName: 'world_packs',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [_column_15, _column_154, _column_1, _column_155, _column_151],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape46 worldPackTrophies = Shape46(
+    source: i0.VersionedTable(
+      entityName: 'world_pack_trophies',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(pack_id, "key")'],
+      columns: [_column_156, _column_157, _column_158],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape47 careerWorlds = Shape47(
+    source: i0.VersionedTable(
+      entityName: 'career_worlds',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id)'],
+      columns: [_column_25, _column_159, _column_155],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape48 careerWorldTrophies = Shape48(
+    source: i0.VersionedTable(
+      entityName: 'career_world_trophies',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id, "key")'],
+      columns: [_column_25, _column_157, _column_158],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape49 worldManagers = Shape49(
+    source: i0.VersionedTable(
+      entityName: 'world_managers',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id, manager_id)'],
+      columns: [
+        _column_25,
+        _column_160,
+        _column_1,
+        _column_161,
+        _column_162,
+        _column_163,
+        _column_164,
+        _column_165,
+        _column_166,
+        _column_167,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape50 managerSpells = Shape50(
+    source: i0.VersionedTable(
+      entityName: 'manager_spells',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id, spell_no)'],
+      columns: [
+        _column_25,
+        _column_168,
+        _column_160,
+        _column_30,
+        _column_169,
+        _column_170,
+        _column_171,
+        _column_172,
+        _column_173,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape51 managerTies = Shape51(
+    source: i0.VersionedTable(
+      entityName: 'manager_ties',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(career_id, tie_no)'],
+      columns: [
+        _column_25,
+        _column_174,
+        _column_160,
+        _column_73,
+        _column_175,
+        _column_34,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index managerSpellsNation = i1.Index(
+    'manager_spells_nation',
+    'CREATE INDEX manager_spells_nation ON manager_spells (career_id, nation_id)',
+  );
+}
+
+class Shape49 extends i0.VersionedTable {
+  Shape49({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get careerId =>
+      columnsByName['career_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get managerId =>
+      columnsByName['manager_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get name =>
+      columnsByName['name']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get nationality =>
+      columnsByName['nationality']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get birthYear =>
+      columnsByName['birth_year']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get style =>
+      columnsByName['style']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get origin =>
+      columnsByName['origin']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get enteredAt =>
+      columnsByName['entered_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get retiredAt =>
+      columnsByName['retired_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get sourceId =>
+      columnsByName['source_id']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<int> _column_160(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'manager_id',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<String> _column_161(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'nationality',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_162(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'birth_year',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<String> _column_163(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'style',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<String> _column_164(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'origin',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_165(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'entered_at',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_166(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'retired_at',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NULL',
+    );
+i1.GeneratedColumn<int> _column_167(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'source_id',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NULL',
+    );
+
+class Shape50 extends i0.VersionedTable {
+  Shape50({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get careerId =>
+      columnsByName['career_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get spellNo =>
+      columnsByName['spell_no']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get managerId =>
+      columnsByName['manager_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get nationId =>
+      columnsByName['nation_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get fromDate =>
+      columnsByName['from_date']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get toDate =>
+      columnsByName['to_date']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get endReason =>
+      columnsByName['end_reason']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get contractUntil =>
+      columnsByName['contract_until']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get briefNet =>
+      columnsByName['brief_net']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<int> _column_168(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'spell_no',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_169(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'from_date',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_170(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'to_date',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NULL',
+    );
+i1.GeneratedColumn<String> _column_171(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'end_reason',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NULL',
+    );
+i1.GeneratedColumn<int> _column_172(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'contract_until',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_173(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'brief_net',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL DEFAULT 0',
+      defaultValue: const i1.CustomExpression('0'),
+    );
+
+class Shape51 extends i0.VersionedTable {
+  Shape51({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get careerId =>
+      columnsByName['career_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get tieNo =>
+      columnsByName['tie_no']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get managerId =>
+      columnsByName['manager_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get kind =>
+      columnsByName['kind']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get delta =>
+      columnsByName['delta']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get date =>
+      columnsByName['date']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<int> _column_174(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'tie_no',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_175(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'delta',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL',
+    );
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema39 schema) from38To39,
   required Future<void> Function(i1.Migrator m, Schema40 schema) from39To40,
@@ -11838,6 +12788,7 @@ i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema52 schema) from51To52,
   required Future<void> Function(i1.Migrator m, Schema53 schema) from52To53,
   required Future<void> Function(i1.Migrator m, Schema54 schema) from53To54,
+  required Future<void> Function(i1.Migrator m, Schema55 schema) from54To55,
 }) {
   return (currentVersion, database) async {
     switch (currentVersion) {
@@ -11921,6 +12872,11 @@ i0.MigrationStepWithVersion migrationSteps({
         final migrator = i1.Migrator(database, schema);
         await from53To54(migrator, schema);
         return 54;
+      case 54:
+        final schema = Schema55(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from54To55(migrator, schema);
+        return 55;
       default:
         throw ArgumentError.value('Unknown migration from $currentVersion');
     }
@@ -11944,6 +12900,7 @@ i1.OnUpgrade stepByStep({
   required Future<void> Function(i1.Migrator m, Schema52 schema) from51To52,
   required Future<void> Function(i1.Migrator m, Schema53 schema) from52To53,
   required Future<void> Function(i1.Migrator m, Schema54 schema) from53To54,
+  required Future<void> Function(i1.Migrator m, Schema55 schema) from54To55,
 }) => i0.VersionedSchema.stepByStepHelper(
   step: migrationSteps(
     from38To39: from38To39,
@@ -11962,5 +12919,6 @@ i1.OnUpgrade stepByStep({
     from51To52: from51To52,
     from52To53: from52To53,
     from53To54: from53To54,
+    from54To55: from54To55,
   ),
 );

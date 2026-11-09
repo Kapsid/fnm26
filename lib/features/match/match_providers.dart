@@ -35,6 +35,7 @@ import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/tactics/player_roles_providers.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
+import 'package:fnm/features/world_managers/world_manager_providers.dart';
 import 'package:fnm/features/y/y_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -446,6 +447,12 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
 
   final oppNation = allNations.firstWhere((n) => n.id == opponentId);
   final oppStyle = NationIdentity.styleOf(oppNation.code);
+  // The world manager in charge of the opponent on the fixture's day (null
+  // in a cycle from before world managers): read by the skip path and the
+  // scout's replay the same way, so all three meet the same man.
+  final oppManagerStyle = await ref
+      .read(worldManagerServiceProvider)
+      .styleOn(careerId, opponentId, fixture.date);
   // Shared with the skip path, so both read the opponent the same way.
   final oppStrength = AiTactics.readStrength(oppPool);
   // The manager's stored history per shape: how drilled he is (chemistry,
@@ -467,8 +474,9 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
         rngSeed: career.rngSeed,
       ),
       // The opponent's national playing identity stamps its character onto
-      // the strength-appropriate posture.
+      // the strength-appropriate posture, bent by its manager's.
       style: oppStyle,
+      managerStyle: oppManagerStyle,
     ),
     drilling: drilling,
     opponentStrength: oppStrength,

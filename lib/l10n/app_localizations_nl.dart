@@ -12093,6 +12093,30 @@ class AppLocalizationsNl extends AppLocalizations {
   String get backupSafetyShare => 'DELEN';
 
   @override
+  String get saveUpgradeFailedTitle =>
+      'Je opgeslagen spel kon niet worden bijgewerkt';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Je opgeslagen spel kon niet worden bijgewerkt. Er is niets verwijderd, en een kopie van vóór de update staat op deze telefoon.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'De kopie van vóór de update terugzetten';
+
+  @override
+  String get saveUpgradeRestoreFailed =>
+      'De kopie kon niet worden teruggezet. Je opgeslagen spel is gebleven zoals het was.';
+
+  @override
+  String get saveOpenFailedTitle =>
+      'Je opgeslagen spellen konden niet worden geopend';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Je opgeslagen spellen konden niet worden geopend. Er is niets verwijderd. Probeer het zo opnieuw.';
+
+  @override
   String get backupCloudNoDetails => 'De details zijn nog onderweg.';
 
   @override
@@ -12379,6 +12403,10 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get hostBidRecentHost =>
       'Je was gastland van een van de laatste drie edities.';
+
+  @override
+  String get hostBidBelowBar =>
+      'Je stadions voldoen niet aan de eisen van dit toernooi.';
 
   @override
   String get hostBidRulesPending =>
@@ -16325,6 +16353,263 @@ class AppLocalizationsNl extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Betere spelers gaan naar sterkere clubs. Standaard: $stars van 5, volgens de competitie.';
   }
+
+  @override
+  String mgrNewsSacked(String nation, String name) {
+    return '$nation ontslaat $name';
+  }
+
+  @override
+  String mgrNewsResigned(String nation, String name) {
+    return '$nation: $name neemt ontslag';
+  }
+
+  @override
+  String mgrNewsPoached(String nation, String name) {
+    return '$nation: $name vertrekt naar een ander nationaal team';
+  }
+
+  @override
+  String mgrNewsRetired(String nation, String name) {
+    return '$nation: $name stopt als trainer';
+  }
+
+  @override
+  String mgrNewsContractEnd(String nation, String name) {
+    return '$nation: $name vertrekt na afloop van zijn contract';
+  }
+
+  @override
+  String mgrNewsReplacedByPlayer(String nation, String name) {
+    return '$nation: $name maakt plaats voor jou';
+  }
+
+  @override
+  String mgrNewsAppointed(String nation, String name) {
+    return '$nation stelt $name aan';
+  }
+
+  @override
+  String mgrNewsAppointedBody(String nation, String name) {
+    return '$name neemt het roer over bij $nation.';
+  }
+
+  @override
+  String pressBeatOpposingManager(String manager) {
+    return 'Jij en $manager hebben een verleden. Wil je iets over hem zeggen?';
+  }
+
+  @override
+  String get pressAnswerHitBackAtManager =>
+      'Hij moet zich zorgen maken over zijn eigen team.';
+
+  @override
+  String get pressAnswerRespectManager => 'Ik heb veel respect voor hem.';
+
+  @override
+  String yMgrTie1(String manager) {
+    return '$manager staat bij de volgende wedstrijd aan de overkant. Er is geschiedenis met onze coach, ik kan niet wachten.';
+  }
+
+  @override
+  String yMgrTie2(String manager) {
+    return 'Straks aan de overkant: $manager. Hij en onze coach kennen elkaar al een tijd.';
+  }
+
+  @override
+  String yMgrTie3(String manager) {
+    return 'Alweer $manager. Onze coach moet er maar geen persoonlijke kwestie van maken.';
+  }
+
+  @override
+  String yMgrTie4(String manager) {
+    return 'Daar gaan we weer. $manager langs de lijn, en onze coach wil een vete winnen in plaats van een wedstrijd.';
+  }
+
+  @override
+  String get mgrRowLabel => 'Bondscoach';
+
+  @override
+  String mgrRowDetail(int age, String date) {
+    return '$age jaar, sinds $date';
+  }
+
+  @override
+  String mgrRecordWdl(int won, int drawn, int lost) {
+    return '$won W, $drawn G, $lost V';
+  }
+
+  @override
+  String mgrRowRecord(String record) {
+    return 'Onder zijn leiding: $record';
+  }
+
+  @override
+  String get mgrTieNeutral => 'Geen verleden';
+
+  @override
+  String get mgrTieRespect => 'Achting';
+
+  @override
+  String get mgrTieRival => 'Rivaal';
+
+  @override
+  String get mgrTieGrudge => 'Wrok';
+
+  @override
+  String get mgrTieSuccessor => 'Opvolger';
+
+  @override
+  String get mgrTieProtege => 'Pupil';
+
+  @override
+  String get mgrTieFormerPlayer => 'Oud-speler';
+
+  @override
+  String get mgrEndSacked => 'Ontslagen';
+
+  @override
+  String get mgrEndResigned => 'Ontslag genomen';
+
+  @override
+  String get mgrEndPoached => 'Naar ander nationaal team vertrokken';
+
+  @override
+  String get mgrEndRetired => 'Gestopt als trainer';
+
+  @override
+  String get mgrEndContractEnd => 'Contract afgelopen';
+
+  @override
+  String get mgrEndReplacedByPlayer => 'Door jou vervangen';
+
+  @override
+  String get mgrProfileSpells => 'Loopbaan';
+
+  @override
+  String mgrProfileSpellNow(String nation, String from) {
+    return '$nation, sinds $from';
+  }
+
+  @override
+  String mgrProfileSpellRange(String nation, String from, String to) {
+    return '$nation, $from tot $to';
+  }
+
+  @override
+  String mgrProfileSpellEnded(String range, String reason) {
+    return '$range, $reason';
+  }
+
+  @override
+  String get mgrProfileRecordVsYou => 'Balans tegen jou';
+
+  @override
+  String get mgrProfileNoMeetings => 'Jullie hebben elkaar nog niet ontmoet';
+
+  @override
+  String get mgrProfileReputation => 'Reputatie';
+
+  @override
+  String get mgrProfileAge => 'Leeftijd';
+
+  @override
+  String get mgrProfileAppointed => 'Aangesteld';
+
+  @override
+  String get mgrProfileStyle => 'Stijl';
+
+  @override
+  String get mgrProfileTie => 'Tussen jullie';
+
+  @override
+  String mgrPreviewLine(String name) {
+    return 'Hun bondscoach: $name';
+  }
+
+  @override
+  String mgrDossierStyle(String style) {
+    return 'Stijl van de bondscoach: $style';
+  }
+
+  @override
+  String mgrDossierRecord(String record) {
+    return 'Jouw balans tegen hem: $record';
+  }
+
+  @override
+  String get mgrStylePossession => 'Balbezit';
+
+  @override
+  String get mgrStyleHighPress => 'Hoog druk zetten';
+
+  @override
+  String get mgrStyleDefensive => 'Verdedigend';
+
+  @override
+  String get mgrStyleDirect => 'Direct';
+
+  @override
+  String get mgrStyleCounter => 'Counters';
+
+  @override
+  String get mgrStyleFlair => 'Technisch';
+
+  @override
+  String get mgrStylePhysical => 'Fysiek';
+
+  @override
+  String get mgrStyleBalanced => 'Gebalanceerd';
+
+  @override
+  String get mgrListTitle => 'Bondscoaches';
+
+  @override
+  String get mgrListCurrent => 'Huidig';
+
+  @override
+  String get mgrListRecentMoves => 'Recente wissels';
+
+  @override
+  String get mgrListFilterAll => 'Alles';
+
+  @override
+  String get mgrListSortReputation => 'Reputatie';
+
+  @override
+  String get mgrListSortName => 'Naam';
+
+  @override
+  String get mgrListEmptyMoves =>
+      'Geen veranderingen in de afgelopen twee jaar.';
+
+  @override
+  String get mgrListEmptyCurrent =>
+      'Bondscoaches verschijnen na de volgende seizoenswissel.';
+
+  @override
+  String get editorSectionManagers => 'Bondscoaches';
+
+  @override
+  String get editorAboutManagers => 'Wie elk land op dag één leidt';
+
+  @override
+  String get editorManagersHint => 'Gekozen bij de start van een carrière';
+
+  @override
+  String get editorManagerName => 'Naam van de bondscoach';
+
+  @override
+  String get editorManagerNationality => 'Nationaliteit';
+
+  @override
+  String editorIssueManagerName(int max) {
+    return 'De bondscoach heeft een naam nodig van 1 tot $max tekens die het spel kan tonen';
+  }
+
+  @override
+  String get editorIssueManagerNationality =>
+      'Kies een nationaliteit voor de bondscoach uit de lijst';
 
   @override
   String get shareButton => 'Delen';
