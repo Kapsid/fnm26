@@ -97,6 +97,7 @@ abstract final class PlayerToken {
     required int number,
     required double facing,
     bool cachedNumber = false,
+    bool chevron = true,
   }) {
     final shirt = _scaled(_shirt, c, r);
     canvas
@@ -161,7 +162,7 @@ abstract final class PlayerToken {
       final tp = _numberPainter(number, on, r);
       tp.paint(canvas, c - Offset(tp.width / 2, tp.height / 2 - r * 0.14));
     }
-    _chevron(canvas, c, r, facing);
+    if (chevron) _chevron(canvas, c, r, facing);
   }
 
   static const double _numberRef = 24;

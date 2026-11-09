@@ -214,7 +214,6 @@ class ShootoutPainter extends CustomPainter {
       baseY - ShootoutStaging.laneHeight(k.lane) * gp,
     );
     _net(canvas, net, scored ? hit : null, since, night);
-    _zones(canvas, net, k, s >= ShootoutStaging.strikeAt, gp);
 
     // The posts and the bar, in front of the net.
     final post = Paint()
@@ -253,6 +252,7 @@ class ShootoutPainter extends CustomPainter {
       trim: AppColors.surfaceContainerLowest,
       number: cast.shirts[keeperId] ?? 1,
       facing: math.pi / 2 * 3,
+      chevron: false,
     );
     canvas.restore();
 
@@ -287,6 +287,7 @@ class ShootoutPainter extends CustomPainter {
       trim: dress.trim,
       number: cast.shirts[takerId] ?? 0,
       facing: math.pi / 2 * 3,
+      chevron: false,
       cachedNumber: true,
     );
 
@@ -497,44 +498,6 @@ class ShootoutPainter extends CustomPainter {
         path.lineTo(node(i, j).dx, node(i, j).dy);
       }
       canvas.drawPath(path, mesh);
-    }
-  }
-
-  /// The six lanes as faint cells on the mouth; once the ball is struck, the
-  /// one it goes to lit (a ring where a miss goes past or off the post).
-  void _zones(Canvas canvas, Rect net, ShootoutKick k, bool struck, double gp) {
-    final cell = net.width / 3;
-    final low = net.bottom - 1.15 * gp;
-    Rect rect(int lane) {
-      final col = lane % 3;
-      final high = lane ~/ 3 == 1;
-      return Rect.fromLTRB(
-        net.left + col * cell,
-        high ? net.top : low,
-        net.left + (col + 1) * cell,
-        high ? low : net.bottom,
-      );
-    }
-
-    final faint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.14)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
-    for (var lane = 0; lane < 6; lane++) {
-      canvas.drawRect(rect(lane).deflate(1.5), faint);
-    }
-    if (!struck) return;
-    final lit = k.result == KickResult.scored || k.result == KickResult.saved;
-    if (lit) {
-      canvas.drawRect(
-        rect(k.lane).deflate(1.5),
-        Paint()
-          ..color =
-              (k.result == KickResult.scored
-                      ? const Color(0xFF6BD66B)
-                      : const Color(0xFFFFB74D))
-                  .withValues(alpha: 0.28),
-      );
     }
   }
 
