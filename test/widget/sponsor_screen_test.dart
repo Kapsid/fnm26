@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/util/sponsor_label.dart';
 import 'package:fnm/data/data_providers.dart';
@@ -142,6 +143,61 @@ void main() {
       expectNothingCut(tester, 'the brand cards in $locale');
     }
   });
+
+  for (final size in [const Size(1366, 1024), const Size(1180, 820)]) {
+    for (final locale in ['en', 'de', 'cs']) {
+      testWidgets('tablet: the offers are tiles side by side at '
+          '${size.width.toInt()} in $locale', (tester) async {
+        final save = await seedSave(tester, formFactor: FormFactor.tablet);
+        late SponsorRound round;
+        await tester.runAsync(() async {
+          round = (await save.container.read(
+            sponsorRoundProvider(save.careerId).future,
+          ))!;
+        });
+        await pumpRoute(
+          tester,
+          save,
+          '${Routes.sponsor}?careerId=${save.careerId}',
+          size: size,
+          locale: Locale(locale),
+        );
+        expect(tester.takeException(), isNull);
+        expect(find.byKey(SponsorScreen.tabletLayoutKey), findsOneWidget);
+        expect(find.byKey(SponsorScreen.tilesKey), findsOneWidget);
+        final cards = [
+          for (final o in round.offers)
+            tester.getRect(
+              find.ancestor(
+                of: find.byKey(SponsorScreen.signKey(o.index)),
+                matching: find.byType(SponsorOfferCard),
+              ),
+            ),
+        ];
+        expect(cards.length, greaterThan(1));
+        for (var i = 1; i < cards.length; i++) {
+          // One row, left to right, every tile as tall as the others.
+          expect(cards[i].top, cards[0].top);
+          expect(cards[i].left, greaterThan(cards[i - 1].right));
+          expect(cards[i].height, closeTo(cards[0].height, 0.5));
+        }
+        // The Sign buttons sit level at the tiles' feet.
+        final signs = [
+          for (final o in round.offers)
+            tester.getRect(find.byKey(SponsorScreen.signKey(o.index))),
+        ];
+        for (final r in signs) {
+          expect(r.bottom, closeTo(signs.first.bottom, 0.5));
+        }
+        expect(
+          tester.getRect(find.byKey(SponsorScreen.declineKey)).top,
+          greaterThan(cards.first.bottom),
+        );
+        expectNothingCut(tester, 'the sponsor tiles in $locale');
+        await tester.pumpWidget(const SizedBox());
+      });
+    }
+  }
 
   testWidgets(
     'signing on a real save pays, settles the round and returns to the hub',

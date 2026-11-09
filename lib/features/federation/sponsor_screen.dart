@@ -103,6 +103,9 @@ class SponsorScreen extends ConsumerStatefulWidget {
   /// The sign button of the offer at [index], for tests.
   static Key signKey(int index) => Key('sponsor.sign.$index');
 
+  /// The tablet's offer tiles, side by side, for tests.
+  static const Key tilesKey = Key('sponsor.tiles');
+
   final int careerId;
 
   @override
@@ -199,7 +202,8 @@ class _SponsorScreenState extends ConsumerState<SponsorScreen> {
         title: l.sponsorTitle,
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 720),
+            // The offers side by side: room for three tiles.
+            constraints: const BoxConstraints(maxWidth: 1080),
             child: content,
           ),
         ),
@@ -219,6 +223,7 @@ class _SponsorScreenState extends ConsumerState<SponsorScreen> {
   }
 
   Widget _body(AppLocalizations l, SponsorRound r) {
+    if (TabletShellScope.isActive(context)) return _tabletBody(l, r);
     return SafeArea(
       top: false,
       child: Padding(
@@ -261,6 +266,51 @@ class _SponsorScreenState extends ConsumerState<SponsorScreen> {
       ),
     );
   }
+
+  /// On a tablet: the offers as tiles side by side, as tall as the tallest,
+  /// each with its Sign at its foot; the way out without one under them.
+  Widget _tabletBody(AppLocalizations l, SponsorRound r) {
+    return ListView(
+      key: SponsorScreen.tilesKey,
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+      children: [
+        Text(
+          l.sponsorIntroCycle,
+          style: AppTypography.bodyMedium.copyWith(
+            color: AppColors.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              for (final (i, o) in r.offers.indexed) ...[
+                if (i > 0) const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: SponsorOfferCard(
+                    offer: o,
+                    busy: _busy,
+                    tile: true,
+                    onSign: () => unawaited(_answer(o)),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+        const SizedBox(height: AppSpacing.lg),
+        Center(
+          child: OutlinedButton(
+            key: SponsorScreen.declineKey,
+            onPressed: _busy ? null : () => unawaited(_answer(null)),
+            style: OutlinedButton.styleFrom(minimumSize: const Size(320, 48)),
+            child: Text(l.sponsorDeclineCycle, textAlign: TextAlign.center),
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 /// One offer: the brand and its trade, what it gives, the small print, and
@@ -271,12 +321,17 @@ class SponsorOfferCard extends StatelessWidget {
     required this.offer,
     required this.onSign,
     this.busy = false,
+    this.tile = false,
     super.key,
   });
 
   final SponsorOffer offer;
   final VoidCallback onSign;
   final bool busy;
+
+  /// A tile in the tablet's row: the Sign button held at the foot and wide
+  /// across it, so the buttons of the row's tiles sit level.
+  final bool tile;
 
   @override
   Widget build(BuildContext context) {
@@ -362,14 +417,25 @@ class SponsorOfferCard extends StatelessWidget {
             Text(l.sponsorRiskyWarning, style: muted),
           ],
           const SizedBox(height: AppSpacing.sm),
-          Align(
-            alignment: AlignmentDirectional.centerEnd,
-            child: FilledButton.tonal(
+          if (tile) ...[
+            const Spacer(),
+            FilledButton.tonal(
               key: SponsorScreen.signKey(offer.index),
               onPressed: busy ? null : onSign,
+              style: FilledButton.styleFrom(
+                minimumSize: const Size.fromHeight(44),
+              ),
               child: Text(l.sponsorSign),
             ),
-          ),
+          ] else
+            Align(
+              alignment: AlignmentDirectional.centerEnd,
+              child: FilledButton.tonal(
+                key: SponsorScreen.signKey(offer.index),
+                onPressed: busy ? null : onSign,
+                child: Text(l.sponsorSign),
+              ),
+            ),
         ],
       ),
     );
