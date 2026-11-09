@@ -1,130 +1,130 @@
 part of 'home_screen.dart';
 
-/// The home screen on a landscape tablet: the logo and the title on the
-/// left; on the right the way back into the last save or campaign, a new
-/// game, and the saves list. Every button is the phone's own; settings stay
-/// top right.
+/// The home on a tablet, the phone's bento grown up. In landscape the logo,
+/// the title and the tagline sit centred in the left half and the grid in
+/// the right: the save played last, the other way back in (if there is one),
+/// New Game beside Saves and Campaigns, and Editor and Settings below. In
+/// portrait the logo stacks over the grid, both centred. Every tile is the
+/// phone's own, with the same actions and the same padlocks.
 class _HomeTabletLayout extends StatelessWidget {
   const _HomeTabletLayout({
     required this.hasSave,
-    required this.cards,
+    required this.hero,
+    required this.second,
   });
 
-  /// Whether a normal save exists (the secondary button then says "All saves").
+  /// Whether a normal save exists (the saves tile then says "All saves").
   final bool hasSave;
 
-  /// The continue cards, most recently played first; none for a fresh install.
-  final List<Widget> cards;
+  /// The save or run played last; null on a first launch.
+  final _Resumable? hero;
+
+  /// The other one, when both a save and a run exist.
+  final _Resumable? second;
+
+  static const double _tall = 104;
+  static const double _small = 60;
+  static const double _hero = 132;
+  static const double _slim = 72;
+  static const double _gap = 12;
+
+  /// How wide the grid grows, and the logo's size against the phone's.
+  static const double _gridMaxWidth = 500;
+  static const double _brandScale = 1.5;
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       key: HomeScreen.tabletLayoutKey,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.centerRight,
-                child: IconButton(
-                  tooltip: l.homeSettings,
-                  icon: const Icon(
-                    Icons.settings_outlined,
-                    color: AppColors.onSurfaceVariant,
-                  ),
-                  onPressed: () => context.go(Routes.settings),
-                ),
-              ),
-              Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 6,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // The artwork's aspect (about 0.96:1), as on the
-                          // phone: a box of another shape letterboxes it.
-                          Image.asset(
-                            'assets/images/fnm_logo.png',
-                            width: 260,
-                            height: 270,
-                            fit: BoxFit.contain,
-                            errorBuilder: (context, error, stack) => const Icon(
-                              Icons.sports_soccer,
-                              size: 140,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                          const SizedBox(height: AppSpacing.lg),
-                          Text(
-                            'Football Nations\nManager',
-                            textAlign: TextAlign.center,
-                            style: textTheme.headlineLarge,
-                          ),
-                          const SizedBox(height: AppSpacing.sm),
-                          Text(
-                            l.homeLeadTheNation,
-                            textAlign: TextAlign.center,
-                            style: AppTypography.labelMedium.copyWith(
-                              color: AppColors.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.xl),
-                    Expanded(
-                      flex: 5,
-                      child: Center(
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 420),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              for (final card in cards) ...[
-                                card,
-                                const SizedBox(height: AppSpacing.md),
-                              ],
-                              PrimaryButton(
-                                label: l.homeNewGame,
-                                icon: Icons.play_arrow_rounded,
-                                onPressed: () => context.go(Routes.nations),
-                              ),
-                              const SizedBox(height: AppSpacing.sm),
-                              TextButton(
-                                onPressed: () => context.go(Routes.saves),
-                                child: Text(
-                                  hasSave ? l.homeAllSaves : l.homeLoadGame,
-                                ),
-                              ),
-                              TextButton(
-                                key: HomeScreen.campaignsKey,
-                                onPressed: () => context.go(Routes.campaigns),
-                                child: Text(l.homeCampaigns),
-                              ),
-                              TextButton(
-                                key: HomeScreen.editorKey,
-                                onPressed: () => context.go(Routes.editor),
-                                child: Text(l.homeEditor),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-            ],
+      body: DecoratedBox(
+        decoration: const BoxDecoration(
+          gradient: RadialGradient(
+            center: Alignment.topCenter,
+            radius: 1.2,
+            colors: [AppColors.surfaceContainerHigh, AppColors.surface],
+            stops: [0, 0.6],
+          ),
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.xxl,
+              vertical: AppSpacing.lg,
+            ),
+            child: LayoutBuilder(
+              builder: (context, box) =>
+                  box.maxWidth > box.maxHeight ? _landscape() : _portrait(),
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _landscape() => Row(
+    children: [
+      const Expanded(
+        child: Center(
+          child: _HomeBrand(roomy: true, scale: _brandScale),
+        ),
+      ),
+      const SizedBox(width: AppSpacing.xxl),
+      Expanded(
+        child: Center(
+          child: SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: _gridMaxWidth),
+              child: _grid(),
+            ),
+          ),
+        ),
+      ),
+    ],
+  );
+
+  Widget _portrait() => Center(
+    child: ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: _gridMaxWidth),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // The logo gives way first if the window is short.
+          Flexible(
+            child: _HomeBrand(
+              roomy: hero == null,
+              scale: _brandScale,
+              shrinkWrap: true,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xxl),
+          _grid(),
+        ],
+      ),
+    ),
+  );
+
+  Widget _grid() {
+    final hero = this.hero;
+    final second = this.second;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (hero != null) ...[
+          _HeroCard(key: HomeScreen.heroKey, entry: hero, minHeight: _hero),
+          const SizedBox(height: _gap),
+        ],
+        if (second != null) ...[
+          _SlimContinueCard(
+            key: HomeScreen.secondContinueKey,
+            entry: second,
+            height: _slim,
+          ),
+          const SizedBox(height: _gap),
+        ],
+        _HomeTiles(hasSave: hasSave, tall: _tall, small: _small, gap: _gap),
+      ],
     );
   }
 }
