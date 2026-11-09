@@ -37,19 +37,25 @@ class TabletPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      body: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TabletScreenHeader(
-              title: title,
-              onBack: onBack,
-              backTooltip: backTooltip,
-              trailing: trailing,
-            ),
-            Expanded(child: child),
-          ],
+      // Inside the shell its own safe area has taken the insets and this is
+      // a no-op; a page with no save behind it (the editor, the campaigns)
+      // fills the screen alone, and its header would sit under the iPad's
+      // status bar without it.
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TabletScreenHeader(
+                title: title,
+                onBack: onBack,
+                backTooltip: backTooltip,
+                trailing: trailing,
+              ),
+              Expanded(child: child),
+            ],
+          ),
         ),
       ),
     );

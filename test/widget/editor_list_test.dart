@@ -11,6 +11,7 @@ import 'package:fnm/features/editor/editor_list_screen.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/home/home_screen.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 
 import '../helpers/editor_app.dart';
 import '../helpers/seeded_save.dart';
@@ -174,6 +175,28 @@ void main() {
       expect(find.byKey(EditorListScreen.tabletLayoutKey), findsOneWidget);
       expect(find.text(enL.editorStatusReady), findsOneWidget);
       expect(find.text(enL.editorStatusMissing(1)), findsOneWidget);
+    });
+  }
+
+  // An iPad's status bar: the editor fills the screen with no shell (and no
+  // shell's safe area) around it, so its header must clear the bar itself.
+  for (final size in [const Size(1366, 1024), const Size(1180, 820)]) {
+    testWidgets('tablet header clears the status bar, $size', (tester) async {
+      final c = await editorContainer(tester, formFactor: FormFactor.tablet);
+      tester.view.padding = const FakeViewPadding(top: 24);
+      tester.view.viewPadding = const FakeViewPadding(top: 24);
+      await pumpEditorRoute(tester, c, Routes.editor, size: size);
+      expect(tester.takeException(), isNull);
+      expect(find.byKey(EditorListScreen.tabletLayoutKey), findsOneWidget);
+      final header = tester.getRect(find.byType(TabletScreenHeader));
+      expect(header.top, greaterThanOrEqualTo(24));
+      final back = tester.getRect(
+        find.descendant(
+          of: find.byType(TabletScreenHeader),
+          matching: find.byIcon(Icons.arrow_back),
+        ),
+      );
+      expect(back.top, greaterThanOrEqualTo(24));
     });
   }
 
