@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -275,7 +276,16 @@ MatchResult _result(WidgetTester tester) => _screen(tester).result!;
 }
 
 Future<void> _switch(WidgetTester tester) async {
-  await tester.tap(find.byKey(const Key('match.viewSwitch')));
+  // A phone's switch on the score; a tablet's toggle on the bottom bar.
+  final phone = find.byKey(const Key('match.viewSwitch'));
+  final to = _screen(tester).mode == MatchViewMode.pitch
+      ? MatchViewMode.timeline
+      : MatchViewMode.pitch;
+  await tester.tap(
+    phone.evaluate().isNotEmpty
+        ? phone
+        : find.byKey(MatchViewToggle.segmentKey(to)),
+  );
   await tester.pump();
   await tester.pump();
 }
@@ -808,7 +818,16 @@ void main() {
       final pb = _pb(tester);
       final si = r.events.indexWhere(wanted);
       final sub = r.events[si];
-      final key = tablet ? matchEventFlashKey : matchEventBannerKey;
+      // A phone's banner under the bug; a tablet's line in the TV's moment
+      // feed (with whatever else has happened lately).
+      final key = tablet ? matchMomentFeedKey : matchEventBannerKey;
+      bool subOut() => find
+          .descendant(
+            of: find.byKey(key),
+            matching: find.text(surnameOf(sub.playerName)),
+          )
+          .evaluate()
+          .isNotEmpty;
       expect(find.byKey(key), findsNothing);
       // Through half time first (its whistle stops play).
       await _seek(tester, pb.halfTime - const Duration(milliseconds: 300));
@@ -825,11 +844,13 @@ void main() {
       await tester.pump();
       await _until(tester, () => _clock(tester).playing);
       await _seek(tester, _secs(pb.revealAt(si) - 0.4));
-      await _until(tester, () => find.byKey(key).evaluate().isNotEmpty);
+      await _until(tester, subOut);
       final pop = find.byKey(key);
+      // The phone's banner shouts it; the tablet's feed line says it with
+      // its mark alone.
       expect(
         find.descendant(of: pop, matching: find.text(enL.matchSubShout)),
-        findsOneWidget,
+        tablet ? findsNothing : findsOneWidget,
       );
       expect(
         find.descendant(
@@ -845,25 +866,30 @@ void main() {
         ),
         findsOneWidget,
       );
+      // (The feed may hold other changes too, each with its arrows.)
+      final arrows = tablet ? findsWidgets : findsOneWidget;
       expect(
         find.descendant(
           of: pop,
           matching: find.byIcon(Icons.arrow_downward_rounded),
         ),
-        findsOneWidget,
+        arrows,
       );
       expect(
         find.descendant(
           of: pop,
           matching: find.byIcon(Icons.arrow_upward_rounded),
         ),
-        findsOneWidget,
+        arrows,
       );
       // Play goes on under it, and it goes.
       expect(_clock(tester).playing, isTrue);
-      await tester.pump(kEventFlashHold + const Duration(milliseconds: 100));
+      await tester.pump(
+        (tablet ? kMomentFeedLife : kEventFlashHold) +
+            const Duration(milliseconds: 100),
+      );
       await tester.pump();
-      expect(find.byKey(key), findsNothing);
+      expect(subOut(), isFalse);
     });
   }
 
@@ -936,9 +962,28 @@ void main() {
       }
       final redFirst = pb.revealAt(ri) < pb.revealAt(si);
       final redBanner = find.byKey(matchRedCardBannerKey);
-      final subPop = find.byKey(
-        tablet ? matchEventFlashKey : matchEventBannerKey,
-      );
+      if (tablet) {
+        // The tablet's TV has no banners to collide: both are lines in its
+        // moment feed, one over the other.
+        await _seek(
+          tester,
+          _secs(math.max(pb.revealAt(ri), pb.revealAt(si)) + 0.05),
+        );
+        await tester.pump(const Duration(milliseconds: 300));
+        final feed = find.byKey(matchMomentFeedKey);
+        expect(redBanner, findsNothing);
+        for (final e in [r.events[ri], r.events[si]]) {
+          expect(
+            find.descendant(
+              of: feed,
+              matching: find.text(surnameOf(e.playerName)),
+            ),
+            findsWidgets,
+          );
+        }
+        return;
+      }
+      final subPop = find.byKey(matchEventBannerKey);
       var sawRed = false;
       var sawSub = false;
       var subAfterRed = false;

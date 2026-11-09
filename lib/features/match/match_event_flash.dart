@@ -6,9 +6,6 @@ const Duration kEventFlashHold = Duration(milliseconds: 2600);
 /// The key of the score bug's substitution banner.
 const Key matchEventBannerKey = Key('match.eventBanner');
 
-/// The key of the Timeline's (and the tablet's) substitution pop-up.
-const Key matchEventFlashKey = Key('match.eventFlash');
-
 /// Whether [e] gets a pop-up of its own: a substitution only. A red card
 /// has its own banner on the 2D TV (`_RedCardBanner`) and never comes here.
 bool flashesAsEvent(MatchEvent e) => e.type == MatchEventType.substitution;
@@ -171,113 +168,6 @@ class _EventBanner extends StatelessWidget {
             );
           },
           child: shown,
-        ),
-      ),
-    );
-  }
-}
-
-/// The Timeline's (and the tablet's) pop-up for a substitution, dressed as
-/// the goal's: a card with the side's flag, the shout,
-/// who and when. It pops in, holds and fades; play goes on under it.
-class _EventFlash extends StatelessWidget {
-  const _EventFlash({required this.event, required this.flagCode});
-
-  final MatchEvent event;
-  final String flagCode;
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final e = event;
-    final still = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
-    const accent = AppColors.primary;
-    Widget row(IconData icon, Color c, String text) => Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: 18, color: c),
-        const SizedBox(width: AppSpacing.xs),
-        Flexible(
-          child: Text(
-            text,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: AppTypography.titleMedium,
-          ),
-        ),
-      ],
-    );
-    final off = e.secondaryName;
-    final card = Container(
-      key: matchEventFlashKey,
-      constraints: const BoxConstraints(maxWidth: 300),
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.xl,
-        vertical: AppSpacing.lg,
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceContainerHigh,
-        borderRadius: AppRadii.lgAll,
-        border: Border.all(color: accent, width: 2),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          FlagDisc(flagCode, size: 36),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            l.matchSubShout,
-            textAlign: TextAlign.center,
-            style: AppTypography.headlineMedium.copyWith(color: accent),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          if (off != null)
-            Semantics(
-              label: l.matchSubOff(off),
-              excludeSemantics: true,
-              child: row(
-                Icons.arrow_downward_rounded,
-                AppColors.error,
-                surnameOf(off),
-              ),
-            ),
-          Semantics(
-            label: l.matchSubOn(e.playerName),
-            excludeSemantics: true,
-            child: row(
-              Icons.arrow_upward_rounded,
-              AppColors.positive,
-              surnameOf(e.playerName),
-            ),
-          ),
-        ],
-      ),
-    );
-    return Positioned.fill(
-      child: IgnorePointer(
-        child: Center(
-          child: still
-              ? card
-              : TweenAnimationBuilder<double>(
-                  key: ValueKey((e.minute, e.stoppage, e.playerId, e.type)),
-                  tween: Tween(begin: 0, end: 1),
-                  duration: kEventFlashHold,
-                  builder: (context, u, child) {
-                    // In with a spring, as the goal's comes; out with a fade.
-                    final pop = Curves.easeOutBack.transform(
-                      (u / 0.12).clamp(0.0, 1.0),
-                    );
-                    final fade = u > 0.85 ? (1 - u) / 0.15 : 1.0;
-                    return Opacity(
-                      opacity: (pop * fade).clamp(0.0, 1.0),
-                      child: Transform.scale(
-                        scale: 0.7 + 0.3 * pop,
-                        child: child,
-                      ),
-                    );
-                  },
-                  child: card,
-                ),
         ),
       ),
     );

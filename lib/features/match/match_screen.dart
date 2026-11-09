@@ -68,6 +68,7 @@ part 'match_event_flash.dart';
 part 'match_score_bug.dart';
 part 'match_tablet_layout.dart';
 part 'match_red_card_banner.dart';
+part 'match_tv_header.dart';
 
 /// The maximum substitutions a manager may make in a match.
 const int kMaxSubs = 5;
@@ -2044,6 +2045,22 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                       _onPitch ? MatchViewMode.timeline : MatchViewMode.pitch,
                     ),
                   );
+            final clockLabel = ft
+                ? (decidedByShootout
+                      ? l.matchClockFullTimePenalties
+                      : knockout != null
+                      ? l.matchClockAfterExtraTime
+                      : l.matchClockFullTime)
+                : showingShootout
+                ? l.matchClockPenalties
+                : inExtraTime
+                // No trailing apostrophe: it adds right-side width that
+                // pushes the digits left of the plate's centre. The bare
+                // number reads as the minute and sits dead-centre.
+                ? 'ET $_minute'
+                : inStoppage
+                ? '90+$_added'
+                : '$_minute';
             final scoreboard = MatchScoreboard(
               homeCode: code(homeId),
               awayCode: code(awayId),
@@ -2051,22 +2068,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               awayName: name(awayId),
               homeScore: homeScore,
               awayScore: awayScore,
-              clock: ft
-                  ? (decidedByShootout
-                        ? l.matchClockFullTimePenalties
-                        : knockout != null
-                        ? l.matchClockAfterExtraTime
-                        : l.matchClockFullTime)
-                  : showingShootout
-                  ? l.matchClockPenalties
-                  : inExtraTime
-                  // No trailing apostrophe: it adds right-side width that
-                  // pushes the digits left of the plate's centre. The bare
-                  // number reads as the minute and sits dead-centre.
-                  ? 'ET $_minute'
-                  : inStoppage
-                  ? '90+$_added'
-                  : '$_minute',
+              clock: clockLabel,
               live: !ft,
               halfTime: _minute > 45 || ft
                   ? l.matchHalfTimeScore(
@@ -2252,23 +2254,14 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                     list: lineupList,
                   )
                 : lineupList;
+            // The tablet's 2D TV: its goal banner and moment feed sit on the
+            // picture itself (see [MatchTvHeader]).
+            final tabletTv = tablet && _onPitch;
             final overlays = <Widget>[
               // A substitution pops up on the 2D TV only: the phone shows it
-              // as the banner under the score bug, the tablet (no bug) as
-              // this card. The Timeline never pops it up. Under a goal's
-              // flash, never over it, and held back while the red card
-              // banner is out (it comes back if its own timer is still
-              // running).
-              if (_eventFlash != null &&
-                  _onPitch &&
-                  _goalFlash == null &&
-                  !bug &&
-                  _redFlash == null)
-                _EventFlash(
-                  event: _eventFlash!,
-                  flagCode: code(_eventFlash!.teamNationId),
-                ),
-              if (_goalFlash != null && !bug)
+              // as the banner under the score bug, the tablet in its moment
+              // feed. The Timeline never pops it up.
+              if (_goalFlash != null && !bug && !tabletTv)
                 _GoalFlash(
                   event: _goalFlash!,
                   flagCode: code(_goalFlash!.teamNationId),
@@ -2362,7 +2355,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                       ),
                       // A sending-off: its banner down from under the
                       // score, unless a goal's is out.
-                      if (red != null && _goalFlash == null)
+                      // (The tablet's TV has it in its moment feed.)
+                      if (red != null && _goalFlash == null && !tablet)
                         Positioned(
                           top: 0,
                           left: AppSpacing.marginMobile + AppSpacing.sm,
@@ -2420,6 +2414,65 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                       )
                     : null,
                 overlays: overlays,
+                tvHeader: tabletTv
+                    ? MatchTvHeader(
+                        homeCode: code(homeId),
+                        awayCode: code(awayId),
+                        homeScore: homeScore,
+                        awayScore: awayScore,
+                        clock: clockLabel,
+                        live: !ft,
+                        homeColor: homeC,
+                        awayColor: awayC,
+                        goal: _goalFlash,
+                        goalForHome: _goalFlash?.teamNationId == homeId,
+                        theme: finalsTheme,
+                        momentum: momentum == null
+                            ? null
+                            : _homeMomentum(preview, homeId),
+                        stats: tvStatsOf(
+                          r,
+                          homeNationId: homeId,
+                          events: timelineEvents,
+                          minute: _minute,
+                          fullTime: ft,
+                        ),
+                      )
+                    : null,
+                tvOverlays: [
+                  if (tabletTv)
+                    // Down the right edge, clear of the goal's banner.
+                    Positioned(
+                      top: AppSpacing.md + MatchTvGoalBanner.height + 10,
+                      right: AppSpacing.sm + 2,
+                      width: 236,
+                      child: MatchMomentFeed(
+                        moments: TvMoment.of(timelineEvents, penalties),
+                        homeNationId: homeId,
+                        homeCode: code(homeId),
+                        awayCode: code(awayId),
+                        homeColor: homeC,
+                        awayColor: awayC,
+                      ),
+                    ),
+                  if (tabletTv && _goalFlash != null)
+                    Positioned(
+                      top: AppSpacing.md,
+                      left: AppSpacing.md,
+                      right: AppSpacing.md,
+                      child: Center(
+                        child: MatchTvGoalBanner(
+                          event: _goalFlash!,
+                          code: code(_goalFlash!.teamNationId),
+                          color: _goalFlash!.teamNationId == homeId
+                              ? homeC
+                              : awayC,
+                          goalNumber: homeScore + awayScore,
+                          theme: finalsTheme,
+                        ),
+                      ),
+                    ),
+                ],
               );
             }
             if (_onPitch) {

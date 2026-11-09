@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
@@ -83,5 +84,43 @@ void main() {
       MatchViewMode.timeline,
       'goldens/match_tablet_timeline.png',
     );
+  });
+
+  // The broadcast header in one row (a 12.9 inch iPad), the goal's banner
+  // centred over the picture and the moment feed down its right edge.
+  testWidgets('tablet match in Pitch mode, a goal', (tester) async {
+    final save = await seedSave(tester, formFactor: FormFactor.tablet);
+    await tester.runAsync(
+      () => const MatchViewModeStore().save(MatchViewMode.pitch),
+    );
+    final warm = save.container.listen(
+      matchPreviewProvider(save.careerId),
+      (_, _) {},
+    );
+    addTearDown(warm.close);
+    await tester.runAsync(
+      () => save.container.read(matchPreviewProvider(save.careerId).future),
+    );
+    await pumpRoute(
+      tester,
+      save,
+      '${Routes.match}?careerId=${save.careerId}',
+      size: const Size(1366, 1024),
+    );
+    await tester.tap(find.byIcon(Icons.pause_rounded));
+    await tester.pump();
+    final screen = tester.state(find.byType(MatchScreen)) as MatchScreenProbe;
+    final pb = screen.pitchMode.playback!;
+    final r = screen.result!;
+    final gi = r.events.indexWhere((e) => e.type == MatchEventType.goal);
+    screen.seekPitch(
+      Duration(microseconds: ((pb.revealAt(gi) + 0.05) * 1e6).round()),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 700));
+    expect(find.byKey(matchTvGoalBannerKey), findsOneWidget);
+    await expectAppGolden('goldens/match_tablet_pitch_goal.png');
+    await tester.pump(const Duration(seconds: 8));
+    await tester.pumpWidget(const SizedBox());
   });
 }
