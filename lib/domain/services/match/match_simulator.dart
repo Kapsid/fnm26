@@ -84,7 +84,36 @@ class RatingMatchSimulator implements MatchSimulator {
   /// and edges the shootout, without making penalties a formality.
   /// The manager's live matches pass their own pair and never come through
   /// here.
-  static double knockoutWeight(int strength) => exp(0.1 * strength);
+  static double knockoutWeight(num strength) => exp(0.1 * strength);
+
+  /// How much louder a strength gap speaks in a World Championship finals
+  /// knockout tie (R32 to the final), and only there: the background path
+  /// adds `(finalsGapStretch - 1) * gap` to the tie as an edge.
+  ///
+  /// The elite band at a 48-team finals sits inside two or three points, and
+  /// the format asks for four knockout wins before the semi-finals. At the
+  /// group-stage response a 3-5 point favourite won a tie only about 62% of
+  /// the time, so the semi-finals and the bronze were a lottery among the top
+  /// twenty and minnows medalled about one edition in three. Stretched, the
+  /// same favourite plays as if 4.5-7.5 points clear and wins about 70-75%
+  /// (before any pedigree). Groups, qualifiers, friendlies and the
+  /// continental finals keep the plain response (`match_balance_test` and
+  /// `world_variance_test` hold their bands); `world_medals_test` guards this.
+  static const double finalsGapStretch = 1.5;
+
+  /// The home side's extra edge in a World Championship finals knockout tie,
+  /// to pass as `simulate(strengthEdge:)`: the gap read louder
+  /// ([finalsGapStretch]) plus the difference of the two sides' pedigrees
+  /// (`WorldPedigree.edges`, already in points).
+  static double finalsKnockoutEdge({
+    required int homeStrength,
+    required int awayStrength,
+    double homePedigree = 0,
+    double awayPedigree = 0,
+  }) =>
+      (finalsGapStretch - 1) * (homeStrength - awayStrength) +
+      homePedigree -
+      awayPedigree;
 
   @override
   MatchOutcome simulate({
@@ -94,15 +123,20 @@ class RatingMatchSimulator implements MatchSimulator {
     bool homeAdvantage = true,
     double openness = 1.0,
     MatchConditions conditions = MatchConditions.none,
+    double strengthEdge = 0,
   }) {
     // +5 home advantage — but a neutral-venue finals gives neither side one.
     // [conditions] add the altitude and heat: the side whose legs go first
     // gives up [MatchConditions.strengthEdge] points. Exactly 0 at sea level
-    // in temperate weather, so the world plays as it did.
+    // in temperate weather, so the world plays as it did. [strengthEdge] is
+    // any other edge the caller hands the home side, in the same points (a
+    // World Championship finals knockout's pedigree and stretched gap; 0
+    // everywhere else).
     final diff =
         (homeStrength + (homeAdvantage ? 5 : 0)) -
         awayStrength +
-        conditions.strengthEdge;
+        conditions.strengthEdge +
+        strengthEdge;
     // Strength tells MULTIPLICATIVELY, not as a flat slope: a modest gap moves
     // the scoreline a little and a real gulf runs away, with the underdog's xG
     // tailing off toward zero rather than hitting a floor. Only the GAP counts,

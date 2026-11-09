@@ -50,8 +50,8 @@ h2hMeetingsProvider = FutureProvider.autoDispose
           competition:
               names[f.competitionId] ??
               (f.round == 'FRIENDLY' ? 'Friendly' : 'Match'),
-          forA: aHome ? f.homeScore! : f.awayScore!,
-          forB: aHome ? f.awayScore! : f.homeScore!,
+          forA: aHome ? f.shownHomeScore! : f.shownAwayScore!,
+          forB: aHome ? f.shownAwayScore! : f.shownHomeScore!,
           afterExtraTime: f.afterExtraTime,
           penA: f.wentToShootout
               ? (aHome ? f.homePenalties : f.awayPenalties)

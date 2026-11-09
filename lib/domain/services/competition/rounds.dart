@@ -32,4 +32,10 @@ abstract final class Rounds {
   /// carries no round code at all — null).
   static bool isKnockout(String? round) =>
       round != null && knockoutSuffixes.any(round.endsWith);
+
+  /// Whether [round] is a World Championship finals knockout tie (the bare
+  /// codes, R32 to the final): the continental and Nations Cup rounds carry a
+  /// prefix and are not.
+  static bool isWorldFinalsKnockout(String? round) =>
+      round != null && knockoutSuffixes.contains(round);
 }

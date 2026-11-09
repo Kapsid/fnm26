@@ -628,10 +628,10 @@ extension SeasonCycle on SeasonService {
       runnerUpId: runnerUp ?? champion,
       finalHomeScore: !scored
           ? null
-          : (champIsHome ? f.homeScore : f.awayScore),
+          : (champIsHome ? f.shownHomeScore : f.shownAwayScore),
       finalAwayScore: !scored
           ? null
-          : (champIsHome ? f.awayScore : f.homeScore),
+          : (champIsHome ? f.shownAwayScore : f.shownHomeScore),
     );
   }
 
@@ -689,8 +689,8 @@ extension SeasonCycle on SeasonService {
       competition: 'Continental Clash',
       championId: SeasonService._winner(f),
       runnerUpId: SeasonService._loser(f),
-      finalHomeScore: champIsHome ? f.homeScore : f.awayScore,
-      finalAwayScore: champIsHome ? f.awayScore : f.homeScore,
+      finalHomeScore: champIsHome ? f.shownHomeScore : f.shownAwayScore,
+      finalAwayScore: champIsHome ? f.shownAwayScore : f.shownHomeScore,
     );
   }
 
@@ -1172,8 +1172,8 @@ extension SeasonCycle on SeasonService {
         seed: career.rngSeed,
         nations: nations.values.toList(),
       ),
-      finalHomeScore: champIsHome ? f.homeScore : f.awayScore,
-      finalAwayScore: champIsHome ? f.awayScore : f.homeScore,
+      finalHomeScore: champIsHome ? f.shownHomeScore : f.shownAwayScore,
+      finalAwayScore: champIsHome ? f.shownAwayScore : f.shownHomeScore,
       topScorerName: bootName,
       topScorerGoals: bootGoals,
     );
@@ -1227,6 +1227,10 @@ extension SeasonCycle on SeasonService {
     }
 
     // The champion is the home/away winner; orient the score accordingly.
+    // The SHOWN score goes on the roll of honour: a final won on penalties is
+    // recorded level (1-1, which every honour screen reads as "pens"), not
+    // with the winner's phantom extra goal the fixture row carries. Rows
+    // written before this keep their old score.
     final champIsHome = f.homeScore! >= f.awayScore!;
     await _comp.recordHonour(
       careerId: careerId,
@@ -1238,8 +1242,8 @@ extension SeasonCycle on SeasonService {
           ? SeasonService._winner(thirds.first)
           : null,
       hostIds: hosts,
-      finalHomeScore: champIsHome ? f.homeScore : f.awayScore,
-      finalAwayScore: champIsHome ? f.awayScore : f.homeScore,
+      finalHomeScore: champIsHome ? f.shownHomeScore : f.shownAwayScore,
+      finalAwayScore: champIsHome ? f.shownAwayScore : f.shownHomeScore,
       topScorerName: bootName,
       topScorerGoals: bootGoals,
     );
@@ -1479,8 +1483,8 @@ extension SeasonCycle on SeasonService {
       thirdId: bronzes.isNotEmpty ? bronzes[0] : null,
       thirdId2: bronzes.length > 1 ? bronzes[1] : null,
       hostIds: hosts.isEmpty ? [members.first.id] : hosts,
-      finalHomeScore: champIsHome ? f.homeScore : f.awayScore,
-      finalAwayScore: champIsHome ? f.awayScore : f.homeScore,
+      finalHomeScore: champIsHome ? f.shownHomeScore : f.shownAwayScore,
+      finalAwayScore: champIsHome ? f.shownAwayScore : f.shownHomeScore,
       topScorerName: bootName,
       topScorerGoals: bootGoals,
     );

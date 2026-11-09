@@ -30,6 +30,7 @@ import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
+import 'package:fnm/domain/services/competition/world_pedigree.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/domain/services/federation/naturalization_rules.dart';
@@ -531,6 +532,9 @@ class SeasonService {
       // between two operations.
       _naturalized = null;
       _naturalizedFor = null;
+      // And the finals pedigree: the roll of honour is re-read per operation
+      // (a restored or edited save may hold a different one).
+      _pedigreeCache.clear();
       // Counted, so the automatic backup never snapshots a half-run step.
       return SimActivity.track(body);
     }
@@ -1151,6 +1155,39 @@ class SeasonService {
     return conditionsAt(f, ground);
   }
 
+  /// Pedigree edges per (career, finals year): derived from the honour rows
+  /// before that year. Loaded once per operation (cleared in [_exclusive]),
+  /// never per fixture.
+  final Map<(int, int), Map<int, double>> _pedigreeCache = {};
+
+  /// The home side's extra edge, in strength points, in a World Championship
+  /// finals knockout tie: the gap read louder
+  /// ([RatingMatchSimulator.finalsGapStretch]) plus the difference of the two
+  /// sides' [WorldPedigree]. 0 for any other round.
+  Future<double> _worldFinalsEdge(
+    Fixture f,
+    Map<int, Nation> nations,
+    int homeStrength,
+    int awayStrength,
+  ) async {
+    if (!Rounds.isWorldFinalsKnockout(f.round)) return 0;
+    final year = f.date.year;
+    final pedigree = _pedigreeCache[(f.careerId, year)] ??= WorldPedigree.edges(
+      honours: await _comp.honours(f.careerId),
+      year: year,
+      idByEnglishName: {
+        for (final n in nations.values)
+          (n.englishName.isEmpty ? n.name : n.englishName): n.id,
+      },
+    );
+    return RatingMatchSimulator.finalsKnockoutEdge(
+      homeStrength: homeStrength,
+      awayStrength: awayStrength,
+      homePedigree: pedigree[f.homeNationId] ?? 0,
+      awayPedigree: pedigree[f.awayNationId] ?? 0,
+    );
+  }
+
   Future<void> _simAndRecord(
     Fixture f,
     Map<int, Nation> nations,
@@ -1200,6 +1237,13 @@ class SeasonService {
     );
     final homeStrength = asHome?.strength ?? homeBase;
     final awayStrength = asAway?.strength ?? awayBase;
+    // A World Championship finals knockout between two background sides
+    // reads the gap louder and adds each side's pedigree (see
+    // [_worldFinalsEdge]). 0 for every other fixture, and for any tie of the
+    // manager's, which plays as his played match would.
+    final finalsEdge = asHome == null && asAway == null
+        ? await _worldFinalsEdge(f, nations, homeStrength, awayStrength)
+        : 0.0;
     const sim = RatingMatchSimulator();
     final outcome = sim.simulate(
       homeStrength: homeStrength,
@@ -1215,6 +1259,7 @@ class SeasonService {
         career,
         memo: groundMemo,
       ),
+      strengthEdge: finalsEdge,
     );
     await _comp.recordAppearances(
       f.careerId,
@@ -1281,7 +1326,10 @@ class SeasonService {
         // knockout weight turns the same gap into the edge it shows in ninety
         // minutes. Only the background path converts — the live match screen
         // passes its own pair (team talks, named takers) and is unchanged.
-        homeStrength: RatingMatchSimulator.knockoutWeight(homeStrength),
+        // A finals knockout's edge leans the extra time and shootout too.
+        homeStrength: RatingMatchSimulator.knockoutWeight(
+          homeStrength + finalsEdge,
+        ),
         awayStrength: RatingMatchSimulator.knockoutWeight(awayStrength),
       );
       aet = true;

@@ -726,12 +726,30 @@ class _FinalsCard extends StatelessWidget {
           Expanded(child: _side(f.homeNationId, done && homeWon, right: true)),
           SizedBox(
             width: 54,
-            child: Text(
-              done ? '${f.homeScore} - ${f.awayScore}' : l.tourContVersusShort,
-              textAlign: TextAlign.center,
-              style: AppTypography.labelMedium.copyWith(
-                color: done ? AppColors.onSurface : AppColors.onSurfaceVariant,
-              ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  done
+                      ? '${f.shownHomeScore} - ${f.shownAwayScore}'
+                      : l.tourContVersusShort,
+                  textAlign: TextAlign.center,
+                  style: AppTypography.labelMedium.copyWith(
+                    color: done
+                        ? AppColors.onSurface
+                        : AppColors.onSurfaceVariant,
+                  ),
+                ),
+                if (done && f.wentToShootout)
+                  Text(
+                    l.hubPens,
+                    textAlign: TextAlign.center,
+                    style: AppTypography.labelSmall.copyWith(
+                      fontSize: 9,
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                  ),
+              ],
             ),
           ),
           Expanded(child: _side(f.awayNationId, done && !homeWon)),
