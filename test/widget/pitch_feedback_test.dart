@@ -20,7 +20,6 @@ import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/pitch/referee_card.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
-import 'package:fnm/features/match/match_feedback.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/match/pitch/pitch_clock.dart';
@@ -273,14 +272,22 @@ const String _buzz = 'HapticFeedback.vibrate null';
 
 int _count(String kind) => _feedback.where((f) => f == kind).length;
 
-/// [goals] goals, felt: each one a heavy haptic tap at once, then a second
-/// [MatchFeedback.goalImpactDelay] later. Never the long `vibrate` buzz.
+/// A goal's tone (desktop only, but asked for on every platform).
+const String _alert = 'SystemSound.play SystemSoundType.alert';
+
+/// [goals] goals, felt: each one a single medium haptic tap (the same as the
+/// full-time whistle's) with the goal tone right after it. Never a heavy
+/// tap, never the long `vibrate` buzz.
 Future<void> _expectGoalFelt(WidgetTester tester, int goals) async {
-  expect(_count(_heavy), goals, reason: 'the first tap, at once');
-  await tester.pump(
-    MatchFeedback.goalImpactDelay + const Duration(milliseconds: 10),
-  );
-  expect(_count(_heavy), goals * 2, reason: 'the second tap');
+  // Nothing more is to come later: no delayed second tap.
+  await tester.pump(const Duration(milliseconds: 200));
+  expect(_count(_alert), goals, reason: 'one tone per goal');
+  for (var i = 0; i < _feedback.length; i++) {
+    if (_feedback[i] != _alert) continue;
+    expect(i, greaterThan(0));
+    expect(_feedback[i - 1], _medium, reason: 'a medium tap with the tone');
+  }
+  expect(_count(_heavy), 0, reason: 'no heavy taps any more');
   expect(_count(_buzz), 0, reason: 'a tap, never the long buzz');
 }
 
@@ -346,14 +353,15 @@ void main() {
       await _until(tester, () => _ready(tester) && _clock(tester).playing);
       final r = _result(tester);
       final gi = r.events.indexWhere((e) => e.type == MatchEventType.goal);
-      expect(_count(_buzz) + _count(_heavy), 0, reason: 'no goal yet');
+      expect(_count(_buzz) + _count(_heavy) + _count(_alert), 0,
+          reason: 'no goal yet');
       await _seek(tester, _secs(_pb(tester).revealAt(gi) - 0.3));
       await _until(tester, () => _shout(tester));
       await tester.pump(const Duration(milliseconds: 1));
       await _expectGoalFelt(tester, 1);
       // Held under the flash: no second buzz for the same goal.
       await tester.pump(const Duration(seconds: 1));
-      expect((_count(_buzz), _count(_heavy)), (0, 2));
+      expect((_count(_buzz), _count(_heavy), _count(_alert)), (0, 0, 1));
     });
 
     testWidgets('2D TV: played from kick-off at match pace, the first goal '
@@ -426,7 +434,7 @@ void main() {
       await _seek(tester, _secs(pb.halfTime.inMicroseconds / 1e6 - 0.5));
       await _until(tester, () => !_clock(tester).playing);
       await tester.pump(const Duration(seconds: 2));
-      expect(_count(_buzz) + _count(_heavy), 0);
+      expect(_count(_buzz) + _count(_heavy) + _count(_alert), 0);
     });
   });
 
@@ -492,7 +500,7 @@ void main() {
       expect(referee.frameAt(t + RefereeCardShow.lift)?.card, RefereeCard.red);
       // A light buzz, not a goal's; and the clock never stopped for it.
       expect(_count(_medium), greaterThanOrEqualTo(2), reason: 'kick-off too');
-      expect(_count(_buzz) + _count(_heavy), 0);
+      expect(_count(_buzz) + _count(_heavy) + _count(_alert), 0);
       expect(_clock(tester).playing, isTrue);
       expect(find.text(enL.matchGoalShout), findsNothing);
       // The man is on his way off while the card is still up.
