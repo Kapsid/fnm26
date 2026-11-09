@@ -1,3 +1,6 @@
+@Tags(['slow'])
+library;
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';

@@ -1,0 +1,3 @@
+tags:
+  slow:
+    # Long simulations and stories: run before a release, not per merge.

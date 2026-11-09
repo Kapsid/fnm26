@@ -1,3 +1,6 @@
+@Tags(['slow'])
+library;
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/services/match/match_simulator.dart';
