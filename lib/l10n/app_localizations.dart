@@ -24859,6 +24859,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Balanced'**
   String get mgrStyleBalanced;
+
+  /// Managers screen title.
+  ///
+  /// In en, this message translates to:
+  /// **'Managers'**
+  String get mgrListTitle;
+
+  /// Managers screen tab: who is in charge of each nation now.
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get mgrListCurrent;
+
+  /// Managers screen tab: sackings, resignations and appointments of the last two years.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent moves'**
+  String get mgrListRecentMoves;
+
+  /// Managers screen filter chip: every confederation.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get mgrListFilterAll;
+
+  /// Managers screen sort chip: highest reputation first.
+  ///
+  /// In en, this message translates to:
+  /// **'Reputation'**
+  String get mgrListSortReputation;
+
+  /// Managers screen sort chip: alphabetical.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get mgrListSortName;
+
+  /// Managers screen, Recent moves tab: nothing has happened.
+  ///
+  /// In en, this message translates to:
+  /// **'No changes in the last two years.'**
+  String get mgrListEmptyMoves;
+
+  /// Managers screen, Current tab: this season has no world managers yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Managers appear after the next season rollover.'**
+  String get mgrListEmptyCurrent;
 }
 
 class _AppLocalizationsDelegate

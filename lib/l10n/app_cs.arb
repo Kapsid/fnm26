@@ -4103,5 +4103,13 @@
   "mgrStyleCounter": "Brejky",
   "mgrStyleFlair": "Technický",
   "mgrStylePhysical": "Fyzický",
-  "mgrStyleBalanced": "Vyvážený"
+  "mgrStyleBalanced": "Vyvážený",
+  "mgrListTitle": "Trenéři",
+  "mgrListCurrent": "Současní",
+  "mgrListRecentMoves": "Poslední změny",
+  "mgrListFilterAll": "Vše",
+  "mgrListSortReputation": "Reputace",
+  "mgrListSortName": "Jméno",
+  "mgrListEmptyMoves": "Za poslední dva roky žádné změny.",
+  "mgrListEmptyCurrent": "Trenéři se objeví po přechodu do další sezóny."
 }

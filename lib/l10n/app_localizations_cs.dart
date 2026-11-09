@@ -16752,4 +16752,29 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get mgrStyleBalanced => 'Vyvážený';
+
+  @override
+  String get mgrListTitle => 'Trenéři';
+
+  @override
+  String get mgrListCurrent => 'Současní';
+
+  @override
+  String get mgrListRecentMoves => 'Poslední změny';
+
+  @override
+  String get mgrListFilterAll => 'Vše';
+
+  @override
+  String get mgrListSortReputation => 'Reputace';
+
+  @override
+  String get mgrListSortName => 'Jméno';
+
+  @override
+  String get mgrListEmptyMoves => 'Za poslední dva roky žádné změny.';
+
+  @override
+  String get mgrListEmptyCurrent =>
+      'Trenéři se objeví po přechodu do další sezóny.';
 }

@@ -25519,5 +25519,37 @@
   "mgrStyleBalanced": "Balanced",
   "@mgrStyleBalanced": {
     "description": "Manager style."
+  },
+  "mgrListTitle": "Managers",
+  "@mgrListTitle": {
+    "description": "Managers screen title."
+  },
+  "mgrListCurrent": "Current",
+  "@mgrListCurrent": {
+    "description": "Managers screen tab: who is in charge of each nation now."
+  },
+  "mgrListRecentMoves": "Recent moves",
+  "@mgrListRecentMoves": {
+    "description": "Managers screen tab: sackings, resignations and appointments of the last two years."
+  },
+  "mgrListFilterAll": "All",
+  "@mgrListFilterAll": {
+    "description": "Managers screen filter chip: every confederation."
+  },
+  "mgrListSortReputation": "Reputation",
+  "@mgrListSortReputation": {
+    "description": "Managers screen sort chip: highest reputation first."
+  },
+  "mgrListSortName": "Name",
+  "@mgrListSortName": {
+    "description": "Managers screen sort chip: alphabetical."
+  },
+  "mgrListEmptyMoves": "No changes in the last two years.",
+  "@mgrListEmptyMoves": {
+    "description": "Managers screen, Recent moves tab: nothing has happened."
+  },
+  "mgrListEmptyCurrent": "Managers appear after the next season rollover.",
+  "@mgrListEmptyCurrent": {
+    "description": "Managers screen, Current tab: this season has no world managers yet."
   }
 }

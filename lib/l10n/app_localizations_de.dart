@@ -16602,4 +16602,29 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get mgrStyleBalanced => 'Balanced';
+
+  @override
+  String get mgrListTitle => 'Managers';
+
+  @override
+  String get mgrListCurrent => 'Current';
+
+  @override
+  String get mgrListRecentMoves => 'Recent moves';
+
+  @override
+  String get mgrListFilterAll => 'All';
+
+  @override
+  String get mgrListSortReputation => 'Reputation';
+
+  @override
+  String get mgrListSortName => 'Name';
+
+  @override
+  String get mgrListEmptyMoves => 'No changes in the last two years.';
+
+  @override
+  String get mgrListEmptyCurrent =>
+      'Managers appear after the next season rollover.';
 }

@@ -58,6 +58,7 @@ import 'package:fnm/features/nations/nation_select_screen.dart';
 import 'package:fnm/features/nations/nation_vitrine_screen.dart';
 import 'package:fnm/features/player/player_detail_screen.dart';
 import 'package:fnm/features/ranking/world_ranking_screen.dart';
+import 'package:fnm/features/world_managers/managers_screen.dart';
 import 'package:fnm/features/records/all_time_records_screen.dart';
 import 'package:fnm/features/records/h2h_meetings_screen.dart';
 import 'package:fnm/features/records/head_to_head_screen.dart';
@@ -134,6 +135,9 @@ abstract final class Routes {
 
   /// World ranking. Expects `?careerId=`.
   static const ranking = '/ranking';
+
+  /// World managers (current and recent moves). Expects `?careerId=`.
+  static const managers = '/managers';
 
   /// World Cup finals draw ceremony. Expects `?careerId=`.
   static const finalsDraw = '/finals-draw';
@@ -1044,6 +1048,17 @@ final routerProvider = Provider<GoRouter>((ref) {
             ) ??
             0;
         return WorldRankingScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.managers,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return ManagersScreen(careerId: id);
       },
     ),
     GoRoute(

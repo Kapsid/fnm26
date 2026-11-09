@@ -53,7 +53,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "da": [
@@ -110,7 +118,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "de": [
@@ -167,7 +183,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "el": [
@@ -224,7 +248,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "es": [
@@ -281,7 +313,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "fi": [
@@ -338,7 +378,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "fil": [
@@ -395,7 +443,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "fr": [
@@ -452,7 +508,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "hi": [
@@ -509,7 +573,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "hr": [
@@ -566,7 +638,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "hu": [
@@ -623,7 +703,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "id": [
@@ -680,7 +768,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "it": [
@@ -737,7 +833,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "ja": [
@@ -794,7 +898,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "ko": [
@@ -851,7 +963,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "ms": [
@@ -908,7 +1028,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "nb": [
@@ -965,7 +1093,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "nl": [
@@ -1022,7 +1158,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "pl": [
@@ -1079,7 +1223,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "pt": [
@@ -1136,7 +1288,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "ro": [
@@ -1193,7 +1353,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "sv": [
@@ -1250,7 +1418,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "th": [
@@ -1307,7 +1483,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "tr": [
@@ -1364,7 +1548,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "uk": [
@@ -1421,7 +1613,15 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ],
 
   "vi": [
@@ -1478,6 +1678,14 @@
     "mgrStyleCounter",
     "mgrStyleFlair",
     "mgrStylePhysical",
-    "mgrStyleBalanced"
+    "mgrStyleBalanced",
+    "mgrListTitle",
+    "mgrListCurrent",
+    "mgrListRecentMoves",
+    "mgrListFilterAll",
+    "mgrListSortReputation",
+    "mgrListSortName",
+    "mgrListEmptyMoves",
+    "mgrListEmptyCurrent"
   ]
 }

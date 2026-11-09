@@ -136,6 +136,12 @@ class _WorldRankingScreenState extends ConsumerState<WorldRankingScreen> {
         centerTitle: true,
         actions: [
           IconButton(
+            tooltip: l.mgrListTitle,
+            icon: const Icon(Icons.badge_outlined, color: AppColors.primary),
+            onPressed: () =>
+                context.go('${Routes.managers}?careerId=$careerId'),
+          ),
+          IconButton(
             tooltip: l.rankingCentreOnMe,
             icon: const Icon(
               Icons.my_location_rounded,
