@@ -8,6 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/db/career_bundle.dart';
+import 'package:fnm/data/db/save_backup.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/competition/host_bidding.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
@@ -19,6 +20,7 @@ import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
 import 'package:fnm/features/world_managers/world_manager_markers.dart';
 import 'package:fnm/features/world_managers/world_manager_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqlite3/sqlite3.dart';
 
 import '../helpers/save_fixtures.dart';
 import 'driver.dart';
@@ -592,6 +594,90 @@ void main() {
           );
         }
 
+        test(
+          'the pre-upgrade copy opens at the old version with the same '
+          'careers',
+          () async {
+            final file = await unpackFixture(build, save);
+            final dir = Directory.systemTemp.createTempSync('fnm_preupgrade');
+            addTearDown(() => dir.delete(recursive: true));
+            final old = fileSchemaVersion(file.path);
+            final careersBefore = _careers(file.path);
+            expect(careersBefore, isNotEmpty);
+
+            // As the app's connection does: the copy first, then the open.
+            final copy = await SaveBackup.writePreUpgradeCopy(
+              file,
+              fromVersion: AppDatabase.firstManagedVersion,
+              into: dir,
+            );
+            expect(copy, isNotNull);
+            final (db, c) = await open(file);
+            await close(db, c);
+            expect(
+              fileSchemaVersion(file.path),
+              AppDatabase.currentSchemaVersion,
+            );
+
+            expect(copy!.existsSync(), isTrue);
+            expect(SaveBackup.inspect(copy.path).rejection, isNull);
+            expect(fileSchemaVersion(copy.path), old);
+            expect(_careers(copy.path), careersBefore);
+          },
+          timeout: const Timeout(Duration(minutes: 5)),
+        );
+
+        test(
+          'the export after the upgrade carries the manager rows, and a '
+          're-import keeps them',
+          () async {
+            final (db, c) = await open(await unpackFixture(build, save));
+            addTearDown(() => close(db, c));
+            await c
+                .read(worldManagerServiceProvider)
+                .ensureSeeded(manifest.careerId);
+            final bundle = await CareerBundle.export(db, manifest.careerId);
+            final tables = bundle['tables']! as Map;
+            for (final t in _managerTables) {
+              final rows = (tables[t]! as List).cast<Map<String, Object?>>();
+              expect(
+                rows.length,
+                await _count(db, t, manifest.careerId),
+                reason: '$t: the export carries every row',
+              );
+              if (t != 'manager_ties') {
+                expect(rows, isNotEmpty, reason: '$t: seeded rows exported');
+              }
+            }
+
+            // Through the bytes a user shares, into a fresh database.
+            final decoded = CareerBundle.decode(CareerBundle.encode(bundle));
+            expect(decoded.rejection, isNull);
+            final db2 = storyDb();
+            final c2 = storyContainer(db2);
+            addTearDown(() => close(db2, c2));
+            await c2.read(seedLoaderProvider).ensureSeeded();
+            final id = await CareerBundle.import(db2, decoded.bundle!);
+            final again = await CareerBundle.export(db2, id);
+            for (final t in _managerTables) {
+              List<Map<String, Object?>> rows(Map<String, Object?> b) => [
+                for (final r
+                    in ((b['tables']! as Map)[t]! as List)
+                        .cast<Map<String, Object?>>())
+                  {...r}..remove('career_id'),
+              ];
+              expect(rows(again), rows(bundle), reason: t);
+            }
+            // The imported career reads them: its managers are not reseeded.
+            final w = await c2.read(worldManagerRepositoryProvider).load(id);
+            expect(
+              w.managers.length,
+              (tables['world_managers']! as List).length,
+            );
+          },
+          timeout: const Timeout(Duration(minutes: 5)),
+        );
+
         if (save == 'mid_cycle') {
           test(
             'fifty more events play',
@@ -621,3 +707,33 @@ void main() {
 /// an ISO string if a build ever stored text.
 int _seconds(Object? v) =>
     v is int ? v : DateTime.parse(v! as String).millisecondsSinceEpoch ~/ 1000;
+
+const List<String> _managerTables = [
+  'world_managers',
+  'manager_spells',
+  'manager_ties',
+];
+
+/// The careers in the file at [path], read raw: id, manager and nation.
+List<String> _careers(String path) {
+  final db = sqlite3.open(path, mode: OpenMode.readOnly);
+  try {
+    return [
+      for (final r in db.select(
+        'SELECT id, manager_name, nation_id FROM careers ORDER BY id',
+      ))
+        '${r['id']} ${r['manager_name']} ${r['nation_id']}',
+    ];
+  } finally {
+    db.close();
+  }
+}
+
+Future<int> _count(AppDatabase db, String table, int careerId) async =>
+    (await db
+            .customSelect(
+              'SELECT COUNT(*) AS n FROM $table WHERE career_id = ?',
+              variables: [Variable<int>(careerId)],
+            )
+            .getSingle())
+        .read<int>('n');
