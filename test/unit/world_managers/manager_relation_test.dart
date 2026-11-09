@@ -111,6 +111,30 @@ void main() {
     expect((f.label, f.warmth), (TieLabel.formerPlayer, 20));
   });
 
+  test('the most recent structural tie sets the label', () {
+    final r = _read(
+      ties: [
+        _tie(TieKind.grudge, -25, DateTime(2022)),
+        _tie(TieKind.protege, 40, DateTime(2024)),
+      ],
+      today: DateTime(2024),
+    );
+    expect(r.label, TieLabel.protege);
+  });
+
+  test('a shootout exit counts as a knockout elimination', () {
+    Fixture shootout(DateTime d) => _fx(d, 1, 1).copyWith(
+      homePenalties: 3,
+      awayPenalties: 5,
+    );
+    final r = _read(
+      meetings: [shootout(DateTime(2022, 6)), shootout(DateTime(2024, 6))],
+      today: DateTime(2024, 7),
+    );
+    expect(r.label, TieLabel.rival);
+    expect(r.warmth, lessThan(-10));
+  });
+
   test('press dig -15 and respect +10 move warmth', () {
     final d = DateTime(2024);
     final r = _read(

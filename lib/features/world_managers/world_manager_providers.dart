@@ -38,17 +38,14 @@ managerRelationProvider = FutureProvider.autoDispose
           .read(careerRepositoryProvider)
           .stints(key.careerId);
       if (career == null) {
-        return readRelation(
-          spells: spells,
-          meetings: const [],
-          playerSideAt: (_) => const {},
-          ties: ties,
-          today: DateTime.now(),
+        return (
+          warmth: 0,
+          label: TieLabel.neutral,
+          meetings: 0,
+          won: 0,
+          drawn: 0,
+          lost: 0,
         );
-      }
-      int cycleOf(DateTime d) {
-        final c = ((d.year - CareerService.worldCupYear(0)) / 4).ceil();
-        return c < 0 ? 0 : c;
       }
 
       final comp = ref.read(competitionRepositoryProvider);
@@ -61,7 +58,9 @@ managerRelationProvider = FutureProvider.autoDispose
       return readRelation(
         spells: spells,
         meetings: byId.values.toList(),
-        playerSideAt: (d) => {stints[cycleOf(d)] ?? career.nationId},
+        playerSideAt: (d) => {
+          stints[CareerService.cycleForYear(d.year)] ?? career.nationId,
+        },
         ties: ties,
         today: career.inGameDate,
       );

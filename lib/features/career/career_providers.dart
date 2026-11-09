@@ -129,6 +129,13 @@ class CareerService {
   /// The World Cup year for a given cycle (clean cadence: 2030, 2034, …).
   static int worldCupYear(int cycle) => cycleStart.year + 4 * (cycle + 1);
 
+  /// The cycle whose World Cup year is [year] or the first one after it
+  /// (never below 0).
+  static int cycleForYear(int year) {
+    final c = ((year - worldCupYear(0)) / 4).ceil();
+    return c < 0 ? 0 : c;
+  }
+
   /// The continental championships' year for a given cycle: two years before
   /// its World Cup (2028, 2032, …). The calendar builds them there, and every
   /// reader that names the edition asks here rather than redoing the sum.

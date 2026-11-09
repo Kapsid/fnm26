@@ -87,6 +87,13 @@ ManagerRelation readRelation({
     }
     final mine = (mineHome ? f.homeScore : f.awayScore)!;
     final theirs = (mineHome ? f.awayScore : f.homeScore)!;
+    // A shootout is stored with the winner one goal up, but a level score
+    // with penalties is read by the penalties too.
+    final myPens = mineHome ? f.homePenalties : f.awayPenalties;
+    final theirPens = mineHome ? f.awayPenalties : f.homePenalties;
+    final decided =
+        mine != theirs ||
+        (myPens != null && theirPens != null && myPens != theirPens);
     met++;
     if (mine > theirs) {
       won++;
@@ -98,7 +105,7 @@ ManagerRelation readRelation({
     final ko =
         Rounds.isKnockout(f.round) &&
         !(f.round?.endsWith('3RD') ?? false) &&
-        mine != theirs;
+        decided;
     var delta = 0;
     if (ko) {
       delta = -10;
@@ -134,14 +141,16 @@ ManagerRelation readRelation({
   warmth = (warmth * decay(last, today)).clamp(-100.0, 100.0);
   final rounded = warmth.round();
 
-  TieLabel? structural;
+  ManagerTie? latest;
   for (final t in ties) {
-    final l = _structural(t.kind);
-    if (l != null) {
-      structural = l;
-      break;
+    if (_structural(t.kind) == null) continue;
+    if (latest == null ||
+        t.date.isAfter(latest.date) ||
+        (t.date.isAtSameMomentAs(latest.date) && t.tieNo > latest.tieNo)) {
+      latest = t;
     }
   }
+  final structural = latest == null ? null : _structural(latest.kind);
   final TieLabel label;
   if (structural != null) {
     label = structural;
