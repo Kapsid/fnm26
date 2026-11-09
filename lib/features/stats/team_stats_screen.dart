@@ -62,8 +62,9 @@ class _TeamStatsScreenState extends ConsumerState<TeamStatsScreen> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.primary),
-          onPressed: () =>
-              context.go('${Routes.hub}?careerId=${widget.careerId}'),
+          onPressed: () => context.canPop()
+              ? context.pop()
+              : context.go('${Routes.careers}?careerId=${widget.careerId}'),
         ),
         title: Text(
           l.statsTeamRecords,

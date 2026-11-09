@@ -39,7 +39,9 @@ class CareerSummaryScreen extends ConsumerWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.primary),
-          onPressed: () => context.go('${Routes.hub}?careerId=$careerId'),
+          onPressed: () => context.canPop()
+              ? context.pop()
+              : context.go('${Routes.careers}?careerId=$careerId'),
         ),
         title: Text(
           l.careerTitle,
