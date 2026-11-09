@@ -73,7 +73,7 @@ DecisionContext _ctx({
   int ranked = 100,
 }) => (
   date: date ?? _d,
-  // Every ranked nation is an AI nation, so the cap is a quarter of these.
+  // Every ranked nation is an AI nation, so the cap is capShare of these.
   rankById: {
     for (var n = 1; n <= (ranked > nations ? ranked : nations); n++) n: n,
   },

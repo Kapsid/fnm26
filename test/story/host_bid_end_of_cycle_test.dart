@@ -201,25 +201,11 @@ void main() {
           seed: s,
           nations: storyNations,
         ).first;
-        // Read as the career managing it sees the world: its cycle-0 hosts
-        // decided under the current rules and the stadium bars.
-        final world = [
-          for (final n in storyNations)
-            n.id == h
-                ? n.copyWith(
-                    hostBids: {
-                      HostBidding.managerKey(0): 1,
-                      HostBidding.rules2Key(0): 1,
-                    },
-                  )
-                : n,
-        ];
         final wc = WorldCupHosts.worldCupBidStanding(
           year: CareerService.worldCupYear(1),
-          nations: world,
+          nations: storyNations,
           seed: s,
           nationId: h,
-          managerNationId: h,
         );
         if (wc.eligible &&
             HostingRequirements.meets(

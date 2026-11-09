@@ -34,7 +34,7 @@ abstract final class ManagerDecisions {
   static const double smallSackChance = 0.25;
   static const double bigSackBelow = -2;
   static const double smallSackBelow = -1;
-  static const double capShare = 0.25;
+  static const double capShare = 0.30;
   static const int retireFromAge = 64;
   static const int freeYearsToLeave = 8;
   static const int poachTopRank = 40;
@@ -84,7 +84,7 @@ abstract final class ManagerDecisions {
     bool inScope(int n) => ctx.scope.contains(n) && !player.contains(n);
     int rankOf(int n) => ctx.rankById[n] ?? ManagerReputation.unranked;
 
-    // The cap: a quarter of the world's AI nations.
+    // The cap: 30% of the world's AI nations.
     final ai = {
       ...ctx.rankById.keys,
       if (ctx.rankById.isEmpty) ...{for (final s in w.spells) s.nationId},

@@ -70,7 +70,6 @@ Future<_World> _world({
   required int seed,
   bool premium = true,
   Nation? nation,
-  bool stadiumHostRules = true,
 }) async {
   SharedPreferences.setMockInitialValues(<String, Object>{});
   final db = createTestDatabase();
@@ -94,7 +93,6 @@ Future<_World> _world({
                 nationId: (nation ?? _bidder).id,
                 managerName: 'M',
                 rngSeed: seed,
-                stadiumHostRules: stadiumHostRules,
               ))
           .valueOrNull!;
   return (c: c, careerId: career.id);
@@ -138,10 +136,7 @@ Future<void> _finishCycle(_World w) async {
 }
 
 /// The world of a new save managed by [nationId] through cycles 0 and 1:
-/// its hosts follow the current rules (see `HostBidding.rulesKind`), and
-/// cycle 0's the stadium bars a new save is stamped with
-/// (`HostBidding.rules2Kind`). Cycle 1 as a save that pledged a bid for it
-/// decides it: under the current rules without the bars.
+/// its hosts follow the current rules (see `HostBidding.rulesKind`).
 List<Nation> _managed(int nationId) => [
   for (final n in _nations)
     n.id == nationId
@@ -149,7 +144,6 @@ List<Nation> _managed(int nationId) => [
             hostBids: {
               HostBidding.managerKey(0): 1,
               HostBidding.managerKey(1): 1,
-              HostBidding.rules2Key(0): 1,
             },
           )
         : n,
@@ -203,15 +197,14 @@ int _seedWhere(bool? Function(int seed) wanted, Object? value) {
 }
 
 /// [world] without the host-rules markers every new career carries (see
-/// `HostBidding.rulesKind` and `HostBidding.rules2Kind`): they ride on the
-/// nations but are no part of the world itself.
+/// `HostBidding.rulesKind`): they ride on the nations but are no part of
+/// the world itself.
 List<Nation> _bare(List<Nation> world) => [
   for (final n in world)
     n.copyWith(
       hostBids: {
         for (final e in n.hostBids.entries)
-          if (!e.key.startsWith('mgr:') && !e.key.startsWith('r2:'))
-            e.key: e.value,
+          if (!e.key.startsWith('mgr:')) e.key: e.value,
       },
     ),
 ];
@@ -299,18 +292,9 @@ void main() {
       // The manager's own nation never hosts without a bid, so the recent
       // host is the nation he moves to: a world (managed from San Marino)
       // where the bidder hosted cycle 0's championship, barred from cycle
-      // 1's. Cycle 0 without the stadium bars: under them a mid-table side
-      // like the bidder may never host it at all.
+      // 1's.
       final first = _europe.last;
-      final world0 = [
-        for (final n in _managed(first.id))
-          n.copyWith(
-            hostBids: {
-              for (final e in n.hostBids.entries)
-                if (!e.key.startsWith('r2:')) e.key: e.value,
-            },
-          ),
-      ];
+      final world0 = _managed(first.id);
       var seed = 1;
       while (!WorldCupHosts.continentalHostsFor(
         confederation: Confederation.europe,
@@ -320,11 +304,7 @@ void main() {
       ).contains(_bidder.id)) {
         seed++;
       }
-      final w = await _world(
-        seed: seed,
-        nation: first,
-        stadiumHostRules: false,
-      );
+      final w = await _world(seed: seed, nation: first);
       await _finishCycle(w);
       final cont = (await _statuses(
         w,

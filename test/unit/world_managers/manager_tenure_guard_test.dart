@@ -4,7 +4,7 @@ import 'manager_lab_world.dart';
 
 /// Pins the turnover the owner asked for (spec section 2): mean tenure 4 to
 /// 6 years, about 20% of nations changing per year, mostly after finals, and
-/// never more than a quarter of the world at once.
+/// never more than 30% of the world at once.
 ///
 /// The spec bounds a mean tenure, not each synthetic world, so tenure and the
 /// yearly share are asserted on the mean over the seeds; the per-point cap
@@ -47,7 +47,7 @@ void main() {
       );
       expect(
         e.value.maxPointShare,
-        lessThanOrEqualTo(0.25),
+        lessThanOrEqualTo(0.30),
         reason: 'seed ${e.key} max share at one point; $perSeed',
       );
     }

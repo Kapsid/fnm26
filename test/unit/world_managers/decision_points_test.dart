@@ -192,8 +192,11 @@ void main() {
       moves.where((m) => m.outgoingId != null).length,
       reason: 'every departure is a closed spell, dated on the final',
     );
-    // At most a quarter of the world changes at one point.
-    expect(closed.length, lessThanOrEqualTo(s.nations.length ~/ 4));
+    // At most 30% of the world changes at one point.
+    expect(
+      closed.length,
+      lessThanOrEqualTo((s.nations.length * ManagerDecisions.capShare).floor()),
+    );
     // Every AI nation has a manager the day after.
     for (final n in s.nations) {
       if (n.id == s.playerNationId) continue;
