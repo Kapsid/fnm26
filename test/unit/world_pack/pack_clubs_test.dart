@@ -204,10 +204,13 @@ void main() {
     expect(moved, greaterThan(0));
   });
 
-  test('allLeagues lists the curated leagues in table order', () {
+  test('allLeagues lists the curated leagues in table order, then the '
+      'rest', () {
     final leagues = ClubService.allLeagues();
     expect(leagues.first.country, 'eng');
-    expect(leagues.last.country, 'tpe');
+    // The 34 curated leagues first, then one for every other country.
+    expect(leagues[33].country, 'tpe');
+    expect(leagues.length, greaterThan(200));
     expect(
       leagues.singleWhere((l) => l.country == 'cze').clubs,
       ClubService.leagueClubs('cze'),

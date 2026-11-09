@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
+import 'package:fnm/domain/repositories/player_repository.dart'
+    show clubStrengthKind;
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/domain/services/federation/sponsors.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
@@ -34,16 +37,6 @@ const _packFile = 'test/unit/world_pack/fixtures/v1_pack.json';
 const _goldenFile = 'test/unit/world_pack/fixtures/v1_world_pin.json';
 
 bool _env(String k) => Platform.environment[k] == '1';
-
-/// A seeded container over a fresh database.
-Future<ProviderContainer> _world() async {
-  final db = createTestDatabase();
-  addTearDown(db.close);
-  final c = greenlandContainer(db);
-  addTearDown(c.dispose);
-  await c.read(seedLoaderProvider).ensureSeeded();
-  return c;
-}
 
 /// The default world as a 1.1.0 pack, with one entry in every override map
 /// and a squad edit: a renamed core player and a pack-made player.
@@ -159,7 +152,11 @@ void main() {
     'default and 1.1.0 worlds read exactly as pinned',
     timeout: const Timeout.factor(8),
     () async {
-      final c = await _world();
+      final db = createTestDatabase();
+      addTearDown(db.close);
+      final c = greenlandContainer(db);
+      addTearDown(c.dispose);
+      await c.read(seedLoaderProvider).ensureSeeded();
       final careers = c.read(careerServiceProvider);
 
       final plain = (await careers.create(
@@ -167,7 +164,6 @@ void main() {
         managerName: 'M',
         rngSeed: _seed,
       )).valueOrNull!;
-      final defaultReads = await _players(c, plain.id);
 
       final packFile = File(_packFile);
       if (_env('WRITE_V1_PACK')) {
@@ -195,7 +191,16 @@ void main() {
       )).valueOrNull;
       expect(onPack, isNotNull, reason: 'the 1.1.0 pack starts a career');
 
-      final packReads = await _players(c, onPack!.id);
+      // Both read as careers from before club strength (no mark), by a
+      // fresh app, as an upgraded build opens an old save: the pin was
+      // written before club strength and pins what those careers show.
+      await (db.delete(
+        db.drawsWatched,
+      )..where((t) => t.kind.equals(clubStrengthKind))).go();
+      final old = greenlandContainer(db);
+      addTearDown(old.dispose);
+      final defaultReads = await _players(old, plain.id);
+      final packReads = await _players(old, onPack!.id);
       // The pack's edits show: the pin reads a 1.1.0 world, not the default.
       final day23 = jsonEncode(packReads['23/0']);
       expect(day23, contains('Pinned Renamed'));

@@ -17,6 +17,7 @@ _Player _$PlayerFromJson(Map<String, dynamic> json) => _Player(
   ),
   club: json['club'] as String? ?? 'Free agent',
   clubCountry: json['clubCountry'] as String? ?? '',
+  clubStars: (json['clubStars'] as num?)?.toInt() ?? 0,
   fixedTraits: (json['fixedTraits'] as List<dynamic>?)
       ?.map((e) => $enumDecode(_$PlayerTraitEnumMap, e))
       .toList(),
@@ -31,6 +32,7 @@ Map<String, dynamic> _$PlayerToJson(_Player instance) => <String, dynamic>{
   'attributes': instance.attributes,
   'club': instance.club,
   'clubCountry': instance.clubCountry,
+  'clubStars': instance.clubStars,
   'fixedTraits': ?instance.fixedTraits
       ?.map((e) => _$PlayerTraitEnumMap[e]!)
       .toList(),

@@ -240,8 +240,9 @@ abstract final class PackCodec {
       return false;
     }
     if (p.madeWithVersion.length > 20) return false;
-    for (final m in [
+    for (final m in <Map<String, Object>>[
       p.clubs,
+      p.clubStrengths,
       p.stadiums,
       p.competitions,
       p.sponsors,
@@ -257,7 +258,8 @@ abstract final class PackCodec {
         p.pools.values.any((s) => s.length > PackRules.poolMax)) {
       return false;
     }
-    if (p.addedClubs.length > PackRules.addedClubsMax ||
+    if (p.clubStrengths.length > PackRules.clubStrengthsMax ||
+        p.addedClubs.length > PackRules.addedClubsMax ||
         p.addedSponsors.length > PackRules.addedSponsorsMax ||
         p.addedYAccounts.length > PackRules.addedYMax) {
       return false;

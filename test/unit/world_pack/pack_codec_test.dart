@@ -223,9 +223,10 @@ void main() {
     Map<String, Object?> rawPack(WorldPack p) =>
         _raw(p)['pack']! as Map<String, Object?>;
 
-    test('v1 file imports and reads as v2', () async {
+    test('v1 file imports and reads as v3', () async {
       final json = _pack().toJson()
         ..['formatVersion'] = 1
+        ..remove('clubStrengths')
         ..remove('pools')
         ..remove('addedClubs')
         ..remove('addedSponsors')
@@ -235,21 +236,99 @@ void main() {
         _file({'format': 1, 'pack': json, 'trophies': <String, Object?>{}}),
       );
       final d = r as PackDecoded;
-      expect(d.pack.formatVersion, 2);
+      expect(d.pack.formatVersion, 3);
       expect(d.pack.squads, _pack().squads);
       expect(d.pack.pools, isEmpty);
       expect(d.pack.localized, isEmpty);
     });
 
-    test('export writes format 2', () {
+    test('export writes format 3', () {
       final bytes = PackCodec.encode(
         _pack().copyWith(formatVersion: 1),
         const {},
       );
       final top =
           jsonDecode(utf8.decode(gzip.decode(bytes))) as Map<String, Object?>;
-      expect(top['format'], 2);
-      expect((top['pack']! as Map)['formatVersion'], 2);
+      expect(top['format'], 3);
+      expect((top['pack']! as Map)['formatVersion'], 3);
+      // A build that reads format 2 at most compares this number first, so
+      // it says "made with a newer version" instead of "broken file".
+      expect(top['format']! as int, greaterThan(2));
+    });
+
+    test('a format-2 file (1.1.x editor 2) imports with every club at its '
+        'default strength', () async {
+      final p = _pack().copyWith(
+        addedClubs: const [
+          PackClub(id: kPackAddedIdBase, name: 'Old Added', country: 'cze'),
+        ],
+      );
+      final raw = _raw(p);
+      raw['format'] = 2;
+      raw['pack'] = (rawPack(p)
+        ..['formatVersion'] = 2
+        ..remove('clubStrengths'));
+      final r = await PackCodec.decode(_file(raw));
+      final d = r as PackDecoded;
+      expect(d.pack.formatVersion, 3);
+      expect(d.pack.clubStrengths, isEmpty);
+      expect(d.pack.addedClubs.single.strength, isNull);
+    });
+
+    test('a format-3 file with strengths round-trips', () async {
+      final p = _pack().copyWith(
+        clubStrengths: const {'Man Blue': 3},
+        addedClubs: const [
+          PackClub(
+            id: kPackAddedIdBase,
+            name: 'Strong Added',
+            country: 'cze',
+            strength: 5,
+          ),
+        ],
+      );
+      final r = await PackCodec.decode(PackCodec.encode(p, const {}));
+      final d = r as PackDecoded;
+      expect(d.pack.clubStrengths, {'Man Blue': 3});
+      expect(d.pack.addedClubs.single.strength, 5);
+    });
+
+    test('a strength out of 1 to 5 -> badData', () async {
+      for (final bad in [0, 6, -1]) {
+        expect(
+          await reason(
+            _file(_raw(_pack().copyWith(clubStrengths: {'Man Blue': bad}))),
+          ),
+          PackRejection.badData,
+          reason: '$bad',
+        );
+        expect(
+          await reason(
+            _file(
+              _raw(
+                _pack().copyWith(
+                  addedClubs: [
+                    PackClub(
+                      id: kPackAddedIdBase,
+                      name: 'Bad Added',
+                      country: 'cze',
+                      strength: bad,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          PackRejection.badData,
+          reason: 'added $bad',
+        );
+      }
+    });
+
+    test('a file from a newer format -> newerFormat, not badData', () async {
+      final raw = _raw(_pack());
+      raw['format'] = kPackFormatVersion + 1;
+      expect(await reason(_file(raw)), PackRejection.newerFormat);
     });
 
     test('a pack with every new part decodes whole', () async {
@@ -383,7 +462,11 @@ void main() {
         );
         expect(PackCodec.fieldsOk(p), isTrue);
         final json = utf8.encode(
-          jsonEncode({'format': 2, 'pack': p.toJson(), 'trophies': <String, Object?>{}}),
+          jsonEncode({
+            'format': 2,
+            'pack': p.toJson(),
+            'trophies': <String, Object?>{},
+          }),
         );
         final bytes = PackCodec.encode(p, const {});
         // ignore: avoid_print
@@ -713,6 +796,7 @@ void main() {
         _raw(p)
           ..['pack'] = (rawPack(p)
             ..['formatVersion'] = 1
+            ..remove('clubStrengths')
             ..remove('pools')
             ..remove('addedClubs')
             ..remove('addedSponsors')

@@ -162,7 +162,7 @@ void main() {
     expect(() => WorldPack.fromJson(json), throwsFormatException);
   });
 
-  test('migrate is identity at v2 and rejects newer or missing versions', () {
+  test('migrate is identity at v3 and rejects newer or missing versions', () {
     final json = _pack().toJson();
     expect(WorldPack.migrate(json), json);
     expect(
@@ -175,7 +175,7 @@ void main() {
 
   test('v2 round trip keeps every new part', () {
     final p = _v2Pack();
-    expect(p.toJson()['formatVersion'], 2);
+    expect(p.toJson()['formatVersion'], kPackFormatVersion);
     final back = WorldPack.fromJson(
       jsonDecode(jsonEncode(p.toJson())) as Map<String, Object?>,
     );
@@ -193,16 +193,17 @@ void main() {
   });
 
   test(
-    'v1 fixture migrates to v2 with empty new parts and the same 1.1.0 maps',
+    'v1 fixture migrates to v3 with empty new parts and the same 1.1.0 maps',
     () {
       final raw =
           jsonDecode(File(_v1Fixture).readAsStringSync())
               as Map<String, Object?>;
       expect(raw['formatVersion'], 1);
       final migrated = WorldPack.migrate(raw);
-      expect(migrated['formatVersion'], 2);
+      expect(migrated['formatVersion'], 3);
       final p = WorldPack.fromJson(migrated);
-      expect(p.formatVersion, 2);
+      expect(p.formatVersion, 3);
+      expect(p.clubStrengths, isEmpty);
       expect(p.pools, isEmpty);
       expect(p.addedClubs, isEmpty);
       expect(p.addedSponsors, isEmpty);
@@ -217,7 +218,7 @@ void main() {
       // The fixture is a 1.1.0 file: migrating never rewrites it.
       expect(raw['formatVersion'], 1);
       expect(raw.containsKey('pools'), isFalse);
-      // Migration is idempotent once at v2.
+      // Migration is idempotent once at v3.
       expect(WorldPack.migrate(migrated), migrated);
     },
   );
@@ -315,11 +316,88 @@ void main() {
     );
   });
 
-  test('migrate refuses format 3', () {
+  test('migrate refuses format 4', () {
     expect(
-      () => WorldPack.migrate({..._v2Pack().toJson(), 'formatVersion': 3}),
+      () => WorldPack.migrate({..._v2Pack().toJson(), 'formatVersion': 4}),
       throwsFormatException,
     );
+  });
+
+  group('format 3: club strength', () {
+    Map<String, Object?> v2Json() {
+      final json = _v2Pack().toJson()
+        ..['formatVersion'] = 2
+        ..remove('clubStrengths');
+      return json;
+    }
+
+    test('a format-2 pack reads as every club at its default strength', () {
+      final p = WorldPack.fromJson(WorldPack.migrate(v2Json()));
+      expect(p.formatVersion, 3);
+      expect(p.clubStrengths, isEmpty);
+      expect(p.addedClubs.single.strength, isNull);
+      expect(p.addedClubs.single, _club);
+    });
+
+    test('a format-2 pack carrying a format-3 part is no format-2 file', () {
+      expect(
+        () => WorldPack.migrate({
+          ...v2Json(),
+          'clubStrengths': {'Man Blue': 4},
+        }),
+        throwsFormatException,
+      );
+      expect(
+        () => WorldPack.migrate({
+          ...v2Json(),
+          'addedClubs': [
+            {..._club.toJson(), 'strength': 4},
+          ],
+        }),
+        throwsFormatException,
+      );
+    });
+
+    test('strengths round-trip; a club with none writes no key', () {
+      final p = _v2Pack().copyWith(
+        clubStrengths: const {'Man Blue': 2, 'FC Blšany': 5},
+        addedClubs: [
+          _club,
+          PackClub(
+            id: _club.id + 100,
+            name: 'Strong FC',
+            country: 'cze',
+            strength: 4,
+          ),
+        ],
+      );
+      final json = jsonDecode(jsonEncode(p.toJson())) as Map<String, Object?>;
+      expect(
+        (json['addedClubs']! as List).first as Map,
+        isNot(contains('strength')),
+      );
+      final back = WorldPack.fromJson(WorldPack.migrate(json));
+      expect(back, p);
+      expect(back.clubStrengths, {'Man Blue': 2, 'FC Blšany': 5});
+      expect(back.addedClubs.last.strength, 4);
+    });
+
+    test('a strength that is no integer is refused by the reader', () {
+      expect(
+        () => WorldPack.fromJson({
+          ..._v2Pack().toJson(),
+          'clubStrengths': {'Man Blue': 'five'},
+        }),
+        throwsFormatException,
+      );
+    });
+
+    test('PackClub.copyWith keeps or clears the strength', () {
+      const c = PackClub(id: 1, name: 'A', country: 'cze', strength: 3);
+      expect(c.copyWith(name: 'B').strength, 3);
+      expect(c.copyWith(strength: const Some(null)).strength, isNull);
+      expect(c.copyWith(strength: const Some(5)).strength, 5);
+    });
   });
 
   test('PackPaths builds and parses localized paths', () {
