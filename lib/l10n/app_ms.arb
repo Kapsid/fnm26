@@ -4051,5 +4051,7 @@
   "shareFailed": "Imej tidak dapat dibuat.",
   "shareSaveToPhotos": "Simpan ke foto",
   "shareSavedToPhotos": "Disimpan ke foto",
-  "sharePhotosDenied": "FNM tidak dibenarkan menambah ke foto anda. Anda boleh membenarkannya dalam Tetapan."
+  "sharePhotosDenied": "FNM tidak dibenarkan menambah ke foto anda. Anda boleh membenarkannya dalam Tetapan.",
+  "editorCountryAll": "Semua negara",
+  "editorCountryFilterTitle": "Tapis mengikut negara"
 }

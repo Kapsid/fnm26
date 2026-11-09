@@ -16610,4 +16610,10 @@ class AppLocalizationsHr extends AppLocalizations {
   @override
   String get sharePhotosDenied =>
       'FNM nema dopuštenje za dodavanje u tvoje fotografije. Možeš ga dopustiti u Postavkama.';
+
+  @override
+  String get editorCountryAll => 'Sve države';
+
+  @override
+  String get editorCountryFilterTitle => 'Filtriraj po državi';
 }

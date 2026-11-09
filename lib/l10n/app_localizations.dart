@@ -24547,6 +24547,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'FNM is not allowed to add to your photos. You can allow it in Settings.'**
   String get sharePhotosDenied;
+
+  /// Editor, clubs and stadiums list: the country filter's choice that lists every country.
+  ///
+  /// In en, this message translates to:
+  /// **'All countries'**
+  String get editorCountryAll;
+
+  /// Editor, clubs and stadiums list: title of the sheet that picks a country to list.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by country'**
+  String get editorCountryFilterTitle;
 }
 
 class _AppLocalizationsDelegate

@@ -4051,5 +4051,7 @@
   "shareFailed": "Slika se nije mogla izraditi.",
   "shareSaveToPhotos": "Spremi u fotografije",
   "shareSavedToPhotos": "Spremljeno u fotografije",
-  "sharePhotosDenied": "FNM nema dopuštenje za dodavanje u tvoje fotografije. Možeš ga dopustiti u Postavkama."
+  "sharePhotosDenied": "FNM nema dopuštenje za dodavanje u tvoje fotografije. Možeš ga dopustiti u Postavkama.",
+  "editorCountryAll": "Sve države",
+  "editorCountryFilterTitle": "Filtriraj po državi"
 }

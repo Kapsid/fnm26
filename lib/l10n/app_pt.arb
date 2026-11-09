@@ -4051,5 +4051,7 @@
   "shareFailed": "Não foi possível criar a imagem.",
   "shareSaveToPhotos": "Salvar nas fotos",
   "shareSavedToPhotos": "Salva nas fotos",
-  "sharePhotosDenied": "O FNM não tem permissão para adicionar às suas fotos. Você pode permitir nos Ajustes."
+  "sharePhotosDenied": "O FNM não tem permissão para adicionar às suas fotos. Você pode permitir nos Ajustes.",
+  "editorCountryAll": "Todos os países",
+  "editorCountryFilterTitle": "Filtrar por país"
 }

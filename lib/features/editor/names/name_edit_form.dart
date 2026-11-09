@@ -8,6 +8,7 @@ import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
+import 'package:fnm/features/editor/names/added_items.dart';
 import 'package:fnm/features/editor/names/club_strength_picker.dart';
 import 'package:fnm/features/editor/names/name_sections.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -311,15 +312,23 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
         ),
         const SizedBox(height: AppSpacing.md),
         ...fields,
-        // A league club's strength: one for every language, so it is set
-        // under All languages only.
-        if (_section == NameSection.clubs && !_e.added && lang == null) ...[
+        // A club's strength is one for every language: set from any tab.
+        if (_section == NameSection.clubs) ...[
           const SizedBox(height: AppSpacing.sm),
           ClubStrengthPicker(
-            value: pack.clubStrengths[_e.key],
+            value: _e.added
+                ? pack.addedClubs
+                      .where((c) => c.id == _e.addedId)
+                      .firstOrNull
+                      ?.strength
+                : pack.clubStrengths[_e.key],
             defaultStars: clubDefaultStars(_e),
             onChanged: (stars) {
-              _write((p) => NameEdits.withClubStrength(p, _e.key, stars));
+              _write(
+                (p) => _e.added
+                    ? AddedEdits.setClubStrength(p, _e.addedId!, stars)
+                    : NameEdits.withClubStrength(p, _e.key, stars),
+              );
               // A pick is a step of its own.
               _group = Object();
               setState(() {});

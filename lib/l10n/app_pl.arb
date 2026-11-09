@@ -4051,5 +4051,7 @@
   "shareFailed": "Nie udało się utworzyć obrazu.",
   "shareSaveToPhotos": "Zapisz w zdjęciach",
   "shareSavedToPhotos": "Zapisano w zdjęciach",
-  "sharePhotosDenied": "FNM nie ma uprawnień do dodawania zdjęć. Możesz na to zezwolić w Ustawieniach."
+  "sharePhotosDenied": "FNM nie ma uprawnień do dodawania zdjęć. Możesz na to zezwolić w Ustawieniach.",
+  "editorCountryAll": "Wszystkie kraje",
+  "editorCountryFilterTitle": "Filtruj według kraju"
 }

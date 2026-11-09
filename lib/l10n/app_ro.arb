@@ -4051,5 +4051,7 @@
   "shareFailed": "Imaginea nu a putut fi creată.",
   "shareSaveToPhotos": "Salvează în poze",
   "shareSavedToPhotos": "Salvată în poze",
-  "sharePhotosDenied": "FNM nu are voie să adauge în pozele tale. Poți permite asta din Setări."
+  "sharePhotosDenied": "FNM nu are voie să adauge în pozele tale. Poți permite asta din Setări.",
+  "editorCountryAll": "Toate țările",
+  "editorCountryFilterTitle": "Filtrează după țară"
 }

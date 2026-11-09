@@ -25156,5 +25156,13 @@
   "sharePhotosDenied": "FNM is not allowed to add to your photos. You can allow it in Settings.",
   "@sharePhotosDenied": {
     "description": "Snack bar when the phone refused the app access to save into the photo gallery."
+  },
+  "editorCountryAll": "All countries",
+  "@editorCountryAll": {
+    "description": "Editor, clubs and stadiums list: the country filter's choice that lists every country."
+  },
+  "editorCountryFilterTitle": "Filter by country",
+  "@editorCountryFilterTitle": {
+    "description": "Editor, clubs and stadiums list: title of the sheet that picks a country to list."
   }
 }

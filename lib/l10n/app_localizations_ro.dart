@@ -16688,4 +16688,10 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get sharePhotosDenied =>
       'FNM nu are voie să adauge în pozele tale. Poți permite asta din Setări.';
+
+  @override
+  String get editorCountryAll => 'Toate țările';
+
+  @override
+  String get editorCountryFilterTitle => 'Filtrează după țară';
 }

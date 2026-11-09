@@ -4051,5 +4051,7 @@
   "shareFailed": "Billedet kunne ikke oprettes.",
   "shareSaveToPhotos": "Gem i billeder",
   "shareSavedToPhotos": "Gemt i billeder",
-  "sharePhotosDenied": "FNM har ikke lov til at tilføje til dine billeder. Du kan tillade det i Indstillinger."
+  "sharePhotosDenied": "FNM har ikke lov til at tilføje til dine billeder. Du kan tillade det i Indstillinger.",
+  "editorCountryAll": "Alle lande",
+  "editorCountryFilterTitle": "Filtrer efter land"
 }

@@ -15979,4 +15979,10 @@ class AppLocalizationsTh extends AppLocalizations {
   @override
   String get sharePhotosDenied =>
       'FNM ไม่ได้รับอนุญาตให้เพิ่มลงในรูปภาพของคุณ คุณอนุญาตได้ในการตั้งค่า';
+
+  @override
+  String get editorCountryAll => 'ทุกประเทศ';
+
+  @override
+  String get editorCountryFilterTitle => 'กรองตามประเทศ';
 }

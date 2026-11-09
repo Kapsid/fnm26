@@ -4051,5 +4051,7 @@
   "shareFailed": "A kép nem hozható létre.",
   "shareSaveToPhotos": "Mentés a fotókhoz",
   "shareSavedToPhotos": "Mentve a fotókhoz",
-  "sharePhotosDenied": "Az FNM nem adhat hozzá a fotóidhoz. A Beállításokban engedélyezheted."
+  "sharePhotosDenied": "Az FNM nem adhat hozzá a fotóidhoz. A Beállításokban engedélyezheted.",
+  "editorCountryAll": "Minden ország",
+  "editorCountryFilterTitle": "Szűrés ország szerint"
 }

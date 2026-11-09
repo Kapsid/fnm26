@@ -16346,4 +16346,10 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String get sharePhotosDenied =>
       'FNM:llä ei ole lupaa lisätä kuviisi. Voit sallia sen Asetuksissa.';
+
+  @override
+  String get editorCountryAll => 'Kaikki maat';
+
+  @override
+  String get editorCountryFilterTitle => 'Suodata maan mukaan';
 }

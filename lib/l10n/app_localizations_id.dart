@@ -16180,4 +16180,10 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get sharePhotosDenied =>
       'FNM tidak diizinkan menambah ke foto Anda. Anda bisa mengizinkannya di Pengaturan.';
+
+  @override
+  String get editorCountryAll => 'Semua negara';
+
+  @override
+  String get editorCountryFilterTitle => 'Filter menurut negara';
 }

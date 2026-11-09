@@ -16120,4 +16120,10 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get sharePhotosDenied =>
       'FNM chưa được phép thêm vào ảnh của bạn. Bạn có thể cho phép trong Cài đặt.';
+
+  @override
+  String get editorCountryAll => 'Tất cả quốc gia';
+
+  @override
+  String get editorCountryFilterTitle => 'Lọc theo quốc gia';
 }

@@ -16548,4 +16548,10 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get sharePhotosDenied =>
       'FNM nemá povolení ukládat do fotek. Můžete ho povolit v Nastavení.';
+
+  @override
+  String get editorCountryAll => 'Všechny země';
+
+  @override
+  String get editorCountryFilterTitle => 'Filtr podle země';
 }

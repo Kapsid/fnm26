@@ -15732,4 +15732,10 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get sharePhotosDenied => 'FNM에 사진 추가 권한이 없습니다. 설정에서 허용할 수 있습니다.';
+
+  @override
+  String get editorCountryAll => '모든 국가';
+
+  @override
+  String get editorCountryFilterTitle => '국가별 필터';
 }

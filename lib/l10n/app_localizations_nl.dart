@@ -16350,4 +16350,10 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get sharePhotosDenied =>
       'FNM mag niets aan je foto\'s toevoegen. Je kunt het toestaan in Instellingen.';
+
+  @override
+  String get editorCountryAll => 'Alle landen';
+
+  @override
+  String get editorCountryFilterTitle => 'Filter op land';
 }

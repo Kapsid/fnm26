@@ -16362,4 +16362,10 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get sharePhotosDenied =>
       'Το FNM δεν έχει άδεια να προσθέτει στις φωτογραφίες σου. Μπορείς να το επιτρέψεις στις Ρυθμίσεις.';
+
+  @override
+  String get editorCountryAll => 'Όλες οι χώρες';
+
+  @override
+  String get editorCountryFilterTitle => 'Φιλτράρισμα ανά χώρα';
 }

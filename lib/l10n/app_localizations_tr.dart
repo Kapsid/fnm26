@@ -16185,4 +16185,10 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get sharePhotosDenied =>
       'FNM\'nin fotoğraflarına ekleme izni yok. Bunu Ayarlar\'dan açabilirsin.';
+
+  @override
+  String get editorCountryAll => 'Tüm ülkeler';
+
+  @override
+  String get editorCountryFilterTitle => 'Ülkeye göre filtrele';
 }

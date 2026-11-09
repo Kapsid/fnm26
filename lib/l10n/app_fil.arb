@@ -4051,5 +4051,7 @@
   "shareFailed": "Hindi magawa ang larawan.",
   "shareSaveToPhotos": "I-save sa photos",
   "shareSavedToPhotos": "Na-save sa photos",
-  "sharePhotosDenied": "Walang pahintulot ang FNM na magdagdag sa photos mo. Puwede mo itong payagan sa Settings."
+  "sharePhotosDenied": "Walang pahintulot ang FNM na magdagdag sa photos mo. Puwede mo itong payagan sa Settings.",
+  "editorCountryAll": "Lahat ng bansa",
+  "editorCountryFilterTitle": "I-filter ayon sa bansa"
 }

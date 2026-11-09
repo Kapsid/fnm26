@@ -4051,5 +4051,7 @@
   "shareFailed": "Не вдалося створити зображення.",
   "shareSaveToPhotos": "Зберегти у фото",
   "shareSavedToPhotos": "Збережено у фото",
-  "sharePhotosDenied": "FNM не має дозволу додавати до твоїх фото. Можна дозволити це в Налаштуваннях."
+  "sharePhotosDenied": "FNM не має дозволу додавати до твоїх фото. Можна дозволити це в Налаштуваннях.",
+  "editorCountryAll": "Усі країни",
+  "editorCountryFilterTitle": "Фільтр за країною"
 }

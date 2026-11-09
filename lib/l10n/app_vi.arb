@@ -4051,5 +4051,7 @@
   "shareFailed": "Không thể tạo ảnh.",
   "shareSaveToPhotos": "Lưu vào ảnh",
   "shareSavedToPhotos": "Đã lưu vào ảnh",
-  "sharePhotosDenied": "FNM chưa được phép thêm vào ảnh của bạn. Bạn có thể cho phép trong Cài đặt."
+  "sharePhotosDenied": "FNM chưa được phép thêm vào ảnh của bạn. Bạn có thể cho phép trong Cài đặt.",
+  "editorCountryAll": "Tất cả quốc gia",
+  "editorCountryFilterTitle": "Lọc theo quốc gia"
 }

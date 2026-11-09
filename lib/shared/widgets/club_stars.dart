@@ -10,9 +10,12 @@ import 'package:fnm/l10n/app_localizations.dart';
 /// club, not a rating of the player, and the gold star the squad screens
 /// already use is theirs.
 class ClubStars extends StatelessWidget {
-  const ClubStars(this.stars, {this.size = 12, super.key});
+  const ClubStars(this.stars, {this.size = 12, this.accent = false, super.key});
 
   final int stars;
+
+  /// Whether the stars are tinted: a strength that was set by hand.
+  final bool accent;
 
   /// Each star's size.
   final double size;
@@ -31,7 +34,9 @@ class ClubStars extends StatelessWidget {
             Icon(
               i < n ? Icons.star_rounded : Icons.star_outline_rounded,
               size: size,
-              color: i < n ? AppColors.onSurfaceVariant : AppColors.outline,
+              color: i < n
+                  ? (accent ? AppColors.primary : AppColors.onSurfaceVariant)
+                  : AppColors.outline,
             ),
         ],
       ),

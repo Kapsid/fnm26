@@ -4051,5 +4051,7 @@
   "shareFailed": "이미지를 만들 수 없습니다.",
   "shareSaveToPhotos": "사진에 저장",
   "shareSavedToPhotos": "사진에 저장했습니다",
-  "sharePhotosDenied": "FNM에 사진 추가 권한이 없습니다. 설정에서 허용할 수 있습니다."
+  "sharePhotosDenied": "FNM에 사진 추가 권한이 없습니다. 설정에서 허용할 수 있습니다.",
+  "editorCountryAll": "모든 국가",
+  "editorCountryFilterTitle": "국가별 필터"
 }

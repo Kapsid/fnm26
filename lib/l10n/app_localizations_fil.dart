@@ -16280,4 +16280,10 @@ class AppLocalizationsFil extends AppLocalizations {
   @override
   String get sharePhotosDenied =>
       'Walang pahintulot ang FNM na magdagdag sa photos mo. Puwede mo itong payagan sa Settings.';
+
+  @override
+  String get editorCountryAll => 'Lahat ng bansa';
+
+  @override
+  String get editorCountryFilterTitle => 'I-filter ayon sa bansa';
 }

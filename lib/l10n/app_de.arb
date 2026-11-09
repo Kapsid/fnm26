@@ -4051,5 +4051,7 @@
   "shareFailed": "Das Bild konnte nicht erstellt werden.",
   "shareSaveToPhotos": "In Fotos sichern",
   "shareSavedToPhotos": "In Fotos gesichert",
-  "sharePhotosDenied": "FNM darf nichts zu Ihren Fotos hinzufügen. Sie können es in den Einstellungen erlauben."
+  "sharePhotosDenied": "FNM darf nichts zu Ihren Fotos hinzufügen. Sie können es in den Einstellungen erlauben.",
+  "editorCountryAll": "Alle Länder",
+  "editorCountryFilterTitle": "Nach Land filtern"
 }

@@ -4051,5 +4051,7 @@
   "shareFailed": "Kuvaa ei voitu luoda.",
   "shareSaveToPhotos": "Tallenna kuviin",
   "shareSavedToPhotos": "Tallennettu kuviin",
-  "sharePhotosDenied": "FNM:llä ei ole lupaa lisätä kuviisi. Voit sallia sen Asetuksissa."
+  "sharePhotosDenied": "FNM:llä ei ole lupaa lisätä kuviisi. Voit sallia sen Asetuksissa.",
+  "editorCountryAll": "Kaikki maat",
+  "editorCountryFilterTitle": "Suodata maan mukaan"
 }

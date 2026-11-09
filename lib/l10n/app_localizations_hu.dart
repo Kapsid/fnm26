@@ -16219,4 +16219,10 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get sharePhotosDenied =>
       'Az FNM nem adhat hozzá a fotóidhoz. A Beállításokban engedélyezheted.';
+
+  @override
+  String get editorCountryAll => 'Minden ország';
+
+  @override
+  String get editorCountryFilterTitle => 'Szűrés ország szerint';
 }

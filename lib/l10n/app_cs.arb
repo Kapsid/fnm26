@@ -4051,5 +4051,7 @@
   "shareFailed": "Obrázek se nepodařilo vytvořit.",
   "shareSaveToPhotos": "Uložit do fotek",
   "shareSavedToPhotos": "Uloženo do fotek",
-  "sharePhotosDenied": "FNM nemá povolení ukládat do fotek. Můžete ho povolit v Nastavení."
+  "sharePhotosDenied": "FNM nemá povolení ukládat do fotek. Můžete ho povolit v Nastavení.",
+  "editorCountryAll": "Všechny země",
+  "editorCountryFilterTitle": "Filtr podle země"
 }
