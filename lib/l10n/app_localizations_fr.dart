@@ -16388,7 +16388,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String clubStrengthOf(int stars) {
-    return 'Force du club : $stars sur 5';
+    return 'Force du club : $stars sur 5';
   }
 
   @override
@@ -16399,6 +16399,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String editorClubStrengthHelp(int stars) {
-    return 'Les meilleurs joueurs rejoignent les clubs les plus forts. Par défaut : $stars sur 5, selon son championnat.';
+    return 'Les meilleurs joueurs rejoignent les clubs les plus forts. Par défaut : $stars sur 5, selon son championnat.';
   }
 }
