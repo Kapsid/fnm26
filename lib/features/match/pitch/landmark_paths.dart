@@ -43,7 +43,7 @@ abstract final class LandmarkPaths {
     LandmarkKind.spires => _spires(),
     LandmarkKind.parliament => _parliament(),
     LandmarkKind.riesenrad => _riesenrad(),
-    LandmarkKind.atomium => _atomium(),
+    LandmarkKind.brusselsTownHall => _brusselsTownHall(),
     LandmarkKind.palaceOfCulture => _palaceOfCulture(),
     LandmarkKind.frauenkirche => _frauenkirche(),
     LandmarkKind.stockholmCityHall => _stockholm(),
@@ -79,7 +79,6 @@ abstract final class LandmarkPaths {
     LandmarkKind.obelisco ||
     LandmarkKind.angel ||
     LandmarkKind.riesenrad ||
-    LandmarkKind.atomium ||
     LandmarkKind.edinburghCastle ||
     LandmarkKind.dublinSpire ||
     LandmarkKind.motherland ||
@@ -697,33 +696,29 @@ abstract final class LandmarkPaths {
     ]);
   }
 
-  /// Brussels: the Atomium, nine spheres of an iron crystal joined by
-  /// tubes, standing on its corner.
-  static Path _atomium() {
-    const r = 0.075;
-    const top = Offset(0, -0.92);
-    const ul = Offset(-0.3, -0.72);
-    const ur = Offset(0.3, -0.72);
-    const mid = Offset(0, -0.55);
-    const ll = Offset(-0.3, -0.38);
-    const lr = Offset(0.3, -0.38);
-    const bottom = Offset(0, -0.18);
-    const spheres = [top, ul, ur, mid, ll, lr, bottom];
-    const tubes = [
-      (top, ul), (top, ur), (top, mid), (ul, ll), (ur, lr), (ul, mid), //
-      (ur, mid), (mid, ll), (mid, lr), (ll, bottom), (lr, bottom),
-      (mid, bottom),
-    ];
-    return _union([
-      for (final (a, b) in tubes) _bar(a, b, 0.035),
-      for (final p in spheres) _circle(p.dx, p.dy, r),
-      // The three bipods it stands on.
-      _bar(ll, const Offset(-0.38, 0), 0.03),
-      _bar(lr, const Offset(0.38, 0), 0.03),
-      _bar(bottom, Offset.zero, 0.04),
-      _rect(-0.45, -0.025, 0.45),
-    ]);
-  }
+  /// Brussels: the Town Hall on the Grand Place, a long Gothic front under
+  /// its steep roof, the tall belfry rising off-centre to an openwork spire.
+  static Path _brusselsTownHall() => _union([
+    // The two wings of the front and the steep roof over them.
+    _rect(-0.9, -0.3, 0.75),
+    _poly([(-0.9, -0.3), (-0.86, -0.42), (0.71, -0.42), (0.75, -0.3)]),
+    // Dormers and corner turrets along the roof line.
+    for (final x in [-0.7, -0.45, 0.3, 0.55]) _spire(x, -0.42, 0.06, -0.5),
+    for (final x in [-0.9, 0.75]) ...[
+      _rect(x - 0.03, -0.48, x + 0.03, -0.3),
+      _spire(x, -0.48, 0.07, -0.56),
+    ],
+    // The belfry: a square tower, then two tiers of lanterns, narrowing.
+    _rect(-0.16, -0.62, 0.04),
+    _rect(-0.135, -0.74, 0.015, -0.6),
+    _rect(-0.11, -0.84, -0.01, -0.72),
+    for (final x in [-0.16, 0.04]) _spire(x, -0.62, 0.035, -0.68),
+    for (final x in [-0.135, 0.015]) _spire(x, -0.74, 0.03, -0.79),
+    // The openwork spire up to the gilded Saint Michael.
+    _spire(-0.06, -0.84, 0.1, -0.98),
+    _rect(-0.065, -1, -0.055, -0.95),
+    _circle(-0.06, -1, 0.015),
+  ]);
 
   /// Warsaw: the Palace of Culture and Science, stepped up to its spire,
   /// with its long low wings.

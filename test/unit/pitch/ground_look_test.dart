@@ -32,7 +32,7 @@ void main() {
     // The second set, keyed on the spellings the game's data uses.
     const second = {
       'Vienna': LandmarkKind.riesenrad,
-      'Brussels': LandmarkKind.atomium,
+      'Brussels': LandmarkKind.brusselsTownHall,
       'Warsaw': LandmarkKind.palaceOfCulture,
       'Munich': LandmarkKind.frauenkirche,
       'Stockholm': LandmarkKind.stockholmCityHall,
@@ -80,8 +80,8 @@ void main() {
     test('the second set: local spellings, accents and case aside', () {
       for (final (city, kind) in [
         ('Wien', LandmarkKind.riesenrad),
-        ('Bruxelles', LandmarkKind.atomium),
-        ('Brussel', LandmarkKind.atomium),
+        ('Bruxelles', LandmarkKind.brusselsTownHall),
+        ('Brussel', LandmarkKind.brusselsTownHall),
         ('Warszawa', LandmarkKind.palaceOfCulture),
         ('München', LandmarkKind.frauenkirche),
         ('MUENCHEN', LandmarkKind.frauenkirche),
