@@ -45,7 +45,7 @@ class _EventLine extends StatelessWidget {
               color: AppColors.error,
             ),
           ),
-          name(off),
+          name(surnameOf(off)),
           const SizedBox(width: AppSpacing.sm),
         ],
         Semantics(
@@ -57,7 +57,7 @@ class _EventLine extends StatelessWidget {
             color: AppColors.positive,
           ),
         ),
-        name(e.playerName),
+        name(surnameOf(e.playerName)),
       ],
     );
   }
@@ -256,7 +256,7 @@ class _EventFlash extends StatelessWidget {
               child: row(
                 Icons.arrow_downward_rounded,
                 AppColors.error,
-                off,
+                surnameOf(off),
               ),
             ),
           Semantics(
@@ -265,7 +265,7 @@ class _EventFlash extends StatelessWidget {
             child: row(
               Icons.arrow_upward_rounded,
               AppColors.positive,
-              e.playerName,
+              surnameOf(e.playerName),
             ),
           ),
           const SizedBox(height: AppSpacing.xs),

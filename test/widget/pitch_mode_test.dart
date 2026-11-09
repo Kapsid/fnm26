@@ -20,6 +20,7 @@ import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
+import 'package:fnm/features/tactics/tactics_pitch.dart' show surnameOf;
 import 'package:fnm/features/match/penalty_order_sheet.dart';
 import 'package:fnm/features/match/pitch/pitch_clock.dart';
 import 'package:fnm/features/match/pitch/pitch_match_view.dart';
@@ -831,11 +832,17 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.descendant(of: pop, matching: find.text(sub.playerName)),
+        find.descendant(
+          of: pop,
+          matching: find.text(surnameOf(sub.playerName)),
+        ),
         findsOneWidget,
       );
       expect(
-        find.descendant(of: pop, matching: find.text(sub.secondaryName!)),
+        find.descendant(
+          of: pop,
+          matching: find.text(surnameOf(sub.secondaryName!)),
+        ),
         findsOneWidget,
       );
       expect(

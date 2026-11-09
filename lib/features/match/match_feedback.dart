@@ -7,23 +7,21 @@ import 'package:flutter/services.dart';
 /// dependency-free and respects the device's silent switch. Every call is a
 /// no-op when [enabled] is false (the settings toggle).
 abstract final class MatchFeedback {
-  /// How long after a goal's buzz its heavy impact follows.
+  /// How long after a goal's first tap its second follows.
   static const Duration goalImpactDelay = Duration(milliseconds: 120);
 
   static Timer? _goalImpact;
 
-  /// A goal: a full buzz, a heavy impact [goalImpactDelay] after it, and a
-  /// short alert tone (desktop only; phones ignore it).
+  /// A goal: a heavy haptic tap, a second one [goalImpactDelay] after it,
+  /// and a short alert tone (desktop only; phones ignore it).
   ///
-  /// The buzz is `HapticFeedback.vibrate`, on iOS the audio services'
-  /// vibrate: no feedback generator to drop. `heavyImpact` alone, a fresh
-  /// unprepared `UIImpactFeedbackGenerator` on iOS, went missing on an
-  /// iPhone under the 2D TV's rendering while the Timeline's was felt. The
-  /// impact still follows, so a goal feels like one on a phone that
-  /// honours impacts.
+  /// Haptic taps only, never the long `vibrate` buzz (the owner wants a
+  /// tap). Two of them because on an iPhone a single `heavyImpact` (a fresh,
+  /// unprepared `UIImpactFeedbackGenerator`) went missing under the 2D TV's
+  /// rendering while the Timeline's was felt.
   static void goal(bool enabled) {
     if (!enabled) return;
-    HapticFeedback.vibrate();
+    HapticFeedback.heavyImpact();
     _goalImpact?.cancel();
     _goalImpact = Timer(goalImpactDelay, () {
       _goalImpact = null;

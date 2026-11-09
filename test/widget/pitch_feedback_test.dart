@@ -273,17 +273,15 @@ const String _buzz = 'HapticFeedback.vibrate null';
 
 int _count(String kind) => _feedback.where((f) => f == kind).length;
 
-/// [goals] goals, felt: each one's buzz at once, then its heavy impact
-/// [MatchFeedback.goalImpactDelay] later.
+/// [goals] goals, felt: each one a heavy haptic tap at once, then a second
+/// [MatchFeedback.goalImpactDelay] later. Never the long `vibrate` buzz.
 Future<void> _expectGoalFelt(WidgetTester tester, int goals) async {
-  expect(_count(_buzz), goals, reason: 'the buzz, at once');
-  expect(_count(_heavy), 0, reason: 'the impact follows the buzz');
+  expect(_count(_heavy), goals, reason: 'the first tap, at once');
   await tester.pump(
     MatchFeedback.goalImpactDelay + const Duration(milliseconds: 10),
   );
-  expect(_count(_buzz), goals);
-  expect(_count(_heavy), goals);
-  expect(_feedback.indexOf(_buzz), lessThan(_feedback.indexOf(_heavy)));
+  expect(_count(_heavy), goals * 2, reason: 'the second tap');
+  expect(_count(_buzz), 0, reason: 'a tap, never the long buzz');
 }
 
 bool _shout(WidgetTester tester) =>
@@ -355,7 +353,7 @@ void main() {
       await _expectGoalFelt(tester, 1);
       // Held under the flash: no second buzz for the same goal.
       await tester.pump(const Duration(seconds: 1));
-      expect((_count(_buzz), _count(_heavy)), (1, 1));
+      expect((_count(_buzz), _count(_heavy)), (0, 2));
     });
 
     testWidgets('2D TV: played from kick-off at match pace, the first goal '
