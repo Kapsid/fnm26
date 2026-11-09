@@ -122,6 +122,8 @@ class _PackHomeTabletLayout extends StatelessWidget {
                             ),
                         ],
                       ),
+                      const SizedBox(height: AppSpacing.lg),
+                      const _CommunityRow(),
                     ],
                   ),
                 );

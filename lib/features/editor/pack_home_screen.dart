@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/config/contact.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
@@ -16,6 +18,8 @@ import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/editor/editor_ui.dart';
 import 'package:fnm/features/editor/names/name_sections.dart';
 import 'package:fnm/features/editor/pack_issue_text.dart';
+import 'package:fnm/features/settings/settings_screen.dart'
+    show linkLauncherProvider;
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -32,6 +36,9 @@ class PackHomeScreen extends ConsumerStatefulWidget {
   static const Key tabletLayoutKey = Key('packHome.tabletLayout');
   static const Key undoKey = Key('packHome.undo');
   static const Key readyKey = Key('packHome.ready');
+
+  /// The row that opens the community Discord.
+  static const Key communityKey = Key('packHome.community');
   static const Key notReadyKey = Key('packHome.notReady');
 
   /// The ready bar when a game update made the pack incompatible.
@@ -83,7 +90,8 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
   /// already is, and [EditorSection.none] has no screen.
   void _open(EditorSection? section) {
     if (section == null || !section.hasScreen) return;
-    context.go(editorSectionLocation(section, _id));
+    // Pushed, so the section's back arrow returns here, wherever it is.
+    unawaited(context.push(editorSectionLocation(section, _id)));
   }
 
   /// Opens where the [index]th entry is fixed (on its nation, when it has
@@ -92,12 +100,14 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
     final issue = view.issues[index];
     final section = issue.section;
     if (section == null || !section.hasScreen) return;
-    context.go(
-      editorSectionLocation(
-        section,
-        _id,
-        nationId: issue.nationId,
-        pool: view.raw[index].where.startsWith('pools.'),
+    unawaited(
+      context.push(
+        editorSectionLocation(
+          section,
+          _id,
+          nationId: issue.nationId,
+          pool: view.raw[index].where.startsWith('pools.'),
+        ),
       ),
     );
   }
@@ -311,6 +321,15 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
                 },
               ),
             ),
+            const SliverPadding(
+              padding: EdgeInsets.fromLTRB(
+                AppSpacing.marginMobile,
+                0,
+                AppSpacing.marginMobile,
+                AppSpacing.xl,
+              ),
+              sliver: SliverToBoxAdapter(child: _CommunityRow()),
+            ),
           ],
         ),
       ),
@@ -326,6 +345,58 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
     ),
     sliver: SliverToBoxAdapter(child: _SectionHeader(text)),
   );
+}
+
+/// A line saying fans share their databases on the Discord, and a row that
+/// opens it. Community sharing only: the databases are not ours.
+class _CommunityRow extends ConsumerWidget {
+  const _CommunityRow();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    return AppCard(
+      key: PackHomeScreen.communityKey,
+      onTap: () => _open(context, ref),
+      child: Row(
+        children: [
+          const Icon(Icons.forum_outlined, color: AppColors.primary),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(l.editorCommunityTitle, style: AppTypography.bodyMedium),
+                const SizedBox(height: 2),
+                Text(
+                  l.editorCommunityAbout,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          const Icon(Icons.open_in_new, size: 18, color: AppColors.primary),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _open(BuildContext context, WidgetRef ref) async {
+    final l = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    var opened = false;
+    try {
+      opened = await ref.read(linkLauncherProvider)(Uri.parse(kDiscordUrl));
+    } on Object {
+      opened = false;
+    }
+    if (opened) return;
+    await Clipboard.setData(const ClipboardData(text: kDiscordUrl));
+    messenger.showSnackBar(SnackBar(content: Text(l.settingsLinkCopied)));
+  }
 }
 
 /// What one section holds and how many things in it need fixing.
