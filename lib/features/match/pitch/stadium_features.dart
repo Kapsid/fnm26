@@ -358,7 +358,7 @@ extension _StadiumFeatures on StadiumPainter {
     final canopy = _sig.roof == RoofStyle.canopy;
     final ring = _sig.roof == RoofStyle.ring;
     final (front, rear) = canopy
-        ? (const Color(0x66DCE6EE), const Color(0x40B4C2CE))
+        ? (const Color(0x99DCE6EE), const Color(0x70B4C2CE))
         : ring
         ? (const Color(0xFF9BA4AD), const Color(0xFF5E666F))
         : (const Color(0xFF6E767F), const Color(0xFF454B53));
