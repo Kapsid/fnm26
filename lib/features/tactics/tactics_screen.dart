@@ -16,7 +16,6 @@ import 'package:fnm/domain/entities/tactic_preset.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/squad/absence_outlook.dart';
 import 'package:fnm/domain/services/squad/captaincy.dart';
-import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
 import 'package:fnm/domain/services/tactics/set_piece_picks.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -26,9 +25,7 @@ import 'package:fnm/features/match/match_preview_screen.dart'
 import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/features/squad/captain_providers.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
-import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/tactics/familiarity_providers.dart';
-import 'package:fnm/features/tactics/fatigue_tag.dart';
 import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/features/tactics/nation_squad_tab.dart';
 import 'package:fnm/features/tactics/player_roles_providers.dart';
@@ -278,7 +275,6 @@ class TacticsScreen extends ConsumerWidget {
                 if ((data.absences[p.id]?.injuryMatches ?? 0) > 0) p.id,
             };
             final outStarters = data.unavailableStarters;
-            final fatigue = _fatigueOf(ref);
             final t = _resolveTakers(ref, careerId, data, takers);
 
             // A Builder for the body's own context: the dock's clearance is
@@ -316,7 +312,6 @@ class TacticsScreen extends ConsumerWidget {
                           teamColors: teamColors,
                           absentIds: absentIds,
                           injuredIds: injuredIds,
-                          fatigue: fatigue,
                         ),
                       ),
                       Padding(
@@ -449,19 +444,6 @@ class TacticsScreen extends ConsumerWidget {
     );
   }
 
-  /// Every squad player's between-match fatigue, for the pitch, the bench and
-  /// the pick sheet. Empty while it loads (or if it fails): no markers rather
-  /// than a spinner on a screen that is otherwise ready.
-  Map<int, FatigueState> _fatigueOf(WidgetRef ref, {bool watch = true}) {
-    final async = watch
-        ? ref.watch(squadConditionProvider(careerId))
-        : ref.read(squadConditionProvider(careerId));
-    final conditions = async.valueOrNull ?? const <int, PlayerCondition>{};
-    return {
-      for (final e in conditions.entries) e.key: e.value.fatigueState,
-    };
-  }
-
   /// The starting XI on the pitch, with every gesture the line-up has: tap a
   /// slot to pick, drag to swap or reshape, drop a substitute on.
   Widget _pitch(
@@ -472,11 +454,9 @@ class TacticsScreen extends ConsumerWidget {
     required List<Color>? teamColors,
     required Set<int> absentIds,
     required Set<int> injuredIds,
-    Map<int, FatigueState> fatigue = const {},
   }) {
     final tactic = data.tactic;
     return TacticsPitch(
-      fatigueByPlayer: fatigue,
       injuredIds: injuredIds,
       formation: tactic.formation,
       instructions: tactic.instructions,
@@ -795,7 +775,6 @@ class TacticsScreen extends ConsumerWidget {
     }
 
     final l = AppLocalizations.of(context);
-    final fatigue = _fatigueOf(ref, watch: false);
     // The sheet answers with a player id, or with a place for the slot
     // itself: the position chips at its head change what the slot plays
     // within the formation (see [SlotSwitchStrip]).
@@ -838,24 +817,13 @@ class TacticsScreen extends ConsumerWidget {
                 // words made the row shout, and the amber that matters — the
                 // number the match is decided on — stopped standing out for
                 // being one of three.
-                subtitle: Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        l.tacticsAgeOnly(p.age),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTypography.labelSmall.copyWith(
-                          color: AppColors.onSurfaceVariant,
-                        ),
-                      ),
-                    ),
-                    if (fatigue[p.id] case final f?
-                        when f != FatigueState.fresh) ...[
-                      const SizedBox(width: AppSpacing.sm),
-                      FatigueTag(state: f),
-                    ],
-                  ],
+                subtitle: Text(
+                  l.tacticsAgeOnly(p.age),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
                 ),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,

@@ -21,7 +21,6 @@ import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/domain/services/squad/absence_outlook.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/squad/camp_scandal_providers.dart';
-import 'package:fnm/features/tactics/fatigue_tag.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
 import 'package:fnm/features/tactics/call_up_advice_sheet.dart';
 import 'package:fnm/features/tactics/call_up_match_tiles.dart';
@@ -1122,7 +1121,7 @@ class _PlayerToggle extends StatelessWidget {
           // his situation.
           if (condition != null &&
               condition!.fatigueState != FatigueState.fresh)
-            FatigueTag(state: condition!.fatigueState),
+            _FatigueTag(state: condition!.fatigueState),
         ],
       ),
       trailing: Row(
@@ -1173,6 +1172,39 @@ class _FormDot extends StatelessWidget {
     return Tooltip(
       message: formLabel(AppLocalizations.of(context), form),
       child: Icon(look.icon, size: 14, color: look.color),
+    );
+  }
+}
+
+/// A compact tag flagging a fatigued player, to nudge rotation.
+class _FatigueTag extends StatelessWidget {
+  const _FatigueTag({required this.state});
+
+  final FatigueState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final (color, label) = switch (state) {
+      FatigueState.exhausted => (
+        const Color(0xFFD64545),
+        l.tacticsFatigueExhausted,
+      ),
+      FatigueState.tired => (const Color(0xFFEFC94C), l.tacticsFatigueTired),
+      FatigueState.ready => (
+        AppColors.onSurfaceVariant,
+        l.tacticsFatigueMatchLegs,
+      ),
+      FatigueState.fresh => (AppColors.onSurfaceVariant, ''),
+    };
+    if (state == FatigueState.fresh) return const SizedBox.shrink();
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.battery_alert_rounded, size: 11, color: color),
+        const SizedBox(width: 2),
+        Text(label, style: AppTypography.labelSmall.copyWith(color: color)),
+      ],
     );
   }
 }
