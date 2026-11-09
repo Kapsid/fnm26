@@ -74,7 +74,7 @@ class StadiumPainter extends CustomPainter {
   /// steeply it climbs and the fascia between two tiers.
   static const double _tierDepth = 8, _overhang = 2.2, _rake = 0.58;
   static const double _fascia = 2.2, _frontWall = 1.1;
-  static const double _roofWall = 2.4, _canopy = 3.0;
+  static const double _roofWall = 2.4;
 
   /// How much of a stand's real depth is drawn: the far stand shallow (see
   /// the class comment), the ends behind the goals nearer their true depth,
@@ -206,6 +206,7 @@ class StadiumPainter extends CustomPainter {
     _pools(canvas);
     _lamps(canvas);
     _flags(canvas);
+    _roofEdgeLight(canvas);
     _screenGlow(canvas);
     _heatHaze(canvas, size, horizon);
     _nearShade(canvas, size);
@@ -470,22 +471,24 @@ class StadiumPainter extends CustomPainter {
   }
 
   /// The roofs over the stands, or a small ground's terrace rails.
+  ///
+  /// A roof is drawn a layer at a time all round (what is under it, then
+  /// the slabs, then the fascias), so where two stands' roofs meet at a
+  /// corner neither's underside shows over the other's slab.
   void _standRoofs(Canvas canvas) {
+    final cut = _roofCut;
     for (final s in _order) {
       if (_isTerraceEnd(s)) {
         _terraceRail(canvas, s);
-        continue;
+      } else if (cut == null) {
+        final top = _topOf(s);
+        _openRim(canvas, s, top.o1, top.z1);
       }
-      final top = _topOf(s);
-      switch (spec.signature.roof) {
-        case RoofStyle.cantilever:
-          _roof(canvas, s, top.o1, top.z1);
-        case RoofStyle.open:
-          _openRim(canvas, s, top.o1, top.z1);
-        case RoofStyle.ring:
-          _ringRoof(canvas, s, top.o1, top.z1);
-        case RoofStyle.canopy:
-          _canopyRoof(canvas, s, top.o1, top.z1);
+    }
+    if (cut == null) return;
+    for (final layer in _RoofLayer.values) {
+      for (final s in _order) {
+        if (!_isTerraceEnd(s)) _roofOver(canvas, s, cut, layer);
       }
     }
   }
@@ -722,32 +725,6 @@ class StadiumPainter extends CustomPainter {
     }
   }
 
-  void _roof(Canvas canvas, _Seg s, double o, double z) {
-    canvas
-      ..drawPath(
-        _band(
-          (t) => _standPoint(s, t, o, z),
-          (t) => _standPoint(s, t, o, z + _roofWall),
-        ),
-        Paint()..color = AppColors.surfaceContainerLow,
-      )
-      ..drawPath(
-        _band(
-          (t) => _standPoint(s, t, o - _canopy, z + _roofWall),
-          (t) => _standPoint(s, t, o - _canopy, z + _roofWall + 0.9),
-        ),
-        Paint()..color = AppColors.surfaceContainerHighest,
-      )
-      ..drawPath(
-        _line((t) => _standPoint(s, t, o - _canopy, z + _roofWall + 0.9)),
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 0.9
-          ..color = (dressing.isFinal ? AppColors.medalGold : AppColors.primary)
-              .withValues(alpha: 0.55),
-      );
-  }
-
   /// Floodlamps along each canopy and on the towers: grey and unlit by day,
   /// coming up through dusk, bright with a halo at night.
   void _lamps(Canvas canvas) {
@@ -766,16 +743,14 @@ class StadiumPainter extends CustomPainter {
         _Seg.left || _Seg.right => edge ? 8 : 5,
         _ => 3,
       };
-      final open = spec.signature.roof == RoofStyle.open;
+      final cut = _roofCut;
+      final r = cut == null ? null : _roofAt(s, cut);
       for (var i = 0; i < lamps; i++) {
-        final c = open
-            ? _standPoint(s, (i + 0.5) / lamps, top.o1, top.z1 + 1.6)
-            : _standPoint(
-                s,
-                (i + 0.5) / lamps,
-                top.o1 - _canopy,
-                top.z1 + _roofWall + 0.2,
-              );
+        final u = (i + 0.5) / lamps;
+        // On the fascia, along the roof's leading edge.
+        final c = r == null
+            ? _standPoint(s, u, top.o1, top.z1 + 1.6)
+            : _standPoint(s, u, r.oe, (r.ze + r.zf) / 2);
         _lamp(canvas, c, _ppm(0) * 0.55);
       }
     }
@@ -840,7 +815,7 @@ class StadiumPainter extends CustomPainter {
   /// How tall the towers stand: a little over the roof.
   double get _towerHeight {
     final top = _tier(spec.tiers - 1);
-    return top.z1 + _roofWall + 7;
+    return math.max(top.z1 + _roofWall + 7, _farRoofTop + 4);
   }
 
   /// The two far towers' masts (the near two stand behind the camera).
@@ -862,9 +837,10 @@ class StadiumPainter extends CustomPainter {
   /// from below at night.
   void _flags(Canvas canvas) {
     final top = _tier(spec.tiers - 1);
-    final open = spec.signature.roof == RoofStyle.open;
-    final o = top.o1 - (open ? 0.5 : 3.0);
-    final z = top.z1 + (open ? 0.4 : _roofWall + 0.9);
+    final cut = _roofCut;
+    // Along the open rim, or the back of the roof.
+    final o = top.o1 - (cut == null ? 0.5 : 0);
+    final z = top.z1 + (cut == null ? 0.4 : cut.back);
     // Clear of the middle, where a city's landmark rises.
     const poles = [0.08, 0.24, 0.76, 0.92];
     final ppm = _ppm(0);
@@ -1268,8 +1244,10 @@ class StadiumPainter extends CustomPainter {
     final e = light.elevation;
     final alpha = 0.22 * (1 - look.flood);
     if (alpha < 0.01) return;
-    final top = _tier(spec.tiers - 1);
-    final height = top.z1 + _roofWall;
+    // An open bowl's rim, or the back of the far roof.
+    final height = _roofCut == null
+        ? _tier(spec.tiers - 1).z1 + _roofWall
+        : _farRoofTop;
     final reach = e <= 1
         ? 120.0
         : math.min(120.0, height * 0.5 / math.tan(e * math.pi / 180));
@@ -1639,3 +1617,6 @@ class StadiumPainter extends CustomPainter {
 }
 
 enum _Seg { left, cornerLeft, far, cornerRight, right }
+
+/// The layers a roof is drawn in (see `StadiumPainter._standRoofs`).
+enum _RoofLayer { under, slab, fascia }
