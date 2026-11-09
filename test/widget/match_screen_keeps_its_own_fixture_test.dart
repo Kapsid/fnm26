@@ -17,6 +17,8 @@ import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
+import 'package:fnm/features/world_managers/world_manager_providers.dart'
+    show worldManagerStyleEnabledProvider;
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
@@ -69,6 +71,9 @@ void main() {
         seedSourceProvider.overrideWithValue(
           InMemorySeedSource(nationList: nations, playerList: players),
         ),
+        // The preview is warmed from the fake-async zone; the manager style
+        // read would park it there (see seedSave in helpers/seeded_save.dart).
+        worldManagerStyleEnabledProvider.overrideWithValue(false),
       ],
     );
     addTearDown(c.dispose);
