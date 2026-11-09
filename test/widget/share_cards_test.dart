@@ -95,6 +95,25 @@ void main() {
     }
   }
 
+  /// Whether the open sheet's preview has drawn its card (the art warmed).
+  bool previewReady() =>
+      find.byKey(ShareKeys.sheet).evaluate().isNotEmpty &&
+      find
+          .descendant(
+            of: find.byKey(ShareKeys.sheet),
+            matching: find.byType(CircularProgressIndicator),
+          )
+          .evaluate()
+          .isEmpty;
+
+  /// Taps Share and waits for the sheet and its preview.
+  Future<void> openSheet(WidgetTester tester) async {
+    await tester.tap(find.byKey(ShareKeys.button));
+    await tester.pump();
+    await settleCapture(tester, previewReady);
+    await tester.pump(const Duration(milliseconds: 400));
+  }
+
   /// The PNG's width and height, from its header.
   (int, int) pngSize(Uint8List png) {
     final b = ByteData.sublistView(png);
@@ -140,8 +159,7 @@ void main() {
           ],
         ),
       );
-      await tester.tap(find.byKey(ShareKeys.button));
-      await tester.pumpAndSettle();
+      await openSheet(tester);
       expect(find.byKey(ShareKeys.sheet), findsOneWidget);
       expect(find.byKey(ShareKeys.format(ShareFormat.square)), findsOneWidget);
       expect(find.byKey(ShareKeys.format(ShareFormat.story)), findsOneWidget);
@@ -188,8 +206,7 @@ void main() {
             ],
           ),
         );
-        await tester.tap(find.byKey(ShareKeys.button));
-        await tester.pumpAndSettle();
+        await openSheet(tester);
         // Square is chosen to begin with.
         await tester.tap(find.byKey(ShareKeys.action(ShareAction.save)));
         await settleCapture(tester, () => saved.isNotEmpty);
@@ -201,6 +218,72 @@ void main() {
         expect(find.text(message), findsOneWidget);
       });
     }
+  });
+
+  group('sheet preview', () {
+    double ratio(WidgetTester t, Finder f) {
+      final s = t.getSize(f);
+      return s.width / s.height;
+    }
+
+    testWidgets('shows the very card, and swaps aspect with the format', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        app(ShareCabinetButton(history: history(won: true))),
+      );
+      await openSheet(tester);
+      final square = find.byKey(ShareKeys.preview(ShareFormat.square));
+      expect(square, findsOneWidget);
+      expect(
+        find.descendant(of: square, matching: find.byType(CabinetShareCard)),
+        findsOneWidget,
+      );
+      expect(ratio(tester, square), closeTo(1, 0.01));
+
+      await tester.tap(find.byKey(ShareKeys.format(ShareFormat.story)));
+      await tester.pump();
+      final story = find.byKey(ShareKeys.preview(ShareFormat.story));
+      expect(story, findsOneWidget);
+      expect(square, findsNothing);
+      expect(ratio(tester, story), closeTo(1080 / 1920, 0.01));
+      final card = find.descendant(
+        of: story,
+        matching: find.byType(CabinetShareCard),
+      );
+      expect(
+        tester.widget<CabinetShareCard>(card).format,
+        ShareFormat.story,
+      );
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('buttons stay in reach on a 320 x 568 phone', (tester) async {
+      tester.view
+        ..physicalSize = const Size(320, 568)
+        ..devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(
+        app(ShareCabinetButton(history: history(won: true))),
+      );
+      await openSheet(tester);
+      for (final f in ShareFormat.values) {
+        await tester.tap(find.byKey(ShareKeys.format(f)));
+        await tester.pump();
+        for (final a in ShareAction.values) {
+          final button = find.byKey(ShareKeys.action(a));
+          expect(button.hitTestable(), findsOneWidget, reason: '$f $a');
+          final r = tester.getRect(button);
+          expect(r.bottom, lessThanOrEqualTo(568), reason: '$f $a');
+          expect(r.top, greaterThanOrEqualTo(0), reason: '$f $a');
+        }
+        expect(
+          tester.getRect(find.byKey(ShareKeys.preview(f))).height,
+          lessThanOrEqualTo(568 * 0.46 + 0.5),
+        );
+      }
+      expect(tester.takeException(), isNull);
+    });
   });
 
   group('custom world trophy art', () {
@@ -269,8 +352,7 @@ void main() {
             ],
           ),
         );
-        await tester.tap(find.byKey(ShareKeys.button));
-        await tester.pumpAndSettle();
+        await openSheet(tester);
         await tester.tap(find.byKey(ShareKeys.action(ShareAction.share)));
         await settleCapture(tester, () => pngs.isNotEmpty);
         await tester.pumpAndSettle();

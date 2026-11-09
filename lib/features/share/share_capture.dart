@@ -91,8 +91,34 @@ Future<Uint8List> renderShareCard(
   final locale = Localizations.localeOf(context);
   final view = View.of(context);
 
-  // Warm the art: the PNGs into the image cache (so they paint on the first
-  // frame), the flags' bytes into the SVG cache.
+  await warmShareArt(context, flagCodes: flagCodes, images: images);
+  if (!context.mounted) throw StateError('share card owner went away');
+  return _capture(
+    view: view,
+    size: size,
+    child: MediaQuery(
+      data: MediaQueryData(size: size),
+      child: Localizations(
+        locale: locale,
+        delegates: AppLocalizations.localizationsDelegates,
+        child: card,
+      ),
+    ),
+  );
+}
+
+/// Loads every picture a share card draws, so it paints whole on its first
+/// frame: the brand logo and every trophy into the image cache, a custom
+/// world's trophy pictures ([images]) under the very provider the card
+/// draws them with, and the flags' bytes ([flagCodes]) into the SVG cache.
+///
+/// The capture waits on it, and so does the share sheet's preview (which
+/// shows a placeholder until it completes).
+Future<void> warmShareArt(
+  BuildContext context, {
+  Iterable<String> flagCodes = const [],
+  Iterable<Uint8List> images = const [],
+}) async {
   await Future.wait([
     precacheImage(const AssetImage(ShareBrand.logoAsset), context),
     for (final t in Trophies.cabinet)
@@ -114,7 +140,15 @@ Future<Uint8List> renderShareCard(
         }
       }(),
   ]);
+}
 
+/// Lays [child] out in a pipeline of its own at exactly [size] and paints
+/// it to a PNG, rebuilding until its last image has landed.
+Future<Uint8List> _capture({
+  required ui.FlutterView view,
+  required Size size,
+  required Widget child,
+}) async {
   final boundary = RenderRepaintBoundary();
   final renderView = RenderView(
     view: view,
@@ -134,14 +168,7 @@ Future<Uint8List> renderShareCard(
   );
   final root = RenderObjectToWidgetAdapter<RenderBox>(
     container: boundary,
-    child: MediaQuery(
-      data: MediaQueryData(size: size),
-      child: Localizations(
-        locale: locale,
-        delegates: AppLocalizations.localizationsDelegates,
-        child: card,
-      ),
-    ),
+    child: child,
   ).attachToRenderTree(build);
 
   void frame() {
