@@ -2223,13 +2223,17 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                   )
                 : lineupList;
             final overlays = <Widget>[
-              // A substitution: under a goal's flash, never over it, and
-              // held back while the 2D TV's red card banner is out (it
-              // comes back if its own timer is still running).
+              // A substitution pops up on the 2D TV only: the phone shows it
+              // as the banner under the score bug, the tablet (no bug) as
+              // this card. The Timeline never pops it up. Under a goal's
+              // flash, never over it, and held back while the red card
+              // banner is out (it comes back if its own timer is still
+              // running).
               if (_eventFlash != null &&
+                  _onPitch &&
                   _goalFlash == null &&
                   !bug &&
-                  !(_onPitch && _redFlash != null))
+                  _redFlash == null)
                 _EventFlash(
                   event: _eventFlash!,
                   flagCode: code(_eventFlash!.teamNationId),

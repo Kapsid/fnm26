@@ -377,7 +377,8 @@ class ShootoutPainter extends CustomPainter {
     );
     ActorsPainter.drawBall(canvas, bc, br);
 
-    // The taker's name, over the stand.
+    // The taker's name, along the bottom of the close-up: the GOAL banner
+    // and the score bug sit over the top, and covered it there.
     final name = names[takerId];
     if (name != null) {
       final label = name.toUpperCase();
@@ -385,7 +386,7 @@ class ShootoutPainter extends CustomPainter {
         label,
         ActorsPainter.nameSizeFor(size) * 1.25,
       );
-      final at = Offset(cx - tp.width / 2, h * 0.05);
+      final at = Offset(cx - tp.width / 2, h * 0.94 - tp.height - 4);
       tp.paint(canvas, at);
       canvas.drawLine(
         Offset(cx - tp.width * 0.3, at.dy + tp.height + 2),

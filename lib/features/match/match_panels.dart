@@ -167,17 +167,17 @@ class _TimelineRow extends StatelessWidget {
   Widget _entry(BuildContext context, {required bool alignEnd}) {
     final event = this.event;
     if (event == null) {
-      // A penalty saved or missed: the ball, greyed, and the shootout's
-      // "missed" wording.
+      // A penalty saved or missed: the ball with a red cross, the taker's
+      // name alone. The old "NAME: MISSED" text ran off the edge in the
+      // longer languages; the icon says it in 18 px and carries the wording
+      // for screen readers.
+      final name = _abbrevName(missedPenalty!.takerName);
       return _entryOf(
-        icon: const Icon(
-          Icons.sports_soccer,
-          size: 16,
-          color: AppColors.onSurfaceVariant,
+        icon: Semantics(
+          label: AppLocalizations.of(context).matchShootoutKickMissed(name),
+          child: const ExcludeSemantics(child: MissedPenaltyMark()),
         ),
-        label: AppLocalizations.of(
-          context,
-        ).matchShootoutKickMissed(_abbrevName(missedPenalty!.takerName)),
+        label: name,
         emphasised: false,
         alignEnd: alignEnd,
       );
@@ -2657,6 +2657,49 @@ class _CameOnChip extends StatelessWidget {
             const SizedBox(width: 6),
             RatingBadge(r, compact: true, motm: motm),
           ],
+        ],
+      ),
+    );
+  }
+}
+
+/// Key on the missed-penalty icon in a Timeline row.
+const Key missedPenaltyMarkKey = Key('match.missedPenaltyMark');
+
+/// A ball with a small red cross on it: a penalty that did not go in
+/// (saved, missed or off the woodwork). Replaces a "MISSED" text chip.
+class MissedPenaltyMark extends StatelessWidget {
+  const MissedPenaltyMark({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(
+      key: missedPenaltyMarkKey,
+      width: 20,
+      height: 18,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Positioned(
+            left: 0,
+            top: 1,
+            child: Icon(
+              Icons.sports_soccer,
+              size: 16,
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+          Positioned(
+            right: 0,
+            bottom: 0,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: AppColors.surfaceContainerHighest,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.close, size: 11, color: AppColors.error),
+            ),
+          ),
         ],
       ),
     );

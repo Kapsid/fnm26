@@ -153,9 +153,18 @@ void main() {
 
     await _pump(tester, _timeline(r));
     expect(
-      find.text(_l.matchShootoutKickMissed(_abbrev(taker))),
+      find.text(_abbrev(taker)),
       findsOneWidget,
       reason: 'a penalty that did not go in is missing from the Timeline',
+    );
+    expect(find.byKey(missedPenaltyMarkKey), findsOneWidget);
+    expect(
+      find.byWidgetPredicate(
+        (w) =>
+            w is Semantics &&
+            w.properties.label == _l.matchShootoutKickMissed(_abbrev(taker)),
+      ),
+      findsOneWidget,
     );
 
     await _pump(tester, _stats(r));
@@ -187,7 +196,7 @@ void main() {
     await _pump(tester, _timeline(r));
     expect(find.text('${_abbrev(taker)} (pen)'), findsOneWidget);
     // Shown once, as the goal: not a second time as a kick.
-    expect(find.text(_l.matchShootoutKickMissed(_abbrev(taker))), findsNothing);
+    expect(find.byKey(missedPenaltyMarkKey), findsNothing);
 
     await _pump(tester, _stats(r));
     expect(find.text(_l.tacticsPenalties.toUpperCase()), findsOneWidget);
