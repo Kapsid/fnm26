@@ -193,7 +193,15 @@ void main() {
           tester.getRect(find.byKey(SponsorScreen.declineKey)).top,
           greaterThan(cards.first.bottom),
         );
-        expectNothingCut(tester, 'the sponsor tiles in $locale');
+        // Nothing on the tiles cut (the shell's own bars are not this
+        // screen's).
+        expectWhole(
+          find.descendant(
+            of: find.byKey(SponsorScreen.tilesKey),
+            matching: find.byType(RichText),
+          ),
+          'the sponsor tiles in $locale',
+        );
         await tester.pumpWidget(const SizedBox());
       });
     }

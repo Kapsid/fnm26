@@ -89,7 +89,15 @@ class _MatchTabletLayout extends StatelessWidget {
                           const SizedBox(width: _gap),
                           Expanded(child: _centre(l)),
                           const SizedBox(width: _gap),
-                          SizedBox(width: side, child: _lineupsColumn(l)),
+                          // The line-ups column is as wide in both modes, so
+                          // the line-ups read the same in each.
+                          SizedBox(
+                            width: (c.maxWidth * _sideShare).clamp(
+                              _sideMin,
+                              _sideMax,
+                            ),
+                            child: _lineupsColumn(l),
+                          ),
                         ],
                       );
                     },
@@ -205,11 +213,12 @@ class _MatchTabletLayout extends StatelessWidget {
           ),
         );
 
-  /// Pitch mode: the commentary so far (newest first) and both line-ups, a
-  /// tab each. The manager's own shape is on the big pitch already.
+  /// Pitch mode: the commentary so far (newest first), then the line-ups
+  /// exactly as Timeline mode shows them: both line-ups, and the manager's
+  /// own shape on the pitch (its energy, its holes; a tap opens the tactics).
   Widget _feedColumn(AppLocalizations l) => PanelBox(
     child: DefaultTabController(
-      length: 2,
+      length: 3,
       key: ValueKey(('pitch', ft)),
       child: Column(
         children: [
@@ -219,8 +228,11 @@ class _MatchTabletLayout extends StatelessWidget {
               labelColor: AppColors.onSurface,
               unselectedLabelColor: AppColors.onSurfaceVariant,
               indicatorColor: AppColors.primary,
+              // Three tabs in the column: tighter gutters, so each label
+              // keeps its size (a long translation still scales down rather
+              // than being cut off).
+              labelPadding: const EdgeInsets.symmetric(horizontal: 4),
               tabs: [
-                // Scaled down rather than cut off in the narrow column.
                 Tab(
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
@@ -233,6 +245,12 @@ class _MatchTabletLayout extends StatelessWidget {
                     child: Text(l.matchTabLineups),
                   ),
                 ),
+                Tab(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(l.matchYourXi),
+                  ),
+                ),
               ],
             ),
           ),
@@ -241,6 +259,10 @@ class _MatchTabletLayout extends StatelessWidget {
               children: [
                 feed ?? const Center(child: CircularProgressIndicator()),
                 lineups,
+                Padding(
+                  padding: const EdgeInsets.all(AppSpacing.sm),
+                  child: pitch,
+                ),
               ],
             ),
           ),

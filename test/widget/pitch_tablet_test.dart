@@ -6,6 +6,8 @@ import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/match/pitch/pitch_match_view.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
+import 'package:fnm/features/tactics/tactics_pitch.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -77,6 +79,8 @@ void main() {
       );
       expect(find.text(enL.matchTabCommentary), findsOneWidget);
       expect(find.text(enL.matchTabLineups), findsOneWidget);
+      // The line-ups as Timeline mode has them: Your XI a tab away too.
+      expect(find.text(enL.matchYourXi), findsOneWidget);
       // The phone's one-line commentary is not used here.
       expect(find.byType(PitchCommentaryLine), findsNothing);
       await tester.pumpWidget(const SizedBox());
@@ -179,7 +183,9 @@ void main() {
       matching: find.byType(MatchViewToggle),
     );
     expect(toggle, findsOneWidget);
-    await tester.tap(find.byKey(MatchViewToggle.segmentKey(MatchViewMode.pitch)));
+    await tester.tap(
+      find.byKey(MatchViewToggle.segmentKey(MatchViewMode.pitch)),
+    );
     await tester.pump();
     for (
       var i = 0;
@@ -219,5 +225,43 @@ void main() {
     expect(find.byType(PitchMatchView), findsOneWidget);
     expect(find.byType(PitchCommentaryFeed), findsOneWidget);
     await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('the line-ups column is the same in Pitch and Timeline mode', (
+    tester,
+  ) async {
+    Future<(Rect, List<String>)> column(MatchViewMode mode) async {
+      await _open(tester, mode, kTabletSize);
+      await tester.tap(find.text(enL.matchTabLineups));
+      await tester.pumpAndSettle();
+      final panel = find.ancestor(
+        of: find.byType(MatchLineups),
+        matching: find.byType(PanelBox),
+      );
+      final rect = tester.getRect(panel);
+      final names = [
+        for (final t in tester.widgetList<Text>(
+          find.descendant(
+            of: find.byType(MatchLineups),
+            matching: find.byType(Text),
+          ),
+        ))
+          ?t.data,
+      ];
+      expect(find.text(enL.matchYourXi), findsOneWidget);
+      await tester.tap(find.text(enL.matchYourXi));
+      await tester.pumpAndSettle();
+      expect(find.byType(TacticsPitch), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+      return (rect, names);
+    }
+
+    final (timelineRect, timelineNames) = await column(MatchViewMode.timeline);
+    final (pitchRect, pitchNames) = await column(MatchViewMode.pitch);
+    expect(pitchRect.width, timelineRect.width);
+    expect(pitchRect.right, timelineRect.right);
+    // The same list: the manager's side's names, in the same order.
+    final names = timelineNames.where((n) => n.contains(' ')).take(5);
+    expect(pitchNames.where((n) => n.contains(' ')).take(5), names);
   });
 }
