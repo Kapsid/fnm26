@@ -16249,4 +16249,14 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get shareFailed => 'Bilden kunde inte skapas.';
+
+  @override
+  String get shareSaveToPhotos => 'Spara i bilder';
+
+  @override
+  String get shareSavedToPhotos => 'Sparad i bilder';
+
+  @override
+  String get sharePhotosDenied =>
+      'FNM får inte lägga till i dina bilder. Du kan tillåta det i Inställningar.';
 }

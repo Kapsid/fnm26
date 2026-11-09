@@ -16219,4 +16219,14 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get shareFailed => 'Imej tidak dapat dibuat.';
+
+  @override
+  String get shareSaveToPhotos => 'Simpan ke foto';
+
+  @override
+  String get shareSavedToPhotos => 'Disimpan ke foto';
+
+  @override
+  String get sharePhotosDenied =>
+      'FNM tidak dibenarkan menambah ke foto anda. Anda boleh membenarkannya dalam Tetapan.';
 }

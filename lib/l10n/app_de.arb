@@ -4048,5 +4048,8 @@
   "shareSheetTitle": "Als Bild teilen",
   "shareFormatSquare": "Quadrat",
   "shareFormatStory": "Story",
-  "shareFailed": "Das Bild konnte nicht erstellt werden."
+  "shareFailed": "Das Bild konnte nicht erstellt werden.",
+  "shareSaveToPhotos": "In Fotos sichern",
+  "shareSavedToPhotos": "In Fotos gesichert",
+  "sharePhotosDenied": "FNM darf nichts zu Ihren Fotos hinzufügen. Sie können es in den Einstellungen erlauben."
 }

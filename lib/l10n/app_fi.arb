@@ -4048,5 +4048,8 @@
   "shareSheetTitle": "Jaa kuvana",
   "shareFormatSquare": "Neliö",
   "shareFormatStory": "Tarina",
-  "shareFailed": "Kuvaa ei voitu luoda."
+  "shareFailed": "Kuvaa ei voitu luoda.",
+  "shareSaveToPhotos": "Tallenna kuviin",
+  "shareSavedToPhotos": "Tallennettu kuviin",
+  "sharePhotosDenied": "FNM:llä ei ole lupaa lisätä kuviisi. Voit sallia sen Asetuksissa."
 }

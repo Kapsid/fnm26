@@ -4048,5 +4048,8 @@
   "shareSheetTitle": "แชร์เป็นรูปภาพ",
   "shareFormatSquare": "สี่เหลี่ยมจัตุรัส",
   "shareFormatStory": "สตอรี่",
-  "shareFailed": "ไม่สามารถสร้างรูปภาพได้"
+  "shareFailed": "ไม่สามารถสร้างรูปภาพได้",
+  "shareSaveToPhotos": "บันทึกลงรูปภาพ",
+  "shareSavedToPhotos": "บันทึกลงรูปภาพแล้ว",
+  "sharePhotosDenied": "FNM ไม่ได้รับอนุญาตให้เพิ่มลงในรูปภาพของคุณ คุณอนุญาตได้ในการตั้งค่า"
 }

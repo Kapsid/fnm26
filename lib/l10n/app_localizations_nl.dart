@@ -16340,4 +16340,14 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get shareFailed => 'De afbeelding kon niet worden gemaakt.';
+
+  @override
+  String get shareSaveToPhotos => 'Opslaan in foto\'s';
+
+  @override
+  String get shareSavedToPhotos => 'Opgeslagen in foto\'s';
+
+  @override
+  String get sharePhotosDenied =>
+      'FNM mag niets aan je foto\'s toevoegen. Je kunt het toestaan in Instellingen.';
 }

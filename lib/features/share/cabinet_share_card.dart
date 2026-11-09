@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_typography.dart';
@@ -18,6 +20,7 @@ class ShareTrophy {
     required this.label,
     required this.asset,
     required this.wins,
+    this.image,
   });
 
   /// The competition's name, already in the manager's language.
@@ -28,6 +31,10 @@ class ShareTrophy {
 
   /// Each time it was won, oldest first.
   final List<ShareWin> wins;
+
+  /// The career world's own picture of it (a custom world), drawn in place
+  /// of [asset]; null for the bundled artwork.
+  final Uint8List? image;
 
   int get count => wins.length;
 
@@ -331,7 +338,11 @@ class _Headline extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Image.asset(trophy.asset, height: art, fit: BoxFit.contain),
+                  ShareTrophyArt(
+                    asset: trophy.asset,
+                    custom: trophy.image,
+                    height: art,
+                  ),
                   if (trophy.count > 1)
                     Positioned(
                       right: art * 0.12,
@@ -525,7 +536,11 @@ class _ShelfItem extends StatelessWidget {
               clipBehavior: Clip.none,
               alignment: Alignment.center,
               children: [
-                Image.asset(trophy.asset, height: art, fit: BoxFit.contain),
+                ShareTrophyArt(
+                  asset: trophy.asset,
+                  custom: trophy.image,
+                  height: art,
+                ),
                 if (trophy.count > 1)
                   Positioned(
                     right: art * 0.02,

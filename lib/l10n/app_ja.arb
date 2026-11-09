@@ -4048,5 +4048,8 @@
   "shareSheetTitle": "画像として共有",
   "shareFormatSquare": "正方形",
   "shareFormatStory": "ストーリーズ",
-  "shareFailed": "画像を作成できませんでした。"
+  "shareFailed": "画像を作成できませんでした。",
+  "shareSaveToPhotos": "写真に保存",
+  "shareSavedToPhotos": "写真に保存しました",
+  "sharePhotosDenied": "FNMには写真への追加が許可されていません。設定で許可できます。"
 }

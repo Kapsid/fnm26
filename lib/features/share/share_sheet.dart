@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
@@ -13,15 +15,20 @@ import 'package:fnm/shared/tablet/adaptive_sheet.dart';
 /// Builds a share card in the given format.
 typedef ShareCardBuilder = Widget Function(ShareFormat format);
 
+/// What to do with the image: the OS share sheet, or straight into the
+/// phone's photos.
+enum ShareAction { share, save }
+
 /// Keys for tests.
 abstract final class ShareKeys {
   static const button = Key('share.button');
   static const sheet = Key('share.sheet');
   static Key format(ShareFormat f) => Key('share.format.${f.name}');
+  static Key action(ShareAction a) => Key('share.action.${a.name}');
 }
 
-/// Asks for a format (square or story), renders the card in it at full
-/// size, and hands the PNG to the platform's share sheet.
+/// Asks for a format (square or story) and what to do with it (share, or
+/// save to photos), renders the card at full size, and hands the PNG on.
 ///
 /// [origin] is the tapped button's rect, taken before any await (an iPad's
 /// popover points at it).
@@ -30,39 +37,65 @@ Future<void> shareCard(
   required ShareCardBuilder card,
   required String fileStem,
   Iterable<String> flagCodes = const [],
+  Iterable<Uint8List> images = const [],
   Rect? origin,
 }) async {
   final l = AppLocalizations.of(context);
   final messenger = ScaffoldMessenger.maybeOf(context);
-  final sink = ProviderScope.containerOf(
-    context,
-    listen: false,
-  ).read(shareImageSinkProvider);
-  final format = await showAdaptiveSheet<ShareFormat>(
+  final container = ProviderScope.containerOf(context, listen: false);
+  final sink = container.read(shareImageSinkProvider);
+  final saver = container.read(shareImageSaverProvider);
+  final choice = await showAdaptiveSheet<(ShareFormat, ShareAction)>(
     context: context,
     builder: (sheetContext) => _FormatSheet(
-      onPick: (f) => Navigator.of(sheetContext).pop(f),
+      onPick: (f, a) => Navigator.of(sheetContext).pop((f, a)),
     ),
   );
-  if (format == null || !context.mounted) return;
+  if (choice == null || !context.mounted) return;
+  final (format, action) = choice;
+  void say(String text) =>
+      messenger?.showSnackBar(SnackBar(content: Text(text)));
   try {
     final png = await renderShareCard(
       context,
       card: card(format),
       format: format,
       flagCodes: flagCodes,
+      images: images,
     );
-    await sink(png, '$fileStem-${format.name}.png', origin);
+    final name = '$fileStem-${format.name}';
+    switch (action) {
+      case ShareAction.share:
+        await sink(png, '$name.png', origin);
+      case ShareAction.save:
+        switch (await saver(png, name)) {
+          case ShareSaveResult.saved:
+            say(l.shareSavedToPhotos);
+          case ShareSaveResult.denied:
+            say(l.sharePhotosDenied);
+          case ShareSaveResult.failed:
+            say(l.shareFailed);
+        }
+    }
   } on Object catch (e, st) {
     AppLog.error('share-card', e, st);
-    messenger?.showSnackBar(SnackBar(content: Text(l.shareFailed)));
+    say(l.shareFailed);
   }
 }
 
-class _FormatSheet extends StatelessWidget {
+/// The format to draw (square selected to begin with) and the two things to
+/// do with it.
+class _FormatSheet extends StatefulWidget {
   const _FormatSheet({required this.onPick});
 
-  final ValueChanged<ShareFormat> onPick;
+  final void Function(ShareFormat format, ShareAction action) onPick;
+
+  @override
+  State<_FormatSheet> createState() => _FormatSheetState();
+}
+
+class _FormatSheetState extends State<_FormatSheet> {
+  ShareFormat _format = ShareFormat.square;
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +106,7 @@ class _FormatSheet extends StatelessWidget {
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
               l.shareSheetTitle,
@@ -88,13 +122,49 @@ class _FormatSheet extends StatelessWidget {
                   Expanded(
                     child: _FormatTile(
                       format: f,
+                      selected: f == _format,
                       label: f.isStory
                           ? l.shareFormatStory
                           : l.shareFormatSquare,
-                      onTap: () => onPick(f),
+                      onTap: () => setState(() => _format = f),
                     ),
                   ),
                 ],
+              ],
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: 48,
+                    child: OutlinedButton.icon(
+                      key: ShareKeys.action(ShareAction.save),
+                      onPressed: () => widget.onPick(_format, ShareAction.save),
+                      icon: const Icon(Icons.download_rounded, size: 18),
+                      label: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(l.shareSaveToPhotos, maxLines: 1),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: SizedBox(
+                    height: 48,
+                    child: FilledButton.icon(
+                      key: ShareKeys.action(ShareAction.share),
+                      onPressed: () =>
+                          widget.onPick(_format, ShareAction.share),
+                      icon: const Icon(Icons.ios_share, size: 18),
+                      label: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(l.shareButton, maxLines: 1),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ],
@@ -104,16 +174,18 @@ class _FormatSheet extends StatelessWidget {
   }
 }
 
-/// One format: its shape drawn to scale, and its name.
+/// One format: its shape drawn to scale, and its name; ringed when chosen.
 class _FormatTile extends StatelessWidget {
   const _FormatTile({
     required this.format,
     required this.label,
+    required this.selected,
     required this.onTap,
   });
 
   final ShareFormat format;
   final String label;
+  final bool selected;
   final VoidCallback onTap;
 
   @override
@@ -121,8 +193,16 @@ class _FormatTile extends StatelessWidget {
     const h = 96.0;
     final w = h * format.size.width / format.size.height;
     return Material(
-      color: AppColors.surfaceContainerHigh,
-      borderRadius: AppRadii.mdAll,
+      color: selected
+          ? AppColors.surfaceContainerHighest
+          : AppColors.surfaceContainerHigh,
+      shape: RoundedRectangleBorder(
+        borderRadius: AppRadii.mdAll,
+        side: BorderSide(
+          color: selected ? AppColors.primary : AppColors.outlineVariant,
+          width: selected ? 2 : 1,
+        ),
+      ),
       child: InkWell(
         key: ShareKeys.format(format),
         borderRadius: AppRadii.mdAll,
@@ -172,6 +252,7 @@ class ShareCardButton extends StatelessWidget {
     required this.card,
     required this.fileStem,
     this.flagCodes = const [],
+    this.images = const [],
     this.compact = false,
     this.height = 48,
     super.key = ShareKeys.button,
@@ -180,6 +261,9 @@ class ShareCardButton extends StatelessWidget {
   final ShareCardBuilder card;
   final String fileStem;
   final Iterable<String> flagCodes;
+
+  /// A custom world's trophy pictures on the card, warmed before capture.
+  final Iterable<Uint8List> images;
   final bool compact;
   final double height;
 
@@ -193,6 +277,7 @@ class ShareCardButton extends StatelessWidget {
           card: card,
           fileStem: fileStem,
           flagCodes: flagCodes,
+          images: images,
           origin: shareOriginOf(button),
         );
         if (compact) {

@@ -4048,5 +4048,8 @@
   "shareSheetTitle": "Сподели като изображение",
   "shareFormatSquare": "Квадрат",
   "shareFormatStory": "История",
-  "shareFailed": "Изображението не можа да бъде създадено."
+  "shareFailed": "Изображението не можа да бъде създадено.",
+  "shareSaveToPhotos": "Запази в снимки",
+  "shareSavedToPhotos": "Запазено в снимки",
+  "sharePhotosDenied": "FNM няма разрешение да добавя към снимките ти. Можеш да го разрешиш в Настройки."
 }

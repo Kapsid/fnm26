@@ -15684,4 +15684,13 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get shareFailed => '画像を作成できませんでした。';
+
+  @override
+  String get shareSaveToPhotos => '写真に保存';
+
+  @override
+  String get shareSavedToPhotos => '写真に保存しました';
+
+  @override
+  String get sharePhotosDenied => 'FNMには写真への追加が許可されていません。設定で許可できます。';
 }

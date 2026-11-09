@@ -15723,4 +15723,13 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get shareFailed => '이미지를 만들 수 없습니다.';
+
+  @override
+  String get shareSaveToPhotos => '사진에 저장';
+
+  @override
+  String get shareSavedToPhotos => '사진에 저장했습니다';
+
+  @override
+  String get sharePhotosDenied => 'FNM에 사진 추가 권한이 없습니다. 설정에서 허용할 수 있습니다.';
 }

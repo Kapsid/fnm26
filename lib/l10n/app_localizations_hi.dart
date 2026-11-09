@@ -16177,4 +16177,14 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get shareFailed => 'छवि नहीं बन सकी।';
+
+  @override
+  String get shareSaveToPhotos => 'फ़ोटो में सेव करें';
+
+  @override
+  String get shareSavedToPhotos => 'फ़ोटो में सेव हो गया';
+
+  @override
+  String get sharePhotosDenied =>
+      'FNM को आपकी फ़ोटो में जोड़ने की अनुमति नहीं है। आप इसे सेटिंग्स में दे सकते हैं।';
 }

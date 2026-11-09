@@ -53,6 +53,7 @@ import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
 import 'package:fnm/features/tactics/tactic_preset_providers.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart'
     show energyColor, surnameOf, TacticsPitch;
+import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/features/share/match_share_card.dart';
 import 'package:fnm/features/share/share_data.dart';
 import 'package:fnm/features/share/share_sheet.dart';
@@ -1052,6 +1053,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       result: r,
       ground: preview.ground,
       confederation: preview.nations[preview.playerNationId]?.confederation,
+      world: ref.watch(localizedWorldProvider),
       outcome: _knockoutOutcome(preview, r),
     );
     final f = preview.fixture;
@@ -1060,6 +1062,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
           'fnm-${preview.nations[f.homeNationId]?.code ?? 'home'}-'
           '${preview.nations[f.awayNationId]?.code ?? 'away'}',
       flagCodes: matchShareFlags(data),
+      images: matchShareImages(data),
       height: AppSpacing.minHitArea + 8,
       card: (format) => MatchShareCard(data: data, format: format),
     );

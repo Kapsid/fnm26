@@ -16600,4 +16600,14 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get shareFailed => 'Slika se nije mogla izraditi.';
+
+  @override
+  String get shareSaveToPhotos => 'Spremi u fotografije';
+
+  @override
+  String get shareSavedToPhotos => 'Spremljeno u fotografije';
+
+  @override
+  String get sharePhotosDenied =>
+      'FNM nema dopuštenje za dodavanje u tvoje fotografije. Možeš ga dopustiti u Postavkama.';
 }

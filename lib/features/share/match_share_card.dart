@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_typography.dart';
@@ -74,6 +76,7 @@ class MatchShareData {
     this.round,
     this.venue,
     this.trophyAsset,
+    this.trophyImage,
     this.plateTheme,
     this.extraTime = false,
     this.homePens,
@@ -102,6 +105,10 @@ class MatchShareData {
 
   /// The competition's trophy artwork (see `Trophies`), or null.
   final String? trophyAsset;
+
+  /// The career world's own picture of that trophy (a custom world), drawn
+  /// in place of [trophyAsset]; null for the bundled artwork.
+  final Uint8List? trophyImage;
 
   /// The score bug's tournament colours (a finals match), or null for the
   /// plain silver plate.
@@ -186,7 +193,11 @@ class _Header extends StatelessWidget {
     return Column(
       children: [
         if (trophy != null) ...[
-          Image.asset(trophy, height: story ? 176 : 96, fit: BoxFit.contain),
+          ShareTrophyArt(
+            asset: trophy,
+            custom: data.trophyImage,
+            height: story ? 176 : 96,
+          ),
           SizedBox(height: story ? 22 : 12),
         ],
         ShareFitText(

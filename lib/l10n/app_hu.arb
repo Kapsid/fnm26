@@ -4048,5 +4048,8 @@
   "shareSheetTitle": "Megosztás képként",
   "shareFormatSquare": "Négyzet",
   "shareFormatStory": "Történet",
-  "shareFailed": "A kép nem hozható létre."
+  "shareFailed": "A kép nem hozható létre.",
+  "shareSaveToPhotos": "Mentés a fotókhoz",
+  "shareSavedToPhotos": "Mentve a fotókhoz",
+  "sharePhotosDenied": "Az FNM nem adhat hozzá a fotóidhoz. A Beállításokban engedélyezheted."
 }

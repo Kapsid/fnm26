@@ -4048,5 +4048,8 @@
   "shareSheetTitle": "Ibahagi bilang larawan",
   "shareFormatSquare": "Parisukat",
   "shareFormatStory": "Story",
-  "shareFailed": "Hindi magawa ang larawan."
+  "shareFailed": "Hindi magawa ang larawan.",
+  "shareSaveToPhotos": "I-save sa photos",
+  "shareSavedToPhotos": "Na-save sa photos",
+  "sharePhotosDenied": "Walang pahintulot ang FNM na magdagdag sa photos mo. Puwede mo itong payagan sa Settings."
 }

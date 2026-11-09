@@ -4048,5 +4048,8 @@
   "shareSheetTitle": "Delen als afbeelding",
   "shareFormatSquare": "Vierkant",
   "shareFormatStory": "Story",
-  "shareFailed": "De afbeelding kon niet worden gemaakt."
+  "shareFailed": "De afbeelding kon niet worden gemaakt.",
+  "shareSaveToPhotos": "Opslaan in foto's",
+  "shareSavedToPhotos": "Opgeslagen in foto's",
+  "sharePhotosDenied": "FNM mag niets aan je foto's toevoegen. Je kunt het toestaan in Instellingen."
 }

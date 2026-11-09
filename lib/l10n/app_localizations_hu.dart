@@ -16209,4 +16209,14 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get shareFailed => 'A kép nem hozható létre.';
+
+  @override
+  String get shareSaveToPhotos => 'Mentés a fotókhoz';
+
+  @override
+  String get shareSavedToPhotos => 'Mentve a fotókhoz';
+
+  @override
+  String get sharePhotosDenied =>
+      'Az FNM nem adhat hozzá a fotóidhoz. A Beállításokban engedélyezheted.';
 }

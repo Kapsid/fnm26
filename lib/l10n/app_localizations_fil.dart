@@ -16270,4 +16270,14 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get shareFailed => 'Hindi magawa ang larawan.';
+
+  @override
+  String get shareSaveToPhotos => 'I-save sa photos';
+
+  @override
+  String get shareSavedToPhotos => 'Na-save sa photos';
+
+  @override
+  String get sharePhotosDenied =>
+      'Walang pahintulot ang FNM na magdagdag sa photos mo. Puwede mo itong payagan sa Settings.';
 }

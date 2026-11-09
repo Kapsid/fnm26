@@ -16577,4 +16577,14 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get shareFailed => 'Не вдалося створити зображення.';
+
+  @override
+  String get shareSaveToPhotos => 'Зберегти у фото';
+
+  @override
+  String get shareSavedToPhotos => 'Збережено у фото';
+
+  @override
+  String get sharePhotosDenied =>
+      'FNM не має дозволу додавати до твоїх фото. Можна дозволити це в Налаштуваннях.';
 }

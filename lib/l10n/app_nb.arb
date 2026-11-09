@@ -4048,5 +4048,8 @@
   "shareSheetTitle": "Del som bilde",
   "shareFormatSquare": "Kvadrat",
   "shareFormatStory": "Story",
-  "shareFailed": "Bildet kunne ikke lages."
+  "shareFailed": "Bildet kunne ikke lages.",
+  "shareSaveToPhotos": "Lagre i bilder",
+  "shareSavedToPhotos": "Lagret i bilder",
+  "sharePhotosDenied": "FNM har ikke tilgang til å legge til i bildene dine. Du kan tillate det i Innstillinger."
 }

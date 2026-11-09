@@ -16175,4 +16175,14 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get shareFailed => 'Görsel oluşturulamadı.';
+
+  @override
+  String get shareSaveToPhotos => 'Fotoğraflara kaydet';
+
+  @override
+  String get shareSavedToPhotos => 'Fotoğraflara kaydedildi';
+
+  @override
+  String get sharePhotosDenied =>
+      'FNM\'nin fotoğraflarına ekleme izni yok. Bunu Ayarlar\'dan açabilirsin.';
 }

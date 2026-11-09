@@ -145,6 +145,8 @@
 	</array>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>FNM opens your photo library only when you choose a picture for a trophy in the database editor. It never reads your photos otherwise.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>FNM saves the match and trophy cabinet images you choose to save into your photos. It only adds pictures; it never reads your library.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>FNM does not use the camera. The file picker it uses to restore a save backup can offer it, but the game never takes photos.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

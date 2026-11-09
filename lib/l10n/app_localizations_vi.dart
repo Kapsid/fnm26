@@ -16110,4 +16110,14 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get shareFailed => 'Không thể tạo ảnh.';
+
+  @override
+  String get shareSaveToPhotos => 'Lưu vào ảnh';
+
+  @override
+  String get shareSavedToPhotos => 'Đã lưu vào ảnh';
+
+  @override
+  String get sharePhotosDenied =>
+      'FNM chưa được phép thêm vào ảnh của bạn. Bạn có thể cho phép trong Cài đặt.';
 }

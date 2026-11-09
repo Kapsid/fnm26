@@ -16538,4 +16538,14 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get shareFailed => 'Obrázek se nepodařilo vytvořit.';
+
+  @override
+  String get shareSaveToPhotos => 'Uložit do fotek';
+
+  @override
+  String get shareSavedToPhotos => 'Uloženo do fotek';
+
+  @override
+  String get sharePhotosDenied =>
+      'FNM nemá povolení ukládat do fotek. Můžete ho povolit v Nastavení.';
 }

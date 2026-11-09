@@ -16288,4 +16288,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shareFailed => 'The image could not be created.';
+
+  @override
+  String get shareSaveToPhotos => 'Save to photos';
+
+  @override
+  String get shareSavedToPhotos => 'Saved to photos';
+
+  @override
+  String get sharePhotosDenied =>
+      'FNM is not allowed to add to your photos. You can allow it in Settings.';
 }

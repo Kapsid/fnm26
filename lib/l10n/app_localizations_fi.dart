@@ -16336,4 +16336,14 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get shareFailed => 'Kuvaa ei voitu luoda.';
+
+  @override
+  String get shareSaveToPhotos => 'Tallenna kuviin';
+
+  @override
+  String get shareSavedToPhotos => 'Tallennettu kuviin';
+
+  @override
+  String get sharePhotosDenied =>
+      'FNM:llä ei ole lupaa lisätä kuviisi. Voit sallia sen Asetuksissa.';
 }

@@ -16265,4 +16265,14 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get shareFailed => 'Billedet kunne ikke oprettes.';
+
+  @override
+  String get shareSaveToPhotos => 'Gem i billeder';
+
+  @override
+  String get shareSavedToPhotos => 'Gemt i billeder';
+
+  @override
+  String get sharePhotosDenied =>
+      'FNM har ikke lov til at tilføje til dine billeder. Du kan tillade det i Indstillinger.';
 }

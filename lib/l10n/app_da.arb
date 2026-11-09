@@ -4048,5 +4048,8 @@
   "shareSheetTitle": "Del som billede",
   "shareFormatSquare": "Kvadrat",
   "shareFormatStory": "Story",
-  "shareFailed": "Billedet kunne ikke oprettes."
+  "shareFailed": "Billedet kunne ikke oprettes.",
+  "shareSaveToPhotos": "Gem i billeder",
+  "shareSavedToPhotos": "Gemt i billeder",
+  "sharePhotosDenied": "FNM har ikke lov til at tilføje til dine billeder. Du kan tillade det i Indstillinger."
 }

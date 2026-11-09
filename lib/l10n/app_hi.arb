@@ -4048,5 +4048,8 @@
   "shareSheetTitle": "छवि के रूप में शेयर करें",
   "shareFormatSquare": "वर्गाकार",
   "shareFormatStory": "स्टोरी",
-  "shareFailed": "छवि नहीं बन सकी।"
+  "shareFailed": "छवि नहीं बन सकी।",
+  "shareSaveToPhotos": "फ़ोटो में सेव करें",
+  "shareSavedToPhotos": "फ़ोटो में सेव हो गया",
+  "sharePhotosDenied": "FNM को आपकी फ़ोटो में जोड़ने की अनुमति नहीं है। आप इसे सेटिंग्स में दे सकते हैं।"
 }

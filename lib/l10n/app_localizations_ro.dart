@@ -16678,4 +16678,14 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get shareFailed => 'Imaginea nu a putut fi creată.';
+
+  @override
+  String get shareSaveToPhotos => 'Salvează în poze';
+
+  @override
+  String get shareSavedToPhotos => 'Salvată în poze';
+
+  @override
+  String get sharePhotosDenied =>
+      'FNM nu are voie să adauge în pozele tale. Poți permite asta din Setări.';
 }

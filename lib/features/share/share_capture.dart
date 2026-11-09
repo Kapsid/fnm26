@@ -7,9 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/share/share_card_kit.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:gal/gal.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -40,12 +42,41 @@ Future<void> _shareToPlatform(
   );
 }
 
+/// How saving a share image into the photo gallery went.
+enum ShareSaveResult { saved, denied, failed }
+
+/// Puts a finished share image straight into the device's photos (iOS
+/// Photos, Android MediaStore) as [name] (no extension). Tests override
+/// [shareImageSaverProvider] so nothing reaches the platform.
+typedef ShareImageSaver =
+    Future<ShareSaveResult> Function(Uint8List png, String name);
+
+final Provider<ShareImageSaver> shareImageSaverProvider =
+    Provider<ShareImageSaver>((ref) => _saveToGallery);
+
+Future<ShareSaveResult> _saveToGallery(Uint8List png, String name) async {
+  try {
+    // Add-only access: iOS asks once ("add to Photos"); Android 10+ needs
+    // nothing, older ones the storage permission in the manifest.
+    if (!await Gal.hasAccess() && !await Gal.requestAccess()) {
+      return ShareSaveResult.denied;
+    }
+    await Gal.putImageBytes(png, name: name);
+    return ShareSaveResult.saved;
+  } on GalException catch (e, st) {
+    if (e.type == GalExceptionType.accessDenied) return ShareSaveResult.denied;
+    AppLog.error('share-save', e, st);
+    return ShareSaveResult.failed;
+  }
+}
+
 /// Renders [card] off screen at exactly [format]'s pixel size (1080 x 1080 or
 /// 1080 x 1920, whatever the phone's density) and returns it as a PNG.
 ///
 /// The card is laid out in a pipeline of its own, never attached to the
 /// screen, under the app's current language ([context]'s locale). Its art is
-/// loaded first ([flagCodes], the brand logo, every trophy), and the tree is
+/// loaded first ([flagCodes], the brand logo, every trophy, a custom world's
+/// trophy pictures ([images])), and the tree is
 /// rebuilt until the last image has arrived, so nothing comes out blank.
 ///
 /// Needs real asynchrony: in a widget test, call it inside `runAsync`.
@@ -54,6 +85,7 @@ Future<Uint8List> renderShareCard(
   required Widget card,
   required ShareFormat format,
   Iterable<String> flagCodes = const [],
+  Iterable<Uint8List> images = const [],
 }) async {
   final size = format.size;
   final locale = Localizations.localeOf(context);
@@ -65,6 +97,10 @@ Future<Uint8List> renderShareCard(
     precacheImage(const AssetImage(ShareBrand.logoAsset), context),
     for (final t in Trophies.cabinet)
       precacheImage(AssetImage(t.asset), context),
+    // A custom world's trophy pictures: decoded into the cache under the
+    // very provider the card draws them with.
+    for (final png in images)
+      precacheImage(shareTrophyImage(png), context, onError: (_, _) {}),
     for (final c in {...flagCodes})
       () async {
         final loader = SvgAssetLoader('assets/flags/${c.toLowerCase()}.svg');

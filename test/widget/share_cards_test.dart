@@ -1,25 +1,31 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/theme/app_theme.dart';
+import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart';
+import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/career/manager_history_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
     show kMatchViewModePrefsKey;
 import 'package:fnm/features/settings/settings_providers.dart';
+import 'package:fnm/features/share/cabinet_share_card.dart';
 import 'package:fnm/features/share/match_share_card.dart';
 import 'package:fnm/features/share/share_cabinet_button.dart';
 import 'package:fnm/features/share/share_capture.dart';
 import 'package:fnm/features/share/share_card_kit.dart';
+import 'package:fnm/features/share/share_data.dart';
 import 'package:fnm/features/share/share_sheet.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -77,6 +83,17 @@ void main() {
         ),
       );
 
+  /// Lets a capture finish: it mixes real work (decoding, encoding the PNG)
+  /// with the test clock's timers, so give it both until [done].
+  Future<void> settleCapture(WidgetTester tester, bool Function() done) async {
+    for (var i = 0; i < 100 && !done(); i++) {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 30)),
+      );
+      await tester.pump(const Duration(milliseconds: 50));
+    }
+  }
+
   /// The PNG's width and height, from its header.
   (int, int) pngSize(Uint8List png) {
     final b = ByteData.sublistView(png);
@@ -119,20 +136,150 @@ void main() {
       expect(find.text('Square'), findsOneWidget);
       expect(find.text('Story'), findsOneWidget);
 
+      expect(find.byKey(ShareKeys.action(ShareAction.share)), findsOneWidget);
+      expect(find.byKey(ShareKeys.action(ShareAction.save)), findsOneWidget);
+      expect(find.text('Save to photos'), findsOneWidget);
+
       await tester.tap(find.byKey(ShareKeys.format(ShareFormat.story)));
-      // The capture mixes real work (decoding, encoding the PNG) with the
-      // test clock's timers: give it both until the image arrives.
-      for (var i = 0; i < 100 && shared.isEmpty; i++) {
-        await tester.runAsync(
-          () => Future<void>.delayed(const Duration(milliseconds: 30)),
-        );
-        await tester.pump(const Duration(milliseconds: 50));
-      }
+      await tester.pump();
+      await tester.tap(find.byKey(ShareKeys.action(ShareAction.share)));
+      await settleCapture(tester, () => shared.isNotEmpty);
       expect(shared, hasLength(1));
       expect(pngSize(shared.single.$1), (1080, 1920));
       expect(shared.single.$2, endsWith('-story.png'));
       await tester.pumpAndSettle();
       expect(find.byKey(ShareKeys.sheet), findsNothing);
+    });
+
+    for (final (result, message) in [
+      (ShareSaveResult.saved, 'Saved to photos'),
+      (
+        ShareSaveResult.denied,
+        'FNM is not allowed to add to your photos. You can allow it in '
+            'Settings.',
+      ),
+    ]) {
+      testWidgets('Save to photos: ${result.name}', (tester) async {
+        final saved = <(Uint8List, String)>[];
+        final shared = <String>[];
+        await tester.pumpWidget(
+          app(
+            ShareCabinetButton(history: history(won: true)),
+            overrides: [
+              shareImageSinkProvider.overrideWithValue(
+                (png, name, origin) async => shared.add(name),
+              ),
+              shareImageSaverProvider.overrideWithValue((png, name) async {
+                saved.add((png, name));
+                return result;
+              }),
+            ],
+          ),
+        );
+        await tester.tap(find.byKey(ShareKeys.button));
+        await tester.pumpAndSettle();
+        // Square is chosen to begin with.
+        await tester.tap(find.byKey(ShareKeys.action(ShareAction.save)));
+        await settleCapture(tester, () => saved.isNotEmpty);
+        await tester.pump();
+        expect(saved, hasLength(1));
+        expect(pngSize(saved.single.$1), (1080, 1080));
+        expect(saved.single.$2, endsWith('-square'));
+        expect(shared, isEmpty, reason: 'saving never opens the share sheet');
+        expect(find.text(message), findsOneWidget);
+      });
+    }
+  });
+
+  group('custom world trophy art', () {
+    // A career on a world pack with its own World Championship picture
+    // (here, the bundled European trophy's PNG, so it is plainly different).
+    final custom = File('assets/trophies/europe.png').readAsBytesSync();
+    final world = ActiveWorld(
+      const WorldPack(
+        uuid: 'u',
+        name: 'Burgers',
+        author: '',
+        formatVersion: kPackFormatVersion,
+        madeWithVersion: '1.1.0',
+      ),
+      trophies: {'world': custom},
+    );
+
+    testWidgets('the cabinet card draws the career world\'s picture', (
+      tester,
+    ) async {
+      final l = lookupAppLocalizations(const Locale('en'));
+      final data = cabinetShareData(l, history(won: true), world)!;
+      expect(identical(data.trophies.single.image, custom), isTrue);
+      expect(
+        cabinetShareData(
+          l,
+          history(won: true),
+          ActiveWorld.none,
+        )!.trophies.single.image,
+        isNull,
+        reason: 'the default world keeps the bundled art',
+      );
+
+      await tester.pumpWidget(
+        app(CabinetShareCard(data: data, format: ShareFormat.square)),
+      );
+      final drawn = find.byWidgetPredicate(
+        (w) =>
+            w is Image &&
+            w.image is ResizeImage &&
+            identical(
+              ((w.image as ResizeImage).imageProvider as MemoryImage).bytes,
+              custom,
+            ),
+      );
+      expect(drawn, findsOneWidget);
+    });
+
+    testWidgets('the shared image carries it', (tester) async {
+      final pngs = <Uint8List>[];
+      for (final w in [ActiveWorld.none, world]) {
+        pngs.clear();
+        // A fresh scope for each world.
+        await tester.pumpWidget(const SizedBox());
+        await tester.pumpWidget(
+          app(
+            ShareCabinetButton(
+              key: ValueKey(w),
+              history: history(won: true),
+            ),
+            overrides: [
+              activeWorldProvider.overrideWith((ref) => w),
+              shareImageSinkProvider.overrideWithValue(
+                (png, name, origin) async => pngs.add(png),
+              ),
+            ],
+          ),
+        );
+        await tester.tap(find.byKey(ShareKeys.button));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(ShareKeys.action(ShareAction.share)));
+        await settleCapture(tester, () => pngs.isNotEmpty);
+        await tester.pumpAndSettle();
+        expect(pngs, hasLength(1));
+        if (identical(w, world)) {
+          File('build/share_preview/captured_custom_trophy_square.png')
+            ..createSync(recursive: true)
+            ..writeAsBytesSync(pngs.single);
+        } else {
+          File('build/share_preview/captured_default_trophy_square.png')
+            ..createSync(recursive: true)
+            ..writeAsBytesSync(pngs.single);
+        }
+      }
+      final a = File(
+        'build/share_preview/captured_default_trophy_square.png',
+      ).readAsBytesSync();
+      final b = File(
+        'build/share_preview/captured_custom_trophy_square.png',
+      ).readAsBytesSync();
+      expect(a, isNot(equals(b)), reason: 'the custom picture is drawn');
     });
   });
 

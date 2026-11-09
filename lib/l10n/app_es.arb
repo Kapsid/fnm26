@@ -4048,5 +4048,8 @@
   "shareSheetTitle": "Compartir como imagen",
   "shareFormatSquare": "Cuadrado",
   "shareFormatStory": "Historia",
-  "shareFailed": "No se pudo crear la imagen."
+  "shareFailed": "No se pudo crear la imagen.",
+  "shareSaveToPhotos": "Guardar en fotos",
+  "shareSavedToPhotos": "Guardada en fotos",
+  "sharePhotosDenied": "FNM no tiene permiso para añadir a tus fotos. Puedes permitirlo en Ajustes."
 }

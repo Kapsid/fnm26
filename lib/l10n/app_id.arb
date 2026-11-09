@@ -4048,5 +4048,8 @@
   "shareSheetTitle": "Bagikan sebagai gambar",
   "shareFormatSquare": "Persegi",
   "shareFormatStory": "Story",
-  "shareFailed": "Gambar tidak dapat dibuat."
+  "shareFailed": "Gambar tidak dapat dibuat.",
+  "shareSaveToPhotos": "Simpan ke foto",
+  "shareSavedToPhotos": "Tersimpan ke foto",
+  "sharePhotosDenied": "FNM tidak diizinkan menambah ke foto Anda. Anda bisa mengizinkannya di Pengaturan."
 }

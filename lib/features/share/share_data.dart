@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/widgets.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/util/app_date.dart';
@@ -11,6 +13,7 @@ import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/features/career/manager_history_providers.dart';
 import 'package:fnm/features/match/score_bug_theme.dart';
 import 'package:fnm/features/share/cabinet_share_card.dart';
@@ -18,7 +21,7 @@ import 'package:fnm/features/share/match_share_card.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
 /// Where a fixture belongs, as the match card heads it: the competition's
-/// name, the round (or null) and the trophy artwork (or null).
+/// name, the round (or null) and its trophy's key (see [Trophies]; or null).
 ({String competition, String? round, String? trophy}) shareOccasion(
   AppLocalizations l,
   Fixture f,
@@ -41,7 +44,7 @@ import 'package:fnm/l10n/app_localizations.dart';
     'FFINAL' => (
       competition: l.compContinentalClash,
       round: null,
-      trophy: Trophies.continentalClash,
+      trophy: 'continentalclash',
     ),
     'POSF' || 'POFINAL' => (
       competition: l.compIntercontinentalPlayoff,
@@ -59,7 +62,7 @@ import 'package:fnm/l10n/app_localizations.dart';
         NationsCups.forConfederation(cont)?.name ?? 'Nations Cup',
       ),
       round: null,
-      trophy: Trophies.nationsCup,
+      trophy: 'nationscup',
     ),
     _ when round.startsWith('N') => (
       competition: competitionLabel(
@@ -67,27 +70,27 @@ import 'package:fnm/l10n/app_localizations.dart';
         NationsCups.forConfederation(cont)?.name ?? 'Nations Cup',
       ),
       round: stage(round),
-      trophy: Trophies.nationsCup,
+      trophy: 'nationscup',
     ),
     'CGROUP' => (
       competition: continentalCupLabel(l, cont),
       round: l.resultsStageGroupStage,
-      trophy: Trophies.forConfederation(cont),
+      trophy: cont.name,
     ),
     _ when round.startsWith('C') => (
       competition: continentalCupLabel(l, cont),
       round: stage(round),
-      trophy: Trophies.forConfederation(cont),
+      trophy: cont.name,
     ),
     'GROUP' => (
       competition: competitionLabel(l, 'World Championship'),
       round: l.resultsStageFinalsGroup,
-      trophy: Trophies.worldCup,
+      trophy: 'world',
     ),
     _ => (
       competition: competitionLabel(l, 'World Championship'),
       round: stage(round),
-      trophy: Trophies.worldCup,
+      trophy: 'world',
     ),
   };
 }
@@ -104,6 +107,7 @@ MatchShareData matchShareData(
   required MatchResult result,
   required MatchGround ground,
   required Confederation? confederation,
+  required ActiveWorld world,
   KnockoutOutcome? outcome,
 }) {
   final l = AppLocalizations.of(context);
@@ -130,7 +134,14 @@ MatchShareData matchShareData(
     away: side(awayId, away),
     competition: occasion.competition,
     round: occasion.round,
-    trophyAsset: occasion.trophy,
+    trophyAsset: switch (occasion.trophy) {
+      final key? => Trophies.assetForKey(key),
+      null => null,
+    },
+    trophyImage: switch (occasion.trophy) {
+      final key? => world.trophy(key),
+      null => null,
+    },
     dateLabel: AppDate.dayMonthYear(context, fixture.date),
     venue: [
       ground.stadium,
@@ -166,7 +177,14 @@ MatchShareData matchShareData(
 
 /// The manager's trophy cabinet as the share card shows it, or null when he
 /// has not won anything yet (there is nothing to share).
-CabinetShareData? cabinetShareData(AppLocalizations l, ManagerHistory h) {
+///
+/// [world] is the career's world: a custom one's own trophy pictures are
+/// drawn, as the in-game cabinet draws them.
+CabinetShareData? cabinetShareData(
+  AppLocalizations l,
+  ManagerHistory h,
+  ActiveWorld world,
+) {
   final trophies = <ShareTrophy>[
     for (final t in Trophies.cabinet)
       if (h.trophyWins.where((w) => w.key == t.key).toList() case final wins
@@ -174,6 +192,7 @@ CabinetShareData? cabinetShareData(AppLocalizations l, ManagerHistory h) {
         ShareTrophy(
           label: competitionLabel(l, t.label),
           asset: t.asset,
+          image: world.trophy(t.key),
           wins: [
             for (final w in wins) (year: w.year, code: w.nation?.code ?? ''),
           ],
@@ -200,6 +219,13 @@ Iterable<String> matchShareFlags(MatchShareData d) => {
   d.away.code,
   ?d.star?.code,
 };
+
+/// Every custom trophy picture a card draws, for warming before capture.
+Iterable<Uint8List> matchShareImages(MatchShareData d) => [?d.trophyImage];
+
+Iterable<Uint8List> cabinetShareImages(CabinetShareData d) => [
+  for (final t in d.trophies) ?t.image,
+];
 
 Iterable<String> cabinetShareFlags(CabinetShareData d) => {
   for (final n in d.nations) n.code,

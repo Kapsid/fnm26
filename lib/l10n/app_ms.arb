@@ -4048,5 +4048,8 @@
   "shareSheetTitle": "Kongsi sebagai imej",
   "shareFormatSquare": "Segi empat sama",
   "shareFormatStory": "Story",
-  "shareFailed": "Imej tidak dapat dibuat."
+  "shareFailed": "Imej tidak dapat dibuat.",
+  "shareSaveToPhotos": "Simpan ke foto",
+  "shareSavedToPhotos": "Disimpan ke foto",
+  "sharePhotosDenied": "FNM tidak dibenarkan menambah ke foto anda. Anda boleh membenarkannya dalam Tetapan."
 }

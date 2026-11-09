@@ -4048,5 +4048,8 @@
   "shareSheetTitle": "Görsel olarak paylaş",
   "shareFormatSquare": "Kare",
   "shareFormatStory": "Hikaye",
-  "shareFailed": "Görsel oluşturulamadı."
+  "shareFailed": "Görsel oluşturulamadı.",
+  "shareSaveToPhotos": "Fotoğraflara kaydet",
+  "shareSavedToPhotos": "Fotoğraflara kaydedildi",
+  "sharePhotosDenied": "FNM'nin fotoğraflarına ekleme izni yok. Bunu Ayarlar'dan açabilirsin."
 }

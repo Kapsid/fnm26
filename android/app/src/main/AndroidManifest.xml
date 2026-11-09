@@ -1,6 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Automatic backups to the Google Drive app folder (opt-in, Settings). -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Saving a share image to the gallery (gal): only Android 10 and older
+         need it; newer ones write through MediaStore without a permission. -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29"/>
     <application
         android:label="Football Nations Manager"
         android:name="${applicationName}"

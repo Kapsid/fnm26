@@ -4048,5 +4048,8 @@
   "shareSheetTitle": "Podijeli kao sliku",
   "shareFormatSquare": "Kvadrat",
   "shareFormatStory": "Priča",
-  "shareFailed": "Slika se nije mogla izraditi."
+  "shareFailed": "Slika se nije mogla izraditi.",
+  "shareSaveToPhotos": "Spremi u fotografije",
+  "shareSavedToPhotos": "Spremljeno u fotografije",
+  "sharePhotosDenied": "FNM nema dopuštenje za dodavanje u tvoje fotografije. Možeš ga dopustiti u Postavkama."
 }

@@ -25144,5 +25144,17 @@
   "shareFailed": "The image could not be created.",
   "@shareFailed": {
     "description": "Snack bar when the share image could not be made."
+  },
+  "shareSaveToPhotos": "Save to photos",
+  "@shareSaveToPhotos": {
+    "description": "Button in the share sheet that saves the image straight into the phone's photo gallery."
+  },
+  "shareSavedToPhotos": "Saved to photos",
+  "@shareSavedToPhotos": {
+    "description": "Snack bar after the share image was saved into the photo gallery."
+  },
+  "sharePhotosDenied": "FNM is not allowed to add to your photos. You can allow it in Settings.",
+  "@sharePhotosDenied": {
+    "description": "Snack bar when the phone refused the app access to save into the photo gallery."
   }
 }

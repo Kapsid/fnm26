@@ -1,9 +1,52 @@
 import 'dart:math' as math;
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/features/world_pack/trophy_image.dart';
 import 'package:fnm/shared/widgets/country_flag.dart';
+
+/// A custom world's trophy picture as the share cards draw it: decoded no
+/// bigger than [TrophyImage] decodes it in the cabinet. One provider per
+/// bytes, so the capture's warm-up and the card hit the same cache entry.
+ImageProvider shareTrophyImage(Uint8List png) => ResizeImage(
+  MemoryImage(png),
+  width: TrophyImage.decodeBound,
+  height: TrophyImage.decodeBound,
+  policy: ResizeImagePolicy.fit,
+);
+
+/// A trophy on a share card, exactly as [TrophyImage] resolves it in the
+/// cabinet: the career world's own picture ([custom]) when it has one, the
+/// bundled [asset] otherwise, and the bundled one if the picture will not
+/// decode.
+class ShareTrophyArt extends StatelessWidget {
+  const ShareTrophyArt({
+    required this.asset,
+    required this.height,
+    this.custom,
+    super.key,
+  });
+
+  final String asset;
+  final Uint8List? custom;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    final bundled = Image.asset(asset, height: height, fit: BoxFit.contain);
+    final png = custom;
+    if (png == null) return bundled;
+    return Image(
+      image: shareTrophyImage(png),
+      height: height,
+      fit: BoxFit.contain,
+      gaplessPlayback: true,
+      errorBuilder: (_, _, _) => bundled,
+    );
+  }
+}
 
 /// The two shapes a share card is drawn in, at Instagram's own pixel sizes.
 ///

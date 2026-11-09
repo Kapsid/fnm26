@@ -24529,6 +24529,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The image could not be created.'**
   String get shareFailed;
+
+  /// Button in the share sheet that saves the image straight into the phone's photo gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Save to photos'**
+  String get shareSaveToPhotos;
+
+  /// Snack bar after the share image was saved into the photo gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved to photos'**
+  String get shareSavedToPhotos;
+
+  /// Snack bar when the phone refused the app access to save into the photo gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'FNM is not allowed to add to your photos. You can allow it in Settings.'**
+  String get sharePhotosDenied;
 }
 
 class _AppLocalizationsDelegate

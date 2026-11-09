@@ -16259,4 +16259,14 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get shareFailed => 'Bildet kunne ikke lages.';
+
+  @override
+  String get shareSaveToPhotos => 'Lagre i bilder';
+
+  @override
+  String get shareSavedToPhotos => 'Lagret i bilder';
+
+  @override
+  String get sharePhotosDenied =>
+      'FNM har ikke tilgang til å legge til i bildene dine. Du kan tillate det i Innstillinger.';
 }
