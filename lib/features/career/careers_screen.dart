@@ -41,31 +41,37 @@ class CareersScreen extends StatelessWidget {
         ),
         centerTitle: true,
       ),
+      extendBody: true,
       bottomNavigationBar: AppBottomNav(
         careerId: careerId,
         current: AppTab.careers,
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(AppSpacing.marginMobile),
-        children: [
-          // The trophy cabinet's big Share, first on the tab once there is
-          // something in it (nothing at all before the first trophy).
-          _CareerShare(careerId: careerId),
-          for (final (i, e) in _careerMenu(l, careerId).indexed) ...[
-            if (i > 0) const SizedBox(height: AppSpacing.sm),
-            _MenuTile(
-              key: e.key,
-              icon: e.icon,
-              title: e.title,
-              subtitle: e.subtitle,
-              onTap: () => context.go(e.location),
-            ),
+      body: Builder(
+        builder: (context) => ListView(
+          padding: AppBottomNav.padScroll(
+            context,
+            const EdgeInsets.all(AppSpacing.marginMobile),
+          ),
+          children: [
+            // The trophy cabinet's big Share, first on the tab once there is
+            // something in it (nothing at all before the first trophy).
+            _CareerShare(careerId: careerId),
+            for (final (i, e) in _careerMenu(l, careerId).indexed) ...[
+              if (i > 0) const SizedBox(height: AppSpacing.sm),
+              _MenuTile(
+                key: e.key,
+                icon: e.icon,
+                title: e.title,
+                subtitle: e.subtitle,
+                onTap: () => context.go(e.location),
+              ),
+            ],
+            // A block of its own, not a menu line: it shows the latest winner
+            // and the most decorated man before it is opened.
+            const SizedBox(height: AppSpacing.sm),
+            PotyHistoryBlock(careerId: careerId),
           ],
-          // A block of its own, not a menu line: it shows the latest winner
-          // and the most decorated man before it is opened.
-          const SizedBox(height: AppSpacing.sm),
-          PotyHistoryBlock(careerId: careerId),
-        ],
+        ),
       ),
     );
   }
