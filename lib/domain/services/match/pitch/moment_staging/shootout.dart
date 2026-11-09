@@ -382,11 +382,29 @@ class InMatchPenalty {
   static InMatchPenalty? _read(PitchScript s, StagedWindow w, ShotMoment m) {
     final shooter = s.actorIndexOf(m.shooterId);
     if (shooter == null) return null;
+    // The kick itself: the flight struck at the window's shot cue. Not
+    // just the taker's first touch in the window: he may play the ball
+    // onto the mark first, and a close-up keyed to that showed the kick
+    // early, then the real one again on the pitch, its goal after it.
+    double? cue;
+    for (final c in w.cues) {
+      if (c.kind == PitchCueKind.shot && c.playerId == m.shooterId) {
+        cue = c.t;
+        break;
+      }
+    }
     FlightPhase? kick;
     for (final p in s.ballPhases) {
       if (p is! FlightPhase || p.pass || p.resting) continue;
       if (p.fromActor != shooter) continue;
       if (p.t0 < w.start - 1e-6 || p.t0 > w.end + 3) continue;
+      final struck = cue != null
+          ? (p.t0 - cue).abs() < 1e-3
+          // No cue (a resumed window): the ball struck from the mark.
+          : xToDepth(p.from.x, p.to.x >= PitchDims.length / 2 ? 1 : -1) >
+                    PitchDims.penaltySpotDepth - 1 &&
+                (p.to.x < 3 || p.to.x > PitchDims.length - 3);
+      if (!struck) continue;
       kick = p;
       break;
     }
