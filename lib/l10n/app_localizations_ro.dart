@@ -16619,4 +16619,32 @@ class AppLocalizationsRo extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Intră: $name';
   }
+
+  @override
+  String get editorFilterToFix => 'De corectat';
+
+  @override
+  String get editorNothingToFix => 'Aici nu e nimic de corectat.';
+
+  @override
+  String get editorPromoteTooltip => 'Mută în lot';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name a fost mutat în lot';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Lotul este plin';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Un lot are cel mult $max jucători. Alegeți jucătorul care se întoarce în rezervă în locul lui.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Alege din fotografiile tale';
+
+  @override
+  String get editorTrophyFile => 'Alege un fișier';
 }

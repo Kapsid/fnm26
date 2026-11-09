@@ -16376,4 +16376,32 @@ class AppLocalizationsPl extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Wchodzi: $name';
   }
+
+  @override
+  String get editorFilterToFix => 'Do poprawy';
+
+  @override
+  String get editorNothingToFix => 'Tutaj nie ma nic do poprawy.';
+
+  @override
+  String get editorPromoteTooltip => 'Przenieś do kadry';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name przeniesiony do kadry';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Kadra jest pełna';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Kadra może mieć najwyżej $max zawodników. Wybierz zawodnika, który wróci do puli na jego miejsce.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Wybierz ze zdjęć';
+
+  @override
+  String get editorTrophyFile => 'Wybierz plik';
 }

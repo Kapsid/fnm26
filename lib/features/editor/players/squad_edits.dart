@@ -210,6 +210,65 @@ abstract final class SquadEdits {
         : list,
   );
 
+  /// [pack] with player [playerId] moved from nation [nationId]'s pool
+  /// ([shown] while it is untouched) into its squad, or null when he cannot
+  /// go: he is not in the pool, or the squad is at [PackRules.squadMax] and
+  /// no [swapOutId] (a squad player who goes back to the pool in his place)
+  /// is given.
+  ///
+  /// Both players get a pack-made id ([nextPlayerId]): a fringe id belongs
+  /// to the pool and a core id to the squad, and a squad may not hold the
+  /// first nor a pool the second. One edit, so one undo moves them back.
+  static WorldPack? promote(
+    WorldPack pack,
+    int nationId,
+    List<PackPlayer> shown,
+    int playerId, {
+    int? swapOutId,
+  }) {
+    final pool = pack.pools[nationId] ?? shown;
+    final squad = pack.squads[nationId] ?? const <PackPlayer>[];
+    final him = pool.where((p) => p.id == playerId).firstOrNull;
+    if (him == null) return null;
+    final out = swapOutId == null
+        ? null
+        : squad.where((p) => p.id == swapOutId).firstOrNull;
+    if (swapOutId != null && out == null) return null;
+    if (out == null && squad.length >= PackRules.squadMax) return null;
+    final id = nextPlayerId(pack);
+    return pack.copyWith(
+      squads: {
+        ...pack.squads,
+        nationId: [
+          for (final p in squad)
+            if (p.id != swapOutId) p,
+          _withId(him, id),
+        ],
+      },
+      pools: {
+        ...pack.pools,
+        nationId: [
+          for (final p in pool)
+            if (p.id != playerId) p,
+          if (out != null) _withId(out, id + 1),
+        ],
+      },
+    );
+  }
+
+  static PackPlayer _withId(PackPlayer p, int id) => PackPlayer(
+    id: id,
+    name: p.name,
+    age: p.age,
+    position: p.position,
+    attributes: p.attributes,
+    potential: p.potential,
+    club: p.club,
+    clubCountry: p.clubCountry,
+    traits: p.traits,
+    unknownTraits: p.unknownTraits,
+  );
+
   static WorldPack _withSquad(
     WorldPack pack,
     int nationId,

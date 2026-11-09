@@ -16298,4 +16298,32 @@ class AppLocalizationsEs extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Entra: $name';
   }
+
+  @override
+  String get editorFilterToFix => 'Por arreglar';
+
+  @override
+  String get editorNothingToFix => 'Aquí no hay nada que arreglar.';
+
+  @override
+  String get editorPromoteTooltip => 'Pasar a la plantilla';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name pasa a la plantilla';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'La plantilla está completa';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Una plantilla tiene como máximo $max jugadores. Elige al jugador que vuelve a los disponibles en su lugar.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Elegir de tus fotos';
+
+  @override
+  String get editorTrophyFile => 'Elegir un archivo';
 }

@@ -15664,4 +15664,32 @@ class AppLocalizationsKo extends AppLocalizations {
   String matchSubOn(String name) {
     return '인: $name';
   }
+
+  @override
+  String get editorFilterToFix => '수정 필요';
+
+  @override
+  String get editorNothingToFix => '여기에는 수정할 항목이 없습니다.';
+
+  @override
+  String get editorPromoteTooltip => '스쿼드로 옮기기';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name 선수를 스쿼드로 옮겼습니다';
+  }
+
+  @override
+  String get editorPromoteFullTitle => '스쿼드가 가득 찼습니다';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return '스쿼드는 최대 $max명까지입니다. 그 대신 풀로 돌아갈 선수를 고르세요.';
+  }
+
+  @override
+  String get editorTrophyGallery => '사진에서 선택';
+
+  @override
+  String get editorTrophyFile => '파일 선택';
 }

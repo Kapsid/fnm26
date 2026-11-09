@@ -16116,4 +16116,32 @@ class AppLocalizationsTr extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Giren: $name';
   }
+
+  @override
+  String get editorFilterToFix => 'Düzeltilecekler';
+
+  @override
+  String get editorNothingToFix => 'Burada düzeltilecek bir şey yok.';
+
+  @override
+  String get editorPromoteTooltip => 'Kadroya al';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name kadroya alındı';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Kadro dolu';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Bir kadroda en fazla $max oyuncu olabilir. Onun yerine havuza geri dönecek oyuncuyu seçin.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Fotoğraflarından seç';
+
+  @override
+  String get editorTrophyFile => 'Dosya seç';
 }

@@ -4031,5 +4031,13 @@
   "matchWeatherFog": "Tåge",
   "matchWeatherWindy": "Blæsende",
   "matchWeatherDustStorm": "Sandstorm",
-  "matchWeatherFrostyNight": "Frostklar nat"
+  "matchWeatherFrostyNight": "Frostklar nat",
+  "editorFilterToFix": "Skal rettes",
+  "editorNothingToFix": "Intet skal rettes her.",
+  "editorPromoteTooltip": "Flyt til truppen",
+  "editorPromoted": "{name} flyttet til truppen",
+  "editorPromoteFullTitle": "Truppen er fuld",
+  "editorPromoteFullBody": "En trup har højst {max} spillere. Vælg den spiller, der går tilbage til puljen i hans sted.",
+  "editorTrophyGallery": "Vælg blandt dine billeder",
+  "editorTrophyFile": "Vælg en fil"
 }

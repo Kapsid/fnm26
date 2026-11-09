@@ -72,6 +72,8 @@ dependencies:
   # The device name in a cloud backup's metadata. Held under 13.1 because
   # 13.1+ needs win32 6, which file_picker 11 does not allow yet.
   device_info_plus: ">=12.0.0 <13.1.0"
+  # Picks a trophy picture from the phone's photo gallery.
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:

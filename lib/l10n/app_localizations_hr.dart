@@ -16541,4 +16541,32 @@ class AppLocalizationsHr extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Ulazi: $name';
   }
+
+  @override
+  String get editorFilterToFix => 'Za popraviti';
+
+  @override
+  String get editorNothingToFix => 'Ovdje nema ničega za popraviti.';
+
+  @override
+  String get editorPromoteTooltip => 'Premjesti u momčad';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name premješten u momčad';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Momčad je popunjena';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Momčad ima najviše $max igrača. Odaberite igrača koji se umjesto njega vraća u zalihu.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Odaberi iz svojih fotografija';
+
+  @override
+  String get editorTrophyFile => 'Odaberi datoteku';
 }

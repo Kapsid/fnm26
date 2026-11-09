@@ -4031,5 +4031,13 @@
   "matchWeatherFog": "Kabus",
   "matchWeatherWindy": "Berangin",
   "matchWeatherDustStorm": "Ribut debu",
-  "matchWeatherFrostyNight": "Malam sejuk beku"
+  "matchWeatherFrostyNight": "Malam sejuk beku",
+  "editorFilterToFix": "Perlu dibetulkan",
+  "editorNothingToFix": "Tiada apa yang perlu dibetulkan di sini.",
+  "editorPromoteTooltip": "Pindah ke skuad",
+  "editorPromoted": "{name} dipindahkan ke skuad",
+  "editorPromoteFullTitle": "Skuad sudah penuh",
+  "editorPromoteFullBody": "Satu skuad memuatkan paling banyak {max} pemain. Pilih pemain yang kembali ke kolam sebagai gantinya.",
+  "editorTrophyGallery": "Pilih daripada foto anda",
+  "editorTrophyFile": "Pilih fail"
 }

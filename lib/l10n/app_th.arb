@@ -4031,5 +4031,13 @@
   "matchWeatherFog": "หมอก",
   "matchWeatherWindy": "ลมแรง",
   "matchWeatherDustStorm": "พายุฝุ่น",
-  "matchWeatherFrostyNight": "คืนหนาวจัด"
+  "matchWeatherFrostyNight": "คืนหนาวจัด",
+  "editorFilterToFix": "ต้องแก้ไข",
+  "editorNothingToFix": "ไม่มีอะไรต้องแก้ไขที่นี่",
+  "editorPromoteTooltip": "ย้ายเข้าทีม",
+  "editorPromoted": "ย้าย {name} เข้าทีมแล้ว",
+  "editorPromoteFullTitle": "ทีมเต็มแล้ว",
+  "editorPromoteFullBody": "ทีมมีผู้เล่นได้สูงสุด {max} คน เลือกผู้เล่นที่จะกลับไปอยู่ในกลุ่มสำรองแทน",
+  "editorTrophyGallery": "เลือกจากรูปภาพของคุณ",
+  "editorTrophyFile": "เลือกไฟล์"
 }

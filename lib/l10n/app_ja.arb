@@ -4031,5 +4031,13 @@
   "matchWeatherFog": "霧",
   "matchWeatherWindy": "強風",
   "matchWeatherDustStorm": "砂嵐",
-  "matchWeatherFrostyNight": "凍てつく夜"
+  "matchWeatherFrostyNight": "凍てつく夜",
+  "editorFilterToFix": "要修正",
+  "editorNothingToFix": "ここで修正が必要なものはありません。",
+  "editorPromoteTooltip": "チームに入れる",
+  "editorPromoted": "{name}をチームに入れました",
+  "editorPromoteFullTitle": "チームがいっぱいです",
+  "editorPromoteFullBody": "チームは最大{max}人までです。代わりにプールへ戻す選手を選んでください。",
+  "editorTrophyGallery": "写真から選ぶ",
+  "editorTrophyFile": "ファイルを選ぶ"
 }

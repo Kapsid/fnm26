@@ -4031,5 +4031,13 @@
   "matchWeatherFog": "Tåke",
   "matchWeatherWindy": "Kraftig vind",
   "matchWeatherDustStorm": "Sandstorm",
-  "matchWeatherFrostyNight": "Frostnatt"
+  "matchWeatherFrostyNight": "Frostnatt",
+  "editorFilterToFix": "Må rettes",
+  "editorNothingToFix": "Ingenting må rettes her.",
+  "editorPromoteTooltip": "Flytt til troppen",
+  "editorPromoted": "{name} flyttet til troppen",
+  "editorPromoteFullTitle": "Troppen er full",
+  "editorPromoteFullBody": "En tropp har høyst {max} spillere. Velg spilleren som går tilbake til puljen i hans sted.",
+  "editorTrophyGallery": "Velg fra bildene dine",
+  "editorTrophyFile": "Velg en fil"
 }

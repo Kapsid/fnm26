@@ -4031,5 +4031,13 @@
   "matchWeatherFog": "Sumu",
   "matchWeatherWindy": "Tuulista",
   "matchWeatherDustStorm": "Hiekkamyrsky",
-  "matchWeatherFrostyNight": "Pakkasyö"
+  "matchWeatherFrostyNight": "Pakkasyö",
+  "editorFilterToFix": "Korjattavat",
+  "editorNothingToFix": "Täällä ei ole mitään korjattavaa.",
+  "editorPromoteTooltip": "Siirrä joukkueeseen",
+  "editorPromoted": "{name} siirretty joukkueeseen",
+  "editorPromoteFullTitle": "Joukkue on täynnä",
+  "editorPromoteFullBody": "Joukkueessa on enintään {max} pelaajaa. Valitse pelaaja, joka palaa varantoon hänen tilalleen.",
+  "editorTrophyGallery": "Valitse omista kuvistasi",
+  "editorTrophyFile": "Valitse tiedosto"
 }

@@ -16479,4 +16479,32 @@ class AppLocalizationsCs extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Přichází: $name';
   }
+
+  @override
+  String get editorFilterToFix => 'K opravě';
+
+  @override
+  String get editorNothingToFix => 'Tady není co opravovat.';
+
+  @override
+  String get editorPromoteTooltip => 'Přesunout do kádru';
+
+  @override
+  String editorPromoted(String name) {
+    return 'Hráč $name přesunut do kádru';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Kádr je plný';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Kádr může mít nejvýše $max hráčů. Vyberte hráče, který se místo něj vrátí do širšího kádru.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Vybrat z fotek';
+
+  @override
+  String get editorTrophyFile => 'Vybrat soubor';
 }

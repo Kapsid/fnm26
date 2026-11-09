@@ -4031,5 +4031,13 @@
   "matchWeatherFog": "Sương mù",
   "matchWeatherWindy": "Gió mạnh",
   "matchWeatherDustStorm": "Bão cát",
-  "matchWeatherFrostyNight": "Đêm giá rét"
+  "matchWeatherFrostyNight": "Đêm giá rét",
+  "editorFilterToFix": "Cần sửa",
+  "editorNothingToFix": "Ở đây không có gì cần sửa.",
+  "editorPromoteTooltip": "Chuyển vào đội hình",
+  "editorPromoted": "{name} đã chuyển vào đội hình",
+  "editorPromoteFullTitle": "Đội hình đã đầy",
+  "editorPromoteFullBody": "Một đội hình có tối đa {max} cầu thủ. Hãy chọn cầu thủ sẽ quay về nhóm dự bị thay cho anh ấy.",
+  "editorTrophyGallery": "Chọn từ ảnh của bạn",
+  "editorTrophyFile": "Chọn một tệp"
 }

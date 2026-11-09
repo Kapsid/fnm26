@@ -16518,4 +16518,32 @@ class AppLocalizationsUk extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Виходить на поле: $name';
   }
+
+  @override
+  String get editorFilterToFix => 'Потребує виправлення';
+
+  @override
+  String get editorNothingToFix => 'Тут нічого виправляти.';
+
+  @override
+  String get editorPromoteTooltip => 'Перемістити до складу';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name переміщено до складу';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Склад заповнений';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'У складі може бути щонайбільше $max гравців. Виберіть гравця, який повернеться до резерву замість нього.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Вибрати з ваших фото';
+
+  @override
+  String get editorTrophyFile => 'Вибрати файл';
 }

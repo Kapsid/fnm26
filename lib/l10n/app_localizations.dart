@@ -24427,6 +24427,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'On: {name}'**
   String matchSubOn(String name);
+
+  /// Chip that lists only the items that still need a fix.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs a fix'**
+  String get editorFilterToFix;
+
+  /// Empty list when the fix filter is on and nothing needs fixing.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing needs fixing here.'**
+  String get editorNothingToFix;
+
+  /// Tooltip of the button on a pool row that moves the player into the squad.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to the squad'**
+  String get editorPromoteTooltip;
+
+  /// Snackbar after a pool player is moved into the squad; it offers Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} moved to the squad'**
+  String editorPromoted(String name);
+
+  /// Title of the dialog shown when the squad is full and a pool player is moved up: pick who goes back.
+  ///
+  /// In en, this message translates to:
+  /// **'The squad is full'**
+  String get editorPromoteFullTitle;
+
+  /// Body of the dialog shown when the squad is full and a pool player is moved up: the squad cap, then the list of squad players to send back to the pool.
+  ///
+  /// In en, this message translates to:
+  /// **'A squad holds at most {max} players. Pick the player who goes back to the pool in his place.'**
+  String editorPromoteFullBody(int max);
+
+  /// Main button on a trophy: pick its picture from the phone's photo gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from your photos'**
+  String get editorTrophyGallery;
+
+  /// Secondary button on a trophy: pick its picture from a file instead of the photo gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a file instead'**
+  String get editorTrophyFile;
 }
 
 class _AppLocalizationsDelegate

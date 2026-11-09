@@ -4031,5 +4031,13 @@
   "matchWeatherFog": "Sis",
   "matchWeatherWindy": "Rüzgârlı",
   "matchWeatherDustStorm": "Kum fırtınası",
-  "matchWeatherFrostyNight": "Ayazlı gece"
+  "matchWeatherFrostyNight": "Ayazlı gece",
+  "editorFilterToFix": "Düzeltilecekler",
+  "editorNothingToFix": "Burada düzeltilecek bir şey yok.",
+  "editorPromoteTooltip": "Kadroya al",
+  "editorPromoted": "{name} kadroya alındı",
+  "editorPromoteFullTitle": "Kadro dolu",
+  "editorPromoteFullBody": "Bir kadroda en fazla {max} oyuncu olabilir. Onun yerine havuza geri dönecek oyuncuyu seçin.",
+  "editorTrophyGallery": "Fotoğraflarından seç",
+  "editorTrophyFile": "Dosya seç"
 }

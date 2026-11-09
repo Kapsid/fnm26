@@ -16051,4 +16051,32 @@ class AppLocalizationsVi extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Vào sân: $name';
   }
+
+  @override
+  String get editorFilterToFix => 'Cần sửa';
+
+  @override
+  String get editorNothingToFix => 'Ở đây không có gì cần sửa.';
+
+  @override
+  String get editorPromoteTooltip => 'Chuyển vào đội hình';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name đã chuyển vào đội hình';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Đội hình đã đầy';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Một đội hình có tối đa $max cầu thủ. Hãy chọn cầu thủ sẽ quay về nhóm dự bị thay cho anh ấy.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Chọn từ ảnh của bạn';
+
+  @override
+  String get editorTrophyFile => 'Chọn một tệp';
 }

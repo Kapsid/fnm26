@@ -4031,5 +4031,13 @@
   "matchWeatherFog": "Köd",
   "matchWeatherWindy": "Szeles",
   "matchWeatherDustStorm": "Homokvihar",
-  "matchWeatherFrostyNight": "Fagyos éjszaka"
+  "matchWeatherFrostyNight": "Fagyos éjszaka",
+  "editorFilterToFix": "Javítandó",
+  "editorNothingToFix": "Itt nincs mit javítani.",
+  "editorPromoteTooltip": "Áthelyezés a keretbe",
+  "editorPromoted": "{name} átkerült a keretbe",
+  "editorPromoteFullTitle": "A keret megtelt",
+  "editorPromoteFullBody": "Egy keret legfeljebb {max} játékosból állhat. Válaszd ki, ki kerüljön vissza a játékoskészletbe helyette.",
+  "editorTrophyGallery": "Választás a fotóid közül",
+  "editorTrophyFile": "Fájl választása"
 }

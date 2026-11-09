@@ -4031,5 +4031,13 @@
   "matchWeatherFog": "Mgła",
   "matchWeatherWindy": "Wietrznie",
   "matchWeatherDustStorm": "Burza piaskowa",
-  "matchWeatherFrostyNight": "Mroźna noc"
+  "matchWeatherFrostyNight": "Mroźna noc",
+  "editorFilterToFix": "Do poprawy",
+  "editorNothingToFix": "Tutaj nie ma nic do poprawy.",
+  "editorPromoteTooltip": "Przenieś do kadry",
+  "editorPromoted": "{name} przeniesiony do kadry",
+  "editorPromoteFullTitle": "Kadra jest pełna",
+  "editorPromoteFullBody": "Kadra może mieć najwyżej {max} zawodników. Wybierz zawodnika, który wróci do puli na jego miejsce.",
+  "editorTrophyGallery": "Wybierz ze zdjęć",
+  "editorTrophyFile": "Wybierz plik"
 }

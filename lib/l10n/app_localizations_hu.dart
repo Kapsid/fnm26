@@ -16150,4 +16150,32 @@ class AppLocalizationsHu extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Be: $name';
   }
+
+  @override
+  String get editorFilterToFix => 'Javítandó';
+
+  @override
+  String get editorNothingToFix => 'Itt nincs mit javítani.';
+
+  @override
+  String get editorPromoteTooltip => 'Áthelyezés a keretbe';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name átkerült a keretbe';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'A keret megtelt';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Egy keret legfeljebb $max játékosból állhat. Válaszd ki, ki kerüljön vissza a játékoskészletbe helyette.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Választás a fotóid közül';
+
+  @override
+  String get editorTrophyFile => 'Fájl választása';
 }

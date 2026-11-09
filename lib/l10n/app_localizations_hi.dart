@@ -16118,4 +16118,32 @@ class AppLocalizationsHi extends AppLocalizations {
   String matchSubOn(String name) {
     return 'अंदर: $name';
   }
+
+  @override
+  String get editorFilterToFix => 'ठीक करना बाकी';
+
+  @override
+  String get editorNothingToFix => 'यहाँ ठीक करने के लिए कुछ नहीं है।';
+
+  @override
+  String get editorPromoteTooltip => 'दस्ते में लाएँ';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name को दस्ते में लाया गया';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'दस्ता भरा हुआ है';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'एक दस्ते में अधिकतम $max खिलाड़ी हो सकते हैं। उसकी जगह जो खिलाड़ी पूल में लौटेगा, उसे चुनें।';
+  }
+
+  @override
+  String get editorTrophyGallery => 'अपनी फ़ोटो में से चुनें';
+
+  @override
+  String get editorTrophyFile => 'फ़ाइल चुनें';
 }

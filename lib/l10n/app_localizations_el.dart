@@ -16293,4 +16293,32 @@ class AppLocalizationsEl extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Μπαίνει: $name';
   }
+
+  @override
+  String get editorFilterToFix => 'Προς διόρθωση';
+
+  @override
+  String get editorNothingToFix => 'Δεν υπάρχει τίποτα προς διόρθωση εδώ.';
+
+  @override
+  String get editorPromoteTooltip => 'Μετακίνηση στην ομάδα';
+
+  @override
+  String editorPromoted(String name) {
+    return 'Ο $name μετακινήθηκε στην ομάδα';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Η ομάδα είναι γεμάτη';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Μια ομάδα έχει το πολύ $max παίκτες. Διαλέξτε τον παίκτη που θα γυρίσει στη δεξαμενή στη θέση του.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Επιλογή από τις φωτογραφίες σας';
+
+  @override
+  String get editorTrophyFile => 'Επιλογή αρχείου';
 }

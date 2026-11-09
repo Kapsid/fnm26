@@ -4031,5 +4031,13 @@
   "matchWeatherFog": "Nebel",
   "matchWeatherWindy": "Stürmisch",
   "matchWeatherDustStorm": "Sandsturm",
-  "matchWeatherFrostyNight": "Frostige Nacht"
+  "matchWeatherFrostyNight": "Frostige Nacht",
+  "editorFilterToFix": "Zu beheben",
+  "editorNothingToFix": "Hier muss nichts behoben werden.",
+  "editorPromoteTooltip": "In den Kader holen",
+  "editorPromoted": "{name} in den Kader geholt",
+  "editorPromoteFullTitle": "Der Kader ist voll",
+  "editorPromoteFullBody": "Ein Kader hat höchstens {max} Spieler. Wählen Sie den Spieler, der dafür zurück in den Pool geht.",
+  "editorTrophyGallery": "Aus deinen Fotos wählen",
+  "editorTrophyFile": "Datei wählen"
 }

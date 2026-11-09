@@ -16206,4 +16206,32 @@ class AppLocalizationsDa extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Ind: $name';
   }
+
+  @override
+  String get editorFilterToFix => 'Skal rettes';
+
+  @override
+  String get editorNothingToFix => 'Intet skal rettes her.';
+
+  @override
+  String get editorPromoteTooltip => 'Flyt til truppen';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name flyttet til truppen';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Truppen er fuld';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'En trup har højst $max spillere. Vælg den spiller, der går tilbage til puljen i hans sted.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Vælg blandt dine billeder';
+
+  @override
+  String get editorTrophyFile => 'Vælg en fil';
 }

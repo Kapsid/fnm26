@@ -16111,4 +16111,32 @@ class AppLocalizationsId extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Masuk: $name';
   }
+
+  @override
+  String get editorFilterToFix => 'Perlu diperbaiki';
+
+  @override
+  String get editorNothingToFix => 'Tidak ada yang perlu diperbaiki di sini.';
+
+  @override
+  String get editorPromoteTooltip => 'Pindahkan ke skuad';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name dipindahkan ke skuad';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Skuad sudah penuh';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Satu skuad berisi paling banyak $max pemain. Pilih pemain yang kembali ke kolam sebagai gantinya.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Pilih dari foto Anda';
+
+  @override
+  String get editorTrophyFile => 'Pilih berkas';
 }
