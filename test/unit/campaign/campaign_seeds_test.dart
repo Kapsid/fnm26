@@ -189,6 +189,7 @@ void main() {
                   nationId: 19,
                   managerName: 'M',
                   rngSeed: Campaigns.grudge.rngSeed,
+                  stadiumHostRules: false,
                 ))
             .valueOrNull!;
     final tables = await c
@@ -241,6 +242,7 @@ void main() {
                   nationId: def.nationId,
                   managerName: 'M',
                   rngSeed: def.rngSeed,
+                  stadiumHostRules: false,
                 ))
             .valueOrNull!;
     final tables = await c
@@ -326,6 +328,7 @@ void main() {
                     nationId: def.nationId,
                     managerName: 'M',
                     rngSeed: def.rngSeed,
+                    stadiumHostRules: false,
                     worldMarkers: [DormantNations.markerFor(212)],
                     // A campaign run's world: never Belarus.
                     newCareerNations: false,
@@ -407,6 +410,7 @@ void main() {
                     nationId: def.nationId,
                     managerName: 'M',
                     rngSeed: def.rngSeed,
+                    stadiumHostRules: false,
                     worldMarkers: [DormantNations.markerFor(213)],
                   ))
               .valueOrNull!;
