@@ -51,6 +51,7 @@ class CupData {
     this.hostCities = const {},
     this.hostEstates = const {},
     this.venueRules = VenueRules.original,
+    this.groundPlan,
     this.goldenGlove,
     this.qualDrawWatched = true,
     this.finalsDrawWatched = true,
@@ -109,6 +110,10 @@ class CupData {
 
   /// The rules this edition's grounds follow (see `hostVenuesV2Kind`).
   final VenueRules venueRules;
+
+  /// The edition's grounds when it was decided under the stadium bars (see
+  /// `WorldCupHosts.worldCupGroundPlan`); null otherwise.
+  final HostGroundPlan? groundPlan;
 
   /// Whether the player has watched the qualifying / finals draw ceremonies —
   /// the groups stay hidden ("to be drawn") until they have.
@@ -520,6 +525,11 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
     teamOfTournament: teamOfTournament,
     hostCities: hostDrawWatched ? hostCities : const {},
     venueRules: await venueRulesFor(comp, careerId, career.cyclePointer),
+    groundPlan: WorldCupHosts.worldCupGroundPlan(
+      year: wcYear,
+      nations: nations.values.toList(),
+      seed: career.rngSeed,
+    ),
     hostEstates: hostDrawWatched
         ? await hostEstatesFor(ref, careerId, hostIds)
         : const {},

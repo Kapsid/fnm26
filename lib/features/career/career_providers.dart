@@ -260,6 +260,12 @@ class CareerService {
     /// to start a world as an older save decided it.
     bool? currentHostRules,
 
+    /// Whether, under the current host rules, its cycle-0 hosts are also held
+    /// to the stadium bars (`HostBidding.rules2Kind`). Defaults to true. A
+    /// test passes false to start a world as the build before them decided
+    /// it.
+    bool stadiumHostRules = true,
+
     /// Whether its world includes the nations every career created from
     /// 1.0.9 on has (`DormantNations.forNewCareers`: Belarus). Defaults to
     /// [countsTowardSlots]: an ordinary career, whichever way it was started,
@@ -360,6 +366,11 @@ class CareerService {
           0,
           HostBidding.rulesKind(0, nationId),
         );
+        // And under the stadium bars (host rules v2): a new save holds no
+        // bid of an older build.
+        if (stadiumHostRules) {
+          await comp.markDrawWatched(career.id, 0, HostBidding.rules2Kind(0));
+        }
       }
       if (pack != null) {
         await packs.copyToCareer(worldPackId!, career.id);

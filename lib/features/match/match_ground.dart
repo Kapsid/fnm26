@@ -73,8 +73,19 @@ Future<MatchGround> resolveMatchGround(
   final venueRules = !v.neutral
       ? VenueRules.original
       : await (memo == null ? rules() : memo._rules ??= rules());
+  // An edition decided under the stadium bars is staged only in the grounds
+  // that count toward its bar (see `VenueGenerator.forHosts`).
+  final groundPlan = !v.neutral
+      ? null
+      : groundPlanForFixture(
+          fixture: fixture,
+          nations: nations,
+          seed: career.rngSeed,
+          cycle: career.cyclePointer,
+        );
   return Attendance.forFixture(
     venueRules: venueRules,
+    groundPlan: groundPlan,
     fixture: fixture,
     neutral: v.neutral,
     tournamentHostIds: v.tournamentHostIds,

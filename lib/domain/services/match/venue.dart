@@ -4,6 +4,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
+import 'package:fnm/domain/services/competition/venues.dart';
 
 /// Where a match is played.
 ///
@@ -162,6 +163,39 @@ MatchVenue venueForFixture({
       ? fixture.awayNationId
       : 0;
   return (neutral: true, hostId: playingHost, tournamentHostIds: hosts);
+}
+
+/// The grounds plan of the finals [fixture] belongs to when that edition was
+/// decided under the stadium bars (see `WorldCupHosts.worldCupGroundPlan`),
+/// else null: a World Championship or continental finals round, read as
+/// [venueForFixture] reads its hosts. Every other fixture has none.
+HostGroundPlan? groundPlanForFixture({
+  required Fixture fixture,
+  required List<Nation> nations,
+  required int seed,
+  required int cycle,
+}) {
+  final round = fixture.round;
+  if (round == null) return null;
+  if (_wcFinalsRounds.contains(round)) {
+    return WorldCupHosts.worldCupGroundPlan(
+      year: fixture.date.year,
+      nations: nations,
+      seed: seed,
+    );
+  }
+  if (!_continentalFinalsRounds.contains(round)) return null;
+  for (final n in nations) {
+    if (n.id == fixture.homeNationId) {
+      return WorldCupHosts.continentalGroundPlan(
+        confederation: n.confederation,
+        cycle: cycle,
+        seed: seed,
+        nations: nations,
+      );
+    }
+  }
+  return null;
 }
 
 /// The finals field size of the tournament [fixture] belongs to: 48 for a

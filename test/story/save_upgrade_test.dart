@@ -8,7 +8,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/db/career_bundle.dart';
+import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/services/competition/host_bidding.dart';
+import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/host_bid_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
     show kMatchViewModePrefsKey;
@@ -51,6 +55,37 @@ void main() {
       expect(now.hosts[key], then.hosts[key], reason: 'hosts $key');
       expect(now.venues[key], then.venues[key], reason: 'venues $key');
     }
+  }
+
+  /// Whether any edition of [cycle] in [careerId]'s world is staged under the
+  /// stadium bars (host rules v2).
+  Future<bool> anyGroundPlan(
+    ProviderContainer c,
+    int careerId,
+    int cycle,
+  ) async {
+    final career = (await c.read(careerRepositoryProvider).byId(careerId))!;
+    final nations = await c.read(nationRepositoryProvider).forCareer(careerId);
+    if (WorldCupHosts.worldCupGroundPlan(
+          year: CareerService.worldCupYear(cycle),
+          nations: nations,
+          seed: career.rngSeed,
+        ) !=
+        null) {
+      return true;
+    }
+    for (final conf in Confederation.values) {
+      if (WorldCupHosts.continentalGroundPlan(
+            confederation: conf,
+            cycle: cycle,
+            seed: career.rngSeed,
+            nations: nations,
+          ) !=
+          null) {
+        return true;
+      }
+    }
+    return false;
   }
 
   test('the rollover exemptions are pinned', () {
@@ -388,6 +423,146 @@ void main() {
             },
             timeout: const Timeout(Duration(minutes: 10)),
           );
+
+          test(
+            "every awarded edition's hosts and venues equal the manifest "
+            'after migration and after the rollover',
+            () async {
+              bool awarded(String k) =>
+                  int.parse(k.split(':').last) <= manifest.cyclePointer;
+              final (db, c) = await open(await unpackFixture(build, save));
+              expectHosts(
+                await computeManifest(c, manifest.careerId),
+                manifest,
+                only: awarded,
+              );
+              expect(
+                await anyGroundPlan(
+                  c,
+                  manifest.careerId,
+                  manifest.cyclePointer,
+                ),
+                isFalse,
+              );
+              await close(db, c);
+
+              final r = await rollOnce();
+              expectHosts(
+                await computeManifest(r.c, manifest.careerId),
+                manifest,
+                only: awarded,
+              );
+              // Staged as before, not in the v2 grounds.
+              expect(
+                await anyGroundPlan(r.c, manifest.careerId, r.from),
+                isFalse,
+              );
+            },
+            timeout: const Timeout(Duration(minutes: 10)),
+          );
+
+          test(
+            'the upgrade cycle carries no hostRules2',
+            () async {
+              final r = await rollOnce();
+              final comp = r.c.read(competitionRepositoryProvider);
+              expect(
+                await comp.hasWatchedDraw(
+                  manifest.careerId,
+                  r.from,
+                  HostBidding.rules2Kind(r.from),
+                ),
+                isFalse,
+              );
+              final nations = await r.c
+                  .read(nationRepositoryProvider)
+                  .forCareer(manifest.careerId);
+              expect(WorldCupHosts.isV2(r.from, nations), isFalse);
+            },
+            timeout: const Timeout(Duration(minutes: 10)),
+          );
+
+          test(
+            'the next cycle carries hostRules2 unless a legacy pledge exists',
+            () async {
+              final r = await rollOnce();
+              final comp = r.c.read(competitionRepositoryProvider);
+              final legacy = HostBidding.hasLegacyBid(
+                await hostBidKinds(comp, manifest.careerId),
+                r.from + 1,
+              );
+              expect(
+                await comp.hasWatchedDraw(
+                  manifest.careerId,
+                  r.from + 1,
+                  HostBidding.rules2Kind(r.from + 1),
+                ),
+                !legacy,
+              );
+              final nations = await r.c
+                  .read(nationRepositoryProvider)
+                  .forCareer(manifest.careerId);
+              expect(WorldCupHosts.isV2(r.from + 1, nations), !legacy);
+            },
+            timeout: const Timeout(Duration(minutes: 10)),
+          );
+
+          if (build == 'v110_37') {
+            test(
+              'the next cycle carries hostRules2 unless a legacy pledge '
+              'exists: one pledged by the old build holds it back',
+              () async {
+                final (db, c) = await open(await unpackFixture(build, save));
+                addTearDown(() => close(db, c));
+                final career = (await c
+                    .read(careerRepositoryProvider)
+                    .byId(manifest.careerId))!;
+                final next = career.cyclePointer + 1;
+                final comp = c.read(competitionRepositoryProvider);
+                // A pledge as the old build wrote it, for the next edition.
+                await comp.markDrawWatched(
+                  manifest.careerId,
+                  next,
+                  HostBidMarker(
+                    comp: HostBidComp.continental,
+                    editionCycle: next,
+                    nationId: career.nationId,
+                    levels: 1,
+                    permille: 100,
+                  ).encodePledge(),
+                );
+                final d = StoryDriver(c, manifest.careerId);
+                expect((await d.nextEvent()).kind, HubEventKind.cycleRollover);
+                await d.step();
+                expect(
+                  (await c
+                          .read(careerRepositoryProvider)
+                          .byId(manifest.careerId))!
+                      .cyclePointer,
+                  next,
+                );
+                expect(
+                  await comp.hasWatchedDraw(
+                    manifest.careerId,
+                    next,
+                    HostBidding.rules2Kind(next),
+                  ),
+                  isFalse,
+                );
+                // The rules marker is still stamped: only the bars wait.
+                expect(
+                  [
+                    for (final r in await comp.watchedKindsWithPrefix(
+                      '${HostBidding.rulesPrefix}$next:',
+                    ))
+                      if (r.careerId == manifest.careerId) r.kind,
+                  ],
+                  isNotEmpty,
+                );
+              },
+              timeout: const Timeout(Duration(minutes: 10)),
+            );
+          }
 
           test(
             "the old build's bundle imports",

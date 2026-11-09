@@ -501,7 +501,8 @@ void main() {
       expect(WorldCupHosts.isV2(4, marked), isFalse);
       expect(WorldCupHosts.isV2(5, _nations), isFalse);
 
-      // The key is invisible to every host draw.
+      // The key changes no host draw before its own cycle (that cycle and
+      // the ones after are held to the stadium bars: hosts_v2_test).
       final plain = [
         for (final n in _nations)
           if (n.code == 'NOR')
@@ -509,7 +510,7 @@ void main() {
           else
             n,
       ];
-      for (var cycle = 0; cycle < 7; cycle++) {
+      for (var cycle = 0; cycle < 5; cycle++) {
         expect(
           WorldCupHosts.hostsFor(
             year: 2030 + 4 * cycle,
@@ -568,23 +569,25 @@ void main() {
                 .valueOrNull!;
         final repo = c.read(nationRepositoryProvider);
 
+        // A new save is stamped for cycle 0 at its creation.
         final before = await repo.forCareer(career.id);
-        expect(WorldCupHosts.isV2(0, before), isFalse);
+        expect(WorldCupHosts.isV2(0, before), isTrue);
+        expect(WorldCupHosts.isV2(1, before), isFalse);
 
         await db
             .into(db.drawsWatched)
             .insert(
               DrawsWatchedCompanion.insert(
                 careerId: career.id,
-                cycle: 0,
-                kind: HostBidding.rules2Kind(0),
+                cycle: 1,
+                kind: HostBidding.rules2Kind(1),
               ),
             );
         final after = await repo.forCareer(career.id);
-        expect(WorldCupHosts.isV2(0, after), isTrue);
-        expect(WorldCupHosts.isV2(1, after), isFalse);
+        expect(WorldCupHosts.isV2(1, after), isTrue);
+        expect(WorldCupHosts.isV2(2, after), isFalse);
         final carrier = after.firstWhere(
-          (n) => n.hostBids.containsKey(HostBidding.rules2Key(0)),
+          (n) => n.hostBids.containsKey(HostBidding.rules2Key(1)),
         );
         expect(carrier.id, nor.id);
         // Nothing else about the world moved.
@@ -594,7 +597,7 @@ void main() {
               n.copyWith(
                 hostBids: {
                   for (final e in n.hostBids.entries)
-                    if (!e.key.startsWith('r2:')) e.key: e.value,
+                    if (e.key != HostBidding.rules2Key(1)) e.key: e.value,
                 },
               ),
           ],

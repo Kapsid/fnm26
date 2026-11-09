@@ -256,6 +256,7 @@ List<Widget> _continentalTabViews(
       hostCities: data.hostCities,
       hostEstates: data.hostEstates,
       venueRules: data.venueRules,
+      groundPlan: data.groundPlan,
       identity: data.identity,
       trophyAsset: Trophies.forConfederation(data.confederation),
       teamCount:

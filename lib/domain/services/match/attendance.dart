@@ -49,7 +49,9 @@ abstract final class Attendance {
   /// caller passes it only for a home game of its own nation, so every AI
   /// ground and every neutral finals reads exactly as before.
   /// [venueRules] are the rules the tournament's grounds follow (see
-  /// [VenueRules]).
+  /// [VenueRules]); [groundPlan], given for an edition decided under the
+  /// stadium bars, stages it in the grounds that count toward its bar (see
+  /// `VenueGenerator.forHosts`).
   static MatchGround forFixture({
     required Fixture fixture,
     required bool neutral,
@@ -63,6 +65,7 @@ abstract final class Attendance {
     Map<int, List<Venue>> hostEstates = const {},
     double moodFill = 0,
     VenueRules venueRules = VenueRules.original,
+    HostGroundPlan? groundPlan,
   }) {
     // Whose ground: at a neutral finals it belongs to the TOURNAMENT — one of
     // the host countries, whoever is playing — and everywhere else to the home
@@ -86,6 +89,9 @@ abstract final class Attendance {
                 count: venueCount,
                 estates: hostEstates,
                 rules: venueRules,
+                qualifyingOnly: groundPlan != null,
+                minSeats: groundPlan?.minSeats ?? 0,
+                planned: groundPlan?.planned ?? const {},
               )[owner] ??
               const <Venue>[]
         : VenueGenerator.forHost(

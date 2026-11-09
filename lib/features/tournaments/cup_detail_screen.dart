@@ -173,6 +173,7 @@ List<Widget> _cupTabViews(
       hostCities: data.hostCities,
       hostEstates: data.hostEstates,
       venueRules: data.venueRules,
+      groundPlan: data.groundPlan,
       identity: data.identity,
       trophyAsset: Trophies.worldCup,
       // The 46 direct places plus the two play-off berths: 48.

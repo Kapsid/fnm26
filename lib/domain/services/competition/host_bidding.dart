@@ -163,6 +163,18 @@ abstract final class HostBidding {
   /// `mgr:` (read as a manager marker), and not a bid key (`wc:` / `cont:`).
   static String rules2Key(int cycle) => 'r2:$cycle';
 
+  /// Whether [kinds] (a career's marker kinds) hold a bid or a pledge in the
+  /// format of an older build (`hostBid:` / `hostBidPledge:`) for an edition
+  /// of [editionCycle]: such an edition is not stamped with [rules2Kind], so
+  /// the bid is decided under the rules it was made under.
+  static bool hasLegacyBid(Iterable<String> kinds, int editionCycle) =>
+      kinds.any(
+        (k) =>
+            (HostBidMarker.decode(k) ?? HostBidMarker.decodePledge(k))
+                ?.editionCycle ==
+            editionCycle,
+      );
+
   /// `Nation.hostBids` key carrying a rules marker on the nation it names:
   /// how the host draw (`WorldCupHosts`), which sees only the nations, learns
   /// which editions follow the current rules and whose nation is the
