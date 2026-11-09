@@ -351,15 +351,16 @@ void main() {
     },
   );
 
-  testWidgets('add a club to a country without a league shows a new country '
-      'group', (tester) async {
+  testWidgets('add a club to a country whose league is new in 1.1.x: it '
+      'joins that country\'s group', (tester) async {
     final c = await editorContainer(tester);
     final id = await insertPack(tester, c, testPack('Lonely'));
     await pumpEditorRoute(tester, c, _at(EditorSection.clubs, id));
     final world = c.read(packEditorProvider(id).notifier).world;
-    final lone = world.firstWhere(
-      (n) => ClubService.leagueClubs(n.code).isEmpty,
-    );
+    // Every country has a league now (Andorra's is one of the new ones),
+    // so no country is without a group of its own.
+    final lone = world.firstWhere((n) => n.code == 'AND');
+    expect(ClubService.leagueClubs(lone.code), isNotEmpty);
     final code = lone.code.toLowerCase();
     // The country's heading in the list (the search field holds its name
     // too).
@@ -369,7 +370,7 @@ void main() {
     );
     await tester.enterText(find.byKey(NameSectionScreen.searchKey), lone.name);
     await tester.pump();
-    expect(heading, findsNothing);
+    expect(heading, findsOneWidget);
 
     await tester.tap(find.byKey(NameSectionScreen.addKey));
     await settle(tester);
@@ -377,12 +378,8 @@ void main() {
     await tester.tap(find.byKey(AddedItemForm.countryKey));
     await settle(tester);
     await _pick(tester, lone.name, code);
-    final cities =
-        c.read(packEditorProvider(id).notifier).countryCities[code] ?? [];
-    expect(
-      find.byKey(AddedItemForm.noLeagueKey),
-      cities.isEmpty ? findsOneWidget : findsNothing,
-    );
+    // It has a league: no warning.
+    expect(find.byKey(AddedItemForm.noLeagueKey), findsNothing);
     await tester.tap(find.byKey(AddedItemForm.addKey));
     await settle(tester);
     expect(_pack(c, id).addedClubs.single.country, code);

@@ -107,7 +107,12 @@ class NameEntry {
     this.firstNames = const [],
     this.surnames = const [],
     this.addedId,
+    this.clubCountry,
   });
+
+  /// The lower-case FIFA code of the country a club row's club plays in
+  /// (clubs only): what its default strength is read off.
+  final String? clubCountry;
 
   /// The id of the item the database adds that this row is (its name is
   /// [original]; a sponsor's description is [original2]), or null for one
@@ -223,6 +228,7 @@ List<NameGroup> nameGroups(
                     key: club,
                     original: club,
                     nationId: n.id,
+                    clubCountry: n.code.toLowerCase(),
                     fold: fold([club, n.name, n.englishName]),
                   ),
               ],
@@ -321,6 +327,28 @@ NameEntry _stadium(
     nationId: n.id,
     fold: fold([name, city, n.name, n.englishName]),
   );
+}
+
+/// The stars club row [e] has in [pack] (1 to 5): what the database sets,
+/// else the game's ([ClubService.starsOf]; an added club's league's lowest).
+/// 0 for a row that is no club.
+int clubStarsIn(WorldPack pack, NameEntry e) {
+  final code = e.clubCountry;
+  if (code == null) return 0;
+  if (e.addedId case final id?) {
+    final c = pack.addedClubs.where((c) => c.id == id).firstOrNull;
+    return c?.strength ?? ClubService.addedDefaultStars(code);
+  }
+  return pack.clubStrengths[e.key] ?? clubDefaultStars(e);
+}
+
+/// The stars club row [e] has when the database leaves it at Default.
+int clubDefaultStars(NameEntry e) {
+  final code = e.clubCountry;
+  if (code == null) return 0;
+  return e.added
+      ? ClubService.addedDefaultStars(code)
+      : ClubService.starsOf((name: e.key, country: code));
 }
 
 /// What [pack] overrides of [e] in [section], or null when it keeps the
@@ -423,6 +451,19 @@ abstract final class NameEdits {
       localized: {
         for (final x in main.localized.entries)
           if (!paths.contains(x.key)) x.key: x.value,
+      },
+    );
+  }
+
+  /// [pack] with game club [club] (its original name) at [stars], or back
+  /// at its default strength when [stars] is null.
+  static WorldPack withClubStrength(WorldPack pack, String club, int? stars) {
+    if (pack.clubStrengths[club] == stars) return pack;
+    return pack.copyWith(
+      clubStrengths: {
+        for (final e in pack.clubStrengths.entries)
+          if (e.key != club) e.key: e.value,
+        if (stars != null) club: stars,
       },
     );
   }
@@ -752,6 +793,8 @@ int changedCount(NameSection section, WorldPack pack) {
           if (text(e.value)) e.key,
       ],
     },
+    // A league club the database sets a strength for is changed too.
+    if (section == NameSection.clubs) ...pack.clubStrengths.keys,
     for (final path in pack.localized.keys)
       if (_localizedKey(section, path) case final key?
           when section.addedRoot == null ||

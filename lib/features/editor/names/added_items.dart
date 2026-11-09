@@ -11,6 +11,7 @@ import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
+import 'package:fnm/features/editor/names/club_strength_picker.dart';
 import 'package:fnm/features/editor/names/name_sections.dart';
 import 'package:fnm/features/editor/players/players_ui.dart';
 import 'package:fnm/features/editor/players/squad_edits.dart';
@@ -84,7 +85,12 @@ abstract final class AddedEdits {
 
   /// [p] with a club named [name] added to [country] (a FIFA code); [p]
   /// itself when it adds [PackRules.addedClubsMax] already.
-  static WorldPack addClub(WorldPack p, String name, String country) {
+  static WorldPack addClub(
+    WorldPack p,
+    String name,
+    String country, {
+    int? strength,
+  }) {
     if (isFull(NameSection.clubs, p)) return p;
     return p.copyWith(
       addedClubs: [
@@ -93,7 +99,21 @@ abstract final class AddedEdits {
           id: nextAddedId(p),
           name: name.trim(),
           country: country.toLowerCase(),
+          strength: strength,
         ),
+      ],
+    );
+  }
+
+  /// [p] with added club [id] at [strength] stars, or at its league's
+  /// lowest (the default) when [strength] is null.
+  static WorldPack setClubStrength(WorldPack p, int id, int? strength) {
+    final club = p.addedClubs.where((c) => c.id == id).firstOrNull;
+    if (club == null || club.strength == strength) return p;
+    return p.copyWith(
+      addedClubs: [
+        for (final c in p.addedClubs)
+          c.id == id ? c.copyWith(strength: Some(strength)) : c,
       ],
     );
   }
@@ -106,8 +126,7 @@ abstract final class AddedEdits {
     if (club == null || club.name == to) return p;
     return p.copyWith(
       addedClubs: [
-        for (final c in p.addedClubs)
-          c.id == id ? PackClub(id: id, name: to, country: c.country) : c,
+        for (final c in p.addedClubs) c.id == id ? c.copyWith(name: to) : c,
       ],
       squads: _moved(p.squads, club, to),
       pools: _moved(p.pools, club, to),
@@ -438,6 +457,7 @@ List<NameGroup> withAddedRows(
             original: c.name,
             addedId: c.id,
             nationId: n?.id,
+            clubCountry: c.country,
             fold: fold([c.name, n?.name, n?.englishName]),
           ),
         );
@@ -611,6 +631,9 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
   final _name = TextEditingController();
   final _description = TextEditingController();
   String? _country;
+
+  /// The added club's strength (null: its league's lowest).
+  int? _strength;
   SponsorDeal _deal = SponsorDeal.crowdPleaser;
   String? _industry;
   YVoice _voice = YVoice.fan;
@@ -651,6 +674,7 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
         if (c == null) return;
         _set(_name, c.name);
         _country = c.country;
+        _strength = c.strength;
       case NameSection.sponsors:
         final s = pack.addedSponsors.where((x) => x.id == id).firstOrNull;
         if (s == null) return;
@@ -696,7 +720,9 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
       case NameSection.clubs:
         if (id != null) return AddedEdits.renameClub(p, id, name);
         final country = _country;
-        return country == null ? p : AddedEdits.addClub(p, name, country);
+        return country == null
+            ? p
+            : AddedEdits.addClub(p, name, country, strength: _strength);
       case NameSection.sponsors:
         final industry = _industry;
         if (industry == null) return p;
@@ -1123,6 +1149,18 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
           text: l.editorAddedNoLeague(_countryName(code)),
         ),
       ],
+      const SizedBox(height: AppSpacing.md),
+      ClubStrengthPicker(
+        value: _strength,
+        defaultStars: ClubService.addedDefaultStars(code ?? ''),
+        onChanged: (stars) {
+          final id = widget.id;
+          setState(() => _strength = stars);
+          if (id == null) return;
+          _write((p) => AddedEdits.setClubStrength(p, id, stars));
+          _group = Object();
+        },
+      ),
       if (here > 0) ...[
         const SizedBox(height: AppSpacing.sm),
         _Note(
