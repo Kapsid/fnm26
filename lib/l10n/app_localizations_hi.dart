@@ -7054,16 +7054,18 @@ class AppLocalizationsHi extends AppLocalizations {
   String get squadLegendCalledUp => 'कॉल-अप, बेंच पर';
 
   @override
-  String get squadLegendRatingUp => 'इस साल रेटिंग बढ़ रही है';
-
-  @override
-  String get squadLegendRatingDown => 'इस साल रेटिंग गिर रही है';
-
-  @override
   String get squadLegendInjured => 'चोटिल, अनुपलब्ध';
 
   @override
   String get squadLegendSuspended => 'निलंबित, अनुपलब्ध';
+
+  @override
+  String get squadLegendTired =>
+      'थका (पीला) या पस्त (लाल): उसे एक मैच आराम दें';
+
+  @override
+  String get squadLegendShift =>
+      'अगले मैच में उसकी अपनी रेटिंग में बदलाव (फ़ॉर्म, फ़िटनेस, क्लब)';
 
   @override
   String get squadLegendTraits => 'किसके लिए मशहूर';
@@ -10718,6 +10720,11 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get playerFormNoEffect => 'अगले मैच में उसकी रेटिंग पर कोई असर नहीं';
+
+  @override
+  String playerFormSquadShare(String delta) {
+    return 'इसमें पूरी टीम का $delta शामिल है (मनोबल, बेस कैंप)';
+  }
 
   @override
   String get sideGroupHome => 'होम';

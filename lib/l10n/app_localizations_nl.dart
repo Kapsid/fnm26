@@ -7153,16 +7153,18 @@ class AppLocalizationsNl extends AppLocalizations {
   String get squadLegendCalledUp => 'Opgeroepen, op de bank';
 
   @override
-  String get squadLegendRatingUp => 'Cijfer stijgt dit jaar';
-
-  @override
-  String get squadLegendRatingDown => 'Cijfer daalt dit jaar';
-
-  @override
   String get squadLegendInjured => 'Geblesseerd, niet beschikbaar';
 
   @override
   String get squadLegendSuspended => 'Geschorst, niet beschikbaar';
+
+  @override
+  String get squadLegendTired =>
+      'Moe (oranje) of uitgeput (rood): gun hem een wedstrijd rust';
+
+  @override
+  String get squadLegendShift =>
+      'Zijn eigen verandering in beoordeling volgende wedstrijd (vorm, fitheid, club)';
 
   @override
   String get squadLegendTraits => 'BEKEND OM';
@@ -10858,6 +10860,11 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get playerFormNoEffect =>
       'Geen verandering in zijn cijfer in de volgende wedstrijd';
+
+  @override
+  String playerFormSquadShare(String delta) {
+    return 'Inclusief $delta voor de hele selectie (moraal, basiskamp)';
+  }
 
   @override
   String get sideGroupHome => 'Thuis';

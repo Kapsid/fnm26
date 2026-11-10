@@ -7125,16 +7125,18 @@ class AppLocalizationsNb extends AppLocalizations {
   String get squadLegendCalledUp => 'Tatt ut, på benken';
 
   @override
-  String get squadLegendRatingUp => 'Karakteren stiger i år';
-
-  @override
-  String get squadLegendRatingDown => 'Karakteren faller i år';
-
-  @override
   String get squadLegendInjured => 'Skadet, utilgjengelig';
 
   @override
   String get squadLegendSuspended => 'Suspendert, utilgjengelig';
+
+  @override
+  String get squadLegendTired =>
+      'Sliten (gul) eller utslitt (rød): gi ham en kamp hvile';
+
+  @override
+  String get squadLegendShift =>
+      'Hans egen endring i vurdering neste kamp (form, fysikk, klubb)';
 
   @override
   String get squadLegendTraits => 'KJENT FOR';
@@ -10803,6 +10805,11 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get playerFormNoEffect =>
       'Ingen endring i karakteren hans i neste kamp';
+
+  @override
+  String playerFormSquadShare(String delta) {
+    return 'Inkludert $delta som hele troppen deler (moral, base)';
+  }
 
   @override
   String get sideGroupHome => 'Hjem';

@@ -13,6 +13,7 @@ import 'package:fnm/features/player/player_detail_screen.dart'
 import 'package:fnm/features/squad/captain_providers.dart';
 import 'package:fnm/features/tactics/squad_legend_sheet.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
+import 'package:fnm/features/tactics/condition_mark.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/tactics/nation_squad_providers.dart';
 import 'package:fnm/features/tactics/squad_pulse.dart';
@@ -573,16 +574,13 @@ class _PlayerRow extends StatelessWidget {
                           ),
                         ),
                       ),
-                      if (c != null && c.overallDelta != 0)
-                        Icon(
-                          c.overallDelta > 0
-                              ? Icons.trending_up_rounded
-                              : Icons.trending_down_rounded,
-                          size: 13,
-                          color: c.overallDelta > 0
-                              ? AppColors.positive
-                              : AppColors.error,
-                        ),
+                      // Tired legs and his own shift next match, on the
+                      // line, so nobody has to open forty profiles to pick
+                      // a side. Nothing for a fresh man in ordinary form.
+                      if (conditionNoteworthy(c)) ...[
+                        const SizedBox(width: 4),
+                        ConditionMark(condition: c),
+                      ],
                       PlayerTraitGlyphs(player: p, saveSeed: saveSeed),
                     ],
                   ),

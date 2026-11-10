@@ -6914,16 +6914,16 @@ class AppLocalizationsKo extends AppLocalizations {
   String get squadLegendCalledUp => '소집, 벤치';
 
   @override
-  String get squadLegendRatingUp => '올해 평점 상승';
-
-  @override
-  String get squadLegendRatingDown => '올해 평점 하락';
-
-  @override
   String get squadLegendInjured => '부상, 출전 불가';
 
   @override
   String get squadLegendSuspended => '출전 정지, 출전 불가';
+
+  @override
+  String get squadLegendTired => '피로(노랑) 또는 탈진(빨강): 한 경기 쉬게 하세요';
+
+  @override
+  String get squadLegendShift => '다음 경기에서 그 자신의 평점 변화 (폼, 컨디션, 클럽)';
 
   @override
   String get squadLegendTraits => '특징';
@@ -10460,6 +10460,11 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get playerFormNoEffect => '다음 경기 평점 변화 없음';
+
+  @override
+  String playerFormSquadShare(String delta) {
+    return '팀 전체에 적용되는 $delta 포함 (사기, 베이스캠프)';
+  }
 
   @override
   String get sideGroupHome => '홈';

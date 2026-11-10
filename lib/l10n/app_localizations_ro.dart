@@ -7306,16 +7306,18 @@ class AppLocalizationsRo extends AppLocalizations {
   String get squadLegendCalledUp => 'Convocat, pe bancă';
 
   @override
-  String get squadLegendRatingUp => 'Valoare în creștere anul acesta';
-
-  @override
-  String get squadLegendRatingDown => 'Valoare în scădere anul acesta';
-
-  @override
   String get squadLegendInjured => 'Accidentat, indisponibil';
 
   @override
   String get squadLegendSuspended => 'Suspendat, indisponibil';
+
+  @override
+  String get squadLegendTired =>
+      'Obosit (galben) sau epuizat (roșu): odihnește-l un meci';
+
+  @override
+  String get squadLegendShift =>
+      'Propria lui schimbare de notă la meciul următor (formă, condiție, club)';
 
   @override
   String get squadLegendTraits => 'CUNOSCUT PENTRU';
@@ -11148,6 +11150,11 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get playerFormNoEffect =>
       'Nicio schimbare de valoare în meciul următor';
+
+  @override
+  String playerFormSquadShare(String delta) {
+    return 'Include $delta comun întregului lot (moral, cantonament)';
+  }
 
   @override
   String get sideGroupHome => 'Acasă';

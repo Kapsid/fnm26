@@ -7052,16 +7052,18 @@ class AppLocalizationsTr extends AppLocalizations {
   String get squadLegendCalledUp => 'Kadroya çağrıldı, yedekte';
 
   @override
-  String get squadLegendRatingUp => 'Bu yıl gücü artıyor';
-
-  @override
-  String get squadLegendRatingDown => 'Bu yıl gücü düşüyor';
-
-  @override
   String get squadLegendInjured => 'Sakat, oynayamaz';
 
   @override
   String get squadLegendSuspended => 'Cezalı, oynayamaz';
+
+  @override
+  String get squadLegendTired =>
+      'Yorgun (sarı) veya bitkin (kırmızı): bir maç dinlendirin';
+
+  @override
+  String get squadLegendShift =>
+      'Gelecek maçta kendi reyting değişimi (form, kondisyon, kulüp)';
 
   @override
   String get squadLegendTraits => 'ŞÖHRETİ';
@@ -10710,6 +10712,11 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get playerFormNoEffect => 'Bir sonraki maçta gücü değişmiyor';
+
+  @override
+  String playerFormSquadShare(String delta) {
+    return 'Tüm kadronun paylaştığı $delta dahil (moral, kamp)';
+  }
 
   @override
   String get sideGroupHome => 'Ana Sayfa';

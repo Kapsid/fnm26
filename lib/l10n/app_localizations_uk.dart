@@ -7240,16 +7240,18 @@ class AppLocalizationsUk extends AppLocalizations {
   String get squadLegendCalledUp => 'Викликаний, на лаві';
 
   @override
-  String get squadLegendRatingUp => 'Рейтинг зростає цього року';
-
-  @override
-  String get squadLegendRatingDown => 'Рейтинг падає цього року';
-
-  @override
   String get squadLegendInjured => 'Травмований, недоступний';
 
   @override
   String get squadLegendSuspended => 'Дискваліфікований, недоступний';
+
+  @override
+  String get squadLegendTired =>
+      'Втомлений (жовтий) або виснажений (червоний): дайте йому матч відпочинку';
+
+  @override
+  String get squadLegendShift =>
+      'Його власна зміна оцінки в наступному матчі (форма, фізика, клуб)';
 
   @override
   String get squadLegendTraits => 'ВІЗИТІВКА';
@@ -11068,6 +11070,11 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get playerFormNoEffect =>
       'Без змін у його рейтингу в наступному матчі';
+
+  @override
+  String playerFormSquadShare(String delta) {
+    return 'Включно з $delta для всієї команди (настрій, база)';
+  }
 
   @override
   String get sideGroupHome => 'Головна';

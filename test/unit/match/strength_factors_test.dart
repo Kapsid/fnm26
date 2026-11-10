@@ -18,6 +18,7 @@ PlayerCondition aCondition({
   fatigueState: FatigueState.fresh,
   gamesInWindow: gamesInWindow,
   overallDelta: overallDelta,
+  personalDelta: overallDelta,
   clubStanding: clubStanding,
 );
 

@@ -7097,16 +7097,18 @@ class AppLocalizationsFil extends AppLocalizations {
   String get squadLegendCalledUp => 'Tinawag, nasa bench';
 
   @override
-  String get squadLegendRatingUp => 'Tumataas ang rating ngayong taon';
-
-  @override
-  String get squadLegendRatingDown => 'Bumababa ang rating ngayong taon';
-
-  @override
   String get squadLegendInjured => 'Injured, hindi available';
 
   @override
   String get squadLegendSuspended => 'Suspendido, hindi available';
+
+  @override
+  String get squadLegendTired =>
+      'Pagod (dilaw) o ubos na (pula): ipahinga siya ng isang laro';
+
+  @override
+  String get squadLegendShift =>
+      'Sariling pagbabago ng rating niya sa susunod na laro (porma, kondisyon, club)';
 
   @override
   String get squadLegendTraits => 'KILALA SA';
@@ -10784,6 +10786,11 @@ class AppLocalizationsFil extends AppLocalizations {
   @override
   String get playerFormNoEffect =>
       'Walang pagbabago sa rating niya sa susunod na laro';
+
+  @override
+  String playerFormSquadShare(String delta) {
+    return 'Kasama ang $delta na para sa buong squad (morale, base camp)';
+  }
 
   @override
   String get sideGroupHome => 'Home';

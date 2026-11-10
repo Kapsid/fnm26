@@ -6994,16 +6994,18 @@ class AppLocalizationsTh extends AppLocalizations {
   String get squadLegendCalledUp => 'ถูกเรียกตัว นั่งสำรอง';
 
   @override
-  String get squadLegendRatingUp => 'ค่าพลังเพิ่มขึ้นปีนี้';
-
-  @override
-  String get squadLegendRatingDown => 'ค่าพลังลดลงปีนี้';
-
-  @override
   String get squadLegendInjured => 'บาดเจ็บ ไม่พร้อม';
 
   @override
   String get squadLegendSuspended => 'ติดโทษแบน ไม่พร้อม';
+
+  @override
+  String get squadLegendTired =>
+      'เหนื่อย (เหลือง) หรือหมดแรง (แดง): พักเขาสักนัด';
+
+  @override
+  String get squadLegendShift =>
+      'การเปลี่ยนแปลงเรตติ้งของเขาเองในนัดหน้า (ฟอร์ม ความฟิต สโมสร)';
 
   @override
   String get squadLegendTraits => 'จุดเด่น';
@@ -10599,6 +10601,11 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get playerFormNoEffect => 'ค่าพลังไม่เปลี่ยนในนัดถัดไป';
+
+  @override
+  String playerFormSquadShare(String delta) {
+    return 'รวม $delta ที่ทั้งทีมได้ร่วมกัน (ขวัญกำลังใจ แคมป์)';
+  }
 
   @override
   String get sideGroupHome => 'หน้าหลัก';

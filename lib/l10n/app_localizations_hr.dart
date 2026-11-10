@@ -7286,16 +7286,18 @@ class AppLocalizationsHr extends AppLocalizations {
   String get squadLegendCalledUp => 'Pozvan, na klupi';
 
   @override
-  String get squadLegendRatingUp => 'Ocjena raste ove godine';
-
-  @override
-  String get squadLegendRatingDown => 'Ocjena pada ove godine';
-
-  @override
   String get squadLegendInjured => 'Ozlijeđen, nedostupan';
 
   @override
   String get squadLegendSuspended => 'Kažnjen, nedostupan';
+
+  @override
+  String get squadLegendTired =>
+      'Umoran (žuto) ili iscrpljen (crveno): odmori ga jednu utakmicu';
+
+  @override
+  String get squadLegendShift =>
+      'Njegova vlastita promjena ocjene u sljedećoj utakmici (forma, kondicija, klub)';
 
   @override
   String get squadLegendTraits => 'POZNAT PO';
@@ -11125,6 +11127,11 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get playerFormNoEffect => 'Ocjena se u sljedećoj utakmici ne mijenja';
+
+  @override
+  String playerFormSquadShare(String delta) {
+    return 'Uključuje $delta za cijelu momčad (moral, bazni kamp)';
+  }
 
   @override
   String get sideGroupHome => 'Početna';

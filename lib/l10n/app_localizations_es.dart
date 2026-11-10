@@ -7162,16 +7162,18 @@ class AppLocalizationsEs extends AppLocalizations {
   String get squadLegendCalledUp => 'Convocado, en el banquillo';
 
   @override
-  String get squadLegendRatingUp => 'Valoración en alza este año';
-
-  @override
-  String get squadLegendRatingDown => 'Valoración a la baja este año';
-
-  @override
   String get squadLegendInjured => 'Lesionado, no disponible';
 
   @override
   String get squadLegendSuspended => 'Sancionado, no disponible';
+
+  @override
+  String get squadLegendTired =>
+      'Cansado (ámbar) o agotado (rojo): dale un partido de descanso';
+
+  @override
+  String get squadLegendShift =>
+      'Su propio cambio de valoración en el próximo partido (forma, físico, club)';
 
   @override
   String get squadLegendTraits => 'CONOCIDO POR';
@@ -10869,6 +10871,11 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get playerFormNoEffect =>
       'Sin cambios en su valoración en el próximo partido';
+
+  @override
+  String playerFormSquadShare(String delta) {
+    return 'Incluye $delta que comparte toda la plantilla (moral, campamento base)';
+  }
 
   @override
   String get sideGroupHome => 'Inicio';

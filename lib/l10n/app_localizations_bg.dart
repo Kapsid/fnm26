@@ -7155,16 +7155,18 @@ class AppLocalizationsBg extends AppLocalizations {
   String get squadLegendCalledUp => 'Повикан, на скамейката';
 
   @override
-  String get squadLegendRatingUp => 'Оценка, която расте тази година';
-
-  @override
-  String get squadLegendRatingDown => 'Оценка, която пада тази година';
-
-  @override
   String get squadLegendInjured => 'Контузен, недостъпен';
 
   @override
   String get squadLegendSuspended => 'Наказан, недостъпен';
+
+  @override
+  String get squadLegendTired =>
+      'Уморен (жълто) или изтощен (червено): дай му почивка за един мач';
+
+  @override
+  String get squadLegendShift =>
+      'Собствената му промяна в оценката за следващия мач (форма, физика, клуб)';
 
   @override
   String get squadLegendTraits => 'ИЗВЕСТЕН С';
@@ -10887,6 +10889,11 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get playerFormNoEffect => 'Без промяна в оценката му в следващия мач';
+
+  @override
+  String playerFormSquadShare(String delta) {
+    return 'Включва $delta за целия състав (дух, базов лагер)';
+  }
 
   @override
   String get sideGroupHome => 'Начало';

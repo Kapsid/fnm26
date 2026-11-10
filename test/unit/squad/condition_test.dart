@@ -62,10 +62,40 @@ void main() {
         DateTime(2030, 6, 12),
         DateTime(2030, 6, 9),
         DateTime(2030, 6, 8),
+        DateTime(2030, 6, 7),
       ];
       final f = Condition.fatigue(dates, asOf);
-      expect(f.games, 5);
+      expect(f.games, 6);
       expect(f.state, FatigueState.exhausted);
+      expect(f.delta, lessThan(0));
+    });
+
+    test('two games in a fortnight is just football', () {
+      final f = Condition.fatigue([
+        DateTime(2030, 6, 17),
+        DateTime(2030, 6, 13),
+      ], asOf);
+      expect(f.state, FatigueState.fresh);
+      expect(f.delta, 0);
+    });
+
+    test('a starter rested once in a tournament is not tired', () {
+      // Games every four days; he sat out the last one.
+      final f = Condition.fatigue([
+        DateTime(2030, 6, 12),
+        DateTime(2030, 6, 8),
+      ], asOf);
+      expect(f.state, FatigueState.fresh);
+    });
+
+    test('an eleven played straight through a three-day run tires', () {
+      final f = Condition.fatigue([
+        DateTime(2030, 6, 17),
+        DateTime(2030, 6, 14),
+        DateTime(2030, 6, 11),
+        DateTime(2030, 6, 8),
+      ], asOf);
+      expect(f.state, FatigueState.tired);
       expect(f.delta, lessThan(0));
     });
 

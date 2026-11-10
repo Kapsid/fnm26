@@ -7160,16 +7160,18 @@ class AppLocalizationsEl extends AppLocalizations {
   String get squadLegendCalledUp => 'Κληθείς, στον πάγκο';
 
   @override
-  String get squadLegendRatingUp => 'Βαθμολογία σε άνοδο φέτος';
-
-  @override
-  String get squadLegendRatingDown => 'Βαθμολογία σε πτώση φέτος';
-
-  @override
   String get squadLegendInjured => 'Τραυματίας, μη διαθέσιμος';
 
   @override
   String get squadLegendSuspended => 'Τιμωρημένος, μη διαθέσιμος';
+
+  @override
+  String get squadLegendTired =>
+      'Κουρασμένος (κίτρινο) ή εξαντλημένος (κόκκινο): ξεκούρασέ τον ένα ματς';
+
+  @override
+  String get squadLegendShift =>
+      'Η δική του αλλαγή βαθμολογίας στο επόμενο ματς (φόρμα, φυσική κατάσταση, σύλλογος)';
 
   @override
   String get squadLegendTraits => 'ΓΝΩΣΤΟΣ ΓΙΑ';
@@ -10859,6 +10861,11 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get playerFormNoEffect =>
       'Καμία αλλαγή στη βαθμολογία του στον επόμενο αγώνα';
+
+  @override
+  String playerFormSquadShare(String delta) {
+    return 'Περιλαμβάνει $delta για όλη την αποστολή (ηθικό, βάση)';
+  }
 
   @override
   String get sideGroupHome => 'Αρχική';
