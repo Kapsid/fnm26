@@ -40,7 +40,11 @@ final Map<int, List<String>> _cities = {
 
 Nation _code(String code) => _nations.firstWhere((n) => n.code == code);
 
-final HostBar _euro = HostStadiumRules.continental(Confederation.europe);
+/// The EURO's bar in a career created now: its editions are stamped with
+/// the lighter bars (`HostBidding.rules3Kind`).
+final HostBar _euro = HostStadiumRules.continentalLighter(
+  Confederation.europe,
+);
 
 bool _meetsEuro(Nation n) => HostStadiumRules.meets(
   HostStadiumRules.qualifyingSeats(nationId: n.id, editionCycle: 1),
@@ -184,6 +188,11 @@ void main() {
       1,
     );
     expect(await _stamped(w, 1), isTrue);
+    expect(
+      await comp.hasWatchedDraw(w.careerId, 1, HostBidding.rules3Kind(1)),
+      isTrue,
+      reason: 'held to the lighter bars',
+    );
     // The pledge was paid and became the bid.
     expect(
       (await hostBidKinds(comp, w.careerId)).any(
@@ -192,6 +201,27 @@ void main() {
       isTrue,
     );
   });
+
+  test(
+    'an edition an earlier build stamped v2 alone keeps the first bars',
+    () async {
+      final w = await _world(_code('GER'));
+      final comp = w.c.read(competitionRepositoryProvider);
+      // Cycle 0 was created by this build: lighter.
+      expect(await lighterBarsFor(comp, w.careerId, 0), isTrue);
+      // Cycle 1 not decided yet: this build's rollover will stamp it lighter.
+      expect(await lighterBarsFor(comp, w.careerId, 1), isTrue);
+      // As the build before the lighter bars stamped it: v2 alone.
+      await comp.markDrawWatched(w.careerId, 1, HostBidding.rules2Kind(1));
+      expect(await lighterBarsFor(comp, w.careerId, 1), isFalse);
+      final world = await w.c
+          .read(nationRepositoryProvider)
+          .forCareer(w.careerId);
+      expect(WorldCupHosts.isV2(1, world), isTrue);
+      expect(WorldCupHosts.isV3(1, world), isFalse);
+      expect(WorldCupHosts.isV3(0, world), isTrue);
+    },
+  );
 
   test('an older build pledge keeps its edition on the old rules', () async {
     final ger = _code('GER');

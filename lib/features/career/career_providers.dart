@@ -370,6 +370,7 @@ class CareerService {
         // bid of an older build.
         if (stadiumHostRules) {
           await comp.markDrawWatched(career.id, 0, HostBidding.rules2Kind(0));
+          await comp.markDrawWatched(career.id, 0, HostBidding.rules3Kind(0));
         } else {
           // Its rollovers keep to the creation's choice.
           await comp.markDrawWatched(career.id, 0, HostBidding.rules2OffKind);

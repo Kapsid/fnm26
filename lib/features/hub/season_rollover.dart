@@ -117,6 +117,12 @@ extension SeasonRollover on SeasonService {
             next,
             HostBidding.rules2Kind(next),
           );
+          // Held to the lighter bars: every edition this build decides.
+          await _comp.markDrawWatched(
+            careerId,
+            next,
+            HostBidding.rules3Kind(next),
+          );
         }
       }
       budget = await _ref
@@ -374,6 +380,34 @@ extension SeasonRollover on SeasonService {
       ..invalidate(yMilestonesProvider)
       ..invalidate(fanMoodProvider)
       ..invalidate(moraleProvider);
+  }
+
+  /// Runs [step] (a move of the clock: an advance, a skip, a simulated
+  /// tournament) and then posts the transfer window of every calendar year
+  /// it carried the clock into.
+  ///
+  /// The window used to be written only when the manager PLAYED a match
+  /// live, for the years between his last date and that match. Every other
+  /// step moves the date too, so a year the clock entered any other way (a
+  /// quick-simmed match, a world matchday, the walk to a call-up) was
+  /// already behind the date when his next live match came, and its window
+  /// was never written. A manager who presses Advance got none at all: the
+  /// clubs moved, the history card showed it, and the news never said so.
+  ///
+  /// Only years entered by THIS step: an older save that skipped its windows
+  /// is not handed a pile of them at once.
+  Future<void> _postingTransferWindows(
+    int careerId,
+    Future<void> Function() step,
+  ) async {
+    final from = (await _careers.byId(careerId))?.inGameDate.year;
+    await step();
+    if (from == null) return;
+    final career = await _careers.byId(careerId);
+    if (career == null) return;
+    for (var y = from + 1; y <= career.inGameDate.year; y++) {
+      await _recordTransferYear(careerId, career.nationId, career.rngSeed, y);
+    }
   }
 
   /// Posts transfer messages for the manager's nation's notable club moves over

@@ -112,13 +112,15 @@ class DriftNationRepository implements NationRepository {
                   t.careerId.equals(careerId) &
                   (t.kind.like('${HostBidMarker.prefix}%') |
                       t.kind.like('${HostBidding.rulesPrefix}%') |
-                      t.kind.like('${HostBidding.rules2Prefix}%')),
+                      t.kind.like('${HostBidding.rules2Prefix}%') |
+                      t.kind.like('${HostBidding.rules3Prefix}%')),
             ))
             .get();
     if (rows.isEmpty) return world;
     final byNation = <int, Map<String, int>>{};
     final managers = <int, int>{};
     final rules2 = <int>[];
+    final rules3 = <int>{};
     for (final r in rows) {
       if (HostBidding.decodeRules(r.kind) case final rule?) {
         (byNation[rule.nationId] ??= {})[HostBidding.managerKey(rule.cycle)] =
@@ -128,6 +130,10 @@ class DriftNationRepository implements NationRepository {
       }
       if (HostBidding.decodeRules2(r.kind) case final cycle?) {
         rules2.add(cycle);
+        continue;
+      }
+      if (HostBidding.decodeRules3(r.kind) case final cycle?) {
+        rules3.add(cycle);
         continue;
       }
       final m = HostBidMarker.decode(r.kind);
@@ -149,6 +155,11 @@ class DriftNationRepository implements NationRepository {
       holder ??= world.isEmpty ? null : world.first.id;
       if (holder case final id?) {
         (byNation[id] ??= {})[HostBidding.rules2Key(cycle)] = 1;
+        // The lighter bars ride beside it (an edition is only ever stamped
+        // v3 together with v2).
+        if (rules3.contains(cycle)) {
+          (byNation[id] ??= {})[HostBidding.rules3Key(cycle)] = 1;
+        }
       }
     }
     if (byNation.isEmpty) return world;

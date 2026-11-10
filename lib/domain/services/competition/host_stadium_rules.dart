@@ -86,11 +86,66 @@ abstract final class HostStadiumRules {
         ),
       };
 
-  /// The bar of [comp] for a nation of [confederation].
-  static HostBar of(HostBidComp comp, Confederation confederation) =>
-      comp == HostBidComp.worldChampionship
-      ? worldChampionship
-      : continental(confederation);
+  /// The bar of [comp] for a nation of [confederation]: the [lighter] one
+  /// for an edition stamped with `HostBidding.rules3Kind`.
+  static HostBar of(
+    HostBidComp comp,
+    Confederation confederation, {
+    bool lighter = false,
+  }) => comp == HostBidComp.worldChampionship
+      ? (lighter ? worldChampionshipLighter : worldChampionship)
+      : (lighter ? continentalLighter : continental)(confederation);
+
+  /// The lighter bars (host rules v2.1, editions carrying
+  /// `HostBidding.rules3Kind`).
+  ///
+  /// | Tournament         | Grounds | Final   | Semi grounds  | Others  |
+  /// |--------------------|---------|---------|---------------|---------|
+  /// | World Championship | 8       | 60,000  | 2 of 40,000   | 25,000  |
+  /// | EURO               | 6       | 50,000  | 2 of 30,000   | 20,000  |
+  /// | AFCON, Asian Cup   | 4       | 40,000  | 1 of 25,000   | 15,000  |
+  /// | Gold Cup           | 4       | 40,000  | 1 of 25,000   | 15,000  |
+  /// | Copa               | 4       | 40,000  | 1 of 25,000   | 15,000  |
+  /// | Oceania Cup        | 2       | 10,000  | none          | 5,000   |
+  ///
+  /// The first bars asked for nearly every ground a nation's data holds
+  /// (ten of 30,000 for the World Championship), so only a handful of
+  /// giants could ever stand alone and most editions went to a joint bid.
+  /// The final and semi-final grounds are unchanged: a big final still
+  /// needs a big stadium. Joint bids still form, by choice or of need; an
+  /// AI nation of the top 30 that stands alone now counts its planned
+  /// grounds BEFORE it looks for partners (`WorldCupHosts._settleBid`).
+  static const HostBar worldChampionshipLighter = (
+    grounds: 8,
+    finalSeats: 60000,
+    semiGrounds: 2,
+    semiSeats: 40000,
+    otherSeats: 25000,
+  );
+
+  /// The lighter bar of [confederation]'s championship (see
+  /// [worldChampionshipLighter]).
+  static HostBar continentalLighter(Confederation confederation) =>
+      switch (confederation) {
+        Confederation.europe => (
+          grounds: 6,
+          finalSeats: 50000,
+          semiGrounds: 2,
+          semiSeats: 30000,
+          otherSeats: 20000,
+        ),
+        Confederation.africa ||
+        Confederation.asia ||
+        Confederation.northAmerica ||
+        Confederation.southAmerica => (
+          grounds: 4,
+          finalSeats: 40000,
+          semiGrounds: 1,
+          semiSeats: 25000,
+          otherSeats: 15000,
+        ),
+        Confederation.oceania => continental(confederation),
+      };
 
   /// What [seats] (grounds in any order) lack against [bar]. The biggest
   /// ground fills the final slot, the next `HostBar.semiGrounds` the semi

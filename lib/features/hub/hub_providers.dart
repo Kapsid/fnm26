@@ -1975,7 +1975,7 @@ class SeasonService {
   ///
   /// Dropped if a sim is already running — see [_exclusive].
   Future<void> advance(int careerId) => _exclusive(
-    () => _advance(careerId),
+    () => _postingTransferWindows(careerId, () => _advance(careerId)),
     dropIfBusy: true,
   ).then((_) => _backupAfter(BackupTrigger.committed));
 
@@ -2369,7 +2369,10 @@ class SeasonService {
   /// Does nothing unless the hub's event is a watch. Dropped if a sim is
   /// already running — see [_exclusive].
   Future<void> simulateTournament(int careerId) => _exclusive(
-    () => _simulateTournament(careerId),
+    () => _postingTransferWindows(
+      careerId,
+      () => _simulateTournament(careerId),
+    ),
     dropIfBusy: true,
   ).then((_) => _backupAfter(BackupTrigger.committed));
 
@@ -2408,7 +2411,7 @@ class SeasonService {
   ///
   /// Dropped if a sim is already running — see [_exclusive].
   Future<void> skipToChampion(int careerId) => _exclusive(
-    () => _skipToChampion(careerId),
+    () => _postingTransferWindows(careerId, () => _skipToChampion(careerId)),
     dropIfBusy: true,
   ).then((_) => _backupAfter(BackupTrigger.committed));
 
