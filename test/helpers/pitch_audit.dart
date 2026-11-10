@@ -295,7 +295,9 @@ class PitchAudit {
           count('long throw');
           _throw(w, first);
         case FoulMoment():
-          count('foul + card');
+          count(
+            first.cardEventIndex == null ? 'penalty foul' : 'foul + card',
+          );
           _foul(w, first);
         case OffsideMoment():
           count('offside');
@@ -847,7 +849,17 @@ class PitchAudit {
     }
     note('fouler distance at the foul (m)', close);
     if (close > 2.0) fail(w.start, 'fouler ${m.foulerId} never reaches him');
-    final idxCard = m.cardEventIndex!;
+    // A penalty's foul is staged with no card when it drew none.
+    final idxCard = m.cardEventIndex;
+    if (idxCard == null) {
+      if (w.cues.any(
+        (c) =>
+            c.kind == PitchCueKind.yellowCard || c.kind == PitchCueKind.redCard,
+      )) {
+        fail(w.start, 'a card shown for a foul that drew none');
+      }
+      return;
+    }
     final red = s.result.events[idxCard].type == MatchEventType.redCard;
     if (s.result.events[idxCard].playerId != m.foulerId) {
       fail(w.start, 'card shown to somebody other than the fouler');

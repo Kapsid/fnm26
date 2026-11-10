@@ -205,6 +205,57 @@ void main() {
   // defending a goal (its keeper with three more) are within 6 m of its
   // line across the box, and the attackers the moment does not name never
   // park there.
+  // The owner: a penalty came out of nowhere. Its foul is staged first: the
+  // man brought down in the box, the whistle, then the kick.
+  test('a penalty follows its foul in the box', () {
+    var seen = 0;
+    var inBox = 0;
+    for (var seed = 0; seed < 120 && seen < 12; seed++) {
+      final m = _match(seed);
+      final s = _script(m, PitchSpeed.values[seed % 3], seed: seed);
+      for (var i = 0; i < s.windows.length; i++) {
+        final w = s.windows[i];
+        final k = w.moments.isEmpty ? null : w.moments.first;
+        if (k is! ShotMoment || k.origin != ShotOrigin.penalty) continue;
+        if (w.start < s.start) continue;
+        seen++;
+        expect(i, greaterThan(0), reason: 'match $seed: no window before');
+        final fw = s.windows[i - 1];
+        final f = fw.moments.isEmpty ? null : fw.moments.first;
+        expect(f, isA<FoulMoment>(), reason: 'match $seed ${k.minute}');
+        f as FoulMoment;
+        expect(f.teamNationId, k.teamNationId);
+        expect(fw.end, closeTo(w.start, 1e-6));
+        final whistle = fw.cues
+            .where((c) => c.kind == PitchCueKind.foul)
+            .map((c) => c.t)
+            .firstOrNull;
+        expect(whistle, isNotNull, reason: 'match $seed: no foul cue');
+        // At the whistle both men are in the area the kick is taken in.
+        final frame = s.sample(
+          Duration(microseconds: (whistle! * 1e6).round()),
+        );
+        final dir = attackDir(
+          home: k.teamNationId == s.homeNationId,
+          minute: k.minute,
+        );
+        bool box(int id) {
+          final p = frame.players[id];
+          if (p == null) return false;
+          final lat = (p.y - PitchDims.width / 2).abs();
+          return xToDepth(p.x, dir) > PitchDims.length - PitchDims.boxDepth &&
+              lat < PitchDims.boxHalfWidth;
+        }
+
+        if (box(f.fouledId) && box(f.foulerId)) inBox++;
+      }
+    }
+    expect(seen, greaterThan(3), reason: 'too few penalties to judge');
+    // A late cut can leave a man a stride outside the line; nearly all
+    // are in it.
+    expect(inBox, greaterThanOrEqualTo((seen * 0.8).floor()));
+  });
+
   test('off-ball men never crowd a goal line in play', () {
     var defenders = 0.0;
     var attackers = 0.0;
