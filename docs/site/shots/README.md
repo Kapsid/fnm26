@@ -149,8 +149,11 @@ can replace a file without touching any page:
 
 - `match-2d-1` to `match-2d-4`: 760 x 605 (`-full`: 1080 x 860), the top of a
   phone match screen (score bar, banner, pitch) cut from the 2D promo clips
-  with ffmpeg: 1 Paris stadium, 2 snow in Reykjavík, 3 a goal banner in Rio,
-  4 the shootout's winning kick. Keep the 1080 x 860 shape, and keep any
+  with ffmpeg: 1 Paris stadium, 2 snow in Reykjavík, 3 a goal banner in a
+  continental cup final in Johannesburg (clip 25 of `FNM_2D_clips_v2`, frame
+  at 3.0 s, cropped from y = 180), 4 the shootout's winning kick. No still may
+  show a protected landmark (the Rio statue, a lit Eiffel Tower and the like),
+  and no caption or alt text names a landmark: say "the city skyline". Keep the 1080 x 860 shape, and keep any
   "Friendly" label out of the crop (the current clips are friendlies).
 - `editor-1`, `editor-2`: 500 x 1010 (`-full`: 1000 x 2020), like the phone
   carousel: a database's home and a player being edited, taken on the iOS

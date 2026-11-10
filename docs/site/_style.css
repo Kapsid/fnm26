@@ -310,6 +310,7 @@ footer {
   justify-content: space-between;
 }
 footer nav { display: flex; gap: 18px; flex-wrap: wrap; }
+footer .legal { flex-basis: 100%; margin: 0; font-size: 12px; line-height: 1.5; color: var(--muted); }
 
 /* ---------- inner pages ---------- */
 
