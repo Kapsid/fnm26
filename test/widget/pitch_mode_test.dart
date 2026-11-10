@@ -19,6 +19,7 @@ import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
+import 'package:fnm/features/match/match_feedback.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart' show surnameOf;
@@ -206,6 +207,7 @@ Future<ProviderContainer> _pump(
   WeatherKind? weather,
   Size size = const Size(400, 2000),
   FormFactor? formFactor,
+  bool haptics = false,
 }) async {
   if (resetPrefs) SharedPreferences.setMockInitialValues(prefs);
   tester.view
@@ -215,7 +217,7 @@ Future<ProviderContainer> _pump(
   final c = ProviderContainer(
     overrides: [
       matchPreviewProvider(1).overrideWith((ref) async => preview),
-      soundHapticsEnabledProvider.overrideWith((ref) => false),
+      soundHapticsEnabledProvider.overrideWith((ref) => haptics),
       matchAttemptSaltProvider.overrideWithValue(() => salt),
       pitchStadiumBakerProvider.overrideWithValue(_InstantBaker(_image)),
       // Built in place: the isolate build is checked on its own
@@ -471,6 +473,67 @@ void main() {
       );
       expect(find.byType(MatchViewChooser), findsNothing);
       expect(_screen(tester).mode, MatchViewMode.timeline);
+    });
+  }
+
+  // Two goals in one minute: each is flashed and buzzed, on the Timeline as
+  // on the 2D TV. The Timeline used to flash the first only, so the second
+  // went in on the score without a buzz.
+  for (final mode in ['timeline', 'pitch']) {
+    testWidgets('every goal buzzes exactly once, two in a minute too '
+        '($mode)', (tester) async {
+      final preview = _preview();
+      bool twoInAMinute(MatchResult r) {
+        final goals = r.events.where((e) => e.type == MatchEventType.goal);
+        return goals.any(
+          (g) =>
+              g.minute < 44 &&
+              g.stoppage == 0 &&
+              goals.where((h) => h.minute == g.minute).length == 2,
+        );
+      }
+
+      final salt = _salt(preview, twoInAMinute);
+      final cues = <String>[];
+      MatchFeedback.debugOnCue = cues.add;
+      addTearDown(() => MatchFeedback.debugOnCue = null);
+      await _pump(
+        tester,
+        preview: preview,
+        salt: salt,
+        haptics: true,
+        prefs: {kMatchViewModePrefsKey: mode},
+      );
+      if (mode == 'pitch') {
+        await _until(tester, () => _ready(tester) && _clock(tester).playing);
+      }
+      final r = _result(tester);
+      expect(twoInAMinute(r), isTrue, reason: 'the screen re-sim matches');
+      final goals = r.events.where((e) => e.type == MatchEventType.goal);
+      final m = goals
+          .firstWhere(
+            (g) =>
+                g.minute < 44 &&
+                goals.where((h) => h.minute == g.minute).length == 2,
+          )
+          .minute;
+      int goalsBy(int minute) => goals.where((g) => g.minute <= minute).length;
+      // Play on past both and their flashes.
+      await _until(
+        tester,
+        () =>
+            _screen(tester).shownEvents
+                    .where((e) => e.type == MatchEventType.goal)
+                    .length >=
+                goalsBy(m) &&
+            find.text(enL.matchGoalShout).evaluate().isEmpty &&
+            _seen(tester).clock != '$m',
+      );
+      final shownGoals = _screen(
+        tester,
+      ).shownEvents.where((e) => e.type == MatchEventType.goal).length;
+      expect(cues.where((c) => c == 'goal').length, shownGoals);
+      expect(shownGoals, greaterThanOrEqualTo(goalsBy(m)));
     });
   }
 
