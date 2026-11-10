@@ -281,7 +281,10 @@ class _RoleEffect extends StatelessWidget {
             // One effect to a line. Run together they ran off a 360px phone in
             // both languages, and a figure that has been scaled down to fit is
             // a figure the manager has to squint at.
-            for (final line in lines) WholeText(line, style: style),
+            for (final line in lines)
+              // Whole words only: a line broken inside a word
+              // ("partid-os") read as a typo in every language but English.
+              WholeText(line, style: style, breakWords: false),
         ],
       ),
     );

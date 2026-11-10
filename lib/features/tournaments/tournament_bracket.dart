@@ -628,7 +628,10 @@ String? playerRunSummary(
   // preposition that does not change shape in Czech ("do", "přes", "po"),
   // which is what lets ONE sentence serve all five rounds in a language with
   // seven cases.
-  final label = MatchStage.stage(l, round).toLowerCase();
+  // German capitalises every noun, so its round names keep their capital
+  // ("Steht im Finale", never "im finale").
+  final stage = MatchStage.stage(l, round);
+  final label = l.localeName.startsWith('de') ? stage : stage.toLowerCase();
   if (!deepest.hasResult) {
     // The bronze match is the one round whose name is not a noun ("third
     // place"), so it cannot be dropped into the same sentence.
