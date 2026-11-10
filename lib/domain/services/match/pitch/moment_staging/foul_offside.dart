@@ -1,9 +1,9 @@
 part of '../moment_staging.dart';
 
-/// A foul worth a card: the fouled man on the ball, the fouler closing in
-/// and bringing him down, play stopped, the card. The ball is left on the
-/// spot when its free kick is staged next; otherwise the fouled side takes
-/// it quickly.
+/// A foul worth a card, or one that gives a penalty: the fouled man on the
+/// ball, the fouler closing in and bringing him down, play stopped, the card
+/// if there is one. The ball is left on the spot when its free kick (or the
+/// penalty) is staged next; otherwise the fouled side takes it quickly.
 class _FoulPlan extends _Plan {
   _FoulPlan(StagingContext c, this.m) : super(c, m.teamNationId) {
     final idx = m.cardEventIndex;
@@ -186,12 +186,16 @@ class _FoulPlan extends _Plan {
   }
 
   /// The card, shown a beat after the whistle; a red a beat later, once
-  /// the referee has run to the man (see `RefereeCardShow`).
-  void _card(double t) => cue(
-    math.max(t, math.min(t + (red ? 1.2 : 0.6), end - 0.15)),
-    red ? PitchCueKind.redCard : PitchCueKind.yellowCard,
-    m.foulerId,
-  );
+  /// the referee has run to the man (see `RefereeCardShow`). None for a
+  /// penalty's foul that drew none.
+  void _card(double t) {
+    if (m.cardEventIndex == null) return;
+    cue(
+      math.max(t, math.min(t + (red ? 1.2 : 0.6), end - 0.15)),
+      red ? PitchCueKind.redCard : PitchCueKind.yellowCard,
+      m.foulerId,
+    );
+  }
 
   /// Where the next moment takes the ball from.
   Offset2 _setSpot(ScriptState now) {

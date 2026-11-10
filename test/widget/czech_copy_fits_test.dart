@@ -129,6 +129,7 @@ void main() {
                   playerIsHome: true,
                   possession: 60,
                   subsUsed: 0,
+                  maxSubs: kMaxSubs,
                   selectedTalk: null,
                   options: TeamTalkTone.values.take(3).toList(),
                   onTalk: (_) {},

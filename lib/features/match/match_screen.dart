@@ -224,6 +224,14 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   MatchEvent? _goalFlash;
   Timer? _flashTimer;
 
+  /// Goals that came into view while another goal's flash was out (two in
+  /// one minute): each gets its own flash and buzz, in turn.
+  final List<MatchEvent> _goalQueue = [];
+
+  /// Every goal already flashed (and buzzed), so none is announced twice
+  /// when the views hand a minute over.
+  final Set<MatchEventKey> _goalsAnnounced = {};
+
   /// The substitution on its pop-up (null when hidden). Play never waits
   /// for it. A red card never comes here: it has its own banner.
   MatchEvent? _eventFlash;
@@ -705,22 +713,23 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     }
   }
 
-  /// Flashes the "GOAL!" overlay for a goal scored on [minute] and pauses the
-  /// clock until it clears; returns whether one was shown so the tick loop
-  /// hands the resume to the flash timer.
+  /// Flashes the "GOAL!" overlay for every goal scored on [minute], one
+  /// after the other, and pauses the clock until they clear; returns whether
+  /// one was shown so the tick loop hands the resume to the flash timer.
   bool _flashGoalAt(int minute, int stoppage) {
     // Extra-time goals are engine events with their real minutes, so they
     // flash and pause the clock like any other. Stoppage goals (90+X) match on
     // the added-time index too, so they flash on their exact "90+X" tick.
+    // Two goals in one minute are two flashes and two buzzes: the second
+    // used to be skipped, shown on the score and never felt.
     for (final e in _result?.events ?? const <MatchEvent>[]) {
       if (e.type == MatchEventType.goal &&
           e.minute == minute &&
           e.stoppage == stoppage) {
         _flashGoal(e);
-        return true;
       }
     }
-    return false;
+    return _goalFlash != null;
   }
 
   /// The pop-up for a substitution [e]: shown a moment, as
@@ -745,15 +754,33 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     if (last != null) _flashEvent(last);
   }
 
-  /// Flashes the "GOAL!" overlay for [e] and holds the clock until it
-  /// clears. Call inside `setState`.
+  /// Flashes the "GOAL!" overlay for [e], with its buzz, and holds the
+  /// clock until it clears. Every goal is flashed and buzzed exactly once:
+  /// one that comes while another's flash is out waits its turn, and one
+  /// already announced is not announced again. Call inside `setState`.
   void _flashGoal(MatchEvent e) {
+    if (!_goalsAnnounced.add(_keyOf(e))) return;
+    _pitchClock?.pause();
+    if (_goalFlash != null) {
+      _goalQueue.add(e);
+      return;
+    }
+    _showGoalFlash(e);
+  }
+
+  /// Puts [e] on the goal flash and buzzes for it; when it clears, the
+  /// next goal waiting has its turn, or play goes on.
+  void _showGoalFlash(MatchEvent e) {
     _goalFlash = e;
     MatchFeedback.goal(ref.read(soundHapticsEnabledProvider));
     _pitchClock?.pause();
     _flashTimer?.cancel();
     _flashTimer = Timer(kGoalFlashHold, () {
       if (!mounted) return;
+      if (_goalQueue.isNotEmpty) {
+        setState(() => _showGoalFlash(_goalQueue.removeAt(0)));
+        return;
+      }
       setState(() => _goalFlash = null);
       // Resume only if nothing else has taken over the clock (half-time in
       // the same minute, a manual pause, or full time) — those paths own
@@ -1359,18 +1386,19 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       _added = now.added;
       _held = now.held;
       if (before == null) return;
-      MatchEvent? goal;
+      final goals = <MatchEvent>[];
       MatchEvent? notice;
       MatchEvent? red;
       for (final e in events) {
         if (!_reached(e) || before.contains(_keyOf(e))) continue;
-        if (e.type == MatchEventType.goal) goal = e;
+        if (e.type == MatchEventType.goal) goals.add(e);
         if (flashesAsEvent(e)) notice = e;
         if (e.type == MatchEventType.redCard) red = e;
         arrived.add(e);
       }
       if (notice != null) _flashEvent(notice);
-      if (goal != null) _flashGoal(goal);
+      // Each goal its own flash and buzz, in match order.
+      goals.forEach(_flashGoal);
       if (red != null) _showRedCard(red);
     });
     for (final e in arrived) {
@@ -2000,6 +2028,15 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                 liveHome;
             final homeScore = ft ? finalHome : liveHome;
             final awayScore = ft ? finalAway : liveAway;
+            // Red cards shown so far, marked on the 2D TV's bar for the
+            // rest of the match.
+            final homeReds = shown
+                .where((e) => e.type == MatchEventType.redCard)
+                .where((e) => e.teamNationId == homeId)
+                .length;
+            final awayReds =
+                shown.where((e) => e.type == MatchEventType.redCard).length -
+                homeReds;
             final knockout = _koOutcome;
             // Reveal the shootout as it plays out (or in full once decided).
             final showingShootout = _isShootout && _clockDone;
@@ -2076,6 +2113,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               notice: bug && _redFlash == null ? _eventFlash : null,
               noticeForHome: _eventFlash?.teamNationId == homeId,
               bugTheme: bugTheme,
+              homeReds: homeReds,
+              awayReds: awayReds,
             );
             final Widget? momentum = !ft && !showingShootout
                 ? _MomentumBar(
@@ -2130,7 +2169,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               events: timelineEvents,
               penalties: penalties,
               // The tablet's 2D TV has the ground in its header band.
-              showGround: !(tablet && _onPitch),
             );
             List<MatchEvent> subsOf(int nationId) => shown
                 .where(
@@ -2265,6 +2303,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                       ? r.homePossession
                       : 100 - r.homePossession,
                   subsUsed: _subsUsed(preview),
+                  // A friendly's allowance is its bench, not the five.
+                  maxSubs: _maxSubsFor(preview),
                   selectedTalk: _halfTimeTalk,
                   options: offeredTalkTones(
                     preview.saveSeed,
@@ -2414,6 +2454,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                         goalForHome: _goalFlash?.teamNationId == homeId,
                         theme: finalsTheme,
                         homeNationId: homeId,
+                        homeReds: homeReds,
+                        awayReds: awayReds,
                         ground: GroundStrip(
                           ground: preview.ground,
                           neutral: preview.neutralVenue,

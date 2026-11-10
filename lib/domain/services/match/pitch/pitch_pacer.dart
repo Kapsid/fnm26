@@ -59,6 +59,21 @@ class PitchPacer {
         }
       }
     }
+    // The foul that gives a penalty is staged before its kick, card or
+    // not: the man brought down in the box, the whistle, then the spot.
+    // The engine logs it straight before the penalty's shot.
+    for (var i = 0; i + 1 < r.moments.length; i++) {
+      final f = r.moments[i];
+      final k = r.moments[i + 1];
+      if (f is FoulMoment &&
+          k is ShotMoment &&
+          k.origin == ShotOrigin.penalty &&
+          f.minute == k.minute &&
+          f.stoppage == k.stoppage &&
+          f.teamNationId == k.teamNationId) {
+        _penaltyFouls.add(f);
+      }
+    }
     // A set piece that comes to nothing is not staged (the owner's ruling:
     // a restart is shown only when it leads to an action). Its time goes
     // to the open play around it: it still counts toward how eventful the
@@ -129,6 +144,10 @@ class PitchPacer {
   static const double _freeKick = 3.5;
   static const double _penalty = 7;
   static const double _card = 3;
+
+  /// The foul that gives a penalty, with no card: the man brought down and
+  /// the whistle, before the kick.
+  static const double _penaltyFoul = 2.2;
   static const double _sub = 2.5;
   static const double _offside = 2.5;
   static const double _injurySeconds = 3;
@@ -189,18 +208,22 @@ class PitchPacer {
   /// - minor moments (wide and blocked shots, attack-ending offsides, subs)
   ///   at 100% / 50% / 30%;
   ///
-  /// and no moment drops below one second. A goal adds 2.5 s. A set piece
+  /// and no moment drops below one second. A penalty's foul is a key moment
+  /// too, card or not: it is staged before the kick. A goal adds 2.5 s. A set piece
   /// that leads to a shot is one moment: its length plus 1.5 s, carried by the
   /// set piece (the folded shot reports zero). Moments that are not staged
   /// (routine set pieces, corners, free kicks and long throws that lead to
-  /// no shot, fouls without a card, offsides that end nothing) have no
-  /// length.
+  /// no shot, fouls without a card that give no penalty, offsides that end
+  /// nothing) have no length.
   Duration momentLength(MatchMoment m) =>
       _dur(_lengths[m] ?? _seconds(m, _speed, null));
 
   final PitchSpeed _speed;
   final List<MatchEvent> _events;
   final Map<MatchMoment, double> _lengths = Map.identity();
+
+  /// The fouls that give a penalty (see the constructor).
+  final Set<FoulMoment> _penaltyFouls = Set.identity();
 
   static bool _fromSetPiece(ShotOrigin o) =>
       o == ShotOrigin.corner ||
@@ -272,12 +295,13 @@ class PitchPacer {
         return scaled < _setPieceFloor ? _setPieceFloor : scaled;
       case FoulMoment f:
         final idx = f.cardEventIndex;
-        if (idx == null) return 0;
+        final penalty = _penaltyFouls.contains(f);
+        if (idx == null) return penalty ? _penaltyFoul : 0;
         final red =
             idx >= 0 &&
             idx < _events.length &&
             _events[idx].type == MatchEventType.redCard;
-        return red ? _card : at(_card, _Tier.standard);
+        return red || penalty ? _card : at(_card, _Tier.standard);
       case OffsideMoment o:
         return o.endsAttack ? at(_offside, _Tier.minor) : 0;
       case SubMoment _:

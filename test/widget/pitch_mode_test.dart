@@ -19,6 +19,7 @@ import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
+import 'package:fnm/features/match/match_feedback.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart' show surnameOf;
@@ -206,6 +207,7 @@ Future<ProviderContainer> _pump(
   WeatherKind? weather,
   Size size = const Size(400, 2000),
   FormFactor? formFactor,
+  bool haptics = false,
 }) async {
   if (resetPrefs) SharedPreferences.setMockInitialValues(prefs);
   tester.view
@@ -215,7 +217,7 @@ Future<ProviderContainer> _pump(
   final c = ProviderContainer(
     overrides: [
       matchPreviewProvider(1).overrideWith((ref) async => preview),
-      soundHapticsEnabledProvider.overrideWith((ref) => false),
+      soundHapticsEnabledProvider.overrideWith((ref) => haptics),
       matchAttemptSaltProvider.overrideWithValue(() => salt),
       pitchStadiumBakerProvider.overrideWithValue(_InstantBaker(_image)),
       // Built in place: the isolate build is checked on its own
@@ -471,6 +473,99 @@ void main() {
       );
       expect(find.byType(MatchViewChooser), findsNothing);
       expect(_screen(tester).mode, MatchViewMode.timeline);
+    });
+  }
+
+  // Two goals in one minute: each is flashed and buzzed, on the Timeline as
+  // on the 2D TV. The Timeline used to flash the first only, so the second
+  // went in on the score without a buzz.
+  for (final mode in ['timeline', 'pitch']) {
+    testWidgets('every goal buzzes exactly once, two in a minute too '
+        '($mode)', (tester) async {
+      final preview = _preview();
+      bool twoInAMinute(MatchResult r) {
+        final goals = r.events.where((e) => e.type == MatchEventType.goal);
+        return goals.any(
+          (g) =>
+              g.minute < 44 &&
+              g.stoppage == 0 &&
+              goals.where((h) => h.minute == g.minute).length == 2,
+        );
+      }
+
+      final salt = _salt(preview, twoInAMinute);
+      final cues = <String>[];
+      MatchFeedback.debugOnCue = cues.add;
+      addTearDown(() => MatchFeedback.debugOnCue = null);
+      await _pump(
+        tester,
+        preview: preview,
+        salt: salt,
+        haptics: true,
+        prefs: {kMatchViewModePrefsKey: mode},
+      );
+      if (mode == 'pitch') {
+        await _until(tester, () => _ready(tester) && _clock(tester).playing);
+      }
+      final r = _result(tester);
+      expect(twoInAMinute(r), isTrue, reason: 'the screen re-sim matches');
+      final goals = r.events.where((e) => e.type == MatchEventType.goal);
+      final m = goals
+          .firstWhere(
+            (g) =>
+                g.minute < 44 &&
+                goals.where((h) => h.minute == g.minute).length == 2,
+          )
+          .minute;
+      int goalsBy(int minute) => goals.where((g) => g.minute <= minute).length;
+      // Play on past both and their flashes.
+      await _until(
+        tester,
+        () =>
+            _screen(tester).shownEvents
+                    .where((e) => e.type == MatchEventType.goal)
+                    .length >=
+                goalsBy(m) &&
+            find.text(enL.matchGoalShout).evaluate().isEmpty &&
+            _seen(tester).clock != '$m',
+      );
+      final shownGoals = _screen(
+        tester,
+      ).shownEvents.where((e) => e.type == MatchEventType.goal).length;
+      expect(cues.where((c) => c == 'goal').length, shownGoals);
+      expect(shownGoals, greaterThanOrEqualTo(goalsBy(m)));
+    });
+  }
+
+  // A friendly's allowance is its bench: half time said "0/5" while the
+  // bar under the pitch and the editor allowed the whole bench.
+  for (final round in ['FRIENDLY', 'CQ']) {
+    testWidgets('half time counts the subs against the match\'s own '
+        'allowance ($round)', (tester) async {
+      final preview = _preview(round: round);
+      await _pump(
+        tester,
+        preview: preview,
+        salt: 7,
+        prefs: {kMatchViewModePrefsKey: 'pitch'},
+      );
+      await _until(tester, () => _ready(tester) && _clock(tester).playing);
+      await _seek(
+        tester,
+        _pb(tester).halfTime - const Duration(milliseconds: 300),
+      );
+      await _until(
+        tester,
+        () => find.byType(HalfTimePrompt).evaluate().isNotEmpty,
+      );
+      final allowed = round == 'FRIENDLY' ? preview.bench.length : kMaxSubs;
+      expect(
+        find.descendant(
+          of: find.byType(HalfTimePrompt),
+          matching: find.text(enL.matchTacticsWithSubs(0, allowed)),
+        ),
+        findsOneWidget,
+      );
     });
   }
 
@@ -961,6 +1056,26 @@ void main() {
       }
       final redFirst = pb.revealAt(ri) < pb.revealAt(si);
       final redBanner = find.byKey(matchRedCardBannerKey);
+      // The TV bar marks the sent-off side's red card for the rest of the
+      // match, and only once it has happened.
+      final redHome = r.events[ri].teamNationId == preview.homeTeam.nationId;
+      final barRed = find.byKey(
+        redHome ? matchBugHomeRedsKey : matchBugAwayRedsKey,
+      );
+      final otherRed = find.byKey(
+        redHome ? matchBugAwayRedsKey : matchBugHomeRedsKey,
+      );
+      if (r.events.take(ri).every((e) => e.type != MatchEventType.redCard)) {
+        expect(barRed, findsNothing);
+      }
+      void barMarksRed() {
+        expect(barRed, findsOneWidget);
+        if (r.events.where((e) => e.type == MatchEventType.redCard).length ==
+            1) {
+          expect(otherRed, findsNothing);
+        }
+      }
+
       if (tablet) {
         // The tablet's TV has no banners to collide: each takes the
         // header's one strip in its turn.
@@ -988,6 +1103,7 @@ void main() {
           }
         }
         expect(seen, {'redCard', 'substitution'});
+        barMarksRed();
         return;
       }
       final subPop = find.byKey(matchEventBannerKey);
@@ -1049,6 +1165,7 @@ void main() {
         expect(subAfterRed, isTrue);
       }
       expect(redOut() || subOut(), isFalse);
+      barMarksRed();
     });
   }
 

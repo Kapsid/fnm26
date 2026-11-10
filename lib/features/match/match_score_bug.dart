@@ -78,7 +78,14 @@ class _ScoreBug extends StatelessWidget {
     this.theme,
     this.notice,
     this.noticeForHome = false,
+    this.homeReds = 0,
+    this.awayReds = 0,
   });
+
+  /// Each side's red cards so far, marked beside its code for the rest of
+  /// the match.
+  final int homeReds;
+  final int awayReds;
 
   /// A substitution being shown (see [_EventBanner]); a goal
   /// banner takes its place.
@@ -126,6 +133,8 @@ class _ScoreBug extends StatelessWidget {
       goalForHome: goalForHome,
       goalId: goalId,
       theme: theme,
+      homeReds: homeReds,
+      awayReds: awayReds,
     );
     return Padding(
       // Two px above and below: stripe and margin together stay the 32 px
@@ -206,10 +215,16 @@ class _ScoreBugBar extends StatelessWidget {
     this.clockMaxWidth = 88,
     this.homeName,
     this.awayName,
+    this.homeReds = 0,
+    this.awayReds = 0,
   });
 
   final String homeCode;
   final String awayCode;
+
+  /// Each side's red cards so far (see [_BugSide.reds]).
+  final int homeReds;
+  final int awayReds;
 
   /// The sides' full names, shown in place of the codes wherever a name fits
   /// its side of the bar (the tablet's 2D TV); null keeps the codes.
@@ -264,6 +279,7 @@ class _ScoreBugBar extends StatelessWidget {
                 name: homeName,
                 color: homeColor,
                 alignEnd: true,
+                reds: homeReds,
               ),
             ),
             _BugScore(
@@ -279,6 +295,7 @@ class _ScoreBugBar extends StatelessWidget {
                 code: awayCode,
                 name: awayName,
                 color: awayColor,
+                reds: awayReds,
               ),
             ),
             _BugClock(
@@ -354,12 +371,17 @@ class _BugSide extends StatelessWidget {
     this.name,
     this.color,
     this.alignEnd = false,
+    this.reds = 0,
   });
 
   final String code;
   final String? name;
   final Color? color;
   final bool alignEnd;
+
+  /// The side's red cards so far: a red card beside the code, against the
+  /// score, with the count on it from the second on.
+  final int reds;
 
   static final TextStyle _style = AppTypography.labelMedium.copyWith(
     color: AppColors.onSurface,
@@ -415,13 +437,26 @@ class _BugSide extends StatelessWidget {
             ),
     );
     const gap = SizedBox(width: 6);
+    final red = reds > 0 ? _BugRedCards(reds, home: alignEnd) : null;
     final cluster = Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
       child: Row(
         mainAxisAlignment: alignEnd
             ? MainAxisAlignment.end
             : MainAxisAlignment.start,
-        children: alignEnd ? [flag, gap, text] : [text, gap, flag],
+        children: alignEnd
+            ? [
+                flag,
+                gap,
+                text,
+                if (red != null) ...[gap, red],
+              ]
+            : [
+                if (red != null) ...[red, gap],
+                text,
+                gap,
+                flag,
+              ],
       ),
     );
     return Row(
@@ -429,6 +464,60 @@ class _BugSide extends StatelessWidget {
       children: alignEnd
           ? [accent, Expanded(child: cluster)]
           : [Expanded(child: cluster), accent],
+    );
+  }
+}
+
+/// The key of the home side's red card mark on the score bar.
+const Key matchBugHomeRedsKey = Key('match.bugSide.reds.home');
+
+/// The key of the away side's red card mark on the score bar.
+const Key matchBugAwayRedsKey = Key('match.bugSide.reds.away');
+
+/// A side's red cards on the bar: one small red card, the count printed on
+/// it once there are two or more.
+class _BugRedCards extends StatelessWidget {
+  const _BugRedCards(this.count, {required this.home})
+    : super(key: home ? matchBugHomeRedsKey : matchBugAwayRedsKey);
+
+  final int count;
+  final bool home;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return Semantics(
+      label: '${l.matchStatRedCards}: $count',
+      excludeSemantics: true,
+      child: Center(
+        child: Container(
+          width: 10,
+          height: 14,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: kRedCardColor,
+            borderRadius: BorderRadius.circular(1.5),
+            border: Border.all(color: const Color(0x66FFFFFF), width: 0.5),
+            boxShadow: const [
+              BoxShadow(color: Color(0x80000000), blurRadius: 2),
+            ],
+          ),
+          child: count > 1
+              ? Text(
+                  '$count',
+                  maxLines: 1,
+                  softWrap: false,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: Colors.white,
+                    fontSize: 9,
+                    height: 1,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0,
+                  ),
+                )
+              : null,
+        ),
+      ),
     );
   }
 }

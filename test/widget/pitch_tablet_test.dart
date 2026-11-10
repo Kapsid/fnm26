@@ -98,7 +98,8 @@ void main() {
         ),
       );
       expect(header.top, closeTo(stats.top, 0.5));
-      // The ground is in the header now, not over the stats.
+      // The ground's line is in the header, and its card closes the stats:
+      // under the figures, never over them.
       expect(
         find.descendant(
           of: find.byType(MatchTvHeader),
@@ -106,7 +107,29 @@ void main() {
         ),
         findsOneWidget,
       );
-      expect(find.byType(GroundCard), findsNothing);
+      final groundCard = find.descendant(
+        of: find.byType(MatchStatsPanel),
+        matching: find.byType(GroundCard),
+      );
+      expect(groundCard, findsOneWidget);
+      expect(
+        tester.getRect(groundCard).top,
+        greaterThan(
+          tester
+              .getRect(
+                find.descendant(
+                  of: find.byType(MatchStatsPanel),
+                  matching: find.byWidgetPredicate(
+                    (w) =>
+                        w is Text &&
+                        w.data?.toLowerCase() ==
+                            enL.matchStatGoals.toLowerCase(),
+                  ),
+                ),
+              )
+              .bottom,
+        ),
+      );
       // Stats on the left, the feed and Your XI on the right.
       expect(
         tester.getCenter(find.byType(MatchStatsPanel)).dx,

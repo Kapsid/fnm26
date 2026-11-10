@@ -139,8 +139,14 @@ class MatchTvHeader extends StatefulWidget {
     this.moments = const [],
     this.homeName,
     this.awayName,
+    this.homeReds = 0,
+    this.awayReds = 0,
     super.key,
   });
+
+  /// Each side's red cards so far, marked on the bar beside its name.
+  final int homeReds;
+  final int awayReds;
 
   final String homeCode;
   final String awayCode;
@@ -299,6 +305,8 @@ class _MatchTvHeaderState extends State<MatchTvHeader> {
               goalForHome: w.goalForHome,
               goalId: goalId,
               theme: w.theme,
+              homeReds: w.homeReds,
+              awayReds: w.awayReds,
               // The minute alone needs little; the whistle's wording more.
               clockMaxWidth: w.live ? 52 : 80,
             ),

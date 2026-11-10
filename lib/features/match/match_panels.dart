@@ -303,8 +303,8 @@ class MatchStatsPanel extends StatelessWidget {
     this.showGround = true,
   });
 
-  /// Whether the ground's card heads the panel. The tablet 2D TV carries
-  /// the ground in its header band instead.
+  /// Whether the ground's card closes the stats, under the figures (and
+  /// over the full-time ratings), where the crowd is read like one more.
   final bool showGround;
   final bool neutral;
   final String groundCode;
@@ -362,17 +362,6 @@ class MatchStatsPanel extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
-        if (showGround) ...[
-          GroundCard(
-            ground: ground,
-            neutral: neutral,
-            groundNationCode: groundCode,
-            fans: homeFans,
-            kickOff: kickOff,
-            weather: weather,
-          ),
-          const SizedBox(height: AppSpacing.lg),
-        ],
         if (motm != null) ...[
           _MotmCard(
             name: motm.playerName,
@@ -438,6 +427,17 @@ class MatchStatsPanel extends StatelessWidget {
             style: AppTypography.bodySmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),
+          ),
+        ],
+        if (showGround) ...[
+          const SizedBox(height: AppSpacing.lg),
+          GroundCard(
+            ground: ground,
+            neutral: neutral,
+            groundNationCode: groundCode,
+            fans: homeFans,
+            kickOff: kickOff,
+            weather: weather,
           ),
         ],
         if (fullTime && result.ratings.isNotEmpty) ...[
@@ -1623,7 +1623,7 @@ class HalfTimePrompt extends StatelessWidget {
     required this.onTalk,
     required this.onTactics,
     required this.onContinue,
-    this.maxSubs = kMaxSubs,
+    required this.maxSubs,
   });
 
   /// Which interval this is — half time, the break before extra time, or the
@@ -1638,8 +1638,10 @@ class HalfTimePrompt extends StatelessWidget {
   final int possession;
   final int subsUsed;
 
-  /// The substitutions allowed: one more at the extra-time breaks
-  /// ([kMaxSubsExtraTime]) than at half time.
+  /// The substitutions allowed (see [maxSubsAllowed]): a friendly's whole
+  /// bench, otherwise [kMaxSubs], one more at the extra-time breaks
+  /// ([kMaxSubsExtraTime]). Required, so no interval falls back to five
+  /// where the match allows more.
   final int maxSubs;
   final TeamTalkTone? selectedTalk;
 

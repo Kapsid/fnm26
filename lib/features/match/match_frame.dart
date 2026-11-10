@@ -179,7 +179,13 @@ class MatchScoreboard extends StatelessWidget {
     this.bugTheme,
     this.notice,
     this.noticeForHome = false,
+    this.homeReds = 0,
+    this.awayReds = 0,
   });
+
+  /// Each side's red cards so far, marked on the [compact] bug.
+  final int homeReds;
+  final int awayReds;
 
   /// A substitution or a red card being shown, for the [compact] bug's
   /// banner; null when none is.
@@ -249,6 +255,8 @@ class MatchScoreboard extends StatelessWidget {
         theme: bugTheme,
         notice: notice,
         noticeForHome: noticeForHome,
+        homeReds: homeReds,
+        awayReds: awayReds,
       );
     }
     final card = AppCard(

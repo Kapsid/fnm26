@@ -355,6 +355,57 @@ void main() {
     expect(fast.momentLength(yellowFoul), const Duration(milliseconds: 1350));
   });
 
+  test("a penalty's foul is staged before the kick, card or not", () {
+    const foul = FoulMoment(
+      minute: 30,
+      stoppage: 0,
+      seq: 0,
+      teamNationId: 1,
+      foulerId: 9,
+      fouledId: 3,
+      zone: PitchZone.boxCentre,
+    );
+    const kick = ShotMoment(
+      minute: 30,
+      stoppage: 0,
+      seq: 1,
+      teamNationId: 1,
+      shooterId: 7,
+      zone: PitchZone.boxCentre,
+      xg: 0.76,
+      outcome: ShotOutcome.saved,
+      origin: ShotOrigin.penalty,
+    );
+    // An ordinary foul with no card is still not staged.
+    const plain = FoulMoment(
+      minute: 40,
+      stoppage: 0,
+      seq: 2,
+      teamNationId: 1,
+      foulerId: 9,
+      fouledId: 3,
+      zone: PitchZone.midfield,
+    );
+    for (final speed in PitchSpeed.values) {
+      final p = PitchPacer(
+        _result(const [foul, kick, plain], stoppage: 0),
+        speed,
+      );
+      expect(
+        p.momentLength(foul),
+        greaterThan(Duration.zero),
+        reason: '$speed',
+      );
+      expect(p.momentLength(plain), Duration.zero, reason: '$speed');
+      // The foul and the kick share the minute, one after the other.
+      expect(
+        p.screenAt(31, 0) - p.screenAt(30, 0),
+        p.momentLength(foul) + p.momentLength(kick),
+        reason: '$speed',
+      );
+    }
+  });
+
   test('an injury stages 3 s at every speed', () {
     const injury = MatchEvent(
       minute: 20,

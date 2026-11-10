@@ -158,6 +158,7 @@ void main() {
                       playerIsHome: true,
                       possession: 48,
                       subsUsed: 2,
+                      maxSubs: kMaxSubs,
                       selectedTalk: options.first,
                       options: options,
                       onTalk: (_) {},
