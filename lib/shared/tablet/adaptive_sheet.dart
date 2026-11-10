@@ -15,7 +15,9 @@ bool sheetIsDialog(BuildContext context) => context.isTabletWindow;
 /// Takes the same arguments the app's sheets already pass to
 /// [showModalBottomSheet], and on a phone forwards them unchanged. On a tablet
 /// [enableDrag] and [showDragHandle] are ignored, and the dialog goes on the
-/// root navigator.
+/// root navigator. [useSafeArea] keeps a phone sheet below the status bar
+/// (a tall sheet with the keyboard up would otherwise run under it, its
+/// drag handle with it); a dialog is always inset.
 ///
 /// On a tablet the sheet is a root dialog, not a route of the screen's own
 /// navigator. Inside [builder], pop with the sheet's own context
@@ -34,6 +36,7 @@ Future<T?> showAdaptiveSheet<T>({
   bool isDismissible = true,
   bool enableDrag = true,
   bool? showDragHandle,
+  bool useSafeArea = false,
 }) {
   if (!sheetIsDialog(context)) {
     return showModalBottomSheet<T>(
@@ -44,6 +47,7 @@ Future<T?> showAdaptiveSheet<T>({
       isDismissible: isDismissible,
       enableDrag: enableDrag,
       showDragHandle: showDragHandle,
+      useSafeArea: useSafeArea,
     );
   }
   return showDialog<T>(

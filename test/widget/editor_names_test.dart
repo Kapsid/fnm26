@@ -12,6 +12,8 @@ import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
+import 'package:fnm/features/editor/names/added_items.dart'
+    show editorFormSheetCloseKey;
 import 'package:fnm/features/editor/names/name_section_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -182,6 +184,76 @@ void main() {
       findsOneWidget,
     );
     await tester.pump(const Duration(milliseconds: 450));
+  });
+
+  testWidgets('the name lists sheet can be left with the keyboard up', (
+    tester,
+  ) async {
+    // Owner report: in Czech, editing a nation's name lists on a phone left
+    // no way out. With the keyboard up the tall sheet filled the screen: the
+    // back arrow and the drag handle went under the status bar and Done
+    // under the keyboard.
+    final c = await editorContainer(tester);
+    final id = await insertPack(tester, c, testPack('Names'));
+    await pumpEditorRoute(
+      tester,
+      c,
+      _at(NameSection.nameLists, id, nation: cze),
+      locale: const Locale('cs'),
+    );
+    tester.view.padding = const FakeViewPadding(top: 47, bottom: 34);
+    await tester.pump();
+    await tester.tap(find.byKey(NameSectionScreen.rowKey('$cze')));
+    await settle(tester);
+    await tester.showKeyboard(find.byKey(NameEditForm.firstNamesKey));
+    tester.view.viewInsets = const FakeViewPadding(bottom: 336);
+    await settle(tester);
+
+    final close = find.byKey(editorFormSheetCloseKey);
+    expect(close, findsOneWidget);
+    final rect = tester.getRect(close);
+    expect(rect.top, greaterThanOrEqualTo(47), reason: 'under the status bar');
+    expect(rect.bottom, lessThanOrEqualTo(844 - 336), reason: 'under keys');
+
+    // Done scrolls into view above the keys.
+    await tester.ensureVisible(find.byKey(NameEditForm.doneKey));
+    await settle(tester);
+    final done = tester.getRect(find.byKey(NameEditForm.doneKey));
+    expect(done.bottom, lessThanOrEqualTo(844 - 336), reason: 'Done hidden');
+
+    // The multi-line keyboard has no key that closes it: a tap outside the
+    // field does.
+    bool focused() => tester
+        .widget<EditableText>(
+          find.descendant(
+            of: find.byKey(NameEditForm.firstNamesKey),
+            matching: find.byType(EditableText),
+          ),
+        )
+        .focusNode
+        .hasFocus;
+    await tester.ensureVisible(find.byKey(NameEditForm.firstNamesKey));
+    await settle(tester);
+    await tester.tap(find.byKey(NameEditForm.firstNamesKey));
+    await tester.pump();
+    expect(focused(), isTrue);
+    await tester.tapAt(tester.getTopLeft(close) + const Offset(-60, 10));
+    await tester.pump();
+    expect(focused(), isFalse);
+
+    await tester.tap(close);
+    await settle(tester);
+    expect(find.byKey(NameEditForm.firstNamesKey), findsNothing);
+
+    // And the screen's own back arrow leads home.
+    tester.view.resetViewInsets();
+    await settle(tester);
+    await tester.tap(find.byIcon(Icons.arrow_back));
+    await settle(tester);
+    expect(
+      c.read(routerProvider).routerDelegate.currentConfiguration.uri.path,
+      Routes.editorPack,
+    );
   });
 
   testWidgets("a league club cannot be renamed onto an added club's name", (
