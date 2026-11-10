@@ -4217,5 +4217,7 @@
   "mgrChangesCount": "{count, plural, =1{1 schimbare} few{{count} schimbări} other{{count} de schimbări}}",
   "mgrChangesLeftFor": "Noul post: {nation}",
   "mgrChangesAppointed": "Numit",
-  "mgrChangesVacant": "Post liber"
+  "mgrChangesVacant": "Post liber",
+  "editorNameNotAllowed": "Acest nume nu este permis.",
+  "editorIssueNameNotAllowed": "„{name}” nu este permis"
 }

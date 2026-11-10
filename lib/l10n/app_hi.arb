@@ -4217,5 +4217,7 @@
   "mgrChangesCount": "{count, plural, =1{1 बदलाव} other{{count} बदलाव}}",
   "mgrChangesLeftFor": "नई टीम: {nation}",
   "mgrChangesAppointed": "नियुक्त",
-  "mgrChangesVacant": "खाली"
+  "mgrChangesVacant": "खाली",
+  "editorNameNotAllowed": "यह नाम अनुमत नहीं है।",
+  "editorIssueNameNotAllowed": "\"{name}\" अनुमत नहीं है"
 }

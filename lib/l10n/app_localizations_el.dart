@@ -16975,4 +16975,12 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get mgrChangesVacant => 'Κενή θέση';
+
+  @override
+  String get editorNameNotAllowed => 'Αυτό το όνομα δεν επιτρέπεται.';
+
+  @override
+  String editorIssueNameNotAllowed(String name) {
+    return 'Το «$name» δεν επιτρέπεται';
+  }
 }

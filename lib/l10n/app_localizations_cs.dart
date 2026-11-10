@@ -17157,4 +17157,12 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get mgrChangesVacant => 'Neobsazeno';
+
+  @override
+  String get editorNameNotAllowed => 'Tento název není povolený.';
+
+  @override
+  String editorIssueNameNotAllowed(String name) {
+    return '„$name“ není povolený název';
+  }
 }

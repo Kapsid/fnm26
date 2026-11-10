@@ -16732,4 +16732,12 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get mgrChangesVacant => 'Còn trống';
+
+  @override
+  String get editorNameNotAllowed => 'Tên này không được phép.';
+
+  @override
+  String editorIssueNameNotAllowed(String name) {
+    return '\"$name\" không được phép';
+  }
 }

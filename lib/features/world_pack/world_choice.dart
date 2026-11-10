@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/domain/services/profanity/profanity_filter.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/editor/pack_issue_text.dart';
@@ -79,7 +80,9 @@ final FutureProvider<List<WorldChoice>> worldChoicesProvider =
           WorldChoice(
             id: s.id,
             uuid: pack?.uuid ?? '',
-            name: s.name,
+            // Shared databases travel: a name the game does not show is
+            // masked here as it is in play.
+            name: ProfanityFilter.mask(s.name),
             status: a.status,
             reason: reason,
           ),

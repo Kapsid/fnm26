@@ -16966,4 +16966,12 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get mgrChangesVacant => 'Onbezet';
+
+  @override
+  String get editorNameNotAllowed => 'Deze naam is niet toegestaan.';
+
+  @override
+  String editorIssueNameNotAllowed(String name) {
+    return '\"$name\" is niet toegestaan';
+  }
 }

@@ -4217,5 +4217,7 @@
   "mgrChangesCount": "{count, plural, =1{1 pagbabago} other{{count} pagbabago}}",
   "mgrChangesLeftFor": "Lumipat sa {nation}",
   "mgrChangesAppointed": "Itinalaga",
-  "mgrChangesVacant": "Bakante"
+  "mgrChangesVacant": "Bakante",
+  "editorNameNotAllowed": "Hindi pinapayagan ang pangalang ito.",
+  "editorIssueNameNotAllowed": "Hindi pinapayagan ang \"{name}\""
 }

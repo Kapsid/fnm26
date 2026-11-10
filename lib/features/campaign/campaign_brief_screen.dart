@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
@@ -10,12 +9,14 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/services/campaign/campaigns.dart';
+import 'package:fnm/domain/services/profanity/profanity_filter.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/campaign/campaign_record_store.dart';
 import 'package:fnm/features/campaign/campaign_stamp.dart';
 import 'package:fnm/features/campaign/campaign_ui.dart';
 import 'package:fnm/features/campaign/campaigns_screen.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/features/paywall/paywall_sheet.dart';
 import 'package:fnm/features/paywall/save_lock.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -80,6 +81,8 @@ class _CampaignBriefScreenState extends ConsumerState<CampaignBriefScreen> {
   /// Starts a fresh run and opens its hub.
   Future<void> _start(CampaignDef def) async {
     if (_starting) return;
+    // A name the game does not show: the field says so, and nothing starts.
+    if (ProfanityFilter.isOffensive(_controller.text)) return;
     // A Pro campaign for a manager without Pro: the paywall, never a run.
     if (campaignNeedsPaywall(ref, def)) {
       await showPaywall(context);
@@ -239,13 +242,17 @@ class _CampaignBriefScreenState extends ConsumerState<CampaignBriefScreen> {
         TextField(
           key: CampaignBriefScreen.nameKey,
           controller: _controller,
-          onChanged: (_) => _edited = true,
+          onChanged: (_) => setState(() => _edited = true),
           textInputAction: TextInputAction.done,
           onSubmitted: run == null ? (_) => _start(def) : null,
           style: AppTypography.bodyMedium.copyWith(color: AppColors.onSurface),
           decoration: InputDecoration(
             labelText: l.careerManagerName,
             hintText: l.careerManagerNameHint,
+            errorText: ProfanityFilter.isOffensive(_controller.text)
+                ? l.editorNameNotAllowed
+                : null,
+            errorMaxLines: 2,
           ),
         ),
         const SizedBox(height: AppSpacing.md),
@@ -255,7 +262,10 @@ class _CampaignBriefScreenState extends ConsumerState<CampaignBriefScreen> {
             label: locked ? l.campaignPartOfUnlimited : l.campaignStart,
             icon: locked ? Icons.lock : Icons.play_arrow_rounded,
             isLoading: _starting,
-            onPressed: _starting ? null : () => _start(def),
+            onPressed:
+                _starting || ProfanityFilter.isOffensive(_controller.text)
+                ? null
+                : () => _start(def),
           )
         else ...[
           if (runLocked) ...[

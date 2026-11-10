@@ -4217,5 +4217,7 @@
   "mgrChangesCount": "{count, plural, =1{1 thay đổi} other{{count} thay đổi}}",
   "mgrChangesLeftFor": "Chuyển sang dẫn dắt {nation}",
   "mgrChangesAppointed": "Được bổ nhiệm",
-  "mgrChangesVacant": "Còn trống"
+  "mgrChangesVacant": "Còn trống",
+  "editorNameNotAllowed": "Tên này không được phép.",
+  "editorIssueNameNotAllowed": "\"{name}\" không được phép"
 }

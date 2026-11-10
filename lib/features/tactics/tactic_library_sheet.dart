@@ -7,6 +7,7 @@ import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/library_tactic.dart';
 import 'package:fnm/domain/entities/tactic_preset.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/profanity/profanity_filter.dart';
 import 'package:fnm/features/tactics/tactic_library_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
@@ -323,7 +324,14 @@ class _TacticNameDialogState extends State<TacticNameDialog> {
     super.dispose();
   }
 
-  void _submit() => Navigator.of(context).pop(_controller.text);
+  /// Whether the name as typed holds a word the game does not show: it is
+  /// never saved.
+  bool get _bad => ProfanityFilter.isOffensive(_controller.text);
+
+  void _submit() {
+    if (_bad) return;
+    Navigator.of(context).pop(_controller.text);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -337,15 +345,23 @@ class _TacticNameDialogState extends State<TacticNameDialog> {
         maxLength: 40,
         textCapitalization: TextCapitalization.words,
         textInputAction: TextInputAction.done,
+        onChanged: (_) => setState(() {}),
         onSubmitted: (_) => _submit(),
-        decoration: InputDecoration(hintText: l.tacticsNameHint),
+        decoration: InputDecoration(
+          hintText: l.tacticsNameHint,
+          errorText: _bad ? l.editorNameNotAllowed : null,
+          errorMaxLines: 2,
+        ),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: Text(l.tacticsCancel),
         ),
-        FilledButton(onPressed: _submit, child: Text(l.tacticsSave)),
+        FilledButton(
+          onPressed: _bad ? null : _submit,
+          child: Text(l.tacticsSave),
+        ),
       ],
     );
   }

@@ -17219,4 +17219,12 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get mgrChangesVacant => 'Upražnjeno';
+
+  @override
+  String get editorNameNotAllowed => 'Ovo ime nije dopušteno.';
+
+  @override
+  String editorIssueNameNotAllowed(String name) {
+    return '„$name“ nije dopušteno';
+  }
 }

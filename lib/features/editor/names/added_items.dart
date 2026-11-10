@@ -9,6 +9,7 @@ import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/federation/sponsor_industries.dart';
 import 'package:fnm/domain/services/federation/sponsors.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
+import 'package:fnm/domain/services/profanity/profanity_filter.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
@@ -200,7 +201,8 @@ abstract final class AddedEdits {
         return AddedNameProblem.tooLong;
       case FieldReason.badCharacters ||
           FieldReason.duplicate ||
-          FieldReason.outOfRange:
+          FieldReason.outOfRange ||
+          FieldReason.notAllowed:
         return AddedNameProblem.badCharacters;
       case null:
         break;
@@ -773,6 +775,7 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
       name = switch (PackRules.checkName(text, max: max)) {
         FieldReason.tooLong => l.editorNameTooLong(max),
         FieldReason.badCharacters => l.editorNameBadCharacters,
+        _ when ProfanityFilter.isOffensive(text) => l.editorNameNotAllowed,
         _ => null,
       };
     }
@@ -811,6 +814,8 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
       )) {
         FieldReason.tooLong => l.editorNameTooLong(PackRules.descriptionMax),
         FieldReason.badCharacters => l.editorNameBadCharacters,
+        _ when ProfanityFilter.isOffensive(_description.text) =>
+          l.editorNameNotAllowed,
         _ => null,
       };
     }

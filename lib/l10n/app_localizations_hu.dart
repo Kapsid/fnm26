@@ -16831,4 +16831,12 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get mgrChangesVacant => 'Betöltetlen';
+
+  @override
+  String get editorNameNotAllowed => 'Ez a név nem engedélyezett.';
+
+  @override
+  String editorIssueNameNotAllowed(String name) {
+    return '„$name” nem engedélyezett';
+  }
 }

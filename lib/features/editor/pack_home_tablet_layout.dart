@@ -24,7 +24,7 @@ class _PackHomeTabletLayout extends StatelessWidget {
     final l = AppLocalizations.of(context);
     return TabletPage(
       scaffoldKey: PackHomeScreen.tabletLayoutKey,
-      title: pack.name,
+      title: ProfanityFilter.mask(pack.name),
       onBack: state._back,
       trailing: Row(
         mainAxisSize: MainAxisSize.min,

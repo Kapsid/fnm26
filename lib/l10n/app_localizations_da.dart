@@ -16884,4 +16884,12 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get mgrChangesVacant => 'Ledig';
+
+  @override
+  String get editorNameNotAllowed => 'Dette navn er ikke tilladt.';
+
+  @override
+  String editorIssueNameNotAllowed(String name) {
+    return '»$name« er ikke tilladt';
+  }
 }

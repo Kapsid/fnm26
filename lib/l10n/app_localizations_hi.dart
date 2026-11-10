@@ -16794,4 +16794,12 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get mgrChangesVacant => 'खाली';
+
+  @override
+  String get editorNameNotAllowed => 'यह नाम अनुमत नहीं है।';
+
+  @override
+  String editorIssueNameNotAllowed(String name) {
+    return '\"$name\" अनुमत नहीं है';
+  }
 }

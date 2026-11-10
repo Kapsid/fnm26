@@ -4217,5 +4217,7 @@
   "mgrChangesCount": "{count, plural, =1{1 váltás} other{{count} váltás}}",
   "mgrChangesLeftFor": "Új állás: {nation}",
   "mgrChangesAppointed": "Kinevezték",
-  "mgrChangesVacant": "Betöltetlen"
+  "mgrChangesVacant": "Betöltetlen",
+  "editorNameNotAllowed": "Ez a név nem engedélyezett.",
+  "editorIssueNameNotAllowed": "„{name}” nem engedélyezett"
 }

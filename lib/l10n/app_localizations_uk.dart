@@ -17199,4 +17199,12 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get mgrChangesVacant => 'Вакантно';
+
+  @override
+  String get editorNameNotAllowed => 'Ця назва не дозволена.';
+
+  @override
+  String editorIssueNameNotAllowed(String name) {
+    return '«$name» не дозволено';
+  }
 }

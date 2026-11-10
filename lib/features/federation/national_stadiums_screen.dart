@@ -7,6 +7,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/federation/national_stadiums.dart';
+import 'package:fnm/domain/services/profanity/profanity_filter.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/investment_editor.dart'
     show formatEuros;
@@ -916,7 +917,14 @@ class _StadiumNameDialogState extends State<_StadiumNameDialog> {
     super.dispose();
   }
 
-  void _done() => Navigator.of(context).pop(_name.text);
+  /// Whether the name as typed holds a word the game does not show: it is
+  /// never saved.
+  bool get _bad => ProfanityFilter.isOffensive(_name.text);
+
+  void _done() {
+    if (_bad) return;
+    Navigator.of(context).pop(_name.text);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -940,11 +948,14 @@ class _StadiumNameDialogState extends State<_StadiumNameDialog> {
             maxLength: StadiumName.maxLength,
             textCapitalization: TextCapitalization.words,
             textInputAction: TextInputAction.done,
+            onChanged: (_) => setState(() {}),
             onSubmitted: (_) => _done(),
             decoration: InputDecoration(
               labelText: l.stadiumsNameLabel,
               helperText: l.stadiumsNameHint,
               helperMaxLines: 3,
+              errorText: _bad ? l.editorNameNotAllowed : null,
+              errorMaxLines: 2,
             ),
           ),
         ],
@@ -954,7 +965,10 @@ class _StadiumNameDialogState extends State<_StadiumNameDialog> {
           onPressed: () => Navigator.of(context).pop(),
           child: Text(l.stadiumsCancel),
         ),
-        TextButton(onPressed: _done, child: Text(l.stadiumsConfirm)),
+        TextButton(
+          onPressed: _bad ? null : _done,
+          child: Text(l.stadiumsConfirm),
+        ),
       ],
     );
   }

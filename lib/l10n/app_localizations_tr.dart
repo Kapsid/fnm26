@@ -16795,4 +16795,12 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get mgrChangesVacant => 'Boş';
+
+  @override
+  String get editorNameNotAllowed => 'Bu ada izin verilmiyor.';
+
+  @override
+  String editorIssueNameNotAllowed(String name) {
+    return '\"$name\" adına izin verilmiyor';
+  }
 }

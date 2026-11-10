@@ -16328,4 +16328,12 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get mgrChangesVacant => '공석';
+
+  @override
+  String get editorNameNotAllowed => '이 이름은 사용할 수 없습니다.';
+
+  @override
+  String editorIssueNameNotAllowed(String name) {
+    return '\"$name\"은(는) 사용할 수 없습니다';
+  }
 }

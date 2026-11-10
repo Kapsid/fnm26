@@ -4217,5 +4217,7 @@
   "mgrChangesCount": "{count, plural, one{{count} promjena} few{{count} promjene} other{{count} promjena}}",
   "mgrChangesLeftFor": "Nova klupa: {nation}",
   "mgrChangesAppointed": "Imenovan",
-  "mgrChangesVacant": "Upražnjeno"
+  "mgrChangesVacant": "Upražnjeno",
+  "editorNameNotAllowed": "Ovo ime nije dopušteno.",
+  "editorIssueNameNotAllowed": "„{name}“ nije dopušteno"
 }

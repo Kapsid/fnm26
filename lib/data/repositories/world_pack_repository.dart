@@ -4,6 +4,8 @@ import 'dart:math';
 
 import 'package:drift/drift.dart';
 import 'package:fnm/data/db/app_database.dart';
+import 'package:fnm/domain/services/profanity/profanity_filter.dart';
+import 'package:fnm/domain/services/world_pack/pack_profanity.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 
 /// The `draws_watched` kind (cycle 0) that records the world pack (by
@@ -102,12 +104,15 @@ class WorldPackRepository {
 
   /// The pack name each career on a custom world was started on, by career
   /// id; a default-world career is not in it. Reads the name column alone.
+  /// A name the game does not show comes masked ([ProfanityFilter.mask]).
   Future<Map<int, String>> careerWorldNames() async {
     final q = _db.selectOnly(_db.careerWorlds)
       ..addColumns([_db.careerWorlds.careerId, _db.careerWorlds.packName]);
     return {
       for (final r in await q.get())
-        r.read(_db.careerWorlds.careerId)!: r.read(_db.careerWorlds.packName)!,
+        r.read(_db.careerWorlds.careerId)!: ProfanityFilter.mask(
+          r.read(_db.careerWorlds.packName)!,
+        ),
     };
   }
 
@@ -271,10 +276,12 @@ class WorldPackRepository {
     return (pack: pack, trophies: {for (final r in images) r.key: r.png});
   }
 
-  /// Career [careerId]'s copy of its world, decoded; null for a career on
-  /// the default world. A career's copy is written once, when it starts, so
-  /// a copy decoded before is handed back while the stored one still has
-  /// the same name and length (read alone: no JSON crosses for that).
+  /// Career [careerId]'s copy of its world, decoded, as the game plays it:
+  /// every name the game does not show masked ([maskedForPlay]; the stored
+  /// copy keeps them as they were). Null for a career on the default world.
+  /// A career's copy is written once, when it starts, so a copy decoded
+  /// before is handed back while the stored one still has the same name and
+  /// length (read alone: no JSON crosses for that).
   /// Opening a save on a big world read and decoded it three times over
   /// before the hub could show (the home card, the world the screens are
   /// named in, the player reads), each time on the UI isolate.
@@ -300,7 +307,7 @@ class WorldPackRepository {
             .map((r) => r.read(t.json)!)
             .getSingleOrNull();
     if (json == null) return null;
-    final pack = await _decodeOffUi(json);
+    final pack = await _decodeForPlayOffUi(json);
     _cache.careers[careerId] = (key: key, pack: pack);
     return pack;
   }
@@ -390,6 +397,17 @@ class WorldPackRepository {
       json.length < offUiDecodeChars
       ? Future.value(_decode(json))
       : Isolate.run(() => _decode(json), debugName: 'world pack decode');
+
+  /// [_decodeOffUi], masked as the game plays it ([maskedForPlay]), the
+  /// masking on the same isolate as the decoding: checking every name of a
+  /// big world is no quicker than reading it.
+  static Future<WorldPack> _decodeForPlayOffUi(String json) =>
+      json.length < offUiDecodeChars
+      ? Future.value(maskedForPlay(_decode(json)))
+      : Isolate.run(
+          () => maskedForPlay(_decode(json)),
+          debugName: 'world pack decode',
+        );
 
   static WorldPack _decode(String json) {
     final raw = jsonDecode(json);

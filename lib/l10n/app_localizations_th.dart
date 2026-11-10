@@ -16584,4 +16584,12 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get mgrChangesVacant => 'ว่าง';
+
+  @override
+  String get editorNameNotAllowed => 'ไม่อนุญาตให้ใช้ชื่อนี้';
+
+  @override
+  String editorIssueNameNotAllowed(String name) {
+    return 'ไม่อนุญาตให้ใช้ \"$name\"';
+  }
 }

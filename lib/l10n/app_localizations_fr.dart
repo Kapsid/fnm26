@@ -17043,4 +17043,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get mgrChangesVacant => 'Poste vacant';
+
+  @override
+  String get editorNameNotAllowed => 'Ce nom n’est pas autorisé.';
+
+  @override
+  String editorIssueNameNotAllowed(String name) {
+    return '« $name » n’est pas autorisé';
+  }
 }

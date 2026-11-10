@@ -4,6 +4,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/profanity/profanity_filter.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
@@ -176,7 +177,10 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
         FieldReason.tooLong => l.editorNameTooLong(m),
         FieldReason.badCharacters => l.editorNameBadCharacters,
         FieldReason.duplicate => l.editorNamesTaken,
-        FieldReason.empty || FieldReason.outOfRange || null => null,
+        FieldReason.notAllowed => l.editorNameNotAllowed,
+        FieldReason.empty ||
+        FieldReason.outOfRange ||
+        null => ProfanityFilter.isOffensive(v) ? l.editorNameNotAllowed : null,
       };
     }
 
@@ -247,6 +251,13 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
     final l = AppLocalizations.of(context);
     setState(() {});
     if (_section == NameSection.nameLists) {
+      // A list holding a name the game does not show is not stored.
+      if ([
+        ...NameEdits.parseNames(_first.text),
+        ...NameEdits.parseNames(_sur.text),
+      ].any(ProfanityFilter.isOffensive)) {
+        return;
+      }
       _write(
         (p) => NameEdits.withLists(
           p,
@@ -470,6 +481,7 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
     return switch (PackRules.checkName(_name.text)) {
       FieldReason.tooLong => l.editorNameTooLong(PackRules.nameMax),
       FieldReason.badCharacters => l.editorNameBadCharacters,
+      _ when ProfanityFilter.isOffensive(_name.text) => l.editorNameNotAllowed,
       _ => null,
     };
   }
@@ -546,7 +558,7 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
       final names = NameEdits.parseNames(c.text);
       final short = names.length < min;
       final bad = names.firstWhere(
-        (n) => PackRules.checkName(n) != null,
+        (n) => PackRules.checkName(n) != null || ProfanityFilter.isOffensive(n),
         orElse: () => '',
       );
       return TextField(
@@ -568,6 +580,9 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
               ? null
               : switch (PackRules.checkName(bad)) {
                   FieldReason.tooLong => l.editorIssueNameTooLong(bad),
+                  null => l.editorIssueNameNotAllowed(
+                    ProfanityFilter.mask(bad),
+                  ),
                   _ => l.editorIssueNameBadCharacters(bad),
                 },
           errorMaxLines: 2,

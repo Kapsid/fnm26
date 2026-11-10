@@ -25543,6 +25543,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Vacant'**
   String get mgrChangesVacant;
+
+  /// Error under a name field (the database editor, the manager name, a tactic or stadium name) when the name holds a slur, a sexual word or strong swearing. It is not saved.
+  ///
+  /// In en, this message translates to:
+  /// **'This name isn\'t allowed.'**
+  String get editorNameNotAllowed;
+
+  /// A database entry (often from an imported file) whose name holds a word the game does not allow. The name is shown masked: its first letter and asterisks. The game shows it masked until it is renamed.
+  ///
+  /// In en, this message translates to:
+  /// **'\"{name}\" isn\'t allowed'**
+  String editorIssueNameNotAllowed(String name);
 }
 
 class _AppLocalizationsDelegate

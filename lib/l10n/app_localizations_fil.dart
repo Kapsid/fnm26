@@ -16896,4 +16896,12 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get mgrChangesVacant => 'Bakante';
+
+  @override
+  String get editorNameNotAllowed => 'Hindi pinapayagan ang pangalang ito.';
+
+  @override
+  String editorIssueNameNotAllowed(String name) {
+    return 'Hindi pinapayagan ang \"$name\"';
+  }
 }

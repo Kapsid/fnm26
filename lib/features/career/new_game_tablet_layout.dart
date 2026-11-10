@@ -66,6 +66,8 @@ class _NewGameTabletLayout extends StatelessWidget {
                                 controller: state._controller,
                                 autofocus: true,
                                 textInputAction: TextInputAction.done,
+                                onChanged: (_) => state._typed(),
+                                errorText: state._nameError(l),
                                 onSubmitted: (_) => state._start(),
                               ),
                               const SizedBox(height: AppSpacing.md),
@@ -82,7 +84,9 @@ class _NewGameTabletLayout extends StatelessWidget {
                                 label: l.careerStartCareer,
                                 icon: Icons.play_arrow_rounded,
                                 isLoading: state._creating,
-                                onPressed: state._creating
+                                onPressed:
+                                    state._creating ||
+                                        state._nameError(l) != null
                                     ? null
                                     : state._start,
                               ),

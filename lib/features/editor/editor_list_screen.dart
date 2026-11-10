@@ -11,6 +11,7 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/app_date.dart';
 import 'package:fnm/core/util/share_origin.dart';
+import 'package:fnm/domain/services/profanity/profanity_filter.dart';
 import 'package:fnm/domain/services/world_pack/pack_codec.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
@@ -209,7 +210,9 @@ class _EditorListScreenState extends ConsumerState<EditorListScreen> {
           builder: (dialogContext) => AlertDialog(
             backgroundColor: AppColors.surfaceContainer,
             title: Text(l.editorDeleteTitle),
-            content: Text(l.editorDeleteBody(pack.name)),
+            content: Text(
+              l.editorDeleteBody(ProfanityFilter.mask(pack.name)),
+            ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(dialogContext).pop(false),
@@ -492,7 +495,8 @@ class _PackCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  pack.name,
+                  // A shared database's name, as the game shows it.
+                  ProfanityFilter.mask(pack.name),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTypography.titleMedium,
@@ -616,6 +620,8 @@ class _NameDialogState extends State<_NameDialog> {
 
   String? _error(AppLocalizations l) =>
       switch (PackRules.checkName(_controller.text)) {
+        null when ProfanityFilter.isOffensive(_controller.text) =>
+          l.editorNameNotAllowed,
         null => null,
         FieldReason.empty => l.editorNameEmpty,
         FieldReason.tooLong => l.editorNameTooLong(PackRules.nameMax),

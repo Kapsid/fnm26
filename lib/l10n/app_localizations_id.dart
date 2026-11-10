@@ -16796,4 +16796,12 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get mgrChangesVacant => 'Kosong';
+
+  @override
+  String get editorNameNotAllowed => 'Nama ini tidak diizinkan.';
+
+  @override
+  String editorIssueNameNotAllowed(String name) {
+    return '\"$name\" tidak diizinkan';
+  }
 }
