@@ -2141,7 +2141,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               events: timelineEvents,
               penalties: penalties,
               // The tablet's 2D TV has the ground in its header band.
-              showGround: !(tablet && _onPitch),
             );
             List<MatchEvent> subsOf(int nationId) => shown
                 .where(
