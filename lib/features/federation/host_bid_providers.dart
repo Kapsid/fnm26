@@ -383,9 +383,37 @@ Future<bool> belowHostBar(
     editionCycle: editionCycle,
     estate: estate,
   );
+  final comps = ref.read(competitionRepositoryProvider);
   return !HostStadiumRules.meets(
     seats,
-    HostStadiumRules.of(comp, nation.confederation),
+    HostStadiumRules.of(
+      comp,
+      nation.confederation,
+      lighter: await lighterBarsFor(comps, careerId, editionCycle),
+    ),
+  );
+}
+
+/// Whether [careerId]'s editions of [editionCycle], when under the stadium
+/// bars, are held to the lighter ones (`HostBidding.rules3Kind`): stamped
+/// already, or to be stamped by the rollover that opens that cycle. An
+/// edition an earlier build stamped v2 alone keeps the first bars.
+Future<bool> lighterBarsFor(
+  CompetitionRepository comp,
+  int careerId,
+  int editionCycle,
+) async {
+  if (await comp.hasWatchedDraw(
+    careerId,
+    editionCycle,
+    HostBidding.rules3Kind(editionCycle),
+  )) {
+    return true;
+  }
+  return !await comp.hasWatchedDraw(
+    careerId,
+    editionCycle,
+    HostBidding.rules2Kind(editionCycle),
   );
 }
 

@@ -163,6 +163,29 @@ abstract final class HostBidding {
   /// `mgr:` (read as a manager marker), and not a bid key (`wc:` / `cont:`).
   static String rules2Key(int cycle) => 'r2:$cycle';
 
+  /// Prefix of the lighter-bars markers (host rules v2.1). `hostRules3:`
+  /// starts with neither [rulesPrefix] (`hostRules:`) nor [rules2Prefix].
+  static const String rules3Prefix = 'hostRules3:';
+
+  /// Stamped (row cycle = [cycle]) beside [rules2Kind] when [cycle]'s hosts
+  /// are decided under the LIGHTER stadium bars
+  /// (`HostStadiumRules.worldChampionshipLighter` and `continentalLighter`):
+  /// the first bars made a joint bid of nearly every edition, since few
+  /// nations hold ten big grounds alone. An edition stamped with [rules2Kind]
+  /// alone keeps the first bars, so a host an earlier build decided never
+  /// moves.
+  static String rules3Kind(int cycle) => '$rules3Prefix$cycle';
+
+  /// The cycle a lighter-bars marker names, or null for any other kind.
+  static int? decodeRules3(String kind) {
+    if (!kind.startsWith(rules3Prefix)) return null;
+    return int.tryParse(kind.substring(rules3Prefix.length));
+  }
+
+  /// `Nation.hostBids` key carrying a [rules3Kind] marker, beside
+  /// [rules2Key] on the same nation.
+  static String rules3Key(int cycle) => 'r3:$cycle';
+
   /// Whether [kinds] (a career's marker kinds) hold a bid or a pledge lodged
   /// by an older build for an edition of [editionCycle]: such an edition is
   /// not stamped with [rules2Kind], so the bid is decided under the rules it

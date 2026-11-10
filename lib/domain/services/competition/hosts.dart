@@ -76,10 +76,15 @@ class _Draw {
 /// grounds reach the bar, and an AI nation of the top 30 may count planned
 /// grounds to reach it alone. See [WorldCupHosts._settle].
 class _Bars {
-  _Bars(this.comp, this.cycle);
+  _Bars(this.comp, this.cycle, List<Nation> nations)
+    : lighter = WorldCupHosts.isV3(cycle, nations);
 
   final HostBidComp comp;
   final int cycle;
+
+  /// The race is held to the lighter bars (an edition stamped with
+  /// `HostBidding.rules3Kind`, see `HostStadiumRules.of`).
+  final bool lighter;
 
   /// Nations already standing in a bid of this race.
   final Set<int> used = {};
@@ -90,7 +95,8 @@ class _Bars {
   /// The qualifying seats of the race's eligible pool, for the joint bids.
   final Map<int, List<int>> seats = {};
 
-  HostBar barOf(Nation n) => HostStadiumRules.of(comp, n.confederation);
+  HostBar barOf(Nation n) =>
+      HostStadiumRules.of(comp, n.confederation, lighter: lighter);
 }
 
 /// Every host decision of a career from cycle 0 on: each confederation's
@@ -152,6 +158,15 @@ abstract final class WorldCupHosts {
   /// `HostBidding.rules2Key(cycle)`.
   static bool isV2(int cycle, List<Nation> nations) {
     final key = HostBidding.rules2Key(cycle);
+    return nations.any((n) => n.hostBids.containsKey(key));
+  }
+
+  /// Whether [cycle]'s editions, when under the stadium bars ([isV2]), are
+  /// held to the LIGHTER ones (`HostStadiumRules.of`, `lighter`): some
+  /// nation carries `HostBidding.rules3Key(cycle)`. An edition stamped v2
+  /// alone keeps the first bars, so its hosts never move.
+  static bool isV3(int cycle, List<Nation> nations) {
+    final key = HostBidding.rules3Key(cycle);
     return nations.any((n) => n.hostBids.containsKey(key));
   }
 
@@ -306,7 +321,7 @@ abstract final class WorldCupHosts {
         for (final withBars in v2 ? const [true, false] : const [false]) {
           for (final t in tiers) {
             exclude = t;
-            bars = withBars ? _Bars(HostBidComp.continental, c) : null;
+            bars = withBars ? _Bars(HostBidComp.continental, c, nations) : null;
             bids = _continentalBids(
               confederation: conf,
               cycle: c,
@@ -332,7 +347,16 @@ abstract final class WorldCupHosts {
               );
         final settled = bars == null
             ? null
-            : _settle(hosts, bars, HostStadiumRules.continental(conf), seed);
+            : _settle(
+                hosts,
+                bars,
+                HostStadiumRules.of(
+                  HostBidComp.continental,
+                  conf,
+                  lighter: bars.lighter,
+                ),
+                seed,
+              );
         contDraws[conf] = _Draw(
           bids: _withLodged(bids, lodgedC, eligible: eligible),
           hosts: hosts,
@@ -374,7 +398,9 @@ abstract final class WorldCupHosts {
         for (final (b, ex) in wcTiers) {
           usedBarred = b;
           usedExclude = ex;
-          wcBars = withBars ? _Bars(HostBidComp.worldChampionship, c) : null;
+          wcBars = withBars
+              ? _Bars(HostBidComp.worldChampionship, c, nations)
+              : null;
           wcBids = _worldCupBidsFor(
             year: year,
             nations: nations,
@@ -406,7 +432,14 @@ abstract final class WorldCupHosts {
       }
       final wcSettled = wcBars == null
           ? null
-          : _settle(wcHosts, wcBars, HostStadiumRules.worldChampionship, seed);
+          : _settle(
+              wcHosts,
+              wcBars,
+              wcBars.lighter
+                  ? HostStadiumRules.worldChampionshipLighter
+                  : HostStadiumRules.worldChampionship,
+              seed,
+            );
       chain.wc.add(
         _Draw(
           bids: _withLodged(wcBids, lodgedW, eligible: wcEligible),
@@ -641,7 +674,7 @@ abstract final class WorldCupHosts {
         if (v2)
           for (var k = 1; k <= 2 && c - k >= 0; k++) ...chain.wc[c - k].broken,
       },
-      bars: v2 ? _Bars(HostBidComp.worldChampionship, c) : null,
+      bars: v2 ? _Bars(HostBidComp.worldChampionship, c, world) : null,
     );
     return (
       eligible: true,
@@ -714,7 +747,7 @@ abstract final class WorldCupHosts {
           for (var k = 1; k <= 2 && cycle - k >= 0; k++)
             ...?chain.cont[cycle - k][confederation]?.broken,
       },
-      bars: v2 ? _Bars(HostBidComp.continental, cycle) : null,
+      bars: v2 ? _Bars(HostBidComp.continental, cycle, world) : null,
     );
     return (
       eligible: true,
@@ -856,6 +889,12 @@ abstract final class WorldCupHosts {
         ids.every(brings) &&
         HostStadiumRules.meets([for (final id in ids) ..._seatsOf(id)], bar)) {
       out = _finalFirst(ids);
+    }
+    // Under the lighter bars a nation that set out alone and can reach the
+    // bar by building (top 30 only) bids alone rather than looking for
+    // partners: it chose to stand alone, and it can.
+    if (out == null && rolled.isEmpty && bars.lighter) {
+      if (_settleSolo(primary, bars) case final solo?) return solo;
     }
     out ??= HostStadiumRules.jointBid(
       lead: primary,

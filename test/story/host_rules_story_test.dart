@@ -61,7 +61,8 @@ void main() {
     return [
       (
         label: 'wc',
-        bar: HostStadiumRules.worldChampionship,
+        // A career created now: every edition on the lighter bars.
+        bar: HostStadiumRules.worldChampionshipLighter,
         hostIds: wc.hostIds,
         hostCities: wc.hostCities,
         hostEstates: wc.hostEstates,
@@ -83,7 +84,7 @@ void main() {
               case final data?)
             (
               label: cup.name,
-              bar: HostStadiumRules.continental(conf),
+              bar: HostStadiumRules.continentalLighter(conf),
               hostIds: data.hostIds,
               hostCities: data.hostCities,
               hostEstates: data.hostEstates,
@@ -105,6 +106,7 @@ void main() {
     final cycle = career.cyclePointer;
     final nations = await c.read(nationRepositoryProvider).forCareer(careerId);
     expect(WorldCupHosts.isV2(cycle, nations), isTrue, reason: why);
+    expect(WorldCupHosts.isV3(cycle, nations), isTrue, reason: why);
 
     var editions = 0;
     for (final e in await shown(c, careerId)) {
@@ -173,7 +175,11 @@ void main() {
     var short = 0;
     for (final s in statuses) {
       final w = '$why ${s.comp.name} ${s.editionCycle} ${s.nation.name}';
-      final bar = HostStadiumRules.of(s.comp, s.nation.confederation);
+      final bar = HostStadiumRules.of(
+        s.comp,
+        s.nation.confederation,
+        lighter: true,
+      );
       final meets = HostStadiumRules.meets(
         HostStadiumRules.qualifyingSeats(
           nationId: s.nation.id,
@@ -261,7 +267,7 @@ void main() {
             for (final h in wcHosts)
               ...HostStadiumRules.qualifyingSeats(nationId: h, editionCycle: 2),
             for (final p in wcPlan!.promised.values) ...p,
-          ], HostStadiumRules.worldChampionship),
+          ], HostStadiumRules.worldChampionshipLighter),
           isTrue,
           reason: 'seed $seed cycle 2 wc $wcHosts',
         );
