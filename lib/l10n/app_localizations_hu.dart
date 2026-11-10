@@ -16389,7 +16389,7 @@ class AppLocalizationsHu extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => 'Mérleg ellened';
+  String get mgrProfileRecordVsYou => 'Az ő mérlege ellened';
 
   @override
   String get mgrProfileNoMeetings => 'Még nem találkoztatok';

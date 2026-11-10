@@ -16450,7 +16450,7 @@ class AppLocalizationsFil extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => 'Rekord laban sa iyo';
+  String get mgrProfileRecordVsYou => 'Ang kanyang rekord laban sa iyo';
 
   @override
   String get mgrProfileNoMeetings => 'Hindi pa kayo nagkakaharap';

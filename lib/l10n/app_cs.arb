@@ -4091,7 +4091,7 @@
   "mgrProfileSpellNow": "{nation}, od {from}",
   "mgrProfileSpellRange": "{nation}, {from} až {to}",
   "mgrProfileSpellEnded": "{range}, {reason}",
-  "mgrProfileRecordVsYou": "Bilance proti vám",
+  "mgrProfileRecordVsYou": "Jeho bilance proti vám",
   "mgrProfileNoMeetings": "Zatím jste se nepotkali",
   "mgrProfileReputation": "Reputace",
   "mgrProfileAge": "Věk",

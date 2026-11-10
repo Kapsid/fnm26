@@ -4099,7 +4099,7 @@
   "mgrProfileSpellNow": "{nation}, seit {from}",
   "mgrProfileSpellRange": "{nation}, {from} bis {to}",
   "mgrProfileSpellEnded": "{range}, {reason}",
-  "mgrProfileRecordVsYou": "Bilanz gegen dich",
+  "mgrProfileRecordVsYou": "Seine Bilanz gegen dich",
   "mgrProfileNoMeetings": "Ihr habt euch noch nicht getroffen",
   "mgrProfileReputation": "Ansehen",
   "mgrProfileAge": "Alter",

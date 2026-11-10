@@ -16399,7 +16399,7 @@ class AppLocalizationsMs extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => 'Rekod menentang anda';
+  String get mgrProfileRecordVsYou => 'Rekodnya menentang anda';
 
   @override
   String get mgrProfileNoMeetings => 'Belum pernah bertemu';

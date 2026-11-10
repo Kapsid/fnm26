@@ -16756,7 +16756,7 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => 'Баланс проти вас';
+  String get mgrProfileRecordVsYou => 'Його баланс проти вас';
 
   @override
   String get mgrProfileNoMeetings => 'Ви ще не зустрічалися';

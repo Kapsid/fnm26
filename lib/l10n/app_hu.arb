@@ -4099,7 +4099,7 @@
   "mgrProfileSpellNow": "{nation}, {from} óta",
   "mgrProfileSpellRange": "{nation}, {from} és {to} között",
   "mgrProfileSpellEnded": "{range}, {reason}",
-  "mgrProfileRecordVsYou": "Mérleg ellened",
+  "mgrProfileRecordVsYou": "Az ő mérlege ellened",
   "mgrProfileNoMeetings": "Még nem találkoztatok",
   "mgrProfileReputation": "Hírnév",
   "mgrProfileAge": "Kor",

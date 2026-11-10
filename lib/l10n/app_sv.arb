@@ -4099,7 +4099,7 @@
   "mgrProfileSpellNow": "{nation}, sedan {from}",
   "mgrProfileSpellRange": "{nation}, {from} till {to}",
   "mgrProfileSpellEnded": "{range}, {reason}",
-  "mgrProfileRecordVsYou": "Facit mot dig",
+  "mgrProfileRecordVsYou": "Hans facit mot dig",
   "mgrProfileNoMeetings": "Ni har inte mötts än",
   "mgrProfileReputation": "Rykte",
   "mgrProfileAge": "Ålder",

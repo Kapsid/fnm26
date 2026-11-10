@@ -16290,7 +16290,8 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => 'Thành tích đối đầu với bạn';
+  String get mgrProfileRecordVsYou =>
+      'Thành tích của anh ấy khi đối đầu với bạn';
 
   @override
   String get mgrProfileNoMeetings => 'Hai bên chưa gặp nhau';

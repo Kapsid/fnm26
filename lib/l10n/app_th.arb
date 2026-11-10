@@ -4099,7 +4099,7 @@
   "mgrProfileSpellNow": "{nation} ตั้งแต่ {from}",
   "mgrProfileSpellRange": "{nation} {from} ถึง {to}",
   "mgrProfileSpellEnded": "{range} ({reason})",
-  "mgrProfileRecordVsYou": "สถิติเจอคุณ",
+  "mgrProfileRecordVsYou": "สถิติของเขาที่เจอคุณ",
   "mgrProfileNoMeetings": "ยังไม่เคยเจอกัน",
   "mgrProfileReputation": "ชื่อเสียง",
   "mgrProfileAge": "อายุ",

@@ -4099,7 +4099,7 @@
   "mgrProfileSpellNow": "{nation}, sejak {from}",
   "mgrProfileSpellRange": "{nation}, {from} sampai {to}",
   "mgrProfileSpellEnded": "{range}, {reason}",
-  "mgrProfileRecordVsYou": "Rekor melawan Anda",
+  "mgrProfileRecordVsYou": "Rekornya melawan Anda",
   "mgrProfileNoMeetings": "Belum pernah bertemu",
   "mgrProfileReputation": "Reputasi",
   "mgrProfileAge": "Usia",

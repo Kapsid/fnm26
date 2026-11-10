@@ -4099,7 +4099,7 @@
   "mgrProfileSpellNow": "{nation}, з {from}",
   "mgrProfileSpellRange": "{nation}, з {from} до {to}",
   "mgrProfileSpellEnded": "{range}, {reason}",
-  "mgrProfileRecordVsYou": "Баланс проти вас",
+  "mgrProfileRecordVsYou": "Його баланс проти вас",
   "mgrProfileNoMeetings": "Ви ще не зустрічалися",
   "mgrProfileReputation": "Репутація",
   "mgrProfileAge": "Вік",

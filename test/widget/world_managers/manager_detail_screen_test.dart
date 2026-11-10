@@ -6,6 +6,7 @@ import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/world_manager.dart';
 import 'package:fnm/domain/services/world_managers/manager_news.dart';
+import 'package:fnm/domain/services/world_managers/manager_relation.dart';
 import 'package:fnm/features/messages/message_sheet.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/features/world_managers/manager_detail_screen.dart';
@@ -99,6 +100,48 @@ void main() {
       expect(find.text(l.mgrEndPoached), findsWidgets);
     });
   }
+
+  testWidgets('his record against you is from his side: your wins are his '
+      'losses', (tester) async {
+    // The relation is the player's: 3 wins, 1 draw, 2 losses for the player.
+    final save = await seedSave(
+      tester,
+      overrides: [
+        managerRelationProvider.overrideWith(
+          (ref, key) async => (
+            warmth: -20,
+            label: TieLabel.rival,
+            meetings: 6,
+            won: 3,
+            drawn: 1,
+            lost: 2,
+          ),
+        ),
+      ],
+    );
+    final (m, _) = await _managerWithHistory(tester, save);
+    await pumpRoute(
+      tester,
+      save,
+      _route(save, m.managerId),
+      size: const Size(360, 640),
+    );
+    expect(tester.takeException(), isNull);
+    final card = find.byKey(ManagerDetailScreen.vsYouKey);
+    expect(
+      find.descendant(
+        of: card,
+        matching: find.text(enL.mgrProfileRecordVsYou.toUpperCase()),
+      ),
+      findsOneWidget,
+    );
+    expect(enL.mgrProfileRecordVsYou, 'His record against you');
+    // His wins are the player's 2 losses, and his losses the player's 3 wins.
+    expect(
+      find.descendant(of: card, matching: find.text(enL.mgrRecordWdl(2, 1, 3))),
+      findsOneWidget,
+    );
+  });
 
   testWidgets('phone: an unknown manager says so', (tester) async {
     final save = await seedSave(tester);

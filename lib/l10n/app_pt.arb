@@ -4099,7 +4099,7 @@
   "mgrProfileSpellNow": "{nation}, desde {from}",
   "mgrProfileSpellRange": "{nation}, de {from} a {to}",
   "mgrProfileSpellEnded": "{range}, {reason}",
-  "mgrProfileRecordVsYou": "Balanço contra si",
+  "mgrProfileRecordVsYou": "O balanço dele contra si",
   "mgrProfileNoMeetings": "Ainda não se encontraram",
   "mgrProfileReputation": "Reputação",
   "mgrProfileAge": "Idade",

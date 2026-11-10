@@ -16516,7 +16516,7 @@ class AppLocalizationsFi extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => 'Tulokset sinua vastaan';
+  String get mgrProfileRecordVsYou => 'Hänen tuloksensa sinua vastaan';
 
   @override
   String get mgrProfileNoMeetings => 'Ette ole vielä kohdanneet';

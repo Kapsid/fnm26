@@ -54,6 +54,7 @@ class TournamentScorers extends StatefulWidget {
     this.allTime = const [],
     this.emptyMessage = 'No goals scored yet.',
     this.highlightNations = const {},
+    this.onPlayerTap,
     super.key,
   });
 
@@ -69,6 +70,9 @@ class TournamentScorers extends StatefulWidget {
   /// The nations the manager has led (current and past): their players are
   /// highlighted, so his own scorers stand out of the chart.
   final Set<int> highlightNations;
+
+  /// Opens a scorer's player page. Null leaves the rows plain.
+  final void Function(int playerId)? onPlayerTap;
 
   @override
   State<TournamentScorers> createState() => _TournamentScorersState();
@@ -127,6 +131,7 @@ class _TournamentScorersState extends State<TournamentScorers> {
 
   Widget _editionRow(int i, ScorerTally s) => _row(
     rank: i + 1,
+    playerId: s.playerId,
     nationId: s.nationId,
     name: widget.playerNames[s.playerId] ?? 'Unknown',
     goals: s.goals,
@@ -135,6 +140,7 @@ class _TournamentScorersState extends State<TournamentScorers> {
 
   Widget _allTimeRow(int i, AllTimeScorer s) => _row(
     rank: i + 1,
+    playerId: s.playerId,
     nationId: s.nationId,
     name: s.name,
     goals: s.goals,
@@ -143,15 +149,18 @@ class _TournamentScorersState extends State<TournamentScorers> {
 
   Widget _row({
     required int rank,
+    required int playerId,
     required int nationId,
     required String name,
     required int goals,
     required bool active,
   }) {
     final mine = widget.highlightNations.contains(nationId);
+    final tap = widget.onPlayerTap;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: AppCard(
+        onTap: tap == null ? null : () => tap(playerId),
         border: mine ? Border.all(color: AppColors.primary) : null,
         padding: const EdgeInsets.symmetric(
           vertical: AppSpacing.sm,

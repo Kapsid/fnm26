@@ -181,6 +181,9 @@ mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
         code: code,
         emptyMessage: l.tourContNoNationsCupGoals,
         highlightNations: v.myNationIds,
+        onPlayerTap: (id) => context.push(
+          '${Routes.player}?careerId=$careerId&playerId=$id',
+        ),
       ),
       // Always reachable: the roll of honour used to be visible only
       // out of season, so the cup's history vanished the moment it

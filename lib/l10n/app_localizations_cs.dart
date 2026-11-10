@@ -16718,7 +16718,7 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => 'Bilance proti vám';
+  String get mgrProfileRecordVsYou => 'Jeho bilance proti vám';
 
   @override
   String get mgrProfileNoMeetings => 'Zatím jste se nepotkali';

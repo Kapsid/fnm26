@@ -25463,9 +25463,9 @@
       }
     }
   },
-  "mgrProfileRecordVsYou": "Record against you",
+  "mgrProfileRecordVsYou": "His record against you",
   "@mgrProfileRecordVsYou": {
-    "description": "Manager profile heading: how your sides fared against his."
+    "description": "Manager profile heading: HIS record against the player (his wins, draws and losses, from his side)."
   },
   "mgrProfileNoMeetings": "You have not met",
   "@mgrProfileNoMeetings": {

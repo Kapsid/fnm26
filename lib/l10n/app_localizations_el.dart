@@ -16532,7 +16532,7 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => 'Ισολογισμός εναντίον σου';
+  String get mgrProfileRecordVsYou => 'Ο ισολογισμός του εναντίον σου';
 
   @override
   String get mgrProfileNoMeetings => 'Δεν έχετε συναντηθεί ακόμη';

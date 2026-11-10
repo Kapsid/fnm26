@@ -290,6 +290,8 @@ _Sections _sections(
         ),
       ),
       const SizedBox(height: AppSpacing.sm),
+      // [r] is read from the player's side (his wins are `won`); this page is
+      // all from HIS side, so his record against you swaps wins and losses.
       AppCard(
         key: ManagerDetailScreen.vsYouKey,
         child: Column(
@@ -303,7 +305,7 @@ _Sections _sections(
                   child: Text(
                     r.meetings == 0
                         ? l.mgrProfileNoMeetings
-                        : managerRecordText(l, r.won, r.drawn, r.lost),
+                        : managerRecordText(l, r.lost, r.drawn, r.won),
                     style: r.meetings == 0 ? muted : AppTypography.titleMedium,
                   ),
                 ),

@@ -4099,7 +4099,7 @@
   "mgrProfileSpellNow": "{nation}, sinds {from}",
   "mgrProfileSpellRange": "{nation}, {from} tot {to}",
   "mgrProfileSpellEnded": "{range}, {reason}",
-  "mgrProfileRecordVsYou": "Balans tegen jou",
+  "mgrProfileRecordVsYou": "Zijn balans tegen jou",
   "mgrProfileNoMeetings": "Jullie hebben elkaar nog niet ontmoet",
   "mgrProfileReputation": "Reputatie",
   "mgrProfileAge": "Leeftijd",

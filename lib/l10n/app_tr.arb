@@ -4099,7 +4099,7 @@
   "mgrProfileSpellNow": "{nation}, {from} tarihinden beri",
   "mgrProfileSpellRange": "{nation}, {from} ile {to} arası",
   "mgrProfileSpellEnded": "{range}, {reason}",
-  "mgrProfileRecordVsYou": "Sana karşı sicil",
+  "mgrProfileRecordVsYou": "Sizinle karşılaşmalardaki sicili",
   "mgrProfileNoMeetings": "Henüz karşılaşmadınız",
   "mgrProfileReputation": "İtibar",
   "mgrProfileAge": "Yaş",
