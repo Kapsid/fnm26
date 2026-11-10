@@ -4217,5 +4217,7 @@
   "mgrChangesCount": "{count, plural, =1{1 değişiklik} other{{count} değişiklik}}",
   "mgrChangesLeftFor": "Yeni görevi: {nation}",
   "mgrChangesAppointed": "Atandı",
-  "mgrChangesVacant": "Boş"
+  "mgrChangesVacant": "Boş",
+  "editorNameNotAllowed": "Bu ada izin verilmiyor.",
+  "editorIssueNameNotAllowed": "\"{name}\" adına izin verilmiyor"
 }

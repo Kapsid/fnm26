@@ -4217,5 +4217,7 @@
   "mgrChangesCount": "{count, plural, =1{1 cambio} other{{count} cambios}}",
   "mgrChangesLeftFor": "Nuevo destino: {nation}",
   "mgrChangesAppointed": "Nombrado",
-  "mgrChangesVacant": "Vacante"
+  "mgrChangesVacant": "Vacante",
+  "editorNameNotAllowed": "Este nombre no está permitido.",
+  "editorIssueNameNotAllowed": "\"{name}\" no está permitido"
 }

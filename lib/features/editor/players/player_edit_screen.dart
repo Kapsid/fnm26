@@ -11,6 +11,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
+import 'package:fnm/domain/services/profanity/profanity_filter.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/player_build.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
@@ -522,12 +523,16 @@ class _PlayerEditFormState extends ConsumerState<PlayerEditForm> {
 
   Widget _nameField(AppLocalizations l, PackPlayer p, bool duplicate) {
     final problem = PackRules.checkName(p.name);
-    final error = switch (problem) {
-      null => null,
-      FieldReason.empty => l.editorPlayerNameNeeded,
-      FieldReason.tooLong => l.editorIssueNameTooLong(p.name.trim()),
-      _ => l.editorPlayerNameBad,
-    };
+    // A name the game does not show is never stored: the field keeps it
+    // while the player still has his last name.
+    final error = ProfanityFilter.isOffensive(_name.text)
+        ? l.editorNameNotAllowed
+        : switch (problem) {
+            null => null,
+            FieldReason.empty => l.editorPlayerNameNeeded,
+            FieldReason.tooLong => l.editorIssueNameTooLong(p.name.trim()),
+            _ => l.editorPlayerNameBad,
+          };
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -541,6 +546,10 @@ class _PlayerEditFormState extends ConsumerState<PlayerEditForm> {
           textInputAction: TextInputAction.done,
           style: AppTypography.bodyLarge.copyWith(color: AppColors.onSurface),
           onChanged: (v) {
+            if (ProfanityFilter.isOffensive(v)) {
+              setState(() {});
+              return;
+            }
             final run = _nameRun ??= Object();
             _edit((p) => SquadEdits.copy(p, name: v), group: run);
           },

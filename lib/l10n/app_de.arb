@@ -4217,5 +4217,7 @@
   "mgrChangesCount": "{count, plural, =1{1 Wechsel} other{{count} Wechsel}}",
   "mgrChangesLeftFor": "Neuer Posten: {nation}",
   "mgrChangesAppointed": "Ernannt",
-  "mgrChangesVacant": "Unbesetzt"
+  "mgrChangesVacant": "Unbesetzt",
+  "editorNameNotAllowed": "Dieser Name ist nicht erlaubt.",
+  "editorIssueNameNotAllowed": "„{name}“ ist nicht erlaubt"
 }

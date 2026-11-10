@@ -8,6 +8,7 @@ import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
+import 'package:fnm/domain/services/world_pack/pack_profanity.dart';
 import 'package:fnm/domain/services/world_pack/pack_ranking.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
@@ -116,7 +117,11 @@ final AutoDisposeFutureProviderFamily<_PackPick?, int> _packPickProvider =
       final base = await ref.watch(nationsProvider.future);
       final WorldPack? pack;
       try {
-        pack = await ref.watch(worldPackRepositoryProvider).load(packId);
+        // As the career will show it: a name the game does not show masked.
+        final stored = await ref
+            .watch(worldPackRepositoryProvider)
+            .load(packId);
+        pack = stored == null ? null : maskedForPlay(stored);
       } on FormatException {
         return null;
       }

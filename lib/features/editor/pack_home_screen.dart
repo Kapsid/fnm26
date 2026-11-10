@@ -11,6 +11,7 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/profanity/profanity_filter.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_language.dart';
@@ -212,7 +213,7 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
           onPressed: _back,
         ),
         title: Text(
-          pack.name,
+          ProfanityFilter.mask(pack.name),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
@@ -466,7 +467,12 @@ class _PackView {
   /// speak ([PackEditor.notes]). Never blocking: not part of [ready].
   final Map<String, int> notes;
 
-  bool get ready => issues.isEmpty;
+  /// Whether the pack can start a career: a name the game does not show
+  /// ([NotAllowedName]) is listed to fix, but only masked in play.
+  bool get ready => blocking == 0;
+
+  /// How many of [raw] stand between the pack and a career ([isBlocking]).
+  int get blocking => raw.where(isBlocking).length;
 
   /// Whether the pack refers to something the game no longer has, or adds
   /// a name the game's own already has.
@@ -541,7 +547,7 @@ class _ReadyCard extends StatelessWidget {
                           ? l.editorReadyTitle
                           : attention
                           ? l.editorStatusAttention
-                          : l.editorNotReadyTitle(view.issues.length),
+                          : l.editorNotReadyTitle(view.blocking),
                       style: AppTypography.titleMedium.copyWith(color: color),
                     ),
                     const SizedBox(height: AppSpacing.xs),

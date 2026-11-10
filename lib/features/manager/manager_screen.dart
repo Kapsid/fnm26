@@ -5,6 +5,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/manager/manager_skills.dart';
+import 'package:fnm/domain/services/profanity/profanity_filter.dart';
 import 'package:fnm/features/federation/staff_card.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -152,6 +153,7 @@ class _RenameDialogState extends State<_RenameDialog> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final bad = ProfanityFilter.isOffensive(_controller.text);
     return AlertDialog(
       title: Text(l.managerRename),
       content: AppTextField(
@@ -160,15 +162,22 @@ class _RenameDialogState extends State<_RenameDialog> {
         controller: _controller,
         autofocus: true,
         textInputAction: TextInputAction.done,
-        onSubmitted: (v) => Navigator.of(context).pop(v),
+        onChanged: (_) => setState(() {}),
+        errorText: bad ? l.editorNameNotAllowed : null,
+        onSubmitted: (v) {
+          if (!bad) Navigator.of(context).pop(v);
+        },
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: Text(l.careerCancel),
         ),
+        // A name the game does not show is never saved.
         TextButton(
-          onPressed: () => Navigator.of(context).pop(_controller.text),
+          onPressed: bad
+              ? null
+              : () => Navigator.of(context).pop(_controller.text),
           child: Text(l.managerRenameSave),
         ),
       ],

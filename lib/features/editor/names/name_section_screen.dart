@@ -223,18 +223,24 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
   WorldPack? _issuesOf;
   Map<String, int> _issues = const {};
 
-  /// How many things each row has to fix, once per pack state. The squads
+  /// How many things each row has to fix, once per pack state, a name the
+  /// game does not show ([PackRules.notAllowed]) among them. The squads
   /// and pools are left out: no name section shows them, and they are most
   /// of the work. The country cities go in, so an added club named like a
   /// side the game names for a league-less country's city counts here as
   /// it does on the pack home.
   Map<String, int> _toFix(WorldPack pack, List<Nation> world) {
     if (identical(pack, _issuesOf)) return _issues;
-    final issues = PackRules.issues(
-      pack.copyWith(squads: const {}, pools: const {}),
-      baseCodes: {for (final n in world) n.id: n.code},
-      countryCities: ref.read(packEditorProvider(_id).notifier).countryCities,
-    );
+    final names = pack.copyWith(squads: const {}, pools: const {});
+    final issues = [
+      ...PackRules.issues(
+        names,
+        baseCodes: {for (final n in world) n.id: n.code},
+        countryCities: ref.read(packEditorProvider(_id).notifier).countryCities,
+      ),
+      // A name the game does not show is one to fix here too.
+      ...PackRules.notAllowed(names),
+    ];
     _issuesOf = pack;
     return _issues = issuesByKey(_section, issues, pack: pack);
   }

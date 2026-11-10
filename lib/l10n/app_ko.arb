@@ -4217,5 +4217,7 @@
   "mgrChangesCount": "{count, plural, =1{교체 1건} other{교체 {count}건}}",
   "mgrChangesLeftFor": "새 팀: {nation}",
   "mgrChangesAppointed": "선임",
-  "mgrChangesVacant": "공석"
+  "mgrChangesVacant": "공석",
+  "editorNameNotAllowed": "이 이름은 사용할 수 없습니다.",
+  "editorIssueNameNotAllowed": "\"{name}\"은(는) 사용할 수 없습니다"
 }

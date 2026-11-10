@@ -4217,5 +4217,7 @@
   "mgrChangesCount": "{count, plural, =1{1 pertukaran} other{{count} pertukaran}}",
   "mgrChangesLeftFor": "Berpindah ke {nation}",
   "mgrChangesAppointed": "Dilantik",
-  "mgrChangesVacant": "Kosong"
+  "mgrChangesVacant": "Kosong",
+  "editorNameNotAllowed": "Nama ini tidak dibenarkan.",
+  "editorIssueNameNotAllowed": "\"{name}\" tidak dibenarkan"
 }

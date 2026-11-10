@@ -4217,5 +4217,7 @@
   "mgrChangesCount": "{count, plural, other{{count} pergantian}}",
   "mgrChangesLeftFor": "Pindah ke {nation}",
   "mgrChangesAppointed": "Ditunjuk",
-  "mgrChangesVacant": "Kosong"
+  "mgrChangesVacant": "Kosong",
+  "editorNameNotAllowed": "Nama ini tidak diizinkan.",
+  "editorIssueNameNotAllowed": "\"{name}\" tidak diizinkan"
 }

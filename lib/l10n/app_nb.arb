@@ -4217,5 +4217,7 @@
   "mgrChangesCount": "{count, plural, =1{1 bytte} other{{count} bytter}}",
   "mgrChangesLeftFor": "Ny jobb: {nation}",
   "mgrChangesAppointed": "Ansatt",
-  "mgrChangesVacant": "Ledig"
+  "mgrChangesVacant": "Ledig",
+  "editorNameNotAllowed": "Dette navnet er ikke tillatt.",
+  "editorIssueNameNotAllowed": "«{name}» er ikke tillatt"
 }

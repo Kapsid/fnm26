@@ -14,6 +14,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_role.dart';
 import 'package:fnm/domain/entities/tactic_preset.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/profanity/profanity_filter.dart';
 import 'package:fnm/domain/services/squad/absence_outlook.dart';
 import 'package:fnm/domain/services/squad/captaincy.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
@@ -1458,7 +1459,14 @@ class _NamePresetDialogState extends State<_NamePresetDialog> {
     super.dispose();
   }
 
-  void _submit() => Navigator.of(context).pop(_controller.text);
+  /// Whether the name as typed holds a word the game does not show: it is
+  /// never saved.
+  bool get _bad => ProfanityFilter.isOffensive(_controller.text);
+
+  void _submit() {
+    if (_bad) return;
+    Navigator.of(context).pop(_controller.text);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1470,9 +1478,12 @@ class _NamePresetDialogState extends State<_NamePresetDialog> {
         autofocus: true,
         textCapitalization: TextCapitalization.words,
         textInputAction: TextInputAction.done,
+        onChanged: (_) => setState(() {}),
         onSubmitted: (_) => _submit(),
         decoration: InputDecoration(
           hintText: l.tacticsNameHint,
+          errorText: _bad ? l.editorNameNotAllowed : null,
+          errorMaxLines: 2,
         ),
       ),
       actions: [
@@ -1481,7 +1492,7 @@ class _NamePresetDialogState extends State<_NamePresetDialog> {
           child: Text(l.tacticsCancel),
         ),
         FilledButton(
-          onPressed: _submit,
+          onPressed: _bad ? null : _submit,
           child: Text(l.tacticsSave),
         ),
       ],

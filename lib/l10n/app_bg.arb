@@ -4217,5 +4217,7 @@
   "mgrChangesCount": "{count, plural, =1{1 промяна} other{{count} промени}}",
   "mgrChangesLeftFor": "Нов пост: {nation}",
   "mgrChangesAppointed": "Назначен",
-  "mgrChangesVacant": "Вакантно"
+  "mgrChangesVacant": "Вакантно",
+  "editorNameNotAllowed": "Това име не е позволено.",
+  "editorIssueNameNotAllowed": "„{name}“ не е позволено"
 }

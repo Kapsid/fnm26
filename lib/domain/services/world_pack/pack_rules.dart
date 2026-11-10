@@ -7,6 +7,7 @@ import '../club/clubs.dart';
 import '../player/golden_generation.dart';
 import '../player/player_traits.dart';
 import '../press/y_feed.dart';
+import '../profanity/profanity_filter.dart';
 import '../rating/overall_rating.dart';
 import 'pack_paths.dart';
 import 'world_pack.dart';
@@ -22,6 +23,10 @@ enum FieldReason {
   /// like another the pack names, an id used twice or a trait picked twice.
   /// A clash with a name only the game gives is a [NameClash].
   duplicate,
+
+  /// A word the game does not show ([ProfanityFilter]): only ever a
+  /// [NotAllowedName]'s reason, never a [BadField]'s.
+  notAllowed,
 }
 
 /// One thing standing between a pack and a career.
@@ -114,6 +119,26 @@ class UnknownLanguage extends PackIssue {
   @override
   String get where => path;
 }
+
+/// A name in the pack the game does not show ([ProfanityFilter]): a slur,
+/// a sexual word or strong swearing, at [path] (the path a [BadField] about
+/// that name would have; `name` is the database's own name).
+///
+/// Listed with what to fix and jumped to like any issue, but it blocks
+/// nothing: a shared database is never refused for it. Until it is renamed
+/// the game shows the name masked (`maskedForPlay`), and the stored pack
+/// keeps it as it was.
+class NotAllowedName extends PackIssue {
+  const NotAllowedName(this.path);
+  final String path;
+  @override
+  String get where => path;
+}
+
+/// Whether [issue] stands between a pack and a career: everything but a
+/// [NotAllowedName] (masked in play) and an [UnknownLanguage] (never shown).
+bool isBlocking(PackIssue issue) =>
+    issue is! NotAllowedName && issue is! UnknownLanguage;
 
 /// Whose name a club name already is, in a country ([PackRules.clubNameClash]).
 enum ClubNameClash {
@@ -932,6 +957,90 @@ abstract final class PackRules {
     }
     return out;
   }
+
+  /// Every name of [p] the game does not show ([ProfanityFilter]), each a
+  /// [NotAllowedName] at its own path, in the order [issues] goes: the
+  /// players first (as [notAllowedPlayers] gives them), then the nations,
+  /// the renames, the reporters, the name lists, the managers, the added
+  /// clubs, sponsors and Y accounts, the per-language values, and last the
+  /// database's own name (`name`). Blocks nothing ([isBlocking]).
+  static List<NotAllowedName> notAllowed(WorldPack p) {
+    final out = <NotAllowedName>[];
+    void check(String path, String? v) {
+      if (v != null && v.trim().isNotEmpty && ProfanityFilter.isOffensive(v)) {
+        out.add(NotAllowedName(path));
+      }
+    }
+
+    for (final id in p.squads.keys.toList()..sort()) {
+      out.addAll(notAllowedPlayers('squads.$id', p.squads[id]!));
+    }
+    for (final id in p.pools.keys.toList()..sort()) {
+      out.addAll(notAllowedPlayers('pools.$id', p.pools[id]!));
+    }
+    for (final id in p.nations.keys.toList()..sort()) {
+      check('nations.$id.name', p.nations[id]!.name);
+    }
+    for (final (root, m) in [
+      ('clubs', p.clubs),
+      ('stadiums', p.stadiums),
+      ('competitions', p.competitions),
+      ('sponsors', p.sponsors),
+      ('yAccounts', p.yAccounts),
+    ]) {
+      for (final k in m.keys.toList()..sort()) {
+        check('$root.$k', m[k]);
+      }
+    }
+    for (final id in p.reporters.keys.toList()..sort()) {
+      check('reporters.$id.name', p.reporters[id]!.name);
+      check('reporters.$id.outlet', p.reporters[id]!.outlet);
+    }
+    for (final id in p.nameLists.keys.toList()..sort()) {
+      final l = p.nameLists[id]!;
+      for (final (kind, names) in [('first', l.first), ('sur', l.sur)]) {
+        for (var i = 0; i < names.length; i++) {
+          check('nameLists.$id.$kind.$i', names[i]);
+        }
+      }
+    }
+    for (final id in p.managers.keys.toList()..sort()) {
+      check('managers.$id.name', p.managers[id]!.name);
+    }
+    for (final c in p.addedClubs) {
+      check('addedClubs.${c.id}', c.name);
+    }
+    for (final s in p.addedSponsors) {
+      check('addedSponsors.${s.id}', s.name);
+      check('addedSponsors.${s.id}.description', s.description);
+    }
+    for (final y in p.addedYAccounts) {
+      check('addedYAccounts.${y.id}', y.name);
+    }
+    for (final path in p.localized.keys.toList()..sort()) {
+      final values = p.localized[path]!;
+      for (final lang in values.keys.toList()..sort()) {
+        check('localized.$path.$lang', values[lang]);
+      }
+    }
+    check('name', p.name);
+    return out;
+  }
+
+  /// [players]' names and clubs the game does not show, at
+  /// `<base>.<playerId>.name` and `.club` ([base] is `squads.<nationId>` or
+  /// `pools.<nationId>`).
+  static List<NotAllowedName> notAllowedPlayers(
+    String base,
+    List<PackPlayer> players,
+  ) => [
+    for (final pl in players) ...[
+      if (ProfanityFilter.isOffensive(pl.name))
+        NotAllowedName('$base.${pl.id}.name'),
+      if (pl.club case final c? when ProfanityFilter.isOffensive(c))
+        NotAllowedName('$base.${pl.id}.club'),
+    ],
+  ];
 
   /// Every `localized` value of [p] under a well-formed language this build
   /// does not speak, by path then language. Kept, listed, never blocking:

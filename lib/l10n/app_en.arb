@@ -26087,5 +26087,18 @@
   "mgrChangesVacant": "Vacant",
   "@mgrChangesVacant": {
     "description": "Manager changes report: nobody has been appointed yet in place of the man who left."
+  },
+  "editorNameNotAllowed": "This name isn't allowed.",
+  "@editorNameNotAllowed": {
+    "description": "Error under a name field (the database editor, the manager name, a tactic or stadium name) when the name holds a slur, a sexual word or strong swearing. It is not saved."
+  },
+  "editorIssueNameNotAllowed": "\"{name}\" isn't allowed",
+  "@editorIssueNameNotAllowed": {
+    "description": "A database entry (often from an imported file) whose name holds a word the game does not allow. The name is shown masked: its first letter and asterisks. The game shows it masked until it is renamed.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   }
 }

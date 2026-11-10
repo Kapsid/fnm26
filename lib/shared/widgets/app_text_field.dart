@@ -15,6 +15,7 @@ class AppTextField extends StatelessWidget {
     this.onSubmitted,
     this.textInputAction,
     this.autofocus = false,
+    this.errorText,
     super.key,
   });
 
@@ -26,6 +27,9 @@ class AppTextField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final bool autofocus;
 
+  /// Shown under the field, in the error colour, when non-null.
+  final String? errorText;
+
   @override
   Widget build(BuildContext context) {
     final field = TextField(
@@ -35,7 +39,11 @@ class AppTextField extends StatelessWidget {
       textInputAction: textInputAction,
       autofocus: autofocus,
       style: AppTypography.bodyMedium.copyWith(color: AppColors.onSurface),
-      decoration: InputDecoration(hintText: hint),
+      decoration: InputDecoration(
+        hintText: hint,
+        errorText: errorText,
+        errorMaxLines: 2,
+      ),
     );
 
     if (label == null) return field;

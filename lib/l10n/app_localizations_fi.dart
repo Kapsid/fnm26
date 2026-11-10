@@ -16960,4 +16960,12 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get mgrChangesVacant => 'Avoinna';
+
+  @override
+  String get editorNameNotAllowed => 'Tämä nimi ei ole sallittu.';
+
+  @override
+  String editorIssueNameNotAllowed(String name) {
+    return '”$name” ei ole sallittu';
+  }
 }

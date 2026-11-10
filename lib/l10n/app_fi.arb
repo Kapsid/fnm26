@@ -4217,5 +4217,7 @@
   "mgrChangesCount": "{count, plural, =1{1 vaihdos} other{{count} vaihdosta}}",
   "mgrChangesLeftFor": "Uusi pesti: {nation}",
   "mgrChangesAppointed": "Nimitetty",
-  "mgrChangesVacant": "Avoinna"
+  "mgrChangesVacant": "Avoinna",
+  "editorNameNotAllowed": "Tämä nimi ei ole sallittu.",
+  "editorIssueNameNotAllowed": "”{name}” ei ole sallittu"
 }

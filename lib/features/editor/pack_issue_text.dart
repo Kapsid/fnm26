@@ -1,5 +1,6 @@
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/profanity/profanity_filter.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_language.dart';
@@ -42,7 +43,10 @@ PackIssueText describePackIssue(
       of == EditorSection.none && !issue.where.startsWith('nations.')
       ? null
       : of;
-  final title = section == null ? pack.name : sectionTitle(l, section);
+  // The database's own name, masked as the game shows it.
+  final title = section == null
+      ? ProfanityFilter.mask(pack.name)
+      : sectionTitle(l, section);
   switch (issue) {
     // A pool over its cap reads as a squad over its: players too many.
     case SquadTooSmall(:final nationId, :final have, :final need):
@@ -138,6 +142,18 @@ PackIssueText describePackIssue(
       );
     case BadField(:final path, :final reason):
       return _badField(l, path, reason, pack, title, section, nation);
+    // A word the game does not show: renamed where it is, or in the list of
+    // databases for the database's own name.
+    case NotAllowedName(:final path):
+      return _badField(
+        l,
+        path,
+        FieldReason.notAllowed,
+        pack,
+        title,
+        section,
+        nation,
+      );
     // Said as a taken name: the fix is a rename, or Remove.
     case NameClash(:final path):
       return _badField(
@@ -175,6 +191,10 @@ PackIssueText _badField(
     FieldReason.badCharacters => l.editorIssueNameBadCharacters(value.trim()),
     FieldReason.duplicate => l.editorIssueNameTaken(value.trim()),
     FieldReason.outOfRange => l.editorIssueValue,
+    // Masked: the list never spells the word out.
+    FieldReason.notAllowed => l.editorIssueNameNotAllowed(
+      ProfanityFilter.mask(value.trim()),
+    ),
   };
 
   int? idAt(int i) => parts.length > i ? int.tryParse(parts[i]) : null;
@@ -198,6 +218,7 @@ PackIssueText _badField(
               ? l.editorIssuePlayerNoName
               : nameProblem(name),
         'age' => l.editorIssueAge(name),
+        'club' => nameProblem(player?.club ?? ''),
         'attributes' => l.editorIssueRating(name),
         'potential' => l.editorIssuePotential(name),
         _ => l.editorIssueValue,
@@ -247,6 +268,8 @@ PackIssueText _badField(
         title: nationId == null ? sectionTitle : nation(nationId),
         detail: field == 'nationality'
             ? l.editorIssueManagerNationality
+            : reason == FieldReason.notAllowed
+            ? nameProblem(pack.managers[nationId]?.name ?? '')
             : l.editorIssueManagerName(PackRules.nameMax),
         section: EditorSection.managers,
         nationId: nationId,
@@ -312,6 +335,14 @@ PackIssueText _badField(
                 languageEndonym(language),
               ),
         section: section,
+        nationId: null,
+      );
+    // The database's own name: renamed in the list of databases.
+    case 'name':
+      return (
+        title: sectionTitle,
+        detail: nameProblem(pack.name),
+        section: null,
         nationId: null,
       );
     default:

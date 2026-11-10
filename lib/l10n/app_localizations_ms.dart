@@ -16845,4 +16845,12 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get mgrChangesVacant => 'Kosong';
+
+  @override
+  String get editorNameNotAllowed => 'Nama ini tidak dibenarkan.';
+
+  @override
+  String editorIssueNameNotAllowed(String name) {
+    return '\"$name\" tidak dibenarkan';
+  }
 }

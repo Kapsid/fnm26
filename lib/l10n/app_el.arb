@@ -4217,5 +4217,7 @@
   "mgrChangesCount": "{count, plural, =1{1 αλλαγή} other{{count} αλλαγές}}",
   "mgrChangesLeftFor": "Νέα θέση: {nation}",
   "mgrChangesAppointed": "Διορίστηκε",
-  "mgrChangesVacant": "Κενή θέση"
+  "mgrChangesVacant": "Κενή θέση",
+  "editorNameNotAllowed": "Αυτό το όνομα δεν επιτρέπεται.",
+  "editorIssueNameNotAllowed": "Το «{name}» δεν επιτρέπεται"
 }

@@ -4217,5 +4217,7 @@
   "mgrChangesCount": "{count, plural, =1{1件の交代} other{{count}件の交代}}",
   "mgrChangesLeftFor": "新天地：{nation}",
   "mgrChangesAppointed": "就任",
-  "mgrChangesVacant": "空席"
+  "mgrChangesVacant": "空席",
+  "editorNameNotAllowed": "この名前は使用できません。",
+  "editorIssueNameNotAllowed": "「{name}」は使用できません"
 }

@@ -4217,5 +4217,7 @@
   "mgrChangesCount": "{count, plural, =1{1 byte} other{{count} byten}}",
   "mgrChangesLeftFor": "Ny post: {nation}",
   "mgrChangesAppointed": "Utsedd",
-  "mgrChangesVacant": "Vakant"
+  "mgrChangesVacant": "Vakant",
+  "editorNameNotAllowed": "Det här namnet är inte tillåtet.",
+  "editorIssueNameNotAllowed": "”{name}” är inte tillåtet"
 }

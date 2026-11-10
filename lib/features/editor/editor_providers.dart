@@ -395,7 +395,7 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
       final checked = await assessPackAsync(pack, world, facts: facts);
       if (!mounted) return;
       _issuesOf = pack;
-      _issues = checked.issues;
+      _issues = [...checked.issues, ...PackRules.notAllowed(pack)];
       // The picture rows are what a career and an export take, so a pack
       // whose list of them drifted (one stored before they were kept in
       // step) is put right from the rows.
@@ -422,19 +422,24 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
   /// What stands between the pack and a career: every [CompatIssue] (what
   /// the game no longer has, [PackRules.compatibility], and an added name
   /// the game's own already has, [NameClash]) first, then what is missing
-  /// ([PackRules.issues]).
+  /// ([PackRules.issues]); and last every name the game does not show
+  /// ([PackRules.notAllowed]), listed to fix but never blocking
+  /// ([isBlocking]).
   List<PackIssue> get issues {
     final pack = state.valueOrNull;
     if (pack == null) return const [];
     if (!identical(pack, _issuesOf)) {
-      _issues = compatFirst(
-        _gameKeys.check(pack),
-        PackRules.issues(
-          pack,
-          baseCodes: _baseCodes,
-          countryCities: _countryCities,
+      _issues = [
+        ...compatFirst(
+          _gameKeys.check(pack),
+          PackRules.issues(
+            pack,
+            baseCodes: _baseCodes,
+            countryCities: _countryCities,
+          ),
         ),
-      );
+        ...PackRules.notAllowed(pack),
+      ];
       _issuesOf = pack;
     }
     return _issues;
@@ -778,14 +783,19 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
   }
 
   /// What stands between nation [nationId]'s squad and a career
-  /// ([PackRules.squadIssues]); empty for a nation the pack has no squad for.
+  /// ([PackRules.squadIssues]), then its names the game does not show
+  /// ([PackRules.notAllowedPlayers]); empty for a nation the pack has no
+  /// squad for.
   ///
   /// Remembered per squad list: an edit replaces only the edited nation's
   /// list, so a keystroke rechecks one squad, not the whole pack.
   List<PackIssue> squadIssues(int nationId) {
     final squad = state.valueOrNull?.squads[nationId];
     if (squad == null) return const [];
-    return _squadIssues[squad] ??= PackRules.squadIssues(nationId, squad);
+    return _squadIssues[squad] ??= [
+      ...PackRules.squadIssues(nationId, squad),
+      ...PackRules.notAllowedPlayers('squads.$nationId', squad),
+    ];
   }
 
   final Expando<List<PackIssue>> _squadIssues = Expando('squadIssues');
@@ -796,7 +806,10 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
   List<PackIssue> poolIssues(int nationId) {
     final pool = state.valueOrNull?.pools[nationId];
     if (pool == null) return const [];
-    return _poolIssues[pool] ??= PackRules.poolIssues(nationId, pool);
+    return _poolIssues[pool] ??= [
+      ...PackRules.poolIssues(nationId, pool),
+      ...PackRules.notAllowedPlayers('pools.$nationId', pool),
+    ];
   }
 
   final Expando<List<PackIssue>> _poolIssues = Expando('poolIssues');

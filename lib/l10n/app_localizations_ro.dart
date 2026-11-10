@@ -17299,4 +17299,12 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get mgrChangesVacant => 'Post liber';
+
+  @override
+  String get editorNameNotAllowed => 'Acest nume nu este permis.';
+
+  @override
+  String editorIssueNameNotAllowed(String name) {
+    return '„$name” nu este permis';
+  }
 }

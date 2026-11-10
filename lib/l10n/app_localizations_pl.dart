@@ -17060,4 +17060,12 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get mgrChangesVacant => 'Wakat';
+
+  @override
+  String get editorNameNotAllowed => 'Ta nazwa jest niedozwolona.';
+
+  @override
+  String editorIssueNameNotAllowed(String name) {
+    return 'Nazwa „$name” jest niedozwolona';
+  }
 }

@@ -16287,4 +16287,12 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get mgrChangesVacant => '空席';
+
+  @override
+  String get editorNameNotAllowed => 'この名前は使用できません。';
+
+  @override
+  String editorIssueNameNotAllowed(String name) {
+    return '「$name」は使用できません';
+  }
 }

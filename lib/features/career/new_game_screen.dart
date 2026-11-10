@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/result/result.dart';
 import 'package:fnm/core/routing/app_router.dart';
@@ -11,8 +10,10 @@ import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
+import 'package:fnm/domain/services/profanity/profanity_filter.dart';
 import 'package:fnm/domain/services/world_pack/pack_status.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/features/nations/nation_preview.dart';
 import 'package:fnm/features/nations/nation_select_providers.dart';
 import 'package:fnm/features/world_pack/world_choice.dart';
@@ -51,10 +52,21 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
     super.dispose();
   }
 
+  /// What is wrong with the manager's name as typed: a word the game does
+  /// not show. Start waits until it is gone.
+  String? _nameError(AppLocalizations l) =>
+      ProfanityFilter.isOffensive(_controller.text)
+      ? l.editorNameNotAllowed
+      : null;
+
+  /// The name changed: its error shows, or goes, as it is typed.
+  void _typed() => setState(() {});
+
   Future<void> _start() async {
     // The button is disabled while a save is made, but the field's keyboard
     // Done also calls this: without the guard it would make a second save.
     if (_creating) return;
+    if (ProfanityFilter.isOffensive(_controller.text)) return;
     setState(() => _creating = true);
     // Taken before the await: a resize across 1000 px rebuilds this page in
     // the other layout meanwhile, and a manager who has gone elsewhere (a
@@ -243,6 +255,8 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
                             controller: _controller,
                             autofocus: true,
                             textInputAction: TextInputAction.done,
+                            onChanged: (_) => _typed(),
+                            errorText: _nameError(l),
                             onSubmitted: (_) => _start(),
                           ),
                           const SizedBox(height: AppSpacing.md),
@@ -265,7 +279,9 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
                             label: l.careerStartCareer,
                             icon: Icons.play_arrow_rounded,
                             isLoading: _creating,
-                            onPressed: _creating ? null : _start,
+                            onPressed: _creating || _nameError(l) != null
+                                ? null
+                                : _start,
                           ),
                           if (_creatingWorld) const _WorldStartingNote(),
                           const SizedBox(height: AppSpacing.md),
