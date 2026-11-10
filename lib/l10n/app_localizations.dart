@@ -24788,10 +24788,10 @@ abstract class AppLocalizations {
   /// **'{range}, {reason}'**
   String mgrProfileSpellEnded(String range, String reason);
 
-  /// Manager profile heading: how your sides fared against his.
+  /// Manager profile heading: HIS record against the player (his wins, draws and losses, from his side).
   ///
   /// In en, this message translates to:
-  /// **'Record against you'**
+  /// **'His record against you'**
   String get mgrProfileRecordVsYou;
 
   /// Manager profile: no meetings with the player yet.

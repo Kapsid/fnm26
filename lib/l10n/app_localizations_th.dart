@@ -16147,7 +16147,7 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => 'สถิติเจอคุณ';
+  String get mgrProfileRecordVsYou => 'สถิติของเขาที่เจอคุณ';
 
   @override
   String get mgrProfileNoMeetings => 'ยังไม่เคยเจอกัน';

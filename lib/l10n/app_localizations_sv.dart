@@ -16428,7 +16428,7 @@ class AppLocalizationsSv extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => 'Facit mot dig';
+  String get mgrProfileRecordVsYou => 'Hans facit mot dig';
 
   @override
   String get mgrProfileNoMeetings => 'Ni har inte mötts än';

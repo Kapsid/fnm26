@@ -16444,7 +16444,7 @@ class AppLocalizationsDa extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => 'Resultater mod dig';
+  String get mgrProfileRecordVsYou => 'Hans resultater mod dig';
 
   @override
   String get mgrProfileNoMeetings => 'I har endnu ikke mødt hinanden';

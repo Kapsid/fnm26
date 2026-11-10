@@ -4099,7 +4099,7 @@
   "mgrProfileSpellNow": "{nation}, từ {from}",
   "mgrProfileSpellRange": "{nation}, từ {from} đến {to}",
   "mgrProfileSpellEnded": "{range}, {reason}",
-  "mgrProfileRecordVsYou": "Thành tích đối đầu với bạn",
+  "mgrProfileRecordVsYou": "Thành tích của anh ấy khi đối đầu với bạn",
   "mgrProfileNoMeetings": "Hai bên chưa gặp nhau",
   "mgrProfileReputation": "Danh tiếng",
   "mgrProfileAge": "Tuổi",

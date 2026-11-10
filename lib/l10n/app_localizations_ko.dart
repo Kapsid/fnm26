@@ -15898,7 +15898,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => '당신과의 전적';
+  String get mgrProfileRecordVsYou => '당신과의 그의 전적';
 
   @override
   String get mgrProfileNoMeetings => '아직 만난 적 없음';

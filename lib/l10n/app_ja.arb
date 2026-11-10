@@ -4099,7 +4099,7 @@
   "mgrProfileSpellNow": "{nation}、{from}から",
   "mgrProfileSpellRange": "{nation}、{from}から{to}まで",
   "mgrProfileSpellEnded": "{range}、{reason}",
-  "mgrProfileRecordVsYou": "あなたとの対戦成績",
+  "mgrProfileRecordVsYou": "あなたとの彼の対戦成績",
   "mgrProfileNoMeetings": "まだ対戦していません",
   "mgrProfileReputation": "評判",
   "mgrProfileAge": "年齢",

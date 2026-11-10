@@ -15858,7 +15858,7 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => 'あなたとの対戦成績';
+  String get mgrProfileRecordVsYou => 'あなたとの彼の対戦成績';
 
   @override
   String get mgrProfileNoMeetings => 'まだ対戦していません';

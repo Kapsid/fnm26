@@ -16350,7 +16350,7 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => 'Rekor melawan Anda';
+  String get mgrProfileRecordVsYou => 'Rekornya melawan Anda';
 
   @override
   String get mgrProfileNoMeetings => 'Belum pernah bertemu';

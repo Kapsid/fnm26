@@ -4099,7 +4099,7 @@
   "mgrProfileSpellNow": "{nation}, od {from}",
   "mgrProfileSpellRange": "{nation}, od {from} do {to}",
   "mgrProfileSpellEnded": "{range}, {reason}",
-  "mgrProfileRecordVsYou": "Omjer protiv vas",
+  "mgrProfileRecordVsYou": "Njegov omjer protiv vas",
   "mgrProfileNoMeetings": "Još se niste susreli",
   "mgrProfileReputation": "Ugled",
   "mgrProfileAge": "Dob",

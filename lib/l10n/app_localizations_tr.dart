@@ -16354,7 +16354,7 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => 'Sana karşı sicil';
+  String get mgrProfileRecordVsYou => 'Sizinle karşılaşmalardaki sicili';
 
   @override
   String get mgrProfileNoMeetings => 'Henüz karşılaşmadınız';

@@ -4099,7 +4099,7 @@
   "mgrProfileSpellNow": "{nation}, {from} से",
   "mgrProfileSpellRange": "{nation}, {from} से {to} तक",
   "mgrProfileSpellEnded": "{range}, {reason}",
-  "mgrProfileRecordVsYou": "आपके खिलाफ़ रिकॉर्ड",
+  "mgrProfileRecordVsYou": "आपके खिलाफ़ उसका रिकॉर्ड",
   "mgrProfileNoMeetings": "अभी तक आमना-सामना नहीं हुआ",
   "mgrProfileReputation": "प्रतिष्ठा",
   "mgrProfileAge": "उम्र",

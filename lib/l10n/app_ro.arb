@@ -4099,7 +4099,7 @@
   "mgrProfileSpellNow": "{nation}, din {from}",
   "mgrProfileSpellRange": "{nation}, din {from} până în {to}",
   "mgrProfileSpellEnded": "{range}, {reason}",
-  "mgrProfileRecordVsYou": "Bilanț împotriva ta",
+  "mgrProfileRecordVsYou": "Bilanțul lui împotriva ta",
   "mgrProfileNoMeetings": "Nu v-ați întâlnit încă",
   "mgrProfileReputation": "Reputație",
   "mgrProfileAge": "Vârstă",

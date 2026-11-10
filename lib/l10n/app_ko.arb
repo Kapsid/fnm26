@@ -4099,7 +4099,7 @@
   "mgrProfileSpellNow": "{nation}, {from}부터",
   "mgrProfileSpellRange": "{nation}, {from}부터 {to}까지",
   "mgrProfileSpellEnded": "{range}, {reason}",
-  "mgrProfileRecordVsYou": "당신과의 전적",
+  "mgrProfileRecordVsYou": "당신과의 그의 전적",
   "mgrProfileNoMeetings": "아직 만난 적 없음",
   "mgrProfileReputation": "평판",
   "mgrProfileAge": "나이",

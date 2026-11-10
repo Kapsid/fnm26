@@ -4099,7 +4099,7 @@
   "mgrProfileSpellNow": "{nation}, alkaen {from}",
   "mgrProfileSpellRange": "{nation}, {from} ja {to} välillä",
   "mgrProfileSpellEnded": "{range}, {reason}",
-  "mgrProfileRecordVsYou": "Tulokset sinua vastaan",
+  "mgrProfileRecordVsYou": "Hänen tuloksensa sinua vastaan",
   "mgrProfileNoMeetings": "Ette ole vielä kohdanneet",
   "mgrProfileReputation": "Maine",
   "mgrProfileAge": "Ikä",

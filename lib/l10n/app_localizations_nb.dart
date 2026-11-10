@@ -16440,7 +16440,7 @@ class AppLocalizationsNb extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => 'Resultater mot deg';
+  String get mgrProfileRecordVsYou => 'Hans resultater mot deg';
 
   @override
   String get mgrProfileNoMeetings => 'Dere har ikke møttes ennå';

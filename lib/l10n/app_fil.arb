@@ -4099,7 +4099,7 @@
   "mgrProfileSpellNow": "{nation}, mula {from}",
   "mgrProfileSpellRange": "{nation}, {from} hanggang {to}",
   "mgrProfileSpellEnded": "{range}, {reason}",
-  "mgrProfileRecordVsYou": "Rekord laban sa iyo",
+  "mgrProfileRecordVsYou": "Ang kanyang rekord laban sa iyo",
   "mgrProfileNoMeetings": "Hindi pa kayo nagkakaharap",
   "mgrProfileReputation": "Reputasyon",
   "mgrProfileAge": "Edad",

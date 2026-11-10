@@ -16518,7 +16518,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => 'Bilancio contro di te';
+  String get mgrProfileRecordVsYou => 'Il suo bilancio contro di te';
 
   @override
   String get mgrProfileNoMeetings => 'Non vi siete ancora incontrati';

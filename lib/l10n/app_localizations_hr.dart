@@ -16779,7 +16779,7 @@ class AppLocalizationsHr extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => 'Omjer protiv vas';
+  String get mgrProfileRecordVsYou => 'Njegov omjer protiv vas';
 
   @override
   String get mgrProfileNoMeetings => 'Još se niste susreli';

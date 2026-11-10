@@ -4099,7 +4099,7 @@
   "mgrProfileSpellNow": "{nation}, siden {from}",
   "mgrProfileSpellRange": "{nation}, {from} til {to}",
   "mgrProfileSpellEnded": "{range}, {reason}",
-  "mgrProfileRecordVsYou": "Resultater mod dig",
+  "mgrProfileRecordVsYou": "Hans resultater mod dig",
   "mgrProfileNoMeetings": "I har endnu ikke mødt hinanden",
   "mgrProfileReputation": "Omdømme",
   "mgrProfileAge": "Alder",

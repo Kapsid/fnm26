@@ -16527,7 +16527,7 @@ class AppLocalizationsBg extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => 'Баланс срещу теб';
+  String get mgrProfileRecordVsYou => 'Неговият баланс срещу теб';
 
   @override
   String get mgrProfileNoMeetings => 'Още не сте се срещали';

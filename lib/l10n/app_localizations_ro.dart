@@ -16858,7 +16858,7 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => 'Bilanț împotriva ta';
+  String get mgrProfileRecordVsYou => 'Bilanțul lui împotriva ta';
 
   @override
   String get mgrProfileNoMeetings => 'Nu v-ați întâlnit încă';
