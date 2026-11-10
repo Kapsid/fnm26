@@ -16772,4 +16772,28 @@ class AppLocalizationsId extends AppLocalizations {
   String mgrNewsSeeManager(String name) {
     return 'Profil: $name';
   }
+
+  @override
+  String get mgrChangesTitle => 'Pergantian pelatih';
+
+  @override
+  String mgrChangesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pergantian',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String mgrChangesLeftFor(String nation) {
+    return 'Pindah ke $nation';
+  }
+
+  @override
+  String get mgrChangesAppointed => 'Ditunjuk';
+
+  @override
+  String get mgrChangesVacant => 'Kosong';
 }

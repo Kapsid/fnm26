@@ -4212,5 +4212,10 @@
   "mgrDetailBackground": "出自",
   "mgrOriginFresh": "生え抜きの指導者",
   "mgrOriginExAssistant": "元コーチ",
-  "mgrNewsSeeManager": "プロフィール: {name}"
+  "mgrNewsSeeManager": "プロフィール: {name}",
+  "mgrChangesTitle": "監督交代",
+  "mgrChangesCount": "{count, plural, =1{1件の交代} other{{count}件の交代}}",
+  "mgrChangesLeftFor": "新天地：{nation}",
+  "mgrChangesAppointed": "就任",
+  "mgrChangesVacant": "空席"
 }

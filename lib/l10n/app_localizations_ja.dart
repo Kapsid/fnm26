@@ -16262,4 +16262,29 @@ class AppLocalizationsJa extends AppLocalizations {
   String mgrNewsSeeManager(String name) {
     return 'プロフィール: $name';
   }
+
+  @override
+  String get mgrChangesTitle => '監督交代';
+
+  @override
+  String mgrChangesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count件の交代',
+      one: '1件の交代',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String mgrChangesLeftFor(String nation) {
+    return '新天地：$nation';
+  }
+
+  @override
+  String get mgrChangesAppointed => '就任';
+
+  @override
+  String get mgrChangesVacant => '空席';
 }

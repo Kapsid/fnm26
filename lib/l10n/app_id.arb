@@ -4212,5 +4212,10 @@
   "mgrDetailBackground": "Latar belakang",
   "mgrOriginFresh": "Pelatih karier",
   "mgrOriginExAssistant": "Mantan asisten pelatih",
-  "mgrNewsSeeManager": "Profil: {name}"
+  "mgrNewsSeeManager": "Profil: {name}",
+  "mgrChangesTitle": "Pergantian pelatih",
+  "mgrChangesCount": "{count, plural, other{{count} pergantian}}",
+  "mgrChangesLeftFor": "Pindah ke {nation}",
+  "mgrChangesAppointed": "Ditunjuk",
+  "mgrChangesVacant": "Kosong"
 }

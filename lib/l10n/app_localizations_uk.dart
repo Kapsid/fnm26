@@ -17172,4 +17172,31 @@ class AppLocalizationsUk extends AppLocalizations {
   String mgrNewsSeeManager(String name) {
     return 'Профіль: $name';
   }
+
+  @override
+  String get mgrChangesTitle => 'Тренерські зміни';
+
+  @override
+  String mgrChangesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count зміни',
+      many: '$count змін',
+      few: '$count зміни',
+      one: '$count зміна',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String mgrChangesLeftFor(String nation) {
+    return 'Нова посада: $nation';
+  }
+
+  @override
+  String get mgrChangesAppointed => 'Призначений';
+
+  @override
+  String get mgrChangesVacant => 'Вакантно';
 }

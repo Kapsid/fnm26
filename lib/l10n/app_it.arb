@@ -4212,5 +4212,10 @@
   "mgrDetailBackground": "Trascorsi",
   "mgrOriginFresh": "Allenatore di carriera",
   "mgrOriginExAssistant": "Ex vice allenatore",
-  "mgrNewsSeeManager": "Profilo: {name}"
+  "mgrNewsSeeManager": "Profilo: {name}",
+  "mgrChangesTitle": "Cambi in panchina",
+  "mgrChangesCount": "{count, plural, =1{1 cambio} other{{count} cambi}}",
+  "mgrChangesLeftFor": "Nuova panchina: {nation}",
+  "mgrChangesAppointed": "Nominato",
+  "mgrChangesVacant": "Vacante"
 }

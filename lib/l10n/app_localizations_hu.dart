@@ -16806,4 +16806,29 @@ class AppLocalizationsHu extends AppLocalizations {
   String mgrNewsSeeManager(String name) {
     return 'Profil: $name';
   }
+
+  @override
+  String get mgrChangesTitle => 'Edzőváltások';
+
+  @override
+  String mgrChangesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count váltás',
+      one: '1 váltás',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String mgrChangesLeftFor(String nation) {
+    return 'Új állás: $nation';
+  }
+
+  @override
+  String get mgrChangesAppointed => 'Kinevezték';
+
+  @override
+  String get mgrChangesVacant => 'Betöltetlen';
 }

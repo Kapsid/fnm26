@@ -4212,5 +4212,10 @@
   "mgrDetailBackground": "Минало",
   "mgrOriginFresh": "Професионален треньор",
   "mgrOriginExAssistant": "Бивш помощник-треньор",
-  "mgrNewsSeeManager": "Профил: {name}"
+  "mgrNewsSeeManager": "Профил: {name}",
+  "mgrChangesTitle": "Треньорски промени",
+  "mgrChangesCount": "{count, plural, =1{1 промяна} other{{count} промени}}",
+  "mgrChangesLeftFor": "Нов пост: {nation}",
+  "mgrChangesAppointed": "Назначен",
+  "mgrChangesVacant": "Вакантно"
 }

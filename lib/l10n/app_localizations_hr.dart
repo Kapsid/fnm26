@@ -17193,4 +17193,30 @@ class AppLocalizationsHr extends AppLocalizations {
   String mgrNewsSeeManager(String name) {
     return 'Profil: $name';
   }
+
+  @override
+  String get mgrChangesTitle => 'Promjene izbornika';
+
+  @override
+  String mgrChangesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count promjena',
+      few: '$count promjene',
+      one: '$count promjena',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String mgrChangesLeftFor(String nation) {
+    return 'Nova klupa: $nation';
+  }
+
+  @override
+  String get mgrChangesAppointed => 'Imenovan';
+
+  @override
+  String get mgrChangesVacant => 'Upražnjeno';
 }

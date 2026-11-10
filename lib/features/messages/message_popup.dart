@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/features/achievements/achievement_popup.dart';
 import 'package:fnm/features/awards/award_providers.dart';
@@ -7,6 +10,7 @@ import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/messages/message_sheet.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
+import 'package:go_router/go_router.dart';
 
 /// At most this many messages pop in one go. Anything past it waits in the
 /// inbox rather than burying the manager in popups — a skip to the final can
@@ -39,6 +43,7 @@ Future<int> showUnreadMessagePopups(
   int careerId,
 ) async {
   final l = AppLocalizations.of(context);
+  final router = GoRouter.maybeOf(context);
   // Generate before reading — see the note above.
   await ref.read(messageServiceProvider).sync(careerId);
   final comp = ref.read(competitionRepositoryProvider);
@@ -87,6 +92,16 @@ Future<int> showUnreadMessagePopups(
       barrierDismissible: false,
       builder: (popupContext) => MessageSheet(
         message: showing[i],
+        // A manager's page opens OVER the popup, which stays: back returns
+        // to the run of news where it was, rather than ending it.
+        onOpenManager: router == null
+            ? null
+            : (careerId, managerId) => unawaited(
+                router.push(
+                  '${Routes.worldManager}?careerId=$careerId'
+                  '&managerId=$managerId',
+                ),
+              ),
         action: (
           label: isLast ? l.messagesDone : l.messagesNext,
           onPressed: () => Navigator.of(popupContext).pop(),

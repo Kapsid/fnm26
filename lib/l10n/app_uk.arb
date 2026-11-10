@@ -4212,5 +4212,10 @@
   "mgrDetailBackground": "Минуле",
   "mgrOriginFresh": "Професійний тренер",
   "mgrOriginExAssistant": "Колишній помічник тренера",
-  "mgrNewsSeeManager": "Профіль: {name}"
+  "mgrNewsSeeManager": "Профіль: {name}",
+  "mgrChangesTitle": "Тренерські зміни",
+  "mgrChangesCount": "{count, plural, one{{count} зміна} few{{count} зміни} many{{count} змін} other{{count} зміни}}",
+  "mgrChangesLeftFor": "Нова посада: {nation}",
+  "mgrChangesAppointed": "Призначений",
+  "mgrChangesVacant": "Вакантно"
 }

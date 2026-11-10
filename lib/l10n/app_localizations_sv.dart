@@ -16844,4 +16844,29 @@ class AppLocalizationsSv extends AppLocalizations {
   String mgrNewsSeeManager(String name) {
     return 'Profil: $name';
   }
+
+  @override
+  String get mgrChangesTitle => 'Tränarbyten';
+
+  @override
+  String mgrChangesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count byten',
+      one: '1 byte',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String mgrChangesLeftFor(String nation) {
+    return 'Ny post: $nation';
+  }
+
+  @override
+  String get mgrChangesAppointed => 'Utsedd';
+
+  @override
+  String get mgrChangesVacant => 'Vakant';
 }

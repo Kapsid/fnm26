@@ -16303,4 +16303,29 @@ class AppLocalizationsKo extends AppLocalizations {
   String mgrNewsSeeManager(String name) {
     return '프로필: $name';
   }
+
+  @override
+  String get mgrChangesTitle => '감독 교체';
+
+  @override
+  String mgrChangesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '교체 $count건',
+      one: '교체 1건',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String mgrChangesLeftFor(String nation) {
+    return '새 팀: $nation';
+  }
+
+  @override
+  String get mgrChangesAppointed => '선임';
+
+  @override
+  String get mgrChangesVacant => '공석';
 }

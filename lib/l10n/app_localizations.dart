@@ -25513,6 +25513,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Profile: {name}'**
   String mgrNewsSeeManager(String name);
+
+  /// Inbox message title: the one summary of every national-team manager change at a decision point (after a tournament, at the new cycle).
+  ///
+  /// In en, this message translates to:
+  /// **'Manager changes'**
+  String get mgrChangesTitle;
+
+  /// Manager changes report: how many changes it lists.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 change} other{{count} changes}}'**
+  String mgrChangesCount(int count);
+
+  /// Manager changes report: the outgoing manager was poached by another nation, named here.
+  ///
+  /// In en, this message translates to:
+  /// **'Left for {nation}'**
+  String mgrChangesLeftFor(String nation);
+
+  /// Manager changes report: a vacant post was filled; nobody left at this point.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointed'**
+  String get mgrChangesAppointed;
+
+  /// Manager changes report: nobody has been appointed yet in place of the man who left.
+  ///
+  /// In en, this message translates to:
+  /// **'Vacant'**
+  String get mgrChangesVacant;
 }
 
 class _AppLocalizationsDelegate

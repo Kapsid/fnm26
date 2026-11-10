@@ -4212,5 +4212,10 @@
   "mgrDetailBackground": "Υπόβαθρο",
   "mgrOriginFresh": "Προπονητής καριέρας",
   "mgrOriginExAssistant": "Πρώην βοηθός προπονητή",
-  "mgrNewsSeeManager": "Προφίλ: {name}"
+  "mgrNewsSeeManager": "Προφίλ: {name}",
+  "mgrChangesTitle": "Αλλαγές προπονητών",
+  "mgrChangesCount": "{count, plural, =1{1 αλλαγή} other{{count} αλλαγές}}",
+  "mgrChangesLeftFor": "Νέα θέση: {nation}",
+  "mgrChangesAppointed": "Διορίστηκε",
+  "mgrChangesVacant": "Κενή θέση"
 }

@@ -4212,5 +4212,10 @@
   "mgrDetailBackground": "Háttér",
   "mgrOriginFresh": "Hivatásos edző",
   "mgrOriginExAssistant": "Volt pályaedző",
-  "mgrNewsSeeManager": "Profil: {name}"
+  "mgrNewsSeeManager": "Profil: {name}",
+  "mgrChangesTitle": "Edzőváltások",
+  "mgrChangesCount": "{count, plural, =1{1 váltás} other{{count} váltás}}",
+  "mgrChangesLeftFor": "Új állás: {nation}",
+  "mgrChangesAppointed": "Kinevezték",
+  "mgrChangesVacant": "Betöltetlen"
 }

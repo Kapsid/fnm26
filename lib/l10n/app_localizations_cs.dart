@@ -17131,4 +17131,30 @@ class AppLocalizationsCs extends AppLocalizations {
   String mgrNewsSeeManager(String name) {
     return 'Profil trenéra: $name';
   }
+
+  @override
+  String get mgrChangesTitle => 'Trenérské změny';
+
+  @override
+  String mgrChangesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count změn',
+      few: '$count změny',
+      one: '1 změna',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String mgrChangesLeftFor(String nation) {
+    return 'Nové působiště: $nation';
+  }
+
+  @override
+  String get mgrChangesAppointed => 'Jmenován';
+
+  @override
+  String get mgrChangesVacant => 'Neobsazeno';
 }

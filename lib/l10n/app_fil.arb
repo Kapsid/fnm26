@@ -4212,5 +4212,10 @@
   "mgrDetailBackground": "Pinagmulan",
   "mgrOriginFresh": "Propesyonal na coach",
   "mgrOriginExAssistant": "Dating assistant coach",
-  "mgrNewsSeeManager": "Profile: {name}"
+  "mgrNewsSeeManager": "Profile: {name}",
+  "mgrChangesTitle": "Mga pagbabago ng manager",
+  "mgrChangesCount": "{count, plural, =1{1 pagbabago} other{{count} pagbabago}}",
+  "mgrChangesLeftFor": "Lumipat sa {nation}",
+  "mgrChangesAppointed": "Itinalaga",
+  "mgrChangesVacant": "Bakante"
 }
