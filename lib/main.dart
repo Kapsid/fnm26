@@ -43,12 +43,17 @@ void main() {
             ? await firstLogicalWindowSize(dispatcher)
             : Size.zero,
       );
-      if (formFactor == FormFactor.tablet) {
-        await SystemChrome.setPreferredOrientations(const [
-          DeviceOrientation.landscapeLeft,
-          DeviceOrientation.landscapeRight,
-        ]);
-      }
+      // A tablet is held in landscape; a phone stays upright. Nothing on a
+      // phone is laid out for landscape, and turning it mid-match only
+      // squeezed the screen.
+      await SystemChrome.setPreferredOrientations(
+        formFactor == FormFactor.tablet
+            ? const [
+                DeviceOrientation.landscapeLeft,
+                DeviceOrientation.landscapeRight,
+              ]
+            : const [DeviceOrientation.portraitUp],
+      );
       runApp(FnmRoot(formFactor: formFactor));
     },
     (e, st) => AppLog.error('zone', e, st),
