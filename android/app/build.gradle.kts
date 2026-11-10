@@ -12,6 +12,7 @@ plugins {
 //
 // See key.properties.example for the four values, and the note on
 // `bundleRelease` below for what happens when the file is absent.
+val isDevApp = System.getenv("FNM_DEV_APP") == "1"
 val keystorePropertiesFile = rootProject.file("key.properties")
 val hasReleaseKey = keystorePropertiesFile.exists()
 val keystoreProperties = Properties().apply {
@@ -33,6 +34,15 @@ android {
     }
 
     defaultConfig {
+        // FNM_DEV_APP=1 builds "FNM Dev" (com.fnm.fnm.dev): a side-by-side
+        // copy with its own saves and no Play purchase, so it runs as a free
+        // player and can be sideloaded next to the Play install.
+        if (isDevApp) {
+            applicationIdSuffix = ".dev"
+            manifestPlaceholders["appLabel"] = "FNM Dev"
+        } else {
+            manifestPlaceholders["appLabel"] = "Football Nations Manager"
+        }
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.fnm.fnm"
         // You can update the following values to match your application needs.
@@ -78,6 +88,12 @@ android {
 // pushing a release APK to a phone still works with no keystore at all.
 tasks.matching { it.name == "bundleRelease" }.configureEach {
     doFirst {
+        if (isDevApp) {
+            throw GradleException(
+                "FNM_DEV_APP=1 builds the side-by-side dev copy; it must " +
+                    "never be uploaded. Unset it to build the Play bundle."
+            )
+        }
         if (!hasReleaseKey) {
             throw GradleException(
                 "Cannot build a release bundle: android/key.properties is " +
