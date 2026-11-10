@@ -553,13 +553,3 @@ const List<String> profanityAllowlist = [
   'shitake',
   'shiitake',
 ];
-
-/// Real names that hold a refused word: allowed only as the whole name, in
-/// order (case and accents folded), so the word on its own stays refused.
-/// "Jakob Wanker" is clean, "Wanker United" is not. Lower case, one space
-/// between words.
-const List<String> profanityAllowedNames = [
-  'jakob wanker', // Austrian footballer
-  'franco foda', // German coach
-  'hang jebat', // Malaysian legend; a stadium in Malacca
-];

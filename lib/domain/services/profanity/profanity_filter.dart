@@ -68,10 +68,8 @@ abstract final class ProfanityFilter {
   static List<(int, int)> _spans(String text) {
     if (text.isEmpty) return const [];
     final words = _words(text);
-    final named = _inAllowedName(words);
     final out = <(int, int)>[];
     for (final w in words) {
-      if (named.contains(w)) continue;
       // A refused letter inside a refused joined word: the joined one
       // covers it.
       if (out.isNotEmpty && w.start < out.last.$2) {
@@ -81,27 +79,6 @@ abstract final class ProfanityFilter {
         continue;
       }
       if (_refused(w)) out.add((w.start, w.end));
-    }
-    return out;
-  }
-
-  static final List<List<String>> _allowedNames = [
-    for (final n in profanityAllowedNames) n.split(' '),
-  ];
-
-  /// The words of [words] that stand inside a whole allowed real name
-  /// ([profanityAllowedNames]): that run of words, in order, nothing between.
-  static Set<_Word> _inAllowedName(List<_Word> words) {
-    final out = <_Word>{};
-    for (var i = 0; i < words.length; i++) {
-      for (final name in _allowedNames) {
-        if (i + name.length > words.length) continue;
-        var match = true;
-        for (var k = 0; k < name.length && match; k++) {
-          match = words[i + k].folded('i') == name[k];
-        }
-        if (match) out.addAll(words.sublist(i, i + name.length));
-      }
     }
     return out;
   }
