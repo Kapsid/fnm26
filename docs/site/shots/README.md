@@ -140,24 +140,21 @@ sliders at zero, everything 0/25. They are true screens of an empty save, and
 they undersell the game. Shoot them again from a career a few cycles in and
 they would earn a place.
 
-## The showcase stills (2D match, editor)
+## The 2026-11 set (current)
 
-Two homepage sections sit between the feature grid and the carousels, and
-their pictures are SHARED by all 28 languages (English UI): every language
-folder reaches them as `../shots/`. They are named by slot, so a better still
-can replace a file without touching any page:
+Since 2026-11-10 every language shows the same 13 screens, phone and tablet
+alike, in this order: hub, every nation, lineup, match preview, 2D match,
+full time, player, youth, World Championship, ranking, federation budget,
+challenges, the editor. `shot-1..13` (phone) and `ipad-1..13` (tablet) in
+each `<lang>/shots/` (English at the root), plus that language's hero pair.
 
-- `match-2d-1` to `match-2d-4`: 760 x 605 (`-full`: 1080 x 860), the top of a
-  phone match screen (score bar, banner, pitch) cut from the 2D promo clips
-  with ffmpeg: 1 Paris stadium, 2 snow in Reykjavík, 3 a goal banner in a
-  continental cup final in Johannesburg (clip 25 of `FNM_2D_clips_v2`, frame
-  at 3.0 s, cropped from y = 180), 4 the shootout's winning kick. No still may
-  show a protected landmark (the Rio statue, a lit Eiffel Tower and the like),
-  and no caption or alt text names a landmark: say "the city skyline". Keep the 1080 x 860 shape, and keep any
-  "Friendly" label out of the crop (the current clips are friendlies).
-- `editor-1`, `editor-2`: 500 x 1010 (`-full`: 1000 x 2020), like the phone
-  carousel: a database's home and a player being edited, taken on the iOS
-  simulator with the game's own fictional world.
+They come from the store-stills harness on the iOS simulator
+(`integration_test/promo/store_capture.sh`, one England career saved before
+the 2034 World Championship final), shot in each game language: the phone
+PNGs lose their top 186 px, the tablet PNGs (rotated upright if the
+simulator hands them over in portrait) get their status-bar band painted
+over and are scaled to 960 x 720 and 2000 x 1500. The captions come from the
+pages' earlier captions, the feature tiles and the app's own terms.
 
-The captions and alt texts are in each `index.html`; if a slot gets a
-different picture, its caption and alt text change in all 28 pages.
+The earlier per-language careers described above, and the shared showcase
+stills (2D match, editor), are retired.
