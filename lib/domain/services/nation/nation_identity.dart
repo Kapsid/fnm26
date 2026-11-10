@@ -63,7 +63,7 @@ abstract final class NationIdentity {
 
   static const Map<String, NationIdentityData> _byCode = {
     // ---- Europe -----------------------------------------------------------
-    'ENG': (nickname: 'Three Lions', style: NationStyle.direct, pedigree: 1),
+    'ENG': (nickname: 'The Whites', style: NationStyle.direct, pedigree: 1),
     'FRA': (nickname: 'Les Bleus', style: NationStyle.balanced, pedigree: 1),
     'ESP': (nickname: 'La Roja', style: NationStyle.possession, pedigree: 1),
     'GER': (
@@ -78,12 +78,12 @@ abstract final class NationIdentity {
       style: NationStyle.possession,
       pedigree: 1,
     ),
-    'BEL': (nickname: 'Red Devils', style: NationStyle.direct, pedigree: 2),
+    'BEL': (nickname: 'Belgian Reds', style: NationStyle.direct, pedigree: 2),
     'CRO': (nickname: 'Vatreni', style: NationStyle.possession, pedigree: 2),
     'SUI': (nickname: 'Nati', style: NationStyle.defensive, pedigree: 3),
     'SWE': (nickname: 'Blågult', style: NationStyle.direct, pedigree: 3),
     'DEN': (
-      nickname: 'Danish Dynamite',
+      nickname: 'The Red and Whites',
       style: NationStyle.highPress,
       pedigree: 3,
     ),
@@ -146,16 +146,24 @@ abstract final class NationIdentity {
       style: NationStyle.physical,
       pedigree: 3,
     ),
-    'MAR': (nickname: 'Atlas Lions', style: NationStyle.counter, pedigree: 2),
-    'NGA': (nickname: 'Super Eagles', style: NationStyle.direct, pedigree: 3),
-    'GHA': (nickname: 'Black Stars', style: NationStyle.physical, pedigree: 3),
+    'MAR': (nickname: 'Red and Green', style: NationStyle.counter, pedigree: 2),
+    'NGA': (
+      nickname: 'Green and Whites',
+      style: NationStyle.direct,
+      pedigree: 3,
+    ),
+    'GHA': (
+      nickname: 'Red, Gold and Green',
+      style: NationStyle.physical,
+      pedigree: 3,
+    ),
     'CIV': (
       nickname: 'Les Éléphants',
       style: NationStyle.physical,
       pedigree: 3,
     ),
     'CMR': (
-      nickname: 'Indomitable Lions',
+      nickname: 'Green, Red and Yellow',
       style: NationStyle.physical,
       pedigree: 3,
     ),
@@ -166,7 +174,7 @@ abstract final class NationIdentity {
       style: NationStyle.defensive,
       pedigree: 3,
     ),
-    'RSA': (nickname: 'Bafana Bafana', style: NationStyle.flair, pedigree: 4),
+    'RSA': (nickname: 'Gold and Green', style: NationStyle.flair, pedigree: 4),
     // Zanzibar, a dormant nation (see DormantNations).
     'ZAN': (
       nickname: 'Zanzibar Heroes',
@@ -176,12 +184,12 @@ abstract final class NationIdentity {
 
     // ---- Asia & Oceania ---------------------------------------------------
     'JPN': (
-      nickname: 'Samurai Blue',
+      nickname: 'The Rising Blues',
       style: NationStyle.possession,
       pedigree: 3,
     ),
     'KOR': (
-      nickname: 'Taegeuk Warriors',
+      nickname: 'Korean Reds',
       style: NationStyle.highPress,
       pedigree: 3,
     ),
@@ -196,7 +204,7 @@ abstract final class NationIdentity {
       style: NationStyle.possession,
       pedigree: 4,
     ),
-    'AUS': (nickname: 'Socceroos', style: NationStyle.direct, pedigree: 3),
+    'AUS': (nickname: 'Green and Gold', style: NationStyle.direct, pedigree: 3),
     // ---- Further nicknames (default style; common descriptive names) ----
     'CAN': (nickname: 'Les Rouges', style: NationStyle.balanced, pedigree: 3),
     'CRC': (nickname: 'Los Ticos', style: NationStyle.balanced, pedigree: 3),
@@ -224,7 +232,11 @@ abstract final class NationIdentity {
       style: NationStyle.balanced,
       pedigree: 3,
     ),
-    'JAM': (nickname: 'Reggae Boyz', style: NationStyle.balanced, pedigree: 3),
+    'JAM': (
+      nickname: 'Black, Green and Gold',
+      style: NationStyle.balanced,
+      pedigree: 3,
+    ),
     'NCA': (
       nickname: 'Los Pinoleros',
       style: NationStyle.balanced,
@@ -379,7 +391,11 @@ abstract final class NationIdentity {
       pedigree: 3,
     ),
     'UGA': (nickname: 'Cranes', style: NationStyle.balanced, pedigree: 3),
-    'ZAM': (nickname: 'Chipolopolo', style: NationStyle.balanced, pedigree: 3),
+    'ZAM': (
+      nickname: 'Green and Copper',
+      style: NationStyle.balanced,
+      pedigree: 3,
+    ),
     'BAN': (
       nickname: 'Bengal Tigers',
       style: NationStyle.balanced,
@@ -427,7 +443,7 @@ abstract final class NationIdentity {
     ),
     'FIJ': (nickname: 'Bula Boys', style: NationStyle.balanced, pedigree: 3),
     'NCL': (nickname: 'Les Cagous', style: NationStyle.balanced, pedigree: 3),
-    'NZL': (nickname: 'All Whites', style: NationStyle.balanced, pedigree: 3),
+    'NZL': (nickname: 'Kiwi Whites', style: NationStyle.balanced, pedigree: 3),
     'PNG': (nickname: 'Kapuls', style: NationStyle.balanced, pedigree: 3),
     'SOL': (nickname: 'Bonitos', style: NationStyle.balanced, pedigree: 3),
     'TAH': (nickname: 'Toa Aito', style: NationStyle.balanced, pedigree: 3),
