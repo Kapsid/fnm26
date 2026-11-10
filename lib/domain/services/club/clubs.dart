@@ -52,6 +52,16 @@ abstract final class ClubService {
   /// every screen prints it through `clubName`, in the manager's language.
   static const String freeAgent = 'Free agent';
 
+  /// League clubs renamed after a release shipped them: the old name to the
+  /// new. The club draw never stores a name (it picks by index), but a world
+  /// pack keys its renames, strengths and per-language names by the game's
+  /// name, and its players carry one; `WorldPack.migrate` maps these over so
+  /// a pack or career made before the rename reads exactly as it did.
+  static const Map<String, String> retiredNames = {
+    'Limburg Smurfs': 'Limburg Blue-White',
+    'Toluca Red Devils': 'Toluca Volcanoes',
+  };
+
   /// The club a player is at right now, with its country (for the flag).
   static ClubSide clubFor(Player p) => clubForSeed(p, 0);
 
@@ -838,7 +848,7 @@ abstract final class ClubService {
     _League('bel', 2, [
       'Brussels Purple',
       'Bruges Blue-Black',
-      'Limburg Smurfs',
+      'Limburg Blue-White',
       'Liège Red',
       'Ghent Buffalos',
       'Antwerp Red-White',
@@ -854,7 +864,7 @@ abstract final class ClubService {
       'Mexico Pumas',
       'Monterrey Tigers',
       'Monterrey Striped',
-      'Toluca Red Devils',
+      'Toluca Volcanoes',
       'Torreón Warriors',
       'León Emeralds',
       'Pachuca Gophers',

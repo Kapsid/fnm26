@@ -15,8 +15,14 @@ import '../../helpers/fixtures.dart';
 ///
 /// It covers curated and uncurated home countries (with and without
 /// cities), abroad moves at every level, ages across the contract clock and
-/// a world's added clubs, over eight save seeds.
+/// a world's added clubs, over eight save seeds. A club renamed since
+/// ([ClubService.retiredNames]) is hashed under the name it had then: the
+/// rename relabels a slot, the draw is the same.
 const _expected = 0x1620DD10;
+
+final Map<String, String> _wasCalled = {
+  for (final e in ClubService.retiredNames.entries) e.value: e.key,
+};
 
 int _fingerprint() {
   var h = 0x811C9DC5;
@@ -65,7 +71,7 @@ int _fingerprint() {
             homeCities: cities,
             added: world,
           );
-          add(c.name);
+          add(_wasCalled[c.name] ?? c.name);
           add(c.country);
         }
       }

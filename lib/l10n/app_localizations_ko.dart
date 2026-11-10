@@ -3142,7 +3142,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get paywallBenefitNoAds =>
-      '광고, 소액 결제, 구독 모두 없습니다. 한 번 결제하면 앞으로의 모든 업데이트도 당신의 것입니다.';
+      '광고, 소액 결제, 구독 모두 없습니다. 한 번 결제로 업데이트도 포함됩니다.';
 
   @override
   String get paywallBenefitSaves =>
@@ -8860,13 +8860,13 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get settingsFreeScopeBlurb =>
-      '완전한 대회 주기 한 번(예선, 대륙 선수권, 세계 선수권)을 저장 파일 두 개로, 전 세계 모든 국가와 함께 제한 없이 즐길 수 있습니다. 끝없는 대회 주기와 무제한 저장은 단 한 번의 결제로, 앞으로의 모든 업데이트도 포함됩니다.';
+      '완전한 대회 주기 한 번(예선, 대륙 선수권, 세계 선수권)을 저장 파일 두 개로, 전 세계 모든 국가와 함께 제한 없이 즐길 수 있습니다. 끝없는 대회 주기와 무제한 저장은 단 한 번의 결제로, 업데이트도 포함됩니다.';
 
   @override
   String get settingsUnlockedTitle => '잠금 해제됨';
 
   @override
-  String get settingsUnlockedBlurb => '끝없는 대회 주기, 무제한 저장, 앞으로의 모든 업데이트. 감사합니다.';
+  String get settingsUnlockedBlurb => '끝없는 대회 주기, 무제한 저장, 업데이트 포함. 감사합니다.';
 
   @override
   String get settingsFromDeveloperTitle => '개발자의 말';
@@ -13567,13 +13567,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get sponsorFlavourMiners => '석탄, 구리, 그리고 먼지투성이 이사진.';
 
   @override
-  String get sponsorBrandMoth => '나방';
+  String get sponsorBrandDragonfly => '잠자리';
 
   @override
-  String get sponsorIndustryMoth => '주유소';
+  String get sponsorIndustryDragonfly => '주유소';
 
   @override
-  String get sponsorFlavourMoth => '휘발유, 핫도그, 그리고 한 번도 작동한 적 없는 세차기.';
+  String get sponsorFlavourDragonfly => '휘발유, 핫도그, 그리고 한 번도 작동한 적 없는 세차기.';
 
   @override
   String get sponsorBrandSludgeco => '진창석유';
@@ -13636,7 +13636,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get sponsorIndustryOldSwamp => '양조장';
 
   @override
-  String get sponsorFlavourOldSwamp => '1869년부터, 그 뒤로 한 번도 청소 안 한 지하실에서 양조.';
+  String get sponsorFlavourOldSwamp => '한 번도 청소한 적 없는 지하실에서 양조.';
 
   @override
   String get sponsorBrandBuzzhorn => 'Buzzhorn';
@@ -13738,13 +13738,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get sponsorFlavourPolarPenguin => '30가지 맛, 전부 녹는 중.';
 
   @override
-  String get sponsorBrandHexagon => 'Hexagon';
+  String get sponsorBrandBoltworth => 'Boltworth';
 
   @override
-  String get sponsorIndustryHexagon => '엔지니어링';
+  String get sponsorIndustryBoltworth => '엔지니어링';
 
   @override
-  String get sponsorFlavourHexagon => '모든 문제에는 여섯 면이 있습니다. 엔지니어들은 아직 세는 중.';
+  String get sponsorFlavourBoltworth => '모든 문제에 볼트 하나. 엔지니어들은 아직 너트를 찾는 중.';
 
   @override
   String get sponsorBrandVelocell => 'Velocell';

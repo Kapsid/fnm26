@@ -3220,7 +3220,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get paywallBenefitNoAds =>
-      'न विज्ञापन, न माइक्रोट्रांज़ैक्शन, न सब्सक्रिप्शन। एक भुगतान, और आगे का हर अपडेट आपका।';
+      'न विज्ञापन, न माइक्रोट्रांज़ैक्शन, न सब्सक्रिप्शन। एक भुगतान, अपडेट शामिल।';
 
   @override
   String get paywallBenefitSaves =>
@@ -9058,14 +9058,14 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get settingsFreeScopeBlurb =>
-      'एक पूरा चक्र (क्वालिफ़ाइंग, आपकी महाद्वीपीय चैंपियनशिप और विश्व चैंपियनशिप) दो सेव पर, दुनिया का हर देश, कुछ भी रोका नहीं गया। अनंत चक्र और असीमित सेव एक ही भुगतान में मिलते हैं, बस एक बार, और इसमें हर आगामी अपडेट शामिल है।';
+      'एक पूरा चक्र (क्वालिफ़ाइंग, आपकी महाद्वीपीय चैंपियनशिप और विश्व चैंपियनशिप) दो सेव पर, दुनिया का हर देश, कुछ भी रोका नहीं गया। अनंत चक्र और असीमित सेव एक ही भुगतान में मिलते हैं, बस एक बार, और इसमें अपडेट शामिल हैं।';
 
   @override
   String get settingsUnlockedTitle => 'अनलॉक';
 
   @override
   String get settingsUnlockedBlurb =>
-      'अनंत चक्र, असीमित सेव और हर आगामी अपडेट। धन्यवाद।';
+      'अनंत चक्र, असीमित सेव, अपडेट शामिल। धन्यवाद।';
 
   @override
   String get settingsFromDeveloperTitle => 'डेवलपर की ओर से';
@@ -13950,13 +13950,13 @@ class AppLocalizationsHi extends AppLocalizations {
   String get sponsorFlavourMiners => 'कोयला, तांबा और धूल से सना निदेशक मंडल।';
 
   @override
-  String get sponsorBrandMoth => 'पतंगा';
+  String get sponsorBrandDragonfly => 'ड्रैगनफ़्लाई';
 
   @override
-  String get sponsorIndustryMoth => 'पेट्रोल पंप';
+  String get sponsorIndustryDragonfly => 'पेट्रोल पंप';
 
   @override
-  String get sponsorFlavourMoth =>
+  String get sponsorFlavourDragonfly =>
       'पेट्रोल, हॉट डॉग और एक कार वॉश जो आज तक एक बार भी नहीं चला।';
 
   @override
@@ -14024,7 +14024,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get sponsorFlavourOldSwamp =>
-      '1869 से एक ऐसे तहख़ाने में बन रही है जिसे तब से किसी ने साफ़ नहीं किया।';
+      'एक ऐसे तहख़ाने में बनती है जिसे कभी किसी ने साफ़ नहीं किया।';
 
   @override
   String get sponsorBrandBuzzhorn => 'Buzzhorn';
@@ -14135,14 +14135,14 @@ class AppLocalizationsHi extends AppLocalizations {
   String get sponsorFlavourPolarPenguin => 'तीस फ़्लेवर, सब पिघलते हुए।';
 
   @override
-  String get sponsorBrandHexagon => 'Hexagon';
+  String get sponsorBrandBoltworth => 'Boltworth';
 
   @override
-  String get sponsorIndustryHexagon => 'इंजीनियरिंग';
+  String get sponsorIndustryBoltworth => 'इंजीनियरिंग';
 
   @override
-  String get sponsorFlavourHexagon =>
-      'हर समस्या के छह पहलू। इनके इंजीनियर अभी भी गिन रहे हैं।';
+  String get sponsorFlavourBoltworth =>
+      'हर समस्या के लिए एक बोल्ट। इनके इंजीनियर अभी भी नट ढूँढ रहे हैं।';
 
   @override
   String get sponsorBrandVelocell => 'Velocell';

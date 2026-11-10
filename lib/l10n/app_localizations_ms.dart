@@ -1607,7 +1607,7 @@ class AppLocalizationsMs extends AppLocalizations {
   String get hubHost => 'Tuan rumah';
 
   @override
-  String get hubGoldenBoot => 'Kasut Emas';
+  String get hubGoldenBoot => 'Penjaring Terbanyak';
 
   @override
   String hubGoldenBootValue(String name, int goals) {
@@ -3201,7 +3201,7 @@ class AppLocalizationsMs extends AppLocalizations {
       'Pastikan seorang pemain dinamakan dalam Pasukan Terbaik Kejohanan Dunia.';
 
   @override
-  String get achGoldenboot => 'Kasut Emas';
+  String get achGoldenboot => 'Penjaring Terbanyak';
 
   @override
   String get achGoldenbootDesc =>
@@ -3240,7 +3240,7 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get paywallBenefitNoAds =>
-      'Tiada iklan, tiada transaksi mikro, tiada langganan. Satu bayaran, dan setiap kemas kini akan datang milik anda.';
+      'Tiada iklan, tiada transaksi mikro, tiada langganan. Satu bayaran, kemas kini disertakan.';
 
   @override
   String get paywallBenefitSaves =>
@@ -5550,13 +5550,13 @@ class AppLocalizationsMs extends AppLocalizations {
   String get playerHonoursTitle => 'PENGHORMATAN';
 
   @override
-  String get awardGoldenBall => 'Bola Emas';
+  String get awardGoldenBall => 'Pemain Terbaik';
 
   @override
-  String get awardGoldenBoot => 'Kasut Emas';
+  String get awardGoldenBoot => 'Penjaring Terbanyak';
 
   @override
-  String get awardGoldenGlove => 'Sarung Tangan Emas';
+  String get awardGoldenGlove => 'Penjaga Gol Terbaik';
 
   @override
   String get awardTeamOfTournament => 'Pasukan Terbaik Kejohanan';
@@ -5707,13 +5707,13 @@ class AppLocalizationsMs extends AppLocalizations {
       'Anugerah ditentukan setelah kejohanan selesai dimainkan.';
 
   @override
-  String get tourSharedGoldenBall => 'BOLA EMAS';
+  String get tourSharedGoldenBall => 'PEMAIN TERBAIK';
 
   @override
   String get tourSharedPlayerOfTournament => 'Pemain Terbaik Kejohanan';
 
   @override
-  String get tourSharedGoldenBoot => 'KASUT EMAS';
+  String get tourSharedGoldenBoot => 'PENJARING TERBANYAK';
 
   @override
   String tourSharedGoalsCount(int count) {
@@ -5726,7 +5726,7 @@ class AppLocalizationsMs extends AppLocalizations {
   }
 
   @override
-  String get tourSharedGoldenGlove => 'SARUNG TANGAN EMAS';
+  String get tourSharedGoldenGlove => 'PENJAGA GOL TERBAIK';
 
   @override
   String get tourSharedTeamOfTournament => 'PASUKAN TERBAIK KEJOHANAN';
@@ -8227,7 +8227,7 @@ class AppLocalizationsMs extends AppLocalizations {
   String get tourJointBid => 'BIDAAN BERSAMA';
 
   @override
-  String get tourGoldenGlove => 'SARUNG TANGAN EMAS';
+  String get tourGoldenGlove => 'PENJAGA GOL TERBAIK';
 
   @override
   String get tourTeamOfTournament => 'PASUKAN TERBAIK KEJOHANAN';
@@ -9084,14 +9084,14 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get settingsFreeScopeBlurb =>
-      'Satu kitaran lengkap (kelayakan, kejohanan benua anda dan Kejohanan Dunia) pada dua simpanan, setiap negara di dunia, tiada yang disekat. Kitaran tanpa had dan simpanan tanpa had ialah satu bayaran, sekali sahaja, dan ia merangkumi setiap kemas kini akan datang.';
+      'Satu kitaran lengkap (kelayakan, kejohanan benua anda dan Kejohanan Dunia) pada dua simpanan, setiap negara di dunia, tiada yang disekat. Kitaran tanpa had dan simpanan tanpa had ialah satu bayaran, sekali sahaja, dengan kemas kini disertakan.';
 
   @override
   String get settingsUnlockedTitle => 'Dibuka';
 
   @override
   String get settingsUnlockedBlurb =>
-      'Kitaran tanpa had, simpanan tanpa had dan setiap kemas kini akan datang. Terima kasih.';
+      'Kitaran tanpa had, simpanan tanpa had, kemas kini disertakan. Terima kasih.';
 
   @override
   String get settingsFromDeveloperTitle => 'Daripada pembangun';
@@ -13983,13 +13983,13 @@ class AppLocalizationsMs extends AppLocalizations {
       'Arang batu, tembaga dan lembaga pengarah yang sangat berdebu.';
 
   @override
-  String get sponsorBrandMoth => 'Rama-Rama';
+  String get sponsorBrandDragonfly => 'Pepatung';
 
   @override
-  String get sponsorIndustryMoth => 'Stesen minyak';
+  String get sponsorIndustryDragonfly => 'Stesen minyak';
 
   @override
-  String get sponsorFlavourMoth =>
+  String get sponsorFlavourDragonfly =>
       'Petrol, hot dog dan cucian kereta yang tak pernah sekali pun berfungsi.';
 
   @override
@@ -14060,7 +14060,7 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get sponsorFlavourOldSwamp =>
-      'Dibancuh sejak 1869 dalam bilik bawah tanah yang tak pernah dibersihkan sejak itu.';
+      'Dibancuh dalam bilik bawah tanah yang tak pernah dibersihkan.';
 
   @override
   String get sponsorBrandBuzzhorn => 'Buzzhorn';
@@ -14172,14 +14172,14 @@ class AppLocalizationsMs extends AppLocalizations {
   String get sponsorFlavourPolarPenguin => 'Tiga puluh perisa, semuanya cair.';
 
   @override
-  String get sponsorBrandHexagon => 'Hexagon';
+  String get sponsorBrandBoltworth => 'Boltworth';
 
   @override
-  String get sponsorIndustryHexagon => 'Kejuruteraan';
+  String get sponsorIndustryBoltworth => 'Kejuruteraan';
 
   @override
-  String get sponsorFlavourHexagon =>
-      'Setiap masalah ada enam sisi. Jurutera mereka masih mengira.';
+  String get sponsorFlavourBoltworth =>
+      'Satu bolt untuk setiap masalah. Jurutera mereka masih mencari natnya.';
 
   @override
   String get sponsorBrandVelocell => 'Velocell';

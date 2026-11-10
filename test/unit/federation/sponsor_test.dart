@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/widgets.dart' show Locale;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/util/sponsor_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/db/career_bundle.dart';
@@ -19,6 +21,7 @@ import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/sponsor_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/press/press_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 
 import '../../helpers/test_database.dart';
 
@@ -338,6 +341,50 @@ void main() {
         // Its effect runs to the cycle's close.
         await moveTo(c, id, DateTime(2030, 6));
         expect(await press(c, id), (morale: 0, board: -2));
+      },
+    );
+
+    test(
+      'a save that signed a retired brand reads its deal under the new name',
+      () async {
+        final c = open();
+        final id = await newCareer(c);
+        final comp = c.read(competitionRepositoryProvider);
+        await comp.markDrawWatched(id, 0, budgetSetupKind);
+        await moveTo(c, id, DateTime(2028, 10));
+        final en = lookupAppLocalizations(const Locale('en'));
+        final cs = lookupAppLocalizations(const Locale('cs'));
+        // Written by a build that still printed these brands as Hexagon and
+        // Můra: the press row stores the id, spelled out here as it was.
+        for (final (year, stored) in [(2028, 'hexagon'), (2029, 'moth')]) {
+          final brand = Sponsors.brandOfPressKey('sponsor:$year:$stored');
+          expect(brand, isNotNull, reason: stored);
+          expect(sponsorBrandName(en, brand!), isNot(contains('Hexagon')));
+          expect(sponsorBrandName(cs, brand), isNot(contains('Můra')));
+        }
+        expect(sponsorBrandName(en, SponsorBrand.hexagon), 'Boltworth');
+        expect(sponsorIndustryLabel(en, SponsorBrand.hexagon), 'Engineering');
+        expect(sponsorBrandName(en, SponsorBrand.moth), 'Dragonfly');
+        expect(sponsorBrandName(cs, SponsorBrand.moth), 'Vážka');
+
+        await comp.markDrawWatched(id, 0, Sponsors.chosenKind(2028, 1));
+        await c
+            .read(careerRepositoryProvider)
+            .recordPressAnswer(
+              careerId: id,
+              cycle: 0,
+              questionKey: 'sponsor:2028:hexagon',
+              tone: Sponsors.pressTone,
+              moraleDelta: -1,
+              boardDelta: 0,
+              answeredAt: DateTime(2028, 10),
+            );
+        final r = await round(c, id);
+        expect(r.decided, isTrue);
+        expect(r.chosen?.brand, SponsorBrand.hexagon);
+        expect(sponsorBrandName(en, r.chosen!.brand), 'Boltworth');
+        await moveTo(c, id, DateTime(2030, 6));
+        expect(await press(c, id), (morale: -1, board: 0));
       },
     );
 

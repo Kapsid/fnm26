@@ -1662,7 +1662,7 @@ class AppLocalizationsHr extends AppLocalizations {
   String get hubHost => 'Domaćin';
 
   @override
-  String get hubGoldenBoot => 'Zlatna kopačka';
+  String get hubGoldenBoot => 'Najbolji strijelac';
 
   @override
   String hubGoldenBootValue(String name, int goals) {
@@ -3286,7 +3286,7 @@ class AppLocalizationsHr extends AppLocalizations {
       'Neka igrač uđe u Momčad turnira Svjetskog prvenstva.';
 
   @override
-  String get achGoldenboot => 'Zlatna kopačka';
+  String get achGoldenboot => 'Najbolji strijelac';
 
   @override
   String get achGoldenbootDesc =>
@@ -3324,7 +3324,7 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get paywallBenefitNoAds =>
-      'Bez reklama, bez mikrotransakcija, bez pretplate. Jedna uplata, a svako buduće ažuriranje je tvoje.';
+      'Bez reklama, bez mikrotransakcija, bez pretplate. Jedna uplata, ažuriranja uključena.';
 
   @override
   String get paywallBenefitSaves =>
@@ -5717,13 +5717,13 @@ class AppLocalizationsHr extends AppLocalizations {
   String get playerHonoursTitle => 'ODLIČJA';
 
   @override
-  String get awardGoldenBall => 'Zlatna lopta';
+  String get awardGoldenBall => 'Najbolji igrač';
 
   @override
-  String get awardGoldenBoot => 'Zlatna kopačka';
+  String get awardGoldenBoot => 'Najbolji strijelac';
 
   @override
-  String get awardGoldenGlove => 'Zlatne rukavice';
+  String get awardGoldenGlove => 'Najbolji vratar';
 
   @override
   String get awardTeamOfTournament => 'Momčad turnira';
@@ -5874,13 +5874,13 @@ class AppLocalizationsHr extends AppLocalizations {
       'Nagrade se dodjeljuju kad se turnir odigra do kraja.';
 
   @override
-  String get tourSharedGoldenBall => 'ZLATNA LOPTA';
+  String get tourSharedGoldenBall => 'NAJBOLJI IGRAČ';
 
   @override
   String get tourSharedPlayerOfTournament => 'Igrač turnira';
 
   @override
-  String get tourSharedGoldenBoot => 'ZLATNA KOPAČKA';
+  String get tourSharedGoldenBoot => 'NAJBOLJI STRIJELAC';
 
   @override
   String tourSharedGoalsCount(int count) {
@@ -5895,7 +5895,7 @@ class AppLocalizationsHr extends AppLocalizations {
   }
 
   @override
-  String get tourSharedGoldenGlove => 'ZLATNE RUKAVICE';
+  String get tourSharedGoldenGlove => 'NAJBOLJI VRATAR';
 
   @override
   String get tourSharedTeamOfTournament => 'MOMČAD TURNIRA';
@@ -8501,7 +8501,7 @@ class AppLocalizationsHr extends AppLocalizations {
   String get tourJointBid => 'ZAJEDNIČKA KANDIDATURA';
 
   @override
-  String get tourGoldenGlove => 'ZLATNE RUKAVICE';
+  String get tourGoldenGlove => 'NAJBOLJI VRATAR';
 
   @override
   String get tourTeamOfTournament => 'MOMČAD TURNIRA';
@@ -9347,14 +9347,14 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get settingsFreeScopeBlurb =>
-      'Cijeli ciklus (kvalifikacije, tvoje kontinentalno prvenstvo i Svjetsko prvenstvo) na dvije spremljene igre, sve zemlje svijeta, bez ograničenja. Neograničeni ciklusi i spremljene igre dolaze uz jednu uplatu, samo jednom, koja pokriva i sva buduća ažuriranja.';
+      'Cijeli ciklus (kvalifikacije, tvoje kontinentalno prvenstvo i Svjetsko prvenstvo) na dvije spremljene igre, sve zemlje svijeta, bez ograničenja. Neograničeni ciklusi i spremljene igre dolaze uz jednu uplatu, samo jednom, s uključenim ažuriranjima.';
 
   @override
   String get settingsUnlockedTitle => 'Otključano';
 
   @override
   String get settingsUnlockedBlurb =>
-      'Neograničeni ciklusi, neograničene spremljene igre i sva buduća ažuriranja. Hvala ti.';
+      'Neograničeni ciklusi, neograničene spremljene igre, ažuriranja uključena. Hvala ti.';
 
   @override
   String get settingsFromDeveloperTitle => 'Od autora igre';
@@ -14358,13 +14358,13 @@ class AppLocalizationsHr extends AppLocalizations {
   String get sponsorFlavourMiners => 'Ugljen, bakar i vrlo prašnjava uprava.';
 
   @override
-  String get sponsorBrandMoth => 'Moljac';
+  String get sponsorBrandDragonfly => 'Vretenac';
 
   @override
-  String get sponsorIndustryMoth => 'Benzinske postaje';
+  String get sponsorIndustryDragonfly => 'Benzinske postaje';
 
   @override
-  String get sponsorFlavourMoth =>
+  String get sponsorFlavourDragonfly =>
       'Benzin, hot dog i autopraonica koja nikad nije radila.';
 
   @override
@@ -14433,7 +14433,7 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get sponsorFlavourOldSwamp =>
-      'Kuha se od 1869. u podrumu koji otad nitko nije očistio.';
+      'Kuha se u podrumu koji nitko nikad nije očistio.';
 
   @override
   String get sponsorBrandBuzzhorn => 'Buzzhorn';
@@ -14544,14 +14544,14 @@ class AppLocalizationsHr extends AppLocalizations {
   String get sponsorFlavourPolarPenguin => 'Trideset okusa, a svi se tope.';
 
   @override
-  String get sponsorBrandHexagon => 'Hexagon';
+  String get sponsorBrandBoltworth => 'Boltworth';
 
   @override
-  String get sponsorIndustryHexagon => 'Strojarstvo';
+  String get sponsorIndustryBoltworth => 'Strojarstvo';
 
   @override
-  String get sponsorFlavourHexagon =>
-      'Svaki problem ima šest strana. Njihovi inženjeri ih još broje.';
+  String get sponsorFlavourBoltworth =>
+      'Za svaki problem jedan vijak. Njihovi inženjeri još traže maticu.';
 
   @override
   String get sponsorBrandVelocell => 'Velocell';

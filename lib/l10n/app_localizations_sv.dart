@@ -1635,7 +1635,7 @@ class AppLocalizationsSv extends AppLocalizations {
   String get hubHost => 'Värd';
 
   @override
-  String get hubGoldenBoot => 'Gyllene skon';
+  String get hubGoldenBoot => 'Skyttekung';
 
   @override
   String hubGoldenBootValue(String name, int goals) {
@@ -3231,7 +3231,7 @@ class AppLocalizationsSv extends AppLocalizations {
       'Få en spelare utsedd till Turneringens lag i ett världsmästerskap.';
 
   @override
-  String get achGoldenboot => 'Gyllene skon';
+  String get achGoldenboot => 'Skyttekung';
 
   @override
   String get achGoldenbootDesc =>
@@ -3268,7 +3268,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get paywallBenefitNoAds =>
-      'Inga annonser, inga mikrotransaktioner, ingen prenumeration. En betalning, och varje framtida uppdatering är din.';
+      'Inga annonser, inga mikrotransaktioner, ingen prenumeration. En betalning, uppdateringar ingår.';
 
   @override
   String get paywallBenefitSaves =>
@@ -5573,13 +5573,13 @@ class AppLocalizationsSv extends AppLocalizations {
   String get playerHonoursTitle => 'PRIS OCH TITLAR';
 
   @override
-  String get awardGoldenBall => 'Gyllene bollen';
+  String get awardGoldenBall => 'Bästa spelare';
 
   @override
-  String get awardGoldenBoot => 'Gyllene skon';
+  String get awardGoldenBoot => 'Skyttekung';
 
   @override
-  String get awardGoldenGlove => 'Gyllene handsken';
+  String get awardGoldenGlove => 'Bästa målvakt';
 
   @override
   String get awardTeamOfTournament => 'Turneringens lag';
@@ -5730,13 +5730,13 @@ class AppLocalizationsSv extends AppLocalizations {
       'Utmärkelserna avgörs när turneringen är färdigspelad.';
 
   @override
-  String get tourSharedGoldenBall => 'GYLLENE BOLLEN';
+  String get tourSharedGoldenBall => 'BÄSTA SPELARE';
 
   @override
   String get tourSharedPlayerOfTournament => 'Turneringens spelare';
 
   @override
-  String get tourSharedGoldenBoot => 'GYLLENE SKON';
+  String get tourSharedGoldenBoot => 'SKYTTEKUNG';
 
   @override
   String tourSharedGoalsCount(int count) {
@@ -5750,7 +5750,7 @@ class AppLocalizationsSv extends AppLocalizations {
   }
 
   @override
-  String get tourSharedGoldenGlove => 'GYLLENE HANDSKEN';
+  String get tourSharedGoldenGlove => 'BÄSTA MÅLVAKT';
 
   @override
   String get tourSharedTeamOfTournament => 'TURNERINGENS LAG';
@@ -8281,7 +8281,7 @@ class AppLocalizationsSv extends AppLocalizations {
   String get tourJointBid => 'GEMENSAM ANSÖKAN';
 
   @override
-  String get tourGoldenGlove => 'GYLLENE HANDSKEN';
+  String get tourGoldenGlove => 'BÄSTA MÅLVAKT';
 
   @override
   String get tourTeamOfTournament => 'TURNERINGENS LAG';
@@ -9136,14 +9136,14 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get settingsFreeScopeBlurb =>
-      'En hel cykel (kval, din kontinentala mästerskapsturnering och Världsmästerskapet) på två sparplatser, alla länder i världen, inget undanhållet. Obegränsade cykler och obegränsat antal sparfiler köper du med en enda betalning, en gång, och den gäller för alla framtida uppdateringar.';
+      'En hel cykel (kval, din kontinentala mästerskapsturnering och Världsmästerskapet) på två sparplatser, alla länder i världen, inget undanhållet. Obegränsade cykler och obegränsat antal sparfiler köper du med en enda betalning, en gång, och uppdateringar ingår.';
 
   @override
   String get settingsUnlockedTitle => 'Upplåst';
 
   @override
   String get settingsUnlockedBlurb =>
-      'Obegränsade cykler, obegränsat antal sparfiler och alla framtida uppdateringar. Tack.';
+      'Obegränsade cykler, obegränsat antal sparfiler, uppdateringar ingår. Tack.';
 
   @override
   String get settingsFromDeveloperTitle => 'Från utvecklaren';
@@ -14024,13 +14024,13 @@ class AppLocalizationsSv extends AppLocalizations {
       'Kol, koppar och en väldigt dammig bolagsstyrelse.';
 
   @override
-  String get sponsorBrandMoth => 'Malen';
+  String get sponsorBrandDragonfly => 'Trollsländan';
 
   @override
-  String get sponsorIndustryMoth => 'Bensinstationer';
+  String get sponsorIndustryDragonfly => 'Bensinstationer';
 
   @override
-  String get sponsorFlavourMoth =>
+  String get sponsorFlavourDragonfly =>
       'Bensin, korv och en biltvätt som aldrig har fungerat.';
 
   @override
@@ -14098,7 +14098,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get sponsorFlavourOldSwamp =>
-      'Bryggt sedan 1869 i en källare som ingen har städat sedan dess.';
+      'Bryggt i en källare som ingen någonsin har städat.';
 
   @override
   String get sponsorBrandBuzzhorn => 'Buzzhorn';
@@ -14210,14 +14210,14 @@ class AppLocalizationsSv extends AppLocalizations {
   String get sponsorFlavourPolarPenguin => 'Trettio smaker, alla smälter.';
 
   @override
-  String get sponsorBrandHexagon => 'Hexagon';
+  String get sponsorBrandBoltworth => 'Boltworth';
 
   @override
-  String get sponsorIndustryHexagon => 'Verkstadsindustri';
+  String get sponsorIndustryBoltworth => 'Verkstadsindustri';
 
   @override
-  String get sponsorFlavourHexagon =>
-      'Varje problem har sex sidor. Deras ingenjörer räknar fortfarande.';
+  String get sponsorFlavourBoltworth =>
+      'En bult för varje problem. Deras ingenjörer letar fortfarande efter muttern.';
 
   @override
   String get sponsorBrandVelocell => 'Velocell';

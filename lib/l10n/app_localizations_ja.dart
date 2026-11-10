@@ -3136,7 +3136,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get paywallBenefitNoAds =>
-      '広告なし、課金アイテムなし、サブスクリプションなし。1回の支払いで今後のアップデートもすべて手に入ります。';
+      '広告なし、課金アイテムなし、サブスクリプションなし。1回の支払いで、アップデートも含まれます。';
 
   @override
   String get paywallBenefitSaves =>
@@ -8845,14 +8845,13 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get settingsFreeScopeBlurb =>
-      '1サイクルを丸ごと（予選、大陸選手権、世界選手権）2つのセーブで。世界中のすべての国が選べ、制限は一切ありません。無制限のサイクルとセーブ数無制限は1回限りの支払いで、今後のアップデートもすべて含まれます。';
+      '1サイクルを丸ごと（予選、大陸選手権、世界選手権）2つのセーブで。世界中のすべての国が選べ、制限は一切ありません。無制限のサイクルとセーブ数無制限は1回限りの支払いで、アップデートも含まれます。';
 
   @override
   String get settingsUnlockedTitle => '解除済み';
 
   @override
-  String get settingsUnlockedBlurb =>
-      '無制限のサイクル、セーブ数無制限、今後のすべてのアップデート。ありがとうございます。';
+  String get settingsUnlockedBlurb => '無制限のサイクル、セーブ数無制限、アップデート込み。ありがとうございます。';
 
   @override
   String get settingsFromDeveloperTitle => '開発者より';
@@ -13529,13 +13528,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get sponsorFlavourMiners => '石炭、銅、そしてやけに埃っぽい取締役会。';
 
   @override
-  String get sponsorBrandMoth => '蛾';
+  String get sponsorBrandDragonfly => 'トンボ';
 
   @override
-  String get sponsorIndustryMoth => 'ガソリンスタンド';
+  String get sponsorIndustryDragonfly => 'ガソリンスタンド';
 
   @override
-  String get sponsorFlavourMoth => 'ガソリン、ホットドッグ、一度も動いたことのない洗車機。';
+  String get sponsorFlavourDragonfly => 'ガソリン、ホットドッグ、一度も動いたことのない洗車機。';
 
   @override
   String get sponsorBrandSludgeco => 'ヘドロ石油';
@@ -13598,7 +13597,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get sponsorIndustryOldSwamp => 'ビール醸造';
 
   @override
-  String get sponsorFlavourOldSwamp => '1869年創業。以来一度も掃除していない地下蔵で醸造。';
+  String get sponsorFlavourOldSwamp => '一度も掃除したことのない地下蔵で醸造。';
 
   @override
   String get sponsorBrandBuzzhorn => 'Buzzhorn';
@@ -13701,13 +13700,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get sponsorFlavourPolarPenguin => '30種類のフレーバー、どれも溶けかけ。';
 
   @override
-  String get sponsorBrandHexagon => 'Hexagon';
+  String get sponsorBrandBoltworth => 'Boltworth';
 
   @override
-  String get sponsorIndustryHexagon => 'エンジニアリング';
+  String get sponsorIndustryBoltworth => 'エンジニアリング';
 
   @override
-  String get sponsorFlavourHexagon => 'どの問題にも6つの面がある。エンジニアはまだ数えている。';
+  String get sponsorFlavourBoltworth => 'どの問題にもボルトが1本。エンジニアはまだナットを探している。';
 
   @override
   String get sponsorBrandVelocell => 'Velocell';

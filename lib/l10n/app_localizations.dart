@@ -2826,7 +2826,7 @@ abstract class AppLocalizations {
   /// **'Host'**
   String get hubHost;
 
-  /// Award label: Golden Boot.
+  /// Award label: Golden Boot. Outside English use a plain generic term (best player, top scorer, best goalkeeper), never the local name of a real trophy.
   ///
   /// In en, this message translates to:
   /// **'Golden Boot'**
@@ -5466,7 +5466,7 @@ abstract class AppLocalizations {
   /// **'Have a player named in a World Championship Team of the Tournament.'**
   String get achAllstarDesc;
 
-  /// Achievement title.
+  /// Achievement title. Outside English use a plain generic term (best player, top scorer, best goalkeeper), never the local name of a real trophy.
   ///
   /// In en, this message translates to:
   /// **'Golden Boot'**
@@ -5535,7 +5535,7 @@ abstract class AppLocalizations {
   /// Paywall benefit line: no ads or microtransactions, one payment covers every update.
   ///
   /// In en, this message translates to:
-  /// **'No ads, no microtransactions, no subscription. One payment, and every future update is yours.'**
+  /// **'No ads, no microtransactions, no subscription. One payment, updates included.'**
   String get paywallBenefitNoAds;
 
   /// Paywall benefit line: the save-slot limit goes away.
@@ -8560,19 +8560,19 @@ abstract class AppLocalizations {
   /// **'HONOURS'**
   String get playerHonoursTitle;
 
-  /// Award: awardGoldenBall.
+  /// Award: awardGoldenBall. Outside English use a plain generic term (best player, top scorer, best goalkeeper), never the local name of a real trophy.
   ///
   /// In en, this message translates to:
   /// **'Golden Ball'**
   String get awardGoldenBall;
 
-  /// Award: awardGoldenBoot.
+  /// Award: awardGoldenBoot. Outside English use a plain generic term (best player, top scorer, best goalkeeper), never the local name of a real trophy.
   ///
   /// In en, this message translates to:
   /// **'Golden Boot'**
   String get awardGoldenBoot;
 
-  /// Award: awardGoldenGlove.
+  /// Award: awardGoldenGlove. Outside English use a plain generic term (best player, top scorer, best goalkeeper), never the local name of a real trophy.
   ///
   /// In en, this message translates to:
   /// **'Golden Glove'**
@@ -8860,7 +8860,7 @@ abstract class AppLocalizations {
   /// **'The awards are decided once the tournament is played out.'**
   String get tourSharedAwardsEmpty;
 
-  /// Award label: best player of the tournament.
+  /// Award label: best player of the tournament. Outside English use a plain generic term (best player, top scorer, best goalkeeper), never the local name of a real trophy.
   ///
   /// In en, this message translates to:
   /// **'GOLDEN BALL'**
@@ -8872,7 +8872,7 @@ abstract class AppLocalizations {
   /// **'Player of the Tournament'**
   String get tourSharedPlayerOfTournament;
 
-  /// Award label: top scorer of the tournament.
+  /// Award label: top scorer of the tournament. Outside English use a plain generic term (best player, top scorer, best goalkeeper), never the local name of a real trophy.
   ///
   /// In en, this message translates to:
   /// **'GOLDEN BOOT'**
@@ -8884,7 +8884,7 @@ abstract class AppLocalizations {
   /// **'{count, plural, one{1 goal} other{{count} goals}}'**
   String tourSharedGoalsCount(int count);
 
-  /// Award label: best goalkeeper of the tournament.
+  /// Award label: best goalkeeper of the tournament. Outside English use a plain generic term (best player, top scorer, best goalkeeper), never the local name of a real trophy.
   ///
   /// In en, this message translates to:
   /// **'GOLDEN GLOVE'**
@@ -12649,7 +12649,7 @@ abstract class AppLocalizations {
   /// **'JOINT BID'**
   String get tourJointBid;
 
-  /// Tournament awards: best goalkeeper.
+  /// Tournament awards: best goalkeeper. Outside English use a plain generic term (best player, top scorer, best goalkeeper), never the local name of a real trophy.
   ///
   /// In en, this message translates to:
   /// **'GOLDEN GLOVE'**
@@ -14080,7 +14080,7 @@ abstract class AppLocalizations {
   /// Settings: what the free game covers.
   ///
   /// In en, this message translates to:
-  /// **'A complete cycle (qualifying, your continental championship and the World Championship) on two saves, every nation in the world, nothing held back. Endless cycles and unlimited saves are a single payment, once, and it covers every future update.'**
+  /// **'A complete cycle (qualifying, your continental championship and the World Championship) on two saves, every nation in the world, nothing held back. Endless cycles and unlimited saves are a single payment, once, with updates included.'**
   String get settingsFreeScopeBlurb;
 
   /// Settings: what the free game covers.
@@ -14092,7 +14092,7 @@ abstract class AppLocalizations {
   /// Settings: what the free game covers.
   ///
   /// In en, this message translates to:
-  /// **'Endless cycles, unlimited saves and every future update. Thank you.'**
+  /// **'Endless cycles, unlimited saves, updates included. Thank you.'**
   String get settingsUnlockedBlurb;
 
   /// Settings: heading of the developer's note on long-term support, shown to every player.
@@ -21182,23 +21182,23 @@ abstract class AppLocalizations {
   /// **'Coal, copper and a very dusty board of directors.'**
   String get sponsorFlavourMiners;
 
-  /// Sponsor brand name. Czech petrol station chain. Czech original Můra (moth). TRANSLATE as the local word for moth.
+  /// Sponsor brand name. Invented Czech petrol station chain. Czech original Vážka (dragonfly). TRANSLATE as the local word for dragonfly.
   ///
   /// In en, this message translates to:
-  /// **'Moth'**
-  String get sponsorBrandMoth;
+  /// **'Dragonfly'**
+  String get sponsorBrandDragonfly;
 
-  /// The trade of the sponsor brand "Moth", shown under its name. Keep short.
+  /// The trade of the sponsor brand "Dragonfly", shown under its name. Keep short.
   ///
   /// In en, this message translates to:
   /// **'Petrol stations'**
-  String get sponsorIndustryMoth;
+  String get sponsorIndustryDragonfly;
 
-  /// One-line witty character of the fictional sponsor brand "Moth" (Petrol stations), shown on its offer card. Dry, funny, short.
+  /// One-line witty character of the fictional sponsor brand "Dragonfly" (Petrol stations), shown on its offer card. Dry, funny, short.
   ///
   /// In en, this message translates to:
   /// **'Petrol, hot dogs and a car wash that has never once worked.'**
-  String get sponsorFlavourMoth;
+  String get sponsorFlavourDragonfly;
 
   /// Sponsor brand name. Invented oil company: "sludge" + "co". TRANSLATE as a fun local oil brand built on sludge/muck.
   ///
@@ -21323,7 +21323,7 @@ abstract class AppLocalizations {
   /// One-line witty character of the fictional sponsor brand "Oldmire" (Brewery), shown on its offer card. Dry, funny, short.
   ///
   /// In en, this message translates to:
-  /// **'Brewed since 1869 in a cellar nobody has cleaned since.'**
+  /// **'Brewed in a cellar nobody has ever cleaned.'**
   String get sponsorFlavourOldSwamp;
 
   /// Sponsor brand name. Invented energy drink. Keep the name.
@@ -21524,23 +21524,23 @@ abstract class AppLocalizations {
   /// **'Thirty flavours, all of them melting.'**
   String get sponsorFlavourPolarPenguin;
 
-  /// Sponsor brand name. Engineering firm. Keep "Hexagon" (or its plain local spelling).
+  /// Sponsor brand name. Invented engineering firm: bolt + worth. Keep "Boltworth" as is in every language.
   ///
   /// In en, this message translates to:
-  /// **'Hexagon'**
-  String get sponsorBrandHexagon;
+  /// **'Boltworth'**
+  String get sponsorBrandBoltworth;
 
-  /// The trade of the sponsor brand "Hexagon", shown under its name. Keep short.
+  /// The trade of the sponsor brand "Boltworth", shown under its name. Keep short.
   ///
   /// In en, this message translates to:
   /// **'Engineering'**
-  String get sponsorIndustryHexagon;
+  String get sponsorIndustryBoltworth;
 
-  /// One-line witty character of the fictional sponsor brand "Hexagon" (Engineering), shown on its offer card. Dry, funny, short.
+  /// One-line witty character of the fictional sponsor brand "Boltworth" (Engineering), shown on its offer card. Dry, funny, short.
   ///
   /// In en, this message translates to:
-  /// **'Six sides to every problem. Their engineers are still counting.'**
-  String get sponsorFlavourHexagon;
+  /// **'A bolt for every problem. Their engineers are still looking for the nut.'**
+  String get sponsorFlavourBoltworth;
 
   /// Sponsor brand name. Invented telecom. Keep the name.
   ///

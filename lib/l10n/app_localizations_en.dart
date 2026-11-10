@@ -3278,7 +3278,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get paywallBenefitNoAds =>
-      'No ads, no microtransactions, no subscription. One payment, and every future update is yours.';
+      'No ads, no microtransactions, no subscription. One payment, updates included.';
 
   @override
   String get paywallBenefitSaves =>
@@ -9173,14 +9173,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsFreeScopeBlurb =>
-      'A complete cycle (qualifying, your continental championship and the World Championship) on two saves, every nation in the world, nothing held back. Endless cycles and unlimited saves are a single payment, once, and it covers every future update.';
+      'A complete cycle (qualifying, your continental championship and the World Championship) on two saves, every nation in the world, nothing held back. Endless cycles and unlimited saves are a single payment, once, with updates included.';
 
   @override
   String get settingsUnlockedTitle => 'Unlocked';
 
   @override
   String get settingsUnlockedBlurb =>
-      'Endless cycles, unlimited saves and every future update. Thank you.';
+      'Endless cycles, unlimited saves, updates included. Thank you.';
 
   @override
   String get settingsFromDeveloperTitle => 'From the developer';
@@ -14058,13 +14058,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Coal, copper and a very dusty board of directors.';
 
   @override
-  String get sponsorBrandMoth => 'Moth';
+  String get sponsorBrandDragonfly => 'Dragonfly';
 
   @override
-  String get sponsorIndustryMoth => 'Petrol stations';
+  String get sponsorIndustryDragonfly => 'Petrol stations';
 
   @override
-  String get sponsorFlavourMoth =>
+  String get sponsorFlavourDragonfly =>
       'Petrol, hot dogs and a car wash that has never once worked.';
 
   @override
@@ -14134,7 +14134,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sponsorFlavourOldSwamp =>
-      'Brewed since 1869 in a cellar nobody has cleaned since.';
+      'Brewed in a cellar nobody has ever cleaned.';
 
   @override
   String get sponsorBrandBuzzhorn => 'Buzzhorn';
@@ -14246,14 +14246,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'Thirty flavours, all of them melting.';
 
   @override
-  String get sponsorBrandHexagon => 'Hexagon';
+  String get sponsorBrandBoltworth => 'Boltworth';
 
   @override
-  String get sponsorIndustryHexagon => 'Engineering';
+  String get sponsorIndustryBoltworth => 'Engineering';
 
   @override
-  String get sponsorFlavourHexagon =>
-      'Six sides to every problem. Their engineers are still counting.';
+  String get sponsorFlavourBoltworth =>
+      'A bolt for every problem. Their engineers are still looking for the nut.';
 
   @override
   String get sponsorBrandVelocell => 'Velocell';

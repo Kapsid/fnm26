@@ -34,10 +34,14 @@ enum SponsorDeal {
 /// core/util/sponsor_label.dart). None is a real company; a few are parodies.
 ///
 /// The enum NAME is the canonical id, stored in a press row (see
-/// [Sponsors.pressKey]). The owner's Czech originals read as themselves in
-/// Czech and are translated elsewhere: Veselé Hamburgery (Happy Burgers),
-/// Agroprd (Agrofart), Havíři (The Miners), Hexagon, and, for Czechia only,
-/// Starobahno beer (Oldmire) and Můra petrol stations (Moth).
+/// [Sponsors.pressKey]), so an enum name never changes once shipped: two of
+/// them outlived the brand they were named for. [hexagon] is printed as
+/// Boltworth (an engineering firm) and [moth] as Dragonfly (Vážka in Czech):
+/// a save that signed either still reads its deal, under the new name. The
+/// owner's Czech originals read as themselves in Czech and are translated
+/// elsewhere: Veselé Hamburgery (Happy Burgers), Agroprd (Agrofart), Havíři
+/// (The Miners), and, for Czechia only, Starobahno beer (Oldmire) and Vážka
+/// petrol stations (Dragonfly).
 enum SponsorBrand implements Sponsor {
   // Dubious: the most money, the board, the room and the press all against it.
   agrofart(SponsorDeal.risky),
@@ -49,6 +53,8 @@ enum SponsorBrand implements Sponsor {
 
   // Big payers the board would rather not be seen with.
   miners(SponsorDeal.bigPayer),
+
+  /// Printed as Dragonfly (Vážka); the id is the brand it replaced.
   moth(SponsorDeal.bigPayer, czechOnly: true),
   sludgeco(SponsorDeal.bigPayer),
   skyloom(SponsorDeal.bigPayer),
@@ -74,6 +80,7 @@ enum SponsorBrand implements Sponsor {
   polarPenguin(SponsorDeal.familyFriendly),
 
   // They fund Commercial / PR and drag the players to photo shoots.
+  /// Printed as Boltworth; the id is the brand it replaced.
   hexagon(SponsorDeal.marketing),
   velocell(SponsorDeal.marketing),
   parcelion(SponsorDeal.marketing),

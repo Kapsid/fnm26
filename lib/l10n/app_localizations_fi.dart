@@ -1651,7 +1651,7 @@ class AppLocalizationsFi extends AppLocalizations {
   String get hubHost => 'Isäntä';
 
   @override
-  String get hubGoldenBoot => 'Kultainen kenkä';
+  String get hubGoldenBoot => 'Maalikuningas';
 
   @override
   String hubGoldenBootValue(String name, int goals) {
@@ -3249,7 +3249,7 @@ class AppLocalizationsFi extends AppLocalizations {
   String get achAllstarDesc => 'Saa pelaaja MM-kisojen tähdistökokoonpanoon.';
 
   @override
-  String get achGoldenboot => 'Kultainen kenkä';
+  String get achGoldenboot => 'Maalikuningas';
 
   @override
   String get achGoldenbootDesc => 'Anna maasi päättää turnaus maalikuninkaana.';
@@ -3285,7 +3285,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get paywallBenefitNoAds =>
-      'Ei mainoksia, ei mikromaksuja, ei tilausta. Yksi maksu, ja jokainen tuleva päivitys on sinun.';
+      'Ei mainoksia, ei mikromaksuja, ei tilausta. Yksi maksu, päivitykset sisältyvät hintaan.';
 
   @override
   String get paywallBenefitSaves =>
@@ -5614,13 +5614,13 @@ class AppLocalizationsFi extends AppLocalizations {
   String get playerHonoursTitle => 'KUNNIAPALKINNOT';
 
   @override
-  String get awardGoldenBall => 'Kultainen pallo';
+  String get awardGoldenBall => 'Paras pelaaja';
 
   @override
-  String get awardGoldenBoot => 'Kultainen kenkä';
+  String get awardGoldenBoot => 'Maalikuningas';
 
   @override
-  String get awardGoldenGlove => 'Kultainen hanska';
+  String get awardGoldenGlove => 'Paras maalivahti';
 
   @override
   String get awardTeamOfTournament => 'Turnauksen tähdistökokoonpano';
@@ -5771,13 +5771,13 @@ class AppLocalizationsFi extends AppLocalizations {
       'Palkinnot ratkeavat, kun turnaus on pelattu loppuun.';
 
   @override
-  String get tourSharedGoldenBall => 'KULTAINEN PALLO';
+  String get tourSharedGoldenBall => 'PARAS PELAAJA';
 
   @override
   String get tourSharedPlayerOfTournament => 'Turnauksen pelaaja';
 
   @override
-  String get tourSharedGoldenBoot => 'KULTAINEN KENKÄ';
+  String get tourSharedGoldenBoot => 'MAALIKUNINGAS';
 
   @override
   String tourSharedGoalsCount(int count) {
@@ -5791,7 +5791,7 @@ class AppLocalizationsFi extends AppLocalizations {
   }
 
   @override
-  String get tourSharedGoldenGlove => 'KULTAINEN HANSKA';
+  String get tourSharedGoldenGlove => 'PARAS MAALIVAHTI';
 
   @override
   String get tourSharedTeamOfTournament => 'TURNAUKSEN TÄHDISTÖKOKOONPANO';
@@ -8355,7 +8355,7 @@ class AppLocalizationsFi extends AppLocalizations {
   String get tourJointBid => 'YHTEISHAKEMUS';
 
   @override
-  String get tourGoldenGlove => 'KULTAINEN HANSKA';
+  String get tourGoldenGlove => 'PARAS MAALIVAHTI';
 
   @override
   String get tourTeamOfTournament => 'TURNAUKSEN JOUKKUE';
@@ -9208,14 +9208,14 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get settingsFreeScopeBlurb =>
-      'Yksi täysi kausi (karsinnat, mannermestaruuskilpailusi ja MM-kisat) kahdella tallennuksella, kaikki maailman maat, mitään pimittämättä. Loputtomat kaudet ja rajattomat tallennukset ovat kertamaksu, ja se kattaa kaikki tulevat päivitykset.';
+      'Yksi täysi kausi (karsinnat, mannermestaruuskilpailusi ja MM-kisat) kahdella tallennuksella, kaikki maailman maat, mitään pimittämättä. Loputtomat kaudet ja rajattomat tallennukset ovat kertamaksu, ja päivitykset sisältyvät hintaan.';
 
   @override
   String get settingsUnlockedTitle => 'Avattu';
 
   @override
   String get settingsUnlockedBlurb =>
-      'Loputtomat kaudet, rajattomat tallennukset ja kaikki tulevat päivitykset. Kiitos.';
+      'Loputtomat kaudet, rajattomat tallennukset, päivitykset mukana. Kiitos.';
 
   @override
   String get settingsFromDeveloperTitle => 'Kehittäjältä';
@@ -14105,13 +14105,13 @@ class AppLocalizationsFi extends AppLocalizations {
       'Hiiltä, kuparia ja hyvin pölyinen johtokunta.';
 
   @override
-  String get sponsorBrandMoth => 'Koi';
+  String get sponsorBrandDragonfly => 'Sudenkorento';
 
   @override
-  String get sponsorIndustryMoth => 'Huoltoasemat';
+  String get sponsorIndustryDragonfly => 'Huoltoasemat';
 
   @override
-  String get sponsorFlavourMoth =>
+  String get sponsorFlavourDragonfly =>
       'Bensaa, nakkeja ja autopesu, joka ei ole toiminut kertaakaan.';
 
   @override
@@ -14180,7 +14180,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get sponsorFlavourOldSwamp =>
-      'Pantu vuodesta 1869 kellarissa, jota kukaan ei ole siivonnut sen jälkeen.';
+      'Pantu kellarissa, jota kukaan ei ole koskaan siivonnut.';
 
   @override
   String get sponsorBrandBuzzhorn => 'Buzzhorn';
@@ -14293,14 +14293,14 @@ class AppLocalizationsFi extends AppLocalizations {
       'Kolmekymmentä makua, kaikki sulamassa.';
 
   @override
-  String get sponsorBrandHexagon => 'Hexagon';
+  String get sponsorBrandBoltworth => 'Boltworth';
 
   @override
-  String get sponsorIndustryHexagon => 'Konepaja';
+  String get sponsorIndustryBoltworth => 'Konepaja';
 
   @override
-  String get sponsorFlavourHexagon =>
-      'Jokaisella ongelmalla on kuusi puolta. Heidän insinöörinsä laskevat yhä.';
+  String get sponsorFlavourBoltworth =>
+      'Joka ongelmaan oma pultti. Heidän insinöörinsä etsivät yhä mutteria.';
 
   @override
   String get sponsorBrandVelocell => 'Velocell';

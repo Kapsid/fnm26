@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
+import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/federation/sponsors.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
@@ -275,6 +276,46 @@ void main() {
     expect(() => WorldPack.migrate({'name': 'x'}), throwsFormatException);
   });
 
+  test('a pack made before a club was renamed reads under the new name', () {
+    // What a pack made before the rename holds: the game's old name as the
+    // key of its rename, strength and Czech name, and on its players.
+    final old = _v2Pack().toJson();
+    final squads = old['squads']! as Map<String, Object?>;
+    final player = (squads['7']! as List).first as Map<String, Object?>;
+    final json = {
+      ...old,
+      'formatVersion': 3,
+      'clubs': {'Old FC': 'New FC', 'Limburg Smurfs': 'Genk Mine'},
+      'clubStrengths': {'Toluca Red Devils': 4},
+      'localized': {
+        ...old['localized']! as Map<String, Object?>,
+        'clubs.Limburg Smurfs': {'cs': 'Limburští'},
+      },
+      'squads': {
+        '7': [
+          {...player, 'club': 'Toluca Red Devils', 'clubCountry': 'mex'},
+        ],
+      },
+    }..remove('managers');
+    final p = WorldPack.fromJson(WorldPack.migrate(json));
+    expect(p.clubs, {'Old FC': 'New FC', 'Limburg Blue-White': 'Genk Mine'});
+    expect(p.clubStrengths, {'Toluca Volcanoes': 4});
+    expect(p.localized['clubs.Limburg Blue-White'], {'cs': 'Limburští'});
+    expect(p.localized.keys, isNot(contains('clubs.Limburg Smurfs')));
+    expect(p.localized['clubs.Old FC'], {'cs': 'Nový FC'});
+    expect(p.squads[7]!.single.club, 'Toluca Volcanoes');
+    expect(p.pools[7]!.length, 2);
+    for (final old in ClubService.retiredNames.keys) {
+      expect(
+        ClubService.allLeagues().expand((l) => l.clubs),
+        isNot(contains(old)),
+      );
+    }
+    for (final now in ClubService.retiredNames.values) {
+      expect(ClubService.allLeagues().expand((l) => l.clubs), contains(now));
+    }
+  });
+
   test('v2 round trip keeps every new part', () {
     final p = _v2Pack();
     expect(p.toJson()['formatVersion'], kPackFormatVersion);
@@ -312,11 +353,18 @@ void main() {
       expect(p.addedSponsors, isEmpty);
       expect(p.addedYAccounts, isEmpty);
       expect(p.localized, isEmpty);
-      // Every 1.1.0 part reads back exactly as the 1.1.0 file wrote it.
+      // Every 1.1.0 part reads back exactly as the 1.1.0 file wrote it,
+      // but for a club renamed since, which reads under its new name.
       final out = jsonDecode(jsonEncode(p.toJson())) as Map<String, Object?>;
+      var renamed = jsonEncode(raw);
+      ClubService.retiredNames.forEach(
+        (from, to) => renamed = renamed.replaceAll('"$from"', '"$to"'),
+      );
+      final expected = jsonDecode(renamed) as Map<String, Object?>;
+      expect(renamed, isNot(jsonEncode(raw)), reason: 'it names one');
       for (final k in raw.keys) {
         if (k == 'formatVersion') continue;
-        expect(out[k], raw[k], reason: k);
+        expect(out[k], expected[k], reason: k);
       }
       // The fixture is a 1.1.0 file: migrating never rewrites it.
       expect(raw['formatVersion'], 1);

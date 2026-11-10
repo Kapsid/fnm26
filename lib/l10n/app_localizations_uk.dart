@@ -1608,7 +1608,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get hubHost => 'Господар';
 
   @override
-  String get hubGoldenBoot => 'Золота бутса';
+  String get hubGoldenBoot => 'Найкращий бомбардир';
 
   @override
   String hubGoldenBootValue(String name, int goals) {
@@ -3229,7 +3229,7 @@ class AppLocalizationsUk extends AppLocalizations {
       'Нехай гравця включать до Збірної турніру чемпіонату світу.';
 
   @override
-  String get achGoldenboot => 'Золота бутса';
+  String get achGoldenboot => 'Найкращий бомбардир';
 
   @override
   String get achGoldenbootDesc =>
@@ -3266,7 +3266,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get paywallBenefitNoAds =>
-      'Без реклами, мікротранзакцій і підписки. Один платіж, і кожне майбутнє оновлення твоє.';
+      'Без реклами, мікротранзакцій і підписки. Один платіж, оновлення включено.';
 
   @override
   String get paywallBenefitSaves =>
@@ -5669,13 +5669,13 @@ class AppLocalizationsUk extends AppLocalizations {
   String get playerHonoursTitle => 'ВІДЗНАКИ';
 
   @override
-  String get awardGoldenBall => 'Золотий м’яч';
+  String get awardGoldenBall => 'Найкращий гравець';
 
   @override
-  String get awardGoldenBoot => 'Золота бутса';
+  String get awardGoldenBoot => 'Найкращий бомбардир';
 
   @override
-  String get awardGoldenGlove => 'Золоті рукавиці';
+  String get awardGoldenGlove => 'Найкращий воротар';
 
   @override
   String get awardTeamOfTournament => 'Збірна турніру';
@@ -5826,13 +5826,13 @@ class AppLocalizationsUk extends AppLocalizations {
       'Нагороди визначаться після завершення турніру.';
 
   @override
-  String get tourSharedGoldenBall => 'ЗОЛОТИЙ М’ЯЧ';
+  String get tourSharedGoldenBall => 'НАЙКРАЩИЙ ГРАВЕЦЬ';
 
   @override
   String get tourSharedPlayerOfTournament => 'Найкращий гравець турніру';
 
   @override
-  String get tourSharedGoldenBoot => 'ЗОЛОТА БУТСА';
+  String get tourSharedGoldenBoot => 'НАЙКРАЩИЙ БОМБАРДИР';
 
   @override
   String tourSharedGoalsCount(int count) {
@@ -5848,7 +5848,7 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get tourSharedGoldenGlove => 'ЗОЛОТІ РУКАВИЦІ';
+  String get tourSharedGoldenGlove => 'НАЙКРАЩИЙ ВОРОТАР';
 
   @override
   String get tourSharedTeamOfTournament => 'ЗБІРНА ТУРНІРУ';
@@ -8439,7 +8439,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get tourJointBid => 'СПІЛЬНА ЗАЯВКА';
 
   @override
-  String get tourGoldenGlove => 'ЗОЛОТІ РУКАВИЦІ';
+  String get tourGoldenGlove => 'НАЙКРАЩИЙ ВОРОТАР';
 
   @override
   String get tourTeamOfTournament => 'ЗБІРНА ТУРНІРУ';
@@ -9299,14 +9299,14 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get settingsFreeScopeBlurb =>
-      'Повний цикл (відбір, твій континентальний чемпіонат і чемпіонат світу) на двох збереженнях, усі країни світу, нічого не приховано. Нескінченні цикли й необмежена кількість збережень це один платіж, раз і назавжди, і він охоплює всі майбутні оновлення.';
+      'Повний цикл (відбір, твій континентальний чемпіонат і чемпіонат світу) на двох збереженнях, усі країни світу, нічого не приховано. Нескінченні цикли й необмежена кількість збережень це один платіж, раз і назавжди, з оновленнями включно.';
 
   @override
   String get settingsUnlockedTitle => 'Розблоковано';
 
   @override
   String get settingsUnlockedBlurb =>
-      'Нескінченні цикли, необмежена кількість збережень і всі майбутні оновлення. Дякуємо.';
+      'Нескінченні цикли, необмежена кількість збережень, оновлення включено. Дякуємо.';
 
   @override
   String get settingsFromDeveloperTitle => 'Від розробника';
@@ -14320,13 +14320,13 @@ class AppLocalizationsUk extends AppLocalizations {
       'Вугілля, мідь і дуже запилена рада директорів.';
 
   @override
-  String get sponsorBrandMoth => 'Міль';
+  String get sponsorBrandDragonfly => 'Бабка';
 
   @override
-  String get sponsorIndustryMoth => 'АЗС';
+  String get sponsorIndustryDragonfly => 'АЗС';
 
   @override
-  String get sponsorFlavourMoth =>
+  String get sponsorFlavourDragonfly =>
       'Бензин, хот-доги й автомийка, яка жодного разу не працювала.';
 
   @override
@@ -14394,7 +14394,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get sponsorFlavourOldSwamp =>
-      'Вариться з 1869 року в льоху, який відтоді ніхто не прибирав.';
+      'Вариться в льоху, який ніхто ніколи не прибирав.';
 
   @override
   String get sponsorBrandBuzzhorn => 'Buzzhorn';
@@ -14506,14 +14506,14 @@ class AppLocalizationsUk extends AppLocalizations {
   String get sponsorFlavourPolarPenguin => 'Тридцять смаків, і всі тануть.';
 
   @override
-  String get sponsorBrandHexagon => 'Hexagon';
+  String get sponsorBrandBoltworth => 'Boltworth';
 
   @override
-  String get sponsorIndustryHexagon => 'Інженерія';
+  String get sponsorIndustryBoltworth => 'Інженерія';
 
   @override
-  String get sponsorFlavourHexagon =>
-      'У кожної проблеми шість сторін. Їхні інженери досі рахують.';
+  String get sponsorFlavourBoltworth =>
+      'На кожну проблему свій болт. Їхні інженери досі шукають гайку.';
 
   @override
   String get sponsorBrandVelocell => 'Velocell';

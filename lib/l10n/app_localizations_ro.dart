@@ -1629,7 +1629,7 @@ class AppLocalizationsRo extends AppLocalizations {
   String get hubHost => 'Gazdă';
 
   @override
-  String get hubGoldenBoot => 'Gheata de Aur';
+  String get hubGoldenBoot => 'Golgheter';
 
   @override
   String hubGoldenBootValue(String name, int goals) {
@@ -3287,7 +3287,7 @@ class AppLocalizationsRo extends AppLocalizations {
       'Un jucător de-al dvs. e inclus în echipa turneului la un Campionat Mondial.';
 
   @override
-  String get achGoldenboot => 'Gheata de Aur';
+  String get achGoldenboot => 'Golgheter';
 
   @override
   String get achGoldenbootDesc =>
@@ -3325,7 +3325,7 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get paywallBenefitNoAds =>
-      'Fără reclame, fără microtranzacții, fără abonament. O singură plată și toate actualizările viitoare sunt ale dvs.';
+      'Fără reclame, fără microtranzacții, fără abonament. O singură plată, actualizări incluse.';
 
   @override
   String get paywallBenefitSaves =>
@@ -5730,13 +5730,13 @@ class AppLocalizationsRo extends AppLocalizations {
   String get playerHonoursTitle => 'PALMARES';
 
   @override
-  String get awardGoldenBall => 'Balonul de Aur';
+  String get awardGoldenBall => 'Cel mai bun jucător';
 
   @override
-  String get awardGoldenBoot => 'Gheata de Aur';
+  String get awardGoldenBoot => 'Golgheter';
 
   @override
-  String get awardGoldenGlove => 'Mănușa de Aur';
+  String get awardGoldenGlove => 'Cel mai bun portar';
 
   @override
   String get awardTeamOfTournament => 'Echipa turneului';
@@ -5887,13 +5887,13 @@ class AppLocalizationsRo extends AppLocalizations {
       'Premiile se decid după ce turneul se încheie.';
 
   @override
-  String get tourSharedGoldenBall => 'BALONUL DE AUR';
+  String get tourSharedGoldenBall => 'CEL MAI BUN JUCĂTOR';
 
   @override
   String get tourSharedPlayerOfTournament => 'Jucătorul turneului';
 
   @override
-  String get tourSharedGoldenBoot => 'GHEATA DE AUR';
+  String get tourSharedGoldenBoot => 'GOLGHETER';
 
   @override
   String tourSharedGoalsCount(int count) {
@@ -5908,7 +5908,7 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String get tourSharedGoldenGlove => 'MĂNUȘA DE AUR';
+  String get tourSharedGoldenGlove => 'CEL MAI BUN PORTAR';
 
   @override
   String get tourSharedTeamOfTournament => 'ECHIPA TURNEULUI';
@@ -8572,7 +8572,7 @@ class AppLocalizationsRo extends AppLocalizations {
   String get tourJointBid => 'CANDIDATURĂ COMUNĂ';
 
   @override
-  String get tourGoldenGlove => 'MĂNUȘA DE AUR';
+  String get tourGoldenGlove => 'CEL MAI BUN PORTAR';
 
   @override
   String get tourTeamOfTournament => 'ECHIPA TURNEULUI';
@@ -9440,14 +9440,14 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get settingsFreeScopeBlurb =>
-      'Un ciclu complet (preliminariile, campionatul continental și Campionatul Mondial) pe două salvări, toate națiunile lumii, nimic ascuns. Ciclurile nelimitate și salvările nelimitate costă o singură plată, o dată, care acoperă toate actualizările viitoare.';
+      'Un ciclu complet (preliminariile, campionatul continental și Campionatul Mondial) pe două salvări, toate națiunile lumii, nimic ascuns. Ciclurile nelimitate și salvările nelimitate costă o singură plată, o dată, cu actualizări incluse.';
 
   @override
   String get settingsUnlockedTitle => 'Deblocat';
 
   @override
   String get settingsUnlockedBlurb =>
-      'Cicluri nelimitate, salvări nelimitate și toate actualizările viitoare. Vă mulțumim.';
+      'Cicluri nelimitate, salvări nelimitate, actualizări incluse. Vă mulțumim.';
 
   @override
   String get settingsFromDeveloperTitle => 'De la dezvoltator';
@@ -14430,13 +14430,13 @@ class AppLocalizationsRo extends AppLocalizations {
       'Cărbune, cupru și un consiliu de administrație foarte prăfuit.';
 
   @override
-  String get sponsorBrandMoth => 'Molia';
+  String get sponsorBrandDragonfly => 'Libelula';
 
   @override
-  String get sponsorIndustryMoth => 'Benzinării';
+  String get sponsorIndustryDragonfly => 'Benzinării';
 
   @override
-  String get sponsorFlavourMoth =>
+  String get sponsorFlavourDragonfly =>
       'Benzină, hot dog și o spălătorie auto care n-a mers niciodată.';
 
   @override
@@ -14506,7 +14506,7 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get sponsorFlavourOldSwamp =>
-      'Fabricată din 1869 într-o pivniță necurățată de atunci.';
+      'Fabricată într-o pivniță pe care n-a curățat-o nimeni vreodată.';
 
   @override
   String get sponsorBrandBuzzhorn => 'Buzzhorn';
@@ -14619,14 +14619,14 @@ class AppLocalizationsRo extends AppLocalizations {
       'Treizeci de arome, toate se topesc.';
 
   @override
-  String get sponsorBrandHexagon => 'Hexagon';
+  String get sponsorBrandBoltworth => 'Boltworth';
 
   @override
-  String get sponsorIndustryHexagon => 'Inginerie';
+  String get sponsorIndustryBoltworth => 'Inginerie';
 
   @override
-  String get sponsorFlavourHexagon =>
-      'Orice problemă are șase laturi. Inginerii lor încă numără.';
+  String get sponsorFlavourBoltworth =>
+      'Un șurub pentru fiecare problemă. Inginerii lor încă mai caută piulița.';
 
   @override
   String get sponsorBrandVelocell => 'Velocell';
