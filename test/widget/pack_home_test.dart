@@ -52,11 +52,8 @@ void main() {
     await tester.tap(issue);
     await settle(tester);
 
-    final uri = c.read(routerProvider).routeInformationProvider.value.uri;
-    // The players section opened on a nation is that nation's squad.
-    expect(uri.path, Routes.editorSquad);
-    expect(uri.queryParameters['id'], '$id');
-    expect(uri.queryParameters['nation'], '$cze');
+    // The players section opened on a nation is that nation's squad, pushed
+    // over the database home so back returns there.
     final screen = tester.widget<SquadScreen>(find.byType(SquadScreen));
     expect(screen.packId, id);
     expect(screen.nationId, cze);
