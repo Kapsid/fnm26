@@ -15,7 +15,7 @@ abstract final class LandmarkPaths {
     LandmarkKind.eiffel => _eiffel(),
     LandmarkKind.colosseum => _colosseum(),
     LandmarkKind.bigBen => _bigBen(),
-    LandmarkKind.christRedeemer => _christ(),
+    LandmarkKind.sugarloaf => _sugarloaf(),
     LandmarkKind.stBasil => _stBasil(),
     LandmarkKind.sagradaFamilia => _sagrada(),
     LandmarkKind.operaHouse => _opera(),
@@ -73,7 +73,7 @@ abstract final class LandmarkPaths {
   static bool hasWindows(LandmarkKind k) => switch (k) {
     LandmarkKind.eiffel ||
     LandmarkKind.tokyoTower ||
-    LandmarkKind.christRedeemer ||
+    LandmarkKind.sugarloaf ||
     LandmarkKind.pyramids ||
     LandmarkKind.tableMountain ||
     LandmarkKind.obelisco ||
@@ -256,22 +256,23 @@ abstract final class LandmarkPaths {
     return _minus(tower, face);
   }
 
-  static Path _christ() => _union([
-    _poly([
-      (-1, 0),
-      (-0.6, -0.22),
-      (-0.25, -0.5),
-      (-0.06, -0.6),
-      (0.08, -0.6),
-      (0.35, -0.42),
-      (0.7, -0.2),
-      (1, 0),
-    ]),
-    _rect(-0.025, -0.9, 0.025, -0.58),
-    _rect(-0.16, -0.86, 0.16, -0.83),
-    Path()
-      ..addOval(Rect.fromCircle(center: const Offset(0, -0.93), radius: 0.03)),
-  ]);
+  /// Rio de Janeiro: Sugarloaf, the tall granite dome over the bay, with
+  /// its lower neighbour beside it and the cable car strung between them.
+  static Path _sugarloaf() {
+    final rock = Path()
+      ..moveTo(-1, 0)
+      ..cubicTo(-0.85, -0.2, -0.6, -0.42, -0.35, -0.43)
+      ..cubicTo(-0.15, -0.44, 0, -0.36, 0.12, -0.22)
+      ..cubicTo(0.18, -0.55, 0.3, -0.98, 0.48, -1)
+      ..cubicTo(0.66, -1, 0.76, -0.6, 0.82, -0.3)
+      ..cubicTo(0.86, -0.12, 0.92, -0.03, 1, 0)
+      ..close();
+    return _union([
+      rock,
+      _bar(const Offset(-0.33, -0.44), const Offset(0.44, -0.97), 0.01),
+      _rect(0.03, -0.71, 0.08, -0.66),
+    ]);
+  }
 
   static Path _stBasil() => _union([
     _rect(-0.7, -0.28, 0.7),

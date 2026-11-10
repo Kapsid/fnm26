@@ -14,7 +14,7 @@ void main() {
       expect(Landmarks.forCity('Roma'), LandmarkKind.colosseum);
       expect(Landmarks.forCity('Rome'), LandmarkKind.colosseum);
       expect(Landmarks.forCity('London'), LandmarkKind.bigBen);
-      expect(Landmarks.forCity('Rio de Janeiro'), LandmarkKind.christRedeemer);
+      expect(Landmarks.forCity('Rio de Janeiro'), LandmarkKind.sugarloaf);
       expect(Landmarks.forCity('Reykjavík'), LandmarkKind.hallgrims);
       expect(Landmarks.forCity('REYKJAVIK'), LandmarkKind.hallgrims);
       expect(Landmarks.forCity('Ciudad de México'), LandmarkKind.angel);
