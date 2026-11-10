@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart' show immutable;
 
 import '../../entities/enums.dart';
 import '../../entities/player_attributes.dart';
+import '../club/clubs.dart';
 import '../federation/sponsors.dart';
 import '../player/player_traits.dart';
 import '../press/y_feed.dart';
@@ -756,7 +757,8 @@ class WorldPack {
     );
   }
 
-  /// Upgrades older JSON step by step to [kPackFormatVersion]. Identity at v4.
+  /// Upgrades older JSON step by step to [kPackFormatVersion]. Identity at v4
+  /// for a pack naming no renamed club ([_retiredClubs]).
   /// Throws [FormatException] for a missing or newer version. Never changes
   /// [json] itself.
   static Map<String, Object?> migrate(Map<String, Object?> json) {
@@ -776,7 +778,73 @@ class WorldPack {
     if (v == 1) out = _from1To2(out);
     if (v <= 2) out = _from2To3(out);
     if (v <= 3) out = _from3To4(out, v);
-    return out;
+    return _retiredClubs(out);
+  }
+
+  /// [json] with every league club the game has since renamed
+  /// ([ClubService.retiredNames]) under its new name: the keys of `clubs`,
+  /// `clubStrengths` and the `clubs.` paths of `localized`, and the club of
+  /// every squad and pool player. A key already under the new name wins.
+  /// [json] itself when it names none, so a current pack is untouched.
+  static Map<String, Object?> _retiredClubs(Map<String, Object?> json) {
+    const retired = ClubService.retiredNames;
+    var changed = false;
+
+    Object? keys(Object? m, String Function(String) rename) {
+      if (m is! Map) return m;
+      if (!m.keys.any((k) => k is String && rename(k) != k)) return m;
+      changed = true;
+      final out = <String, Object?>{};
+      for (final e in m.entries) {
+        final k = e.key as String;
+        if (rename(k) == k) out[k] = e.value;
+      }
+      for (final e in m.entries) {
+        final k = e.key as String;
+        if (rename(k) != k) out.putIfAbsent(rename(k), () => e.value);
+      }
+      return out;
+    }
+
+    Object? players(Object? m) {
+      if (m is! Map) return m;
+      if (!m.values.any(
+        (l) =>
+            l is List && l.any((p) => p is Map && retired[p['club']] != null),
+      )) {
+        return m;
+      }
+      changed = true;
+      return {
+        for (final e in m.entries)
+          e.key: e.value is List
+              ? [
+                  for (final p in e.value as List)
+                    if (p is Map && retired[p['club']] != null)
+                      {...p, 'club': retired[p['club']]}
+                    else
+                      p,
+                ]
+              : e.value,
+      };
+    }
+
+    String club(String k) => retired[k] ?? k;
+    String path(String k) => k.startsWith('clubs.')
+        ? 'clubs.${club(k.substring('clubs.'.length))}'
+        : k;
+
+    final out = {
+      ...json,
+      if (json.containsKey('clubs')) 'clubs': keys(json['clubs'], club),
+      if (json.containsKey('clubStrengths'))
+        'clubStrengths': keys(json['clubStrengths'], club),
+      if (json.containsKey('localized'))
+        'localized': keys(json['localized'], path),
+      if (json.containsKey('squads')) 'squads': players(json['squads']),
+      if (json.containsKey('pools')) 'pools': players(json['pools']),
+    };
+    return changed ? out : json;
   }
 
   /// Format 2 to 3: no club strengths set, so a format-2 pack reads as
