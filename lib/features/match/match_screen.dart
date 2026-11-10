@@ -2000,6 +2000,15 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                 liveHome;
             final homeScore = ft ? finalHome : liveHome;
             final awayScore = ft ? finalAway : liveAway;
+            // Red cards shown so far, marked on the 2D TV's bar for the
+            // rest of the match.
+            final homeReds = shown
+                .where((e) => e.type == MatchEventType.redCard)
+                .where((e) => e.teamNationId == homeId)
+                .length;
+            final awayReds =
+                shown.where((e) => e.type == MatchEventType.redCard).length -
+                homeReds;
             final knockout = _koOutcome;
             // Reveal the shootout as it plays out (or in full once decided).
             final showingShootout = _isShootout && _clockDone;
@@ -2076,6 +2085,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               notice: bug && _redFlash == null ? _eventFlash : null,
               noticeForHome: _eventFlash?.teamNationId == homeId,
               bugTheme: bugTheme,
+              homeReds: homeReds,
+              awayReds: awayReds,
             );
             final Widget? momentum = !ft && !showingShootout
                 ? _MomentumBar(
@@ -2414,6 +2425,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                         goalForHome: _goalFlash?.teamNationId == homeId,
                         theme: finalsTheme,
                         homeNationId: homeId,
+                        homeReds: homeReds,
+                        awayReds: awayReds,
                         ground: GroundStrip(
                           ground: preview.ground,
                           neutral: preview.neutralVenue,

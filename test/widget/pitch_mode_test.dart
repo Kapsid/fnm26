@@ -961,6 +961,26 @@ void main() {
       }
       final redFirst = pb.revealAt(ri) < pb.revealAt(si);
       final redBanner = find.byKey(matchRedCardBannerKey);
+      // The TV bar marks the sent-off side's red card for the rest of the
+      // match, and only once it has happened.
+      final redHome = r.events[ri].teamNationId == preview.homeTeam.nationId;
+      final barRed = find.byKey(
+        redHome ? matchBugHomeRedsKey : matchBugAwayRedsKey,
+      );
+      final otherRed = find.byKey(
+        redHome ? matchBugAwayRedsKey : matchBugHomeRedsKey,
+      );
+      if (r.events.take(ri).every((e) => e.type != MatchEventType.redCard)) {
+        expect(barRed, findsNothing);
+      }
+      void barMarksRed() {
+        expect(barRed, findsOneWidget);
+        if (r.events.where((e) => e.type == MatchEventType.redCard).length ==
+            1) {
+          expect(otherRed, findsNothing);
+        }
+      }
+
       if (tablet) {
         // The tablet's TV has no banners to collide: each takes the
         // header's one strip in its turn.
@@ -988,6 +1008,7 @@ void main() {
           }
         }
         expect(seen, {'redCard', 'substitution'});
+        barMarksRed();
         return;
       }
       final subPop = find.byKey(matchEventBannerKey);
@@ -1049,6 +1070,7 @@ void main() {
         expect(subAfterRed, isTrue);
       }
       expect(redOut() || subOut(), isFalse);
+      barMarksRed();
     });
   }
 
