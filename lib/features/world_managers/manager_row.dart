@@ -152,8 +152,8 @@ class ManagerRow extends ConsumerWidget {
 }
 
 /// The match preview's one line: the opposing manager and, when there is
-/// something between you, the tie. Nothing in a cycle without world managers
-/// (the provider seeds nothing there).
+/// something between you, the tie. Nothing when nobody is in charge on the
+/// fixture's day.
 class OpponentManagerLine extends ConsumerWidget {
   const OpponentManagerLine({
     required this.careerId,

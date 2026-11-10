@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/data/data_providers.dart';
-import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/nations/nation_now_card.dart';
 import 'package:fnm/features/nations/nation_now_providers.dart';
 import 'package:fnm/features/world_managers/manager_detail_screen.dart';
@@ -39,7 +38,7 @@ Future<void> _pump(WidgetTester tester, SeededSave save, int nationId) async {
 }
 
 int _otherNation(SeededSave s) =>
-    s.nations.firstWhere((Nation n) => n.id != s.nationId).id;
+    s.nations.firstWhere((n) => n.id != s.nationId).id;
 
 void main() {
   testWidgets("another nation's page shows the manager row", (tester) async {
@@ -102,7 +101,7 @@ void main() {
     expect(find.byKey(NationNowCard.managerKey), findsOneWidget);
   });
 
-  testWidgets('a cycle without world managers shows no row and seeds none', (
+  testWidgets('a cycle without world managers (an old save) shows the row', (
     tester,
   ) async {
     final save = await seedSave(tester);
@@ -113,13 +112,7 @@ void main() {
       ),
     );
     await _pump(tester, save, _otherNation(save));
-    expect(find.byKey(NationNowCard.managerKey), findsNothing);
-    expect(find.byType(ManagerRow), findsNothing);
-    final seeded = await tester.runAsync(
-      () => save.container
-          .read(worldManagerRepositoryProvider)
-          .hasManagers(save.careerId),
-    );
-    expect(seeded, isFalse);
+    expect(find.byKey(NationNowCard.managerKey), findsOneWidget);
+    expect(find.byType(ManagerRow), findsOneWidget);
   });
 }

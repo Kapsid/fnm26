@@ -35,7 +35,8 @@ import 'package:fnm/features/world_pack/world_pack_providers.dart'
 /// for them, and read by date.
 ///
 /// Seeding never runs on its own: not when a career opens, not on a hub
-/// read. Only [ensureSeeded] (directly, or through [styleOn]) seeds.
+/// read. Only [ensureSeeded] (directly, through [styleOn], or through
+/// [seedForDisplay] when a screen shows them) seeds.
 class WorldManagerService {
   WorldManagerService(this._ref);
 
@@ -117,7 +118,32 @@ class WorldManagerService {
     AppLog.info('mgr-seed', '${watch.elapsedMilliseconds} ms');
   }
 
-  /// Whether the cycle open on [date] is run by world managers.
+  /// Whether the screens show career [careerId]'s world managers: when it
+  /// has them already, or can seed them (any career on this schema). Display
+  /// only, never an effect: a save from before world managers shows its
+  /// managers at once, seeded as of its current cycle's opening, while what
+  /// they DO (style, decisions, news, press, Y) waits for a cycle that
+  /// [cycleHasManagers].
+  Future<bool> managersVisible(int careerId) async {
+    if (await _ref.read(worldManagerRepositoryProvider).hasManagers(careerId)) {
+      return true;
+    }
+    return await _ref.read(careerRepositoryProvider).byId(careerId) != null;
+  }
+
+  /// Seeds career [careerId]'s managers for a screen (see
+  /// [managersVisible]); false when there is nothing to show. Seeding writes
+  /// only the manager tables, which no match or world outcome reads in a
+  /// cycle without [worldManagersKind].
+  Future<bool> seedForDisplay(int careerId) async {
+    if (!await managersVisible(careerId)) return false;
+    await ensureSeeded(careerId);
+    return true;
+  }
+
+  /// Whether the cycle open on [date] is run by world managers: the gate of
+  /// every EFFECT of theirs (AI style, decision points, news, press, Y).
+  /// Screens that only show them ask [managersVisible].
   Future<bool> cycleHasManagers(int careerId, DateTime date) => _ref
       .read(competitionRepositoryProvider)
       .hasWatchedDraw(careerId, CareerService.cycleAt(date), worldManagersKind);
