@@ -301,60 +301,30 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
     }
     if (e.addedId case final id? when language == null) {
       unawaited(
-        showAdaptiveSheet<void>(
-          context: context,
-          isScrollControlled: true,
-          showDragHandle: true,
-          builder: (sheet) => Padding(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.viewInsetsOf(sheet).bottom,
-            ),
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.marginMobile,
-                AppSpacing.sm,
-                AppSpacing.marginMobile,
-                AppSpacing.lg,
-              ),
-              child: AddedItemForm(
-                packId: _id,
-                section: _section,
-                world: world,
-                id: id,
-                onDeleted: _deleted,
-                onDone: () => Navigator.of(sheet).pop(),
-              ),
-            ),
+        showEditorFormSheet(
+          context,
+          form: (close) => AddedItemForm(
+            packId: _id,
+            section: _section,
+            world: world,
+            id: id,
+            onDeleted: _deleted,
+            onDone: close,
           ),
         ),
       );
       return;
     }
     unawaited(
-      showAdaptiveSheet<void>(
-        context: context,
-        isScrollControlled: true,
-        showDragHandle: true,
-        builder: (sheet) => Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.viewInsetsOf(sheet).bottom,
-          ),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.marginMobile,
-              AppSpacing.sm,
-              AppSpacing.marginMobile,
-              AppSpacing.lg,
-            ),
-            child: NameEditForm(
-              packId: _id,
-              section: _section,
-              entry: e,
-              world: world,
-              language: language,
-              onDone: () => Navigator.of(sheet).pop(),
-            ),
-          ),
+      showEditorFormSheet(
+        context,
+        form: (close) => NameEditForm(
+          packId: _id,
+          section: _section,
+          entry: e,
+          world: world,
+          language: language,
+          onDone: close,
         ),
       ),
     );

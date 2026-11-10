@@ -441,6 +441,7 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
           // An added sponsor's description runs over lines.
           minLines: _e.added ? 2 : 1,
           maxLines: _e.added ? 4 : 1,
+          onTapOutside: _e.added ? hideKeyboard : null,
           textCapitalization: _e.added
               ? TextCapitalization.sentences
               : TextCapitalization.words,
@@ -555,6 +556,9 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
         maxLines: 8,
         keyboardType: TextInputType.multiline,
         textCapitalization: TextCapitalization.words,
+        // A multi-line keyboard has no key that closes it: a tap anywhere
+        // else does.
+        onTapOutside: hideKeyboard,
         style: AppTypography.bodyMedium.copyWith(color: AppColors.onSurface),
         onChanged: (_) => _changed(),
         decoration: InputDecoration(

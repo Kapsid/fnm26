@@ -1225,6 +1225,8 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
         maxLength: PackRules.descriptionMax,
         keyboardType: TextInputType.multiline,
         textCapitalization: TextCapitalization.sentences,
+        // A multi-line keyboard has no key that closes it.
+        onTapOutside: hideKeyboard,
         style: fieldStyle,
         onChanged: (_) => _changed(),
         decoration: InputDecoration(
@@ -1489,6 +1491,65 @@ class _AddedPickerState extends State<_AddedPicker> {
   }
 }
 
+/// Closes the keyboard: for a multi-line field, whose keyboard has no key
+/// that does (its return key starts a new line).
+void hideKeyboard(PointerDownEvent _) =>
+    FocusManager.instance.primaryFocus?.unfocus();
+
+/// What closes an editor form sheet ([showEditorFormSheet]).
+const Key editorFormSheetCloseKey = Key('editorNames.sheet.close');
+
+/// An editor form in a sheet on the phone, a dialog on a tablet. [form] is
+/// given what closes it (its Done).
+///
+/// A close button stays pinned above the scrolling form, and the sheet stays
+/// below the status bar: with the keyboard up a tall form (the name lists)
+/// fills the screen, its drag handle and the screen's back arrow go under
+/// the status bar and Done under the keyboard, and there was no way out.
+Future<void> showEditorFormSheet(
+  BuildContext context, {
+  required Widget Function(VoidCallback close) form,
+}) => showAdaptiveSheet<void>(
+  context: context,
+  isScrollControlled: true,
+  showDragHandle: true,
+  useSafeArea: true,
+  builder: (sheet) {
+    void close() => Navigator.of(sheet).pop();
+    return Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(sheet).bottom),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+              child: CloseButton(
+                key: editorFormSheetCloseKey,
+                onPressed: close,
+              ),
+            ),
+          ),
+          Flexible(
+            child: SingleChildScrollView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.marginMobile,
+                0,
+                AppSpacing.marginMobile,
+                AppSpacing.lg,
+              ),
+              child: form(close),
+            ),
+          ),
+        ],
+      ),
+    );
+  },
+);
+
 /// Opens [AddedItemForm] to add an item to [section] (a sheet on the phone,
 /// a dialog on a tablet); [onAdded] is told the new item's id.
 Future<void> showAddedItemSheet(
@@ -1497,26 +1558,13 @@ Future<void> showAddedItemSheet(
   required NameSection section,
   required List<Nation> world,
   void Function(int id)? onAdded,
-}) => showAdaptiveSheet<void>(
-  context: context,
-  isScrollControlled: true,
-  showDragHandle: true,
-  builder: (sheet) => Padding(
-    padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(sheet).bottom),
-    child: SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.marginMobile,
-        AppSpacing.sm,
-        AppSpacing.marginMobile,
-        AppSpacing.lg,
-      ),
-      child: AddedItemForm(
-        packId: packId,
-        section: section,
-        world: world,
-        onAdded: onAdded,
-        onDone: () => Navigator.of(sheet).pop(),
-      ),
-    ),
+}) => showEditorFormSheet(
+  context,
+  form: (close) => AddedItemForm(
+    packId: packId,
+    section: section,
+    world: world,
+    onAdded: onAdded,
+    onDone: close,
   ),
 );
