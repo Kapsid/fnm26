@@ -174,8 +174,9 @@ Future<({int won, int drawn, int lost})> _spellResults(
 
 /// The manager in charge of a nation today, for the nation page. This is the
 /// first thing that seeds a career's managers (lazily, see
-/// [WorldManagerService.ensureSeeded]); a cycle without world managers, or
-/// the player's own nation, has none.
+/// [WorldManagerService.seedForDisplay]), in a save from before world
+/// managers too: shown at once, though they act only from the next cycle.
+/// The player's own nation has none.
 final AutoDisposeFutureProviderFamily<
   NationManagerView?,
   ({int careerId, int nationId})
@@ -190,16 +191,14 @@ nationManagerProvider = FutureProvider.autoDispose
           .byId(key.careerId);
       if (career == null || career.nationId == key.nationId) return null;
       final service = ref.read(worldManagerServiceProvider);
-      if (!await service.cycleHasManagers(key.careerId, career.inGameDate)) {
-        return null;
-      }
-      await service.ensureSeeded(key.careerId);
+      if (!await service.seedForDisplay(key.careerId)) return null;
       return _viewOf(ref, key.careerId, key.nationId, career.inGameDate);
     });
 
 /// The manager in charge of a nation on a fixture's date, for the match
-/// preview. A date in a cycle without world managers reads none and seeds
-/// nothing, so the preview is no slower there.
+/// preview and the dossier. Display only: in a cycle without world managers
+/// he is shown, but the AI still reads the nation's own style
+/// ([WorldManagerService.styleOn]). A date before the seeding reads none.
 final AutoDisposeFutureProviderFamily<
   NationManagerView?,
   ({int careerId, int nationId, DateTime date})
@@ -210,8 +209,7 @@ opponentManagerProvider = FutureProvider.autoDispose
       key,
     ) async {
       final service = ref.read(worldManagerServiceProvider);
-      if (!await service.cycleHasManagers(key.careerId, key.date)) return null;
-      await service.ensureSeeded(key.careerId);
+      if (!await service.seedForDisplay(key.careerId)) return null;
       return _viewOf(ref, key.careerId, key.nationId, key.date);
     });
 
@@ -293,7 +291,7 @@ typedef ManagerDetail = ({
 
 /// A manager's page, derived on read from his stored spells, the fixtures
 /// inside them and the roll of honour. Null when the career has no manager
-/// of that id (an old link, or a cycle without world managers).
+/// of that id (an old link).
 final AutoDisposeFutureProviderFamily<
   ManagerDetail?,
   ({int careerId, int managerId})
@@ -304,10 +302,7 @@ managerDetailProvider = FutureProvider.autoDispose
           .read(careerRepositoryProvider)
           .byId(key.careerId);
       if (career == null) return null;
-      final service = ref.read(worldManagerServiceProvider);
-      if (await service.cycleHasManagers(key.careerId, career.inGameDate)) {
-        await service.ensureSeeded(key.careerId);
-      }
+      await ref.read(worldManagerServiceProvider).seedForDisplay(key.careerId);
       final repo = ref.read(worldManagerRepositoryProvider);
       final m = await repo.managerById(key.careerId, key.managerId);
       if (m == null) return null;

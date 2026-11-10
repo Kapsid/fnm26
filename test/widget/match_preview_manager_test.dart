@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fnm/core/theme/app_theme.dart';
-import 'package:fnm/data/data_providers.dart';
-import 'package:fnm/features/hub/draw_reveal.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/core/theme/app_theme.dart';
+import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/world_manager.dart';
+import 'package:fnm/features/hub/draw_reveal.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
-import 'package:fnm/features/world_managers/world_manager_markers.dart';
-import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_preview_screen.dart';
+import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/world_managers/manager_row.dart';
+import 'package:fnm/features/world_managers/world_manager_markers.dart';
 import 'package:fnm/features/world_managers/world_manager_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
@@ -92,9 +92,8 @@ void main() {
     expect(find.text(enL.mgrTieGrudge), findsOneWidget);
   });
 
-  testWidgets('without world managers the briefing has no manager line', (
-    tester,
-  ) async {
+  testWidgets('an unmarked cycle (an old save) still names the manager, but '
+      'his style is not read', (tester) async {
     final save = await seedSave(tester);
     await tester.runAsync(
       () => save.container.read(appDatabaseProvider).customStatement(
@@ -117,16 +116,16 @@ void main() {
         ).future,
       ),
     );
-    expect(view, isNull);
-    final seeded = await tester.runAsync(
+    expect(view, isNotNull);
+    final style = await tester.runAsync(
       () => save.container
-          .read(worldManagerRepositoryProvider)
-          .hasManagers(save.careerId),
+          .read(worldManagerServiceProvider)
+          .styleOn(save.careerId, opp.id, career!.inGameDate),
     );
-    expect(seeded, isFalse);
+    expect(style, isNull, reason: 'his effects wait for a marked cycle');
   });
 
-  testWidgets('the real phone preview names the fixture\'s manager', (
+  testWidgets("the real phone preview names the fixture's manager", (
     tester,
   ) async {
     final save = await seedSave(tester);
@@ -158,7 +157,7 @@ void main() {
     expect(find.text(enL.mgrPreviewLine(view.m.name)), findsOneWidget);
   });
 
-  testWidgets('the tablet Tactics dossier names the fixture\'s manager', (
+  testWidgets("the tablet Tactics dossier names the fixture's manager", (
     tester,
   ) async {
     final save = await seedSave(tester, formFactor: FormFactor.tablet);

@@ -18,18 +18,15 @@ typedef ManagerListRow = ({
 
 /// Every AI nation's manager today, with his reputation. The whole manager
 /// world is read once and every reputation computed from it, not one query
-/// per row. A cycle without world managers lists none and seeds nothing; an
-/// open screen in a marked cycle seeds lazily like the nation page.
+/// per row. An open screen seeds lazily like the nation page, in a save from
+/// before world managers too (see [WorldManagerService.managersVisible]).
 final AutoDisposeFutureProviderFamily<List<ManagerListRow>, int>
 managersListProvider = FutureProvider.autoDispose
     .family<List<ManagerListRow>, int>((ref, careerId) async {
       final career = await ref.read(careerRepositoryProvider).byId(careerId);
       if (career == null) return const [];
       final service = ref.read(worldManagerServiceProvider);
-      if (!await service.cycleHasManagers(careerId, career.inGameDate)) {
-        return const [];
-      }
-      await service.ensureSeeded(careerId);
+      if (!await service.seedForDisplay(careerId)) return const [];
       final world = await ref
           .read(worldManagerRepositoryProvider)
           .load(careerId);
@@ -76,10 +73,7 @@ recentMovesProvider = FutureProvider.autoDispose.family<List<ManagerMove>, int>(
     final career = await ref.read(careerRepositoryProvider).byId(careerId);
     if (career == null) return const [];
     final service = ref.read(worldManagerServiceProvider);
-    if (!await service.cycleHasManagers(careerId, career.inGameDate)) {
-      return const [];
-    }
-    await service.ensureSeeded(careerId);
+    if (!await service.seedForDisplay(careerId)) return const [];
     final today = career.inGameDate;
     final since = DateTime(today.year - 2, today.month, today.day);
     final repo = ref.read(worldManagerRepositoryProvider);

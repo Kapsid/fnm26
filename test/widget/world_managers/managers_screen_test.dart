@@ -247,7 +247,7 @@ void main() {
     expect(find.text(enL.mgrListEmptyMoves), findsOneWidget);
   });
 
-  testWidgets('an unmarked cycle shows the empty state and seeds nothing', (
+  testWidgets('an unmarked cycle (an old save) lists the managers too', (
     tester,
   ) async {
     final save = await seedSave(tester);
@@ -258,14 +258,8 @@ void main() {
       ),
     );
     await _open(tester, save);
-    expect(find.text(enL.mgrListEmptyCurrent), findsOneWidget);
-    expect(find.byKey(ManagersScreen.rowKey), findsNothing);
-    final seeded = await tester.runAsync(
-      () => save.container
-          .read(worldManagerRepositoryProvider)
-          .hasManagers(save.careerId),
-    );
-    expect(seeded, isFalse);
+    expect(find.text(enL.mgrListEmptyCurrent), findsNothing);
+    expect(find.byKey(ManagersScreen.rowKey), findsWidgets);
   });
 
   testWidgets('ranking action opens it', (tester) async {
