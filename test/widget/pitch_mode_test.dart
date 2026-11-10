@@ -537,6 +537,38 @@ void main() {
     });
   }
 
+  // A friendly's allowance is its bench: half time said "0/5" while the
+  // bar under the pitch and the editor allowed the whole bench.
+  for (final round in ['FRIENDLY', 'CQ']) {
+    testWidgets('half time counts the subs against the match\'s own '
+        'allowance ($round)', (tester) async {
+      final preview = _preview(round: round);
+      await _pump(
+        tester,
+        preview: preview,
+        salt: 7,
+        prefs: {kMatchViewModePrefsKey: 'pitch'},
+      );
+      await _until(tester, () => _ready(tester) && _clock(tester).playing);
+      await _seek(
+        tester,
+        _pb(tester).halfTime - const Duration(milliseconds: 300),
+      );
+      await _until(
+        tester,
+        () => find.byType(HalfTimePrompt).evaluate().isNotEmpty,
+      );
+      final allowed = round == 'FRIENDLY' ? preview.bench.length : kMaxSubs;
+      expect(
+        find.descendant(
+          of: find.byType(HalfTimePrompt),
+          matching: find.text(enL.matchTacticsWithSubs(0, allowed)),
+        ),
+        findsOneWidget,
+      );
+    });
+  }
+
   testWidgets('an older save is never asked again', (tester) async {
     await _pump(
       tester,

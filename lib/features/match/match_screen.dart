@@ -2303,6 +2303,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                       ? r.homePossession
                       : 100 - r.homePossession,
                   subsUsed: _subsUsed(preview),
+                  // A friendly's allowance is its bench, not the five.
+                  maxSubs: _maxSubsFor(preview),
                   selectedTalk: _halfTimeTalk,
                   options: offeredTalkTones(
                     preview.saveSeed,
