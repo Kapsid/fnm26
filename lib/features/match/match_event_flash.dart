@@ -13,11 +13,11 @@ bool flashesAsEvent(MatchEvent e) => e.type == MatchEventType.substitution;
 /// The key of the substitution's mark ([_SubMark]) on a banner.
 const Key matchSubMarkKey = Key('match.subMark');
 
-/// A substitution, said without a word: one arrow up in the game's green and
-/// one down in its red, side by side. It stands where the shout used to on
-/// the 2D TV's banners, so the two names get the room (a long shout such as
-/// the Czech one left them almost none). Screen readers still hear the
-/// shout.
+/// A substitution, said without a word: one arrow up in green and one down
+/// in red, side by side on a small light chip so they read against the
+/// dark plates of the 2D TV's banners. It stands where the shout used to,
+/// so the two names get the room (a long shout such as the Czech one left
+/// them almost none). Screen readers still hear the shout.
 class _SubMark extends StatelessWidget {
   const _SubMark({this.size = 14}) : super(key: matchSubMarkKey);
 
@@ -26,31 +26,34 @@ class _SubMark extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final arrow = size * 0.9;
     return Semantics(
       label: l.matchSubShout,
       excludeSemantics: true,
-      child: SizedBox(
-        width: size * 1.25,
-        height: size,
-        child: Stack(
-          clipBehavior: Clip.none,
+      child: Container(
+        height: size + 4,
+        padding: EdgeInsets.symmetric(horizontal: size * 0.15),
+        decoration: BoxDecoration(
+          color: AppColors.primaryFixed,
+          borderRadius: BorderRadius.circular(size * 0.3),
+          boxShadow: const [
+            BoxShadow(color: Color(0x66000000), blurRadius: 2),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Positioned(
-              left: -size * 0.15,
-              top: 0,
-              child: Icon(
-                Icons.arrow_upward_rounded,
-                size: size,
-                color: AppColors.positive,
-              ),
+            Icon(
+              Icons.arrow_upward_rounded,
+              size: arrow,
+              color: AppColors.ratingGreat,
             ),
-            Positioned(
-              right: -size * 0.15,
-              top: 0,
+            Transform.translate(
+              offset: Offset(-size * 0.2, 0),
               child: Icon(
                 Icons.arrow_downward_rounded,
-                size: size,
-                color: AppColors.error,
+                size: arrow,
+                color: kRedCardColor,
               ),
             ),
           ],
