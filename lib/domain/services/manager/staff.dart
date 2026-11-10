@@ -179,6 +179,19 @@ abstract final class StaffMarket {
   static const int _roleStride = 1000;
   static const int _tierStride = 100;
 
+  /// Added to the basic applicant's slot when he was drawn under the home
+  /// bias ([forRole] with `home`), so his id says which draw named him.
+  ///
+  /// Both draws used to give him the same id, so the staff room, which keeps
+  /// a basic coach hired before 1.0.9 under his old name, took every basic
+  /// hire for one of those and switched the list back to the old draw: the
+  /// first applicant picked was never the man hired. Stays under
+  /// [_tierStride], so [tierOf], [roleOf] and [cycleOf] read him as before.
+  static const int _homeDrawn = 10;
+
+  /// Whether the person with this [id] was drawn under the home bias.
+  static bool drawnAtHome(int id) => (id - idBase) % _tierStride >= _homeDrawn;
+
   /// Whether [id] is a staff candidate rather than any other kind of id.
   static bool isCandidateId(int id) =>
       id >= idBase && id < idBase + _cycleStride * 10000;
@@ -262,7 +275,10 @@ abstract final class StaffMarket {
                 cycle * _cycleStride +
                 role.index * _roleStride +
                 tiers[slot].index * _tierStride +
-                slot,
+                slot +
+                (home != null && tiers[slot] == StaffTier.basic
+                    ? _homeDrawn
+                    : 0),
             name: _nameFrom(namePool[from]!, rng),
             country: from,
             role: role,

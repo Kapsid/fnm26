@@ -180,10 +180,17 @@ void main() {
           if (now[i].tier == StaffTier.basic) {
             total++;
             if (now[i].country == 'cze') local++;
+            // Marked as the home draw's, so it never passes for the old
+            // draw's man; the tier still reads back out of it.
+            expect(now[i].id, isNot(before[i].id));
+            expect(StaffMarket.drawnAtHome(now[i].id), isTrue);
+            expect(StaffMarket.drawnAtHome(before[i].id), isFalse);
+            expect(StaffMarket.tierOf(now[i].id), StaffTier.basic);
+            expect(StaffMarket.roleOf(now[i].id), role);
+            expect(StaffMarket.cycleOf(now[i].id), 2);
           } else {
             expect(now[i], before[i]);
           }
-          expect(now[i].id, before[i].id);
         }
       }
     }
