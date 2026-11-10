@@ -1,0 +1,84 @@
+<style>
+  .phones{display:flex;gap:28px;flex-wrap:wrap;justify-content:center}
+  .ph{width:340px;background:#0f1012;border-radius:34px;padding:18px 14px 22px;box-shadow:0 0 0 8px #222,0 20px 40px rgba(0,0,0,.4);color:#e8eaed;font-family:"Hanken Grotesk",system-ui,sans-serif}
+  .cap{font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.12em;color:#9aa3ad;text-transform:uppercase;margin:14px 2px 8px}
+  .ttl{font:600 13px ui-monospace,Menlo,monospace;letter-spacing:.14em;text-align:center;color:#cfd4da;margin:2px 0 10px}
+  .silver{background:linear-gradient(160deg,#2b2e33 0%,#1d1f23 55%,#25282c 100%);border:1px solid #3a3e44;box-shadow:inset 0 1px 0 rgba(255,255,255,.07)}
+  .live{border-color:#2fa86a;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 0 0 1px rgba(47,168,106,.25)}
+  .chip{font:600 10px ui-monospace,Menlo,monospace;letter-spacing:.08em;padding:3px 7px;border-radius:6px;white-space:nowrap}
+  .c-live{background:rgba(47,168,106,.16);color:#4cd38a}
+  .c-done{background:rgba(200,205,212,.12);color:#c9ced5}
+  .c-soon{background:rgba(120,126,134,.14);color:#8b929b}
+  .cup{width:34px;height:34px;flex:none;display:grid;place-items:center;font-size:24px;filter:grayscale(.2)}
+  .flag{font-size:15px;line-height:1}
+  .win{display:flex;align-items:center;gap:6px;font-size:13px;color:#dfe3e8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .muted{color:#8b929b;font-size:12px}
+  /* A: list rows */
+  .row{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;margin-bottom:8px}
+  .row .mid{flex:1;min-width:0}
+  .row .name{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  /* B: equal tiles */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .tile{border-radius:16px;padding:12px;height:150px;display:flex;flex-direction:column}
+  .tile .cup{width:44px;height:44px;font-size:32px;margin-bottom:auto}
+  .tile .name{font-size:14px;font-weight:600;line-height:1.2;height:34px;overflow:hidden}
+  .tile .foot{display:flex;justify-content:space-between;align-items:center;margin-top:8px;gap:6px}
+  /* C: hero */
+  .hero{border-radius:18px;padding:16px;text-align:center;margin-bottom:6px}
+  .hero .cup{width:auto;height:auto;font-size:54px;margin:4px auto 6px}
+  .hero .name{font-size:18px;font-weight:700}
+  .hero .stage{font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.1em;color:#4cd38a;margin-top:4px}
+</style>
+
+<h2>Competitions: three directions</h2>
+<p class="subtitle">Same data in each: what's on, its stage, and the holder with flag. Fixed type sizes: names never shrink and never overflow (one line with an ellipsis in A, two reserved lines in B).</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image"><div class="ph">
+      <div class="ttl">COMPETITIONS</div>
+      <div class="cap">Your competitions</div>
+      <div class="row silver live"><div class="cup">🏆</div><div class="mid"><div class="name">World Championship</div><div class="muted">Holder <span class="flag">🇦🇷</span> Argentina</div></div><span class="chip c-live">FINAL</span></div>
+      <div class="row silver"><div class="cup">🏆</div><div class="mid"><div class="name">European Championship</div><div class="muted">Holder <span class="flag">🇪🇸</span> Spain</div></div><span class="chip c-soon">2036</span></div>
+      <div class="row silver"><div class="cup">🎖️</div><div class="mid"><div class="name">Nations Cup</div><div class="muted">Holder <span class="flag">🇫🇷</span> France</div></div><span class="chip c-done">LEAGUE A</span></div>
+      <div class="cap">Other continents</div>
+      <div class="row silver"><div class="cup">🏆</div><div class="mid"><div class="name">South America Cup</div><div class="muted">Holder <span class="flag">🇧🇷</span> Brazil</div></div><span class="chip c-done">DONE</span></div>
+      <div class="row silver"><div class="cup">🏆</div><div class="mid"><div class="name">African Championship</div><div class="muted">Holder <span class="flag">🇲🇦</span> Morocco</div></div><span class="chip c-done">DONE</span></div>
+      <div class="row silver"><div class="cup">🏆</div><div class="mid"><div class="name">Asian Championship</div><div class="muted">Holder <span class="flag">🇯🇵</span> Japan</div></div><span class="chip c-done">DONE</span></div>
+    </div></div>
+    <div class="card-body"><h3>A · Silver list</h3><p>One competition per row, full width. Trophy, name on one line, holder with flag under it, stage chip on the right. Calmest, nothing to squeeze.</p></div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image"><div class="ph">
+      <div class="ttl">COMPETITIONS</div>
+      <div class="cap">Your competitions</div>
+      <div class="grid">
+        <div class="tile silver live"><div class="cup">🏆</div><div class="name">World Championship</div><div class="foot"><span class="chip c-live">FINAL</span><span class="win"><span class="flag">🇦🇷</span>ARG</span></div></div>
+        <div class="tile silver"><div class="cup">🏆</div><div class="name">European Championship</div><div class="foot"><span class="chip c-soon">2036</span><span class="win"><span class="flag">🇪🇸</span>ESP</span></div></div>
+        <div class="tile silver"><div class="cup">🎖️</div><div class="name">Nations Cup</div><div class="foot"><span class="chip c-done">LEAGUE A</span><span class="win"><span class="flag">🇫🇷</span>FRA</span></div></div>
+        <div class="tile silver"><div class="cup">⚡</div><div class="name">Continental Clash</div><div class="foot"><span class="chip c-soon">2035</span><span class="win"><span class="flag">🇧🇷</span>BRA</span></div></div>
+      </div>
+      <div class="cap">Other continents</div>
+      <div class="grid">
+        <div class="tile silver"><div class="cup">🏆</div><div class="name">South America Cup</div><div class="foot"><span class="chip c-done">DONE</span><span class="win"><span class="flag">🇧🇷</span>BRA</span></div></div>
+        <div class="tile silver"><div class="cup">🏆</div><div class="name">African Championship</div><div class="foot"><span class="chip c-done">DONE</span><span class="win"><span class="flag">🇲🇦</span>MAR</span></div></div>
+      </div>
+    </div></div>
+    <div class="card-body"><h3>B · Equal silver tiles</h3><p>Two per row as now, but every tile the same height, big trophy, name always on two reserved lines, footer: stage + flag and code of the holder.</p></div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image"><div class="ph">
+      <div class="ttl">COMPETITIONS</div>
+      <div class="hero silver live"><div class="cup">🏆</div><div class="name">World Championship</div><div class="stage">FINAL · 13 JUL</div><div class="muted" style="margin-top:8px">Holder <span class="flag">🇦🇷</span> Argentina</div></div>
+      <div class="cap">Your competitions</div>
+      <div class="row silver"><div class="cup">🏆</div><div class="mid"><div class="name">European Championship</div><div class="muted">Holder <span class="flag">🇪🇸</span> Spain</div></div><span class="chip c-soon">2036</span></div>
+      <div class="row silver"><div class="cup">🎖️</div><div class="mid"><div class="name">Nations Cup</div><div class="muted">Holder <span class="flag">🇫🇷</span> France</div></div><span class="chip c-done">LEAGUE A</span></div>
+      <div class="cap">Other continents</div>
+      <div class="row silver"><div class="cup">🏆</div><div class="mid"><div class="name">South America Cup</div><div class="muted">Holder <span class="flag">🇧🇷</span> Brazil</div></div><span class="chip c-done">DONE</span></div>
+      <div class="row silver"><div class="cup">🏆</div><div class="mid"><div class="name">African Championship</div><div class="muted">Holder <span class="flag">🇲🇦</span> Morocco</div></div><span class="chip c-done">DONE</span></div>
+    </div></div>
+    <div class="card-body"><h3>C · Live hero + list</h3><p>The competition being played right now gets a big silver card on top (trophy, stage, date, holder); everything else is the calm list from A.</p></div>
+  </div>
+</div>
