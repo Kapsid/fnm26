@@ -185,7 +185,7 @@ Two things to keep in mind whenever you edit:
 - **Bump `?v=` on the stylesheet link** in every page, all 85 of them (28
   languages times three, plus the 404). `.htaccess` tells
   browsers to hold CSS for an hour, and without the bump that hour is exactly
-  how long your change stays invisible. It is at `?v=17` now.
+  how long your change stays invisible. It is at `?v=18` now.
 - **The language trees move together.** A new page needs all 28 versions,
   29 hreflang lines, a sitemap entry per language and a menu entry in
   each, and nothing here will catch a half-done set.
