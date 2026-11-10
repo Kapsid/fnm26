@@ -210,6 +210,7 @@ CabinetShareData? cabinetShareData(
     managerName: h.managerName,
     nations: nations,
     trophies: trophies,
+    record: (played: h.played, won: h.won, drawn: h.drawn, lost: h.lost),
   );
 }
 

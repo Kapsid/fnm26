@@ -50,6 +50,18 @@ void main() {
         );
       });
     }
+    // The longest names the game prints, in the manager's own language.
+    for (final (name, locale, data) in _cabinetsLocalized) {
+      testWidgets('cabinet card: $name (${format.name})', (tester) async {
+        await _render(
+          tester,
+          CabinetShareCard(data: data, format: format),
+          format,
+          '$out/cabinet_${name}_${format.name}.png',
+          locale: locale,
+        );
+      });
+    }
   }
 
   // The share sheet as a phone shows it (iPhone 17 Pro, 402 x 874 at 3x,
@@ -200,8 +212,9 @@ Future<void> _render(
   WidgetTester tester,
   Widget card,
   ShareFormat format,
-  String path,
-) async {
+  String path, {
+  Locale? locale,
+}) async {
   tester.view
     ..physicalSize = format.size
     ..devicePixelRatio = 1;
@@ -212,6 +225,7 @@ Future<void> _render(
       theme: AppTheme.theme,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
+      locale: locale,
       home: Center(
         child: RepaintBoundary(key: _root, child: card),
       ),
@@ -380,6 +394,7 @@ List<ShareWin> _w(String code, List<int> years) => [
 const ShareNation _cze = (code: 'CZE', name: 'Czechia');
 const ShareNation _ned = (code: 'NED', name: 'Netherlands');
 const ShareNation _bih = (code: 'BIH', name: 'Bosnia and Herzegovina');
+const ShareNation _cmr = (code: 'CMR', name: 'Kamerun');
 
 final List<(String, CabinetShareData)> _cabinets = [
   (
@@ -387,6 +402,7 @@ final List<(String, CabinetShareData)> _cabinets = [
     CabinetShareData(
       managerName: 'Tomáš Hrubý',
       nations: const [_cze],
+      record: (played: 186, won: 104, drawn: 41, lost: 41),
       trophies: [
         ShareTrophy(
           label: 'World Championship',
@@ -416,6 +432,7 @@ final List<(String, CabinetShareData)> _cabinets = [
     CabinetShareData(
       managerName: 'Tomáš Hrubý',
       nations: const [_ned, _cze],
+      record: (played: 241, won: 139, drawn: 52, lost: 50),
       trophies: [
         ShareTrophy(
           label: 'World Championship',
@@ -451,6 +468,7 @@ final List<(String, CabinetShareData)> _cabinets = [
     CabinetShareData(
       managerName: 'Elvir Hodžić',
       nations: const [_bih],
+      record: (played: 1204, won: 811, drawn: 214, lost: 179),
       trophies: [
         for (final t in Trophies.cabinet)
           ShareTrophy(
@@ -466,12 +484,96 @@ final List<(String, CabinetShareData)> _cabinets = [
     CabinetShareData(
       managerName: 'Joost Bakhuizen',
       nations: const [_ned],
+      record: (played: 22, won: 11, drawn: 6, lost: 5),
       trophies: [
         ShareTrophy(
           label: 'Nations Cup',
           asset: Trophies.nationsCup,
           wins: _w('NED', [2031]),
         ),
+      ],
+    ),
+  ),
+];
+
+/// Long names on a long manager: three nations (the stack's cap), German
+/// and Czech shelves, every continent's cup.
+final List<(String, Locale, CabinetShareData)> _cabinetsLocalized = [
+  (
+    'three_nations_de',
+    const Locale('de'),
+    CabinetShareData(
+      managerName: 'Maximilian Oberkirchner-Hagedorn',
+      nations: const [
+        (code: 'CMR', name: 'Kamerun'),
+        (code: 'BIH', name: 'Bosnien und Herzegowina'),
+        (code: 'CZE', name: 'Tschechien'),
+      ],
+      record: (played: 312, won: 170, drawn: 71, lost: 71),
+      trophies: [
+        ShareTrophy(
+          label: 'Weltmeisterschaft',
+          asset: Trophies.worldCup,
+          wins: _w('CMR', [2050]),
+        ),
+        ShareTrophy(
+          label: 'Afrikameisterschaft',
+          asset: 'assets/trophies/africa.png',
+          wins: [
+            ..._w('CMR', [2047, 2049, 2051]),
+          ],
+        ),
+        ShareTrophy(
+          label: 'Europameisterschaft',
+          asset: 'assets/trophies/europe.png',
+          wins: [
+            ..._w('CZE', [2032]),
+            ..._w('BIH', [2040, 2044]),
+          ],
+        ),
+        ShareTrophy(
+          label: 'Nordamerika-Pokal',
+          asset: 'assets/trophies/northamerica.png',
+          wins: _w('CMR', [2053]),
+        ),
+        ShareTrophy(
+          label: 'Kontinental-Duell',
+          asset: Trophies.continentalClash,
+          wins: _w('BIH', [2041]),
+        ),
+      ],
+    ),
+  ),
+  (
+    'many_cs',
+    const Locale('cs'),
+    CabinetShareData(
+      managerName: 'Bořivoj Štěpánek-Zahradníček',
+      nations: const [
+        (code: 'BIH', name: 'Bosna a Hercegovina'),
+        _cmr,
+      ],
+      record: (played: 1204, won: 811, drawn: 214, lost: 179),
+      trophies: [
+        for (final (i, t) in Trophies.cabinet.indexed)
+          ShareTrophy(
+            label: const [
+              'Mistrovství světa',
+              'Evropský šampionát',
+              'Pohár Jižní Ameriky',
+              'Africký šampionát',
+              'Asijský šampionát',
+              'Pohár Severní Ameriky',
+              'Pohár Oceánie',
+              'Pohár národů',
+              'Souboj kontinentů',
+            ][i],
+            asset: t.asset,
+            wins: [
+              ..._w('BIH', [2030, 2034]),
+              ..._w('CMR', [2042, 2046]),
+            ],
+          ),
       ],
     ),
   ),
