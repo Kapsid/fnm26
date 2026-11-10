@@ -4212,5 +4212,10 @@
   "mgrDetailBackground": "Bakgrunn",
   "mgrOriginFresh": "Yrkestrener",
   "mgrOriginExAssistant": "Tidligere assistenttrener",
-  "mgrNewsSeeManager": "Profil: {name}"
+  "mgrNewsSeeManager": "Profil: {name}",
+  "mgrChangesTitle": "Trenerbytter",
+  "mgrChangesCount": "{count, plural, =1{1 bytte} other{{count} bytter}}",
+  "mgrChangesLeftFor": "Ny jobb: {nation}",
+  "mgrChangesAppointed": "Ansatt",
+  "mgrChangesVacant": "Ledig"
 }

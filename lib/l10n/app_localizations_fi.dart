@@ -16935,4 +16935,29 @@ class AppLocalizationsFi extends AppLocalizations {
   String mgrNewsSeeManager(String name) {
     return 'Profiili: $name';
   }
+
+  @override
+  String get mgrChangesTitle => 'Valmentajavaihdokset';
+
+  @override
+  String mgrChangesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count vaihdosta',
+      one: '1 vaihdos',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String mgrChangesLeftFor(String nation) {
+    return 'Uusi pesti: $nation';
+  }
+
+  @override
+  String get mgrChangesAppointed => 'Nimitetty';
+
+  @override
+  String get mgrChangesVacant => 'Avoinna';
 }

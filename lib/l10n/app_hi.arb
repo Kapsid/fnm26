@@ -4212,5 +4212,10 @@
   "mgrDetailBackground": "पृष्ठभूमि",
   "mgrOriginFresh": "पेशेवर कोच",
   "mgrOriginExAssistant": "पूर्व सहायक कोच",
-  "mgrNewsSeeManager": "प्रोफ़ाइल: {name}"
+  "mgrNewsSeeManager": "प्रोफ़ाइल: {name}",
+  "mgrChangesTitle": "मैनेजर बदलाव",
+  "mgrChangesCount": "{count, plural, =1{1 बदलाव} other{{count} बदलाव}}",
+  "mgrChangesLeftFor": "नई टीम: {nation}",
+  "mgrChangesAppointed": "नियुक्त",
+  "mgrChangesVacant": "खाली"
 }

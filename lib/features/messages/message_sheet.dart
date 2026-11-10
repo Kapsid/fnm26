@@ -8,6 +8,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/world_managers/manager_news.dart';
+import 'package:fnm/features/messages/manager_changes_report.dart';
 import 'package:fnm/features/messages/poty_card.dart';
 import 'package:fnm/features/nations/career_nations_providers.dart';
 import 'package:fnm/features/messages/squad_dev_report.dart';
@@ -182,6 +183,13 @@ class MessageSheet extends StatelessWidget {
               SquadDevTable(rows: report.rows),
             ] else if (decodeTransferReport(words.body) case final moves?) ...[
               TransferTable(rows: moves),
+            ] else if (decodeManagerChanges(words.body)
+                case final changes?) ...[
+              _ManagerChanges(
+                rows: changes,
+                careerId: _careerId(context),
+                onOpenManager: onOpenManager,
+              ),
             ] else if (decodePotyVote(words.body) case final vote?) ...[
               // A whole year's vote: the winners' cards, and the way to the
               // top five (see [AwardsCeremonyScreen]).
@@ -247,6 +255,36 @@ class _VoteWinners extends ConsumerWidget {
         : ref.watch(careerNationsByIdProvider(id)).valueOrNull;
     return PotyCard(
       rows: potyWinnerRows(vote, nationName: (n) => nations?[n]?.name),
+    );
+  }
+}
+
+/// A decision point's manager changes ([ManagerChangesTable]), naming each
+/// nation in the language being read now, each man a link to his page.
+class _ManagerChanges extends ConsumerWidget {
+  const _ManagerChanges({
+    required this.rows,
+    required this.careerId,
+    required this.onOpenManager,
+  });
+
+  final List<ManagerChangeRow> rows;
+  final int? careerId;
+  final void Function(int careerId, int managerId)? onOpenManager;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final id = careerId;
+    final nations = id == null
+        ? null
+        : ref.watch(careerNationsByIdProvider(id)).valueOrNull;
+    final open = onOpenManager;
+    return ManagerChangesTable(
+      rows: rows,
+      nationName: (n) => nations?[n]?.name,
+      onOpenManager: id == null || open == null
+          ? null
+          : (managerId) => open(id, managerId),
     );
   }
 }

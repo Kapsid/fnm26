@@ -126,12 +126,13 @@ void main() {
   }
 
   /// Every manager news key, grouped by its decision point: the key is
-  /// `mgr:<point>:<nationId>`.
+  /// `mgr:<point>:<nationId>`. The point's one summary (`mgr:<point>:all`)
+  /// is not news of its own and is not counted.
   Future<Map<String, int>> newsByPoint(int careerId) async {
     final out = <String, int>{};
     for (final k
         in await c.read(competitionRepositoryProvider).messageKeys(careerId)) {
-      if (!k.startsWith('mgr:')) continue;
+      if (!k.startsWith('mgr:') || k.endsWith(':all')) continue;
       final point = k.substring(0, k.lastIndexOf(':'));
       out[point] = (out[point] ?? 0) + 1;
     }

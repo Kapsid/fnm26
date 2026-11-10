@@ -4212,5 +4212,10 @@
   "mgrDetailBackground": "Parcurs",
   "mgrOriginFresh": "Antrenor de carieră",
   "mgrOriginExAssistant": "Fost antrenor secund",
-  "mgrNewsSeeManager": "Profil: {name}"
+  "mgrNewsSeeManager": "Profil: {name}",
+  "mgrChangesTitle": "Schimbări de antrenori",
+  "mgrChangesCount": "{count, plural, =1{1 schimbare} few{{count} schimbări} other{{count} de schimbări}}",
+  "mgrChangesLeftFor": "Noul post: {nation}",
+  "mgrChangesAppointed": "Numit",
+  "mgrChangesVacant": "Post liber"
 }

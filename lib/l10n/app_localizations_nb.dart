@@ -16855,4 +16855,29 @@ class AppLocalizationsNb extends AppLocalizations {
   String mgrNewsSeeManager(String name) {
     return 'Profil: $name';
   }
+
+  @override
+  String get mgrChangesTitle => 'Trenerbytter';
+
+  @override
+  String mgrChangesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count bytter',
+      one: '1 bytte',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String mgrChangesLeftFor(String nation) {
+    return 'Ny jobb: $nation';
+  }
+
+  @override
+  String get mgrChangesAppointed => 'Ansatt';
+
+  @override
+  String get mgrChangesVacant => 'Ledig';
 }

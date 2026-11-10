@@ -4212,5 +4212,10 @@
   "mgrDetailBackground": "Achtergrond",
   "mgrOriginFresh": "Beroepstrainer",
   "mgrOriginExAssistant": "Oud-assistent-trainer",
-  "mgrNewsSeeManager": "Profiel: {name}"
+  "mgrNewsSeeManager": "Profiel: {name}",
+  "mgrChangesTitle": "Trainerswissels",
+  "mgrChangesCount": "{count, plural, =1{1 wissel} other{{count} wissels}}",
+  "mgrChangesLeftFor": "Nieuwe baan: {nation}",
+  "mgrChangesAppointed": "Aangesteld",
+  "mgrChangesVacant": "Onbezet"
 }

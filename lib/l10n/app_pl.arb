@@ -4212,5 +4212,10 @@
   "mgrDetailBackground": "Przeszłość",
   "mgrOriginFresh": "Trener z zawodu",
   "mgrOriginExAssistant": "Były asystent trenera",
-  "mgrNewsSeeManager": "Profil: {name}"
+  "mgrNewsSeeManager": "Profil: {name}",
+  "mgrChangesTitle": "Zmiany trenerów",
+  "mgrChangesCount": "{count, plural, =1{1 zmiana} few{{count} zmiany} many{{count} zmian} other{{count} zmiany}}",
+  "mgrChangesLeftFor": "Nowa posada: {nation}",
+  "mgrChangesAppointed": "Mianowany",
+  "mgrChangesVacant": "Wakat"
 }

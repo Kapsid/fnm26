@@ -4212,5 +4212,10 @@
   "mgrDetailBackground": "ภูมิหลัง",
   "mgrOriginFresh": "โค้ชอาชีพ",
   "mgrOriginExAssistant": "อดีตผู้ช่วยโค้ช",
-  "mgrNewsSeeManager": "โปรไฟล์: {name}"
+  "mgrNewsSeeManager": "โปรไฟล์: {name}",
+  "mgrChangesTitle": "การเปลี่ยนตัวผู้จัดการทีม",
+  "mgrChangesCount": "{count, plural, =1{1 รายการ} other{{count} รายการ}}",
+  "mgrChangesLeftFor": "ย้ายไปคุม {nation}",
+  "mgrChangesAppointed": "ได้รับแต่งตั้ง",
+  "mgrChangesVacant": "ว่าง"
 }

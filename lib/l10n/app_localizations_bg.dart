@@ -16944,4 +16944,29 @@ class AppLocalizationsBg extends AppLocalizations {
   String mgrNewsSeeManager(String name) {
     return 'Профил: $name';
   }
+
+  @override
+  String get mgrChangesTitle => 'Треньорски промени';
+
+  @override
+  String mgrChangesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count промени',
+      one: '1 промяна',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String mgrChangesLeftFor(String nation) {
+    return 'Нов пост: $nation';
+  }
+
+  @override
+  String get mgrChangesAppointed => 'Назначен';
+
+  @override
+  String get mgrChangesVacant => 'Вакантно';
 }

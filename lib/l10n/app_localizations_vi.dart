@@ -16707,4 +16707,29 @@ class AppLocalizationsVi extends AppLocalizations {
   String mgrNewsSeeManager(String name) {
     return 'Hồ sơ: $name';
   }
+
+  @override
+  String get mgrChangesTitle => 'Thay đổi HLV';
+
+  @override
+  String mgrChangesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count thay đổi',
+      one: '1 thay đổi',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String mgrChangesLeftFor(String nation) {
+    return 'Chuyển sang dẫn dắt $nation';
+  }
+
+  @override
+  String get mgrChangesAppointed => 'Được bổ nhiệm';
+
+  @override
+  String get mgrChangesVacant => 'Còn trống';
 }

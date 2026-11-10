@@ -21,6 +21,7 @@ import 'package:fnm/domain/services/world_managers/manager_seeder.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/staff_providers.dart';
+import 'package:fnm/features/messages/manager_changes_report.dart';
 import 'package:fnm/features/settings/settings_providers.dart'
     show appLocalizationsProvider;
 import 'package:fnm/features/world_managers/manager_windows.dart';
@@ -602,9 +603,15 @@ class WorldManagerService {
     return moves;
   }
 
-  /// Files the inbox news of one decision point's [moves]: only the moves
-  /// that touch the player ([ManagerNews.newsworthy]), at most
-  /// [ManagerNews.maxPerPass], each stored as meaning.
+  /// Files the inbox news of one decision point's [moves]: with
+  /// [ManagerNews.summaryMin] or more changes, ONE "Manager changes"
+  /// summary of all of them (a paged report body, deduped per point) plus
+  /// a message of its own for each personal one; otherwise only the moves
+  /// that touch the player ([ManagerNews.newsworthy]). At most
+  /// [ManagerNews.maxPerPass] messages of their own, each stored as meaning.
+  ///
+  /// Grouping applies to points decided from this build on: every point
+  /// runs once (its marker), and messages already in a save are untouched.
   ///
   /// Reads: the managers and ties once, and the player's own fixtures (all
   /// time, every nation he has led) in one query, which give both his
@@ -678,14 +685,21 @@ class WorldManagerService {
             .take(10)
             .toSet();
 
+    // Two or more changes at once are ONE summary (the paged report), and
+    // only what is personal keeps a message of its own beside it: the
+    // player's own nations and the men he has a tie with. A single change
+    // is news by the older rule.
+    final named = ManagerNews.named(moves);
+    final summary = named.length >= ManagerNews.summaryMin;
     final news = ManagerNews.newsworthy(
       moves,
       tiedManagerIds: tied,
       myNations: mine,
       upcomingOpponents: opponents,
       confTop10: top10,
+      maxRank: summary ? ManagerNews.personalRank : 3,
     );
-    if (news.isEmpty) return;
+    if (news.isEmpty && !summary) return;
     final names = {for (final m in w.managers) m.managerId: m.name};
     final l = _ref.read(appLocalizationsProvider);
     for (final m in news) {
@@ -706,7 +720,37 @@ class WorldManagerService {
         year: m.date.year,
       );
     }
-    AppLog.info('mgr-news', '$key: ${news.length} of ${moves.length} moves');
+    if (summary) {
+      // The strongest nations first, the way a reader scans the world.
+      final ordered = [...named]
+        ..sort(
+          (a, b) => (rankById[a.nationId] ?? 999).compareTo(
+            rankById[b.nationId] ?? 999,
+          ),
+        );
+      await comp.addTextMessage(
+        l: l,
+        careerId: careerId,
+        dedupKey: ManagerNews.summaryDedupKey(key),
+        category: ManagerNews.category,
+        title: const MsgText(MsgKey.mgrChangesTitle),
+        rawBody: encodeManagerChanges(
+          managerChangeRows(
+            ordered,
+            nations: {
+              for (final n in nations) n.id: (code: n.code, name: n.name),
+            },
+            managerNames: names,
+          ),
+        ),
+        year: date.year,
+      );
+    }
+    AppLog.info(
+      'mgr-news',
+      '$key: ${news.length} of ${moves.length} moves'
+          '${summary ? ', summary of ${named.length}' : ''}',
+    );
   }
 
   /// The free pool once [changes]' retirements and departures are counted,

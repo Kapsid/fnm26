@@ -17033,4 +17033,31 @@ class AppLocalizationsPl extends AppLocalizations {
   String mgrNewsSeeManager(String name) {
     return 'Profil: $name';
   }
+
+  @override
+  String get mgrChangesTitle => 'Zmiany trenerów';
+
+  @override
+  String mgrChangesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count zmiany',
+      many: '$count zmian',
+      few: '$count zmiany',
+      one: '1 zmiana',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String mgrChangesLeftFor(String nation) {
+    return 'Nowa posada: $nation';
+  }
+
+  @override
+  String get mgrChangesAppointed => 'Mianowany';
+
+  @override
+  String get mgrChangesVacant => 'Wakat';
 }

@@ -16559,4 +16559,29 @@ class AppLocalizationsTh extends AppLocalizations {
   String mgrNewsSeeManager(String name) {
     return 'โปรไฟล์: $name';
   }
+
+  @override
+  String get mgrChangesTitle => 'การเปลี่ยนตัวผู้จัดการทีม';
+
+  @override
+  String mgrChangesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count รายการ',
+      one: '1 รายการ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String mgrChangesLeftFor(String nation) {
+    return 'ย้ายไปคุม $nation';
+  }
+
+  @override
+  String get mgrChangesAppointed => 'ได้รับแต่งตั้ง';
+
+  @override
+  String get mgrChangesVacant => 'ว่าง';
 }

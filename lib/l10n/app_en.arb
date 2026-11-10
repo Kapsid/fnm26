@@ -26057,5 +26057,35 @@
         "type": "String"
       }
     }
+  },
+  "mgrChangesTitle": "Manager changes",
+  "@mgrChangesTitle": {
+    "description": "Inbox message title: the one summary of every national-team manager change at a decision point (after a tournament, at the new cycle)."
+  },
+  "mgrChangesCount": "{count, plural, =1{1 change} other{{count} changes}}",
+  "@mgrChangesCount": {
+    "description": "Manager changes report: how many changes it lists.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mgrChangesLeftFor": "Left for {nation}",
+  "@mgrChangesLeftFor": {
+    "description": "Manager changes report: the outgoing manager was poached by another nation, named here.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrChangesAppointed": "Appointed",
+  "@mgrChangesAppointed": {
+    "description": "Manager changes report: a vacant post was filled; nobody left at this point."
+  },
+  "mgrChangesVacant": "Vacant",
+  "@mgrChangesVacant": {
+    "description": "Manager changes report: nobody has been appointed yet in place of the man who left."
   }
 }

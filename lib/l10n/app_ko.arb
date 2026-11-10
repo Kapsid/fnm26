@@ -4212,5 +4212,10 @@
   "mgrDetailBackground": "출신",
   "mgrOriginFresh": "지도자 출신",
   "mgrOriginExAssistant": "전 코치",
-  "mgrNewsSeeManager": "프로필: {name}"
+  "mgrNewsSeeManager": "프로필: {name}",
+  "mgrChangesTitle": "감독 교체",
+  "mgrChangesCount": "{count, plural, =1{교체 1건} other{교체 {count}건}}",
+  "mgrChangesLeftFor": "새 팀: {nation}",
+  "mgrChangesAppointed": "선임",
+  "mgrChangesVacant": "공석"
 }

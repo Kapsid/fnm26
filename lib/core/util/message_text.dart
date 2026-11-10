@@ -311,6 +311,7 @@ enum MsgKey {
   mgrNewsReplacedByPlayer,
   mgrNewsAppointed,
   mgrNewsAppointedBody,
+  mgrChangesTitle,
   warmUpOfferMsgTitle,
   warmUpOfferMsgBody,
   punditsMsgTitle,
@@ -694,6 +695,7 @@ String renderMsgKey(AppLocalizations l, MsgText text) {
     MsgKey.mgrNewsReplacedByPlayer => l.mgrNewsReplacedByPlayer(s(0), s(1)),
     MsgKey.mgrNewsAppointed => l.mgrNewsAppointed(s(0), s(1)),
     MsgKey.mgrNewsAppointedBody => l.mgrNewsAppointedBody(s(0), s(1)),
+    MsgKey.mgrChangesTitle => l.mgrChangesTitle,
   };
 }
 

@@ -4212,5 +4212,10 @@
   "mgrDetailBackground": "Xuất thân",
   "mgrOriginFresh": "HLV chuyên nghiệp",
   "mgrOriginExAssistant": "Cựu trợ lý HLV",
-  "mgrNewsSeeManager": "Hồ sơ: {name}"
+  "mgrNewsSeeManager": "Hồ sơ: {name}",
+  "mgrChangesTitle": "Thay đổi HLV",
+  "mgrChangesCount": "{count, plural, =1{1 thay đổi} other{{count} thay đổi}}",
+  "mgrChangesLeftFor": "Chuyển sang dẫn dắt {nation}",
+  "mgrChangesAppointed": "Được bổ nhiệm",
+  "mgrChangesVacant": "Còn trống"
 }

@@ -4212,5 +4212,10 @@
   "mgrDetailBackground": "Tausta",
   "mgrOriginFresh": "Ammattivalmentaja",
   "mgrOriginExAssistant": "Entinen apuvalmentaja",
-  "mgrNewsSeeManager": "Profiili: {name}"
+  "mgrNewsSeeManager": "Profiili: {name}",
+  "mgrChangesTitle": "Valmentajavaihdokset",
+  "mgrChangesCount": "{count, plural, =1{1 vaihdos} other{{count} vaihdosta}}",
+  "mgrChangesLeftFor": "Uusi pesti: {nation}",
+  "mgrChangesAppointed": "Nimitetty",
+  "mgrChangesVacant": "Avoinna"
 }

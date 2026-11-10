@@ -16886,4 +16886,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String mgrNewsSeeManager(String name) {
     return 'Profile: $name';
   }
+
+  @override
+  String get mgrChangesTitle => 'Manager changes';
+
+  @override
+  String mgrChangesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count changes',
+      one: '1 change',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String mgrChangesLeftFor(String nation) {
+    return 'Left for $nation';
+  }
+
+  @override
+  String get mgrChangesAppointed => 'Appointed';
+
+  @override
+  String get mgrChangesVacant => 'Vacant';
 }

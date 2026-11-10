@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/features/messages/paged_report.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:fnm/core/util/club_label.dart';
@@ -130,7 +131,7 @@ List<TransferRow>? decodeTransferReport(String body) {
 /// closes it somewhere off the bottom — the manager scrolls past his own squad
 /// looking for the end. A page of six fits on the screen it is shown on, the
 /// count says how much there is, and the numbered pager walks through it.
-class TransferTable extends StatefulWidget {
+class TransferTable extends StatelessWidget {
   const TransferTable({required this.rows, super.key});
 
   final List<TransferRow> rows;
@@ -141,117 +142,12 @@ class TransferTable extends StatefulWidget {
   static const int perPage = 6;
 
   @override
-  State<TransferTable> createState() => _TransferTableState();
-}
-
-class _TransferTableState extends State<TransferTable> {
-  int _page = 0;
-
-  int get _pages => (widget.rows.length / TransferTable.perPage).ceil();
-
-  @override
-  Widget build(BuildContext context) {
-    if (widget.rows.isEmpty) return const SizedBox.shrink();
-    final l = AppLocalizations.of(context);
-    final start = _page * TransferTable.perPage;
-    final end = (start + TransferTable.perPage).clamp(0, widget.rows.length);
-    final page = widget.rows.sublist(start, end);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // The count flexes and the page label does not: a Spacer between
-            // two Flexible children splits the free space three ways and
-            // leaves the page label nothing, which is how "Page 1 of 3" came
-            // out as "Page 1 o…" on a screen with room to spare.
-            Flexible(
-              child: Text(
-                l.transfersMoves(widget.rows.length),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTypography.labelSmall.copyWith(
-                  color: AppColors.onSurfaceVariant,
-                ),
-              ),
-            ),
-            // Which page, said in the header rather than down beside the
-            // buttons: at 360 points the Czech for "Previous", "Page 1 of 3"
-            // and "Next" do not fit on one line together, and a page count
-            // squeezed between two buttons is the first thing to be cut.
-            if (_pages > 1) ...[
-              const SizedBox(width: AppSpacing.sm),
-              Text(
-                l.transfersPageOf(_page + 1, _pages),
-                maxLines: 1,
-                textAlign: TextAlign.end,
-                style: AppTypography.labelSmall.copyWith(
-                  color: AppColors.onSurfaceVariant,
-                ),
-              ),
-            ],
-          ],
-        ),
-        const Divider(height: AppSpacing.md),
-        for (final r in page) _MoveRow(row: r),
-        if (_pages > 1) ...[
-          const SizedBox(height: AppSpacing.sm),
-          // PAGING, and nothing else. The two chevrons that used to sit here
-          // were arrows on a screen whose rows are also arrows, so one glyph
-          // meant "this player moved to that club" in the table and "show me
-          // six more" underneath it. Arrows are reserved for moves now; the
-          // pager is two words and the page count between them, which cannot
-          // be read as anything but a pager.
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _PageButton(
-                label: l.transfersPagePrevious,
-                onTap: _page == 0 ? null : () => setState(() => _page--),
-              ),
-              _PageButton(
-                label: l.transfersPageNext,
-                onTap: _page >= _pages - 1
-                    ? null
-                    : () => setState(() => _page++),
-              ),
-            ],
-          ),
-        ],
-      ],
-    );
-  }
-}
-
-/// A page control. A WORD, never an arrow: the whole complaint this row
-/// answers is that arrows on this screen meant two different things at once.
-class _PageButton extends StatelessWidget {
-  const _PageButton({required this.label, required this.onTap});
-
-  final String label;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final color = onTap == null
-        ? AppColors.onSurfaceVariant.withValues(alpha: 0.4)
-        : AppColors.primary;
-    return TextButton(
-      onPressed: onTap,
-      style: TextButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-        minimumSize: const Size(0, 36),
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      ),
-      child: Text(
-        label,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: AppTypography.labelSmall.copyWith(color: color),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => PagedReport(
+    itemCount: rows.length,
+    perPage: perPage,
+    countLabel: AppLocalizations.of(context).transfersMoves(rows.length),
+    itemBuilder: (context, i) => _MoveRow(row: rows[i]),
+  );
 }
 
 /// One move, read in one order: WHO, from where, to where, and for how much.

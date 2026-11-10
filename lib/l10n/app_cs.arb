@@ -4212,5 +4212,10 @@
   "mgrDetailBackground": "Minulost",
   "mgrOriginFresh": "Profesionální trenér",
   "mgrOriginExAssistant": "Bývalý asistent trenéra",
-  "mgrNewsSeeManager": "Profil trenéra: {name}"
+  "mgrNewsSeeManager": "Profil trenéra: {name}",
+  "mgrChangesTitle": "Trenérské změny",
+  "mgrChangesCount": "{count, plural, =1{1 změna} few{{count} změny} other{{count} změn}}",
+  "mgrChangesLeftFor": "Nové působiště: {nation}",
+  "mgrChangesAppointed": "Jmenován",
+  "mgrChangesVacant": "Neobsazeno"
 }

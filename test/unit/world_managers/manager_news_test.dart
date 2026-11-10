@@ -9,6 +9,7 @@ import 'package:fnm/domain/entities/world_manager.dart';
 import 'package:fnm/domain/services/world_managers/manager_news.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
     show kMatchViewModePrefsKey;
+import 'package:fnm/features/messages/manager_changes_report.dart';
 import 'package:fnm/features/world_managers/world_manager_providers.dart';
 import 'package:fnm/l10n/app_localizations_cs.dart';
 import 'package:fnm/l10n/app_localizations_en.dart';
@@ -52,6 +53,80 @@ void main() {
       confTop10: const {},
     );
     expect(none, isEmpty);
+  });
+
+  test('beside a summary, only personal moves are news of their own', () {
+    final moves = [for (var n = 1; n <= 12; n++) _move(n)];
+    final kept = ManagerNews.newsworthy(
+      moves,
+      tiedManagerIds: {31},
+      myNations: {5},
+      upcomingOpponents: {7},
+      confTop10: {9},
+      maxRank: ManagerNews.personalRank,
+    );
+    expect(kept.map((m) => m.nationId).toSet(), {3, 5});
+  });
+
+  test('a summary lists every named change, and where a poached man went', () {
+    final moves = <ManagerMove>[
+      _move(1, out: 10, why: SpellEnd.poached, inc: 11),
+      // Nation 2 sacked its man and took nation 1's.
+      _move(2, out: 20, inc: 10),
+      // Nation 3's man retired and nobody is in yet.
+      (
+        nationId: 3,
+        outgoingId: 30,
+        why: SpellEnd.retired,
+        incomingId: null,
+        date: DateTime(2030, 7, 19),
+      ),
+      // A vacancy filled.
+      (
+        nationId: 4,
+        outgoingId: null,
+        why: null,
+        incomingId: 41,
+        date: DateTime(2030, 7, 19),
+      ),
+      // Names nobody: not listed.
+      (
+        nationId: 5,
+        outgoingId: null,
+        why: null,
+        incomingId: null,
+        date: DateTime(2030, 7, 19),
+      ),
+    ];
+    expect(ManagerNews.named(moves), hasLength(4));
+    final rows = managerChangeRows(
+      ManagerNews.named(moves),
+      nations: {
+        1: (code: 'AAA', name: 'Arvenia'),
+        2: (code: 'BBB', name: 'Borlund'),
+        3: (code: 'CCC', name: 'Castrova'),
+        4: (code: 'DDD', name: 'Dalmir'),
+      },
+      managerNames: {
+        10: 'Tomas Vrel',
+        11: 'Ivo Marsk',
+        20: 'Petr Hollan',
+        30: 'Jan Dobrak',
+        41: 'Emil Sorvan',
+      },
+    );
+    final back = decodeManagerChanges(encodeManagerChanges(rows))!;
+    expect(back, rows);
+    expect(back[0].toNationId, 2);
+    expect(back[0].toName, 'Borlund');
+    expect(back[1].why, SpellEnd.sacked);
+    expect(back[1].incomingName, 'Tomas Vrel');
+    expect(back[2].incomingId, isNull);
+    expect(back[3].outgoingId, isNull);
+    expect(back[3].why, isNull);
+    // Not a report: an ordinary body, or a transfer window.
+    expect(decodeManagerChanges('The board are pleased.'), isNull);
+    expect(decodeManagerChanges('#transfers/v4\n'), isNull);
   });
 
   test('never more than 3 per pass', () {
@@ -147,7 +222,8 @@ void main() {
     );
   });
 
-  test('a pass files at most 3 manager items, keyed per nation', () async {
+  test('a pass files ONE summary of its changes, and only personal news '
+      'beside it', () async {
     SharedPreferences.setMockInitialValues(<String, Object>{
       kMatchViewModePrefsKey: 'timeline',
     });
@@ -191,14 +267,46 @@ void main() {
     final inbox = await c
         .read(competitionRepositoryProvider)
         .messages(careerId);
-    final news = [
+    final manager = [
       for (final m in inbox)
         if (m.category == 'manager') m,
     ];
-    // The world's top 10 of his confederation is among the favourites, so
-    // something is news; never more than three.
-    expect(news, isNotEmpty);
+    // A batch of changes is ONE summary message, listing every change that
+    // names somebody, each man by id.
+    final named = ManagerNews.named(moves);
+    expect(named.length, greaterThanOrEqualTo(ManagerNews.summaryMin));
+    final summaries = [
+      for (final m in manager)
+        if (decodeManagerChanges(m.body) != null) m,
+    ];
+    expect(summaries, hasLength(1));
+    final rows = decodeManagerChanges(summaries.single.body)!;
+    expect(rows, hasLength(named.length));
+    expect(
+      {for (final r in rows) r.nationId},
+      {for (final m in named) m.nationId},
+    );
+    for (final r in rows) {
+      expect(r.nationCode, isNotEmpty);
+      if (r.outgoingId != null) expect(r.outgoingName, isNotEmpty);
+      if (r.incomingId != null) expect(r.incomingName, isNotEmpty);
+    }
+    expect(
+      renderMsgPart(
+        AppLocalizationsEn(),
+        decodeMessageSpec(summaries.single.spec)!.title,
+      ),
+      'Manager changes',
+    );
+
+    // Beside it, only what is personal: his own nation or a man tied to
+    // him. The opponents and the confederation's top 10 are in the summary.
+    final news = [
+      for (final m in manager)
+        if (!summaries.contains(m)) m,
+    ];
     expect(news.length, lessThanOrEqualTo(3));
+    final career = (await c.read(careerRepositoryProvider).byId(careerId))!;
     for (final m in news) {
       expect(decodeMessageSpec(m.spec), isNotNull);
     }
@@ -207,11 +315,17 @@ void main() {
           in await c.read(competitionRepositoryProvider).messageKeys(careerId))
         if (k.startsWith('mgr:')) k,
     ];
-    expect(keys, hasLength(news.length));
+    expect(keys, hasLength(manager.length));
+    expect(keys, contains(ManagerNews.summaryDedupKey('wc:2030')));
     final moved = {for (final m in moves) m.nationId};
     for (final k in keys) {
       expect(k, startsWith('mgr:wc:2030:'));
-      expect(moved, contains(int.parse(k.split(':').last)));
+      if (k.endsWith(':all')) continue;
+      final nation = int.parse(k.split(':').last);
+      expect(moved, contains(nation));
+      // This save's player has led only his first nation, and has no ties
+      // yet: anything personal is about that nation.
+      expect(nation, career.nationId);
     }
 
     // Run again: the point has run, so it moves nobody and files nothing
@@ -230,7 +344,7 @@ void main() {
         .messages(careerId);
     expect(
       after.where((m) => m.category == 'manager').length,
-      news.length,
+      manager.length,
     );
   }, timeout: const Timeout(Duration(minutes: 5)));
 }

@@ -4212,5 +4212,10 @@
   "mgrDetailBackground": "Geçmiş",
   "mgrOriginFresh": "Kariyer antrenörü",
   "mgrOriginExAssistant": "Eski yardımcı antrenör",
-  "mgrNewsSeeManager": "Profil: {name}"
+  "mgrNewsSeeManager": "Profil: {name}",
+  "mgrChangesTitle": "Teknik direktör değişiklikleri",
+  "mgrChangesCount": "{count, plural, =1{1 değişiklik} other{{count} değişiklik}}",
+  "mgrChangesLeftFor": "Yeni görevi: {nation}",
+  "mgrChangesAppointed": "Atandı",
+  "mgrChangesVacant": "Boş"
 }

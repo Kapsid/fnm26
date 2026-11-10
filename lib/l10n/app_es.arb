@@ -4212,5 +4212,10 @@
   "mgrDetailBackground": "Procedencia",
   "mgrOriginFresh": "Entrenador de carrera",
   "mgrOriginExAssistant": "Exsegundo entrenador",
-  "mgrNewsSeeManager": "Perfil: {name}"
+  "mgrNewsSeeManager": "Perfil: {name}",
+  "mgrChangesTitle": "Cambios de seleccionador",
+  "mgrChangesCount": "{count, plural, =1{1 cambio} other{{count} cambios}}",
+  "mgrChangesLeftFor": "Nuevo destino: {nation}",
+  "mgrChangesAppointed": "Nombrado",
+  "mgrChangesVacant": "Vacante"
 }
