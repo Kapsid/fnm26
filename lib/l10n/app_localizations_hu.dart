@@ -7078,16 +7078,18 @@ class AppLocalizationsHu extends AppLocalizations {
   String get squadLegendCalledUp => 'Meghívva, a cserepadon';
 
   @override
-  String get squadLegendRatingUp => 'Idén emelkedő értékelés';
-
-  @override
-  String get squadLegendRatingDown => 'Idén csökkenő értékelés';
-
-  @override
   String get squadLegendInjured => 'Sérült, nem elérhető';
 
   @override
   String get squadLegendSuspended => 'Eltiltva, nem elérhető';
+
+  @override
+  String get squadLegendTired =>
+      'Fáradt (sárga) vagy kimerült (piros): pihentesd egy meccsen';
+
+  @override
+  String get squadLegendShift =>
+      'Saját értékelésváltozása a következő meccsen (forma, erőnlét, klub)';
 
   @override
   String get squadLegendTraits => 'ISMERT ERÉNYEI';
@@ -10743,6 +10745,11 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get playerFormNoEffect =>
       'Nem változik az értékelése a következő meccsen';
+
+  @override
+  String playerFormSquadShare(String delta) {
+    return 'Benne $delta, ami az egész keretre vonatkozik (morál, szálláshely)';
+  }
 
   @override
   String get sideGroupHome => 'Főoldal';

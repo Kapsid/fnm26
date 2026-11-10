@@ -16,6 +16,7 @@ import 'package:fnm/domain/entities/tactic_preset.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/squad/absence_outlook.dart';
 import 'package:fnm/domain/services/squad/captaincy.dart';
+import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
 import 'package:fnm/domain/services/tactics/set_piece_picks.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -25,6 +26,8 @@ import 'package:fnm/features/match/match_preview_screen.dart'
 import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/features/squad/captain_providers.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
+import 'package:fnm/features/tactics/condition_mark.dart';
+import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/tactics/familiarity_providers.dart';
 import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/features/tactics/nation_squad_tab.dart';
@@ -276,6 +279,7 @@ class TacticsScreen extends ConsumerWidget {
             };
             final outStarters = data.unavailableStarters;
             final t = _resolveTakers(ref, careerId, data, takers);
+            final conditions = _conditionsOf(ref);
 
             // A Builder for the body's own context: the dock's clearance is
             // read from the padding the Scaffold gives its body.
@@ -319,6 +323,24 @@ class TacticsScreen extends ConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // Who is carrying tired legs or a shift of his
+                            // own into the match, under the pitch rather than
+                            // on it (markers on the discs made it too busy).
+                            // Absent when nobody is worth flagging.
+                            if (conditions.values.any(conditionNoteworthy))
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: AppSpacing.md,
+                                ),
+                                child: LineupConditionStrip(
+                                  players: data.pool,
+                                  conditions: conditions,
+                                  starters: tactic.lineup
+                                      .whereType<int>()
+                                      .toSet(),
+                                  onOpen: (p) => _openPlayer(context, p),
+                                ),
+                              ),
                             // The pitch scrolls, so a drag has to start with a
                             // hold — say so, or it just reads as the page moving.
                             Text(
@@ -443,6 +465,20 @@ class TacticsScreen extends ConsumerWidget {
       ),
     );
   }
+
+  /// Every squad player's condition, for the line-up's condition strip, the
+  /// bench and the pick sheet. Empty while it loads (or if it fails): no
+  /// marks rather than a spinner on a screen that is otherwise ready.
+  Map<int, PlayerCondition> _conditionsOf(WidgetRef ref, {bool watch = true}) {
+    final async = watch
+        ? ref.watch(squadConditionProvider(careerId))
+        : ref.read(squadConditionProvider(careerId));
+    return async.valueOrNull ?? const <int, PlayerCondition>{};
+  }
+
+  void _openPlayer(BuildContext context, Player p) => context.push(
+    '${Routes.player}?careerId=$careerId&playerId=${p.id}',
+  );
 
   /// The starting XI on the pitch, with every gesture the line-up has: tap a
   /// slot to pick, drag to swap or reshape, drop a substitute on.
@@ -775,6 +811,7 @@ class TacticsScreen extends ConsumerWidget {
     }
 
     final l = AppLocalizations.of(context);
+    final conditions = _conditionsOf(ref, watch: false);
     // The sheet answers with a player id, or with a place for the slot
     // itself: the position chips at its head change what the slot plays
     // within the formation (see [SlotSwitchStrip]).
@@ -848,6 +885,12 @@ class TacticsScreen extends ConsumerWidget {
                           color: AppColors.onSurfaceVariant,
                         ),
                       ),
+                    // Tired legs and his own shift next match, so the pick
+                    // is made on the number that will actually play.
+                    if (conditionNoteworthy(conditions[p.id])) ...[
+                      const SizedBox(width: AppSpacing.xs),
+                      ConditionMark(condition: conditions[p.id]),
+                    ],
                     IconButton(
                       visualDensity: VisualDensity.compact,
                       icon: const Icon(

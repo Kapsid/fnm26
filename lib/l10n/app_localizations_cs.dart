@@ -7244,16 +7244,18 @@ class AppLocalizationsCs extends AppLocalizations {
   String get squadLegendCalledUp => 'V nominaci, na lavičce';
 
   @override
-  String get squadLegendRatingUp => 'Rating letos roste';
-
-  @override
-  String get squadLegendRatingDown => 'Rating letos klesá';
-
-  @override
   String get squadLegendInjured => 'Zraněný, nemůže hrát';
 
   @override
   String get squadLegendSuspended => 'Trest, nemůže hrát';
+
+  @override
+  String get squadLegendTired =>
+      'Unavený (žlutě) nebo vyčerpaný (červeně): dopřejte mu zápas pauzu';
+
+  @override
+  String get squadLegendShift =>
+      'Jeho vlastní změna hodnocení v příštím zápase (forma, kondice, klub)';
 
   @override
   String get squadLegendTraits => 'ZNÁMÝ PRO';
@@ -11060,6 +11062,11 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get playerFormNoEffect => 'Hodnocení v příštím zápase beze změny';
+
+  @override
+  String playerFormSquadShare(String delta) {
+    return 'Včetně $delta, které má celý tým (morálka, základní tábor)';
+  }
 
   @override
   String get sideGroupHome => 'Hlavní';

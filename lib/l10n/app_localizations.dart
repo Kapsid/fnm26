@@ -11086,18 +11086,6 @@ abstract class AppLocalizations {
   /// **'Called up, on the bench'**
   String get squadLegendCalledUp;
 
-  /// Legend: the green arrow.
-  ///
-  /// In en, this message translates to:
-  /// **'Rating rising this year'**
-  String get squadLegendRatingUp;
-
-  /// Legend: the red arrow.
-  ///
-  /// In en, this message translates to:
-  /// **'Rating falling this year'**
-  String get squadLegendRatingDown;
-
   /// Legend: the injury icon.
   ///
   /// In en, this message translates to:
@@ -11109,6 +11097,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Suspended, unavailable'**
   String get squadLegendSuspended;
+
+  /// Squad legend: the battery mark on a squad row. Amber battery is tired, red is exhausted.
+  ///
+  /// In en, this message translates to:
+  /// **'Tired (amber) or exhausted (red): rest him a match'**
+  String get squadLegendTired;
+
+  /// Squad legend: the signed number (like +2 or −3) on a squad row: the player's own rating shift next match.
+  ///
+  /// In en, this message translates to:
+  /// **'His own change to his rating next match (form, fitness, club)'**
+  String get squadLegendShift;
 
   /// Legend: heading above the player traits.
   ///
@@ -16470,6 +16470,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No change to his rating next match'**
   String get playerFormNoEffect;
+
+  /// Player page, under the next-match rating shift: the part of it every squad member shares. {delta} is signed, like +1.
+  ///
+  /// In en, this message translates to:
+  /// **'Includes {delta} the whole squad shares (morale, base camp)'**
+  String playerFormSquadShare(String delta);
 
   /// Tablet sidebar: section heading over Hub, Inbox and Y.
   ///

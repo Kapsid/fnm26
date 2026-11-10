@@ -7055,16 +7055,18 @@ class AppLocalizationsVi extends AppLocalizations {
   String get squadLegendCalledUp => 'Được triệu tập, ngồi dự bị';
 
   @override
-  String get squadLegendRatingUp => 'Điểm đang tăng trong năm';
-
-  @override
-  String get squadLegendRatingDown => 'Điểm đang giảm trong năm';
-
-  @override
   String get squadLegendInjured => 'Chấn thương, không sẵn sàng';
 
   @override
   String get squadLegendSuspended => 'Bị treo giò, không sẵn sàng';
+
+  @override
+  String get squadLegendTired =>
+      'Mệt (vàng) hoặc kiệt sức (đỏ): cho nghỉ một trận';
+
+  @override
+  String get squadLegendShift =>
+      'Thay đổi điểm riêng của anh ấy ở trận tới (phong độ, thể lực, CLB)';
 
   @override
   String get squadLegendTraits => 'NỔI TIẾNG VỀ';
@@ -10675,6 +10677,11 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get playerFormNoEffect => 'Không thay đổi điểm số của anh ấy trận tới';
+
+  @override
+  String playerFormSquadShare(String delta) {
+    return 'Gồm $delta chung cho cả đội (tinh thần, nơi đóng quân)';
+  }
 
   @override
   String get sideGroupHome => 'Trang chủ';

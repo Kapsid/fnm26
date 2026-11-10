@@ -7048,16 +7048,18 @@ class AppLocalizationsId extends AppLocalizations {
   String get squadLegendCalledUp => 'Dipanggil, di bangku cadangan';
 
   @override
-  String get squadLegendRatingUp => 'Rating naik tahun ini';
-
-  @override
-  String get squadLegendRatingDown => 'Rating turun tahun ini';
-
-  @override
   String get squadLegendInjured => 'Cedera, tidak tersedia';
 
   @override
   String get squadLegendSuspended => 'Skorsing, tidak tersedia';
+
+  @override
+  String get squadLegendTired =>
+      'Lelah (kuning) atau habis tenaga (merah): istirahatkan satu laga';
+
+  @override
+  String get squadLegendShift =>
+      'Perubahan ratingnya sendiri di laga berikutnya (performa, kebugaran, klub)';
 
   @override
   String get squadLegendTraits => 'DIKENAL KARENA';
@@ -10709,6 +10711,11 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get playerFormNoEffect =>
       'Tidak ada perubahan pada rating-nya di laga berikutnya';
+
+  @override
+  String playerFormSquadShare(String delta) {
+    return 'Termasuk $delta untuk seluruh skuad (moral, markas)';
+  }
 
   @override
   String get sideGroupHome => 'Beranda';

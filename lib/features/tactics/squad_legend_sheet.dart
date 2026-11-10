@@ -3,6 +3,8 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
+import 'package:fnm/domain/services/squad/condition.dart';
+import 'package:fnm/features/tactics/condition_mark.dart';
 import 'package:fnm/features/player/player_detail_screen.dart'
     show describeTrait;
 import 'package:fnm/l10n/app_localizations.dart';
@@ -65,15 +67,23 @@ class _SquadLegendSheet extends StatelessWidget {
               color: AppColors.positive,
               label: l.squadLegendCalledUp,
             ),
+            // Condition: the two marks a row carries for a man who is not
+            // simply fresh and in ordinary form (see [ConditionMark]).
             _Entry(
-              icon: Icons.trending_up_rounded,
-              color: AppColors.positive,
-              label: l.squadLegendRatingUp,
+              icon: Icons.battery_alert_rounded,
+              color: fatigueColor(FatigueState.tired),
+              label: l.squadLegendTired,
             ),
             _Entry(
-              icon: Icons.trending_down_rounded,
-              color: AppColors.error,
-              label: l.squadLegendRatingDown,
+              lead: Text(
+                signedDelta(-2),
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.error,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 10,
+                ),
+              ),
+              label: l.squadLegendShift,
             ),
             _Entry(
               icon: Icons.personal_injury,
@@ -113,14 +123,18 @@ class _SquadLegendSheet extends StatelessWidget {
 
 class _Entry extends StatelessWidget {
   const _Entry({
-    required this.icon,
-    required this.color,
     required this.label,
+    this.icon,
+    this.color,
+    this.lead,
     this.blurb,
   });
 
-  final IconData icon;
-  final Color color;
+  final IconData? icon;
+  final Color? color;
+
+  /// Drawn in the icon's place, for a mark that is not an icon.
+  final Widget? lead;
   final String label;
   final String? blurb;
 
@@ -133,7 +147,7 @@ class _Entry extends StatelessWidget {
         children: [
           SizedBox(
             width: 24,
-            child: Icon(icon, size: 15, color: color),
+            child: lead ?? Icon(icon, size: 15, color: color),
           ),
           Expanded(
             child: Column(

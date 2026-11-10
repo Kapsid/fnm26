@@ -59,6 +59,8 @@ class _TacticsTabletLayout extends ConsumerWidget {
               if ((data.absences[p.id]?.injuryMatches ?? 0) > 0) p.id,
           };
           final t = _resolveTakers(ref, careerId, data, takers);
+          final conditions = screen._conditionsOf(ref);
+          final starters = tactic.lineup.whereType<int>().toSet();
           final bench = [
             for (final p in data.pool)
               if (!tactic.lineup.contains(p.id)) p,
@@ -118,6 +120,23 @@ class _TacticsTabletLayout extends ConsumerWidget {
                           ),
                         ),
                       ),
+                      // The starters worth a mark, on one line under the
+                      // pitch; the bench chips carry their own.
+                      if (starters.any(
+                        (id) => conditionNoteworthy(conditions[id]),
+                      )) ...[
+                        const SizedBox(height: AppSpacing.sm),
+                        LineupConditionStrip(
+                          players: [
+                            for (final p in data.pool)
+                              if (starters.contains(p.id)) p,
+                          ],
+                          conditions: conditions,
+                          starters: starters,
+                          singleLine: true,
+                          onOpen: (p) => screen._openPlayer(context, p),
+                        ),
+                      ],
                       const SizedBox(height: AppSpacing.sm),
                       Panel(
                         title: l.tacticsTabBench,
@@ -136,6 +155,14 @@ class _TacticsTabletLayout extends ConsumerWidget {
                                       for (final p in bench)
                                         BenchChip(
                                           player: p,
+                                          mark:
+                                              conditionNoteworthy(
+                                                conditions[p.id],
+                                              )
+                                              ? ConditionMark(
+                                                  condition: conditions[p.id],
+                                                )
+                                              : null,
                                           onTap: () => context.push(
                                             '${Routes.player}'
                                             '?careerId=$careerId'

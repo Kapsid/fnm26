@@ -18,6 +18,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/club/club_form.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
+import 'package:fnm/features/tactics/condition_mark.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/tactics/player_form_look.dart';
 import 'package:fnm/features/tactics/call_up_screen.dart'
@@ -1168,6 +1169,16 @@ class _FormCard extends StatelessWidget {
               fontWeight: FontWeight.w700,
             ),
           ),
+          // The squad list shows only his own share of the shift; say how
+          // much of the number above every man in the squad has, so the two
+          // never seem to disagree.
+          if (delta != 0 && delta != condition.personalDelta)
+            Text(
+              l.playerFormSquadShare(
+                signedDelta(delta - condition.personalDelta),
+              ),
+              style: muted,
+            ),
         ],
       ),
     );

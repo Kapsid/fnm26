@@ -6900,16 +6900,16 @@ class AppLocalizationsJa extends AppLocalizations {
   String get squadLegendCalledUp => '招集済み、控え';
 
   @override
-  String get squadLegendRatingUp => '今年評価が上昇';
-
-  @override
-  String get squadLegendRatingDown => '今年評価が下降';
-
-  @override
   String get squadLegendInjured => '負傷、出場不可';
 
   @override
   String get squadLegendSuspended => '出場停止、出場不可';
+
+  @override
+  String get squadLegendTired => '疲労（黄）または消耗（赤）：1試合休ませよう';
+
+  @override
+  String get squadLegendShift => '次の試合での彼自身の評価の増減（調子・コンディション・クラブ）';
 
   @override
   String get squadLegendTraits => '特徴';
@@ -10438,6 +10438,11 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get playerFormNoEffect => '次の試合の評価に変化なし';
+
+  @override
+  String playerFormSquadShare(String delta) {
+    return 'チーム全体の$deltaを含む（士気・ベースキャンプ）';
+  }
 
   @override
   String get sideGroupHome => 'ホーム';

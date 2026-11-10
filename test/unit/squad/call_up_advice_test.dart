@@ -85,6 +85,7 @@ _World _world(int seed) {
       fatigueState: fatigue,
       gamesInWindow: fatigue.index + 1,
       overallDelta: (formDelta + tired + morale).clamp(-9, 6),
+      personalDelta: (formDelta + tired).clamp(-9, 6),
       clubStanding: null,
     );
   }
@@ -401,6 +402,7 @@ void main() {
         fatigueState: FatigueState.exhausted,
         gamesInWindow: 5,
         overallDelta: -9,
+        personalDelta: -9,
         clubStanding: null,
       ),
     };

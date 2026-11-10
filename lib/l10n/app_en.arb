@@ -11241,14 +11241,6 @@
   "@squadLegendCalledUp": {
     "description": "Legend: the tick before a name."
   },
-  "squadLegendRatingUp": "Rating rising this year",
-  "@squadLegendRatingUp": {
-    "description": "Legend: the green arrow."
-  },
-  "squadLegendRatingDown": "Rating falling this year",
-  "@squadLegendRatingDown": {
-    "description": "Legend: the red arrow."
-  },
   "squadLegendInjured": "Injured, unavailable",
   "@squadLegendInjured": {
     "description": "Legend: the injury icon."
@@ -11256,6 +11248,14 @@
   "squadLegendSuspended": "Suspended, unavailable",
   "@squadLegendSuspended": {
     "description": "Legend: the suspension icon."
+  },
+  "squadLegendTired": "Tired (amber) or exhausted (red): rest him a match",
+  "@squadLegendTired": {
+    "description": "Squad legend: the battery mark on a squad row. Amber battery is tired, red is exhausted."
+  },
+  "squadLegendShift": "His own change to his rating next match (form, fitness, club)",
+  "@squadLegendShift": {
+    "description": "Squad legend: the signed number (like +2 or −3) on a squad row: the player's own rating shift next match."
   },
   "squadLegendTraits": "KNOWN FOR",
   "@squadLegendTraits": {
@@ -16784,6 +16784,15 @@
   "playerFormNoEffect": "No change to his rating next match",
   "@playerFormNoEffect": {
     "description": "Player page: form and fatigue leave his rating unchanged next match."
+  },
+  "playerFormSquadShare": "Includes {delta} the whole squad shares (morale, base camp)",
+  "@playerFormSquadShare": {
+    "description": "Player page, under the next-match rating shift: the part of it every squad member shares. {delta} is signed, like +1.",
+    "placeholders": {
+      "delta": {
+        "type": "String"
+      }
+    }
   },
   "sideGroupHome": "Home",
   "@sideGroupHome": {

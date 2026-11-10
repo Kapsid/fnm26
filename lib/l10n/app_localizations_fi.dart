@@ -7173,16 +7173,18 @@ class AppLocalizationsFi extends AppLocalizations {
   String get squadLegendCalledUp => 'Kutsuttu, vaihtopenkillä';
 
   @override
-  String get squadLegendRatingUp => 'Taso nousussa tänä vuonna';
-
-  @override
-  String get squadLegendRatingDown => 'Taso laskussa tänä vuonna';
-
-  @override
   String get squadLegendInjured => 'Loukkaantunut, poissa pelistä';
 
   @override
   String get squadLegendSuspended => 'Pelikiellossa, poissa pelistä';
+
+  @override
+  String get squadLegendTired =>
+      'Väsynyt (keltainen) tai uupunut (punainen): lepuuta ottelu';
+
+  @override
+  String get squadLegendShift =>
+      'Hänen oma arvosanamuutoksensa seuraavassa ottelussa (vire, kunto, seura)';
 
   @override
   String get squadLegendTraits => 'TUNNETTU SIITÄ';
@@ -10874,6 +10876,11 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String get playerFormNoEffect =>
       'Ei muutosta arvosanaan seuraavassa ottelussa';
+
+  @override
+  String playerFormSquadShare(String delta) {
+    return 'Sisältää $delta, joka koskee koko joukkuetta (moraali, tukikohta)';
+  }
 
   @override
   String get sideGroupHome => 'Etusivu';

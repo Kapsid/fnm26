@@ -15,6 +15,13 @@ typedef PlayerCondition = ({
   FatigueState fatigueState,
   int gamesInWindow, // appearances counted toward fatigue
   int overallDelta, // net rating shift applied in the match
+  /// The part of [overallDelta] that is his alone (form, fatigue, club
+  /// sharpness, what was said about him), without the team-wide morale and
+  /// base-camp shifts every man in the squad shares. What a squad list flags:
+  /// a +1 on every row from a good run of results says nothing about whom to
+  /// pick.
+  int personalDelta,
+
   /// Where he stands at his club, or null when it was not supplied.
   ClubStanding? clubStanding,
 });
@@ -67,11 +74,19 @@ abstract final class Condition {
     final games = appearanceDates
         .where((d) => !d.isAfter(asOf) && d.isAfter(cutoff))
         .length;
+    // One step gentler than it was (2 games read "match legs", 3 tired, 5
+    // exhausted). A tournament plays every three or four days, so under the
+    // old steps a side that kept its eleven was flagged tired from the fourth
+    // match on and stayed so, and resting a man for one match never cleared
+    // it: half the squad wore a battery by the knockouts. Now two games in a
+    // fortnight is just football, a third is a small cost, and tired takes
+    // four (a man played straight through a three-day run). One match off in
+    // a tournament clears it. See test/story/fatigue_lab_test.dart.
     final (state, delta) = switch (games) {
-      <= 1 => (FatigueState.fresh, 0),
-      2 => (FatigueState.ready, -1),
-      3 => (FatigueState.tired, -2),
-      4 => (FatigueState.tired, -4),
+      <= 2 => (FatigueState.fresh, 0),
+      3 => (FatigueState.ready, -1),
+      4 => (FatigueState.tired, -2),
+      5 => (FatigueState.tired, -4),
       _ => (FatigueState.exhausted, -6),
     };
     return (state: state, games: games, delta: delta);
@@ -98,15 +113,15 @@ abstract final class Condition {
     final f = form(recentRatings);
     final t = fatigue(appearanceDates, asOf);
     final tired = (t.delta * travelFatigue).round();
-    final net =
-        (f.delta + tired + moraleDelta + campBonus + clubDelta + statementDelta)
-            .clamp(-9, 6);
+    final own = f.delta + tired + clubDelta + statementDelta;
+    final net = (own + moraleDelta + campBonus).clamp(-9, 6);
     return (
       form: f.state,
       formRating: f.avg,
       fatigueState: t.state,
       gamesInWindow: t.games,
       overallDelta: net,
+      personalDelta: own.clamp(-9, 6),
       clubStanding: clubStanding,
     );
   }

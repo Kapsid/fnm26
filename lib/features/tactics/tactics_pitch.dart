@@ -1951,10 +1951,13 @@ Widget playerNameWithCard(String name, MatchCard? card, {TextStyle? style}) {
 /// Hold and drag it onto a player on the pitch to bring it on, exactly like a
 /// [SubDragRow]; a tap does [onTap].
 class BenchChip extends StatelessWidget {
-  const BenchChip({required this.player, this.onTap, super.key});
+  const BenchChip({required this.player, this.onTap, this.mark, super.key});
 
   final Player player;
   final VoidCallback? onTap;
+
+  /// Drawn after the name when given: the line-up's condition mark.
+  final Widget? mark;
 
   @override
   Widget build(BuildContext context) {
@@ -1978,6 +1981,7 @@ class BenchChip extends StatelessWidget {
               ),
               const SizedBox(width: 5),
               Text(surnameOf(player.name), style: AppTypography.labelSmall),
+              if (mark case final m?) ...[const SizedBox(width: 5), m],
             ],
           ),
         ),

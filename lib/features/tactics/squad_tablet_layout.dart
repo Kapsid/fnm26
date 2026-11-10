@@ -13,6 +13,7 @@ import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/features/player/player_detail_screen.dart'
     show PlayerTraitGlyphs;
 import 'package:fnm/features/tactics/absence_providers.dart';
+import 'package:fnm/features/tactics/condition_mark.dart';
 import 'package:fnm/features/tactics/nation_squad_providers.dart';
 import 'package:fnm/features/tactics/squad_legend_sheet.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -339,24 +340,63 @@ List<GridColumnSet<NationSquadRow>> squadColumnSets(
       );
     },
   );
+  // His condition: the row's mark (tired legs, his own shift next match)
+  // and, with the room the form view has, the word for his legs. Sorted by
+  // that shift, worst first, so the men to rest come to the top.
+  Comparable<dynamic> shiftKey(NationSquadRow r) =>
+      r.condition?.personalDelta ?? 0;
   final condition = GridColumn<NationSquadRow>(
     id: 'cond',
     label: h(l.gridColCondition),
     flex: 2,
     gapBefore: 20,
-    sortKey: (r) => r.condition?.fatigueState.index ?? 0,
-    cell: (r) => Text(switch (r.condition?.fatigueState) {
-      FatigueState.exhausted => l.tacticsFatigueExhausted,
-      FatigueState.tired => l.tacticsFatigueTired,
-      FatigueState.ready => l.tacticsFatigueMatchLegs,
-      FatigueState.fresh || null => '',
-    }),
+    sortKey: shiftKey,
+    firstAscending: true,
+    cell: (r) {
+      final word = switch (r.condition?.fatigueState) {
+        FatigueState.exhausted => l.tacticsFatigueExhausted,
+        FatigueState.tired => l.tacticsFatigueTired,
+        _ => null,
+      };
+      return Row(
+        children: [
+          ConditionMark(condition: r.condition, size: 13),
+          if (word != null) ...[
+            const SizedBox(width: 6),
+            Flexible(child: Text(word, maxLines: 1)),
+          ],
+        ],
+      );
+    },
+  );
+  // The same mark alone, for the overview: the squad's first screen.
+  final conditionMark = GridColumn<NationSquadRow>(
+    id: 'condMark',
+    label: h(l.gridColCondition),
+    width: 76,
+    gapBefore: 12,
+    sortKey: shiftKey,
+    firstAscending: true,
+    cell: (r) => Align(
+      alignment: Alignment.centerLeft,
+      child: ConditionMark(condition: r.condition, size: 13),
+    ),
   );
   return [
     GridColumnSet(
       id: 'overview',
       label: l.gridViewOverview,
-      columns: [pos(), name(), age, club, overall, caps, goals, status],
+      columns: [
+        pos(),
+        name(),
+        age,
+        club,
+        overall,
+        conditionMark,
+        caps,
+        goals,
+        status,
+      ],
     ),
     GridColumnSet(
       id: 'attributes',

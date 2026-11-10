@@ -7117,16 +7117,18 @@ class AppLocalizationsSv extends AppLocalizations {
   String get squadLegendCalledUp => 'Uttagen, på bänken';
 
   @override
-  String get squadLegendRatingUp => 'Betyget stiger i år';
-
-  @override
-  String get squadLegendRatingDown => 'Betyget sjunker i år';
-
-  @override
   String get squadLegendInjured => 'Skadad, otillgänglig';
 
   @override
   String get squadLegendSuspended => 'Avstängd, otillgänglig';
+
+  @override
+  String get squadLegendTired =>
+      'Trött (gul) eller utmattad (röd): vila honom en match';
+
+  @override
+  String get squadLegendShift =>
+      'Hans egen betygsförändring nästa match (form, kondition, klubb)';
 
   @override
   String get squadLegendTraits => 'KÄND FÖR';
@@ -10794,6 +10796,11 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get playerFormNoEffect => 'Ingen förändring av hans betyg nästa match';
+
+  @override
+  String playerFormSquadShare(String delta) {
+    return 'Inklusive $delta som hela truppen delar (moral, basläger)';
+  }
 
   @override
   String get sideGroupHome => 'Hem';
