@@ -77,4 +77,30 @@ void main() {
     final renamed = canada.copyWith(name: 'Maple Land', englishName: 'Canada');
     expect(NationIdentity.nicknameFor(renamed, 'en'), isNull);
   });
+
+  test('federation-branded nicknames are gone, descriptive ones remain', () {
+    const retired = {
+      'Three Lions',
+      'Red Devils',
+      'Super Eagles',
+      'Black Stars',
+      'Indomitable Lions',
+      'Atlas Lions',
+      'Bafana Bafana',
+      'Samurai Blue',
+      'Taegeuk Warriors',
+      'Socceroos',
+      'All Whites',
+      'Chipolopolo',
+      'Reggae Boyz',
+      'Danish Dynamite',
+    };
+    final shown = {
+      for (final c in NationIdentity.curatedCodes) NationIdentity.nicknameOf(c),
+    };
+    expect(shown.intersection(retired), isEmpty);
+    expect(NationIdentity.nicknameOf('AUS'), 'Green and Gold');
+    expect(NationIdentity.nicknameOf('FRA'), 'Les Bleus');
+    expect(NationIdentity.nicknameOf('ITA'), 'Azzurri');
+  });
 }
