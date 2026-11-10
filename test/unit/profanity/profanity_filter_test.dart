@@ -283,6 +283,30 @@ void main() {
         expect(ProfanityFilter.isClean(n), isTrue, reason: n);
       }
     });
+
+    // Real names whose one word is refused on its own: allowed only as the
+    // whole name, so the word alone still is not.
+    test('real names on the allowed-names list, as whole names only', () {
+      for (final n in [
+        'Jakob Wanker',
+        'JAKOB WANKER',
+        'Franco Foda',
+        'Hang Jebat Stadium',
+        'Stadion Hang Jebat',
+      ]) {
+        expect(ProfanityFilter.isClean(n), isTrue, reason: n);
+      }
+      for (final n in [
+        'Wanker',
+        'Wanker United',
+        'Foda FC',
+        'Jebat',
+        'Jakob Wanker Wanker',
+      ]) {
+        expect(ProfanityFilter.isClean(n), isFalse, reason: n);
+      }
+      expect(ProfanityFilter.mask('Jakob Wanker Wanker'), 'Jakob Wanker W*****');
+    });
   });
 
   group('mask', () {
