@@ -1652,7 +1652,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get hubHost => 'Paese ospitante';
 
   @override
-  String get hubGoldenBoot => 'Scarpa d\'oro';
+  String get hubGoldenBoot => 'Capocannoniere';
 
   @override
   String hubGoldenBootValue(String name, int goals) {
@@ -3252,7 +3252,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Fai entrare un giocatore nella squadra ideale di un Campionato del mondo.';
 
   @override
-  String get achGoldenboot => 'Scarpa d\'oro';
+  String get achGoldenboot => 'Capocannoniere';
 
   @override
   String get achGoldenbootDesc =>
@@ -3290,7 +3290,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get paywallBenefitNoAds =>
-      'Niente pubblicità, niente microtransazioni, niente abbonamento. Un solo pagamento e ogni aggiornamento futuro è tuo.';
+      'Niente pubblicità, niente microtransazioni, niente abbonamento. Un solo pagamento, aggiornamenti inclusi.';
 
   @override
   String get paywallBenefitSaves =>
@@ -5599,13 +5599,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get playerHonoursTitle => 'PALMARÈS';
 
   @override
-  String get awardGoldenBall => 'Pallone d\'oro';
+  String get awardGoldenBall => 'Miglior giocatore';
 
   @override
-  String get awardGoldenBoot => 'Scarpa d\'oro';
+  String get awardGoldenBoot => 'Capocannoniere';
 
   @override
-  String get awardGoldenGlove => 'Guanto d\'oro';
+  String get awardGoldenGlove => 'Miglior portiere';
 
   @override
   String get awardTeamOfTournament => 'Squadra del torneo';
@@ -5756,13 +5756,13 @@ class AppLocalizationsIt extends AppLocalizations {
       'I premi vengono assegnati a torneo concluso.';
 
   @override
-  String get tourSharedGoldenBall => 'PALLONE D\'ORO';
+  String get tourSharedGoldenBall => 'MIGLIOR GIOCATORE';
 
   @override
   String get tourSharedPlayerOfTournament => 'Miglior giocatore del torneo';
 
   @override
-  String get tourSharedGoldenBoot => 'SCARPA D\'ORO';
+  String get tourSharedGoldenBoot => 'CAPOCANNONIERE';
 
   @override
   String tourSharedGoalsCount(int count) {
@@ -5776,7 +5776,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get tourSharedGoldenGlove => 'GUANTO D\'ORO';
+  String get tourSharedGoldenGlove => 'MIGLIOR PORTIERE';
 
   @override
   String get tourSharedTeamOfTournament => 'SQUADRA DEL TORNEO';
@@ -8330,7 +8330,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get tourJointBid => 'CANDIDATURA CONGIUNTA';
 
   @override
-  String get tourGoldenGlove => 'GUANTO D\'ORO';
+  String get tourGoldenGlove => 'MIGLIOR PORTIERE';
 
   @override
   String get tourTeamOfTournament => 'SQUADRA DEL TORNEO';
@@ -9185,14 +9185,14 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get settingsFreeScopeBlurb =>
-      'Un ciclo completo (qualificazioni, campionato continentale e Campionato del mondo) su due salvataggi, con tutte le nazionali del mondo, senza limitazioni. Cicli infiniti e salvataggi illimitati costano un unico pagamento, una volta sola, che copre tutti gli aggiornamenti futuri.';
+      'Un ciclo completo (qualificazioni, campionato continentale e Campionato del mondo) su due salvataggi, con tutte le nazionali del mondo, senza limitazioni. Cicli infiniti e salvataggi illimitati costano un unico pagamento, una volta sola, aggiornamenti inclusi.';
 
   @override
   String get settingsUnlockedTitle => 'Sbloccato';
 
   @override
   String get settingsUnlockedBlurb =>
-      'Cicli infiniti, salvataggi illimitati e tutti gli aggiornamenti futuri. Grazie.';
+      'Cicli infiniti, salvataggi illimitati, aggiornamenti inclusi. Grazie.';
 
   @override
   String get settingsFromDeveloperTitle => 'Dallo sviluppatore';
@@ -14101,13 +14101,13 @@ class AppLocalizationsIt extends AppLocalizations {
       'Carbone, rame e un consiglio d\'amministrazione molto impolverato.';
 
   @override
-  String get sponsorBrandMoth => 'Falena';
+  String get sponsorBrandDragonfly => 'Libellula';
 
   @override
-  String get sponsorIndustryMoth => 'Stazioni di servizio';
+  String get sponsorIndustryDragonfly => 'Stazioni di servizio';
 
   @override
-  String get sponsorFlavourMoth =>
+  String get sponsorFlavourDragonfly =>
       'Benzina, hot dog e un autolavaggio che non ha mai funzionato.';
 
   @override
@@ -14177,7 +14177,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sponsorFlavourOldSwamp =>
-      'Prodotta dal 1869 in una cantina che da allora nessuno ha mai pulito.';
+      'Prodotta in una cantina che nessuno ha mai pulito.';
 
   @override
   String get sponsorBrandBuzzhorn => 'Buzzhorn';
@@ -14290,14 +14290,14 @@ class AppLocalizationsIt extends AppLocalizations {
       'Trenta gusti, tutti che si sciolgono.';
 
   @override
-  String get sponsorBrandHexagon => 'Hexagon';
+  String get sponsorBrandBoltworth => 'Boltworth';
 
   @override
-  String get sponsorIndustryHexagon => 'Ingegneria';
+  String get sponsorIndustryBoltworth => 'Ingegneria';
 
   @override
-  String get sponsorFlavourHexagon =>
-      'Ogni problema ha sei lati. I loro ingegneri li stanno ancora contando.';
+  String get sponsorFlavourBoltworth =>
+      'Un bullone per ogni problema. I loro ingegneri stanno ancora cercando il dado.';
 
   @override
   String get sponsorBrandVelocell => 'Velocell';

@@ -2380,7 +2380,7 @@
   },
   "hubGoldenBoot": "Golden Boot",
   "@hubGoldenBoot": {
-    "description": "Award label: Golden Boot."
+    "description": "Award label: Golden Boot. Outside English use a plain generic term (best player, top scorer, best goalkeeper), never the local name of a real trophy."
   },
   "hubGoldenBootValue": "{name} · {goals, plural, one{1 goal} other{{goals} goals}}",
   "@hubGoldenBootValue": {
@@ -4365,7 +4365,7 @@
   },
   "achGoldenboot": "Golden Boot",
   "@achGoldenboot": {
-    "description": "Achievement title."
+    "description": "Achievement title. Outside English use a plain generic term (best player, top scorer, best goalkeeper), never the local name of a real trophy."
   },
   "achGoldenbootDesc": "Have your nation finish as a championship top scorer.",
   "@achGoldenbootDesc": {
@@ -4407,7 +4407,7 @@
   "@paywallBenefitCarryOn": {
     "description": "Paywall benefit line: the existing career continues."
   },
-  "paywallBenefitNoAds": "No ads, no microtransactions, no subscription. One payment, and every future update is yours.",
+  "paywallBenefitNoAds": "No ads, no microtransactions, no subscription. One payment, updates included.",
   "@paywallBenefitNoAds": {
     "description": "Paywall benefit line: no ads or microtransactions, one payment covers every update."
   },
@@ -9200,15 +9200,15 @@
   },
   "awardGoldenBall": "Golden Ball",
   "@awardGoldenBall": {
-    "description": "Award: awardGoldenBall."
+    "description": "Award: awardGoldenBall. Outside English use a plain generic term (best player, top scorer, best goalkeeper), never the local name of a real trophy."
   },
   "awardGoldenBoot": "Golden Boot",
   "@awardGoldenBoot": {
-    "description": "Award: awardGoldenBoot."
+    "description": "Award: awardGoldenBoot. Outside English use a plain generic term (best player, top scorer, best goalkeeper), never the local name of a real trophy."
   },
   "awardGoldenGlove": "Golden Glove",
   "@awardGoldenGlove": {
-    "description": "Award: awardGoldenGlove."
+    "description": "Award: awardGoldenGlove. Outside English use a plain generic term (best player, top scorer, best goalkeeper), never the local name of a real trophy."
   },
   "awardTeamOfTournament": "Team of the Tournament",
   "@awardTeamOfTournament": {
@@ -9420,7 +9420,7 @@
   },
   "tourSharedGoldenBall": "GOLDEN BALL",
   "@tourSharedGoldenBall": {
-    "description": "Award label: best player of the tournament."
+    "description": "Award label: best player of the tournament. Outside English use a plain generic term (best player, top scorer, best goalkeeper), never the local name of a real trophy."
   },
   "tourSharedPlayerOfTournament": "Player of the Tournament",
   "@tourSharedPlayerOfTournament": {
@@ -9428,7 +9428,7 @@
   },
   "tourSharedGoldenBoot": "GOLDEN BOOT",
   "@tourSharedGoldenBoot": {
-    "description": "Award label: top scorer of the tournament."
+    "description": "Award label: top scorer of the tournament. Outside English use a plain generic term (best player, top scorer, best goalkeeper), never the local name of a real trophy."
   },
   "tourSharedGoalsCount": "{count, plural, one{1 goal} other{{count} goals}}",
   "@tourSharedGoalsCount": {
@@ -9441,7 +9441,7 @@
   },
   "tourSharedGoldenGlove": "GOLDEN GLOVE",
   "@tourSharedGoldenGlove": {
-    "description": "Award label: best goalkeeper of the tournament."
+    "description": "Award label: best goalkeeper of the tournament. Outside English use a plain generic term (best player, top scorer, best goalkeeper), never the local name of a real trophy."
   },
   "tourSharedTeamOfTournament": "TEAM OF THE TOURNAMENT",
   "@tourSharedTeamOfTournament": {
@@ -13229,7 +13229,7 @@
   },
   "tourGoldenGlove": "GOLDEN GLOVE",
   "@tourGoldenGlove": {
-    "description": "Tournament awards: best goalkeeper."
+    "description": "Tournament awards: best goalkeeper. Outside English use a plain generic term (best player, top scorer, best goalkeeper), never the local name of a real trophy."
   },
   "tourTeamOfTournament": "TEAM OF THE TOURNAMENT",
   "@tourTeamOfTournament": {
@@ -14353,7 +14353,7 @@
   "@settingsFreeScopeTitle": {
     "description": "Settings: what the free game covers."
   },
-  "settingsFreeScopeBlurb": "A complete cycle (qualifying, your continental championship and the World Championship) on two saves, every nation in the world, nothing held back. Endless cycles and unlimited saves are a single payment, once, and it covers every future update.",
+  "settingsFreeScopeBlurb": "A complete cycle (qualifying, your continental championship and the World Championship) on two saves, every nation in the world, nothing held back. Endless cycles and unlimited saves are a single payment, once, with updates included.",
   "@settingsFreeScopeBlurb": {
     "description": "Settings: what the free game covers."
   },
@@ -14361,7 +14361,7 @@
   "@settingsUnlockedTitle": {
     "description": "Settings: what the free game covers."
   },
-  "settingsUnlockedBlurb": "Endless cycles, unlimited saves and every future update. Thank you.",
+  "settingsUnlockedBlurb": "Endless cycles, unlimited saves, updates included. Thank you.",
   "@settingsUnlockedBlurb": {
     "description": "Settings: what the free game covers."
   },
@@ -21771,17 +21771,17 @@
   "@sponsorFlavourMiners": {
     "description": "One-line witty character of the fictional sponsor brand \"The Miners\" (Mining), shown on its offer card. Dry, funny, short."
   },
-  "sponsorBrandMoth": "Moth",
-  "@sponsorBrandMoth": {
-    "description": "Sponsor brand name. Czech petrol station chain. Czech original Můra (moth). TRANSLATE as the local word for moth."
+  "sponsorBrandDragonfly": "Dragonfly",
+  "@sponsorBrandDragonfly": {
+    "description": "Sponsor brand name. Invented Czech petrol station chain. Czech original Vážka (dragonfly). TRANSLATE as the local word for dragonfly."
   },
-  "sponsorIndustryMoth": "Petrol stations",
-  "@sponsorIndustryMoth": {
-    "description": "The trade of the sponsor brand \"Moth\", shown under its name. Keep short."
+  "sponsorIndustryDragonfly": "Petrol stations",
+  "@sponsorIndustryDragonfly": {
+    "description": "The trade of the sponsor brand \"Dragonfly\", shown under its name. Keep short."
   },
-  "sponsorFlavourMoth": "Petrol, hot dogs and a car wash that has never once worked.",
-  "@sponsorFlavourMoth": {
-    "description": "One-line witty character of the fictional sponsor brand \"Moth\" (Petrol stations), shown on its offer card. Dry, funny, short."
+  "sponsorFlavourDragonfly": "Petrol, hot dogs and a car wash that has never once worked.",
+  "@sponsorFlavourDragonfly": {
+    "description": "One-line witty character of the fictional sponsor brand \"Dragonfly\" (Petrol stations), shown on its offer card. Dry, funny, short."
   },
   "sponsorBrandSludgeco": "Sludgeco Oil",
   "@sponsorBrandSludgeco": {
@@ -21863,7 +21863,7 @@
   "@sponsorIndustryOldSwamp": {
     "description": "The trade of the sponsor brand \"Oldmire\", shown under its name. Keep short."
   },
-  "sponsorFlavourOldSwamp": "Brewed since 1869 in a cellar nobody has cleaned since.",
+  "sponsorFlavourOldSwamp": "Brewed in a cellar nobody has ever cleaned.",
   "@sponsorFlavourOldSwamp": {
     "description": "One-line witty character of the fictional sponsor brand \"Oldmire\" (Brewery), shown on its offer card. Dry, funny, short."
   },
@@ -21999,17 +21999,17 @@
   "@sponsorFlavourPolarPenguin": {
     "description": "One-line witty character of the fictional sponsor brand \"Polar Penguin\" (Ice cream), shown on its offer card. Dry, funny, short."
   },
-  "sponsorBrandHexagon": "Hexagon",
-  "@sponsorBrandHexagon": {
-    "description": "Sponsor brand name. Engineering firm. Keep \"Hexagon\" (or its plain local spelling)."
+  "sponsorBrandBoltworth": "Boltworth",
+  "@sponsorBrandBoltworth": {
+    "description": "Sponsor brand name. Invented engineering firm: bolt + worth. Keep \"Boltworth\" as is in every language."
   },
-  "sponsorIndustryHexagon": "Engineering",
-  "@sponsorIndustryHexagon": {
-    "description": "The trade of the sponsor brand \"Hexagon\", shown under its name. Keep short."
+  "sponsorIndustryBoltworth": "Engineering",
+  "@sponsorIndustryBoltworth": {
+    "description": "The trade of the sponsor brand \"Boltworth\", shown under its name. Keep short."
   },
-  "sponsorFlavourHexagon": "Six sides to every problem. Their engineers are still counting.",
-  "@sponsorFlavourHexagon": {
-    "description": "One-line witty character of the fictional sponsor brand \"Hexagon\" (Engineering), shown on its offer card. Dry, funny, short."
+  "sponsorFlavourBoltworth": "A bolt for every problem. Their engineers are still looking for the nut.",
+  "@sponsorFlavourBoltworth": {
+    "description": "One-line witty character of the fictional sponsor brand \"Boltworth\" (Engineering), shown on its offer card. Dry, funny, short."
   },
   "sponsorBrandVelocell": "Velocell",
   "@sponsorBrandVelocell": {

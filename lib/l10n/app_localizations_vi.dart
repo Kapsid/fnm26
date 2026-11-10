@@ -1601,7 +1601,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get hubHost => 'Chủ nhà';
 
   @override
-  String get hubGoldenBoot => 'Chiếc giày vàng';
+  String get hubGoldenBoot => 'Vua phá lưới';
 
   @override
   String hubGoldenBootValue(String name, int goals) {
@@ -3193,7 +3193,7 @@ class AppLocalizationsVi extends AppLocalizations {
       'Có một cầu thủ được chọn vào Đội hình tiêu biểu của Giải vô địch thế giới.';
 
   @override
-  String get achGoldenboot => 'Chiếc giày vàng';
+  String get achGoldenboot => 'Vua phá lưới';
 
   @override
   String get achGoldenbootDesc =>
@@ -3230,7 +3230,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get paywallBenefitNoAds =>
-      'Không quảng cáo, không giao dịch vi mô, không đăng ký định kỳ. Một lần thanh toán, và mọi bản cập nhật sau này đều thuộc về bạn.';
+      'Không quảng cáo, không giao dịch vi mô, không đăng ký định kỳ. Một lần thanh toán, đã bao gồm các bản cập nhật.';
 
   @override
   String get paywallBenefitSaves =>
@@ -5534,13 +5534,13 @@ class AppLocalizationsVi extends AppLocalizations {
   String get playerHonoursTitle => 'DANH HIỆU';
 
   @override
-  String get awardGoldenBall => 'Quả bóng vàng';
+  String get awardGoldenBall => 'Cầu thủ xuất sắc nhất';
 
   @override
-  String get awardGoldenBoot => 'Chiếc giày vàng';
+  String get awardGoldenBoot => 'Vua phá lưới';
 
   @override
-  String get awardGoldenGlove => 'Găng tay vàng';
+  String get awardGoldenGlove => 'Thủ môn xuất sắc nhất';
 
   @override
   String get awardTeamOfTournament => 'Đội hình tiêu biểu';
@@ -5691,13 +5691,13 @@ class AppLocalizationsVi extends AppLocalizations {
       'Các giải thưởng sẽ được trao khi giải đấu kết thúc.';
 
   @override
-  String get tourSharedGoldenBall => 'QUẢ BÓNG VÀNG';
+  String get tourSharedGoldenBall => 'CẦU THỦ XUẤT SẮC NHẤT';
 
   @override
   String get tourSharedPlayerOfTournament => 'Cầu thủ xuất sắc nhất giải';
 
   @override
-  String get tourSharedGoldenBoot => 'CHIẾC GIÀY VÀNG';
+  String get tourSharedGoldenBoot => 'VUA PHÁ LƯỚI';
 
   @override
   String tourSharedGoalsCount(int count) {
@@ -5710,7 +5710,7 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String get tourSharedGoldenGlove => 'GĂNG TAY VÀNG';
+  String get tourSharedGoldenGlove => 'THỦ MÔN XUẤT SẮC NHẤT';
 
   @override
   String get tourSharedTeamOfTournament => 'ĐỘI HÌNH TIÊU BIỂU CỦA GIẢI';
@@ -8159,7 +8159,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get tourJointBid => 'ĐỒNG ĐĂNG CAI';
 
   @override
-  String get tourGoldenGlove => 'GĂNG TAY VÀNG';
+  String get tourGoldenGlove => 'THỦ MÔN XUẤT SẮC NHẤT';
 
   @override
   String get tourTeamOfTournament => 'ĐỘI HÌNH TIÊU BIỂU';
@@ -9010,14 +9010,14 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get settingsFreeScopeBlurb =>
-      'Một chu kỳ trọn vẹn (vòng loại, giải vô địch châu lục của bạn và Giải vô địch thế giới) trên hai bản lưu, mọi quốc gia trên thế giới, không giấu giếm gì. Chu kỳ không giới hạn và bản lưu không giới hạn chỉ là một lần thanh toán duy nhất, và bao gồm mọi bản cập nhật tương lai.';
+      'Một chu kỳ trọn vẹn (vòng loại, giải vô địch châu lục của bạn và Giải vô địch thế giới) trên hai bản lưu, mọi quốc gia trên thế giới, không giấu giếm gì. Chu kỳ không giới hạn và bản lưu không giới hạn chỉ là một lần thanh toán duy nhất, đã bao gồm các bản cập nhật.';
 
   @override
   String get settingsUnlockedTitle => 'Đã mở khóa';
 
   @override
   String get settingsUnlockedBlurb =>
-      'Chu kỳ không giới hạn, bản lưu không giới hạn và mọi bản cập nhật tương lai. Cảm ơn bạn.';
+      'Chu kỳ không giới hạn, bản lưu không giới hạn, đã bao gồm các bản cập nhật. Cảm ơn bạn.';
 
   @override
   String get settingsFromDeveloperTitle => 'Từ nhà phát triển';
@@ -13898,13 +13898,13 @@ class AppLocalizationsVi extends AppLocalizations {
       'Than, đồng và một hội đồng quản trị phủ đầy bụi.';
 
   @override
-  String get sponsorBrandMoth => 'Bướm Đêm';
+  String get sponsorBrandDragonfly => 'Chuồn Chuồn';
 
   @override
-  String get sponsorIndustryMoth => 'Cây xăng';
+  String get sponsorIndustryDragonfly => 'Cây xăng';
 
   @override
-  String get sponsorFlavourMoth =>
+  String get sponsorFlavourDragonfly =>
       'Xăng, xúc xích và một tiệm rửa xe chưa từng hoạt động lần nào.';
 
   @override
@@ -13972,7 +13972,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get sponsorFlavourOldSwamp =>
-      'Ủ từ năm 1869 trong một căn hầm chưa ai dọn kể từ đó.';
+      'Ủ trong một căn hầm chưa từng ai dọn dẹp.';
 
   @override
   String get sponsorBrandBuzzhorn => 'Buzzhorn';
@@ -14083,14 +14083,14 @@ class AppLocalizationsVi extends AppLocalizations {
   String get sponsorFlavourPolarPenguin => 'Ba mươi vị, vị nào cũng đang tan.';
 
   @override
-  String get sponsorBrandHexagon => 'Hexagon';
+  String get sponsorBrandBoltworth => 'Boltworth';
 
   @override
-  String get sponsorIndustryHexagon => 'Kỹ thuật';
+  String get sponsorIndustryBoltworth => 'Kỹ thuật';
 
   @override
-  String get sponsorFlavourHexagon =>
-      'Vấn đề nào cũng có sáu mặt. Kỹ sư của họ vẫn đang đếm.';
+  String get sponsorFlavourBoltworth =>
+      'Mỗi vấn đề một con bu lông. Kỹ sư của họ vẫn đang tìm con ốc.';
 
   @override
   String get sponsorBrandVelocell => 'Velocell';

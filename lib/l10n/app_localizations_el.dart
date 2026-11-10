@@ -1649,7 +1649,7 @@ class AppLocalizationsEl extends AppLocalizations {
   String get hubHost => 'Οικοδεσπότης';
 
   @override
-  String get hubGoldenBoot => 'Χρυσή Μπότα';
+  String get hubGoldenBoot => 'Πρώτος σκόρερ';
 
   @override
   String hubGoldenBootValue(String name, int goals) {
@@ -3253,7 +3253,7 @@ class AppLocalizationsEl extends AppLocalizations {
       'Κάνε έναν παίκτη να ονομαστεί στην Ομάδα του Τουρνουά ενός Παγκοσμίου Πρωταθλήματος.';
 
   @override
-  String get achGoldenboot => 'Χρυσή Μπότα';
+  String get achGoldenboot => 'Πρώτος σκόρερ';
 
   @override
   String get achGoldenbootDesc =>
@@ -3291,7 +3291,7 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get paywallBenefitNoAds =>
-      'Χωρίς διαφημίσεις, χωρίς μικροσυναλλαγές, χωρίς συνδρομή. Μία πληρωμή και κάθε μελλοντική ενημέρωση είναι δική σου.';
+      'Χωρίς διαφημίσεις, χωρίς μικροσυναλλαγές, χωρίς συνδρομή. Μία πληρωμή, οι ενημερώσεις περιλαμβάνονται.';
 
   @override
   String get paywallBenefitSaves =>
@@ -5600,13 +5600,13 @@ class AppLocalizationsEl extends AppLocalizations {
   String get playerHonoursTitle => 'ΤΙΤΛΟΙ';
 
   @override
-  String get awardGoldenBall => 'Χρυσή Μπάλα';
+  String get awardGoldenBall => 'Καλύτερος παίκτης';
 
   @override
-  String get awardGoldenBoot => 'Χρυσή Μπότα';
+  String get awardGoldenBoot => 'Πρώτος σκόρερ';
 
   @override
-  String get awardGoldenGlove => 'Χρυσό Γάντι';
+  String get awardGoldenGlove => 'Καλύτερος τερματοφύλακας';
 
   @override
   String get awardTeamOfTournament => 'Ομάδα του Τουρνουά';
@@ -5757,13 +5757,13 @@ class AppLocalizationsEl extends AppLocalizations {
       'Τα βραβεία αποφασίζονται όταν ολοκληρωθεί το τουρνουά.';
 
   @override
-  String get tourSharedGoldenBall => 'ΧΡΥΣΗ ΜΠΑΛΑ';
+  String get tourSharedGoldenBall => 'ΚΑΛΥΤΕΡΟΣ ΠΑΙΚΤΗΣ';
 
   @override
   String get tourSharedPlayerOfTournament => 'Κορυφαίος παίκτης του τουρνουά';
 
   @override
-  String get tourSharedGoldenBoot => 'ΧΡΥΣΗ ΜΠΟΤΑ';
+  String get tourSharedGoldenBoot => 'ΠΡΩΤΟΣ ΣΚΟΡΕΡ';
 
   @override
   String tourSharedGoalsCount(int count) {
@@ -5777,7 +5777,7 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String get tourSharedGoldenGlove => 'ΧΡΥΣΟ ΓΑΝΤΙ';
+  String get tourSharedGoldenGlove => 'ΚΑΛΥΤΕΡΟΣ ΤΕΡΜΑΤΟΦΥΛΑΚΑΣ';
 
   @override
   String get tourSharedTeamOfTournament => 'ΟΜΑΔΑ ΤΟΥ ΤΟΥΡΝΟΥΑ';
@@ -8329,7 +8329,7 @@ class AppLocalizationsEl extends AppLocalizations {
   String get tourJointBid => 'ΚΟΙΝΗ ΥΠΟΨΗΦΙΟΤΗΤΑ';
 
   @override
-  String get tourGoldenGlove => 'ΧΡΥΣΟ ΓΑΝΤΙ';
+  String get tourGoldenGlove => 'ΚΑΛΥΤΕΡΟΣ ΤΕΡΜΑΤΟΦΥΛΑΚΑΣ';
 
   @override
   String get tourTeamOfTournament => 'ΙΔΑΝΙΚΗ ΕΝΔΕΚΑΔΑ ΤΗΣ ΔΙΟΡΓΑΝΩΣΗΣ';
@@ -9190,14 +9190,14 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get settingsFreeScopeBlurb =>
-      'Ένας πλήρης κύκλος (προκριματικά, το ηπειρωτικό σου πρωτάθλημα και το Παγκόσμιο Πρωτάθλημα) σε δύο αποθηκεύσεις, με κάθε χώρα του κόσμου, χωρίς περιορισμούς. Οι ατελείωτοι κύκλοι και οι απεριόριστες αποθηκεύσεις είναι μία μόνο πληρωμή, μία φορά, και καλύπτει κάθε μελλοντική ενημέρωση.';
+      'Ένας πλήρης κύκλος (προκριματικά, το ηπειρωτικό σου πρωτάθλημα και το Παγκόσμιο Πρωτάθλημα) σε δύο αποθηκεύσεις, με κάθε χώρα του κόσμου, χωρίς περιορισμούς. Οι ατελείωτοι κύκλοι και οι απεριόριστες αποθηκεύσεις είναι μία μόνο πληρωμή, μία φορά, με τις ενημερώσεις να περιλαμβάνονται.';
 
   @override
   String get settingsUnlockedTitle => 'Ξεκλειδώθηκε';
 
   @override
   String get settingsUnlockedBlurb =>
-      'Ατελείωτοι κύκλοι, απεριόριστες αποθηκεύσεις και κάθε μελλοντική ενημέρωση. Ευχαριστούμε.';
+      'Ατελείωτοι κύκλοι, απεριόριστες αποθηκεύσεις, οι ενημερώσεις περιλαμβάνονται. Ευχαριστούμε.';
 
   @override
   String get settingsFromDeveloperTitle => 'Από τον δημιουργό';
@@ -14105,13 +14105,13 @@ class AppLocalizationsEl extends AppLocalizations {
       'Άνθρακας, χαλκός και ένα πολύ σκονισμένο διοικητικό συμβούλιο.';
 
   @override
-  String get sponsorBrandMoth => 'Σκόρος';
+  String get sponsorBrandDragonfly => 'Λιβελούλα';
 
   @override
-  String get sponsorIndustryMoth => 'Πρατήρια καυσίμων';
+  String get sponsorIndustryDragonfly => 'Πρατήρια καυσίμων';
 
   @override
-  String get sponsorFlavourMoth =>
+  String get sponsorFlavourDragonfly =>
       'Βενζίνη, χοτ ντογκ και ένα πλυντήριο αυτοκινήτων που δεν δούλεψε ποτέ.';
 
   @override
@@ -14181,7 +14181,7 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get sponsorFlavourOldSwamp =>
-      'Μπύρα από το 1869, σε ένα κελάρι που δεν έχει καθαριστεί από τότε.';
+      'Μπύρα από ένα κελάρι που δεν έχει καθαριστεί ποτέ.';
 
   @override
   String get sponsorBrandBuzzhorn => 'Buzzhorn';
@@ -14293,14 +14293,14 @@ class AppLocalizationsEl extends AppLocalizations {
   String get sponsorFlavourPolarPenguin => 'Τριάντα γεύσεις, όλες λιώνουν.';
 
   @override
-  String get sponsorBrandHexagon => 'Hexagon';
+  String get sponsorBrandBoltworth => 'Boltworth';
 
   @override
-  String get sponsorIndustryHexagon => 'Μηχανική';
+  String get sponsorIndustryBoltworth => 'Μηχανική';
 
   @override
-  String get sponsorFlavourHexagon =>
-      'Έξι πλευρές σε κάθε πρόβλημα. Οι μηχανικοί τους ακόμα μετράνε.';
+  String get sponsorFlavourBoltworth =>
+      'Μια βίδα για κάθε πρόβλημα. Οι μηχανικοί τους ακόμα ψάχνουν το παξιμάδι.';
 
   @override
   String get sponsorBrandVelocell => 'Velocell';

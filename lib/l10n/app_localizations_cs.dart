@@ -1660,7 +1660,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get hubHost => 'Pořadatel';
 
   @override
-  String get hubGoldenBoot => 'Zlatá kopačka';
+  String get hubGoldenBoot => 'Nejlepší střelec';
 
   @override
   String hubGoldenBootValue(String name, int goals) {
@@ -3307,7 +3307,7 @@ class AppLocalizationsCs extends AppLocalizations {
       'Nechte hráče zvolit do all-stars týmu mistrovství světa.';
 
   @override
-  String get achGoldenboot => 'Zlatá kopačka';
+  String get achGoldenboot => 'Nejlepší střelec';
 
   @override
   String get achGoldenbootDesc =>
@@ -3344,7 +3344,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get paywallBenefitNoAds =>
-      'Žádné reklamy, žádné mikrotransakce, žádné předplatné. Jedna platba a všechny budoucí aktualizace jsou vaše.';
+      'Žádné reklamy, žádné mikrotransakce, žádné předplatné. Jedna platba, aktualizace v ceně.';
 
   @override
   String get paywallBenefitSaves =>
@@ -5675,13 +5675,13 @@ class AppLocalizationsCs extends AppLocalizations {
   String get playerHonoursTitle => 'TROFEJE';
 
   @override
-  String get awardGoldenBall => 'Zlatý míč';
+  String get awardGoldenBall => 'Nejlepší hráč';
 
   @override
-  String get awardGoldenBoot => 'Zlatá kopačka';
+  String get awardGoldenBoot => 'Nejlepší střelec';
 
   @override
-  String get awardGoldenGlove => 'Zlatá rukavice';
+  String get awardGoldenGlove => 'Nejlepší brankář';
 
   @override
   String get awardTeamOfTournament => 'Sestava turnaje';
@@ -5831,13 +5831,13 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tourSharedAwardsEmpty => 'Ocenění se udělují po odehrání turnaje.';
 
   @override
-  String get tourSharedGoldenBall => 'ZLATÝ MÍČ';
+  String get tourSharedGoldenBall => 'NEJLEPŠÍ HRÁČ';
 
   @override
   String get tourSharedPlayerOfTournament => 'Hráč turnaje';
 
   @override
-  String get tourSharedGoldenBoot => 'ZLATÁ KOPAČKA';
+  String get tourSharedGoldenBoot => 'NEJLEPŠÍ STŘELEC';
 
   @override
   String tourSharedGoalsCount(int count) {
@@ -5853,7 +5853,7 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
-  String get tourSharedGoldenGlove => 'ZLATÁ RUKAVICE';
+  String get tourSharedGoldenGlove => 'NEJLEPŠÍ BRANKÁŘ';
 
   @override
   String get tourSharedTeamOfTournament => 'JEDENÁCTKA TURNAJE';
@@ -8462,7 +8462,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tourJointBid => 'SPOLEČNÁ KANDIDATURA';
 
   @override
-  String get tourGoldenGlove => 'ZLATÁ RUKAVICE';
+  String get tourGoldenGlove => 'NEJLEPŠÍ BRANKÁŘ';
 
   @override
   String get tourTeamOfTournament => 'NEJLEPŠÍ JEDENÁCTKA TURNAJE';
@@ -9312,14 +9312,14 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get settingsFreeScopeBlurb =>
-      'Celý cyklus (kvalifikace, kontinentální šampionát i mistrovství světa) na dvou uložených hrách, všechny země světa, nic není zamčené. Nekonečné cykly a neomezený počet uložených her jsou jednorázová platba, jednou, a platí i pro všechny budoucí aktualizace.';
+      'Celý cyklus (kvalifikace, kontinentální šampionát i mistrovství světa) na dvou uložených hrách, všechny země světa, nic není zamčené. Nekonečné cykly a neomezený počet uložených her jsou jednorázová platba, jednou, a aktualizace jsou v ceně.';
 
   @override
   String get settingsUnlockedTitle => 'Odemčeno';
 
   @override
   String get settingsUnlockedBlurb =>
-      'Nekonečné cykly, neomezená uložení a všechny budoucí aktualizace. Děkujeme.';
+      'Nekonečné cykly, neomezená uložení, aktualizace v ceně. Děkujeme.';
 
   @override
   String get settingsFromDeveloperTitle => 'Od vývojáře';
@@ -14292,13 +14292,13 @@ class AppLocalizationsCs extends AppLocalizations {
       'Uhlí, měď a velmi zaprášená správní rada.';
 
   @override
-  String get sponsorBrandMoth => 'Můra';
+  String get sponsorBrandDragonfly => 'Vážka';
 
   @override
-  String get sponsorIndustryMoth => 'Čerpací stanice';
+  String get sponsorIndustryDragonfly => 'Čerpací stanice';
 
   @override
-  String get sponsorFlavourMoth =>
+  String get sponsorFlavourDragonfly =>
       'Benzín, párek v rohlíku a myčka, která ještě nikdy nefungovala.';
 
   @override
@@ -14365,7 +14365,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get sponsorFlavourOldSwamp =>
-      'Vaří se od roku 1869 ve sklepě, který od té doby nikdo neuklízel.';
+      'Vaří se ve sklepě, který ještě nikdy nikdo neuklízel.';
 
   @override
   String get sponsorBrandBuzzhorn => 'Buzzhorn';
@@ -14476,14 +14476,14 @@ class AppLocalizationsCs extends AppLocalizations {
   String get sponsorFlavourPolarPenguin => 'Třicet příchutí a všechny tají.';
 
   @override
-  String get sponsorBrandHexagon => 'Hexagon';
+  String get sponsorBrandBoltworth => 'Boltworth';
 
   @override
-  String get sponsorIndustryHexagon => 'Strojírenství';
+  String get sponsorIndustryBoltworth => 'Strojírenství';
 
   @override
-  String get sponsorFlavourHexagon =>
-      'Každý problém má šest stran. Jejich inženýři je pořád počítají.';
+  String get sponsorFlavourBoltworth =>
+      'Na každý problém jeden šroub. Jejich inženýři pořád hledají matku.';
 
   @override
   String get sponsorBrandVelocell => 'Velocell';

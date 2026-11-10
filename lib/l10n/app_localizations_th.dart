@@ -1581,7 +1581,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get hubHost => 'เจ้าภาพ';
 
   @override
-  String get hubGoldenBoot => 'รองเท้าทองคำ';
+  String get hubGoldenBoot => 'ดาวซัลโว';
 
   @override
   String hubGoldenBootValue(String name, int goals) {
@@ -3154,7 +3154,7 @@ class AppLocalizationsTh extends AppLocalizations {
       'มีผู้เล่นติดทีมยอดเยี่ยมของทัวร์นาเมนต์ชิงแชมป์โลก';
 
   @override
-  String get achGoldenboot => 'รองเท้าทองคำ';
+  String get achGoldenboot => 'ดาวซัลโว';
 
   @override
   String get achGoldenbootDesc =>
@@ -3191,7 +3191,7 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get paywallBenefitNoAds =>
-      'ไม่มีโฆษณา ไม่มีไมโครทรานแซกชัน ไม่มีการสมัครสมาชิก จ่ายครั้งเดียว ได้อัปเดตทุกครั้งในอนาคต';
+      'ไม่มีโฆษณา ไม่มีไมโครทรานแซกชัน ไม่มีการสมัครสมาชิก จ่ายครั้งเดียว รวมอัปเดต';
 
   @override
   String get paywallBenefitSaves =>
@@ -5485,13 +5485,13 @@ class AppLocalizationsTh extends AppLocalizations {
   String get playerHonoursTitle => 'เกียรติประวัติ';
 
   @override
-  String get awardGoldenBall => 'ลูกบอลทองคำ';
+  String get awardGoldenBall => 'ผู้เล่นยอดเยี่ยม';
 
   @override
-  String get awardGoldenBoot => 'รองเท้าทองคำ';
+  String get awardGoldenBoot => 'ดาวซัลโว';
 
   @override
-  String get awardGoldenGlove => 'ถุงมือทองคำ';
+  String get awardGoldenGlove => 'ผู้รักษาประตูยอดเยี่ยม';
 
   @override
   String get awardTeamOfTournament => 'ทีมยอดเยี่ยมทัวร์นาเมนต์';
@@ -5641,13 +5641,13 @@ class AppLocalizationsTh extends AppLocalizations {
   String get tourSharedAwardsEmpty => 'รางวัลจะตัดสินเมื่อทัวร์นาเมนต์จบลง';
 
   @override
-  String get tourSharedGoldenBall => 'ลูกบอลทองคำ';
+  String get tourSharedGoldenBall => 'ผู้เล่นยอดเยี่ยม';
 
   @override
   String get tourSharedPlayerOfTournament => 'ผู้เล่นยอดเยี่ยมของทัวร์นาเมนต์';
 
   @override
-  String get tourSharedGoldenBoot => 'รองเท้าทองคำ';
+  String get tourSharedGoldenBoot => 'ดาวซัลโว';
 
   @override
   String tourSharedGoalsCount(int count) {
@@ -5660,7 +5660,7 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
-  String get tourSharedGoldenGlove => 'ถุงมือทองคำ';
+  String get tourSharedGoldenGlove => 'ผู้รักษาประตูยอดเยี่ยม';
 
   @override
   String get tourSharedTeamOfTournament => 'ทีมยอดเยี่ยมทัวร์นาเมนต์';
@@ -8137,7 +8137,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get tourJointBid => 'เสนอตัวร่วม';
 
   @override
-  String get tourGoldenGlove => 'ถุงมือทองคำ';
+  String get tourGoldenGlove => 'ผู้รักษาประตูยอดเยี่ยม';
 
   @override
   String get tourTeamOfTournament => 'ทีมยอดเยี่ยมทัวร์นาเมนต์';
@@ -8964,14 +8964,14 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get settingsFreeScopeBlurb =>
-      'หนึ่งรอบเต็ม (รอบคัดเลือก ชิงแชมป์ทวีปของคุณ และชิงแชมป์โลก) ได้ 2 เซฟ ทุกชาติทั่วโลก ไม่มีกั๊ก รอบไม่จำกัดและเซฟไม่จำกัดจ่ายครั้งเดียว และครอบคลุมทุกอัปเดตในอนาคต';
+      'หนึ่งรอบเต็ม (รอบคัดเลือก ชิงแชมป์ทวีปของคุณ และชิงแชมป์โลก) ได้ 2 เซฟ ทุกชาติทั่วโลก ไม่มีกั๊ก รอบไม่จำกัดและเซฟไม่จำกัดจ่ายครั้งเดียว และรวมอัปเดต';
 
   @override
   String get settingsUnlockedTitle => 'ปลดล็อกแล้ว';
 
   @override
   String get settingsUnlockedBlurb =>
-      'รอบไม่จำกัด เซฟไม่จำกัด และทุกอัปเดตในอนาคต ขอบคุณ';
+      'รอบไม่จำกัด เซฟไม่จำกัด รวมอัปเดต ขอบคุณ';
 
   @override
   String get settingsFromDeveloperTitle => 'จากผู้พัฒนา';
@@ -13776,13 +13776,13 @@ class AppLocalizationsTh extends AppLocalizations {
       'ถ่านหิน ทองแดง และคณะกรรมการบริหารที่ฝุ่นเขรอะ';
 
   @override
-  String get sponsorBrandMoth => 'ผีเสื้อราตรี';
+  String get sponsorBrandDragonfly => 'แมลงปอ';
 
   @override
-  String get sponsorIndustryMoth => 'ปั๊มน้ำมัน';
+  String get sponsorIndustryDragonfly => 'ปั๊มน้ำมัน';
 
   @override
-  String get sponsorFlavourMoth =>
+  String get sponsorFlavourDragonfly =>
       'น้ำมัน ฮอตดอก และคาร์แคร์ที่ไม่เคยใช้งานได้สักครั้ง';
 
   @override
@@ -13848,7 +13848,7 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get sponsorFlavourOldSwamp =>
-      'หมักตั้งแต่ปี 1869 ในห้องใต้ดินที่ไม่มีใครทำความสะอาดอีกเลย';
+      'หมักในห้องใต้ดินที่ไม่เคยมีใครทำความสะอาด';
 
   @override
   String get sponsorBrandBuzzhorn => 'Buzzhorn';
@@ -13957,14 +13957,14 @@ class AppLocalizationsTh extends AppLocalizations {
   String get sponsorFlavourPolarPenguin => 'สามสิบรส ละลายหมดทุกรส';
 
   @override
-  String get sponsorBrandHexagon => 'Hexagon';
+  String get sponsorBrandBoltworth => 'Boltworth';
 
   @override
-  String get sponsorIndustryHexagon => 'วิศวกรรม';
+  String get sponsorIndustryBoltworth => 'วิศวกรรม';
 
   @override
-  String get sponsorFlavourHexagon =>
-      'ทุกปัญหามีหกด้าน วิศวกรของพวกเขายังนับไม่เสร็จ';
+  String get sponsorFlavourBoltworth =>
+      'ทุกปัญหามีโบลต์หนึ่งตัว วิศวกรของพวกเขายังหาน็อตตัวเมียไม่เจอ';
 
   @override
   String get sponsorBrandVelocell => 'Velocell';

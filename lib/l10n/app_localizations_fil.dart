@@ -3247,7 +3247,7 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get paywallBenefitNoAds =>
-      'Walang ads, walang microtransaction, walang subscription. Isang bayad lang, at sa iyo ang bawat susunod na update.';
+      'Walang ads, walang microtransaction, walang subscription. Isang bayad lang, kasama na ang mga update.';
 
   @override
   String get paywallBenefitSaves =>
@@ -9116,14 +9116,14 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get settingsFreeScopeBlurb =>
-      'Isang kumpletong cycle (kwalipikasyon, ang kampeonato ng kontinente mo at ang Kampeonato ng Mundo) sa dalawang save, bawat bansa sa mundo, walang tinipid. Ang walang katapusang cycle at walang limitasyong save ay isang bayad lang, minsanan, at sakop nito ang bawat update sa hinaharap.';
+      'Isang kumpletong cycle (kwalipikasyon, ang kampeonato ng kontinente mo at ang Kampeonato ng Mundo) sa dalawang save, bawat bansa sa mundo, walang tinipid. Ang walang katapusang cycle at walang limitasyong save ay isang bayad lang, minsanan, kasama na ang mga update.';
 
   @override
   String get settingsUnlockedTitle => 'Naka-unlock';
 
   @override
   String get settingsUnlockedBlurb =>
-      'Walang katapusang cycle, walang limitasyong save at bawat update sa hinaharap. Salamat.';
+      'Walang katapusang cycle, walang limitasyong save, kasama ang mga update. Salamat.';
 
   @override
   String get settingsFromDeveloperTitle => 'Mula sa developer';
@@ -14034,13 +14034,13 @@ class AppLocalizationsFil extends AppLocalizations {
       'Uling, tanso at isang napakaalikabok na board of directors.';
 
   @override
-  String get sponsorBrandMoth => 'Gamugamo';
+  String get sponsorBrandDragonfly => 'Tutubi';
 
   @override
-  String get sponsorIndustryMoth => 'Gasolinahan';
+  String get sponsorIndustryDragonfly => 'Gasolinahan';
 
   @override
-  String get sponsorFlavourMoth =>
+  String get sponsorFlavourDragonfly =>
       'Gasolina, hotdog at car wash na kahit minsan ay hindi gumana.';
 
   @override
@@ -14110,7 +14110,7 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get sponsorFlavourOldSwamp =>
-      'Ginagawa mula pa 1869 sa bodegang hindi na nalinis mula noon.';
+      'Ginagawa sa bodegang hindi pa kailanman nalinis.';
 
   @override
   String get sponsorBrandBuzzhorn => 'Buzzhorn';
@@ -14223,14 +14223,14 @@ class AppLocalizationsFil extends AppLocalizations {
       'Tatlumpung flavor, lahat natutunaw.';
 
   @override
-  String get sponsorBrandHexagon => 'Hexagon';
+  String get sponsorBrandBoltworth => 'Boltworth';
 
   @override
-  String get sponsorIndustryHexagon => 'Engineering';
+  String get sponsorIndustryBoltworth => 'Engineering';
 
   @override
-  String get sponsorFlavourHexagon =>
-      'Anim na panig ang bawat problema. Nagbibilang pa rin ang mga engineer nila.';
+  String get sponsorFlavourBoltworth =>
+      'May turnilyo sa bawat problema. Hinahanap pa rin ng mga engineer nila ang nut.';
 
   @override
   String get sponsorBrandVelocell => 'Velocell';

@@ -193,7 +193,7 @@ void main() {
       yAccounts: const {'@fan': '@griller'},
       localized: {
         PackPaths.sponsor(SponsorBrand.miners.name): {'cs': 'Kopáči'},
-        PackPaths.sponsor(SponsorBrand.moth.name): {'cs': 'Můra'},
+        PackPaths.sponsor(SponsorBrand.moth.name): {'cs': 'Svižník'},
         PackPaths.stadium('50:Madrid'): {'cs': 'Housková aréna'},
         PackPaths.stadium('50:Seville'): {'cs': 'Sevilla'},
         PackPaths.yAccount('@fan'): {'cs': '@grilovač'},
@@ -201,7 +201,7 @@ void main() {
     );
     final cs = ActiveWorld(world).inLanguage('cs');
     expect(cs.sponsor(SponsorBrand.miners.name), 'Kopáči');
-    expect(cs.sponsor(SponsorBrand.moth.name), 'Můra');
+    expect(cs.sponsor(SponsorBrand.moth.name), 'Svižník');
     expect(cs.stadium(50, 'Madrid'), 'Housková aréna');
     expect(cs.stadium(50, 'Seville'), 'Sevilla');
     expect(cs.yAccount('@fan'), '@grilovač');
@@ -215,7 +215,7 @@ void main() {
     ActiveWorld.current = cs;
     expect(
       sponsorBrandName(_l('cs'), Sponsor.of(SponsorBrand.moth)),
-      'Můra',
+      'Svižník',
     );
     ActiveWorld.current = ActiveWorld.none;
     final game = sponsorBrandName(_l('de'), Sponsor.of(SponsorBrand.moth));

@@ -1599,7 +1599,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get hubHost => 'Ev sahibi';
 
   @override
-  String get hubGoldenBoot => 'Altın Ayakkabı';
+  String get hubGoldenBoot => 'Gol Kralı';
 
   @override
   String hubGoldenBootValue(String name, int goals) {
@@ -3187,7 +3187,7 @@ class AppLocalizationsTr extends AppLocalizations {
       'Bir oyuncun Dünya Şampiyonası Turnuva Takımı\'na seçilsin.';
 
   @override
-  String get achGoldenboot => 'Altın Ayakkabı';
+  String get achGoldenboot => 'Gol Kralı';
 
   @override
   String get achGoldenbootDesc =>
@@ -3224,7 +3224,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get paywallBenefitNoAds =>
-      'Reklam yok, mikro ödeme yok, abonelik yok. Tek ödeme, sonraki her güncelleme senin.';
+      'Reklam yok, mikro ödeme yok, abonelik yok. Tek ödeme, güncellemeler dahil.';
 
   @override
   String get paywallBenefitSaves =>
@@ -5526,13 +5526,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get playerHonoursTitle => 'BAŞARILAR';
 
   @override
-  String get awardGoldenBall => 'Altın Top';
+  String get awardGoldenBall => 'En İyi Oyuncu';
 
   @override
-  String get awardGoldenBoot => 'Altın Ayakkabı';
+  String get awardGoldenBoot => 'Gol Kralı';
 
   @override
-  String get awardGoldenGlove => 'Altın Eldiven';
+  String get awardGoldenGlove => 'En İyi Kaleci';
 
   @override
   String get awardTeamOfTournament => 'Turnuvanın En İyi 11\'i';
@@ -5683,13 +5683,13 @@ class AppLocalizationsTr extends AppLocalizations {
       'Ödüller turnuva tamamlanınca belli olur.';
 
   @override
-  String get tourSharedGoldenBall => 'ALTIN TOP';
+  String get tourSharedGoldenBall => 'EN İYİ OYUNCU';
 
   @override
   String get tourSharedPlayerOfTournament => 'Turnuvanın Oyuncusu';
 
   @override
-  String get tourSharedGoldenBoot => 'ALTIN AYAKKABI';
+  String get tourSharedGoldenBoot => 'GOL KRALI';
 
   @override
   String tourSharedGoalsCount(int count) {
@@ -5703,7 +5703,7 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get tourSharedGoldenGlove => 'ALTIN ELDİVEN';
+  String get tourSharedGoldenGlove => 'EN İYİ KALECİ';
 
   @override
   String get tourSharedTeamOfTournament => 'TURNUVANIN EN İYİ 11\'İ';
@@ -8210,7 +8210,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get tourJointBid => 'ORTAK BAŞVURU';
 
   @override
-  String get tourGoldenGlove => 'ALTIN ELDİVEN';
+  String get tourGoldenGlove => 'EN İYİ KALECİ';
 
   @override
   String get tourTeamOfTournament => 'TURNUVANIN TAKIMI';
@@ -9051,14 +9051,14 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get settingsFreeScopeBlurb =>
-      'Tam bir dönem (elemeler, kıta şampiyonan ve Dünya Şampiyonası) iki kayıtta, dünyadaki her ülke, hiçbir şey kısıtlanmadan. Sınırsız dönemler ve sınırsız kayıtlar tek seferlik bir ödemeyle gelir ve gelecekteki her güncellemeyi kapsar.';
+      'Tam bir dönem (elemeler, kıta şampiyonan ve Dünya Şampiyonası) iki kayıtta, dünyadaki her ülke, hiçbir şey kısıtlanmadan. Sınırsız dönemler ve sınırsız kayıtlar tek seferlik bir ödemeyle gelir, güncellemeler dahil.';
 
   @override
   String get settingsUnlockedTitle => 'Kilidi açıldı';
 
   @override
   String get settingsUnlockedBlurb =>
-      'Sınırsız dönemler, sınırsız kayıtlar ve gelecekteki her güncelleme. Teşekkürler.';
+      'Sınırsız dönemler, sınırsız kayıtlar, güncellemeler dahil. Teşekkürler.';
 
   @override
   String get settingsFromDeveloperTitle => 'Geliştiriciden';
@@ -13946,13 +13946,13 @@ class AppLocalizationsTr extends AppLocalizations {
       'Kömür, bakır ve epey tozlu bir yönetim kurulu.';
 
   @override
-  String get sponsorBrandMoth => 'Güve';
+  String get sponsorBrandDragonfly => 'Yusufçuk';
 
   @override
-  String get sponsorIndustryMoth => 'Akaryakıt istasyonu';
+  String get sponsorIndustryDragonfly => 'Akaryakıt istasyonu';
 
   @override
-  String get sponsorFlavourMoth =>
+  String get sponsorFlavourDragonfly =>
       'Benzin, sosisli ve bir kez bile çalışmamış bir oto yıkama.';
 
   @override
@@ -14023,7 +14023,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get sponsorFlavourOldSwamp =>
-      '1869\'dan beri, o günden beri hiç temizlenmemiş bir mahzende üretiliyor.';
+      'Hiç temizlenmemiş bir mahzende üretiliyor.';
 
   @override
   String get sponsorBrandBuzzhorn => 'Buzzhorn';
@@ -14135,14 +14135,14 @@ class AppLocalizationsTr extends AppLocalizations {
   String get sponsorFlavourPolarPenguin => 'Otuz çeşit, hepsi eriyor.';
 
   @override
-  String get sponsorBrandHexagon => 'Hexagon';
+  String get sponsorBrandBoltworth => 'Boltworth';
 
   @override
-  String get sponsorIndustryHexagon => 'Mühendislik';
+  String get sponsorIndustryBoltworth => 'Mühendislik';
 
   @override
-  String get sponsorFlavourHexagon =>
-      'Her sorunun altı kenarı var. Mühendisleri hâlâ sayıyor.';
+  String get sponsorFlavourBoltworth =>
+      'Her soruna bir cıvata. Mühendisleri hâlâ somunu arıyor.';
 
   @override
   String get sponsorBrandVelocell => 'Velocell';

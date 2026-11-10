@@ -1609,7 +1609,7 @@ class AppLocalizationsHu extends AppLocalizations {
   String get hubHost => 'Rendező';
 
   @override
-  String get hubGoldenBoot => 'Aranycipő';
+  String get hubGoldenBoot => 'Gólkirály';
 
   @override
   String hubGoldenBootValue(String name, int goals) {
@@ -3205,7 +3205,7 @@ class AppLocalizationsHu extends AppLocalizations {
       'Egy játékosod kerüljön be egy vb A torna csapatába.';
 
   @override
-  String get achGoldenboot => 'Aranycipő';
+  String get achGoldenboot => 'Gólkirály';
 
   @override
   String get achGoldenbootDesc =>
@@ -3242,7 +3242,7 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get paywallBenefitNoAds =>
-      'Nincs reklám, nincs mikrotranzakció, nincs előfizetés. Egyetlen fizetés, és minden jövőbeli frissítés a tiéd.';
+      'Nincs reklám, nincs mikrotranzakció, nincs előfizetés. Egyetlen fizetés, a frissítésekkel együtt.';
 
   @override
   String get paywallBenefitSaves =>
@@ -5545,13 +5545,13 @@ class AppLocalizationsHu extends AppLocalizations {
   String get playerHonoursTitle => 'ELISMERÉSEK';
 
   @override
-  String get awardGoldenBall => 'Aranylabda';
+  String get awardGoldenBall => 'Legjobb játékos';
 
   @override
-  String get awardGoldenBoot => 'Aranycipő';
+  String get awardGoldenBoot => 'Gólkirály';
 
   @override
-  String get awardGoldenGlove => 'Aranykesztyű';
+  String get awardGoldenGlove => 'Legjobb kapus';
 
   @override
   String get awardTeamOfTournament => 'A torna csapata';
@@ -5702,13 +5702,13 @@ class AppLocalizationsHu extends AppLocalizations {
       'A díjakról a torna lejátszása után döntenek.';
 
   @override
-  String get tourSharedGoldenBall => 'ARANYLABDA';
+  String get tourSharedGoldenBall => 'LEGJOBB JÁTÉKOS';
 
   @override
   String get tourSharedPlayerOfTournament => 'A torna játékosa';
 
   @override
-  String get tourSharedGoldenBoot => 'ARANYCIPŐ';
+  String get tourSharedGoldenBoot => 'GÓLKIRÁLY';
 
   @override
   String tourSharedGoalsCount(int count) {
@@ -5722,7 +5722,7 @@ class AppLocalizationsHu extends AppLocalizations {
   }
 
   @override
-  String get tourSharedGoldenGlove => 'ARANYKESZTYŰ';
+  String get tourSharedGoldenGlove => 'LEGJOBB KAPUS';
 
   @override
   String get tourSharedTeamOfTournament => 'A TORNA CSAPATA';
@@ -8236,7 +8236,7 @@ class AppLocalizationsHu extends AppLocalizations {
   String get tourJointBid => 'KÖZÖS PÁLYÁZAT';
 
   @override
-  String get tourGoldenGlove => 'ARANYKESZTYŰ';
+  String get tourGoldenGlove => 'LEGJOBB KAPUS';
 
   @override
   String get tourTeamOfTournament => 'A TORNA CSAPATA';
@@ -9084,14 +9084,14 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get settingsFreeScopeBlurb =>
-      'Egy teljes ciklus (selejtezők, a kontinentális bajnokságod és a világbajnokság) két mentésen, a világ minden országával, semmit nem visszatartva. A végtelen ciklusok és a korlátlan mentés egyetlen, egyszeri fizetés, és minden jövőbeli frissítést tartalmaz.';
+      'Egy teljes ciklus (selejtezők, a kontinentális bajnokságod és a világbajnokság) két mentésen, a világ minden országával, semmit nem visszatartva. A végtelen ciklusok és a korlátlan mentés egyetlen, egyszeri fizetés, a frissítésekkel együtt.';
 
   @override
   String get settingsUnlockedTitle => 'Feloldva';
 
   @override
   String get settingsUnlockedBlurb =>
-      'Végtelen ciklusok, korlátlan mentés és minden jövőbeli frissítés. Köszönöm.';
+      'Végtelen ciklusok, korlátlan mentés, a frissítésekkel együtt. Köszönöm.';
 
   @override
   String get settingsFromDeveloperTitle => 'A fejlesztőtől';
@@ -13972,13 +13972,13 @@ class AppLocalizationsHu extends AppLocalizations {
       'Szén, réz és egy nagyon poros igazgatótanács.';
 
   @override
-  String get sponsorBrandMoth => 'Moly';
+  String get sponsorBrandDragonfly => 'Szitakötő';
 
   @override
-  String get sponsorIndustryMoth => 'Benzinkutak';
+  String get sponsorIndustryDragonfly => 'Benzinkutak';
 
   @override
-  String get sponsorFlavourMoth =>
+  String get sponsorFlavourDragonfly =>
       'Benzin, hot dog és egy autómosó, ami még soha nem működött.';
 
   @override
@@ -14046,7 +14046,7 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get sponsorFlavourOldSwamp =>
-      '1869 óta főzik egy pincében, amit azóta senki sem takarított ki.';
+      'Egy pincében főzik, amit még soha senki nem takarított ki.';
 
   @override
   String get sponsorBrandBuzzhorn => 'Buzzhorn';
@@ -14158,14 +14158,14 @@ class AppLocalizationsHu extends AppLocalizations {
   String get sponsorFlavourPolarPenguin => 'Harminc íz, és mind olvad.';
 
   @override
-  String get sponsorBrandHexagon => 'Hexagon';
+  String get sponsorBrandBoltworth => 'Boltworth';
 
   @override
-  String get sponsorIndustryHexagon => 'Gépipar';
+  String get sponsorIndustryBoltworth => 'Gépipar';
 
   @override
-  String get sponsorFlavourHexagon =>
-      'Minden problémának hat oldala van. A mérnökeik még mindig számolnak.';
+  String get sponsorFlavourBoltworth =>
+      'Minden problémára egy csavar. A mérnökeik még mindig az anyát keresik.';
 
   @override
   String get sponsorBrandVelocell => 'Velocell';

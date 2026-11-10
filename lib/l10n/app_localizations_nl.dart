@@ -1651,7 +1651,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get hubHost => 'Gastheer';
 
   @override
-  String get hubGoldenBoot => 'Gouden Schoen';
+  String get hubGoldenBoot => 'Topscorer';
 
   @override
   String hubGoldenBootValue(String name, int goals) {
@@ -3252,7 +3252,7 @@ class AppLocalizationsNl extends AppLocalizations {
       'Laat een speler opnemen in het Elftal van het Toernooi van een Wereldkampioenschap.';
 
   @override
-  String get achGoldenboot => 'Gouden Schoen';
+  String get achGoldenboot => 'Topscorer';
 
   @override
   String get achGoldenbootDesc =>
@@ -3290,7 +3290,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get paywallBenefitNoAds =>
-      'Geen advertenties, geen microtransacties, geen abonnement. Eén betaling, en elke toekomstige update is van jou.';
+      'Geen advertenties, geen microtransacties, geen abonnement. Eén betaling, updates inbegrepen.';
 
   @override
   String get paywallBenefitSaves =>
@@ -5595,13 +5595,13 @@ class AppLocalizationsNl extends AppLocalizations {
   String get playerHonoursTitle => 'PRIJZEN';
 
   @override
-  String get awardGoldenBall => 'Gouden Bal';
+  String get awardGoldenBall => 'Beste speler';
 
   @override
-  String get awardGoldenBoot => 'Gouden Schoen';
+  String get awardGoldenBoot => 'Topscorer';
 
   @override
-  String get awardGoldenGlove => 'Gouden Handschoen';
+  String get awardGoldenGlove => 'Beste keeper';
 
   @override
   String get awardTeamOfTournament => 'Elftal van het Toernooi';
@@ -5752,13 +5752,13 @@ class AppLocalizationsNl extends AppLocalizations {
       'De prijzen worden uitgereikt zodra het toernooi is afgelopen.';
 
   @override
-  String get tourSharedGoldenBall => 'GOUDEN BAL';
+  String get tourSharedGoldenBall => 'BESTE SPELER';
 
   @override
   String get tourSharedPlayerOfTournament => 'Speler van het Toernooi';
 
   @override
-  String get tourSharedGoldenBoot => 'GOUDEN SCHOEN';
+  String get tourSharedGoldenBoot => 'TOPSCORER';
 
   @override
   String tourSharedGoalsCount(int count) {
@@ -5772,7 +5772,7 @@ class AppLocalizationsNl extends AppLocalizations {
   }
 
   @override
-  String get tourSharedGoldenGlove => 'GOUDEN HANDSCHOEN';
+  String get tourSharedGoldenGlove => 'BESTE KEEPER';
 
   @override
   String get tourSharedTeamOfTournament => 'ELFTAL VAN HET TOERNOOI';
@@ -8335,7 +8335,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get tourJointBid => 'GEZAMENLIJK BOD';
 
   @override
-  String get tourGoldenGlove => 'GOUDEN HANDSCHOEN';
+  String get tourGoldenGlove => 'BESTE KEEPER';
 
   @override
   String get tourTeamOfTournament => 'ELFTAL VAN HET TOERNOOI';
@@ -9189,14 +9189,14 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get settingsFreeScopeBlurb =>
-      'Een complete cyclus (kwalificatie, je continentale kampioenschap en het Wereldkampioenschap) op twee opslagen, met elk land ter wereld, niets achtergehouden. Eindeloze cycli en onbeperkt opslaan zijn één betaling, eenmalig, en gelden voor elke toekomstige update.';
+      'Een complete cyclus (kwalificatie, je continentale kampioenschap en het Wereldkampioenschap) op twee opslagen, met elk land ter wereld, niets achtergehouden. Eindeloze cycli en onbeperkt opslaan zijn één betaling, eenmalig, updates inbegrepen.';
 
   @override
   String get settingsUnlockedTitle => 'Ontgrendeld';
 
   @override
   String get settingsUnlockedBlurb =>
-      'Eindeloze cycli, onbeperkt opslaan en elke toekomstige update. Bedankt.';
+      'Eindeloze cycli, onbeperkt opslaan, updates inbegrepen. Bedankt.';
 
   @override
   String get settingsFromDeveloperTitle => 'Van de ontwikkelaar';
@@ -14108,13 +14108,13 @@ class AppLocalizationsNl extends AppLocalizations {
       'Kolen, koper en een heel stoffige raad van bestuur.';
 
   @override
-  String get sponsorBrandMoth => 'Mot';
+  String get sponsorBrandDragonfly => 'Libel';
 
   @override
-  String get sponsorIndustryMoth => 'Tankstations';
+  String get sponsorIndustryDragonfly => 'Tankstations';
 
   @override
-  String get sponsorFlavourMoth =>
+  String get sponsorFlavourDragonfly =>
       'Benzine, hotdogs en een wasstraat die nog nooit heeft gewerkt.';
 
   @override
@@ -14183,7 +14183,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get sponsorFlavourOldSwamp =>
-      'Gebrouwen sinds 1869 in een kelder die sindsdien niemand heeft schoongemaakt.';
+      'Gebrouwen in een kelder die nog nooit iemand heeft schoongemaakt.';
 
   @override
   String get sponsorBrandBuzzhorn => 'Buzzhorn';
@@ -14296,14 +14296,14 @@ class AppLocalizationsNl extends AppLocalizations {
       'Dertig smaken, allemaal aan het smelten.';
 
   @override
-  String get sponsorBrandHexagon => 'Hexagon';
+  String get sponsorBrandBoltworth => 'Boltworth';
 
   @override
-  String get sponsorIndustryHexagon => 'Machinebouw';
+  String get sponsorIndustryBoltworth => 'Machinebouw';
 
   @override
-  String get sponsorFlavourHexagon =>
-      'Elk probleem heeft zes kanten. Hun ingenieurs zijn nog aan het tellen.';
+  String get sponsorFlavourBoltworth =>
+      'Een bout voor elk probleem. Hun ingenieurs zoeken nog naar de moer.';
 
   @override
   String get sponsorBrandVelocell => 'Velocell';
