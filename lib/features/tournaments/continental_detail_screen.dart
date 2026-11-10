@@ -212,6 +212,9 @@ List<Widget> _continentalTabViews(
   final l = AppLocalizations.of(context);
   String code(int id) => data.nations[id]?.code ?? '??';
   String name(int id) => data.nations[id]?.name ?? l.tourContUnknown;
+  void openPlayer(int playerId) => context.push(
+    '${Routes.player}?careerId=$careerId&playerId=$playerId',
+  );
 
   Widget qualifyingTab() {
     if (data.qualifyingGroups.isEmpty) {
@@ -346,6 +349,7 @@ List<Widget> _continentalTabViews(
               ),
       ),
     TournamentAwardsTab(
+      onPlayerTap: openPlayer,
       highlightNations: data.myNationIds,
       team: data.teamOfTournament,
       goldenGlove: data.goldenGlove,
@@ -359,6 +363,7 @@ List<Widget> _continentalTabViews(
       code: code,
       emptyMessage: l.tourContNoGoalsYet,
       highlightNations: data.myNationIds,
+      onPlayerTap: openPlayer,
     ),
     TournamentHistory(
       honours: data.honours,

@@ -20,8 +20,12 @@ class TournamentAwardsTab extends StatelessWidget {
     required this.code,
     required this.name,
     this.highlightNations = const {},
+    this.onPlayerTap,
     super.key,
   });
+
+  /// Opens a player's page. Null leaves the awards plain.
+  final void Function(int playerId)? onPlayerTap;
 
   final List<StarPlayer> team;
   final ({int nationId, String name})? goldenGlove;
@@ -49,6 +53,9 @@ class TournamentAwardsTab extends StatelessWidget {
             award: l.tourSharedGoldenBall,
             sub: l.tourSharedPlayerOfTournament,
             icon: Icons.emoji_events_rounded,
+            onTap: onPlayerTap == null
+                ? null
+                : () => onPlayerTap!(goldenBall.id),
             playerName: goldenBall.name,
             nationName: name(goldenBall.nationId),
             code: code(goldenBall.nationId),
@@ -58,6 +65,9 @@ class TournamentAwardsTab extends StatelessWidget {
             award: l.tourSharedGoldenBoot,
             sub: l.tourSharedGoalsCount(goldenBoot.goals),
             icon: Icons.sports_soccer_rounded,
+            onTap: onPlayerTap == null
+                ? null
+                : () => onPlayerTap!(goldenBoot.id),
             playerName: goldenBoot.name,
             nationName: name(goldenBoot.nationId),
             code: code(goldenBoot.nationId),
@@ -75,6 +85,7 @@ class TournamentAwardsTab extends StatelessWidget {
             code: code,
             name: name,
             highlightNations: highlightNations,
+            onPlayerTap: onPlayerTap,
           ),
         ],
         const SizedBox(height: AppSpacing.xl),
@@ -92,8 +103,10 @@ class _AwardHero extends StatelessWidget {
     required this.playerName,
     required this.nationName,
     required this.code,
+    this.onTap,
   });
 
+  final VoidCallback? onTap;
   final String award;
   final String sub;
   final IconData icon;
@@ -106,6 +119,7 @@ class _AwardHero extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.md),
       child: AppCard(
+        onTap: onTap,
         child: Row(
           children: [
             Icon(icon, color: AppColors.primary, size: 30),
@@ -198,8 +212,12 @@ class TeamOfTournamentCard extends StatelessWidget {
     required this.code,
     required this.name,
     this.highlightNations = const {},
+    this.onPlayerTap,
     super.key,
   });
+
+  /// Opens a player's page. Null leaves the rows plain.
+  final void Function(int playerId)? onPlayerTap;
 
   final List<StarPlayer> stars;
   final String Function(int) code;
@@ -255,7 +273,8 @@ class TeamOfTournamentCard extends StatelessWidget {
 
   Widget _row(StarPlayer s) {
     final mine = highlightNations.contains(s.nationId);
-    return Container(
+    final tap = onPlayerTap;
+    final row = Container(
       padding: const EdgeInsets.symmetric(vertical: 3),
       decoration: mine
           ? BoxDecoration(
@@ -301,5 +320,7 @@ class TeamOfTournamentCard extends StatelessWidget {
         ],
       ),
     );
+    if (tap == null) return row;
+    return InkWell(onTap: () => tap(s.id), child: row);
   }
 }

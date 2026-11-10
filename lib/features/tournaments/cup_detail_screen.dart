@@ -165,6 +165,9 @@ List<Widget> _cupTabViews(
   final l = AppLocalizations.of(context);
   String code(int id) => data.nations[id]?.code ?? '??';
   String name(int id) => data.nations[id]?.name ?? l.tourCupUnknown;
+  void openPlayer(int playerId) => context.push(
+    '${Routes.player}?careerId=$careerId&playerId=$playerId',
+  );
   return [
     // Host cities, stadiums, mascot and ball — first, as an
     // at-a-glance overview of the edition.
@@ -239,6 +242,7 @@ List<Widget> _cupTabViews(
       _Soon(message: l.tourCupKnockoutSoon),
     // Every individual honour for the edition in one place.
     TournamentAwardsTab(
+      onPlayerTap: openPlayer,
       highlightNations: data.myNationIds,
       team: data.teamOfTournament,
       goldenGlove: data.goldenGlove,
@@ -252,6 +256,7 @@ List<Widget> _cupTabViews(
       playerNames: data.playerNames,
       code: code,
       highlightNations: data.myNationIds,
+      onPlayerTap: openPlayer,
     ),
     // Not the shared TournamentHistory: the World Cup screen's
     // history browses every competition, not just its own.
@@ -909,6 +914,7 @@ class _Scorers extends StatefulWidget {
     required this.playerNames,
     required this.code,
     required this.highlightNations,
+    required this.onPlayerTap,
   });
 
   final List<ScorerTally> qualifying;
@@ -922,6 +928,9 @@ class _Scorers extends StatefulWidget {
 
   /// The manager's nations, current and past: their scorers are highlighted.
   final Set<int> highlightNations;
+
+  /// Opens a scorer's player page.
+  final void Function(int playerId) onPlayerTap;
 
   @override
   State<_Scorers> createState() => _ScorersState();
@@ -941,6 +950,7 @@ class _ScorersState extends State<_Scorers> {
         ? [
             for (final s in widget.allTime)
               (
+                playerId: s.playerId,
                 nationId: s.nationId,
                 name: s.name,
                 goals: s.goals,
@@ -950,6 +960,7 @@ class _ScorersState extends State<_Scorers> {
         : [
             for (final s in (_tab == 1 ? widget.finals : widget.qualifying))
               (
+                playerId: s.playerId,
                 nationId: s.nationId,
                 name: widget.playerNames[s.playerId] ?? l.tourCupUnknown,
                 goals: s.goals,
@@ -998,6 +1009,7 @@ class _ScorersState extends State<_Scorers> {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                   child: AppCard(
+                    onTap: () => widget.onPlayerTap(s.playerId),
                     border: mine ? Border.all(color: AppColors.primary) : null,
                     padding: const EdgeInsets.symmetric(
                       vertical: AppSpacing.sm,
