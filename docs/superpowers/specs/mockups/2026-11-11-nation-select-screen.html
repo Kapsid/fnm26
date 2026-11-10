@@ -1,0 +1,99 @@
+<style>
+  .ph{width:340px;background:#0f1012;border-radius:34px;padding:18px 14px 22px;box-shadow:0 0 0 8px #222,0 20px 40px rgba(0,0,0,.4);color:#e8eaed;font-family:"Hanken Grotesk",system-ui,sans-serif;min-height:640px}
+  .mono{font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase}
+  .ttl{text-align:center;color:#cfd4da;margin:2px 0 12px}
+  .silver{background:linear-gradient(160deg,#2b2e33 0%,#1d1f23 55%,#25282c 100%);border:1px solid #3a3e44;box-shadow:inset 0 1px 0 rgba(255,255,255,.07)}
+  .muted{color:#8b929b;font-size:12px}
+  .search{border:1px solid #33373c;border-radius:12px;padding:9px 12px;color:#8b929b;font-size:13px;margin-bottom:10px}
+  .chips{display:flex;gap:6px;margin-bottom:12px;overflow:hidden}
+  .chip{border:1px solid #3a3e44;border-radius:999px;padding:5px 10px;font-size:12px;color:#c9ced5;white-space:nowrap}
+  .chip.on{background:#e6e9ed;color:#111;border-color:#e6e9ed}
+  .btn{display:block;text-align:center;border-radius:14px;padding:12px;font-weight:700;background:linear-gradient(180deg,#f2f4f6,#c9ced4);color:#111;margin-top:12px}
+  .bar{height:5px;border-radius:3px;background:#2a2d31;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,#9aa3ad,#e6e9ed)}
+  /* A hero */
+  .hero{border-radius:22px;padding:18px;text-align:center}
+  .bigflag{font-size:76px;line-height:1;margin:6px 0 4px}
+  .hname{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+  .stat b{display:block;font-size:20px}.stat span{font:600 10px ui-monospace,Menlo,monospace;letter-spacing:.1em;color:#8b929b}
+  .strip{display:flex;gap:10px;justify-content:center;margin-top:14px;font-size:26px;opacity:.55}
+  .strip .cur{opacity:1;transform:scale(1.25)}
+  .kv{display:flex;justify-content:space-between;font-size:13px;margin-top:10px;text-align:left}
+  /* B list */
+  .row{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:14px;margin-bottom:7px}
+  .row .f{font-size:28px;line-height:1}
+  .row .mid{flex:1;min-width:0}.row .n{font-size:15px;font-weight:600}
+  .rk{font:600 12px ui-monospace,Menlo,monospace;color:#c9ced5}
+  .sheet{border-radius:22px 22px 0 0;margin:10px -14px -22px;padding:16px 18px 20px;border-bottom:0}
+  /* C grid */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .cell{border-radius:16px;padding:12px 6px 10px;text-align:center}
+  .cell .f{font-size:38px;line-height:1}.cell .n{font-size:12px;font-weight:600;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cell .r{font:600 10px ui-monospace,Menlo,monospace;color:#8b929b;margin-top:2px}
+  .cell.sel{border-color:#e6e9ed;box-shadow:0 0 0 1px #e6e9ed inset}
+</style>
+
+<h2>Choose your nation: three directions</h2>
+<p class="subtitle">All calm, silver, fixed type sizes. What differs is how big the moment of choosing feels.</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image"><div class="ph">
+      <div class="ttl mono">Choose your nation</div>
+      <div class="chips"><span class="chip on">Europe</span><span class="chip">S. America</span><span class="chip">Africa</span><span class="chip">Asia</span></div>
+      <div class="hero silver">
+        <div class="mono muted">World ranking #4</div>
+        <div class="bigflag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</div>
+        <div class="hname">England</div>
+        <div class="muted">Europe · Wembley Park, 90,000</div>
+        <div class="stats"><div class="stat"><b>88</b><span>SQUAD</span></div><div class="stat"><b>●●●●○</b><span>STRENGTH</span></div><div class="stat"><b>€45M</b><span>BUDGET</span></div></div>
+        <div class="kv"><span class="muted">Star</span><span>Connor Singh · 95</span></div>
+        <div class="kv"><span class="muted">The board expects</span><span>Win the World Championship</span></div>
+        <div class="strip"><span>🇫🇷</span><span>🇪🇸</span><span class="cur">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span><span>🇵🇹</span><span>🇧🇪</span></div>
+      </div>
+      <span class="btn">Manage England</span>
+      <div class="muted" style="text-align:center;margin-top:10px">Swipe for the next nation · 🔍 Search · 🎲 Random</div>
+    </div></div>
+    <div class="card-body"><h3>A · One nation, centre stage</h3><p>A big silver card per nation, swipe through them (flags strip below). Flag, ranking, squad strength, star, budget and what the board expects, then one button. Most impressive; slower to scan 209 nations, so search and continents stay on top.</p></div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image"><div class="ph">
+      <div class="ttl mono">Choose your nation</div>
+      <div class="search">🔍 Search a nation</div>
+      <div class="chips"><span class="chip on">Europe</span><span class="chip">S. America</span><span class="chip">Africa</span><span class="chip">Asia</span></div>
+      <div class="row silver"><span class="f">🇪🇸</span><div class="mid"><div class="n">Spain</div><div class="bar"><i style="width:94%"></i></div></div><span class="rk">#1</span></div>
+      <div class="row silver"><span class="f">🇫🇷</span><div class="mid"><div class="n">France</div><div class="bar"><i style="width:92%"></i></div></div><span class="rk">#3</span></div>
+      <div class="row silver" style="border-color:#e6e9ed"><span class="f">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span><div class="mid"><div class="n">England</div><div class="bar"><i style="width:90%"></i></div></div><span class="rk">#4</span></div>
+      <div class="sheet silver">
+        <div style="display:flex;align-items:center;gap:12px"><span style="font-size:44px">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span><div><div style="font-size:20px;font-weight:800">England</div><div class="muted">Ranking #4 · Squad 88 · €45M</div></div></div>
+        <div class="kv"><span class="muted">Star</span><span>Connor Singh · 95</span></div>
+        <div class="kv"><span class="muted">The board expects</span><span>Win the World Championship</span></div>
+        <span class="btn">Manage England</span>
+      </div>
+    </div></div>
+    <div class="card-body"><h3>B · Calm list + preview sheet</h3><p>Today's list made silver and quiet: flag, name, a strength bar, rank. No button on every row; tapping a nation slides up a preview with the details and one "Manage" button. Fastest to scan, matches the competitions list.</p></div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image"><div class="ph">
+      <div class="ttl mono">Choose your nation</div>
+      <div class="search">🔍 Search a nation</div>
+      <div class="chips"><span class="chip on">Europe</span><span class="chip">S. America</span><span class="chip">Africa</span><span class="chip">Asia</span></div>
+      <div class="grid">
+        <div class="cell silver"><div class="f">🇪🇸</div><div class="n">Spain</div><div class="r">#1</div></div>
+        <div class="cell silver"><div class="f">🇫🇷</div><div class="n">France</div><div class="r">#3</div></div>
+        <div class="cell silver sel"><div class="f">🏴󠁧󠁢󠁥󠁮󠁧󠁿</div><div class="n">England</div><div class="r">#4</div></div>
+        <div class="cell silver"><div class="f">🇵🇹</div><div class="n">Portugal</div><div class="r">#7</div></div>
+        <div class="cell silver"><div class="f">🇧🇪</div><div class="n">Belgium</div><div class="r">#8</div></div>
+        <div class="cell silver"><div class="f">🇳🇱</div><div class="n">Netherlands</div><div class="r">#9</div></div>
+        <div class="cell silver"><div class="f">🇩🇪</div><div class="n">Germany</div><div class="r">#12</div></div>
+        <div class="cell silver"><div class="f">🇭🇷</div><div class="n">Croatia</div><div class="r">#13</div></div>
+        <div class="cell silver"><div class="f">🇨🇿</div><div class="n">Czechia</div><div class="r">#40</div></div>
+      </div>
+      <div class="silver" style="border-radius:16px;padding:12px;margin-top:10px;display:flex;align-items:center;gap:10px"><span style="font-size:30px">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span><div style="flex:1"><b>England</b><div class="muted">Squad 88 · Star Connor Singh</div></div></div>
+      <span class="btn">Manage England</span>
+    </div></div>
+    <div class="card-body"><h3>C · Flag wall</h3><p>A calm grid of big flags (like the tablet today). Tap one: a slim summary bar and one "Manage" button at the bottom. Visual and quick; less room for the board's expectations.</p></div>
+  </div>
+</div>
