@@ -139,3 +139,22 @@ on a fresh save, so they read "No points to spend", "Nobody in the job", all
 sliders at zero, everything 0/25. They are true screens of an empty save, and
 they undersell the game. Shoot them again from a career a few cycles in and
 they would earn a place.
+
+## The showcase stills (2D match, editor)
+
+Two homepage sections sit between the feature grid and the carousels, and
+their pictures are SHARED by all 28 languages (English UI): every language
+folder reaches them as `../shots/`. They are named by slot, so a better still
+can replace a file without touching any page:
+
+- `match-2d-1` to `match-2d-4`: 760 x 605 (`-full`: 1080 x 860), the top of a
+  phone match screen (score bar, banner, pitch) cut from the 2D promo clips
+  with ffmpeg: 1 Paris stadium, 2 snow in Reykjavík, 3 a goal banner in Rio,
+  4 the shootout's winning kick. Keep the 1080 x 860 shape, and keep any
+  "Friendly" label out of the crop (the current clips are friendlies).
+- `editor-1`, `editor-2`: 500 x 1010 (`-full`: 1000 x 2020), like the phone
+  carousel: a database's home and a player being edited, taken on the iOS
+  simulator with the game's own fictional world.
+
+The captions and alt texts are in each `index.html`; if a slot gets a
+different picture, its caption and alt text change in all 28 pages.
