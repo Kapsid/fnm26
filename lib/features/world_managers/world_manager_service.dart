@@ -332,25 +332,33 @@ class WorldManagerService {
     final career = await _ref.read(careerRepositoryProvider).byId(careerId);
     if (career == null) return (name: '', country: null);
     final pool = await staffNamePool(_ref.read, careerId);
+    // A basic coach drawn under the home bias is named by that draw, as the
+    // staff room named him.
+    final home = StaffMarket.drawnAtHome(candidateId)
+        ? (await _ref.read(nationRepositoryProvider).byId(career.nationId))
+              ?.code
+              .toLowerCase()
+        : null;
     final hit = StaffMarket.forRole(
       saveSeed: career.rngSeed,
       cycle: StaffMarket.cycleOf(candidateId),
       role: StaffMarket.roleOf(candidateId),
       namePool: pool,
+      home: home,
     ).where((c) => c.id == candidateId).firstOrNull;
     if (hit != null && hit.name.trim().isNotEmpty) {
       return (name: hit.name, country: hit.country);
     }
-    final home = await _homeCode(career.nationId);
+    final homeCode = await _homeCode(career.nationId);
     final pools = await _ref
         .read(playerRepositoryProvider)
         .namePoolsFor(careerId);
     return (
       name: ManagerNames.build(
-        ManagerNames.poolFor(pools, home),
+        ManagerNames.poolFor(pools, homeCode),
         SeededRng(varietySeed('mgr:asst:$candidateId')),
       ),
-      country: home,
+      country: homeCode,
     );
   }
 

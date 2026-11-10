@@ -48,6 +48,8 @@ final AutoDisposeFutureProviderFamily<StaffRoom?, int> staffRoomProvider =
           role: () {
             // A basic coach already hired from this cycle's market keeps the
             // name and flag he was hired under (the home bias came in 1.0.9).
+            // Only an old-draw id matches here: the home draw marks its basic
+            // id ([StaffMarket.drawnAtHome]), so picking him keeps this list.
             final before = market(role);
             final hiredBasic = before.any(
               (c) => c.id == ids[role] && c.tier == StaffTier.basic,
