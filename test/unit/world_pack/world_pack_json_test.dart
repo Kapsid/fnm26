@@ -353,11 +353,18 @@ void main() {
       expect(p.addedSponsors, isEmpty);
       expect(p.addedYAccounts, isEmpty);
       expect(p.localized, isEmpty);
-      // Every 1.1.0 part reads back exactly as the 1.1.0 file wrote it.
+      // Every 1.1.0 part reads back exactly as the 1.1.0 file wrote it,
+      // but for a club renamed since, which reads under its new name.
       final out = jsonDecode(jsonEncode(p.toJson())) as Map<String, Object?>;
+      var renamed = jsonEncode(raw);
+      ClubService.retiredNames.forEach(
+        (from, to) => renamed = renamed.replaceAll('"$from"', '"$to"'),
+      );
+      final expected = jsonDecode(renamed) as Map<String, Object?>;
+      expect(renamed, isNot(jsonEncode(raw)), reason: 'it names one');
       for (final k in raw.keys) {
         if (k == 'formatVersion') continue;
-        expect(out[k], raw[k], reason: k);
+        expect(out[k], expected[k], reason: k);
       }
       // The fixture is a 1.1.0 file: migrating never rewrites it.
       expect(raw['formatVersion'], 1);

@@ -10,6 +10,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/repositories/player_repository.dart'
     show clubStrengthKind;
+import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/domain/services/federation/sponsors.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
@@ -207,15 +208,19 @@ void main() {
       expect(day23, contains('Pinned Added'));
       expect(jsonEncode(packReads['1/0']), contains('Pinned FC'));
 
-      // Round-trip through JSON so the comparison is like for like.
-      final got = jsonDecode(
-        jsonEncode({
-          'default': defaultReads,
-          'v1Pack': packReads,
-          'sponsors': _sponsors(),
-          'y': _y(),
-        }),
+      // Round-trip through JSON so the comparison is like for like. A club
+      // renamed since the pin was written reads under its new name; it is
+      // the same club in the same slot, so it is compared under the old one.
+      var encoded = jsonEncode({
+        'default': defaultReads,
+        'v1Pack': packReads,
+        'sponsors': _sponsors(),
+        'y': _y(),
+      });
+      ClubService.retiredNames.forEach(
+        (from, to) => encoded = encoded.replaceAll('"$to"', '"$from"'),
       );
+      final got = jsonDecode(encoded);
       final golden = File(_goldenFile);
       if (_env('WRITE_GOLDEN')) {
         golden
