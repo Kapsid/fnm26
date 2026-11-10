@@ -10,6 +10,9 @@ import 'package:fnm/l10n/app_localizations.dart';
 /// already in the manager's language.
 typedef ShareNation = ({String code, String name});
 
+/// The manager's whole record: every match he has led a side in.
+typedef ShareRecord = ({int played, int won, int drawn, int lost});
+
 /// One title: the year and the nation (its FIFA code) it was won with.
 typedef ShareWin = ({int year, String code});
 
@@ -53,9 +56,14 @@ class CabinetShareData {
     required this.managerName,
     required this.nations,
     required this.trophies,
+    this.record,
   });
 
   final String managerName;
+
+  /// His record across the whole career, for the story's stat strip; null
+  /// (or no match played) leaves the strip out.
+  final ShareRecord? record;
 
   /// Every nation he has coached, the current one first.
   final List<ShareNation> nations;
@@ -86,16 +94,26 @@ class CabinetShareCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final story = format.isStory;
     final shelf = data.trophies.skip(1).toList();
+    final record = data.record;
     return ShareCanvas(
       format: format,
       child: ShareBackdrop(
         topGlow: kShareGold,
         child: Padding(
-          padding: format.contentInsets,
+          // A story reaches a little into Instagram's clear bands, as far as
+          // the caption on top and the brand at the foot: both stay well
+          // clear of the progress bar and the reply box.
+          padding: story
+              ? const EdgeInsets.fromLTRB(72, 200, 72, 210)
+              : format.contentInsets,
           child: Column(
             children: [
               _Identity(data: data, story: story),
-              SizedBox(height: story ? 40 : 18),
+              if (story && record != null && record.played > 0) ...[
+                const SizedBox(height: 40),
+                _RecordStrip(record: record),
+              ],
+              SizedBox(height: story ? 36 : 18),
               Expanded(
                 child: _Headline(
                   trophy: data.trophies.first,
@@ -123,6 +141,100 @@ class CabinetShareCard extends StatelessWidget {
   }
 }
 
+/// Every nation he has led as a stack of flags: the current one in front,
+/// the earlier ones peeking out behind it to the left.
+class _FlagStack extends StatelessWidget {
+  const _FlagStack({required this.codes, required this.size});
+
+  /// Current first.
+  final List<String> codes;
+  final double size;
+
+  /// How much of each flag behind shows past the one in front of it.
+  static const _step = 0.4;
+
+  @override
+  Widget build(BuildContext context) {
+    final n = codes.length;
+    return SizedBox(
+      width: size * (1 + _step * (n - 1)),
+      height: size,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          // Painted back to front: the oldest first, leftmost.
+          for (var i = n - 1; i >= 0; i--)
+            Positioned(
+              left: size * _step * (n - 1 - i),
+              top: 0,
+              child: ShareFlag(codes[i], size: size),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The career in four numbers: played, won, drawn, lost.
+class _RecordStrip extends StatelessWidget {
+  const _RecordStrip({required this.record});
+
+  final ShareRecord record;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final cells = [
+      (record.played, l.careerStatPlayed, AppColors.onSurface),
+      (record.won, l.careerStatWon, kShareGold),
+      (record.drawn, l.careerStatDrawn, AppColors.onSurface),
+      (record.lost, l.careerStatLost, AppColors.onSurface),
+    ];
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 22),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(28),
+        color: const Color(0x0FFFFFFF),
+        border: Border.all(color: kShareGold.withValues(alpha: 0.22)),
+      ),
+      child: Row(
+        children: [
+          for (var i = 0; i < cells.length; i++) ...[
+            if (i > 0)
+              Container(
+                width: 1.5,
+                height: 64,
+                color: kShareGold.withValues(alpha: 0.18),
+              ),
+            Expanded(
+              child: Column(
+                children: [
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      '${cells[i].$1}',
+                      style: AppTypography.displayLarge.copyWith(
+                        fontSize: 60,
+                        height: 1,
+                        color: cells[i].$3,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
+                    child: ShareCaption(cells[i].$2, size: 18),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
 class _Identity extends StatelessWidget {
   const _Identity({required this.data, required this.story});
 
@@ -139,19 +251,25 @@ class _Identity extends StatelessWidget {
       fontWeight: FontWeight.w600,
       color: AppColors.outline,
     );
-    final small = story ? 44.0 : 38.0;
+    final flag = story ? 150.0 : 104.0;
+    // A stack of three at most: past that it reads as a smear, and the
+    // names beneath the manager list every side anyway.
+    final codes = [for (final n in data.nations.take(3)) n.code];
     return Column(
       children: [
         ShareCaption(
           l.careerTrophyCabinet,
           color: kShareGold,
-          size: story ? 26 : 21,
+          size: story ? 30 : 21,
         ),
-        SizedBox(height: story ? 30 : 18),
+        SizedBox(height: story ? 36 : 18),
         Row(
           children: [
-            if (current != null) ...[
-              ShareFlag(current.code, size: story ? 132 : 104),
+            if (codes.length > 1) ...[
+              _FlagStack(codes: codes, size: flag),
+              SizedBox(width: story ? 30 : 24),
+            ] else if (current != null) ...[
+              ShareFlag(current.code, size: flag),
               SizedBox(width: story ? 30 : 24),
             ],
             Expanded(
@@ -166,7 +284,7 @@ class _Identity extends StatelessWidget {
                     maxLines: 2,
                     minSize: 30,
                     style: AppTypography.displayLarge.copyWith(
-                      fontSize: story ? 56 : 46,
+                      fontSize: story ? 64 : 46,
                       height: 1.05,
                       letterSpacing: 1,
                       fontWeight: FontWeight.w800,
@@ -174,27 +292,17 @@ class _Identity extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: story ? 12 : 8),
-                  if (data.nations.length == 1)
+                  if (data.nations.isNotEmpty)
+                    // Every side he has led, the current one first, in the
+                    // order the flag stack beside it piles them.
                     Text(
-                      current!.name,
-                      maxLines: 1,
+                      [for (final n in data.nations) n.name].join('  ·  '),
+                      maxLines: story && data.nations.length > 1 ? 2 : 1,
                       overflow: TextOverflow.ellipsis,
                       style: AppTypography.titleMedium.copyWith(
-                        fontSize: story ? 30 : 26,
+                        fontSize: story ? 32 : 26,
+                        height: 1.2,
                         color: AppColors.onSurfaceVariant,
-                      ),
-                    )
-                  else if (data.nations.length > 1)
-                    // Every side he has led, the current one first.
-                    SizedBox(
-                      height: small,
-                      child: Row(
-                        children: [
-                          for (final n in data.nations.take(8)) ...[
-                            ShareFlag(n.code, size: small),
-                            const SizedBox(width: 10),
-                          ],
-                        ],
                       ),
                     ),
                 ],
@@ -207,13 +315,13 @@ class _Identity extends StatelessWidget {
                   Text(
                     '${data.total}',
                     style: AppTypography.displayLarge.copyWith(
-                      fontSize: story ? 84 : 70,
+                      fontSize: story ? 100 : 70,
                       height: 1,
                       color: kShareGold,
                     ),
                   ),
                   const SizedBox(height: 4),
-                  ShareCaption(l.careerStatTitles, size: story ? 19 : 16),
+                  ShareCaption(l.careerStatTitles, size: story ? 21 : 16),
                 ],
               ),
             ],
@@ -302,15 +410,15 @@ class _Headline extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final nameSize = story ? 48.0 : (alone ? 44.0 : 36.0);
-    final yearsSize = story ? 28.0 : 23.0;
+    final nameSize = story ? 56.0 : (alone ? 44.0 : 36.0);
+    final yearsSize = story ? 31.0 : 23.0;
     final textBlock =
-        (story ? 200.0 : (alone ? 150.0 : 112.0)) + (flags ? 12.0 : 0.0);
+        (story ? 170.0 : (alone ? 150.0 : 112.0)) + (flags ? 12.0 : 0.0);
     return LayoutBuilder(
       builder: (context, c) {
         final art = (c.maxHeight - textBlock).clamp(
           80.0,
-          story ? 520.0 : 420.0,
+          story ? 640.0 : 420.0,
         );
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -369,7 +477,7 @@ class _Headline extends StatelessWidget {
               trophy: trophy,
               flags: flags,
               maxYears: 6,
-              flagSize: story ? 44 : 36,
+              flagSize: story ? 48 : 36,
               style: AppTypography.labelMedium.copyWith(
                 fontSize: yearsSize,
                 height: 1.2,
@@ -441,13 +549,15 @@ class _Shelf extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final n = trophies.length;
-    final cols = story ? (n <= 3 ? n : (n <= 6 ? 3 : 4)) : (n <= 4 ? n : 4);
+    final cols = story ? (n <= 4 ? n : (n <= 6 ? 3 : 4)) : (n <= 4 ? n : 4);
     final rows = <List<ShareTrophy>>[
       for (var i = 0; i < n; i += cols)
         trophies.sublist(i, (i + cols).clamp(0, n)),
     ];
     final art = story
-        ? (cols <= 3 ? 150.0 : 118.0)
+        ? (rows.length > 1
+              ? (cols <= 3 ? 124.0 : 112.0)
+              : (cols <= 3 ? 180.0 : 150.0))
         : (rows.length > 1 ? 82.0 : 112.0);
     return LayoutBuilder(
       builder: (context, c) => Column(
@@ -515,7 +625,7 @@ class _ShelfItem extends StatelessWidget {
 
   static TextStyle labelStyleFor({required bool story}) =>
       AppTypography.titleMedium.copyWith(
-        fontSize: story ? 21 : 17,
+        fontSize: story ? 23 : 17,
         height: 1.15,
         letterSpacing: 1.2,
         fontWeight: FontWeight.w700,
@@ -568,9 +678,9 @@ class _ShelfItem extends StatelessWidget {
             flags: flags,
             maxYears: 3,
             separator: ' · ',
-            flagSize: story ? 26 : 21,
+            flagSize: story ? 30 : 21,
             style: AppTypography.labelSmall.copyWith(
-              fontSize: story ? 19 : 15,
+              fontSize: story ? 21 : 15,
               letterSpacing: 0.5,
               color: AppColors.outline,
             ),
