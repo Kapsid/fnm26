@@ -77,7 +77,11 @@ void main() {
     await tester.tap(find.byKey(ManagerRow.rowKey));
     await settle(tester);
     expect(find.byType(ManagerDetailScreen), findsOneWidget);
+    await tester.tap(find.byKey(ManagerDetailScreen.tabCareerKey));
+    await tester.pump();
     expect(find.byKey(ManagerDetailScreen.careerKey), findsOneWidget);
+    await tester.tap(find.byKey(ManagerDetailScreen.tabVsYouKey));
+    await tester.pump();
     expect(find.text(enL.mgrProfileNoMeetings), findsOneWidget);
     expect(find.byKey(ManagerDetailScreen.tieKey), findsOneWidget);
     expect(find.text(enL.mgrTieNeutral), findsOneWidget);

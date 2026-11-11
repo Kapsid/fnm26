@@ -6,7 +6,7 @@ import 'package:fnm/data/seed/pool_generator.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
-import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/player/player_detail_screen.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
@@ -78,8 +78,13 @@ void main() {
     );
     expect(tester.takeException(), isNull);
     final cs = lookupAppLocalizations(const Locale('cs'));
-    // The club row and the club history both say it in Czech.
-    expect(find.text(cs.editorPlayerFreeAgent), findsNWidgets(2));
+    // The club row (Overview) and the club history (Career) both say it in
+    // Czech.
+    expect(find.text(cs.editorPlayerFreeAgent), findsOneWidget);
+    expect(find.text(ClubService.freeAgent), findsNothing);
+    await tester.tap(find.byKey(PlayerDetailScreen.tabCareerKey));
+    await settle(tester);
+    expect(find.text(cs.editorPlayerFreeAgent), findsOneWidget);
     expect(find.text(ClubService.freeAgent), findsNothing);
     await tester.pumpWidget(const SizedBox());
   });

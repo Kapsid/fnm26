@@ -5,7 +5,12 @@ import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/core/theme/text_size.dart';
+import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
+import 'package:fnm/features/player/player_detail_screen.dart';
+import 'package:fnm/features/world_managers/manager_detail_screen.dart';
+import 'package:fnm/features/world_managers/world_manager_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
 import '../helpers/seeded_save.dart';
@@ -69,8 +74,33 @@ Future<void> _pumpLarger(
   addTearDown(tester.view.reset);
   tester.platformDispatcher.textScaleFactorTestValue = systemScale;
   addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
-  final router = save.container.read(routerProvider)
-    ..go(_location(route, save.careerId));
+  var location = _location(route, save.careerId);
+  if (route == Routes.player) {
+    final id = await tester.runAsync(() async {
+      final pool = await save.container
+          .read(playerRepositoryProvider)
+          .byNation(
+            save.nationId,
+            agingYears: CareerService.agingYears(save.career),
+            saveSeed: save.career.rngSeed,
+            careerId: save.career.id,
+          );
+      return pool.first.id;
+    });
+    location = '$location&playerId=$id';
+  } else if (route == Routes.worldManager) {
+    final id = await tester.runAsync(() async {
+      await save.container
+          .read(worldManagerServiceProvider)
+          .ensureSeeded(save.careerId);
+      final w = await save.container
+          .read(worldManagerRepositoryProvider)
+          .load(save.careerId);
+      return w.spells.firstWhere((s) => s.current).managerId;
+    });
+    location = '$location&managerId=$id';
+  }
+  final router = save.container.read(routerProvider)..go(location);
   await tester.pumpWidget(
     UncontrolledProviderScope(
       container: save.container,
@@ -87,7 +117,59 @@ Future<void> _pumpLarger(
   await settle(tester, allowSpinner: true);
 }
 
+/// The player and world manager pages, with every tab a phone shows.
+const _profilePages = <String, List<Key>>{
+  Routes.player: [
+    PlayerDetailScreen.tabOverviewKey,
+    PlayerDetailScreen.tabStatsKey,
+    PlayerDetailScreen.tabCareerKey,
+  ],
+  Routes.worldManager: [
+    ManagerDetailScreen.tabOverviewKey,
+    ManagerDetailScreen.tabVsYouKey,
+    ManagerDetailScreen.tabCareerKey,
+  ],
+};
+
 void main() {
+  for (final MapEntry(key: route, value: tabs) in _profilePages.entries) {
+    testWidgets('$route fits a phone at the text scale ceiling, every tab', (
+      tester,
+    ) async {
+      await _pumpLarger(
+        tester,
+        route,
+        size: kPhoneSize,
+        formFactor: FormFactor.phone,
+        systemScale: 1.2,
+      );
+      expect(tester.takeException(), isNull);
+      for (final tab in tabs) {
+        await tester.tap(find.byKey(tab));
+        await tester.pump();
+        expect(tester.takeException(), isNull, reason: '$tab');
+      }
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('$route fits the smallest tablet at Larger', (tester) async {
+      await _pumpLarger(
+        tester,
+        route,
+        size: kTabletSizes.last,
+        formFactor: FormFactor.tablet,
+        systemScale: 1.2,
+      );
+      expect(tester.takeException(), isNull);
+      if (route == Routes.player) {
+        await tester.tap(find.byKey(PlayerDetailScreen.tabCareerKey));
+        await tester.pump();
+        expect(tester.takeException(), isNull);
+      }
+      await tester.pumpWidget(const SizedBox());
+    });
+  }
+
   for (final route in _routes) {
     testWidgets('$route fits a phone at Larger', (tester) async {
       await _pumpLarger(

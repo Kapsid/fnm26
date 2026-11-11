@@ -65,20 +65,14 @@ void main() {
     });
   }
 
-  testWidgets('his club and club history sit on the right, once', (
-    tester,
-  ) async {
+  testWidgets('his club is in the Overview on the left, his club history '
+      'on the Career tab on the right, once each', (tester) async {
     await _open(tester, const Size(1080, 810));
     expect(tester.takeException(), isNull);
     final profile = find.byKey(PlayerDetailScreen.profileKey);
+    final record = find.byKey(PlayerDetailScreen.recordKey);
     final club = find.byKey(PlayerDetailScreen.clubKey);
-    expect(
-      find.descendant(
-        of: find.byKey(PlayerDetailScreen.recordKey),
-        matching: club,
-      ),
-      findsOneWidget,
-    );
+    expect(find.descendant(of: profile, matching: club), findsOneWidget);
     for (final label in [
       enL.playerClub,
       enL.playerClubRole.toUpperCase(),
@@ -89,21 +83,22 @@ void main() {
         reason: label,
       );
       expect(
-        find.descendant(of: profile, matching: find.text(label)),
+        find.descendant(of: record, matching: find.text(label)),
         findsNothing,
         reason: label,
       );
     }
+    // Stats opens first on the right; the club history waits on Career.
+    expect(find.byType(ClubHistoryCard), findsNothing);
+    await tester.tap(find.byKey(PlayerDetailScreen.tabCareerKey));
+    await tester.pump();
     expect(
-      find.descendant(of: club, matching: find.byType(ClubHistoryCard)),
+      find.descendant(of: record, matching: find.byType(ClubHistoryCard)),
       findsOneWidget,
     );
     expect(find.byType(ClubHistoryCard), findsOneWidget);
-    // The club sits above the career record in that column.
-    expect(
-      tester.getTopLeft(club).dy,
-      lessThan(tester.getTopLeft(find.text(enL.playerCareerRecord)).dy),
-    );
+    expect(find.text(enL.playerCareerRecord), findsNothing);
+    expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox());
   });
 
