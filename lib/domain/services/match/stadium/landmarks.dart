@@ -56,6 +56,34 @@ enum LandmarkKind {
   hassanII,
   kicc,
   skyTower,
+  // The third set (1.2): mountains and architecture over a hundred years
+  // old only, in cities that had none.
+  ararat,
+  fuji,
+  popocatepetl,
+  cotopaxi,
+  illimani,
+  vesuvius,
+  kilimanjaro,
+  alpinePeaks,
+  fjord,
+  cologneCathedral,
+  florenceDome,
+  wawel,
+  bratislavaCastle,
+  nevskyCathedral,
+  belgradeFortress,
+  gediminasTower,
+  narikala,
+  maidenTower,
+  giralda,
+  koutoubia,
+  hassanTower,
+  angkor,
+  shwedagon,
+  morroCastle,
+  clerigos,
+  victoriaMemorial,
 }
 
 abstract final class Landmarks {
@@ -63,6 +91,39 @@ abstract final class Landmarks {
   /// ignored ("Reykjavík", "reykjavik" and "REYKJAVIK" are one city).
   static LandmarkKind forCity(String city) =>
       _byCity[fold(city)] ?? LandmarkKind.none;
+
+  /// Whether [kind] may appear in promo and store captures. The modern
+  /// silhouettes whose owners guard their image (a trademarked tower, a
+  /// recent building still under its architect's copyright) stay in the
+  /// game but are left out of anything made to advertise it; the promo
+  /// tooling picks only grounds whose landmark is promo-safe. No effect on
+  /// the game itself.
+  static bool promoSafe(LandmarkKind kind) => !promoUnsafe.contains(kind);
+
+  /// The landmarks [promoSafe] keeps out of promo and store captures.
+  static const Set<LandmarkKind> promoUnsafe = {
+    LandmarkKind.operaHouse,
+    LandmarkKind.burj,
+    LandmarkKind.sailHotel,
+    LandmarkKind.twinTowers,
+    LandmarkKind.tokyoTower,
+    LandmarkKind.cnTower,
+    LandmarkKind.skyTower,
+    LandmarkKind.kingdomCentre,
+    LandmarkKind.aspireTorch,
+    LandmarkKind.costanera,
+    LandmarkKind.dublinSpire,
+    LandmarkKind.seoulTower,
+    LandmarkKind.orientalPearl,
+    LandmarkKind.kicc,
+    LandmarkKind.motherland,
+    LandmarkKind.newYorkSkyline,
+    LandmarkKind.tvTower,
+    LandmarkKind.palaceOfCulture,
+    LandmarkKind.palaceOfParliament,
+    LandmarkKind.hassanII,
+    LandmarkKind.azadi,
+  };
 
   static const Map<String, LandmarkKind> _byCity = {
     'paris': LandmarkKind.eiffel,
@@ -160,6 +221,56 @@ abstract final class Landmarks {
     'nairobi': LandmarkKind.kicc,
     'auckland': LandmarkKind.skyTower,
     'tamaki makaurau': LandmarkKind.skyTower,
+    // The third set: the game's spellings first, local ones after.
+    'yerevan': LandmarkKind.ararat,
+    'erevan': LandmarkKind.ararat,
+    'yokohama': LandmarkKind.fuji,
+    'saitama': LandmarkKind.fuji,
+    'shizuoka': LandmarkKind.fuji,
+    'puebla': LandmarkKind.popocatepetl,
+    'puebla de zaragoza': LandmarkKind.popocatepetl,
+    'quito': LandmarkKind.cotopaxi,
+    'la paz': LandmarkKind.illimani,
+    'el alto': LandmarkKind.illimani,
+    'naples': LandmarkKind.vesuvius,
+    'napoli': LandmarkKind.vesuvius,
+    'arusha': LandmarkKind.kilimanjaro,
+    'moshi': LandmarkKind.kilimanjaro,
+    'innsbruck': LandmarkKind.alpinePeaks,
+    'salzburg': LandmarkKind.alpinePeaks,
+    'wals siezenheim': LandmarkKind.alpinePeaks,
+    'bern': LandmarkKind.alpinePeaks,
+    'berne': LandmarkKind.alpinePeaks,
+    'bergen': LandmarkKind.fjord,
+    'cologne': LandmarkKind.cologneCathedral,
+    'koln': LandmarkKind.cologneCathedral,
+    'koeln': LandmarkKind.cologneCathedral,
+    'florence': LandmarkKind.florenceDome,
+    'firenze': LandmarkKind.florenceDome,
+    'krakow': LandmarkKind.wawel,
+    'cracow': LandmarkKind.wawel,
+    'bratislava': LandmarkKind.bratislavaCastle,
+    'sofia': LandmarkKind.nevskyCathedral,
+    'sofiya': LandmarkKind.nevskyCathedral,
+    'belgrade': LandmarkKind.belgradeFortress,
+    'beograd': LandmarkKind.belgradeFortress,
+    'vilnius': LandmarkKind.gediminasTower,
+    'tbilisi': LandmarkKind.narikala,
+    'baku': LandmarkKind.maidenTower,
+    'seville': LandmarkKind.giralda,
+    'sevilla': LandmarkKind.giralda,
+    'marrakesh': LandmarkKind.koutoubia,
+    'marrakech': LandmarkKind.koutoubia,
+    'rabat': LandmarkKind.hassanTower,
+    'siem reap': LandmarkKind.angkor,
+    'yangon': LandmarkKind.shwedagon,
+    'rangoon': LandmarkKind.shwedagon,
+    'havana': LandmarkKind.morroCastle,
+    'la habana': LandmarkKind.morroCastle,
+    'porto': LandmarkKind.clerigos,
+    'oporto': LandmarkKind.clerigos,
+    'kolkata': LandmarkKind.victoriaMemorial,
+    'calcutta': LandmarkKind.victoriaMemorial,
   };
 
   /// [s] lower-cased, its accents stripped and its spacing collapsed.

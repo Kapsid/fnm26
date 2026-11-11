@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:fnm/domain/services/match/stadium/landmarks.dart';
 
-/// The fifty-four city silhouettes, drawn in code: each a path one unit tall,
+/// The eighty city silhouettes, drawn in code: each a path one unit tall,
 /// standing on y = 0 (up is negative y) and centred on x = 0, about as wide
 /// as it is in life relative to its height.
 ///
@@ -66,6 +66,32 @@ abstract final class LandmarkPaths {
     LandmarkKind.hassanII => _hassanII(),
     LandmarkKind.kicc => _kicc(),
     LandmarkKind.skyTower => _skyTower(),
+    LandmarkKind.ararat => _ararat(),
+    LandmarkKind.fuji => _fuji(),
+    LandmarkKind.popocatepetl => _popocatepetl(),
+    LandmarkKind.cotopaxi => _cotopaxi(),
+    LandmarkKind.illimani => _illimani(),
+    LandmarkKind.vesuvius => _vesuvius(),
+    LandmarkKind.kilimanjaro => _kilimanjaro(),
+    LandmarkKind.alpinePeaks => _alpinePeaks(),
+    LandmarkKind.fjord => _fjord(),
+    LandmarkKind.cologneCathedral => _cologneCathedral(),
+    LandmarkKind.florenceDome => _florenceDome(),
+    LandmarkKind.wawel => _wawel(),
+    LandmarkKind.bratislavaCastle => _bratislavaCastle(),
+    LandmarkKind.nevskyCathedral => _nevskyCathedral(),
+    LandmarkKind.belgradeFortress => _belgradeFortress(),
+    LandmarkKind.gediminasTower => _gediminasTower(),
+    LandmarkKind.narikala => _narikala(),
+    LandmarkKind.maidenTower => _maidenTower(),
+    LandmarkKind.giralda => _giralda(),
+    LandmarkKind.koutoubia => _koutoubia(),
+    LandmarkKind.hassanTower => _hassanTower(),
+    LandmarkKind.angkor => _angkor(),
+    LandmarkKind.shwedagon => _shwedagon(),
+    LandmarkKind.morroCastle => _morroCastle(),
+    LandmarkKind.clerigos => _clerigos(),
+    LandmarkKind.victoriaMemorial => _victoriaMemorial(),
   };
 
   /// Whether a landmark is a building with windows that light up at night
@@ -89,15 +115,57 @@ abstract final class LandmarkPaths {
     LandmarkKind.monserrate ||
     LandmarkKind.costanera ||
     LandmarkKind.skyTower ||
+    // The third set: mountains, towers, churches and walls (only the two
+    // palaces, Wawel and Bratislava's castle, keep rows of windows).
+    LandmarkKind.ararat ||
+    LandmarkKind.fuji ||
+    LandmarkKind.popocatepetl ||
+    LandmarkKind.cotopaxi ||
+    LandmarkKind.illimani ||
+    LandmarkKind.vesuvius ||
+    LandmarkKind.kilimanjaro ||
+    LandmarkKind.alpinePeaks ||
+    LandmarkKind.fjord ||
+    LandmarkKind.cologneCathedral ||
+    LandmarkKind.florenceDome ||
+    LandmarkKind.nevskyCathedral ||
+    LandmarkKind.belgradeFortress ||
+    LandmarkKind.gediminasTower ||
+    LandmarkKind.narikala ||
+    LandmarkKind.maidenTower ||
+    LandmarkKind.giralda ||
+    LandmarkKind.koutoubia ||
+    LandmarkKind.hassanTower ||
+    LandmarkKind.angkor ||
+    LandmarkKind.shwedagon ||
+    LandmarkKind.morroCastle ||
+    LandmarkKind.clerigos ||
+    LandmarkKind.victoriaMemorial ||
     LandmarkKind.none => false,
     _ => true,
+  };
+
+  /// The third set's mountains: never floodlit, and snow on the high ones
+  /// ([capOf]).
+  static bool isMountain(LandmarkKind k) => switch (k) {
+    LandmarkKind.ararat ||
+    LandmarkKind.fuji ||
+    LandmarkKind.popocatepetl ||
+    LandmarkKind.cotopaxi ||
+    LandmarkKind.illimani ||
+    LandmarkKind.vesuvius ||
+    LandmarkKind.kilimanjaro ||
+    LandmarkKind.alpinePeaks ||
+    LandmarkKind.fjord => true,
+    _ => false,
   };
 
   /// Whether a landmark is lit from below at night. Never the Eiffel
   /// Tower: its night lighting is a protected work, so it stays a plain
   /// dark silhouette.
+  /// A mountain is not lit either.
   static bool floodlitAtNight(LandmarkKind k) =>
-      k != LandmarkKind.eiffel && k != LandmarkKind.none;
+      k != LandmarkKind.eiffel && k != LandmarkKind.none && !isMountain(k);
 
   // --- Helpers -----------------------------------------------------------------
 
@@ -1243,5 +1311,513 @@ abstract final class LandmarkPaths {
       (0.44, -0.22, 0.6),
     ])
       _rect(l, t, r),
+  ]);
+
+  // --- The third set: mountains, and architecture over a century old ----
+
+  /// The snow on a mountain landmark's top, in the same unit space as its
+  /// silhouette, or null for one that keeps no snow (or is not a mountain).
+  static Path? capOf(LandmarkKind k) => switch (k) {
+    LandmarkKind.ararat => _cap(_ararat(), -0.7, teeth: 9),
+    LandmarkKind.fuji => _cap(_fuji(), -0.66, teeth: 14, deep: 0.12),
+    LandmarkKind.popocatepetl => _cap(_popocatepetl(), -0.74),
+    LandmarkKind.cotopaxi => _cap(_cotopaxi(), -0.6, teeth: 12),
+    LandmarkKind.illimani => _cap(_illimani(), -0.66, teeth: 14),
+    LandmarkKind.kilimanjaro => _cap(
+      _kilimanjaro(),
+      -0.86,
+      teeth: 12,
+      deep: 0.03,
+    ),
+    LandmarkKind.alpinePeaks => _cap(_alpinePeaks(), -0.56, teeth: 18),
+    LandmarkKind.fjord => _cap(_fjord(), -0.8, teeth: 16),
+    _ => null,
+  };
+
+  /// The part of [mountain] above a ragged snow line at [line].
+  static Path _cap(
+    Path mountain,
+    double line, {
+    int teeth = 10,
+    double deep = 0.06,
+  }) {
+    final pts = <(double, double)>[(-1.2, -1.2), (1.2, -1.2), (1.2, line)];
+    for (var i = teeth; i >= 0; i--) {
+      final x = -1.2 + 2.4 * i / teeth;
+      pts.add((x, line + (i.isEven ? deep : -deep * 0.3)));
+    }
+    return Path.combine(PathOperation.intersect, mountain, _poly(pts));
+  }
+
+  /// A tower that tapers in tiers to a point, as a temple's prang or a
+  /// lotus-bud tower: [w] wide at [base], [tiers] steps, its tip at [top].
+  static Path _bud(double cx, double base, double w, double top, int tiers) {
+    final pts = <(double, double)>[(cx - w / 2, base)];
+    final h = base - top;
+    for (var i = 0; i < tiers; i++) {
+      final y = base - h * 0.75 * (i + 1) / tiers;
+      final ww = w / 2 * (1 - 0.62 * (i + 1) / tiers);
+      pts
+        ..add((cx - ww - w * 0.06, y + h * 0.04))
+        ..add((cx - ww, y));
+    }
+    pts.add((cx, top));
+    for (var i = tiers - 1; i >= 0; i--) {
+      final y = base - h * 0.75 * (i + 1) / tiers;
+      final ww = w / 2 * (1 - 0.62 * (i + 1) / tiers);
+      pts
+        ..add((cx + ww, y))
+        ..add((cx + ww + w * 0.06, y + h * 0.04));
+    }
+    pts.add((cx + w / 2, base));
+    return _poly(pts);
+  }
+
+  /// Yerevan: Ararat across the plain, the great snowy cone and its lesser
+  /// twin beside it.
+  static Path _ararat() => _poly([
+    (-1, 0),
+    (-0.82, -0.32),
+    (-0.58, -0.72),
+    (-0.4, -0.95),
+    (-0.3, -1),
+    (-0.2, -0.97),
+    (-0.02, -0.76),
+    (0.18, -0.5),
+    (0.32, -0.42),
+    (0.48, -0.55),
+    (0.56, -0.6),
+    (0.64, -0.56),
+    (0.8, -0.3),
+    (1, 0),
+  ]);
+
+  /// Yokohama, Saitama, Shizuoka: Fuji, the long concave slopes up to its
+  /// flat crater rim.
+  static Path _fuji() => Path()
+    ..moveTo(-1, 0)
+    ..cubicTo(-0.55, -0.18, -0.26, -0.6, -0.13, -0.99)
+    ..lineTo(-0.06, -0.97)
+    ..lineTo(0, -1)
+    ..lineTo(0.06, -0.98)
+    ..lineTo(0.13, -1)
+    ..cubicTo(0.26, -0.6, 0.55, -0.18, 1, 0)
+    ..close();
+
+  /// Puebla: Popocatépetl, a steep cone with a notched crater.
+  static Path _popocatepetl() => _poly([
+    (-0.95, 0),
+    (-0.6, -0.36),
+    (-0.3, -0.72),
+    (-0.12, -0.99),
+    (-0.06, -0.96),
+    (0, -0.98),
+    (0.08, -0.96),
+    (0.14, -1),
+    (0.32, -0.72),
+    (0.62, -0.38),
+    (0.95, 0),
+  ]);
+
+  /// Quito: Cotopaxi, the near-perfect cone under its glacier.
+  static Path _cotopaxi() => Path()
+    ..moveTo(-0.95, 0)
+    ..cubicTo(-0.6, -0.22, -0.3, -0.6, -0.12, -0.97)
+    ..lineTo(-0.04, -1)
+    ..lineTo(0.05, -0.99)
+    ..lineTo(0.12, -0.97)
+    ..cubicTo(0.3, -0.6, 0.6, -0.22, 0.95, 0)
+    ..close();
+
+  /// La Paz: Illimani, the long white massif with its three summits.
+  static Path _illimani() => _poly([
+    (-1, 0),
+    (-0.9, -0.3),
+    (-0.7, -0.6),
+    (-0.48, -0.9),
+    (-0.4, -0.86),
+    (-0.22, -0.92),
+    (-0.08, -0.97),
+    (0, -1),
+    (0.1, -0.95),
+    (0.28, -0.88),
+    (0.4, -0.93),
+    (0.52, -0.82),
+    (0.72, -0.56),
+    (0.9, -0.28),
+    (1, 0),
+  ]);
+
+  /// Naples: Vesuvius over the bay, the cone beside the old rim of Somma.
+  static Path _vesuvius() => _poly([
+    (-1, 0),
+    (-0.75, -0.3),
+    (-0.5, -0.66),
+    (-0.36, -0.74),
+    (-0.22, -0.68),
+    (-0.08, -0.84),
+    (0.04, -1),
+    (0.14, -0.98),
+    (0.24, -1),
+    (0.4, -0.78),
+    (0.66, -0.42),
+    (1, 0),
+  ]);
+
+  /// Arusha: Kilimanjaro, the broad flat-topped dome of Kibo and the jagged
+  /// peak of Mawenzi beside it.
+  static Path _kilimanjaro() => _poly([
+    (-1, 0),
+    (-0.75, -0.36),
+    (-0.5, -0.74),
+    (-0.32, -0.92),
+    (-0.18, -0.99),
+    (0.1, -1),
+    (0.3, -0.96),
+    (0.44, -0.84),
+    (0.56, -0.66),
+    (0.64, -0.7),
+    (0.7, -0.76),
+    (0.76, -0.68),
+    (0.82, -0.72),
+    (0.9, -0.42),
+    (1, 0),
+  ]);
+
+  /// Innsbruck, Salzburg, Bern: the Alps, a jagged chain under one tall
+  /// pyramid of a peak.
+  static Path _alpinePeaks() => _poly([
+    (-1, 0),
+    (-1, -0.34),
+    (-0.86, -0.48),
+    (-0.72, -0.62),
+    (-0.6, -0.5),
+    (-0.48, -0.66),
+    (-0.38, -0.78),
+    (-0.26, -0.6),
+    (-0.12, -0.7),
+    (0.02, -0.84),
+    (0.12, -1),
+    (0.22, -0.82),
+    (0.34, -0.66),
+    (0.46, -0.74),
+    (0.58, -0.56),
+    (0.72, -0.64),
+    (0.86, -0.46),
+    (1, -0.38),
+    (1, 0),
+  ]);
+
+  /// Bergen: a fjord between two steep walls, their flat tops white.
+  static Path _fjord() => _union([
+    _poly([
+      (-1, 0),
+      (-1, -0.86),
+      (-0.84, -0.96),
+      (-0.62, -1),
+      (-0.4, -0.94),
+      (-0.3, -0.7),
+      (-0.22, -0.34),
+      (-0.14, 0),
+    ]),
+    _poly([
+      (0.12, 0),
+      (0.2, -0.36),
+      (0.28, -0.72),
+      (0.4, -0.88),
+      (0.64, -0.92),
+      (0.84, -0.88),
+      (1, -0.8),
+      (1, 0),
+    ]),
+  ]);
+
+  /// Cologne: the Cathedral's two tall Gothic spires over the nave.
+  static Path _cologneCathedral() => _union([
+    for (final x in [-0.2, 0.06]) ...[
+      _rect(x, -0.62, x + 0.14),
+      _spire(x + 0.07, -0.6, 0.12, -1),
+      for (final d in [0.0, 0.14]) _spire(x + d, -0.6, 0.03, -0.7),
+    ],
+    _rect(0.2, -0.36, 0.86),
+    _poly([(0.2, -0.36), (0.26, -0.46), (0.8, -0.46), (0.86, -0.36)]),
+    _spire(0.6, -0.46, 0.04, -0.6),
+    for (var i = 0; i < 5; i++) _spire(0.26 + i * 0.14, -0.36, 0.025, -0.44),
+  ]);
+
+  /// Florence: the Cathedral's great dome on its drum, the lantern on top,
+  /// the nave on one side and the bell tower on the other.
+  static Path _florenceDome() => _union([
+    _rect(-0.95, -0.34, -0.3),
+    _poly([(-0.95, -0.34), (-0.9, -0.4), (-0.35, -0.4), (-0.3, -0.34)]),
+    _rect(-0.3, -0.44, 0.3),
+    _rect(-0.26, -0.54, 0.26, -0.44),
+    Path()
+      ..moveTo(-0.26, -0.54)
+      ..cubicTo(-0.26, -0.72, -0.12, -0.84, -0.04, -0.88)
+      ..lineTo(0.04, -0.88)
+      ..cubicTo(0.12, -0.84, 0.26, -0.72, 0.26, -0.54)
+      ..close(),
+    _rect(-0.035, -0.95, 0.035, -0.87),
+    _spire(0, -0.95, 0.05, -1),
+    _rect(0.5, -0.86, 0.63),
+    ..._merlons(0.5, 0.63, -0.86, 3),
+  ]);
+
+  /// Kraków: Wawel on its hill, the castle walls, the cathedral's towers
+  /// and domes.
+  static Path _wawel() => _union([
+    _poly([(-1, 0), (-0.86, -0.22), (0.84, -0.24), (1, 0)]),
+    _rect(-0.74, -0.44, 0.8, -0.2),
+    _poly([(-0.74, -0.44), (-0.7, -0.5), (0.76, -0.5), (0.8, -0.44)]),
+    _rect(-0.66, -0.62, -0.5, -0.4),
+    _spire(-0.58, -0.62, 0.2, -0.76),
+    _rect(-0.24, -0.66, -0.1, -0.44),
+    _poly([(-0.26, -0.66), (-0.17, -0.74), (-0.08, -0.66)]),
+    _rect(0.1, -0.78, 0.22, -0.44),
+    _spire(0.16, -0.78, 0.14, -1),
+    _dome(0.38, -0.5, 0.16, 0.1),
+    _rect(0.37, -0.64, 0.39, -0.58),
+    _dome(0.58, -0.5, 0.12, 0.08),
+  ]);
+
+  /// Bratislava: the castle, a square block on its hill with a tower at
+  /// each corner.
+  static Path _bratislavaCastle() => _union([
+    _poly([
+      (-1, 0),
+      (-0.8, -0.2),
+      (-0.5, -0.3),
+      (0.5, -0.3),
+      (0.8, -0.2),
+      (1, 0),
+    ]),
+    _rect(-0.5, -0.66, 0.5, -0.28),
+    _poly([(-0.5, -0.66), (-0.42, -0.76), (0.42, -0.76), (0.5, -0.66)]),
+    for (final x in [-0.56, 0.42]) ...[
+      _rect(x, -0.86, x + 0.14, -0.28),
+      _poly([(x - 0.01, -0.86), (x + 0.07, -1), (x + 0.15, -0.86)]),
+    ],
+  ]);
+
+  /// Sofia: the Alexander Nevsky Cathedral, its gilded dome over a cluster
+  /// of smaller ones and the belfry beside it.
+  static Path _nevskyCathedral() => _union([
+    _rect(-0.86, -0.34, 0.7),
+    _rect(-0.22, -0.52, 0.22, -0.32),
+    _dome(0, -0.52, 0.44, 0.26),
+    _rect(-0.012, -0.86, 0.012, -0.76),
+    _rect(-0.04, -0.83, 0.04, -0.81),
+    for (final x in [-0.42, 0.42]) _dome(x, -0.34, 0.2, 0.13),
+    _rect(-0.78, -0.82, -0.56, -0.3),
+    _dome(-0.67, -0.82, 0.22, 0.12),
+    _rect(-0.68, -1, -0.66, -0.92),
+    _rect(-0.7, -0.97, -0.64, -0.955),
+  ]);
+
+  /// Belgrade: the Fortress on its ridge over the rivers, its walls, a gate
+  /// tower and the slim clock tower.
+  static Path _belgradeFortress() => _union([
+    _poly([(-1, 0), (-0.9, -0.24), (0.86, -0.3), (1, 0)]),
+    _rect(-0.86, -0.44, 0.84, -0.24),
+    ..._merlons(-0.86, 0.84, -0.44, 16),
+    _rect(-0.36, -0.68, -0.1, -0.4),
+    ..._merlons(-0.36, -0.1, -0.68, 4),
+    _rect(0.34, -0.82, 0.44, -0.4),
+    _dome(0.39, -0.82, 0.12, 0.1),
+    _spire(0.39, -0.91, 0.03, -1),
+  ]);
+
+  /// Vilnius: Gediminas Tower, the brick tower on top of the castle hill.
+  static Path _gediminasTower() => _union([
+    _poly([
+      (-1, 0),
+      (-0.7, -0.24),
+      (-0.42, -0.44),
+      (-0.2, -0.52),
+      (0.24, -0.52),
+      (0.46, -0.42),
+      (0.72, -0.22),
+      (1, 0),
+    ]),
+    _rect(-0.14, -0.9, 0.14, -0.5),
+    ..._merlons(-0.14, 0.14, -0.9, 3),
+    _rect(0.005, -1, 0.02, -0.9),
+    _rect(0.02, -0.99, 0.09, -0.95),
+  ]);
+
+  /// Tbilisi: Narikala, the old fortress walls and towers climbing their
+  /// ridge over the city.
+  static Path _narikala() => _union([
+    _poly([
+      (-1, 0),
+      (-0.9, -0.1),
+      (-0.4, -0.26),
+      (0.1, -0.4),
+      (0.5, -0.48),
+      (0.8, -0.44),
+      (0.95, -0.28),
+      (1, 0),
+    ]),
+    for (final (x, y, h) in [
+      (-0.76, -0.16, 0.2),
+      (-0.4, -0.28, 0.26),
+      (-0.04, -0.37, 0.3),
+      (0.32, -0.45, 0.55),
+      (0.66, -0.47, 0.3),
+    ]) ...[
+      _rect(x - 0.06, y - h, x + 0.06, y + 0.04),
+      ..._merlons(x - 0.06, x + 0.06, y - h, 2),
+    ],
+    // The curtain walls between the towers, stepping up the ridge.
+    _poly([
+      (-0.76, -0.26),
+      (-0.4, -0.4),
+      (-0.04, -0.52),
+      (0.32, -0.64),
+      (0.66, -0.62),
+      (0.66, -0.47),
+      (0.32, -0.45),
+      (-0.04, -0.37),
+      (-0.4, -0.28),
+      (-0.76, -0.16),
+    ]),
+  ]);
+
+  /// Baku: the Maiden Tower over the old city walls, its buttress on one
+  /// side.
+  static Path _maidenTower() => _union([
+    _rect(-0.95, -0.22, 0.95),
+    ..._merlons(-0.95, -0.4, -0.22, 5),
+    ..._merlons(0.5, 0.95, -0.22, 4),
+    _rect(-0.26, -0.98, 0.2),
+    _poly([(0.2, 0), (0.2, -0.78), (0.38, -0.7), (0.38, 0)]),
+    _rect(-0.26, -1, 0.2, -0.97),
+  ]);
+
+  /// Seville: the Giralda, the old minaret turned bell tower, its belfry
+  /// stages and the figure on top, the cathedral low beside it.
+  static Path _giralda() => _union([
+    _rect(-0.9, -0.3, -0.12),
+    for (var i = 0; i < 6; i++) _spire(-0.84 + i * 0.13, -0.3, 0.03, -0.38),
+    _rect(-0.1, -0.7, 0.1),
+    _rect(-0.085, -0.82, 0.085, -0.7),
+    _rect(-0.06, -0.9, 0.06, -0.82),
+    _dome(0, -0.9, 0.1, 0.05),
+    _rect(-0.008, -1, 0.008, -0.94),
+    _poly([(-0.02, -0.98), (0.03, -0.995), (0.01, -0.97)]),
+  ]);
+
+  /// Marrakesh: the Koutoubia's square minaret, its lantern on top, the
+  /// mosque low at its foot.
+  static Path _koutoubia() => _union([
+    _rect(-0.13, -0.78, 0.13),
+    ..._merlons(-0.13, 0.13, -0.78, 4),
+    _rect(-0.055, -0.9, 0.055, -0.76),
+    _dome(0, -0.9, 0.08, 0.04),
+    _rect(-0.006, -1, 0.006, -0.93),
+    _circle(0, -0.955, 0.012),
+    _circle(0, -0.98, 0.009),
+    _rect(0.13, -0.24, 0.95),
+  ]);
+
+  /// Rabat: the Hassan Tower, the great unfinished minaret, and the rows
+  /// of column stumps of the mosque that was never finished.
+  static Path _hassanTower() => _union([
+    _minus(
+      _union([_rect(-0.22, -0.96, 0.22), _rect(-0.18, -1, 0.18, -0.95)]),
+      _union([
+        for (final (y, w) in [(-0.82, 0.07), (-0.6, 0.09), (-0.36, 0.07)])
+          Path()..addRRect(
+            RRect.fromRectAndCorners(
+              _r(-w / 2, y - 0.1, w / 2, y),
+              topLeft: Radius.circular(w / 2),
+              topRight: Radius.circular(w / 2),
+            ),
+          ),
+      ]),
+    ),
+    _rect(-0.6, -0.04, 0.95),
+    for (var i = 0; i < 9; i++) _rect(0.3 + i * 0.075, -0.16, 0.33 + i * 0.075),
+    for (var i = 0; i < 4; i++)
+      _rect(-0.56 + i * 0.075, -0.16, -0.53 + i * 0.075),
+  ]);
+
+  /// Siem Reap: Angkor Wat, five lotus-bud towers over the galleries.
+  static Path _angkor() => _union([
+    _rect(-1, -0.18, 1),
+    _rect(-0.8, -0.3, 0.8, -0.16),
+    _rect(-0.5, -0.4, 0.5, -0.28),
+    _bud(0, -0.38, 0.26, -1, 5),
+    for (final x in [-0.36, 0.36]) _bud(x, -0.28, 0.2, -0.8, 4),
+    for (final x in [-0.7, 0.7]) _bud(x, -0.16, 0.16, -0.58, 4),
+  ]);
+
+  /// Yangon: the Shwedagon, the gilded stupa's bell rising into its
+  /// spire, small stupas round its terrace.
+  static Path _shwedagon() => _union([
+    _rect(-0.62, -0.1, 0.62),
+    _rect(-0.46, -0.18, 0.46, -0.08),
+    Path()
+      ..moveTo(-0.4, -0.18)
+      ..cubicTo(-0.36, -0.36, -0.2, -0.46, -0.15, -0.52)
+      ..lineTo(0.15, -0.52)
+      ..cubicTo(0.2, -0.46, 0.36, -0.36, 0.4, -0.18)
+      ..close(),
+    _rect(-0.14, -0.58, 0.14, -0.5),
+    Path()
+      ..moveTo(-0.12, -0.58)
+      ..cubicTo(-0.06, -0.7, -0.02, -0.85, 0, -1)
+      ..cubicTo(0.02, -0.85, 0.06, -0.7, 0.12, -0.58)
+      ..close(),
+    for (final x in [-0.54, 0.54]) _bud(x, -0.1, 0.1, -0.3, 3),
+  ]);
+
+  /// Havana: El Morro, the old fortress on its rock at the harbour mouth,
+  /// with its lighthouse.
+  static Path _morroCastle() => _union([
+    _poly([
+      (-1, 0),
+      (-0.9, -0.16),
+      (-0.6, -0.26),
+      (0.62, -0.26),
+      (0.84, -0.16),
+      (0.95, 0),
+    ]),
+    _poly([(-0.82, -0.26), (-0.76, -0.44), (0.56, -0.44), (0.66, -0.26)]),
+    ..._merlons(-0.76, 0.56, -0.44, 10),
+    _rect(0.28, -0.88, 0.42, -0.42),
+    _rect(0.26, -0.9, 0.44, -0.86),
+    _rect(0.3, -0.96, 0.4, -0.9),
+    _dome(0.35, -0.96, 0.1, 0.04),
+  ]);
+
+  /// Porto: the Clérigos Tower, the tall baroque bell tower over its
+  /// church.
+  static Path _clerigos() => _union([
+    _rect(-0.62, -0.3, -0.1),
+    _poly([(-0.62, -0.3), (-0.36, -0.38), (-0.1, -0.3)]),
+    _rect(-0.1, -0.68, 0.1),
+    _rect(-0.085, -0.78, 0.085, -0.68),
+    _rect(-0.07, -0.84, 0.07, -0.78),
+    _dome(0, -0.84, 0.13, 0.07),
+    _rect(-0.025, -0.95, 0.025, -0.9),
+    _rect(-0.006, -1, 0.006, -0.95),
+    _rect(-0.025, -0.985, 0.025, -0.975),
+  ]);
+
+  /// Kolkata: the Victoria Memorial, the long white hall under its great
+  /// dome, the figure on top and small domed towers at its corners.
+  static Path _victoriaMemorial() => _union([
+    _rect(-1, -0.28, 1),
+    _rect(-0.4, -0.4, 0.4, -0.26),
+    _rect(-0.2, -0.5, 0.2, -0.38),
+    _dome(0, -0.5, 0.42, 0.3),
+    _rect(-0.025, -0.86, 0.025, -0.78),
+    _poly([(-0.03, -0.86), (0, -1), (0.03, -0.86)]),
+    for (final x in [-0.86, 0.86]) ...[
+      _rect(x - 0.07, -0.44, x + 0.07, -0.26),
+      _dome(x, -0.44, 0.14, 0.1),
+    ],
   ]);
 }
