@@ -11509,6 +11509,11 @@ class AppLocalizationsFi extends AppLocalizations {
   String get campaignCupOpen => 'Ratkaisematta';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Tämä tietokanta nimeää uudelleen maan, jonka ympärille kampanja on rakennettu: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name loistaa $level-maajoukkueessa';
   }

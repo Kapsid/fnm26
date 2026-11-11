@@ -2879,6 +2879,7 @@
   "campaignProgressCup": "{cup} {year}: {status}",
   "campaignCupNotQualified": "Necalificată",
   "campaignCupOpen": "De decis",
+  "campaignWorldRenames": "Această bază de date redenumește o națiune în jurul căreia este construită campania: {nation}.",
   "newsYouthTitle1": "{name} strălucește la {level}",
   "newsYouthTitle2": "Raport de la academie: {name} iese în evidență",
   "newsYouthTitle3": "Remarcatul de la {level}: {name}",

@@ -11081,6 +11081,11 @@ class AppLocalizationsKo extends AppLocalizations {
   String get campaignCupOpen => '미정';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return '이 데이터베이스는 이 캠페인의 중심이 되는 국가의 이름을 바꿉니다: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$level 대표팀에서 빛난 $name';
   }

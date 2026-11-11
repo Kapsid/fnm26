@@ -11059,6 +11059,11 @@ class AppLocalizationsJa extends AppLocalizations {
   String get campaignCupOpen => '未定';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'このデータベースは、このキャンペーンの軸となる国の名前を変更しています: $nation。';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$nameが$level代表で輝く';
   }

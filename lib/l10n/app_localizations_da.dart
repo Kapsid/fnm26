@@ -11437,6 +11437,11 @@ class AppLocalizationsDa extends AppLocalizations {
   String get campaignCupOpen => 'Afgøres senere';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Denne database omdøber en nation, som kampagnen er bygget op om: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name skinner på $level-landsholdet';
   }

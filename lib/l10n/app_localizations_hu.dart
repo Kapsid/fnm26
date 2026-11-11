@@ -11380,6 +11380,11 @@ class AppLocalizationsHu extends AppLocalizations {
   String get campaignCupOpen => 'Még eldöntetlen';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Ez az adatbázis átnevez egy nemzetet, amelyre ez a kampány épül: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name ragyogott az $level válogatottban';
   }

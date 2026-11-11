@@ -17569,6 +17569,12 @@ abstract class AppLocalizations {
   /// **'To be decided'**
   String get campaignCupOpen;
 
+  /// Campaign brief: why a custom database cannot start this campaign (in the world list, and as a snackbar when Start is refused). {nation} is the game's name of a nation the campaign's story names, which the database renames.
+  ///
+  /// In en, this message translates to:
+  /// **'This database renames a nation this campaign is built around: {nation}.'**
+  String campaignWorldRenames(String nation);
+
   /// Inbox, youth news: a promising academy boy stood out for an age-group side ({level} is a label like U-21; {opponent} is the nation the side played). Title.
   ///
   /// In en, this message translates to:

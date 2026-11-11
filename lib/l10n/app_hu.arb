@@ -2879,6 +2879,7 @@
   "campaignProgressCup": "{cup} {year}: {status}",
   "campaignCupNotQualified": "Nem jutott ki",
   "campaignCupOpen": "Még eldöntetlen",
+  "campaignWorldRenames": "Ez az adatbázis átnevez egy nemzetet, amelyre ez a kampány épül: {nation}.",
   "newsYouthTitle1": "{name} ragyogott az {level} válogatottban",
   "newsYouthTitle2": "Akadémiai jelentés: {name} felhívta magára a figyelmet",
   "newsYouthTitle3": "Az {level} válogatott kiemelkedő játékosa: {name}",

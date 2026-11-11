@@ -2879,6 +2879,7 @@
   "campaignProgressCup": "{cup} {year}: {status}",
   "campaignCupNotQualified": "Nicht qualifiziert",
   "campaignCupOpen": "Noch offen",
+  "campaignWorldRenames": "Diese Datenbank benennt eine Nation um, auf der diese Kampagne aufbaut: {nation}.",
   "newsYouthTitle1": "{name} glänzt für die {level}",
   "newsYouthTitle2": "Bericht aus der Akademie: {name} fällt auf",
   "newsYouthTitle3": "Herausragend in der {level}: {name}",

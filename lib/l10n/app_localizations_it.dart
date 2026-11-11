@@ -11501,6 +11501,11 @@ class AppLocalizationsIt extends AppLocalizations {
   String get campaignCupOpen => 'Da decidere';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Questo database rinomina una nazionale su cui si basa questa campagna: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name brilla con la nazionale $level';
   }

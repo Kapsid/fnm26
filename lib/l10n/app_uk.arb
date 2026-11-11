@@ -2879,6 +2879,7 @@
   "campaignProgressCup": "{cup} {year}: {status}",
   "campaignCupNotQualified": "Не кваліфікувалися",
   "campaignCupOpen": "Ще не визначено",
+  "campaignWorldRenames": "Ця база даних перейменовує країну, на якій побудовано цю кампанію: {nation}.",
   "newsYouthTitle1": "{name} сяє у збірній {level}",
   "newsYouthTitle2": "Звіт академії: {name} привертає увагу",
   "newsYouthTitle3": "Найкращий у збірній {level}: {name}",

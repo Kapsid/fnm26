@@ -11355,6 +11355,11 @@ class AppLocalizationsTr extends AppLocalizations {
   String get campaignCupOpen => 'Henüz belli değil';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Bu veritabanı, bu kampanyanın üzerine kurulduğu bir ülkenin adını değiştiriyor: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name, $level takımında parlıyor';
   }

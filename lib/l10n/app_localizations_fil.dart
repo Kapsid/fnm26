@@ -11428,6 +11428,11 @@ class AppLocalizationsFil extends AppLocalizations {
   String get campaignCupOpen => 'Hindi pa tiyak';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Pinapalitan ng database na ito ang pangalan ng bansang pinagbatayan ng kampanyang ito: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return 'Nagningning si $name para sa $level';
   }

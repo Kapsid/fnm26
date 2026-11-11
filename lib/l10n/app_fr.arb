@@ -2879,6 +2879,7 @@
   "campaignProgressCup": "{cup} {year} : {status}",
   "campaignCupNotQualified": "Non qualifiée",
   "campaignCupOpen": "À décider",
+  "campaignWorldRenames": "Cette base renomme une nation au cœur de cette campagne : {nation}.",
   "newsYouthTitle1": "{name} brille avec les {level}",
   "newsYouthTitle2": "Rapport du centre de formation : {name} se distingue",
   "newsYouthTitle3": "Le joueur à suivre chez les {level} : {name}",

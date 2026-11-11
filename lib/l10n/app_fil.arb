@@ -2879,6 +2879,7 @@
   "campaignProgressCup": "{cup} {year}: {status}",
   "campaignCupNotQualified": "Hindi nakapasok",
   "campaignCupOpen": "Hindi pa tiyak",
+  "campaignWorldRenames": "Pinapalitan ng database na ito ang pangalan ng bansang pinagbatayan ng kampanyang ito: {nation}.",
   "newsYouthTitle1": "Nagningning si {name} para sa {level}",
   "newsYouthTitle2": "Ulat mula sa akademya: pumukaw ng pansin si {name}",
   "newsYouthTitle3": "Bida ng {level}: {name}",

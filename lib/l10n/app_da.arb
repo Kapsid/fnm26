@@ -2879,6 +2879,7 @@
   "campaignProgressCup": "{cup} {year}: {status}",
   "campaignCupNotQualified": "Ikke kvalificeret",
   "campaignCupOpen": "Afgøres senere",
+  "campaignWorldRenames": "Denne database omdøber en nation, som kampagnen er bygget op om: {nation}.",
   "newsYouthTitle1": "{name} skinner på {level}-landsholdet",
   "newsYouthTitle2": "Akademirapport: {name} skiller sig ud",
   "newsYouthTitle3": "Bedst på {level}-landsholdet: {name}",

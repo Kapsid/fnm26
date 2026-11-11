@@ -11468,6 +11468,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get campaignCupOpen => 'To be decided';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'This database renames a nation this campaign is built around: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name shines for the ${level}s';
   }

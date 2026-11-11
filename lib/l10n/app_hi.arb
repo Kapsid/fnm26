@@ -2879,6 +2879,7 @@
   "campaignProgressCup": "{cup} {year}: {status}",
   "campaignCupNotQualified": "क्वालिफ़ाई नहीं किया",
   "campaignCupOpen": "तय होना बाक़ी",
+  "campaignWorldRenames": "यह डेटाबेस उस देश का नाम बदलता है जिस पर यह अभियान बना है: {nation}।",
   "newsYouthTitle1": "{level} टीम में चमके {name}",
   "newsYouthTitle2": "अकादमी रिपोर्ट: {name} ने ध्यान खींचा",
   "newsYouthTitle3": "{level} टीम का सितारा: {name}",

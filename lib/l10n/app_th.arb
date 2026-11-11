@@ -2879,6 +2879,7 @@
   "campaignProgressCup": "{cup} {year}: {status}",
   "campaignCupNotQualified": "ไม่ผ่านเข้ารอบ",
   "campaignCupOpen": "ยังไม่ตัดสิน",
+  "campaignWorldRenames": "ฐานข้อมูลนี้เปลี่ยนชื่อชาติที่แคมเปญนี้สร้างขึ้นมารอบ ๆ: {nation}",
   "newsYouthTitle1": "{name} โดดเด่นกับทีม {level}",
   "newsYouthTitle2": "รายงานอะคาเดมี: {name} เตะตา",
   "newsYouthTitle3": "ดาวเด่น {level}: {name}",

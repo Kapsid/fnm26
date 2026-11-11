@@ -2879,6 +2879,7 @@
   "campaignProgressCup": "{cup} {year}: {status}",
   "campaignCupNotQualified": "Missade kvalet",
   "campaignCupOpen": "Återstår att avgöra",
+  "campaignWorldRenames": "Den här databasen byter namn på en nation som kampanjen bygger på: {nation}.",
   "newsYouthTitle1": "{name} glänser i {level}-landslaget",
   "newsYouthTitle2": "Akademirapport: {name} sticker ut",
   "newsYouthTitle3": "Bäst i {level}-landslaget: {name}",

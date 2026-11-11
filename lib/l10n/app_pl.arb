@@ -2879,6 +2879,7 @@
   "campaignProgressCup": "{cup} {year}: {status}",
   "campaignCupNotQualified": "Brak awansu",
   "campaignCupOpen": "Do rozstrzygnięcia",
+  "campaignWorldRenames": "Ta baza zmienia nazwę reprezentacji, na której opiera się ta kampania: {nation}.",
   "newsYouthTitle1": "{name} błyszczy w kadrze {level}",
   "newsYouthTitle2": "Raport z akademii: {name} zwraca uwagę",
   "newsYouthTitle3": "Wyróżniający się w kadrze {level}: {name}",

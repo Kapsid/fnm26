@@ -11695,6 +11695,11 @@ class AppLocalizationsCs extends AppLocalizations {
   String get campaignCupOpen => 'Zatím nerozhodnuto';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Tato databáze přejmenovává zemi, na které tato kampaň stojí: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name zazářil ve výběru $level';
   }

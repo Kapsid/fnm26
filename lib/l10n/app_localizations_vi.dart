@@ -11317,6 +11317,11 @@ class AppLocalizationsVi extends AppLocalizations {
   String get campaignCupOpen => 'Chưa xác định';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Cơ sở dữ liệu này đổi tên một quốc gia làm nền cho chiến dịch này: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name tỏa sáng trong màu áo đội $level';
   }

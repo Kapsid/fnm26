@@ -2879,6 +2879,7 @@
   "campaignProgressCup": "{cup} {year}: {status}",
   "campaignCupNotQualified": "Niet geplaatst",
   "campaignCupOpen": "Nog open",
+  "campaignWorldRenames": "Deze database hernoemt een land waar deze campagne om draait: {nation}.",
   "newsYouthTitle1": "{name} schittert bij de {level}",
   "newsYouthTitle2": "Academierapport: {name} valt op",
   "newsYouthTitle3": "Uitblinker bij de {level}: {name}",

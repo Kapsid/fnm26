@@ -2879,6 +2879,7 @@
   "campaignProgressCup": "{cup} {year}: {status}",
   "campaignCupNotQualified": "Kvalifiserte seg ikke",
   "campaignCupOpen": "Avgjøres senere",
+  "campaignWorldRenames": "Denne databasen gir nytt navn til en nasjon kampanjen er bygget rundt: {nation}.",
   "newsYouthTitle1": "{name} glitrer for {level}-landslaget",
   "newsYouthTitle2": "Akademirapport: {name} skiller seg ut",
   "newsYouthTitle3": "Best på {level}-landslaget: {name}",

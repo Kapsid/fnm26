@@ -11707,6 +11707,11 @@ class AppLocalizationsUk extends AppLocalizations {
   String get campaignCupOpen => 'Ще не визначено';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Ця база даних перейменовує країну, на якій побудовано цю кампанію: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name сяє у збірній $level';
   }

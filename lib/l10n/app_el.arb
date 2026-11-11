@@ -2879,6 +2879,7 @@
   "campaignProgressCup": "{cup} {year}: {status}",
   "campaignCupNotQualified": "Χωρίς πρόκριση",
   "campaignCupOpen": "Εκκρεμεί",
+  "campaignWorldRenames": "Αυτή η βάση δεδομένων μετονομάζει μια χώρα πάνω στην οποία στηρίζεται αυτή η εκστρατεία: {nation}.",
   "newsYouthTitle1": "{name}: λάμψη με την ομάδα {level}",
   "newsYouthTitle2": "Αναφορά ακαδημίας: {name}, ένα όνομα που ξεχωρίζει",
   "newsYouthTitle3": "Ο κορυφαίος της ομάδας {level}: {name}",

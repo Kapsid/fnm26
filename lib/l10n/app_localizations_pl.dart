@@ -11552,6 +11552,11 @@ class AppLocalizationsPl extends AppLocalizations {
   String get campaignCupOpen => 'Do rozstrzygnięcia';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Ta baza zmienia nazwę reprezentacji, na której opiera się ta kampania: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name błyszczy w kadrze $level';
   }

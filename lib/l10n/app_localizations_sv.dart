@@ -11432,6 +11432,11 @@ class AppLocalizationsSv extends AppLocalizations {
   String get campaignCupOpen => 'Återstår att avgöra';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Den här databasen byter namn på en nation som kampanjen bygger på: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name glänser i $level-landslaget';
   }

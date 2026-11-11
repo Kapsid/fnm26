@@ -11363,6 +11363,11 @@ class AppLocalizationsHi extends AppLocalizations {
   String get campaignCupOpen => 'तय होना बाक़ी';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'यह डेटाबेस उस देश का नाम बदलता है जिस पर यह अभियान बना है: $nation।';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$level टीम में चमके $name';
   }

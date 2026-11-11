@@ -11521,6 +11521,11 @@ class AppLocalizationsBg extends AppLocalizations {
   String get campaignCupOpen => 'Предстои да се реши';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Тази база данни преименува държава, върху която е изградена кампанията: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name блести за отбора $level';
   }

@@ -11762,6 +11762,11 @@ class AppLocalizationsHr extends AppLocalizations {
   String get campaignCupOpen => 'Tek treba biti odlučeno';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Ova baza preimenuje reprezentaciju na kojoj se temelji ova kampanja: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name blista u reprezentaciji $level';
   }

@@ -11228,6 +11228,11 @@ class AppLocalizationsTh extends AppLocalizations {
   String get campaignCupOpen => 'ยังไม่ตัดสิน';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'ฐานข้อมูลนี้เปลี่ยนชื่อชาติที่แคมเปญนี้สร้างขึ้นมารอบ ๆ: $nation';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name โดดเด่นกับทีม $level';
   }

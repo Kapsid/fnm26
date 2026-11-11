@@ -11501,6 +11501,11 @@ class AppLocalizationsEl extends AppLocalizations {
   String get campaignCupOpen => 'Εκκρεμεί';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Αυτή η βάση δεδομένων μετονομάζει μια χώρα πάνω στην οποία στηρίζεται αυτή η εκστρατεία: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name: λάμψη με την ομάδα $level';
   }

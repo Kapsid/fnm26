@@ -2879,6 +2879,7 @@
   "campaignProgressCup": "{cup} {year}: {status}",
   "campaignCupNotQualified": "Katılamadı",
   "campaignCupOpen": "Henüz belli değil",
+  "campaignWorldRenames": "Bu veritabanı, bu kampanyanın üzerine kurulduğu bir ülkenin adını değiştiriyor: {nation}.",
   "newsYouthTitle1": "{name}, {level} takımında parlıyor",
   "newsYouthTitle2": "Altyapı raporu: {name} göz dolduruyor",
   "newsYouthTitle3": "{level} takımının yıldızı: {name}",

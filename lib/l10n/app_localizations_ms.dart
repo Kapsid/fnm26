@@ -11392,6 +11392,11 @@ class AppLocalizationsMs extends AppLocalizations {
   String get campaignCupOpen => 'Belum ditentukan';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Pangkalan data ini menamakan semula negara yang menjadi teras kempen ini: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name bersinar untuk pasukan $level';
   }

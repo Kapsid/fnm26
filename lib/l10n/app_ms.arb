@@ -2879,6 +2879,7 @@
   "campaignProgressCup": "{cup} {year}: {status}",
   "campaignCupNotQualified": "Tidak layak",
   "campaignCupOpen": "Belum ditentukan",
+  "campaignWorldRenames": "Pangkalan data ini menamakan semula negara yang menjadi teras kempen ini: {nation}.",
   "newsYouthTitle1": "{name} bersinar untuk pasukan {level}",
   "newsYouthTitle2": "Laporan akademi: {name} menarik perhatian",
   "newsYouthTitle3": "Bintang {level}: {name}",

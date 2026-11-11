@@ -11784,6 +11784,11 @@ class AppLocalizationsRo extends AppLocalizations {
   String get campaignCupOpen => 'De decis';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Această bază de date redenumește o națiune în jurul căreia este construită campania: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name strălucește la $level';
   }

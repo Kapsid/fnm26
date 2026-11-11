@@ -17655,6 +17655,16 @@
   "@campaignCupOpen": {
     "description": "Hub campaign card: that continental championship is still to be decided for the nation."
   },
+  "campaignWorldRenames": "This database renames a nation this campaign is built around: {nation}.",
+  "@campaignWorldRenames": {
+    "description": "Campaign brief: why a custom database cannot start this campaign (in the world list, and as a snackbar when Start is refused). {nation} is the game's name of a nation the campaign's story names, which the database renames.",
+    "placeholders": {
+      "nation": {
+        "type": "String",
+        "example": "San Marino"
+      }
+    }
+  },
   "newsYouthTitle1": "{name} shines for the {level}s",
   "@newsYouthTitle1": {
     "description": "Inbox, youth news: a promising academy boy stood out for an age-group side ({level} is a label like U-21; {opponent} is the nation the side played). Title.",

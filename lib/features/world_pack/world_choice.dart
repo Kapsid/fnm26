@@ -26,6 +26,7 @@ class WorldChoice {
     required this.name,
     required this.status,
     this.reason,
+    this.renamedNations = const {},
   });
 
   final int id;
@@ -39,6 +40,10 @@ class WorldChoice {
   /// ("Czechia: 2 goalkeepers needed"), or "Needs attention". Null when it
   /// can.
   final String? reason;
+
+  /// The nations it renames (an old database's name or code for them),
+  /// which a campaign built around one of them refuses.
+  final Set<int> renamedNations;
 
   /// Whether a career can start on it: complete and compatible.
   bool get selectable => status == PackStatus.ready;
@@ -85,6 +90,7 @@ final FutureProvider<List<WorldChoice>> worldChoicesProvider =
             name: ProfanityFilter.mask(s.name),
             status: a.status,
             reason: reason,
+            renamedNations: pack == null ? const {} : renamedNationsOf(pack),
           ),
         );
       }
@@ -159,18 +165,23 @@ typedef WorldPick = ({WorldChoice? choice});
 /// The world sheet: Default and every database, those that cannot start a
 /// career greyed out with the reason. [selected] says which row is ticked
 /// (null: Default). Null when it is closed without a pick.
+///
+/// [refuse] names why a database that could start a career cannot start
+/// this one (a campaign built around a nation it renames): it is greyed out
+/// with that reason, as an incomplete one is.
 Future<WorldPick?> showWorldChoiceSheet(
   BuildContext context, {
   required bool Function(WorldChoice? choice) selected,
+  String? Function(WorldChoice choice)? refuse,
 }) => showAdaptiveSheet<WorldPick>(
   context: context,
   isScrollControlled: true,
-  builder: (ctx) => WorldChoiceSheet(selected: selected),
+  builder: (ctx) => WorldChoiceSheet(selected: selected, refuse: refuse),
 );
 
 /// The body of [showWorldChoiceSheet].
 class WorldChoiceSheet extends ConsumerWidget {
-  const WorldChoiceSheet({required this.selected, super.key});
+  const WorldChoiceSheet({required this.selected, this.refuse, super.key});
 
   static const Key defaultKey = Key('worldSheet.default');
   static const Key closeKey = Key('worldSheet.close');
@@ -180,10 +191,17 @@ class WorldChoiceSheet extends ConsumerWidget {
 
   final bool Function(WorldChoice? choice) selected;
 
+  /// See [showWorldChoiceSheet].
+  final String? Function(WorldChoice choice)? refuse;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
-    final choices = ref.watch(worldChoicesProvider);
+    final choices = ref
+        .watch(worldChoicesProvider)
+        .whenData(
+          (all) => [for (final c in all) withRefusal(c, refuse)],
+        );
     Widget tick({required bool on}) => on
         ? const Icon(Icons.check_rounded, color: AppColors.primary)
         : const SizedBox(width: 24);
@@ -310,6 +328,31 @@ class WorldChoiceSheet extends ConsumerWidget {
   }
 }
 
+/// [c] as a picker offers it where [refuse] may turn down a database that
+/// could start a career: refused, it cannot be picked and says why.
+WorldChoice withRefusal(
+  WorldChoice c,
+  String? Function(WorldChoice choice)? refuse,
+) {
+  if (!c.selectable || refuse == null) return c;
+  final why = refuse(c);
+  if (why == null) return c;
+  return WorldChoice(
+    id: c.id,
+    uuid: c.uuid,
+    name: c.name,
+    status: PackStatus.needsAttention,
+    reason: why,
+    renamedNations: c.renamedNations,
+  );
+}
+
+/// The nations [pack] renames: an old database's name or code for them.
+Set<int> renamedNationsOf(WorldPack pack) => {
+  for (final MapEntry(key: id, value: n) in pack.nations.entries)
+    if (n.name.trim().isNotEmpty || n.code.trim().isNotEmpty) id,
+};
+
 /// "World: Default ▾" on the nation pick: the world the career being started
 /// takes. Opens the world sheet; a pick changes this one career only.
 class WorldChip extends ConsumerStatefulWidget {
@@ -331,25 +374,52 @@ class _WorldChipState extends ConsumerState<WorldChip> {
     unawaited(Future.microtask(() => seedNewGameWorld(c)));
   }
 
-  Future<void> _pick() async {
+  @override
+  Widget build(BuildContext context) {
     final c = ProviderScope.containerOf(context, listen: false);
-    final current = ref.read(newGameWorldProvider);
+    return WorldPickerChip(
+      key: WorldChip.chipKey,
+      worldId: ref.watch(newGameWorldProvider),
+      onChosen: (id) => chooseNewGameWorld(c, id),
+    );
+  }
+}
+
+/// "World: Default ▾": the world [worldId] (null: Default) a career or a
+/// campaign run being started takes. Opens the world sheet; a pick is
+/// passed to [onChosen]. [refuse] as [showWorldChoiceSheet] has it.
+class WorldPickerChip extends ConsumerWidget {
+  const WorldPickerChip({
+    required this.worldId,
+    required this.onChosen,
+    this.refuse,
+    super.key,
+  });
+
+  final int? worldId;
+  final ValueChanged<int?> onChosen;
+  final String? Function(WorldChoice choice)? refuse;
+
+  Future<void> _pick(BuildContext context) async {
+    final current = worldId;
     final pick = await showWorldChoiceSheet(
       context,
       selected: (w) => w?.id == current,
+      refuse: refuse,
     );
     if (pick == null) return;
-    chooseNewGameWorld(c, pick.choice?.id);
+    onChosen(pick.choice?.id);
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
-    final id = ref.watch(newGameWorldProvider);
+    final id = worldId;
     final choices = ref.watch(worldChoicesProvider).valueOrNull;
-    final chosen = id == null
+    final found = id == null
         ? null
         : choices?.firstWhereOrNull((c) => c.id == id);
+    final chosen = found == null ? null : withRefusal(found, refuse);
     // A pick that has since gone stale (the database deleted, or no longer
     // complete and compatible) is not passed off as ready: gone, it reads
     // Default; still there, it is named in the warning colour with the
@@ -357,8 +427,7 @@ class _WorldChipState extends ConsumerState<WorldChip> {
     final stale = chosen != null && !chosen.selectable;
     final color = stale ? AppColors.error : AppColors.primary;
     final chip = ActionChip(
-      key: WorldChip.chipKey,
-      onPressed: _pick,
+      onPressed: () => _pick(context),
       avatar: Icon(
         stale ? Icons.error_outline_rounded : Icons.public_rounded,
         size: 16,

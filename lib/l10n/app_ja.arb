@@ -2879,6 +2879,7 @@
   "campaignProgressCup": "{cup} {year}: {status}",
   "campaignCupNotQualified": "出場ならず",
   "campaignCupOpen": "未定",
+  "campaignWorldRenames": "このデータベースは、このキャンペーンの軸となる国の名前を変更しています: {nation}。",
   "newsYouthTitle1": "{name}が{level}代表で輝く",
   "newsYouthTitle2": "アカデミー通信: {name}が注目を集める",
   "newsYouthTitle3": "{level}の逸材: {name}",

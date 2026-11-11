@@ -2879,6 +2879,7 @@
   "campaignProgressCup": "{cup} {year}: {status}",
   "campaignCupNotQualified": "Nije se kvalificirao",
   "campaignCupOpen": "Tek treba biti odlučeno",
+  "campaignWorldRenames": "Ova baza preimenuje reprezentaciju na kojoj se temelji ova kampanja: {nation}.",
   "newsYouthTitle1": "{name} blista u reprezentaciji {level}",
   "newsYouthTitle2": "Izvještaj iz akademije: {name} privlači pozornost",
   "newsYouthTitle3": "Najbolji u reprezentaciji {level}: {name}",
