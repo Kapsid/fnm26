@@ -30,6 +30,7 @@ ShotMoment _shot(
   int seq = 0,
   int minute = 30,
   int stoppage = 0,
+  double xg = 0.12,
 }) => ShotMoment(
   minute: minute,
   stoppage: stoppage,
@@ -41,7 +42,9 @@ ShotMoment _shot(
   zone: origin == ShotOrigin.penalty
       ? PitchZone.boxCentre
       : PitchZone.edgeOfBox,
-  xg: 0.2,
+  // Below a big save's bar, so a save reads as an ordinary one; see the
+  // big-save test.
+  xg: xg,
   outcome: outcome,
   origin: origin,
   header: header,
@@ -457,6 +460,36 @@ void main() {
     for (final k in en.keys) {
       if (k == 'pitchComGoalScore') continue;
       expect(cs[k], isNot(en[k]), reason: k);
+    }
+  });
+
+  test('a good chance kept out is a big save, with lines of its own', () {
+    for (final loc in _locales.entries) {
+      final l = loc.value;
+      for (final origin in [
+        ShotOrigin.openPlay,
+        ShotOrigin.corner,
+        ShotOrigin.freeKickCross,
+        ShotOrigin.longThrow,
+      ]) {
+        final big = _shot(origin, ShotOutcome.saved, xg: 0.2);
+        expect(big.isBigSave, isTrue);
+        final lines = {
+          for (var seed = 0; seed < 64; seed++)
+            pitchLine(l, big, _names, seed, events: _cards),
+        };
+        expect(lines, {
+          l.pitchComBigSave1(_k, _p),
+          l.pitchComBigSave2(_k),
+          l.pitchComBigSave3(_k, _p),
+        }, reason: '${loc.key} $origin');
+      }
+      // A penalty or a direct free kick saved keeps its own lines.
+      final pen = _shot(ShotOrigin.penalty, ShotOutcome.saved, xg: 0.8);
+      expect(
+        pitchLine(l, pen, _names, 0, events: _cards),
+        isNot(l.pitchComBigSave2(_k)),
+      );
     }
   });
 

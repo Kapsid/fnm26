@@ -17246,4 +17246,111 @@ class AppLocalizationsHr extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '„$name“ nije dopušteno';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Jaka kiša: udarci i ubačaji manje precizni, više poskliznuća';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Grmljavinsko nevrijeme: udarci i ubačaji manje precizni, više poskliznuća';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Snijeg: sporija igra, dodavanja malo teža';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Smrznut teren: sporija igra, dodavanja malo teža';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Jak vjetar: duge lopte i ubačaji nepredvidivi, udarci izdaleka teži';
+
+  @override
+  String get matchWeatherPlaysFog => 'Magla: udarci izdaleka teži';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Vrela izmaglica: toplije nego inače, noge će ranije popustiti';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Krenulo je po jakoj kiši. Lopta će kliziti po ovom terenu.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Početni udarac u grmljavinskom nevremenu. Teren će biti varljiv.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Krenulo je po snijegu. Bit će to spora i oprezna utakmica.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Ledena noć i tvrd teren. Dodavanja neće biti laka.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Početni udarac uz jak vjetar. Duge lopte će bježati.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Početni udarac u gustoj magli. Izdaleka nitko neće lako zabiti.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Početni udarac u vreloj izmaglici. Noge će se danas rano umoriti.';
+
+  @override
+  String get matchOwnGoal => 'AUTOGOL';
+
+  @override
+  String get matchGoalOwnGoal => 'AG';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Autogol! $defender je ubacio loptu u vlastitu mrežu.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return 'Pokušaj igrača $shooter nesretno se odbije od igrača $defender i završi u mreži.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Katastrofa za igrača $defender, koji svladava vlastitog vratara.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Kakva obrana! $keeper zaustavlja igrača $player iz blizine.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Sjajna obrana, $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player je izgledao siguran za gol, ali $keeper nekako brani.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name je pogodio okvir gola';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Velika obrana: $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG tijekom utakmice';
+
+  @override
+  String get matchChartMomentum => 'Tko je bio bolji';
 }

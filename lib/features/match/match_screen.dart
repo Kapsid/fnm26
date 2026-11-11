@@ -40,10 +40,12 @@ import 'package:fnm/features/achievements/achievement_popup.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/match/match_feedback.dart';
+import 'package:fnm/features/match/match_flow_charts.dart';
 import 'package:fnm/features/match/ground_card.dart';
 import 'package:fnm/features/match/penalty_order_sheet.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/pitch/pitch_clock.dart';
+import 'package:fnm/features/match/pitch/pitch_commentary.dart';
 import 'package:fnm/features/match/pitch/pitch_mode_controller.dart';
 import 'package:fnm/features/match/pitch/pitch_match_view.dart';
 import 'package:fnm/features/match/pitch/pitch_playback.dart';
@@ -2006,23 +2008,26 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             // no event, so it comes in by its minute: the Timeline shows
             // the minute on the clock whole, the 2D TV may not have staged
             // it yet, so there it waits for the next.
+            final timelineNames = {
+              for (final p in [
+                ...preview.homeTeam.xi,
+                ...preview.awayTeam.xi,
+                ...preview.bench,
+                ...preview.opponentBench,
+              ])
+                p.id: p.name,
+            };
+            bool momentReached(int minute, int stoppage) {
+              if (ft) return true;
+              if (minute != _minute) return minute < _minute;
+              return _onPitch ? stoppage < _added : stoppage <= _added;
+            }
+
             final penalties = inPlayPenalties(
               r,
-              names: {
-                for (final p in [
-                  ...preview.homeTeam.xi,
-                  ...preview.awayTeam.xi,
-                  ...preview.bench,
-                  ...preview.opponentBench,
-                ])
-                  p.id: p.name,
-              },
+              names: timelineNames,
               eventReached: _reached,
-              momentReached: (minute, stoppage) {
-                if (ft) return true;
-                if (minute != _minute) return minute < _minute;
-                return _onPitch ? stoppage < _added : stoppage <= _added;
-              },
+              momentReached: momentReached,
             );
             // (The Pitch view plays the 120th while it is on the clock.)
             final inExtraTime = _minute > 90 && !_clockDone;
@@ -2155,6 +2160,12 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             final timeline = MatchTimeline(
               events: timelineEvents,
               penalties: penalties,
+              chances: timelineChances(
+                r,
+                names: timelineNames,
+                momentReached: momentReached,
+                opponentOf: (id) => id == homeId ? awayId : homeId,
+              ),
               live: !ft,
               homeId: homeId,
             );
@@ -2181,6 +2192,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               fullTime: ft,
               events: timelineEvents,
               penalties: penalties,
+              homeColor: homeC,
+              awayColor: awayC,
               // The tablet's 2D TV has the ground in its header band.
             );
             List<MatchEvent> subsOf(int nationId) => shown
@@ -2445,6 +2458,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                 feed: _onPitch && picture
                     ? PitchCommentaryFeed(
                         clock: clock,
+                        kickOffLine: pitchKickOffLine(
+                          l,
+                          conditionsShown.weather,
+                        ),
                         countAt: pb.lineCountAt,
                         linesAt: (t) =>
                             pb.linesUpTo(l, t, _pc.names, _seed(preview)),
@@ -2513,6 +2530,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                             if (picture)
                               PitchCommentaryLine(
                                 clock: clock,
+                                kickOffLine: pitchKickOffLine(
+                                  l,
+                                  conditionsShown.weather,
+                                ),
                                 countAt: pb.lineCountAt,
                                 lineAt: (t) =>
                                     pb.lineAt(l, t, _pc.names, _seed(preview)),

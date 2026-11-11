@@ -248,7 +248,7 @@ class PitchPacer {
       s.outcome == ShotOutcome.goal ||
       s.origin == ShotOrigin.penalty ||
       s.outcome == ShotOutcome.woodwork ||
-      (s.outcome == ShotOutcome.saved && s.xg >= 0.15);
+      s.isBigSave;
 
   static double _tier(
     double base,

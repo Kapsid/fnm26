@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:fnm/domain/services/competition/national_stadium_data.dart';
+import 'package:fnm/domain/services/match/stadium/match_weather.dart';
+import 'package:fnm/domain/services/match/weather_play.dart';
 
 /// A broad climate: the typical match-time temperature (°C) a lowland venue
 /// sees in each month, January first, northern hemisphere. A southern nation
@@ -509,8 +511,14 @@ abstract final class MatchClimate {
 ///   higher home (Bolivia in Quito).
 /// - Heat hurts both sides, the one from a cooler climate more.
 ///
-/// At sea level in temperate weather both drains are exactly 1.0 and the edge
-/// exactly 0, so the engine and the world play exactly as they did before.
+/// - The weather ([weather], from `MatchWeather.forFixture`) plays through
+///   [play]: the engine reads its factors, the background simulator its
+///   [WeatherPlay.backgroundGoals]. A heat haze plays as a hotter day
+///   ([hazeFloor]), through the heat drain above.
+///
+/// At sea level in temperate weather under a clear sky (or light rain) both
+/// drains are exactly 1.0, the edge exactly 0 and the weather plays as
+/// nothing, so the engine and the world play exactly as they did before.
 class MatchConditions {
   const MatchConditions({
     this.altitude = 0,
@@ -519,6 +527,7 @@ class MatchConditions {
     this.awayAltitudeDrain = 0,
     this.homeHeatDrain = 0,
     this.awayHeatDrain = 0,
+    this.weather = WeatherKind.clear,
   });
 
   /// Sea level, temperate: changes nothing.
@@ -536,6 +545,12 @@ class MatchConditions {
   final double awayAltitudeDrain;
   final double homeHeatDrain;
   final double awayHeatDrain;
+
+  /// The weather the match is played in (and the Pitch view draws).
+  final WeatherKind weather;
+
+  /// What [weather] does to the match.
+  WeatherPlay get play => WeatherPlay.of(weather);
 
   /// How much faster than normal each side's legs go (1.0 = normal).
   double get homeDrain => 1.0 + homeAltitudeDrain + homeHeatDrain;
@@ -568,17 +583,28 @@ class MatchConditions {
   /// the played engine (see `match_conditions_test.dart`).
   static const double pointsPerDrain = 2.9;
 
+  /// A heat haze makes the day this much hotter than the month's typical
+  /// one, and never cooler than [hazeFloor]: the haze's extra fatigue, read
+  /// through the same heat drain as any hot day, so it is never counted
+  /// twice.
+  static const int hazeExtraHeat = 2;
+  static const int hazeFloor = 31;
+
   /// The conditions at [city] in [groundNationId] in [month] (1-12), for
-  /// [homeNationId] hosting [awayNationId].
+  /// [homeNationId] hosting [awayNationId], in [weather].
   factory MatchConditions.at({
     required int groundNationId,
     required String city,
     required int month,
     required int homeNationId,
     required int awayNationId,
+    WeatherKind weather = WeatherKind.clear,
   }) {
     final altitude = MatchClimate.altitudeOf(groundNationId, city);
-    final temperature = MatchClimate.temperatureAt(groundNationId, city, month);
+    final typical = MatchClimate.temperatureAt(groundNationId, city, month);
+    final temperature = weather == WeatherKind.haze
+        ? max(typical + hazeExtraHeat, hazeFloor)
+        : typical;
     double thinAir(int nationId) {
       if (altitude < MatchClimate.altitudeFloor) return 0;
       final usedTo = max(
@@ -609,6 +635,7 @@ class MatchConditions {
       awayAltitudeDrain: thinAir(awayNationId),
       homeHeatDrain: heat(homeNationId),
       awayHeatDrain: heat(awayNationId),
+      weather: weather,
     );
   }
 
@@ -637,7 +664,7 @@ class MatchConditions {
       homeFeelsAltitude || awayFeelsAltitude || altitude >= notableAltitude;
 
   /// Whether these conditions change anything at all.
-  bool get matters => homeDrain != 1.0 || awayDrain != 1.0;
+  bool get matters => homeDrain != 1.0 || awayDrain != 1.0 || play.matters;
 
   /// The home side's edge from the conditions, in rating points, for the
   /// background simulator: the visitors' extra drain less the hosts'.

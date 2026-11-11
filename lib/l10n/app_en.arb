@@ -26126,5 +26126,158 @@
         "type": "String"
       }
     }
+  },
+  "matchWeatherPlaysHeavyRain": "Heavy rain: shots and crosses less reliable, more slips",
+  "@matchWeatherPlaysHeavyRain": {
+    "description": "Match preview, under the ground: the match is played in heavy rain, which makes shots and crosses a little less reliable and brings more slips (fouls)."
+  },
+  "matchWeatherPlaysStorm": "Thunderstorm: shots and crosses less reliable, more slips",
+  "@matchWeatherPlaysStorm": {
+    "description": "Match preview, under the ground: the match is played in a thunderstorm, which makes shots and crosses a little less reliable and brings more slips (fouls)."
+  },
+  "matchWeatherPlaysSnow": "Snow: a slower game, passing a little harder",
+  "@matchWeatherPlaysSnow": {
+    "description": "Match preview, under the ground: the match is played in snow, which slows the game down and makes passing a little harder."
+  },
+  "matchWeatherPlaysFrost": "Frozen pitch: a slower game, passing a little harder",
+  "@matchWeatherPlaysFrost": {
+    "description": "Match preview, under the ground: the match is played on a clear, frosty night on a hard, frozen pitch, which slows the game down and makes passing a little harder."
+  },
+  "matchWeatherPlaysGale": "Strong wind: long balls and crosses erratic, long shots harder",
+  "@matchWeatherPlaysGale": {
+    "description": "Match preview, under the ground: the match is played in a strong wind, which makes long balls and crosses erratic and long shots less likely to go in."
+  },
+  "matchWeatherPlaysFog": "Fog: shots from distance harder",
+  "@matchWeatherPlaysFog": {
+    "description": "Match preview, under the ground: the match is played in fog, which makes shots from distance less likely to go in."
+  },
+  "matchWeatherPlaysHaze": "Heat haze: hotter than usual, legs will go sooner",
+  "@matchWeatherPlaysHaze": {
+    "description": "Match preview, under the ground: the match is played in a heat haze, a hotter day than usual for the time of year, so legs tire sooner."
+  },
+  "pitchComKickOffHeavyRain": "We're under way in heavy rain. The ball will skid off this surface.",
+  "@pitchComKickOffHeavyRain": {
+    "description": "Pitch view commentary, the first line at kick-off when the match is played in heavy rain."
+  },
+  "pitchComKickOffStorm": "Kick-off in a thunderstorm. The footing will be treacherous.",
+  "@pitchComKickOffStorm": {
+    "description": "Pitch view commentary, the first line at kick-off when the match is played in a thunderstorm."
+  },
+  "pitchComKickOffSnow": "We're under way in the snow. This will be a slow, careful game.",
+  "@pitchComKickOffSnow": {
+    "description": "Pitch view commentary, the first line at kick-off when the match is played in snow."
+  },
+  "pitchComKickOffFrost": "A frosty night and a hard pitch. Passing won't be easy.",
+  "@pitchComKickOffFrost": {
+    "description": "Pitch view commentary, the first line at kick-off when the match is played on a clear, frosty night on a hard pitch."
+  },
+  "pitchComKickOffGale": "Kick-off in a strong wind. Long balls will go astray.",
+  "@pitchComKickOffGale": {
+    "description": "Pitch view commentary, the first line at kick-off when the match is played in a strong wind."
+  },
+  "pitchComKickOffFog": "Kick-off in thick fog. Nobody will be scoring from distance easily.",
+  "@pitchComKickOffFog": {
+    "description": "Pitch view commentary, the first line at kick-off when the match is played in thick fog."
+  },
+  "pitchComKickOffHaze": "Kick-off in the heat haze. Legs will tire early today.",
+  "@pitchComKickOffHaze": {
+    "description": "Pitch view commentary, the first line at kick-off when the match is played in a heat haze."
+  },
+  "matchOwnGoal": "OWN GOAL",
+  "@matchOwnGoal": {
+    "description": "Caption under the goal celebration (and on the TV strip) when the goal was an own goal: a defender put the ball into his own net. All caps, like the PENALTY caption."
+  },
+  "matchGoalOwnGoal": "OG",
+  "@matchGoalOwnGoal": {
+    "description": "Short tag after an own goal's minute or scorer in compact lists (the match timeline, the share card), like PEN for a penalty. Keep it two or three letters where the language allows."
+  },
+  "pitchComOwnGoal1": "Own goal! {defender} turns it into his own net.",
+  "@pitchComOwnGoal1": {
+    "description": "Pitch view commentary line: an own goal. {defender} is the defending player who put the ball into his own net. Variant 1 of 3.",
+    "placeholders": {
+      "defender": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComOwnGoal2": "{shooter}'s effort takes a cruel deflection off {defender} and goes in.",
+  "@pitchComOwnGoal2": {
+    "description": "Pitch view commentary line: an own goal. {shooter} is the attacking player whose shot or cross it was, {defender} the defending player it went in off. Variant 2 of 3.",
+    "placeholders": {
+      "defender": {
+        "type": "String"
+      },
+      "shooter": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComOwnGoal3": "Disaster for {defender}, who puts it past his own keeper.",
+  "@pitchComOwnGoal3": {
+    "description": "Pitch view commentary line: an own goal. {defender} is the defending player who put the ball past his own goalkeeper. Variant 3 of 3.",
+    "placeholders": {
+      "defender": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComBigSave1": "What a save! {keeper} denies {player} from close range.",
+  "@pitchComBigSave1": {
+    "description": "Pitch view commentary line: the goalkeeper makes a big save from a good chance. {keeper} is the goalkeeper, {player} the shooter. Variant 1 of 3.",
+    "placeholders": {
+      "keeper": {
+        "type": "String"
+      },
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComBigSave2": "Brilliant stop by {keeper}!",
+  "@pitchComBigSave2": {
+    "description": "Pitch view commentary line: the goalkeeper makes a big save from a good chance. {keeper} is the goalkeeper. Variant 2 of 3.",
+    "placeholders": {
+      "keeper": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComBigSave3": "{player} looked certain to score, but {keeper} somehow keeps it out.",
+  "@pitchComBigSave3": {
+    "description": "Pitch view commentary line: the goalkeeper makes a big save from a good chance. {player} is the shooter, {keeper} the goalkeeper. Variant 3 of 3.",
+    "placeholders": {
+      "keeper": {
+        "type": "String"
+      },
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "matchTimelineWoodwork": "{name} hit the woodwork",
+  "@matchTimelineWoodwork": {
+    "description": "Match timeline, read aloud by the screen reader for a row with a goalpost icon: {name} hit the post or the bar.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "matchTimelineBigSave": "Big save by {name}",
+  "@matchTimelineBigSave": {
+    "description": "Match timeline, read aloud by the screen reader for a row with a goalkeeper glove icon: {name}, the goalkeeper, made a big save.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "matchChartXg": "xG over the match",
+  "@matchChartXg": {
+    "description": "Match stats, heading over the chart of both sides' expected goals (xG) adding up minute by minute through the match."
+  },
+  "matchChartMomentum": "Who was on top",
+  "@matchChartMomentum": {
+    "description": "Match stats, heading over the momentum chart: which side was on top, minute by minute, read from the chances each side made (bars up for the home side, down for the visitors)."
   }
 }

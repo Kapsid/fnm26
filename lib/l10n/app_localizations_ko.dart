@@ -16353,4 +16353,99 @@ class AppLocalizationsKo extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '\"$name\"은(는) 사용할 수 없습니다';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain => '폭우: 슈팅과 크로스 정확도 저하, 미끄러짐 증가';
+
+  @override
+  String get matchWeatherPlaysStorm => '뇌우: 슈팅과 크로스 정확도 저하, 미끄러짐 증가';
+
+  @override
+  String get matchWeatherPlaysSnow => '눈: 경기 속도 저하, 패스가 조금 더 어려움';
+
+  @override
+  String get matchWeatherPlaysFrost => '얼어붙은 그라운드: 경기 속도 저하, 패스가 조금 더 어려움';
+
+  @override
+  String get matchWeatherPlaysGale => '강풍: 롱볼과 크로스가 불안정, 중거리 슛이 더 어려움';
+
+  @override
+  String get matchWeatherPlaysFog => '안개: 중거리 슛이 더 어려움';
+
+  @override
+  String get matchWeatherPlaysHaze => '열기 아지랑이: 평소보다 더워 체력이 일찍 떨어짐';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      '폭우 속에 경기가 시작됐습니다. 공이 잔디 위에서 미끄러질 겁니다.';
+
+  @override
+  String get pitchComKickOffStorm => '뇌우 속에 킥오프. 발밑이 위험할 정도로 미끄러울 겁니다.';
+
+  @override
+  String get pitchComKickOffSnow => '눈 속에 경기가 시작됐습니다. 느리고 조심스러운 경기가 될 겁니다.';
+
+  @override
+  String get pitchComKickOffFrost => '서리 내린 밤, 딱딱한 그라운드. 패스가 쉽지 않을 겁니다.';
+
+  @override
+  String get pitchComKickOffGale => '강풍 속에 킥오프. 롱볼이 바람에 흘러갈 겁니다.';
+
+  @override
+  String get pitchComKickOffFog => '짙은 안개 속에 킥오프. 먼 거리에서 골을 넣기는 쉽지 않을 겁니다.';
+
+  @override
+  String get pitchComKickOffHaze => '열기 아지랑이 속에 킥오프. 오늘은 체력이 일찍 떨어질 겁니다.';
+
+  @override
+  String get matchOwnGoal => '자책골';
+
+  @override
+  String get matchGoalOwnGoal => '자책';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return '자책골! $defender가 공을 자기 골문에 넣고 맙니다.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return '$shooter의 슈팅이 $defender에게 맞고 굴절돼 그대로 들어갑니다.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return '$defender에게는 악몽, 자기 팀 골키퍼를 넘기고 맙니다.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return '엄청난 선방! $keeper가 가까운 거리에서 $player를 막아냅니다.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return '$keeper의 눈부신 선방!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player의 골이 확실해 보였지만 $keeper가 어떻게든 막아냅니다.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name의 슈팅이 골대를 맞혔습니다';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return '$name의 결정적 선방';
+  }
+
+  @override
+  String get matchChartXg => '경기 흐름별 xG';
+
+  @override
+  String get matchChartMomentum => '경기 주도권';
 }

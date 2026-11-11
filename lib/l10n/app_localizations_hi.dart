@@ -16821,4 +16821,110 @@ class AppLocalizationsHi extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '\"$name\" अनुमत नहीं है';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'तेज़ बारिश: शॉट और क्रॉस कम भरोसेमंद, ज़्यादा फिसलन';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'आंधी-तूफ़ान: शॉट और क्रॉस कम भरोसेमंद, ज़्यादा फिसलन';
+
+  @override
+  String get matchWeatherPlaysSnow => 'बर्फ़: धीमा खेल, पास देना थोड़ा मुश्किल';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'जमी हुई पिच: धीमा खेल, पास देना थोड़ा मुश्किल';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'तेज़ हवा: लंबी गेंदें और क्रॉस बेकाबू, दूर से शॉट मुश्किल';
+
+  @override
+  String get matchWeatherPlaysFog => 'कोहरा: दूर से शॉट मुश्किल';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'गर्मी की धुंध: सामान्य से ज़्यादा गर्मी, पैर जल्दी थकेंगे';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'तेज़ बारिश में मैच शुरू हो गया है। इस पिच पर गेंद फिसलेगी।';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'आंधी-तूफ़ान में किक-ऑफ़। पैर जमाना मुश्किल होगा।';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'बर्फ़ में मैच शुरू हो गया है। यह धीमा और सावधानी भरा खेल होगा।';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'पाले वाली रात और सख़्त पिच। पास देना आसान नहीं होगा।';
+
+  @override
+  String get pitchComKickOffGale =>
+      'तेज़ हवा में किक-ऑफ़। लंबी गेंदें भटकेंगी।';
+
+  @override
+  String get pitchComKickOffFog =>
+      'घने कोहरे में किक-ऑफ़। दूर से गोल करना किसी के लिए आसान नहीं होगा।';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'गर्मी की धुंध में किक-ऑफ़। आज पैर जल्दी थकेंगे।';
+
+  @override
+  String get matchOwnGoal => 'आत्मघाती गोल';
+
+  @override
+  String get matchGoalOwnGoal => 'आगो';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'आत्मघाती गोल! $defender ने गेंद अपने ही जाल में डाल दी।';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return '$shooter का प्रयास $defender से टकराकर बदकिस्मती से अंदर चला गया।';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return '$defender के लिए मुसीबत, उन्होंने अपने ही गोलकीपर को छका दिया।';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'क्या बचाव है! $keeper ने करीब से $player को गोल नहीं करने दिया।';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return '$keeper का शानदार बचाव!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player का गोल पक्का लग रहा था, पर $keeper ने किसी तरह रोक लिया।';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name का शॉट पोस्ट से टकराया';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return '$name का बड़ा बचाव';
+  }
+
+  @override
+  String get matchChartXg => 'पूरे मैच में xG';
+
+  @override
+  String get matchChartMomentum => 'कौन हावी रहा';
 }

@@ -16760,4 +16760,111 @@ class AppLocalizationsVi extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '\"$name\" không được phép';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Mưa to: sút và tạt bóng kém chính xác hơn, dễ trượt chân hơn';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Giông bão: sút và tạt bóng kém chính xác hơn, dễ trượt chân hơn';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Tuyết: lối chơi chậm hơn, chuyền bóng khó hơn một chút';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Mặt sân đóng băng: lối chơi chậm hơn, chuyền bóng khó hơn một chút';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Gió mạnh: bóng dài và tạt bóng khó lường, sút xa khó hơn';
+
+  @override
+  String get matchWeatherPlaysFog => 'Sương mù: sút xa khó hơn';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Nắng nóng mờ hơi: nóng hơn thường lệ, thể lực sẽ cạn sớm hơn';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Trận đấu bắt đầu dưới mưa to. Bóng sẽ trơn trượt trên mặt sân này.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Giao bóng trong giông bão. Mặt sân sẽ rất trơn.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Trận đấu bắt đầu trong tuyết. Đây sẽ là một trận đấu chậm và thận trọng.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Một đêm giá rét và mặt sân cứng. Chuyền bóng sẽ không dễ.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Giao bóng trong gió mạnh. Những đường bóng dài sẽ đi chệch hướng.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Giao bóng trong sương mù dày đặc. Sẽ chẳng dễ ghi bàn từ xa.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Giao bóng trong cái nóng mờ hơi. Hôm nay thể lực sẽ cạn sớm.';
+
+  @override
+  String get matchOwnGoal => 'PHẢN LƯỚI NHÀ';
+
+  @override
+  String get matchGoalOwnGoal => 'PLN';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Phản lưới nhà! $defender đưa bóng vào lưới đội mình.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return 'Pha dứt điểm của $shooter chạm chân $defender đổi hướng oan nghiệt rồi đi vào lưới.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Thảm họa cho $defender, người đánh bại chính thủ môn đội nhà.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Pha cứu thua xuất sắc! $keeper từ chối $player ở cự ly gần.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Pha cứu thua tuyệt vời của $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player tưởng như chắc chắn ghi bàn, nhưng $keeper bằng cách nào đó vẫn cản phá được.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name sút trúng khung gỗ';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Pha cứu thua quan trọng của $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG theo diễn biến trận đấu';
+
+  @override
+  String get matchChartMomentum => 'Đội nào lấn lướt';
 }

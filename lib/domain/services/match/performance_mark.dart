@@ -16,6 +16,9 @@ abstract final class PerformanceMark {
   /// (kicks a keeper stopped) come from the tactical engine's recorded shots.
   /// The background layer records no kicks and leaves them at zero.
   ///
+  /// [ownGoals] are goals he put into his own net: they count against him,
+  /// and never as goals of his.
+  ///
   /// [cleanSheetShare] (0–1) is how much of a defender's clean-sheet bonus
   /// has been earned: the whole of it for a finished match, the default. Only
   /// the live line-ups pass less, for a match still being played (see
@@ -30,6 +33,7 @@ abstract final class PerformanceMark {
     required int oppScore,
     int penaltiesMissed = 0,
     int penaltiesSaved = 0,
+    int ownGoals = 0,
     double cleanSheetShare = 1.0,
   }) {
     var r = 6.5;
@@ -48,6 +52,10 @@ abstract final class PerformanceMark {
     if (booked) r -= 0.3;
     if (sentOff) r -= 1.2;
     r += penaltiesSaved * 0.5 - penaltiesMissed * 0.4;
+    r -= ownGoals * ownGoalCost;
     return (r.clamp(3.0, 10.0) * 10).roundToDouble() / 10;
   }
+
+  /// What an own goal takes off the mark of the man who scored it.
+  static const double ownGoalCost = 0.5;
 }

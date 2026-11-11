@@ -16858,4 +16858,111 @@ class AppLocalizationsHu extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '„$name” nem engedélyezett';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Felhőszakadás: pontatlanabb lövések és beadások, több megcsúszás';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Zivatar: pontatlanabb lövések és beadások, több megcsúszás';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Hó: lassabb játék, kicsit nehezebb passzok';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Fagyos pálya: lassabb játék, kicsit nehezebb passzok';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Erős szél: kiszámíthatatlan hosszú labdák és beadások, nehezebb távoli lövések';
+
+  @override
+  String get matchWeatherPlaysFog => 'Köd: nehezebb távoli lövések';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Hőségpára: melegebb a szokásosnál, hamarabb elfogy az erő';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Felhőszakadásban kezdődik a meccs. A labda csúszni fog ezen a gyepen.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Kezdőrúgás zivatarban. Alattomos lesz a talaj.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Hóban kezdődik a meccs. Lassú, óvatos játék lesz.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Fagyos este és kemény pálya. Nem lesz könnyű passzolni.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Kezdőrúgás erős szélben. A hosszú labdák elszállnak majd.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Kezdőrúgás sűrű ködben. Távolról senki sem fog könnyen gólt lőni.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Kezdőrúgás a hőségpárában. Ma korán elfogy majd az erő.';
+
+  @override
+  String get matchOwnGoal => 'ÖNGÓL';
+
+  @override
+  String get matchGoalOwnGoal => 'ÖG';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Öngól! $defender a saját kapujába juttatja a labdát.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return '$shooter próbálkozása szerencsétlenül megpattan $defender játékosán, és bemegy.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Katasztrófa $defender számára, aki a saját kapusát veri meg.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Micsoda védés! $keeper közelről hárítja $player lövését.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Remek védés, $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player biztos gólnak tűnt, de $keeper valahogy hárít.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name kapufát talált';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Nagy védés: $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG a mérkőzés során';
+
+  @override
+  String get matchChartMomentum => 'Ki volt fölényben';
 }

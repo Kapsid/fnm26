@@ -816,7 +816,10 @@ class _GoalBanner extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    initialledName(event.playerName),
+                    event.ownGoal
+                        ? '${initialledName(event.playerName)} '
+                              '(${AppLocalizations.of(context).matchGoalOwnGoal})'
+                        : initialledName(event.playerName),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTypography.labelMedium.copyWith(

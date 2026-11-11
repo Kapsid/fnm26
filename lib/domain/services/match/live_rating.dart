@@ -22,6 +22,10 @@ final class MatchTally {
     final t = MatchTally._();
     for (final e in events) {
       switch (e.type) {
+        // An own goal is the scoring side's goal and its scorer's blot: it
+        // never counts as a goal of his.
+        case MatchEventType.goal when e.ownGoal:
+          t.ownGoals.update(e.playerId, (v) => v + 1, ifAbsent: () => 1);
         case MatchEventType.goal:
           t.goals.update(e.playerId, (v) => v + 1, ifAbsent: () => 1);
           final a = e.assistPlayerId;
@@ -60,6 +64,7 @@ final class MatchTally {
   final reds = <int>{};
   final penaltiesMissed = <int, int>{};
   final penaltiesSaved = <int, int>{};
+  final ownGoals = <int, int>{};
 
   /// [playerId]'s mark with the score at [teamScore]–[oppScore]. See
   /// [PerformanceMark.forPlayer] for [cleanSheetShare].
@@ -79,6 +84,7 @@ final class MatchTally {
     oppScore: oppScore,
     penaltiesMissed: penaltiesMissed[playerId] ?? 0,
     penaltiesSaved: penaltiesSaved[playerId] ?? 0,
+    ownGoals: ownGoals[playerId] ?? 0,
     cleanSheetShare: cleanSheetShare,
   );
 }

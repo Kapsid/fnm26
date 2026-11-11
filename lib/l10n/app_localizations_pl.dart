@@ -17087,4 +17087,111 @@ class AppLocalizationsPl extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return 'Nazwa „$name” jest niedozwolona';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Ulewa: strzały i dośrodkowania mniej pewne, więcej poślizgnięć';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Burza: strzały i dośrodkowania mniej pewne, więcej poślizgnięć';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Śnieg: wolniejsza gra, podania nieco trudniejsze';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Zmarznięta murawa: wolniejsza gra, podania nieco trudniejsze';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Silny wiatr: długie piłki i dośrodkowania nieprzewidywalne, strzały z dystansu trudniejsze';
+
+  @override
+  String get matchWeatherPlaysFog => 'Mgła: strzały z dystansu trudniejsze';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Upalna mgiełka: goręcej niż zwykle, siły skończą się wcześniej';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Grają w ulewie. Piłka będzie ślizgać się po murawie.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Początek meczu w czasie burzy. Murawa będzie zdradliwa.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Grają na śniegu. To będzie powolny, ostrożny mecz.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Mroźny wieczór i twarda murawa. Podania nie będą łatwe.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Początek meczu przy silnym wietrze. Długie piłki będą zbaczać.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Początek meczu w gęstej mgle. Z dystansu nikt łatwo nie strzeli.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Początek meczu w upalnej mgiełce. Siły dziś szybko się skończą.';
+
+  @override
+  String get matchOwnGoal => 'GOL SAMOBÓJCZY';
+
+  @override
+  String get matchGoalOwnGoal => 'SAM';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Samobój! $defender wpakował piłkę do własnej bramki.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return 'Strzał $shooter pechowo odbija się od $defender i wpada do siatki.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Katastrofa $defender, który pokonuje własnego bramkarza.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Co za interwencja! $keeper zatrzymuje $player z bliska.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Świetna interwencja $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player miał już gola, ale $keeper jakimś cudem broni.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name trafił w obramowanie';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Świetna obrona: $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG w trakcie meczu';
+
+  @override
+  String get matchChartMomentum => 'Kto przeważał';
 }

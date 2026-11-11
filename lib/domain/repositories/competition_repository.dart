@@ -97,6 +97,10 @@ typedef TournamentLine = ({
 });
 
 /// One attributed goal, ready to persist.
+///
+/// An own goal is stored for the side it counted for ([nationId]) with the
+/// defender's id negated ([playerId] < 0, see [isOwnGoal]): it keeps the
+/// match's goal timeline whole, and every scorer tally leaves it out.
 typedef GoalRecord = ({
   int careerId,
   int competitionId,
@@ -105,6 +109,9 @@ typedef GoalRecord = ({
   int playerId,
   int minute,
 });
+
+/// Whether a stored goal's [playerId] marks an own goal (see [GoalRecord]).
+bool isOwnGoal(int playerId) => playerId < 0;
 
 /// A top-scorer tally.
 typedef ScorerTally = ({int playerId, int nationId, int goals});

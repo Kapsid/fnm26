@@ -16912,4 +16912,111 @@ class AppLocalizationsDa extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '»$name« er ikke tilladt';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Kraftig regn: skud og indlæg mindre præcise, flere glid';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Tordenvejr: skud og indlæg mindre præcise, flere glid';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Sne: langsommere spil, afleveringer lidt sværere';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Frossen bane: langsommere spil, afleveringer lidt sværere';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Kraftig vind: lange bolde og indlæg uberegnelige, langskud sværere';
+
+  @override
+  String get matchWeatherPlaysFog => 'Tåge: langskud sværere';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Varmedis: varmere end normalt, benene giver op tidligere';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Vi er i gang i kraftig regn. Bolden kommer til at glide på denne bane.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Kickoff i tordenvejr. Fodfæstet bliver lumsk.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Vi er i gang i sneen. Det bliver en langsom og forsigtig kamp.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'En frostklar aften og en hård bane. Afleveringerne bliver ikke lette.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Kickoff i kraftig vind. Lange bolde kommer til at drive væk.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Kickoff i tæt tåge. Ingen kommer til at score let på langskud.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Kickoff i varmedisen. Benene bliver tidligt trætte i dag.';
+
+  @override
+  String get matchOwnGoal => 'SELVMÅL';
+
+  @override
+  String get matchGoalOwnGoal => 'SM';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Selvmål! $defender styrer bolden i eget net.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return '${shooter}s forsøg tager en uheldig styring på $defender og går ind.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Katastrofe for $defender, der overlister sin egen målmand.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Sikke en redning! $keeper stopper $player på tæt hold.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Fremragende redning af $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player så sikker ud til at score, men $keeper redder på en eller anden måde.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name ramte træværket';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Stor redning af $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG gennem kampen';
+
+  @override
+  String get matchChartMomentum => 'Hvem der dominerede';
 }

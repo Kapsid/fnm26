@@ -17326,4 +17326,111 @@ class AppLocalizationsRo extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '„$name” nu este permis';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Ploaie torențială: șuturi și centrări mai nesigure, mai multe alunecări';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Furtună: șuturi și centrări mai nesigure, mai multe alunecări';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Ninsoare: joc mai lent, pase puțin mai grele';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Teren înghețat: joc mai lent, pase puțin mai grele';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Vânt puternic: mingi lungi și centrări imprevizibile, șuturi de la distanță mai grele';
+
+  @override
+  String get matchWeatherPlaysFog => 'Ceață: șuturi de la distanță mai grele';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Ceață de căldură: mai cald decât de obicei, picioarele vor ceda mai devreme';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Se joacă sub o ploaie torențială. Mingea va aluneca pe acest gazon.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Lovitura de start pe furtună. Terenul va fi înșelător.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Se joacă pe zăpadă. Va fi un meci lent și prudent.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'O noapte geroasă și un teren tare. Pasele nu vor fi ușoare.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Lovitura de start pe vânt puternic. Mingile lungi vor devia.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Lovitura de start în ceață deasă. Nimeni nu va marca ușor de la distanță.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Lovitura de start în ceața de căldură. Azi picioarele vor obosi devreme.';
+
+  @override
+  String get matchOwnGoal => 'AUTOGOL';
+
+  @override
+  String get matchGoalOwnGoal => 'AG';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Autogol! $defender trimite mingea în propria poartă.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return 'Încercarea lui $shooter este deviată nefericit de $defender și intră.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Dezastru pentru $defender, care își învinge propriul portar.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Ce paradă! $keeper îl refuză pe $player de aproape.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Paradă excelentă a lui $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player părea sigur că marchează, dar $keeper reușește cumva să apere.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name a nimerit bara';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Paradă mare a lui $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG pe parcursul meciului';
+
+  @override
+  String get matchChartMomentum => 'Cine a dominat';
 }

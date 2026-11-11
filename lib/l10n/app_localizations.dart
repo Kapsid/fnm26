@@ -25585,6 +25585,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'\"{name}\" isn\'t allowed'**
   String editorIssueNameNotAllowed(String name);
+
+  /// Match preview, under the ground: the match is played in heavy rain, which makes shots and crosses a little less reliable and brings more slips (fouls).
+  ///
+  /// In en, this message translates to:
+  /// **'Heavy rain: shots and crosses less reliable, more slips'**
+  String get matchWeatherPlaysHeavyRain;
+
+  /// Match preview, under the ground: the match is played in a thunderstorm, which makes shots and crosses a little less reliable and brings more slips (fouls).
+  ///
+  /// In en, this message translates to:
+  /// **'Thunderstorm: shots and crosses less reliable, more slips'**
+  String get matchWeatherPlaysStorm;
+
+  /// Match preview, under the ground: the match is played in snow, which slows the game down and makes passing a little harder.
+  ///
+  /// In en, this message translates to:
+  /// **'Snow: a slower game, passing a little harder'**
+  String get matchWeatherPlaysSnow;
+
+  /// Match preview, under the ground: the match is played on a clear, frosty night on a hard, frozen pitch, which slows the game down and makes passing a little harder.
+  ///
+  /// In en, this message translates to:
+  /// **'Frozen pitch: a slower game, passing a little harder'**
+  String get matchWeatherPlaysFrost;
+
+  /// Match preview, under the ground: the match is played in a strong wind, which makes long balls and crosses erratic and long shots less likely to go in.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong wind: long balls and crosses erratic, long shots harder'**
+  String get matchWeatherPlaysGale;
+
+  /// Match preview, under the ground: the match is played in fog, which makes shots from distance less likely to go in.
+  ///
+  /// In en, this message translates to:
+  /// **'Fog: shots from distance harder'**
+  String get matchWeatherPlaysFog;
+
+  /// Match preview, under the ground: the match is played in a heat haze, a hotter day than usual for the time of year, so legs tire sooner.
+  ///
+  /// In en, this message translates to:
+  /// **'Heat haze: hotter than usual, legs will go sooner'**
+  String get matchWeatherPlaysHaze;
+
+  /// Pitch view commentary, the first line at kick-off when the match is played in heavy rain.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re under way in heavy rain. The ball will skid off this surface.'**
+  String get pitchComKickOffHeavyRain;
+
+  /// Pitch view commentary, the first line at kick-off when the match is played in a thunderstorm.
+  ///
+  /// In en, this message translates to:
+  /// **'Kick-off in a thunderstorm. The footing will be treacherous.'**
+  String get pitchComKickOffStorm;
+
+  /// Pitch view commentary, the first line at kick-off when the match is played in snow.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re under way in the snow. This will be a slow, careful game.'**
+  String get pitchComKickOffSnow;
+
+  /// Pitch view commentary, the first line at kick-off when the match is played on a clear, frosty night on a hard pitch.
+  ///
+  /// In en, this message translates to:
+  /// **'A frosty night and a hard pitch. Passing won\'t be easy.'**
+  String get pitchComKickOffFrost;
+
+  /// Pitch view commentary, the first line at kick-off when the match is played in a strong wind.
+  ///
+  /// In en, this message translates to:
+  /// **'Kick-off in a strong wind. Long balls will go astray.'**
+  String get pitchComKickOffGale;
+
+  /// Pitch view commentary, the first line at kick-off when the match is played in thick fog.
+  ///
+  /// In en, this message translates to:
+  /// **'Kick-off in thick fog. Nobody will be scoring from distance easily.'**
+  String get pitchComKickOffFog;
+
+  /// Pitch view commentary, the first line at kick-off when the match is played in a heat haze.
+  ///
+  /// In en, this message translates to:
+  /// **'Kick-off in the heat haze. Legs will tire early today.'**
+  String get pitchComKickOffHaze;
+
+  /// Caption under the goal celebration (and on the TV strip) when the goal was an own goal: a defender put the ball into his own net. All caps, like the PENALTY caption.
+  ///
+  /// In en, this message translates to:
+  /// **'OWN GOAL'**
+  String get matchOwnGoal;
+
+  /// Short tag after an own goal's minute or scorer in compact lists (the match timeline, the share card), like PEN for a penalty. Keep it two or three letters where the language allows.
+  ///
+  /// In en, this message translates to:
+  /// **'OG'**
+  String get matchGoalOwnGoal;
+
+  /// Pitch view commentary line: an own goal. {defender} is the defending player who put the ball into his own net. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Own goal! {defender} turns it into his own net.'**
+  String pitchComOwnGoal1(String defender);
+
+  /// Pitch view commentary line: an own goal. {shooter} is the attacking player whose shot or cross it was, {defender} the defending player it went in off. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{shooter}\'s effort takes a cruel deflection off {defender} and goes in.'**
+  String pitchComOwnGoal2(String defender, String shooter);
+
+  /// Pitch view commentary line: an own goal. {defender} is the defending player who put the ball past his own goalkeeper. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Disaster for {defender}, who puts it past his own keeper.'**
+  String pitchComOwnGoal3(String defender);
+
+  /// Pitch view commentary line: the goalkeeper makes a big save from a good chance. {keeper} is the goalkeeper, {player} the shooter. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'What a save! {keeper} denies {player} from close range.'**
+  String pitchComBigSave1(String keeper, String player);
+
+  /// Pitch view commentary line: the goalkeeper makes a big save from a good chance. {keeper} is the goalkeeper. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Brilliant stop by {keeper}!'**
+  String pitchComBigSave2(String keeper);
+
+  /// Pitch view commentary line: the goalkeeper makes a big save from a good chance. {player} is the shooter, {keeper} the goalkeeper. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} looked certain to score, but {keeper} somehow keeps it out.'**
+  String pitchComBigSave3(String keeper, String player);
+
+  /// Match timeline, read aloud by the screen reader for a row with a goalpost icon: {name} hit the post or the bar.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} hit the woodwork'**
+  String matchTimelineWoodwork(String name);
+
+  /// Match timeline, read aloud by the screen reader for a row with a goalkeeper glove icon: {name}, the goalkeeper, made a big save.
+  ///
+  /// In en, this message translates to:
+  /// **'Big save by {name}'**
+  String matchTimelineBigSave(String name);
+
+  /// Match stats, heading over the chart of both sides' expected goals (xG) adding up minute by minute through the match.
+  ///
+  /// In en, this message translates to:
+  /// **'xG over the match'**
+  String get matchChartXg;
+
+  /// Match stats, heading over the momentum chart: which side was on top, minute by minute, read from the chances each side made (bars up for the home side, down for the visitors).
+  ///
+  /// In en, this message translates to:
+  /// **'Who was on top'**
+  String get matchChartMomentum;
 }
 
 class _AppLocalizationsDelegate

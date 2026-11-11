@@ -16923,4 +16923,111 @@ class AppLocalizationsFil extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return 'Hindi pinapayagan ang \"$name\"';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Malakas na ulan: mas di-tiyak ang tira at cross, mas maraming dulas';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Bagyong may kidlat: mas di-tiyak ang tira at cross, mas maraming dulas';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Niyebe: mas mabagal ang laro, medyo mas mahirap ang pasa';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Nagyelong pitch: mas mabagal ang laro, medyo mas mahirap ang pasa';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Malakas na hangin: pabago-bago ang long ball at cross, mas mahirap ang tirang malayo';
+
+  @override
+  String get matchWeatherPlaysFog => 'Hamog: mas mahirap ang tirang malayo';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Init na may ulap: mas mainit kaysa karaniwan, mas maagang mapapagod';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Nagsimula na sa malakas na ulan. Dudulas ang bola sa pitch na ito.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Kick-off sa gitna ng bagyong may kidlat. Madulas ang tapakan.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Nagsimula na sa niyebe. Mabagal at maingat na laro ito.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Nagyeyelong gabi at matigas na pitch. Hindi magiging madali ang pasa.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Kick-off sa malakas na hangin. Liligaw ang mga long ball.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Kick-off sa makapal na hamog. Walang madaling makakaiskor mula sa malayo.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Kick-off sa init na may ulap. Maagang mapapagod ang mga binti ngayon.';
+
+  @override
+  String get matchOwnGoal => 'SARILING GOL';
+
+  @override
+  String get matchGoalOwnGoal => 'SG';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Sariling gol! Naipasok ni $defender ang bola sa sarili niyang net.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return 'Tumama ang tira ni $shooter kay $defender at malas na pumasok.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Kapahamakan para kay $defender, na nalusutan ang sarili niyang goalkeeper.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Napakagandang save! Pinigilan ni $keeper si $player mula sa malapitan.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Napakahusay na save ni $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return 'Mukhang siguradong makakaiskor si $player, pero kahit paano ay napigilan ito ni $keeper.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return 'Tumama sa poste ang tira ni $name';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Malaking save ni $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG sa buong laro';
+
+  @override
+  String get matchChartMomentum => 'Sino ang nakalamang';
 }

@@ -22,6 +22,7 @@ import 'package:fnm/domain/services/match/stadium/kick_off.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/domain/services/match/stadium/nation_latitudes.dart';
 import 'package:fnm/domain/services/match/stadium/stadium_spec.dart';
+import 'package:fnm/features/match/match_ground.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/pitch/match_dressing.dart';
 import 'package:fnm/features/match/pitch/pitch_projection.dart';
@@ -385,28 +386,13 @@ double pitchRateForStep(int index) =>
 
 /// The competition a fixture's [round] code belongs to, as far as the
 /// ground's dressing and its kick-off slots care.
-CompetitionKind pitchCompetitionOf(String? round) => switch (round) {
-  'FRIENDLY' => CompetitionKind.friendly,
-  'FFINAL' => CompetitionKind.finalissima,
-  'GROUP' ||
-  'R32' ||
-  'R16' ||
-  'QF' ||
-  'SF' ||
-  '3RD' ||
-  'FINAL' => CompetitionKind.worldCupFinals,
-  'CGROUP' ||
-  'CR16' ||
-  'CQF' ||
-  'CSF' ||
-  'C3RD' ||
-  'CFINAL' => CompetitionKind.continentalFinals,
-  _ => CompetitionKind.worldCupQualifying,
-};
+CompetitionKind pitchCompetitionOf(String? round) =>
+    KickOff.competitionOfRound(round);
 
-/// The weather the Pitch view shows when a test pins it; null (always, in
-/// the app) takes it from the ground's climate and the date
-/// ([MatchWeather]). The weather is cosmetic only: no match reads it.
+/// The weather the Pitch view shows when a test or a promo capture pins it;
+/// null (always, in the app) shows the weather the match is played in
+/// ([MatchPreview.conditions], from [weatherAt]). A pinned weather is drawn
+/// only: the match is still played in its own.
 final Provider<WeatherKind?> pitchForcedWeatherProvider =
     Provider<WeatherKind?>((ref) => null);
 
@@ -416,30 +402,23 @@ final Provider<WeatherKind?> pitchForcedWeatherProvider =
 ///
 /// Drawn from the save's seed and the fixture alone, never from a match
 /// attempt's dice: the line is shown before kick-off, and a match played
-/// again must not move its kick-off. [weather] pins the weather (tests).
-/// Cosmetic only: no match reads either.
+/// again must not move its kick-off. The weather is the one the engine
+/// plays the match in ([weatherAt]); [weather] pins what is drawn (tests,
+/// promo captures).
 ({KickOffTime kickOff, WeatherKind weather}) matchConditionsShown(
   MatchPreview preview, {
   WeatherKind? weather,
 }) {
   final f = preview.fixture;
-  final home = preview.nations[f.homeNationId];
-  final groundNation = preview.nations[preview.ground.groundNationId] ?? home;
-  final kickOff = KickOff.localTime(
-    f,
-    pitchCompetitionOf(f.round),
-    preview.saveSeed,
-  );
   return (
-    kickOff: kickOff,
+    kickOff: KickOff.forFixture(f, preview.saveSeed),
     weather:
         weather ??
-        MatchWeather.of(
-          code: groundNation?.code ?? '',
-          confederation: groundNation?.confederation ?? Confederation.europe,
-          date: f.date,
-          fixtureId: f.id,
-          kickOffHours: kickOff.hours,
+        weatherAt(
+          f,
+          preview.ground,
+          nations: preview.nations,
+          saveSeed: preview.saveSeed,
         ),
   );
 }

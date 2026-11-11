@@ -16611,4 +16611,109 @@ class AppLocalizationsTh extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return 'ไม่อนุญาตให้ใช้ \"$name\"';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'ฝนตกหนัก: การยิงและการเปิดบอลแม่นน้อยลง ลื่นล้มบ่อยขึ้น';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'พายุฝนฟ้าคะนอง: การยิงและการเปิดบอลแม่นน้อยลง ลื่นล้มบ่อยขึ้น';
+
+  @override
+  String get matchWeatherPlaysSnow => 'หิมะ: เกมช้าลง การส่งบอลยากขึ้นเล็กน้อย';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'สนามเป็นน้ำแข็ง: เกมช้าลง การส่งบอลยากขึ้นเล็กน้อย';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'ลมแรง: บอลยาวและการเปิดบอลคาดเดายาก ยิงไกลยากขึ้น';
+
+  @override
+  String get matchWeatherPlaysFog => 'หมอก: ยิงไกลยากขึ้น';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'ไอแดดร้อน: ร้อนกว่าปกติ ขาจะหมดแรงเร็วขึ้น';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'เกมเริ่มแล้วท่ามกลางฝนตกหนัก บอลจะลื่นไถลบนสนามนี้';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'เริ่มเกมท่ามกลางพายุฝนฟ้าคะนอง พื้นสนามจะลื่นอันตราย';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'เกมเริ่มแล้วท่ามกลางหิมะ นี่จะเป็นเกมที่ช้าและระมัดระวัง';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'คืนที่หนาวจัดและสนามแข็ง การส่งบอลจะไม่ง่าย';
+
+  @override
+  String get pitchComKickOffGale => 'เริ่มเกมท่ามกลางลมแรง บอลยาวจะเฉออกนอกทาง';
+
+  @override
+  String get pitchComKickOffFog =>
+      'เริ่มเกมท่ามกลางหมอกหนา ไม่มีใครยิงไกลเข้าได้ง่ายๆ';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'เริ่มเกมท่ามกลางไอแดดร้อน วันนี้ขาจะล้าเร็ว';
+
+  @override
+  String get matchOwnGoal => 'ทำเข้าประตูตัวเอง';
+
+  @override
+  String get matchGoalOwnGoal => 'OG';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'ทำเข้าประตูตัวเอง! $defender ทำบอลเข้าตาข่ายของทีมตัวเอง';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return 'ลูกยิงของ $shooter โดน $defender เบี่ยงทางอย่างโชคร้ายและเข้าประตูไป';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'หายนะของ $defender ที่ทำบอลผ่านผู้รักษาประตูทีมตัวเอง';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'เซฟสุดยอด! $keeper ปัดลูกยิงระยะประชิดของ $player ออกไป';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return '$keeper เซฟได้ยอดเยี่ยม!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player ดูเหมือนจะยิงเข้าแน่ แต่ $keeper ก็ป้องกันไว้ได้';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name ยิงชนเสาหรือคาน';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return '$name เซฟสำคัญ';
+  }
+
+  @override
+  String get matchChartXg => 'xG ตลอดเกม';
+
+  @override
+  String get matchChartMomentum => 'ใครเป็นฝ่ายเหนือกว่า';
 }

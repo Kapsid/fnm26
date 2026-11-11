@@ -16823,4 +16823,111 @@ class AppLocalizationsTr extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '\"$name\" adına izin verilmiyor';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Sağanak: şutlar ve ortalar daha az isabetli, daha çok kayma';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Fırtına: şutlar ve ortalar daha az isabetli, daha çok kayma';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Kar: daha yavaş oyun, paslar biraz daha zor';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Donmuş zemin: daha yavaş oyun, paslar biraz daha zor';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Sert rüzgar: uzun toplar ve ortalar öngörülemez, uzaktan şutlar daha zor';
+
+  @override
+  String get matchWeatherPlaysFog => 'Sis: uzaktan şutlar daha zor';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Sıcak pus: her zamankinden sıcak, bacaklar daha erken yorulacak';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Maç sağanak altında başladı. Top bu zeminde kayacak.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Maç fırtına altında başladı. Zemin çok kaygan olacak.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Maç kar altında başladı. Yavaş ve temkinli bir oyun olacak.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Ayaz bir gece ve sert bir zemin. Pas yapmak kolay olmayacak.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Maç sert rüzgarda başladı. Uzun toplar yolunu şaşıracak.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Maç yoğun siste başladı. Kimse uzaktan kolay gol atamayacak.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Maç sıcak pus içinde başladı. Bacaklar bugün erken yorulacak.';
+
+  @override
+  String get matchOwnGoal => 'KENDİ KALESİNE';
+
+  @override
+  String get matchGoalOwnGoal => 'KK';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Kendi kalesine! $defender topu kendi ağlarına gönderiyor.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return '$shooter\'in denemesi $defender\'e çarpıp talihsiz şekilde ağlara gidiyor.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return '$defender için felaket, kendi kalecisini avlıyor.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Ne kurtarış! $keeper, $player\'in yakın mesafeden şutunu çıkarıyor.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return '$keeper\'den harika bir kurtarış!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player golü kesin atacak gibiydi, ama $keeper bir şekilde kurtarıyor.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name direğe takıldı';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return '$name\'den büyük kurtarış';
+  }
+
+  @override
+  String get matchChartXg => 'Maç boyunca xG';
+
+  @override
+  String get matchChartMomentum => 'Kim üstündü';
 }

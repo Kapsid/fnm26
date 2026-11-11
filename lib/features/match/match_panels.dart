@@ -41,6 +41,48 @@ List<InPlayPenalty> inPlayPenalties(
   ];
 }
 
+/// A woodwork hit or a big save on the Timeline: a shot that did not go in
+/// but was worth a row. [teamNationId] is the side the row sits on (the
+/// shooter's for the woodwork, the keeper's for a save) and [name] the man
+/// it names.
+typedef TimelineChance = ({
+  int minute,
+  int stoppage,
+  int teamNationId,
+  String name,
+  bool woodwork,
+});
+
+/// The woodwork hits and big saves ([ShotMoment.isBigSave]) in [r] the clock
+/// has reached ([momentReached]), penalties left out (a penalty that did not
+/// go in has its own row, see [inPlayPenalties]). [names] names the players;
+/// [opponentOf] is the other side of a nation in the match.
+List<TimelineChance> timelineChances(
+  MatchResult r, {
+  required Map<int, String> names,
+  required bool Function(int minute, int stoppage) momentReached,
+  required int Function(int nationId) opponentOf,
+}) => [
+  for (final s in r.moments.whereType<ShotMoment>())
+    if (s.origin != ShotOrigin.penalty && momentReached(s.minute, s.stoppage))
+      if (s.outcome == ShotOutcome.woodwork)
+        (
+          minute: s.minute,
+          stoppage: s.stoppage,
+          teamNationId: s.teamNationId,
+          name: names[s.shooterId] ?? '',
+          woodwork: true,
+        )
+      else if (s.isBigSave && s.keeperId != null)
+        (
+          minute: s.minute,
+          stoppage: s.stoppage,
+          teamNationId: opponentOf(s.teamNationId),
+          name: names[s.keeperId] ?? '',
+          woodwork: false,
+        ),
+];
+
 /// What the manager reads while the game runs: the timeline, the box score,
 /// the two line-ups, momentum, and the moments that interrupt — a goal, a
 /// shootout, half time.
@@ -54,10 +96,15 @@ class MatchTimeline extends StatelessWidget {
     required this.live,
     required this.homeId,
     this.penalties = const [],
+    this.chances = const [],
     super.key,
   });
   final List<MatchEvent> events;
   final List<InPlayPenalty> penalties;
+
+  /// The woodwork hits and big saves the clock has reached
+  /// ([timelineChances]).
+  final List<TimelineChance> chances;
   final bool live;
   final int homeId;
 
@@ -82,6 +129,12 @@ class MatchTimeline extends StatelessWidget {
               isHome: p.teamNationId == homeId,
             ),
           ),
+      for (final c in chances)
+        (
+          minute: c.minute,
+          stoppage: c.stoppage,
+          row: _TimelineRow(chance: c, isHome: c.teamNationId == homeId),
+        ),
     ];
     if (rows.isEmpty) {
       return Center(
@@ -115,21 +168,32 @@ class MatchTimeline extends StatelessWidget {
 /// right, with the minute down the centre spine. Either an [event] or a
 /// [missedPenalty] (a penalty saved or missed, which is no event).
 class _TimelineRow extends StatelessWidget {
-  const _TimelineRow({required this.isHome, this.event, this.missedPenalty})
-    : assert(
-        (event == null) != (missedPenalty == null),
-        'a row is an event or a missed penalty',
-      );
+  const _TimelineRow({
+    required this.isHome,
+    this.event,
+    this.missedPenalty,
+    this.chance,
+  }) : assert(
+         (event != null ? 1 : 0) +
+                 (missedPenalty != null ? 1 : 0) +
+                 (chance != null ? 1 : 0) ==
+             1,
+         'a row is an event, a missed penalty or a chance',
+       );
 
   final MatchEvent? event;
   final InPlayPenalty? missedPenalty;
+  final TimelineChance? chance;
   final bool isHome;
 
   String get _clock {
     final e = event;
     if (e != null) return _eventClock(e);
-    final p = missedPenalty!;
-    return p.stoppage > 0 ? '90+${p.stoppage}' : "${p.minute}'";
+    final (minute, stoppage) = switch (missedPenalty) {
+      final p? => (p.minute, p.stoppage),
+      _ => (chance!.minute, chance!.stoppage),
+    };
+    return stoppage > 0 ? '90+$stoppage' : "$minute'";
   }
 
   @override
@@ -166,6 +230,32 @@ class _TimelineRow extends StatelessWidget {
 
   Widget _entry(BuildContext context, {required bool alignEnd}) {
     final event = this.event;
+    final chance = this.chance;
+    if (chance != null) {
+      // The woodwork, or a big save: a goal frame or a keeper's glove, and
+      // the man's name, the wording for screen readers.
+      final l = AppLocalizations.of(context);
+      final name = _abbrevName(chance.name);
+      return _entryOf(
+        icon: Semantics(
+          label: chance.woodwork
+              ? l.matchTimelineWoodwork(name)
+              : l.matchTimelineBigSave(name),
+          child: ExcludeSemantics(
+            child: chance.woodwork
+                ? const WoodworkMark()
+                : const Icon(
+                    Icons.back_hand_outlined,
+                    size: 16,
+                    color: AppColors.onSurfaceVariant,
+                  ),
+          ),
+        ),
+        label: name,
+        emphasised: false,
+        alignEnd: alignEnd,
+      );
+    }
     if (event == null) {
       // A penalty saved or missed: the ball with a red cross, the taker's
       // name alone. The old "NAME: MISSED" text ran off the edge in the
@@ -214,6 +304,9 @@ class _TimelineRow extends StatelessWidget {
             '${_abbrevName(event.secondaryName ?? '')}',
       MatchEventType.goal when event.penalty =>
         '${_abbrevName(event.playerName)} (pen)',
+      MatchEventType.goal when event.ownGoal =>
+        '${_abbrevName(event.playerName)} '
+            '(${AppLocalizations.of(context).matchGoalOwnGoal})',
       // A dismissal carries the name alone. The CARD says which one it was —
       // two overlapping cards for a second booking, one red for a straight
       // one — so naming it again in text said nothing the icon had not
@@ -301,7 +394,13 @@ class MatchStatsPanel extends StatelessWidget {
     required this.events,
     this.penalties = const [],
     this.showGround = true,
+    this.homeColor = AppColors.primary,
+    this.awayColor = AppColors.outline,
   });
+
+  /// The two sides' colours, told apart, for the charts over the match.
+  final Color homeColor;
+  final Color awayColor;
 
   /// Whether the ground's card closes the stats, under the figures (and
   /// over the full-time ratings), where the crowd is read like one more.
@@ -419,6 +518,26 @@ class MatchStatsPanel extends StatelessWidget {
             home: penalties.where((p) => p.teamNationId == homeNationId).length,
             away: penalties.where((p) => p.teamNationId != homeNationId).length,
           ),
+        // The match as it went: xG adding up and who was on top, drawn as
+        // of the clock, the whole match at the whistle.
+        if (result.homeXgByMinute.length > 1) ...[
+          const SizedBox(height: AppSpacing.lg),
+          MatchFlowCharts(
+            homeXg: result.homeXgByMinute,
+            awayXg: result.awayXgByMinute,
+            minute: fullTime ? 1 << 20 : minute,
+            homeColor: homeColor,
+            awayColor: awayColor,
+            goals: [
+              for (final e in events)
+                if (e.type == MatchEventType.goal)
+                  (
+                    minute: e.minute,
+                    home: (e.teamNationId == homeNationId),
+                  ),
+            ],
+          ),
+        ],
         if (!fullTime) ...[
           const SizedBox(height: AppSpacing.lg),
           Text(
@@ -1427,6 +1546,9 @@ class _GoalFlash extends StatelessWidget {
                     event.penalty
                         ? '${AppLocalizations.of(context).matchPenalty} · '
                               '${_eventClock(event)}'
+                        : event.ownGoal
+                        ? '${AppLocalizations.of(context).matchOwnGoal} · '
+                              '${_eventClock(event)}'
                         : event.longThrow
                         ? '${AppLocalizations.of(context).matchGoalLongThrow}'
                               ' · ${_eventClock(event)}'
@@ -2158,10 +2280,15 @@ class PitchCommentaryLine extends StatefulWidget {
     required this.clock,
     required this.countAt,
     required this.lineAt,
+    this.kickOffLine,
     super.key,
   });
 
   final PitchClock clock;
+
+  /// What is said before the first real moment: the weather the match is
+  /// played in ([pitchKickOffLine]), or null for the plain kick-off line.
+  final String? kickOffLine;
 
   /// How many lines are in by the clock's time (cheap: it runs every tick).
   final int Function(Duration t) countAt;
@@ -2223,7 +2350,10 @@ class _PitchCommentaryLineState extends State<PitchCommentaryLine> {
 
   @override
   Widget build(BuildContext context) {
-    final text = _line ?? AppLocalizations.of(context).matchFeedKickOff;
+    final text =
+        _line ??
+        widget.kickOffLine ??
+        AppLocalizations.of(context).matchFeedKickOff;
     return Container(
       width: double.infinity,
       height: kPitchCommentaryHeight,
@@ -2256,10 +2386,15 @@ class PitchCommentaryFeed extends StatefulWidget {
     required this.clock,
     required this.countAt,
     required this.linesAt,
+    this.kickOffLine,
     super.key,
   });
 
   final PitchClock clock;
+
+  /// The first line of the feed, said at kick-off: the weather the match is
+  /// played in ([pitchKickOffLine]), or null for none.
+  final String? kickOffLine;
 
   /// How many lines are in by the clock's time (cheap: it runs every tick).
   final int Function(Duration t) countAt;
@@ -2313,7 +2448,9 @@ class _PitchCommentaryFeedState extends State<PitchCommentaryFeed> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    if (_lines.isEmpty) {
+    final kickOff = widget.kickOffLine;
+    final lines = [?kickOff, ..._lines];
+    if (_lines.isEmpty && kickOff == null) {
       return Padding(
         padding: const EdgeInsets.all(AppSpacing.sm),
         child: Text(
@@ -2330,12 +2467,12 @@ class _PitchCommentaryFeedState extends State<PitchCommentaryFeed> {
         horizontal: AppSpacing.sm,
         vertical: AppSpacing.xs,
       ),
-      itemCount: _lines.length,
+      itemCount: lines.length,
       separatorBuilder: (_, _) => const Divider(height: 1),
       itemBuilder: (context, i) => Padding(
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
         child: Text(
-          _lines[_lines.length - 1 - i],
+          lines[lines.length - 1 - i],
           style: AppTypography.bodyMedium.copyWith(
             color: i == 0 ? AppColors.onSurface : AppColors.onSurfaceVariant,
           ),
@@ -2680,6 +2817,54 @@ const Key missedPenaltyMarkKey = Key('match.missedPenaltyMark');
 
 /// A ball with a small red cross on it: a penalty that did not go in
 /// (saved, missed or off the woodwork). Replaces a "MISSED" text chip.
+/// A shot off the woodwork, on the Timeline: a small goal frame with the
+/// ball against its post.
+class WoodworkMark extends StatelessWidget {
+  const WoodworkMark({super.key});
+
+  @override
+  Widget build(BuildContext context) => const SizedBox(
+    key: Key('match.woodworkMark'),
+    width: 20,
+    height: 18,
+    child: CustomPaint(painter: _WoodworkPainter()),
+  );
+}
+
+class _WoodworkPainter extends CustomPainter {
+  const _WoodworkPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final frame = Paint()
+      ..color = AppColors.onSurfaceVariant
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.8
+      ..strokeCap = StrokeCap.round;
+    final left = size.width * 0.12;
+    final right = size.width * 0.88;
+    final top = size.height * 0.2;
+    final bottom = size.height * 0.9;
+    canvas.drawPath(
+      Path()
+        ..moveTo(left, bottom)
+        ..lineTo(left, top)
+        ..lineTo(right, top)
+        ..lineTo(right, bottom),
+      frame,
+    );
+    // The ball, struck against the near post.
+    canvas.drawCircle(
+      Offset(right - 0.5, size.height * 0.5),
+      size.height * 0.17,
+      Paint()..color = AppColors.primary,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_WoodworkPainter old) => false;
+}
+
 class MissedPenaltyMark extends StatelessWidget {
   const MissedPenaltyMark({super.key});
 

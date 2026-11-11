@@ -59,7 +59,8 @@ void main() {
         rng: SeededRng.forFixture(77, fixture),
       );
       for (final e in r.events) {
-        if (e.type != MatchEventType.goal) continue;
+        // An own goal is nobody's goal in a scorer chart.
+        if (e.type != MatchEventType.goal || e.ownGoal) continue;
         final line = positions[e.playerId];
         if (line != null) byLine[line] = byLine[line]! + 1;
       }

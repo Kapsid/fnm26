@@ -16987,4 +16987,111 @@ class AppLocalizationsFi extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '”$name” ei ole sallittu';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Rankkasade: laukaukset ja keskitykset epävarmempia, enemmän liukastumisia';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Ukonilma: laukaukset ja keskitykset epävarmempia, enemmän liukastumisia';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Lumi: hitaampaa peliä, syötöt hieman vaikeampia';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Jäinen kenttä: hitaampaa peliä, syötöt hieman vaikeampia';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Kova tuuli: pitkät pallot ja keskitykset arvaamattomia, kaukolaukaukset vaikeampia';
+
+  @override
+  String get matchWeatherPlaysFog => 'Sumu: kaukolaukaukset vaikeampia';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Helleusva: tavallista kuumempaa, jalat väsyvät aiemmin';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Peli käynnistyy rankkasateessa. Pallo luistaa tällä nurmella.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Aloituspotku ukonilmassa. Jalansija on petollinen.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Peli käynnistyy lumisateessa. Tästä tulee hidas ja varovainen ottelu.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Pakkasilta ja kova kenttä. Syöttäminen ei ole helppoa.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Aloituspotku kovassa tuulessa. Pitkät pallot karkaavat.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Aloituspotku sakeassa sumussa. Kaukaa ei maaleja helpolla synny.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Aloituspotku helleusvassa. Jalat väsyvät tänään aikaisin.';
+
+  @override
+  String get matchOwnGoal => 'OMA MAALI';
+
+  @override
+  String get matchGoalOwnGoal => 'OM';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Oma maali! $defender ohjaa pallon omaan verkkoon.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return '${shooter}n yritys kimpoaa ikävästi ${defender}ista ja menee sisään.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Katastrofi ${defender}ille, joka voittaa oman maalivahtinsa.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Mikä torjunta! $keeper pysäyttää ${player}n läheltä.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Loistava torjunta, $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player näytti varmalta maalintekijältä, mutta $keeper torjuu jotenkin.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name osui tolppaan';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Iso torjunta: $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG ottelun aikana';
+
+  @override
+  String get matchChartMomentum => 'Kumpi hallitsi';
 }

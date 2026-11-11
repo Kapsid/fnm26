@@ -17227,4 +17227,111 @@ class AppLocalizationsUk extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '«$name» не дозволено';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Злива: удари й навіси менш точні, більше підковзувань';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Гроза: удари й навіси менш точні, більше підковзувань';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Сніг: повільніша гра, передачі трохи складніші';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Замерзле поле: повільніша гра, передачі трохи складніші';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Сильний вітер: довгі передачі й навіси непередбачувані, далекі удари складніші';
+
+  @override
+  String get matchWeatherPlaysFog => 'Туман: далекі удари складніші';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Спекотне марево: спекотніше, ніж зазвичай, ноги підведуть раніше';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Гра почалася під зливою. М’яч ковзатиме цим газоном.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Стартовий свисток у грозу. Газон буде підступним.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Гра почалася на снігу. Це буде повільний, обережний матч.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Морозний вечір і тверде поле. Передачі даватимуться нелегко.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Стартовий свисток при сильному вітрі. Довгі передачі зноситиме.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Стартовий свисток у густому тумані. Здалеку легко ніхто не заб’є.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Стартовий свисток у спекотному мареві. Сьогодні ноги втомляться рано.';
+
+  @override
+  String get matchOwnGoal => 'АВТОГОЛ';
+
+  @override
+  String get matchGoalOwnGoal => 'АГ';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Автогол! $defender спрямовує м’яч у власні ворота.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return 'Удар $shooter підступно рикошетить від $defender і залітає у ворота.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Катастрофа для $defender, який переграє власного воротаря.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Який сейв! $keeper не дає забити $player з близької відстані.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Блискучий сейв від $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player мав би забивати, але $keeper якимось дивом рятує.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name влучив у каркас воріт';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Важливий сейв від $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG протягом матчу';
+
+  @override
+  String get matchChartMomentum => 'Хто домінував';
 }

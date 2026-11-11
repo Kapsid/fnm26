@@ -16823,4 +16823,111 @@ class AppLocalizationsId extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '\"$name\" tidak diizinkan';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Hujan lebat: tembakan dan umpan silang kurang akurat, lebih sering terpeleset';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Badai petir: tembakan dan umpan silang kurang akurat, lebih sering terpeleset';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Salju: permainan lebih lambat, umpan sedikit lebih sulit';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Lapangan beku: permainan lebih lambat, umpan sedikit lebih sulit';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Angin kencang: umpan panjang dan umpan silang liar, tembakan jarak jauh lebih sulit';
+
+  @override
+  String get matchWeatherPlaysFog => 'Kabut: tembakan jarak jauh lebih sulit';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Kabut panas: lebih panas dari biasanya, tenaga cepat habis';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Laga dimulai di bawah hujan lebat. Bola akan meluncur deras di lapangan ini.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Sepak mula di tengah badai petir. Pijakan akan sangat licin.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Laga dimulai di tengah salju. Ini akan jadi laga yang lambat dan hati-hati.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Malam beku dan lapangan keras. Mengumpan tidak akan mudah.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Sepak mula di tengah angin kencang. Umpan panjang akan melenceng.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Sepak mula di tengah kabut tebal. Tak akan mudah mencetak gol dari jauh.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Sepak mula di tengah kabut panas. Tenaga akan cepat terkuras hari ini.';
+
+  @override
+  String get matchOwnGoal => 'GOL BUNUH DIRI';
+
+  @override
+  String get matchGoalOwnGoal => 'BD';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Gol bunuh diri! $defender membelokkan bola ke gawang sendiri.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return 'Upaya $shooter berbelok secara malang setelah mengenai $defender dan masuk.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Petaka bagi $defender, yang menaklukkan kipernya sendiri.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Penyelamatan luar biasa! $keeper menggagalkan $player dari jarak dekat.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Penyelamatan gemilang dari $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player tampak pasti mencetak gol, tapi $keeper entah bagaimana mampu menghalaunya.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name membentur tiang gawang';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Penyelamatan penting oleh $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG sepanjang laga';
+
+  @override
+  String get matchChartMomentum => 'Siapa yang menguasai';
 }

@@ -1,11 +1,15 @@
 import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/services/match/stadium/kick_off.dart';
 import 'package:fnm/domain/services/match/stadium/nation_latitudes.dart';
 
-/// The weather the Pitch view draws over a match. It is cosmetic only: no
-/// match engine, rating or result ever reads it.
+/// The weather a match is played in: what the Pitch view draws, and (since
+/// 1.2) what the match plays in. Both simulators read it through
+/// `MatchConditions.weather` (see `WeatherPlay`), from the one function
+/// [MatchWeather.forFixture], so what is shown is what was played.
 ///
-/// Never stored: it is worked out again for every fixture ([MatchWeather.of]).
+/// Never stored: it is worked out again for every fixture.
 /// New kinds go on the end all the same, so the order of the old ones never
 /// moves.
 enum WeatherKind {
@@ -84,6 +88,25 @@ abstract final class MatchWeather {
     'GUI', 'GNB', 'CIV', 'LBR', 'NGA', 'SLE', 'TOG', 'STP', 'MLI', 'SEN',
     'GAM', 'NIG', 'MTN',
   };
+
+  /// The weather [fixture] is played in, at a ground in the country [code]
+  /// of [confederation], for the save [saveSeed]: its kick-off read off the
+  /// save and the fixture ([KickOff.forFixture]), then [of].
+  ///
+  /// The ONE function the Pitch view, the shown match and the background
+  /// simulation all read, from the fixture, the ground and the save alone.
+  static WeatherKind forFixture({
+    required Fixture fixture,
+    required String code,
+    required Confederation confederation,
+    required int saveSeed,
+  }) => of(
+    code: code,
+    confederation: confederation,
+    date: fixture.date,
+    fixtureId: fixture.id,
+    kickOffHours: KickOff.forFixture(fixture, saveSeed).hours,
+  );
 
   /// The weather for the match [fixtureId] on [date] at a ground in the
   /// country [code] of [confederation], kicking off at [kickOffHours] local

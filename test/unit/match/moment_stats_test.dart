@@ -91,11 +91,14 @@ void main() {
         }
       }
       final goals = <int, int>{};
+      final ownGoals = <int, int>{};
       final assists = <int, int>{};
       final yellows = <int>{};
       final reds = <int>{};
       for (final e in r.events) {
         switch (e.type) {
+          case MatchEventType.goal when e.ownGoal:
+            ownGoals.update(e.playerId, (v) => v + 1, ifAbsent: () => 1);
           case MatchEventType.goal:
             goals.update(e.playerId, (v) => v + 1, ifAbsent: () => 1);
             if (e.assistPlayerId case final a?) {
@@ -124,6 +127,7 @@ void main() {
               oppScore: p.teamNationId == 1 ? away : home,
               penaltiesMissed: missed,
               penaltiesSaved: saved,
+              ownGoals: ownGoals[p.playerId] ?? 0,
             );
         final missed = missedBy[p.playerId] ?? 0;
         final saved = savedBy[p.playerId] ?? 0;

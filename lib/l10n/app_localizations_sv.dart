@@ -16897,4 +16897,111 @@ class AppLocalizationsSv extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '”$name” är inte tillåtet';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Kraftigt regn: skott och inlägg mindre säkra, fler halkningar';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Åska: skott och inlägg mindre säkra, fler halkningar';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Snö: långsammare spel, passningar lite svårare';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Frusen plan: långsammare spel, passningar lite svårare';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Hård vind: långa bollar och inlägg oberäkneliga, distansskott svårare';
+
+  @override
+  String get matchWeatherPlaysFog => 'Dimma: distansskott svårare';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Värmedis: varmare än vanligt, benen tar slut tidigare';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Vi är igång i kraftigt regn. Bollen kommer att glida på den här planen.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Avspark i åskväder. Fotfästet blir förrädiskt.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Vi är igång i snön. Det blir en långsam, försiktig match.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'En frostig kväll och en hård plan. Passningsspelet blir inte lätt.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Avspark i hård vind. Långa bollar kommer att driva iväg.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Avspark i tät dimma. Ingen kommer att göra mål från distans i första taget.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Avspark i värmedisen. Benen tröttnar tidigt i dag.';
+
+  @override
+  String get matchOwnGoal => 'SJÄLVMÅL';
+
+  @override
+  String get matchGoalOwnGoal => 'SM';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Självmål! $defender styr in bollen i eget mål.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return '${shooter}s försök tar en olycklig styrning på $defender och går in.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Katastrof för $defender, som överlistar sin egen målvakt.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Vilken räddning! $keeper stoppar $player från nära håll.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Lysande räddning av $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player såg ut att göra mål, men $keeper räddar på något sätt.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name träffade ramen';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Stor räddning av $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG under matchen';
+
+  @override
+  String get matchChartMomentum => 'Vem som styrde';
 }

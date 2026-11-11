@@ -16938,4 +16938,111 @@ class AppLocalizationsEn extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '\"$name\" isn\'t allowed';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Heavy rain: shots and crosses less reliable, more slips';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Thunderstorm: shots and crosses less reliable, more slips';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Snow: a slower game, passing a little harder';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Frozen pitch: a slower game, passing a little harder';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Strong wind: long balls and crosses erratic, long shots harder';
+
+  @override
+  String get matchWeatherPlaysFog => 'Fog: shots from distance harder';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Heat haze: hotter than usual, legs will go sooner';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'We\'re under way in heavy rain. The ball will skid off this surface.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Kick-off in a thunderstorm. The footing will be treacherous.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'We\'re under way in the snow. This will be a slow, careful game.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'A frosty night and a hard pitch. Passing won\'t be easy.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Kick-off in a strong wind. Long balls will go astray.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Kick-off in thick fog. Nobody will be scoring from distance easily.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Kick-off in the heat haze. Legs will tire early today.';
+
+  @override
+  String get matchOwnGoal => 'OWN GOAL';
+
+  @override
+  String get matchGoalOwnGoal => 'OG';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Own goal! $defender turns it into his own net.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return '$shooter\'s effort takes a cruel deflection off $defender and goes in.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Disaster for $defender, who puts it past his own keeper.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'What a save! $keeper denies $player from close range.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Brilliant stop by $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player looked certain to score, but $keeper somehow keeps it out.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name hit the woodwork';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Big save by $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG over the match';
+
+  @override
+  String get matchChartMomentum => 'Who was on top';
 }

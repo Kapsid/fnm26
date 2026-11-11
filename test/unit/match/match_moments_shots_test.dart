@@ -83,8 +83,15 @@ void main() {
       for (final s in goalShots) {
         final e = r.events[s.goalEventIndex!];
         expect(e.type, MatchEventType.goal);
-        expect(s.shooterId, e.playerId);
-        expect(s.assistId, e.assistPlayerId);
+        // An own goal's shot is still the attacker's: the event names the
+        // defender who turned it in, and has no assist.
+        if (e.ownGoal) {
+          expect(s.shooterId, isNot(e.playerId));
+          expect(e.assistPlayerId, isNull);
+        } else {
+          expect(s.shooterId, e.playerId);
+          expect(s.assistId, e.assistPlayerId);
+        }
         expect(s.teamNationId, e.teamNationId);
         expect(s.minute, e.minute);
         expect(s.stoppage, e.stoppage);
