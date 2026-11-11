@@ -8,6 +8,7 @@ import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/domain/services/press/conference.dart';
 import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
+import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/press/press_copy.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/press/press_providers.dart';
@@ -60,7 +61,15 @@ class _PressSheetState extends ConsumerState<PressSheet> {
   );
 
   late final int _seed = varietySeed('conf:${_c.row.id}');
-  late final List<PressReporter> _room = Press.roomFor(_seed);
+
+  /// The room: the game's reporters, and those the career's custom world
+  /// adds (none in a default career).
+  late final List<PressReporter> _room = Press.roomFor(
+    _seed,
+    added: Press.addedReporters(
+      ActiveWorld.current.pack?.addedReporters ?? const [],
+    ),
+  );
   late final Beat? _throwback = ConferenceBuilder.throwback(_c.facts);
 
   /// The question about the opposing manager, when he has a history with
@@ -306,7 +315,14 @@ class PressByline extends StatelessWidget {
       PressAngle.local => AppColors.warning,
       PressAngle.foreign => AppColors.onSurfaceVariant,
     };
-    final renamed = ActiveWorld.current.reporter(reporter.index);
+    // One the world added goes by his own name (in the app's language when
+    // the world gives one); one of the game's by the world's rename.
+    final added = reporter.index >= kPackAddedIdBase
+        ? ActiveWorld.current.addedReporter(reporter.index)
+        : null;
+    final renamed = added == null
+        ? ActiveWorld.current.reporter(reporter.index)
+        : PackReporter(name: added.name, outlet: added.outlet);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

@@ -61,7 +61,11 @@ abstract final class Attendance {
   /// [venueRules] are the rules the tournament's grounds follow (see
   /// [VenueRules]); [groundPlan], given for an edition decided under the
   /// stadium bars, stages it in the grounds that count toward its bar (see
-  /// `VenueGenerator.forHosts`).
+  /// `VenueGenerator.forHosts`). [addedGrounds] are the grounds a career's
+  /// custom world adds to each nation (biggest first, see
+  /// `NationalStadiums.addedGrounds`): a home game rotates over them with the
+  /// static grounds (see [VenueGenerator.withAdded]); a neutral finals never
+  /// uses them. None (every default career) changes nothing.
   static MatchGround forFixture({
     required Fixture fixture,
     required bool neutral,
@@ -79,6 +83,7 @@ abstract final class Attendance {
     double moodFill = 0,
     VenueRules venueRules = VenueRules.original,
     HostGroundPlan? groundPlan,
+    Map<int, List<Venue>> addedGrounds = const {},
   }) {
     // Whose ground: at a neutral finals it belongs to the TOURNAMENT — one of
     // the host countries, whoever is playing — and everywhere else to the home
@@ -107,10 +112,13 @@ abstract final class Attendance {
                 planned: groundPlan?.planned ?? const {},
               )[owner] ??
               const <Venue>[]
-        : VenueGenerator.forHost(
-            hostId: owner,
-            cities: citiesByNation[owner],
-            count: venueCount,
+        : VenueGenerator.withAdded(
+            VenueGenerator.forHost(
+              hostId: owner,
+              cities: citiesByNation[owner],
+              count: venueCount,
+            ),
+            neutral ? const [] : addedGrounds[owner] ?? const [],
           );
     // A career's own national stadium, for a home game of its nation.
     final home = neutral ? null : homeGrounds[owner];

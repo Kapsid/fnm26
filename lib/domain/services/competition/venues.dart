@@ -152,6 +152,26 @@ abstract final class VenueGenerator {
     _ => 8,
   };
 
+  /// [grounds] (a nation's, biggest first) with [added] (the grounds a
+  /// career's custom world adds to it, biggest first:
+  /// `NationalStadiums.addedGrounds`) among them, still biggest first: a
+  /// merge, so [grounds] keep their order and on equal seats the game's
+  /// ground comes first. [grounds] itself when [added] is empty, so a
+  /// default career reads exactly what it always read.
+  static List<Venue> withAdded(List<Venue> grounds, List<Venue> added) {
+    if (added.isEmpty) return grounds;
+    final out = <Venue>[];
+    var j = 0;
+    for (final g in grounds) {
+      while (j < added.length && added[j].capacity > g.capacity) {
+        out.add(added[j++]);
+      }
+      out.add(g);
+    }
+    out.addAll(added.skip(j));
+    return out;
+  }
+
   /// The venues of a tournament shared between [hostIds] (primary first):
   /// [count] grounds in total, split as evenly as possible, with any remainder
   /// going to the earlier hosts.

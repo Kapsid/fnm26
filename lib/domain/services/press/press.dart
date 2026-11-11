@@ -1,4 +1,5 @@
 import 'package:fnm/domain/services/match/match_engine.dart';
+import 'package:fnm/domain/services/world_pack/world_pack.dart';
 
 /// What an answer does to the dressing room and to the board, in points on
 /// their 0–100 scales. Deliberately small: a press answer is a nudge, not a
@@ -52,7 +53,9 @@ enum PressAngle {
 /// language — they are proper nouns, like the club names.
 ///
 /// [index] is the reporter's place in the press pack, which a custom world
-/// renames him by (`ActiveWorld.reporter`).
+/// renames him by (`ActiveWorld.reporter`); for a reporter a custom world
+/// adds ([Press.addedReporters]) it is his id in that world
+/// (`ActiveWorld.addedReporter`).
 typedef PressReporter = ({
   String name,
   String outlet,
@@ -185,8 +188,15 @@ abstract final class Press {
   ///
   /// One of each angle would be tidy and wrong: a room is not a panel, so the
   /// pool is drawn as it comes and a conference simply takes the next three.
-  static List<PressReporter> roomFor(int seed) {
-    final pool = [...reporters];
+  ///
+  /// [added] are the reporters a career's custom world adds
+  /// ([addedReporters]): they sit in the pool after the game's own. With
+  /// none (every default career) the room is exactly what it always was.
+  static List<PressReporter> roomFor(
+    int seed, {
+    List<PressReporter> added = const [],
+  }) {
+    final pool = [...reporters, ...added];
     // A deterministic shuffle — a rotation plus a stride — so two saves get
     // different rooms without needing a random source in a pure function.
     final stride = 1 + seed.abs() % (pool.length - 1);
@@ -279,6 +289,22 @@ abstract final class Press {
       angle: PressAngle.foreign,
       index: 9,
     ),
+  ];
+
+  /// The reporters a custom world adds, as the press pool seats them: each
+  /// under his id ([PressReporter.index]), his angle (the colour of his
+  /// byline) fixed by his place among them, so the same world always seats
+  /// the same room.
+  static List<PressReporter> addedReporters(
+    Iterable<PackAddedReporter> added,
+  ) => [
+    for (final (i, r) in added.indexed)
+      (
+        name: r.name,
+        outlet: r.outlet,
+        angle: PressAngle.values[i % PressAngle.values.length],
+        index: r.id,
+      ),
   ];
 
   /// The combined effect of everything said this cycle, clamped so a manager

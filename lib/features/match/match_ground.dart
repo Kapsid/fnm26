@@ -21,7 +21,9 @@ import 'package:fnm/features/tournaments/city_providers.dart';
 /// skipped tie in Toluca and the shown one in Monterrey. Everything that
 /// moves the ground is read here: the fixture's venue (a neutral finals at
 /// the host), the nation's real cities, the estate a manager's nation hosts
-/// a finals in, and the national stadium his own works have made.
+/// a finals in, the national stadium his own works have made, and the
+/// grounds a custom world adds to a nation (its home games rotate over
+/// them; a neutral finals never uses them).
 ///
 /// [homeStrength], [awayStrength] and [moodFill] only size the crowd; they
 /// never move the ground (the background passes none of them). A home game
@@ -52,6 +54,14 @@ Future<MatchGround> resolveMatchGround(
         hostsMemo: memo?._hosts,
       );
   final cities = await loadCountryCities(ref);
+  // The grounds the career's custom world adds (none in a default career):
+  // an AI nation's home games rotate over them too. His own nation's are
+  // already in its estate (see [managerHomeEstate]).
+  final added = v.neutral
+      ? const <int, List<AddedGround>>{}
+      : await (memo == null
+            ? careerAddedGrounds(ref, career.id)
+            : memo._added ??= careerAddedGrounds(ref, career.id));
   // A finals the manager's nation hosts is staged in the estate the career
   // has made of its grounds (built Arena Novas, resized grounds).
   Future<Map<int, List<Venue>>> estates() =>
@@ -121,6 +131,9 @@ Future<MatchGround> resolveMatchGround(
     awayRanking: v.neutral ? null : _rankingOf(nations, fixture.awayNationId),
     hostEstates: hostEstates,
     moodFill: moodFill,
+    addedGrounds: {
+      for (final e in added.entries) e.key: [for (final g in e.value) g.venue],
+    },
   );
 }
 
@@ -132,6 +145,7 @@ class MatchGroundMemo {
   final Map<String, Future<Map<int, List<Venue>>>> _estates = {};
   Future<ManagerHomeEstate?>? _home;
   Future<VenueRules>? _rules;
+  Future<Map<int, List<AddedGround>>>? _added;
 }
 
 int? _rankingOf(List<Nation> nations, int nationId) {

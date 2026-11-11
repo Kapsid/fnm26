@@ -18,6 +18,8 @@ import 'package:fnm/features/federation/host_bid_providers.dart'
         hostBidStatusProvider,
         nationStadiumsProvider;
 import 'package:fnm/features/tournaments/city_providers.dart';
+import 'package:fnm/features/world_pack/world_pack_providers.dart'
+    show worldPackRepositoryProvider;
 import 'package:fnm/features/y/y_providers.dart';
 
 /// Every stadium work [careerId] has paid for, any nation.
@@ -51,6 +53,21 @@ List<Venue> seedStadiums(int nationId, Map<int, List<String>> cities) =>
       cities: cities[nationId],
       count: seedStadiumsListed,
     );
+
+/// The grounds career [careerId]'s custom world adds, by nation, biggest
+/// first ([NationalStadiums.addedGrounds]); none for a default career. A
+/// world that cannot be read throws: a guess would move the grounds the
+/// results are played at.
+Future<Map<int, List<AddedGround>>> careerAddedGrounds(
+  Ref ref,
+  int careerId,
+) async {
+  final added = await ref
+      .read(worldPackRepositoryProvider)
+      .addedStadiumsFor(careerId);
+  if (added.stadiums.isEmpty) return const {};
+  return NationalStadiums.addedGrounds(added.stadiums, world: added.world);
+}
 
 /// As many grounds as the biggest finals uses (sixteen, see
 /// [VenueGenerator.countForField]).
@@ -180,6 +197,7 @@ Future<List<NationalStadium>> _allStadiums(
     seed: seedStadiums(nationId, cities),
     works: works,
     names: await stadiumNames(comp, careerId),
+    added: (await careerAddedGrounds(ref, careerId))[nationId] ?? const [],
   );
 }
 
@@ -298,6 +316,7 @@ Future<NationalStadiumsView?> _loadView(Ref ref, int careerId) async {
     seed: seedStadiums(nationId, cities),
     works: works,
     names: await stadiumNames(comp, careerId),
+    added: (await careerAddedGrounds(ref, careerId))[nationId] ?? const [],
   );
   final set = NationalStadiums.nationalSet(all);
   final builtIn = {
