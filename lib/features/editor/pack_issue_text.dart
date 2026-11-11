@@ -337,7 +337,8 @@ PackIssueText _badField(
         section: section,
         nationId: null,
       );
-    // The database's own name: renamed in the list of databases.
+    // The database's own name: renamed from its home (Rename) or the list
+    // of databases.
     case 'name':
       return (
         title: sectionTitle,
