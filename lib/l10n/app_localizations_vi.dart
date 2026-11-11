@@ -16890,4 +16890,12 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Thể lực';
+
+  @override
+  String get settingsAboutCopyright =>
+      '© 2026 Martin Urbanczyk. Bảo lưu mọi quyền.';
+
+  @override
+  String get settingsAboutProtected =>
+      'Trò chơi, mã nguồn và nội dung của trò chơi được bảo vệ bởi luật bản quyền.';
 }

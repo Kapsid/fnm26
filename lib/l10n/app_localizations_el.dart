@@ -17133,4 +17133,12 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Φυσική κατάσταση';
+
+  @override
+  String get settingsAboutCopyright =>
+      '© 2026 Martin Urbanczyk. Με επιφύλαξη παντός δικαιώματος.';
+
+  @override
+  String get settingsAboutProtected =>
+      'Το παιχνίδι, ο κώδικάς του και το περιεχόμενό του προστατεύονται από πνευματικά δικαιώματα.';
 }

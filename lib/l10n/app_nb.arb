@@ -4257,5 +4257,7 @@
   "profileTabStats": "Statistikk",
   "profileTabCareer": "Karriere",
   "profileTabVsYou": "Mot deg",
-  "playerStatFitness": "Kondisjon"
+  "playerStatFitness": "Kondisjon",
+  "settingsAboutCopyright": "© 2026 Martin Urbanczyk. Alle rettigheter forbeholdt.",
+  "settingsAboutProtected": "Spillet, koden og innholdet er beskyttet av opphavsrett."
 }

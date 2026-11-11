@@ -210,6 +210,16 @@ void main() {
     });
   }
 
+  testWidgets('the copyright line closes the middle column', (tester) async {
+    await _open(tester, const Size(1024, 768));
+    await tester.scrollUntilVisible(
+      find.text(enL.settingsAboutCopyright),
+      200,
+      scrollable: find.byType(Scrollable).at(1),
+    );
+    expect(find.text(enL.settingsAboutProtected), findsOneWidget);
+  });
+
   testWidgets("the sound switch writes the phone's setting", (tester) async {
     final save = await _open(tester, kTabletSize);
     expect((await _prefs(tester)).getBool('settings.soundHaptics'), isNull);

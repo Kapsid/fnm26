@@ -193,6 +193,8 @@ class SettingsScreen extends ConsumerWidget {
           _ContactCard(),
           SizedBox(height: AppSpacing.md),
           CommunityCard(),
+          SizedBox(height: AppSpacing.lg),
+          _AboutFooter(),
         ],
       ),
     );
@@ -649,6 +651,35 @@ class _ContactCard extends StatelessWidget {
           color: AppColors.primary,
         ),
       ),
+    );
+  }
+}
+
+/// The visible copyright line at the foot of Settings.
+class _AboutFooter extends StatelessWidget {
+  const _AboutFooter();
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final style = AppTypography.labelSmall.copyWith(
+      color: AppColors.onSurfaceVariant,
+    );
+    return Column(
+      children: [
+        Text(
+          l.settingsAboutCopyright,
+          key: const Key('settings.aboutCopyright'),
+          textAlign: TextAlign.center,
+          style: style,
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        Text(
+          l.settingsAboutProtected,
+          textAlign: TextAlign.center,
+          style: style,
+        ),
+      ],
     );
   }
 }

@@ -4257,5 +4257,7 @@
   "profileTabStats": "スタッツ",
   "profileTabCareer": "キャリア",
   "profileTabVsYou": "対あなた",
-  "playerStatFitness": "コンディション"
+  "playerStatFitness": "コンディション",
+  "settingsAboutCopyright": "© 2026 Martin Urbanczyk. 無断複製・転載を禁じます。",
+  "settingsAboutProtected": "本ゲーム、そのコードおよびコンテンツは著作権により保護されています。"
 }

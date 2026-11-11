@@ -17127,4 +17127,12 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Физическа форма';
+
+  @override
+  String get settingsAboutCopyright =>
+      '© 2026 Martin Urbanczyk. Всички права запазени.';
+
+  @override
+  String get settingsAboutProtected =>
+      'Играта, нейният код и съдържание са защитени от авторско право.';
 }

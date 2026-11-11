@@ -4257,5 +4257,7 @@
   "profileTabStats": "Statistik",
   "profileTabCareer": "Karriere",
   "profileTabVsYou": "Gegen dich",
-  "playerStatFitness": "Fitness"
+  "playerStatFitness": "Fitness",
+  "settingsAboutCopyright": "© 2026 Martin Urbanczyk. Alle Rechte vorbehalten.",
+  "settingsAboutProtected": "Das Spiel, sein Code und seine Inhalte sind urheberrechtlich geschützt."
 }

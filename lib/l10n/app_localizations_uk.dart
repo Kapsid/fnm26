@@ -17357,4 +17357,12 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Фізпідготовка';
+
+  @override
+  String get settingsAboutCopyright =>
+      '© 2026 Martin Urbanczyk. Усі права захищено.';
+
+  @override
+  String get settingsAboutProtected =>
+      'Гра, її код і вміст захищені авторським правом.';
 }

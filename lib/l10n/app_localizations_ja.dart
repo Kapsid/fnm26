@@ -16429,4 +16429,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'コンディション';
+
+  @override
+  String get settingsAboutCopyright => '© 2026 Martin Urbanczyk. 無断複製・転載を禁じます。';
+
+  @override
+  String get settingsAboutProtected => '本ゲーム、そのコードおよびコンテンツは著作権により保護されています。';
 }

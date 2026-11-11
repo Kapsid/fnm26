@@ -4257,5 +4257,7 @@
   "profileTabStats": "Στατιστικά",
   "profileTabCareer": "Καριέρα",
   "profileTabVsYou": "Εναντίον σου",
-  "playerStatFitness": "Φυσική κατάσταση"
+  "playerStatFitness": "Φυσική κατάσταση",
+  "settingsAboutCopyright": "© 2026 Martin Urbanczyk. Με επιφύλαξη παντός δικαιώματος.",
+  "settingsAboutProtected": "Το παιχνίδι, ο κώδικάς του και το περιεχόμενό του προστατεύονται από πνευματικά δικαιώματα."
 }

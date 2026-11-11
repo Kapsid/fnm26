@@ -25783,6 +25783,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Fitness'**
   String get playerStatFitness;
+
+  /// Settings footer: copyright line, holder name stays as is.
+  ///
+  /// In en, this message translates to:
+  /// **'© 2026 Martin Urbanczyk. All rights reserved.'**
+  String get settingsAboutCopyright;
+
+  /// Settings footer: one line saying the game, code and content are protected.
+  ///
+  /// In en, this message translates to:
+  /// **'The game, its code and its content are protected by copyright.'**
+  String get settingsAboutProtected;
 }
 
 class _AppLocalizationsDelegate

@@ -16953,4 +16953,12 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Kebugaran';
+
+  @override
+  String get settingsAboutCopyright =>
+      '© 2026 Martin Urbanczyk. Hak cipta dilindungi.';
+
+  @override
+  String get settingsAboutProtected =>
+      'Game ini, kodenya, dan kontennya dilindungi hak cipta.';
 }

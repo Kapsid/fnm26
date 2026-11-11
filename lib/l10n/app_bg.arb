@@ -4257,5 +4257,7 @@
   "profileTabStats": "Статистика",
   "profileTabCareer": "Кариера",
   "profileTabVsYou": "Срещу теб",
-  "playerStatFitness": "Физическа форма"
+  "playerStatFitness": "Физическа форма",
+  "settingsAboutCopyright": "© 2026 Martin Urbanczyk. Всички права запазени.",
+  "settingsAboutProtected": "Играта, нейният код и съдържание са защитени от авторско право."
 }
