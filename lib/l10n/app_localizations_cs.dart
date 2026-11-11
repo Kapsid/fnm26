@@ -15715,6 +15715,62 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String get editorAddReporter => 'Přidat novináře';
+
+  @override
+  String get editorAddStadium => 'Přidat stadion';
+
+  @override
+  String editorAddedReportersFull(int max) {
+    return 'Databáze může přidat nejvýše $max novinářů.';
+  }
+
+  @override
+  String editorAddedStadiumsFull(int max) {
+    return 'Databáze může přidat nejvýše $max stadionů.';
+  }
+
+  @override
+  String get editorAddedCity => 'Město';
+
+  @override
+  String get editorAddedCityHelp =>
+      'Může to být jakékoli město. Město, které hra nezná, převezme vzhled své země a hraje se v něm jako v nížině.';
+
+  @override
+  String get editorAddedCapacity => 'Počet míst';
+
+  @override
+  String editorAddedCapacityRange(int min, int max) {
+    final intl.NumberFormat minNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String minString = minNumberFormat.format(min);
+    final intl.NumberFormat maxNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String maxString = maxNumberFormat.format(max);
+
+    return '$minString až $maxString míst';
+  }
+
+  @override
+  String editorAddedStadiumTaken(String country) {
+    return '$country už má přidaný stadion s tímto názvem.';
+  }
+
+  @override
+  String get editorAddedFieldNeeded => 'Vyplňte toto pole';
+
+  @override
+  String get editorAddedReporterAbout =>
+      'V kariérách na této databázi se přidá k novinářům a klade otázky na tiskových konferencích.';
+
+  @override
+  String get editorAddedStadiumAbout =>
+      'V kariérách na této databázi hostí část domácích zápasů své reprezentace. Závěrečné turnaje se hrají na stadionech ze hry.';
+
+  @override
   String get editorAddedGone => 'Toto už v databázi není.';
 
   @override

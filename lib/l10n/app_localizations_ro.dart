@@ -15746,6 +15746,62 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
+  String get editorAddReporter => 'Adăugați jurnalist';
+
+  @override
+  String get editorAddStadium => 'Adăugați stadion';
+
+  @override
+  String editorAddedReportersFull(int max) {
+    return 'O bază de date poate adăuga cel mult $max de jurnaliști.';
+  }
+
+  @override
+  String editorAddedStadiumsFull(int max) {
+    return 'O bază de date poate adăuga cel mult $max de stadioane.';
+  }
+
+  @override
+  String get editorAddedCity => 'Oraș';
+
+  @override
+  String get editorAddedCityHelp =>
+      'Orice oraș merge. Un oraș pe care jocul nu îl cunoaște ia aspectul țării sale și se află la nivelul mării.';
+
+  @override
+  String get editorAddedCapacity => 'Locuri';
+
+  @override
+  String editorAddedCapacityRange(int min, int max) {
+    final intl.NumberFormat minNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String minString = minNumberFormat.format(min);
+    final intl.NumberFormat maxNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String maxString = maxNumberFormat.format(max);
+
+    return 'Între $minString și $maxString de locuri';
+  }
+
+  @override
+  String editorAddedStadiumTaken(String country) {
+    return '$country are deja un stadion adăugat cu acest nume.';
+  }
+
+  @override
+  String get editorAddedFieldNeeded => 'Completați acest câmp';
+
+  @override
+  String get editorAddedReporterAbout =>
+      'În carierele pe această bază de date intră în sala de presă și pune întrebări la conferințele de presă.';
+
+  @override
+  String get editorAddedStadiumAbout =>
+      'În carierele pe această bază de date găzduiește o parte din meciurile de acasă ale naționalei sale. Turneele finale rămân pe stadioanele jocului.';
+
+  @override
   String get editorAddedGone => 'Acest element nu mai este în baza de date.';
 
   @override

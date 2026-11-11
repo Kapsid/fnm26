@@ -5,6 +5,7 @@ import 'package:fnm/domain/services/competition/stadium_capacity.dart';
 import 'package:fnm/domain/services/competition/venues.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
+import 'package:fnm/domain/services/world_pack/world_pack.dart';
 
 /// One of a nation's national stadiums in one career: a seed ground (one of
 /// the static venues every career starts from) or one the federation built,
@@ -50,6 +51,10 @@ class NationalStadium {
   /// For a built stadium, the cycle it opens in; null for a seed ground.
   final int? opensCycle;
 
+  /// Whether a career's custom world added it (its site is
+  /// `<city>#+<id>`, see [NationalStadiums.forNation]).
+  bool get added => site.contains('#+');
+
   /// Whether the ground can be played in (and counted) in [cycle].
   bool openIn(int cycle) => opensCycle == null || cycle >= opensCycle!;
 
@@ -64,8 +69,13 @@ class NationalStadium {
 }
 
 /// Which stadium a work names. [city] is the ground's site: its city, or
-/// `<city>#2` for a city's second ground.
+/// `<city>#2` for a city's second ground, or `<city>#+<id>` for the ground
+/// a career's custom world added with that id.
 typedef StadiumRef = ({String city, bool built});
+
+/// A ground a career's custom world adds to a nation: its id in that world
+/// ([PackStadium.id]) and the ground.
+typedef AddedGround = ({int id, Venue venue});
 
 /// A stadium's level IS its capacity band. Chosen from what real grounds of
 /// each size are:
@@ -567,17 +577,54 @@ abstract final class NationalStadiums {
   static double fillBonus(int upgrades) =>
       math.min(maxLevel, upgrades) * fillPerUpgrade;
 
+  /// [stadiums] (the ones a custom world adds) by nation, as grounds, each
+  /// nation's biggest first (on equal seats by id): under its name in the
+  /// app's language when the world [world] (its uuid) gives one there
+  /// ([ActiveWorld.addedStadiumName]), else its own.
+  static Map<int, List<AddedGround>> addedGrounds(
+    Iterable<PackStadium> stadiums, {
+    String? world,
+  }) {
+    final out = <int, List<AddedGround>>{};
+    final sorted = [...stadiums]
+      ..sort((a, b) {
+        final bySeats = b.capacity.compareTo(a.capacity);
+        return bySeats != 0 ? bySeats : a.id.compareTo(b.id);
+      });
+    for (final g in sorted) {
+      (out[g.nationId] ??= []).add((
+        id: g.id,
+        venue: (
+          city: g.city,
+          stadium:
+              ActiveWorld.current.addedStadiumName(g.id, world: world) ??
+              g.name,
+          capacity: g.capacity,
+        ),
+      ));
+    }
+    return out;
+  }
+
   /// [nationId]'s stadiums in a career: the seed grounds ([seed], biggest
   /// first, the static venues) with the works in [works] applied, plus the
   /// stadiums [works] built, under the name [names] gives each (see
   /// [StadiumName]) or the generated one. [works] and [names] may hold other
   /// nations'; only [nationId]'s count. Built stadiums come back whether
   /// open or not (see [NationalStadium.openIn]).
+  ///
+  /// [added] are the grounds the career's custom world adds to the nation
+  /// ([addedGrounds], biggest first): seed grounds like the rest, among them
+  /// by their seats (on equal seats the game's first), each under its own
+  /// name and site
+  /// (`<city>#+<id>`), so the works on one never land on another. None (a
+  /// default career) leaves the list exactly as it was.
   static List<NationalStadium> forNation({
     required int nationId,
     required List<Venue> seed,
     required Iterable<StadiumWork> works,
     Iterable<StadiumName> names = const [],
+    List<AddedGround> added = const [],
   }) {
     final given = StadiumName.latestFor(names, nationId);
     final mine = [
@@ -652,8 +699,34 @@ abstract final class NationalStadiums {
       );
     }
 
+    final grounds = <NationalStadium>[];
+    // The added grounds (biggest first, see [addedGrounds]) merged in by
+    // the seats each starts with: the game's keep their order, and on equal
+    // seats go first.
+    final extra = added;
+    var j = 0;
+    NationalStadium addedAt(int k) {
+      final a = extra[k];
+      return shaped(
+        city: a.venue.city,
+        name: a.venue.stadium,
+        base: a.venue.capacity,
+        built: false,
+        site: '${a.venue.city}#+${a.id}',
+      );
+    }
+
+    for (final v in seed) {
+      while (j < extra.length && extra[j].venue.capacity > v.capacity) {
+        grounds.add(addedAt(j++));
+      }
+      grounds.add(seeded(v));
+    }
+    while (j < extra.length) {
+      grounds.add(addedAt(j++));
+    }
     return [
-      for (final v in seed) seeded(v),
+      ...grounds,
       for (final w in mine)
         if (w.isBuild)
           shaped(

@@ -14802,6 +14802,61 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String get editorAddReporter => '기자 추가';
+
+  @override
+  String get editorAddStadium => '경기장 추가';
+
+  @override
+  String editorAddedReportersFull(int max) {
+    return '데이터베이스에는 기자를 최대 $max명까지 추가할 수 있습니다.';
+  }
+
+  @override
+  String editorAddedStadiumsFull(int max) {
+    return '데이터베이스에는 경기장을 최대 $max개까지 추가할 수 있습니다.';
+  }
+
+  @override
+  String get editorAddedCity => '도시';
+
+  @override
+  String get editorAddedCityHelp =>
+      '어느 도시든 괜찮습니다. 게임이 모르는 도시는 그 나라의 풍경을 따르고 해발 0m로 취급됩니다.';
+
+  @override
+  String get editorAddedCapacity => '좌석 수';
+
+  @override
+  String editorAddedCapacityRange(int min, int max) {
+    final intl.NumberFormat minNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String minString = minNumberFormat.format(min);
+    final intl.NumberFormat maxNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String maxString = maxNumberFormat.format(max);
+
+    return '$minString~$maxString석';
+  }
+
+  @override
+  String editorAddedStadiumTaken(String country) {
+    return '$country에 이미 같은 이름의 추가 경기장이 있습니다.';
+  }
+
+  @override
+  String get editorAddedFieldNeeded => '입력해 주세요';
+
+  @override
+  String get editorAddedReporterAbout => '이 데이터베이스의 커리어에서 기자회견장에 합류해 질문합니다.';
+
+  @override
+  String get editorAddedStadiumAbout =>
+      '이 데이터베이스의 커리어에서 대표팀 홈 경기 일부를 개최합니다. 본선 대회는 게임 본래의 경기장에서 열립니다.';
+
+  @override
   String get editorAddedGone => '이 항목은 더 이상 데이터베이스에 없습니다.';
 
   @override

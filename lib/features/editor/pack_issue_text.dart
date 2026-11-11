@@ -108,7 +108,11 @@ PackIssueText describePackIssue(
           nation,
         ),
         // An added item (its unknown deal or voice) by its name.
-        'addedClubs' || 'addedSponsors' || 'addedYAccounts' =>
+        'addedClubs' ||
+        'addedSponsors' ||
+        'addedYAccounts' ||
+        'addedReporters' ||
+        'addedStadiums' =>
           _addedName(pack, root, int.tryParse(key.split('.').first)) ?? key,
         _ => switch (section) {
           EditorSection.players ||
@@ -296,11 +300,20 @@ PackIssueText _badField(
         section: section,
         nationId: null,
       );
-    case 'addedClubs' || 'addedSponsors' || 'addedYAccounts':
+    case 'addedClubs' ||
+        'addedSponsors' ||
+        'addedYAccounts' ||
+        'addedReporters' ||
+        'addedStadiums':
       // `<root>` (the list over its cap), `<root>.<id>` (the name),
-      // `<root>.<id>.id`, `.country` or `.description`.
+      // `<root>.<id>.id`, `.country`, `.description`, `.outlet`, `.city` or
+      // `.capacity`.
       final field = parts.length > 2 ? parts[2] : '';
       final value = switch (field) {
+        'outlet' =>
+          pack.addedReporters.where((x) => x.id == idAt(1)).firstOrNull?.outlet,
+        'city' =>
+          pack.addedStadiums.where((x) => x.id == idAt(1)).firstOrNull?.city,
         '' => _addedName(pack, root, idAt(1)),
         'handle' =>
           pack.addedYAccounts.where((x) => x.id == idAt(1)).firstOrNull?.handle,
@@ -382,13 +395,18 @@ PackIssueText _badField(
 }
 
 /// The name pack [pack] gives its added item [id] of [root]
-/// (`addedClubs`, `addedSponsors` or `addedYAccounts`), if it has one.
+/// (`addedClubs`, `addedSponsors`, `addedYAccounts`, `addedReporters` or
+/// `addedStadiums`), if it has one.
 String? _addedName(WorldPack pack, String root, int? id) => switch (root) {
   'addedClubs' => pack.addedClubs.where((x) => x.id == id).firstOrNull?.name,
   'addedSponsors' =>
     pack.addedSponsors.where((x) => x.id == id).firstOrNull?.name,
   'addedYAccounts' =>
     pack.addedYAccounts.where((x) => x.id == id).firstOrNull?.name,
+  'addedReporters' =>
+    pack.addedReporters.where((x) => x.id == id).firstOrNull?.name,
+  'addedStadiums' =>
+    pack.addedStadiums.where((x) => x.id == id).firstOrNull?.name,
   _ => null,
 };
 

@@ -15337,6 +15337,62 @@ class AppLocalizationsFil extends AppLocalizations {
   }
 
   @override
+  String get editorAddReporter => 'Magdagdag ng reporter';
+
+  @override
+  String get editorAddStadium => 'Magdagdag ng stadium';
+
+  @override
+  String editorAddedReportersFull(int max) {
+    return 'Hanggang $max reporter lang ang puwedeng idagdag ng isang database.';
+  }
+
+  @override
+  String editorAddedStadiumsFull(int max) {
+    return 'Hanggang $max stadium lang ang puwedeng idagdag ng isang database.';
+  }
+
+  @override
+  String get editorAddedCity => 'Lungsod';
+
+  @override
+  String get editorAddedCityHelp =>
+      'Puwede ang kahit anong lungsod. Ang lungsod na hindi kilala ng laro ay kukuha ng itsura ng bansa nito at ituturing na nasa antas ng dagat.';
+
+  @override
+  String get editorAddedCapacity => 'Upuan';
+
+  @override
+  String editorAddedCapacityRange(int min, int max) {
+    final intl.NumberFormat minNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String minString = minNumberFormat.format(min);
+    final intl.NumberFormat maxNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String maxString = maxNumberFormat.format(max);
+
+    return '$minString hanggang $maxString upuan';
+  }
+
+  @override
+  String editorAddedStadiumTaken(String country) {
+    return 'May idinagdag nang stadium ang $country na ganito ang pangalan.';
+  }
+
+  @override
+  String get editorAddedFieldNeeded => 'Punan ito';
+
+  @override
+  String get editorAddedReporterAbout =>
+      'Sa mga career sa database na ito, sasali siya sa press room at magtatanong sa mga press conference.';
+
+  @override
+  String get editorAddedStadiumAbout =>
+      'Sa mga career sa database na ito, dito gaganapin ang ilan sa mga home game ng bansa nito. Mananatili ang mga finals sa mga stadium ng laro.';
+
+  @override
   String get editorAddedGone => 'Wala na ito sa database.';
 
   @override

@@ -82,7 +82,9 @@ void main() {
     test('a format-4 file (no new keys) reads, with nothing set', () {
       final json = pack().copyWith(formatVersion: 4).toJson()
         ..remove('sponsorIndustries')
-        ..remove('yHandles');
+        ..remove('yHandles')
+        ..remove('addedReporters')
+        ..remove('addedStadiums');
       final p = WorldPack.fromJson(WorldPack.migrate(json));
       expect(p.formatVersion, kPackFormatVersion);
       expect(p.sponsorIndustries, isEmpty);

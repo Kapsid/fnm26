@@ -15244,6 +15244,62 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
+  String get editorAddReporter => 'रिपोर्टर जोड़ें';
+
+  @override
+  String get editorAddStadium => 'स्टेडियम जोड़ें';
+
+  @override
+  String editorAddedReportersFull(int max) {
+    return 'एक डेटाबेस ज़्यादा से ज़्यादा $max रिपोर्टर जोड़ सकता है।';
+  }
+
+  @override
+  String editorAddedStadiumsFull(int max) {
+    return 'एक डेटाबेस ज़्यादा से ज़्यादा $max स्टेडियम जोड़ सकता है।';
+  }
+
+  @override
+  String get editorAddedCity => 'शहर';
+
+  @override
+  String get editorAddedCityHelp =>
+      'कोई भी शहर चलेगा। जिस शहर को गेम नहीं जानता, वह अपने देश जैसा दिखता है और समुद्र तल पर माना जाता है।';
+
+  @override
+  String get editorAddedCapacity => 'सीटें';
+
+  @override
+  String editorAddedCapacityRange(int min, int max) {
+    final intl.NumberFormat minNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String minString = minNumberFormat.format(min);
+    final intl.NumberFormat maxNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String maxString = maxNumberFormat.format(max);
+
+    return '$minString से $maxString सीटें';
+  }
+
+  @override
+  String editorAddedStadiumTaken(String country) {
+    return '$country में इस नाम का एक जोड़ा गया स्टेडियम पहले से है।';
+  }
+
+  @override
+  String get editorAddedFieldNeeded => 'इसे भरें';
+
+  @override
+  String get editorAddedReporterAbout =>
+      'इस डेटाबेस वाले करियर में यह प्रेस रूम में शामिल होता है और प्रेस कॉन्फ़्रेंस में सवाल पूछता है।';
+
+  @override
+  String get editorAddedStadiumAbout =>
+      'इस डेटाबेस वाले करियर में यह अपनी राष्ट्रीय टीम के कुछ घरेलू मैचों की मेज़बानी करता है। फ़ाइनल टूर्नामेंट गेम के अपने स्टेडियमों में ही होते हैं।';
+
+  @override
   String get editorAddedGone => 'यह अब डेटाबेस में नहीं है।';
 
   @override

@@ -15043,6 +15043,62 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
+  String get editorAddReporter => 'เพิ่มนักข่าว';
+
+  @override
+  String get editorAddStadium => 'เพิ่มสนาม';
+
+  @override
+  String editorAddedReportersFull(int max) {
+    return 'ฐานข้อมูลหนึ่งเพิ่มนักข่าวได้ไม่เกิน $max คน';
+  }
+
+  @override
+  String editorAddedStadiumsFull(int max) {
+    return 'ฐานข้อมูลหนึ่งเพิ่มสนามได้ไม่เกิน $max สนาม';
+  }
+
+  @override
+  String get editorAddedCity => 'เมือง';
+
+  @override
+  String get editorAddedCityHelp =>
+      'ใช้เมืองไหนก็ได้ เมืองที่เกมไม่รู้จักจะมีหน้าตาแบบประเทศของมันและถือว่าอยู่ระดับน้ำทะเล';
+
+  @override
+  String get editorAddedCapacity => 'ที่นั่ง';
+
+  @override
+  String editorAddedCapacityRange(int min, int max) {
+    final intl.NumberFormat minNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String minString = minNumberFormat.format(min);
+    final intl.NumberFormat maxNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String maxString = maxNumberFormat.format(max);
+
+    return '$minString ถึง $maxString ที่นั่ง';
+  }
+
+  @override
+  String editorAddedStadiumTaken(String country) {
+    return '$country มีสนามที่เพิ่มไว้ชื่อนี้อยู่แล้ว';
+  }
+
+  @override
+  String get editorAddedFieldNeeded => 'กรอกช่องนี้';
+
+  @override
+  String get editorAddedReporterAbout =>
+      'ในอาชีพที่ใช้ฐานข้อมูลนี้ จะเข้าร่วมห้องแถลงข่าวและถามคำถามในงานแถลงข่าว';
+
+  @override
+  String get editorAddedStadiumAbout =>
+      'ในอาชีพที่ใช้ฐานข้อมูลนี้ สนามนี้จะเป็นเจ้าภาพเกมเหย้าบางส่วนของทีมชาติ ส่วนรอบสุดท้ายยังเล่นในสนามเดิมของเกม';
+
+  @override
   String get editorAddedGone => 'สิ่งนี้ไม่อยู่ในฐานข้อมูลแล้ว';
 
   @override

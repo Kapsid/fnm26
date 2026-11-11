@@ -14,20 +14,24 @@ import '../press/y_feed.dart';
 /// club strength ([WorldPack.clubStrengths], [PackClub.strength]); format 4
 /// (world managers) adds [WorldPack.managers]; format 5 (1.1.1) adds a
 /// built-in sponsor's industry ([WorldPack.sponsorIndustries]) and a Y
-/// account's handle ([WorldPack.yHandles], [PackYAccount.handle]).
-/// [WorldPack.migrate] lifts a format-1 to 4 pack to it, step by step.
+/// account's handle ([WorldPack.yHandles], [PackYAccount.handle]); format 6
+/// (1.1.1) adds the press reporters and the stadiums a pack adds
+/// ([WorldPack.addedReporters], [WorldPack.addedStadiums]).
+/// [WorldPack.migrate] lifts a format-1 to 5 pack to it, step by step.
 ///
 /// A pack is written in the oldest format that holds it ([WorldPack.asWritten]):
 /// format 3 when it names no managers, so a 1.1.x build without managers still
-/// reads it, format 4 when it does, and format 5 only when it sets an
-/// industry or a handle. A build that reads only an older format says the
-/// file is from a newer version rather than calling it broken.
-const int kPackFormatVersion = 5;
+/// reads it, format 4 when it does, format 5 when it sets an industry or a
+/// handle, and format 6 only when it adds a reporter or a stadium. A build
+/// that reads only an older format says the file is from a newer version
+/// rather than calling it broken.
+const int kPackFormatVersion = 6;
 
 /// Ids at or above this belong to players created in a pack.
 const int kPackPlayerIdBase = 800000000;
 
-/// The id range of the clubs, sponsors and Y accounts a pack adds.
+/// The id range of the clubs, sponsors, Y accounts, reporters and stadiums
+/// a pack adds (one range for all of them, each id used once).
 const int kPackAddedIdBase = 700000000, kPackAddedIdMax = 799999999;
 
 /// The voices a pack's own Y account can post as.
@@ -483,6 +487,101 @@ class PackReporter {
   int get hashCode => Object.hash(name, outlet);
 }
 
+/// A press reporter a pack adds (format 6): he joins the game's reporters
+/// in the press room of a career on the pack.
+@immutable
+class PackAddedReporter {
+  const PackAddedReporter({
+    required this.id,
+    required this.name,
+    required this.outlet,
+  });
+
+  final int id;
+  final String name;
+  final String outlet;
+
+  Map<String, Object?> toJson() => {'id': id, 'name': name, 'outlet': outlet};
+
+  static PackAddedReporter fromJson(Object? raw) {
+    final m = _map(raw, 'addedReporter');
+    _only(m, const {'id', 'name', 'outlet'}, 'addedReporter');
+    return PackAddedReporter(
+      id: _int(m['id'], 'id'),
+      name: _str(m['name'], 'name'),
+      outlet: _str(m['outlet'], 'outlet'),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      other is PackAddedReporter &&
+      other.id == id &&
+      other.name == name &&
+      other.outlet == outlet;
+
+  @override
+  int get hashCode => Object.hash(id, name, outlet);
+}
+
+/// A stadium a pack adds to nation [nationId] (format 6): a ground of
+/// [capacity] seats in [city], one more of the nation's grounds in a career
+/// on the pack.
+@immutable
+class PackStadium {
+  const PackStadium({
+    required this.id,
+    required this.nationId,
+    required this.name,
+    required this.city,
+    required this.capacity,
+  });
+
+  final int id;
+  final int nationId;
+  final String name;
+  final String city;
+  final int capacity;
+
+  Map<String, Object?> toJson() => {
+    'id': id,
+    'nationId': nationId,
+    'name': name,
+    'city': city,
+    'capacity': capacity,
+  };
+
+  static PackStadium fromJson(Object? raw) {
+    final m = _map(raw, 'addedStadium');
+    _only(m, const {
+      'id',
+      'nationId',
+      'name',
+      'city',
+      'capacity',
+    }, 'addedStadium');
+    return PackStadium(
+      id: _int(m['id'], 'id'),
+      nationId: _int(m['nationId'], 'nationId'),
+      name: _str(m['name'], 'name'),
+      city: _str(m['city'], 'city'),
+      capacity: _int(m['capacity'], 'capacity'),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      other is PackStadium &&
+      other.id == id &&
+      other.nationId == nationId &&
+      other.name == name &&
+      other.city == city &&
+      other.capacity == capacity;
+
+  @override
+  int get hashCode => Object.hash(id, nationId, name, city, capacity);
+}
+
 /// A shareable custom starting world: edits layered on the default world.
 @immutable
 class WorldPack {
@@ -511,6 +610,8 @@ class WorldPack {
     this.managers = const {},
     this.sponsorIndustries = const {},
     this.yHandles = const {},
+    this.addedReporters = const [],
+    this.addedStadiums = const [],
   });
 
   final String uuid;
@@ -574,6 +675,16 @@ class WorldPack {
   /// gives.
   final Map<String, String> yHandles;
 
+  /// The press reporters the pack adds (format 6).
+  final List<PackAddedReporter> addedReporters;
+
+  /// The stadiums the pack adds, every nation's (format 6).
+  final List<PackStadium> addedStadiums;
+
+  /// Whether the pack uses what only format 6 holds.
+  bool get _needsFormat6 =>
+      addedReporters.isNotEmpty || addedStadiums.isNotEmpty;
+
   /// Whether the pack uses what only format 5 holds.
   bool get _needsFormat5 =>
       sponsorIndustries.isNotEmpty ||
@@ -582,11 +693,14 @@ class WorldPack {
 
   /// This pack in the oldest format that holds it, as every writer stores
   /// and exports it: format 3 (which a 1.1.x build without managers reads)
-  /// when it names no managers, 4 when it does, and [kPackFormatVersion]
-  /// only when it sets a sponsor's industry or a Y handle.
+  /// when it names no managers, 4 when it does, 5 when it sets a sponsor's
+  /// industry or a Y handle, and [kPackFormatVersion] (6) only when it adds
+  /// a reporter or a stadium.
   WorldPack get asWritten => copyWith(
-    formatVersion: _needsFormat5
+    formatVersion: _needsFormat6
         ? kPackFormatVersion
+        : _needsFormat5
+        ? 5
         : managers.isEmpty
         ? 3
         : 4,
@@ -645,6 +759,8 @@ class WorldPack {
     Map<int, ({String name, String nationality})>? managers,
     Map<String, String>? sponsorIndustries,
     Map<String, String>? yHandles,
+    List<PackAddedReporter>? addedReporters,
+    List<PackStadium>? addedStadiums,
   }) => WorldPack(
     uuid: uuid ?? this.uuid,
     name: name ?? this.name,
@@ -670,6 +786,8 @@ class WorldPack {
     managers: managers ?? this.managers,
     sponsorIndustries: sponsorIndustries ?? this.sponsorIndustries,
     yHandles: yHandles ?? this.yHandles,
+    addedReporters: addedReporters ?? this.addedReporters,
+    addedStadiums: addedStadiums ?? this.addedStadiums,
   );
 
   Map<String, Object?> toJson() => {
@@ -721,9 +839,14 @@ class WorldPack {
       },
     // Written from format 5 on (see [asWritten]): a format-4 reader knows
     // neither key.
-    if (formatVersion >= 5 || _needsFormat5) ...{
+    if (formatVersion >= 5 || _needsFormat5 || _needsFormat6) ...{
       'sponsorIndustries': sponsorIndustries,
       'yHandles': yHandles,
+    },
+    // Written from format 6 on: a format-5 reader knows neither key.
+    if (formatVersion >= 6 || _needsFormat6) ...{
+      'addedReporters': [for (final r in addedReporters) r.toJson()],
+      'addedStadiums': [for (final s in addedStadiums) s.toJson()],
     },
   };
 
@@ -752,6 +875,8 @@ class WorldPack {
     'managers',
     'sponsorIndustries',
     'yHandles',
+    'addedReporters',
+    'addedStadiums',
   };
 
   /// Strict reader: any wrong type or unknown key throws [FormatException].
@@ -825,10 +950,18 @@ class WorldPack {
         'sponsorIndustries',
       ),
       yHandles: _strMap(json['yHandles'], 'yHandles'),
+      addedReporters: _list(
+        json['addedReporters'],
+        'addedReporters',
+      ).map(PackAddedReporter.fromJson).toList(),
+      addedStadiums: _list(
+        json['addedStadiums'],
+        'addedStadiums',
+      ).map(PackStadium.fromJson).toList(),
     );
   }
 
-  /// Upgrades older JSON step by step to [kPackFormatVersion]. Identity at v5
+  /// Upgrades older JSON step by step to [kPackFormatVersion]. Identity at v6
   /// for a pack naming no renamed club ([_retiredClubs]).
   /// Throws [FormatException] for a missing or newer version. Never changes
   /// [json] itself.
@@ -850,6 +983,7 @@ class WorldPack {
     if (v <= 2) out = _from2To3(out);
     if (v <= 3) out = _from3To4(out, v);
     if (v <= 4) out = _from4To5(out, v);
+    if (v <= 5) out = _from5To6(out, v);
     return _retiredClubs(out);
   }
 
@@ -979,6 +1113,21 @@ class WorldPack {
       'sponsorIndustries': <String, Object?>{},
       'yHandles': <String, Object?>{},
       'formatVersion': 5,
+    };
+  }
+
+  /// Format 5 to 6: no reporters or stadiums added. A pack of format [from]
+  /// that already holds either key is not a file of that format.
+  static Map<String, Object?> _from5To6(Map<String, Object?> json, int from) {
+    if (json.containsKey('addedReporters') ||
+        json.containsKey('addedStadiums')) {
+      throw FormatException('Format $from pack has a format 6 key');
+    }
+    return {
+      ...json,
+      'addedReporters': <Object?>[],
+      'addedStadiums': <Object?>[],
+      'formatVersion': 6,
     };
   }
 

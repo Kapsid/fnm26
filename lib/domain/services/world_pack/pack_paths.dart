@@ -21,6 +21,9 @@ abstract final class PackPaths {
     'addedClubs',
     'addedSponsors',
     'addedYAccounts',
+    // Format 6.
+    'addedReporters',
+    'addedStadiums',
   };
 
   /// A renamed club, by its original name.
@@ -56,6 +59,15 @@ abstract final class PackPaths {
 
   /// An added Y account's name.
   static String addedY(int id) => 'addedYAccounts.$id';
+
+  /// An added reporter's name.
+  static String addedReporter(int id) => 'addedReporters.$id';
+
+  /// An added reporter's outlet.
+  static String addedReporterOutlet(int id) => 'addedReporters.$id.outlet';
+
+  /// An added stadium's name.
+  static String addedStadium(int id) => 'addedStadiums.$id';
 
   /// [path] split at its first `.`, or null when it has no known root or
   /// nothing after it.

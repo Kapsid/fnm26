@@ -18,6 +18,7 @@ typedef _Added = ({
   List<PackSponsor> sponsors,
   List<PackYAccount> yAccounts,
   Map<int, ({String name, String nationality})> managers,
+  List<PackStadium> stadiums,
 });
 
 /// The custom databases (world packs) on this device, and the copy a career
@@ -345,9 +346,19 @@ class WorldPackRepository {
     int careerId,
   ) async => (await _addedFor(careerId)).managers;
 
+  /// The stadiums career [careerId]'s world added, every nation's, with
+  /// that world's uuid; none (and no uuid) for the default world. See
+  /// [_addedFor]; a world that cannot be read throws.
+  Future<({String? world, List<PackStadium> stadiums})> addedStadiumsFor(
+    int careerId,
+  ) async {
+    final added = await _addedFor(careerId);
+    return (world: added.world, stadiums: added.stadiums);
+  }
+
   /// What career [careerId]'s world added that the career reads outside its
-  /// player reads: its sponsors, Y accounts and day-one managers, with the
-  /// world's uuid.
+  /// player reads: its sponsors, Y accounts, day-one managers and stadiums,
+  /// with the world's uuid.
   ///
   /// Read wherever the sponsor round is (the hub, the finances, the cycle's
   /// close) and on every Y feed build, so it is cheap on a repeat: a
@@ -367,6 +378,7 @@ class WorldPackRepository {
       managers: Map<int, ({String name, String nationality})>.unmodifiable(
         pack.managers,
       ),
+      stadiums: List<PackStadium>.unmodifiable(pack.addedStadiums),
     );
     _added[careerId] = (pack: pack, value: value);
     return value;
@@ -377,6 +389,7 @@ class WorldPackRepository {
     sponsors: <PackSponsor>[],
     yAccounts: <PackYAccount>[],
     managers: <int, ({String name, String nationality})>{},
+    stadiums: <PackStadium>[],
   );
 
   final Map<int, ({WorldPack pack, _Added value})> _added = {};

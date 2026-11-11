@@ -23222,6 +23222,78 @@ abstract class AppLocalizations {
   /// **'A database can add at most {max} accounts.'**
   String editorAddedYFull(int max);
 
+  /// Button that adds a press reporter to the database.
+  ///
+  /// In en, this message translates to:
+  /// **'Add reporter'**
+  String get editorAddReporter;
+
+  /// Button that adds a stadium to the database.
+  ///
+  /// In en, this message translates to:
+  /// **'Add stadium'**
+  String get editorAddStadium;
+
+  /// Said when the database has added as many reporters as it may.
+  ///
+  /// In en, this message translates to:
+  /// **'A database can add at most {max} reporters.'**
+  String editorAddedReportersFull(int max);
+
+  /// Said when the database has added as many stadiums as it may.
+  ///
+  /// In en, this message translates to:
+  /// **'A database can add at most {max} stadiums.'**
+  String editorAddedStadiumsFull(int max);
+
+  /// Label of the field for the city an added stadium stands in.
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get editorAddedCity;
+
+  /// Help under the city field of an added stadium: a city the game does not know is drawn like the rest of its country and has no altitude.
+  ///
+  /// In en, this message translates to:
+  /// **'Any town will do. One the game does not know keeps its country\'s look and plays at sea level.'**
+  String get editorAddedCityHelp;
+
+  /// Label of the field for how many seats an added stadium holds.
+  ///
+  /// In en, this message translates to:
+  /// **'Seats'**
+  String get editorAddedCapacity;
+
+  /// Help (and error) under the seats field of an added stadium: the seats it may hold.
+  ///
+  /// In en, this message translates to:
+  /// **'{min} to {max} seats'**
+  String editorAddedCapacityRange(int min, int max);
+
+  /// Error when another stadium the database adds to that nation has the name typed.
+  ///
+  /// In en, this message translates to:
+  /// **'{country} already has an added stadium of this name.'**
+  String editorAddedStadiumTaken(String country);
+
+  /// Error under a field of an added item that was emptied (a reporter's outlet, a stadium's city or seats).
+  ///
+  /// In en, this message translates to:
+  /// **'Fill this in'**
+  String get editorAddedFieldNeeded;
+
+  /// Note in the form that adds a press reporter: what he does in a career on the database.
+  ///
+  /// In en, this message translates to:
+  /// **'Joins the press room in careers on this database and asks questions at press conferences.'**
+  String get editorAddedReporterAbout;
+
+  /// Note in the form that adds a stadium: what it does in a career on the database. Finals = the final tournaments.
+  ///
+  /// In en, this message translates to:
+  /// **'Hosts some of its nation\'s home games in careers on this database. Finals stay at the game\'s own grounds.'**
+  String get editorAddedStadiumAbout;
+
   /// An added item's form after the item was deleted or undone.
   ///
   /// In en, this message translates to:

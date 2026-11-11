@@ -100,7 +100,8 @@ abstract final class PackCodec {
 
   /// [p] as a `.fnmdb` file, in the oldest format that holds it
   /// ([WorldPack.asWritten]): format 3, which a 1.1.x build without managers
-  /// reads, unless it names managers (format 4).
+  /// reads, unless it names managers (format 4), sets an industry or a
+  /// handle (5) or adds a reporter or a stadium (6).
   static Uint8List encode(WorldPack p, Map<String, Uint8List> trophies) {
     final written = p.asWritten;
     final json = jsonEncode({
@@ -270,7 +271,9 @@ abstract final class PackCodec {
     if (p.clubStrengths.length > PackRules.clubStrengthsMax ||
         p.addedClubs.length > PackRules.addedClubsMax ||
         p.addedSponsors.length > PackRules.addedSponsorsMax ||
-        p.addedYAccounts.length > PackRules.addedYMax) {
+        p.addedYAccounts.length > PackRules.addedYMax ||
+        p.addedReporters.length > PackRules.addedReportersMax ||
+        p.addedStadiums.length > PackRules.addedStadiumsMax) {
       return false;
     }
     var localized = 0;

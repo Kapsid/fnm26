@@ -15279,6 +15279,62 @@ class AppLocalizationsHu extends AppLocalizations {
   }
 
   @override
+  String get editorAddReporter => 'Újságíró hozzáadása';
+
+  @override
+  String get editorAddStadium => 'Stadion hozzáadása';
+
+  @override
+  String editorAddedReportersFull(int max) {
+    return 'Egy adatbázis legfeljebb $max újságírót adhat hozzá.';
+  }
+
+  @override
+  String editorAddedStadiumsFull(int max) {
+    return 'Egy adatbázis legfeljebb $max stadiont adhat hozzá.';
+  }
+
+  @override
+  String get editorAddedCity => 'Város';
+
+  @override
+  String get editorAddedCityHelp =>
+      'Bármelyik város jó. Az a város, amelyet a játék nem ismer, az országa külsejét kapja, és tengerszinten fekszik.';
+
+  @override
+  String get editorAddedCapacity => 'Férőhely';
+
+  @override
+  String editorAddedCapacityRange(int min, int max) {
+    final intl.NumberFormat minNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String minString = minNumberFormat.format(min);
+    final intl.NumberFormat maxNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String maxString = maxNumberFormat.format(max);
+
+    return '$minString és $maxString férőhely között';
+  }
+
+  @override
+  String editorAddedStadiumTaken(String country) {
+    return '$country már rendelkezik ilyen nevű hozzáadott stadionnal.';
+  }
+
+  @override
+  String get editorAddedFieldNeeded => 'Töltsd ki ezt a mezőt';
+
+  @override
+  String get editorAddedReporterAbout =>
+      'Az ezen az adatbázison futó karrierekben ott ül a sajtóteremben, és kérdez a sajtótájékoztatókon.';
+
+  @override
+  String get editorAddedStadiumAbout =>
+      'Az ezen az adatbázison futó karrierekben a válogatott hazai meccseinek egy részét rendezi. A zárótornák a játék saját stadionjaiban maradnak.';
+
+  @override
   String get editorAddedGone => 'Ez már nincs az adatbázisban.';
 
   @override

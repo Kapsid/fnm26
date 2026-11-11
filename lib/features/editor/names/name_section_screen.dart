@@ -41,7 +41,8 @@ part 'name_section_tablet_layout.dart';
 /// top bar): under a language it shows and edits that language's names,
 /// and under All languages the main ones.
 ///
-/// Clubs, sponsors and Y accounts also list what the database adds (see
+/// Clubs, sponsors, Y accounts, the press and the stadiums also list what
+/// the database adds (see
 /// [withAddedRows]): under All languages Add makes one and an added row
 /// opens its own form ([AddedItemForm]: edit, delete); under a language an
 /// added row edits only its name there (and a sponsor's description).
@@ -68,8 +69,8 @@ class NameSectionScreen extends ConsumerStatefulWidget {
   static Key countryOptionKey(String key) => Key('editorNames.country.$key');
   static const Key undoKey = Key('editorNames.undo');
 
-  /// Add a club, sponsor or Y account (the phone's button, the tablet's
-  /// header).
+  /// Add a club, sponsor, Y account, reporter or stadium (the phone's
+  /// button, the tablet's header).
   static const Key addKey = Key('editorNames.add');
 
   static Key rowKey(String key) => Key('editorNames.row.$key');
@@ -346,7 +347,8 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
     );
   }
 
-  /// Opens the form that adds a club, sponsor or Y account; at the cap,
+  /// Opens the form that adds a club, sponsor, Y account, reporter or
+  /// stadium; at the cap,
   /// says so instead. On a tablet the new item is then picked.
   void _add({required bool tablet, required List<Nation> world}) {
     final pack = ref.read(packEditorProvider(_id)).valueOrNull;
@@ -361,6 +363,8 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
             content: Text(switch (_section) {
               NameSection.clubs => l.editorAddedClubsFull(max),
               NameSection.sponsors => l.editorAddedSponsorsFull(max),
+              NameSection.press => l.editorAddedReportersFull(max),
+              NameSection.stadiums => l.editorAddedStadiumsFull(max),
               _ => l.editorAddedYFull(max),
             }),
           ),
@@ -390,6 +394,8 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
   String _addLabel(AppLocalizations l) => switch (_section) {
     NameSection.clubs => l.editorAddClub,
     NameSection.sponsors => l.editorAddSponsor,
+    NameSection.press => l.editorAddReporter,
+    NameSection.stadiums => l.editorAddStadium,
     _ => l.editorAddY,
   };
 

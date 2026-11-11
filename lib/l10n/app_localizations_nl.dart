@@ -15408,6 +15408,62 @@ class AppLocalizationsNl extends AppLocalizations {
   }
 
   @override
+  String get editorAddReporter => 'Verslaggever toevoegen';
+
+  @override
+  String get editorAddStadium => 'Stadion toevoegen';
+
+  @override
+  String editorAddedReportersFull(int max) {
+    return 'Een database kan maximaal $max verslaggevers toevoegen.';
+  }
+
+  @override
+  String editorAddedStadiumsFull(int max) {
+    return 'Een database kan maximaal $max stadions toevoegen.';
+  }
+
+  @override
+  String get editorAddedCity => 'Stad';
+
+  @override
+  String get editorAddedCityHelp =>
+      'Elke stad is goed. Een stad die het spel niet kent, ziet eruit als de rest van het land en ligt op zeeniveau.';
+
+  @override
+  String get editorAddedCapacity => 'Plaatsen';
+
+  @override
+  String editorAddedCapacityRange(int min, int max) {
+    final intl.NumberFormat minNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String minString = minNumberFormat.format(min);
+    final intl.NumberFormat maxNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String maxString = maxNumberFormat.format(max);
+
+    return '$minString tot $maxString plaatsen';
+  }
+
+  @override
+  String editorAddedStadiumTaken(String country) {
+    return '$country heeft al een toegevoegd stadion met deze naam.';
+  }
+
+  @override
+  String get editorAddedFieldNeeded => 'Vul dit in';
+
+  @override
+  String get editorAddedReporterAbout =>
+      'Zit in carrières op deze database in de perszaal en stelt vragen op persconferenties.';
+
+  @override
+  String get editorAddedStadiumAbout =>
+      'Speelt in carrières op deze database een deel van de thuiswedstrijden van zijn land. Eindtoernooien blijven in de stadions van het spel.';
+
+  @override
   String get editorAddedGone => 'Dit staat niet meer in de database.';
 
   @override

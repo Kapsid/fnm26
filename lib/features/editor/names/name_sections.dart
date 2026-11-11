@@ -85,11 +85,14 @@ enum NameSection {
   bool get grouped => this == clubs || this == stadiums;
 
   /// The root of the items a database adds to this section (`addedClubs`,
-  /// `addedSponsors`, `addedYAccounts`), or null where nothing is added.
+  /// `addedSponsors`, `addedYAccounts`, `addedReporters`, `addedStadiums`),
+  /// or null where nothing is added.
   String? get addedRoot => switch (this) {
     clubs => 'addedClubs',
     sponsors => 'addedSponsors',
     yAccounts => 'addedYAccounts',
+    press => 'addedReporters',
+    stadiums => 'addedStadiums',
     _ => null,
   };
 
@@ -548,8 +551,8 @@ abstract final class NameEdits {
   }
 
   /// The `localized` paths of [e] in [section]: its name's, and a
-  /// reporter's outlet's (an added sponsor's description's). None for the
-  /// name lists.
+  /// reporter's outlet's (an added sponsor's description's, an added
+  /// reporter's outlet's). None for the name lists.
   static List<String> pathsOf(NameSection section, NameEntry e) =>
       switch (e.addedId) {
         final id? => switch (section) {
@@ -559,6 +562,11 @@ abstract final class NameEdits {
             PackPaths.addedSponsorDescription(id),
           ],
           NameSection.yAccounts => [PackPaths.addedY(id)],
+          NameSection.press => [
+            PackPaths.addedReporter(id),
+            PackPaths.addedReporterOutlet(id),
+          ],
+          NameSection.stadiums => [PackPaths.addedStadium(id)],
           _ => throw ArgumentError('$section adds nothing'),
         },
         null => _gamePathsOf(section, e),
@@ -914,5 +922,7 @@ int addedCount(NameSection section, WorldPack pack) => switch (section) {
   NameSection.clubs => pack.addedClubs.length,
   NameSection.sponsors => pack.addedSponsors.length,
   NameSection.yAccounts => pack.addedYAccounts.length,
+  NameSection.press => pack.addedReporters.length,
+  NameSection.stadiums => pack.addedStadiums.length,
   _ => 0,
 };

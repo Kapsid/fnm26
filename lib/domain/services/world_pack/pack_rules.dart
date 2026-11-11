@@ -181,6 +181,13 @@ abstract final class PackRules {
   /// see `kPackFormatVersion`).
   static const addedClubsMax = 5000, addedSponsorsMax = 50, addedYMax = 100;
 
+  /// The most press reporters and stadiums a pack adds (format 6): a press
+  /// room several times the game's own, and a few grounds for every nation.
+  static const addedReportersMax = 50, addedStadiumsMax = 500;
+
+  /// The seats an added stadium may hold, both ends included.
+  static const stadiumCapacityMin = 1000, stadiumCapacityMax = 150000;
+
   /// The most game clubs a pack sets a strength for. The game has about
   /// 1 600 clubs; this only bounds a hostile file.
   static const clubStrengthsMax = 5000;
@@ -553,9 +560,13 @@ abstract final class PackRules {
   static bool addedIdInRange(int id) =>
       id >= kPackAddedIdBase && id <= kPackAddedIdMax;
 
-  /// The added clubs, sponsors and Y accounts: each list within its cap
-  /// (one issue at the list's root past it), each id in the reserved range
-  /// and used once across the three (`<root>.<id>.id`), each name a name.
+  /// The added clubs, sponsors, Y accounts, reporters and stadiums: each
+  /// list within its cap (one issue at the list's root past it), each id in
+  /// the reserved range and used once across them all (`<root>.<id>.id`),
+  /// each name a name. An added stadium's city is a name too, its seats
+  /// within [stadiumCapacityMin] to [stadiumCapacityMax]
+  /// (`addedStadiums.<id>.capacity`), and two added stadiums of one nation
+  /// never share a name.
   static void _added(
     WorldPack p,
     List<PackIssue> out,
@@ -628,7 +639,40 @@ abstract final class PackRules {
       name('addedYAccounts.${y.id}', y.name, max: handleMax);
     }
     _yClashes(p.yAccounts, p.addedYAccounts, out, checkRenames: false);
+
+    cap('addedReporters', p.addedReporters.length, addedReportersMax);
+    for (final r in p.addedReporters) {
+      final path = 'addedReporters.${r.id}';
+      id('addedReporters', r.id);
+      name(path, r.name);
+      name('$path.outlet', r.outlet);
+    }
+
+    cap('addedStadiums', p.addedStadiums.length, addedStadiumsMax);
+    final grounds = <int, Set<String>>{};
+    for (final g in p.addedStadiums) {
+      final path = 'addedStadiums.${g.id}';
+      id('addedStadiums', g.id);
+      final r = checkName(g.name);
+      if (r != null) {
+        out.add(BadField(path, r));
+      } else if (!(grounds[g.nationId] ??= {}).add(stadiumFold(g.name))) {
+        out.add(BadField(path, FieldReason.duplicate));
+      }
+      name('$path.city', g.city);
+      if (!stadiumCapacityOk(g.capacity)) {
+        out.add(BadField('$path.capacity', FieldReason.outOfRange));
+      }
+    }
   }
+
+  /// Whether an added stadium may hold [seats].
+  static bool stadiumCapacityOk(int seats) =>
+      seats >= stadiumCapacityMin && seats <= stadiumCapacityMax;
+
+  /// [name] as two added stadiums of a nation are compared: trimmed, any
+  /// case.
+  static String stadiumFold(String name) => name.trim().toLowerCase();
 
   /// Every @handle [p] sets (a built-in account's, `yHandles.<original>`,
   /// or an added one's, `addedYAccounts.<id>.handle`): one [checkHandle]
@@ -693,6 +737,8 @@ abstract final class PackRules {
     final clubIds = {for (final c in p.addedClubs) c.id};
     final sponsorIds = {for (final s in p.addedSponsors) s.id};
     final yIds = {for (final y in p.addedYAccounts) y.id};
+    final reporterIds = {for (final r in p.addedReporters) r.id};
+    final stadiumIds = {for (final g in p.addedStadiums) g.id};
     int? idOf(String s) {
       final n = int.tryParse(s);
       return n != null && '$n' == s ? n : null;
@@ -712,6 +758,13 @@ abstract final class PackRules {
           max = descriptionMax;
           return rest.substring(dot + 1) == 'description' &&
               sponsorIds.contains(idOf(rest.substring(0, dot)));
+        }(),
+        'addedStadiums' => stadiumIds.contains(idOf(rest)),
+        'addedReporters' => () {
+          final dot = rest.indexOf('.');
+          if (dot < 0) return reporterIds.contains(idOf(rest));
+          return rest.substring(dot + 1) == 'outlet' &&
+              reporterIds.contains(idOf(rest.substring(0, dot)));
         }(),
         'reporters' => () {
           final parts = rest.split('.');
@@ -922,7 +975,8 @@ abstract final class PackRules {
   /// (`pools.<id>`), a pool's fringe id outside its own nation's range in
   /// [fringeRanges] (`pools.<id>.<playerId>`), an added club in a country
   /// outside [countryCodes] (lower-case), an added Y account bound to an
-  /// unknown nation, an added sponsor whose industry is outside
+  /// unknown nation, an added stadium of an unknown nation
+  /// (`addedStadiums.<id>`), an added sponsor whose industry is outside
   /// [sponsorBrands] and [sponsorIndustries] (picker-only trades), and a
   /// `localized` path whose key the game no longer has (`localized.<path>`, checked as the plain maps are).
   ///
@@ -1027,6 +1081,11 @@ abstract final class PackRules {
         out.add(UnknownId('addedYAccounts.${y.id}.voice'));
       }
     }
+    for (final g in p.addedStadiums) {
+      if (!nationIds.contains(g.nationId)) {
+        out.add(UnknownId('addedStadiums.${g.id}'));
+      }
+    }
     for (final path in p.localized.keys.toList()..sort()) {
       final parsed = PackPaths.parse(path);
       if (parsed == null) continue;
@@ -1047,7 +1106,8 @@ abstract final class PackRules {
   /// [NotAllowedName] at its own path, in the order [issues] goes: the
   /// players first (as [notAllowedPlayers] gives them), then the nations,
   /// the renames, the reporters, the name lists, the managers, the added
-  /// clubs, sponsors and Y accounts, the per-language values, and last the
+  /// clubs, sponsors, Y accounts, reporters and stadiums, the per-language
+  /// values, and last the
   /// database's own name (`name`). Blocks nothing ([isBlocking]).
   static List<NotAllowedName> notAllowed(WorldPack p) {
     final out = <NotAllowedName>[];
@@ -1103,6 +1163,14 @@ abstract final class PackRules {
     for (final y in p.addedYAccounts) {
       check('addedYAccounts.${y.id}', y.name);
       check('addedYAccounts.${y.id}.handle', y.handle);
+    }
+    for (final r in p.addedReporters) {
+      check('addedReporters.${r.id}', r.name);
+      check('addedReporters.${r.id}.outlet', r.outlet);
+    }
+    for (final g in p.addedStadiums) {
+      check('addedStadiums.${g.id}', g.name);
+      check('addedStadiums.${g.id}.city', g.city);
     }
     for (final path in p.localized.keys.toList()..sort()) {
       final values = p.localized[path]!;

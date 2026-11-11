@@ -15486,6 +15486,62 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get editorAddReporter => 'Ajouter un journaliste';
+
+  @override
+  String get editorAddStadium => 'Ajouter un stade';
+
+  @override
+  String editorAddedReportersFull(int max) {
+    return 'Une base peut ajouter au plus $max journalistes.';
+  }
+
+  @override
+  String editorAddedStadiumsFull(int max) {
+    return 'Une base peut ajouter au plus $max stades.';
+  }
+
+  @override
+  String get editorAddedCity => 'Ville';
+
+  @override
+  String get editorAddedCityHelp =>
+      'N’importe quelle ville convient. Une ville inconnue du jeu garde l’apparence de son pays et se joue au niveau de la mer.';
+
+  @override
+  String get editorAddedCapacity => 'Places';
+
+  @override
+  String editorAddedCapacityRange(int min, int max) {
+    final intl.NumberFormat minNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String minString = minNumberFormat.format(min);
+    final intl.NumberFormat maxNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String maxString = maxNumberFormat.format(max);
+
+    return 'De $minString à $maxString places';
+  }
+
+  @override
+  String editorAddedStadiumTaken(String country) {
+    return '$country a déjà un stade ajouté portant ce nom.';
+  }
+
+  @override
+  String get editorAddedFieldNeeded => 'Champ à remplir';
+
+  @override
+  String get editorAddedReporterAbout =>
+      'Rejoint la salle de presse dans les carrières sur cette base et pose des questions en conférence de presse.';
+
+  @override
+  String get editorAddedStadiumAbout =>
+      'Accueille une partie des matchs à domicile de sa sélection dans les carrières sur cette base. Les phases finales restent dans les stades du jeu.';
+
+  @override
   String get editorAddedGone => 'Cet élément n’est plus dans la base.';
 
   @override
