@@ -4,6 +4,8 @@ import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/venues.dart';
 import 'package:fnm/domain/services/federation/national_stadiums.dart';
+import 'package:fnm/domain/services/match/attendance.dart' show MatchGround;
+import 'package:fnm/domain/services/match/stadium/ground_character.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/press/fan_mood.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart'
@@ -102,6 +104,48 @@ Future<Map<int, List<Venue>>> hostEstatesFor(
     career.nationId: [for (final g in grounds) g.venue],
   };
 }
+
+/// What [careerId]'s federation has done to [ground] (built it, enlarged
+/// it, works under way on it), for the ground's look: derived from the
+/// career's stadium works every time, never stored, cosmetic only.
+/// [GroundWorks.none] for a ground outside the manager's own nation, and
+/// for every ground of an estate nobody has worked on.
+Future<GroundWorks> groundWorksFor(
+  Ref ref,
+  int careerId,
+  MatchGround ground,
+) async {
+  final career = await ref.read(careerRepositoryProvider).byId(careerId);
+  if (career == null || ground.groundNationId != career.nationId) {
+    return GroundWorks.none;
+  }
+  final works = await stadiumWorks(
+    ref.read(competitionRepositoryProvider),
+    careerId,
+  );
+  if (!works.any((w) => w.nationId == career.nationId)) {
+    return GroundWorks.none;
+  }
+  return GroundWorks.forGround(
+    city: ground.city,
+    stadium: ground.stadium,
+    estate: await _allStadiums(ref, careerId, career.nationId),
+    works: works,
+    nationId: career.nationId,
+    cycle: career.cyclePointer,
+  );
+}
+
+/// [groundWorksFor] for the match screen, which reads it once the preview
+/// has landed and hands it to the Pitch view's ground.
+final AutoDisposeFutureProviderFamily<
+  GroundWorks,
+  ({int careerId, MatchGround ground})
+>
+groundWorksProvider = FutureProvider.autoDispose
+    .family<GroundWorks, ({int careerId, MatchGround ground})>(
+      (ref, a) => groundWorksFor(ref, a.careerId, a.ground),
+    );
 
 /// Read with `ref.read`: a service calls these from inside its own
 /// methods, and the screens invalidate them by hand after every work.

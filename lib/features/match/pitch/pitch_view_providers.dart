@@ -17,6 +17,7 @@ import 'package:fnm/domain/services/match/pitch/story_layer.dart';
 import 'package:fnm/domain/services/match/stadium/away_fan_share.dart';
 import 'package:fnm/domain/services/match/stadium/crowd_culture.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
+import 'package:fnm/domain/services/match/stadium/ground_character.dart';
 import 'package:fnm/domain/services/match/stadium/kick_off.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/domain/services/match/stadium/nation_latitudes.dart';
@@ -84,6 +85,8 @@ class PitchStadium {
   /// and, with the kick-off and the ground's latitude, the light of every
   /// minute. [weather] is drawn over it (cosmetic only), and
   /// [groundColours] (the ground nation's two colours) pattern its seats.
+  /// [works] is what the manager's federation has done to the ground
+  /// (cosmetic only; none for every other ground).
   factory PitchStadium.forMatch({
     required MatchGround ground,
     required Nation home,
@@ -96,6 +99,7 @@ class PitchStadium {
     MatchDressing dressing = MatchDressing.none,
     WeatherKind weather = WeatherKind.clear,
     (Color, Color)? groundColours,
+    GroundWorks works = GroundWorks.none,
   }) {
     final code = groundNationCode ?? home.code;
     final confed = groundConfederation ?? home.confederation;
@@ -121,6 +125,7 @@ class PitchStadium {
         dressing,
         weather,
         groundColours,
+        works,
       ),
       spec: StadiumSpec.from(
         ground,
@@ -132,6 +137,7 @@ class PitchStadium {
         date: date,
         weather: weather,
         groundColours: groundColours,
+        works: works,
       ),
       kits: KitClash.resolve(home, away),
       latitude: NationLatitudes.ofCode(code, confed),
@@ -440,10 +446,13 @@ final Provider<WeatherKind?> pitchForcedWeatherProvider =
 
 /// The ground of the match [preview] pins, for the Pitch view: its look,
 /// both kits, the dressing of the occasion, the kick-off time and the
-/// weather ([matchConditionsShown]; [weather] pins the weather).
+/// weather ([matchConditionsShown]; [weather] pins the weather). [works] is
+/// what the manager's federation has done to the ground (see
+/// `groundWorksProvider`).
 PitchStadium pitchStadiumForPreview(
   MatchPreview preview, {
   WeatherKind? weather,
+  GroundWorks works = GroundWorks.none,
 }) {
   final f = preview.fixture;
   final shown = matchConditionsShown(preview, weather: weather);
@@ -469,6 +478,7 @@ PitchStadium pitchStadiumForPreview(
     groundConfederation: groundNation?.confederation ?? home.confederation,
     dressing: dressing,
     weather: shown.weather,
+    works: works,
     groundColours: groundNation == null
         ? null
         : (

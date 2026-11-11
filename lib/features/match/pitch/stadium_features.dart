@@ -318,6 +318,25 @@ extension _StadiumFeatures on StadiumPainter {
         RoofStyle.canopy => (reach: 5.5, lift: 3.2, fascia: 0.6, back: 9.0),
       };
 
+  /// Whether the stand on [s] has a roof over it: not a terrace, not an
+  /// open bowl, and under a part roof only the main stand.
+  bool _roofed(_Seg s) =>
+      _roofCut != null &&
+      !_isTerraceEnd(s) &&
+      (!spec.partRoof || s == _Seg.far);
+
+  /// Where along [s] its roof runs, 0 to 1: all of it, or the middle of
+  /// the main stand under a part roof.
+  (double, double) _roofSpan(_Seg s) => spec.partRoof && s == _Seg.far
+      ? GroundCharacter.partRoofSpan(spec.scale)
+      : (0.0, 1.0);
+
+  /// [_standPoint] for a roof: [u] runs along the roof's span.
+  Offset _roofPoint(_Seg s, double u, double o, double z) {
+    final (a, b) = _roofSpan(s);
+    return _standPoint(s, a + (b - a) * u, o, z);
+  }
+
   /// Where the roof over [s] stands: the leading edge `oe` metres out from
   /// the front row, the foot `ze` and top `zf` of its fascia, and the
   /// roof's back `zb` over the back row (`o1`, `z1`); and `zs`, how high
@@ -379,10 +398,10 @@ extension _StadiumFeatures on StadiumPainter {
     Color rear, {
     required bool canopy,
   }) {
-    Offset seat(double u) => _standPoint(s, u, r.oe, r.zs);
-    Offset row(double u) => _standPoint(s, u, r.o1, r.z1);
-    Offset back(double u) => _standPoint(s, u, r.o1, r.zb);
-    Offset foot(double u) => _standPoint(s, u, r.oe, r.ze);
+    Offset seat(double u) => _roofPoint(s, u, r.oe, r.zs);
+    Offset row(double u) => _roofPoint(s, u, r.o1, r.z1);
+    Offset back(double u) => _roofPoint(s, u, r.o1, r.zb);
+    Offset foot(double u) => _roofPoint(s, u, r.oe, r.ze);
 
     // The shade on the seats under the roof, with a crisp line where the
     // edge cuts the light.
@@ -443,8 +462,8 @@ extension _StadiumFeatures on StadiumPainter {
     Color rear, {
     required bool canopy,
   }) {
-    Offset back(double u) => _standPoint(s, u, r.o1, r.zb);
-    Offset brow(double u) => _standPoint(s, u, r.oe, r.zf);
+    Offset back(double u) => _roofPoint(s, u, r.o1, r.zb);
+    Offset brow(double u) => _roofPoint(s, u, r.oe, r.zf);
 
     // The slab, sloping up from the edge to the back.
     canvas.drawPath(
@@ -478,8 +497,8 @@ extension _StadiumFeatures on StadiumPainter {
     required bool ring,
     required bool canopy,
   }) {
-    Offset foot(double u) => _standPoint(s, u, r.oe, r.ze);
-    Offset brow(double u) => _standPoint(s, u, r.oe, r.zf);
+    Offset foot(double u) => _roofPoint(s, u, r.oe, r.ze);
+    Offset brow(double u) => _roofPoint(s, u, r.oe, r.zf);
 
     // The fascia along the leading edge: the deep pale edge of a ring, a
     // steel band, or a canopy's thin rim; lit along its top.
@@ -516,12 +535,12 @@ extension _StadiumFeatures on StadiumPainter {
     final f = look.flood;
     if (cut == null || f < 0.05) return;
     for (final s in _order) {
-      if (_isTerraceEnd(s)) continue;
+      if (!_roofed(s)) continue;
       final r = _roofAt(s, cut);
-      Offset seat(double u) => _standPoint(s, u, r.oe, r.zs);
-      Offset foot(double u) => _standPoint(s, u, r.oe, r.ze);
-      Offset brow(double u) => _standPoint(s, u, r.oe, r.zf);
-      Offset back(double u) => _standPoint(s, u, r.o1, r.zb);
+      Offset seat(double u) => _roofPoint(s, u, r.oe, r.zs);
+      Offset foot(double u) => _roofPoint(s, u, r.oe, r.ze);
+      Offset brow(double u) => _roofPoint(s, u, r.oe, r.zf);
+      Offset back(double u) => _roofPoint(s, u, r.o1, r.zb);
       canvas
         // The lamps' spill up the roof from its edge, so the slab still
         // shows against the night sky.
@@ -573,6 +592,7 @@ extension _StadiumFeatures on StadiumPainter {
     final top = _tier(spec.tiers - 1);
     final o = top.o1 - 1;
     final z = _farRoofTop;
+    if (spec.partRoof) return;
     switch (_sig.crownFeature) {
       case RoofCrown.none:
         return;
@@ -739,6 +759,294 @@ extension _StadiumFeatures on StadiumPainter {
     }
   }
 
+  // --- Small and old grounds -------------------------------------------------
+
+  /// An old ground's floodlights stand on four lattice pylons at its
+  /// corners, whatever its roof.
+  bool get _pylons => spec.scale == GroundScale.old;
+
+  /// Lamps along the roof's edge all round, no towers.
+  bool get _roofEdgeLamps =>
+      _sig.lights == FloodlightStyle.roofEdge && !_pylons;
+
+  /// Four lattice pylons at the corners: two legs drawn in to the lamp
+  /// bank, braced in a zigzag.
+  void _latticePylons(Canvas canvas) {
+    final h = _towerHeight;
+    for (final (x, y) in StadiumPainter.towers) {
+      final ppm = _ppm(y);
+      final leg = Paint()
+        ..color = AppColors.outlineVariant
+        ..strokeWidth = math.max(0.7, ppm * 0.22);
+      final brace = Paint()
+        ..color = AppColors.outlineVariant.withValues(alpha: 0.8)
+        ..strokeWidth = math.max(0.4, ppm * 0.1);
+      Offset at(double side, double z) {
+        final spread = 1.3 - 0.9 * z / h;
+        return _p(x + side * spread, y, z);
+      }
+
+      canvas
+        ..drawLine(at(-1, 0), at(-1, h), leg)
+        ..drawLine(at(1, 0), at(1, h), leg);
+      const steps = 7;
+      for (var i = 0; i < steps; i++) {
+        final z0 = h * i / steps;
+        final z1 = h * (i + 1) / steps;
+        canvas.drawLine(
+          at(i.isEven ? -1 : 1, z0),
+          at(i.isEven ? 1 : -1, z1),
+          brace,
+        );
+      }
+    }
+  }
+
+  /// An old ground's home end: no stand, a grass bank rising away from the
+  /// goal, a fence along its foot and the old manual scoreboard on it.
+  void _openEndBank(Canvas canvas) {
+    const s = _Seg.left;
+    canvas.drawPath(
+      StadiumPainter._band(
+        (t) => _standPoint(s, t, -0.5, 0),
+        (t) => _standPoint(s, t, 13, 3.6),
+      ),
+      Paint()
+        ..shader = ui.Gradient.linear(
+          _standPoint(s, 0.5, 0, 0),
+          _standPoint(s, 0.5, 13, 3.6),
+          const [Color(0xFF2E4E35), Color(0xFF1F3525)],
+        ),
+    );
+    // Its few standing fans, scattered thin along the top.
+    final r = math.Random(varietySeed('bank:${spec.flagCode}'));
+    final fan = Paint();
+    for (var i = 0; i < 70 * spec.fill; i++) {
+      final t = 0.08 + r.nextDouble() * 0.9;
+      final o = 2 + r.nextDouble() * 9;
+      final c = _standPoint(s, t, o, 0.7 + o * 0.27 + 0.9);
+      fan.color = _StadiumFeatures._fanTone(spec.homeColour, r.nextDouble());
+      canvas.drawCircle(c, math.max(0.8, _ppm(_segY(s, t, o)) * 0.32), fan);
+    }
+    _fence(canvas, s, 0.05, 1);
+    _scoreboard(canvas);
+  }
+
+  static Color _fanTone(Color kit, double roll) => roll < 0.55
+      ? StadiumPainter._crowdTone(kit)
+      : roll < 0.8
+      ? const Color(0xFF3A3F45)
+      : const Color(0xFF8E8A82);
+
+  /// The fences in front of an old ground's terraces.
+  void _terraceFences(Canvas canvas) {
+    if (spec.scale != GroundScale.old) return;
+    for (final s in _order) {
+      if (_isTerraceEnd(s)) _fence(canvas, s, 0, 1);
+    }
+  }
+
+  /// A wire fence along the front of [s] from [a] to [b]: posts, two rails
+  /// and the mesh between them, faint.
+  void _fence(Canvas canvas, _Seg s, double a, double b) {
+    const o = -0.7;
+    const top = 2.6;
+    Offset at(double u, double z) => _standPoint(s, a + (b - a) * u, o, z);
+    canvas.drawPath(
+      StadiumPainter._band((u) => at(u, 0.3), (u) => at(u, top)),
+      Paint()..color = const Color(0xFFB9C2C8).withValues(alpha: 0.1),
+    );
+    final rail = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 0.7
+      ..color = const Color(0xFFA9B2B8).withValues(alpha: 0.7);
+    canvas
+      ..drawPath(StadiumPainter._line((u) => at(u, top)), rail)
+      ..drawPath(StadiumPainter._line((u) => at(u, top * 0.5)), rail);
+    final n = math.max(4, (_segLength(s) * (b - a) / 2.5).round());
+    final post = Paint()
+      ..strokeWidth = 0.6
+      ..color = const Color(0xFF8E979E).withValues(alpha: 0.8);
+    for (var i = 0; i <= n; i++) {
+      final u = i / n;
+      canvas.drawLine(at(u, 0), at(u, top + 0.2), post);
+    }
+  }
+
+  /// The old manual scoreboard on the open end's bank: a dark green board
+  /// on two posts, its number plates blank white tiles (no figure, no
+  /// word).
+  void _scoreboard(Canvas canvas) {
+    const s = _Seg.left;
+    const t0 = 0.7;
+    const t1 = 0.86;
+    const o = 9.5;
+    const z0 = 4.2;
+    const z1 = 8.4;
+    Offset at(double u, double v) =>
+        _standPoint(s, t0 + (t1 - t0) * u, o, z0 + (z1 - z0) * v);
+    final post = Paint()
+      ..strokeWidth = math.max(0.8, _ppm(_segY(s, t0, o)) * 0.22)
+      ..color = const Color(0xFF3E3A34);
+    for (final u in [0.12, 0.88]) {
+      canvas.drawLine(
+        _standPoint(s, t0 + (t1 - t0) * u, o, 3.1),
+        at(u, 0),
+        post,
+      );
+    }
+    final face = StadiumPainter._poly([at(0, 0), at(1, 0), at(1, 1), at(0, 1)]);
+    canvas
+      ..drawPath(face, Paint()..color = const Color(0xFF1E3A2A))
+      ..drawPath(
+        face,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 0.7
+          ..color = const Color(0xFFD9D4C4).withValues(alpha: 0.55),
+      );
+    final tile = Paint()
+      ..color = const Color(0xFFE8E4D8).withValues(alpha: 0.8);
+    for (final (v0, v1) in [(0.18, 0.42), (0.56, 0.8)]) {
+      for (final (u0, u1) in [(0.12, 0.3), (0.36, 0.54), (0.7, 0.88)]) {
+        canvas.drawPath(
+          StadiumPainter._poly([
+            at(u0, v0),
+            at(u1, v0),
+            at(u1, v1),
+            at(u0, v1),
+          ]),
+          tile,
+        );
+      }
+    }
+  }
+
+  // --- Works -----------------------------------------------------------------
+
+  /// The stand works are under way on: the home end, or the main stand of
+  /// a ground whose home end is open.
+  _Seg get _worksStand =>
+      _segments.contains(_Seg.left) && !_isTerraceEnd(_Seg.left)
+      ? _Seg.left
+      : _Seg.far;
+
+  /// While works are under way: a tower crane over the ground's far left
+  /// corner, its jib swung out over the stands.
+  void _crane(Canvas canvas) {
+    if (!spec.works.underWay) return;
+    const x = -16.0;
+    const y = -24.0;
+    final h = _farRoofTop + 13;
+    final ppm = _ppm(y);
+    const yellow = Color(0xFFC9A03A);
+    final steel = Paint()
+      ..color = yellow
+      ..strokeWidth = math.max(0.8, ppm * 0.28);
+    final thin = Paint()
+      ..color = yellow.withValues(alpha: 0.85)
+      ..strokeWidth = math.max(0.4, ppm * 0.12);
+    // The mast: two chords braced in a zigzag.
+    const w = 1.0;
+    canvas
+      ..drawLine(_p(x - w, y), _p(x - w, y, h), steel)
+      ..drawLine(_p(x + w, y), _p(x + w, y, h), steel);
+    for (var z = 0.0; z < h - 2; z += 2.5) {
+      canvas.drawLine(_p(x - w, y, z), _p(x + w, y, z + 2.5), thin);
+    }
+    // The jib out toward the pitch, the counter-jib and its weights behind.
+    final jib0 = _p(x - 11, y, h);
+    final jib1 = _p(x + 36, y, h);
+    canvas
+      ..drawLine(jib0, jib1, steel)
+      ..drawLine(_p(x - 11, y, h - 1.4), _p(x + 36, y, h - 1.0), thin)
+      ..drawLine(_p(x, y, h + 5), jib1, thin)
+      ..drawLine(_p(x, y, h + 5), jib0, thin)
+      ..drawLine(_p(x, y, h), _p(x, y, h + 5), steel)
+      ..drawPath(
+        StadiumPainter._poly([
+          _p(x - 11, y, h + 0.2),
+          _p(x - 6, y, h + 0.2),
+          _p(x - 6, y, h - 2.8),
+          _p(x - 11, y, h - 2.8),
+        ]),
+        Paint()..color = const Color(0xFF4A4E54),
+      )
+      // The cab under the jib.
+      ..drawPath(
+        StadiumPainter._poly([
+          _p(x + 1, y, h - 0.4),
+          _p(x + 3.5, y, h - 0.4),
+          _p(x + 3.5, y, h - 3),
+          _p(x + 1, y, h - 3),
+        ]),
+        Paint()..color = const Color(0xFF8C8F92),
+      );
+    // The hook and a load on its cable.
+    final hook = _p(x + 28, y, h - 9);
+    canvas
+      ..drawLine(_p(x + 28, y, h), hook, thin)
+      ..drawRect(
+        Rect.fromCenter(
+          center: hook.translate(0, ppm * 0.9),
+          width: ppm * 3.2,
+          height: ppm * 1.6,
+        ),
+        Paint()..color = const Color(0xFF6E6A62),
+      );
+    if (look.flood > 0.05) {
+      canvas.drawCircle(
+        _p(x, y, h + 5),
+        math.max(1, ppm * 0.5).toDouble(),
+        Paint()
+          ..color = const Color(0xFFD9544A).withValues(alpha: 0.9 * look.flood),
+      );
+    }
+  }
+
+  /// While works are under way: scaffolding over part of one stand, its
+  /// poles and boards, sheeted along the top.
+  void _scaffolding(Canvas canvas) {
+    if (!spec.works.underWay) return;
+    final s = _worksStand;
+    final top = _topOf(s);
+    final cut = _roofed(s) ? _roofCut : null;
+    final zTop = top.z1 + (cut?.back ?? 1) + 2.5;
+    const a = 0.35;
+    const b = 0.98;
+    final o = top.o1 + 0.4;
+    Offset at(double u, double z) => _standPoint(s, a + (b - a) * u, o, z);
+    final pole = Paint()
+      ..strokeWidth = 0.9
+      ..color = const Color(0xFFC4CACF);
+    final board = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 0.9
+      ..color = const Color(0xFF9A8A6A).withValues(alpha: 0.9);
+    final n = math.max(5, (_segLength(s) * (b - a) / 3).round());
+    for (var i = 0; i <= n; i++) {
+      canvas.drawLine(at(i / n, top.z0), at(i / n, zTop), pole);
+    }
+    for (var z = top.z0 + 2; z <= zTop; z += 2.2) {
+      canvas.drawPath(StadiumPainter._line((u) => at(u, z)), board);
+    }
+    for (var i = 0; i < n; i += 2) {
+      canvas.drawLine(
+        at(i / n, top.z0 + 2),
+        at((i + 1) / n, math.min(zTop, top.z0 + 6.4)),
+        pole,
+      );
+    }
+    // Sheeting over its upper lifts, part of the way along.
+    canvas.drawPath(
+      StadiumPainter._band(
+        (u) => at(0.3 + 0.55 * u, zTop - 4.4),
+        (u) => at(0.3 + 0.55 * u, zTop),
+      ),
+      Paint()..color = const Color(0xFFDCE2D6).withValues(alpha: 0.72),
+    );
+  }
+
   // --- Turf ------------------------------------------------------------------
 
   /// An American-football bowl's faint gridiron lines left on the turf.
@@ -851,7 +1159,7 @@ extension _StadiumFeatures on StadiumPainter {
     final cut = _roofCut;
     for (final s in _order) {
       if (_isTerraceEnd(s)) continue;
-      if (cut == null) {
+      if (cut == null || !_roofed(s)) {
         final t = _topOf(s);
         final zr = t.z1 + 0.9;
         canvas.drawPath(
@@ -866,8 +1174,8 @@ extension _StadiumFeatures on StadiumPainter {
       // Lying on the slab, thinner toward its steeper back, and a lip of
       // it along the top of the fascia.
       final r = _roofAt(s, cut);
-      Offset brow(double u) => _standPoint(s, u, r.oe, r.zf);
-      Offset back(double u) => _standPoint(s, u, r.o1, r.zb);
+      Offset brow(double u) => _roofPoint(s, u, r.oe, r.zf);
+      Offset back(double u) => _roofPoint(s, u, r.o1, r.zb);
       canvas
         ..drawPath(
           StadiumPainter._band(brow, back),
@@ -880,7 +1188,7 @@ extension _StadiumFeatures on StadiumPainter {
         ..drawPath(
           StadiumPainter._band(
             brow,
-            (u) => _standPoint(s, u, r.oe, r.zf + 0.5),
+            (u) => _roofPoint(s, u, r.oe, r.zf + 0.5),
           ),
           snow,
         );
