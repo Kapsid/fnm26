@@ -359,8 +359,11 @@ void main() {
       expect(matches, greaterThan(5));
       expect((await d.nextEvent()).kind, HubEventKind.cycleRollover);
 
+      // Whether this seed's finals cost anybody his job depends on the
+      // results (weather and rotated grounds since 1.1.1 move them); that
+      // the decision points file news at all is pinned by the year-after
+      // test below. Here only the cap is held.
       final news = await newsByPoint(id);
-      expect(news.keys, isNotEmpty, reason: 'the finals points filed news');
       for (final MapEntry(key: point, value: n) in news.entries) {
         expect(n, lessThanOrEqualTo(3), reason: point);
       }

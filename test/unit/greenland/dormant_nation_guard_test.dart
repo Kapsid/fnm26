@@ -33,7 +33,13 @@ void main() {
     'lib/features/nations/nation_select_screen.dart': {
       'newGameNationsProvider',
       'newGameStarPlayersProvider',
+      // The phone's flag wall shows each tile's squad overall, as the
+      // tablet's tiles do.
+      'newGameStrengthsProvider',
     },
+    // A campaign's brief, before its career exists: names the nation a
+    // database would rename, against the world a new career starts with.
+    'lib/features/campaign/campaign_brief_screen.dart': {'nationsProvider'},
     'lib/features/nations/nation_select_tablet_layout.dart': {
       'newGameNationsProvider',
       'newGameStrengthsProvider',

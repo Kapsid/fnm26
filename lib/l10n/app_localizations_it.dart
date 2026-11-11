@@ -17037,7 +17037,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get pitchComKickOffFog =>
-      'Calcio d’inizio in una fitta nebbia. Nessuno segnerà facilmente da fuori.';
+      'Calcio d’inizio in una nebbia densa. Nessuno segnerà facilmente da fuori.';
 
   @override
   String get pitchComKickOffHaze =>

@@ -196,5 +196,8 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(find.byType(MatchScoreboard), findsOneWidget);
     await tester.pumpWidget(const SizedBox());
+    // The ground's works (stadiums 2.0) are a database read the match
+    // starts at kick-off; let its clean-up timer run out with the tree.
+    await tester.pump(const Duration(seconds: 1));
   });
 }

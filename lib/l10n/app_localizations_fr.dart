@@ -17074,30 +17074,30 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get matchWeatherPlaysHeavyRain =>
-      'Forte pluie : tirs et centres moins fiables, plus de glissades';
+      'Forte pluie : tirs et centres moins fiables, plus de glissades';
 
   @override
   String get matchWeatherPlaysStorm =>
-      'Orage : tirs et centres moins fiables, plus de glissades';
+      'Orage : tirs et centres moins fiables, plus de glissades';
 
   @override
   String get matchWeatherPlaysSnow =>
-      'Neige : jeu plus lent, passes un peu plus difficiles';
+      'Neige : jeu plus lent, passes un peu plus difficiles';
 
   @override
   String get matchWeatherPlaysFrost =>
-      'Terrain gelé : jeu plus lent, passes un peu plus difficiles';
+      'Terrain gelé : jeu plus lent, passes un peu plus difficiles';
 
   @override
   String get matchWeatherPlaysGale =>
-      'Vent fort : longs ballons et centres imprévisibles, frappes de loin plus dures';
+      'Vent fort : longs ballons et centres imprévisibles, frappes de loin plus dures';
 
   @override
-  String get matchWeatherPlaysFog => 'Brouillard : frappes de loin plus dures';
+  String get matchWeatherPlaysFog => 'Brouillard : frappes de loin plus dures';
 
   @override
   String get matchWeatherPlaysHaze =>
-      'Brume de chaleur : plus chaud que d’habitude, les jambes lâcheront plus tôt';
+      'Brume de chaleur : plus chaud que d’habitude, les jambes lâcheront plus tôt';
 
   @override
   String get pitchComKickOffHeavyRain =>
