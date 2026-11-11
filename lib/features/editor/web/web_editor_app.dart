@@ -21,6 +21,7 @@ import 'package:fnm/features/editor/players/squad_screen.dart';
 import 'package:fnm/features/editor/save_failure_listener.dart';
 import 'package:fnm/features/editor/trophy_section_screen.dart';
 import 'package:fnm/features/editor/web/browser_files.dart';
+import 'package:fnm/features/editor/web/web_guide.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/l10n/app_localizations_en.dart';
@@ -36,13 +37,12 @@ final List<Override> webEditorOverrides = [
   editorHasHomeProvider.overrideWithValue(false),
   editorFilePickerProvider.overrideWithValue(pickFileAsBlobUrl),
   editorPackExporterProvider.overrideWith(
-    (ref) =>
-        (packId, {required subject, origin}) async {
-          final file = await ref
-              .read(worldPackServiceProvider)
-              .encodeForExport(packId);
-          downloadBytes(file.bytes, file.fileName, type: PackCodec.mimeType);
-        },
+    (ref) => (packId, {required subject, origin}) async {
+      final file = await ref
+          .read(worldPackServiceProvider)
+          .encodeForExport(packId);
+      downloadBytes(file.bytes, file.fileName, type: PackCodec.mimeType);
+    },
   ),
 ];
 
@@ -58,7 +58,7 @@ GoRouter webEditorRouter() {
     routes: [
       GoRoute(
         path: Routes.editor,
-        builder: (context, state) => const EditorListScreen(),
+        builder: (context, state) => const _ListWithGuide(),
       ),
       GoRoute(
         path: Routes.editorPack,
@@ -133,7 +133,12 @@ class WebEditorApp extends ConsumerWidget {
       routerConfig: ref.watch(_webRouterProvider),
       builder: (context, child) => switch (ready) {
         AsyncData() => PackSaveFailureListener(
-          child: child ?? const SizedBox.shrink(),
+          child: Column(
+            children: [
+              const WebDownloadReminder(),
+              Expanded(child: child ?? const SizedBox.shrink()),
+            ],
+          ),
         ),
         AsyncError() => const _BootMessage(
           busy: false,
@@ -148,6 +153,40 @@ class WebEditorApp extends ConsumerWidget {
       },
     );
   }
+}
+
+/// The list of databases under the big how-it-works guide.
+class _ListWithGuide extends StatelessWidget {
+  const _ListWithGuide();
+
+  @override
+  Widget build(BuildContext context) => Material(
+    color: AppColors.surface,
+    child: LayoutBuilder(
+      builder: (context, c) => Column(
+        children: [
+          ConstrainedBox(
+            constraints: BoxConstraints(maxHeight: c.maxHeight * 0.6),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                AppSpacing.lg,
+                AppSpacing.lg,
+                0,
+              ),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 960),
+                  child: const WebEditorGuide(),
+                ),
+              ),
+            ),
+          ),
+          const Expanded(child: EditorListScreen()),
+        ],
+      ),
+    ),
+  );
 }
 
 class _BootMessage extends StatelessWidget {
