@@ -26,15 +26,18 @@ import '../../helpers/fixtures.dart';
 /// Paired seeds: the same fixtures are played in clear skies and in each
 /// weather, so the difference is measured, not the noise.
 ///
-/// Measured 2026-11-11 (2000 engine matches a cell, goals a match):
+/// Measured 2026-11-11 (2000 paired engine matches a cell, the change in
+/// goals a match against the same fixtures in clear skies):
 ///
-///   weather       75 v 75          80 v 70
-///   clear         2.715            2.876
-///   heavy rain    2.640 (-2.8%)    2.795 (-2.8%)
-///   snow / frost  2.650 (-2.4%)    2.804 (-2.5%)
-///   gale          see the test's print (about -2.6%)
-///   fog           2.656 (-2.2%)    2.825 (-1.8%)
-///   heat haze     plays through the heat drain (Doha in January below)
+///   weather        75 v 75   80 v 70
+///   heavy rain     -2.8%     -2.6%
+///   snow / frost   -2.3%     -2.1%
+///   gale           -2.7%     -2.4%
+///   fog            -2.3%     -1.8%
+///   heat haze      +0.1% (Doha in January: through the heat drain)
+///
+/// The world's mix of weathers (78.8% clear, 10.9% light rain) moves goals
+/// about -0.2% overall.
 void main() {
   const engine = MatchEngine();
   const sim = RatingMatchSimulator();
