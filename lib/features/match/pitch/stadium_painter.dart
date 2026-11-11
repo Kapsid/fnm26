@@ -10,6 +10,7 @@ import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_geometry.dart';
 import 'package:fnm/domain/services/match/stadium/crowd_culture.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
+import 'package:fnm/domain/services/match/stadium/ground_character.dart';
 import 'package:fnm/domain/services/match/stadium/ground_look.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/domain/services/match/stadium/stadium_signature.dart';
@@ -137,6 +138,7 @@ class StadiumPainter extends CustomPainter {
       city: spec.city,
       season: spec.season,
       landmark: spec.landmark,
+      features: spec.features,
       look: look,
       seed: '${spec.flagCode}:${spec.landmark.name}:${spec.tiers}',
     ).paint(canvas, size, horizon);
@@ -162,6 +164,7 @@ class StadiumPainter extends CustomPainter {
     _apronGround(canvas);
     _track(canvas);
     _openEndSkyline(canvas);
+    _crane(canvas);
     _towerMasts(canvas);
     ungrade();
     grade(
@@ -171,6 +174,7 @@ class StadiumPainter extends CustomPainter {
     ungrade();
     grade(look.grade);
     _standRoofs(canvas);
+    _scaffolding(canvas);
     _roofCrown(canvas);
     _screens(canvas);
     _snowOnRoofs(canvas);
@@ -362,7 +366,10 @@ class StadiumPainter extends CustomPainter {
     }
   }
 
-  List<_Seg> get _segments => spec.openCorners
+  List<_Seg> get _segments => spec.scale == GroundScale.old
+      // An old ground's home end is open: a grass bank, no stand.
+      ? const [_Seg.far, _Seg.right]
+      : spec.openCorners
       ? const [_Seg.left, _Seg.far, _Seg.right]
       : const [
           _Seg.left,
@@ -427,10 +434,10 @@ class StadiumPainter extends CustomPainter {
 
   bool _isEnd(_Seg s) => s == _Seg.left || s == _Seg.right;
 
-  /// An end drawn as a low open terrace: a small ground's two ends, or the
-  /// open end of a soccer-specific ground.
+  /// An end drawn as a low open terrace: an old ground's end, or the open
+  /// end of a soccer-specific ground.
   bool _isTerraceEnd(_Seg s) =>
-      (spec.tiers == 1 && _isEnd(s)) ||
+      (spec.scale == GroundScale.old && _isEnd(s)) ||
       (spec.signature.bowl == BowlShape.openEnd && s == _Seg.left);
 
   /// A small ground's end terrace: one shallow, low step of standing fans.
@@ -441,14 +448,15 @@ class StadiumPainter extends CustomPainter {
     z1: _frontWall * 0.7 + _terraceDepth * _terraceRake,
   );
 
-  /// The tiers and their crowd, and a small ground's grass banks.
+  /// The tiers and their crowd, and a smaller ground's grass banks (and an
+  /// old ground's open end, its fences and its scoreboard).
   void _standTiers(Canvas canvas) {
     final seats = _seatTone(spec.homeColour);
-    final small = spec.tiers == 1;
-    if (small) {
+    if (spec.scale != GroundScale.big) {
       _grassBank(canvas, _Seg.cornerLeft);
       _grassBank(canvas, _Seg.cornerRight);
     }
+    if (spec.scale == GroundScale.old) _openEndBank(canvas);
     final crowd = CrowdPainter(home: spec.homeColour, away: spec.awayColour);
     final most = _order.map(_tiersOf).reduce(math.max);
     for (var k = 0; k < most; k++) {
@@ -468,6 +476,7 @@ class StadiumPainter extends CustomPainter {
         );
       }
     }
+    _terraceFences(canvas);
   }
 
   /// The roofs over the stands, or a small ground's terrace rails.
@@ -480,7 +489,8 @@ class StadiumPainter extends CustomPainter {
     for (final s in _order) {
       if (_isTerraceEnd(s)) {
         _terraceRail(canvas, s);
-      } else if (cut == null) {
+      } else if (cut == null || !_roofed(s) || _roofSpan(s) != (0.0, 1.0)) {
+        // An open rim, and along a part roof's open ends.
         final top = _topOf(s);
         _openRim(canvas, s, top.o1, top.z1);
       }
@@ -488,7 +498,7 @@ class StadiumPainter extends CustomPainter {
     if (cut == null) return;
     for (final layer in _RoofLayer.values) {
       for (final s in _order) {
-        if (!_isTerraceEnd(s)) _roofOver(canvas, s, cut, layer);
+        if (_roofed(s)) _roofOver(canvas, s, cut, layer);
       }
     }
   }
@@ -728,7 +738,7 @@ class StadiumPainter extends CustomPainter {
   /// Floodlamps along each canopy and on the towers: grey and unlit by day,
   /// coming up through dusk, bright with a halo at night.
   void _lamps(Canvas canvas) {
-    final edge = spec.signature.lights == FloodlightStyle.roofEdge;
+    final edge = _roofEdgeLamps;
     for (final s
         in edge
             ? _order
@@ -736,7 +746,7 @@ class StadiumPainter extends CustomPainter {
                 _Seg.far,
                 if (spec.tiers > 1) ...[_Seg.left, _Seg.right],
               ]) {
-      if (_isTerraceEnd(s)) continue;
+      if (_isTerraceEnd(s) || _pylons) continue;
       final top = _topOf(s);
       final lamps = switch (s) {
         _Seg.far => edge ? 15 : 9,
@@ -744,18 +754,20 @@ class StadiumPainter extends CustomPainter {
         _ => 3,
       };
       final cut = _roofCut;
-      final r = cut == null ? null : _roofAt(s, cut);
-      for (var i = 0; i < lamps; i++) {
-        final u = (i + 0.5) / lamps;
+      final r = cut == null || !_roofed(s) ? null : _roofAt(s, cut);
+      final (a, b) = r == null ? (0.0, 1.0) : _roofSpan(s);
+      final n = math.max(3, (lamps * (b - a)).round());
+      for (var i = 0; i < n; i++) {
+        final u = (i + 0.5) / n;
         // On the fascia, along the roof's leading edge.
         final c = r == null
             ? _standPoint(s, u, top.o1, top.z1 + 1.6)
-            : _standPoint(s, u, r.oe, (r.ze + r.zf) / 2);
+            : _roofPoint(s, u, r.oe, (r.ze + r.zf) / 2);
         _lamp(canvas, c, _ppm(0) * 0.55);
       }
     }
     if (edge) return;
-    for (final (x, y) in towers.take(2)) {
+    for (final (x, y) in _pylons ? towers : towers.take(2)) {
       final head = _p(x, y, _towerHeight);
       final ppm = _ppm(y);
       final rect = Rect.fromCenter(
@@ -818,9 +830,14 @@ class StadiumPainter extends CustomPainter {
     return math.max(top.z1 + _roofWall + 7, _farRoofTop + 4);
   }
 
-  /// The two far towers' masts (the near two stand behind the camera).
+  /// The two far towers' masts (the near two stand behind the camera); an
+  /// old ground's four lattice pylons.
   void _towerMasts(Canvas canvas) {
-    if (spec.signature.lights == FloodlightStyle.roofEdge) return;
+    if (_roofEdgeLamps) return;
+    if (_pylons) {
+      _latticePylons(canvas);
+      return;
+    }
     for (final (x, y) in towers.take(2)) {
       final ppm = _ppm(y);
       canvas.drawLine(
@@ -837,12 +854,18 @@ class StadiumPainter extends CustomPainter {
   /// from below at night.
   void _flags(Canvas canvas) {
     final top = _tier(spec.tiers - 1);
-    final cut = _roofCut;
-    // Along the open rim, or the back of the roof.
-    final o = top.o1 - (cut == null ? 0.5 : 0);
-    final z = top.z1 + (cut == null ? 0.4 : cut.back);
-    // Clear of the middle, where a city's landmark rises.
-    const poles = [0.08, 0.24, 0.76, 0.92];
+    final cut = _roofed(_Seg.far) ? _roofCut : null;
+    final (a, b) = _roofSpan(_Seg.far);
+    // Clear of the middle, where a city's landmark rises; on a part roof,
+    // along the roof alone.
+    final poles = cut != null && (a, b) != (0.0, 1.0)
+        ? [
+            a + 0.04,
+            if (spec.scale != GroundScale.old) a + (b - a) * 0.22,
+            if (spec.scale != GroundScale.old) b - (b - a) * 0.22,
+            b - 0.04,
+          ]
+        : const [0.08, 0.24, 0.76, 0.92];
     final ppm = _ppm(0);
     final poleH = 4.2 * ppm * projection.tilt * 1.6;
     final w = math.max(9.0, ppm * 3.4);
@@ -851,6 +874,10 @@ class StadiumPainter extends CustomPainter {
       ..color = AppColors.outline
       ..strokeWidth = math.max(0.8, ppm * 0.22);
     for (final t in poles) {
+      // Along the open rim, or the back of the roof.
+      final roofed = cut != null && t >= a && t <= b;
+      final o = top.o1 - (roofed ? 0 : 0.5);
+      final z = top.z1 + (roofed ? cut.back : 0.4);
       final base = _standPoint(_Seg.far, t, o, z);
       final tip = base.translate(0, -poleH);
       canvas.drawLine(base, tip, polePaint);

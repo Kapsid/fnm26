@@ -5,7 +5,9 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/stadium/backdrop.dart';
+import 'package:fnm/domain/services/match/stadium/city_geography.dart';
 import 'package:fnm/domain/services/match/stadium/crowd_culture.dart';
+import 'package:fnm/domain/services/match/stadium/ground_character.dart';
 import 'package:fnm/domain/services/match/stadium/ground_look.dart';
 import 'package:fnm/domain/services/match/stadium/landmarks.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
@@ -37,13 +39,18 @@ class StadiumSpec {
     this.homeCulture = CrowdCulture.calm,
     this.awayCulture = CrowdCulture.calm,
     this.weather = WeatherKind.clear,
+    this.features = const {},
+    this.scale = GroundScale.big,
+    this.partRoof = false,
+    this.works = GroundWorks.none,
   });
 
   /// The spec for [g] between [home] and [away] in the country
   /// [groundNationCode] (the home nation's unless the venue is neutral),
   /// with the season of [date] (green when there is none), in [weather].
   /// [groundColours] are the ground nation's two colours, for its seats
-  /// (the home side's when not given).
+  /// (the home side's when not given). [works] is what the manager's
+  /// federation has done to the ground (none for every other ground).
   factory StadiumSpec.from(
     MatchGround g,
     Nation home,
@@ -54,24 +61,34 @@ class StadiumSpec {
     DateTime? date,
     (Color, Color)? groundColours,
     WeatherKind weather = WeatherKind.clear,
+    GroundWorks works = GroundWorks.none,
   }) {
-    final tiers = g.capacity < 15000 ? 1 : (g.capacity < 45000 ? 2 : 3);
     final kits = KitClash.resolve(home, away);
     final confed = groundConfederation ?? home.confederation;
-    final signature = StadiumSignature.of(
+    final character = GroundCharacter.of(
       stadium: g.stadium,
       nationCode: groundNationCode,
       confederation: confed,
       capacity: g.capacity,
+      works: works,
     );
-    final (city, horizon) = NationBackdrops.of(
+    final signature = character.signature;
+    final (city, countryHorizon) = NationBackdrops.of(
       groundNationCode,
       confed,
       capacity: g.capacity,
     );
+    // The city's own geography, where the table knows it; else the
+    // country's look.
+    final features = CityGeography.of(groundNationCode, g.city);
+    final horizon = features == null
+        ? countryHorizon
+        : CityGeography.horizonFor(countryHorizon, features, confed);
     return StadiumSpec(
-      tiers: tiers,
-      openCorners: tiers == 1 || signature.bowl == BowlShape.openCorners,
+      tiers: character.tiers,
+      openCorners:
+          character.scale != GroundScale.big ||
+          signature.bowl == BowlShape.openCorners,
       fill: g.capacity <= 0 ? 0 : (g.attendance / g.capacity).clamp(0.0, 1.0),
       homeColour: kits.home.primary,
       awayColour: kits.away.primary,
@@ -108,6 +125,10 @@ class StadiumSpec {
       homeCulture: CrowdCultures.of(home.code, home.confederation),
       awayCulture: CrowdCultures.of(away.code, away.confederation),
       weather: weather,
+      features: features ?? const {},
+      scale: character.scale,
+      partRoof: character.partRoof,
+      works: works,
     );
   }
 
@@ -124,11 +145,12 @@ class StadiumSpec {
     CrowdCulture? homeCulture,
     CrowdCulture? awayCulture,
     WeatherKind? weather,
+    Set<CityFeature>? features,
   }) => StadiumSpec(
     tiers: tiers,
     openCorners: signature == null
         ? openCorners
-        : tiers == 1 || signature.bowl == BowlShape.openCorners,
+        : scale != GroundScale.big || signature.bowl == BowlShape.openCorners,
     fill: fill ?? this.fill,
     homeColour: homeColour,
     awayColour: awayColour,
@@ -146,6 +168,10 @@ class StadiumSpec {
     homeCulture: homeCulture ?? this.homeCulture,
     awayCulture: awayCulture ?? this.awayCulture,
     weather: weather ?? this.weather,
+    features: features ?? this.features,
+    scale: scale,
+    partRoof: partRoof,
+    works: works,
   );
 
   final int tiers;
@@ -186,4 +212,19 @@ class StadiumSpec {
 
   /// The weather on the day: cosmetic only.
   final WeatherKind weather;
+
+  /// What is round the city (its coast, river, mountains...): the near
+  /// features of the backdrop. Empty for a city the geography table does
+  /// not know.
+  final Set<CityFeature> features;
+
+  /// The ground's size, for its character: an old small ground, a compact
+  /// one or a big one.
+  final GroundScale scale;
+
+  /// Only the middle of the main stand is roofed.
+  final bool partRoof;
+
+  /// What the manager's federation has done to the ground.
+  final GroundWorks works;
 }

@@ -193,6 +193,31 @@ class StadiumSignature {
     );
   }
 
+  /// A ground the manager's federation built (an Arena Nova): a modern
+  /// closed bowl under a cantilever or ring roof all round, mosaic seats,
+  /// lamps along the roof's edge and a big screen. The roof is drawn from
+  /// the stadium, so a ground always looks the same.
+  factory StadiumSignature.arenaNova(String stadium) => StadiumSignature(
+    roof: varietySeed('arena-nova:$stadium').isEven
+        ? RoofStyle.ring
+        : RoofStyle.cantilever,
+    seats: SeatPattern.mosaic,
+    lights: FloodlightStyle.roofEdge,
+    bigScreen: true,
+  );
+
+  /// This look under [roof] instead.
+  StadiumSignature withRoof(RoofStyle roof) => StadiumSignature(
+    kind: kind,
+    roof: roof,
+    crownFeature: crownFeature,
+    bowl: bowl,
+    seats: seats,
+    lights: lights,
+    bigScreen: bigScreen,
+    runningTrack: runningTrack,
+  );
+
   /// The look every ground had before signatures: a cantilevered roof on a
   /// closed bowl, plain seats and four corner towers.
   static const StadiumSignature classic = StadiumSignature();

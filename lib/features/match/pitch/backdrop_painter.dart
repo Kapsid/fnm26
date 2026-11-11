@@ -4,8 +4,10 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:fnm/domain/services/match/stadium/backdrop.dart';
+import 'package:fnm/domain/services/match/stadium/city_geography.dart';
 import 'package:fnm/domain/services/match/stadium/landmarks.dart';
 import 'package:fnm/features/match/pitch/backdrop_tone.dart';
+import 'package:fnm/features/match/pitch/city_features.dart';
 import 'package:fnm/features/match/pitch/city_skyline.dart';
 import 'package:fnm/features/match/pitch/landmark_paths.dart';
 import 'package:fnm/features/match/pitch/scene_look.dart';
@@ -27,6 +29,7 @@ class BackdropPainter {
     required this.look,
     required this.seed,
     this.season = BackdropSeason.green,
+    this.features = const {},
   }) : _t = BackdropTone(look: look, season: season, seed: seed);
 
   final Horizon horizon;
@@ -34,6 +37,10 @@ class BackdropPainter {
   final LandmarkKind landmark;
   final SceneLook look;
   final BackdropSeason season;
+
+  /// What is round the city: its harbour, river, industry, old town or
+  /// park, drawn among the buildings ([CityFeatures]).
+  final Set<CityFeature> features;
   final String seed;
   final BackdropTone _t;
 
@@ -80,7 +87,10 @@ class BackdropPainter {
       lowered: landmark != LandmarkKind.none,
     )..paintBack(canvas, size, roofLine, room);
     if (landmark != LandmarkKind.none) _landmark(canvas, size, roofLine, room);
+    final near = CityFeatures(features: features, style: city, tone: _t)
+      ..paintBehind(canvas, size, roofLine, room);
     skyline.paintFront(canvas, size, roofLine, room);
+    near.paintFront(canvas, size, roofLine, room);
     _cityGlow(canvas, size, roofLine, room);
     // Below the roof line is the town round the stadium, seen from above:
     // what shows of it past the end stands is roofs and streets, never sky.
@@ -1100,6 +1110,21 @@ class BackdropPainter {
             0.2,
           )!.withValues(alpha: 0.6),
       );
+    // Snow on a mountain's top.
+    final cap = LandmarkPaths.capOf(landmark);
+    if (cap != null) {
+      canvas.drawPath(
+        cap.transform(
+          Float64List.fromList([
+            h, 0, 0, 0, //
+            0, h, 0, 0,
+            0, 0, 1, 0,
+            cx, horizon + hidden, 0, 1,
+          ]),
+        ),
+        Paint()..color = _t.snow(_hazeMid),
+      );
+    }
     if (_night > 0.15) {
       if (LandmarkPaths.hasWindows(landmark)) {
         canvas

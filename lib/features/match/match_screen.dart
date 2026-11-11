@@ -25,6 +25,7 @@ import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/card_status.dart';
 import 'package:fnm/domain/services/match/live_rating.dart';
+import 'package:fnm/domain/services/match/stadium/ground_character.dart';
 import 'package:fnm/domain/services/match/stadium/kick_off.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
@@ -33,6 +34,8 @@ import 'package:fnm/domain/services/match/penalty_takers.dart';
 import 'package:fnm/domain/services/match/pitch/moment_staging.dart'
     show ShootoutCast, ShootoutStaging;
 import 'package:fnm/domain/services/press/fan_mood.dart';
+import 'package:fnm/features/federation/national_stadium_providers.dart'
+    show groundWorksProvider;
 import 'package:fnm/features/achievements/achievement_popup.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
@@ -1178,6 +1181,11 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   /// the clock goes there: the same match position, never back; the old
   /// picture stays, held, until it is in. Otherwise it is told from kick-off
   /// and the clock goes to the end of the minute the screen is on.
+  /// What the manager's federation has done to [preview]'s ground.
+  AutoDisposeFutureProvider<GroundWorks> _groundWorksOf(
+    MatchPreview preview,
+  ) => groundWorksProvider((careerId: widget.careerId, ground: preview.ground));
+
   Future<void> _rebuildPitch(
     MatchPreview preview, {
     bool resume = false,
@@ -1187,6 +1195,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     final stadium = _pc.stadium ??= pitchStadiumForPreview(
       preview,
       weather: ref.read(pitchForcedWeatherProvider),
+      // What his federation has done to the ground, read while the preview
+      // was up (cosmetic only: a ground still loading looks as it was).
+      works: ref.read(_groundWorksOf(preview)).valueOrNull ?? GroundWorks.none,
     );
     if (_pc.names.isEmpty) _pc.names = pitchNamesForPreview(preview);
     final clock = _pitchClock;
@@ -1948,6 +1959,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             // the bare fixture seed's match, so it only stands at salt 0.
             _result ??= _attemptSalt == 0 ? preview.result : _resim(preview);
             _livePreview = preview;
+            // Loaded ahead of kick-off for the Pitch view's ground.
+            ref.watch(_groundWorksOf(preview));
             _ensureLiveSetup(preview);
             final r = _result!;
             _stoppage = r.stoppage;
