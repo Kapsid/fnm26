@@ -46,65 +46,55 @@ class ClubHistoryCard extends ConsumerWidget {
     // career is a career, and saying so is the answer to "has he ever moved?".
     if (spells.isEmpty) return const SizedBox.shrink();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: AppSpacing.md),
-        Text(
-          l.playerClubHistory,
-          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        AppCard(
-          padding: EdgeInsets.zero,
-          child: Column(
-            children: [
-              // Newest first — where he is now, then how he got here.
-              for (var i = spells.length - 1; i >= 0; i--)
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                    vertical: AppSpacing.sm,
-                  ),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 74,
-                        child: Text(
-                          spells.length == 1
-                              // He is still there, so the span is open.
-                              ? '${spells[i].fromYear}–'
-                              : spells[i].fromYear == spells[i].toYear
-                              ? '${spells[i].fromYear}'
-                              : '${spells[i].fromYear}–${spells[i].toYear}',
-                          style: AppTypography.labelSmall.copyWith(
-                            color: AppColors.onSurfaceVariant,
-                          ),
-                        ),
+    return ProfileBlock(
+      title: l.playerClubHistory,
+      padding: EdgeInsets.zero,
+      child: Column(
+        children: [
+          // Newest first — where he is now, then how he got here.
+          for (var i = spells.length - 1; i >= 0; i--)
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.sm,
+              ),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 74,
+                    child: Text(
+                      spells.length == 1
+                          // He is still there, so the span is open.
+                          ? '${spells[i].fromYear}–'
+                          : spells[i].fromYear == spells[i].toYear
+                          ? '${spells[i].fromYear}'
+                          : '${spells[i].fromYear}–${spells[i].toYear}',
+                      style: AppTypography.labelSmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
                       ),
-                      // Which of these rows is a TRANSFER: every row but the
-                      // first is a move, and they all look alike, because a
-                      // move is a move.
-                      _MoveMark(isMove: i != 0),
-                      const SizedBox(width: AppSpacing.sm),
-                      if (spells[i].country.isNotEmpty) ...[
-                        FlagDisc(spells[i].country, size: 18),
-                        const SizedBox(width: AppSpacing.sm),
-                      ],
-                      Expanded(
-                        child: Text(
-                          clubName(l, spells[i].club),
-                          style: AppTypography.bodyMedium,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-            ],
-          ),
-        ),
-      ],
+                  // Which of these rows is a TRANSFER: every row but the
+                  // first is a move, and they all look alike, because a
+                  // move is a move.
+                  _MoveMark(isMove: i != 0),
+                  const SizedBox(width: AppSpacing.sm),
+                  if (spells[i].country.isNotEmpty) ...[
+                    FlagDisc(spells[i].country, size: 18),
+                    const SizedBox(width: AppSpacing.sm),
+                  ],
+                  Expanded(
+                    child: Text(
+                      clubName(l, spells[i].club),
+                      style: AppTypography.bodyMedium,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

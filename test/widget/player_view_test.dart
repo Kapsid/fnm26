@@ -54,8 +54,18 @@ void main() {
     await settle(tester);
     expect(tester.takeException(), isNull);
     expect(find.text(name), findsOneWidget);
-    // The ability ring upper-cases its label.
-    expect(find.text(enL.playerAttrPhysical.toUpperCase()), findsOneWidget);
+    // The Overview tab opens first, with the ability bars.
+    expect(find.text(enL.playerAttrPhysical), findsOneWidget);
+    // Every tab fits the pane too.
+    for (final tab in [
+      PlayerDetailScreen.tabStatsKey,
+      PlayerDetailScreen.tabCareerKey,
+    ]) {
+      await tester.tap(find.byKey(tab));
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+    }
+    expect(find.byKey(PlayerDetailScreen.headerKey), findsOneWidget);
     expect(find.byType(AppBar), findsNothing, reason: 'the view has no chrome');
   });
 }

@@ -4252,5 +4252,10 @@
   "matchChartXg": "xG a lo largo del partido",
   "matchChartMomentum": "Quién dominaba",
   "editorDemoteTooltip": "Pasar a disponibles",
-  "editorDemoted": "{name} pasa a disponibles"
+  "editorDemoted": "{name} pasa a disponibles",
+  "profileTabOverview": "Resumen",
+  "profileTabStats": "Estadísticas",
+  "profileTabCareer": "Carrera",
+  "profileTabVsYou": "Contra ti",
+  "playerStatFitness": "Físico"
 }

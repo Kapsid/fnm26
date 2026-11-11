@@ -4252,5 +4252,10 @@
   "matchChartXg": "xG ottelun aikana",
   "matchChartMomentum": "Kumpi hallitsi",
   "editorDemoteTooltip": "Siirrä pooliin",
-  "editorDemoted": "{name} siirretty pooliin"
+  "editorDemoted": "{name} siirretty pooliin",
+  "profileTabOverview": "Yleiskuva",
+  "profileTabStats": "Tilastot",
+  "profileTabCareer": "Ura",
+  "profileTabVsYou": "Sinua vastaan",
+  "playerStatFitness": "Kunto"
 }

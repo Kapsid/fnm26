@@ -16987,4 +16987,19 @@ class AppLocalizationsMs extends AppLocalizations {
   String editorDemoted(String name) {
     return '$name dipindahkan ke senarai';
   }
+
+  @override
+  String get profileTabOverview => 'Gambaran';
+
+  @override
+  String get profileTabStats => 'Statistik';
+
+  @override
+  String get profileTabCareer => 'Kerjaya';
+
+  @override
+  String get profileTabVsYou => 'Menentang anda';
+
+  @override
+  String get playerStatFitness => 'Kecergasan';
 }

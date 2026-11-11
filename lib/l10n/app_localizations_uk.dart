@@ -17342,4 +17342,19 @@ class AppLocalizationsUk extends AppLocalizations {
   String editorDemoted(String name) {
     return '$name переміщено до пулу';
   }
+
+  @override
+  String get profileTabOverview => 'Огляд';
+
+  @override
+  String get profileTabStats => 'Статистика';
+
+  @override
+  String get profileTabCareer => 'Кар’єра';
+
+  @override
+  String get profileTabVsYou => 'Проти вас';
+
+  @override
+  String get playerStatFitness => 'Фізпідготовка';
 }

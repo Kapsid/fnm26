@@ -4252,5 +4252,10 @@
   "matchChartXg": "xG gedurende de wedstrijd",
   "matchChartMomentum": "Wie de overhand had",
   "editorDemoteTooltip": "Naar de pool",
-  "editorDemoted": "{name} naar de pool verplaatst"
+  "editorDemoted": "{name} naar de pool verplaatst",
+  "profileTabOverview": "Overzicht",
+  "profileTabStats": "Stats",
+  "profileTabCareer": "Loopbaan",
+  "profileTabVsYou": "Tegen jou",
+  "playerStatFitness": "Fitheid"
 }

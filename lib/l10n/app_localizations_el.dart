@@ -17118,4 +17118,19 @@ class AppLocalizationsEl extends AppLocalizations {
   String editorDemoted(String name) {
     return 'Ο $name μετακινήθηκε στη δεξαμενή';
   }
+
+  @override
+  String get profileTabOverview => 'Επισκόπηση';
+
+  @override
+  String get profileTabStats => 'Στατιστικά';
+
+  @override
+  String get profileTabCareer => 'Καριέρα';
+
+  @override
+  String get profileTabVsYou => 'Εναντίον σου';
+
+  @override
+  String get playerStatFitness => 'Φυσική κατάσταση';
 }

@@ -17441,4 +17441,19 @@ class AppLocalizationsRo extends AppLocalizations {
   String editorDemoted(String name) {
     return '$name a fost mutat în rezervor';
   }
+
+  @override
+  String get profileTabOverview => 'Pe scurt';
+
+  @override
+  String get profileTabStats => 'Statistici';
+
+  @override
+  String get profileTabCareer => 'Carieră';
+
+  @override
+  String get profileTabVsYou => 'Contra ta';
+
+  @override
+  String get playerStatFitness => 'Condiție fizică';
 }

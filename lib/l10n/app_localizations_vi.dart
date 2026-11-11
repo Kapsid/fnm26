@@ -16875,4 +16875,19 @@ class AppLocalizationsVi extends AppLocalizations {
   String editorDemoted(String name) {
     return '$name đã chuyển về nguồn';
   }
+
+  @override
+  String get profileTabOverview => 'Tổng quan';
+
+  @override
+  String get profileTabStats => 'Thống kê';
+
+  @override
+  String get profileTabCareer => 'Sự nghiệp';
+
+  @override
+  String get profileTabVsYou => 'Đối đầu bạn';
+
+  @override
+  String get playerStatFitness => 'Thể lực';
 }

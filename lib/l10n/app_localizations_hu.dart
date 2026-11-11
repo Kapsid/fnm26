@@ -16973,4 +16973,19 @@ class AppLocalizationsHu extends AppLocalizations {
   String editorDemoted(String name) {
     return '$name átkerült a bő keretbe';
   }
+
+  @override
+  String get profileTabOverview => 'Áttekintés';
+
+  @override
+  String get profileTabStats => 'Statisztika';
+
+  @override
+  String get profileTabCareer => 'Karrier';
+
+  @override
+  String get profileTabVsYou => 'Ellened';
+
+  @override
+  String get playerStatFitness => 'Erőnlét';
 }

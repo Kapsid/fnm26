@@ -4252,5 +4252,10 @@
   "matchChartXg": "xG tijekom utakmice",
   "matchChartMomentum": "Tko je bio bolji",
   "editorDemoteTooltip": "Premjesti u fond",
-  "editorDemoted": "{name} premješten u fond"
+  "editorDemoted": "{name} premješten u fond",
+  "profileTabOverview": "Pregled",
+  "profileTabStats": "Statistika",
+  "profileTabCareer": "Karijera",
+  "profileTabVsYou": "Protiv vas",
+  "playerStatFitness": "Kondicija"
 }

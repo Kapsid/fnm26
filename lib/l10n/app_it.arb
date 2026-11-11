@@ -4252,5 +4252,10 @@
   "matchChartXg": "xG nel corso della partita",
   "matchChartMomentum": "Chi ha dominato",
   "editorDemoteTooltip": "Sposta nel bacino",
-  "editorDemoted": "{name} spostato nel bacino"
+  "editorDemoted": "{name} spostato nel bacino",
+  "profileTabOverview": "Panoramica",
+  "profileTabStats": "Statistiche",
+  "profileTabCareer": "Carriera",
+  "profileTabVsYou": "Contro di te",
+  "playerStatFitness": "Condizione"
 }

@@ -4252,5 +4252,10 @@
   "matchChartXg": "xG στη διάρκεια του αγώνα",
   "matchChartMomentum": "Ποιος κυριαρχούσε",
   "editorDemoteTooltip": "Μετακίνηση στη δεξαμενή",
-  "editorDemoted": "Ο {name} μετακινήθηκε στη δεξαμενή"
+  "editorDemoted": "Ο {name} μετακινήθηκε στη δεξαμενή",
+  "profileTabOverview": "Επισκόπηση",
+  "profileTabStats": "Στατιστικά",
+  "profileTabCareer": "Καριέρα",
+  "profileTabVsYou": "Εναντίον σου",
+  "playerStatFitness": "Φυσική κατάσταση"
 }

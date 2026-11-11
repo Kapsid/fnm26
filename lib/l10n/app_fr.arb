@@ -4252,5 +4252,10 @@
   "matchChartXg": "xG au fil du match",
   "matchChartMomentum": "Qui dominait",
   "editorDemoteTooltip": "Passer dans le vivier",
-  "editorDemoted": "{name} passe dans le vivier"
+  "editorDemoted": "{name} passe dans le vivier",
+  "profileTabOverview": "Aperçu",
+  "profileTabStats": "Stats",
+  "profileTabCareer": "Carrière",
+  "profileTabVsYou": "Contre vous",
+  "playerStatFitness": "Physique"
 }

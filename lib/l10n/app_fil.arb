@@ -4252,5 +4252,10 @@
   "matchChartXg": "xG sa buong laro",
   "matchChartMomentum": "Sino ang nakalamang",
   "editorDemoteTooltip": "Ilipat sa pool",
-  "editorDemoted": "Inilipat si {name} sa pool"
+  "editorDemoted": "Inilipat si {name} sa pool",
+  "profileTabOverview": "Pangkalahatan",
+  "profileTabStats": "Stats",
+  "profileTabCareer": "Karera",
+  "profileTabVsYou": "Laban sa iyo",
+  "playerStatFitness": "Fitness"
 }

@@ -4252,5 +4252,10 @@
   "matchChartXg": "xG ao longo do jogo",
   "matchChartMomentum": "Quem estava por cima",
   "editorDemoteTooltip": "Mover para o grupo",
-  "editorDemoted": "{name} movido para o grupo"
+  "editorDemoted": "{name} movido para o grupo",
+  "profileTabOverview": "Visão geral",
+  "profileTabStats": "Estatísticas",
+  "profileTabCareer": "Carreira",
+  "profileTabVsYou": "Contra si",
+  "playerStatFitness": "Físico"
 }

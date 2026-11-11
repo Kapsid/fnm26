@@ -17413,4 +17413,19 @@ class AppLocalizationsCs extends AppLocalizations {
   String editorDemoted(String name) {
     return 'Hráč $name přesunut do širšího kádru';
   }
+
+  @override
+  String get profileTabOverview => 'Přehled';
+
+  @override
+  String get profileTabStats => 'Statistiky';
+
+  @override
+  String get profileTabCareer => 'Kariéra';
+
+  @override
+  String get profileTabVsYou => 'Proti vám';
+
+  @override
+  String get playerStatFitness => 'Kondice';
 }

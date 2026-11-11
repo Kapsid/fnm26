@@ -17119,4 +17119,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String editorDemoted(String name) {
     return '$name pasa a disponibles';
   }
+
+  @override
+  String get profileTabOverview => 'Resumen';
+
+  @override
+  String get profileTabStats => 'Estadísticas';
+
+  @override
+  String get profileTabCareer => 'Carrera';
+
+  @override
+  String get profileTabVsYou => 'Contra ti';
+
+  @override
+  String get playerStatFitness => 'Físico';
 }

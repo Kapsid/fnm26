@@ -17102,4 +17102,19 @@ class AppLocalizationsIt extends AppLocalizations {
   String editorDemoted(String name) {
     return '$name spostato nel bacino';
   }
+
+  @override
+  String get profileTabOverview => 'Panoramica';
+
+  @override
+  String get profileTabStats => 'Statistiche';
+
+  @override
+  String get profileTabCareer => 'Carriera';
+
+  @override
+  String get profileTabVsYou => 'Contro di te';
+
+  @override
+  String get playerStatFitness => 'Condizione';
 }

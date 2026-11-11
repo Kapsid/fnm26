@@ -16938,4 +16938,19 @@ class AppLocalizationsId extends AppLocalizations {
   String editorDemoted(String name) {
     return '$name dipindahkan ke kolam';
   }
+
+  @override
+  String get profileTabOverview => 'Ikhtisar';
+
+  @override
+  String get profileTabStats => 'Statistik';
+
+  @override
+  String get profileTabCareer => 'Karier';
+
+  @override
+  String get profileTabVsYou => 'Lawan Anda';
+
+  @override
+  String get playerStatFitness => 'Kebugaran';
 }

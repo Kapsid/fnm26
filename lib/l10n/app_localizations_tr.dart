@@ -16938,4 +16938,19 @@ class AppLocalizationsTr extends AppLocalizations {
   String editorDemoted(String name) {
     return '$name havuza gönderildi';
   }
+
+  @override
+  String get profileTabOverview => 'Genel bakış';
+
+  @override
+  String get profileTabStats => 'İstatistik';
+
+  @override
+  String get profileTabCareer => 'Kariyer';
+
+  @override
+  String get profileTabVsYou => 'Size karşı';
+
+  @override
+  String get playerStatFitness => 'Kondisyon';
 }

@@ -16414,4 +16414,19 @@ class AppLocalizationsJa extends AppLocalizations {
   String editorDemoted(String name) {
     return '$nameを候補に戻しました';
   }
+
+  @override
+  String get profileTabOverview => '概要';
+
+  @override
+  String get profileTabStats => 'スタッツ';
+
+  @override
+  String get profileTabCareer => 'キャリア';
+
+  @override
+  String get profileTabVsYou => '対あなた';
+
+  @override
+  String get playerStatFitness => 'コンディション';
 }

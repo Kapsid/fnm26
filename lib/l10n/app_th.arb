@@ -4252,5 +4252,10 @@
   "matchChartXg": "xG ตลอดเกม",
   "matchChartMomentum": "ใครเป็นฝ่ายเหนือกว่า",
   "editorDemoteTooltip": "ย้ายไปตัวเลือก",
-  "editorDemoted": "ย้าย {name} ไปตัวเลือกแล้ว"
+  "editorDemoted": "ย้าย {name} ไปตัวเลือกแล้ว",
+  "profileTabOverview": "ภาพรวม",
+  "profileTabStats": "สถิติ",
+  "profileTabCareer": "อาชีพ",
+  "profileTabVsYou": "เจอคุณ",
+  "playerStatFitness": "ฟิตเนส"
 }

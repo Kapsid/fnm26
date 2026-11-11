@@ -17112,4 +17112,19 @@ class AppLocalizationsBg extends AppLocalizations {
   String editorDemoted(String name) {
     return '$name е преместен в пула';
   }
+
+  @override
+  String get profileTabOverview => 'Общо';
+
+  @override
+  String get profileTabStats => 'Статистика';
+
+  @override
+  String get profileTabCareer => 'Кариера';
+
+  @override
+  String get profileTabVsYou => 'Срещу теб';
+
+  @override
+  String get playerStatFitness => 'Физическа форма';
 }

@@ -17102,4 +17102,19 @@ class AppLocalizationsFi extends AppLocalizations {
   String editorDemoted(String name) {
     return '$name siirretty pooliin';
   }
+
+  @override
+  String get profileTabOverview => 'Yleiskuva';
+
+  @override
+  String get profileTabStats => 'Tilastot';
+
+  @override
+  String get profileTabCareer => 'Ura';
+
+  @override
+  String get profileTabVsYou => 'Sinua vastaan';
+
+  @override
+  String get playerStatFitness => 'Kunto';
 }

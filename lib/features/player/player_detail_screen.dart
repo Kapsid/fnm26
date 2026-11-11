@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
@@ -187,8 +185,9 @@ ProviderListenable<Future<Object?>> playerDetailFuture(
   int playerId,
 ) => _playerDetailProvider((careerId: careerId, playerId: playerId)).future;
 
-/// A player's detail card: identity, club/value, and the ten attributes. Base
-/// data for now — reachable from anywhere a player is listed.
+/// A player's page: a silver header card (rating, name, nation, position,
+/// age and four key numbers) over three tabs, Overview, Stats and Career.
+/// Reachable from anywhere a player is listed.
 class PlayerDetailScreen extends ConsumerWidget {
   const PlayerDetailScreen({
     required this.careerId,
@@ -209,6 +208,10 @@ class PlayerDetailScreen extends ConsumerWidget {
   static const Key profileKey = Key('player.profile');
   static const Key recordKey = Key('player.record');
   static const Key clubKey = Key('player.club');
+  static const Key headerKey = Key('player.header');
+  static const Key tabOverviewKey = Key('player.tab.overview');
+  static const Key tabStatsKey = Key('player.tab.stats');
+  static const Key tabCareerKey = Key('player.tab.career');
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -236,12 +239,12 @@ class PlayerDetailScreen extends ConsumerWidget {
   }
 }
 
-/// A player's whole card: identity, abilities, traits, club, cabinet, career
-/// record, form and match history. The body of [PlayerDetailScreen], on its
-/// own so a tablet detail pane can show the same card beside a list.
+/// A player's whole page in one column: the header card, the tab control
+/// and the open tab's blocks. The body of [PlayerDetailScreen], on its own so
+/// a tablet detail pane can show the same page beside a list.
 ///
 /// Scrolls itself; give it a bounded height.
-class PlayerView extends ConsumerWidget {
+class PlayerView extends ConsumerStatefulWidget {
   const PlayerView({
     required this.careerId,
     required this.playerId,
@@ -254,10 +257,20 @@ class PlayerView extends ConsumerWidget {
   final EdgeInsetsGeometry padding;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<PlayerView> createState() => _PlayerViewState();
+}
+
+class _PlayerViewState extends ConsumerState<PlayerView> {
+  int _tab = 0;
+
+  @override
+  Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final viewAsync = ref.watch(
-      _playerDetailProvider((careerId: careerId, playerId: playerId)),
+      _playerDetailProvider((
+        careerId: widget.careerId,
+        playerId: widget.playerId,
+      )),
     );
 
     return viewAsync.when(
@@ -266,42 +279,135 @@ class PlayerView extends ConsumerWidget {
       data: (view) {
         final p = view.player;
         if (p == null) return Center(child: Text(l.playerNotFound));
-        final sections = _playerSections(context, view, p, careerId);
+        final s = _playerSections(context, view, p, widget.careerId);
         return ListView(
-          padding: padding,
-          children: [...sections.profile, ...sections.record],
+          padding: widget.padding,
+          children: [
+            s.header,
+            const SizedBox(height: AppSpacing.md),
+            ProfileTabs(
+              labels: [
+                l.profileTabOverview,
+                l.profileTabStats,
+                l.profileTabCareer,
+              ],
+              keys: const [
+                PlayerDetailScreen.tabOverviewKey,
+                PlayerDetailScreen.tabStatsKey,
+                PlayerDetailScreen.tabCareerKey,
+              ],
+              selected: _tab,
+              onSelect: (i) => setState(() => _tab = i),
+            ),
+            ..._spaced(switch (_tab) {
+              0 => s.overview,
+              1 => s.stats,
+              _ => s.career,
+            }),
+            const SizedBox(height: AppSpacing.xl),
+          ],
         );
       },
     );
   }
 }
 
-/// The player card in runs: `profile` (who he is: the headline card,
-/// abilities, traits, facts, cabinet), `club` (where he plays: his club and
-/// standing there, and the club history) and `record` (what he has done:
-/// the career record, recent form, every match). One column shows them one
-/// after the other ([PlayerView]); the tablet's player page puts the profile
-/// on the left and the club over the record on the right.
+/// [blocks] with the page's gap above each one.
+List<Widget> _spaced(List<Widget> blocks) => [
+  for (final b in blocks)
+    Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.sm),
+      child: b,
+    ),
+];
+
+/// The player page in its parts: the header card, then each tab's blocks.
+/// One column shows the header, the tab control and the open tab
+/// ([PlayerView]); the tablet's page puts the header and Overview on the
+/// left and Stats or Career on the right.
 ///
-/// With [splitClub] false (the one column) `club` is empty and the club rows
-/// and history stay inside `profile`, exactly as the phone card has them.
-({List<Widget> profile, List<Widget> club, List<Widget> record})
+/// - Overview: abilities, recent form, form and fitness now, traits, and his
+///   club with the facts about him (position, age, potential, value).
+/// - Stats: his international record.
+/// - Career: honours, club history and every international match.
+({
+  Widget header,
+  List<Widget> overview,
+  List<Widget> stats,
+  List<Widget> career,
+})
 _playerSections(
   BuildContext context,
   _PlayerView view,
   Player p,
-  int careerId, {
-  bool splitClub = false,
-}) {
+  int careerId,
+) {
   final l = AppLocalizations.of(context);
   final a = p.attributes;
 
-  final clubFact = _clubFact(p, l.playerClub, clubName(l, p.club));
-  // How much football he is actually getting THERE. It used to be a badge on
-  // the call-up row, where it appeared on some players and not others and
-  // read as a warning the game had raised about the man rather than a fact
-  // about his season. Here every player has one, and it sits next to the
-  // club it is about.
+  // The numbers that identify a footballer, across the header.
+  final caps = view.stats?.caps ?? view.history.length;
+  final goals = view.goals > (view.stats?.goals ?? 0)
+      ? view.goals
+      : (view.stats?.goals ?? 0);
+  final form = view.stats?.formRating ?? 0;
+
+  final header = ProfileHeaderCard(
+    key: PlayerDetailScreen.headerKey,
+    disc: '${p.overall}',
+    name: p.name,
+    meta: [
+      if (view.nation != null) ...[
+        FlagDisc(view.nation!.code, size: 16),
+        const SizedBox(width: AppSpacing.xs),
+      ],
+      Flexible(
+        child: Text(
+          view.nation?.name ?? '',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: profileMetaStyle,
+        ),
+      ),
+      profileMetaDot(),
+      Flexible(flex: 0, child: ProfileChip(p.position.label)),
+      profileMetaDot(),
+      Flexible(
+        flex: 0,
+        child: Text(
+          l.tacticsAgeOnly(p.age),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          softWrap: false,
+          style: profileMetaStyle,
+        ),
+      ),
+    ],
+    notes: [
+      if (view.intlRetirement case final r?)
+        Text(
+          r.comebackYear == null
+              ? l.playerIntlRetired(r.retiredYear)
+              : l.playerIntlComeback(r.comebackYear!),
+          style: profileMetaStyle.copyWith(fontStyle: FontStyle.italic),
+        ),
+    ],
+    stats: [
+      ProfileKeyStat.text('$caps', label: l.playerStatCaps),
+      ProfileKeyStat.text('$goals', label: l.playerStatGoals),
+      ProfileKeyStat.text(
+        form > 0 ? form.toStringAsFixed(1) : '-',
+        label: l.playerStatForm,
+      ),
+      ProfileKeyStat(
+        value: _FitnessDot(careerId: careerId, playerId: p.id),
+        label: l.playerStatFitness,
+      ),
+    ],
+  );
+
+  // How much football he is actually getting at his club. Every player has
+  // one, and it sits next to the club it is about.
   final clubStanding = _fact(
     l.playerClubRole,
     clubStandingLabel(
@@ -315,163 +421,57 @@ _playerSections(
       ),
     ),
   );
-  final clubHistory = ClubHistoryCard(careerId: careerId, playerId: p.id);
-
-  // The four numbers that actually identify a footballer — how old he
-  // is, where he plays, how often he's played and what he's produced —
-  // read as headlines rather than as rows in a list of facts.
-  final caps = view.stats?.caps ?? view.history.length;
-  final goals = view.goals > (view.stats?.goals ?? 0)
-      ? view.goals
-      : (view.stats?.goals ?? 0);
 
   return (
-    profile: [
-      AppCard(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Container(
-                  width: 64,
-                  height: 64,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.primary.withValues(alpha: 0.10),
-                    border: Border.all(color: AppColors.primary, width: 2),
-                  ),
-                  child: Text(
-                    '${p.overall}',
-                    style: AppTypography.headlineLargeMobile.copyWith(
-                      color: AppColors.primary,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(p.name, style: AppTypography.headlineMedium),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          if (view.nation != null)
-                            FlagDisc(view.nation!.code, size: 18),
-                          const SizedBox(width: AppSpacing.xs),
-                          Flexible(
-                            child: Text(
-                              view.nation?.name ?? '',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: AppTypography.labelSmall.copyWith(
-                                color: AppColors.onSurfaceVariant,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      if (view.intlRetirement case final r?) ...[
-                        const SizedBox(height: 4),
-                        Text(
-                          r.comebackYear == null
-                              ? l.playerIntlRetired(r.retiredYear)
-                              : l.playerIntlComeback(r.comebackYear!),
-                          style: AppTypography.labelSmall.copyWith(
-                            color: AppColors.onSurfaceVariant,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Row(
-              children: [
-                _HeadlineStat(value: '${p.age}', label: l.playerAge),
-                _HeadlineStat(
-                  value: p.position.label,
-                  label: l.playerPosition,
-                  accent: true,
-                ),
-                _HeadlineStat(value: '$caps', label: l.playerStatCaps),
-                _HeadlineStat(value: '$goals', label: l.playerStatGoals),
-              ],
-            ),
+    header: header,
+    overview: [
+      // Abilities as bars with the number at the end: a lopsided player
+      // reads as lopsided at a glance.
+      ProfileBlock(
+        title: l.playerAttributes,
+        child: _AttributeBars(
+          rows: [
+            (l.playerAttrPhysical, a.physical),
+            (l.playerAttrTechnical, a.technical),
+            (l.playerAttrStamina, a.stamina),
           ],
         ),
       ),
-      const SizedBox(height: AppSpacing.sm),
-      // Abilities as filled rings — three numbers on a bar chart all
-      // look alike, three dials do not: a lopsided player reads as
-      // lopsided at a glance.
-      AppCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l.playerAttributes.capsIn(l.localeName),
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.primary,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Row(
-              children: [
-                for (final s in <(String, int)>[
-                  (l.playerAttrPhysical, a.physical),
-                  (l.playerAttrTechnical, a.technical),
-                  (l.playerAttrStamina, a.stamina),
-                ])
-                  Expanded(
-                    child: _AbilityRing(label: s.$1, value: s.$2),
-                  ),
-              ],
-            ),
-          ],
-        ),
-      ),
-      // His form and legs right now. The call-up row shows only an icon for
-      // it, so this is where a flame or a snowflake is explained, with what
-      // it does to him next match.
-      _FormSection(careerId: careerId, playerId: p.id),
-      // What this player is KNOWN for. A squad of twenty-three ratings
-      // is forgettable; a hothead, an iron man and a big-game striker
-      // are not — and each one changes how they should be used.
-      if (PlayerTraits.of(p, saveSeed: view.saveSeed) case final traits
-          when traits.isNotEmpty) ...[
-        const SizedBox(height: AppSpacing.sm),
-        AppCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                l.playerTraitsTitle,
-                style: AppTypography.labelSmall.copyWith(
-                  color: AppColors.primary,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              for (final t in traits) _TraitRow(trait: t),
+      if (view.history.length >= 3)
+        ProfileBlock(
+          title: l.playerRecentForm,
+          child: _FormSparkline(
+            // Oldest to newest, the last eight games.
+            ratings: [
+              for (final m in view.history.take(8).toList().reversed) m.rating,
             ],
           ),
         ),
-      ],
-      const SizedBox(height: AppSpacing.sm),
-      AppCard(
+      // His form and legs right now: what the call-up row's icons mean for
+      // him, and what they do to him next match.
+      _FormSection(careerId: careerId, playerId: p.id),
+      // What this player is KNOWN for: each trait changes how he should be
+      // used, so its effect is spelled out under its chip.
+      if (PlayerTraits.of(p, saveSeed: view.saveSeed) case final traits
+          when traits.isNotEmpty)
+        ProfileBlock(
+          title: l.playerTraitsTitle,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [for (final t in traits) _TraitRow(trait: t)],
+          ),
+        ),
+      ProfileBlock(
+        key: PlayerDetailScreen.clubKey,
         child: Column(
           children: [
-            if (!splitClub) ...[clubFact, clubStanding],
+            _clubFact(p, l.playerClub, clubName(l, p.club)),
+            clubStanding,
             _fact(l.playerPosition, positionName(l, p.position)),
             _fact(l.playerAge, '${p.age}'),
-            // The scouted ceiling for prospects: the same read the
-            // youth screens give (the estimate until he has played
-            // enough to be known), so developing youth stays a gamble
-            // and a better scout narrows it.
+            // The scouted ceiling for prospects: the same read the youth
+            // screens give, so developing youth stays a gamble and a better
+            // scout narrows it.
             if (p.age <= 21)
               _fact(
                 l.playerPotential,
@@ -488,50 +488,25 @@ _playerSections(
           ],
         ),
       ),
-      if (!splitClub) clubHistory,
-      _TrophyCabinet(careerId: careerId, playerId: p.id),
     ],
-    club: [
-      if (splitClub) ...[
-        AppCard(child: Column(children: [clubFact, clubStanding])),
-        clubHistory,
-      ],
-    ],
-    record: [
-      const SizedBox(height: AppSpacing.md),
-      Text(
-        l.playerCareerRecord,
-        style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
-      ),
-      const SizedBox(height: AppSpacing.sm),
+    stats: [
       if (view.stats case final s?)
-        _CareerStatsCard(stats: s, goals: view.goals)
+        ProfileBlock(
+          title: l.playerCareerRecord,
+          child: _CareerStatsCard(stats: s, goals: view.goals),
+        )
       else
-        AppCard(child: _fact(l.playerInternationalGoals, '${view.goals}')),
-      if (view.history.length >= 3) ...[
-        const SizedBox(height: AppSpacing.md),
-        Text(
-          l.playerRecentForm,
-          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+        ProfileBlock(
+          title: l.playerCareerRecord,
+          child: _fact(l.playerInternationalGoals, '${view.goals}'),
         ),
-        const SizedBox(height: AppSpacing.sm),
-        AppCard(
-          child: _FormSparkline(
-            // Oldest → newest, capped to the last dozen games.
-            ratings: [
-              for (final m in view.history.take(12).toList().reversed) m.rating,
-            ],
-          ),
-        ),
-      ],
-      if (view.history.isNotEmpty) ...[
-        const SizedBox(height: AppSpacing.md),
-        Text(
-          l.playerMatchHistory,
-          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        AppCard(
+    ],
+    career: [
+      _TrophyCabinet(careerId: careerId, playerId: p.id),
+      ClubHistoryCard(careerId: careerId, playerId: p.id),
+      if (view.history.isNotEmpty)
+        ProfileBlock(
+          title: l.playerMatchHistory,
           padding: EdgeInsets.zero,
           child: Column(
             children: [
@@ -544,8 +519,6 @@ _playerSections(
             ],
           ),
         ),
-      ],
-      const SizedBox(height: AppSpacing.xl),
     ],
   );
 }
@@ -605,9 +578,8 @@ Widget _fact(String label, String value) => Padding(
           ),
         ),
       ),
-      // Takes the rest of the row and keeps the value at its right edge,
-      // where the Spacer put it; a narrow pane (the tablet squad's)
-      // ellipsises the value instead of overflowing.
+      // Takes the rest of the row and keeps the value at its right edge; a
+      // narrow pane ellipsises the value instead of overflowing.
       Expanded(
         child: Align(
           alignment: AlignmentDirectional.centerEnd,
@@ -623,62 +595,15 @@ Widget _fact(String label, String value) => Padding(
   ),
 );
 
-/// One of the four headline facts across the top of the player card — the
-/// number large, its name small underneath.
-class _HeadlineStat extends StatelessWidget {
-  const _HeadlineStat({
-    required this.value,
-    required this.label,
-    this.accent = false,
-  });
+/// The three abilities as bars: the name, the bar, the number at its end.
+/// The bar maps 20 to 95 (where players actually sit) onto its length; the
+/// number takes the band colour the rest of the app uses.
+class _AttributeBars extends StatelessWidget {
+  const _AttributeBars({required this.rows});
 
-  final String value;
-  final String label;
-  final bool accent;
+  final List<(String, int)> rows;
 
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          FittedBox(
-            child: Text(
-              value,
-              maxLines: 1,
-              style: AppTypography.headlineMedium.copyWith(
-                color: accent ? AppColors.primary : AppColors.onSurface,
-              ),
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            label.capsIn(Localizations.localeOf(context).languageCode),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// One ability as a filled dial: the arc sweeps in proportion to the rating and
-/// takes its colour from the same band scale the rest of the app uses, so a 40
-/// and an 85 are different shapes AND different colours.
-class _AbilityRing extends StatelessWidget {
-  const _AbilityRing({required this.label, required this.value});
-
-  final String label;
-  final int value;
-
-  /// Ratings live in roughly 20–99; mapping from 20 (not 0) means the dial uses
-  /// its whole sweep on the range players actually occupy.
-  double get _fraction => ((value - 20) / 75).clamp(0.04, 1.0);
-
-  Color get _color => value >= 80
+  static Color _color(int value) => value >= 80
       ? AppColors.positive
       : value >= 68
       ? AppColors.primary
@@ -688,69 +613,91 @@ class _AbilityRing extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    // A table, so the bars all start at the widest name, in any language.
+    return Table(
+      columnWidths: const {
+        0: IntrinsicColumnWidth(),
+        1: FlexColumnWidth(),
+        2: IntrinsicColumnWidth(),
+      },
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: [
-        SizedBox(
-          width: 68,
-          height: 68,
-          child: CustomPaint(
-            painter: _RingPainter(fraction: _fraction, color: _color),
-            child: Center(
-              child: Text(
-                '$value',
-                style: AppTypography.titleMedium.copyWith(color: _color),
+        for (final r in rows)
+          TableRow(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  right: AppSpacing.md,
+                  top: 5,
+                  bottom: 5,
+                ),
+                child: Text(r.$1, style: AppTypography.bodySmall),
               ),
-            ),
+              ProfileBar(fraction: ((r.$2 - 20) / 75).clamp(0.04, 1.0)),
+              Padding(
+                padding: const EdgeInsets.only(left: AppSpacing.sm),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minWidth: MediaQuery.textScalerOf(context).scale(26),
+                  ),
+                  child: Text(
+                    '${r.$2}',
+                    textAlign: TextAlign.end,
+                    style: AppTypography.labelMedium.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: _color(r.$2),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ),
-        const SizedBox(height: AppSpacing.xs),
-        Text(
-          label.capsIn(Localizations.localeOf(context).languageCode),
-          textAlign: TextAlign.center,
-          maxLines: 2,
-          style: AppTypography.labelSmall.copyWith(
-            color: AppColors.onSurfaceVariant,
-          ),
-        ),
       ],
     );
   }
 }
 
-class _RingPainter extends CustomPainter {
-  const _RingPainter({required this.fraction, required this.color});
+/// The header's fitness dot: how fresh his legs are, green to red, for a
+/// player the squad's condition covers; a quiet grey dot for anyone else.
+class _FitnessDot extends ConsumerWidget {
+  const _FitnessDot({required this.careerId, required this.playerId});
 
-  final double fraction;
-  final Color color;
-
-  static const double _stroke = 6;
+  final int careerId;
+  final int playerId;
 
   @override
-  void paint(Canvas canvas, Size size) {
-    final rect = Offset.zero & size;
-    final inset = rect.deflate(_stroke / 2 + 1);
-    final track = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = _stroke
-      ..color = AppColors.outlineVariant;
-    final arc = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = _stroke
-      ..strokeCap = StrokeCap.round
-      ..color = color;
-    canvas
-      ..drawArc(inset, 0, 2 * math.pi, false, track)
-      // Start at twelve o'clock and sweep clockwise, the way a dial reads.
-      ..drawArc(inset, -math.pi / 2, 2 * math.pi * fraction, false, arc);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    final state = ref
+        .watch(squadConditionProvider(careerId))
+        .valueOrNull?[playerId]
+        ?.fatigueState;
+    final (color, words) = switch (state) {
+      FatigueState.fresh => (AppColors.positive, l.playerStatFitness),
+      FatigueState.ready => (AppColors.primary, l.tacticsFatigueMatchLegs),
+      FatigueState.tired => (AppColors.warning, l.tacticsFatigueTired),
+      FatigueState.exhausted => (AppColors.error, l.tacticsFatigueExhausted),
+      null => (AppColors.outlineVariant, l.playerStatFitness),
+    };
+    final d = MediaQuery.textScalerOf(context).scale(14);
+    return Semantics(
+      label: words,
+      child: Container(
+        width: d,
+        height: d,
+        decoration: BoxDecoration(
+          color: color,
+          shape: BoxShape.circle,
+          boxShadow: [
+            if (state != null)
+              BoxShadow(color: color.withValues(alpha: 0.45), blurRadius: 6),
+          ],
+        ),
+      ),
+    );
   }
-
-  @override
-  bool shouldRepaint(_RingPainter old) =>
-      old.fraction != fraction || old.color != color;
 }
 
-/// One match on the player's history list: date, opponent, the scoreline from
-/// this player's perspective (win/draw/loss coloured), any goals, and the mark.
 /// What he has won.
 ///
 /// A player who has won nothing shows nothing at all — an empty cabinet is a
@@ -776,55 +723,45 @@ class _TrophyCabinet extends ConsumerWidget {
         const <PlayerAward>[];
     if (awards.isEmpty) return const SizedBox.shrink();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: AppSpacing.md),
-        Text(
-          l.playerHonoursTitle,
-          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        AppCard(
-          padding: EdgeInsets.zero,
-          child: Column(
-            children: [
-              for (final a in awards)
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                    vertical: AppSpacing.sm,
+    return ProfileBlock(
+      title: l.playerHonoursTitle,
+      padding: EdgeInsets.zero,
+      child: Column(
+        children: [
+          for (final a in awards)
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.sm,
+              ),
+              child: Row(
+                children: [
+                  Icon(_glyph(a.kind), size: 16, color: AppColors.primary),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      awardName(l, a.kind),
+                      style: AppTypography.bodyMedium,
+                    ),
                   ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        _glyph(a.kind),
-                        size: 16,
-                        color: AppColors.primary,
+                  const SizedBox(width: AppSpacing.sm),
+                  Flexible(
+                    child: Text(
+                      a.competition.isEmpty
+                          ? '${a.year}'
+                          : '${competitionLabel(l, a.competition)} '
+                                '${a.year}',
+                      textAlign: TextAlign.end,
+                      style: AppTypography.labelSmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
                       ),
-                      const SizedBox(width: AppSpacing.sm),
-                      Expanded(
-                        child: Text(
-                          awardName(l, a.kind),
-                          style: AppTypography.bodyMedium,
-                        ),
-                      ),
-                      Text(
-                        a.competition.isEmpty
-                            ? '${a.year}'
-                            : '${competitionLabel(l, a.competition)} '
-                                  '${a.year}',
-                        style: AppTypography.labelSmall.copyWith(
-                          color: AppColors.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-            ],
-          ),
-        ),
-      ],
+                ],
+              ),
+            ),
+        ],
+      ),
     );
   }
 
@@ -848,6 +785,8 @@ String awardName(AppLocalizations l, AwardKind kind) => switch (kind) {
   AwardKind.youngPlayerOfYear => l.awardYoungPlayerOfYear,
 };
 
+/// One match on the player's history list: date, opponent, the scoreline from
+/// this player's perspective (win/draw/loss coloured), any goals, and the mark.
 class _HistoryRow extends StatelessWidget {
   const _HistoryRow({
     required this.stat,
@@ -998,12 +937,10 @@ class _CareerStatsCard extends StatelessWidget {
       (l.playerStatBestGame, stats.bestRating.toStringAsFixed(1)),
       (l.playerStatCards, l.playerCardsValue(stats.yellows, stats.reds)),
     ];
-    return AppCard(
-      child: Wrap(
-        spacing: AppSpacing.md,
-        runSpacing: AppSpacing.md,
-        children: [for (final t in tiles) _StatTile(label: t.$1, value: t.$2)],
-      ),
+    return Wrap(
+      spacing: AppSpacing.md,
+      runSpacing: AppSpacing.md,
+      children: [for (final t in tiles) _StatTile(label: t.$1, value: t.$2)],
     );
   }
 }
@@ -1043,7 +980,7 @@ class _FormSparkline extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const trackHeight = 52.0;
+    const trackHeight = 40.0;
     // The badge's own band colours, so a bar and the match's badge agree.
     final bands = RatingBandColors.of(context);
     return SizedBox(
@@ -1085,10 +1022,7 @@ class _FormSection extends ConsumerWidget {
         .watch(squadConditionProvider(careerId))
         .valueOrNull?[playerId];
     if (condition == null) return const SizedBox.shrink();
-    return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.sm),
-      child: _FormCard(condition: condition),
-    );
+    return _FormCard(condition: condition);
   }
 }
 
@@ -1113,15 +1047,11 @@ class _FormCard extends StatelessWidget {
     final muted = AppTypography.labelSmall.copyWith(
       color: AppColors.onSurfaceVariant,
     );
-    return AppCard(
+    return ProfileBlock(
+      title: l.playerFormTitle,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            l.playerFormTitle,
-            style: AppTypography.labelSmall.copyWith(color: AppColors.primary),
-          ),
-          const SizedBox(height: AppSpacing.sm),
           Row(
             children: [
               Icon(look.icon, size: 18, color: look.color),
@@ -1200,38 +1130,43 @@ class _TraitRow extends StatelessWidget {
     final l = AppLocalizations.of(context);
     final (icon, label, blurb, positive) = _describe(l, trait);
     final color = positive ? AppColors.positive : AppColors.warning;
+    // The trait as a chip (its glyph and name), what it does underneath.
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-      child: Row(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 26,
-            height: 26,
-            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.15),
+              color: color.withValues(alpha: 0.12),
               borderRadius: AppRadii.smAll,
-              border: Border.all(color: color.withValues(alpha: 0.6)),
+              border: Border.all(color: color.withValues(alpha: 0.45)),
             ),
-            child: Icon(icon, size: 15, color: color),
-          ),
-          const SizedBox(width: AppSpacing.sm),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  label,
-                  style: AppTypography.labelMedium.copyWith(color: color),
-                ),
-                Text(
-                  blurb,
-                  style: AppTypography.labelSmall.copyWith(
-                    color: AppColors.onSurfaceVariant,
+                Icon(icon, size: 14, color: color),
+                const SizedBox(width: AppSpacing.xs),
+                Flexible(
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.labelSmall.copyWith(
+                      color: color,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            blurb,
+            style: AppTypography.bodySmall.copyWith(
+              color: AppColors.onSurfaceVariant,
             ),
           ),
         ],

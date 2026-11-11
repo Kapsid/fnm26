@@ -17186,4 +17186,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String editorDemoted(String name) {
     return '$name passe dans le vivier';
   }
+
+  @override
+  String get profileTabOverview => 'Aperçu';
+
+  @override
+  String get profileTabStats => 'Stats';
+
+  @override
+  String get profileTabCareer => 'Carrière';
+
+  @override
+  String get profileTabVsYou => 'Contre vous';
+
+  @override
+  String get playerStatFitness => 'Physique';
 }

@@ -4252,5 +4252,10 @@
   "matchChartXg": "xG sepanjang perlawanan",
   "matchChartMomentum": "Siapa yang menguasai",
   "editorDemoteTooltip": "Pindah ke senarai",
-  "editorDemoted": "{name} dipindahkan ke senarai"
+  "editorDemoted": "{name} dipindahkan ke senarai",
+  "profileTabOverview": "Gambaran",
+  "profileTabStats": "Statistik",
+  "profileTabCareer": "Kerjaya",
+  "profileTabVsYou": "Menentang anda",
+  "playerStatFitness": "Kecergasan"
 }

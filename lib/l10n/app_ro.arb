@@ -4252,5 +4252,10 @@
   "matchChartXg": "xG pe parcursul meciului",
   "matchChartMomentum": "Cine a dominat",
   "editorDemoteTooltip": "Mută în rezervor",
-  "editorDemoted": "{name} a fost mutat în rezervor"
+  "editorDemoted": "{name} a fost mutat în rezervor",
+  "profileTabOverview": "Pe scurt",
+  "profileTabStats": "Statistici",
+  "profileTabCareer": "Carieră",
+  "profileTabVsYou": "Contra ta",
+  "playerStatFitness": "Condiție fizică"
 }

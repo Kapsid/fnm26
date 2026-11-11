@@ -80,18 +80,29 @@ void main() {
       expect(find.byType(ManagerDetailScreen), findsOneWidget);
       expect(find.text(m.name), findsOneWidget);
       expect(find.byKey(ManagerDetailScreen.tabletLayoutKey), findsNothing);
-      // Scroll the whole page through: nothing may overflow on the way.
+      expect(find.byKey(ManagerDetailScreen.headerKey), findsOneWidget);
+      expect(find.byKey(ManagerDetailScreen.recordKey), findsOneWidget);
+      expect(find.byKey(ManagerDetailScreen.inChargeKey), findsOneWidget);
+      // Each tab in turn, scrolled through: nothing may overflow.
       final list = find.byKey(ManagerDetailScreen.profileKey);
-      await tester.scrollUntilVisible(
-        find.byKey(ManagerDetailScreen.careerKey),
-        200,
-        scrollable: find.descendant(
-          of: list,
-          matching: find.byType(Scrollable),
-        ),
-      );
-      await tester.pump();
-      expect(tester.takeException(), isNull);
+      for (final (tab, last) in [
+        (ManagerDetailScreen.tabOverviewKey, ManagerDetailScreen.inChargeKey),
+        (ManagerDetailScreen.tabVsYouKey, ManagerDetailScreen.vsYouKey),
+        (ManagerDetailScreen.tabCareerKey, ManagerDetailScreen.careerKey),
+      ]) {
+        await tester.tap(find.byKey(tab));
+        await tester.pump();
+        await tester.scrollUntilVisible(
+          find.byKey(last),
+          200,
+          scrollable: find.descendant(
+            of: list,
+            matching: find.byType(Scrollable),
+          ),
+        );
+        await tester.pump();
+        expect(tester.takeException(), isNull);
+      }
       expect(
         find.byKey(ManagerDetailScreen.spellRowKey),
         findsNWidgets(spells),
@@ -127,6 +138,8 @@ void main() {
       size: const Size(360, 640),
     );
     expect(tester.takeException(), isNull);
+    await tester.tap(find.byKey(ManagerDetailScreen.tabVsYouKey));
+    await tester.pump();
     final card = find.byKey(ManagerDetailScreen.vsYouKey);
     expect(
       find.descendant(
@@ -176,6 +189,12 @@ void main() {
         findsNWidgets(spells),
       );
       expect(find.text(m.name), findsOneWidget);
+      // No tabs on the tablet: his record against you sits over the career.
+      expect(find.byKey(ManagerDetailScreen.tabVsYouKey), findsNothing);
+      expect(
+        tester.getRect(find.byKey(ManagerDetailScreen.vsYouKey)).bottom,
+        lessThan(career.top),
+      );
       await tester.pumpWidget(const SizedBox());
     });
   }

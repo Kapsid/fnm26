@@ -4252,5 +4252,10 @@
   "matchChartXg": "xG протягом матчу",
   "matchChartMomentum": "Хто домінував",
   "editorDemoteTooltip": "Перемістити до пулу",
-  "editorDemoted": "{name} переміщено до пулу"
+  "editorDemoted": "{name} переміщено до пулу",
+  "profileTabOverview": "Огляд",
+  "profileTabStats": "Статистика",
+  "profileTabCareer": "Кар’єра",
+  "profileTabVsYou": "Проти вас",
+  "playerStatFitness": "Фізпідготовка"
 }

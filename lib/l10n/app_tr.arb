@@ -4252,5 +4252,10 @@
   "matchChartXg": "Maç boyunca xG",
   "matchChartMomentum": "Kim üstündü",
   "editorDemoteTooltip": "Havuza gönder",
-  "editorDemoted": "{name} havuza gönderildi"
+  "editorDemoted": "{name} havuza gönderildi",
+  "profileTabOverview": "Genel bakış",
+  "profileTabStats": "İstatistik",
+  "profileTabCareer": "Kariyer",
+  "profileTabVsYou": "Size karşı",
+  "playerStatFitness": "Kondisyon"
 }

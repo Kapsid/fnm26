@@ -4252,5 +4252,10 @@
   "matchChartXg": "पूरे मैच में xG",
   "matchChartMomentum": "कौन हावी रहा",
   "editorDemoteTooltip": "पूल में भेजें",
-  "editorDemoted": "{name} को पूल में भेजा गया"
+  "editorDemoted": "{name} को पूल में भेजा गया",
+  "profileTabOverview": "अवलोकन",
+  "profileTabStats": "आँकड़े",
+  "profileTabCareer": "करियर",
+  "profileTabVsYou": "आपके खिलाफ़",
+  "playerStatFitness": "फ़िटनेस"
 }

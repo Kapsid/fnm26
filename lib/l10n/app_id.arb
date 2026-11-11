@@ -4252,5 +4252,10 @@
   "matchChartXg": "xG sepanjang laga",
   "matchChartMomentum": "Siapa yang menguasai",
   "editorDemoteTooltip": "Pindahkan ke kolam",
-  "editorDemoted": "{name} dipindahkan ke kolam"
+  "editorDemoted": "{name} dipindahkan ke kolam",
+  "profileTabOverview": "Ikhtisar",
+  "profileTabStats": "Statistik",
+  "profileTabCareer": "Karier",
+  "profileTabVsYou": "Lawan Anda",
+  "playerStatFitness": "Kebugaran"
 }

@@ -4252,5 +4252,10 @@
   "matchChartXg": "xG gennem kampen",
   "matchChartMomentum": "Hvem der dominerede",
   "editorDemoteTooltip": "Flyt til puljen",
-  "editorDemoted": "{name} flyttet til puljen"
+  "editorDemoted": "{name} flyttet til puljen",
+  "profileTabOverview": "Overblik",
+  "profileTabStats": "Statistik",
+  "profileTabCareer": "Karriere",
+  "profileTabVsYou": "Mod dig",
+  "playerStatFitness": "Kondition"
 }

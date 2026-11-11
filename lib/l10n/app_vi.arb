@@ -4252,5 +4252,10 @@
   "matchChartXg": "xG theo diễn biến trận đấu",
   "matchChartMomentum": "Đội nào lấn lướt",
   "editorDemoteTooltip": "Chuyển về nguồn",
-  "editorDemoted": "{name} đã chuyển về nguồn"
+  "editorDemoted": "{name} đã chuyển về nguồn",
+  "profileTabOverview": "Tổng quan",
+  "profileTabStats": "Thống kê",
+  "profileTabCareer": "Sự nghiệp",
+  "profileTabVsYou": "Đối đầu bạn",
+  "playerStatFitness": "Thể lực"
 }

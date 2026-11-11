@@ -17155,4 +17155,19 @@ class AppLocalizationsDe extends AppLocalizations {
   String editorDemoted(String name) {
     return '$name in den Pool verschoben';
   }
+
+  @override
+  String get profileTabOverview => 'Übersicht';
+
+  @override
+  String get profileTabStats => 'Statistik';
+
+  @override
+  String get profileTabCareer => 'Karriere';
+
+  @override
+  String get profileTabVsYou => 'Gegen dich';
+
+  @override
+  String get playerStatFitness => 'Fitness';
 }

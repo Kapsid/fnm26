@@ -17023,4 +17023,19 @@ class AppLocalizationsNb extends AppLocalizations {
   String editorDemoted(String name) {
     return '$name flyttet til poolen';
   }
+
+  @override
+  String get profileTabOverview => 'Oversikt';
+
+  @override
+  String get profileTabStats => 'Statistikk';
+
+  @override
+  String get profileTabCareer => 'Karriere';
+
+  @override
+  String get profileTabVsYou => 'Mot deg';
+
+  @override
+  String get playerStatFitness => 'Kondisjon';
 }

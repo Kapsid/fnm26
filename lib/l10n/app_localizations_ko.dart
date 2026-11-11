@@ -16456,4 +16456,19 @@ class AppLocalizationsKo extends AppLocalizations {
   String editorDemoted(String name) {
     return '$name 선수를 선수 풀로 옮겼습니다';
   }
+
+  @override
+  String get profileTabOverview => '개요';
+
+  @override
+  String get profileTabStats => '기록';
+
+  @override
+  String get profileTabCareer => '커리어';
+
+  @override
+  String get profileTabVsYou => '당신과의 전적';
+
+  @override
+  String get playerStatFitness => '체력';
 }

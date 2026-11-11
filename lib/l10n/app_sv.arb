@@ -4252,5 +4252,10 @@
   "matchChartXg": "xG under matchen",
   "matchChartMomentum": "Vem som styrde",
   "editorDemoteTooltip": "Flytta till poolen",
-  "editorDemoted": "{name} flyttad till poolen"
+  "editorDemoted": "{name} flyttad till poolen",
+  "profileTabOverview": "Översikt",
+  "profileTabStats": "Statistik",
+  "profileTabCareer": "Karriär",
+  "profileTabVsYou": "Mot dig",
+  "playerStatFitness": "Kondition"
 }

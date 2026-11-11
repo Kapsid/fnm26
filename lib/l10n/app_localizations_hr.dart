@@ -17361,4 +17361,19 @@ class AppLocalizationsHr extends AppLocalizations {
   String editorDemoted(String name) {
     return '$name premješten u fond';
   }
+
+  @override
+  String get profileTabOverview => 'Pregled';
+
+  @override
+  String get profileTabStats => 'Statistika';
+
+  @override
+  String get profileTabCareer => 'Karijera';
+
+  @override
+  String get profileTabVsYou => 'Protiv vas';
+
+  @override
+  String get playerStatFitness => 'Kondicija';
 }

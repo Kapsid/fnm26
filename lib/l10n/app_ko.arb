@@ -4252,5 +4252,10 @@
   "matchChartXg": "경기 흐름별 xG",
   "matchChartMomentum": "경기 주도권",
   "editorDemoteTooltip": "선수 풀로 옮기기",
-  "editorDemoted": "{name} 선수를 선수 풀로 옮겼습니다"
+  "editorDemoted": "{name} 선수를 선수 풀로 옮겼습니다",
+  "profileTabOverview": "개요",
+  "profileTabStats": "기록",
+  "profileTabCareer": "커리어",
+  "profileTabVsYou": "당신과의 전적",
+  "playerStatFitness": "체력"
 }

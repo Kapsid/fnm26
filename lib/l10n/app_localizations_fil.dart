@@ -17038,4 +17038,19 @@ class AppLocalizationsFil extends AppLocalizations {
   String editorDemoted(String name) {
     return 'Inilipat si $name sa pool';
   }
+
+  @override
+  String get profileTabOverview => 'Pangkalahatan';
+
+  @override
+  String get profileTabStats => 'Stats';
+
+  @override
+  String get profileTabCareer => 'Karera';
+
+  @override
+  String get profileTabVsYou => 'Laban sa iyo';
+
+  @override
+  String get playerStatFitness => 'Fitness';
 }

@@ -16724,4 +16724,19 @@ class AppLocalizationsTh extends AppLocalizations {
   String editorDemoted(String name) {
     return 'ย้าย $name ไปตัวเลือกแล้ว';
   }
+
+  @override
+  String get profileTabOverview => 'ภาพรวม';
+
+  @override
+  String get profileTabStats => 'สถิติ';
+
+  @override
+  String get profileTabCareer => 'อาชีพ';
+
+  @override
+  String get profileTabVsYou => 'เจอคุณ';
+
+  @override
+  String get playerStatFitness => 'ฟิตเนส';
 }

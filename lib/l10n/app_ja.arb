@@ -4252,5 +4252,10 @@
   "matchChartXg": "試合を通したxG",
   "matchChartMomentum": "試合の流れ",
   "editorDemoteTooltip": "候補に戻す",
-  "editorDemoted": "{name}を候補に戻しました"
+  "editorDemoted": "{name}を候補に戻しました",
+  "profileTabOverview": "概要",
+  "profileTabStats": "スタッツ",
+  "profileTabCareer": "キャリア",
+  "profileTabVsYou": "対あなた",
+  "playerStatFitness": "コンディション"
 }

@@ -4252,5 +4252,10 @@
   "matchChartXg": "xG v průběhu zápasu",
   "matchChartMomentum": "Kdo měl navrch",
   "editorDemoteTooltip": "Přesunout do širšího kádru",
-  "editorDemoted": "Hráč {name} přesunut do širšího kádru"
+  "editorDemoted": "Hráč {name} přesunut do širšího kádru",
+  "profileTabOverview": "Přehled",
+  "profileTabStats": "Statistiky",
+  "profileTabCareer": "Kariéra",
+  "profileTabVsYou": "Proti vám",
+  "playerStatFitness": "Kondice"
 }

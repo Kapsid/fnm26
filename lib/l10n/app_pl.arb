@@ -4252,5 +4252,10 @@
   "matchChartXg": "xG w trakcie meczu",
   "matchChartMomentum": "Kto przeważał",
   "editorDemoteTooltip": "Przenieś do puli",
-  "editorDemoted": "{name} przeniesiony do puli"
+  "editorDemoted": "{name} przeniesiony do puli",
+  "profileTabOverview": "Przegląd",
+  "profileTabStats": "Statystyki",
+  "profileTabCareer": "Kariera",
+  "profileTabVsYou": "Przeciw tobie",
+  "playerStatFitness": "Kondycja"
 }

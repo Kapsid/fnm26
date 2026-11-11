@@ -17125,4 +17125,19 @@ class AppLocalizationsPt extends AppLocalizations {
   String editorDemoted(String name) {
     return '$name movido para o grupo';
   }
+
+  @override
+  String get profileTabOverview => 'Visão geral';
+
+  @override
+  String get profileTabStats => 'Estatísticas';
+
+  @override
+  String get profileTabCareer => 'Carreira';
+
+  @override
+  String get profileTabVsYou => 'Contra si';
+
+  @override
+  String get playerStatFitness => 'Físico';
 }
