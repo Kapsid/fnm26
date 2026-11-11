@@ -17133,4 +17133,58 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Φυσική κατάσταση';
+
+  @override
+  String get matchTabPlayer => 'ΠΑΙΚΤΗΣ';
+
+  @override
+  String get matchTabStadium => 'ΓΗΠΕΔΟ';
+
+  @override
+  String get matchPotmNone =>
+      'Δεν αναδείχθηκε παίκτης του αγώνα σε αυτό το παιχνίδι.';
+
+  @override
+  String get matchPotmHisMatch => 'Ο αγώνας του';
+
+  @override
+  String get matchPotmBeforeMatch => 'Πριν από αυτόν τον αγώνα';
+
+  @override
+  String get matchStatMinutes => 'Λεπτά';
+
+  @override
+  String get matchStatSaves => 'Αποκρούσεις';
+
+  @override
+  String get matchStatOnTarget => 'Στην εστία';
+
+  @override
+  String get matchStadiumCapacity => 'Χωρητικότητα';
+
+  @override
+  String get matchStadiumAttendance => 'Θεατές';
+
+  @override
+  String get matchStadiumFull => 'Πληρότητα';
+
+  @override
+  String matchStadiumHomeOf(String nation) {
+    return 'Έδρα: $nation';
+  }
+
+  @override
+  String get matchStadiumNeutral => 'Ουδέτερο γήπεδο';
+
+  @override
+  String get matchStadiumBuilt => 'Το έχτισε η ομοσπονδία σου';
+
+  @override
+  String get matchStadiumEnlarged => 'Το επέκτεινε η ομοσπονδία σου';
+
+  @override
+  String get matchStadiumWorks => 'Γίνονται έργα σε αυτό το γήπεδο';
+
+  @override
+  String get matchStadiumConditions => 'Συνθήκες';
 }

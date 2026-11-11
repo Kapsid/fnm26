@@ -17376,4 +17376,57 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Kondicija';
+
+  @override
+  String get matchTabPlayer => 'IGRAČ';
+
+  @override
+  String get matchTabStadium => 'STADION';
+
+  @override
+  String get matchPotmNone => 'Na ovoj utakmici nije proglašen igrač utakmice.';
+
+  @override
+  String get matchPotmHisMatch => 'Njegova utakmica';
+
+  @override
+  String get matchPotmBeforeMatch => 'Prije ove utakmice';
+
+  @override
+  String get matchStatMinutes => 'Minute';
+
+  @override
+  String get matchStatSaves => 'Obrane';
+
+  @override
+  String get matchStatOnTarget => 'U okvir';
+
+  @override
+  String get matchStadiumCapacity => 'Kapacitet';
+
+  @override
+  String get matchStadiumAttendance => 'Posjećenost';
+
+  @override
+  String get matchStadiumFull => 'Popunjenost';
+
+  @override
+  String matchStadiumHomeOf(String nation) {
+    return 'Domaći stadion: $nation';
+  }
+
+  @override
+  String get matchStadiumNeutral => 'Neutralni teren';
+
+  @override
+  String get matchStadiumBuilt => 'Izgradio ga je tvoj savez';
+
+  @override
+  String get matchStadiumEnlarged => 'Proširio ga je tvoj savez';
+
+  @override
+  String get matchStadiumWorks => 'Na stadionu su u tijeku radovi';
+
+  @override
+  String get matchStadiumConditions => 'Uvjeti';
 }

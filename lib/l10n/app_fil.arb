@@ -4257,5 +4257,22 @@
   "profileTabStats": "Stats",
   "profileTabCareer": "Karera",
   "profileTabVsYou": "Laban sa iyo",
-  "playerStatFitness": "Fitness"
+  "playerStatFitness": "Fitness",
+  "matchTabPlayer": "MANLALARO",
+  "matchTabStadium": "ISTADYUM",
+  "matchPotmNone": "Walang napiling manlalaro ng laro sa larong ito.",
+  "matchPotmHisMatch": "Ang laro niya",
+  "matchPotmBeforeMatch": "Bago ang larong ito",
+  "matchStatMinutes": "Minuto",
+  "matchStatSaves": "Mga sangga",
+  "matchStatOnTarget": "Sa target",
+  "matchStadiumCapacity": "Kapasidad",
+  "matchStadiumAttendance": "Dumalo",
+  "matchStadiumFull": "Puno",
+  "matchStadiumHomeOf": "Tahanang istadyum: {nation}",
+  "matchStadiumNeutral": "Neutral na lugar",
+  "matchStadiumBuilt": "Itinayo ng iyong pederasyon",
+  "matchStadiumEnlarged": "Pinalaki ng iyong pederasyon",
+  "matchStadiumWorks": "May ginagawang trabaho sa istadyum na ito",
+  "matchStadiumConditions": "Kondisyon"
 }

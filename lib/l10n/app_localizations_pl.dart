@@ -17217,4 +17217,57 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Kondycja';
+
+  @override
+  String get matchTabPlayer => 'ZAWODNIK';
+
+  @override
+  String get matchTabStadium => 'STADION';
+
+  @override
+  String get matchPotmNone => 'W tym meczu nie wybrano zawodnika meczu.';
+
+  @override
+  String get matchPotmHisMatch => 'Jego mecz';
+
+  @override
+  String get matchPotmBeforeMatch => 'Przed tym meczem';
+
+  @override
+  String get matchStatMinutes => 'Minuty';
+
+  @override
+  String get matchStatSaves => 'Obrony';
+
+  @override
+  String get matchStatOnTarget => 'Celne';
+
+  @override
+  String get matchStadiumCapacity => 'Pojemność';
+
+  @override
+  String get matchStadiumAttendance => 'Frekwencja';
+
+  @override
+  String get matchStadiumFull => 'Zapełnienie';
+
+  @override
+  String matchStadiumHomeOf(String nation) {
+    return 'Stadion gospodarzy: $nation';
+  }
+
+  @override
+  String get matchStadiumNeutral => 'Teren neutralny';
+
+  @override
+  String get matchStadiumBuilt => 'Zbudowany przez twoją federację';
+
+  @override
+  String get matchStadiumEnlarged => 'Rozbudowany przez twoją federację';
+
+  @override
+  String get matchStadiumWorks => 'Na stadionie trwa przebudowa';
+
+  @override
+  String get matchStadiumConditions => 'Warunki';
 }

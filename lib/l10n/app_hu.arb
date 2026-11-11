@@ -4257,5 +4257,22 @@
   "profileTabStats": "Statisztika",
   "profileTabCareer": "Karrier",
   "profileTabVsYou": "Ellened",
-  "playerStatFitness": "Erőnlét"
+  "playerStatFitness": "Erőnlét",
+  "matchTabPlayer": "JÁTÉKOS",
+  "matchTabStadium": "STADION",
+  "matchPotmNone": "Ezen a meccsen nem választottak meccs emberét.",
+  "matchPotmHisMatch": "Az ő meccse",
+  "matchPotmBeforeMatch": "E meccs előtt",
+  "matchStatMinutes": "Percek",
+  "matchStatSaves": "Védések",
+  "matchStatOnTarget": "Kapura",
+  "matchStadiumCapacity": "Befogadóképesség",
+  "matchStadiumAttendance": "Nézőszám",
+  "matchStadiumFull": "Telítettség",
+  "matchStadiumHomeOf": "Hazai pálya: {nation}",
+  "matchStadiumNeutral": "Semleges pálya",
+  "matchStadiumBuilt": "A szövetséged építette",
+  "matchStadiumEnlarged": "A szövetséged bővítette",
+  "matchStadiumWorks": "A stadionban munkálatok folynak",
+  "matchStadiumConditions": "Körülmények"
 }

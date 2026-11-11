@@ -4257,5 +4257,22 @@
   "profileTabStats": "สถิติ",
   "profileTabCareer": "อาชีพ",
   "profileTabVsYou": "เจอคุณ",
-  "playerStatFitness": "ฟิตเนส"
+  "playerStatFitness": "ฟิตเนส",
+  "matchTabPlayer": "ผู้เล่น",
+  "matchTabStadium": "สนาม",
+  "matchPotmNone": "เกมนี้ไม่มีการเลือกผู้เล่นยอดเยี่ยมประจำเกม",
+  "matchPotmHisMatch": "เกมของเขา",
+  "matchPotmBeforeMatch": "ก่อนเกมนี้",
+  "matchStatMinutes": "นาที",
+  "matchStatSaves": "เซฟ",
+  "matchStatOnTarget": "เข้ากรอบ",
+  "matchStadiumCapacity": "ความจุ",
+  "matchStadiumAttendance": "ผู้ชม",
+  "matchStadiumFull": "เต็ม",
+  "matchStadiumHomeOf": "สนามเหย้า: {nation}",
+  "matchStadiumNeutral": "สนามกลาง",
+  "matchStadiumBuilt": "สมาคมของคุณสร้าง",
+  "matchStadiumEnlarged": "สมาคมของคุณขยาย",
+  "matchStadiumWorks": "สนามนี้กำลังปรับปรุง",
+  "matchStadiumConditions": "สภาพ"
 }

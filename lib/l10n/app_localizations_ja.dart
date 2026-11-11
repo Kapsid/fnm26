@@ -16429,4 +16429,57 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'コンディション';
+
+  @override
+  String get matchTabPlayer => '選手';
+
+  @override
+  String get matchTabStadium => 'スタジアム';
+
+  @override
+  String get matchPotmNone => 'この試合ではマン・オブ・ザ・マッチは選ばれませんでした。';
+
+  @override
+  String get matchPotmHisMatch => 'この試合の彼';
+
+  @override
+  String get matchPotmBeforeMatch => 'この試合の前';
+
+  @override
+  String get matchStatMinutes => '出場時間';
+
+  @override
+  String get matchStatSaves => 'セーブ';
+
+  @override
+  String get matchStatOnTarget => '枠内';
+
+  @override
+  String get matchStadiumCapacity => '収容人数';
+
+  @override
+  String get matchStadiumAttendance => '観客数';
+
+  @override
+  String get matchStadiumFull => '入場率';
+
+  @override
+  String matchStadiumHomeOf(String nation) {
+    return 'ホーム：$nation';
+  }
+
+  @override
+  String get matchStadiumNeutral => '中立地';
+
+  @override
+  String get matchStadiumBuilt => 'あなたの協会が建設';
+
+  @override
+  String get matchStadiumEnlarged => 'あなたの協会が拡張';
+
+  @override
+  String get matchStadiumWorks => 'このスタジアムは工事中';
+
+  @override
+  String get matchStadiumConditions => 'コンディション';
 }

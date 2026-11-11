@@ -17068,4 +17068,57 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Fitness';
+
+  @override
+  String get matchTabPlayer => 'PLAYER';
+
+  @override
+  String get matchTabStadium => 'STADIUM';
+
+  @override
+  String get matchPotmNone => 'No player of the match was named for this game.';
+
+  @override
+  String get matchPotmHisMatch => 'His match';
+
+  @override
+  String get matchPotmBeforeMatch => 'Before this match';
+
+  @override
+  String get matchStatMinutes => 'Minutes';
+
+  @override
+  String get matchStatSaves => 'Saves';
+
+  @override
+  String get matchStatOnTarget => 'On target';
+
+  @override
+  String get matchStadiumCapacity => 'Capacity';
+
+  @override
+  String get matchStadiumAttendance => 'Attendance';
+
+  @override
+  String get matchStadiumFull => 'Full';
+
+  @override
+  String matchStadiumHomeOf(String nation) {
+    return 'Home ground of $nation';
+  }
+
+  @override
+  String get matchStadiumNeutral => 'Neutral venue';
+
+  @override
+  String get matchStadiumBuilt => 'Built by your federation';
+
+  @override
+  String get matchStadiumEnlarged => 'Enlarged by your federation';
+
+  @override
+  String get matchStadiumWorks => 'Works under way at this ground';
+
+  @override
+  String get matchStadiumConditions => 'Conditions';
 }

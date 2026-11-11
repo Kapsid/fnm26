@@ -4257,5 +4257,22 @@
   "profileTabStats": "Stats",
   "profileTabCareer": "Carrière",
   "profileTabVsYou": "Contre vous",
-  "playerStatFitness": "Physique"
+  "playerStatFitness": "Physique",
+  "matchTabPlayer": "JOUEUR",
+  "matchTabStadium": "STADE",
+  "matchPotmNone": "Aucun homme du match n’a été désigné pour cette rencontre.",
+  "matchPotmHisMatch": "Son match",
+  "matchPotmBeforeMatch": "Avant ce match",
+  "matchStatMinutes": "Minutes",
+  "matchStatSaves": "Arrêts",
+  "matchStatOnTarget": "Cadrés",
+  "matchStadiumCapacity": "Capacité",
+  "matchStadiumAttendance": "Affluence",
+  "matchStadiumFull": "Remplissage",
+  "matchStadiumHomeOf": "Stade à domicile : {nation}",
+  "matchStadiumNeutral": "Terrain neutre",
+  "matchStadiumBuilt": "Construit par votre fédération",
+  "matchStadiumEnlarged": "Agrandi par votre fédération",
+  "matchStadiumWorks": "Travaux en cours dans ce stade",
+  "matchStadiumConditions": "Conditions"
 }

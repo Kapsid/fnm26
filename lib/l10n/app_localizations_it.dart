@@ -17117,4 +17117,58 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Condizione';
+
+  @override
+  String get matchTabPlayer => 'GIOCATORE';
+
+  @override
+  String get matchTabStadium => 'STADIO';
+
+  @override
+  String get matchPotmNone =>
+      'Per questa partita non è stato indicato un migliore in campo.';
+
+  @override
+  String get matchPotmHisMatch => 'La sua partita';
+
+  @override
+  String get matchPotmBeforeMatch => 'Prima di questa partita';
+
+  @override
+  String get matchStatMinutes => 'Minuti';
+
+  @override
+  String get matchStatSaves => 'Parate';
+
+  @override
+  String get matchStatOnTarget => 'In porta';
+
+  @override
+  String get matchStadiumCapacity => 'Capienza';
+
+  @override
+  String get matchStadiumAttendance => 'Spettatori';
+
+  @override
+  String get matchStadiumFull => 'Riempimento';
+
+  @override
+  String matchStadiumHomeOf(String nation) {
+    return 'Stadio di casa: $nation';
+  }
+
+  @override
+  String get matchStadiumNeutral => 'Campo neutro';
+
+  @override
+  String get matchStadiumBuilt => 'Costruito dalla tua federazione';
+
+  @override
+  String get matchStadiumEnlarged => 'Ampliato dalla tua federazione';
+
+  @override
+  String get matchStadiumWorks => 'Lavori in corso in questo stadio';
+
+  @override
+  String get matchStadiumConditions => 'Condizioni';
 }

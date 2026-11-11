@@ -16950,4 +16950,57 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'फ़िटनेस';
+
+  @override
+  String get matchTabPlayer => 'खिलाड़ी';
+
+  @override
+  String get matchTabStadium => 'स्टेडियम';
+
+  @override
+  String get matchPotmNone => 'इस मैच में प्लेयर ऑफ़ द मैच नहीं चुना गया।';
+
+  @override
+  String get matchPotmHisMatch => 'उसका मैच';
+
+  @override
+  String get matchPotmBeforeMatch => 'इस मैच से पहले';
+
+  @override
+  String get matchStatMinutes => 'मिनट';
+
+  @override
+  String get matchStatSaves => 'बचाव';
+
+  @override
+  String get matchStatOnTarget => 'निशाने पर';
+
+  @override
+  String get matchStadiumCapacity => 'क्षमता';
+
+  @override
+  String get matchStadiumAttendance => 'दर्शक';
+
+  @override
+  String get matchStadiumFull => 'भराव';
+
+  @override
+  String matchStadiumHomeOf(String nation) {
+    return 'घरेलू मैदान: $nation';
+  }
+
+  @override
+  String get matchStadiumNeutral => 'तटस्थ मैदान';
+
+  @override
+  String get matchStadiumBuilt => 'आपके महासंघ ने बनाया';
+
+  @override
+  String get matchStadiumEnlarged => 'आपके महासंघ ने बड़ा किया';
+
+  @override
+  String get matchStadiumWorks => 'इस स्टेडियम में काम चल रहा है';
+
+  @override
+  String get matchStadiumConditions => 'परिस्थितियाँ';
 }

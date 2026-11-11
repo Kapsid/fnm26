@@ -4257,5 +4257,22 @@
   "profileTabStats": "Statistik",
   "profileTabCareer": "Karriere",
   "profileTabVsYou": "Mod dig",
-  "playerStatFitness": "Kondition"
+  "playerStatFitness": "Kondition",
+  "matchTabPlayer": "SPILLER",
+  "matchTabStadium": "STADION",
+  "matchPotmNone": "Der blev ikke kåret nogen kampens spiller i denne kamp.",
+  "matchPotmHisMatch": "Hans kamp",
+  "matchPotmBeforeMatch": "Før denne kamp",
+  "matchStatMinutes": "Minutter",
+  "matchStatSaves": "Redninger",
+  "matchStatOnTarget": "På mål",
+  "matchStadiumCapacity": "Kapacitet",
+  "matchStadiumAttendance": "Tilskuere",
+  "matchStadiumFull": "Belægning",
+  "matchStadiumHomeOf": "Hjemmebane: {nation}",
+  "matchStadiumNeutral": "Neutral bane",
+  "matchStadiumBuilt": "Bygget af dit forbund",
+  "matchStadiumEnlarged": "Udvidet af dit forbund",
+  "matchStadiumWorks": "Der arbejdes på stadionet",
+  "matchStadiumConditions": "Forhold"
 }

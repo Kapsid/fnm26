@@ -17127,4 +17127,57 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Физическа форма';
+
+  @override
+  String get matchTabPlayer => 'ИГРАЧ';
+
+  @override
+  String get matchTabStadium => 'СТАДИОН';
+
+  @override
+  String get matchPotmNone => 'В този мач не беше избран играч на мача.';
+
+  @override
+  String get matchPotmHisMatch => 'Неговият мач';
+
+  @override
+  String get matchPotmBeforeMatch => 'Преди този мач';
+
+  @override
+  String get matchStatMinutes => 'Минути';
+
+  @override
+  String get matchStatSaves => 'Спасявания';
+
+  @override
+  String get matchStatOnTarget => 'Във вратата';
+
+  @override
+  String get matchStadiumCapacity => 'Капацитет';
+
+  @override
+  String get matchStadiumAttendance => 'Посещаемост';
+
+  @override
+  String get matchStadiumFull => 'Запълване';
+
+  @override
+  String matchStadiumHomeOf(String nation) {
+    return 'Домакински стадион: $nation';
+  }
+
+  @override
+  String get matchStadiumNeutral => 'Неутрален терен';
+
+  @override
+  String get matchStadiumBuilt => 'Построен от твоята федерация';
+
+  @override
+  String get matchStadiumEnlarged => 'Разширен от твоята федерация';
+
+  @override
+  String get matchStadiumWorks => 'На стадиона текат ремонтни работи';
+
+  @override
+  String get matchStadiumConditions => 'Условия';
 }

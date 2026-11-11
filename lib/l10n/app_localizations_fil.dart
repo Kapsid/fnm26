@@ -17053,4 +17053,58 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Fitness';
+
+  @override
+  String get matchTabPlayer => 'MANLALARO';
+
+  @override
+  String get matchTabStadium => 'ISTADYUM';
+
+  @override
+  String get matchPotmNone =>
+      'Walang napiling manlalaro ng laro sa larong ito.';
+
+  @override
+  String get matchPotmHisMatch => 'Ang laro niya';
+
+  @override
+  String get matchPotmBeforeMatch => 'Bago ang larong ito';
+
+  @override
+  String get matchStatMinutes => 'Minuto';
+
+  @override
+  String get matchStatSaves => 'Mga sangga';
+
+  @override
+  String get matchStatOnTarget => 'Sa target';
+
+  @override
+  String get matchStadiumCapacity => 'Kapasidad';
+
+  @override
+  String get matchStadiumAttendance => 'Dumalo';
+
+  @override
+  String get matchStadiumFull => 'Puno';
+
+  @override
+  String matchStadiumHomeOf(String nation) {
+    return 'Tahanang istadyum: $nation';
+  }
+
+  @override
+  String get matchStadiumNeutral => 'Neutral na lugar';
+
+  @override
+  String get matchStadiumBuilt => 'Itinayo ng iyong pederasyon';
+
+  @override
+  String get matchStadiumEnlarged => 'Pinalaki ng iyong pederasyon';
+
+  @override
+  String get matchStadiumWorks => 'May ginagawang trabaho sa istadyum na ito';
+
+  @override
+  String get matchStadiumConditions => 'Kondisyon';
 }

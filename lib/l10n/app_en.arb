@@ -26293,5 +26293,78 @@
   "profileTabVsYou": "Vs you",
   "@profileTabVsYou": {"description": "Manager page, second tab: his record against the nations you have managed."},
   "playerStatFitness": "Fitness",
-  "@playerStatFitness": {"description": "Player page header: label under a coloured dot showing how fresh his legs are."}
+  "@playerStatFitness": {"description": "Player page header: label under a coloured dot showing how fresh his legs are."},
+  "matchTabPlayer": "PLAYER",
+  "@matchTabPlayer": {
+    "description": "Match screen tab at full time: the player of the match. Very short, upper case like the other match tabs."
+  },
+  "matchTabStadium": "STADIUM",
+  "@matchTabStadium": {
+    "description": "Match screen tab at full time: the ground the match was played in. Very short, upper case like the other match tabs."
+  },
+  "matchPotmNone": "No player of the match was named for this game.",
+  "@matchPotmNone": {
+    "description": "Player tab at full time when the result names no player of the match (an old saved result)."
+  },
+  "matchPotmHisMatch": "His match",
+  "@matchPotmHisMatch": {
+    "description": "Player tab: caption over the player of the match's own figures in this match."
+  },
+  "matchPotmBeforeMatch": "Before this match",
+  "@matchPotmBeforeMatch": {
+    "description": "Player tab: caption over the player's international caps and goals as they stood before this match (the match is not yet counted)."
+  },
+  "matchStatMinutes": "Minutes",
+  "@matchStatMinutes": {
+    "description": "Player tab: minutes he played in the match."
+  },
+  "matchStatSaves": "Saves",
+  "@matchStatSaves": {
+    "description": "Player tab: saves a goalkeeper made in the match."
+  },
+  "matchStatOnTarget": "On target",
+  "@matchStatOnTarget": {
+    "description": "Player tab: his shots on target, shown as '2 / 4'."
+  },
+  "matchStadiumCapacity": "Capacity",
+  "@matchStadiumCapacity": {
+    "description": "Stadium tab: the ground's seats."
+  },
+  "matchStadiumAttendance": "Attendance",
+  "@matchStadiumAttendance": {
+    "description": "Stadium tab: the crowd at this match."
+  },
+  "matchStadiumFull": "Full",
+  "@matchStadiumFull": {
+    "description": "Stadium tab: caption under a percentage of seats filled ('85%')."
+  },
+  "matchStadiumHomeOf": "Home ground of {nation}",
+  "@matchStadiumHomeOf": {
+    "description": "Stadium tab: whose home ground it is. {nation} is a nation's name; phrase it so the name needs no grammatical case.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "matchStadiumNeutral": "Neutral venue",
+  "@matchStadiumNeutral": {
+    "description": "Stadium tab: the match was played on neutral ground (a finals tie at the host)."
+  },
+  "matchStadiumBuilt": "Built by your federation",
+  "@matchStadiumBuilt": {
+    "description": "Stadium tab: the manager's federation built this ground."
+  },
+  "matchStadiumEnlarged": "Enlarged by your federation",
+  "@matchStadiumEnlarged": {
+    "description": "Stadium tab: the manager's federation has enlarged this ground."
+  },
+  "matchStadiumWorks": "Works under way at this ground",
+  "@matchStadiumWorks": {
+    "description": "Stadium tab: building works ordered by the manager's federation are still going on at this ground."
+  },
+  "matchStadiumConditions": "Conditions",
+  "@matchStadiumConditions": {
+    "description": "Stadium tab: caption over the kick-off time, the weather and what the altitude, heat and weather did."
+  }
 }

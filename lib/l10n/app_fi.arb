@@ -4257,5 +4257,22 @@
   "profileTabStats": "Tilastot",
   "profileTabCareer": "Ura",
   "profileTabVsYou": "Sinua vastaan",
-  "playerStatFitness": "Kunto"
+  "playerStatFitness": "Kunto",
+  "matchTabPlayer": "PELAAJA",
+  "matchTabStadium": "STADION",
+  "matchPotmNone": "Tässä ottelussa ei valittu ottelun parasta pelaajaa.",
+  "matchPotmHisMatch": "Hänen ottelunsa",
+  "matchPotmBeforeMatch": "Ennen tätä ottelua",
+  "matchStatMinutes": "Minuutit",
+  "matchStatSaves": "Torjunnat",
+  "matchStatOnTarget": "Maalia kohti",
+  "matchStadiumCapacity": "Kapasiteetti",
+  "matchStadiumAttendance": "Yleisö",
+  "matchStadiumFull": "Täyttöaste",
+  "matchStadiumHomeOf": "Kotikenttä: {nation}",
+  "matchStadiumNeutral": "Puolueeton kenttä",
+  "matchStadiumBuilt": "Liittosi rakentama",
+  "matchStadiumEnlarged": "Liittosi laajentama",
+  "matchStadiumWorks": "Stadionilla on työt käynnissä",
+  "matchStadiumConditions": "Olosuhteet"
 }

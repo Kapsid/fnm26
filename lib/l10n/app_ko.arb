@@ -4257,5 +4257,22 @@
   "profileTabStats": "기록",
   "profileTabCareer": "커리어",
   "profileTabVsYou": "당신과의 전적",
-  "playerStatFitness": "체력"
+  "playerStatFitness": "체력",
+  "matchTabPlayer": "선수",
+  "matchTabStadium": "경기장",
+  "matchPotmNone": "이 경기에서는 경기 최우수 선수가 선정되지 않았습니다.",
+  "matchPotmHisMatch": "그의 경기",
+  "matchPotmBeforeMatch": "이 경기 전",
+  "matchStatMinutes": "출전 시간",
+  "matchStatSaves": "선방",
+  "matchStatOnTarget": "유효 슈팅",
+  "matchStadiumCapacity": "수용 인원",
+  "matchStadiumAttendance": "관중",
+  "matchStadiumFull": "좌석 점유",
+  "matchStadiumHomeOf": "홈구장: {nation}",
+  "matchStadiumNeutral": "중립 경기장",
+  "matchStadiumBuilt": "협회가 건설",
+  "matchStadiumEnlarged": "협회가 확장",
+  "matchStadiumWorks": "경기장 공사 중",
+  "matchStadiumConditions": "경기 조건"
 }

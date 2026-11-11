@@ -4257,5 +4257,22 @@
   "profileTabStats": "Statistik",
   "profileTabCareer": "Kerjaya",
   "profileTabVsYou": "Menentang anda",
-  "playerStatFitness": "Kecergasan"
+  "playerStatFitness": "Kecergasan",
+  "matchTabPlayer": "PEMAIN",
+  "matchTabStadium": "STADIUM",
+  "matchPotmNone": "Tiada pemain terbaik dipilih untuk perlawanan ini.",
+  "matchPotmHisMatch": "Perlawanannya",
+  "matchPotmBeforeMatch": "Sebelum perlawanan ini",
+  "matchStatMinutes": "Minit",
+  "matchStatSaves": "Selamatan",
+  "matchStatOnTarget": "Tepat sasaran",
+  "matchStadiumCapacity": "Kapasiti",
+  "matchStadiumAttendance": "Kehadiran",
+  "matchStadiumFull": "Terisi",
+  "matchStadiumHomeOf": "Gelanggang sendiri: {nation}",
+  "matchStadiumNeutral": "Tempat neutral",
+  "matchStadiumBuilt": "Dibina oleh persekutuan anda",
+  "matchStadiumEnlarged": "Diperbesar oleh persekutuan anda",
+  "matchStadiumWorks": "Kerja sedang dijalankan di stadium ini",
+  "matchStadiumConditions": "Keadaan"
 }

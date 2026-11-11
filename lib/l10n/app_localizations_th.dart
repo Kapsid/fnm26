@@ -16739,4 +16739,57 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'ฟิตเนส';
+
+  @override
+  String get matchTabPlayer => 'ผู้เล่น';
+
+  @override
+  String get matchTabStadium => 'สนาม';
+
+  @override
+  String get matchPotmNone => 'เกมนี้ไม่มีการเลือกผู้เล่นยอดเยี่ยมประจำเกม';
+
+  @override
+  String get matchPotmHisMatch => 'เกมของเขา';
+
+  @override
+  String get matchPotmBeforeMatch => 'ก่อนเกมนี้';
+
+  @override
+  String get matchStatMinutes => 'นาที';
+
+  @override
+  String get matchStatSaves => 'เซฟ';
+
+  @override
+  String get matchStatOnTarget => 'เข้ากรอบ';
+
+  @override
+  String get matchStadiumCapacity => 'ความจุ';
+
+  @override
+  String get matchStadiumAttendance => 'ผู้ชม';
+
+  @override
+  String get matchStadiumFull => 'เต็ม';
+
+  @override
+  String matchStadiumHomeOf(String nation) {
+    return 'สนามเหย้า: $nation';
+  }
+
+  @override
+  String get matchStadiumNeutral => 'สนามกลาง';
+
+  @override
+  String get matchStadiumBuilt => 'สมาคมของคุณสร้าง';
+
+  @override
+  String get matchStadiumEnlarged => 'สมาคมของคุณขยาย';
+
+  @override
+  String get matchStadiumWorks => 'สนามนี้กำลังปรับปรุง';
+
+  @override
+  String get matchStadiumConditions => 'สภาพ';
 }

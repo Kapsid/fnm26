@@ -4257,5 +4257,22 @@
   "profileTabStats": "Thống kê",
   "profileTabCareer": "Sự nghiệp",
   "profileTabVsYou": "Đối đầu bạn",
-  "playerStatFitness": "Thể lực"
+  "playerStatFitness": "Thể lực",
+  "matchTabPlayer": "CẦU THỦ",
+  "matchTabStadium": "SÂN",
+  "matchPotmNone": "Trận này không bầu cầu thủ xuất sắc nhất.",
+  "matchPotmHisMatch": "Trận đấu của anh ấy",
+  "matchPotmBeforeMatch": "Trước trận này",
+  "matchStatMinutes": "Phút",
+  "matchStatSaves": "Cứu thua",
+  "matchStatOnTarget": "Trúng đích",
+  "matchStadiumCapacity": "Sức chứa",
+  "matchStadiumAttendance": "Khán giả",
+  "matchStadiumFull": "Lấp đầy",
+  "matchStadiumHomeOf": "Sân nhà: {nation}",
+  "matchStadiumNeutral": "Sân trung lập",
+  "matchStadiumBuilt": "Do liên đoàn của bạn xây",
+  "matchStadiumEnlarged": "Do liên đoàn của bạn mở rộng",
+  "matchStadiumWorks": "Sân đang được thi công",
+  "matchStadiumConditions": "Điều kiện"
 }

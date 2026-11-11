@@ -4257,5 +4257,22 @@
   "profileTabStats": "スタッツ",
   "profileTabCareer": "キャリア",
   "profileTabVsYou": "対あなた",
-  "playerStatFitness": "コンディション"
+  "playerStatFitness": "コンディション",
+  "matchTabPlayer": "選手",
+  "matchTabStadium": "スタジアム",
+  "matchPotmNone": "この試合ではマン・オブ・ザ・マッチは選ばれませんでした。",
+  "matchPotmHisMatch": "この試合の彼",
+  "matchPotmBeforeMatch": "この試合の前",
+  "matchStatMinutes": "出場時間",
+  "matchStatSaves": "セーブ",
+  "matchStatOnTarget": "枠内",
+  "matchStadiumCapacity": "収容人数",
+  "matchStadiumAttendance": "観客数",
+  "matchStadiumFull": "入場率",
+  "matchStadiumHomeOf": "ホーム：{nation}",
+  "matchStadiumNeutral": "中立地",
+  "matchStadiumBuilt": "あなたの協会が建設",
+  "matchStadiumEnlarged": "あなたの協会が拡張",
+  "matchStadiumWorks": "このスタジアムは工事中",
+  "matchStadiumConditions": "コンディション"
 }

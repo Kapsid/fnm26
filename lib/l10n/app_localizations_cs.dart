@@ -17428,4 +17428,57 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Kondice';
+
+  @override
+  String get matchTabPlayer => 'HRÁČ';
+
+  @override
+  String get matchTabStadium => 'STADION';
+
+  @override
+  String get matchPotmNone => 'V tomto zápase nebyl vyhlášen hráč zápasu.';
+
+  @override
+  String get matchPotmHisMatch => 'Jeho zápas';
+
+  @override
+  String get matchPotmBeforeMatch => 'Před tímto zápasem';
+
+  @override
+  String get matchStatMinutes => 'Minuty';
+
+  @override
+  String get matchStatSaves => 'Zákroky';
+
+  @override
+  String get matchStatOnTarget => 'Na branku';
+
+  @override
+  String get matchStadiumCapacity => 'Kapacita';
+
+  @override
+  String get matchStadiumAttendance => 'Návštěva';
+
+  @override
+  String get matchStadiumFull => 'Zaplněno';
+
+  @override
+  String matchStadiumHomeOf(String nation) {
+    return 'Domácí stadion: $nation';
+  }
+
+  @override
+  String get matchStadiumNeutral => 'Neutrální půda';
+
+  @override
+  String get matchStadiumBuilt => 'Postavila ho vaše federace';
+
+  @override
+  String get matchStadiumEnlarged => 'Rozšířila ho vaše federace';
+
+  @override
+  String get matchStadiumWorks => 'Na stadionu probíhá přestavba';
+
+  @override
+  String get matchStadiumConditions => 'Podmínky';
 }

@@ -1697,23 +1697,38 @@ class _ShootoutStrip extends StatelessWidget {
 ///
 /// In Pitch mode ([withTimeline] false) the pitch and its commentary line
 /// stand in for the Timeline: Stats and Lineups only.
+///
+/// At full time [extra] adds the Player and Stadium tabs: five (or four)
+/// never fit as thirds, so the strip scrolls from the start instead, each
+/// label at its own whole width.
 class MatchDetailTabs extends StatelessWidget {
-  const MatchDetailTabs({this.withTimeline = true, super.key});
+  const MatchDetailTabs({
+    this.withTimeline = true,
+    this.extra = const [],
+    super.key,
+  });
 
   final bool withTimeline;
+
+  /// The labels of the tabs after Line-ups (the full-time ones).
+  final List<String> extra;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final scrolls = extra.isNotEmpty;
     return TabBar(
       labelColor: AppColors.onSurface,
       unselectedLabelColor: AppColors.onSurfaceVariant,
       indicatorColor: AppColors.primary,
+      isScrollable: scrolls,
+      tabAlignment: scrolls ? TabAlignment.start : null,
       tabs: [
         for (final label in [
           if (withTimeline) l.matchTabTimeline,
           l.matchTabStats,
           l.matchTabLineups,
+          ...extra,
         ])
           Tab(
             child: WholeText(label, maxLines: 1, textAlign: TextAlign.center),

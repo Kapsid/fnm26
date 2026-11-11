@@ -253,6 +253,8 @@ class GroundCard extends StatelessWidget {
   };
 
   /// `62431` → `62,431`.
+  static String thousands(int v) => _thousands(v);
+
   static String _thousands(int v) {
     final s = '$v';
     final out = StringBuffer();

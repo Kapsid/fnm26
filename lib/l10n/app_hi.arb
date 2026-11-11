@@ -4257,5 +4257,22 @@
   "profileTabStats": "आँकड़े",
   "profileTabCareer": "करियर",
   "profileTabVsYou": "आपके खिलाफ़",
-  "playerStatFitness": "फ़िटनेस"
+  "playerStatFitness": "फ़िटनेस",
+  "matchTabPlayer": "खिलाड़ी",
+  "matchTabStadium": "स्टेडियम",
+  "matchPotmNone": "इस मैच में प्लेयर ऑफ़ द मैच नहीं चुना गया।",
+  "matchPotmHisMatch": "उसका मैच",
+  "matchPotmBeforeMatch": "इस मैच से पहले",
+  "matchStatMinutes": "मिनट",
+  "matchStatSaves": "बचाव",
+  "matchStatOnTarget": "निशाने पर",
+  "matchStadiumCapacity": "क्षमता",
+  "matchStadiumAttendance": "दर्शक",
+  "matchStadiumFull": "भराव",
+  "matchStadiumHomeOf": "घरेलू मैदान: {nation}",
+  "matchStadiumNeutral": "तटस्थ मैदान",
+  "matchStadiumBuilt": "आपके महासंघ ने बनाया",
+  "matchStadiumEnlarged": "आपके महासंघ ने बड़ा किया",
+  "matchStadiumWorks": "इस स्टेडियम में काम चल रहा है",
+  "matchStadiumConditions": "परिस्थितियाँ"
 }
