@@ -53,3 +53,4 @@ app.*.map.json
 .superpowers/brainstorm/
 .superpowers/sdd/
 docs/site/editor/
+test/golden/failures/

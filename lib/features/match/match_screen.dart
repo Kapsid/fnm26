@@ -2164,12 +2164,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             final timeline = MatchTimeline(
               events: timelineEvents,
               penalties: penalties,
-              chances: timelineChances(
-                r,
-                names: timelineNames,
-                momentReached: momentReached,
-                opponentOf: (id) => id == homeId ? awayId : homeId,
-              ),
+              // Woodwork and big saves still happen (pitch, commentary,
+              // stats) but the owner wants the Timeline to keep to goals,
+              // cards, subs, injuries and missed penalties (1.1.1).
               live: !ft,
               homeId: homeId,
             );
