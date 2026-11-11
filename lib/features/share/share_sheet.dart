@@ -205,6 +205,12 @@ class _FormatSheetState extends State<_FormatSheet> {
                     child: OutlinedButton.icon(
                       key: ShareKeys.action(ShareAction.save),
                       onPressed: () => widget.onPick(_format, ShareAction.save),
+                      // The theme's outlined button reads as switched off
+                      // beside the filled one: give it the bright ink.
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.onSurface,
+                        side: const BorderSide(color: AppColors.primary),
+                      ),
                       icon: const Icon(Icons.download_rounded, size: 18),
                       label: FittedBox(
                         fit: BoxFit.scaleDown,

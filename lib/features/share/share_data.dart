@@ -9,7 +9,6 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
-import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
@@ -21,7 +20,7 @@ import 'package:fnm/features/share/match_share_card.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
 /// Where a fixture belongs, as the match card heads it: the competition's
-/// name, the round (or null) and its trophy's key (see [Trophies]; or null).
+/// name exactly as the match screen's banner names it ([MatchStage.category]), the round (or null) and its trophy's key (see [Trophies]; or null).
 ({String competition, String? round, String? trophy}) shareOccasion(
   AppLocalizations l,
   Fixture f,
@@ -32,7 +31,7 @@ import 'package:fnm/l10n/app_localizations.dart';
   String? stage(String r) => MatchStage.stage(l, r);
   return switch (round) {
     null => (
-      competition: l.compWorldCupQualifying,
+      competition: MatchStage.category(l, round),
       round: l.matchStageMatchday(f.matchday),
       trophy: null,
     ),
@@ -52,43 +51,37 @@ import 'package:fnm/l10n/app_localizations.dart';
       trophy: null,
     ),
     'CQ' => (
-      competition: l.compQualifiers(continentalCupLabel(l, cont)),
+      competition: MatchStage.category(l, round),
       round: l.matchStageMatchday(f.matchday),
       trophy: null,
     ),
     'NL' || 'NGROUP' => (
-      competition: competitionLabel(
-        l,
-        NationsCups.forConfederation(cont)?.name ?? 'Nations Cup',
-      ),
+      competition: MatchStage.category(l, round),
       round: null,
       trophy: 'nationscup',
     ),
     _ when round.startsWith('N') => (
-      competition: competitionLabel(
-        l,
-        NationsCups.forConfederation(cont)?.name ?? 'Nations Cup',
-      ),
+      competition: MatchStage.category(l, round),
       round: stage(round),
       trophy: 'nationscup',
     ),
     'CGROUP' => (
-      competition: continentalCupLabel(l, cont),
+      competition: MatchStage.category(l, round),
       round: l.resultsStageGroupStage,
       trophy: cont.name,
     ),
     _ when round.startsWith('C') => (
-      competition: continentalCupLabel(l, cont),
+      competition: MatchStage.category(l, round),
       round: stage(round),
       trophy: cont.name,
     ),
     'GROUP' => (
-      competition: competitionLabel(l, 'World Championship'),
+      competition: MatchStage.category(l, round),
       round: l.resultsStageFinalsGroup,
       trophy: 'world',
     ),
     _ => (
-      competition: competitionLabel(l, 'World Championship'),
+      competition: MatchStage.category(l, round),
       round: stage(round),
       trophy: 'world',
     ),
