@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/features/editor/web/browser_files.dart';
 import 'package:fnm/features/editor/web/web_editor_app.dart';
 
 /// The web database editor (footballnationsmanager.com/editor/): the app's
@@ -12,6 +13,7 @@ import 'package:fnm/features/editor/web/web_editor_app.dart';
 /// as downloads. Nothing leaves the visitor's machine.
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  warnBeforeLeaving();
   runApp(
     ProviderScope(
       overrides: webEditorOverrides,
