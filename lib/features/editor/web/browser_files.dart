@@ -45,3 +45,18 @@ void downloadBytes(Uint8List bytes, String fileName, {required String type}) {
 String _blobUrl(Uint8List bytes, String type) => web.URL.createObjectURL(
   web.Blob([bytes.toJS].toJS, web.BlobPropertyBag(type: type)),
 );
+
+/// Makes the browser ask "Leave site?" when the tab is closed or reloaded,
+/// so nobody walks away without downloading their database. Browsers only
+/// ask once the visitor has clicked something on the page.
+void warnBeforeLeaving() {
+  web.window.addEventListener(
+    'beforeunload',
+    ((web.Event e) {
+      e.preventDefault();
+      if (e.isA<web.BeforeUnloadEvent>()) {
+        (e as web.BeforeUnloadEvent).returnValue = '';
+      }
+    }).toJS,
+  );
+}
