@@ -179,7 +179,10 @@ Iterable<File> _dartFiles(String dir) => Directory(dir)
     // Generated code writes its own English (`toString` dumps every field
     // name) and is not hand-edited.
     .where((f) => !f.path.endsWith('.freezed.dart'))
-    .where((f) => !f.path.endsWith('.g.dart'));
+    .where((f) => !f.path.endsWith('.g.dart'))
+    // The web editor is English only by design and is never built into the
+    // app (lib/main_editor_web.dart): its browser wording is not copy.
+    .where((f) => !f.path.contains('lib/features/editor/web/'));
 
 /// Fails naming every file and line that hands back English, so one run tells
 /// you the whole list rather than the first of it.

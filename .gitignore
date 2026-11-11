@@ -52,3 +52,4 @@ app.*.map.json
 # Brainstorm mockups (visual companion)
 .superpowers/brainstorm/
 .superpowers/sdd/
+docs/site/editor/
