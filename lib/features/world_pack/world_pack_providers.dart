@@ -451,19 +451,26 @@ class WorldPackService {
   /// would be refused everywhere, so instead of writing one this throws
   /// [PackTooBigToShare] and the editor says so.
   Future<File> export(int id, {Directory? into}) async {
+    final (:fileName, :bytes) = await encodeForExport(id);
+    final dir = into ?? await getTemporaryDirectory();
+    final file = File(p.join(dir.path, fileName));
+    await file.writeAsBytes(bytes, flush: true);
+    return file;
+  }
+
+  /// Pack [id] as the bytes of its `.fnmdb` file and the file's name, the
+  /// way [export] writes it (the web editor hands them to the browser as a
+  /// download). Throws [PackTooBigToShare] over the cap every device reads
+  /// to.
+  Future<({String fileName, Uint8List bytes})> encodeForExport(int id) async {
     final pack = await _packs.load(id);
     if (pack == null) throw StateError('No world pack $id');
     final bytes = PackCodec.encode(pack, await _packs.trophies(id));
     if (bytes.length > _maxFileBytes) throw PackTooBigToShare(bytes.length);
-    final dir = into ?? await getTemporaryDirectory();
-    final file = File(
-      p.join(
-        dir.path,
-        '${PackCodec.fileStem(pack.name)}.${PackCodec.extension}',
-      ),
+    return (
+      fileName: '${PackCodec.fileStem(pack.name)}.${PackCodec.extension}',
+      bytes: bytes,
     );
-    await file.writeAsBytes(bytes, flush: true);
-    return file;
   }
 
   /// Reads the `.fnmdb` file at [path] as a new pack with a new uuid; a name
@@ -483,6 +490,17 @@ class WorldPackService {
     } on Object catch (e) {
       return Result.failure(
         Failure('Unreadable', code: PackRejection.notAPack.name, cause: e),
+      );
+    }
+    return importBytes(bytes);
+  }
+
+  /// [importFile] for a file already read into [bytes] (the web editor's
+  /// file picker hands over bytes, not a path).
+  Future<Result<int>> importBytes(Uint8List bytes) async {
+    if (bytes.length > PackCodec.maxFileBytes) {
+      return Result.failure(
+        Failure('Too big', code: PackRejection.tooBig.name),
       );
     }
     final world = await _nations.newCareerWorld();

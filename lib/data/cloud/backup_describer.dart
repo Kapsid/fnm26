@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:fnm/data/db/raw_sqlite.dart';
 import 'package:fnm/domain/services/cloud/cloud_backup_meta.dart';
-import 'package:sqlite3/sqlite3.dart';
 
 /// The careers inside the backup file at [path], read straight from the file
 /// (read-only), so the metadata describes exactly what was uploaded.
