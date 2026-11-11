@@ -15305,6 +15305,21 @@ class AppLocalizationsTr extends AppLocalizations {
   String get editorAddedIndustryPick => 'Sektör seç';
 
   @override
+  String get editorHandleLabel => 'Kullanıcı adı';
+
+  @override
+  String get editorHandleHelp =>
+      'Harf, rakam ve alt çizgi. Adı kullanmak için boş bırakın.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Yalnızca A-Z harfleri, rakamlar ve alt çizgi kullanın';
+
+  @override
+  String get editorHandleTaken =>
+      'Bu kullanıcı adı başka bir hesapta zaten var.';
+
+  @override
   String get editorAddedDescription => 'Açıklama (isteğe bağlı)';
 
   @override

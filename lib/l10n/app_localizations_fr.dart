@@ -15545,6 +15545,21 @@ class AppLocalizationsFr extends AppLocalizations {
   String get editorAddedIndustryPick => 'Choisir un secteur';
 
   @override
+  String get editorHandleLabel => 'Identifiant';
+
+  @override
+  String get editorHandleHelp =>
+      'Lettres, chiffres et tirets bas. Laissez vide pour suivre le nom.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Utilisez seulement les lettres A à Z, des chiffres et des tirets bas';
+
+  @override
+  String get editorHandleTaken =>
+      'Un autre compte utilise déjà cet identifiant.';
+
+  @override
   String get editorAddedDescription => 'Description (facultative)';
 
   @override

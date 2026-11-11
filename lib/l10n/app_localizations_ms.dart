@@ -15347,6 +15347,20 @@ class AppLocalizationsMs extends AppLocalizations {
   String get editorAddedIndustryPick => 'Pilih industri';
 
   @override
+  String get editorHandleLabel => 'Nama pengguna';
+
+  @override
+  String get editorHandleHelp =>
+      'Huruf, digit dan garis bawah. Biarkan kosong untuk mengikut nama.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Gunakan hanya huruf A hingga Z, digit dan garis bawah';
+
+  @override
+  String get editorHandleTaken => 'Akaun lain sudah ada nama pengguna ini.';
+
+  @override
   String get editorAddedDescription => 'Penerangan (pilihan)';
 
   @override

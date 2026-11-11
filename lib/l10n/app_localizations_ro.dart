@@ -15807,6 +15807,20 @@ class AppLocalizationsRo extends AppLocalizations {
   String get editorAddedIndustryPick => 'Alegeți un domeniu';
 
   @override
+  String get editorHandleLabel => 'Nume de utilizator';
+
+  @override
+  String get editorHandleHelp =>
+      'Litere, cifre și liniuțe de subliniere. Lăsați gol pentru a urma numele.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Folosiți doar literele de la A la Z, cifre și liniuțe de subliniere';
+
+  @override
+  String get editorHandleTaken => 'Alt cont are deja acest nume de utilizator.';
+
+  @override
   String get editorAddedDescription => 'Descriere (opțional)';
 
   @override

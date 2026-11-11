@@ -15390,6 +15390,21 @@ class AppLocalizationsNb extends AppLocalizations {
   String get editorAddedIndustryPick => 'Velg en bransje';
 
   @override
+  String get editorHandleLabel => 'Brukernavn';
+
+  @override
+  String get editorHandleHelp =>
+      'Bokstaver, sifre og understreker. La feltet stå tomt for å følge navnet.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Bruk bare bokstavene A til Z, sifre og understreker';
+
+  @override
+  String get editorHandleTaken =>
+      'En annen konto har allerede dette brukernavnet.';
+
+  @override
   String get editorAddedDescription => 'Beskrivelse (valgfritt)';
 
   @override

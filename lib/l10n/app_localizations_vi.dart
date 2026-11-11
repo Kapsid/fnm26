@@ -15240,6 +15240,21 @@ class AppLocalizationsVi extends AppLocalizations {
   String get editorAddedIndustryPick => 'Chọn ngành';
 
   @override
+  String get editorHandleLabel => 'Tên người dùng';
+
+  @override
+  String get editorHandleHelp =>
+      'Chữ cái, chữ số và dấu gạch dưới. Để trống để theo tên.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Chỉ dùng chữ cái A đến Z, chữ số và dấu gạch dưới';
+
+  @override
+  String get editorHandleTaken =>
+      'Đã có tài khoản khác dùng tên người dùng này.';
+
+  @override
   String get editorAddedDescription => 'Mô tả (không bắt buộc)';
 
   @override

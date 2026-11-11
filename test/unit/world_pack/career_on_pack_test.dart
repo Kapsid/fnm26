@@ -216,7 +216,7 @@ void main() {
   });
 
   test(
-    'campaigns never get a world',
+    'a campaign gets no world unless one is chosen, and then its own copy',
     timeout: const Timeout.factor(4),
     () async {
       final c = await _world();
@@ -238,18 +238,15 @@ void main() {
             ),
         isEmpty,
       );
-      // A run cannot be handed one either: it plays the world its seed was
-      // searched on.
-      await expectLater(
-        c
-            .read(careerServiceProvider)
-            .create(
-              nationId: 1,
-              managerName: 'M',
-              countsTowardSlots: false,
-              worldPackId: packId,
-            ),
-        throwsArgumentError,
+      // Chosen on its brief (1.1.1), a run takes its own copy, as a career
+      // does.
+      await c.read(campaignServiceProvider).abandon(run.id);
+      final onPack = await c
+          .read(campaignServiceProvider)
+          .start(Campaigns.grudge, managerName: 'Me', worldPackId: packId);
+      expect(
+        await c.read(worldPackRepositoryProvider).forCareer(onPack.id),
+        isNotNull,
       );
     },
   );

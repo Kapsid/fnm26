@@ -15468,6 +15468,20 @@ class AppLocalizationsIt extends AppLocalizations {
   String get editorAddedIndustryPick => 'Scegli un settore';
 
   @override
+  String get editorHandleLabel => 'Nome utente';
+
+  @override
+  String get editorHandleHelp =>
+      'Lettere, cifre e trattini bassi. Lascia vuoto per seguire il nome.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Usa solo lettere dalla A alla Z, cifre e trattini bassi';
+
+  @override
+  String get editorHandleTaken => 'Un altro account ha già questo nome utente.';
+
+  @override
   String get editorAddedDescription => 'Descrizione (facoltativa)';
 
   @override

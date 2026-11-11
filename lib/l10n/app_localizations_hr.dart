@@ -15729,6 +15729,20 @@ class AppLocalizationsHr extends AppLocalizations {
   String get editorAddedIndustryPick => 'Odaberi djelatnost';
 
   @override
+  String get editorHandleLabel => 'Korisničko ime';
+
+  @override
+  String get editorHandleHelp =>
+      'Slova, znamenke i podvlake. Ostavite prazno da prati naziv.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Koristite samo slova od A do Z bez dijakritika, znamenke i podvlake';
+
+  @override
+  String get editorHandleTaken => 'Drugi račun već ima ovo korisničko ime.';
+
+  @override
   String get editorAddedDescription => 'Opis (neobavezno)';
 
   @override

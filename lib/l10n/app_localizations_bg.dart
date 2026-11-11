@@ -15477,6 +15477,21 @@ class AppLocalizationsBg extends AppLocalizations {
   String get editorAddedIndustryPick => 'Избери отрасъл';
 
   @override
+  String get editorHandleLabel => 'Потребителско име';
+
+  @override
+  String get editorHandleHelp =>
+      'Букви, цифри и долни черти. Оставете празно, за да следва името.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Използвайте само латински букви от A до Z, цифри и долни черти';
+
+  @override
+  String get editorHandleTaken =>
+      'Друг профил вече има това потребителско име.';
+
+  @override
   String get editorAddedDescription => 'Описание (по желание)';
 
   @override

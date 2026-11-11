@@ -12,7 +12,7 @@ import 'package:fnm/domain/services/world_managers/manager_relation.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart'
-    show PackYAccount;
+    show PackYAccount, WorldPack;
 
 /// Who is talking on Y.
 enum YVoice {
@@ -345,6 +345,7 @@ enum YTemplate {
   /// [YFeed.forOpponentManager]): four wordings, banded by the speaker's
   /// tone.
   managerTieLooms,
+
   /// Out of a finals further on than anybody expected (see
   /// `YTournaments.proudExit`): proud of the run, not angry it ended. The
   /// mirror of [exitHeartbreak]. Tester feedback: Montenegro reached the last
@@ -3295,6 +3296,41 @@ abstract final class YFeed {
     return out.toString();
   }
 
+  /// [handle] with its `@` (one is added when it has none).
+  static String withAt(String handle) {
+    final t = handle.trim();
+    return t.startsWith('@') ? t : '@$t';
+  }
+
+  /// The handle the game gives its named account [original]
+  /// ([namedAccounts]): a fixed account's own (the desk, the wire, the
+  /// streamer, a cameo), else `@` and the name.
+  static String defaultHandle(String original) {
+    for (final p in [numbersDesk, theWire, streamerPersona, ...czechCameos]) {
+      if (p.displayName == original) return p.handle;
+    }
+    return '@$original';
+  }
+
+  /// The handle the game's named account [original] shows in a world on
+  /// [pack]: the handle the pack sets for it, else the one its new name
+  /// gives ([handleFor]) when the pack renames it, else its own
+  /// ([defaultHandle]).
+  static String packHandleOf(WorldPack pack, String original) {
+    if (pack.yHandles[original] case final h? when h.trim().isNotEmpty) {
+      return withAt(h);
+    }
+    final renamed = pack.yAccounts[original]?.trim() ?? '';
+    return renamed.isEmpty ? defaultHandle(original) : handleFor(renamed);
+  }
+
+  /// The handle an account a pack adds shows: its own, else the one its
+  /// name gives ([handleFor]).
+  static String addedHandleOf(PackYAccount a) => switch (a.handle) {
+    final h? when h.trim().isNotEmpty => withAt(h),
+    _ => handleFor(a.name),
+  };
+
   /// [feed] with the accounts [world] renamed shown under their new names
   /// and handles ([handleFor]), in [world]'s language
   /// ([ActiveWorld.inLanguage]); and the accounts the career's own world
@@ -3320,24 +3356,36 @@ abstract final class YFeed {
     // An added account posts under its main name; lowest id first, should a
     // pack carry two under one name.
     final addedNames = <String, String>{};
+    // And under the handle it sets, when it sets one.
+    final addedHandles = <String, String>{};
     for (final a in [...added]..sort((x, y) => x.id.compareTo(y.id))) {
       final shown = world.addedYName(a.id, world: addedWorld);
       if (shown != null) addedNames.putIfAbsent(a.name, () => shown);
+      if (a.handle case final h? when h.trim().isNotEmpty) {
+        addedHandles.putIfAbsent(a.name, () => withAt(h));
+      }
     }
     final renames =
         pack.yAccounts.isNotEmpty ||
+        pack.yHandles.isNotEmpty ||
         addedNames.isNotEmpty ||
+        addedHandles.isNotEmpty ||
         (world.language != null &&
             pack.localized.keys.any((k) => k.startsWith('yAccounts.')));
     if (!renames) return feed;
     YPost renamed(YPost p) {
       if (p.voice == YVoice.player) return p;
       final name = world.yAccount(p.displayName) ?? addedNames[p.displayName];
+      // A handle the world sets wins over the one a new name gives.
+      final set = switch (pack.yHandles[p.displayName]) {
+        final h? when h.trim().isNotEmpty => withAt(h),
+        _ => addedHandles[p.displayName],
+      };
       final args = List<String>.of(p.args);
       _accountOf[args] = p.displayName;
       return (
         voice: p.voice,
-        handle: name == null ? p.handle : handleFor(name),
+        handle: set ?? (name == null ? p.handle : handleFor(name)),
         displayName: name ?? p.displayName,
         template: p.template,
         variant: p.variant,
@@ -3375,7 +3423,7 @@ abstract final class YFeed {
   /// ([YCast.traitFor]), or the desk's when it posts numbers ([personaOf]
   /// reads it back the same way).
   static YPersona _addedPersona(PackYAccount a) => (
-    handle: handleFor(a.name),
+    handle: addedHandleOf(a),
     displayName: a.name,
     trait: a.voice == YVoice.stats ? YTrait.statshead : YCast.traitFor(a.name),
   );

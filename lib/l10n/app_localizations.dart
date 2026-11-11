@@ -23312,6 +23312,30 @@ abstract class AppLocalizations {
   /// **'Pick an industry'**
   String get editorAddedIndustryPick;
 
+  /// Editor, Y accounts: label of the field for an account's @handle (the @ is shown in front of the field).
+  ///
+  /// In en, this message translates to:
+  /// **'Handle'**
+  String get editorHandleLabel;
+
+  /// Editor, Y accounts: helper line under the @handle field.
+  ///
+  /// In en, this message translates to:
+  /// **'Letters, digits and underscores. Leave empty to follow the name.'**
+  String get editorHandleHelp;
+
+  /// Editor, Y accounts: error when the @handle holds anything but ASCII letters (A to Z), digits and underscores.
+  ///
+  /// In en, this message translates to:
+  /// **'Use only letters A to Z, digits and underscores'**
+  String get editorHandleBadCharacters;
+
+  /// Editor, Y accounts: error when another account (one of the game's or one the database adds) already shows this @handle.
+  ///
+  /// In en, this message translates to:
+  /// **'Another account already has this handle.'**
+  String get editorHandleTaken;
+
   /// Label of an added sponsor's description.
   ///
   /// In en, this message translates to:

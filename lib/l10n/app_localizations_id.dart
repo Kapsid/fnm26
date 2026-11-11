@@ -15298,6 +15298,20 @@ class AppLocalizationsId extends AppLocalizations {
   String get editorAddedIndustryPick => 'Pilih industri';
 
   @override
+  String get editorHandleLabel => 'Nama pengguna';
+
+  @override
+  String get editorHandleHelp =>
+      'Huruf, angka, dan garis bawah. Kosongkan untuk mengikuti nama.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Gunakan hanya huruf A sampai Z, angka, dan garis bawah';
+
+  @override
+  String get editorHandleTaken => 'Akun lain sudah memakai nama pengguna ini.';
+
+  @override
   String get editorAddedDescription => 'Deskripsi (opsional)';
 
   @override

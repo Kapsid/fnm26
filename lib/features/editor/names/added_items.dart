@@ -298,12 +298,16 @@ abstract final class AddedEdits {
   /// [p] with a Y account added, posting as [voice] in nation [nationId]'s
   /// feed (every nation's when null). [p] itself when it adds
   /// [PackRules.addedYMax] already.
+  ///
+  /// [handle] is its @handle without the `@` (null or blank: the one its
+  /// name gives).
   static WorldPack addY(
     WorldPack p,
     String name,
     YVoice voice,
-    int? nationId,
-  ) {
+    int? nationId, {
+    String? handle,
+  }) {
     if (isFull(NameSection.yAccounts, p)) return p;
     return p.copyWith(
       addedYAccounts: [
@@ -313,20 +317,22 @@ abstract final class AddedEdits {
           name: name.trim(),
           voice: voice,
           nationId: nationId,
+          handle: cleanHandle(handle),
         ),
       ],
     );
   }
 
   /// [p] with added Y account [id] as given. A voice this build does not
-  /// know stays until another is picked.
+  /// know stays until another is picked. [handle] as [addY] has it.
   static WorldPack editY(
     WorldPack p,
     int id,
     String name,
     YVoice voice,
-    int? nationId,
-  ) {
+    int? nationId, {
+    String? handle,
+  }) {
     final y = p.addedYAccounts.where((x) => x.id == id).firstOrNull;
     if (y == null) return p;
     final next = PackYAccount(
@@ -335,11 +341,27 @@ abstract final class AddedEdits {
       voice: voice,
       nationId: nationId,
       unknownVoice: voice == y.voice ? y.unknownVoice : null,
+      handle: cleanHandle(handle),
     );
     if (next == y) return p;
     return p.copyWith(
       addedYAccounts: [
         for (final x in p.addedYAccounts) x.id == id ? next : x,
+      ],
+    );
+  }
+
+  /// [p] with added Y account [id]'s @handle as [handle] (null or blank:
+  /// the one its name gives).
+  static WorldPack setYHandle(WorldPack p, int id, String? handle) {
+    final y = p.addedYAccounts.where((x) => x.id == id).firstOrNull;
+    if (y == null) return p;
+    final h = cleanHandle(handle);
+    if (h == y.handle) return p;
+    return p.copyWith(
+      addedYAccounts: [
+        for (final x in p.addedYAccounts)
+          if (x.id == id) x.withNames(name: x.name, handle: h) else x,
       ],
     );
   }
@@ -366,6 +388,81 @@ abstract final class AddedEdits {
       if (e.key != '$root.$id' && !e.key.startsWith('$root.$id.'))
         e.key: e.value,
   };
+}
+
+/// [handle] as a pack stores it: trimmed, without a leading `@`; null when
+/// that leaves nothing.
+String? cleanHandle(String? handle) {
+  var h = handle?.trim() ?? '';
+  if (h.startsWith('@')) h = h.substring(1).trim();
+  return h.isEmpty ? null : h;
+}
+
+/// What is wrong with [handle] (stored form, [cleanHandle]) as the @handle
+/// of built-in account [original] or added account [addedId] of [pack], in
+/// words: a [PackRules.checkHandle] reason, a word the game does not show,
+/// or another account's handle ([PackRules.takenHandle]). Null when it can
+/// be used.
+String? handleProblem(
+  AppLocalizations l,
+  WorldPack pack,
+  String handle, {
+  String? original,
+  int? addedId,
+}) => switch (PackRules.checkHandle(handle)) {
+  FieldReason.tooLong => l.editorNameTooLong(PackRules.handleChars),
+  FieldReason.badCharacters => l.editorHandleBadCharacters,
+  _ when ProfanityFilter.isOffensive(handle) => l.editorNameNotAllowed,
+  _
+      when PackRules.takenHandle(
+        pack,
+        handle,
+        original: original,
+        addedId: addedId,
+      ) =>
+    l.editorHandleTaken,
+  _ => null,
+};
+
+/// The @handle field of a Y account: `@` in front, [hint] (the handle its
+/// name gives) when empty.
+class HandleField extends StatelessWidget {
+  const HandleField({
+    required this.controller,
+    required this.onChanged,
+    this.hint,
+    this.error,
+    super.key,
+  });
+
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
+  final String? hint;
+  final String? error;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final h = hint;
+    return TextField(
+      controller: controller,
+      maxLength: PackRules.handleChars,
+      autocorrect: false,
+      enableSuggestions: false,
+      keyboardType: TextInputType.visiblePassword,
+      style: AppTypography.bodyLarge.copyWith(color: AppColors.onSurface),
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        labelText: l.editorHandleLabel,
+        prefixText: '@',
+        hintText: h == null || h.length < 2 ? null : h.substring(1),
+        helperText: l.editorHandleHelp,
+        helperMaxLines: 2,
+        errorText: error,
+        errorMaxLines: 2,
+      ),
+    );
+  }
 }
 
 /// A deal type, as the editor names it.
@@ -421,7 +518,7 @@ List<({String brand, String label})> industryOptions(AppLocalizations l) {
   final seen = <String>{};
   return [
     for (final b in SponsorBrand.values)
-      if (sponsorIndustryLabel(l, b) case final label
+      if (builtInIndustryLabel(l, b) case final label
           when label.isNotEmpty && seen.add(label))
         (brand: b.name, label: label),
     for (final i in SponsorIndustry.values)
@@ -429,6 +526,28 @@ List<({String brand, String label})> industryOptions(AppLocalizations l) {
           when label.isNotEmpty && seen.add(label))
         (brand: i.id, label: label),
   ]..sort((a, b) => searchFold(a.label).compareTo(searchFold(b.label)));
+}
+
+/// The industry picker ([industryOptions]): the picked industry's stored
+/// form (a `SponsorBrand.name` or a [SponsorIndustry.id]), or null when it
+/// is closed without a pick. [current] is ticked.
+Future<String?> pickSponsorIndustry(BuildContext context, {String? current}) {
+  final l = AppLocalizations.of(context);
+  return showAddedPicker(
+    context,
+    title: l.editorAddedIndustryPick,
+    options: [
+      for (final o in industryOptions(l))
+        (
+          id: o.brand,
+          label: o.label,
+          about: null,
+          fold: searchFold(o.label),
+          flag: null,
+        ),
+    ],
+    current: current,
+  );
 }
 
 /// The label of industry [brand] (a `SponsorBrand.name` or a
@@ -593,6 +712,7 @@ class AddedItemForm extends ConsumerStatefulWidget {
   static const Key countryKey = Key('editorAdded.country');
   static const Key industryKey = Key('editorAdded.industry');
   static const Key descriptionKey = Key('editorAdded.description');
+  static const Key handleKey = Key('editorAdded.handle');
   static const Key nationKey = Key('editorAdded.nation');
   static const Key addKey = Key('editorAdded.add');
   static const Key deleteKey = Key('editorAdded.delete');
@@ -637,6 +757,9 @@ class AddedItemForm extends ConsumerStatefulWidget {
 class _AddedItemFormState extends ConsumerState<AddedItemForm> {
   final _name = TextEditingController();
   final _description = TextEditingController();
+
+  /// A Y account's @handle, without the `@` (empty: its name's).
+  final _handle = TextEditingController();
   String? _country;
 
   /// The added club's strength (null: its league's lowest).
@@ -668,6 +791,7 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
   void dispose() {
     _name.dispose();
     _description.dispose();
+    _handle.dispose();
     super.dispose();
   }
 
@@ -693,6 +817,7 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
         final y = pack.addedYAccounts.where((x) => x.id == id).firstOrNull;
         if (y == null) return;
         _set(_name, y.name);
+        _set(_handle, y.handle ?? '');
         _voice = y.voice;
         _nationId = y.nationId;
       case _:
@@ -745,8 +870,21 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
               );
       case NameSection.yAccounts:
         return id == null
-            ? AddedEdits.addY(p, name, _voice, _nationId)
-            : AddedEdits.editY(p, id, name, _voice, _nationId);
+            ? AddedEdits.addY(
+                p,
+                name,
+                _voice,
+                _nationId,
+                handle: _handle.text,
+              )
+            : AddedEdits.editY(
+                p,
+                id,
+                name,
+                _voice,
+                _nationId,
+                handle: _handle.text,
+              );
       case _:
         return p;
     }
@@ -822,11 +960,26 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
     return (name: name, description: description);
   }
 
+  /// What is wrong with the @handle as typed ([handleProblem]); null for
+  /// none typed, or anything but a Y account.
+  String? _handleError(AppLocalizations l, WorldPack pack) {
+    if (_section != NameSection.yAccounts) return null;
+    final h = cleanHandle(_handle.text);
+    if (h == null) return null;
+    return handleProblem(
+      l,
+      pack,
+      h,
+      addedId: widget.id ?? AddedEdits.nextAddedId(pack),
+    );
+  }
+
   /// Whether the fields as they are make a whole item.
   bool _complete(WorldPack pack, ({String? name, String? description}) e) =>
       _name.text.trim().isNotEmpty &&
       e.name == null &&
       e.description == null &&
+      _handleError(AppLocalizations.of(context), pack) == null &&
       switch (_section) {
         NameSection.clubs => _country != null,
         NameSection.sponsors => _industry != null,
@@ -914,22 +1067,7 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
   }
 
   Future<void> _pickIndustry() async {
-    final l = AppLocalizations.of(context);
-    final picked = await showAddedPicker(
-      context,
-      title: l.editorAddedIndustryPick,
-      options: [
-        for (final o in industryOptions(l))
-          (
-            id: o.brand,
-            label: o.label,
-            about: null,
-            fold: searchFold(o.label),
-            flag: null,
-          ),
-      ],
-      current: _industry,
-    );
+    final picked = await pickSponsorIndustry(context, current: _industry);
     if (picked == null || !mounted) return;
     _industry = picked;
     _changed(typed: false);
@@ -1140,7 +1278,7 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
         ? null
         : widget.world.where((n) => n.code.toLowerCase() == code).firstOrNull;
     return [
-      _PickField(
+      EditorPickField(
         key: AddedItemForm.countryKey,
         label: l.editorAddedCountry,
         value: code == null ? null : _countryName(code),
@@ -1213,7 +1351,7 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
       const SizedBox(height: AppSpacing.xs),
       Text(sponsorDealLine(l, _deal), style: muted),
       const SizedBox(height: AppSpacing.md),
-      _PickField(
+      EditorPickField(
         key: AddedItemForm.industryKey,
         label: l.editorAddedIndustry,
         value: industry == null ? null : industryLabel(l, industry),
@@ -1249,6 +1387,7 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
   }
 
   List<Widget> _yFields(AppLocalizations l, TextStyle muted) {
+    final pack = ref.read(packEditorProvider(widget.packId)).valueOrNull;
     final nation = widget.world.where((n) => n.id == _nationId).firstOrNull;
     return [
       Text(l.editorAddedVoice, style: AppTypography.labelLarge),
@@ -1273,7 +1412,15 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
       const SizedBox(height: AppSpacing.xs),
       Text(yVoiceAbout(l, _voice), style: muted),
       const SizedBox(height: AppSpacing.md),
-      _PickField(
+      HandleField(
+        key: AddedItemForm.handleKey,
+        controller: _handle,
+        hint: YFeed.handleFor(_name.text.trim()),
+        error: pack == null ? null : _handleError(l, pack),
+        onChanged: (_) => _changed(),
+      ),
+      const SizedBox(height: AppSpacing.md),
+      EditorPickField(
         key: AddedItemForm.nationKey,
         label: l.editorAddedPostsIn,
         value: nation?.name ?? l.editorAddedAllNations,
@@ -1325,8 +1472,8 @@ class _Note extends StatelessWidget {
 
 /// A field that opens a picker: its label, and the value picked (else
 /// [placeholder]). Null [onTap] shows it fixed.
-class _PickField extends StatelessWidget {
-  const _PickField({
+class EditorPickField extends StatelessWidget {
+  const EditorPickField({
     required this.label,
     required this.value,
     required this.placeholder,

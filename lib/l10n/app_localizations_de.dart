@@ -15515,6 +15515,21 @@ class AppLocalizationsDe extends AppLocalizations {
   String get editorAddedIndustryPick => 'Branche wählen';
 
   @override
+  String get editorHandleLabel => 'Handle';
+
+  @override
+  String get editorHandleHelp =>
+      'Buchstaben, Ziffern und Unterstriche. Leer lassen, um dem Namen zu folgen.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Nur Buchstaben A bis Z, Ziffern und Unterstriche verwenden';
+
+  @override
+  String get editorHandleTaken =>
+      'Ein anderer Account hat dieses Handle schon.';
+
+  @override
   String get editorAddedDescription => 'Beschreibung (optional)';
 
   @override

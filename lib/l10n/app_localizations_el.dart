@@ -15479,6 +15479,21 @@ class AppLocalizationsEl extends AppLocalizations {
   String get editorAddedIndustryPick => 'Διάλεξε κλάδο';
 
   @override
+  String get editorHandleLabel => 'Όνομα χρήστη';
+
+  @override
+  String get editorHandleHelp =>
+      'Γράμματα, ψηφία και κάτω παύλες. Αφήστε το κενό για να ακολουθεί το όνομα.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Χρησιμοποιήστε μόνο λατινικά γράμματα A έως Z, ψηφία και κάτω παύλες';
+
+  @override
+  String get editorHandleTaken =>
+      'Άλλος λογαριασμός έχει ήδη αυτό το όνομα χρήστη.';
+
+  @override
   String get editorAddedDescription => 'Περιγραφή (προαιρετικά)';
 
   @override

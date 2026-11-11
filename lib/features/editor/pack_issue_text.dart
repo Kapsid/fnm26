@@ -302,6 +302,8 @@ PackIssueText _badField(
       final field = parts.length > 2 ? parts[2] : '';
       final value = switch (field) {
         '' => _addedName(pack, root, idAt(1)),
+        'handle' =>
+          pack.addedYAccounts.where((x) => x.id == idAt(1)).firstOrNull?.handle,
         'description' =>
           pack.addedSponsors
               .where((x) => x.id == idAt(1))
@@ -314,6 +316,22 @@ PackIssueText _badField(
         detail: parts.length == 1 || value == null
             ? l.editorIssueValue
             : nameProblem(value),
+        section: section,
+        nationId: null,
+      );
+    // A built-in Y account's @handle, by its original name.
+    case 'yHandles':
+      return (
+        title: sectionTitle,
+        detail: nameProblem(pack.yHandles[key] ?? ''),
+        section: section,
+        nationId: null,
+      );
+    // A built-in sponsor's industry: a value no industry has.
+    case 'sponsorIndustries':
+      return (
+        title: sectionTitle,
+        detail: l.editorIssueValue,
         section: section,
         nationId: null,
       );

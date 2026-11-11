@@ -15563,6 +15563,20 @@ class AppLocalizationsPl extends AppLocalizations {
   String get editorAddedIndustryPick => 'Wybierz branżę';
 
   @override
+  String get editorHandleLabel => 'Nazwa użytkownika';
+
+  @override
+  String get editorHandleHelp =>
+      'Litery, cyfry i podkreślenia. Zostaw puste, by użyć nazwy.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Używaj tylko liter od A do Z, cyfr i podkreśleń';
+
+  @override
+  String get editorHandleTaken => 'Inne konto ma już tę nazwę użytkownika.';
+
+  @override
   String get editorAddedDescription => 'Opis (opcjonalnie)';
 
   @override

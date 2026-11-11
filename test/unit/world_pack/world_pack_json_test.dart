@@ -167,9 +167,11 @@ void main() {
     final v2 = _v2Pack().toJson()
       ..['formatVersion'] = 2
       ..remove('clubStrengths')
-      ..remove('managers');
+      ..remove('managers')
+      ..remove('sponsorIndustries')
+      ..remove('yHandles');
     final migrated = WorldPack.migrate(v2);
-    expect(migrated['formatVersion'], 4);
+    expect(migrated['formatVersion'], kPackFormatVersion);
     expect(migrated['managers'], <String, Object?>{});
     final p = WorldPack.fromJson(migrated);
     expect(p.managers, isEmpty);
@@ -187,9 +189,11 @@ void main() {
   test('v3 (clubs) migrates to v4 with empty managers', () {
     final v3 = _v2Pack().copyWith(clubStrengths: const {'Man Blue': 2}).toJson()
       ..['formatVersion'] = 3
-      ..remove('managers');
+      ..remove('managers')
+      ..remove('sponsorIndustries')
+      ..remove('yHandles');
     final migrated = WorldPack.migrate(v3);
-    expect(migrated['formatVersion'], 4);
+    expect(migrated['formatVersion'], kPackFormatVersion);
     final p = WorldPack.fromJson(migrated);
     expect(p.managers, isEmpty);
     expect(p.clubStrengths, {'Man Blue': 2});
@@ -229,7 +233,7 @@ void main() {
         9: (name: 'Lew Ward', nationality: 'ENG'),
       },
     );
-    expect(p.toJson()['formatVersion'], 4);
+    expect(p.toJson()['formatVersion'], kPackFormatVersion);
     final back = WorldPack.fromJson(
       WorldPack.migrate(
         jsonDecode(jsonEncode(p.toJson())) as Map<String, Object?>,
@@ -256,16 +260,16 @@ void main() {
     }
   });
 
-  test('migrate refuses format 5', () {
+  test('migrate refuses format 6', () {
     final json = _pack().toJson();
-    expect(kPackFormatVersion, 4);
+    expect(kPackFormatVersion, 5);
     expect(
-      () => WorldPack.migrate({...json, 'formatVersion': 5}),
+      () => WorldPack.migrate({...json, 'formatVersion': 6}),
       throwsFormatException,
     );
   });
 
-  test('migrate is identity at v4 and rejects newer or missing versions', () {
+  test('migrate is identity at v5 and rejects newer or missing versions', () {
     final json = _pack().toJson();
     expect(WorldPack.migrate(json), json);
     expect(
@@ -282,21 +286,25 @@ void main() {
     final old = _v2Pack().toJson();
     final squads = old['squads']! as Map<String, Object?>;
     final player = (squads['7']! as List).first as Map<String, Object?>;
-    final json = {
-      ...old,
-      'formatVersion': 3,
-      'clubs': {'Old FC': 'New FC', 'Limburg Smurfs': 'Genk Mine'},
-      'clubStrengths': {'Toluca Red Devils': 4},
-      'localized': {
-        ...old['localized']! as Map<String, Object?>,
-        'clubs.Limburg Smurfs': {'cs': 'Limburští'},
-      },
-      'squads': {
-        '7': [
-          {...player, 'club': 'Toluca Red Devils', 'clubCountry': 'mex'},
-        ],
-      },
-    }..remove('managers');
+    final json =
+        {
+            ...old,
+            'formatVersion': 3,
+            'clubs': {'Old FC': 'New FC', 'Limburg Smurfs': 'Genk Mine'},
+            'clubStrengths': {'Toluca Red Devils': 4},
+            'localized': {
+              ...old['localized']! as Map<String, Object?>,
+              'clubs.Limburg Smurfs': {'cs': 'Limburští'},
+            },
+            'squads': {
+              '7': [
+                {...player, 'club': 'Toluca Red Devils', 'clubCountry': 'mex'},
+              ],
+            },
+          }
+          ..remove('managers')
+          ..remove('sponsorIndustries')
+          ..remove('yHandles');
     final p = WorldPack.fromJson(WorldPack.migrate(json));
     expect(p.clubs, {'Old FC': 'New FC', 'Limburg Blue-White': 'Genk Mine'});
     expect(p.clubStrengths, {'Toluca Volcanoes': 4});
@@ -343,9 +351,9 @@ void main() {
               as Map<String, Object?>;
       expect(raw['formatVersion'], 1);
       final migrated = WorldPack.migrate(raw);
-      expect(migrated['formatVersion'], 4);
+      expect(migrated['formatVersion'], kPackFormatVersion);
       final p = WorldPack.fromJson(migrated);
-      expect(p.formatVersion, 4);
+      expect(p.formatVersion, kPackFormatVersion);
       expect(p.clubStrengths, isEmpty);
       expect(p.managers, isEmpty);
       expect(p.pools, isEmpty);
@@ -472,7 +480,9 @@ void main() {
       final json = _v2Pack().toJson()
         ..['formatVersion'] = 2
         ..remove('clubStrengths')
-        ..remove('managers');
+        ..remove('managers')
+        ..remove('sponsorIndustries')
+        ..remove('yHandles');
       return json;
     }
 

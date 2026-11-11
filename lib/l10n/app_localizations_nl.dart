@@ -15468,6 +15468,21 @@ class AppLocalizationsNl extends AppLocalizations {
   String get editorAddedIndustryPick => 'Kies een sector';
 
   @override
+  String get editorHandleLabel => 'Gebruikersnaam';
+
+  @override
+  String get editorHandleHelp =>
+      'Letters, cijfers en underscores. Laat leeg om de naam te volgen.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Gebruik alleen de letters A tot Z, cijfers en underscores';
+
+  @override
+  String get editorHandleTaken =>
+      'Een ander account heeft deze gebruikersnaam al.';
+
+  @override
   String get editorAddedDescription => 'Beschrijving (optioneel)';
 
   @override

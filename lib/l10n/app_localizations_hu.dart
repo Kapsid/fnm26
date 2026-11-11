@@ -15338,6 +15338,20 @@ class AppLocalizationsHu extends AppLocalizations {
   String get editorAddedIndustryPick => 'Válassz ágazatot';
 
   @override
+  String get editorHandleLabel => 'Felhasználónév';
+
+  @override
+  String get editorHandleHelp =>
+      'Betűk, számjegyek és aláhúzásjelek. Hagyja üresen, hogy a nevet kövesse.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Csak az A–Z betűket, számjegyeket és aláhúzásjelet használjon';
+
+  @override
+  String get editorHandleTaken => 'Egy másik fióknak már ez a felhasználóneve.';
+
+  @override
   String get editorAddedDescription => 'Leírás (nem kötelező)';
 
   @override

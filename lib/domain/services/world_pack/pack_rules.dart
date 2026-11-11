@@ -194,6 +194,27 @@ abstract final class PackRules {
   static final _country = RegExp(r'^[a-z]{3}$');
   static final _industry = RegExp(r'^[a-zA-Z][a-zA-Z0-9]{0,39}$');
 
+  /// What a Y @handle may hold (without its `@`): ASCII letters, digits and
+  /// underscores, as on the real thing.
+  static final _handle = RegExp(r'^[A-Za-z0-9_]+$');
+
+  /// The longest @handle without its `@`: [handleMax] with it.
+  static const int handleChars = handleMax - 1;
+
+  /// What is wrong with [s] as a Y @handle (a leading `@` is not part of
+  /// it): empty, longer than [handleChars], or holding anything but ASCII
+  /// letters, digits and underscores. Null when it can be used.
+  static FieldReason? checkHandle(String s) {
+    final t = s.trim();
+    if (t.isEmpty) return FieldReason.empty;
+    if (t.length > handleChars) return FieldReason.tooLong;
+    if (!_handle.hasMatch(t)) return FieldReason.badCharacters;
+    return null;
+  }
+
+  /// Whether [industry] is shaped like an industry a sponsor can store.
+  static bool industryShaped(String industry) => _industry.hasMatch(industry);
+
   /// A player's stored club country: three letters, either case.
   static final _clubCountry = RegExp(r'^[A-Za-z]{3}$');
 
@@ -438,6 +459,14 @@ abstract final class PackRules {
     values('sponsors', p.sponsors);
     values('yAccounts', p.yAccounts, max: handleMax);
     _yClashes(p.yAccounts, p.addedYAccounts, out, checkAdded: false);
+    for (final e in p.sponsorIndustries.entries) {
+      if (!_industry.hasMatch(e.value)) {
+        out.add(
+          BadField('sponsorIndustries.${e.key}', FieldReason.badCharacters),
+        );
+      }
+    }
+    _handles(p, out);
 
     for (final id in p.reporters.keys.toList()..sort()) {
       name('reporters.$id.name', p.reporters[id]!.name);
@@ -599,6 +628,54 @@ abstract final class PackRules {
       name('addedYAccounts.${y.id}', y.name, max: handleMax);
     }
     _yClashes(p.yAccounts, p.addedYAccounts, out, checkRenames: false);
+  }
+
+  /// Every @handle [p] sets (a built-in account's, `yHandles.<original>`,
+  /// or an added one's, `addedYAccounts.<id>.handle`): one [checkHandle]
+  /// takes, and no other account's ([takenHandle]).
+  static void _handles(WorldPack p, List<PackIssue> out) {
+    for (final e in p.yHandles.entries) {
+      final path = 'yHandles.${e.key}';
+      final r = checkHandle(e.value);
+      if (r != null) {
+        out.add(BadField(path, r));
+      } else if (takenHandle(p, e.value, original: e.key)) {
+        out.add(BadField(path, FieldReason.duplicate));
+      }
+    }
+    for (final y in p.addedYAccounts) {
+      final h = y.handle;
+      if (h == null) continue;
+      final path = 'addedYAccounts.${y.id}.handle';
+      final r = checkHandle(h);
+      if (r != null) {
+        out.add(BadField(path, r));
+      } else if (takenHandle(p, h, addedId: y.id)) {
+        out.add(BadField(path, FieldReason.duplicate));
+      }
+    }
+  }
+
+  /// Whether [handle] (with or without its `@`) is, ignoring case, the
+  /// @handle another account of [p] shows: any of the game's named accounts
+  /// ([YFeed.namedAccounts], under the handle [p] gives it) or any account
+  /// [p] adds, other than built-in account [original] or added [addedId].
+  static bool takenHandle(
+    WorldPack p,
+    String handle, {
+    String? original,
+    int? addedId,
+  }) {
+    final want = YFeed.withAt(handle).toLowerCase();
+    for (final o in YFeed.namedAccounts) {
+      if (o == original) continue;
+      if (YFeed.packHandleOf(p, o).toLowerCase() == want) return true;
+    }
+    for (final a in p.addedYAccounts) {
+      if (a.id == addedId) continue;
+      if (YFeed.addedHandleOf(a).toLowerCase() == want) return true;
+    }
+    return false;
   }
 
   /// Every `localized` entry: within [localizedMax] in all (one issue at
@@ -896,6 +973,14 @@ abstract final class PackRules {
     names('yAccounts', p.yAccounts.keys, yAccounts);
     names('sponsors', p.sponsors.keys, sponsorBrands);
     names('trophies', p.trophies, trophyKeys);
+    names('yHandles', p.yHandles.keys, yAccounts);
+    for (final k in p.sponsorIndustries.keys.toList()..sort()) {
+      final v = p.sponsorIndustries[k]!;
+      if (!sponsorBrands.contains(k) ||
+          (!sponsorBrands.contains(v) && !sponsorIndustries.contains(v))) {
+        out.add(UnknownId('sponsorIndustries.$k'));
+      }
+    }
 
     for (final n in p.pools.keys.toList()..sort()) {
       if (!nationIds.contains(n)) {
@@ -987,6 +1072,7 @@ abstract final class PackRules {
       ('competitions', p.competitions),
       ('sponsors', p.sponsors),
       ('yAccounts', p.yAccounts),
+      ('yHandles', p.yHandles),
     ]) {
       for (final k in m.keys.toList()..sort()) {
         check('$root.$k', m[k]);
@@ -1016,6 +1102,7 @@ abstract final class PackRules {
     }
     for (final y in p.addedYAccounts) {
       check('addedYAccounts.${y.id}', y.name);
+      check('addedYAccounts.${y.id}.handle', y.handle);
     }
     for (final path in p.localized.keys.toList()..sort()) {
       final values = p.localized[path]!;

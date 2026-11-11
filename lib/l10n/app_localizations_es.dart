@@ -15486,6 +15486,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get editorAddedIndustryPick => 'Elige un sector';
 
   @override
+  String get editorHandleLabel => 'Usuario';
+
+  @override
+  String get editorHandleHelp =>
+      'Letras, números y guiones bajos. Déjalo vacío para usar el nombre.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Usa solo letras de la A a la Z, números y guiones bajos';
+
+  @override
+  String get editorHandleTaken => 'Otra cuenta ya tiene este usuario.';
+
+  @override
   String get editorAddedDescription => 'Descripción (opcional)';
 
   @override

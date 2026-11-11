@@ -12,14 +12,17 @@ import '../press/y_feed.dart';
 /// [WorldPack.pools], the added clubs, sponsors and Y accounts,
 /// [WorldPack.localized] and [PackPlayer.traits]; format 3 (clubs) adds
 /// club strength ([WorldPack.clubStrengths], [PackClub.strength]); format 4
-/// (world managers) adds [WorldPack.managers]. [WorldPack.migrate] lifts a
-/// format-1, 2 or 3 pack to it, step by step.
+/// (world managers) adds [WorldPack.managers]; format 5 (1.1.1) adds a
+/// built-in sponsor's industry ([WorldPack.sponsorIndustries]) and a Y
+/// account's handle ([WorldPack.yHandles], [PackYAccount.handle]).
+/// [WorldPack.migrate] lifts a format-1 to 4 pack to it, step by step.
 ///
 /// A pack is written in the oldest format that holds it ([WorldPack.asWritten]):
 /// format 3 when it names no managers, so a 1.1.x build without managers still
-/// reads it, and this format when it does. A build that reads only an older
-/// format says the file is from a newer version rather than calling it broken.
-const int kPackFormatVersion = 4;
+/// reads it, format 4 when it does, and format 5 only when it sets an
+/// industry or a handle. A build that reads only an older format says the
+/// file is from a newer version rather than calling it broken.
+const int kPackFormatVersion = 5;
 
 /// Ids at or above this belong to players created in a pack.
 const int kPackPlayerIdBase = 800000000;
@@ -341,12 +344,17 @@ class PackYAccount {
     required this.voice,
     this.nationId,
     this.unknownVoice,
+    this.handle,
   });
 
   final int id;
   final String name;
   final YVoice voice;
   final int? nationId;
+
+  /// The account's @handle without the `@` (format 5), or null for the one
+  /// its name gives (`YFeed.handleFor`).
+  final String? handle;
 
   /// The voice name the file gave when it is not one of [kPackYVoices] in
   /// this build, kept so the file travels on unchanged; [voice] is then
@@ -358,19 +366,38 @@ class PackYAccount {
   static const YVoice fallbackVoice = YVoice.neutral;
 
   /// This account with [unknownVoice] dropped: its voice is [voice].
-  PackYAccount withoutUnknown() =>
-      PackYAccount(id: id, name: name, voice: voice, nationId: nationId);
+  PackYAccount withoutUnknown() => PackYAccount(
+    id: id,
+    name: name,
+    voice: voice,
+    nationId: nationId,
+    handle: handle,
+  );
+
+  /// This account with [name] and [handle] as given (the rest kept).
+  PackYAccount withNames({required String name, required String? handle}) =>
+      PackYAccount(
+        id: id,
+        name: name,
+        voice: voice,
+        nationId: nationId,
+        unknownVoice: unknownVoice,
+        handle: handle,
+      );
 
   Map<String, Object?> toJson() => {
     'id': id,
     'name': name,
     'voice': unknownVoice ?? voice.name,
     'nationId': nationId,
+    // Format 5's key, written only when set: an account without one reads
+    // in a format-4 build.
+    'handle': ?handle,
   };
 
   static PackYAccount fromJson(Object? raw) {
     final m = _map(raw, 'yAccount');
-    _only(m, const {'id', 'name', 'voice', 'nationId'}, 'yAccount');
+    _only(m, const {'id', 'name', 'voice', 'nationId', 'handle'}, 'yAccount');
     final voiceName = _token(_str(m['voice'], 'voice'), 'voice');
     final voice = YVoice.values.asNameMap()[voiceName];
     final known = voice != null && kPackYVoices.contains(voice);
@@ -381,6 +408,7 @@ class PackYAccount {
       voice: known ? voice : fallbackVoice,
       nationId: nationId == null ? null : _int(nationId, 'nationId'),
       unknownVoice: known ? null : voiceName,
+      handle: m['handle'] == null ? null : _str(m['handle'], 'handle'),
     );
   }
 
@@ -391,10 +419,12 @@ class PackYAccount {
       other.name == name &&
       other.voice == voice &&
       other.nationId == nationId &&
-      other.unknownVoice == unknownVoice;
+      other.unknownVoice == unknownVoice &&
+      other.handle == handle;
 
   @override
-  int get hashCode => Object.hash(id, name, voice, nationId, unknownVoice);
+  int get hashCode =>
+      Object.hash(id, name, voice, nationId, unknownVoice, handle);
 }
 
 /// Custom first and surname pools for one nation.
@@ -479,6 +509,8 @@ class WorldPack {
     this.addedYAccounts = const [],
     this.localized = const {},
     this.managers = const {},
+    this.sponsorIndustries = const {},
+    this.yHandles = const {},
   });
 
   final String uuid;
@@ -532,11 +564,33 @@ class WorldPack {
   /// later manager is the game's own.
   final Map<int, ({String name, String nationality})> managers;
 
+  /// A built-in sponsor's `SponsorBrand.name` -> the industry it is shown
+  /// in: another brand's name (that brand's trade) or a `SponsorIndustry`
+  /// id, as an added sponsor stores its own (format 5).
+  final Map<String, String> sponsorIndustries;
+
+  /// A built-in Y account's original display name -> its @handle without
+  /// the `@` (format 5). An account not in it keeps the handle its name
+  /// gives.
+  final Map<String, String> yHandles;
+
+  /// Whether the pack uses what only format 5 holds.
+  bool get _needsFormat5 =>
+      sponsorIndustries.isNotEmpty ||
+      yHandles.isNotEmpty ||
+      addedYAccounts.any((y) => y.handle != null);
+
   /// This pack in the oldest format that holds it, as every writer stores
   /// and exports it: format 3 (which a 1.1.x build without managers reads)
-  /// when it names no managers, [kPackFormatVersion] when it does.
-  WorldPack get asWritten =>
-      copyWith(formatVersion: managers.isEmpty ? 3 : kPackFormatVersion);
+  /// when it names no managers, 4 when it does, and [kPackFormatVersion]
+  /// only when it sets a sponsor's industry or a Y handle.
+  WorldPack get asWritten => copyWith(
+    formatVersion: _needsFormat5
+        ? kPackFormatVersion
+        : managers.isEmpty
+        ? 3
+        : 4,
+  );
 
   /// [managers] without the entries a game cannot use: a blank name, a
   /// nationality that is not one of [codes] (upper-case FIFA codes), or a
@@ -589,6 +643,8 @@ class WorldPack {
     List<PackYAccount>? addedYAccounts,
     Map<String, Map<String, String>>? localized,
     Map<int, ({String name, String nationality})>? managers,
+    Map<String, String>? sponsorIndustries,
+    Map<String, String>? yHandles,
   }) => WorldPack(
     uuid: uuid ?? this.uuid,
     name: name ?? this.name,
@@ -612,6 +668,8 @@ class WorldPack {
     addedYAccounts: addedYAccounts ?? this.addedYAccounts,
     localized: localized ?? this.localized,
     managers: managers ?? this.managers,
+    sponsorIndustries: sponsorIndustries ?? this.sponsorIndustries,
+    yHandles: yHandles ?? this.yHandles,
   );
 
   Map<String, Object?> toJson() => {
@@ -661,6 +719,12 @@ class WorldPack {
             'nationality': e.value.nationality,
           },
       },
+    // Written from format 5 on (see [asWritten]): a format-4 reader knows
+    // neither key.
+    if (formatVersion >= 5 || _needsFormat5) ...{
+      'sponsorIndustries': sponsorIndustries,
+      'yHandles': yHandles,
+    },
   };
 
   static const _keys = {
@@ -686,6 +750,8 @@ class WorldPack {
     'addedYAccounts',
     'localized',
     'managers',
+    'sponsorIndustries',
+    'yHandles',
   };
 
   /// Strict reader: any wrong type or unknown key throws [FormatException].
@@ -754,10 +820,15 @@ class WorldPack {
         for (final e in _map(json['managers'], 'managers').entries)
           _intKey(e.key): _manager(e.value),
       },
+      sponsorIndustries: _strMap(
+        json['sponsorIndustries'],
+        'sponsorIndustries',
+      ),
+      yHandles: _strMap(json['yHandles'], 'yHandles'),
     );
   }
 
-  /// Upgrades older JSON step by step to [kPackFormatVersion]. Identity at v4
+  /// Upgrades older JSON step by step to [kPackFormatVersion]. Identity at v5
   /// for a pack naming no renamed club ([_retiredClubs]).
   /// Throws [FormatException] for a missing or newer version. Never changes
   /// [json] itself.
@@ -778,6 +849,7 @@ class WorldPack {
     if (v == 1) out = _from1To2(out);
     if (v <= 2) out = _from2To3(out);
     if (v <= 3) out = _from3To4(out, v);
+    if (v <= 4) out = _from4To5(out, v);
     return _retiredClubs(out);
   }
 
@@ -895,6 +967,19 @@ class WorldPack {
       );
     }
     return {...json, 'managers': <String, Object?>{}, 'formatVersion': 4};
+  }
+
+  static Map<String, Object?> _from4To5(Map<String, Object?> json, int from) {
+    if (json.containsKey('sponsorIndustries') || json.containsKey('yHandles')) {
+      throw FormatException('Format $from pack has a format 5 key');
+    }
+    // A format-4 account has no handle key; it reads as it did.
+    return {
+      ...json,
+      'sponsorIndustries': <String, Object?>{},
+      'yHandles': <String, Object?>{},
+      'formatVersion': 5,
+    };
   }
 
   static ({String name, String nationality}) _manager(Object? raw) {

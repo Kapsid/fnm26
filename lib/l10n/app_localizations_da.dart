@@ -15394,6 +15394,21 @@ class AppLocalizationsDa extends AppLocalizations {
   String get editorAddedIndustryPick => 'Vælg en branche';
 
   @override
+  String get editorHandleLabel => 'Brugernavn';
+
+  @override
+  String get editorHandleHelp =>
+      'Bogstaver, tal og understreger. Lad feltet stå tomt for at følge navnet.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Brug kun bogstaverne A til Z, tal og understreger';
+
+  @override
+  String get editorHandleTaken =>
+      'En anden konto har allerede dette brugernavn.';
+
+  @override
   String get editorAddedDescription => 'Beskrivelse (valgfri)';
 
   @override

@@ -15705,6 +15705,21 @@ class AppLocalizationsUk extends AppLocalizations {
   String get editorAddedIndustryPick => 'Обери галузь';
 
   @override
+  String get editorHandleLabel => 'Ім\'я користувача';
+
+  @override
+  String get editorHandleHelp =>
+      'Літери, цифри та підкреслення. Залиште порожнім, щоб воно відповідало назві.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Використовуйте лише латинські літери від A до Z, цифри та підкреслення';
+
+  @override
+  String get editorHandleTaken =>
+      'Інший акаунт уже має таке ім\'я користувача.';
+
+  @override
   String get editorAddedDescription => 'Опис (необов’язково)';
 
   @override

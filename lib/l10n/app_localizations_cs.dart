@@ -15661,6 +15661,20 @@ class AppLocalizationsCs extends AppLocalizations {
   String get editorAddedIndustryPick => 'Vyberte obor';
 
   @override
+  String get editorHandleLabel => 'Přezdívka (@)';
+
+  @override
+  String get editorHandleHelp =>
+      'Písmena, číslice a podtržítka. Prázdné pole převezme jméno.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Použijte jen písmena A až Z bez diakritiky, číslice a podtržítka';
+
+  @override
+  String get editorHandleTaken => 'Tuto přezdívku už má jiný účet.';
+
+  @override
   String get editorAddedDescription => 'Popis (nepovinný)';
 
   @override

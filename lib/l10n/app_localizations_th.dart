@@ -15100,6 +15100,20 @@ class AppLocalizationsTh extends AppLocalizations {
   String get editorAddedIndustryPick => 'เลือกประเภทธุรกิจ';
 
   @override
+  String get editorHandleLabel => 'ชื่อผู้ใช้';
+
+  @override
+  String get editorHandleHelp =>
+      'ตัวอักษร ตัวเลข และขีดล่างเท่านั้น เว้นว่างไว้เพื่อใช้ตามชื่อ';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'ใช้ได้เฉพาะตัวอักษร A ถึง Z ตัวเลข และขีดล่าง';
+
+  @override
+  String get editorHandleTaken => 'มีบัญชีอื่นใช้ชื่อผู้ใช้นี้แล้ว';
+
+  @override
   String get editorAddedDescription => 'คำอธิบาย (ไม่บังคับ)';
 
   @override

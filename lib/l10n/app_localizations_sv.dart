@@ -15378,6 +15378,21 @@ class AppLocalizationsSv extends AppLocalizations {
   String get editorAddedIndustryPick => 'Välj en bransch';
 
   @override
+  String get editorHandleLabel => 'Användarnamn';
+
+  @override
+  String get editorHandleHelp =>
+      'Bokstäver, siffror och understreck. Lämna tomt för att följa namnet.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Använd bara bokstäverna A till Z, siffror och understreck';
+
+  @override
+  String get editorHandleTaken =>
+      'Ett annat konto har redan det här användarnamnet.';
+
+  @override
   String get editorAddedDescription => 'Beskrivning (valfritt)';
 
   @override

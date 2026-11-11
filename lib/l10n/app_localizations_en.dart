@@ -15417,6 +15417,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editorAddedIndustryPick => 'Pick an industry';
 
   @override
+  String get editorHandleLabel => 'Handle';
+
+  @override
+  String get editorHandleHelp =>
+      'Letters, digits and underscores. Leave empty to follow the name.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Use only letters A to Z, digits and underscores';
+
+  @override
+  String get editorHandleTaken => 'Another account already has this handle.';
+
+  @override
   String get editorAddedDescription => 'Description (optional)';
 
   @override

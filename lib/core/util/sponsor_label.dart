@@ -56,13 +56,26 @@ String _sponsorBrandName(AppLocalizations l, SponsorBrand b) => switch (b) {
   SponsorBrand.clickbait => l.sponsorBrandClickbait,
 };
 
-/// What a brand does for a living. A brand the world added borrows the
+/// What a brand does for a living. A built-in brand reads in the industry
+/// the career's world gives it ([ActiveWorld], format 5), if it gives one
+/// this build knows, else its own. A brand the world added borrows the
 /// industry of the built-in brand it names; one this build does not know
 /// (a newer game's, flagged in the editor) reads as nothing.
 String sponsorIndustryLabel(AppLocalizations l, Sponsor s) {
-  if (s.builtIn case final b?) return _sponsorIndustryLabel(l, b);
+  if (s.builtIn case final b?) {
+    if (ActiveWorld.current.pack?.sponsorIndustries[b.name] case final i?) {
+      final label = addedIndustryLabel(l, i);
+      if (label.isNotEmpty) return label;
+    }
+    return _sponsorIndustryLabel(l, b);
+  }
   return addedIndustryLabel(l, s.added?.industry ?? '');
 }
+
+/// The game's own industry of built-in brand [b], whatever a world gives
+/// it: what the editor offers and compares against.
+String builtInIndustryLabel(AppLocalizations l, SponsorBrand b) =>
+    _sponsorIndustryLabel(l, b);
 
 /// The label of the industry an added sponsor stores as [industry]: a
 /// `SponsorBrand.name` (the trade of that brand) or a [SponsorIndustry] id;
