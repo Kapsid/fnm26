@@ -1,11 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
-import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart' show immutable;
 import 'package:fnm/core/diagnostics/app_log.dart';
+import 'package:fnm/core/util/off_ui.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
+import 'package:fnm/domain/services/world_pack/pack_gzip.dart';
 
 import 'pack_rules.dart';
 import 'trophy_normaliser.dart';
@@ -110,7 +110,7 @@ abstract final class PackCodec {
         for (final e in trophies.entries) e.key: base64Encode(e.value),
       },
     });
-    return Uint8List.fromList(gzip.encode(utf8.encode(json)));
+    return gzipBytes(utf8.encode(json));
   }
 
   /// Reads [bytes]. [baseCodes] are the default world's nation codes; a
@@ -125,7 +125,7 @@ abstract final class PackCodec {
     if (bytes.length < 2 || bytes[0] != 0x1f || bytes[1] != 0x8b) {
       return const PackRejected(PackRejection.notAPack);
     }
-    final (:code, :json) = await Isolate.run(() => _read(bytes));
+    final (:code, :json) = await runOffUi(() => _read(bytes));
     if (code == 1) return const PackRejected(PackRejection.tooBig);
     final top = json;
     if (code != 0 || top is! Map<String, Object?>) {
@@ -217,18 +217,7 @@ abstract final class PackCodec {
   /// Streamed, so a file that unzips to gigabytes is dropped at the cap.
   static Uint8List _gunzip(Uint8List bytes) {
     final sink = _CappedSink(maxJsonBytes);
-    final conversion = gzip.decoder.startChunkedConversion(sink);
-    const chunk = 32 * 1024;
-    for (var i = 0; i < bytes.length; i += chunk) {
-      conversion.add(
-        Uint8List.sublistView(
-          bytes,
-          i,
-          i + chunk > bytes.length ? bytes.length : i + chunk,
-        ),
-      );
-    }
-    conversion.close();
+    gunzipInto(bytes, sink);
     return sink.take();
   }
 

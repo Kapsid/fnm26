@@ -3,19 +3,21 @@ part of 'editor_list_screen.dart';
 /// The editor list on a landscape tablet: the tablet header with Import and
 /// New on its right, over the phone's cards laid out in as many columns as
 /// fit.
-class _EditorListTabletLayout extends StatelessWidget {
+class _EditorListTabletLayout extends ConsumerWidget {
   const _EditorListTabletLayout({required this.state, required this.list});
 
   final _EditorListScreenState state;
   final Widget list;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     return TabletPage(
       scaffoldKey: EditorListScreen.tabletLayoutKey,
       title: l.editorTitle,
-      onBack: () => context.go(Routes.home),
+      onBack: ref.watch(editorHasHomeProvider)
+          ? () => context.go(Routes.home)
+          : null,
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

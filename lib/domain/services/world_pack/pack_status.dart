@@ -1,6 +1,5 @@
-import 'dart:isolate';
-
 import 'package:collection/collection.dart';
+import 'package:fnm/core/util/off_ui.dart';
 
 import '../../entities/nation.dart';
 import 'pack_keys.dart';
@@ -98,7 +97,7 @@ Future<({PackStatus status, List<PackIssue> issues})> assessPackAsync(
   ].fold<int>(0, (n, l) => n + l.length);
   final result = players < assessOffUiPlayers
       ? assessPack(pack, world, facts: facts)
-      : await Isolate.run(
+      : await runOffUi(
           () => assessPack(pack, world, facts: facts),
           debugName: 'world pack check',
         );

@@ -20,6 +20,7 @@ import 'package:fnm/domain/services/world_pack/pack_ranking.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/pack_status.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
+import 'package:fnm/features/editor/picked_file.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path/path.dart' as p;
@@ -478,18 +479,17 @@ class WorldPackService {
   /// written unless every check passes. The failure's code is the
   /// [PackRejection] name.
   Future<Result<int>> importFile(String path) async {
-    final Uint8List bytes;
+    final Uint8List? bytes;
     try {
-      final file = File(path);
-      if (await file.length() > PackCodec.maxFileBytes) {
-        return Result.failure(
-          Failure('Too big', code: PackRejection.tooBig.name),
-        );
-      }
-      bytes = await file.readAsBytes();
+      bytes = await readPickedFile(path, maxBytes: PackCodec.maxFileBytes);
     } on Object catch (e) {
       return Result.failure(
         Failure('Unreadable', code: PackRejection.notAPack.name, cause: e),
+      );
+    }
+    if (bytes == null) {
+      return Result.failure(
+        Failure('Too big', code: PackRejection.tooBig.name),
       );
     }
     return importBytes(bytes);

@@ -12,13 +12,15 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/repositories/world_pack_repository.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/nation_repository.dart';
+import 'package:fnm/domain/services/world_pack/pack_codec.dart';
 import 'package:fnm/domain/services/world_pack/pack_keys.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/pack_status.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/names/added_items.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:image_picker/image_picker.dart' hide XFile;
+import 'package:share_plus/share_plus.dart';
 
 export 'package:fnm/domain/services/world_pack/pack_status.dart';
 
@@ -189,6 +191,31 @@ final Provider<EditorFilePicker> editorFilePickerProvider = Provider(
         allowedExtensions: extensions,
       ))?.files.single.path,
 );
+
+/// Hands database [packId]'s file to the manager: the share sheet on a
+/// device ([WorldPackService.export]), a download in the web editor. Throws
+/// [PackTooBigToShare] for a file over the cap. A provider so the web editor
+/// (and a test) can stand in its own way out.
+typedef EditorPackExporter =
+    Future<void> Function(int packId, {required String subject, Rect? origin});
+
+final Provider<EditorPackExporter> editorPackExporterProvider = Provider(
+  (ref) =>
+      (packId, {required subject, origin}) async {
+        final file = await ref.read(worldPackServiceProvider).export(packId);
+        await SharePlus.instance.share(
+          ShareParams(
+            files: [XFile(file.path, mimeType: PackCodec.mimeType)],
+            subject: subject,
+            sharePositionOrigin: origin,
+          ),
+        );
+      },
+);
+
+/// Whether the editor's front page has a way back to the game's home
+/// screen; false in the web editor, where the editor is all there is.
+final Provider<bool> editorHasHomeProvider = Provider<bool>((ref) => true);
 
 /// Picks one picture from the phone's photo gallery and gives its path, or
 /// null when nothing was picked. A provider so a test can stand in a path.

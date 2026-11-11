@@ -61,6 +61,8 @@ dependencies:
   share_plus: ^12.0.0 # Hands an exported save to the OS share sheet.
   file_picker: ^11.0.3 # Picks a save file back off the device to restore.
   url_launcher: ^6.3.3
+  archive: ^4.0.9 # Pure-Dart gzip for .fnmdb files in the web editor.
+  web: ^1.1.1 # Browser file download for the web database editor.
   # Automatic backups: the app's iCloud container (iPhone/iPad).
   icloud_storage_plus: ^4.0.0
   # Automatic backups: Google Drive's hidden app folder (Android), drive.appdata only.
