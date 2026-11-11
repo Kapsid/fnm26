@@ -25975,6 +25975,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Conditions'**
   String get matchStadiumConditions;
+
+  /// Editor list: a row saying the database editor is also on the website, with its address (not translated). Tap opens it.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit on a computer: {address}'**
+  String editorWebTitle(String address);
+
+  /// Editor list: the line under editorWebTitle, how a database goes to the web editor and back.
+  ///
+  /// In en, this message translates to:
+  /// **'Export your database, open it in the browser, download it back and import it here.'**
+  String get editorWebAbout;
 }
 
 class _AppLocalizationsDelegate

@@ -4289,5 +4289,7 @@
   "matchStadiumBuilt": "Postavila ho vaše federace",
   "matchStadiumEnlarged": "Rozšířila ho vaše federace",
   "matchStadiumWorks": "Na stadionu probíhá přestavba",
-  "matchStadiumConditions": "Podmínky"
+  "matchStadiumConditions": "Podmínky",
+  "editorWebTitle": "Upravujte na počítači: {address}",
+  "editorWebAbout": "Exportujte databázi, otevřete ji v prohlížeči, stáhněte ji zpět a importujte ji sem."
 }

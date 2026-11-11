@@ -4289,5 +4289,7 @@
   "matchStadiumBuilt": "あなたの協会が建設",
   "matchStadiumEnlarged": "あなたの協会が拡張",
   "matchStadiumWorks": "このスタジアムは工事中",
-  "matchStadiumConditions": "コンディション"
+  "matchStadiumConditions": "コンディション",
+  "editorWebTitle": "パソコンで編集: {address}",
+  "editorWebAbout": "データベースをエクスポートしてブラウザで開き、ダウンロードし直してここでインポートします。"
 }

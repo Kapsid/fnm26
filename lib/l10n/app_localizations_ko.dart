@@ -16588,4 +16588,12 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get matchStadiumConditions => '경기 조건';
+
+  @override
+  String editorWebTitle(String address) {
+    return '컴퓨터에서 편집: $address';
+  }
+
+  @override
+  String get editorWebAbout => '데이터베이스를 내보내 브라우저에서 열고, 다시 내려받아 여기에서 가져오세요.';
 }

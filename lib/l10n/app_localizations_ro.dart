@@ -17577,4 +17577,13 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get matchStadiumConditions => 'Condiții';
+
+  @override
+  String editorWebTitle(String address) {
+    return 'Editează pe calculator: $address';
+  }
+
+  @override
+  String get editorWebAbout =>
+      'Exportă baza de date, deschide-o în browser, descarc-o înapoi și importă-o aici.';
 }

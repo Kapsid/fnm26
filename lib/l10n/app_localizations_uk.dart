@@ -17477,4 +17477,13 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get matchStadiumConditions => 'Умови';
+
+  @override
+  String editorWebTitle(String address) {
+    return 'Редагуйте на комп’ютері: $address';
+  }
+
+  @override
+  String get editorWebAbout =>
+      'Експортуйте базу даних, відкрийте її в браузері, завантажте назад та імпортуйте тут.';
 }

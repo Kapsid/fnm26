@@ -17108,4 +17108,13 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get matchStadiumConditions => 'Körülmények';
+
+  @override
+  String editorWebTitle(String address) {
+    return 'Szerkesztés számítógépen: $address';
+  }
+
+  @override
+  String get editorWebAbout =>
+      'Exportáld az adatbázisodat, nyisd meg a böngészőben, töltsd le újra, és importáld ide.';
 }

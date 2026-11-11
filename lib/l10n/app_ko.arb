@@ -4289,5 +4289,7 @@
   "matchStadiumBuilt": "협회가 건설",
   "matchStadiumEnlarged": "협회가 확장",
   "matchStadiumWorks": "경기장 공사 중",
-  "matchStadiumConditions": "경기 조건"
+  "matchStadiumConditions": "경기 조건",
+  "editorWebTitle": "컴퓨터에서 편집: {address}",
+  "editorWebAbout": "데이터베이스를 내보내 브라우저에서 열고, 다시 내려받아 여기에서 가져오세요."
 }

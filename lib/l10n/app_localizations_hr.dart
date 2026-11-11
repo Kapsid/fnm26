@@ -17496,4 +17496,13 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get matchStadiumConditions => 'Uvjeti';
+
+  @override
+  String editorWebTitle(String address) {
+    return 'Uređujte na računalu: $address';
+  }
+
+  @override
+  String get editorWebAbout =>
+      'Izvezite svoju bazu podataka, otvorite je u pregledniku, ponovno je preuzmite i uvezite ovdje.';
 }

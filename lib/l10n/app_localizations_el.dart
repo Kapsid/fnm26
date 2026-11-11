@@ -17254,4 +17254,13 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get matchStadiumConditions => 'Συνθήκες';
+
+  @override
+  String editorWebTitle(String address) {
+    return 'Επεξεργασία σε υπολογιστή: $address';
+  }
+
+  @override
+  String get editorWebAbout =>
+      'Εξαγάγετε τη βάση δεδομένων σας, ανοίξτε τη στο πρόγραμμα περιήγησης, κατεβάστε τη ξανά και εισαγάγετέ τη εδώ.';
 }

@@ -17322,4 +17322,13 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get matchStadiumConditions => 'Conditions';
+
+  @override
+  String editorWebTitle(String address) {
+    return 'Modifier sur un ordinateur : $address';
+  }
+
+  @override
+  String get editorWebAbout =>
+      'Exportez votre base de données, ouvrez-la dans le navigateur, téléchargez-la à nouveau et importez-la ici.';
 }

@@ -4289,5 +4289,7 @@
   "matchStadiumBuilt": "Dibina oleh persekutuan anda",
   "matchStadiumEnlarged": "Diperbesar oleh persekutuan anda",
   "matchStadiumWorks": "Kerja sedang dijalankan di stadium ini",
-  "matchStadiumConditions": "Keadaan"
+  "matchStadiumConditions": "Keadaan",
+  "editorWebTitle": "Sunting di komputer: {address}",
+  "editorWebAbout": "Eksport pangkalan data anda, buka dalam pelayar, muat turun semula dan import di sini."
 }

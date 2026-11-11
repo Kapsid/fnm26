@@ -26471,5 +26471,18 @@
   "matchStadiumConditions": "Conditions",
   "@matchStadiumConditions": {
     "description": "Stadium tab: caption over the kick-off time, the weather and what the altitude, heat and weather did."
+  },
+  "editorWebTitle": "Edit on a computer: {address}",
+  "@editorWebTitle": {
+    "description": "Editor list: a row saying the database editor is also on the website, with its address (not translated). Tap opens it.",
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "editorWebAbout": "Export your database, open it in the browser, download it back and import it here.",
+  "@editorWebAbout": {
+    "description": "Editor list: the line under editorWebTitle, how a database goes to the web editor and back."
   }
 }

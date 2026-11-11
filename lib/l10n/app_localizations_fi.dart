@@ -17238,4 +17238,13 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get matchStadiumConditions => 'Olosuhteet';
+
+  @override
+  String editorWebTitle(String address) {
+    return 'Muokkaa tietokoneella: $address';
+  }
+
+  @override
+  String get editorWebAbout =>
+      'Vie tietokantasi, avaa se selaimessa, lataa se takaisin ja tuo se tänne.';
 }

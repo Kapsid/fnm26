@@ -17163,4 +17163,13 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get matchStadiumConditions => 'Forhold';
+
+  @override
+  String editorWebTitle(String address) {
+    return 'Rediger på en computer: $address';
+  }
+
+  @override
+  String get editorWebAbout =>
+      'Eksportér din database, åbn den i browseren, download den igen og importér den her.';
 }

@@ -17074,4 +17074,13 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get matchStadiumConditions => 'Kondisi';
+
+  @override
+  String editorWebTitle(String address) {
+    return 'Edit di komputer: $address';
+  }
+
+  @override
+  String get editorWebAbout =>
+      'Ekspor database Anda, buka di peramban, unduh kembali, lalu impor di sini.';
 }

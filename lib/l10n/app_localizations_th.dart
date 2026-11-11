@@ -16858,4 +16858,13 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get matchStadiumConditions => 'สภาพ';
+
+  @override
+  String editorWebTitle(String address) {
+    return 'แก้ไขบนคอมพิวเตอร์: $address';
+  }
+
+  @override
+  String get editorWebAbout =>
+      'ส่งออกฐานข้อมูลของคุณ เปิดในเบราว์เซอร์ ดาวน์โหลดกลับมา แล้วนำเข้าที่นี่';
 }

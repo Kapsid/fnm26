@@ -4289,5 +4289,7 @@
   "matchStadiumBuilt": "A szövetséged építette",
   "matchStadiumEnlarged": "A szövetséged bővítette",
   "matchStadiumWorks": "A stadionban munkálatok folynak",
-  "matchStadiumConditions": "Körülmények"
+  "matchStadiumConditions": "Körülmények",
+  "editorWebTitle": "Szerkesztés számítógépen: {address}",
+  "editorWebAbout": "Exportáld az adatbázisodat, nyisd meg a böngészőben, töltsd le újra, és importáld ide."
 }

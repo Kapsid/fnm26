@@ -4289,5 +4289,7 @@
   "matchStadiumBuilt": "Το έχτισε η ομοσπονδία σου",
   "matchStadiumEnlarged": "Το επέκτεινε η ομοσπονδία σου",
   "matchStadiumWorks": "Γίνονται έργα σε αυτό το γήπεδο",
-  "matchStadiumConditions": "Συνθήκες"
+  "matchStadiumConditions": "Συνθήκες",
+  "editorWebTitle": "Επεξεργασία σε υπολογιστή: {address}",
+  "editorWebAbout": "Εξαγάγετε τη βάση δεδομένων σας, ανοίξτε τη στο πρόγραμμα περιήγησης, κατεβάστε τη ξανά και εισαγάγετέ τη εδώ."
 }

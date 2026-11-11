@@ -4289,5 +4289,7 @@
   "matchStadiumBuilt": "Construit de federația dumneavoastră",
   "matchStadiumEnlarged": "Extins de federația dumneavoastră",
   "matchStadiumWorks": "Se lucrează la acest stadion",
-  "matchStadiumConditions": "Condiții"
+  "matchStadiumConditions": "Condiții",
+  "editorWebTitle": "Editează pe calculator: {address}",
+  "editorWebAbout": "Exportă baza de date, deschide-o în browser, descarc-o înapoi și importă-o aici."
 }

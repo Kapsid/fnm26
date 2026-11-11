@@ -5,7 +5,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/config/contact.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/result/result.dart';
@@ -21,6 +23,8 @@ import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/editor/editor_ui.dart';
 import 'package:fnm/features/editor/pack_name_dialog.dart';
+import 'package:fnm/features/settings/settings_screen.dart'
+    show linkLauncherProvider;
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
@@ -39,6 +43,7 @@ class EditorListScreen extends ConsumerStatefulWidget {
   static const Key emptyKey = Key('editorList.empty');
   static const Key newKey = Key('editorList.new');
   static const Key importKey = Key('editorList.import');
+  static const Key webEditorKey = Key('editorList.webEditor');
   static const Key nameFieldKey = PackNameDialog.fieldKey;
   static const Key confirmKey = PackNameDialog.confirmKey;
 
@@ -377,6 +382,7 @@ class _PackList extends StatelessWidget {
         padding: padding,
         children: [
           intro,
+          const _WebEditorRow(),
           const SizedBox(height: AppSpacing.lg),
           const _EmptyState(),
         ],
@@ -393,6 +399,7 @@ class _PackList extends StatelessWidget {
             padding: padding,
             children: [
               intro,
+              const _WebEditorRow(),
               const SizedBox(height: AppSpacing.lg),
               Wrap(
                 spacing: gap,
@@ -416,6 +423,76 @@ class _PackList extends StatelessWidget {
       AsyncError() => AppErrorState(message: l.editorPackMissing),
       _ => const Center(child: CircularProgressIndicator()),
     };
+  }
+}
+
+/// The same editor on the site, for a manager who would rather work at a
+/// keyboard: a tap opens it, a long press (or a phone that cannot open it)
+/// copies the address. Not in the web editor itself, which IS that page.
+class _WebEditorRow extends ConsumerWidget {
+  const _WebEditorRow();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (!ref.watch(editorHasHomeProvider)) return const SizedBox.shrink();
+    final l = AppLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.md),
+      child: GestureDetector(
+        onLongPress: () => _copy(context),
+        child: AppCard(
+          key: EditorListScreen.webEditorKey,
+          onTap: () => _open(context, ref),
+          child: Row(
+            children: [
+              const Icon(Icons.computer_outlined, color: AppColors.primary),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l.editorWebTitle(kWebEditorAddress),
+                      style: AppTypography.bodyMedium,
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      l.editorWebAbout,
+                      style: AppTypography.labelSmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              const Icon(
+                Icons.open_in_new,
+                size: 18,
+                color: AppColors.primary,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _open(BuildContext context, WidgetRef ref) async {
+    var opened = false;
+    try {
+      opened = await ref.read(linkLauncherProvider)(Uri.parse(kWebEditorUrl));
+    } on Object {
+      opened = false;
+    }
+    if (!opened && context.mounted) await _copy(context);
+  }
+
+  Future<void> _copy(BuildContext context) async {
+    final l = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    await Clipboard.setData(const ClipboardData(text: kWebEditorUrl));
+    messenger.showSnackBar(SnackBar(content: Text(l.settingsLinkCopied)));
   }
 }
 

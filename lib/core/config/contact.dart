@@ -18,6 +18,11 @@ const String kContactSite = 'footballnationsmanager.com';
 /// The community Discord invite, opened from Settings.
 const String kDiscordUrl = 'https://discord.gg/SEnYCRnU6J';
 
+/// The database editor on the site, mentioned in the app's own editor list,
+/// and the shorter address that row prints.
+const String kWebEditorUrl = 'https://footballnationsmanager.com/editor/';
+const String kWebEditorAddress = 'footballnationsmanager.com/editor';
+
 /// The Instagram account, shown as its handle and opened from Settings.
 const String kInstagramHandle = '@fnm.football';
 const String kInstagramUrl = 'https://instagram.com/fnm.football';

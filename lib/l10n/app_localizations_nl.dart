@@ -17245,4 +17245,13 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get matchStadiumConditions => 'Omstandigheden';
+
+  @override
+  String editorWebTitle(String address) {
+    return 'Bewerken op een computer: $address';
+  }
+
+  @override
+  String get editorWebAbout =>
+      'Exporteer je database, open hem in de browser, download hem weer en importeer hem hier.';
 }

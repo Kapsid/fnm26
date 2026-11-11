@@ -4289,5 +4289,7 @@
   "matchStadiumBuilt": "Gebouwd door je bond",
   "matchStadiumEnlarged": "Uitgebreid door je bond",
   "matchStadiumWorks": "Er wordt aan dit stadion gewerkt",
-  "matchStadiumConditions": "Omstandigheden"
+  "matchStadiumConditions": "Omstandigheden",
+  "editorWebTitle": "Bewerken op een computer: {address}",
+  "editorWebAbout": "Exporteer je database, open hem in de browser, download hem weer en importeer hem hier."
 }
