@@ -22,7 +22,9 @@ import 'package:fnm/features/tournaments/city_providers.dart';
 /// a finals in, and the national stadium his own works have made.
 ///
 /// [homeStrength], [awayStrength] and [moodFill] only size the crowd; they
-/// never move the ground.
+/// never move the ground (the background passes none of them). A home game
+/// rotates over the nation's grounds by `HomeGround`, from the fixture, the
+/// career seed and the visitor's ranking alone.
 ///
 /// [memo] lets a batch of background fixtures share the work that does not
 /// change within it (the tournaments' hosts, the host estate, his national
@@ -57,12 +59,13 @@ Future<MatchGround> resolveMatchGround(
       : memo == null
       ? await estates()
       : await (memo._estates[v.tournamentHostIds.join(',')] ??= estates());
-  // His own nation's home games are played in the national stadium of that
-  // estate. Nobody else's estate is ever touched.
+  // His own nation's home games are played in that estate: its national
+  // stadium for a big match, its grounds in rotation otherwise. Nobody
+  // else's estate is ever touched.
   final home = !v.neutral && fixture.homeNationId == career.nationId
       ? await (memo == null
-            ? managerNationalGround(ref, career)
-            : memo._home ??= managerNationalGround(ref, career))
+            ? managerHomeEstate(ref, career)
+            : memo._home ??= managerHomeEstate(ref, career))
       : null;
   // The rules this cycle's finals are staged under (see hostVenuesV2Kind).
   Future<VenueRules> rules() => venueRulesFor(
@@ -99,10 +102,21 @@ Future<MatchGround> resolveMatchGround(
     homeGrounds: {
       if (home != null)
         career.nationId: (
-          venue: home.venue,
-          fillBonus: NationalStadiums.fillBonus(home.upgrades),
+          venue: home.national.venue,
+          fillBonus: NationalStadiums.fillBonus(home.national.upgrades),
         ),
     },
+    homeEstates: {
+      if (home != null)
+        career.nationId: [
+          for (final g in home.grounds)
+            (venue: g.venue, fillBonus: NationalStadiums.fillBonus(g.upgrades)),
+        ],
+    },
+    // The visitor's standing: a top side makes it a night for the national
+    // stadium (see `HomeGround.isBigMatch`). Read from [nations], which the
+    // shown and the background match pass alike.
+    awayRanking: v.neutral ? null : _rankingOf(nations, fixture.awayNationId),
     hostEstates: hostEstates,
     moodFill: moodFill,
   );
@@ -114,8 +128,52 @@ Future<MatchGround> resolveMatchGround(
 class MatchGroundMemo {
   final Map<Object, List<int>> _hosts = {};
   final Map<String, Future<Map<int, List<Venue>>>> _estates = {};
-  Future<NationalStadium?>? _home;
+  Future<ManagerHomeEstate?>? _home;
   Future<VenueRules>? _rules;
+}
+
+int? _rankingOf(List<Nation> nations, int nationId) {
+  for (final n in nations) {
+    if (n.id == nationId) return n.ranking;
+  }
+  return null;
+}
+
+/// The manager's nation's open grounds (biggest first) and the national
+/// stadium among them (see [nationalGroundOf]).
+typedef ManagerHomeEstate = ({
+  List<NationalStadium> grounds,
+  NationalStadium national,
+});
+
+/// The estate the manager's nation plays its home games in, or null when it
+/// has no open ground. The rest of its home games rotate over
+/// `grounds` (see `HomeGround`); its big matches go to its
+/// national stadium.
+///
+/// Once the career has done ANY stadium work for it, that is the biggest
+/// open ground of the estate, as it always was: the federation's investment
+/// is what the national team plays in. An untouched estate is the static
+/// one, so it plays where every AI nation does: its national team's home
+/// city, or its biggest ground. A nation that plays up in the mountains
+/// (Quito, Bogotá, Addis Ababa; see `MatchClimate.homeCityOf`) stays there
+/// for every home game whatever is built: the thin air is its edge, and a
+/// seat upgrade elsewhere must not cost it.
+Future<ManagerHomeEstate?> managerHomeEstate(Ref ref, Career career) async {
+  final grounds = await careerStadiumsFor(ref, career.id, career.nationId);
+  if (grounds.isEmpty) return null;
+  final works = await stadiumWorks(
+    ref.read(competitionRepositoryProvider),
+    career.id,
+  );
+  return (
+    grounds: grounds,
+    national: nationalGroundOf(
+      grounds,
+      career.nationId,
+      worked: works.any((w) => w.nationId == career.nationId),
+    ),
+  );
 }
 
 /// The conditions of [fixture] at [ground]: its altitude and the heat of
@@ -128,30 +186,6 @@ MatchConditions conditionsAt(Fixture fixture, MatchGround ground) =>
       homeNationId: fixture.homeNationId,
       awayNationId: fixture.awayNationId,
     );
-
-/// The ground the manager's nation plays its home games in, or null when it
-/// has no open ground.
-///
-/// Once the career has done ANY stadium work for it, the biggest open ground
-/// of the estate, as it always was: the federation's investment is what the
-/// national team plays in. An untouched estate is the static one, so it plays
-/// where every AI nation does: its national team's home city, or its biggest
-/// ground. A nation that plays up in the mountains (Quito, Bogotá, Addis
-/// Ababa; see `MatchClimate.homeCityOf`) stays there whatever is built: the
-/// thin air is its edge, and a seat upgrade elsewhere must not cost it.
-Future<NationalStadium?> managerNationalGround(Ref ref, Career career) async {
-  final grounds = await careerStadiumsFor(ref, career.id, career.nationId);
-  if (grounds.isEmpty) return null;
-  final works = await stadiumWorks(
-    ref.read(competitionRepositoryProvider),
-    career.id,
-  );
-  return nationalGroundOf(
-    grounds,
-    career.nationId,
-    worked: works.any((w) => w.nationId == career.nationId),
-  );
-}
 
 /// Of [grounds] (biggest first): the first in the national team's home city
 /// when the estate is untouched, or whenever that city is at altitude (an

@@ -1,5 +1,6 @@
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/competition/venues.dart';
+import 'package:fnm/domain/services/match/home_ground.dart';
 import 'package:fnm/domain/services/match/match_conditions.dart';
 import 'package:fnm/domain/services/match/venue.dart' show isShowpieceRound;
 
@@ -19,12 +20,14 @@ typedef MatchGround = ({
 /// The ground a fixture is played at, and its crowd.
 ///
 /// Every match now has somewhere to be played: a finals tie is at one of the
-/// tournament host's stadiums, everything else at the home nation's national
-/// ground (its biggest, or its national team's home city: Quito, Bogotá; see
-/// `MatchClimate.homeCityOf`). Callers that play the match go through
-/// `resolveMatchGround`, which also brings in a career's estate. Attendance follows from the occasion — a World Cup final fills the
-/// place, a friendly does not — so the crowd figure says something about the
-/// match rather than being decoration.
+/// tournament host's stadiums, everything else at one of the home nation's
+/// grounds ([HomeGround]: the national ground for a big match and always for
+/// a nation up in the mountains, Quito or Bogotá; else a rotation over its
+/// biggest grounds). Callers that play the match go through
+/// `resolveMatchGround`, which also brings in a career's estate. Attendance
+/// follows from the occasion — a World Cup final fills the place, a friendly
+/// does not — so the crowd figure says something about the match rather than
+/// being decoration.
 ///
 /// Deterministic in the fixture id, so the same match always reads the same.
 abstract final class Attendance {
@@ -40,8 +43,15 @@ abstract final class Attendance {
   /// national stadium a career has made of a nation's grounds (its biggest
   /// open ground after upgrades and new builds, and how much fuller its
   /// quality makes it); a home game of a nation listed there is played at
-  /// that ground instead of the static one. Nations not listed (every AI
-  /// nation) keep the static grounds. [hostEstates] does the same for a
+  /// that ground instead of the static one. [homeEstates] lists, for the
+  /// same nations, every open ground of that estate (biggest first, each
+  /// with its own fill bonus): what its home games rotate over (see
+  /// [HomeGround]); a nation in [homeGrounds] but not here plays every home
+  /// game at its national stadium. Nations not listed (every AI nation)
+  /// rotate over the static grounds. [awayRanking] is the visitor's
+  /// `Nation.ranking`, which makes a home game a big one (see
+  /// [HomeGround.isBigMatch]); [homeGroundOverride] bypasses the rotation
+  /// for a home game (nothing sets it yet). [hostEstates] does the same for a
   /// finals the manager's nation hosts: its share of the tournament's grounds
   /// comes from the estate the career has made (see
   /// [VenueGenerator.forHosts]). [moodFill] is how much fuller or emptier
@@ -62,6 +72,9 @@ abstract final class Attendance {
     int homeStrength = 70,
     int awayStrength = 70,
     Map<int, ({Venue venue, double fillBonus})> homeGrounds = const {},
+    Map<int, List<({Venue venue, double fillBonus})>> homeEstates = const {},
+    int? awayRanking,
+    Venue? homeGroundOverride,
     Map<int, List<Venue>> hostEstates = const {},
     double moodFill = 0,
     VenueRules venueRules = VenueRules.original,
@@ -78,7 +91,7 @@ abstract final class Attendance {
 
     // At a finals the ground is one of the owner's share of the tournament's
     // [venueCount] grounds, exactly as the tournament summary lists them;
-    // a home game is played at the home side's national stadium.
+    // a home game at one of the home side's grounds.
     final venues = neutral && tournamentHostIds.contains(owner)
         ? VenueGenerator.forHosts(
                 hostIds: tournamentHostIds,
@@ -101,29 +114,54 @@ abstract final class Attendance {
           );
     // A career's own national stadium, for a home game of its nation.
     final home = neutral ? null : homeGrounds[owner];
-    final venue = home != null
-        ? home.venue
-        : venues.isEmpty
-        ? (city: '—', stadium: 'National Stadium', capacity: 42000)
-        // The showpiece (the final and the third-place match) is played at the
-        // tournament's marquee ground — the primary host's biggest stadium —
-        // rather than wherever the shuffle lands.
-        : neutral && isShowpieceRound(fixture.round)
-        ? venues.first
-        // The rest of a finals moves around the host's grounds; a home
-        // qualifier is played at the national stadium: the biggest one, or
-        // the one up in the mountains a few nations choose instead (Quito,
-        // Bogotá; see `MatchClimate.homeCityOf`).
-        : neutral
-        ? venues[_mix(fixture.id ^ seed) % venues.length]
-        : _nationalGround(owner, venues);
+    // What a home game rotates over, each with how much fuller its quality
+    // makes it: his estate, or the static grounds.
+    final estate = home == null
+        ? [for (final v in venues) (venue: v, fillBonus: 0.0)]
+        : homeEstates[owner] ?? [home];
+    final Venue venue;
+    var quality = 0.0;
+    if (neutral) {
+      venue = venues.isEmpty
+          ? _noGround
+          // The showpiece (the final and the third-place match) is played at
+          // the tournament's marquee ground (the primary host's biggest
+          // stadium) rather than wherever the shuffle lands.
+          : isShowpieceRound(fixture.round)
+          ? venues.first
+          // The rest of a finals moves around the host's grounds.
+          : venues[_mix(fixture.id ^ seed) % venues.length];
+    } else {
+      // A home game: the national ground for a big match (and always the
+      // one up in the mountains a few nations choose: Quito, Bogotá), else
+      // a rotation over the biggest few (see [HomeGround]).
+      final national =
+          home?.venue ??
+          (venues.isEmpty ? _noGround : _nationalGround(owner, venues));
+      venue =
+          homeGroundFor(
+            candidates: [for (final g in estate) g.venue],
+            national: national,
+            fixture: fixture,
+            seed: seed,
+            awayRanking: awayRanking,
+            override: homeGroundOverride,
+          ) ??
+          national;
+      for (final g in estate) {
+        if (g.venue == venue) {
+          quality = g.fillBonus;
+          break;
+        }
+      }
+    }
 
     final fill = _fill(
       round: fixture.round,
       homeStrength: homeStrength,
       awayStrength: awayStrength,
       wobble: (_mix(fixture.id * 31 ^ seed) % 61) / 1000 - 0.03, // ±3%
-      quality: home?.fillBonus ?? 0,
+      quality: quality,
       mood: neutral ? 0 : moodFill,
     );
     // A thousand at the least, unless the ground is smaller than that (a
@@ -144,7 +182,14 @@ abstract final class Attendance {
     );
   }
 
-  /// The ground a nation plays its home games at: the first of [venues] in
+  /// Where a match with no ground at all is shown to be.
+  static const Venue _noGround = (
+    city: '—',
+    stadium: 'National Stadium',
+    capacity: 42000,
+  );
+
+  /// The ground a nation plays its big home games at: the first of [venues] in
   /// its national team's home city, or the biggest when none is.
   static Venue _nationalGround(int nationId, List<Venue> venues) {
     final city = MatchClimate.homeCityOf(nationId);
