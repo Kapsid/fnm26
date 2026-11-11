@@ -357,6 +357,26 @@ class ActiveWorld {
     return PackReporter(name: name ?? '', outlet: outlet ?? '');
   }
 
+  /// The reporter this world added with id [id] (format 6), his name and
+  /// outlet each in [language], else his own; null when it added none.
+  PackAddedReporter? addedReporter(int id) {
+    final r = pack?.addedReporters.where((r) => r.id == id).firstOrNull;
+    if (r == null) return null;
+    final name = _inLanguage(PackPaths.addedReporter(id));
+    final outlet = _inLanguage(PackPaths.addedReporterOutlet(id));
+    if (name == null && outlet == null) return r;
+    return PackAddedReporter(
+      id: id,
+      name: name ?? r.name,
+      outlet: outlet ?? r.outlet,
+    );
+  }
+
+  /// This world's [language] name for the stadium it added with id [id];
+  /// see [addedSponsorName].
+  String? addedStadiumName(int id, {required String? world}) =>
+      _ownLocalized(PackPaths.addedStadium(id), world);
+
   /// The world's name for the Y account [original].
   String? yAccount(String original) =>
       _named(PackPaths.yAccount(original), pack?.yAccounts[original]);

@@ -169,7 +169,9 @@ void main() {
       ..remove('clubStrengths')
       ..remove('managers')
       ..remove('sponsorIndustries')
-      ..remove('yHandles');
+      ..remove('yHandles')
+      ..remove('addedReporters')
+      ..remove('addedStadiums');
     final migrated = WorldPack.migrate(v2);
     expect(migrated['formatVersion'], kPackFormatVersion);
     expect(migrated['managers'], <String, Object?>{});
@@ -191,7 +193,9 @@ void main() {
       ..['formatVersion'] = 3
       ..remove('managers')
       ..remove('sponsorIndustries')
-      ..remove('yHandles');
+      ..remove('yHandles')
+      ..remove('addedReporters')
+      ..remove('addedStadiums');
     final migrated = WorldPack.migrate(v3);
     expect(migrated['formatVersion'], kPackFormatVersion);
     final p = WorldPack.fromJson(migrated);
@@ -260,16 +264,16 @@ void main() {
     }
   });
 
-  test('migrate refuses format 6', () {
+  test('migrate refuses format 7', () {
     final json = _pack().toJson();
-    expect(kPackFormatVersion, 5);
+    expect(kPackFormatVersion, 6);
     expect(
-      () => WorldPack.migrate({...json, 'formatVersion': 6}),
+      () => WorldPack.migrate({...json, 'formatVersion': 7}),
       throwsFormatException,
     );
   });
 
-  test('migrate is identity at v5 and rejects newer or missing versions', () {
+  test('migrate is identity at v6 and rejects newer or missing versions', () {
     final json = _pack().toJson();
     expect(WorldPack.migrate(json), json);
     expect(
@@ -304,7 +308,9 @@ void main() {
           }
           ..remove('managers')
           ..remove('sponsorIndustries')
-          ..remove('yHandles');
+          ..remove('yHandles')
+          ..remove('addedReporters')
+          ..remove('addedStadiums');
     final p = WorldPack.fromJson(WorldPack.migrate(json));
     expect(p.clubs, {'Old FC': 'New FC', 'Limburg Blue-White': 'Genk Mine'});
     expect(p.clubStrengths, {'Toluca Volcanoes': 4});
@@ -482,7 +488,9 @@ void main() {
         ..remove('clubStrengths')
         ..remove('managers')
         ..remove('sponsorIndustries')
-        ..remove('yHandles');
+        ..remove('yHandles')
+        ..remove('addedReporters')
+        ..remove('addedStadiums');
       return json;
     }
 
@@ -587,6 +595,6 @@ void main() {
       expect(PackPaths.parse(bad), isNull, reason: bad);
     }
     expect(PackPaths.roots, isNot(contains('nations')));
-    expect(PackPaths.roots, hasLength(9));
+    expect(PackPaths.roots, hasLength(11));
   });
 }

@@ -105,6 +105,20 @@ WorldPack _mask(WorldPack p) {
           handle: y.handle == null ? null : m(y.handle!),
         ),
     ],
+    addedReporters: [
+      for (final r in p.addedReporters)
+        PackAddedReporter(id: r.id, name: m(r.name), outlet: m(r.outlet)),
+    ],
+    addedStadiums: [
+      for (final g in p.addedStadiums)
+        PackStadium(
+          id: g.id,
+          nationId: g.nationId,
+          name: m(g.name),
+          city: m(g.city),
+          capacity: g.capacity,
+        ),
+    ],
     localized: {
       for (final e in p.localized.entries) e.key: values(e.value),
     },
