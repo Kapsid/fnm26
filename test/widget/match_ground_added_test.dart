@@ -4,6 +4,8 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
+import 'package:fnm/features/federation/host_bid_providers.dart'
+    show nationStadiumsFor;
 import 'package:fnm/features/federation/national_stadium_providers.dart';
 import 'package:fnm/features/match/match_ground.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
@@ -104,6 +106,14 @@ void main() {
         ).future,
       );
       expect(estate.map((s) => s.name), contains('Home Park Nova'));
+      // A finals, or a bid for one, never counts it.
+      final bid = await c.read(
+        FutureProvider(
+          (ref) => nationStadiumsFor(ref, career.id, career.nationId),
+        ).future,
+      );
+      expect(bid.map((v) => v.stadium), isNot(contains('Home Park Nova')));
+      expect(bid, hasLength(estate.length - 1));
     });
   });
 }

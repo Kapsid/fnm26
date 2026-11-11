@@ -51,6 +51,10 @@ class NationalStadium {
   /// For a built stadium, the cycle it opens in; null for a seed ground.
   final int? opensCycle;
 
+  /// Whether a career's custom world added it (its site is
+  /// `<city>#+<id>`, see [NationalStadiums.forNation]).
+  bool get added => site.contains('#+');
+
   /// Whether the ground can be played in (and counted) in [cycle].
   bool openIn(int cycle) => opensCycle == null || cycle >= opensCycle!;
 

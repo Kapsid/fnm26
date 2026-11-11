@@ -57,7 +57,9 @@ Future<List<Venue>> nationStadiumsFor(
     nationId,
     atCycle: atCycle,
   ))
-    s.venue,
+    // A ground a custom world added never stages a finals, so it is no
+    // part of a bid.
+    if (!s.added) s.venue,
 ];
 
 /// [nationStadiumsFor] as a provider, for screens.

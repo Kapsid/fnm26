@@ -117,8 +117,13 @@ Future<Map<int, List<Venue>>> hostEstatesFor(
     career.nationId,
     atCycle: career.cyclePointer,
   );
+  // A finals is never staged at a ground a custom world added, as an AI
+  // host's never is (see `Attendance.forFixture`).
   return {
-    career.nationId: [for (final g in grounds) g.venue],
+    career.nationId: [
+      for (final g in grounds)
+        if (!g.added) g.venue,
+    ],
   };
 }
 

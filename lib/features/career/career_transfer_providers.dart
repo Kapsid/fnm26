@@ -24,13 +24,15 @@ import 'package:path_provider/path_provider.dart';
 /// The whole-database backup in Settings is the safety net; this is the
 /// sociable one. It MERGES: importing adds a save rather than replacing what
 /// is there, which is what makes it safe to accept a file from somebody else.
-/// The roots of what format 2 adds to a world, whose references a bundle's
-/// world must keep to (see `CareerTransferService._checkWorld`).
+/// The roots of what format 2 adds to a world (and format 6's stadiums,
+/// each bound to a nation), whose references a bundle's world must keep to
+/// (see `CareerTransferService._checkWorld`).
 const Set<String> _formatTwoRoots = {
   'pools',
   'addedClubs',
   'addedSponsors',
   'addedYAccounts',
+  'addedStadiums',
 };
 
 class CareerTransferService {
