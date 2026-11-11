@@ -16740,4 +16740,59 @@ class AppLocalizationsVi extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '\"$name\" không được phép';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Mưa to: sút và tạt bóng kém chính xác hơn, dễ trượt chân hơn';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Giông bão: sút và tạt bóng kém chính xác hơn, dễ trượt chân hơn';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Tuyết: lối chơi chậm hơn, chuyền bóng khó hơn một chút';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Mặt sân đóng băng: lối chơi chậm hơn, chuyền bóng khó hơn một chút';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Gió mạnh: bóng dài và tạt bóng khó lường, sút xa khó hơn';
+
+  @override
+  String get matchWeatherPlaysFog => 'Sương mù: sút xa khó hơn';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Nắng nóng mờ hơi: nóng hơn thường lệ, thể lực sẽ cạn sớm hơn';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Trận đấu bắt đầu dưới mưa to. Bóng sẽ trơn trượt trên mặt sân này.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Giao bóng trong giông bão. Mặt sân sẽ rất trơn.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Trận đấu bắt đầu trong tuyết. Đây sẽ là một trận đấu chậm và thận trọng.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Một đêm giá rét và mặt sân cứng. Chuyền bóng sẽ không dễ.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Giao bóng trong gió mạnh. Những đường bóng dài sẽ đi chệch hướng.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Giao bóng trong sương mù dày đặc. Sẽ chẳng dễ ghi bàn từ xa.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Giao bóng trong cái nóng mờ hơi. Hôm nay thể lực sẽ cạn sớm.';
 }

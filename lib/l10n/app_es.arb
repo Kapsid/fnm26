@@ -4219,5 +4219,19 @@
   "mgrChangesAppointed": "Nombrado",
   "mgrChangesVacant": "Vacante",
   "editorNameNotAllowed": "Este nombre no está permitido.",
-  "editorIssueNameNotAllowed": "\"{name}\" no está permitido"
+  "editorIssueNameNotAllowed": "\"{name}\" no está permitido",
+  "matchWeatherPlaysHeavyRain": "Lluvia intensa: tiros y centros menos fiables, más resbalones",
+  "matchWeatherPlaysStorm": "Tormenta: tiros y centros menos fiables, más resbalones",
+  "matchWeatherPlaysSnow": "Nieve: juego más lento, pases algo más difíciles",
+  "matchWeatherPlaysFrost": "Césped helado: juego más lento, pases algo más difíciles",
+  "matchWeatherPlaysGale": "Viento fuerte: balones largos y centros imprevisibles, tiros lejanos más difíciles",
+  "matchWeatherPlaysFog": "Niebla: tiros lejanos más difíciles",
+  "matchWeatherPlaysHaze": "Calima: más calor de lo habitual, las piernas fallarán antes",
+  "pitchComKickOffHeavyRain": "Arranca el partido bajo una lluvia intensa. El balón correrá sobre este césped.",
+  "pitchComKickOffStorm": "Saque inicial bajo una tormenta. Los apoyos serán traicioneros.",
+  "pitchComKickOffSnow": "Arranca el partido bajo la nieve. Será un juego lento y cauteloso.",
+  "pitchComKickOffFrost": "Una noche helada y un césped duro. Los pases no serán fáciles.",
+  "pitchComKickOffGale": "Saque inicial con viento fuerte. Los balones largos se irán desviados.",
+  "pitchComKickOffFog": "Saque inicial con una niebla espesa. Nadie marcará fácil desde lejos.",
+  "pitchComKickOffHaze": "Saque inicial con calima. Hoy las piernas se cansarán pronto."
 }

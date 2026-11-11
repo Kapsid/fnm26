@@ -127,7 +127,7 @@ void main() {
       citiesByNation: _cities,
       seed: 7,
     );
-    final c = conditionsAt(f, g);
+    final c = conditionsAt(f, g, nations: const {}, saveSeed: 7);
     expect(c.altitude, MatchClimate.altitudeOf(57, 'La Paz'));
     expect(c.awayDrain, greaterThan(1.9));
   });

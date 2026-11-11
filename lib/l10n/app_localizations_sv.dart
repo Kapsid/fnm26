@@ -16877,4 +16877,59 @@ class AppLocalizationsSv extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '”$name” är inte tillåtet';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Kraftigt regn: skott och inlägg mindre säkra, fler halkningar';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Åska: skott och inlägg mindre säkra, fler halkningar';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Snö: långsammare spel, passningar lite svårare';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Frusen plan: långsammare spel, passningar lite svårare';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Hård vind: långa bollar och inlägg oberäkneliga, distansskott svårare';
+
+  @override
+  String get matchWeatherPlaysFog => 'Dimma: distansskott svårare';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Värmedis: varmare än vanligt, benen tar slut tidigare';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Vi är igång i kraftigt regn. Bollen kommer att glida på den här planen.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Avspark i åskväder. Fotfästet blir förrädiskt.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Vi är igång i snön. Det blir en långsam, försiktig match.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'En frostig kväll och en hård plan. Passningsspelet blir inte lätt.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Avspark i hård vind. Långa bollar kommer att driva iväg.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Avspark i tät dimma. Ingen kommer att göra mål från distans i första taget.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Avspark i värmedisen. Benen tröttnar tidigt i dag.';
 }

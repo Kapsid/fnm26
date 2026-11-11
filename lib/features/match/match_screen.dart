@@ -41,6 +41,7 @@ import 'package:fnm/features/match/ground_card.dart';
 import 'package:fnm/features/match/penalty_order_sheet.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/pitch/pitch_clock.dart';
+import 'package:fnm/features/match/pitch/pitch_commentary.dart';
 import 'package:fnm/features/match/pitch/pitch_mode_controller.dart';
 import 'package:fnm/features/match/pitch/pitch_match_view.dart';
 import 'package:fnm/features/match/pitch/pitch_playback.dart';
@@ -2432,6 +2433,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                 feed: _onPitch && picture
                     ? PitchCommentaryFeed(
                         clock: clock,
+                        kickOffLine: pitchKickOffLine(
+                          l,
+                          conditionsShown.weather,
+                        ),
                         countAt: pb.lineCountAt,
                         linesAt: (t) =>
                             pb.linesUpTo(l, t, _pc.names, _seed(preview)),
@@ -2500,6 +2505,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                             if (picture)
                               PitchCommentaryLine(
                                 clock: clock,
+                                kickOffLine: pitchKickOffLine(
+                                  l,
+                                  conditionsShown.weather,
+                                ),
                                 countAt: pb.lineCountAt,
                                 lineAt: (t) =>
                                     pb.lineAt(l, t, _pc.names, _seed(preview)),

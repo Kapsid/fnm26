@@ -16803,4 +16803,59 @@ class AppLocalizationsTr extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '\"$name\" adına izin verilmiyor';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Sağanak: şutlar ve ortalar daha az isabetli, daha çok kayma';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Fırtına: şutlar ve ortalar daha az isabetli, daha çok kayma';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Kar: daha yavaş oyun, paslar biraz daha zor';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Donmuş zemin: daha yavaş oyun, paslar biraz daha zor';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Sert rüzgar: uzun toplar ve ortalar öngörülemez, uzaktan şutlar daha zor';
+
+  @override
+  String get matchWeatherPlaysFog => 'Sis: uzaktan şutlar daha zor';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Sıcak pus: her zamankinden sıcak, bacaklar daha erken yorulacak';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Maç sağanak altında başladı. Top bu zeminde kayacak.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Maç fırtına altında başladı. Zemin çok kaygan olacak.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Maç kar altında başladı. Yavaş ve temkinli bir oyun olacak.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Ayaz bir gece ve sert bir zemin. Pas yapmak kolay olmayacak.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Maç sert rüzgarda başladı. Uzun toplar yolunu şaşıracak.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Maç yoğun siste başladı. Kimse uzaktan kolay gol atamayacak.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Maç sıcak pus içinde başladı. Bacaklar bugün erken yorulacak.';
 }

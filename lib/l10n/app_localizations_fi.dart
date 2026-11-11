@@ -16968,4 +16968,59 @@ class AppLocalizationsFi extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '”$name” ei ole sallittu';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Rankkasade: laukaukset ja keskitykset epävarmempia, enemmän liukastumisia';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Ukonilma: laukaukset ja keskitykset epävarmempia, enemmän liukastumisia';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Lumi: hitaampaa peliä, syötöt hieman vaikeampia';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Jäinen kenttä: hitaampaa peliä, syötöt hieman vaikeampia';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Kova tuuli: pitkät pallot ja keskitykset arvaamattomia, kaukolaukaukset vaikeampia';
+
+  @override
+  String get matchWeatherPlaysFog => 'Sumu: kaukolaukaukset vaikeampia';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Helleusva: tavallista kuumempaa, jalat väsyvät aiemmin';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Peli käynnistyy rankkasateessa. Pallo luistaa tällä nurmella.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Aloituspotku ukonilmassa. Jalansija on petollinen.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Peli käynnistyy lumisateessa. Tästä tulee hidas ja varovainen ottelu.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Pakkasilta ja kova kenttä. Syöttäminen ei ole helppoa.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Aloituspotku kovassa tuulessa. Pitkät pallot karkaavat.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Aloituspotku sakeassa sumussa. Kaukaa ei maaleja helpolla synny.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Aloituspotku helleusvassa. Jalat väsyvät tänään aikaisin.';
 }

@@ -16892,4 +16892,59 @@ class AppLocalizationsDa extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '»$name« er ikke tilladt';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Kraftig regn: skud og indlæg mindre præcise, flere glid';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Tordenvejr: skud og indlæg mindre præcise, flere glid';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Sne: langsommere spil, afleveringer lidt sværere';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Frossen bane: langsommere spil, afleveringer lidt sværere';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Kraftig vind: lange bolde og indlæg uberegnelige, langskud sværere';
+
+  @override
+  String get matchWeatherPlaysFog => 'Tåge: langskud sværere';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Varmedis: varmere end normalt, benene giver op tidligere';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Vi er i gang i kraftig regn. Bolden kommer til at glide på denne bane.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Kickoff i tordenvejr. Fodfæstet bliver lumsk.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Vi er i gang i sneen. Det bliver en langsom og forsigtig kamp.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'En frostklar aften og en hård bane. Afleveringerne bliver ikke lette.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Kickoff i kraftig vind. Lange bolde kommer til at drive væk.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Kickoff i tæt tåge. Ingen kommer til at score let på langskud.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Kickoff i varmedisen. Benene bliver tidligt trætte i dag.';
 }

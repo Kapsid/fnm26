@@ -277,10 +277,19 @@ class MatchPreview {
   /// The altitude and heat of [ground] in the fixture's month, and what they
   /// cost each side's legs. Derived, never stored, so every (re-)sim and the
   /// preview line read the same thing.
-  MatchConditions get conditions => conditionsFor(fixture, ground);
+  MatchConditions get conditions => conditionsFor(
+    fixture,
+    ground,
+    nations: nations,
+    saveSeed: saveSeed,
+  );
 
-  static MatchConditions conditionsFor(Fixture fixture, MatchGround ground) =>
-      conditionsAt(fixture, ground);
+  static MatchConditions conditionsFor(
+    Fixture fixture,
+    MatchGround ground, {
+    required Map<int, Nation> nations,
+    required int saveSeed,
+  }) => conditionsAt(fixture, ground, nations: nations, saveSeed: saveSeed);
 }
 
 // autoDispose so re-opening the match screen always recomputes the *current*
@@ -606,7 +615,12 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
       bigMatch: bigMatch,
       atmosphere: Attendance.atmosphere(ground),
       extraTimeIfLevel: Rounds.isKnockout(fixture.round),
-      conditions: MatchPreview.conditionsFor(fixture, ground),
+      conditions: MatchPreview.conditionsFor(
+        fixture,
+        ground,
+        nations: {for (final n in allNations) n.id: n},
+        saveSeed: career.rngSeed,
+      ),
     ),
     aiSubs: opponentSubs,
     aiTeam: oppTeam,

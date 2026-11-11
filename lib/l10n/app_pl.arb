@@ -4219,5 +4219,19 @@
   "mgrChangesAppointed": "Mianowany",
   "mgrChangesVacant": "Wakat",
   "editorNameNotAllowed": "Ta nazwa jest niedozwolona.",
-  "editorIssueNameNotAllowed": "Nazwa „{name}” jest niedozwolona"
+  "editorIssueNameNotAllowed": "Nazwa „{name}” jest niedozwolona",
+  "matchWeatherPlaysHeavyRain": "Ulewa: strzały i dośrodkowania mniej pewne, więcej poślizgnięć",
+  "matchWeatherPlaysStorm": "Burza: strzały i dośrodkowania mniej pewne, więcej poślizgnięć",
+  "matchWeatherPlaysSnow": "Śnieg: wolniejsza gra, podania nieco trudniejsze",
+  "matchWeatherPlaysFrost": "Zmarznięta murawa: wolniejsza gra, podania nieco trudniejsze",
+  "matchWeatherPlaysGale": "Silny wiatr: długie piłki i dośrodkowania nieprzewidywalne, strzały z dystansu trudniejsze",
+  "matchWeatherPlaysFog": "Mgła: strzały z dystansu trudniejsze",
+  "matchWeatherPlaysHaze": "Upalna mgiełka: goręcej niż zwykle, siły skończą się wcześniej",
+  "pitchComKickOffHeavyRain": "Grają w ulewie. Piłka będzie ślizgać się po murawie.",
+  "pitchComKickOffStorm": "Początek meczu w czasie burzy. Murawa będzie zdradliwa.",
+  "pitchComKickOffSnow": "Grają na śniegu. To będzie powolny, ostrożny mecz.",
+  "pitchComKickOffFrost": "Mroźny wieczór i twarda murawa. Podania nie będą łatwe.",
+  "pitchComKickOffGale": "Początek meczu przy silnym wietrze. Długie piłki będą zbaczać.",
+  "pitchComKickOffFog": "Początek meczu w gęstej mgle. Z dystansu nikt łatwo nie strzeli.",
+  "pitchComKickOffHaze": "Początek meczu w upalnej mgiełce. Siły dziś szybko się skończą."
 }

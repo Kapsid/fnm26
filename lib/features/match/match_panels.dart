@@ -2158,10 +2158,15 @@ class PitchCommentaryLine extends StatefulWidget {
     required this.clock,
     required this.countAt,
     required this.lineAt,
+    this.kickOffLine,
     super.key,
   });
 
   final PitchClock clock;
+
+  /// What is said before the first real moment: the weather the match is
+  /// played in ([pitchKickOffLine]), or null for the plain kick-off line.
+  final String? kickOffLine;
 
   /// How many lines are in by the clock's time (cheap: it runs every tick).
   final int Function(Duration t) countAt;
@@ -2223,7 +2228,10 @@ class _PitchCommentaryLineState extends State<PitchCommentaryLine> {
 
   @override
   Widget build(BuildContext context) {
-    final text = _line ?? AppLocalizations.of(context).matchFeedKickOff;
+    final text =
+        _line ??
+        widget.kickOffLine ??
+        AppLocalizations.of(context).matchFeedKickOff;
     return Container(
       width: double.infinity,
       height: kPitchCommentaryHeight,
@@ -2256,10 +2264,15 @@ class PitchCommentaryFeed extends StatefulWidget {
     required this.clock,
     required this.countAt,
     required this.linesAt,
+    this.kickOffLine,
     super.key,
   });
 
   final PitchClock clock;
+
+  /// The first line of the feed, said at kick-off: the weather the match is
+  /// played in ([pitchKickOffLine]), or null for none.
+  final String? kickOffLine;
 
   /// How many lines are in by the clock's time (cheap: it runs every tick).
   final int Function(Duration t) countAt;
@@ -2313,7 +2326,9 @@ class _PitchCommentaryFeedState extends State<PitchCommentaryFeed> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    if (_lines.isEmpty) {
+    final kickOff = widget.kickOffLine;
+    final lines = [?kickOff, ..._lines];
+    if (_lines.isEmpty && kickOff == null) {
       return Padding(
         padding: const EdgeInsets.all(AppSpacing.sm),
         child: Text(
@@ -2330,12 +2345,12 @@ class _PitchCommentaryFeedState extends State<PitchCommentaryFeed> {
         horizontal: AppSpacing.sm,
         vertical: AppSpacing.xs,
       ),
-      itemCount: _lines.length,
+      itemCount: lines.length,
       separatorBuilder: (_, _) => const Divider(height: 1),
       itemBuilder: (context, i) => Padding(
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
         child: Text(
-          _lines[_lines.length - 1 - i],
+          lines[lines.length - 1 - i],
           style: AppTypography.bodyMedium.copyWith(
             color: i == 0 ? AppColors.onSurface : AppColors.onSurfaceVariant,
           ),

@@ -16904,4 +16904,59 @@ class AppLocalizationsFil extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return 'Hindi pinapayagan ang \"$name\"';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Malakas na ulan: mas di-tiyak ang tira at cross, mas maraming dulas';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Bagyong may kidlat: mas di-tiyak ang tira at cross, mas maraming dulas';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Niyebe: mas mabagal ang laro, medyo mas mahirap ang pasa';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Nagyelong pitch: mas mabagal ang laro, medyo mas mahirap ang pasa';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Malakas na hangin: pabago-bago ang long ball at cross, mas mahirap ang tirang malayo';
+
+  @override
+  String get matchWeatherPlaysFog => 'Hamog: mas mahirap ang tirang malayo';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Init na may ulap: mas mainit kaysa karaniwan, mas maagang mapapagod';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Nagsimula na sa malakas na ulan. Dudulas ang bola sa pitch na ito.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Kick-off sa gitna ng bagyong may kidlat. Madulas ang tapakan.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Nagsimula na sa niyebe. Mabagal at maingat na laro ito.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Nagyeyelong gabi at matigas na pitch. Hindi magiging madali ang pasa.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Kick-off sa malakas na hangin. Liligaw ang mga long ball.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Kick-off sa makapal na hamog. Walang madaling makakaiskor mula sa malayo.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Kick-off sa init na may ulap. Maagang mapapagod ang mga binti ngayon.';
 }

@@ -157,8 +157,18 @@ class RatingMatchSimulator implements MatchSimulator {
     // passes one: his plan is the only one anybody set. Every background
     // fixture leaves it at 1.0, where multiplying by it changes nothing, so
     // the world's results do not move by a single goal.
-    final homeXg = (homeBase * edge / total * openness).clamp(0.10, 5.5);
-    final awayXg = (awayBase / edge / total * openness).clamp(0.10, 5.5);
+    // The weather ([MatchConditions.play]) lowers both sides' goals by what
+    // the played engine loses in it (`WeatherPlay.backgroundGoals`): exactly
+    // 1.0 under a clear sky, so such a fixture plays exactly as it did.
+    final weather = conditions.play.backgroundGoals;
+    final homeXg = (homeBase * edge / total * openness * weather).clamp(
+      0.10,
+      5.5,
+    );
+    final awayXg = (awayBase / edge / total * openness * weather).clamp(
+      0.10,
+      5.5,
+    );
     return _scoreline(homeXg, awayXg, rng);
   }
 

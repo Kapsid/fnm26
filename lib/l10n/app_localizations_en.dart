@@ -16919,4 +16919,59 @@ class AppLocalizationsEn extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '\"$name\" isn\'t allowed';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Heavy rain: shots and crosses less reliable, more slips';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Thunderstorm: shots and crosses less reliable, more slips';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Snow: a slower game, passing a little harder';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Frozen pitch: a slower game, passing a little harder';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Strong wind: long balls and crosses erratic, long shots harder';
+
+  @override
+  String get matchWeatherPlaysFog => 'Fog: shots from distance harder';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Heat haze: hotter than usual, legs will go sooner';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'We\'re under way in heavy rain. The ball will skid off this surface.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Kick-off in a thunderstorm. The footing will be treacherous.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'We\'re under way in the snow. This will be a slow, careful game.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'A frosty night and a hard pitch. Passing won\'t be easy.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Kick-off in a strong wind. Long balls will go astray.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Kick-off in thick fog. Nobody will be scoring from distance easily.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Kick-off in the heat haze. Legs will tire early today.';
 }

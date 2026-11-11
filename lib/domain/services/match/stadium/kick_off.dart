@@ -63,6 +63,32 @@ abstract final class KickOff {
     KickOffTime(17, 0),
   ];
 
+  /// The competition a fixture's [round] code belongs to, as far as its
+  /// kick-off slots (and the ground's dressing) care.
+  static CompetitionKind competitionOfRound(String? round) => switch (round) {
+    'FRIENDLY' => CompetitionKind.friendly,
+    'FFINAL' => CompetitionKind.finalissima,
+    'GROUP' ||
+    'R32' ||
+    'R16' ||
+    'QF' ||
+    'SF' ||
+    '3RD' ||
+    'FINAL' => CompetitionKind.worldCupFinals,
+    'CGROUP' ||
+    'CR16' ||
+    'CQF' ||
+    'CSF' ||
+    'C3RD' ||
+    'CFINAL' => CompetitionKind.continentalFinals,
+    _ => CompetitionKind.worldCupQualifying,
+  };
+
+  /// When [fixture] kicks off for the save [seed], its competition read off
+  /// its round ([competitionOfRound]).
+  static KickOffTime forFixture(Fixture fixture, int seed) =>
+      localTime(fixture, competitionOfRound(fixture.round), seed);
+
   static KickOffTime localTime(
     Fixture fixture,
     CompetitionKind competition,

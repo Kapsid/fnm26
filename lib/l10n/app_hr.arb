@@ -4219,5 +4219,19 @@
   "mgrChangesAppointed": "Imenovan",
   "mgrChangesVacant": "Upražnjeno",
   "editorNameNotAllowed": "Ovo ime nije dopušteno.",
-  "editorIssueNameNotAllowed": "„{name}“ nije dopušteno"
+  "editorIssueNameNotAllowed": "„{name}“ nije dopušteno",
+  "matchWeatherPlaysHeavyRain": "Jaka kiša: udarci i ubačaji manje precizni, više poskliznuća",
+  "matchWeatherPlaysStorm": "Grmljavinsko nevrijeme: udarci i ubačaji manje precizni, više poskliznuća",
+  "matchWeatherPlaysSnow": "Snijeg: sporija igra, dodavanja malo teža",
+  "matchWeatherPlaysFrost": "Smrznut teren: sporija igra, dodavanja malo teža",
+  "matchWeatherPlaysGale": "Jak vjetar: duge lopte i ubačaji nepredvidivi, udarci izdaleka teži",
+  "matchWeatherPlaysFog": "Magla: udarci izdaleka teži",
+  "matchWeatherPlaysHaze": "Vrela izmaglica: toplije nego inače, noge će ranije popustiti",
+  "pitchComKickOffHeavyRain": "Krenulo je po jakoj kiši. Lopta će kliziti po ovom terenu.",
+  "pitchComKickOffStorm": "Početni udarac u grmljavinskom nevremenu. Teren će biti varljiv.",
+  "pitchComKickOffSnow": "Krenulo je po snijegu. Bit će to spora i oprezna utakmica.",
+  "pitchComKickOffFrost": "Ledena noć i tvrd teren. Dodavanja neće biti laka.",
+  "pitchComKickOffGale": "Početni udarac uz jak vjetar. Duge lopte će bježati.",
+  "pitchComKickOffFog": "Početni udarac u gustoj magli. Izdaleka nitko neće lako zabiti.",
+  "pitchComKickOffHaze": "Početni udarac u vreloj izmaglici. Noge će se danas rano umoriti."
 }

@@ -4219,5 +4219,19 @@
   "mgrChangesAppointed": "Nomeado",
   "mgrChangesVacant": "Vago",
   "editorNameNotAllowed": "Este nome não é permitido.",
-  "editorIssueNameNotAllowed": "\"{name}\" não é permitido"
+  "editorIssueNameNotAllowed": "\"{name}\" não é permitido",
+  "matchWeatherPlaysHeavyRain": "Chuva forte: remates e cruzamentos menos fiáveis, mais escorregões",
+  "matchWeatherPlaysStorm": "Trovoada: remates e cruzamentos menos fiáveis, mais escorregões",
+  "matchWeatherPlaysSnow": "Neve: jogo mais lento, passes um pouco mais difíceis",
+  "matchWeatherPlaysFrost": "Relvado gelado: jogo mais lento, passes um pouco mais difíceis",
+  "matchWeatherPlaysGale": "Vento forte: bolas longas e cruzamentos imprevisíveis, remates de longe mais difíceis",
+  "matchWeatherPlaysFog": "Nevoeiro: remates de longe mais difíceis",
+  "matchWeatherPlaysHaze": "Neblina de calor: mais quente do que o habitual, as pernas vão ceder mais cedo",
+  "pitchComKickOffHeavyRain": "Começa o jogo debaixo de chuva forte. A bola vai deslizar neste relvado.",
+  "pitchComKickOffStorm": "Pontapé de saída debaixo de trovoada. Os apoios vão ser traiçoeiros.",
+  "pitchComKickOffSnow": "Começa o jogo debaixo de neve. Vai ser uma partida lenta e cautelosa.",
+  "pitchComKickOffFrost": "Uma noite gélida e um relvado duro. Os passes não vão ser fáceis.",
+  "pitchComKickOffGale": "Pontapé de saída com vento forte. As bolas longas vão sair desviadas.",
+  "pitchComKickOffFog": "Pontapé de saída com nevoeiro cerrado. Ninguém vai marcar facilmente de longe.",
+  "pitchComKickOffHaze": "Pontapé de saída na neblina de calor. Hoje as pernas vão cansar cedo."
 }

@@ -4219,5 +4219,19 @@
   "mgrChangesAppointed": "नियुक्त",
   "mgrChangesVacant": "खाली",
   "editorNameNotAllowed": "यह नाम अनुमत नहीं है।",
-  "editorIssueNameNotAllowed": "\"{name}\" अनुमत नहीं है"
+  "editorIssueNameNotAllowed": "\"{name}\" अनुमत नहीं है",
+  "matchWeatherPlaysHeavyRain": "तेज़ बारिश: शॉट और क्रॉस कम भरोसेमंद, ज़्यादा फिसलन",
+  "matchWeatherPlaysStorm": "आंधी-तूफ़ान: शॉट और क्रॉस कम भरोसेमंद, ज़्यादा फिसलन",
+  "matchWeatherPlaysSnow": "बर्फ़: धीमा खेल, पास देना थोड़ा मुश्किल",
+  "matchWeatherPlaysFrost": "जमी हुई पिच: धीमा खेल, पास देना थोड़ा मुश्किल",
+  "matchWeatherPlaysGale": "तेज़ हवा: लंबी गेंदें और क्रॉस बेकाबू, दूर से शॉट मुश्किल",
+  "matchWeatherPlaysFog": "कोहरा: दूर से शॉट मुश्किल",
+  "matchWeatherPlaysHaze": "गर्मी की धुंध: सामान्य से ज़्यादा गर्मी, पैर जल्दी थकेंगे",
+  "pitchComKickOffHeavyRain": "तेज़ बारिश में मैच शुरू हो गया है। इस पिच पर गेंद फिसलेगी।",
+  "pitchComKickOffStorm": "आंधी-तूफ़ान में किक-ऑफ़। पैर जमाना मुश्किल होगा।",
+  "pitchComKickOffSnow": "बर्फ़ में मैच शुरू हो गया है। यह धीमा और सावधानी भरा खेल होगा।",
+  "pitchComKickOffFrost": "पाले वाली रात और सख़्त पिच। पास देना आसान नहीं होगा।",
+  "pitchComKickOffGale": "तेज़ हवा में किक-ऑफ़। लंबी गेंदें भटकेंगी।",
+  "pitchComKickOffFog": "घने कोहरे में किक-ऑफ़। दूर से गोल करना किसी के लिए आसान नहीं होगा।",
+  "pitchComKickOffHaze": "गर्मी की धुंध में किक-ऑफ़। आज पैर जल्दी थकेंगे।"
 }

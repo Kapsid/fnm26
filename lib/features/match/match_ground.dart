@@ -1,12 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/venues.dart';
 import 'package:fnm/domain/services/federation/national_stadiums.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/match_conditions.dart';
+import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/domain/services/match/venue.dart';
 import 'package:fnm/features/federation/national_stadium_providers.dart';
 import 'package:fnm/features/tournaments/city_providers.dart';
@@ -176,16 +178,44 @@ Future<ManagerHomeEstate?> managerHomeEstate(Ref ref, Career career) async {
   );
 }
 
-/// The conditions of [fixture] at [ground]: its altitude and the heat of
-/// its month, and what they cost each side.
-MatchConditions conditionsAt(Fixture fixture, MatchGround ground) =>
-    MatchConditions.at(
-      groundNationId: ground.groundNationId,
-      city: ground.city,
-      month: fixture.date.month,
-      homeNationId: fixture.homeNationId,
-      awayNationId: fixture.awayNationId,
-    );
+/// The conditions of [fixture] at [ground]: its altitude, the heat of its
+/// month and the weather on the day, and what they cost each side.
+///
+/// The weather is [weatherAt]'s, the one the Pitch view draws: the shown
+/// match, a skipped one and the background world all come through here.
+MatchConditions conditionsAt(
+  Fixture fixture,
+  MatchGround ground, {
+  required Map<int, Nation> nations,
+  required int saveSeed,
+}) => MatchConditions.at(
+  groundNationId: ground.groundNationId,
+  city: ground.city,
+  month: fixture.date.month,
+  homeNationId: fixture.homeNationId,
+  awayNationId: fixture.awayNationId,
+  weather: weatherAt(fixture, ground, nations: nations, saveSeed: saveSeed),
+);
+
+/// The weather [fixture] is played in at [ground], for the save [saveSeed]:
+/// the ground's country's climate, the date and the kick-off
+/// ([MatchWeather.forFixture]). A ground whose nation is not in [nations]
+/// reads as the home side's country, as the Pitch view always drew it.
+WeatherKind weatherAt(
+  Fixture fixture,
+  MatchGround ground, {
+  required Map<int, Nation> nations,
+  required int saveSeed,
+}) {
+  final groundNation =
+      nations[ground.groundNationId] ?? nations[fixture.homeNationId];
+  return MatchWeather.forFixture(
+    fixture: fixture,
+    code: groundNation?.code ?? '',
+    confederation: groundNation?.confederation ?? Confederation.europe,
+    saveSeed: saveSeed,
+  );
+}
 
 /// Of [grounds] (biggest first): the first in the national team's home city
 /// when the estate is untouched, or whenever that city is at altitude (an

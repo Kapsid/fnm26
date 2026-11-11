@@ -4219,5 +4219,19 @@
   "mgrChangesAppointed": "Aangesteld",
   "mgrChangesVacant": "Onbezet",
   "editorNameNotAllowed": "Deze naam is niet toegestaan.",
-  "editorIssueNameNotAllowed": "\"{name}\" is niet toegestaan"
+  "editorIssueNameNotAllowed": "\"{name}\" is niet toegestaan",
+  "matchWeatherPlaysHeavyRain": "Zware regen: schoten en voorzetten minder betrouwbaar, meer uitglijders",
+  "matchWeatherPlaysStorm": "Onweer: schoten en voorzetten minder betrouwbaar, meer uitglijders",
+  "matchWeatherPlaysSnow": "Sneeuw: trager spel, passen iets lastiger",
+  "matchWeatherPlaysFrost": "Bevroren veld: trager spel, passen iets lastiger",
+  "matchWeatherPlaysGale": "Harde wind: lange ballen en voorzetten grillig, afstandsschoten lastiger",
+  "matchWeatherPlaysFog": "Mist: afstandsschoten lastiger",
+  "matchWeatherPlaysHaze": "Hittewaas: warmer dan normaal, de benen raken eerder op",
+  "pitchComKickOffHeavyRain": "We zijn begonnen in de stromende regen. De bal gaat over dit veld schieten.",
+  "pitchComKickOffStorm": "Aftrap tijdens onweer. Het wordt glibberig op het veld.",
+  "pitchComKickOffSnow": "We zijn begonnen in de sneeuw. Dit wordt een traag, voorzichtig duel.",
+  "pitchComKickOffFrost": "Een vriesnacht en een hard veld. Passen wordt niet makkelijk.",
+  "pitchComKickOffGale": "Aftrap bij harde wind. Lange ballen gaan afdwalen.",
+  "pitchComKickOffFog": "Aftrap in dichte mist. Van afstand scoort niemand hier makkelijk.",
+  "pitchComKickOffHaze": "Aftrap in de hittewaas. De benen raken vandaag vroeg vermoeid."
 }

@@ -16839,4 +16839,59 @@ class AppLocalizationsHu extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '„$name” nem engedélyezett';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Felhőszakadás: pontatlanabb lövések és beadások, több megcsúszás';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Zivatar: pontatlanabb lövések és beadások, több megcsúszás';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Hó: lassabb játék, kicsit nehezebb passzok';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Fagyos pálya: lassabb játék, kicsit nehezebb passzok';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Erős szél: kiszámíthatatlan hosszú labdák és beadások, nehezebb távoli lövések';
+
+  @override
+  String get matchWeatherPlaysFog => 'Köd: nehezebb távoli lövések';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Hőségpára: melegebb a szokásosnál, hamarabb elfogy az erő';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Felhőszakadásban kezdődik a meccs. A labda csúszni fog ezen a gyepen.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Kezdőrúgás zivatarban. Alattomos lesz a talaj.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Hóban kezdődik a meccs. Lassú, óvatos játék lesz.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Fagyos este és kemény pálya. Nem lesz könnyű passzolni.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Kezdőrúgás erős szélben. A hosszú labdák elszállnak majd.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Kezdőrúgás sűrű ködben. Távolról senki sem fog könnyen gólt lőni.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Kezdőrúgás a hőségpárában. Ma korán elfogy majd az erő.';
 }

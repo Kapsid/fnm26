@@ -16974,4 +16974,59 @@ class AppLocalizationsNl extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '\"$name\" is niet toegestaan';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Zware regen: schoten en voorzetten minder betrouwbaar, meer uitglijders';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Onweer: schoten en voorzetten minder betrouwbaar, meer uitglijders';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Sneeuw: trager spel, passen iets lastiger';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Bevroren veld: trager spel, passen iets lastiger';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Harde wind: lange ballen en voorzetten grillig, afstandsschoten lastiger';
+
+  @override
+  String get matchWeatherPlaysFog => 'Mist: afstandsschoten lastiger';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Hittewaas: warmer dan normaal, de benen raken eerder op';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'We zijn begonnen in de stromende regen. De bal gaat over dit veld schieten.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Aftrap tijdens onweer. Het wordt glibberig op het veld.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'We zijn begonnen in de sneeuw. Dit wordt een traag, voorzichtig duel.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Een vriesnacht en een hard veld. Passen wordt niet makkelijk.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Aftrap bij harde wind. Lange ballen gaan afdwalen.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Aftrap in dichte mist. Van afstand scoort niemand hier makkelijk.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Aftrap in de hittewaas. De benen raken vandaag vroeg vermoeid.';
 }

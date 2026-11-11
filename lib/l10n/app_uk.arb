@@ -4219,5 +4219,19 @@
   "mgrChangesAppointed": "Призначений",
   "mgrChangesVacant": "Вакантно",
   "editorNameNotAllowed": "Ця назва не дозволена.",
-  "editorIssueNameNotAllowed": "«{name}» не дозволено"
+  "editorIssueNameNotAllowed": "«{name}» не дозволено",
+  "matchWeatherPlaysHeavyRain": "Злива: удари й навіси менш точні, більше підковзувань",
+  "matchWeatherPlaysStorm": "Гроза: удари й навіси менш точні, більше підковзувань",
+  "matchWeatherPlaysSnow": "Сніг: повільніша гра, передачі трохи складніші",
+  "matchWeatherPlaysFrost": "Замерзле поле: повільніша гра, передачі трохи складніші",
+  "matchWeatherPlaysGale": "Сильний вітер: довгі передачі й навіси непередбачувані, далекі удари складніші",
+  "matchWeatherPlaysFog": "Туман: далекі удари складніші",
+  "matchWeatherPlaysHaze": "Спекотне марево: спекотніше, ніж зазвичай, ноги підведуть раніше",
+  "pitchComKickOffHeavyRain": "Гра почалася під зливою. М’яч ковзатиме цим газоном.",
+  "pitchComKickOffStorm": "Стартовий свисток у грозу. Газон буде підступним.",
+  "pitchComKickOffSnow": "Гра почалася на снігу. Це буде повільний, обережний матч.",
+  "pitchComKickOffFrost": "Морозний вечір і тверде поле. Передачі даватимуться нелегко.",
+  "pitchComKickOffGale": "Стартовий свисток при сильному вітрі. Довгі передачі зноситиме.",
+  "pitchComKickOffFog": "Стартовий свисток у густому тумані. Здалеку легко ніхто не заб’є.",
+  "pitchComKickOffHaze": "Стартовий свисток у спекотному мареві. Сьогодні ноги втомляться рано."
 }

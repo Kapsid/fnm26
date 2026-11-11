@@ -4219,5 +4219,19 @@
   "mgrChangesAppointed": "Atandı",
   "mgrChangesVacant": "Boş",
   "editorNameNotAllowed": "Bu ada izin verilmiyor.",
-  "editorIssueNameNotAllowed": "\"{name}\" adına izin verilmiyor"
+  "editorIssueNameNotAllowed": "\"{name}\" adına izin verilmiyor",
+  "matchWeatherPlaysHeavyRain": "Sağanak: şutlar ve ortalar daha az isabetli, daha çok kayma",
+  "matchWeatherPlaysStorm": "Fırtına: şutlar ve ortalar daha az isabetli, daha çok kayma",
+  "matchWeatherPlaysSnow": "Kar: daha yavaş oyun, paslar biraz daha zor",
+  "matchWeatherPlaysFrost": "Donmuş zemin: daha yavaş oyun, paslar biraz daha zor",
+  "matchWeatherPlaysGale": "Sert rüzgar: uzun toplar ve ortalar öngörülemez, uzaktan şutlar daha zor",
+  "matchWeatherPlaysFog": "Sis: uzaktan şutlar daha zor",
+  "matchWeatherPlaysHaze": "Sıcak pus: her zamankinden sıcak, bacaklar daha erken yorulacak",
+  "pitchComKickOffHeavyRain": "Maç sağanak altında başladı. Top bu zeminde kayacak.",
+  "pitchComKickOffStorm": "Maç fırtına altında başladı. Zemin çok kaygan olacak.",
+  "pitchComKickOffSnow": "Maç kar altında başladı. Yavaş ve temkinli bir oyun olacak.",
+  "pitchComKickOffFrost": "Ayaz bir gece ve sert bir zemin. Pas yapmak kolay olmayacak.",
+  "pitchComKickOffGale": "Maç sert rüzgarda başladı. Uzun toplar yolunu şaşıracak.",
+  "pitchComKickOffFog": "Maç yoğun siste başladı. Kimse uzaktan kolay gol atamayacak.",
+  "pitchComKickOffHaze": "Maç sıcak pus içinde başladı. Bacaklar bugün erken yorulacak."
 }

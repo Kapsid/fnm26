@@ -1156,7 +1156,7 @@ class SeasonService {
       nations: nations.values.toList(),
       memo: memo,
     );
-    return conditionsAt(f, ground);
+    return conditionsAt(f, ground, nations: nations, saveSeed: career.rngSeed);
   }
 
   /// Pedigree edges per (career, finals year): derived from the honour rows

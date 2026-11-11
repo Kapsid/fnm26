@@ -17227,4 +17227,59 @@ class AppLocalizationsHr extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '„$name“ nije dopušteno';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Jaka kiša: udarci i ubačaji manje precizni, više poskliznuća';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Grmljavinsko nevrijeme: udarci i ubačaji manje precizni, više poskliznuća';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Snijeg: sporija igra, dodavanja malo teža';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Smrznut teren: sporija igra, dodavanja malo teža';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Jak vjetar: duge lopte i ubačaji nepredvidivi, udarci izdaleka teži';
+
+  @override
+  String get matchWeatherPlaysFog => 'Magla: udarci izdaleka teži';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Vrela izmaglica: toplije nego inače, noge će ranije popustiti';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Krenulo je po jakoj kiši. Lopta će kliziti po ovom terenu.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Početni udarac u grmljavinskom nevremenu. Teren će biti varljiv.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Krenulo je po snijegu. Bit će to spora i oprezna utakmica.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Ledena noć i tvrd teren. Dodavanja neće biti laka.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Početni udarac uz jak vjetar. Duge lopte će bježati.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Početni udarac u gustoj magli. Izdaleka nitko neće lako zabiti.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Početni udarac u vreloj izmaglici. Noge će se danas rano umoriti.';
 }

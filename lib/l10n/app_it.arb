@@ -4219,5 +4219,19 @@
   "mgrChangesAppointed": "Nominato",
   "mgrChangesVacant": "Vacante",
   "editorNameNotAllowed": "Questo nome non è consentito.",
-  "editorIssueNameNotAllowed": "\"{name}\" non è consentito"
+  "editorIssueNameNotAllowed": "\"{name}\" non è consentito",
+  "matchWeatherPlaysHeavyRain": "Pioggia battente: tiri e cross meno precisi, più scivoloni",
+  "matchWeatherPlaysStorm": "Temporale: tiri e cross meno precisi, più scivoloni",
+  "matchWeatherPlaysSnow": "Neve: gioco più lento, passaggi un po' più difficili",
+  "matchWeatherPlaysFrost": "Campo ghiacciato: gioco più lento, passaggi un po' più difficili",
+  "matchWeatherPlaysGale": "Vento forte: lanci lunghi e cross imprevedibili, tiri da fuori più difficili",
+  "matchWeatherPlaysFog": "Nebbia: tiri da fuori più difficili",
+  "matchWeatherPlaysHaze": "Foschia di calore: più caldo del solito, le gambe cederanno prima",
+  "pitchComKickOffHeavyRain": "Si parte sotto una pioggia battente. Il pallone schizzerà su questo terreno.",
+  "pitchComKickOffStorm": "Calcio d’inizio sotto il temporale. Il terreno sarà infido.",
+  "pitchComKickOffSnow": "Si parte sotto la neve. Sarà una partita lenta e prudente.",
+  "pitchComKickOffFrost": "Una notte gelida e un campo duro. Passarsi la palla non sarà facile.",
+  "pitchComKickOffGale": "Calcio d’inizio con un vento forte. I lanci lunghi andranno fuori misura.",
+  "pitchComKickOffFog": "Calcio d’inizio in una fitta nebbia. Nessuno segnerà facilmente da fuori.",
+  "pitchComKickOffHaze": "Calcio d’inizio nella foschia di calore. Oggi le gambe si stancheranno presto."
 }

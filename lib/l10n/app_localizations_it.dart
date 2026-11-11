@@ -16968,4 +16968,59 @@ class AppLocalizationsIt extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '\"$name\" non è consentito';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Pioggia battente: tiri e cross meno precisi, più scivoloni';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Temporale: tiri e cross meno precisi, più scivoloni';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Neve: gioco più lento, passaggi un po\' più difficili';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Campo ghiacciato: gioco più lento, passaggi un po\' più difficili';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Vento forte: lanci lunghi e cross imprevedibili, tiri da fuori più difficili';
+
+  @override
+  String get matchWeatherPlaysFog => 'Nebbia: tiri da fuori più difficili';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Foschia di calore: più caldo del solito, le gambe cederanno prima';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Si parte sotto una pioggia battente. Il pallone schizzerà su questo terreno.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Calcio d’inizio sotto il temporale. Il terreno sarà infido.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Si parte sotto la neve. Sarà una partita lenta e prudente.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Una notte gelida e un campo duro. Passarsi la palla non sarà facile.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Calcio d’inizio con un vento forte. I lanci lunghi andranno fuori misura.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Calcio d’inizio in una fitta nebbia. Nessuno segnerà facilmente da fuori.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Calcio d’inizio nella foschia di calore. Oggi le gambe si stancheranno presto.';
 }

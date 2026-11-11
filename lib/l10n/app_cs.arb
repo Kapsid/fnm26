@@ -4219,5 +4219,19 @@
   "mgrChangesAppointed": "Jmenován",
   "mgrChangesVacant": "Neobsazeno",
   "editorNameNotAllowed": "Tento název není povolený.",
-  "editorIssueNameNotAllowed": "„{name}“ není povolený název"
+  "editorIssueNameNotAllowed": "„{name}“ není povolený název",
+  "matchWeatherPlaysHeavyRain": "Silný déšť: střely a centry méně přesné, víc uklouznutí",
+  "matchWeatherPlaysStorm": "Bouřka: střely a centry méně přesné, víc uklouznutí",
+  "matchWeatherPlaysSnow": "Sníh: pomalejší hra, přihrávky o něco těžší",
+  "matchWeatherPlaysFrost": "Zmrzlý trávník: pomalejší hra, přihrávky o něco těžší",
+  "matchWeatherPlaysGale": "Silný vítr: dlouhé míče a centry nevyzpytatelné, střely z dálky těžší",
+  "matchWeatherPlaysFog": "Mlha: střely z dálky těžší",
+  "matchWeatherPlaysHaze": "Horký opar: tepleji než obvykle, síly dojdou dřív",
+  "pitchComKickOffHeavyRain": "Hraje se v silném dešti. Míč bude po trávníku klouzat.",
+  "pitchComKickOffStorm": "Výkop za bouřky. Na trávníku to bude zrádně klouzat.",
+  "pitchComKickOffSnow": "Hraje se na sněhu. Bude to pomalý a opatrný zápas.",
+  "pitchComKickOffFrost": "Mrazivý večer a tvrdý trávník. Přihrávky nebudou snadné.",
+  "pitchComKickOffGale": "Výkop v silném větru. Dlouhé míče budou létat mimo.",
+  "pitchComKickOffFog": "Výkop v husté mlze. Z dálky se tu snadno skórovat nebude.",
+  "pitchComKickOffHaze": "Výkop v horkém oparu. Síly dnes dojdou brzy."
 }

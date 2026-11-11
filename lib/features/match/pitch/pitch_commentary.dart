@@ -8,6 +8,7 @@ library;
 
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_moments.dart';
+import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
 /// The commentary line for [m], or null when [m] is routine and gets none.
@@ -173,6 +174,22 @@ String pitchInjuryLine(
   return variants[(seed ^ e.minute ^ e.stoppage ^ e.playerId) %
       variants.length];
 }
+
+/// The line said at kick-off for a match played in [weather], naming what it
+/// will do to the football (the same `WeatherPlay` the engine plays), or
+/// null when the weather does nothing (a clear sky, light rain, a dust
+/// storm).
+String? pitchKickOffLine(AppLocalizations l, WeatherKind weather) =>
+    switch (weather) {
+      WeatherKind.heavyRain => l.pitchComKickOffHeavyRain,
+      WeatherKind.thunderstorm => l.pitchComKickOffStorm,
+      WeatherKind.snow => l.pitchComKickOffSnow,
+      WeatherKind.frostyNight => l.pitchComKickOffFrost,
+      WeatherKind.windy => l.pitchComKickOffGale,
+      WeatherKind.fog => l.pitchComKickOffFog,
+      WeatherKind.haze => l.pitchComKickOffHaze,
+      WeatherKind.clear || WeatherKind.rain || WeatherKind.dustStorm => null,
+    };
 
 /// Whether [m] flows on with no commentary line (see [pitchLine]).
 bool isRoutineMoment(MatchMoment m) => switch (m) {

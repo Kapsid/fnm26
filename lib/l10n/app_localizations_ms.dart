@@ -16853,4 +16853,59 @@ class AppLocalizationsMs extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '\"$name\" tidak dibenarkan';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Hujan lebat: rembatan dan lintangan kurang tepat, lebih kerap tergelincir';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Ribut petir: rembatan dan lintangan kurang tepat, lebih kerap tergelincir';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Salji: permainan lebih perlahan, hantaran sedikit lebih sukar';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Padang beku: permainan lebih perlahan, hantaran sedikit lebih sukar';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Angin kencang: bola panjang dan lintangan tidak menentu, rembatan jarak jauh lebih sukar';
+
+  @override
+  String get matchWeatherPlaysFog => 'Kabus: rembatan jarak jauh lebih sukar';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Jerebu panas: lebih panas daripada biasa, kaki akan letih lebih awal';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Perlawanan bermula dalam hujan lebat. Bola akan menggelongsor di padang ini.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Sepak mula dalam ribut petir. Pijakan akan sangat licin.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Perlawanan bermula dalam salji. Ini akan jadi permainan yang perlahan dan berhati-hati.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Malam yang dingin dan padang yang keras. Hantaran tidak akan mudah.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Sepak mula dalam angin kencang. Bola panjang akan tersasar.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Sepak mula dalam kabus tebal. Tiada siapa akan mudah menjaringkan gol dari jauh.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Sepak mula dalam jerebu panas. Kaki akan cepat letih hari ini.';
 }

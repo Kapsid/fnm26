@@ -149,18 +149,25 @@ void main() {
     });
   });
 
-  group('cosmetic only', () {
-    test('no match, rating or result code reads the weather', () {
+  group('one door into the match', () {
+    // Since 1.2 the weather plays, but only through `MatchConditions` and
+    // `WeatherPlay`: the engine and the background simulator read its
+    // factors there, never the weather itself, so no second reading of it
+    // can grow up beside the one the Pitch view draws.
+    test('only the conditions and their weather play read the weather', () {
       final readers = <String>[];
       for (final f in Directory('lib/domain').listSync(recursive: true)) {
         if (f is! File || !f.path.endsWith('.dart')) continue;
         if (f.path.contains('/stadium/')) continue;
         final src = f.readAsStringSync();
         if (src.contains('WeatherKind') || src.contains('MatchWeather')) {
-          readers.add(f.path);
+          readers.add(f.path.split('/').last);
         }
       }
-      expect(readers, isEmpty);
+      expect(
+        readers.toSet(),
+        {'weather_play.dart', 'match_conditions.dart'},
+      );
     });
 
     test('the enum keeps its first four kinds in place', () {

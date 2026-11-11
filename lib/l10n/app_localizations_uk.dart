@@ -17207,4 +17207,59 @@ class AppLocalizationsUk extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '«$name» не дозволено';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Злива: удари й навіси менш точні, більше підковзувань';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Гроза: удари й навіси менш точні, більше підковзувань';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Сніг: повільніша гра, передачі трохи складніші';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Замерзле поле: повільніша гра, передачі трохи складніші';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Сильний вітер: довгі передачі й навіси непередбачувані, далекі удари складніші';
+
+  @override
+  String get matchWeatherPlaysFog => 'Туман: далекі удари складніші';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Спекотне марево: спекотніше, ніж зазвичай, ноги підведуть раніше';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Гра почалася під зливою. М’яч ковзатиме цим газоном.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Стартовий свисток у грозу. Газон буде підступним.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Гра почалася на снігу. Це буде повільний, обережний матч.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Морозний вечір і тверде поле. Передачі даватимуться нелегко.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Стартовий свисток при сильному вітрі. Довгі передачі зноситиме.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Стартовий свисток у густому тумані. Здалеку легко ніхто не заб’є.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Стартовий свисток у спекотному мареві. Сьогодні ноги втомляться рано.';
 }

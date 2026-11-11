@@ -5,13 +5,15 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/features/match/match_ground.dart';
 import 'package:fnm/features/match/match_providers.dart';
+import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 
 import '../helpers/seeded_save.dart';
 
 /// The match screen and a skipped match must play at the same ground, so
-/// at the same altitude and in the same heat: both go through
-/// [resolveMatchGround]. This reads the real preview of a seeded save and
-/// the resolver for the same fixture, home and away, and asks they agree.
+/// at the same altitude, in the same heat and the same weather: both go
+/// through [resolveMatchGround]. This reads the real preview of a seeded
+/// save and the resolver for the same fixture, home and away, and asks they
+/// agree.
 void main() {
   testWidgets('the preview and the background resolve the same ground', (
     tester,
@@ -47,9 +49,19 @@ void main() {
       final same = await resolve(preview.fixture);
       expect(same.city, preview.ground.city);
       expect(same.groundNationId, preview.ground.groundNationId);
+      final background = conditionsAt(
+        preview.fixture,
+        same,
+        nations: {for (final n in nations) n.id: n},
+        saveSeed: career.rngSeed,
+      );
+      expect(background.awayDrain, preview.conditions.awayDrain);
+      // The same weather too: the one the background plays it in is the
+      // one the shown match is played in and the Pitch view draws.
+      expect(background.weather, preview.conditions.weather);
       expect(
-        conditionsAt(preview.fixture, same).awayDrain,
-        preview.conditions.awayDrain,
+        matchConditionsShown(preview).weather,
+        preview.conditions.weather,
       );
 
       // The manager's side moved to the other end: the opponent's ground.

@@ -17051,4 +17051,59 @@ class AppLocalizationsFr extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '« $name » n’est pas autorisé';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Forte pluie : tirs et centres moins fiables, plus de glissades';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Orage : tirs et centres moins fiables, plus de glissades';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Neige : jeu plus lent, passes un peu plus difficiles';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Terrain gelé : jeu plus lent, passes un peu plus difficiles';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Vent fort : longs ballons et centres imprévisibles, frappes de loin plus dures';
+
+  @override
+  String get matchWeatherPlaysFog => 'Brouillard : frappes de loin plus dures';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Brume de chaleur : plus chaud que d’habitude, les jambes lâcheront plus tôt';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'C’est parti sous une forte pluie. Le ballon va fuser sur cette pelouse.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Coup d’envoi sous l’orage. Les appuis seront traîtres.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'C’est parti sous la neige. Ce sera un match lent et prudent.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Une nuit glaciale et une pelouse dure. Les passes ne seront pas faciles.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Coup d’envoi dans un vent violent. Les longs ballons vont s’égarer.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Coup d’envoi dans un épais brouillard. Personne ne marquera facilement de loin.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Coup d’envoi dans la brume de chaleur. Les jambes vont fatiguer tôt aujourd’hui.';
 }

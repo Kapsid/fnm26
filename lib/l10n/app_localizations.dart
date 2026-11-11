@@ -25555,6 +25555,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'\"{name}\" isn\'t allowed'**
   String editorIssueNameNotAllowed(String name);
+
+  /// Match preview, under the ground: the match is played in heavy rain, which makes shots and crosses a little less reliable and brings more slips (fouls).
+  ///
+  /// In en, this message translates to:
+  /// **'Heavy rain: shots and crosses less reliable, more slips'**
+  String get matchWeatherPlaysHeavyRain;
+
+  /// Match preview, under the ground: the match is played in a thunderstorm, which makes shots and crosses a little less reliable and brings more slips (fouls).
+  ///
+  /// In en, this message translates to:
+  /// **'Thunderstorm: shots and crosses less reliable, more slips'**
+  String get matchWeatherPlaysStorm;
+
+  /// Match preview, under the ground: the match is played in snow, which slows the game down and makes passing a little harder.
+  ///
+  /// In en, this message translates to:
+  /// **'Snow: a slower game, passing a little harder'**
+  String get matchWeatherPlaysSnow;
+
+  /// Match preview, under the ground: the match is played on a clear, frosty night on a hard, frozen pitch, which slows the game down and makes passing a little harder.
+  ///
+  /// In en, this message translates to:
+  /// **'Frozen pitch: a slower game, passing a little harder'**
+  String get matchWeatherPlaysFrost;
+
+  /// Match preview, under the ground: the match is played in a strong wind, which makes long balls and crosses erratic and long shots less likely to go in.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong wind: long balls and crosses erratic, long shots harder'**
+  String get matchWeatherPlaysGale;
+
+  /// Match preview, under the ground: the match is played in fog, which makes shots from distance less likely to go in.
+  ///
+  /// In en, this message translates to:
+  /// **'Fog: shots from distance harder'**
+  String get matchWeatherPlaysFog;
+
+  /// Match preview, under the ground: the match is played in a heat haze, a hotter day than usual for the time of year, so legs tire sooner.
+  ///
+  /// In en, this message translates to:
+  /// **'Heat haze: hotter than usual, legs will go sooner'**
+  String get matchWeatherPlaysHaze;
+
+  /// Pitch view commentary, the first line at kick-off when the match is played in heavy rain.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re under way in heavy rain. The ball will skid off this surface.'**
+  String get pitchComKickOffHeavyRain;
+
+  /// Pitch view commentary, the first line at kick-off when the match is played in a thunderstorm.
+  ///
+  /// In en, this message translates to:
+  /// **'Kick-off in a thunderstorm. The footing will be treacherous.'**
+  String get pitchComKickOffStorm;
+
+  /// Pitch view commentary, the first line at kick-off when the match is played in snow.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re under way in the snow. This will be a slow, careful game.'**
+  String get pitchComKickOffSnow;
+
+  /// Pitch view commentary, the first line at kick-off when the match is played on a clear, frosty night on a hard pitch.
+  ///
+  /// In en, this message translates to:
+  /// **'A frosty night and a hard pitch. Passing won\'t be easy.'**
+  String get pitchComKickOffFrost;
+
+  /// Pitch view commentary, the first line at kick-off when the match is played in a strong wind.
+  ///
+  /// In en, this message translates to:
+  /// **'Kick-off in a strong wind. Long balls will go astray.'**
+  String get pitchComKickOffGale;
+
+  /// Pitch view commentary, the first line at kick-off when the match is played in thick fog.
+  ///
+  /// In en, this message translates to:
+  /// **'Kick-off in thick fog. Nobody will be scoring from distance easily.'**
+  String get pitchComKickOffFog;
+
+  /// Pitch view commentary, the first line at kick-off when the match is played in a heat haze.
+  ///
+  /// In en, this message translates to:
+  /// **'Kick-off in the heat haze. Legs will tire early today.'**
+  String get pitchComKickOffHaze;
 }
 
 class _AppLocalizationsDelegate

@@ -16336,4 +16336,47 @@ class AppLocalizationsKo extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '\"$name\"은(는) 사용할 수 없습니다';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain => '폭우: 슈팅과 크로스 정확도 저하, 미끄러짐 증가';
+
+  @override
+  String get matchWeatherPlaysStorm => '뇌우: 슈팅과 크로스 정확도 저하, 미끄러짐 증가';
+
+  @override
+  String get matchWeatherPlaysSnow => '눈: 경기 속도 저하, 패스가 조금 더 어려움';
+
+  @override
+  String get matchWeatherPlaysFrost => '얼어붙은 그라운드: 경기 속도 저하, 패스가 조금 더 어려움';
+
+  @override
+  String get matchWeatherPlaysGale => '강풍: 롱볼과 크로스가 불안정, 중거리 슛이 더 어려움';
+
+  @override
+  String get matchWeatherPlaysFog => '안개: 중거리 슛이 더 어려움';
+
+  @override
+  String get matchWeatherPlaysHaze => '열기 아지랑이: 평소보다 더워 체력이 일찍 떨어짐';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      '폭우 속에 경기가 시작됐습니다. 공이 잔디 위에서 미끄러질 겁니다.';
+
+  @override
+  String get pitchComKickOffStorm => '뇌우 속에 킥오프. 발밑이 위험할 정도로 미끄러울 겁니다.';
+
+  @override
+  String get pitchComKickOffSnow => '눈 속에 경기가 시작됐습니다. 느리고 조심스러운 경기가 될 겁니다.';
+
+  @override
+  String get pitchComKickOffFrost => '서리 내린 밤, 딱딱한 그라운드. 패스가 쉽지 않을 겁니다.';
+
+  @override
+  String get pitchComKickOffGale => '강풍 속에 킥오프. 롱볼이 바람에 흘러갈 겁니다.';
+
+  @override
+  String get pitchComKickOffFog => '짙은 안개 속에 킥오프. 먼 거리에서 골을 넣기는 쉽지 않을 겁니다.';
+
+  @override
+  String get pitchComKickOffHaze => '열기 아지랑이 속에 킥오프. 오늘은 체력이 일찍 떨어질 겁니다.';
 }

@@ -16592,4 +16592,57 @@ class AppLocalizationsTh extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return 'ไม่อนุญาตให้ใช้ \"$name\"';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'ฝนตกหนัก: การยิงและการเปิดบอลแม่นน้อยลง ลื่นล้มบ่อยขึ้น';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'พายุฝนฟ้าคะนอง: การยิงและการเปิดบอลแม่นน้อยลง ลื่นล้มบ่อยขึ้น';
+
+  @override
+  String get matchWeatherPlaysSnow => 'หิมะ: เกมช้าลง การส่งบอลยากขึ้นเล็กน้อย';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'สนามเป็นน้ำแข็ง: เกมช้าลง การส่งบอลยากขึ้นเล็กน้อย';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'ลมแรง: บอลยาวและการเปิดบอลคาดเดายาก ยิงไกลยากขึ้น';
+
+  @override
+  String get matchWeatherPlaysFog => 'หมอก: ยิงไกลยากขึ้น';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'ไอแดดร้อน: ร้อนกว่าปกติ ขาจะหมดแรงเร็วขึ้น';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'เกมเริ่มแล้วท่ามกลางฝนตกหนัก บอลจะลื่นไถลบนสนามนี้';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'เริ่มเกมท่ามกลางพายุฝนฟ้าคะนอง พื้นสนามจะลื่นอันตราย';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'เกมเริ่มแล้วท่ามกลางหิมะ นี่จะเป็นเกมที่ช้าและระมัดระวัง';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'คืนที่หนาวจัดและสนามแข็ง การส่งบอลจะไม่ง่าย';
+
+  @override
+  String get pitchComKickOffGale => 'เริ่มเกมท่ามกลางลมแรง บอลยาวจะเฉออกนอกทาง';
+
+  @override
+  String get pitchComKickOffFog =>
+      'เริ่มเกมท่ามกลางหมอกหนา ไม่มีใครยิงไกลเข้าได้ง่ายๆ';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'เริ่มเกมท่ามกลางไอแดดร้อน วันนี้ขาจะล้าเร็ว';
 }

@@ -17165,4 +17165,59 @@ class AppLocalizationsCs extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '„$name“ není povolený název';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Silný déšť: střely a centry méně přesné, víc uklouznutí';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Bouřka: střely a centry méně přesné, víc uklouznutí';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Sníh: pomalejší hra, přihrávky o něco těžší';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Zmrzlý trávník: pomalejší hra, přihrávky o něco těžší';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Silný vítr: dlouhé míče a centry nevyzpytatelné, střely z dálky těžší';
+
+  @override
+  String get matchWeatherPlaysFog => 'Mlha: střely z dálky těžší';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Horký opar: tepleji než obvykle, síly dojdou dřív';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Hraje se v silném dešti. Míč bude po trávníku klouzat.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Výkop za bouřky. Na trávníku to bude zrádně klouzat.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Hraje se na sněhu. Bude to pomalý a opatrný zápas.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Mrazivý večer a tvrdý trávník. Přihrávky nebudou snadné.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Výkop v silném větru. Dlouhé míče budou létat mimo.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Výkop v husté mlze. Z dálky se tu snadno skórovat nebude.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Výkop v horkém oparu. Síly dnes dojdou brzy.';
 }

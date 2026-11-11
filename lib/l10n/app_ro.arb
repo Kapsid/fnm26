@@ -4219,5 +4219,19 @@
   "mgrChangesAppointed": "Numit",
   "mgrChangesVacant": "Post liber",
   "editorNameNotAllowed": "Acest nume nu este permis.",
-  "editorIssueNameNotAllowed": "„{name}” nu este permis"
+  "editorIssueNameNotAllowed": "„{name}” nu este permis",
+  "matchWeatherPlaysHeavyRain": "Ploaie torențială: șuturi și centrări mai nesigure, mai multe alunecări",
+  "matchWeatherPlaysStorm": "Furtună: șuturi și centrări mai nesigure, mai multe alunecări",
+  "matchWeatherPlaysSnow": "Ninsoare: joc mai lent, pase puțin mai grele",
+  "matchWeatherPlaysFrost": "Teren înghețat: joc mai lent, pase puțin mai grele",
+  "matchWeatherPlaysGale": "Vânt puternic: mingi lungi și centrări imprevizibile, șuturi de la distanță mai grele",
+  "matchWeatherPlaysFog": "Ceață: șuturi de la distanță mai grele",
+  "matchWeatherPlaysHaze": "Ceață de căldură: mai cald decât de obicei, picioarele vor ceda mai devreme",
+  "pitchComKickOffHeavyRain": "Se joacă sub o ploaie torențială. Mingea va aluneca pe acest gazon.",
+  "pitchComKickOffStorm": "Lovitura de start pe furtună. Terenul va fi înșelător.",
+  "pitchComKickOffSnow": "Se joacă pe zăpadă. Va fi un meci lent și prudent.",
+  "pitchComKickOffFrost": "O noapte geroasă și un teren tare. Pasele nu vor fi ușoare.",
+  "pitchComKickOffGale": "Lovitura de start pe vânt puternic. Mingile lungi vor devia.",
+  "pitchComKickOffFog": "Lovitura de start în ceață deasă. Nimeni nu va marca ușor de la distanță.",
+  "pitchComKickOffHaze": "Lovitura de start în ceața de căldură. Azi picioarele vor obosi devreme."
 }

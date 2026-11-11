@@ -4219,5 +4219,19 @@
   "mgrChangesAppointed": "Itinalaga",
   "mgrChangesVacant": "Bakante",
   "editorNameNotAllowed": "Hindi pinapayagan ang pangalang ito.",
-  "editorIssueNameNotAllowed": "Hindi pinapayagan ang \"{name}\""
+  "editorIssueNameNotAllowed": "Hindi pinapayagan ang \"{name}\"",
+  "matchWeatherPlaysHeavyRain": "Malakas na ulan: mas di-tiyak ang tira at cross, mas maraming dulas",
+  "matchWeatherPlaysStorm": "Bagyong may kidlat: mas di-tiyak ang tira at cross, mas maraming dulas",
+  "matchWeatherPlaysSnow": "Niyebe: mas mabagal ang laro, medyo mas mahirap ang pasa",
+  "matchWeatherPlaysFrost": "Nagyelong pitch: mas mabagal ang laro, medyo mas mahirap ang pasa",
+  "matchWeatherPlaysGale": "Malakas na hangin: pabago-bago ang long ball at cross, mas mahirap ang tirang malayo",
+  "matchWeatherPlaysFog": "Hamog: mas mahirap ang tirang malayo",
+  "matchWeatherPlaysHaze": "Init na may ulap: mas mainit kaysa karaniwan, mas maagang mapapagod",
+  "pitchComKickOffHeavyRain": "Nagsimula na sa malakas na ulan. Dudulas ang bola sa pitch na ito.",
+  "pitchComKickOffStorm": "Kick-off sa gitna ng bagyong may kidlat. Madulas ang tapakan.",
+  "pitchComKickOffSnow": "Nagsimula na sa niyebe. Mabagal at maingat na laro ito.",
+  "pitchComKickOffFrost": "Nagyeyelong gabi at matigas na pitch. Hindi magiging madali ang pasa.",
+  "pitchComKickOffGale": "Kick-off sa malakas na hangin. Liligaw ang mga long ball.",
+  "pitchComKickOffFog": "Kick-off sa makapal na hamog. Walang madaling makakaiskor mula sa malayo.",
+  "pitchComKickOffHaze": "Kick-off sa init na may ulap. Maagang mapapagod ang mga binti ngayon."
 }

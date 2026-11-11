@@ -16983,4 +16983,59 @@ class AppLocalizationsEl extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return 'Το «$name» δεν επιτρέπεται';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Δυνατή βροχή: σουτ και σέντρες λιγότερο εύστοχα, περισσότερα γλιστρήματα';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Καταιγίδα: σουτ και σέντρες λιγότερο εύστοχα, περισσότερα γλιστρήματα';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Χιόνι: πιο αργό παιχνίδι, πάσες λίγο πιο δύσκολες';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Παγωμένος αγωνιστικός χώρος: πιο αργό παιχνίδι, πάσες λίγο πιο δύσκολες';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Δυνατός άνεμος: μακριές μπαλιές και σέντρες απρόβλεπτες, μακρινά σουτ πιο δύσκολα';
+
+  @override
+  String get matchWeatherPlaysFog => 'Ομίχλη: μακρινά σουτ πιο δύσκολα';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Καυτή αχλή: πιο ζέστη από το συνηθισμένο, τα πόδια θα κουραστούν νωρίτερα';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Ξεκινάμε κάτω από δυνατή βροχή. Η μπάλα θα γλιστράει σε αυτόν τον αγωνιστικό χώρο.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Σέντρα μέσα σε καταιγίδα. Το έδαφος θα είναι ύπουλο.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Ξεκινάμε στο χιόνι. Θα είναι ένα αργό, προσεκτικό παιχνίδι.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Παγωμένη νύχτα και σκληρός αγωνιστικός χώρος. Οι πάσες δεν θα είναι εύκολες.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Σέντρα με δυνατό άνεμο. Οι μακριές μπαλιές θα ξεφεύγουν.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Σέντρα μέσα σε πυκνή ομίχλη. Κανείς δεν θα σκοράρει εύκολα από μακριά.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Σέντρα μέσα στην καυτή αχλή. Τα πόδια θα κουραστούν νωρίς σήμερα.';
 }

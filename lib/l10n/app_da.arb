@@ -4219,5 +4219,19 @@
   "mgrChangesAppointed": "Ansat",
   "mgrChangesVacant": "Ledig",
   "editorNameNotAllowed": "Dette navn er ikke tilladt.",
-  "editorIssueNameNotAllowed": "»{name}« er ikke tilladt"
+  "editorIssueNameNotAllowed": "»{name}« er ikke tilladt",
+  "matchWeatherPlaysHeavyRain": "Kraftig regn: skud og indlæg mindre præcise, flere glid",
+  "matchWeatherPlaysStorm": "Tordenvejr: skud og indlæg mindre præcise, flere glid",
+  "matchWeatherPlaysSnow": "Sne: langsommere spil, afleveringer lidt sværere",
+  "matchWeatherPlaysFrost": "Frossen bane: langsommere spil, afleveringer lidt sværere",
+  "matchWeatherPlaysGale": "Kraftig vind: lange bolde og indlæg uberegnelige, langskud sværere",
+  "matchWeatherPlaysFog": "Tåge: langskud sværere",
+  "matchWeatherPlaysHaze": "Varmedis: varmere end normalt, benene giver op tidligere",
+  "pitchComKickOffHeavyRain": "Vi er i gang i kraftig regn. Bolden kommer til at glide på denne bane.",
+  "pitchComKickOffStorm": "Kickoff i tordenvejr. Fodfæstet bliver lumsk.",
+  "pitchComKickOffSnow": "Vi er i gang i sneen. Det bliver en langsom og forsigtig kamp.",
+  "pitchComKickOffFrost": "En frostklar aften og en hård bane. Afleveringerne bliver ikke lette.",
+  "pitchComKickOffGale": "Kickoff i kraftig vind. Lange bolde kommer til at drive væk.",
+  "pitchComKickOffFog": "Kickoff i tæt tåge. Ingen kommer til at score let på langskud.",
+  "pitchComKickOffHaze": "Kickoff i varmedisen. Benene bliver tidligt trætte i dag."
 }

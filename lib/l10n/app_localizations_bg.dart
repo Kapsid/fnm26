@@ -16977,4 +16977,59 @@ class AppLocalizationsBg extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '„$name“ не е позволено';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Силен дъжд: ударите и центриранията са по-неточни, повече подхлъзвания';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Гръмотевична буря: ударите и центриранията са по-неточни, повече подхлъзвания';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Сняг: по-бавна игра, подаванията са малко по-трудни';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Замръзнал терен: по-бавна игра, подаванията са малко по-трудни';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Силен вятър: дългите топки и центриранията са непредвидими, ударите отдалеч по-трудни';
+
+  @override
+  String get matchWeatherPlaysFog => 'Мъгла: ударите отдалеч са по-трудни';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Знойна мараня: по-горещо от обикновено, краката ще отмалеят по-рано';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Започваме под силен дъжд. Топката ще се плъзга по този терен.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Начален удар в гръмотевична буря. Теренът ще бъде коварен.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Започваме в снега. Ще бъде бавен и предпазлив мач.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Мразовита вечер и твърд терен. Подаванията няма да са лесни.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Начален удар при силен вятър. Дългите топки ще се отклоняват.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Начален удар в гъста мъгла. Никой няма да вкарва лесно отдалеч.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Начален удар в знойната мараня. Краката ще се уморят рано днес.';
 }

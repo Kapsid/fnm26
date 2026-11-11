@@ -16991,4 +16991,59 @@ class AppLocalizationsPt extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '\"$name\" não é permitido';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Chuva forte: remates e cruzamentos menos fiáveis, mais escorregões';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Trovoada: remates e cruzamentos menos fiáveis, mais escorregões';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Neve: jogo mais lento, passes um pouco mais difíceis';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Relvado gelado: jogo mais lento, passes um pouco mais difíceis';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Vento forte: bolas longas e cruzamentos imprevisíveis, remates de longe mais difíceis';
+
+  @override
+  String get matchWeatherPlaysFog => 'Nevoeiro: remates de longe mais difíceis';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Neblina de calor: mais quente do que o habitual, as pernas vão ceder mais cedo';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Começa o jogo debaixo de chuva forte. A bola vai deslizar neste relvado.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Pontapé de saída debaixo de trovoada. Os apoios vão ser traiçoeiros.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Começa o jogo debaixo de neve. Vai ser uma partida lenta e cautelosa.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Uma noite gélida e um relvado duro. Os passes não vão ser fáceis.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Pontapé de saída com vento forte. As bolas longas vão sair desviadas.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Pontapé de saída com nevoeiro cerrado. Ninguém vai marcar facilmente de longe.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Pontapé de saída na neblina de calor. Hoje as pernas vão cansar cedo.';
 }

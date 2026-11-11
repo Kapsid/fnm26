@@ -16802,4 +16802,58 @@ class AppLocalizationsHi extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return '\"$name\" अनुमत नहीं है';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'तेज़ बारिश: शॉट और क्रॉस कम भरोसेमंद, ज़्यादा फिसलन';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'आंधी-तूफ़ान: शॉट और क्रॉस कम भरोसेमंद, ज़्यादा फिसलन';
+
+  @override
+  String get matchWeatherPlaysSnow => 'बर्फ़: धीमा खेल, पास देना थोड़ा मुश्किल';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'जमी हुई पिच: धीमा खेल, पास देना थोड़ा मुश्किल';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'तेज़ हवा: लंबी गेंदें और क्रॉस बेकाबू, दूर से शॉट मुश्किल';
+
+  @override
+  String get matchWeatherPlaysFog => 'कोहरा: दूर से शॉट मुश्किल';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'गर्मी की धुंध: सामान्य से ज़्यादा गर्मी, पैर जल्दी थकेंगे';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'तेज़ बारिश में मैच शुरू हो गया है। इस पिच पर गेंद फिसलेगी।';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'आंधी-तूफ़ान में किक-ऑफ़। पैर जमाना मुश्किल होगा।';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'बर्फ़ में मैच शुरू हो गया है। यह धीमा और सावधानी भरा खेल होगा।';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'पाले वाली रात और सख़्त पिच। पास देना आसान नहीं होगा।';
+
+  @override
+  String get pitchComKickOffGale =>
+      'तेज़ हवा में किक-ऑफ़। लंबी गेंदें भटकेंगी।';
+
+  @override
+  String get pitchComKickOffFog =>
+      'घने कोहरे में किक-ऑफ़। दूर से गोल करना किसी के लिए आसान नहीं होगा।';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'गर्मी की धुंध में किक-ऑफ़। आज पैर जल्दी थकेंगे।';
 }

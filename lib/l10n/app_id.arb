@@ -4219,5 +4219,19 @@
   "mgrChangesAppointed": "Ditunjuk",
   "mgrChangesVacant": "Kosong",
   "editorNameNotAllowed": "Nama ini tidak diizinkan.",
-  "editorIssueNameNotAllowed": "\"{name}\" tidak diizinkan"
+  "editorIssueNameNotAllowed": "\"{name}\" tidak diizinkan",
+  "matchWeatherPlaysHeavyRain": "Hujan lebat: tembakan dan umpan silang kurang akurat, lebih sering terpeleset",
+  "matchWeatherPlaysStorm": "Badai petir: tembakan dan umpan silang kurang akurat, lebih sering terpeleset",
+  "matchWeatherPlaysSnow": "Salju: permainan lebih lambat, umpan sedikit lebih sulit",
+  "matchWeatherPlaysFrost": "Lapangan beku: permainan lebih lambat, umpan sedikit lebih sulit",
+  "matchWeatherPlaysGale": "Angin kencang: umpan panjang dan umpan silang liar, tembakan jarak jauh lebih sulit",
+  "matchWeatherPlaysFog": "Kabut: tembakan jarak jauh lebih sulit",
+  "matchWeatherPlaysHaze": "Kabut panas: lebih panas dari biasanya, tenaga cepat habis",
+  "pitchComKickOffHeavyRain": "Laga dimulai di bawah hujan lebat. Bola akan meluncur deras di lapangan ini.",
+  "pitchComKickOffStorm": "Sepak mula di tengah badai petir. Pijakan akan sangat licin.",
+  "pitchComKickOffSnow": "Laga dimulai di tengah salju. Ini akan jadi laga yang lambat dan hati-hati.",
+  "pitchComKickOffFrost": "Malam beku dan lapangan keras. Mengumpan tidak akan mudah.",
+  "pitchComKickOffGale": "Sepak mula di tengah angin kencang. Umpan panjang akan melenceng.",
+  "pitchComKickOffFog": "Sepak mula di tengah kabut tebal. Tak akan mudah mencetak gol dari jauh.",
+  "pitchComKickOffHaze": "Sepak mula di tengah kabut panas. Tenaga akan cepat terkuras hari ini."
 }

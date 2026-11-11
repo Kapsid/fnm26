@@ -4219,5 +4219,19 @@
   "mgrChangesAppointed": "Dilantik",
   "mgrChangesVacant": "Kosong",
   "editorNameNotAllowed": "Nama ini tidak dibenarkan.",
-  "editorIssueNameNotAllowed": "\"{name}\" tidak dibenarkan"
+  "editorIssueNameNotAllowed": "\"{name}\" tidak dibenarkan",
+  "matchWeatherPlaysHeavyRain": "Hujan lebat: rembatan dan lintangan kurang tepat, lebih kerap tergelincir",
+  "matchWeatherPlaysStorm": "Ribut petir: rembatan dan lintangan kurang tepat, lebih kerap tergelincir",
+  "matchWeatherPlaysSnow": "Salji: permainan lebih perlahan, hantaran sedikit lebih sukar",
+  "matchWeatherPlaysFrost": "Padang beku: permainan lebih perlahan, hantaran sedikit lebih sukar",
+  "matchWeatherPlaysGale": "Angin kencang: bola panjang dan lintangan tidak menentu, rembatan jarak jauh lebih sukar",
+  "matchWeatherPlaysFog": "Kabus: rembatan jarak jauh lebih sukar",
+  "matchWeatherPlaysHaze": "Jerebu panas: lebih panas daripada biasa, kaki akan letih lebih awal",
+  "pitchComKickOffHeavyRain": "Perlawanan bermula dalam hujan lebat. Bola akan menggelongsor di padang ini.",
+  "pitchComKickOffStorm": "Sepak mula dalam ribut petir. Pijakan akan sangat licin.",
+  "pitchComKickOffSnow": "Perlawanan bermula dalam salji. Ini akan jadi permainan yang perlahan dan berhati-hati.",
+  "pitchComKickOffFrost": "Malam yang dingin dan padang yang keras. Hantaran tidak akan mudah.",
+  "pitchComKickOffGale": "Sepak mula dalam angin kencang. Bola panjang akan tersasar.",
+  "pitchComKickOffFog": "Sepak mula dalam kabus tebal. Tiada siapa akan mudah menjaringkan gol dari jauh.",
+  "pitchComKickOffHaze": "Sepak mula dalam jerebu panas. Kaki akan cepat letih hari ini."
 }

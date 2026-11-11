@@ -17068,4 +17068,59 @@ class AppLocalizationsPl extends AppLocalizations {
   String editorIssueNameNotAllowed(String name) {
     return 'Nazwa „$name” jest niedozwolona';
   }
+
+  @override
+  String get matchWeatherPlaysHeavyRain =>
+      'Ulewa: strzały i dośrodkowania mniej pewne, więcej poślizgnięć';
+
+  @override
+  String get matchWeatherPlaysStorm =>
+      'Burza: strzały i dośrodkowania mniej pewne, więcej poślizgnięć';
+
+  @override
+  String get matchWeatherPlaysSnow =>
+      'Śnieg: wolniejsza gra, podania nieco trudniejsze';
+
+  @override
+  String get matchWeatherPlaysFrost =>
+      'Zmarznięta murawa: wolniejsza gra, podania nieco trudniejsze';
+
+  @override
+  String get matchWeatherPlaysGale =>
+      'Silny wiatr: długie piłki i dośrodkowania nieprzewidywalne, strzały z dystansu trudniejsze';
+
+  @override
+  String get matchWeatherPlaysFog => 'Mgła: strzały z dystansu trudniejsze';
+
+  @override
+  String get matchWeatherPlaysHaze =>
+      'Upalna mgiełka: goręcej niż zwykle, siły skończą się wcześniej';
+
+  @override
+  String get pitchComKickOffHeavyRain =>
+      'Grają w ulewie. Piłka będzie ślizgać się po murawie.';
+
+  @override
+  String get pitchComKickOffStorm =>
+      'Początek meczu w czasie burzy. Murawa będzie zdradliwa.';
+
+  @override
+  String get pitchComKickOffSnow =>
+      'Grają na śniegu. To będzie powolny, ostrożny mecz.';
+
+  @override
+  String get pitchComKickOffFrost =>
+      'Mroźny wieczór i twarda murawa. Podania nie będą łatwe.';
+
+  @override
+  String get pitchComKickOffGale =>
+      'Początek meczu przy silnym wietrze. Długie piłki będą zbaczać.';
+
+  @override
+  String get pitchComKickOffFog =>
+      'Początek meczu w gęstej mgle. Z dystansu nikt łatwo nie strzeli.';
+
+  @override
+  String get pitchComKickOffHaze =>
+      'Początek meczu w upalnej mgiełce. Siły dziś szybko się skończą.';
 }

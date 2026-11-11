@@ -3,11 +3,13 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/match/match_conditions.dart';
+import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
-/// The altitude and heat of the ground, said out loud under it: who the thin
-/// air will tire, how hot it will be, and (when the manager's own side is
-/// the one that will fade) a word to plan the changes early.
+/// The altitude, heat and weather of the ground, said out loud under it: who
+/// the thin air will tire, how hot it will be, what the weather will do to
+/// the football, and (when the manager's own side is the one that will fade)
+/// a word to plan the changes early.
 ///
 /// Every line reads the same [MatchConditions] the engine plays the match
 /// with, so it never promises an effect the match does not have. Nothing at
@@ -36,7 +38,9 @@ class ConditionsNote extends StatelessWidget {
     final mineAlt = playerIsHome ? c.homeFeelsAltitude : c.awayFeelsAltitude;
     final theirsAlt = playerIsHome ? c.awayFeelsAltitude : c.homeFeelsAltitude;
     final mine = (playerIsHome ? c.homeDrain : c.awayDrain) - 1;
+    final weather = weatherLine(l, c.weather);
     return [
+      if (weather != null) (Icons.cloud_outlined, weather),
       if (c.showsAltitude)
         (
           Icons.terrain_outlined,
@@ -54,6 +58,22 @@ class ConditionsNote extends StatelessWidget {
         (Icons.swap_horiz_rounded, l.matchConditionsAdvice),
     ];
   }
+
+  /// What [weather] will do to the match, or null when it does nothing (a
+  /// clear sky, light rain, a dust storm): the weather the engine plays
+  /// (`WeatherPlay.of`). A haze's line sits beside the heat line its hotter
+  /// day brings.
+  static String? weatherLine(AppLocalizations l, WeatherKind weather) =>
+      switch (weather) {
+        WeatherKind.heavyRain => l.matchWeatherPlaysHeavyRain,
+        WeatherKind.thunderstorm => l.matchWeatherPlaysStorm,
+        WeatherKind.snow => l.matchWeatherPlaysSnow,
+        WeatherKind.frostyNight => l.matchWeatherPlaysFrost,
+        WeatherKind.windy => l.matchWeatherPlaysGale,
+        WeatherKind.fog => l.matchWeatherPlaysFog,
+        WeatherKind.haze => l.matchWeatherPlaysHaze,
+        WeatherKind.clear || WeatherKind.rain || WeatherKind.dustStorm => null,
+      };
 
   @override
   Widget build(BuildContext context) {
