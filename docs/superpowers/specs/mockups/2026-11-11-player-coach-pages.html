@@ -1,0 +1,121 @@
+<style>
+  .ph{width:340px;background:#0f1012;border-radius:34px;padding:18px 14px 22px;box-shadow:0 0 0 8px #222,0 20px 40px rgba(0,0,0,.4);color:#e8eaed;font-family:"Hanken Grotesk",system-ui,sans-serif;min-height:660px}
+  .mono{font:600 10.5px ui-monospace,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;color:#8b929b}
+  .ttl{text-align:center;color:#cfd4da;margin:2px 0 12px}
+  .silver{background:linear-gradient(160deg,#2b2e33 0%,#1d1f23 55%,#25282c 100%);border:1px solid #3a3e44;box-shadow:inset 0 1px 0 rgba(255,255,255,.07);border-radius:16px}
+  .muted{color:#8b929b;font-size:12px}
+  .row{display:flex;align-items:center;gap:10px}
+  .sp{display:flex;justify-content:space-between;align-items:center}
+  .disc{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:26px;background:radial-gradient(circle at 35% 30%,#f4f6f8,#aeb6bf 60%,#7d858e);color:#111;box-shadow:0 2px 8px rgba(0,0,0,.5)}
+  .chip{font:600 10px ui-monospace,Menlo,monospace;letter-spacing:.08em;padding:3px 7px;border-radius:6px;background:rgba(200,205,212,.12);color:#c9ced5}
+  .bar{height:6px;border-radius:3px;background:#2a2d31;overflow:hidden;flex:1}.bar i{display:block;height:100%;background:linear-gradient(90deg,#9aa3ad,#e6e9ed)}
+  .tabs{display:flex;gap:6px;margin:12px 0}.tab{flex:1;text-align:center;font-size:12px;padding:7px 0;border-radius:10px;border:1px solid #3a3e44;color:#c9ced5}.tab.on{background:#e6e9ed;color:#111;border-color:#e6e9ed;font-weight:700}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .tile{padding:12px;min-height:84px}
+  .big{font-size:22px;font-weight:800}
+  .spark{display:flex;align-items:flex-end;gap:3px;height:28px}.spark i{width:9px;border-radius:2px;background:#4cd38a}
+  .card{border-radius:22px;padding:16px;text-align:center;background:linear-gradient(170deg,#3a3e44,#1b1d21 60%,#2b2e33);border:1px solid #5a6068}
+  .attrs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+  .attr b{display:block;font-size:20px}.attr span{font:600 9.5px ui-monospace,Menlo,monospace;letter-spacing:.1em;color:#8b929b}
+  .sec{margin-top:12px;padding:12px}
+  .flag{font-size:16px}
+</style>
+
+<h2>Player & coach pages: three directions</h2>
+<p class="subtitle">Same content as today, regrouped. Left half of each card is the player, right is the coach in the same style. Fixed type sizes, silver surfaces, one idea per block.</p>
+
+<div class="cards">
+  <div class="card-x card" data-choice="a" onclick="toggleSelect(this)" style="all:unset;display:block;cursor:pointer">
+    <div class="card-image" style="display:flex;gap:18px;flex-wrap:wrap;justify-content:center">
+      <div class="ph">
+        <div class="ttl mono">Player</div>
+        <div class="silver" style="padding:16px">
+          <div class="row"><div class="disc">95</div><div><div style="font-size:21px;font-weight:800">Connor Singh</div><div class="muted"><span class="flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span> England · <span class="chip">RB</span> · 28 y</div></div></div>
+          <div class="sp" style="margin-top:12px"><div><div class="big">62</div><div class="mono">caps</div></div><div><div class="big">12</div><div class="mono">goals</div></div><div><div class="big">7.9</div><div class="mono">form</div></div><div><div class="big" style="color:#4cd38a">●</div><div class="mono">fit</div></div></div>
+        </div>
+        <div class="tabs"><div class="tab on">Overview</div><div class="tab">Stats</div><div class="tab">Career</div></div>
+        <div class="silver" style="padding:12px">
+          <div class="mono" style="margin-bottom:8px">Attributes</div>
+          <div class="row" style="margin:6px 0"><span style="width:84px;font-size:13px">Physical</span><div class="bar"><i style="width:95%"></i></div><b style="width:26px;text-align:right">95</b></div>
+          <div class="row" style="margin:6px 0"><span style="width:84px;font-size:13px">Technical</span><div class="bar"><i style="width:95%"></i></div><b style="width:26px;text-align:right">95</b></div>
+          <div class="row" style="margin:6px 0"><span style="width:84px;font-size:13px">Stamina</span><div class="bar"><i style="width:95%"></i></div><b style="width:26px;text-align:right">95</b></div>
+        </div>
+        <div class="silver" style="padding:12px;margin-top:8px"><div class="mono" style="margin-bottom:8px">Last 8 matches</div><div class="spark"><i style="height:60%"></i><i style="height:80%"></i><i style="height:45%;background:#e0a34a"></i><i style="height:90%"></i><i style="height:70%"></i><i style="height:85%"></i><i style="height:95%"></i><i style="height:75%"></i></div></div>
+        <div class="silver" style="padding:12px;margin-top:8px"><div class="mono" style="margin-bottom:6px">Known for</div><span class="chip">Pacey</span> <span class="chip">Iron man</span></div>
+      </div>
+      <div class="ph">
+        <div class="ttl mono">Manager</div>
+        <div class="silver" style="padding:16px">
+          <div class="row"><div class="disc" style="font-size:20px">78</div><div><div style="font-size:21px;font-weight:800">Hugo Rivera</div><div class="muted"><span class="flag">🇲🇽</span> Mexico · <span class="chip">DEFENSIVE</span> · 48 y</div></div></div>
+          <div class="sp" style="margin-top:12px"><div><div class="big">67</div><div class="mono">matches</div></div><div><div class="big">88%</div><div class="mono">wins</div></div><div><div class="big">1</div><div class="mono">trophies</div></div><div><div class="big">2</div><div class="mono">nations</div></div></div>
+        </div>
+        <div class="tabs"><div class="tab on">Overview</div><div class="tab">Vs you</div><div class="tab">Career</div></div>
+        <div class="silver" style="padding:12px"><div class="mono" style="margin-bottom:8px">Record</div><div class="row"><div class="bar" style="height:10px"><i style="width:88%;background:#4cd38a"></i></div></div><div class="sp muted" style="margin-top:6px"><span>59 W</span><span>3 D</span><span>5 L</span></div></div>
+        <div class="silver" style="padding:12px;margin-top:8px"><div class="mono" style="margin-bottom:6px">Style</div><div style="font-size:14px">Defensive · deep block, counters</div><div class="muted" style="margin-top:4px">Background: career coach</div></div>
+        <div class="silver" style="padding:12px;margin-top:8px"><div class="mono" style="margin-bottom:6px">In charge now</div><div class="row"><span class="flag">🇲🇽</span><b>Mexico</b><span class="muted">since 2026 · 🏆 1</span></div></div>
+      </div>
+    </div>
+    <div class="card-body"><h3>A · Header + tabs</h3><p>A silver header with the rating disc and four key numbers; below, three tabs so the page never scrolls into a wall. Bars instead of rings, a form sparkline, trait chips.</p></div>
+  </div>
+
+  <div class="card-x card" data-choice="b" onclick="toggleSelect(this)" style="all:unset;display:block;cursor:pointer">
+    <div class="card-image" style="display:flex;gap:18px;flex-wrap:wrap;justify-content:center">
+      <div class="ph">
+        <div class="ttl mono">Player</div>
+        <div class="card">
+          <div class="sp"><div style="text-align:left"><div style="font-size:40px;font-weight:900;line-height:1">95</div><div class="chip">RB</div></div><div style="font-size:34px">🏴󠁧󠁢󠁥󠁮󠁧󠁿</div></div>
+          <div style="font-size:24px;font-weight:900;margin-top:10px;letter-spacing:.01em">CONNOR SINGH</div>
+          <div class="muted">28 · Mersey Blue ★★★★★</div>
+          <div class="attrs"><div class="attr"><b>95</b><span>PHY</span></div><div class="attr"><b>95</b><span>TEC</span></div><div class="attr"><b>95</b><span>STA</span></div></div>
+        </div>
+        <div class="silver sec"><div class="sp"><span class="mono">Caps · goals</span><b>62 · 12</b></div><div class="sp" style="margin-top:8px"><span class="mono">Form</span><b style="color:#4cd38a">On fire · 7.9</b></div><div class="sp" style="margin-top:8px"><span class="mono">Fitness</span><b>Match legs</b></div></div>
+        <div class="silver sec"><div class="mono" style="margin-bottom:6px">Known for</div><span class="chip">Pacey</span> <span class="chip">Iron man</span></div>
+        <div class="silver sec"><div class="mono" style="margin-bottom:6px">Career</div><div class="sp muted"><span>2026–</span><span>Mersey Blue</span></div><div class="sp muted" style="margin-top:4px"><span>2022–2026</span><span>Madrid White</span></div></div>
+      </div>
+      <div class="ph">
+        <div class="ttl mono">Manager</div>
+        <div class="card">
+          <div class="sp"><div style="text-align:left"><div style="font-size:40px;font-weight:900;line-height:1">78</div><div class="chip">DEFENSIVE</div></div><div style="font-size:34px">🇲🇽</div></div>
+          <div style="font-size:24px;font-weight:900;margin-top:10px">HUGO RIVERA</div>
+          <div class="muted">48 · in charge of Mexico</div>
+          <div class="attrs"><div class="attr"><b>67</b><span>MATCHES</span></div><div class="attr"><b>88%</b><span>WINS</span></div><div class="attr"><b>1</b><span>TROPHIES</span></div></div>
+        </div>
+        <div class="silver sec"><div class="sp"><span class="mono">Against you</span><b>First meeting</b></div><div class="sp" style="margin-top:8px"><span class="mono">Background</span><b>Career coach</b></div></div>
+        <div class="silver sec"><div class="mono" style="margin-bottom:6px">Career</div><div class="sp muted"><span>2026–</span><span>🇲🇽 Mexico · 59-3-5 · 🏆1</span></div><div class="sp muted" style="margin-top:4px"><span>2021–2024</span><span>🇦🇺 Australia</span></div></div>
+      </div>
+    </div>
+    <div class="card-body"><h3>B · The collector's card</h3><p>A big silver card on top: rating, position or style, flag, name in capitals, three numbers. Everything else below as calm two-column fact rows. The most premium look; a single scroll.</p></div>
+  </div>
+
+  <div class="card-x card" data-choice="c" onclick="toggleSelect(this)" style="all:unset;display:block;cursor:pointer">
+    <div class="card-image" style="display:flex;gap:18px;flex-wrap:wrap;justify-content:center">
+      <div class="ph">
+        <div class="ttl mono">Player</div>
+        <div class="row" style="margin:4px 0 12px"><div class="disc">95</div><div><div style="font-size:20px;font-weight:800">Connor Singh</div><div class="muted">🏴󠁧󠁢󠁥󠁮󠁧󠁿 England · RB · 28</div></div></div>
+        <div class="grid2">
+          <div class="silver tile"><div class="mono">Caps</div><div class="big">62</div><div class="muted">12 goals</div></div>
+          <div class="silver tile"><div class="mono">Form</div><div class="big" style="color:#4cd38a">7.9</div><div class="muted">on fire</div></div>
+          <div class="silver tile"><div class="mono">Physical</div><div class="big">95</div><div class="bar"><i style="width:95%"></i></div></div>
+          <div class="silver tile"><div class="mono">Technical</div><div class="big">95</div><div class="bar"><i style="width:95%"></i></div></div>
+          <div class="silver tile"><div class="mono">Stamina</div><div class="big">95</div><div class="bar"><i style="width:95%"></i></div></div>
+          <div class="silver tile"><div class="mono">Fitness</div><div class="big">OK</div><div class="muted">match legs</div></div>
+          <div class="silver tile"><div class="mono">Club</div><div style="font-size:14px;font-weight:700">Mersey Blue</div><div class="muted">★★★★★</div></div>
+          <div class="silver tile"><div class="mono">Known for</div><div style="font-size:13px">Pacey<br>Iron man</div></div>
+        </div>
+      </div>
+      <div class="ph">
+        <div class="ttl mono">Manager</div>
+        <div class="row" style="margin:4px 0 12px"><div class="disc" style="font-size:20px">78</div><div><div style="font-size:20px;font-weight:800">Hugo Rivera</div><div class="muted">🇲🇽 Mexico · Defensive · 48</div></div></div>
+        <div class="grid2">
+          <div class="silver tile"><div class="mono">Matches</div><div class="big">67</div><div class="muted">59 W 3 D 5 L</div></div>
+          <div class="silver tile"><div class="mono">Win rate</div><div class="big">88%</div><div class="bar"><i style="width:88%;background:#4cd38a"></i></div></div>
+          <div class="silver tile"><div class="mono">Trophies</div><div class="big">1</div><div class="muted">🏆 2030</div></div>
+          <div class="silver tile"><div class="mono">Vs you</div><div class="big">0-0-0</div><div class="muted">first meeting</div></div>
+          <div class="silver tile"><div class="mono">In charge</div><div style="font-size:14px;font-weight:700">🇲🇽 Mexico</div><div class="muted">since 2026</div></div>
+          <div class="silver tile"><div class="mono">Before</div><div style="font-size:14px;font-weight:700">🇦🇺 Australia</div><div class="muted">2021–2024</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body"><h3>C · Tile dashboard</h3><p>A slim header, then equal silver tiles two by two, each one fact with one big number. Quickest to scan, very orderly; less of a "hero" moment.</p></div>
+  </div>
+</div>
