@@ -459,6 +459,7 @@
   "hubBoardConcerned": "चिंतित",
   "hubBoardJobAtRisk": "नौकरी ख़तरे में",
   "hubBoard": "बोर्ड",
+  "hubFunds": "धनराशि",
   "hubBoardObjective": "बोर्ड का लक्ष्य: {label}",
   "hubObjectiveMet": "पूरा · {result}",
   "hubObjectiveMissed": "चूके · {result}",

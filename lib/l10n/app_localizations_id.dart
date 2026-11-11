@@ -1644,6 +1644,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get hubBoard => 'DEWAN';
 
   @override
+  String get hubFunds => 'DANA';
+
+  @override
   String hubBoardObjective(String label) {
     return 'Target dewan: $label';
   }

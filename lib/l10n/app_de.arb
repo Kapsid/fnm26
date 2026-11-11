@@ -459,6 +459,7 @@
   "hubBoardConcerned": "Besorgt",
   "hubBoardJobAtRisk": "Job in Gefahr",
   "hubBoard": "PRÄSIDIUM",
+  "hubFunds": "MITTEL",
   "hubBoardObjective": "Ziel des Präsidiums: {label}",
   "hubObjectiveMet": "ERFÜLLT · {result}",
   "hubObjectiveMissed": "VERFEHLT · {result}",

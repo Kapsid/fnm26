@@ -1622,6 +1622,9 @@ class AppLocalizationsTh extends AppLocalizations {
   String get hubBoard => 'บอร์ดบริหาร';
 
   @override
+  String get hubFunds => 'งบประมาณ';
+
+  @override
   String hubBoardObjective(String label) {
     return 'เป้าหมายของบอร์ด: $label';
   }

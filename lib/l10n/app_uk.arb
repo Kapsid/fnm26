@@ -459,6 +459,7 @@
   "hubBoardConcerned": "Занепокоєна",
   "hubBoardJobAtRisk": "Робота під загрозою",
   "hubBoard": "РАДА",
+  "hubFunds": "КОШТИ",
   "hubBoardObjective": "Завдання від ради: {label}",
   "hubObjectiveMet": "ВИКОНАНО · {result}",
   "hubObjectiveMissed": "ПРОВАЛЕНО · {result}",

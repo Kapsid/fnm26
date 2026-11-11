@@ -1708,6 +1708,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String get hubBoard => 'VEDENÍ';
 
   @override
+  String get hubFunds => 'PROSTŘEDKY';
+
+  @override
   String hubBoardObjective(String label) {
     return 'Cíl vedení: $label';
   }

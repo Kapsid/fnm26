@@ -1650,6 +1650,9 @@ class AppLocalizationsHu extends AppLocalizations {
   String get hubBoard => 'VEZETŐSÉG';
 
   @override
+  String get hubFunds => 'KERET';
+
+  @override
   String hubBoardObjective(String label) {
     return 'Vezetőségi cél: $label';
   }

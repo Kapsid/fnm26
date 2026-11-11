@@ -459,6 +459,7 @@
   "hubBoardConcerned": "Znepokojené",
   "hubBoardJobAtRisk": "Místo v ohrožení",
   "hubBoard": "VEDENÍ",
+  "hubFunds": "PROSTŘEDKY",
   "hubBoardObjective": "Cíl vedení: {label}",
   "hubObjectiveMet": "SPLNĚNO · {result}",
   "hubObjectiveMissed": "NESPLNĚNO · {result}",

@@ -459,6 +459,7 @@
   "hubBoardConcerned": "Preoccupata",
   "hubBoardJobAtRisk": "Panchina a rischio",
   "hubBoard": "FEDERAZIONE",
+  "hubFunds": "FONDI",
   "hubBoardObjective": "Obiettivo della federazione: {label}",
   "hubObjectiveMet": "RAGGIUNTO · {result}",
   "hubObjectiveMissed": "MANCATO · {result}",

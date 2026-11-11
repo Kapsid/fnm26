@@ -481,11 +481,12 @@ class _ChampionshipTile extends StatelessWidget {
         color: live
             ? AppColors.positive.withValues(alpha: 0.08)
             : AppColors.surfaceContainerHigh,
-        border: Border.all(
-          color: live
-              ? AppColors.positive.withValues(alpha: 0.6)
-              : AppColors.surfaceContainerHighest,
-        ),
+        // The hub's card edge (AppCard's own), so these tiles and the hub's
+        // board and funds tiles read as one set; only a live competition
+        // trades it for its green.
+        border: live
+            ? Border.all(color: AppColors.positive.withValues(alpha: 0.6))
+            : null,
         onTap: available
             ? onView
             : () => ScaffoldMessenger.of(context)

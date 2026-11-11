@@ -1670,6 +1670,9 @@ class AppLocalizationsRo extends AppLocalizations {
   String get hubBoard => 'FEDERAȚIA';
 
   @override
+  String get hubFunds => 'FONDURI';
+
+  @override
   String hubBoardObjective(String label) {
     return 'Obiectivul federației: $label';
   }

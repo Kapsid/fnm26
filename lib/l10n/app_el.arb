@@ -459,6 +459,7 @@
   "hubBoardConcerned": "Ανήσυχη",
   "hubBoardJobAtRisk": "Η θέση σου κινδυνεύει",
   "hubBoard": "ΔΙΟΙΚΗΣΗ",
+  "hubFunds": "ΚΟΝΔΥΛΙΑ",
   "hubBoardObjective": "Στόχος της διοίκησης: {label}",
   "hubObjectiveMet": "ΕΠΙΤΕΥΧΘΗΚΕ · {result}",
   "hubObjectiveMissed": "ΑΠΟΤΥΧΙΑ · {result}",

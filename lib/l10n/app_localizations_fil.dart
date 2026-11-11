@@ -1651,6 +1651,9 @@ class AppLocalizationsFil extends AppLocalizations {
   String get hubBoard => 'BOARD';
 
   @override
+  String get hubFunds => 'PONDO';
+
+  @override
   String hubBoardObjective(String label) {
     return 'Layunin ng board: $label';
   }

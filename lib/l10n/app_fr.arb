@@ -459,6 +459,7 @@
   "hubBoardConcerned": "Inquiète",
   "hubBoardJobAtRisk": "Poste menacé",
   "hubBoard": "DIRECTION",
+  "hubFunds": "FONDS",
   "hubBoardObjective": "Objectif de la direction : {label}",
   "hubObjectiveMet": "ATTEINT · {result}",
   "hubObjectiveMissed": "MANQUÉ · {result}",

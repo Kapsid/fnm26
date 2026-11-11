@@ -296,45 +296,25 @@ class _BoardPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
-    final value = ref.watch(satisfactionProvider(careerId)).valueOrNull;
-    final (color, verdict) = boardVerdict(l, value);
     final objectives =
         ref.watch(cycleObjectivesProvider(careerId)).valueOrNull ??
         const <CycleObjective>[];
+    void openObjectives() =>
+        context.go('${Routes.boardObjectives}?careerId=$careerId');
     return Panel(
       title: l.sideBoard,
-      action: PanelLink(
-        label: l.panelViewAll,
-        onTap: () => context.go('${Routes.boardObjectives}?careerId=$careerId'),
-      ),
+      action: PanelLink(label: l.panelViewAll, onTap: openObjectives),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  l.boardObjectivesConfidence,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TabletText.cell,
-                ),
-              ),
-              if (value != null)
-                Text(
-                  '$value%',
-                  style: TabletText.cellNumeric.copyWith(color: color),
-                ),
-            ],
+          // The phone's two tiles, one above the other: side by side they
+          // would not leave the mood word room in a three-column panel.
+          HubBoardTiles(
+            careerId: careerId,
+            stacked: true,
+            onBoard: openObjectives,
+            onFunds: () => context.go('${Routes.finances}?careerId=$careerId'),
           ),
-          const SizedBox(height: AppSpacing.xs),
-          _Bar(fraction: (value ?? 0) / 100, color: color),
-          // The verdict only once there is a figure: without one,
-          // boardVerdict's placeholder is a dash, not a word.
-          if (value != null) ...[
-            const SizedBox(height: AppSpacing.xs),
-            Text(verdict, style: TabletText.barMeta.copyWith(color: color)),
-          ],
           for (final o in objectives) ...[
             const SizedBox(height: AppSpacing.sm),
             Text(o.label, style: TabletText.cell),

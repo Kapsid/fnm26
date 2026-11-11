@@ -2904,6 +2904,12 @@ abstract class AppLocalizations {
   /// **'BOARD'**
   String get hubBoard;
 
+  /// Small caption on the hub's funds tile, over the money the federation has free to spend.
+  ///
+  /// In en, this message translates to:
+  /// **'FUNDS'**
+  String get hubFunds;
+
   /// Board objective line with its label.
   ///
   /// In en, this message translates to:

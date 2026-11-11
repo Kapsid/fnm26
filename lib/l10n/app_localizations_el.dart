@@ -1690,6 +1690,9 @@ class AppLocalizationsEl extends AppLocalizations {
   String get hubBoard => 'ΔΙΟΙΚΗΣΗ';
 
   @override
+  String get hubFunds => 'ΚΟΝΔΥΛΙΑ';
+
+  @override
   String hubBoardObjective(String label) {
     return 'Στόχος της διοίκησης: $label';
   }

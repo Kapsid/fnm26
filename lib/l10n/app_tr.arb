@@ -459,6 +459,7 @@
   "hubBoardConcerned": "Endişeli",
   "hubBoardJobAtRisk": "Görev risk altında",
   "hubBoard": "YÖNETİM KURULU",
+  "hubFunds": "BÜTÇE",
   "hubBoardObjective": "Yönetim hedefi: {label}",
   "hubObjectiveMet": "BAŞARILDI · {result}",
   "hubObjectiveMissed": "KAÇIRILDI · {result}",

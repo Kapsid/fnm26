@@ -1582,6 +1582,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get hubBoard => '協会';
 
   @override
+  String get hubFunds => '資金';
+
+  @override
   String hubBoardObjective(String label) {
     return '協会の目標: $label';
   }

@@ -1700,6 +1700,9 @@ class AppLocalizationsBg extends AppLocalizations {
   String get hubBoard => 'СЪВЕТ';
 
   @override
+  String get hubFunds => 'СРЕДСТВА';
+
+  @override
   String hubBoardObjective(String label) {
     return 'Цел на съвета: $label';
   }

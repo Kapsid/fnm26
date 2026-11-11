@@ -459,6 +459,7 @@
   "hubBoardConcerned": "Bimbang",
   "hubBoardJobAtRisk": "Jawatan terancam",
   "hubBoard": "LEMBAGA",
+  "hubFunds": "DANA",
   "hubBoardObjective": "Objektif lembaga: {label}",
   "hubObjectiveMet": "TERCAPAI · {result}",
   "hubObjectiveMissed": "GAGAL · {result}",

@@ -1655,6 +1655,9 @@ class AppLocalizationsPl extends AppLocalizations {
   String get hubBoard => 'ZARZĄD';
 
   @override
+  String get hubFunds => 'ŚRODKI';
+
+  @override
   String hubBoardObjective(String label) {
     return 'Cel zarządu: $label';
   }

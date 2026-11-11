@@ -1658,6 +1658,9 @@ class AppLocalizationsDa extends AppLocalizations {
   String get hubBoard => 'BESTYRELSE';
 
   @override
+  String get hubFunds => 'MIDLER';
+
+  @override
   String hubBoardObjective(String label) {
     return 'Bestyrelsens mål: $label';
   }

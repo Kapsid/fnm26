@@ -459,6 +459,7 @@
   "hubBoardConcerned": "Bezorgd",
   "hubBoardJobAtRisk": "Baan in gevaar",
   "hubBoard": "BESTUUR",
+  "hubFunds": "MIDDELEN",
   "hubBoardObjective": "Bestuursdoel: {label}",
   "hubObjectiveMet": "BEHAALD · {result}",
   "hubObjectiveMissed": "GEMIST · {result}",
