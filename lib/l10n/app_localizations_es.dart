@@ -1699,6 +1699,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get hubBoard => 'DIRECTIVA';
 
   @override
+  String get hubFunds => 'FONDOS';
+
+  @override
   String hubBoardObjective(String label) {
     return 'Objetivo de la directiva: $label';
   }

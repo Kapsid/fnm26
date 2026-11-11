@@ -459,6 +459,7 @@
   "hubBoardConcerned": "Bekymret",
   "hubBoardJobAtRisk": "Jobben i fare",
   "hubBoard": "STYRET",
+  "hubFunds": "MIDLER",
   "hubBoardObjective": "Styrets mål: {label}",
   "hubObjectiveMet": "OPPNÅDD · {result}",
   "hubObjectiveMissed": "IKKE NÅDD · {result}",

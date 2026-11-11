@@ -459,6 +459,7 @@
   "hubBoardConcerned": "Khawatir",
   "hubBoardJobAtRisk": "Jabatan terancam",
   "hubBoard": "DEWAN",
+  "hubFunds": "DANA",
   "hubBoardObjective": "Target dewan: {label}",
   "hubObjectiveMet": "TERCAPAI · {result}",
   "hubObjectiveMissed": "GAGAL · {result}",

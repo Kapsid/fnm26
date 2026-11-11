@@ -1587,6 +1587,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get hubBoard => '협회 이사회';
 
   @override
+  String get hubFunds => '자금';
+
+  @override
   String hubBoardObjective(String label) {
     return '이사회 목표: $label';
   }

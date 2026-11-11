@@ -459,6 +459,7 @@
   "hubBoardConcerned": "กังวล",
   "hubBoardJobAtRisk": "เก้าอี้สั่นคลอน",
   "hubBoard": "บอร์ดบริหาร",
+  "hubFunds": "งบประมาณ",
   "hubBoardObjective": "เป้าหมายของบอร์ด: {label}",
   "hubObjectiveMet": "สำเร็จ · {result}",
   "hubObjectiveMissed": "พลาดเป้า · {result}",

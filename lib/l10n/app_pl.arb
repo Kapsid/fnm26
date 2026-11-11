@@ -459,6 +459,7 @@
   "hubBoardConcerned": "Zaniepokojony",
   "hubBoardJobAtRisk": "Posada zagrożona",
   "hubBoard": "ZARZĄD",
+  "hubFunds": "ŚRODKI",
   "hubBoardObjective": "Cel zarządu: {label}",
   "hubObjectiveMet": "OSIĄGNIĘTY · {result}",
   "hubObjectiveMissed": "NIEOSIĄGNIĘTY · {result}",

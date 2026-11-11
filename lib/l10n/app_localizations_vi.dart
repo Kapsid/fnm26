@@ -1642,6 +1642,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get hubBoard => 'BAN LÃNH ĐẠO';
 
   @override
+  String get hubFunds => 'NGÂN SÁCH';
+
+  @override
   String hubBoardObjective(String label) {
     return 'Mục tiêu của ban lãnh đạo: $label';
   }

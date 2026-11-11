@@ -459,6 +459,7 @@
   "hubBoardConcerned": "Orolig",
   "hubBoardJobAtRisk": "Jobbet i fara",
   "hubBoard": "STYRELSE",
+  "hubFunds": "MEDEL",
   "hubBoardObjective": "Styrelsens mål: {label}",
   "hubObjectiveMet": "UPPNÅTT · {result}",
   "hubObjectiveMissed": "MISSAT · {result}",

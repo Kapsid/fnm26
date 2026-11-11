@@ -459,6 +459,7 @@
   "hubBoardConcerned": "Îngrijorată",
   "hubBoardJobAtRisk": "Post în pericol",
   "hubBoard": "FEDERAȚIA",
+  "hubFunds": "FONDURI",
   "hubBoardObjective": "Obiectivul federației: {label}",
   "hubObjectiveMet": "ATINS · {result}",
   "hubObjectiveMissed": "RATAT · {result}",

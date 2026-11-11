@@ -1649,6 +1649,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get hubBoard => 'РАДА';
 
   @override
+  String get hubFunds => 'КОШТИ';
+
+  @override
   String hubBoardObjective(String label) {
     return 'Завдання від ради: $label';
   }

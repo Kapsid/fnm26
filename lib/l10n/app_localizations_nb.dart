@@ -1674,6 +1674,9 @@ class AppLocalizationsNb extends AppLocalizations {
   String get hubBoard => 'STYRET';
 
   @override
+  String get hubFunds => 'MIDLER';
+
+  @override
   String hubBoardObjective(String label) {
     return 'Styrets mål: $label';
   }

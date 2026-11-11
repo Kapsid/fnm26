@@ -459,6 +459,7 @@
   "hubBoardConcerned": "Preocupada",
   "hubBoardJobAtRisk": "Cargo em risco",
   "hubBoard": "DIREÇÃO",
+  "hubFunds": "FUNDOS",
   "hubBoardObjective": "Objetivo da direção: {label}",
   "hubObjectiveMet": "CUMPRIDO · {result}",
   "hubObjectiveMissed": "FALHOU · {result}",

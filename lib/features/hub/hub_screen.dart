@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -385,14 +386,14 @@ class _HubScreenState extends ConsumerState<HubScreen> {
                 // The press, when they have something to ask. A card, not a
                 // forced step: it waits, and it goes away on its own if the
                 // manager would rather not talk.
-                _BoardFinanceCard(
+                HubBoardTiles(
                   key: TourKeys.hubBoard,
                   careerId: careerId,
-                  onFinances: () =>
-                      context.go('${Routes.finances}?careerId=$careerId'),
-                  onObjectives: () => context.go(
+                  onBoard: () => context.go(
                     '${Routes.boardObjectives}?careerId=$careerId',
                   ),
+                  onFunds: () =>
+                      context.go('${Routes.finances}?careerId=$careerId'),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 // The primary action is whatever the next timeline event is
@@ -473,101 +474,252 @@ class _ChampionBanner extends StatelessWidget {
   }
 }
 
-/// The strip's buttons: short enough that two of them plus the confidence
-/// figure read as one line of status rather than three stacked controls.
-final ButtonStyle _stripButton = OutlinedButton.styleFrom(
-  foregroundColor: AppColors.primary,
-  side: const BorderSide(color: AppColors.outlineVariant),
-  textStyle: AppTypography.labelSmall,
-  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-  minimumSize: const Size(0, 32),
-  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-);
+/// The colour of the board's mood on the hub tiles: green while pleased or
+/// better, the neutral silver while it expects more, amber concerned, red once
+/// the job is at risk. The verdict word itself is [boardVerdict]'s, so both
+/// screens say the same thing.
+Color hubBoardMoodColor(int? value) => switch (value) {
+  null => AppColors.onSurfaceVariant,
+  >= 55 => AppColors.positive,
+  >= 40 => AppColors.primary,
+  >= 25 => AppColors.warning,
+  _ => AppColors.error,
+};
 
-/// A single compact strip: board confidence (shown immediately, colour-coded)
-/// on the left, the federation funds as a button through to the finances screen
-/// on the right, and a way through to the board's objectives below.
-class _BoardFinanceCard extends ConsumerWidget {
-  const _BoardFinanceCard({
+/// The board and the federation's funds as two equal tiles side by side
+/// ([stacked] puts one above the other, for the tablet's narrow board panel).
+///
+/// The board tile is a confidence ring and the mood word, through to the
+/// objectives; the funds tile is what is left to SPEND, through to the
+/// finances. Fixed type sizes: a long mood word wraps and the tiles grow
+/// with it, never scaled down, never clipped.
+class HubBoardTiles extends ConsumerWidget {
+  const HubBoardTiles({
     required this.careerId,
+    required this.onBoard,
+    required this.onFunds,
+    this.stacked = false,
     super.key,
-    required this.onFinances,
-    required this.onObjectives,
   });
 
   final int careerId;
-  final VoidCallback onFinances;
-  final VoidCallback onObjectives;
+  final VoidCallback onBoard;
+  final VoidCallback onFunds;
+  final bool stacked;
+
+  static const Key boardTileKey = Key('hub.boardTile');
+  static const Key fundsTileKey = Key('hub.fundsTile');
+
+  /// The gap between the two tiles.
+  static const double gap = 10;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final value = ref.watch(satisfactionProvider(careerId)).valueOrNull;
-    final (color, verdict) = boardVerdict(l, value);
+    final (_, verdict) = boardVerdict(l, value);
+    final color = hubBoardMoodColor(value);
     // What is left to SPEND, not what the federation holds. The balance still
-    // contains the staff's wages — they are paid at the rollover — so a manager
+    // contains the staff's wages (they are paid at the rollover), so a manager
     // who had just committed every last euro on the budget screen came back to
     // the hub, saw the wage bill sitting there as a balance, and read it as his
     // allocation having gone nowhere. See [federationFundsProvider].
     final funds = ref.watch(federationFundsProvider(careerId)).valueOrNull;
-    // Tighter than a default pod. This strip is a STATUS line, not a section:
-    // at full padding with two full-height buttons it took as much of the hub
-    // as the fixture it sits above, for two numbers and a way through.
-    return AppCard(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: AppSpacing.sm,
+    final amount = formatEuros(funds?.free ?? 0);
+
+    final board = _HubTile(
+      key: boardTileKey,
+      semanticsLabel: value == null
+          ? l.sideBoard
+          : '${l.sideBoard}: $verdict, $value%',
+      onTap: onBoard,
+      // A job at risk is said by the edge too, not only by the word.
+      border: value != null && value < 25
+          ? Border.all(color: AppColors.error.withValues(alpha: 0.6))
+          : null,
+      leading: _ConfidenceRing(value: value, color: color),
+      label: l.hubBoard,
+      body: Text(
+        verdict,
+        style: AppTypography.bodyMedium.copyWith(
+          color: color,
+          fontWeight: FontWeight.w600,
+          height: 1.2,
+        ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    );
+    final fundsTile = _HubTile(
+      key: fundsTileKey,
+      semanticsLabel: '${l.federationFreeToSpend}: $amount',
+      onTap: onFunds,
+      leading: const SizedBox.square(
+        dimension: 28,
+        child: Icon(Icons.account_balance, color: AppColors.primary, size: 24),
+      ),
+      label: l.hubFunds,
+      body: Text(
+        amount,
+        style: AppTypography.labelMedium.copyWith(
+          color: AppColors.onSurface,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+    if (stacked) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [board, const SizedBox(height: gap), fundsTile],
+      );
+    }
+    // Equal heights: the taller tile (a mood word on two lines) sets the row.
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              Icon(Icons.gavel, color: color, size: 18),
-              const SizedBox(width: AppSpacing.sm),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    value == null ? l.hubBoard : '$value%',
-                    style: AppTypography.bodyMedium.copyWith(color: color),
-                  ),
-                  Text(
-                    verdict,
-                    style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              OutlinedButton.icon(
-                onPressed: onFinances,
-                icon: const Icon(Icons.account_balance, size: 14),
-                label: Text(formatEuros(funds?.free ?? 0)),
-                style: _stripButton,
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          // The objectives themselves live on their own screen: spelled out in
-          // full they never fit this strip, and an ellipsised half-sentence
-          // told the manager less than the confidence figure above already
-          // does.
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton.icon(
-              onPressed: onObjectives,
-              icon: const Icon(Icons.flag_outlined, size: 14),
-              label: Text(l.boardObjectivesTitle),
-              style: _stripButton,
-            ),
-          ),
+          Expanded(child: board),
+          const SizedBox(width: gap),
+          Expanded(child: fundsTile),
         ],
       ),
     );
   }
+}
+
+/// One hub tile: the hub's card edge over the competitions list's raised
+/// fill, a leading graphic, a small spaced monospace label and a line under
+/// it. One button to a screen reader, read as [semanticsLabel].
+class _HubTile extends StatelessWidget {
+  const _HubTile({
+    required this.semanticsLabel,
+    required this.onTap,
+    required this.leading,
+    required this.label,
+    required this.body,
+    this.border,
+    super.key,
+  });
+
+  final String semanticsLabel;
+  final VoidCallback onTap;
+  final Widget leading;
+  final String label;
+  final Widget body;
+  final BoxBorder? border;
+
+  @override
+  Widget build(BuildContext context) {
+    final lang = Localizations.localeOf(context).languageCode;
+    return Semantics(
+      container: true,
+      button: true,
+      label: semanticsLabel,
+      onTap: onTap,
+      excludeSemantics: true,
+      child: AppCard(
+        color: AppColors.surfaceContainerHigh,
+        border: border,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm + 4,
+          vertical: AppSpacing.sm + 2,
+        ),
+        onTap: onTap,
+        child: Row(
+          children: [
+            leading,
+            const SizedBox(width: AppSpacing.sm + 2),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(label.capsIn(lang), style: profileCaptionStyle),
+                  const SizedBox(height: 2),
+                  body,
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// The board's confidence as a ring: a dim track, the arc filled to the
+/// percentage in the mood's colour, and the figure in the middle. The ring
+/// grows with the text size so the figure always fits inside it.
+class _ConfidenceRing extends StatelessWidget {
+  const _ConfidenceRing({required this.value, required this.color});
+
+  final int? value;
+  final Color color;
+
+  static const double _size = 44;
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.textScalerOf(context).scale(_size);
+    return SizedBox.square(
+      dimension: size,
+      child: CustomPaint(
+        painter: _RingPainter(
+          fraction: ((value ?? 0) / 100).clamp(0.0, 1.0),
+          color: color,
+        ),
+        child: Center(
+          child: Text(
+            value == null ? '-' : '$value',
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurface,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _RingPainter extends CustomPainter {
+  const _RingPainter({required this.fraction, required this.color});
+
+  final double fraction;
+  final Color color;
+
+  static const double _stroke = 4;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = (Offset.zero & size).deflate(_stroke / 2);
+    canvas.drawArc(
+      rect,
+      0,
+      2 * math.pi,
+      false,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = _stroke
+        ..color = AppColors.surfaceContainerHighest,
+    );
+    if (fraction <= 0) return;
+    canvas.drawArc(
+      rect,
+      -math.pi / 2,
+      2 * math.pi * fraction,
+      false,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = _stroke
+        ..strokeCap = StrokeCap.round
+        ..color = color,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_RingPainter old) =>
+      old.fraction != fraction || old.color != color;
 }
 
 /// Human-readable stage for a fixture (distinguishes qualifiers from finals).

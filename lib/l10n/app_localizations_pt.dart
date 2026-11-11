@@ -1704,6 +1704,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get hubBoard => 'DIREÇÃO';
 
   @override
+  String get hubFunds => 'FUNDOS';
+
+  @override
   String hubBoardObjective(String label) {
     return 'Objetivo da direção: $label';
   }

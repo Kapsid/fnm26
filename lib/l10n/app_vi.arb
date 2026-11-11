@@ -459,6 +459,7 @@
   "hubBoardConcerned": "Lo ngại",
   "hubBoardJobAtRisk": "Ghế nóng",
   "hubBoard": "BAN LÃNH ĐẠO",
+  "hubFunds": "NGÂN SÁCH",
   "hubBoardObjective": "Mục tiêu của ban lãnh đạo: {label}",
   "hubObjectiveMet": "ĐẠT · {result}",
   "hubObjectiveMissed": "KHÔNG ĐẠT · {result}",

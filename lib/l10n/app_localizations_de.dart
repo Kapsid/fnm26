@@ -1706,6 +1706,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get hubBoard => 'PRÄSIDIUM';
 
   @override
+  String get hubFunds => 'MITTEL';
+
+  @override
   String hubBoardObjective(String label) {
     return 'Ziel des Präsidiums: $label';
   }

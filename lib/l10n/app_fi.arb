@@ -459,6 +459,7 @@
   "hubBoardConcerned": "Huolissaan",
   "hubBoardJobAtRisk": "Työ vaarassa",
   "hubBoard": "HALLITUS",
+  "hubFunds": "VARAT",
   "hubBoardObjective": "Hallituksen tavoite: {label}",
   "hubObjectiveMet": "SAAVUTETTU · {result}",
   "hubObjectiveMissed": "EPÄONNISTUI · {result}",

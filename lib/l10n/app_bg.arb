@@ -459,6 +459,7 @@
   "hubBoardConcerned": "Притеснен",
   "hubBoardJobAtRisk": "Постът е в риск",
   "hubBoard": "СЪВЕТ",
+  "hubFunds": "СРЕДСТВА",
   "hubBoardObjective": "Цел на съвета: {label}",
   "hubObjectiveMet": "ПОСТИГНАТА · {result}",
   "hubObjectiveMissed": "ПРОВАЛЕНА · {result}",

@@ -459,6 +459,7 @@
   "hubBoardConcerned": "Zabrinut",
   "hubBoardJobAtRisk": "Posao u opasnosti",
   "hubBoard": "ODBOR",
+  "hubFunds": "SREDSTVA",
   "hubBoardObjective": "Cilj odbora: {label}",
   "hubObjectiveMet": "ISPUNJENO · {result}",
   "hubObjectiveMissed": "PROPUŠTENO · {result}",

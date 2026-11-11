@@ -1710,6 +1710,9 @@ class AppLocalizationsHr extends AppLocalizations {
   String get hubBoard => 'ODBOR';
 
   @override
+  String get hubFunds => 'SREDSTVA';
+
+  @override
   String hubBoardObjective(String label) {
     return 'Cilj odbora: $label';
   }

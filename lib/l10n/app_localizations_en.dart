@@ -1686,6 +1686,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hubBoard => 'BOARD';
 
   @override
+  String get hubFunds => 'FUNDS';
+
+  @override
   String hubBoardObjective(String label) {
     return 'Board objective: $label';
   }

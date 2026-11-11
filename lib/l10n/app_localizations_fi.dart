@@ -1698,6 +1698,9 @@ class AppLocalizationsFi extends AppLocalizations {
   String get hubBoard => 'HALLITUS';
 
   @override
+  String get hubFunds => 'VARAT';
+
+  @override
   String hubBoardObjective(String label) {
     return 'Hallituksen tavoite: $label';
   }

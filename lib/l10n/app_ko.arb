@@ -459,6 +459,7 @@
   "hubBoardConcerned": "우려",
   "hubBoardJobAtRisk": "경질 위기",
   "hubBoard": "협회 이사회",
+  "hubFunds": "자금",
   "hubBoardObjective": "이사회 목표: {label}",
   "hubObjectiveMet": "달성 · {result}",
   "hubObjectiveMissed": "실패 · {result}",

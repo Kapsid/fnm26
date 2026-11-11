@@ -459,6 +459,7 @@
   "hubBoardConcerned": "Aggódik",
   "hubBoardJobAtRisk": "Veszélyben a munkád",
   "hubBoard": "VEZETŐSÉG",
+  "hubFunds": "KERET",
   "hubBoardObjective": "Vezetőségi cél: {label}",
   "hubObjectiveMet": "TELJESÍTVE · {result}",
   "hubObjectiveMissed": "NEM TELJESÜLT · {result}",

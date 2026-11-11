@@ -459,6 +459,7 @@
   "hubBoardConcerned": "懸念",
   "hubBoardJobAtRisk": "解任の危機",
   "hubBoard": "協会",
+  "hubFunds": "資金",
   "hubBoardObjective": "協会の目標: {label}",
   "hubObjectiveMet": "達成 · {result}",
   "hubObjectiveMissed": "未達 · {result}",

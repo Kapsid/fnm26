@@ -1636,6 +1636,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get hubBoard => 'बोर्ड';
 
   @override
+  String get hubFunds => 'धनराशि';
+
+  @override
   String hubBoardObjective(String label) {
     return 'बोर्ड का लक्ष्य: $label';
   }

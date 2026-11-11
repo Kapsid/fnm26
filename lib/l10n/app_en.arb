@@ -2438,6 +2438,10 @@
   "@hubBoard": {
     "description": "Heading of the board panel."
   },
+  "hubFunds": "FUNDS",
+  "@hubFunds": {
+    "description": "Small caption on the hub's funds tile, over the money the federation has free to spend."
+  },
   "hubBoardObjective": "Board objective: {label}",
   "@hubBoardObjective": {
     "description": "Board objective line with its label.",

@@ -1648,6 +1648,9 @@ class AppLocalizationsMs extends AppLocalizations {
   String get hubBoard => 'LEMBAGA';
 
   @override
+  String get hubFunds => 'DANA';
+
+  @override
   String hubBoardObjective(String label) {
     return 'Objektif lembaga: $label';
   }

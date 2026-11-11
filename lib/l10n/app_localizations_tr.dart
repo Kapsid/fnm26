@@ -1640,6 +1640,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get hubBoard => 'YÖNETİM KURULU';
 
   @override
+  String get hubFunds => 'BÜTÇE';
+
+  @override
   String hubBoardObjective(String label) {
     return 'Yönetim hedefi: $label';
   }

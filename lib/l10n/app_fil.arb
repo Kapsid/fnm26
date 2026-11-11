@@ -459,6 +459,7 @@
   "hubBoardConcerned": "Nag-aalala",
   "hubBoardJobAtRisk": "Nanganganib ang trabaho",
   "hubBoard": "BOARD",
+  "hubFunds": "PONDO",
   "hubBoardObjective": "Layunin ng board: {label}",
   "hubObjectiveMet": "NAABOT · {result}",
   "hubObjectiveMissed": "HINDI NAABOT · {result}",
