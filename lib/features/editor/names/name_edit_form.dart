@@ -107,8 +107,13 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
   /// sponsor's description.
   bool get _hasSecond => NameEdits.pathsOf(_section, _e).length > 1;
 
+  /// Whether the row is a sponsor the database adds, whose second text is
+  /// its description (an added reporter's is his outlet, as the game's).
+  bool get _isAddedSponsor => _e.added && _section == NameSection.sponsors;
+
   /// The longest second text.
-  int get _secondMax => _e.added ? PackRules.descriptionMax : PackRules.nameMax;
+  int get _secondMax =>
+      _isAddedSponsor ? PackRules.descriptionMax : PackRules.nameMax;
   String? get _lang => widget.language;
   PackEditor get _editor =>
       ref.read(packEditorProvider(widget.packId).notifier);
@@ -554,17 +559,17 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
           controller: _second,
           maxLength: _secondMax,
           // An added sponsor's description runs over lines.
-          minLines: _e.added ? 2 : 1,
-          maxLines: _e.added ? 4 : 1,
-          onTapOutside: _e.added ? hideKeyboard : null,
-          textCapitalization: _e.added
+          minLines: _isAddedSponsor ? 2 : 1,
+          maxLines: _isAddedSponsor ? 4 : 1,
+          onTapOutside: _isAddedSponsor ? hideKeyboard : null,
+          textCapitalization: _isAddedSponsor
               ? TextCapitalization.sentences
               : TextCapitalization.words,
           style: style,
           onChanged: (_) => _changed(),
           onSubmitted: (_) => widget.onDone?.call(),
           decoration: InputDecoration(
-            labelText: _e.added
+            labelText: _isAddedSponsor
                 ? l.editorAddedDescription
                 : l.editorNamesOutlet,
             hintText: fallback(inLanguage?.second),

@@ -15287,6 +15287,62 @@ class AppLocalizationsMs extends AppLocalizations {
   }
 
   @override
+  String get editorAddReporter => 'Tambah wartawan';
+
+  @override
+  String get editorAddStadium => 'Tambah stadium';
+
+  @override
+  String editorAddedReportersFull(int max) {
+    return 'Pangkalan data boleh menambah paling banyak $max wartawan.';
+  }
+
+  @override
+  String editorAddedStadiumsFull(int max) {
+    return 'Pangkalan data boleh menambah paling banyak $max stadium.';
+  }
+
+  @override
+  String get editorAddedCity => 'Bandar';
+
+  @override
+  String get editorAddedCityHelp =>
+      'Mana-mana bandar boleh. Bandar yang tidak dikenali permainan mengikut rupa negaranya dan dikira berada di paras laut.';
+
+  @override
+  String get editorAddedCapacity => 'Tempat duduk';
+
+  @override
+  String editorAddedCapacityRange(int min, int max) {
+    final intl.NumberFormat minNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String minString = minNumberFormat.format(min);
+    final intl.NumberFormat maxNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String maxString = maxNumberFormat.format(max);
+
+    return '$minString hingga $maxString tempat duduk';
+  }
+
+  @override
+  String editorAddedStadiumTaken(String country) {
+    return '$country sudah ada stadium tambahan dengan nama ini.';
+  }
+
+  @override
+  String get editorAddedFieldNeeded => 'Isi ruangan ini';
+
+  @override
+  String get editorAddedReporterAbout =>
+      'Dalam kerjaya pada pangkalan data ini, dia menyertai bilik media dan bertanya di sidang media.';
+
+  @override
+  String get editorAddedStadiumAbout =>
+      'Dalam kerjaya pada pangkalan data ini, stadium ini menjadi tuan rumah sebahagian perlawanan di laman sendiri pasukan kebangsaannya. Pusingan akhir kekal di stadium asal permainan.';
+
+  @override
   String get editorAddedGone => 'Ini sudah tiada dalam pangkalan data.';
 
   @override

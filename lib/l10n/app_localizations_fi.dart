@@ -15406,6 +15406,62 @@ class AppLocalizationsFi extends AppLocalizations {
   }
 
   @override
+  String get editorAddReporter => 'Lisää toimittaja';
+
+  @override
+  String get editorAddStadium => 'Lisää stadion';
+
+  @override
+  String editorAddedReportersFull(int max) {
+    return 'Tietokantaan voi lisätä enintään $max toimittajaa.';
+  }
+
+  @override
+  String editorAddedStadiumsFull(int max) {
+    return 'Tietokantaan voi lisätä enintään $max stadionia.';
+  }
+
+  @override
+  String get editorAddedCity => 'Kaupunki';
+
+  @override
+  String get editorAddedCityHelp =>
+      'Mikä tahansa kaupunki käy. Kaupunki, jota peli ei tunne, saa maansa ilmeen ja on merenpinnan tasolla.';
+
+  @override
+  String get editorAddedCapacity => 'Paikat';
+
+  @override
+  String editorAddedCapacityRange(int min, int max) {
+    final intl.NumberFormat minNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String minString = minNumberFormat.format(min);
+    final intl.NumberFormat maxNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String maxString = maxNumberFormat.format(max);
+
+    return 'Vähintään $minString ja enintään $maxString paikkaa';
+  }
+
+  @override
+  String editorAddedStadiumTaken(String country) {
+    return 'Maalla $country on jo lisätty stadion tällä nimellä.';
+  }
+
+  @override
+  String get editorAddedFieldNeeded => 'Täytä tämä kenttä';
+
+  @override
+  String get editorAddedReporterAbout =>
+      'Istuu tämän tietokannan urilla lehdistötilassa ja esittää kysymyksiä lehdistötilaisuuksissa.';
+
+  @override
+  String get editorAddedStadiumAbout =>
+      'Isännöi tämän tietokannan urilla osaa maansa kotiotteluista. Lopputurnaukset pelataan pelin omilla stadioneilla.';
+
+  @override
   String get editorAddedGone => 'Tätä ei ole enää tietokannassa.';
 
   @override

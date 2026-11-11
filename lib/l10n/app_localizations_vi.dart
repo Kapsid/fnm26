@@ -15182,6 +15182,62 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String get editorAddReporter => 'Thêm phóng viên';
+
+  @override
+  String get editorAddStadium => 'Thêm sân vận động';
+
+  @override
+  String editorAddedReportersFull(int max) {
+    return 'Mỗi cơ sở dữ liệu thêm được tối đa $max phóng viên.';
+  }
+
+  @override
+  String editorAddedStadiumsFull(int max) {
+    return 'Mỗi cơ sở dữ liệu thêm được tối đa $max sân vận động.';
+  }
+
+  @override
+  String get editorAddedCity => 'Thành phố';
+
+  @override
+  String get editorAddedCityHelp =>
+      'Thành phố nào cũng được. Thành phố mà trò chơi không biết sẽ mang diện mạo của quốc gia và được coi như ở mực nước biển.';
+
+  @override
+  String get editorAddedCapacity => 'Số chỗ ngồi';
+
+  @override
+  String editorAddedCapacityRange(int min, int max) {
+    final intl.NumberFormat minNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String minString = minNumberFormat.format(min);
+    final intl.NumberFormat maxNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String maxString = maxNumberFormat.format(max);
+
+    return 'Từ $minString đến $maxString chỗ ngồi';
+  }
+
+  @override
+  String editorAddedStadiumTaken(String country) {
+    return '$country đã có một sân được thêm với tên này.';
+  }
+
+  @override
+  String get editorAddedFieldNeeded => 'Hãy điền vào ô này';
+
+  @override
+  String get editorAddedReporterAbout =>
+      'Trong các sự nghiệp dùng cơ sở dữ liệu này, phóng viên sẽ vào phòng họp báo và đặt câu hỏi tại các buổi họp báo.';
+
+  @override
+  String get editorAddedStadiumAbout =>
+      'Trong các sự nghiệp dùng cơ sở dữ liệu này, sân sẽ tổ chức một phần các trận sân nhà của đội tuyển. Các vòng chung kết vẫn diễn ra ở các sân gốc của trò chơi.';
+
+  @override
   String get editorAddedGone => 'Mục này không còn trong cơ sở dữ liệu.';
 
   @override

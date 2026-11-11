@@ -15418,6 +15418,62 @@ class AppLocalizationsBg extends AppLocalizations {
   }
 
   @override
+  String get editorAddReporter => 'Добави журналист';
+
+  @override
+  String get editorAddStadium => 'Добави стадион';
+
+  @override
+  String editorAddedReportersFull(int max) {
+    return 'Базата данни може да добави най-много $max журналисти.';
+  }
+
+  @override
+  String editorAddedStadiumsFull(int max) {
+    return 'Базата данни може да добави най-много $max стадиона.';
+  }
+
+  @override
+  String get editorAddedCity => 'Град';
+
+  @override
+  String get editorAddedCityHelp =>
+      'Става всеки град. Град, който играта не познава, приема облика на страната си и е на морското равнище.';
+
+  @override
+  String get editorAddedCapacity => 'Места';
+
+  @override
+  String editorAddedCapacityRange(int min, int max) {
+    final intl.NumberFormat minNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String minString = minNumberFormat.format(min);
+    final intl.NumberFormat maxNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String maxString = maxNumberFormat.format(max);
+
+    return 'От $minString до $maxString места';
+  }
+
+  @override
+  String editorAddedStadiumTaken(String country) {
+    return '$country вече има добавен стадион с това име.';
+  }
+
+  @override
+  String get editorAddedFieldNeeded => 'Попълни това поле';
+
+  @override
+  String get editorAddedReporterAbout =>
+      'В кариерите с тази база данни влиза в пресзалата и задава въпроси на пресконференциите.';
+
+  @override
+  String get editorAddedStadiumAbout =>
+      'В кариерите с тази база данни приема част от домакинските мачове на националния си отбор. Финалните турнири остават на стадионите от играта.';
+
+  @override
   String get editorAddedGone => 'Това вече не е в базата данни.';
 
   @override

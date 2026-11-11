@@ -15419,6 +15419,62 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
+  String get editorAddReporter => 'Προσθήκη δημοσιογράφου';
+
+  @override
+  String get editorAddStadium => 'Προσθήκη γηπέδου';
+
+  @override
+  String editorAddedReportersFull(int max) {
+    return 'Μια βάση δεδομένων προσθέτει έως $max δημοσιογράφους.';
+  }
+
+  @override
+  String editorAddedStadiumsFull(int max) {
+    return 'Μια βάση δεδομένων προσθέτει έως $max γήπεδα.';
+  }
+
+  @override
+  String get editorAddedCity => 'Πόλη';
+
+  @override
+  String get editorAddedCityHelp =>
+      'Κάνει οποιαδήποτε πόλη. Μια πόλη που δεν ξέρει το παιχνίδι παίρνει την όψη της χώρας της και θεωρείται στο επίπεδο της θάλασσας.';
+
+  @override
+  String get editorAddedCapacity => 'Θέσεις';
+
+  @override
+  String editorAddedCapacityRange(int min, int max) {
+    final intl.NumberFormat minNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String minString = minNumberFormat.format(min);
+    final intl.NumberFormat maxNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String maxString = maxNumberFormat.format(max);
+
+    return 'Από $minString έως $maxString θέσεις';
+  }
+
+  @override
+  String editorAddedStadiumTaken(String country) {
+    return 'Η χώρα $country έχει ήδη προστεθέν γήπεδο με αυτό το όνομα.';
+  }
+
+  @override
+  String get editorAddedFieldNeeded => 'Συμπλήρωσε αυτό το πεδίο';
+
+  @override
+  String get editorAddedReporterAbout =>
+      'Στις καριέρες με αυτή τη βάση μπαίνει στην αίθουσα Τύπου και κάνει ερωτήσεις στις συνεντεύξεις Τύπου.';
+
+  @override
+  String get editorAddedStadiumAbout =>
+      'Στις καριέρες με αυτή τη βάση φιλοξενεί μέρος των εντός έδρας αγώνων της εθνικής ομάδας. Οι τελικές φάσεις μένουν στα γήπεδα του παιχνιδιού.';
+
+  @override
   String get editorAddedGone => 'Αυτό δεν υπάρχει πια στη βάση δεδομένων.';
 
   @override

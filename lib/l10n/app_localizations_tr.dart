@@ -15245,6 +15245,62 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get editorAddReporter => 'Gazeteci ekle';
+
+  @override
+  String get editorAddStadium => 'Stadyum ekle';
+
+  @override
+  String editorAddedReportersFull(int max) {
+    return 'Bir veritabanı en fazla $max gazeteci ekleyebilir.';
+  }
+
+  @override
+  String editorAddedStadiumsFull(int max) {
+    return 'Bir veritabanı en fazla $max stadyum ekleyebilir.';
+  }
+
+  @override
+  String get editorAddedCity => 'Şehir';
+
+  @override
+  String get editorAddedCityHelp =>
+      'Herhangi bir şehir olabilir. Oyunun tanımadığı bir şehir ülkesinin görünümünü alır ve deniz seviyesinde sayılır.';
+
+  @override
+  String get editorAddedCapacity => 'Koltuk';
+
+  @override
+  String editorAddedCapacityRange(int min, int max) {
+    final intl.NumberFormat minNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String minString = minNumberFormat.format(min);
+    final intl.NumberFormat maxNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String maxString = maxNumberFormat.format(max);
+
+    return '$minString ile $maxString koltuk arası';
+  }
+
+  @override
+  String editorAddedStadiumTaken(String country) {
+    return '$country için bu adda eklenmiş bir stadyum zaten var.';
+  }
+
+  @override
+  String get editorAddedFieldNeeded => 'Bu alanı doldur';
+
+  @override
+  String get editorAddedReporterAbout =>
+      'Bu veritabanındaki kariyerlerde basın odasına katılır ve basın toplantılarında soru sorar.';
+
+  @override
+  String get editorAddedStadiumAbout =>
+      'Bu veritabanındaki kariyerlerde milli takımının iç saha maçlarının bir kısmına ev sahipliği yapar. Final turnuvaları oyunun stadyumlarında kalır.';
+
+  @override
   String get editorAddedGone => 'Bu artık veritabanında yok.';
 
   @override

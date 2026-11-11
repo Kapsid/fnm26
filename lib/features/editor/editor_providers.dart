@@ -78,10 +78,10 @@ enum EditorSection {
     'squads' || 'pools' => players,
     'nations' => none,
     'clubs' || 'addedClubs' => clubs,
-    'stadiums' => stadiums,
+    'stadiums' || 'addedStadiums' => stadiums,
     'competitions' => competitions,
     'yAccounts' || 'addedYAccounts' || 'yHandles' => yAccounts,
-    'reporters' => press,
+    'reporters' || 'addedReporters' => press,
     'nameLists' => nameLists,
     'managers' => managers,
     'sponsors' || 'addedSponsors' || 'sponsorIndustries' => sponsors,
@@ -533,7 +533,8 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
   /// - a nation's squad, nation entry, name list, day-one manager or pool, a
   ///   stadium, competition, Y account or sponsor rename;
   /// - a pool player (`pools.<n>.<id>`);
-  /// - an added club, sponsor or Y account, with every `localized` name of
+  /// - an added club, sponsor, Y account, reporter or stadium, with every
+  ///   `localized` name of
   ///   it (`addedClubs.<id>`, and for a sponsor its description's too), as
   ///   the editor deletes one ([AddedEdits]): a club's players go back to
   ///   Auto;
@@ -634,6 +635,14 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
         }
         if (parts.length != 1) return p;
         return AddedEdits.removeY(p, itemId!);
+      case 'addedReporters':
+        final itemId = at(0);
+        if (parts.length != 1 || itemId == null) return p;
+        return AddedEdits.removeReporter(p, itemId);
+      case 'addedStadiums':
+        final itemId = at(0);
+        if (parts.length != 1 || itemId == null) return p;
+        return AddedEdits.removeStadium(p, itemId);
       case 'localized':
         if (p.localized.containsKey(key)) {
           return p.copyWith(localized: without(p.localized, key));

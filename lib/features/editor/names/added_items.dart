@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show FilteringTextInputFormatter;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -20,6 +21,7 @@ import 'package:fnm/features/editor/players/squad_edits.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
+import 'package:intl/intl.dart' show NumberFormat;
 
 /// Why a name cannot be an added club's ([AddedEdits.clubNameProblem]).
 enum AddedNameProblem {
@@ -68,6 +70,8 @@ abstract final class AddedEdits {
     for (final c in p.addedClubs) c.id,
     for (final s in p.addedSponsors) s.id,
     for (final y in p.addedYAccounts) y.id,
+    for (final r in p.addedReporters) r.id,
+    for (final g in p.addedStadiums) g.id,
   };
 
   /// The most items [section] can add ([PackRules]), or 0 where it adds
@@ -76,6 +80,8 @@ abstract final class AddedEdits {
     NameSection.clubs => PackRules.addedClubsMax,
     NameSection.sponsors => PackRules.addedSponsorsMax,
     NameSection.yAccounts => PackRules.addedYMax,
+    NameSection.press => PackRules.addedReportersMax,
+    NameSection.stadiums => PackRules.addedStadiumsMax,
     _ => 0,
   };
 
@@ -378,6 +384,145 @@ abstract final class AddedEdits {
     );
   }
 
+  // Reporters.
+
+  /// [p] with a reporter named [name] of [outlet] added; [p] itself when it
+  /// adds [PackRules.addedReportersMax] already.
+  static WorldPack addReporter(WorldPack p, String name, String outlet) {
+    if (isFull(NameSection.press, p)) return p;
+    return p.copyWith(
+      addedReporters: [
+        ...p.addedReporters,
+        PackAddedReporter(
+          id: nextAddedId(p),
+          name: name.trim(),
+          outlet: outlet.trim(),
+        ),
+      ],
+    );
+  }
+
+  /// [p] with added reporter [id] named [name] of [outlet].
+  static WorldPack editReporter(
+    WorldPack p,
+    int id,
+    String name,
+    String outlet,
+  ) {
+    final r = p.addedReporters.where((x) => x.id == id).firstOrNull;
+    if (r == null) return p;
+    final next = PackAddedReporter(
+      id: id,
+      name: name.trim(),
+      outlet: outlet.trim(),
+    );
+    if (next == r) return p;
+    return p.copyWith(
+      addedReporters: [
+        for (final x in p.addedReporters) x.id == id ? next : x,
+      ],
+    );
+  }
+
+  /// [p] without added reporter [id], his name and his outlet in every
+  /// language.
+  static WorldPack removeReporter(WorldPack p, int id) {
+    if (!p.addedReporters.any((r) => r.id == id)) return p;
+    return p.copyWith(
+      addedReporters: [
+        for (final r in p.addedReporters)
+          if (r.id != id) r,
+      ],
+      localized: _namesGone(p, 'addedReporters', id),
+    );
+  }
+
+  // Stadiums.
+
+  /// [p] with a stadium of [capacity] seats named [name] added to nation
+  /// [nationId], in [city]; [p] itself when it adds
+  /// [PackRules.addedStadiumsMax] already.
+  static WorldPack addStadium(
+    WorldPack p,
+    int nationId,
+    String name,
+    String city,
+    int capacity,
+  ) {
+    if (isFull(NameSection.stadiums, p)) return p;
+    return p.copyWith(
+      addedStadiums: [
+        ...p.addedStadiums,
+        PackStadium(
+          id: nextAddedId(p),
+          nationId: nationId,
+          name: name.trim(),
+          city: city.trim(),
+          capacity: capacity,
+        ),
+      ],
+    );
+  }
+
+  /// [p] with added stadium [id] as given. It stays in the nation it was
+  /// added to.
+  static WorldPack editStadium(
+    WorldPack p,
+    int id,
+    String name,
+    String city,
+    int capacity,
+  ) {
+    final g = p.addedStadiums.where((x) => x.id == id).firstOrNull;
+    if (g == null) return p;
+    final next = PackStadium(
+      id: id,
+      nationId: g.nationId,
+      name: name.trim(),
+      city: city.trim(),
+      capacity: capacity,
+    );
+    if (next == g) return p;
+    return p.copyWith(
+      addedStadiums: [
+        for (final x in p.addedStadiums) x.id == id ? next : x,
+      ],
+    );
+  }
+
+  /// [p] without added stadium [id] and its name in every language.
+  static WorldPack removeStadium(WorldPack p, int id) {
+    if (!p.addedStadiums.any((g) => g.id == id)) return p;
+    return p.copyWith(
+      addedStadiums: [
+        for (final g in p.addedStadiums)
+          if (g.id != id) g,
+      ],
+      localized: _namesGone(p, 'addedStadiums', id),
+    );
+  }
+
+  /// Whether another stadium [p] adds to nation [nationId] (not [id]) is
+  /// named [name] ([PackRules.stadiumFold]).
+  static bool stadiumNameTaken(
+    WorldPack p,
+    int nationId,
+    String name, {
+    int? id,
+  }) {
+    final want = PackRules.stadiumFold(name);
+    return p.addedStadiums.any(
+      (g) =>
+          g.id != id &&
+          g.nationId == nationId &&
+          PackRules.stadiumFold(g.name) == want,
+    );
+  }
+
+  /// The seats typed in [text], or null when it holds no whole number.
+  static int? seatsOf(String text) =>
+      int.tryParse(text.replaceAll(RegExp(r'[\s.,\u00A0\u202F]'), ''));
+
   /// [p]'s `localized` without the paths of added item [id] of [root].
   static Map<String, Map<String, String>> _namesGone(
     WorldPack p,
@@ -556,10 +701,10 @@ String industryLabel(AppLocalizations l, String brand) =>
     addedIndustryLabel(l, brand);
 
 /// [groups] (a section's rows, as [nameGroups] has them) with the items
-/// [pack] adds to [section]: an added club at the top of its country's
-/// group (a group of its own for a country with no league, in name order);
-/// added sponsors and Y accounts in a group of their own above the game's.
-/// [world] names the countries.
+/// [pack] adds to [section]: an added club or stadium at the top of its
+/// country's group (a group of its own for a country with none of the
+/// game's, in name order); added sponsors, Y accounts and reporters in a
+/// group of their own above the game's. [world] names the countries.
 List<NameGroup> withAddedRows(
   NameSection section,
   AppLocalizations l,
@@ -608,6 +753,67 @@ List<NameGroup> withAddedRows(
       }
       return out
         ..sort((a, b) => searchFold(a.title!).compareTo(searchFold(b.title!)));
+    case NameSection.stadiums:
+      if (pack.addedStadiums.isEmpty) return groups;
+      final nations = {for (final n in world) n.id: n};
+      final seats = NumberFormat.decimalPattern(l.localeName);
+      final added = <int, List<NameEntry>>{};
+      for (final g in pack.addedStadiums) {
+        final n = nations[g.nationId];
+        (added[g.nationId] ??= []).add(
+          NameEntry(
+            key: section.addedKey(g.id),
+            original: g.name,
+            addedId: g.id,
+            nationId: g.nationId,
+            detail: l.tourSharedVenueSeats(g.city, seats.format(g.capacity)),
+            fold: fold([g.name, g.city, n?.name, n?.englishName]),
+          ),
+        );
+      }
+      final byCode = {for (final n in world) n.code: n.id};
+      final out = <NameGroup>[
+        for (final g in groups)
+          switch (added.remove(byCode[g.flagCode])) {
+            final mine? => (
+              title: g.title,
+              flagCode: g.flagCode,
+              entries: [...mine, ...g.entries],
+            ),
+            null => g,
+          },
+      ];
+      for (final e in added.entries) {
+        final n = nations[e.key];
+        out.add((
+          title: n?.name ?? '#${e.key}',
+          flagCode: n?.code,
+          entries: e.value,
+        ));
+      }
+      return out
+        ..sort((a, b) => searchFold(a.title!).compareTo(searchFold(b.title!)));
+    case NameSection.press:
+      if (pack.addedReporters.isEmpty) return groups;
+      final entries = [
+        for (final r in pack.addedReporters)
+          NameEntry(
+            key: section.addedKey(r.id),
+            original: r.name,
+            original2: r.outlet,
+            addedId: r.id,
+            fold: fold([r.name, r.outlet]),
+          ),
+      ]..sort((a, b) => a.fold.compareTo(b.fold));
+      return [
+        (title: l.editorAddedGroup, flagCode: null, entries: entries),
+        for (final g in groups)
+          (
+            title: g.title ?? l.editorAddedGameGroup,
+            flagCode: g.flagCode,
+            entries: g.entries,
+          ),
+      ];
     case NameSection.sponsors || NameSection.yAccounts:
       final nations = {for (final n in world) n.id: n};
       final entries = section == NameSection.sponsors
@@ -648,9 +854,7 @@ List<NameGroup> withAddedRows(
             entries: g.entries,
           ),
       ];
-    case NameSection.stadiums ||
-        NameSection.competitions ||
-        NameSection.press ||
+    case NameSection.competitions ||
         NameSection.nameLists ||
         NameSection.managers:
       return groups;
@@ -687,8 +891,18 @@ class AddedTag extends StatelessWidget {
   );
 }
 
-/// Adds a club, sponsor or Y account to a database ([id] null), or edits
-/// and deletes one it adds.
+/// What is wrong with an added item's fields as typed, in words: its name,
+/// its second text (a sponsor's description, a reporter's outlet), and a
+/// stadium's city and seats.
+typedef AddedErrors = ({
+  String? name,
+  String? description,
+  String? city,
+  String? capacity,
+});
+
+/// Adds a club, sponsor, Y account, reporter or stadium to a database ([id]
+/// null), or edits and deletes one it adds.
 ///
 /// Adding takes everything in one go, with the Add button. Editing saves as
 /// it is typed, a name that cannot be used (one its country or the other
@@ -713,6 +927,9 @@ class AddedItemForm extends ConsumerStatefulWidget {
   static const Key industryKey = Key('editorAdded.industry');
   static const Key descriptionKey = Key('editorAdded.description');
   static const Key handleKey = Key('editorAdded.handle');
+  static const Key outletKey = Key('editorAdded.outlet');
+  static const Key cityKey = Key('editorAdded.city');
+  static const Key capacityKey = Key('editorAdded.capacity');
   static const Key nationKey = Key('editorAdded.nation');
   static const Key addKey = Key('editorAdded.add');
   static const Key deleteKey = Key('editorAdded.delete');
@@ -760,6 +977,11 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
 
   /// A Y account's @handle, without the `@` (empty: its name's).
   final _handle = TextEditingController();
+
+  /// A reporter's outlet; a stadium's city and seats.
+  final _outlet = TextEditingController();
+  final _city = TextEditingController();
+  final _capacity = TextEditingController();
   String? _country;
 
   /// The added club's strength (null: its league's lowest).
@@ -792,6 +1014,9 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
     _name.dispose();
     _description.dispose();
     _handle.dispose();
+    _outlet.dispose();
+    _city.dispose();
+    _capacity.dispose();
     super.dispose();
   }
 
@@ -820,6 +1045,21 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
         _set(_handle, y.handle ?? '');
         _voice = y.voice;
         _nationId = y.nationId;
+      case NameSection.press:
+        final r = pack.addedReporters.where((x) => x.id == id).firstOrNull;
+        if (r == null) return;
+        _set(_name, r.name);
+        _set(_outlet, r.outlet);
+      case NameSection.stadiums:
+        final g = pack.addedStadiums.where((x) => x.id == id).firstOrNull;
+        if (g == null) return;
+        _set(_name, g.name);
+        _set(_city, g.city);
+        // Left as typed while it reads as the stored seats.
+        if (AddedEdits.seatsOf(_capacity.text) != g.capacity) {
+          _set(_capacity, '${g.capacity}');
+        }
+        _nationId = g.nationId;
       case _:
         return;
     }
@@ -840,6 +1080,8 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
       NameSection.clubs => pack.addedClubs.any((x) => x.id == id),
       NameSection.sponsors => pack.addedSponsors.any((x) => x.id == id),
       NameSection.yAccounts => pack.addedYAccounts.any((x) => x.id == id),
+      NameSection.press => pack.addedReporters.any((x) => x.id == id),
+      NameSection.stadiums => pack.addedStadiums.any((x) => x.id == id),
       _ => false,
     };
   }
@@ -885,10 +1127,28 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
                 _nationId,
                 handle: _handle.text,
               );
+      case NameSection.press:
+        return id == null
+            ? AddedEdits.addReporter(p, name, _outlet.text)
+            : AddedEdits.editReporter(p, id, name, _outlet.text);
+      case NameSection.stadiums:
+        final seats = AddedEdits.seatsOf(_capacity.text);
+        if (seats == null) return p;
+        if (id != null) {
+          return AddedEdits.editStadium(p, id, name, _city.text, seats);
+        }
+        final nation = _nationId;
+        return nation == null
+            ? p
+            : AddedEdits.addStadium(p, nation, name, _city.text, seats);
       case _:
         return p;
     }
   }
+
+  /// Nation [id]'s name, as the database's world has it.
+  String _nationName(int? id) =>
+      widget.world.where((n) => n.id == id).firstOrNull?.name ?? '';
 
   String _countryName(String code) =>
       widget.world
@@ -897,11 +1157,34 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
           ?.name ??
       code.toUpperCase();
 
-  /// What is wrong with the name and the description as typed, in words.
-  ({String? name, String? description}) _errors(
-    AppLocalizations l,
-    WorldPack pack,
-  ) {
+  /// What is wrong with a plain text field (a reporter's outlet, a
+  /// stadium's city) as typed: blank is fine while adding (Add waits for
+  /// it), and needed when editing.
+  String? _textError(AppLocalizations l, String text) {
+    if (text.trim().isEmpty) return _adding ? null : l.editorAddedFieldNeeded;
+    return switch (PackRules.checkName(text)) {
+      FieldReason.tooLong => l.editorNameTooLong(PackRules.nameMax),
+      FieldReason.badCharacters => l.editorNameBadCharacters,
+      _ when ProfanityFilter.isOffensive(text) => l.editorNameNotAllowed,
+      _ => null,
+    };
+  }
+
+  /// What is wrong with a stadium's seats as typed; blank is fine while
+  /// adding.
+  String? _capacityError(AppLocalizations l) {
+    final text = _capacity.text;
+    if (text.trim().isEmpty) return _adding ? null : l.editorAddedFieldNeeded;
+    final seats = AddedEdits.seatsOf(text);
+    if (seats != null && PackRules.stadiumCapacityOk(seats)) return null;
+    return l.editorAddedCapacityRange(
+      PackRules.stadiumCapacityMin,
+      PackRules.stadiumCapacityMax,
+    );
+  }
+
+  /// What is wrong with the fields as typed, in words.
+  AddedErrors _errors(AppLocalizations l, WorldPack pack) {
     final text = _name.text;
     final max = _section == NameSection.yAccounts
         ? PackRules.handleMax
@@ -939,6 +1222,12 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
           if (!identical(next, pack) && PackRules.addedYNameTaken(next, id)) {
             name = l.editorNamesTaken;
           }
+        case NameSection.stadiums:
+          final nation = _nationId;
+          if (nation != null &&
+              AddedEdits.stadiumNameTaken(pack, nation, text, id: widget.id)) {
+            name = l.editorAddedStadiumTaken(_nationName(nation));
+          }
         case _:
           break;
       }
@@ -957,7 +1246,16 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
         _ => null,
       };
     }
-    return (name: name, description: description);
+    if (_section == NameSection.press) {
+      description = _textError(l, _outlet.text);
+    }
+    final stadium = _section == NameSection.stadiums;
+    return (
+      name: name,
+      description: description,
+      city: stadium ? _textError(l, _city.text) : null,
+      capacity: stadium ? _capacityError(l) : null,
+    );
   }
 
   /// What is wrong with the @handle as typed ([handleProblem]); null for
@@ -975,14 +1273,21 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
   }
 
   /// Whether the fields as they are make a whole item.
-  bool _complete(WorldPack pack, ({String? name, String? description}) e) =>
+  bool _complete(WorldPack pack, AddedErrors e) =>
       _name.text.trim().isNotEmpty &&
       e.name == null &&
       e.description == null &&
+      e.city == null &&
+      e.capacity == null &&
       _handleError(AppLocalizations.of(context), pack) == null &&
       switch (_section) {
         NameSection.clubs => _country != null,
         NameSection.sponsors => _industry != null,
+        NameSection.press => _outlet.text.trim().isNotEmpty,
+        NameSection.stadiums =>
+          _nationId != null &&
+              _city.text.trim().isNotEmpty &&
+              _capacity.text.trim().isNotEmpty,
         _ => true,
       };
 
@@ -1034,6 +1339,8 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
         NameSection.clubs => AddedEdits.removeClub(p, id),
         NameSection.sponsors => AddedEdits.removeSponsor(p, id),
         NameSection.yAccounts => AddedEdits.removeY(p, id),
+        NameSection.press => AddedEdits.removeReporter(p, id),
+        NameSection.stadiums => AddedEdits.removeStadium(p, id),
         _ => p,
       },
     );
@@ -1064,6 +1371,32 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
     );
     if (picked == null || !mounted) return;
     setState(() => _country = picked);
+  }
+
+  /// The nation an added stadium goes to: picked once, when it is added.
+  Future<void> _pickStadiumNation() async {
+    final l = AppLocalizations.of(context);
+    final nations = [...widget.world]
+      ..sort((a, b) => searchFold(a.name).compareTo(searchFold(b.name)));
+    final picked = await showAddedPicker(
+      context,
+      title: l.editorAddedCountryPick,
+      options: [
+        for (final n in nations)
+          (
+            id: '${n.id}',
+            label: n.name,
+            about: null,
+            fold:
+                '${searchFold(n.name)} ${searchFold(n.englishName)} '
+                '${n.code.toLowerCase()}',
+            flag: n.code,
+          ),
+      ],
+      current: _nationId == null ? null : '$_nationId',
+    );
+    if (picked == null || !mounted) return;
+    setState(() => _nationId = int.tryParse(picked));
   }
 
   Future<void> _pickIndustry() async {
@@ -1150,6 +1483,12 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
               NameSection.sponsors => l.editorAddedSponsorsFull(
                 PackRules.addedSponsorsMax,
               ),
+              NameSection.press => l.editorAddedReportersFull(
+                PackRules.addedReportersMax,
+              ),
+              NameSection.stadiums => l.editorAddedStadiumsFull(
+                PackRules.addedStadiumsMax,
+              ),
               _ => l.editorAddedYFull(PackRules.addedYMax),
             },
           ),
@@ -1179,6 +1518,8 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
           NameSection.clubs => _clubFields(l, pack, muted),
           NameSection.sponsors => _sponsorFields(l, errors, fieldStyle, muted),
           NameSection.yAccounts => _yFields(l, muted),
+          NameSection.press => _reporterFields(l, errors, fieldStyle, muted),
+          NameSection.stadiums => _stadiumFields(l, errors, fieldStyle, muted),
           _ => const <Widget>[],
         },
         const SizedBox(height: AppSpacing.lg),
@@ -1228,6 +1569,8 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
         ? switch (_section) {
             NameSection.clubs => l.editorAddClub,
             NameSection.sponsors => l.editorAddSponsor,
+            NameSection.press => l.editorAddReporter,
+            NameSection.stadiums => l.editorAddStadium,
             _ => l.editorAddY,
           }
         : _name.text.trim();
@@ -1243,6 +1586,8 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
           child: Icon(switch (_section) {
             NameSection.clubs => Icons.shield_outlined,
             NameSection.sponsors => Icons.handshake_outlined,
+            NameSection.press => Icons.mic_none,
+            NameSection.stadiums => Icons.stadium_outlined,
             _ => Icons.alternate_email,
           }, color: AppColors.tertiary),
         ),
@@ -1321,9 +1666,91 @@ class _AddedItemFormState extends ConsumerState<AddedItemForm> {
     ];
   }
 
+  List<Widget> _reporterFields(
+    AppLocalizations l,
+    AddedErrors errors,
+    TextStyle fieldStyle,
+    TextStyle muted,
+  ) => [
+    TextField(
+      key: AddedItemForm.outletKey,
+      controller: _outlet,
+      maxLength: PackRules.nameMax,
+      textCapitalization: TextCapitalization.words,
+      style: fieldStyle,
+      onChanged: (_) => _changed(),
+      decoration: InputDecoration(
+        labelText: l.editorNamesOutlet,
+        errorText: errors.description,
+        errorMaxLines: 2,
+      ),
+    ),
+    const SizedBox(height: AppSpacing.xs),
+    Text(l.editorAddedReporterAbout, style: muted),
+  ];
+
+  List<Widget> _stadiumFields(
+    AppLocalizations l,
+    AddedErrors errors,
+    TextStyle fieldStyle,
+    TextStyle muted,
+  ) {
+    final nation = widget.world.where((n) => n.id == _nationId).firstOrNull;
+    return [
+      EditorPickField(
+        key: AddedItemForm.nationKey,
+        label: l.editorAddedCountry,
+        value: nation?.name,
+        placeholder: l.editorAddedCountryPick,
+        leading: nation == null ? null : FlagDisc(nation.code, size: 28),
+        // A stadium stays in the nation it was added to.
+        onTap: _adding ? _pickStadiumNation : null,
+      ),
+      const SizedBox(height: AppSpacing.md),
+      TextField(
+        key: AddedItemForm.cityKey,
+        controller: _city,
+        maxLength: PackRules.nameMax,
+        textCapitalization: TextCapitalization.words,
+        textInputAction: TextInputAction.next,
+        style: fieldStyle,
+        onChanged: (_) => _changed(),
+        decoration: InputDecoration(
+          labelText: l.editorAddedCity,
+          helperText: l.editorAddedCityHelp,
+          helperMaxLines: 3,
+          errorText: errors.city,
+          errorMaxLines: 2,
+        ),
+      ),
+      const SizedBox(height: AppSpacing.sm),
+      TextField(
+        key: AddedItemForm.capacityKey,
+        controller: _capacity,
+        keyboardType: TextInputType.number,
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+        maxLength: '${PackRules.stadiumCapacityMax}'.length,
+        style: fieldStyle,
+        onChanged: (_) => _changed(),
+        decoration: InputDecoration(
+          labelText: l.editorAddedCapacity,
+          helperText: l.editorAddedCapacityRange(
+            PackRules.stadiumCapacityMin,
+            PackRules.stadiumCapacityMax,
+          ),
+          helperMaxLines: 2,
+          errorText: errors.capacity,
+          errorMaxLines: 2,
+        ),
+      ),
+      const SizedBox(height: AppSpacing.xs),
+      Text(l.editorAddedStadiumAbout, style: muted),
+    ];
+  }
+
   List<Widget> _sponsorFields(
     AppLocalizations l,
-    ({String? name, String? description}) errors,
+    AddedErrors errors,
     TextStyle fieldStyle,
     TextStyle muted,
   ) {
