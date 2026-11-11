@@ -12,8 +12,9 @@ import 'package:fnm/domain/services/profanity/profanity_words.dart';
 /// A name is read word by word. Before a word is compared it is folded:
 /// lower case, accents dropped (an `=` entry keeps them), leetspeak read as
 /// letters (`0 1 3 4 5 7 @ $ ! |`), and a run of one letter matches that
-/// letter once or more ("fuuuck"). Single letters spaced or dotted apart
-/// ("f.u.c.k", "b i t c h") are read as one word.
+/// letter once or more ("fuuuck"); against a whole-word entry, twice is not
+/// a stretch but another word ("Twatt", "Tiits"). Single letters spaced or
+/// dotted apart ("f.u.c.k", "b i t c h") are read as one word.
 abstract final class ProfanityFilter {
   /// Whether [text] holds nothing refused.
   static bool isClean(String text) {
@@ -123,6 +124,13 @@ abstract final class ProfanityFilter {
 
   static final _letter = RegExp(r'\p{L}', unicode: true);
   static final _mark = RegExp(r'\p{M}', unicode: true);
+
+  /// The combining accents of the Latin, Greek and Cyrillic scripts: what
+  /// folding drops. Every other mark (a Devanagari or Thai vowel sign) is a
+  /// letter's own: dropping it reads "चैत्य" (a shrine) as "चूतिया".
+  static final _accent = RegExp(
+    '[\u0300-\u036F\u1AB0-\u1AFF\u1DC0-\u1DFF\u20D0-\u20FF\uFE20-\uFE2F]',
+  );
   static final _gap = RegExp(r'^[\s.\-_*,/\\+~·]{1,3}$');
 
   static List<_Word> _words(String text) {
@@ -137,11 +145,12 @@ abstract final class ProfanityFilter {
       final asciiLetter =
           ascii && ((r >= 0x41 && r <= 0x5A) || (r >= 0x61 && r <= 0x7A));
       if (!ascii && _mark.hasMatch(ch)) {
-        // A combining accent belongs to the letter before it.
+        // A combining mark belongs to the letter before it: an accent is
+        // folded away, a vowel sign (Devanagari, Thai) is part of the word.
         if (units.isNotEmpty && units.last.end == start) {
           final u = units.last;
           units[units.length - 1] = _Unit(
-            u.folded,
+            _accent.hasMatch(ch) ? u.folded : u.folded + ch,
             u.accented + ch,
             u.start,
             i,
@@ -228,7 +237,7 @@ abstract final class ProfanityFilter {
     final out = StringBuffer();
     for (final r in s.toLowerCase().runes) {
       final ch = String.fromCharCode(r);
-      if (_mark.hasMatch(ch)) continue;
+      if (_accent.hasMatch(ch)) continue;
       out.write(foldChar(ch));
     }
     return out.toString();
@@ -396,7 +405,20 @@ class _Table {
           return true;
         });
 
-    if (fits(_byMode[_Mode.word]![w.letters.join()], 0)) return true;
+    // A whole word is the entry's own letters, or a letter of it stretched
+    // to three or more ("twaaat"): a doubled one is another word ("Twatt",
+    // "Tiits", "Kokott", "assess" against "asses").
+    bool isWord(List<List<int>>? found) =>
+        found != null &&
+        found.any((min) {
+          for (var i = 0; i < min.length; i++) {
+            final c = w.counts[i];
+            if (c != min[i] && c < (min[i] < 2 ? 3 : min[i] + 1)) return false;
+          }
+          return true;
+        });
+
+    if (isWord(_byMode[_Mode.word]![w.letters.join()])) return true;
     final prefix = _byMode[_Mode.prefix]!;
     final any = _byMode[_Mode.any]!;
     for (var from = 0; from < n; from++) {
