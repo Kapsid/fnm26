@@ -18,6 +18,7 @@ class CitySkyline {
     required this.style,
     required this.tone,
     required this.lowered,
+    this.arctic = false,
   });
 
   final CityStyle style;
@@ -26,6 +27,10 @@ class CitySkyline {
   /// A landmark stands among the buildings: the back row keeps lower so it
   /// stands clear.
   final bool lowered;
+
+  /// An arctic town: a small town's houses are wooden and painted red,
+  /// blue, yellow and green, and no trees grow among them.
+  final bool arctic;
 
   bool get _snowy => tone.season == BackdropSeason.snow;
 
@@ -98,6 +103,22 @@ class CitySkyline {
   static const _tin = [Color(0xFF7E7A74), Color(0xFF8A5A3E), Color(0xFF6E7378)];
   static const _concrete = Color(0xFF8A8E92);
 
+  /// An arctic town's painted wooden houses, and their dark roofs.
+  static const _painted = [
+    Color(0xFFB23A30),
+    Color(0xFF2F5E8E),
+    Color(0xFFD8B03A),
+    Color(0xFF3E7A4E),
+    Color(0xFFB23A30),
+    Color(0xFF2F5E8E),
+    Color(0xFFDCD8CC),
+  ];
+  static const _paintedRoofs = [
+    Color(0xFF2E3136),
+    Color(0xFF3A3D44),
+    Color(0xFF4A2E2A),
+  ];
+
   // --- Rows ------------------------------------------------------------------
 
   /// The back row, behind a landmark.
@@ -149,7 +170,7 @@ class CitySkyline {
         CityStyle.glassTowers => _glassTowers(b, x),
         CityStyle.minarets => _minarets(b, x),
         CityStyle.african => _african(b, x),
-        CityStyle.smallTown => _smallTown(b, x),
+        CityStyle.smallTown => arctic ? _arcticTown(b, x) : _smallTown(b, x),
       };
       x += w;
     }
@@ -473,6 +494,28 @@ class CitySkyline {
     return w + b.unit * 0.2;
   }
 
+  // --- An arctic town --------------------------------------------------------
+
+  /// Painted wooden houses scattered over bare rock, a white church among
+  /// them, and no trees.
+  double _arcticTown(_Builder b, double x) {
+    final r = b.r;
+    final roll = r.nextDouble();
+    if (!b.near && roll < 0.04) {
+      final w = b.unit * 1.2;
+      final body = b.rect(x, w, b.h(0.1, 0.15));
+      b.box(body, const Color(0xFFE2DED4), mute: 0.2);
+      b.spire(body.center.dx, body.top, w * 0.7, b.h(0.12, 0.18), _slate);
+      return w + b.unit * 0.8;
+    }
+    if (roll < 0.32) return b.unit * (0.5 + r.nextDouble() * 1.6);
+    final w = b.unit * (0.8 + r.nextDouble() * 0.7);
+    final body = b.rect(x, w, b.near ? b.h(0.035, 0.075) : b.h(0.05, 0.1));
+    b.box(body, _painted[r.nextInt(_painted.length)], mute: 0.18);
+    b.pitched(body, _paintedRoofs[r.nextInt(3)], w * 0.42);
+    return w + b.unit * (0.15 + r.nextDouble() * 0.4);
+  }
+
   // --- Below the roof line ---------------------------------------------------
 
   /// The town round the ground, looked down on: rows of roofs in the
@@ -490,6 +533,7 @@ class CitySkyline {
         ]),
     );
     final roofs = switch (style) {
+      CityStyle.smallTown when arctic => _painted,
       CityStyle.oldEuropean || CityStyle.smallTown => _oeRoofs,
       CityStyle.northernBrick => const [_slate, Color(0xFF6A3A2E)],
       CityStyle.sovietBlocks => _panels,

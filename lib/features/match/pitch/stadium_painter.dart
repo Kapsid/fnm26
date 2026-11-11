@@ -139,6 +139,7 @@ class StadiumPainter extends CustomPainter {
       season: spec.season,
       landmark: spec.landmark,
       features: spec.features,
+      shore: spec.shore,
       look: look,
       seed: '${spec.flagCode}:${spec.landmark.name}:${spec.tiers}',
     ).paint(canvas, size, horizon);

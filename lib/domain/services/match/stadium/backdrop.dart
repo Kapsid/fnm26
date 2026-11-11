@@ -80,11 +80,12 @@ enum BackdropSeason {
   /// The season at [latitude] on [date]. [continental] grounds (inland, high
   /// or far east) get their snow further south than maritime ones. Where a
   /// winter only sometimes brings snow, the date decides, the same way
-  /// every time.
+  /// every time. In the [arctic] the snow lies from October to May.
   static BackdropSeason at({
     required double latitude,
     required DateTime date,
     required bool continental,
+    bool arctic = false,
   }) {
     final a = latitude.abs();
     // The month as the northern hemisphere has it, so a southern July is
@@ -94,6 +95,7 @@ enum BackdropSeason {
         varietySeed('season:${date.year}-${date.month}-${date.day}') %
         1000 /
         1000;
+    if (arctic && (m >= 10 || m <= 5)) return snow;
     if (m == 12 || m == 1 || m == 2) {
       final line = continental ? 44.0 : 50.0;
       if (a >= line + 6) return snow;
