@@ -1,23 +1,32 @@
 part of 'player_detail_screen.dart';
 
-/// A player's page on a tablet, pushed over the screen he was picked from:
-/// who he is (the headline card, abilities, traits, facts, cabinet) on the
-/// left; his club (the club and his standing there, the club history) over
-/// what he has done (the career record, recent form, every match) on the
-/// right. The card's own sections and read ([_playerSections],
-/// `_playerDetailProvider`), side by side. The detail pane beside a grid
-/// keeps the one-column [PlayerView].
-class _PlayerTabletLayout extends ConsumerWidget {
+/// A player's page on a tablet, pushed over the screen he was picked from.
+/// The phone's header card and blocks in two panes: the header over the
+/// Overview tab on the left (always in view), and the tab control for Stats
+/// and Career on the right. The same sections and read ([_playerSections],
+/// `_playerDetailProvider`) as the one column. The detail pane beside a grid
+/// keeps the one-column [PlayerView], all three tabs.
+class _PlayerTabletLayout extends ConsumerStatefulWidget {
   const _PlayerTabletLayout({required this.careerId, required this.playerId});
 
   final int careerId;
   final int playerId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_PlayerTabletLayout> createState() =>
+      _PlayerTabletLayoutState();
+}
+
+class _PlayerTabletLayoutState extends ConsumerState<_PlayerTabletLayout> {
+  /// 0 Stats, 1 Career: Overview sits on the left.
+  int _tab = 0;
+
+  @override
+  Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final careerId = widget.careerId;
     final viewAsync = ref.watch(
-      _playerDetailProvider((careerId: careerId, playerId: playerId)),
+      _playerDetailProvider((careerId: careerId, playerId: widget.playerId)),
     );
     return TabletPage(
       scaffoldKey: PlayerDetailScreen.tabletLayoutKey,
@@ -41,13 +50,7 @@ class _PlayerTabletLayout extends ConsumerWidget {
         data: (view) {
           final p = view.player;
           if (p == null) return Center(child: Text(l.playerNotFound));
-          final sections = _playerSections(
-            context,
-            view,
-            p,
-            careerId,
-            splitClub: true,
-          );
+          final s = _playerSections(context, view, p, careerId);
           return Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -55,7 +58,11 @@ class _PlayerTabletLayout extends ConsumerWidget {
                 flex: 5,
                 child: ListView(
                   key: PlayerDetailScreen.profileKey,
-                  children: sections.profile,
+                  children: [
+                    s.header,
+                    ..._spaced(s.overview),
+                    const SizedBox(height: AppSpacing.lg),
+                  ],
                 ),
               ),
               const SizedBox(width: AppSpacing.md),
@@ -64,14 +71,17 @@ class _PlayerTabletLayout extends ConsumerWidget {
                 child: ListView(
                   key: PlayerDetailScreen.recordKey,
                   children: [
-                    KeyedSubtree(
-                      key: PlayerDetailScreen.clubKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: sections.club,
-                      ),
+                    ProfileTabs(
+                      labels: [l.profileTabStats, l.profileTabCareer],
+                      keys: const [
+                        PlayerDetailScreen.tabStatsKey,
+                        PlayerDetailScreen.tabCareerKey,
+                      ],
+                      selected: _tab,
+                      onSelect: (i) => setState(() => _tab = i),
                     ),
-                    ...sections.record,
+                    ..._spaced(_tab == 0 ? s.stats : s.career),
+                    const SizedBox(height: AppSpacing.lg),
                   ],
                 ),
               ),
