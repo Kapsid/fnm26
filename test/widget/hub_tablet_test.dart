@@ -44,7 +44,8 @@ void main() {
           of: find.byType(DashboardGrid),
           matching: find.text(title.toUpperCase()),
         ),
-        findsOneWidget,
+        // The board panel's title, and the board tile's own label inside it.
+        title == enL.sideBoard ? findsNWidgets(2) : findsOneWidget,
         reason: title,
       );
     }
