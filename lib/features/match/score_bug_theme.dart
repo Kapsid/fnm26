@@ -8,9 +8,9 @@ import 'package:fnm/domain/entities/enums.dart';
 /// finals and each confederation's continental championship finals. The
 /// final itself of every one of them is GOLD, every third-place match
 /// BRONZE, and the other rounds wear their tournament's own colours. The
-/// Continental Clash (a one-off, round `FFINAL`) wears its own violet.
-/// Qualifiers, friendlies, play-offs and Nations Cups all keep the plain
-/// silver.
+/// Continental Clash (a one-off, round `FFINAL`) wears its own violet, and
+/// every Nations Cup match its graphite and ice blue (its final the gold).
+/// Qualifiers, friendlies and play-offs keep the plain silver.
 enum ScoreBugThemeKind {
   /// The final of any finals tournament.
   finalGold,
@@ -27,6 +27,9 @@ enum ScoreBugThemeKind {
 
   /// Every Continental Clash match.
   continentalClash,
+
+  /// Every Nations Cup match but its final (which is gold).
+  nationsCup,
 }
 
 /// The colours of a tournament-dressed score bar. The silver bar is not one
@@ -170,6 +173,17 @@ class ScoreBugTheme {
       clockText: Color(0xFFC7A8FF),
       accent: Color(0xFFC7A8FF),
     ),
+    // The Nations Cup: graphite plates, a silver score block with a cold
+    // blue wash, an ice-blue clock. Not a confederation's colours, since
+    // every confederation plays one.
+    ScoreBugThemeKind.nationsCup: ScoreBugTheme(
+      kind: ScoreBugThemeKind.nationsCup,
+      plates: [Color(0xFF2A3038), Color(0xFF0F1216)],
+      score: [Color(0xFFF7FAFD), Color(0xFFBCD3E6)],
+      scoreText: Color(0xFF0F1216),
+      clockText: Color(0xFF8FD3FF),
+      accent: Color(0xFF8FD3FF),
+    ),
   };
 
   /// The Continental Clash's round (a one-off between two continental
@@ -200,7 +214,10 @@ class ScoreBugTheme {
 
   /// The finals' finals and third-place matches (the round codes of
   /// `MatchStage`).
-  static const Set<String> _finals = {'FINAL', 'CFINAL'};
+  static const Set<String> _finals = {'FINAL', 'CFINAL', 'NFINAL'};
+
+  /// A Nations Cup's rounds before its final.
+  static const Set<String> _nationsCup = {'NL', 'NGROUP', 'NR16', 'NQF', 'NSF'};
   static const Set<String> _thirdPlace = {'3RD', 'C3RD'};
 
   /// Which colours [round] wears, if its finals dress the bar.
@@ -216,6 +233,7 @@ class ScoreBugTheme {
     if (_finals.contains(round)) return ScoreBugThemeKind.finalGold;
     if (_thirdPlace.contains(round)) return ScoreBugThemeKind.bronze;
     if (round == _clash) return ScoreBugThemeKind.continentalClash;
+    if (_nationsCup.contains(round)) return ScoreBugThemeKind.nationsCup;
     if (_worldFinals.contains(round)) {
       return ScoreBugThemeKind.worldChampionship;
     }

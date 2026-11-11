@@ -70,20 +70,23 @@ void main() {
     }
   });
 
-  test('qualifiers, friendlies, play-offs and Nations Cups stay silver', () {
-    for (final r in <String?>[
-      null,
-      'CQ',
-      'FRIENDLY',
-      'POSF',
-      'POFINAL',
-      'NL',
-      'NGROUP',
-      'NR16',
-      'NQF',
-      'NSF',
-      'NFINAL',
-    ]) {
+  test('Nations Cups wear their own colours, and their final gold', () {
+    for (final r in ['NL', 'NGROUP', 'NR16', 'NQF', 'NSF']) {
+      for (final c in Confederation.values) {
+        expect(
+          ScoreBugTheme.kindFor(r, c),
+          ScoreBugThemeKind.nationsCup,
+          reason: '$r $c',
+        );
+      }
+    }
+    for (final c in Confederation.values) {
+      expect(ScoreBugTheme.kindFor('NFINAL', c), ScoreBugThemeKind.finalGold);
+    }
+  });
+
+  test('qualifiers, friendlies and play-offs stay silver', () {
+    for (final r in <String?>[null, 'CQ', 'FRIENDLY', 'POSF', 'POFINAL']) {
       for (final c in Confederation.values) {
         expect(ScoreBugTheme.kindFor(r, c), isNull, reason: '$r $c');
         expect(ScoreBugTheme.forRound(r, c), isNull);
