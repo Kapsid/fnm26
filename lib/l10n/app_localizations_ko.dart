@@ -16535,4 +16535,57 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get settingsAboutProtected => '이 게임과 코드, 콘텐츠는 저작권법에 따라 보호됩니다.';
+
+  @override
+  String get matchTabPlayer => '선수';
+
+  @override
+  String get matchTabStadium => '경기장';
+
+  @override
+  String get matchPotmNone => '이 경기에서는 경기 최우수 선수가 선정되지 않았습니다.';
+
+  @override
+  String get matchPotmHisMatch => '그의 경기';
+
+  @override
+  String get matchPotmBeforeMatch => '이 경기 전';
+
+  @override
+  String get matchStatMinutes => '출전 시간';
+
+  @override
+  String get matchStatSaves => '선방';
+
+  @override
+  String get matchStatOnTarget => '유효 슈팅';
+
+  @override
+  String get matchStadiumCapacity => '수용 인원';
+
+  @override
+  String get matchStadiumAttendance => '관중';
+
+  @override
+  String get matchStadiumFull => '좌석 점유';
+
+  @override
+  String matchStadiumHomeOf(String nation) {
+    return '홈구장: $nation';
+  }
+
+  @override
+  String get matchStadiumNeutral => '중립 경기장';
+
+  @override
+  String get matchStadiumBuilt => '협회가 건설';
+
+  @override
+  String get matchStadiumEnlarged => '협회가 확장';
+
+  @override
+  String get matchStadiumWorks => '경기장 공사 중';
+
+  @override
+  String get matchStadiumConditions => '경기 조건';
 }

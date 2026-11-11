@@ -17424,4 +17424,57 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get settingsAboutProtected =>
       'Гра, її код і вміст захищені авторським правом.';
+
+  @override
+  String get matchTabPlayer => 'ГРАВЕЦЬ';
+
+  @override
+  String get matchTabStadium => 'СТАДІОН';
+
+  @override
+  String get matchPotmNone => 'У цьому матчі гравця матчу не визначили.';
+
+  @override
+  String get matchPotmHisMatch => 'Його матч';
+
+  @override
+  String get matchPotmBeforeMatch => 'До цього матчу';
+
+  @override
+  String get matchStatMinutes => 'Хвилини';
+
+  @override
+  String get matchStatSaves => 'Сейви';
+
+  @override
+  String get matchStatOnTarget => 'У площину';
+
+  @override
+  String get matchStadiumCapacity => 'Місткість';
+
+  @override
+  String get matchStadiumAttendance => 'Відвідуваність';
+
+  @override
+  String get matchStadiumFull => 'Заповненість';
+
+  @override
+  String matchStadiumHomeOf(String nation) {
+    return 'Домашній стадіон: $nation';
+  }
+
+  @override
+  String get matchStadiumNeutral => 'Нейтральне поле';
+
+  @override
+  String get matchStadiumBuilt => 'Збудувала твоя федерація';
+
+  @override
+  String get matchStadiumEnlarged => 'Розширила твоя федерація';
+
+  @override
+  String get matchStadiumWorks => 'На стадіоні тривають роботи';
+
+  @override
+  String get matchStadiumConditions => 'Умови';
 }

@@ -222,11 +222,16 @@ class ProfileHeaderCard extends StatelessWidget {
   final List<Widget> notes;
   final List<ProfileKeyStat> stats;
 
+  /// Below this width the four key numbers go two by two.
+  static const double narrowFrom = 240;
+
   @override
   Widget build(BuildContext context) {
     final lang = Localizations.localeOf(context).languageCode;
     // Four across, or two by two once the text is large enough that a
-    // quarter of a phone no longer holds a number like "100%".
+    // quarter of a phone no longer holds a number like "100%", or the card
+    // itself is narrower than a phone's (a tablet's side column), where a
+    // quarter no longer holds a caption like "ASSISTS" whole.
     final twoByTwo = MediaQuery.textScalerOf(context).scale(10) > 11.5;
     Widget cell(ProfileKeyStat s) => Column(
       mainAxisSize: MainAxisSize.min,
@@ -282,12 +287,19 @@ class ProfileHeaderCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.md),
-          if (twoByTwo && stats.length == 4) ...[
-            row(stats.sublist(0, 2)),
-            const SizedBox(height: AppSpacing.sm),
-            row(stats.sublist(2)),
-          ] else
-            row(stats),
+          LayoutBuilder(
+            builder: (context, c) =>
+                (twoByTwo || c.maxWidth < narrowFrom) && stats.length == 4
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      row(stats.sublist(0, 2)),
+                      const SizedBox(height: AppSpacing.sm),
+                      row(stats.sublist(2)),
+                    ],
+                  )
+                : row(stats),
+          ),
         ],
       ),
     );

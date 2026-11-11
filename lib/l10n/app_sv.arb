@@ -4272,5 +4272,22 @@
   "profileTabVsYou": "Mot dig",
   "playerStatFitness": "Kondition",
   "settingsAboutCopyright": "© 2026 Martin Urbanczyk. Alla rättigheter förbehållna.",
-  "settingsAboutProtected": "Spelet, dess kod och innehåll skyddas av upphovsrätt."
+  "settingsAboutProtected": "Spelet, dess kod och innehåll skyddas av upphovsrätt.",
+  "matchTabPlayer": "SPELARE",
+  "matchTabStadium": "ARENA",
+  "matchPotmNone": "Ingen bäste spelare utsågs i den här matchen.",
+  "matchPotmHisMatch": "Hans match",
+  "matchPotmBeforeMatch": "Före den här matchen",
+  "matchStatMinutes": "Minuter",
+  "matchStatSaves": "Räddningar",
+  "matchStatOnTarget": "På mål",
+  "matchStadiumCapacity": "Kapacitet",
+  "matchStadiumAttendance": "Publik",
+  "matchStadiumFull": "Beläggning",
+  "matchStadiumHomeOf": "Hemmaarena: {nation}",
+  "matchStadiumNeutral": "Neutral plan",
+  "matchStadiumBuilt": "Byggd av ditt förbund",
+  "matchStadiumEnlarged": "Utbyggd av ditt förbund",
+  "matchStadiumWorks": "Arbeten pågår på arenan",
+  "matchStadiumConditions": "Förhållanden"
 }

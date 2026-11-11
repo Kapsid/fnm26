@@ -4272,5 +4272,22 @@
   "profileTabVsYou": "Ellened",
   "playerStatFitness": "Erőnlét",
   "settingsAboutCopyright": "© 2026 Martin Urbanczyk. Minden jog fenntartva.",
-  "settingsAboutProtected": "A játékot, annak kódját és tartalmát szerzői jog védi."
+  "settingsAboutProtected": "A játékot, annak kódját és tartalmát szerzői jog védi.",
+  "matchTabPlayer": "JÁTÉKOS",
+  "matchTabStadium": "STADION",
+  "matchPotmNone": "Ezen a meccsen nem választottak meccs emberét.",
+  "matchPotmHisMatch": "Az ő meccse",
+  "matchPotmBeforeMatch": "E meccs előtt",
+  "matchStatMinutes": "Percek",
+  "matchStatSaves": "Védések",
+  "matchStatOnTarget": "Kapura",
+  "matchStadiumCapacity": "Befogadóképesség",
+  "matchStadiumAttendance": "Nézőszám",
+  "matchStadiumFull": "Telítettség",
+  "matchStadiumHomeOf": "Hazai pálya: {nation}",
+  "matchStadiumNeutral": "Semleges pálya",
+  "matchStadiumBuilt": "A szövetséged építette",
+  "matchStadiumEnlarged": "A szövetséged bővítette",
+  "matchStadiumWorks": "A stadionban munkálatok folynak",
+  "matchStadiumConditions": "Körülmények"
 }

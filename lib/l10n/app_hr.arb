@@ -4272,5 +4272,22 @@
   "profileTabVsYou": "Protiv vas",
   "playerStatFitness": "Kondicija",
   "settingsAboutCopyright": "© 2026 Martin Urbanczyk. Sva prava pridržana.",
-  "settingsAboutProtected": "Igra, njezin kod i sadržaj zaštićeni su autorskim pravom."
+  "settingsAboutProtected": "Igra, njezin kod i sadržaj zaštićeni su autorskim pravom.",
+  "matchTabPlayer": "IGRAČ",
+  "matchTabStadium": "STADION",
+  "matchPotmNone": "Na ovoj utakmici nije proglašen igrač utakmice.",
+  "matchPotmHisMatch": "Njegova utakmica",
+  "matchPotmBeforeMatch": "Prije ove utakmice",
+  "matchStatMinutes": "Minute",
+  "matchStatSaves": "Obrane",
+  "matchStatOnTarget": "U okvir",
+  "matchStadiumCapacity": "Kapacitet",
+  "matchStadiumAttendance": "Posjećenost",
+  "matchStadiumFull": "Popunjenost",
+  "matchStadiumHomeOf": "Domaći stadion: {nation}",
+  "matchStadiumNeutral": "Neutralni teren",
+  "matchStadiumBuilt": "Izgradio ga je tvoj savez",
+  "matchStadiumEnlarged": "Proširio ga je tvoj savez",
+  "matchStadiumWorks": "Na stadionu su u tijeku radovi",
+  "matchStadiumConditions": "Uvjeti"
 }

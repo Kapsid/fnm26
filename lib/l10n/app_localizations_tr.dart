@@ -17020,4 +17020,57 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get settingsAboutProtected =>
       'Oyun, kodu ve içeriği telif hakkı ile korunmaktadır.';
+
+  @override
+  String get matchTabPlayer => 'OYUNCU';
+
+  @override
+  String get matchTabStadium => 'STADYUM';
+
+  @override
+  String get matchPotmNone => 'Bu maçta maçın oyuncusu seçilmedi.';
+
+  @override
+  String get matchPotmHisMatch => 'Onun maçı';
+
+  @override
+  String get matchPotmBeforeMatch => 'Bu maçtan önce';
+
+  @override
+  String get matchStatMinutes => 'Dakika';
+
+  @override
+  String get matchStatSaves => 'Kurtarış';
+
+  @override
+  String get matchStatOnTarget => 'İsabetli';
+
+  @override
+  String get matchStadiumCapacity => 'Kapasite';
+
+  @override
+  String get matchStadiumAttendance => 'Seyirci';
+
+  @override
+  String get matchStadiumFull => 'Doluluk';
+
+  @override
+  String matchStadiumHomeOf(String nation) {
+    return 'İç saha: $nation';
+  }
+
+  @override
+  String get matchStadiumNeutral => 'Tarafsız saha';
+
+  @override
+  String get matchStadiumBuilt => 'Federasyonun inşa etti';
+
+  @override
+  String get matchStadiumEnlarged => 'Federasyonun büyüttü';
+
+  @override
+  String get matchStadiumWorks => 'Bu stadyumda çalışmalar sürüyor';
+
+  @override
+  String get matchStadiumConditions => 'Koşullar';
 }

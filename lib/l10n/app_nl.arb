@@ -4272,5 +4272,22 @@
   "profileTabVsYou": "Tegen jou",
   "playerStatFitness": "Fitheid",
   "settingsAboutCopyright": "© 2026 Martin Urbanczyk. Alle rechten voorbehouden.",
-  "settingsAboutProtected": "De game, de code en de inhoud zijn beschermd door auteursrecht."
+  "settingsAboutProtected": "De game, de code en de inhoud zijn beschermd door auteursrecht.",
+  "matchTabPlayer": "SPELER",
+  "matchTabStadium": "STADION",
+  "matchPotmNone": "Voor dit duel is geen man van de wedstrijd gekozen.",
+  "matchPotmHisMatch": "Zijn wedstrijd",
+  "matchPotmBeforeMatch": "Voor deze wedstrijd",
+  "matchStatMinutes": "Minuten",
+  "matchStatSaves": "Reddingen",
+  "matchStatOnTarget": "Op doel",
+  "matchStadiumCapacity": "Capaciteit",
+  "matchStadiumAttendance": "Toeschouwers",
+  "matchStadiumFull": "Bezetting",
+  "matchStadiumHomeOf": "Thuisstadion: {nation}",
+  "matchStadiumNeutral": "Neutraal terrein",
+  "matchStadiumBuilt": "Gebouwd door je bond",
+  "matchStadiumEnlarged": "Uitgebreid door je bond",
+  "matchStadiumWorks": "Er wordt aan dit stadion gewerkt",
+  "matchStadiumConditions": "Omstandigheden"
 }

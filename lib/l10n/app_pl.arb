@@ -4272,5 +4272,22 @@
   "profileTabVsYou": "Przeciw tobie",
   "playerStatFitness": "Kondycja",
   "settingsAboutCopyright": "© 2026 Martin Urbanczyk. Wszelkie prawa zastrzeżone.",
-  "settingsAboutProtected": "Gra, jej kod i zawartość są chronione prawem autorskim."
+  "settingsAboutProtected": "Gra, jej kod i zawartość są chronione prawem autorskim.",
+  "matchTabPlayer": "ZAWODNIK",
+  "matchTabStadium": "STADION",
+  "matchPotmNone": "W tym meczu nie wybrano zawodnika meczu.",
+  "matchPotmHisMatch": "Jego mecz",
+  "matchPotmBeforeMatch": "Przed tym meczem",
+  "matchStatMinutes": "Minuty",
+  "matchStatSaves": "Obrony",
+  "matchStatOnTarget": "Celne",
+  "matchStadiumCapacity": "Pojemność",
+  "matchStadiumAttendance": "Frekwencja",
+  "matchStadiumFull": "Zapełnienie",
+  "matchStadiumHomeOf": "Stadion gospodarzy: {nation}",
+  "matchStadiumNeutral": "Teren neutralny",
+  "matchStadiumBuilt": "Zbudowany przez twoją federację",
+  "matchStadiumEnlarged": "Rozbudowany przez twoją federację",
+  "matchStadiumWorks": "Na stadionie trwa przebudowa",
+  "matchStadiumConditions": "Warunki"
 }

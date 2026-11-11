@@ -4272,5 +4272,22 @@
   "profileTabVsYou": "Đối đầu bạn",
   "playerStatFitness": "Thể lực",
   "settingsAboutCopyright": "© 2026 Martin Urbanczyk. Bảo lưu mọi quyền.",
-  "settingsAboutProtected": "Trò chơi, mã nguồn và nội dung của trò chơi được bảo vệ bởi luật bản quyền."
+  "settingsAboutProtected": "Trò chơi, mã nguồn và nội dung của trò chơi được bảo vệ bởi luật bản quyền.",
+  "matchTabPlayer": "CẦU THỦ",
+  "matchTabStadium": "SÂN",
+  "matchPotmNone": "Trận này không bầu cầu thủ xuất sắc nhất.",
+  "matchPotmHisMatch": "Trận đấu của anh ấy",
+  "matchPotmBeforeMatch": "Trước trận này",
+  "matchStatMinutes": "Phút",
+  "matchStatSaves": "Cứu thua",
+  "matchStatOnTarget": "Trúng đích",
+  "matchStadiumCapacity": "Sức chứa",
+  "matchStadiumAttendance": "Khán giả",
+  "matchStadiumFull": "Lấp đầy",
+  "matchStadiumHomeOf": "Sân nhà: {nation}",
+  "matchStadiumNeutral": "Sân trung lập",
+  "matchStadiumBuilt": "Do liên đoàn của bạn xây",
+  "matchStadiumEnlarged": "Do liên đoàn của bạn mở rộng",
+  "matchStadiumWorks": "Sân đang được thi công",
+  "matchStadiumConditions": "Điều kiện"
 }

@@ -4272,5 +4272,22 @@
   "profileTabVsYou": "Εναντίον σου",
   "playerStatFitness": "Φυσική κατάσταση",
   "settingsAboutCopyright": "© 2026 Martin Urbanczyk. Με επιφύλαξη παντός δικαιώματος.",
-  "settingsAboutProtected": "Το παιχνίδι, ο κώδικάς του και το περιεχόμενό του προστατεύονται από πνευματικά δικαιώματα."
+  "settingsAboutProtected": "Το παιχνίδι, ο κώδικάς του και το περιεχόμενό του προστατεύονται από πνευματικά δικαιώματα.",
+  "matchTabPlayer": "ΠΑΙΚΤΗΣ",
+  "matchTabStadium": "ΓΗΠΕΔΟ",
+  "matchPotmNone": "Δεν αναδείχθηκε παίκτης του αγώνα σε αυτό το παιχνίδι.",
+  "matchPotmHisMatch": "Ο αγώνας του",
+  "matchPotmBeforeMatch": "Πριν από αυτόν τον αγώνα",
+  "matchStatMinutes": "Λεπτά",
+  "matchStatSaves": "Αποκρούσεις",
+  "matchStatOnTarget": "Στην εστία",
+  "matchStadiumCapacity": "Χωρητικότητα",
+  "matchStadiumAttendance": "Θεατές",
+  "matchStadiumFull": "Πληρότητα",
+  "matchStadiumHomeOf": "Έδρα: {nation}",
+  "matchStadiumNeutral": "Ουδέτερο γήπεδο",
+  "matchStadiumBuilt": "Το έχτισε η ομοσπονδία σου",
+  "matchStadiumEnlarged": "Το επέκτεινε η ομοσπονδία σου",
+  "matchStadiumWorks": "Γίνονται έργα σε αυτό το γήπεδο",
+  "matchStadiumConditions": "Συνθήκες"
 }

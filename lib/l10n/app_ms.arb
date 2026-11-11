@@ -4272,5 +4272,22 @@
   "profileTabVsYou": "Menentang anda",
   "playerStatFitness": "Kecergasan",
   "settingsAboutCopyright": "© 2026 Martin Urbanczyk. Hak cipta terpelihara.",
-  "settingsAboutProtected": "Permainan ini, kodnya dan kandungannya dilindungi oleh hak cipta."
+  "settingsAboutProtected": "Permainan ini, kodnya dan kandungannya dilindungi oleh hak cipta.",
+  "matchTabPlayer": "PEMAIN",
+  "matchTabStadium": "STADIUM",
+  "matchPotmNone": "Tiada pemain terbaik dipilih untuk perlawanan ini.",
+  "matchPotmHisMatch": "Perlawanannya",
+  "matchPotmBeforeMatch": "Sebelum perlawanan ini",
+  "matchStatMinutes": "Minit",
+  "matchStatSaves": "Selamatan",
+  "matchStatOnTarget": "Tepat sasaran",
+  "matchStadiumCapacity": "Kapasiti",
+  "matchStadiumAttendance": "Kehadiran",
+  "matchStadiumFull": "Terisi",
+  "matchStadiumHomeOf": "Gelanggang sendiri: {nation}",
+  "matchStadiumNeutral": "Tempat neutral",
+  "matchStadiumBuilt": "Dibina oleh persekutuan anda",
+  "matchStadiumEnlarged": "Diperbesar oleh persekutuan anda",
+  "matchStadiumWorks": "Kerja sedang dijalankan di stadium ini",
+  "matchStadiumConditions": "Keadaan"
 }

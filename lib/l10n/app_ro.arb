@@ -4272,5 +4272,22 @@
   "profileTabVsYou": "Contra ta",
   "playerStatFitness": "Condiție fizică",
   "settingsAboutCopyright": "© 2026 Martin Urbanczyk. Toate drepturile rezervate.",
-  "settingsAboutProtected": "Jocul, codul și conținutul său sunt protejate de drepturile de autor."
+  "settingsAboutProtected": "Jocul, codul și conținutul său sunt protejate de drepturile de autor.",
+  "matchTabPlayer": "JUCĂTOR",
+  "matchTabStadium": "STADION",
+  "matchPotmNone": "La acest meci nu a fost desemnat jucătorul meciului.",
+  "matchPotmHisMatch": "Meciul lui",
+  "matchPotmBeforeMatch": "Înainte de acest meci",
+  "matchStatMinutes": "Minute",
+  "matchStatSaves": "Parade",
+  "matchStatOnTarget": "Pe poartă",
+  "matchStadiumCapacity": "Capacitate",
+  "matchStadiumAttendance": "Spectatori",
+  "matchStadiumFull": "Grad de ocupare",
+  "matchStadiumHomeOf": "Stadion propriu: {nation}",
+  "matchStadiumNeutral": "Teren neutru",
+  "matchStadiumBuilt": "Construit de federația dumneavoastră",
+  "matchStadiumEnlarged": "Extins de federația dumneavoastră",
+  "matchStadiumWorks": "Se lucrează la acest stadion",
+  "matchStadiumConditions": "Condiții"
 }

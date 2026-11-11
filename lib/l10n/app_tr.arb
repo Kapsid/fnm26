@@ -4272,5 +4272,22 @@
   "profileTabVsYou": "Size karşı",
   "playerStatFitness": "Kondisyon",
   "settingsAboutCopyright": "© 2026 Martin Urbanczyk. Tüm hakları saklıdır.",
-  "settingsAboutProtected": "Oyun, kodu ve içeriği telif hakkı ile korunmaktadır."
+  "settingsAboutProtected": "Oyun, kodu ve içeriği telif hakkı ile korunmaktadır.",
+  "matchTabPlayer": "OYUNCU",
+  "matchTabStadium": "STADYUM",
+  "matchPotmNone": "Bu maçta maçın oyuncusu seçilmedi.",
+  "matchPotmHisMatch": "Onun maçı",
+  "matchPotmBeforeMatch": "Bu maçtan önce",
+  "matchStatMinutes": "Dakika",
+  "matchStatSaves": "Kurtarış",
+  "matchStatOnTarget": "İsabetli",
+  "matchStadiumCapacity": "Kapasite",
+  "matchStadiumAttendance": "Seyirci",
+  "matchStadiumFull": "Doluluk",
+  "matchStadiumHomeOf": "İç saha: {nation}",
+  "matchStadiumNeutral": "Tarafsız saha",
+  "matchStadiumBuilt": "Federasyonun inşa etti",
+  "matchStadiumEnlarged": "Federasyonun büyüttü",
+  "matchStadiumWorks": "Bu stadyumda çalışmalar sürüyor",
+  "matchStadiumConditions": "Koşullar"
 }

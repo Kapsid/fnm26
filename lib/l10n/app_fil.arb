@@ -4272,5 +4272,22 @@
   "profileTabVsYou": "Laban sa iyo",
   "playerStatFitness": "Fitness",
   "settingsAboutCopyright": "© 2026 Martin Urbanczyk. Nakareserba ang lahat ng karapatan.",
-  "settingsAboutProtected": "Ang laro, ang code nito at ang nilalaman nito ay protektado ng copyright."
+  "settingsAboutProtected": "Ang laro, ang code nito at ang nilalaman nito ay protektado ng copyright.",
+  "matchTabPlayer": "MANLALARO",
+  "matchTabStadium": "ISTADYUM",
+  "matchPotmNone": "Walang napiling manlalaro ng laro sa larong ito.",
+  "matchPotmHisMatch": "Ang laro niya",
+  "matchPotmBeforeMatch": "Bago ang larong ito",
+  "matchStatMinutes": "Minuto",
+  "matchStatSaves": "Mga sangga",
+  "matchStatOnTarget": "Sa target",
+  "matchStadiumCapacity": "Kapasidad",
+  "matchStadiumAttendance": "Dumalo",
+  "matchStadiumFull": "Puno",
+  "matchStadiumHomeOf": "Tahanang istadyum: {nation}",
+  "matchStadiumNeutral": "Neutral na lugar",
+  "matchStadiumBuilt": "Itinayo ng iyong pederasyon",
+  "matchStadiumEnlarged": "Pinalaki ng iyong pederasyon",
+  "matchStadiumWorks": "May ginagawang trabaho sa istadyum na ito",
+  "matchStadiumConditions": "Kondisyon"
 }

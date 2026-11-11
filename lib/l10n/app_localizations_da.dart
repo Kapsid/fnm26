@@ -17109,4 +17109,58 @@ class AppLocalizationsDa extends AppLocalizations {
   @override
   String get settingsAboutProtected =>
       'Spillet, dets kode og indhold er beskyttet af ophavsret.';
+
+  @override
+  String get matchTabPlayer => 'SPILLER';
+
+  @override
+  String get matchTabStadium => 'STADION';
+
+  @override
+  String get matchPotmNone =>
+      'Der blev ikke kåret nogen kampens spiller i denne kamp.';
+
+  @override
+  String get matchPotmHisMatch => 'Hans kamp';
+
+  @override
+  String get matchPotmBeforeMatch => 'Før denne kamp';
+
+  @override
+  String get matchStatMinutes => 'Minutter';
+
+  @override
+  String get matchStatSaves => 'Redninger';
+
+  @override
+  String get matchStatOnTarget => 'På mål';
+
+  @override
+  String get matchStadiumCapacity => 'Kapacitet';
+
+  @override
+  String get matchStadiumAttendance => 'Tilskuere';
+
+  @override
+  String get matchStadiumFull => 'Belægning';
+
+  @override
+  String matchStadiumHomeOf(String nation) {
+    return 'Hjemmebane: $nation';
+  }
+
+  @override
+  String get matchStadiumNeutral => 'Neutral bane';
+
+  @override
+  String get matchStadiumBuilt => 'Bygget af dit forbund';
+
+  @override
+  String get matchStadiumEnlarged => 'Udvidet af dit forbund';
+
+  @override
+  String get matchStadiumWorks => 'Der arbejdes på stadionet';
+
+  @override
+  String get matchStadiumConditions => 'Forhold';
 }

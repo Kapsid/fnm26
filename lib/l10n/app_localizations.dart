@@ -25873,6 +25873,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The game, its code and its content are protected by copyright.'**
   String get settingsAboutProtected;
+
+  /// Match screen tab at full time: the player of the match. Very short, upper case like the other match tabs.
+  ///
+  /// In en, this message translates to:
+  /// **'PLAYER'**
+  String get matchTabPlayer;
+
+  /// Match screen tab at full time: the ground the match was played in. Very short, upper case like the other match tabs.
+  ///
+  /// In en, this message translates to:
+  /// **'STADIUM'**
+  String get matchTabStadium;
+
+  /// Player tab at full time when the result names no player of the match (an old saved result).
+  ///
+  /// In en, this message translates to:
+  /// **'No player of the match was named for this game.'**
+  String get matchPotmNone;
+
+  /// Player tab: caption over the player of the match's own figures in this match.
+  ///
+  /// In en, this message translates to:
+  /// **'His match'**
+  String get matchPotmHisMatch;
+
+  /// Player tab: caption over the player's international caps and goals as they stood before this match (the match is not yet counted).
+  ///
+  /// In en, this message translates to:
+  /// **'Before this match'**
+  String get matchPotmBeforeMatch;
+
+  /// Player tab: minutes he played in the match.
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes'**
+  String get matchStatMinutes;
+
+  /// Player tab: saves a goalkeeper made in the match.
+  ///
+  /// In en, this message translates to:
+  /// **'Saves'**
+  String get matchStatSaves;
+
+  /// Player tab: his shots on target, shown as '2 / 4'.
+  ///
+  /// In en, this message translates to:
+  /// **'On target'**
+  String get matchStatOnTarget;
+
+  /// Stadium tab: the ground's seats.
+  ///
+  /// In en, this message translates to:
+  /// **'Capacity'**
+  String get matchStadiumCapacity;
+
+  /// Stadium tab: the crowd at this match.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance'**
+  String get matchStadiumAttendance;
+
+  /// Stadium tab: caption under a percentage of seats filled ('85%').
+  ///
+  /// In en, this message translates to:
+  /// **'Full'**
+  String get matchStadiumFull;
+
+  /// Stadium tab: whose home ground it is. {nation} is a nation's name; phrase it so the name needs no grammatical case.
+  ///
+  /// In en, this message translates to:
+  /// **'Home ground of {nation}'**
+  String matchStadiumHomeOf(String nation);
+
+  /// Stadium tab: the match was played on neutral ground (a finals tie at the host).
+  ///
+  /// In en, this message translates to:
+  /// **'Neutral venue'**
+  String get matchStadiumNeutral;
+
+  /// Stadium tab: the manager's federation built this ground.
+  ///
+  /// In en, this message translates to:
+  /// **'Built by your federation'**
+  String get matchStadiumBuilt;
+
+  /// Stadium tab: the manager's federation has enlarged this ground.
+  ///
+  /// In en, this message translates to:
+  /// **'Enlarged by your federation'**
+  String get matchStadiumEnlarged;
+
+  /// Stadium tab: building works ordered by the manager's federation are still going on at this ground.
+  ///
+  /// In en, this message translates to:
+  /// **'Works under way at this ground'**
+  String get matchStadiumWorks;
+
+  /// Stadium tab: caption over the kick-off time, the weather and what the altitude, heat and weather did.
+  ///
+  /// In en, this message translates to:
+  /// **'Conditions'**
+  String get matchStadiumConditions;
 }
 
 class _AppLocalizationsDelegate

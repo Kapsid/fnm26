@@ -26360,18 +26360,37 @@
   },
   "editorDemoteTooltip": "Move to the pool",
   "editorDemoted": "{name} moved to the pool",
-  "@editorDemoteTooltip": {"description": "Editor squad list: tooltip of the button that moves a squad player back into the nation's pool (the reverse of editorPromoteTooltip)."},
-  "@editorDemoted": {"description": "Editor snackbar after moving a squad player into the pool, with Undo.", "placeholders": {"name": {"type": "String"}}},
+  "@editorDemoteTooltip": {
+    "description": "Editor squad list: tooltip of the button that moves a squad player back into the nation's pool (the reverse of editorPromoteTooltip)."
+  },
+  "@editorDemoted": {
+    "description": "Editor snackbar after moving a squad player into the pool, with Undo.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "profileTabOverview": "Overview",
-  "@profileTabOverview": {"description": "Player and manager pages, first tab: who he is at a glance (abilities, form, traits, club; or his record, style and current job)."},
+  "@profileTabOverview": {
+    "description": "Player and manager pages, first tab: who he is at a glance (abilities, form, traits, club; or his record, style and current job)."
+  },
   "profileTabStats": "Stats",
-  "@profileTabStats": {"description": "Player page, second tab: his international statistics."},
+  "@profileTabStats": {
+    "description": "Player page, second tab: his international statistics."
+  },
   "profileTabCareer": "Career",
-  "@profileTabCareer": {"description": "Player and manager pages, last tab: his career history (clubs, honours, matches; or a manager's jobs spell by spell)."},
+  "@profileTabCareer": {
+    "description": "Player and manager pages, last tab: his career history (clubs, honours, matches; or a manager's jobs spell by spell)."
+  },
   "profileTabVsYou": "Vs you",
-  "@profileTabVsYou": {"description": "Manager page, second tab: his record against the nations you have managed."},
+  "@profileTabVsYou": {
+    "description": "Manager page, second tab: his record against the nations you have managed."
+  },
   "playerStatFitness": "Fitness",
-  "@playerStatFitness": {"description": "Player page header: label under a coloured dot showing how fresh his legs are."},
+  "@playerStatFitness": {
+    "description": "Player page header: label under a coloured dot showing how fresh his legs are."
+  },
   "settingsAboutCopyright": "© 2026 Martin Urbanczyk. All rights reserved.",
   "settingsAboutProtected": "The game, its code and its content are protected by copyright.",
   "@settingsAboutCopyright": {
@@ -26379,5 +26398,78 @@
   },
   "@settingsAboutProtected": {
     "description": "Settings footer: one line saying the game, code and content are protected."
+  },
+  "matchTabPlayer": "PLAYER",
+  "@matchTabPlayer": {
+    "description": "Match screen tab at full time: the player of the match. Very short, upper case like the other match tabs."
+  },
+  "matchTabStadium": "STADIUM",
+  "@matchTabStadium": {
+    "description": "Match screen tab at full time: the ground the match was played in. Very short, upper case like the other match tabs."
+  },
+  "matchPotmNone": "No player of the match was named for this game.",
+  "@matchPotmNone": {
+    "description": "Player tab at full time when the result names no player of the match (an old saved result)."
+  },
+  "matchPotmHisMatch": "His match",
+  "@matchPotmHisMatch": {
+    "description": "Player tab: caption over the player of the match's own figures in this match."
+  },
+  "matchPotmBeforeMatch": "Before this match",
+  "@matchPotmBeforeMatch": {
+    "description": "Player tab: caption over the player's international caps and goals as they stood before this match (the match is not yet counted)."
+  },
+  "matchStatMinutes": "Minutes",
+  "@matchStatMinutes": {
+    "description": "Player tab: minutes he played in the match."
+  },
+  "matchStatSaves": "Saves",
+  "@matchStatSaves": {
+    "description": "Player tab: saves a goalkeeper made in the match."
+  },
+  "matchStatOnTarget": "On target",
+  "@matchStatOnTarget": {
+    "description": "Player tab: his shots on target, shown as '2 / 4'."
+  },
+  "matchStadiumCapacity": "Capacity",
+  "@matchStadiumCapacity": {
+    "description": "Stadium tab: the ground's seats."
+  },
+  "matchStadiumAttendance": "Attendance",
+  "@matchStadiumAttendance": {
+    "description": "Stadium tab: the crowd at this match."
+  },
+  "matchStadiumFull": "Full",
+  "@matchStadiumFull": {
+    "description": "Stadium tab: caption under a percentage of seats filled ('85%')."
+  },
+  "matchStadiumHomeOf": "Home ground of {nation}",
+  "@matchStadiumHomeOf": {
+    "description": "Stadium tab: whose home ground it is. {nation} is a nation's name; phrase it so the name needs no grammatical case.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "matchStadiumNeutral": "Neutral venue",
+  "@matchStadiumNeutral": {
+    "description": "Stadium tab: the match was played on neutral ground (a finals tie at the host)."
+  },
+  "matchStadiumBuilt": "Built by your federation",
+  "@matchStadiumBuilt": {
+    "description": "Stadium tab: the manager's federation built this ground."
+  },
+  "matchStadiumEnlarged": "Enlarged by your federation",
+  "@matchStadiumEnlarged": {
+    "description": "Stadium tab: the manager's federation has enlarged this ground."
+  },
+  "matchStadiumWorks": "Works under way at this ground",
+  "@matchStadiumWorks": {
+    "description": "Stadium tab: building works ordered by the manager's federation are still going on at this ground."
+  },
+  "matchStadiumConditions": "Conditions",
+  "@matchStadiumConditions": {
+    "description": "Stadium tab: caption over the kick-off time, the weather and what the altitude, heat and weather did."
   }
 }

@@ -17268,4 +17268,58 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get settingsAboutProtected =>
       'Le jeu, son code et son contenu sont protégés par le droit d’auteur.';
+
+  @override
+  String get matchTabPlayer => 'JOUEUR';
+
+  @override
+  String get matchTabStadium => 'STADE';
+
+  @override
+  String get matchPotmNone =>
+      'Aucun homme du match n’a été désigné pour cette rencontre.';
+
+  @override
+  String get matchPotmHisMatch => 'Son match';
+
+  @override
+  String get matchPotmBeforeMatch => 'Avant ce match';
+
+  @override
+  String get matchStatMinutes => 'Minutes';
+
+  @override
+  String get matchStatSaves => 'Arrêts';
+
+  @override
+  String get matchStatOnTarget => 'Cadrés';
+
+  @override
+  String get matchStadiumCapacity => 'Capacité';
+
+  @override
+  String get matchStadiumAttendance => 'Affluence';
+
+  @override
+  String get matchStadiumFull => 'Remplissage';
+
+  @override
+  String matchStadiumHomeOf(String nation) {
+    return 'Stade à domicile : $nation';
+  }
+
+  @override
+  String get matchStadiumNeutral => 'Terrain neutre';
+
+  @override
+  String get matchStadiumBuilt => 'Construit par votre fédération';
+
+  @override
+  String get matchStadiumEnlarged => 'Agrandi par votre fédération';
+
+  @override
+  String get matchStadiumWorks => 'Travaux en cours dans ce stade';
+
+  @override
+  String get matchStadiumConditions => 'Conditions';
 }

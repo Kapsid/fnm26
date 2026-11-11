@@ -4272,5 +4272,22 @@
   "profileTabVsYou": "Проти вас",
   "playerStatFitness": "Фізпідготовка",
   "settingsAboutCopyright": "© 2026 Martin Urbanczyk. Усі права захищено.",
-  "settingsAboutProtected": "Гра, її код і вміст захищені авторським правом."
+  "settingsAboutProtected": "Гра, її код і вміст захищені авторським правом.",
+  "matchTabPlayer": "ГРАВЕЦЬ",
+  "matchTabStadium": "СТАДІОН",
+  "matchPotmNone": "У цьому матчі гравця матчу не визначили.",
+  "matchPotmHisMatch": "Його матч",
+  "matchPotmBeforeMatch": "До цього матчу",
+  "matchStatMinutes": "Хвилини",
+  "matchStatSaves": "Сейви",
+  "matchStatOnTarget": "У площину",
+  "matchStadiumCapacity": "Місткість",
+  "matchStadiumAttendance": "Відвідуваність",
+  "matchStadiumFull": "Заповненість",
+  "matchStadiumHomeOf": "Домашній стадіон: {nation}",
+  "matchStadiumNeutral": "Нейтральне поле",
+  "matchStadiumBuilt": "Збудувала твоя федерація",
+  "matchStadiumEnlarged": "Розширила твоя федерація",
+  "matchStadiumWorks": "На стадіоні тривають роботи",
+  "matchStadiumConditions": "Умови"
 }

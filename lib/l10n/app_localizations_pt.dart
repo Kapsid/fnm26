@@ -17207,4 +17207,58 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get settingsAboutProtected =>
       'O jogo, o seu código e o seu conteúdo estão protegidos por direitos de autor.';
+
+  @override
+  String get matchTabPlayer => 'JOGADOR';
+
+  @override
+  String get matchTabStadium => 'ESTÁDIO';
+
+  @override
+  String get matchPotmNone =>
+      'Nenhum homem do jogo foi escolhido nesta partida.';
+
+  @override
+  String get matchPotmHisMatch => 'O jogo dele';
+
+  @override
+  String get matchPotmBeforeMatch => 'Antes deste jogo';
+
+  @override
+  String get matchStatMinutes => 'Minutos';
+
+  @override
+  String get matchStatSaves => 'Defesas';
+
+  @override
+  String get matchStatOnTarget => 'À baliza';
+
+  @override
+  String get matchStadiumCapacity => 'Capacidade';
+
+  @override
+  String get matchStadiumAttendance => 'Público';
+
+  @override
+  String get matchStadiumFull => 'Ocupação';
+
+  @override
+  String matchStadiumHomeOf(String nation) {
+    return 'Estádio da casa: $nation';
+  }
+
+  @override
+  String get matchStadiumNeutral => 'Campo neutro';
+
+  @override
+  String get matchStadiumBuilt => 'Construído pela sua federação';
+
+  @override
+  String get matchStadiumEnlarged => 'Ampliado pela sua federação';
+
+  @override
+  String get matchStadiumWorks => 'Obras a decorrer neste estádio';
+
+  @override
+  String get matchStadiumConditions => 'Condições';
 }

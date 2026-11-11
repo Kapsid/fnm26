@@ -4272,5 +4272,22 @@
   "profileTabVsYou": "Proti vám",
   "playerStatFitness": "Kondice",
   "settingsAboutCopyright": "© 2026 Martin Urbanczyk. Všechna práva vyhrazena.",
-  "settingsAboutProtected": "Hra, její kód a obsah jsou chráněny autorským právem."
+  "settingsAboutProtected": "Hra, její kód a obsah jsou chráněny autorským právem.",
+  "matchTabPlayer": "HRÁČ",
+  "matchTabStadium": "STADION",
+  "matchPotmNone": "V tomto zápase nebyl vyhlášen hráč zápasu.",
+  "matchPotmHisMatch": "Jeho zápas",
+  "matchPotmBeforeMatch": "Před tímto zápasem",
+  "matchStatMinutes": "Minuty",
+  "matchStatSaves": "Zákroky",
+  "matchStatOnTarget": "Na branku",
+  "matchStadiumCapacity": "Kapacita",
+  "matchStadiumAttendance": "Návštěva",
+  "matchStadiumFull": "Zaplněno",
+  "matchStadiumHomeOf": "Domácí stadion: {nation}",
+  "matchStadiumNeutral": "Neutrální půda",
+  "matchStadiumBuilt": "Postavila ho vaše federace",
+  "matchStadiumEnlarged": "Rozšířila ho vaše federace",
+  "matchStadiumWorks": "Na stadionu probíhá přestavba",
+  "matchStadiumConditions": "Podmínky"
 }
