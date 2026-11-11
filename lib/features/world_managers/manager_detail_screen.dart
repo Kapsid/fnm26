@@ -43,10 +43,11 @@ String managerOriginText(AppLocalizations l, ManagerOrigin o) => switch (o) {
   ManagerOrigin.exAssistant => l.mgrOriginExAssistant,
 };
 
-/// One world manager's page, the counterpart of the player's: who he is and
-/// where he works now, his record over every national team job, how your
-/// sides have fared against him, and his career, spell by spell, with how
-/// each one ended.
+/// One world manager's page, the counterpart of the player's: a silver
+/// header card (his reputation, name, homeland, style, age and four key
+/// numbers) over three tabs. Overview: his record over every national team
+/// job, his style and background, where he is in charge now. Vs you: how your
+/// sides have fared against him. Career: every spell and how it ended.
 ///
 /// Everything is derived on read from the stored spells
 /// ([managerDetailProvider]); nothing new is persisted.
@@ -67,6 +68,12 @@ class ManagerDetailScreen extends ConsumerWidget {
   static const Key recordKey = Key('managerDetail.record');
   static const Key vsYouKey = Key('managerDetail.vsYou');
   static const Key tieKey = Key('managerDetail.tie');
+  static const Key headerKey = Key('managerDetail.header');
+  static const Key styleKey = Key('managerDetail.style');
+  static const Key inChargeKey = Key('managerDetail.inCharge');
+  static const Key tabOverviewKey = Key('managerDetail.tab.overview');
+  static const Key tabVsYouKey = Key('managerDetail.tab.vsYou');
+  static const Key tabCareerKey = Key('managerDetail.tab.career');
 
   /// Back to the screen that opened him; opened by a link with nothing
   /// beneath, the parent the system back button would pick.
@@ -106,19 +113,77 @@ class ManagerDetailScreen extends ConsumerWidget {
       body: _ManagerDetailBody(
         careerId: careerId,
         managerId: managerId,
-        builder: (context, sections) => ListView(
-          key: profileKey,
-          padding: const EdgeInsets.all(AppSpacing.marginMobile),
-          children: [...sections.profile, ...sections.career],
-        ),
+        builder: (context, sections) => _ManagerPhoneTabs(sections: sections),
       ),
     );
   }
 }
 
-/// The page's two runs: `profile` (who he is, his record, you and him) and
-/// `career` (every spell). One column on a phone, side by side on a tablet.
-typedef _Sections = ({List<Widget> profile, List<Widget> career});
+/// The phone's one column: the header, the tab control and the open tab.
+class _ManagerPhoneTabs extends StatefulWidget {
+  const _ManagerPhoneTabs({required this.sections});
+
+  final _Sections sections;
+
+  @override
+  State<_ManagerPhoneTabs> createState() => _ManagerPhoneTabsState();
+}
+
+class _ManagerPhoneTabsState extends State<_ManagerPhoneTabs> {
+  int _tab = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final s = widget.sections;
+    return ListView(
+      key: ManagerDetailScreen.profileKey,
+      padding: const EdgeInsets.all(AppSpacing.marginMobile),
+      children: [
+        s.header,
+        const SizedBox(height: AppSpacing.md),
+        ProfileTabs(
+          labels: [
+            l.profileTabOverview,
+            l.profileTabVsYou,
+            l.profileTabCareer,
+          ],
+          keys: const [
+            ManagerDetailScreen.tabOverviewKey,
+            ManagerDetailScreen.tabVsYouKey,
+            ManagerDetailScreen.tabCareerKey,
+          ],
+          selected: _tab,
+          onSelect: (i) => setState(() => _tab = i),
+        ),
+        ..._spaced(switch (_tab) {
+          0 => s.overview,
+          1 => s.vsYou,
+          _ => s.career,
+        }),
+        const SizedBox(height: AppSpacing.xl),
+      ],
+    );
+  }
+}
+
+/// [blocks] with the page's gap above each one.
+List<Widget> _spaced(List<Widget> blocks) => [
+  for (final b in blocks)
+    Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.sm),
+      child: b,
+    ),
+];
+
+/// The page in its parts: the header card, then each tab's blocks. One
+/// column on a phone (tabs), two panes on a tablet.
+typedef _Sections = ({
+  Widget header,
+  List<Widget> overview,
+  List<Widget> vsYou,
+  List<Widget> career,
+});
 
 /// Loads the page and hands its sections to [builder]; the loading, error
 /// and not-found states are the same in both layouts.
@@ -173,162 +238,137 @@ _Sections _sections(
   }
   final matches = won + drawn + lost;
   final current = d.spells.where((s) => s.spell.current).firstOrNull;
-  final job = current != null
-      ? l.mgrDetailCurrentJob(nations[current.spell.nationId]?.name ?? '')
-      : m.retiredAt != null
-      ? l.mgrEndRetired
-      : l.mgrDetailFree;
   final led = {for (final s in d.spells) s.spell.nationId}.length;
-  final label = AppTypography.labelSmall.copyWith(color: AppColors.primary);
   final muted = AppTypography.bodyMedium.copyWith(
     color: AppColors.onSurfaceVariant,
   );
   final r = p.relation;
 
-  return (
-    profile: [
-      AppCard(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                // His reputation where a player's card has his rating: the
-                // one number that says how big a name he is.
-                Container(
-                  width: 64,
-                  height: 64,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.primary.withValues(alpha: 0.10),
-                    border: Border.all(color: AppColors.primary, width: 2),
-                  ),
-                  child: Text(
-                    '${p.reputation}',
-                    style: AppTypography.headlineLargeMobile.copyWith(
-                      color: AppColors.primary,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(m.name, style: AppTypography.headlineMedium),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          FlagDisc(m.nationality, size: 18),
-                          const SizedBox(width: AppSpacing.xs),
-                          Flexible(
-                            child: Text(
-                              d.homeland?.name ?? m.nationality,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: AppTypography.labelSmall.copyWith(
-                                color: AppColors.onSurfaceVariant,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        job,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTypography.labelMedium,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Row(
-              children: [
-                _HeadlineStat(value: '${p.age}', label: l.mgrProfileAge),
-                _HeadlineStat(value: '$matches', label: l.mgrDetailMatches),
-                _HeadlineStat(
-                  value: matches == 0
-                      ? '-'
-                      : '${(won * 100 / matches).round()}%',
-                  label: l.mgrDetailWinRate,
-                  accent: true,
-                ),
-                _HeadlineStat(value: '$trophies', label: l.mgrDetailTrophies),
-              ],
-            ),
-          ],
+  final header = ProfileHeaderCard(
+    key: ManagerDetailScreen.headerKey,
+    // His reputation where a player's card has his rating: the one number
+    // that says how big a name he is.
+    disc: '${p.reputation}',
+    name: m.name,
+    meta: [
+      FlagDisc(m.nationality, size: 16),
+      const SizedBox(width: AppSpacing.xs),
+      Flexible(
+        child: Text(
+          d.homeland?.name ?? m.nationality,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: profileMetaStyle,
         ),
       ),
-      const SizedBox(height: AppSpacing.sm),
-      AppCard(
+      profileMetaDot(),
+      Flexible(child: ProfileChip(managerStyleText(l, m.style))),
+      profileMetaDot(),
+      Flexible(
+        flex: 0,
+        child: Text(
+          l.tacticsAgeOnly(p.age),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          softWrap: false,
+          style: profileMetaStyle,
+        ),
+      ),
+    ],
+    stats: [
+      ProfileKeyStat.text('$matches', label: l.mgrDetailMatches),
+      ProfileKeyStat.text(
+        matches == 0 ? '-' : '${(won * 100 / matches).round()}%',
+        label: l.mgrDetailWinRate,
+      ),
+      ProfileKeyStat.text('$trophies', label: l.mgrDetailTrophies),
+      ProfileKeyStat.text('$led', label: l.mgrDetailNationsLed),
+    ],
+  );
+
+  return (
+    header: header,
+    overview: [
+      ProfileBlock(
         key: ManagerDetailScreen.recordKey,
+        title: l.mgrDetailRecord,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(l.mgrDetailRecord.capsIn(l.localeName), style: label),
+            _RecordBar(won: won, drawn: drawn, lost: lost),
             const SizedBox(height: AppSpacing.sm),
             Text(
               managerRecordText(l, won, drawn, lost),
               style: AppTypography.titleMedium,
             ),
-            const SizedBox(height: AppSpacing.sm),
-            Wrap(
-              spacing: AppSpacing.lg,
-              runSpacing: AppSpacing.sm,
-              children: [
-                _Fact(l.mgrProfileReputation, '${p.reputation}'),
-                _Fact(l.mgrDetailNationsLed, '$led'),
-                _Fact(l.mgrProfileStyle, managerStyleText(l, m.style)),
-                _Fact(l.mgrDetailBackground, managerOriginText(l, m.origin)),
-              ],
-            ),
           ],
         ),
       ),
-      const SizedBox(height: AppSpacing.sm),
-      // [r] is read from the player's side (his wins are `won`); this page is
-      // all from HIS side, so his record against you swaps wins and losses.
-      AppCard(
-        key: ManagerDetailScreen.vsYouKey,
+      ProfileBlock(
+        key: ManagerDetailScreen.styleKey,
+        title: l.mgrProfileStyle,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(l.mgrProfileRecordVsYou.capsIn(l.localeName), style: label),
-            const SizedBox(height: AppSpacing.sm),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    r.meetings == 0
-                        ? l.mgrProfileNoMeetings
-                        : managerRecordText(l, r.lost, r.drawn, r.won),
-                    style: r.meetings == 0 ? muted : AppTypography.titleMedium,
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.sm),
-                KeyedSubtree(
-                  key: ManagerDetailScreen.tieKey,
-                  child: TieChip(r.label),
-                ),
-              ],
+            Text(
+              managerStyleText(l, m.style),
+              style: AppTypography.titleMedium,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            // A caption and its value, not "label: value", so no language
+            // needs its own spacing before a colon.
+            Text(
+              l.mgrDetailBackground.capsIn(l.localeName),
+              style: profileCaptionStyle,
+            ),
+            const SizedBox(height: 2),
+            Text(managerOriginText(l, m.origin), style: muted),
+          ],
+        ),
+      ),
+      ProfileBlock(
+        key: ManagerDetailScreen.inChargeKey,
+        title: l.mgrDetailInCharge,
+        child: current == null
+            ? Text(
+                m.retiredAt != null ? l.mgrEndRetired : l.mgrDetailFree,
+                style: muted,
+              )
+            : _InChargeRow(
+                record: current,
+                nation: nations[current.spell.nationId],
+              ),
+      ),
+    ],
+    // [r] is read from the player's side (his wins are `won`); this page is
+    // all from HIS side, so his record against you swaps wins and losses.
+    vsYou: [
+      ProfileBlock(
+        key: ManagerDetailScreen.vsYouKey,
+        title: l.mgrProfileRecordVsYou,
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                r.meetings == 0
+                    ? l.mgrProfileNoMeetings
+                    : managerRecordText(l, r.lost, r.drawn, r.won),
+                style: r.meetings == 0 ? muted : AppTypography.titleMedium,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            KeyedSubtree(
+              key: ManagerDetailScreen.tieKey,
+              child: TieChip(r.label),
             ),
           ],
         ),
       ),
     ],
     career: [
-      const SizedBox(height: AppSpacing.md),
-      Text(
-        l.mgrProfileSpells,
-        style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
-      ),
-      const SizedBox(height: AppSpacing.sm),
-      AppCard(
+      ProfileBlock(
         key: ManagerDetailScreen.careerKey,
+        title: l.mgrProfileSpells,
         padding: EdgeInsets.zero,
         child: d.spells.isEmpty
             ? Padding(
@@ -350,6 +390,98 @@ _Sections _sections(
       ),
     ],
   );
+}
+
+/// His wins, draws and losses as one bar: green, grey, red, each as long as
+/// its share. An empty track for a man with no matches yet.
+class _RecordBar extends StatelessWidget {
+  const _RecordBar({
+    required this.won,
+    required this.drawn,
+    required this.lost,
+  });
+
+  final int won;
+  final int drawn;
+  final int lost;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(5),
+      child: SizedBox(
+        height: 10,
+        child: ColoredBox(
+          color: AppColors.surfaceContainerHighest,
+          child: Row(
+            children: [
+              for (final (n, c) in [
+                (won, AppColors.positive),
+                (drawn, AppColors.outline),
+                (lost, AppColors.error),
+              ])
+                if (n > 0)
+                  Expanded(
+                    flex: n,
+                    child: ColoredBox(color: c),
+                  ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The job he holds now: the flag and nation, since when, and the titles
+/// won there.
+class _InChargeRow extends StatelessWidget {
+  const _InChargeRow({required this.record, required this.nation});
+
+  final ManagerSpellRecord record;
+  final Nation? nation;
+
+  @override
+  Widget build(BuildContext context) {
+    final s = record.spell;
+    return Row(
+      children: [
+        if (nation != null) ...[
+          FlagDisc(nation!.code, size: 20),
+          const SizedBox(width: AppSpacing.sm),
+        ],
+        Flexible(
+          child: Text(
+            nation?.name ?? '',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.bodyMedium.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        Tooltip(
+          message: AppDate.dayMonthYear(context, s.fromDate),
+          child: Text('${s.fromDate.year}–', style: profileMetaStyle),
+        ),
+        if (record.trophies > 0) ...[
+          const SizedBox(width: AppSpacing.sm),
+          const Icon(
+            Icons.emoji_events_rounded,
+            size: 16,
+            color: AppColors.primary,
+          ),
+          Text(
+            '${record.trophies}',
+            style: AppTypography.labelMedium.copyWith(
+              color: AppColors.primary,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
 }
 
 /// One spell of the career list: the years, the nation, its record under
@@ -475,68 +607,4 @@ class _SpellRow extends StatelessWidget {
       ),
     );
   }
-}
-
-/// One of the four headline facts across the top of the card: the number
-/// large, its name small underneath (as on the player's card).
-class _HeadlineStat extends StatelessWidget {
-  const _HeadlineStat({
-    required this.value,
-    required this.label,
-    this.accent = false,
-  });
-
-  final String value;
-  final String label;
-  final bool accent;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          FittedBox(
-            child: Text(
-              value,
-              maxLines: 1,
-              style: AppTypography.headlineMedium.copyWith(
-                color: accent ? AppColors.primary : AppColors.onSurface,
-              ),
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            label.capsIn(Localizations.localeOf(context).languageCode),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Fact extends StatelessWidget {
-  const _Fact(this.label, this.value);
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Text(
-        label,
-        style: AppTypography.labelSmall.copyWith(
-          color: AppColors.onSurfaceVariant,
-        ),
-      ),
-      Text(value, style: AppTypography.titleMedium),
-    ],
-  );
 }
