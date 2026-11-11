@@ -1,0 +1,23 @@
+# The web database editor (www/editor/), Apache, uploaded by FTP.
+# A dotfile: check the FTP client shows and uploads it.
+
+# WebAssembly must be served as application/wasm: the site sends
+# "X-Content-Type-Options: nosniff", and a browser refuses to compile a
+# .wasm file that comes back as anything else.
+<IfModule mod_mime.c>
+  AddType application/wasm .wasm
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE application/javascript text/javascript application/json application/wasm
+</IfModule>
+
+# The code keeps its file names between builds, so it is never cached for
+# long: a new upload reaches visitors on their next visit.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType application/javascript "access plus 0 seconds"
+  ExpiresByType text/javascript "access plus 0 seconds"
+  ExpiresByType application/wasm "access plus 1 hour"
+  ExpiresByType application/json "access plus 1 hour"
+</IfModule>
