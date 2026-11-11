@@ -16795,4 +16795,11 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'ฟิตเนส';
+
+  @override
+  String get settingsAboutCopyright => '© 2026 Martin Urbanczyk. สงวนลิขสิทธิ์';
+
+  @override
+  String get settingsAboutProtected =>
+      'เกม โค้ด และเนื้อหาของเกมได้รับความคุ้มครองตามกฎหมายลิขสิทธิ์';
 }

@@ -17098,4 +17098,12 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Kondition';
+
+  @override
+  String get settingsAboutCopyright =>
+      '© 2026 Martin Urbanczyk. Alle rettigheder forbeholdes.';
+
+  @override
+  String get settingsAboutProtected =>
+      'Spillet, dets kode og indhold er beskyttet af ophavsret.';
 }

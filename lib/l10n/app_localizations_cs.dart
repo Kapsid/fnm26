@@ -17484,4 +17484,12 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Kondice';
+
+  @override
+  String get settingsAboutCopyright =>
+      '© 2026 Martin Urbanczyk. Všechna práva vyhrazena.';
+
+  @override
+  String get settingsAboutProtected =>
+      'Hra, její kód a obsah jsou chráněny autorským právem.';
 }

@@ -17512,4 +17512,12 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Condiție fizică';
+
+  @override
+  String get settingsAboutCopyright =>
+      '© 2026 Martin Urbanczyk. Toate drepturile rezervate.';
+
+  @override
+  String get settingsAboutProtected =>
+      'Jocul, codul și conținutul său sunt protejate de drepturile de autor.';
 }

@@ -17009,4 +17009,12 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Kondisyon';
+
+  @override
+  String get settingsAboutCopyright =>
+      '© 2026 Martin Urbanczyk. Tüm hakları saklıdır.';
+
+  @override
+  String get settingsAboutProtected =>
+      'Oyun, kodu ve içeriği telif hakkı ile korunmaktadır.';
 }

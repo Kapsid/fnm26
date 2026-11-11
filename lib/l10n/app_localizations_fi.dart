@@ -17173,4 +17173,12 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Kunto';
+
+  @override
+  String get settingsAboutCopyright =>
+      '© 2026 Martin Urbanczyk. Kaikki oikeudet pidätetään.';
+
+  @override
+  String get settingsAboutProtected =>
+      'Peli, sen koodi ja sisältö on suojattu tekijänoikeudella.';
 }

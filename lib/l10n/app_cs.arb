@@ -4269,5 +4269,7 @@
   "profileTabStats": "Statistiky",
   "profileTabCareer": "Kariéra",
   "profileTabVsYou": "Proti vám",
-  "playerStatFitness": "Kondice"
+  "playerStatFitness": "Kondice",
+  "settingsAboutCopyright": "© 2026 Martin Urbanczyk. Všechna práva vyhrazena.",
+  "settingsAboutProtected": "Hra, její kód a obsah jsou chráněny autorským právem."
 }

@@ -26367,5 +26367,13 @@
   "profileTabVsYou": "Vs you",
   "@profileTabVsYou": {"description": "Manager page, second tab: his record against the nations you have managed."},
   "playerStatFitness": "Fitness",
-  "@playerStatFitness": {"description": "Player page header: label under a coloured dot showing how fresh his legs are."}
+  "@playerStatFitness": {"description": "Player page header: label under a coloured dot showing how fresh his legs are."},
+  "settingsAboutCopyright": "© 2026 Martin Urbanczyk. All rights reserved.",
+  "settingsAboutProtected": "The game, its code and its content are protected by copyright.",
+  "@settingsAboutCopyright": {
+    "description": "Settings footer: copyright line, holder name stays as is."
+  },
+  "@settingsAboutProtected": {
+    "description": "Settings footer: one line saying the game, code and content are protected."
+  }
 }

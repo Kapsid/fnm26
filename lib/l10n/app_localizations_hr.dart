@@ -17432,4 +17432,12 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Kondicija';
+
+  @override
+  String get settingsAboutCopyright =>
+      '© 2026 Martin Urbanczyk. Sva prava pridržana.';
+
+  @override
+  String get settingsAboutProtected =>
+      'Igra, njezin kod i sadržaj zaštićeni su autorskim pravom.';
 }

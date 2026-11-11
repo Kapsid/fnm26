@@ -4269,5 +4269,7 @@
   "profileTabStats": "Statistika",
   "profileTabCareer": "Karijera",
   "profileTabVsYou": "Protiv vas",
-  "playerStatFitness": "Kondicija"
+  "playerStatFitness": "Kondicija",
+  "settingsAboutCopyright": "© 2026 Martin Urbanczyk. Sva prava pridržana.",
+  "settingsAboutProtected": "Igra, njezin kod i sadržaj zaštićeni su autorskim pravom."
 }

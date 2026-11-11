@@ -17044,4 +17044,12 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Erőnlét';
+
+  @override
+  String get settingsAboutCopyright =>
+      '© 2026 Martin Urbanczyk. Minden jog fenntartva.';
+
+  @override
+  String get settingsAboutProtected =>
+      'A játékot, annak kódját és tartalmát szerzői jog védi.';
 }
