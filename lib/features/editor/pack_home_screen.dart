@@ -240,11 +240,39 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
           icon: const Icon(Icons.arrow_back, color: AppColors.primary),
           onPressed: _back,
         ),
-        title: Text(
-          ProfanityFilter.mask(pack.name),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+        // The name itself renames the database: a narrow phone has no
+        // room in the bar for another button.
+        title: Tooltip(
+          message: l.editorRename,
+          child: InkWell(
+            key: PackHomeScreen.renameKey,
+            onTap: _rename,
+            borderRadius: AppRadii.smAll,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    child: Text(
+                      ProfanityFilter.mask(pack.name),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.labelMedium.copyWith(
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  const Icon(
+                    Icons.edit_outlined,
+                    size: 16,
+                    color: AppColors.primary,
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
         // Centred, the name gets only twice its narrower side's room; on a
         // narrow phone, beside the language chip, that is a few letters.
@@ -252,13 +280,6 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
         titleSpacing: centred ? null : 0,
         actions: [
           const EditorLanguageChip(),
-          IconButton(
-            key: PackHomeScreen.renameKey,
-            tooltip: l.editorRename,
-            icon: const Icon(Icons.drive_file_rename_outline),
-            color: AppColors.primary,
-            onPressed: _rename,
-          ),
           IconButton(
             key: PackHomeScreen.undoKey,
             tooltip: l.editorUndo,
