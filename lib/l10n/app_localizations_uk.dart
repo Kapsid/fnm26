@@ -11707,6 +11707,11 @@ class AppLocalizationsUk extends AppLocalizations {
   String get campaignCupOpen => 'Ще не визначено';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Ця база даних перейменовує країну, на якій побудовано цю кампанію: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name сяє у збірній $level';
   }
@@ -15698,6 +15703,21 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get editorAddedIndustryPick => 'Обери галузь';
+
+  @override
+  String get editorHandleLabel => 'Ім\'я користувача';
+
+  @override
+  String get editorHandleHelp =>
+      'Літери, цифри та підкреслення. Залиште порожнім, щоб воно відповідало назві.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Використовуйте лише латинські літери від A до Z, цифри та підкреслення';
+
+  @override
+  String get editorHandleTaken =>
+      'Інший акаунт уже має таке ім\'я користувача.';
 
   @override
   String get editorAddedDescription => 'Опис (необов’язково)';

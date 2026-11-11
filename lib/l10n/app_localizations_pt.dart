@@ -11529,6 +11529,11 @@ class AppLocalizationsPt extends AppLocalizations {
   String get campaignCupOpen => 'A decidir';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Este banco de dados renomeia uma seleção central desta campanha: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name brilha pela seleção $level';
   }
@@ -15487,6 +15492,20 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get editorAddedIndustryPick => 'Escolha um setor';
+
+  @override
+  String get editorHandleLabel => 'Nome de usuário';
+
+  @override
+  String get editorHandleHelp =>
+      'Letras, números e sublinhados. Deixe vazio para seguir o nome.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Use apenas letras de A a Z, números e sublinhados';
+
+  @override
+  String get editorHandleTaken => 'Outra conta já tem este nome de usuário.';
 
   @override
   String get editorAddedDescription => 'Descrição (opcional)';

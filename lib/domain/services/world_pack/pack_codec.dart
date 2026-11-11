@@ -266,6 +266,8 @@ abstract final class PackCodec {
       p.sponsors,
       p.yAccounts,
       p.localized,
+      p.sponsorIndustries,
+      p.yHandles,
     ]) {
       if (m.keys.any((k) => k.length > keyMax)) return false;
     }

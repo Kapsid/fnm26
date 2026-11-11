@@ -3,7 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/sponsor_label.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/federation/sponsors.dart';
+import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/domain/services/profanity/profanity_filter.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
@@ -48,6 +51,12 @@ class NameEditForm extends ConsumerStatefulWidget {
     'editorNames.form.managerNationality',
   );
   static const Key resetKey = Key('editorNames.form.reset');
+
+  /// A built-in sponsor's industry.
+  static const Key industryKey = Key('editorNames.form.industry');
+
+  /// A built-in Y account's @handle.
+  static const Key handleKey = Key('editorNames.form.handle');
   static const Key doneKey = Key('editorNames.form.done');
 
   final int packId;
@@ -73,6 +82,9 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
   final _second = TextEditingController();
   final _first = TextEditingController();
   final _sur = TextEditingController();
+
+  /// A built-in Y account's @handle, without the `@` (empty: its name's).
+  final _handle = TextEditingController();
 
   /// The day-one manager's nationality as picked (managers only): kept
   /// while the name is blank, written with it.
@@ -113,6 +125,7 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
     _second.dispose();
     _first.dispose();
     _sur.dispose();
+    _handle.dispose();
     super.dispose();
   }
 
@@ -138,6 +151,7 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
       _set(_second, v.second?.own ?? '');
       return;
     }
+    if (_isBuiltInY) _set(_handle, pack.yHandles[_e.key] ?? '');
     final o = nameOverride(_section, pack, _e);
     _set(_name, ActiveWorld.textOrNull(o?.name) ?? _e.original);
     _set(_second, ActiveWorld.textOrNull(o?.second) ?? _e.original2);
@@ -285,6 +299,73 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
     _write(_edited, group: _group);
   }
 
+  /// Whether the row is one of the game's own Y accounts, whose @handle
+  /// the form also sets.
+  bool get _isBuiltInY => _section == NameSection.yAccounts && !_e.added;
+
+  /// Whether the row is one of the game's own sponsors, whose industry the
+  /// form also sets.
+  bool get _isBuiltInSponsor => _section == NameSection.sponsors && !_e.added;
+
+  /// What is wrong with the @handle as typed; null for none typed.
+  String? _handleError(AppLocalizations l, WorldPack pack) {
+    final h = cleanHandle(_handle.text);
+    if (h == null) return null;
+    return handleProblem(l, pack, h, original: _e.key);
+  }
+
+  /// The @handle changed: saved when it can be used (empty: back to the
+  /// one the name gives), as part of this opening's typing.
+  void _handleChanged() {
+    final pack = ref.read(packEditorProvider(widget.packId)).valueOrNull;
+    if (pack == null) return;
+    setState(() {});
+    if (_handleError(AppLocalizations.of(context), pack) != null) return;
+    final h = cleanHandle(_handle.text);
+    _write((p) => NameEdits.withYHandle(p, _e.key, h), group: _group);
+  }
+
+  /// The handle the row shows with no @handle of its own: the one its
+  /// name gives in the database.
+  String _nameHandle(WorldPack pack) => YFeed.packHandleOf(
+    pack.copyWith(
+      yHandles: {
+        for (final e in pack.yHandles.entries)
+          if (e.key != _e.key) e.key: e.value,
+      },
+    ),
+    _e.key,
+  );
+
+  /// Picks the sponsor's industry: its own one takes the override away.
+  Future<void> _pickIndustry() async {
+    final brand = SponsorBrand.byName(_e.key);
+    if (brand == null) return;
+    final pack = ref.read(packEditorProvider(widget.packId)).valueOrNull;
+    final picked = await pickSponsorIndustry(
+      context,
+      current: pack?.sponsorIndustries[_e.key] ?? brand.name,
+    );
+    if (picked == null || !mounted) return;
+    final l = AppLocalizations.of(context);
+    final own = addedIndustryLabel(l, picked) == builtInIndustryLabel(l, brand);
+    _write(
+      (p) => NameEdits.withSponsorIndustry(p, _e.key, own ? null : picked),
+    );
+    // A pick is a step of its own.
+    _group = Object();
+    setState(() {});
+  }
+
+  /// The sponsor's industry, in words.
+  String? _industryLabel(AppLocalizations l, WorldPack pack) {
+    final brand = SponsorBrand.byName(_e.key);
+    if (brand == null) return null;
+    final set = pack.sponsorIndustries[_e.key];
+    final label = set == null ? '' : addedIndustryLabel(l, set);
+    return label.isNotEmpty ? label : builtInIndustryLabel(l, brand);
+  }
+
   /// Whether this form is writing right now: what the pack tells its
   /// listeners meanwhile is this form's own edit.
   bool _writing = false;
@@ -377,6 +458,29 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
               _group = Object();
               setState(() {});
             },
+          ),
+        ],
+        // A built-in sponsor's industry and a built-in Y account's handle
+        // are one for every language: set from any tab.
+        if (_isBuiltInSponsor) ...[
+          const SizedBox(height: AppSpacing.sm),
+          EditorPickField(
+            key: NameEditForm.industryKey,
+            label: l.editorAddedIndustry,
+            value: _industryLabel(l, pack),
+            placeholder: l.editorAddedIndustryPick,
+            leading: const Icon(Icons.factory_outlined),
+            onTap: _pickIndustry,
+          ),
+        ],
+        if (_isBuiltInY) ...[
+          const SizedBox(height: AppSpacing.sm),
+          HandleField(
+            key: NameEditForm.handleKey,
+            controller: _handle,
+            hint: _nameHandle(pack),
+            error: _handleError(l, pack),
+            onChanged: (_) => _handleChanged(),
           ),
         ],
         const SizedBox(height: AppSpacing.md),

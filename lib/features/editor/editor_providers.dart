@@ -80,11 +80,11 @@ enum EditorSection {
     'clubs' || 'addedClubs' => clubs,
     'stadiums' => stadiums,
     'competitions' => competitions,
-    'yAccounts' || 'addedYAccounts' => yAccounts,
+    'yAccounts' || 'addedYAccounts' || 'yHandles' => yAccounts,
     'reporters' => press,
     'nameLists' => nameLists,
     'managers' => managers,
-    'sponsors' || 'addedSponsors' => sponsors,
+    'sponsors' || 'addedSponsors' || 'sponsorIndustries' => sponsors,
     'trophies' => trophies,
     'localized' when path.contains('.') => ofPath(
       path.substring(path.indexOf('.') + 1),
@@ -667,6 +667,12 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
         return p.copyWith(yAccounts: without(p.yAccounts, key));
       case 'sponsors' when p.sponsors.containsKey(key):
         return p.copyWith(sponsors: without(p.sponsors, key));
+      case 'yHandles' when p.yHandles.containsKey(key):
+        return p.copyWith(yHandles: without(p.yHandles, key));
+      case 'sponsorIndustries' when p.sponsorIndustries.containsKey(key):
+        return p.copyWith(
+          sponsorIndustries: without(p.sponsorIndustries, key),
+        );
     }
     return p;
   }

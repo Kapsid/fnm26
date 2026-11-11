@@ -511,6 +511,42 @@ abstract final class NameEdits {
     );
   }
 
+  /// [pack] with built-in sponsor [brand] (its `SponsorBrand.name`) shown
+  /// in [industry] (a stored industry), or back in its own when [industry]
+  /// is null.
+  static WorldPack withSponsorIndustry(
+    WorldPack pack,
+    String brand,
+    String? industry,
+  ) {
+    if (pack.sponsorIndustries[brand] == industry) return pack;
+    return pack.copyWith(
+      sponsorIndustries: {
+        for (final e in pack.sponsorIndustries.entries)
+          if (e.key != brand) e.key: e.value,
+        brand: ?industry,
+      },
+    );
+  }
+
+  /// [pack] with built-in Y account [original] under @[handle] (stored
+  /// form, without the `@`), or back under the one its name gives when
+  /// [handle] is null.
+  static WorldPack withYHandle(
+    WorldPack pack,
+    String original,
+    String? handle,
+  ) {
+    if (pack.yHandles[original] == handle) return pack;
+    return pack.copyWith(
+      yHandles: {
+        for (final e in pack.yHandles.entries)
+          if (e.key != original) e.key: e.value,
+        original: ?handle,
+      },
+    );
+  }
+
   /// The `localized` paths of [e] in [section]: its name's, and a
   /// reporter's outlet's (an added sponsor's description's). None for the
   /// name lists.

@@ -11537,6 +11537,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get campaignCupOpen => 'Noch offen';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Diese Datenbank benennt eine Nation um, auf der diese Kampagne aufbaut: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name glänzt für die $level';
   }
@@ -15508,6 +15513,21 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get editorAddedIndustryPick => 'Branche wählen';
+
+  @override
+  String get editorHandleLabel => 'Handle';
+
+  @override
+  String get editorHandleHelp =>
+      'Buchstaben, Ziffern und Unterstriche. Leer lassen, um dem Namen zu folgen.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Nur Buchstaben A bis Z, Ziffern und Unterstriche verwenden';
+
+  @override
+  String get editorHandleTaken =>
+      'Ein anderer Account hat dieses Handle schon.';
 
   @override
   String get editorAddedDescription => 'Beschreibung (optional)';

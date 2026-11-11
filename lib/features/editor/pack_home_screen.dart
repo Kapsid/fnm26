@@ -19,6 +19,7 @@ import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/editor/editor_ui.dart';
 import 'package:fnm/features/editor/names/name_sections.dart';
 import 'package:fnm/features/editor/pack_issue_text.dart';
+import 'package:fnm/features/editor/pack_name_dialog.dart';
 import 'package:fnm/features/settings/settings_screen.dart'
     show linkLauncherProvider;
 import 'package:fnm/l10n/app_localizations.dart';
@@ -36,6 +37,9 @@ class PackHomeScreen extends ConsumerStatefulWidget {
 
   static const Key tabletLayoutKey = Key('packHome.tabletLayout');
   static const Key undoKey = Key('packHome.undo');
+
+  /// Renames the database (its own name, as the list of databases shows it).
+  static const Key renameKey = Key('packHome.rename');
   static const Key readyKey = Key('packHome.ready');
 
   /// The row that opens the community Discord.
@@ -95,9 +99,33 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
     unawaited(context.push(editorSectionLocation(section, _id)));
   }
 
+  /// Asks for the database's new name, checked as the list of databases
+  /// checks it ([askPackName]), and renames it as one undoable edit, saved
+  /// as every edit is.
+  Future<void> _rename() async {
+    final pack = ref.read(packEditorProvider(_id)).valueOrNull;
+    if (pack == null) return;
+    final l = AppLocalizations.of(context);
+    final name = await askPackName(
+      context,
+      title: l.editorRenameTitle,
+      initial: pack.name,
+      confirm: l.editorRename,
+    );
+    if (name == null || !mounted) return;
+    ref
+        .read(packEditorProvider(_id).notifier)
+        .update((p) => p.name == name ? p : p.copyWith(name: name));
+  }
+
   /// Opens where the [index]th entry is fixed (on its nation, when it has
-  /// one): a pool's on that nation's Pool tab.
+  /// one): a pool's on that nation's Pool tab. The database's own name is
+  /// fixed by Rename, here.
   void _openIssue(_PackView view, int index) {
+    if (view.raw[index].where == 'name') {
+      unawaited(_rename());
+      return;
+    }
     final issue = view.issues[index];
     final section = issue.section;
     if (section == null || !section.hasScreen) return;
@@ -212,11 +240,39 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
           icon: const Icon(Icons.arrow_back, color: AppColors.primary),
           onPressed: _back,
         ),
-        title: Text(
-          ProfanityFilter.mask(pack.name),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+        // The name itself renames the database: a narrow phone has no
+        // room in the bar for another button.
+        title: Tooltip(
+          message: l.editorRename,
+          child: InkWell(
+            key: PackHomeScreen.renameKey,
+            onTap: _rename,
+            borderRadius: AppRadii.smAll,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    child: Text(
+                      ProfanityFilter.mask(pack.name),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.labelMedium.copyWith(
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  const Icon(
+                    Icons.edit_outlined,
+                    size: 16,
+                    color: AppColors.primary,
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
         // Centred, the name gets only twice its narrower side's room; on a
         // narrow phone, beside the language chip, that is a few letters.

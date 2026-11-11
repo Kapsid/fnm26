@@ -11552,6 +11552,11 @@ class AppLocalizationsPl extends AppLocalizations {
   String get campaignCupOpen => 'Do rozstrzygnięcia';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Ta baza zmienia nazwę reprezentacji, na której opiera się ta kampania: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name błyszczy w kadrze $level';
   }
@@ -15556,6 +15561,20 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get editorAddedIndustryPick => 'Wybierz branżę';
+
+  @override
+  String get editorHandleLabel => 'Nazwa użytkownika';
+
+  @override
+  String get editorHandleHelp =>
+      'Litery, cyfry i podkreślenia. Zostaw puste, by użyć nazwy.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Używaj tylko liter od A do Z, cyfr i podkreśleń';
+
+  @override
+  String get editorHandleTaken => 'Inne konto ma już tę nazwę użytkownika.';
 
   @override
   String get editorAddedDescription => 'Opis (opcjonalnie)';

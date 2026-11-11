@@ -11468,6 +11468,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get campaignCupOpen => 'To be decided';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'This database renames a nation this campaign is built around: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name shines for the ${level}s';
   }
@@ -15410,6 +15415,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editorAddedIndustryPick => 'Pick an industry';
+
+  @override
+  String get editorHandleLabel => 'Handle';
+
+  @override
+  String get editorHandleHelp =>
+      'Letters, digits and underscores. Leave empty to follow the name.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Use only letters A to Z, digits and underscores';
+
+  @override
+  String get editorHandleTaken => 'Another account already has this handle.';
 
   @override
   String get editorAddedDescription => 'Description (optional)';

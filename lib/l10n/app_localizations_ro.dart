@@ -11784,6 +11784,11 @@ class AppLocalizationsRo extends AppLocalizations {
   String get campaignCupOpen => 'De decis';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Această bază de date redenumește o națiune în jurul căreia este construită campania: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name strălucește la $level';
   }
@@ -15800,6 +15805,20 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get editorAddedIndustryPick => 'Alegeți un domeniu';
+
+  @override
+  String get editorHandleLabel => 'Nume de utilizator';
+
+  @override
+  String get editorHandleHelp =>
+      'Litere, cifre și liniuțe de subliniere. Lăsați gol pentru a urma numele.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Folosiți doar literele de la A la Z, cifre și liniuțe de subliniere';
+
+  @override
+  String get editorHandleTaken => 'Alt cont are deja acest nume de utilizator.';
 
   @override
   String get editorAddedDescription => 'Descriere (opțional)';

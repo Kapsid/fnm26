@@ -16,6 +16,7 @@ import 'package:fnm/domain/services/world_pack/pack_codec.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/editor/editor_ui.dart';
+import 'package:fnm/features/editor/pack_name_dialog.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
@@ -35,8 +36,8 @@ class EditorListScreen extends ConsumerStatefulWidget {
   static const Key emptyKey = Key('editorList.empty');
   static const Key newKey = Key('editorList.new');
   static const Key importKey = Key('editorList.import');
-  static const Key nameFieldKey = Key('editorList.nameField');
-  static const Key confirmKey = Key('editorList.confirm');
+  static const Key nameFieldKey = PackNameDialog.fieldKey;
+  static const Key confirmKey = PackNameDialog.confirmKey;
 
   static Key editKey(int id) => Key('editorList.edit.$id');
   static Key moreKey(int id) => Key('editorList.more.$id');
@@ -82,7 +83,7 @@ class _EditorListScreenState extends ConsumerState<EditorListScreen> {
 
   Future<void> _new() async {
     final l = AppLocalizations.of(context);
-    final name = await _askName(
+    final name = await askPackName(
       context,
       title: l.editorNew,
       initial: l.editorNameHint,
@@ -145,7 +146,7 @@ class _EditorListScreenState extends ConsumerState<EditorListScreen> {
       case _RowAction.edit:
         _edit(pack.id);
       case _RowAction.rename:
-        final name = await _askName(
+        final name = await askPackName(
           context,
           title: l.editorRenameTitle,
           initial: pack.name,
@@ -164,7 +165,7 @@ class _EditorListScreenState extends ConsumerState<EditorListScreen> {
           ref.invalidate(worldPacksProvider);
         });
       case _RowAction.duplicate:
-        final name = await _askName(
+        final name = await askPackName(
           context,
           title: l.editorDuplicateTitle,
           initial: _fit(l.editorCopyName(pack.name)),
@@ -574,99 +575,4 @@ class _PackCard extends StatelessWidget {
       ],
     ),
   );
-}
-
-/// Asks for a database name, checked as it is typed. Null when cancelled.
-Future<String?> _askName(
-  BuildContext context, {
-  required String title,
-  required String initial,
-  required String confirm,
-}) => showDialog<String>(
-  context: context,
-  builder: (_) => _NameDialog(title: title, initial: initial, confirm: confirm),
-);
-
-class _NameDialog extends StatefulWidget {
-  const _NameDialog({
-    required this.title,
-    required this.initial,
-    required this.confirm,
-  });
-
-  final String title;
-  final String initial;
-  final String confirm;
-
-  @override
-  State<_NameDialog> createState() => _NameDialogState();
-}
-
-class _NameDialogState extends State<_NameDialog> {
-  late final TextEditingController _controller =
-      TextEditingController(
-          text: widget.initial,
-        )
-        ..selection = TextSelection(
-          baseOffset: 0,
-          extentOffset: widget.initial.length,
-        );
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  String? _error(AppLocalizations l) =>
-      switch (PackRules.checkName(_controller.text)) {
-        null when ProfanityFilter.isOffensive(_controller.text) =>
-          l.editorNameNotAllowed,
-        null => null,
-        FieldReason.empty => l.editorNameEmpty,
-        FieldReason.tooLong => l.editorNameTooLong(PackRules.nameMax),
-        _ => l.editorNameBadCharacters,
-      };
-
-  void _submit() {
-    if (_error(AppLocalizations.of(context)) != null) return;
-    Navigator.of(context).pop(_controller.text.trim());
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final error = _error(l);
-    return AlertDialog(
-      backgroundColor: AppColors.surfaceContainer,
-      title: Text(widget.title),
-      content: TextField(
-        key: EditorListScreen.nameFieldKey,
-        controller: _controller,
-        autofocus: true,
-        // Counts user-perceived characters, as PackRules.checkName does.
-        maxLength: PackRules.nameMax,
-        textCapitalization: TextCapitalization.sentences,
-        textInputAction: TextInputAction.done,
-        onChanged: (_) => setState(() {}),
-        onSubmitted: (_) => _submit(),
-        decoration: InputDecoration(
-          labelText: l.editorNameLabel,
-          hintText: l.editorNameHint,
-          errorText: error,
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text(l.editorCancel),
-        ),
-        TextButton(
-          key: EditorListScreen.confirmKey,
-          onPressed: error == null ? _submit : null,
-          child: Text(widget.confirm),
-        ),
-      ],
-    );
-  }
 }

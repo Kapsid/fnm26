@@ -11437,6 +11437,11 @@ class AppLocalizationsDa extends AppLocalizations {
   String get campaignCupOpen => 'Afgøres senere';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Denne database omdøber en nation, som kampagnen er bygget op om: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name skinner på $level-landsholdet';
   }
@@ -15387,6 +15392,21 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get editorAddedIndustryPick => 'Vælg en branche';
+
+  @override
+  String get editorHandleLabel => 'Brugernavn';
+
+  @override
+  String get editorHandleHelp =>
+      'Bogstaver, tal og understreger. Lad feltet stå tomt for at følge navnet.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Brug kun bogstaverne A til Z, tal og understreger';
+
+  @override
+  String get editorHandleTaken =>
+      'En anden konto har allerede dette brugernavn.';
 
   @override
   String get editorAddedDescription => 'Beskrivelse (valgfri)';

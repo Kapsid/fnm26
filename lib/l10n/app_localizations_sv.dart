@@ -11432,6 +11432,11 @@ class AppLocalizationsSv extends AppLocalizations {
   String get campaignCupOpen => 'Återstår att avgöra';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Den här databasen byter namn på en nation som kampanjen bygger på: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name glänser i $level-landslaget';
   }
@@ -15371,6 +15376,21 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get editorAddedIndustryPick => 'Välj en bransch';
+
+  @override
+  String get editorHandleLabel => 'Användarnamn';
+
+  @override
+  String get editorHandleHelp =>
+      'Bokstäver, siffror och understreck. Lämna tomt för att följa namnet.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Använd bara bokstäverna A till Z, siffror och understreck';
+
+  @override
+  String get editorHandleTaken =>
+      'Ett annat konto har redan det här användarnamnet.';
 
   @override
   String get editorAddedDescription => 'Beskrivning (valfritt)';

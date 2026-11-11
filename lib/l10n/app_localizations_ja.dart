@@ -11059,6 +11059,11 @@ class AppLocalizationsJa extends AppLocalizations {
   String get campaignCupOpen => '未定';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'このデータベースは、このキャンペーンの軸となる国の名前を変更しています: $nation。';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$nameが$level代表で輝く';
   }
@@ -14812,6 +14817,18 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get editorAddedIndustryPick => '業種を選ぶ';
+
+  @override
+  String get editorHandleLabel => 'ユーザー名';
+
+  @override
+  String get editorHandleHelp => '英字、数字、アンダースコアのみ。空欄なら名前に合わせます。';
+
+  @override
+  String get editorHandleBadCharacters => 'A～Zの英字、数字、アンダースコアのみ使えます';
+
+  @override
+  String get editorHandleTaken => 'このユーザー名は別のアカウントが使っています。';
 
   @override
   String get editorAddedDescription => '説明（任意）';

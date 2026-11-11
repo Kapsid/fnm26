@@ -11509,6 +11509,11 @@ class AppLocalizationsFi extends AppLocalizations {
   String get campaignCupOpen => 'Ratkaisematta';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Tämä tietokanta nimeää uudelleen maan, jonka ympärille kampanja on rakennettu: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name loistaa $level-maajoukkueessa';
   }
@@ -15458,6 +15463,20 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get editorAddedIndustryPick => 'Valitse toimiala';
+
+  @override
+  String get editorHandleLabel => 'Käyttäjänimi';
+
+  @override
+  String get editorHandleHelp =>
+      'Kirjaimet, numerot ja alaviivat. Jätä tyhjäksi, niin se seuraa nimeä.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Käytä vain kirjaimia A–Z, numeroita ja alaviivoja';
+
+  @override
+  String get editorHandleTaken => 'Toisella tilillä on jo tämä käyttäjänimi.';
 
   @override
   String get editorAddedDescription => 'Kuvaus (valinnainen)';

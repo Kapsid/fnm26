@@ -11809,6 +11809,11 @@ class AppLocalizationsCs extends AppLocalizations {
   String get campaignCupOpen => 'Zatím nerozhodnuto';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Tato databáze přejmenovává zemi, na které tato kampaň stojí: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name zazářil ve výběru $level';
   }
@@ -15768,6 +15773,20 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get editorAddedIndustryPick => 'Vyberte obor';
+
+  @override
+  String get editorHandleLabel => 'Přezdívka (@)';
+
+  @override
+  String get editorHandleHelp =>
+      'Písmena, číslice a podtržítka. Prázdné pole převezme jméno.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Použijte jen písmena A až Z bez diakritiky, číslice a podtržítka';
+
+  @override
+  String get editorHandleTaken => 'Tuto přezdívku už má jiný účet.';
 
   @override
   String get editorAddedDescription => 'Popis (nepovinný)';

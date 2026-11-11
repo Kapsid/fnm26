@@ -66,6 +66,7 @@ WorldPack _mask(WorldPack p) {
     competitions: values(p.competitions),
     sponsors: values(p.sponsors),
     yAccounts: values(p.yAccounts),
+    yHandles: values(p.yHandles),
     reporters: {
       for (final e in p.reporters.entries)
         e.key: PackReporter(name: m(e.value.name), outlet: m(e.value.outlet)),
@@ -101,6 +102,7 @@ WorldPack _mask(WorldPack p) {
           voice: y.voice,
           nationId: y.nationId,
           unknownVoice: y.unknownVoice,
+          handle: y.handle == null ? null : m(y.handle!),
         ),
     ],
     localized: {

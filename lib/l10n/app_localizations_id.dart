@@ -11344,6 +11344,11 @@ class AppLocalizationsId extends AppLocalizations {
   String get campaignCupOpen => 'Belum ditentukan';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Database ini mengganti nama negara yang menjadi inti kampanye ini: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name bersinar bersama tim $level';
   }
@@ -15291,6 +15296,20 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get editorAddedIndustryPick => 'Pilih industri';
+
+  @override
+  String get editorHandleLabel => 'Nama pengguna';
+
+  @override
+  String get editorHandleHelp =>
+      'Huruf, angka, dan garis bawah. Kosongkan untuk mengikuti nama.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Gunakan hanya huruf A sampai Z, angka, dan garis bawah';
+
+  @override
+  String get editorHandleTaken => 'Akun lain sudah memakai nama pengguna ini.';
 
   @override
   String get editorAddedDescription => 'Deskripsi (opsional)';

@@ -11081,6 +11081,11 @@ class AppLocalizationsKo extends AppLocalizations {
   String get campaignCupOpen => '미정';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return '이 데이터베이스는 이 캠페인의 중심이 되는 국가의 이름을 바꿉니다: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$level 대표팀에서 빛난 $name';
   }
@@ -14851,6 +14856,18 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get editorAddedIndustryPick => '업종 선택';
+
+  @override
+  String get editorHandleLabel => '사용자 이름';
+
+  @override
+  String get editorHandleHelp => '영문자, 숫자, 밑줄만 쓸 수 있습니다. 비워 두면 이름을 따릅니다.';
+
+  @override
+  String get editorHandleBadCharacters => 'A부터 Z까지의 영문자, 숫자, 밑줄만 쓸 수 있습니다';
+
+  @override
+  String get editorHandleTaken => '다른 계정이 이미 이 사용자 이름을 쓰고 있습니다.';
 
   @override
   String get editorAddedDescription => '설명 (선택)';

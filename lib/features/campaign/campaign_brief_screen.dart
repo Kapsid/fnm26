@@ -10,6 +10,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/services/campaign/campaigns.dart';
 import 'package:fnm/domain/services/profanity/profanity_filter.dart';
+import 'package:fnm/domain/services/world_pack/pack_status.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/campaign/campaign_record_store.dart';
 import 'package:fnm/features/campaign/campaign_stamp.dart';
@@ -17,8 +18,10 @@ import 'package:fnm/features/campaign/campaign_ui.dart';
 import 'package:fnm/features/campaign/campaigns_screen.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
+import 'package:fnm/features/nations/nation_select_providers.dart';
 import 'package:fnm/features/paywall/paywall_sheet.dart';
 import 'package:fnm/features/paywall/save_lock.dart';
+import 'package:fnm/features/world_pack/world_choice.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -46,6 +49,9 @@ class CampaignBriefScreen extends ConsumerStatefulWidget {
   static const Key abandonKey = Key('campaignBrief.abandon');
   static const Key moveKey = Key('campaignBrief.move');
   static const Key nameKey = Key('campaignBrief.name');
+
+  /// The world the run starts on: Default, or a custom database.
+  static const Key worldKey = Key('campaignBrief.world');
 
   @override
   ConsumerState<CampaignBriefScreen> createState() =>
@@ -93,9 +99,26 @@ class _CampaignBriefScreenState extends ConsumerState<CampaignBriefScreen> {
     // layout meanwhile, and a manager who has gone elsewhere is left there.
     final router = GoRouter.of(context);
     final service = ref.read(campaignServiceProvider);
+    final container = ProviderScope.containerOf(context, listen: false);
     final name = _controller.text;
     try {
-      final career = await service.start(def, managerName: name);
+      // The world chosen on the chip (null: the game's own), checked afresh
+      // as New Game checks it: the database may have been edited, or
+      // deleted, since it was picked.
+      final worldPackId = ref.read(campaignWorldProvider(def.id));
+      if (worldPackId != null) {
+        final status = await chosenWorldStatus(container, worldPackId);
+        if (status != PackStatus.ready) {
+          throw CampaignWorldRefused(
+            status == null ? worldPackMissingCode : worldPackNotReadyCode,
+          );
+        }
+      }
+      final career = await service.start(
+        def,
+        managerName: name,
+        worldPackId: worldPackId,
+      );
       // A new run asks how to watch at its first match, once.
       await ref.read(matchViewModeStoreProvider).markFirstMatchAsk(career.id);
       if (router.state.uri.path == Routes.campaignBrief) {
@@ -106,9 +129,62 @@ class _CampaignBriefScreenState extends ConsumerState<CampaignBriefScreen> {
     } on StateError {
       // A run appeared meanwhile: the page now offers Resume or Abandon.
       ref.invalidate(campaignRunsProvider);
+    } on CampaignWorldRefused catch (e) {
+      _refuseWorld(def, e);
     } finally {
       if (mounted) setState(() => _starting = false);
     }
+  }
+
+  /// The chosen database cannot start this run ([e] says why): says so in
+  /// plain words and puts the run back on Default. Nothing is made.
+  void _refuseWorld(CampaignDef def, CampaignWorldRefused e) {
+    if (!mounted) return;
+    ref.read(campaignWorldProvider(def.id).notifier).state = null;
+    final l = AppLocalizations.of(context);
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(switch (e.code) {
+            worldPackMissingCode => l.worldPackGone,
+            campaignWorldRenamesCode => l.campaignWorldRenames(
+              _nationName(e.nationId),
+            ),
+            _ => l.worldPackNotReady,
+          }),
+        ),
+      );
+  }
+
+  /// Nation [id]'s name as the game has it ('' before the nations load).
+  String _nationName(int? id) =>
+      ref
+          .read(nationsProvider)
+          .valueOrNull
+          ?.where((n) => n.id == id)
+          .firstOrNull
+          ?.name ??
+      '';
+
+  /// The chip for the run's world: a database that renames a nation the
+  /// campaign names is offered greyed out, with the reason.
+  Widget _worldChip(AppLocalizations l, CampaignDef def) {
+    // Watched so a refusal names the nation once the nations are in.
+    ref.watch(nationsProvider);
+    return Align(
+      alignment: AlignmentDirectional.centerStart,
+      child: WorldPickerChip(
+        key: CampaignBriefScreen.worldKey,
+        worldId: ref.watch(campaignWorldProvider(def.id)),
+        onChosen: (id) =>
+            ref.read(campaignWorldProvider(def.id).notifier).state = id,
+        refuse: (c) => switch (campaignRenamedNation(def, c.renamedNations)) {
+          null => null,
+          final id => l.campaignWorldRenames(_nationName(id)),
+        },
+      ),
+    );
   }
 
   /// Throws the run away, once confirmed; the page then offers Start again.
@@ -256,7 +332,9 @@ class _CampaignBriefScreenState extends ConsumerState<CampaignBriefScreen> {
           ),
         ),
         const SizedBox(height: AppSpacing.md),
-        if (run == null)
+        if (run == null) ...[
+          _worldChip(l, def),
+          const SizedBox(height: AppSpacing.sm),
           PrimaryButton(
             key: CampaignBriefScreen.startKey,
             label: locked ? l.campaignPartOfUnlimited : l.campaignStart,
@@ -266,8 +344,8 @@ class _CampaignBriefScreenState extends ConsumerState<CampaignBriefScreen> {
                 _starting || ProfanityFilter.isOffensive(_controller.text)
                 ? null
                 : () => _start(def),
-          )
-        else ...[
+          ),
+        ] else ...[
           if (runLocked) ...[
             const SaveLockedNote(key: CampaignBriefScreen.lockedNoteKey),
             const SizedBox(height: AppSpacing.sm),

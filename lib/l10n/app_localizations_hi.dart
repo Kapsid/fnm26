@@ -11363,6 +11363,11 @@ class AppLocalizationsHi extends AppLocalizations {
   String get campaignCupOpen => 'तय होना बाक़ी';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'यह डेटाबेस उस देश का नाम बदलता है जिस पर यह अभियान बना है: $nation।';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$level टीम में चमके $name';
   }
@@ -15297,6 +15302,20 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get editorAddedIndustryPick => 'उद्योग चुनें';
+
+  @override
+  String get editorHandleLabel => 'हैंडल';
+
+  @override
+  String get editorHandleHelp =>
+      'अक्षर, अंक और अंडरस्कोर। नाम के अनुसार रखने के लिए खाली छोड़ें।';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'केवल A से Z तक के अक्षर, अंक और अंडरस्कोर इस्तेमाल करें';
+
+  @override
+  String get editorHandleTaken => 'यह हैंडल किसी और अकाउंट के पास है।';
 
   @override
   String get editorAddedDescription => 'विवरण (वैकल्पिक)';

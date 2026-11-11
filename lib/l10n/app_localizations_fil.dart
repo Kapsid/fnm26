@@ -11428,6 +11428,11 @@ class AppLocalizationsFil extends AppLocalizations {
   String get campaignCupOpen => 'Hindi pa tiyak';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Pinapalitan ng database na ito ang pangalan ng bansang pinagbatayan ng kampanyang ito: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return 'Nagningning si $name para sa $level';
   }
@@ -15390,6 +15395,20 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get editorAddedIndustryPick => 'Pumili ng industriya';
+
+  @override
+  String get editorHandleLabel => 'Handle';
+
+  @override
+  String get editorHandleHelp =>
+      'Mga titik, numero at underscore. Iwanang blangko para sundan ang pangalan.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Gumamit lang ng mga titik A hanggang Z, numero at underscore';
+
+  @override
+  String get editorHandleTaken => 'May ibang account na may ganitong handle.';
 
   @override
   String get editorAddedDescription => 'Paglalarawan (opsyonal)';

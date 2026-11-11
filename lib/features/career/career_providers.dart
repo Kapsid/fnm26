@@ -279,17 +279,11 @@ class CareerService {
     /// [worldPackNotReadyCode]. The career takes its own copy of the pack, so editing or
     /// deleting the pack later never touches it, and its starting ranking
     /// follows the pack's squads (see [PackRanking.startingRanks]). A
-    /// campaign run never takes one: it plays the world its seed was
-    /// searched on.
+    /// campaign run may take one too: it plays the pack's squads and names,
+    /// but keeps the starting ranking its seed was searched on (the pack's
+    /// squads never move it), so its draws and hosts stay the designed ones.
     int? worldPackId,
   }) async {
-    if (worldPackId != null && !countsTowardSlots) {
-      throw ArgumentError.value(
-        worldPackId,
-        'worldPackId',
-        'A campaign run always plays the default world',
-      );
-    }
     final repo = _ref.read(careerRepositoryProvider);
     final premium = _ref.read(premiumUnlockedProvider);
 
@@ -334,7 +328,7 @@ class CareerService {
     }
     // How strong each nation's core squad is in the default world, against
     // which the pack's squads move the starting ranking.
-    final defaultStrength = pack == null
+    final defaultStrength = pack == null || !countsTowardSlots
         ? const <int, int>{}
         : await _ref.read(worldPackServiceProvider).defaultStrength();
     // The career, its world markers and any starting ranks land together:
@@ -394,7 +388,8 @@ class CareerService {
             .snapshot(
               career.id,
               0,
-              pack == null
+              // A campaign run keeps its designed ranking on a pack too.
+              pack == null || !countsTowardSlots
                   ? base
                   : PackRanking.startingRanks(
                       baseRanks: base,

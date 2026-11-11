@@ -11355,6 +11355,11 @@ class AppLocalizationsTr extends AppLocalizations {
   String get campaignCupOpen => 'Henüz belli değil';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Bu veritabanı, bu kampanyanın üzerine kurulduğu bir ülkenin adını değiştiriyor: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name, $level takımında parlıyor';
   }
@@ -15298,6 +15303,21 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get editorAddedIndustryPick => 'Sektör seç';
+
+  @override
+  String get editorHandleLabel => 'Kullanıcı adı';
+
+  @override
+  String get editorHandleHelp =>
+      'Harf, rakam ve alt çizgi. Adı kullanmak için boş bırakın.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Yalnızca A-Z harfleri, rakamlar ve alt çizgi kullanın';
+
+  @override
+  String get editorHandleTaken =>
+      'Bu kullanıcı adı başka bir hesapta zaten var.';
 
   @override
   String get editorAddedDescription => 'Açıklama (isteğe bağlı)';

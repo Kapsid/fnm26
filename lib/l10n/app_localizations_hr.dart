@@ -11762,6 +11762,11 @@ class AppLocalizationsHr extends AppLocalizations {
   String get campaignCupOpen => 'Tek treba biti odlučeno';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Ova baza preimenuje reprezentaciju na kojoj se temelji ova kampanja: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name blista u reprezentaciji $level';
   }
@@ -15722,6 +15727,20 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get editorAddedIndustryPick => 'Odaberi djelatnost';
+
+  @override
+  String get editorHandleLabel => 'Korisničko ime';
+
+  @override
+  String get editorHandleHelp =>
+      'Slova, znamenke i podvlake. Ostavite prazno da prati naziv.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Koristite samo slova od A do Z bez dijakritika, znamenke i podvlake';
+
+  @override
+  String get editorHandleTaken => 'Drugi račun već ima ovo korisničko ime.';
 
   @override
   String get editorAddedDescription => 'Opis (neobavezno)';

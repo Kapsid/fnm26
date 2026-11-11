@@ -32,6 +32,12 @@ class _PackHomeTabletLayout extends StatelessWidget {
         children: [
           const EditorLanguageChip(),
           TextButton.icon(
+            key: PackHomeScreen.renameKey,
+            onPressed: state._rename,
+            icon: const Icon(Icons.drive_file_rename_outline),
+            label: Text(l.editorRename),
+          ),
+          TextButton.icon(
             key: PackHomeScreen.undoKey,
             onPressed: onUndo,
             icon: const Icon(Icons.undo),

@@ -11501,6 +11501,11 @@ class AppLocalizationsEl extends AppLocalizations {
   String get campaignCupOpen => 'Εκκρεμεί';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Αυτή η βάση δεδομένων μετονομάζει μια χώρα πάνω στην οποία στηρίζεται αυτή η εκστρατεία: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name: λάμψη με την ομάδα $level';
   }
@@ -15472,6 +15477,21 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get editorAddedIndustryPick => 'Διάλεξε κλάδο';
+
+  @override
+  String get editorHandleLabel => 'Όνομα χρήστη';
+
+  @override
+  String get editorHandleHelp =>
+      'Γράμματα, ψηφία και κάτω παύλες. Αφήστε το κενό για να ακολουθεί το όνομα.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Χρησιμοποιήστε μόνο λατινικά γράμματα A έως Z, ψηφία και κάτω παύλες';
+
+  @override
+  String get editorHandleTaken =>
+      'Άλλος λογαριασμός έχει ήδη αυτό το όνομα χρήστη.';
 
   @override
   String get editorAddedDescription => 'Περιγραφή (προαιρετικά)';

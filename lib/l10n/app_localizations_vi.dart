@@ -11317,6 +11317,11 @@ class AppLocalizationsVi extends AppLocalizations {
   String get campaignCupOpen => 'Chưa xác định';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Cơ sở dữ liệu này đổi tên một quốc gia làm nền cho chiến dịch này: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name tỏa sáng trong màu áo đội $level';
   }
@@ -15233,6 +15238,21 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get editorAddedIndustryPick => 'Chọn ngành';
+
+  @override
+  String get editorHandleLabel => 'Tên người dùng';
+
+  @override
+  String get editorHandleHelp =>
+      'Chữ cái, chữ số và dấu gạch dưới. Để trống để theo tên.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Chỉ dùng chữ cái A đến Z, chữ số và dấu gạch dưới';
+
+  @override
+  String get editorHandleTaken =>
+      'Đã có tài khoản khác dùng tên người dùng này.';
 
   @override
   String get editorAddedDescription => 'Mô tả (không bắt buộc)';

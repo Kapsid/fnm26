@@ -11521,6 +11521,11 @@ class AppLocalizationsBg extends AppLocalizations {
   String get campaignCupOpen => 'Предстои да се реши';
 
   @override
+  String campaignWorldRenames(String nation) {
+    return 'Тази база данни преименува държава, върху която е изградена кампанията: $nation.';
+  }
+
+  @override
   String newsYouthTitle1(String name, String level) {
     return '$name блести за отбора $level';
   }
@@ -15470,6 +15475,21 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get editorAddedIndustryPick => 'Избери отрасъл';
+
+  @override
+  String get editorHandleLabel => 'Потребителско име';
+
+  @override
+  String get editorHandleHelp =>
+      'Букви, цифри и долни черти. Оставете празно, за да следва името.';
+
+  @override
+  String get editorHandleBadCharacters =>
+      'Използвайте само латински букви от A до Z, цифри и долни черти';
+
+  @override
+  String get editorHandleTaken =>
+      'Друг профил вече има това потребителско име.';
 
   @override
   String get editorAddedDescription => 'Описание (по желание)';

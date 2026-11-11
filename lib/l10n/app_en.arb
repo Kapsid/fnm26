@@ -17655,6 +17655,16 @@
   "@campaignCupOpen": {
     "description": "Hub campaign card: that continental championship is still to be decided for the nation."
   },
+  "campaignWorldRenames": "This database renames a nation this campaign is built around: {nation}.",
+  "@campaignWorldRenames": {
+    "description": "Campaign brief: why a custom database cannot start this campaign (in the world list, and as a snackbar when Start is refused). {nation} is the game's name of a nation the campaign's story names, which the database renames.",
+    "placeholders": {
+      "nation": {
+        "type": "String",
+        "example": "San Marino"
+      }
+    }
+  },
   "newsYouthTitle1": "{name} shines for the {level}s",
   "@newsYouthTitle1": {
     "description": "Inbox, youth news: a promising academy boy stood out for an age-group side ({level} is a label like U-21; {opponent} is the nation the side played). Title.",
@@ -23587,6 +23597,22 @@
   "editorAddedIndustryPick": "Pick an industry",
   "@editorAddedIndustryPick": {
     "description": "Prompt and picker title for an added sponsor's industry."
+  },
+  "editorHandleLabel": "Handle",
+  "@editorHandleLabel": {
+    "description": "Editor, Y accounts: label of the field for an account's @handle (the @ is shown in front of the field)."
+  },
+  "editorHandleHelp": "Letters, digits and underscores. Leave empty to follow the name.",
+  "@editorHandleHelp": {
+    "description": "Editor, Y accounts: helper line under the @handle field."
+  },
+  "editorHandleBadCharacters": "Use only letters A to Z, digits and underscores",
+  "@editorHandleBadCharacters": {
+    "description": "Editor, Y accounts: error when the @handle holds anything but ASCII letters (A to Z), digits and underscores."
+  },
+  "editorHandleTaken": "Another account already has this handle.",
+  "@editorHandleTaken": {
+    "description": "Editor, Y accounts: error when another account (one of the game's or one the database adds) already shows this @handle."
   },
   "editorAddedDescription": "Description (optional)",
   "@editorAddedDescription": {

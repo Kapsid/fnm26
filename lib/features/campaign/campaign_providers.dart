@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:fnm/core/result/result.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -13,6 +14,7 @@ import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/nation/dormant_nations.dart';
 import 'package:fnm/domain/services/player/golden_generation.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
+import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/campaign/campaign_record_store.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/career/nation_offers_providers.dart';
@@ -21,6 +23,8 @@ import 'package:fnm/features/friendlies/friendlies_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
+import 'package:fnm/features/world_pack/world_choice.dart';
+import 'package:fnm/features/world_pack/world_pack_providers.dart';
 
 /// A career's campaign: which one, and whether a settled run has been moved
 /// into the manager's save slots.
@@ -606,6 +610,37 @@ enum CampaignMoveResult {
   needsPremium,
 }
 
+/// The code of a [CampaignWorldRefused] for a database that renames a nation
+/// the campaign names ([CampaignDef.namedNations]).
+const String campaignWorldRenamesCode = 'campaign_world_renames';
+
+/// Why a campaign run was not started on the custom database chosen for it:
+/// [code] is [worldPackMissingCode] (gone), [worldPackNotReadyCode] (no
+/// longer complete and compatible) or [campaignWorldRenamesCode] (it renames
+/// [nationId], a nation the campaign is built around). Nothing was made.
+class CampaignWorldRefused implements Exception {
+  const CampaignWorldRefused(this.code, {this.nationId});
+
+  final String code;
+  final int? nationId;
+}
+
+/// The first nation [def] names that [renamed] (a database's renamed
+/// nations) holds, or null when the database tells the campaign's story.
+int? campaignRenamedNation(CampaignDef def, Set<int> renamed) {
+  for (final id in def.namedNations) {
+    if (renamed.contains(id)) return id;
+  }
+  return null;
+}
+
+/// The campaign brief's world, by campaign id: a pack id, or null for the
+/// game's own world. Default each time a brief opens: a campaign is a
+/// designed scenario, so the Settings default for new careers does not
+/// carry over to it.
+final AutoDisposeStateProviderFamily<int?, String> campaignWorldProvider =
+    StateProvider.autoDispose.family<int?, String>((ref, id) => null);
+
 /// Starts, abandons and moves campaign runs, which live outside the save slots
 /// until the manager chooses to keep one.
 class CampaignService {
@@ -617,9 +652,38 @@ class CampaignService {
   /// [StateError] when a run already exists (the UI asks Resume or Abandon
   /// first), or when [def] needs Pro and the manager has not got it (the UI
   /// opens the paywall instead of calling this).
-  Future<Career> start(CampaignDef def, {required String managerName}) async {
+  ///
+  /// [worldPackId] starts it on a custom database (null: the game's own
+  /// world), checked as a new career's is, and refused with
+  /// [CampaignWorldRefused] when it is gone, cannot start a career, or
+  /// renames a nation the campaign names. The run takes the database's
+  /// squads and names but keeps the designed starting ranking (see
+  /// `CareerService.create`), so its draws and hosts are the campaign's.
+  Future<Career> start(
+    CampaignDef def, {
+    required String managerName,
+    int? worldPackId,
+  }) async {
     if (def.needsPro && !_ref.read(premiumUnlockedProvider)) {
       throw StateError('Campaign ${def.id} needs Pro.');
+    }
+    if (worldPackId != null) {
+      final WorldPack? pack;
+      try {
+        pack = await _ref.read(worldPackRepositoryProvider).load(worldPackId);
+      } on FormatException {
+        throw const CampaignWorldRefused(worldPackNotReadyCode);
+      }
+      if (pack == null) {
+        throw const CampaignWorldRefused(worldPackMissingCode);
+      }
+      final renamed = campaignRenamedNation(def, renamedNationsOf(pack));
+      if (renamed != null) {
+        throw CampaignWorldRefused(
+          campaignWorldRenamesCode,
+          nationId: renamed,
+        );
+      }
     }
     // The run freezes the stored ranking (see freezeStartingRanks below), so
     // an upgraded database must first have moved to the current one.
@@ -651,10 +715,16 @@ class CampaignService {
           // drawn as they were before the stadium bars, or the curated
           // groups and paths move (see campaign_seeds_test).
           stadiumHostRules: false,
-          // Never a worldPackId (create refuses one for a run): the run
-          // plays the default world its seed was searched on.
+          // A custom database, when one was chosen: its squads and names,
+          // never its ranking (create keeps a run's designed one).
+          worldPackId: worldPackId,
         );
     final career = result.valueOrNull;
+    if (result case ResultFailure(
+      failure: Failure(code: final code?),
+    ) when code == worldPackMissingCode || code == worldPackNotReadyCode) {
+      throw CampaignWorldRefused(code);
+    }
     if (career == null) {
       throw StateError('Could not create the ${def.id} campaign.');
     }

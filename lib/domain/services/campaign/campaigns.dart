@@ -110,6 +110,17 @@ class CampaignDef {
   /// `CareerService.create`, before the calendar is drawn, so the whole world
   /// is built with it.
   final int? dormantNationId;
+
+  /// Every nation the campaign's story and goal name: its own, its rivals,
+  /// its opening friendly's and its donor. A custom database that renames
+  /// one of them cannot start it: the brief would tell another story.
+  Set<int> get namedNations => {
+    nationId,
+    ?rivalNationId,
+    ...rivalNationIds,
+    ?friendlyNationId,
+    ?donorNationId,
+  };
 }
 
 abstract final class Campaigns {
