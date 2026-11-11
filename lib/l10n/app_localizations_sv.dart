@@ -17004,4 +17004,19 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Vem som styrde';
+
+  @override
+  String get profileTabOverview => 'Översikt';
+
+  @override
+  String get profileTabStats => 'Statistik';
+
+  @override
+  String get profileTabCareer => 'Karriär';
+
+  @override
+  String get profileTabVsYou => 'Mot dig';
+
+  @override
+  String get playerStatFitness => 'Kondition';
 }

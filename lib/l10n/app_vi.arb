@@ -4250,5 +4250,10 @@
   "matchTimelineWoodwork": "{name} sút trúng khung gỗ",
   "matchTimelineBigSave": "Pha cứu thua quan trọng của {name}",
   "matchChartXg": "xG theo diễn biến trận đấu",
-  "matchChartMomentum": "Đội nào lấn lướt"
+  "matchChartMomentum": "Đội nào lấn lướt",
+  "profileTabOverview": "Tổng quan",
+  "profileTabStats": "Thống kê",
+  "profileTabCareer": "Sự nghiệp",
+  "profileTabVsYou": "Đối đầu bạn",
+  "playerStatFitness": "Thể lực"
 }

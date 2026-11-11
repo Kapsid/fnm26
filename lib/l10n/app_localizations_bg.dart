@@ -17104,4 +17104,19 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Кой надделяваше';
+
+  @override
+  String get profileTabOverview => 'Общо';
+
+  @override
+  String get profileTabStats => 'Статистика';
+
+  @override
+  String get profileTabCareer => 'Кариера';
+
+  @override
+  String get profileTabVsYou => 'Срещу теб';
+
+  @override
+  String get playerStatFitness => 'Физическа форма';
 }

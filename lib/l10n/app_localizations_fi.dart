@@ -17094,4 +17094,19 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Kumpi hallitsi';
+
+  @override
+  String get profileTabOverview => 'Yleiskuva';
+
+  @override
+  String get profileTabStats => 'Tilastot';
+
+  @override
+  String get profileTabCareer => 'Ura';
+
+  @override
+  String get profileTabVsYou => 'Sinua vastaan';
+
+  @override
+  String get playerStatFitness => 'Kunto';
 }

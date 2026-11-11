@@ -4250,5 +4250,10 @@
   "matchTimelineWoodwork": "{name} a nimerit bara",
   "matchTimelineBigSave": "Paradă mare a lui {name}",
   "matchChartXg": "xG pe parcursul meciului",
-  "matchChartMomentum": "Cine a dominat"
+  "matchChartMomentum": "Cine a dominat",
+  "profileTabOverview": "Pe scurt",
+  "profileTabStats": "Statistici",
+  "profileTabCareer": "Carieră",
+  "profileTabVsYou": "Contra ta",
+  "playerStatFitness": "Condiție fizică"
 }

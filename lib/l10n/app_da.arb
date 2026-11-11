@@ -4250,5 +4250,10 @@
   "matchTimelineWoodwork": "{name} ramte træværket",
   "matchTimelineBigSave": "Stor redning af {name}",
   "matchChartXg": "xG gennem kampen",
-  "matchChartMomentum": "Hvem der dominerede"
+  "matchChartMomentum": "Hvem der dominerede",
+  "profileTabOverview": "Overblik",
+  "profileTabStats": "Statistik",
+  "profileTabCareer": "Karriere",
+  "profileTabVsYou": "Mod dig",
+  "playerStatFitness": "Kondition"
 }

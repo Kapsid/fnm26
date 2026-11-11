@@ -16927,4 +16927,19 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'कौन हावी रहा';
+
+  @override
+  String get profileTabOverview => 'अवलोकन';
+
+  @override
+  String get profileTabStats => 'आँकड़े';
+
+  @override
+  String get profileTabCareer => 'करियर';
+
+  @override
+  String get profileTabVsYou => 'आपके खिलाफ़';
+
+  @override
+  String get playerStatFitness => 'फ़िटनेस';
 }

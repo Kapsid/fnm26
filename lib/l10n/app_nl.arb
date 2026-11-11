@@ -4250,5 +4250,10 @@
   "matchTimelineWoodwork": "{name} raakte het aluminium",
   "matchTimelineBigSave": "Grote redding van {name}",
   "matchChartXg": "xG gedurende de wedstrijd",
-  "matchChartMomentum": "Wie de overhand had"
+  "matchChartMomentum": "Wie de overhand had",
+  "profileTabOverview": "Overzicht",
+  "profileTabStats": "Stats",
+  "profileTabCareer": "Loopbaan",
+  "profileTabVsYou": "Tegen jou",
+  "playerStatFitness": "Fitheid"
 }

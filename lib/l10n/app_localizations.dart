@@ -25741,6 +25741,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Who was on top'**
   String get matchChartMomentum;
+
+  /// Player and manager pages, first tab: who he is at a glance (abilities, form, traits, club; or his record, style and current job).
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get profileTabOverview;
+
+  /// Player page, second tab: his international statistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Stats'**
+  String get profileTabStats;
+
+  /// Player and manager pages, last tab: his career history (clubs, honours, matches; or a manager's jobs spell by spell).
+  ///
+  /// In en, this message translates to:
+  /// **'Career'**
+  String get profileTabCareer;
+
+  /// Manager page, second tab: his record against the nations you have managed.
+  ///
+  /// In en, this message translates to:
+  /// **'Vs you'**
+  String get profileTabVsYou;
+
+  /// Player page header: label under a coloured dot showing how fresh his legs are.
+  ///
+  /// In en, this message translates to:
+  /// **'Fitness'**
+  String get playerStatFitness;
 }
 
 class _AppLocalizationsDelegate

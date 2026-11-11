@@ -17030,4 +17030,19 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Sino ang nakalamang';
+
+  @override
+  String get profileTabOverview => 'Pangkalahatan';
+
+  @override
+  String get profileTabStats => 'Stats';
+
+  @override
+  String get profileTabCareer => 'Karera';
+
+  @override
+  String get profileTabVsYou => 'Laban sa iyo';
+
+  @override
+  String get playerStatFitness => 'Fitness';
 }

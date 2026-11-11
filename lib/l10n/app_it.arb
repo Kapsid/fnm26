@@ -4250,5 +4250,10 @@
   "matchTimelineWoodwork": "{name} ha colpito un legno",
   "matchTimelineBigSave": "Grande parata di {name}",
   "matchChartXg": "xG nel corso della partita",
-  "matchChartMomentum": "Chi ha dominato"
+  "matchChartMomentum": "Chi ha dominato",
+  "profileTabOverview": "Panoramica",
+  "profileTabStats": "Statistiche",
+  "profileTabCareer": "Carriera",
+  "profileTabVsYou": "Contro di te",
+  "playerStatFitness": "Condizione"
 }

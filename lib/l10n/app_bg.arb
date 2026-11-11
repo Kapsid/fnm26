@@ -4250,5 +4250,10 @@
   "matchTimelineWoodwork": "{name} уцели гредата",
   "matchTimelineBigSave": "Голямо спасяване на {name}",
   "matchChartXg": "xG по време на мача",
-  "matchChartMomentum": "Кой надделяваше"
+  "matchChartMomentum": "Кой надделяваше",
+  "profileTabOverview": "Общо",
+  "profileTabStats": "Статистика",
+  "profileTabCareer": "Кариера",
+  "profileTabVsYou": "Срещу теб",
+  "playerStatFitness": "Физическа форма"
 }

@@ -17101,4 +17101,19 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Wie de overhand had';
+
+  @override
+  String get profileTabOverview => 'Overzicht';
+
+  @override
+  String get profileTabStats => 'Stats';
+
+  @override
+  String get profileTabCareer => 'Loopbaan';
+
+  @override
+  String get profileTabVsYou => 'Tegen jou';
+
+  @override
+  String get playerStatFitness => 'Fitheid';
 }

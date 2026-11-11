@@ -16716,4 +16716,19 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'ใครเป็นฝ่ายเหนือกว่า';
+
+  @override
+  String get profileTabOverview => 'ภาพรวม';
+
+  @override
+  String get profileTabStats => 'สถิติ';
+
+  @override
+  String get profileTabCareer => 'อาชีพ';
+
+  @override
+  String get profileTabVsYou => 'เจอคุณ';
+
+  @override
+  String get playerStatFitness => 'ฟิตเนส';
 }

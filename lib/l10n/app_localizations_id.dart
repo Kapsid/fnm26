@@ -16930,4 +16930,19 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Siapa yang menguasai';
+
+  @override
+  String get profileTabOverview => 'Ikhtisar';
+
+  @override
+  String get profileTabStats => 'Statistik';
+
+  @override
+  String get profileTabCareer => 'Karier';
+
+  @override
+  String get profileTabVsYou => 'Lawan Anda';
+
+  @override
+  String get playerStatFitness => 'Kebugaran';
 }

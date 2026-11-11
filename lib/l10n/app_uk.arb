@@ -4250,5 +4250,10 @@
   "matchTimelineWoodwork": "{name} влучив у каркас воріт",
   "matchTimelineBigSave": "Важливий сейв від {name}",
   "matchChartXg": "xG протягом матчу",
-  "matchChartMomentum": "Хто домінував"
+  "matchChartMomentum": "Хто домінував",
+  "profileTabOverview": "Огляд",
+  "profileTabStats": "Статистика",
+  "profileTabCareer": "Кар’єра",
+  "profileTabVsYou": "Проти вас",
+  "playerStatFitness": "Фізпідготовка"
 }

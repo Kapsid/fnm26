@@ -4250,5 +4250,10 @@
   "matchTimelineWoodwork": "{name} ยิงชนเสาหรือคาน",
   "matchTimelineBigSave": "{name} เซฟสำคัญ",
   "matchChartXg": "xG ตลอดเกม",
-  "matchChartMomentum": "ใครเป็นฝ่ายเหนือกว่า"
+  "matchChartMomentum": "ใครเป็นฝ่ายเหนือกว่า",
+  "profileTabOverview": "ภาพรวม",
+  "profileTabStats": "สถิติ",
+  "profileTabCareer": "อาชีพ",
+  "profileTabVsYou": "เจอคุณ",
+  "playerStatFitness": "ฟิตเนส"
 }

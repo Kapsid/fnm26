@@ -16965,4 +16965,19 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Ki volt fölényben';
+
+  @override
+  String get profileTabOverview => 'Áttekintés';
+
+  @override
+  String get profileTabStats => 'Statisztika';
+
+  @override
+  String get profileTabCareer => 'Karrier';
+
+  @override
+  String get profileTabVsYou => 'Ellened';
+
+  @override
+  String get playerStatFitness => 'Erőnlét';
 }

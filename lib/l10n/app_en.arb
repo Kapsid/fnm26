@@ -26279,5 +26279,25 @@
   "matchChartMomentum": "Who was on top",
   "@matchChartMomentum": {
     "description": "Match stats, heading over the momentum chart: which side was on top, minute by minute, read from the chances each side made (bars up for the home side, down for the visitors)."
+  },
+  "profileTabOverview": "Overview",
+  "@profileTabOverview": {
+    "description": "Player and manager pages, first tab: who he is at a glance (abilities, form, traits, club; or his record, style and current job)."
+  },
+  "profileTabStats": "Stats",
+  "@profileTabStats": {
+    "description": "Player page, second tab: his international statistics."
+  },
+  "profileTabCareer": "Career",
+  "@profileTabCareer": {
+    "description": "Player and manager pages, last tab: his career history (clubs, honours, matches; or a manager's jobs spell by spell)."
+  },
+  "profileTabVsYou": "Vs you",
+  "@profileTabVsYou": {
+    "description": "Manager page, second tab: his record against the nations you have managed."
+  },
+  "playerStatFitness": "Fitness",
+  "@playerStatFitness": {
+    "description": "Player page header: label under a coloured dot showing how fresh his legs are."
   }
 }

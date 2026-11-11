@@ -4250,5 +4250,10 @@
   "matchTimelineWoodwork": "{name} traff treverket",
   "matchTimelineBigSave": "Stor redning av {name}",
   "matchChartXg": "xG gjennom kampen",
-  "matchChartMomentum": "Hvem som dominerte"
+  "matchChartMomentum": "Hvem som dominerte",
+  "profileTabOverview": "Oversikt",
+  "profileTabStats": "Statistikk",
+  "profileTabCareer": "Karriere",
+  "profileTabVsYou": "Mot deg",
+  "playerStatFitness": "Kondisjon"
 }

@@ -17353,4 +17353,19 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Tko je bio bolji';
+
+  @override
+  String get profileTabOverview => 'Pregled';
+
+  @override
+  String get profileTabStats => 'Statistika';
+
+  @override
+  String get profileTabCareer => 'Karijera';
+
+  @override
+  String get profileTabVsYou => 'Protiv vas';
+
+  @override
+  String get playerStatFitness => 'Kondicija';
 }

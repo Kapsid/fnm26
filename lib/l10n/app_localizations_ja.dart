@@ -16406,4 +16406,19 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get matchChartMomentum => '試合の流れ';
+
+  @override
+  String get profileTabOverview => '概要';
+
+  @override
+  String get profileTabStats => 'スタッツ';
+
+  @override
+  String get profileTabCareer => 'キャリア';
+
+  @override
+  String get profileTabVsYou => '対あなた';
+
+  @override
+  String get playerStatFitness => 'コンディション';
 }

@@ -17433,4 +17433,19 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Cine a dominat';
+
+  @override
+  String get profileTabOverview => 'Pe scurt';
+
+  @override
+  String get profileTabStats => 'Statistici';
+
+  @override
+  String get profileTabCareer => 'Carieră';
+
+  @override
+  String get profileTabVsYou => 'Contra ta';
+
+  @override
+  String get playerStatFitness => 'Condiție fizică';
 }

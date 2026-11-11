@@ -17111,4 +17111,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Quién dominaba';
+
+  @override
+  String get profileTabOverview => 'Resumen';
+
+  @override
+  String get profileTabStats => 'Estadísticas';
+
+  @override
+  String get profileTabCareer => 'Carrera';
+
+  @override
+  String get profileTabVsYou => 'Contra ti';
+
+  @override
+  String get playerStatFitness => 'Físico';
 }

@@ -17334,4 +17334,19 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Хто домінував';
+
+  @override
+  String get profileTabOverview => 'Огляд';
+
+  @override
+  String get profileTabStats => 'Статистика';
+
+  @override
+  String get profileTabCareer => 'Кар’єра';
+
+  @override
+  String get profileTabVsYou => 'Проти вас';
+
+  @override
+  String get playerStatFitness => 'Фізпідготовка';
 }

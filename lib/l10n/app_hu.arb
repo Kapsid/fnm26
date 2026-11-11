@@ -4250,5 +4250,10 @@
   "matchTimelineWoodwork": "{name} kapufát talált",
   "matchTimelineBigSave": "Nagy védés: {name}",
   "matchChartXg": "xG a mérkőzés során",
-  "matchChartMomentum": "Ki volt fölényben"
+  "matchChartMomentum": "Ki volt fölényben",
+  "profileTabOverview": "Áttekintés",
+  "profileTabStats": "Statisztika",
+  "profileTabCareer": "Karrier",
+  "profileTabVsYou": "Ellened",
+  "playerStatFitness": "Erőnlét"
 }

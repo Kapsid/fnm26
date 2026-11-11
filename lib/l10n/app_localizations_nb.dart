@@ -17015,4 +17015,19 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Hvem som dominerte';
+
+  @override
+  String get profileTabOverview => 'Oversikt';
+
+  @override
+  String get profileTabStats => 'Statistikk';
+
+  @override
+  String get profileTabCareer => 'Karriere';
+
+  @override
+  String get profileTabVsYou => 'Mot deg';
+
+  @override
+  String get playerStatFitness => 'Kondisjon';
 }

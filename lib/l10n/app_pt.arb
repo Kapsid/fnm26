@@ -4250,5 +4250,10 @@
   "matchTimelineWoodwork": "{name} acertou nos ferros",
   "matchTimelineBigSave": "Grande defesa de {name}",
   "matchChartXg": "xG ao longo do jogo",
-  "matchChartMomentum": "Quem estava por cima"
+  "matchChartMomentum": "Quem estava por cima",
+  "profileTabOverview": "Visão geral",
+  "profileTabStats": "Estatísticas",
+  "profileTabCareer": "Carreira",
+  "profileTabVsYou": "Contra si",
+  "playerStatFitness": "Físico"
 }

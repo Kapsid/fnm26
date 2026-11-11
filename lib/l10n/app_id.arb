@@ -4250,5 +4250,10 @@
   "matchTimelineWoodwork": "{name} membentur tiang gawang",
   "matchTimelineBigSave": "Penyelamatan penting oleh {name}",
   "matchChartXg": "xG sepanjang laga",
-  "matchChartMomentum": "Siapa yang menguasai"
+  "matchChartMomentum": "Siapa yang menguasai",
+  "profileTabOverview": "Ikhtisar",
+  "profileTabStats": "Statistik",
+  "profileTabCareer": "Karier",
+  "profileTabVsYou": "Lawan Anda",
+  "playerStatFitness": "Kebugaran"
 }

@@ -4250,5 +4250,10 @@
   "matchTimelineWoodwork": "{name} träffade ramen",
   "matchTimelineBigSave": "Stor räddning av {name}",
   "matchChartXg": "xG under matchen",
-  "matchChartMomentum": "Vem som styrde"
+  "matchChartMomentum": "Vem som styrde",
+  "profileTabOverview": "Översikt",
+  "profileTabStats": "Statistik",
+  "profileTabCareer": "Karriär",
+  "profileTabVsYou": "Mot dig",
+  "playerStatFitness": "Kondition"
 }

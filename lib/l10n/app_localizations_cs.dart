@@ -17405,4 +17405,19 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Kdo měl navrch';
+
+  @override
+  String get profileTabOverview => 'Přehled';
+
+  @override
+  String get profileTabStats => 'Statistiky';
+
+  @override
+  String get profileTabCareer => 'Kariéra';
+
+  @override
+  String get profileTabVsYou => 'Proti vám';
+
+  @override
+  String get playerStatFitness => 'Kondice';
 }

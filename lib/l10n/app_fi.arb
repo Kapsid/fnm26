@@ -4250,5 +4250,10 @@
   "matchTimelineWoodwork": "{name} osui tolppaan",
   "matchTimelineBigSave": "Iso torjunta: {name}",
   "matchChartXg": "xG ottelun aikana",
-  "matchChartMomentum": "Kumpi hallitsi"
+  "matchChartMomentum": "Kumpi hallitsi",
+  "profileTabOverview": "Yleiskuva",
+  "profileTabStats": "Tilastot",
+  "profileTabCareer": "Ura",
+  "profileTabVsYou": "Sinua vastaan",
+  "playerStatFitness": "Kunto"
 }

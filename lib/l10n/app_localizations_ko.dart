@@ -16448,4 +16448,19 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get matchChartMomentum => '경기 주도권';
+
+  @override
+  String get profileTabOverview => '개요';
+
+  @override
+  String get profileTabStats => '기록';
+
+  @override
+  String get profileTabCareer => '커리어';
+
+  @override
+  String get profileTabVsYou => '당신과의 전적';
+
+  @override
+  String get playerStatFitness => '체력';
 }

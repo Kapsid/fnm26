@@ -16979,4 +16979,19 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Siapa yang menguasai';
+
+  @override
+  String get profileTabOverview => 'Gambaran';
+
+  @override
+  String get profileTabStats => 'Statistik';
+
+  @override
+  String get profileTabCareer => 'Kerjaya';
+
+  @override
+  String get profileTabVsYou => 'Menentang anda';
+
+  @override
+  String get playerStatFitness => 'Kecergasan';
 }

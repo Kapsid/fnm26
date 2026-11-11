@@ -4250,5 +4250,10 @@
   "matchTimelineWoodwork": "{name} a trouvé les montants",
   "matchTimelineBigSave": "Gros arrêt de {name}",
   "matchChartXg": "xG au fil du match",
-  "matchChartMomentum": "Qui dominait"
+  "matchChartMomentum": "Qui dominait",
+  "profileTabOverview": "Aperçu",
+  "profileTabStats": "Stats",
+  "profileTabCareer": "Carrière",
+  "profileTabVsYou": "Contre vous",
+  "playerStatFitness": "Physique"
 }

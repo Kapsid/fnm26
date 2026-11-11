@@ -4250,5 +4250,10 @@
   "matchTimelineWoodwork": "{name}のシュートはゴール枠に当たった",
   "matchTimelineBigSave": "{name}のビッグセーブ",
   "matchChartXg": "試合を通したxG",
-  "matchChartMomentum": "試合の流れ"
+  "matchChartMomentum": "試合の流れ",
+  "profileTabOverview": "概要",
+  "profileTabStats": "スタッツ",
+  "profileTabCareer": "キャリア",
+  "profileTabVsYou": "対あなた",
+  "playerStatFitness": "コンディション"
 }

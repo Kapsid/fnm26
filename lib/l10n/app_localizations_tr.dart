@@ -16930,4 +16930,19 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Kim üstündü';
+
+  @override
+  String get profileTabOverview => 'Genel bakış';
+
+  @override
+  String get profileTabStats => 'İstatistik';
+
+  @override
+  String get profileTabCareer => 'Kariyer';
+
+  @override
+  String get profileTabVsYou => 'Size karşı';
+
+  @override
+  String get playerStatFitness => 'Kondisyon';
 }

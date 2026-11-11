@@ -16867,4 +16867,19 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Đội nào lấn lướt';
+
+  @override
+  String get profileTabOverview => 'Tổng quan';
+
+  @override
+  String get profileTabStats => 'Thống kê';
+
+  @override
+  String get profileTabCareer => 'Sự nghiệp';
+
+  @override
+  String get profileTabVsYou => 'Đối đầu bạn';
+
+  @override
+  String get playerStatFitness => 'Thể lực';
 }
