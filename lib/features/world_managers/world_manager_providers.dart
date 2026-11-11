@@ -238,7 +238,7 @@ managerProfileProvider = FutureProvider.autoDispose
           .byId(key.careerId);
       final today = career?.inGameDate ?? DateTime.now();
       final nations = await ref
-          .read(nationRepositoryProvider)
+          .watch(nationRepositoryProvider)
           .forCareer(key.careerId);
       final world = ManagerWorld(managers: [m], spells: spells);
       final honours = WorldManagerService.honoursByManager(
@@ -266,7 +266,7 @@ managerNationsProvider = FutureProvider.autoDispose
     .family<Map<int, Nation>, int>(
       (ref, careerId) async => {
         for (final n
-            in await ref.read(nationRepositoryProvider).forCareer(careerId))
+            in await ref.watch(nationRepositoryProvider).forCareer(careerId))
           n.id: n,
       },
     );

@@ -32,7 +32,7 @@ managersListProvider = FutureProvider.autoDispose
           .load(careerId);
       final nations = {
         for (final n
-            in await ref.read(nationRepositoryProvider).forCareer(careerId))
+            in await ref.watch(nationRepositoryProvider).forCareer(careerId))
           n.id: n,
       };
       final rank = {for (final n in nations.values) n.id: n.ranking};
