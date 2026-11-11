@@ -17505,4 +17505,7 @@ class AppLocalizationsHr extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Izvezite svoju bazu podataka, otvorite je u pregledniku, ponovno je preuzmite i uvezite ovdje.';
+
+  @override
+  String get editorWebAnother => 'Druga mogućnost';
 }

@@ -17264,4 +17264,7 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Exporta tu base de datos, ábrela en el navegador, descárgala de nuevo e impórtala aquí.';
+
+  @override
+  String get editorWebAnother => 'Otra opción';
 }

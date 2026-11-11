@@ -16554,4 +16554,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get editorWebAbout => 'データベースをエクスポートしてブラウザで開き、ダウンロードし直してここでインポートします。';
+
+  @override
+  String get editorWebAnother => '別の方法';
 }

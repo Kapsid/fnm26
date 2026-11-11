@@ -17486,4 +17486,7 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Експортуйте базу даних, відкрийте її в браузері, завантажте назад та імпортуйте тут.';
+
+  @override
+  String get editorWebAnother => 'Інший варіант';
 }

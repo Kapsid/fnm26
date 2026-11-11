@@ -17557,4 +17557,7 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Exportujte databázi, otevřete ji v prohlížeči, stáhněte ji zpět a importujte ji sem.';
+
+  @override
+  String get editorWebAnother => 'Další možnost';
 }

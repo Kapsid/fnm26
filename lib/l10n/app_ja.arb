@@ -4291,5 +4291,6 @@
   "matchStadiumWorks": "このスタジアムは工事中",
   "matchStadiumConditions": "コンディション",
   "editorWebTitle": "パソコンで編集: {address}",
-  "editorWebAbout": "データベースをエクスポートしてブラウザで開き、ダウンロードし直してここでインポートします。"
+  "editorWebAbout": "データベースをエクスポートしてブラウザで開き、ダウンロードし直してここでインポートします。",
+  "editorWebAnother": "別の方法"
 }

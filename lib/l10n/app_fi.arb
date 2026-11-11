@@ -4291,5 +4291,6 @@
   "matchStadiumWorks": "Stadionilla on työt käynnissä",
   "matchStadiumConditions": "Olosuhteet",
   "editorWebTitle": "Muokkaa tietokoneella: {address}",
-  "editorWebAbout": "Vie tietokantasi, avaa se selaimessa, lataa se takaisin ja tuo se tänne."
+  "editorWebAbout": "Vie tietokantasi, avaa se selaimessa, lataa se takaisin ja tuo se tänne.",
+  "editorWebAnother": "Toinen vaihtoehto"
 }

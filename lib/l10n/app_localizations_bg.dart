@@ -17256,4 +17256,7 @@ class AppLocalizationsBg extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Експортирайте базата си данни, отворете я в браузъра, изтеглете я обратно и я импортирайте тук.';
+
+  @override
+  String get editorWebAnother => 'Друга възможност';
 }

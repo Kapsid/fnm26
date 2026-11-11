@@ -17156,4 +17156,7 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Exportera din databas, öppna den i webbläsaren, ladda ner den igen och importera den här.';
+
+  @override
+  String get editorWebAnother => 'Ett annat alternativ';
 }

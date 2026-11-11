@@ -4291,5 +4291,6 @@
   "matchStadiumWorks": "Na stadionu su u tijeku radovi",
   "matchStadiumConditions": "Uvjeti",
   "editorWebTitle": "Uređujte na računalu: {address}",
-  "editorWebAbout": "Izvezite svoju bazu podataka, otvorite je u pregledniku, ponovno je preuzmite i uvezite ovdje."
+  "editorWebAbout": "Izvezite svoju bazu podataka, otvorite je u pregledniku, ponovno je preuzmite i uvezite ovdje.",
+  "editorWebAnother": "Druga mogućnost"
 }

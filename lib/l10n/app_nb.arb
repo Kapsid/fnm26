@@ -4291,5 +4291,6 @@
   "matchStadiumWorks": "Det pågår arbeid på stadion",
   "matchStadiumConditions": "Forhold",
   "editorWebTitle": "Rediger på en datamaskin: {address}",
-  "editorWebAbout": "Eksporter databasen din, åpne den i nettleseren, last den ned igjen og importer den her."
+  "editorWebAbout": "Eksporter databasen din, åpne den i nettleseren, last den ned igjen og importer den her.",
+  "editorWebAnother": "Et annet alternativ"
 }

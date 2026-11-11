@@ -25987,6 +25987,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Export your database, open it in the browser, download it back and import it here.'**
   String get editorWebAbout;
+
+  /// Editor list: small caps label above the row that points to the web editor, below the user's databases.
+  ///
+  /// In en, this message translates to:
+  /// **'Another option'**
+  String get editorWebAnother;
 }
 
 class _AppLocalizationsDelegate

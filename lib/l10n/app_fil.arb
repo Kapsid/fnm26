@@ -4291,5 +4291,6 @@
   "matchStadiumWorks": "May ginagawang trabaho sa istadyum na ito",
   "matchStadiumConditions": "Kondisyon",
   "editorWebTitle": "Mag-edit sa computer: {address}",
-  "editorWebAbout": "I-export ang iyong database, buksan ito sa browser, i-download ito pabalik at i-import dito."
+  "editorWebAbout": "I-export ang iyong database, buksan ito sa browser, i-download ito pabalik at i-import dito.",
+  "editorWebAnother": "Isa pang opsyon"
 }

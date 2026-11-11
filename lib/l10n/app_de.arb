@@ -4291,5 +4291,6 @@
   "matchStadiumWorks": "An diesem Stadion wird gebaut",
   "matchStadiumConditions": "Bedingungen",
   "editorWebTitle": "Am Computer bearbeiten: {address}",
-  "editorWebAbout": "Exportiere deine Datenbank, öffne sie im Browser, lade sie wieder herunter und importiere sie hier."
+  "editorWebAbout": "Exportiere deine Datenbank, öffne sie im Browser, lade sie wieder herunter und importiere sie hier.",
+  "editorWebAnother": "Eine weitere Möglichkeit"
 }

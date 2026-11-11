@@ -4291,5 +4291,6 @@
   "matchStadiumWorks": "Lavori in corso in questo stadio",
   "matchStadiumConditions": "Condizioni",
   "editorWebTitle": "Modifica al computer: {address}",
-  "editorWebAbout": "Esporta il tuo database, aprilo nel browser, scaricalo di nuovo e importalo qui."
+  "editorWebAbout": "Esporta il tuo database, aprilo nel browser, scaricalo di nuovo e importalo qui.",
+  "editorWebAnother": "Un'altra opzione"
 }

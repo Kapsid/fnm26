@@ -17117,4 +17117,7 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Exportáld az adatbázisodat, nyisd meg a böngészőben, töltsd le újra, és importáld ide.';
+
+  @override
+  String get editorWebAnother => 'Másik lehetőség';
 }

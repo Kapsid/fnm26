@@ -17270,4 +17270,7 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Exporte a sua base de dados, abra-a no navegador, descarregue-a de novo e importe-a aqui.';
+
+  @override
+  String get editorWebAnother => 'Outra opção';
 }

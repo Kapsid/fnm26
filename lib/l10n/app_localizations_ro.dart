@@ -17586,4 +17586,7 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Exportă baza de date, deschide-o în browser, descarc-o înapoi și importă-o aici.';
+
+  @override
+  String get editorWebAnother => 'O altă opțiune';
 }

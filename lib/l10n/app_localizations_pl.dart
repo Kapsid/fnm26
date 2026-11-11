@@ -17346,4 +17346,7 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Wyeksportuj bazę danych, otwórz ją w przeglądarce, pobierz ją z powrotem i zaimportuj tutaj.';
+
+  @override
+  String get editorWebAnother => 'Inna możliwość';
 }

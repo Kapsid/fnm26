@@ -17083,4 +17083,7 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Ekspor database Anda, buka di peramban, unduh kembali, lalu impor di sini.';
+
+  @override
+  String get editorWebAnother => 'Pilihan lain';
 }

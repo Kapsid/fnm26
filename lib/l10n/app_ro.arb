@@ -4291,5 +4291,6 @@
   "matchStadiumWorks": "Se lucrează la acest stadion",
   "matchStadiumConditions": "Condiții",
   "editorWebTitle": "Editează pe calculator: {address}",
-  "editorWebAbout": "Exportă baza de date, deschide-o în browser, descarc-o înapoi și importă-o aici."
+  "editorWebAbout": "Exportă baza de date, deschide-o în browser, descarc-o înapoi și importă-o aici.",
+  "editorWebAnother": "O altă opțiune"
 }

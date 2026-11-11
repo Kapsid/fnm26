@@ -4291,5 +4291,6 @@
   "matchStadiumWorks": "Pekerjaan sedang berlangsung di stadion ini",
   "matchStadiumConditions": "Kondisi",
   "editorWebTitle": "Edit di komputer: {address}",
-  "editorWebAbout": "Ekspor database Anda, buka di peramban, unduh kembali, lalu impor di sini."
+  "editorWebAbout": "Ekspor database Anda, buka di peramban, unduh kembali, lalu impor di sini.",
+  "editorWebAnother": "Pilihan lain"
 }

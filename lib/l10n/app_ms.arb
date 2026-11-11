@@ -4291,5 +4291,6 @@
   "matchStadiumWorks": "Kerja sedang dijalankan di stadium ini",
   "matchStadiumConditions": "Keadaan",
   "editorWebTitle": "Sunting di komputer: {address}",
-  "editorWebAbout": "Eksport pangkalan data anda, buka dalam pelayar, muat turun semula dan import di sini."
+  "editorWebAbout": "Eksport pangkalan data anda, buka dalam pelayar, muat turun semula dan import di sini.",
+  "editorWebAnother": "Pilihan lain"
 }

@@ -17019,4 +17019,7 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Xuất cơ sở dữ liệu, mở nó trong trình duyệt, tải về lại rồi nhập vào đây.';
+
+  @override
+  String get editorWebAnother => 'Một lựa chọn khác';
 }

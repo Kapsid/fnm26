@@ -17254,4 +17254,7 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Exporteer je database, open hem in de browser, download hem weer en importeer hem hier.';
+
+  @override
+  String get editorWebAnother => 'Een andere mogelijkheid';
 }

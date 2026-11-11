@@ -17247,4 +17247,7 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Vie tietokantasi, avaa se selaimessa, lataa se takaisin ja tuo se tänne.';
+
+  @override
+  String get editorWebAnother => 'Toinen vaihtoehto';
 }

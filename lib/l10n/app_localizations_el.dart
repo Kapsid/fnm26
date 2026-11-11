@@ -17263,4 +17263,7 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Εξαγάγετε τη βάση δεδομένων σας, ανοίξτε τη στο πρόγραμμα περιήγησης, κατεβάστε τη ξανά και εισαγάγετέ τη εδώ.';
+
+  @override
+  String get editorWebAnother => 'Άλλη επιλογή';
 }

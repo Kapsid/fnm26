@@ -4291,5 +4291,6 @@
   "matchStadiumWorks": "Bu stadyumda çalışmalar sürüyor",
   "matchStadiumConditions": "Koşullar",
   "editorWebTitle": "Bilgisayarda düzenle: {address}",
-  "editorWebAbout": "Veritabanını dışa aktar, tarayıcıda aç, geri indir ve buraya içe aktar."
+  "editorWebAbout": "Veritabanını dışa aktar, tarayıcıda aç, geri indir ve buraya içe aktar.",
+  "editorWebAnother": "Başka bir seçenek"
 }

@@ -4291,5 +4291,6 @@
   "matchStadiumWorks": "A stadionban munkálatok folynak",
   "matchStadiumConditions": "Körülmények",
   "editorWebTitle": "Szerkesztés számítógépen: {address}",
-  "editorWebAbout": "Exportáld az adatbázisodat, nyisd meg a böngészőben, töltsd le újra, és importáld ide."
+  "editorWebAbout": "Exportáld az adatbázisodat, nyisd meg a böngészőben, töltsd le újra, és importáld ide.",
+  "editorWebAnother": "Másik lehetőség"
 }

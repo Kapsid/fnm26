@@ -382,9 +382,9 @@ class _PackList extends StatelessWidget {
         padding: padding,
         children: [
           intro,
-          const _WebEditorRow(),
           const SizedBox(height: AppSpacing.lg),
           const _EmptyState(),
+          const _WebEditorRow(),
         ],
       ),
       AsyncValue(:final valueOrNull?) => LayoutBuilder(
@@ -399,7 +399,6 @@ class _PackList extends StatelessWidget {
             padding: padding,
             children: [
               intro,
-              const _WebEditorRow(),
               const SizedBox(height: AppSpacing.lg),
               Wrap(
                 spacing: gap,
@@ -416,6 +415,7 @@ class _PackList extends StatelessWidget {
                     ),
                 ],
               ),
+              const _WebEditorRow(),
             ],
           );
         },
@@ -437,43 +437,56 @@ class _WebEditorRow extends ConsumerWidget {
     if (!ref.watch(editorHasHomeProvider)) return const SizedBox.shrink();
     final l = AppLocalizations.of(context);
     return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.md),
-      child: GestureDetector(
-        onLongPress: () => _copy(context),
-        child: AppCard(
-          key: EditorListScreen.webEditorKey,
-          onTap: () => _open(context, ref),
-          child: Row(
-            children: [
-              const Icon(Icons.computer_outlined, color: AppColors.primary),
-              const SizedBox(width: AppSpacing.md),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l.editorWebTitle(kWebEditorAddress),
-                      style: AppTypography.bodyMedium,
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      l.editorWebAbout,
-                      style: AppTypography.labelSmall.copyWith(
-                        color: AppColors.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              const Icon(
-                Icons.open_in_new,
-                size: 18,
-                color: AppColors.primary,
-              ),
-            ],
+      padding: const EdgeInsets.only(top: AppSpacing.xl),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l.editorWebAnother.toUpperCase(),
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+              letterSpacing: 1.2,
+            ),
           ),
-        ),
+          const SizedBox(height: AppSpacing.sm),
+          GestureDetector(
+            onLongPress: () => _copy(context),
+            child: AppCard(
+              key: EditorListScreen.webEditorKey,
+              onTap: () => _open(context, ref),
+              child: Row(
+                children: [
+                  const Icon(Icons.computer_outlined, color: AppColors.primary),
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l.editorWebTitle(kWebEditorAddress),
+                          style: AppTypography.bodyMedium,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          l.editorWebAbout,
+                          style: AppTypography.labelSmall.copyWith(
+                            color: AppColors.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  const Icon(
+                    Icons.open_in_new,
+                    size: 18,
+                    color: AppColors.primary,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

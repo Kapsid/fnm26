@@ -17172,4 +17172,7 @@ class AppLocalizationsDa extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Eksportér din database, åbn den i browseren, download den igen og importér den her.';
+
+  @override
+  String get editorWebAnother => 'En anden mulighed';
 }

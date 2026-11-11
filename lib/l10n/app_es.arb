@@ -4291,5 +4291,6 @@
   "matchStadiumWorks": "Obras en curso en este estadio",
   "matchStadiumConditions": "Condiciones",
   "editorWebTitle": "Edita en un ordenador: {address}",
-  "editorWebAbout": "Exporta tu base de datos, ábrela en el navegador, descárgala de nuevo e impórtala aquí."
+  "editorWebAbout": "Exporta tu base de datos, ábrela en el navegador, descárgala de nuevo e impórtala aquí.",
+  "editorWebAnother": "Otra opción"
 }

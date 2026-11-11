@@ -16596,4 +16596,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get editorWebAbout => '데이터베이스를 내보내 브라우저에서 열고, 다시 내려받아 여기에서 가져오세요.';
+
+  @override
+  String get editorWebAnother => '다른 방법';
 }

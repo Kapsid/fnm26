@@ -4291,5 +4291,6 @@
   "matchStadiumWorks": "Na stadionie trwa przebudowa",
   "matchStadiumConditions": "Warunki",
   "editorWebTitle": "Edytuj na komputerze: {address}",
-  "editorWebAbout": "Wyeksportuj bazę danych, otwórz ją w przeglądarce, pobierz ją z powrotem i zaimportuj tutaj."
+  "editorWebAbout": "Wyeksportuj bazę danych, otwórz ją w przeglądarce, pobierz ją z powrotem i zaimportuj tutaj.",
+  "editorWebAnother": "Inna możliwość"
 }

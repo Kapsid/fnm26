@@ -17183,4 +17183,7 @@ class AppLocalizationsFil extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'I-export ang iyong database, buksan ito sa browser, i-download ito pabalik at i-import dito.';
+
+  @override
+  String get editorWebAnother => 'Isa pang opsyon';
 }

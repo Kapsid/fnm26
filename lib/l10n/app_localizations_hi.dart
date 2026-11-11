@@ -17079,4 +17079,7 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'अपना डेटाबेस निर्यात करें, उसे ब्राउज़र में खोलें, वापस डाउनलोड करें और यहाँ आयात करें।';
+
+  @override
+  String get editorWebAnother => 'एक और विकल्प';
 }

@@ -4291,5 +4291,6 @@
   "matchStadiumWorks": "Sân đang được thi công",
   "matchStadiumConditions": "Điều kiện",
   "editorWebTitle": "Chỉnh sửa trên máy tính: {address}",
-  "editorWebAbout": "Xuất cơ sở dữ liệu, mở nó trong trình duyệt, tải về lại rồi nhập vào đây."
+  "editorWebAbout": "Xuất cơ sở dữ liệu, mở nó trong trình duyệt, tải về lại rồi nhập vào đây.",
+  "editorWebAnother": "Một lựa chọn khác"
 }

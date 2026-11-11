@@ -17082,4 +17082,7 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Veritabanını dışa aktar, tarayıcıda aç, geri indir ve buraya içe aktar.';
+
+  @override
+  String get editorWebAnother => 'Başka bir seçenek';
 }
