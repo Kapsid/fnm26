@@ -75,6 +75,9 @@ class _NationSelectScreenState extends ConsumerState<NationSelectScreen> {
     final nationsAsync = ref.watch(newGameNationsProvider(world));
     final stars =
         ref.watch(newGameStarPlayersProvider(world)).valueOrNull ?? const {};
+    final strengths =
+        ref.watch(newGameStrengthsProvider(world)).valueOrNull ??
+        const <int, NationStrength>{};
     final selectedConf = ref.watch(selectedConfederationProvider);
     final query = ref.watch(nationSearchProvider).trim().toLowerCase();
     final l = AppLocalizations.of(context);
@@ -126,26 +129,43 @@ class _NationSelectScreenState extends ConsumerState<NationSelectScreen> {
                   return Center(child: Text(l.nationsNoMatch));
                 }
 
-                return ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.marginMobile,
-                    AppSpacing.sm,
-                    AppSpacing.marginMobile,
-                    AppSpacing.xl,
-                  ),
-                  itemCount: filtered.length,
-                  separatorBuilder: (_, _) =>
-                      const SizedBox(height: AppSpacing.sm + 4),
-                  itemBuilder: (context, i) {
-                    final nation = filtered[i];
-                    return _NationCard(
-                      nation: nation,
-                      star: stars[nation.id],
-                      onSelect: () => context.go(
-                        '${Routes.newGame}?nationId=${nation.id}',
+                // The flag wall: three silver tiles a row, the same tile
+                // the tablet shows. A tap picks; the bar below manages.
+                final picked = filtered
+                    .where((n) => n.id == _previewId)
+                    .firstOrNull;
+                return Column(
+                  children: [
+                    Expanded(
+                      child: GridView.builder(
+                        key: NationSelectScreen.gridKey,
+                        padding: const EdgeInsets.fromLTRB(
+                          AppSpacing.marginMobile,
+                          AppSpacing.sm,
+                          AppSpacing.marginMobile,
+                          AppSpacing.xl,
+                        ),
+                        gridDelegate: _phoneTileGrid(context),
+                        itemCount: filtered.length,
+                        itemBuilder: (context, i) {
+                          final n = filtered[i];
+                          return _NationTile(
+                            key: NationSelectScreen.tileKey(n.id),
+                            nation: n,
+                            strength: strengths[n.id],
+                            selected: n.id == picked?.id,
+                            onTap: () => _preview(n.id),
+                          );
+                        },
                       ),
-                    );
-                  },
+                    ),
+                    if (picked != null)
+                      _PickBar(
+                        nation: picked,
+                        strength: strengths[picked.id],
+                        star: stars[picked.id],
+                      ),
+                  ],
                 );
               },
             ),
@@ -345,142 +365,101 @@ class _ModeButton extends StatelessWidget {
   );
 }
 
-class _NationCard extends StatelessWidget {
-  const _NationCard({
-    required this.nation,
-    required this.star,
-    required this.onSelect,
-  });
+/// The phone's flag wall: three tiles a row, each as tall as the tablet's
+/// tile needs for its flag, two lines of name and the overall line.
+SliverGridDelegate _phoneTileGrid(BuildContext context) =>
+    SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 3,
+      // The text in a tile grows with the reader's text size; the flag and
+      // the padding do not.
+      mainAxisExtent: 112 + MediaQuery.textScalerOf(context).scale(60),
+      crossAxisSpacing: AppSpacing.sm,
+      mainAxisSpacing: AppSpacing.sm,
+    );
+
+/// The bar under the wall once a nation is picked: its flag, name, rank,
+/// overall and star, and the one button that starts the career.
+class _PickBar extends StatelessWidget {
+  const _PickBar({required this.nation, this.strength, this.star});
 
   final Nation nation;
+  final NationStrength? strength;
   final Player? star;
-  final VoidCallback onSelect;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Container(
+    final s = strength;
+    final p = star;
+    final facts = [
+      '#${nation.ranking}',
+      if (s != null) '${l.teamOverall} ${s.overall}',
+      if (p != null) '${p.name} ${p.overall}',
+    ].join(' · ');
+    return DecoratedBox(
+      key: NationSelectScreen.previewKey,
       decoration: const BoxDecoration(
-        borderRadius: AppRadii.mdAll,
-        boxShadow: [
-          BoxShadow(
-            color: Color(0x4D000000),
-            blurRadius: 6,
-            offset: Offset(0, 3),
-          ),
-        ],
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.surfaceContainerHigh,
+            AppColors.surfaceContainerLow,
+          ],
+        ),
+        border: Border(
+          top: BorderSide(color: AppColors.surfaceContainerHighest),
+        ),
       ),
-      clipBehavior: Clip.antiAlias,
-      child: Stack(
-        children: [
-          // Brushed gradient surface with a uniform 1px edge.
-          const Positioned.fill(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    AppColors.surfaceContainerHigh,
-                    AppColors.surfaceContainerLow,
-                  ],
-                ),
-                border: Border.fromBorderSide(
-                  BorderSide(color: AppColors.surfaceContainerHighest),
-                ),
-              ),
-            ),
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.marginMobile,
+            AppSpacing.md,
+            AppSpacing.marginMobile,
+            AppSpacing.md,
           ),
-          Padding(
-            padding: const EdgeInsets.all(AppSpacing.sm + 4),
-            child: Row(
-              children: [
-                FlagDisc(nation.code, size: 60),
-                const SizedBox(width: AppSpacing.sm + 4),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        nation.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTypography.titleMedium,
-                      ),
-                      const SizedBox(height: 2),
-                      Text.rich(
-                        TextSpan(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  FlagDisc(nation.code, size: 40),
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          nation.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTypography.titleMedium,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          facts,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: AppTypography.labelSmall.copyWith(
                             color: AppColors.outline,
                           ),
-                          children: [
-                            TextSpan(text: l.nationsRank),
-                            TextSpan(
-                              text: '#${nation.ranking}',
-                              style: AppTypography.labelSmall.copyWith(
-                                color: AppColors.primary,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ],
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(width: AppSpacing.sm),
-                _SelectButton(onTap: onSelect),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SelectButton extends StatelessWidget {
-  const _SelectButton({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    return Material(
-      color: Colors.transparent,
-      borderRadius: AppRadii.baseAll,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: AppRadii.baseAll,
-        child: Ink(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md,
-            vertical: AppSpacing.sm + 2,
-          ),
-          decoration: BoxDecoration(
-            borderRadius: AppRadii.baseAll,
-            border: Border.all(color: AppColors.primaryFixed),
-            gradient: const LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [AppColors.primaryFixed, AppColors.outline],
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                l.nationsSelect,
-                style: AppTypography.labelSmall.copyWith(
-                  color: AppColors.onPrimary,
-                ),
+                ],
               ),
-              const Icon(
-                Icons.chevron_right,
-                size: 16,
-                color: AppColors.onPrimary,
+              const SizedBox(height: AppSpacing.md),
+              PrimaryButton(
+                key: NationSelectScreen.manageKey,
+                label: l.nationsManage(nation.name),
+                icon: Icons.play_arrow_rounded,
+                onPressed: () =>
+                    context.go('${Routes.newGame}?nationId=${nation.id}'),
               ),
             ],
           ),

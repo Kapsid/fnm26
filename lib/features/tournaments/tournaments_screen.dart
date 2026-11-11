@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -122,6 +121,7 @@ typedef _Spec = ({
   _Championship championship,
   TournamentStatus? status,
   String? championName,
+  String? championCode,
   String route,
   _Pick pick,
 });
@@ -261,6 +261,9 @@ class TournamentsScreen extends ConsumerWidget {
       championName: championId == null
           ? null
           : overview?.nations[championId]?.name,
+      championCode: championId == null
+          ? null
+          : overview?.nations[championId]?.code,
       route: conf == null
           ? '${Routes.cup}?careerId=$careerId'
           : '${Routes.continental}?careerId=$careerId&conf=${conf.name}',
@@ -294,6 +297,7 @@ class TournamentsScreen extends ConsumerWidget {
       ),
       status: status,
       championName: overview.nations[status.championId]?.name,
+      championCode: overview.nations[status.championId]?.code,
       route: '${Routes.nationsCup}?careerId=$careerId&conf=${conf.name}',
       pick: (kind: _PickKind.nationsCup, conf: conf),
     );
@@ -319,6 +323,7 @@ class TournamentsScreen extends ConsumerWidget {
     ),
     status: overview.continentalClash,
     championName: overview.nations[overview.continentalClash!.championId]?.name,
+    championCode: overview.nations[overview.continentalClash!.championId]?.code,
     route: '${Routes.continentalClash}?careerId=$careerId',
     pick: (kind: _PickKind.clash, conf: null),
   );
@@ -368,6 +373,7 @@ class TournamentsScreen extends ConsumerWidget {
     championship: s.championship,
     status: s.status,
     championName: s.championName,
+    championCode: s.championCode,
     onView: () => context.go(s.route),
   );
 
@@ -406,37 +412,15 @@ class TournamentsScreen extends ConsumerWidget {
   /// Championship" wraps to two lines on a 393-point iPhone, and a longer
   /// translation or a larger text size does it anywhere, and the tile's copy
   /// then spilled out of the bottom of its cell.
-  static Widget _tileGrid(BuildContext context, List<Widget> tiles) {
-    final rows = <Widget>[];
-    for (var i = 0; i < tiles.length; i += 2) {
-      final left = tiles[i];
-      final right = i + 1 < tiles.length ? tiles[i + 1] : null;
-      rows.add(
+  static Widget _tileGrid(BuildContext context, List<Widget> tiles) => Column(
+    children: [
+      for (final t in tiles)
         Padding(
           padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-          child: LayoutBuilder(
-            builder: (context, box) {
-              final cell = (box.maxWidth - AppSpacing.sm) / 2;
-              return ConstrainedBox(
-                constraints: BoxConstraints(minHeight: cell / 1.25),
-                child: IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(child: left),
-                      const SizedBox(width: AppSpacing.sm),
-                      Expanded(child: right ?? const SizedBox.shrink()),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
+          child: t,
         ),
-      );
-    }
-    return Column(children: rows);
-  }
+    ],
+  );
 }
 
 class _ChampionshipTile extends StatelessWidget {
@@ -445,12 +429,19 @@ class _ChampionshipTile extends StatelessWidget {
     required this.status,
     required this.championName,
     required this.onView,
+    this.championCode,
   });
 
   final _Championship championship;
   final TournamentStatus? status;
   final String? championName;
+  final String? championCode;
   final VoidCallback onView;
+
+  /// Every row the same height in every language: the name and the holder
+  /// each get one line at the theme's size, never scaled down.
+  static const double _height = 80;
+  static const double _trophy = 44;
 
   @override
   Widget build(BuildContext context) {
@@ -465,145 +456,128 @@ class _ChampionshipTile extends StatelessWidget {
         : live
         ? AppColors.positive
         : AppColors.primary;
+    // A Nations Cup row says just that: the zone names the continent.
+    final name =
+        NationsCups.isNationsCup(c.name) &&
+            ActiveWorld.current.competition(c.name) == null
+        ? l.compNationsCup
+        : competitionLabel(l, c.name);
+    final holder = championName;
+    final code = championCode;
 
-    return AppCard(
-      color: live ? AppColors.positive.withValues(alpha: 0.08) : null,
-      border: live
-          ? Border.all(color: AppColors.positive.withValues(alpha: 0.6))
-          : null,
-      onTap: available
-          ? onView
-          : () => ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(content: Text(l.tourSharedComingSoon)),
-              ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          () {
-            final trophy = Trophies.keyForCompetitionName(c.name);
-            if (trophy == null) {
-              return Icon(c.icon, size: 24, color: accent);
-            }
-            // The trophy artwork, dimmed until this competition is live.
-            return Opacity(
-              opacity: available ? 1 : 0.5,
-              child: TrophyImage(
-                trophy,
-                height: 40,
-                fit: BoxFit.contain,
-                errorBuilder: (_, __, ___) =>
-                    Icon(c.icon, size: 24, color: accent),
-              ),
-            );
-          }(),
-          const Spacer(),
-          Builder(
-            builder: (context) {
-              // A Nations Cup tile says just that: the strap under it names
-              // the continent, and "Coupe des Nations d’Amérique du Nord"
-              // cannot fit two lines of a half-width tile in any language.
-              final name =
-                  NationsCups.isNationsCup(c.name) &&
-                      ActiveWorld.current.competition(c.name) == null
-                  ? l.compNationsCup
-                  : competitionLabel(l, c.name);
-              return Text(
-                name,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: _fitLongestWord(context, name, AppTypography.labelLarge),
-              );
-            },
-          ),
-          const SizedBox(height: 2),
-          Text(
-            c.zone(l),
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
+    // At least [_height]: the same row everywhere at the usual text size,
+    // and a taller row (never clipped) at the largest.
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: _height),
+      child: AppCard(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
+        color: live
+            ? AppColors.positive.withValues(alpha: 0.08)
+            : AppColors.surfaceContainerHigh,
+        border: Border.all(
+          color: live
+              ? AppColors.positive.withValues(alpha: 0.6)
+              : AppColors.surfaceContainerHighest,
+        ),
+        onTap: available
+            ? onView
+            : () => ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(content: Text(l.tourSharedComingSoon)),
+                ),
+        child: Row(
+          children: [
+            SizedBox.square(
+              dimension: _trophy,
+              child: () {
+                final trophy = Trophies.keyForCompetitionName(c.name);
+                final icon = Icon(c.icon, size: 26, color: accent);
+                if (trophy == null) return Center(child: icon);
+                // The trophy artwork, dimmed until this competition is live.
+                return Opacity(
+                  opacity: available ? 1 : 0.5,
+                  child: TrophyImage(
+                    trophy,
+                    height: _trophy,
+                    fit: BoxFit.contain,
+                    errorBuilder: (_, __, ___) => Center(child: icon),
+                  ),
+                );
+              }(),
             ),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // The status chip shrinks to its share rather than running off
-              // the tile: "VENCEDORES ANTERIORES" is wider than half a phone.
-              Flexible(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 2,
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    name,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.titleMedium.copyWith(height: 1.15),
                   ),
-                  decoration: BoxDecoration(
-                    color: accent.withValues(alpha: 0.14),
-                    borderRadius: AppRadii.smAll,
+                  const SizedBox(height: 3),
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          c.zone(l),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTypography.labelSmall.copyWith(
+                            color: AppColors.outline,
+                          ),
+                        ),
+                      ),
+                      if (holder != null) ...[
+                        const SizedBox(width: AppSpacing.sm),
+                        if (code != null) ...[
+                          FlagDisc(code, size: 14),
+                          const SizedBox(width: AppSpacing.xs),
+                        ],
+                        Flexible(
+                          child: Text(
+                            holder,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTypography.labelSmall.copyWith(
+                              color: AppColors.onSurfaceVariant,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      label,
-                      maxLines: 1,
-                      softWrap: false,
-                      style: AppTypography.labelSmall.copyWith(color: accent),
-                    ),
-                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            // The status chip keeps its size: it gives way by ellipsis.
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 120),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                decoration: BoxDecoration(
+                  color: accent.withValues(alpha: 0.14),
+                  borderRadius: AppRadii.smAll,
+                ),
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: false,
+                  style: AppTypography.labelSmall.copyWith(color: accent),
                 ),
               ),
-              if (championName != null) ...[
-                const SizedBox(width: AppSpacing.xs),
-                Flexible(
-                  child: Text(
-                    championName!,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.end,
-                    style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
-                    ),
-                  ),
-                ),
-              ],
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
-}
-
-/// [style], made smaller when the longest single word of [text] would not fit
-/// the width of a half-width tile: a German compound ("Europameisterschaft")
-/// otherwise breaks in the middle of the word. Two-word names still wrap at
-/// the space, at full size.
-///
-/// The width is worked out from the screen rather than measured, because the
-/// tile sits under an IntrinsicHeight, which a LayoutBuilder cannot.
-TextStyle _fitLongestWord(BuildContext context, String text, TextStyle style) {
-  final screen = MediaQuery.sizeOf(context).width;
-  // Two tiles a row between the page margins, each with the card's padding
-  // and its one-pixel border inside it.
-  final available =
-      (screen - 2 * AppSpacing.marginMobile - AppSpacing.sm) / 2 -
-      2 * AppSpacing.md -
-      2;
-  final words = text.split(RegExp(r'\s+'));
-  var widest = 0.0;
-  for (final w in words) {
-    final painter = TextPainter(
-      text: TextSpan(text: w, style: style),
-      textDirection: Directionality.of(context),
-      textScaler: MediaQuery.textScalerOf(context),
-      maxLines: 1,
-    )..layout();
-    widest = math.max(widest, painter.width);
-    painter.dispose();
-  }
-  if (available <= 0 || widest <= available) return style;
-  final size = style.fontSize ?? 16;
-  return style.copyWith(
-    fontSize: math.max(size * 0.7, size * available / widest - 0.1),
-  );
 }

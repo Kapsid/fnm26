@@ -261,11 +261,11 @@ void main() {
     final pick = _europe(save)[5];
     await tester.tap(find.byKey(NationSelectScreen.tileKey(pick.id)));
     await settle(tester);
-    // Under 1000 wide: the phone list.
+    // Under 1000 wide: the phone's flag wall, the pick still in its bar.
     tester.view.physicalSize = const Size(900, 810);
     await settle(tester);
     expect(find.byKey(NationSelectScreen.tabletLayoutKey), findsNothing);
-    expect(find.text(enL.nationsSelect), findsWidgets);
+    expect(find.text(enL.nationsManage(pick.name)), findsOneWidget);
     // Back over 1000: the same nation in the pane.
     tester.view.physicalSize = kTabletSize;
     await settle(tester);

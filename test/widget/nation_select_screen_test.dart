@@ -50,10 +50,28 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.text('SELECT'), findsNWidgets(2)); // France + Germany
+    // Every tile is open: no padlock, no premium badge.
+    expect(find.byKey(NationSelectScreen.tileKey(1)), findsOneWidget);
+    expect(find.byKey(NationSelectScreen.tileKey(2)), findsOneWidget);
     expect(find.text('PREMIUM'), findsNothing);
-    // The star-player line was removed from the card by design.
+    // Nothing is picked yet, so there is no bar and no star line.
+    expect(find.byKey(NationSelectScreen.manageKey), findsNothing);
     expect(find.textContaining('Luc Mercier'), findsNothing);
+
+    // A tap picks the nation: the bar shows it and offers to manage it.
+    await tester.tap(find.byKey(NationSelectScreen.tileKey(2)));
+    await tester.pump();
+    expect(find.byKey(NationSelectScreen.manageKey), findsOneWidget);
+    expect(find.text('Manage Germany'), findsOneWidget);
+  });
+
+  testWidgets('the picked bar names the star player', (tester) async {
+    await tester.pumpApp(const NationSelectScreen(), overrides: overrides);
+    await tester.pump();
+
+    await tester.tap(find.byKey(NationSelectScreen.tileKey(1)));
+    await tester.pump();
+    expect(find.textContaining('Luc Mercier'), findsOneWidget);
   });
 
   testWidgets('search filters the list', (tester) async {
