@@ -47,10 +47,12 @@ void main() {
         'faggot',
 
         'dickhead',
-        'cock',
         'pussy',
-        'wanker',
+        'wankers',
+        'wanking',
         'twat',
+        'twaaat',
+        'Shitbank',
       ],
       'cs': [
         'kurva',
@@ -125,7 +127,8 @@ void main() {
       'pt': [
         'caralho',
         'porra',
-        'foda',
+        'fodase',
+        'fodido',
         'buceta',
         'viado',
         'merda',
@@ -325,6 +328,29 @@ void main() {
         if (ProfanityFilter.isOffensive(n)) n,
     ]..sort();
     expect(refused, isEmpty);
+  });
+
+  test('real names from every region pass, all but a known few', () {
+    // Players, coaches, grounds and towns (several of them refused by the
+    // filter as it first shipped), with each country's common names and
+    // places: test/fixtures/profanity/real_names.txt.
+    final names = [
+      for (final l in File(
+        'test/fixtures/profanity/real_names.txt',
+      ).readAsLinesSync())
+        if (l.trim().isNotEmpty && !l.startsWith('#')) l.trim(),
+    ];
+    expect(names.length, greaterThan(50000));
+    for (final n in ['Jakob Wanker', 'Franco Foda', 'Hang Jebat Stadium']) {
+      expect(names, contains(n));
+    }
+    final refused = [
+      for (final n in names)
+        if (ProfanityFilter.isOffensive(n)) n,
+    ];
+    // Two hamlets that hold a refused word whole: Cunter (Graubünden) and
+    // Bitchfield (Lincolnshire). Was 55 before the 1.1.x softening.
+    expect(refused, unorderedEquals(['Cunter', 'Bitchfield']));
   });
 
   test('no translated string is refused, but known everyday words', () {
