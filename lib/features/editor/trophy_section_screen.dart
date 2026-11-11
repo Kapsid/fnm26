@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -17,6 +16,7 @@ import 'package:fnm/domain/services/world_pack/trophy_normaliser.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/editor/editor_ui.dart';
+import 'package:fnm/features/editor/picked_file.dart';
 import 'package:fnm/features/editor/players/players_ui.dart';
 import 'package:fnm/features/editor/trophy_crop_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -174,12 +174,9 @@ class _TrophySectionScreenState extends ConsumerState<TrophySectionScreen> {
     Uint8List? bytes;
     ui.Size? size;
     try {
-      final file = File(path);
       // Too big is refused before anything is read into memory.
-      if (await file.length() <= TrophyNormaliser.maxBytes) {
-        bytes = await file.readAsBytes();
-        size = await TrophyNormaliser.measure(bytes);
-      }
+      bytes = await readPickedFile(path, maxBytes: TrophyNormaliser.maxBytes);
+      if (bytes != null) size = await TrophyNormaliser.measure(bytes);
     } on Object catch (e, st) {
       AppLog.error('editor-trophy-read', e, st);
     }

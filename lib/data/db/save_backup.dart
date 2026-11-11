@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:fnm/data/db/app_database.dart';
+import 'package:fnm/data/db/raw_sqlite.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:sqlite3/sqlite3.dart';
 
 /// Why a file offered for restore cannot be used.
 enum BackupRejection {

@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 /// Turns a picture the player chose into a trophy picture the game can show:
 /// a transparent PNG, 400x400 for the World Championship and 400x600 for
 /// every other trophy.
@@ -28,18 +30,25 @@ abstract final class TrophyNormaliser {
     ui.ImmutableBuffer? buffer;
     ui.ImageDescriptor? descriptor;
     try {
-      // Read the declared size before any pixel is decoded, so a tiny file
-      // that claims a huge picture is refused without allocating it.
-      buffer = await ui.ImmutableBuffer.fromUint8List(input);
-      descriptor = await ui.ImageDescriptor.encoded(buffer);
-      if (descriptor.width > _maxSide || descriptor.height > _maxSide) {
-        return null;
-      }
-      final codec = await descriptor.instantiateCodec();
-      try {
-        src = (await codec.getNextFrame()).image;
-      } finally {
-        codec.dispose();
+      if (kIsWeb) {
+        // The browser has no ImageDescriptor: the picture is decoded whole
+        // and its size checked after.
+        src = await _decodeOnWeb(input);
+        if (src.width > _maxSide || src.height > _maxSide) return null;
+      } else {
+        // Read the declared size before any pixel is decoded, so a tiny file
+        // that claims a huge picture is refused without allocating it.
+        buffer = await ui.ImmutableBuffer.fromUint8List(input);
+        descriptor = await ui.ImageDescriptor.encoded(buffer);
+        if (descriptor.width > _maxSide || descriptor.height > _maxSide) {
+          return null;
+        }
+        final codec = await descriptor.instantiateCodec();
+        try {
+          src = (await codec.getNextFrame()).image;
+        } finally {
+          codec.dispose();
+        }
       }
 
       final bounds = ui.Rect.fromLTWH(
@@ -111,11 +120,38 @@ abstract final class TrophyNormaliser {
     }
   }
 
+  /// [measure] in the browser (the web editor), which has no
+  /// [ui.ImageDescriptor]: the picture is decoded to read its size.
+  static Future<ui.Size?> _measureOnWeb(Uint8List input) async {
+    ui.Image? image;
+    try {
+      image = await _decodeOnWeb(input);
+      final w = image.width;
+      final h = image.height;
+      if (w <= 0 || h <= 0 || w > _maxSide || h > _maxSide) return null;
+      return ui.Size(w.toDouble(), h.toDouble());
+    } on Object {
+      return null;
+    } finally {
+      image?.dispose();
+    }
+  }
+
+  static Future<ui.Image> _decodeOnWeb(Uint8List input) async {
+    final codec = await ui.instantiateImageCodec(input);
+    try {
+      return (await codec.getNextFrame()).image;
+    } finally {
+      codec.dispose();
+    }
+  }
+
   /// The pixel size of [input] when [normalise] could take it (a PNG or
   /// JPEG within the byte and pixel caps), else null. Reads only the
   /// header: no pixel is decoded.
   static Future<ui.Size?> measure(Uint8List input) async {
     if (input.length > maxBytes || !_isPngOrJpeg(input)) return null;
+    if (kIsWeb) return _measureOnWeb(input);
     ui.ImmutableBuffer? buffer;
     ui.ImageDescriptor? descriptor;
     try {

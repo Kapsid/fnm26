@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'dart:isolate';
 import 'dart:math';
 
 import 'package:drift/drift.dart';
+import 'package:fnm/core/util/off_ui.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/domain/services/profanity/profanity_filter.dart';
 import 'package:fnm/domain/services/world_pack/pack_profanity.dart';
@@ -396,7 +396,7 @@ class WorldPackRepository {
   static Future<WorldPack> _decodeOffUi(String json) =>
       json.length < offUiDecodeChars
       ? Future.value(_decode(json))
-      : Isolate.run(() => _decode(json), debugName: 'world pack decode');
+      : runOffUi(() => _decode(json), debugName: 'world pack decode');
 
   /// [_decodeOffUi], masked as the game plays it ([maskedForPlay]), the
   /// masking on the same isolate as the decoding: checking every name of a
@@ -404,7 +404,7 @@ class WorldPackRepository {
   static Future<WorldPack> _decodeForPlayOffUi(String json) =>
       json.length < offUiDecodeChars
       ? Future.value(maskedForPlay(_decode(json)))
-      : Isolate.run(
+      : runOffUi(
           () => maskedForPlay(_decode(json)),
           debugName: 'world pack decode',
         );

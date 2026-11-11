@@ -22,7 +22,6 @@ import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:share_plus/share_plus.dart';
 
 part 'editor_list_tablet_layout.dart';
 
@@ -183,13 +182,10 @@ class _EditorListScreenState extends ConsumerState<EditorListScreen> {
       case _RowAction.export:
         await _run(() async {
           try {
-            final file = await service.export(pack.id);
-            await SharePlus.instance.share(
-              ShareParams(
-                files: [XFile(file.path, mimeType: PackCodec.mimeType)],
-                subject: l.editorShareSubject,
-                sharePositionOrigin: at,
-              ),
+            await ref.read(editorPackExporterProvider)(
+              pack.id,
+              subject: l.editorShareSubject,
+              origin: at,
             );
           } on PackTooBigToShare catch (e) {
             if (mounted) {
@@ -250,10 +246,13 @@ class _EditorListScreenState extends ConsumerState<EditorListScreen> {
     }
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
-          onPressed: () => context.go(Routes.home),
-        ),
+        automaticallyImplyLeading: false,
+        leading: ref.watch(editorHasHomeProvider)
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back, color: AppColors.primary),
+                onPressed: () => context.go(Routes.home),
+              )
+            : null,
         title: Text(
           l.editorTitle,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
