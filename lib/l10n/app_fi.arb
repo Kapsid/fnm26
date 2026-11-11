@@ -4250,5 +4250,7 @@
   "matchTimelineWoodwork": "{name} osui tolppaan",
   "matchTimelineBigSave": "Iso torjunta: {name}",
   "matchChartXg": "xG ottelun aikana",
-  "matchChartMomentum": "Kumpi hallitsi"
+  "matchChartMomentum": "Kumpi hallitsi",
+  "editorDemoteTooltip": "Siirrä pooliin",
+  "editorDemoted": "{name} siirretty pooliin"
 }

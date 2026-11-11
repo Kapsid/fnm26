@@ -17178,4 +17178,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Qui dominait';
+
+  @override
+  String get editorDemoteTooltip => 'Passer dans le vivier';
+
+  @override
+  String editorDemoted(String name) {
+    return '$name passe dans le vivier';
+  }
 }

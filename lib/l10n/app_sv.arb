@@ -4250,5 +4250,7 @@
   "matchTimelineWoodwork": "{name} träffade ramen",
   "matchTimelineBigSave": "Stor räddning av {name}",
   "matchChartXg": "xG under matchen",
-  "matchChartMomentum": "Vem som styrde"
+  "matchChartMomentum": "Vem som styrde",
+  "editorDemoteTooltip": "Flytta till poolen",
+  "editorDemoted": "{name} flyttad till poolen"
 }

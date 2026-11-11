@@ -16979,4 +16979,12 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Siapa yang menguasai';
+
+  @override
+  String get editorDemoteTooltip => 'Pindah ke senarai';
+
+  @override
+  String editorDemoted(String name) {
+    return '$name dipindahkan ke senarai';
+  }
 }

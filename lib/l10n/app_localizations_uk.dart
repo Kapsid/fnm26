@@ -17334,4 +17334,12 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Хто домінував';
+
+  @override
+  String get editorDemoteTooltip => 'Перемістити до пулу';
+
+  @override
+  String editorDemoted(String name) {
+    return '$name переміщено до пулу';
+  }
 }

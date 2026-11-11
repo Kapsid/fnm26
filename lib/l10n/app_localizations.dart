@@ -25741,6 +25741,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Who was on top'**
   String get matchChartMomentum;
+
+  /// Editor squad list: tooltip of the button that moves a squad player back into the nation's pool (the reverse of editorPromoteTooltip).
+  ///
+  /// In en, this message translates to:
+  /// **'Move to the pool'**
+  String get editorDemoteTooltip;
+
+  /// Editor snackbar after moving a squad player into the pool, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} moved to the pool'**
+  String editorDemoted(String name);
 }
 
 class _AppLocalizationsDelegate

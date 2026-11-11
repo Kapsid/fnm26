@@ -17015,4 +17015,12 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Hvem som dominerte';
+
+  @override
+  String get editorDemoteTooltip => 'Flytt til poolen';
+
+  @override
+  String editorDemoted(String name) {
+    return '$name flyttet til poolen';
+  }
 }

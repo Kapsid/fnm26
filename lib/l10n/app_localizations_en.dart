@@ -17045,4 +17045,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Who was on top';
+
+  @override
+  String get editorDemoteTooltip => 'Move to the pool';
+
+  @override
+  String editorDemoted(String name) {
+    return '$name moved to the pool';
+  }
 }

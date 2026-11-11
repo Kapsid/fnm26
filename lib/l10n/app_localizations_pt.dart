@@ -17117,4 +17117,12 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Quem estava por cima';
+
+  @override
+  String get editorDemoteTooltip => 'Mover para o grupo';
+
+  @override
+  String editorDemoted(String name) {
+    return '$name movido para o grupo';
+  }
 }

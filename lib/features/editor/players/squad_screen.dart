@@ -77,6 +77,7 @@ class SquadScreen extends ConsumerStatefulWidget {
 
   /// The button on a pool row that moves the player into the squad.
   static Key promoteKey(int id) => Key('editorSquad.promote.$id');
+  static Key demoteKey(int id) => Key('editorSquad.demote.$id');
 
   /// A squad player's row in the "squad is full, who goes back" dialog.
   static Key swapKey(int id) => Key('editorSquad.swap.$id');
@@ -290,6 +291,26 @@ class _SquadScreenState extends ConsumerState<SquadScreen>
       _editor,
       l.editorPromoted(playerLabel(l, player)),
     );
+  }
+
+  /// Moves squad player [player] into the pool (one undoable edit).
+  void _demote(PackPlayer player) {
+    final l = AppLocalizations.of(context);
+    final pack = ref.read(packEditorProvider(_id)).valueOrNull;
+    if (pack == null) return;
+    final shown =
+        shownPlayers(ref, pack, _key, pool: true, listen: false) ??
+        const <PackPlayer>[];
+    var moved = false;
+    _editor.update((p) {
+      final now = shownPlayers(ref, p, _key, pool: true, listen: false);
+      final next = SquadEdits.demote(p, _nation, now ?? shown, player.id);
+      moved = next != null;
+      return next ?? p;
+    });
+    if (!moved) return;
+    if (_picked == player.id && !_pickedPool) setState(() => _picked = null);
+    showUndoSnackBar(context, _editor, l.editorDemoted(playerLabel(l, player)));
   }
 
   /// Asks which squad player goes back to the pool, or null when none is
@@ -561,6 +582,7 @@ class _SquadScreenState extends ConsumerState<SquadScreen>
                     padding: padding,
                     onTap: (p) => _open(p.id, tablet: false, pool: false),
                     onRemove: _remove,
+                    onDemote: _demote,
                   ),
           ),
         ],
@@ -698,6 +720,7 @@ class _SquadList extends StatelessWidget {
     required this.padding,
     required this.onTap,
     required this.onRemove,
+    required this.onDemote,
     this.picked,
   });
 
@@ -705,6 +728,7 @@ class _SquadList extends StatelessWidget {
   final EdgeInsets padding;
   final void Function(PackPlayer) onTap;
   final void Function(PackPlayer) onRemove;
+  final void Function(PackPlayer) onDemote;
   final int? picked;
 
   @override
@@ -739,6 +763,7 @@ class _SquadList extends StatelessWidget {
             duplicate: view.duplicates.contains(SquadEdits.nameKey(p.name)),
             picked: picked == p.id,
             onTap: () => onTap(p),
+            onDemote: () => onDemote(p),
           ),
         );
       },
@@ -1274,6 +1299,7 @@ class _PlayerRow extends StatelessWidget {
     required this.onTap,
     this.duplicateNote,
     this.onPromote,
+    this.onDemote,
   });
 
   final Key rowKey;
@@ -1281,6 +1307,10 @@ class _PlayerRow extends StatelessWidget {
   /// Moves the player into the squad: a pool row's button (none in the
   /// squad's own list).
   final VoidCallback? onPromote;
+
+  /// Moves the player into the pool: a squad row's button (none in the
+  /// pool's own list).
+  final VoidCallback? onDemote;
 
   /// What the shared-name badge says (the squad's wording when null).
   final String? duplicateNote;
@@ -1393,6 +1423,15 @@ class _PlayerRow extends StatelessWidget {
               color: AppColors.primary,
               visualDensity: VisualDensity.compact,
               onPressed: onPromote,
+            ),
+          if (onDemote != null)
+            IconButton(
+              key: SquadScreen.demoteKey(p.id),
+              tooltip: l.editorDemoteTooltip,
+              icon: const Icon(Icons.arrow_circle_down_outlined),
+              color: AppColors.onSurfaceVariant,
+              visualDensity: VisualDensity.compact,
+              onPressed: onDemote,
             ),
         ],
       ),

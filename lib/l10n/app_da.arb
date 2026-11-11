@@ -4250,5 +4250,7 @@
   "matchTimelineWoodwork": "{name} ramte træværket",
   "matchTimelineBigSave": "Stor redning af {name}",
   "matchChartXg": "xG gennem kampen",
-  "matchChartMomentum": "Hvem der dominerede"
+  "matchChartMomentum": "Hvem der dominerede",
+  "editorDemoteTooltip": "Flyt til puljen",
+  "editorDemoted": "{name} flyttet til puljen"
 }

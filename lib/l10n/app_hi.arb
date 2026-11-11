@@ -4250,5 +4250,7 @@
   "matchTimelineWoodwork": "{name} का शॉट पोस्ट से टकराया",
   "matchTimelineBigSave": "{name} का बड़ा बचाव",
   "matchChartXg": "पूरे मैच में xG",
-  "matchChartMomentum": "कौन हावी रहा"
+  "matchChartMomentum": "कौन हावी रहा",
+  "editorDemoteTooltip": "पूल में भेजें",
+  "editorDemoted": "{name} को पूल में भेजा गया"
 }

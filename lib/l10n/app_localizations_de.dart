@@ -17147,4 +17147,12 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Wer am Drücker war';
+
+  @override
+  String get editorDemoteTooltip => 'In den Pool verschieben';
+
+  @override
+  String editorDemoted(String name) {
+    return '$name in den Pool verschoben';
+  }
 }

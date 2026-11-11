@@ -16927,4 +16927,12 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'कौन हावी रहा';
+
+  @override
+  String get editorDemoteTooltip => 'पूल में भेजें';
+
+  @override
+  String editorDemoted(String name) {
+    return '$name को पूल में भेजा गया';
+  }
 }

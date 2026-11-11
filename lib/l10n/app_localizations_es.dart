@@ -17111,4 +17111,12 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Quién dominaba';
+
+  @override
+  String get editorDemoteTooltip => 'Pasar a disponibles';
+
+  @override
+  String editorDemoted(String name) {
+    return '$name pasa a disponibles';
+  }
 }

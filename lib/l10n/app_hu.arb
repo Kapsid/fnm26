@@ -4250,5 +4250,7 @@
   "matchTimelineWoodwork": "{name} kapufát talált",
   "matchTimelineBigSave": "Nagy védés: {name}",
   "matchChartXg": "xG a mérkőzés során",
-  "matchChartMomentum": "Ki volt fölényben"
+  "matchChartMomentum": "Ki volt fölényben",
+  "editorDemoteTooltip": "Áthelyezés a bő keretbe",
+  "editorDemoted": "{name} átkerült a bő keretbe"
 }

@@ -16448,4 +16448,12 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get matchChartMomentum => '경기 주도권';
+
+  @override
+  String get editorDemoteTooltip => '선수 풀로 옮기기';
+
+  @override
+  String editorDemoted(String name) {
+    return '$name 선수를 선수 풀로 옮겼습니다';
+  }
 }

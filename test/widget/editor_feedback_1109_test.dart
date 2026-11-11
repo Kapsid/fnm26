@@ -148,6 +148,50 @@ void main() {
       await tester.pump(const Duration(milliseconds: 450));
     });
 
+    test('a squad player moves into the pool, under a fresh id', () {
+      final squad = testSquad();
+      final pool = _reserves(squad, 2);
+      final pack = testPack('D', squads: {cze: squad}).copyWith(
+        pools: {cze: pool},
+      );
+      final next = SquadEdits.demote(pack, cze, pool, squad.first.id)!;
+      expect(next.squads[cze], hasLength(squad.length - 1));
+      expect(next.pools[cze], hasLength(3));
+      expect(next.pools[cze]!.last.name, squad.first.name);
+      final ids = [
+        for (final l in [...next.squads.values, ...next.pools.values])
+          for (final p in l) p.id,
+      ];
+      expect(ids.toSet(), hasLength(ids.length));
+      expect(SquadEdits.demote(pack, cze, pool, -1), isNull);
+    });
+
+    testWidgets('one tap on a squad player sends him to the pool; Undo too', (
+      tester,
+    ) async {
+      final c = await editorContainer(tester);
+      final squad = testSquad();
+      final pool = _reserves(squad, 2);
+      final id = await insertPack(
+        tester,
+        c,
+        testPack('Down', squads: {cze: squad}).copyWith(pools: {cze: pool}),
+      );
+      await pumpEditorRoute(tester, c, editorSquadLocation(id, cze));
+      // The first row of the list (goalkeepers first): built on screen.
+      final him = SquadEdits.sorted(squad).first;
+      await tester.tap(find.byKey(SquadScreen.demoteKey(him.id)));
+      await settle(tester);
+      expect(_pack(c, id).squads[cze], hasLength(squad.length - 1));
+      expect(_pack(c, id).pools[cze], hasLength(3));
+
+      await tester.tap(find.text(enL.editorUndo).last);
+      await settle(tester);
+      expect(_pack(c, id).squads[cze], squad);
+      expect(_pack(c, id).pools[cze], pool);
+      await tester.pump(const Duration(milliseconds: 450));
+    });
+
     testWidgets('with a full squad it asks who goes back to the pool', (
       tester,
     ) async {

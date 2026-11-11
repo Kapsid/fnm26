@@ -17194,4 +17194,12 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Kto przeważał';
+
+  @override
+  String get editorDemoteTooltip => 'Przenieś do puli';
+
+  @override
+  String editorDemoted(String name) {
+    return '$name przeniesiony do puli';
+  }
 }

@@ -17405,4 +17405,12 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Kdo měl navrch';
+
+  @override
+  String get editorDemoteTooltip => 'Přesunout do širšího kádru';
+
+  @override
+  String editorDemoted(String name) {
+    return 'Hráč $name přesunut do širšího kádru';
+  }
 }

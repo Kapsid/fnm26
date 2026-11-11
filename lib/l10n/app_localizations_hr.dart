@@ -17353,4 +17353,12 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Tko je bio bolji';
+
+  @override
+  String get editorDemoteTooltip => 'Premjesti u fond';
+
+  @override
+  String editorDemoted(String name) {
+    return '$name premješten u fond';
+  }
 }

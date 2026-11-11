@@ -17094,4 +17094,12 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Kumpi hallitsi';
+
+  @override
+  String get editorDemoteTooltip => 'Siirrä pooliin';
+
+  @override
+  String editorDemoted(String name) {
+    return '$name siirretty pooliin';
+  }
 }

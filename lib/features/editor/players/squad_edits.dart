@@ -321,6 +321,34 @@ abstract final class SquadEdits {
     );
   }
 
+  /// Moves squad player [playerId] of [nationId] into the pool (the
+  /// reverse of [promote]); [shown] is the pool on show when the pack has no
+  /// pool of its own yet. Null when he is not in the squad.
+  static WorldPack? demote(
+    WorldPack pack,
+    int nationId,
+    List<PackPlayer> shown,
+    int playerId,
+  ) {
+    final squad = pack.squads[nationId] ?? const <PackPlayer>[];
+    final him = squad.where((p) => p.id == playerId).firstOrNull;
+    if (him == null) return null;
+    final pool = pack.pools[nationId] ?? shown;
+    return pack.copyWith(
+      squads: {
+        ...pack.squads,
+        nationId: [
+          for (final p in squad)
+            if (p.id != playerId) p,
+        ],
+      },
+      pools: {
+        ...pack.pools,
+        nationId: [...pool, _withId(him, nextPlayerId(pack))],
+      },
+    );
+  }
+
   static PackPlayer _withId(PackPlayer p, int id) => PackPlayer(
     id: id,
     name: p.name,

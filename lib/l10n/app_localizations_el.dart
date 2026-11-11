@@ -17110,4 +17110,12 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Ποιος κυριαρχούσε';
+
+  @override
+  String get editorDemoteTooltip => 'Μετακίνηση στη δεξαμενή';
+
+  @override
+  String editorDemoted(String name) {
+    return 'Ο $name μετακινήθηκε στη δεξαμενή';
+  }
 }

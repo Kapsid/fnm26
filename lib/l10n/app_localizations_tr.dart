@@ -16930,4 +16930,12 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Kim üstündü';
+
+  @override
+  String get editorDemoteTooltip => 'Havuza gönder';
+
+  @override
+  String editorDemoted(String name) {
+    return '$name havuza gönderildi';
+  }
 }

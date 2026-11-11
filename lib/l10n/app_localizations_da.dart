@@ -17019,4 +17019,12 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Hvem der dominerede';
+
+  @override
+  String get editorDemoteTooltip => 'Flyt til puljen';
+
+  @override
+  String editorDemoted(String name) {
+    return '$name flyttet til puljen';
+  }
 }

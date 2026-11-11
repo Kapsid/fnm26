@@ -4250,5 +4250,7 @@
   "matchTimelineWoodwork": "{name} влучив у каркас воріт",
   "matchTimelineBigSave": "Важливий сейв від {name}",
   "matchChartXg": "xG протягом матчу",
-  "matchChartMomentum": "Хто домінував"
+  "matchChartMomentum": "Хто домінував",
+  "editorDemoteTooltip": "Перемістити до пулу",
+  "editorDemoted": "{name} переміщено до пулу"
 }

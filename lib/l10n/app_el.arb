@@ -4250,5 +4250,7 @@
   "matchTimelineWoodwork": "Ο {name} βρήκε δοκάρι",
   "matchTimelineBigSave": "Μεγάλη απόκρουση του {name}",
   "matchChartXg": "xG στη διάρκεια του αγώνα",
-  "matchChartMomentum": "Ποιος κυριαρχούσε"
+  "matchChartMomentum": "Ποιος κυριαρχούσε",
+  "editorDemoteTooltip": "Μετακίνηση στη δεξαμενή",
+  "editorDemoted": "Ο {name} μετακινήθηκε στη δεξαμενή"
 }

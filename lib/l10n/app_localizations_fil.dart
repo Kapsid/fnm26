@@ -17030,4 +17030,12 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Sino ang nakalamang';
+
+  @override
+  String get editorDemoteTooltip => 'Ilipat sa pool';
+
+  @override
+  String editorDemoted(String name) {
+    return 'Inilipat si $name sa pool';
+  }
 }

@@ -4250,5 +4250,7 @@
   "matchTimelineWoodwork": "{name} direğe takıldı",
   "matchTimelineBigSave": "{name}'den büyük kurtarış",
   "matchChartXg": "Maç boyunca xG",
-  "matchChartMomentum": "Kim üstündü"
+  "matchChartMomentum": "Kim üstündü",
+  "editorDemoteTooltip": "Havuza gönder",
+  "editorDemoted": "{name} havuza gönderildi"
 }

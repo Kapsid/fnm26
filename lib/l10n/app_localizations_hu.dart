@@ -16965,4 +16965,12 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Ki volt fölényben';
+
+  @override
+  String get editorDemoteTooltip => 'Áthelyezés a bő keretbe';
+
+  @override
+  String editorDemoted(String name) {
+    return '$name átkerült a bő keretbe';
+  }
 }

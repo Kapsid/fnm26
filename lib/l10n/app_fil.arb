@@ -4250,5 +4250,7 @@
   "matchTimelineWoodwork": "Tumama sa poste ang tira ni {name}",
   "matchTimelineBigSave": "Malaking save ni {name}",
   "matchChartXg": "xG sa buong laro",
-  "matchChartMomentum": "Sino ang nakalamang"
+  "matchChartMomentum": "Sino ang nakalamang",
+  "editorDemoteTooltip": "Ilipat sa pool",
+  "editorDemoted": "Inilipat si {name} sa pool"
 }

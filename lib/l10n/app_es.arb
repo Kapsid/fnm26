@@ -4250,5 +4250,7 @@
   "matchTimelineWoodwork": "{name} estrelló el balón en la madera",
   "matchTimelineBigSave": "Paradón de {name}",
   "matchChartXg": "xG a lo largo del partido",
-  "matchChartMomentum": "Quién dominaba"
+  "matchChartMomentum": "Quién dominaba",
+  "editorDemoteTooltip": "Pasar a disponibles",
+  "editorDemoted": "{name} pasa a disponibles"
 }

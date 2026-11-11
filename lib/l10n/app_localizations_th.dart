@@ -16716,4 +16716,12 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'ใครเป็นฝ่ายเหนือกว่า';
+
+  @override
+  String get editorDemoteTooltip => 'ย้ายไปตัวเลือก';
+
+  @override
+  String editorDemoted(String name) {
+    return 'ย้าย $name ไปตัวเลือกแล้ว';
+  }
 }

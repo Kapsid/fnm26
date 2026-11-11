@@ -17004,4 +17004,12 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Vem som styrde';
+
+  @override
+  String get editorDemoteTooltip => 'Flytta till poolen';
+
+  @override
+  String editorDemoted(String name) {
+    return '$name flyttad till poolen';
+  }
 }

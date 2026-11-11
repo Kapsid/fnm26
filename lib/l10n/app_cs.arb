@@ -4250,5 +4250,7 @@
   "matchTimelineWoodwork": "{name} trefil tyč",
   "matchTimelineBigSave": "Velký zákrok: {name}",
   "matchChartXg": "xG v průběhu zápasu",
-  "matchChartMomentum": "Kdo měl navrch"
+  "matchChartMomentum": "Kdo měl navrch",
+  "editorDemoteTooltip": "Přesunout do širšího kádru",
+  "editorDemoted": "Hráč {name} přesunut do širšího kádru"
 }

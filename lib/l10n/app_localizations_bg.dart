@@ -17104,4 +17104,12 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Кой надделяваше';
+
+  @override
+  String get editorDemoteTooltip => 'Премести в пула';
+
+  @override
+  String editorDemoted(String name) {
+    return '$name е преместен в пула';
+  }
 }

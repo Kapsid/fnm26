@@ -4250,5 +4250,7 @@
   "matchTimelineWoodwork": "{name} ยิงชนเสาหรือคาน",
   "matchTimelineBigSave": "{name} เซฟสำคัญ",
   "matchChartXg": "xG ตลอดเกม",
-  "matchChartMomentum": "ใครเป็นฝ่ายเหนือกว่า"
+  "matchChartMomentum": "ใครเป็นฝ่ายเหนือกว่า",
+  "editorDemoteTooltip": "ย้ายไปตัวเลือก",
+  "editorDemoted": "ย้าย {name} ไปตัวเลือกแล้ว"
 }

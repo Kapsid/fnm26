@@ -17094,4 +17094,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Chi ha dominato';
+
+  @override
+  String get editorDemoteTooltip => 'Sposta nel bacino';
+
+  @override
+  String editorDemoted(String name) {
+    return '$name spostato nel bacino';
+  }
 }

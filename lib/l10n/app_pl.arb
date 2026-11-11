@@ -4250,5 +4250,7 @@
   "matchTimelineWoodwork": "{name} trafił w obramowanie",
   "matchTimelineBigSave": "Świetna obrona: {name}",
   "matchChartXg": "xG w trakcie meczu",
-  "matchChartMomentum": "Kto przeważał"
+  "matchChartMomentum": "Kto przeważał",
+  "editorDemoteTooltip": "Przenieś do puli",
+  "editorDemoted": "{name} przeniesiony do puli"
 }

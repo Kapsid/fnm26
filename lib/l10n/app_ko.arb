@@ -4250,5 +4250,7 @@
   "matchTimelineWoodwork": "{name}의 슈팅이 골대를 맞혔습니다",
   "matchTimelineBigSave": "{name}의 결정적 선방",
   "matchChartXg": "경기 흐름별 xG",
-  "matchChartMomentum": "경기 주도권"
+  "matchChartMomentum": "경기 주도권",
+  "editorDemoteTooltip": "선수 풀로 옮기기",
+  "editorDemoted": "{name} 선수를 선수 풀로 옮겼습니다"
 }

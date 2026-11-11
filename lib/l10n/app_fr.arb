@@ -4250,5 +4250,7 @@
   "matchTimelineWoodwork": "{name} a trouvé les montants",
   "matchTimelineBigSave": "Gros arrêt de {name}",
   "matchChartXg": "xG au fil du match",
-  "matchChartMomentum": "Qui dominait"
+  "matchChartMomentum": "Qui dominait",
+  "editorDemoteTooltip": "Passer dans le vivier",
+  "editorDemoted": "{name} passe dans le vivier"
 }

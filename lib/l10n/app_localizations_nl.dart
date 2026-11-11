@@ -17101,4 +17101,12 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Wie de overhand had';
+
+  @override
+  String get editorDemoteTooltip => 'Naar de pool';
+
+  @override
+  String editorDemoted(String name) {
+    return '$name naar de pool verplaatst';
+  }
 }

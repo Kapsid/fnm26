@@ -4250,5 +4250,7 @@
   "matchTimelineWoodwork": "{name}のシュートはゴール枠に当たった",
   "matchTimelineBigSave": "{name}のビッグセーブ",
   "matchChartXg": "試合を通したxG",
-  "matchChartMomentum": "試合の流れ"
+  "matchChartMomentum": "試合の流れ",
+  "editorDemoteTooltip": "候補に戻す",
+  "editorDemoted": "{name}を候補に戻しました"
 }

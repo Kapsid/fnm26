@@ -16867,4 +16867,12 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Đội nào lấn lướt';
+
+  @override
+  String get editorDemoteTooltip => 'Chuyển về nguồn';
+
+  @override
+  String editorDemoted(String name) {
+    return '$name đã chuyển về nguồn';
+  }
 }

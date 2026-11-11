@@ -4250,5 +4250,7 @@
   "matchTimelineWoodwork": "{name} traf das Aluminium",
   "matchTimelineBigSave": "Große Parade von {name}",
   "matchChartXg": "xG im Spielverlauf",
-  "matchChartMomentum": "Wer am Drücker war"
+  "matchChartMomentum": "Wer am Drücker war",
+  "editorDemoteTooltip": "In den Pool verschieben",
+  "editorDemoted": "{name} in den Pool verschoben"
 }

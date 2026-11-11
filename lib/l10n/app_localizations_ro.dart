@@ -17433,4 +17433,12 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Cine a dominat';
+
+  @override
+  String get editorDemoteTooltip => 'Mută în rezervor';
+
+  @override
+  String editorDemoted(String name) {
+    return '$name a fost mutat în rezervor';
+  }
 }

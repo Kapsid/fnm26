@@ -4250,5 +4250,7 @@
   "matchTimelineWoodwork": "{name} membentur tiang gawang",
   "matchTimelineBigSave": "Penyelamatan penting oleh {name}",
   "matchChartXg": "xG sepanjang laga",
-  "matchChartMomentum": "Siapa yang menguasai"
+  "matchChartMomentum": "Siapa yang menguasai",
+  "editorDemoteTooltip": "Pindahkan ke kolam",
+  "editorDemoted": "{name} dipindahkan ke kolam"
 }

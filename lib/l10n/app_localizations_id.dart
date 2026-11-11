@@ -16930,4 +16930,12 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get matchChartMomentum => 'Siapa yang menguasai';
+
+  @override
+  String get editorDemoteTooltip => 'Pindahkan ke kolam';
+
+  @override
+  String editorDemoted(String name) {
+    return '$name dipindahkan ke kolam';
+  }
 }

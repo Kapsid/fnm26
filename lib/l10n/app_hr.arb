@@ -4250,5 +4250,7 @@
   "matchTimelineWoodwork": "{name} je pogodio okvir gola",
   "matchTimelineBigSave": "Velika obrana: {name}",
   "matchChartXg": "xG tijekom utakmice",
-  "matchChartMomentum": "Tko je bio bolji"
+  "matchChartMomentum": "Tko je bio bolji",
+  "editorDemoteTooltip": "Premjesti u fond",
+  "editorDemoted": "{name} premješten u fond"
 }

@@ -88,6 +88,7 @@ class _SquadTabletLayout extends StatelessWidget {
                       onTap: (p) =>
                           state._open(p.id, tablet: true, pool: false),
                       onRemove: state._remove,
+                      onDemote: state._demote,
                     ),
             ),
           ],

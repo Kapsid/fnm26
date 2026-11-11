@@ -16406,4 +16406,12 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get matchChartMomentum => '試合の流れ';
+
+  @override
+  String get editorDemoteTooltip => '候補に戻す';
+
+  @override
+  String editorDemoted(String name) {
+    return '$nameを候補に戻しました';
+  }
 }
