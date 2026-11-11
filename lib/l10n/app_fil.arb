@@ -4289,5 +4289,7 @@
   "matchStadiumBuilt": "Itinayo ng iyong pederasyon",
   "matchStadiumEnlarged": "Pinalaki ng iyong pederasyon",
   "matchStadiumWorks": "May ginagawang trabaho sa istadyum na ito",
-  "matchStadiumConditions": "Kondisyon"
+  "matchStadiumConditions": "Kondisyon",
+  "editorWebTitle": "Mag-edit sa computer: {address}",
+  "editorWebAbout": "I-export ang iyong database, buksan ito sa browser, i-download ito pabalik at i-import dito."
 }

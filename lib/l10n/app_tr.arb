@@ -4289,5 +4289,7 @@
   "matchStadiumBuilt": "Federasyonun inşa etti",
   "matchStadiumEnlarged": "Federasyonun büyüttü",
   "matchStadiumWorks": "Bu stadyumda çalışmalar sürüyor",
-  "matchStadiumConditions": "Koşullar"
+  "matchStadiumConditions": "Koşullar",
+  "editorWebTitle": "Bilgisayarda düzenle: {address}",
+  "editorWebAbout": "Veritabanını dışa aktar, tarayıcıda aç, geri indir ve buraya içe aktar."
 }

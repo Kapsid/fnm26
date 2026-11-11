@@ -17147,4 +17147,13 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get matchStadiumConditions => 'Förhållanden';
+
+  @override
+  String editorWebTitle(String address) {
+    return 'Redigera på en dator: $address';
+  }
+
+  @override
+  String get editorWebAbout =>
+      'Exportera din databas, öppna den i webbläsaren, ladda ner den igen och importera den här.';
 }

@@ -17337,4 +17337,13 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get matchStadiumConditions => 'Warunki';
+
+  @override
+  String editorWebTitle(String address) {
+    return 'Edytuj na komputerze: $address';
+  }
+
+  @override
+  String get editorWebAbout =>
+      'Wyeksportuj bazę danych, otwórz ją w przeglądarce, pobierz ją z powrotem i zaimportuj tutaj.';
 }

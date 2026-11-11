@@ -17548,4 +17548,13 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get matchStadiumConditions => 'Podmínky';
+
+  @override
+  String editorWebTitle(String address) {
+    return 'Upravujte na počítači: $address';
+  }
+
+  @override
+  String get editorWebAbout =>
+      'Exportujte databázi, otevřete ji v prohlížeči, stáhněte ji zpět a importujte ji sem.';
 }

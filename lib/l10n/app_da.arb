@@ -4289,5 +4289,7 @@
   "matchStadiumBuilt": "Bygget af dit forbund",
   "matchStadiumEnlarged": "Udvidet af dit forbund",
   "matchStadiumWorks": "Der arbejdes på stadionet",
-  "matchStadiumConditions": "Forhold"
+  "matchStadiumConditions": "Forhold",
+  "editorWebTitle": "Rediger på en computer: {address}",
+  "editorWebAbout": "Eksportér din database, åbn den i browseren, download den igen og importér den her."
 }

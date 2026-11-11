@@ -17070,4 +17070,13 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get matchStadiumConditions => 'परिस्थितियाँ';
+
+  @override
+  String editorWebTitle(String address) {
+    return 'कंप्यूटर पर संपादित करें: $address';
+  }
+
+  @override
+  String get editorWebAbout =>
+      'अपना डेटाबेस निर्यात करें, उसे ब्राउज़र में खोलें, वापस डाउनलोड करें और यहाँ आयात करें।';
 }

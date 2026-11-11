@@ -4289,5 +4289,7 @@
   "matchStadiumBuilt": "Liittosi rakentama",
   "matchStadiumEnlarged": "Liittosi laajentama",
   "matchStadiumWorks": "Stadionilla on työt käynnissä",
-  "matchStadiumConditions": "Olosuhteet"
+  "matchStadiumConditions": "Olosuhteet",
+  "editorWebTitle": "Muokkaa tietokoneella: {address}",
+  "editorWebAbout": "Vie tietokantasi, avaa se selaimessa, lataa se takaisin ja tuo se tänne."
 }

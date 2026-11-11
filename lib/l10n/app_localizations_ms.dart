@@ -17123,4 +17123,13 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get matchStadiumConditions => 'Keadaan';
+
+  @override
+  String editorWebTitle(String address) {
+    return 'Sunting di komputer: $address';
+  }
+
+  @override
+  String get editorWebAbout =>
+      'Eksport pangkalan data anda, buka dalam pelayar, muat turun semula dan import di sini.';
 }

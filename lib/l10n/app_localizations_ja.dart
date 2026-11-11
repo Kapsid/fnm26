@@ -16546,4 +16546,12 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get matchStadiumConditions => 'コンディション';
+
+  @override
+  String editorWebTitle(String address) {
+    return 'パソコンで編集: $address';
+  }
+
+  @override
+  String get editorWebAbout => 'データベースをエクスポートしてブラウザで開き、ダウンロードし直してここでインポートします。';
 }

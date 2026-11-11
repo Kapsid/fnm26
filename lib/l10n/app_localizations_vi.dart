@@ -17010,4 +17010,13 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get matchStadiumConditions => 'Điều kiện';
+
+  @override
+  String editorWebTitle(String address) {
+    return 'Chỉnh sửa trên máy tính: $address';
+  }
+
+  @override
+  String get editorWebAbout =>
+      'Xuất cơ sở dữ liệu, mở nó trong trình duyệt, tải về lại rồi nhập vào đây.';
 }

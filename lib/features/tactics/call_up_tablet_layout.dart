@@ -41,10 +41,29 @@ class _CallUpTabletLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final line = state._tabletLine;
+    // Within a chosen line, the position it is narrowed to (if any).
+    final position = line == null ? null : state._positionFor(data.pool, line);
     final rows = [
       for (final p in data.pool)
-        if (state._tabletLine == null || p.category == state._tabletLine) p,
+        if ((line == null || p.category == line) &&
+            (position == null || p.position == position))
+          p,
     ]..sort((a, b) => b.overall.compareTo(a.overall));
+    final positionChips = line == null
+        ? null
+        : state._positionChips(
+            l,
+            line,
+            data.pool,
+            selected,
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.sm,
+              0,
+              AppSpacing.sm,
+              AppSpacing.sm,
+            ),
+          );
     final status = state._squadStatus(selected, data, coverage);
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.md),
@@ -67,6 +86,7 @@ class _CallUpTabletLayout extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       _lineChips(context, l),
+                      ?positionChips,
                       Expanded(
                         child: DataGrid<Player>(
                           rows: rows,

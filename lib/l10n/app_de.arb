@@ -4289,5 +4289,7 @@
   "matchStadiumBuilt": "Von Ihrem Verband gebaut",
   "matchStadiumEnlarged": "Von Ihrem Verband ausgebaut",
   "matchStadiumWorks": "An diesem Stadion wird gebaut",
-  "matchStadiumConditions": "Bedingungen"
+  "matchStadiumConditions": "Bedingungen",
+  "editorWebTitle": "Am Computer bearbeiten: {address}",
+  "editorWebAbout": "Exportiere deine Datenbank, öffne sie im Browser, lade sie wieder herunter und importiere sie hier."
 }

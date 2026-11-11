@@ -4289,5 +4289,7 @@
   "matchStadiumBuilt": "Do liên đoàn của bạn xây",
   "matchStadiumEnlarged": "Do liên đoàn của bạn mở rộng",
   "matchStadiumWorks": "Sân đang được thi công",
-  "matchStadiumConditions": "Điều kiện"
+  "matchStadiumConditions": "Điều kiện",
+  "editorWebTitle": "Chỉnh sửa trên máy tính: {address}",
+  "editorWebAbout": "Xuất cơ sở dữ liệu, mở nó trong trình duyệt, tải về lại rồi nhập vào đây."
 }

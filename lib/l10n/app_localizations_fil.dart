@@ -17174,4 +17174,13 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get matchStadiumConditions => 'Kondisyon';
+
+  @override
+  String editorWebTitle(String address) {
+    return 'Mag-edit sa computer: $address';
+  }
+
+  @override
+  String get editorWebAbout =>
+      'I-export ang iyong database, buksan ito sa browser, i-download ito pabalik at i-import dito.';
 }

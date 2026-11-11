@@ -4289,5 +4289,7 @@
   "matchStadiumBuilt": "Построен от твоята федерация",
   "matchStadiumEnlarged": "Разширен от твоята федерация",
   "matchStadiumWorks": "На стадиона текат ремонтни работи",
-  "matchStadiumConditions": "Условия"
+  "matchStadiumConditions": "Условия",
+  "editorWebTitle": "Редактирайте на компютър: {address}",
+  "editorWebAbout": "Експортирайте базата си данни, отворете я в браузъра, изтеглете я обратно и я импортирайте тук."
 }

@@ -4289,5 +4289,7 @@
   "matchStadiumBuilt": "Construit par votre fédération",
   "matchStadiumEnlarged": "Agrandi par votre fédération",
   "matchStadiumWorks": "Travaux en cours dans ce stade",
-  "matchStadiumConditions": "Conditions"
+  "matchStadiumConditions": "Conditions",
+  "editorWebTitle": "Modifier sur un ordinateur : {address}",
+  "editorWebAbout": "Exportez votre base de données, ouvrez-la dans le navigateur, téléchargez-la à nouveau et importez-la ici."
 }

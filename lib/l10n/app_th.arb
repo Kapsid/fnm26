@@ -4289,5 +4289,7 @@
   "matchStadiumBuilt": "สมาคมของคุณสร้าง",
   "matchStadiumEnlarged": "สมาคมของคุณขยาย",
   "matchStadiumWorks": "สนามนี้กำลังปรับปรุง",
-  "matchStadiumConditions": "สภาพ"
+  "matchStadiumConditions": "สภาพ",
+  "editorWebTitle": "แก้ไขบนคอมพิวเตอร์: {address}",
+  "editorWebAbout": "ส่งออกฐานข้อมูลของคุณ เปิดในเบราว์เซอร์ ดาวน์โหลดกลับมา แล้วนำเข้าที่นี่"
 }

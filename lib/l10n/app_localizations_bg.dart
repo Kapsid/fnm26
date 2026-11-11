@@ -17247,4 +17247,13 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get matchStadiumConditions => 'Условия';
+
+  @override
+  String editorWebTitle(String address) {
+    return 'Редактирайте на компютър: $address';
+  }
+
+  @override
+  String get editorWebAbout =>
+      'Експортирайте базата си данни, отворете я в браузъра, изтеглете я обратно и я импортирайте тук.';
 }

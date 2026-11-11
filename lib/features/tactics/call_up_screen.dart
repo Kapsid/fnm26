@@ -64,6 +64,16 @@ class CallUpScreen extends ConsumerStatefulWidget {
 
   static const Key tabletLayoutKey = Key('callUps.tabletLayout');
 
+  /// The row narrowing [line] to one position.
+  static Key positionFilterKey(PositionCategory line) =>
+      ValueKey('callUps.positions.${line.name}');
+
+  /// One chip in that row; [position] null is "everyone in the line".
+  static Key positionChipKey(
+    PositionCategory line,
+    PlayerPosition? position,
+  ) => ValueKey('callUps.position.${line.name}.${position?.name ?? 'all'}');
+
   @override
   ConsumerState<CallUpScreen> createState() => _CallUpScreenState();
 }
@@ -84,6 +94,65 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
 
   void _setTabletLine(PositionCategory? line) =>
       setState(() => _tabletLine = line);
+
+  /// The exact position each line is narrowed to (absent: the whole line).
+  ///
+  /// A view over the pool and nothing more: the squad, its counts and its
+  /// rules never read it, so a man named and then filtered out stays named.
+  /// It lives on this State, so it is gone the moment the screen is left.
+  final Map<PositionCategory, PlayerPosition> _positionFilter = {};
+
+  void _setPosition(PositionCategory line, PlayerPosition? position) =>
+      setState(() {
+        if (position == null) {
+          _positionFilter.remove(line);
+        } else {
+          _positionFilter[line] = position;
+        }
+      });
+
+  /// The positions [line] has in [pool], back to front. Only these are worth
+  /// a chip: a filter that can only ever show nobody is a dead end.
+  static List<PlayerPosition> _positionsIn(
+    List<Player> pool,
+    PositionCategory line,
+  ) => [
+    for (final p in PlayerPosition.values)
+      if (p.category == line && pool.any((x) => x.position == p)) p,
+  ];
+
+  /// The position [line] is narrowed to, if [pool] still has anyone there.
+  PlayerPosition? _positionFor(List<Player> pool, PositionCategory line) {
+    final p = _positionFilter[line];
+    return p != null && pool.any((x) => x.position == p) ? p : null;
+  }
+
+  /// The chip row narrowing [line] to one position, or null where the line
+  /// has a single position (the keepers, always) and there is nothing to pick.
+  Widget? _positionChips(
+    AppLocalizations l,
+    PositionCategory line,
+    List<Player> pool,
+    Set<int> selected, {
+    required EdgeInsets padding,
+  }) {
+    final positions = _positionsIn(pool, line);
+    if (positions.length < 2) return null;
+    return _PositionFilterChips(
+      line: line,
+      allLabel: l.squadFilterAll,
+      positions: positions,
+      current: _positionFor(pool, line),
+      named: {
+        for (final p in positions)
+          p: pool
+              .where((x) => x.position == p && selected.contains(x.id))
+              .length,
+      },
+      padding: padding,
+      onSelected: (p) => _setPosition(line, p),
+    );
+  }
 
   /// How many are named, how many of them can play in the period, and
   /// whether that is a squad that may be confirmed.
@@ -699,6 +768,23 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                                         context,
                                       ),
                                 ),
+                                // Narrows the line to one position. Edge to
+                                // edge, so the chips scroll off the side
+                                // rather than stopping at the margin.
+                                if (_positionChips(
+                                      l,
+                                      category,
+                                      data.pool,
+                                      selected,
+                                      padding: const EdgeInsets.fromLTRB(
+                                        AppSpacing.marginMobile,
+                                        AppSpacing.sm,
+                                        AppSpacing.marginMobile,
+                                        0,
+                                      ),
+                                    )
+                                    case final chips?)
+                                  SliverToBoxAdapter(child: chips),
                                 SliverPadding(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: AppSpacing.marginMobile,
@@ -770,8 +856,16 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
     int saveSeed = 0,
   }) {
     final l = AppLocalizations.of(context);
-    final players = pool.where((p) => p.position.category == category).toList()
-      ..sort((a, b) => b.overall.compareTo(a.overall));
+    final position = _positionFor(pool, category);
+    final players =
+        pool
+            .where(
+              (p) =>
+                  p.position.category == category &&
+                  (position == null || p.position == position),
+            )
+            .toList()
+          ..sort((a, b) => b.overall.compareTo(a.overall));
     if (players.isEmpty) {
       return [
         const SizedBox(height: AppSpacing.lg),
@@ -906,6 +1000,59 @@ class _LineTab extends StatelessWidget {
       ],
     ],
   );
+}
+
+/// One line narrowed to a single position: "Everyone", then each position the
+/// line has, with how many of it are named. Single-select, one row, scrolling
+/// sideways when a long word or a large text size will not fit across.
+class _PositionFilterChips extends StatelessWidget {
+  const _PositionFilterChips({
+    required this.line,
+    required this.allLabel,
+    required this.positions,
+    required this.current,
+    required this.named,
+    required this.padding,
+    required this.onSelected,
+  });
+
+  final PositionCategory line;
+  final String allLabel;
+  final List<PlayerPosition> positions;
+  final PlayerPosition? current;
+  final Map<PlayerPosition, int> named;
+  final EdgeInsets padding;
+  final ValueChanged<PlayerPosition?> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget chip(String label, PlayerPosition? p) => Padding(
+      padding: const EdgeInsets.only(right: AppSpacing.xs),
+      child: ChoiceChip(
+        key: CallUpScreen.positionChipKey(line, p),
+        label: Text(label, maxLines: 1, softWrap: false),
+        visualDensity: VisualDensity.compact,
+        selected: current == p,
+        // A second tap on the chip already chosen is not a way to lose it.
+        onSelected: (_) => onSelected(p),
+      ),
+    );
+    return SingleChildScrollView(
+      key: CallUpScreen.positionFilterKey(line),
+      scrollDirection: Axis.horizontal,
+      padding: padding,
+      child: Row(
+        children: [
+          chip(allLabel, null),
+          for (final p in positions)
+            chip(
+              (named[p] ?? 0) > 0 ? '${p.label} ${named[p]}' : p.label,
+              p,
+            ),
+        ],
+      ),
+    );
+  }
 }
 
 class _CoverageBanner extends StatelessWidget {

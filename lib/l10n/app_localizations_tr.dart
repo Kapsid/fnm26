@@ -17073,4 +17073,13 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get matchStadiumConditions => 'Koşullar';
+
+  @override
+  String editorWebTitle(String address) {
+    return 'Bilgisayarda düzenle: $address';
+  }
+
+  @override
+  String get editorWebAbout =>
+      'Veritabanını dışa aktar, tarayıcıda aç, geri indir ve buraya içe aktar.';
 }
