@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:fnm/domain/services/match/stadium/backdrop.dart';
 import 'package:fnm/domain/services/match/stadium/city_geography.dart';
 import 'package:fnm/domain/services/match/stadium/landmarks.dart';
+import 'package:fnm/domain/services/match/stadium/shore_look.dart';
 import 'package:fnm/features/match/pitch/backdrop_tone.dart';
 import 'package:fnm/features/match/pitch/city_features.dart';
 import 'package:fnm/features/match/pitch/city_skyline.dart';
@@ -34,6 +35,7 @@ class BackdropPainter {
     required this.seed,
     this.season = BackdropSeason.green,
     this.features = const {},
+    this.shore = ShoreLook.none,
   }) : _t = BackdropTone(look: look, season: season, seed: seed);
 
   final Horizon horizon;
@@ -45,6 +47,10 @@ class BackdropPainter {
   /// What is round the city: its harbour, river, industry, old town or
   /// park, drawn among the buildings ([CityFeatures]).
   final Set<CityFeature> features;
+
+  /// What the climate lays over the land and the water: the arctic's ice,
+  /// a tropical beach, boats ([ShoreLook]).
+  final ShoreLook shore;
   final String seed;
   final BackdropTone _t;
 
@@ -89,10 +95,16 @@ class BackdropPainter {
       style: city,
       tone: _t,
       lowered: landmark != LandmarkKind.none,
+      arctic: shore.arctic,
     )..paintBack(canvas, size, roofLine, room);
     if (landmark != LandmarkKind.none) _landmark(canvas, size, roofLine, room);
-    final near = CityFeatures(features: features, style: city, tone: _t)
-      ..paintBehind(canvas, size, roofLine, room);
+    final near = CityFeatures(
+      features: features,
+      style: city,
+      tone: _t,
+      shore: shore,
+      clearMiddle: landmark != LandmarkKind.none,
+    )..paintBehind(canvas, size, roofLine, room);
     skyline.paintFront(canvas, size, roofLine, room);
     near.paintFront(canvas, size, roofLine, room);
     _cityGlow(canvas, size, roofLine, room);
@@ -460,6 +472,7 @@ class BackdropPainter {
 
   void _sea(Canvas canvas, Size size, double horizon, double room) {
     final sea = horizon - room * 0.42;
+    if (shore.arctic) _iceSheet(canvas, size, sea - room * 0.1, sea);
     // A far coast, faint, along the horizon.
     final coast = _ridgeLine(
       size,
@@ -489,6 +502,7 @@ class BackdropPainter {
         ]),
     );
     _waterLight(canvas, size, sea, horizon, room);
+    _onTheWater(canvas, size, sea, horizon, room, from: 0.26);
     // A headland on the left with its lighthouse.
     final head = Path()
       ..moveTo(0, size.height)
@@ -535,6 +549,7 @@ class BackdropPainter {
           ..maskFilter = MaskFilter.blur(BlurStyle.normal, lh * 0.4),
       );
     }
+    if (shore.beach) _beach(canvas, size, horizon, room);
   }
 
   /// The sun's or the moon's path on open water from [top] down to
@@ -922,6 +937,8 @@ class BackdropPainter {
 
   void _fjords(Canvas canvas, Size size, double horizon, double room) {
     final water = horizon - room * 0.3;
+    // Behind them all, the ice sheet's flat white edge.
+    if (shore.arctic) _iceSheet(canvas, size, horizon - room * 0.6, water);
     // The far walls, snow on their tops.
     final far = _ridgeLine(
       size,
@@ -949,7 +966,7 @@ class BackdropPainter {
       far,
       horizon,
       room,
-      snowline: _snowy ? 0.5 : 0.72,
+      snowline: _snowy ? 0.5 : (shore.arctic ? 0.62 : 0.72),
       alpha: 0.85,
     );
     // The water between the walls.
@@ -963,6 +980,7 @@ class BackdropPainter {
         ),
     );
     _waterLight(canvas, size, water, horizon, room);
+    _onTheWater(canvas, size, water, horizon, room, from: 0.3);
     // The near walls: steep on either side, dropping into the water.
     for (final left in [true, false]) {
       final x0 = left ? 0.0 : size.width;
@@ -1000,7 +1018,11 @@ class BackdropPainter {
           Paint()..color = _t.snow(_hazeMid).withValues(alpha: 0.8),
         )
         ..restore();
-      _forestBand(canvas, wall, x0, dir, reach, horizon, room);
+      if (shore.arctic) {
+        if (!_snowy) _snowPatches(canvas, wall, x0, dir, reach, horizon, room);
+      } else {
+        _forestBand(canvas, wall, x0, dir, reach, horizon, room);
+      }
     }
   }
 
@@ -1036,6 +1058,301 @@ class BackdropPainter {
       );
     }
     canvas.restore();
+  }
+
+  // --- The arctic and the tropics ----------------------------------------
+
+  /// The edge of the ice sheet far inland: a flat white plateau along the
+  /// horizon at [top], down to [foot], showing between the nearer land.
+  void _iceSheet(Canvas canvas, Size size, double top, double foot) {
+    final r = _rng('ice-sheet');
+    final line = [
+      for (var i = 0; i <= 12; i++)
+        Offset(size.width * i / 12, top + (r.nextDouble() - 0.5) * 1.6),
+    ];
+    canvas
+      ..save()
+      ..clipRect(Rect.fromLTRB(0, 0, size.width, foot))
+      ..drawPath(
+        _smooth(line, size),
+        Paint()
+          ..shader = ui.Gradient.linear(Offset(0, top), Offset(0, foot), [
+            _hazed(Color.lerp(look.snow, Colors.white, 0.25 * _day)!, 0.3),
+            _hazed(look.snow, _hazeFar),
+          ]),
+      )
+      // Its rim catching the light, the one flat line on the horizon.
+      ..drawPath(
+        Path()..addPolygon(line, false),
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 0.8
+          ..color = Colors.white.withValues(alpha: 0.15 + 0.4 * _t.lit),
+      )
+      ..restore();
+  }
+
+  /// Patches of old snow lying high on a fjord's wall all summer.
+  void _snowPatches(
+    Canvas canvas,
+    Path wall,
+    double x0,
+    double dir,
+    double reach,
+    double horizon,
+    double room,
+  ) {
+    final r = _rng('snow-patches-$dir');
+    final p = Paint()..color = _t.snow(_hazeMid).withValues(alpha: 0.75);
+    canvas
+      ..save()
+      ..clipPath(wall);
+    for (var i = 0; i < 14; i++) {
+      final x = x0 + dir * reach * (0.05 + r.nextDouble() * 0.7);
+      final y = horizon - room * (0.4 + r.nextDouble() * 0.4);
+      final w = room * (0.03 + r.nextDouble() * 0.07);
+      canvas.drawOval(
+        Rect.fromCenter(center: Offset(x, y), width: w, height: w * 0.3),
+        p,
+      );
+    }
+    canvas.restore();
+  }
+
+  /// What floats on the open water between [top] and the town at [horizon]:
+  /// icebergs in the arctic, dhows or sailboats off a warm coast. Boats keep
+  /// off the middle a landmark takes, and right of [from] (a fraction of the
+  /// width), past the headland.
+  void _onTheWater(
+    Canvas canvas,
+    Size size,
+    double top,
+    double horizon,
+    double room, {
+    required double from,
+  }) {
+    if (shore.arctic) _icebergs(canvas, size, top, horizon, room);
+    if (shore.sails == Sails.none) return;
+    final r = _rng('sails');
+    final n = 3 + r.nextInt(2);
+    for (var i = 0; i < n; i++) {
+      // Alternate the two sides of the middle.
+      final f = i.isEven
+          ? from + r.nextDouble() * (0.4 - from)
+          : 0.6 + r.nextDouble() * 0.32;
+      // Higher on the water is further off: smaller and hazier.
+      final near = r.nextDouble();
+      final y = top + room * 0.08 + near * (horizon - top - room * 0.26);
+      final s = room * (0.06 + near * 0.06);
+      final haze = _hazeMid * (1.4 - near);
+      final at = Offset(size.width * f, y);
+      if (shore.sails == Sails.dhows) {
+        _dhow(canvas, at, s, haze, r.nextBool());
+      } else {
+        _sailboat(canvas, at, s, haze, r.nextBool());
+      }
+    }
+  }
+
+  /// A few icebergs adrift: white blocks and peaks, shaded on one side,
+  /// their pale turquoise foot under the water.
+  void _icebergs(
+    Canvas canvas,
+    Size size,
+    double top,
+    double horizon,
+    double room,
+  ) {
+    final r = _rng('icebergs');
+    final n = 4 + r.nextInt(3);
+    final ice = Paint();
+    final foot = Paint()
+      ..color = Color.lerp(
+        look.water,
+        const Color(0xFF8FD0D0),
+        0.5 * _t.lit,
+      )!.withValues(alpha: 0.5);
+    final shade = Paint()
+      ..color = const Color(0xFF4E7A96).withValues(alpha: 0.28 + 0.12 * _night);
+    final line = Paint()
+      ..color = Colors.white.withValues(alpha: 0.35 * _t.lit)
+      ..strokeWidth = 0.6;
+    for (var i = 0; i < n; i++) {
+      final near = r.nextDouble();
+      final y = top + room * 0.05 + near * (horizon - top - room * 0.16);
+      final x = size.width * (0.12 + r.nextDouble() * 0.76);
+      final w = room * (0.07 + near * 0.1) * (0.7 + r.nextDouble() * 0.6);
+      final h = w * (0.35 + r.nextDouble() * 0.4);
+      final haze = _hazeMid * (1.3 - near);
+      final peak = 0.2 + r.nextDouble() * 0.6;
+      final berg = Path()
+        ..moveTo(x - w / 2, y)
+        ..lineTo(x - w * 0.42, y - h * (0.4 + r.nextDouble() * 0.3))
+        ..lineTo(x - w * 0.5 + w * peak * 0.8, y - h)
+        ..lineTo(x - w * 0.5 + w * peak, y - h * (0.85 + r.nextDouble() * 0.1))
+        ..lineTo(x + w * 0.4, y - h * (0.3 + r.nextDouble() * 0.3))
+        ..lineTo(x + w / 2, y)
+        ..close();
+      ice.color = _hazed(
+        Color.lerp(look.snow, Colors.white, 0.3 * _day)!,
+        haze * 0.6,
+      );
+      canvas
+        // The foot under the water.
+        ..drawOval(
+          Rect.fromLTRB(x - w * 0.55, y - h * 0.08, x + w * 0.55, y + h * 0.3),
+          foot,
+        )
+        ..drawPath(berg, ice)
+        ..save()
+        ..clipPath(berg)
+        // The face away from the light.
+        ..drawRect(
+          Rect.fromLTRB(x - w * 0.5 + w * peak, y - h, x + w, y),
+          shade,
+        )
+        ..restore()
+        ..drawLine(Offset(x - w * 0.55, y), Offset(x + w * 0.55, y), line);
+    }
+  }
+
+  /// A dhow with its waterline at [at], [s] high: a low wooden hull with a
+  /// raised stern and one great lateen sail slanting off a tilted yard.
+  void _dhow(Canvas canvas, Offset at, double s, double haze, bool east) {
+    final d = east ? 1.0 : -1.0;
+    final hull = _t.tone(const Color(0xFF5A4028), haze, mute: 0.3);
+    final cloth = _t.tone(const Color(0xFFEDE4CF), haze, mute: 0.2);
+    final x = at.dx;
+    final y = at.dy;
+    canvas
+      ..drawPath(
+        Path()
+          ..moveTo(x - d * s * 0.8, y - s * 0.24)
+          ..quadraticBezierTo(
+            x - d * s * 0.1,
+            y + s * 0.12,
+            x + d * s * 0.9,
+            y - s * 0.12,
+          )
+          ..lineTo(x + d * s * 0.7, y - s * 0.02)
+          ..lineTo(x - d * s * 0.6, y - s * 0.02)
+          ..close(),
+        Paint()..color = hull,
+      )
+      // The sail, hung under the long tilted yard and sheeted to the deck.
+      ..drawPath(
+        Path()
+          ..moveTo(x - d * s * 0.75, y - s * 0.3)
+          ..lineTo(x + d * s * 0.55, y - s * 1.45)
+          ..lineTo(x + d * s * 0.25, y - s * 0.16)
+          ..close(),
+        Paint()..color = cloth,
+      )
+      ..drawLine(
+        Offset(x - d * s * 0.82, y - s * 0.26),
+        Offset(x + d * s * 0.6, y - s * 1.5),
+        Paint()
+          ..color = hull
+          ..strokeWidth = math.max(0.5, s * 0.05),
+      )
+      ..drawLine(
+        Offset(x, y - s * 0.05),
+        Offset(x + d * s * 0.05, y - s * 0.9),
+        Paint()
+          ..color = hull
+          ..strokeWidth = math.max(0.5, s * 0.06),
+      );
+    _boatLamp(canvas, Offset(x - d * s * 0.6, y - s * 0.22), s);
+  }
+
+  /// A small sailboat at [at]: a white hull, a mast, a mainsail and a jib.
+  void _sailboat(Canvas canvas, Offset at, double s, double haze, bool east) {
+    final d = east ? 1.0 : -1.0;
+    final white = _t.tone(const Color(0xFFF0EEE8), haze, mute: 0.18);
+    final hull = _t.tone(const Color(0xFFDCDAD4), haze, mute: 0.25);
+    final x = at.dx;
+    final y = at.dy;
+    canvas
+      ..drawPath(
+        Path()
+          ..moveTo(x - s * 0.55, y - s * 0.14)
+          ..lineTo(x + s * 0.6, y - s * 0.14)
+          ..lineTo(x + s * 0.42, y)
+          ..lineTo(x - s * 0.42, y)
+          ..close(),
+        Paint()..color = hull,
+      )
+      ..drawPath(
+        Path()
+          ..moveTo(x, y - s * 1.3)
+          ..lineTo(x, y - s * 0.2)
+          ..lineTo(x - d * s * 0.55, y - s * 0.2)
+          ..close(),
+        Paint()..color = white,
+      )
+      ..drawPath(
+        Path()
+          ..moveTo(x + d * s * 0.04, y - s * 1.15)
+          ..lineTo(x + d * s * 0.04, y - s * 0.22)
+          ..lineTo(x + d * s * 0.42, y - s * 0.22)
+          ..close(),
+        Paint()..color = Color.lerp(white, look.skyHorizon, 0.25)!,
+      );
+    _boatLamp(canvas, Offset(x, y - s * 1.3), s);
+  }
+
+  /// A boat's riding light at night.
+  void _boatLamp(Canvas canvas, Offset at, double s) {
+    if (_night < 0.2) return;
+    canvas.drawCircle(
+      at,
+      math.max(0.6, s * 0.06),
+      Paint()..color = _window.withValues(alpha: 0.85 * _night),
+    );
+  }
+
+  /// A sandy beach along the foot of the water, the town standing on it:
+  /// turquoise shallows, a line of surf and pale sand.
+  void _beach(Canvas canvas, Size size, double horizon, double room) {
+    final edgeY = horizon - room * 0.12;
+    final shallows = horizon - room * 0.24;
+    canvas.drawRect(
+      Rect.fromLTRB(0, shallows, size.width, edgeY + 1),
+      Paint()
+        ..shader = ui.Gradient.linear(Offset(0, shallows), Offset(0, edgeY), [
+          look.water.withValues(alpha: 0),
+          Color.lerp(
+            look.water,
+            const Color(0xFF52B8B0),
+            0.6 * _t.lit,
+          )!.withValues(alpha: 0.85),
+        ]),
+    );
+    final r = _rng('beach');
+    final edge = [
+      for (var i = 0; i <= 16; i++)
+        Offset(
+          size.width * i / 16,
+          edgeY + (r.nextDouble() - 0.5) * room * 0.025,
+        ),
+    ];
+    canvas
+      ..drawPath(
+        _smooth(edge, size),
+        Paint()
+          ..shader = ui.Gradient.linear(Offset(0, edgeY), Offset(0, horizon), [
+            _t.tone(const Color(0xFFE6D6A8), _hazeNear, mute: 0.22),
+            _t.tone(const Color(0xFFD2BC88), _hazeNear, mute: 0.3),
+          ]),
+      )
+      // The surf along the water's edge.
+      ..drawPath(
+        Path()..addPolygon(edge, false),
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = math.max(0.6, room * 0.012)
+          ..color = Colors.white.withValues(alpha: 0.1 + 0.55 * _t.lit),
+      );
   }
 
   /// At night a lit city warms the haze over it.

@@ -25,6 +25,7 @@ import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/domain/services/match/stadium/nation_latitudes.dart';
 import 'package:fnm/domain/services/match/stadium/stadium_signature.dart';
 import 'package:fnm/domain/services/match/stadium/stadium_spec.dart';
+import 'package:fnm/domain/services/nation/dormant_nations.dart';
 import 'package:fnm/features/match/pitch/confetti_painter.dart';
 import 'package:fnm/features/match/pitch/match_dressing.dart';
 import 'package:fnm/features/match/pitch/pitch_projection.dart';
@@ -230,6 +231,8 @@ final Map<String, Map<String, Object?>> _nations = {
 
 /// Nations the mock needs that the game's data does not carry.
 const Map<String, Nation> _extra = {
+  'GRL': DormantNations.greenland,
+  'ZAN': DormantNations.zanzibar,
   'RUS': Nation(
     id: 990,
     name: 'Russia',
@@ -1111,6 +1114,107 @@ List<_Scene> _scenes() {
       matchDay: DateTime(2026, 9, 8),
       personal: true,
       tags: ('SOK', 'SOMCHAI'),
+    ),
+    // The challenge islands: Greenland's ice, Zanzibar's beaches.
+    _Scene(
+      'phone_island_nuuk_summer',
+      home: 'GRL',
+      away: 'FRO',
+      capacity: 2000,
+      stadium: 'Mock Nuuk Ground',
+      city: 'Nuuk',
+      light: PitchLight.day,
+      kickOff: const KickOffTime(16, 0),
+      matchDay: DateTime(2026, 7, 10),
+      tags: ('LYBERTH', 'JOENSEN'),
+    ),
+    _Scene(
+      'phone_island_nuuk_october_night',
+      home: 'GRL',
+      away: 'FRO',
+      capacity: 2000,
+      stadium: 'Mock Nuuk Ground',
+      city: 'Nuuk',
+      light: PitchLight.night,
+      kickOff: const KickOffTime(19, 0),
+      matchDay: DateTime(2026, 10, 12),
+      tags: ('LYBERTH', 'JOENSEN'),
+    ),
+    _Scene(
+      'phone_island_ilulissat_fog',
+      home: 'GRL',
+      away: 'ISL',
+      capacity: 1000,
+      stadium: 'Mock Ilulissat Ground',
+      city: 'Ilulissat',
+      light: PitchLight.dusk,
+      kickOff: const KickOffTime(18, 30),
+      matchDay: DateTime(2026, 6, 20),
+      weather: WeatherKind.fog,
+      tags: ('LYBERTH', 'HALLDORSSON'),
+    ),
+    _Scene(
+      'phone_island_zanzibar_city',
+      home: 'ZAN',
+      away: 'COM',
+      capacity: 15000,
+      stadium: 'Mock Zanzibar Ground',
+      city: 'Zanzibar City',
+      light: PitchLight.day,
+      kickOff: const KickOffTime(16, 0),
+      matchDay: DateTime(2026, 9, 8),
+      tags: ('MZEE', 'SAID'),
+    ),
+    _Scene(
+      'phone_island_zanzibar_city_night',
+      home: 'ZAN',
+      away: 'COM',
+      capacity: 15000,
+      stadium: 'Mock Zanzibar Ground',
+      city: 'Zanzibar City',
+      light: PitchLight.night,
+      kickOff: const KickOffTime(20, 0),
+      matchDay: DateTime(2026, 9, 8),
+      tags: ('MZEE', 'SAID'),
+    ),
+    _Scene(
+      'phone_island_chake_chake_rain',
+      home: 'ZAN',
+      away: 'SEY',
+      capacity: 10000,
+      stadium: 'Mock Pemba Ground',
+      city: 'Chake-Chake',
+      light: PitchLight.dusk,
+      kickOff: const KickOffTime(18, 0),
+      matchDay: DateTime(2026, 4, 14),
+      weather: WeatherKind.rain,
+      tags: ('MZEE', 'LABICHE'),
+    ),
+    _Scene(
+      'tablet_island_zanzibar_city',
+      home: 'ZAN',
+      away: 'COM',
+      capacity: 15000,
+      stadium: 'Mock Zanzibar Ground',
+      city: 'Zanzibar City',
+      tablet: true,
+      light: PitchLight.day,
+      kickOff: const KickOffTime(16, 0),
+      matchDay: DateTime(2026, 9, 8),
+      tags: ('MZEE', 'SAID'),
+    ),
+    _Scene(
+      'tablet_island_nuuk_summer',
+      home: 'GRL',
+      away: 'FRO',
+      capacity: 2000,
+      stadium: 'Mock Nuuk Ground',
+      city: 'Nuuk',
+      tablet: true,
+      light: PitchLight.day,
+      kickOff: const KickOffTime(16, 0),
+      matchDay: DateTime(2026, 7, 10),
+      tags: ('LYBERTH', 'JOENSEN'),
     ),
   ];
 }

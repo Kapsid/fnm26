@@ -7,6 +7,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:fnm/domain/services/match/stadium/backdrop.dart';
 import 'package:fnm/domain/services/match/stadium/city_geography.dart';
+import 'package:fnm/domain/services/match/stadium/shore_look.dart';
 import 'package:fnm/features/match/pitch/backdrop_tone.dart';
 
 /// What a city's geography adds to the near layer of its ground's backdrop
@@ -23,11 +24,21 @@ class CityFeatures {
     required this.features,
     required this.style,
     required this.tone,
+    this.shore = ShoreLook.none,
+    this.clearMiddle = false,
   });
 
   final Set<CityFeature> features;
   final CityStyle style;
   final BackdropTone tone;
+
+  /// The climate's own look: a beach town has palms along its shore where
+  /// a harbour would have its cranes.
+  final ShoreLook shore;
+
+  /// A landmark stands in the middle: what is drawn in front of it keeps
+  /// to the outer part of each side.
+  final bool clearMiddle;
 
   bool get _snowy => tone.season == BackdropSeason.snow;
 
@@ -58,7 +69,9 @@ class CityFeatures {
     double x(double f) => size.width * f;
     final coast = features.contains(CityFeature.coast);
     if (coast) {
-      _cranes(canvas, x(a.$1 + 0.02), x(a.$1 + 0.2), horizon, room, unit);
+      if (!shore.beach) {
+        _cranes(canvas, x(a.$1 + 0.02), x(a.$1 + 0.2), horizon, room, unit);
+      }
       _lighthouse(canvas, x(b.$2 - 0.04), horizon, room, unit);
     }
     if (features.contains(CityFeature.industrial)) {
@@ -75,6 +88,19 @@ class CityFeatures {
     final (:a, :b) = _sides;
     double x(double f) => size.width * f;
     final coast = features.contains(CityFeature.coast);
+    if (shore.beach) {
+      // Palms along the shore: a grove where the cranes would stand, a few
+      // short of the lighthouse on the other side.
+      for (final (lo, hi, salt, n) in [
+        (a.$1, a.$2 - 0.04, 'a', 6),
+        (b.$1 + 0.02, b.$2 - 0.1, 'b', 4),
+      ]) {
+        final (l, h) = clearMiddle
+            ? (lo < 0.5 ? (lo, math.min(hi, 0.2)) : (math.max(lo, 0.8), hi))
+            : (lo, hi);
+        _palms(canvas, x(l), x(h), horizon, room, unit, salt, n);
+      }
+    }
     if (features.contains(CityFeature.oldTown) && !_alreadyOld) {
       final side = coast ? b : a;
       _oldTown(
@@ -258,6 +284,77 @@ class CityFeatures {
             ..color = BackdropTone.window.withValues(alpha: 0.12 * tone.night)
             ..maskFilter = MaskFilter.blur(BlurStyle.normal, unit * 0.4),
         );
+    }
+  }
+
+  // --- Beach ----------------------------------------------------------------
+
+  /// [n] coconut palms between [x0] and [x1], on the beach in front of the
+  /// town: tall curved trunks leaning off the vertical, a crown of drooping
+  /// fronds. Dark against the sky at night.
+  void _palms(
+    Canvas canvas,
+    double x0,
+    double x1,
+    double horizon,
+    double room,
+    double unit,
+    String salt,
+    int n,
+  ) {
+    final r = tone.rng('palms-$salt');
+    const haze = BackdropTone.hazeNear;
+    final trunk = Paint()
+      ..color = _c(const Color(0xFF6E5A44), haze, mute: 0.3)
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+    final frond = Paint()
+      ..color = _c(const Color(0xFF3F6A3A), haze, mute: 0.26)
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+    final nut = Paint()..color = _c(const Color(0xFF5A4A2E), haze, mute: 0.3);
+    for (var i = 0; i < n; i++) {
+      final cx = x0 + (x1 - x0) * ((i + 0.2 + r.nextDouble() * 0.6) / n);
+      final h = room * (0.26 + r.nextDouble() * 0.24);
+      final lean = (r.nextBool() ? 1 : -1) * h * (0.12 + r.nextDouble() * 0.16);
+      final foot = Offset(cx, horizon + room * 0.2);
+      final top = Offset(cx + lean, horizon - h);
+      trunk.strokeWidth = math.max(0.8, unit * (0.16 + r.nextDouble() * 0.06));
+      canvas.drawPath(
+        Path()
+          ..moveTo(foot.dx, foot.dy)
+          ..quadraticBezierTo(
+            cx + lean * 0.1,
+            horizon - h * 0.5,
+            top.dx,
+            top.dy,
+          ),
+        trunk,
+      );
+      final l = unit * (1.3 + r.nextDouble() * 0.5);
+      frond.strokeWidth = math.max(0.7, unit * 0.16);
+      for (var k = 0; k < 7; k++) {
+        // Spread round the crown, drooping more the further out they reach.
+        final a = -math.pi + k * math.pi / 6 + (r.nextDouble() - 0.5) * 0.3;
+        final dx = math.cos(a) * l;
+        final up = math.sin(a) * l * 0.35;
+        canvas.drawPath(
+          Path()
+            ..moveTo(top.dx, top.dy)
+            ..quadraticBezierTo(
+              top.dx + dx * 0.55,
+              top.dy + up - l * 0.32,
+              top.dx + dx,
+              top.dy + up + l * 0.38 * (dx.abs() / l + 0.3),
+            ),
+          frond,
+        );
+      }
+      canvas.drawCircle(
+        top.translate(0, unit * 0.18),
+        math.max(0.6, unit * 0.16),
+        nut,
+      );
     }
   }
 

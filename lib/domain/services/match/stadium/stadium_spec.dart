@@ -16,6 +16,7 @@ import 'package:fnm/domain/services/match/stadium/ground_look.dart';
 import 'package:fnm/domain/services/match/stadium/landmarks.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/domain/services/match/stadium/nation_latitudes.dart';
+import 'package:fnm/domain/services/match/stadium/shore_look.dart';
 import 'package:fnm/domain/services/match/stadium/stadium_signature.dart';
 
 /// What the stadium looks like for one match: size from capacity, crowd from
@@ -47,6 +48,7 @@ class StadiumSpec {
     this.scale = GroundScale.big,
     this.partRoof = false,
     this.works = GroundWorks.none,
+    this.shore = ShoreLook.none,
   });
 
   /// The spec for [g] between [home] and [away] in the country
@@ -118,6 +120,7 @@ class StadiumSpec {
                 groundNationCode,
                 confed,
               ),
+              arctic: ShoreLook.isArctic(groundNationCode),
             ),
       signature: signature,
       groundColours:
@@ -133,6 +136,11 @@ class StadiumSpec {
       scale: character.scale,
       partRoof: character.partRoof,
       works: works,
+      shore: ShoreLook.of(
+        groundNationCode,
+        features: features,
+        horizon: horizon,
+      ),
     );
   }
 
@@ -150,6 +158,7 @@ class StadiumSpec {
     CrowdCulture? awayCulture,
     WeatherKind? weather,
     Set<CityFeature>? features,
+    ShoreLook? shore,
   }) => StadiumSpec(
     tiers: tiers,
     openCorners: signature == null
@@ -176,6 +185,7 @@ class StadiumSpec {
     scale: scale,
     partRoof: partRoof,
     works: works,
+    shore: shore ?? this.shore,
   );
 
   final int tiers;
@@ -231,4 +241,8 @@ class StadiumSpec {
 
   /// What the manager's federation has done to the ground.
   final GroundWorks works;
+
+  /// What the region's climate lays over the backdrop: the arctic's ice, a
+  /// tropical island's beach, the boats on the water.
+  final ShoreLook shore;
 }
