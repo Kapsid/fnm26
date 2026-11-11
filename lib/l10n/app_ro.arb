@@ -4233,5 +4233,17 @@
   "pitchComKickOffFrost": "O noapte geroasă și un teren tare. Pasele nu vor fi ușoare.",
   "pitchComKickOffGale": "Lovitura de start pe vânt puternic. Mingile lungi vor devia.",
   "pitchComKickOffFog": "Lovitura de start în ceață deasă. Nimeni nu va marca ușor de la distanță.",
-  "pitchComKickOffHaze": "Lovitura de start în ceața de căldură. Azi picioarele vor obosi devreme."
+  "pitchComKickOffHaze": "Lovitura de start în ceața de căldură. Azi picioarele vor obosi devreme.",
+  "matchOwnGoal": "AUTOGOL",
+  "matchGoalOwnGoal": "AG",
+  "pitchComOwnGoal1": "Autogol! {defender} trimite mingea în propria poartă.",
+  "pitchComOwnGoal2": "Încercarea lui {shooter} este deviată nefericit de {defender} și intră.",
+  "pitchComOwnGoal3": "Dezastru pentru {defender}, care își învinge propriul portar.",
+  "pitchComBigSave1": "Ce paradă! {keeper} îl refuză pe {player} de aproape.",
+  "pitchComBigSave2": "Paradă excelentă a lui {keeper}!",
+  "pitchComBigSave3": "{player} părea sigur că marchează, dar {keeper} reușește cumva să apere.",
+  "matchTimelineWoodwork": "{name} a nimerit bara",
+  "matchTimelineBigSave": "Paradă mare a lui {name}",
+  "matchChartXg": "xG pe parcursul meciului",
+  "matchChartMomentum": "Cine a dominat"
 }

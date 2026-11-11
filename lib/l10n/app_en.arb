@@ -26156,5 +26156,102 @@
   "pitchComKickOffHaze": "Kick-off in the heat haze. Legs will tire early today.",
   "@pitchComKickOffHaze": {
     "description": "Pitch view commentary, the first line at kick-off when the match is played in a heat haze."
+  },
+  "matchOwnGoal": "OWN GOAL",
+  "@matchOwnGoal": {
+    "description": "Caption under the goal celebration (and on the TV strip) when the goal was an own goal: a defender put the ball into his own net. All caps, like the PENALTY caption."
+  },
+  "matchGoalOwnGoal": "OG",
+  "@matchGoalOwnGoal": {
+    "description": "Short tag after an own goal's minute or scorer in compact lists (the match timeline, the share card), like PEN for a penalty. Keep it two or three letters where the language allows."
+  },
+  "pitchComOwnGoal1": "Own goal! {defender} turns it into his own net.",
+  "@pitchComOwnGoal1": {
+    "description": "Pitch view commentary line: an own goal. {defender} is the defending player who put the ball into his own net. Variant 1 of 3.",
+    "placeholders": {
+      "defender": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComOwnGoal2": "{shooter}'s effort takes a cruel deflection off {defender} and goes in.",
+  "@pitchComOwnGoal2": {
+    "description": "Pitch view commentary line: an own goal. {shooter} is the attacking player whose shot or cross it was, {defender} the defending player it went in off. Variant 2 of 3.",
+    "placeholders": {
+      "defender": {
+        "type": "String"
+      },
+      "shooter": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComOwnGoal3": "Disaster for {defender}, who puts it past his own keeper.",
+  "@pitchComOwnGoal3": {
+    "description": "Pitch view commentary line: an own goal. {defender} is the defending player who put the ball past his own goalkeeper. Variant 3 of 3.",
+    "placeholders": {
+      "defender": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComBigSave1": "What a save! {keeper} denies {player} from close range.",
+  "@pitchComBigSave1": {
+    "description": "Pitch view commentary line: the goalkeeper makes a big save from a good chance. {keeper} is the goalkeeper, {player} the shooter. Variant 1 of 3.",
+    "placeholders": {
+      "keeper": {
+        "type": "String"
+      },
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComBigSave2": "Brilliant stop by {keeper}!",
+  "@pitchComBigSave2": {
+    "description": "Pitch view commentary line: the goalkeeper makes a big save from a good chance. {keeper} is the goalkeeper. Variant 2 of 3.",
+    "placeholders": {
+      "keeper": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComBigSave3": "{player} looked certain to score, but {keeper} somehow keeps it out.",
+  "@pitchComBigSave3": {
+    "description": "Pitch view commentary line: the goalkeeper makes a big save from a good chance. {player} is the shooter, {keeper} the goalkeeper. Variant 3 of 3.",
+    "placeholders": {
+      "keeper": {
+        "type": "String"
+      },
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "matchTimelineWoodwork": "{name} hit the woodwork",
+  "@matchTimelineWoodwork": {
+    "description": "Match timeline, read aloud by the screen reader for a row with a goalpost icon: {name} hit the post or the bar.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "matchTimelineBigSave": "Big save by {name}",
+  "@matchTimelineBigSave": {
+    "description": "Match timeline, read aloud by the screen reader for a row with a goalkeeper glove icon: {name}, the goalkeeper, made a big save.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "matchChartXg": "xG over the match",
+  "@matchChartXg": {
+    "description": "Match stats, heading over the chart of both sides' expected goals (xG) adding up minute by minute through the match."
+  },
+  "matchChartMomentum": "Who was on top",
+  "@matchChartMomentum": {
+    "description": "Match stats, heading over the momentum chart: which side was on top, minute by minute, read from the chances each side made (bars up for the home side, down for the visitors)."
   }
 }

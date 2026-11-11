@@ -17029,4 +17029,56 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get pitchComKickOffHaze =>
       'Aftrap in de hittewaas. De benen raken vandaag vroeg vermoeid.';
+
+  @override
+  String get matchOwnGoal => 'EIGEN DOELPUNT';
+
+  @override
+  String get matchGoalOwnGoal => 'ED';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Eigen doelpunt! $defender werkt de bal in zijn eigen doel.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return 'De poging van $shooter wordt ongelukkig van richting veranderd door $defender en gaat erin.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Rampzalig voor $defender, die zijn eigen keeper passeert.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Wat een redding! $keeper houdt $player van dichtbij van scoren af.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Geweldige redding van $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player leek zeker te scoren, maar $keeper houdt hem op de een of andere manier tegen.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name raakte het aluminium';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Grote redding van $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG gedurende de wedstrijd';
+
+  @override
+  String get matchChartMomentum => 'Wie de overhand had';
 }

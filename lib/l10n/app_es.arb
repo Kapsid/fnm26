@@ -4233,5 +4233,17 @@
   "pitchComKickOffFrost": "Una noche helada y un césped duro. Los pases no serán fáciles.",
   "pitchComKickOffGale": "Saque inicial con viento fuerte. Los balones largos se irán desviados.",
   "pitchComKickOffFog": "Saque inicial con una niebla espesa. Nadie marcará fácil desde lejos.",
-  "pitchComKickOffHaze": "Saque inicial con calima. Hoy las piernas se cansarán pronto."
+  "pitchComKickOffHaze": "Saque inicial con calima. Hoy las piernas se cansarán pronto.",
+  "matchOwnGoal": "GOL EN PROPIA",
+  "matchGoalOwnGoal": "PP",
+  "pitchComOwnGoal1": "¡Gol en propia puerta! {defender} la mete en su propia portería.",
+  "pitchComOwnGoal2": "El intento de {shooter} se desvía cruelmente en {defender} y entra.",
+  "pitchComOwnGoal3": "Desastre para {defender}, que bate a su propio portero.",
+  "pitchComBigSave1": "¡Qué paradón! {keeper} le niega el gol a {player} a quemarropa.",
+  "pitchComBigSave2": "¡Paradón de {keeper}!",
+  "pitchComBigSave3": "{player} parecía que marcaba seguro, pero {keeper} la saca como puede.",
+  "matchTimelineWoodwork": "{name} estrelló el balón en la madera",
+  "matchTimelineBigSave": "Paradón de {name}",
+  "matchChartXg": "xG a lo largo del partido",
+  "matchChartMomentum": "Quién dominaba"
 }

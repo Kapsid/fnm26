@@ -4233,5 +4233,17 @@
   "pitchComKickOffFrost": "पाले वाली रात और सख़्त पिच। पास देना आसान नहीं होगा।",
   "pitchComKickOffGale": "तेज़ हवा में किक-ऑफ़। लंबी गेंदें भटकेंगी।",
   "pitchComKickOffFog": "घने कोहरे में किक-ऑफ़। दूर से गोल करना किसी के लिए आसान नहीं होगा।",
-  "pitchComKickOffHaze": "गर्मी की धुंध में किक-ऑफ़। आज पैर जल्दी थकेंगे।"
+  "pitchComKickOffHaze": "गर्मी की धुंध में किक-ऑफ़। आज पैर जल्दी थकेंगे।",
+  "matchOwnGoal": "आत्मघाती गोल",
+  "matchGoalOwnGoal": "आगो",
+  "pitchComOwnGoal1": "आत्मघाती गोल! {defender} ने गेंद अपने ही जाल में डाल दी।",
+  "pitchComOwnGoal2": "{shooter} का प्रयास {defender} से टकराकर बदकिस्मती से अंदर चला गया।",
+  "pitchComOwnGoal3": "{defender} के लिए मुसीबत, उन्होंने अपने ही गोलकीपर को छका दिया।",
+  "pitchComBigSave1": "क्या बचाव है! {keeper} ने करीब से {player} को गोल नहीं करने दिया।",
+  "pitchComBigSave2": "{keeper} का शानदार बचाव!",
+  "pitchComBigSave3": "{player} का गोल पक्का लग रहा था, पर {keeper} ने किसी तरह रोक लिया।",
+  "matchTimelineWoodwork": "{name} का शॉट पोस्ट से टकराया",
+  "matchTimelineBigSave": "{name} का बड़ा बचाव",
+  "matchChartXg": "पूरे मैच में xG",
+  "matchChartMomentum": "कौन हावी रहा"
 }

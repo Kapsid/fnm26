@@ -16908,4 +16908,56 @@ class AppLocalizationsMs extends AppLocalizations {
   @override
   String get pitchComKickOffHaze =>
       'Sepak mula dalam jerebu panas. Kaki akan cepat letih hari ini.';
+
+  @override
+  String get matchOwnGoal => 'GOL SENDIRI';
+
+  @override
+  String get matchGoalOwnGoal => 'GS';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Gol sendiri! $defender memasukkan bola ke gawang sendiri.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return 'Percubaan $shooter terkena $defender lalu terpesong masuk.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Malapetaka buat $defender, yang menewaskan penjaga golnya sendiri.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Selamatan hebat! $keeper menafikan $player dari jarak dekat.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Selamatan cemerlang oleh $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player kelihatan pasti menjaringkan gol, tetapi $keeper entah bagaimana menyelamatkannya.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name terkena tiang gol';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Selamatan besar oleh $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG sepanjang perlawanan';
+
+  @override
+  String get matchChartMomentum => 'Siapa yang menguasai';
 }

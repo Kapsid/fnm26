@@ -17220,4 +17220,56 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get pitchComKickOffHaze =>
       'Výkop v horkém oparu. Síly dnes dojdou brzy.';
+
+  @override
+  String get matchOwnGoal => 'VLASTNÍ GÓL';
+
+  @override
+  String get matchGoalOwnGoal => 'VL';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Vlastní gól! $defender si to srazil do vlastní branky.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return 'Pokus hráče $shooter se nešťastně odrazí od hráče $defender a končí v síti.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Katastrofa pro hráče $defender, který překonal vlastního brankáře.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Jaký zákrok! $keeper zblízka vychytal hráče $player.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Skvělý zákrok, $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player už měl gól na noze, ale $keeper to nějak vytáhl.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name trefil tyč';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Velký zákrok: $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG v průběhu zápasu';
+
+  @override
+  String get matchChartMomentum => 'Kdo měl navrch';
 }

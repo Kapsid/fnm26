@@ -112,8 +112,17 @@ final class ShotMoment extends MatchMoment {
   final ShotOrigin origin;
 
   /// The index into `MatchResult.events` of the goal this shot scored, when
-  /// [outcome] is [ShotOutcome.goal]; null otherwise.
+  /// [outcome] is [ShotOutcome.goal]; null otherwise. An own goal's event
+  /// names the defender who turned it in ([MatchEvent.ownGoal]); the shot is
+  /// still the attacker's.
   final int? goalEventIndex;
+
+  /// The chance a save has to have been to count as a big one.
+  static const double bigSaveXg = 0.15;
+
+  /// Whether the keeper kept out a good chance: a key moment on the Pitch
+  /// view, a line of its own in the commentary and a row on the Timeline.
+  bool get isBigSave => outcome == ShotOutcome.saved && xg >= bigSaveXg;
 
   /// This shot with its goal's index into `MatchResult.events`.
   ShotMoment withGoalEventIndex(int index) => ShotMoment(

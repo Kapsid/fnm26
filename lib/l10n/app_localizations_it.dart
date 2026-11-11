@@ -17023,4 +17023,56 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get pitchComKickOffHaze =>
       'Calcio d’inizio nella foschia di calore. Oggi le gambe si stancheranno presto.';
+
+  @override
+  String get matchOwnGoal => 'AUTOGOL';
+
+  @override
+  String get matchGoalOwnGoal => 'AUT';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Autogol! $defender la spedisce nella propria porta.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return 'Il tentativo di $shooter viene deviato beffardamente da $defender ed entra.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Disastro di $defender, che batte il proprio portiere.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Che parata! $keeper nega il gol a $player da distanza ravvicinata.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Grande intervento di $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player sembrava sicuro di segnare, ma $keeper in qualche modo la tiene fuori.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name ha colpito un legno';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Grande parata di $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG nel corso della partita';
+
+  @override
+  String get matchChartMomentum => 'Chi ha dominato';
 }

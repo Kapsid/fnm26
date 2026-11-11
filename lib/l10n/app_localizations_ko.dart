@@ -16379,4 +16379,56 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get pitchComKickOffHaze => '열기 아지랑이 속에 킥오프. 오늘은 체력이 일찍 떨어질 겁니다.';
+
+  @override
+  String get matchOwnGoal => '자책골';
+
+  @override
+  String get matchGoalOwnGoal => '자책';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return '자책골! $defender가 공을 자기 골문에 넣고 맙니다.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return '$shooter의 슈팅이 $defender에게 맞고 굴절돼 그대로 들어갑니다.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return '$defender에게는 악몽, 자기 팀 골키퍼를 넘기고 맙니다.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return '엄청난 선방! $keeper가 가까운 거리에서 $player를 막아냅니다.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return '$keeper의 눈부신 선방!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player의 골이 확실해 보였지만 $keeper가 어떻게든 막아냅니다.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name의 슈팅이 골대를 맞혔습니다';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return '$name의 결정적 선방';
+  }
+
+  @override
+  String get matchChartXg => '경기 흐름별 xG';
+
+  @override
+  String get matchChartMomentum => '경기 주도권';
 }

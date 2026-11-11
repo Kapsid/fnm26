@@ -16959,4 +16959,56 @@ class AppLocalizationsFil extends AppLocalizations {
   @override
   String get pitchComKickOffHaze =>
       'Kick-off sa init na may ulap. Maagang mapapagod ang mga binti ngayon.';
+
+  @override
+  String get matchOwnGoal => 'SARILING GOL';
+
+  @override
+  String get matchGoalOwnGoal => 'SG';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Sariling gol! Naipasok ni $defender ang bola sa sarili niyang net.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return 'Tumama ang tira ni $shooter kay $defender at malas na pumasok.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Kapahamakan para kay $defender, na nalusutan ang sarili niyang goalkeeper.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Napakagandang save! Pinigilan ni $keeper si $player mula sa malapitan.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Napakahusay na save ni $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return 'Mukhang siguradong makakaiskor si $player, pero kahit paano ay napigilan ito ni $keeper.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return 'Tumama sa poste ang tira ni $name';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Malaking save ni $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG sa buong laro';
+
+  @override
+  String get matchChartMomentum => 'Sino ang nakalamang';
 }

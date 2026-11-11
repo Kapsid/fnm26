@@ -17362,4 +17362,56 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get pitchComKickOffHaze =>
       'Lovitura de start în ceața de căldură. Azi picioarele vor obosi devreme.';
+
+  @override
+  String get matchOwnGoal => 'AUTOGOL';
+
+  @override
+  String get matchGoalOwnGoal => 'AG';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Autogol! $defender trimite mingea în propria poartă.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return 'Încercarea lui $shooter este deviată nefericit de $defender și intră.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Dezastru pentru $defender, care își învinge propriul portar.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Ce paradă! $keeper îl refuză pe $player de aproape.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Paradă excelentă a lui $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player părea sigur că marchează, dar $keeper reușește cumva să apere.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name a nimerit bara';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Paradă mare a lui $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG pe parcursul meciului';
+
+  @override
+  String get matchChartMomentum => 'Cine a dominat';
 }

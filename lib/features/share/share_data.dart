@@ -153,6 +153,7 @@ MatchShareData matchShareData(
             stoppage: e.stoppage,
             home: e.teamNationId == homeId,
             penalty: e.penalty,
+            ownGoal: e.ownGoal,
           ),
     ],
     star: star == null

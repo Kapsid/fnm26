@@ -4233,5 +4233,17 @@
   "pitchComKickOffFrost": "서리 내린 밤, 딱딱한 그라운드. 패스가 쉽지 않을 겁니다.",
   "pitchComKickOffGale": "강풍 속에 킥오프. 롱볼이 바람에 흘러갈 겁니다.",
   "pitchComKickOffFog": "짙은 안개 속에 킥오프. 먼 거리에서 골을 넣기는 쉽지 않을 겁니다.",
-  "pitchComKickOffHaze": "열기 아지랑이 속에 킥오프. 오늘은 체력이 일찍 떨어질 겁니다."
+  "pitchComKickOffHaze": "열기 아지랑이 속에 킥오프. 오늘은 체력이 일찍 떨어질 겁니다.",
+  "matchOwnGoal": "자책골",
+  "matchGoalOwnGoal": "자책",
+  "pitchComOwnGoal1": "자책골! {defender}가 공을 자기 골문에 넣고 맙니다.",
+  "pitchComOwnGoal2": "{shooter}의 슈팅이 {defender}에게 맞고 굴절돼 그대로 들어갑니다.",
+  "pitchComOwnGoal3": "{defender}에게는 악몽, 자기 팀 골키퍼를 넘기고 맙니다.",
+  "pitchComBigSave1": "엄청난 선방! {keeper}가 가까운 거리에서 {player}를 막아냅니다.",
+  "pitchComBigSave2": "{keeper}의 눈부신 선방!",
+  "pitchComBigSave3": "{player}의 골이 확실해 보였지만 {keeper}가 어떻게든 막아냅니다.",
+  "matchTimelineWoodwork": "{name}의 슈팅이 골대를 맞혔습니다",
+  "matchTimelineBigSave": "{name}의 결정적 선방",
+  "matchChartXg": "경기 흐름별 xG",
+  "matchChartMomentum": "경기 주도권"
 }

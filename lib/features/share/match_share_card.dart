@@ -37,6 +37,7 @@ class ShareGoal {
     required this.home,
     this.stoppage = 0,
     this.penalty = false,
+    this.ownGoal = false,
   });
 
   final String scorer;
@@ -44,6 +45,10 @@ class ShareGoal {
   final int stoppage;
   final bool home;
   final bool penalty;
+
+  /// A goal that went in off [scorer], a man of the other side: it sits in
+  /// the column of the side it counted for, tagged as his own goal.
+  final bool ownGoal;
 
   String get minuteLabel => stoppage > 0 ? "$minute+$stoppage'" : "$minute'";
 }
@@ -428,8 +433,11 @@ class _Scorers extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final maxRows = story ? 6 : 4;
-    String minute(ShareGoal g) =>
-        g.penalty ? '${g.minuteLabel} ${l.matchGoalPenalty}' : g.minuteLabel;
+    String minute(ShareGoal g) => g.penalty
+        ? '${g.minuteLabel} ${l.matchGoalPenalty}'
+        : g.ownGoal
+        ? '${g.minuteLabel} ${l.matchGoalOwnGoal}'
+        : g.minuteLabel;
     List<Widget> column({required bool home}) {
       final byScorer = <String, List<ShareGoal>>{};
       for (final g in data.goals.where((g) => g.home == home)) {

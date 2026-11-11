@@ -16943,4 +16943,56 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get pitchComKickOffHaze =>
       'Avspark i varmedisen. Beina blir tidlig slitne i dag.';
+
+  @override
+  String get matchOwnGoal => 'SELVMÅL';
+
+  @override
+  String get matchGoalOwnGoal => 'SM';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Selvmål! $defender styrer ballen i eget nett.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return 'Forsøket til $shooter tar en uheldig retningsendring på $defender og går inn.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Katastrofe for $defender, som overlister sin egen keeper.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'For en redning! $keeper stopper $player på kort hold.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Strålende redning av $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player så ut til å score, men $keeper redder på et vis.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name traff treverket';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Stor redning av $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG gjennom kampen';
+
+  @override
+  String get matchChartMomentum => 'Hvem som dominerte';
 }

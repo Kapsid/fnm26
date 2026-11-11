@@ -4233,5 +4233,17 @@
   "pitchComKickOffFrost": "Malam beku dan lapangan keras. Mengumpan tidak akan mudah.",
   "pitchComKickOffGale": "Sepak mula di tengah angin kencang. Umpan panjang akan melenceng.",
   "pitchComKickOffFog": "Sepak mula di tengah kabut tebal. Tak akan mudah mencetak gol dari jauh.",
-  "pitchComKickOffHaze": "Sepak mula di tengah kabut panas. Tenaga akan cepat terkuras hari ini."
+  "pitchComKickOffHaze": "Sepak mula di tengah kabut panas. Tenaga akan cepat terkuras hari ini.",
+  "matchOwnGoal": "GOL BUNUH DIRI",
+  "matchGoalOwnGoal": "BD",
+  "pitchComOwnGoal1": "Gol bunuh diri! {defender} membelokkan bola ke gawang sendiri.",
+  "pitchComOwnGoal2": "Upaya {shooter} berbelok secara malang setelah mengenai {defender} dan masuk.",
+  "pitchComOwnGoal3": "Petaka bagi {defender}, yang menaklukkan kipernya sendiri.",
+  "pitchComBigSave1": "Penyelamatan luar biasa! {keeper} menggagalkan {player} dari jarak dekat.",
+  "pitchComBigSave2": "Penyelamatan gemilang dari {keeper}!",
+  "pitchComBigSave3": "{player} tampak pasti mencetak gol, tapi {keeper} entah bagaimana mampu menghalaunya.",
+  "matchTimelineWoodwork": "{name} membentur tiang gawang",
+  "matchTimelineBigSave": "Penyelamatan penting oleh {name}",
+  "matchChartXg": "xG sepanjang laga",
+  "matchChartMomentum": "Siapa yang menguasai"
 }

@@ -1576,6 +1576,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
             .get();
     final out = <int, Map<int, int>>{};
     for (final r in rows) {
+      if (isOwnGoal(r.playerId)) continue;
       (out[r.fixtureId] ??= <int, int>{}).update(
         r.playerId,
         (v) => v + 1,
@@ -1618,6 +1619,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
     final tally = <int, ({int nationId, int goals})>{};
     for (final r in rows) {
       if (!compIds.contains(r.competitionId)) continue;
+      if (isOwnGoal(r.playerId)) continue;
       final cur = tally[r.playerId];
       tally[r.playerId] = (
         nationId: r.nationId,
@@ -1676,6 +1678,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
     final tally = <int, ({int nationId, int goals})>{};
     for (final r in rows) {
       if (!compIds.contains(r.competitionId)) continue;
+      if (isOwnGoal(r.playerId)) continue;
       final cur = tally[r.playerId];
       tally[r.playerId] = (
         nationId: r.nationId,
@@ -1725,6 +1728,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
     final tally = <int, int>{};
     for (final r in rows) {
       if (compIds != null && !compIds.contains(r.competitionId)) continue;
+      if (isOwnGoal(r.playerId)) continue;
       tally[r.playerId] = (tally[r.playerId] ?? 0) + 1;
     }
 

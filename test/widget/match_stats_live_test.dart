@@ -209,7 +209,9 @@ void main() {
   });
 
   testWidgets('the man of the match waits for the whistle', (tester) async {
-    await tester.binding.setSurfaceSize(const Size(400, 800));
+    // Tall enough for the charts over the match (1.2) and the ratings under
+    // them: the list builds only what is on screen.
+    await tester.binding.setSurfaceSize(const Size(400, 1400));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
     final l = await AppLocalizations.delegate.load(const Locale('en'));

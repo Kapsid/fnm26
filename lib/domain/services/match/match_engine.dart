@@ -279,6 +279,7 @@ class MatchEvent {
     this.stoppage = 0,
     this.setPiece = false,
     this.longThrow = false,
+    this.ownGoal = false,
   });
 
   final int minute;
@@ -321,6 +322,12 @@ class MatchEvent {
   /// For a [redCard], whether it was a second booking (a one-match ban) rather
   /// than a straight red (which can carry a heavier, severity-based ban).
   final bool secondYellow;
+
+  /// Whether a goal went in off a defender: it counts for [teamNationId] (the
+  /// side it was scored FOR), while [playerId] / [playerName] name the man of
+  /// the other side who put it into his own net. Never assisted, never a
+  /// goal of his in any tally (see `MatchTally`, `GoalRecord`).
+  final bool ownGoal;
 }
 
 /// A single player's performance mark for one match (`3.0`–`10.0`), derived
@@ -816,6 +823,10 @@ class MatchEngine {
     // These decide outcomes, so they never share [detailRng]; forked after it
     // and, like it, without advancing [rng].
     final playRng = rng.fork(0xF0E1);
+    // Own goals on a SEVENTH stream, forked like the two above. It only
+    // re-credits a goal that was going in anyway (see [ownGoalOr]), so
+    // every score, shot and card stays exactly what it was.
+    final ownGoalRng = rng.fork(0x06A1);
     // Moments as they happen, each with the event it points at (a goal, a
     // card, a sub), whose index is settled after the final sort of [events].
     final momentLog = <({MatchMoment moment, MatchEvent? event})>[];
@@ -854,8 +865,12 @@ class MatchEngine {
           stoppage: stoppage,
           seq: momentSeq++,
           teamNationId: atk.nationId,
-          shooterId: goal?.playerId ?? shooter.id,
-          assistId: goal != null ? goal.assistPlayerId : deliverer?.id,
+          // An own goal is still the attacker's shot: the defender who
+          // turned it in is on its goal event.
+          shooterId: goal != null && !goal.ownGoal ? goal.playerId : shooter.id,
+          assistId: goal != null && !goal.ownGoal
+              ? goal.assistPlayerId
+              : deliverer?.id,
           keeperId: _keeperOf(def)?.id,
           zone:
               zone ??
@@ -868,6 +883,30 @@ class MatchEngine {
           origin: origin,
         ),
         goal,
+      );
+    }
+
+    // A goal [goal] that was going in for its side, against [def]: now and
+    // then the last touch was a defender's, and it is his own goal instead.
+    // [cross] is a delivery into the box (a corner, a crossed free kick, a
+    // long throw), which a defender turns in more often than he deflects a
+    // shot. One draw on [ownGoalRng] a goal, and the culprit's pick after it:
+    // nothing else reads that stream, so the score is never touched.
+    MatchEvent ownGoalOr(MatchEvent goal, _Live def, {required bool cross}) {
+      if (def.xi.isEmpty) return goal;
+      final share = cross ? ownGoalFromCross : ownGoalFromShot;
+      if (!ownGoalRng.chance(share)) return goal;
+      final culprit = _ownGoalScorer(def, ownGoalRng);
+      return MatchEvent(
+        minute: goal.minute,
+        stoppage: goal.stoppage,
+        type: MatchEventType.goal,
+        teamNationId: goal.teamNationId,
+        playerId: culprit.id,
+        playerName: culprit.name,
+        setPiece: goal.setPiece,
+        longThrow: goal.longThrow,
+        ownGoal: true,
       );
     }
 
@@ -1499,12 +1538,16 @@ class MatchEngine {
           if (finished) {
             homeScore++;
             events.add(
-              goal = _goal(
-                manageMinute,
-                liveHome,
-                shooter,
-                assistRng,
-                stoppage: stoppage,
+              goal = ownGoalOr(
+                _goal(
+                  manageMinute,
+                  liveHome,
+                  shooter,
+                  assistRng,
+                  stoppage: stoppage,
+                ),
+                liveAway,
+                cross: false,
               ),
             );
           }
@@ -1571,12 +1614,16 @@ class MatchEngine {
           if (finished) {
             awayScore++;
             events.add(
-              goal = _goal(
-                manageMinute,
-                liveAway,
-                shooter,
-                assistRng,
-                stoppage: stoppage,
+              goal = ownGoalOr(
+                _goal(
+                  manageMinute,
+                  liveAway,
+                  shooter,
+                  assistRng,
+                  stoppage: stoppage,
+                ),
+                liveHome,
+                cross: false,
               ),
             );
           }
@@ -1607,9 +1654,12 @@ class MatchEngine {
       );
       if (homeSp.shot) homeShots++;
       homeXg += homeSp.xg;
-      if (homeSp.goal != null) {
+      final homeSpGoal = homeSp.goal == null
+          ? null
+          : ownGoalOr(homeSp.goal!, liveAway, cross: true);
+      if (homeSpGoal != null) {
         homeScore++;
-        events.add(homeSp.goal!);
+        events.add(homeSpGoal);
       }
       if (homeSp.shot) {
         final origin = recordDelivery(
@@ -1631,7 +1681,7 @@ class MatchEngine {
           shooter: homeSp.shooter!,
           xg: homeSp.xg,
           origin: origin,
-          goal: homeSp.goal,
+          goal: homeSpGoal,
           deliverer: homeSp.deliverer,
           header: true,
         );
@@ -1647,9 +1697,12 @@ class MatchEngine {
       );
       if (awaySp.shot) awayShots++;
       awayXg += awaySp.xg;
-      if (awaySp.goal != null) {
+      final awaySpGoal = awaySp.goal == null
+          ? null
+          : ownGoalOr(awaySp.goal!, liveHome, cross: true);
+      if (awaySpGoal != null) {
         awayScore++;
-        events.add(awaySp.goal!);
+        events.add(awaySpGoal);
       }
       if (awaySp.shot) {
         final origin = recordDelivery(
@@ -1671,7 +1724,7 @@ class MatchEngine {
           shooter: awaySp.shooter!,
           xg: awaySp.xg,
           origin: origin,
-          goal: awaySp.goal,
+          goal: awaySpGoal,
           deliverer: awaySp.deliverer,
           header: true,
         );
@@ -1691,9 +1744,12 @@ class MatchEngine {
         );
         if (lt.shot) homeShots++;
         homeXg += lt.xg;
-        if (lt.goal != null) {
+        final ltGoal = lt.goal == null
+            ? null
+            : ownGoalOr(lt.goal!, liveAway, cross: true);
+        if (ltGoal != null) {
           homeScore++;
-          events.add(lt.goal!);
+          events.add(ltGoal);
         }
         if (lt.shot) {
           recordSetPiece(
@@ -1712,7 +1768,7 @@ class MatchEngine {
             shooter: lt.shooter!,
             xg: lt.xg,
             origin: ShotOrigin.longThrow,
-            goal: lt.goal,
+            goal: ltGoal,
             deliverer: lt.deliverer,
             header: true,
           );
@@ -1730,9 +1786,12 @@ class MatchEngine {
         );
         if (lt.shot) awayShots++;
         awayXg += lt.xg;
-        if (lt.goal != null) {
+        final ltGoal = lt.goal == null
+            ? null
+            : ownGoalOr(lt.goal!, liveHome, cross: true);
+        if (ltGoal != null) {
           awayScore++;
-          events.add(lt.goal!);
+          events.add(ltGoal);
         }
         if (lt.shot) {
           recordSetPiece(
@@ -1751,7 +1810,7 @@ class MatchEngine {
             shooter: lt.shooter!,
             xg: lt.xg,
             origin: ShotOrigin.longThrow,
-            goal: lt.goal,
+            goal: ltGoal,
             deliverer: lt.deliverer,
             header: true,
           );
@@ -2797,6 +2856,33 @@ class MatchEngine {
   /// The xG of a typical missed chance, where [_missOutcome]'s odds are the
   /// target shares.
   static const double _missPivot = 0.13;
+
+  /// The share of goals from open play that go in off a defender (a shot
+  /// deflected in) and of those from a delivery into the box (a cross or a
+  /// corner turned in). With set pieces about a sixth of the goals, about one
+  /// goal in thirty is an own goal: one a match in every twelve or so, about
+  /// what international football sees.
+  static const double ownGoalFromShot = 0.025;
+  static const double ownGoalFromCross = 0.07;
+
+  /// The man of [def] whose touch put the ball into his own net: mostly a
+  /// centre-half or a full-back, now and then a midfielder tracking back,
+  /// rarely the keeper himself.
+  static Player _ownGoalScorer(_Live def, SeededRng rng) {
+    double weight(Player p) => switch (p.category) {
+      PositionCategory.defender => 5.0,
+      PositionCategory.midfielder => 1.5,
+      PositionCategory.forward => 0.4,
+      PositionCategory.goalkeeper => 0.3,
+    };
+    final total = def.xi.fold<double>(0, (sum, p) => sum + weight(p));
+    var roll = rng.nextDouble() * total;
+    for (final p in def.xi) {
+      roll -= weight(p);
+      if (roll <= 0) return p;
+    }
+    return def.xi.last;
+  }
 
   /// Picks a scorer, weighting outfield players by finishing and attacking
   /// position.

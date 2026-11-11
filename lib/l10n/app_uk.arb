@@ -4233,5 +4233,17 @@
   "pitchComKickOffFrost": "Морозний вечір і тверде поле. Передачі даватимуться нелегко.",
   "pitchComKickOffGale": "Стартовий свисток при сильному вітрі. Довгі передачі зноситиме.",
   "pitchComKickOffFog": "Стартовий свисток у густому тумані. Здалеку легко ніхто не заб’є.",
-  "pitchComKickOffHaze": "Стартовий свисток у спекотному мареві. Сьогодні ноги втомляться рано."
+  "pitchComKickOffHaze": "Стартовий свисток у спекотному мареві. Сьогодні ноги втомляться рано.",
+  "matchOwnGoal": "АВТОГОЛ",
+  "matchGoalOwnGoal": "АГ",
+  "pitchComOwnGoal1": "Автогол! {defender} спрямовує м’яч у власні ворота.",
+  "pitchComOwnGoal2": "Удар {shooter} підступно рикошетить від {defender} і залітає у ворота.",
+  "pitchComOwnGoal3": "Катастрофа для {defender}, який переграє власного воротаря.",
+  "pitchComBigSave1": "Який сейв! {keeper} не дає забити {player} з близької відстані.",
+  "pitchComBigSave2": "Блискучий сейв від {keeper}!",
+  "pitchComBigSave3": "{player} мав би забивати, але {keeper} якимось дивом рятує.",
+  "matchTimelineWoodwork": "{name} влучив у каркас воріт",
+  "matchTimelineBigSave": "Важливий сейв від {name}",
+  "matchChartXg": "xG протягом матчу",
+  "matchChartMomentum": "Хто домінував"
 }

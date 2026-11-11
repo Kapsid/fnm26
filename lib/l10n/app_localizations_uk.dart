@@ -17262,4 +17262,56 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get pitchComKickOffHaze =>
       'Стартовий свисток у спекотному мареві. Сьогодні ноги втомляться рано.';
+
+  @override
+  String get matchOwnGoal => 'АВТОГОЛ';
+
+  @override
+  String get matchGoalOwnGoal => 'АГ';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Автогол! $defender спрямовує м’яч у власні ворота.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return 'Удар $shooter підступно рикошетить від $defender і залітає у ворота.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Катастрофа для $defender, який переграє власного воротаря.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Який сейв! $keeper не дає забити $player з близької відстані.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Блискучий сейв від $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player мав би забивати, але $keeper якимось дивом рятує.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name влучив у каркас воріт';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Важливий сейв від $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG протягом матчу';
+
+  @override
+  String get matchChartMomentum => 'Хто домінував';
 }

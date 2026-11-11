@@ -4233,5 +4233,17 @@
   "pitchComKickOffFrost": "Malam yang dingin dan padang yang keras. Hantaran tidak akan mudah.",
   "pitchComKickOffGale": "Sepak mula dalam angin kencang. Bola panjang akan tersasar.",
   "pitchComKickOffFog": "Sepak mula dalam kabus tebal. Tiada siapa akan mudah menjaringkan gol dari jauh.",
-  "pitchComKickOffHaze": "Sepak mula dalam jerebu panas. Kaki akan cepat letih hari ini."
+  "pitchComKickOffHaze": "Sepak mula dalam jerebu panas. Kaki akan cepat letih hari ini.",
+  "matchOwnGoal": "GOL SENDIRI",
+  "matchGoalOwnGoal": "GS",
+  "pitchComOwnGoal1": "Gol sendiri! {defender} memasukkan bola ke gawang sendiri.",
+  "pitchComOwnGoal2": "Percubaan {shooter} terkena {defender} lalu terpesong masuk.",
+  "pitchComOwnGoal3": "Malapetaka buat {defender}, yang menewaskan penjaga golnya sendiri.",
+  "pitchComBigSave1": "Selamatan hebat! {keeper} menafikan {player} dari jarak dekat.",
+  "pitchComBigSave2": "Selamatan cemerlang oleh {keeper}!",
+  "pitchComBigSave3": "{player} kelihatan pasti menjaringkan gol, tetapi {keeper} entah bagaimana menyelamatkannya.",
+  "matchTimelineWoodwork": "{name} terkena tiang gol",
+  "matchTimelineBigSave": "Selamatan besar oleh {name}",
+  "matchChartXg": "xG sepanjang perlawanan",
+  "matchChartMomentum": "Siapa yang menguasai"
 }

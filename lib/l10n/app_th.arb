@@ -4233,5 +4233,17 @@
   "pitchComKickOffFrost": "คืนที่หนาวจัดและสนามแข็ง การส่งบอลจะไม่ง่าย",
   "pitchComKickOffGale": "เริ่มเกมท่ามกลางลมแรง บอลยาวจะเฉออกนอกทาง",
   "pitchComKickOffFog": "เริ่มเกมท่ามกลางหมอกหนา ไม่มีใครยิงไกลเข้าได้ง่ายๆ",
-  "pitchComKickOffHaze": "เริ่มเกมท่ามกลางไอแดดร้อน วันนี้ขาจะล้าเร็ว"
+  "pitchComKickOffHaze": "เริ่มเกมท่ามกลางไอแดดร้อน วันนี้ขาจะล้าเร็ว",
+  "matchOwnGoal": "ทำเข้าประตูตัวเอง",
+  "matchGoalOwnGoal": "OG",
+  "pitchComOwnGoal1": "ทำเข้าประตูตัวเอง! {defender} ทำบอลเข้าตาข่ายของทีมตัวเอง",
+  "pitchComOwnGoal2": "ลูกยิงของ {shooter} โดน {defender} เบี่ยงทางอย่างโชคร้ายและเข้าประตูไป",
+  "pitchComOwnGoal3": "หายนะของ {defender} ที่ทำบอลผ่านผู้รักษาประตูทีมตัวเอง",
+  "pitchComBigSave1": "เซฟสุดยอด! {keeper} ปัดลูกยิงระยะประชิดของ {player} ออกไป",
+  "pitchComBigSave2": "{keeper} เซฟได้ยอดเยี่ยม!",
+  "pitchComBigSave3": "{player} ดูเหมือนจะยิงเข้าแน่ แต่ {keeper} ก็ป้องกันไว้ได้",
+  "matchTimelineWoodwork": "{name} ยิงชนเสาหรือคาน",
+  "matchTimelineBigSave": "{name} เซฟสำคัญ",
+  "matchChartXg": "xG ตลอดเกม",
+  "matchChartMomentum": "ใครเป็นฝ่ายเหนือกว่า"
 }

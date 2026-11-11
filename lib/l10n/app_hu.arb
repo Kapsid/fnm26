@@ -4233,5 +4233,17 @@
   "pitchComKickOffFrost": "Fagyos este és kemény pálya. Nem lesz könnyű passzolni.",
   "pitchComKickOffGale": "Kezdőrúgás erős szélben. A hosszú labdák elszállnak majd.",
   "pitchComKickOffFog": "Kezdőrúgás sűrű ködben. Távolról senki sem fog könnyen gólt lőni.",
-  "pitchComKickOffHaze": "Kezdőrúgás a hőségpárában. Ma korán elfogy majd az erő."
+  "pitchComKickOffHaze": "Kezdőrúgás a hőségpárában. Ma korán elfogy majd az erő.",
+  "matchOwnGoal": "ÖNGÓL",
+  "matchGoalOwnGoal": "ÖG",
+  "pitchComOwnGoal1": "Öngól! {defender} a saját kapujába juttatja a labdát.",
+  "pitchComOwnGoal2": "{shooter} próbálkozása szerencsétlenül megpattan {defender} játékosán, és bemegy.",
+  "pitchComOwnGoal3": "Katasztrófa {defender} számára, aki a saját kapusát veri meg.",
+  "pitchComBigSave1": "Micsoda védés! {keeper} közelről hárítja {player} lövését.",
+  "pitchComBigSave2": "Remek védés, {keeper}!",
+  "pitchComBigSave3": "{player} biztos gólnak tűnt, de {keeper} valahogy hárít.",
+  "matchTimelineWoodwork": "{name} kapufát talált",
+  "matchTimelineBigSave": "Nagy védés: {name}",
+  "matchChartXg": "xG a mérkőzés során",
+  "matchChartMomentum": "Ki volt fölényben"
 }

@@ -16932,4 +16932,56 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get pitchComKickOffHaze =>
       'Avspark i värmedisen. Benen tröttnar tidigt i dag.';
+
+  @override
+  String get matchOwnGoal => 'SJÄLVMÅL';
+
+  @override
+  String get matchGoalOwnGoal => 'SM';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Självmål! $defender styr in bollen i eget mål.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return '${shooter}s försök tar en olycklig styrning på $defender och går in.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Katastrof för $defender, som överlistar sin egen målvakt.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Vilken räddning! $keeper stoppar $player från nära håll.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Lysande räddning av $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player såg ut att göra mål, men $keeper räddar på något sätt.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name träffade ramen';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Stor räddning av $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG under matchen';
+
+  @override
+  String get matchChartMomentum => 'Vem som styrde';
 }

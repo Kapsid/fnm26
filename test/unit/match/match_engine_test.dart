@@ -779,7 +779,8 @@ void main() {
             (e) => e.type == MatchEventType.goal && e.setPiece,
           )) {
             expect(g.penalty, isFalse, reason: 'set piece is not a penalty');
-            final ids = g.teamNationId == 1 ? homeIds : awayIds;
+            // An own goal counts for one side and is the other's man.
+            final ids = (g.teamNationId == 1) != g.ownGoal ? homeIds : awayIds;
             expect(ids.contains(g.playerId), isTrue);
             checked++;
           }

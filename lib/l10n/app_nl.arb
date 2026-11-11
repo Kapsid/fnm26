@@ -4233,5 +4233,17 @@
   "pitchComKickOffFrost": "Een vriesnacht en een hard veld. Passen wordt niet makkelijk.",
   "pitchComKickOffGale": "Aftrap bij harde wind. Lange ballen gaan afdwalen.",
   "pitchComKickOffFog": "Aftrap in dichte mist. Van afstand scoort niemand hier makkelijk.",
-  "pitchComKickOffHaze": "Aftrap in de hittewaas. De benen raken vandaag vroeg vermoeid."
+  "pitchComKickOffHaze": "Aftrap in de hittewaas. De benen raken vandaag vroeg vermoeid.",
+  "matchOwnGoal": "EIGEN DOELPUNT",
+  "matchGoalOwnGoal": "ED",
+  "pitchComOwnGoal1": "Eigen doelpunt! {defender} werkt de bal in zijn eigen doel.",
+  "pitchComOwnGoal2": "De poging van {shooter} wordt ongelukkig van richting veranderd door {defender} en gaat erin.",
+  "pitchComOwnGoal3": "Rampzalig voor {defender}, die zijn eigen keeper passeert.",
+  "pitchComBigSave1": "Wat een redding! {keeper} houdt {player} van dichtbij van scoren af.",
+  "pitchComBigSave2": "Geweldige redding van {keeper}!",
+  "pitchComBigSave3": "{player} leek zeker te scoren, maar {keeper} houdt hem op de een of andere manier tegen.",
+  "matchTimelineWoodwork": "{name} raakte het aluminium",
+  "matchTimelineBigSave": "Grote redding van {name}",
+  "matchChartXg": "xG gedurende de wedstrijd",
+  "matchChartMomentum": "Wie de overhand had"
 }

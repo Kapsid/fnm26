@@ -494,6 +494,8 @@ class _TvEventStrip extends StatelessWidget {
           final assist = e.assistName;
           final how = e.penalty
               ? l.matchPenalty
+              : e.ownGoal
+              ? l.matchOwnGoal
               : e.longThrow
               ? l.matchGoalLongThrow
               : assist != null && assist.isNotEmpty

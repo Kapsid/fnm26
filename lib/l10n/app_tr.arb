@@ -4233,5 +4233,17 @@
   "pitchComKickOffFrost": "Ayaz bir gece ve sert bir zemin. Pas yapmak kolay olmayacak.",
   "pitchComKickOffGale": "Maç sert rüzgarda başladı. Uzun toplar yolunu şaşıracak.",
   "pitchComKickOffFog": "Maç yoğun siste başladı. Kimse uzaktan kolay gol atamayacak.",
-  "pitchComKickOffHaze": "Maç sıcak pus içinde başladı. Bacaklar bugün erken yorulacak."
+  "pitchComKickOffHaze": "Maç sıcak pus içinde başladı. Bacaklar bugün erken yorulacak.",
+  "matchOwnGoal": "KENDİ KALESİNE",
+  "matchGoalOwnGoal": "KK",
+  "pitchComOwnGoal1": "Kendi kalesine! {defender} topu kendi ağlarına gönderiyor.",
+  "pitchComOwnGoal2": "{shooter}'in denemesi {defender}'e çarpıp talihsiz şekilde ağlara gidiyor.",
+  "pitchComOwnGoal3": "{defender} için felaket, kendi kalecisini avlıyor.",
+  "pitchComBigSave1": "Ne kurtarış! {keeper}, {player}'in yakın mesafeden şutunu çıkarıyor.",
+  "pitchComBigSave2": "{keeper}'den harika bir kurtarış!",
+  "pitchComBigSave3": "{player} golü kesin atacak gibiydi, ama {keeper} bir şekilde kurtarıyor.",
+  "matchTimelineWoodwork": "{name} direğe takıldı",
+  "matchTimelineBigSave": "{name}'den büyük kurtarış",
+  "matchChartXg": "Maç boyunca xG",
+  "matchChartMomentum": "Kim üstündü"
 }

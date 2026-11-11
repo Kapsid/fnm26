@@ -4233,5 +4233,17 @@
   "pitchComKickOffFrost": "Một đêm giá rét và mặt sân cứng. Chuyền bóng sẽ không dễ.",
   "pitchComKickOffGale": "Giao bóng trong gió mạnh. Những đường bóng dài sẽ đi chệch hướng.",
   "pitchComKickOffFog": "Giao bóng trong sương mù dày đặc. Sẽ chẳng dễ ghi bàn từ xa.",
-  "pitchComKickOffHaze": "Giao bóng trong cái nóng mờ hơi. Hôm nay thể lực sẽ cạn sớm."
+  "pitchComKickOffHaze": "Giao bóng trong cái nóng mờ hơi. Hôm nay thể lực sẽ cạn sớm.",
+  "matchOwnGoal": "PHẢN LƯỚI NHÀ",
+  "matchGoalOwnGoal": "PLN",
+  "pitchComOwnGoal1": "Phản lưới nhà! {defender} đưa bóng vào lưới đội mình.",
+  "pitchComOwnGoal2": "Pha dứt điểm của {shooter} chạm chân {defender} đổi hướng oan nghiệt rồi đi vào lưới.",
+  "pitchComOwnGoal3": "Thảm họa cho {defender}, người đánh bại chính thủ môn đội nhà.",
+  "pitchComBigSave1": "Pha cứu thua xuất sắc! {keeper} từ chối {player} ở cự ly gần.",
+  "pitchComBigSave2": "Pha cứu thua tuyệt vời của {keeper}!",
+  "pitchComBigSave3": "{player} tưởng như chắc chắn ghi bàn, nhưng {keeper} bằng cách nào đó vẫn cản phá được.",
+  "matchTimelineWoodwork": "{name} sút trúng khung gỗ",
+  "matchTimelineBigSave": "Pha cứu thua quan trọng của {name}",
+  "matchChartXg": "xG theo diễn biến trận đấu",
+  "matchChartMomentum": "Đội nào lấn lướt"
 }

@@ -4233,5 +4233,17 @@
   "pitchComKickOffFrost": "Mroźny wieczór i twarda murawa. Podania nie będą łatwe.",
   "pitchComKickOffGale": "Początek meczu przy silnym wietrze. Długie piłki będą zbaczać.",
   "pitchComKickOffFog": "Początek meczu w gęstej mgle. Z dystansu nikt łatwo nie strzeli.",
-  "pitchComKickOffHaze": "Początek meczu w upalnej mgiełce. Siły dziś szybko się skończą."
+  "pitchComKickOffHaze": "Początek meczu w upalnej mgiełce. Siły dziś szybko się skończą.",
+  "matchOwnGoal": "GOL SAMOBÓJCZY",
+  "matchGoalOwnGoal": "SAM",
+  "pitchComOwnGoal1": "Samobój! {defender} wpakował piłkę do własnej bramki.",
+  "pitchComOwnGoal2": "Strzał {shooter} pechowo odbija się od {defender} i wpada do siatki.",
+  "pitchComOwnGoal3": "Katastrofa {defender}, który pokonuje własnego bramkarza.",
+  "pitchComBigSave1": "Co za interwencja! {keeper} zatrzymuje {player} z bliska.",
+  "pitchComBigSave2": "Świetna interwencja {keeper}!",
+  "pitchComBigSave3": "{player} miał już gola, ale {keeper} jakimś cudem broni.",
+  "matchTimelineWoodwork": "{name} trafił w obramowanie",
+  "matchTimelineBigSave": "Świetna obrona: {name}",
+  "matchChartXg": "xG w trakcie meczu",
+  "matchChartMomentum": "Kto przeważał"
 }

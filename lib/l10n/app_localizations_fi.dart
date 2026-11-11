@@ -17023,4 +17023,56 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String get pitchComKickOffHaze =>
       'Aloituspotku helleusvassa. Jalat väsyvät tänään aikaisin.';
+
+  @override
+  String get matchOwnGoal => 'OMA MAALI';
+
+  @override
+  String get matchGoalOwnGoal => 'OM';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Oma maali! $defender ohjaa pallon omaan verkkoon.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return '${shooter}n yritys kimpoaa ikävästi ${defender}ista ja menee sisään.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Katastrofi ${defender}ille, joka voittaa oman maalivahtinsa.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Mikä torjunta! $keeper pysäyttää ${player}n läheltä.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Loistava torjunta, $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player näytti varmalta maalintekijältä, mutta $keeper torjuu jotenkin.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name osui tolppaan';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Iso torjunta: $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG ottelun aikana';
+
+  @override
+  String get matchChartMomentum => 'Kumpi hallitsi';
 }

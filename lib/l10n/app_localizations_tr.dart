@@ -16858,4 +16858,56 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get pitchComKickOffHaze =>
       'Maç sıcak pus içinde başladı. Bacaklar bugün erken yorulacak.';
+
+  @override
+  String get matchOwnGoal => 'KENDİ KALESİNE';
+
+  @override
+  String get matchGoalOwnGoal => 'KK';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Kendi kalesine! $defender topu kendi ağlarına gönderiyor.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return '$shooter\'in denemesi $defender\'e çarpıp talihsiz şekilde ağlara gidiyor.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return '$defender için felaket, kendi kalecisini avlıyor.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Ne kurtarış! $keeper, $player\'in yakın mesafeden şutunu çıkarıyor.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return '$keeper\'den harika bir kurtarış!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player golü kesin atacak gibiydi, ama $keeper bir şekilde kurtarıyor.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name direğe takıldı';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return '$name\'den büyük kurtarış';
+  }
+
+  @override
+  String get matchChartXg => 'Maç boyunca xG';
+
+  @override
+  String get matchChartMomentum => 'Kim üstündü';
 }

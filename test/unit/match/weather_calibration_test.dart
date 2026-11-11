@@ -94,6 +94,7 @@ void main() {
           final ratio = engineGoals(pair, c) / clear;
           final bgRatio = backgroundGoals(pair, c) / bgClear;
           engineRatio[w] = ratio;
+          // The measured figures, for the calibration record.
           // ignore: avoid_print
           print(
             '$pair ${w.name}: engine ${(100 * (ratio - 1)).toStringAsFixed(2)}%'
@@ -130,6 +131,7 @@ void main() {
     final bgRatio =
         backgroundGoals(pair, doha(WeatherKind.haze)) /
         backgroundGoals(pair, doha(WeatherKind.clear));
+    // The measured figures, for the calibration record.
     // ignore: avoid_print
     print(
       'haze: engine ${(100 * (ratio - 1)).toStringAsFixed(2)}% '
@@ -185,6 +187,7 @@ void main() {
     for (final w in WeatherKind.values) {
       overall += count[w]! / total * ratioOf(w);
     }
+    // The measured figures, for the calibration record.
     // ignore: avoid_print
     print(
       'world mix: ${{for (final w in WeatherKind.values) w.name: (100 * count[w]! / total).toStringAsFixed(1)}} '

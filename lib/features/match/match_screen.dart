@@ -37,6 +37,7 @@ import 'package:fnm/features/achievements/achievement_popup.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/match/match_feedback.dart';
+import 'package:fnm/features/match/match_flow_charts.dart';
 import 'package:fnm/features/match/ground_card.dart';
 import 'package:fnm/features/match/penalty_order_sheet.dart';
 import 'package:fnm/features/match/match_providers.dart';
@@ -1994,23 +1995,26 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             // no event, so it comes in by its minute: the Timeline shows
             // the minute on the clock whole, the 2D TV may not have staged
             // it yet, so there it waits for the next.
+            final timelineNames = {
+              for (final p in [
+                ...preview.homeTeam.xi,
+                ...preview.awayTeam.xi,
+                ...preview.bench,
+                ...preview.opponentBench,
+              ])
+                p.id: p.name,
+            };
+            bool momentReached(int minute, int stoppage) {
+              if (ft) return true;
+              if (minute != _minute) return minute < _minute;
+              return _onPitch ? stoppage < _added : stoppage <= _added;
+            }
+
             final penalties = inPlayPenalties(
               r,
-              names: {
-                for (final p in [
-                  ...preview.homeTeam.xi,
-                  ...preview.awayTeam.xi,
-                  ...preview.bench,
-                  ...preview.opponentBench,
-                ])
-                  p.id: p.name,
-              },
+              names: timelineNames,
               eventReached: _reached,
-              momentReached: (minute, stoppage) {
-                if (ft) return true;
-                if (minute != _minute) return minute < _minute;
-                return _onPitch ? stoppage < _added : stoppage <= _added;
-              },
+              momentReached: momentReached,
             );
             // (The Pitch view plays the 120th while it is on the clock.)
             final inExtraTime = _minute > 90 && !_clockDone;
@@ -2143,6 +2147,12 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             final timeline = MatchTimeline(
               events: timelineEvents,
               penalties: penalties,
+              chances: timelineChances(
+                r,
+                names: timelineNames,
+                momentReached: momentReached,
+                opponentOf: (id) => id == homeId ? awayId : homeId,
+              ),
               live: !ft,
               homeId: homeId,
             );
@@ -2169,6 +2179,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               fullTime: ft,
               events: timelineEvents,
               penalties: penalties,
+              homeColor: homeC,
+              awayColor: awayC,
               // The tablet's 2D TV has the ground in its header band.
             );
             List<MatchEvent> subsOf(int nationId) => shown

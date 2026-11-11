@@ -4233,5 +4233,17 @@
   "pitchComKickOffFrost": "Una notte gelida e un campo duro. Passarsi la palla non sarà facile.",
   "pitchComKickOffGale": "Calcio d’inizio con un vento forte. I lanci lunghi andranno fuori misura.",
   "pitchComKickOffFog": "Calcio d’inizio in una fitta nebbia. Nessuno segnerà facilmente da fuori.",
-  "pitchComKickOffHaze": "Calcio d’inizio nella foschia di calore. Oggi le gambe si stancheranno presto."
+  "pitchComKickOffHaze": "Calcio d’inizio nella foschia di calore. Oggi le gambe si stancheranno presto.",
+  "matchOwnGoal": "AUTOGOL",
+  "matchGoalOwnGoal": "AUT",
+  "pitchComOwnGoal1": "Autogol! {defender} la spedisce nella propria porta.",
+  "pitchComOwnGoal2": "Il tentativo di {shooter} viene deviato beffardamente da {defender} ed entra.",
+  "pitchComOwnGoal3": "Disastro di {defender}, che batte il proprio portiere.",
+  "pitchComBigSave1": "Che parata! {keeper} nega il gol a {player} da distanza ravvicinata.",
+  "pitchComBigSave2": "Grande intervento di {keeper}!",
+  "pitchComBigSave3": "{player} sembrava sicuro di segnare, ma {keeper} in qualche modo la tiene fuori.",
+  "matchTimelineWoodwork": "{name} ha colpito un legno",
+  "matchTimelineBigSave": "Grande parata di {name}",
+  "matchChartXg": "xG nel corso della partita",
+  "matchChartMomentum": "Chi ha dominato"
 }

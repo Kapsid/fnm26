@@ -25639,6 +25639,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Kick-off in the heat haze. Legs will tire early today.'**
   String get pitchComKickOffHaze;
+
+  /// Caption under the goal celebration (and on the TV strip) when the goal was an own goal: a defender put the ball into his own net. All caps, like the PENALTY caption.
+  ///
+  /// In en, this message translates to:
+  /// **'OWN GOAL'**
+  String get matchOwnGoal;
+
+  /// Short tag after an own goal's minute or scorer in compact lists (the match timeline, the share card), like PEN for a penalty. Keep it two or three letters where the language allows.
+  ///
+  /// In en, this message translates to:
+  /// **'OG'**
+  String get matchGoalOwnGoal;
+
+  /// Pitch view commentary line: an own goal. {defender} is the defending player who put the ball into his own net. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Own goal! {defender} turns it into his own net.'**
+  String pitchComOwnGoal1(String defender);
+
+  /// Pitch view commentary line: an own goal. {shooter} is the attacking player whose shot or cross it was, {defender} the defending player it went in off. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{shooter}\'s effort takes a cruel deflection off {defender} and goes in.'**
+  String pitchComOwnGoal2(String defender, String shooter);
+
+  /// Pitch view commentary line: an own goal. {defender} is the defending player who put the ball past his own goalkeeper. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Disaster for {defender}, who puts it past his own keeper.'**
+  String pitchComOwnGoal3(String defender);
+
+  /// Pitch view commentary line: the goalkeeper makes a big save from a good chance. {keeper} is the goalkeeper, {player} the shooter. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'What a save! {keeper} denies {player} from close range.'**
+  String pitchComBigSave1(String keeper, String player);
+
+  /// Pitch view commentary line: the goalkeeper makes a big save from a good chance. {keeper} is the goalkeeper. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Brilliant stop by {keeper}!'**
+  String pitchComBigSave2(String keeper);
+
+  /// Pitch view commentary line: the goalkeeper makes a big save from a good chance. {player} is the shooter, {keeper} the goalkeeper. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} looked certain to score, but {keeper} somehow keeps it out.'**
+  String pitchComBigSave3(String keeper, String player);
+
+  /// Match timeline, read aloud by the screen reader for a row with a goalpost icon: {name} hit the post or the bar.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} hit the woodwork'**
+  String matchTimelineWoodwork(String name);
+
+  /// Match timeline, read aloud by the screen reader for a row with a goalkeeper glove icon: {name}, the goalkeeper, made a big save.
+  ///
+  /// In en, this message translates to:
+  /// **'Big save by {name}'**
+  String matchTimelineBigSave(String name);
+
+  /// Match stats, heading over the chart of both sides' expected goals (xG) adding up minute by minute through the match.
+  ///
+  /// In en, this message translates to:
+  /// **'xG over the match'**
+  String get matchChartXg;
+
+  /// Match stats, heading over the momentum chart: which side was on top, minute by minute, read from the chances each side made (bars up for the home side, down for the visitors).
+  ///
+  /// In en, this message translates to:
+  /// **'Who was on top'**
+  String get matchChartMomentum;
 }
 
 class _AppLocalizationsDelegate

@@ -17282,4 +17282,56 @@ class AppLocalizationsHr extends AppLocalizations {
   @override
   String get pitchComKickOffHaze =>
       'Početni udarac u vreloj izmaglici. Noge će se danas rano umoriti.';
+
+  @override
+  String get matchOwnGoal => 'AUTOGOL';
+
+  @override
+  String get matchGoalOwnGoal => 'AG';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Autogol! $defender je ubacio loptu u vlastitu mrežu.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return 'Pokušaj igrača $shooter nesretno se odbije od igrača $defender i završi u mreži.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Katastrofa za igrača $defender, koji svladava vlastitog vratara.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Kakva obrana! $keeper zaustavlja igrača $player iz blizine.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Sjajna obrana, $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player je izgledao siguran za gol, ali $keeper nekako brani.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name je pogodio okvir gola';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Velika obrana: $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG tijekom utakmice';
+
+  @override
+  String get matchChartMomentum => 'Tko je bio bolji';
 }

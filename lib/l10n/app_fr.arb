@@ -4233,5 +4233,17 @@
   "pitchComKickOffFrost": "Une nuit glaciale et une pelouse dure. Les passes ne seront pas faciles.",
   "pitchComKickOffGale": "Coup d’envoi dans un vent violent. Les longs ballons vont s’égarer.",
   "pitchComKickOffFog": "Coup d’envoi dans un épais brouillard. Personne ne marquera facilement de loin.",
-  "pitchComKickOffHaze": "Coup d’envoi dans la brume de chaleur. Les jambes vont fatiguer tôt aujourd’hui."
+  "pitchComKickOffHaze": "Coup d’envoi dans la brume de chaleur. Les jambes vont fatiguer tôt aujourd’hui.",
+  "matchOwnGoal": "CONTRE SON CAMP",
+  "matchGoalOwnGoal": "CSC",
+  "pitchComOwnGoal1": "Contre son camp ! {defender} pousse le ballon dans ses propres filets.",
+  "pitchComOwnGoal2": "La tentative de {shooter} est cruellement déviée par {defender} et rentre.",
+  "pitchComOwnGoal3": "Catastrophe pour {defender}, qui trompe son propre gardien.",
+  "pitchComBigSave1": "Quel arrêt ! {keeper} écœure {player} à bout portant.",
+  "pitchComBigSave2": "Superbe arrêt de {keeper} !",
+  "pitchComBigSave3": "{player} semblait sûr de marquer, mais {keeper} s’interpose on ne sait comment.",
+  "matchTimelineWoodwork": "{name} a trouvé les montants",
+  "matchTimelineBigSave": "Gros arrêt de {name}",
+  "matchChartXg": "xG au fil du match",
+  "matchChartMomentum": "Qui dominait"
 }

@@ -4233,5 +4233,17 @@
   "pitchComKickOffFrost": "Nagyeyelong gabi at matigas na pitch. Hindi magiging madali ang pasa.",
   "pitchComKickOffGale": "Kick-off sa malakas na hangin. Liligaw ang mga long ball.",
   "pitchComKickOffFog": "Kick-off sa makapal na hamog. Walang madaling makakaiskor mula sa malayo.",
-  "pitchComKickOffHaze": "Kick-off sa init na may ulap. Maagang mapapagod ang mga binti ngayon."
+  "pitchComKickOffHaze": "Kick-off sa init na may ulap. Maagang mapapagod ang mga binti ngayon.",
+  "matchOwnGoal": "SARILING GOL",
+  "matchGoalOwnGoal": "SG",
+  "pitchComOwnGoal1": "Sariling gol! Naipasok ni {defender} ang bola sa sarili niyang net.",
+  "pitchComOwnGoal2": "Tumama ang tira ni {shooter} kay {defender} at malas na pumasok.",
+  "pitchComOwnGoal3": "Kapahamakan para kay {defender}, na nalusutan ang sarili niyang goalkeeper.",
+  "pitchComBigSave1": "Napakagandang save! Pinigilan ni {keeper} si {player} mula sa malapitan.",
+  "pitchComBigSave2": "Napakahusay na save ni {keeper}!",
+  "pitchComBigSave3": "Mukhang siguradong makakaiskor si {player}, pero kahit paano ay napigilan ito ni {keeper}.",
+  "matchTimelineWoodwork": "Tumama sa poste ang tira ni {name}",
+  "matchTimelineBigSave": "Malaking save ni {name}",
+  "matchChartXg": "xG sa buong laro",
+  "matchChartMomentum": "Sino ang nakalamang"
 }

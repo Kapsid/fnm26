@@ -4233,5 +4233,17 @@
   "pitchComKickOffFrost": "Mrazivý večer a tvrdý trávník. Přihrávky nebudou snadné.",
   "pitchComKickOffGale": "Výkop v silném větru. Dlouhé míče budou létat mimo.",
   "pitchComKickOffFog": "Výkop v husté mlze. Z dálky se tu snadno skórovat nebude.",
-  "pitchComKickOffHaze": "Výkop v horkém oparu. Síly dnes dojdou brzy."
+  "pitchComKickOffHaze": "Výkop v horkém oparu. Síly dnes dojdou brzy.",
+  "matchOwnGoal": "VLASTNÍ GÓL",
+  "matchGoalOwnGoal": "VL",
+  "pitchComOwnGoal1": "Vlastní gól! {defender} si to srazil do vlastní branky.",
+  "pitchComOwnGoal2": "Pokus hráče {shooter} se nešťastně odrazí od hráče {defender} a končí v síti.",
+  "pitchComOwnGoal3": "Katastrofa pro hráče {defender}, který překonal vlastního brankáře.",
+  "pitchComBigSave1": "Jaký zákrok! {keeper} zblízka vychytal hráče {player}.",
+  "pitchComBigSave2": "Skvělý zákrok, {keeper}!",
+  "pitchComBigSave3": "{player} už měl gól na noze, ale {keeper} to nějak vytáhl.",
+  "matchTimelineWoodwork": "{name} trefil tyč",
+  "matchTimelineBigSave": "Velký zákrok: {name}",
+  "matchChartXg": "xG v průběhu zápasu",
+  "matchChartMomentum": "Kdo měl navrch"
 }

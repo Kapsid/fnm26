@@ -4233,5 +4233,17 @@
   "pitchComKickOffFrost": "En frostig kväll och en hård plan. Passningsspelet blir inte lätt.",
   "pitchComKickOffGale": "Avspark i hård vind. Långa bollar kommer att driva iväg.",
   "pitchComKickOffFog": "Avspark i tät dimma. Ingen kommer att göra mål från distans i första taget.",
-  "pitchComKickOffHaze": "Avspark i värmedisen. Benen tröttnar tidigt i dag."
+  "pitchComKickOffHaze": "Avspark i värmedisen. Benen tröttnar tidigt i dag.",
+  "matchOwnGoal": "SJÄLVMÅL",
+  "matchGoalOwnGoal": "SM",
+  "pitchComOwnGoal1": "Självmål! {defender} styr in bollen i eget mål.",
+  "pitchComOwnGoal2": "{shooter}s försök tar en olycklig styrning på {defender} och går in.",
+  "pitchComOwnGoal3": "Katastrof för {defender}, som överlistar sin egen målvakt.",
+  "pitchComBigSave1": "Vilken räddning! {keeper} stoppar {player} från nära håll.",
+  "pitchComBigSave2": "Lysande räddning av {keeper}!",
+  "pitchComBigSave3": "{player} såg ut att göra mål, men {keeper} räddar på något sätt.",
+  "matchTimelineWoodwork": "{name} träffade ramen",
+  "matchTimelineBigSave": "Stor räddning av {name}",
+  "matchChartXg": "xG under matchen",
+  "matchChartMomentum": "Vem som styrde"
 }

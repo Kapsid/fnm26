@@ -16795,4 +16795,56 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get pitchComKickOffHaze =>
       'Giao bóng trong cái nóng mờ hơi. Hôm nay thể lực sẽ cạn sớm.';
+
+  @override
+  String get matchOwnGoal => 'PHẢN LƯỚI NHÀ';
+
+  @override
+  String get matchGoalOwnGoal => 'PLN';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Phản lưới nhà! $defender đưa bóng vào lưới đội mình.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return 'Pha dứt điểm của $shooter chạm chân $defender đổi hướng oan nghiệt rồi đi vào lưới.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Thảm họa cho $defender, người đánh bại chính thủ môn đội nhà.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Pha cứu thua xuất sắc! $keeper từ chối $player ở cự ly gần.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Pha cứu thua tuyệt vời của $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player tưởng như chắc chắn ghi bàn, nhưng $keeper bằng cách nào đó vẫn cản phá được.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name sút trúng khung gỗ';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Pha cứu thua quan trọng của $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG theo diễn biến trận đấu';
+
+  @override
+  String get matchChartMomentum => 'Đội nào lấn lướt';
 }

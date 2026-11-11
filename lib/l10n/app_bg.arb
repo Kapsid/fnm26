@@ -4233,5 +4233,17 @@
   "pitchComKickOffFrost": "Мразовита вечер и твърд терен. Подаванията няма да са лесни.",
   "pitchComKickOffGale": "Начален удар при силен вятър. Дългите топки ще се отклоняват.",
   "pitchComKickOffFog": "Начален удар в гъста мъгла. Никой няма да вкарва лесно отдалеч.",
-  "pitchComKickOffHaze": "Начален удар в знойната мараня. Краката ще се уморят рано днес."
+  "pitchComKickOffHaze": "Начален удар в знойната мараня. Краката ще се уморят рано днес.",
+  "matchOwnGoal": "АВТОГОЛ",
+  "matchGoalOwnGoal": "АГ",
+  "pitchComOwnGoal1": "Автогол! {defender} вкарва топката в собствената си врата.",
+  "pitchComOwnGoal2": "Опитът на {shooter} рикошира нещастно в {defender} и влиза.",
+  "pitchComOwnGoal3": "Катастрофа за {defender}, който преодолява собствения си вратар.",
+  "pitchComBigSave1": "Какво спасяване! {keeper} отказва {player} от близко разстояние.",
+  "pitchComBigSave2": "Блестящо спасяване на {keeper}!",
+  "pitchComBigSave3": "{player} изглеждаше сигурен, че ще вкара, но {keeper} някак спасява.",
+  "matchTimelineWoodwork": "{name} уцели гредата",
+  "matchTimelineBigSave": "Голямо спасяване на {name}",
+  "matchChartXg": "xG по време на мача",
+  "matchChartMomentum": "Кой надделяваше"
 }

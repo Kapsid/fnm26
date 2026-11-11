@@ -16337,4 +16337,56 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get pitchComKickOffHaze => '陽炎の中でキックオフ。今日は早く足が止まりそうです。';
+
+  @override
+  String get matchOwnGoal => 'オウンゴール';
+
+  @override
+  String get matchGoalOwnGoal => 'OG';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'オウンゴール！$defenderが自陣のゴールに入れてしまいました。';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return '$shooterのシュートが$defenderに当たって不運にもコースが変わり、ゴールへ。';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return '$defenderにとって悪夢、味方のキーパーを破ってしまいました。';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'なんというセーブ！$keeperが至近距離から$playerを阻みます。';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return '$keeperの見事なセーブ！';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$playerの決定的なシュート、しかし$keeperがなんとか防ぎます。';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$nameのシュートはゴール枠に当たった';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return '$nameのビッグセーブ';
+  }
+
+  @override
+  String get matchChartXg => '試合を通したxG';
+
+  @override
+  String get matchChartMomentum => '試合の流れ';
 }

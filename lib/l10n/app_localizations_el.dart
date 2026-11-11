@@ -17038,4 +17038,56 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get pitchComKickOffHaze =>
       'Σέντρα μέσα στην καυτή αχλή. Τα πόδια θα κουραστούν νωρίς σήμερα.';
+
+  @override
+  String get matchOwnGoal => 'ΑΥΤΟΓΚΟΛ';
+
+  @override
+  String get matchGoalOwnGoal => 'ΑΥΤ';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Αυτογκόλ! Ο $defender στέλνει την μπάλα στα δικά του δίχτυα.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return 'Η προσπάθεια του $shooter κόβεται άτυχα από τον $defender και καταλήγει στα δίχτυα.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Καταστροφή για τον $defender, που νικάει τον δικό του τερματοφύλακα.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Τι απόκρουση! Ο $keeper σταματά τον $player από κοντά.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Εξαιρετική απόκρουση του $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return 'Ο $player έμοιαζε σίγουρος για γκολ, αλλά ο $keeper με κάποιο τρόπο το αποτρέπει.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return 'Ο $name βρήκε δοκάρι';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Μεγάλη απόκρουση του $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG στη διάρκεια του αγώνα';
+
+  @override
+  String get matchChartMomentum => 'Ποιος κυριαρχούσε';
 }

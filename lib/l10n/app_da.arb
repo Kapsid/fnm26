@@ -4233,5 +4233,17 @@
   "pitchComKickOffFrost": "En frostklar aften og en hård bane. Afleveringerne bliver ikke lette.",
   "pitchComKickOffGale": "Kickoff i kraftig vind. Lange bolde kommer til at drive væk.",
   "pitchComKickOffFog": "Kickoff i tæt tåge. Ingen kommer til at score let på langskud.",
-  "pitchComKickOffHaze": "Kickoff i varmedisen. Benene bliver tidligt trætte i dag."
+  "pitchComKickOffHaze": "Kickoff i varmedisen. Benene bliver tidligt trætte i dag.",
+  "matchOwnGoal": "SELVMÅL",
+  "matchGoalOwnGoal": "SM",
+  "pitchComOwnGoal1": "Selvmål! {defender} styrer bolden i eget net.",
+  "pitchComOwnGoal2": "{shooter}s forsøg tager en uheldig styring på {defender} og går ind.",
+  "pitchComOwnGoal3": "Katastrofe for {defender}, der overlister sin egen målmand.",
+  "pitchComBigSave1": "Sikke en redning! {keeper} stopper {player} på tæt hold.",
+  "pitchComBigSave2": "Fremragende redning af {keeper}!",
+  "pitchComBigSave3": "{player} så sikker ud til at score, men {keeper} redder på en eller anden måde.",
+  "matchTimelineWoodwork": "{name} ramte træværket",
+  "matchTimelineBigSave": "Stor redning af {name}",
+  "matchChartXg": "xG gennem kampen",
+  "matchChartMomentum": "Hvem der dominerede"
 }

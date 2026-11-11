@@ -4233,5 +4233,17 @@
   "pitchComKickOffFrost": "Παγωμένη νύχτα και σκληρός αγωνιστικός χώρος. Οι πάσες δεν θα είναι εύκολες.",
   "pitchComKickOffGale": "Σέντρα με δυνατό άνεμο. Οι μακριές μπαλιές θα ξεφεύγουν.",
   "pitchComKickOffFog": "Σέντρα μέσα σε πυκνή ομίχλη. Κανείς δεν θα σκοράρει εύκολα από μακριά.",
-  "pitchComKickOffHaze": "Σέντρα μέσα στην καυτή αχλή. Τα πόδια θα κουραστούν νωρίς σήμερα."
+  "pitchComKickOffHaze": "Σέντρα μέσα στην καυτή αχλή. Τα πόδια θα κουραστούν νωρίς σήμερα.",
+  "matchOwnGoal": "ΑΥΤΟΓΚΟΛ",
+  "matchGoalOwnGoal": "ΑΥΤ",
+  "pitchComOwnGoal1": "Αυτογκόλ! Ο {defender} στέλνει την μπάλα στα δικά του δίχτυα.",
+  "pitchComOwnGoal2": "Η προσπάθεια του {shooter} κόβεται άτυχα από τον {defender} και καταλήγει στα δίχτυα.",
+  "pitchComOwnGoal3": "Καταστροφή για τον {defender}, που νικάει τον δικό του τερματοφύλακα.",
+  "pitchComBigSave1": "Τι απόκρουση! Ο {keeper} σταματά τον {player} από κοντά.",
+  "pitchComBigSave2": "Εξαιρετική απόκρουση του {keeper}!",
+  "pitchComBigSave3": "Ο {player} έμοιαζε σίγουρος για γκολ, αλλά ο {keeper} με κάποιο τρόπο το αποτρέπει.",
+  "matchTimelineWoodwork": "Ο {name} βρήκε δοκάρι",
+  "matchTimelineBigSave": "Μεγάλη απόκρουση του {name}",
+  "matchChartXg": "xG στη διάρκεια του αγώνα",
+  "matchChartMomentum": "Ποιος κυριαρχούσε"
 }

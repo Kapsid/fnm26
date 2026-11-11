@@ -16859,4 +16859,56 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get pitchComKickOffHaze =>
       'Sepak mula di tengah kabut panas. Tenaga akan cepat terkuras hari ini.';
+
+  @override
+  String get matchOwnGoal => 'GOL BUNUH DIRI';
+
+  @override
+  String get matchGoalOwnGoal => 'BD';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Gol bunuh diri! $defender membelokkan bola ke gawang sendiri.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return 'Upaya $shooter berbelok secara malang setelah mengenai $defender dan masuk.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Petaka bagi $defender, yang menaklukkan kipernya sendiri.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Penyelamatan luar biasa! $keeper menggagalkan $player dari jarak dekat.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Penyelamatan gemilang dari $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player tampak pasti mencetak gol, tapi $keeper entah bagaimana mampu menghalaunya.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name membentur tiang gawang';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Penyelamatan penting oleh $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG sepanjang laga';
+
+  @override
+  String get matchChartMomentum => 'Siapa yang menguasai';
 }

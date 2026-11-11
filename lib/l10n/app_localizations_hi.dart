@@ -16856,4 +16856,56 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get pitchComKickOffHaze =>
       'गर्मी की धुंध में किक-ऑफ़। आज पैर जल्दी थकेंगे।';
+
+  @override
+  String get matchOwnGoal => 'आत्मघाती गोल';
+
+  @override
+  String get matchGoalOwnGoal => 'आगो';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'आत्मघाती गोल! $defender ने गेंद अपने ही जाल में डाल दी।';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return '$shooter का प्रयास $defender से टकराकर बदकिस्मती से अंदर चला गया।';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return '$defender के लिए मुसीबत, उन्होंने अपने ही गोलकीपर को छका दिया।';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'क्या बचाव है! $keeper ने करीब से $player को गोल नहीं करने दिया।';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return '$keeper का शानदार बचाव!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player का गोल पक्का लग रहा था, पर $keeper ने किसी तरह रोक लिया।';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name का शॉट पोस्ट से टकराया';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return '$name का बड़ा बचाव';
+  }
+
+  @override
+  String get matchChartXg => 'पूरे मैच में xG';
+
+  @override
+  String get matchChartMomentum => 'कौन हावी रहा';
 }

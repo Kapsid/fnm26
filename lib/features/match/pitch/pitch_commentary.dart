@@ -56,7 +56,17 @@ String? pitchLine(
       final p = name(s.shooterId);
       final k = s.keeperId == null ? null : name(s.keeperId);
       final o = s.assistId == null ? null : name(s.assistId);
-      final line = pick(_shotVariants(l, s, p, k, o))!;
+      // An own goal is told as one, naming the defender it went in off.
+      final goal = s.goalEventIndex;
+      final ownGoal =
+          s.outcome == ShotOutcome.goal &&
+          goal != null &&
+          goal >= 0 &&
+          goal < events.length &&
+          events[goal].ownGoal;
+      final line = ownGoal
+          ? pick(_ownGoalVariants(l, name(events[goal].playerId), p))!
+          : pick(_shotVariants(l, s, p, k, o))!;
       if (s.outcome != ShotOutcome.goal || score == null) return line;
       return l.pitchComGoalScore(line, score.home, score.away);
     case final SetPieceMoment sp:
@@ -219,6 +229,22 @@ _Card? _card(FoulMoment f, List<MatchEvent> events) {
   return e.secondYellow ? _Card.secondYellow : _Card.red;
 }
 
+/// An own goal's wordings: [d] is the defender it went in off (named as the
+/// goal event names him), [p] the attacker whose shot or ball it was.
+List<String> _ownGoalVariants(AppLocalizations l, String d, String p) => [
+  l.pitchComOwnGoal1(d),
+  l.pitchComOwnGoal2(d, p),
+  l.pitchComOwnGoal3(d),
+];
+
+/// A big save's wordings ([ShotMoment.isBigSave]): [k] the keeper, [p] the
+/// shooter.
+List<String> _bigSaveVariants(AppLocalizations l, String p, String k) => [
+  l.pitchComBigSave1(k, p),
+  l.pitchComBigSave2(k),
+  l.pitchComBigSave3(k, p),
+];
+
 /// A shot's wordings, by where it came from and how it ended. [k] (the
 /// keeper) and [o] (the man who delivered it) are null when the shot has
 /// none; the variants that name them are then left out.
@@ -229,6 +255,14 @@ List<String> _shotVariants(
   String? k,
   String? o,
 ) {
+  // A good chance kept out is a big save, whatever it came from (a
+  // penalty or a direct free kick keeps its own lines).
+  if (s.isBigSave &&
+      k != null &&
+      s.origin != ShotOrigin.penalty &&
+      s.origin != ShotOrigin.directFreeKick) {
+    return _bigSaveVariants(l, p, k);
+  }
   switch (s.origin) {
     case ShotOrigin.penalty:
       return switch (s.outcome) {

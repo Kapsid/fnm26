@@ -74,7 +74,8 @@ void main() {
     // drift must change nothing the engine decides. Re-pinned when the
     // penalty rate rose (0.095 to 0.105 of finished chances, 2026-11-07),
     // an intended outcome change; again when it rose to 0.175 with a home
-    // lean (2026-11-08).
+    // lean (2026-11-08); and when own goals re-credited a few goals to the
+    // defender who turned them in (1.2, every score unchanged).
     final parts = StringBuffer();
     for (var i = 0; i < 40; i++) {
       parts
@@ -106,4 +107,4 @@ void main() {
   });
 }
 
-const _before = 'ed728d0c';
+const _before = '96c701de';

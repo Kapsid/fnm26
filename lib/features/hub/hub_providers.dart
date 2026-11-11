@@ -2612,7 +2612,9 @@ class SeasonService {
       awayPenalties: awayPens,
     );
     _bumpRank(fixture, fixture.homeNationId, fixture.awayNationId, hs, as);
-    // Persist the engine's actual scorers for the player's match.
+    // Persist the engine's actual scorers for the player's match. An own
+    // goal is the side's goal but nobody's in a scorer tally: it is stored
+    // with the defender's id negated (see `GoalRecord`).
     await _comp.recordGoals([
       for (final e in result.events)
         if (e.type == MatchEventType.goal)
@@ -2621,7 +2623,7 @@ class SeasonService {
             competitionId: fixture.competitionId,
             fixtureId: fixture.id,
             nationId: e.teamNationId,
-            playerId: e.playerId,
+            playerId: e.ownGoal ? -e.playerId : e.playerId,
             minute: e.minute,
           ),
     ]);
@@ -2714,6 +2716,9 @@ class SeasonService {
     final redsBy = <int, int>{};
     for (final e in result.events) {
       switch (e.type) {
+        // An own goal is no goal of the man who scored it.
+        case MatchEventType.goal when e.ownGoal:
+          break;
         case MatchEventType.goal:
           goalsBy.update(e.playerId, (v) => v + 1, ifAbsent: () => 1);
           final a = e.assistPlayerId;

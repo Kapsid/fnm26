@@ -4233,5 +4233,17 @@
   "pitchComKickOffFrost": "Ledena noć i tvrd teren. Dodavanja neće biti laka.",
   "pitchComKickOffGale": "Početni udarac uz jak vjetar. Duge lopte će bježati.",
   "pitchComKickOffFog": "Početni udarac u gustoj magli. Izdaleka nitko neće lako zabiti.",
-  "pitchComKickOffHaze": "Početni udarac u vreloj izmaglici. Noge će se danas rano umoriti."
+  "pitchComKickOffHaze": "Početni udarac u vreloj izmaglici. Noge će se danas rano umoriti.",
+  "matchOwnGoal": "AUTOGOL",
+  "matchGoalOwnGoal": "AG",
+  "pitchComOwnGoal1": "Autogol! {defender} je ubacio loptu u vlastitu mrežu.",
+  "pitchComOwnGoal2": "Pokušaj igrača {shooter} nesretno se odbije od igrača {defender} i završi u mreži.",
+  "pitchComOwnGoal3": "Katastrofa za igrača {defender}, koji svladava vlastitog vratara.",
+  "pitchComBigSave1": "Kakva obrana! {keeper} zaustavlja igrača {player} iz blizine.",
+  "pitchComBigSave2": "Sjajna obrana, {keeper}!",
+  "pitchComBigSave3": "{player} je izgledao siguran za gol, ali {keeper} nekako brani.",
+  "matchTimelineWoodwork": "{name} je pogodio okvir gola",
+  "matchTimelineBigSave": "Velika obrana: {name}",
+  "matchChartXg": "xG tijekom utakmice",
+  "matchChartMomentum": "Tko je bio bolji"
 }

@@ -16894,4 +16894,56 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get pitchComKickOffHaze =>
       'Kezdőrúgás a hőségpárában. Ma korán elfogy majd az erő.';
+
+  @override
+  String get matchOwnGoal => 'ÖNGÓL';
+
+  @override
+  String get matchGoalOwnGoal => 'ÖG';
+
+  @override
+  String pitchComOwnGoal1(String defender) {
+    return 'Öngól! $defender a saját kapujába juttatja a labdát.';
+  }
+
+  @override
+  String pitchComOwnGoal2(String defender, String shooter) {
+    return '$shooter próbálkozása szerencsétlenül megpattan $defender játékosán, és bemegy.';
+  }
+
+  @override
+  String pitchComOwnGoal3(String defender) {
+    return 'Katasztrófa $defender számára, aki a saját kapusát veri meg.';
+  }
+
+  @override
+  String pitchComBigSave1(String keeper, String player) {
+    return 'Micsoda védés! $keeper közelről hárítja $player lövését.';
+  }
+
+  @override
+  String pitchComBigSave2(String keeper) {
+    return 'Remek védés, $keeper!';
+  }
+
+  @override
+  String pitchComBigSave3(String keeper, String player) {
+    return '$player biztos gólnak tűnt, de $keeper valahogy hárít.';
+  }
+
+  @override
+  String matchTimelineWoodwork(String name) {
+    return '$name kapufát talált';
+  }
+
+  @override
+  String matchTimelineBigSave(String name) {
+    return 'Nagy védés: $name';
+  }
+
+  @override
+  String get matchChartXg => 'xG a mérkőzés során';
+
+  @override
+  String get matchChartMomentum => 'Ki volt fölényben';
 }

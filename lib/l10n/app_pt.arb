@@ -4233,5 +4233,17 @@
   "pitchComKickOffFrost": "Uma noite gélida e um relvado duro. Os passes não vão ser fáceis.",
   "pitchComKickOffGale": "Pontapé de saída com vento forte. As bolas longas vão sair desviadas.",
   "pitchComKickOffFog": "Pontapé de saída com nevoeiro cerrado. Ninguém vai marcar facilmente de longe.",
-  "pitchComKickOffHaze": "Pontapé de saída na neblina de calor. Hoje as pernas vão cansar cedo."
+  "pitchComKickOffHaze": "Pontapé de saída na neblina de calor. Hoje as pernas vão cansar cedo.",
+  "matchOwnGoal": "AUTOGOLO",
+  "matchGoalOwnGoal": "AG",
+  "pitchComOwnGoal1": "Autogolo! {defender} desvia para a própria baliza.",
+  "pitchComOwnGoal2": "A tentativa de {shooter} sofre um desvio cruel em {defender} e entra.",
+  "pitchComOwnGoal3": "Desastre para {defender}, que bate o próprio guarda-redes.",
+  "pitchComBigSave1": "Que defesa! {keeper} nega o golo a {player} à queima-roupa.",
+  "pitchComBigSave2": "Grande defesa de {keeper}!",
+  "pitchComBigSave3": "{player} parecia que ia marcar, mas {keeper} evita o golo de alguma forma.",
+  "matchTimelineWoodwork": "{name} acertou nos ferros",
+  "matchTimelineBigSave": "Grande defesa de {name}",
+  "matchChartXg": "xG ao longo do jogo",
+  "matchChartMomentum": "Quem estava por cima"
 }
