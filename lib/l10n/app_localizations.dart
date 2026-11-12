@@ -20234,7 +20234,7 @@ abstract class AppLocalizations {
   /// **'{nation} want a send-off friendly against you before the {competition}.'**
   String warmUpOfferMsgBody(String nation, String competition);
 
-  /// Hub: second button under 'watch the next round' of a tournament the manager is out of or not in. Plays every remaining round at once, up to and including the final. Short.
+  /// Hub: second button under 'watch the next round' of a tournament the manager is out of or not in. Plays every remaining round at once up to the final, which is left for the manager to watch. Short.
   ///
   /// In en, this message translates to:
   /// **'Simulate to the final'**

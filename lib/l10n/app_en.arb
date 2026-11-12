@@ -20722,7 +20722,7 @@
   },
   "hubSimToFinal": "Simulate to the final",
   "@hubSimToFinal": {
-    "description": "Hub: second button under 'watch the next round' of a tournament the manager is out of or not in. Plays every remaining round at once, up to and including the final. Short."
+    "description": "Hub: second button under 'watch the next round' of a tournament the manager is out of or not in. Plays every remaining round at once up to the final, which is left for the manager to watch. Short."
   },
   "jobDossierOpen": "Scout this job",
   "@jobDossierOpen": {
