@@ -1835,7 +1835,7 @@ class AppLocalizationsHr extends AppLocalizations {
   String get careerManagerName => 'Ime izbornika';
 
   @override
-  String get careerManagerNameHint => 'npr. Zlatko Dalić';
+  String get careerManagerNameHint => 'npr. Martin';
 
   @override
   String get careerBeginsBlurb =>
@@ -17435,10 +17435,6 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Kondicija';
-
-  @override
-  String get settingsAboutCopyright =>
-      '© 2026 Martin Urbanczyk. Sva prava pridržana.';
 
   @override
   String get settingsAboutProtected =>

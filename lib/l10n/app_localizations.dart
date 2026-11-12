@@ -3105,7 +3105,7 @@ abstract class AppLocalizations {
   /// Hint text for the manager-name field.
   ///
   /// In en, this message translates to:
-  /// **'e.g. Alex Ferguson'**
+  /// **'e.g. Martin'**
   String get careerManagerNameHint;
 
   /// Intro describing when the career begins.
@@ -25861,12 +25861,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Fitness'**
   String get playerStatFitness;
-
-  /// Settings footer: copyright line, holder name stays as is.
-  ///
-  /// In en, this message translates to:
-  /// **'© 2026 Martin Urbanczyk. All rights reserved.'**
-  String get settingsAboutCopyright;
 
   /// Settings footer: one line saying the game, code and content are protected.
   ///

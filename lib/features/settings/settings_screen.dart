@@ -669,21 +669,11 @@ class _AboutFooter extends StatelessWidget {
     final style = AppTypography.labelSmall.copyWith(
       color: AppColors.onSurfaceVariant,
     );
-    return Column(
-      children: [
-        Text(
-          l.settingsAboutCopyright,
-          key: const Key('settings.aboutCopyright'),
-          textAlign: TextAlign.center,
-          style: style,
-        ),
-        const SizedBox(height: AppSpacing.xs),
-        Text(
-          l.settingsAboutProtected,
-          textAlign: TextAlign.center,
-          style: style,
-        ),
-      ],
+    return Text(
+      l.settingsAboutProtected,
+      key: const Key('settings.aboutCopyright'),
+      textAlign: TextAlign.center,
+      style: style,
     );
   }
 }

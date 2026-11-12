@@ -1758,7 +1758,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get careerManagerName => 'Teknik direktör adı';
 
   @override
-  String get careerManagerNameHint => 'örn. Fatih Terim';
+  String get careerManagerNameHint => 'örn. Martin';
 
   @override
   String get careerBeginsBlurb =>
@@ -17012,10 +17012,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Kondisyon';
-
-  @override
-  String get settingsAboutCopyright =>
-      '© 2026 Martin Urbanczyk. Tüm hakları saklıdır.';
 
   @override
   String get settingsAboutProtected =>

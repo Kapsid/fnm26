@@ -1760,7 +1760,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get careerManagerName => 'Tên huấn luyện viên';
 
   @override
-  String get careerManagerNameHint => 'ví dụ: Alex Ferguson';
+  String get careerManagerNameHint => 'ví dụ: Martin';
 
   @override
   String get careerBeginsBlurb =>
@@ -16949,10 +16949,6 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Thể lực';
-
-  @override
-  String get settingsAboutCopyright =>
-      '© 2026 Martin Urbanczyk. Bảo lưu mọi quyền.';
 
   @override
   String get settingsAboutProtected =>

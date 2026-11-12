@@ -1776,7 +1776,7 @@ class AppLocalizationsDa extends AppLocalizations {
   String get careerManagerName => 'Trænernavn';
 
   @override
-  String get careerManagerNameHint => 'fx Morten Olsen';
+  String get careerManagerNameHint => 'fx Martin';
 
   @override
   String get careerBeginsBlurb =>
@@ -17101,10 +17101,6 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Kondition';
-
-  @override
-  String get settingsAboutCopyright =>
-      '© 2026 Martin Urbanczyk. Alle rettigheder forbeholdes.';
 
   @override
   String get settingsAboutProtected =>

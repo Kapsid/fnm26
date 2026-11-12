@@ -1704,7 +1704,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get careerManagerName => '감독 이름';
 
   @override
-  String get careerManagerNameHint => '예: 알렉스 퍼거슨';
+  String get careerManagerNameHint => '예: 마르틴';
 
   @override
   String get careerBeginsBlurb =>
@@ -16529,9 +16529,6 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get playerStatFitness => '체력';
-
-  @override
-  String get settingsAboutCopyright => '© 2026 Martin Urbanczyk. 모든 권리 보유.';
 
   @override
   String get settingsAboutProtected => '이 게임과 코드, 콘텐츠는 저작권법에 따라 보호됩니다.';

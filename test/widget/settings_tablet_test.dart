@@ -213,7 +213,7 @@ void main() {
   testWidgets('the copyright line closes the middle column', (tester) async {
     await _open(tester, const Size(1024, 768));
     await tester.scrollUntilVisible(
-      find.text(enL.settingsAboutCopyright),
+      find.text(enL.settingsAboutProtected),
       200,
       scrollable: find.byType(Scrollable).at(1),
     );

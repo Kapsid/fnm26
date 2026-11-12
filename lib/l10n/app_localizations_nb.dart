@@ -1792,7 +1792,7 @@ class AppLocalizationsNb extends AppLocalizations {
   String get careerManagerName => 'Navn på landslagssjef';
 
   @override
-  String get careerManagerNameHint => 'f.eks. Alex Ferguson';
+  String get careerManagerNameHint => 'f.eks. Martin';
 
   @override
   String get careerBeginsBlurb =>
@@ -17097,10 +17097,6 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Kondisjon';
-
-  @override
-  String get settingsAboutCopyright =>
-      '© 2026 Martin Urbanczyk. Alle rettigheter forbeholdt.';
 
   @override
   String get settingsAboutProtected =>

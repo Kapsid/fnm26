@@ -1740,7 +1740,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get careerManagerName => 'ชื่อผู้จัดการทีม';
 
   @override
-  String get careerManagerNameHint => 'เช่น Alex Ferguson';
+  String get careerManagerNameHint => 'เช่น Martin';
 
   @override
   String get careerBeginsBlurb =>
@@ -16798,9 +16798,6 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'ฟิตเนส';
-
-  @override
-  String get settingsAboutCopyright => '© 2026 Martin Urbanczyk. สงวนลิขสิทธิ์';
 
   @override
   String get settingsAboutProtected =>

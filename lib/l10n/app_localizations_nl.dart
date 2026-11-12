@@ -1816,7 +1816,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get careerManagerName => 'Naam bondscoach';
 
   @override
-  String get careerManagerNameHint => 'bijv. Louis van Gaal';
+  String get careerManagerNameHint => 'bijv. Martin';
 
   @override
   String get careerBeginsBlurb =>
@@ -17183,10 +17183,6 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Fitheid';
-
-  @override
-  String get settingsAboutCopyright =>
-      '© 2026 Martin Urbanczyk. Alle rechten voorbehouden.';
 
   @override
   String get settingsAboutProtected =>

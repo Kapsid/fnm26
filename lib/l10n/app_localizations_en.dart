@@ -1804,7 +1804,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get careerManagerName => 'Manager name';
 
   @override
-  String get careerManagerNameHint => 'e.g. Alex Ferguson';
+  String get careerManagerNameHint => 'e.g. Martin';
 
   @override
   String get careerBeginsBlurb =>
@@ -17127,10 +17127,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Fitness';
-
-  @override
-  String get settingsAboutCopyright =>
-      '© 2026 Martin Urbanczyk. All rights reserved.';
 
   @override
   String get settingsAboutProtected =>

@@ -1768,7 +1768,7 @@ class AppLocalizationsHu extends AppLocalizations {
   String get careerManagerName => 'Kapitány neve';
 
   @override
-  String get careerManagerNameHint => 'pl. Alex Ferguson';
+  String get careerManagerNameHint => 'pl. Martin';
 
   @override
   String get careerBeginsBlurb =>
@@ -17047,10 +17047,6 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Erőnlét';
-
-  @override
-  String get settingsAboutCopyright =>
-      '© 2026 Martin Urbanczyk. Minden jog fenntartva.';
 
   @override
   String get settingsAboutProtected =>

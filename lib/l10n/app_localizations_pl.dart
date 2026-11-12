@@ -1773,7 +1773,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get careerManagerName => 'Imię i nazwisko selekcjonera';
 
   @override
-  String get careerManagerNameHint => 'np. Kazimierz Górski';
+  String get careerManagerNameHint => 'np. Martin';
 
   @override
   String get careerBeginsBlurb =>
@@ -17276,10 +17276,6 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Kondycja';
-
-  @override
-  String get settingsAboutCopyright =>
-      '© 2026 Martin Urbanczyk. Wszelkie prawa zastrzeżone.';
 
   @override
   String get settingsAboutProtected =>

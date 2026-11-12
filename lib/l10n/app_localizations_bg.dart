@@ -1824,7 +1824,7 @@ class AppLocalizationsBg extends AppLocalizations {
   String get careerManagerName => 'Име на селекционера';
 
   @override
-  String get careerManagerNameHint => 'напр. Алекс Фъргюсън';
+  String get careerManagerNameHint => 'напр. Мартин';
 
   @override
   String get careerBeginsBlurb =>
@@ -17186,10 +17186,6 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Физическа форма';
-
-  @override
-  String get settingsAboutCopyright =>
-      '© 2026 Martin Urbanczyk. Всички права запазени.';
 
   @override
   String get settingsAboutProtected =>

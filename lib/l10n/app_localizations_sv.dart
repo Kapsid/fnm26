@@ -1794,7 +1794,7 @@ class AppLocalizationsSv extends AppLocalizations {
   String get careerManagerName => 'Förbundskaptenens namn';
 
   @override
-  String get careerManagerNameHint => 't.ex. Sven-Göran Eriksson';
+  String get careerManagerNameHint => 't.ex. Martin';
 
   @override
   String get careerBeginsBlurb =>
@@ -17086,10 +17086,6 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get playerStatFitness => 'Kondition';
-
-  @override
-  String get settingsAboutCopyright =>
-      '© 2026 Martin Urbanczyk. Alla rättigheter förbehållna.';
 
   @override
   String get settingsAboutProtected =>
