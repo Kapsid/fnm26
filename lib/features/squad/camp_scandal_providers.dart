@@ -178,7 +178,13 @@ Future<bool> _hadScandal(Ref ref, int careerId, int cycle) async {
   return markers.any((m) => m.careerId == careerId);
 }
 
-/// [pendingScandal] for the decision screen.
+/// [pendingScandal] for the decision screen, and for the decision screen
+/// alone.
+///
+/// Cached while anything listens, so nothing else may watch it: the Y feed
+/// once did, kept it alive under the hub's badge with the answer it had
+/// before the squad was named ("no scandal"), and the screen the hub then
+/// opened showed only its way out. Everything else calls [pendingScandal].
 final AutoDisposeFutureProviderFamily<PendingScandal?, int>
 pendingScandalProvider = FutureProvider.autoDispose
     .family<PendingScandal?, int>(pendingScandal);
