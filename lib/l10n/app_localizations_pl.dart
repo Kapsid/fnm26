@@ -17615,4 +17615,13 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Zainwestowano dotąd';
+
+  @override
+  String get tacticsQuickBest => 'Najlepsi';
+
+  @override
+  String get tacticsQuickPrevious => 'Poprzedni';
+
+  @override
+  String get assistantAskShort => 'Asystent';
 }

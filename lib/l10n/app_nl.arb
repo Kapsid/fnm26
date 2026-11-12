@@ -4350,5 +4350,8 @@
   "editorHistoryDeleteBody": "Ze wordt uit de geschiedenis verwijderd. De database zelf verandert niet.",
   "financesTabDepartments": "Afdelingen",
   "financesTabFacilities": "Faciliteiten",
-  "financesInvestedSoFar": "Tot nu toe geïnvesteerd"
+  "financesInvestedSoFar": "Tot nu toe geïnvesteerd",
+  "tacticsQuickBest": "Beste",
+  "tacticsQuickPrevious": "Vorige",
+  "assistantAskShort": "Assistent"
 }

@@ -17339,4 +17339,13 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Diinvestasikan sejauh ini';
+
+  @override
+  String get tacticsQuickBest => 'Terbaik';
+
+  @override
+  String get tacticsQuickPrevious => 'Sebelumnya';
+
+  @override
+  String get assistantAskShort => 'Asisten';
 }

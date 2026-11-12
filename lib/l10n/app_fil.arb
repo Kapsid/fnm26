@@ -4350,5 +4350,8 @@
   "editorHistoryDeleteBody": "Aalisin ito sa history. Hindi magbabago ang mismong database.",
   "financesTabDepartments": "Mga departamento",
   "financesTabFacilities": "Mga pasilidad",
-  "financesInvestedSoFar": "Naipuhunan na"
+  "financesInvestedSoFar": "Naipuhunan na",
+  "tacticsQuickBest": "Pinakamahusay",
+  "tacticsQuickPrevious": "Nakaraan",
+  "assistantAskShort": "Katulong"
 }

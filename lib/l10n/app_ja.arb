@@ -4350,5 +4350,8 @@
   "editorHistoryDeleteBody": "履歴から削除されます。データベース自体は変わりません。",
   "financesTabDepartments": "部門",
   "financesTabFacilities": "施設",
-  "financesInvestedSoFar": "これまでの投資額"
+  "financesInvestedSoFar": "これまでの投資額",
+  "tacticsQuickBest": "ベスト",
+  "tacticsQuickPrevious": "前回",
+  "assistantAskShort": "助手"
 }

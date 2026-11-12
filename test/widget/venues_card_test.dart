@@ -14,6 +14,23 @@ void main() {
     (city: '${prefix}town', stadium: '$prefix Park', capacity: 45000),
   ];
 
+  testWidgets('the seat count is localised: Czech says míst, never seats', (
+    tester,
+  ) async {
+    await tester.pumpApp(
+      Scaffold(
+        body: VenuesCard(
+          hosts: [(code: 'ESP', name: 'Spain', venues: venues('A'))],
+        ),
+      ),
+      locale: const Locale('cs'),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('míst'), findsWidgets);
+    expect(find.textContaining('seats'), findsNothing);
+  });
+
   testWidgets('a solo host reads as one host', (tester) async {
     await tester.pumpApp(
       Scaffold(

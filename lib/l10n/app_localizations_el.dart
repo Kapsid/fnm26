@@ -17520,4 +17520,13 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Επενδύσεις έως τώρα';
+
+  @override
+  String get tacticsQuickBest => 'Καλύτερη';
+
+  @override
+  String get tacticsQuickPrevious => 'Προηγούμενη';
+
+  @override
+  String get assistantAskShort => 'Βοηθός';
 }

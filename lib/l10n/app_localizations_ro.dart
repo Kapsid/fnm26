@@ -17848,4 +17848,13 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Investit până acum';
+
+  @override
+  String get tacticsQuickBest => 'Cel mai bun';
+
+  @override
+  String get tacticsQuickPrevious => 'Precedent';
+
+  @override
+  String get assistantAskShort => 'Secund';
 }

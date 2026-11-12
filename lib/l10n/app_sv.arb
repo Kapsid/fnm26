@@ -4350,5 +4350,8 @@
   "editorHistoryDeleteBody": "Den tas bort från historiken. Själva databasen ändras inte.",
   "financesTabDepartments": "Avdelningar",
   "financesTabFacilities": "Anläggningar",
-  "financesInvestedSoFar": "Investerat hittills"
+  "financesInvestedSoFar": "Investerat hittills",
+  "tacticsQuickBest": "Bästa",
+  "tacticsQuickPrevious": "Förra",
+  "assistantAskShort": "Assistent"
 }

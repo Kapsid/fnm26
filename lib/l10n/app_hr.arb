@@ -4350,5 +4350,8 @@
   "editorHistoryDeleteBody": "Uklanja se iz povijesti. Sama baza podataka se ne mijenja.",
   "financesTabDepartments": "Odjeli",
   "financesTabFacilities": "Objekti",
-  "financesInvestedSoFar": "Dosad uloženo"
+  "financesInvestedSoFar": "Dosad uloženo",
+  "tacticsQuickBest": "Najbolji",
+  "tacticsQuickPrevious": "Prošli",
+  "assistantAskShort": "Pomoćnik"
 }

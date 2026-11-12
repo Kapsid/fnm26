@@ -26341,6 +26341,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Invested so far'**
   String get financesInvestedSoFar;
+
+  /// Short label on the call-up quick-pick tile that picks the best available squad.
+  ///
+  /// In en, this message translates to:
+  /// **'Best'**
+  String get tacticsQuickBest;
+
+  /// Short label on the quick-pick tile that restores the previous squad.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get tacticsQuickPrevious;
+
+  /// Short label on the quick-pick tile that asks the assistant for a squad.
+  ///
+  /// In en, this message translates to:
+  /// **'Assistant'**
+  String get assistantAskShort;
 }
 
 class _AppLocalizationsDelegate

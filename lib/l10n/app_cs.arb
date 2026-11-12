@@ -4350,5 +4350,8 @@
   "editorHistoryDeleteBody": "Odebere se z historie. Samotná databáze se nezmění.",
   "financesTabDepartments": "Oddělení",
   "financesTabFacilities": "Zázemí",
-  "financesInvestedSoFar": "Dosud investováno"
+  "financesInvestedSoFar": "Dosud investováno",
+  "tacticsQuickBest": "Nejlepší",
+  "tacticsQuickPrevious": "Minulý",
+  "assistantAskShort": "Asistent"
 }

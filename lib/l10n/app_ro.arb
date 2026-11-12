@@ -4350,5 +4350,8 @@
   "editorHistoryDeleteBody": "Este eliminată din istoric. Baza de date în sine nu se schimbă.",
   "financesTabDepartments": "Departamente",
   "financesTabFacilities": "Facilități",
-  "financesInvestedSoFar": "Investit până acum"
+  "financesInvestedSoFar": "Investit până acum",
+  "tacticsQuickBest": "Cel mai bun",
+  "tacticsQuickPrevious": "Precedent",
+  "assistantAskShort": "Secund"
 }

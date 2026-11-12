@@ -169,6 +169,131 @@ class AskAssistantButton extends StatelessWidget {
   }
 }
 
+/// The call-up screen's three one-tap answers as ONE row of equal tiles:
+/// the best available squad, the previous squad, and the assistant's pick.
+///
+/// Each tile is an outlined button with the icon over a one-line label, so
+/// a long language ellipsises inside its third rather than overflowing the
+/// row. Without an assistant the Assistant tile is disabled and the note
+/// pointing to the staff room sits under the row.
+class CallUpQuickPicks extends StatelessWidget {
+  const CallUpQuickPicks({
+    required this.tier,
+    required this.onBest,
+    required this.onPrevious,
+    required this.onAssistant,
+    super.key,
+  });
+
+  final StaffTier tier;
+  final VoidCallback onBest;
+
+  /// Null while there is no previous squad to restore.
+  final VoidCallback? onPrevious;
+  final VoidCallback onAssistant;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final none = tier == StaffTier.none;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: _QuickPickTile(
+                icon: Icons.auto_awesome,
+                label: l.tacticsQuickBest,
+                tooltip: l.tacticsBestQuality,
+                onPressed: onBest,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: _QuickPickTile(
+                icon: Icons.history,
+                label: l.tacticsQuickPrevious,
+                tooltip: l.tacticsPreviousSquad,
+                onPressed: onPrevious,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: _QuickPickTile(
+                buttonKey: CallUpAdviceKeys.ask,
+                icon: Icons.record_voice_over_outlined,
+                label: l.assistantAskShort,
+                tooltip: l.assistantAsk,
+                onPressed: none ? null : onAssistant,
+              ),
+            ),
+          ],
+        ),
+        if (none) ...[
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            l.assistantNoneNote,
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _QuickPickTile extends StatelessWidget {
+  const _QuickPickTile({
+    required this.icon,
+    required this.label,
+    required this.tooltip,
+    required this.onPressed,
+    this.buttonKey,
+  });
+
+  final Key? buttonKey;
+  final IconData icon;
+  final String label;
+  final String tooltip;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip,
+      child: OutlinedButton(
+        key: buttonKey,
+        onPressed: onPressed,
+        style: OutlinedButton.styleFrom(
+          minimumSize: const Size(0, 56),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.xs,
+            vertical: AppSpacing.xs,
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 18),
+            const SizedBox(height: 2),
+            Text(
+              label,
+              maxLines: 1,
+              softWrap: false,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: AppTypography.labelSmall,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 /// What a proposal is compared with on its card.
 enum CallUpAdviceBase {
   /// The squad being named on the screen right now.

@@ -17388,4 +17388,13 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Dilaburkan setakat ini';
+
+  @override
+  String get tacticsQuickBest => 'Terbaik';
+
+  @override
+  String get tacticsQuickPrevious => 'Terdahulu';
+
+  @override
+  String get assistantAskShort => 'Pembantu';
 }

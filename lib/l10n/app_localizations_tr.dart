@@ -17339,4 +17339,13 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Şimdiye kadar yatırılan';
+
+  @override
+  String get tacticsQuickBest => 'En iyi';
+
+  @override
+  String get tacticsQuickPrevious => 'Önceki';
+
+  @override
+  String get assistantAskShort => 'Yardımcı';
 }

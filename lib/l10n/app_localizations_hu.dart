@@ -17374,4 +17374,13 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Eddig befektetve';
+
+  @override
+  String get tacticsQuickBest => 'Legjobb';
+
+  @override
+  String get tacticsQuickPrevious => 'Előző';
+
+  @override
+  String get assistantAskShort => 'Segéd';
 }

@@ -17821,4 +17821,13 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Dosud investováno';
+
+  @override
+  String get tacticsQuickBest => 'Nejlepší';
+
+  @override
+  String get tacticsQuickPrevious => 'Minulý';
+
+  @override
+  String get assistantAskShort => 'Asistent';
 }

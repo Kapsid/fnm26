@@ -16806,4 +16806,13 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'これまでの投資額';
+
+  @override
+  String get tacticsQuickBest => 'ベスト';
+
+  @override
+  String get tacticsQuickPrevious => '前回';
+
+  @override
+  String get assistantAskShort => '助手';
 }

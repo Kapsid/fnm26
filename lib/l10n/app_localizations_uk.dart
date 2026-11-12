@@ -17755,4 +17755,13 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Інвестовано досі';
+
+  @override
+  String get tacticsQuickBest => 'Найкращий';
+
+  @override
+  String get tacticsQuickPrevious => 'Попередній';
+
+  @override
+  String get assistantAskShort => 'Асистент';
 }

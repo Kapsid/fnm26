@@ -642,8 +642,9 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                   ],
                 ),
               ),
-              // The squad starts empty, so offer the two answers a manager
-              // actually wants: the best available, or the last lot again.
+              // The squad starts empty, so offer the three answers a manager
+              // actually wants in one compact row: the best available, the
+              // last lot again, or his assistant's squad with reasons.
               if (!locked)
                 Padding(
                   padding: const EdgeInsets.fromLTRB(
@@ -652,42 +653,14 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                     AppSpacing.marginMobile,
                     0,
                   ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: () => _pickBest(data, coverage, formation),
-                          icon: const Icon(Icons.auto_awesome, size: 16),
-                          label: Text(l.tacticsBestQuality),
-                        ),
-                      ),
-                      const SizedBox(width: AppSpacing.sm),
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          // Nothing to restore before a squad has been named.
-                          onPressed: !data.hasPreviousSquad
-                              ? null
-                              : () => _pickPrevious(data, coverage),
-                          icon: const Icon(Icons.history, size: 16),
-                          label: Text(l.tacticsPreviousSquad),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              // The third answer: his assistant's squad, with reasons.
-              if (!locked)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.marginMobile,
-                    AppSpacing.xs,
-                    AppSpacing.marginMobile,
-                    0,
-                  ),
-                  child: AskAssistantButton(
+                  child: CallUpQuickPicks(
                     tier: _assistantTier,
-                    noteBeside: true,
-                    onPressed: () => _askAssistant(
+                    onBest: () => _pickBest(data, coverage, formation),
+                    // Nothing to restore before a squad has been named.
+                    onPrevious: !data.hasPreviousSquad
+                        ? null
+                        : () => _pickPrevious(data, coverage),
+                    onAssistant: () => _askAssistant(
                       data,
                       selected: selected,
                       coverage: coverage,

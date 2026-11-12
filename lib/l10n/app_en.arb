@@ -26815,5 +26815,17 @@
   "financesInvestedSoFar": "Invested so far",
   "@financesInvestedSoFar": {
     "description": "Finances, Facilities tab: small label over the euros kept up in a building (its maintained investment)."
+  },
+  "tacticsQuickBest": "Best",
+  "@tacticsQuickBest": {
+    "description": "Short label on the call-up quick-pick tile that picks the best available squad."
+  },
+  "tacticsQuickPrevious": "Previous",
+  "@tacticsQuickPrevious": {
+    "description": "Short label on the quick-pick tile that restores the previous squad."
+  },
+  "assistantAskShort": "Assistant",
+  "@assistantAskShort": {
+    "description": "Short label on the quick-pick tile that asks the assistant for a squad."
   }
 }
