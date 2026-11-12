@@ -418,6 +418,16 @@ class AppLocalizationsHr extends AppLocalizations {
       'Vibracija i kratki ton kod golova, početnog udarca i kraja utakmice.';
 
   @override
+  String get settingsMatchSoundTitle => 'Zvuk stadiona';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'Publika i sudačka zviždaljka tijekom utakmica.';
+
+  @override
+  String get settingsMatchSoundVolume => 'Glasnoća';
+
+  @override
   String get settingsLanguageTitle => 'Jezik';
 
   @override

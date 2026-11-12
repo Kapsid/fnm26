@@ -416,6 +416,16 @@ class AppLocalizationsId extends AppLocalizations {
       'Getaran dan nada singkat saat gol, kick off, dan peluit akhir.';
 
   @override
+  String get settingsMatchSoundTitle => 'Suara stadion';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'Penonton dan peluit wasit selama pertandingan.';
+
+  @override
+  String get settingsMatchSoundVolume => 'Volume';
+
+  @override
   String get settingsLanguageTitle => 'Bahasa';
 
   @override

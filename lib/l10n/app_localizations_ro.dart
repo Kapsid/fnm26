@@ -409,6 +409,16 @@ class AppLocalizationsRo extends AppLocalizations {
       'Vibrație și un scurt semnal la goluri, la start și la final.';
 
   @override
+  String get settingsMatchSoundTitle => 'Sunetul stadionului';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'Publicul și fluierul arbitrului în timpul meciurilor.';
+
+  @override
+  String get settingsMatchSoundVolume => 'Volum';
+
+  @override
   String get settingsLanguageTitle => 'Limbă';
 
   @override

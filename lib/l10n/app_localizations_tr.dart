@@ -412,6 +412,16 @@ class AppLocalizationsTr extends AppLocalizations {
       'Gollerde, başlama vuruşunda ve maç sonunda titreşim ve kısa bir ses.';
 
   @override
+  String get settingsMatchSoundTitle => 'Stadyum sesi';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'Maçlarda taraftarlar ve hakemin düdüğü.';
+
+  @override
+  String get settingsMatchSoundVolume => 'Ses düzeyi';
+
+  @override
   String get settingsLanguageTitle => 'Dil';
 
   @override

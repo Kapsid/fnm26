@@ -415,6 +415,16 @@ class AppLocalizationsNl extends AppLocalizations {
       'Trilling en een korte toon bij doelpunten, aftrap en eindsignaal.';
 
   @override
+  String get settingsMatchSoundTitle => 'Stadiongeluid';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'Het publiek en het fluitje van de scheidsrechter tijdens wedstrijden.';
+
+  @override
+  String get settingsMatchSoundVolume => 'Volume';
+
+  @override
   String get settingsLanguageTitle => 'Taal';
 
   @override

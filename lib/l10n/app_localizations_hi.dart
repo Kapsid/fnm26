@@ -410,6 +410,16 @@ class AppLocalizationsHi extends AppLocalizations {
       'गोल, किक-ऑफ़ और फ़ुल टाइम पर वाइब्रेशन और छोटी आवाज़।';
 
   @override
+  String get settingsMatchSoundTitle => 'स्टेडियम की आवाज़';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'मैचों के दौरान दर्शकों का शोर और रेफ़री की सीटी।';
+
+  @override
+  String get settingsMatchSoundVolume => 'आवाज़';
+
+  @override
   String get settingsLanguageTitle => 'भाषा';
 
   @override

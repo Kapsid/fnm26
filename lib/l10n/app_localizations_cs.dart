@@ -416,6 +416,16 @@ class AppLocalizationsCs extends AppLocalizations {
       'Vibrace a krátký tón při gólech, výkopu a konci zápasu.';
 
   @override
+  String get settingsMatchSoundTitle => 'Zvuk stadionu';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'Fanoušci a píšťalka rozhodčího během zápasů.';
+
+  @override
+  String get settingsMatchSoundVolume => 'Hlasitost';
+
+  @override
   String get settingsLanguageTitle => 'Jazyk';
 
   @override

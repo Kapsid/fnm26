@@ -420,6 +420,16 @@ class AppLocalizationsEs extends AppLocalizations {
       'Vibración y un breve tono en goles, saque inicial y final del partido.';
 
   @override
+  String get settingsMatchSoundTitle => 'Sonido del estadio';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'La afición y el silbato del árbitro durante los partidos.';
+
+  @override
+  String get settingsMatchSoundVolume => 'Volumen';
+
+  @override
   String get settingsLanguageTitle => 'Idioma';
 
   @override

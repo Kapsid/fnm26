@@ -417,6 +417,16 @@ class AppLocalizationsFil extends AppLocalizations {
       'Vibration at maikling tunog sa goal, kick-off at full-time.';
 
   @override
+  String get settingsMatchSoundTitle => 'Tunog ng istadyum';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'Ang mga manonood at ang pito ng referee habang may laro.';
+
+  @override
+  String get settingsMatchSoundVolume => 'Lakas ng tunog';
+
+  @override
   String get settingsLanguageTitle => 'Wika';
 
   @override

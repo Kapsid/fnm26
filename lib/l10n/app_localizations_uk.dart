@@ -413,6 +413,16 @@ class AppLocalizationsUk extends AppLocalizations {
       'Вібрація й короткий сигнал на голи, стартовий та фінальний свисток.';
 
   @override
+  String get settingsMatchSoundTitle => 'Звук стадіону';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'Вболівальники та свисток арбітра під час матчів.';
+
+  @override
+  String get settingsMatchSoundVolume => 'Гучність';
+
+  @override
   String get settingsLanguageTitle => 'Мова';
 
   @override

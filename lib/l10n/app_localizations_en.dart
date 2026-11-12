@@ -412,6 +412,16 @@ class AppLocalizationsEn extends AppLocalizations {
       'Vibration and a short tone on goals, kick-off and full time.';
 
   @override
+  String get settingsMatchSoundTitle => 'Stadium sound';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'The crowd and the referee\'s whistle during matches.';
+
+  @override
+  String get settingsMatchSoundVolume => 'Volume';
+
+  @override
   String get settingsLanguageTitle => 'Language';
 
   @override

@@ -49,6 +49,7 @@ import 'package:fnm/features/match/match_flow_charts.dart';
 import 'package:fnm/features/match/ground_card.dart';
 import 'package:fnm/features/match/penalty_order_sheet.dart';
 import 'package:fnm/features/match/match_providers.dart';
+import 'package:fnm/features/match/pitch/match_dressing.dart';
 import 'package:fnm/features/match/pitch/pitch_clock.dart';
 import 'package:fnm/features/match/pitch/pitch_commentary.dart';
 import 'package:fnm/features/match/pitch/pitch_mode_controller.dart';
@@ -57,6 +58,8 @@ import 'package:fnm/features/match/pitch/pitch_playback.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/features/match/pitch/shootout_stage.dart';
 import 'package:fnm/features/match/score_bug_theme.dart';
+import 'package:fnm/features/match/sound/match_audio.dart';
+import 'package:fnm/features/match/sound/match_sound_director.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
@@ -370,6 +373,17 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   /// The final whistle has gone (its sound, the shootout's taker sheet).
   bool _whistled = false;
 
+  /// The stadium's sound (silent unless the manager turned it on). Only
+  /// told what the screen shows: it never touches the match.
+  late final MatchSoundDirector _sound;
+
+  /// Whether [_sound] has been given this match's ground.
+  bool _soundGroundSet = false;
+
+  /// The Pitch clock's time the crowd last reacted up to (see
+  /// [_soundPitchCues]).
+  Duration? _soundAt;
+
   // --- MatchScreenProbe (tests) ---------------------------------------------
 
   @override
@@ -479,6 +493,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       onTick: _onPitchClock,
     );
     _lifecycle = AppLifecycleListener(onStateChange: _onAppState);
+    _sound = MatchSoundDirector(ref.read(matchAudioProvider));
     // Restore the playback speed chosen in a previous match this session...
     _speedIdx = ref.read(matchSpeedProvider);
     // ...and, if this is the first match of the session, the one this CAREER
@@ -501,10 +516,76 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     if (front == _inForeground) return;
     _inForeground = front;
     _syncPitchClock();
+    _syncSound();
+  }
+
+  /// Tells the stadium's sound how things stand: the setting, whether the
+  /// match is being played out, paused or at an interval (the bed ducks),
+  /// and whether the app is in front.
+  void _syncSound() {
+    _sound.sync(
+      enabled: ref.read(matchSoundEnabledProvider),
+      volume: ref.read(matchSoundVolumeProvider),
+      playing: _started && !_fullTime,
+      ducked: _atInterval || (!_playing && !_whistled),
+      foreground: _inForeground,
+    );
+  }
+
+  /// The ground's crowd for [_sound], once: how big and full it is, and
+  /// whose fans fill it (the home side's; at a neutral finals, the host's
+  /// when it plays, else nobody's).
+  void _setSoundGround(MatchPreview preview) {
+    if (_soundGroundSet) return;
+    _soundGroundSet = true;
+    final f = preview.fixture;
+    final host = preview.venueHostId;
+    final playing = {preview.homeTeam.nationId, preview.awayTeam.nationId};
+    _sound.setGround(
+      intensity: crowdIntensity(
+        attendance: preview.ground.attendance,
+        capacity: preview.ground.capacity,
+        bigMatch: preview.bigMatch,
+        isFinal: MatchDressing.forFixture(
+          pitchCompetitionOf(f.round),
+          f.round,
+        ).isFinal,
+      ),
+      homeFansNationId: !preview.neutralVenue
+          ? preview.homeTeam.nationId
+          : (host != null && playing.contains(host) ? host : null),
+    );
+  }
+
+  /// The crowd's reactions to what the Pitch clock has just played, from
+  /// where it last stood to [t]. A jump (a seek, a new picture) plays none.
+  void _soundPitchCues(PitchPlayback pb, Duration t) {
+    final from = _soundAt;
+    if (from == null || t < from - const Duration(seconds: 1)) {
+      _soundAt = t;
+      return;
+    }
+    if (t <= from) return;
+    _soundAt = t;
+    if (t - from > const Duration(seconds: 1)) return;
+    for (final c in pb.crowdCuesBetween(from, t)) {
+      _sound.pitchMoment(c.moment, build: c.build);
+    }
+  }
+
+  /// The Timeline's crowd for the minute ([minute], [stoppage]) just shown.
+  void _soundTimelineMinute(int minute, int stoppage) {
+    final moments = _result?.moments;
+    if (moments == null) return;
+    _sound.timelineMoments(
+      moments.where((m) => m.minute == minute && m.stoppage == stoppage),
+      speed: _speeds[_speedIdx],
+    );
   }
 
   @override
   void dispose() {
+    _sound.dispose();
     _lifecycle.dispose();
     _timer?.cancel();
     _flashTimer?.cancel();
@@ -626,6 +707,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   void _begin() {
     _started = true;
     MatchFeedback.kickoff(ref.read(soundHapticsEnabledProvider));
+    _syncSound();
+    _sound.kickOff();
     _restartTimer();
   }
 
@@ -657,6 +740,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       if (!mounted || !_playing) return;
       var scored = false;
       var tickStoppage = 0;
+      // The minute this tick shows, for the crowd (null: none new).
+      (int, int)? soundMinute;
       setState(() {
         if (_held.isNotEmpty) {
           // Back from the Pitch view part-way through a minute: the rest of
@@ -673,22 +758,26 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
         } else if (_minute < 90) {
           // Normal play.
           _minute++;
+          soundMinute = (_minute, 0);
           _flashEventsAt(_minute, 0);
           scored = _flashGoalAt(_minute, 0);
         } else if (_added < _stoppage) {
           // Second-half stoppage: the clock holds at 90 and counts +1, +2, …
           _added++;
           tickStoppage = _added;
+          soundMinute = (90, _added);
           _flashEventsAt(90, _added);
           scored = _flashGoalAt(90, _added);
         } else if (_minute < _fullTimeMinute) {
           // Extra time (a level knockout) resumes after stoppage.
           _minute++;
+          soundMinute = (_minute, 0);
           _flashEventsAt(_minute, 0);
           scored = _flashGoalAt(_minute, 0);
         }
         if (_clockDone) _whistleFullTime();
       });
+      if (soundMinute case (final m, final st)) _soundTimelineMinute(m, st);
       // An injury opens the squad (paused) with the hurt player flagged — play
       // resumes when the manager is done, whether or not they made a sub.
       _checkInjuryAt(_minute, tickStoppage);
@@ -710,6 +799,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     _whistled = true;
     _playing = false;
     MatchFeedback.fullTime(ref.read(soundHapticsEnabledProvider));
+    _sound.fullTime();
     // A level knockout that reached the shootout: name the takers first,
     // then reveal the kicks. The order is asked once, and only of a
     // manager who is actually in the tie.
@@ -788,6 +878,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   void _showGoalFlash(MatchEvent e) {
     _goalFlash = e;
     MatchFeedback.goal(ref.read(soundHapticsEnabledProvider));
+    _sound.goal(e.teamNationId);
     _pitchClock?.pause();
     _flashTimer?.cancel();
     _flashTimer = Timer(kGoalFlashHold, () {
@@ -884,6 +975,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     if (_halfTimeTaken || _minute < 45 || _minute >= 90) return false;
     _halfTimeTaken = true;
     _stopClock();
+    _sound.interval();
     setState(() {
       _playing = false;
       _atHalfTime = true;
@@ -897,6 +989,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       _atHalfTime = false;
       _playing = true;
     });
+    _sound.kickOff();
     _restartTimer();
   }
 
@@ -911,6 +1004,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     if (!_extraTimeStartTaken && _minute >= 90 && _added >= _stoppage) {
       _extraTimeStartTaken = true;
       _stopClock();
+      _sound.interval();
       setState(() {
         _playing = false;
         _atExtraTimeStart = true;
@@ -920,6 +1014,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     if (!_extraTimeHalfTaken && _minute >= 105) {
       _extraTimeHalfTaken = true;
       _stopClock();
+      _sound.interval();
       setState(() {
         _playing = false;
         _atExtraTimeHalf = true;
@@ -936,6 +1031,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       _atExtraTimeHalf = false;
       _playing = true;
     });
+    _sound.kickOff();
     _restartTimer();
   }
 
@@ -1378,6 +1474,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       if (stop != null) _pc.jump(stop);
     }
     _pc.markRead();
+    _soundPitchCues(pb, clock.value);
     _syncPitchState(announce: true);
     if (whistle != null && !_checkHalfTime()) _checkExtraTimeBreaks();
     if (clock.finished && !_whistled) setState(_whistleFullTime);
@@ -1475,6 +1572,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   /// kicks are revealing, a second tap lands the rest of them at once; the
   /// sheet has been offered, and nothing offers it again.
   void _skip() {
+    _sound.skip();
     _stopClock();
     final clock = _pitchClock;
     if (clock != null) _pc.jump(clock.total);
@@ -2020,6 +2118,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     // its own state. Redrawn from a fresher preview, it would put the NEXT
     // opponent's flags, names and ratings either side of the score of the match
     // just finished — for as long as the transition lasts.
+    // Stadium sound follows the setting live (a change mid-match is heard).
+    ref
+      ..watch(matchSoundEnabledProvider)
+      ..watch(matchSoundVolumeProvider);
     final pinned = _livePreview;
     final previewAsync = pinned != null
         ? AsyncValue<MatchPreview?>.data(pinned)
@@ -2132,6 +2234,14 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                 liveHome;
             final homeScore = ft ? finalHome : liveHome;
             final awayScore = ft ? finalAway : liveAway;
+            _setSoundGround(preview);
+            _syncSound();
+            if (ft && _started) {
+              final mine = preview.playerNationId == homeId
+                  ? finalHome - finalAway
+                  : finalAway - finalHome;
+              _sound.matchOver(won: mine > 0);
+            }
             // Red cards shown so far, marked on the 2D TV's bar for the
             // rest of the match.
             final homeReds = shown

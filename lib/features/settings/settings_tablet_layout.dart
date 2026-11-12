@@ -38,6 +38,8 @@ class _SettingsTabletLayout extends StatelessWidget {
                         children: const [
                           _SoundHapticsCard(),
                           SizedBox(height: AppSpacing.md),
+                          MatchSoundCard(),
+                          SizedBox(height: AppSpacing.md),
                           _LanguageCard(),
                           SizedBox(height: AppSpacing.md),
                           _TextSizeCard(),

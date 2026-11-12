@@ -416,6 +416,16 @@ class AppLocalizationsBg extends AppLocalizations {
       'Вибрация и кратък тон при гол, начален удар и краен резултат.';
 
   @override
+  String get settingsMatchSoundTitle => 'Звук от стадиона';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'Публиката и свирката на съдията по време на мачовете.';
+
+  @override
+  String get settingsMatchSoundVolume => 'Сила на звука';
+
+  @override
   String get settingsLanguageTitle => 'Език';
 
   @override

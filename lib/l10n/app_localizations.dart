@@ -840,6 +840,24 @@ abstract class AppLocalizations {
   /// **'Vibration and a short tone on goals, kick-off and full time.'**
   String get settingsSoundHapticsBlurb;
 
+  /// Stadium sound toggle label (crowd and whistle in matches; off by default).
+  ///
+  /// In en, this message translates to:
+  /// **'Stadium sound'**
+  String get settingsMatchSoundTitle;
+
+  /// Stadium sound toggle description.
+  ///
+  /// In en, this message translates to:
+  /// **'The crowd and the referee\'s whistle during matches.'**
+  String get settingsMatchSoundBlurb;
+
+  /// Label of the stadium sound volume slider.
+  ///
+  /// In en, this message translates to:
+  /// **'Volume'**
+  String get settingsMatchSoundVolume;
+
   /// Language selector label.
   ///
   /// In en, this message translates to:

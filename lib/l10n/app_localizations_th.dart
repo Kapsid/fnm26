@@ -405,6 +405,16 @@ class AppLocalizationsTh extends AppLocalizations {
       'สั่นและเสียงสั้นๆ เมื่อมีประตู เริ่มเกม และจบเกม';
 
   @override
+  String get settingsMatchSoundTitle => 'เสียงในสนาม';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'เสียงผู้ชมและนกหวีดของผู้ตัดสินระหว่างการแข่งขัน';
+
+  @override
+  String get settingsMatchSoundVolume => 'ระดับเสียง';
+
+  @override
   String get settingsLanguageTitle => 'ภาษา';
 
   @override
