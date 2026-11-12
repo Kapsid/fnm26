@@ -878,7 +878,9 @@ class MatchEngine {
           keeperId: _keeperOf(def)?.id,
           zone:
               zone ??
-              (header ? _headerZone(xg, detailRng) : _shotZone(xg, detailRng)),
+              (header
+                  ? _headerZone(xg, detailRng)
+                  : _shotZone(xg, detailRng, goal: goal != null)),
           xg: xg,
           outcome:
               outcome ??
@@ -2624,30 +2626,43 @@ class MatchEngine {
   }
 
   /// Where an open-play shot of quality [xg] was taken from, for the Pitch
-  /// view, drawn on the detail stream so a side's shots spread over the
-  /// pitch: about 30% in the box, 35% at its edge and 35% from distance
-  /// overall, with the better chances leaning into the box.
+  /// view, drawn on the detail stream with one draw.
   ///
-  /// The engine's open-play xG is narrow, so it only tilts the draw. [xg] is
-  /// placed on its measured range (2026-11-05, 3000 matches of the baseline
-  /// pairs, about 47,000 shots): [_lowXg] (p5) to [_highXg] (p99), median
-  /// 0.148. At the bottom a shot is in the box 20% of the time and from
-  /// distance 45%; at the top 55% and 10%. Inside the box the six-yard area
-  /// takes 10% rising to 40%, the rest 40% centre, 30% left, 30% right.
+  /// The engine has no pitch, so a shot's [goal] is decided before its
+  /// place, and the place is drawn for it the way real football has it
+  /// (2026-11-12): about 8% of shots from the six-yard area, 50% from the
+  /// rest of the box and 42% from outside it, the closer ones going in far
+  /// more often. A goal is in the six-yard area 27% of the time, elsewhere
+  /// in the box 61%, from outside it 12% (9% its edge, 3% distance); the
+  /// picture loses a few box finishes to strikes a stride short of it, so
+  /// it shows about one goal in five from outside. A miss is 5% six-yard
+  /// area, 47% box, 27% edge, 21% distance. A long shot still goes in now
+  /// and then; a tap-in is no longer as rare as a 30-yarder.
+  ///
+  /// [xg] tilts it a little: placed on its measured range (2026-11-05,
+  /// 3000 matches of the baseline pairs, about 47,000 shots), [_lowXg] (p5)
+  /// to [_highXg] (p99), the best chances move up to 8 points (4 for a
+  /// goal) from outside into the box, the poorest as many the other way.
+  /// Inside the box the rest splits 45% centre, 27.5% left, 27.5% right.
   /// Penalties and headers never come here.
-  static PitchZone _shotZone(double xg, SeededRng detailRng) {
+  static PitchZone _shotZone(
+    double xg,
+    SeededRng detailRng, {
+    required bool goal,
+  }) {
     final t = ((xg - _lowXg) / (_highXg - _lowXg)).clamp(0.0, 1.0);
-    final box = 0.20 + 0.35 * t;
-    final roll = detailRng.nextDouble();
-    if (roll >= box) {
-      return roll < box + 0.35 ? PitchZone.edgeOfBox : PitchZone.longRange;
+    final tilt = 0.16 * (t - 0.5);
+    final (six, box, edge) = goal
+        ? (0.27, 0.61 + tilt / 2, 0.09 - tilt * 0.3)
+        : (0.05, 0.47 + tilt, 0.27 - tilt * 0.5);
+    var roll = detailRng.nextDouble();
+    if ((roll -= six) < 0) return PitchZone.sixYard;
+    if ((roll -= box) < 0) {
+      final u = (roll + box) / box;
+      if (u < 0.45) return PitchZone.boxCentre;
+      return u < 0.725 ? PitchZone.boxLeft : PitchZone.boxRight;
     }
-    final inBox = detailRng.nextDouble();
-    final six = 0.10 + 0.30 * t;
-    if (inBox < six) return PitchZone.sixYard;
-    final rest = (inBox - six) / (1 - six);
-    if (rest < 0.4) return PitchZone.boxCentre;
-    return rest < 0.7 ? PitchZone.boxLeft : PitchZone.boxRight;
+    return roll < edge ? PitchZone.edgeOfBox : PitchZone.longRange;
   }
 
   static const double _lowXg = 0.133;

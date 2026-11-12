@@ -75,7 +75,11 @@ void main() {
     // penalty rate rose (0.095 to 0.105 of finished chances, 2026-11-07),
     // an intended outcome change; again when it rose to 0.175 with a home
     // lean (2026-11-08); and when own goals re-credited a few goals to the
-    // defender who turned them in (1.2, every score unchanged).
+    // defender who turned them in (1.2, every score unchanged); and when
+    // open-play shot zones were drawn for the shot's outcome (2026-11-12:
+    // only the moments' display detail and the routine restarts drawn
+    // after them on the detail stream moved; scores, events, xG, ratings
+    // and energy unchanged).
     final parts = StringBuffer();
     for (var i = 0; i < 40; i++) {
       parts
@@ -107,4 +111,4 @@ void main() {
   });
 }
 
-const _before = '96c701de';
+const _before = '802c3040';
