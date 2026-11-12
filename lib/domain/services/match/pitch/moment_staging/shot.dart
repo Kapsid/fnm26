@@ -464,15 +464,14 @@ class _OpenShotPlan extends _Plan {
       keeperAssist = e.keepers.contains(a);
     }
     earliest = start + (0.3 * len).clamp(0.15, 1.4);
-    final flightEst = zone.distanceTo(goal) / 24;
-    deadline = end - flightEst - shot.tail;
+    _setDeadline();
 
     if (resumed) _readResume(e);
   }
 
   final ShotMoment m;
   late final _Shot shot;
-  late final Offset2 zone;
+  late Offset2 zone;
   int? assister;
 
   /// The assister is his side's keeper: he never leaves his area, so he
@@ -481,7 +480,14 @@ class _OpenShotPlan extends _Plan {
   int? crosser;
   bool delivered = false;
   late final double earliest;
-  late final double deadline;
+  late double deadline;
+
+  /// The latest the shooter can still strike it from [zone] and have it
+  /// arrive, its ending played, before the window closes.
+  void _setDeadline() {
+    final flightEst = zone.distanceTo(goal) / 24;
+    deadline = end - flightEst - shot.tail;
+  }
 
   /// How the chance is made, once the picture cuts to it (see [_Route]),
   /// the team-mate it uses, how far through it is and when it began.
@@ -590,6 +596,9 @@ class _OpenShotPlan extends _Plan {
         shot.blocker = b;
       }
     }
+    // The man stepping out to a shot from distance, in front of it.
+    final cl = closer;
+    if (cl != null && !extra.containsKey(cl)) extra[cl] = _closeSpot(zone);
     // The scorer up toward the zone, held onside by the cut itself.
     if (setUp) extra[m.shooterId] = at(depthOf(zone) - 1, latOf(zone));
     return cutToPhase(
@@ -617,6 +626,8 @@ class _OpenShotPlan extends _Plan {
     }
 
     if (cutWanted == null) {
+      _runIn(now);
+      _pickCloser(now);
       cutWanted = _needCut(now);
       if (cutWanted!) {
         _chooseRoute(now);
@@ -682,7 +693,10 @@ class _OpenShotPlan extends _Plan {
     final by = car == null ? s : null;
     if (atFeet(s) && (assister == null || delivered) && inRange) {
       final sp = now.players[s]!;
-      final near = sp.distanceTo(_strikeFrom(now)) < 2.0;
+      // In the box he gets right to it: a stride short of a spot near
+      // its edge is a shot from outside it.
+      final reach = depthOf(zone) >= _goalLine - 16.5 ? 0.8 : 2.0;
+      final near = sp.distanceTo(_strikeFrom(now)) < reach;
       if (m.header && delivered && car == s) {
         return shot.strike(t, now, fromHeight: headerHeight, by: by);
       }
@@ -865,6 +879,53 @@ class _OpenShotPlan extends _Plan {
     return at(d, latOf(zone));
   }
 
+  /// The defender who steps out to a shot from outside the box: a shot
+  /// from distance is struck past or over a man in front of it, not by a
+  /// striker with nobody between him and goal. Null for any other shot.
+  int? closer;
+
+  /// Picks [closer] as the window opens: the outfielder of theirs nearest
+  /// the spot in front of a shot from outside the box.
+  void _pickCloser(ScriptState now) {
+    if (resumed || m.header || m.outcome == ShotOutcome.blocked) return;
+    if (depthOf(zone) >= _goalLine - 16.5) return;
+    final defs = available(now, opp).where((o) => !now.keepers.contains(o));
+    closer = nearest(now, defs, _closeSpot(zone));
+  }
+
+  /// Where [closer] stands against a shot from [from]: five metres in
+  /// front of it, a stride off its line so the ball goes by him.
+  Offset2 _closeSpot(Offset2 from) {
+    final ahead = (goal - from).unit;
+    final side = _unit(c.seed, 103) < 0.5 ? 1.0 : -1.0;
+    return from + ahead * 5 + Offset2(-ahead.y, ahead.x) * (2.2 * side);
+  }
+
+  /// Through on goal: as the window opens, a shooter with nobody of theirs
+  /// between him and goal but the keeper, his chance recorded outside the
+  /// box, mostly runs it on into the box and finishes from 10-16 m (a
+  /// striker clean through rarely shoots from 25 m); now and then he still
+  /// lets fly from distance. It moves [zone] before the window works out
+  /// how to reach it, so a cut, when one is needed, cuts to him there.
+  /// Display only: the window's seed decides it.
+  void _runIn(ScriptState now) {
+    if (resumed || m.header || m.outcome == ShotOutcome.blocked) return;
+    if (depthOf(zone) >= _goalLine - 16.5) return;
+    final sp = now.players[m.shooterId];
+    if (sp == null || depthOf(sp) < PitchDims.length / 2) return;
+    final mine = depthOf(sp);
+    for (final id in available(now, opp)) {
+      if (now.keepers.contains(id)) continue;
+      if (depthOf(now.players[id]!) > mine - 1) return;
+    }
+    if (_unit(c.seed, 89) >= 0.75) return;
+    zone = at(
+      _goalLine - 10 - 6 * _unit(c.seed, 97),
+      latOf(zone).clamp(-8.0, 8.0),
+    );
+    _setDeadline();
+  }
+
   int? _pickCrosser(ScriptState now) {
     final s = m.shooterId;
     final car = now.carrierId;
@@ -891,7 +952,11 @@ class _OpenShotPlan extends _Plan {
     final spare = len - (end - strikeBy) - 0.3;
     final options = <_Route>[];
     if (assister == null && spare > 1.3) options.add(_Route.carry);
-    if (spare > 1.4 && zd > 76) options.add(_Route.through);
+    // A ball in behind is run onto and finished in the box; one for a
+    // chance from distance only now and then.
+    final behind =
+        zd > _goalLine - 16.5 || (zd > 76 && _unit(c.seed, 101) < 0.3);
+    if (spare > 1.4 && behind) options.add(_Route.through);
     if (spare > 1.8) options.add(_Route.oneTwo);
     if (spare > 1.5 && zd > 86 && latOf(zone).abs() < 13) {
       options.add(_Route.cutBack);
@@ -1169,6 +1234,10 @@ class _OpenShotPlan extends _Plan {
       final from = car == s ? now.ball : zone;
       final lane = from + (goal - from).unit * 2.0;
       return (target: lane, maxSpeed: 8.8);
+    }
+    if (id == closer) {
+      // He faces the ball as he steps across: never a backwards sprint.
+      return (target: _closeSpot(car == s ? now.ball : zone), maxSpeed: 5);
     }
     if (id == assister || id == crosser) {
       if (car == id) return (target: now.players[id]!, maxSpeed: 1.5);

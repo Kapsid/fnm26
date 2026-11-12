@@ -276,7 +276,7 @@ void main() {
   });
 
   test('open-play shot zones spread: 2.5+ distinct zones a side a match, '
-      'about 30% box, 35% edge, 35% long range', () {
+      'about 55% box, 25% edge, 20% long range', () {
     const n = 600;
     const box = [
       PitchZone.sixYard,
@@ -322,9 +322,11 @@ void main() {
       'share xg>=0.16 ${hiBox / hiTotal}, below ${loBox / loTotal}',
     );
     expect(distinct / (2 * n), greaterThanOrEqualTo(2.5));
-    expect(inBox / total, closeTo(0.30, 0.05));
-    expect(edge / total, closeTo(0.35, 0.05));
-    expect(long / total, closeTo(0.35, 0.05));
+    // Real football's spread (2026-11-12): most shots from inside the box,
+    // two in five from outside it; it was 30/35/35 before.
+    expect(inBox / total, closeTo(0.55, 0.05));
+    expect(edge / total, closeTo(0.25, 0.05));
+    expect(long / total, closeTo(0.20, 0.05));
     expect(hiBox / hiTotal, greaterThan(loBox / loTotal + 0.05));
   });
 

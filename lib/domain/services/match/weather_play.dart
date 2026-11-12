@@ -81,9 +81,13 @@ class WeatherPlay {
       fouls != 1 ||
       backgroundGoals != 1;
 
-  /// The engine's shot-zone band (`MatchEngine._shotZone`): a chance of
-  /// this xG or less is struck from distance 45% of the time, one of
-  /// [longRangeXgHigh] or more 10% of the time, straight in between.
+  /// The weather's own model of how often a chance is struck from
+  /// distance: one of this xG or less 45% of the time, one of
+  /// [longRangeXgHigh] or more 10% of the time, straight in between. It was
+  /// the Pitch view's shot-zone band until 2026-11-12, when the drawn
+  /// places moved closer in (`MatchEngine._shotZone`); it stays as it was
+  /// because it changes results, and the weather calibration is tuned to
+  /// it.
   static const double longRangeXgLow = 0.133;
   static const double longRangeXgHigh = 0.200;
 
