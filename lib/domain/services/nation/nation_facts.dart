@@ -62,9 +62,6 @@ class NationFact {
 
   /// A player the line names (the record scorer).
   final String? name;
-
-  @override
-  String toString() => 'NationFact($kind, $headline, score $score)';
 }
 
 /// Derives a nation's facts from what the save already holds: its fixtures,
@@ -73,7 +70,7 @@ class NationFact {
 ///
 /// A fact is only offered when it says something: a "biggest win" of 1-0, a
 /// home run of two games or a climb of one place is left out. What remains is
-/// ranked by [NationFact.score] and the best [limit] are returned, best first.
+/// ranked by [NationFact.score] and the best `limit` are returned, best first.
 abstract final class NationFacts {
   /// The fewest goals a win must be by to be the "biggest win".
   static const int minWinMargin = 2;

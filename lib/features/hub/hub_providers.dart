@@ -120,6 +120,7 @@ import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/stats/stats_providers.dart'
     show careerStatsProvider, teamOverallHistoryProvider, teamStatsProvider;
+import 'package:fnm/features/nations/nation_now_providers.dart';
 import 'package:fnm/features/nations/nation_vitrine_providers.dart';
 import 'package:fnm/features/player/player_detail_screen.dart'
     show invalidatePlayerDetails;
@@ -966,6 +967,9 @@ class SeasonService {
       ..invalidate(intercontinentalPlayoffProvider)
       ..invalidate(resultsProvider)
       ..invalidate(nationVitrineProvider)
+      // The nation page's "now" read (form, next match, squad); the page's
+      // own read and its next ground follow it.
+      ..invalidate(nationNowProvider)
       ..invalidate(wcHostThemeProvider)
       ..invalidate(continentalHostThemeProvider);
     _invalidateFederationViews();

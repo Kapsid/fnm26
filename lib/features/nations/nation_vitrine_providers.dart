@@ -48,6 +48,27 @@ class TitleWon {
   final bool wasHost;
 }
 
+/// How a nation placed at a finals it hosted.
+enum HostFinish { champion, runnerUp, third, other }
+
+/// One finals the nation hosted (alone or with others), for the hosting
+/// record.
+class HostedEdition {
+  const HostedEdition({
+    required this.year,
+    required this.competition,
+    required this.finish,
+    required this.coHosted,
+  });
+
+  final int year;
+  final String competition;
+  final HostFinish finish;
+
+  /// Staged with another nation.
+  final bool coHosted;
+}
+
 /// A nation's all-time top scorer entry.
 class ScorerRecord {
   const ScorerRecord({
@@ -92,6 +113,8 @@ class NationVitrine {
     required this.topScorers,
     required this.rankHistory,
     required this.isPlayerNation,
+    this.hosted = const [],
+    this.worldFinalsPlayed = 0,
   });
 
   final Nation nation;
@@ -111,6 +134,13 @@ class NationVitrine {
   final List<RankPoint> rankHistory;
 
   final bool isPlayerNation;
+
+  /// Every finals it hosted, newest first.
+  final List<HostedEdition> hosted;
+
+  /// World Championship finals played since the save began: what its
+  /// [MedalHaul.appearances] there are out of.
+  final int worldFinalsPlayed;
 
   int get totalGolds => worldCup.golds + continental.golds;
 }
@@ -158,6 +188,8 @@ nationVitrineProvider = FutureProvider.autoDispose
       var coS = 0;
       var coB = 0;
       final titles = <TitleWon>[];
+      final hosted = <HostedEdition>[];
+      var worldFinalsPlayed = 0;
       // Global competitions any nation can win, shown alongside its own
       // confederation's continental cup.
       // A Nations Cup is only ever contested by its own confederation, so
@@ -174,6 +206,23 @@ nationVitrineProvider = FutureProvider.autoDispose
         final gold = h.champions.contains(arg.nationId);
         final silver = h.runnerUpId == arg.nationId;
         final bronze = h.thirdId == arg.nationId || h.thirdId2 == arg.nationId;
+        if (isWc && CareerService.isOwnHonourYear(h.year)) worldFinalsPlayed++;
+        if (h.hostIds.contains(arg.nationId)) {
+          hosted.add(
+            HostedEdition(
+              year: h.year,
+              competition: h.competition,
+              finish: gold
+                  ? HostFinish.champion
+                  : silver
+                  ? HostFinish.runnerUp
+                  : bronze
+                  ? HostFinish.third
+                  : HostFinish.other,
+              coHosted: h.hostIds.length > 1,
+            ),
+          );
+        }
         if (isWc) {
           if (gold) wcG++;
           if (silver) wcS++;
@@ -196,6 +245,7 @@ nationVitrineProvider = FutureProvider.autoDispose
         }
       }
       titles.sort((a, b) => b.year.compareTo(a.year));
+      hosted.sort((a, b) => b.year.compareTo(a.year));
 
       // Finals appearances: distinct years the nation had a finals-round
       // fixture, split by World Cup vs. continental. (Continental fixtures
@@ -295,5 +345,7 @@ nationVitrineProvider = FutureProvider.autoDispose
         topScorers: scorers,
         rankHistory: history,
         isPlayerNation: arg.nationId == career.nationId,
+        hosted: hosted,
+        worldFinalsPlayed: worldFinalsPlayed,
       );
     });
