@@ -610,45 +610,20 @@ class _Tabs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    Widget label(String text, int? count) => Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Flexible(
-          child: Text(text, maxLines: 1, overflow: TextOverflow.ellipsis),
+    return AppSegmentedTabs(
+      controller: controller,
+      tabs: [
+        SegmentTab(
+          l.editorTabSquad,
+          key: SquadScreen.squadTabKey,
+          badge: '$squad',
         ),
-        if (count != null) ...[
-          const SizedBox(width: AppSpacing.xs + 2),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-            decoration: BoxDecoration(
-              color: AppColors.surfaceContainerHighest,
-              borderRadius: AppRadii.smAll,
-            ),
-            child: Text(
-              '$count',
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.onSurfaceVariant,
-              ),
-            ),
-          ),
-        ],
+        SegmentTab(
+          l.editorTabPool,
+          key: SquadScreen.poolTabKey,
+          badge: pool == null ? null : '$pool',
+        ),
       ],
-    );
-    return Material(
-      color: Colors.transparent,
-      child: TabBar(
-        controller: controller,
-        labelColor: AppColors.onSurface,
-        unselectedLabelColor: AppColors.onSurfaceVariant,
-        indicatorColor: AppColors.primary,
-        tabs: [
-          Tab(
-            key: SquadScreen.squadTabKey,
-            child: label(l.editorTabSquad, squad),
-          ),
-          Tab(key: SquadScreen.poolTabKey, child: label(l.editorTabPool, pool)),
-        ],
-      ),
     );
   }
 }

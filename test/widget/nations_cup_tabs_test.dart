@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/shared/widgets/app_segmented_tabs.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/app_database.dart';
@@ -123,7 +124,7 @@ void main() {
     // carries the star.
     expect(find.text(l.tourContLeagueChipStar('A')), findsOneWidget);
     expect(find.text(l.tourContLeagueChip('B')), findsOneWidget);
-    expect(find.byType(TabBar), findsNWidgets(2));
+    expect(find.byType(AppSegmentedControl), findsNWidgets(2));
   });
 
   testWidgets('it opens on the manager own league', (tester) async {
@@ -164,8 +165,16 @@ void main() {
             : l.tourContLeagueChip(letter),
       );
       if (tab.evaluate().isEmpty) continue;
-      await tester.ensureVisible(tab);
-      await tester.pumpAndSettle();
+      // Scroll the league strip itself: ensureVisible would also nudge the
+      // cup's own tab pages it sits in.
+      final strip = find.descendant(
+        of: find.byType(AppSegmentedControl).last,
+        matching: find.byType(Scrollable),
+      );
+      if (strip.evaluate().isNotEmpty) {
+        await tester.scrollUntilVisible(tab, 60, scrollable: strip.first);
+        await tester.pumpAndSettle();
+      }
       await tester.tap(tab);
       await tester.pumpAndSettle();
 

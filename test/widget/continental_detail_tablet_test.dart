@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/shared/widgets/app_segmented_tabs.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -126,7 +127,10 @@ void main() {
   testWidgets('a cup with no qualifying has seven tabs', (tester) async {
     await openCup(tester, Confederation.southAmerica, kTabletSize);
     expect(tester.takeException(), isNull);
-    expect(tester.widget<TabBar>(find.byType(TabBar)).tabs, hasLength(7));
+    expect(
+      tester.widget<AppSegmentedControl>(find.byType(AppSegmentedControl)).tabs,
+      hasLength(7),
+    );
     expect(find.text(enL.tourContTabQualifying), findsNothing);
     // Not the manager's region, and played: it opens on its bracket, which
     // is tab 2 once there is no qualifying tab.

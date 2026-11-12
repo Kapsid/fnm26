@@ -12,14 +12,6 @@ class _TacticsTabletLayout extends ConsumerWidget {
 
   static const double _pitchColumnWidth = 452;
 
-  /// The tabs' type: capitals, a little tracked, as the panel titles.
-  static const _tabLabel = TextStyle(
-    fontFamily: AppFonts.sans,
-    fontSize: 13,
-    fontWeight: FontWeight.w700,
-    letterSpacing: 0.6,
-  );
-
   final TacticsScreen screen;
 
   int get careerId => screen.careerId;
@@ -197,33 +189,26 @@ class _TacticsTabletLayout extends ConsumerWidget {
                             child: Row(
                               children: [
                                 Expanded(
-                                  child: TabBar(
-                                    isScrollable: true,
-                                    tabAlignment: TabAlignment.start,
-                                    labelColor: AppColors.onSurface,
-                                    unselectedLabelColor:
-                                        AppColors.onSurfaceVariant,
-                                    indicatorColor: AppColors.primary,
-                                    // In capitals the theme's tab type is too
-                                    // wide for all three to fit.
-                                    labelStyle: _tabLabel,
-                                    unselectedLabelStyle: _tabLabel,
-                                    // One case for every tab, as the kit's
-                                    // panel titles: the copy itself mixes
-                                    // capitals and sentence case.
+                                  child: AppSegmentedTabs(
+                                    padding: const EdgeInsets.fromLTRB(
+                                      AppSpacing.sm + 4,
+                                      AppSpacing.sm,
+                                      0,
+                                      AppSpacing.sm,
+                                    ),
                                     tabs: [
-                                      Tab(
-                                        text: l.tacticsFormation.capsIn(
+                                      SegmentTab(
+                                        l.tacticsFormation.capsIn(
                                           l.localeName,
                                         ),
                                       ),
-                                      Tab(
-                                        text: l.tacticsTabRolesSetPieces.capsIn(
+                                      SegmentTab(
+                                        l.tacticsTabRolesSetPieces.capsIn(
                                           l.localeName,
                                         ),
                                       ),
-                                      Tab(
-                                        text: l.matchDossierTitle.capsIn(
+                                      SegmentTab(
+                                        l.matchDossierTitle.capsIn(
                                           l.localeName,
                                         ),
                                       ),

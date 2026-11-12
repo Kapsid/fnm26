@@ -118,7 +118,7 @@ class _AllTimeTabletLayoutState extends ConsumerState<_AllTimeTabletLayout> {
                             ),
                           ),
                           TabletTabBar(
-                            tabs: [for (final b in boards) Tab(text: b.label)],
+                            tabs: [for (final b in boards) SegmentTab(b.label)],
                           ),
                           Expanded(
                             child: TabBarView(

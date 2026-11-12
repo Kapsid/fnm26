@@ -27,7 +27,6 @@ import 'package:fnm/features/tournaments/intercontinental_playoff_bracket.dart';
 import 'package:fnm/features/tournaments/intercontinental_playoff_providers.dart';
 import 'package:fnm/features/tournaments/tournament_awards.dart';
 import 'package:fnm/features/tournaments/tournament_bracket.dart';
-import 'package:fnm/features/tournaments/tournament_history.dart';
 import 'package:fnm/features/tournaments/tournament_holders_row.dart';
 import 'package:fnm/features/tournaments/tournament_stats.dart';
 import 'package:fnm/features/tournaments/tournament_summary.dart';
@@ -95,17 +94,9 @@ class CupDetailScreen extends ConsumerWidget {
             style: AppTypography.labelMedium.copyWith(color: accent),
           ),
           centerTitle: true,
-          // The tabs sit right on top of the content otherwise; the extra
-          // height gives them room to breathe.
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(kTournamentTabBarHeight),
-            child: TabBar(
-              isScrollable: true,
-              labelColor: themed ? accent : AppColors.onSurface,
-              unselectedLabelColor: AppColors.onSurfaceVariant,
-              indicatorColor: accent,
-              tabs: _cupTabs(l),
-            ),
+          bottom: AppSegmentedTabBar(
+            tabs: _cupTabs(l),
+            selectedColor: themed ? accent : null,
           ),
         ),
         body: dataAsync.when(
@@ -145,16 +136,16 @@ class CupDetailScreen extends ConsumerWidget {
 
 /// The World Championship's nine tabs, in the order [_cupTabViews] builds
 /// their bodies.
-List<Tab> _cupTabs(AppLocalizations l) => [
-  Tab(text: l.tourCupTabSummary),
-  Tab(text: l.tourCupTabQualifying),
-  Tab(text: l.tourCupTabPlayoff),
-  Tab(text: l.tourCupTabFinals),
-  Tab(text: l.tourCupTabBracket),
-  Tab(text: l.tourCupTabAwards),
-  Tab(text: l.tourCupTabScorers),
-  Tab(text: l.tourCupTabHistory),
-  Tab(text: l.tourCupTabRecords),
+List<SegmentTab> _cupTabs(AppLocalizations l) => [
+  SegmentTab(l.tourCupTabSummary),
+  SegmentTab(l.tourCupTabQualifying),
+  SegmentTab(l.tourCupTabPlayoff),
+  SegmentTab(l.tourCupTabFinals),
+  SegmentTab(l.tourCupTabBracket),
+  SegmentTab(l.tourCupTabAwards),
+  SegmentTab(l.tourCupTabScorers),
+  SegmentTab(l.tourCupTabHistory),
+  SegmentTab(l.tourCupTabRecords),
 ];
 
 /// The nine tab bodies. Shared by the phone screen and [CupDetailView]:

@@ -201,16 +201,12 @@ class TacticsScreen extends ConsumerWidget {
           // Split into sections so it's not one long scroll — the pitch, each
           // player's role, the set-piece takers, and the wider squad each get
           // their own tab.
-          bottom: TabBar(
-            isScrollable: true,
-            labelColor: AppColors.onSurface,
-            unselectedLabelColor: AppColors.onSurfaceVariant,
-            indicatorColor: AppColors.primary,
+          bottom: AppSegmentedTabBar(
             tabs: [
-              Tab(text: l.tacticsTabLineup),
-              Tab(text: l.tacticsTabInstructions),
-              Tab(text: l.tacticsTabRolesSetPieces),
-              Tab(key: TourKeys.squadTab, text: l.tacticsSquad),
+              SegmentTab(l.tacticsTabLineup),
+              SegmentTab(l.tacticsTabInstructions),
+              SegmentTab(l.tacticsTabRolesSetPieces),
+              SegmentTab(l.tacticsSquad, key: TourKeys.squadTab),
             ],
           ),
           // Squad, instructions, saving how they play, then who is coming

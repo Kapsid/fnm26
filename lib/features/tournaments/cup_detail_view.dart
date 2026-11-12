@@ -32,8 +32,7 @@ class CupDetailView extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TabletTabBar(
-            selectedColor: themed ? accent : AppColors.onSurface,
-            indicatorColor: accent,
+            selectedColor: themed ? accent : null,
             tabs: _cupTabs(l),
           ),
           Expanded(

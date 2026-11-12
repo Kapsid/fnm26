@@ -136,18 +136,7 @@ class ContinentalDetailScreen extends ConsumerWidget {
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
           centerTitle: true,
-          // The tabs sit right on top of the content otherwise; the extra
-          // height gives them room to breathe.
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(kTournamentTabBarHeight),
-            child: TabBar(
-              isScrollable: true,
-              labelColor: AppColors.onSurface,
-              unselectedLabelColor: AppColors.onSurfaceVariant,
-              indicatorColor: AppColors.primary,
-              tabs: _continentalTabs(l, confederation),
-            ),
-          ),
+          bottom: AppSegmentedTabBar(tabs: _continentalTabs(l, confederation)),
         ),
         body: dataAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
@@ -191,16 +180,16 @@ class ContinentalDetailScreen extends ConsumerWidget {
 /// A continental championship's tabs, in the order [_continentalTabViews]
 /// builds their bodies. A cup the whole confederation plays has no
 /// qualifying tab.
-List<Tab> _continentalTabs(AppLocalizations l, Confederation c) => [
-  Tab(text: l.tourContTabSummary),
+List<SegmentTab> _continentalTabs(AppLocalizations l, Confederation c) => [
+  SegmentTab(l.tourContTabSummary),
   if (ContinentalDetailScreen._hasQualifyingFor(c))
-    Tab(text: l.tourContTabQualifying),
-  Tab(text: l.tourContTabFinals),
-  Tab(text: l.tourContTabBracket),
-  Tab(text: l.tourContTabAwards),
-  Tab(text: l.tourContTabScorers),
-  Tab(text: l.tourContTabHistory),
-  Tab(text: l.tourContTabRecords),
+    SegmentTab(l.tourContTabQualifying),
+  SegmentTab(l.tourContTabFinals),
+  SegmentTab(l.tourContTabBracket),
+  SegmentTab(l.tourContTabAwards),
+  SegmentTab(l.tourContTabScorers),
+  SegmentTab(l.tourContTabHistory),
+  SegmentTab(l.tourContTabRecords),
 ];
 
 /// The tab bodies. Shared by the phone screen and [ContinentalDetailView]:

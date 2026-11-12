@@ -3,10 +3,10 @@
 // is copyrighted intellectual property; do not reproduce, clone or help
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'dart:math' as math;
-import 'dart:ui' show SemanticsRole;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
@@ -196,9 +196,12 @@ class AppSegmentedControl extends StatefulWidget {
   static double _naturalWidth(BuildContext context, SegmentTab tab) {
     final scaler = MediaQuery.textScalerOf(context);
     final direction = Directionality.of(context);
+    // Merged over the ambient style, as the Text itself will be (an app
+    // bar's, say, may carry letter spacing the label does not set).
+    final ambient = DefaultTextStyle.of(context).style;
     double measure(String text, TextStyle style) {
       final painter = TextPainter(
-        text: TextSpan(text: text, style: style),
+        text: TextSpan(text: text, style: ambient.merge(style)),
         textDirection: direction,
         textScaler: scaler,
         maxLines: 1,
@@ -256,14 +259,27 @@ class _AppSegmentedControlState extends State<AppSegmentedControl> {
     if (!mounted || !_scrolls) return;
     final i = widget.selected;
     if (i < 0 || i >= _segmentKeys.length) return;
-    final ctx = _segmentKeys[i].currentContext;
-    if (ctx == null) return;
-    Scrollable.ensureVisible(
-      ctx,
-      alignment: 0.5,
-      duration: animate ? const Duration(milliseconds: 200) : Duration.zero,
-      curve: Curves.easeOut,
-    );
+    final box = _segmentKeys[i].currentContext?.findRenderObject();
+    if (box == null || !_scroll.hasClients) return;
+    // The strip's own scroll only: Scrollable.ensureVisible would also move
+    // every scrollable around it (a TabBarView's pages, a list).
+    final viewport = RenderAbstractViewport.maybeOf(box);
+    if (viewport == null) return;
+    final position = _scroll.position;
+    final target = viewport
+        .getOffsetToReveal(box, 0.5)
+        .offset
+        .clamp(position.minScrollExtent, position.maxScrollExtent);
+    if ((target - position.pixels).abs() < 0.5) return;
+    if (animate) {
+      _scroll.animateTo(
+        target,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+      );
+    } else {
+      _scroll.jumpTo(target);
+    }
   }
 
   @override
@@ -382,4 +398,47 @@ class AppSegmentedTabs extends StatelessWidget {
       ),
     );
   }
+}
+
+/// [AppSegmentedTabs] as an app bar's `bottom`: a fixed [height], the strip
+/// centred in it.
+///
+/// An app bar needs its height before it lays anything out, so the text
+/// scale inside is held at [maxTextScale], the largest the strip is built to
+/// fit at that height (a Material `TabBar` has the same fixed height).
+class AppSegmentedTabBar extends StatelessWidget
+    implements PreferredSizeWidget {
+  const AppSegmentedTabBar({
+    required this.tabs,
+    this.controller,
+    this.selectedColor,
+    super.key,
+  });
+
+  final List<SegmentTab> tabs;
+  final TabController? controller;
+  final Color? selectedColor;
+
+  /// The bar's height: a segment at [maxTextScale] and its inset.
+  static const double height = 56;
+
+  static const double maxTextScale = 1.4;
+
+  @override
+  Size get preferredSize => const Size.fromHeight(height);
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    height: height,
+    child: Center(
+      child: MediaQuery.withClampedTextScaling(
+        maxScaleFactor: maxTextScale,
+        child: AppSegmentedTabs(
+          tabs: tabs,
+          controller: controller,
+          selectedColor: selectedColor,
+        ),
+      ),
+    ),
+  );
 }

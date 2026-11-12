@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/shared/widgets/app_segmented_tabs.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/core/theme/app_colors.dart';
@@ -2108,7 +2109,7 @@ void _ownerFeedbackTests() {
       // The score stays put.
       expect(tester.getRect(find.byType(MatchScoreboard)), scoreBefore);
       // Lineups, and its last row reached by scrolling the page.
-      await tester.tap(find.byType(Tab).last);
+      await tester.tap(find.byType(AppTabSegment).last);
       for (var i = 0; i < 30; i++) {
         await tester.pump(const Duration(milliseconds: 16));
       }
@@ -2122,7 +2123,7 @@ void _ownerFeedbackTests() {
       await tester.pump();
       // In view: under the pinned tab bar, above the bottom bar.
       final row = tester.getRect(last);
-      final tabBar = tester.getRect(find.byType(TabBar));
+      final tabBar = tester.getRect(find.byType(AppSegmentedControl));
       final page = tester.getRect(find.byKey(PitchModeColumn.scrollKey));
       expect(row.top, greaterThanOrEqualTo(tabBar.bottom - 0.5));
       expect(row.bottom, lessThanOrEqualTo(page.bottom + 0.5));

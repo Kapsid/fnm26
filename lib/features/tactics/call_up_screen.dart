@@ -724,29 +724,29 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                         sliver: SliverPersistentHeader(
                           pinned: true,
                           delegate: _LineTabBarHeader(
-                            TabBar(
-                              labelPadding: EdgeInsets.zero,
-                              labelColor: AppColors.primary,
-                              unselectedLabelColor: AppColors.onSurfaceVariant,
-                              indicatorColor: AppColors.primary,
+                            AppSegmentedTabs(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppSpacing.marginMobile,
+                                vertical: 6,
+                              ),
                               tabs: [
                                 for (final category in _order)
-                                  Tab(
-                                    height: 44,
-                                    child: _LineTab(
-                                      label: _shortHeading(l, category),
-                                      // How many of this line are in the squad —
-                                      // the number the manager is balancing.
-                                      count: data.pool
-                                          .where(
-                                            (p) =>
-                                                p.position.category ==
-                                                    category &&
-                                                selected.contains(p.id),
-                                          )
-                                          .length,
-                                    ),
-                                  ),
+                                  () {
+                                    // How many of this line are in the
+                                    // squad: the number the manager is
+                                    // balancing.
+                                    final count = data.pool
+                                        .where(
+                                          (p) =>
+                                              p.position.category == category &&
+                                              selected.contains(p.id),
+                                        )
+                                        .length;
+                                    return SegmentTab(
+                                      _shortHeading(l, category),
+                                      badge: count > 0 ? '$count' : null,
+                                    );
+                                  }(),
                               ],
                             ),
                           ),
@@ -937,14 +937,11 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
 class _LineTabBarHeader extends SliverPersistentHeaderDelegate {
   _LineTabBarHeader(this.tabBar);
 
-  final TabBar tabBar;
+  final Widget tabBar;
 
-  /// The strip's height, fixed here and forced on the bar below.
-  ///
-  /// Not `tabBar.preferredSize`: that reports the bar's natural height, which
-  /// is not what a bar of explicitly-sized tabs actually paints — and a header
-  /// that claims more room than it fills fails layout outright.
-  static const double height = 48;
+  /// The strip's height, fixed here: a segment at the largest text size the
+  /// strip is held to ([AppSegmentedTabBar.maxTextScale]) and its inset.
+  static const double height = 52;
 
   @override
   double get minExtent => height;
@@ -961,45 +958,19 @@ class _LineTabBarHeader extends SliverPersistentHeaderDelegate {
       // Opaque: the names must not show through the tabs as they pass under.
       ColoredBox(
         color: AppColors.surface,
-        child: SizedBox(height: height, child: tabBar),
+        child: SizedBox(
+          height: height,
+          child: Center(
+            child: MediaQuery.withClampedTextScaling(
+              maxScaleFactor: AppSegmentedTabBar.maxTextScale,
+              child: tabBar,
+            ),
+          ),
+        ),
       );
 
   @override
   bool shouldRebuild(covariant _LineTabBarHeader old) => old.tabBar != tabBar;
-}
-
-/// One line's tab: its short name, and how many of that line are in the squad.
-class _LineTab extends StatelessWidget {
-  const _LineTab({required this.label, required this.count});
-
-  final String label;
-  final int count;
-
-  @override
-  Widget build(BuildContext context) => Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Flexible(
-        child: Text(
-          label,
-          maxLines: 1,
-          softWrap: false,
-          overflow: TextOverflow.ellipsis,
-          style: AppTypography.labelMedium,
-        ),
-      ),
-      if (count > 0) ...[
-        const SizedBox(width: AppSpacing.xs),
-        Text(
-          '$count',
-          style: AppTypography.labelSmall.copyWith(
-            color: AppColors.onSurfaceVariant,
-          ),
-        ),
-      ],
-    ],
-  );
 }
 
 /// One line narrowed to a single position: "Everyone", then each position the

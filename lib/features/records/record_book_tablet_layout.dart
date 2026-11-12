@@ -112,9 +112,9 @@ class _RecordBookTabletLayoutState
                               children: [
                                 TabletTabBar(
                                   tabs: [
-                                    Tab(text: l.recordsMostCaps),
-                                    Tab(text: l.recordsTopScorers),
-                                    Tab(text: l.recordsMostAssists),
+                                    SegmentTab(l.recordsMostCaps),
+                                    SegmentTab(l.recordsTopScorers),
+                                    SegmentTab(l.recordsMostAssists),
                                   ],
                                 ),
                                 Expanded(

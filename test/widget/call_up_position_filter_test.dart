@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/shared/widgets/app_segmented_tabs.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/core/theme/text_size.dart';
 import 'package:fnm/data/data_providers.dart';
@@ -155,8 +156,10 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  Finder tab(String label) =>
-      find.descendant(of: find.byType(Tab), matching: find.text(label));
+  Finder tab(String label) => find.descendant(
+    of: find.byType(AppTabSegment),
+    matching: find.text(label),
+  );
 
   Finder chip(PositionCategory line, PlayerPosition? pos) =>
       find.byKey(CallUpScreen.positionChipKey(line, pos));
@@ -267,7 +270,7 @@ void main() {
           textScale: kMaxAppTextScale,
           locale: locale,
         );
-        await tester.tap(find.byType(Tab).at(2));
+        await tester.tap(find.byType(AppTabSegment).at(2));
         await tester.pumpAndSettle();
         final row = find.byKey(
           CallUpScreen.positionFilterKey(PositionCategory.midfielder),
