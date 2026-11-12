@@ -83,6 +83,11 @@ final soundHapticsEnabledProvider = StateProvider<bool>((ref) => true);
 /// OS's own buzz and tone. Persisted; loaded at startup via [loadSettings].
 final matchSoundEnabledProvider = StateProvider<bool>((ref) => false);
 
+/// Whether stadium sound ships at all. Off until real recordings replace the
+/// synthesized placeholders: the Settings card is hidden and nothing plays,
+/// whatever an earlier build saved. Tests override it to exercise the feature.
+final stadiumSoundAvailableProvider = Provider<bool>((ref) => false);
+
 /// The stadium sound's master volume, 0..1. Persisted; loaded at startup via
 /// [loadSettings].
 final matchSoundVolumeProvider = StateProvider<double>(

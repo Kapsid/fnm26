@@ -22,7 +22,11 @@ void main() {
     required Size size,
     bool largest = false,
   }) async {
-    final save = await seedSave(tester, formFactor: formFactor);
+    final save = await seedSave(
+      tester,
+      formFactor: formFactor,
+      overrides: [stadiumSoundAvailableProvider.overrideWithValue(true)],
+    );
     tester.view
       ..physicalSize = size
       ..devicePixelRatio = 1;

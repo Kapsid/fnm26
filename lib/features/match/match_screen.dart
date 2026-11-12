@@ -524,7 +524,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   /// and whether the app is in front.
   void _syncSound() {
     _sound.sync(
-      enabled: ref.read(matchSoundEnabledProvider),
+      enabled:
+          ref.read(stadiumSoundAvailableProvider) &&
+          ref.read(matchSoundEnabledProvider),
       volume: ref.read(matchSoundVolumeProvider),
       playing: _started && !_fullTime,
       ducked: _atInterval || (!_playing && !_whistled),

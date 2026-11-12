@@ -250,6 +250,9 @@ class MatchSoundCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (!ref.watch(stadiumSoundAvailableProvider)) {
+      return const SizedBox.shrink();
+    }
     final l = AppLocalizations.of(context);
     final on = ref.watch(matchSoundEnabledProvider);
     final volume = ref.watch(matchSoundVolumeProvider);

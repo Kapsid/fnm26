@@ -126,6 +126,7 @@ Future<(ProviderContainer, FakeMatchAudio)> _pump(
       soundHapticsEnabledProvider.overrideWith((ref) => false),
       matchAttemptSaltProvider.overrideWithValue(() => 0),
       matchAudioProvider.overrideWithValue(audio),
+      stadiumSoundAvailableProvider.overrideWithValue(true),
       if (soundOn != null)
         matchSoundEnabledProvider.overrideWith((ref) => soundOn),
     ],
