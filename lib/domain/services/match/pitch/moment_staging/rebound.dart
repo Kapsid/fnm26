@@ -19,9 +19,10 @@ bool _boxZone(PitchZone z) =>
 /// parries into the six-yard area or round the penalty spot, and the
 /// recorded scorer following it up from close range. The first shot is the
 /// assist's maker's when the goal has one (he still sets it up); else a
-/// team-mate's or the scorer's own, parried back to him. The record is untouched: the man who puts it
-/// in is the scorer, the assist stays the assist, and the first shot is no
-/// recorded shot (it is never a moment of its own, only part of the goal's).
+/// team-mate's or the scorer's own, parried back to him. The record is
+/// untouched: the man who puts it in is the scorer, the assist stays the
+/// assist, and the first shot is no recorded shot (never a moment of its
+/// own, only part of the goal's).
 /// Every choice comes from the window's seed through `_unit`, never from
 /// the plan's own stream, so a window not drawn as a rebound is staged
 /// exactly as before.

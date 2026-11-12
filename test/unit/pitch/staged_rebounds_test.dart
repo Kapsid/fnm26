@@ -92,7 +92,7 @@ void main() {
             .lastOrNull;
         if (last?.fromActor != si) {
           fails.add(
-            'match $seed ${first.minute}\': last touch '
+            'match $seed min ${first.minute}: last touch '
             '${last?.fromActor} not scorer $si',
           );
         }
@@ -126,11 +126,12 @@ void main() {
               s.actorList[p.fromActor!].keeper,
         );
         if (parry.isEmpty || ki == null) {
-          fails.add('match $seed ${first.minute}\': no parry to the scorer');
+          fails.add('match $seed min ${first.minute}: no parry to the scorer');
         }
       }
     }
     final share = rebounds / goals;
+    // The measured share, for the record of a run.
     // ignore: avoid_print
     print(
       'goals $goals, eligible $eligible, rebounds $rebounds '
