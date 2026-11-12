@@ -48,6 +48,9 @@ void main() {
         expect(row, findsOneWidget);
         expect(find.text(enL.editorCommunityTitle), findsOneWidget);
         expect(find.text(enL.editorCommunityAbout), findsOneWidget);
+        // Below the merge and history rows: brought fully into view.
+        await tester.ensureVisible(row);
+        await tester.pumpAndSettle();
         await tester.tap(row);
         await tester.pump();
         expect(opened.map((u) => u.toString()), [kDiscordUrl]);
