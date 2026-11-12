@@ -525,6 +525,23 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
+    for (final w in [360.0, 1180.0]) {
+      testWidgets('the scoreboard fits at ${w.toInt()}px', (
+        tester,
+      ) async {
+        tester.view
+          ..physicalSize = Size(w, 900)
+          ..devicePixelRatio = 1.0;
+        addTearDown(tester.view.reset);
+        await _pump(tester, summary(sides: true));
+        expect(find.byKey(MatchSummaryTab.scoreboardKey), findsOneWidget);
+        expect(tester.takeException(), isNull);
+        final box = tester.getRect(find.byKey(MatchSummaryTab.scoreboardKey));
+        expect(box.right, lessThanOrEqualTo(w));
+        expect(box.left, greaterThanOrEqualTo(0));
+      });
+    }
+
     testWidgets('while it is on: no scoreboard card', (tester) async {
       await _pump(tester, summary(fullTime: false, sides: true));
       expect(find.byKey(MatchSummaryTab.scoreboardKey), findsNothing);

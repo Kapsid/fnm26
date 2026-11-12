@@ -19,6 +19,7 @@ import 'package:fnm/features/player/player_detail_screen.dart'
 import 'package:fnm/features/tactics/absence_providers.dart';
 import 'package:fnm/features/tactics/condition_mark.dart';
 import 'package:fnm/features/tactics/nation_squad_providers.dart';
+import 'package:fnm/features/tactics/call_up_screen.dart';
 import 'package:fnm/features/tactics/squad_legend_sheet.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
@@ -43,6 +44,9 @@ class SquadTabletLayout extends ConsumerStatefulWidget {
 class _SquadTabletLayoutState extends ConsumerState<SquadTabletLayout> {
   PositionCategory? _line;
 
+  /// The exact position the chosen line is narrowed to (null: all of it).
+  PlayerPosition? _position;
+
   static const List<PositionCategory> _lines = [
     PositionCategory.goalkeeper,
     PositionCategory.defender,
@@ -54,18 +58,57 @@ class _SquadTabletLayoutState extends ConsumerState<SquadTabletLayout> {
   // until their inputs change.
   NationSquadData? _rowsData;
   PositionCategory? _rowsLine;
+  PlayerPosition? _rowsPosition;
   List<NationSquadRow> _rows = const [];
 
   List<NationSquadRow> _rowsFor(NationSquadData data) {
-    if (!identical(_rowsData, data) || _rowsLine != _line) {
+    if (!identical(_rowsData, data) ||
+        _rowsLine != _line ||
+        _rowsPosition != _position) {
       _rowsData = data;
       _rowsLine = _line;
+      _rowsPosition = _position;
       _rows = [
         for (final r in data.rows)
-          if (_line == null || r.player.category == _line) r,
+          if ((_line == null || r.player.category == _line) &&
+              (_position == null || r.player.position == _position))
+            r,
       ];
     }
     return _rows;
+  }
+
+  /// The chips narrowing the chosen line to one position (the phone Squad
+  /// tab's row). Nothing without a line, or for a single-position line.
+  List<Widget> _positionRow(AppLocalizations l, NationSquadData data) {
+    final line = _line;
+    if (line == null) return const [];
+    final inLine = [
+      for (final r in data.rows)
+        if (r.player.category == line) r,
+    ];
+    final positions = [
+      for (final p in PlayerPosition.values)
+        if (p.category == line && inLine.any((r) => r.player.position == p)) p,
+    ];
+    if (positions.length < 2) return const [];
+    return [
+      PositionFilterChips(
+        line: line,
+        allLabel: l.squadFilterAll,
+        positions: positions,
+        current: positions.contains(_position) ? _position : null,
+        named: {
+          for (final p in positions)
+            p: inLine.where((r) => r.player.position == p && r.calledUp).length,
+        },
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm,
+          vertical: AppSpacing.xs,
+        ),
+        onSelected: (p) => setState(() => _position = p),
+      ),
+    ];
   }
 
   AppLocalizations? _setsL;
@@ -156,19 +199,25 @@ class _SquadTabletLayoutState extends ConsumerState<SquadTabletLayout> {
                           label: Text(l.squadLineAll.capsIn(l.localeName)),
                           visualDensity: VisualDensity.compact,
                           selected: _line == null,
-                          onSelected: (_) => setState(() => _line = null),
+                          onSelected: (_) => setState(() {
+                            _line = null;
+                            _position = null;
+                          }),
                         ),
                         for (final c in _lines)
                           ChoiceChip(
                             label: Text(_lineLabel(l, c)),
                             visualDensity: VisualDensity.compact,
                             selected: _line == c,
-                            onSelected: (_) =>
-                                setState(() => _line = _line == c ? null : c),
+                            onSelected: (_) => setState(() {
+                              _line = _line == c ? null : c;
+                              _position = null;
+                            }),
                           ),
                       ],
                     ),
                   ),
+                  ..._positionRow(l, data),
                   Expanded(
                     child: DataGrid<NationSquadRow>(
                       rows: rows,
