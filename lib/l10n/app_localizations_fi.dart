@@ -17504,4 +17504,119 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Investoitu tähän mennessä';
+
+  @override
+  String get nationTabResults => 'Tulokset';
+
+  @override
+  String get nationTabHistory => 'Historia';
+
+  @override
+  String get nationTabStadiums => 'Stadionit';
+
+  @override
+  String get nationStatRanking => 'Ranking';
+
+  @override
+  String get nationStatOverall => 'Taso';
+
+  @override
+  String get nationFactsTitle => 'Faktat';
+
+  @override
+  String get nationFactAgainstYou => 'Tilastosi heitä vastaan (V-T-H)';
+
+  @override
+  String nationFactBiggestWin(String opponent, String year) {
+    return 'Suurin voitto ($opponent, $year)';
+  }
+
+  @override
+  String get nationFactHomeUnbeaten => 'Kotiottelua putkeen ilman tappiota';
+
+  @override
+  String nationFactTitleDrought(String year) {
+    return 'Vuotta edellisestä mestaruudesta ($year)';
+  }
+
+  @override
+  String get nationFactNoTitles => 'Odottaa yhä ensimmäistä mestaruutta';
+
+  @override
+  String nationFactRecordScorer(String name) {
+    return 'Ennätysmaalintekijän maalit, $name';
+  }
+
+  @override
+  String nationFactRankClimb(int rank, String year) {
+    return 'Sijaa noustu yhdessä syklissä, sijalle #$rank vuonna $year';
+  }
+
+  @override
+  String nationFactWorldFinals(String year) {
+    return 'MM-kisojen lopputurnauksia vuodesta $year';
+  }
+
+  @override
+  String nationBestRankYear(int rank, String year) {
+    return 'Paras: #$rank ($year)';
+  }
+
+  @override
+  String get nationLikelyEleven => 'Todennäköinen avaus';
+
+  @override
+  String get nationBestYoung => 'Paras alle 21-vuotias';
+
+  @override
+  String get nationWhereTheyPlay => 'Missä he pelaavat';
+
+  @override
+  String get nationOtherCountries => 'Muut maat';
+
+  @override
+  String get nationBiggestWinYou => 'Suurin voittosi';
+
+  @override
+  String nationAllMeetings(int count) {
+    return 'Kaikki kohtaamiset ($count)';
+  }
+
+  @override
+  String get nationUpcoming => 'Tulevat';
+
+  @override
+  String get nationLastResults => 'Viimeisimmät tulokset';
+
+  @override
+  String nationAllMatches(int count) {
+    return 'Kaikki ottelut ($count)';
+  }
+
+  @override
+  String get nationShowMore => 'Näytä lisää';
+
+  @override
+  String get nationHostingRecord => 'Isännöidyt turnaukset';
+
+  @override
+  String get nationNeverHosted => 'Ei ole vielä isännöinyt lopputurnausta';
+
+  @override
+  String get nationHostChampions => 'Mestari';
+
+  @override
+  String get nationHostRunnersUp => 'Hopea';
+
+  @override
+  String get nationHostThird => 'Pronssi';
+
+  @override
+  String get nationCoHosts => 'Toinen isäntä';
+
+  @override
+  String get nationNoStadiums => 'Ei stadioneita tiedossa';
+
+  @override
+  String get nationManageStadiums => 'Hallinnoi stadioneita';
 }

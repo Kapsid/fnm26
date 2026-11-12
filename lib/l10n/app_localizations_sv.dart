@@ -17414,4 +17414,119 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Investerat hittills';
+
+  @override
+  String get nationTabResults => 'Resultat';
+
+  @override
+  String get nationTabHistory => 'Historia';
+
+  @override
+  String get nationTabStadiums => 'Arenor';
+
+  @override
+  String get nationStatRanking => 'Ranking';
+
+  @override
+  String get nationStatOverall => 'Styrka';
+
+  @override
+  String get nationFactsTitle => 'Fakta';
+
+  @override
+  String get nationFactAgainstYou => 'Ditt facit mot dem (V-O-F)';
+
+  @override
+  String nationFactBiggestWin(String opponent, String year) {
+    return 'Största seger ($opponent, $year)';
+  }
+
+  @override
+  String get nationFactHomeUnbeaten => 'Hemmamatcher i rad utan förlust';
+
+  @override
+  String nationFactTitleDrought(String year) {
+    return 'År sedan senaste titeln ($year)';
+  }
+
+  @override
+  String get nationFactNoTitles => 'Väntar fortfarande på en första titel';
+
+  @override
+  String nationFactRecordScorer(String name) {
+    return 'Mål av rekordmålskytten, $name';
+  }
+
+  @override
+  String nationFactRankClimb(int rank, String year) {
+    return 'Placeringar uppåt under en cykel, till #$rank år $year';
+  }
+
+  @override
+  String nationFactWorldFinals(String year) {
+    return 'Slutspel i Världsmästerskapet sedan $year';
+  }
+
+  @override
+  String nationBestRankYear(int rank, String year) {
+    return 'Bäst: #$rank ($year)';
+  }
+
+  @override
+  String get nationLikelyEleven => 'Trolig startelva';
+
+  @override
+  String get nationBestYoung => 'Bäst under 21';
+
+  @override
+  String get nationWhereTheyPlay => 'Var de spelar';
+
+  @override
+  String get nationOtherCountries => 'Övriga länder';
+
+  @override
+  String get nationBiggestWinYou => 'Din största seger';
+
+  @override
+  String nationAllMeetings(int count) {
+    return 'Alla möten ($count)';
+  }
+
+  @override
+  String get nationUpcoming => 'Kommande';
+
+  @override
+  String get nationLastResults => 'Senaste resultat';
+
+  @override
+  String nationAllMatches(int count) {
+    return 'Alla matcher ($count)';
+  }
+
+  @override
+  String get nationShowMore => 'Visa fler';
+
+  @override
+  String get nationHostingRecord => 'Som värdland';
+
+  @override
+  String get nationNeverHosted => 'Har ännu inte varit värd för ett slutspel';
+
+  @override
+  String get nationHostChampions => 'Mästare';
+
+  @override
+  String get nationHostRunnersUp => 'Finalist';
+
+  @override
+  String get nationHostThird => 'Trea';
+
+  @override
+  String get nationCoHosts => 'Medvärd';
+
+  @override
+  String get nationNoStadiums => 'Inga arenor registrerade';
+
+  @override
+  String get nationManageStadiums => 'Hantera arenor';
 }

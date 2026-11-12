@@ -17374,4 +17374,119 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Eddig befektetve';
+
+  @override
+  String get nationTabResults => 'Eredmények';
+
+  @override
+  String get nationTabHistory => 'Történet';
+
+  @override
+  String get nationTabStadiums => 'Stadionok';
+
+  @override
+  String get nationStatRanking => 'Rangsor';
+
+  @override
+  String get nationStatOverall => 'Erő';
+
+  @override
+  String get nationFactsTitle => 'Tények';
+
+  @override
+  String get nationFactAgainstYou => 'A mérleged ellenük (GY-D-V)';
+
+  @override
+  String nationFactBiggestWin(String opponent, String year) {
+    return 'Legnagyobb győzelem ($opponent, $year)';
+  }
+
+  @override
+  String get nationFactHomeUnbeaten => 'Hazai meccs zsinórban vereség nélkül';
+
+  @override
+  String nationFactTitleDrought(String year) {
+    return 'Év az utolsó cím óta ($year)';
+  }
+
+  @override
+  String get nationFactNoTitles => 'Még mindig az első címére vár';
+
+  @override
+  String nationFactRecordScorer(String name) {
+    return 'A rekorder góljai, $name';
+  }
+
+  @override
+  String nationFactRankClimb(int rank, String year) {
+    return 'Hely előrelépés egy ciklus alatt, a #$rank. helyig $year-ban';
+  }
+
+  @override
+  String nationFactWorldFinals(String year) {
+    return 'Világbajnoki döntős tornák $year óta';
+  }
+
+  @override
+  String nationBestRankYear(int rank, String year) {
+    return 'Legjobb: #$rank ($year)';
+  }
+
+  @override
+  String get nationLikelyEleven => 'Várható kezdőcsapat';
+
+  @override
+  String get nationBestYoung => 'Legjobb U21-es';
+
+  @override
+  String get nationWhereTheyPlay => 'Hol játszanak';
+
+  @override
+  String get nationOtherCountries => 'Más országok';
+
+  @override
+  String get nationBiggestWinYou => 'A legnagyobb győzelmed';
+
+  @override
+  String nationAllMeetings(int count) {
+    return 'Összes egymás elleni meccs ($count)';
+  }
+
+  @override
+  String get nationUpcoming => 'Következő';
+
+  @override
+  String get nationLastResults => 'Legutóbbi eredmények';
+
+  @override
+  String nationAllMatches(int count) {
+    return 'Összes meccs ($count)';
+  }
+
+  @override
+  String get nationShowMore => 'Több mutatása';
+
+  @override
+  String get nationHostingRecord => 'Rendezések';
+
+  @override
+  String get nationNeverHosted => 'Még nem rendezett döntős tornát';
+
+  @override
+  String get nationHostChampions => 'Bajnok';
+
+  @override
+  String get nationHostRunnersUp => 'Döntős';
+
+  @override
+  String get nationHostThird => 'Harmadik';
+
+  @override
+  String get nationCoHosts => 'Társrendező';
+
+  @override
+  String get nationNoStadiums => 'Nincs nyilvántartott stadion';
+
+  @override
+  String get nationManageStadiums => 'Stadionok kezelése';
 }

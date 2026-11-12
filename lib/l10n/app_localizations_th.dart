@@ -17124,4 +17124,119 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'ลงทุนไปแล้ว';
+
+  @override
+  String get nationTabResults => 'ผลการแข่งขัน';
+
+  @override
+  String get nationTabHistory => 'ประวัติ';
+
+  @override
+  String get nationTabStadiums => 'สนามกีฬา';
+
+  @override
+  String get nationStatRanking => 'อันดับ';
+
+  @override
+  String get nationStatOverall => 'ความแข็งแกร่ง';
+
+  @override
+  String get nationFactsTitle => 'ข้อมูล';
+
+  @override
+  String get nationFactAgainstYou => 'สถิติของคุณที่พบกับทีมนี้ (ชนะ-เสมอ-แพ้)';
+
+  @override
+  String nationFactBiggestWin(String opponent, String year) {
+    return 'ชนะขาดที่สุด ($opponent, $year)';
+  }
+
+  @override
+  String get nationFactHomeUnbeaten => 'เกมเหย้าติดต่อกันที่ไม่แพ้';
+
+  @override
+  String nationFactTitleDrought(String year) {
+    return 'ปีนับจากแชมป์ครั้งล่าสุด ($year)';
+  }
+
+  @override
+  String get nationFactNoTitles => 'ยังรอแชมป์แรก';
+
+  @override
+  String nationFactRecordScorer(String name) {
+    return 'ประตูของดาวซัลโวตลอดกาล $name';
+  }
+
+  @override
+  String nationFactRankClimb(int rank, String year) {
+    return 'อันดับที่ไต่ขึ้นในหนึ่งรอบ ถึงอันดับ $rank ในปี $year';
+  }
+
+  @override
+  String nationFactWorldFinals(String year) {
+    return 'จำนวนครั้งที่ผ่านเข้ารอบสุดท้ายชิงแชมป์โลกตั้งแต่ปี $year';
+  }
+
+  @override
+  String nationBestRankYear(int rank, String year) {
+    return 'ดีที่สุด: อันดับ $rank ($year)';
+  }
+
+  @override
+  String get nationLikelyEleven => 'ตัวจริงที่คาดการณ์';
+
+  @override
+  String get nationBestYoung => 'ดีที่สุดอายุไม่เกิน 21';
+
+  @override
+  String get nationWhereTheyPlay => 'เล่นอยู่ที่ไหน';
+
+  @override
+  String get nationOtherCountries => 'ประเทศอื่น';
+
+  @override
+  String get nationBiggestWinYou => 'ชัยชนะที่ขาดที่สุดของคุณ';
+
+  @override
+  String nationAllMeetings(int count) {
+    return 'การพบกันทั้งหมด ($count)';
+  }
+
+  @override
+  String get nationUpcoming => 'นัดต่อไป';
+
+  @override
+  String get nationLastResults => 'ผลล่าสุด';
+
+  @override
+  String nationAllMatches(int count) {
+    return 'ทุกนัด ($count)';
+  }
+
+  @override
+  String get nationShowMore => 'แสดงเพิ่ม';
+
+  @override
+  String get nationHostingRecord => 'การเป็นเจ้าภาพ';
+
+  @override
+  String get nationNeverHosted => 'ยังไม่เคยเป็นเจ้าภาพรอบสุดท้าย';
+
+  @override
+  String get nationHostChampions => 'แชมป์';
+
+  @override
+  String get nationHostRunnersUp => 'รองแชมป์';
+
+  @override
+  String get nationHostThird => 'อันดับสาม';
+
+  @override
+  String get nationCoHosts => 'เจ้าภาพร่วม';
+
+  @override
+  String get nationNoStadiums => 'ไม่มีสนามกีฬาในบันทึก';
+
+  @override
+  String get nationManageStadiums => 'จัดการสนามกีฬา';
 }

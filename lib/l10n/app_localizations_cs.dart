@@ -17821,4 +17821,119 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Dosud investováno';
+
+  @override
+  String get nationTabResults => 'Výsledky';
+
+  @override
+  String get nationTabHistory => 'Historie';
+
+  @override
+  String get nationTabStadiums => 'Stadiony';
+
+  @override
+  String get nationStatRanking => 'Žebříček';
+
+  @override
+  String get nationStatOverall => 'Síla';
+
+  @override
+  String get nationFactsTitle => 'Fakta';
+
+  @override
+  String get nationFactAgainstYou => 'Vaše bilance proti nim (V-R-P)';
+
+  @override
+  String nationFactBiggestWin(String opponent, String year) {
+    return 'Nejvyšší výhra ($opponent, $year)';
+  }
+
+  @override
+  String get nationFactHomeUnbeaten => 'Domácích zápasů v řadě bez porážky';
+
+  @override
+  String nationFactTitleDrought(String year) {
+    return 'Let od posledního titulu ($year)';
+  }
+
+  @override
+  String get nationFactNoTitles => 'Stále čeká na první titul';
+
+  @override
+  String nationFactRecordScorer(String name) {
+    return 'Gólů rekordního střelce, $name';
+  }
+
+  @override
+  String nationFactRankClimb(int rank, String year) {
+    return 'Míst získaných za jeden cyklus, až na #$rank v roce $year';
+  }
+
+  @override
+  String nationFactWorldFinals(String year) {
+    return 'Závěrečných turnajů mistrovství světa od roku $year';
+  }
+
+  @override
+  String nationBestRankYear(int rank, String year) {
+    return 'Nejlepší: #$rank ($year)';
+  }
+
+  @override
+  String get nationLikelyEleven => 'Pravděpodobná jedenáctka';
+
+  @override
+  String get nationBestYoung => 'Nejlepší do 21 let';
+
+  @override
+  String get nationWhereTheyPlay => 'Kde hrají';
+
+  @override
+  String get nationOtherCountries => 'Ostatní země';
+
+  @override
+  String get nationBiggestWinYou => 'Vaše nejvyšší výhra';
+
+  @override
+  String nationAllMeetings(int count) {
+    return 'Všechny zápasy ($count)';
+  }
+
+  @override
+  String get nationUpcoming => 'Nadcházející';
+
+  @override
+  String get nationLastResults => 'Poslední výsledky';
+
+  @override
+  String nationAllMatches(int count) {
+    return 'Všechny zápasy ($count)';
+  }
+
+  @override
+  String get nationShowMore => 'Zobrazit další';
+
+  @override
+  String get nationHostingRecord => 'Pořadatelství';
+
+  @override
+  String get nationNeverHosted => 'Zatím nepořádala žádný závěrečný turnaj';
+
+  @override
+  String get nationHostChampions => 'Vítěz';
+
+  @override
+  String get nationHostRunnersUp => 'Finalista';
+
+  @override
+  String get nationHostThird => 'Třetí';
+
+  @override
+  String get nationCoHosts => 'Spolupořadatel';
+
+  @override
+  String get nationNoStadiums => 'Žádné stadiony v záznamech';
+
+  @override
+  String get nationManageStadiums => 'Spravovat stadiony';
 }

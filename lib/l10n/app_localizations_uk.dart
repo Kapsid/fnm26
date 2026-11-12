@@ -17755,4 +17755,119 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Інвестовано досі';
+
+  @override
+  String get nationTabResults => 'Результати';
+
+  @override
+  String get nationTabHistory => 'Історія';
+
+  @override
+  String get nationTabStadiums => 'Стадіони';
+
+  @override
+  String get nationStatRanking => 'Рейтинг';
+
+  @override
+  String get nationStatOverall => 'Сила';
+
+  @override
+  String get nationFactsTitle => 'Факти';
+
+  @override
+  String get nationFactAgainstYou => 'Твій баланс проти них (В-Н-П)';
+
+  @override
+  String nationFactBiggestWin(String opponent, String year) {
+    return 'Найбільша перемога ($opponent, $year)';
+  }
+
+  @override
+  String get nationFactHomeUnbeaten => 'Домашніх матчів поспіль без поразок';
+
+  @override
+  String nationFactTitleDrought(String year) {
+    return 'Років від останнього титулу ($year)';
+  }
+
+  @override
+  String get nationFactNoTitles => 'Досі чекає на перший титул';
+
+  @override
+  String nationFactRecordScorer(String name) {
+    return 'Голи рекордсмена, $name';
+  }
+
+  @override
+  String nationFactRankClimb(int rank, String year) {
+    return 'Місць угору за один цикл, до #$rank у $year';
+  }
+
+  @override
+  String nationFactWorldFinals(String year) {
+    return 'Фінальних турнірів Чемпіонату світу з $year';
+  }
+
+  @override
+  String nationBestRankYear(int rank, String year) {
+    return 'Найкраще: #$rank ($year)';
+  }
+
+  @override
+  String get nationLikelyEleven => 'Ймовірний склад';
+
+  @override
+  String get nationBestYoung => 'Найкращий до 21 року';
+
+  @override
+  String get nationWhereTheyPlay => 'Де вони грають';
+
+  @override
+  String get nationOtherCountries => 'Інші країни';
+
+  @override
+  String get nationBiggestWinYou => 'Твоя найбільша перемога';
+
+  @override
+  String nationAllMeetings(int count) {
+    return 'Усі зустрічі ($count)';
+  }
+
+  @override
+  String get nationUpcoming => 'Найближчі';
+
+  @override
+  String get nationLastResults => 'Останні результати';
+
+  @override
+  String nationAllMatches(int count) {
+    return 'Усі матчі ($count)';
+  }
+
+  @override
+  String get nationShowMore => 'Показати більше';
+
+  @override
+  String get nationHostingRecord => 'Як господарі';
+
+  @override
+  String get nationNeverHosted => 'Ще не приймала фінальний турнір';
+
+  @override
+  String get nationHostChampions => 'Чемпіон';
+
+  @override
+  String get nationHostRunnersUp => 'Фіналіст';
+
+  @override
+  String get nationHostThird => 'Третє місце';
+
+  @override
+  String get nationCoHosts => 'Співгосподар';
+
+  @override
+  String get nationNoStadiums => 'Немає записаних стадіонів';
+
+  @override
+  String get nationManageStadiums => 'Керувати стадіонами';
 }

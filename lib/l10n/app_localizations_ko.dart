@@ -16848,4 +16848,119 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => '지금까지 투자액';
+
+  @override
+  String get nationTabResults => '결과';
+
+  @override
+  String get nationTabHistory => '역사';
+
+  @override
+  String get nationTabStadiums => '경기장';
+
+  @override
+  String get nationStatRanking => '랭킹';
+
+  @override
+  String get nationStatOverall => '전력';
+
+  @override
+  String get nationFactsTitle => '기록';
+
+  @override
+  String get nationFactAgainstYou => '상대 전적 (승-무-패)';
+
+  @override
+  String nationFactBiggestWin(String opponent, String year) {
+    return '최다 점수 차 승리 ($opponent, $year)';
+  }
+
+  @override
+  String get nationFactHomeUnbeaten => '홈 연속 무패 경기';
+
+  @override
+  String nationFactTitleDrought(String year) {
+    return '마지막 우승 이후 햇수 ($year)';
+  }
+
+  @override
+  String get nationFactNoTitles => '아직 첫 우승을 기다리는 중';
+
+  @override
+  String nationFactRecordScorer(String name) {
+    return '역대 최다 득점자 $name의 골';
+  }
+
+  @override
+  String nationFactRankClimb(int rank, String year) {
+    return '한 주기 동안 오른 순위 ($year년 $rank위까지)';
+  }
+
+  @override
+  String nationFactWorldFinals(String year) {
+    return '$year년 이후 세계 선수권 본선 진출';
+  }
+
+  @override
+  String nationBestRankYear(int rank, String year) {
+    return '최고: $rank위 ($year)';
+  }
+
+  @override
+  String get nationLikelyEleven => '예상 선발 11인';
+
+  @override
+  String get nationBestYoung => '21세 이하 최고 선수';
+
+  @override
+  String get nationWhereTheyPlay => '소속 리그 국가';
+
+  @override
+  String get nationOtherCountries => '기타 국가';
+
+  @override
+  String get nationBiggestWinYou => '당신의 최다 점수 차 승리';
+
+  @override
+  String nationAllMeetings(int count) {
+    return '전체 맞대결 ($count)';
+  }
+
+  @override
+  String get nationUpcoming => '예정 경기';
+
+  @override
+  String get nationLastResults => '최근 결과';
+
+  @override
+  String nationAllMatches(int count) {
+    return '전체 경기 ($count)';
+  }
+
+  @override
+  String get nationShowMore => '더 보기';
+
+  @override
+  String get nationHostingRecord => '개최 이력';
+
+  @override
+  String get nationNeverHosted => '아직 본선을 개최한 적이 없음';
+
+  @override
+  String get nationHostChampions => '우승';
+
+  @override
+  String get nationHostRunnersUp => '준우승';
+
+  @override
+  String get nationHostThird => '3위';
+
+  @override
+  String get nationCoHosts => '공동 개최';
+
+  @override
+  String get nationNoStadiums => '등록된 경기장이 없음';
+
+  @override
+  String get nationManageStadiums => '경기장 관리';
 }
