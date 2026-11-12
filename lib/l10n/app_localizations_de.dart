@@ -423,6 +423,16 @@ class AppLocalizationsDe extends AppLocalizations {
       'Vibration und ein kurzer Ton bei Toren, Anstoß und Abpfiff.';
 
   @override
+  String get settingsMatchSoundTitle => 'Stadionsound';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'Fans und die Pfeife des Schiedsrichters während der Spiele.';
+
+  @override
+  String get settingsMatchSoundVolume => 'Lautstärke';
+
+  @override
   String get settingsLanguageTitle => 'Sprache';
 
   @override

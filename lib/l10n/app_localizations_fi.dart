@@ -421,6 +421,16 @@ class AppLocalizationsFi extends AppLocalizations {
       'Värinää ja lyhyt ääni maaleista, aloituksesta ja loppuvihellyksestä.';
 
   @override
+  String get settingsMatchSoundTitle => 'Stadionin äänet';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'Yleisö ja tuomarin pilli otteluiden aikana.';
+
+  @override
+  String get settingsMatchSoundVolume => 'Äänenvoimakkuus';
+
+  @override
   String get settingsLanguageTitle => 'Kieli';
 
   @override

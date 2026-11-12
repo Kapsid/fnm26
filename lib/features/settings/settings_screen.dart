@@ -178,6 +178,8 @@ class SettingsScreen extends ConsumerWidget {
         children: const [
           _SoundHapticsCard(),
           SizedBox(height: AppSpacing.md),
+          MatchSoundCard(),
+          SizedBox(height: AppSpacing.md),
           _LanguageCard(),
           SizedBox(height: AppSpacing.md),
           _TextSizeCard(),
@@ -233,6 +235,95 @@ class _SoundHapticsCard extends ConsumerWidget {
           Icons.vibration_rounded,
           color: AppColors.primary,
         ),
+      ),
+    );
+  }
+}
+
+/// Stadium sound in matches (the crowd and the whistle): off until the
+/// manager turns it on, with its volume once it is on.
+class MatchSoundCard extends ConsumerWidget {
+  const MatchSoundCard({super.key});
+
+  static const Key toggleKey = Key('settings.matchSound');
+  static const Key volumeKey = Key('settings.matchSoundVolume');
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    final on = ref.watch(matchSoundEnabledProvider);
+    final volume = ref.watch(matchSoundVolumeProvider);
+    return AppCard(
+      padding: EdgeInsets.zero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SwitchListTile(
+            key: toggleKey,
+            value: on,
+            onChanged: (v) => setMatchSound(ref, enabled: v),
+            activeColor: AppColors.primary,
+            title: Text(
+              l.settingsMatchSoundTitle,
+              style: AppTypography.bodyMedium,
+            ),
+            subtitle: Text(
+              l.settingsMatchSoundBlurb,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+            secondary: const Icon(
+              Icons.stadium_rounded,
+              color: AppColors.primary,
+            ),
+          ),
+          if (on)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.md,
+                0,
+                AppSpacing.md,
+                AppSpacing.sm,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l.settingsMatchSoundVolume,
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.volume_down_rounded,
+                        color: AppColors.primary,
+                      ),
+                      Expanded(
+                        child: Semantics(
+                          label: l.settingsMatchSoundVolume,
+                          child: Slider(
+                            key: volumeKey,
+                            value: volume,
+                            activeColor: AppColors.primary,
+                            onChanged: (v) =>
+                                setMatchSoundVolume(ref, v, persist: false),
+                            onChangeEnd: (v) => setMatchSoundVolume(ref, v),
+                          ),
+                        ),
+                      ),
+                      const Icon(
+                        Icons.volume_up_rounded,
+                        color: AppColors.primary,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+        ],
       ),
     );
   }

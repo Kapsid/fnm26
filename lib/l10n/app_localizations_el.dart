@@ -426,6 +426,16 @@ class AppLocalizationsEl extends AppLocalizations {
       'Δόνηση και σύντομος ήχος σε γκολ, σέντρα και τέλος αγώνα.';
 
   @override
+  String get settingsMatchSoundTitle => 'Ήχος γηπέδου';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'Το πλήθος και η σφυρίχτρα του διαιτητή στους αγώνες.';
+
+  @override
+  String get settingsMatchSoundVolume => 'Ένταση';
+
+  @override
   String get settingsLanguageTitle => 'Γλώσσα';
 
   @override

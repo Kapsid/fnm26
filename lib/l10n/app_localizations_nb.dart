@@ -416,6 +416,16 @@ class AppLocalizationsNb extends AppLocalizations {
       'Vibrasjon og en kort tone ved mål, avspark og full tid.';
 
   @override
+  String get settingsMatchSoundTitle => 'Stadionlyd';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'Publikum og dommerens fløyte under kampene.';
+
+  @override
+  String get settingsMatchSoundVolume => 'Volum';
+
+  @override
   String get settingsLanguageTitle => 'Språk';
 
   @override

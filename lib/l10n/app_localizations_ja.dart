@@ -380,6 +380,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get settingsSoundHapticsBlurb => 'ゴール、キックオフ、試合終了時に振動と短い効果音。';
 
   @override
+  String get settingsMatchSoundTitle => 'スタジアムの音';
+
+  @override
+  String get settingsMatchSoundBlurb => '試合中の観客の声と審判の笛。';
+
+  @override
+  String get settingsMatchSoundVolume => '音量';
+
+  @override
   String get settingsLanguageTitle => '言語';
 
   @override

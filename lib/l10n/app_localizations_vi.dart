@@ -412,6 +412,16 @@ class AppLocalizationsVi extends AppLocalizations {
       'Rung và âm báo ngắn khi có bàn thắng, giao bóng và hết giờ.';
 
   @override
+  String get settingsMatchSoundTitle => 'Âm thanh sân vận động';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'Tiếng khán giả và còi trọng tài trong trận đấu.';
+
+  @override
+  String get settingsMatchSoundVolume => 'Âm lượng';
+
+  @override
   String get settingsLanguageTitle => 'Ngôn ngữ';
 
   @override

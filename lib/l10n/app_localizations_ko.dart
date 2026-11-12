@@ -380,6 +380,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get settingsSoundHapticsBlurb => '골, 킥오프, 경기 종료 때 진동과 짧은 효과음.';
 
   @override
+  String get settingsMatchSoundTitle => '경기장 사운드';
+
+  @override
+  String get settingsMatchSoundBlurb => '경기 중 관중 소리와 심판 휘슬.';
+
+  @override
+  String get settingsMatchSoundVolume => '음량';
+
+  @override
   String get settingsLanguageTitle => '언어';
 
   @override

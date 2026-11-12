@@ -412,6 +412,16 @@ class AppLocalizationsPl extends AppLocalizations {
       'Wibracja i krótki sygnał przy golach, rozpoczęciu i końcu meczu.';
 
   @override
+  String get settingsMatchSoundTitle => 'Dźwięk stadionu';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'Kibice i gwizdek sędziego podczas meczów.';
+
+  @override
+  String get settingsMatchSoundVolume => 'Głośność';
+
+  @override
   String get settingsLanguageTitle => 'Język';
 
   @override

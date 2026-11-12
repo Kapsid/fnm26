@@ -419,6 +419,16 @@ class AppLocalizationsPt extends AppLocalizations {
       'Vibração e um som curto nos gols, no início e no fim do jogo.';
 
   @override
+  String get settingsMatchSoundTitle => 'Som do estádio';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'Os adeptos e o apito do árbitro durante os jogos.';
+
+  @override
+  String get settingsMatchSoundVolume => 'Volume';
+
+  @override
   String get settingsLanguageTitle => 'Idioma';
 
   @override

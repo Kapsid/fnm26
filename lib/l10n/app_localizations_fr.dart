@@ -423,6 +423,16 @@ class AppLocalizationsFr extends AppLocalizations {
       'Vibration et court signal sonore sur les buts, le coup d’envoi et la fin du match.';
 
   @override
+  String get settingsMatchSoundTitle => 'Ambiance du stade';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'La foule et le sifflet de l’arbitre pendant les matchs.';
+
+  @override
+  String get settingsMatchSoundVolume => 'Volume';
+
+  @override
   String get settingsLanguageTitle => 'Langue';
 
   @override

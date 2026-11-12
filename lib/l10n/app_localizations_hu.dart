@@ -416,6 +416,16 @@ class AppLocalizationsHu extends AppLocalizations {
       'Rezgés és rövid hang gólnál, kezdőrúgásnál és lefújáskor.';
 
   @override
+  String get settingsMatchSoundTitle => 'Stadionhang';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'A közönség és a játékvezető sípja a meccsek alatt.';
+
+  @override
+  String get settingsMatchSoundVolume => 'Hangerő';
+
+  @override
   String get settingsLanguageTitle => 'Nyelv';
 
   @override

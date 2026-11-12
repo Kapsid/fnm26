@@ -417,6 +417,16 @@ class AppLocalizationsSv extends AppLocalizations {
       'Vibration och en kort ton vid mål, avspark och full tid.';
 
   @override
+  String get settingsMatchSoundTitle => 'Arenaljud';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'Publiken och domarens visselpipa under matcherna.';
+
+  @override
+  String get settingsMatchSoundVolume => 'Volym';
+
+  @override
   String get settingsLanguageTitle => 'Språk';
 
   @override

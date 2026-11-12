@@ -416,6 +416,16 @@ class AppLocalizationsMs extends AppLocalizations {
       'Getaran dan bunyi ringkas ketika gol, sepak mula dan tamat perlawanan.';
 
   @override
+  String get settingsMatchSoundTitle => 'Bunyi stadium';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'Penonton dan wisel pengadil semasa perlawanan.';
+
+  @override
+  String get settingsMatchSoundVolume => 'Kelantangan';
+
+  @override
   String get settingsLanguageTitle => 'Bahasa';
 
   @override

@@ -411,6 +411,16 @@ class AppLocalizationsDa extends AppLocalizations {
       'Vibration og en kort tone ved mål, anspark og slutfløjt.';
 
   @override
+  String get settingsMatchSoundTitle => 'Stadionlyd';
+
+  @override
+  String get settingsMatchSoundBlurb =>
+      'Publikum og dommerens fløjte under kampene.';
+
+  @override
+  String get settingsMatchSoundVolume => 'Lydstyrke';
+
+  @override
   String get settingsLanguageTitle => 'Sprog';
 
   @override

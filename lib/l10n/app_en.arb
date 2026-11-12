@@ -536,6 +536,18 @@
   "@settingsSoundHapticsBlurb": {
     "description": "Sound-and-haptics toggle description."
   },
+  "settingsMatchSoundTitle": "Stadium sound",
+  "@settingsMatchSoundTitle": {
+    "description": "Stadium sound toggle label (crowd and whistle in matches; off by default)."
+  },
+  "settingsMatchSoundBlurb": "The crowd and the referee's whistle during matches.",
+  "@settingsMatchSoundBlurb": {
+    "description": "Stadium sound toggle description."
+  },
+  "settingsMatchSoundVolume": "Volume",
+  "@settingsMatchSoundVolume": {
+    "description": "Label of the stadium sound volume slider."
+  },
   "settingsLanguageTitle": "Language",
   "@settingsLanguageTitle": {
     "description": "Language selector label."
