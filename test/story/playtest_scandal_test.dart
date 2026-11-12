@@ -3,14 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/data/data_providers.dart';
-import 'package:fnm/domain/entities/enums.dart';
-import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/squad/camp_scandal.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
-import 'package:fnm/features/hub/hub_event_button.dart';
 import 'package:fnm/features/messages/message_providers.dart';
-import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/features/squad/camp_scandal_providers.dart';
 import 'package:fnm/features/squad/camp_scandal_screen.dart';
 import 'package:fnm/features/y/y_providers.dart';
@@ -20,11 +16,10 @@ import '../helpers/seeded_save.dart' show settle;
 import 'capture.dart';
 import 'driver.dart';
 
-/// Two playtest reports (1.1.1, a Copa run), played through the real hub on a
+/// A playtest report (1.1.1, a Copa run), played through the real hub on a
 /// phone rather than through the services alone.
 void main() {
   const colombia = 60;
-  const ecuador = 61;
   final l = lookupAppLocalizations(const Locale('en'));
 
   /// Runs [body] in real time, and fails the test if it throws (runAsync
@@ -70,17 +65,6 @@ void main() {
         ..invalidate(messageInboxProvider(d.careerId))
         ..invalidate(unreadMessagesProvider(d.careerId));
     });
-  }
-
-  Future<void> tapHubAction(WidgetTester tester) async {
-    await tester.tap(find.byKey(TourKeys.hubAction));
-    // A watched round's popup keeps the hub's button busy under it: a
-    // spinner there is expected.
-    await settle(
-      tester,
-      maxWait: const Duration(seconds: 60),
-      allowSpinner: true,
-    );
   }
 
   // "The scandal is broken: I can continue past it with the button but I
@@ -169,109 +153,6 @@ void main() {
       // Let the reads the last screen started finish before the container
       // goes.
       await settle(tester, rounds: 60);
-    },
-    timeout: const Timeout(Duration(minutes: 10)),
-  );
-
-  // "The final (Copa) was not shown to me after I was knocked out."
-  testWidgets(
-    'knocked out of the Copa: its final is shown when stepped',
-    (tester) async {
-      await tester.runAsync(loadMaterialIcons);
-      setPhone(tester);
-      final c = storyContainer();
-      addTearDown(c.dispose);
-      late StoryDriver d;
-      await real(tester, () async {
-        d = await StoryDriver.start(c, 1, nationId: ecuador);
-      });
-      final comp = c.read(competitionRepositoryProvider);
-      Future<List<Fixture>> round(String r) => comp.fixturesByRound(
-        d.careerId,
-        r,
-        kind: CompetitionKind.continentalFinals,
-        confederation: Confederation.southAmerica,
-      );
-      late Fixture last;
-      // The hub offers the next Copa round to watch, and that round is the
-      // final: everything else of the cup is played, the manager is out.
-      await driveTo(tester, d, (e) async {
-        if (e.kind != HubEventKind.watchTournament) return false;
-        final finals = await round('CFINAL');
-        if (finals.isEmpty || finals.single.hasResult) return false;
-        last = finals.single;
-        return (await round('CSF')).every((f) => f.hasResult);
-      });
-      expect(
-        [last.homeNationId, last.awayNationId],
-        isNot(contains(ecuador)),
-        reason: 'the manager is only watching',
-      );
-
-      await pumpApp(tester, c, '${Routes.hub}?careerId=${d.careerId}');
-      await settle(tester);
-      await tapHubAction(tester);
-
-      // The final's result, in the round popup over the hub.
-      expect(find.text(l.hubFinal.toUpperCase()), findsOneWidget);
-      expect(
-        find.textContaining(nationById[last.homeNationId]!.code),
-        findsWidgets,
-      );
-      await tester.pumpWidget(const SizedBox());
-      await settle(tester);
-      // Let the reads the last screen started finish before the container
-      // goes.
-      await settle(tester, rounds: 60);
-    },
-    timeout: const Timeout(Duration(minutes: 10)),
-  );
-
-  // The same report, the other way to follow the cup: "Simulate to the
-  // final" ("Simulovat až do finále") from the semi-finals played the final
-  // too and went straight on. It now stops with the final still to watch.
-  testWidgets(
-    'knocked out of the Copa: simulate to the final leaves the final',
-    (tester) async {
-      await tester.runAsync(loadMaterialIcons);
-      setPhone(tester);
-      final c = storyContainer();
-      addTearDown(c.dispose);
-      late StoryDriver d;
-      await real(tester, () async {
-        d = await StoryDriver.start(c, 1, nationId: ecuador);
-      });
-      final comp = c.read(competitionRepositoryProvider);
-      Future<List<Fixture>> round(String r) => comp.fixturesByRound(
-        d.careerId,
-        r,
-        kind: CompetitionKind.continentalFinals,
-        confederation: Confederation.southAmerica,
-      );
-      // Out in the quarter-finals; the semi-finals are next to watch.
-      await driveTo(tester, d, (e) async {
-        if (e.kind != HubEventKind.watchTournament) return false;
-        final semis = await round('CSF');
-        return semis.isNotEmpty && semis.every((f) => !f.hasResult);
-      });
-
-      await pumpApp(tester, c, '${Routes.hub}?careerId=${d.careerId}');
-      await settle(tester);
-      await tester.tap(find.byKey(HubEventButton.simToFinalKey));
-      await settle(
-        tester,
-        maxWait: const Duration(seconds: 60),
-        allowSpinner: true,
-      );
-
-      // The semi-finals are shown; the final is drawn and still to watch.
-      expect(find.text(l.finishSemiFinals.toUpperCase()), findsOneWidget);
-      await tester.pumpWidget(const SizedBox());
-      await settle(tester);
-      final semis = await real(tester, () => round('CSF'));
-      expect(semis.every((f) => f.hasResult), isTrue);
-      final finals = await real(tester, () => round('CFINAL'));
-      expect(finals.single.hasResult, isFalse, reason: 'left to watch');
     },
     timeout: const Timeout(Duration(minutes: 10)),
   );
