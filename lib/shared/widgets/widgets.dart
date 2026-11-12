@@ -15,6 +15,7 @@ export 'app_crash_box.dart';
 export 'app_error_state.dart';
 export 'app_list_row.dart';
 export 'app_popup.dart';
+export 'app_segmented_tabs.dart';
 export 'app_text_field.dart';
 export 'card_mark.dart';
 export 'club_stars.dart';

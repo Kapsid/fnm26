@@ -777,13 +777,10 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
               length: 2,
               child: Column(
                 children: [
-                  TabBar(
-                    labelColor: AppColors.onSurface,
-                    unselectedLabelColor: AppColors.onSurfaceVariant,
-                    indicatorColor: AppColors.primary,
+                  AppSegmentedTabs(
                     tabs: [
-                      Tab(text: l.tacticsTabLineupSubs),
-                      Tab(text: l.tacticsTabTactics),
+                      SegmentTab(l.tacticsTabLineupSubs),
+                      SegmentTab(l.tacticsTabTactics),
                     ],
                   ),
                   Expanded(
@@ -1152,13 +1149,10 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
             length: 2,
             child: Column(
               children: [
-                TabBar(
-                  labelColor: AppColors.onSurface,
-                  unselectedLabelColor: AppColors.onSurfaceVariant,
-                  indicatorColor: AppColors.primary,
+                AppSegmentedTabs(
                   tabs: [
-                    Tab(text: l.tacticsTabLineupSubs),
-                    Tab(text: l.tacticsTabTactics),
+                    SegmentTab(l.tacticsTabLineupSubs),
+                    SegmentTab(l.tacticsTabTactics),
                   ],
                 ),
                 Expanded(

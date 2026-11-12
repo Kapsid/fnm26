@@ -17734,4 +17734,13 @@ class AppLocalizationsHr extends AppLocalizations {
   @override
   String get editorHistoryDeleteBody =>
       'Uklanja se iz povijesti. Sama baza podataka se ne mijenja.';
+
+  @override
+  String get financesTabDepartments => 'Odjeli';
+
+  @override
+  String get financesTabFacilities => 'Objekti';
+
+  @override
+  String get financesInvestedSoFar => 'Dosad uloženo';
 }

@@ -17243,4 +17243,13 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get editorHistoryDeleteBody =>
       'Phiên bản bị gỡ khỏi lịch sử. Bản thân cơ sở dữ liệu không đổi.';
+
+  @override
+  String get financesTabDepartments => 'Bộ phận';
+
+  @override
+  String get financesTabFacilities => 'Cơ sở vật chất';
+
+  @override
+  String get financesInvestedSoFar => 'Đã đầu tư đến nay';
 }

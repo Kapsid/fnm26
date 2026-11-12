@@ -17480,4 +17480,13 @@ class AppLocalizationsBg extends AppLocalizations {
   @override
   String get editorHistoryDeleteBody =>
       'Тя се премахва от историята. Самата база данни не се променя.';
+
+  @override
+  String get financesTabDepartments => 'Отдели';
+
+  @override
+  String get financesTabFacilities => 'Съоръжения';
+
+  @override
+  String get financesInvestedSoFar => 'Инвестирано досега';
 }

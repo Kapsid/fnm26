@@ -4345,5 +4345,8 @@
   "editorHistoryFailed": "Gagal. Sila cuba lagi.",
   "editorHistoryRenameTitle": "Namakan semula versi",
   "editorHistoryDeleteTitle": "Padam versi ini?",
-  "editorHistoryDeleteBody": "Ia dibuang daripada sejarah. Pangkalan data itu sendiri tidak berubah."
+  "editorHistoryDeleteBody": "Ia dibuang daripada sejarah. Pangkalan data itu sendiri tidak berubah.",
+  "financesTabDepartments": "Jabatan",
+  "financesTabFacilities": "Kemudahan",
+  "financesInvestedSoFar": "Dilaburkan setakat ini"
 }

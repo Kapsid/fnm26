@@ -4345,5 +4345,8 @@
   "editorHistoryFailed": "Не се получи. Опитай отново.",
   "editorHistoryRenameTitle": "Преименувай версията",
   "editorHistoryDeleteTitle": "Да се изтрие ли тази версия?",
-  "editorHistoryDeleteBody": "Тя се премахва от историята. Самата база данни не се променя."
+  "editorHistoryDeleteBody": "Тя се премахва от историята. Самата база данни не се променя.",
+  "financesTabDepartments": "Отдели",
+  "financesTabFacilities": "Съоръжения",
+  "financesInvestedSoFar": "Инвестирано досега"
 }

@@ -103,18 +103,7 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen>
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
           centerTitle: true,
-          // The tabs sit right on top of the content otherwise; the extra
-          // height gives them room to breathe.
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(kTournamentTabBarHeight),
-            child: TabBar(
-              isScrollable: true,
-              labelColor: AppColors.onSurface,
-              unselectedLabelColor: AppColors.onSurfaceVariant,
-              indicatorColor: AppColors.primary,
-              tabs: _tabs(l, zones: zones),
-            ),
-          ),
+          bottom: AppSegmentedTabBar(tabs: _tabs(l, zones: zones)),
         ),
         body: async.when(
           loading: () => const Center(child: CircularProgressIndicator()),
@@ -160,13 +149,13 @@ mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
   String _case(String label) =>
       grid ? label.capsIn(Localizations.localeOf(context).languageCode) : label;
 
-  List<Tab> _tabs(AppLocalizations l, {required bool zones}) => [
-    Tab(text: _case(zones ? l.tourContTabZones : l.tourContTabLeagues)),
-    Tab(
-      text: _case(zones ? l.tourContTabFinalsEight : l.tourContTabFinalsFour),
+  List<SegmentTab> _tabs(AppLocalizations l, {required bool zones}) => [
+    SegmentTab(_case(zones ? l.tourContTabZones : l.tourContTabLeagues)),
+    SegmentTab(
+      _case(zones ? l.tourContTabFinalsEight : l.tourContTabFinalsFour),
     ),
-    Tab(text: _case(l.tourContTabScorers)),
-    Tab(text: _case(l.tourContTabHistory)),
+    SegmentTab(_case(l.tourContTabScorers)),
+    SegmentTab(_case(l.tourContTabHistory)),
   ];
 
   List<Widget> _tabViews(NationsCupData v) {
@@ -434,7 +423,8 @@ mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
 ///
 /// They used to be a row of chips above the tables, which is a control the
 /// rest of the app does not use anywhere else; the tournament screens are
-/// tabbed, so these are tabs too, at the same [kTournamentTabBarHeight].
+/// tabbed, so these are tabs too: the app's segmented tabs, scrolling when
+/// a confederation has more leagues than fit across.
 class _LeagueTabs extends StatelessWidget {
   const _LeagueTabs({
     required this.capitals,
@@ -465,36 +455,18 @@ class _LeagueTabs extends StatelessWidget {
       initialIndex: mine < 0 ? 0 : mine,
       child: Column(
         children: [
-          SizedBox(
-            height: kTournamentTabBarHeight,
-            child: TabBar(
-              // Scrollable, so each label is laid out at the width it asks
-              // for: a confederation can run to half a dozen leagues, and a
-              // fixed bar would divide the phone between them and cut every
-              // one of them in half.
-              isScrollable: true,
-              labelColor: AppColors.onSurface,
-              unselectedLabelColor: AppColors.onSurfaceVariant,
-              indicatorColor: AppColors.primary,
-              tabs: [
-                for (final league in leagues)
-                  Tab(
-                    // A plain Text, not a Tab(text:) — that one wraps its
-                    // label with softWrap off and no maxLines, so a width
-                    // guard reading didExceedMaxLines never fires on it.
-                    child: Text(
-                      () {
-                        final label = league == playerLeague
-                            ? l.tourContLeagueChipStar(league)
-                            : l.tourContLeagueChip(league);
-                        return capitals ? label.capsIn(l.localeName) : label;
-                      }(),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-              ],
-            ),
+          // Each league's label whole: a confederation can run to half a
+          // dozen leagues, and the strip scrolls rather than cut them.
+          AppSegmentedTabs(
+            tabs: [
+              for (final league in leagues)
+                SegmentTab(() {
+                  final label = league == playerLeague
+                      ? l.tourContLeagueChipStar(league)
+                      : l.tourContLeagueChip(league);
+                  return capitals ? label.capsIn(l.localeName) : label;
+                }()),
+            ],
           ),
           Expanded(
             child: TabBarView(

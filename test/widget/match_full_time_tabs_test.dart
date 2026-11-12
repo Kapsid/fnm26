@@ -516,9 +516,6 @@ void main() {
           final l = AppLocalizations.of(
             tester.element(find.byType(MatchDetailTabs)),
           );
-          final bar = tester.widget<TabBar>(find.byType(TabBar));
-          expect(bar.isScrollable, isTrue);
-          expect(bar.tabAlignment, TabAlignment.start);
           for (final label in [
             l.matchTabTimeline,
             l.matchTabStats,

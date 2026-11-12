@@ -17306,4 +17306,13 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get editorHistoryDeleteBody =>
       'Geçmişten kaldırılır. Veritabanının kendisi değişmez.';
+
+  @override
+  String get financesTabDepartments => 'Departmanlar';
+
+  @override
+  String get financesTabFacilities => 'Tesisler';
+
+  @override
+  String get financesInvestedSoFar => 'Şimdiye kadar yatırılan';
 }

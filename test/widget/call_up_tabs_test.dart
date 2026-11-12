@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/shared/widgets/app_segmented_tabs.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/app_database.dart';
@@ -160,7 +161,10 @@ void main() {
     // tab is looked for inside the tab bar.)
     for (final line in ['GK', 'DEF', 'MID', 'FWD']) {
       expect(
-        find.descendant(of: find.byType(Tab), matching: find.text(line)),
+        find.descendant(
+          of: find.byType(AppTabSegment),
+          matching: find.text(line),
+        ),
         findsOneWidget,
         reason: 'a $line tab',
       );
@@ -239,17 +243,23 @@ void main() {
     await tester.pumpAndSettle();
 
     final before = tester.getTopLeft(
-      find.descendant(of: find.byType(Tab), matching: find.text('DEF')),
+      find.descendant(
+        of: find.byType(AppTabSegment),
+        matching: find.text('DEF'),
+      ),
     );
     await tester.drag(find.text('Back 0'), const Offset(0, -220));
     await tester.pumpAndSettle();
 
     // The header above has scrolled away; the tabs have not.
     final after = tester.getTopLeft(
-      find.descendant(of: find.byType(Tab), matching: find.text('DEF')),
+      find.descendant(
+        of: find.byType(AppTabSegment),
+        matching: find.text('DEF'),
+      ),
     );
     expect(after.dy, lessThanOrEqualTo(before.dy));
-    expect(find.byType(TabBar), findsOneWidget);
+    expect(find.byType(AppSegmentedControl), findsOneWidget);
     expect(tester.takeException(), isNull);
     expectNothingCut(tester);
   });

@@ -17580,4 +17580,13 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get editorHistoryDeleteBody =>
       'Zniknie z historii. Sama baza danych się nie zmieni.';
+
+  @override
+  String get financesTabDepartments => 'Działy';
+
+  @override
+  String get financesTabFacilities => 'Obiekty';
+
+  @override
+  String get financesInvestedSoFar => 'Zainwestowano dotąd';
 }

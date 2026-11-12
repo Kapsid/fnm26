@@ -17091,4 +17091,13 @@ class AppLocalizationsTh extends AppLocalizations {
   @override
   String get editorHistoryDeleteBody =>
       'เวอร์ชันนี้จะถูกลบออกจากประวัติ ตัวฐานข้อมูลไม่เปลี่ยนแปลง';
+
+  @override
+  String get financesTabDepartments => 'แผนก';
+
+  @override
+  String get financesTabFacilities => 'สิ่งอำนวยความสะดวก';
+
+  @override
+  String get financesInvestedSoFar => 'ลงทุนไปแล้ว';
 }

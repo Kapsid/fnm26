@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/shared/widgets/app_segmented_tabs.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 
@@ -42,7 +43,7 @@ void main() {
   testWidgets('narrow window falls back to the phone editor', (tester) async {
     await openEditor(tester, size: const Size(700, 810), tabletLayout: true);
     expect(find.byKey(InMatchTacticsKeys.tabletLayout), findsNothing);
-    expect(find.byType(TabBar), findsOneWidget);
+    expect(find.byType(AppSegmentedControl), findsOneWidget);
   });
 
   testWidgets('without the flag the editor keeps its phone body', (

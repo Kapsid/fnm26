@@ -17487,4 +17487,13 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get editorHistoryDeleteBody =>
       'Αφαιρείται από το ιστορικό. Η ίδια η βάση δεδομένων δεν αλλάζει.';
+
+  @override
+  String get financesTabDepartments => 'Τμήματα';
+
+  @override
+  String get financesTabFacilities => 'Εγκαταστάσεις';
+
+  @override
+  String get financesInvestedSoFar => 'Επενδύσεις έως τώρα';
 }

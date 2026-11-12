@@ -4345,5 +4345,8 @@
   "editorHistoryFailed": "Δεν πέτυχε. Δοκίμασε ξανά.",
   "editorHistoryRenameTitle": "Μετονομασία έκδοσης",
   "editorHistoryDeleteTitle": "Διαγραφή αυτής της έκδοσης;",
-  "editorHistoryDeleteBody": "Αφαιρείται από το ιστορικό. Η ίδια η βάση δεδομένων δεν αλλάζει."
+  "editorHistoryDeleteBody": "Αφαιρείται από το ιστορικό. Η ίδια η βάση δεδομένων δεν αλλάζει.",
+  "financesTabDepartments": "Τμήματα",
+  "financesTabFacilities": "Εγκαταστάσεις",
+  "financesInvestedSoFar": "Επενδύσεις έως τώρα"
 }

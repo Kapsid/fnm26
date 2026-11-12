@@ -17720,4 +17720,13 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get editorHistoryDeleteBody =>
       'Її буде прибрано з історії. Сама база даних не зміниться.';
+
+  @override
+  String get financesTabDepartments => 'Відділи';
+
+  @override
+  String get financesTabFacilities => 'Інфраструктура';
+
+  @override
+  String get financesInvestedSoFar => 'Інвестовано досі';
 }

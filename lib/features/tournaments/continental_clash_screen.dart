@@ -50,15 +50,7 @@ class ContinentalClashScreen extends ConsumerWidget {
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
           centerTitle: true,
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(kTournamentTabBarHeight),
-            child: TabBar(
-              labelColor: AppColors.onSurface,
-              unselectedLabelColor: AppColors.onSurfaceVariant,
-              indicatorColor: AppColors.primary,
-              tabs: _clashTabs(l),
-            ),
-          ),
+          bottom: AppSegmentedTabBar(tabs: _clashTabs(l)),
         ),
         body: dataAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
@@ -79,9 +71,9 @@ class ContinentalClashScreen extends ConsumerWidget {
 }
 
 /// The Clash's two tabs, in the order [_clashTabViews] builds them.
-List<Tab> _clashTabs(AppLocalizations l) => [
-  Tab(text: l.tourContTabThisCycle),
-  Tab(text: l.tourContTabHistory),
+List<SegmentTab> _clashTabs(AppLocalizations l) => [
+  SegmentTab(l.tourContTabThisCycle),
+  SegmentTab(l.tourContTabHistory),
 ];
 
 /// The two tab bodies. Shared by the phone screen and [ContinentalClashView];

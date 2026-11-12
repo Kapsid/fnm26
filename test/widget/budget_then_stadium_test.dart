@@ -72,7 +72,11 @@ void main() {
         await tester.tap(finances.first);
         await settle(tester);
         expect(find.byType(FinancesScreen), findsOneWidget);
-        final entry = find.byKey(NationalStadiumsEntry.entryKey);
+        // The stadiums are a facility: the third tab, then its tile.
+        await tester.tap(find.byKey(FinancesScreen.tabFacilitiesKey));
+        await tester.pumpAndSettle();
+        await settle(tester);
+        final entry = find.byKey(FinancesScreen.stadiumsTileKey);
         await tester.scrollUntilVisible(
           entry,
           200,

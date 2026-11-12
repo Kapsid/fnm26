@@ -7,6 +7,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/caps.dart';
+import 'package:fnm/shared/widgets/app_segmented_tabs.dart';
 
 /// The parts the player page and the world manager page are built from: a
 /// silver header card (rating disc, name, one muted line, four key numbers),
@@ -316,9 +317,8 @@ Widget profileMetaDot() => Padding(
   child: Text('·', style: profileMetaStyle),
 );
 
-/// The segmented control under the header: one pill per tab, the selected
-/// one filled silver. Each pill keeps a 44-point hit area and grows taller,
-/// never clipped, at a large text size.
+/// The segmented control under the header: the app's one tab control
+/// ([AppSegmentedControl]), one pill per tab, the selected one filled silver.
 class ProfileTabs extends StatelessWidget {
   const ProfileTabs({
     required this.labels,
@@ -336,68 +336,14 @@ class ProfileTabs extends StatelessWidget {
   final List<Key> keys;
 
   @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        for (var i = 0; i < labels.length; i++) ...[
-          if (i > 0) const SizedBox(width: 6),
-          Expanded(
-            child: Semantics(
-              button: true,
-              selected: i == selected,
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  key: i < keys.length ? keys[i] : null,
-                  onTap: () => onSelect(i),
-                  borderRadius: AppRadii.mdAll,
-                  child: Ink(
-                    decoration: BoxDecoration(
-                      color: i == selected ? AppColors.primaryFixed : null,
-                      borderRadius: AppRadii.mdAll,
-                      border: Border.all(
-                        color: i == selected
-                            ? AppColors.primaryFixed
-                            : AppColors.outlineVariant,
-                      ),
-                    ),
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        minHeight: AppSpacing.minHitArea - 8,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.xs,
-                          vertical: 6,
-                        ),
-                        child: Center(
-                          child: Text(
-                            labels[i],
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTypography.bodySmall.copyWith(
-                              fontWeight: i == selected
-                                  ? FontWeight.w700
-                                  : FontWeight.w500,
-                              color: i == selected
-                                  ? AppColors.onPrimaryFixed
-                                  : AppColors.onSurfaceVariant,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ],
-    );
-  }
+  Widget build(BuildContext context) => AppSegmentedControl(
+    tabs: [
+      for (var i = 0; i < labels.length; i++)
+        SegmentTab(labels[i], key: i < keys.length ? keys[i] : null),
+    ],
+    selected: selected,
+    onSelect: onSelect,
+  );
 }
 
 /// A horizontal bar of a 0..1 share, the silver fill over a dark track.

@@ -123,25 +123,19 @@ class _TeamStatsTabletLayoutState
                               children: [
                                 TabletTabBar(
                                   tabs: [
-                                    Tab(
-                                      text: l.statsTopScorersShort.capsIn(
+                                    SegmentTab(
+                                      l.statsTopScorersShort.capsIn(
                                         l.localeName,
                                       ),
                                     ),
-                                    Tab(
-                                      text: l.statsMostGames.capsIn(
-                                        l.localeName,
-                                      ),
+                                    SegmentTab(
+                                      l.statsMostGames.capsIn(l.localeName),
                                     ),
-                                    Tab(
-                                      text: l.statsBestRated.capsIn(
-                                        l.localeName,
-                                      ),
+                                    SegmentTab(
+                                      l.statsBestRated.capsIn(l.localeName),
                                     ),
-                                    Tab(
-                                      text: l.statsMyCareer.capsIn(
-                                        l.localeName,
-                                      ),
+                                    SegmentTab(
+                                      l.statsMyCareer.capsIn(l.localeName),
                                     ),
                                   ],
                                 ),

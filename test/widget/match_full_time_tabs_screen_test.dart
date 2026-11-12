@@ -8,6 +8,7 @@ import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
+import '../helpers/expect_whole.dart';
 import '../helpers/seeded_save.dart';
 
 /// The match screen's Player and Stadium tabs: there only once the match is
@@ -83,7 +84,10 @@ Future<void> _awaitPitch(WidgetTester tester) async {
 }
 
 int _phoneTabs(WidgetTester tester) => find
-    .descendant(of: find.byType(MatchDetailTabs), matching: find.byType(Tab))
+    .descendant(
+      of: find.byType(MatchDetailTabs),
+      matching: find.byType(AppTabSegment),
+    )
     .evaluate()
     .length;
 
@@ -132,13 +136,22 @@ void main() {
     await _toFullTime(tester);
     expect(tester.takeException(), isNull);
     expect(_phoneTabs(tester), 4);
-    final bar = tester.widget<TabBar>(
-      find.descendant(
-        of: find.byType(MatchDetailTabs),
-        matching: find.byType(TabBar),
-      ),
-    );
-    expect(bar.isScrollable, isTrue);
+    // Four labels, each whole on one line: shared out or scrolling, never
+    // cut or scaled.
+    for (final label in [
+      enL.matchTabStats,
+      enL.matchTabLineups,
+      enL.matchTabPlayer,
+      enL.matchTabStadium,
+    ]) {
+      expectWhole(
+        find.descendant(
+          of: find.byType(MatchDetailTabs),
+          matching: find.text(label),
+        ),
+        'the "$label" tab',
+      );
+    }
     await _checkTabs(tester, save);
 
     // On the Timeline at full time: five, opening on Stats.

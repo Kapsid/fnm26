@@ -4345,5 +4345,8 @@
   "editorHistoryFailed": "Det virkede ikke. Prøv igen.",
   "editorHistoryRenameTitle": "Omdøb version",
   "editorHistoryDeleteTitle": "Slet denne version?",
-  "editorHistoryDeleteBody": "Den fjernes fra historikken. Selve databasen ændres ikke."
+  "editorHistoryDeleteBody": "Den fjernes fra historikken. Selve databasen ændres ikke.",
+  "financesTabDepartments": "Afdelinger",
+  "financesTabFacilities": "Faciliteter",
+  "financesInvestedSoFar": "Investeret indtil nu"
 }

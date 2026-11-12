@@ -4345,5 +4345,8 @@
   "editorHistoryFailed": "Nepovedlo se to. Zkuste to prosím znovu.",
   "editorHistoryRenameTitle": "Přejmenovat verzi",
   "editorHistoryDeleteTitle": "Smazat tuto verzi?",
-  "editorHistoryDeleteBody": "Odebere se z historie. Samotná databáze se nezmění."
+  "editorHistoryDeleteBody": "Odebere se z historie. Samotná databáze se nezmění.",
+  "financesTabDepartments": "Oddělení",
+  "financesTabFacilities": "Zázemí",
+  "financesInvestedSoFar": "Dosud investováno"
 }

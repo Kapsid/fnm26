@@ -17557,4 +17557,13 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get editorHistoryDeleteBody =>
       'Elle est retirée de l’historique. La base de données elle-même ne change pas.';
+
+  @override
+  String get financesTabDepartments => 'Départements';
+
+  @override
+  String get financesTabFacilities => 'Installations';
+
+  @override
+  String get financesInvestedSoFar => 'Investi à ce jour';
 }

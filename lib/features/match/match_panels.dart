@@ -1690,21 +1690,19 @@ class _ShootoutStrip extends StatelessWidget {
 /// The tab strip above the live match detail.
 ///
 /// Its own widget, and PUBLIC, so a width test can pump the real strip rather
-/// than a reconstruction of it: the three labels are fixed copy sharing a
-/// phone's width between them, and Czech's are half again as long as English's
+/// than a reconstruction of it: the labels are fixed copy sharing a phone's
+/// width between them, and Czech's are half again as long as English's
 /// ("STATISTIKY" against "STATS").
 ///
-/// [WholeText] rather than `Tab(text:)`, for the reason the substitution strip
-/// uses it too: a tab that is cut, or broken into STATIS / TIKY, is not a tab.
-/// A label too long for its third of a 320-wide phone scales down instead, and
-/// [expectLegible] is the guard built for that.
+/// The app's segmented tabs ([AppSegmentedTabs]): three short labels share
+/// the width; a label too long for its share, or the five tabs at full time
+/// (four in Pitch mode), and the strip scrolls sideways instead, every label
+/// whole at its own width. Never scaled down, never broken mid-word.
 ///
 /// In Pitch mode ([withTimeline] false) the pitch and its commentary line
 /// stand in for the Timeline: Stats and Lineups only.
 ///
-/// At full time [extra] adds the Player and Stadium tabs: five (or four)
-/// never fit as thirds, so the strip scrolls from the start instead, each
-/// label at its own whole width.
+/// At full time [extra] adds the Player and Stadium tabs.
 class MatchDetailTabs extends StatelessWidget {
   const MatchDetailTabs({
     this.withTimeline = true,
@@ -1720,13 +1718,11 @@ class MatchDetailTabs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final scrolls = extra.isNotEmpty;
-    return TabBar(
-      labelColor: AppColors.onSurface,
-      unselectedLabelColor: AppColors.onSurfaceVariant,
-      indicatorColor: AppColors.primary,
-      isScrollable: scrolls,
-      tabAlignment: scrolls ? TabAlignment.start : null,
+    return AppSegmentedTabs(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xs + 2,
+      ),
       tabs: [
         for (final label in [
           if (withTimeline) l.matchTabTimeline,
@@ -1734,9 +1730,7 @@ class MatchDetailTabs extends StatelessWidget {
           l.matchTabLineups,
           ...extra,
         ])
-          Tab(
-            child: WholeText(label, maxLines: 1, textAlign: TextAlign.center),
-          ),
+          SegmentTab(label),
       ],
     );
   }

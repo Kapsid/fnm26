@@ -4345,5 +4345,8 @@
   "editorHistoryFailed": "Se ei onnistunut. Yritä uudelleen.",
   "editorHistoryRenameTitle": "Nimeä versio uudelleen",
   "editorHistoryDeleteTitle": "Poistetaanko tämä versio?",
-  "editorHistoryDeleteBody": "Se poistetaan historiasta. Itse tietokanta ei muutu."
+  "editorHistoryDeleteBody": "Se poistetaan historiasta. Itse tietokanta ei muutu.",
+  "financesTabDepartments": "Osastot",
+  "financesTabFacilities": "Tilat",
+  "financesInvestedSoFar": "Investoitu tähän mennessä"
 }

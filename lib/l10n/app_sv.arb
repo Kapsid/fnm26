@@ -4345,5 +4345,8 @@
   "editorHistoryFailed": "Det gick inte. Försök igen.",
   "editorHistoryRenameTitle": "Byt namn på versionen",
   "editorHistoryDeleteTitle": "Ta bort den här versionen?",
-  "editorHistoryDeleteBody": "Den tas bort från historiken. Själva databasen ändras inte."
+  "editorHistoryDeleteBody": "Den tas bort från historiken. Själva databasen ändras inte.",
+  "financesTabDepartments": "Avdelningar",
+  "financesTabFacilities": "Anläggningar",
+  "financesInvestedSoFar": "Investerat hittills"
 }

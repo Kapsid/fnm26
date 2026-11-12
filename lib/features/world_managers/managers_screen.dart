@@ -101,11 +101,11 @@ class _ManagersBodyState extends ConsumerState<ManagersBody>
     final nations = ref.watch(managerNationsProvider(careerId)).valueOrNull;
     return Column(
       children: [
-        TabBar(
+        AppSegmentedTabs(
           controller: _tabs,
           tabs: [
-            Tab(key: ManagersScreen.currentTabKey, text: l.mgrListCurrent),
-            Tab(key: ManagersScreen.movesTabKey, text: l.mgrListRecentMoves),
+            SegmentTab(l.mgrListCurrent, key: ManagersScreen.currentTabKey),
+            SegmentTab(l.mgrListRecentMoves, key: ManagersScreen.movesTabKey),
           ],
         ),
         Expanded(

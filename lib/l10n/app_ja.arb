@@ -4345,5 +4345,8 @@
   "editorHistoryFailed": "うまくいきませんでした。もう一度お試しください。",
   "editorHistoryRenameTitle": "バージョン名を変更",
   "editorHistoryDeleteTitle": "このバージョンを削除しますか？",
-  "editorHistoryDeleteBody": "履歴から削除されます。データベース自体は変わりません。"
+  "editorHistoryDeleteBody": "履歴から削除されます。データベース自体は変わりません。",
+  "financesTabDepartments": "部門",
+  "financesTabFacilities": "施設",
+  "financesInvestedSoFar": "これまでの投資額"
 }

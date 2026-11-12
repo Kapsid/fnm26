@@ -4345,5 +4345,8 @@
   "editorHistoryFailed": "Không được. Vui lòng thử lại.",
   "editorHistoryRenameTitle": "Đổi tên phiên bản",
   "editorHistoryDeleteTitle": "Xóa phiên bản này?",
-  "editorHistoryDeleteBody": "Phiên bản bị gỡ khỏi lịch sử. Bản thân cơ sở dữ liệu không đổi."
+  "editorHistoryDeleteBody": "Phiên bản bị gỡ khỏi lịch sử. Bản thân cơ sở dữ liệu không đổi.",
+  "financesTabDepartments": "Bộ phận",
+  "financesTabFacilities": "Cơ sở vật chất",
+  "financesInvestedSoFar": "Đã đầu tư đến nay"
 }

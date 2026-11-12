@@ -69,14 +69,10 @@ class YouthScreen extends ConsumerWidget {
           ),
           title: Text(l.youthTitle, style: AppTypography.titleMedium),
           centerTitle: true,
-          bottom: TabBar(
-            isScrollable: true,
-            labelColor: AppColors.onSurface,
-            unselectedLabelColor: AppColors.onSurfaceVariant,
-            indicatorColor: AppColors.primary,
+          bottom: AppSegmentedTabBar(
             tabs: [
-              Tab(text: l.youthWatching),
-              for (final level in YouthLevel.values) Tab(text: level.label),
+              SegmentTab(l.youthWatching),
+              for (final level in YouthLevel.values) SegmentTab(level.label),
             ],
           ),
         ),

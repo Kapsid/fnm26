@@ -4345,5 +4345,8 @@
   "editorHistoryFailed": "Das hat nicht geklappt. Bitte versuchen Sie es erneut.",
   "editorHistoryRenameTitle": "Version umbenennen",
   "editorHistoryDeleteTitle": "Diese Version löschen?",
-  "editorHistoryDeleteBody": "Sie wird aus dem Verlauf entfernt. Die Datenbank selbst ändert sich nicht."
+  "editorHistoryDeleteBody": "Sie wird aus dem Verlauf entfernt. Die Datenbank selbst ändert sich nicht.",
+  "financesTabDepartments": "Abteilungen",
+  "financesTabFacilities": "Einrichtungen",
+  "financesInvestedSoFar": "Bisher investiert"
 }

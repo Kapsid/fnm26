@@ -4345,5 +4345,8 @@
   "editorHistoryFailed": "Non ha funzionato. Riprova.",
   "editorHistoryRenameTitle": "Rinomina versione",
   "editorHistoryDeleteTitle": "Eliminare questa versione?",
-  "editorHistoryDeleteBody": "Viene rimossa dalla cronologia. Il database in sé non cambia."
+  "editorHistoryDeleteBody": "Viene rimossa dalla cronologia. Il database in sé non cambia.",
+  "financesTabDepartments": "Reparti",
+  "financesTabFacilities": "Strutture",
+  "financesInvestedSoFar": "Investito finora"
 }

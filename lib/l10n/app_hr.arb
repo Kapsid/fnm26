@@ -4345,5 +4345,8 @@
   "editorHistoryFailed": "Nije uspjelo. Pokušaj ponovno.",
   "editorHistoryRenameTitle": "Preimenuj verziju",
   "editorHistoryDeleteTitle": "Obrisati ovu verziju?",
-  "editorHistoryDeleteBody": "Uklanja se iz povijesti. Sama baza podataka se ne mijenja."
+  "editorHistoryDeleteBody": "Uklanja se iz povijesti. Sama baza podataka se ne mijenja.",
+  "financesTabDepartments": "Odjeli",
+  "financesTabFacilities": "Objekti",
+  "financesInvestedSoFar": "Dosad uloženo"
 }

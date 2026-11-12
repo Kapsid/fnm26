@@ -17471,4 +17471,13 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String get editorHistoryDeleteBody =>
       'Se poistetaan historiasta. Itse tietokanta ei muutu.';
+
+  @override
+  String get financesTabDepartments => 'Osastot';
+
+  @override
+  String get financesTabFacilities => 'Tilat';
+
+  @override
+  String get financesInvestedSoFar => 'Investoitu tähän mennessä';
 }

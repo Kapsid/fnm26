@@ -4345,5 +4345,8 @@
   "editorHistoryFailed": "ไม่สำเร็จ ลองอีกครั้งนะ",
   "editorHistoryRenameTitle": "เปลี่ยนชื่อเวอร์ชัน",
   "editorHistoryDeleteTitle": "ลบเวอร์ชันนี้ไหม",
-  "editorHistoryDeleteBody": "เวอร์ชันนี้จะถูกลบออกจากประวัติ ตัวฐานข้อมูลไม่เปลี่ยนแปลง"
+  "editorHistoryDeleteBody": "เวอร์ชันนี้จะถูกลบออกจากประวัติ ตัวฐานข้อมูลไม่เปลี่ยนแปลง",
+  "financesTabDepartments": "แผนก",
+  "financesTabFacilities": "สิ่งอำนวยความสะดวก",
+  "financesInvestedSoFar": "ลงทุนไปแล้ว"
 }

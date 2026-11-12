@@ -4345,5 +4345,8 @@
   "editorHistoryFailed": "Nu a mers. Încercați din nou.",
   "editorHistoryRenameTitle": "Redenumiți versiunea",
   "editorHistoryDeleteTitle": "Ștergeți această versiune?",
-  "editorHistoryDeleteBody": "Este eliminată din istoric. Baza de date în sine nu se schimbă."
+  "editorHistoryDeleteBody": "Este eliminată din istoric. Baza de date în sine nu se schimbă.",
+  "financesTabDepartments": "Departamente",
+  "financesTabFacilities": "Facilități",
+  "financesInvestedSoFar": "Investit până acum"
 }

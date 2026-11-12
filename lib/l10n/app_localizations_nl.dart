@@ -17479,4 +17479,13 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get editorHistoryDeleteBody =>
       'Ze wordt uit de geschiedenis verwijderd. De database zelf verandert niet.';
+
+  @override
+  String get financesTabDepartments => 'Afdelingen';
+
+  @override
+  String get financesTabFacilities => 'Faciliteiten';
+
+  @override
+  String get financesInvestedSoFar => 'Tot nu toe geïnvesteerd';
 }

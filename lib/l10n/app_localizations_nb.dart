@@ -17390,4 +17390,13 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get editorHistoryDeleteBody =>
       'Den fjernes fra historikken. Selve databasen endres ikke.';
+
+  @override
+  String get financesTabDepartments => 'Avdelinger';
+
+  @override
+  String get financesTabFacilities => 'Anlegg';
+
+  @override
+  String get financesInvestedSoFar => 'Investert så langt';
 }

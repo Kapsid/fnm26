@@ -4345,5 +4345,8 @@
   "editorHistoryFailed": "Olmadı. Lütfen tekrar dene.",
   "editorHistoryRenameTitle": "Sürümü yeniden adlandır",
   "editorHistoryDeleteTitle": "Bu sürüm silinsin mi?",
-  "editorHistoryDeleteBody": "Geçmişten kaldırılır. Veritabanının kendisi değişmez."
+  "editorHistoryDeleteBody": "Geçmişten kaldırılır. Veritabanının kendisi değişmez.",
+  "financesTabDepartments": "Departmanlar",
+  "financesTabFacilities": "Tesisler",
+  "financesInvestedSoFar": "Şimdiye kadar yatırılan"
 }

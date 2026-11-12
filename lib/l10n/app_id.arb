@@ -4345,5 +4345,8 @@
   "editorHistoryFailed": "Gagal. Silakan coba lagi.",
   "editorHistoryRenameTitle": "Ganti nama versi",
   "editorHistoryDeleteTitle": "Hapus versi ini?",
-  "editorHistoryDeleteBody": "Versi ini dihapus dari riwayat. Database itu sendiri tidak berubah."
+  "editorHistoryDeleteBody": "Versi ini dihapus dari riwayat. Database itu sendiri tidak berubah.",
+  "financesTabDepartments": "Departemen",
+  "financesTabFacilities": "Fasilitas",
+  "financesInvestedSoFar": "Diinvestasikan sejauh ini"
 }

@@ -17406,4 +17406,13 @@ class AppLocalizationsFil extends AppLocalizations {
   @override
   String get editorHistoryDeleteBody =>
       'Aalisin ito sa history. Hindi magbabago ang mismong database.';
+
+  @override
+  String get financesTabDepartments => 'Mga departamento';
+
+  @override
+  String get financesTabFacilities => 'Mga pasilidad';
+
+  @override
+  String get financesInvestedSoFar => 'Naipuhunan na';
 }

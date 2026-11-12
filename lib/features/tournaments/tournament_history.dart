@@ -13,12 +13,6 @@ import 'package:fnm/features/tournaments/cup_detail_providers.dart'
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
-/// The height a tournament screen's TabBar occupies.
-///
-/// Taller than the tabs themselves (Flutter's default is ~46), so the labels
-/// aren't jammed against the content below them.
-const double kTournamentTabBarHeight = 60;
-
 /// A placeholder for a tab whose content doesn't exist yet.
 class TournamentSoon extends StatelessWidget {
   const TournamentSoon({required this.message, super.key});

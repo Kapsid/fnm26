@@ -16773,4 +16773,13 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get editorHistoryDeleteBody => '履歴から削除されます。データベース自体は変わりません。';
+
+  @override
+  String get financesTabDepartments => '部門';
+
+  @override
+  String get financesTabFacilities => '施設';
+
+  @override
+  String get financesInvestedSoFar => 'これまでの投資額';
 }

@@ -164,7 +164,7 @@ void main() {
   /// label: the line headings are translated, and Czech does not spell them
   /// GK/DEF/MID/FWD.
   Future<void> openMidfield(WidgetTester tester) async {
-    await tester.tap(find.byType(Tab).at(2));
+    await tester.tap(find.byType(AppTabSegment).at(2));
     await tester.pumpAndSettle();
   }
 

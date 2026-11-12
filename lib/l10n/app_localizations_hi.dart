@@ -17303,4 +17303,13 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get editorHistoryDeleteBody =>
       'यह हिस्ट्री से हट जाएगा। डेटाबेस खुद नहीं बदलता।';
+
+  @override
+  String get financesTabDepartments => 'विभाग';
+
+  @override
+  String get financesTabFacilities => 'सुविधाएँ';
+
+  @override
+  String get financesInvestedSoFar => 'अब तक निवेश';
 }

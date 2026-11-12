@@ -17380,4 +17380,13 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get editorHistoryDeleteBody =>
       'Den tas bort från historiken. Själva databasen ändras inte.';
+
+  @override
+  String get financesTabDepartments => 'Avdelningar';
+
+  @override
+  String get financesTabFacilities => 'Anläggningar';
+
+  @override
+  String get financesInvestedSoFar => 'Investerat hittills';
 }

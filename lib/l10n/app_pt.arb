@@ -4345,5 +4345,8 @@
   "editorHistoryFailed": "Não deu certo. Tente de novo.",
   "editorHistoryRenameTitle": "Renomear versão",
   "editorHistoryDeleteTitle": "Excluir esta versão?",
-  "editorHistoryDeleteBody": "Ela é removida do histórico. O banco de dados em si não muda."
+  "editorHistoryDeleteBody": "Ela é removida do histórico. O banco de dados em si não muda.",
+  "financesTabDepartments": "Departamentos",
+  "financesTabFacilities": "Instalações",
+  "financesInvestedSoFar": "Investido até agora"
 }

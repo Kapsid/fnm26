@@ -4345,5 +4345,8 @@
   "editorHistoryFailed": "Hindi iyon gumana. Pakisubukan ulit.",
   "editorHistoryRenameTitle": "Palitan ang pangalan ng bersyon",
   "editorHistoryDeleteTitle": "Burahin ang bersyong ito?",
-  "editorHistoryDeleteBody": "Aalisin ito sa history. Hindi magbabago ang mismong database."
+  "editorHistoryDeleteBody": "Aalisin ito sa history. Hindi magbabago ang mismong database.",
+  "financesTabDepartments": "Mga departamento",
+  "financesTabFacilities": "Mga pasilidad",
+  "financesInvestedSoFar": "Naipuhunan na"
 }

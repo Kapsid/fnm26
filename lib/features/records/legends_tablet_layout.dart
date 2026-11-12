@@ -79,8 +79,8 @@ class _LegendsTabletLayoutState extends ConsumerState<_LegendsTabletLayout> {
                         children: [
                           TabletTabBar(
                             tabs: [
-                              Tab(text: l.recordsHallOfFame),
-                              Tab(text: l.recordsAllTimeXi),
+                              SegmentTab(l.recordsHallOfFame),
+                              SegmentTab(l.recordsAllTimeXi),
                             ],
                           ),
                           Expanded(

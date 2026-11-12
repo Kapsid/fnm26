@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/util/federation_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
+import 'package:fnm/features/federation/finances_screen.dart';
 
 import '../helpers/seeded_save.dart';
 
@@ -23,13 +24,7 @@ void main() {
         '${Routes.finances}?careerId=${save.careerId}',
         size: size,
       );
-      expect(
-        find.text(
-          '${departmentBuildingName(enL, Department.youth)}'
-          '  ·  ${departmentLabel(enL, Department.youth)}',
-        ),
-        findsOneWidget,
-      );
+      expect(find.text(enL.federationBalance), findsOneWidget);
       await expectAppGolden('goldens/$name.png');
     });
   }
@@ -55,7 +50,28 @@ void main() {
       '${Routes.finances}?careerId=${save.careerId}',
       size: const Size(390, 2400),
     );
+    await tester.tap(find.byKey(FinancesScreen.tabDepartmentsKey));
+    await tester.pumpAndSettle();
+    await settle(tester);
     expect(find.text(enL.federationThisSeasonLocked), findsOneWidget);
     await expectAppGolden('goldens/finances_phone_invested_tall.png');
+  });
+
+  // The Facilities tab: the buildings two to a row, then the stadiums.
+  testWidgets('finances_phone_facilities', (tester) async {
+    final save = await seedSave(tester);
+    await pumpRoute(
+      tester,
+      save,
+      '${Routes.finances}?careerId=${save.careerId}',
+    );
+    await tester.tap(find.byKey(FinancesScreen.tabFacilitiesKey));
+    await tester.pumpAndSettle();
+    await settle(tester);
+    expect(
+      find.text(departmentBuildingName(enL, Department.youth)),
+      findsOneWidget,
+    );
+    await expectAppGolden('goldens/finances_phone_facilities.png');
   });
 }

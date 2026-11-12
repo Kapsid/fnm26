@@ -17815,4 +17815,13 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get editorHistoryDeleteBody =>
       'Este eliminată din istoric. Baza de date în sine nu se schimbă.';
+
+  @override
+  String get financesTabDepartments => 'Departamente';
+
+  @override
+  String get financesTabFacilities => 'Facilități';
+
+  @override
+  String get financesInvestedSoFar => 'Investit până acum';
 }

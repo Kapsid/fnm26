@@ -7,34 +7,30 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/shared/tablet/panel.dart';
 import 'package:fnm/shared/tablet/screen_header.dart';
+import 'package:fnm/shared/widgets/app_segmented_tabs.dart';
 
-/// The tab bar every tablet competition view carries across the top of its
-/// panel: scrolling, start-aligned, on the container surface.
+/// The tab strip every tablet competition view carries across the top of its
+/// panel: the app's segmented tabs ([AppSegmentedTabs]) on the container
+/// surface.
 class TabletTabBar extends StatelessWidget {
-  const TabletTabBar({
-    required this.tabs,
-    this.selectedColor = AppColors.onSurface,
-    this.indicatorColor = AppColors.primary,
-    super.key,
-  });
+  const TabletTabBar({required this.tabs, this.selectedColor, super.key});
 
-  final List<Widget> tabs;
+  final List<SegmentTab> tabs;
 
-  /// The selected tab's label colour.
-  final Color selectedColor;
-  final Color indicatorColor;
+  /// The selected segment's fill; the silver one when null.
+  final Color? selectedColor;
 
   @override
   Widget build(BuildContext context) {
-    return Material(
+    return ColoredBox(
       color: AppColors.surfaceContainer,
-      child: TabBar(
-        isScrollable: true,
-        tabAlignment: TabAlignment.start,
-        labelColor: selectedColor,
-        unselectedLabelColor: AppColors.onSurfaceVariant,
-        indicatorColor: indicatorColor,
+      child: AppSegmentedTabs(
         tabs: tabs,
+        selectedColor: selectedColor,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm + 4,
+          vertical: AppSpacing.sm,
+        ),
       ),
     );
   }

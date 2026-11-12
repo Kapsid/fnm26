@@ -153,20 +153,11 @@ class _MatchTabletLayout extends StatelessWidget {
             key: const ValueKey('match.statsTabs'),
             child: Column(
               children: [
-                Material(
-                  color: AppColors.surfaceContainer,
-                  child: TabBar(
-                    labelColor: AppColors.onSurface,
-                    unselectedLabelColor: AppColors.onSurfaceVariant,
-                    indicatorColor: AppColors.primary,
-                    isScrollable: true,
-                    tabAlignment: TabAlignment.start,
-                    labelPadding: const EdgeInsets.symmetric(horizontal: 12),
-                    tabs: [
-                      Tab(text: l.matchTabStats),
-                      for (final (label, _) in afterTabs) Tab(text: label),
-                    ],
-                  ),
+                TabletTabBar(
+                  tabs: [
+                    SegmentTab(l.matchTabStats),
+                    for (final (label, _) in afterTabs) SegmentTab(label),
+                  ],
                 ),
                 Expanded(
                   child: TabBarView(
@@ -272,17 +263,11 @@ class _MatchTabletLayout extends StatelessWidget {
             key: ValueKey(ft),
             child: Column(
               children: [
-                Material(
-                  color: AppColors.surfaceContainer,
-                  child: TabBar(
-                    labelColor: AppColors.onSurface,
-                    unselectedLabelColor: AppColors.onSurfaceVariant,
-                    indicatorColor: AppColors.primary,
-                    tabs: [
-                      Tab(text: l.matchTabLineups),
-                      Tab(text: l.matchYourXi),
-                    ],
-                  ),
+                TabletTabBar(
+                  tabs: [
+                    SegmentTab(l.matchTabLineups),
+                    SegmentTab(l.matchYourXi),
+                  ],
                 ),
                 Expanded(
                   child: TabBarView(
@@ -310,28 +295,11 @@ class _MatchTabletLayout extends StatelessWidget {
       key: ValueKey(('pitch', ft)),
       child: Column(
         children: [
-          Material(
-            color: AppColors.surfaceContainer,
-            child: TabBar(
-              labelColor: AppColors.onSurface,
-              unselectedLabelColor: AppColors.onSurfaceVariant,
-              indicatorColor: AppColors.primary,
-              labelPadding: const EdgeInsets.symmetric(horizontal: 4),
-              tabs: [
-                Tab(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(l.matchTabCommentary),
-                  ),
-                ),
-                Tab(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(ft ? l.matchTabLineups : l.matchYourXi),
-                  ),
-                ),
-              ],
-            ),
+          TabletTabBar(
+            tabs: [
+              SegmentTab(l.matchTabCommentary),
+              SegmentTab(ft ? l.matchTabLineups : l.matchYourXi),
+            ],
           ),
           Expanded(
             child: TabBarView(

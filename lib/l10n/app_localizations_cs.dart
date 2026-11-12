@@ -17786,4 +17786,13 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get editorHistoryDeleteBody =>
       'Odebere se z historie. Samotná databáze se nezmění.';
+
+  @override
+  String get financesTabDepartments => 'Oddělení';
+
+  @override
+  String get financesTabFacilities => 'Zázemí';
+
+  @override
+  String get financesInvestedSoFar => 'Dosud investováno';
 }

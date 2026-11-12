@@ -16815,4 +16815,13 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get editorHistoryDeleteBody => '기록에서 삭제됩니다. 데이터베이스 자체는 바뀌지 않습니다.';
+
+  @override
+  String get financesTabDepartments => '부서';
+
+  @override
+  String get financesTabFacilities => '시설';
+
+  @override
+  String get financesInvestedSoFar => '지금까지 투자액';
 }

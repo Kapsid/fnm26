@@ -4345,5 +4345,8 @@
   "editorHistoryFailed": "Nem sikerült. Próbáld újra.",
   "editorHistoryRenameTitle": "Verzió átnevezése",
   "editorHistoryDeleteTitle": "Törlöd ezt a verziót?",
-  "editorHistoryDeleteBody": "Eltűnik az előzményekből. Maga az adatbázis nem változik."
+  "editorHistoryDeleteBody": "Eltűnik az előzményekből. Maga az adatbázis nem változik.",
+  "financesTabDepartments": "Részlegek",
+  "financesTabFacilities": "Létesítmények",
+  "financesInvestedSoFar": "Eddig befektetve"
 }

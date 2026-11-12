@@ -17341,4 +17341,13 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get editorHistoryDeleteBody =>
       'Eltűnik az előzményekből. Maga az adatbázis nem változik.';
+
+  @override
+  String get financesTabDepartments => 'Részlegek';
+
+  @override
+  String get financesTabFacilities => 'Létesítmények';
+
+  @override
+  String get financesInvestedSoFar => 'Eddig befektetve';
 }

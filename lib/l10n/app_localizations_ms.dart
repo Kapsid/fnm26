@@ -17356,4 +17356,13 @@ class AppLocalizationsMs extends AppLocalizations {
   @override
   String get editorHistoryDeleteBody =>
       'Ia dibuang daripada sejarah. Pangkalan data itu sendiri tidak berubah.';
+
+  @override
+  String get financesTabDepartments => 'Jabatan';
+
+  @override
+  String get financesTabFacilities => 'Kemudahan';
+
+  @override
+  String get financesInvestedSoFar => 'Dilaburkan setakat ini';
 }

@@ -4345,5 +4345,8 @@
   "editorHistoryFailed": "यह नहीं हो पाया। कृपया फिर कोशिश करें।",
   "editorHistoryRenameTitle": "वर्शन का नाम बदलें",
   "editorHistoryDeleteTitle": "यह वर्शन डिलीट करें?",
-  "editorHistoryDeleteBody": "यह हिस्ट्री से हट जाएगा। डेटाबेस खुद नहीं बदलता।"
+  "editorHistoryDeleteBody": "यह हिस्ट्री से हट जाएगा। डेटाबेस खुद नहीं बदलता।",
+  "financesTabDepartments": "विभाग",
+  "financesTabFacilities": "सुविधाएँ",
+  "financesInvestedSoFar": "अब तक निवेश"
 }

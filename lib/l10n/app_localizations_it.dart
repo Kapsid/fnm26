@@ -17471,4 +17471,13 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get editorHistoryDeleteBody =>
       'Viene rimossa dalla cronologia. Il database in sé non cambia.';
+
+  @override
+  String get financesTabDepartments => 'Reparti';
+
+  @override
+  String get financesTabFacilities => 'Strutture';
+
+  @override
+  String get financesInvestedSoFar => 'Investito finora';
 }
