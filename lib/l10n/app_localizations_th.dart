@@ -17021,6 +17021,29 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
+  String get editorMergeTabOverview => 'ภาพรวม';
+
+  @override
+  String get editorMergeTabNames => 'ชื่อ';
+
+  @override
+  String get editorMergeTabPress => 'สื่อมวลชนและ Y';
+
+  @override
+  String get editorMergeEveryChange => 'การเปลี่ยนแปลงทั้งหมด';
+
+  @override
+  String editorMergeNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'ใหม่ $count',
+      zero: 'ไม่มีรายการใหม่',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorHistorySave => 'บันทึกเวอร์ชัน';
 
   @override

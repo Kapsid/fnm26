@@ -16704,6 +16704,29 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get editorMergeTabOverview => '概要';
+
+  @override
+  String get editorMergeTabNames => '名前';
+
+  @override
+  String get editorMergeTabPress => 'メディアとY';
+
+  @override
+  String get editorMergeEveryChange => 'すべての変更';
+
+  @override
+  String editorMergeNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '新規 $count',
+      zero: '新規なし',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorHistorySave => 'バージョンを保存';
 
   @override

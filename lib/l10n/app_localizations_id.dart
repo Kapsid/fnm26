@@ -17237,6 +17237,29 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
+  String get editorMergeTabOverview => 'Ikhtisar';
+
+  @override
+  String get editorMergeTabNames => 'Nama';
+
+  @override
+  String get editorMergeTabPress => 'Pers dan Y';
+
+  @override
+  String get editorMergeEveryChange => 'Semua perubahan';
+
+  @override
+  String editorMergeNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count baru',
+      zero: 'Tidak ada yang baru',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorHistorySave => 'Simpan versi';
 
   @override

@@ -17744,6 +17744,30 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
+  String get editorMergeTabOverview => 'Pe scurt';
+
+  @override
+  String get editorMergeTabNames => 'Nume';
+
+  @override
+  String get editorMergeTabPress => 'Presă și Y';
+
+  @override
+  String get editorMergeEveryChange => 'Toate modificările';
+
+  @override
+  String editorMergeNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count noi',
+      one: '1 nouă',
+      zero: 'Nimic nou',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorHistorySave => 'Salvați versiunea';
 
   @override

@@ -17417,6 +17417,30 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
+  String get editorMergeTabOverview => 'Επισκόπηση';
+
+  @override
+  String get editorMergeTabNames => 'Ονόματα';
+
+  @override
+  String get editorMergeTabPress => 'Τύπος και Y';
+
+  @override
+  String get editorMergeEveryChange => 'Όλες οι αλλαγές';
+
+  @override
+  String editorMergeNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count νέες',
+      one: '1 νέα',
+      zero: 'Καμία νέα',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorHistorySave => 'Αποθήκευση έκδοσης';
 
   @override

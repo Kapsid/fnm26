@@ -26668,6 +26668,31 @@
       }
     }
   },
+  "editorMergeTabOverview": "Overview",
+  "@editorMergeTabOverview": {
+    "description": "Merge review: the first tab, totals per area of the changes."
+  },
+  "editorMergeTabNames": "Names",
+  "@editorMergeTabNames": {
+    "description": "Merge review: tab with the renamed clubs, competitions, nations, name lists and managers."
+  },
+  "editorMergeTabPress": "Press & Y",
+  "@editorMergeTabPress": {
+    "description": "Merge review: tab with the reporters, Y accounts and their handles."
+  },
+  "editorMergeEveryChange": "Every change",
+  "@editorMergeEveryChange": {
+    "description": "Merge review overview: the row that ticks or unticks every change at once (All / None)."
+  },
+  "editorMergeNewCount": "{count, plural, =0{Nothing new} =1{1 new} other{{count} new}}",
+  "@editorMergeNewCount": {
+    "description": "Merge review overview tile: how many changes in an area are new (not conflicts).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "editorHistorySave": "Save version",
   "@editorHistorySave": {
     "description": "History: button that saves the database as it is now as a version."

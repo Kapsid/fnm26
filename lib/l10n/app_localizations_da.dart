@@ -17326,6 +17326,30 @@ class AppLocalizationsDa extends AppLocalizations {
   }
 
   @override
+  String get editorMergeTabOverview => 'Overblik';
+
+  @override
+  String get editorMergeTabNames => 'Navne';
+
+  @override
+  String get editorMergeTabPress => 'Presse og Y';
+
+  @override
+  String get editorMergeEveryChange => 'Alle ændringer';
+
+  @override
+  String editorMergeNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nye',
+      one: '1 ny',
+      zero: 'Intet nyt',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorHistorySave => 'Gem version';
 
   @override

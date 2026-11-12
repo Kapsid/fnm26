@@ -17508,6 +17508,31 @@ class AppLocalizationsPl extends AppLocalizations {
   }
 
   @override
+  String get editorMergeTabOverview => 'Przegląd';
+
+  @override
+  String get editorMergeTabNames => 'Nazwy';
+
+  @override
+  String get editorMergeTabPress => 'Prasa i Y';
+
+  @override
+  String get editorMergeEveryChange => 'Wszystkie zmiany';
+
+  @override
+  String editorMergeNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nowych',
+      few: '$count nowe',
+      one: '1 nowa',
+      zero: 'Nic nowego',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorHistorySave => 'Zapisz wersję';
 
   @override

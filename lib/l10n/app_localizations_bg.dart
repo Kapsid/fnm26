@@ -17410,6 +17410,30 @@ class AppLocalizationsBg extends AppLocalizations {
   }
 
   @override
+  String get editorMergeTabOverview => 'Общо';
+
+  @override
+  String get editorMergeTabNames => 'Имена';
+
+  @override
+  String get editorMergeTabPress => 'Преса и Y';
+
+  @override
+  String get editorMergeEveryChange => 'Всички промени';
+
+  @override
+  String editorMergeNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count нови',
+      one: '1 нова',
+      zero: 'Няма нови',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorHistorySave => 'Запази версия';
 
   @override

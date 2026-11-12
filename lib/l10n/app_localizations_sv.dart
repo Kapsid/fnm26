@@ -17310,6 +17310,30 @@ class AppLocalizationsSv extends AppLocalizations {
   }
 
   @override
+  String get editorMergeTabOverview => 'Översikt';
+
+  @override
+  String get editorMergeTabNames => 'Namn';
+
+  @override
+  String get editorMergeTabPress => 'Press och Y';
+
+  @override
+  String get editorMergeEveryChange => 'Alla ändringar';
+
+  @override
+  String editorMergeNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nya',
+      one: '1 ny',
+      zero: 'Inget nytt',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorHistorySave => 'Spara version';
 
   @override
