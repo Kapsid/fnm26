@@ -17034,6 +17034,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get matchTabStadium => 'STADYUM';
 
   @override
+  String get matchTabSummary => 'ÖZET';
+
+  @override
   String get matchPotmNone => 'Bu maçta maçın oyuncusu seçilmedi.';
 
   @override

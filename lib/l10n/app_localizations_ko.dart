@@ -16549,6 +16549,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get matchTabStadium => '경기장';
 
   @override
+  String get matchTabSummary => '요약';
+
+  @override
   String get matchPotmNone => '이 경기에서는 경기 최우수 선수가 선정되지 않았습니다.';
 
   @override

@@ -90,14 +90,22 @@ void main() {
         pitch.bottom,
         lessThanOrEqualTo(tester.getRect(find.byType(MatchBarDock)).top),
       );
-      // Top-aligned with the side columns.
-      final stats = tester.getRect(
-        find.ancestor(
-          of: find.byType(MatchStatsPanel),
-          matching: find.byType(Panel),
-        ),
+      // The left column opens on the Summary, top-aligned with the TV.
+      expect(find.byType(MatchSummaryTab), findsOneWidget);
+      final column = tester.getRect(
+        find
+            .ancestor(
+              of: find.byType(MatchSummaryTab),
+              matching: find.byType(PanelBox),
+            )
+            .first,
       );
-      expect(header.top, closeTo(stats.top, 0.5));
+      expect(header.top, closeTo(column.top, 0.5));
+      expect(column.right, lessThan(pitch.left));
+      // Its Stats a tab away.
+      await tester.tap(find.text(enL.matchTabStats));
+      await tester.pumpAndSettle(const Duration(milliseconds: 100));
+      expect(find.byType(MatchSummaryTab), findsNothing);
       // The ground's line is in the header, and its card closes the stats:
       // under the figures, never over them.
       expect(
@@ -110,6 +118,17 @@ void main() {
       final groundCard = find.descendant(
         of: find.byType(MatchStatsPanel),
         matching: find.byType(GroundCard),
+      );
+      // (Under the tab strip the list may be too short to build it yet.)
+      await tester.scrollUntilVisible(
+        groundCard,
+        80,
+        scrollable: find
+            .descendant(
+              of: find.byType(MatchStatsPanel),
+              matching: find.byType(Scrollable),
+            )
+            .first,
       );
       expect(groundCard, findsOneWidget);
       expect(

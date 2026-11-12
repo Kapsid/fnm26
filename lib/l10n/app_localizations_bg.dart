@@ -17208,6 +17208,9 @@ class AppLocalizationsBg extends AppLocalizations {
   String get matchTabStadium => 'СТАДИОН';
 
   @override
+  String get matchTabSummary => 'ОБОБЩЕНИЕ';
+
+  @override
   String get matchPotmNone => 'В този мач не беше избран играч на мача.';
 
   @override

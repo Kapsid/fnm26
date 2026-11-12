@@ -17298,6 +17298,9 @@ class AppLocalizationsPl extends AppLocalizations {
   String get matchTabStadium => 'STADION';
 
   @override
+  String get matchTabSummary => 'PODSUMOWANIE';
+
+  @override
   String get matchPotmNone => 'W tym meczu nie wybrano zawodnika meczu.';
 
   @override

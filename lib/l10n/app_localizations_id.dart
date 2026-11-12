@@ -17034,6 +17034,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get matchTabStadium => 'STADION';
 
   @override
+  String get matchTabSummary => 'RINGKASAN';
+
+  @override
   String get matchPotmNone =>
       'Tidak ada pemain terbaik yang dipilih untuk laga ini.';
 

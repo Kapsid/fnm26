@@ -1702,15 +1702,20 @@ class _ShootoutStrip extends StatelessWidget {
 /// In Pitch mode ([withTimeline] false) the pitch and its commentary line
 /// stand in for the Timeline: Stats and Lineups only.
 ///
-/// At full time [extra] adds the Player and Stadium tabs.
+/// At full time [extra] adds the Player and Stadium tabs. Pitch mode leads
+/// with the Summary ([leading]).
 class MatchDetailTabs extends StatelessWidget {
   const MatchDetailTabs({
     this.withTimeline = true,
+    this.leading = const [],
     this.extra = const [],
     super.key,
   });
 
   final bool withTimeline;
+
+  /// The labels of the tabs before all the others (Pitch mode's Summary).
+  final List<String> leading;
 
   /// The labels of the tabs after Line-ups (the full-time ones).
   final List<String> extra;
@@ -1725,6 +1730,7 @@ class MatchDetailTabs extends StatelessWidget {
       ),
       tabs: [
         for (final label in [
+          ...leading,
           if (withTimeline) l.matchTabTimeline,
           l.matchTabStats,
           l.matchTabLineups,

@@ -17119,6 +17119,9 @@ class AppLocalizationsNb extends AppLocalizations {
   String get matchTabStadium => 'STADION';
 
   @override
+  String get matchTabSummary => 'OPPSUMMERING';
+
+  @override
   String get matchPotmNone => 'Ingen banens beste ble kåret i denne kampen.';
 
   @override

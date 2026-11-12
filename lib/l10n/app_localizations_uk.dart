@@ -17438,6 +17438,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get matchTabStadium => 'СТАДІОН';
 
   @override
+  String get matchTabSummary => 'ПІДСУМКИ';
+
+  @override
   String get matchPotmNone => 'У цьому матчі гравця матчу не визначили.';
 
   @override

@@ -17069,6 +17069,9 @@ class AppLocalizationsHu extends AppLocalizations {
   String get matchTabStadium => 'STADION';
 
   @override
+  String get matchTabSummary => 'ÖSSZEFOGLALÓ';
+
+  @override
   String get matchPotmNone => 'Ezen a meccsen nem választottak meccs emberét.';
 
   @override

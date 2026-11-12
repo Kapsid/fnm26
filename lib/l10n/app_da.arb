@@ -4277,6 +4277,7 @@
   "settingsAboutProtected": "Spillet, dets kode og indhold er beskyttet af ophavsret.",
   "matchTabPlayer": "SPILLER",
   "matchTabStadium": "STADION",
+  "matchTabSummary": "OVERSIGT",
   "matchPotmNone": "Der blev ikke kåret nogen kampens spiller i denne kamp.",
   "matchPotmHisMatch": "Hans kamp",
   "matchPotmBeforeMatch": "Før denne kamp",

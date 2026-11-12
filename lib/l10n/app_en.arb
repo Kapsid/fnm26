@@ -26415,6 +26415,10 @@
   "@matchTabStadium": {
     "description": "Match screen tab at full time: the ground the match was played in. Very short, upper case like the other match tabs."
   },
+  "matchTabSummary": "SUMMARY",
+  "@matchTabSummary": {
+    "description": "Match screen tab in Pitch (2D) mode, the first tab for the whole match: the score, the scorers, the ground and at full time the player of the match. Very short, upper case like the other match tabs."
+  },
   "matchPotmNone": "No player of the match was named for this game.",
   "@matchPotmNone": {
     "description": "Player tab at full time when the result names no player of the match (an old saved result)."

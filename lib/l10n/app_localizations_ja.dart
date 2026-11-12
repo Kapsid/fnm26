@@ -16507,6 +16507,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get matchTabStadium => 'スタジアム';
 
   @override
+  String get matchTabSummary => '概要';
+
+  @override
   String get matchPotmNone => 'この試合ではマン・オブ・ザ・マッチは選ばれませんでした。';
 
   @override

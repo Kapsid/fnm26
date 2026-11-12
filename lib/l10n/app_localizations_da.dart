@@ -17123,6 +17123,9 @@ class AppLocalizationsDa extends AppLocalizations {
   String get matchTabStadium => 'STADION';
 
   @override
+  String get matchTabSummary => 'OVERSIGT';
+
+  @override
   String get matchPotmNone =>
       'Der blev ikke kåret nogen kampens spiller i denne kamp.';
 

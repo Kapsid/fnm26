@@ -17282,6 +17282,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get matchTabStadium => 'STADE';
 
   @override
+  String get matchTabSummary => 'RÉSUMÉ';
+
+  @override
   String get matchPotmNone =>
       'Aucun homme du match n’a été désigné pour cette rencontre.';
 

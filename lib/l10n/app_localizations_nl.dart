@@ -17205,6 +17205,9 @@ class AppLocalizationsNl extends AppLocalizations {
   String get matchTabStadium => 'STADION';
 
   @override
+  String get matchTabSummary => 'OVERZICHT';
+
+  @override
   String get matchPotmNone =>
       'Voor dit duel is geen man van de wedstrijd gekozen.';
 

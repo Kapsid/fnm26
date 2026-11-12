@@ -17214,6 +17214,9 @@ class AppLocalizationsEl extends AppLocalizations {
   String get matchTabStadium => 'ΓΗΠΕΔΟ';
 
   @override
+  String get matchTabSummary => 'ΣΥΝΟΨΗ';
+
+  @override
   String get matchPotmNone =>
       'Δεν αναδείχθηκε παίκτης του αγώνα σε αυτό το παιχνίδι.';
 

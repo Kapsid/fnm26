@@ -4277,6 +4277,7 @@
   "settingsAboutProtected": "Το παιχνίδι, ο κώδικάς του και το περιεχόμενό του προστατεύονται από πνευματικά δικαιώματα.",
   "matchTabPlayer": "ΠΑΙΚΤΗΣ",
   "matchTabStadium": "ΓΗΠΕΔΟ",
+  "matchTabSummary": "ΣΥΝΟΨΗ",
   "matchPotmNone": "Δεν αναδείχθηκε παίκτης του αγώνα σε αυτό το παιχνίδι.",
   "matchPotmHisMatch": "Ο αγώνας του",
   "matchPotmBeforeMatch": "Πριν από αυτόν τον αγώνα",

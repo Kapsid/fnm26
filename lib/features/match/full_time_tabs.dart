@@ -188,63 +188,12 @@ class PlayerOfMatchTab extends ConsumerWidget {
     }
     final line = playerMatchLine(result, motm.playerId);
     final keeper = motm.position == PlayerPosition.gk;
-    final code = nationCode;
-    final header = ProfileHeaderCard(
+    final header = PlayerOfMatchHeader(
       key: headerKey,
-      disc: motm.rating.toStringAsFixed(1),
-      name: motm.playerName,
-      meta: [
-        if (code != null) ...[
-          FlagDisc(code, size: 16),
-          const SizedBox(width: AppSpacing.xs),
-        ],
-        Flexible(
-          child: Text(
-            nationName ?? '',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: profileMetaStyle,
-          ),
-        ),
-        profileMetaDot(),
-        Flexible(flex: 0, child: ProfileChip(motm.position.label)),
-      ],
-      // His age on a line of its own: beside the nation and the position it
-      // ran out of room at a large text size on a narrow phone.
-      notes: [
-        if (age != null)
-          Text(
-            l.tacticsAgeOnly(age!),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: profileMetaStyle,
-          ),
-        Row(
-          children: [
-            const Icon(
-              Icons.star_rounded,
-              size: 16,
-              color: AppColors.primary,
-            ),
-            const SizedBox(width: AppSpacing.xs),
-            Flexible(
-              child: Text(
-                l.ratingPlayerOfTheMatch,
-                style: profileMetaStyle.copyWith(color: AppColors.primary),
-              ),
-            ),
-          ],
-        ),
-      ],
-      stats: [
-        if (keeper && line.saves != null)
-          ProfileKeyStat.text('${line.saves}', label: l.matchStatSaves),
-        ProfileKeyStat.text('${line.goals}', label: l.playerStatGoals),
-        ProfileKeyStat.text('${line.assists}', label: l.playerStatAssists),
-        if (!keeper && line.shots != null)
-          ProfileKeyStat.text('${line.shots}', label: l.matchStatShots),
-        ProfileKeyStat.text("${line.minutes}'", label: l.matchStatMinutes),
-      ],
+      result: result,
+      nationCode: nationCode,
+      nationName: nationName,
+      age: age,
     );
     // The rest of his match, row by row, each only when it says something.
     final rows = <(String, String)>[
@@ -303,6 +252,90 @@ class PlayerOfMatchTab extends ConsumerWidget {
             ),
           ),
         ],
+      ],
+    );
+  }
+}
+
+/// The man of the match in the player page's silver header card: his mark
+/// on the disc, his nation and position, and the numbers of his match. The
+/// Player tab leads with it and the Summary shows it as its card. [result]
+/// must name a man of the match.
+class PlayerOfMatchHeader extends StatelessWidget {
+  const PlayerOfMatchHeader({
+    required this.result,
+    this.nationCode,
+    this.nationName,
+    this.age,
+    super.key,
+  });
+
+  final MatchResult result;
+  final String? nationCode;
+  final String? nationName;
+  final int? age;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final motm = result.manOfTheMatch!;
+    final line = playerMatchLine(result, motm.playerId);
+    final keeper = motm.position == PlayerPosition.gk;
+    final code = nationCode;
+    return ProfileHeaderCard(
+      disc: motm.rating.toStringAsFixed(1),
+      name: motm.playerName,
+      meta: [
+        if (code != null) ...[
+          FlagDisc(code, size: 16),
+          const SizedBox(width: AppSpacing.xs),
+        ],
+        Flexible(
+          child: Text(
+            nationName ?? '',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: profileMetaStyle,
+          ),
+        ),
+        profileMetaDot(),
+        Flexible(flex: 0, child: ProfileChip(motm.position.label)),
+      ],
+      // His age on a line of its own: beside the nation and the position it
+      // ran out of room at a large text size on a narrow phone.
+      notes: [
+        if (age != null)
+          Text(
+            l.tacticsAgeOnly(age!),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: profileMetaStyle,
+          ),
+        Row(
+          children: [
+            const Icon(
+              Icons.star_rounded,
+              size: 16,
+              color: AppColors.primary,
+            ),
+            const SizedBox(width: AppSpacing.xs),
+            Flexible(
+              child: Text(
+                l.ratingPlayerOfTheMatch,
+                style: profileMetaStyle.copyWith(color: AppColors.primary),
+              ),
+            ),
+          ],
+        ),
+      ],
+      stats: [
+        if (keeper && line.saves != null)
+          ProfileKeyStat.text('${line.saves}', label: l.matchStatSaves),
+        ProfileKeyStat.text('${line.goals}', label: l.playerStatGoals),
+        ProfileKeyStat.text('${line.assists}', label: l.playerStatAssists),
+        if (!keeper && line.shots != null)
+          ProfileKeyStat.text('${line.shots}', label: l.matchStatShots),
+        ProfileKeyStat.text("${line.minutes}'", label: l.matchStatMinutes),
       ],
     );
   }
@@ -385,7 +418,7 @@ class MatchStadiumTab extends StatelessWidget {
     final conditionLines = <(IconData, String)>[
       if (k != null && w != null)
         (
-          _weatherIcon(w),
+          weatherIcon(w),
           '${l.matchConditionsKickOff} ${k.label} · '
               '${GroundCard.weatherLabel(l, w)}',
         ),
@@ -402,7 +435,7 @@ class MatchStadiumTab extends StatelessWidget {
             borderRadius: AppRadii.mdAll,
             child: AspectRatio(
               aspectRatio: _aspect,
-              child: _GroundStill(stadium: s),
+              child: GroundStill(stadium: s),
             ),
           ),
           const SizedBox(height: AppSpacing.md),
@@ -537,7 +570,8 @@ class MatchStadiumTab extends StatelessWidget {
   /// From this width the three figures sit side by side.
   static const double _acrossFrom = 250;
 
-  static IconData _weatherIcon(WeatherKind w) => switch (w) {
+  /// The icon set beside the weather [w].
+  static IconData weatherIcon(WeatherKind w) => switch (w) {
     WeatherKind.clear => Icons.wb_sunny_rounded,
     WeatherKind.rain => Icons.umbrella_rounded,
     WeatherKind.snow => Icons.ac_unit_rounded,
@@ -553,8 +587,8 @@ class MatchStadiumTab extends StatelessWidget {
 
 /// The ground with nobody on it, at kick-off's light: the Pitch view's own
 /// [StadiumPainter], painted once (nothing in it moves).
-class _GroundStill extends StatelessWidget {
-  const _GroundStill({required this.stadium});
+class GroundStill extends StatelessWidget {
+  const GroundStill({required this.stadium, super.key});
 
   final PitchStadium stadium;
 

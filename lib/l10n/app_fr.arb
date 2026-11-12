@@ -4277,6 +4277,7 @@
   "settingsAboutProtected": "Le jeu, son code et son contenu sont protégés par le droit d’auteur.",
   "matchTabPlayer": "JOUEUR",
   "matchTabStadium": "STADE",
+  "matchTabSummary": "RÉSUMÉ",
   "matchPotmNone": "Aucun homme du match n’a été désigné pour cette rencontre.",
   "matchPotmHisMatch": "Son match",
   "matchPotmBeforeMatch": "Avant ce match",

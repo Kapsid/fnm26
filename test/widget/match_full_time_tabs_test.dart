@@ -533,4 +533,144 @@ void main() {
       }
     }
   });
+
+  group('the Summary', () {
+    Widget summary({
+      bool fullTime = true,
+      bool motm = true,
+      PitchStadium? still,
+    }) {
+      final r = _result();
+      return MatchSummaryTab(
+        occasion: 'World Championship · Final',
+        status: fullTime ? 'FT' : '67',
+        homeNationId: _home,
+        homeCode: 'CZE',
+        awayCode: 'POR',
+        homeName: 'Bosnia and Herzegovina',
+        awayName: 'Central African Republic',
+        homeScore: 1,
+        awayScore: fullTime ? 2 : 1,
+        halfTime: 'HT 1 : 1',
+        goals: [
+          for (final e in r.events)
+            if (e.type == MatchEventType.goal && (fullTime || e.minute < 67)) e,
+        ],
+        result: fullTime ? r : null,
+        potm: fullTime && motm
+            ? PlayerOfMatchHeader(
+                result: r,
+                nationCode: 'POR',
+                nationName: 'Portugal',
+                age: 27,
+              )
+            : null,
+        ground: _ground,
+        still: still,
+        groundNationCode: 'CZE',
+        groundNationName: 'Czechia',
+        kickOff: const KickOffTime(20, 45),
+        weather: WeatherKind.rain,
+        playerTab: fullTime ? 3 : null,
+        stadiumTab: fullTime ? 4 : null,
+      );
+    }
+
+    testWidgets('full time: score, scorers, figures, his card, the ground', (
+      tester,
+    ) async {
+      await _pump(tester, summary());
+      expect(
+        find.descendant(
+          of: find.byKey(MatchSummaryTab.scoreKey),
+          matching: find.text('1 - 2'),
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('HT 1 : 1'), findsOneWidget);
+      // His two goals on one line, the home side's one on its own.
+      expect(
+        find.textContaining("A. Striker 12', 77'", findRichText: true),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining("H. Forward 40'", findRichText: true),
+        findsOneWidget,
+      );
+      expect(find.byKey(MatchSummaryTab.headlineKey), findsOneWidget);
+      expect(find.text('47%'), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byKey(MatchSummaryTab.potmKey),
+          matching: find.text('Away Striker'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: find.byKey(MatchSummaryTab.stadiumKey),
+          matching: find.text(_ground.stadium),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining('33,000 / 41,250 · 80%', findRichText: true),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('while it is on: no figures, no player of the match', (
+      tester,
+    ) async {
+      await _pump(tester, summary(fullTime: false));
+      expect(find.byKey(MatchSummaryTab.headlineKey), findsNothing);
+      expect(find.byKey(MatchSummaryTab.potmKey), findsNothing);
+      expect(find.byType(PlayerOfMatchHeader), findsNothing);
+      expect(find.textContaining("77'", findRichText: true), findsNothing);
+      expect(find.byKey(MatchSummaryTab.stadiumKey), findsOneWidget);
+      expect(find.byKey(MatchSummaryTab.attendanceKey), findsOneWidget);
+    });
+
+    testWidgets('an old result without a man of the match', (tester) async {
+      await _pump(tester, summary(motm: false));
+      expect(find.byKey(MatchSummaryTab.potmKey), findsNothing);
+      expect(find.byKey(MatchSummaryTab.stadiumKey), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('a tap opens the Player tab, another the Stadium tab', (
+      tester,
+    ) async {
+      await _pump(tester, DefaultTabController(length: 5, child: summary()));
+      final controller = DefaultTabController.of(
+        tester.element(find.byType(MatchSummaryTab)),
+      );
+      await tester.tap(find.byKey(MatchSummaryTab.potmKey));
+      await tester.pumpAndSettle();
+      expect(controller.index, 3);
+      await tester.tap(find.byKey(MatchSummaryTab.stadiumKey));
+      await tester.pumpAndSettle();
+      expect(controller.index, 4);
+    });
+
+    for (final locale in const ['en', 'cs', 'de']) {
+      testWidgets('no overflow at 320 and the largest text in $locale', (
+        tester,
+      ) async {
+        for (final fullTime in [true, false]) {
+          await _pump(
+            tester,
+            summary(fullTime: fullTime, still: _stadium()),
+            size: const Size(320, 640),
+            locale: locale,
+            scale: 1.4,
+          );
+          expect(tester.takeException(), isNull);
+          await tester.drag(find.byType(ListView), const Offset(0, -3000));
+          await tester.pumpAndSettle();
+          expect(tester.takeException(), isNull);
+        }
+      });
+    }
+  });
 }

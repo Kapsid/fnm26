@@ -4277,6 +4277,7 @@
   "settingsAboutProtected": "Peli, sen koodi ja sisältö on suojattu tekijänoikeudella.",
   "matchTabPlayer": "PELAAJA",
   "matchTabStadium": "STADION",
+  "matchTabSummary": "YHTEENVETO",
   "matchPotmNone": "Tässä ottelussa ei valittu ottelun parasta pelaajaa.",
   "matchPotmHisMatch": "Hänen ottelunsa",
   "matchPotmBeforeMatch": "Ennen tätä ottelua",
