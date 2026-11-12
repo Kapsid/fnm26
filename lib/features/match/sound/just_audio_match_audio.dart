@@ -5,6 +5,7 @@
 import 'dart:async';
 
 import 'package:audio_session/audio_session.dart';
+import 'package:flutter/foundation.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/features/match/sound/match_audio.dart';
 import 'package:just_audio/just_audio.dart';
@@ -12,11 +13,11 @@ import 'package:just_audio/just_audio.dart';
 /// [MatchAudio] on just_audio: one player per loop and per cue, made and
 /// loaded the first time each is wanted.
 ///
-/// **Session.** The ambient category on iOS (with mix-with-others): the
-/// silent switch mutes it, and the manager's own music keeps playing under
-/// the crowd. The players never activate the session themselves, so Android
-/// asks for no audio focus either: nothing else is paused or ducked for a
-/// match.
+/// **Session.** The playback category on iOS with mix-with-others: stadium
+/// sound is opt-in in Settings, so once it is on it plays even with the
+/// silent switch set (the ambient category stayed silent on owners' phones),
+/// and the manager's own music keeps playing under the crowd. The session is
+/// activated once, explicitly, before the first sound.
 class JustAudioMatchAudio implements MatchAudio {
   final Map<SoundLoop, AudioPlayer> _loops = {};
   final Map<SoundCue, AudioPlayer> _cues = {};
@@ -32,7 +33,7 @@ class JustAudioMatchAudio implements MatchAudio {
       final session = await AudioSession.instance;
       await session.configure(
         const AudioSessionConfiguration(
-          avAudioSessionCategory: AVAudioSessionCategory.ambient,
+          avAudioSessionCategory: AVAudioSessionCategory.playback,
           avAudioSessionCategoryOptions:
               AVAudioSessionCategoryOptions.mixWithOthers,
           avAudioSessionMode: AVAudioSessionMode.defaultMode,
@@ -45,6 +46,11 @@ class JustAudioMatchAudio implements MatchAudio {
           androidWillPauseWhenDucked: false,
         ),
       );
+      // iOS only: on Android activating asks for audio focus, which would
+      // duck the manager's music for the whole match.
+      if (defaultTargetPlatform == TargetPlatform.iOS) {
+        await session.setActive(true);
+      }
     } on Object catch (e, st) {
       AppLog.error('match-audio-session', e, st);
     }
