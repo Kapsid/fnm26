@@ -8,6 +8,7 @@ import 'dart:math';
 import 'package:drift/drift.dart';
 import 'package:fnm/core/util/off_ui.dart';
 import 'package:fnm/data/db/app_database.dart';
+import 'package:fnm/data/repositories/pack_history_repository.dart';
 import 'package:fnm/domain/services/profanity/profanity_filter.dart';
 import 'package:fnm/domain/services/world_pack/pack_profanity.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
@@ -213,9 +214,11 @@ class WorldPackRepository {
     return {for (final r in rows) r.key: r.png};
   }
 
-  /// Removes pack [id] and its images. Careers started on it keep their copy.
+  /// Removes pack [id], its images and its history (every saved version).
+  /// Careers started on it keep their copy.
   Future<void> delete(int id) => _db.transaction(() async {
     _cache.packs.remove(id);
+    await PackHistoryRepository(_db).deleteAllOf(id);
     await (_db.delete(
       _db.worldPackTrophies,
     )..where((t) => t.packId.equals(id))).go();

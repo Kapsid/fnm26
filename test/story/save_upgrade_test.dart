@@ -144,6 +144,9 @@ void main() {
               'world_managers',
               'manager_spells',
               'manager_ties',
+              // The custom databases' history starts empty (schema 56).
+              'pack_versions',
+              'pack_version_images',
             ]) {
               final n = await db
                   .customSelect('SELECT COUNT(*) AS n FROM $table')

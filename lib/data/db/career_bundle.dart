@@ -110,6 +110,8 @@ abstract final class CareerBundle {
     'tactic_library',
     'world_packs',
     'world_pack_trophies',
+    'pack_versions',
+    'pack_version_images',
   };
 
   /// The career's own row.

@@ -19208,6 +19208,719 @@ class ManagerTiesCompanion extends UpdateCompanion<ManagerTieRow> {
   }
 }
 
+class $PackVersionsTable extends PackVersions
+    with TableInfo<$PackVersionsTable, PackVersionRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PackVersionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _packIdMeta = const VerificationMeta('packId');
+  @override
+  late final GeneratedColumn<int> packId = GeneratedColumn<int>(
+    'pack_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES world_packs (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _reasonMeta = const VerificationMeta('reason');
+  @override
+  late final GeneratedColumn<String> reason = GeneratedColumn<String>(
+    'reason',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _jsonMeta = const VerificationMeta('json');
+  @override
+  late final GeneratedColumn<Uint8List> json = GeneratedColumn<Uint8List>(
+    'json',
+    aliasedName,
+    false,
+    type: DriftSqlType.blob,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _trophiesMeta = const VerificationMeta(
+    'trophies',
+  );
+  @override
+  late final GeneratedColumn<String> trophies = GeneratedColumn<String>(
+    'trophies',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    packId,
+    createdAt,
+    reason,
+    name,
+    json,
+    trophies,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'pack_versions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PackVersionRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('pack_id')) {
+      context.handle(
+        _packIdMeta,
+        packId.isAcceptableOrUnknown(data['pack_id']!, _packIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_packIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('reason')) {
+      context.handle(
+        _reasonMeta,
+        reason.isAcceptableOrUnknown(data['reason']!, _reasonMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_reasonMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('json')) {
+      context.handle(
+        _jsonMeta,
+        json.isAcceptableOrUnknown(data['json']!, _jsonMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_jsonMeta);
+    }
+    if (data.containsKey('trophies')) {
+      context.handle(
+        _trophiesMeta,
+        trophies.isAcceptableOrUnknown(data['trophies']!, _trophiesMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_trophiesMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PackVersionRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PackVersionRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      packId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pack_id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      reason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reason'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      json: attachedDatabase.typeMapping.read(
+        DriftSqlType.blob,
+        data['${effectivePrefix}json'],
+      )!,
+      trophies: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}trophies'],
+      )!,
+    );
+  }
+
+  @override
+  $PackVersionsTable createAlias(String alias) {
+    return $PackVersionsTable(attachedDatabase, alias);
+  }
+}
+
+class PackVersionRow extends DataClass implements Insertable<PackVersionRow> {
+  final int id;
+  final int packId;
+  final DateTime createdAt;
+  final String reason;
+  final String name;
+  final Uint8List json;
+  final String trophies;
+  const PackVersionRow({
+    required this.id,
+    required this.packId,
+    required this.createdAt,
+    required this.reason,
+    required this.name,
+    required this.json,
+    required this.trophies,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['pack_id'] = Variable<int>(packId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['reason'] = Variable<String>(reason);
+    map['name'] = Variable<String>(name);
+    map['json'] = Variable<Uint8List>(json);
+    map['trophies'] = Variable<String>(trophies);
+    return map;
+  }
+
+  PackVersionsCompanion toCompanion(bool nullToAbsent) {
+    return PackVersionsCompanion(
+      id: Value(id),
+      packId: Value(packId),
+      createdAt: Value(createdAt),
+      reason: Value(reason),
+      name: Value(name),
+      json: Value(json),
+      trophies: Value(trophies),
+    );
+  }
+
+  factory PackVersionRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PackVersionRow(
+      id: serializer.fromJson<int>(json['id']),
+      packId: serializer.fromJson<int>(json['packId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      reason: serializer.fromJson<String>(json['reason']),
+      name: serializer.fromJson<String>(json['name']),
+      json: serializer.fromJson<Uint8List>(json['json']),
+      trophies: serializer.fromJson<String>(json['trophies']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'packId': serializer.toJson<int>(packId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'reason': serializer.toJson<String>(reason),
+      'name': serializer.toJson<String>(name),
+      'json': serializer.toJson<Uint8List>(json),
+      'trophies': serializer.toJson<String>(trophies),
+    };
+  }
+
+  PackVersionRow copyWith({
+    int? id,
+    int? packId,
+    DateTime? createdAt,
+    String? reason,
+    String? name,
+    Uint8List? json,
+    String? trophies,
+  }) => PackVersionRow(
+    id: id ?? this.id,
+    packId: packId ?? this.packId,
+    createdAt: createdAt ?? this.createdAt,
+    reason: reason ?? this.reason,
+    name: name ?? this.name,
+    json: json ?? this.json,
+    trophies: trophies ?? this.trophies,
+  );
+  PackVersionRow copyWithCompanion(PackVersionsCompanion data) {
+    return PackVersionRow(
+      id: data.id.present ? data.id.value : this.id,
+      packId: data.packId.present ? data.packId.value : this.packId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      reason: data.reason.present ? data.reason.value : this.reason,
+      name: data.name.present ? data.name.value : this.name,
+      json: data.json.present ? data.json.value : this.json,
+      trophies: data.trophies.present ? data.trophies.value : this.trophies,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PackVersionRow(')
+          ..write('id: $id, ')
+          ..write('packId: $packId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('reason: $reason, ')
+          ..write('name: $name, ')
+          ..write('json: $json, ')
+          ..write('trophies: $trophies')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    packId,
+    createdAt,
+    reason,
+    name,
+    $driftBlobEquality.hash(json),
+    trophies,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PackVersionRow &&
+          other.id == this.id &&
+          other.packId == this.packId &&
+          other.createdAt == this.createdAt &&
+          other.reason == this.reason &&
+          other.name == this.name &&
+          $driftBlobEquality.equals(other.json, this.json) &&
+          other.trophies == this.trophies);
+}
+
+class PackVersionsCompanion extends UpdateCompanion<PackVersionRow> {
+  final Value<int> id;
+  final Value<int> packId;
+  final Value<DateTime> createdAt;
+  final Value<String> reason;
+  final Value<String> name;
+  final Value<Uint8List> json;
+  final Value<String> trophies;
+  const PackVersionsCompanion({
+    this.id = const Value.absent(),
+    this.packId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.reason = const Value.absent(),
+    this.name = const Value.absent(),
+    this.json = const Value.absent(),
+    this.trophies = const Value.absent(),
+  });
+  PackVersionsCompanion.insert({
+    this.id = const Value.absent(),
+    required int packId,
+    required DateTime createdAt,
+    required String reason,
+    required String name,
+    required Uint8List json,
+    required String trophies,
+  }) : packId = Value(packId),
+       createdAt = Value(createdAt),
+       reason = Value(reason),
+       name = Value(name),
+       json = Value(json),
+       trophies = Value(trophies);
+  static Insertable<PackVersionRow> custom({
+    Expression<int>? id,
+    Expression<int>? packId,
+    Expression<DateTime>? createdAt,
+    Expression<String>? reason,
+    Expression<String>? name,
+    Expression<Uint8List>? json,
+    Expression<String>? trophies,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (packId != null) 'pack_id': packId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (reason != null) 'reason': reason,
+      if (name != null) 'name': name,
+      if (json != null) 'json': json,
+      if (trophies != null) 'trophies': trophies,
+    });
+  }
+
+  PackVersionsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? packId,
+    Value<DateTime>? createdAt,
+    Value<String>? reason,
+    Value<String>? name,
+    Value<Uint8List>? json,
+    Value<String>? trophies,
+  }) {
+    return PackVersionsCompanion(
+      id: id ?? this.id,
+      packId: packId ?? this.packId,
+      createdAt: createdAt ?? this.createdAt,
+      reason: reason ?? this.reason,
+      name: name ?? this.name,
+      json: json ?? this.json,
+      trophies: trophies ?? this.trophies,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (packId.present) {
+      map['pack_id'] = Variable<int>(packId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (reason.present) {
+      map['reason'] = Variable<String>(reason.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (json.present) {
+      map['json'] = Variable<Uint8List>(json.value);
+    }
+    if (trophies.present) {
+      map['trophies'] = Variable<String>(trophies.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PackVersionsCompanion(')
+          ..write('id: $id, ')
+          ..write('packId: $packId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('reason: $reason, ')
+          ..write('name: $name, ')
+          ..write('json: $json, ')
+          ..write('trophies: $trophies')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PackVersionImagesTable extends PackVersionImages
+    with TableInfo<$PackVersionImagesTable, PackVersionImageRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PackVersionImagesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _packIdMeta = const VerificationMeta('packId');
+  @override
+  late final GeneratedColumn<int> packId = GeneratedColumn<int>(
+    'pack_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES world_packs (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _hashMeta = const VerificationMeta('hash');
+  @override
+  late final GeneratedColumn<String> hash = GeneratedColumn<String>(
+    'hash',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _pngMeta = const VerificationMeta('png');
+  @override
+  late final GeneratedColumn<Uint8List> png = GeneratedColumn<Uint8List>(
+    'png',
+    aliasedName,
+    false,
+    type: DriftSqlType.blob,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [packId, hash, png];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'pack_version_images';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PackVersionImageRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('pack_id')) {
+      context.handle(
+        _packIdMeta,
+        packId.isAcceptableOrUnknown(data['pack_id']!, _packIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_packIdMeta);
+    }
+    if (data.containsKey('hash')) {
+      context.handle(
+        _hashMeta,
+        hash.isAcceptableOrUnknown(data['hash']!, _hashMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_hashMeta);
+    }
+    if (data.containsKey('png')) {
+      context.handle(
+        _pngMeta,
+        png.isAcceptableOrUnknown(data['png']!, _pngMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_pngMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {packId, hash};
+  @override
+  PackVersionImageRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PackVersionImageRow(
+      packId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pack_id'],
+      )!,
+      hash: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}hash'],
+      )!,
+      png: attachedDatabase.typeMapping.read(
+        DriftSqlType.blob,
+        data['${effectivePrefix}png'],
+      )!,
+    );
+  }
+
+  @override
+  $PackVersionImagesTable createAlias(String alias) {
+    return $PackVersionImagesTable(attachedDatabase, alias);
+  }
+}
+
+class PackVersionImageRow extends DataClass
+    implements Insertable<PackVersionImageRow> {
+  final int packId;
+  final String hash;
+  final Uint8List png;
+  const PackVersionImageRow({
+    required this.packId,
+    required this.hash,
+    required this.png,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['pack_id'] = Variable<int>(packId);
+    map['hash'] = Variable<String>(hash);
+    map['png'] = Variable<Uint8List>(png);
+    return map;
+  }
+
+  PackVersionImagesCompanion toCompanion(bool nullToAbsent) {
+    return PackVersionImagesCompanion(
+      packId: Value(packId),
+      hash: Value(hash),
+      png: Value(png),
+    );
+  }
+
+  factory PackVersionImageRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PackVersionImageRow(
+      packId: serializer.fromJson<int>(json['packId']),
+      hash: serializer.fromJson<String>(json['hash']),
+      png: serializer.fromJson<Uint8List>(json['png']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'packId': serializer.toJson<int>(packId),
+      'hash': serializer.toJson<String>(hash),
+      'png': serializer.toJson<Uint8List>(png),
+    };
+  }
+
+  PackVersionImageRow copyWith({int? packId, String? hash, Uint8List? png}) =>
+      PackVersionImageRow(
+        packId: packId ?? this.packId,
+        hash: hash ?? this.hash,
+        png: png ?? this.png,
+      );
+  PackVersionImageRow copyWithCompanion(PackVersionImagesCompanion data) {
+    return PackVersionImageRow(
+      packId: data.packId.present ? data.packId.value : this.packId,
+      hash: data.hash.present ? data.hash.value : this.hash,
+      png: data.png.present ? data.png.value : this.png,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PackVersionImageRow(')
+          ..write('packId: $packId, ')
+          ..write('hash: $hash, ')
+          ..write('png: $png')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(packId, hash, $driftBlobEquality.hash(png));
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PackVersionImageRow &&
+          other.packId == this.packId &&
+          other.hash == this.hash &&
+          $driftBlobEquality.equals(other.png, this.png));
+}
+
+class PackVersionImagesCompanion extends UpdateCompanion<PackVersionImageRow> {
+  final Value<int> packId;
+  final Value<String> hash;
+  final Value<Uint8List> png;
+  final Value<int> rowid;
+  const PackVersionImagesCompanion({
+    this.packId = const Value.absent(),
+    this.hash = const Value.absent(),
+    this.png = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PackVersionImagesCompanion.insert({
+    required int packId,
+    required String hash,
+    required Uint8List png,
+    this.rowid = const Value.absent(),
+  }) : packId = Value(packId),
+       hash = Value(hash),
+       png = Value(png);
+  static Insertable<PackVersionImageRow> custom({
+    Expression<int>? packId,
+    Expression<String>? hash,
+    Expression<Uint8List>? png,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (packId != null) 'pack_id': packId,
+      if (hash != null) 'hash': hash,
+      if (png != null) 'png': png,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PackVersionImagesCompanion copyWith({
+    Value<int>? packId,
+    Value<String>? hash,
+    Value<Uint8List>? png,
+    Value<int>? rowid,
+  }) {
+    return PackVersionImagesCompanion(
+      packId: packId ?? this.packId,
+      hash: hash ?? this.hash,
+      png: png ?? this.png,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (packId.present) {
+      map['pack_id'] = Variable<int>(packId.value);
+    }
+    if (hash.present) {
+      map['hash'] = Variable<String>(hash.value);
+    }
+    if (png.present) {
+      map['png'] = Variable<Uint8List>(png.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PackVersionImagesCompanion(')
+          ..write('packId: $packId, ')
+          ..write('hash: $hash, ')
+          ..write('png: $png, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -19271,6 +19984,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $WorldManagersTable worldManagers = $WorldManagersTable(this);
   late final $ManagerSpellsTable managerSpells = $ManagerSpellsTable(this);
   late final $ManagerTiesTable managerTies = $ManagerTiesTable(this);
+  late final $PackVersionsTable packVersions = $PackVersionsTable(this);
+  late final $PackVersionImagesTable packVersionImages =
+      $PackVersionImagesTable(this);
   late final Index managerSpellsNation = Index(
     'manager_spells_nation',
     'CREATE INDEX manager_spells_nation ON manager_spells (career_id, nation_id)',
@@ -19323,6 +20039,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     worldManagers,
     managerSpells,
     managerTies,
+    packVersions,
+    packVersionImages,
     managerSpellsNation,
   ];
   @override
@@ -19599,6 +20317,20 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('manager_ties', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'world_packs',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('pack_versions', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'world_packs',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('pack_version_images', kind: UpdateKind.delete)],
     ),
   ]);
 }
@@ -37206,6 +37938,45 @@ final class $$WorldPacksTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$PackVersionsTable, List<PackVersionRow>>
+  _packVersionsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.packVersions,
+    aliasName: 'world_packs__id__pack_versions__pack_id',
+  );
+
+  $$PackVersionsTableProcessedTableManager get packVersionsRefs {
+    final manager = $$PackVersionsTableTableManager(
+      $_db,
+      $_db.packVersions,
+    ).filter((f) => f.packId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_packVersionsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$PackVersionImagesTable, List<PackVersionImageRow>>
+  _packVersionImagesRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.packVersionImages,
+        aliasName: 'world_packs__id__pack_version_images__pack_id',
+      );
+
+  $$PackVersionImagesTableProcessedTableManager get packVersionImagesRefs {
+    final manager = $$PackVersionImagesTableTableManager(
+      $_db,
+      $_db.packVersionImages,
+    ).filter((f) => f.packId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _packVersionImagesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$WorldPacksTableFilterComposer
@@ -37258,6 +38029,56 @@ class $$WorldPacksTableFilterComposer
           }) => $$WorldPackTrophiesTableFilterComposer(
             $db: $db,
             $table: $db.worldPackTrophies,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> packVersionsRefs(
+    Expression<bool> Function($$PackVersionsTableFilterComposer f) f,
+  ) {
+    final $$PackVersionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.packVersions,
+      getReferencedColumn: (t) => t.packId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PackVersionsTableFilterComposer(
+            $db: $db,
+            $table: $db.packVersions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> packVersionImagesRefs(
+    Expression<bool> Function($$PackVersionImagesTableFilterComposer f) f,
+  ) {
+    final $$PackVersionImagesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.packVersionImages,
+      getReferencedColumn: (t) => t.packId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PackVersionImagesTableFilterComposer(
+            $db: $db,
+            $table: $db.packVersionImages,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -37352,6 +38173,57 @@ class $$WorldPacksTableAnnotationComposer
         );
     return f(composer);
   }
+
+  Expression<T> packVersionsRefs<T extends Object>(
+    Expression<T> Function($$PackVersionsTableAnnotationComposer a) f,
+  ) {
+    final $$PackVersionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.packVersions,
+      getReferencedColumn: (t) => t.packId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PackVersionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.packVersions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> packVersionImagesRefs<T extends Object>(
+    Expression<T> Function($$PackVersionImagesTableAnnotationComposer a) f,
+  ) {
+    final $$PackVersionImagesTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.packVersionImages,
+          getReferencedColumn: (t) => t.packId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$PackVersionImagesTableAnnotationComposer(
+                $db: $db,
+                $table: $db.packVersionImages,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$WorldPacksTableTableManager
@@ -37367,7 +38239,11 @@ class $$WorldPacksTableTableManager
           $$WorldPacksTableUpdateCompanionBuilder,
           (WorldPackRow, $$WorldPacksTableReferences),
           WorldPackRow,
-          PrefetchHooks Function({bool worldPackTrophiesRefs})
+          PrefetchHooks Function({
+            bool worldPackTrophiesRefs,
+            bool packVersionsRefs,
+            bool packVersionImagesRefs,
+          })
         > {
   $$WorldPacksTableTableManager(_$AppDatabase db, $WorldPacksTable table)
     : super(
@@ -37416,38 +38292,89 @@ class $$WorldPacksTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({worldPackTrophiesRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (worldPackTrophiesRefs) db.worldPackTrophies,
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (worldPackTrophiesRefs)
-                    await $_getPrefetchedData<
-                      WorldPackRow,
-                      $WorldPacksTable,
-                      WorldPackTrophyRow
-                    >(
-                      currentTable: table,
-                      referencedTable: $$WorldPacksTableReferences
-                          ._worldPackTrophiesRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$WorldPacksTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).worldPackTrophiesRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.packId == item.id),
-                      typedResults: items,
-                    ),
-                ];
+          prefetchHooksCallback:
+              ({
+                worldPackTrophiesRefs = false,
+                packVersionsRefs = false,
+                packVersionImagesRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (worldPackTrophiesRefs) db.worldPackTrophies,
+                    if (packVersionsRefs) db.packVersions,
+                    if (packVersionImagesRefs) db.packVersionImages,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (worldPackTrophiesRefs)
+                        await $_getPrefetchedData<
+                          WorldPackRow,
+                          $WorldPacksTable,
+                          WorldPackTrophyRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WorldPacksTableReferences
+                              ._worldPackTrophiesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WorldPacksTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).worldPackTrophiesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.packId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (packVersionsRefs)
+                        await $_getPrefetchedData<
+                          WorldPackRow,
+                          $WorldPacksTable,
+                          PackVersionRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WorldPacksTableReferences
+                              ._packVersionsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WorldPacksTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).packVersionsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.packId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (packVersionImagesRefs)
+                        await $_getPrefetchedData<
+                          WorldPackRow,
+                          $WorldPacksTable,
+                          PackVersionImageRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WorldPacksTableReferences
+                              ._packVersionImagesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WorldPacksTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).packVersionImagesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.packId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
               },
-            );
-          },
         ),
       );
 }
@@ -37464,7 +38391,11 @@ typedef $$WorldPacksTableProcessedTableManager =
       $$WorldPacksTableUpdateCompanionBuilder,
       (WorldPackRow, $$WorldPacksTableReferences),
       WorldPackRow,
-      PrefetchHooks Function({bool worldPackTrophiesRefs})
+      PrefetchHooks Function({
+        bool worldPackTrophiesRefs,
+        bool packVersionsRefs,
+        bool packVersionImagesRefs,
+      })
     >;
 typedef $$WorldPackTrophiesTableCreateCompanionBuilder =
     WorldPackTrophiesCompanion Function({
@@ -39487,6 +40418,650 @@ typedef $$ManagerTiesTableProcessedTableManager =
       ManagerTieRow,
       PrefetchHooks Function({bool careerId})
     >;
+typedef $$PackVersionsTableCreateCompanionBuilder =
+    PackVersionsCompanion Function({
+      Value<int> id,
+      required int packId,
+      required DateTime createdAt,
+      required String reason,
+      required String name,
+      required Uint8List json,
+      required String trophies,
+    });
+typedef $$PackVersionsTableUpdateCompanionBuilder =
+    PackVersionsCompanion Function({
+      Value<int> id,
+      Value<int> packId,
+      Value<DateTime> createdAt,
+      Value<String> reason,
+      Value<String> name,
+      Value<Uint8List> json,
+      Value<String> trophies,
+    });
+
+final class $$PackVersionsTableReferences
+    extends BaseReferences<_$AppDatabase, $PackVersionsTable, PackVersionRow> {
+  $$PackVersionsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $WorldPacksTable _packIdTable(_$AppDatabase db) =>
+      db.worldPacks.createAlias('pack_versions__pack_id__world_packs__id');
+
+  $$WorldPacksTableProcessedTableManager get packId {
+    final $_column = $_itemColumn<int>('pack_id')!;
+
+    final manager = $$WorldPacksTableTableManager(
+      $_db,
+      $_db.worldPacks,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_packIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$PackVersionsTableFilterComposer
+    extends Composer<_$AppDatabase, $PackVersionsTable> {
+  $$PackVersionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<Uint8List> get json => $composableBuilder(
+    column: $table.json,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get trophies => $composableBuilder(
+    column: $table.trophies,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$WorldPacksTableFilterComposer get packId {
+    final $$WorldPacksTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.packId,
+      referencedTable: $db.worldPacks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorldPacksTableFilterComposer(
+            $db: $db,
+            $table: $db.worldPacks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PackVersionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $PackVersionsTable> {
+  $$PackVersionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<Uint8List> get json => $composableBuilder(
+    column: $table.json,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get trophies => $composableBuilder(
+    column: $table.trophies,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$WorldPacksTableOrderingComposer get packId {
+    final $$WorldPacksTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.packId,
+      referencedTable: $db.worldPacks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorldPacksTableOrderingComposer(
+            $db: $db,
+            $table: $db.worldPacks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PackVersionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PackVersionsTable> {
+  $$PackVersionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<String> get reason =>
+      $composableBuilder(column: $table.reason, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<Uint8List> get json =>
+      $composableBuilder(column: $table.json, builder: (column) => column);
+
+  GeneratedColumn<String> get trophies =>
+      $composableBuilder(column: $table.trophies, builder: (column) => column);
+
+  $$WorldPacksTableAnnotationComposer get packId {
+    final $$WorldPacksTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.packId,
+      referencedTable: $db.worldPacks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorldPacksTableAnnotationComposer(
+            $db: $db,
+            $table: $db.worldPacks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PackVersionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PackVersionsTable,
+          PackVersionRow,
+          $$PackVersionsTableFilterComposer,
+          $$PackVersionsTableOrderingComposer,
+          $$PackVersionsTableAnnotationComposer,
+          $$PackVersionsTableCreateCompanionBuilder,
+          $$PackVersionsTableUpdateCompanionBuilder,
+          (PackVersionRow, $$PackVersionsTableReferences),
+          PackVersionRow,
+          PrefetchHooks Function({bool packId})
+        > {
+  $$PackVersionsTableTableManager(_$AppDatabase db, $PackVersionsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PackVersionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PackVersionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PackVersionsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> packId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<String> reason = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<Uint8List> json = const Value.absent(),
+                Value<String> trophies = const Value.absent(),
+              }) => PackVersionsCompanion(
+                id: id,
+                packId: packId,
+                createdAt: createdAt,
+                reason: reason,
+                name: name,
+                json: json,
+                trophies: trophies,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int packId,
+                required DateTime createdAt,
+                required String reason,
+                required String name,
+                required Uint8List json,
+                required String trophies,
+              }) => PackVersionsCompanion.insert(
+                id: id,
+                packId: packId,
+                createdAt: createdAt,
+                reason: reason,
+                name: name,
+                json: json,
+                trophies: trophies,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$PackVersionsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({packId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (packId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.packId,
+                                referencedTable: $$PackVersionsTableReferences
+                                    ._packIdTable(db),
+                                referencedColumn: $$PackVersionsTableReferences
+                                    ._packIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$PackVersionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PackVersionsTable,
+      PackVersionRow,
+      $$PackVersionsTableFilterComposer,
+      $$PackVersionsTableOrderingComposer,
+      $$PackVersionsTableAnnotationComposer,
+      $$PackVersionsTableCreateCompanionBuilder,
+      $$PackVersionsTableUpdateCompanionBuilder,
+      (PackVersionRow, $$PackVersionsTableReferences),
+      PackVersionRow,
+      PrefetchHooks Function({bool packId})
+    >;
+typedef $$PackVersionImagesTableCreateCompanionBuilder =
+    PackVersionImagesCompanion Function({
+      required int packId,
+      required String hash,
+      required Uint8List png,
+      Value<int> rowid,
+    });
+typedef $$PackVersionImagesTableUpdateCompanionBuilder =
+    PackVersionImagesCompanion Function({
+      Value<int> packId,
+      Value<String> hash,
+      Value<Uint8List> png,
+      Value<int> rowid,
+    });
+
+final class $$PackVersionImagesTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $PackVersionImagesTable,
+          PackVersionImageRow
+        > {
+  $$PackVersionImagesTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $WorldPacksTable _packIdTable(_$AppDatabase db) => db.worldPacks
+      .createAlias('pack_version_images__pack_id__world_packs__id');
+
+  $$WorldPacksTableProcessedTableManager get packId {
+    final $_column = $_itemColumn<int>('pack_id')!;
+
+    final manager = $$WorldPacksTableTableManager(
+      $_db,
+      $_db.worldPacks,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_packIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$PackVersionImagesTableFilterComposer
+    extends Composer<_$AppDatabase, $PackVersionImagesTable> {
+  $$PackVersionImagesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get hash => $composableBuilder(
+    column: $table.hash,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<Uint8List> get png => $composableBuilder(
+    column: $table.png,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$WorldPacksTableFilterComposer get packId {
+    final $$WorldPacksTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.packId,
+      referencedTable: $db.worldPacks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorldPacksTableFilterComposer(
+            $db: $db,
+            $table: $db.worldPacks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PackVersionImagesTableOrderingComposer
+    extends Composer<_$AppDatabase, $PackVersionImagesTable> {
+  $$PackVersionImagesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get hash => $composableBuilder(
+    column: $table.hash,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<Uint8List> get png => $composableBuilder(
+    column: $table.png,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$WorldPacksTableOrderingComposer get packId {
+    final $$WorldPacksTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.packId,
+      referencedTable: $db.worldPacks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorldPacksTableOrderingComposer(
+            $db: $db,
+            $table: $db.worldPacks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PackVersionImagesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PackVersionImagesTable> {
+  $$PackVersionImagesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get hash =>
+      $composableBuilder(column: $table.hash, builder: (column) => column);
+
+  GeneratedColumn<Uint8List> get png =>
+      $composableBuilder(column: $table.png, builder: (column) => column);
+
+  $$WorldPacksTableAnnotationComposer get packId {
+    final $$WorldPacksTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.packId,
+      referencedTable: $db.worldPacks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorldPacksTableAnnotationComposer(
+            $db: $db,
+            $table: $db.worldPacks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PackVersionImagesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PackVersionImagesTable,
+          PackVersionImageRow,
+          $$PackVersionImagesTableFilterComposer,
+          $$PackVersionImagesTableOrderingComposer,
+          $$PackVersionImagesTableAnnotationComposer,
+          $$PackVersionImagesTableCreateCompanionBuilder,
+          $$PackVersionImagesTableUpdateCompanionBuilder,
+          (PackVersionImageRow, $$PackVersionImagesTableReferences),
+          PackVersionImageRow,
+          PrefetchHooks Function({bool packId})
+        > {
+  $$PackVersionImagesTableTableManager(
+    _$AppDatabase db,
+    $PackVersionImagesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PackVersionImagesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PackVersionImagesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PackVersionImagesTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> packId = const Value.absent(),
+                Value<String> hash = const Value.absent(),
+                Value<Uint8List> png = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PackVersionImagesCompanion(
+                packId: packId,
+                hash: hash,
+                png: png,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int packId,
+                required String hash,
+                required Uint8List png,
+                Value<int> rowid = const Value.absent(),
+              }) => PackVersionImagesCompanion.insert(
+                packId: packId,
+                hash: hash,
+                png: png,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$PackVersionImagesTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({packId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (packId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.packId,
+                                referencedTable:
+                                    $$PackVersionImagesTableReferences
+                                        ._packIdTable(db),
+                                referencedColumn:
+                                    $$PackVersionImagesTableReferences
+                                        ._packIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$PackVersionImagesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PackVersionImagesTable,
+      PackVersionImageRow,
+      $$PackVersionImagesTableFilterComposer,
+      $$PackVersionImagesTableOrderingComposer,
+      $$PackVersionImagesTableAnnotationComposer,
+      $$PackVersionImagesTableCreateCompanionBuilder,
+      $$PackVersionImagesTableUpdateCompanionBuilder,
+      (PackVersionImageRow, $$PackVersionImagesTableReferences),
+      PackVersionImageRow,
+      PrefetchHooks Function({bool packId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -39577,4 +41152,8 @@ class $AppDatabaseManager {
       $$ManagerSpellsTableTableManager(_db, _db.managerSpells);
   $$ManagerTiesTableTableManager get managerTies =>
       $$ManagerTiesTableTableManager(_db, _db.managerTies);
+  $$PackVersionsTableTableManager get packVersions =>
+      $$PackVersionsTableTableManager(_db, _db.packVersions);
+  $$PackVersionImagesTableTableManager get packVersionImages =>
+      $$PackVersionImagesTableTableManager(_db, _db.packVersionImages);
 }
