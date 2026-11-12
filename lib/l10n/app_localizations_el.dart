@@ -15832,6 +15832,36 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
+  String pitchComReboundGoal1(String player, String other) {
+    return 'Ο $other σουτάρει, ο τερματοφύλακας αποκρούει και ο $player συμπληρώνει! ΓΚΟΛ!';
+  }
+
+  @override
+  String pitchComReboundGoal2(String player, String other) {
+    return 'Ο $other σταματιέται, αλλά ο $player εκμεταλλεύεται την επαναφορά! ΓΚΟΛ!';
+  }
+
+  @override
+  String pitchComReboundGoal3(String player, String other) {
+    return 'ΓΚΟΛ! Ο $other αναγκάζει τον τερματοφύλακα σε απόκρουση και ο $player στέλνει την επαναφορά στα δίχτυα!';
+  }
+
+  @override
+  String pitchComReboundOwn1(String player) {
+    return 'Απόκρουση, αλλά ο $player συμπληρώνει! ΓΚΟΛ!';
+  }
+
+  @override
+  String pitchComReboundOwn2(String player, String keeper) {
+    return 'Ο $keeper αποκρούει, αλλά ο $player φτάνει πρώτος στην επαναφορά! ΓΚΟΛ!';
+  }
+
+  @override
+  String pitchComReboundOwn3(String player) {
+    return 'ΓΚΟΛ! Απόκρουση και ο $player είναι ο πιο γρήγορος στην επαναφορά!';
+  }
+
+  @override
   String pitchComShotSaved1(String player, String keeper) {
     return 'Ο $player σουτάρει, αλλά ο $keeper αποκρούει.';
   }

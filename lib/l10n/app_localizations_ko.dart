@@ -15194,6 +15194,36 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String pitchComReboundGoal1(String player, String other) {
+    return '$other의 슛을 골키퍼가 쳐냈지만 $player 선수가 밀어 넣습니다! 골!';
+  }
+
+  @override
+  String pitchComReboundGoal2(String player, String other) {
+    return '$other의 슛은 막혔지만 $player 선수가 리바운드를 놓치지 않습니다! 골!';
+  }
+
+  @override
+  String pitchComReboundGoal3(String player, String other) {
+    return '골! $other의 슛이 선방에 막히고 $player 선수가 흘러나온 공을 마무리합니다!';
+  }
+
+  @override
+  String pitchComReboundOwn1(String player) {
+    return '선방! 하지만 $player 선수가 다시 밀어 넣습니다! 골!';
+  }
+
+  @override
+  String pitchComReboundOwn2(String player, String keeper) {
+    return '$keeper가 쳐냈지만 $player 선수가 리바운드에 먼저 도착합니다! 골!';
+  }
+
+  @override
+  String pitchComReboundOwn3(String player) {
+    return '골! 튕겨 나온 공에 $player 선수가 가장 빨랐습니다!';
+  }
+
+  @override
   String pitchComShotSaved1(String player, String keeper) {
     return '$player의 슛, 하지만 $keeper 골키퍼가 막아냅니다.';
   }

@@ -15689,6 +15689,36 @@ class AppLocalizationsHu extends AppLocalizations {
   }
 
   @override
+  String pitchComReboundGoal1(String player, String other) {
+    return '$other lő, a kapus kiüti, és $player bepótolja! GÓL!';
+  }
+
+  @override
+  String pitchComReboundGoal2(String player, String other) {
+    return '$other még elakad, de $player lecsap a kipattanóra! GÓL!';
+  }
+
+  @override
+  String pitchComReboundGoal3(String player, String other) {
+    return 'GÓL! $other védésre kényszeríti a kapust, és $player a kipattanót a hálóba juttatja!';
+  }
+
+  @override
+  String pitchComReboundOwn1(String player) {
+    return 'Védés, de $player bepótolja! GÓL!';
+  }
+
+  @override
+  String pitchComReboundOwn2(String player, String keeper) {
+    return '$keeper kiüti, de $player ér elsőként a kipattanóhoz! GÓL!';
+  }
+
+  @override
+  String pitchComReboundOwn3(String player) {
+    return 'GÓL! Kiütött labda, és $player a leggyorsabb a kipattanónál!';
+  }
+
+  @override
   String pitchComShotSaved1(String player, String keeper) {
     return '$player lő, de $keeper véd.';
   }

@@ -15868,6 +15868,36 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String pitchComReboundGoal1(String player, String other) {
+    return '$other zieht ab, der Keeper pariert, und $player staubt ab! TOR!';
+  }
+
+  @override
+  String pitchComReboundGoal2(String player, String other) {
+    return '$other scheitert noch, doch $player nutzt den Abpraller! TOR!';
+  }
+
+  @override
+  String pitchComReboundGoal3(String player, String other) {
+    return 'TOR! $other prüft den Keeper, und $player drückt den Abpraller über die Linie!';
+  }
+
+  @override
+  String pitchComReboundOwn1(String player) {
+    return 'Gehalten, aber $player setzt nach! TOR!';
+  }
+
+  @override
+  String pitchComReboundOwn2(String player, String keeper) {
+    return '$keeper pariert, aber $player ist zuerst am Abpraller! TOR!';
+  }
+
+  @override
+  String pitchComReboundOwn3(String player) {
+    return 'TOR! Abgewehrt, und $player ist beim Nachschuss am schnellsten!';
+  }
+
+  @override
   String pitchComShotSaved1(String player, String keeper) {
     return '$player schießt, aber $keeper hält.';
   }

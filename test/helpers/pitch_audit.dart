@@ -369,10 +369,16 @@ class PitchAudit {
         }
       }
     }
+    // A goal drawn as a rebound: the shot is the scorer's follow-up, after
+    // the first one (his own or a team-mate's) the keeper parried.
+    final rebound = m.outcome == ShotOutcome.goal
+        ? w.cues.where((c) => c.kind == PitchCueKind.rebound).firstOrNull
+        : null;
     for (final f in flights(from, _until(w))) {
       if (f.fromActor == si &&
           !f.pass &&
-          (f.toActor == null || team(f.toActor!) != m.teamNationId)) {
+          (f.toActor == null || team(f.toActor!) != m.teamNationId) &&
+          (rebound == null || f.toActor == null)) {
         shot = f;
         break;
       }
@@ -547,10 +553,16 @@ class PitchAudit {
           }
         }
     }
+    if (rebound != null) _rebound(m, rebound, shot);
     // The right men: the assist (or the set piece's deliverer) gives the
-    // last ball to the shooter.
+    // last ball to the shooter (or, in a rebound, strikes the shot the
+    // keeper parries to him).
     final assist = m.assistId;
-    if (m.outcome == ShotOutcome.goal &&
+    if (rebound != null && assist != null && assist != m.shooterId) {
+      if (rebound.playerId != assist) {
+        fail(shot.t0, 'rebound not from the assist $assist');
+      }
+    } else if (m.outcome == ShotOutcome.goal &&
         assist != null &&
         assist != m.shooterId &&
         s.actorIndexOf(assist) != null) {
@@ -592,6 +604,49 @@ class PitchAudit {
         }
       }
     }
+  }
+
+  /// A goal drawn as a rebound: [cue]'s man strikes a shot at their keeper
+  /// (no pass, from the box), the keeper parries it to the scorer, who was
+  /// onside as it was struck, and the scorer's follow-up [shot] is the very
+  /// next ball, from close range.
+  void _rebound(ShotMoment m, PitchCue cue, FlightPhase shot) {
+    count('goal as a rebound');
+    final si = idx(m.shooterId)!;
+    final fi = idx(cue.playerId);
+    final all = flights(cue.t - 1e-6, shot.t0 + 1e-6);
+    final first = all.firstOrNull;
+    if (fi == null ||
+        first == null ||
+        first.fromActor != fi ||
+        first.pass ||
+        first.toActor == null ||
+        !s
+            .keepersAt(first.t1 - 1e-3)
+            .contains(s.actorList[first.toActor!].playerId) ||
+        team(first.toActor!) == m.teamNationId) {
+      fail(cue.t, 'rebound: first shot not at their keeper');
+      return;
+    }
+    final dir = dirOf(m.teamNationId, first.t0);
+    if (depth(first.from, dir) < PitchDims.length - PitchDims.boxDepth) {
+      fail(first.t0, 'rebound: first shot from outside the box');
+    }
+    if (fi != si && !onsideAt(si, first.from, first.t0)) {
+      fail(first.t0, 'rebound: scorer offside as it is struck');
+    }
+    final parry = all.length > 1 ? all[1] : null;
+    if (parry == null ||
+        parry.fromActor != first.toActor ||
+        parry.toActor != si ||
+        all.length != 3 ||
+        all[2] != shot) {
+      fail(first.t1, 'rebound: not parried straight to the scorer');
+      return;
+    }
+    final out = PitchDims.length - depth(shot.from, dir);
+    note('rebound follow-up distance (m)', out);
+    if (out > 13) fail(shot.t0, 'rebound: follow-up from ${out.round()} m');
   }
 
   /// The dead-ball kick of window [w]: the first ball [taker] plays from

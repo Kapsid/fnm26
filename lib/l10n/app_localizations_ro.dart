@@ -16158,6 +16158,36 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
+  String pitchComReboundGoal1(String player, String other) {
+    return '$other șutează, portarul respinge, iar $player reia în poartă! GOL!';
+  }
+
+  @override
+  String pitchComReboundGoal2(String player, String other) {
+    return '$other e oprit, dar $player profită de mingea respinsă! GOL!';
+  }
+
+  @override
+  String pitchComReboundGoal3(String player, String other) {
+    return 'GOL! $other îl obligă pe portar să intervină, iar $player trimite mingea respinsă în plasă!';
+  }
+
+  @override
+  String pitchComReboundOwn1(String player) {
+    return 'Paradă, dar $player reia în poartă! GOL!';
+  }
+
+  @override
+  String pitchComReboundOwn2(String player, String keeper) {
+    return '$keeper respinge, dar $player ajunge primul la minge! GOL!';
+  }
+
+  @override
+  String pitchComReboundOwn3(String player) {
+    return 'GOL! Minge respinsă, iar $player e cel mai rapid la ea!';
+  }
+
+  @override
   String pitchComShotSaved1(String player, String keeper) {
     return '$player șutează, dar $keeper apără.';
   }

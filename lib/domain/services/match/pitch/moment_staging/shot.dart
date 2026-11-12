@@ -474,6 +474,9 @@ class _OpenShotPlan extends _Plan {
   late Offset2 zone;
   int? assister;
 
+  /// The goal drawn as a rebound, when it is (see [_Rebound]).
+  _Rebound? rebound;
+
   /// The assister is his side's keeper: he never leaves his area, so he
   /// sets the goal up with a long ball from it.
   bool keeperAssist = false;
@@ -501,6 +504,7 @@ class _OpenShotPlan extends _Plan {
 
   void _readResume(ScriptState e) {
     final f = e.flight;
+    if (_resumeRebound(e)) return;
     // A ball on its way from the assister to the scorer: set up already.
     if (f != null && f.fromId == assister && f.toId == m.shooterId) {
       delivered = true;
@@ -533,6 +537,28 @@ class _OpenShotPlan extends _Plan {
         shot.keeperSpeed = m.outcome == ShotOutcome.saved ? 8.8 : 6;
       }
     }
+  }
+
+  /// A resumed window caught in a rebound: the first shot on its way to
+  /// the keeper, or his parry on its way to the scorer.
+  bool _resumeRebound(ScriptState e) {
+    final f = e.flight;
+    if (f == null || f.pass || m.outcome != ShotOutcome.goal) return false;
+    final from = f.fromId;
+    final to = f.toId;
+    if (from == null || to == null) return false;
+    if (e.teams[from] == side && e.keepers.contains(to) && e.teams[to] == opp) {
+      final tap = at(_goalLine - 8, (latOf(e.ball) * 0.3).clamp(-5.0, 5.0));
+      rebound = _Rebound.resumed(this, from, e.ball, tap, 1)
+        ..keeper = to
+        ..keeperTo = e.players[to];
+      return true;
+    }
+    if (e.keepers.contains(from) && e.teams[from] == opp && to == m.shooterId) {
+      rebound = _Rebound.resumed(this, to, e.ball, f.lead, 2)..keeper = from;
+      return true;
+    }
+    return false;
   }
 
   bool? cutWanted;
@@ -628,12 +654,30 @@ class _OpenShotPlan extends _Plan {
     if (cutWanted == null) {
       _runIn(now);
       _pickCloser(now);
-      cutWanted = _needCut(now);
-      if (cutWanted!) {
+      rebound ??= _Rebound.choose(this, now);
+      cutWanted = (rebound != null && !resumed) || _needCut(now);
+      if (rebound != null) {
+        // Its own cut and its own men.
+      } else if (cutWanted!) {
         _chooseRoute(now);
       } else {
         _chooseOnTheRun(t, now);
       }
+    }
+    final rb = rebound;
+    if (rb != null && !rb.done) {
+      if (!sceneCut && !resumed) {
+        if (!settledIn(t) || landing(now)) return null;
+        if (math.min(end, c.hardEnd) - t < _Rebound._needs - 0.3) {
+          // Too late now: finished as usual.
+          rb.done = true;
+          rebound = null;
+          return _phaseCut(now);
+        }
+        return rb.cut(t, now);
+      }
+      final a = rb.ball(t, now, atFeet);
+      if (!rb.done || a != null) return a;
     }
     // A ball in the air comes down before any cut.
     if (cutWanted! && !sceneCut && settledIn(t)) {
@@ -1196,6 +1240,8 @@ class _OpenShotPlan extends _Plan {
     if (celebrate != null) return celebrate;
     final sd = shot.drive(id, t, now);
     if (sd != null) return sd;
+    final rd = shot.struck ? null : rebound?.steer(id, now);
+    if (rd != null) return rd;
     final car = now.carrierId;
     final f = now.flight;
     if (id == helper && route != _Route.direct && !shot.struck) {

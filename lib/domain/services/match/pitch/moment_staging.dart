@@ -15,7 +15,9 @@
 /// post or over the bar, one off the woodwork strikes a post or the bar, a
 /// blocked one is stopped by a defender in its path. The men the moment
 /// names do what it says they did, and every pass in a goal's move finds a
-/// man onside.
+/// man onside. Now and then an open-play goal in the box is drawn as a
+/// rebound: a first shot the keeper parries and the scorer following it up
+/// (display only; see `_Rebound`).
 ///
 /// Plans react to the state they are handed each step rather than
 /// replaying a fixed script, so a window staged from part-way through (a
@@ -40,6 +42,7 @@ import 'package:fnm/domain/services/match/pitch/story_layer.dart';
 
 part 'moment_staging/plan.dart';
 part 'moment_staging/shot.dart';
+part 'moment_staging/rebound.dart';
 part 'moment_staging/penalty.dart';
 part 'moment_staging/dead_ball.dart';
 part 'moment_staging/foul_offside.dart';

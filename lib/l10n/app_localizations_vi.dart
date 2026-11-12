@@ -15591,6 +15591,36 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String pitchComReboundGoal1(String player, String other) {
+    return '$other sút, thủ môn đẩy ra và $player đá bồi! VÀO!';
+  }
+
+  @override
+  String pitchComReboundGoal2(String player, String other) {
+    return '$other bị chặn, nhưng $player băng vào đá bồi! VÀO!';
+  }
+
+  @override
+  String pitchComReboundGoal3(String player, String other) {
+    return 'VÀO! $other buộc thủ môn cản phá và $player đá bồi tung lưới!';
+  }
+
+  @override
+  String pitchComReboundOwn1(String player) {
+    return 'Cản phá, nhưng $player đá bồi! VÀO!';
+  }
+
+  @override
+  String pitchComReboundOwn2(String player, String keeper) {
+    return '$keeper đẩy ra, nhưng $player nhanh chân nhất ở pha bóng bật ra! VÀO!';
+  }
+
+  @override
+  String pitchComReboundOwn3(String player) {
+    return 'VÀO! Bóng bật ra và $player nhanh nhất đá bồi!';
+  }
+
+  @override
   String pitchComShotSaved1(String player, String keeper) {
     return '$player sút, nhưng $keeper cản phá.';
   }

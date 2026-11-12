@@ -16057,6 +16057,36 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
+  String pitchComReboundGoal1(String player, String other) {
+    return '$other б\'є, воротар відбиває, а $player добиває! ГОЛ!';
+  }
+
+  @override
+  String pitchComReboundGoal2(String player, String other) {
+    return '$other не пробиває, але $player встигає на добивання! ГОЛ!';
+  }
+
+  @override
+  String pitchComReboundGoal3(String player, String other) {
+    return 'ГОЛ! $other змушує воротаря рятувати, а $player добиває м\'яч у сітку!';
+  }
+
+  @override
+  String pitchComReboundOwn1(String player) {
+    return 'Сейв, але $player добиває! ГОЛ!';
+  }
+
+  @override
+  String pitchComReboundOwn2(String player, String keeper) {
+    return '$keeper відбиває, але $player першим встигає на добивання! ГОЛ!';
+  }
+
+  @override
+  String pitchComReboundOwn3(String player) {
+    return 'ГОЛ! М\'яч відскакує, і $player найшвидший на добиванні!';
+  }
+
+  @override
   String pitchComShotSaved1(String player, String keeper) {
     return '$player б\'є, але $keeper відбиває.';
   }

@@ -180,10 +180,23 @@ enum PitchCutKind { kickOff, setPiece, phase }
 /// whistle for a foul, the card the referee shows, the assistant's flag, a
 /// shot struck, a goal. For the renderer and the commentary to keep time
 /// with the picture.
-enum PitchCueKind { foul, yellowCard, redCard, offsideFlag, shot, goal }
+/// What a stager shows beyond the men and the ball. [rebound] marks a goal
+/// drawn as a follow-up: a first shot the keeper parries, about the man who
+/// struck it (the scorer himself when it came straight back to him); the
+/// goal itself is still the recorded scorer's [goal] cue.
+enum PitchCueKind {
+  foul,
+  yellowCard,
+  redCard,
+  offsideFlag,
+  shot,
+  goal,
+  rebound,
+}
 
 /// A [PitchCueKind] at screen second [t], about [playerId] (the fouler, the
-/// man booked, the man flagged, the shooter, the scorer).
+/// man booked, the man flagged, the shooter, the scorer, the man whose shot
+/// was parried for a rebound).
 typedef PitchCue = ({double t, PitchCueKind kind, int playerId});
 
 /// A routine restart the picture shows (see [PitchRestart]).

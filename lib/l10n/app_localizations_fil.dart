@@ -15750,6 +15750,36 @@ class AppLocalizationsFil extends AppLocalizations {
   }
 
   @override
+  String pitchComReboundGoal1(String player, String other) {
+    return 'Bumira si $other, sinupalpal ng goalkeeper, at sinundan ni $player! GOAL!';
+  }
+
+  @override
+  String pitchComReboundGoal2(String player, String other) {
+    return 'Napigilan si $other, pero sinunggaban ni $player ang rebound! GOAL!';
+  }
+
+  @override
+  String pitchComReboundGoal3(String player, String other) {
+    return 'GOAL! Pinilit ni $other na sumalo ang goalkeeper at ipinasok ni $player ang rebound!';
+  }
+
+  @override
+  String pitchComReboundOwn1(String player) {
+    return 'Nasalo, pero sinundan ni $player! GOAL!';
+  }
+
+  @override
+  String pitchComReboundOwn2(String player, String keeper) {
+    return 'Sinupalpal ni $keeper, pero si $player ang unang nakarating sa rebound! GOAL!';
+  }
+
+  @override
+  String pitchComReboundOwn3(String player) {
+    return 'GOAL! Sinupalpal, at si $player ang pinakamabilis sa rebound!';
+  }
+
+  @override
   String pitchComShotSaved1(String player, String keeper) {
     return 'Bumira si $player, pero sinalo ni $keeper.';
   }

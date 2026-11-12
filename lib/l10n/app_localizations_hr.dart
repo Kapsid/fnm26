@@ -16080,6 +16080,36 @@ class AppLocalizationsHr extends AppLocalizations {
   }
 
   @override
+  String pitchComReboundGoal1(String player, String other) {
+    return '$other puca, vratar odbija, a $player zabija iz odbijanca! GOL!';
+  }
+
+  @override
+  String pitchComReboundGoal2(String player, String other) {
+    return '$other je zaustavljen, ali $player koristi odbijanac! GOL!';
+  }
+
+  @override
+  String pitchComReboundGoal3(String player, String other) {
+    return 'GOL! $other tjera vratara na obranu, a $player gura odbijanac u mrežu!';
+  }
+
+  @override
+  String pitchComReboundOwn1(String player) {
+    return 'Obrana, ali $player dopunjava! GOL!';
+  }
+
+  @override
+  String pitchComReboundOwn2(String player, String keeper) {
+    return '$keeper odbija, ali $player je prvi na odbijancu! GOL!';
+  }
+
+  @override
+  String pitchComReboundOwn3(String player) {
+    return 'GOL! Odbijena lopta, a $player je najbrži do nje!';
+  }
+
+  @override
   String pitchComShotSaved1(String player, String keeper) {
     return '$player puca, ali $keeper brani.';
   }

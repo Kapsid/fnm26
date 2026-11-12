@@ -15898,6 +15898,36 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String pitchComReboundGoal1(String player, String other) {
+    return '$other frappe, le gardien repousse et $player a bien suivi ! BUT !';
+  }
+
+  @override
+  String pitchComReboundGoal2(String player, String other) {
+    return '$other bute sur le gardien, mais $player reprend le ballon relâché ! BUT !';
+  }
+
+  @override
+  String pitchComReboundGoal3(String player, String other) {
+    return 'BUT ! $other oblige le gardien à s’interposer et $player pousse le ballon au fond !';
+  }
+
+  @override
+  String pitchComReboundOwn1(String player) {
+    return 'Arrêt, mais $player a bien suivi ! BUT !';
+  }
+
+  @override
+  String pitchComReboundOwn2(String player, String keeper) {
+    return '$keeper repousse, mais $player est le premier sur le ballon relâché ! BUT !';
+  }
+
+  @override
+  String pitchComReboundOwn3(String player) {
+    return 'BUT ! Ballon repoussé et $player est le plus prompt à suivre !';
+  }
+
+  @override
   String pitchComShotSaved1(String player, String keeper) {
     return '$player tire, mais $keeper détourne.';
   }

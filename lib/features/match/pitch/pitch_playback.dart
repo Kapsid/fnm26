@@ -248,6 +248,7 @@ class PitchPlayback {
       seed,
       events: result.events,
       score: c.score,
+      reboundFrom: c.reboundFrom,
     );
   }
 
@@ -311,14 +312,20 @@ class PitchPlayback {
       return scored ?? cue(w, PitchCueKind.shot, m.shooterId) ?? fallback;
     }
 
-    _Cue shotCue(double t, ShotMoment m) {
+    _Cue shotCue(double t, ShotMoment m, [StagedWindow? w]) {
       final g = m.goalEventIndex;
+      final goal = m.outcome == ShotOutcome.goal;
+      int? rebound;
+      if (goal && w != null) {
+        for (final c in w.cues) {
+          if (c.kind == PitchCueKind.rebound) rebound = c.playerId;
+        }
+      }
       return _Cue(
         t,
         moment: m,
-        score: m.outcome == ShotOutcome.goal && g != null
-            ? scoreAfter(g)
-            : null,
+        score: goal && g != null ? scoreAfter(g) : null,
+        reboundFrom: rebound,
       );
     }
 
@@ -349,7 +356,7 @@ class PitchPlayback {
           final award = awardOf(first);
           if (award != null) out.add(_Cue(w.start, moment: award));
         }
-        out.add(shotCue(shotAt(w, first, w.start), first));
+        out.add(shotCue(shotAt(w, first, w.start), first, w));
       } else if (!isRoutineMoment(first)) {
         out.add(_Cue(w.start, moment: first));
       }
@@ -375,9 +382,12 @@ class PitchPlayback {
 
 /// One commentary line's moment (or injury) and when it comes in.
 class _Cue {
-  const _Cue(this.t, {this.moment, this.injury, this.score});
+  const _Cue(this.t, {this.moment, this.injury, this.score, this.reboundFrom});
   final double t;
   final MatchMoment? moment;
   final MatchEvent? injury;
   final ({int home, int away})? score;
+
+  /// For a goal drawn as a rebound: whose shot was parried.
+  final int? reboundFrom;
 }

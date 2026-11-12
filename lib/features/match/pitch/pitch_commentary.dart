@@ -33,6 +33,11 @@ import 'package:fnm/l10n/app_localizations.dart';
 /// the shot's `goalEventIndex`; given for every goal (penalties and set
 /// pieces included), the goal's line carries it.
 ///
+/// [reboundFrom] is set when the picture drew the goal as a rebound (the
+/// window's `PitchCueKind.rebound` cue): the man whose shot the keeper
+/// parried, the scorer himself when it came back to him. The goal is then
+/// told as a follow-up; it is ignored for anything but a goal.
+///
 /// The wording is variant `(seed ^ m.seq ^ m.minute ^ m.stoppage) % n` of
 /// the `n` that can be written: a variant naming the keeper or a second
 /// player is left out when the moment has none.
@@ -43,6 +48,7 @@ String? pitchLine(
   int seed, {
   required List<MatchEvent> events,
   ({int home, int away})? score,
+  int? reboundFrom,
 }) {
   if (isRoutineMoment(m)) return null;
   String name(int? id) {
@@ -68,8 +74,15 @@ String? pitchLine(
           goal >= 0 &&
           goal < events.length &&
           events[goal].ownGoal;
+      final rebound = s.outcome == ShotOutcome.goal ? reboundFrom : null;
       final line = ownGoal
           ? pick(_ownGoalVariants(l, name(events[goal].playerId), p))!
+          : rebound != null
+          ? pick(
+              rebound == s.shooterId
+                  ? _ownReboundVariants(l, p, k)
+                  : _reboundVariants(l, p, name(rebound)),
+            )!
           : pick(_shotVariants(l, s, p, k, o))!;
       if (s.outcome != ShotOutcome.goal || score == null) return line;
       return l.pitchComGoalScore(line, score.home, score.away);
@@ -239,6 +252,23 @@ List<String> _ownGoalVariants(AppLocalizations l, String d, String p) => [
   l.pitchComOwnGoal1(d),
   l.pitchComOwnGoal2(d, p),
   l.pitchComOwnGoal3(d),
+];
+
+/// A goal drawn as a rebound of a team-mate's shot: [p] the scorer who
+/// followed it up, [o] the man whose shot the keeper parried.
+List<String> _reboundVariants(AppLocalizations l, String p, String o) => [
+  l.pitchComReboundGoal1(p, o),
+  l.pitchComReboundGoal2(p, o),
+  l.pitchComReboundGoal3(p, o),
+];
+
+/// A goal drawn as the scorer [p] following up his own shot, parried back
+/// to him by [k] (null when the moment names no keeper: that variant is
+/// left out).
+List<String> _ownReboundVariants(AppLocalizations l, String p, String? k) => [
+  l.pitchComReboundOwn1(p),
+  if (k != null) l.pitchComReboundOwn2(p, k),
+  l.pitchComReboundOwn3(p),
 ];
 
 /// A big save's wordings ([ShotMoment.isBigSave]): [k] the keeper, [p] the
