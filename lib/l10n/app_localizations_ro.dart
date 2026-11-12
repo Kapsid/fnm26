@@ -17586,4 +17586,224 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Exportă baza de date, deschide-o în browser, descarc-o înapoi și importă-o aici.';
+
+  @override
+  String get editorMerge => 'Îmbinați altă bază de date';
+
+  @override
+  String get editorMergeAbout =>
+      'Preluați ce a modificat altcineva în copia sa.';
+
+  @override
+  String get editorHistory => 'Istoric';
+
+  @override
+  String get editorHistoryAbout =>
+      'Versiunile salvate ale acestei baze de date. Reveniți la oricare dintre ele.';
+
+  @override
+  String get editorMergeFromTitle => 'Îmbinați din';
+
+  @override
+  String get editorMergeFromFile => 'Un fișier de bază de date';
+
+  @override
+  String get editorMergeFromFileAbout =>
+      'Alegeți un fișier .fnmdb pe care vi l-a trimis cineva.';
+
+  @override
+  String get editorMergeFromDevice => 'Pe acest dispozitiv';
+
+  @override
+  String get editorMergeComparing => 'Se compară bazele de date';
+
+  @override
+  String get editorMergeNothing =>
+      'Nu e nimic de îmbinat. Baza dvs. de date are deja toate modificările celeilalte.';
+
+  @override
+  String get editorMergeFailed => 'Bazele de date nu au putut fi îmbinate.';
+
+  @override
+  String editorMergeReviewTitle(String name) {
+    return 'Modificări din $name';
+  }
+
+  @override
+  String editorMergeFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count de modificări de verificat',
+      few: '$count modificări de verificat',
+      one: '1 modificare de verificat',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorMergeConflicts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count de conflicte',
+      few: '$count conflicte',
+      one: '1 conflict',
+      zero: 'Fără conflicte',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeConflictsOnly => 'Doar conflicte';
+
+  @override
+  String get editorMergeNoConflicts =>
+      'Fără conflicte. Fiecare modificare este nouă pentru baza dvs. de date.';
+
+  @override
+  String get editorMergeAll => 'Toate';
+
+  @override
+  String get editorMergeNone => 'Niciuna';
+
+  @override
+  String editorMergeTake(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Preluați $count de modificări',
+      few: 'Preluați $count modificări',
+      one: 'Preluați 1 modificare',
+      zero: 'Nu preluați modificări',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeApply => 'Aplicați';
+
+  @override
+  String get editorMergeYours => 'A dvs.';
+
+  @override
+  String get editorMergeTheirs => 'A lor';
+
+  @override
+  String get editorMergeNew => 'Nou';
+
+  @override
+  String get editorMergeConflict => 'Conflict';
+
+  @override
+  String get editorMergeGameValue => 'Ca în joc';
+
+  @override
+  String get editorMergeNotHere => 'Nu există în această bază de date';
+
+  @override
+  String editorMergeSquadOf(String nation) {
+    return 'Lotul ($nation)';
+  }
+
+  @override
+  String editorMergePoolOf(String nation) {
+    return 'Rezervor ($nation)';
+  }
+
+  @override
+  String get editorMergePlace => 'Mutare';
+
+  @override
+  String editorMergeNames(int first, int sur) {
+    return '$first prenume, $sur nume de familie';
+  }
+
+  @override
+  String editorMerged(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count de modificări îmbinate',
+      few: '$count modificări îmbinate',
+      one: '1 modificare îmbinată',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistorySave => 'Salvați versiunea';
+
+  @override
+  String get editorHistorySaveTitle => 'Salvați această versiune';
+
+  @override
+  String get editorHistoryNameHint => 'Nume (opțional)';
+
+  @override
+  String get editorHistorySaved => 'Versiune salvată';
+
+  @override
+  String get editorHistoryEmpty =>
+      'Nu există încă versiuni salvate. Una se salvează înainte de fiecare îmbinare și restaurare, precum și când reveniți la această bază de date după o pauză.';
+
+  @override
+  String get editorHistoryKeep =>
+      'Se păstrează ultimele 30 de versiuni automate. Versiunile salvate de dvs. rămân până le ștergeți.';
+
+  @override
+  String get editorHistorySession => 'Începutul editării';
+
+  @override
+  String editorHistoryBeforeMerge(String name) {
+    return 'Înainte de îmbinarea $name';
+  }
+
+  @override
+  String get editorHistoryBeforeRestore => 'Înainte de restaurare';
+
+  @override
+  String get editorHistoryManual => 'Versiune salvată';
+
+  @override
+  String get editorHistoryAuto => 'Automată';
+
+  @override
+  String editorHistoryDiff(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count de diferențe față de acum',
+      few: '$count diferențe față de acum',
+      one: '1 diferență față de acum',
+      zero: 'La fel ca acum',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistoryRestore => 'Restaurați';
+
+  @override
+  String get editorHistoryRestoreTitle => 'Restaurați această versiune?';
+
+  @override
+  String get editorHistoryRestoreBody =>
+      'Baza de date revine la această versiune. Starea ei actuală este salvată mai întâi în istoric.';
+
+  @override
+  String get editorHistoryRestored => 'Versiune restaurată';
+
+  @override
+  String get editorHistoryFailed => 'Nu a mers. Încercați din nou.';
+
+  @override
+  String get editorHistoryRenameTitle => 'Redenumiți versiunea';
+
+  @override
+  String get editorHistoryDeleteTitle => 'Ștergeți această versiune?';
+
+  @override
+  String get editorHistoryDeleteBody =>
+      'Este eliminată din istoric. Baza de date în sine nu se schimbă.';
 }

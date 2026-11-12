@@ -206,6 +206,39 @@ class WorldPackRepository {
     await _touch(id);
   });
 
+  /// Overwrites pack [id] with [p] and its trophy pictures with [trophies]
+  /// (every key: a picture to set; a key of [p]'s old ones missing from it
+  /// is removed when [replaceAll]), in one transaction that first runs
+  /// [before] (a history version of what is overwritten). For a merge and a
+  /// restore: one new state, all of it or none.
+  Future<void> replace(
+    int id,
+    WorldPack p,
+    Map<String, Uint8List> trophies, {
+    bool replaceAll = false,
+    Future<void> Function()? before,
+  }) => _db.transaction(() async {
+    await before?.call();
+    await save(id, p);
+    if (replaceAll) {
+      await (_db.delete(_db.worldPackTrophies)..where(
+            (t) => t.packId.equals(id) & t.key.isNotIn(trophies.keys),
+          ))
+          .go();
+    }
+    for (final e in trophies.entries) {
+      await _db
+          .into(_db.worldPackTrophies)
+          .insertOnConflictUpdate(
+            WorldPackTrophiesCompanion.insert(
+              packId: id,
+              key: e.key,
+              png: e.value,
+            ),
+          );
+    }
+  });
+
   /// The custom trophy images of pack [id], by key.
   Future<Map<String, Uint8List>> trophies(int id) async {
     final rows = await (_db.select(

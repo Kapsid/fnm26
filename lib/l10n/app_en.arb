@@ -26484,5 +26484,262 @@
   "editorWebAbout": "Export your database, open it in the browser, download it back and import it here.",
   "@editorWebAbout": {
     "description": "Editor list: the line under editorWebTitle, how a database goes to the web editor and back."
+  },
+  "editorMerge": "Merge another database",
+  "@editorMerge": {
+    "description": "Pack home row and database menu item: take changes from another database into this one."
+  },
+  "editorMergeAbout": "Take what someone else changed in their copy into this one.",
+  "@editorMergeAbout": {
+    "description": "Pack home: the line under editorMerge."
+  },
+  "editorHistory": "History",
+  "@editorHistory": {
+    "description": "Pack home row: the saved versions of this database. Also the History screen's title."
+  },
+  "editorHistoryAbout": "Saved versions of this database. Go back to any of them.",
+  "@editorHistoryAbout": {
+    "description": "Pack home: the line under editorHistory."
+  },
+  "editorMergeFromTitle": "Merge from",
+  "@editorMergeFromTitle": {
+    "description": "Title of the sheet that asks where the changes to merge come from."
+  },
+  "editorMergeFromFile": "A database file",
+  "@editorMergeFromFile": {
+    "description": "Merge source: a .fnmdb file picked from the device."
+  },
+  "editorMergeFromFileAbout": "Pick a .fnmdb file someone shared with you.",
+  "@editorMergeFromFileAbout": {
+    "description": "Line under editorMergeFromFile."
+  },
+  "editorMergeFromDevice": "On this device",
+  "@editorMergeFromDevice": {
+    "description": "Merge source sheet: header over the other databases on this device."
+  },
+  "editorMergeComparing": "Comparing the databases",
+  "@editorMergeComparing": {
+    "description": "Shown with a spinner while two databases are compared for a merge."
+  },
+  "editorMergeNothing": "Nothing to merge. Your database already has every change from that one.",
+  "@editorMergeNothing": {
+    "description": "Snackbar: the other database changes nothing this one does not already have."
+  },
+  "editorMergeFailed": "The databases could not be merged.",
+  "@editorMergeFailed": {
+    "description": "Snackbar when comparing or applying a merge failed."
+  },
+  "editorMergeReviewTitle": "Changes from {name}",
+  "@editorMergeReviewTitle": {
+    "description": "Title of the merge review screen. name: the other database's name.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "editorMergeFound": "{count, plural, =1{1 change to review} other{{count} changes to review}}",
+  "@editorMergeFound": {
+    "description": "Merge review: how many changes the other database has that this one does not.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "editorMergeConflicts": "{count, plural, =0{No conflicts} =1{1 conflict} other{{count} conflicts}}",
+  "@editorMergeConflicts": {
+    "description": "Merge review: how many changes clash with this database's own edits.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "editorMergeConflictsOnly": "Conflicts only",
+  "@editorMergeConflictsOnly": {
+    "description": "Merge review: filter switch that shows only the clashing changes."
+  },
+  "editorMergeNoConflicts": "No conflicts. Every change is new to your database.",
+  "@editorMergeNoConflicts": {
+    "description": "Merge review with the conflicts filter on and none to show."
+  },
+  "editorMergeAll": "All",
+  "@editorMergeAll": {
+    "description": "Merge review: tick every change of a group."
+  },
+  "editorMergeNone": "None",
+  "@editorMergeNone": {
+    "description": "Merge review: untick every change of a group."
+  },
+  "editorMergeTake": "{count, plural, =0{Take no changes} =1{Take 1 change} other{Take {count} changes}}",
+  "@editorMergeTake": {
+    "description": "Merge review: the bottom bar's summary of how many changes will be taken.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "editorMergeApply": "Apply",
+  "@editorMergeApply": {
+    "description": "Merge review: button that merges the ticked changes."
+  },
+  "editorMergeYours": "Yours",
+  "@editorMergeYours": {
+    "description": "Merge review: label over this database's value in a conflict."
+  },
+  "editorMergeTheirs": "Theirs",
+  "@editorMergeTheirs": {
+    "description": "Merge review: label over the other database's value."
+  },
+  "editorMergeNew": "New",
+  "@editorMergeNew": {
+    "description": "Merge review: tag on a change only the other database made."
+  },
+  "editorMergeConflict": "Conflict",
+  "@editorMergeConflict": {
+    "description": "Merge review: tag on a change both databases made, differently."
+  },
+  "editorMergeGameValue": "As in the game",
+  "@editorMergeGameValue": {
+    "description": "Merge review: the value is the game's own (not changed in that database)."
+  },
+  "editorMergeNotHere": "Not in this database",
+  "@editorMergeNotHere": {
+    "description": "Merge review: the player or item is not in the database."
+  },
+  "editorMergeSquadOf": "Squad of {nation}",
+  "@editorMergeSquadOf": {
+    "description": "Merge review: where a player is, a nation's squad.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "editorMergePoolOf": "Pool of {nation}",
+  "@editorMergePoolOf": {
+    "description": "Merge review: where a player is, a nation's pool of other players.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "editorMergePlace": "Moves",
+  "@editorMergePlace": {
+    "description": "Merge review: tag on a change of where a player is (squad, pool, another nation or out)."
+  },
+  "editorMergeNames": "{first} first names, {sur} surnames",
+  "@editorMergeNames": {
+    "description": "Merge review: a nation's name lists, by their sizes.",
+    "placeholders": {
+      "first": {
+        "type": "int"
+      },
+      "sur": {
+        "type": "int"
+      }
+    }
+  },
+  "editorMerged": "{count, plural, =1{1 change merged} other{{count} changes merged}}",
+  "@editorMerged": {
+    "description": "Snackbar after a merge, with Undo.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "editorHistorySave": "Save version",
+  "@editorHistorySave": {
+    "description": "History: button that saves the database as it is now as a version."
+  },
+  "editorHistorySaveTitle": "Save this version",
+  "@editorHistorySaveTitle": {
+    "description": "Title of the dialog that names a version being saved."
+  },
+  "editorHistoryNameHint": "Name (optional)",
+  "@editorHistoryNameHint": {
+    "description": "History: hint of the field naming a version."
+  },
+  "editorHistorySaved": "Version saved",
+  "@editorHistorySaved": {
+    "description": "Snackbar after a version was saved."
+  },
+  "editorHistoryEmpty": "No saved versions yet. One is saved before every merge and restore, and when you come back to this database after a break.",
+  "@editorHistoryEmpty": {
+    "description": "History with no versions."
+  },
+  "editorHistoryKeep": "The last 30 automatic versions are kept. Versions you save stay until you delete them.",
+  "@editorHistoryKeep": {
+    "description": "History: the note on how long versions are kept."
+  },
+  "editorHistorySession": "When editing began",
+  "@editorHistorySession": {
+    "description": "History: a version saved automatically when the database was opened after a break."
+  },
+  "editorHistoryBeforeMerge": "Before merging {name}",
+  "@editorHistoryBeforeMerge": {
+    "description": "History: a version saved automatically before another database was merged in. name: the other database.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "editorHistoryBeforeRestore": "Before restoring",
+  "@editorHistoryBeforeRestore": {
+    "description": "History: a version saved automatically before an older one was restored."
+  },
+  "editorHistoryManual": "Saved version",
+  "@editorHistoryManual": {
+    "description": "History: a version the manager saved without a name."
+  },
+  "editorHistoryAuto": "Automatic",
+  "@editorHistoryAuto": {
+    "description": "History: tag on a version the game saved on its own."
+  },
+  "editorHistoryDiff": "{count, plural, =0{Same as now} =1{1 difference from now} other{{count} differences from now}}",
+  "@editorHistoryDiff": {
+    "description": "History: how many items differ between a version and the database as it is now.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "editorHistoryRestore": "Restore",
+  "@editorHistoryRestore": {
+    "description": "History: action that puts a version back as the database."
+  },
+  "editorHistoryRestoreTitle": "Restore this version?",
+  "@editorHistoryRestoreTitle": {
+    "description": "Title of the restore confirmation."
+  },
+  "editorHistoryRestoreBody": "The database goes back to this version. Its current state is saved in the history first.",
+  "@editorHistoryRestoreBody": {
+    "description": "Body of the restore confirmation."
+  },
+  "editorHistoryRestored": "Version restored",
+  "@editorHistoryRestored": {
+    "description": "Snackbar after a version was restored."
+  },
+  "editorHistoryFailed": "That did not work. Please try again.",
+  "@editorHistoryFailed": {
+    "description": "Snackbar when saving, restoring, exporting or changing a version failed."
+  },
+  "editorHistoryRenameTitle": "Rename version",
+  "@editorHistoryRenameTitle": {
+    "description": "Title of the dialog that renames a version."
+  },
+  "editorHistoryDeleteTitle": "Delete this version?",
+  "@editorHistoryDeleteTitle": {
+    "description": "Title of the delete-version confirmation."
+  },
+  "editorHistoryDeleteBody": "It is removed from the history. The database itself does not change.",
+  "@editorHistoryDeleteBody": {
+    "description": "Body of the delete-version confirmation."
   }
 }

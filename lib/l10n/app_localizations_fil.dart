@@ -17183,4 +17183,218 @@ class AppLocalizationsFil extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'I-export ang iyong database, buksan ito sa browser, i-download ito pabalik at i-import dito.';
+
+  @override
+  String get editorMerge => 'Pagsamahin ang ibang database';
+
+  @override
+  String get editorMergeAbout => 'Kunin ang mga binago ng iba sa kopya nila.';
+
+  @override
+  String get editorHistory => 'History';
+
+  @override
+  String get editorHistoryAbout =>
+      'Mga naka-save na bersyon ng database na ito. Bumalik sa alinman sa mga ito.';
+
+  @override
+  String get editorMergeFromTitle => 'Pagsamahin mula sa';
+
+  @override
+  String get editorMergeFromFile => 'Isang database file';
+
+  @override
+  String get editorMergeFromFileAbout =>
+      'Pumili ng .fnmdb file na ibinahagi sa iyo.';
+
+  @override
+  String get editorMergeFromDevice => 'Sa device na ito';
+
+  @override
+  String get editorMergeComparing => 'Inihahambing ang mga database';
+
+  @override
+  String get editorMergeNothing =>
+      'Walang pagsasamahin. Nasa database mo na ang lahat ng pagbabago ng isa.';
+
+  @override
+  String get editorMergeFailed => 'Hindi napagsama ang mga database.';
+
+  @override
+  String editorMergeReviewTitle(String name) {
+    return 'Mga pagbabago mula sa $name';
+  }
+
+  @override
+  String editorMergeFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pagbabagong susuriin',
+      one: '1 pagbabagong susuriin',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorMergeConflicts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count conflict',
+      one: '1 conflict',
+      zero: 'Walang conflict',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeConflictsOnly => 'Conflict lang';
+
+  @override
+  String get editorMergeNoConflicts =>
+      'Walang conflict. Bago sa database mo ang bawat pagbabago.';
+
+  @override
+  String get editorMergeAll => 'Lahat';
+
+  @override
+  String get editorMergeNone => 'Wala';
+
+  @override
+  String editorMergeTake(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Kunin ang $count pagbabago',
+      one: 'Kunin ang 1 pagbabago',
+      zero: 'Walang kukuning pagbabago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeApply => 'Ilapat';
+
+  @override
+  String get editorMergeYours => 'Sa iyo';
+
+  @override
+  String get editorMergeTheirs => 'Sa kanila';
+
+  @override
+  String get editorMergeNew => 'Bago';
+
+  @override
+  String get editorMergeConflict => 'Conflict';
+
+  @override
+  String get editorMergeGameValue => 'Gaya sa laro';
+
+  @override
+  String get editorMergeNotHere => 'Wala sa database na ito';
+
+  @override
+  String editorMergeSquadOf(String nation) {
+    return 'Squad ng $nation';
+  }
+
+  @override
+  String editorMergePoolOf(String nation) {
+    return 'Pool ng $nation';
+  }
+
+  @override
+  String get editorMergePlace => 'Lilipat';
+
+  @override
+  String editorMergeNames(int first, int sur) {
+    return '$first first name, $sur apelyido';
+  }
+
+  @override
+  String editorMerged(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pagbabago ang napagsama',
+      one: '1 pagbabago ang napagsama',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistorySave => 'I-save ang bersyon';
+
+  @override
+  String get editorHistorySaveTitle => 'I-save ang bersyong ito';
+
+  @override
+  String get editorHistoryNameHint => 'Pangalan (opsyonal)';
+
+  @override
+  String get editorHistorySaved => 'Na-save ang bersyon';
+
+  @override
+  String get editorHistoryEmpty =>
+      'Wala pang naka-save na bersyon. May isang sine-save bago ang bawat pagsasama at pag-restore, at kapag bumalik ka sa database na ito pagkatapos ng pahinga.';
+
+  @override
+  String get editorHistoryKeep =>
+      'Itinatago ang huling 30 awtomatikong bersyon. Ang mga bersyong sine-save mo ay mananatili hanggang burahin mo.';
+
+  @override
+  String get editorHistorySession => 'Simula ng pag-edit';
+
+  @override
+  String editorHistoryBeforeMerge(String name) {
+    return 'Bago pagsamahin ang $name';
+  }
+
+  @override
+  String get editorHistoryBeforeRestore => 'Bago mag-restore';
+
+  @override
+  String get editorHistoryManual => 'Naka-save na bersyon';
+
+  @override
+  String get editorHistoryAuto => 'Awtomatiko';
+
+  @override
+  String editorHistoryDiff(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pagkakaiba sa ngayon',
+      one: '1 pagkakaiba sa ngayon',
+      zero: 'Kapareho ng ngayon',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistoryRestore => 'I-restore';
+
+  @override
+  String get editorHistoryRestoreTitle => 'I-restore ang bersyong ito?';
+
+  @override
+  String get editorHistoryRestoreBody =>
+      'Babalik ang database sa bersyong ito. Ise-save muna sa history ang kasalukuyan nitong estado.';
+
+  @override
+  String get editorHistoryRestored => 'Na-restore ang bersyon';
+
+  @override
+  String get editorHistoryFailed => 'Hindi iyon gumana. Pakisubukan ulit.';
+
+  @override
+  String get editorHistoryRenameTitle => 'Palitan ang pangalan ng bersyon';
+
+  @override
+  String get editorHistoryDeleteTitle => 'Burahin ang bersyong ito?';
+
+  @override
+  String get editorHistoryDeleteBody =>
+      'Aalisin ito sa history. Hindi magbabago ang mismong database.';
 }

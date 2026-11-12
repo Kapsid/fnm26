@@ -25987,6 +25987,312 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Export your database, open it in the browser, download it back and import it here.'**
   String get editorWebAbout;
+
+  /// Pack home row and database menu item: take changes from another database into this one.
+  ///
+  /// In en, this message translates to:
+  /// **'Merge another database'**
+  String get editorMerge;
+
+  /// Pack home: the line under editorMerge.
+  ///
+  /// In en, this message translates to:
+  /// **'Take what someone else changed in their copy into this one.'**
+  String get editorMergeAbout;
+
+  /// Pack home row: the saved versions of this database. Also the History screen's title.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get editorHistory;
+
+  /// Pack home: the line under editorHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved versions of this database. Go back to any of them.'**
+  String get editorHistoryAbout;
+
+  /// Title of the sheet that asks where the changes to merge come from.
+  ///
+  /// In en, this message translates to:
+  /// **'Merge from'**
+  String get editorMergeFromTitle;
+
+  /// Merge source: a .fnmdb file picked from the device.
+  ///
+  /// In en, this message translates to:
+  /// **'A database file'**
+  String get editorMergeFromFile;
+
+  /// Line under editorMergeFromFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a .fnmdb file someone shared with you.'**
+  String get editorMergeFromFileAbout;
+
+  /// Merge source sheet: header over the other databases on this device.
+  ///
+  /// In en, this message translates to:
+  /// **'On this device'**
+  String get editorMergeFromDevice;
+
+  /// Shown with a spinner while two databases are compared for a merge.
+  ///
+  /// In en, this message translates to:
+  /// **'Comparing the databases'**
+  String get editorMergeComparing;
+
+  /// Snackbar: the other database changes nothing this one does not already have.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to merge. Your database already has every change from that one.'**
+  String get editorMergeNothing;
+
+  /// Snackbar when comparing or applying a merge failed.
+  ///
+  /// In en, this message translates to:
+  /// **'The databases could not be merged.'**
+  String get editorMergeFailed;
+
+  /// Title of the merge review screen. name: the other database's name.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes from {name}'**
+  String editorMergeReviewTitle(String name);
+
+  /// Merge review: how many changes the other database has that this one does not.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 change to review} other{{count} changes to review}}'**
+  String editorMergeFound(int count);
+
+  /// Merge review: how many changes clash with this database's own edits.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No conflicts} =1{1 conflict} other{{count} conflicts}}'**
+  String editorMergeConflicts(int count);
+
+  /// Merge review: filter switch that shows only the clashing changes.
+  ///
+  /// In en, this message translates to:
+  /// **'Conflicts only'**
+  String get editorMergeConflictsOnly;
+
+  /// Merge review with the conflicts filter on and none to show.
+  ///
+  /// In en, this message translates to:
+  /// **'No conflicts. Every change is new to your database.'**
+  String get editorMergeNoConflicts;
+
+  /// Merge review: tick every change of a group.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get editorMergeAll;
+
+  /// Merge review: untick every change of a group.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get editorMergeNone;
+
+  /// Merge review: the bottom bar's summary of how many changes will be taken.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Take no changes} =1{Take 1 change} other{Take {count} changes}}'**
+  String editorMergeTake(int count);
+
+  /// Merge review: button that merges the ticked changes.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get editorMergeApply;
+
+  /// Merge review: label over this database's value in a conflict.
+  ///
+  /// In en, this message translates to:
+  /// **'Yours'**
+  String get editorMergeYours;
+
+  /// Merge review: label over the other database's value.
+  ///
+  /// In en, this message translates to:
+  /// **'Theirs'**
+  String get editorMergeTheirs;
+
+  /// Merge review: tag on a change only the other database made.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get editorMergeNew;
+
+  /// Merge review: tag on a change both databases made, differently.
+  ///
+  /// In en, this message translates to:
+  /// **'Conflict'**
+  String get editorMergeConflict;
+
+  /// Merge review: the value is the game's own (not changed in that database).
+  ///
+  /// In en, this message translates to:
+  /// **'As in the game'**
+  String get editorMergeGameValue;
+
+  /// Merge review: the player or item is not in the database.
+  ///
+  /// In en, this message translates to:
+  /// **'Not in this database'**
+  String get editorMergeNotHere;
+
+  /// Merge review: where a player is, a nation's squad.
+  ///
+  /// In en, this message translates to:
+  /// **'Squad of {nation}'**
+  String editorMergeSquadOf(String nation);
+
+  /// Merge review: where a player is, a nation's pool of other players.
+  ///
+  /// In en, this message translates to:
+  /// **'Pool of {nation}'**
+  String editorMergePoolOf(String nation);
+
+  /// Merge review: tag on a change of where a player is (squad, pool, another nation or out).
+  ///
+  /// In en, this message translates to:
+  /// **'Moves'**
+  String get editorMergePlace;
+
+  /// Merge review: a nation's name lists, by their sizes.
+  ///
+  /// In en, this message translates to:
+  /// **'{first} first names, {sur} surnames'**
+  String editorMergeNames(int first, int sur);
+
+  /// Snackbar after a merge, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 change merged} other{{count} changes merged}}'**
+  String editorMerged(int count);
+
+  /// History: button that saves the database as it is now as a version.
+  ///
+  /// In en, this message translates to:
+  /// **'Save version'**
+  String get editorHistorySave;
+
+  /// Title of the dialog that names a version being saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Save this version'**
+  String get editorHistorySaveTitle;
+
+  /// History: hint of the field naming a version.
+  ///
+  /// In en, this message translates to:
+  /// **'Name (optional)'**
+  String get editorHistoryNameHint;
+
+  /// Snackbar after a version was saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Version saved'**
+  String get editorHistorySaved;
+
+  /// History with no versions.
+  ///
+  /// In en, this message translates to:
+  /// **'No saved versions yet. One is saved before every merge and restore, and when you come back to this database after a break.'**
+  String get editorHistoryEmpty;
+
+  /// History: the note on how long versions are kept.
+  ///
+  /// In en, this message translates to:
+  /// **'The last 30 automatic versions are kept. Versions you save stay until you delete them.'**
+  String get editorHistoryKeep;
+
+  /// History: a version saved automatically when the database was opened after a break.
+  ///
+  /// In en, this message translates to:
+  /// **'When editing began'**
+  String get editorHistorySession;
+
+  /// History: a version saved automatically before another database was merged in. name: the other database.
+  ///
+  /// In en, this message translates to:
+  /// **'Before merging {name}'**
+  String editorHistoryBeforeMerge(String name);
+
+  /// History: a version saved automatically before an older one was restored.
+  ///
+  /// In en, this message translates to:
+  /// **'Before restoring'**
+  String get editorHistoryBeforeRestore;
+
+  /// History: a version the manager saved without a name.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved version'**
+  String get editorHistoryManual;
+
+  /// History: tag on a version the game saved on its own.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic'**
+  String get editorHistoryAuto;
+
+  /// History: how many items differ between a version and the database as it is now.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Same as now} =1{1 difference from now} other{{count} differences from now}}'**
+  String editorHistoryDiff(int count);
+
+  /// History: action that puts a version back as the database.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get editorHistoryRestore;
+
+  /// Title of the restore confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore this version?'**
+  String get editorHistoryRestoreTitle;
+
+  /// Body of the restore confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'The database goes back to this version. Its current state is saved in the history first.'**
+  String get editorHistoryRestoreBody;
+
+  /// Snackbar after a version was restored.
+  ///
+  /// In en, this message translates to:
+  /// **'Version restored'**
+  String get editorHistoryRestored;
+
+  /// Snackbar when saving, restoring, exporting or changing a version failed.
+  ///
+  /// In en, this message translates to:
+  /// **'That did not work. Please try again.'**
+  String get editorHistoryFailed;
+
+  /// Title of the dialog that renames a version.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename version'**
+  String get editorHistoryRenameTitle;
+
+  /// Title of the delete-version confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this version?'**
+  String get editorHistoryDeleteTitle;
+
+  /// Body of the delete-version confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'It is removed from the history. The database itself does not change.'**
+  String get editorHistoryDeleteBody;
 }
 
 class _AppLocalizationsDelegate

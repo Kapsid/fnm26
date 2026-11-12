@@ -17505,4 +17505,224 @@ class AppLocalizationsHr extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Izvezite svoju bazu podataka, otvorite je u pregledniku, ponovno je preuzmite i uvezite ovdje.';
+
+  @override
+  String get editorMerge => 'Spoji drugu bazu podataka';
+
+  @override
+  String get editorMergeAbout =>
+      'Preuzmi što je netko drugi promijenio u svojoj kopiji.';
+
+  @override
+  String get editorHistory => 'Povijest';
+
+  @override
+  String get editorHistoryAbout =>
+      'Spremljene verzije ove baze podataka. Vrati se na bilo koju od njih.';
+
+  @override
+  String get editorMergeFromTitle => 'Spoji iz';
+
+  @override
+  String get editorMergeFromFile => 'Datoteka baze podataka';
+
+  @override
+  String get editorMergeFromFileAbout =>
+      'Odaberi .fnmdb datoteku koju je netko podijelio s tobom.';
+
+  @override
+  String get editorMergeFromDevice => 'Na ovom uređaju';
+
+  @override
+  String get editorMergeComparing => 'Usporedba baza podataka';
+
+  @override
+  String get editorMergeNothing =>
+      'Nema se što spojiti. Tvoja baza podataka već ima sve promjene one druge.';
+
+  @override
+  String get editorMergeFailed => 'Baze podataka nije bilo moguće spojiti.';
+
+  @override
+  String editorMergeReviewTitle(String name) {
+    return 'Promjene iz $name';
+  }
+
+  @override
+  String editorMergeFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count promjena za pregled',
+      few: '$count promjene za pregled',
+      one: '1 promjena za pregled',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorMergeConflicts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sukoba',
+      few: '$count sukoba',
+      one: '1 sukob',
+      zero: 'Nema sukoba',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeConflictsOnly => 'Samo sukobi';
+
+  @override
+  String get editorMergeNoConflicts =>
+      'Nema sukoba. Svaka je promjena nova za tvoju bazu podataka.';
+
+  @override
+  String get editorMergeAll => 'Sve';
+
+  @override
+  String get editorMergeNone => 'Ništa';
+
+  @override
+  String editorMergeTake(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Preuzmi $count promjena',
+      few: 'Preuzmi $count promjene',
+      one: 'Preuzmi 1 promjenu',
+      zero: 'Ne preuzimaj promjene',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeApply => 'Primijeni';
+
+  @override
+  String get editorMergeYours => 'Tvoje';
+
+  @override
+  String get editorMergeTheirs => 'Njihovo';
+
+  @override
+  String get editorMergeNew => 'Novo';
+
+  @override
+  String get editorMergeConflict => 'Sukob';
+
+  @override
+  String get editorMergeGameValue => 'Kao u igri';
+
+  @override
+  String get editorMergeNotHere => 'Nema u ovoj bazi podataka';
+
+  @override
+  String editorMergeSquadOf(String nation) {
+    return 'Sastav ($nation)';
+  }
+
+  @override
+  String editorMergePoolOf(String nation) {
+    return 'Fond ($nation)';
+  }
+
+  @override
+  String get editorMergePlace => 'Premještaj';
+
+  @override
+  String editorMergeNames(int first, int sur) {
+    return '$first imena, $sur prezimena';
+  }
+
+  @override
+  String editorMerged(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count promjena spojeno',
+      few: '$count promjene spojene',
+      one: '1 promjena spojena',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistorySave => 'Spremi verziju';
+
+  @override
+  String get editorHistorySaveTitle => 'Spremi ovu verziju';
+
+  @override
+  String get editorHistoryNameHint => 'Naziv (neobavezno)';
+
+  @override
+  String get editorHistorySaved => 'Verzija spremljena';
+
+  @override
+  String get editorHistoryEmpty =>
+      'Još nema spremljenih verzija. Jedna se sprema prije svakog spajanja i vraćanja te kad se nakon pauze vratiš u ovu bazu podataka.';
+
+  @override
+  String get editorHistoryKeep =>
+      'Čuva se zadnjih 30 automatskih verzija. Verzije koje sam spremiš ostaju dok ih ne obrišeš.';
+
+  @override
+  String get editorHistorySession => 'Početak uređivanja';
+
+  @override
+  String editorHistoryBeforeMerge(String name) {
+    return 'Prije spajanja baze $name';
+  }
+
+  @override
+  String get editorHistoryBeforeRestore => 'Prije vraćanja';
+
+  @override
+  String get editorHistoryManual => 'Spremljena verzija';
+
+  @override
+  String get editorHistoryAuto => 'Automatski';
+
+  @override
+  String editorHistoryDiff(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count razlika u odnosu na sada',
+      few: '$count razlike u odnosu na sada',
+      one: '1 razlika u odnosu na sada',
+      zero: 'Isto kao sada',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistoryRestore => 'Vrati';
+
+  @override
+  String get editorHistoryRestoreTitle => 'Vratiti ovu verziju?';
+
+  @override
+  String get editorHistoryRestoreBody =>
+      'Baza podataka vraća se na ovu verziju. Njezino trenutno stanje prvo se sprema u povijest.';
+
+  @override
+  String get editorHistoryRestored => 'Verzija vraćena';
+
+  @override
+  String get editorHistoryFailed => 'Nije uspjelo. Pokušaj ponovno.';
+
+  @override
+  String get editorHistoryRenameTitle => 'Preimenuj verziju';
+
+  @override
+  String get editorHistoryDeleteTitle => 'Obrisati ovu verziju?';
+
+  @override
+  String get editorHistoryDeleteBody =>
+      'Uklanja se iz povijesti. Sama baza podataka se ne mijenja.';
 }

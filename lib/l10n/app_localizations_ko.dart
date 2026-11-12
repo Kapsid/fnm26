@@ -16596,4 +16596,214 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get editorWebAbout => '데이터베이스를 내보내 브라우저에서 열고, 다시 내려받아 여기에서 가져오세요.';
+
+  @override
+  String get editorMerge => '다른 데이터베이스 병합';
+
+  @override
+  String get editorMergeAbout => '다른 사람이 자기 사본에서 바꾼 내용을 가져옵니다.';
+
+  @override
+  String get editorHistory => '기록';
+
+  @override
+  String get editorHistoryAbout => '이 데이터베이스의 저장된 버전입니다. 원하는 버전으로 돌아갈 수 있습니다.';
+
+  @override
+  String get editorMergeFromTitle => '병합할 곳';
+
+  @override
+  String get editorMergeFromFile => '데이터베이스 파일';
+
+  @override
+  String get editorMergeFromFileAbout => '공유받은 .fnmdb 파일을 선택하세요.';
+
+  @override
+  String get editorMergeFromDevice => '이 기기';
+
+  @override
+  String get editorMergeComparing => '데이터베이스 비교 중';
+
+  @override
+  String get editorMergeNothing =>
+      '병합할 내용이 없습니다. 내 데이터베이스에 상대의 변경이 모두 들어 있습니다.';
+
+  @override
+  String get editorMergeFailed => '데이터베이스를 병합할 수 없습니다.';
+
+  @override
+  String editorMergeReviewTitle(String name) {
+    return '$name 변경 사항';
+  }
+
+  @override
+  String editorMergeFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '검토할 변경 $count개',
+      one: '검토할 변경 1개',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorMergeConflicts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '충돌 $count개',
+      one: '충돌 1개',
+      zero: '충돌 없음',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeConflictsOnly => '충돌만';
+
+  @override
+  String get editorMergeNoConflicts => '충돌이 없습니다. 모든 변경이 내 데이터베이스에 새로운 내용입니다.';
+
+  @override
+  String get editorMergeAll => '전체';
+
+  @override
+  String get editorMergeNone => '없음';
+
+  @override
+  String editorMergeTake(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '변경 $count개 가져오기',
+      one: '변경 1개 가져오기',
+      zero: '가져올 변경 없음',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeApply => '적용';
+
+  @override
+  String get editorMergeYours => '내 값';
+
+  @override
+  String get editorMergeTheirs => '상대 값';
+
+  @override
+  String get editorMergeNew => '신규';
+
+  @override
+  String get editorMergeConflict => '충돌';
+
+  @override
+  String get editorMergeGameValue => '게임 기본값';
+
+  @override
+  String get editorMergeNotHere => '이 데이터베이스에 없음';
+
+  @override
+  String editorMergeSquadOf(String nation) {
+    return '$nation 스쿼드';
+  }
+
+  @override
+  String editorMergePoolOf(String nation) {
+    return '$nation 선수 풀';
+  }
+
+  @override
+  String get editorMergePlace => '이동';
+
+  @override
+  String editorMergeNames(int first, int sur) {
+    return '이름 $first개, 성 $sur개';
+  }
+
+  @override
+  String editorMerged(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '변경 $count개를 병합했습니다',
+      one: '변경 1개를 병합했습니다',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistorySave => '버전 저장';
+
+  @override
+  String get editorHistorySaveTitle => '이 버전 저장';
+
+  @override
+  String get editorHistoryNameHint => '이름 (선택)';
+
+  @override
+  String get editorHistorySaved => '버전을 저장했습니다';
+
+  @override
+  String get editorHistoryEmpty =>
+      '저장된 버전이 아직 없습니다. 병합과 복원 전, 그리고 휴식 후 이 데이터베이스로 돌아올 때 자동으로 하나씩 저장됩니다.';
+
+  @override
+  String get editorHistoryKeep =>
+      '자동 버전은 최근 30개까지 보관됩니다. 직접 저장한 버전은 삭제할 때까지 남습니다.';
+
+  @override
+  String get editorHistorySession => '편집 시작 시점';
+
+  @override
+  String editorHistoryBeforeMerge(String name) {
+    return '$name 병합 전';
+  }
+
+  @override
+  String get editorHistoryBeforeRestore => '복원 전';
+
+  @override
+  String get editorHistoryManual => '저장한 버전';
+
+  @override
+  String get editorHistoryAuto => '자동';
+
+  @override
+  String editorHistoryDiff(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '현재와 차이 $count개',
+      one: '현재와 차이 1개',
+      zero: '현재와 동일',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistoryRestore => '복원';
+
+  @override
+  String get editorHistoryRestoreTitle => '이 버전을 복원할까요?';
+
+  @override
+  String get editorHistoryRestoreBody =>
+      '데이터베이스가 이 버전으로 돌아갑니다. 현재 상태는 먼저 기록에 저장됩니다.';
+
+  @override
+  String get editorHistoryRestored => '버전을 복원했습니다';
+
+  @override
+  String get editorHistoryFailed => '실패했습니다. 다시 시도해 주세요.';
+
+  @override
+  String get editorHistoryRenameTitle => '버전 이름 변경';
+
+  @override
+  String get editorHistoryDeleteTitle => '이 버전을 삭제할까요?';
+
+  @override
+  String get editorHistoryDeleteBody => '기록에서 삭제됩니다. 데이터베이스 자체는 바뀌지 않습니다.';
 }

@@ -17247,4 +17247,219 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Vie tietokantasi, avaa se selaimessa, lataa se takaisin ja tuo se tänne.';
+
+  @override
+  String get editorMerge => 'Yhdistä toinen tietokanta';
+
+  @override
+  String get editorMergeAbout =>
+      'Tuo tähän se, mitä joku muu on muuttanut omassa kopiossaan.';
+
+  @override
+  String get editorHistory => 'Historia';
+
+  @override
+  String get editorHistoryAbout =>
+      'Tämän tietokannan tallennetut versiot. Palaa mihin tahansa niistä.';
+
+  @override
+  String get editorMergeFromTitle => 'Yhdistä lähteestä';
+
+  @override
+  String get editorMergeFromFile => 'Tietokantatiedosto';
+
+  @override
+  String get editorMergeFromFileAbout =>
+      'Valitse .fnmdb-tiedosto, jonka joku on jakanut sinulle.';
+
+  @override
+  String get editorMergeFromDevice => 'Tällä laitteella';
+
+  @override
+  String get editorMergeComparing => 'Verrataan tietokantoja';
+
+  @override
+  String get editorMergeNothing =>
+      'Ei mitään yhdistettävää. Tietokannassasi on jo kaikki toisen muutokset.';
+
+  @override
+  String get editorMergeFailed => 'Tietokantoja ei voitu yhdistää.';
+
+  @override
+  String editorMergeReviewTitle(String name) {
+    return 'Muutokset tietokannasta $name';
+  }
+
+  @override
+  String editorMergeFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count muutosta tarkistettavana',
+      one: '1 muutos tarkistettavana',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorMergeConflicts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ristiriitaa',
+      one: '1 ristiriita',
+      zero: 'Ei ristiriitoja',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeConflictsOnly => 'Vain ristiriidat';
+
+  @override
+  String get editorMergeNoConflicts =>
+      'Ei ristiriitoja. Jokainen muutos on uusi tietokannallesi.';
+
+  @override
+  String get editorMergeAll => 'Kaikki';
+
+  @override
+  String get editorMergeNone => 'Ei mitään';
+
+  @override
+  String editorMergeTake(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ota $count muutosta',
+      one: 'Ota 1 muutos',
+      zero: 'Ei otettavia muutoksia',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeApply => 'Toteuta';
+
+  @override
+  String get editorMergeYours => 'Sinun';
+
+  @override
+  String get editorMergeTheirs => 'Heidän';
+
+  @override
+  String get editorMergeNew => 'Uusi';
+
+  @override
+  String get editorMergeConflict => 'Ristiriita';
+
+  @override
+  String get editorMergeGameValue => 'Kuten pelissä';
+
+  @override
+  String get editorMergeNotHere => 'Ei tässä tietokannassa';
+
+  @override
+  String editorMergeSquadOf(String nation) {
+    return 'Joukkue ($nation)';
+  }
+
+  @override
+  String editorMergePoolOf(String nation) {
+    return 'Pooli ($nation)';
+  }
+
+  @override
+  String get editorMergePlace => 'Siirtyy';
+
+  @override
+  String editorMergeNames(int first, int sur) {
+    return '$first etunimeä, $sur sukunimeä';
+  }
+
+  @override
+  String editorMerged(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count muutosta yhdistetty',
+      one: '1 muutos yhdistetty',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistorySave => 'Tallenna versio';
+
+  @override
+  String get editorHistorySaveTitle => 'Tallenna tämä versio';
+
+  @override
+  String get editorHistoryNameHint => 'Nimi (valinnainen)';
+
+  @override
+  String get editorHistorySaved => 'Versio tallennettu';
+
+  @override
+  String get editorHistoryEmpty =>
+      'Tallennettuja versioita ei vielä ole. Yksi tallennetaan ennen jokaista yhdistämistä ja palautusta sekä kun palaat tähän tietokantaan tauon jälkeen.';
+
+  @override
+  String get editorHistoryKeep =>
+      'Viimeiset 30 automaattista versiota säilytetään. Itse tallentamasi versiot pysyvät, kunnes poistat ne.';
+
+  @override
+  String get editorHistorySession => 'Muokkauksen alku';
+
+  @override
+  String editorHistoryBeforeMerge(String name) {
+    return 'Ennen tietokannan $name yhdistämistä';
+  }
+
+  @override
+  String get editorHistoryBeforeRestore => 'Ennen palautusta';
+
+  @override
+  String get editorHistoryManual => 'Tallennettu versio';
+
+  @override
+  String get editorHistoryAuto => 'Automaattinen';
+
+  @override
+  String editorHistoryDiff(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count eroa nykyiseen',
+      one: '1 ero nykyiseen',
+      zero: 'Sama kuin nyt',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistoryRestore => 'Palauta';
+
+  @override
+  String get editorHistoryRestoreTitle => 'Palautetaanko tämä versio?';
+
+  @override
+  String get editorHistoryRestoreBody =>
+      'Tietokanta palaa tähän versioon. Sen nykyinen tila tallennetaan ensin historiaan.';
+
+  @override
+  String get editorHistoryRestored => 'Versio palautettu';
+
+  @override
+  String get editorHistoryFailed => 'Se ei onnistunut. Yritä uudelleen.';
+
+  @override
+  String get editorHistoryRenameTitle => 'Nimeä versio uudelleen';
+
+  @override
+  String get editorHistoryDeleteTitle => 'Poistetaanko tämä versio?';
+
+  @override
+  String get editorHistoryDeleteBody =>
+      'Se poistetaan historiasta. Itse tietokanta ei muutu.';
 }

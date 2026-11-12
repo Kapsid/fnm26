@@ -17019,4 +17019,219 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Xuất cơ sở dữ liệu, mở nó trong trình duyệt, tải về lại rồi nhập vào đây.';
+
+  @override
+  String get editorMerge => 'Gộp cơ sở dữ liệu khác';
+
+  @override
+  String get editorMergeAbout =>
+      'Lấy những gì người khác đã đổi trong bản sao của họ.';
+
+  @override
+  String get editorHistory => 'Lịch sử';
+
+  @override
+  String get editorHistoryAbout =>
+      'Các phiên bản đã lưu của cơ sở dữ liệu này. Quay lại bất kỳ phiên bản nào.';
+
+  @override
+  String get editorMergeFromTitle => 'Gộp từ';
+
+  @override
+  String get editorMergeFromFile => 'Một tệp cơ sở dữ liệu';
+
+  @override
+  String get editorMergeFromFileAbout =>
+      'Chọn tệp .fnmdb mà ai đó đã chia sẻ cho bạn.';
+
+  @override
+  String get editorMergeFromDevice => 'Trên thiết bị này';
+
+  @override
+  String get editorMergeComparing => 'Đang so sánh các cơ sở dữ liệu';
+
+  @override
+  String get editorMergeNothing =>
+      'Không có gì để gộp. Cơ sở dữ liệu của bạn đã có mọi thay đổi từ cái kia.';
+
+  @override
+  String get editorMergeFailed => 'Không thể gộp các cơ sở dữ liệu.';
+
+  @override
+  String editorMergeReviewTitle(String name) {
+    return 'Thay đổi từ $name';
+  }
+
+  @override
+  String editorMergeFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count thay đổi cần xem',
+      one: '1 thay đổi cần xem',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorMergeConflicts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count xung đột',
+      one: '1 xung đột',
+      zero: 'Không xung đột',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeConflictsOnly => 'Chỉ xung đột';
+
+  @override
+  String get editorMergeNoConflicts =>
+      'Không xung đột. Mọi thay đổi đều mới với cơ sở dữ liệu của bạn.';
+
+  @override
+  String get editorMergeAll => 'Tất cả';
+
+  @override
+  String get editorMergeNone => 'Không chọn';
+
+  @override
+  String editorMergeTake(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Lấy $count thay đổi',
+      one: 'Lấy 1 thay đổi',
+      zero: 'Không lấy thay đổi nào',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeApply => 'Áp dụng';
+
+  @override
+  String get editorMergeYours => 'Của bạn';
+
+  @override
+  String get editorMergeTheirs => 'Của họ';
+
+  @override
+  String get editorMergeNew => 'Mới';
+
+  @override
+  String get editorMergeConflict => 'Xung đột';
+
+  @override
+  String get editorMergeGameValue => 'Như trong game';
+
+  @override
+  String get editorMergeNotHere => 'Không có trong cơ sở dữ liệu này';
+
+  @override
+  String editorMergeSquadOf(String nation) {
+    return 'Đội hình $nation';
+  }
+
+  @override
+  String editorMergePoolOf(String nation) {
+    return 'Nguồn cầu thủ $nation';
+  }
+
+  @override
+  String get editorMergePlace => 'Chuyển chỗ';
+
+  @override
+  String editorMergeNames(int first, int sur) {
+    return '$first tên, $sur họ';
+  }
+
+  @override
+  String editorMerged(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Đã gộp $count thay đổi',
+      one: 'Đã gộp 1 thay đổi',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistorySave => 'Lưu phiên bản';
+
+  @override
+  String get editorHistorySaveTitle => 'Lưu phiên bản này';
+
+  @override
+  String get editorHistoryNameHint => 'Tên (không bắt buộc)';
+
+  @override
+  String get editorHistorySaved => 'Đã lưu phiên bản';
+
+  @override
+  String get editorHistoryEmpty =>
+      'Chưa có phiên bản đã lưu. Một phiên bản được lưu trước mỗi lần gộp và khôi phục, và khi bạn quay lại cơ sở dữ liệu này sau một khoảng nghỉ.';
+
+  @override
+  String get editorHistoryKeep =>
+      '30 phiên bản tự động gần nhất được giữ lại. Phiên bản bạn tự lưu sẽ ở lại cho đến khi bạn xóa.';
+
+  @override
+  String get editorHistorySession => 'Lúc bắt đầu chỉnh sửa';
+
+  @override
+  String editorHistoryBeforeMerge(String name) {
+    return 'Trước khi gộp $name';
+  }
+
+  @override
+  String get editorHistoryBeforeRestore => 'Trước khi khôi phục';
+
+  @override
+  String get editorHistoryManual => 'Phiên bản đã lưu';
+
+  @override
+  String get editorHistoryAuto => 'Tự động';
+
+  @override
+  String editorHistoryDiff(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count điểm khác so với hiện tại',
+      one: '1 điểm khác so với hiện tại',
+      zero: 'Giống hiện tại',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistoryRestore => 'Khôi phục';
+
+  @override
+  String get editorHistoryRestoreTitle => 'Khôi phục phiên bản này?';
+
+  @override
+  String get editorHistoryRestoreBody =>
+      'Cơ sở dữ liệu sẽ quay về phiên bản này. Trạng thái hiện tại của nó được lưu vào lịch sử trước.';
+
+  @override
+  String get editorHistoryRestored => 'Đã khôi phục phiên bản';
+
+  @override
+  String get editorHistoryFailed => 'Không được. Vui lòng thử lại.';
+
+  @override
+  String get editorHistoryRenameTitle => 'Đổi tên phiên bản';
+
+  @override
+  String get editorHistoryDeleteTitle => 'Xóa phiên bản này?';
+
+  @override
+  String get editorHistoryDeleteBody =>
+      'Phiên bản bị gỡ khỏi lịch sử. Bản thân cơ sở dữ liệu không đổi.';
 }

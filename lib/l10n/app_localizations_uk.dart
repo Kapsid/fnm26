@@ -17486,4 +17486,229 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Експортуйте базу даних, відкрийте її в браузері, завантажте назад та імпортуйте тут.';
+
+  @override
+  String get editorMerge => 'Злити іншу базу даних';
+
+  @override
+  String get editorMergeAbout =>
+      'Візьми зміни, які хтось інший зробив у своїй копії.';
+
+  @override
+  String get editorHistory => 'Історія';
+
+  @override
+  String get editorHistoryAbout =>
+      'Збережені версії цієї бази даних. Повернись до будь-якої з них.';
+
+  @override
+  String get editorMergeFromTitle => 'Злити з';
+
+  @override
+  String get editorMergeFromFile => 'Файл бази даних';
+
+  @override
+  String get editorMergeFromFileAbout =>
+      'Обери файл .fnmdb, яким з тобою поділилися.';
+
+  @override
+  String get editorMergeFromDevice => 'На цьому пристрої';
+
+  @override
+  String get editorMergeComparing => 'Порівняння баз даних';
+
+  @override
+  String get editorMergeNothing =>
+      'Нічого зливати. Твоя база даних уже має всі зміни іншої.';
+
+  @override
+  String get editorMergeFailed => 'Не вдалося злити бази даних.';
+
+  @override
+  String editorMergeReviewTitle(String name) {
+    return 'Зміни з $name';
+  }
+
+  @override
+  String editorMergeFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count зміни для перегляду',
+      many: '$count змін для перегляду',
+      few: '$count зміни для перегляду',
+      one: '1 зміна для перегляду',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorMergeConflicts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count конфлікту',
+      many: '$count конфліктів',
+      few: '$count конфлікти',
+      one: '1 конфлікт',
+      zero: 'Без конфліктів',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeConflictsOnly => 'Лише конфлікти';
+
+  @override
+  String get editorMergeNoConflicts =>
+      'Конфліктів немає. Кожна зміна нова для твоєї бази даних.';
+
+  @override
+  String get editorMergeAll => 'Усі';
+
+  @override
+  String get editorMergeNone => 'Жодної';
+
+  @override
+  String editorMergeTake(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Взяти $count зміни',
+      many: 'Взяти $count змін',
+      few: 'Взяти $count зміни',
+      one: 'Взяти 1 зміну',
+      zero: 'Не брати змін',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeApply => 'Застосувати';
+
+  @override
+  String get editorMergeYours => 'Твоє';
+
+  @override
+  String get editorMergeTheirs => 'Їхнє';
+
+  @override
+  String get editorMergeNew => 'Нове';
+
+  @override
+  String get editorMergeConflict => 'Конфлікт';
+
+  @override
+  String get editorMergeGameValue => 'Як у грі';
+
+  @override
+  String get editorMergeNotHere => 'Немає в цій базі даних';
+
+  @override
+  String editorMergeSquadOf(String nation) {
+    return 'Склад ($nation)';
+  }
+
+  @override
+  String editorMergePoolOf(String nation) {
+    return 'Пул ($nation)';
+  }
+
+  @override
+  String get editorMergePlace => 'Переміщення';
+
+  @override
+  String editorMergeNames(int first, int sur) {
+    return '$first імен, $sur прізвищ';
+  }
+
+  @override
+  String editorMerged(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count зміни злито',
+      many: '$count змін злито',
+      few: '$count зміни злито',
+      one: '1 зміну злито',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistorySave => 'Зберегти версію';
+
+  @override
+  String get editorHistorySaveTitle => 'Зберегти цю версію';
+
+  @override
+  String get editorHistoryNameHint => 'Назва (необов’язково)';
+
+  @override
+  String get editorHistorySaved => 'Версію збережено';
+
+  @override
+  String get editorHistoryEmpty =>
+      'Збережених версій ще немає. Одна зберігається перед кожним злиттям і відновленням, а також коли ти повертаєшся до цієї бази даних після перерви.';
+
+  @override
+  String get editorHistoryKeep =>
+      'Зберігаються останні 30 автоматичних версій. Версії, які зберіг ти сам, лишаються, доки ти їх не видалиш.';
+
+  @override
+  String get editorHistorySession => 'Початок редагування';
+
+  @override
+  String editorHistoryBeforeMerge(String name) {
+    return 'Перед злиттям $name';
+  }
+
+  @override
+  String get editorHistoryBeforeRestore => 'Перед відновленням';
+
+  @override
+  String get editorHistoryManual => 'Збережена версія';
+
+  @override
+  String get editorHistoryAuto => 'Автоматична';
+
+  @override
+  String editorHistoryDiff(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count відмінності від теперішньої',
+      many: '$count відмінностей від теперішньої',
+      few: '$count відмінності від теперішньої',
+      one: '1 відмінність від теперішньої',
+      zero: 'Така сама, як зараз',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistoryRestore => 'Відновити';
+
+  @override
+  String get editorHistoryRestoreTitle => 'Відновити цю версію?';
+
+  @override
+  String get editorHistoryRestoreBody =>
+      'База даних повернеться до цієї версії. Її поточний стан спершу збережеться в історії.';
+
+  @override
+  String get editorHistoryRestored => 'Версію відновлено';
+
+  @override
+  String get editorHistoryFailed => 'Не вийшло. Спробуй ще раз.';
+
+  @override
+  String get editorHistoryRenameTitle => 'Перейменувати версію';
+
+  @override
+  String get editorHistoryDeleteTitle => 'Видалити цю версію?';
+
+  @override
+  String get editorHistoryDeleteBody =>
+      'Її буде прибрано з історії. Сама база даних не зміниться.';
 }

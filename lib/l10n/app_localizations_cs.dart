@@ -17557,4 +17557,224 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Exportujte databázi, otevřete ji v prohlížeči, stáhněte ji zpět a importujte ji sem.';
+
+  @override
+  String get editorMerge => 'Sloučit jinou databázi';
+
+  @override
+  String get editorMergeAbout =>
+      'Převezměte, co někdo jiný změnil ve své kopii.';
+
+  @override
+  String get editorHistory => 'Historie';
+
+  @override
+  String get editorHistoryAbout =>
+      'Uložené verze této databáze. Můžete se vrátit ke kterékoli z nich.';
+
+  @override
+  String get editorMergeFromTitle => 'Sloučit z';
+
+  @override
+  String get editorMergeFromFile => 'Soubor databáze';
+
+  @override
+  String get editorMergeFromFileAbout =>
+      'Vyberte soubor .fnmdb, který vám někdo sdílel.';
+
+  @override
+  String get editorMergeFromDevice => 'V tomto zařízení';
+
+  @override
+  String get editorMergeComparing => 'Porovnávání databází';
+
+  @override
+  String get editorMergeNothing =>
+      'Není co slučovat. Vaše databáze už obsahuje všechny změny z té druhé.';
+
+  @override
+  String get editorMergeFailed => 'Databáze se nepodařilo sloučit.';
+
+  @override
+  String editorMergeReviewTitle(String name) {
+    return 'Změny z databáze $name';
+  }
+
+  @override
+  String editorMergeFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count změn ke kontrole',
+      few: '$count změny ke kontrole',
+      one: '1 změna ke kontrole',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorMergeConflicts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count konfliktů',
+      few: '$count konflikty',
+      one: '1 konflikt',
+      zero: 'Žádné konflikty',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeConflictsOnly => 'Jen konflikty';
+
+  @override
+  String get editorMergeNoConflicts =>
+      'Žádné konflikty. Každá změna je pro vaši databázi nová.';
+
+  @override
+  String get editorMergeAll => 'Vše';
+
+  @override
+  String get editorMergeNone => 'Nic';
+
+  @override
+  String editorMergeTake(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Převzít $count změn',
+      few: 'Převzít $count změny',
+      one: 'Převzít 1 změnu',
+      zero: 'Nepřevzít žádné změny',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeApply => 'Použít';
+
+  @override
+  String get editorMergeYours => 'Vaše';
+
+  @override
+  String get editorMergeTheirs => 'Jejich';
+
+  @override
+  String get editorMergeNew => 'Nové';
+
+  @override
+  String get editorMergeConflict => 'Konflikt';
+
+  @override
+  String get editorMergeGameValue => 'Jako ve hře';
+
+  @override
+  String get editorMergeNotHere => 'Není v této databázi';
+
+  @override
+  String editorMergeSquadOf(String nation) {
+    return 'Kádr ($nation)';
+  }
+
+  @override
+  String editorMergePoolOf(String nation) {
+    return 'Širší kádr ($nation)';
+  }
+
+  @override
+  String get editorMergePlace => 'Přesun';
+
+  @override
+  String editorMergeNames(int first, int sur) {
+    return 'Jména $first, příjmení $sur';
+  }
+
+  @override
+  String editorMerged(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count změn sloučeno',
+      few: '$count změny sloučeny',
+      one: '1 změna sloučena',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistorySave => 'Uložit verzi';
+
+  @override
+  String get editorHistorySaveTitle => 'Uložit tuto verzi';
+
+  @override
+  String get editorHistoryNameHint => 'Název (volitelný)';
+
+  @override
+  String get editorHistorySaved => 'Verze uložena';
+
+  @override
+  String get editorHistoryEmpty =>
+      'Zatím žádné uložené verze. Jedna se uloží před každým sloučením a obnovením a také když se k databázi vrátíte po přestávce.';
+
+  @override
+  String get editorHistoryKeep =>
+      'Uchovává se posledních 30 automatických verzí. Verze, které uložíte sami, zůstanou, dokud je nesmažete.';
+
+  @override
+  String get editorHistorySession => 'Začátek úprav';
+
+  @override
+  String editorHistoryBeforeMerge(String name) {
+    return 'Před sloučením databáze $name';
+  }
+
+  @override
+  String get editorHistoryBeforeRestore => 'Před obnovením';
+
+  @override
+  String get editorHistoryManual => 'Uložená verze';
+
+  @override
+  String get editorHistoryAuto => 'Automaticky';
+
+  @override
+  String editorHistoryDiff(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rozdílů oproti současnosti',
+      few: '$count rozdíly oproti současnosti',
+      one: '1 rozdíl oproti současnosti',
+      zero: 'Stejná jako teď',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistoryRestore => 'Obnovit';
+
+  @override
+  String get editorHistoryRestoreTitle => 'Obnovit tuto verzi?';
+
+  @override
+  String get editorHistoryRestoreBody =>
+      'Databáze se vrátí k této verzi. Její současný stav se předtím uloží do historie.';
+
+  @override
+  String get editorHistoryRestored => 'Verze obnovena';
+
+  @override
+  String get editorHistoryFailed => 'Nepovedlo se to. Zkuste to prosím znovu.';
+
+  @override
+  String get editorHistoryRenameTitle => 'Přejmenovat verzi';
+
+  @override
+  String get editorHistoryDeleteTitle => 'Smazat tuto verzi?';
+
+  @override
+  String get editorHistoryDeleteBody =>
+      'Odebere se z historie. Samotná databáze se nezmění.';
 }

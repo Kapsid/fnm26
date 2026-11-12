@@ -17172,4 +17172,219 @@ class AppLocalizationsDa extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Eksportér din database, åbn den i browseren, download den igen og importér den her.';
+
+  @override
+  String get editorMerge => 'Flet en anden database';
+
+  @override
+  String get editorMergeAbout =>
+      'Hent det, en anden har ændret i sin kopi, ind i denne.';
+
+  @override
+  String get editorHistory => 'Historik';
+
+  @override
+  String get editorHistoryAbout =>
+      'Gemte versioner af denne database. Gå tilbage til en hvilken som helst af dem.';
+
+  @override
+  String get editorMergeFromTitle => 'Flet fra';
+
+  @override
+  String get editorMergeFromFile => 'En databasefil';
+
+  @override
+  String get editorMergeFromFileAbout =>
+      'Vælg en .fnmdb-fil, som nogen har delt med dig.';
+
+  @override
+  String get editorMergeFromDevice => 'På denne enhed';
+
+  @override
+  String get editorMergeComparing => 'Sammenligner databaserne';
+
+  @override
+  String get editorMergeNothing =>
+      'Intet at flette. Din database har allerede alle ændringerne fra den anden.';
+
+  @override
+  String get editorMergeFailed => 'Databaserne kunne ikke flettes.';
+
+  @override
+  String editorMergeReviewTitle(String name) {
+    return 'Ændringer fra $name';
+  }
+
+  @override
+  String editorMergeFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ændringer til gennemsyn',
+      one: '1 ændring til gennemsyn',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorMergeConflicts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count konflikter',
+      one: '1 konflikt',
+      zero: 'Ingen konflikter',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeConflictsOnly => 'Kun konflikter';
+
+  @override
+  String get editorMergeNoConflicts =>
+      'Ingen konflikter. Hver ændring er ny for din database.';
+
+  @override
+  String get editorMergeAll => 'Alle';
+
+  @override
+  String get editorMergeNone => 'Ingen';
+
+  @override
+  String editorMergeTake(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Tag $count ændringer',
+      one: 'Tag 1 ændring',
+      zero: 'Tag ingen ændringer',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeApply => 'Anvend';
+
+  @override
+  String get editorMergeYours => 'Din';
+
+  @override
+  String get editorMergeTheirs => 'Deres';
+
+  @override
+  String get editorMergeNew => 'Ny';
+
+  @override
+  String get editorMergeConflict => 'Konflikt';
+
+  @override
+  String get editorMergeGameValue => 'Som i spillet';
+
+  @override
+  String get editorMergeNotHere => 'Ikke i denne database';
+
+  @override
+  String editorMergeSquadOf(String nation) {
+    return 'Truppen for $nation';
+  }
+
+  @override
+  String editorMergePoolOf(String nation) {
+    return 'Puljen for $nation';
+  }
+
+  @override
+  String get editorMergePlace => 'Flytter';
+
+  @override
+  String editorMergeNames(int first, int sur) {
+    return '$first fornavne, $sur efternavne';
+  }
+
+  @override
+  String editorMerged(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ændringer flettet',
+      one: '1 ændring flettet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistorySave => 'Gem version';
+
+  @override
+  String get editorHistorySaveTitle => 'Gem denne version';
+
+  @override
+  String get editorHistoryNameHint => 'Navn (valgfrit)';
+
+  @override
+  String get editorHistorySaved => 'Version gemt';
+
+  @override
+  String get editorHistoryEmpty =>
+      'Ingen gemte versioner endnu. Der gemmes én før hver sammenfletning og gendannelse, og når du vender tilbage til denne database efter en pause.';
+
+  @override
+  String get editorHistoryKeep =>
+      'De seneste 30 automatiske versioner gemmes. Versioner, du selv gemmer, bliver, til du sletter dem.';
+
+  @override
+  String get editorHistorySession => 'Redigeringen begyndte';
+
+  @override
+  String editorHistoryBeforeMerge(String name) {
+    return 'Før sammenfletning af $name';
+  }
+
+  @override
+  String get editorHistoryBeforeRestore => 'Før gendannelse';
+
+  @override
+  String get editorHistoryManual => 'Gemt version';
+
+  @override
+  String get editorHistoryAuto => 'Automatisk';
+
+  @override
+  String editorHistoryDiff(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count forskelle fra nu',
+      one: '1 forskel fra nu',
+      zero: 'Som nu',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistoryRestore => 'Gendan';
+
+  @override
+  String get editorHistoryRestoreTitle => 'Gendan denne version?';
+
+  @override
+  String get editorHistoryRestoreBody =>
+      'Databasen går tilbage til denne version. Dens nuværende tilstand gemmes først i historikken.';
+
+  @override
+  String get editorHistoryRestored => 'Version gendannet';
+
+  @override
+  String get editorHistoryFailed => 'Det virkede ikke. Prøv igen.';
+
+  @override
+  String get editorHistoryRenameTitle => 'Omdøb version';
+
+  @override
+  String get editorHistoryDeleteTitle => 'Slet denne version?';
+
+  @override
+  String get editorHistoryDeleteBody =>
+      'Den fjernes fra historikken. Selve databasen ændres ikke.';
 }

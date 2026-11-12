@@ -17263,4 +17263,219 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get editorWebAbout =>
       'Εξαγάγετε τη βάση δεδομένων σας, ανοίξτε τη στο πρόγραμμα περιήγησης, κατεβάστε τη ξανά και εισαγάγετέ τη εδώ.';
+
+  @override
+  String get editorMerge => 'Συγχώνευση άλλης βάσης δεδομένων';
+
+  @override
+  String get editorMergeAbout =>
+      'Πάρε τις αλλαγές που έκανε κάποιος άλλος στο δικό του αντίγραφο.';
+
+  @override
+  String get editorHistory => 'Ιστορικό';
+
+  @override
+  String get editorHistoryAbout =>
+      'Αποθηκευμένες εκδόσεις αυτής της βάσης δεδομένων. Γύρνα σε όποια θες.';
+
+  @override
+  String get editorMergeFromTitle => 'Συγχώνευση από';
+
+  @override
+  String get editorMergeFromFile => 'Αρχείο βάσης δεδομένων';
+
+  @override
+  String get editorMergeFromFileAbout =>
+      'Διάλεξε ένα αρχείο .fnmdb που σου μοιράστηκε κάποιος.';
+
+  @override
+  String get editorMergeFromDevice => 'Σε αυτή τη συσκευή';
+
+  @override
+  String get editorMergeComparing => 'Σύγκριση των βάσεων δεδομένων';
+
+  @override
+  String get editorMergeNothing =>
+      'Δεν υπάρχει τίποτα για συγχώνευση. Η βάση σου έχει ήδη όλες τις αλλαγές της άλλης.';
+
+  @override
+  String get editorMergeFailed => 'Η συγχώνευση των βάσεων δεδομένων απέτυχε.';
+
+  @override
+  String editorMergeReviewTitle(String name) {
+    return 'Αλλαγές από $name';
+  }
+
+  @override
+  String editorMergeFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count αλλαγές για έλεγχο',
+      one: '1 αλλαγή για έλεγχο',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorMergeConflicts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count συγκρούσεις',
+      one: '1 σύγκρουση',
+      zero: 'Χωρίς συγκρούσεις',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeConflictsOnly => 'Μόνο συγκρούσεις';
+
+  @override
+  String get editorMergeNoConflicts =>
+      'Καμία σύγκρουση. Κάθε αλλαγή είναι νέα για τη βάση σου.';
+
+  @override
+  String get editorMergeAll => 'Όλες';
+
+  @override
+  String get editorMergeNone => 'Καμία';
+
+  @override
+  String editorMergeTake(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Λήψη $count αλλαγών',
+      one: 'Λήψη 1 αλλαγής',
+      zero: 'Καμία αλλαγή',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeApply => 'Εφαρμογή';
+
+  @override
+  String get editorMergeYours => 'Δικό σου';
+
+  @override
+  String get editorMergeTheirs => 'Δικό τους';
+
+  @override
+  String get editorMergeNew => 'Νέο';
+
+  @override
+  String get editorMergeConflict => 'Σύγκρουση';
+
+  @override
+  String get editorMergeGameValue => 'Όπως στο παιχνίδι';
+
+  @override
+  String get editorMergeNotHere => 'Δεν υπάρχει σε αυτή τη βάση';
+
+  @override
+  String editorMergeSquadOf(String nation) {
+    return 'Αποστολή $nation';
+  }
+
+  @override
+  String editorMergePoolOf(String nation) {
+    return 'Δεξαμενή $nation';
+  }
+
+  @override
+  String get editorMergePlace => 'Μετακίνηση';
+
+  @override
+  String editorMergeNames(int first, int sur) {
+    return '$first ονόματα, $sur επώνυμα';
+  }
+
+  @override
+  String editorMerged(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count αλλαγές συγχωνεύτηκαν',
+      one: '1 αλλαγή συγχωνεύτηκε',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistorySave => 'Αποθήκευση έκδοσης';
+
+  @override
+  String get editorHistorySaveTitle => 'Αποθήκευση αυτής της έκδοσης';
+
+  @override
+  String get editorHistoryNameHint => 'Όνομα (προαιρετικό)';
+
+  @override
+  String get editorHistorySaved => 'Η έκδοση αποθηκεύτηκε';
+
+  @override
+  String get editorHistoryEmpty =>
+      'Δεν υπάρχουν ακόμα αποθηκευμένες εκδόσεις. Μία αποθηκεύεται πριν από κάθε συγχώνευση και επαναφορά, καθώς και όταν επιστρέφεις σε αυτή τη βάση μετά από διάλειμμα.';
+
+  @override
+  String get editorHistoryKeep =>
+      'Κρατιούνται οι τελευταίες 30 αυτόματες εκδόσεις. Όσες αποθηκεύεις εσύ μένουν μέχρι να τις διαγράψεις.';
+
+  @override
+  String get editorHistorySession => 'Έναρξη επεξεργασίας';
+
+  @override
+  String editorHistoryBeforeMerge(String name) {
+    return 'Πριν τη συγχώνευση με $name';
+  }
+
+  @override
+  String get editorHistoryBeforeRestore => 'Πριν την επαναφορά';
+
+  @override
+  String get editorHistoryManual => 'Αποθηκευμένη έκδοση';
+
+  @override
+  String get editorHistoryAuto => 'Αυτόματη';
+
+  @override
+  String editorHistoryDiff(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count διαφορές από τώρα',
+      one: '1 διαφορά από τώρα',
+      zero: 'Ίδια με τώρα',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistoryRestore => 'Επαναφορά';
+
+  @override
+  String get editorHistoryRestoreTitle => 'Επαναφορά αυτής της έκδοσης;';
+
+  @override
+  String get editorHistoryRestoreBody =>
+      'Η βάση δεδομένων επιστρέφει σε αυτή την έκδοση. Η τωρινή της κατάσταση αποθηκεύεται πρώτα στο ιστορικό.';
+
+  @override
+  String get editorHistoryRestored => 'Η έκδοση επαναφέρθηκε';
+
+  @override
+  String get editorHistoryFailed => 'Δεν πέτυχε. Δοκίμασε ξανά.';
+
+  @override
+  String get editorHistoryRenameTitle => 'Μετονομασία έκδοσης';
+
+  @override
+  String get editorHistoryDeleteTitle => 'Διαγραφή αυτής της έκδοσης;';
+
+  @override
+  String get editorHistoryDeleteBody =>
+      'Αφαιρείται από το ιστορικό. Η ίδια η βάση δεδομένων δεν αλλάζει.';
 }
