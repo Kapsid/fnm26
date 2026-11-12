@@ -17383,4 +17383,45 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get assistantAskShort => 'Segéd';
+
+  @override
+  String get editorRankingTitle => 'Világranglista';
+
+  @override
+  String editorRankingPlace(int rank) {
+    return '#$rank';
+  }
+
+  @override
+  String get editorRankingAuto => 'Automatikus';
+
+  @override
+  String editorRankingAutoPlace(int rank) {
+    return 'Automatikus (#$rank)';
+  }
+
+  @override
+  String get editorRankingAbout =>
+      'Hol kezdi ez a nemzet az új karriert a világranglistán. Az automatikus a keret erejét követi.';
+
+  @override
+  String editorRankingHint(int min, int max) {
+    return '$min–$max';
+  }
+
+  @override
+  String editorRankingOf(String nation) {
+    return '$nation: Világranglista';
+  }
+
+  @override
+  String editorIssueRanking(int min, int max) {
+    return 'Adj meg egy világranglista-helyet $min és $max között.';
+  }
+
+  @override
+  String get editorRegionWorldwide => 'Világszerte';
+
+  @override
+  String get editorRegionNone => 'Ebben a régióban itt nincs semmi.';
 }

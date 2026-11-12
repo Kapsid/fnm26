@@ -17568,4 +17568,45 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get assistantAskShort => 'Co-Trainer';
+
+  @override
+  String get editorRankingTitle => 'Weltrangliste';
+
+  @override
+  String editorRankingPlace(int rank) {
+    return '#$rank';
+  }
+
+  @override
+  String get editorRankingAuto => 'Automatisch';
+
+  @override
+  String editorRankingAutoPlace(int rank) {
+    return 'Automatisch (#$rank)';
+  }
+
+  @override
+  String get editorRankingAbout =>
+      'Wo diese Nation eine neue Karriere in der Weltrangliste beginnt. Automatisch richtet sich nach der Stärke ihres Kaders.';
+
+  @override
+  String editorRankingHint(int min, int max) {
+    return '$min bis $max';
+  }
+
+  @override
+  String editorRankingOf(String nation) {
+    return '$nation: Weltrangliste';
+  }
+
+  @override
+  String editorIssueRanking(int min, int max) {
+    return 'Wähle einen Platz in der Weltrangliste von $min bis $max.';
+  }
+
+  @override
+  String get editorRegionWorldwide => 'Weltweit';
+
+  @override
+  String get editorRegionNone => 'Hier gibt es nichts für diese Region.';
 }

@@ -26359,6 +26359,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Assistant'**
   String get assistantAskShort;
+
+  /// A nation's starting world ranking in the database editor (tile and dialog title).
+  ///
+  /// In en, this message translates to:
+  /// **'World ranking'**
+  String get editorRankingTitle;
+
+  /// A place in the world ranking, e.g. #12.
+  ///
+  /// In en, this message translates to:
+  /// **'#{rank}'**
+  String editorRankingPlace(int rank);
+
+  /// The world ranking left to the game: it follows the squad's strength. Also the dialog button that sets it.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic'**
+  String get editorRankingAuto;
+
+  /// The world ranking left to the game, with the place the squad gives it.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic (#{rank})'**
+  String editorRankingAutoPlace(int rank);
+
+  /// What a nation's starting world ranking in the editor means.
+  ///
+  /// In en, this message translates to:
+  /// **'Where this nation starts a new career in the world ranking. Automatic follows the strength of its squad.'**
+  String get editorRankingAbout;
+
+  /// Hint in the world ranking field: the places allowed.
+  ///
+  /// In en, this message translates to:
+  /// **'{min} to {max}'**
+  String editorRankingHint(int min, int max);
+
+  /// Merge review: a nation's starting world ranking.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation}: world ranking'**
+  String editorRankingOf(String nation);
+
+  /// A world ranking place out of range.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a world ranking place from {min} to {max}.'**
+  String editorIssueRanking(int min, int max);
+
+  /// Editor region filter chip: rows that belong to no confederation (the World Championship, sponsors, reporters).
+  ///
+  /// In en, this message translates to:
+  /// **'Worldwide'**
+  String get editorRegionWorldwide;
+
+  /// Shown when the editor's region filter leaves a list empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing here for this region.'**
+  String get editorRegionNone;
 }
 
 class _AppLocalizationsDelegate

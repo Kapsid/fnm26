@@ -171,7 +171,8 @@ void main() {
       ..remove('sponsorIndustries')
       ..remove('yHandles')
       ..remove('addedReporters')
-      ..remove('addedStadiums');
+      ..remove('addedStadiums')
+      ..remove('rankings');
     final migrated = WorldPack.migrate(v2);
     expect(migrated['formatVersion'], kPackFormatVersion);
     expect(migrated['managers'], <String, Object?>{});
@@ -195,7 +196,8 @@ void main() {
       ..remove('sponsorIndustries')
       ..remove('yHandles')
       ..remove('addedReporters')
-      ..remove('addedStadiums');
+      ..remove('addedStadiums')
+      ..remove('rankings');
     final migrated = WorldPack.migrate(v3);
     expect(migrated['formatVersion'], kPackFormatVersion);
     final p = WorldPack.fromJson(migrated);
@@ -264,16 +266,16 @@ void main() {
     }
   });
 
-  test('migrate refuses format 7', () {
+  test('migrate refuses format 8', () {
     final json = _pack().toJson();
-    expect(kPackFormatVersion, 6);
+    expect(kPackFormatVersion, 7);
     expect(
-      () => WorldPack.migrate({...json, 'formatVersion': 7}),
+      () => WorldPack.migrate({...json, 'formatVersion': 8}),
       throwsFormatException,
     );
   });
 
-  test('migrate is identity at v6 and rejects newer or missing versions', () {
+  test('migrate is identity at v7 and rejects newer or missing versions', () {
     final json = _pack().toJson();
     expect(WorldPack.migrate(json), json);
     expect(
@@ -310,7 +312,8 @@ void main() {
           ..remove('sponsorIndustries')
           ..remove('yHandles')
           ..remove('addedReporters')
-          ..remove('addedStadiums');
+          ..remove('addedStadiums')
+          ..remove('rankings');
     final p = WorldPack.fromJson(WorldPack.migrate(json));
     expect(p.clubs, {'Old FC': 'New FC', 'Limburg Blue-White': 'Genk Mine'});
     expect(p.clubStrengths, {'Toluca Volcanoes': 4});
@@ -490,7 +493,8 @@ void main() {
         ..remove('sponsorIndustries')
         ..remove('yHandles')
         ..remove('addedReporters')
-        ..remove('addedStadiums');
+        ..remove('addedStadiums')
+        ..remove('rankings');
       return json;
     }
 

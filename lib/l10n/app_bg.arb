@@ -4353,5 +4353,15 @@
   "financesInvestedSoFar": "Инвестирано досега",
   "tacticsQuickBest": "Най-добър",
   "tacticsQuickPrevious": "Предишен",
-  "assistantAskShort": "Асистент"
+  "assistantAskShort": "Асистент",
+  "editorRankingTitle": "Световна ранглиста",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Автоматично",
+  "editorRankingAutoPlace": "Автоматично (#{rank})",
+  "editorRankingAbout": "Къде започва този национален отбор нова кариера в световната ранглиста. Автоматично следва силата на състава му.",
+  "editorRankingHint": "от {min} до {max}",
+  "editorRankingOf": "{nation}: световна ранглиста",
+  "editorIssueRanking": "Задайте място в световната ранглиста от {min} до {max}.",
+  "editorRegionWorldwide": "Световно",
+  "editorRegionNone": "Няма нищо за този регион."
 }

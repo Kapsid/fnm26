@@ -4353,5 +4353,15 @@
   "financesInvestedSoFar": "अब तक निवेश",
   "tacticsQuickBest": "सर्वश्रेष्ठ",
   "tacticsQuickPrevious": "पिछला",
-  "assistantAskShort": "सहायक"
+  "assistantAskShort": "सहायक",
+  "editorRankingTitle": "विश्व रैंकिंग",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "ऑटोमैटिक",
+  "editorRankingAutoPlace": "ऑटोमैटिक (#{rank})",
+  "editorRankingAbout": "नए करियर की शुरुआत में यह देश विश्व रैंकिंग में कहाँ होगा। ऑटोमैटिक उसकी टीम की ताकत के हिसाब से चलता है।",
+  "editorRankingHint": "{min} से {max}",
+  "editorRankingOf": "{nation}: विश्व रैंकिंग",
+  "editorIssueRanking": "विश्व रैंकिंग में {min} से {max} तक का स्थान चुनें।",
+  "editorRegionWorldwide": "विश्वव्यापी",
+  "editorRegionNone": "इस क्षेत्र के लिए यहाँ कुछ नहीं है।"
 }

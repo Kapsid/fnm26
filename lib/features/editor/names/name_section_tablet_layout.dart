@@ -62,7 +62,12 @@ class _NameSectionTabletLayout extends StatelessWidget {
         master: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _SearchField(state: state),
+            _SearchField(
+              state: state,
+              horizontal: false,
+              regional: view.regional,
+              worldwide: view.worldwide,
+            ),
             const SizedBox(height: AppSpacing.md),
             Expanded(
               child: _NameList(

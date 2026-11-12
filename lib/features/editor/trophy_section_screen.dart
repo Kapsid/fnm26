@@ -15,10 +15,12 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/competition_label.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/domain/services/world_pack/trophy_normaliser.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
+import 'package:fnm/features/editor/editor_region_filter.dart';
 import 'package:fnm/features/editor/editor_ui.dart';
 import 'package:fnm/features/editor/picked_file.dart';
 import 'package:fnm/features/editor/players/players_ui.dart';
@@ -71,8 +73,14 @@ class TrophySectionScreen extends ConsumerStatefulWidget {
       _TrophySectionScreenState();
 }
 
-/// One trophy as the section shows it.
-typedef _Trophy = ({String key, String label, Uint8List? png});
+/// One trophy as the section shows it: [confederation] its continent's
+/// (null for a worldwide one), what the region filter reads.
+typedef _Trophy = ({
+  String key,
+  String label,
+  Uint8List? png,
+  Confederation? confederation,
+});
 
 class _TrophySectionScreenState extends ConsumerState<TrophySectionScreen> {
   /// The trophy shown beside the grid (tablet).
@@ -99,6 +107,7 @@ class _TrophySectionScreenState extends ConsumerState<TrophySectionScreen> {
           // in the player's language.
           label: pack.competitions[t.label] ?? competitionLabel(l, t.label),
           png: editor.trophy(t.key),
+          confederation: Confederation.values.asNameMap()[t.key],
         ),
     ];
   }
@@ -262,7 +271,11 @@ class _TrophySectionScreenState extends ConsumerState<TrophySectionScreen> {
       );
     }
 
-    final trophies = _trophies(l, pack);
+    final region = ref.watch(editorRegionProvider);
+    final trophies = [
+      for (final t in _trophies(l, pack))
+        if (editorRegionShows(region, t.confederation)) t,
+    ];
     if (tablet) {
       return _TrophySectionTabletLayout(
         state: this,
@@ -286,6 +299,7 @@ class _TrophySectionScreenState extends ConsumerState<TrophySectionScreen> {
             AppSpacing.marginMobile,
             AppSpacing.lg,
           ),
+          horizontalChips: true,
           onTap: (t) => _open(t, tablet: false),
         ),
       ),
@@ -336,17 +350,21 @@ class _Working extends StatelessWidget {
   );
 }
 
-/// The intro line and every trophy's tile.
+/// The region filter, the intro line and every trophy's tile.
 class _TrophyGrid extends StatelessWidget {
   const _TrophyGrid({
     required this.trophies,
     required this.padding,
     required this.onTap,
     this.picked,
+    this.horizontalChips = false,
   });
 
   final List<_Trophy> trophies;
   final EdgeInsets padding;
+
+  /// Whether the region chips scroll in one row (the phone) or wrap.
+  final bool horizontalChips;
   final void Function(_Trophy) onTap;
 
   /// The trophy shown beside the grid (tablet).
@@ -359,8 +377,26 @@ class _TrophyGrid extends StatelessWidget {
       slivers: [
         SliverPadding(
           padding: EdgeInsets.fromLTRB(
-            padding.left,
+            horizontalChips ? 0 : padding.left,
             padding.top,
+            horizontalChips ? 0 : padding.right,
+            AppSpacing.sm,
+          ),
+          sliver: SliverToBoxAdapter(
+            child: EditorRegionChips(
+              horizontal: horizontalChips,
+              worldwide: true,
+              padding: EdgeInsets.only(
+                left: padding.left,
+                right: padding.right,
+              ),
+            ),
+          ),
+        ),
+        SliverPadding(
+          padding: EdgeInsets.fromLTRB(
+            padding.left,
+            0,
             padding.right,
             AppSpacing.md,
           ),

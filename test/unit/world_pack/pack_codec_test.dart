@@ -236,7 +236,8 @@ void main() {
         ..remove('sponsorIndustries')
         ..remove('yHandles')
         ..remove('addedReporters')
-        ..remove('addedStadiums');
+        ..remove('addedStadiums')
+        ..remove('rankings');
       final r = await PackCodec.decode(
         _file({'format': 1, 'pack': json, 'trophies': <String, Object?>{}}),
       );
@@ -282,7 +283,8 @@ void main() {
         ..remove('sponsorIndustries')
         ..remove('yHandles')
         ..remove('addedReporters')
-        ..remove('addedStadiums'));
+        ..remove('addedStadiums')
+        ..remove('rankings'));
       final r = await PackCodec.decode(_file(raw));
       final d = r as PackDecoded;
       expect(d.pack.formatVersion, kPackFormatVersion);
@@ -302,7 +304,8 @@ void main() {
         ..remove('sponsorIndustries')
         ..remove('yHandles')
         ..remove('addedReporters')
-        ..remove('addedStadiums'));
+        ..remove('addedStadiums')
+        ..remove('rankings'));
       final d = await PackCodec.decode(_file(raw)) as PackDecoded;
       expect(d.pack.formatVersion, kPackFormatVersion);
       expect(d.pack.clubStrengths, {'Man Blue': 4});
@@ -908,7 +911,8 @@ void main() {
             ..remove('sponsorIndustries')
             ..remove('yHandles')
             ..remove('addedReporters')
-            ..remove('addedStadiums')),
+            ..remove('addedStadiums')
+            ..remove('rankings')),
       );
       final r = await PackCodec.decode(
         file,

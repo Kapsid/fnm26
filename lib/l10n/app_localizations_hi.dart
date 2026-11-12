@@ -17345,4 +17345,45 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get assistantAskShort => 'सहायक';
+
+  @override
+  String get editorRankingTitle => 'विश्व रैंकिंग';
+
+  @override
+  String editorRankingPlace(int rank) {
+    return '#$rank';
+  }
+
+  @override
+  String get editorRankingAuto => 'ऑटोमैटिक';
+
+  @override
+  String editorRankingAutoPlace(int rank) {
+    return 'ऑटोमैटिक (#$rank)';
+  }
+
+  @override
+  String get editorRankingAbout =>
+      'नए करियर की शुरुआत में यह देश विश्व रैंकिंग में कहाँ होगा। ऑटोमैटिक उसकी टीम की ताकत के हिसाब से चलता है।';
+
+  @override
+  String editorRankingHint(int min, int max) {
+    return '$min से $max';
+  }
+
+  @override
+  String editorRankingOf(String nation) {
+    return '$nation: विश्व रैंकिंग';
+  }
+
+  @override
+  String editorIssueRanking(int min, int max) {
+    return 'विश्व रैंकिंग में $min से $max तक का स्थान चुनें।';
+  }
+
+  @override
+  String get editorRegionWorldwide => 'विश्वव्यापी';
+
+  @override
+  String get editorRegionNone => 'इस क्षेत्र के लिए यहाँ कुछ नहीं है।';
 }

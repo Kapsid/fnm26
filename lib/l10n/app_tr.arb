@@ -4353,5 +4353,15 @@
   "financesInvestedSoFar": "Şimdiye kadar yatırılan",
   "tacticsQuickBest": "En iyi",
   "tacticsQuickPrevious": "Önceki",
-  "assistantAskShort": "Yardımcı"
+  "assistantAskShort": "Yardımcı",
+  "editorRankingTitle": "Dünya sıralaması",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Otomatik",
+  "editorRankingAutoPlace": "Otomatik (#{rank})",
+  "editorRankingAbout": "Bu milli takımın yeni bir kariyere dünya sıralamasında başladığı yer. Otomatik, kadrosunun gücüne göre belirlenir.",
+  "editorRankingHint": "{min} - {max}",
+  "editorRankingOf": "{nation}: Dünya sıralaması",
+  "editorIssueRanking": "Dünya sıralamasında {min} ile {max} arasında bir yer gir.",
+  "editorRegionWorldwide": "Dünya geneli",
+  "editorRegionNone": "Bu bölge için burada bir şey yok."
 }

@@ -17348,4 +17348,45 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get assistantAskShort => 'Yardımcı';
+
+  @override
+  String get editorRankingTitle => 'Dünya sıralaması';
+
+  @override
+  String editorRankingPlace(int rank) {
+    return '#$rank';
+  }
+
+  @override
+  String get editorRankingAuto => 'Otomatik';
+
+  @override
+  String editorRankingAutoPlace(int rank) {
+    return 'Otomatik (#$rank)';
+  }
+
+  @override
+  String get editorRankingAbout =>
+      'Bu milli takımın yeni bir kariyere dünya sıralamasında başladığı yer. Otomatik, kadrosunun gücüne göre belirlenir.';
+
+  @override
+  String editorRankingHint(int min, int max) {
+    return '$min - $max';
+  }
+
+  @override
+  String editorRankingOf(String nation) {
+    return '$nation: Dünya sıralaması';
+  }
+
+  @override
+  String editorIssueRanking(int min, int max) {
+    return 'Dünya sıralamasında $min ile $max arasında bir yer gir.';
+  }
+
+  @override
+  String get editorRegionWorldwide => 'Dünya geneli';
+
+  @override
+  String get editorRegionNone => 'Bu bölge için burada bir şey yok.';
 }

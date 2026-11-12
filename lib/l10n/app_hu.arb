@@ -4353,5 +4353,15 @@
   "financesInvestedSoFar": "Eddig befektetve",
   "tacticsQuickBest": "Legjobb",
   "tacticsQuickPrevious": "Előző",
-  "assistantAskShort": "Segéd"
+  "assistantAskShort": "Segéd",
+  "editorRankingTitle": "Világranglista",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Automatikus",
+  "editorRankingAutoPlace": "Automatikus (#{rank})",
+  "editorRankingAbout": "Hol kezdi ez a nemzet az új karriert a világranglistán. Az automatikus a keret erejét követi.",
+  "editorRankingHint": "{min}–{max}",
+  "editorRankingOf": "{nation}: Világranglista",
+  "editorIssueRanking": "Adj meg egy világranglista-helyet {min} és {max} között.",
+  "editorRegionWorldwide": "Világszerte",
+  "editorRegionNone": "Ebben a régióban itt nincs semmi."
 }

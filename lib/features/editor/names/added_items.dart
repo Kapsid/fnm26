@@ -841,6 +841,8 @@ List<NameGroup> withAddedRows(
                   key: section.addedKey(y.id),
                   original: y.name,
                   addedId: y.id,
+                  // Its nation's region; one for every nation is worldwide.
+                  nationId: y.nationId,
                   detail:
                       '${yVoiceLabel(l, y.voice)} · '
                       '${nations[y.nationId]?.name ?? l.editorAddedAllNations}',

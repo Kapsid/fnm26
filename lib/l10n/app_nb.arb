@@ -4353,5 +4353,15 @@
   "financesInvestedSoFar": "Investert så langt",
   "tacticsQuickBest": "Beste",
   "tacticsQuickPrevious": "Forrige",
-  "assistantAskShort": "Assistent"
+  "assistantAskShort": "Assistent",
+  "editorRankingTitle": "Verdensrankingen",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Automatisk",
+  "editorRankingAutoPlace": "Automatisk (#{rank})",
+  "editorRankingAbout": "Hvor denne nasjonen starter en ny karriere på verdensrankingen. Automatisk følger styrken i troppen.",
+  "editorRankingHint": "{min} til {max}",
+  "editorRankingOf": "{nation}: verdensrankingen",
+  "editorIssueRanking": "Angi en plass på verdensrankingen fra {min} til {max}.",
+  "editorRegionWorldwide": "Hele verden",
+  "editorRegionNone": "Ingenting her for denne regionen."
 }

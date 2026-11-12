@@ -4353,5 +4353,15 @@
   "financesInvestedSoFar": "Dosud investováno",
   "tacticsQuickBest": "Nejlepší",
   "tacticsQuickPrevious": "Minulý",
-  "assistantAskShort": "Asistent"
+  "assistantAskShort": "Asistent",
+  "editorRankingTitle": "Světový žebříček",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Automaticky",
+  "editorRankingAutoPlace": "Automaticky (#{rank})",
+  "editorRankingAbout": "Kde tento národ začíná novou kariéru ve světovém žebříčku. Automaticky se řídí silou jeho kádru.",
+  "editorRankingHint": "{min} až {max}",
+  "editorRankingOf": "{nation}: světový žebříček",
+  "editorIssueRanking": "Zadejte místo ve světovém žebříčku od {min} do {max}.",
+  "editorRegionWorldwide": "Celosvětově",
+  "editorRegionNone": "Pro tento region tu nic není."
 }

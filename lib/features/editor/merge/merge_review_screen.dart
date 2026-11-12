@@ -965,6 +965,7 @@ class _ValueText {
       MergeField.nameLists ||
       MergeField.manager ||
       MergeField.nation => nationName(i.nationId),
+      MergeField.ranking => l.editorRankingOf(nationName(i.nationId)),
       MergeField.stadium =>
         '${ProfanityFilter.mask(i.label)}, '
             '${nationName(i.nationId)}',
@@ -1009,6 +1010,9 @@ class _ValueText {
 
   String? _string(MergeItem i, Object? v, {required bool mine}) {
     final pack = mine ? plan.mine : plan.theirs;
+    if (i.field == MergeField.ranking) {
+      return v is int ? l.editorRankingPlace(v) : null;
+    }
     return switch (v) {
       null => null,
       final PackPlayer p => _player(pack, p),

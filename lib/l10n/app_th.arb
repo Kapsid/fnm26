@@ -4353,5 +4353,15 @@
   "financesInvestedSoFar": "ลงทุนไปแล้ว",
   "tacticsQuickBest": "ดีที่สุด",
   "tacticsQuickPrevious": "ครั้งก่อน",
-  "assistantAskShort": "ผู้ช่วย"
+  "assistantAskShort": "ผู้ช่วย",
+  "editorRankingTitle": "อันดับโลก",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "อัตโนมัติ",
+  "editorRankingAutoPlace": "อัตโนมัติ (#{rank})",
+  "editorRankingAbout": "อันดับโลกของชาตินี้เมื่อเริ่มอาชีพใหม่ อัตโนมัติจะเป็นไปตามความแข็งแกร่งของทีม",
+  "editorRankingHint": "{min} ถึง {max}",
+  "editorRankingOf": "{nation}: อันดับโลก",
+  "editorIssueRanking": "กำหนดอันดับโลกตั้งแต่ {min} ถึง {max}",
+  "editorRegionWorldwide": "ทั่วโลก",
+  "editorRegionNone": "ไม่มีรายการสำหรับภูมิภาคนี้"
 }

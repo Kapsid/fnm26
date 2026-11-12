@@ -17529,4 +17529,45 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get assistantAskShort => 'Βοηθός';
+
+  @override
+  String get editorRankingTitle => 'Παγκόσμια κατάταξη';
+
+  @override
+  String editorRankingPlace(int rank) {
+    return '#$rank';
+  }
+
+  @override
+  String get editorRankingAuto => 'Αυτόματα';
+
+  @override
+  String editorRankingAutoPlace(int rank) {
+    return 'Αυτόματα (#$rank)';
+  }
+
+  @override
+  String get editorRankingAbout =>
+      'Πού ξεκινά αυτό το έθνος μια νέα καριέρα στην παγκόσμια κατάταξη. Η αυτόματη επιλογή ακολουθεί τη δύναμη του ρόστερ του.';
+
+  @override
+  String editorRankingHint(int min, int max) {
+    return '$min έως $max';
+  }
+
+  @override
+  String editorRankingOf(String nation) {
+    return '$nation: παγκόσμια κατάταξη';
+  }
+
+  @override
+  String editorIssueRanking(int min, int max) {
+    return 'Ορίστε θέση στην παγκόσμια κατάταξη από $min έως $max.';
+  }
+
+  @override
+  String get editorRegionWorldwide => 'Παγκοσμίως';
+
+  @override
+  String get editorRegionNone => 'Δεν υπάρχει τίποτα για αυτή την περιοχή.';
 }

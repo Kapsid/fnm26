@@ -4353,5 +4353,15 @@
   "financesInvestedSoFar": "Investi à ce jour",
   "tacticsQuickBest": "Meilleur",
   "tacticsQuickPrevious": "Précédent",
-  "assistantAskShort": "Adjoint"
+  "assistantAskShort": "Adjoint",
+  "editorRankingTitle": "Classement mondial",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Automatique",
+  "editorRankingAutoPlace": "Automatique (#{rank})",
+  "editorRankingAbout": "La place de cette nation au classement mondial au début d’une nouvelle carrière. Automatique suit la force de son effectif.",
+  "editorRankingHint": "{min} à {max}",
+  "editorRankingOf": "{nation} : classement mondial",
+  "editorIssueRanking": "Indiquez une place au classement mondial entre {min} et {max}.",
+  "editorRegionWorldwide": "Monde entier",
+  "editorRegionNone": "Rien ici pour cette région."
 }

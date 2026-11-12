@@ -4353,5 +4353,15 @@
   "financesInvestedSoFar": "Επενδύσεις έως τώρα",
   "tacticsQuickBest": "Καλύτερη",
   "tacticsQuickPrevious": "Προηγούμενη",
-  "assistantAskShort": "Βοηθός"
+  "assistantAskShort": "Βοηθός",
+  "editorRankingTitle": "Παγκόσμια κατάταξη",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Αυτόματα",
+  "editorRankingAutoPlace": "Αυτόματα (#{rank})",
+  "editorRankingAbout": "Πού ξεκινά αυτό το έθνος μια νέα καριέρα στην παγκόσμια κατάταξη. Η αυτόματη επιλογή ακολουθεί τη δύναμη του ρόστερ του.",
+  "editorRankingHint": "{min} έως {max}",
+  "editorRankingOf": "{nation}: παγκόσμια κατάταξη",
+  "editorIssueRanking": "Ορίστε θέση στην παγκόσμια κατάταξη από {min} έως {max}.",
+  "editorRegionWorldwide": "Παγκοσμίως",
+  "editorRegionNone": "Δεν υπάρχει τίποτα για αυτή την περιοχή."
 }

@@ -4353,5 +4353,15 @@
   "financesInvestedSoFar": "Diinvestasikan sejauh ini",
   "tacticsQuickBest": "Terbaik",
   "tacticsQuickPrevious": "Sebelumnya",
-  "assistantAskShort": "Asisten"
+  "assistantAskShort": "Asisten",
+  "editorRankingTitle": "Peringkat dunia",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Otomatis",
+  "editorRankingAutoPlace": "Otomatis (#{rank})",
+  "editorRankingAbout": "Posisi negara ini di peringkat dunia saat karier baru dimulai. Otomatis mengikuti kekuatan skuadnya.",
+  "editorRankingHint": "{min} sampai {max}",
+  "editorRankingOf": "{nation}: peringkat dunia",
+  "editorIssueRanking": "Tetapkan posisi peringkat dunia dari {min} sampai {max}.",
+  "editorRegionWorldwide": "Seluruh dunia",
+  "editorRegionNone": "Tidak ada apa pun untuk wilayah ini."
 }

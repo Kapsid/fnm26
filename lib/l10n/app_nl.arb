@@ -4353,5 +4353,15 @@
   "financesInvestedSoFar": "Tot nu toe geïnvesteerd",
   "tacticsQuickBest": "Beste",
   "tacticsQuickPrevious": "Vorige",
-  "assistantAskShort": "Assistent"
+  "assistantAskShort": "Assistent",
+  "editorRankingTitle": "Wereldranglijst",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Automatisch",
+  "editorRankingAutoPlace": "Automatisch (#{rank})",
+  "editorRankingAbout": "Waar dit land een nieuwe carrière begint op de wereldranglijst. Automatisch volgt de sterkte van de selectie.",
+  "editorRankingHint": "{min} tot {max}",
+  "editorRankingOf": "{nation}: wereldranglijst",
+  "editorIssueRanking": "Kies een plaats op de wereldranglijst van {min} tot {max}.",
+  "editorRegionWorldwide": "Wereldwijd",
+  "editorRegionNone": "Niets voor deze regio."
 }

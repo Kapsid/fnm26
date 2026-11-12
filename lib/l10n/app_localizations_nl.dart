@@ -17521,4 +17521,45 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get assistantAskShort => 'Assistent';
+
+  @override
+  String get editorRankingTitle => 'Wereldranglijst';
+
+  @override
+  String editorRankingPlace(int rank) {
+    return '#$rank';
+  }
+
+  @override
+  String get editorRankingAuto => 'Automatisch';
+
+  @override
+  String editorRankingAutoPlace(int rank) {
+    return 'Automatisch (#$rank)';
+  }
+
+  @override
+  String get editorRankingAbout =>
+      'Waar dit land een nieuwe carrière begint op de wereldranglijst. Automatisch volgt de sterkte van de selectie.';
+
+  @override
+  String editorRankingHint(int min, int max) {
+    return '$min tot $max';
+  }
+
+  @override
+  String editorRankingOf(String nation) {
+    return '$nation: wereldranglijst';
+  }
+
+  @override
+  String editorIssueRanking(int min, int max) {
+    return 'Kies een plaats op de wereldranglijst van $min tot $max.';
+  }
+
+  @override
+  String get editorRegionWorldwide => 'Wereldwijd';
+
+  @override
+  String get editorRegionNone => 'Niets voor deze regio.';
 }

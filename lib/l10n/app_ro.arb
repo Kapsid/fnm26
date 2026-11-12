@@ -4353,5 +4353,15 @@
   "financesInvestedSoFar": "Investit până acum",
   "tacticsQuickBest": "Cel mai bun",
   "tacticsQuickPrevious": "Precedent",
-  "assistantAskShort": "Secund"
+  "assistantAskShort": "Secund",
+  "editorRankingTitle": "Clasamentul mondial",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Automat",
+  "editorRankingAutoPlace": "Automat (#{rank})",
+  "editorRankingAbout": "Locul acestei naționale în clasamentul mondial la începutul unei cariere noi. Automat urmează forța lotului.",
+  "editorRankingHint": "{min} - {max}",
+  "editorRankingOf": "{nation}: clasamentul mondial",
+  "editorIssueRanking": "Alege un loc în clasamentul mondial de la {min} la {max}.",
+  "editorRegionWorldwide": "Global",
+  "editorRegionNone": "Nimic aici pentru această regiune."
 }

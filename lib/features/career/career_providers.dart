@@ -282,7 +282,8 @@ class CareerService {
     /// incompatible) is refused with [worldPackMissingCode] or
     /// [worldPackNotReadyCode]. The career takes its own copy of the pack, so editing or
     /// deleting the pack later never touches it, and its starting ranking
-    /// follows the pack's squads (see [PackRanking.startingRanks]). A
+    /// follows the pack's squads and the places it sets (see
+    /// [PackRanking.forPack]). A
     /// campaign run may take one too: it plays the pack's squads and names,
     /// but keeps the starting ranking its seed was searched on (the pack's
     /// squads never move it), so its draws and hosts stay the designed ones.
@@ -395,10 +396,10 @@ class CareerService {
               // A campaign run keeps its designed ranking on a pack too.
               pack == null || !countsTowardSlots
                   ? base
-                  : PackRanking.startingRanks(
+                  : PackRanking.forPack(
+                      pack,
                       baseRanks: base,
                       defaultStrength: defaultStrength,
-                      packStrength: PackRanking.squadStrengths(pack.squads),
                     ),
             );
       }

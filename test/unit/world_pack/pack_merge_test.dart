@@ -350,6 +350,32 @@ void main() {
       expect(merged.nations[1], (name: 'Tomland', code: 'TOM'));
     });
 
+    test('a starting world ranking, by nation', () {
+      final mine = _pack('Mine').copyWith(rankings: {1: 5, 2: 9});
+      final theirs = _pack('Theirs').copyWith(rankings: {1: 5, 2: 4, 3: 1});
+      final plan = _plan(mine, theirs);
+      expect(
+        plan.items.map((i) => (i.section, i.field, i.nationId, i.kind)),
+        [
+          (MergeSection.nations, MergeField.ranking, 2, MergeKind.conflict),
+          (MergeSection.nations, MergeField.ranking, 3, MergeKind.theirs),
+        ],
+      );
+      // Preselected: theirs where only they set it; mine kept on a clash.
+      expect(PackMerge.apply(plan, plan.preselected).pack.rankings, {
+        1: 5,
+        2: 9,
+        3: 1,
+      });
+      final all = PackMerge.apply(
+        plan,
+        plan.items.map((i) => i.key).toSet(),
+      ).pack;
+      expect(all.rankings, {1: 5, 2: 4, 3: 1});
+      // The history counts each place that differs.
+      expect(PackMerge.countDifferences(mine, all), 2);
+    });
+
     test('trophy pictures by their bytes', () {
       final a = Uint8List.fromList([1, 2, 3]);
       final b = Uint8List.fromList([1, 2, 4]);

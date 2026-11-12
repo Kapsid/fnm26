@@ -249,6 +249,18 @@ PackIssueText _badField(
         section: EditorSection.none,
         nationId: nationId,
       );
+    case 'rankings':
+      // `rankings.<nationId>`: a place out of range, under the nation.
+      final nationId = idAt(1);
+      return (
+        title: nationId == null ? sectionTitle : nation(nationId),
+        detail: l.editorIssueRanking(
+          PackRules.rankingMin,
+          PackRules.rankingMax,
+        ),
+        section: EditorSection.players,
+        nationId: nationId,
+      );
     case 'nameLists':
       final nationId = idAt(1);
       final kind = parts.length > 2 ? parts[2] : '';

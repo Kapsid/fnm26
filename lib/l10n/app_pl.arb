@@ -4353,5 +4353,15 @@
   "financesInvestedSoFar": "Zainwestowano dotąd",
   "tacticsQuickBest": "Najlepsi",
   "tacticsQuickPrevious": "Poprzedni",
-  "assistantAskShort": "Asystent"
+  "assistantAskShort": "Asystent",
+  "editorRankingTitle": "Ranking światowy",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Automatycznie",
+  "editorRankingAutoPlace": "Automatycznie (#{rank})",
+  "editorRankingAbout": "Miejsce tej reprezentacji w rankingu światowym na start nowej kariery. Automatycznie oznacza siłę jej kadry.",
+  "editorRankingHint": "{min} do {max}",
+  "editorRankingOf": "{nation}: ranking światowy",
+  "editorIssueRanking": "Podaj miejsce w rankingu światowym od {min} do {max}.",
+  "editorRegionWorldwide": "Cały świat",
+  "editorRegionNone": "Nic tu nie ma dla tego regionu."
 }

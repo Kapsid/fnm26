@@ -4353,5 +4353,15 @@
   "financesInvestedSoFar": "Đã đầu tư đến nay",
   "tacticsQuickBest": "Tốt nhất",
   "tacticsQuickPrevious": "Lần trước",
-  "assistantAskShort": "Trợ lý"
+  "assistantAskShort": "Trợ lý",
+  "editorRankingTitle": "Bảng xếp hạng thế giới",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Tự động",
+  "editorRankingAutoPlace": "Tự động (#{rank})",
+  "editorRankingAbout": "Vị trí của đội tuyển này trên bảng xếp hạng thế giới khi bắt đầu sự nghiệp mới. Tự động dựa theo sức mạnh đội hình.",
+  "editorRankingHint": "{min} đến {max}",
+  "editorRankingOf": "{nation}: bảng xếp hạng thế giới",
+  "editorIssueRanking": "Đặt vị trí trên bảng xếp hạng thế giới từ {min} đến {max}.",
+  "editorRegionWorldwide": "Toàn cầu",
+  "editorRegionNone": "Không có gì cho khu vực này."
 }

@@ -16815,4 +16815,45 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get assistantAskShort => '助手';
+
+  @override
+  String get editorRankingTitle => '世界ランキング';
+
+  @override
+  String editorRankingPlace(int rank) {
+    return '#$rank';
+  }
+
+  @override
+  String get editorRankingAuto => '自動';
+
+  @override
+  String editorRankingAutoPlace(int rank) {
+    return '自動 (#$rank)';
+  }
+
+  @override
+  String get editorRankingAbout =>
+      '新しいキャリア開始時の世界ランキングでのこの国の順位です。自動ではチームの戦力に応じて決まります。';
+
+  @override
+  String editorRankingHint(int min, int max) {
+    return '$min～$max';
+  }
+
+  @override
+  String editorRankingOf(String nation) {
+    return '$nation: 世界ランキング';
+  }
+
+  @override
+  String editorIssueRanking(int min, int max) {
+    return '世界ランキングの順位を$min～$maxで入力してください。';
+  }
+
+  @override
+  String get editorRegionWorldwide => '世界共通';
+
+  @override
+  String get editorRegionNone => 'この地域には何もありません。';
 }

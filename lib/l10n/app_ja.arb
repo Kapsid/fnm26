@@ -4353,5 +4353,15 @@
   "financesInvestedSoFar": "これまでの投資額",
   "tacticsQuickBest": "ベスト",
   "tacticsQuickPrevious": "前回",
-  "assistantAskShort": "助手"
+  "assistantAskShort": "助手",
+  "editorRankingTitle": "世界ランキング",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "自動",
+  "editorRankingAutoPlace": "自動 (#{rank})",
+  "editorRankingAbout": "新しいキャリア開始時の世界ランキングでのこの国の順位です。自動ではチームの戦力に応じて決まります。",
+  "editorRankingHint": "{min}～{max}",
+  "editorRankingOf": "{nation}: 世界ランキング",
+  "editorIssueRanking": "世界ランキングの順位を{min}～{max}で入力してください。",
+  "editorRegionWorldwide": "世界共通",
+  "editorRegionNone": "この地域には何もありません。"
 }

@@ -16857,4 +16857,45 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get assistantAskShort => '코치';
+
+  @override
+  String get editorRankingTitle => '세계 랭킹';
+
+  @override
+  String editorRankingPlace(int rank) {
+    return '#$rank';
+  }
+
+  @override
+  String get editorRankingAuto => '자동';
+
+  @override
+  String editorRankingAutoPlace(int rank) {
+    return '자동 (#$rank)';
+  }
+
+  @override
+  String get editorRankingAbout =>
+      '새 커리어를 시작할 때 이 국가의 세계 랭킹 순위입니다. 자동은 스쿼드 전력을 따릅니다.';
+
+  @override
+  String editorRankingHint(int min, int max) {
+    return '$min~$max';
+  }
+
+  @override
+  String editorRankingOf(String nation) {
+    return '$nation: 세계 랭킹';
+  }
+
+  @override
+  String editorIssueRanking(int min, int max) {
+    return '세계 랭킹 순위를 $min~$max 사이로 정하세요.';
+  }
+
+  @override
+  String get editorRegionWorldwide => '전 세계';
+
+  @override
+  String get editorRegionNone => '이 지역에는 아무것도 없습니다.';
 }

@@ -17599,4 +17599,45 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get assistantAskShort => 'Adjoint';
+
+  @override
+  String get editorRankingTitle => 'Classement mondial';
+
+  @override
+  String editorRankingPlace(int rank) {
+    return '#$rank';
+  }
+
+  @override
+  String get editorRankingAuto => 'Automatique';
+
+  @override
+  String editorRankingAutoPlace(int rank) {
+    return 'Automatique (#$rank)';
+  }
+
+  @override
+  String get editorRankingAbout =>
+      'La place de cette nation au classement mondial au début d’une nouvelle carrière. Automatique suit la force de son effectif.';
+
+  @override
+  String editorRankingHint(int min, int max) {
+    return '$min à $max';
+  }
+
+  @override
+  String editorRankingOf(String nation) {
+    return '$nation : classement mondial';
+  }
+
+  @override
+  String editorIssueRanking(int min, int max) {
+    return 'Indiquez une place au classement mondial entre $min et $max.';
+  }
+
+  @override
+  String get editorRegionWorldwide => 'Monde entier';
+
+  @override
+  String get editorRegionNone => 'Rien ici pour cette région.';
 }

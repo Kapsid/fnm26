@@ -17348,4 +17348,45 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get assistantAskShort => 'Asisten';
+
+  @override
+  String get editorRankingTitle => 'Peringkat dunia';
+
+  @override
+  String editorRankingPlace(int rank) {
+    return '#$rank';
+  }
+
+  @override
+  String get editorRankingAuto => 'Otomatis';
+
+  @override
+  String editorRankingAutoPlace(int rank) {
+    return 'Otomatis (#$rank)';
+  }
+
+  @override
+  String get editorRankingAbout =>
+      'Posisi negara ini di peringkat dunia saat karier baru dimulai. Otomatis mengikuti kekuatan skuadnya.';
+
+  @override
+  String editorRankingHint(int min, int max) {
+    return '$min sampai $max';
+  }
+
+  @override
+  String editorRankingOf(String nation) {
+    return '$nation: peringkat dunia';
+  }
+
+  @override
+  String editorIssueRanking(int min, int max) {
+    return 'Tetapkan posisi peringkat dunia dari $min sampai $max.';
+  }
+
+  @override
+  String get editorRegionWorldwide => 'Seluruh dunia';
+
+  @override
+  String get editorRegionNone => 'Tidak ada apa pun untuk wilayah ini.';
 }

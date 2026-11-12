@@ -4353,5 +4353,15 @@
   "financesInvestedSoFar": "Bisher investiert",
   "tacticsQuickBest": "Beste",
   "tacticsQuickPrevious": "Letzter",
-  "assistantAskShort": "Co-Trainer"
+  "assistantAskShort": "Co-Trainer",
+  "editorRankingTitle": "Weltrangliste",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Automatisch",
+  "editorRankingAutoPlace": "Automatisch (#{rank})",
+  "editorRankingAbout": "Wo diese Nation eine neue Karriere in der Weltrangliste beginnt. Automatisch richtet sich nach der Stärke ihres Kaders.",
+  "editorRankingHint": "{min} bis {max}",
+  "editorRankingOf": "{nation}: Weltrangliste",
+  "editorIssueRanking": "Wähle einen Platz in der Weltrangliste von {min} bis {max}.",
+  "editorRegionWorldwide": "Weltweit",
+  "editorRegionNone": "Hier gibt es nichts für diese Region."
 }

@@ -72,6 +72,8 @@ class _SquadTabletLayout extends StatelessWidget {
         minDetailWidth: 420,
         master: Column(
           children: [
+            NationRankingTile(packId: state._id, nationId: state._nation),
+            const SizedBox(height: AppSpacing.sm),
             tabs,
             Expanded(
               child: onPool

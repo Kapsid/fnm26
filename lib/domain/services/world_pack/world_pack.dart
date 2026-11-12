@@ -20,16 +20,18 @@ import '../press/y_feed.dart';
 /// built-in sponsor's industry ([WorldPack.sponsorIndustries]) and a Y
 /// account's handle ([WorldPack.yHandles], [PackYAccount.handle]); format 6
 /// (1.1.1) adds the press reporters and the stadiums a pack adds
-/// ([WorldPack.addedReporters], [WorldPack.addedStadiums]).
-/// [WorldPack.migrate] lifts a format-1 to 5 pack to it, step by step.
+/// ([WorldPack.addedReporters], [WorldPack.addedStadiums]); format 7 (1.1.1)
+/// adds each nation's starting world ranking ([WorldPack.rankings]).
+/// [WorldPack.migrate] lifts a format-1 to 6 pack to it, step by step.
 ///
 /// A pack is written in the oldest format that holds it ([WorldPack.asWritten]):
 /// format 3 when it names no managers, so a 1.1.x build without managers still
 /// reads it, format 4 when it does, format 5 when it sets an industry or a
-/// handle, and format 6 only when it adds a reporter or a stadium. A build
+/// handle, format 6 when it adds a reporter or a stadium, and format 7 only
+/// when it sets a nation's starting world ranking. A build
 /// that reads only an older format says the file is from a newer version
 /// rather than calling it broken.
-const int kPackFormatVersion = 6;
+const int kPackFormatVersion = 7;
 
 /// Ids at or above this belong to players created in a pack.
 const int kPackPlayerIdBase = 800000000;
@@ -616,6 +618,7 @@ class WorldPack {
     this.yHandles = const {},
     this.addedReporters = const [],
     this.addedStadiums = const [],
+    this.rankings = const {},
   });
 
   final String uuid;
@@ -685,6 +688,14 @@ class WorldPack {
   /// The stadiums the pack adds, every nation's (format 6).
   final List<PackStadium> addedStadiums;
 
+  /// nationId -> the place it starts a career on in the world ranking
+  /// (1 = top; format 7). A nation not in it takes the place the pack's
+  /// squads give it (`PackRanking.startingRanks`).
+  final Map<int, int> rankings;
+
+  /// Whether the pack uses what only format 7 holds.
+  bool get _needsFormat7 => rankings.isNotEmpty;
+
   /// Whether the pack uses what only format 6 holds.
   bool get _needsFormat6 =>
       addedReporters.isNotEmpty || addedStadiums.isNotEmpty;
@@ -698,11 +709,13 @@ class WorldPack {
   /// This pack in the oldest format that holds it, as every writer stores
   /// and exports it: format 3 (which a 1.1.x build without managers reads)
   /// when it names no managers, 4 when it does, 5 when it sets a sponsor's
-  /// industry or a Y handle, and [kPackFormatVersion] (6) only when it adds
-  /// a reporter or a stadium.
+  /// industry or a Y handle, 6 when it adds a reporter or a stadium, and
+  /// [kPackFormatVersion] (7) only when it sets a starting ranking.
   WorldPack get asWritten => copyWith(
-    formatVersion: _needsFormat6
+    formatVersion: _needsFormat7
         ? kPackFormatVersion
+        : _needsFormat6
+        ? 6
         : _needsFormat5
         ? 5
         : managers.isEmpty
@@ -765,6 +778,7 @@ class WorldPack {
     Map<String, String>? yHandles,
     List<PackAddedReporter>? addedReporters,
     List<PackStadium>? addedStadiums,
+    Map<int, int>? rankings,
   }) => WorldPack(
     uuid: uuid ?? this.uuid,
     name: name ?? this.name,
@@ -792,6 +806,7 @@ class WorldPack {
     yHandles: yHandles ?? this.yHandles,
     addedReporters: addedReporters ?? this.addedReporters,
     addedStadiums: addedStadiums ?? this.addedStadiums,
+    rankings: rankings ?? this.rankings,
   );
 
   Map<String, Object?> toJson() => {
@@ -843,15 +858,21 @@ class WorldPack {
       },
     // Written from format 5 on (see [asWritten]): a format-4 reader knows
     // neither key.
-    if (formatVersion >= 5 || _needsFormat5 || _needsFormat6) ...{
+    if (formatVersion >= 5 ||
+        _needsFormat5 ||
+        _needsFormat6 ||
+        _needsFormat7) ...{
       'sponsorIndustries': sponsorIndustries,
       'yHandles': yHandles,
     },
     // Written from format 6 on: a format-5 reader knows neither key.
-    if (formatVersion >= 6 || _needsFormat6) ...{
+    if (formatVersion >= 6 || _needsFormat6 || _needsFormat7) ...{
       'addedReporters': [for (final r in addedReporters) r.toJson()],
       'addedStadiums': [for (final s in addedStadiums) s.toJson()],
     },
+    // Written from format 7 on: a format-6 reader knows no such key.
+    if (formatVersion >= 7 || _needsFormat7)
+      'rankings': {for (final e in rankings.entries) '${e.key}': e.value},
   };
 
   static const _keys = {
@@ -881,6 +902,7 @@ class WorldPack {
     'yHandles',
     'addedReporters',
     'addedStadiums',
+    'rankings',
   };
 
   /// Strict reader: any wrong type or unknown key throws [FormatException].
@@ -962,10 +984,14 @@ class WorldPack {
         json['addedStadiums'],
         'addedStadiums',
       ).map(PackStadium.fromJson).toList(),
+      rankings: {
+        for (final e in _map(json['rankings'], 'rankings').entries)
+          _intKey(e.key): _int(e.value, 'rankings'),
+      },
     );
   }
 
-  /// Upgrades older JSON step by step to [kPackFormatVersion]. Identity at v6
+  /// Upgrades older JSON step by step to [kPackFormatVersion]. Identity at v7
   /// for a pack naming no renamed club ([_retiredClubs]).
   /// Throws [FormatException] for a missing or newer version. Never changes
   /// [json] itself.
@@ -988,6 +1014,7 @@ class WorldPack {
     if (v <= 3) out = _from3To4(out, v);
     if (v <= 4) out = _from4To5(out, v);
     if (v <= 5) out = _from5To6(out, v);
+    if (v <= 6) out = _from6To7(out, v);
     return _retiredClubs(out);
   }
 
@@ -1133,6 +1160,18 @@ class WorldPack {
       'addedStadiums': <Object?>[],
       'formatVersion': 6,
     };
+  }
+
+  /// Format 6 to 7: no starting ranking set, so every nation starts where
+  /// the pack's squads put it. A pack of format [from] that already holds
+  /// `rankings` is not a file of that format.
+  static Map<String, Object?> _from6To7(Map<String, Object?> json, int from) {
+    if (json.containsKey('rankings')) {
+      throw FormatException(
+        'Format $from pack has the format 7 key "rankings"',
+      );
+    }
+    return {...json, 'rankings': <String, Object?>{}, 'formatVersion': 7};
   }
 
   static ({String name, String nationality}) _manager(Object? raw) {

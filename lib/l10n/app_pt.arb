@@ -4353,5 +4353,15 @@
   "financesInvestedSoFar": "Investido até agora",
   "tacticsQuickBest": "Melhor",
   "tacticsQuickPrevious": "Anterior",
-  "assistantAskShort": "Adjunto"
+  "assistantAskShort": "Adjunto",
+  "editorRankingTitle": "Ranking mundial",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Automático",
+  "editorRankingAutoPlace": "Automático (#{rank})",
+  "editorRankingAbout": "Onde esta seleção começa uma nova carreira no ranking mundial. Automático segue a força do seu plantel.",
+  "editorRankingHint": "{min} a {max}",
+  "editorRankingOf": "{nation}: ranking mundial",
+  "editorIssueRanking": "Indique uma posição no ranking mundial de {min} a {max}.",
+  "editorRegionWorldwide": "Todo o mundo",
+  "editorRegionNone": "Nada aqui para esta região."
 }

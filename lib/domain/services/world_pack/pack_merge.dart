@@ -22,7 +22,8 @@ enum MergeSection {
   sponsors,
   trophies,
 
-  /// A nation's name and code (no section edits them any more).
+  /// A nation's name and code (no section edits them any more), and its
+  /// starting world ranking.
   nations,
 }
 
@@ -78,6 +79,9 @@ enum MergeField {
 
   /// A nation's name and code (`({String name, String code})?`).
   nation,
+
+  /// A nation's starting world ranking (`int?`, 1 = top).
+  ranking,
   addedClub,
   addedSponsor,
   addedY,
@@ -421,6 +425,14 @@ abstract final class PackMerge {
       'nation',
       byString(mine.nations),
       byString(t.nations),
+      nationOf: int.tryParse,
+    );
+    overrides(
+      MergeSection.nations,
+      MergeField.ranking,
+      'ranking',
+      byString(mine.rankings),
+      byString(t.rankings),
       nationOf: int.tryParse,
     );
 
@@ -900,6 +912,7 @@ abstract final class PackMerge {
       sponsors: set(mine.sponsors, 'sponsor'),
       sponsorIndustries: set(mine.sponsorIndustries, 'sponsorIndustry'),
       nations: setInt(mine.nations, 'nation'),
+      rankings: setInt(mine.rankings, 'ranking'),
       addedClubs: addedOf(mine.addedClubs, MergeField.addedClub, (c) => c.id),
       addedSponsors: addedOf(
         mine.addedSponsors,
@@ -984,6 +997,7 @@ abstract final class PackMerge {
         keys(a.sponsors, b.sponsors) +
         keys(a.sponsorIndustries, b.sponsorIndustries) +
         keys(a.nations, b.nations) +
+        keys(a.rankings, b.rankings) +
         items(a.addedClubs, b.addedClubs, (c) => c.id) +
         items(a.addedSponsors, b.addedSponsors, (s) => s.id) +
         items(a.addedYAccounts, b.addedYAccounts, (y) => y.id) +

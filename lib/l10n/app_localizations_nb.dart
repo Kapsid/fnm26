@@ -17433,4 +17433,45 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get assistantAskShort => 'Assistent';
+
+  @override
+  String get editorRankingTitle => 'Verdensrankingen';
+
+  @override
+  String editorRankingPlace(int rank) {
+    return '#$rank';
+  }
+
+  @override
+  String get editorRankingAuto => 'Automatisk';
+
+  @override
+  String editorRankingAutoPlace(int rank) {
+    return 'Automatisk (#$rank)';
+  }
+
+  @override
+  String get editorRankingAbout =>
+      'Hvor denne nasjonen starter en ny karriere på verdensrankingen. Automatisk følger styrken i troppen.';
+
+  @override
+  String editorRankingHint(int min, int max) {
+    return '$min til $max';
+  }
+
+  @override
+  String editorRankingOf(String nation) {
+    return '$nation: verdensrankingen';
+  }
+
+  @override
+  String editorIssueRanking(int min, int max) {
+    return 'Angi en plass på verdensrankingen fra $min til $max.';
+  }
+
+  @override
+  String get editorRegionWorldwide => 'Hele verden';
+
+  @override
+  String get editorRegionNone => 'Ingenting her for denne regionen.';
 }

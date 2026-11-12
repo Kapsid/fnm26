@@ -17464,4 +17464,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get assistantAskShort => 'Assistant';
+
+  @override
+  String get editorRankingTitle => 'World ranking';
+
+  @override
+  String editorRankingPlace(int rank) {
+    return '#$rank';
+  }
+
+  @override
+  String get editorRankingAuto => 'Automatic';
+
+  @override
+  String editorRankingAutoPlace(int rank) {
+    return 'Automatic (#$rank)';
+  }
+
+  @override
+  String get editorRankingAbout =>
+      'Where this nation starts a new career in the world ranking. Automatic follows the strength of its squad.';
+
+  @override
+  String editorRankingHint(int min, int max) {
+    return '$min to $max';
+  }
+
+  @override
+  String editorRankingOf(String nation) {
+    return '$nation: world ranking';
+  }
+
+  @override
+  String editorIssueRanking(int min, int max) {
+    return 'Set a world ranking place from $min to $max.';
+  }
+
+  @override
+  String get editorRegionWorldwide => 'Worldwide';
+
+  @override
+  String get editorRegionNone => 'Nothing here for this region.';
 }

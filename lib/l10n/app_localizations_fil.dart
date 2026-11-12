@@ -17447,4 +17447,45 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get assistantAskShort => 'Katulong';
+
+  @override
+  String get editorRankingTitle => 'Pandaigdigang ranking';
+
+  @override
+  String editorRankingPlace(int rank) {
+    return '#$rank';
+  }
+
+  @override
+  String get editorRankingAuto => 'Awtomatiko';
+
+  @override
+  String editorRankingAutoPlace(int rank) {
+    return 'Awtomatiko (#$rank)';
+  }
+
+  @override
+  String get editorRankingAbout =>
+      'Kung saan nagsisimula ang bansang ito sa bagong karera sa pandaigdigang ranking. Sinusunod ng awtomatiko ang lakas ng squad nito.';
+
+  @override
+  String editorRankingHint(int min, int max) {
+    return '$min hanggang $max';
+  }
+
+  @override
+  String editorRankingOf(String nation) {
+    return '$nation: pandaigdigang ranking';
+  }
+
+  @override
+  String editorIssueRanking(int min, int max) {
+    return 'Maglagay ng puwesto sa pandaigdigang ranking mula $min hanggang $max.';
+  }
+
+  @override
+  String get editorRegionWorldwide => 'Pandaigdig';
+
+  @override
+  String get editorRegionNone => 'Walang laman para sa rehiyong ito.';
 }
