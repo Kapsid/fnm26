@@ -35,7 +35,7 @@ part 'editor_list_tablet_layout.dart';
 
 /// The database editor's front page: every custom database on the device,
 /// each with its status, and the ways to make one (New, Import) and to look
-/// after one (Edit, Rename, Duplicate, Export, Delete).
+/// after one (Edit, Rename, Duplicate, Merge, Export, Delete).
 class EditorListScreen extends ConsumerStatefulWidget {
   const EditorListScreen({super.key});
 
@@ -54,7 +54,7 @@ class EditorListScreen extends ConsumerStatefulWidget {
   ConsumerState<EditorListScreen> createState() => _EditorListScreenState();
 }
 
-enum _RowAction { edit, rename, duplicate, export, delete }
+enum _RowAction { edit, rename, duplicate, merge, export, delete }
 
 class _EditorListScreenState extends ConsumerState<EditorListScreen> {
   /// Whether a new database is being made (a copy of the whole world, which
@@ -153,6 +153,8 @@ class _EditorListScreenState extends ConsumerState<EditorListScreen> {
     switch (action) {
       case _RowAction.edit:
         _edit(pack.id);
+      case _RowAction.merge:
+        context.go(editorPackLocation(pack.id, merge: true));
       case _RowAction.rename:
         final name = await askPackName(
           context,
@@ -633,6 +635,7 @@ class _PackCard extends StatelessWidget {
                     Icons.copy_outlined,
                     l.editorDuplicate,
                   ),
+                  _item(_RowAction.merge, Icons.merge_type, l.editorMerge),
                   _item(
                     _RowAction.export,
                     Icons.ios_share_outlined,

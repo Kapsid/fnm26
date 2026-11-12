@@ -425,6 +425,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       path: Routes.editorPack,
       builder: (context, state) => PackHomeScreen(
         packId: int.tryParse(state.uri.queryParameters['id'] ?? '') ?? 0,
+        startMerge: state.uri.queryParameters['merge'] == '1',
       ),
     ),
     GoRoute(

@@ -17081,4 +17081,219 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get editorWebAnother => 'Başka bir seçenek';
+
+  @override
+  String get editorMerge => 'Başka bir veritabanını birleştir';
+
+  @override
+  String get editorMergeAbout =>
+      'Başkasının kendi kopyasında değiştirdiklerini al.';
+
+  @override
+  String get editorHistory => 'Geçmiş';
+
+  @override
+  String get editorHistoryAbout =>
+      'Bu veritabanının kayıtlı sürümleri. İstediğine geri dön.';
+
+  @override
+  String get editorMergeFromTitle => 'Şuradan birleştir';
+
+  @override
+  String get editorMergeFromFile => 'Bir veritabanı dosyası';
+
+  @override
+  String get editorMergeFromFileAbout =>
+      'Birinin seninle paylaştığı bir .fnmdb dosyası seç.';
+
+  @override
+  String get editorMergeFromDevice => 'Bu cihazda';
+
+  @override
+  String get editorMergeComparing => 'Veritabanları karşılaştırılıyor';
+
+  @override
+  String get editorMergeNothing =>
+      'Birleştirilecek bir şey yok. Veritabanında diğerinin tüm değişiklikleri zaten var.';
+
+  @override
+  String get editorMergeFailed => 'Veritabanları birleştirilemedi.';
+
+  @override
+  String editorMergeReviewTitle(String name) {
+    return '$name değişiklikleri';
+  }
+
+  @override
+  String editorMergeFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'İncelenecek $count değişiklik',
+      one: 'İncelenecek 1 değişiklik',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorMergeConflicts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count çakışma',
+      one: '1 çakışma',
+      zero: 'Çakışma yok',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeConflictsOnly => 'Yalnızca çakışmalar';
+
+  @override
+  String get editorMergeNoConflicts =>
+      'Çakışma yok. Her değişiklik veritabanın için yeni.';
+
+  @override
+  String get editorMergeAll => 'Tümü';
+
+  @override
+  String get editorMergeNone => 'Hiçbiri';
+
+  @override
+  String editorMergeTake(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count değişikliği al',
+      one: '1 değişikliği al',
+      zero: 'Değişiklik alma',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeApply => 'Uygula';
+
+  @override
+  String get editorMergeYours => 'Seninki';
+
+  @override
+  String get editorMergeTheirs => 'Onlarınki';
+
+  @override
+  String get editorMergeNew => 'Yeni';
+
+  @override
+  String get editorMergeConflict => 'Çakışma';
+
+  @override
+  String get editorMergeGameValue => 'Oyundaki gibi';
+
+  @override
+  String get editorMergeNotHere => 'Bu veritabanında yok';
+
+  @override
+  String editorMergeSquadOf(String nation) {
+    return 'Kadro ($nation)';
+  }
+
+  @override
+  String editorMergePoolOf(String nation) {
+    return 'Havuz ($nation)';
+  }
+
+  @override
+  String get editorMergePlace => 'Taşınır';
+
+  @override
+  String editorMergeNames(int first, int sur) {
+    return '$first ad, $sur soyadı';
+  }
+
+  @override
+  String editorMerged(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count değişiklik birleştirildi',
+      one: '1 değişiklik birleştirildi',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistorySave => 'Sürümü kaydet';
+
+  @override
+  String get editorHistorySaveTitle => 'Bu sürümü kaydet';
+
+  @override
+  String get editorHistoryNameHint => 'Ad (isteğe bağlı)';
+
+  @override
+  String get editorHistorySaved => 'Sürüm kaydedildi';
+
+  @override
+  String get editorHistoryEmpty =>
+      'Henüz kayıtlı sürüm yok. Her birleştirme ve geri yüklemeden önce, ayrıca bir aradan sonra bu veritabanına döndüğünde bir sürüm kaydedilir.';
+
+  @override
+  String get editorHistoryKeep =>
+      'Son 30 otomatik sürüm saklanır. Kendi kaydettiğin sürümler sen silene kadar kalır.';
+
+  @override
+  String get editorHistorySession => 'Düzenlemenin başlangıcı';
+
+  @override
+  String editorHistoryBeforeMerge(String name) {
+    return '$name birleştirilmeden önce';
+  }
+
+  @override
+  String get editorHistoryBeforeRestore => 'Geri yüklemeden önce';
+
+  @override
+  String get editorHistoryManual => 'Kayıtlı sürüm';
+
+  @override
+  String get editorHistoryAuto => 'Otomatik';
+
+  @override
+  String editorHistoryDiff(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Şimdikinden $count fark',
+      one: 'Şimdikinden 1 fark',
+      zero: 'Şimdikiyle aynı',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistoryRestore => 'Geri yükle';
+
+  @override
+  String get editorHistoryRestoreTitle => 'Bu sürüm geri yüklensin mi?';
+
+  @override
+  String get editorHistoryRestoreBody =>
+      'Veritabanı bu sürüme döner. Şu anki durumu önce geçmişe kaydedilir.';
+
+  @override
+  String get editorHistoryRestored => 'Sürüm geri yüklendi';
+
+  @override
+  String get editorHistoryFailed => 'Olmadı. Lütfen tekrar dene.';
+
+  @override
+  String get editorHistoryRenameTitle => 'Sürümü yeniden adlandır';
+
+  @override
+  String get editorHistoryDeleteTitle => 'Bu sürüm silinsin mi?';
+
+  @override
+  String get editorHistoryDeleteBody =>
+      'Geçmişten kaldırılır. Veritabanının kendisi değişmez.';
 }

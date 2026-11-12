@@ -17078,4 +17078,219 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get editorWebAnother => 'एक और विकल्प';
+
+  @override
+  String get editorMerge => 'दूसरा डेटाबेस मर्ज करें';
+
+  @override
+  String get editorMergeAbout =>
+      'किसी और ने अपनी कॉपी में जो बदला है, उसे यहाँ लें।';
+
+  @override
+  String get editorHistory => 'हिस्ट्री';
+
+  @override
+  String get editorHistoryAbout =>
+      'इस डेटाबेस के सेव किए गए वर्शन। किसी भी पर वापस जाएँ।';
+
+  @override
+  String get editorMergeFromTitle => 'यहाँ से मर्ज करें';
+
+  @override
+  String get editorMergeFromFile => 'एक डेटाबेस फ़ाइल';
+
+  @override
+  String get editorMergeFromFileAbout =>
+      'किसी की शेयर की हुई .fnmdb फ़ाइल चुनें।';
+
+  @override
+  String get editorMergeFromDevice => 'इस डिवाइस पर';
+
+  @override
+  String get editorMergeComparing => 'डेटाबेस की तुलना हो रही है';
+
+  @override
+  String get editorMergeNothing =>
+      'मर्ज करने को कुछ नहीं है। आपके डेटाबेस में दूसरे के सभी बदलाव पहले से हैं।';
+
+  @override
+  String get editorMergeFailed => 'डेटाबेस मर्ज नहीं हो सके।';
+
+  @override
+  String editorMergeReviewTitle(String name) {
+    return '$name के बदलाव';
+  }
+
+  @override
+  String editorMergeFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'समीक्षा के लिए $count बदलाव',
+      one: 'समीक्षा के लिए 1 बदलाव',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorMergeConflicts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count टकराव',
+      one: '1 टकराव',
+      zero: 'कोई टकराव नहीं',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeConflictsOnly => 'सिर्फ़ टकराव';
+
+  @override
+  String get editorMergeNoConflicts =>
+      'कोई टकराव नहीं। हर बदलाव आपके डेटाबेस के लिए नया है।';
+
+  @override
+  String get editorMergeAll => 'सभी';
+
+  @override
+  String get editorMergeNone => 'कोई नहीं';
+
+  @override
+  String editorMergeTake(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count बदलाव लें',
+      one: '1 बदलाव लें',
+      zero: 'कोई बदलाव न लें',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeApply => 'लागू करें';
+
+  @override
+  String get editorMergeYours => 'आपका';
+
+  @override
+  String get editorMergeTheirs => 'उनका';
+
+  @override
+  String get editorMergeNew => 'नया';
+
+  @override
+  String get editorMergeConflict => 'टकराव';
+
+  @override
+  String get editorMergeGameValue => 'गेम जैसा';
+
+  @override
+  String get editorMergeNotHere => 'इस डेटाबेस में नहीं है';
+
+  @override
+  String editorMergeSquadOf(String nation) {
+    return '$nation का स्क्वॉड';
+  }
+
+  @override
+  String editorMergePoolOf(String nation) {
+    return '$nation का पूल';
+  }
+
+  @override
+  String get editorMergePlace => 'जगह बदली';
+
+  @override
+  String editorMergeNames(int first, int sur) {
+    return '$first पहले नाम, $sur सरनेम';
+  }
+
+  @override
+  String editorMerged(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count बदलाव मर्ज हुए',
+      one: '1 बदलाव मर्ज हुआ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistorySave => 'वर्शन सेव करें';
+
+  @override
+  String get editorHistorySaveTitle => 'यह वर्शन सेव करें';
+
+  @override
+  String get editorHistoryNameHint => 'नाम (वैकल्पिक)';
+
+  @override
+  String get editorHistorySaved => 'वर्शन सेव हो गया';
+
+  @override
+  String get editorHistoryEmpty =>
+      'अभी कोई सेव किया वर्शन नहीं है। हर मर्ज और रिस्टोर से पहले एक वर्शन सेव होता है, और ब्रेक के बाद इस डेटाबेस पर लौटने पर भी।';
+
+  @override
+  String get editorHistoryKeep =>
+      'पिछले 30 ऑटोमैटिक वर्शन रखे जाते हैं। आपके सेव किए वर्शन तब तक रहते हैं जब तक आप उन्हें डिलीट न करें।';
+
+  @override
+  String get editorHistorySession => 'एडिटिंग की शुरुआत';
+
+  @override
+  String editorHistoryBeforeMerge(String name) {
+    return '$name को मर्ज करने से पहले';
+  }
+
+  @override
+  String get editorHistoryBeforeRestore => 'रिस्टोर से पहले';
+
+  @override
+  String get editorHistoryManual => 'सेव किया वर्शन';
+
+  @override
+  String get editorHistoryAuto => 'ऑटोमैटिक';
+
+  @override
+  String editorHistoryDiff(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'अभी से $count अंतर',
+      one: 'अभी से 1 अंतर',
+      zero: 'अभी जैसा ही',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistoryRestore => 'रिस्टोर करें';
+
+  @override
+  String get editorHistoryRestoreTitle => 'यह वर्शन रिस्टोर करें?';
+
+  @override
+  String get editorHistoryRestoreBody =>
+      'डेटाबेस इस वर्शन पर लौट जाएगा। उसकी मौजूदा स्थिति पहले हिस्ट्री में सेव हो जाती है।';
+
+  @override
+  String get editorHistoryRestored => 'वर्शन रिस्टोर हो गया';
+
+  @override
+  String get editorHistoryFailed => 'यह नहीं हो पाया। कृपया फिर कोशिश करें।';
+
+  @override
+  String get editorHistoryRenameTitle => 'वर्शन का नाम बदलें';
+
+  @override
+  String get editorHistoryDeleteTitle => 'यह वर्शन डिलीट करें?';
+
+  @override
+  String get editorHistoryDeleteBody =>
+      'यह हिस्ट्री से हट जाएगा। डेटाबेस खुद नहीं बदलता।';
 }

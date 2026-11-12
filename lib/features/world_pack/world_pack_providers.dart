@@ -11,7 +11,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/result/result.dart';
+import 'package:fnm/core/util/off_ui.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/data/repositories/pack_history_repository.dart';
 import 'package:fnm/data/repositories/world_pack_repository.dart';
 import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/player.dart';
@@ -20,6 +22,7 @@ import 'package:fnm/domain/repositories/player_repository.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/world_pack/pack_codec.dart';
+import 'package:fnm/domain/services/world_pack/pack_merge.dart';
 import 'package:fnm/domain/services/world_pack/pack_ranking.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/pack_status.dart';
@@ -45,6 +48,11 @@ typedef WorldPackSummary = ({int id, String name, DateTime updatedAt});
 
 final worldPackRepositoryProvider = Provider<WorldPackRepository>(
   (ref) => WorldPackRepository(ref.watch(appDatabaseProvider)),
+);
+
+/// The saved versions of the databases on this device (their history).
+final packHistoryRepositoryProvider = Provider<PackHistoryRepository>(
+  (ref) => PackHistoryRepository(ref.watch(appDatabaseProvider)),
 );
 
 /// The custom world career `careerId` runs on, as the [WorldZone] its
@@ -395,19 +403,20 @@ class WorldPackService {
   /// The squads [createFromDefault] stores, by nation id: each nation's
   /// stored core players as a career created now meets them, a veteran the
   /// default world retires on day one included (he is one of the stored 23).
-  Future<Map<int, List<PackPlayer>>> defaultSquads() async {
-    final squads = <int, List<PackPlayer>>{};
-    for (final nation in await _nations.newCareerWorld()) {
-      final core = await _players.coreAsBorn(
-        nation.id,
-        saveSeed: kPackDrawSeed,
-        newCareerNames: true,
-      );
-      squads[nation.id] = [
-        for (final p in core.sortedBy<num>((p) => p.id)) _packPlayerOf(p),
-      ];
-    }
-    return squads;
+  Future<Map<int, List<PackPlayer>>> defaultSquads() async => {
+    for (final nation in await _nations.newCareerWorld())
+      nation.id: await defaultSquad(nation.id),
+  };
+
+  /// Nation [nationId]'s squad as [defaultSquads] stores it: what a pack
+  /// that leaves the nation to the game has.
+  Future<List<PackPlayer>> defaultSquad(int nationId) async {
+    final core = await _players.coreAsBorn(
+      nationId,
+      saveSeed: kPackDrawSeed,
+      newCareerNames: true,
+    );
+    return [for (final p in core.sortedBy<num>((p) => p.id)) _packPlayerOf(p)];
   }
 
   /// Nation [nationId]'s generated pool as [pack] shows it before the pool
@@ -533,6 +542,74 @@ class WorldPackService {
         _onChanged();
         return Result.success(id);
     }
+  }
+
+  /// Reads the `.fnmdb` file at [path] for a merge, every check of an
+  /// import passed ([importFile]); the failure's code is the
+  /// [PackRejection] name. Nothing is stored.
+  Future<Result<PackDecoded>> readFile(String path) async {
+    final Uint8List? bytes;
+    try {
+      bytes = await readPickedFile(path, maxBytes: PackCodec.maxFileBytes);
+    } on Object catch (e) {
+      return Result.failure(
+        Failure('Unreadable', code: PackRejection.notAPack.name, cause: e),
+      );
+    }
+    if (bytes == null) {
+      return Result.failure(
+        Failure('Too big', code: PackRejection.tooBig.name),
+      );
+    }
+    final world = await _nations.newCareerWorld();
+    final decoded = await PackCodec.decode(
+      bytes,
+      baseCodes: {for (final n in world) n.id: n.code},
+    );
+    return switch (decoded) {
+      PackRejected(:final reason) => Result.failure(
+        Failure('Refused', code: reason.name),
+      ),
+      final PackDecoded d => Result.success(d),
+    };
+  }
+
+  /// Every change of [theirs] against [mine] ([PackMerge]), with both
+  /// packs' trophy pictures. The comparing runs off the UI isolate; the
+  /// default world is read only for the nations whose players differ.
+  Future<MergePlan> planMerge({
+    required WorldPack mine,
+    required Map<String, Uint8List> mineTrophies,
+    required WorldPack theirs,
+    required Map<String, Uint8List> theirTrophies,
+  }) async {
+    final needs = await runOffUi(
+      () => PackMerge.prepare(mine, theirs),
+      debugName: 'merge prepare',
+    );
+    final plain = mine.copyWith(nameLists: const {});
+    final base = MergeBase(
+      squads: {
+        for (final n in needs.squadNations) n: await defaultSquad(n),
+      },
+      pools: {
+        for (final n in needs.poolNations) n: await generatedPool(n, plain),
+      },
+      mineGeneratedPools: {
+        for (final n in needs.mineGeneratedPools)
+          n: await generatedPool(n, mine),
+      },
+    );
+    return runOffUi(
+      () => PackMerge.plan(
+        mine,
+        needs,
+        base,
+        mineTrophies: mineTrophies,
+        theirTrophies: theirTrophies,
+      ),
+      debugName: 'merge plan',
+    );
   }
 
   /// Removes pack [id]. Careers started on it keep their own copy. If it was

@@ -16554,4 +16554,214 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get editorWebAnother => '別の方法';
+
+  @override
+  String get editorMerge => '別のデータベースを統合';
+
+  @override
+  String get editorMergeAbout => '他の人がコピーで変更した内容を取り込みます。';
+
+  @override
+  String get editorHistory => '履歴';
+
+  @override
+  String get editorHistoryAbout => 'このデータベースの保存済みバージョンです。どれにでも戻せます。';
+
+  @override
+  String get editorMergeFromTitle => '統合元';
+
+  @override
+  String get editorMergeFromFile => 'データベースファイル';
+
+  @override
+  String get editorMergeFromFileAbout => '共有された .fnmdb ファイルを選びます。';
+
+  @override
+  String get editorMergeFromDevice => 'この端末内';
+
+  @override
+  String get editorMergeComparing => 'データベースを比較しています';
+
+  @override
+  String get editorMergeNothing =>
+      '統合するものがありません。あなたのデータベースには、相手の変更がすべて含まれています。';
+
+  @override
+  String get editorMergeFailed => 'データベースを統合できませんでした。';
+
+  @override
+  String editorMergeReviewTitle(String name) {
+    return '$name からの変更';
+  }
+
+  @override
+  String editorMergeFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '確認する変更 $count件',
+      one: '確認する変更 1件',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorMergeConflicts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '競合 $count件',
+      one: '競合 1件',
+      zero: '競合なし',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeConflictsOnly => '競合のみ';
+
+  @override
+  String get editorMergeNoConflicts => '競合はありません。すべての変更があなたのデータベースにとって新規です。';
+
+  @override
+  String get editorMergeAll => 'すべて';
+
+  @override
+  String get editorMergeNone => 'なし';
+
+  @override
+  String editorMergeTake(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count件の変更を取り込む',
+      one: '1件の変更を取り込む',
+      zero: '変更を取り込まない',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeApply => '適用';
+
+  @override
+  String get editorMergeYours => 'あなたの値';
+
+  @override
+  String get editorMergeTheirs => '相手の値';
+
+  @override
+  String get editorMergeNew => '新規';
+
+  @override
+  String get editorMergeConflict => '競合';
+
+  @override
+  String get editorMergeGameValue => 'ゲームの初期値';
+
+  @override
+  String get editorMergeNotHere => 'このデータベースにはありません';
+
+  @override
+  String editorMergeSquadOf(String nation) {
+    return '$nationのメンバー';
+  }
+
+  @override
+  String editorMergePoolOf(String nation) {
+    return '$nationの候補選手';
+  }
+
+  @override
+  String get editorMergePlace => '移動';
+
+  @override
+  String editorMergeNames(int first, int sur) {
+    return '名 $first件、姓 $sur件';
+  }
+
+  @override
+  String editorMerged(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count件の変更を統合しました',
+      one: '1件の変更を統合しました',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistorySave => 'バージョンを保存';
+
+  @override
+  String get editorHistorySaveTitle => 'このバージョンを保存';
+
+  @override
+  String get editorHistoryNameHint => '名前（任意）';
+
+  @override
+  String get editorHistorySaved => 'バージョンを保存しました';
+
+  @override
+  String get editorHistoryEmpty =>
+      '保存済みバージョンはまだありません。統合や復元の前、そして休憩後にこのデータベースへ戻ったときに自動で保存されます。';
+
+  @override
+  String get editorHistoryKeep =>
+      '自動保存は直近30件まで保持されます。自分で保存したバージョンは、削除するまで残ります。';
+
+  @override
+  String get editorHistorySession => '編集の開始時';
+
+  @override
+  String editorHistoryBeforeMerge(String name) {
+    return '$name を統合する前';
+  }
+
+  @override
+  String get editorHistoryBeforeRestore => '復元する前';
+
+  @override
+  String get editorHistoryManual => '保存したバージョン';
+
+  @override
+  String get editorHistoryAuto => '自動';
+
+  @override
+  String editorHistoryDiff(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '現在との差 $count件',
+      one: '現在との差 1件',
+      zero: '現在と同じ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistoryRestore => '復元';
+
+  @override
+  String get editorHistoryRestoreTitle => 'このバージョンを復元しますか？';
+
+  @override
+  String get editorHistoryRestoreBody =>
+      'データベースがこのバージョンに戻ります。現在の状態は先に履歴へ保存されます。';
+
+  @override
+  String get editorHistoryRestored => 'バージョンを復元しました';
+
+  @override
+  String get editorHistoryFailed => 'うまくいきませんでした。もう一度お試しください。';
+
+  @override
+  String get editorHistoryRenameTitle => 'バージョン名を変更';
+
+  @override
+  String get editorHistoryDeleteTitle => 'このバージョンを削除しますか？';
+
+  @override
+  String get editorHistoryDeleteBody => '履歴から削除されます。データベース自体は変わりません。';
 }

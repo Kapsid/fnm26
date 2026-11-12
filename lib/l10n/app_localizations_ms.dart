@@ -17131,4 +17131,219 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get editorWebAnother => 'Pilihan lain';
+
+  @override
+  String get editorMerge => 'Gabung pangkalan data lain';
+
+  @override
+  String get editorMergeAbout =>
+      'Ambil perubahan yang dibuat orang lain dalam salinan mereka.';
+
+  @override
+  String get editorHistory => 'Sejarah';
+
+  @override
+  String get editorHistoryAbout =>
+      'Versi tersimpan bagi pangkalan data ini. Kembali ke mana-mana versi.';
+
+  @override
+  String get editorMergeFromTitle => 'Gabung daripada';
+
+  @override
+  String get editorMergeFromFile => 'Fail pangkalan data';
+
+  @override
+  String get editorMergeFromFileAbout =>
+      'Pilih fail .fnmdb yang dikongsi seseorang dengan anda.';
+
+  @override
+  String get editorMergeFromDevice => 'Pada peranti ini';
+
+  @override
+  String get editorMergeComparing => 'Membandingkan pangkalan data';
+
+  @override
+  String get editorMergeNothing =>
+      'Tiada apa untuk digabung. Pangkalan data anda sudah mempunyai semua perubahan daripada yang satu lagi.';
+
+  @override
+  String get editorMergeFailed => 'Pangkalan data tidak dapat digabungkan.';
+
+  @override
+  String editorMergeReviewTitle(String name) {
+    return 'Perubahan daripada $name';
+  }
+
+  @override
+  String editorMergeFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count perubahan untuk disemak',
+      one: '1 perubahan untuk disemak',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorMergeConflicts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count konflik',
+      one: '1 konflik',
+      zero: 'Tiada konflik',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeConflictsOnly => 'Konflik sahaja';
+
+  @override
+  String get editorMergeNoConflicts =>
+      'Tiada konflik. Setiap perubahan baharu untuk pangkalan data anda.';
+
+  @override
+  String get editorMergeAll => 'Semua';
+
+  @override
+  String get editorMergeNone => 'Tiada';
+
+  @override
+  String editorMergeTake(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ambil $count perubahan',
+      one: 'Ambil 1 perubahan',
+      zero: 'Jangan ambil perubahan',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeApply => 'Guna';
+
+  @override
+  String get editorMergeYours => 'Milik anda';
+
+  @override
+  String get editorMergeTheirs => 'Milik mereka';
+
+  @override
+  String get editorMergeNew => 'Baharu';
+
+  @override
+  String get editorMergeConflict => 'Konflik';
+
+  @override
+  String get editorMergeGameValue => 'Seperti dalam permainan';
+
+  @override
+  String get editorMergeNotHere => 'Tiada dalam pangkalan data ini';
+
+  @override
+  String editorMergeSquadOf(String nation) {
+    return 'Skuad $nation';
+  }
+
+  @override
+  String editorMergePoolOf(String nation) {
+    return 'Senarai $nation';
+  }
+
+  @override
+  String get editorMergePlace => 'Berpindah';
+
+  @override
+  String editorMergeNames(int first, int sur) {
+    return '$first nama pertama, $sur nama keluarga';
+  }
+
+  @override
+  String editorMerged(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count perubahan digabungkan',
+      one: '1 perubahan digabungkan',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistorySave => 'Simpan versi';
+
+  @override
+  String get editorHistorySaveTitle => 'Simpan versi ini';
+
+  @override
+  String get editorHistoryNameHint => 'Nama (pilihan)';
+
+  @override
+  String get editorHistorySaved => 'Versi disimpan';
+
+  @override
+  String get editorHistoryEmpty =>
+      'Belum ada versi tersimpan. Satu versi disimpan sebelum setiap penggabungan dan pemulihan, dan apabila anda kembali ke pangkalan data ini selepas berehat.';
+
+  @override
+  String get editorHistoryKeep =>
+      '30 versi automatik terakhir disimpan. Versi yang anda simpan kekal sehingga anda memadamnya.';
+
+  @override
+  String get editorHistorySession => 'Permulaan penyuntingan';
+
+  @override
+  String editorHistoryBeforeMerge(String name) {
+    return 'Sebelum menggabungkan $name';
+  }
+
+  @override
+  String get editorHistoryBeforeRestore => 'Sebelum memulihkan';
+
+  @override
+  String get editorHistoryManual => 'Versi tersimpan';
+
+  @override
+  String get editorHistoryAuto => 'Automatik';
+
+  @override
+  String editorHistoryDiff(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count perbezaan daripada sekarang',
+      one: '1 perbezaan daripada sekarang',
+      zero: 'Sama seperti sekarang',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistoryRestore => 'Pulihkan';
+
+  @override
+  String get editorHistoryRestoreTitle => 'Pulihkan versi ini?';
+
+  @override
+  String get editorHistoryRestoreBody =>
+      'Pangkalan data kembali ke versi ini. Keadaannya sekarang disimpan dahulu dalam sejarah.';
+
+  @override
+  String get editorHistoryRestored => 'Versi dipulihkan';
+
+  @override
+  String get editorHistoryFailed => 'Gagal. Sila cuba lagi.';
+
+  @override
+  String get editorHistoryRenameTitle => 'Namakan semula versi';
+
+  @override
+  String get editorHistoryDeleteTitle => 'Padam versi ini?';
+
+  @override
+  String get editorHistoryDeleteBody =>
+      'Ia dibuang daripada sejarah. Pangkalan data itu sendiri tidak berubah.';
 }

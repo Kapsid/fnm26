@@ -13,6 +13,7 @@ import '../../generated_migrations/schema_v51.dart' as v51;
 import '../../generated_migrations/schema_v52.dart' as v52;
 import '../../generated_migrations/schema_v53.dart' as v53;
 import '../../generated_migrations/schema_v54.dart' as v54;
+import '../../generated_migrations/schema_v55.dart' as v55;
 
 /// Guards the promise that a save survives a schema bump.
 ///
@@ -471,6 +472,49 @@ void main() {
             .getSingle();
         expect(n, 0, reason: '$table should start empty');
       }
+    },
+  );
+
+  test(
+    '55 -> 56 keeps every pack and career and adds an empty history',
+    () async {
+      // 56 adds the custom databases' history: their saved versions and the
+      // trophy pictures those hold. Purely additive: every pack keeps its JSON
+      // and pictures, and starts with no versions.
+      expect(AppDatabase.currentSchemaVersion, greaterThanOrEqualTo(56));
+      final schema = await verifier.schemaAt(55);
+      final old = v55.DatabaseAtV55(schema.newConnection());
+      await old.customStatement(
+        'INSERT INTO careers (id, nation_id, manager_name, created_at, '
+        'in_game_date, rng_seed, cycle_pointer, budget) '
+        "VALUES (1, 1, 'Kept', 0, 0, 7, 0, 0)",
+      );
+      await old.customStatement(
+        'INSERT INTO world_packs (id, uuid, name, json, updated_at) '
+        "VALUES (3, 'u-1', 'Old world', '{\"x\":1}', 0)",
+      );
+      await old.customStatement(
+        'INSERT INTO world_pack_trophies (pack_id, key, png) '
+        "VALUES (3, 'europe', x'89504e47')",
+      );
+      await old.close();
+
+      final db = AppDatabase.forTesting(schema.newConnection());
+      addTearDown(db.close);
+      await verifier.migrateAndValidate(db, 56);
+
+      expect((await db.select(db.careers).get()).map((c) => c.managerName), [
+        'Kept',
+      ]);
+      final packs = await db.select(db.worldPacks).get();
+      expect(packs.map((p) => (p.id, p.name, p.json)), [
+        (3, 'Old world', '{"x":1}'),
+      ]);
+      final pics = await db.select(db.worldPackTrophies).get();
+      expect(pics.map((t) => (t.packId, t.key)), [(3, 'europe')]);
+      expect(pics.single.png, [0x89, 0x50, 0x4e, 0x47]);
+      expect(await db.select(db.packVersions).get(), isEmpty);
+      expect(await db.select(db.packVersionImages).get(), isEmpty);
     },
   );
 

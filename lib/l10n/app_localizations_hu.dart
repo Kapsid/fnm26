@@ -17116,4 +17116,219 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get editorWebAnother => 'Másik lehetőség';
+
+  @override
+  String get editorMerge => 'Másik adatbázis egyesítése';
+
+  @override
+  String get editorMergeAbout =>
+      'Vedd át, amit valaki más módosított a saját másolatában.';
+
+  @override
+  String get editorHistory => 'Előzmények';
+
+  @override
+  String get editorHistoryAbout =>
+      'Ennek az adatbázisnak a mentett verziói. Bármelyikhez visszatérhetsz.';
+
+  @override
+  String get editorMergeFromTitle => 'Egyesítés innen';
+
+  @override
+  String get editorMergeFromFile => 'Adatbázisfájl';
+
+  @override
+  String get editorMergeFromFileAbout =>
+      'Válassz egy .fnmdb fájlt, amit valaki megosztott veled.';
+
+  @override
+  String get editorMergeFromDevice => 'Ezen az eszközön';
+
+  @override
+  String get editorMergeComparing => 'Adatbázisok összehasonlítása';
+
+  @override
+  String get editorMergeNothing =>
+      'Nincs mit egyesíteni. Az adatbázisod már tartalmaz minden módosítást a másikból.';
+
+  @override
+  String get editorMergeFailed => 'Az adatbázisokat nem sikerült egyesíteni.';
+
+  @override
+  String editorMergeReviewTitle(String name) {
+    return '$name módosításai';
+  }
+
+  @override
+  String editorMergeFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count áttekintendő módosítás',
+      one: '1 áttekintendő módosítás',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorMergeConflicts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ütközés',
+      one: '1 ütközés',
+      zero: 'Nincs ütközés',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeConflictsOnly => 'Csak ütközések';
+
+  @override
+  String get editorMergeNoConflicts =>
+      'Nincs ütközés. Minden módosítás új az adatbázisodnak.';
+
+  @override
+  String get editorMergeAll => 'Mind';
+
+  @override
+  String get editorMergeNone => 'Egyik sem';
+
+  @override
+  String editorMergeTake(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count módosítás átvétele',
+      one: '1 módosítás átvétele',
+      zero: 'Nincs átvett módosítás',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeApply => 'Alkalmaz';
+
+  @override
+  String get editorMergeYours => 'Tiéd';
+
+  @override
+  String get editorMergeTheirs => 'Övék';
+
+  @override
+  String get editorMergeNew => 'Új';
+
+  @override
+  String get editorMergeConflict => 'Ütközés';
+
+  @override
+  String get editorMergeGameValue => 'Mint a játékban';
+
+  @override
+  String get editorMergeNotHere => 'Nincs ebben az adatbázisban';
+
+  @override
+  String editorMergeSquadOf(String nation) {
+    return '$nation kerete';
+  }
+
+  @override
+  String editorMergePoolOf(String nation) {
+    return '$nation bő kerete';
+  }
+
+  @override
+  String get editorMergePlace => 'Áthelyezés';
+
+  @override
+  String editorMergeNames(int first, int sur) {
+    return '$first keresztnév, $sur vezetéknév';
+  }
+
+  @override
+  String editorMerged(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count módosítás egyesítve',
+      one: '1 módosítás egyesítve',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistorySave => 'Verzió mentése';
+
+  @override
+  String get editorHistorySaveTitle => 'Ennek a verziónak a mentése';
+
+  @override
+  String get editorHistoryNameHint => 'Név (nem kötelező)';
+
+  @override
+  String get editorHistorySaved => 'Verzió elmentve';
+
+  @override
+  String get editorHistoryEmpty =>
+      'Még nincs mentett verzió. Egy mentés készül minden egyesítés és visszaállítás előtt, és akkor is, ha szünet után visszatérsz ehhez az adatbázishoz.';
+
+  @override
+  String get editorHistoryKeep =>
+      'Az utolsó 30 automatikus verzió megmarad. Az általad mentett verziók addig maradnak, amíg törlöd őket.';
+
+  @override
+  String get editorHistorySession => 'A szerkesztés kezdete';
+
+  @override
+  String editorHistoryBeforeMerge(String name) {
+    return '$name egyesítése előtt';
+  }
+
+  @override
+  String get editorHistoryBeforeRestore => 'Visszaállítás előtt';
+
+  @override
+  String get editorHistoryManual => 'Mentett verzió';
+
+  @override
+  String get editorHistoryAuto => 'Automatikus';
+
+  @override
+  String editorHistoryDiff(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count eltérés a mostanitól',
+      one: '1 eltérés a mostanitól',
+      zero: 'Megegyezik a mostanival',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistoryRestore => 'Visszaállítás';
+
+  @override
+  String get editorHistoryRestoreTitle => 'Visszaállítod ezt a verziót?';
+
+  @override
+  String get editorHistoryRestoreBody =>
+      'Az adatbázis visszaáll erre a verzióra. A jelenlegi állapota előbb bekerül az előzményekbe.';
+
+  @override
+  String get editorHistoryRestored => 'Verzió visszaállítva';
+
+  @override
+  String get editorHistoryFailed => 'Nem sikerült. Próbáld újra.';
+
+  @override
+  String get editorHistoryRenameTitle => 'Verzió átnevezése';
+
+  @override
+  String get editorHistoryDeleteTitle => 'Törlöd ezt a verziót?';
+
+  @override
+  String get editorHistoryDeleteBody =>
+      'Eltűnik az előzményekből. Maga az adatbázis nem változik.';
 }

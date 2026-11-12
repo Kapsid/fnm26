@@ -17082,4 +17082,219 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get editorWebAnother => 'Pilihan lain';
+
+  @override
+  String get editorMerge => 'Gabungkan database lain';
+
+  @override
+  String get editorMergeAbout =>
+      'Ambil perubahan yang dibuat orang lain di salinan mereka.';
+
+  @override
+  String get editorHistory => 'Riwayat';
+
+  @override
+  String get editorHistoryAbout =>
+      'Versi tersimpan dari database ini. Kembali ke versi mana pun.';
+
+  @override
+  String get editorMergeFromTitle => 'Gabungkan dari';
+
+  @override
+  String get editorMergeFromFile => 'File database';
+
+  @override
+  String get editorMergeFromFileAbout =>
+      'Pilih file .fnmdb yang dibagikan seseorang kepada Anda.';
+
+  @override
+  String get editorMergeFromDevice => 'Di perangkat ini';
+
+  @override
+  String get editorMergeComparing => 'Membandingkan database';
+
+  @override
+  String get editorMergeNothing =>
+      'Tidak ada yang digabungkan. Database Anda sudah memiliki semua perubahan dari yang lain.';
+
+  @override
+  String get editorMergeFailed => 'Database tidak dapat digabungkan.';
+
+  @override
+  String editorMergeReviewTitle(String name) {
+    return 'Perubahan dari $name';
+  }
+
+  @override
+  String editorMergeFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count perubahan untuk ditinjau',
+      one: '1 perubahan untuk ditinjau',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorMergeConflicts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count konflik',
+      one: '1 konflik',
+      zero: 'Tidak ada konflik',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeConflictsOnly => 'Hanya konflik';
+
+  @override
+  String get editorMergeNoConflicts =>
+      'Tidak ada konflik. Setiap perubahan baru bagi database Anda.';
+
+  @override
+  String get editorMergeAll => 'Semua';
+
+  @override
+  String get editorMergeNone => 'Tidak ada';
+
+  @override
+  String editorMergeTake(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ambil $count perubahan',
+      one: 'Ambil 1 perubahan',
+      zero: 'Tidak ambil perubahan',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeApply => 'Terapkan';
+
+  @override
+  String get editorMergeYours => 'Milik Anda';
+
+  @override
+  String get editorMergeTheirs => 'Milik mereka';
+
+  @override
+  String get editorMergeNew => 'Baru';
+
+  @override
+  String get editorMergeConflict => 'Konflik';
+
+  @override
+  String get editorMergeGameValue => 'Seperti di game';
+
+  @override
+  String get editorMergeNotHere => 'Tidak ada di database ini';
+
+  @override
+  String editorMergeSquadOf(String nation) {
+    return 'Skuad $nation';
+  }
+
+  @override
+  String editorMergePoolOf(String nation) {
+    return 'Kolam $nation';
+  }
+
+  @override
+  String get editorMergePlace => 'Pindah';
+
+  @override
+  String editorMergeNames(int first, int sur) {
+    return '$first nama depan, $sur nama belakang';
+  }
+
+  @override
+  String editorMerged(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count perubahan digabungkan',
+      one: '1 perubahan digabungkan',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistorySave => 'Simpan versi';
+
+  @override
+  String get editorHistorySaveTitle => 'Simpan versi ini';
+
+  @override
+  String get editorHistoryNameHint => 'Nama (opsional)';
+
+  @override
+  String get editorHistorySaved => 'Versi disimpan';
+
+  @override
+  String get editorHistoryEmpty =>
+      'Belum ada versi tersimpan. Satu versi disimpan sebelum setiap penggabungan dan pemulihan, dan saat Anda kembali ke database ini setelah jeda.';
+
+  @override
+  String get editorHistoryKeep =>
+      '30 versi otomatis terakhir disimpan. Versi yang Anda simpan tetap ada sampai Anda menghapusnya.';
+
+  @override
+  String get editorHistorySession => 'Awal pengeditan';
+
+  @override
+  String editorHistoryBeforeMerge(String name) {
+    return 'Sebelum menggabungkan $name';
+  }
+
+  @override
+  String get editorHistoryBeforeRestore => 'Sebelum memulihkan';
+
+  @override
+  String get editorHistoryManual => 'Versi tersimpan';
+
+  @override
+  String get editorHistoryAuto => 'Otomatis';
+
+  @override
+  String editorHistoryDiff(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count perbedaan dari sekarang',
+      one: '1 perbedaan dari sekarang',
+      zero: 'Sama dengan sekarang',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistoryRestore => 'Pulihkan';
+
+  @override
+  String get editorHistoryRestoreTitle => 'Pulihkan versi ini?';
+
+  @override
+  String get editorHistoryRestoreBody =>
+      'Database kembali ke versi ini. Kondisinya saat ini disimpan dulu ke riwayat.';
+
+  @override
+  String get editorHistoryRestored => 'Versi dipulihkan';
+
+  @override
+  String get editorHistoryFailed => 'Gagal. Silakan coba lagi.';
+
+  @override
+  String get editorHistoryRenameTitle => 'Ganti nama versi';
+
+  @override
+  String get editorHistoryDeleteTitle => 'Hapus versi ini?';
+
+  @override
+  String get editorHistoryDeleteBody =>
+      'Versi ini dihapus dari riwayat. Database itu sendiri tidak berubah.';
 }

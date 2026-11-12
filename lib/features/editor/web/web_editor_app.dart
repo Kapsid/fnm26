@@ -48,6 +48,10 @@ final List<Override> webEditorOverrides = [
       downloadBytes(file.bytes, file.fileName, type: PackCodec.mimeType);
     },
   ),
+  editorFileExporterProvider.overrideWithValue(
+    (bytes, fileName, {required subject, origin}) async =>
+        downloadBytes(bytes, fileName, type: PackCodec.mimeType),
+  ),
 ];
 
 /// The editor's routes, as the app has them, with the list of databases as
@@ -66,7 +70,10 @@ GoRouter webEditorRouter() {
       ),
       GoRoute(
         path: Routes.editorPack,
-        builder: (context, state) => PackHomeScreen(packId: idOf(state, 'id')),
+        builder: (context, state) => PackHomeScreen(
+          packId: idOf(state, 'id'),
+          startMerge: state.uri.queryParameters['merge'] == '1',
+        ),
       ),
       GoRoute(
         path: Routes.editorPlayers,

@@ -76,6 +76,8 @@ const int _newgenIdBase = 1000000000;
     WorldManagers,
     ManagerSpells,
     ManagerTies,
+    PackVersions,
+    PackVersionImages,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -96,7 +98,7 @@ class AppDatabase extends _$AppDatabase {
   /// full set of upgrade paths from it — see `schema_migration_test.dart`.
   /// A hand-written list of paths is a step somebody forgets on the bump that
   /// matters.
-  static const int currentSchemaVersion = 55;
+  static const int currentSchemaVersion = 56;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -347,6 +349,14 @@ class AppDatabase extends _$AppDatabase {
             'CREATE INDEX IF NOT EXISTS manager_spells_nation '
             'ON manager_spells (career_id, nation_id)',
           );
+        },
+        // 55 -> 56 adds the history of the custom databases: their saved
+        // versions and the trophy pictures those hold. Two new tables that
+        // belong to no career, and nothing else moves: every pack and career
+        // reads as it did, each pack with an empty history.
+        from55To56: (m, schema) async {
+          await m.createTable(schema.packVersions);
+          await m.createTable(schema.packVersionImages);
         },
       )(m, from, to);
     },

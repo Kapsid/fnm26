@@ -16867,4 +16867,218 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get editorWebAnother => 'อีกทางเลือกหนึ่ง';
+
+  @override
+  String get editorMerge => 'รวมฐานข้อมูลอื่น';
+
+  @override
+  String get editorMergeAbout =>
+      'นำการเปลี่ยนแปลงที่คนอื่นทำในสำเนาของเขามารวมไว้ที่นี่';
+
+  @override
+  String get editorHistory => 'ประวัติ';
+
+  @override
+  String get editorHistoryAbout =>
+      'เวอร์ชันที่บันทึกไว้ของฐานข้อมูลนี้ ย้อนกลับไปเวอร์ชันไหนก็ได้';
+
+  @override
+  String get editorMergeFromTitle => 'รวมจาก';
+
+  @override
+  String get editorMergeFromFile => 'ไฟล์ฐานข้อมูล';
+
+  @override
+  String get editorMergeFromFileAbout => 'เลือกไฟล์ .fnmdb ที่มีคนแชร์ให้คุณ';
+
+  @override
+  String get editorMergeFromDevice => 'บนอุปกรณ์นี้';
+
+  @override
+  String get editorMergeComparing => 'กำลังเปรียบเทียบฐานข้อมูล';
+
+  @override
+  String get editorMergeNothing =>
+      'ไม่มีอะไรให้รวม ฐานข้อมูลของคุณมีการเปลี่ยนแปลงทั้งหมดของอีกฐานข้อมูลแล้ว';
+
+  @override
+  String get editorMergeFailed => 'รวมฐานข้อมูลไม่ได้';
+
+  @override
+  String editorMergeReviewTitle(String name) {
+    return 'การเปลี่ยนแปลงจาก $name';
+  }
+
+  @override
+  String editorMergeFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'มี $count การเปลี่ยนแปลงให้ตรวจ',
+      one: 'มี 1 การเปลี่ยนแปลงให้ตรวจ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorMergeConflicts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'ขัดแย้ง $count รายการ',
+      one: 'ขัดแย้ง 1 รายการ',
+      zero: 'ไม่มีความขัดแย้ง',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeConflictsOnly => 'เฉพาะที่ขัดแย้ง';
+
+  @override
+  String get editorMergeNoConflicts =>
+      'ไม่มีความขัดแย้ง ทุกการเปลี่ยนแปลงเป็นของใหม่สำหรับฐานข้อมูลของคุณ';
+
+  @override
+  String get editorMergeAll => 'ทั้งหมด';
+
+  @override
+  String get editorMergeNone => 'ไม่เลือก';
+
+  @override
+  String editorMergeTake(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'นำ $count การเปลี่ยนแปลงมาใช้',
+      one: 'นำ 1 การเปลี่ยนแปลงมาใช้',
+      zero: 'ไม่นำการเปลี่ยนแปลงมาใช้',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorMergeApply => 'ใช้';
+
+  @override
+  String get editorMergeYours => 'ของคุณ';
+
+  @override
+  String get editorMergeTheirs => 'ของเขา';
+
+  @override
+  String get editorMergeNew => 'ใหม่';
+
+  @override
+  String get editorMergeConflict => 'ขัดแย้ง';
+
+  @override
+  String get editorMergeGameValue => 'ตามค่าในเกม';
+
+  @override
+  String get editorMergeNotHere => 'ไม่มีในฐานข้อมูลนี้';
+
+  @override
+  String editorMergeSquadOf(String nation) {
+    return 'ทีมของ $nation';
+  }
+
+  @override
+  String editorMergePoolOf(String nation) {
+    return 'กลุ่มตัวเลือกของ $nation';
+  }
+
+  @override
+  String get editorMergePlace => 'ย้ายที่';
+
+  @override
+  String editorMergeNames(int first, int sur) {
+    return 'ชื่อต้น $first รายการ, นามสกุล $sur รายการ';
+  }
+
+  @override
+  String editorMerged(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'รวม $count การเปลี่ยนแปลงแล้ว',
+      one: 'รวม 1 การเปลี่ยนแปลงแล้ว',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistorySave => 'บันทึกเวอร์ชัน';
+
+  @override
+  String get editorHistorySaveTitle => 'บันทึกเวอร์ชันนี้';
+
+  @override
+  String get editorHistoryNameHint => 'ชื่อ (ไม่บังคับ)';
+
+  @override
+  String get editorHistorySaved => 'บันทึกเวอร์ชันแล้ว';
+
+  @override
+  String get editorHistoryEmpty =>
+      'ยังไม่มีเวอร์ชันที่บันทึกไว้ ระบบจะบันทึกหนึ่งเวอร์ชันก่อนการรวมและการกู้คืนทุกครั้ง และเมื่อคุณกลับมาที่ฐานข้อมูลนี้หลังพักไปสักพัก';
+
+  @override
+  String get editorHistoryKeep =>
+      'เก็บเวอร์ชันอัตโนมัติ 30 รายการล่าสุด ส่วนเวอร์ชันที่คุณบันทึกเองจะอยู่จนกว่าคุณจะลบ';
+
+  @override
+  String get editorHistorySession => 'ตอนเริ่มแก้ไข';
+
+  @override
+  String editorHistoryBeforeMerge(String name) {
+    return 'ก่อนรวม $name';
+  }
+
+  @override
+  String get editorHistoryBeforeRestore => 'ก่อนกู้คืน';
+
+  @override
+  String get editorHistoryManual => 'เวอร์ชันที่บันทึก';
+
+  @override
+  String get editorHistoryAuto => 'อัตโนมัติ';
+
+  @override
+  String editorHistoryDiff(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'ต่างจากตอนนี้ $count รายการ',
+      one: 'ต่างจากตอนนี้ 1 รายการ',
+      zero: 'เหมือนตอนนี้',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorHistoryRestore => 'กู้คืน';
+
+  @override
+  String get editorHistoryRestoreTitle => 'กู้คืนเวอร์ชันนี้ไหม';
+
+  @override
+  String get editorHistoryRestoreBody =>
+      'ฐานข้อมูลจะย้อนกลับไปเป็นเวอร์ชันนี้ โดยสถานะปัจจุบันจะถูกบันทึกลงประวัติก่อน';
+
+  @override
+  String get editorHistoryRestored => 'กู้คืนเวอร์ชันแล้ว';
+
+  @override
+  String get editorHistoryFailed => 'ไม่สำเร็จ ลองอีกครั้งนะ';
+
+  @override
+  String get editorHistoryRenameTitle => 'เปลี่ยนชื่อเวอร์ชัน';
+
+  @override
+  String get editorHistoryDeleteTitle => 'ลบเวอร์ชันนี้ไหม';
+
+  @override
+  String get editorHistoryDeleteBody =>
+      'เวอร์ชันนี้จะถูกลบออกจากประวัติ ตัวฐานข้อมูลไม่เปลี่ยนแปลง';
 }

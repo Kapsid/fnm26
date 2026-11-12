@@ -920,6 +920,42 @@ class WorldPackTrophies extends Table {
   Set<Column> get primaryKey => {packId, key};
 }
 
+/// A saved version of a world pack (its history, schema 56): the whole pack
+/// as it was at [createdAt], to restore or export later. Belongs to no
+/// career, like the pack itself (`CareerBundle.globalTables`).
+///
+/// [reason] is a `PackVersionReason` name (`manual` versions are kept until
+/// deleted, the others are trimmed to the newest 30 per pack); [name] the
+/// manager's name for it or the merged database's, '' for none. [json] is
+/// the gzip of the pack's JSON as `WorldPackRepository.save` writes it, and
+/// [trophies] a JSON object of trophy key to the hash of its picture in
+/// [PackVersionImages], so a picture is stored once per pack however many
+/// versions hold it.
+@DataClassName('PackVersionRow')
+class PackVersions extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get packId =>
+      integer().references(WorldPacks, #id, onDelete: KeyAction.cascade)();
+  DateTimeColumn get createdAt => dateTime()();
+  TextColumn get reason => text()();
+  TextColumn get name => text()();
+  BlobColumn get json => blob()();
+  TextColumn get trophies => text()();
+}
+
+/// The trophy pictures [PackVersions] hold, once each per pack, by a hash of
+/// the bytes. One no version of its pack names any more is deleted.
+@DataClassName('PackVersionImageRow')
+class PackVersionImages extends Table {
+  IntColumn get packId =>
+      integer().references(WorldPacks, #id, onDelete: KeyAction.cascade)();
+  TextColumn get hash => text()();
+  BlobColumn get png => blob()();
+
+  @override
+  Set<Column> get primaryKey => {packId, hash};
+}
+
 /// The world a career was started on: a full copy of the pack, taken when the
 /// career began. A career never reads the device's packs again, so editing or
 /// deleting a pack cannot change a running save. No row = the default world.

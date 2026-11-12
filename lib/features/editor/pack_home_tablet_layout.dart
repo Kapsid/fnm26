@@ -133,6 +133,8 @@ class _PackHomeTabletLayout extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: AppSpacing.lg),
+                      _ToolRows(state: state),
+                      const SizedBox(height: AppSpacing.md),
                       const _CommunityRow(),
                     ],
                   ),

@@ -21,6 +21,8 @@ import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_language.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/editor/editor_ui.dart';
+import 'package:fnm/features/editor/history/pack_history_screen.dart';
+import 'package:fnm/features/editor/merge/merge_flow.dart';
 import 'package:fnm/features/editor/names/name_sections.dart';
 import 'package:fnm/features/editor/pack_issue_text.dart';
 import 'package:fnm/features/editor/pack_name_dialog.dart';
@@ -37,7 +39,11 @@ part 'pack_home_tablet_layout.dart';
 /// (each entry jumps to its place), and its sections, each with what it
 /// holds and what it still needs.
 class PackHomeScreen extends ConsumerStatefulWidget {
-  const PackHomeScreen({required this.packId, super.key});
+  const PackHomeScreen({
+    required this.packId,
+    this.startMerge = false,
+    super.key,
+  });
 
   static const Key tabletLayoutKey = Key('packHome.tabletLayout');
   static const Key undoKey = Key('packHome.undo');
@@ -48,6 +54,10 @@ class PackHomeScreen extends ConsumerStatefulWidget {
 
   /// The row that opens the community Discord.
   static const Key communityKey = Key('packHome.community');
+
+  /// The rows that merge another database in and open the history.
+  static const Key mergeKey = Key('packHome.merge');
+  static const Key historyKey = Key('packHome.history');
   static const Key notReadyKey = Key('packHome.notReady');
 
   /// The ready bar when a game update made the pack incompatible.
@@ -73,6 +83,10 @@ class PackHomeScreen extends ConsumerStatefulWidget {
 
   final int packId;
 
+  /// Whether to start merging another database in as soon as the pack is
+  /// read (the editor list's "Merge another database").
+  final bool startMerge;
+
   @override
   ConsumerState<PackHomeScreen> createState() => _PackHomeScreenState();
 }
@@ -86,7 +100,29 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
 
   bool _showAll = false;
 
+  /// Whether a merge runs: one at a time.
+  bool _merging = false;
+
+  /// Whether [PackHomeScreen.startMerge] has been acted on.
+  bool _startedMerge = false;
+
   int get _id => widget.packId;
+
+  /// Merges another database into this one ([runMerge]).
+  Future<void> _merge() async {
+    if (_merging) return;
+    setState(() => _merging = true);
+    try {
+      await runMerge(context, ref, _id);
+    } finally {
+      if (mounted) setState(() => _merging = false);
+    }
+  }
+
+  /// Opens the database's saved versions.
+  void _history() => Navigator.of(context).push(
+    MaterialPageRoute<void>(builder: (_) => PackHistoryScreen(packId: _id)),
+  );
 
   /// Back to the list, once the last edit is on the device: the list reads
   /// every pack again and must see it.
@@ -212,6 +248,13 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
               ),
               body: body,
             );
+    }
+
+    if (widget.startMerge && !_startedMerge) {
+      _startedMerge = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) unawaited(_merge());
+      });
     }
 
     final view = _PackView.of(
@@ -382,6 +425,15 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
                 },
               ),
             ),
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.marginMobile,
+                0,
+                AppSpacing.marginMobile,
+                AppSpacing.md,
+              ),
+              sliver: SliverToBoxAdapter(child: _ToolRows(state: this)),
+            ),
             const SliverPadding(
               padding: EdgeInsets.fromLTRB(
                 AppSpacing.marginMobile,
@@ -405,6 +457,90 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
       AppSpacing.sm,
     ),
     sliver: SliverToBoxAdapter(child: _SectionHeader(text)),
+  );
+}
+
+/// Merge another database in, and the history of saved versions.
+class _ToolRows extends StatelessWidget {
+  const _ToolRows({required this.state});
+
+  final _PackHomeScreenState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: AppSpacing.sm,
+      children: [
+        _ToolRow(
+          key: PackHomeScreen.mergeKey,
+          icon: Icons.merge_type,
+          title: l.editorMerge,
+          about: l.editorMergeAbout,
+          busy: state._merging,
+          onTap: state._merging ? null : state._merge,
+        ),
+        _ToolRow(
+          key: PackHomeScreen.historyKey,
+          icon: Icons.history,
+          title: l.editorHistory,
+          about: l.editorHistoryAbout,
+          onTap: state._history,
+        ),
+      ],
+    );
+  }
+}
+
+class _ToolRow extends StatelessWidget {
+  const _ToolRow({
+    required this.icon,
+    required this.title,
+    required this.about,
+    required this.onTap,
+    this.busy = false,
+    super.key,
+  });
+
+  final IconData icon;
+  final String title;
+  final String about;
+  final VoidCallback? onTap;
+  final bool busy;
+
+  @override
+  Widget build(BuildContext context) => AppCard(
+    onTap: onTap,
+    child: Row(
+      children: [
+        Icon(icon, color: AppColors.primary),
+        const SizedBox(width: AppSpacing.md),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: AppTypography.bodyMedium),
+              const SizedBox(height: 2),
+              Text(
+                about,
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        if (busy)
+          const SizedBox.square(
+            dimension: 18,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          )
+        else
+          const Icon(Icons.chevron_right, color: AppColors.onSurfaceVariant),
+      ],
+    ),
   );
 }
 

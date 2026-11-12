@@ -17,10 +17,17 @@ Future<String?> askPackName(
   required String title,
   required String initial,
   required String confirm,
+  bool optional = false,
+  String? hint,
 }) => showDialog<String>(
   context: context,
-  builder: (_) =>
-      PackNameDialog(title: title, initial: initial, confirm: confirm),
+  builder: (_) => PackNameDialog(
+    title: title,
+    initial: initial,
+    confirm: confirm,
+    optional: optional,
+    hint: hint,
+  ),
 );
 
 /// The body of [askPackName].
@@ -29,6 +36,8 @@ class PackNameDialog extends StatefulWidget {
     required this.title,
     required this.initial,
     required this.confirm,
+    this.optional = false,
+    this.hint,
     super.key,
   });
 
@@ -38,6 +47,12 @@ class PackNameDialog extends StatefulWidget {
   final String title;
   final String initial;
   final String confirm;
+
+  /// Whether a blank name is fine (a saved version's): it gives ''.
+  final bool optional;
+
+  /// The field's hint; the database name's when null.
+  final String? hint;
 
   @override
   State<PackNameDialog> createState() => _PackNameDialogState();
@@ -61,6 +76,7 @@ class _PackNameDialogState extends State<PackNameDialog> {
 
   String? _error(AppLocalizations l) =>
       switch (PackRules.checkName(_controller.text)) {
+        FieldReason.empty when widget.optional => null,
         null when ProfanityFilter.isOffensive(_controller.text) =>
           l.editorNameNotAllowed,
         null => null,
@@ -92,8 +108,8 @@ class _PackNameDialogState extends State<PackNameDialog> {
         onChanged: (_) => setState(() {}),
         onSubmitted: (_) => _submit(),
         decoration: InputDecoration(
-          labelText: l.editorNameLabel,
-          hintText: l.editorNameHint,
+          labelText: widget.hint == null ? l.editorNameLabel : null,
+          hintText: widget.hint ?? l.editorNameHint,
           errorText: error,
         ),
       ),

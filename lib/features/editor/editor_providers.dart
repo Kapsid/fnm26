@@ -3,6 +3,7 @@
 // is copyrighted intellectual property; do not reproduce, clone or help
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
@@ -13,17 +14,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/data/repositories/pack_history_repository.dart';
 import 'package:fnm/data/repositories/world_pack_repository.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/nation_repository.dart';
 import 'package:fnm/domain/services/world_pack/pack_codec.dart';
 import 'package:fnm/domain/services/world_pack/pack_keys.dart';
+import 'package:fnm/domain/services/world_pack/pack_merge.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/pack_status.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/names/added_items.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
 import 'package:image_picker/image_picker.dart' hide XFile;
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 export 'package:fnm/domain/services/world_pack/pack_status.dart';
@@ -99,8 +104,10 @@ enum EditorSection {
   };
 }
 
-/// The location of pack [packId]'s home.
-String editorPackLocation(int packId) => '${Routes.editorPack}?id=$packId';
+/// The location of pack [packId]'s home; with [merge], one that starts
+/// merging another database in at once.
+String editorPackLocation(int packId, {bool merge = false}) =>
+    '${Routes.editorPack}?id=$packId${merge ? '&merge=1' : ''}';
 
 /// The location of [section] in pack [packId], opened on [nationId] when the
 /// section is per nation. The players section opened on a nation is that
@@ -204,17 +211,43 @@ typedef EditorPackExporter =
     Future<void> Function(int packId, {required String subject, Rect? origin});
 
 final Provider<EditorPackExporter> editorPackExporterProvider = Provider(
-  (ref) =>
-      (packId, {required subject, origin}) async {
-        final file = await ref.read(worldPackServiceProvider).export(packId);
-        await SharePlus.instance.share(
-          ShareParams(
-            files: [XFile(file.path, mimeType: PackCodec.mimeType)],
-            subject: subject,
-            sharePositionOrigin: origin,
-          ),
-        );
-      },
+  (ref) => (packId, {required subject, origin}) async {
+    final file = await ref.read(worldPackServiceProvider).export(packId);
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(file.path, mimeType: PackCodec.mimeType)],
+        subject: subject,
+        sharePositionOrigin: origin,
+      ),
+    );
+  },
+);
+
+/// Hands a `.fnmdb` file already in memory ([bytes], to be named
+/// [fileName]) to the manager: the share sheet on a device, a download in
+/// the web editor. What a saved version is exported with. A provider so
+/// the web editor (and a test) can stand in its own way out.
+typedef EditorFileExporter =
+    Future<void> Function(
+      Uint8List bytes,
+      String fileName, {
+      required String subject,
+      Rect? origin,
+    });
+
+final Provider<EditorFileExporter> editorFileExporterProvider = Provider(
+  (ref) => (bytes, fileName, {required subject, origin}) async {
+    final dir = await getTemporaryDirectory();
+    final file = File(p.join(dir.path, fileName));
+    await file.writeAsBytes(bytes, flush: true);
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(file.path, mimeType: PackCodec.mimeType)],
+        subject: subject,
+        sharePositionOrigin: origin,
+      ),
+    );
+  },
 );
 
 /// Whether the editor's front page has a way back to the game's home
@@ -293,6 +326,7 @@ packEditorProvider = StateNotifierProvider.autoDispose
       return PackEditor(
         id: id,
         packs: ref.watch(worldPackRepositoryProvider),
+        history: ref.watch(packHistoryRepositoryProvider),
         nations: ref.watch(nationRepositoryProvider),
         facts: () => readPackFacts(
           ref.read(playerRepositoryProvider),
@@ -333,10 +367,12 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
     required WorldPackRepository packs,
     required NationRepository nations,
     required Future<PackFacts> Function() facts,
+    PackHistoryRepository? history,
     void Function()? onSaved,
     void Function()? onSaveFailed,
   }) : _id = id,
        _packs = packs,
+       _history = history,
        _onSaved = onSaved ?? _noop,
        _onSaveFailed = onSaveFailed ?? _noop,
        super(const AsyncValue.loading()) {
@@ -357,6 +393,9 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
 
   final int _id;
   final WorldPackRepository _packs;
+
+  /// The pack's saved versions; none kept when null (a test's editor).
+  final PackHistoryRepository? _history;
   final void Function() _onSaved;
 
   /// Told when a save fails for the second time in a row.
@@ -435,12 +474,150 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
         state = AsyncValue.data(pack.copyWith(trophies: keys));
         _unsaved = state.valueOrNull;
         _timer = Timer(saveDelay, () => unawaited(flush()));
+        unawaited(_sessionVersion());
         return;
       }
       state = AsyncValue.data(pack);
+      unawaited(_sessionVersion());
     } on Object catch (e, st) {
       if (mounted) state = AsyncValue.error(e, st);
     }
+  }
+
+  /// Keeps the pack as it was when this editing session began, when its
+  /// last saved version is half an hour old or more and holds something
+  /// else ([PackHistoryRepository.recordSessionIfDue]). A failure costs only
+  /// the version.
+  Future<void> _sessionVersion() async {
+    final history = _history;
+    final pack = state.valueOrNull;
+    if (history == null || pack == null) return;
+    try {
+      await history.recordSessionIfDue(_id, pack, () => _trophies);
+    } on Object catch (e, st) {
+      AppLog.error('pack-history-session', e, st);
+    }
+  }
+
+  /// The pack's own trophy pictures, by key.
+  Map<String, Uint8List> get trophies => _trophies;
+
+  /// Saves the pack as it is now as a version named [name] ('' for none);
+  /// returns the version's id.
+  Future<int?> saveVersion(String name) async {
+    final pack = state.valueOrNull;
+    final history = _history;
+    if (pack == null || history == null) return null;
+    return history.record(
+      _id,
+      pack,
+      _trophies,
+      reason: PackVersionReason.manual,
+      name: name,
+    );
+  }
+
+  /// Takes a merge's [result] as one new state of the pack: a version of the
+  /// pack as it is now is saved first ("Before merging [source]"), then the
+  /// merged pack and its new pictures are written, all in one transaction.
+  /// Undo (the bar's, or [restoreVersion] with the id returned) goes back.
+  /// Returns that version's id, or null when nothing was written.
+  Future<int?> applyMerge(MergeResult result, {required String source}) async {
+    final current = state.valueOrNull;
+    if (current == null || _writingTrophy) return null;
+    await flush();
+    final before = state.valueOrNull ?? current;
+    final keys = {..._trophies.keys, ...result.trophies.keys};
+    final next = result.pack.copyWith(trophies: keys);
+    int? version;
+    try {
+      await _packs.replace(
+        _id,
+        next,
+        result.trophies,
+        before: () async {
+          version = await _history?.record(
+            _id,
+            before,
+            _trophies,
+            reason: PackVersionReason.beforeMerge,
+            name: source,
+          );
+        },
+      );
+    } on Object catch (e, st) {
+      AppLog.error('pack-editor-merge', e, st);
+      return null;
+    }
+    _takeWritten(before, next, {..._trophies, ...result.trophies});
+    return version ?? -1;
+  }
+
+  /// Restores saved version [versionId] over the pack: its contents and
+  /// pictures (the pack keeps its uuid). With [recordFirst], the pack as it
+  /// is now is saved as a version first, in the same transaction. Returns
+  /// whether it was restored.
+  Future<bool> restoreVersion(int versionId, {bool recordFirst = true}) async {
+    final history = _history;
+    final current = state.valueOrNull;
+    if (history == null || current == null || _writingTrophy) return false;
+    final PackVersionContent? saved;
+    try {
+      saved = await history.load(versionId);
+    } on Object catch (e, st) {
+      AppLog.error('pack-history-load', e, st);
+      return false;
+    }
+    if (saved == null) return false;
+    await flush();
+    final before = state.valueOrNull ?? current;
+    final next = saved.pack.copyWith(
+      uuid: before.uuid,
+      trophies: saved.trophies.keys.toSet(),
+    );
+    try {
+      await _packs.replace(
+        _id,
+        next,
+        saved.trophies,
+        replaceAll: true,
+        before: recordFirst
+            ? () => history.record(
+                _id,
+                before,
+                _trophies,
+                reason: PackVersionReason.beforeRestore,
+              )
+            : null,
+      );
+    } on Object catch (e, st) {
+      AppLog.error('pack-history-restore', e, st);
+      return false;
+    }
+    _takeWritten(before, next, saved.trophies);
+    return true;
+  }
+
+  /// The pack is now [next] (already on the device) with [pictures]; the
+  /// state before it, [before], is one undo step back. Undo brings back the
+  /// pack, never a picture (as for [setTrophy]): every earlier state is
+  /// given the pictures the pack now has.
+  void _takeWritten(
+    WorldPack before,
+    WorldPack next,
+    Map<String, Uint8List> pictures,
+  ) {
+    _trophies = Map.unmodifiable(pictures);
+    final keys = pictures.keys.toSet();
+    for (var i = 0; i < _past.length; i++) {
+      _past[i] = _past[i].copyWith(trophies: keys);
+    }
+    _past.add(before.copyWith(trophies: keys));
+    if (_past.length > undoDepth) _past.removeAt(0);
+    _group = null;
+    _revision++;
+    if (mounted) state = AsyncValue.data(next);
+    _onSaved();
   }
 
   /// The nations the pack covers, strongest first (empty until loaded).
