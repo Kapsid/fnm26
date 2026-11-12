@@ -5,6 +5,7 @@ import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/features/tournaments/continental_detail_screen.dart';
 import 'package:fnm/features/tournaments/tournaments_providers.dart';
 import 'package:fnm/features/tournaments/tournaments_screen.dart';
+import 'package:fnm/shared/widgets/widgets.dart';
 
 import '../helpers/expect_whole.dart';
 import '../helpers/fixtures.dart';
@@ -80,8 +81,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('European Championship'), findsOneWidget);
-      // The decided continental cup surfaces its champion and unlocks.
-      expect(find.text('CHAMPIONS'), findsOneWidget);
+      // The decided continental cup surfaces its champion alone, no chip.
+      expect(find.text('CHAMPIONS'), findsNothing);
       expect(find.text('Spain'), findsWidgets);
       // Scroll the lazy list to reach the lower tiles.
       await tester.scrollUntilVisible(find.text('PAST WINNERS'), 300);
@@ -115,12 +116,113 @@ void main() {
       expect(find.text('Evropský šampionát'), findsOneWidget);
       expect(find.text('European Championship'), findsNothing);
       expect(find.text('Mistrovství světa'), findsOneWidget);
-      // The zone strap under the tile is copy too, not a constant.
-      expect(find.text('EVROPA'), findsOneWidget);
+      // The zone strap under a live tile is copy too, not a constant. (The
+      // decided European row shows only its winner.)
       expect(find.text('SVĚT'), findsOneWidget);
       expect(find.text('EUROPE'), findsNothing);
       expect(find.text('GLOBAL'), findsNothing);
     });
+  });
+
+  // A competition that is not being played shows only its winner and the
+  // year; the one being played keeps its strap and status chip.
+  group('winner rows', () {
+    TournamentsOverview winners({int? year = 2030}) => TournamentsOverview(
+      playerConfederation: Confederation.europe,
+      nations: nations,
+      nextMatches: const {},
+      playerGroup: null,
+      worldCupHostId: null,
+      statuses: {
+        null: const TournamentStatus(
+          phase: TournamentPhase.live,
+          label: 'QUALIFYING',
+          championId: null,
+        ),
+        Confederation.europe: TournamentStatus(
+          phase: TournamentPhase.decided,
+          label: 'CHAMPIONS',
+          championId: 1,
+          championYear: year,
+        ),
+        Confederation.southAmerica: TournamentStatus(
+          phase: TournamentPhase.history,
+          label: 'PAST WINNERS',
+          championId: 3,
+          championYear: year == null ? null : year - 4,
+        ),
+      },
+    );
+
+    Future<void> open(
+      WidgetTester tester,
+      TournamentsOverview o, {
+      Locale? locale,
+      Size size = const Size(390, 1600),
+      double scale = 1,
+    }) async {
+      tester.view.physicalSize = size;
+      tester.view.devicePixelRatio = 1;
+      tester.platformDispatcher.textScaleFactorTestValue = scale;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+        tester.platformDispatcher.clearTextScaleFactorTestValue();
+      });
+      await tester.pumpApp(
+        const TournamentsScreen(careerId: 1),
+        locale: locale,
+        overrides: [
+          tournamentsOverviewProvider.overrideWith((ref, _) async => o),
+        ],
+      );
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('decided and past rows: flag, name, year, no chip', (
+      tester,
+    ) async {
+      await open(tester, winners());
+      expect(find.text('CHAMPIONS'), findsNothing);
+      expect(find.text('PAST WINNERS'), findsNothing);
+      expect(find.text('EUROPE'), findsNothing);
+      expect(find.text('Spain'), findsOneWidget);
+      expect(find.text(' \u00b7 2030'), findsOneWidget);
+      expect(find.text(' \u00b7 2026'), findsOneWidget);
+      expect(find.byKey(const Key('competition.winner')), findsNWidgets(2));
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('competition.winner')).first,
+          matching: find.byType(FlagDisc),
+        ),
+        findsOneWidget,
+      );
+      // The live World Championship row is untouched: chip and strap.
+      expect(find.text('QUALIFYING'), findsOneWidget);
+      expect(find.text('GLOBAL'), findsOneWidget);
+    });
+
+    testWidgets('no year: the winner alone', (tester) async {
+      await open(tester, winners(year: null));
+      expect(find.text('Spain'), findsOneWidget);
+      expect(find.textContaining('\u00b7'), findsNothing);
+      expect(find.text('CHAMPIONS'), findsNothing);
+    });
+
+    for (final locale in ['en', 'cs', 'de']) {
+      testWidgets('largest text at 320 wide, $locale', (tester) async {
+        await open(
+          tester,
+          winners(),
+          locale: Locale(locale),
+          size: const Size(320, 1600),
+          scale: 1.4,
+        );
+        expectWhole(find.text('Spain'), 'the winner');
+        expect(find.text(' \u00b7 2030'), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      });
+    }
   });
 
   group('ContinentalDetailScreen', () {

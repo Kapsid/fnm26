@@ -27,7 +27,10 @@ import '../helpers/seeded_save.dart';
 /// not yet: other confederations' rows that open real views, and one that
 /// does not. The labels are the provider's own longest, in [locale]'s copy,
 /// so the rows are measured with what they really carry.
-TournamentsOverview _overview([Locale locale = const Locale('en')]) {
+TournamentsOverview _overview([
+  Locale locale = const Locale('en'),
+  bool winners = false,
+]) {
   final l = lookupAppLocalizations(locale);
   final live = TournamentStatus(
     phase: TournamentPhase.live,
@@ -35,9 +38,10 @@ TournamentsOverview _overview([Locale locale = const Locale('en')]) {
     championId: null,
   );
   final soon = TournamentStatus(
-    phase: TournamentPhase.upcoming,
+    phase: winners ? TournamentPhase.history : TournamentPhase.upcoming,
     label: l.tourSharedPastWinners,
-    championId: null,
+    championId: winners ? realNationsById.keys.first : null,
+    championYear: winners ? 2030 : null,
   );
   return TournamentsOverview(
     playerConfederation: Confederation.europe,
@@ -67,6 +71,7 @@ Future<SeededSave> _open(
   WidgetTester tester,
   Size size, {
   bool fake = false,
+  bool winners = false,
   Locale? locale,
 }) async {
   final save = await seedSave(
@@ -77,7 +82,7 @@ Future<SeededSave> _open(
         tournamentsOverviewProvider(
           kSeededCareerId,
         ).overrideWith(
-          (ref) async => _overview(locale ?? const Locale('en')),
+          (ref) async => _overview(locale ?? const Locale('en'), winners),
         ),
     ],
   );
@@ -182,6 +187,38 @@ void main() {
     expect(find.text(enL.tourSharedComingSoon), findsOneWidget);
     expect(find.byType(ContinentalDetailView), findsNothing);
     expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('a past competition lists only its winner and the year', (
+    tester,
+  ) async {
+    await _open(tester, kTabletSize, fake: true, winners: true);
+    final row = find.byKey(const Key('competition.continental.africa'));
+    await tester.ensureVisible(row);
+    await tester.pump();
+    expect(
+      find.descendant(
+        of: row,
+        matching: find.byKey(const Key('competition.winner')),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: row, matching: find.text(' \u00b7 2030')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: row, matching: find.text(enL.tourSharedPastWinners)),
+      findsNothing,
+    );
+    expect(
+      find.descendant(
+        of: row,
+        matching: find.byKey(const Key('competition.strap')),
+      ),
+      findsNothing,
+    );
     await tester.pumpWidget(const SizedBox());
   });
 
