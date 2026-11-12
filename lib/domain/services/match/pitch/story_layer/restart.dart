@@ -104,7 +104,6 @@ extension _Restarts on _Builder {
         keeperIdx != null &&
         side.standIn == null &&
         agents[keeperIdx].walkStart == null &&
-        !agents[keeperIdx].headingInGoal &&
         !_departsWithin(agents[keeperIdx], t, 10)) {
       final latSign = (ball.y - PitchDims.width / 2) * dir >= 0 ? 1.0 : -1.0;
       final outAt = Offset2(
@@ -137,7 +136,7 @@ extension _Restarts on _Builder {
       var best = double.infinity;
       for (final o in agents) {
         if (!o.present || o.side != s || o.walkStart != null) continue;
-        if (o.slot == side.gkSlot || o.headingInGoal) continue;
+        if (o.slot == side.gkSlot) continue;
         if (_departsWithin(o, t, 10) || avoid.contains(o.id)) continue;
         if (o.id == wanted) continue;
         final edge = math.min(o.pos.y, PitchDims.width - o.pos.y);

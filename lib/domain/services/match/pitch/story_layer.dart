@@ -677,9 +677,6 @@ class _Agent {
   /// Whether he walks off over a goal line (else a touchline).
   bool walkToGoalLine = false;
 
-  /// A keeper on his way in while a stand-in minds goal.
-  bool headingInGoal = false;
-
   /// Whether he is named for the keeper's slot when he steps on.
   bool namedKeeper = false;
 
@@ -1109,10 +1106,6 @@ class _Builder {
         if (a.walkStart != null && _toBoundary(a.pos) <= _edge + 0.3) {
           _endWalk(a);
         }
-      }
-      // A keeper coming on takes over once he reaches his area.
-      for (final a in agents) {
-        if (a.headingInGoal) _takeOverGoal(a, t);
       }
     }
     if (activeWindow != null) activeWindow!.exit = _state(total);
@@ -1590,7 +1583,7 @@ class _Builder {
       leaving[a.index] = t;
       _startWalk(a, t, replaced: false);
     }
-    _ensureKeeper(side, coming: side.pending[side.gkSlot]);
+    _ensureKeeper(side, t, coming: side.pending[side.gkSlot]);
     side.reform();
   }
 
@@ -1607,9 +1600,7 @@ class _Builder {
     if (!a.present || a.walkStart != null) return;
     departures[a.id] = t;
     if (carrier == a.index) _forcePass(a, t);
-    a
-      ..walkStart = t
-      ..headingInGoal = false;
+    a.walkStart = t;
     _aimOff(a);
     final side = sides[a.side];
     final slot = a.slot;
@@ -1632,16 +1623,42 @@ class _Builder {
         side.vacated.add(slot);
       }
     }
-    _ensureKeeper(side, coming: side.pending[side.gkSlot]);
+    _ensureKeeper(side, t, coming: side.pending[side.gkSlot]);
     side.reform();
   }
 
-  /// Somebody always keeps goal: an empty keeper's slot is filled by the
-  /// man in the nearest slot, for good when no keeper is [coming], or until
-  /// the one on his way steps on.
-  void _ensureKeeper(_Side side, {required bool coming}) {
+  /// Somebody always keeps goal: an empty keeper's slot is filled at [t] by
+  /// the man in the nearest slot, for good when no keeper is [coming], or
+  /// until the one on his way steps on.
+  ///
+  /// For good, it is never a man a moment still to come has playing out of
+  /// goal (taking a set piece, shooting, fouled, flagged offside) while
+  /// anybody else can go in: the engine has no keeper then and may name
+  /// any of them, and the man in the keeper's shirt would run upfield for
+  /// it.
+  void _ensureKeeper(_Side side, double t, {required bool coming}) {
     final gk = side.gkSlot;
     if (side.owner[gk] != null) return;
+    final busy = coming
+        ? const <int>{}
+        : {
+            for (final w in windows)
+              if (w.end > t + 1e-9)
+                for (final m in w.moments)
+                  ...switch (m) {
+                    ShotMoment(:final shooterId, :final assistId) => [
+                      shooterId,
+                      ?assistId,
+                    ],
+                    SetPieceMoment(:final takerId) => [takerId],
+                    FoulMoment(:final foulerId, :final fouledId) => [
+                      foulerId,
+                      fouledId,
+                    ],
+                    OffsideMoment(:final playerId) => [playerId],
+                    SubMoment() => const <int>[],
+                  },
+          };
     int? best;
     var bestD = double.infinity;
     for (var i = 0; i < side.owner.length; i++) {
@@ -1649,7 +1666,8 @@ class _Builder {
       if (i == gk || o == null || agents[o].walkStart != null) continue;
       final d =
           (side.layout[i].$1 - side.layout[gk].$1).abs() +
-          (side.layout[i].$2 - side.layout[gk].$2).abs();
+          (side.layout[i].$2 - side.layout[gk].$2).abs() +
+          (busy.contains(agents[o].id) ? 1e6 : 0);
       if (d < bestD) {
         bestD = d;
         best = i;
@@ -1675,7 +1693,6 @@ class _Builder {
       ..gone = true
       ..walkStart = null
       ..walkTarget = null
-      ..headingInGoal = false
       ..vel = Offset2.zero;
   }
 
@@ -1774,22 +1791,28 @@ class _Builder {
     side.vacated.remove(slot);
     arrivalSlot.remove(on.index);
     on.namedKeeper = slot == side.gkSlot;
-    if (slot == side.gkSlot && side.standIn != null) {
-      // The stand-in minds goal until the keeper reaches his area.
-      on
-        ..slot = null
-        ..headingInGoal = true;
-    } else {
-      side
-        ..pending[slot] = false
-        ..owner[slot] = on.index;
-      on.slot = slot;
-    }
-    // In from the halfway line on the benches' side.
-    var spot = const Offset2(PitchDims.length / 2, PitchDims.width - 0.6);
+    // A keeper coming on keeps goal from the moment he steps on, and runs
+    // in from the bench to it; the man minding goal meanwhile goes back to
+    // his own place at once. (Kept in goal until the keeper reached his
+    // area, the stand-in was an outfielder in a keeper's shirt wherever
+    // open play had left him, upfield or in the other box, and the real
+    // keeper, with no place in the shape, was sent forward at every set
+    // piece and seldom made it back.)
+    if (slot == side.gkSlot) _standDown(side);
+    side
+      ..pending[slot] = false
+      ..owner[slot] = on.index;
+    on.slot = slot;
+    // In from the halfway line on the benches' side; a keeper from the
+    // touchline level with his own area, so he is never seen keeping goal
+    // from halfway (play does not wait for him to get there).
+    final from = slot == side.gkSlot
+        ? depthToX(_area - 2, _dir(q.side, pacer.matchAt(_dur(t)).minute))
+        : PitchDims.length / 2;
+    var spot = Offset2(from, PitchDims.width - 0.6);
     for (var k = 0; k < 40; k++) {
       final dx = (k.isEven ? 1 : -1) * ((k + 1) ~/ 2) * 1.2;
-      final c = Offset2(PitchDims.length / 2 + dx, PitchDims.width - 0.6);
+      final c = Offset2(from + dx, PitchDims.width - 0.6);
       if (agents.every((o) => !o.present || o.pos.distanceTo(c) >= 1.2)) {
         spot = c;
         break;
@@ -1806,38 +1829,27 @@ class _Builder {
     return true;
   }
 
-  /// [a], a keeper on his way in, takes the keeper's slot once he is in his
-  /// area; the stand-in goes back to his own place.
-  void _takeOverGoal(_Agent a, double t) {
-    if (!a.present) {
-      a.headingInGoal = false;
-      return;
-    }
-    final side = sides[a.side];
-    final dir = _dir(a.side, pacer.matchAt(_dur(t)).minute);
-    if (xToDepth(a.pos.x, dir) > _area) return;
+  /// The man minding [side]'s goal for a keeper on his way goes back to his
+  /// own place, leaving the keeper's slot to the keeper.
+  void _standDown(_Side side) {
     final stand = side.standIn;
-    a.headingInGoal = false;
-    if (stand != null) {
-      final mover = agents[stand.agent];
-      final back = side.owner[stand.back] == null
-          ? stand.back
-          : side.owner.indexOf(null);
-      side.standIn = null;
-      if (back >= 0 && back != side.gkSlot) {
-        side
-          ..owner[back] = mover.index
-          ..pending[back] = false;
-        mover.slot = back;
-      } else {
-        mover.slot = null;
-      }
+    if (stand == null) return;
+    final mover = agents[stand.agent];
+    final back = side.owner[stand.back] == null
+        ? stand.back
+        : side.owner.indexOf(null);
+    side.standIn = null;
+    if (side.owner[side.gkSlot] == mover.index) {
+      side.owner[side.gkSlot] = null;
     }
-    side
-      ..owner[side.gkSlot] = a.index
-      ..pending[side.gkSlot] = false;
-    a.slot = side.gkSlot;
-    side.reform();
+    if (back >= 0 && back != side.gkSlot) {
+      side
+        ..owner[back] = mover.index
+        ..pending[back] = false;
+      mover.slot = back;
+    } else {
+      mover.slot = null;
+    }
   }
 
   bool _departsWithin(_Agent a, double t, double within) {
@@ -2880,11 +2892,6 @@ class _Builder {
     final dir = _dir(a.side, minute);
     final isKeeper = a.slot == side.gkSlot;
     final anchor = anchors[a.index] ?? a.pos;
-    if (a.headingInGoal) {
-      // Into his area beside the stand-in, then he takes over.
-      final spot = Offset2(depthToX(_area - 4, dir), PitchDims.width / 2 + 6);
-      return (spot, 6, 2);
-    }
     if (!inWindow) {
       final r = _restartDrive(a);
       if (r != null) return r;

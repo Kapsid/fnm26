@@ -482,7 +482,7 @@ void main() {
     expect(redirected, greaterThan(0));
   });
 
-  test('a stand-in keeps goal until the keeper coming on takes over', () {
+  test('a keeper coming on keeps goal from the moment he steps on', () {
     final home = _team(1, 75, Formation.f442, const TacticalInstructions());
     final away = _team(2, 75, Formation.f433, const TacticalInstructions());
     final backup = player(id: 150, nationId: 1, position: PlayerPosition.gk);
@@ -529,18 +529,22 @@ void main() {
       expect(k.length, 1, reason: 'keepers $k at ${f.t}');
       if (takeover == null && k.contains(150)) takeover = f.t;
     }
+    // The keeper coming on keeps goal from the moment he steps on, level
+    // with his own area; nobody else is seen in a keeper's shirt meanwhile.
     expect(takeover, isNotNull);
-    expect(takeover!, greaterThanOrEqualTo(on));
-    final standIn = homeKeepers(on + 0.3).single;
-    expect(standIn, isNot(anyOf(100, 150)));
-    // The stand-in goes back to his own place afterwards.
-    final dir = attackDir(home: true, minute: 31);
-    final before = xToDepth(s.sample(_at(takeover)).players[standIn]!.x, dir);
-    final later = xToDepth(
-      s.sample(_at(takeover + 6)).players[standIn]!.x,
-      dir,
+    final tk = takeover!;
+    expect(tk, greaterThanOrEqualTo(on));
+    expect(
+      tk,
+      lessThanOrEqualTo(s.keyframes.firstWhere((f) => f.t > on).t),
     );
-    expect(later, greaterThan(before + 4));
+    for (final f in s.keyframes) {
+      if (f.t < off || f.t >= tk) continue;
+      expect(homeKeepers(f.t), anyOf(isEmpty, {100}), reason: 'at ${f.t}');
+    }
+    final dir = attackDir(home: true, minute: 31);
+    final at = s.sample(_at(tk + 0.01)).players[150]!;
+    expect(xToDepth(at.x, dir), lessThanOrEqualTo(16.5 + 1e-6));
   });
 
   test('a wall stands 9.15 m from a direct free kick, 3 to 5 men', () {
