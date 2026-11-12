@@ -4350,5 +4350,8 @@
   "editorHistoryDeleteBody": "Zniknie z historii. Sama baza danych się nie zmieni.",
   "financesTabDepartments": "Działy",
   "financesTabFacilities": "Obiekty",
-  "financesInvestedSoFar": "Zainwestowano dotąd"
+  "financesInvestedSoFar": "Zainwestowano dotąd",
+  "tacticsQuickBest": "Najlepsi",
+  "tacticsQuickPrevious": "Poprzedni",
+  "assistantAskShort": "Asystent"
 }

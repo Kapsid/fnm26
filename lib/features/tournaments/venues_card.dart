@@ -111,7 +111,7 @@ class VenuesCard extends StatelessWidget {
                 ],
               ),
             ],
-            for (final v in h.venues) _venueRow(v),
+            for (final v in h.venues) _venueRow(context, v),
           ],
           if (mascot != null || ball != null) ...[
             const Divider(height: AppSpacing.md),
@@ -155,7 +155,7 @@ class VenuesCard extends StatelessWidget {
     ),
   );
 
-  Widget _venueRow(Venue v) => Padding(
+  Widget _venueRow(BuildContext context, Venue v) => Padding(
     padding: const EdgeInsets.symmetric(vertical: 3),
     child: Row(
       children: [
@@ -177,7 +177,10 @@ class VenuesCard extends StatelessWidget {
                 style: AppTypography.bodyMedium,
               ),
               Text(
-                '${v.city} · ${_capacity(v.capacity)} seats',
+                AppLocalizations.of(context).tourSharedVenueSeats(
+                  v.city,
+                  _capacity(v.capacity),
+                ),
                 style: AppTypography.labelSmall.copyWith(
                   color: AppColors.onSurfaceVariant,
                 ),

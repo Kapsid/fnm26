@@ -284,46 +284,13 @@ class _CallUpTabletLayout extends StatelessWidget {
           if (!locked)
             Padding(
               padding: const EdgeInsets.all(AppSpacing.sm),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () =>
-                          state._pickBest(data, coverage, formation),
-                      child: Text(
-                        l.tacticsBestQuality,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.xs),
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: !data.hasPreviousSquad
-                          ? null
-                          : () => state._pickPrevious(data, coverage),
-                      child: Text(
-                        l.tacticsPreviousSquad,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          if (!locked)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.sm,
-                0,
-                AppSpacing.sm,
-                AppSpacing.sm,
-              ),
-              child: AskAssistantButton(
+              child: CallUpQuickPicks(
                 tier: state._assistantTier,
-                onPressed: () => state._askAssistant(
+                onBest: () => state._pickBest(data, coverage, formation),
+                onPrevious: !data.hasPreviousSquad
+                    ? null
+                    : () => state._pickPrevious(data, coverage),
+                onAssistant: () => state._askAssistant(
                   data,
                   selected: selected,
                   coverage: coverage,

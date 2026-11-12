@@ -4350,5 +4350,8 @@
   "editorHistoryDeleteBody": "Versi ini dihapus dari riwayat. Database itu sendiri tidak berubah.",
   "financesTabDepartments": "Departemen",
   "financesTabFacilities": "Fasilitas",
-  "financesInvestedSoFar": "Diinvestasikan sejauh ini"
+  "financesInvestedSoFar": "Diinvestasikan sejauh ini",
+  "tacticsQuickBest": "Terbaik",
+  "tacticsQuickPrevious": "Sebelumnya",
+  "assistantAskShort": "Asisten"
 }

@@ -17504,4 +17504,13 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Investoitu tähän mennessä';
+
+  @override
+  String get tacticsQuickBest => 'Paras';
+
+  @override
+  String get tacticsQuickPrevious => 'Edellinen';
+
+  @override
+  String get assistantAskShort => 'Apuri';
 }

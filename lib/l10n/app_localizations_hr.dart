@@ -17769,4 +17769,13 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Dosad uloženo';
+
+  @override
+  String get tacticsQuickBest => 'Najbolji';
+
+  @override
+  String get tacticsQuickPrevious => 'Prošli';
+
+  @override
+  String get assistantAskShort => 'Pomoćnik';
 }

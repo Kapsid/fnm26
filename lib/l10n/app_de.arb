@@ -4350,5 +4350,8 @@
   "editorHistoryDeleteBody": "Sie wird aus dem Verlauf entfernt. Die Datenbank selbst ändert sich nicht.",
   "financesTabDepartments": "Abteilungen",
   "financesTabFacilities": "Einrichtungen",
-  "financesInvestedSoFar": "Bisher investiert"
+  "financesInvestedSoFar": "Bisher investiert",
+  "tacticsQuickBest": "Beste",
+  "tacticsQuickPrevious": "Letzter",
+  "assistantAskShort": "Co-Trainer"
 }

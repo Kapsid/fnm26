@@ -4350,5 +4350,8 @@
   "editorHistoryDeleteBody": "기록에서 삭제됩니다. 데이터베이스 자체는 바뀌지 않습니다.",
   "financesTabDepartments": "부서",
   "financesTabFacilities": "시설",
-  "financesInvestedSoFar": "지금까지 투자액"
+  "financesInvestedSoFar": "지금까지 투자액",
+  "tacticsQuickBest": "최고",
+  "tacticsQuickPrevious": "이전",
+  "assistantAskShort": "코치"
 }

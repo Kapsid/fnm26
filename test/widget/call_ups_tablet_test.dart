@@ -171,7 +171,7 @@ void main() {
       expect(find.byType(DetailPaneHost), findsNothing);
       expect(find.byKey(DataGrid.scrollKey), findsNothing);
 
-      await tester.tap(find.text(enL.tacticsBestQuality));
+      await tester.tap(find.text(enL.tacticsQuickBest));
       await settle(tester);
       expect(tester.takeException(), isNull);
       final tiles = find.byType(ListTile);
@@ -235,7 +235,7 @@ void main() {
           '&event=$budgetSetupKind&cycle=${save.career.cyclePointer}',
         );
     await settle(tester);
-    await tester.tap(find.text(enL.tacticsBestQuality));
+    await tester.tap(find.text(enL.tacticsQuickBest));
     await settle(tester);
     await tester.tap(find.text(enL.tacticsConfirmSquad));
     await settle(tester);

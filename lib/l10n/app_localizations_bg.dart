@@ -17514,4 +17514,13 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Инвестирано досега';
+
+  @override
+  String get tacticsQuickBest => 'Най-добър';
+
+  @override
+  String get tacticsQuickPrevious => 'Предишен';
+
+  @override
+  String get assistantAskShort => 'Асистент';
 }

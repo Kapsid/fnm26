@@ -4350,5 +4350,8 @@
   "editorHistoryDeleteBody": "Eltűnik az előzményekből. Maga az adatbázis nem változik.",
   "financesTabDepartments": "Részlegek",
   "financesTabFacilities": "Létesítmények",
-  "financesInvestedSoFar": "Eddig befektetve"
+  "financesInvestedSoFar": "Eddig befektetve",
+  "tacticsQuickBest": "Legjobb",
+  "tacticsQuickPrevious": "Előző",
+  "assistantAskShort": "Segéd"
 }

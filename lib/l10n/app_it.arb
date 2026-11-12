@@ -4350,5 +4350,8 @@
   "editorHistoryDeleteBody": "Viene rimossa dalla cronologia. Il database in sé non cambia.",
   "financesTabDepartments": "Reparti",
   "financesTabFacilities": "Strutture",
-  "financesInvestedSoFar": "Investito finora"
+  "financesInvestedSoFar": "Investito finora",
+  "tacticsQuickBest": "Migliore",
+  "tacticsQuickPrevious": "Precedente",
+  "assistantAskShort": "Vice"
 }

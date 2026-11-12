@@ -17336,4 +17336,13 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'अब तक निवेश';
+
+  @override
+  String get tacticsQuickBest => 'सर्वश्रेष्ठ';
+
+  @override
+  String get tacticsQuickPrevious => 'पिछला';
+
+  @override
+  String get assistantAskShort => 'सहायक';
 }

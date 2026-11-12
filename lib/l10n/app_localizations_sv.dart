@@ -17414,4 +17414,13 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Investerat hittills';
+
+  @override
+  String get tacticsQuickBest => 'Bästa';
+
+  @override
+  String get tacticsQuickPrevious => 'Förra';
+
+  @override
+  String get assistantAskShort => 'Assistent';
 }

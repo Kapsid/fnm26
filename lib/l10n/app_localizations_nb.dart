@@ -17424,4 +17424,13 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Investert så langt';
+
+  @override
+  String get tacticsQuickBest => 'Beste';
+
+  @override
+  String get tacticsQuickPrevious => 'Forrige';
+
+  @override
+  String get assistantAskShort => 'Assistent';
 }

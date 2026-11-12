@@ -17438,4 +17438,13 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Naipuhunan na';
+
+  @override
+  String get tacticsQuickBest => 'Pinakamahusay';
+
+  @override
+  String get tacticsQuickPrevious => 'Nakaraan';
+
+  @override
+  String get assistantAskShort => 'Katulong';
 }

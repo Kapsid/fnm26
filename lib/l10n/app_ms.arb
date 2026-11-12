@@ -4350,5 +4350,8 @@
   "editorHistoryDeleteBody": "Ia dibuang daripada sejarah. Pangkalan data itu sendiri tidak berubah.",
   "financesTabDepartments": "Jabatan",
   "financesTabFacilities": "Kemudahan",
-  "financesInvestedSoFar": "Dilaburkan setakat ini"
+  "financesInvestedSoFar": "Dilaburkan setakat ini",
+  "tacticsQuickBest": "Terbaik",
+  "tacticsQuickPrevious": "Terdahulu",
+  "assistantAskShort": "Pembantu"
 }

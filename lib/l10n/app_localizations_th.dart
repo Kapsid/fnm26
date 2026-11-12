@@ -17124,4 +17124,13 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'ลงทุนไปแล้ว';
+
+  @override
+  String get tacticsQuickBest => 'ดีที่สุด';
+
+  @override
+  String get tacticsQuickPrevious => 'ครั้งก่อน';
+
+  @override
+  String get assistantAskShort => 'ผู้ช่วย';
 }

@@ -17276,4 +17276,13 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Đã đầu tư đến nay';
+
+  @override
+  String get tacticsQuickBest => 'Tốt nhất';
+
+  @override
+  String get tacticsQuickPrevious => 'Lần trước';
+
+  @override
+  String get assistantAskShort => 'Trợ lý';
 }

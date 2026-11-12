@@ -4350,5 +4350,8 @@
   "editorHistoryDeleteBody": "Geçmişten kaldırılır. Veritabanının kendisi değişmez.",
   "financesTabDepartments": "Departmanlar",
   "financesTabFacilities": "Tesisler",
-  "financesInvestedSoFar": "Şimdiye kadar yatırılan"
+  "financesInvestedSoFar": "Şimdiye kadar yatırılan",
+  "tacticsQuickBest": "En iyi",
+  "tacticsQuickPrevious": "Önceki",
+  "assistantAskShort": "Yardımcı"
 }

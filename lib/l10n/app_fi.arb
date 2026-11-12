@@ -4350,5 +4350,8 @@
   "editorHistoryDeleteBody": "Se poistetaan historiasta. Itse tietokanta ei muutu.",
   "financesTabDepartments": "Osastot",
   "financesTabFacilities": "Tilat",
-  "financesInvestedSoFar": "Investoitu tähän mennessä"
+  "financesInvestedSoFar": "Investoitu tähän mennessä",
+  "tacticsQuickBest": "Paras",
+  "tacticsQuickPrevious": "Edellinen",
+  "assistantAskShort": "Apuri"
 }

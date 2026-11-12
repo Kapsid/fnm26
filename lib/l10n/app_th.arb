@@ -4350,5 +4350,8 @@
   "editorHistoryDeleteBody": "เวอร์ชันนี้จะถูกลบออกจากประวัติ ตัวฐานข้อมูลไม่เปลี่ยนแปลง",
   "financesTabDepartments": "แผนก",
   "financesTabFacilities": "สิ่งอำนวยความสะดวก",
-  "financesInvestedSoFar": "ลงทุนไปแล้ว"
+  "financesInvestedSoFar": "ลงทุนไปแล้ว",
+  "tacticsQuickBest": "ดีที่สุด",
+  "tacticsQuickPrevious": "ครั้งก่อน",
+  "assistantAskShort": "ผู้ช่วย"
 }

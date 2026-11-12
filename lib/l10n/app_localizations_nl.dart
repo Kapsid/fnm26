@@ -17512,4 +17512,13 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Tot nu toe geïnvesteerd';
+
+  @override
+  String get tacticsQuickBest => 'Beste';
+
+  @override
+  String get tacticsQuickPrevious => 'Vorige';
+
+  @override
+  String get assistantAskShort => 'Assistent';
 }

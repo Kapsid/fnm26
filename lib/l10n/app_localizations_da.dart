@@ -17429,4 +17429,13 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Investeret indtil nu';
+
+  @override
+  String get tacticsQuickBest => 'Bedste';
+
+  @override
+  String get tacticsQuickPrevious => 'Forrige';
+
+  @override
+  String get assistantAskShort => 'Assistent';
 }

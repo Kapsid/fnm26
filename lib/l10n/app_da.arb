@@ -4350,5 +4350,8 @@
   "editorHistoryDeleteBody": "Den fjernes fra historikken. Selve databasen ændres ikke.",
   "financesTabDepartments": "Afdelinger",
   "financesTabFacilities": "Faciliteter",
-  "financesInvestedSoFar": "Investeret indtil nu"
+  "financesInvestedSoFar": "Investeret indtil nu",
+  "tacticsQuickBest": "Bedste",
+  "tacticsQuickPrevious": "Forrige",
+  "assistantAskShort": "Assistent"
 }

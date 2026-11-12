@@ -4350,5 +4350,8 @@
   "editorHistoryDeleteBody": "Αφαιρείται από το ιστορικό. Η ίδια η βάση δεδομένων δεν αλλάζει.",
   "financesTabDepartments": "Τμήματα",
   "financesTabFacilities": "Εγκαταστάσεις",
-  "financesInvestedSoFar": "Επενδύσεις έως τώρα"
+  "financesInvestedSoFar": "Επενδύσεις έως τώρα",
+  "tacticsQuickBest": "Καλύτερη",
+  "tacticsQuickPrevious": "Προηγούμενη",
+  "assistantAskShort": "Βοηθός"
 }

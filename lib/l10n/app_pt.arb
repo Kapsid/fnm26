@@ -4350,5 +4350,8 @@
   "editorHistoryDeleteBody": "Ela é removida do histórico. O banco de dados em si não muda.",
   "financesTabDepartments": "Departamentos",
   "financesTabFacilities": "Instalações",
-  "financesInvestedSoFar": "Investido até agora"
+  "financesInvestedSoFar": "Investido até agora",
+  "tacticsQuickBest": "Melhor",
+  "tacticsQuickPrevious": "Anterior",
+  "assistantAskShort": "Adjunto"
 }

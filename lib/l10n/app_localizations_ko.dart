@@ -16848,4 +16848,13 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => '지금까지 투자액';
+
+  @override
+  String get tacticsQuickBest => '최고';
+
+  @override
+  String get tacticsQuickPrevious => '이전';
+
+  @override
+  String get assistantAskShort => '코치';
 }
