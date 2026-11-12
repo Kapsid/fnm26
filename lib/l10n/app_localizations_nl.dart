@@ -17562,4 +17562,119 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get editorRegionNone => 'Niets voor deze regio.';
+
+  @override
+  String get nationTabResults => 'Uitslagen';
+
+  @override
+  String get nationTabHistory => 'Geschiedenis';
+
+  @override
+  String get nationTabStadiums => 'Stadions';
+
+  @override
+  String get nationStatRanking => 'Ranking';
+
+  @override
+  String get nationStatOverall => 'Sterkte';
+
+  @override
+  String get nationFactsTitle => 'Feiten';
+
+  @override
+  String get nationFactAgainstYou => 'Jouw resultaten tegen hen (W-G-V)';
+
+  @override
+  String nationFactBiggestWin(String opponent, String year) {
+    return 'Grootste zege ($opponent, $year)';
+  }
+
+  @override
+  String get nationFactHomeUnbeaten => 'Thuiswedstrijden op rij ongeslagen';
+
+  @override
+  String nationFactTitleDrought(String year) {
+    return 'Jaar sinds de laatste titel ($year)';
+  }
+
+  @override
+  String get nationFactNoTitles => 'Wacht nog op een eerste titel';
+
+  @override
+  String nationFactRecordScorer(String name) {
+    return 'Doelpunten van topscorer aller tijden $name';
+  }
+
+  @override
+  String nationFactRankClimb(int rank, String year) {
+    return 'Plaatsen gestegen in één cyclus, tot #$rank in $year';
+  }
+
+  @override
+  String nationFactWorldFinals(String year) {
+    return 'Eindrondes van het Wereldkampioenschap sinds $year';
+  }
+
+  @override
+  String nationBestRankYear(int rank, String year) {
+    return 'Beste: #$rank ($year)';
+  }
+
+  @override
+  String get nationLikelyEleven => 'Vermoedelijke elf';
+
+  @override
+  String get nationBestYoung => 'Beste onder-21';
+
+  @override
+  String get nationWhereTheyPlay => 'Waar ze spelen';
+
+  @override
+  String get nationOtherCountries => 'Andere landen';
+
+  @override
+  String get nationBiggestWinYou => 'Jouw grootste zege';
+
+  @override
+  String nationAllMeetings(int count) {
+    return 'Alle ontmoetingen ($count)';
+  }
+
+  @override
+  String get nationUpcoming => 'Komend';
+
+  @override
+  String get nationLastResults => 'Laatste uitslagen';
+
+  @override
+  String nationAllMatches(int count) {
+    return 'Alle wedstrijden ($count)';
+  }
+
+  @override
+  String get nationShowMore => 'Meer tonen';
+
+  @override
+  String get nationHostingRecord => 'Als gastland';
+
+  @override
+  String get nationNeverHosted => 'Heeft nog geen eindronde georganiseerd';
+
+  @override
+  String get nationHostChampions => 'Kampioen';
+
+  @override
+  String get nationHostRunnersUp => 'Finalist';
+
+  @override
+  String get nationHostThird => 'Derde';
+
+  @override
+  String get nationCoHosts => 'Mede-gastheer';
+
+  @override
+  String get nationNoStadiums => 'Geen stadions bekend';
+
+  @override
+  String get nationManageStadiums => 'Stadions beheren';
 }

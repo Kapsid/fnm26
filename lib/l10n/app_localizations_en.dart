@@ -17505,4 +17505,119 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editorRegionNone => 'Nothing here for this region.';
+
+  @override
+  String get nationTabResults => 'Results';
+
+  @override
+  String get nationTabHistory => 'History';
+
+  @override
+  String get nationTabStadiums => 'Stadiums';
+
+  @override
+  String get nationStatRanking => 'Ranking';
+
+  @override
+  String get nationStatOverall => 'Overall';
+
+  @override
+  String get nationFactsTitle => 'Facts';
+
+  @override
+  String get nationFactAgainstYou => 'Your record against them (W-D-L)';
+
+  @override
+  String nationFactBiggestWin(String opponent, String year) {
+    return 'Biggest win ($opponent, $year)';
+  }
+
+  @override
+  String get nationFactHomeUnbeaten => 'Home matches unbeaten in a row';
+
+  @override
+  String nationFactTitleDrought(String year) {
+    return 'Years since the last title ($year)';
+  }
+
+  @override
+  String get nationFactNoTitles => 'Still waiting for a first title';
+
+  @override
+  String nationFactRecordScorer(String name) {
+    return 'Goals by the record scorer, $name';
+  }
+
+  @override
+  String nationFactRankClimb(int rank, String year) {
+    return 'Places climbed in one cycle, up to #$rank in $year';
+  }
+
+  @override
+  String nationFactWorldFinals(String year) {
+    return 'World Championship finals reached since $year';
+  }
+
+  @override
+  String nationBestRankYear(int rank, String year) {
+    return 'Best: #$rank ($year)';
+  }
+
+  @override
+  String get nationLikelyEleven => 'Likely eleven';
+
+  @override
+  String get nationBestYoung => 'Best under-21';
+
+  @override
+  String get nationWhereTheyPlay => 'Where they play';
+
+  @override
+  String get nationOtherCountries => 'Other countries';
+
+  @override
+  String get nationBiggestWinYou => 'Your biggest win';
+
+  @override
+  String nationAllMeetings(int count) {
+    return 'All meetings ($count)';
+  }
+
+  @override
+  String get nationUpcoming => 'Upcoming';
+
+  @override
+  String get nationLastResults => 'Latest results';
+
+  @override
+  String nationAllMatches(int count) {
+    return 'All matches ($count)';
+  }
+
+  @override
+  String get nationShowMore => 'Show more';
+
+  @override
+  String get nationHostingRecord => 'Hosting record';
+
+  @override
+  String get nationNeverHosted => 'Has not hosted a finals yet';
+
+  @override
+  String get nationHostChampions => 'Champions';
+
+  @override
+  String get nationHostRunnersUp => 'Runners-up';
+
+  @override
+  String get nationHostThird => 'Third';
+
+  @override
+  String get nationCoHosts => 'Co-hosts';
+
+  @override
+  String get nationNoStadiums => 'No stadiums on record';
+
+  @override
+  String get nationManageStadiums => 'Manage stadiums';
 }

@@ -331,6 +331,70 @@ class _StadiumMapState extends State<StadiumMap> {
   }
 }
 
+/// A nation's outline at a glance: the stadium map's land, fixed (no zoom,
+/// no labels, no taps), with a small dot on each of [cities]. For a header
+/// beside a name, where the full [StadiumMap] would be too much.
+class NationOutline extends StatelessWidget {
+  const NationOutline({required this.geo, this.cities = const [], super.key});
+
+  final NationGeo geo;
+
+  /// The cities to dot, the biggest ground's first (drawn largest).
+  final List<String> cities;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, box) {
+        final size = Size(box.maxWidth, box.maxHeight);
+        final fit = _Fit.of(geo.view, size, 4);
+        return IgnorePointer(
+          child: CustomPaint(
+            size: size,
+            painter: _LandPainter(geo: geo, fit: fit),
+            foregroundPainter: _DotPainter(
+              geo: geo,
+              fit: fit,
+              cities: cities,
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// [NationOutline]'s dots: silver, the first a little larger.
+class _DotPainter extends CustomPainter {
+  _DotPainter({required this.geo, required this.fit, required this.cities});
+
+  final NationGeo geo;
+  final _Fit fit;
+  final List<String> cities;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final seen = <String>{};
+    for (var i = 0; i < cities.length; i++) {
+      final c = cities[i];
+      if (!seen.add(c) || geo.boxOf(c) != -1) continue;
+      final at = fit.apply(geo.cities[c]!);
+      final r = i == 0 ? 3.2 : 2.2;
+      canvas
+        ..drawCircle(
+          at,
+          r + 1,
+          Paint()..color = AppColors.surfaceContainerLowest,
+        )
+        ..drawCircle(at, r, Paint()..color = AppColors.primary);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_DotPainter old) =>
+      !identical(old.geo, geo) || old.fit != fit || old.cities != cities;
+}
+
 /// How the plane maps onto a box: a uniform scale and an offset that centre
 /// the view in it with a margin.
 @immutable

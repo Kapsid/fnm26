@@ -17326,4 +17326,119 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get editorRegionNone => 'Không có gì cho khu vực này.';
+
+  @override
+  String get nationTabResults => 'Kết quả';
+
+  @override
+  String get nationTabHistory => 'Lịch sử';
+
+  @override
+  String get nationTabStadiums => 'Sân vận động';
+
+  @override
+  String get nationStatRanking => 'Xếp hạng';
+
+  @override
+  String get nationStatOverall => 'Sức mạnh';
+
+  @override
+  String get nationFactsTitle => 'Thông tin';
+
+  @override
+  String get nationFactAgainstYou => 'Thành tích của bạn trước họ (T-H-B)';
+
+  @override
+  String nationFactBiggestWin(String opponent, String year) {
+    return 'Trận thắng đậm nhất ($opponent, $year)';
+  }
+
+  @override
+  String get nationFactHomeUnbeaten => 'Trận sân nhà liên tiếp bất bại';
+
+  @override
+  String nationFactTitleDrought(String year) {
+    return 'Số năm kể từ danh hiệu gần nhất ($year)';
+  }
+
+  @override
+  String get nationFactNoTitles => 'Vẫn chờ danh hiệu đầu tiên';
+
+  @override
+  String nationFactRecordScorer(String name) {
+    return 'Số bàn của chân sút kỷ lục, $name';
+  }
+
+  @override
+  String nationFactRankClimb(int rank, String year) {
+    return 'Bậc tăng trong một chu kỳ, lên #$rank năm $year';
+  }
+
+  @override
+  String nationFactWorldFinals(String year) {
+    return 'Lần dự vòng chung kết Giải vô địch thế giới từ năm $year';
+  }
+
+  @override
+  String nationBestRankYear(int rank, String year) {
+    return 'Cao nhất: #$rank ($year)';
+  }
+
+  @override
+  String get nationLikelyEleven => 'Đội hình dự kiến';
+
+  @override
+  String get nationBestYoung => 'Hay nhất U21';
+
+  @override
+  String get nationWhereTheyPlay => 'Nơi họ thi đấu';
+
+  @override
+  String get nationOtherCountries => 'Quốc gia khác';
+
+  @override
+  String get nationBiggestWinYou => 'Trận thắng đậm nhất của bạn';
+
+  @override
+  String nationAllMeetings(int count) {
+    return 'Tất cả các lần gặp ($count)';
+  }
+
+  @override
+  String get nationUpcoming => 'Sắp tới';
+
+  @override
+  String get nationLastResults => 'Kết quả gần đây';
+
+  @override
+  String nationAllMatches(int count) {
+    return 'Tất cả các trận ($count)';
+  }
+
+  @override
+  String get nationShowMore => 'Xem thêm';
+
+  @override
+  String get nationHostingRecord => 'Lần đăng cai';
+
+  @override
+  String get nationNeverHosted => 'Chưa từng đăng cai vòng chung kết';
+
+  @override
+  String get nationHostChampions => 'Vô địch';
+
+  @override
+  String get nationHostRunnersUp => 'Á quân';
+
+  @override
+  String get nationHostThird => 'Hạng ba';
+
+  @override
+  String get nationCoHosts => 'Đồng chủ nhà';
+
+  @override
+  String get nationNoStadiums => 'Không có sân vận động nào';
+
+  @override
+  String get nationManageStadiums => 'Quản lý sân vận động';
 }

@@ -26419,6 +26419,204 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nothing here for this region.'**
   String get editorRegionNone;
+
+  /// Nation page tab: its results, fixtures and record against you.
+  ///
+  /// In en, this message translates to:
+  /// **'Results'**
+  String get nationTabResults;
+
+  /// Nation page tab: titles, record scorers, ranking history and hosting record.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get nationTabHistory;
+
+  /// Nation page tab: the map and list of its national stadiums.
+  ///
+  /// In en, this message translates to:
+  /// **'Stadiums'**
+  String get nationTabStadiums;
+
+  /// Nation page header: small caption under the world ranking position.
+  ///
+  /// In en, this message translates to:
+  /// **'Ranking'**
+  String get nationStatRanking;
+
+  /// Nation page header: small caption under the squad's overall strength.
+  ///
+  /// In en, this message translates to:
+  /// **'Overall'**
+  String get nationStatOverall;
+
+  /// Nation page, Overview: caption over the grid of facts about the nation.
+  ///
+  /// In en, this message translates to:
+  /// **'Facts'**
+  String get nationFactsTitle;
+
+  /// Fact tile: the big number above is the manager's wins-draws-losses against this nation.
+  ///
+  /// In en, this message translates to:
+  /// **'Your record against them (W-D-L)'**
+  String get nationFactAgainstYou;
+
+  /// Fact tile: the big number above is the score of the nation's biggest win; the line names the opponent and the year.
+  ///
+  /// In en, this message translates to:
+  /// **'Biggest win ({opponent}, {year})'**
+  String nationFactBiggestWin(String opponent, String year);
+
+  /// Fact tile: the big number above is how many home matches in a row the nation has not lost, up to now.
+  ///
+  /// In en, this message translates to:
+  /// **'Home matches unbeaten in a row'**
+  String get nationFactHomeUnbeaten;
+
+  /// Fact tile: the big number above is the years since the nation's last title; the line gives that title's year.
+  ///
+  /// In en, this message translates to:
+  /// **'Years since the last title ({year})'**
+  String nationFactTitleDrought(String year);
+
+  /// Fact tile under a big 0: the nation has never won a title.
+  ///
+  /// In en, this message translates to:
+  /// **'Still waiting for a first title'**
+  String get nationFactNoTitles;
+
+  /// Fact tile: the big number above is the all-time top scorer's goals; the line names him.
+  ///
+  /// In en, this message translates to:
+  /// **'Goals by the record scorer, {name}'**
+  String nationFactRecordScorer(String name);
+
+  /// Fact tile: the big number above is the most world-ranking places the nation gained in one four-year cycle; the line gives where and when that climb ended.
+  ///
+  /// In en, this message translates to:
+  /// **'Places climbed in one cycle, up to #{rank} in {year}'**
+  String nationFactRankClimb(int rank, String year);
+
+  /// Fact tile: the big number above is how many World Championship finals tournaments the nation has reached since the save began in the given year.
+  ///
+  /// In en, this message translates to:
+  /// **'World Championship finals reached since {year}'**
+  String nationFactWorldFinals(String year);
+
+  /// Nation page, Overview: the best world ranking the nation has held, and the year.
+  ///
+  /// In en, this message translates to:
+  /// **'Best: #{rank} ({year})'**
+  String nationBestRankYear(int rank, String year);
+
+  /// Nation page, Squad tab: caption over the pitch with the eleven most likely to start.
+  ///
+  /// In en, this message translates to:
+  /// **'Likely eleven'**
+  String get nationLikelyEleven;
+
+  /// Nation page, Squad tab: label over the best player aged 21 or under.
+  ///
+  /// In en, this message translates to:
+  /// **'Best under-21'**
+  String get nationBestYoung;
+
+  /// Nation page, Squad tab: caption over the countries the players play their club football in, with how many in each.
+  ///
+  /// In en, this message translates to:
+  /// **'Where they play'**
+  String get nationWhereTheyPlay;
+
+  /// Nation page, Squad tab: the row adding up every other country the players are at clubs in.
+  ///
+  /// In en, this message translates to:
+  /// **'Other countries'**
+  String get nationOtherCountries;
+
+  /// Nation page, Results tab: label before the manager's biggest win over this nation (score and year follow).
+  ///
+  /// In en, this message translates to:
+  /// **'Your biggest win'**
+  String get nationBiggestWinYou;
+
+  /// Nation page, Results tab: link to every match between the manager's nation and this one, with how many.
+  ///
+  /// In en, this message translates to:
+  /// **'All meetings ({count})'**
+  String nationAllMeetings(int count);
+
+  /// Nation page, Results tab: caption over the matches still to play.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming'**
+  String get nationUpcoming;
+
+  /// Nation page, Results tab: caption over the latest results, newest first.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest results'**
+  String get nationLastResults;
+
+  /// Nation page, Results tab: button showing every match the nation has played, with how many.
+  ///
+  /// In en, this message translates to:
+  /// **'All matches ({count})'**
+  String nationAllMatches(int count);
+
+  /// Nation page, Results tab: button that lists more of the nation's past matches.
+  ///
+  /// In en, this message translates to:
+  /// **'Show more'**
+  String get nationShowMore;
+
+  /// Nation page, History tab: caption over every finals the nation has hosted.
+  ///
+  /// In en, this message translates to:
+  /// **'Hosting record'**
+  String get nationHostingRecord;
+
+  /// Nation page, History tab: shown when the nation has never hosted a finals.
+  ///
+  /// In en, this message translates to:
+  /// **'Has not hosted a finals yet'**
+  String get nationNeverHosted;
+
+  /// Nation page, History tab, hosting record: won the finals it hosted.
+  ///
+  /// In en, this message translates to:
+  /// **'Champions'**
+  String get nationHostChampions;
+
+  /// Nation page, History tab, hosting record: lost the final of the finals it hosted.
+  ///
+  /// In en, this message translates to:
+  /// **'Runners-up'**
+  String get nationHostRunnersUp;
+
+  /// Nation page, History tab, hosting record: finished third (a bronze) at the finals it hosted.
+  ///
+  /// In en, this message translates to:
+  /// **'Third'**
+  String get nationHostThird;
+
+  /// Nation page, History tab, hosting record: small tag on a finals it staged together with another nation.
+  ///
+  /// In en, this message translates to:
+  /// **'Co-hosts'**
+  String get nationCoHosts;
+
+  /// Nation page, Stadiums tab: shown when the nation has no stadium on record.
+  ///
+  /// In en, this message translates to:
+  /// **'No stadiums on record'**
+  String get nationNoStadiums;
+
+  /// Nation page, Stadiums tab on the manager's own nation: opens the screen where its stadiums are run.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage stadiums'**
+  String get nationManageStadiums;
 }
 
 class _AppLocalizationsDelegate

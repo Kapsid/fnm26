@@ -16856,4 +16856,119 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get editorRegionNone => 'この地域には何もありません。';
+
+  @override
+  String get nationTabResults => '結果';
+
+  @override
+  String get nationTabHistory => '歴史';
+
+  @override
+  String get nationTabStadiums => 'スタジアム';
+
+  @override
+  String get nationStatRanking => 'ランキング';
+
+  @override
+  String get nationStatOverall => '総合力';
+
+  @override
+  String get nationFactsTitle => 'データ';
+
+  @override
+  String get nationFactAgainstYou => '対戦成績(勝-分-敗)';
+
+  @override
+  String nationFactBiggestWin(String opponent, String year) {
+    return '最大勝利($opponent、$year年)';
+  }
+
+  @override
+  String get nationFactHomeUnbeaten => 'ホームでの連続無敗試合数';
+
+  @override
+  String nationFactTitleDrought(String year) {
+    return '最後のタイトルからの年数($year年)';
+  }
+
+  @override
+  String get nationFactNoTitles => 'まだ初タイトルを待っている';
+
+  @override
+  String nationFactRecordScorer(String name) {
+    return '歴代最多得点者 $name の得点';
+  }
+
+  @override
+  String nationFactRankClimb(int rank, String year) {
+    return '1サイクルで上げた順位($year年に$rank位)';
+  }
+
+  @override
+  String nationFactWorldFinals(String year) {
+    return '$year年以降の世界選手権本大会出場';
+  }
+
+  @override
+  String nationBestRankYear(int rank, String year) {
+    return '最高: $rank位($year年)';
+  }
+
+  @override
+  String get nationLikelyEleven => '予想スタメン';
+
+  @override
+  String get nationBestYoung => 'U-21最優秀選手';
+
+  @override
+  String get nationWhereTheyPlay => '所属クラブの国';
+
+  @override
+  String get nationOtherCountries => 'その他の国';
+
+  @override
+  String get nationBiggestWinYou => 'あなたの最大勝利';
+
+  @override
+  String nationAllMeetings(int count) {
+    return '全対戦 ($count)';
+  }
+
+  @override
+  String get nationUpcoming => '今後の試合';
+
+  @override
+  String get nationLastResults => '最近の結果';
+
+  @override
+  String nationAllMatches(int count) {
+    return '全試合 ($count)';
+  }
+
+  @override
+  String get nationShowMore => 'さらに表示';
+
+  @override
+  String get nationHostingRecord => '開催実績';
+
+  @override
+  String get nationNeverHosted => 'まだ本大会を開催したことがない';
+
+  @override
+  String get nationHostChampions => '優勝';
+
+  @override
+  String get nationHostRunnersUp => '準優勝';
+
+  @override
+  String get nationHostThird => '3位';
+
+  @override
+  String get nationCoHosts => '共催';
+
+  @override
+  String get nationNoStadiums => '登録されたスタジアムはない';
+
+  @override
+  String get nationManageStadiums => 'スタジアムを管理';
 }

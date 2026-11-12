@@ -17474,4 +17474,120 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get editorRegionNone => 'Ingenting her for denne regionen.';
+
+  @override
+  String get nationTabResults => 'Resultater';
+
+  @override
+  String get nationTabHistory => 'Historikk';
+
+  @override
+  String get nationTabStadiums => 'Arenaer';
+
+  @override
+  String get nationStatRanking => 'Rangering';
+
+  @override
+  String get nationStatOverall => 'Styrke';
+
+  @override
+  String get nationFactsTitle => 'Fakta';
+
+  @override
+  String get nationFactAgainstYou => 'Din fasit mot dem (S-U-T)';
+
+  @override
+  String nationFactBiggestWin(String opponent, String year) {
+    return 'Største seier ($opponent, $year)';
+  }
+
+  @override
+  String get nationFactHomeUnbeaten => 'Hjemmekamper på rad uten tap';
+
+  @override
+  String nationFactTitleDrought(String year) {
+    return 'År siden forrige tittel ($year)';
+  }
+
+  @override
+  String get nationFactNoTitles => 'Venter fortsatt på sin første tittel';
+
+  @override
+  String nationFactRecordScorer(String name) {
+    return 'Mål av rekordscoreren, $name';
+  }
+
+  @override
+  String nationFactRankClimb(int rank, String year) {
+    return 'Plasser klatret i én syklus, til #$rank i $year';
+  }
+
+  @override
+  String nationFactWorldFinals(String year) {
+    return 'Sluttspill i Verdensmesterskapet siden $year';
+  }
+
+  @override
+  String nationBestRankYear(int rank, String year) {
+    return 'Best: #$rank ($year)';
+  }
+
+  @override
+  String get nationLikelyEleven => 'Sannsynlig startellever';
+
+  @override
+  String get nationBestYoung => 'Beste under 21';
+
+  @override
+  String get nationWhereTheyPlay => 'Hvor de spiller';
+
+  @override
+  String get nationOtherCountries => 'Andre land';
+
+  @override
+  String get nationBiggestWinYou => 'Din største seier';
+
+  @override
+  String nationAllMeetings(int count) {
+    return 'Alle oppgjør ($count)';
+  }
+
+  @override
+  String get nationUpcoming => 'Kommende';
+
+  @override
+  String get nationLastResults => 'Siste resultater';
+
+  @override
+  String nationAllMatches(int count) {
+    return 'Alle kamper ($count)';
+  }
+
+  @override
+  String get nationShowMore => 'Vis flere';
+
+  @override
+  String get nationHostingRecord => 'Som vertskap';
+
+  @override
+  String get nationNeverHosted =>
+      'Har ennå ikke vært vertskap for et sluttspill';
+
+  @override
+  String get nationHostChampions => 'Mester';
+
+  @override
+  String get nationHostRunnersUp => 'Finalist';
+
+  @override
+  String get nationHostThird => 'Tredje';
+
+  @override
+  String get nationCoHosts => 'Medarrangør';
+
+  @override
+  String get nationNoStadiums => 'Ingen arenaer registrert';
+
+  @override
+  String get nationManageStadiums => 'Administrer arenaer';
 }

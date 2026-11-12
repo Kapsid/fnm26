@@ -26905,5 +26905,186 @@
   "editorRegionNone": "Nothing here for this region.",
   "@editorRegionNone": {
     "description": "Shown when the editor's region filter leaves a list empty."
+  },
+  "nationTabResults": "Results",
+  "@nationTabResults": {
+    "description": "Nation page tab: its results, fixtures and record against you."
+  },
+  "nationTabHistory": "History",
+  "@nationTabHistory": {
+    "description": "Nation page tab: titles, record scorers, ranking history and hosting record."
+  },
+  "nationTabStadiums": "Stadiums",
+  "@nationTabStadiums": {
+    "description": "Nation page tab: the map and list of its national stadiums."
+  },
+  "nationStatRanking": "Ranking",
+  "@nationStatRanking": {
+    "description": "Nation page header: small caption under the world ranking position."
+  },
+  "nationStatOverall": "Overall",
+  "@nationStatOverall": {
+    "description": "Nation page header: small caption under the squad's overall strength."
+  },
+  "nationFactsTitle": "Facts",
+  "@nationFactsTitle": {
+    "description": "Nation page, Overview: caption over the grid of facts about the nation."
+  },
+  "nationFactAgainstYou": "Your record against them (W-D-L)",
+  "@nationFactAgainstYou": {
+    "description": "Fact tile: the big number above is the manager's wins-draws-losses against this nation."
+  },
+  "nationFactBiggestWin": "Biggest win ({opponent}, {year})",
+  "@nationFactBiggestWin": {
+    "description": "Fact tile: the big number above is the score of the nation's biggest win; the line names the opponent and the year.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "year": {
+        "type": "String"
+      }
+    }
+  },
+  "nationFactHomeUnbeaten": "Home matches unbeaten in a row",
+  "@nationFactHomeUnbeaten": {
+    "description": "Fact tile: the big number above is how many home matches in a row the nation has not lost, up to now."
+  },
+  "nationFactTitleDrought": "Years since the last title ({year})",
+  "@nationFactTitleDrought": {
+    "description": "Fact tile: the big number above is the years since the nation's last title; the line gives that title's year.",
+    "placeholders": {
+      "year": {
+        "type": "String"
+      }
+    }
+  },
+  "nationFactNoTitles": "Still waiting for a first title",
+  "@nationFactNoTitles": {
+    "description": "Fact tile under a big 0: the nation has never won a title."
+  },
+  "nationFactRecordScorer": "Goals by the record scorer, {name}",
+  "@nationFactRecordScorer": {
+    "description": "Fact tile: the big number above is the all-time top scorer's goals; the line names him.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "nationFactRankClimb": "Places climbed in one cycle, up to #{rank} in {year}",
+  "@nationFactRankClimb": {
+    "description": "Fact tile: the big number above is the most world-ranking places the nation gained in one four-year cycle; the line gives where and when that climb ended.",
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      },
+      "year": {
+        "type": "String"
+      }
+    }
+  },
+  "nationFactWorldFinals": "World Championship finals reached since {year}",
+  "@nationFactWorldFinals": {
+    "description": "Fact tile: the big number above is how many World Championship finals tournaments the nation has reached since the save began in the given year.",
+    "placeholders": {
+      "year": {
+        "type": "String"
+      }
+    }
+  },
+  "nationBestRankYear": "Best: #{rank} ({year})",
+  "@nationBestRankYear": {
+    "description": "Nation page, Overview: the best world ranking the nation has held, and the year.",
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      },
+      "year": {
+        "type": "String"
+      }
+    }
+  },
+  "nationLikelyEleven": "Likely eleven",
+  "@nationLikelyEleven": {
+    "description": "Nation page, Squad tab: caption over the pitch with the eleven most likely to start."
+  },
+  "nationBestYoung": "Best under-21",
+  "@nationBestYoung": {
+    "description": "Nation page, Squad tab: label over the best player aged 21 or under."
+  },
+  "nationWhereTheyPlay": "Where they play",
+  "@nationWhereTheyPlay": {
+    "description": "Nation page, Squad tab: caption over the countries the players play their club football in, with how many in each."
+  },
+  "nationOtherCountries": "Other countries",
+  "@nationOtherCountries": {
+    "description": "Nation page, Squad tab: the row adding up every other country the players are at clubs in."
+  },
+  "nationBiggestWinYou": "Your biggest win",
+  "@nationBiggestWinYou": {
+    "description": "Nation page, Results tab: label before the manager's biggest win over this nation (score and year follow)."
+  },
+  "nationAllMeetings": "All meetings ({count})",
+  "@nationAllMeetings": {
+    "description": "Nation page, Results tab: link to every match between the manager's nation and this one, with how many.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "nationUpcoming": "Upcoming",
+  "@nationUpcoming": {
+    "description": "Nation page, Results tab: caption over the matches still to play."
+  },
+  "nationLastResults": "Latest results",
+  "@nationLastResults": {
+    "description": "Nation page, Results tab: caption over the latest results, newest first."
+  },
+  "nationAllMatches": "All matches ({count})",
+  "@nationAllMatches": {
+    "description": "Nation page, Results tab: button showing every match the nation has played, with how many.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "nationShowMore": "Show more",
+  "@nationShowMore": {
+    "description": "Nation page, Results tab: button that lists more of the nation's past matches."
+  },
+  "nationHostingRecord": "Hosting record",
+  "@nationHostingRecord": {
+    "description": "Nation page, History tab: caption over every finals the nation has hosted."
+  },
+  "nationNeverHosted": "Has not hosted a finals yet",
+  "@nationNeverHosted": {
+    "description": "Nation page, History tab: shown when the nation has never hosted a finals."
+  },
+  "nationHostChampions": "Champions",
+  "@nationHostChampions": {
+    "description": "Nation page, History tab, hosting record: won the finals it hosted."
+  },
+  "nationHostRunnersUp": "Runners-up",
+  "@nationHostRunnersUp": {
+    "description": "Nation page, History tab, hosting record: lost the final of the finals it hosted."
+  },
+  "nationHostThird": "Third",
+  "@nationHostThird": {
+    "description": "Nation page, History tab, hosting record: finished third (a bronze) at the finals it hosted."
+  },
+  "nationCoHosts": "Co-hosts",
+  "@nationCoHosts": {
+    "description": "Nation page, History tab, hosting record: small tag on a finals it staged together with another nation."
+  },
+  "nationNoStadiums": "No stadiums on record",
+  "@nationNoStadiums": {
+    "description": "Nation page, Stadiums tab: shown when the nation has no stadium on record."
+  },
+  "nationManageStadiums": "Manage stadiums",
+  "@nationManageStadiums": {
+    "description": "Nation page, Stadiums tab on the manager's own nation: opens the screen where its stadiums are run."
   }
 }

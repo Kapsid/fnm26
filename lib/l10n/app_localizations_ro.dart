@@ -17898,4 +17898,120 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get editorRegionNone => 'Nimic aici pentru această regiune.';
+
+  @override
+  String get nationTabResults => 'Rezultate';
+
+  @override
+  String get nationTabHistory => 'Istoric';
+
+  @override
+  String get nationTabStadiums => 'Stadioane';
+
+  @override
+  String get nationStatRanking => 'Clasament';
+
+  @override
+  String get nationStatOverall => 'Valoare';
+
+  @override
+  String get nationFactsTitle => 'Date';
+
+  @override
+  String get nationFactAgainstYou => 'Bilanțul tău contra lor (V-E-Î)';
+
+  @override
+  String nationFactBiggestWin(String opponent, String year) {
+    return 'Cea mai mare victorie ($opponent, $year)';
+  }
+
+  @override
+  String get nationFactHomeUnbeaten =>
+      'Meciuri consecutive acasă fără înfrângere';
+
+  @override
+  String nationFactTitleDrought(String year) {
+    return 'Ani de la ultimul titlu ($year)';
+  }
+
+  @override
+  String get nationFactNoTitles => 'Încă așteaptă primul titlu';
+
+  @override
+  String nationFactRecordScorer(String name) {
+    return 'Golurile golgheterului all-time, $name';
+  }
+
+  @override
+  String nationFactRankClimb(int rank, String year) {
+    return 'Locuri urcate într-un ciclu, până pe #$rank în $year';
+  }
+
+  @override
+  String nationFactWorldFinals(String year) {
+    return 'Turnee finale ale Campionatului Mondial din $year';
+  }
+
+  @override
+  String nationBestRankYear(int rank, String year) {
+    return 'Cel mai bun: #$rank ($year)';
+  }
+
+  @override
+  String get nationLikelyEleven => 'Primul unsprezece probabil';
+
+  @override
+  String get nationBestYoung => 'Cel mai bun sub 21 de ani';
+
+  @override
+  String get nationWhereTheyPlay => 'Unde joacă';
+
+  @override
+  String get nationOtherCountries => 'Alte țări';
+
+  @override
+  String get nationBiggestWinYou => 'Cea mai mare victorie a ta';
+
+  @override
+  String nationAllMeetings(int count) {
+    return 'Toate întâlnirile ($count)';
+  }
+
+  @override
+  String get nationUpcoming => 'Următoarele';
+
+  @override
+  String get nationLastResults => 'Ultimele rezultate';
+
+  @override
+  String nationAllMatches(int count) {
+    return 'Toate meciurile ($count)';
+  }
+
+  @override
+  String get nationShowMore => 'Arată mai multe';
+
+  @override
+  String get nationHostingRecord => 'Turnee găzduite';
+
+  @override
+  String get nationNeverHosted => 'Nu a găzduit încă un turneu final';
+
+  @override
+  String get nationHostChampions => 'Campioană';
+
+  @override
+  String get nationHostRunnersUp => 'Finalistă';
+
+  @override
+  String get nationHostThird => 'Locul trei';
+
+  @override
+  String get nationCoHosts => 'Co-gazdă';
+
+  @override
+  String get nationNoStadiums => 'Niciun stadion înregistrat';
+
+  @override
+  String get nationManageStadiums => 'Administrează stadioanele';
 }

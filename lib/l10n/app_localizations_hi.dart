@@ -17386,4 +17386,119 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get editorRegionNone => 'इस क्षेत्र के लिए यहाँ कुछ नहीं है।';
+
+  @override
+  String get nationTabResults => 'नतीजे';
+
+  @override
+  String get nationTabHistory => 'इतिहास';
+
+  @override
+  String get nationTabStadiums => 'स्टेडियम';
+
+  @override
+  String get nationStatRanking => 'रैंकिंग';
+
+  @override
+  String get nationStatOverall => 'ताक़त';
+
+  @override
+  String get nationFactsTitle => 'तथ्य';
+
+  @override
+  String get nationFactAgainstYou => 'उनके ख़िलाफ़ आपका रिकॉर्ड (W-D-L)';
+
+  @override
+  String nationFactBiggestWin(String opponent, String year) {
+    return 'सबसे बड़ी जीत ($opponent, $year)';
+  }
+
+  @override
+  String get nationFactHomeUnbeaten => 'लगातार घरेलू मैच बिना हार के';
+
+  @override
+  String nationFactTitleDrought(String year) {
+    return 'पिछले ख़िताब के बाद से साल ($year)';
+  }
+
+  @override
+  String get nationFactNoTitles => 'अब भी पहले ख़िताब का इंतज़ार';
+
+  @override
+  String nationFactRecordScorer(String name) {
+    return 'रिकॉर्ड स्कोरर $name के गोल';
+  }
+
+  @override
+  String nationFactRankClimb(int rank, String year) {
+    return 'एक चक्र में चढ़े स्थान, $year में #$rank तक';
+  }
+
+  @override
+  String nationFactWorldFinals(String year) {
+    return '$year से विश्व चैंपियनशिप फ़ाइनल्स में पहुँचे';
+  }
+
+  @override
+  String nationBestRankYear(int rank, String year) {
+    return 'सर्वश्रेष्ठ: #$rank ($year)';
+  }
+
+  @override
+  String get nationLikelyEleven => 'संभावित एकादश';
+
+  @override
+  String get nationBestYoung => 'सर्वश्रेष्ठ अंडर-21';
+
+  @override
+  String get nationWhereTheyPlay => 'वे कहाँ खेलते हैं';
+
+  @override
+  String get nationOtherCountries => 'अन्य देश';
+
+  @override
+  String get nationBiggestWinYou => 'आपकी सबसे बड़ी जीत';
+
+  @override
+  String nationAllMeetings(int count) {
+    return 'सभी मुक़ाबले ($count)';
+  }
+
+  @override
+  String get nationUpcoming => 'आगामी';
+
+  @override
+  String get nationLastResults => 'हाल के नतीजे';
+
+  @override
+  String nationAllMatches(int count) {
+    return 'सभी मैच ($count)';
+  }
+
+  @override
+  String get nationShowMore => 'और दिखाएँ';
+
+  @override
+  String get nationHostingRecord => 'मेज़बानी का रिकॉर्ड';
+
+  @override
+  String get nationNeverHosted => 'अभी तक किसी फ़ाइनल्स की मेज़बानी नहीं की';
+
+  @override
+  String get nationHostChampions => 'चैंपियन';
+
+  @override
+  String get nationHostRunnersUp => 'उपविजेता';
+
+  @override
+  String get nationHostThird => 'तीसरा';
+
+  @override
+  String get nationCoHosts => 'सह-मेज़बान';
+
+  @override
+  String get nationNoStadiums => 'कोई स्टेडियम दर्ज नहीं';
+
+  @override
+  String get nationManageStadiums => 'स्टेडियम प्रबंधित करें';
 }

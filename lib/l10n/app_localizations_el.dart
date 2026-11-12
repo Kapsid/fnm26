@@ -17570,4 +17570,120 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get editorRegionNone => 'Δεν υπάρχει τίποτα για αυτή την περιοχή.';
+
+  @override
+  String get nationTabResults => 'Αποτελέσματα';
+
+  @override
+  String get nationTabHistory => 'Ιστορία';
+
+  @override
+  String get nationTabStadiums => 'Γήπεδα';
+
+  @override
+  String get nationStatRanking => 'Κατάταξη';
+
+  @override
+  String get nationStatOverall => 'Δύναμη';
+
+  @override
+  String get nationFactsTitle => 'Στοιχεία';
+
+  @override
+  String get nationFactAgainstYou => 'Το ρεκόρ σου απέναντί τους (Ν-Ι-Η)';
+
+  @override
+  String nationFactBiggestWin(String opponent, String year) {
+    return 'Μεγαλύτερη νίκη ($opponent, $year)';
+  }
+
+  @override
+  String get nationFactHomeUnbeaten =>
+      'Συνεχόμενα εντός έδρας παιχνίδια χωρίς ήττα';
+
+  @override
+  String nationFactTitleDrought(String year) {
+    return 'Χρόνια από τον τελευταίο τίτλο ($year)';
+  }
+
+  @override
+  String get nationFactNoTitles => 'Περιμένει ακόμη τον πρώτο τίτλο';
+
+  @override
+  String nationFactRecordScorer(String name) {
+    return 'Γκολ του πρώτου σκόρερ όλων των εποχών, $name';
+  }
+
+  @override
+  String nationFactRankClimb(int rank, String year) {
+    return 'Θέσεις ανόδου σε έναν κύκλο, έως το #$rank το $year';
+  }
+
+  @override
+  String nationFactWorldFinals(String year) {
+    return 'Τελικές φάσεις Παγκόσμιου Πρωταθλήματος από το $year';
+  }
+
+  @override
+  String nationBestRankYear(int rank, String year) {
+    return 'Καλύτερη: #$rank ($year)';
+  }
+
+  @override
+  String get nationLikelyEleven => 'Πιθανή ενδεκάδα';
+
+  @override
+  String get nationBestYoung => 'Καλύτερος κάτω των 21';
+
+  @override
+  String get nationWhereTheyPlay => 'Πού αγωνίζονται';
+
+  @override
+  String get nationOtherCountries => 'Άλλες χώρες';
+
+  @override
+  String get nationBiggestWinYou => 'Η μεγαλύτερη νίκη σου';
+
+  @override
+  String nationAllMeetings(int count) {
+    return 'Όλες οι αναμετρήσεις ($count)';
+  }
+
+  @override
+  String get nationUpcoming => 'Επόμενα';
+
+  @override
+  String get nationLastResults => 'Τελευταία αποτελέσματα';
+
+  @override
+  String nationAllMatches(int count) {
+    return 'Όλοι οι αγώνες ($count)';
+  }
+
+  @override
+  String get nationShowMore => 'Περισσότερα';
+
+  @override
+  String get nationHostingRecord => 'Ως οικοδεσπότης';
+
+  @override
+  String get nationNeverHosted => 'Δεν έχει φιλοξενήσει ακόμη τελική φάση';
+
+  @override
+  String get nationHostChampions => 'Πρωταθλητής';
+
+  @override
+  String get nationHostRunnersUp => 'Φιναλίστ';
+
+  @override
+  String get nationHostThird => 'Τρίτη θέση';
+
+  @override
+  String get nationCoHosts => 'Συνδιοργανωτής';
+
+  @override
+  String get nationNoStadiums => 'Δεν υπάρχουν καταγεγραμμένα γήπεδα';
+
+  @override
+  String get nationManageStadiums => 'Διαχείριση γηπέδων';
 }

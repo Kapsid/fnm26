@@ -17640,4 +17640,120 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get editorRegionNone => 'Rien ici pour cette région.';
+
+  @override
+  String get nationTabResults => 'Résultats';
+
+  @override
+  String get nationTabHistory => 'Histoire';
+
+  @override
+  String get nationTabStadiums => 'Stades';
+
+  @override
+  String get nationStatRanking => 'Classement';
+
+  @override
+  String get nationStatOverall => 'Niveau';
+
+  @override
+  String get nationFactsTitle => 'En chiffres';
+
+  @override
+  String get nationFactAgainstYou => 'Votre bilan contre eux (V-N-D)';
+
+  @override
+  String nationFactBiggestWin(String opponent, String year) {
+    return 'Plus large victoire ($opponent, $year)';
+  }
+
+  @override
+  String get nationFactHomeUnbeaten =>
+      'Matchs à domicile d’affilée sans défaite';
+
+  @override
+  String nationFactTitleDrought(String year) {
+    return 'Années depuis le dernier titre ($year)';
+  }
+
+  @override
+  String get nationFactNoTitles => 'Toujours en quête d’un premier titre';
+
+  @override
+  String nationFactRecordScorer(String name) {
+    return 'Buts du meilleur buteur de l’histoire, $name';
+  }
+
+  @override
+  String nationFactRankClimb(int rank, String year) {
+    return 'Places gagnées en un cycle, jusqu’à la #$rank en $year';
+  }
+
+  @override
+  String nationFactWorldFinals(String year) {
+    return 'Phases finales du Championnat du monde depuis $year';
+  }
+
+  @override
+  String nationBestRankYear(int rank, String year) {
+    return 'Meilleur : #$rank ($year)';
+  }
+
+  @override
+  String get nationLikelyEleven => 'Onze probable';
+
+  @override
+  String get nationBestYoung => 'Meilleur moins de 21 ans';
+
+  @override
+  String get nationWhereTheyPlay => 'Où ils jouent';
+
+  @override
+  String get nationOtherCountries => 'Autres pays';
+
+  @override
+  String get nationBiggestWinYou => 'Votre plus large victoire';
+
+  @override
+  String nationAllMeetings(int count) {
+    return 'Toutes les rencontres ($count)';
+  }
+
+  @override
+  String get nationUpcoming => 'À venir';
+
+  @override
+  String get nationLastResults => 'Derniers résultats';
+
+  @override
+  String nationAllMatches(int count) {
+    return 'Tous les matchs ($count)';
+  }
+
+  @override
+  String get nationShowMore => 'Afficher plus';
+
+  @override
+  String get nationHostingRecord => 'Pays hôte';
+
+  @override
+  String get nationNeverHosted => 'N’a encore jamais accueilli de phase finale';
+
+  @override
+  String get nationHostChampions => 'Champion';
+
+  @override
+  String get nationHostRunnersUp => 'Finaliste';
+
+  @override
+  String get nationHostThird => 'Troisième';
+
+  @override
+  String get nationCoHosts => 'Co-organisateur';
+
+  @override
+  String get nationNoStadiums => 'Aucun stade enregistré';
+
+  @override
+  String get nationManageStadiums => 'Gérer les stades';
 }

@@ -17564,4 +17564,119 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get editorRegionNone => 'Няма нищо за този регион.';
+
+  @override
+  String get nationTabResults => 'Резултати';
+
+  @override
+  String get nationTabHistory => 'История';
+
+  @override
+  String get nationTabStadiums => 'Стадиони';
+
+  @override
+  String get nationStatRanking => 'Ранглиста';
+
+  @override
+  String get nationStatOverall => 'Сила';
+
+  @override
+  String get nationFactsTitle => 'Факти';
+
+  @override
+  String get nationFactAgainstYou => 'Твоят баланс срещу тях (П-Р-З)';
+
+  @override
+  String nationFactBiggestWin(String opponent, String year) {
+    return 'Най-голяма победа ($opponent, $year)';
+  }
+
+  @override
+  String get nationFactHomeUnbeaten => 'Поредни мача у дома без загуба';
+
+  @override
+  String nationFactTitleDrought(String year) {
+    return 'Години от последната титла ($year)';
+  }
+
+  @override
+  String get nationFactNoTitles => 'Все още чака първа титла';
+
+  @override
+  String nationFactRecordScorer(String name) {
+    return 'Голове на рекордьора, $name';
+  }
+
+  @override
+  String nationFactRankClimb(int rank, String year) {
+    return 'Места нагоре за един цикъл, до #$rank през $year';
+  }
+
+  @override
+  String nationFactWorldFinals(String year) {
+    return 'Финални турнири на Световното първенство от $year';
+  }
+
+  @override
+  String nationBestRankYear(int rank, String year) {
+    return 'Най-добро: #$rank ($year)';
+  }
+
+  @override
+  String get nationLikelyEleven => 'Вероятен състав';
+
+  @override
+  String get nationBestYoung => 'Най-добър до 21 г.';
+
+  @override
+  String get nationWhereTheyPlay => 'Къде играят';
+
+  @override
+  String get nationOtherCountries => 'Други държави';
+
+  @override
+  String get nationBiggestWinYou => 'Най-голямата ти победа';
+
+  @override
+  String nationAllMeetings(int count) {
+    return 'Всички срещи ($count)';
+  }
+
+  @override
+  String get nationUpcoming => 'Предстоящи';
+
+  @override
+  String get nationLastResults => 'Последни резултати';
+
+  @override
+  String nationAllMatches(int count) {
+    return 'Всички мачове ($count)';
+  }
+
+  @override
+  String get nationShowMore => 'Покажи още';
+
+  @override
+  String get nationHostingRecord => 'Като домакин';
+
+  @override
+  String get nationNeverHosted => 'Все още не е домакин на финален турнир';
+
+  @override
+  String get nationHostChampions => 'Шампион';
+
+  @override
+  String get nationHostRunnersUp => 'Финалист';
+
+  @override
+  String get nationHostThird => 'Трето място';
+
+  @override
+  String get nationCoHosts => 'Съдомакин';
+
+  @override
+  String get nationNoStadiums => 'Няма записани стадиони';
+
+  @override
+  String get nationManageStadiums => 'Управление на стадионите';
 }

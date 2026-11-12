@@ -17488,4 +17488,120 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get editorRegionNone => 'Walang laman para sa rehiyong ito.';
+
+  @override
+  String get nationTabResults => 'Mga resulta';
+
+  @override
+  String get nationTabHistory => 'Kasaysayan';
+
+  @override
+  String get nationTabStadiums => 'Mga stadium';
+
+  @override
+  String get nationStatRanking => 'Ranggo';
+
+  @override
+  String get nationStatOverall => 'Lakas';
+
+  @override
+  String get nationFactsTitle => 'Mga datos';
+
+  @override
+  String get nationFactAgainstYou => 'Rekord mo laban sa kanila (P-T-N)';
+
+  @override
+  String nationFactBiggestWin(String opponent, String year) {
+    return 'Pinakamalaking panalo ($opponent, $year)';
+  }
+
+  @override
+  String get nationFactHomeUnbeaten =>
+      'Sunod-sunod na laro sa sariling bayan nang walang talo';
+
+  @override
+  String nationFactTitleDrought(String year) {
+    return 'Taon mula sa huling titulo ($year)';
+  }
+
+  @override
+  String get nationFactNoTitles => 'Naghihintay pa ng unang titulo';
+
+  @override
+  String nationFactRecordScorer(String name) {
+    return 'Mga gol ng record scorer, si $name';
+  }
+
+  @override
+  String nationFactRankClimb(int rank, String year) {
+    return 'Mga puwestong naakyat sa isang cycle, hanggang #$rank noong $year';
+  }
+
+  @override
+  String nationFactWorldFinals(String year) {
+    return 'Mga finals ng Kampeonato ng Mundo mula $year';
+  }
+
+  @override
+  String nationBestRankYear(int rank, String year) {
+    return 'Pinakamataas: #$rank ($year)';
+  }
+
+  @override
+  String get nationLikelyEleven => 'Malamang na labing-isa';
+
+  @override
+  String get nationBestYoung => 'Pinakamahusay na U-21';
+
+  @override
+  String get nationWhereTheyPlay => 'Saan sila naglalaro';
+
+  @override
+  String get nationOtherCountries => 'Ibang bansa';
+
+  @override
+  String get nationBiggestWinYou => 'Pinakamalaki mong panalo';
+
+  @override
+  String nationAllMeetings(int count) {
+    return 'Lahat ng tapatan ($count)';
+  }
+
+  @override
+  String get nationUpcoming => 'Paparating';
+
+  @override
+  String get nationLastResults => 'Pinakahuling resulta';
+
+  @override
+  String nationAllMatches(int count) {
+    return 'Lahat ng laro ($count)';
+  }
+
+  @override
+  String get nationShowMore => 'Ipakita pa';
+
+  @override
+  String get nationHostingRecord => 'Mga pinag-host';
+
+  @override
+  String get nationNeverHosted => 'Hindi pa nagho-host ng finals';
+
+  @override
+  String get nationHostChampions => 'Kampeon';
+
+  @override
+  String get nationHostRunnersUp => 'Runner-up';
+
+  @override
+  String get nationHostThird => 'Ikatlo';
+
+  @override
+  String get nationCoHosts => 'Kasamang host';
+
+  @override
+  String get nationNoStadiums => 'Walang nakatalang stadium';
+
+  @override
+  String get nationManageStadiums => 'Pamahalaan ang mga stadium';
 }

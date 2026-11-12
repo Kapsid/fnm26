@@ -17389,4 +17389,120 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get editorRegionNone => 'Bu bölge için burada bir şey yok.';
+
+  @override
+  String get nationTabResults => 'Sonuçlar';
+
+  @override
+  String get nationTabHistory => 'Tarihçe';
+
+  @override
+  String get nationTabStadiums => 'Stadyumlar';
+
+  @override
+  String get nationStatRanking => 'Sıralama';
+
+  @override
+  String get nationStatOverall => 'Güç';
+
+  @override
+  String get nationFactsTitle => 'Bilgiler';
+
+  @override
+  String get nationFactAgainstYou => 'Onlara karşı karnen (G-B-M)';
+
+  @override
+  String nationFactBiggestWin(String opponent, String year) {
+    return 'En farklı galibiyet ($opponent, $year)';
+  }
+
+  @override
+  String get nationFactHomeUnbeaten =>
+      'Üst üste yenilmeden geçilen iç saha maçı';
+
+  @override
+  String nationFactTitleDrought(String year) {
+    return 'Son şampiyonluktan bu yana geçen yıl ($year)';
+  }
+
+  @override
+  String get nationFactNoTitles => 'Hâlâ ilk şampiyonluğunu bekliyor';
+
+  @override
+  String nationFactRecordScorer(String name) {
+    return 'Rekor golcünün golleri, $name';
+  }
+
+  @override
+  String nationFactRankClimb(int rank, String year) {
+    return 'Bir döngüde yükselinen sıra, $year yılında #$rank';
+  }
+
+  @override
+  String nationFactWorldFinals(String year) {
+    return '$year yılından beri Dünya Şampiyonası finallerine katılım';
+  }
+
+  @override
+  String nationBestRankYear(int rank, String year) {
+    return 'En iyi: #$rank ($year)';
+  }
+
+  @override
+  String get nationLikelyEleven => 'Muhtemel 11';
+
+  @override
+  String get nationBestYoung => 'En iyi 21 yaş altı';
+
+  @override
+  String get nationWhereTheyPlay => 'Nerede oynuyorlar';
+
+  @override
+  String get nationOtherCountries => 'Diğer ülkeler';
+
+  @override
+  String get nationBiggestWinYou => 'En farklı galibiyetin';
+
+  @override
+  String nationAllMeetings(int count) {
+    return 'Tüm karşılaşmalar ($count)';
+  }
+
+  @override
+  String get nationUpcoming => 'Yaklaşan';
+
+  @override
+  String get nationLastResults => 'Son sonuçlar';
+
+  @override
+  String nationAllMatches(int count) {
+    return 'Tüm maçlar ($count)';
+  }
+
+  @override
+  String get nationShowMore => 'Daha fazla göster';
+
+  @override
+  String get nationHostingRecord => 'Ev sahipliği';
+
+  @override
+  String get nationNeverHosted => 'Henüz bir finallere ev sahipliği yapmadı';
+
+  @override
+  String get nationHostChampions => 'Şampiyon';
+
+  @override
+  String get nationHostRunnersUp => 'Finalist';
+
+  @override
+  String get nationHostThird => 'Üçüncü';
+
+  @override
+  String get nationCoHosts => 'Ortak ev sahibi';
+
+  @override
+  String get nationNoStadiums => 'Kayıtlı stadyum yok';
+
+  @override
+  String get nationManageStadiums => 'Stadyumları yönet';
 }

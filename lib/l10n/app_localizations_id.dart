@@ -17389,4 +17389,120 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get editorRegionNone => 'Tidak ada apa pun untuk wilayah ini.';
+
+  @override
+  String get nationTabResults => 'Hasil';
+
+  @override
+  String get nationTabHistory => 'Sejarah';
+
+  @override
+  String get nationTabStadiums => 'Stadion';
+
+  @override
+  String get nationStatRanking => 'Peringkat';
+
+  @override
+  String get nationStatOverall => 'Kekuatan';
+
+  @override
+  String get nationFactsTitle => 'Fakta';
+
+  @override
+  String get nationFactAgainstYou => 'Rekor Anda melawan mereka (M-S-K)';
+
+  @override
+  String nationFactBiggestWin(String opponent, String year) {
+    return 'Kemenangan terbesar ($opponent, $year)';
+  }
+
+  @override
+  String get nationFactHomeUnbeaten => 'Laga kandang beruntun tak terkalahkan';
+
+  @override
+  String nationFactTitleDrought(String year) {
+    return 'Tahun sejak gelar terakhir ($year)';
+  }
+
+  @override
+  String get nationFactNoTitles => 'Masih menanti gelar pertama';
+
+  @override
+  String nationFactRecordScorer(String name) {
+    return 'Gol pencetak gol terbanyak, $name';
+  }
+
+  @override
+  String nationFactRankClimb(int rank, String year) {
+    return 'Naik peringkat dalam satu siklus, hingga #$rank pada $year';
+  }
+
+  @override
+  String nationFactWorldFinals(String year) {
+    return 'Putaran final Kejuaraan Dunia sejak $year';
+  }
+
+  @override
+  String nationBestRankYear(int rank, String year) {
+    return 'Terbaik: #$rank ($year)';
+  }
+
+  @override
+  String get nationLikelyEleven => 'Kemungkinan sebelas pemain';
+
+  @override
+  String get nationBestYoung => 'Terbaik U-21';
+
+  @override
+  String get nationWhereTheyPlay => 'Tempat mereka bermain';
+
+  @override
+  String get nationOtherCountries => 'Negara lain';
+
+  @override
+  String get nationBiggestWinYou => 'Kemenangan terbesar Anda';
+
+  @override
+  String nationAllMeetings(int count) {
+    return 'Semua pertemuan ($count)';
+  }
+
+  @override
+  String get nationUpcoming => 'Mendatang';
+
+  @override
+  String get nationLastResults => 'Hasil terbaru';
+
+  @override
+  String nationAllMatches(int count) {
+    return 'Semua laga ($count)';
+  }
+
+  @override
+  String get nationShowMore => 'Tampilkan lagi';
+
+  @override
+  String get nationHostingRecord => 'Riwayat tuan rumah';
+
+  @override
+  String get nationNeverHosted =>
+      'Belum pernah menjadi tuan rumah putaran final';
+
+  @override
+  String get nationHostChampions => 'Juara';
+
+  @override
+  String get nationHostRunnersUp => 'Runner-up';
+
+  @override
+  String get nationHostThird => 'Ketiga';
+
+  @override
+  String get nationCoHosts => 'Tuan rumah bersama';
+
+  @override
+  String get nationNoStadiums => 'Tidak ada stadion tercatat';
+
+  @override
+  String get nationManageStadiums => 'Kelola stadion';
 }

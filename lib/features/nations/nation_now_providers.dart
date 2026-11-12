@@ -8,6 +8,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
@@ -42,6 +43,12 @@ class NationNow {
     required this.topPlayers,
     required this.againstYou,
     required this.isPlayerNation,
+    this.upcoming = const [],
+    this.xi = const [],
+    this.lineup = const [],
+    this.pool = const [],
+    this.formation = Formation.f433,
+    this.instructions = const TacticalInstructions(),
   });
 
   final int? rank;
@@ -67,6 +74,24 @@ class NationNow {
   final ({HeadToHead record, Fixture? last})? againstYou;
 
   final bool isPlayerNation;
+
+  /// Every match still to play this cycle whose draw has been seen, earliest
+  /// first ([next] is the first of them).
+  final List<Fixture> upcoming;
+
+  /// The likely starting eleven, in [formation]'s slot order: the lineup the
+  /// manager set on his own page, the best eleven of the pool elsewhere.
+  final List<Player> xi;
+
+  /// [xi] by slot, ids, an empty slot null: what a pitch is drawn from.
+  final List<int?> lineup;
+
+  /// The players to pick from: his squad on his own page, everyone fit to be
+  /// called up elsewhere.
+  final List<Player> pool;
+
+  final Formation formation;
+  final TacticalInstructions instructions;
 }
 
 /// The "now" block of a nation's team page.
@@ -119,9 +144,17 @@ nationNowProvider = FutureProvider.autoDispose
       // Strength and the three to watch.
       final List<Player> xi;
       final List<Player> pool;
+      var formation = Formation.f433;
+      var instructions = const TacticalInstructions();
+      List<int?> lineup;
       if (isOwn) {
         final data = await ref.watch(tacticDataProvider(arg.careerId).future);
         pool = data?.pool ?? const [];
+        if (data != null) {
+          formation = data.tactic.formation;
+          instructions = data.tactic.instructions;
+        }
+        lineup = data?.tactic.lineup ?? const [];
         xi = [
           for (final id in data?.tactic.lineup ?? const <int?>[])
             if (id != null && data!.byId[id] != null) data.byId[id]!,
@@ -135,8 +168,9 @@ nationNowProvider = FutureProvider.autoDispose
           absences,
         );
         final byId = {for (final p in pool) p.id: p};
+        lineup = bestEleven(Formation.f433, pool);
         xi = [
-          for (final id in bestEleven(Formation.f433, pool))
+          for (final id in lineup)
             if (id != null) byId[id]!,
         ];
       }
@@ -177,6 +211,12 @@ nationNowProvider = FutureProvider.autoDispose
         topPlayers: top.take(3).toList(),
         againstYou: against,
         isPlayerNation: isOwn,
+        upcoming: upcoming,
+        xi: xi,
+        lineup: lineup,
+        pool: pool,
+        formation: formation,
+        instructions: instructions,
       );
     });
 
