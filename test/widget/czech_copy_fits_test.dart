@@ -76,11 +76,11 @@ void main() {
   group('the live match tab strip', () {
     for (final width in _widths) {
       for (final locale in _locales) {
-        testWidgets('three tabs share $width in $locale', (tester) async {
+        testWidgets('four tabs share $width in $locale', (tester) async {
           await _pump(
             tester,
             const DefaultTabController(
-              length: 3,
+              length: 4,
               child: Column(children: [MatchDetailTabs()]),
             ),
             width: width,
@@ -97,6 +97,7 @@ void main() {
           // SCREEN first: expectLegible passes silently on an empty finder.
           for (final label in [
             l.matchTabTimeline,
+            l.matchTabSummary,
             l.matchTabStats,
             l.matchTabLineups,
           ]) {

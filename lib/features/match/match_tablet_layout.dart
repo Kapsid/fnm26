@@ -24,8 +24,7 @@ class _MatchTabletLayout extends StatelessWidget {
     required this.lineups,
     required this.pitch,
     required this.overlays,
-    this.afterTabs = const [],
-    this.summary,
+    required this.summary,
     this.pitchView,
     this.feed,
     this.tvHeader,
@@ -53,13 +52,10 @@ class _MatchTabletLayout extends StatelessWidget {
   final Widget pitch;
   final List<Widget> overlays;
 
-  /// The full-time tabs (Player, Stadium), labelled: beside the stats in
-  /// the left column after the whistle, in either mode. Empty while playing.
-  final List<(String, Widget)> afterTabs;
-
-  /// Pitch mode: the Summary, the left column's first tab for the whole
-  /// match, and the one it opens on (see [MatchSummaryTab]).
-  final Widget? summary;
+  /// The Summary, the left column's first tab for the whole match (see
+  /// [MatchSummaryTab]). Pitch mode opens on it; the Timeline opens on the
+  /// Stats while the match is on and on the Summary at the whistle.
+  final Widget summary;
 
   /// Pitch mode: the picture, filling the centre column under the score. Null
   /// in Timeline mode, which is laid out exactly as it always was.
@@ -137,50 +133,29 @@ class _MatchTabletLayout extends StatelessWidget {
     );
   }
 
-  /// The match stats (in Pitch mode the momentum is under the TV's header,
-  /// and the ground in it).
-  ///
-  /// After the whistle the column's title becomes a strip of tabs, Stats
-  /// then the player of the match and the ground (see [afterTabs]): the
-  /// verdicts on the match beside its figures. Three short labels; should a
-  /// long language need more than the column's width, the strip scrolls from
-  /// the start with every label whole.
-  Widget _statsColumn(AppLocalizations l) =>
-      afterTabs.isEmpty && summary == null
-      ? Panel(
-          title: l.matchTabStats,
-          expand: true,
-          padding: EdgeInsets.zero,
-          child: stats,
-        )
-      : PanelBox(
-          child: DefaultTabController(
-            length: (summary == null ? 1 : 2) + afterTabs.length,
-            // Recreated at the whistle (the full-time tabs join), so Pitch
-            // mode lands on its Summary again.
-            key: ValueKey(('match.statsTabs', ft)),
-            child: Column(
-              children: [
-                TabletTabBar(
-                  tabs: [
-                    if (summary != null) SegmentTab(l.matchTabSummary),
-                    SegmentTab(l.matchTabStats),
-                    for (final (label, _) in afterTabs) SegmentTab(label),
-                  ],
-                ),
-                Expanded(
-                  child: TabBarView(
-                    children: [
-                      ?summary,
-                      stats,
-                      for (final (_, tab) in afterTabs) tab,
-                    ],
-                  ),
-                ),
-              ],
-            ),
+  /// The Summary and the match stats, a tab each (in Pitch mode the
+  /// momentum is under the TV's header, and the ground in it). Two short
+  /// labels; should a long language need more than the column's width, the
+  /// strip scrolls from the start with every label whole.
+  Widget _statsColumn(AppLocalizations l) => PanelBox(
+    child: DefaultTabController(
+      length: 2,
+      initialIndex: _pitchMode || ft ? 0 : 1,
+      // Recreated at the whistle and on a change of view, so each lands
+      // where it opens.
+      key: ValueKey(('match.statsTabs', ft, _pitchMode)),
+      child: Column(
+        children: [
+          TabletTabBar(
+            tabs: [SegmentTab(l.matchTabSummary), SegmentTab(l.matchTabStats)],
           ),
-        );
+          Expanded(
+            child: TabBarView(children: [summary, stats]),
+          ),
+        ],
+      ),
+    ),
+  );
 
   /// The momentum over the score, then the shootout if there is one, then
   /// the commentary filling the rest. In Pitch mode the TV fills what the

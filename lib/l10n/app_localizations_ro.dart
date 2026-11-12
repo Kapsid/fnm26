@@ -17561,12 +17561,6 @@ class AppLocalizationsRo extends AppLocalizations {
       'Jocul, codul și conținutul său sunt protejate de drepturile de autor.';
 
   @override
-  String get matchTabPlayer => 'JUCĂTOR';
-
-  @override
-  String get matchTabStadium => 'STADION';
-
-  @override
   String get matchTabSummary => 'REZUMAT';
 
   @override
@@ -17585,52 +17579,10 @@ class AppLocalizationsRo extends AppLocalizations {
   String get matchSummaryExtraTimeMark => 'DUPĂ PREL.';
 
   @override
-  String get matchPotmNone =>
-      'La acest meci nu a fost desemnat jucătorul meciului.';
-
-  @override
-  String get matchPotmHisMatch => 'Meciul lui';
-
-  @override
-  String get matchPotmBeforeMatch => 'Înainte de acest meci';
-
-  @override
   String get matchStatMinutes => 'Minute';
 
   @override
   String get matchStatSaves => 'Parade';
-
-  @override
-  String get matchStatOnTarget => 'Pe poartă';
-
-  @override
-  String get matchStadiumCapacity => 'Capacitate';
-
-  @override
-  String get matchStadiumAttendance => 'Spectatori';
-
-  @override
-  String get matchStadiumFull => 'Grad de ocupare';
-
-  @override
-  String matchStadiumHomeOf(String nation) {
-    return 'Stadion propriu: $nation';
-  }
-
-  @override
-  String get matchStadiumNeutral => 'Teren neutru';
-
-  @override
-  String get matchStadiumBuilt => 'Construit de federația dumneavoastră';
-
-  @override
-  String get matchStadiumEnlarged => 'Extins de federația dumneavoastră';
-
-  @override
-  String get matchStadiumWorks => 'Se lucrează la acest stadion';
-
-  @override
-  String get matchStadiumConditions => 'Condiții';
 
   @override
   String editorWebTitle(String address) {

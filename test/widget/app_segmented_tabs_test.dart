@@ -193,10 +193,9 @@ void main() {
           (l) {
             match = [
               l.matchTabTimeline,
+              l.matchTabSummary,
               l.matchTabStats,
               l.matchTabLineups,
-              l.matchTabPlayer,
-              l.matchTabStadium,
             ];
             return _tabs(match);
           },

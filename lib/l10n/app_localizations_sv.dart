@@ -17132,12 +17132,6 @@ class AppLocalizationsSv extends AppLocalizations {
       'Spelet, dess kod och innehåll skyddas av upphovsrätt.';
 
   @override
-  String get matchTabPlayer => 'SPELARE';
-
-  @override
-  String get matchTabStadium => 'ARENA';
-
-  @override
   String get matchTabSummary => 'ÖVERSIKT';
 
   @override
@@ -17156,51 +17150,10 @@ class AppLocalizationsSv extends AppLocalizations {
   String get matchSummaryExtraTimeMark => 'EFTER FÖRL.';
 
   @override
-  String get matchPotmNone => 'Ingen bäste spelare utsågs i den här matchen.';
-
-  @override
-  String get matchPotmHisMatch => 'Hans match';
-
-  @override
-  String get matchPotmBeforeMatch => 'Före den här matchen';
-
-  @override
   String get matchStatMinutes => 'Minuter';
 
   @override
   String get matchStatSaves => 'Räddningar';
-
-  @override
-  String get matchStatOnTarget => 'På mål';
-
-  @override
-  String get matchStadiumCapacity => 'Kapacitet';
-
-  @override
-  String get matchStadiumAttendance => 'Publik';
-
-  @override
-  String get matchStadiumFull => 'Beläggning';
-
-  @override
-  String matchStadiumHomeOf(String nation) {
-    return 'Hemmaarena: $nation';
-  }
-
-  @override
-  String get matchStadiumNeutral => 'Neutral plan';
-
-  @override
-  String get matchStadiumBuilt => 'Byggd av ditt förbund';
-
-  @override
-  String get matchStadiumEnlarged => 'Utbyggd av ditt förbund';
-
-  @override
-  String get matchStadiumWorks => 'Arbeten pågår på arenan';
-
-  @override
-  String get matchStadiumConditions => 'Förhållanden';
 
   @override
   String editorWebTitle(String address) {

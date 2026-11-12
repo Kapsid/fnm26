@@ -455,9 +455,6 @@ class MatchStatsPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    // The man of the match is a verdict on ninety minutes, not a running
-    // total, so it stays behind the whistle however good someone looks at 20'.
-    final motm = fullTime ? result.manOfTheMatch : null;
     final homeYellow = _count(MatchEventType.yellowCard, home: true);
     final awayYellow = _count(MatchEventType.yellowCard, home: false);
     final homeRed = _count(MatchEventType.redCard, home: true);
@@ -465,14 +462,6 @@ class MatchStatsPanel extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
-        if (motm != null) ...[
-          _MotmCard(
-            name: motm.playerName,
-            rating: motm.rating,
-            teamCode: motm.teamNationId == homeNationId ? homeCode : awayCode,
-          ),
-          const SizedBox(height: AppSpacing.lg),
-        ],
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -1299,58 +1288,6 @@ class _EnergyPip extends StatelessWidget {
   }
 }
 
-/// A "player of the match" highlight card shown on the full-time stats tab.
-class _MotmCard extends StatelessWidget {
-  const _MotmCard({
-    required this.name,
-    required this.rating,
-    required this.teamCode,
-  });
-
-  final String name;
-  final double rating;
-  final String teamCode;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.10),
-        borderRadius: AppRadii.mdAll,
-        border: Border.all(color: AppColors.primary.withValues(alpha: 0.4)),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.star_rounded, color: AppColors.primary, size: 28),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  AppLocalizations.of(context).matchPlayerOfTheMatch,
-                  style: AppTypography.labelSmall.copyWith(
-                    color: AppColors.primary,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  '$name · ${nationCodeLabel(teamCode)}',
-                  style: AppTypography.bodyLarge,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-          RatingBadge(rating),
-        ],
-      ),
-    );
-  }
-}
-
 /// A live momentum bar: a bold two-sided track where the home share (left,
 /// primary) pushes against the away share (right, positive). The split, the
 /// percentages and the pointer at the boundary all glide as the game swings.
@@ -1694,31 +1631,18 @@ class _ShootoutStrip extends StatelessWidget {
 /// width between them, and Czech's are half again as long as English's
 /// ("STATISTIKY" against "STATS").
 ///
-/// The app's segmented tabs ([AppSegmentedTabs]): three short labels share
-/// the width; a label too long for its share, or the five tabs at full time
-/// (four in Pitch mode), and the strip scrolls sideways instead, every label
-/// whole at its own width. Never scaled down, never broken mid-word.
+/// The app's segmented tabs ([AppSegmentedTabs]): the short labels share
+/// the width; a label too long for its share, and the strip scrolls sideways
+/// instead, every label whole at its own width. Never scaled down, never
+/// broken mid-word.
 ///
-/// In Pitch mode ([withTimeline] false) the pitch and its commentary line
-/// stand in for the Timeline: Stats and Lineups only.
-///
-/// At full time [extra] adds the Player and Stadium tabs. Pitch mode leads
-/// with the Summary ([leading]).
+/// Timeline, Summary, Stats, Line-ups. In Pitch mode ([withTimeline] false)
+/// the pitch and its commentary line stand in for the Timeline, and the
+/// Summary leads.
 class MatchDetailTabs extends StatelessWidget {
-  const MatchDetailTabs({
-    this.withTimeline = true,
-    this.leading = const [],
-    this.extra = const [],
-    super.key,
-  });
+  const MatchDetailTabs({this.withTimeline = true, super.key});
 
   final bool withTimeline;
-
-  /// The labels of the tabs before all the others (Pitch mode's Summary).
-  final List<String> leading;
-
-  /// The labels of the tabs after Line-ups (the full-time ones).
-  final List<String> extra;
 
   @override
   Widget build(BuildContext context) {
@@ -1730,11 +1654,10 @@ class MatchDetailTabs extends StatelessWidget {
       ),
       tabs: [
         for (final label in [
-          ...leading,
           if (withTimeline) l.matchTabTimeline,
+          l.matchTabSummary,
           l.matchTabStats,
           l.matchTabLineups,
-          ...extra,
         ])
           SegmentTab(label),
       ],

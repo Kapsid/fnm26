@@ -8,22 +8,19 @@ import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_moments.dart';
 import 'package:fnm/domain/services/match/same_day_results.dart';
-import 'package:fnm/domain/services/match/stadium/away_fan_share.dart';
-import 'package:fnm/domain/services/match/stadium/ground_character.dart';
 import 'package:fnm/domain/services/match/stadium/kick_off.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/features/match/full_time_tabs.dart';
 import 'package:fnm/features/match/match_screen.dart';
-import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/widgets/widgets.dart';
 
 import '../helpers/expect_whole.dart';
-import '../helpers/pitch_view_fixture.dart';
 import '../helpers/seeded_save.dart' show enL;
 
-/// The two tabs the match screen adds at full time, Player and Stadium, on
-/// their own: what each shows, the empty state, and that nothing overflows
-/// at the largest text size or in Czech.
+/// The player of the match's card and the Summary that carries it, on their
+/// own: what each shows, and that nothing overflows at the largest text size
+/// or in Czech.
 
 const _home = 10;
 const _away = 20;
@@ -190,24 +187,6 @@ Future<void> _pump(
   addTearDown(tester.view.reset);
   await tester.pumpWidget(
     ProviderScope(
-      overrides: [
-        potmCareerStatsProvider.overrideWith(
-          (ref, a) async => a.playerId == 201
-              ? (
-                  caps: 31,
-                  goals: 12,
-                  assists: 5,
-                  cleanSheets: 0,
-                  motm: 4,
-                  yellows: 3,
-                  reds: 0,
-                  avgRating: 7.1,
-                  bestRating: 9.0,
-                  formRating: 7.3,
-                )
-              : null,
-        ),
-      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: AppTheme.theme,
@@ -226,46 +205,6 @@ Future<void> _pump(
   );
   await tester.pumpAndSettle();
 }
-
-PitchStadium _stadium() {
-  final home = pitchNation('CZE');
-  final away = pitchNation('POR');
-  return PitchStadium.forMatch(
-    ground: (
-      stadium: _ground.stadium,
-      city: _ground.city,
-      groundNationId: home.id,
-      capacity: _ground.capacity,
-      attendance: _ground.attendance,
-      soldOut: false,
-    ),
-    home: home,
-    away: away,
-    awayShare: AwayFanShare.estimate(
-      home: home,
-      away: away,
-      neutral: false,
-      tournament: false,
-      distanceKm: AwayFanShare.proxyDistanceKm(home, away),
-    ),
-    date: DateTime(2026, 9, 10),
-    kickOff: const KickOffTime(20, 45),
-    weather: WeatherKind.rain,
-  );
-}
-
-Widget _stadiumTab({PitchStadium? stadium, GroundWorks? works}) =>
-    MatchStadiumTab(
-      ground: _ground,
-      neutral: false,
-      groundNationCode: 'CZE',
-      groundNationName: 'Czechia',
-      homeNationName: 'Czechia',
-      kickOff: const KickOffTime(20, 45),
-      weather: WeatherKind.rain,
-      stadium: stadium,
-      works: works ?? GroundWorks.none,
-    );
 
 void main() {
   group('his match line', () {
@@ -296,41 +235,35 @@ void main() {
     });
   });
 
-  group('the Player tab', () {
+  group('the player of the match card', () {
+    Finder inHeader(String t) => find.descendant(
+      of: find.byType(PlayerOfMatchHeader),
+      matching: find.text(t),
+    );
+
     testWidgets('the man of the match from the away side', (tester) async {
       await _pump(
         tester,
-        PlayerOfMatchTab(
+        PlayerOfMatchHeader(
           result: _result(),
-          careerId: 1,
           nationCode: 'POR',
           nationName: 'Portugal',
           age: 27,
-          onOpenPlayer: () {},
         ),
       );
       expect(tester.takeException(), isNull);
-      final header = find.byKey(PlayerOfMatchTab.headerKey);
-      expect(header, findsOneWidget);
-      Finder inHeader(String t) =>
-          find.descendant(of: header, matching: find.text(t));
       expect(inHeader('Away Striker'), findsOneWidget);
       expect(inHeader('8.7'), findsOneWidget);
       expect(inHeader('Portugal'), findsOneWidget);
       expect(inHeader(enL.tacticsAgeOnly(27)), findsOneWidget);
       expect(inHeader("81'"), findsOneWidget);
       expect(inHeader(enL.ratingPlayerOfTheMatch), findsOneWidget);
-      expect(find.text('3 / 4'), findsOneWidget);
-      expect(find.byKey(PlayerOfMatchTab.careerKey), findsOneWidget);
-      expect(find.text('31'), findsOneWidget);
-      expect(find.text('12'), findsOneWidget);
-      expect(find.byKey(PlayerOfMatchTab.openKey), findsOneWidget);
     });
 
     testWidgets('the man of the match from the home side', (tester) async {
       await _pump(
         tester,
-        PlayerOfMatchTab(
+        PlayerOfMatchHeader(
           result: _result(
             ratings: const [
               PlayerRating(
@@ -349,30 +282,19 @@ void main() {
               ),
             ],
           ),
-          careerId: 1,
           nationCode: 'CZE',
           nationName: 'Czechia',
         ),
       );
-      final header = find.byKey(PlayerOfMatchTab.headerKey);
-      expect(
-        find.descendant(of: header, matching: find.text('Home Forward')),
-        findsOneWidget,
-      );
-      expect(
-        find.descendant(of: header, matching: find.text('Czechia')),
-        findsOneWidget,
-      );
+      expect(inHeader('Home Forward'), findsOneWidget);
+      expect(inHeader('Czechia'), findsOneWidget);
       expect(find.text('Away Striker'), findsNothing);
-      // No record for him: the block is left out.
-      expect(find.byKey(PlayerOfMatchTab.careerKey), findsNothing);
-      expect(find.byKey(PlayerOfMatchTab.openKey), findsNothing);
     });
 
     testWidgets('a keeper leads with his saves', (tester) async {
       await _pump(
         tester,
-        PlayerOfMatchTab(
+        PlayerOfMatchHeader(
           result: _result(
             ratings: const [
               PlayerRating(
@@ -384,146 +306,34 @@ void main() {
               ),
             ],
           ),
-          careerId: 1,
         ),
       );
-      expect(
-        find.descendant(
-          of: find.byKey(PlayerOfMatchTab.headerKey),
-          matching: find.text(enL.matchStatSaves.toUpperCase()),
-        ),
-        findsOneWidget,
-      );
-    });
-
-    testWidgets('no man of the match: a calm empty state', (tester) async {
-      await _pump(
-        tester,
-        PlayerOfMatchTab(result: _result(ratings: const []), careerId: 1),
-      );
-      expect(find.byKey(PlayerOfMatchTab.emptyKey), findsOneWidget);
-      expect(find.text(enL.matchPotmNone), findsOneWidget);
-      expect(tester.takeException(), isNull);
+      expect(inHeader(enL.matchStatSaves.toUpperCase()), findsOneWidget);
     });
   });
 
-  group('the Stadium tab', () {
-    testWidgets('name, capacity, attendance and how full', (tester) async {
-      await _pump(tester, _stadiumTab(stadium: _stadium()));
-      expect(tester.takeException(), isNull);
-      expect(find.byKey(MatchStadiumTab.pictureKey), findsOneWidget);
-      expect(find.text('Stadion Nad Lesem'), findsOneWidget);
-      expect(find.text('Brno · Czechia'), findsOneWidget);
-      expect(
-        find.descendant(
-          of: find.byKey(MatchStadiumTab.capacityKey),
-          matching: find.text('41,250'),
-        ),
-        findsOneWidget,
-      );
-      expect(
-        find.descendant(
-          of: find.byKey(MatchStadiumTab.attendanceKey),
-          matching: find.text('33,000'),
-        ),
-        findsOneWidget,
-      );
-      expect(
-        find.descendant(
-          of: find.byKey(MatchStadiumTab.fillKey),
-          matching: find.text('80%'),
-        ),
-        findsOneWidget,
-      );
-      expect(find.text(enL.matchStadiumHomeOf('Czechia')), findsOneWidget);
-      expect(
-        find.text(
-          '${enL.matchConditionsKickOff} 20:45 · ${enL.matchWeatherRain}',
-        ),
-        findsOneWidget,
-      );
-    });
-
-    testWidgets('says what the federation did to the ground', (tester) async {
-      await _pump(
-        tester,
-        _stadiumTab(
-          works: const GroundWorks(built: true, underWay: true),
-        ),
-      );
-      expect(find.text(enL.matchStadiumBuilt), findsOneWidget);
-      expect(find.text(enL.matchStadiumWorks), findsOneWidget);
-      expect(find.byKey(MatchStadiumTab.pictureKey), findsNothing);
-    });
-  });
-
-  group('at the largest text size', () {
-    for (final locale in const ['en', 'cs', 'de']) {
-      testWidgets('neither tab overflows at 320 in $locale', (tester) async {
-        for (final tab in [
-          PlayerOfMatchTab(
-            result: _result(),
-            careerId: 1,
-            nationCode: 'POR',
-            nationName: 'Bosnia and Herzegovina',
-            age: 27,
-            onOpenPlayer: () {},
-          ),
-          _stadiumTab(
-            stadium: _stadium(),
-            works: const GroundWorks(upgrades: 1, underWay: true),
-          ),
-        ]) {
-          await _pump(
-            tester,
-            tab,
-            size: const Size(320, 640),
-            locale: locale,
-            scale: 1.4,
-          );
-          expect(tester.takeException(), isNull);
-          // Scrolled through to the end, nothing overflows on the way.
-          await tester.drag(find.byType(ListView), const Offset(0, -3000));
-          await tester.pumpAndSettle();
-          expect(tester.takeException(), isNull);
-        }
-      });
-    }
-  });
-
-  group('the full-time tab strip', () {
+  group('the match tab strip', () {
     for (final width in const [320.0, 360.0]) {
       for (final locale in const ['cs', 'en', 'de']) {
         testWidgets('every label whole at $width in $locale', (tester) async {
           await _pump(
             tester,
-            Builder(
-              builder: (context) {
-                final l = AppLocalizations.of(context);
-                return DefaultTabController(
-                  length: 5,
-                  child: Column(
-                    children: [
-                      MatchDetailTabs(
-                        extra: [l.matchTabPlayer, l.matchTabStadium],
-                      ),
-                    ],
-                  ),
-                );
-              },
+            const DefaultTabController(
+              length: 4,
+              child: Column(children: [MatchDetailTabs()]),
             ),
             size: Size(width, 400),
             locale: locale,
+            scale: 1.4,
           );
           final l = AppLocalizations.of(
             tester.element(find.byType(MatchDetailTabs)),
           );
           for (final label in [
             l.matchTabTimeline,
+            l.matchTabSummary,
             l.matchTabStats,
             l.matchTabLineups,
-            l.matchTabPlayer,
-            l.matchTabStadium,
           ]) {
             final finder = find.text(label);
             expect(finder, findsOneWidget, reason: '"$label" is missing');
@@ -531,6 +341,8 @@ void main() {
             // Scrolling, nothing is squeezed at all.
             expectLegible(tester, finder, 'the "$label" tab', min: 0.99);
           }
+          // No Player or Stadium tab any more: four segments, no more.
+          expect(find.byType(AppTabSegment), findsNWidgets(4));
         });
       }
     }
@@ -595,6 +407,7 @@ void main() {
       bool motm = true,
       SameDayPhase? phase,
       List<SameDayResult>? sameDay,
+      VoidCallback? onOpenPlayer,
     }) {
       final r = _result();
       return MatchSummaryTab(
@@ -616,8 +429,7 @@ void main() {
             phase ?? (fullTime ? SameDayPhase.fullTime : SameDayPhase.live),
         codeOf: (id) => 'C$id',
         nameOf: nameOf,
-        playerTab: fullTime ? 3 : null,
-        stadiumTab: fullTime ? 4 : null,
+        onOpenPlayer: onOpenPlayer,
       );
     }
 
@@ -666,8 +478,6 @@ void main() {
         find.textContaining('33,000 / 41,250 · 80%', findRichText: true),
         findsOneWidget,
       );
-      // The ground's box has no picture: the Stadium tab keeps it.
-      expect(find.byType(GroundStill), findsNothing);
       // Full-time results of the rest of the day.
       expect(scoreOf(tester, 501), '3 - 1 | FT');
       expect(scoreOf(tester, 502), '1 - 1 | AET | 4–3 pens');
@@ -686,7 +496,6 @@ void main() {
       expect(find.byKey(MatchSummaryTab.headlineKey), findsNothing);
       expect(find.byKey(MatchSummaryTab.potmKey), findsNothing);
       expect(find.byType(PlayerOfMatchHeader), findsNothing);
-      expect(find.byType(GroundStill), findsNothing);
       expect(find.byKey(MatchSummaryTab.attendanceKey), findsOneWidget);
       expect(
         topOf(tester, MatchSummaryTab.stadiumKey),
@@ -726,21 +535,36 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('a tap opens the Player tab, another the Stadium tab', (
-      tester,
-    ) async {
-      await _pump(tester, DefaultTabController(length: 5, child: summary()));
+    testWidgets('a tap on his card opens his page; the ground is no '
+        'button', (tester) async {
+      var opened = 0;
+      await _pump(
+        tester,
+        DefaultTabController(
+          length: 3,
+          child: summary(onOpenPlayer: () => opened++),
+        ),
+      );
       final controller = DefaultTabController.of(
         tester.element(find.byType(MatchSummaryTab)),
       );
       await tester.tap(find.byKey(MatchSummaryTab.potmKey));
       await tester.pumpAndSettle();
-      expect(controller.index, 3);
+      expect(opened, 1);
+      expect(controller.index, 0);
+      expect(
+        find.descendant(
+          of: find.byKey(MatchSummaryTab.stadiumKey),
+          matching: find.byType(InkWell),
+        ),
+        findsNothing,
+      );
       await tester.ensureVisible(find.byKey(MatchSummaryTab.stadiumKey));
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(MatchSummaryTab.stadiumKey));
       await tester.pumpAndSettle();
-      expect(controller.index, 4);
+      expect(opened, 1);
+      expect(controller.index, 0);
     });
 
     for (final locale in const ['en', 'cs', 'de']) {

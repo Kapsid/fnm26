@@ -17107,12 +17107,6 @@ class AppLocalizationsMs extends AppLocalizations {
       'Permainan ini, kodnya dan kandungannya dilindungi oleh hak cipta.';
 
   @override
-  String get matchTabPlayer => 'PEMAIN';
-
-  @override
-  String get matchTabStadium => 'STADIUM';
-
-  @override
   String get matchTabSummary => 'RINGKASAN';
 
   @override
@@ -17131,52 +17125,10 @@ class AppLocalizationsMs extends AppLocalizations {
   String get matchSummaryExtraTimeMark => 'MASA TAMB.';
 
   @override
-  String get matchPotmNone =>
-      'Tiada pemain terbaik dipilih untuk perlawanan ini.';
-
-  @override
-  String get matchPotmHisMatch => 'Perlawanannya';
-
-  @override
-  String get matchPotmBeforeMatch => 'Sebelum perlawanan ini';
-
-  @override
   String get matchStatMinutes => 'Minit';
 
   @override
   String get matchStatSaves => 'Selamatan';
-
-  @override
-  String get matchStatOnTarget => 'Tepat sasaran';
-
-  @override
-  String get matchStadiumCapacity => 'Kapasiti';
-
-  @override
-  String get matchStadiumAttendance => 'Kehadiran';
-
-  @override
-  String get matchStadiumFull => 'Terisi';
-
-  @override
-  String matchStadiumHomeOf(String nation) {
-    return 'Gelanggang sendiri: $nation';
-  }
-
-  @override
-  String get matchStadiumNeutral => 'Tempat neutral';
-
-  @override
-  String get matchStadiumBuilt => 'Dibina oleh persekutuan anda';
-
-  @override
-  String get matchStadiumEnlarged => 'Diperbesar oleh persekutuan anda';
-
-  @override
-  String get matchStadiumWorks => 'Kerja sedang dijalankan di stadium ini';
-
-  @override
-  String get matchStadiumConditions => 'Keadaan';
 
   @override
   String editorWebTitle(String address) {

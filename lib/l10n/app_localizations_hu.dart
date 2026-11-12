@@ -17093,12 +17093,6 @@ class AppLocalizationsHu extends AppLocalizations {
       'A játékot, annak kódját és tartalmát szerzői jog védi.';
 
   @override
-  String get matchTabPlayer => 'JÁTÉKOS';
-
-  @override
-  String get matchTabStadium => 'STADION';
-
-  @override
   String get matchTabSummary => 'ÖSSZEFOGLALÓ';
 
   @override
@@ -17117,51 +17111,10 @@ class AppLocalizationsHu extends AppLocalizations {
   String get matchSummaryExtraTimeMark => 'HOSSZ. U.';
 
   @override
-  String get matchPotmNone => 'Ezen a meccsen nem választottak meccs emberét.';
-
-  @override
-  String get matchPotmHisMatch => 'Az ő meccse';
-
-  @override
-  String get matchPotmBeforeMatch => 'E meccs előtt';
-
-  @override
   String get matchStatMinutes => 'Percek';
 
   @override
   String get matchStatSaves => 'Védések';
-
-  @override
-  String get matchStatOnTarget => 'Kapura';
-
-  @override
-  String get matchStadiumCapacity => 'Befogadóképesség';
-
-  @override
-  String get matchStadiumAttendance => 'Nézőszám';
-
-  @override
-  String get matchStadiumFull => 'Telítettség';
-
-  @override
-  String matchStadiumHomeOf(String nation) {
-    return 'Hazai pálya: $nation';
-  }
-
-  @override
-  String get matchStadiumNeutral => 'Semleges pálya';
-
-  @override
-  String get matchStadiumBuilt => 'A szövetséged építette';
-
-  @override
-  String get matchStadiumEnlarged => 'A szövetséged bővítette';
-
-  @override
-  String get matchStadiumWorks => 'A stadionban munkálatok folynak';
-
-  @override
-  String get matchStadiumConditions => 'Körülmények';
 
   @override
   String editorWebTitle(String address) {
