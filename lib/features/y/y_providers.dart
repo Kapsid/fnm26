@@ -804,7 +804,11 @@ Future<YTimeline> _feedOf(
   final scandals = <({CampScandalRecord? record, PendingScandal? pending})>[
     for (final r in await ref.watch(campScandalsProvider(careerId).future))
       (record: r, pending: null),
-    if (await ref.watch(pendingScandalProvider(careerId).future) case final p?)
+    // Read fresh, never through [pendingScandalProvider]: watched here, the
+    // feed (alive under the hub's badge) kept that provider's answer from
+    // before the squad was named, and the decision screen, which reads the
+    // same provider, opened on "nothing to answer" with only its way out.
+    if (await pendingScandal(ref, careerId) case final p?)
       (record: null, pending: p),
   ];
   for (final s in scandals) {
