@@ -17486,6 +17486,30 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get editorMergeTabOverview => 'Aperçu';
+
+  @override
+  String get editorMergeTabNames => 'Noms';
+
+  @override
+  String get editorMergeTabPress => 'Presse et Y';
+
+  @override
+  String get editorMergeEveryChange => 'Toutes les modifications';
+
+  @override
+  String editorMergeNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nouvelles',
+      one: '1 nouvelle',
+      zero: 'Rien de nouveau',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorHistorySave => 'Enregistrer la version';
 
   @override

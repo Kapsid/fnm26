@@ -17286,6 +17286,29 @@ class AppLocalizationsMs extends AppLocalizations {
   }
 
   @override
+  String get editorMergeTabOverview => 'Gambaran';
+
+  @override
+  String get editorMergeTabNames => 'Nama';
+
+  @override
+  String get editorMergeTabPress => 'Media dan Y';
+
+  @override
+  String get editorMergeEveryChange => 'Semua perubahan';
+
+  @override
+  String editorMergeNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count baharu',
+      zero: 'Tiada yang baharu',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorHistorySave => 'Simpan versi';
 
   @override

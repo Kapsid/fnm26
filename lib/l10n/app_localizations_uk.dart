@@ -17648,6 +17648,31 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
+  String get editorMergeTabOverview => 'Огляд';
+
+  @override
+  String get editorMergeTabNames => 'Назви';
+
+  @override
+  String get editorMergeTabPress => 'Преса і Y';
+
+  @override
+  String get editorMergeEveryChange => 'Усі зміни';
+
+  @override
+  String editorMergeNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count нових',
+      few: '$count нові',
+      one: '1 нова',
+      zero: 'Нічого нового',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorHistorySave => 'Зберегти версію';
 
   @override

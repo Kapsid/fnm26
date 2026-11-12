@@ -22,14 +22,16 @@ import 'package:fnm/core/theme/app_typography.dart';
 
 /// One tab of an [AppSegmentedControl]: its label, an optional key for tests
 /// (set on the tappable segment) and an optional small [badge] after the
-/// label, such as a count.
+/// label, such as a count, and an optional [marker]: a small dot of that
+/// colour at the end, to flag the tab (say, it holds conflicts).
 @immutable
 class SegmentTab {
-  const SegmentTab(this.label, {this.key, this.badge});
+  const SegmentTab(this.label, {this.key, this.badge, this.marker});
 
   final String label;
   final Key? key;
   final String? badge;
+  final Color? marker;
 }
 
 /// How an [AppSegmentedControl] shares its width: [even] shares when every
@@ -62,6 +64,10 @@ class AppTabSegment extends StatelessWidget {
   /// The space between the label and its badge.
   static const double badgeGap = 6;
 
+  /// A marker dot's size, and the space before it.
+  static const double markerSize = 7;
+  static const double markerGap = 5;
+
   static const double _borderWidth = 1;
 
   /// The label's style; [selected] is bolder.
@@ -88,23 +94,37 @@ class AppTabSegment extends StatelessWidget {
       textAlign: TextAlign.center,
       style: labelStyle(selected: selected).copyWith(color: fg),
     );
-    final content = tab.badge == null
+    final marker = tab.marker;
+    final content = tab.badge == null && marker == null
         ? label
         : Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               label,
-              const SizedBox(width: badgeGap),
-              Text(
-                tab.badge!,
-                maxLines: 1,
-                softWrap: false,
-                style: badgeStyle.copyWith(
-                  color: selected
-                      ? fg.withValues(alpha: 0.75)
-                      : AppColors.onSurfaceVariant,
+              if (tab.badge case final badge?) ...[
+                const SizedBox(width: badgeGap),
+                Text(
+                  badge,
+                  maxLines: 1,
+                  softWrap: false,
+                  style: badgeStyle.copyWith(
+                    color: selected
+                        ? fg.withValues(alpha: 0.75)
+                        : AppColors.onSurfaceVariant,
+                  ),
                 ),
-              ),
+              ],
+              if (marker != null) ...[
+                const SizedBox(width: markerGap),
+                Container(
+                  width: markerSize,
+                  height: markerSize,
+                  decoration: BoxDecoration(
+                    color: marker,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ],
             ],
           );
     return MergeSemantics(
@@ -216,6 +236,9 @@ class AppSegmentedControl extends StatefulWidget {
       w +=
           AppTabSegment.badgeGap +
           measure(tab.badge!, AppTabSegment.badgeStyle);
+    }
+    if (tab.marker != null) {
+      w += AppTabSegment.markerGap + AppTabSegment.markerSize;
     }
     // A pixel of slack, so rounding never tips a label into the edge.
     return w.ceilToDouble() + 1 + AppTabSegment.horizontalPadding * 2;

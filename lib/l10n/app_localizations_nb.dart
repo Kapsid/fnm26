@@ -17320,6 +17320,30 @@ class AppLocalizationsNb extends AppLocalizations {
   }
 
   @override
+  String get editorMergeTabOverview => 'Oversikt';
+
+  @override
+  String get editorMergeTabNames => 'Navn';
+
+  @override
+  String get editorMergeTabPress => 'Presse og Y';
+
+  @override
+  String get editorMergeEveryChange => 'Alle endringer';
+
+  @override
+  String editorMergeNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nye',
+      one: '1 ny',
+      zero: 'Ingenting nytt',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorHistorySave => 'Lagre versjon';
 
   @override

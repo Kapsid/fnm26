@@ -17401,6 +17401,30 @@ class AppLocalizationsFi extends AppLocalizations {
   }
 
   @override
+  String get editorMergeTabOverview => 'Yleiskuva';
+
+  @override
+  String get editorMergeTabNames => 'Nimet';
+
+  @override
+  String get editorMergeTabPress => 'Media ja Y';
+
+  @override
+  String get editorMergeEveryChange => 'Kaikki muutokset';
+
+  @override
+  String editorMergeNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count uutta',
+      one: '1 uusi',
+      zero: 'Ei uusia',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorHistorySave => 'Tallenna versio';
 
   @override

@@ -17409,6 +17409,30 @@ class AppLocalizationsNl extends AppLocalizations {
   }
 
   @override
+  String get editorMergeTabOverview => 'Overzicht';
+
+  @override
+  String get editorMergeTabNames => 'Namen';
+
+  @override
+  String get editorMergeTabPress => 'Pers en Y';
+
+  @override
+  String get editorMergeEveryChange => 'Alle wijzigingen';
+
+  @override
+  String editorMergeNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nieuw',
+      one: '1 nieuw',
+      zero: 'Niets nieuws',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorHistorySave => 'Versie opslaan';
 
   @override

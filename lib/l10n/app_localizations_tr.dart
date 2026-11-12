@@ -17236,6 +17236,29 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get editorMergeTabOverview => 'Genel bakış';
+
+  @override
+  String get editorMergeTabNames => 'Adlar';
+
+  @override
+  String get editorMergeTabPress => 'Basın ve Y';
+
+  @override
+  String get editorMergeEveryChange => 'Tüm değişiklikler';
+
+  @override
+  String editorMergeNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count yeni',
+      zero: 'Yeni yok',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorHistorySave => 'Sürümü kaydet';
 
   @override

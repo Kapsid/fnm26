@@ -26198,6 +26198,36 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{1 change merged} other{{count} changes merged}}'**
   String editorMerged(int count);
 
+  /// Merge review: the first tab, totals per area of the changes.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get editorMergeTabOverview;
+
+  /// Merge review: tab with the renamed clubs, competitions, nations, name lists and managers.
+  ///
+  /// In en, this message translates to:
+  /// **'Names'**
+  String get editorMergeTabNames;
+
+  /// Merge review: tab with the reporters, Y accounts and their handles.
+  ///
+  /// In en, this message translates to:
+  /// **'Press & Y'**
+  String get editorMergeTabPress;
+
+  /// Merge review overview: the row that ticks or unticks every change at once (All / None).
+  ///
+  /// In en, this message translates to:
+  /// **'Every change'**
+  String get editorMergeEveryChange;
+
+  /// Merge review overview tile: how many changes in an area are new (not conflicts).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Nothing new} =1{1 new} other{{count} new}}'**
+  String editorMergeNewCount(int count);
+
   /// History: button that saves the database as it is now as a version.
   ///
   /// In en, this message translates to:

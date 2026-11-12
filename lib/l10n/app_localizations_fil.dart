@@ -17336,6 +17336,29 @@ class AppLocalizationsFil extends AppLocalizations {
   }
 
   @override
+  String get editorMergeTabOverview => 'Pangkalahatan';
+
+  @override
+  String get editorMergeTabNames => 'Mga pangalan';
+
+  @override
+  String get editorMergeTabPress => 'Press at Y';
+
+  @override
+  String get editorMergeEveryChange => 'Lahat ng pagbabago';
+
+  @override
+  String editorMergeNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count bago',
+      zero: 'Walang bago',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorHistorySave => 'I-save ang bersyon';
 
   @override

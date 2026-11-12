@@ -17233,6 +17233,29 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
+  String get editorMergeTabOverview => 'अवलोकन';
+
+  @override
+  String get editorMergeTabNames => 'नाम';
+
+  @override
+  String get editorMergeTabPress => 'प्रेस और Y';
+
+  @override
+  String get editorMergeEveryChange => 'सभी बदलाव';
+
+  @override
+  String editorMergeNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count नए',
+      zero: 'कुछ नया नहीं',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorHistorySave => 'वर्शन सेव करें';
 
   @override

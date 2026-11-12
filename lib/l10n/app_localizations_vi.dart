@@ -17173,6 +17173,29 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String get editorMergeTabOverview => 'Tổng quan';
+
+  @override
+  String get editorMergeTabNames => 'Tên';
+
+  @override
+  String get editorMergeTabPress => 'Báo chí và Y';
+
+  @override
+  String get editorMergeEveryChange => 'Mọi thay đổi';
+
+  @override
+  String editorMergeNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count mới',
+      zero: 'Không có gì mới',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorHistorySave => 'Lưu phiên bản';
 
   @override

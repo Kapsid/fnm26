@@ -16746,6 +16746,29 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String get editorMergeTabOverview => '개요';
+
+  @override
+  String get editorMergeTabNames => '이름';
+
+  @override
+  String get editorMergeTabPress => '언론 및 Y';
+
+  @override
+  String get editorMergeEveryChange => '모든 변경';
+
+  @override
+  String editorMergeNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '새 항목 $count개',
+      zero: '새 항목 없음',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorHistorySave => '버전 저장';
 
   @override

@@ -17271,6 +17271,29 @@ class AppLocalizationsHu extends AppLocalizations {
   }
 
   @override
+  String get editorMergeTabOverview => 'Áttekintés';
+
+  @override
+  String get editorMergeTabNames => 'Nevek';
+
+  @override
+  String get editorMergeTabPress => 'Sajtó és Y';
+
+  @override
+  String get editorMergeEveryChange => 'Minden változás';
+
+  @override
+  String editorMergeNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count új',
+      zero: 'Nincs új',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorHistorySave => 'Verzió mentése';
 
   @override

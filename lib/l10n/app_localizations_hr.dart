@@ -17663,6 +17663,31 @@ class AppLocalizationsHr extends AppLocalizations {
   }
 
   @override
+  String get editorMergeTabOverview => 'Pregled';
+
+  @override
+  String get editorMergeTabNames => 'Nazivi';
+
+  @override
+  String get editorMergeTabPress => 'Novinari i Y';
+
+  @override
+  String get editorMergeEveryChange => 'Sve promjene';
+
+  @override
+  String editorMergeNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count novih',
+      few: '$count nove',
+      one: '1 nova',
+      zero: 'Ništa novo',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorHistorySave => 'Spremi verziju';
 
   @override

@@ -17715,6 +17715,31 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String get editorMergeTabOverview => 'Přehled';
+
+  @override
+  String get editorMergeTabNames => 'Názvy';
+
+  @override
+  String get editorMergeTabPress => 'Novináři a Y';
+
+  @override
+  String get editorMergeEveryChange => 'Všechny změny';
+
+  @override
+  String editorMergeNewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nových',
+      few: '$count nové',
+      one: '1 nová',
+      zero: 'Nic nového',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorHistorySave => 'Uložit verzi';
 
   @override
