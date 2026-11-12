@@ -17222,12 +17222,6 @@ class AppLocalizationsFi extends AppLocalizations {
       'Peli, sen koodi ja sisältö on suojattu tekijänoikeudella.';
 
   @override
-  String get matchTabPlayer => 'PELAAJA';
-
-  @override
-  String get matchTabStadium => 'STADION';
-
-  @override
   String get matchTabSummary => 'YHTEENVETO';
 
   @override
@@ -17246,52 +17240,10 @@ class AppLocalizationsFi extends AppLocalizations {
   String get matchSummaryExtraTimeMark => 'JATKOAJALLA';
 
   @override
-  String get matchPotmNone =>
-      'Tässä ottelussa ei valittu ottelun parasta pelaajaa.';
-
-  @override
-  String get matchPotmHisMatch => 'Hänen ottelunsa';
-
-  @override
-  String get matchPotmBeforeMatch => 'Ennen tätä ottelua';
-
-  @override
   String get matchStatMinutes => 'Minuutit';
 
   @override
   String get matchStatSaves => 'Torjunnat';
-
-  @override
-  String get matchStatOnTarget => 'Maalia kohti';
-
-  @override
-  String get matchStadiumCapacity => 'Kapasiteetti';
-
-  @override
-  String get matchStadiumAttendance => 'Yleisö';
-
-  @override
-  String get matchStadiumFull => 'Täyttöaste';
-
-  @override
-  String matchStadiumHomeOf(String nation) {
-    return 'Kotikenttä: $nation';
-  }
-
-  @override
-  String get matchStadiumNeutral => 'Puolueeton kenttä';
-
-  @override
-  String get matchStadiumBuilt => 'Liittosi rakentama';
-
-  @override
-  String get matchStadiumEnlarged => 'Liittosi laajentama';
-
-  @override
-  String get matchStadiumWorks => 'Stadionilla on työt käynnissä';
-
-  @override
-  String get matchStadiumConditions => 'Olosuhteet';
 
   @override
   String editorWebTitle(String address) {

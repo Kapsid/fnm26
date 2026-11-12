@@ -4,17 +4,16 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 part of 'match_screen.dart';
 
-/// The Pitch mode's first tab, for the whole match: the ground and its
-/// crowd, the other matches of the group or round played the same day, and
-/// after the whistle the player of the match and the three headline figures.
+/// The Summary, for the whole match (Pitch mode's first tab, the Timeline's
+/// second): the ground and its crowd, the other matches of the group or
+/// round played the same day, and after the whistle the player of the match
+/// and the three headline figures.
 ///
 /// The score is not on it: the scoreboard above already shows it, and the
 /// scorers are the Timeline's and the Stats'.
 ///
-/// Read-only, like the full-time tabs: it shows what the screen already
-/// holds and decides nothing. A tap on the player of the match or on the
-/// ground opens its own full-time tab ([playerTab], [stadiumTab]) in the
-/// enclosing [DefaultTabController].
+/// Read-only: it shows what the screen already holds and decides nothing. A
+/// tap on the player of the match opens his page ([onOpenPlayer]).
 class MatchSummaryTab extends StatelessWidget {
   const MatchSummaryTab({
     required this.ground,
@@ -27,8 +26,7 @@ class MatchSummaryTab extends StatelessWidget {
     this.sameDayPhase = SameDayPhase.live,
     this.codeOf,
     this.nameOf,
-    this.playerTab,
-    this.stadiumTab,
+    this.onOpenPlayer,
     super.key,
   });
 
@@ -68,23 +66,15 @@ class MatchSummaryTab extends StatelessWidget {
   final String Function(int nationId)? codeOf;
   final String Function(int nationId)? nameOf;
 
-  /// The tabs a tap on the player of the match and on the ground opens;
-  /// null (while the match is on) leaves the card a card.
-  final int? playerTab;
-  final int? stadiumTab;
-
-  void _open(BuildContext context, int? index) {
-    if (index == null) return;
-    DefaultTabController.maybeOf(context)?.animateTo(index);
-  }
+  /// Opens the player of the match's page; null leaves the card a card.
+  final VoidCallback? onOpenPlayer;
 
   @override
   Widget build(BuildContext context) {
     final r = result;
     final p = potm;
-    final stadium = _tappable(
+    final stadium = KeyedSubtree(
       key: stadiumKey,
-      onTap: stadiumTab == null ? null : () => _open(context, stadiumTab),
       child: _stadiumBlock(context),
     );
     final others = sameDay.isEmpty ? null : _otherMatches(context);
@@ -99,12 +89,12 @@ class MatchSummaryTab extends StatelessWidget {
           ]
         : [
             if (p != null) ...[
-              _tappable(
+              Material(
                 key: potmKey,
-                onTap: playerTab == null
-                    ? null
-                    : () => _open(context, playerTab),
-                child: p,
+                color: Colors.transparent,
+                borderRadius: AppRadii.mdAll,
+                clipBehavior: Clip.antiAlias,
+                child: InkWell(onTap: onOpenPlayer, child: p),
               ),
               gap,
             ],
@@ -118,18 +108,6 @@ class MatchSummaryTab extends StatelessWidget {
       children: children,
     );
   }
-
-  Widget _tappable({
-    required Key key,
-    required Widget child,
-    VoidCallback? onTap,
-  }) => Material(
-    key: key,
-    color: Colors.transparent,
-    borderRadius: AppRadii.mdAll,
-    clipBehavior: Clip.antiAlias,
-    child: InkWell(onTap: onTap, child: child),
-  );
 
   /// The day's other matches, a row each: the home side, the score (or the
   /// live mark) with what it is, the away side. In a narrow column (the
@@ -341,7 +319,7 @@ class MatchSummaryTab extends StatelessWidget {
   }
 
   /// The ground: its name and place, the crowd against the seats, and the
-  /// kick-off with its weather. No picture: the Stadium tab has it.
+  /// kick-off with its weather.
   Widget _stadiumBlock(BuildContext context) {
     final l = AppLocalizations.of(context);
     final fill = ground.capacity <= 0
@@ -409,7 +387,7 @@ class MatchSummaryTab extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Icon(
-                  MatchStadiumTab.weatherIcon(w),
+                  weatherIcon(w),
                   size: 16,
                   color: AppColors.onSurfaceVariant,
                 ),
@@ -428,4 +406,18 @@ class MatchSummaryTab extends StatelessWidget {
       ),
     );
   }
+
+  /// The icon set beside the weather [w].
+  static IconData weatherIcon(WeatherKind w) => switch (w) {
+    WeatherKind.clear => Icons.wb_sunny_rounded,
+    WeatherKind.rain => Icons.umbrella_rounded,
+    WeatherKind.snow => Icons.ac_unit_rounded,
+    WeatherKind.haze => Icons.blur_on_rounded,
+    WeatherKind.heavyRain => Icons.water_drop_rounded,
+    WeatherKind.thunderstorm => Icons.thunderstorm_rounded,
+    WeatherKind.fog => Icons.foggy,
+    WeatherKind.windy => Icons.air_rounded,
+    WeatherKind.dustStorm => Icons.grain_rounded,
+    WeatherKind.frostyNight => Icons.severe_cold_rounded,
+  };
 }

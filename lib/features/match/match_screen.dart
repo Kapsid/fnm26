@@ -352,10 +352,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   /// Made in [initState], so [dispose] never has to reach for `ref`.
   late final PitchModeController _pc;
 
-  /// The ground as the Stadium tab's still draws it, built once at the
-  /// whistle (the Pitch view's own when it has one).
-  PitchStadium? _stillStadium;
-
   /// Watches the app going to the background and back (see [_inForeground]).
   late final AppLifecycleListener _lifecycle;
 
@@ -1691,35 +1687,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     _liveReady = true;
   }
 
-  /// The ground as the Pitch view draws it for this match (built once), and
-  /// what the manager's federation has done to it.
-  ({PitchStadium? still, GroundWorks works}) _groundStill(
-    MatchPreview preview,
-  ) {
-    final read = ref.read(_groundWorksOf(preview));
-    final works = read.valueOrNull ?? GroundWorks.none;
-    PitchStadium? still;
-    try {
-      still =
-          _stillStadium ??
-          _pc.stadium ??
-          pitchStadiumForPreview(
-            preview,
-            weather: ref.read(pitchForcedWeatherProvider),
-            works: works,
-          );
-      // Kept once it is the ground for good: the Pitch view's own, or one
-      // built with the federation's works known (the Summary asks from
-      // kick-off, before they may have loaded).
-      if (_pc.stadium != null || read.hasValue) _stillStadium = still;
-    } on Object {
-      // A ground the Pitch view could not build (a nation missing from the
-      // preview): the tab goes without its picture, never without its facts.
-      still = null;
-    }
-    return (still: still, works: works);
-  }
-
   /// The man of the match's nation and age, when the result names one.
   ({String? code, String? name, int? age}) _motmFacts(
     MatchPreview preview,
@@ -1739,57 +1706,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     }
     final nation = preview.nations[motm.teamNationId];
     return (code: nation?.code, name: nation?.name, age: him?.age);
-  }
-
-  /// The two full-time tabs, Player and Stadium, labelled. Built from the
-  /// result and the fixture as they stand; the ground's still is the Pitch
-  /// view's own ground for this match, built once.
-  List<(String, Widget)> _afterTabs(
-    AppLocalizations l,
-    MatchPreview preview,
-    MatchResult r,
-    ({KickOffTime kickOff, WeatherKind weather}) shown,
-  ) {
-    final (:still, :works) = _groundStill(preview);
-    final motm = r.manOfTheMatch;
-    final who = _motmFacts(preview, r);
-    final groundNation = preview.nations[preview.ground.groundNationId];
-    return [
-      (
-        l.matchTabPlayer,
-        PlayerOfMatchTab(
-          result: r,
-          careerId: widget.careerId,
-          nationCode: who.code,
-          nationName: who.name,
-          age: who.age,
-          onOpenPlayer: motm == null
-              ? null
-              : () => openPlayer(
-                  context,
-                  careerId: widget.careerId,
-                  playerId: motm.playerId,
-                ),
-        ),
-      ),
-      (
-        l.matchTabStadium,
-        MatchStadiumTab(
-          ground: preview.ground,
-          neutral: preview.neutralVenue,
-          groundNationCode: groundNation?.code,
-          groundNationName: groundNation?.name,
-          homeNationName: preview.nations[preview.fixture.homeNationId]?.name,
-          homeFans: preview.homeFans,
-          kickOff: shown.kickOff,
-          weather: shown.weather,
-          conditions: preview.conditions,
-          playerIsHome: preview.playerIsHome,
-          stadium: still,
-          works: works,
-        ),
-      ),
-    ];
   }
 
   /// The player's on-pitch XI now (their live lineup resolved to players).
@@ -2526,57 +2442,50 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                     list: lineupList,
                   )
                 : lineupList;
-            // After the whistle: the player of the match and the ground, a
-            // tab each (read-only; nothing in them touches the result).
-            final afterTabs = ft
-                ? _afterTabs(l, preview, r, conditionsShown)
-                : const <(String, Widget)>[];
-            // Pitch mode's first tab, the whole match through: the ground,
-            // the day's other matches, and at the whistle the player of the
-            // match and the headline figures.
-            Widget? summary;
-            if (_onPitch) {
-              final motm = ft ? r.manOfTheMatch : null;
-              final who = _motmFacts(preview, r);
-              final groundId = preview.ground.groundNationId;
-              // The full-time tabs come after Stats and Line-ups on the
-              // phone, after Stats alone in the tablet's left column.
-              final firstAfter = tablet ? 2 : 3;
-              // The rest of the group (or round) that day, with the results
-              // the save will hold for them, revealed by our clock.
-              final sameDay =
-                  ref
-                      .watch(
-                        sameDayResultsProvider(sameDayKey(preview.fixture)),
-                      )
-                      .valueOrNull ??
-                  const <SameDayResult>[];
-              summary = MatchSummaryTab(
-                result: ft ? r : null,
-                potm: motm == null
-                    ? null
-                    : PlayerOfMatchHeader(
-                        result: r,
-                        nationCode: who.code,
-                        nationName: who.name,
-                        age: who.age,
-                      ),
-                ground: preview.ground,
-                groundNationName: preview.nations[groundId]?.name,
-                kickOff: conditionsShown.kickOff,
-                weather: conditionsShown.weather,
-                sameDay: sameDay,
-                // Our half-time whistle, the interval included.
-                sameDayPhase: SameDayPhase.of(
-                  halfTime: _halfTimeTaken || halfTimeLabel != null,
-                  fullTime: ft,
-                ),
-                codeOf: code,
-                nameOf: name,
-                playerTab: ft ? firstAfter : null,
-                stadiumTab: ft ? firstAfter + 1 : null,
-              );
-            }
+            // The Summary, the whole match through: the ground, the day's
+            // other matches, and at the whistle the player of the match
+            // (his card opens his page) and the headline figures. Pitch
+            // mode's first tab, the Timeline's second.
+            final motm = ft ? r.manOfTheMatch : null;
+            final who = _motmFacts(preview, r);
+            final groundId = preview.ground.groundNationId;
+            // The rest of the group (or round) that day, with the results
+            // the save will hold for them, revealed by our clock.
+            final sameDay =
+                ref
+                    .watch(sameDayResultsProvider(sameDayKey(preview.fixture)))
+                    .valueOrNull ??
+                const <SameDayResult>[];
+            final Widget summary = MatchSummaryTab(
+              result: ft ? r : null,
+              potm: motm == null
+                  ? null
+                  : PlayerOfMatchHeader(
+                      result: r,
+                      nationCode: who.code,
+                      nationName: who.name,
+                      age: who.age,
+                    ),
+              onOpenPlayer: motm == null
+                  ? null
+                  : () => openPlayer(
+                      context,
+                      careerId: widget.careerId,
+                      playerId: motm.playerId,
+                    ),
+              ground: preview.ground,
+              groundNationName: preview.nations[groundId]?.name,
+              kickOff: conditionsShown.kickOff,
+              weather: conditionsShown.weather,
+              sameDay: sameDay,
+              // Our half-time whistle, the interval included.
+              sameDayPhase: SameDayPhase.of(
+                halfTime: _halfTimeTaken || halfTimeLabel != null,
+                fullTime: ft,
+              ),
+              codeOf: code,
+              nameOf: name,
+            );
             // The tablet's 2D TV: its goal and every other moment take the
             // header's strip in turn, never the picture (see [MatchTvHeader]).
             final tabletTv = tablet && _onPitch;
@@ -2728,7 +2637,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                     : timeline,
                 stats: stats,
                 lineups: lineups,
-                afterTabs: afterTabs,
                 summary: summary,
                 pitch: _livePitch(preview, r),
                 pitchView: _onPitch ? pitchSurface : null,
@@ -2789,7 +2697,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               // Pitch mode: the match on the pitch under the score, one line
               // of commentary under it, then the momentum and the details.
               return DefaultTabController(
-                length: 3 + afterTabs.length,
+                length: 3,
                 // Opens on the Summary, from kick-off and again at the
                 // whistle: the key recreates the controller there, so the
                 // manager lands on the result and its player of the match.
@@ -2823,18 +2731,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                             ?shootout,
                           ],
                         ),
-                        tabBar: MatchDetailTabs(
-                          withTimeline: false,
-                          leading: [l.matchTabSummary],
-                          extra: [for (final (label, _) in afterTabs) label],
-                        ),
+                        tabBar: const MatchDetailTabs(withTimeline: false),
                         tabs: TabBarView(
-                          children: [
-                            ?summary,
-                            stats,
-                            lineups,
-                            for (final (_, tab) in afterTabs) tab,
-                          ],
+                          children: [summary, stats, lineups],
                         ),
                       ),
                       ...overlays,
@@ -2844,9 +2743,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               );
             }
             return DefaultTabController(
-              length: 3 + afterTabs.length,
-              // Jump to the Stats tab (player ratings, MOTM) at full time; the
-              // key recreates the controller so the switch takes effect.
+              length: 4,
+              // Timeline, Summary, Stats, Line-ups. Jump to the Summary (the
+              // player of the match, the figures) at full time; the key
+              // recreates the controller so the switch takes effect.
               initialIndex: ft ? 1 : 0,
               key: ValueKey(ft),
               child: SafeArea(
@@ -2858,9 +2758,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                         scoreboard,
                         ?momentum,
                         ?shootout,
-                        MatchDetailTabs(
-                          extra: [for (final (label, _) in afterTabs) label],
-                        ),
+                        const MatchDetailTabs(),
                         Expanded(
                           child: TabBarView(
                             children: [
@@ -2872,9 +2770,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                                 )
                               else
                                 timeline,
+                              summary,
                               stats,
                               lineups,
-                              for (final (_, tab) in afterTabs) tab,
                             ],
                           ),
                         ),

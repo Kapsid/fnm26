@@ -5,7 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/domain/services/match/same_day_results.dart';
-import 'package:fnm/features/match/full_time_tabs.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
@@ -119,14 +118,7 @@ void main() {
       final card = find.byKey(MatchSummaryTab.otherMatchesKey);
       await _show(tester, card);
       expect(card, findsOneWidget);
-      // No score card, no still of the ground on the Summary.
-      expect(
-        find.descendant(
-          of: find.byType(MatchSummaryTab),
-          matching: find.byType(GroundStill),
-        ),
-        findsNothing,
-      );
+      // No score card on the Summary.
       for (final s in others) {
         expect(_score(tester, s.fixture.id), enL.matchSummaryLive);
       }

@@ -17239,12 +17239,6 @@ class AppLocalizationsEs extends AppLocalizations {
       'El juego, su código y su contenido están protegidos por derechos de autor.';
 
   @override
-  String get matchTabPlayer => 'JUGADOR';
-
-  @override
-  String get matchTabStadium => 'ESTADIO';
-
-  @override
   String get matchTabSummary => 'RESUMEN';
 
   @override
@@ -17263,52 +17257,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get matchSummaryExtraTimeMark => 'PRÓR.';
 
   @override
-  String get matchPotmNone =>
-      'No se eligió jugador del partido en este encuentro.';
-
-  @override
-  String get matchPotmHisMatch => 'Su partido';
-
-  @override
-  String get matchPotmBeforeMatch => 'Antes de este partido';
-
-  @override
   String get matchStatMinutes => 'Minutos';
 
   @override
   String get matchStatSaves => 'Paradas';
-
-  @override
-  String get matchStatOnTarget => 'A puerta';
-
-  @override
-  String get matchStadiumCapacity => 'Aforo';
-
-  @override
-  String get matchStadiumAttendance => 'Asistencia';
-
-  @override
-  String get matchStadiumFull => 'Ocupación';
-
-  @override
-  String matchStadiumHomeOf(String nation) {
-    return 'Estadio local: $nation';
-  }
-
-  @override
-  String get matchStadiumNeutral => 'Campo neutral';
-
-  @override
-  String get matchStadiumBuilt => 'Construido por tu federación';
-
-  @override
-  String get matchStadiumEnlarged => 'Ampliado por tu federación';
-
-  @override
-  String get matchStadiumWorks => 'Obras en curso en este estadio';
-
-  @override
-  String get matchStadiumConditions => 'Condiciones';
 
   @override
   String editorWebTitle(String address) {

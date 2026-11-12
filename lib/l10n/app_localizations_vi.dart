@@ -16995,12 +16995,6 @@ class AppLocalizationsVi extends AppLocalizations {
       'Trò chơi, mã nguồn và nội dung của trò chơi được bảo vệ bởi luật bản quyền.';
 
   @override
-  String get matchTabPlayer => 'CẦU THỦ';
-
-  @override
-  String get matchTabStadium => 'SÂN';
-
-  @override
   String get matchTabSummary => 'TỔNG QUAN';
 
   @override
@@ -17019,51 +17013,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get matchSummaryExtraTimeMark => 'SAU HP';
 
   @override
-  String get matchPotmNone => 'Trận này không bầu cầu thủ xuất sắc nhất.';
-
-  @override
-  String get matchPotmHisMatch => 'Trận đấu của anh ấy';
-
-  @override
-  String get matchPotmBeforeMatch => 'Trước trận này';
-
-  @override
   String get matchStatMinutes => 'Phút';
 
   @override
   String get matchStatSaves => 'Cứu thua';
-
-  @override
-  String get matchStatOnTarget => 'Trúng đích';
-
-  @override
-  String get matchStadiumCapacity => 'Sức chứa';
-
-  @override
-  String get matchStadiumAttendance => 'Khán giả';
-
-  @override
-  String get matchStadiumFull => 'Lấp đầy';
-
-  @override
-  String matchStadiumHomeOf(String nation) {
-    return 'Sân nhà: $nation';
-  }
-
-  @override
-  String get matchStadiumNeutral => 'Sân trung lập';
-
-  @override
-  String get matchStadiumBuilt => 'Do liên đoàn của bạn xây';
-
-  @override
-  String get matchStadiumEnlarged => 'Do liên đoàn của bạn mở rộng';
-
-  @override
-  String get matchStadiumWorks => 'Sân đang được thi công';
-
-  @override
-  String get matchStadiumConditions => 'Điều kiện';
 
   @override
   String editorWebTitle(String address) {

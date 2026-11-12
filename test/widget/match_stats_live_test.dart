@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/widgets/widgets.dart';
 
 import '../helpers/expect_whole.dart';
 
@@ -208,7 +209,9 @@ void main() {
     expect(_bar(tester, 'REDS'), ('1', '0'));
   });
 
-  testWidgets('the man of the match waits for the whistle', (tester) async {
+  testWidgets('the ratings wait for the whistle; no man of the match card', (
+    tester,
+  ) async {
     // Tall enough for the charts over the match (1.2) and the ratings under
     // them: the list builds only what is on screen.
     await tester.binding.setSurfaceSize(const Size(400, 1400));
@@ -227,10 +230,18 @@ void main() {
     // What waits is stated, rather than left as a gap.
     expect(find.text(l.matchStatsAtFullTime), findsOneWidget);
 
-    // Full time: all of it arrives, and the waiting line goes.
+    // Full time: all of it arrives, and the waiting line goes. The man of
+    // the match is the Summary's card, not a card here: only his row in the
+    // ratings, with its star.
     await pumpStats(tester, minute: 90, fullTime: true);
-    expect(find.text(l.matchPlayerOfTheMatch), findsOneWidget);
-    expect(find.text('Vaclav Hruby · CZE'), findsOneWidget);
+    expect(find.text(l.matchPlayerOfTheMatch), findsNothing);
+    expect(find.text('Vaclav Hruby · CZE'), findsNothing);
+    expect(find.text('Vaclav Hruby'), findsOneWidget);
+    expect(
+      find.byWidgetPredicate((w) => w is RatingBadge && w.motm),
+      findsOneWidget,
+      reason: 'his row in the ratings keeps its star',
+    );
     expect(find.text(l.matchPlayerRatings), findsOneWidget);
     expect(_bar(tester, 'POSSESSION'), ('61%', '39%'));
     expect(find.text(l.matchStatsAtFullTime), findsNothing);
