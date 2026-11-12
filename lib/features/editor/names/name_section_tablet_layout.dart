@@ -65,6 +65,7 @@ class _NameSectionTabletLayout extends StatelessWidget {
             _SearchField(
               state: state,
               horizontal: false,
+              regional: view.regional,
               worldwide: view.worldwide,
             ),
             const SizedBox(height: AppSpacing.md),

@@ -95,16 +95,25 @@ void main() {
       await tester.pump(const Duration(milliseconds: 450));
     });
 
-    testWidgets('press: nothing belongs to a continent', (tester) async {
+    testWidgets('press: every row is worldwide, so no region chips', (
+      tester,
+    ) async {
       final c = await editorContainer(tester);
       final id = await insertPack(tester, c, testPack('Press'));
+      // A region picked in another section does not empty this one.
+      c.read(editorRegionProvider.notifier).state = const EditorRegion(
+        Confederation.europe,
+      );
       await pumpEditorRoute(
         tester,
         c,
         editorSectionLocation(EditorSection.press, id),
       );
-      await _tapChip(tester, _chip(Confederation.europe));
-      expect(find.text(_en.editorRegionNone), findsOneWidget);
+      expect(_chip(null), findsNothing);
+      expect(_chip(Confederation.europe), findsNothing);
+      expect(find.byKey(NameSectionScreen.fixFilterKey), findsOneWidget);
+      expect(find.text(_en.editorRegionNone), findsNothing);
+      expect(find.byKey(NameSectionScreen.rowKey('0')), findsOneWidget);
       await tester.pump(const Duration(milliseconds: 450));
     });
 

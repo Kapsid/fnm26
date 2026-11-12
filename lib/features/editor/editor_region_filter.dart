@@ -58,6 +58,7 @@ Map<int, Confederation> confederationsById(Iterable<Nation> world) => {
 class EditorRegionChips extends ConsumerWidget {
   const EditorRegionChips({
     required this.horizontal,
+    this.regions = true,
     this.worldwide = false,
     this.leading = const [],
     this.padding = EdgeInsets.zero,
@@ -72,6 +73,10 @@ class EditorRegionChips extends ConsumerWidget {
 
   final bool horizontal;
 
+  /// Whether the region chips are shown at all: false for a list with no
+  /// row of any confederation, which shows only [leading].
+  final bool regions;
+
   /// Whether the list has rows of no confederation, so Worldwide is offered.
   final bool worldwide;
   final List<Widget> leading;
@@ -85,14 +90,17 @@ class EditorRegionChips extends ConsumerWidget {
     final picked = ref.watch(editorRegionProvider);
     void pick(EditorRegion? r) =>
         ref.read(editorRegionProvider.notifier).state = r;
-    final regions = <EditorRegion?>[
-      null,
-      for (final c in Confederation.values) EditorRegion(c),
-      if (worldwide || picked == EditorRegion.worldwide) EditorRegion.worldwide,
+    final shown = <EditorRegion?>[
+      if (regions) ...[
+        null,
+        for (final c in Confederation.values) EditorRegion(c),
+        if (worldwide || picked == EditorRegion.worldwide)
+          EditorRegion.worldwide,
+      ],
     ];
     final chips = [
       ...leading,
-      for (final r in regions)
+      for (final r in shown)
         ChoiceChip(
           key: chipKey(r),
           label: Text(switch (r) {

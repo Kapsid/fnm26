@@ -475,8 +475,14 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
     _jump(world);
     final rows = _withAdded(l, _rows(l, world, listsValue), pack);
     final toFix = _toFix(pack, world);
-    final region = ref.watch(editorRegionProvider);
     final confederations = _confederationsOf(world);
+    // A section whose every row is worldwide (the press, the sponsors) has
+    // no region to narrow by: no chips, and the filter does not apply.
+    final regional = rows.groups.any(
+      (g) => g.entries.any((e) => regionOf(e, confederations) != null),
+    );
+    final picked = ref.watch(editorRegionProvider);
+    final region = regional ? picked : null;
     if (_section.grouped) {
       _countries = _countriesOf(rows.groups, region, confederations);
     }
@@ -493,6 +499,7 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
       toFix: toFix,
       language: language,
       region: region,
+      regional: regional,
       worldwide: rows.groups.any(
         (g) => g.entries.any((e) => regionOf(e, confederations) == null),
       ),
@@ -548,6 +555,7 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
             child: _SearchField(
               state: this,
               horizontal: true,
+              regional: view.regional,
               worldwide: view.worldwide,
             ),
           ),
@@ -580,6 +588,7 @@ class _NameView {
     required this.toFix,
     required this.language,
     required this.region,
+    required this.regional,
     required this.worldwide,
   });
 
@@ -589,6 +598,9 @@ class _NameView {
 
   /// The region the list is narrowed to (null: every region).
   final EditorRegion? region;
+
+  /// Whether any row belongs to a confederation: else no region chips.
+  final bool regional;
 
   /// Whether the section has rows of no confederation (Worldwide).
   final bool worldwide;
@@ -601,10 +613,14 @@ class _SearchField extends StatelessWidget {
   const _SearchField({
     required this.state,
     required this.horizontal,
+    required this.regional,
     required this.worldwide,
   });
 
   final _NameSectionScreenState state;
+
+  /// Whether the region chips are shown ([_NameView.regional]).
+  final bool regional;
 
   /// Whether the filter chips scroll in one row (the phone) or wrap.
   final bool horizontal;
@@ -645,6 +661,7 @@ class _SearchField extends StatelessWidget {
         const SizedBox(height: AppSpacing.xs),
         EditorRegionChips(
           horizontal: horizontal,
+          regions: regional,
           worldwide: worldwide,
           leading: [
             FilterChip(
