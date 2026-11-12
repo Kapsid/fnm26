@@ -11,12 +11,14 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/data/seed/seed_source.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_language.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
+import 'package:fnm/features/editor/editor_region_filter.dart';
 import 'package:fnm/features/editor/editor_ui.dart';
 import 'package:fnm/features/editor/names/added_items.dart';
 import 'package:fnm/features/editor/names/name_edit_form.dart';
@@ -50,6 +52,10 @@ part 'name_section_tablet_layout.dart';
 /// [withAddedRows]): under All languages Add makes one and an added row
 /// opens its own form ([AddedItemForm]: edit, delete); under a language an
 /// added row edits only its name there (and a sponsor's description).
+///
+/// Every section is narrowed by the editor's region filter
+/// ([EditorRegionChips]): a row by its own continent (a competition) or its
+/// nation's, and what belongs to neither under Worldwide.
 ///
 /// Opened on [nationId] (a jump from the database home), the search starts
 /// on that nation, and a per-nation section picks it.
@@ -137,13 +143,20 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
   /// What identifies a country heading.
   static String _countryKey(NameGroup g) => g.flagCode ?? g.title ?? '';
 
-  /// The countries [groups] are under, sorted by (translated) name.
+  /// The countries [groups] are under, sorted by (translated) name: those
+  /// of the [region] picked only.
   List<({String key, String title, String? flagCode})> _countriesOf(
     List<NameGroup> groups,
+    EditorRegion? region,
+    Map<int, Confederation> confederations,
   ) {
     final out = [
       for (final g in groups)
-        if (g.title != null)
+        if (g.title != null &&
+            (region == null ||
+                g.entries.any(
+                  (e) => region.holds(regionOf(e, confederations)),
+                )))
           (key: _countryKey(g), title: g.title!, flagCode: g.flagCode),
     ]..sort((a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()));
     return out;
@@ -225,6 +238,16 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
           );
   }
 
+  List<Nation>? _confederationsFor;
+  Map<int, Confederation> _confederations = const {};
+
+  /// Each nation's confederation, once per world.
+  Map<int, Confederation> _confederationsOf(List<Nation> world) {
+    if (identical(world, _confederationsFor)) return _confederations;
+    _confederationsFor = world;
+    return _confederations = confederationsById(world);
+  }
+
   WorldPack? _issuesOf;
   Map<String, int> _issues = const {};
 
@@ -257,12 +280,19 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
     List<NameGroup> groups,
     WorldPack pack,
     String? language,
-    Map<String, int> toFix,
-  ) {
+    Map<String, int> toFix, {
+    required EditorRegion? region,
+    required Map<int, Confederation> confederations,
+  }) {
     final q = searchFold(_query);
     final country = _country;
-    if (q.isEmpty && !_onlyFix && country == null) return groups;
+    if (q.isEmpty && !_onlyFix && country == null && region == null) {
+      return groups;
+    }
     bool hit(NameEntry e) {
+      if (!editorRegionShows(region, regionOf(e, confederations))) {
+        return false;
+      }
       if (_onlyFix && (toFix[e.key] ?? 0) == 0) return false;
       if (q.isEmpty) return true;
       if (e.fold.contains(q)) return true;
@@ -445,12 +475,27 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
     _jump(world);
     final rows = _withAdded(l, _rows(l, world, listsValue), pack);
     final toFix = _toFix(pack, world);
-    if (_section.grouped) _countries = _countriesOf(rows.groups);
+    final region = ref.watch(editorRegionProvider);
+    final confederations = _confederationsOf(world);
+    if (_section.grouped) {
+      _countries = _countriesOf(rows.groups, region, confederations);
+    }
     final view = _NameView(
       pack: pack,
-      groups: _filter(rows.groups, pack, language, toFix),
+      groups: _filter(
+        rows.groups,
+        pack,
+        language,
+        toFix,
+        region: region,
+        confederations: confederations,
+      ),
       toFix: toFix,
       language: language,
+      region: region,
+      worldwide: rows.groups.any(
+        (g) => g.entries.any((e) => regionOf(e, confederations) == null),
+      ),
     );
     void undo() => editor.undo();
     final onUndo = editor.canUndo ? undo : null;
@@ -500,7 +545,11 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
               AppSpacing.marginMobile,
               AppSpacing.sm,
             ),
-            child: _SearchField(state: this),
+            child: _SearchField(
+              state: this,
+              horizontal: true,
+              worldwide: view.worldwide,
+            ),
           ),
           Expanded(
             child: _NameList(
@@ -530,20 +579,38 @@ class _NameView {
     required this.groups,
     required this.toFix,
     required this.language,
+    required this.region,
+    required this.worldwide,
   });
 
   final WorldPack pack;
   final List<NameGroup> groups;
   final Map<String, int> toFix;
 
+  /// The region the list is narrowed to (null: every region).
+  final EditorRegion? region;
+
+  /// Whether the section has rows of no confederation (Worldwide).
+  final bool worldwide;
+
   /// The editor's language, or null for All languages (and the name lists).
   final String? language;
 }
 
 class _SearchField extends StatelessWidget {
-  const _SearchField({required this.state});
+  const _SearchField({
+    required this.state,
+    required this.horizontal,
+    required this.worldwide,
+  });
 
   final _NameSectionScreenState state;
+
+  /// Whether the filter chips scroll in one row (the phone) or wrap.
+  final bool horizontal;
+
+  /// Whether the region filter offers Worldwide.
+  final bool worldwide;
 
   @override
   Widget build(BuildContext context) {
@@ -576,9 +643,10 @@ class _SearchField extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.xs),
-        Wrap(
-          spacing: AppSpacing.sm,
-          children: [
+        EditorRegionChips(
+          horizontal: horizontal,
+          worldwide: worldwide,
+          leading: [
             FilterChip(
               key: NameSectionScreen.fixFilterKey,
               label: Text(l.editorFilterToFix),
@@ -787,6 +855,11 @@ class _NameList extends StatelessWidget {
                     l.editorNothingToFix,
                     icon: Icons.check_circle_outline,
                   )
+                : view.region != null &&
+                      state._query.isEmpty &&
+                      !state._onlyFix &&
+                      state._country == null
+                ? EditorMessage(l.editorRegionNone, icon: Icons.public_off)
                 : EditorMessage(l.editorNamesNone, icon: Icons.search_off),
           ),
         // Padded inside, not by a SliverPadding: a pinned heading in a

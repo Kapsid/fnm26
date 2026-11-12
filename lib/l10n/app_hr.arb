@@ -4350,5 +4350,15 @@
   "editorHistoryDeleteBody": "Uklanja se iz povijesti. Sama baza podataka se ne mijenja.",
   "financesTabDepartments": "Odjeli",
   "financesTabFacilities": "Objekti",
-  "financesInvestedSoFar": "Dosad uloženo"
+  "financesInvestedSoFar": "Dosad uloženo",
+  "editorRankingTitle": "Svjetska ljestvica",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Automatski",
+  "editorRankingAutoPlace": "Automatski (#{rank})",
+  "editorRankingAbout": "Gdje ova reprezentacija počinje novu karijeru na svjetskoj ljestvici. Automatski prati snagu njezine momčadi.",
+  "editorRankingHint": "{min} do {max}",
+  "editorRankingOf": "{nation}: svjetska ljestvica",
+  "editorIssueRanking": "Unesite mjesto na svjetskoj ljestvici od {min} do {max}.",
+  "editorRegionWorldwide": "Cijeli svijet",
+  "editorRegionNone": "Za ovu regiju ovdje nema ničega."
 }

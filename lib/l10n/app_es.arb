@@ -4350,5 +4350,15 @@
   "editorHistoryDeleteBody": "Se quita del historial. La base de datos en sí no cambia.",
   "financesTabDepartments": "Departamentos",
   "financesTabFacilities": "Instalaciones",
-  "financesInvestedSoFar": "Invertido hasta ahora"
+  "financesInvestedSoFar": "Invertido hasta ahora",
+  "editorRankingTitle": "Ranking mundial",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Automático",
+  "editorRankingAutoPlace": "Automático (#{rank})",
+  "editorRankingAbout": "Dónde empieza esta selección una nueva carrera en el ranking mundial. Automático sigue la fuerza de su plantilla.",
+  "editorRankingHint": "{min} a {max}",
+  "editorRankingOf": "{nation}: ranking mundial",
+  "editorIssueRanking": "Indica un puesto del ranking mundial entre {min} y {max}.",
+  "editorRegionWorldwide": "Todo el mundo",
+  "editorRegionNone": "No hay nada para esta región."
 }

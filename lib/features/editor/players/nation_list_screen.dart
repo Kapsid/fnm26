@@ -15,6 +15,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
+import 'package:fnm/features/editor/editor_region_filter.dart';
 import 'package:fnm/features/editor/editor_ui.dart';
 import 'package:fnm/features/editor/pack_issue_text.dart';
 import 'package:fnm/features/editor/players/players_ui.dart';
@@ -25,9 +26,9 @@ import 'package:go_router/go_router.dart';
 part 'nation_list_tablet_layout.dart';
 
 /// The players section of a database: every nation, with a search (by the
-/// name the database gives it, the game's name or its code), confederation
-/// filter chips and a mark saying whether its squad is ready. A nation opens
-/// its squad.
+/// name the database gives it, the game's name or its code), the editor's
+/// region filter ([EditorRegionChips]) and a mark saying whether its squad
+/// is ready. A nation opens its squad.
 class NationListScreen extends ConsumerStatefulWidget {
   const NationListScreen({required this.packId, super.key});
 
@@ -38,8 +39,10 @@ class NationListScreen extends ConsumerStatefulWidget {
   static const Key fixFilterKey = Key('editorNations.fixFilter');
 
   static Key nationKey(int id) => Key('editorNations.nation.$id');
+
+  /// The region chip of confederation [c] (null: All).
   static Key confKey(Confederation? c) =>
-      Key('editorNations.conf.${c?.name ?? 'all'}');
+      EditorRegionChips.chipKey(c == null ? null : EditorRegion(c));
 
   final int packId;
 
@@ -65,7 +68,6 @@ typedef _NationRow = ({
 class _NationListScreenState extends ConsumerState<NationListScreen> {
   final _search = TextEditingController();
   String _query = '';
-  Confederation? _conf;
 
   /// Whether only the nations that still need a fix are listed.
   bool _onlyFix = false;
@@ -82,14 +84,14 @@ class _NationListScreenState extends ConsumerState<NationListScreen> {
 
   void _setQuery(String q) => setState(() => _query = q);
 
-  void _setConf(Confederation? c) => setState(() => _conf = c);
-
   void _setOnlyFix(bool on) => setState(() => _onlyFix = on);
 
   /// What an empty list says: that nothing needs fixing, or that nothing
   /// matches the search.
   Widget _nothingShown(AppLocalizations l) => _onlyFix && _query.isEmpty
       ? EditorMessage(l.editorNothingToFix, icon: Icons.check_circle_outline)
+      : _query.isEmpty
+      ? EditorMessage(l.editorRegionNone, icon: Icons.public_off)
       : EditorMessage(l.editorNationsNone, icon: Icons.search_off);
 
   void _open(int nationId) =>
@@ -130,11 +132,11 @@ class _NationListScreenState extends ConsumerState<NationListScreen> {
     return _rowsCache = rows;
   }
 
-  List<_NationRow> _filter(List<_NationRow> rows) {
+  List<_NationRow> _filter(List<_NationRow> rows, EditorRegion? region) {
     final q = searchFold(_query);
     return [
       for (final r in rows)
-        if ((_conf == null || r.nation.confederation == _conf) &&
+        if (editorRegionShows(region, r.nation.confederation) &&
             (!_onlyFix || r.toFix > 0) &&
             (q.isEmpty || r.searchKeys.any((k) => k.contains(q))))
           r,
@@ -162,7 +164,7 @@ class _NationListScreenState extends ConsumerState<NationListScreen> {
       );
     }
 
-    final rows = _filter(_rows(p, editor));
+    final rows = _filter(_rows(p, editor), ref.watch(editorRegionProvider));
     if (tablet) {
       return _NationListTabletLayout(state: this, title: title, rows: rows);
     }
@@ -183,10 +185,7 @@ class _NationListScreenState extends ConsumerState<NationListScreen> {
             ),
             child: _SearchField(state: this),
           ),
-          SizedBox(
-            height: 48,
-            child: _ConfChips(state: this, horizontal: true),
-          ),
+          _ConfChips(state: this, horizontal: true),
           Expanded(
             child: rows.isEmpty
                 ? _nothingShown(l)
@@ -245,7 +244,7 @@ class _SearchField extends StatelessWidget {
   }
 }
 
-/// "All" and one chip per confederation.
+/// The To fix chip, then the editor's region filter ([EditorRegionChips]).
 class _ConfChips extends StatelessWidget {
   const _ConfChips({required this.state, required this.horizontal});
 
@@ -257,38 +256,18 @@ class _ConfChips extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final chips = [
-      FilterChip(
-        key: NationListScreen.fixFilterKey,
-        label: Text(l.editorFilterToFix),
-        avatar: const Icon(Icons.pending_outlined, size: 16),
-        selected: state._onlyFix,
-        onSelected: state._setOnlyFix,
-      ),
-      for (final c in <Confederation?>[null, ...Confederation.values])
-        ChoiceChip(
-          key: NationListScreen.confKey(c),
-          label: Text(c == null ? l.editorFilterAll : confederationLabel(l, c)),
-          selected: state._conf == c,
-          onSelected: (_) => state._setConf(c),
+    return EditorRegionChips(
+      horizontal: horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.marginMobile),
+      leading: [
+        FilterChip(
+          key: NationListScreen.fixFilterKey,
+          label: Text(l.editorFilterToFix),
+          avatar: const Icon(Icons.pending_outlined, size: 16),
+          selected: state._onlyFix,
+          onSelected: state._setOnlyFix,
         ),
-    ];
-    if (!horizontal) {
-      return Wrap(
-        spacing: AppSpacing.xs,
-        runSpacing: AppSpacing.xs,
-        children: chips,
-      );
-    }
-    return ListView.separated(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.marginMobile,
-        vertical: AppSpacing.xs,
-      ),
-      itemCount: chips.length,
-      separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.xs),
-      itemBuilder: (_, i) => chips[i],
+      ],
     );
   }
 }

@@ -122,7 +122,12 @@ class NameEntry {
     this.surnames = const [],
     this.addedId,
     this.clubCountry,
+    this.confederation,
   });
+
+  /// The confederation a row belongs to by itself (a continent's
+  /// competition); a row of a nation belongs to its nation's ([regionOf]).
+  final Confederation? confederation;
 
   /// The lower-case FIFA code of the country a club row's club plays in
   /// (clubs only): what its default strength is read off.
@@ -162,6 +167,11 @@ class NameEntry {
   /// Everything the search matches before any rename, folded.
   final String fold;
 }
+
+/// The confederation row [e] belongs to: its own, else its nation's in
+/// [confederations] (by nation id); null for one of none (worldwide).
+Confederation? regionOf(NameEntry e, Map<int, Confederation> confederations) =>
+    e.confederation ?? confederations[e.nationId];
 
 /// A run of rows under one heading (a country), or under none.
 typedef NameGroup = ({
@@ -302,6 +312,7 @@ List<NameGroup> nameGroups(
               NameEntry(
                 key: s,
                 original: competitionLabel(l, s),
+                confederation: conf,
                 detail: conf == null ? null : confederationLabel(l, conf),
                 fold: fold([
                   competitionLabel(l, s),

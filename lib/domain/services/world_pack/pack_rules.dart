@@ -196,6 +196,15 @@ abstract final class PackRules {
   /// 1 600 clubs; this only bounds a hostile file.
   static const clubStrengthsMax = 5000;
 
+  /// The places a nation's starting world ranking may be set to, both ends
+  /// included (format 7). The game has about 210 nations; a place past the
+  /// world's last is read as the last (`PackRanking.withPinned`).
+  static const rankingMin = 1, rankingMax = 300;
+
+  /// Whether [rank] is a place a nation's starting ranking can be set to.
+  static bool rankingValid(int rank) =>
+      rank >= rankingMin && rank <= rankingMax;
+
   /// Longest added sponsor description.
   static const descriptionMax = 120;
 
@@ -498,6 +507,11 @@ abstract final class PackRules {
       }
     }
     _managers(p, out, baseCodes);
+    for (final id in p.rankings.keys.toList()..sort()) {
+      if (!rankingValid(p.rankings[id]!)) {
+        out.add(BadField('rankings.$id', FieldReason.outOfRange));
+      }
+    }
     _added(p, out, name, countryCities);
     _localized(p, out);
     _yLanguageClashes(p, out);
@@ -970,10 +984,10 @@ abstract final class PackRules {
   }
 
   /// What in [p] the current game no longer has: every override keyed by a
-  /// nation id outside [nationIds] (squads, nations, stadiums, name lists),
-  /// a competition outside [competitionNames], a trophy outside
-  /// [trophyKeys], a sponsor outside [sponsorBrands] and a Y account outside
-  /// [yAccounts], each as an [UnknownId] at its entry's path.
+  /// nation id outside [nationIds] (squads, nations, stadiums, name lists,
+  /// managers, rankings), a competition outside [competitionNames], a trophy
+  /// outside [trophyKeys], a sponsor outside [sponsorBrands] and a Y account
+  /// outside [yAccounts], each as an [UnknownId] at its entry's path.
   ///
   /// Format 2's parts likewise: a pool keyed by an unknown nation
   /// (`pools.<id>`), a pool's fringe id outside its own nation's range in
@@ -1027,6 +1041,7 @@ abstract final class PackRules {
     }
     ids('nameLists', p.nameLists.keys);
     ids('managers', p.managers.keys);
+    ids('rankings', p.rankings.keys);
     names('competitions', p.competitions.keys, competitionNames);
     names('yAccounts', p.yAccounts.keys, yAccounts);
     names('sponsors', p.sponsors.keys, sponsorBrands);

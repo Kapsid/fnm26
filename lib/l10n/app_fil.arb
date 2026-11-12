@@ -4350,5 +4350,15 @@
   "editorHistoryDeleteBody": "Aalisin ito sa history. Hindi magbabago ang mismong database.",
   "financesTabDepartments": "Mga departamento",
   "financesTabFacilities": "Mga pasilidad",
-  "financesInvestedSoFar": "Naipuhunan na"
+  "financesInvestedSoFar": "Naipuhunan na",
+  "editorRankingTitle": "Pandaigdigang ranking",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Awtomatiko",
+  "editorRankingAutoPlace": "Awtomatiko (#{rank})",
+  "editorRankingAbout": "Kung saan nagsisimula ang bansang ito sa bagong karera sa pandaigdigang ranking. Sinusunod ng awtomatiko ang lakas ng squad nito.",
+  "editorRankingHint": "{min} hanggang {max}",
+  "editorRankingOf": "{nation}: pandaigdigang ranking",
+  "editorIssueRanking": "Maglagay ng puwesto sa pandaigdigang ranking mula {min} hanggang {max}.",
+  "editorRegionWorldwide": "Pandaigdig",
+  "editorRegionNone": "Walang laman para sa rehiyong ito."
 }

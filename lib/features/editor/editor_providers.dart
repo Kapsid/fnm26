@@ -86,7 +86,7 @@ enum EditorSection {
   /// old rename, the `localized` cap, anything a newer game writes) is
   /// [none]: the home, where it is listed, never a guessed section.
   static EditorSection ofPath(String path) => switch (path.split('.').first) {
-    'squads' || 'pools' => players,
+    'squads' || 'pools' || 'rankings' => players,
     'nations' => none,
     'clubs' || 'addedClubs' => clubs,
     'stadiums' || 'addedStadiums' => stadiums,
@@ -738,7 +738,8 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
   /// [p] without exactly the entry the [UnknownId] path [path] names, or
   /// [p] itself (identical) when it names nothing the pack has:
   ///
-  /// - a nation's squad, nation entry, name list, day-one manager or pool, a
+  /// - a nation's squad, nation entry, name list, day-one manager, starting
+  ///   ranking or pool, a
   ///   stadium, competition, Y account or sponsor rename;
   /// - a pool player (`pools.<n>.<id>`);
   /// - an added club, sponsor, Y account, reporter or stadium, with every
@@ -876,6 +877,8 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
         return p.copyWith(nameLists: without(p.nameLists, id));
       case 'managers' when id != null && p.managers.containsKey(id):
         return p.copyWith(managers: without(p.managers, id));
+      case 'rankings' when id != null && p.rankings.containsKey(id):
+        return p.copyWith(rankings: without(p.rankings, id));
       case 'stadiums' when p.stadiums.containsKey(key):
         return p.copyWith(stadiums: without(p.stadiums, key));
       case 'competitions' when p.competitions.containsKey(key):

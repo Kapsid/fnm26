@@ -4350,5 +4350,15 @@
   "editorHistoryDeleteBody": "Eltűnik az előzményekből. Maga az adatbázis nem változik.",
   "financesTabDepartments": "Részlegek",
   "financesTabFacilities": "Létesítmények",
-  "financesInvestedSoFar": "Eddig befektetve"
+  "financesInvestedSoFar": "Eddig befektetve",
+  "editorRankingTitle": "Világranglista",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Automatikus",
+  "editorRankingAutoPlace": "Automatikus (#{rank})",
+  "editorRankingAbout": "Hol kezdi ez a nemzet az új karriert a világranglistán. Az automatikus a keret erejét követi.",
+  "editorRankingHint": "{min}–{max}",
+  "editorRankingOf": "{nation}: Világranglista",
+  "editorIssueRanking": "Adj meg egy világranglista-helyet {min} és {max} között.",
+  "editorRegionWorldwide": "Világszerte",
+  "editorRegionNone": "Ebben a régióban itt nincs semmi."
 }

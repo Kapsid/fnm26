@@ -17514,4 +17514,45 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Инвестирано досега';
+
+  @override
+  String get editorRankingTitle => 'Световна ранглиста';
+
+  @override
+  String editorRankingPlace(int rank) {
+    return '#$rank';
+  }
+
+  @override
+  String get editorRankingAuto => 'Автоматично';
+
+  @override
+  String editorRankingAutoPlace(int rank) {
+    return 'Автоматично (#$rank)';
+  }
+
+  @override
+  String get editorRankingAbout =>
+      'Къде започва този национален отбор нова кариера в световната ранглиста. Автоматично следва силата на състава му.';
+
+  @override
+  String editorRankingHint(int min, int max) {
+    return 'от $min до $max';
+  }
+
+  @override
+  String editorRankingOf(String nation) {
+    return '$nation: световна ранглиста';
+  }
+
+  @override
+  String editorIssueRanking(int min, int max) {
+    return 'Задайте място в световната ранглиста от $min до $max.';
+  }
+
+  @override
+  String get editorRegionWorldwide => 'Световно';
+
+  @override
+  String get editorRegionNone => 'Няма нищо за този регион.';
 }

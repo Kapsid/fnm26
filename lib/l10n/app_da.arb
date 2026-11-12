@@ -4350,5 +4350,15 @@
   "editorHistoryDeleteBody": "Den fjernes fra historikken. Selve databasen ændres ikke.",
   "financesTabDepartments": "Afdelinger",
   "financesTabFacilities": "Faciliteter",
-  "financesInvestedSoFar": "Investeret indtil nu"
+  "financesInvestedSoFar": "Investeret indtil nu",
+  "editorRankingTitle": "Verdensranglisten",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Automatisk",
+  "editorRankingAutoPlace": "Automatisk (#{rank})",
+  "editorRankingAbout": "Hvor denne nation starter en ny karriere på verdensranglisten. Automatisk følger styrken i dens trup.",
+  "editorRankingHint": "{min} til {max}",
+  "editorRankingOf": "{nation}: verdensranglisten",
+  "editorIssueRanking": "Angiv en placering på verdensranglisten fra {min} til {max}.",
+  "editorRegionWorldwide": "Hele verden",
+  "editorRegionNone": "Intet her for denne region."
 }

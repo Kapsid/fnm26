@@ -4350,5 +4350,15 @@
   "editorHistoryDeleteBody": "Den tas bort från historiken. Själva databasen ändras inte.",
   "financesTabDepartments": "Avdelningar",
   "financesTabFacilities": "Anläggningar",
-  "financesInvestedSoFar": "Investerat hittills"
+  "financesInvestedSoFar": "Investerat hittills",
+  "editorRankingTitle": "Världsranking",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Automatiskt",
+  "editorRankingAutoPlace": "Automatiskt (#{rank})",
+  "editorRankingAbout": "Var den här nationen börjar en ny karriär på världsrankingen. Automatiskt följer truppens styrka.",
+  "editorRankingHint": "{min} till {max}",
+  "editorRankingOf": "{nation}: världsranking",
+  "editorIssueRanking": "Ange en placering på världsrankingen från {min} till {max}.",
+  "editorRegionWorldwide": "Hela världen",
+  "editorRegionNone": "Inget här för den här regionen."
 }

@@ -4350,5 +4350,15 @@
   "editorHistoryDeleteBody": "Phiên bản bị gỡ khỏi lịch sử. Bản thân cơ sở dữ liệu không đổi.",
   "financesTabDepartments": "Bộ phận",
   "financesTabFacilities": "Cơ sở vật chất",
-  "financesInvestedSoFar": "Đã đầu tư đến nay"
+  "financesInvestedSoFar": "Đã đầu tư đến nay",
+  "editorRankingTitle": "Bảng xếp hạng thế giới",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Tự động",
+  "editorRankingAutoPlace": "Tự động (#{rank})",
+  "editorRankingAbout": "Vị trí của đội tuyển này trên bảng xếp hạng thế giới khi bắt đầu sự nghiệp mới. Tự động dựa theo sức mạnh đội hình.",
+  "editorRankingHint": "{min} đến {max}",
+  "editorRankingOf": "{nation}: bảng xếp hạng thế giới",
+  "editorIssueRanking": "Đặt vị trí trên bảng xếp hạng thế giới từ {min} đến {max}.",
+  "editorRegionWorldwide": "Toàn cầu",
+  "editorRegionNone": "Không có gì cho khu vực này."
 }

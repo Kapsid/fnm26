@@ -17276,4 +17276,45 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Đã đầu tư đến nay';
+
+  @override
+  String get editorRankingTitle => 'Bảng xếp hạng thế giới';
+
+  @override
+  String editorRankingPlace(int rank) {
+    return '#$rank';
+  }
+
+  @override
+  String get editorRankingAuto => 'Tự động';
+
+  @override
+  String editorRankingAutoPlace(int rank) {
+    return 'Tự động (#$rank)';
+  }
+
+  @override
+  String get editorRankingAbout =>
+      'Vị trí của đội tuyển này trên bảng xếp hạng thế giới khi bắt đầu sự nghiệp mới. Tự động dựa theo sức mạnh đội hình.';
+
+  @override
+  String editorRankingHint(int min, int max) {
+    return '$min đến $max';
+  }
+
+  @override
+  String editorRankingOf(String nation) {
+    return '$nation: bảng xếp hạng thế giới';
+  }
+
+  @override
+  String editorIssueRanking(int min, int max) {
+    return 'Đặt vị trí trên bảng xếp hạng thế giới từ $min đến $max.';
+  }
+
+  @override
+  String get editorRegionWorldwide => 'Toàn cầu';
+
+  @override
+  String get editorRegionNone => 'Không có gì cho khu vực này.';
 }

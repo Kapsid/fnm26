@@ -17821,4 +17821,45 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Dosud investováno';
+
+  @override
+  String get editorRankingTitle => 'Světový žebříček';
+
+  @override
+  String editorRankingPlace(int rank) {
+    return '#$rank';
+  }
+
+  @override
+  String get editorRankingAuto => 'Automaticky';
+
+  @override
+  String editorRankingAutoPlace(int rank) {
+    return 'Automaticky (#$rank)';
+  }
+
+  @override
+  String get editorRankingAbout =>
+      'Kde tento národ začíná novou kariéru ve světovém žebříčku. Automaticky se řídí silou jeho kádru.';
+
+  @override
+  String editorRankingHint(int min, int max) {
+    return '$min až $max';
+  }
+
+  @override
+  String editorRankingOf(String nation) {
+    return '$nation: světový žebříček';
+  }
+
+  @override
+  String editorIssueRanking(int min, int max) {
+    return 'Zadejte místo ve světovém žebříčku od $min do $max.';
+  }
+
+  @override
+  String get editorRegionWorldwide => 'Celosvětově';
+
+  @override
+  String get editorRegionNone => 'Pro tento region tu nic není.';
 }

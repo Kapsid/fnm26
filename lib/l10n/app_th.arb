@@ -4350,5 +4350,15 @@
   "editorHistoryDeleteBody": "เวอร์ชันนี้จะถูกลบออกจากประวัติ ตัวฐานข้อมูลไม่เปลี่ยนแปลง",
   "financesTabDepartments": "แผนก",
   "financesTabFacilities": "สิ่งอำนวยความสะดวก",
-  "financesInvestedSoFar": "ลงทุนไปแล้ว"
+  "financesInvestedSoFar": "ลงทุนไปแล้ว",
+  "editorRankingTitle": "อันดับโลก",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "อัตโนมัติ",
+  "editorRankingAutoPlace": "อัตโนมัติ (#{rank})",
+  "editorRankingAbout": "อันดับโลกของชาตินี้เมื่อเริ่มอาชีพใหม่ อัตโนมัติจะเป็นไปตามความแข็งแกร่งของทีม",
+  "editorRankingHint": "{min} ถึง {max}",
+  "editorRankingOf": "{nation}: อันดับโลก",
+  "editorIssueRanking": "กำหนดอันดับโลกตั้งแต่ {min} ถึง {max}",
+  "editorRegionWorldwide": "ทั่วโลก",
+  "editorRegionNone": "ไม่มีรายการสำหรับภูมิภาคนี้"
 }

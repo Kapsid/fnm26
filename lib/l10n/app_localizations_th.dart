@@ -17124,4 +17124,45 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'ลงทุนไปแล้ว';
+
+  @override
+  String get editorRankingTitle => 'อันดับโลก';
+
+  @override
+  String editorRankingPlace(int rank) {
+    return '#$rank';
+  }
+
+  @override
+  String get editorRankingAuto => 'อัตโนมัติ';
+
+  @override
+  String editorRankingAutoPlace(int rank) {
+    return 'อัตโนมัติ (#$rank)';
+  }
+
+  @override
+  String get editorRankingAbout =>
+      'อันดับโลกของชาตินี้เมื่อเริ่มอาชีพใหม่ อัตโนมัติจะเป็นไปตามความแข็งแกร่งของทีม';
+
+  @override
+  String editorRankingHint(int min, int max) {
+    return '$min ถึง $max';
+  }
+
+  @override
+  String editorRankingOf(String nation) {
+    return '$nation: อันดับโลก';
+  }
+
+  @override
+  String editorIssueRanking(int min, int max) {
+    return 'กำหนดอันดับโลกตั้งแต่ $min ถึง $max';
+  }
+
+  @override
+  String get editorRegionWorldwide => 'ทั่วโลก';
+
+  @override
+  String get editorRegionNone => 'ไม่มีรายการสำหรับภูมิภาคนี้';
 }

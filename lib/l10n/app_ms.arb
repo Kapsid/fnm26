@@ -4350,5 +4350,15 @@
   "editorHistoryDeleteBody": "Ia dibuang daripada sejarah. Pangkalan data itu sendiri tidak berubah.",
   "financesTabDepartments": "Jabatan",
   "financesTabFacilities": "Kemudahan",
-  "financesInvestedSoFar": "Dilaburkan setakat ini"
+  "financesInvestedSoFar": "Dilaburkan setakat ini",
+  "editorRankingTitle": "Ranking dunia",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Automatik",
+  "editorRankingAutoPlace": "Automatik (#{rank})",
+  "editorRankingAbout": "Kedudukan negara ini dalam ranking dunia apabila kerjaya baharu bermula. Automatik mengikut kekuatan skuadnya.",
+  "editorRankingHint": "{min} hingga {max}",
+  "editorRankingOf": "{nation}: ranking dunia",
+  "editorIssueRanking": "Tetapkan kedudukan ranking dunia dari {min} hingga {max}.",
+  "editorRegionWorldwide": "Seluruh dunia",
+  "editorRegionNone": "Tiada apa-apa di sini untuk rantau ini."
 }

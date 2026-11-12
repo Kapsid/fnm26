@@ -17769,4 +17769,45 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Dosad uloženo';
+
+  @override
+  String get editorRankingTitle => 'Svjetska ljestvica';
+
+  @override
+  String editorRankingPlace(int rank) {
+    return '#$rank';
+  }
+
+  @override
+  String get editorRankingAuto => 'Automatski';
+
+  @override
+  String editorRankingAutoPlace(int rank) {
+    return 'Automatski (#$rank)';
+  }
+
+  @override
+  String get editorRankingAbout =>
+      'Gdje ova reprezentacija počinje novu karijeru na svjetskoj ljestvici. Automatski prati snagu njezine momčadi.';
+
+  @override
+  String editorRankingHint(int min, int max) {
+    return '$min do $max';
+  }
+
+  @override
+  String editorRankingOf(String nation) {
+    return '$nation: svjetska ljestvica';
+  }
+
+  @override
+  String editorIssueRanking(int min, int max) {
+    return 'Unesite mjesto na svjetskoj ljestvici od $min do $max.';
+  }
+
+  @override
+  String get editorRegionWorldwide => 'Cijeli svijet';
+
+  @override
+  String get editorRegionNone => 'Za ovu regiju ovdje nema ničega.';
 }

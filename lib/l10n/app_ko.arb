@@ -4350,5 +4350,15 @@
   "editorHistoryDeleteBody": "기록에서 삭제됩니다. 데이터베이스 자체는 바뀌지 않습니다.",
   "financesTabDepartments": "부서",
   "financesTabFacilities": "시설",
-  "financesInvestedSoFar": "지금까지 투자액"
+  "financesInvestedSoFar": "지금까지 투자액",
+  "editorRankingTitle": "세계 랭킹",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "자동",
+  "editorRankingAutoPlace": "자동 (#{rank})",
+  "editorRankingAbout": "새 커리어를 시작할 때 이 국가의 세계 랭킹 순위입니다. 자동은 스쿼드 전력을 따릅니다.",
+  "editorRankingHint": "{min}~{max}",
+  "editorRankingOf": "{nation}: 세계 랭킹",
+  "editorIssueRanking": "세계 랭킹 순위를 {min}~{max} 사이로 정하세요.",
+  "editorRegionWorldwide": "전 세계",
+  "editorRegionNone": "이 지역에는 아무것도 없습니다."
 }

@@ -7,7 +7,8 @@ import 'package:fnm/domain/services/world_pack/world_pack.dart';
 
 /// The starting world ranking of a career on a world pack: the default
 /// ranking, moved by how much stronger (or weaker) each nation's squad is in
-/// the pack than in the default world.
+/// the pack than in the default world, with every nation whose place the
+/// pack sets ([WorldPack.rankings]) on that place.
 abstract final class PackRanking {
   /// How many of a squad's best players its strength counts.
   static const int strengthDepth = 18;
@@ -74,4 +75,62 @@ abstract final class PackRanking {
     }
     return out;
   }
+
+  /// [ranks] (nation id -> place, as [startingRanks] gives them) with each
+  /// nation of [pinned] it holds on its pinned place, and the others
+  /// filling the places left, in their order in [ranks].
+  ///
+  /// A pinned place past the last nation is read as the last. Two nations
+  /// pinned to one place share it, as the base ranking lets two nations
+  /// share one. [ranks] itself when nothing it holds is pinned.
+  static Map<int, int> withPinned(Map<int, int> ranks, Map<int, int> pinned) {
+    final pins = {
+      for (final e in pinned.entries)
+        if (ranks.containsKey(e.key)) e.key: e.value.clamp(1, ranks.length),
+    };
+    if (pins.isEmpty) return ranks;
+    final taken = pins.values.toSet();
+    final rest =
+        [
+          for (final id in ranks.keys)
+            if (!pins.containsKey(id)) id,
+        ]..sort((a, b) {
+          final c = ranks[a]!.compareTo(ranks[b]!);
+          return c != 0 ? c : a.compareTo(b);
+        });
+    final out = <int, int>{...pins};
+    var place = 0;
+    int? previousRank;
+    int? previousPlace;
+    for (final id in rest) {
+      // Nations sharing a place in [ranks] still share one.
+      if (previousRank != null && ranks[id] == previousRank) {
+        out[id] = previousPlace!;
+        continue;
+      }
+      do {
+        place++;
+      } while (taken.contains(place));
+      out[id] = place;
+      previousRank = ranks[id];
+      previousPlace = place;
+    }
+    return out;
+  }
+
+  /// The starting ranks of a career on [pack]: [startingRanks] of its
+  /// squads against [baseRanks] and [defaultStrength], then [withPinned]
+  /// by the places it sets.
+  static Map<int, int> forPack(
+    WorldPack pack, {
+    required Map<int, int> baseRanks,
+    required Map<int, int> defaultStrength,
+  }) => withPinned(
+    startingRanks(
+      baseRanks: baseRanks,
+      defaultStrength: defaultStrength,
+      packStrength: squadStrengths(pack.squads),
+    ),
+    pack.rankings,
+  );
 }

@@ -4350,5 +4350,15 @@
   "editorHistoryDeleteBody": "Її буде прибрано з історії. Сама база даних не зміниться.",
   "financesTabDepartments": "Відділи",
   "financesTabFacilities": "Інфраструктура",
-  "financesInvestedSoFar": "Інвестовано досі"
+  "financesInvestedSoFar": "Інвестовано досі",
+  "editorRankingTitle": "Світовий рейтинг",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Автоматично",
+  "editorRankingAutoPlace": "Автоматично (#{rank})",
+  "editorRankingAbout": "Місце цієї збірної у світовому рейтингу на старті нової кар'єри. Автоматично залежить від сили її складу.",
+  "editorRankingHint": "від {min} до {max}",
+  "editorRankingOf": "{nation}: світовий рейтинг",
+  "editorIssueRanking": "Вкажіть місце у світовому рейтингу від {min} до {max}.",
+  "editorRegionWorldwide": "Увесь світ",
+  "editorRegionNone": "Для цього регіону тут нічого немає."
 }

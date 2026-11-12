@@ -268,6 +268,7 @@ abstract final class PackCodec {
     if (p.squads.values.any((s) => s.length > maxPlayersPerNation)) {
       return false;
     }
+    if (p.rankings.length > maxPoolNations) return false;
     if (p.pools.length > maxPoolNations ||
         p.pools.values.any((s) => s.length > PackRules.poolMax)) {
       return false;

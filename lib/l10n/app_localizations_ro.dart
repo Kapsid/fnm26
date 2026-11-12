@@ -17848,4 +17848,45 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Investit până acum';
+
+  @override
+  String get editorRankingTitle => 'Clasamentul mondial';
+
+  @override
+  String editorRankingPlace(int rank) {
+    return '#$rank';
+  }
+
+  @override
+  String get editorRankingAuto => 'Automat';
+
+  @override
+  String editorRankingAutoPlace(int rank) {
+    return 'Automat (#$rank)';
+  }
+
+  @override
+  String get editorRankingAbout =>
+      'Locul acestei naționale în clasamentul mondial la începutul unei cariere noi. Automat urmează forța lotului.';
+
+  @override
+  String editorRankingHint(int min, int max) {
+    return '$min - $max';
+  }
+
+  @override
+  String editorRankingOf(String nation) {
+    return '$nation: clasamentul mondial';
+  }
+
+  @override
+  String editorIssueRanking(int min, int max) {
+    return 'Alege un loc în clasamentul mondial de la $min la $max.';
+  }
+
+  @override
+  String get editorRegionWorldwide => 'Global';
+
+  @override
+  String get editorRegionNone => 'Nimic aici pentru această regiune.';
 }

@@ -17,6 +17,7 @@ import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/editor/pack_issue_text.dart';
+import 'package:fnm/features/editor/players/nation_ranking.dart';
 import 'package:fnm/features/editor/players/player_edit_screen.dart';
 import 'package:fnm/features/editor/players/players_ui.dart';
 import 'package:fnm/features/editor/players/squad_edits.dart';
@@ -572,6 +573,15 @@ class _SquadScreenState extends ConsumerState<SquadScreen>
       ),
       body: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.marginMobile,
+              AppSpacing.sm,
+              AppSpacing.marginMobile,
+              0,
+            ),
+            child: NationRankingTile(packId: _id, nationId: _nation),
+          ),
           tabs,
           Expanded(
             child: _onPool

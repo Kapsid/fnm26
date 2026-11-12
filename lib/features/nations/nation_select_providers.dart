@@ -106,7 +106,7 @@ typedef _PackPick = ({
 /// read (the pick then shows the game's own world, and Start refuses it).
 ///
 /// Its nations carry the pack's names and the starting ranks a career on it
-/// is given ([PackRanking.startingRanks], as `CareerService.create` works
+/// is given ([PackRanking.forPack], as `CareerService.create` works
 /// them out), ordered by them. Its strengths read each nation's pack squad
 /// and fixed pool on day one (exactly as the editor left them), with the
 /// game's own core, fringe and youth for whatever the pack leaves alone, as
@@ -130,12 +130,12 @@ final AutoDisposeFutureProviderFamily<_PackPick?, int> _packPickProvider =
         return null;
       }
       if (pack == null) return null;
-      final ranks = PackRanking.startingRanks(
+      final ranks = PackRanking.forPack(
+        pack,
         baseRanks: {for (final n in base) n.id: n.ranking},
         defaultStrength: await ref
             .watch(worldPackServiceProvider)
             .defaultStrength(),
-        packStrength: PackRanking.squadStrengths(pack.squads),
       );
       final order = {for (var i = 0; i < base.length; i++) base[i].id: i};
       final nations =

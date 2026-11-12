@@ -17528,4 +17528,45 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Investido até agora';
+
+  @override
+  String get editorRankingTitle => 'Ranking mundial';
+
+  @override
+  String editorRankingPlace(int rank) {
+    return '#$rank';
+  }
+
+  @override
+  String get editorRankingAuto => 'Automático';
+
+  @override
+  String editorRankingAutoPlace(int rank) {
+    return 'Automático (#$rank)';
+  }
+
+  @override
+  String get editorRankingAbout =>
+      'Onde esta seleção começa uma nova carreira no ranking mundial. Automático segue a força do seu plantel.';
+
+  @override
+  String editorRankingHint(int min, int max) {
+    return '$min a $max';
+  }
+
+  @override
+  String editorRankingOf(String nation) {
+    return '$nation: ranking mundial';
+  }
+
+  @override
+  String editorIssueRanking(int min, int max) {
+    return 'Indique uma posição no ranking mundial de $min a $max.';
+  }
+
+  @override
+  String get editorRegionWorldwide => 'Todo o mundo';
+
+  @override
+  String get editorRegionNone => 'Nada aqui para esta região.';
 }

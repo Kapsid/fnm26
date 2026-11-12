@@ -4350,5 +4350,15 @@
   "editorHistoryDeleteBody": "Se poistetaan historiasta. Itse tietokanta ei muutu.",
   "financesTabDepartments": "Osastot",
   "financesTabFacilities": "Tilat",
-  "financesInvestedSoFar": "Investoitu tähän mennessä"
+  "financesInvestedSoFar": "Investoitu tähän mennessä",
+  "editorRankingTitle": "Maailmanranking",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Automaattinen",
+  "editorRankingAutoPlace": "Automaattinen (#{rank})",
+  "editorRankingAbout": "Mistä tämä maa aloittaa uuden uran maailmanrankingissa. Automaattinen seuraa sen joukkueen vahvuutta.",
+  "editorRankingHint": "{min}–{max}",
+  "editorRankingOf": "{nation}: Maailmanranking",
+  "editorIssueRanking": "Anna maailmanrankingin sija väliltä {min}–{max}.",
+  "editorRegionWorldwide": "Maailmanlaajuinen",
+  "editorRegionNone": "Tällä alueella ei ole mitään."
 }

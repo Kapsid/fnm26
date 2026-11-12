@@ -26815,5 +26815,83 @@
   "financesInvestedSoFar": "Invested so far",
   "@financesInvestedSoFar": {
     "description": "Finances, Facilities tab: small label over the euros kept up in a building (its maintained investment)."
+  },
+  "editorRankingTitle": "World ranking",
+  "@editorRankingTitle": {
+    "description": "A nation's starting world ranking in the database editor (tile and dialog title)."
+  },
+  "editorRankingPlace": "#{rank}",
+  "@editorRankingPlace": {
+    "description": "A place in the world ranking, e.g. #12.",
+    "placeholders": {
+      "rank": {
+        "type": "int",
+        "example": "12"
+      }
+    }
+  },
+  "editorRankingAuto": "Automatic",
+  "@editorRankingAuto": {
+    "description": "The world ranking left to the game: it follows the squad's strength. Also the dialog button that sets it."
+  },
+  "editorRankingAutoPlace": "Automatic (#{rank})",
+  "@editorRankingAutoPlace": {
+    "description": "The world ranking left to the game, with the place the squad gives it.",
+    "placeholders": {
+      "rank": {
+        "type": "int",
+        "example": "34"
+      }
+    }
+  },
+  "editorRankingAbout": "Where this nation starts a new career in the world ranking. Automatic follows the strength of its squad.",
+  "@editorRankingAbout": {
+    "description": "What a nation's starting world ranking in the editor means."
+  },
+  "editorRankingHint": "{min} to {max}",
+  "@editorRankingHint": {
+    "description": "Hint in the world ranking field: the places allowed.",
+    "placeholders": {
+      "min": {
+        "type": "int",
+        "example": "1"
+      },
+      "max": {
+        "type": "int",
+        "example": "211"
+      }
+    }
+  },
+  "editorRankingOf": "{nation}: world ranking",
+  "@editorRankingOf": {
+    "description": "Merge review: a nation's starting world ranking.",
+    "placeholders": {
+      "nation": {
+        "type": "String",
+        "example": "Czechia"
+      }
+    }
+  },
+  "editorIssueRanking": "Set a world ranking place from {min} to {max}.",
+  "@editorIssueRanking": {
+    "description": "A world ranking place out of range.",
+    "placeholders": {
+      "min": {
+        "type": "int",
+        "example": "1"
+      },
+      "max": {
+        "type": "int",
+        "example": "211"
+      }
+    }
+  },
+  "editorRegionWorldwide": "Worldwide",
+  "@editorRegionWorldwide": {
+    "description": "Editor region filter chip: rows that belong to no confederation (the World Championship, sponsors, reporters)."
+  },
+  "editorRegionNone": "Nothing here for this region.",
+  "@editorRegionNone": {
+    "description": "Shown when the editor's region filter leaves a list empty."
   }
 }

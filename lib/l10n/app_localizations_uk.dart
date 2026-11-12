@@ -17755,4 +17755,45 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get financesInvestedSoFar => 'Інвестовано досі';
+
+  @override
+  String get editorRankingTitle => 'Світовий рейтинг';
+
+  @override
+  String editorRankingPlace(int rank) {
+    return '#$rank';
+  }
+
+  @override
+  String get editorRankingAuto => 'Автоматично';
+
+  @override
+  String editorRankingAutoPlace(int rank) {
+    return 'Автоматично (#$rank)';
+  }
+
+  @override
+  String get editorRankingAbout =>
+      'Місце цієї збірної у світовому рейтингу на старті нової кар\'єри. Автоматично залежить від сили її складу.';
+
+  @override
+  String editorRankingHint(int min, int max) {
+    return 'від $min до $max';
+  }
+
+  @override
+  String editorRankingOf(String nation) {
+    return '$nation: світовий рейтинг';
+  }
+
+  @override
+  String editorIssueRanking(int min, int max) {
+    return 'Вкажіть місце у світовому рейтингу від $min до $max.';
+  }
+
+  @override
+  String get editorRegionWorldwide => 'Увесь світ';
+
+  @override
+  String get editorRegionNone => 'Для цього регіону тут нічого немає.';
 }

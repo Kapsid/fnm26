@@ -4350,5 +4350,15 @@
   "editorHistoryDeleteBody": "Sie wird aus dem Verlauf entfernt. Die Datenbank selbst ändert sich nicht.",
   "financesTabDepartments": "Abteilungen",
   "financesTabFacilities": "Einrichtungen",
-  "financesInvestedSoFar": "Bisher investiert"
+  "financesInvestedSoFar": "Bisher investiert",
+  "editorRankingTitle": "Weltrangliste",
+  "editorRankingPlace": "#{rank}",
+  "editorRankingAuto": "Automatisch",
+  "editorRankingAutoPlace": "Automatisch (#{rank})",
+  "editorRankingAbout": "Wo diese Nation eine neue Karriere in der Weltrangliste beginnt. Automatisch richtet sich nach der Stärke ihres Kaders.",
+  "editorRankingHint": "{min} bis {max}",
+  "editorRankingOf": "{nation}: Weltrangliste",
+  "editorIssueRanking": "Wähle einen Platz in der Weltrangliste von {min} bis {max}.",
+  "editorRegionWorldwide": "Weltweit",
+  "editorRegionNone": "Hier gibt es nichts für diese Region."
 }
