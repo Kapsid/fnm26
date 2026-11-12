@@ -1,40 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/routing/app_router.dart';
-import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/data/data_providers.dart';
-import 'package:fnm/features/nations/nation_now_card.dart';
 import 'package:fnm/features/nations/nation_now_providers.dart';
+import 'package:fnm/features/nations/nation_vitrine_screen.dart';
 import 'package:fnm/features/world_managers/manager_detail_screen.dart';
 import 'package:fnm/features/world_managers/manager_row.dart';
 import 'package:fnm/features/world_managers/world_manager_markers.dart';
 import 'package:fnm/features/world_managers/world_manager_providers.dart';
-import 'package:fnm/l10n/app_localizations.dart';
 
 import '../../helpers/seeded_save.dart';
 
+/// A nation's page, opened on its History tab, where the manager row sits.
 Future<void> _pump(WidgetTester tester, SeededSave save, int nationId) async {
-  tester.view.physicalSize = const Size(900, 1600);
-  tester.view.devicePixelRatio = 1;
-  addTearDown(tester.view.reset);
-  await tester.pumpWidget(
-    UncontrolledProviderScope(
-      container: save.container,
-      child: MaterialApp(
-        theme: AppTheme.theme,
-        locale: const Locale('en'),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: Scaffold(
-          body: SingleChildScrollView(
-            child: NationNowCard(careerId: save.careerId, nationId: nationId),
-          ),
-        ),
-      ),
-    ),
+  await pumpRoute(
+    tester,
+    save,
+    '${Routes.nationVitrine}?careerId=${save.careerId}&nationId=$nationId',
+    size: const Size(900, 1600),
   );
-  await settle(tester);
+  await tester.tap(find.byKey(NationVitrineScreen.tabKeys[3]));
+  await settle(tester, rounds: 10);
 }
 
 int _otherNation(SeededSave s) =>
@@ -45,19 +31,33 @@ void main() {
     final save = await seedSave(tester);
     final other = _otherNation(save);
     await _pump(tester, save, other);
-    expect(find.byKey(NationNowCard.managerKey), findsOneWidget);
+    expect(find.byKey(NationVitrineScreen.managerKey), findsOneWidget);
     final view = save.container
         .read(
           nationManagerProvider((careerId: save.careerId, nationId: other)),
         )
         .value!;
-    expect(find.text(view.m.name), findsOneWidget);
+    // Named in the row, and in the header's numbers.
+    expect(
+      find.descendant(
+        of: find.byType(ManagerRow),
+        matching: find.text(view.m.name),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byKey(NationVitrineScreen.managerStatKey),
+        matching: find.text(view.m.name),
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('your own nation shows none', (tester) async {
     final save = await seedSave(tester);
     await _pump(tester, save, save.nationId);
-    expect(find.byKey(NationNowCard.managerKey), findsNothing);
+    expect(find.byKey(NationVitrineScreen.managerKey), findsNothing);
     expect(find.byType(ManagerRow), findsNothing);
   });
 
@@ -66,12 +66,7 @@ void main() {
   ) async {
     final save = await seedSave(tester);
     final other = _otherNation(save);
-    await pumpRoute(
-      tester,
-      save,
-      '${Routes.nationVitrine}?careerId=${save.careerId}&nationId=$other',
-      size: const Size(900, 1600),
-    );
+    await _pump(tester, save, other);
     await tester.ensureVisible(find.byKey(ManagerRow.rowKey));
     await tester.pump();
     await tester.tap(find.byKey(ManagerRow.rowKey));
@@ -88,7 +83,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets("the row does not rebuild NationNowCard's provider", (
+  testWidgets("the row does not rebuild the page's now read", (
     tester,
   ) async {
     final save = await seedSave(tester);
@@ -102,7 +97,7 @@ void main() {
       identical(save.container.read(nationNowProvider(key)), before),
       isTrue,
     );
-    expect(find.byKey(NationNowCard.managerKey), findsOneWidget);
+    expect(find.byKey(NationVitrineScreen.managerKey), findsOneWidget);
   });
 
   testWidgets('a cycle without world managers (an old save) shows the row', (
@@ -116,7 +111,7 @@ void main() {
       ),
     );
     await _pump(tester, save, _otherNation(save));
-    expect(find.byKey(NationNowCard.managerKey), findsOneWidget);
+    expect(find.byKey(NationVitrineScreen.managerKey), findsOneWidget);
     expect(find.byType(ManagerRow), findsOneWidget);
   });
 }

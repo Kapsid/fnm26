@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/routing/app_router.dart';
-import 'package:fnm/features/nations/nation_now_card.dart';
+import 'package:fnm/features/nations/nation_vitrine_screen.dart';
 import 'package:fnm/features/world_managers/manager_detail_screen.dart';
 import 'package:fnm/features/world_managers/manager_row.dart';
 
@@ -21,7 +21,9 @@ void main() {
         size: const Size(390, 844),
         locale: Locale(lang),
       );
-      expect(find.byKey(NationNowCard.managerKey), findsOneWidget);
+      await tester.tap(find.byKey(NationVitrineScreen.tabKeys[3]));
+      await settle(tester, rounds: 10);
+      expect(find.byKey(NationVitrineScreen.managerKey), findsOneWidget);
       await tester.ensureVisible(find.byKey(ManagerRow.rowKey));
       await tester.pump();
       await tester.tap(find.byKey(ManagerRow.rowKey));
