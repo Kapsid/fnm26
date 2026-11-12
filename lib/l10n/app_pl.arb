@@ -4291,5 +4291,8 @@
   "matchStadiumConditions": "Warunki",
   "editorWebTitle": "Edytuj na komputerze: {address}",
   "editorWebAbout": "Wyeksportuj bazę danych, otwórz ją w przeglądarce, pobierz ją z powrotem i zaimportuj tutaj.",
-  "editorWebAnother": "Inna możliwość"
+  "editorWebAnother": "Inna możliwość",
+  "financesTabDepartments": "Działy",
+  "financesTabFacilities": "Obiekty",
+  "financesInvestedSoFar": "Zainwestowano dotąd"
 }

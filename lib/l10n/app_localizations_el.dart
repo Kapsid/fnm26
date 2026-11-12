@@ -17262,4 +17262,13 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get editorWebAnother => 'Άλλη επιλογή';
+
+  @override
+  String get financesTabDepartments => 'Τμήματα';
+
+  @override
+  String get financesTabFacilities => 'Εγκαταστάσεις';
+
+  @override
+  String get financesInvestedSoFar => 'Επενδύσεις έως τώρα';
 }

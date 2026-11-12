@@ -4291,5 +4291,8 @@
   "matchStadiumConditions": "Условия",
   "editorWebTitle": "Редактирайте на компютър: {address}",
   "editorWebAbout": "Експортирайте базата си данни, отворете я в браузъра, изтеглете я обратно и я импортирайте тук.",
-  "editorWebAnother": "Друга възможност"
+  "editorWebAnother": "Друга възможност",
+  "financesTabDepartments": "Отдели",
+  "financesTabFacilities": "Съоръжения",
+  "financesInvestedSoFar": "Инвестирано досега"
 }

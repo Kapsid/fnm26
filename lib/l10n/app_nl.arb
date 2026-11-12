@@ -4291,5 +4291,8 @@
   "matchStadiumConditions": "Omstandigheden",
   "editorWebTitle": "Bewerken op een computer: {address}",
   "editorWebAbout": "Exporteer je database, open hem in de browser, download hem weer en importeer hem hier.",
-  "editorWebAnother": "Een andere mogelijkheid"
+  "editorWebAnother": "Een andere mogelijkheid",
+  "financesTabDepartments": "Afdelingen",
+  "financesTabFacilities": "Faciliteiten",
+  "financesInvestedSoFar": "Tot nu toe geïnvesteerd"
 }

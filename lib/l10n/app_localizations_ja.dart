@@ -16554,4 +16554,13 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get editorWebAnother => '別の方法';
+
+  @override
+  String get financesTabDepartments => '部門';
+
+  @override
+  String get financesTabFacilities => '施設';
+
+  @override
+  String get financesInvestedSoFar => 'これまでの投資額';
 }

@@ -4291,5 +4291,8 @@
   "matchStadiumConditions": "สภาพ",
   "editorWebTitle": "แก้ไขบนคอมพิวเตอร์: {address}",
   "editorWebAbout": "ส่งออกฐานข้อมูลของคุณ เปิดในเบราว์เซอร์ ดาวน์โหลดกลับมา แล้วนำเข้าที่นี่",
-  "editorWebAnother": "อีกทางเลือกหนึ่ง"
+  "editorWebAnother": "อีกทางเลือกหนึ่ง",
+  "financesTabDepartments": "แผนก",
+  "financesTabFacilities": "สิ่งอำนวยความสะดวก",
+  "financesInvestedSoFar": "ลงทุนไปแล้ว"
 }

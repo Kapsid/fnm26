@@ -4291,5 +4291,8 @@
   "matchStadiumConditions": "Condiții",
   "editorWebTitle": "Editează pe calculator: {address}",
   "editorWebAbout": "Exportă baza de date, deschide-o în browser, descarc-o înapoi și importă-o aici.",
-  "editorWebAnother": "O altă opțiune"
+  "editorWebAnother": "O altă opțiune",
+  "financesTabDepartments": "Departamente",
+  "financesTabFacilities": "Facilități",
+  "financesInvestedSoFar": "Investit până acum"
 }

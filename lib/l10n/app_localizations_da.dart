@@ -17171,4 +17171,13 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get editorWebAnother => 'En anden mulighed';
+
+  @override
+  String get financesTabDepartments => 'Afdelinger';
+
+  @override
+  String get financesTabFacilities => 'Faciliteter';
+
+  @override
+  String get financesInvestedSoFar => 'Investeret indtil nu';
 }

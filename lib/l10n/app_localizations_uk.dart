@@ -17485,4 +17485,13 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get editorWebAnother => 'Інший варіант';
+
+  @override
+  String get financesTabDepartments => 'Відділи';
+
+  @override
+  String get financesTabFacilities => 'Інфраструктура';
+
+  @override
+  String get financesInvestedSoFar => 'Інвестовано досі';
 }

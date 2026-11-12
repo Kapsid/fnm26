@@ -4291,5 +4291,8 @@
   "matchStadiumConditions": "コンディション",
   "editorWebTitle": "パソコンで編集: {address}",
   "editorWebAbout": "データベースをエクスポートしてブラウザで開き、ダウンロードし直してここでインポートします。",
-  "editorWebAnother": "別の方法"
+  "editorWebAnother": "別の方法",
+  "financesTabDepartments": "部門",
+  "financesTabFacilities": "施設",
+  "financesInvestedSoFar": "これまでの投資額"
 }

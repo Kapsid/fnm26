@@ -17255,4 +17255,13 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get editorWebAnother => 'Друга възможност';
+
+  @override
+  String get financesTabDepartments => 'Отдели';
+
+  @override
+  String get financesTabFacilities => 'Съоръжения';
+
+  @override
+  String get financesInvestedSoFar => 'Инвестирано досега';
 }

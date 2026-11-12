@@ -17082,4 +17082,13 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get editorWebAnother => 'Pilihan lain';
+
+  @override
+  String get financesTabDepartments => 'Departemen';
+
+  @override
+  String get financesTabFacilities => 'Fasilitas';
+
+  @override
+  String get financesInvestedSoFar => 'Diinvestasikan sejauh ini';
 }

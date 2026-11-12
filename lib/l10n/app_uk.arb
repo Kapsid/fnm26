@@ -4291,5 +4291,8 @@
   "matchStadiumConditions": "Умови",
   "editorWebTitle": "Редагуйте на комп’ютері: {address}",
   "editorWebAbout": "Експортуйте базу даних, відкрийте її в браузері, завантажте назад та імпортуйте тут.",
-  "editorWebAnother": "Інший варіант"
+  "editorWebAnother": "Інший варіант",
+  "financesTabDepartments": "Відділи",
+  "financesTabFacilities": "Інфраструктура",
+  "financesInvestedSoFar": "Інвестовано досі"
 }

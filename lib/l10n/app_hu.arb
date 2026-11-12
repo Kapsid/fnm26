@@ -4291,5 +4291,8 @@
   "matchStadiumConditions": "Körülmények",
   "editorWebTitle": "Szerkesztés számítógépen: {address}",
   "editorWebAbout": "Exportáld az adatbázisodat, nyisd meg a böngészőben, töltsd le újra, és importáld ide.",
-  "editorWebAnother": "Másik lehetőség"
+  "editorWebAnother": "Másik lehetőség",
+  "financesTabDepartments": "Részlegek",
+  "financesTabFacilities": "Létesítmények",
+  "financesInvestedSoFar": "Eddig befektetve"
 }

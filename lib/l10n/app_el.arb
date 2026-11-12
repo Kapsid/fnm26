@@ -4291,5 +4291,8 @@
   "matchStadiumConditions": "Συνθήκες",
   "editorWebTitle": "Επεξεργασία σε υπολογιστή: {address}",
   "editorWebAbout": "Εξαγάγετε τη βάση δεδομένων σας, ανοίξτε τη στο πρόγραμμα περιήγησης, κατεβάστε τη ξανά και εισαγάγετέ τη εδώ.",
-  "editorWebAnother": "Άλλη επιλογή"
+  "editorWebAnother": "Άλλη επιλογή",
+  "financesTabDepartments": "Τμήματα",
+  "financesTabFacilities": "Εγκαταστάσεις",
+  "financesInvestedSoFar": "Επενδύσεις έως τώρα"
 }

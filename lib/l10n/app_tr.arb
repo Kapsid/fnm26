@@ -4291,5 +4291,8 @@
   "matchStadiumConditions": "Koşullar",
   "editorWebTitle": "Bilgisayarda düzenle: {address}",
   "editorWebAbout": "Veritabanını dışa aktar, tarayıcıda aç, geri indir ve buraya içe aktar.",
-  "editorWebAnother": "Başka bir seçenek"
+  "editorWebAnother": "Başka bir seçenek",
+  "financesTabDepartments": "Departmanlar",
+  "financesTabFacilities": "Tesisler",
+  "financesInvestedSoFar": "Şimdiye kadar yatırılan"
 }

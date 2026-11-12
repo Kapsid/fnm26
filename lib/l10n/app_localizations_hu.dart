@@ -17116,4 +17116,13 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get editorWebAnother => 'Másik lehetőség';
+
+  @override
+  String get financesTabDepartments => 'Részlegek';
+
+  @override
+  String get financesTabFacilities => 'Létesítmények';
+
+  @override
+  String get financesInvestedSoFar => 'Eddig befektetve';
 }

@@ -4291,5 +4291,8 @@
   "matchStadiumConditions": "Uvjeti",
   "editorWebTitle": "Uređujte na računalu: {address}",
   "editorWebAbout": "Izvezite svoju bazu podataka, otvorite je u pregledniku, ponovno je preuzmite i uvezite ovdje.",
-  "editorWebAnother": "Druga mogućnost"
+  "editorWebAnother": "Druga mogućnost",
+  "financesTabDepartments": "Odjeli",
+  "financesTabFacilities": "Objekti",
+  "financesInvestedSoFar": "Dosad uloženo"
 }

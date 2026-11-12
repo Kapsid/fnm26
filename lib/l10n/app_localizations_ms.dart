@@ -17131,4 +17131,13 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get editorWebAnother => 'Pilihan lain';
+
+  @override
+  String get financesTabDepartments => 'Jabatan';
+
+  @override
+  String get financesTabFacilities => 'Kemudahan';
+
+  @override
+  String get financesInvestedSoFar => 'Dilaburkan setakat ini';
 }

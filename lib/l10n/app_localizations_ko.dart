@@ -16596,4 +16596,13 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get editorWebAnother => '다른 방법';
+
+  @override
+  String get financesTabDepartments => '부서';
+
+  @override
+  String get financesTabFacilities => '시설';
+
+  @override
+  String get financesInvestedSoFar => '지금까지 투자액';
 }

@@ -4291,5 +4291,8 @@
   "matchStadiumConditions": "परिस्थितियाँ",
   "editorWebTitle": "कंप्यूटर पर संपादित करें: {address}",
   "editorWebAbout": "अपना डेटाबेस निर्यात करें, उसे ब्राउज़र में खोलें, वापस डाउनलोड करें और यहाँ आयात करें।",
-  "editorWebAnother": "एक और विकल्प"
+  "editorWebAnother": "एक और विकल्प",
+  "financesTabDepartments": "विभाग",
+  "financesTabFacilities": "सुविधाएँ",
+  "financesInvestedSoFar": "अब तक निवेश"
 }

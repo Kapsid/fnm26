@@ -17299,4 +17299,13 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get editorWebAnother => 'Eine weitere Möglichkeit';
+
+  @override
+  String get financesTabDepartments => 'Abteilungen';
+
+  @override
+  String get financesTabFacilities => 'Einrichtungen';
+
+  @override
+  String get financesInvestedSoFar => 'Bisher investiert';
 }

@@ -17504,4 +17504,13 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get editorWebAnother => 'Druga mogućnost';
+
+  @override
+  String get financesTabDepartments => 'Odjeli';
+
+  @override
+  String get financesTabFacilities => 'Objekti';
+
+  @override
+  String get financesInvestedSoFar => 'Dosad uloženo';
 }

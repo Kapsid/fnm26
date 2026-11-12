@@ -17585,4 +17585,13 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get editorWebAnother => 'O altă opțiune';
+
+  @override
+  String get financesTabDepartments => 'Departamente';
+
+  @override
+  String get financesTabFacilities => 'Facilități';
+
+  @override
+  String get financesInvestedSoFar => 'Investit până acum';
 }

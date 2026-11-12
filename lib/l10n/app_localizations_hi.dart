@@ -17078,4 +17078,13 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get editorWebAnother => 'एक और विकल्प';
+
+  @override
+  String get financesTabDepartments => 'विभाग';
+
+  @override
+  String get financesTabFacilities => 'सुविधाएँ';
+
+  @override
+  String get financesInvestedSoFar => 'अब तक निवेश';
 }

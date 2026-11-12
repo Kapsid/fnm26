@@ -17018,4 +17018,13 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get editorWebAnother => 'Một lựa chọn khác';
+
+  @override
+  String get financesTabDepartments => 'Bộ phận';
+
+  @override
+  String get financesTabFacilities => 'Cơ sở vật chất';
+
+  @override
+  String get financesInvestedSoFar => 'Đã đầu tư đến nay';
 }

@@ -4291,5 +4291,8 @@
   "matchStadiumConditions": "Kondisi",
   "editorWebTitle": "Edit di komputer: {address}",
   "editorWebAbout": "Ekspor database Anda, buka di peramban, unduh kembali, lalu impor di sini.",
-  "editorWebAnother": "Pilihan lain"
+  "editorWebAnother": "Pilihan lain",
+  "financesTabDepartments": "Departemen",
+  "financesTabFacilities": "Fasilitas",
+  "financesInvestedSoFar": "Diinvestasikan sejauh ini"
 }

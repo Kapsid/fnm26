@@ -17182,4 +17182,13 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get editorWebAnother => 'Isa pang opsyon';
+
+  @override
+  String get financesTabDepartments => 'Mga departamento';
+
+  @override
+  String get financesTabFacilities => 'Mga pasilidad';
+
+  @override
+  String get financesInvestedSoFar => 'Naipuhunan na';
 }

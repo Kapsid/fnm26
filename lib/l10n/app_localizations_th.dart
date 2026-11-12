@@ -16867,4 +16867,13 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get editorWebAnother => 'อีกทางเลือกหนึ่ง';
+
+  @override
+  String get financesTabDepartments => 'แผนก';
+
+  @override
+  String get financesTabFacilities => 'สิ่งอำนวยความสะดวก';
+
+  @override
+  String get financesInvestedSoFar => 'ลงทุนไปแล้ว';
 }

@@ -25987,6 +25987,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Another option'**
   String get editorWebAnother;
+
+  /// Finances screen, second tab: this cycle's investment, department by department.
+  ///
+  /// In en, this message translates to:
+  /// **'Departments'**
+  String get financesTabDepartments;
+
+  /// Finances screen, third tab: the federation's buildings (one per department) and the national stadiums.
+  ///
+  /// In en, this message translates to:
+  /// **'Facilities'**
+  String get financesTabFacilities;
+
+  /// Finances, Facilities tab: small label over the euros kept up in a building (its maintained investment).
+  ///
+  /// In en, this message translates to:
+  /// **'Invested so far'**
+  String get financesInvestedSoFar;
 }
 
 class _AppLocalizationsDelegate

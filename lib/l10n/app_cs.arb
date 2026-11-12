@@ -4291,5 +4291,8 @@
   "matchStadiumConditions": "Podmínky",
   "editorWebTitle": "Upravujte na počítači: {address}",
   "editorWebAbout": "Exportujte databázi, otevřete ji v prohlížeči, stáhněte ji zpět a importujte ji sem.",
-  "editorWebAnother": "Další možnost"
+  "editorWebAnother": "Další možnost",
+  "financesTabDepartments": "Oddělení",
+  "financesTabFacilities": "Zázemí",
+  "financesInvestedSoFar": "Dosud investováno"
 }

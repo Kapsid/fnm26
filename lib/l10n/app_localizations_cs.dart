@@ -17556,4 +17556,13 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get editorWebAnother => 'Další možnost';
+
+  @override
+  String get financesTabDepartments => 'Oddělení';
+
+  @override
+  String get financesTabFacilities => 'Zázemí';
+
+  @override
+  String get financesInvestedSoFar => 'Dosud investováno';
 }

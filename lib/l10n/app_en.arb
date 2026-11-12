@@ -26484,5 +26484,17 @@
   "editorWebAnother": "Another option",
   "@editorWebAnother": {
     "description": "Editor list: small caps label above the row that points to the web editor, below the user's databases."
+  },
+  "financesTabDepartments": "Departments",
+  "@financesTabDepartments": {
+    "description": "Finances screen, second tab: this cycle's investment, department by department."
+  },
+  "financesTabFacilities": "Facilities",
+  "@financesTabFacilities": {
+    "description": "Finances screen, third tab: the federation's buildings (one per department) and the national stadiums."
+  },
+  "financesInvestedSoFar": "Invested so far",
+  "@financesInvestedSoFar": {
+    "description": "Finances, Facilities tab: small label over the euros kept up in a building (its maintained investment)."
   }
 }

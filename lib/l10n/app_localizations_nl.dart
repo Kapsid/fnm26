@@ -17253,4 +17253,13 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get editorWebAnother => 'Een andere mogelijkheid';
+
+  @override
+  String get financesTabDepartments => 'Afdelingen';
+
+  @override
+  String get financesTabFacilities => 'Faciliteiten';
+
+  @override
+  String get financesInvestedSoFar => 'Tot nu toe geïnvesteerd';
 }

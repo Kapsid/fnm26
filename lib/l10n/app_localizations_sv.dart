@@ -17155,4 +17155,13 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get editorWebAnother => 'Ett annat alternativ';
+
+  @override
+  String get financesTabDepartments => 'Avdelningar';
+
+  @override
+  String get financesTabFacilities => 'Anläggningar';
+
+  @override
+  String get financesInvestedSoFar => 'Investerat hittills';
 }

@@ -50,11 +50,16 @@ Finder _panel(String title) => find
     )
     .first;
 
+Future<void> _tab(WidgetTester tester, Key key) async {
+  await tester.tap(find.byKey(key));
+  await tester.pumpAndSettle();
+  await settle(tester);
+}
+
 void main() {
   for (final size in kTabletSizes) {
-    testWidgets('balance beside the projection, the buildings below, $size', (
-      tester,
-    ) async {
+    testWidgets('balance beside the projection, the buildings a tab away, '
+        '$size', (tester) async {
       await _open(tester, size);
       expect(tester.takeException(), isNull);
       expect(find.byKey(FinancesScreen.tabletLayoutKey), findsOneWidget);
@@ -62,37 +67,33 @@ void main() {
       expect(find.byType(AppBar), findsNothing);
       final balance = tester.getRect(_panel(enL.federationBalance));
       final income = tester.getRect(_panel(enL.federationProjectedAtSeasonEnd));
-      final buildings = tester.getRect(_panel(enL.federationDevelopment));
       expect(balance.top, income.top);
       expect(income.left, greaterThan(balance.right));
-      expect(buildings.top, greaterThan(balance.bottom));
+      expect(find.text(enL.federationNextCycleLocked), findsOneWidget);
+
+      await _tab(tester, FinancesScreen.tabFacilitiesKey);
+      expect(tester.takeException(), isNull);
+      expect(_panel(enL.federationDevelopment), findsOneWidget);
       for (final d in Department.values) {
         expect(
-          find.text(
-            '${departmentBuildingName(enL, d)}  ·  ${departmentLabel(enL, d)}',
+          find.descendant(
+            of: find.byKey(FinancesScreen.buildingKey(d)),
+            matching: find.text(departmentBuildingName(enL, d)),
           ),
           findsOneWidget,
         );
       }
-      // Nothing invested yet: no locked-in panel.
-      expect(
-        find.text(enL.federationThisSeasonLocked.toUpperCase()),
-        findsNothing,
-      );
-      expect(find.text(enL.federationNextCycleLocked), findsOneWidget);
+      expect(find.byKey(FinancesScreen.stadiumsTileKey), findsOneWidget);
       await tester.pumpWidget(const SizedBox());
     });
   }
 
-  testWidgets("this cycle's investment sits beside the buildings", (
+  testWidgets("this cycle's investment is the Departments tab", (
     tester,
   ) async {
     await _open(tester, kTabletSize, invested: true);
     expect(tester.takeException(), isNull);
-    final locked = tester.getRect(_panel(enL.federationThisSeasonLocked));
-    final buildings = tester.getRect(_panel(enL.federationDevelopment));
-    expect(locked.top, buildings.top);
-    expect(locked.left, greaterThan(buildings.right));
+    await _tab(tester, FinancesScreen.tabDepartmentsKey);
     expect(
       find.descendant(
         of: _panel(enL.federationThisSeasonLocked),
