@@ -17215,6 +17215,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get matchTabStadium => 'ESTADIO';
 
   @override
+  String get matchTabSummary => 'RESUMEN';
+
+  @override
   String get matchPotmNone =>
       'No se eligió jugador del partido en este encuentro.';
 

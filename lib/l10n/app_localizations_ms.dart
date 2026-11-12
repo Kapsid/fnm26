@@ -17083,6 +17083,9 @@ class AppLocalizationsMs extends AppLocalizations {
   String get matchTabStadium => 'STADIUM';
 
   @override
+  String get matchTabSummary => 'RINGKASAN';
+
+  @override
   String get matchPotmNone =>
       'Tiada pemain terbaik dipilih untuk perlawanan ini.';
 

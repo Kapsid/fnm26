@@ -17198,6 +17198,9 @@ class AppLocalizationsFi extends AppLocalizations {
   String get matchTabStadium => 'STADION';
 
   @override
+  String get matchTabSummary => 'YHTEENVETO';
+
+  @override
   String get matchPotmNone =>
       'Tässä ottelussa ei valittu ottelun parasta pelaajaa.';
 

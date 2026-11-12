@@ -17031,6 +17031,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get matchTabStadium => 'स्टेडियम';
 
   @override
+  String get matchTabSummary => 'सारांश';
+
+  @override
   String get matchPotmNone => 'इस मैच में प्लेयर ऑफ़ द मैच नहीं चुना गया।';
 
   @override

@@ -17509,6 +17509,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String get matchTabStadium => 'STADION';
 
   @override
+  String get matchTabSummary => 'PŘEHLED';
+
+  @override
   String get matchPotmNone => 'V tomto zápase nebyl vyhlášen hráč zápasu.';
 
   @override

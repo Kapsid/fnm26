@@ -4277,6 +4277,7 @@
   "settingsAboutProtected": "यह गेम, इसका कोड और इसकी सामग्री कॉपीराइट द्वारा संरक्षित हैं।",
   "matchTabPlayer": "खिलाड़ी",
   "matchTabStadium": "स्टेडियम",
+  "matchTabSummary": "सारांश",
   "matchPotmNone": "इस मैच में प्लेयर ऑफ़ द मैच नहीं चुना गया।",
   "matchPotmHisMatch": "उसका मैच",
   "matchPotmBeforeMatch": "इस मैच से पहले",

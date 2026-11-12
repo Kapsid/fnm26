@@ -17134,6 +17134,9 @@ class AppLocalizationsFil extends AppLocalizations {
   String get matchTabStadium => 'ISTADYUM';
 
   @override
+  String get matchTabSummary => 'BUOD';
+
+  @override
   String get matchPotmNone =>
       'Walang napiling manlalaro ng laro sa larong ito.';
 

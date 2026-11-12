@@ -4277,6 +4277,7 @@
   "settingsAboutProtected": "Играта, нейният код и съдържание са защитени от авторско право.",
   "matchTabPlayer": "ИГРАЧ",
   "matchTabStadium": "СТАДИОН",
+  "matchTabSummary": "ОБОБЩЕНИЕ",
   "matchPotmNone": "В този мач не беше избран играч на мача.",
   "matchPotmHisMatch": "Неговият мач",
   "matchPotmBeforeMatch": "Преди този мач",

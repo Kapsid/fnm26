@@ -16820,6 +16820,9 @@ class AppLocalizationsTh extends AppLocalizations {
   String get matchTabStadium => 'สนาม';
 
   @override
+  String get matchTabSummary => 'สรุป';
+
+  @override
   String get matchPotmNone => 'เกมนี้ไม่มีการเลือกผู้เล่นยอดเยี่ยมประจำเกม';
 
   @override

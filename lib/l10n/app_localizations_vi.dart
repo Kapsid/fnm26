@@ -16971,6 +16971,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get matchTabStadium => 'SÂN';
 
   @override
+  String get matchTabSummary => 'TỔNG QUAN';
+
+  @override
   String get matchPotmNone => 'Trận này không bầu cầu thủ xuất sắc nhất.';
 
   @override

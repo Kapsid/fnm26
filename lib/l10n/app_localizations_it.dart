@@ -17198,6 +17198,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get matchTabStadium => 'STADIO';
 
   @override
+  String get matchTabSummary => 'RIEPILOGO';
+
+  @override
   String get matchPotmNone =>
       'Per questa partita non è stato indicato un migliore in campo.';
 

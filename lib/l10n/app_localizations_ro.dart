@@ -17537,6 +17537,9 @@ class AppLocalizationsRo extends AppLocalizations {
   String get matchTabStadium => 'STADION';
 
   @override
+  String get matchTabSummary => 'REZUMAT';
+
+  @override
   String get matchPotmNone =>
       'La acest meci nu a fost desemnat jucătorul meciului.';
 

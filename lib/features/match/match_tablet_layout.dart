@@ -25,6 +25,7 @@ class _MatchTabletLayout extends StatelessWidget {
     required this.pitch,
     required this.overlays,
     this.afterTabs = const [],
+    this.summary,
     this.pitchView,
     this.feed,
     this.tvHeader,
@@ -55,6 +56,10 @@ class _MatchTabletLayout extends StatelessWidget {
   /// The full-time tabs (Player, Stadium), labelled: beside the stats in
   /// the left column after the whistle, in either mode. Empty while playing.
   final List<(String, Widget)> afterTabs;
+
+  /// Pitch mode: the Summary, the left column's first tab for the whole
+  /// match, and the one it opens on (see [MatchSummaryTab]).
+  final Widget? summary;
 
   /// Pitch mode: the picture, filling the centre column under the score. Null
   /// in Timeline mode, which is laid out exactly as it always was.
@@ -140,7 +145,8 @@ class _MatchTabletLayout extends StatelessWidget {
   /// verdicts on the match beside its figures. Three short labels; should a
   /// long language need more than the column's width, the strip scrolls from
   /// the start with every label whole.
-  Widget _statsColumn(AppLocalizations l) => afterTabs.isEmpty
+  Widget _statsColumn(AppLocalizations l) =>
+      afterTabs.isEmpty && summary == null
       ? Panel(
           title: l.matchTabStats,
           expand: true,
@@ -149,12 +155,15 @@ class _MatchTabletLayout extends StatelessWidget {
         )
       : PanelBox(
           child: DefaultTabController(
-            length: 1 + afterTabs.length,
-            key: const ValueKey('match.statsTabs'),
+            length: (summary == null ? 1 : 2) + afterTabs.length,
+            // Recreated at the whistle (the full-time tabs join), so Pitch
+            // mode lands on its Summary again.
+            key: ValueKey(('match.statsTabs', ft)),
             child: Column(
               children: [
                 TabletTabBar(
                   tabs: [
+                    if (summary != null) SegmentTab(l.matchTabSummary),
                     SegmentTab(l.matchTabStats),
                     for (final (label, _) in afterTabs) SegmentTab(label),
                   ],
@@ -162,6 +171,7 @@ class _MatchTabletLayout extends StatelessWidget {
                 Expanded(
                   child: TabBarView(
                     children: [
+                      ?summary,
                       stats,
                       for (final (_, tab) in afterTabs) tab,
                     ],

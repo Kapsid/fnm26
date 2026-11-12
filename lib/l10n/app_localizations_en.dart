@@ -17149,6 +17149,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get matchTabStadium => 'STADIUM';
 
   @override
+  String get matchTabSummary => 'SUMMARY';
+
+  @override
   String get matchPotmNone => 'No player of the match was named for this game.';
 
   @override

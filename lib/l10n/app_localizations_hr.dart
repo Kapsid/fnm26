@@ -17457,6 +17457,9 @@ class AppLocalizationsHr extends AppLocalizations {
   String get matchTabStadium => 'STADION';
 
   @override
+  String get matchTabSummary => 'SAŽETAK';
+
+  @override
   String get matchPotmNone => 'Na ovoj utakmici nije proglašen igrač utakmice.';
 
   @override

@@ -17108,6 +17108,9 @@ class AppLocalizationsSv extends AppLocalizations {
   String get matchTabStadium => 'ARENA';
 
   @override
+  String get matchTabSummary => 'ÖVERSIKT';
+
+  @override
   String get matchPotmNone => 'Ingen bäste spelare utsågs i den här matchen.';
 
   @override

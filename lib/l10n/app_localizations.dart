@@ -25898,6 +25898,12 @@ abstract class AppLocalizations {
   /// **'STADIUM'**
   String get matchTabStadium;
 
+  /// Match screen tab in Pitch (2D) mode, the first tab for the whole match: the score, the scorers, the ground and at full time the player of the match. Very short, upper case like the other match tabs.
+  ///
+  /// In en, this message translates to:
+  /// **'SUMMARY'**
+  String get matchTabSummary;
+
   /// Player tab at full time when the result names no player of the match (an old saved result).
   ///
   /// In en, this message translates to:
