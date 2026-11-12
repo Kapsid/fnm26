@@ -987,27 +987,54 @@ class _FormSparkline extends StatelessWidget {
     const trackHeight = 40.0;
     // The badge's own band colours, so a bar and the match's badge agree.
     final bands = RatingBandColors.of(context);
-    return SizedBox(
-      height: trackHeight,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          for (final r in ratings)
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 1.5),
-                child: Container(
-                  // Map the 3.0–10.0 mark onto the bar height.
-                  height: (((r - 3) / 7).clamp(0.06, 1.0)) * trackHeight,
-                  decoration: BoxDecoration(
-                    color: bands.fill(RatingBand.of(r)),
-                    borderRadius: AppRadii.smAll,
-                  ),
+    // Each bar carries its exact mark above it, so the form reads as numbers
+    // as well as a shape. The labels sit in their own row so every bar keeps
+    // the same baseline whatever the text size.
+    final label = AppTypography.labelSmall.copyWith(
+      color: AppColors.onSurfaceVariant,
+    );
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          children: [
+            for (final r in ratings)
+              Expanded(
+                child: Text(
+                  r.toStringAsFixed(1),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  softWrap: false,
+                  overflow: TextOverflow.visible,
+                  style: label.copyWith(color: bands.fill(RatingBand.of(r))),
                 ),
               ),
-            ),
-        ],
-      ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        SizedBox(
+          height: trackHeight,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              for (final r in ratings)
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 1.5),
+                    child: Container(
+                      // Map the 3.0–10.0 mark onto the bar height.
+                      height: (((r - 3) / 7).clamp(0.06, 1.0)) * trackHeight,
+                      decoration: BoxDecoration(
+                        color: bands.fill(RatingBand.of(r)),
+                        borderRadius: AppRadii.smAll,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
