@@ -629,7 +629,7 @@ void main() {
     expect(depth, lessThan(25));
   });
 
-  test('a keeper brought on takes over from the man minding goal', () {
+  test('a keeper brought on takes over from the man minding goal at once', () {
     final home = _team(1, 75, Formation.f442, const TacticalInstructions());
     final away = _team(2, 75, Formation.f433, const TacticalInstructions());
     final backup = player(id: 150, nationId: 1, position: PlayerPosition.gk);
@@ -680,32 +680,23 @@ void main() {
         if (s.actorList[s.actorIndexOf(id)!].teamNationId == 1) id,
     };
     final injured = s.departures[100]!;
-    final standIn = homeKeepers(injured + 1);
-    expect(standIn, hasLength(1));
-    expect(standIn.single, isNot(anyOf(100, 150)));
     final on = s.arrivals[150]!;
-    // The stand-in minds goal until the keeper reaches his area.
-    expect(homeKeepers(on + 0.3), standIn);
-    double? takeover;
+    // From the keeper's going off to the end, one man keeps goal; the keeper
+    // coming on from the moment he steps on (never a stand-in in a keeper's
+    // shirt wherever open play left him), level with his own area.
     for (final f in s.keyframes) {
-      if (f.t > on && s.keepersAt(f.t).contains(150)) {
-        takeover = f.t;
-        break;
-      }
+      if (f.t <= injured) continue;
+      expect(homeKeepers(f.t), hasLength(1), reason: 'at ${f.t}');
+      if (f.t > on) expect(homeKeepers(f.t), {150}, reason: 'at ${f.t}');
     }
-    expect(takeover, isNotNull, reason: 'the keeper never took over');
-    final minute = s.pacer.matchAt(_at(takeover!)).minute;
-    final at = s.sample(_at(takeover)).players[150]!;
+    final first = s.keyframes.firstWhere((f) => f.t > on).t;
+    final minute = s.pacer.matchAt(_at(first)).minute;
+    final at = s.sample(_at(first)).players[150]!;
     expect(
       xToDepth(at.x, attackDir(home: true, minute: minute)),
       lessThanOrEqualTo(16.5 + 1e-6),
     );
     expect(s.actorList[s.actorIndexOf(150)!].keeper, isTrue);
-    // The stand-in is an outfielder again.
-    expect(
-      s.sample(_at(takeover + 0.3)).keepers,
-      isNot(contains(standIn.single)),
-    );
   });
 
   test('the same seed gives the same frames', () {
