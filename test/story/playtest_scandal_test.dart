@@ -163,7 +163,7 @@ void main() {
   }) async {
     await pumpApp(tester, c, '${Routes.callUps}?careerId=$careerId');
     await settle(tester);
-    await tester.tap(find.text(l.tacticsPreviousSquad));
+    await tester.tap(find.text(l.tacticsQuickPrevious));
     await settle(tester);
     Future<void> toggle(Player p) async {
       await tester.tap(

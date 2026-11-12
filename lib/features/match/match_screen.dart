@@ -2485,8 +2485,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               ),
               codeOf: code,
               nameOf: name,
-              homeId: homeId,
-              awayId: awayId,
+              // The tablet's centre column already carries the score, so
+              // only the phone's Summary gets the scoreboard card.
+              homeId: tablet ? null : homeId,
+              awayId: tablet ? null : awayId,
             );
             // The tablet's 2D TV: its goal and every other moment take the
             // header's strip in turn, never the picture (see [MatchTvHeader]).
