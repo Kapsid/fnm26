@@ -168,10 +168,10 @@ void main() {
       // Scroll the league strip itself: ensureVisible would also nudge the
       // cup's own tab pages it sits in.
       final strip = find.descendant(
-        of: find.byType(AppSegmentedControl).last,
+        of: find.ancestor(of: tab, matching: find.byType(AppSegmentedControl)),
         matching: find.byType(Scrollable),
       );
-      if (strip.evaluate().isNotEmpty) {
+      if (tab.hitTestable().evaluate().isEmpty && strip.evaluate().isNotEmpty) {
         await tester.scrollUntilVisible(tab, 60, scrollable: strip.first);
         await tester.pumpAndSettle();
       }
