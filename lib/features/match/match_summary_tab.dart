@@ -9,8 +9,8 @@ part of 'match_screen.dart';
 /// round played the same day, and after the whistle the player of the match
 /// and the three headline figures.
 ///
-/// The score is not on it: the scoreboard above already shows it, and the
-/// scorers are the Timeline's and the Stats'.
+/// After the whistle it opens with a small scoreboard card: the two sides and
+/// the final score, the scorers beneath (given [homeId] and [awayId]).
 ///
 /// Read-only: it shows what the screen already holds and decides nothing. A
 /// tap on the player of the match opens his page ([onOpenPlayer]).
@@ -26,10 +26,14 @@ class MatchSummaryTab extends StatelessWidget {
     this.sameDayPhase = SameDayPhase.live,
     this.codeOf,
     this.nameOf,
+    this.homeId,
+    this.awayId,
     this.onOpenPlayer,
     super.key,
   });
 
+  static const Key scoreboardKey = Key('summary.scoreboard');
+  static const Key scoreboardScoreKey = Key('summary.scoreboard.score');
   static const Key headlineKey = Key('summary.headline');
   static const Key potmKey = Key('summary.potm');
   static const Key stadiumKey = Key('summary.stadium');
@@ -66,6 +70,10 @@ class MatchSummaryTab extends StatelessWidget {
   final String Function(int nationId)? codeOf;
   final String Function(int nationId)? nameOf;
 
+  /// The two sides, for the scoreboard card; either null hides the card.
+  final int? homeId;
+  final int? awayId;
+
   /// Opens the player of the match's page; null leaves the card a card.
   final VoidCallback? onOpenPlayer;
 
@@ -88,6 +96,10 @@ class MatchSummaryTab extends StatelessWidget {
             if (others != null) ...[gap, others],
           ]
         : [
+            if (homeId != null && awayId != null) ...[
+              _scoreboard(context, r, homeId!, awayId!),
+              gap,
+            ],
             if (p != null) ...[
               Material(
                 key: potmKey,
@@ -106,6 +118,100 @@ class MatchSummaryTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: children,
+    );
+  }
+
+  /// The final score between the two sides, flags and names either side, the
+  /// scorers (minute and name) under each. Quiet: one card, no animation.
+  Widget _scoreboard(
+    BuildContext context,
+    MatchResult r,
+    int home,
+    int away,
+  ) {
+    final code = codeOf ?? (_) => '';
+    final name = nameOf ?? (_) => '';
+    final nameStyle = AppTypography.bodyMedium.copyWith(
+      color: AppColors.onSurface,
+      fontWeight: FontWeight.w700,
+    );
+    final scorerStyle = AppTypography.labelSmall.copyWith(
+      color: AppColors.onSurfaceVariant,
+    );
+    String minute(MatchEvent e) =>
+        e.stoppage > 0 ? "${e.minute}+${e.stoppage}'" : "${e.minute}'";
+    List<String> scorers(int nationId) => [
+      for (final e in r.events)
+        if (e.type == MatchEventType.goal && e.teamNationId == nationId)
+          '${e.playerName} ${minute(e)}',
+    ];
+    Widget side(int id) => Expanded(
+      child: Column(
+        children: [
+          FlagDisc(code(id), size: 28),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            name(id),
+            maxLines: 2,
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+            style: nameStyle,
+          ),
+        ],
+      ),
+    );
+    Widget scorerColumn(int id, TextAlign align) => Expanded(
+      child: Column(
+        crossAxisAlignment: align == TextAlign.end
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
+        children: [
+          for (final t in scorers(id))
+            Text(t, textAlign: align, style: scorerStyle),
+        ],
+      ),
+    );
+    final hasScorers = scorers(home).isNotEmpty || scorers(away).isNotEmpty;
+    return AppCard(
+      key: scoreboardKey,
+      child: Column(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              side(home),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.sm,
+                  vertical: AppSpacing.xs,
+                ),
+                child: Text(
+                  '${r.homeScore} - ${r.awayScore}',
+                  key: scoreboardScoreKey,
+                  maxLines: 1,
+                  softWrap: false,
+                  style: AppTypography.headlineMedium.copyWith(
+                    fontWeight: FontWeight.w800,
+                    fontFeatures: const [FontFeature.tabularFigures()],
+                  ),
+                ),
+              ),
+              side(away),
+            ],
+          ),
+          if (hasScorers) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                scorerColumn(home, TextAlign.start),
+                const SizedBox(width: AppSpacing.md),
+                scorerColumn(away, TextAlign.end),
+              ],
+            ),
+          ],
+        ],
+      ),
     );
   }
 

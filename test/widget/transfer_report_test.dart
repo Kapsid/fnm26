@@ -46,8 +46,8 @@ void main() {
         step: i % 3 - 1,
         fromCountry: 'cze',
         toCountry: 'eng',
-        fromStars: 0,
-        toStars: 0,
+        fromStars: 4,
+        toStars: 5,
       ),
   ];
 
@@ -74,6 +74,11 @@ void main() {
     );
     await tester.pumpAndSettle();
   }
+
+  testWidgets('a move shows no club stars', (tester) async {
+    await pumpTable(tester, width: 360, locale: const Locale('en'));
+    expect(find.byType(ClubStars), findsNothing);
+  });
 
   for (final width in [360.0, 400.0]) {
     for (final locale in [const Locale('en'), const Locale('cs')]) {

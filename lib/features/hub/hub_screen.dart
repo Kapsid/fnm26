@@ -572,7 +572,11 @@ class HubBoardTiles extends ConsumerWidget {
     if (stacked) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [board, const SizedBox(height: gap), fundsTile],
+        children: [
+          board,
+          const SizedBox(height: gap),
+          fundsTile,
+        ],
       );
     }
     // Equal heights: the taller tile (a mood word on two lines) sets the row.

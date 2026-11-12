@@ -408,6 +408,7 @@ void main() {
       SameDayPhase? phase,
       List<SameDayResult>? sameDay,
       VoidCallback? onOpenPlayer,
+      bool sides = false,
     }) {
       final r = _result();
       return MatchSummaryTab(
@@ -429,6 +430,8 @@ void main() {
             phase ?? (fullTime ? SameDayPhase.fullTime : SameDayPhase.live),
         codeOf: (id) => 'C$id',
         nameOf: nameOf,
+        homeId: sides ? _home : null,
+        awayId: sides ? _away : null,
         onOpenPlayer: onOpenPlayer,
       );
     }
@@ -487,6 +490,44 @@ void main() {
       final ground = topOf(tester, MatchSummaryTab.stadiumKey);
       final figures = topOf(tester, MatchSummaryTab.headlineKey);
       expect(potm < day && day < ground && ground < figures, isTrue);
+    });
+
+    testWidgets('full time with the sides: a scoreboard leads the tab', (
+      tester,
+    ) async {
+      await _pump(tester, summary(sides: true));
+      expect(find.byKey(MatchSummaryTab.scoreboardKey), findsOneWidget);
+      expect(
+        tester
+            .widget<Text>(find.byKey(MatchSummaryTab.scoreboardScoreKey))
+            .data,
+        '1 - 2',
+      );
+      expect(
+        find.descendant(
+          of: find.byKey(MatchSummaryTab.scoreboardKey),
+          matching: find.text("Away Striker 12'"),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: find.byKey(MatchSummaryTab.scoreboardKey),
+          matching: find.text("Home Forward 40'"),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        topOf(tester, MatchSummaryTab.scoreboardKey) <
+            topOf(tester, MatchSummaryTab.potmKey),
+        isTrue,
+      );
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('while it is on: no scoreboard card', (tester) async {
+      await _pump(tester, summary(fullTime: false, sides: true));
+      expect(find.byKey(MatchSummaryTab.scoreboardKey), findsNothing);
     });
 
     testWidgets('while it is on: the ground first, then the day, live', (

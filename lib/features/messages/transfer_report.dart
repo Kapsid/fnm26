@@ -199,7 +199,7 @@ class _MoveRow extends StatelessWidget {
   /// flags say where the move went without spending a word on it.
   Widget _move(BuildContext context) {
     final l = AppLocalizations.of(context);
-    Widget side(String club, String country, int stars) => Flexible(
+    Widget side(String club, String country) => Flexible(
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -220,10 +220,6 @@ class _MoveRow extends StatelessWidget {
               ),
             ),
           ),
-          if (stars > 0) ...[
-            const SizedBox(width: 3),
-            ClubStars(stars, size: 9),
-          ],
         ],
       ),
     );
@@ -239,7 +235,7 @@ class _MoveRow extends StatelessWidget {
     // on the screen varies by it now.
     return Row(
       children: [
-        side(row.from, row.fromCountry, row.fromStars),
+        side(row.from, row.fromCountry),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
           child: Semantics(
@@ -251,7 +247,7 @@ class _MoveRow extends StatelessWidget {
             ),
           ),
         ),
-        side(row.to, row.toCountry, row.toStars),
+        side(row.to, row.toCountry),
       ],
     );
   }

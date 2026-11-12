@@ -15,6 +15,7 @@ import 'package:fnm/domain/services/squad/absence_outlook.dart';
 import 'package:fnm/features/player/player_detail_screen.dart'
     show PlayerTraitGlyphs;
 import 'package:fnm/features/squad/captain_providers.dart';
+import 'package:fnm/features/tactics/call_up_screen.dart';
 import 'package:fnm/features/tactics/squad_legend_sheet.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
 import 'package:fnm/features/tactics/condition_mark.dart';
@@ -52,6 +53,9 @@ class _NationSquadTabState extends ConsumerState<NationSquadTab> {
   _SquadSort _sort = _SquadSort.rating;
   _SquadFilter _filter = _SquadFilter.all;
   PositionCategory? _line;
+
+  /// The exact position the chosen line is narrowed to (null: the whole line).
+  PlayerPosition? _position;
   String _query = '';
 
   static const _lines = [
@@ -66,19 +70,20 @@ class _NationSquadTabState extends ConsumerState<NationSquadTab> {
     final rows = [
       for (final r in data.rows)
         if (_line == null || r.player.category == _line)
-          if (switch (_filter) {
-            _SquadFilter.all => true,
-            _SquadFilter.squad => r.calledUp,
-            _SquadFilter.uncapped => r.caps == 0,
-            _SquadFilter.unavailable => !(r.absence?.isAvailable ?? true),
-          })
-            if (q.isEmpty ||
-                r.player.name.toLowerCase().contains(q) ||
-                clubName(
-                  AppLocalizations.of(context),
-                  r.player.club,
-                ).toLowerCase().contains(q))
-              r,
+          if (_position == null || r.player.position == _position)
+            if (switch (_filter) {
+              _SquadFilter.all => true,
+              _SquadFilter.squad => r.calledUp,
+              _SquadFilter.uncapped => r.caps == 0,
+              _SquadFilter.unavailable => !(r.absence?.isAvailable ?? true),
+            })
+              if (q.isEmpty ||
+                  r.player.name.toLowerCase().contains(q) ||
+                  clubName(
+                    AppLocalizations.of(context),
+                    r.player.club,
+                  ).toLowerCase().contains(q))
+                r,
     ];
     rows.sort((a, b) {
       final primary = switch (_sort) {
@@ -154,19 +159,24 @@ class _NationSquadTabState extends ConsumerState<NationSquadTab> {
                   _Chip(
                     label: l.squadLineAll,
                     on: _line == null,
-                    onTap: () => setState(() => _line = null),
+                    onTap: () => setState(() {
+                      _line = null;
+                      _position = null;
+                    }),
                   ),
                   for (final c in _lines)
                     _Chip(
                       label: _lineLabel(l, c),
                       on: _line == c,
-                      onTap: () => setState(
-                        () => _line = _line == c ? null : c,
-                      ),
+                      onTap: () => setState(() {
+                        _line = _line == c ? null : c;
+                        _position = null;
+                      }),
                     ),
                 ],
               ),
             ),
+            ..._positionRow(l, data),
             const SizedBox(height: AppSpacing.xs),
             // The count, and beside it the key to the marks on every row.
             // A tester could read the arrows, guessed the flame and could not
@@ -235,6 +245,38 @@ class _NationSquadTabState extends ConsumerState<NationSquadTab> {
         );
       },
     );
+  }
+
+  /// The chips narrowing the chosen line to one position, the same row the
+  /// call-up screen carries, so it is there before the squad is named too.
+  /// Nothing for a line with a single position (the keepers) or no line.
+  List<Widget> _positionRow(AppLocalizations l, NationSquadData data) {
+    final line = _line;
+    if (line == null) return const [];
+    final inLine = [
+      for (final r in data.rows)
+        if (r.player.category == line) r,
+    ];
+    final positions = [
+      for (final p in PlayerPosition.values)
+        if (p.category == line && inLine.any((r) => r.player.position == p)) p,
+    ];
+    if (positions.length < 2) return const [];
+    return [
+      const SizedBox(height: AppSpacing.xs),
+      PositionFilterChips(
+        line: line,
+        allLabel: l.squadFilterAll,
+        positions: positions,
+        current: positions.contains(_position) ? _position : null,
+        named: {
+          for (final p in positions)
+            p: inLine.where((r) => r.player.position == p && r.calledUp).length,
+        },
+        padding: EdgeInsets.zero,
+        onSelected: (p) => setState(() => _position = p),
+      ),
+    ];
   }
 
   String _filterLabel(AppLocalizations l, _SquadFilter f) => switch (f) {
