@@ -91,6 +91,88 @@ int _phoneTabs(WidgetTester tester) => find
     .evaluate()
     .length;
 
+/// The index of the tab controller around [of].
+int _tabIndex(WidgetTester tester, Finder of) =>
+    DefaultTabController.of(tester.element(of)).index;
+
+/// The Summary on screen names the man of the match and the ground with its
+/// crowd; a tap on his card opens the Player tab, one on the ground the
+/// Stadium tab.
+Future<void> _checkSummary(
+  WidgetTester tester,
+  SeededSave save, {
+  required int playerTab,
+}) async {
+  final motm = _probe(tester).result!.manOfTheMatch!;
+  final preview = save.container
+      .read(matchPreviewProvider(save.careerId))
+      .value!;
+  // The tab is short under the phone's pitch: scrolled to each card.
+  final list = find.descendant(
+    of: find.byType(MatchSummaryTab),
+    matching: find.byType(Scrollable),
+  );
+  await tester.scrollUntilVisible(
+    find.byKey(MatchSummaryTab.potmKey),
+    80,
+    scrollable: list.first,
+  );
+  expect(
+    find.descendant(
+      of: find.byKey(MatchSummaryTab.potmKey),
+      matching: find.text(motm.playerName),
+    ),
+    findsOneWidget,
+  );
+  await tester.scrollUntilVisible(
+    find.byKey(MatchSummaryTab.attendanceKey),
+    80,
+    scrollable: list.first,
+  );
+  expect(find.byKey(MatchSummaryTab.attendanceKey), findsOneWidget);
+  expect(
+    find.descendant(
+      of: find.byKey(MatchSummaryTab.stadiumKey),
+      matching: find.text(preview.ground.stadium),
+    ),
+    findsOneWidget,
+  );
+  await tester.scrollUntilVisible(
+    find.byKey(MatchSummaryTab.potmKey),
+    -80,
+    scrollable: list.first,
+  );
+  final summary = find.byType(MatchSummaryTab);
+  await tester.tap(find.byKey(MatchSummaryTab.potmKey));
+  await tester.pumpAndSettle(const Duration(milliseconds: 100));
+  expect(_tabIndex(tester, find.byType(PlayerOfMatchTab)), playerTab);
+  expect(find.byType(PlayerOfMatchTab), findsOneWidget);
+  // Back to the Summary, then its ground, brought to the top of the tab.
+  DefaultTabController.of(
+    tester.element(find.byType(PlayerOfMatchTab)),
+  ).animateTo(0);
+  await tester.pumpAndSettle(const Duration(milliseconds: 100));
+  final stadium = find.byKey(MatchSummaryTab.stadiumKey);
+  await tester.scrollUntilVisible(
+    stadium,
+    80,
+    scrollable: find
+        .descendant(
+          of: find.byType(MatchSummaryTab),
+          matching: find.byType(Scrollable),
+        )
+        .first,
+  );
+  await tester.ensureVisible(stadium);
+  await tester.pumpAndSettle(const Duration(milliseconds: 100));
+  await tester.tapAt(tester.getTopLeft(stadium) + const Offset(24, 24));
+  await tester.pumpAndSettle(const Duration(milliseconds: 100));
+  expect(find.byType(MatchStadiumTab), findsOneWidget);
+  expect(_tabIndex(tester, find.byType(MatchStadiumTab)), playerTab + 1);
+  expect(summary, findsNothing);
+  expect(tester.takeException(), isNull);
+}
+
 MatchScreenProbe _probe(WidgetTester tester) =>
     tester.state(find.byType(MatchScreen)) as MatchScreenProbe;
 
@@ -130,15 +212,26 @@ void main() {
       kPhoneSize,
     );
     await _awaitPitch(tester);
-    expect(_phoneTabs(tester), 2);
+    // Pitch mode opens on its Summary from kick-off: the ground, no man of
+    // the match yet.
+    expect(_phoneTabs(tester), 3);
+    expect(_tabIndex(tester, find.byType(MatchDetailTabs)), 0);
+    expect(find.byType(MatchSummaryTab), findsOneWidget);
+    expect(find.byKey(MatchSummaryTab.stadiumKey), findsOneWidget);
+    expect(find.byKey(MatchSummaryTab.potmKey), findsNothing);
     expect(find.text(enL.matchTabPlayer), findsNothing);
     expect(find.text(enL.matchTabStadium), findsNothing);
     await _toFullTime(tester);
     expect(tester.takeException(), isNull);
-    expect(_phoneTabs(tester), 4);
-    // Four labels, each whole on one line: shared out or scrolling, never
+    expect(_phoneTabs(tester), 5);
+    // At the whistle it lands on the Summary again, the man of the match
+    // on it.
+    expect(_tabIndex(tester, find.byType(MatchDetailTabs)), 0);
+    expect(find.byKey(MatchSummaryTab.scoreKey), findsOneWidget);
+    // Five labels, each whole on one line: shared out or scrolling, never
     // cut or scaled.
     for (final label in [
+      enL.matchTabSummary,
       enL.matchTabStats,
       enL.matchTabLineups,
       enL.matchTabPlayer,
@@ -152,14 +245,16 @@ void main() {
         'the "$label" tab',
       );
     }
+    await _checkSummary(tester, save, playerTab: 3);
     await _checkTabs(tester, save);
 
-    // On the Timeline at full time: five, opening on Stats.
+    // On the Timeline at full time: five, opening on Stats, no Summary.
     await tester.tap(
       find.byKey(MatchViewToggle.segmentKey(MatchViewMode.timeline)),
     );
     await tester.pumpAndSettle(const Duration(milliseconds: 100));
     expect(_phoneTabs(tester), 5);
+    expect(find.text(enL.matchTabSummary), findsNothing);
     expect(
       DefaultTabController.of(
         tester.element(find.byType(MatchDetailTabs)),
@@ -175,6 +270,7 @@ void main() {
   ) async {
     await _open(tester, FormFactor.phone, MatchViewMode.timeline, kPhoneSize);
     expect(_phoneTabs(tester), 3);
+    expect(find.byType(MatchSummaryTab), findsNothing);
     expect(find.byType(PlayerOfMatchTab), findsNothing);
     expect(find.text(enL.matchTabStadium), findsNothing);
     await tester.pumpWidget(const SizedBox());
@@ -190,20 +286,34 @@ void main() {
       const Size(1180, 820),
     );
     await _awaitPitch(tester);
+    // The TV's left column opens on the Summary from kick-off.
+    expect(find.byType(MatchTvHeader), findsOneWidget);
+    expect(find.byType(MatchSummaryTab), findsOneWidget);
+    expect(_tabIndex(tester, find.byType(MatchSummaryTab)), 0);
+    expect(find.byKey(MatchSummaryTab.potmKey), findsNothing);
     expect(find.text(enL.matchTabPlayer), findsNothing);
     expect(find.text(enL.matchTabStadium), findsNothing);
     await _toFullTime(tester);
     expect(tester.takeException(), isNull);
-    // In the left column, beside Stats, every label whole on screen.
+    expect(_tabIndex(tester, find.byType(MatchSummaryTab)), 0);
+    // In the left column, beside Stats, every label whole: four share the
+    // column or the strip scrolls, never into the TV.
     final tv = tester.getRect(find.byType(MatchTvHeader));
     for (final label in [
+      enL.matchTabSummary,
       enL.matchTabStats,
       enL.matchTabPlayer,
       enL.matchTabStadium,
     ]) {
+      await tester.ensureVisible(find.text(label));
+      await tester.pumpAndSettle(const Duration(milliseconds: 100));
+      expectWhole(find.text(label), 'the "$label" tab');
       final r = tester.getRect(find.text(label));
       expect(r.right, lessThan(tv.left), reason: label);
     }
+    // (Still on the Summary: a strip scrolled is no tab changed.)
+    expect(_tabIndex(tester, find.byType(MatchSummaryTab)), 0);
+    await _checkSummary(tester, save, playerTab: 2);
     await _checkTabs(tester, save);
     // The right column keeps its commentary and line-ups.
     expect(find.text(enL.matchTabCommentary), findsOneWidget);
@@ -213,6 +323,7 @@ void main() {
       find.byKey(MatchViewToggle.segmentKey(MatchViewMode.timeline)),
     );
     await tester.pumpAndSettle(const Duration(milliseconds: 100));
+    expect(find.byType(MatchSummaryTab), findsNothing);
     final score = tester.getRect(find.byType(MatchScoreboard));
     expect(
       tester.getRect(find.text(enL.matchTabStadium)).right,
