@@ -16510,6 +16510,21 @@ class AppLocalizationsJa extends AppLocalizations {
   String get matchTabSummary => '概要';
 
   @override
+  String get matchSummaryOtherMatches => '他の試合';
+
+  @override
+  String get matchSummaryLive => '試合中';
+
+  @override
+  String get matchSummaryHalfTimeMark => '前半終了';
+
+  @override
+  String get matchSummaryFullTimeMark => '試合終了';
+
+  @override
+  String get matchSummaryExtraTimeMark => '延長';
+
+  @override
   String get matchPotmNone => 'この試合ではマン・オブ・ザ・マッチは選ばれませんでした。';
 
   @override

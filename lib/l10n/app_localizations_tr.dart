@@ -17037,6 +17037,21 @@ class AppLocalizationsTr extends AppLocalizations {
   String get matchTabSummary => 'ÖZET';
 
   @override
+  String get matchSummaryOtherMatches => 'Diğer maçlar';
+
+  @override
+  String get matchSummaryLive => 'CANLI';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'İY';
+
+  @override
+  String get matchSummaryFullTimeMark => 'MS';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'UZ.';
+
+  @override
   String get matchPotmNone => 'Bu maçta maçın oyuncusu seçilmedi.';
 
   @override

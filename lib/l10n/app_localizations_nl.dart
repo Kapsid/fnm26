@@ -17208,6 +17208,21 @@ class AppLocalizationsNl extends AppLocalizations {
   String get matchTabSummary => 'OVERZICHT';
 
   @override
+  String get matchSummaryOtherMatches => 'Andere wedstrijden';
+
+  @override
+  String get matchSummaryLive => 'LIVE';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'RUST';
+
+  @override
+  String get matchSummaryFullTimeMark => 'EINDE';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'N.V.';
+
+  @override
   String get matchPotmNone =>
       'Voor dit duel is geen man van de wedstrijd gekozen.';
 

@@ -17211,6 +17211,21 @@ class AppLocalizationsBg extends AppLocalizations {
   String get matchTabSummary => 'ОБОБЩЕНИЕ';
 
   @override
+  String get matchSummaryOtherMatches => 'Други мачове';
+
+  @override
+  String get matchSummaryLive => 'НА ЖИВО';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'ПОЛУВР.';
+
+  @override
+  String get matchSummaryFullTimeMark => 'КРАЙ';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'СЛ. ПРОД.';
+
+  @override
   String get matchPotmNone => 'В този мач не беше избран играч на мача.';
 
   @override

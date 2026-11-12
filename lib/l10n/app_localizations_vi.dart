@@ -16974,6 +16974,21 @@ class AppLocalizationsVi extends AppLocalizations {
   String get matchTabSummary => 'TỔNG QUAN';
 
   @override
+  String get matchSummaryOtherMatches => 'Các trận khác';
+
+  @override
+  String get matchSummaryLive => 'TRỰC TIẾP';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'HẾT H1';
+
+  @override
+  String get matchSummaryFullTimeMark => 'KẾT THÚC';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'SAU HP';
+
+  @override
   String get matchPotmNone => 'Trận này không bầu cầu thủ xuất sắc nhất.';
 
   @override

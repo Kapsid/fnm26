@@ -17201,6 +17201,21 @@ class AppLocalizationsFi extends AppLocalizations {
   String get matchTabSummary => 'YHTEENVETO';
 
   @override
+  String get matchSummaryOtherMatches => 'Muut ottelut';
+
+  @override
+  String get matchSummaryLive => 'KÄYNNISSÄ';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'TAUKO';
+
+  @override
+  String get matchSummaryFullTimeMark => 'LOPPU';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'JATKOAJALLA';
+
+  @override
   String get matchPotmNone =>
       'Tässä ottelussa ei valittu ottelun parasta pelaajaa.';
 

@@ -17224,6 +17224,21 @@ class AppLocalizationsPt extends AppLocalizations {
   String get matchTabSummary => 'RESUMO';
 
   @override
+  String get matchSummaryOtherMatches => 'Outros jogos';
+
+  @override
+  String get matchSummaryLive => 'AO VIVO';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'INT.';
+
+  @override
+  String get matchSummaryFullTimeMark => 'FIM';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'PROL.';
+
+  @override
   String get matchPotmNone =>
       'Nenhum homem do jogo foi escolhido nesta partida.';
 

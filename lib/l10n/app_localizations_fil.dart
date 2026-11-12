@@ -17137,6 +17137,21 @@ class AppLocalizationsFil extends AppLocalizations {
   String get matchTabSummary => 'BUOD';
 
   @override
+  String get matchSummaryOtherMatches => 'Iba pang laro';
+
+  @override
+  String get matchSummaryLive => 'LIVE';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'HALFTIME';
+
+  @override
+  String get matchSummaryFullTimeMark => 'TAPOS';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'EXTRA TIME';
+
+  @override
   String get matchPotmNone =>
       'Walang napiling manlalaro ng laro sa larong ito.';
 

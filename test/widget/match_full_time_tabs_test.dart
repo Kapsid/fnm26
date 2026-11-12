@@ -3,9 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_moments.dart';
+import 'package:fnm/domain/services/match/same_day_results.dart';
 import 'package:fnm/domain/services/match/stadium/away_fan_share.dart';
 import 'package:fnm/domain/services/match/stadium/ground_character.dart';
 import 'package:fnm/domain/services/match/stadium/kick_off.dart';
@@ -535,27 +537,67 @@ void main() {
   });
 
   group('the Summary', () {
+    // Two other matches of the group, one with a long pair of names; and a
+    // knockout tie of the round settled on penalties.
+    final others = [
+      SameDayResult.of(
+        Fixture(
+          id: 501,
+          careerId: 1,
+          competitionId: 7,
+          matchday: 2,
+          date: DateTime(2030, 6, 14),
+          homeNationId: 30,
+          awayNationId: 40,
+          groupId: 3,
+          homeScore: 3,
+          awayScore: 1,
+          played: true,
+        ),
+        const [
+          (nationId: 30, playerId: 1, minute: 9),
+          (nationId: 40, playerId: 2, minute: 44),
+          (nationId: 30, playerId: 3, minute: 46),
+          (nationId: 30, playerId: 4, minute: 88),
+        ],
+      ),
+      SameDayResult.of(
+        Fixture(
+          id: 502,
+          careerId: 1,
+          competitionId: 7,
+          matchday: 2,
+          date: DateTime(2030, 6, 14),
+          homeNationId: 50,
+          awayNationId: 60,
+          groupId: 3,
+          homeScore: 2,
+          awayScore: 1,
+          played: true,
+          afterExtraTime: true,
+          homePenalties: 4,
+          awayPenalties: 3,
+        ),
+        const [
+          (nationId: 50, playerId: 5, minute: 70),
+        ],
+      ),
+    ];
+    String nameOf(int id) => switch (id) {
+      30 => 'Bosnia and Herzegovina',
+      40 => 'Central African Republic',
+      50 => 'Papua New Guinea',
+      _ => 'Saint Vincent and the Grenadines',
+    };
+
     Widget summary({
       bool fullTime = true,
       bool motm = true,
-      PitchStadium? still,
+      SameDayPhase? phase,
+      List<SameDayResult>? sameDay,
     }) {
       final r = _result();
       return MatchSummaryTab(
-        occasion: 'World Championship · Final',
-        status: fullTime ? 'FT' : '67',
-        homeNationId: _home,
-        homeCode: 'CZE',
-        awayCode: 'POR',
-        homeName: 'Bosnia and Herzegovina',
-        awayName: 'Central African Republic',
-        homeScore: 1,
-        awayScore: fullTime ? 2 : 1,
-        halfTime: 'HT 1 : 1',
-        goals: [
-          for (final e in r.events)
-            if (e.type == MatchEventType.goal && (fullTime || e.minute < 67)) e,
-        ],
         result: fullTime ? r : null,
         potm: fullTime && motm
             ? PlayerOfMatchHeader(
@@ -566,36 +608,43 @@ void main() {
               )
             : null,
         ground: _ground,
-        still: still,
-        groundNationCode: 'CZE',
         groundNationName: 'Czechia',
         kickOff: const KickOffTime(20, 45),
         weather: WeatherKind.rain,
+        sameDay: sameDay ?? others,
+        sameDayPhase:
+            phase ?? (fullTime ? SameDayPhase.fullTime : SameDayPhase.live),
+        codeOf: (id) => 'C$id',
+        nameOf: nameOf,
         playerTab: fullTime ? 3 : null,
         stadiumTab: fullTime ? 4 : null,
       );
     }
 
-    testWidgets('full time: score, scorers, figures, his card, the ground', (
+    String scoreOf(WidgetTester tester, int fixtureId) => tester
+        .widgetList<Text>(
+          find.descendant(
+            of: find.byKey(MatchSummaryTab.otherScoreKey(fixtureId)),
+            matching: find.byType(Text),
+          ),
+        )
+        .map((t) => t.data)
+        .join(' | ');
+
+    double topOf(WidgetTester tester, Key key) =>
+        tester.getTopLeft(find.byKey(key)).dy;
+
+    testWidgets('full time: no score card, his card, the day, the ground', (
       tester,
     ) async {
       await _pump(tester, summary());
+      // The scoreboard above has the score: the tab does not repeat it, nor
+      // the scorers.
+      expect(find.text('1 - 2'), findsNothing);
+      expect(find.textContaining('Striker', findRichText: true), findsWidgets);
       expect(
-        find.descendant(
-          of: find.byKey(MatchSummaryTab.scoreKey),
-          matching: find.text('1 - 2'),
-        ),
-        findsOneWidget,
-      );
-      expect(find.text('HT 1 : 1'), findsOneWidget);
-      // His two goals on one line, the home side's one on its own.
-      expect(
-        find.textContaining("A. Striker 12', 77'", findRichText: true),
-        findsOneWidget,
-      );
-      expect(
-        find.textContaining("H. Forward 40'", findRichText: true),
-        findsOneWidget,
+        find.textContaining("A. Striker 12'", findRichText: true),
+        findsNothing,
       );
       expect(find.byKey(MatchSummaryTab.headlineKey), findsOneWidget);
       expect(find.text('47%'), findsOneWidget);
@@ -617,18 +666,57 @@ void main() {
         find.textContaining('33,000 / 41,250 · 80%', findRichText: true),
         findsOneWidget,
       );
+      // The ground's box has no picture: the Stadium tab keeps it.
+      expect(find.byType(GroundStill), findsNothing);
+      // Full-time results of the rest of the day.
+      expect(scoreOf(tester, 501), '3 - 1 | FT');
+      expect(scoreOf(tester, 502), '1 - 1 | AET | 4–3 pens');
+      // The order: player of the match, the day, the ground, the figures.
+      final potm = topOf(tester, MatchSummaryTab.potmKey);
+      final day = topOf(tester, MatchSummaryTab.otherMatchesKey);
+      final ground = topOf(tester, MatchSummaryTab.stadiumKey);
+      final figures = topOf(tester, MatchSummaryTab.headlineKey);
+      expect(potm < day && day < ground && ground < figures, isTrue);
     });
 
-    testWidgets('while it is on: no figures, no player of the match', (
+    testWidgets('while it is on: the ground first, then the day, live', (
       tester,
     ) async {
       await _pump(tester, summary(fullTime: false));
       expect(find.byKey(MatchSummaryTab.headlineKey), findsNothing);
       expect(find.byKey(MatchSummaryTab.potmKey), findsNothing);
       expect(find.byType(PlayerOfMatchHeader), findsNothing);
-      expect(find.textContaining("77'", findRichText: true), findsNothing);
-      expect(find.byKey(MatchSummaryTab.stadiumKey), findsOneWidget);
+      expect(find.byType(GroundStill), findsNothing);
       expect(find.byKey(MatchSummaryTab.attendanceKey), findsOneWidget);
+      expect(
+        topOf(tester, MatchSummaryTab.stadiumKey),
+        lessThan(topOf(tester, MatchSummaryTab.otherMatchesKey)),
+      );
+      // No spoilers before our break: no score at all, just "live".
+      expect(scoreOf(tester, 501), 'LIVE');
+      expect(scoreOf(tester, 502), 'LIVE');
+      expect(find.text('Bosnia and Herzegovina'), findsOneWidget);
+    });
+
+    testWidgets('from our half time their half-time score, then the result', (
+      tester,
+    ) async {
+      await _pump(
+        tester,
+        summary(fullTime: false, phase: SameDayPhase.halfTime),
+      );
+      expect(scoreOf(tester, 501), '1 - 1 | HT');
+      expect(scoreOf(tester, 502), '0 - 0 | HT');
+      await _pump(tester, summary());
+      expect(scoreOf(tester, 501), '3 - 1 | FT');
+    });
+
+    testWidgets('no other match that day: no card', (tester) async {
+      await _pump(tester, summary(sameDay: const []));
+      expect(find.byKey(MatchSummaryTab.otherMatchesKey), findsNothing);
+      await _pump(tester, summary(fullTime: false, sameDay: const []));
+      expect(find.byKey(MatchSummaryTab.otherMatchesKey), findsNothing);
+      expect(find.byKey(MatchSummaryTab.stadiumKey), findsOneWidget);
     });
 
     testWidgets('an old result without a man of the match', (tester) async {
@@ -648,6 +736,8 @@ void main() {
       await tester.tap(find.byKey(MatchSummaryTab.potmKey));
       await tester.pumpAndSettle();
       expect(controller.index, 3);
+      await tester.ensureVisible(find.byKey(MatchSummaryTab.stadiumKey));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(MatchSummaryTab.stadiumKey));
       await tester.pumpAndSettle();
       expect(controller.index, 4);
@@ -657,10 +747,13 @@ void main() {
       testWidgets('no overflow at 320 and the largest text in $locale', (
         tester,
       ) async {
-        for (final fullTime in [true, false]) {
+        for (final phase in SameDayPhase.values) {
           await _pump(
             tester,
-            summary(fullTime: fullTime, still: _stadium()),
+            summary(
+              fullTime: phase == SameDayPhase.fullTime,
+              phase: phase,
+            ),
             size: const Size(320, 640),
             locale: locale,
             scale: 1.4,

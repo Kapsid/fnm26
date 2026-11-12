@@ -17152,6 +17152,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get matchTabSummary => 'SUMMARY';
 
   @override
+  String get matchSummaryOtherMatches => 'Other matches';
+
+  @override
+  String get matchSummaryLive => 'LIVE';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'HT';
+
+  @override
+  String get matchSummaryFullTimeMark => 'FT';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'AET';
+
+  @override
   String get matchPotmNone => 'No player of the match was named for this game.';
 
   @override

@@ -17540,6 +17540,21 @@ class AppLocalizationsRo extends AppLocalizations {
   String get matchTabSummary => 'REZUMAT';
 
   @override
+  String get matchSummaryOtherMatches => 'Alte meciuri';
+
+  @override
+  String get matchSummaryLive => 'ÎN DIRECT';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'PAUZĂ';
+
+  @override
+  String get matchSummaryFullTimeMark => 'FINAL';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'DUPĂ PREL.';
+
+  @override
   String get matchPotmNone =>
       'La acest meci nu a fost desemnat jucătorul meciului.';
 

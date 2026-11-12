@@ -17301,6 +17301,21 @@ class AppLocalizationsPl extends AppLocalizations {
   String get matchTabSummary => 'PODSUMOWANIE';
 
   @override
+  String get matchSummaryOtherMatches => 'Pozostałe mecze';
+
+  @override
+  String get matchSummaryLive => 'NA ŻYWO';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'PRZERWA';
+
+  @override
+  String get matchSummaryFullTimeMark => 'KONIEC';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'PO DOGR.';
+
+  @override
   String get matchPotmNone => 'W tym meczu nie wybrano zawodnika meczu.';
 
   @override

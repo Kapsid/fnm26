@@ -17254,6 +17254,21 @@ class AppLocalizationsDe extends AppLocalizations {
   String get matchTabSummary => 'ÜBERSICHT';
 
   @override
+  String get matchSummaryOtherMatches => 'Weitere Spiele';
+
+  @override
+  String get matchSummaryLive => 'LIVE';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'HZ';
+
+  @override
+  String get matchSummaryFullTimeMark => 'ENDE';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'N. V.';
+
+  @override
   String get matchPotmNone =>
       'Für dieses Spiel wurde kein Spieler des Spiels gekürt.';
 
