@@ -17460,6 +17460,21 @@ class AppLocalizationsHr extends AppLocalizations {
   String get matchTabSummary => 'SAŽETAK';
 
   @override
+  String get matchSummaryOtherMatches => 'Ostale utakmice';
+
+  @override
+  String get matchSummaryLive => 'UŽIVO';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'POLUVR.';
+
+  @override
+  String get matchSummaryFullTimeMark => 'KRAJ';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'PRODUŽ.';
+
+  @override
   String get matchPotmNone => 'Na ovoj utakmici nije proglašen igrač utakmice.';
 
   @override

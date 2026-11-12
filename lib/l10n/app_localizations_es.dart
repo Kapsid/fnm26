@@ -17218,6 +17218,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get matchTabSummary => 'RESUMEN';
 
   @override
+  String get matchSummaryOtherMatches => 'Otros partidos';
+
+  @override
+  String get matchSummaryLive => 'EN JUEGO';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'DESC.';
+
+  @override
+  String get matchSummaryFullTimeMark => 'FINAL';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'PRÓR.';
+
+  @override
   String get matchPotmNone =>
       'No se eligió jugador del partido en este encuentro.';
 

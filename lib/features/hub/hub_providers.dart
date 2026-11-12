@@ -49,6 +49,7 @@ import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_conditions.dart';
 import 'package:fnm/domain/services/match/match_simulator.dart';
 import 'package:fnm/domain/services/match/mid_tier_difficulty.dart';
+import 'package:fnm/domain/services/match/same_day_results.dart';
 import 'package:fnm/domain/services/match/venue.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
 import 'package:fnm/domain/services/player/discipline.dart';
@@ -382,6 +383,34 @@ typedef _ManagerSetup = ({
   /// Who is reading the opposition for him: his dossier is worth
   /// `Staff.dossierBonus` on the day, watched or skipped.
   StaffTier scout,
+});
+
+/// A background match played and not yet stored: what
+/// [SeasonService._playBackground] hands [SeasonService._simAndRecord].
+typedef _BackgroundPlay = ({
+  List<Player> homeXi,
+  List<Player> awayXi,
+  List<Player> homeSubs,
+  List<Player> awaySubs,
+  int homeStrength,
+  int awayStrength,
+
+  /// The ninety minutes' score, the one the box score is dressed from.
+  int regulationHome,
+  int regulationAway,
+
+  /// The score as stored (a shootout's winner one clear).
+  int homeScore,
+  int awayScore,
+  bool afterExtraTime,
+  int? homePens,
+  int? awayPens,
+
+  /// Each side's ninety, then each side's extra time, in draw order.
+  List<List<GoalRecord>> goalBatches,
+
+  /// Whether either side is the manager's.
+  bool managers,
 });
 
 /// The day the world stops for the manager's next call-up, while it is still
@@ -1203,9 +1232,116 @@ class SeasonService {
     required Career career,
     MatchGroundMemo? groundMemo,
   }) async {
+    final play = await _playBackground(
+      f,
+      nations,
+      rngSeed,
+      career: career,
+      groundMemo: groundMemo,
+    );
+    if (play == null) return;
+    await _comp.recordAppearances(
+      f.careerId,
+      f.homeNationId,
+      [...play.homeXi, ...play.homeSubs].map((p) => p.id),
+    );
+    await _comp.recordAppearances(
+      f.careerId,
+      f.awayNationId,
+      [...play.awayXi, ...play.awaySubs].map((p) => p.id),
+    );
+    // Tournament-tagged participation (whole world) so records like "most World
+    // Cup starts" / "most cups attended" accrue — the XI as starters, the
+    // substitutes as appearances off the bench.
+    await _comp.recordTournamentAppearances(
+      f.careerId,
+      f.competitionId,
+      [
+        for (final p in play.homeXi)
+          (playerId: p.id, nationId: f.homeNationId, started: true),
+        for (final p in play.homeSubs)
+          (playerId: p.id, nationId: f.homeNationId, started: false),
+        for (final p in play.awayXi)
+          (playerId: p.id, nationId: f.awayNationId, started: true),
+        for (final p in play.awaySubs)
+          (playerId: p.id, nationId: f.awayNationId, started: false),
+      ],
+    );
+    // The goals as they always went in: each side's ninety, then each side's
+    // extra time.
+    for (final goals in play.goalBatches) {
+      if (goals.isNotEmpty) await _comp.recordGoals(goals);
+    }
+    await _comp.recordResult(
+      fixtureId: f.id,
+      homeScore: play.homeScore,
+      awayScore: play.awayScore,
+      afterExtraTime: play.afterExtraTime,
+      homePenalties: play.homePens,
+      awayPenalties: play.awayPens,
+    );
+    _bumpRank(
+      f,
+      f.homeNationId,
+      f.awayNationId,
+      play.homeScore,
+      play.awayScore,
+    );
+    await _recordBackgroundDetail(
+      f,
+      homeXi: play.homeXi,
+      awayXi: play.awayXi,
+      homeSubs: play.homeSubs,
+      awaySubs: play.awaySubs,
+      homeScore: play.regulationHome,
+      awayScore: play.regulationAway,
+      homeStrength: play.homeStrength,
+      awayStrength: play.awayStrength,
+      scorers: [
+        for (final goals in play.goalBatches)
+          for (final g in goals) g.playerId,
+      ],
+      rngSeed: rngSeed,
+    );
+    // One of HIS matches, skipped rather than played: it drills (and reads)
+    // his side exactly as playing it would have. Recorded after the result,
+    // so this match was countered from the drilling before it, as a played
+    // one is. Background fixtures (neither side his) record nothing.
+    if (play.managers) await _recordDrilling(f.careerId);
+    // A finals just ended in the background: its veterans announce it now,
+    // dated on the final, rather than at the next advance after a few more
+    // AI fixtures had fielded them (which made the world depend on how the
+    // user stepped). A no-op unless every fixture of that finals is played.
+    if (f.round == 'FINAL' || f.round == 'CFINAL') {
+      if (await _ref
+          .read(internationalRetirementServiceProvider)
+          .settle(f.careerId, asOf: f.date)) {
+        _poolCache.removeWhere((k, _) => k.$1 == f.careerId);
+      }
+    }
+  }
+
+  /// Plays [f] the background way and returns everything [_simAndRecord]
+  /// stores, writing NOTHING: the XIs and benches, the strengths, the score
+  /// (a level knockout settled as it always was) and every goal with its
+  /// scorer and minute. Null when either nation is missing.
+  ///
+  /// The ONE function behind a background result. [_simAndRecord] stores
+  /// what it returns, and the match screen's other results of the day
+  /// ([sameDayResults]) show it before the world gets there, so what the
+  /// screen shows is what the save will hold. Every draw is on the fixture's
+  /// own seeded streams in the order the stored path always drew them; only
+  /// the writes moved, after it (none of them is read back in between).
+  Future<_BackgroundPlay?> _playBackground(
+    Fixture f,
+    Map<int, Nation> nations,
+    int rngSeed, {
+    required Career career,
+    MatchGroundMemo? groundMemo,
+  }) async {
     final home = nations[f.homeNationId];
     final away = nations[f.awayNationId];
-    if (home == null || away == null) return;
+    if (home == null || away == null) return null;
     // The XI each side fields (its best 4-3-3): goals are attributed within
     // it, and every fielded player logs a cap — so a nation's all-time
     // scorers and appearance records accumulate across the whole save,
@@ -1285,36 +1421,9 @@ class SeasonService {
       ),
       strengthEdge: finalsEdge,
     );
-    await _comp.recordAppearances(
-      f.careerId,
-      f.homeNationId,
-      [...homeXi, ...homeSubs].map((p) => p.id),
-    );
-    await _comp.recordAppearances(
-      f.careerId,
-      f.awayNationId,
-      [...awayXi, ...awaySubs].map((p) => p.id),
-    );
-    // Tournament-tagged participation (whole world) so records like "most World
-    // Cup starts" / "most cups attended" accrue — the XI as starters, the
-    // substitutes as appearances off the bench.
-    await _comp.recordTournamentAppearances(
-      f.careerId,
-      f.competitionId,
-      [
-        for (final p in homeXi)
-          (playerId: p.id, nationId: f.homeNationId, started: true),
-        for (final p in homeSubs)
-          (playerId: p.id, nationId: f.homeNationId, started: false),
-        for (final p in awayXi)
-          (playerId: p.id, nationId: f.awayNationId, started: true),
-        for (final p in awaySubs)
-          (playerId: p.id, nationId: f.awayNationId, started: false),
-      ],
-    );
     // Attribute scorers from the pre-shootout score (penalties don't count).
-    final scorers = <int>[
-      ...await _attributeGoals(
+    final goalBatches = <List<GoalRecord>>[
+      await _drawGoals(
         f,
         f.homeNationId,
         outcome.homeScore,
@@ -1323,7 +1432,7 @@ class SeasonService {
         xi: homeXi,
         subs: homeSubs,
       ),
-      ...await _attributeGoals(
+      await _drawGoals(
         f,
         f.awayNationId,
         outcome.awayScore,
@@ -1359,9 +1468,9 @@ class SeasonService {
       aet = true;
       // The extra-time goals are attributed with 91'–120' minutes so they show
       // up in the scorer charts, not just on the scoreboard.
-      scorers
-        ..addAll(
-          await _attributeGoals(
+      goalBatches
+        ..add(
+          await _drawGoals(
             f,
             f.homeNationId,
             ko.homeScore - hs,
@@ -1373,8 +1482,8 @@ class SeasonService {
             minuteSpan: 30,
           ),
         )
-        ..addAll(
-          await _attributeGoals(
+        ..add(
+          await _drawGoals(
             f,
             f.awayNationId,
             ko.awayScore - as,
@@ -1397,44 +1506,130 @@ class SeasonService {
         as = ko.awayScore;
       }
     }
-    await _comp.recordResult(
-      fixtureId: f.id,
-      homeScore: hs,
-      awayScore: as,
-      afterExtraTime: aet,
-      homePenalties: homePens,
-      awayPenalties: awayPens,
-    );
-    _bumpRank(f, f.homeNationId, f.awayNationId, hs, as);
-    await _recordBackgroundDetail(
-      f,
+    return (
       homeXi: homeXi,
       awayXi: awayXi,
       homeSubs: homeSubs,
       awaySubs: awaySubs,
-      homeScore: outcome.homeScore,
-      awayScore: outcome.awayScore,
       homeStrength: homeStrength,
       awayStrength: awayStrength,
-      scorers: scorers,
-      rngSeed: rngSeed,
+      regulationHome: outcome.homeScore,
+      regulationAway: outcome.awayScore,
+      homeScore: hs,
+      awayScore: as,
+      afterExtraTime: aet,
+      homePens: homePens,
+      awayPens: awayPens,
+      goalBatches: goalBatches,
+      managers: asHome != null || asAway != null,
     );
-    // One of HIS matches, skipped rather than played: it drills (and reads)
-    // his side exactly as playing it would have. Recorded after the result,
-    // so this match was countered from the drilling before it, as a played
-    // one is. Background fixtures (neither side his) record nothing.
-    if (asHome != null || asAway != null) await _recordDrilling(f.careerId);
-    // A finals just ended in the background: its veterans announce it now,
-    // dated on the final, rather than at the next advance after a few more
-    // AI fixtures had fielded them (which made the world depend on how the
-    // user stepped). A no-op unless every fixture of that finals is played.
-    if (f.round == 'FINAL' || f.round == 'CFINAL') {
-      if (await _ref
-          .read(internationalRetirementServiceProvider)
-          .settle(f.careerId, asOf: f.date)) {
-        _poolCache.removeWhere((k, _) => k.$1 == f.careerId);
+  }
+
+  /// The other fixtures of [ours]'s group (or round) played on its day, each
+  /// with the result the save holds or will hold for it (see
+  /// [SameDayFixtures]). Read-only: it writes nothing and moves no stream.
+  ///
+  /// A fixture already played is read back as stored. One still to be played
+  /// is played here by [_playBackground], the function the commit's catch-up
+  /// stores it with, on the same inputs: the same nations, pools, absences,
+  /// aging and ground, since nothing the manager's own match commits touches
+  /// another side's. Where that cannot be promised (either side still has an
+  /// unplayed fixture BEFORE this day, which the catch-up plays first and
+  /// which may change who is fit; or such a fixture is a final, whose
+  /// veterans may retire from any side) the fixture is left out rather than
+  /// shown wrong.
+  ///
+  /// Queued behind any running step like one ([_exclusive]): it reads the
+  /// caches a step fills.
+  Future<List<SameDayResult>> sameDayResults(int careerId, Fixture ours) async {
+    final out = <SameDayResult>[];
+    await _exclusive(() async {
+      final career = await _careers.byId(careerId);
+      if (career == null) return;
+      final day = DateTime(ours.date.year, ours.date.month, ours.date.day);
+      final others = SameDayFixtures.select(
+        ours,
+        await _comp.fixturesBetween(
+          careerId,
+          day,
+          DateTime(day.year, day.month, day.day + 1),
+        ),
+        managerNationId: career.nationId,
+      );
+      if (others.isEmpty) return;
+      final pending = <Fixture>[];
+      for (final f in others) {
+        if (f.hasResult) {
+          final goals = (await _comp.goalTimeline(
+            careerId,
+            fixtureId: f.id,
+          ))[f.id];
+          out.add(SameDayResult.of(f, goals ?? const []));
+        } else {
+          pending.add(f);
+        }
       }
-    }
+      if (pending.isEmpty) return;
+      final before = [
+        for (final f in await _comp.unplayedDueBy(
+          careerId,
+          day,
+          excludeNationId: career.nationId,
+        ))
+          if (f.date.isBefore(day)) f,
+      ];
+      if (before.any((f) => f.round == 'FINAL' || f.round == 'CFINAL')) {
+        return;
+      }
+      final busy = {
+        for (final f in before) ...[f.homeNationId, f.awayNationId],
+      };
+      // As the commit sets them before its catch-up ([_playPlayerMatch]).
+      _simCareer = career.id;
+      _simSeed = career.rngSeed;
+      _simYears = CareerService.agingYears(career);
+      final nations = await _nationsById(careerId);
+      final memo = MatchGroundMemo();
+      for (final f in pending) {
+        if (busy.contains(f.homeNationId) || busy.contains(f.awayNationId)) {
+          continue;
+        }
+        final play = await _playBackground(
+          f,
+          nations,
+          career.rngSeed,
+          career: career,
+          groundMemo: memo,
+        );
+        if (play == null) continue;
+        out.add(
+          SameDayResult.of(
+            f.copyWith(
+              homeScore: play.homeScore,
+              awayScore: play.awayScore,
+              afterExtraTime: play.afterExtraTime,
+              homePenalties: play.homePens,
+              awayPenalties: play.awayPens,
+              played: true,
+            ),
+            [
+              for (final goals in play.goalBatches)
+                for (final g in goals)
+                  (
+                    nationId: g.nationId,
+                    playerId: g.playerId,
+                    minute: g.minute,
+                  ),
+            ],
+          ),
+        );
+      }
+    }, dropIfBusy: false);
+    out.sort((a, b) {
+      final byDate = a.fixture.date.compareTo(b.fixture.date);
+      return byDate != 0 ? byDate : a.fixture.id.compareTo(b.fixture.id);
+    });
+    return out;
   }
 
   /// Records one manager match into the stored drilling: the shape he fielded
@@ -1877,6 +2072,35 @@ class SeasonService {
     int minuteFrom = 1,
     int minuteSpan = 90,
   }) async {
+    final drawn = await _drawGoals(
+      f,
+      nationId,
+      goals,
+      rngSeed,
+      salt,
+      xi: xi,
+      subs: subs,
+      minuteFrom: minuteFrom,
+      minuteSpan: minuteSpan,
+    );
+    if (drawn.isEmpty) return const [];
+    await _comp.recordGoals(drawn);
+    return [for (final g in drawn) g.playerId];
+  }
+
+  /// [_attributeGoals] without the write: who scored each of [goals] and in
+  /// which minute, drawn on the fixture's [salt] stream.
+  Future<List<GoalRecord>> _drawGoals(
+    Fixture f,
+    int nationId,
+    int goals,
+    int rngSeed,
+    int salt, {
+    List<Player>? xi,
+    List<Player> subs = const [],
+    int minuteFrom = 1,
+    int minuteSpan = 90,
+  }) async {
     if (goals <= 0) return const [];
     // Attribute to the players who actually take the field, not the whole
     // 100-man pool — otherwise goals scatter across every fringe player and no
@@ -1892,7 +2116,7 @@ class SeasonService {
       rng: rng,
       benchIds: {for (final p in subs) p.id},
     );
-    await _comp.recordGoals([
+    return [
       for (final id in ids)
         (
           careerId: f.careerId,
@@ -1902,8 +2126,7 @@ class SeasonService {
           playerId: id,
           minute: minuteFrom + rng.nextInt(minuteSpan),
         ),
-    ]);
-    return ids;
+    ];
   }
 
   Future<void> _simDue(

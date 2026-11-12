@@ -17441,6 +17441,21 @@ class AppLocalizationsUk extends AppLocalizations {
   String get matchTabSummary => 'ПІДСУМКИ';
 
   @override
+  String get matchSummaryOtherMatches => 'Інші матчі';
+
+  @override
+  String get matchSummaryLive => 'НАЖИВО';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'ПЕРЕРВА';
+
+  @override
+  String get matchSummaryFullTimeMark => 'КІНЕЦЬ';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'ДОД. ЧАС';
+
+  @override
   String get matchPotmNone => 'У цьому матчі гравця матчу не визначили.';
 
   @override

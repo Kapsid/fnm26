@@ -4,9 +4,12 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 part of 'match_screen.dart';
 
-/// The Pitch mode's first tab, for the whole match: the score and who has
-/// scored so far, the ground and its crowd, and after the whistle the three
-/// headline figures and the player of the match.
+/// The Pitch mode's first tab, for the whole match: the ground and its
+/// crowd, the other matches of the group or round played the same day, and
+/// after the whistle the player of the match and the three headline figures.
+///
+/// The score is not on it: the scoreboard above already shows it, and the
+/// scorers are the Timeline's and the Stats'.
 ///
 /// Read-only, like the full-time tabs: it shows what the screen already
 /// holds and decides nothing. A tap on the player of the match or on the
@@ -14,55 +17,32 @@ part of 'match_screen.dart';
 /// enclosing [DefaultTabController].
 class MatchSummaryTab extends StatelessWidget {
   const MatchSummaryTab({
-    required this.occasion,
-    required this.status,
-    required this.homeNationId,
-    required this.homeCode,
-    required this.awayCode,
-    required this.homeName,
-    required this.awayName,
-    required this.homeScore,
-    required this.awayScore,
-    required this.goals,
     required this.ground,
-    this.halfTime,
     this.result,
     this.potm,
-    this.still,
-    this.groundNationCode,
     this.groundNationName,
     this.kickOff,
     this.weather,
+    this.sameDay = const [],
+    this.sameDayPhase = SameDayPhase.live,
+    this.codeOf,
+    this.nameOf,
     this.playerTab,
     this.stadiumTab,
     super.key,
   });
 
-  static const Key scoreKey = Key('summary.score');
-  static const Key scorersKey = Key('summary.scorers');
   static const Key headlineKey = Key('summary.headline');
   static const Key potmKey = Key('summary.potm');
   static const Key stadiumKey = Key('summary.stadium');
   static const Key attendanceKey = Key('summary.attendance');
+  static const Key otherMatchesKey = Key('summary.otherMatches');
 
-  /// The competition and stage, as the top bar names it.
-  final String occasion;
-
-  /// The clock as the scoreboard shows it ("67", "FT", "AET").
-  final String status;
-  final int homeNationId;
-  final String homeCode;
-  final String awayCode;
-  final String homeName;
-  final String awayName;
-  final int homeScore;
-  final int awayScore;
-
-  /// "HT 1 : 0" once the first half is over; null before.
-  final String? halfTime;
-
-  /// The goals the clock has reached, in order.
-  final List<MatchEvent> goals;
+  /// One other match's row; its score (or its "live" mark) under
+  /// [otherScoreKey].
+  static Key otherMatchKey(int fixtureId) => Key('summary.other.$fixtureId');
+  static Key otherScoreKey(int fixtureId) =>
+      Key('summary.other.$fixtureId.score');
 
   /// The result, for the headline figures: given only at full time (the
   /// possession is a share of the whole match).
@@ -73,13 +53,20 @@ class MatchSummaryTab extends StatelessWidget {
   final Widget? potm;
 
   final MatchGround ground;
-
-  /// The ground as the Pitch view builds it; null leaves the picture out.
-  final PitchStadium? still;
-  final String? groundNationCode;
   final String? groundNationName;
   final KickOffTime? kickOff;
   final WeatherKind? weather;
+
+  /// The other matches of the day (see [SameDayFixtures]); none hides the
+  /// card.
+  final List<SameDayResult> sameDay;
+
+  /// How far they have got, by our clock.
+  final SameDayPhase sameDayPhase;
+
+  /// A nation's flag code and name, for [sameDay]'s rows.
+  final String Function(int nationId)? codeOf;
+  final String Function(int nationId)? nameOf;
 
   /// The tabs a tap on the player of the match and on the ground opens;
   /// null (while the match is on) leaves the card a card.
@@ -95,29 +82,40 @@ class MatchSummaryTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final r = result;
     final p = potm;
+    final stadium = _tappable(
+      key: stadiumKey,
+      onTap: stadiumTab == null ? null : () => _open(context, stadiumTab),
+      child: _stadiumBlock(context),
+    );
+    final others = sameDay.isEmpty ? null : _otherMatches(context);
+    const gap = SizedBox(height: AppSpacing.md);
+    // Live: the ground, then the rest of the day. At the whistle the man of
+    // the match leads, the day's results follow, then the ground and the
+    // figures.
+    final children = r == null
+        ? [
+            stadium,
+            if (others != null) ...[gap, others],
+          ]
+        : [
+            if (p != null) ...[
+              _tappable(
+                key: potmKey,
+                onTap: playerTab == null
+                    ? null
+                    : () => _open(context, playerTab),
+                child: p,
+              ),
+              gap,
+            ],
+            if (others != null) ...[others, gap],
+            stadium,
+            gap,
+            _headline(context, r),
+          ];
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
-      children: [
-        _resultBlock(context),
-        if (p != null) ...[
-          const SizedBox(height: AppSpacing.md),
-          _tappable(
-            key: potmKey,
-            onTap: playerTab == null ? null : () => _open(context, playerTab),
-            child: p,
-          ),
-        ],
-        const SizedBox(height: AppSpacing.md),
-        _tappable(
-          key: stadiumKey,
-          onTap: stadiumTab == null ? null : () => _open(context, stadiumTab),
-          child: _stadiumBlock(context),
-        ),
-        if (r != null) ...[
-          const SizedBox(height: AppSpacing.md),
-          _headline(context, r),
-        ],
-      ],
+      children: children,
     );
   }
 
@@ -133,140 +131,160 @@ class MatchSummaryTab extends StatelessWidget {
     child: InkWell(onTap: onTap, child: child),
   );
 
-  /// The score between the flags, the clock and the half-time score under
-  /// it, then each side's scorers under its own flag.
-  Widget _resultBlock(BuildContext context) {
+  /// The day's other matches, a row each: the home side, the score (or the
+  /// live mark) with what it is, the away side. In a narrow column (the
+  /// tablet's, or a phone at a large text size) the two sides stack, one
+  /// line each, with the score beside them, so no name breaks mid-word.
+  Widget _otherMatches(BuildContext context) {
     final l = AppLocalizations.of(context);
-    Widget side(String code, String name) => Column(
-      children: [
-        FlagDisc(code, size: 32),
-        const SizedBox(height: AppSpacing.xs),
-        Text(
-          name,
-          textAlign: TextAlign.center,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: AppTypography.bodyMedium.copyWith(fontWeight: FontWeight.w700),
-        ),
-      ],
+    final code = codeOf ?? (_) => '';
+    final name = nameOf ?? (_) => '';
+    final nameStyle = AppTypography.bodySmall.copyWith(
+      color: AppColors.onSurface,
+      fontWeight: FontWeight.w600,
     );
-    String mark(MatchEvent e) => e.penalty
-        ? '${_eventClock(e)} ${l.matchGoalPenalty}'
-        : e.ownGoal
-        ? '${_eventClock(e)} ${l.matchGoalOwnGoal}'
-        : _eventClock(e);
-    List<Widget> scorers({required bool home}) {
-      // One line a man, his minutes in the order he scored them. An own
-      // goal is the defender's, in the column of the side it counted for.
-      final byScorer = <(int, bool), List<MatchEvent>>{};
-      for (final e in goals) {
-        if ((e.teamNationId == homeNationId) != home) continue;
-        byScorer.putIfAbsent((e.playerId, e.ownGoal), () => []).add(e);
+    final mark = AppTypography.labelSmall.copyWith(
+      color: AppColors.onSurfaceVariant,
+      fontWeight: FontWeight.w700,
+    );
+    Widget row(SameDayResult s, {required bool wide}) {
+      final f = s.fixture;
+      final score = s.scoreAt(sameDayPhase);
+      final pens = sameDayPhase == SameDayPhase.fullTime && f.wentToShootout
+          ? l.recordsOnPenalties(f.homePenalties!, f.awayPenalties!)
+          : null;
+      final centre = score == null
+          ? Text(
+              l.matchSummaryLive,
+              maxLines: 1,
+              softWrap: false,
+              style: mark.copyWith(color: AppColors.primary),
+            )
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '${score.home} - ${score.away}',
+                  maxLines: 1,
+                  softWrap: false,
+                  style: AppTypography.titleMedium.copyWith(
+                    fontWeight: FontWeight.w800,
+                    fontFeatures: const [FontFeature.tabularFigures()],
+                  ),
+                ),
+                Text(
+                  sameDayPhase == SameDayPhase.halfTime
+                      ? l.matchSummaryHalfTimeMark
+                      : f.afterExtraTime
+                      ? l.matchSummaryExtraTimeMark
+                      : l.matchSummaryFullTimeMark,
+                  maxLines: 1,
+                  softWrap: false,
+                  style: mark,
+                ),
+                if (pens != null)
+                  Text(pens, maxLines: 1, softWrap: false, style: mark),
+              ],
+            );
+      final scoreBox = ConstrainedBox(
+        constraints: const BoxConstraints(minWidth: 64),
+        child: Padding(
+          key: otherScoreKey(f.id),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+          child: Center(widthFactor: 1, child: centre),
+        ),
+      );
+      if (!wide) {
+        Widget side(int nationId) => Row(
+          children: [
+            FlagDisc(code(nationId), size: 18),
+            const SizedBox(width: AppSpacing.xs),
+            Expanded(
+              child: Text(
+                name(nationId),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: nameStyle,
+              ),
+            ),
+          ],
+        );
+        return Padding(
+          key: otherMatchKey(f.id),
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    side(f.homeNationId),
+                    const SizedBox(height: 2),
+                    side(f.awayNationId),
+                  ],
+                ),
+              ),
+              scoreBox,
+            ],
+          ),
+        );
       }
-      return [
-        for (final g in byScorer.values)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 2),
-            child: Text.rich(
-              TextSpan(
+      return Padding(
+        key: otherMatchKey(f.id),
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+        child: Row(
+          children: [
+            Expanded(
+              child: Row(
                 children: [
-                  TextSpan(text: _abbrevName(g.first.playerName)),
-                  TextSpan(
-                    text: ' ${g.map(mark).join(', ')}',
-                    style: AppTypography.bodySmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
+                  Expanded(
+                    child: Text(
+                      name(f.homeNationId),
+                      textAlign: TextAlign.end,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: nameStyle,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
+                  FlagDisc(code(f.homeNationId), size: 20),
+                ],
+              ),
+            ),
+            scoreBox,
+            Expanded(
+              child: Row(
+                children: [
+                  FlagDisc(code(f.awayNationId), size: 20),
+                  const SizedBox(width: AppSpacing.xs),
+                  Expanded(
+                    child: Text(
+                      name(f.awayNationId),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: nameStyle,
                     ),
                   ),
                 ],
               ),
-              textAlign: home ? TextAlign.end : TextAlign.start,
-              style: AppTypography.bodySmall.copyWith(
-                color: AppColors.onSurface,
-              ),
-            ),
-          ),
-      ];
-    }
-
-    final ht = halfTime;
-    return ProfileBlock(
-      title: occasion,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(child: side(homeCode, homeName)),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-                child: Column(
-                  key: scoreKey,
-                  children: [
-                    Text(
-                      '$homeScore - $awayScore',
-                      maxLines: 1,
-                      softWrap: false,
-                      style: AppTypography.headlineLarge.copyWith(
-                        fontWeight: FontWeight.w800,
-                        fontFeatures: const [FontFeature.tabularFigures()],
-                      ),
-                    ),
-                    Text(
-                      // The scoreboard's bare minute reads as one here
-                      // only with its mark.
-                      RegExp(r'^\d+$').hasMatch(status) ? "$status'" : status,
-                      maxLines: 1,
-                      softWrap: false,
-                      style: profileCaptionStyle,
-                    ),
-                    if (ht != null) ...[
-                      const SizedBox(height: 2),
-                      Text(
-                        ht,
-                        maxLines: 1,
-                        softWrap: false,
-                        style: AppTypography.labelSmall.copyWith(
-                          color: AppColors.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-              Expanded(child: side(awayCode, awayName)),
-            ],
-          ),
-          if (goals.isNotEmpty) ...[
-            const SizedBox(height: AppSpacing.md),
-            Row(
-              key: scorersKey,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: scorers(home: true),
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-                  child: Icon(
-                    Icons.sports_soccer,
-                    size: 14,
-                    color: AppColors.outline,
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: scorers(home: false),
-                  ),
-                ),
-              ],
             ),
           ],
-        ],
+        ),
+      );
+    }
+
+    return ProfileBlock(
+      key: otherMatchesKey,
+      title: l.matchSummaryOtherMatches,
+      child: LayoutBuilder(
+        builder: (context, c) {
+          // Room for the two names either side of the score at this text
+          // size; the phone's column is, the tablet's is not.
+          final wide =
+              c.maxWidth / MediaQuery.textScalerOf(context).scale(1) >= 270;
+          return Column(
+            children: [for (final s in sameDay) row(s, wide: wide)],
+          );
+        },
       ),
     );
   }
@@ -322,8 +340,8 @@ class MatchSummaryTab extends StatelessWidget {
     );
   }
 
-  /// The ground: a small still of it beside its name and place, the crowd
-  /// against the seats, and the kick-off with its weather.
+  /// The ground: its name and place, the crowd against the seats, and the
+  /// kick-off with its weather. No picture: the Stadium tab has it.
   Widget _stadiumBlock(BuildContext context) {
     final l = AppLocalizations.of(context);
     final fill = ground.capacity <= 0
@@ -335,116 +353,78 @@ class MatchSummaryTab extends StatelessWidget {
     ].where((s) => s.trim().isNotEmpty).join(' · ');
     final k = kickOff;
     final w = weather;
-    final s = still;
     final muted = AppTypography.bodySmall.copyWith(
       color: AppColors.onSurfaceVariant,
     );
-    final facts = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          ground.stadium,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: AppTypography.titleMedium.copyWith(
-            fontWeight: FontWeight.w800,
-            height: 1.2,
-          ),
-        ),
-        if (place.isNotEmpty) Text(place, style: muted),
-        const SizedBox(height: AppSpacing.sm),
-        Text.rich(
-          key: attendanceKey,
-          TextSpan(
-            children: [
-              TextSpan(
-                text: GroundCard.thousands(ground.attendance),
-                style: AppTypography.bodyMedium.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.onSurface,
-                ),
-              ),
-              TextSpan(
-                text:
-                    ' / ${GroundCard.thousands(ground.capacity)}'
-                    ' · ${(fill * 100).round()}%',
-              ),
-            ],
-          ),
-          style: muted,
-        ),
-        const SizedBox(height: AppSpacing.xs),
-        ClipRRect(
-          borderRadius: AppRadii.smAll,
-          child: LinearProgressIndicator(
-            value: fill,
-            minHeight: 4,
-            backgroundColor: AppColors.surfaceContainerHighest,
-            valueColor: AlwaysStoppedAnimation<Color>(
-              fill >= 0.95 ? AppColors.positive : AppColors.primary,
+    return ProfileBlock(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            ground.stadium,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.titleMedium.copyWith(
+              fontWeight: FontWeight.w800,
+              height: 1.2,
             ),
           ),
-        ),
-        if (k != null && w != null) ...[
+          if (place.isNotEmpty) Text(place, style: muted),
           const SizedBox(height: AppSpacing.sm),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(
-                MatchStadiumTab.weatherIcon(w),
-                size: 16,
-                color: AppColors.onSurfaceVariant,
-              ),
-              const SizedBox(width: AppSpacing.xs),
-              Expanded(
-                child: Text(
-                  '${l.matchConditionsKickOff} ${k.label} · '
-                  '${GroundCard.weatherLabel(l, w)}',
-                  style: muted,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ],
-    );
-    return ProfileBlock(
-      child: LayoutBuilder(
-        builder: (context, c) {
-          final picture = s == null
-              ? null
-              : ClipRRect(
-                  borderRadius: AppRadii.smAll,
-                  child: AspectRatio(
-                    aspectRatio: 390 / 280,
-                    child: GroundStill(stadium: s),
+          Text.rich(
+            key: attendanceKey,
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: GroundCard.thousands(ground.attendance),
+                  style: AppTypography.bodyMedium.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.onSurface,
                   ),
-                );
-          // Beside the facts when there is room for both; at a large text
-          // size or in a narrow column, over them.
-          final beside =
-              c.maxWidth >= 260 &&
-              MediaQuery.textScalerOf(context).scale(10) <= 11.5;
-          if (picture == null) return facts;
-          if (beside) {
-            return Row(
+                ),
+                TextSpan(
+                  text:
+                      ' / ${GroundCard.thousands(ground.capacity)}'
+                      ' · ${(fill * 100).round()}%',
+                ),
+              ],
+            ),
+            style: muted,
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          ClipRRect(
+            borderRadius: AppRadii.smAll,
+            child: LinearProgressIndicator(
+              value: fill,
+              minHeight: 4,
+              backgroundColor: AppColors.surfaceContainerHighest,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                fill >= 0.95 ? AppColors.positive : AppColors.primary,
+              ),
+            ),
+          ),
+          if (k != null && w != null) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(width: c.maxWidth * 0.38, child: picture),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(child: facts),
+                Icon(
+                  MatchStadiumTab.weatherIcon(w),
+                  size: 16,
+                  color: AppColors.onSurfaceVariant,
+                ),
+                const SizedBox(width: AppSpacing.xs),
+                Expanded(
+                  child: Text(
+                    '${l.matchConditionsKickOff} ${k.label} · '
+                    '${GroundCard.weatherLabel(l, w)}',
+                    style: muted,
+                  ),
+                ),
               ],
-            );
-          }
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              picture,
-              const SizedBox(height: AppSpacing.md),
-              facts,
-            ],
-          );
-        },
+            ),
+          ],
+        ],
       ),
     );
   }

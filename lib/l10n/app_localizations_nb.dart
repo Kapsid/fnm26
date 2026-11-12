@@ -17122,6 +17122,21 @@ class AppLocalizationsNb extends AppLocalizations {
   String get matchTabSummary => 'OPPSUMMERING';
 
   @override
+  String get matchSummaryOtherMatches => 'Andre kamper';
+
+  @override
+  String get matchSummaryLive => 'DIREKTE';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'PAUSE';
+
+  @override
+  String get matchSummaryFullTimeMark => 'SLUTT';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'EKSTRAOMG.';
+
+  @override
   String get matchPotmNone => 'Ingen banens beste ble kåret i denne kampen.';
 
   @override

@@ -16552,6 +16552,21 @@ class AppLocalizationsKo extends AppLocalizations {
   String get matchTabSummary => '요약';
 
   @override
+  String get matchSummaryOtherMatches => '다른 경기';
+
+  @override
+  String get matchSummaryLive => '진행 중';
+
+  @override
+  String get matchSummaryHalfTimeMark => '전반 종료';
+
+  @override
+  String get matchSummaryFullTimeMark => '종료';
+
+  @override
+  String get matchSummaryExtraTimeMark => '연장';
+
+  @override
   String get matchPotmNone => '이 경기에서는 경기 최우수 선수가 선정되지 않았습니다.';
 
   @override

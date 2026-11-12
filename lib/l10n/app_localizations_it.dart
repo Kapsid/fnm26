@@ -17201,6 +17201,21 @@ class AppLocalizationsIt extends AppLocalizations {
   String get matchTabSummary => 'RIEPILOGO';
 
   @override
+  String get matchSummaryOtherMatches => 'Altre partite';
+
+  @override
+  String get matchSummaryLive => 'IN CORSO';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'INT.';
+
+  @override
+  String get matchSummaryFullTimeMark => 'FINE';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'D.T.S.';
+
+  @override
   String get matchPotmNone =>
       'Per questa partita non è stato indicato un migliore in campo.';
 

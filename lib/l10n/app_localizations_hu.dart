@@ -17072,6 +17072,21 @@ class AppLocalizationsHu extends AppLocalizations {
   String get matchTabSummary => 'ÖSSZEFOGLALÓ';
 
   @override
+  String get matchSummaryOtherMatches => 'További meccsek';
+
+  @override
+  String get matchSummaryLive => 'ÉLŐ';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'FÉLIDŐ';
+
+  @override
+  String get matchSummaryFullTimeMark => 'VÉGE';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'HOSSZ. U.';
+
+  @override
   String get matchPotmNone => 'Ezen a meccsen nem választottak meccs emberét.';
 
   @override

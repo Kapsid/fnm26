@@ -17111,6 +17111,21 @@ class AppLocalizationsSv extends AppLocalizations {
   String get matchTabSummary => 'ÖVERSIKT';
 
   @override
+  String get matchSummaryOtherMatches => 'Övriga matcher';
+
+  @override
+  String get matchSummaryLive => 'LIVE';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'HALVTID';
+
+  @override
+  String get matchSummaryFullTimeMark => 'SLUT';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'EFTER FÖRL.';
+
+  @override
   String get matchPotmNone => 'Ingen bäste spelare utsågs i den här matchen.';
 
   @override

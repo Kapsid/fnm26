@@ -17217,6 +17217,21 @@ class AppLocalizationsEl extends AppLocalizations {
   String get matchTabSummary => 'ΣΥΝΟΨΗ';
 
   @override
+  String get matchSummaryOtherMatches => 'Άλλοι αγώνες';
+
+  @override
+  String get matchSummaryLive => 'ΖΩΝΤΑΝΑ';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'ΗΜΙΧΡ.';
+
+  @override
+  String get matchSummaryFullTimeMark => 'ΤΕΛΙΚΟ';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'ΠΑΡ.';
+
+  @override
   String get matchPotmNone =>
       'Δεν αναδείχθηκε παίκτης του αγώνα σε αυτό το παιχνίδι.';
 

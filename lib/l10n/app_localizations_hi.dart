@@ -17034,6 +17034,21 @@ class AppLocalizationsHi extends AppLocalizations {
   String get matchTabSummary => 'सारांश';
 
   @override
+  String get matchSummaryOtherMatches => 'अन्य मैच';
+
+  @override
+  String get matchSummaryLive => 'लाइव';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'हाफ़ टाइम';
+
+  @override
+  String get matchSummaryFullTimeMark => 'समाप्त';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'अतिरिक्त समय';
+
+  @override
   String get matchPotmNone => 'इस मैच में प्लेयर ऑफ़ द मैच नहीं चुना गया।';
 
   @override

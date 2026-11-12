@@ -17086,6 +17086,21 @@ class AppLocalizationsMs extends AppLocalizations {
   String get matchTabSummary => 'RINGKASAN';
 
   @override
+  String get matchSummaryOtherMatches => 'Perlawanan lain';
+
+  @override
+  String get matchSummaryLive => 'LANGSUNG';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'REHAT';
+
+  @override
+  String get matchSummaryFullTimeMark => 'TAMAT';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'MASA TAMB.';
+
+  @override
   String get matchPotmNone =>
       'Tiada pemain terbaik dipilih untuk perlawanan ini.';
 

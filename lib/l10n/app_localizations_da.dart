@@ -17126,6 +17126,21 @@ class AppLocalizationsDa extends AppLocalizations {
   String get matchTabSummary => 'OVERSIGT';
 
   @override
+  String get matchSummaryOtherMatches => 'Andre kampe';
+
+  @override
+  String get matchSummaryLive => 'LIVE';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'PAUSE';
+
+  @override
+  String get matchSummaryFullTimeMark => 'SLUT';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'E. FORL.';
+
+  @override
   String get matchPotmNone =>
       'Der blev ikke kåret nogen kampens spiller i denne kamp.';
 

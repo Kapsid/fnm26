@@ -17285,6 +17285,21 @@ class AppLocalizationsFr extends AppLocalizations {
   String get matchTabSummary => 'RÉSUMÉ';
 
   @override
+  String get matchSummaryOtherMatches => 'Autres matchs';
+
+  @override
+  String get matchSummaryLive => 'EN DIRECT';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'MI-TEMPS';
+
+  @override
+  String get matchSummaryFullTimeMark => 'FIN';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'A.P.';
+
+  @override
   String get matchPotmNone =>
       'Aucun homme du match n’a été désigné pour cette rencontre.';
 

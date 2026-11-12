@@ -16823,6 +16823,21 @@ class AppLocalizationsTh extends AppLocalizations {
   String get matchTabSummary => 'สรุป';
 
   @override
+  String get matchSummaryOtherMatches => 'คู่อื่น';
+
+  @override
+  String get matchSummaryLive => 'สด';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'พักครึ่ง';
+
+  @override
+  String get matchSummaryFullTimeMark => 'จบเกม';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'ต่อเวลา';
+
+  @override
   String get matchPotmNone => 'เกมนี้ไม่มีการเลือกผู้เล่นยอดเยี่ยมประจำเกม';
 
   @override

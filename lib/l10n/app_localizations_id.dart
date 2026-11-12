@@ -17037,6 +17037,21 @@ class AppLocalizationsId extends AppLocalizations {
   String get matchTabSummary => 'RINGKASAN';
 
   @override
+  String get matchSummaryOtherMatches => 'Laga lainnya';
+
+  @override
+  String get matchSummaryLive => 'LANGSUNG';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'JEDA';
+
+  @override
+  String get matchSummaryFullTimeMark => 'SELESAI';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'PERP.';
+
+  @override
   String get matchPotmNone =>
       'Tidak ada pemain terbaik yang dipilih untuk laga ini.';
 

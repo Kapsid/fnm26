@@ -26419,6 +26419,26 @@
   "@matchTabSummary": {
     "description": "Match screen tab in Pitch (2D) mode, the first tab for the whole match: the score, the scorers, the ground and at full time the player of the match. Very short, upper case like the other match tabs."
   },
+  "matchSummaryOtherMatches": "Other matches",
+  "@matchSummaryOtherMatches": {
+    "description": "Summary tab in Pitch (2D) mode: caption over the other matches of the same group or round played the same day."
+  },
+  "matchSummaryLive": "LIVE",
+  "@matchSummaryLive": {
+    "description": "Summary tab, other matches of the day: shown instead of a score while our first half is on (their matches are being played). Very short, upper case."
+  },
+  "matchSummaryHalfTimeMark": "HT",
+  "@matchSummaryHalfTimeMark": {
+    "description": "Summary tab, other matches of the day: short mark under a half-time score. Very short, upper case (like HT)."
+  },
+  "matchSummaryFullTimeMark": "FT",
+  "@matchSummaryFullTimeMark": {
+    "description": "Summary tab, other matches of the day: short mark under a final score. Very short, upper case (like FT)."
+  },
+  "matchSummaryExtraTimeMark": "AET",
+  "@matchSummaryExtraTimeMark": {
+    "description": "Summary tab, other matches of the day: short mark under a final score reached after extra time. Very short, upper case (like AET)."
+  },
   "matchPotmNone": "No player of the match was named for this game.",
   "@matchPotmNone": {
     "description": "Player tab at full time when the result names no player of the match (an old saved result)."

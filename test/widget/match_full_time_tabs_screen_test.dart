@@ -227,7 +227,7 @@ void main() {
     // At the whistle it lands on the Summary again, the man of the match
     // on it.
     expect(_tabIndex(tester, find.byType(MatchDetailTabs)), 0);
-    expect(find.byKey(MatchSummaryTab.scoreKey), findsOneWidget);
+    expect(find.byKey(MatchSummaryTab.potmKey), findsOneWidget);
     // Five labels, each whole on one line: shared out or scrolling, never
     // cut or scaled.
     for (final label in [

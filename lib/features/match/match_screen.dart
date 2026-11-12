@@ -35,6 +35,7 @@ import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_moments.dart';
 import 'package:fnm/domain/services/match/penalty_takers.dart';
+import 'package:fnm/domain/services/match/same_day_results.dart';
 import 'package:fnm/domain/services/match/pitch/moment_staging.dart'
     show ShootoutCast, ShootoutStaging;
 import 'package:fnm/domain/services/press/fan_mood.dart';
@@ -49,6 +50,7 @@ import 'package:fnm/features/match/match_flow_charts.dart';
 import 'package:fnm/features/match/ground_card.dart';
 import 'package:fnm/features/match/penalty_order_sheet.dart';
 import 'package:fnm/features/match/match_providers.dart';
+import 'package:fnm/features/match/same_day_providers.dart';
 import 'package:fnm/features/match/pitch/match_dressing.dart';
 import 'package:fnm/features/match/pitch/pitch_clock.dart';
 import 'package:fnm/features/match/pitch/pitch_commentary.dart';
@@ -2529,9 +2531,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             final afterTabs = ft
                 ? _afterTabs(l, preview, r, conditionsShown)
                 : const <(String, Widget)>[];
-            // Pitch mode's first tab, the whole match through: the score
-            // and its scorers so far, the ground, and at the whistle the
-            // headline figures and the player of the match.
+            // Pitch mode's first tab, the whole match through: the ground,
+            // the day's other matches, and at the whistle the player of the
+            // match and the headline figures.
             Widget? summary;
             if (_onPitch) {
               final motm = ft ? r.manOfTheMatch : null;
@@ -2540,21 +2542,16 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               // The full-time tabs come after Stats and Line-ups on the
               // phone, after Stats alone in the tablet's left column.
               final firstAfter = tablet ? 2 : 3;
+              // The rest of the group (or round) that day, with the results
+              // the save will hold for them, revealed by our clock.
+              final sameDay =
+                  ref
+                      .watch(
+                        sameDayResultsProvider(sameDayKey(preview.fixture)),
+                      )
+                      .valueOrNull ??
+                  const <SameDayResult>[];
               summary = MatchSummaryTab(
-                occasion: MatchStage.label(l, preview.fixture),
-                status: clockLabel,
-                homeNationId: homeId,
-                homeCode: code(homeId),
-                awayCode: code(awayId),
-                homeName: name(homeId),
-                awayName: name(awayId),
-                homeScore: homeScore,
-                awayScore: awayScore,
-                halfTime: halfTimeLabel,
-                goals: [
-                  for (final e in timelineEvents)
-                    if (e.type == MatchEventType.goal) e,
-                ],
                 result: ft ? r : null,
                 potm: motm == null
                     ? null
@@ -2565,11 +2562,17 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                         age: who.age,
                       ),
                 ground: preview.ground,
-                still: _groundStill(preview).still,
-                groundNationCode: preview.nations[groundId]?.code,
                 groundNationName: preview.nations[groundId]?.name,
                 kickOff: conditionsShown.kickOff,
                 weather: conditionsShown.weather,
+                sameDay: sameDay,
+                // Our half-time whistle, the interval included.
+                sameDayPhase: SameDayPhase.of(
+                  halfTime: _halfTimeTaken || halfTimeLabel != null,
+                  fullTime: ft,
+                ),
+                codeOf: code,
+                nameOf: name,
                 playerTab: ft ? firstAfter : null,
                 stadiumTab: ft ? firstAfter + 1 : null,
               );

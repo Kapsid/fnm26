@@ -17512,6 +17512,21 @@ class AppLocalizationsCs extends AppLocalizations {
   String get matchTabSummary => 'PŘEHLED';
 
   @override
+  String get matchSummaryOtherMatches => 'Ostatní zápasy';
+
+  @override
+  String get matchSummaryLive => 'ŽIVĚ';
+
+  @override
+  String get matchSummaryHalfTimeMark => 'POLOČAS';
+
+  @override
+  String get matchSummaryFullTimeMark => 'KONEC';
+
+  @override
+  String get matchSummaryExtraTimeMark => 'PO PRODL.';
+
+  @override
   String get matchPotmNone => 'V tomto zápase nebyl vyhlášen hráč zápasu.';
 
   @override

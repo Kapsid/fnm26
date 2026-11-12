@@ -25904,6 +25904,36 @@ abstract class AppLocalizations {
   /// **'SUMMARY'**
   String get matchTabSummary;
 
+  /// Summary tab in Pitch (2D) mode: caption over the other matches of the same group or round played the same day.
+  ///
+  /// In en, this message translates to:
+  /// **'Other matches'**
+  String get matchSummaryOtherMatches;
+
+  /// Summary tab, other matches of the day: shown instead of a score while our first half is on (their matches are being played). Very short, upper case.
+  ///
+  /// In en, this message translates to:
+  /// **'LIVE'**
+  String get matchSummaryLive;
+
+  /// Summary tab, other matches of the day: short mark under a half-time score. Very short, upper case (like HT).
+  ///
+  /// In en, this message translates to:
+  /// **'HT'**
+  String get matchSummaryHalfTimeMark;
+
+  /// Summary tab, other matches of the day: short mark under a final score. Very short, upper case (like FT).
+  ///
+  /// In en, this message translates to:
+  /// **'FT'**
+  String get matchSummaryFullTimeMark;
+
+  /// Summary tab, other matches of the day: short mark under a final score reached after extra time. Very short, upper case (like AET).
+  ///
+  /// In en, this message translates to:
+  /// **'AET'**
+  String get matchSummaryExtraTimeMark;
+
   /// Player tab at full time when the result names no player of the match (an old saved result).
   ///
   /// In en, this message translates to:
