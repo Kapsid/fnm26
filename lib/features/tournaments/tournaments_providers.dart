@@ -9,6 +9,7 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -37,11 +38,15 @@ class TournamentStatus {
     required this.phase,
     required this.label,
     required this.championId,
+    this.championYear,
   });
 
   final TournamentPhase phase;
   final String label;
   final int? championId;
+
+  /// The year that title was won; null when it cannot be told.
+  final int? championYear;
 
   bool get available => phase != TournamentPhase.upcoming;
 }
@@ -117,6 +122,10 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
   final playerConf = nations[career.nationId]?.confederation;
   final honours = await comp.honours(careerId);
   final honourComps = {for (final h in honours) h.competition};
+  // The newest title of a competition (honours come newest first): what a
+  // competition that is not being played shows as its holder.
+  Honour? latestHonour(String name) =>
+      honours.where((h) => h.competition == name).firstOrNull;
   final l = ref.watch(appLocalizationsProvider);
 
   final statuses = <Confederation?, TournamentStatus>{};
@@ -159,6 +168,15 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
   // ACTIVE) once the player has watched the finals-draw ceremony — before that
   // it's still the QUALIFYING campaign as far as the UI is concerned.
   final worldChampion = await comp.worldChampion(careerId);
+  final wcLatest = latestHonour('World Championship');
+  int? worldChampionYear;
+  if (worldChampion != null) {
+    final fin = await comp.fixturesByRound(
+      careerId,
+      WorldCupFinals.finalRound,
+    );
+    worldChampionYear = fin.firstOrNull?.date.year;
+  }
   final hasFinals = await comp.hasFinals(careerId);
   final finalsDrawWatched = await comp.hasWatchedDraw(
     careerId,
@@ -194,7 +212,10 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
         : wcHasHistory
         ? l.tourSharedPastWinners
         : l.tourStatusUpcoming,
-    championId: worldChampion,
+    championId: worldChampion ?? (wcLive ? null : wcLatest?.championId),
+    championYear: worldChampion != null
+        ? worldChampionYear
+        : (wcLive ? null : wcLatest?.year),
   );
 
   // The player's continental championship is played in detail this cycle;
@@ -208,6 +229,7 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
     confederation: playerConf,
   );
   int? continentalChampion;
+  int? continentalYear;
   if (hasContinental) {
     final finalTie = await comp.fixturesByRound(
       careerId,
@@ -220,6 +242,7 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
       continentalChampion = f.homeScore! >= f.awayScore!
           ? f.homeNationId
           : f.awayNationId;
+      continentalYear = f.date.year;
     }
   }
 
@@ -252,6 +275,7 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
     final TournamentPhase phase;
     final String label;
     int? champion;
+    int? championYear;
     if (liveThisCycle) {
       phase = continentalChampion != null
           ? TournamentPhase.decided
@@ -262,9 +286,12 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
           ? l.tourStatusInProgress
           : l.tourStatusQualifying;
       champion = continentalChampion;
+      championYear = continentalYear;
     } else if (hasHistory) {
       phase = TournamentPhase.history;
       label = l.tourSharedPastWinners;
+      champion = latestHonour(name)?.championId;
+      championYear = latestHonour(name)?.year;
     } else {
       phase = TournamentPhase.upcoming;
       label = l.tourStatusComingSoon;
@@ -273,6 +300,7 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
       phase: phase,
       label: label,
       championId: champion,
+      championYear: championYear,
     );
   }
 
@@ -346,13 +374,17 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
       confederation: conf,
     );
     final started = ncGroupFx.any((f) => f.hasResult);
-    final champ = await _knockoutWinner(
+    final champFx = await _knockoutFinal(
       comp,
       careerId,
       'NFINAL',
       CompetitionKind.nationsLeague,
       confederation: conf,
     );
+    final champ = champFx?.winner;
+    final ncLatest = started || champ != null
+        ? null
+        : latestHonour(NationsCups.forConfederation(conf)?.name ?? '');
     final mine = conf == ncMine;
     final ladder =
         NationsCups.forConfederation(conf)?.format == NationsCupFormat.ladder;
@@ -371,7 +403,8 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
                 ? l.tourStatusLeague(ncLeague)
                 : l.tourStatusInProgress)
           : l.tourSharedPastWinners,
-      championId: champ,
+      championId: champ ?? ncLatest?.championId,
+      championYear: champ != null ? champFx?.year : ncLatest?.year,
     );
     if (mine) {
       nationsCup = status;
@@ -395,22 +428,26 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
           f.homeNationId == career.nationId ||
           f.awayNationId == career.nationId,
     );
-    final champ = await _knockoutWinner(
+    final champFx = await _knockoutFinal(
       comp,
       careerId,
       'FFINAL',
       CompetitionKind.finalissima,
     );
+    final champ = champFx?.winner;
     continentalClash = TournamentStatus(
       phase: champ != null ? TournamentPhase.decided : TournamentPhase.live,
       label: champ != null ? l.tourStatusDecided : l.tourStatusInProgress,
       championId: champ,
+      championYear: champFx?.year,
     );
   } else {
+    final clashLatest = latestHonour('Continental Clash');
     continentalClash = TournamentStatus(
       phase: TournamentPhase.history,
       label: l.tourSharedPastWinners,
-      championId: null,
+      championId: clashLatest?.championId,
+      championYear: clashLatest?.year,
     );
   }
 
@@ -430,8 +467,9 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
   );
 });
 
-/// The winner of a single-fixture [round] once it's played, else null.
-Future<int?> _knockoutWinner(
+/// The winner of a single-fixture [round] once it's played, and the year it
+/// was played in; null before then.
+Future<({int winner, int year})?> _knockoutFinal(
   CompetitionRepository comp,
   int careerId,
   String round,
@@ -446,5 +484,8 @@ Future<int?> _knockoutWinner(
   );
   if (fx.isEmpty || !fx.first.hasResult) return null;
   final f = fx.first;
-  return f.homeScore! >= f.awayScore! ? f.homeNationId : f.awayNationId;
+  return (
+    winner: f.homeScore! >= f.awayScore! ? f.homeNationId : f.awayNationId,
+    year: f.date.year,
+  );
 }

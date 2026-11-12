@@ -276,24 +276,52 @@ class _CompetitionListRow extends StatelessWidget {
                     // that tells "LEAGUE A" from "N. AMERICA". The status
                     // follows it on its line while there is room, and drops
                     // under it when there is not, rather than cutting it.
-                    Wrap(
-                      spacing: AppSpacing.sm,
-                      runSpacing: 4,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        Text(
-                          c.zone(l),
-                          key: _CompetitionListRow.strapKey,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TabletText.sectionLabel,
-                        ),
-                        _StatusChip(
-                          label: spec.status?.label ?? l.tourSharedSoon,
-                          accent: accent,
-                        ),
-                      ],
-                    ),
+                    if (spec.status?.phase != TournamentPhase.live &&
+                        available &&
+                        spec.championName != null)
+                      Row(
+                        key: _ChampionshipTile.winnerKey,
+                        children: [
+                          if (spec.championCode != null) ...[
+                            FlagDisc(spec.championCode!, size: 14),
+                            const SizedBox(width: AppSpacing.xs),
+                          ],
+                          Flexible(
+                            child: Text(
+                              spec.championName!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TabletText.sectionLabel,
+                            ),
+                          ),
+                          if (spec.championYear != null)
+                            Text(
+                              ' \u00b7 ${spec.championYear}',
+                              maxLines: 1,
+                              softWrap: false,
+                              style: TabletText.sectionLabel,
+                            ),
+                        ],
+                      )
+                    else
+                      Wrap(
+                        spacing: AppSpacing.sm,
+                        runSpacing: 4,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          Text(
+                            c.zone(l),
+                            key: _CompetitionListRow.strapKey,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TabletText.sectionLabel,
+                          ),
+                          _StatusChip(
+                            label: spec.status?.label ?? l.tourSharedSoon,
+                            accent: accent,
+                          ),
+                        ],
+                      ),
                   ],
                 ),
               ),

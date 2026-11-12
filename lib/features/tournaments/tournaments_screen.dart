@@ -126,6 +126,7 @@ typedef _Spec = ({
   TournamentStatus? status,
   String? championName,
   String? championCode,
+  int? championYear,
   String route,
   _Pick pick,
 });
@@ -268,6 +269,9 @@ class TournamentsScreen extends ConsumerWidget {
       championCode: championId == null
           ? null
           : overview?.nations[championId]?.code,
+      championYear: championId == null
+          ? null
+          : overview?.statuses[conf]?.championYear,
       route: conf == null
           ? '${Routes.cup}?careerId=$careerId'
           : '${Routes.continental}?careerId=$careerId&conf=${conf.name}',
@@ -302,6 +306,7 @@ class TournamentsScreen extends ConsumerWidget {
       status: status,
       championName: overview.nations[status.championId]?.name,
       championCode: overview.nations[status.championId]?.code,
+      championYear: status.championId == null ? null : status.championYear,
       route: '${Routes.nationsCup}?careerId=$careerId&conf=${conf.name}',
       pick: (kind: _PickKind.nationsCup, conf: conf),
     );
@@ -328,6 +333,9 @@ class TournamentsScreen extends ConsumerWidget {
     status: overview.continentalClash,
     championName: overview.nations[overview.continentalClash!.championId]?.name,
     championCode: overview.nations[overview.continentalClash!.championId]?.code,
+    championYear: overview.continentalClash!.championId == null
+        ? null
+        : overview.continentalClash!.championYear,
     route: '${Routes.continentalClash}?careerId=$careerId',
     pick: (kind: _PickKind.clash, conf: null),
   );
@@ -378,6 +386,7 @@ class TournamentsScreen extends ConsumerWidget {
     status: s.status,
     championName: s.championName,
     championCode: s.championCode,
+    championYear: s.championYear,
     onView: () => context.go(s.route),
   );
 
@@ -434,18 +443,23 @@ class _ChampionshipTile extends StatelessWidget {
     required this.championName,
     required this.onView,
     this.championCode,
+    this.championYear,
   });
 
   final _Championship championship;
   final TournamentStatus? status;
   final String? championName;
   final String? championCode;
+  final int? championYear;
   final VoidCallback onView;
 
   /// Every row the same height in every language: the name and the holder
   /// each get one line at the theme's size, never scaled down.
   static const double _height = 80;
   static const double _trophy = 44;
+
+  /// The winner line of a row that is not being played, found by tests.
+  static const Key winnerKey = Key('competition.winner');
 
   @override
   Widget build(BuildContext context) {
@@ -468,6 +482,9 @@ class _ChampionshipTile extends StatelessWidget {
         : competitionLabel(l, c.name);
     final holder = championName;
     final code = championCode;
+    // A competition that is not being played shows only its winner: no strap,
+    // no status chip. The one being played keeps both.
+    final winnerOnly = available && !live && holder != null;
 
     // At least [_height]: the same row everywhere at the usual text size,
     // and a taller row (never clipped) at the largest.
@@ -527,20 +544,10 @@ class _ChampionshipTile extends StatelessWidget {
                     style: AppTypography.titleMedium.copyWith(height: 1.15),
                   ),
                   const SizedBox(height: 3),
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          c.zone(l),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppTypography.labelSmall.copyWith(
-                            color: AppColors.outline,
-                          ),
-                        ),
-                      ),
-                      if (holder != null) ...[
-                        const SizedBox(width: AppSpacing.sm),
+                  if (winnerOnly)
+                    Row(
+                      key: winnerKey,
+                      children: [
                         if (code != null) ...[
                           FlagDisc(code, size: 14),
                           const SizedBox(width: AppSpacing.xs),
@@ -555,31 +562,76 @@ class _ChampionshipTile extends StatelessWidget {
                             ),
                           ),
                         ),
+                        if (championYear != null)
+                          Text(
+                            ' \u00b7 $championYear',
+                            maxLines: 1,
+                            softWrap: false,
+                            style: AppTypography.labelSmall.copyWith(
+                              color: AppColors.onSurfaceVariant,
+                            ),
+                          ),
                       ],
-                    ],
-                  ),
+                    )
+                  else
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            c.zone(l),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTypography.labelSmall.copyWith(
+                              color: AppColors.outline,
+                            ),
+                          ),
+                        ),
+                        if (holder != null) ...[
+                          const SizedBox(width: AppSpacing.sm),
+                          if (code != null) ...[
+                            FlagDisc(code, size: 14),
+                            const SizedBox(width: AppSpacing.xs),
+                          ],
+                          Flexible(
+                            child: Text(
+                              holder,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTypography.labelSmall.copyWith(
+                                color: AppColors.onSurfaceVariant,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
                 ],
               ),
             ),
-            const SizedBox(width: AppSpacing.sm),
-            // The status chip keeps its size: it gives way by ellipsis.
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 120),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                decoration: BoxDecoration(
-                  color: accent.withValues(alpha: 0.14),
-                  borderRadius: AppRadii.smAll,
-                ),
-                child: Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: false,
-                  style: AppTypography.labelSmall.copyWith(color: accent),
+            if (!winnerOnly) ...[
+              const SizedBox(width: AppSpacing.sm),
+              // The status chip keeps its size: it gives way by ellipsis.
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 120),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 3,
+                  ),
+                  decoration: BoxDecoration(
+                    color: accent.withValues(alpha: 0.14),
+                    borderRadius: AppRadii.smAll,
+                  ),
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
+                    style: AppTypography.labelSmall.copyWith(color: accent),
+                  ),
                 ),
               ),
-            ),
+            ],
           ],
         ),
       ),
