@@ -32,7 +32,9 @@ import 'package:fnm/l10n/app_localizations.dart';
 class PitchPlayback {
   PitchPlayback(this.script)
     : _reveal = _revealTimes(script),
-      _lines = _commentaryCues(script);
+      _lines = _commentaryCues(script) {
+    _crowd = _crowdCues(script, _lines);
+  }
 
   /// The picture for [result] at [speed], told from kick-off, or, with
   /// [resumeState] (`PitchScript.stateAt` of the picture on show), from
@@ -58,6 +60,7 @@ class PitchPlayback {
   final PitchScript script;
   final List<double> _reveal;
   final List<_Cue> _lines;
+  late final List<({double t, MatchMoment moment, bool build})> _crowd;
 
   MatchResult get result => script.result;
   PitchPacer get pacer => script.pacer;
@@ -151,6 +154,41 @@ class PitchPlayback {
       final to = _secs(s.pacer.screenAt(e.minute, e.stoppage, within: 1));
       out[i] = out[i].clamp(from, to);
     }
+    return out;
+  }
+
+  // --- the crowd -------------------------------------------------------------
+
+  /// The moments the stadium reacts to whose time falls in ([from], [to]],
+  /// in order: each shot's move as it starts (`build`, a goal's too), and
+  /// every moment the commentary names as its line comes in (a shot as it
+  /// is struck, a foul or offside as its window opens). A goal going in is
+  /// not among them: the screen sounds it as it flashes it.
+  List<({MatchMoment moment, bool build})> crowdCuesBetween(
+    Duration from,
+    Duration to,
+  ) {
+    final a = _secs(from) + _slack;
+    final b = _secs(to) + _slack;
+    return [
+      for (final c in _crowd)
+        if (c.t > a && c.t <= b) (moment: c.moment, build: c.build),
+    ];
+  }
+
+  static List<({double t, MatchMoment moment, bool build})> _crowdCues(
+    PitchScript s,
+    List<_Cue> lines,
+  ) {
+    final out = <({double t, MatchMoment moment, bool build})>[
+      for (final w in s.windows)
+        for (final m in w.moments)
+          if (m is ShotMoment) (t: w.start, moment: m, build: true),
+      for (final c in lines)
+        if (c.moment case final m?)
+          if (!(m is ShotMoment && m.outcome == ShotOutcome.goal))
+            (t: c.t, moment: m, build: false),
+    ]..sort((x, y) => x.t.compareTo(y.t));
     return out;
   }
 

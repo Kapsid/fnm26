@@ -20,6 +20,16 @@ export 'package:fnm/core/config/ui_language.dart'
 /// Prefs key for the sound-and-haptics toggle.
 const String _kSoundHapticsKey = 'settings.soundHaptics';
 
+/// Prefs key for the stadium sound toggle (absent = off).
+const String _kMatchSoundKey = 'settings.matchSound';
+
+/// Prefs key for the stadium sound volume, 0..1 (absent =
+/// [kMatchSoundDefaultVolume]).
+const String _kMatchSoundVolumeKey = 'settings.matchSoundVolume';
+
+/// The stadium sound volume before the manager moves the slider.
+const double kMatchSoundDefaultVolume = 0.7;
+
 /// Prefs key for the chosen text size (the option's name; absent = normal).
 const String _kTextSizeKey = 'settings.textSize';
 
@@ -66,6 +76,18 @@ const List<Locale> supportedAppLocales = [
 /// app; persisted to [SharedPreferences] so it survives relaunches. Loaded once
 /// at startup via [loadSettings].
 final soundHapticsEnabledProvider = StateProvider<bool>((ref) => true);
+
+/// Whether matches play the stadium's sound: the crowd and the referee's
+/// whistle (see `MatchSoundDirector`). OFF by default: the manager turns it
+/// on in Settings. Separate from [soundHapticsEnabledProvider], which is the
+/// OS's own buzz and tone. Persisted; loaded at startup via [loadSettings].
+final matchSoundEnabledProvider = StateProvider<bool>((ref) => false);
+
+/// The stadium sound's master volume, 0..1. Persisted; loaded at startup via
+/// [loadSettings].
+final matchSoundVolumeProvider = StateProvider<double>(
+  (ref) => kMatchSoundDefaultVolume,
+);
 
 /// The manager's chosen text size (default normal), applied app-wide on top of
 /// the phone's own text scale. Persisted; loaded at startup via [loadSettings].
@@ -179,6 +201,14 @@ Future<void> loadSettings(WidgetRef ref) async {
   if (v != null) {
     ref.read(soundHapticsEnabledProvider.notifier).state = v;
   }
+  final sound = prefs.getBool(_kMatchSoundKey);
+  if (sound != null) {
+    ref.read(matchSoundEnabledProvider.notifier).state = sound;
+  }
+  final volume = prefs.getDouble(_kMatchSoundVolumeKey);
+  if (volume != null) {
+    ref.read(matchSoundVolumeProvider.notifier).state = volume.clamp(0.0, 1.0);
+  }
   final code = prefs.getString(_kLocaleKey);
   if (code != null) {
     ref.read(localeProvider.notifier).state = Locale(code);
@@ -201,6 +231,27 @@ Future<void> setSoundHaptics(WidgetRef ref, bool enabled) async {
   ref.read(soundHapticsEnabledProvider.notifier).state = enabled;
   final prefs = await SharedPreferences.getInstance();
   await prefs.setBool(_kSoundHapticsKey, enabled);
+}
+
+/// Sets and persists the stadium sound toggle.
+Future<void> setMatchSound(WidgetRef ref, {required bool enabled}) async {
+  ref.read(matchSoundEnabledProvider.notifier).state = enabled;
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setBool(_kMatchSoundKey, enabled);
+}
+
+/// Sets the stadium sound volume (0..1) as the slider moves; [persist] writes
+/// it (the slider persists once, when the drag ends).
+Future<void> setMatchSoundVolume(
+  WidgetRef ref,
+  double volume, {
+  bool persist = true,
+}) async {
+  final v = volume.clamp(0.0, 1.0);
+  ref.read(matchSoundVolumeProvider.notifier).state = v;
+  if (!persist) return;
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setDouble(_kMatchSoundVolumeKey, v);
 }
 
 /// Sets and persists the UI language. A null [locale] clears the override so the

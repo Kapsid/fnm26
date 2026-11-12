@@ -79,6 +79,8 @@ dependencies:
   # Saves a share card straight into the photo gallery (iOS Photos, Android
   # MediaStore).
   gal: ^2.3.1
+  just_audio: ^0.10.6
+  audio_session: ^0.2.4
 
 dev_dependencies:
   flutter_test:
@@ -128,6 +130,7 @@ flutter:
     - assets/geo/
     - assets/flags/
     - assets/trophies/
+    - assets/sounds/
 
   # Bundled variable fonts (offline-first). The wght axis is driven by
   # `fontWeight` in TextStyle — see lib/core/theme/app_typography.dart.
