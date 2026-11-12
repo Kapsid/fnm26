@@ -15448,6 +15448,36 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
+  String pitchComReboundGoal1(String player, String other) {
+    return '$other ยิง ผู้รักษาประตูปัดออกมา และ $player ซ้ำเข้าไป! ประตู!';
+  }
+
+  @override
+  String pitchComReboundGoal2(String player, String other) {
+    return '$other ถูกเซฟไว้ได้ แต่ $player ซ้ำบอลกระดอน! ประตู!';
+  }
+
+  @override
+  String pitchComReboundGoal3(String player, String other) {
+    return 'ประตู! $other บังคับให้ผู้รักษาประตูเซฟ และ $player ซ้ำบอลกระดอนเข้าไป!';
+  }
+
+  @override
+  String pitchComReboundOwn1(String player) {
+    return 'เซฟได้ แต่ $player ซ้ำเข้าไป! ประตู!';
+  }
+
+  @override
+  String pitchComReboundOwn2(String player, String keeper) {
+    return '$keeper ปัดออกมา แต่ $player ถึงบอลกระดอนก่อน! ประตู!';
+  }
+
+  @override
+  String pitchComReboundOwn3(String player) {
+    return 'ประตู! บอลกระดอนออกมา และ $player เร็วที่สุด!';
+  }
+
+  @override
   String pitchComShotSaved1(String player, String keeper) {
     return '$player ยิง แต่ $keeper เซฟไว้ได้';
   }

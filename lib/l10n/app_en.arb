@@ -24076,6 +24076,72 @@
       }
     }
   },
+  "pitchComReboundGoal1": "{other} shoots, the keeper parries, and {player} follows up! GOAL!",
+  "@pitchComReboundGoal1": {
+    "description": "Pitch view commentary line: an open-play goal drawn as a rebound. {other}'s shot was saved or parried by the goalkeeper and {player} (the scorer) followed it up. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "other": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComReboundGoal2": "{other} is denied, but {player} pounces on the rebound! GOAL!",
+  "@pitchComReboundGoal2": {
+    "description": "Pitch view commentary line: an open-play goal drawn as a rebound. {other}'s shot was saved or parried by the goalkeeper and {player} (the scorer) followed it up. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "other": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComReboundGoal3": "GOAL! {other} forces a save and {player} buries the rebound!",
+  "@pitchComReboundGoal3": {
+    "description": "Pitch view commentary line: an open-play goal drawn as a rebound. {other}'s shot was saved or parried by the goalkeeper and {player} (the scorer) followed it up. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "other": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComReboundOwn1": "Saved, but {player} follows up! GOAL!",
+  "@pitchComReboundOwn1": {
+    "description": "Pitch view commentary line: an open-play goal drawn as a rebound of the scorer's own shot. {player} shot, the goalkeeper parried it back to him and he scored the follow-up. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComReboundOwn2": "{keeper} parries, but {player} gets to the rebound first! GOAL!",
+  "@pitchComReboundOwn2": {
+    "description": "Pitch view commentary line: an open-play goal drawn as a rebound of the scorer's own shot. {player} shot, the goalkeeper parried it back to him and he scored the follow-up. {keeper} is the goalkeeper. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "keeper": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComReboundOwn3": "GOAL! Parried, and {player} is quickest to the rebound!",
+  "@pitchComReboundOwn3": {
+    "description": "Pitch view commentary line: an open-play goal drawn as a rebound of the scorer's own shot. {player} shot, the goalkeeper parried it back to him and he scored the follow-up. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
   "pitchComShotSaved1": "{player} shoots, but {keeper} saves.",
   "@pitchComShotSaved1": {
     "description": "Pitch view commentary line: an open-play shot the goalkeeper saves. {player} is the shooter, {keeper} the goalkeeper. Variant 1 of 3.",

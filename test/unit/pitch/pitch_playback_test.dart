@@ -140,6 +140,14 @@ void main() {
         final shot = r.moments.whereType<ShotMoment>().firstWhere(
           (m) => m.goalEventIndex == i,
         );
+        // A goal drawn as a rebound is told as one.
+        int? rebound;
+        for (final w in pb.script.windows) {
+          if (w.moments.isEmpty || w.moments.first != shot) continue;
+          for (final c in w.cues) {
+            if (c.kind == PitchCueKind.rebound) rebound = c.playerId;
+          }
+        }
         expect(
           line,
           pitchLine(
@@ -149,6 +157,7 @@ void main() {
             seed,
             events: r.events,
             score: (home: home, away: away),
+            reboundFrom: rebound,
           ),
           reason: 'match $seed goal $i',
         );

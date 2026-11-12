@@ -15816,6 +15816,36 @@ class AppLocalizationsFi extends AppLocalizations {
   }
 
   @override
+  String pitchComReboundGoal1(String player, String other) {
+    return '$other laukoo, maalivahti torjuu, ja $player paikkaa! MAALI!';
+  }
+
+  @override
+  String pitchComReboundGoal2(String player, String other) {
+    return '$other ei vielä onnistu, mutta $player iskee irtopalloon! MAALI!';
+  }
+
+  @override
+  String pitchComReboundGoal3(String player, String other) {
+    return 'MAALI! $other pakottaa maalivahdin torjuntaan, ja $player vie irtopallon verkkoon!';
+  }
+
+  @override
+  String pitchComReboundOwn1(String player) {
+    return 'Torjuttu, mutta $player paikkaa! MAALI!';
+  }
+
+  @override
+  String pitchComReboundOwn2(String player, String keeper) {
+    return '$keeper torjuu, mutta $player ehtii irtopalloon ensimmäisenä! MAALI!';
+  }
+
+  @override
+  String pitchComReboundOwn3(String player) {
+    return 'MAALI! Torjunta, ja $player on nopein irtopallolle!';
+  }
+
+  @override
   String pitchComShotSaved1(String player, String keeper) {
     return '$player laukoo, mutta $keeper torjuu.';
   }

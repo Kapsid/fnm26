@@ -15648,6 +15648,36 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
+  String pitchComReboundGoal1(String player, String other) {
+    return '$other menembak, kiper menepis, dan $player menyambar bola muntah! GOL!';
+  }
+
+  @override
+  String pitchComReboundGoal2(String player, String other) {
+    return '$other digagalkan, tetapi $player menyambar bola pantulan! GOL!';
+  }
+
+  @override
+  String pitchComReboundGoal3(String player, String other) {
+    return 'GOL! $other memaksa kiper melakukan penyelamatan dan $player menceploskan bola muntah!';
+  }
+
+  @override
+  String pitchComReboundOwn1(String player) {
+    return 'Ditepis, tetapi $player menyambar lagi! GOL!';
+  }
+
+  @override
+  String pitchComReboundOwn2(String player, String keeper) {
+    return '$keeper menepis, tetapi $player lebih dulu meraih bola muntah! GOL!';
+  }
+
+  @override
+  String pitchComReboundOwn3(String player) {
+    return 'GOL! Bola ditepis dan $player paling sigap menyambar bola muntah!';
+  }
+
+  @override
   String pitchComShotSaved1(String player, String keeper) {
     return '$player menembak, tetapi $keeper menyelamatkan.';
   }

@@ -23882,6 +23882,42 @@ abstract class AppLocalizations {
   /// **'GOAL! A clinical finish from {player}.'**
   String pitchComShotGoal3(String player);
 
+  /// Pitch view commentary line: an open-play goal drawn as a rebound. {other}'s shot was saved or parried by the goalkeeper and {player} (the scorer) followed it up. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{other} shoots, the keeper parries, and {player} follows up! GOAL!'**
+  String pitchComReboundGoal1(String player, String other);
+
+  /// Pitch view commentary line: an open-play goal drawn as a rebound. {other}'s shot was saved or parried by the goalkeeper and {player} (the scorer) followed it up. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{other} is denied, but {player} pounces on the rebound! GOAL!'**
+  String pitchComReboundGoal2(String player, String other);
+
+  /// Pitch view commentary line: an open-play goal drawn as a rebound. {other}'s shot was saved or parried by the goalkeeper and {player} (the scorer) followed it up. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'GOAL! {other} forces a save and {player} buries the rebound!'**
+  String pitchComReboundGoal3(String player, String other);
+
+  /// Pitch view commentary line: an open-play goal drawn as a rebound of the scorer's own shot. {player} shot, the goalkeeper parried it back to him and he scored the follow-up. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved, but {player} follows up! GOAL!'**
+  String pitchComReboundOwn1(String player);
+
+  /// Pitch view commentary line: an open-play goal drawn as a rebound of the scorer's own shot. {player} shot, the goalkeeper parried it back to him and he scored the follow-up. {keeper} is the goalkeeper. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{keeper} parries, but {player} gets to the rebound first! GOAL!'**
+  String pitchComReboundOwn2(String player, String keeper);
+
+  /// Pitch view commentary line: an open-play goal drawn as a rebound of the scorer's own shot. {player} shot, the goalkeeper parried it back to him and he scored the follow-up. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'GOAL! Parried, and {player} is quickest to the rebound!'**
+  String pitchComReboundOwn3(String player);
+
   /// Pitch view commentary line: an open-play shot the goalkeeper saves. {player} is the shooter, {keeper} the goalkeeper. Variant 1 of 3.
   ///
   /// In en, this message translates to:

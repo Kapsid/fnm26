@@ -588,6 +588,63 @@ void main() {
     );
   });
 
+  test('a goal drawn as a rebound is told as a follow-up', () {
+    final goal = _shot(ShotOrigin.openPlay, ShotOutcome.goal);
+    for (final l in _locales.values) {
+      final mates = {
+        l.pitchComReboundGoal1(_p, _o),
+        l.pitchComReboundGoal2(_p, _o),
+        l.pitchComReboundGoal3(_p, _o),
+      };
+      final own = {
+        l.pitchComReboundOwn1(_p),
+        l.pitchComReboundOwn2(_p, _k),
+        l.pitchComReboundOwn3(_p),
+      };
+      for (var seed = 0; seed < 12; seed++) {
+        // A team-mate's shot parried: both men named, the scorer scoring.
+        final line = pitchLine(
+          l,
+          goal,
+          _names,
+          seed,
+          events: const [],
+          reboundFrom: _assist,
+        )!;
+        expect(mates, contains(line));
+        expect(line, contains(_p));
+        expect(line, contains(_o));
+        // His own, parried back to him.
+        expect(
+          own,
+          contains(
+            pitchLine(
+              l,
+              goal,
+              _names,
+              seed,
+              events: const [],
+              reboundFrom: _shooter,
+            ),
+          ),
+        );
+        // Only a goal is ever a follow-up.
+        final saved = _shot(ShotOrigin.openPlay, ShotOutcome.saved);
+        expect(
+          pitchLine(
+            l,
+            saved,
+            _names,
+            seed,
+            events: const [],
+            reboundFrom: _assist,
+          ),
+          pitchLine(l, saved, _names, seed, events: const []),
+        );
+      }
+    }
+  });
+
   test('same seed same line', () {
     for (var i = 0; i < 6; i++) {
       final r = labMatch(i).result;

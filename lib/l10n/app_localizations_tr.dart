@@ -15656,6 +15656,36 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String pitchComReboundGoal1(String player, String other) {
+    return '$other vuruyor, kaleci çeliyor ve $player dönen topu tamamlıyor! GOL!';
+  }
+
+  @override
+  String pitchComReboundGoal2(String player, String other) {
+    return '$other engelleniyor, ama $player dönen topa yetişiyor! GOL!';
+  }
+
+  @override
+  String pitchComReboundGoal3(String player, String other) {
+    return 'GOL! $other kaleciyi kurtarışa zorluyor ve $player dönen topu ağlara gönderiyor!';
+  }
+
+  @override
+  String pitchComReboundOwn1(String player) {
+    return 'Kurtarış, ama $player dönen topu tamamlıyor! GOL!';
+  }
+
+  @override
+  String pitchComReboundOwn2(String player, String keeper) {
+    return '$keeper çeliyor, ama dönen topa ilk $player yetişiyor! GOL!';
+  }
+
+  @override
+  String pitchComReboundOwn3(String player) {
+    return 'GOL! Top çelindi ve $player dönen topa herkesten hızlı!';
+  }
+
+  @override
   String pitchComShotSaved1(String player, String keeper) {
     return '$player vuruyor, ama $keeper kurtarıyor.';
   }

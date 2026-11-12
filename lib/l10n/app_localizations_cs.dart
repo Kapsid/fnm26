@@ -16133,6 +16133,36 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String pitchComReboundGoal1(String player, String other) {
+    return '$other pálí, brankář vyráží a $player doráží do sítě! GÓL!';
+  }
+
+  @override
+  String pitchComReboundGoal2(String player, String other) {
+    return '$other ještě neuspěl, ale $player dorážkou skóruje! GÓL!';
+  }
+
+  @override
+  String pitchComReboundGoal3(String player, String other) {
+    return 'GÓL! $other prověřil brankáře a $player doklepl odražený míč do sítě!';
+  }
+
+  @override
+  String pitchComReboundOwn1(String player) {
+    return 'Brankář vyrazil, ale $player dorazil! GÓL!';
+  }
+
+  @override
+  String pitchComReboundOwn2(String player, String keeper) {
+    return '$keeper vyrazil, ale $player je u dorážky první! GÓL!';
+  }
+
+  @override
+  String pitchComReboundOwn3(String player) {
+    return 'GÓL! Vyražená střela a $player je u dorážky nejrychlejší!';
+  }
+
+  @override
   String pitchComShotSaved1(String player, String keeper) {
     return '$player střílí, ale $keeper chytá.';
   }

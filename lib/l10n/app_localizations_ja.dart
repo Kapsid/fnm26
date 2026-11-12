@@ -15153,6 +15153,36 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String pitchComReboundGoal1(String player, String other) {
+    return '$otherのシュートをキーパーが弾くも、$playerが押し込んだ！ゴール！';
+  }
+
+  @override
+  String pitchComReboundGoal2(String player, String other) {
+    return '$otherは止められたが、$playerがこぼれ球に詰めた！ゴール！';
+  }
+
+  @override
+  String pitchComReboundGoal3(String player, String other) {
+    return 'ゴール！$otherのシュートはセーブされたが、$playerがこぼれ球を流し込んだ！';
+  }
+
+  @override
+  String pitchComReboundOwn1(String player) {
+    return 'セーブされるも、$playerが詰めた！ゴール！';
+  }
+
+  @override
+  String pitchComReboundOwn2(String player, String keeper) {
+    return '$keeperが弾いたが、$playerがこぼれ球にいち早く反応！ゴール！';
+  }
+
+  @override
+  String pitchComReboundOwn3(String player) {
+    return 'ゴール！弾かれたボールに$playerが真っ先に反応！';
+  }
+
+  @override
   String pitchComShotSaved1(String player, String keeper) {
     return '$playerのシュート、しかし$keeperがセーブ。';
   }

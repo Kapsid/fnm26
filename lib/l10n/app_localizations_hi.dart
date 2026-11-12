@@ -15656,6 +15656,36 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
+  String pitchComReboundGoal1(String player, String other) {
+    return '$other का शॉट, गोलकीपर ने रोका, पर $player ने रिबाउंड पर गोल कर दिया! गोल!';
+  }
+
+  @override
+  String pitchComReboundGoal2(String player, String other) {
+    return '$other चूक गए, लेकिन $player ने रिबाउंड पर झपट्टा मारा! गोल!';
+  }
+
+  @override
+  String pitchComReboundGoal3(String player, String other) {
+    return 'गोल! $other के शॉट पर गोलकीपर ने बचाव किया और $player ने रिबाउंड को जाल में डाल दिया!';
+  }
+
+  @override
+  String pitchComReboundOwn1(String player) {
+    return 'बचाव हुआ, पर $player ने फ़ॉलो-अप में गोल कर दिया! गोल!';
+  }
+
+  @override
+  String pitchComReboundOwn2(String player, String keeper) {
+    return '$keeper ने गेंद रोकी, लेकिन रिबाउंड पर $player सबसे पहले पहुँचे! गोल!';
+  }
+
+  @override
+  String pitchComReboundOwn3(String player) {
+    return 'गोल! गेंद लौटकर आई और $player रिबाउंड पर सबसे तेज़ निकले!';
+  }
+
+  @override
   String pitchComShotSaved1(String player, String keeper) {
     return '$player का शॉट, लेकिन $keeper ने बचा लिया।';
   }

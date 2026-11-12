@@ -15729,6 +15729,36 @@ class AppLocalizationsSv extends AppLocalizations {
   }
 
   @override
+  String pitchComReboundGoal1(String player, String other) {
+    return '$other skjuter, målvakten styr ut, och $player följer upp! MÅL!';
+  }
+
+  @override
+  String pitchComReboundGoal2(String player, String other) {
+    return '$other stoppas, men $player slår till på returen! MÅL!';
+  }
+
+  @override
+  String pitchComReboundGoal3(String player, String other) {
+    return 'MÅL! $other tvingar fram en räddning och $player sätter returen i nät!';
+  }
+
+  @override
+  String pitchComReboundOwn1(String player) {
+    return 'Räddad, men $player följer upp! MÅL!';
+  }
+
+  @override
+  String pitchComReboundOwn2(String player, String keeper) {
+    return '$keeper styr ut, men $player är först på returen! MÅL!';
+  }
+
+  @override
+  String pitchComReboundOwn3(String player) {
+    return 'MÅL! Bollen studsar ut och $player är snabbast på returen!';
+  }
+
+  @override
   String pitchComShotSaved1(String player, String keeper) {
     return '$player skjuter, men $keeper räddar.';
   }

@@ -15914,6 +15914,36 @@ class AppLocalizationsPl extends AppLocalizations {
   }
 
   @override
+  String pitchComReboundGoal1(String player, String other) {
+    return '$other strzela, bramkarz odbija, a $player dobija! GOL!';
+  }
+
+  @override
+  String pitchComReboundGoal2(String player, String other) {
+    return '$other zatrzymany, ale $player wykorzystuje dobitkę! GOL!';
+  }
+
+  @override
+  String pitchComReboundGoal3(String player, String other) {
+    return 'GOL! $other zmusza bramkarza do interwencji, a $player wpycha piłkę do siatki z dobitki!';
+  }
+
+  @override
+  String pitchComReboundOwn1(String player) {
+    return 'Obrona, ale $player dobija! GOL!';
+  }
+
+  @override
+  String pitchComReboundOwn2(String player, String keeper) {
+    return '$keeper odbija, ale $player pierwszy dopada do piłki! GOL!';
+  }
+
+  @override
+  String pitchComReboundOwn3(String player) {
+    return 'GOL! Piłka odbita, a $player najszybciej dopada do dobitki!';
+  }
+
+  @override
   String pitchComShotSaved1(String player, String keeper) {
     return '$player strzela, ale $keeper broni.';
   }
