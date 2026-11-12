@@ -2485,6 +2485,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               ),
               codeOf: code,
               nameOf: name,
+              homeId: homeId,
+              awayId: awayId,
             );
             // The tablet's 2D TV: its goal and every other moment take the
             // header's strip in turn, never the picture (see [MatchTvHeader]).

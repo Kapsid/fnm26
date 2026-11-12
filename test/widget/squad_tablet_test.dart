@@ -9,6 +9,7 @@ import 'package:fnm/features/player/player_detail_screen.dart';
 import 'package:fnm/features/shell/detail_pane_host.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/features/shell/tablet_sidebar.dart';
+import 'package:fnm/features/tactics/call_up_screen.dart';
 import 'package:fnm/features/tactics/nation_squad_providers.dart';
 import 'package:fnm/features/tactics/squad_tablet_layout.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
@@ -199,6 +200,51 @@ void main() {
       expect(arrowOn(label), findsOneWidget, reason: label);
       expect(tester.takeException(), isNull, reason: label);
     }
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('a defence offers its positions and one narrows the table', (
+    tester,
+  ) async {
+    final save = await seedSave(tester, formFactor: FormFactor.tablet);
+    await pumpRoute(
+      tester,
+      save,
+      '${Routes.tactics}?careerId=${save.careerId}&tab=3',
+      size: const Size(1080, 810),
+    );
+    final data = save.container.read(nationSquadProvider(save.careerId)).value!;
+    final total = data.rows.length;
+    expect(
+      find.byKey(CallUpScreen.positionFilterKey(PositionCategory.defender)),
+      findsNothing,
+    );
+    await tester.tap(find.widgetWithText(ChoiceChip, enL.squadLineDefenders));
+    await tester.pump();
+    expect(
+      find.byKey(CallUpScreen.positionFilterKey(PositionCategory.defender)),
+      findsOneWidget,
+    );
+    final inLine = data.rows
+        .where((r) => r.player.category == PositionCategory.defender)
+        .toList();
+    final pos = inLine.first.player.position;
+    final n = inLine.where((r) => r.player.position == pos).length;
+    await tester.tap(
+      find.byKey(
+        CallUpScreen.positionChipKey(PositionCategory.defender, pos),
+      ),
+    );
+    await tester.pump();
+    expect(find.text(enL.squadShowingOf(n, total)), findsOneWidget);
+    // Keepers have one position: no row.
+    await tester.tap(find.widgetWithText(ChoiceChip, enL.squadLineKeepers));
+    await tester.pump();
+    expect(
+      find.byKey(CallUpScreen.positionFilterKey(PositionCategory.goalkeeper)),
+      findsNothing,
+    );
+    expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox());
   });
 

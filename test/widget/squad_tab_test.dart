@@ -7,6 +7,7 @@ import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/squad/absence_outlook.dart';
 import 'package:fnm/features/squad/captain_providers.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
+import 'package:fnm/features/tactics/call_up_screen.dart';
 import 'package:fnm/features/tactics/nation_squad_providers.dart';
 import 'package:fnm/features/tactics/nation_squad_tab.dart';
 
@@ -149,6 +150,34 @@ void main() {
     expect(find.text('Costa'), findsOneWidget);
     expect(find.text('Alonso'), findsNothing, reason: 'a forward, not a mid');
     expect(find.text('Showing 1 of 5 players'), findsOneWidget);
+  });
+
+  testWidgets('a line offers its positions, and one narrows the pool', (
+    tester,
+  ) async {
+    await pumpTab(tester);
+    // No line chosen: no position row.
+    expect(
+      find.byKey(CallUpScreen.positionFilterKey(PositionCategory.defender)),
+      findsNothing,
+    );
+    await tester.ensureVisible(find.text('DEFENCE'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('DEFENCE'));
+    await tester.pumpAndSettle();
+    final cb = find.byKey(
+      CallUpScreen.positionChipKey(
+        PositionCategory.defender,
+        PlayerPosition.cb,
+      ),
+    );
+    expect(cb, findsOneWidget);
+    await tester.tap(cb);
+    await tester.pumpAndSettle();
+    expect(find.text('Barrow'), findsOneWidget);
+    expect(find.text('Engel'), findsNothing, reason: 'a left back');
+    expect(find.text('Showing 1 of 5 players'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('sorting is a menu, not a row of chips', (tester) async {

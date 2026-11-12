@@ -138,7 +138,7 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
   }) {
     final positions = _positionsIn(pool, line);
     if (positions.length < 2) return null;
-    return _PositionFilterChips(
+    return PositionFilterChips(
       line: line,
       allLabel: l.squadFilterAll,
       positions: positions,
@@ -976,8 +976,8 @@ class _LineTabBarHeader extends SliverPersistentHeaderDelegate {
 /// One line narrowed to a single position: "Everyone", then each position the
 /// line has, with how many of it are named. Single-select, one row, scrolling
 /// sideways when a long word or a large text size will not fit across.
-class _PositionFilterChips extends StatelessWidget {
-  const _PositionFilterChips({
+class PositionFilterChips extends StatelessWidget {
+  const PositionFilterChips({
     required this.line,
     required this.allLabel,
     required this.positions,

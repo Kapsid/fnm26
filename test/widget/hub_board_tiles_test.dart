@@ -43,8 +43,7 @@ void main() {
                 : Future.value(value),
           ),
           federationFundsProvider.overrideWith(
-            (ref, id) async =>
-                (balance: 5200000, wages: 500000, free: 4700000),
+            (ref, id) async => (balance: 5200000, wages: 500000, free: 4700000),
           ),
         ],
         child: MaterialApp(
