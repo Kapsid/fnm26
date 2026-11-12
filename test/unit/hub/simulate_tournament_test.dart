@@ -10,32 +10,12 @@ import '../../story/driver.dart';
 /// played out in one go from the hub's watch event. It is the same stepping
 /// done for him, so it ends where stepping ends (the champion crowned, the
 /// same champion from the same seed) and never plays or passes anything of
-/// his. It stops with the final next, which is left to be watched.
+/// his.
 void main() {
   // San Marino: in none of the finals of the cycle, so every one of them is
   // watched (the European Championship, the Nations Cup finals, the World
   // Championship).
   const sanMarino = 45;
-
-  /// How many times a simulation stopped with a final still to watch.
-  var finalsLeft = 0;
-
-  /// Whether the tournament [route] watches has its final drawn and unplayed.
-  Future<bool> finalNext(StoryDriver d, String route) async {
-    final uri = Uri.parse(route);
-    final conf = Confederation.values
-        .where((c) => c.name == uri.queryParameters['conf'])
-        .firstOrNull;
-    final (kind, round) = switch (uri.path) {
-      '/continental' => (CompetitionKind.continentalFinals, 'CFINAL'),
-      '/nations-cup' => (CompetitionKind.nationsLeague, 'NFINAL'),
-      _ => (CompetitionKind.worldCupFinals, 'FINAL'),
-    };
-    final finals = await d.c
-        .read(competitionRepositoryProvider)
-        .fixturesByRound(d.careerId, round, kind: kind, confederation: conf);
-    return finals.isNotEmpty && finals.every((f) => !f.hasResult);
-  }
 
   /// Drives a career to the end of its first cycle. At each watch event the
   /// tournament is either stepped (the event's own action) or simulated to
@@ -68,18 +48,14 @@ void main() {
                 .length,
             played,
           );
-          // It lands on something other than this tournament's next round,
-          // or on its final, which is left to be watched.
+          // It lands on something other than this tournament's next round.
           final after = await d.nextEvent();
-          if (after.kind == HubEventKind.watchTournament &&
-              after.route == e.route) {
-            expect(
-              await finalNext(d, e.route!),
-              isTrue,
-              reason: 'stopped short of the final of ${e.route}',
-            );
-            finalsLeft++;
-          }
+          expect(
+            after.kind == HubEventKind.watchTournament &&
+                after.route == e.route,
+            isFalse,
+            reason: 'stopped short of the end of ${e.route}',
+          );
           continue;
         }
       }
@@ -145,14 +121,7 @@ void main() {
           aFinal.awayScore,
         ),
       );
-      // Every tournament it played out stopped before its final, and each
-      // of those finals is one more tap of its own.
-      expect(finalsLeft, greaterThan(0));
-      expect(
-        taps - finalsLeft,
-        lessThan(steps ~/ 3),
-        reason: '$taps taps ($finalsLeft of them finals), $steps steps',
-      );
+      expect(taps, lessThan(steps ~/ 3), reason: '$taps taps, $steps steps');
       // And the hub's next step is the rollover, the champion known.
       expect((await fast.nextEvent()).kind, HubEventKind.cycleRollover);
     },

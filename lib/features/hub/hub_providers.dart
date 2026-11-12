@@ -7,7 +7,6 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
-import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/sim_activity.dart';
 import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/core/util/text_variety.dart';
@@ -2583,15 +2582,8 @@ class SeasonService {
   }
 
   /// Plays the rest of a tournament the manager is only watching in one go,
-  /// up to its final: the hub's "simulate to the final", beside stepping it a
-  /// round at a time. The final itself is left for him to step and see.
-  ///
-  /// Playtest (Copa, 1.1.1): "the final was not shown to me after I was
-  /// knocked out, then it simply went on". The button reads "simulate to the
-  /// final" ("Simulovat až do finále"), and it used to play the final too and
-  /// hand back to the next thing, so the one round he still wanted to watch
-  /// was gone. Now it stops with the final next; called with the final
-  /// already next, it plays just that, as the watch button would.
+  /// up to and including its final: the hub's "simulate to the final", beside
+  /// stepping it a round at a time.
   ///
   /// It IS the stepping, done for him: one [_advance] per round, exactly what
   /// the watch event's own tap runs, and after each the hub's next event is
@@ -2622,36 +2614,7 @@ class SeasonService {
           next.route != first.route) {
         return;
       }
-      if (await _finalIsNext(careerId, first.route)) return;
     }
-  }
-
-  /// Whether the watched tournament [route] points at (the hub's watch event:
-  /// the World Championship, a continental cup, a Nations Cup, by its `conf`)
-  /// has its final drawn and still to play: the knockout spawns it only once
-  /// every semi-final is in, so it is the round the next step leads to (the
-  /// World Championship's third-place play-off, two days ahead of it, aside).
-  Future<bool> _finalIsNext(int careerId, String? route) async {
-    if (route == null) return false;
-    final uri = Uri.parse(route);
-    final conf = Confederation.values
-        .where((c) => c.name == uri.queryParameters['conf'])
-        .firstOrNull;
-    final (kind, round) = switch (uri.path) {
-      Routes.continental => (CompetitionKind.continentalFinals, 'CFINAL'),
-      Routes.nationsCup => (CompetitionKind.nationsLeague, 'NFINAL'),
-      _ => (CompetitionKind.worldCupFinals, 'FINAL'),
-    };
-    // Every continental cup and Nations Cup is a competition of one kind:
-    // only the manager's own (the route's) is asked about.
-    if (kind != CompetitionKind.worldCupFinals && conf == null) return false;
-    final finals = await _comp.fixturesByRound(
-      careerId,
-      round,
-      kind: kind,
-      confederation: kind == CompetitionKind.worldCupFinals ? null : conf,
-    );
-    return finals.isNotEmpty && finals.every((f) => !f.hasResult);
   }
 
   /// The hub's next event as it stands now, read fresh.
