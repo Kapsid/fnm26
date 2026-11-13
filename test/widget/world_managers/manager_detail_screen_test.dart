@@ -199,6 +199,48 @@ void main() {
     });
   }
 
+  // Seen on a tablet hub: a message naming two managers drew two buttons
+  // with one key, and the Wrap threw "Duplicate keys found".
+  testWidgets('a message naming two managers links to both', (tester) async {
+    final save = await seedSave(tester);
+    final (m, _) = await _managerWithHistory(tester, save);
+    final other = (await tester.runAsync(
+      () => save.container
+          .read(worldManagerRepositoryProvider)
+          .load(save.careerId),
+    ))!.managers.firstWhere((x) => x.managerId != m.managerId);
+    final nation = save.nations.firstWhere((n) => n.id != save.nationId).name;
+    await tester.runAsync(
+      () => save.container
+          .read(competitionRepositoryProvider)
+          .addTextMessage(
+            l: enL,
+            careerId: save.careerId,
+            dedupKey: 'test:mgr-two',
+            category: ManagerNews.category,
+            title: MsgText(MsgKey.mgrNewsRetired, [nation, m.name]),
+            body: MsgText(MsgKey.mgrNewsAppointedBody, [nation, other.name]),
+            year: 2026,
+          ),
+    );
+    await pumpRoute(
+      tester,
+      save,
+      '${Routes.messages}?careerId=${save.careerId}',
+    );
+    await tester.tap(find.text(enL.mgrNewsRetired(nation, m.name)).first);
+    await settle(tester);
+    expect(tester.takeException(), isNull);
+    expect(
+      find.byKey(MessageSheet.managerLinkKey(m.managerId)),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(MessageSheet.managerLinkKey(other.managerId)),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('manager news links to the manager it names', (tester) async {
     final save = await seedSave(tester);
     final (m, _) = await _managerWithHistory(tester, save);
@@ -223,8 +265,11 @@ void main() {
     );
     await tester.tap(find.text(enL.mgrNewsAppointed(nation, m.name)).first);
     await settle(tester);
-    expect(find.byKey(MessageSheet.managerLinkKey), findsOneWidget);
-    await tester.tap(find.byKey(MessageSheet.managerLinkKey));
+    expect(
+      find.byKey(MessageSheet.managerLinkKey(m.managerId)),
+      findsOneWidget,
+    );
+    await tester.tap(find.byKey(MessageSheet.managerLinkKey(m.managerId)));
     await settle(tester);
     expect(find.byType(ManagerDetailScreen), findsOneWidget);
     expect(find.byType(MessageSheet), findsNothing);

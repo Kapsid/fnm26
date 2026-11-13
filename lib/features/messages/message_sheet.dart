@@ -99,7 +99,11 @@ class MessageSheet extends StatelessWidget {
   /// each manager it names; the caller closes any popup before navigating.
   final void Function(int careerId, int managerId)? onOpenManager;
 
-  static const Key managerLinkKey = Key('message.managerLink');
+  /// The button opening manager [managerId]'s page. One per manager: a
+  /// message can name two (a retirement and the successor), and a shared key
+  /// made the Wrap holding them throw.
+  static Key managerLinkKey(int managerId) =>
+      ValueKey('message.managerLink.$managerId');
 
   @override
   Widget build(BuildContext context) {
@@ -322,7 +326,7 @@ class _ManagerLinks extends ConsumerWidget {
           for (final name in ManagerNews.namesIn(spec))
             if (ids[name] case final id?)
               TextButton.icon(
-                key: MessageSheet.managerLinkKey,
+                key: MessageSheet.managerLinkKey(id),
                 icon: const Icon(Icons.badge_outlined, size: 18),
                 label: Text(l.mgrNewsSeeManager(name)),
                 onPressed: () => onOpen(careerId, id),
