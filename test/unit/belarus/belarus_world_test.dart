@@ -17,6 +17,8 @@ import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:path/path.dart' as p;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../helpers/calendar2_draws.dart';
+
 import '../../story/driver.dart';
 
 /// Belarus is back from 1.0.9, in every ordinary career created from then on
@@ -114,7 +116,9 @@ void main() {
     expect(world[at - 1].id, palestine);
     expect(world[at].ranking, 94);
 
-    // In a European qualifying group from the first draw.
+    // In a European qualifying group from the first draw (on calendar2,
+    // made after the first Nations Cup: made now).
+    await drawEuroQualifyingNow(c, id);
     final cq = await europeGroups(
       c,
       id,
@@ -206,6 +210,7 @@ void main() {
       await season.startNextCycle(id);
       expect((await careers.byId(id))!.cyclePointer, cycle + 1);
       await checkLadder();
+      await drawEuroQualifyingNow(c, id);
       final cq = await europeGroups(
         c,
         id,

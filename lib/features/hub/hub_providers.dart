@@ -23,6 +23,7 @@ import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/repositories/tactic_familiarity_repository.dart';
+import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
@@ -131,6 +132,8 @@ import 'package:fnm/features/tournaments/continental_clash_providers.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/features/tournaments/cup_detail_providers.dart';
 import 'package:fnm/features/tournaments/intercontinental_playoff_providers.dart';
+import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart'
+    show nationsCupDrawKind;
 import 'package:fnm/features/tournaments/nations_cup_providers.dart';
 import 'package:fnm/features/tournaments/tournaments_providers.dart';
 import 'package:fnm/features/tournaments/playoff_paths.dart';

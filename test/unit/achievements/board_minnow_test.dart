@@ -11,6 +11,7 @@ import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
 
+import '../../helpers/calendar2_draws.dart';
 import '../../helpers/test_database.dart';
 
 /// The board's patience with the weakest sides in the world (owner, 1.0.7:
@@ -361,6 +362,9 @@ void main() {
                   ))
               .valueOrNull!;
       expect(await c.read(boardMinnowProvider(career.id).future), isNotNull);
+      // Calendar2: the brief is set on the second Nations Cup, drawn once
+      // the first is crowned. Drawn now.
+      await drawSecondNationsCupNow(c, career.id);
       return c.read(cycleObjectiveOutcomesProvider(career.id).future);
     }
 

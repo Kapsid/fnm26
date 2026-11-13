@@ -62,7 +62,14 @@ void main() {
     final career =
         (await c
                 .read(careerServiceProvider)
-                .create(nationId: europe[10].id, managerName: 'M', rngSeed: 7))
+                .create(
+                  nationId: europe[10].id,
+                  managerName: 'M',
+                  rngSeed: 7,
+                  // The calendar the scenario was set on (before 1.1.2):
+                  // the qualifiers open the cycle.
+                  calendar2: false,
+                ))
             .valueOrNull!;
     careerId = career.id;
     nationId = career.nationId;

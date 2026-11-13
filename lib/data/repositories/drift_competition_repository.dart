@@ -57,6 +57,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
     int cycle = 0,
     CompetitionKind kind = CompetitionKind.worldCupQualifying,
     String? fixtureRound,
+    int edition = 0,
   }) async {
     await _db.transaction(() async {
       final compId = await _db
@@ -68,6 +69,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
               name: schedule.name,
               cycle: Value(cycle),
               kind: Value(kind),
+              edition: Value(edition),
             ),
           );
 
@@ -832,24 +834,38 @@ class DriftCompetitionRepository implements CompetitionRepository {
   /// The current cycle's competition of [kind] — scoped to [confederation]
   /// when given, which matters now that every confederation's continental
   /// finals exist as real competitions in the same cycle.
+  ///
+  /// [edition] names one of a calendar2 cycle's two Nations Cups. Null takes
+  /// the latest edition there is; only a Nations Cup is ordered that way, so
+  /// every other lookup reads exactly as it did before editions existed.
   Future<CompetitionRow?> _tournamentComp(
     int careerId,
     CompetitionKind kind, {
     Confederation? confederation,
+    int? edition,
   }) async {
     final cycle = await _cycle(careerId);
-    return (_db.select(_db.competitions)
-          ..where(
-            (t) =>
-                t.careerId.equals(careerId) &
-                t.cycle.equals(cycle) &
-                t.kind.equalsValue(kind) &
-                (confederation == null
-                    ? const Constant(true)
-                    : t.confederation.equalsValue(confederation)),
-          )
-          ..limit(1))
-        .getSingleOrNull();
+    final query = _db.select(_db.competitions)
+      ..where(
+        (t) =>
+            t.careerId.equals(careerId) &
+            t.cycle.equals(cycle) &
+            t.kind.equalsValue(kind) &
+            (confederation == null
+                ? const Constant(true)
+                : t.confederation.equalsValue(confederation)) &
+            (edition == null
+                ? const Constant(true)
+                : t.edition.equals(edition)),
+      );
+    if (edition == null && kind == CompetitionKind.nationsLeague) {
+      query.orderBy([
+        (t) => OrderingTerm(expression: t.edition, mode: OrderingMode.desc),
+        (t) => OrderingTerm(expression: t.id),
+      ]);
+    }
+    query.limit(1);
+    return query.getSingleOrNull();
   }
 
   @override
@@ -857,9 +873,28 @@ class DriftCompetitionRepository implements CompetitionRepository {
     int careerId,
     CompetitionKind kind, {
     Confederation? confederation,
+    int? edition,
   }) async =>
-      (await _tournamentComp(careerId, kind, confederation: confederation)) !=
+      (await _tournamentComp(
+        careerId,
+        kind,
+        confederation: confederation,
+        edition: edition,
+      )) !=
       null;
+
+  @override
+  Future<int?> competitionIdOf(
+    int careerId,
+    CompetitionKind kind, {
+    Confederation? confederation,
+    int? edition,
+  }) async => (await _tournamentComp(
+    careerId,
+    kind,
+    confederation: confederation,
+    edition: edition,
+  ))?.id;
 
   @override
   Future<void> createKnockout({
@@ -1188,8 +1223,14 @@ class DriftCompetitionRepository implements CompetitionRepository {
     int careerId,
     CompetitionKind kind, {
     Confederation? confederation,
+    int? edition,
   }) async => _groupTables(
-    await _tournamentComp(careerId, kind, confederation: confederation),
+    await _tournamentComp(
+      careerId,
+      kind,
+      confederation: confederation,
+      edition: edition,
+    ),
   );
 
   /// Builds the group tables for [comp] (empty if it has no group stage).
@@ -1286,11 +1327,13 @@ class DriftCompetitionRepository implements CompetitionRepository {
     String round, {
     CompetitionKind kind = CompetitionKind.worldCupFinals,
     Confederation? confederation,
+    int? edition,
   }) async {
     final comp = await _tournamentComp(
       careerId,
       kind,
       confederation: confederation,
+      edition: edition,
     );
     if (comp == null) return [];
     final query = _db.select(_db.fixtures)
@@ -1336,11 +1379,13 @@ class DriftCompetitionRepository implements CompetitionRepository {
     CompetitionKind kind = CompetitionKind.worldCupFinals,
     Confederation? confederation,
     List<DateTime>? dates,
+    int? edition,
   }) async {
     final comp = await _tournamentComp(
       careerId,
       kind,
       confederation: confederation,
+      edition: edition,
     );
     if (comp == null) return;
     await _db.batch((b) {
@@ -1860,6 +1905,17 @@ class DriftCompetitionRepository implements CompetitionRepository {
           DrawWatchedRow(careerId: careerId, cycle: cycle, kind: kind),
           mode: InsertMode.insertOrIgnore,
         );
+  }
+
+  @override
+  Future<void> unmarkDrawWatched(int careerId, int cycle, String kind) async {
+    await (_db.delete(_db.drawsWatched)..where(
+          (t) =>
+              t.careerId.equals(careerId) &
+              t.cycle.equals(cycle) &
+              t.kind.equals(kind),
+        ))
+        .go();
   }
 
   @override

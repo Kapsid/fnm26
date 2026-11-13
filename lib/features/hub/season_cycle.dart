@@ -9,18 +9,30 @@ part of 'hub_providers.dart';
 /// Qualifying draws, the Nations Cup ladder, every confederation's cup, the
 /// World Cup's own rounds and the honours each of them records. Split out of
 /// [SeasonService] for navigability only — same library, same state.
+/// Marks a calendar2 cycle whose Europe ladder has moved on its first Nations
+/// Cup (see `_ladderAfterFirstEdition`), so it moves once.
+const String ncFirstLadderKind = 'ncLadder:e0';
+
+/// Mark a calendar2 cycle's lazy draws as made (see `_calendar2Draws`), so
+/// each is made once whatever the world it finds.
+const String _cal2EuroQualKind = 'cal2:euroQual';
+const String _cal2ConmebolKind = 'cal2:wcqSouthAmerica';
+const String _cal2WcQualKind = 'cal2:wcq';
+
 extension SeasonCycle on SeasonService {
   Future<bool> _roundComplete(
     int careerId,
     String round, {
     CompetitionKind kind = CompetitionKind.worldCupFinals,
     Confederation? confederation,
+    int? edition,
   }) async {
     final fx = await _comp.fixturesByRound(
       careerId,
       round,
       kind: kind,
       confederation: confederation,
+      edition: edition,
     );
     return fx.isNotEmpty && fx.every((f) => f.hasResult);
   }
@@ -30,12 +42,14 @@ extension SeasonCycle on SeasonService {
     String round, {
     CompetitionKind kind = CompetitionKind.worldCupFinals,
     Confederation? confederation,
+    int? edition,
   }) async {
     final fx = await _comp.fixturesByRound(
       careerId,
       round,
       kind: kind,
       confederation: confederation,
+      edition: edition,
     );
     return fx.map((f) => f.date).reduce((a, b) => a.isAfter(b) ? a : b);
   }
@@ -190,7 +204,16 @@ extension SeasonCycle on SeasonService {
   }
 
   Future<void> _progress(int careerId) async {
-    await _drawWorldCupQualifyingIfDue(careerId);
+    final career = await _careers.byId(careerId);
+    if (career == null) return;
+    // A cycle on the 1.1.2 rhythm draws its campaigns on its own dates (see
+    // [_calendar2Draws]); one without the mark keeps today's.
+    final cal2 = await isCalendar2(_comp, careerId, career.cyclePointer);
+    if (cal2) {
+      await _calendar2Draws(careerId);
+    } else {
+      await _drawWorldCupQualifyingIfDue(careerId);
+    }
     await _revealQualifyingToHost(careerId);
     await _progressWorldCup(careerId);
     await _progressContinental(careerId);
@@ -260,6 +283,274 @@ extension SeasonCycle on SeasonService {
     );
   }
 
+  /// The draws of a calendar2 cycle (see [Calendar2]), each made the day its
+  /// trigger is reached and never again:
+  ///
+  /// * Europe's first Nations Cup league phase played out: its ladder moves
+  ///   ([_ladderAfterFirstEdition]) and Euro qualifying is drawn, the Finals
+  ///   Four's sides into groups that leave June free. December at the latest.
+  /// * July after the first edition's Finals Four, once it is crowned:
+  ///   Europe's second edition is drawn on the ladder it left.
+  /// * The Copa won: CONMEBOL's qualifying league, from September.
+  /// * Europe's second league phase played out: every other confederation's
+  ///   World Championship qualifying, the second Finals Four's sides into
+  ///   groups that leave June free. December at the latest.
+  Future<void> _calendar2Draws(int careerId) async {
+    final career = await _careers.byId(careerId);
+    if (career == null) return;
+    final cycle = career.cyclePointer;
+    final wcYear = SeasonService.finalsYear(cycle);
+    final today = career.inGameDate;
+    const europe = Confederation.europe;
+    final europeCup = NationsCups.forConfederation(europe);
+
+    // The ranking the cycle's own draws seed from: what its calendar was
+    // built with (the career's own ranking for the first cycle, as at
+    // creation; the snapshot frozen at the rollover for every later one), so
+    // a draw made later comes out as it would have on the cycle's first day.
+    Future<Map<int, int>?> baseline() async {
+      if (cycle == 0) return null;
+      final snap = await _ref
+          .read(seedRankingRepositoryProvider)
+          .forCycle(careerId, cycle);
+      return snap.isEmpty ? null : snap;
+    }
+
+    // 1. The first edition's league phase: ladder, then Euro qualifying.
+    final firstDone =
+        europeCup != null &&
+        await _roundComplete(
+          careerId,
+          'NGROUP',
+          kind: CompetitionKind.nationsLeague,
+          confederation: europe,
+          edition: Calendar2.firstEdition,
+        );
+    if (firstDone) await _ladderAfterFirstEdition(careerId, cycle);
+    if ((firstDone ||
+            !today.isBefore(Calendar2.euroQualifyingDrawDue(wcYear))) &&
+        !await _comp.hasWatchedDraw(careerId, cycle, _cal2EuroQualKind) &&
+        !await _comp.hasTournament(
+          careerId,
+          CompetitionKind.continentalQualifying,
+          confederation: europe,
+        ) &&
+        !await _comp.hasTournament(
+          careerId,
+          CompetitionKind.continentalFinals,
+          confederation: europe,
+        )) {
+      await CareerService.buildEuroQualifying(
+        comp: _comp,
+        nations: (await _nationsById(careerId)).values.toList(),
+        careerId: careerId,
+        rngSeed: career.rngSeed,
+        cycle: cycle,
+        wcYear: wcYear,
+        rankById: await baseline(),
+        finalsFour: firstDone
+            ? await _finalsFourSides(careerId, Calendar2.firstEdition)
+            : const {},
+      );
+      await _comp.markDrawWatched(careerId, cycle, _cal2EuroQualKind);
+    }
+
+    // 2. Europe's second edition, on the ladder the first one left.
+    if (europeCup != null &&
+        await _comp.hasTournament(
+          careerId,
+          CompetitionKind.nationsLeague,
+          confederation: europe,
+          edition: Calendar2.firstEdition,
+        ) &&
+        !await _comp.hasTournament(
+          careerId,
+          CompetitionKind.nationsLeague,
+          confederation: europe,
+          edition: Calendar2.secondEdition,
+        )) {
+      final crowned = await _comp.hasHonour(
+        careerId,
+        europeCup.name,
+        Calendar2.nationsCupHonourYear(
+          wcYear,
+          europe,
+          Calendar2.firstEdition,
+          calendar2: true,
+        ),
+      );
+      // Not the day the first is crowned: every screen that reads "the cup"
+      // reads the latest edition, and the final's own results are still
+      // being shown then. From July, once the first is settled (or, should
+      // it never be, from January).
+      if (!today.isBefore(Calendar2.secondEditionDue(wcYear)) &&
+          (crowned || !today.isBefore(Calendar2.secondEditionLatest(wcYear)))) {
+        // A first edition that never finished still moves its ladder.
+        await _ladderAfterFirstEdition(careerId, cycle);
+        await CareerService.buildNationsCup(
+          comp: _comp,
+          nations: (await _nationsById(careerId)).values.toList(),
+          careerId: careerId,
+          rngSeed: career.rngSeed,
+          cycle: cycle,
+          confederation: europe,
+          leagueYear: Calendar2.nationsCupLeagueYear(
+            wcYear,
+            europe,
+            Calendar2.secondEdition,
+            calendar2: true,
+          ),
+          rankById: await baseline(),
+          nationsCupTiers: await _careers.nationsCupTiers(careerId),
+          edition: Calendar2.secondEdition,
+        );
+        // Both editions share the one ceremony key: the first's is long
+        // watched and every match of it played, so it is cleared for the
+        // second's draw to be offered in its turn.
+        await _comp.unmarkDrawWatched(careerId, cycle, nationsCupDrawKind);
+      }
+    }
+
+    // 3. CONMEBOL's qualifying league, the day the Copa is won.
+    const southAmerica = Confederation.southAmerica;
+    if (!await _comp.hasWatchedDraw(careerId, cycle, _cal2ConmebolKind) &&
+        !await _comp.hasTournament(
+          careerId,
+          CompetitionKind.worldCupQualifying,
+          confederation: southAmerica,
+        ) &&
+        (await _comp.continentalChampion(
+                  careerId,
+                  confederation: southAmerica,
+                ) !=
+                null ||
+            !today.isBefore(Calendar2.conmebolQualifyingDrawDue(wcYear)))) {
+      await _ensureRank(careerId);
+      final nations = await _nationsById(careerId);
+      final live = _liveRankById(nations);
+      await CareerService.buildWorldCupQualifying(
+        comp: _comp,
+        nations: nations.values.toList(),
+        careerId: careerId,
+        nationId: career.nationId,
+        rngSeed: career.rngSeed,
+        cycle: cycle,
+        wcYear: wcYear,
+        rankById: live.isEmpty ? null : live,
+        only: const {southAmerica},
+      );
+      await _comp.markDrawWatched(careerId, cycle, _cal2ConmebolKind);
+    }
+
+    // 4. Everyone else's qualifying, the day Europe's second league phase
+    //    ends.
+    if (!await _comp.hasWatchedDraw(careerId, cycle, _cal2WcQualKind) &&
+        !await _comp.hasTournament(
+          careerId,
+          CompetitionKind.worldCupQualifying,
+          confederation: europe,
+        )) {
+      final secondDone =
+          europeCup != null &&
+          await _roundComplete(
+            careerId,
+            'NGROUP',
+            kind: CompetitionKind.nationsLeague,
+            confederation: europe,
+            edition: Calendar2.secondEdition,
+          );
+      if (secondDone ||
+          !today.isBefore(Calendar2.wcQualifyingDrawDue(wcYear))) {
+        // Seeded off the LIVE ranking, snapshotted so the ceremony shows the
+        // pots the draw used (see [_drawWorldCupQualifyingIfDue]).
+        await _ensureRank(careerId);
+        final nations = await _nationsById(careerId);
+        final seedRank = _liveRankById(nations);
+        await _ref
+            .read(seedRankingRepositoryProvider)
+            .snapshot(
+              careerId,
+              drawSeedCycle(cycle, drawSlotWorldCupQualifying),
+              seedRank,
+            );
+        await CareerService.buildWorldCupQualifying(
+          comp: _comp,
+          nations: nations.values.toList(),
+          careerId: careerId,
+          nationId: career.nationId,
+          rngSeed: career.rngSeed,
+          cycle: cycle,
+          wcYear: wcYear,
+          rankById: seedRank.isEmpty ? null : seedRank,
+          only: {
+            for (final c in Confederation.values)
+              if (c != southAmerica) c,
+          },
+          noJuneNationIds: secondDone
+              ? await _finalsFourSides(careerId, Calendar2.secondEdition)
+              : const {},
+        );
+        await _comp.markDrawWatched(careerId, cycle, _cal2WcQualKind);
+      }
+    }
+  }
+
+  /// The sides of Europe's Finals Four for [edition]: League A's group
+  /// winners, once its league phase is played.
+  Future<Set<int>> _finalsFourSides(int careerId, int edition) async {
+    final tables = await _comp.tournamentGroupTables(
+      careerId,
+      CompetitionKind.nationsLeague,
+      confederation: Confederation.europe,
+      edition: edition,
+    );
+    return {
+      for (final t in tables)
+        if (t.standings.isNotEmpty && NationsCup.tierOfGroupName(t.name) == 0)
+          t.standings.first.nationId,
+    };
+  }
+
+  /// Moves Europe's ladder on the first edition's tables, once, before the
+  /// second is drawn (the rollover moves it on the second's, as every cycle's
+  /// only cup always has). The other confederations' ladders wait for the
+  /// rollover as before.
+  Future<void> _ladderAfterFirstEdition(int careerId, int cycle) async {
+    if (await _comp.hasWatchedDraw(careerId, cycle, ncFirstLadderKind)) {
+      return;
+    }
+    var tiers = await _careers.nationsCupTiers(careerId);
+    final tables = await _comp.tournamentGroupTables(
+      careerId,
+      CompetitionKind.nationsLeague,
+      confederation: Confederation.europe,
+      edition: Calendar2.firstEdition,
+    );
+    if (tiers.isNotEmpty && tables.isNotEmpty) {
+      tiers = NationsCup.promoteRelegate(
+        tiers: tiers,
+        groups: [
+          for (final t in tables)
+            if (t.standings.length >= 2)
+              (
+                tier: NationsCup.tierOfGroupName(t.name),
+                winner: t.standings.first,
+                bottom: t.standings.last,
+              ),
+        ],
+      );
+      final confOf = {
+        for (final n in (await _nationsById(careerId)).values)
+          n.id: n.confederation,
+      };
+      await _careers.setNationsCupTiers(
+        careerId,
+        NationsCup.mergeRemainders(tiers, (id) => confOf[id]),
+      );
+    }
+    await _comp.markDrawWatched(careerId, cycle, ncFirstLadderKind);
+  }
+
   /// Opens a qualifying campaign the manager's nation sits out as host.
   ///
   /// A qualifying campaign's groups, tables and news stay behind its draw
@@ -321,19 +612,33 @@ extension SeasonCycle on SeasonService {
   /// every lookup names its confederation: an unscoped one returns an
   /// arbitrary cup, which advanced one and left the others without a champion.
   Future<void> _progressNationsLeague(int careerId) async {
+    final career = await _careers.byId(careerId);
+    if (career == null) return;
+    final cal2 = await isCalendar2(_comp, careerId, career.cyclePointer);
     final mine = await _managerConfederation(careerId);
-    if (mine != null && NationsCups.forConfederation(mine) != null) {
-      await _progressNationsCupFor(careerId, mine);
-    }
-    for (final conf in NationsCups.confederations) {
-      if (conf == mine) continue;
-      await _progressNationsCupFor(careerId, conf);
+    final order = [
+      if (mine != null && NationsCups.forConfederation(mine) != null) mine,
+      for (final conf in NationsCups.confederations)
+        if (conf != mine) conf,
+    ];
+    // A calendar2 cycle holds two of Europe's cups: each is progressed on its
+    // own, named by its edition.
+    for (final conf in order) {
+      for (final edition in Calendar2.editionsOf(conf, calendar2: cal2)) {
+        await _progressNationsCupFor(careerId, conf, edition, calendar2: cal2);
+      }
     }
   }
 
-  /// Progresses one confederation's Nations Cup from its groups to its final,
-  /// recording the honour under the cup's own name once it is decided.
-  Future<void> _progressNationsCupFor(int careerId, Confederation conf) async {
+  /// Progresses one confederation's Nations Cup [edition] from its groups to
+  /// its final, recording the honour under the cup's own name once it is
+  /// decided, filed under the year of its league phase.
+  Future<void> _progressNationsCupFor(
+    int careerId,
+    Confederation conf,
+    int edition, {
+    required bool calendar2,
+  }) async {
     const kind = CompetitionKind.nationsLeague;
     final cup = NationsCups.forConfederation(conf);
     if (cup == null) return;
@@ -341,15 +646,39 @@ extension SeasonCycle on SeasonService {
     if (career == null) return;
     // Already decided this cycle: the cheapest way to say there is nothing
     // left to do, on a path `_progress` walks many times per catch-up.
-    final year = SeasonService.finalsYear(career.cyclePointer) - 2;
+    final wcYear = SeasonService.finalsYear(career.cyclePointer);
+    final year = Calendar2.nationsCupHonourYear(
+      wcYear,
+      conf,
+      edition,
+      calendar2: calendar2,
+    );
     if (await _comp.hasHonour(careerId, cup.name, year)) return;
-    // A save whose cycle was built before this cup existed simply has none.
-    if (!await _comp.hasTournament(careerId, kind, confederation: conf)) {
+    // A save whose cycle was built before this cup existed simply has none,
+    // and a calendar2 cycle's second edition is drawn only later.
+    if (!await _comp.hasTournament(
+      careerId,
+      kind,
+      confederation: conf,
+      edition: edition,
+    )) {
       return;
     }
     switch (cup.format) {
       case NationsCupFormat.ladder:
-        await _progressLadderCup(careerId, conf, cup.name);
+        await _progressLadderCup(
+          careerId,
+          conf,
+          cup.name,
+          edition: edition,
+          honourYear: year,
+          finalsFour: Calendar2.finalsFour(
+            wcYear,
+            conf,
+            edition,
+            calendar2: calendar2,
+          ),
+        );
       case NationsCupFormat.zones:
         await _progressZonesCup(careerId, conf, cup.name);
     }
@@ -362,20 +691,25 @@ extension SeasonCycle on SeasonService {
   Future<void> _progressLadderCup(
     int careerId,
     Confederation conf,
-    String cupName,
-  ) async {
+    String cupName, {
+    required int edition,
+    required int honourYear,
+    ({DateTime semi1, DateTime semi2, DateTime finalDay})? finalsFour,
+  }) async {
     const kind = CompetitionKind.nationsLeague;
     final finalFx = await _comp.fixturesByRound(
       careerId,
       'NFINAL',
       kind: kind,
       confederation: conf,
+      edition: edition,
     );
     final semiFx = await _comp.fixturesByRound(
       careerId,
       'NSF',
       kind: kind,
       confederation: conf,
+      edition: edition,
     );
 
     // Stage 1 — groups done: seed the Finals Four from the group winners.
@@ -385,6 +719,7 @@ extension SeasonCycle on SeasonService {
         'NGROUP',
         kind: kind,
         confederation: conf,
+        edition: edition,
       )) {
         return;
       }
@@ -392,6 +727,7 @@ extension SeasonCycle on SeasonService {
         careerId,
         kind,
         confederation: conf,
+        edition: edition,
       );
       // The title is contested by League A (tier 0) — its group winners meet in
       // the Finals Four.
@@ -407,17 +743,21 @@ extension SeasonCycle on SeasonService {
           cupName,
           winners.first.nationId,
           null,
+          year: honourYear,
         );
         return;
       }
       // The Finals Four takes the real Nations League slot: the June window of
       // the year after the autumn group stage — the season before the World
       // Cup, so the whole Nations Cup is settled before the finals begin.
-      // Days 18/21 sit clear of that window's qualifying matchdays.
+      // Days 18/21 sit clear of that window's qualifying matchdays. A
+      // calendar2 cup plays it on 4/5 and 8 June instead: its four sides were
+      // drawn into qualifying groups that leave June free.
       final career = await _careers.byId(careerId);
       if (career == null) return;
       final date = _notBeforeToday(
-        DateTime(SeasonService.finalsYear(career.cyclePointer) - 1, 6, 18),
+        finalsFour?.semi1 ??
+            DateTime(SeasonService.finalsYear(career.cyclePointer) - 1, 6, 18),
         career.inGameDate,
       );
       if (winners.length < 4) {
@@ -427,22 +767,50 @@ extension SeasonCycle on SeasonService {
           round: 'NFINAL',
           kind: kind,
           confederation: conf,
+          edition: edition,
           pairings: [(winners[0].nationId, winners[1].nationId)],
-          date: date,
+          date: finalsFour == null
+              ? date
+              : _notBeforeToday(finalsFour.finalDay, career.inGameDate),
         );
         return;
       }
       // Semi-finals: top seed v fourth, second v third.
+      final semis = [
+        (winners[0].nationId, winners[3].nationId),
+        (winners[1].nationId, winners[2].nationId),
+      ];
+      if (finalsFour == null) {
+        await _comp.addKnockoutFixtures(
+          careerId: careerId,
+          round: 'NSF',
+          kind: kind,
+          confederation: conf,
+          edition: edition,
+          pairings: semis,
+          date: date,
+        );
+        return;
+      }
+      // One a day, as the real Finals Four: the first on the 4th, the second
+      // on the 5th (both moved on together by a late catch-up).
       await _comp.addKnockoutFixtures(
         careerId: careerId,
         round: 'NSF',
         kind: kind,
         confederation: conf,
-        pairings: [
-          (winners[0].nationId, winners[3].nationId),
-          (winners[1].nationId, winners[2].nationId),
-        ],
+        edition: edition,
+        pairings: [semis[0]],
         date: date,
+      );
+      await _comp.addKnockoutFixtures(
+        careerId: careerId,
+        round: 'NSF',
+        kind: kind,
+        confederation: conf,
+        edition: edition,
+        pairings: [semis[1]],
+        date: date.add(finalsFour.semi2.difference(finalsFour.semi1)),
       );
       return;
     }
@@ -455,6 +823,7 @@ extension SeasonCycle on SeasonService {
         round: 'NFINAL',
         kind: kind,
         confederation: conf,
+        edition: edition,
         pairings: [
           (SeasonService._winner(semiFx[0]), SeasonService._winner(semiFx[1])),
         ],
@@ -463,12 +832,18 @@ extension SeasonCycle on SeasonService {
           'NSF',
           kind: kind,
           confederation: conf,
+          edition: edition,
         )).add(const Duration(days: 3)),
       );
       return;
     }
 
-    await _crownNationsCupIfDecided(careerId, cupName, finalFx);
+    await _crownNationsCupIfDecided(
+      careerId,
+      cupName,
+      finalFx,
+      year: honourYear,
+    );
   }
 
   /// The African cup: once every zone group is played, all 14 group winners
@@ -671,8 +1046,9 @@ extension SeasonCycle on SeasonService {
   Future<void> _crownNationsCupIfDecided(
     int careerId,
     String cupName,
-    List<Fixture> finalFx,
-  ) async {
+    List<Fixture> finalFx, {
+    int? year,
+  }) async {
     final f = finalFx.first;
     if (!f.hasResult) return;
     await _recordNationsLeagueHonour(
@@ -681,19 +1057,23 @@ extension SeasonCycle on SeasonService {
       SeasonService._winner(f),
       SeasonService._loser(f),
       finalFixture: f,
+      year: year,
     );
   }
 
+  /// Files a Nations Cup's honour under [year] (its league phase's year),
+  /// by default the autumn after the continental finals.
   Future<void> _recordNationsLeagueHonour(
     int careerId,
     String cupName,
     int champion,
     int? runnerUp, {
     Fixture? finalFixture,
+    int? year,
   }) async {
     final career = await _careers.byId(careerId);
     if (career == null) return;
-    final year = SeasonService.finalsYear(career.cyclePointer) - 2;
+    year ??= SeasonService.finalsYear(career.cyclePointer) - 2;
     if (await _comp.hasHonour(careerId, cupName, year)) return;
     // Store the final's scoreline champion-first, so the past-winners card
     // shows the result rather than a bare "beat".

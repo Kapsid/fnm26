@@ -137,11 +137,17 @@ void main() {
     );
     final gaps = await read(cycleObjectiveGapsProvider(career.id));
     expect(gaps.where((g) => g.reason == ObjectiveGapReason.noBrief), isEmpty);
-    // LOW-2: the Nations Cup league exists from the cycle's first day, with
-    // nothing played. Its brief claims no place yet, so the board screen
-    // says "still to be decided" rather than "So far: top half".
-    final nc = briefs.singleWhere((o) => o.tier == TournamentTier.nationsCup);
-    expect(nc.decided, isFalse);
-    expect(nc.actual, lessThan(2));
+    // On calendar2 the board grades the second Nations Cup, drawn once the
+    // first is crowned: until then its row waits for that draw.
+    expect(
+      briefs.where((o) => o.tier == TournamentTier.nationsCup),
+      isEmpty,
+    );
+    expect(
+      gaps
+          .singleWhere((g) => g.tier == TournamentTier.nationsCup)
+          .reason,
+      ObjectiveGapReason.awaitingDraw,
+    );
   });
 }

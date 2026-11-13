@@ -90,6 +90,8 @@ void main() {
                     nationId: europe[8].id,
                     managerName: 'M',
                     rngSeed: seed,
+                    // The calendar the scenario was set on (before 1.1.2).
+                    calendar2: false,
                   ))
               .valueOrNull!;
       final sorted = (await comp.cycleFixturesForNation(

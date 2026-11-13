@@ -248,6 +248,8 @@ void main() {
                     stadiumHostRules: false,
                     // Found on the finals before TournamentCalendar spaced them.
                     tournamentSpacing: false,
+                    // The calendar the seed was found on (before 1.1.2).
+                    calendar2: false,
                   ))
               .valueOrNull!;
       await w.c.read(tacticServiceProvider).setFormation(career.id, shape);
@@ -266,6 +268,8 @@ void main() {
                     stadiumHostRules: false,
                     // Found on the finals before TournamentCalendar spaced them.
                     tournamentSpacing: false,
+                    // The calendar the seed was found on (before 1.1.2).
+                    calendar2: false,
                   ))
               .valueOrNull!;
       final refFam = ref.c.read(tacticFamiliarityRepositoryProvider);

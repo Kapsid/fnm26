@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/domain/services/competition/tournament_calendar.dart';
+import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/util/nation_label.dart';
@@ -1004,8 +1005,23 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
           CompetitionKind.continentalFinals,
           confederation: playerConf,
         );
+    // A calendar2 cycle draws Europe's qualifying only once its first
+    // Nations Cup league phase is played: until then the campaign is all to
+    // come, though nothing of it exists yet.
+    final contQualUndrawn =
+        playerConf == Confederation.europe &&
+        !hasContFinals &&
+        await isCalendar2(comp, careerId, cycle) &&
+        !await comp.hasTournament(
+          careerId,
+          CompetitionKind.continentalQualifying,
+          confederation: playerConf,
+        );
     final contCampaignPending =
-        contQualUnfinished || contFinalsUndrawn || contFinalsUnfinished;
+        contQualUndrawn ||
+        contQualUnfinished ||
+        contFinalsUndrawn ||
+        contFinalsUnfinished;
     // The host reveal waits for the continental cup to be done — for hosts and
     // non-hosts alike.
     if ((isWcQualGame || playerIsWcHost) && !contCampaignPending) {
