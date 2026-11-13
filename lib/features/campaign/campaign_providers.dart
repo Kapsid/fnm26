@@ -340,6 +340,7 @@ campaignProgressProvider = FutureProvider.autoDispose
             careerId: careerId,
             nationId: def.nationId,
             fixtures: fixtures,
+            cycle: cyclePointer,
           ),
         );
       }

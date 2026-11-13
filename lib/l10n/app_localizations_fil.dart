@@ -17898,4 +17898,45 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'MGA PLAY-OFF';
+
+  @override
+  String get wcPlayoffIntro =>
+      'Pasok na ang labindalawang nanalo sa grupo. Ang huling mga puwesto ng Europa ay pagpapasyahan sa mga landas ng play-off na may apat na koponan: ang pinakamahusay na pumangalawa at ang pinakamahusay na nanalo sa grupo ng Nations Cup na hindi pa pasok, semi-final na isang laro sa tahanan ng mas mataas na seed sa Marso, pagkatapos ay isang final.';
+
+  @override
+  String get icPlayoffIntro =>
+      'Anim na koponan mula sa limang kompederasyon para sa huling dalawang puwesto. Naghihintay ang dalawang pinakamataas ang ranggo sa mga final ng landas, naglalaro ng semi-final ang apat pa, at lahat ng laro ay sa bansang punong-abala sa Marso.';
+
+  @override
+  String get icPlayoffSeeded => 'Diretso sa final ng landas';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation laban sa panalo sa semi-final';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return 'Panalo sa Landas ng Europa $path';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return 'Panalo sa Intercontinental na Landas $path';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return 'Intercontinental na play-off: Landas $path';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return 'Isang laro na semi-final laban sa $opponent sa Marso, sa bansang punong-abala, pagkatapos ay ang final ng landas para sa puwesto sa finals.';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return 'Diretso sa final ng landas sa Marso, sa bansang punong-abala, laban sa panalo ng $first laban sa $second.';
+  }
 }

@@ -14,6 +14,7 @@ import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/tournaments/drawn_groups.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/tournaments/wc_host_berths.dart';
+import 'package:fnm/features/tournaments/wc_playoff_providers.dart';
 
 /// The finals draw recomputed for the draw ceremony. It reuses the exact same
 /// finalist selection, seed and ranking as the season service so the ceremony
@@ -26,7 +27,41 @@ class FinalsDrawData {
     required this.potByNation,
     required this.cycle,
     required this.alreadyWatched,
+    this.placeholderKeys = const {},
+    this.playerPathKey,
   });
+
+  /// The balls in [draw] standing for a play-off path's winner (a calendar2
+  /// draw made before its play-offs), by their id (below zero) and stored
+  /// key ("UEFA-B", "IC-1"). Empty for every other draw.
+  final Map<int, String> placeholderKeys;
+
+  /// The placeholder key of the path the manager's nation is in, if any:
+  /// its winner's ball is the one to follow.
+  final String? playerPathKey;
+
+  /// The ball to keep lit: the manager's nation, or his path's placeholder
+  /// while it stands in the draw.
+  int get highlightId {
+    final key = playerPathKey;
+    if (key != null) {
+      for (final e in placeholderKeys.entries) {
+        if (e.value == key) return e.key;
+      }
+    }
+    return playerNationId;
+  }
+
+  /// The group the manager's path winner was drawn into, or null.
+  String? get playerPathGroup {
+    if (playerPathKey == null) return null;
+    final id = highlightId;
+    if (id == playerNationId) return null;
+    for (final g in draw.groups) {
+      if (g.nationIds.contains(id)) return g.name;
+    }
+    return null;
+  }
 
   final FinalsDraw draw;
   final Map<int, Nation> nations;
@@ -57,6 +92,47 @@ finalsDrawProvider = FutureProvider.autoDispose.family<FinalsDrawData?, int>((
   if (career == null) return null;
   final comp = ref.watch(competitionRepositoryProvider);
   if (!await comp.allQualifyingPlayed(careerId)) return null;
+
+  // A calendar2 draw is made (and stored) before the play-offs, a
+  // placeholder in each path winner's slot: the ceremony reads it, never
+  // draws it, and the slots' order is the pots'.
+  final slots = await comp.drawSlots(
+    careerId,
+    career.cyclePointer,
+    CompetitionKind.worldCupFinals,
+  );
+  if (slots.isNotEmpty) {
+    final all = {
+      for (final n
+          in await ref.watch(nationRepositoryProvider).forCareer(careerId))
+        n.id: n,
+    };
+    final stored = wcDrawWithPlaceholders(slots);
+    final playoffs = await readWcPlayoffs(
+      comp,
+      careerId: careerId,
+      cycle: career.cyclePointer,
+      playerNationId: career.nationId,
+      nations: all,
+    );
+    return FinalsDrawData(
+      draw: stored.draw,
+      nations: all,
+      playerNationId: career.nationId,
+      potByNation: potsFromGroups([
+        for (final g in stored.draw.groups)
+          (name: g.name, nationIds: g.nationIds),
+      ]),
+      cycle: career.cyclePointer,
+      alreadyWatched: await comp.hasWatchedDraw(
+        careerId,
+        career.cyclePointer,
+        worldCupDrawKind,
+      ),
+      placeholderKeys: stored.keys,
+      playerPathKey: playoffs?.playerPathKey,
+    );
+  }
 
   final byConfederation = await comp.allGroupTablesByConfederation(careerId);
   final grouped = <Confederation, List<List<GroupStanding>>>{};

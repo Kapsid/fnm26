@@ -4471,5 +4471,14 @@
   "euroPlayoffWinnerToGroup": "El ganador pasa al Grupo {group}",
   "euroPlayoffWinnerPlaceholder": "Ganador de la Ruta {path}",
   "euroPlayoffYourGroupIfWin": "Tu grupo si ganas la Ruta {path}: Grupo {group}",
-  "euroPlayoffBracketHeading": "REPESCA"
+  "euroPlayoffBracketHeading": "REPESCA",
+  "wcPlayoffIntro": "Los doce ganadores de grupo están clasificados. Las últimas plazas europeas se deciden en rutas de repesca de cuatro equipos: los mejores segundos y los mejores ganadores de grupo de la Copa de Naciones aún fuera, semifinales a partido único en casa del mejor cabeza de serie en marzo y luego una final única.",
+  "icPlayoffIntro": "Seis selecciones de cinco confederaciones por las dos últimas plazas. Las dos mejor clasificadas esperan en las finales de ruta, las otras cuatro juegan semifinales y todos los partidos se disputan en el país anfitrión en marzo.",
+  "icPlayoffSeeded": "Directo a la final de la ruta",
+  "icPlayoffFinalPending": "{nation} contra el ganador de la semifinal",
+  "wcPlaceholderUefa": "Ganador de la ruta europea {path}",
+  "wcPlaceholderIc": "Ganador de la ruta intercontinental {path}",
+  "newsIcPlayoffTitle": "Repesca intercontinental: ruta {path}",
+  "newsIcPlayoffBodySemi": "Una semifinal a partido único contra {opponent} en marzo, en el país anfitrión, y luego la final de la ruta por una plaza en la fase final.",
+  "newsIcPlayoffBodyBye": "Directo a la final de la ruta en marzo, en el país anfitrión, contra el ganador de {first} contra {second}."
 }

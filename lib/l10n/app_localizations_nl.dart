@@ -17972,4 +17972,45 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'PLAY-OFFS';
+
+  @override
+  String get wcPlayoffIntro =>
+      'De twaalf groepswinnaars zijn door. Europa\'s laatste plaatsen worden verdeeld in play-offroutes van vier teams: de beste nummers twee en de beste groepswinnaars van de Nations Cup die er nog niet bij zijn, halve finales over één wedstrijd bij het hoogst geplaatste team in maart, dan één finale.';
+
+  @override
+  String get icPlayoffIntro =>
+      'Zes teams uit vijf confederaties strijden om de laatste twee plaatsen. De twee hoogst geplaatste wachten in de routefinales, de andere vier spelen halve finales, en elke wedstrijd wordt in maart in het gastland gespeeld.';
+
+  @override
+  String get icPlayoffSeeded => 'Direct geplaatst in de routefinale';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation tegen de winnaar van de halve finale';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return 'Winnaar Europese route $path';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return 'Winnaar intercontinentale route $path';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return 'Intercontinentale play-off: route $path';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return 'Eén halve finale tegen $opponent in maart, in het gastland, dan de routefinale om een plaats in de eindronde.';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return 'Direct geplaatst in de routefinale in maart, in het gastland, tegen de winnaar van $first tegen $second.';
+  }
 }

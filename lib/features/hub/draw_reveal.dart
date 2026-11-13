@@ -8,6 +8,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
@@ -36,6 +37,12 @@ String? drawKindForFixture(Fixture f) {
   // Europe's play-offs (EPSF, EPFINAL): their own ceremony, the paths. They
   // would otherwise fall through to the World Championship key at the bottom.
   if (EuroPlayoffs.rounds.contains(round)) return EuroPlayoffs.drawWatchedKind;
+  // The World Championship's calendar2 play-offs: Europe's paths have their
+  // own ceremony, the intercontinental play-off its own (the legacy key).
+  if (UefaWcPlayoffs.rounds.contains(round)) {
+    return UefaWcPlayoffs.drawWatchedKind;
+  }
+  if (IcPlayoffs.rounds.contains(round)) return worldCupPlayoffKind;
   if (round.startsWith('C')) return continentalFinalsDrawKind; // CGROUP, CR16…
   // NGROUP/NSF/NFINAL — the Nations Cup has its own ceremony. Without this they
   // fell through to the World Cup key below and were hidden until December of
@@ -61,6 +68,8 @@ Future<Set<String>> watchedFixtureDraws(
     worldCupDrawKind,
     nationsCupDrawKind,
     EuroPlayoffs.drawWatchedKind,
+    UefaWcPlayoffs.drawWatchedKind,
+    worldCupPlayoffKind,
   ]) {
     if (await comp.hasWatchedDraw(careerId, cycle, kind)) watched.add(kind);
   }
@@ -91,7 +100,8 @@ String? groupDrawKind(CompetitionKind kind) => switch (kind) {
   CompetitionKind.friendly ||
   CompetitionKind.finalissima ||
   CompetitionKind.worldCupPlayoff ||
-  CompetitionKind.continentalPlayoff => null,
+  CompetitionKind.continentalPlayoff ||
+  CompetitionKind.worldCupPlayoffEurope => null,
 };
 
 /// Whether the draw for the player's next fixture has been watched, so the hub

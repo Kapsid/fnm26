@@ -18312,4 +18312,45 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'BARAJE';
+
+  @override
+  String get wcPlayoffIntro =>
+      'Cele douăsprezece câștigătoare de grupă sunt calificate. Ultimele locuri europene se decid în trasee de baraj cu patru echipe: cele mai bune ocupante ale locului doi și cele mai bune câștigătoare de grupă din Cupa Națiunilor încă necalificate, semifinale într-un singur meci pe terenul capului de serie în martie, apoi o singură finală.';
+
+  @override
+  String get icPlayoffIntro =>
+      'Șase echipe din cinci confederații pentru ultimele două locuri. Cele mai bine clasate două așteaptă în finalele traseelor, celelalte patru joacă semifinale, iar toate meciurile se dispută în martie în țara gazdă.';
+
+  @override
+  String get icPlayoffSeeded => 'Direct în finala traseului';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation contra câștigătoarei semifinalei';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return 'Câștigătoarea traseului european $path';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return 'Câștigătoarea traseului intercontinental $path';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return 'Baraj intercontinental: traseul $path';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return 'O semifinală într-un singur meci cu $opponent în martie, în țara gazdă, apoi finala traseului pentru un loc la turneul final.';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return 'Direct în finala traseului din martie, în țara gazdă, contra câștigătoarei meciului $first contra $second.';
+  }
 }

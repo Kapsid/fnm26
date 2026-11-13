@@ -17965,4 +17965,45 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'SPAREGGI';
+
+  @override
+  String get wcPlayoffIntro =>
+      'Le dodici vincitrici dei gironi sono qualificate. Gli ultimi posti europei si decidono in percorsi di spareggio a quattro: le migliori seconde e le migliori vincitrici dei gironi di Coppa delle Nazioni ancora fuori, semifinali in gara secca in casa della testa di serie a marzo, poi una finale secca.';
+
+  @override
+  String get icPlayoffIntro =>
+      'Sei squadre da cinque confederazioni per gli ultimi due posti. Le due meglio classificate attendono nelle finali dei percorsi, le altre quattro giocano le semifinali, e ogni partita si gioca nel paese ospitante a marzo.';
+
+  @override
+  String get icPlayoffSeeded => 'Direttamente in finale del percorso';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation contro la vincente della semifinale';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return 'Vincente del percorso europeo $path';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return 'Vincente del percorso intercontinentale $path';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return 'Spareggio intercontinentale: percorso $path';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return 'Una semifinale secca contro $opponent a marzo, nel paese ospitante, poi la finale del percorso per un posto alla fase finale.';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return 'Direttamente in finale del percorso a marzo, nel paese ospitante, contro la vincente di $first contro $second.';
+  }
 }

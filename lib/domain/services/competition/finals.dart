@@ -161,6 +161,11 @@ abstract final class WorldCupFinals {
     required Map<Confederation, int> hostBerths,
     SeededRng? playoffRng,
     List<int>? playoffWinnersOverride,
+
+    /// Places a confederation decides in its own play-offs instead of its
+    /// groups (Europe's paths on the calendar2 rhythm): its group ladder
+    /// hands out that many fewer. Empty keeps every ladder as it was.
+    Map<Confederation, int> heldBack = const {},
   }) {
     int rank(int id) => rankingById[id] ?? 9999;
     final qualifiers = <int>[];
@@ -170,7 +175,12 @@ abstract final class WorldCupFinals {
       final fmt = QualificationFormat.forConfederation(entry.key);
       final berths = fmt.qualifyingBerths(hostBerths[entry.key] ?? 0);
       reserved += fmt.finalsBerths - berths;
-      qualifiers.addAll(Qualification.qualifiers(entry.value, berths));
+      qualifiers.addAll(
+        Qualification.qualifiers(
+          entry.value,
+          (berths - (heldBack[entry.key] ?? 0)).clamp(0, berths),
+        ),
+      );
     }
     // The two remaining places go through the intercontinental play-off. A
     // caller that has actually PLAYED the play-off passes its real winners in
@@ -259,6 +269,7 @@ abstract final class WorldCupFinals {
     required Map<int, Confederation> confederationById,
     required int pinnedCount,
     required SeededRng rng,
+    Map<int, Set<Confederation>> anyOf = const {},
   }) {
     if (caps.isEmpty) return null;
     final n = slice.length;
@@ -283,6 +294,11 @@ abstract final class WorldCupFinals {
     final out = List<int>.filled(n, -1);
 
     bool fits(int team, int gi) {
+      // A placeholder for a play-off path's winner carries every
+      // confederation its winner could come from.
+      if (anyOf[team] case final cs?) {
+        return cs.every((c) => (tally[gi][c] ?? 0) < (caps[c] ?? 1 << 30));
+      }
       final c = confederationById[team];
       if (c == null) return true;
       return (tally[gi][c] ?? 0) < (caps[c] ?? 1 << 30);
@@ -296,13 +312,20 @@ abstract final class WorldCupFinals {
       for (final gi in choices) {
         if (taken[gi] || !fits(team, gi)) continue;
         final c = confederationById[team];
+        final multi = anyOf[team];
         taken[gi] = true;
         out[i] = gi;
         if (c != null) tally[gi][c] = (tally[gi][c] ?? 0) + 1;
+        for (final m in multi ?? const <Confederation>{}) {
+          tally[gi][m] = (tally[gi][m] ?? 0) + 1;
+        }
         if (place(i + 1)) return true;
         taken[gi] = false;
         out[i] = -1;
         if (c != null) tally[gi][c] = tally[gi][c]! - 1;
+        for (final m in multi ?? const <Confederation>{}) {
+          tally[gi][m] = tally[gi][m]! - 1;
+        }
       }
       return false;
     }
@@ -327,8 +350,54 @@ abstract final class WorldCupFinals {
     List<int> hosts = const [],
     int perGroup = 4,
     Map<int, Confederation> confederationById = const {},
+
+    /// Placeholders for a play-off path's winner (calendar2 World
+    /// Championship, see `WcPlaceholders`), each holding every confederation
+    /// its winner could come from: no group may then exceed a cap in any of
+    /// them. Relaxed for a pot only if no legal placement exists. Empty for
+    /// every other draw, which is then exactly what it was.
+    Map<int, Set<Confederation>> anyOfConfederations = const {},
   }) {
-    final rng = SeededRng(rngSeed ^ 0xF1A15);
+    FinalsDraw? once(SeededRng rng, {required bool strict}) => _drawOnce(
+      qualifierIds: qualifierIds,
+      rankingById: rankingById,
+      rng: rng,
+      hosts: hosts,
+      perGroup: perGroup,
+      confederationById: confederationById,
+      anyOfConfederations: anyOfConfederations,
+      strict: strict,
+    );
+    if (anyOfConfederations.isEmpty) {
+      return once(SeededRng(rngSeed ^ 0xF1A15), strict: false)!;
+    }
+    // A placeholder carrying several confederations can be boxed in by the
+    // pots drawn before it, so the draw is made again (on a stream of its
+    // own each time, still seeded) until every pot is legal, and relaxed
+    // pot by pot only when no attempt finds one.
+    for (var attempt = 0; attempt < 64; attempt++) {
+      final drawn = once(
+        SeededRng((rngSeed ^ 0xF1A15) + attempt * 0x9E37),
+        strict: true,
+      );
+      if (drawn != null) return drawn;
+    }
+    return once(SeededRng(rngSeed ^ 0xF1A15), strict: false)!;
+  }
+
+  /// One pass of [drawGroups] on [rng]. With [strict], null as soon as a pot
+  /// has no legal placement; otherwise each pot falls back (caps without the
+  /// placeholders' extra confederations, then slot i to group i).
+  static FinalsDraw? _drawOnce({
+    required List<int> qualifierIds,
+    required Map<int, int> rankingById,
+    required SeededRng rng,
+    required List<int> hosts,
+    required int perGroup,
+    required Map<int, Confederation> confederationById,
+    required Map<int, Set<Confederation>> anyOfConfederations,
+    required bool strict,
+  }) {
     final groupCount = qualifierIds.length ~/ perGroup;
     if (groupCount == 0) return const FinalsDraw(groups: []);
 
@@ -390,7 +459,20 @@ abstract final class WorldCupFinals {
       // Slot i → group i is the draw when nothing constrains it, and it stays
       // the draw whenever the constraint cannot be met — a tournament with an
       // awkward field still gets drawn rather than throwing.
+      final legal = anyOfConfederations.isEmpty
+          ? null
+          : _placePot(
+              slice: slice,
+              groups: groups,
+              caps: caps,
+              confederationById: confederationById,
+              pinnedCount: pot == 0 ? activeHosts.length : 0,
+              rng: rng,
+              anyOf: anyOfConfederations,
+            );
+      if (strict && legal == null && caps.isNotEmpty) return null;
       final placement =
+          legal ??
           _placePot(
             slice: slice,
             groups: groups,

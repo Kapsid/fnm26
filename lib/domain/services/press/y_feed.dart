@@ -873,6 +873,9 @@ abstract final class YFeed {
     if (round == playoffFinalRound) return YStakes.knockout;
     // So is a European play-off path's final (`EuroPlayoffs.finalRound`).
     if (round == 'EPFINAL') return YStakes.knockout;
+    // And the World Championship's calendar2 path finals (Europe's and the
+    // intercontinental play-off's).
+    if (round == 'UPFINAL' || round == 'ICFINAL') return YStakes.knockout;
     if (round.endsWith('FINAL')) return YStakes.trophyFinal;
     if (Rounds.isKnockout(round)) return YStakes.knockout;
     if (round == 'GROUP' || round == 'CGROUP') return YStakes.finals;

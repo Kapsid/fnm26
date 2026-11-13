@@ -309,6 +309,7 @@ class EuroPendingGroups extends StatelessWidget {
     required this.code,
     required this.name,
     this.playerPathLetter,
+    this.labels = const {},
     super.key,
   });
 
@@ -316,6 +317,10 @@ class EuroPendingGroups extends StatelessWidget {
 
   /// The placeholder ids in [draw] and their path letters.
   final Map<int, String> letters;
+
+  /// A placeholder's name when it is not "Path B winner" (the World
+  /// Championship's "European Path B winner"), by its id.
+  final Map<int, String> labels;
   final int playerNationId;
   final String? playerPathLetter;
   final String Function(int) code;
@@ -359,7 +364,8 @@ class EuroPendingGroups extends StatelessWidget {
                         child: Text(
                           letter == null
                               ? name(id)
-                              : l.euroPlayoffWinnerPlaceholder(letter),
+                              : labels[id] ??
+                                    l.euroPlayoffWinnerPlaceholder(letter),
                           style: AppTypography.labelMedium.copyWith(
                             color: lit
                                 ? AppColors.primary

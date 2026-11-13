@@ -4471,5 +4471,14 @@
   "euroPlayoffWinnerToGroup": "Pemenang akan ke Kumpulan {group}",
   "euroPlayoffWinnerPlaceholder": "Pemenang Laluan {path}",
   "euroPlayoffYourGroupIfWin": "Kumpulan anda jika menang Laluan {path}: Kumpulan {group}",
-  "euroPlayoffBracketHeading": "PLAY-OFF"
+  "euroPlayoffBracketHeading": "PLAY-OFF",
+  "wcPlayoffIntro": "Dua belas juara kumpulan sudah layak. Tempat terakhir Eropah ditentukan dalam laluan play-off empat pasukan: naib juara terbaik dan juara kumpulan Piala Negara-Negara terbaik yang belum layak, separuh akhir satu perlawanan di tempat pilihan lebih tinggi pada bulan Mac, kemudian satu perlawanan akhir.",
+  "icPlayoffIntro": "Enam pasukan dari lima konfederasi merebut dua tempat terakhir. Dua pasukan ranking terbaik menunggu di perlawanan akhir laluan, empat yang lain bermain separuh akhir, dan semua perlawanan dimainkan di negara tuan rumah pada bulan Mac.",
+  "icPlayoffSeeded": "Terus ke perlawanan akhir laluan",
+  "icPlayoffFinalPending": "{nation} menentang pemenang separuh akhir",
+  "wcPlaceholderUefa": "Pemenang Laluan Eropah {path}",
+  "wcPlaceholderIc": "Pemenang Laluan Antara Benua {path}",
+  "newsIcPlayoffTitle": "Play-off antara benua: Laluan {path}",
+  "newsIcPlayoffBodySemi": "Separuh akhir satu perlawanan menentang {opponent} pada bulan Mac di negara tuan rumah, kemudian perlawanan akhir laluan untuk tempat di pusingan akhir.",
+  "newsIcPlayoffBodyBye": "Terus ke perlawanan akhir laluan pada bulan Mac di negara tuan rumah, menentang pemenang {first} lawan {second}."
 }

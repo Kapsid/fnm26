@@ -4471,5 +4471,14 @@
   "euroPlayoffWinnerToGroup": "Le vainqueur va dans le groupe {group}",
   "euroPlayoffWinnerPlaceholder": "Vainqueur de la Voie {path}",
   "euroPlayoffYourGroupIfWin": "Votre groupe si vous gagnez la Voie {path} : groupe {group}",
-  "euroPlayoffBracketHeading": "BARRAGES"
+  "euroPlayoffBracketHeading": "BARRAGES",
+  "wcPlayoffIntro": "Les douze vainqueurs de groupe sont qualifiés. Les dernières places européennes se jouent dans des voies de barrage à quatre : les meilleurs deuxièmes et les meilleurs vainqueurs de groupe de la Coupe des Nations encore non qualifiés, demi-finales sur un match chez la tête de série en mars, puis une finale sèche.",
+  "icPlayoffIntro": "Six équipes de cinq confédérations pour les deux dernières places. Les deux mieux classées attendent en finale de voie, les quatre autres jouent les demi-finales, et tous les matchs ont lieu dans le pays hôte en mars.",
+  "icPlayoffSeeded": "Directement en finale de voie",
+  "icPlayoffFinalPending": "{nation} contre le vainqueur de la demi-finale",
+  "wcPlaceholderUefa": "Vainqueur de la voie européenne {path}",
+  "wcPlaceholderIc": "Vainqueur de la voie intercontinentale {path}",
+  "newsIcPlayoffTitle": "Barrage intercontinental : voie {path}",
+  "newsIcPlayoffBodySemi": "Une demi-finale sèche contre {opponent} en mars, dans le pays hôte, puis la finale de voie pour une place en phase finale.",
+  "newsIcPlayoffBodyBye": "Directement en finale de voie en mars, dans le pays hôte, contre le vainqueur de {first} contre {second}."
 }

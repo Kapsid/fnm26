@@ -17,6 +17,7 @@ import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/services/campaign/campaigns.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/kickoff_keys.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
@@ -436,6 +437,10 @@ class StoryDriver {
       Routes.intercontinentalPlayoff => worldCupPlayoffKind,
       Routes.nationsCupDraw => nationsCupDrawKind,
       Routes.euroPlayoffDraw => EuroPlayoffs.drawWatchedKind,
+      Routes.wcPlayoffDraw =>
+        uri.queryParameters['ic'] == '1'
+            ? worldCupPlayoffKind
+            : UefaWcPlayoffs.drawWatchedKind,
       _ => throw StateError('unknown draw ${uri.path}'),
     };
   }

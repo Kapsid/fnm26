@@ -72,6 +72,11 @@ class ScheduleGenerator {
     int? groupSize,
     Map<int, int>? rankById,
 
+    /// Draws exactly this many groups instead of deriving the count from
+    /// the group size (Europe's twelve on the calendar2 rhythm). Null keeps
+    /// every other draw as it was.
+    int? groupCount,
+
     /// Plays the campaign in fluid windows across this span (see
     /// [WindowPlan]); without it every window holds three matchdays, as a
     /// cycle opened before 1.0.6 has them.
@@ -89,6 +94,7 @@ class ScheduleGenerator {
       groupSize ?? format.targetGroupSize,
       rng,
       rankById,
+      groupCount: groupCount,
     );
 
     // One shared matchday→date map sized to the largest group.
@@ -149,19 +155,22 @@ class ScheduleGenerator {
     List<Nation> nations,
     int targetSize,
     SeededRng rng,
-    Map<int, int>? rankById,
-  ) {
+    Map<int, int>? rankById, {
+    int? groupCount,
+  }) {
     int rankOf(Nation n) => rankById?[n.id] ?? n.ranking;
     final sorted = [...nations]..sort((a, b) => rankOf(a).compareTo(rankOf(b)));
     // Ceil, not round: [targetSize] is a ceiling, and rounding down overfills
     // the groups. A 13-nation pool at target 4 would round to 3 groups of 5/4/4
     // — and a group of 5 runs 10 matchdays instead of 6, spilling the Nations
     // Cup out of its autumn and into World Cup qualifying's March window.
-    final groupCount = (sorted.length / targetSize).ceil().clamp(1, 12);
-    final groups = List.generate(groupCount, (_) => <int>[]);
+    final count =
+        groupCount?.clamp(1, sorted.length.clamp(1, 1 << 20)) ??
+        (sorted.length / targetSize).ceil().clamp(1, 12);
+    final groups = List.generate(count, (_) => <int>[]);
 
-    for (var start = 0; start < sorted.length; start += groupCount) {
-      final end = (start + groupCount).clamp(0, sorted.length);
+    for (var start = 0; start < sorted.length; start += count) {
+      final end = (start + count).clamp(0, sorted.length);
       final pot = rng.shuffled(
         sorted.sublist(start, end).map((n) => n.id).toList(),
       );

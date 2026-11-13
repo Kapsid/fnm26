@@ -23,7 +23,10 @@ import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/tournaments/all_time_scorers_legend.dart';
 import 'package:fnm/features/tournaments/best_thirds.dart';
 import 'package:fnm/features/tournaments/cup_detail_providers.dart';
+import 'package:fnm/features/tournaments/euro_playoff_draw_screen.dart';
 import 'package:fnm/features/tournaments/intercontinental_playoff_bracket.dart';
+import 'package:fnm/features/tournaments/wc_playoff_draw_screen.dart';
+import 'package:fnm/features/tournaments/wc_playoff_providers.dart';
 import 'package:fnm/features/tournaments/intercontinental_playoff_providers.dart';
 import 'package:fnm/features/tournaments/tournament_awards.dart';
 import 'package:fnm/features/tournaments/tournament_bracket.dart';
@@ -58,6 +61,8 @@ class CupDetailScreen extends ConsumerWidget {
     if (data == null) return 0;
     if (data.knockout.isNotEmpty) return 4; // the bracket, even once crowned
     if (data.hasFinals && data.finalsDrawWatched) return 3; // finals groups
+    // The calendar2 play-offs under way, the finals still waiting on them.
+    if (data.playoffs != null && !data.hasFinals) return 2;
     return 1; // qualifying
   }
 
@@ -193,10 +198,11 @@ List<Widget> _cupTabViews(
         code: code,
         name: name,
         hostBerths: data.wcHostBerths,
+        europePlayoffPaths: data.europePlayoffPaths,
       ),
     // The intercontinental play-off — its own tab, shown as a
     // knockout bracket for the last two finals berths.
-    _PlayoffTab(careerId: careerId),
+    _PlayoffTab(careerId: careerId, playoffs: data.playoffs),
     if (data.hasFinals && !data.finalsDrawWatched)
       _Soon(message: l.tourCupFinalsDrawSoon)
     else if (data.hasFinals)
@@ -206,6 +212,27 @@ List<Widget> _cupTabViews(
         groups: data.finalsGroups,
         groupFixtures: data.groupFixtures,
         playerNationId: data.playerNationId,
+        code: code,
+        name: name,
+      )
+    // A calendar2 draw made before the play-offs: the groups with a
+    // placeholder in each path winner's slot.
+    else if (data.pendingDraw case final pending? when data.finalsDrawWatched)
+      EuroPendingGroups(
+        draw: pending,
+        letters: {
+          for (final e in data.pendingKeys.entries)
+            e.key: wcPlaceholderMark(e.value),
+        },
+        labels: {
+          for (final e in data.pendingKeys.entries)
+            e.key: wcPlaceholderLabel(l, e.value),
+        },
+        playerNationId: data.playerNationId,
+        playerPathLetter: switch (data.playoffs?.playerPathKey) {
+          final key? => wcPlaceholderMark(key),
+          null => null,
+        },
         code: code,
         name: name,
       )
@@ -276,13 +303,33 @@ List<Widget> _cupTabViews(
 /// berths, drawn as a bracket. Shows a "not yet" note until every
 /// confederation's qualifying is complete and the ties are decided.
 class _PlayoffTab extends ConsumerWidget {
-  const _PlayoffTab({required this.careerId});
+  const _PlayoffTab({required this.careerId, this.playoffs});
 
   final int careerId;
+
+  /// The calendar2 play-offs (Europe's paths and the intercontinental
+  /// play-off, every tie a fixture), read from their stored draws; null in
+  /// a cycle on the legacy play-off.
+  final WcPlayoffData? playoffs;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
+    if (playoffs case final data?) {
+      return ListView(
+        padding: const EdgeInsets.all(AppSpacing.marginMobile),
+        children: [
+          Text(
+            l.tourCupPlayoffIntro,
+            style: AppTypography.bodySmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          WcPlayoffPaths(data: data, careerId: careerId, headings: true),
+        ],
+      );
+    }
     final async = ref.watch(intercontinentalPlayoffProvider(careerId));
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -313,10 +360,15 @@ class _Qualifying extends StatefulWidget {
     required this.name,
     this.grid = false,
     this.hostBerths = const {},
+    this.europePlayoffPaths = 0,
   });
 
   final int careerId;
   final List<ConfederationGroupTable> groups;
+
+  /// Europe's play-off paths on the calendar2 rhythm (see
+  /// `CupData.europePlayoffPaths`); 0 otherwise.
+  final int europePlayoffPaths;
 
   /// How many of each confederation's nations host the finals: their places
   /// come out of its qualifying allocation, so its ladder is that much
@@ -421,16 +473,22 @@ class _QualifyingState extends State<_Qualifying> {
     Map<Confederation, List<ConfederationGroupTable>> byConf,
   ) {
     final hosts = widget.hostBerths[conf] ?? 0;
+    final paths = conf == Confederation.europe ? widget.europePlayoffPaths : 0;
     final adv = GroupAdvancement.worldCupQualifying(
       conf,
       byConf[conf]!.length,
       hosts: hosts,
+      playoffPaths: paths,
     );
     // Who is on course for the intercontinental play-off (yellow), from the
     // real format and the live cross-group ladder, never a fixed position.
-    final playoff = GroupAdvancement.worldCupPlayoffNations(conf, [
-      for (final g in byConf[conf]!) g.standings,
-    ], hosts: hosts);
+    // Europe's runners-up on course for its own paths, on calendar2.
+    final playoff = GroupAdvancement.worldCupPlayoffNations(
+      conf,
+      [for (final g in byConf[conf]!) g.standings],
+      hosts: hosts,
+      playoffPaths: paths,
+    );
     final cards = [
       for (final g in _mineFirst(byConf[conf]!, widget.playerNationId))
         _GroupCard(
@@ -486,6 +544,11 @@ class _QualifyingState extends State<_Qualifying> {
           // plays two groups for one place), exactly as a real qualifying table
           // reads.
           () {
+            // Europe's paths (calendar2) are no ladder: every runner-up
+            // painted for them is in the group cards.
+            if (conf == Confederation.europe && widget.europePlayoffPaths > 0) {
+              return const SizedBox.shrink();
+            }
             final ladder = _contentionLadder(
               conf,
               byConf[conf]!,

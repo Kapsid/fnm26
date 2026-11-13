@@ -4471,5 +4471,14 @@
   "euroPlayoffWinnerToGroup": "De winnaar gaat naar groep {group}",
   "euroPlayoffWinnerPlaceholder": "Winnaar pad {path}",
   "euroPlayoffYourGroupIfWin": "Jouw groep als je pad {path} wint: groep {group}",
-  "euroPlayoffBracketHeading": "PLAY-OFFS"
+  "euroPlayoffBracketHeading": "PLAY-OFFS",
+  "wcPlayoffIntro": "De twaalf groepswinnaars zijn door. Europa's laatste plaatsen worden verdeeld in play-offroutes van vier teams: de beste nummers twee en de beste groepswinnaars van de Nations Cup die er nog niet bij zijn, halve finales over één wedstrijd bij het hoogst geplaatste team in maart, dan één finale.",
+  "icPlayoffIntro": "Zes teams uit vijf confederaties strijden om de laatste twee plaatsen. De twee hoogst geplaatste wachten in de routefinales, de andere vier spelen halve finales, en elke wedstrijd wordt in maart in het gastland gespeeld.",
+  "icPlayoffSeeded": "Direct geplaatst in de routefinale",
+  "icPlayoffFinalPending": "{nation} tegen de winnaar van de halve finale",
+  "wcPlaceholderUefa": "Winnaar Europese route {path}",
+  "wcPlaceholderIc": "Winnaar intercontinentale route {path}",
+  "newsIcPlayoffTitle": "Intercontinentale play-off: route {path}",
+  "newsIcPlayoffBodySemi": "Eén halve finale tegen {opponent} in maart, in het gastland, dan de routefinale om een plaats in de eindronde.",
+  "newsIcPlayoffBodyBye": "Direct geplaatst in de routefinale in maart, in het gastland, tegen de winnaar van {first} tegen {second}."
 }

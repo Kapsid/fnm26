@@ -342,6 +342,16 @@ Future<DateTime?> _hostedFinalsStart(
       ).contains(me)) {
     starts.add(DateTime(wcYear, 6));
   }
+  // Drawn straight into a calendar2 World Championship whose finals are
+  // made only after the March play-offs: the spring is a gap to prepare in.
+  if (!await comp.hasTournament(career.id, CompetitionKind.worldCupFinals) &&
+      (await comp.drawSlots(
+        career.id,
+        career.cyclePointer,
+        CompetitionKind.worldCupFinals,
+      )).any((s) => s.nationId == me)) {
+    starts.add(DateTime(wcYear, 6));
+  }
   final conf = nations[me]?.confederation;
   final cup = conf == null ? null : ContinentalCups.byConfederation[conf];
   if (conf != null &&

@@ -18077,4 +18077,45 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'BARAŻE';
+
+  @override
+  String get wcPlayoffIntro =>
+      'Dwunastu zwycięzców grup ma awans. O ostatnich europejskich miejscach decydują czterozespołowe ścieżki baraży: najlepsze drużyny z drugich miejsc i najlepsi zwycięzcy grup Pucharu Narodów, którzy jeszcze nie awansowali. W marcu jednomeczowe półfinały u wyżej rozstawionego, potem jeden finał.';
+
+  @override
+  String get icPlayoffIntro =>
+      'Sześć drużyn z pięciu konfederacji walczy o ostatnie dwa miejsca. Dwie najwyżej notowane czekają w finałach ścieżek, pozostałe cztery grają półfinały, a wszystkie mecze odbywają się w marcu w kraju gospodarza.';
+
+  @override
+  String get icPlayoffSeeded => 'Rozstawiony od razu w finale ścieżki';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation kontra zwycięzca półfinału';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return 'Zwycięzca europejskiej ścieżki $path';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return 'Zwycięzca interkontynentalnej ścieżki $path';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return 'Baraż interkontynentalny: ścieżka $path';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return 'Jednomeczowy półfinał z $opponent w marcu w kraju gospodarza, potem finał ścieżki o miejsce w turnieju finałowym.';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return 'Rozstawiony od razu w marcowym finale ścieżki w kraju gospodarza, przeciwko zwycięzcy meczu $first kontra $second.';
+  }
 }

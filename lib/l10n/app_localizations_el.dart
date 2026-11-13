@@ -17979,4 +17979,45 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'ΜΠΑΡΑΖ';
+
+  @override
+  String get wcPlayoffIntro =>
+      'Οι δώδεκα νικητές ομίλων προκρίνονται. Οι τελευταίες ευρωπαϊκές θέσεις κρίνονται σε διαδρομές μπαράζ τεσσάρων ομάδων: οι καλύτεροι δεύτεροι και οι καλύτεροι νικητές ομίλων του Κυπέλλου Εθνών που δεν έχουν προκριθεί, ημιτελικοί ενός αγώνα στην έδρα του υψηλότερα ταξινομημένου τον Μάρτιο, μετά ένας τελικός.';
+
+  @override
+  String get icPlayoffIntro =>
+      'Έξι ομάδες από πέντε συνομοσπονδίες για τις δύο τελευταίες θέσεις. Οι δύο υψηλότερα κατατασσόμενες περιμένουν στους τελικούς των διαδρομών, οι άλλες τέσσερις παίζουν ημιτελικούς, και όλοι οι αγώνες γίνονται στη διοργανώτρια χώρα τον Μάρτιο.';
+
+  @override
+  String get icPlayoffSeeded => 'Απευθείας στον τελικό της διαδρομής';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation εναντίον του νικητή του ημιτελικού';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return 'Νικητής ευρωπαϊκής διαδρομής $path';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return 'Νικητής διηπειρωτικής διαδρομής $path';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return 'Διηπειρωτικό μπαράζ: διαδρομή $path';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return 'Ένας ημιτελικός ενός αγώνα με $opponent τον Μάρτιο, στη διοργανώτρια χώρα, και μετά ο τελικός της διαδρομής για μια θέση στην τελική φάση.';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return 'Απευθείας στον τελικό της διαδρομής τον Μάρτιο, στη διοργανώτρια χώρα, με τον νικητή του $first εναντίον $second.';
+  }
 }

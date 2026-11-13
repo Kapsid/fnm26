@@ -76,6 +76,10 @@ const int drawSlotWorldCupQualifying = 2;
 /// the bracket cannot reseed itself between the manager's semi and his final.
 const int drawSlotWorldCupPlayoff = 3;
 
+/// Europe's World Championship play-off paths (calendar2): the pots are the
+/// live ranking the day qualifying is played out.
+const int drawSlotUefaWcPlayoff = 4;
+
 /// The synthetic "cycle" a draw's own live-ranking snapshot is stored under.
 int drawSeedCycle(int cycle, int slot) => 900000 + cycle * 10 + slot;
 

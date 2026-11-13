@@ -8,6 +8,7 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/tournaments/playoff_paths.dart';
@@ -29,6 +30,9 @@ intercontinentalPlayoffProvider = FutureProvider.autoDispose
       if (career == null) return null;
       final comp = ref.watch(competitionRepositoryProvider);
       if (!await comp.allQualifyingPlayed(careerId)) return null;
+      // A calendar2 cycle plays every tie as a fixture, read from its stored
+      // draw (see `wcPlayoffProvider`): never this modelled bracket.
+      if (await isCalendar2(comp, careerId, career.cyclePointer)) return null;
 
       final byConfederation = await comp.allGroupTablesByConfederation(
         careerId,

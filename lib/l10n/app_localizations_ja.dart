@@ -17257,4 +17257,45 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'プレーオフ';
+
+  @override
+  String get wcPlayoffIntro =>
+      '12のグループ首位は出場決定。欧州の残り枠は4チームによるプレーオフパスで争われます。成績上位のグループ2位と、まだ出場を決めていないネーションズカップのグループ首位の上位チームが出場し、3月に上位シードのホームで一発勝負の準決勝、その後に一発勝負の決勝。';
+
+  @override
+  String get icPlayoffIntro =>
+      '5つの連盟の6チームが最後の2枠を争います。ランキング上位2チームはパス決勝で待ち、残る4チームが準決勝を戦い、全試合が3月に開催国で行われます。';
+
+  @override
+  String get icPlayoffSeeded => 'パス決勝にシード';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation対準決勝の勝者';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return '欧州パス$pathの勝者';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return '大陸間パス$pathの勝者';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return '大陸間プレーオフ: パス$path';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return '3月に開催国で$opponentと一発勝負の準決勝、その後は本大会出場を懸けたパス決勝。';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return '3月に開催国で行われるパス決勝にシードされ、$first対$secondの勝者と対戦。';
+  }
 }

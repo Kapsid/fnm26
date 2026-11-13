@@ -4471,5 +4471,14 @@
   "euroPlayoffWinnerToGroup": "Pobjednik ide u skupinu {group}",
   "euroPlayoffWinnerPlaceholder": "Pobjednik puta {path}",
   "euroPlayoffYourGroupIfWin": "Tvoja skupina ako pobijediš na putu {path}: skupina {group}",
-  "euroPlayoffBracketHeading": "PLAY-OFF"
+  "euroPlayoffBracketHeading": "PLAY-OFF",
+  "wcPlayoffIntro": "Dvanaest pobjednika skupina je prošlo. O posljednjim europskim mjestima odlučuju doigravanja u stazama od četiri momčadi: najbolje drugoplasirane i najbolji pobjednici skupina Kupa nacija koji još nisu prošli, polufinala na jednu utakmicu kod više nositelja u ožujku, zatim jedno finale.",
+  "icPlayoffIntro": "Šest momčadi iz pet konfederacija igra za posljednja dva mjesta. Dvije najbolje rangirane čekaju u finalima staza, ostale četiri igraju polufinala, a sve se utakmice igraju u zemlji domaćinu u ožujku.",
+  "icPlayoffSeeded": "Izravno u finalu staze",
+  "icPlayoffFinalPending": "{nation} protiv pobjednika polufinala",
+  "wcPlaceholderUefa": "Pobjednik europske staze {path}",
+  "wcPlaceholderIc": "Pobjednik interkontinentalne staze {path}",
+  "newsIcPlayoffTitle": "Interkontinentalno doigravanje: staza {path}",
+  "newsIcPlayoffBodySemi": "Polufinale na jednu utakmicu protiv {opponent} u ožujku, u zemlji domaćinu, zatim finale staze za mjesto na završnom turniru.",
+  "newsIcPlayoffBodyBye": "Izravno u finalu staze u ožujku, u zemlji domaćinu, protiv pobjednika utakmice {first} protiv {second}."
 }

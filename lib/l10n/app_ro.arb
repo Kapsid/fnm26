@@ -4471,5 +4471,14 @@
   "euroPlayoffWinnerToGroup": "Câștigătoarea merge în grupa {group}",
   "euroPlayoffWinnerPlaceholder": "Câștigătoarea traseului {path}",
   "euroPlayoffYourGroupIfWin": "Grupa ta dacă câștigi traseul {path}: grupa {group}",
-  "euroPlayoffBracketHeading": "BARAJE"
+  "euroPlayoffBracketHeading": "BARAJE",
+  "wcPlayoffIntro": "Cele douăsprezece câștigătoare de grupă sunt calificate. Ultimele locuri europene se decid în trasee de baraj cu patru echipe: cele mai bune ocupante ale locului doi și cele mai bune câștigătoare de grupă din Cupa Națiunilor încă necalificate, semifinale într-un singur meci pe terenul capului de serie în martie, apoi o singură finală.",
+  "icPlayoffIntro": "Șase echipe din cinci confederații pentru ultimele două locuri. Cele mai bine clasate două așteaptă în finalele traseelor, celelalte patru joacă semifinale, iar toate meciurile se dispută în martie în țara gazdă.",
+  "icPlayoffSeeded": "Direct în finala traseului",
+  "icPlayoffFinalPending": "{nation} contra câștigătoarei semifinalei",
+  "wcPlaceholderUefa": "Câștigătoarea traseului european {path}",
+  "wcPlaceholderIc": "Câștigătoarea traseului intercontinental {path}",
+  "newsIcPlayoffTitle": "Baraj intercontinental: traseul {path}",
+  "newsIcPlayoffBodySemi": "O semifinală într-un singur meci cu {opponent} în martie, în țara gazdă, apoi finala traseului pentru un loc la turneul final.",
+  "newsIcPlayoffBodyBye": "Direct în finala traseului din martie, în țara gazdă, contra câștigătoarei meciului {first} contra {second}."
 }

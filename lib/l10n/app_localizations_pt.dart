@@ -17987,4 +17987,45 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'PLAY-OFFS';
+
+  @override
+  String get wcPlayoffIntro =>
+      'Os doze vencedores de grupo estão classificados. As últimas vagas europeias decidem-se em caminhos de repescagem de quatro equipas: os melhores segundos e os melhores vencedores de grupo da Taça das Nações ainda de fora, meias-finais num só jogo em casa do cabeça de série em março e depois uma final única.';
+
+  @override
+  String get icPlayoffIntro =>
+      'Seis seleções de cinco confederações pelas duas últimas vagas. As duas mais bem classificadas esperam nas finais dos caminhos, as outras quatro jogam as meias-finais, e todos os jogos são disputados no país anfitrião em março.';
+
+  @override
+  String get icPlayoffSeeded => 'Direto à final do caminho';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation contra o vencedor da meia-final';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return 'Vencedor do caminho europeu $path';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return 'Vencedor do caminho intercontinental $path';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return 'Repescagem intercontinental: caminho $path';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return 'Uma meia-final num só jogo contra $opponent em março, no país anfitrião, e depois a final do caminho por uma vaga na fase final.';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return 'Direto à final do caminho em março, no país anfitrião, contra o vencedor de $first contra $second.';
+  }
 }

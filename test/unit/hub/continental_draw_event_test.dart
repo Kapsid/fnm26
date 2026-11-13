@@ -8,6 +8,7 @@ import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
@@ -128,6 +129,7 @@ void main() {
         career.id,
         career.cyclePointer,
         EuroPlayoffs.drawWatchedKind,
+        UefaWcPlayoffs.drawWatchedKind,
       );
 
       // The draw is offered anyway.

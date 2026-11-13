@@ -17798,4 +17798,45 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'PLAY-OFF\'LAR';
+
+  @override
+  String get wcPlayoffIntro =>
+      'On iki grup lideri finallerde. Avrupa\'nın son yerleri dört takımlı play-off yollarında belirlenir: en iyi grup ikincileri ve henüz katılamamış en iyi Uluslar Kupası grup liderleri, mart ayında üst torbadaki takımın sahasında tek maçlık yarı finaller, ardından tek maçlık final.';
+
+  @override
+  String get icPlayoffIntro =>
+      'Beş konfederasyondan altı takım son iki yer için oynar. En iyi sıralanan ikisi yol finallerinde bekler, diğer dördü yarı final oynar ve tüm maçlar mart ayında ev sahibi ülkede oynanır.';
+
+  @override
+  String get icPlayoffSeeded => 'Doğrudan yol finalinde';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation ile yarı final galibi';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return 'Avrupa $path yolu galibi';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return 'Kıtalararası $path yolu galibi';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return 'Kıtalararası play-off: $path yolu';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return 'Mart ayında ev sahibi ülkede $opponent ile tek maçlık yarı final, ardından finallere katılım için yol finali.';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return 'Mart ayında ev sahibi ülkede doğrudan yol finalinde, $first ile $second maçının galibine karşı.';
+  }
 }

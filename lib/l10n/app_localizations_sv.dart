@@ -17872,4 +17872,45 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'PLAY-OFF';
+
+  @override
+  String get wcPlayoffIntro =>
+      'De tolv gruppvinnarna är klara. Europas sista platser avgörs i playoff-vägar med fyra lag: de bästa grupptvåorna och de bästa gruppvinnarna i Nationscupen som ännu inte är klara, semifinaler i en match hos det högst seedade laget i mars, sedan en final.';
+
+  @override
+  String get icPlayoffIntro =>
+      'Sex lag från fem konfederationer spelar om de två sista platserna. De två högst rankade väntar i vägfinalerna, de andra fyra spelar semifinaler, och alla matcher spelas i värdlandet i mars.';
+
+  @override
+  String get icPlayoffSeeded => 'Direkt till vägfinalen';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation mot vinnaren av semifinalen';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return 'Vinnare europeisk väg $path';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return 'Vinnare interkontinental väg $path';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return 'Interkontinentalt playoff: väg $path';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return 'En semifinal i en match mot $opponent i mars, i värdlandet, sedan vägfinalen om en plats i slutspelet.';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return 'Direkt till vägfinalen i mars, i värdlandet, mot vinnaren av $first mot $second.';
+  }
 }

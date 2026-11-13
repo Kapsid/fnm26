@@ -4471,5 +4471,14 @@
   "euroPlayoffWinnerToGroup": "La vincente va nel girone {group}",
   "euroPlayoffWinnerPlaceholder": "Vincente del Percorso {path}",
   "euroPlayoffYourGroupIfWin": "Il tuo girone se vinci il Percorso {path}: girone {group}",
-  "euroPlayoffBracketHeading": "SPAREGGI"
+  "euroPlayoffBracketHeading": "SPAREGGI",
+  "wcPlayoffIntro": "Le dodici vincitrici dei gironi sono qualificate. Gli ultimi posti europei si decidono in percorsi di spareggio a quattro: le migliori seconde e le migliori vincitrici dei gironi di Coppa delle Nazioni ancora fuori, semifinali in gara secca in casa della testa di serie a marzo, poi una finale secca.",
+  "icPlayoffIntro": "Sei squadre da cinque confederazioni per gli ultimi due posti. Le due meglio classificate attendono nelle finali dei percorsi, le altre quattro giocano le semifinali, e ogni partita si gioca nel paese ospitante a marzo.",
+  "icPlayoffSeeded": "Direttamente in finale del percorso",
+  "icPlayoffFinalPending": "{nation} contro la vincente della semifinale",
+  "wcPlaceholderUefa": "Vincente del percorso europeo {path}",
+  "wcPlaceholderIc": "Vincente del percorso intercontinentale {path}",
+  "newsIcPlayoffTitle": "Spareggio intercontinentale: percorso {path}",
+  "newsIcPlayoffBodySemi": "Una semifinale secca contro {opponent} a marzo, nel paese ospitante, poi la finale del percorso per un posto alla fase finale.",
+  "newsIcPlayoffBodyBye": "Direttamente in finale del percorso a marzo, nel paese ospitante, contro la vincente di {first} contro {second}."
 }

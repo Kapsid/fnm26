@@ -64,6 +64,12 @@ enum CompetitionKind {
   /// on the calendar2 rhythm: four-team paths from the first Nations Cup).
   /// Every lookup names its confederation.
   continentalPlayoff,
+
+  /// Europe's play-offs for the World Championship (calendar2): four-team
+  /// paths of group runners-up and Nations Cup group winners, rounds `UPSF`
+  /// and `UPFINAL`, group name the path letter. Every lookup names its
+  /// confederation.
+  worldCupPlayoffEurope,
 }
 
 /// Display helpers for [Confederation].

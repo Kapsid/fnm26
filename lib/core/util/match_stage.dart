@@ -5,6 +5,7 @@
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
 /// Turns a fixture's round code into words.
@@ -22,12 +23,20 @@ abstract final class MatchStage {
         'R32' => l.matchTinyRoundOf32,
         'R16' || 'NR16' || 'CR16' => l.matchTinyRoundOf16,
         'QF' || 'NQF' || 'CQF' => l.matchTinyQuarterFinal,
-        'SF' || 'NSF' || 'CSF' || 'POSF' || 'EPSF' => l.matchTinySemiFinal,
+        'SF' ||
+        'NSF' ||
+        'CSF' ||
+        'POSF' ||
+        'EPSF' ||
+        'UPSF' ||
+        'ICSF' => l.matchTinySemiFinal,
         'FINAL' ||
         'NFINAL' ||
         'CFINAL' ||
         'POFINAL' ||
-        'EPFINAL' => l.matchTinyFinal,
+        'EPFINAL' ||
+        'UPFINAL' ||
+        'ICFINAL' => l.matchTinyFinal,
         '3RD' || 'C3RD' => l.matchTinyThirdPlace,
         _ => round,
       };
@@ -56,8 +65,8 @@ abstract final class MatchStage {
     'CSF' => l.resultsStageSemiFinal,
     'C3RD' => l.resultsStageThirdPlace,
     'CFINAL' => l.resultsStageFinal,
-    'EPSF' => l.resultsStageSemiFinal,
-    'EPFINAL' => l.resultsStageFinal,
+    'EPSF' || 'UPSF' || 'ICSF' => l.resultsStageSemiFinal,
+    'EPFINAL' || 'UPFINAL' || 'ICFINAL' => l.resultsStageFinal,
     _ => round,
   };
 
@@ -76,6 +85,9 @@ abstract final class MatchStage {
       return l.resultsCategoryContinentalQualifying;
     }
     if (round.startsWith('C')) return l.resultsCategoryContinentalCup;
+    // The World Championship's calendar2 play-offs (Europe's paths, the
+    // intercontinental play-off) are the last of its qualifying.
+    if (isWcPlayoffRound(round)) return l.resultsCategoryWorldCupQualifying;
     return l.resultsCategoryWorldCupFinals;
   }
 
@@ -125,12 +137,20 @@ abstract final class MatchStage {
       'R32' => l.matchTinyRoundOf32,
       'R16' || 'NR16' || 'CR16' => l.matchTinyRoundOf16,
       'QF' || 'NQF' || 'CQF' => l.matchTinyQuarterFinal,
-      'SF' || 'NSF' || 'CSF' || 'POSF' || 'EPSF' => l.matchTinySemiFinal,
+      'SF' ||
+      'NSF' ||
+      'CSF' ||
+      'POSF' ||
+      'EPSF' ||
+      'UPSF' ||
+      'ICSF' => l.matchTinySemiFinal,
       'FINAL' ||
       'NFINAL' ||
       'CFINAL' ||
       'POFINAL' ||
-      'EPFINAL' => l.matchTinyFinal,
+      'EPFINAL' ||
+      'UPFINAL' ||
+      'ICFINAL' => l.matchTinyFinal,
       '3RD' || 'C3RD' => l.matchTinyThirdPlace,
       _ => null,
     };
@@ -149,6 +169,12 @@ abstract final class MatchStage {
         competition: l.matchTinyQualifying(cup),
         stage: knockout(round),
       ),
+      'UPSF' || 'UPFINAL' => (
+        competition: l.matchTinyQualifying(l.matchTinyWorld),
+        stage: knockout(round),
+      ),
+      'ICSF' ||
+      'ICFINAL' => (competition: l.matchTinyPlayoff, stage: knockout(round)),
       // A group game is the competition alone, as on [label].
       'GROUP' => (competition: l.matchTinyWorld, stage: null),
       'CGROUP' => (competition: cup, stage: null),

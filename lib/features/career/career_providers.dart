@@ -23,6 +23,7 @@ import 'package:fnm/domain/repositories/player_repository.dart'
         namePoolsV4Kind,
         namePoolsV5Kind;
 import 'package:fnm/domain/services/competition/calendar2.dart';
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/host_bidding.dart';
@@ -1026,6 +1027,12 @@ class CareerService {
         rngSeed: rngSeed ^ (cycle * 0x1B3D) ^ (entry.key.index * 0x9E37),
         start: span2?.start ?? wcQualStart,
         rankById: rankById,
+        // A calendar2 cycle draws Europe into twelve groups, every winner
+        // through and the runners-up to the play-off paths (see
+        // UefaWcPlayoffs).
+        groupCount: cal2 && entry.key == Confederation.europe
+            ? UefaWcPlayoffs.groupCount(quals.length)
+            : null,
         noJuneNationIds: span2 == null ? const {} : noJuneNationIds,
         // Done by November, or, for South America's eighteen matchdays, in
         // every window up to March, where the play-off follows as before.

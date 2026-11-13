@@ -4471,5 +4471,14 @@
   "euroPlayoffWinnerToGroup": "Galip {group} Grubu'na gider",
   "euroPlayoffWinnerPlaceholder": "{path} Yolu galibi",
   "euroPlayoffYourGroupIfWin": "{path} Yolunu kazanırsan grubun: {group} Grubu",
-  "euroPlayoffBracketHeading": "PLAY-OFF'LAR"
+  "euroPlayoffBracketHeading": "PLAY-OFF'LAR",
+  "wcPlayoffIntro": "On iki grup lideri finallerde. Avrupa'nın son yerleri dört takımlı play-off yollarında belirlenir: en iyi grup ikincileri ve henüz katılamamış en iyi Uluslar Kupası grup liderleri, mart ayında üst torbadaki takımın sahasında tek maçlık yarı finaller, ardından tek maçlık final.",
+  "icPlayoffIntro": "Beş konfederasyondan altı takım son iki yer için oynar. En iyi sıralanan ikisi yol finallerinde bekler, diğer dördü yarı final oynar ve tüm maçlar mart ayında ev sahibi ülkede oynanır.",
+  "icPlayoffSeeded": "Doğrudan yol finalinde",
+  "icPlayoffFinalPending": "{nation} ile yarı final galibi",
+  "wcPlaceholderUefa": "Avrupa {path} yolu galibi",
+  "wcPlaceholderIc": "Kıtalararası {path} yolu galibi",
+  "newsIcPlayoffTitle": "Kıtalararası play-off: {path} yolu",
+  "newsIcPlayoffBodySemi": "Mart ayında ev sahibi ülkede {opponent} ile tek maçlık yarı final, ardından finallere katılım için yol finali.",
+  "newsIcPlayoffBodyBye": "Mart ayında ev sahibi ülkede doğrudan yol finalinde, {first} ile {second} maçının galibine karşı."
 }

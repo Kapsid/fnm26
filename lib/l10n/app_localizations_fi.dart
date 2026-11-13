@@ -17961,4 +17961,45 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'JATKOKARSINTA';
+
+  @override
+  String get wcPlayoffIntro =>
+      'Kaksitoista lohkovoittajaa on jatkossa. Euroopan viimeiset paikat ratkaistaan neljän joukkueen jatkokarsintapoluilla: parhaat lohkokakkoset ja parhaat vielä jatkoon pääsemättömät Kansakuntien cupin lohkovoittajat, yhden ottelun välierät korkeammin sijoitetun kotona maaliskuussa, sitten yksi finaali.';
+
+  @override
+  String get icPlayoffIntro =>
+      'Kuusi joukkuetta viidestä maanosaliitosta pelaa kahdesta viimeisestä paikasta. Kaksi parhaiten rankattua odottaa polkujen finaaleissa, muut neljä pelaavat välierät, ja kaikki ottelut pelataan isäntämaassa maaliskuussa.';
+
+  @override
+  String get icPlayoffSeeded => 'Suoraan polun finaaliin';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation vastaan välierän voittaja';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return 'Euroopan polun $path voittaja';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return 'Mannertenvälisen polun $path voittaja';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return 'Mannertenvälinen jatkokarsinta: polku $path';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return 'Yhden ottelun välierä joukkuetta $opponent vastaan maaliskuussa isäntämaassa, sitten polun finaali paikasta lopputurnaukseen.';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return 'Suoraan polun finaaliin maaliskuussa isäntämaassa, vastaan ottelun $first vastaan $second voittaja.';
+  }
 }
