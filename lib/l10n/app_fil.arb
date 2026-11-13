@@ -4408,5 +4408,16 @@
   "nationHostThird": "Ikatlo",
   "nationCoHosts": "Kasamang host",
   "nationNoStadiums": "Walang nakatalang stadium",
-  "nationManageStadiums": "Pamahalaan ang mga stadium"
+  "nationManageStadiums": "Pamahalaan ang mga stadium",
+  "scheduleHome": "Home",
+  "scheduleAway": "Away",
+  "scheduleGroupTag": "Grupo {name}",
+  "scheduleFilterMine": "Akin",
+  "scheduleFilterCompetitions": "Mga Kompetisyon",
+  "scheduleFilterDraws": "Mga Bunutan",
+  "scheduleDrawOf": "Bunutan ng {competition}",
+  "scheduleDrawCeremony": "Seremonya ng bunutan",
+  "scheduleNoDraws": "Walang paparating na bunutan",
+  "hubCallUpClosesIn": "{count, plural, =0{Magsasara ang call-up ngayon} =1{Magsasara ang call-up bukas} other{Magsasara ang call-up sa loob ng {count} araw}}",
+  "hubNextWindowLabel": "{month}: {count, plural, =1{1 pang laro} other{{count} pang laro}}"
 }

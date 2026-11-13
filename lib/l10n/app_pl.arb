@@ -4408,5 +4408,16 @@
   "nationHostThird": "Trzecie miejsce",
   "nationCoHosts": "Współgospodarz",
   "nationNoStadiums": "Brak stadionów w rejestrze",
-  "nationManageStadiums": "Zarządzaj stadionami"
+  "nationManageStadiums": "Zarządzaj stadionami",
+  "scheduleHome": "U siebie",
+  "scheduleAway": "Na wyjeździe",
+  "scheduleGroupTag": "Grupa {name}",
+  "scheduleFilterMine": "Moje",
+  "scheduleFilterCompetitions": "Rozgrywki",
+  "scheduleFilterDraws": "Losowania",
+  "scheduleDrawOf": "Losowanie: {competition}",
+  "scheduleDrawCeremony": "Ceremonia losowania",
+  "scheduleNoDraws": "Brak nadchodzących losowań",
+  "hubCallUpClosesIn": "{count, plural, =0{Powołania zamykają się dziś} =1{Powołania zamykają się jutro} few{Powołania zamykają się za {count} dni} many{Powołania zamykają się za {count} dni} other{Powołania zamykają się za {count} dni}}",
+  "hubNextWindowLabel": "{month}: {count, plural, =1{jeszcze 1 mecz} few{jeszcze {count} mecze} many{jeszcze {count} meczów} other{jeszcze {count} meczu}}"
 }

@@ -17329,4 +17329,57 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'จัดการสนามกีฬา';
+
+  @override
+  String get scheduleHome => 'เหย้า';
+
+  @override
+  String get scheduleAway => 'เยือน';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'กลุ่ม $name';
+  }
+
+  @override
+  String get scheduleFilterMine => 'ของฉัน';
+
+  @override
+  String get scheduleFilterCompetitions => 'รายการแข่งขัน';
+
+  @override
+  String get scheduleFilterDraws => 'การจับสลาก';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return 'จับสลาก$competition';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'พิธีจับสลาก';
+
+  @override
+  String get scheduleNoDraws => 'ไม่มีการจับสลากที่กำลังจะมาถึง';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'ปิดการเรียกตัวในอีก $count วัน',
+      one: 'ปิดการเรียกตัวพรุ่งนี้',
+      zero: 'ปิดการเรียกตัววันนี้',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'อีก $count นัด',
+    );
+    return '$month: $_temp0';
+  }
 }

@@ -4408,5 +4408,16 @@
   "nationHostThird": "Ketiga",
   "nationCoHosts": "Tuan rumah bersama",
   "nationNoStadiums": "Tidak ada stadion tercatat",
-  "nationManageStadiums": "Kelola stadion"
+  "nationManageStadiums": "Kelola stadion",
+  "scheduleHome": "Kandang",
+  "scheduleAway": "Tandang",
+  "scheduleGroupTag": "Grup {name}",
+  "scheduleFilterMine": "Saya",
+  "scheduleFilterCompetitions": "Kompetisi",
+  "scheduleFilterDraws": "Undian",
+  "scheduleDrawOf": "Undian {competition}",
+  "scheduleDrawCeremony": "Upacara undian",
+  "scheduleNoDraws": "Tidak ada undian mendatang",
+  "hubCallUpClosesIn": "{count, plural, =0{Pemanggilan pemain ditutup hari ini} =1{Pemanggilan pemain ditutup besok} other{Pemanggilan pemain ditutup dalam {count} hari}}",
+  "hubNextWindowLabel": "{month}: {count, plural, other{{count} laga lagi}}"
 }

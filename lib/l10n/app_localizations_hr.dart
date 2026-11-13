@@ -17974,4 +17974,60 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Upravljaj stadionima';
+
+  @override
+  String get scheduleHome => 'Doma';
+
+  @override
+  String get scheduleAway => 'U gostima';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'Skupina $name';
+  }
+
+  @override
+  String get scheduleFilterMine => 'Moje';
+
+  @override
+  String get scheduleFilterCompetitions => 'Natjecanja';
+
+  @override
+  String get scheduleFilterDraws => 'Ždrijebovi';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return 'Ždrijeb: $competition';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'Ceremonija ždrijeba';
+
+  @override
+  String get scheduleNoDraws => 'Nema nadolazećih ždrijebova';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Pozivi se zatvaraju za $count dana',
+      few: 'Pozivi se zatvaraju za $count dana',
+      one: 'Pozivi se zatvaraju za $count dan',
+      zero: 'Pozivi se zatvaraju danas',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'još $count utakmica',
+      few: 'još $count utakmice',
+      one: 'još $count utakmica',
+    );
+    return '$month: $_temp0';
+  }
 }

@@ -18026,4 +18026,60 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Spravovat stadiony';
+
+  @override
+  String get scheduleHome => 'Doma';
+
+  @override
+  String get scheduleAway => 'Venku';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'Skupina $name';
+  }
+
+  @override
+  String get scheduleFilterMine => 'Moje';
+
+  @override
+  String get scheduleFilterCompetitions => 'Soutěže';
+
+  @override
+  String get scheduleFilterDraws => 'Losy';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return 'Los: $competition';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'Ceremoniál losu';
+
+  @override
+  String get scheduleNoDraws => 'Žádné nadcházející losy';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Nominace se uzavírá za $count dní',
+      few: 'Nominace se uzavírá za $count dny',
+      one: 'Nominace se uzavírá zítra',
+      zero: 'Nominace se uzavírá dnes',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'ještě $count zápasů',
+      few: 'ještě $count zápasy',
+      one: 'ještě 1 zápas',
+    );
+    return '$month: $_temp0';
+  }
 }

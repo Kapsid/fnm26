@@ -732,8 +732,9 @@ class _RingPainter extends CustomPainter {
 
 /// Human-readable stage for a fixture (distinguishes qualifiers from finals).
 
-/// The current window's matches, then the full schedule one tap away. The
-/// rows gate themselves on the draws, so an undrawn opponent is never shown.
+/// The programme: a section heading with the full schedule one tap away,
+/// then the next matches as a strip of cards. The cards gate themselves on
+/// the draws, so an undrawn opponent is never shown.
 class _Upcoming extends StatelessWidget {
   const _Upcoming({required this.careerId});
 
@@ -742,22 +743,55 @@ class _Upcoming extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(l.hubUpcoming, style: AppTypography.labelMedium),
-          UpcomingRows(careerId: careerId),
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              onPressed: () =>
-                  context.push('${Routes.schedule}?careerId=$careerId'),
-              child: Text(l.hubFullSchedule),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                l.hubUpcoming.capsIn(l.localeName),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTypography.labelMedium,
+              ),
             ),
-          ),
-        ],
-      ),
+            InkWell(
+              onTap: () =>
+                  context.push('${Routes.schedule}?careerId=$careerId'),
+              borderRadius: AppRadii.smAll,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minHeight: AppSpacing.minHitArea,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: AppSpacing.sm),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        l.hubFullSchedule,
+                        maxLines: 1,
+                        style: AppTypography.labelLarge.copyWith(
+                          fontSize: 14,
+                          color: AppColors.onSurface,
+                        ),
+                      ),
+                      const Icon(
+                        Icons.chevron_right,
+                        size: 18,
+                        color: AppColors.onSurface,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        UpcomingStrip(careerId: careerId),
+      ],
     );
   }
 }

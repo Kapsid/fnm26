@@ -4408,5 +4408,16 @@
   "nationHostThird": "Üçüncü",
   "nationCoHosts": "Ortak ev sahibi",
   "nationNoStadiums": "Kayıtlı stadyum yok",
-  "nationManageStadiums": "Stadyumları yönet"
+  "nationManageStadiums": "Stadyumları yönet",
+  "scheduleHome": "İç saha",
+  "scheduleAway": "Deplasman",
+  "scheduleGroupTag": "{name} Grubu",
+  "scheduleFilterMine": "Benim",
+  "scheduleFilterCompetitions": "Turnuvalar",
+  "scheduleFilterDraws": "Kuralar",
+  "scheduleDrawOf": "{competition} kurası",
+  "scheduleDrawCeremony": "Kura töreni",
+  "scheduleNoDraws": "Yaklaşan kura yok",
+  "hubCallUpClosesIn": "{count, plural, =0{Kadro bildirimi bugün kapanıyor} =1{Kadro bildirimi yarın kapanıyor} other{Kadro bildirimi {count} gün içinde kapanıyor}}",
+  "hubNextWindowLabel": "{month}: {count, plural, =1{1 maç daha} other{{count} maç daha}}"
 }

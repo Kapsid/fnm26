@@ -4408,5 +4408,16 @@
   "nationHostThird": "Treći",
   "nationCoHosts": "Sudomaćin",
   "nationNoStadiums": "Nema zabilježenih stadiona",
-  "nationManageStadiums": "Upravljaj stadionima"
+  "nationManageStadiums": "Upravljaj stadionima",
+  "scheduleHome": "Doma",
+  "scheduleAway": "U gostima",
+  "scheduleGroupTag": "Skupina {name}",
+  "scheduleFilterMine": "Moje",
+  "scheduleFilterCompetitions": "Natjecanja",
+  "scheduleFilterDraws": "Ždrijebovi",
+  "scheduleDrawOf": "Ždrijeb: {competition}",
+  "scheduleDrawCeremony": "Ceremonija ždrijeba",
+  "scheduleNoDraws": "Nema nadolazećih ždrijebova",
+  "hubCallUpClosesIn": "{count, plural, =0{Pozivi se zatvaraju danas} one{Pozivi se zatvaraju za {count} dan} few{Pozivi se zatvaraju za {count} dana} other{Pozivi se zatvaraju za {count} dana}}",
+  "hubNextWindowLabel": "{month}: {count, plural, one{još {count} utakmica} few{još {count} utakmice} other{još {count} utakmica}}"
 }

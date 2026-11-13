@@ -4408,5 +4408,16 @@
   "nationHostThird": "Pronssi",
   "nationCoHosts": "Toinen isäntä",
   "nationNoStadiums": "Ei stadioneita tiedossa",
-  "nationManageStadiums": "Hallinnoi stadioneita"
+  "nationManageStadiums": "Hallinnoi stadioneita",
+  "scheduleHome": "Koti",
+  "scheduleAway": "Vieras",
+  "scheduleGroupTag": "Lohko {name}",
+  "scheduleFilterMine": "Omat",
+  "scheduleFilterCompetitions": "Turnaukset",
+  "scheduleFilterDraws": "Arvonnat",
+  "scheduleDrawOf": "Arvonta: {competition}",
+  "scheduleDrawCeremony": "Arvontaseremonia",
+  "scheduleNoDraws": "Ei tulevia arvontoja",
+  "hubCallUpClosesIn": "{count, plural, =0{Valinnat sulkeutuvat tänään} =1{Valinnat sulkeutuvat huomenna} other{Valinnat sulkeutuvat {count} päivän päästä}}",
+  "hubNextWindowLabel": "{month}: {count, plural, =1{vielä 1 ottelu} other{vielä {count} ottelua}}"
 }

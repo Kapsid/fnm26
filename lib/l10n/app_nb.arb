@@ -4408,5 +4408,16 @@
   "nationHostThird": "Tredje",
   "nationCoHosts": "Medarrangør",
   "nationNoStadiums": "Ingen arenaer registrert",
-  "nationManageStadiums": "Administrer arenaer"
+  "nationManageStadiums": "Administrer arenaer",
+  "scheduleHome": "Hjemme",
+  "scheduleAway": "Borte",
+  "scheduleGroupTag": "Gruppe {name}",
+  "scheduleFilterMine": "Mine",
+  "scheduleFilterCompetitions": "Turneringer",
+  "scheduleFilterDraws": "Trekninger",
+  "scheduleDrawOf": "Trekning: {competition}",
+  "scheduleDrawCeremony": "Trekningsseremoni",
+  "scheduleNoDraws": "Ingen kommende trekninger",
+  "hubCallUpClosesIn": "{count, plural, =0{Uttaket stenger i dag} =1{Uttaket stenger i morgen} other{Uttaket stenger om {count} dager}}",
+  "hubNextWindowLabel": "{month}: {count, plural, =1{1 kamp til} other{{count} kamper til}}"
 }

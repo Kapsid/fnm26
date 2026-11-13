@@ -4408,5 +4408,16 @@
   "nationHostThird": "3位",
   "nationCoHosts": "共催",
   "nationNoStadiums": "登録されたスタジアムはない",
-  "nationManageStadiums": "スタジアムを管理"
+  "nationManageStadiums": "スタジアムを管理",
+  "scheduleHome": "ホーム",
+  "scheduleAway": "アウェー",
+  "scheduleGroupTag": "グループ{name}",
+  "scheduleFilterMine": "自分",
+  "scheduleFilterCompetitions": "大会",
+  "scheduleFilterDraws": "抽選",
+  "scheduleDrawOf": "{competition}の抽選",
+  "scheduleDrawCeremony": "抽選会",
+  "scheduleNoDraws": "予定されている抽選はありません",
+  "hubCallUpClosesIn": "{count, plural, =0{招集締切は今日} =1{招集締切は明日} other{招集締切まであと{count}日}}",
+  "hubNextWindowLabel": "{month}: {count, plural, other{あと{count}試合}}"
 }

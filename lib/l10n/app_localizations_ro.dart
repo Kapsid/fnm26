@@ -18054,4 +18054,60 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Administrează stadioanele';
+
+  @override
+  String get scheduleHome => 'Acasă';
+
+  @override
+  String get scheduleAway => 'Deplasare';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'Grupa $name';
+  }
+
+  @override
+  String get scheduleFilterMine => 'Ale mele';
+
+  @override
+  String get scheduleFilterCompetitions => 'Competiții';
+
+  @override
+  String get scheduleFilterDraws => 'Trageri la sorți';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return 'Tragerea la sorți: $competition';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'Ceremonia tragerii la sorți';
+
+  @override
+  String get scheduleNoDraws => 'Nicio tragere la sorți în curând';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Convocările se închid în $count de zile',
+      few: 'Convocările se închid în $count zile',
+      one: 'Convocările se închid mâine',
+      zero: 'Convocările se închid azi',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'încă $count de meciuri',
+      few: 'încă $count meciuri',
+      one: 'încă 1 meci',
+    );
+    return '$month: $_temp0';
+  }
 }

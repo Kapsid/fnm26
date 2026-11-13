@@ -4408,5 +4408,16 @@
   "nationHostThird": "Třetí",
   "nationCoHosts": "Spolupořadatel",
   "nationNoStadiums": "Žádné stadiony v záznamech",
-  "nationManageStadiums": "Spravovat stadiony"
+  "nationManageStadiums": "Spravovat stadiony",
+  "scheduleHome": "Doma",
+  "scheduleAway": "Venku",
+  "scheduleGroupTag": "Skupina {name}",
+  "scheduleFilterMine": "Moje",
+  "scheduleFilterCompetitions": "Soutěže",
+  "scheduleFilterDraws": "Losy",
+  "scheduleDrawOf": "Los: {competition}",
+  "scheduleDrawCeremony": "Ceremoniál losu",
+  "scheduleNoDraws": "Žádné nadcházející losy",
+  "hubCallUpClosesIn": "{count, plural, =0{Nominace se uzavírá dnes} =1{Nominace se uzavírá zítra} few{Nominace se uzavírá za {count} dny} other{Nominace se uzavírá za {count} dní}}",
+  "hubNextWindowLabel": "{month}: {count, plural, =1{ještě 1 zápas} few{ještě {count} zápasy} other{ještě {count} zápasů}}"
 }

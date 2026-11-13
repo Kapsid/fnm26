@@ -17481,4 +17481,57 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Quản lý sân vận động';
+
+  @override
+  String get scheduleHome => 'Sân nhà';
+
+  @override
+  String get scheduleAway => 'Sân khách';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'Bảng $name';
+  }
+
+  @override
+  String get scheduleFilterMine => 'Của tôi';
+
+  @override
+  String get scheduleFilterCompetitions => 'Giải đấu';
+
+  @override
+  String get scheduleFilterDraws => 'Bốc thăm';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return 'Bốc thăm $competition';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'Lễ bốc thăm';
+
+  @override
+  String get scheduleNoDraws => 'Không có lễ bốc thăm sắp tới';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Hạn triệu tập đóng sau $count ngày',
+      one: 'Hạn triệu tập đóng ngày mai',
+      zero: 'Hạn triệu tập đóng hôm nay',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'thêm $count trận',
+    );
+    return '$month: $_temp0';
+  }
 }

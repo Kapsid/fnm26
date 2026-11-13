@@ -4408,5 +4408,16 @@
   "nationHostThird": "Tercero",
   "nationCoHosts": "Coanfitrión",
   "nationNoStadiums": "No hay estadios registrados",
-  "nationManageStadiums": "Gestionar estadios"
+  "nationManageStadiums": "Gestionar estadios",
+  "scheduleHome": "Local",
+  "scheduleAway": "Visitante",
+  "scheduleGroupTag": "Grupo {name}",
+  "scheduleFilterMine": "Míos",
+  "scheduleFilterCompetitions": "Competiciones",
+  "scheduleFilterDraws": "Sorteos",
+  "scheduleDrawOf": "Sorteo: {competition}",
+  "scheduleDrawCeremony": "Ceremonia del sorteo",
+  "scheduleNoDraws": "No hay sorteos próximos",
+  "hubCallUpClosesIn": "{count, plural, =0{La convocatoria se cierra hoy} =1{La convocatoria se cierra mañana} other{La convocatoria se cierra en {count} días}}",
+  "hubNextWindowLabel": "{month}: {count, plural, =1{1 partido más} other{{count} partidos más}}"
 }

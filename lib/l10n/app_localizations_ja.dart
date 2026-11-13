@@ -17011,4 +17011,57 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'スタジアムを管理';
+
+  @override
+  String get scheduleHome => 'ホーム';
+
+  @override
+  String get scheduleAway => 'アウェー';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'グループ$name';
+  }
+
+  @override
+  String get scheduleFilterMine => '自分';
+
+  @override
+  String get scheduleFilterCompetitions => '大会';
+
+  @override
+  String get scheduleFilterDraws => '抽選';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return '$competitionの抽選';
+  }
+
+  @override
+  String get scheduleDrawCeremony => '抽選会';
+
+  @override
+  String get scheduleNoDraws => '予定されている抽選はありません';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '招集締切まであと$count日',
+      one: '招集締切は明日',
+      zero: '招集締切は今日',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'あと$count試合',
+    );
+    return '$month: $_temp0';
+  }
 }

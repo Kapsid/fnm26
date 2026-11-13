@@ -4408,5 +4408,16 @@
   "nationHostThird": "Harmadik",
   "nationCoHosts": "Társrendező",
   "nationNoStadiums": "Nincs nyilvántartott stadion",
-  "nationManageStadiums": "Stadionok kezelése"
+  "nationManageStadiums": "Stadionok kezelése",
+  "scheduleHome": "Hazai",
+  "scheduleAway": "Idegen",
+  "scheduleGroupTag": "{name} csoport",
+  "scheduleFilterMine": "Saját",
+  "scheduleFilterCompetitions": "Versenyek",
+  "scheduleFilterDraws": "Sorsolások",
+  "scheduleDrawOf": "Sorsolás: {competition}",
+  "scheduleDrawCeremony": "Sorsolási ceremónia",
+  "scheduleNoDraws": "Nincs közelgő sorsolás",
+  "hubCallUpClosesIn": "{count, plural, =0{A keretkijelölés ma zárul} =1{A keretkijelölés holnap zárul} other{A keretkijelölés {count} nap múlva zárul}}",
+  "hubNextWindowLabel": "{month}: {count, plural, other{még {count} meccs}}"
 }

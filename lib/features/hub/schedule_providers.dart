@@ -93,3 +93,17 @@ Future<Set<String>> _knockoutsDrawn(
 /// False while the draw that decides [f]'s opponent is unwatched.
 bool opponentKnown(ScheduleData d, Fixture f) =>
     fixtureRevealed(f, d.watchedDrawKinds);
+
+/// Every group in the save by id, with the name it is known by ("A"), for the
+/// schedule's "COMPETITION · GROUP A · HOME" line.
+///
+/// Its own provider rather than a field of [ScheduleData], so the screens can
+/// draw before it lands and simply leave the group out if it never does.
+/// Awaits [hubDataProvider] for the same reason [scheduleProvider] does: a
+/// draw watched or a sim step taken refreshes it with the hub.
+final AutoDisposeFutureProviderFamily<Map<int, String>, int>
+scheduleGroupNamesProvider = FutureProvider.autoDispose
+    .family<Map<int, String>, int>((ref, careerId) async {
+      await ref.watch(hubDataProvider(careerId).future);
+      return ref.watch(competitionRepositoryProvider).groupNames(careerId);
+    });

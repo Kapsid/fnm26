@@ -17545,4 +17545,58 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Stadyumları yönet';
+
+  @override
+  String get scheduleHome => 'İç saha';
+
+  @override
+  String get scheduleAway => 'Deplasman';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return '$name Grubu';
+  }
+
+  @override
+  String get scheduleFilterMine => 'Benim';
+
+  @override
+  String get scheduleFilterCompetitions => 'Turnuvalar';
+
+  @override
+  String get scheduleFilterDraws => 'Kuralar';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return '$competition kurası';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'Kura töreni';
+
+  @override
+  String get scheduleNoDraws => 'Yaklaşan kura yok';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Kadro bildirimi $count gün içinde kapanıyor',
+      one: 'Kadro bildirimi yarın kapanıyor',
+      zero: 'Kadro bildirimi bugün kapanıyor',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count maç daha',
+      one: '1 maç daha',
+    );
+    return '$month: $_temp0';
+  }
 }

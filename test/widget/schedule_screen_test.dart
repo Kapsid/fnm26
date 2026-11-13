@@ -180,6 +180,111 @@ void main() {
     expect(find.text(enL.hubNoMoreFixtures), findsOneWidget);
   });
 
+  group('month cards and filters', () {
+    // Two qualifiers (one in September, one in October), a friendly in
+    // October, the qualifying draw unwatched so the qualifiers wait on it.
+    ScheduleData calendar() => _data([
+      _fx(1, DateTime(2030, 9, 5), 'CQ', group: 7),
+      _fx(2, DateTime(2030, 10, 8), 'FRIENDLY'),
+      _fx(3, DateTime(2030, 10, 11), 'CQ', group: 7),
+    ]);
+
+    Future<void> pump(WidgetTester tester) => _pumpScreen(
+      tester,
+      scheduleProvider.overrideWith((ref, id) async => calendar()),
+    );
+
+    testWidgets('one header per month, opening on today', (tester) async {
+      await pump(tester);
+      expect(find.text('SEPTEMBER 2030'), findsOneWidget);
+      expect(find.text('OCTOBER 2030'), findsOneWidget);
+      expect(find.byKey(ScheduleScreen.todayKey), findsOneWidget);
+      expect(find.byType(ScheduleFixtureRow), findsNWidgets(3));
+    });
+
+    testWidgets('an unwatched draw is a dashed row before its matches', (
+      tester,
+    ) async {
+      await pump(tester);
+      final title = enL.scheduleDrawOf(
+        enL.resultsCategoryContinentalQualifying,
+      );
+      expect(find.widgetWithText(ScheduleDrawRow, title), findsOneWidget);
+      expect(
+        tester.getTopLeft(find.byType(ScheduleDrawRow)).dy,
+        lessThan(tester.getTopLeft(find.byType(ScheduleFixtureRow).first).dy),
+      );
+      // The group is a draw result too: not named before the ceremony.
+      expect(find.textContaining('GROUP'), findsNothing);
+    });
+
+    testWidgets('Competitions leaves the friendly out', (tester) async {
+      await pump(tester);
+      await tester.tap(
+        find.byKey(ScheduleScreen.filterKey(ScheduleFilter.competitions)),
+      );
+      await tester.pump();
+      final ids = tester
+          .widgetList<ScheduleFixtureRow>(find.byType(ScheduleFixtureRow))
+          .map((r) => r.fixture.id);
+      expect(ids, [1, 3]);
+      expect(find.byType(ScheduleDrawRow), findsOneWidget);
+    });
+
+    testWidgets('Draws shows the draws alone', (tester) async {
+      await pump(tester);
+      await tester.tap(
+        find.byKey(ScheduleScreen.filterKey(ScheduleFilter.draws)),
+      );
+      await tester.pump();
+      expect(find.byType(ScheduleFixtureRow), findsNothing);
+      expect(find.byType(ScheduleDrawRow), findsOneWidget);
+    });
+
+    testWidgets('Draws with none to come says so', (tester) async {
+      final data = _data([_fx(1, DateTime(2030, 6, 11), 'FRIENDLY')]);
+      await _pumpScreen(
+        tester,
+        scheduleProvider.overrideWith((ref, id) async => data),
+      );
+      await tester.tap(
+        find.byKey(ScheduleScreen.filterKey(ScheduleFilter.draws)),
+      );
+      await tester.pump();
+      expect(find.text(enL.scheduleNoDraws), findsOneWidget);
+    });
+
+    testWidgets('a watched draw names the group in the mono line', (
+      tester,
+    ) async {
+      final d = calendar();
+      final watched = (
+        nationId: d.nationId,
+        blocks: d.blocks,
+        currentIndex: d.currentIndex,
+        nations: d.nations,
+        watchedDrawKinds: {continentalQualDrawKind},
+      );
+      await _pumpScreen(
+        tester,
+        scheduleProvider.overrideWith((ref, id) async => watched),
+      );
+      expect(find.byType(ScheduleDrawRow), findsNothing);
+      final line = scheduleMetaLine(
+        enL,
+        _fx(1, DateTime(2030, 9, 5), 'CQ', group: 7),
+        nationId: 1,
+        // A grouped qualifier: the matchday gives way to the group.
+        competition: enL.resultsCategoryContinentalQualifyingShort
+            .toUpperCase(),
+        groupName: 'B',
+      );
+      expect(line, contains(enL.scheduleGroupTag('B').toUpperCase()));
+      expect(line, endsWith(enL.scheduleHome.toUpperCase()));
+      expect(find.text(line), findsNWidgets(2));
+    });
+  });
+
   group('the score reads from the nation side', () {
     Future<void> pumpRow(WidgetTester tester, Fixture f) => tester.pumpWidget(
       MaterialApp(
@@ -230,6 +335,7 @@ Fixture _fx(
   int home = 0,
   int away = 0,
   bool nationHome = true,
+  int? group,
 }) => Fixture(
   id: id,
   careerId: 1,
@@ -239,6 +345,7 @@ Fixture _fx(
   homeNationId: nationHome ? 1 : 2,
   awayNationId: nationHome ? 2 : 1,
   round: round,
+  groupId: group,
   played: played,
   homeScore: played ? home : null,
   awayScore: played ? away : null,
@@ -260,6 +367,9 @@ Future<void> _pumpScreen(WidgetTester tester, Override schedule) async {
     ProviderScope(
       overrides: [
         schedule,
+        scheduleGroupNamesProvider.overrideWith(
+          (ref, id) async => const {7: 'B'},
+        ),
         nextEventProvider.overrideWith(
           (ref, id) async => throw StateError('none'),
         ),

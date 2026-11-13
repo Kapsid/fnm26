@@ -4408,5 +4408,16 @@
   "nationHostThird": "Nummer tre",
   "nationCoHosts": "Medvært",
   "nationNoStadiums": "Ingen stadioner registreret",
-  "nationManageStadiums": "Administrer stadioner"
+  "nationManageStadiums": "Administrer stadioner",
+  "scheduleHome": "Hjemme",
+  "scheduleAway": "Ude",
+  "scheduleGroupTag": "Gruppe {name}",
+  "scheduleFilterMine": "Mine",
+  "scheduleFilterCompetitions": "Turneringer",
+  "scheduleFilterDraws": "Lodtrækninger",
+  "scheduleDrawOf": "Lodtrækning: {competition}",
+  "scheduleDrawCeremony": "Lodtrækningsceremoni",
+  "scheduleNoDraws": "Ingen kommende lodtrækninger",
+  "hubCallUpClosesIn": "{count, plural, =0{Udtagelsen lukker i dag} =1{Udtagelsen lukker i morgen} other{Udtagelsen lukker om {count} dage}}",
+  "hubNextWindowLabel": "{month}: {count, plural, =1{1 kamp mere} other{{count} kampe mere}}"
 }

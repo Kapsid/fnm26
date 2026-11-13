@@ -23,6 +23,11 @@ void main() {
       tester,
     ) async {
       final save = await seedSave(tester);
+      // With the draw watched the hub shows its group table under the
+      // programme strip, which is what runs it under the dock.
+      if (route == Routes.hub) {
+        await watchContinentalQualifyingDraw(tester, save);
+      }
       tester.view
         ..padding = const FakeViewPadding(top: 59, bottom: 34)
         ..viewPadding = const FakeViewPadding(top: 59, bottom: 34);

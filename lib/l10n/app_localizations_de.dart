@@ -17764,4 +17764,58 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Stadien verwalten';
+
+  @override
+  String get scheduleHome => 'Heim';
+
+  @override
+  String get scheduleAway => 'Auswärts';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'Gruppe $name';
+  }
+
+  @override
+  String get scheduleFilterMine => 'Meine';
+
+  @override
+  String get scheduleFilterCompetitions => 'Wettbewerbe';
+
+  @override
+  String get scheduleFilterDraws => 'Auslosungen';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return 'Auslosung: $competition';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'Auslosungszeremonie';
+
+  @override
+  String get scheduleNoDraws => 'Keine anstehenden Auslosungen';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Nominierung endet in $count Tagen',
+      one: 'Nominierung endet morgen',
+      zero: 'Nominierung endet heute',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'noch $count Spiele',
+      one: 'noch 1 Spiel',
+    );
+    return '$month: $_temp0';
+  }
 }

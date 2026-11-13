@@ -17053,4 +17053,57 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get nationManageStadiums => '경기장 관리';
+
+  @override
+  String get scheduleHome => '홈';
+
+  @override
+  String get scheduleAway => '원정';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return '$name조';
+  }
+
+  @override
+  String get scheduleFilterMine => '내 경기';
+
+  @override
+  String get scheduleFilterCompetitions => '대회';
+
+  @override
+  String get scheduleFilterDraws => '추첨';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return '$competition 추첨';
+  }
+
+  @override
+  String get scheduleDrawCeremony => '추첨식';
+
+  @override
+  String get scheduleNoDraws => '예정된 추첨 없음';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '소집 마감까지 $count일',
+      one: '소집 마감 내일',
+      zero: '소집 마감 오늘',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count경기 더',
+    );
+    return '$month: $_temp0';
+  }
 }

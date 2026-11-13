@@ -164,16 +164,8 @@ class _NextMatchPanel extends StatelessWidget {
       body = Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          UpcomingRows(careerId: careerId),
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              onPressed: () =>
-                  context.push('${Routes.schedule}?careerId=$careerId'),
-              child: Text(l.hubFullSchedule),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.sm),
+          UpcomingStrip(careerId: careerId),
+          const SizedBox(height: AppSpacing.md),
           Row(
             children: [
               Expanded(
@@ -196,7 +188,17 @@ class _NextMatchPanel extends StatelessWidget {
         ],
       );
     }
-    return Panel(title: l.hubUpcoming, child: body);
+    return Panel(
+      title: l.hubUpcoming,
+      action: champion == null
+          ? PanelLink(
+              label: l.hubFullSchedule,
+              onTap: () =>
+                  context.push('${Routes.schedule}?careerId=$careerId'),
+            )
+          : null,
+      child: body,
+    );
   }
 }
 

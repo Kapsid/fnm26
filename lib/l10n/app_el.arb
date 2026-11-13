@@ -4408,5 +4408,16 @@
   "nationHostThird": "Τρίτη θέση",
   "nationCoHosts": "Συνδιοργανωτής",
   "nationNoStadiums": "Δεν υπάρχουν καταγεγραμμένα γήπεδα",
-  "nationManageStadiums": "Διαχείριση γηπέδων"
+  "nationManageStadiums": "Διαχείριση γηπέδων",
+  "scheduleHome": "Εντός",
+  "scheduleAway": "Εκτός",
+  "scheduleGroupTag": "Όμιλος {name}",
+  "scheduleFilterMine": "Δικά μου",
+  "scheduleFilterCompetitions": "Διοργανώσεις",
+  "scheduleFilterDraws": "Κληρώσεις",
+  "scheduleDrawOf": "Κλήρωση: {competition}",
+  "scheduleDrawCeremony": "Τελετή κλήρωσης",
+  "scheduleNoDraws": "Καμία επερχόμενη κλήρωση",
+  "hubCallUpClosesIn": "{count, plural, =0{Οι κλήσεις κλείνουν σήμερα} =1{Οι κλήσεις κλείνουν αύριο} other{Οι κλήσεις κλείνουν σε {count} ημέρες}}",
+  "hubNextWindowLabel": "{month}: {count, plural, =1{ακόμη 1 αγώνας} other{ακόμη {count} αγώνες}}"
 }
