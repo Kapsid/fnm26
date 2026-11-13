@@ -16,6 +16,7 @@ import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/y/y_providers.dart';
 
+import '../../helpers/calendar2_draws.dart';
 import '../../helpers/test_database.dart';
 
 /// The feed reacts to the tournaments, not only to the scorelines.
@@ -199,6 +200,9 @@ void main() {
                   .read(careerServiceProvider)
                   .create(nationId: nations.first.id, managerName: 'M'))
               .valueOrNull!;
+      // On calendar2 Europe's qualifying is drawn after its first Nations
+      // Cup; drawn here, as it would be then.
+      await drawEuroQualifyingNow(container, career.id);
       final comp = container.read(competitionRepositoryProvider);
       final fixtures = await comp.fixturesForNation(career.id, career.nationId);
       final qualifiers = [
