@@ -27,5 +27,9 @@ Global: app tokens and shared widgets only (AppCard, segmented tabs, chips, Tact
 - Region chips stay. The list becomes ONE card with dense rows (rank, mono ▲/▼ movement, flag disc, name, mono points); the manager's row highlighted with the "YOUR TEAM" tag; a dashed playoff-yellow divider marking the pot 1 cut-off for the next draw when it is known.
 - The big per-row cards and the separate history chart card go (the sparkline replaces the chart; tapping the team card opens the existing full chart).
 
-## Not in scope
-- Team records redesign: owner has not picked a variant yet.
+## 5. Team records (variant A, `Main.dc.html`)
+- Record book screen (lib/features/records/record_book_screen.dart + tablet layout): top row of three stat tiles (matches with W/D/L, win share with goals for:against, trophies with the latest one in gold).
+- One card of team records as label/value rows (mono label left, value right): best finish, longest unbeaten run, biggest win and biggest defeat (flag disc + score + opponent).
+- "Record holders" section: one card with rows per category (caps, goals, clean sheets): mono category, holder's name, number, ACTIVE badge when still playing.
+- Fiercest rival card (flag disc, name, mono record line, aggregate score).
+- The existing Legends / All-time world / Head to head tiles stay reachable (compact row of buttons at the bottom); the most-caps list moves behind them or the record-holder rows.
