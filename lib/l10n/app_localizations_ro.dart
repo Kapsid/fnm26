@@ -1214,8 +1214,49 @@ class AppLocalizationsRo extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ROLURI ȘI FAZE FIXE';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Dați fiecărui titular un rol. Atingeți insigna de penalty (⚽) sau lovitură liberă (▲) ca să alegeți executantul.';
+  String get tacticsSectionRoles => 'Roluri';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Lovituri libere';
+
+  @override
+  String get tacticsSectionCorners => 'Cornere';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Atingeți un jucător pentru a-l desemna. Atingeți-l din nou pentru a lăsa alegerea antrenorului.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Cine execută penalty-urile, până la trei în ordine. Dacă primul nu este pe teren, execută următorul.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Cine execută loviturile libere din zona porții, până la trei în ordine. Dacă primul nu este pe teren, execută următorul.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Cornerele din fiecare parte au propriii executanți, până la doi în ordine. Dacă primul nu este pe teren, execută următorul.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Atingeți jucătorii în ordinea în care trebuie să execute. Atingeți un jucător numerotat pentru a-l scoate din listă.';
+
+  @override
+  String get tacticsCornersLeft => 'Din stânga';
+
+  @override
+  String get tacticsCornersRight => 'Din dreapta';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Cine execută aruncările lungi de la margine. Dacă primul nu este pe teren, execută al doilea.';
+
+  @override
+  String get tacticsPickBest => 'Alegeți cel mai bun';
+
+  @override
+  String get tacticsSameAsPenalties => 'Ca la penalty-uri';
 
   @override
   String get tacticsTooltipCallUps => 'Convocări';

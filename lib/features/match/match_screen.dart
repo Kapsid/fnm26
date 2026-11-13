@@ -275,7 +275,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   /// and changeable from the in-match editor. Held here rather than read back
   /// off the provider each time so a change takes effect on the very next
   /// re-sim rather than a frame later.
-  ({int? penalty, int? deadBall})? _takers;
+  SetPieceTakers? _takers;
 
   /// The throw-in style and thrower as they stand right now, seeded from the
   /// team sheet the same way as [_takers].
@@ -1819,10 +1819,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       pool: _playerPool(preview),
       startingIds: team.xi.map((p) => p.id).toSet(),
       maxSubs: _maxSubsFor(preview),
-      takers: _takers ??= (
-        penalty: team.penaltyTakerId,
-        deadBall: team.deadBallTakerId,
-      ),
+      takers: _takers ??= team.takers,
       throwIn: _throwIn ??= (
         style: team.throwInStyle,
         taker: team.throwInTakerId,
@@ -1965,11 +1962,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     if (takersChanged) {
       await ref
           .read(setPieceTakersStoreProvider)
-          .setBoth(
-            widget.careerId,
-            penalty: r.takers.penalty,
-            deadBall: r.takers.deadBall,
-          );
+          .save(widget.careerId, r.takers);
     }
     // The thrower outlives the match like the other takers. The STYLE does
     // not: like the dials and the full-backs' arrows, it is a call for this

@@ -1246,8 +1246,49 @@ class AppLocalizationsEs extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ROLES Y BALÓN PARADO';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Da un rol a cada titular. Toca la insignia de penalti (⚽) o de falta (▲) para elegir lanzador.';
+  String get tacticsSectionRoles => 'Funciones';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Faltas';
+
+  @override
+  String get tacticsSectionCorners => 'Córners';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Toca a un jugador para elegirlo. Vuelve a tocarlo para dejarlo en manos del entrenador.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Quién lanza los penaltis, hasta tres por orden. Si el primero no está en el campo, lanza el siguiente.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Quién lanza las faltas cerca del área, hasta tres por orden. Si el primero no está en el campo, lanza el siguiente.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Los córners de cada banda tienen sus propios lanzadores, hasta dos por orden. Si el primero no está en el campo, lanza el siguiente.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Toca a los jugadores en el orden en que deben lanzar. Toca a un jugador numerado para quitarlo de la lista.';
+
+  @override
+  String get tacticsCornersLeft => 'Desde la izquierda';
+
+  @override
+  String get tacticsCornersRight => 'Desde la derecha';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Quién saca los saques de banda largos. Si el primero no está en el campo, saca el segundo.';
+
+  @override
+  String get tacticsPickBest => 'Elegir al mejor';
+
+  @override
+  String get tacticsSameAsPenalties => 'Igual que penaltis';
 
   @override
   String get tacticsTooltipCallUps => 'Convocatoria';

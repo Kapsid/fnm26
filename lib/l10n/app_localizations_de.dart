@@ -1253,8 +1253,49 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ROLLEN & STANDARDS';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Geben Sie jedem Startspieler eine Rolle. Tippen Sie auf das Elfmeter- (⚽) oder Freistoß-Abzeichen (▲), um den Schützen festzulegen.';
+  String get tacticsSectionRoles => 'Rollen';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Freistöße';
+
+  @override
+  String get tacticsSectionCorners => 'Ecken';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Tippen Sie auf einen Spieler, um ihn zu bestimmen. Ein zweites Tippen überlässt die Wahl dem Trainer.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Wer die Elfmeter schießt, bis zu drei in Reihenfolge. Steht der Erste nicht auf dem Platz, schießt der Nächste.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Wer die Freistöße in Tornähe schießt, bis zu drei in Reihenfolge. Steht der Erste nicht auf dem Platz, schießt der Nächste.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Ecken von jeder Seite haben eigene Schützen, bis zu zwei in Reihenfolge. Steht der Erste nicht auf dem Platz, tritt der Nächste.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Tippen Sie die Spieler in der Reihenfolge an, in der sie schießen sollen. Ein nummerierter Spieler wird durch Antippen von der Liste genommen.';
+
+  @override
+  String get tacticsCornersLeft => 'Von links';
+
+  @override
+  String get tacticsCornersRight => 'Von rechts';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Wer die langen Einwürfe ausführt. Steht der Erste nicht auf dem Platz, wirft der Zweite.';
+
+  @override
+  String get tacticsPickBest => 'Besten wählen';
+
+  @override
+  String get tacticsSameAsPenalties => 'Wie Elfmeter';
 
   @override
   String get tacticsTooltipCallUps => 'Nominierung';

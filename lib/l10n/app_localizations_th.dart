@@ -1186,8 +1186,49 @@ class AppLocalizationsTh extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'บทบาทและลูกตั้งเตะ';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'กำหนดบทบาทให้ตัวจริงแต่ละคน แตะสัญลักษณ์จุดโทษ (⚽) หรือฟรีคิก (▲) เพื่อเลือกคนสังหาร';
+  String get tacticsSectionRoles => 'บทบาท';
+
+  @override
+  String get tacticsSectionFreeKicks => 'ฟรีคิก';
+
+  @override
+  String get tacticsSectionCorners => 'เตะมุม';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'แตะผู้เล่นเพื่อเลือก แตะอีกครั้งเพื่อให้โค้ชเลือกเอง';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'ใครเป็นผู้ยิงจุดโทษ เรียงลำดับได้สูงสุดสามคน หากคนแรกไม่ได้อยู่ในสนาม คนถัดไปจะยิงแทน';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'ใครเป็นผู้เตะฟรีคิกในระยะยิงประตู เรียงลำดับได้สูงสุดสามคน หากคนแรกไม่ได้อยู่ในสนาม คนถัดไปจะเตะแทน';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'ลูกเตะมุมแต่ละฝั่งมีผู้เตะของตัวเอง เรียงลำดับได้สูงสุดสองคน หากคนแรกไม่ได้อยู่ในสนาม คนถัดไปจะเตะแทน';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'แตะผู้เล่นตามลำดับที่จะให้เตะ แตะผู้เล่นที่มีหมายเลขเพื่อเอาออกจากรายชื่อ';
+
+  @override
+  String get tacticsCornersLeft => 'ฝั่งซ้าย';
+
+  @override
+  String get tacticsCornersRight => 'ฝั่งขวา';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'ใครเป็นผู้ทุ่มบอลไกล หากคนแรกไม่ได้อยู่ในสนาม คนที่สองจะทุ่มแทน';
+
+  @override
+  String get tacticsPickBest => 'เลือกคนที่ดีที่สุด';
+
+  @override
+  String get tacticsSameAsPenalties => 'เหมือนจุดโทษ';
 
   @override
   String get tacticsTooltipCallUps => 'เรียกตัว';

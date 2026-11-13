@@ -187,24 +187,24 @@ void main() {
     test('a stored keeper goes back to automatic', () async {
       await stored(7, 1);
       final c = container({1});
-      expect(await c.read(setPieceTakersProvider(1).future), (
-        penalty: 7,
-        deadBall: null,
-      ));
+      expect(
+        await c.read(setPieceTakersProvider(1).future),
+        SetPieceOrder.single(penalty: 7),
+      );
       // And it is written back, so the store agrees with the screen.
       expect(
         await c.read(setPieceTakersStoreProvider).load(1),
-        (penalty: 7, deadBall: null),
+        SetPieceOrder.single(penalty: 7),
       );
     });
 
     test('outfield takers are left alone', () async {
       await stored(7, 8);
       final c = container({1});
-      expect(await c.read(setPieceTakersProvider(1).future), (
-        penalty: 7,
-        deadBall: 8,
-      ));
+      expect(
+        await c.read(setPieceTakersProvider(1).future),
+        SetPieceOrder.single(penalty: 7, deadBall: 8),
+      );
     });
 
     test("a keeper named after the sweep is the manager's to keep", () async {
@@ -214,27 +214,27 @@ void main() {
       await c
           .read(setPieceTakersStoreProvider)
           .set(1, penalty: false, playerId: 1);
-      expect(await c.read(setPieceTakersProvider(1).future), (
-        penalty: 7,
-        deadBall: 1,
-      ));
+      expect(
+        await c.read(setPieceTakersProvider(1).future),
+        SetPieceOrder.single(penalty: 7, deadBall: 1),
+      );
     });
 
     test('a save on automatic keeps a keeper named later', () async {
       // Nothing stored: the first read must still mark the sweep done, or
       // the next read would wipe the keeper the manager then names.
       final c = container({1});
-      expect(await c.read(setPieceTakersProvider(1).future), (
-        penalty: null,
-        deadBall: null,
-      ));
+      expect(
+        await c.read(setPieceTakersProvider(1).future),
+        SetPieceOrder.none,
+      );
       await c
           .read(setPieceTakersStoreProvider)
           .set(1, penalty: false, playerId: 1);
-      expect(await c.read(setPieceTakersProvider(1).future), (
-        penalty: null,
-        deadBall: 1,
-      ));
+      expect(
+        await c.read(setPieceTakersProvider(1).future),
+        SetPieceOrder.single(deadBall: 1),
+      );
     });
 
     test('a failed lookup leaves the pair as stored', () async {
@@ -248,10 +248,10 @@ void main() {
       );
       addTearDown(c.dispose);
       c.listen(setPieceTakersProvider(1), (_, _) {});
-      expect(await c.read(setPieceTakersProvider(1).future), (
-        penalty: 1,
-        deadBall: 1,
-      ));
+      expect(
+        await c.read(setPieceTakersProvider(1).future),
+        SetPieceOrder.single(penalty: 1, deadBall: 1),
+      );
     });
   });
 }

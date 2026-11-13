@@ -1201,8 +1201,49 @@ class AppLocalizationsHu extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'SZEREPEK ÉS PONTRÚGÁSOK';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Adj minden kezdőnek szerepet. Koppints a tizenegyes (⚽) vagy szabadrúgás (▲) jelvényre a rúgó kijelöléséhez.';
+  String get tacticsSectionRoles => 'Szerepek';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Szabadrúgások';
+
+  @override
+  String get tacticsSectionCorners => 'Szögletek';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Koppints egy játékosra a kijelöléséhez. Koppints rá újra, és az edző dönt.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Ki rúgja a tizenegyeseket, legfeljebb hárman sorrendben. Ha az első nincs a pályán, a következő rúgja.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Ki rúgja a kapu közeli szabadrúgásokat, legfeljebb hárman sorrendben. Ha az első nincs a pályán, a következő rúgja.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Mindkét oldal szögleteinek saját rúgója van, legfeljebb ketten sorrendben. Ha az első nincs a pályán, a következő rúgja.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Koppints a játékosokra abban a sorrendben, ahogy rúgniuk kell. Egy számozott játékosra koppintva leveszed a listáról.';
+
+  @override
+  String get tacticsCornersLeft => 'Balról';
+
+  @override
+  String get tacticsCornersRight => 'Jobbról';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Ki végzi el a hosszú bedobásokat. Ha az első nincs a pályán, a második dobja.';
+
+  @override
+  String get tacticsPickBest => 'Legjobb kiválasztása';
+
+  @override
+  String get tacticsSameAsPenalties => 'Mint a tizenegyesek';
 
   @override
   String get tacticsTooltipCallUps => 'Meghívók';

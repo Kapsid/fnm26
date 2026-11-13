@@ -1196,8 +1196,49 @@ class AppLocalizationsTr extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ROLLER VE DURAN TOPLAR';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Her ilk 11 oyuncusuna bir rol ver. Atıcını belirlemek için penaltı (⚽) ya da serbest vuruş (▲) rozetine dokun.';
+  String get tacticsSectionRoles => 'Roller';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Serbest vuruşlar';
+
+  @override
+  String get tacticsSectionCorners => 'Kornerler';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Bir oyuncuya dokunarak onu seç. Tekrar dokunursan seçimi teknik direktöre bırakırsın.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Penaltıları kim kullanır, sırayla en fazla üç kişi. İlki sahada değilse sıradaki kullanır.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Kaleye yakın serbest vuruşları kim kullanır, sırayla en fazla üç kişi. İlki sahada değilse sıradaki kullanır.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Her iki taraftaki kornerlerin kendi kullanıcıları var, sırayla en fazla iki kişi. İlki sahada değilse sıradaki kullanır.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Oyunculara kullanacakları sırayla dokun. Numaralı bir oyuncuya dokunarak onu listeden çıkar.';
+
+  @override
+  String get tacticsCornersLeft => 'Soldan';
+
+  @override
+  String get tacticsCornersRight => 'Sağdan';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Uzun taç atışlarını kim kullanır. İlki sahada değilse ikincisi kullanır.';
+
+  @override
+  String get tacticsPickBest => 'En iyisini seç';
+
+  @override
+  String get tacticsSameAsPenalties => 'Penaltılarla aynı';
 
   @override
   String get tacticsTooltipCallUps => 'Milli takım daveti';

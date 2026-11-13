@@ -1155,8 +1155,48 @@ class AppLocalizationsKo extends AppLocalizations {
   String get tacticsTabRolesSetPieces => '역할 및 세트피스';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      '선발 선수마다 역할을 정하세요. 페널티킥(⚽) 또는 프리킥(▲) 배지를 눌러 키커를 지정합니다.';
+  String get tacticsSectionRoles => '역할';
+
+  @override
+  String get tacticsSectionFreeKicks => '프리킥';
+
+  @override
+  String get tacticsSectionCorners => '코너킥';
+
+  @override
+  String get tacticsTakerTapHint => '선수를 탭해 지정하세요. 다시 탭하면 코치에게 맡깁니다.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      '페널티킥을 차는 선수, 순서대로 최대 세 명. 첫 번째 선수가 경기장에 없으면 다음 선수가 찹니다.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      '골문을 노릴 수 있는 프리킥을 차는 선수, 순서대로 최대 세 명. 첫 번째 선수가 경기장에 없으면 다음 선수가 찹니다.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      '코너킥은 양쪽마다 키커가 따로 있으며, 순서대로 최대 두 명입니다. 첫 번째 선수가 경기장에 없으면 다음 선수가 찹니다.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      '차는 순서대로 선수를 탭하세요. 번호가 붙은 선수를 탭하면 목록에서 빠집니다.';
+
+  @override
+  String get tacticsCornersLeft => '왼쪽에서';
+
+  @override
+  String get tacticsCornersRight => '오른쪽에서';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      '롱 스로인을 던지는 선수. 첫 번째 선수가 경기장에 없으면 두 번째 선수가 던집니다.';
+
+  @override
+  String get tacticsPickBest => '최적 선수 선택';
+
+  @override
+  String get tacticsSameAsPenalties => '페널티킥과 동일';
 
   @override
   String get tacticsTooltipCallUps => '소집';

@@ -1197,8 +1197,49 @@ class AppLocalizationsVi extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'VAI TRÒ & BÓNG CHẾT';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Giao vai trò cho từng cầu thủ đá chính. Chạm vào biểu tượng phạt đền (⚽) hoặc đá phạt (▲) để chọn người thực hiện.';
+  String get tacticsSectionRoles => 'Vai trò';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Đá phạt';
+
+  @override
+  String get tacticsSectionCorners => 'Phạt góc';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Chạm vào một cầu thủ để chọn. Chạm lại để huấn luyện viên tự chọn.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Ai sút phạt đền, tối đa ba người theo thứ tự. Nếu người thứ nhất không có trên sân, người tiếp theo sẽ sút.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Ai đá phạt trong tầm sút, tối đa ba người theo thứ tự. Nếu người thứ nhất không có trên sân, người tiếp theo sẽ đá.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Phạt góc mỗi bên có người đá riêng, tối đa hai người theo thứ tự. Nếu người thứ nhất không có trên sân, người tiếp theo sẽ đá.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Chạm vào các cầu thủ theo thứ tự đá. Chạm vào cầu thủ đã có số để bỏ khỏi danh sách.';
+
+  @override
+  String get tacticsCornersLeft => 'Bên trái';
+
+  @override
+  String get tacticsCornersRight => 'Bên phải';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Ai thực hiện ném biên dài. Nếu người thứ nhất không có trên sân, người thứ hai sẽ ném.';
+
+  @override
+  String get tacticsPickBest => 'Chọn người tốt nhất';
+
+  @override
+  String get tacticsSameAsPenalties => 'Giống phạt đền';
 
   @override
   String get tacticsTooltipCallUps => 'Triệu tập';

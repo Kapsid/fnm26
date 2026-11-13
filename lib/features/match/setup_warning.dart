@@ -12,6 +12,7 @@ import 'package:fnm/features/match/strength_panel.dart';
 import 'package:fnm/features/squad/captain_providers.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
+import 'package:fnm/features/tactics/tactics_screen.dart' show RolesSection;
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -139,11 +140,14 @@ final AutoDisposeFutureProviderFamily<SquadSetup, int> squadSetupProvider =
         // has named nobody since. The acknowledgement only holds while nothing
         // is named: once he picks somebody, the question becomes whether THAT
         // man can play, and an old "leave it" must not swallow the answer.
+        //
+        // An order counts as set when one of the men listed can play: the
+        // next one steps up when the first cannot.
         setPieces:
-            (takers.penalty == null &&
-                takers.deadBall == null &&
-                acceptedAuto) ||
-            (available(takers.penalty) && available(takers.deadBall)),
+            (takers.isEmpty && acceptedAuto) ||
+            SetPieceDuty.values.every(
+              (d) => takers.of(d).any(available),
+            ),
       );
     });
 
@@ -183,9 +187,15 @@ class SquadSetupWarning extends ConsumerWidget {
       child: AppCard(
         // Straight to the tab that holds both the armband and the takers,
         // rather than the lineup the manager then has to navigate off. Index 2
-        // since the instructions took a tab of their own.
+        // since the instructions took a tab of their own. The sub-tab is the
+        // one the strip is about: the armband first, as the message is.
         onTap: () async {
-          await context.push('${Routes.tactics}?careerId=$careerId&tab=2');
+          final sub = setup.captain != null
+              ? RolesSection.captain
+              : RolesSection.penalties;
+          await context.push(
+            '${Routes.tactics}?careerId=$careerId&tab=2&sub=${sub.name}',
+          );
           // The strength panel reads the shape too (the preview itself is
           // refreshed by the tactics writes).
           if (context.mounted) ref.invalidate(strengthFactorsProvider);

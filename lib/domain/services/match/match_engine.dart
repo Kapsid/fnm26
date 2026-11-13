@@ -10,6 +10,7 @@ import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/entities/player_role.dart';
+import 'package:fnm/domain/entities/set_piece_order.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/match/match_conditions.dart';
 import 'package:fnm/domain/services/match/match_moments.dart';
@@ -34,6 +35,7 @@ class MatchTeam {
     this.roles = const {},
     this.penaltyTakerId,
     this.deadBallTakerId,
+    this.setPieceOrder,
     this.conditionByPlayer = const {},
     this.traitsByPlayer = const {},
     this.ratingBonus = 0,
@@ -100,6 +102,18 @@ class MatchTeam {
   /// that player isn't on the pitch.
   final int? penaltyTakerId;
   final int? deadBallTakerId;
+
+  /// The manager's ordered takers (see [SetPieceOrder]): the first listed
+  /// still on the pitch steps up, else the engine's own pick. When set it
+  /// replaces [penaltyTakerId] and [deadBallTakerId]; when null those two
+  /// stand as one-man orders ([SetPieceOrder.single]), which is exactly how
+  /// the engine read them before there were orders.
+  final SetPieceOrder? setPieceOrder;
+
+  /// The order the engine plays: [setPieceOrder], or the single pair.
+  SetPieceOrder get takers =>
+      setPieceOrder ??
+      SetPieceOrder.single(penalty: penaltyTakerId, deadBall: deadBallTakerId);
 
   /// The shape the XI lines up in; `xi[i]` occupies `positions[i]`.
   /// Players fielded away from their natural position take a rating penalty.
@@ -190,14 +204,14 @@ class TacticalChange {
   }
 
   /// New set-piece takers from this minute on, or null to leave the side's
-  /// existing pair alone. Either id inside may itself be null, which hands that
+  /// existing orders alone. Any list inside may be empty, which hands that
   /// duty back to the engine's own pick.
   ///
   /// Carried on the CHANGE rather than swapped on the team because a match is
   /// re-simulated from the first minute every time the manager touches
   /// anything: setting the taker on the team would rewrite the penalty he has
   /// already watched being taken.
-  final ({int? penalty, int? deadBall})? takers;
+  final SetPieceOrder? takers;
 }
 
 /// The tone a manager strikes in a team talk (at the interval). Each tone shifts
@@ -513,16 +527,15 @@ class _Live {
       fullBacks = team.fullBacks,
       throwInStyle = team.throwInStyle,
       throwInTakerId = team.throwInTakerId,
-      penaltyTakerId = team.penaltyTakerId,
-      deadBallTakerId = team.deadBallTakerId;
+      takers = team.takers;
 
   final MatchTeam team;
 
-  /// Who takes the side's penalties and dead balls RIGHT NOW. Seeded from the
-  /// team sheet and reassignable mid-match, so a manager whose taker has gone
-  /// off (or has just missed one) can hand the ball to somebody else.
-  int? penaltyTakerId;
-  int? deadBallTakerId;
+  /// Who takes the side's penalties and dead balls RIGHT NOW, in order.
+  /// Seeded from the team sheet and reassignable mid-match, so a manager whose
+  /// taker has gone off (or has just missed one) can hand the ball to
+  /// somebody else.
+  SetPieceOrder takers;
 
   /// The throw-in style and thrower right now: the team sheet's, until a live
   /// change names others.
@@ -1016,28 +1029,42 @@ class MatchEngine {
       );
     }
 
+    // Which delivery a set piece the engine plays is: a corner (else a
+    // crossed free kick), and from which flank. Drawn by [_setPiece] the
+    // moment it knows there is a delivery, so the taker can be the one
+    // ordered for that flag. Two draws on [detailRng], exactly the two
+    // [recordDelivery] used to make itself: nothing else draws on that stream
+    // between the set piece being played and its delivery being recorded, so
+    // the stream reads as it always did.
+    ({bool corner, bool left}) drawDelivery() => (
+      corner: detailRng.chance(_cornerShareOfDeliveries),
+      left: detailRng.chance(0.5),
+    );
+
     // A set-piece delivery the engine played (and that led to a shot):
-    // labelled a corner or a crossed free kick, recorded with the foul that
-    // won a free kick, and returning the shot's origin.
+    // labelled a corner or a crossed free kick ([label], from
+    // [drawDelivery]), recorded with the foul that won a free kick, and
+    // returning the shot's origin.
     ShotOrigin recordDelivery({
       required int minute,
       required int stoppage,
       required _Live atk,
       required _Live def,
       required int takerId,
+      required ({bool corner, bool left}) label,
     }) {
-      if (detailRng.chance(_cornerShareOfDeliveries)) {
+      if (label.corner) {
         recordSetPiece(
           minute: minute,
           stoppage: stoppage,
           atk: atk,
           kind: SetPieceKind.corner,
           takerId: takerId,
-          left: detailRng.chance(0.5),
+          left: label.left,
         );
         return ShotOrigin.corner;
       }
-      final left = detailRng.chance(0.5);
+      final left = label.left;
       final zone = left ? PitchZone.wideLeft : PitchZone.wideRight;
       recordFoul(
         minute: minute,
@@ -1073,13 +1100,17 @@ class MatchEngine {
     }) {
       if (atk.xi.isEmpty || def.xi.isEmpty) return;
       if (detailRng.chance(_idleCornerPerMinute * 2 * share * legs)) {
+        // The flank first (the same draw as ever: picking the taker draws
+        // nothing), so the man sent over is the one ordered for that flag.
+        final left = detailRng.chance(0.5);
+        final order = atk.takers.corners(left: left);
         recordSetPiece(
           minute: minute,
           stoppage: stoppage,
           atk: atk,
           kind: SetPieceKind.corner,
-          takerId: (_deadBallTaker(atk) ?? atk.xi.first).id,
-          left: detailRng.chance(0.5),
+          takerId: (_deadBallTaker(atk, order: order) ?? atk.xi.first).id,
+          left: left,
         );
       }
       if (detailRng.chance(_offsidePerMinute * 2 * share * legs)) {
@@ -1649,11 +1680,13 @@ class MatchEngine {
       // Set pieces — a third, additive channel on its own RNG stream. Corners /
       // free-kicks reward aerial strength and a good delivery, so a physical,
       // set-piece-strong side scores goals open play alone wouldn't give it.
+      ({bool corner, bool left})? homeLabel;
       final homeSp = _setPiece(
         liveHome,
         liveAway,
         manageMinute,
         setPieceRng,
+        label: () => homeLabel = drawDelivery(),
         stoppage: stoppage,
         damping: legs * weather.tempo * _blowoutDamping(homeScore, awayScore),
         delivery: weather.delivery,
@@ -1677,7 +1710,9 @@ class MatchEngine {
             liveHome,
             homeSp.deliverer,
             homeSp.shooter!,
+            order: liveHome.takers.deliveryOrder(homeLabel!),
           ).id,
+          label: homeLabel!,
         );
         recordShot(
           minute: manageMinute,
@@ -1692,11 +1727,13 @@ class MatchEngine {
           header: true,
         );
       }
+      ({bool corner, bool left})? awayLabel;
       final awaySp = _setPiece(
         liveAway,
         liveHome,
         manageMinute,
         setPieceRng,
+        label: () => awayLabel = drawDelivery(),
         stoppage: stoppage,
         damping: legs * weather.tempo * _blowoutDamping(awayScore, homeScore),
         delivery: weather.delivery,
@@ -1720,7 +1757,9 @@ class MatchEngine {
             liveAway,
             awaySp.deliverer,
             awaySp.shooter!,
+            order: liveAway.takers.deliveryOrder(awayLabel!),
           ).id,
+          label: awayLabel!,
         );
         recordShot(
           minute: manageMinute,
@@ -2149,11 +2188,7 @@ class MatchEngine {
         ..throwInStyle = t.style
         ..throwInTakerId = t.taker;
     }
-    if (c.takers case final t?) {
-      live
-        ..penaltyTakerId = t.penalty
-        ..deadBallTakerId = t.deadBall;
-    }
+    if (c.takers case final t?) live.takers = t;
   }
 
   /// Rolls one minute of discipline for [live]: a possible booking (a second
@@ -2564,7 +2599,7 @@ class MatchEngine {
   /// pitch, else the outfield player with the best finishing; the first player
   /// when a team is somehow empty.
   Player _penaltyTaker(_Live team) {
-    final chosen = _designated(team, team.penaltyTakerId);
+    final chosen = _designated(team, team.takers.penalties);
     if (chosen != null) return chosen;
     final outfield = team.xi
         .where((p) => p.category != PositionCategory.goalkeeper)
@@ -2576,12 +2611,15 @@ class MatchEngine {
     );
   }
 
-  /// The player [id] if they're currently on the pitch for [team], else null —
-  /// so a designated taker who's been subbed off or sent off falls back to auto.
-  Player? _designated(_Live team, int? id) {
-    if (id == null) return null;
-    for (final p in team.xi) {
-      if (p.id == id) return p;
+  /// The first of [ids] currently on the pitch for [team] (and not [not]),
+  /// else null — so a designated taker who's been subbed off or sent off
+  /// hands the ball to the next man listed, and the last to auto.
+  Player? _designated(_Live team, List<int> ids, {int? not}) {
+    for (final id in ids) {
+      if (id == not) continue;
+      for (final p in team.xi) {
+        if (p.id == id) return p;
+      }
     }
     return null;
   }
@@ -2804,18 +2842,23 @@ class MatchEngine {
   /// engine's [deliverer], else the dead-ball man, else the next best
   /// technician, so a header never shows the shooter as his own taker. Only
   /// a side down to the shooter alone has nobody else. No draw.
-  Player _deliveryTaker(_Live team, Player? deliverer, Player shooter) {
+  Player _deliveryTaker(
+    _Live team,
+    Player? deliverer,
+    Player shooter, {
+    List<int>? order,
+  }) {
     if (deliverer != null) return deliverer;
-    final dead = _deadBallTaker(team);
+    final dead = _deadBallTaker(team, order: order);
     if (dead != null && dead.id != shooter.id) return dead;
-    return _setPieceTaker(team, shooter) ?? shooter;
+    return _setPieceTaker(team, shooter, order: order) ?? shooter;
   }
 
   /// The side's dead-ball man for a corner or free kick the engine did not
-  /// play out: the designated taker if on the pitch, else the best technician
-  /// outfield. No draw.
-  Player? _deadBallTaker(_Live team) {
-    final chosen = _designated(team, team.deadBallTakerId);
+  /// play out: the first designated taker of [order] (the free-kick order
+  /// when null) on the pitch, else the best technician outfield. No draw.
+  Player? _deadBallTaker(_Live team, {List<int>? order}) {
+    final chosen = _designated(team, order ?? team.takers.freeKicks);
     if (chosen != null) return chosen;
     final outfield = team.xi
         .where((p) => p.category != PositionCategory.goalkeeper)
@@ -2946,12 +2989,15 @@ class MatchEngine {
   /// Plays the set-piece channel for [atk] against [def] this minute on the
   /// independent [rng] stream. Returns whether an attempt happened ([shot]), its
   /// xG, and a goal event when it goes in. Purely additive to open play.
+  /// [label] is called once there is a delivery, to say which one it is (see
+  /// `drawDelivery` in [play]); it draws on its own stream, not on [rng].
   ({MatchEvent? goal, double xg, bool shot, Player? shooter, Player? deliverer})
   _setPiece(
     _Live atk,
     _Live def,
     int minute,
     SeededRng rng, {
+    required ({bool corner, bool left}) Function() label,
     int stoppage = 0,
     double damping = 1.0,
     double delivery = 1.0,
@@ -2975,7 +3021,14 @@ class MatchEngine {
     // specialist's better ball actually raises the chance of the goal rather
     // than only being named on one that was going in anyway.
     final scorer = _pickHeader(atk, rng);
-    final taker = _setPieceTaker(atk, scorer);
+    // Which delivery it is (a corner from which flag, or a crossed free
+    // kick), so the taker is the one ordered for it. [label] draws on the
+    // detail stream, never on [rng].
+    final taker = _setPieceTaker(
+      atk,
+      scorer,
+      order: atk.takers.deliveryOrder(label()),
+    );
     final ball =
         taker != null && atk.team.hasTrait(taker.id, PlayerTrait.setPiece)
         ? PlayerTraits.setPieceFactor
@@ -3147,8 +3200,12 @@ class MatchEngine {
   /// heading it), else [SetPiecePicks.throwIn] over the rest. Never the
   /// keeper unless nobody else is left.
   Player? _thrower(_Live team, Player scorer) {
-    final chosen = _designated(team, team.throwInTakerId);
-    if (chosen != null && chosen.id != scorer.id) return chosen;
+    final chosen = _designated(
+      team,
+      [?team.throwInTakerId],
+      not: scorer.id,
+    );
+    if (chosen != null) return chosen;
     final others = team.xi.where((p) => p.id != scorer.id).toList();
     final id = SetPiecePicks.throwIn(others);
     if (id == null) return null;
@@ -3207,9 +3264,16 @@ class MatchEngine {
   /// rating is as high as anyone's, so ranking the whole eleven sent him up
   /// for every corner, the AI's included. He takes one only when the manager
   /// names him or nobody else is left.
-  Player? _setPieceTaker(_Live team, Player scorer) {
-    final chosen = _designated(team, team.deadBallTakerId);
-    if (chosen != null && chosen.id != scorer.id) return chosen;
+  ///
+  /// [order] is the delivery's own order (a corner flag's, or the free
+  /// kicks'); the free-kick order when null.
+  Player? _setPieceTaker(_Live team, Player scorer, {List<int>? order}) {
+    final chosen = _designated(
+      team,
+      order ?? team.takers.freeKicks,
+      not: scorer.id,
+    );
+    if (chosen != null) return chosen;
     final others = team.xi.where((p) => p.id != scorer.id).toList();
     if (others.isEmpty) return null;
     final outfield = others

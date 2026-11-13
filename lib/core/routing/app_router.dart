@@ -520,7 +520,18 @@ final routerProvider = Provider<GoRouter>((ref) {
         // which both live on the second one; landing on the lineup instead
         // left the manager to find the thing they had just been told about.
         final tab = int.tryParse(state.uri.queryParameters['tab'] ?? '') ?? 0;
-        return TacticsScreen(careerId: id, initialTab: tab);
+        // `?sub=` names the sub-tab of roles and set pieces (captain,
+        // penalties, ...); anything else opens on the roles.
+        final sub = state.uri.queryParameters['sub'];
+        final section = RolesSection.values.firstWhere(
+          (s) => s.name == sub,
+          orElse: () => RolesSection.roles,
+        );
+        return TacticsScreen(
+          careerId: id,
+          initialTab: tab,
+          initialSection: section,
+        );
       },
     ),
     GoRoute(

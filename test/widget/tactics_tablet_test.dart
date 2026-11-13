@@ -140,7 +140,11 @@ void main() {
         reason: 'closing the sheet must not pop the Tactics page',
       );
 
-      // The captain picker.
+      // The captain picker, on its own sub-tab.
+      await tester.tap(
+        find.byKey(TacticsScreen.sectionChipKey(RolesSection.captain)),
+      );
+      await settle(tester);
       await tester.tap(find.text(enL.captainNone));
       await settle(tester);
       expect(find.text(enL.squadCaptain.toUpperCase()), findsWidgets);
@@ -190,7 +194,7 @@ void main() {
         size: kTabletSize,
       );
       expect(
-        find.text(enL.tacticsRolesSetPiecesBlurb),
+        find.text(enL.tacticsRolesBlurb),
         tab == 2 ? findsOneWidget : findsNothing,
       );
       expect(
