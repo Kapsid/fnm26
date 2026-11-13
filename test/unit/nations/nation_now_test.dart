@@ -17,6 +17,7 @@ import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/draw_reveal.dart';
 import 'package:fnm/features/hub/hub_event.dart';
+import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart';
 import 'package:fnm/features/nations/nation_now_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
@@ -101,6 +102,8 @@ void main() {
       continentalQualDrawKind,
       continentalFinalsDrawKind,
       worldCupDrawKind,
+      // Calendar2: a European cycle opens with the Nations Cup.
+      nationsCupDrawKind,
     ]) {
       await comp.markDrawWatched(careerId, 0, kind);
     }

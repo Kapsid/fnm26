@@ -22,6 +22,7 @@ import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:path/path.dart' as p;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../helpers/calendar2_draws.dart';
 import '../../helpers/test_database.dart';
 import '../../story/driver.dart';
 import 'greenland_fixtures.dart';
@@ -117,7 +118,9 @@ void main() {
       base.where((n) => n.confederation == Confederation.europe).length,
     );
 
-    // A European qualifying group, and the bottom Nations Cup league.
+    // A European qualifying group, and the bottom Nations Cup league. On
+    // calendar2 the qualifying draw comes after the first Nations Cup.
+    await drawEuroQualifyingNow(c, id);
     final groups = await comp.tournamentGroupTables(
       id,
       CompetitionKind.continentalQualifying,

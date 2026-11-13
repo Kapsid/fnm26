@@ -235,6 +235,7 @@ class StoryDriver {
     bool currentHostRules = true,
     bool? newCareerNations,
     bool stadiumHostRules = true,
+    bool calendar2 = true,
   }) async {
     await c.read(seedLoaderProvider).ensureSeeded();
     final career =
@@ -248,6 +249,7 @@ class StoryDriver {
                   currentHostRules: currentHostRules,
                   newCareerNations: newCareerNations,
                   stadiumHostRules: stadiumHostRules,
+                  calendar2: calendar2,
                 ))
             .valueOrNull!;
     return StoryDriver(c, career.id);
