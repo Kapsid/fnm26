@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation}: {name} ({age}) bersara daripada kejurulatihan",
   "editorManagerAge": "Umur",
   "editorManagerAgeHint": "Kosong: permainan yang memilih",
-  "editorIssueManagerAge": "Umur jurulatih mestilah antara {min} hingga {max}."
+  "editorIssueManagerAge": "Umur jurulatih mestilah antara {min} hingga {max}.",
+  "pressFloor": "GILIRAN ANDA BERCAKAP · {index}/{total}",
+  "pressTickerStanding": "{code} {points} MATA · TEMPAT {place}",
+  "pressAfterTitle": "SELEPAS SIDANG MEDIA",
+  "pressTileMorale": "Moral",
+  "pressTilePress": "Media",
+  "pressPromiseHeading": "ANDA BERJANJI",
+  "pressPromiseWinNext": "Kemenangan dalam perlawanan seterusnya.",
+  "pressPromiseJob": "Jawatan anda dalam tiga perlawanan seterusnya.",
+  "pressPromiseJudgedCampaign": "Lembaga akan menilai apabila kempen selesai.",
+  "pressPromiseJudgedMatch": "Dinilai melalui keputusan perlawanan seterusnya."
 }

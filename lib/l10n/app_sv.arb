@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation}: {name} ({age}) slutar som tränare",
   "editorManagerAge": "Ålder",
   "editorManagerAgeHint": "Tomt: spelet väljer",
-  "editorIssueManagerAge": "Förbundskaptenens ålder måste vara från {min} till {max}."
+  "editorIssueManagerAge": "Förbundskaptenens ålder måste vara från {min} till {max}.",
+  "pressFloor": "ORDET ÄR DITT · {index}/{total}",
+  "pressTickerStanding": "{code} {points} P · {place} PLATS",
+  "pressAfterTitle": "EFTER PRESSKONFERENSEN",
+  "pressTileMorale": "Moral",
+  "pressTilePress": "Pressen",
+  "pressPromiseHeading": "DU LOVADE",
+  "pressPromiseWinNext": "Seger i nästa match.",
+  "pressPromiseJob": "Ditt jobb på de tre nästa matcherna.",
+  "pressPromiseJudgedCampaign": "Styrelsen dömer när kampanjen är avgjord.",
+  "pressPromiseJudgedMatch": "Avgörs av resultatet i nästa match."
 }

@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation}: ο {name} ({age}) αποσύρεται από την προπονητική",
   "editorManagerAge": "Ηλικία",
   "editorManagerAgeHint": "Κενό: το διαλέγει το παιχνίδι",
-  "editorIssueManagerAge": "Η ηλικία του προπονητή πρέπει να είναι από {min} έως {max}."
+  "editorIssueManagerAge": "Η ηλικία του προπονητή πρέπει να είναι από {min} έως {max}.",
+  "pressFloor": "ΕΧΕΤΕ ΤΟΝ ΛΟΓΟ · {index}/{total}",
+  "pressTickerStanding": "{code} {points} Β. · {place} ΘΕΣΗ",
+  "pressAfterTitle": "ΜΕΤΑ ΤΗ ΣΥΝΕΝΤΕΥΞΗ",
+  "pressTileMorale": "Ηθικό",
+  "pressTilePress": "Τύπος",
+  "pressPromiseHeading": "ΥΠΟΣΧΕΘΗΚΑΤΕ",
+  "pressPromiseWinNext": "Νίκη στο επόμενο ματς.",
+  "pressPromiseJob": "Τη θέση σας στα επόμενα τρία ματς.",
+  "pressPromiseJudgedCampaign": "Η διοίκηση θα κρίνει όταν κριθεί η εκστρατεία.",
+  "pressPromiseJudgedMatch": "Κρίνεται από το αποτέλεσμα του επόμενου ματς."
 }

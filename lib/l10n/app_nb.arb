@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation}: {name} ({age}) legger opp som trener",
   "editorManagerAge": "Alder",
   "editorManagerAgeHint": "Tomt: spillet velger",
-  "editorIssueManagerAge": "Alderen til treneren må være fra {min} til {max}."
+  "editorIssueManagerAge": "Alderen til treneren må være fra {min} til {max}.",
+  "pressFloor": "DU HAR ORDET · {index}/{total}",
+  "pressTickerStanding": "{code} {points} P · {place} PLASS",
+  "pressAfterTitle": "ETTER PRESSEKONFERANSEN",
+  "pressTileMorale": "Moral",
+  "pressTilePress": "Pressen",
+  "pressPromiseHeading": "DU LOVTE",
+  "pressPromiseWinNext": "Seier i neste kamp.",
+  "pressPromiseJob": "Jobben din på de tre neste kampene.",
+  "pressPromiseJudgedCampaign": "Styret dømmer når kampanjen er avgjort.",
+  "pressPromiseJudgedMatch": "Avgjøres av resultatet i neste kamp."
 }

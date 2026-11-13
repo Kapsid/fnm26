@@ -18198,4 +18198,40 @@ class AppLocalizationsRo extends AppLocalizations {
   String editorIssueManagerAge(int min, int max) {
     return 'Vârsta selecționerului trebuie să fie între $min și $max.';
   }
+
+  @override
+  String pressFloor(int index, int total) {
+    return 'AVEȚI CUVÂNTUL · $index/$total';
+  }
+
+  @override
+  String pressTickerStanding(String code, int points, String place) {
+    return '$code $points PCT. · $place';
+  }
+
+  @override
+  String get pressAfterTitle => 'DUPĂ CONFERINȚĂ';
+
+  @override
+  String get pressTileMorale => 'Moral';
+
+  @override
+  String get pressTilePress => 'Presa';
+
+  @override
+  String get pressPromiseHeading => 'AȚI PROMIS';
+
+  @override
+  String get pressPromiseWinNext => 'O victorie în meciul următor.';
+
+  @override
+  String get pressPromiseJob => 'Postul tău în următoarele trei meciuri.';
+
+  @override
+  String get pressPromiseJudgedCampaign =>
+      'Federația judecă atunci când campania e decisă.';
+
+  @override
+  String get pressPromiseJudgedMatch =>
+      'Se judecă după rezultatul meciului următor.';
 }

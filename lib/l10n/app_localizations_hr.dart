@@ -18116,4 +18116,39 @@ class AppLocalizationsHr extends AppLocalizations {
   String editorIssueManagerAge(int min, int max) {
     return 'Dob izbornika mora biti od $min do $max.';
   }
+
+  @override
+  String pressFloor(int index, int total) {
+    return 'IMATE RIJEČ · $index/$total';
+  }
+
+  @override
+  String pressTickerStanding(String code, int points, String place) {
+    return '$code $points BOD. · $place MJESTO';
+  }
+
+  @override
+  String get pressAfterTitle => 'NAKON KONFERENCIJE';
+
+  @override
+  String get pressTileMorale => 'Moral';
+
+  @override
+  String get pressTilePress => 'Novinari';
+
+  @override
+  String get pressPromiseHeading => 'OBEĆALI STE';
+
+  @override
+  String get pressPromiseWinNext => 'Pobjedu u sljedećoj utakmici.';
+
+  @override
+  String get pressPromiseJob => 'Svoje mjesto u sljedeće tri utakmice.';
+
+  @override
+  String get pressPromiseJudgedCampaign =>
+      'Odbor će presuditi kad kampanja bude odlučena.';
+
+  @override
+  String get pressPromiseJudgedMatch => 'Presuđuje rezultat sljedeće utakmice.';
 }

@@ -17770,4 +17770,39 @@ class AppLocalizationsNb extends AppLocalizations {
   String editorIssueManagerAge(int min, int max) {
     return 'Alderen til treneren må være fra $min til $max.';
   }
+
+  @override
+  String pressFloor(int index, int total) {
+    return 'DU HAR ORDET · $index/$total';
+  }
+
+  @override
+  String pressTickerStanding(String code, int points, String place) {
+    return '$code $points P · $place PLASS';
+  }
+
+  @override
+  String get pressAfterTitle => 'ETTER PRESSEKONFERANSEN';
+
+  @override
+  String get pressTileMorale => 'Moral';
+
+  @override
+  String get pressTilePress => 'Pressen';
+
+  @override
+  String get pressPromiseHeading => 'DU LOVTE';
+
+  @override
+  String get pressPromiseWinNext => 'Seier i neste kamp.';
+
+  @override
+  String get pressPromiseJob => 'Jobben din på de tre neste kampene.';
+
+  @override
+  String get pressPromiseJudgedCampaign =>
+      'Styret dømmer når kampanjen er avgjort.';
+
+  @override
+  String get pressPromiseJudgedMatch => 'Avgjøres av resultatet i neste kamp.';
 }

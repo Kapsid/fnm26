@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation}: {name} ({age}) се оттегля от треньорството",
   "editorManagerAge": "Възраст",
   "editorManagerAgeHint": "Празно: играта избира",
-  "editorIssueManagerAge": "Възрастта на селекционера трябва да е от {min} до {max}."
+  "editorIssueManagerAge": "Възрастта на селекционера трябва да е от {min} до {max}.",
+  "pressFloor": "ДУМАТА Е ВАША · {index}/{total}",
+  "pressTickerStanding": "{code} {points} Т. · {place} МЯСТО",
+  "pressAfterTitle": "СЛЕД ПРЕСКОНФЕРЕНЦИЯТА",
+  "pressTileMorale": "Морал",
+  "pressTilePress": "Медии",
+  "pressPromiseHeading": "ОБЕЩАХТЕ",
+  "pressPromiseWinNext": "Победа в следващия мач.",
+  "pressPromiseJob": "Поста си в следващите три мача.",
+  "pressPromiseJudgedCampaign": "Съветът ще отсъди, когато кампанията приключи.",
+  "pressPromiseJudgedMatch": "Решава резултатът от следващия мач."
 }

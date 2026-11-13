@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation}: {name} ({age}) završava trenersku karijeru",
   "editorManagerAge": "Dob",
   "editorManagerAgeHint": "Prazno: bira igra",
-  "editorIssueManagerAge": "Dob izbornika mora biti od {min} do {max}."
+  "editorIssueManagerAge": "Dob izbornika mora biti od {min} do {max}.",
+  "pressFloor": "IMATE RIJEČ · {index}/{total}",
+  "pressTickerStanding": "{code} {points} BOD. · {place} MJESTO",
+  "pressAfterTitle": "NAKON KONFERENCIJE",
+  "pressTileMorale": "Moral",
+  "pressTilePress": "Novinari",
+  "pressPromiseHeading": "OBEĆALI STE",
+  "pressPromiseWinNext": "Pobjedu u sljedećoj utakmici.",
+  "pressPromiseJob": "Svoje mjesto u sljedeće tri utakmice.",
+  "pressPromiseJudgedCampaign": "Odbor će presuditi kad kampanja bude odlučena.",
+  "pressPromiseJudgedMatch": "Presuđuje rezultat sljedeće utakmice."
 }

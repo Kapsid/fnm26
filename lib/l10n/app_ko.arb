@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation}: {name} ({age}) 감독 은퇴",
   "editorManagerAge": "나이",
   "editorManagerAgeHint": "비워 두면 게임이 정합니다",
-  "editorIssueManagerAge": "감독의 나이는 {min}~{max}세여야 합니다."
+  "editorIssueManagerAge": "감독의 나이는 {min}~{max}세여야 합니다.",
+  "pressFloor": "발언 차례 · {index}/{total}",
+  "pressTickerStanding": "{code} 승점 {points} · {place}",
+  "pressAfterTitle": "기자회견 후",
+  "pressTileMorale": "사기",
+  "pressTilePress": "언론",
+  "pressPromiseHeading": "당신의 약속",
+  "pressPromiseWinNext": "다음 경기 승리.",
+  "pressPromiseJob": "다음 세 경기에 거는 자리.",
+  "pressPromiseJudgedCampaign": "대회가 결정되면 이사회가 판단합니다.",
+  "pressPromiseJudgedMatch": "다음 경기 결과로 판단합니다."
 }

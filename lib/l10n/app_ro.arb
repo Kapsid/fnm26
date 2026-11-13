@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation}: {name} ({age}) se retrage din antrenorat",
   "editorManagerAge": "Vârstă",
   "editorManagerAgeHint": "Gol: alege jocul",
-  "editorIssueManagerAge": "Vârsta selecționerului trebuie să fie între {min} și {max}."
+  "editorIssueManagerAge": "Vârsta selecționerului trebuie să fie între {min} și {max}.",
+  "pressFloor": "AVEȚI CUVÂNTUL · {index}/{total}",
+  "pressTickerStanding": "{code} {points} PCT. · {place}",
+  "pressAfterTitle": "DUPĂ CONFERINȚĂ",
+  "pressTileMorale": "Moral",
+  "pressTilePress": "Presa",
+  "pressPromiseHeading": "AȚI PROMIS",
+  "pressPromiseWinNext": "O victorie în meciul următor.",
+  "pressPromiseJob": "Postul tău în următoarele trei meciuri.",
+  "pressPromiseJudgedCampaign": "Federația judecă atunci când campania e decisă.",
+  "pressPromiseJudgedMatch": "Se judecă după rezultatul meciului următor."
 }

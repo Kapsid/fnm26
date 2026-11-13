@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation}: {name} ({age}) giải nghệ huấn luyện viên",
   "editorManagerAge": "Tuổi",
   "editorManagerAgeHint": "Để trống: game sẽ chọn",
-  "editorIssueManagerAge": "Tuổi của huấn luyện viên phải từ {min} đến {max}."
+  "editorIssueManagerAge": "Tuổi của huấn luyện viên phải từ {min} đến {max}.",
+  "pressFloor": "ĐẾN LƯỢT BẠN · {index}/{total}",
+  "pressTickerStanding": "{code} {points} ĐIỂM · {place}",
+  "pressAfterTitle": "SAU HỌP BÁO",
+  "pressTileMorale": "Tinh thần",
+  "pressTilePress": "Báo chí",
+  "pressPromiseHeading": "BẠN ĐÃ HỨA",
+  "pressPromiseWinNext": "Một chiến thắng ở trận tới.",
+  "pressPromiseJob": "Chiếc ghế của bạn trong ba trận tới.",
+  "pressPromiseJudgedCampaign": "Ban lãnh đạo sẽ đánh giá khi chiến dịch ngã ngũ.",
+  "pressPromiseJudgedMatch": "Đánh giá bằng kết quả trận tới."
 }

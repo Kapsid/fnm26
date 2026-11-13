@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation} : {name} ({age}) met fin à sa carrière d’entraîneur",
   "editorManagerAge": "Âge",
   "editorManagerAgeHint": "Vide : le jeu en choisit un",
-  "editorIssueManagerAge": "L’âge du sélectionneur doit être compris entre {min} et {max}."
+  "editorIssueManagerAge": "L’âge du sélectionneur doit être compris entre {min} et {max}.",
+  "pressFloor": "VOUS AVEZ LA PAROLE · {index}/{total}",
+  "pressTickerStanding": "{code} {points} PT · {place} PLACE",
+  "pressAfterTitle": "APRÈS LA CONFÉRENCE",
+  "pressTileMorale": "Moral",
+  "pressTilePress": "Presse",
+  "pressPromiseHeading": "VOUS AVEZ PROMIS",
+  "pressPromiseWinNext": "Une victoire au prochain match.",
+  "pressPromiseJob": "Votre poste sur les trois prochains matchs.",
+  "pressPromiseJudgedCampaign": "La direction jugera quand la campagne sera terminée.",
+  "pressPromiseJudgedMatch": "Jugé sur le résultat du prochain match."
 }
