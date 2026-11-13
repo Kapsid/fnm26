@@ -292,6 +292,11 @@ extension SeasonRollover on SeasonService {
     await _comp.markDrawWatched(careerId, nextCycle, briefRulesV4Kind);
     await _comp.markDrawWatched(careerId, nextCycle, hostVenuesV2Kind);
     await _comp.markDrawWatched(careerId, nextCycle, fluidWindowsKind);
+    await _comp.markDrawWatched(
+      careerId,
+      nextCycle,
+      TournamentCalendar.markerKind,
+    );
     // Its national teams are run by world managers (see worldManagersKind).
     await _comp.markDrawWatched(careerId, nextCycle, worldManagersKind);
 

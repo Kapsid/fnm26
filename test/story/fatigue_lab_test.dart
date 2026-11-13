@@ -108,7 +108,8 @@ String _rotated(List<DateTime> dates) {
   for (final date in dates) {
     final asOf = date;
     final states = [
-      for (final a in apps) Condition.fatigue(a.reversed.toList(), asOf),
+      for (final a in apps)
+        Condition.fatigue(a.reversed.toList(), asOf, weighted: true),
     ];
     for (final s in states) {
       seen++;

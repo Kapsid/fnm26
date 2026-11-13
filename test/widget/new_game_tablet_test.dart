@@ -45,6 +45,7 @@ class _GatedCareers extends CareerService {
     bool? currentHostRules,
     bool? newCareerNations,
     int? worldPackId,
+    bool tournamentSpacing = true,
   }) async {
     await gate?.future;
     if (throwOnce) {
@@ -64,6 +65,7 @@ class _GatedCareers extends CareerService {
       currentHostRules: currentHostRules,
       newCareerNations: newCareerNations,
       worldPackId: worldPackId,
+      tournamentSpacing: tournamentSpacing,
     );
   }
 }

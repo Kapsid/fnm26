@@ -42,6 +42,27 @@ void main() {
       expect(period, hasLength(3), reason: 'the squad is locked for the group');
     });
 
+    test('a warm-up 13 days before his opener is the same camp only in a '
+        'spaced cycle', () {
+      // His group opens a few days into a staggered tournament.
+      final fixtures = [
+        _f(md: 1, round: 'FRIENDLY', day: 2, played: true),
+        _f(md: 1, round: 'GROUP', day: 15),
+        _f(md: 2, round: 'GROUP', day: 20),
+      ];
+      final warmUp = fixtures[0];
+      final opener = fixtures[1];
+      // Marked (tourSpacing1): one camp, the warm-up's squad plays on.
+      expect(Nomination.isPeriodStart(opener, warmUp, spaced: true), isFalse);
+      expect(Nomination.windowOpen(fixtures, spaced: true), isFalse);
+      // Unmarked: as before, the opener calls up a squad of its own.
+      expect(Nomination.isPeriodStart(opener, warmUp), isTrue);
+      expect(Nomination.windowOpen(fixtures), isTrue);
+      // And ten days out is one camp either way, as it always was.
+      final near = _f(md: 1, round: 'FRIENDLY', day: 5, played: true);
+      expect(Nomination.isPeriodStart(opener, near), isFalse);
+    });
+
     test('warm-ups just before the opener share the tournament squad', () {
       // WarmUps.daysBefore: nine and six days out. One camp, one squad named
       // before the first warm-up; once a warm-up is played the window is

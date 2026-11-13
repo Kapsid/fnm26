@@ -76,7 +76,8 @@ String stageLabelFor(AppLocalizations l, String round) => switch (round) {
 /// by which tournament happens to exist: they overlap across a cycle, and the
 /// Nations Cup is stepped on the hub too.
 ///
-/// Null when nothing has been played yet.
+/// Null when nothing has been played yet; no fixtures while a staggered group
+/// matchday is still being played on other days.
 final AutoDisposeFutureProviderFamily<RoundPopup?, int>
 latestRoundPopupProvider = FutureProvider.autoDispose.family<RoundPopup?, int>((
   ref,
@@ -137,6 +138,9 @@ latestRoundPopupProvider = FutureProvider.autoDispose.family<RoundPopup?, int>((
 
   ({String name, Fixture fixture})? newest;
   final byName = <String, List<Fixture>>{};
+  // Every fixture of a source, played or not: a group matchday is summed up
+  // only once all of it is in.
+  final allByName = <String, List<Fixture>>{};
   for (final source in sources) {
     for (final round in source.rounds) {
       final fixtures = await comp.fixturesByRound(
@@ -145,6 +149,7 @@ latestRoundPopupProvider = FutureProvider.autoDispose.family<RoundPopup?, int>((
         kind: source.kind,
         confederation: source.confederation,
       );
+      (allByName[source.name] ??= []).addAll(fixtures);
       for (final f in fixtures.where((f) => f.hasResult)) {
         (byName[source.name] ??= []).add(f);
         if (newest == null || f.date.isAfter(newest.fixture.date)) {
@@ -155,6 +160,46 @@ latestRoundPopupProvider = FutureProvider.autoDispose.family<RoundPopup?, int>((
   }
   final latest = newest;
   if (latest == null) return null;
+
+  // A group matchday is spread over several days when the groups are
+  // staggered (see `TournamentCalendar`): it is summed up once, when its last
+  // day is played, with every group's games of it. Until then the popup is
+  // empty and nothing is shown.
+  // One day can carry two matchdays (one group's last and another's next),
+  // so the one summed up is a matchday that ends on this day.
+  final latestRound = latest.fixture.round;
+  if (latestRound == 'GROUP' || latestRound == 'CGROUP') {
+    final group = [
+      for (final f in allByName[latest.name]!)
+        if (f.round == latestRound) f,
+    ];
+    final day = latest.fixture.date;
+    List<Fixture> ofMatchday(int md) => [
+      for (final f in group)
+        if (f.matchday == md) f,
+    ];
+    final ended =
+        {
+            for (final f in group)
+              if (f.date.isAtSameMomentAs(day)) f.matchday,
+          }.where((md) {
+            final games = ofMatchday(md);
+            return games.every((f) => f.hasResult) &&
+                games.every((f) => !f.date.isAfter(day));
+          }).toList()
+          ..sort();
+    return (
+      competition: latest.name,
+      stage: _knockoutRounds[latestRound]?.label ?? 'Group Stage',
+      fixtures: ended.isEmpty
+          ? const <Fixture>[]
+          : (ofMatchday(ended.first)..sort((a, b) {
+              final c = a.date.compareTo(b.date);
+              return c != 0 ? c : a.id.compareTo(b.id);
+            })),
+      groupNames: await comp.groupNames(careerId),
+    );
+  }
 
   // Everything that competition played on its most recent date — the day the
   // player just stepped.
@@ -198,6 +243,9 @@ Future<void> showRoundPopup(
     if (route != null) context.go(route);
     return;
   }
+  // A group matchday still being played on other days: it is shown whole,
+  // once, when its last day is in.
+  if (popup.fixtures.isEmpty) return;
   await showAppPopup<void>(
     context: context,
     builder: (context) => _RoundSheet(

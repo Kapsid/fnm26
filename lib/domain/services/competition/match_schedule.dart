@@ -34,8 +34,8 @@ abstract final class MatchSchedule {
   static bool _isGroup(String? round) => round == 'GROUP' || round == 'CGROUP';
 
   /// Whether [f] opens a new block after [previous].
-  static bool _blockStart(Fixture f, Fixture previous) {
-    if (Nomination.isPeriodStart(f, previous)) return true;
+  static bool _blockStart(Fixture f, Fixture previous, {required bool spaced}) {
+    if (Nomination.isPeriodStart(f, previous, spaced: spaced)) return true;
     // Inside a tournament Nomination keeps one period; split it by stage.
     if (_inFinals(f.round) && _inFinals(previous.round)) {
       if (_isGroup(f.round) && _isGroup(previous.round)) return false;
@@ -52,11 +52,14 @@ abstract final class MatchSchedule {
     List<Fixture> fixtures, {
     required int nationId,
     Set<String> knockoutsDrawnFor = const {},
+
+    /// A cycle whose finals are spaced (see `Nomination.isPeriodStart`).
+    bool spaced = false,
   }) {
     final sorted = [...fixtures]..sort((a, b) => a.date.compareTo(b.date));
     final groups = <List<Fixture>>[];
     for (var i = 0; i < sorted.length; i++) {
-      if (i == 0 || _blockStart(sorted[i], sorted[i - 1])) {
+      if (i == 0 || _blockStart(sorted[i], sorted[i - 1], spaced: spaced)) {
         groups.add([sorted[i]]);
       } else {
         groups.last.add(sorted[i]);

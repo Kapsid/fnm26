@@ -5,6 +5,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/services/competition/tournament_calendar.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/squad/camp_scandal.dart';
@@ -73,8 +74,13 @@ Future<({PendingScandal scandal, bool dropped})?> _windowScandal(
   final comp = ref.read(competitionRepositoryProvider);
   final fixtures = await comp.cycleFixturesForNation(careerId, career.nationId);
   // The window has not started: nobody in it has played yet.
-  if (!Nomination.windowOpen(fixtures)) return null;
-  final period = Nomination.currentPeriod(fixtures);
+  final spaced = await TournamentCalendar.isSpaced(
+    comp,
+    careerId,
+    career.cyclePointer,
+  );
+  if (!Nomination.windowOpen(fixtures, spaced: spaced)) return null;
+  final period = Nomination.currentPeriod(fixtures, spaced: spaced);
   if (period.isEmpty) return null;
   final cycle = career.cyclePointer;
   // And the squad has been named, so there is a squad to have gathered.
@@ -86,7 +92,7 @@ Future<({PendingScandal scandal, bool dropped})?> _windowScandal(
     return null;
   }
   final window = period.first.date;
-  final starts = CampScandal.windowStarts(fixtures);
+  final starts = CampScandal.windowStarts(fixtures, spaced: spaced);
   final span = scandalSpan(cycle);
   // The cheap question first: most windows are quiet, and the pool is only
   // worth loading for the one that is not.
@@ -312,7 +318,12 @@ class CampScandalService {
       careerId,
       career.nationId,
     );
-    final period = Nomination.currentPeriod(fixtures);
+    final spaced = await TournamentCalendar.isSpaced(
+      comp,
+      careerId,
+      career.cyclePointer,
+    );
+    final period = Nomination.currentPeriod(fixtures, spaced: spaced);
     if (period.isEmpty) return;
     final cycle = career.cyclePointer;
     if (await comp.hasWatchedDraw(
@@ -322,7 +333,7 @@ class CampScandalService {
     )) {
       return;
     }
-    final starts = CampScandal.windowStarts(fixtures);
+    final starts = CampScandal.windowStarts(fixtures, spaced: spaced);
     final now = period.first.date;
     final markers = await comp.watchedKindsWithPrefix(
       CampScandal.cyclePrefix(cycle),

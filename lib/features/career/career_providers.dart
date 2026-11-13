@@ -30,6 +30,7 @@ import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/real_history.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
+import 'package:fnm/domain/services/competition/tournament_calendar.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/domain/services/manager/manager_age.dart';
@@ -293,6 +294,11 @@ class CareerService {
     /// but keeps the starting ranking its seed was searched on (the pack's
     /// squads never move it), so its draws and hosts stay the designed ones.
     int? worldPackId,
+
+    /// Whether its finals are dated by `TournamentCalendar` (staggered
+    /// groups, four days' rest). Defaults to true; a test passes false to
+    /// play a world as a save from before 1.1.2 has it.
+    bool tournamentSpacing = true,
   }) async {
     final repo = _ref.read(careerRepositoryProvider);
     final premium = _ref.read(premiumUnlockedProvider);
@@ -449,6 +455,10 @@ class CareerService {
     // (see hostVenuesV2Kind).
     await comp.markDrawWatched(career.id, 0, hostVenuesV2Kind);
     await comp.markDrawWatched(career.id, 0, fluidWindowsKind);
+    // Its finals are spaced like real ones (see TournamentCalendar).
+    if (tournamentSpacing) {
+      await comp.markDrawWatched(career.id, 0, TournamentCalendar.markerKind);
+    }
     // Its national teams have managers of their own (see worldManagersKind),
     // seeded the first time something asks for them, never here.
     await comp.markDrawWatched(career.id, 0, worldManagersKind);
@@ -526,6 +536,11 @@ class CareerService {
     for (final n in nations) {
       (byConfederation[n.confederation] ??= []).add(n);
     }
+    final spaced = await comp.hasWatchedDraw(
+      careerId,
+      cycle,
+      TournamentCalendar.markerKind,
+    );
 
     // 1. Continental qualifying opens the cycle (autumn of the start year). The
     //    finals are drawn from the qualifiers two years before the World Cup.
@@ -641,6 +656,7 @@ class CareerService {
           draw: draw,
           groupStart: contFinalsStart,
           round: 'CGROUP',
+          spaced: spaced,
         );
       }
     }
