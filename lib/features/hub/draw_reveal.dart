@@ -7,6 +7,7 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
@@ -32,6 +33,9 @@ String? drawKindForFixture(Fixture f) {
   // ('FFINAL') is the same: two champions, nothing drawn.
   if (round == Rounds.friendly || round == 'FFINAL') return null;
   if (round == 'CQ') return continentalQualDrawKind;
+  // Europe's play-offs (EPSF, EPFINAL): their own ceremony, the paths. They
+  // would otherwise fall through to the World Championship key at the bottom.
+  if (EuroPlayoffs.rounds.contains(round)) return EuroPlayoffs.drawWatchedKind;
   if (round.startsWith('C')) return continentalFinalsDrawKind; // CGROUP, CR16…
   // NGROUP/NSF/NFINAL — the Nations Cup has its own ceremony. Without this they
   // fell through to the World Cup key below and were hidden until December of
@@ -56,6 +60,7 @@ Future<Set<String>> watchedFixtureDraws(
     continentalFinalsDrawKind,
     worldCupDrawKind,
     nationsCupDrawKind,
+    EuroPlayoffs.drawWatchedKind,
   ]) {
     if (await comp.hasWatchedDraw(careerId, cycle, kind)) watched.add(kind);
   }
@@ -85,7 +90,8 @@ String? groupDrawKind(CompetitionKind kind) => switch (kind) {
   // two champions, and the play-off is a knockout.
   CompetitionKind.friendly ||
   CompetitionKind.finalissima ||
-  CompetitionKind.worldCupPlayoff => null,
+  CompetitionKind.worldCupPlayoff ||
+  CompetitionKind.continentalPlayoff => null,
 };
 
 /// Whether the draw for the player's next fixture has been watched, so the hub

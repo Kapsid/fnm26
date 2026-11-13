@@ -233,6 +233,7 @@ campaignProgressProvider = FutureProvider.autoDispose
         nationId: def.nationId,
         confederation: conf,
         fixtures: fixtures,
+        cycle: cyclePointer,
       );
 
       // The qualifying group: the one holding the rival too, for a rivalry.

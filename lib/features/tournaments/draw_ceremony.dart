@@ -45,8 +45,14 @@ class DrawCeremony extends StatefulWidget {
     this.potCount,
     this.crossAxisCount = 2,
     this.landscape = false,
+    this.placeholders = const {},
     super.key,
   });
+
+  /// Balls that stand for a side still to be decided, by the id they carry
+  /// in [groups] (below zero): a play-off path's winner, drawn before its
+  /// final ("Path B winner"). Shown as the path's letter on a plain ball.
+  final Map<int, ({String letter, String label})> placeholders;
 
   /// The drawn groups, each nation ordered by the pot it came from.
   final List<DrawGroup> groups;
@@ -222,8 +228,11 @@ class DrawCeremonyState extends State<DrawCeremony> {
     });
   }
 
-  String _code(int id) => widget.nations[id]?.code ?? '??';
-  String _name(int id) => widget.nations[id]?.name ?? '—';
+  String _code(int id) => widget.placeholders.containsKey(id)
+      ? '$drawPlaceholderPrefix${widget.placeholders[id]!.letter}'
+      : widget.nations[id]?.code ?? '??';
+  String _name(int id) =>
+      widget.placeholders[id]?.label ?? widget.nations[id]?.name ?? '—';
 
   _DrawFrame _frame() {
     final revealedByGroup = <int, List<int>>{};
@@ -675,10 +684,10 @@ class _Pot extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          FlagDisc(code(id), size: flagSize, highlighted: true),
+                          DrawFlag(code(id), size: flagSize, highlighted: true),
                           const SizedBox(width: 3),
                           Text(
-                            nationCodeLabel(code(id)).toUpperCase(),
+                            drawBallLabel(code(id)).toUpperCase(),
                             style: AppTypography.labelSmall.copyWith(
                               color: AppColors.primary,
                               fontWeight: FontWeight.w800,
@@ -690,7 +699,7 @@ class _Pot extends StatelessWidget {
                     ),
                   )
                 else
-                  FlagDisc(code(id), size: flagSize),
+                  DrawFlag(code(id), size: flagSize),
               if (waiting.isEmpty)
                 Text(
                   '✓',
@@ -766,7 +775,7 @@ class _Stage extends StatelessWidget {
                       ),
                       border: Border.all(color: AppColors.primary, width: 2),
                     ),
-                    child: FlagDisc(code(step!.nationId), size: 48),
+                    child: DrawFlag(code(step!.nationId), size: 48),
                   ),
                   const SizedBox(width: AppSpacing.md),
                   Column(
@@ -792,7 +801,7 @@ class _Stage extends StatelessWidget {
                             for (final id in groupMembers)
                               Padding(
                                 padding: const EdgeInsets.only(right: 3),
-                                child: FlagDisc(
+                                child: DrawFlag(
                                   code(id),
                                   size: 18,
                                   highlighted: id == step!.nationId,
@@ -880,7 +889,7 @@ class _GroupCard extends StatelessWidget {
         nationId: nationId,
         child: Row(
           children: [
-            FlagDisc(code(nationId), size: 18, highlighted: emphasise),
+            DrawFlag(code(nationId), size: 18, highlighted: emphasise),
             const SizedBox(width: AppSpacing.xs),
             Expanded(
               child: Text(
@@ -913,6 +922,54 @@ class _EmptySlot extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(color: AppColors.outlineVariant),
+        ),
+      ),
+    );
+  }
+}
+
+/// The code a placeholder ball carries in place of a nation's (its path's
+/// letter after this), so the ceremony's flag and code lookups can tell it
+/// from a nation.
+const String drawPlaceholderPrefix = 'path:';
+
+/// The short label on a ball: the nation's code, or a placeholder's letter.
+String drawBallLabel(String code) => code.startsWith(drawPlaceholderPrefix)
+    ? code.substring(drawPlaceholderPrefix.length)
+    : nationCodeLabel(code);
+
+/// A nation's flag, or for a placeholder (see [drawPlaceholderPrefix]) a
+/// plain disc carrying its path's letter.
+class DrawFlag extends StatelessWidget {
+  const DrawFlag(this.code, {required this.size, this.highlighted = false, super.key});
+
+  final String code;
+  final double size;
+  final bool highlighted;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!code.startsWith(drawPlaceholderPrefix)) {
+      return FlagDisc(code, size: size, highlighted: highlighted);
+    }
+    return Container(
+      width: size,
+      height: size,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: AppColors.surfaceContainerHigh,
+        border: Border.all(
+          color: highlighted ? AppColors.primary : AppColors.outlineVariant,
+          width: highlighted ? 1.5 : 1,
+        ),
+      ),
+      child: Text(
+        drawBallLabel(code),
+        style: AppTypography.labelSmall.copyWith(
+          fontSize: size * 0.5,
+          fontWeight: FontWeight.w800,
+          color: highlighted ? AppColors.primary : AppColors.onSurfaceVariant,
         ),
       ),
     );

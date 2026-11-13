@@ -22,8 +22,12 @@ abstract final class MatchStage {
         'R32' => l.matchTinyRoundOf32,
         'R16' || 'NR16' || 'CR16' => l.matchTinyRoundOf16,
         'QF' || 'NQF' || 'CQF' => l.matchTinyQuarterFinal,
-        'SF' || 'NSF' || 'CSF' || 'POSF' => l.matchTinySemiFinal,
-        'FINAL' || 'NFINAL' || 'CFINAL' || 'POFINAL' => l.matchTinyFinal,
+        'SF' || 'NSF' || 'CSF' || 'POSF' || 'EPSF' => l.matchTinySemiFinal,
+        'FINAL' ||
+        'NFINAL' ||
+        'CFINAL' ||
+        'POFINAL' ||
+        'EPFINAL' => l.matchTinyFinal,
         '3RD' || 'C3RD' => l.matchTinyThirdPlace,
         _ => round,
       };
@@ -52,6 +56,8 @@ abstract final class MatchStage {
     'CSF' => l.resultsStageSemiFinal,
     'C3RD' => l.resultsStageThirdPlace,
     'CFINAL' => l.resultsStageFinal,
+    'EPSF' => l.resultsStageSemiFinal,
+    'EPFINAL' => l.resultsStageFinal,
     _ => round,
   };
 
@@ -65,7 +71,10 @@ abstract final class MatchStage {
     // "Continental Cup" — the same heading the cup itself carries. So a
     // qualifier and the final of the tournament it leads to read identically
     // on the hub, and the word "qualifying" appeared nowhere on either.
-    if (round == 'CQ') return l.resultsCategoryContinentalQualifying;
+    // Europe's play-offs are the last of its qualifying (EPSF, EPFINAL).
+    if (round == 'CQ' || round == 'EPSF' || round == 'EPFINAL') {
+      return l.resultsCategoryContinentalQualifying;
+    }
     if (round.startsWith('C')) return l.resultsCategoryContinentalCup;
     return l.resultsCategoryWorldCupFinals;
   }
@@ -116,8 +125,12 @@ abstract final class MatchStage {
       'R32' => l.matchTinyRoundOf32,
       'R16' || 'NR16' || 'CR16' => l.matchTinyRoundOf16,
       'QF' || 'NQF' || 'CQF' => l.matchTinyQuarterFinal,
-      'SF' || 'NSF' || 'CSF' || 'POSF' => l.matchTinySemiFinal,
-      'FINAL' || 'NFINAL' || 'CFINAL' || 'POFINAL' => l.matchTinyFinal,
+      'SF' || 'NSF' || 'CSF' || 'POSF' || 'EPSF' => l.matchTinySemiFinal,
+      'FINAL' ||
+      'NFINAL' ||
+      'CFINAL' ||
+      'POFINAL' ||
+      'EPFINAL' => l.matchTinyFinal,
       '3RD' || 'C3RD' => l.matchTinyThirdPlace,
       _ => null,
     };
@@ -132,6 +145,10 @@ abstract final class MatchStage {
       'FFINAL' => (competition: l.matchTinyClash, stage: null),
       'POSF' ||
       'POFINAL' => (competition: l.matchTinyPlayoff, stage: knockout(round)),
+      'EPSF' || 'EPFINAL' => (
+        competition: l.matchTinyQualifying(cup),
+        stage: knockout(round),
+      ),
       // A group game is the competition alone, as on [label].
       'GROUP' => (competition: l.matchTinyWorld, stage: null),
       'CGROUP' => (competition: cup, stage: null),

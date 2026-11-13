@@ -17894,4 +17894,82 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get pressPromiseJudgedMatch =>
       'Beoordeeld op de uitslag van de volgende wedstrijd.';
+
+  @override
+  String get hubEventWatchEuroPlayoffDraw =>
+      'Bekijk de loting van de play-offs';
+
+  @override
+  String get hubEventWatchEuroPlayoffs => 'Bekijk de play-offs';
+
+  @override
+  String get hubCallUpPlayoffs => 'Maak je selectie voor de play-offs bekend';
+
+  @override
+  String compPlayoffs(String competition) {
+    return 'Play-offs $competition';
+  }
+
+  @override
+  String newsEuroPlayoffPathTitle(String cup, String path) {
+    return 'Play-offs $cup: Pad $path';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyHome(String opponent) {
+    return 'Een halve finale in één wedstrijd thuis tegen $opponent in maart, daarna een eenmalige finale om een plek op de eindronde.';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyAway(String opponent) {
+    return 'Een halve finale in één wedstrijd uit bij $opponent in maart, daarna een eenmalige finale om een plek op de eindronde.';
+  }
+
+  @override
+  String get euroPlayoffDrawTitle => 'LOTING PLAY-OFFS';
+
+  @override
+  String get euroPlayoffIntro =>
+      'De top twee van elke kwalificatiegroep is erdoor. De laatste plekken worden beslist in play-offpaden met vier teams, één per Nations Cup-competitie: halve finales in één wedstrijd bij de hoogst geplaatste in maart, daarna een eenmalige finale.';
+
+  @override
+  String euroPlayoffPath(String path) {
+    return 'Pad $path';
+  }
+
+  @override
+  String get euroPlayoffYourPath => 'Jouw pad';
+
+  @override
+  String euroPlayoffSemi(int number) {
+    return 'Halve finale $number';
+  }
+
+  @override
+  String euroPlayoffFinalHost(int number) {
+    return 'Finale, met de winnaar van halve finale $number als gastheer';
+  }
+
+  @override
+  String euroPlayoffFinalPending(int first, int second) {
+    return 'Winnaar halve finale $first tegen winnaar halve finale $second';
+  }
+
+  @override
+  String euroPlayoffWinnerToGroup(String group) {
+    return 'De winnaar gaat naar groep $group';
+  }
+
+  @override
+  String euroPlayoffWinnerPlaceholder(String path) {
+    return 'Winnaar pad $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWin(String path, String group) {
+    return 'Jouw groep als je pad $path wint: groep $group';
+  }
+
+  @override
+  String get euroPlayoffBracketHeading => 'PLAY-OFFS';
 }

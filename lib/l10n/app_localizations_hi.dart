@@ -17717,4 +17717,81 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get pressPromiseJudgedMatch => 'अगले मैच के नतीजे से तय होगा।';
+
+  @override
+  String get hubEventWatchEuroPlayoffDraw => 'प्ले-ऑफ़ का ड्रॉ देखें';
+
+  @override
+  String get hubEventWatchEuroPlayoffs => 'प्ले-ऑफ़ देखें';
+
+  @override
+  String get hubCallUpPlayoffs => 'प्ले-ऑफ़ के लिए अपना स्क्वॉड चुनें';
+
+  @override
+  String compPlayoffs(String competition) {
+    return '$competition प्ले-ऑफ़';
+  }
+
+  @override
+  String newsEuroPlayoffPathTitle(String cup, String path) {
+    return '$cup प्ले-ऑफ़: पाथ $path';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyHome(String opponent) {
+    return 'मार्च में $opponent के खिलाफ घरेलू मैदान पर एक मैच का सेमीफ़ाइनल, फिर फ़ाइनल्स में जगह के लिए एक ही मैच का फ़ाइनल।';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyAway(String opponent) {
+    return 'मार्च में $opponent के खिलाफ उनके मैदान पर एक मैच का सेमीफ़ाइनल, फिर फ़ाइनल्स में जगह के लिए एक ही मैच का फ़ाइनल।';
+  }
+
+  @override
+  String get euroPlayoffDrawTitle => 'प्ले-ऑफ़ ड्रॉ';
+
+  @override
+  String get euroPlayoffIntro =>
+      'हर क्वालिफ़ाइंग ग्रुप की शीर्ष दो टीमें आगे बढ़ चुकी हैं। बाकी जगहें चार-चार टीमों के प्ले-ऑफ़ पाथ में तय होती हैं, हर नेशंस कप लीग के लिए एक: मार्च में ऊँची सीड वाली टीम के मैदान पर एक मैच के सेमीफ़ाइनल, फिर एक ही मैच का फ़ाइनल।';
+
+  @override
+  String euroPlayoffPath(String path) {
+    return 'पाथ $path';
+  }
+
+  @override
+  String get euroPlayoffYourPath => 'आपका पाथ';
+
+  @override
+  String euroPlayoffSemi(int number) {
+    return 'सेमीफ़ाइनल $number';
+  }
+
+  @override
+  String euroPlayoffFinalHost(int number) {
+    return 'फ़ाइनल, मेज़बानी सेमीफ़ाइनल $number के विजेता की';
+  }
+
+  @override
+  String euroPlayoffFinalPending(int first, int second) {
+    return 'सेमीफ़ाइनल $first का विजेता बनाम सेमीफ़ाइनल $second का विजेता';
+  }
+
+  @override
+  String euroPlayoffWinnerToGroup(String group) {
+    return 'विजेता ग्रुप $group में जाएगा';
+  }
+
+  @override
+  String euroPlayoffWinnerPlaceholder(String path) {
+    return 'पाथ $path का विजेता';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWin(String path, String group) {
+    return 'पाथ $path जीतने पर आपका ग्रुप: ग्रुप $group';
+  }
+
+  @override
+  String get euroPlayoffBracketHeading => 'प्ले-ऑफ़';
 }

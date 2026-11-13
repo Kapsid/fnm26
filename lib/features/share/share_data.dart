@@ -59,6 +59,11 @@ import 'package:fnm/l10n/app_localizations.dart';
       round: l.matchStageMatchday(f.matchday),
       trophy: null,
     ),
+    'EPSF' || 'EPFINAL' => (
+      competition: l.compPlayoffs(continentalCupLabel(l, cont)),
+      round: round == 'EPFINAL' ? l.resultsStageFinal : l.resultsStageSemiFinal,
+      trophy: null,
+    ),
     'NL' || 'NGROUP' => (
       competition: MatchStage.category(l, round),
       round: null,

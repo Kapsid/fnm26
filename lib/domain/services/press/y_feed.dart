@@ -871,6 +871,8 @@ abstract final class YFeed {
     if (round == null) return YStakes.qualifier;
     // The intercontinental play-off final is a tie for a place, not a trophy.
     if (round == playoffFinalRound) return YStakes.knockout;
+    // So is a European play-off path's final (`EuroPlayoffs.finalRound`).
+    if (round == 'EPFINAL') return YStakes.knockout;
     if (round.endsWith('FINAL')) return YStakes.trophyFinal;
     if (Rounds.isKnockout(round)) return YStakes.knockout;
     if (round == 'GROUP' || round == 'CGROUP') return YStakes.finals;

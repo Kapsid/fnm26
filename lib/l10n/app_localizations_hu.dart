@@ -17754,4 +17754,81 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get pressPromiseJudgedMatch => 'A következő meccs eredménye dönt.';
+
+  @override
+  String get hubEventWatchEuroPlayoffDraw => 'Nézd a pótselejtező sorsolását';
+
+  @override
+  String get hubEventWatchEuroPlayoffs => 'Nézd a pótselejtezőket';
+
+  @override
+  String get hubCallUpPlayoffs => 'Add le a keretet a pótselejtezőre';
+
+  @override
+  String compPlayoffs(String competition) {
+    return '$competition: pótselejtező';
+  }
+
+  @override
+  String newsEuroPlayoffPathTitle(String cup, String path) {
+    return '$cup, pótselejtező: $path ág';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyHome(String opponent) {
+    return 'Egymeccses elődöntő otthon $opponent ellen márciusban, majd egyetlen döntő a tornán való részvételért.';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyAway(String opponent) {
+    return 'Egymeccses elődöntő idegenben $opponent ellen márciusban, majd egyetlen döntő a tornán való részvételért.';
+  }
+
+  @override
+  String get euroPlayoffDrawTitle => 'PÓTSELEJTEZŐ SORSOLÁS';
+
+  @override
+  String get euroPlayoffIntro =>
+      'Minden selejtezőcsoport első két helyezettje biztosan ott lesz. Az utolsó helyekért négycsapatos pótselejtező-ágakon küzdenek, Nations Cup-ligánként egyen: egymeccses elődöntők a magasabban kiemelt csapat otthonában márciusban, majd egyetlen döntő.';
+
+  @override
+  String euroPlayoffPath(String path) {
+    return '$path ág';
+  }
+
+  @override
+  String get euroPlayoffYourPath => 'A te ágad';
+
+  @override
+  String euroPlayoffSemi(int number) {
+    return '$number. elődöntő';
+  }
+
+  @override
+  String euroPlayoffFinalHost(int number) {
+    return 'Döntő, házigazda a(z) $number. elődöntő győztese';
+  }
+
+  @override
+  String euroPlayoffFinalPending(int first, int second) {
+    return 'A(z) $first. elődöntő győztese vs. a(z) $second. elődöntő győztese';
+  }
+
+  @override
+  String euroPlayoffWinnerToGroup(String group) {
+    return 'A győztes a(z) $group csoportba kerül';
+  }
+
+  @override
+  String euroPlayoffWinnerPlaceholder(String path) {
+    return 'A(z) $path ág győztese';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWin(String path, String group) {
+    return 'A csoportod, ha megnyered a(z) $path ágat: $group csoport';
+  }
+
+  @override
+  String get euroPlayoffBracketHeading => 'PÓTSELEJTEZŐK';
 }

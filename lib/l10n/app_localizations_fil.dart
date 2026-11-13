@@ -17821,4 +17821,81 @@ class AppLocalizationsFil extends AppLocalizations {
   @override
   String get pressPromiseJudgedMatch =>
       'Huhusgahan sa resulta ng susunod na laban.';
+
+  @override
+  String get hubEventWatchEuroPlayoffDraw => 'Panoorin ang draw ng play-off';
+
+  @override
+  String get hubEventWatchEuroPlayoffs => 'Panoorin ang mga play-off';
+
+  @override
+  String get hubCallUpPlayoffs => 'Ihayag ang squad para sa play-off';
+
+  @override
+  String compPlayoffs(String competition) {
+    return 'Mga Play-off ng $competition';
+  }
+
+  @override
+  String newsEuroPlayoffPathTitle(String cup, String path) {
+    return 'Play-off ng $cup: Landas $path';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyHome(String opponent) {
+    return 'Isang laro na semi-final sa bahay laban sa $opponent sa Marso, pagkatapos ay isang laro na final para sa puwesto sa finals.';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyAway(String opponent) {
+    return 'Isang laro na semi-final sa labas laban sa $opponent sa Marso, pagkatapos ay isang laro na final para sa puwesto sa finals.';
+  }
+
+  @override
+  String get euroPlayoffDrawTitle => 'DRAW NG PLAY-OFF';
+
+  @override
+  String get euroPlayoffIntro =>
+      'Pasok na ang nangungunang dalawa sa bawat qualifying group. Ang huling mga puwesto ay pagpapasyahan sa mga landas ng play-off na may apat na koponan, isa sa bawat liga ng Nations Cup: semi-final na isang laro sa tahanan ng mas mataas na seed sa Marso, pagkatapos ay isang final.';
+
+  @override
+  String euroPlayoffPath(String path) {
+    return 'Landas $path';
+  }
+
+  @override
+  String get euroPlayoffYourPath => 'Ang landas mo';
+
+  @override
+  String euroPlayoffSemi(int number) {
+    return 'Semi-final $number';
+  }
+
+  @override
+  String euroPlayoffFinalHost(int number) {
+    return 'Final, host ang panalo sa semi-final $number';
+  }
+
+  @override
+  String euroPlayoffFinalPending(int first, int second) {
+    return 'Panalo sa semi-final $first vs. panalo sa semi-final $second';
+  }
+
+  @override
+  String euroPlayoffWinnerToGroup(String group) {
+    return 'Ang panalo ay mapupunta sa Group $group';
+  }
+
+  @override
+  String euroPlayoffWinnerPlaceholder(String path) {
+    return 'Panalo sa Landas $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWin(String path, String group) {
+    return 'Ang group mo kung mananalo ka sa Landas $path: Group $group';
+  }
+
+  @override
+  String get euroPlayoffBracketHeading => 'MGA PLAY-OFF';
 }

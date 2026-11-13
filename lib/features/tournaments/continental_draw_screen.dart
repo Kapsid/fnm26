@@ -34,6 +34,10 @@ class ContinentalDrawScreen extends ConsumerStatefulWidget {
   final Confederation confederation;
   final bool qualifying;
 
+  /// The line telling a manager in the play-offs where his path's winner
+  /// was drawn.
+  static const Key pathNoteKey = Key('continentalDraw.pathNote');
+
   @override
   ConsumerState<ContinentalDrawScreen> createState() =>
       _ContinentalDrawScreenState();
@@ -99,19 +103,51 @@ class _ContinentalDrawScreenState extends ConsumerState<ContinentalDrawScreen> {
           if (data == null) {
             return Center(child: Text(l.tourContDrawNotReady));
           }
-          return DrawCeremony(
+          final pathLetter = data.playerPathLetter;
+          final pathGroup = data.playerPathGroup;
+          final ceremony = DrawCeremony(
             groups: [
               for (final g in data.draw.groups)
                 (name: g.name, nationIds: g.nationIds),
             ],
             nations: data.nations,
-            highlightNationId: data.playerNationId,
+            highlightNationId: data.highlightId,
+            placeholders: {
+              for (final e in data.placeholderLetters.entries)
+                e.key: (
+                  letter: e.value,
+                  label: l.euroPlayoffWinnerPlaceholder(e.value),
+                ),
+            },
             careerId: widget.careerId,
             // Derive the pot count from the actual group size, so a
             // groups-of-five draw (Copa América) reveals all five pots rather
             // than stopping at four.
             onContinue: leave,
             landscape: useTabletLayout(context, ref),
+          );
+          // A manager in the play-offs follows his path's winner: say so.
+          if (pathLetter == null || pathGroup == null) return ceremony;
+          return Column(
+            children: [
+              Container(
+                key: ContinentalDrawScreen.pathNoteKey,
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                color: AppColors.primary.withValues(alpha: 0.12),
+                child: Text(
+                  l.euroPlayoffYourGroupIfWin(pathLetter, pathGroup),
+                  textAlign: TextAlign.center,
+                  style: AppTypography.labelMedium.copyWith(
+                    color: AppColors.primary,
+                  ),
+                ),
+              ),
+              Expanded(child: ceremony),
+            ],
           );
         },
       ),

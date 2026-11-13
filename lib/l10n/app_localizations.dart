@@ -26959,6 +26959,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Judged on the result of the next match.'**
   String get pressPromiseJudgedMatch;
+
+  /// Hub action: watch the draw of the European Championship play-off paths.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch the play-off draw'**
+  String get hubEventWatchEuroPlayoffDraw;
+
+  /// Hub action: step through the European Championship play-offs the manager is not playing in.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch the play-offs'**
+  String get hubEventWatchEuroPlayoffs;
+
+  /// Hub action: name the squad for the European Championship play-off matches.
+  ///
+  /// In en, this message translates to:
+  /// **'Call up for the play-offs'**
+  String get hubCallUpPlayoffs;
+
+  /// Competition name: a championship's qualifying play-offs, e.g. 'European Championship Play-offs'.
+  ///
+  /// In en, this message translates to:
+  /// **'{competition} Play-offs'**
+  String compPlayoffs(String competition);
+
+  /// Inbox title: the manager's nation was drawn into a play-off path (path is a letter A to D).
+  ///
+  /// In en, this message translates to:
+  /// **'{cup} play-offs: Path {path}'**
+  String newsEuroPlayoffPathTitle(String cup, String path);
+
+  /// Inbox body: the manager's play-off path, semi-final at home.
+  ///
+  /// In en, this message translates to:
+  /// **'A one-leg semi-final at home to {opponent} in March, then a one-off final for a place at the finals.'**
+  String newsEuroPlayoffPathBodyHome(String opponent);
+
+  /// Inbox body: the manager's play-off path, semi-final away.
+  ///
+  /// In en, this message translates to:
+  /// **'A one-leg semi-final away to {opponent} in March, then a one-off final for a place at the finals.'**
+  String newsEuroPlayoffPathBodyAway(String opponent);
+
+  /// Screen title: the European Championship play-off draw. Upper case.
+  ///
+  /// In en, this message translates to:
+  /// **'PLAY-OFF DRAW'**
+  String get euroPlayoffDrawTitle;
+
+  /// Intro on the play-off draw screen explaining the format.
+  ///
+  /// In en, this message translates to:
+  /// **'The top two of every qualifying group are through. The last places are won in four-team play-off paths, one per Nations Cup league: one-leg semi-finals at the higher seed in March, then a one-off final.'**
+  String get euroPlayoffIntro;
+
+  /// Heading of one play-off path (path is a letter A to D).
+  ///
+  /// In en, this message translates to:
+  /// **'Path {path}'**
+  String euroPlayoffPath(String path);
+
+  /// Tag on the play-off path the manager's nation is in.
+  ///
+  /// In en, this message translates to:
+  /// **'Your path'**
+  String get euroPlayoffYourPath;
+
+  /// Label of a play-off path's semi-final (1 or 2).
+  ///
+  /// In en, this message translates to:
+  /// **'Semi-final {number}'**
+  String euroPlayoffSemi(int number);
+
+  /// Label of a play-off path's final, whose venue was drawn.
+  ///
+  /// In en, this message translates to:
+  /// **'Final, hosted by the winner of semi-final {number}'**
+  String euroPlayoffFinalHost(int number);
+
+  /// A play-off final not yet known: the two semi-final winners, the host first.
+  ///
+  /// In en, this message translates to:
+  /// **'Winner of semi-final {first} v winner of semi-final {second}'**
+  String euroPlayoffFinalPending(int first, int second);
+
+  /// Under a play-off path: the finals group its winner was drawn into.
+  ///
+  /// In en, this message translates to:
+  /// **'The winner goes to Group {group}'**
+  String euroPlayoffWinnerToGroup(String group);
+
+  /// A placeholder in the finals draw for the winner of a play-off path.
+  ///
+  /// In en, this message translates to:
+  /// **'Path {path} winner'**
+  String euroPlayoffWinnerPlaceholder(String path);
+
+  /// Banner on the finals draw for a manager still in the play-offs.
+  ///
+  /// In en, this message translates to:
+  /// **'Your group if you win Path {path}: Group {group}'**
+  String euroPlayoffYourGroupIfWin(String path, String group);
+
+  /// Heading above the play-off paths on the cup screen. Upper case.
+  ///
+  /// In en, this message translates to:
+  /// **'PLAY-OFFS'**
+  String get euroPlayoffBracketHeading;
 }
 
 class _AppLocalizationsDelegate

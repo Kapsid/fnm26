@@ -177,6 +177,7 @@ class AwardYear {
       case CompetitionKind.finalissima:
         return 1.6;
       case CompetitionKind.worldCupPlayoff:
+      case CompetitionKind.continentalPlayoff:
         return 1.3;
       case CompetitionKind.worldCupQualifying:
       case CompetitionKind.continentalQualifying:

@@ -17721,4 +17721,81 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get pressPromiseJudgedMatch =>
       'Sıradaki maçın sonucuyla değerlendirilir.';
+
+  @override
+  String get hubEventWatchEuroPlayoffDraw => 'Play-off kurasını izle';
+
+  @override
+  String get hubEventWatchEuroPlayoffs => 'Play-off maçlarını izle';
+
+  @override
+  String get hubCallUpPlayoffs => 'Play-off için kadronu açıkla';
+
+  @override
+  String compPlayoffs(String competition) {
+    return '$competition Play-off\'ları';
+  }
+
+  @override
+  String newsEuroPlayoffPathTitle(String cup, String path) {
+    return '$cup play-off: $path Yolu';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyHome(String opponent) {
+    return 'Mart ayında $opponent ile evinde tek maçlık yarı final, ardından final turnuvasında yer için tek maçlık final.';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyAway(String opponent) {
+    return 'Mart ayında $opponent ile deplasmanda tek maçlık yarı final, ardından final turnuvasında yer için tek maçlık final.';
+  }
+
+  @override
+  String get euroPlayoffDrawTitle => 'PLAY-OFF KURASI';
+
+  @override
+  String get euroPlayoffIntro =>
+      'Her eleme grubunun ilk iki takımı turladı. Son yerler, her Uluslar Kupası ligi için bir tane olmak üzere dört takımlı play-off yollarında belirlenir: Mart\'ta üst sıradaki seribaşının evinde tek maçlık yarı finaller, ardından tek final.';
+
+  @override
+  String euroPlayoffPath(String path) {
+    return '$path Yolu';
+  }
+
+  @override
+  String get euroPlayoffYourPath => 'Senin yolun';
+
+  @override
+  String euroPlayoffSemi(int number) {
+    return 'Yarı final $number';
+  }
+
+  @override
+  String euroPlayoffFinalHost(int number) {
+    return 'Final, ev sahibi yarı final $number galibi';
+  }
+
+  @override
+  String euroPlayoffFinalPending(int first, int second) {
+    return 'Yarı final $first galibi - yarı final $second galibi';
+  }
+
+  @override
+  String euroPlayoffWinnerToGroup(String group) {
+    return 'Galip $group Grubu\'na gider';
+  }
+
+  @override
+  String euroPlayoffWinnerPlaceholder(String path) {
+    return '$path Yolu galibi';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWin(String path, String group) {
+    return '$path Yolunu kazanırsan grubun: $group Grubu';
+  }
+
+  @override
+  String get euroPlayoffBracketHeading => 'PLAY-OFF\'LAR';
 }

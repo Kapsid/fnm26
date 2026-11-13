@@ -17795,4 +17795,81 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get pressPromiseJudgedMatch => 'Avgörs av resultatet i nästa match.';
+
+  @override
+  String get hubEventWatchEuroPlayoffDraw => 'Se lottningen till play-off';
+
+  @override
+  String get hubEventWatchEuroPlayoffs => 'Se play-off';
+
+  @override
+  String get hubCallUpPlayoffs => 'Ta ut truppen till play-off';
+
+  @override
+  String compPlayoffs(String competition) {
+    return '$competition: play-off';
+  }
+
+  @override
+  String newsEuroPlayoffPathTitle(String cup, String path) {
+    return '$cup, play-off: Väg $path';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyHome(String opponent) {
+    return 'En semifinal i en match hemma mot $opponent i mars, sedan en enda final om en plats i slutspelet.';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyAway(String opponent) {
+    return 'En semifinal i en match borta mot $opponent i mars, sedan en enda final om en plats i slutspelet.';
+  }
+
+  @override
+  String get euroPlayoffDrawTitle => 'LOTTNING TILL PLAY-OFF';
+
+  @override
+  String get euroPlayoffIntro =>
+      'De två bästa i varje kvalgrupp är klara. De sista platserna avgörs i play-off-vägar med fyra lag, en för varje Nations Cup-liga: semifinaler i en match hos det högst seedade laget i mars, sedan en enda final.';
+
+  @override
+  String euroPlayoffPath(String path) {
+    return 'Väg $path';
+  }
+
+  @override
+  String get euroPlayoffYourPath => 'Din väg';
+
+  @override
+  String euroPlayoffSemi(int number) {
+    return 'Semifinal $number';
+  }
+
+  @override
+  String euroPlayoffFinalHost(int number) {
+    return 'Final, med vinnaren av semifinal $number som värd';
+  }
+
+  @override
+  String euroPlayoffFinalPending(int first, int second) {
+    return 'Vinnaren av semifinal $first mot vinnaren av semifinal $second';
+  }
+
+  @override
+  String euroPlayoffWinnerToGroup(String group) {
+    return 'Vinnaren går till grupp $group';
+  }
+
+  @override
+  String euroPlayoffWinnerPlaceholder(String path) {
+    return 'Vinnare av väg $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWin(String path, String group) {
+    return 'Din grupp om du vinner väg $path: grupp $group';
+  }
+
+  @override
+  String get euroPlayoffBracketHeading => 'PLAY-OFF';
 }
