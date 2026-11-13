@@ -18,6 +18,7 @@ import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
+import 'package:fnm/domain/services/competition/tournament_calendar.dart';
 
 /// Drift-backed [CompetitionRepository].
 class DriftCompetitionRepository implements CompetitionRepository {
@@ -1091,13 +1092,42 @@ class DriftCompetitionRepository implements CompetitionRepository {
     return row?.date;
   }
 
+  /// The date of a group fixture (group index, matchday) in [draw]: three
+  /// days a matchday from [groupStart], as every save before 1.1.2 has it,
+  /// or, when [spaced], on the tournament's template (`TournamentCalendar`).
+  static DateTime Function(int groupIndex, int matchday) _groupDating(
+    FinalsDraw draw,
+    DateTime groupStart, {
+    required bool spaced,
+  }) {
+    if (!spaced) {
+      return (_, matchday) =>
+          groupStart.add(Duration(days: (matchday - 1) * 3));
+    }
+    final template = TournamentCalendar.templateFor(
+      groups: draw.groups.length,
+      groupSize: draw.groups.fold(
+        0,
+        (m, g) => g.nationIds.length > m ? g.nationIds.length : m,
+      ),
+    );
+    return (groupIndex, matchday) => TournamentCalendar.groupDate(
+      opener: groupStart,
+      template: template,
+      groupIndex: groupIndex,
+      matchday: matchday,
+    );
+  }
+
   @override
   Future<void> saveFinals({
     required int careerId,
     required FinalsDraw draw,
     required DateTime groupStart,
     int cycle = 0,
+    bool spaced = false,
   }) async {
+    final dateOf = _groupDating(draw, groupStart, spaced: spaced);
     await _db.transaction(() async {
       final compId = await _db
           .into(_db.competitions)
@@ -1113,7 +1143,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
             ),
           );
 
-      for (final group in draw.groups) {
+      for (final (gi, group) in draw.groups.indexed) {
         final groupId = await _db
             .into(_db.qualifyingGroups)
             .insert(
@@ -1138,7 +1168,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
                   competitionId: compId,
                   groupId: Value(groupId),
                   matchday: matchday,
-                  date: groupStart.add(Duration(days: (matchday - 1) * 3)),
+                  date: dateOf(gi, matchday),
                   homeNationId: home,
                   awayNationId: away,
                   round: const Value('GROUP'),
@@ -1199,7 +1229,9 @@ class DriftCompetitionRepository implements CompetitionRepository {
     required FinalsDraw draw,
     required DateTime groupStart,
     String round = 'GROUP',
+    bool spaced = false,
   }) async {
+    final dateOf = _groupDating(draw, groupStart, spaced: spaced);
     await _db.transaction(() async {
       final compId = await _db
           .into(_db.competitions)
@@ -1212,7 +1244,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
               cycle: Value(cycle),
             ),
           );
-      for (final group in draw.groups) {
+      for (final (gi, group) in draw.groups.indexed) {
         final groupId = await _db
             .into(_db.qualifyingGroups)
             .insert(
@@ -1237,7 +1269,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
                   competitionId: compId,
                   groupId: Value(groupId),
                   matchday: matchday,
-                  date: groupStart.add(Duration(days: (matchday - 1) * 3)),
+                  date: dateOf(gi, matchday),
                   homeNationId: home,
                   awayNationId: away,
                   round: Value(round),
@@ -1303,6 +1335,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
     required DateTime date,
     CompetitionKind kind = CompetitionKind.worldCupFinals,
     Confederation? confederation,
+    List<DateTime>? dates,
   }) async {
     final comp = await _tournamentComp(
       careerId,
@@ -1312,12 +1345,12 @@ class DriftCompetitionRepository implements CompetitionRepository {
     if (comp == null) return;
     await _db.batch((b) {
       b.insertAll(_db.fixtures, [
-        for (final (home, away) in pairings)
+        for (final (i, (home, away)) in pairings.indexed)
           FixturesCompanion.insert(
             careerId: careerId,
             competitionId: comp.id,
             matchday: 99,
-            date: date,
+            date: dates?[i] ?? date,
             homeNationId: home,
             awayNationId: away,
             round: Value(round),

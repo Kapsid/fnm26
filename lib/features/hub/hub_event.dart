@@ -710,8 +710,16 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
   // championship has no third-place play-off — its final is always the last
   // fixture of its tournament — which is the only reason it never showed this.
   // Mirrors the same guard in [SeasonService._advance].
+  //
+  // Not while his next is a group game: staggered groups (see
+  // `TournamentCalendar`) put other groups' days between his own, and those
+  // are caught up on his way to his match, as they always were.
   final finalsRoundBeforeOwn =
-      finalsDate != null && nextIsFinalsMatch && finalsDate.isBefore(next.date);
+      finalsDate != null &&
+      nextIsFinalsMatch &&
+      next.round != 'GROUP' &&
+      next.round != 'CGROUP' &&
+      finalsDate.isBefore(next.date);
   if (finalsDate != null &&
       !friendliesFirst(finalsDate) &&
       (finalsRoundBeforeOwn ||

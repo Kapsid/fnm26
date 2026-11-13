@@ -322,6 +322,11 @@ extension SeasonFinals on SeasonService {
           ? scheduled
           : inGame.add(const Duration(days: 14)),
       cycle: career.cyclePointer,
+      spaced: await _comp.hasWatchedDraw(
+        careerId,
+        career.cyclePointer,
+        TournamentCalendar.markerKind,
+      ),
     );
 
     // The field is set — if the manager's nation isn't in it, their qualifying

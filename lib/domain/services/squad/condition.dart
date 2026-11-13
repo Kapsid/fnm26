@@ -70,10 +70,22 @@ abstract final class Condition {
   /// A player's fatigue from their [appearanceDates] (newest first) relative to
   /// [asOf]. Games stack up across a tournament or double-header; a long rest
   /// clears it. Returns the state, the games counted, and a rating penalty.
+  ///
+  /// [weighted] (a cycle whose finals are spaced, see `TournamentCalendar`)
+  /// reads [weightedFatigue] instead.
   static ({FatigueState state, int games, int delta}) fatigue(
     List<DateTime> appearanceDates,
-    DateTime asOf,
-  ) {
+    DateTime asOf, {
+    bool weighted = false,
+    double travelFatigue = 1,
+  }) {
+    if (weighted) {
+      return weightedFatigue(
+        appearanceDates,
+        asOf,
+        travelFatigue: travelFatigue,
+      );
+    }
     final cutoff = asOf.subtract(const Duration(days: fatigueWindowDays));
     final games = appearanceDates
         .where((d) => !d.isAfter(asOf) && d.isAfter(cutoff))
@@ -96,13 +108,60 @@ abstract final class Condition {
     return (state: state, games: games, delta: delta);
   }
 
+  /// The weight, in tenths, of an appearance [days] before the match: a game
+  /// in the last three days counts in full, one four or five days back 0.6,
+  /// six to nine days back 0.3, anything older nothing.
+  static int appearanceWeightTenths(int days) => days < 0
+      ? 0
+      : days <= 3
+      ? 10
+      : days <= 5
+      ? 6
+      : days <= 9
+      ? 3
+      : 0;
+
+  /// Fatigue from appearances weighted by how recent they are (see
+  /// [appearanceWeightTenths]), scaled by the base camp's [travelFatigue].
+  ///
+  /// Tournaments now give every side four to six days between games, which
+  /// a plain count over a fortnight cannot tell from a three-day run. Under
+  /// the weights a normal tournament rhythm (a game every four days, 0.9)
+  /// and a window double-header (1.0) read fresh, a man played straight
+  /// through a three-day run (1.6) tires, and one match off clears it.
+  /// `games` carries the weighted load rounded to whole games, for display.
+  static ({FatigueState state, int games, int delta}) weightedFatigue(
+    List<DateTime> appearanceDates,
+    DateTime asOf, {
+    double travelFatigue = 1,
+  }) {
+    final day = DateTime.utc(asOf.year, asOf.month, asOf.day);
+    var tenths = 0;
+    for (final d in appearanceDates) {
+      if (d.isAfter(asOf)) continue;
+      tenths += appearanceWeightTenths(
+        day.difference(DateTime.utc(d.year, d.month, d.day)).inDays,
+      );
+    }
+    final load = (tenths * travelFatigue).round();
+    final (state, delta) = switch (load) {
+      <= 10 => (FatigueState.fresh, 0),
+      < 15 => (FatigueState.ready, -1),
+      < 20 => (FatigueState.tired, -2),
+      < 25 => (FatigueState.tired, -4),
+      _ => (FatigueState.exhausted, -6),
+    };
+    return (state: state, games: (load / 10).round(), delta: delta);
+  }
+
   /// A player's overall condition from their recent ratings + appearance dates.
   ///
   /// [travelFatigue] scales how heavily a congested run of games weighs — the
   /// base camp's contribution during a tournament (under 1 = a squad that
   /// isn't spending the month on a coach). [campBonus] is that camp's flat lift
   /// to sharpness. Both default to no effect, which is every match outside a
-  /// tournament.
+  /// tournament. [weighted] reads fatigue through [weightedFatigue] (a cycle
+  /// whose finals are spaced, see `TournamentCalendar.markerKind`).
   static PlayerCondition of(
     List<double> recentRatings,
     List<DateTime> appearanceDates,
@@ -113,10 +172,18 @@ abstract final class Condition {
     int clubDelta = 0,
     int statementDelta = 0,
     ClubStanding? clubStanding,
+    bool weighted = false,
   }) {
     final f = form(recentRatings);
-    final t = fatigue(appearanceDates, asOf);
-    final tired = (t.delta * travelFatigue).round();
+    final t = fatigue(
+      appearanceDates,
+      asOf,
+      weighted: weighted,
+      travelFatigue: travelFatigue,
+    );
+    // Weighted fatigue scales the load itself by the camp's travel; the old
+    // count scales the penalty.
+    final tired = weighted ? t.delta : (t.delta * travelFatigue).round();
     final own = f.delta + tired + clubDelta + statementDelta;
     final net = (own + moraleDelta + campBonus).clamp(-9, 6);
     return (

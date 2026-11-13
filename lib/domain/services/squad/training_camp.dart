@@ -35,6 +35,8 @@ enum CampTerrain {
 ///
 /// * [travelFatigue] scales the fatigue a match costs — under 1 is a squad
 ///   that arrives fresh, over 1 one that spends the tournament on a coach.
+///   In a cycle with spaced finals it scales the recency-weighted load of
+///   games (`Condition.weightedFatigue`), otherwise the fatigue penalty.
 /// * [injuryRecovery] scales how quickly knocks clear.
 /// * [conditionBonus] is a flat lift to sharpness for the tournament.
 typedef TrainingCamp = ({

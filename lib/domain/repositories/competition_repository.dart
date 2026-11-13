@@ -520,12 +520,14 @@ abstract interface class CompetitionRepository {
   });
 
   /// Persists the finals group-stage [draw], scheduling matchdays from
-  /// [groupStart].
+  /// [groupStart]: three days apart, or, when [spaced], staggered by group
+  /// on the tournament's template (see `TournamentCalendar`).
   Future<void> saveFinals({
     required int careerId,
     required FinalsDraw draw,
     required DateTime groupStart,
     int cycle = 0,
+    bool spaced = false,
   });
 
   /// Finals group tables (groups A…H, ordered).
@@ -533,7 +535,8 @@ abstract interface class CompetitionRepository {
 
   /// Persists a drawn group stage for any tournament [kind] (e.g. a continental
   /// championship), labelling its fixtures [round] and spacing matchdays from
-  /// [groupStart]. Creates the competition.
+  /// [groupStart] (staggered by group when [spaced], as [saveFinals]).
+  /// Creates the competition.
   Future<void> saveTournamentGroups({
     required int careerId,
     required int cycle,
@@ -543,6 +546,7 @@ abstract interface class CompetitionRepository {
     required FinalsDraw draw,
     required DateTime groupStart,
     String round = 'GROUP',
+    bool spaced = false,
   });
 
   /// Group tables for the current cycle's tournament of [kind], ordered by
@@ -565,7 +569,8 @@ abstract interface class CompetitionRepository {
   /// All finals knockout fixtures (round ≠ `GROUP`), by date then id.
   Future<List<Fixture>> finalsKnockoutFixtures(int careerId);
 
-  /// Adds knockout fixtures for [round] on [date] to the tournament of [kind].
+  /// Adds knockout fixtures for [round] on [date] to the tournament of [kind],
+  /// or each tie on its own day when [dates] (one per pairing) is given.
   Future<void> addKnockoutFixtures({
     required int careerId,
     required String round,
@@ -573,6 +578,7 @@ abstract interface class CompetitionRepository {
     required DateTime date,
     CompetitionKind kind = CompetitionKind.worldCupFinals,
     Confederation? confederation,
+    List<DateTime>? dates,
   });
 
   /// Whether the current cycle has a tournament of [kind].

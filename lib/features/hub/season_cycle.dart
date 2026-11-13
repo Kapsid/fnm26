@@ -40,6 +40,82 @@ extension SeasonCycle on SeasonService {
     return fx.map((f) => f.date).reduce((a, b) => a.isAfter(b) ? a : b);
   }
 
+  /// Whether this career's current cycle dates its finals on
+  /// [TournamentCalendar] (staggered groups, four days' rest). An older
+  /// cycle keeps its three-day steps.
+  Future<bool> _spacedFinals(int careerId) async {
+    final career = await _careers.byId(careerId);
+    return career != null &&
+        await _comp.hasWatchedDraw(
+          careerId,
+          career.cyclePointer,
+          TournamentCalendar.markerKind,
+        );
+  }
+
+  /// The day of each tie in [pairings] for knockout [round] of the tournament
+  /// of [kind] (see [TournamentCalendar.knockoutDates]), or null in a cycle
+  /// whose finals are not spaced, where the caller's single date stands.
+  Future<List<DateTime>?> _knockoutDates(
+    int careerId,
+    String round,
+    List<(int, int)> pairings, {
+    CompetitionKind kind = CompetitionKind.worldCupFinals,
+    Confederation? confederation,
+  }) async {
+    if (pairings.isEmpty || !await _spacedFinals(careerId)) return null;
+    final prefix = kind == CompetitionKind.worldCupFinals ? '' : 'C';
+    final groupRound = '${prefix}GROUP';
+    final all = [
+      for (final r in [
+        groupRound,
+        for (final k in const ['R32', 'R16', 'QF', 'SF', '3RD', 'FINAL'])
+          '$prefix$k',
+      ])
+        ...await _comp.fixturesByRound(
+          careerId,
+          r,
+          kind: kind,
+          confederation: confederation,
+        ),
+    ];
+    final groupGames = all.where((f) => f.round == groupRound).toList();
+    if (groupGames.isEmpty) return null;
+    final tables = kind == CompetitionKind.worldCupFinals
+        ? await _comp.finalsGroupTables(careerId)
+        : await _comp.tournamentGroupTables(
+            careerId,
+            kind,
+            confederation: confederation,
+          );
+    DateTime later(DateTime a, DateTime b) => a.isAfter(b) ? a : b;
+    final opener = groupGames
+        .map((f) => f.date)
+        .reduce((a, b) => a.isBefore(b) ? a : b);
+    final lastPlayed = <int, DateTime>{};
+    for (final f in all) {
+      for (final team in [f.homeNationId, f.awayNationId]) {
+        final seen = lastPlayed[team];
+        lastPlayed[team] = seen == null ? f.date : later(seen, f.date);
+      }
+    }
+    final latest = all.map((f) => f.date).reduce(later);
+    return TournamentCalendar.knockoutDates(
+      opener: opener,
+      template: TournamentCalendar.templateFor(
+        groups: tables.length,
+        groupSize: tables.fold(
+          0,
+          (m, t) => t.standings.length > m ? t.standings.length : m,
+        ),
+      ),
+      round: round,
+      pairings: pairings,
+      lastPlayed: lastPlayed,
+      notBefore: DateTime(latest.year, latest.month, latest.day + 1),
+    );
+  }
+
   /// Creates the next competition stage when the current one finishes.
   /// Files the board's verdict on each of the cycle's objectives the moment
   /// that tournament is settled for the manager's nation — the cup is won, or
@@ -720,6 +796,11 @@ extension SeasonCycle on SeasonService {
           date: (await _maxDate(careerId, 'GROUP')).add(
             const Duration(days: 7),
           ),
+          dates: await _knockoutDates(
+            careerId,
+            WorldCupFinals.r32,
+            pairings,
+          ),
         );
       }
       return;
@@ -838,22 +919,30 @@ extension SeasonCycle on SeasonService {
         )) {
           return;
         }
+        final pairings = copa
+            ? WorldCupFinals.copaQuarters(standings)
+            : bestThirds > 0
+            ? WorldCupFinals.knockoutWithThirds(standings, bestThirds)
+            : WorldCupFinals.knockoutFromGroups(standings);
         await _comp.addKnockoutFixtures(
           careerId: careerId,
           round: firstRound,
           kind: kind,
           confederation: conf,
-          pairings: copa
-              ? WorldCupFinals.copaQuarters(standings)
-              : bestThirds > 0
-              ? WorldCupFinals.knockoutWithThirds(standings, bestThirds)
-              : WorldCupFinals.knockoutFromGroups(standings),
+          pairings: pairings,
           date: (await _maxDate(
             careerId,
             'CGROUP',
             kind: kind,
             confederation: conf,
           )).add(const Duration(days: 7)),
+          dates: await _knockoutDates(
+            careerId,
+            firstRound,
+            pairings,
+            kind: kind,
+            confederation: conf,
+          ),
         );
         return;
       }
@@ -956,26 +1045,44 @@ extension SeasonCycle on SeasonService {
       // own days — sharing one date collapsed them into a single round popup
       // titled after the play-off, so the final was never its own moment.
       if (thirdPlace) {
+        final losers = WorldCupFinals.pairWinners(
+          semis.map(SeasonService._loser).toList(),
+        );
         await _comp.addKnockoutFixtures(
           careerId: careerId,
           round: third,
           kind: kind,
           confederation: confederation,
-          pairings: WorldCupFinals.pairWinners(
-            semis.map(SeasonService._loser).toList(),
-          ),
+          pairings: losers,
           date: afterSemis.add(const Duration(days: 5)),
+          dates: await _knockoutDates(
+            careerId,
+            third,
+            losers,
+            kind: kind,
+            confederation: confederation,
+          ),
         );
       }
+      // Spaced, the final is dated after the play-off just added: it closes
+      // the tournament on its own day.
+      final finalists = WorldCupFinals.pairWinners(
+        semis.map(SeasonService._winner).toList(),
+      );
       await _comp.addKnockoutFixtures(
         careerId: careerId,
         round: fin,
         kind: kind,
         confederation: confederation,
-        pairings: WorldCupFinals.pairWinners(
-          semis.map(SeasonService._winner).toList(),
-        ),
+        pairings: finalists,
         date: afterSemis.add(const Duration(days: 7)),
+        dates: await _knockoutDates(
+          careerId,
+          fin,
+          finalists,
+          kind: kind,
+          confederation: confederation,
+        ),
       );
     }
 
@@ -1076,6 +1183,7 @@ extension SeasonCycle on SeasonService {
       draw: draw,
       groupStart: DateTime(wcYear - 2, cont.month, 8),
       round: 'CGROUP',
+      spaced: await _spacedFinals(careerId),
     );
 
     // If the manager's nation didn't make the field, their continental
@@ -1410,6 +1518,7 @@ extension SeasonCycle on SeasonService {
       draw: draw,
       groupStart: DateTime(year, cont.month, 8),
       round: 'CGROUP',
+      spaced: await _spacedFinals(careerId),
     );
 
     const kind = CompetitionKind.continentalFinals;
@@ -1460,17 +1569,25 @@ extension SeasonCycle on SeasonService {
             _ => ['CSF'],
           };
     final firstRound = ladder.first;
+    final firstPairings = copa
+        ? WorldCupFinals.copaQuarters(standings)
+        : bestThirds > 0
+        ? WorldCupFinals.knockoutWithThirds(standings, bestThirds)
+        : WorldCupFinals.knockoutFromGroups(standings);
     await _comp.addKnockoutFixtures(
       careerId: careerId,
       round: firstRound,
       kind: kind,
       confederation: confederation,
-      pairings: copa
-          ? WorldCupFinals.copaQuarters(standings)
-          : bestThirds > 0
-          ? WorldCupFinals.knockoutWithThirds(standings, bestThirds)
-          : WorldCupFinals.knockoutFromGroups(standings),
+      pairings: firstPairings,
       date: (await lastDate('CGROUP')).add(const Duration(days: 5)),
+      dates: await _knockoutDates(
+        careerId,
+        firstRound,
+        firstPairings,
+        kind: kind,
+        confederation: confederation,
+      ),
     );
     // Play each round, seeding the next from its winners — straight to the
     // final. Continental championships have no third-place play-off.
@@ -1482,13 +1599,21 @@ extension SeasonCycle on SeasonService {
       )).map(SeasonService._winner).toList();
       final next = i + 1 < ladder.length ? ladder[i + 1] : 'CFINAL';
       final base = (await lastDate(round)).add(const Duration(days: 4));
+      final pairings = WorldCupFinals.pairWinners(winners);
       await _comp.addKnockoutFixtures(
         careerId: careerId,
         round: next,
         kind: kind,
         confederation: confederation,
-        pairings: WorldCupFinals.pairWinners(winners),
+        pairings: pairings,
         date: base,
+        dates: await _knockoutDates(
+          careerId,
+          next,
+          pairings,
+          kind: kind,
+          confederation: confederation,
+        ),
       );
     }
     await simRound('CFINAL');
@@ -1586,20 +1711,28 @@ extension SeasonCycle on SeasonService {
       kind: kind,
       confederation: confederation,
     );
+    final pairings = WorldCupFinals.pairWinners(
+      fx.map(SeasonService._winner).toList(),
+    );
     await _comp.addKnockoutFixtures(
       careerId: careerId,
       round: to,
       kind: kind,
       confederation: confederation,
-      pairings: WorldCupFinals.pairWinners(
-        fx.map(SeasonService._winner).toList(),
-      ),
+      pairings: pairings,
       date: (await _maxDate(
         careerId,
         from,
         kind: kind,
         confederation: confederation,
       )).add(Duration(days: plusDays)),
+      dates: await _knockoutDates(
+        careerId,
+        to,
+        pairings,
+        kind: kind,
+        confederation: confederation,
+      ),
     );
   }
 }

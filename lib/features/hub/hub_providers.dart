@@ -34,6 +34,7 @@ import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
+import 'package:fnm/domain/services/competition/tournament_calendar.dart';
 import 'package:fnm/domain/services/match/ai_substitutions.dart';
 import 'package:fnm/domain/services/competition/world_pedigree.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
@@ -2317,8 +2318,15 @@ class SeasonService {
       //    it is why the rule belongs here rather than on one competition.
       //    `next` is the player's earliest unplayed fixture, so a finals
       //    fixture strictly before it is never one of theirs.
+      // Not while his next is a group game: staggered groups (see
+      // TournamentCalendar) put other groups' days between his own, and the
+      // catch-up to his match plays them, as it always did.
       final finalsRoundBeforeOwn =
-          finalsDate != null && nextIsFinals && finalsDate.isBefore(next.date);
+          finalsDate != null &&
+          nextIsFinals &&
+          next.round != 'GROUP' &&
+          next.round != 'CGROUP' &&
+          finalsDate.isBefore(next.date);
       if (finalsDate != null &&
           (finalsRoundBeforeOwn ||
               (!nextIsFinals &&

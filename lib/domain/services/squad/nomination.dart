@@ -48,7 +48,8 @@ abstract final class Nomination {
     if (f.matchday == 1 &&
         _tournamentRounds.contains(f.round) &&
         previous.round == 'FRIENDLY' &&
-        f.date.difference(previous.date).inDays <= warmUpCampDays) {
+        f.date.difference(previous.date).inDays <=
+            warmUpCampDays + openerSlotDays) {
       return false;
     }
     if (f.matchday == 1 && _periodStartRounds.contains(f.round)) return true;
@@ -122,6 +123,13 @@ abstract final class Nomination {
   /// How close before a finals opener a friendly must be to belong to its
   /// camp rather than to a window of its own.
   static const warmUpCampDays = 10;
+
+  /// How many days after the tournament's opener a side's own first game may
+  /// fall when the groups are staggered (`TournamentCalendar`: two groups a
+  /// day, so the World Championship's last pair opens five days in). The
+  /// warm-ups are dated off the tournament's opener, so the camp reaches that
+  /// much further for its opener.
+  static const openerSlotDays = 5;
 
   /// How long before a window the squad is called up.
   static const callUpLeadDays = 10;

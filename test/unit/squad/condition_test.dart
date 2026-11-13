@@ -105,6 +105,86 @@ void main() {
     });
   });
 
+  group('Condition.weightedFatigue (spaced finals)', () {
+    final asOf = DateTime(2030, 6, 20);
+    List<DateTime> every(int days, int games) => [
+      for (var i = 1; i <= games; i++) asOf.subtract(Duration(days: days * i)),
+    ];
+    ({FatigueState state, int games, int delta}) w(
+      List<DateTime> dates, {
+      double travel = 1,
+    }) => Condition.fatigue(
+      dates,
+      asOf,
+      weighted: true,
+      travelFatigue: travel,
+    );
+
+    test('an appearance weighs by the days since it', () {
+      expect(Condition.appearanceWeightTenths(0), 10);
+      expect(Condition.appearanceWeightTenths(3), 10);
+      expect(Condition.appearanceWeightTenths(4), 6);
+      expect(Condition.appearanceWeightTenths(5), 6);
+      expect(Condition.appearanceWeightTenths(6), 3);
+      expect(Condition.appearanceWeightTenths(9), 3);
+      expect(Condition.appearanceWeightTenths(10), 0);
+    });
+
+    test('a normal tournament rhythm (every four or five days) is fit', () {
+      expect(w(every(4, 6)).delta, 0);
+      expect(w(every(5, 6)).delta, 0);
+      expect(w(every(6, 6)).state, FatigueState.fresh);
+    });
+
+    test('a window double-header is fit for its second game', () {
+      expect(w(every(3, 1)).state, FatigueState.fresh);
+    });
+
+    test('a three-day run tires, and congestion exhausts', () {
+      // The third game of a three-day window: 1.0 + 0.3.
+      expect(w(every(3, 2)).state, FatigueState.ready);
+      // Straight through a three-day run: 1.0 + 0.3 + 0.3.
+      expect(w(every(3, 5)).state, FatigueState.tired);
+      // Every other day: 1.0 + 0.6 + 0.3 + 0.3.
+      expect(w(every(2, 6)).delta, lessThanOrEqualTo(-4));
+      expect(
+        w([asOf, ...every(1, 3), ...every(2, 4)]).state,
+        FatigueState.exhausted,
+      );
+    });
+
+    test('one match off in a tournament clears it', () {
+      // Played every four days, rested for the last one.
+      final dates = [
+        for (var i = 2; i <= 6; i++) asOf.subtract(Duration(days: 4 * i)),
+      ];
+      expect(w(dates).state, FatigueState.fresh);
+    });
+
+    test('the base camp scales the weighted load', () {
+      // 1.3 on the road (1.12) reads 1.5: tired rather than ready.
+      final dates = every(3, 2);
+      expect(w(dates).state, FatigueState.ready);
+      expect(w(dates, travel: 1.12).state, FatigueState.tired);
+      // And a city camp (0.88) brings a 1.6 run back under 1.5.
+      final run = every(3, 5);
+      expect(w(run).state, FatigueState.tired);
+      expect(w(run, travel: 0.88).state, FatigueState.ready);
+    });
+
+    test('a later appearance is ignored', () {
+      expect(w([asOf.add(const Duration(days: 1))]).games, 0);
+    });
+
+    test('Condition.of reads it only when asked', () {
+      final dates = every(4, 5); // 0.9: fresh weighted, tired by count
+      final weighted = Condition.of(const [], dates, asOf, 0, weighted: true);
+      final counted = Condition.of(const [], dates, asOf, 0);
+      expect(weighted.fatigueState, FatigueState.fresh);
+      expect(counted.fatigueState, FatigueState.ready);
+    });
+  });
+
   group('Condition.morale', () {
     test('recent wins lift morale above neutral', () {
       final wins = [
