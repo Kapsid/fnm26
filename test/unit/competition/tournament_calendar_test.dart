@@ -405,6 +405,8 @@ void main() {
       awayNationId: 3,
       round: 'GROUP',
     );
-    expect(Nomination.isPeriodStart(first, warmUp), isFalse);
+    expect(Nomination.isPeriodStart(first, warmUp, spaced: true), isFalse);
+    // An unmarked cycle keeps the old ten-day reach.
+    expect(Nomination.isPeriodStart(first, warmUp), isTrue);
   });
 }

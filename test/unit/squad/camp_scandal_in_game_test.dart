@@ -39,7 +39,8 @@ void main() {
           d.careerId,
           career.nationId,
         );
-        final period = Nomination.currentPeriod(fixtures);
+        // A new career's finals are spaced (TournamentCalendar).
+        final period = Nomination.currentPeriod(fixtures, spaced: true);
         if (period.isEmpty) return;
         // A finals camp opens with its warm-ups when it has them: it is
         // the tournament's camp all the same.
@@ -53,7 +54,7 @@ void main() {
         seen.add((
           window: period.first.date,
           round: (finals ?? period.first).round,
-          starts: CampScandal.windowStarts(fixtures),
+          starts: CampScandal.windowStarts(fixtures, spaced: true),
         ));
       };
       for (var i = 0; i < 2000; i++) {

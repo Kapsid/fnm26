@@ -432,9 +432,14 @@ Future<DateTime?> pendingCallUpStop(
     career.id,
     career.nationId,
   );
-  final day = Nomination.callUpDay(fixtures);
+  final spaced = await TournamentCalendar.isSpaced(
+    comp,
+    career.id,
+    career.cyclePointer,
+  );
+  final day = Nomination.callUpDay(fixtures, spaced: spaced);
   if (day == null || !career.inGameDate.isBefore(day)) return null;
-  final period = Nomination.currentPeriod(fixtures);
+  final period = Nomination.currentPeriod(fixtures, spaced: spaced);
   if (await comp.hasWatchedDraw(
     career.id,
     career.cyclePointer,

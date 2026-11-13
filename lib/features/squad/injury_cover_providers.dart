@@ -4,6 +4,7 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/services/competition/tournament_calendar.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
@@ -38,9 +39,14 @@ Future<InjuryCover?> pendingInjuryCover(Ref ref, int careerId) async {
   if (career == null) return null;
   final comp = ref.read(competitionRepositoryProvider);
   final fixtures = await comp.cycleFixturesForNation(careerId, career.nationId);
-  if (Nomination.windowOpen(fixtures)) return null;
-  if (Nomination.currentPeriod(fixtures).isEmpty) return null;
-  final played = Nomination.playedInCurrentPeriod(fixtures);
+  final spaced = await TournamentCalendar.isSpaced(
+    comp,
+    careerId,
+    career.cyclePointer,
+  );
+  if (Nomination.windowOpen(fixtures, spaced: spaced)) return null;
+  if (Nomination.currentPeriod(fixtures, spaced: spaced).isEmpty) return null;
+  final played = Nomination.playedInCurrentPeriod(fixtures, spaced: spaced);
   if (played.isEmpty) return null;
   // An empty stored squad means "the whole pool": nobody to send home.
   final callUps = await ref.read(squadRepositoryProvider).callUps(careerId);

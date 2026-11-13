@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/domain/services/competition/tournament_calendar.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/util/nation_label.dart';
@@ -1059,8 +1060,9 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
     //    Not before the call-up day, ten days ahead of the window: until then
     //    the world is advanced (see [pendingCallUpStop]), and the advance
     //    stops on the day.
-    if (Nomination.windowOpen(playerFixtures)) {
-      final period = Nomination.currentPeriod(playerFixtures);
+    final spaced = await TournamentCalendar.isSpaced(comp, careerId, cycle);
+    if (Nomination.windowOpen(playerFixtures, spaced: spaced)) {
+      final period = Nomination.currentPeriod(playerFixtures, spaced: spaced);
       if (period.isNotEmpty) {
         final periodKey = 'callup:${period.first.id}';
         if (!await comp.hasWatchedDraw(careerId, cycle, periodKey)) {
