@@ -7675,6 +7675,15 @@ class AppLocalizationsFil extends AppLocalizations {
   }
 
   @override
+  String get rankingSinceWcDrawShort => 'mula sa draw ng KM';
+
+  @override
+  String get rankingSinceCycleStartShort => 'sa kampanyang ito';
+
+  @override
+  String get rankingTrend => 'Takbo ng ranggo';
+
+  @override
   String msgCapsTitle(String name, int count) {
     return 'Umabot si $name sa $count caps';
   }

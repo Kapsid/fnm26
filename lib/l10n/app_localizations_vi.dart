@@ -7584,6 +7584,15 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String get rankingSinceWcDrawShort => 'từ lễ bốc thăm VĐTG';
+
+  @override
+  String get rankingSinceCycleStartShort => 'chiến dịch này';
+
+  @override
+  String get rankingTrend => 'Xu hướng thứ hạng';
+
+  @override
   String msgCapsTitle(String name, int count) {
     return '$name đạt $count trận ĐT';
   }

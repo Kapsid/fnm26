@@ -7838,6 +7838,15 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
+  String get rankingSinceWcDrawShort => 'від жеребкування ЧС';
+
+  @override
+  String get rankingSinceCycleStartShort => 'у цій кампанії';
+
+  @override
+  String get rankingTrend => 'Динаміка рейтингу';
+
+  @override
   String msgCapsTitle(String name, int count) {
     return '$name: матчів за збірну $count';
   }

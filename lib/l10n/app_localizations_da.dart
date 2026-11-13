@@ -7701,6 +7701,15 @@ class AppLocalizationsDa extends AppLocalizations {
   }
 
   @override
+  String get rankingSinceWcDrawShort => 'siden VM-lodtrækningen';
+
+  @override
+  String get rankingSinceCycleStartShort => 'i denne kampagne';
+
+  @override
+  String get rankingTrend => 'Ranglisteudvikling';
+
+  @override
   String msgCapsTitle(String name, int count) {
     return '$name når $count landskampe';
   }

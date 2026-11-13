@@ -12220,6 +12220,18 @@
       }
     }
   },
+  "rankingSinceWcDrawShort": "since the WC draw",
+  "@rankingSinceWcDrawShort": {
+    "description": "Ranking screen, your-team card: short mono caption after the movement figure (e.g. '▼4 since the WC draw · 1951'), shown in capitals. WC is the tiny tag for the World Championship. Keep it about 20 characters or fewer."
+  },
+  "rankingSinceCycleStartShort": "this campaign",
+  "@rankingSinceCycleStartShort": {
+    "description": "Ranking screen, your-team card: short mono caption after the movement figure before any World Championship draw exists (e.g. '▲3 this campaign · 1951'), shown in capitals. Keep it about 20 characters or fewer."
+  },
+  "rankingTrend": "Ranking trend",
+  "@rankingTrend": {
+    "description": "Ranking screen, your-team card: accessibility label of the small line showing how your world place has moved over recent releases. Tapping the card opens the full chart."
+  },
   "msgCapsTitle": "{name} reaches {count} caps",
   "@msgCapsTitle": {
     "description": "Inbox: caps milestone headline.",

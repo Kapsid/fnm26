@@ -7655,6 +7655,15 @@ class AppLocalizationsHu extends AppLocalizations {
   }
 
   @override
+  String get rankingSinceWcDrawShort => 'a VB-sorsolás óta';
+
+  @override
+  String get rankingSinceCycleStartShort => 'ebben a kampányban';
+
+  @override
+  String get rankingTrend => 'Helyezés alakulása';
+
+  @override
   String msgCapsTitle(String name, int count) {
     return '$name: $count válogatottság';
   }

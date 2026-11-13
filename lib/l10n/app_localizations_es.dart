@@ -7753,6 +7753,15 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get rankingSinceWcDrawShort => 'desde el sorteo del CM';
+
+  @override
+  String get rankingSinceCycleStartShort => 'en esta campaña';
+
+  @override
+  String get rankingTrend => 'Tendencia en el ranking';
+
+  @override
   String msgCapsTitle(String name, int count) {
     return '$name llega a $count partidos';
   }

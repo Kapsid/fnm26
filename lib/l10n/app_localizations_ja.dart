@@ -7463,6 +7463,15 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get rankingSinceWcDrawShort => '世界選手権の抽選以降';
+
+  @override
+  String get rankingSinceCycleStartShort => '今回のキャンペーン';
+
+  @override
+  String get rankingTrend => 'ランキングの推移';
+
+  @override
   String msgCapsTitle(String name, int count) {
     return '$nameが$countキャップに到達';
   }

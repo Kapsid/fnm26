@@ -7742,6 +7742,15 @@ class AppLocalizationsNl extends AppLocalizations {
   }
 
   @override
+  String get rankingSinceWcDrawShort => 'sinds de WK-loting';
+
+  @override
+  String get rankingSinceCycleStartShort => 'deze campagne';
+
+  @override
+  String get rankingTrend => 'Verloop op de ranglijst';
+
+  @override
   String msgCapsTitle(String name, int count) {
     return '$name bereikt $count interlands';
   }

@@ -7651,6 +7651,15 @@ class AppLocalizationsMs extends AppLocalizations {
   }
 
   @override
+  String get rankingSinceWcDrawShort => 'sejak cabutan KD';
+
+  @override
+  String get rankingSinceCycleStartShort => 'kempen ini';
+
+  @override
+  String get rankingTrend => 'Trend kedudukan';
+
+  @override
   String msgCapsTitle(String name, int count) {
     return '$name mencapai $count penampilan';
   }

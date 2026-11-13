@@ -7630,6 +7630,15 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
+  String get rankingSinceWcDrawShort => 'वि.चैं. ड्रॉ से';
+
+  @override
+  String get rankingSinceCycleStartShort => 'इस अभियान में';
+
+  @override
+  String get rankingTrend => 'रैंकिंग का रुझान';
+
+  @override
   String msgCapsTitle(String name, int count) {
     return '$name के $count कैप हुए';
   }

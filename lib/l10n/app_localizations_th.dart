@@ -7562,6 +7562,15 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
+  String get rankingSinceWcDrawShort => 'นับจากจับสลากแชมป์โลก';
+
+  @override
+  String get rankingSinceCycleStartShort => 'ในแคมเปญนี้';
+
+  @override
+  String get rankingTrend => 'แนวโน้มอันดับ';
+
+  @override
   String msgCapsTitle(String name, int count) {
     return '$name ติดทีมชาติครบ $count นัด';
   }

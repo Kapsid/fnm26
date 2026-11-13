@@ -7616,6 +7616,15 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
+  String get rankingSinceWcDrawShort => 'sejak undian KD';
+
+  @override
+  String get rankingSinceCycleStartShort => 'kampanye ini';
+
+  @override
+  String get rankingTrend => 'Tren peringkat';
+
+  @override
   String msgCapsTitle(String name, int count) {
     return '$name capai $count caps';
   }

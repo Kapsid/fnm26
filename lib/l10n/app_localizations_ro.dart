@@ -7928,6 +7928,15 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
+  String get rankingSinceWcDrawShort => 'de la tragerea CM';
+
+  @override
+  String get rankingSinceCycleStartShort => 'în această campanie';
+
+  @override
+  String get rankingTrend => 'Evoluția în clasament';
+
+  @override
   String msgCapsTitle(String name, int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

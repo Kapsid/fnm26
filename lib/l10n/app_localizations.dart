@@ -11848,6 +11848,24 @@ abstract class AppLocalizations {
   /// **'#{from} to #{now}'**
   String rankingMovedFromTo(int from, int now);
 
+  /// Ranking screen, your-team card: short mono caption after the movement figure (e.g. '▼4 since the WC draw · 1951'), shown in capitals. WC is the tiny tag for the World Championship. Keep it about 20 characters or fewer.
+  ///
+  /// In en, this message translates to:
+  /// **'since the WC draw'**
+  String get rankingSinceWcDrawShort;
+
+  /// Ranking screen, your-team card: short mono caption after the movement figure before any World Championship draw exists (e.g. '▲3 this campaign · 1951'), shown in capitals. Keep it about 20 characters or fewer.
+  ///
+  /// In en, this message translates to:
+  /// **'this campaign'**
+  String get rankingSinceCycleStartShort;
+
+  /// Ranking screen, your-team card: accessibility label of the small line showing how your world place has moved over recent releases. Tapping the card opens the full chart.
+  ///
+  /// In en, this message translates to:
+  /// **'Ranking trend'**
+  String get rankingTrend;
+
   /// Inbox: caps milestone headline.
   ///
   /// In en, this message translates to:
