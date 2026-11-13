@@ -542,6 +542,37 @@ class AppLocalizationsHi extends AppLocalizations {
   String get recordsBiggestWin => 'सबसे बड़ी जीत';
 
   @override
+  String get recordsTileMatches => 'मैच';
+
+  @override
+  String get recordsTileWins => 'जीत';
+
+  @override
+  String get recordsTileTrophies => 'ट्रॉफ़ी';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct%';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'अभी कोई नहीं';
+
+  @override
+  String get recordsBiggestDefeat => 'सबसे बड़ी हार';
+
+  @override
+  String get recordsRecordHolders => 'रिकॉर्डधारी';
+
+  @override
+  String get recordsMostCleanSheets => 'सबसे ज़्यादा क्लीन शीट';
+
+  @override
   String get recordsSeeAllMeetings => 'सभी मुक़ाबले देखें';
 
   @override
@@ -7628,6 +7659,15 @@ class AppLocalizationsHi extends AppLocalizations {
   String rankingMovedFromTo(int from, int now) {
     return '#$from से #$now';
   }
+
+  @override
+  String get rankingSinceWcDrawShort => 'वि.चैं. ड्रॉ से';
+
+  @override
+  String get rankingSinceCycleStartShort => 'इस अभियान में';
+
+  @override
+  String get rankingTrend => 'रैंकिंग का रुझान';
 
   @override
   String msgCapsTitle(String name, int count) {
@@ -17501,4 +17541,58 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'स्टेडियम प्रबंधित करें';
+
+  @override
+  String get scheduleHome => 'घरेलू';
+
+  @override
+  String get scheduleAway => 'बाहर';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'ग्रुप $name';
+  }
+
+  @override
+  String get scheduleFilterMine => 'मेरे';
+
+  @override
+  String get scheduleFilterCompetitions => 'प्रतियोगिताएँ';
+
+  @override
+  String get scheduleFilterDraws => 'ड्रॉ';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return '$competition ड्रॉ';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'ड्रॉ समारोह';
+
+  @override
+  String get scheduleNoDraws => 'कोई आगामी ड्रॉ नहीं';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'कॉल-अप $count दिनों में बंद होगा',
+      one: 'कॉल-अप कल बंद होगा',
+      zero: 'कॉल-अप आज बंद होगा',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count और मैच',
+      one: '1 और मैच',
+    );
+    return '$month: $_temp0';
+  }
 }

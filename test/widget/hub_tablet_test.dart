@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
@@ -7,6 +9,7 @@ import 'package:fnm/features/hub/draw_reveal.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/hub/hub_screen.dart';
 import 'package:fnm/features/hub/schedule_providers.dart';
+import 'package:fnm/features/hub/schedule_widgets.dart';
 import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/features/shell/tablet_sidebar.dart';
@@ -105,10 +108,10 @@ void main() {
       findsNothing,
     );
     expect(
-      // One per undrawn match of the window (the whole first window is
-      // qualifiers of the one undrawn qualifying draw).
+      // One per undrawn match on the strip's cards (the whole first window
+      // is qualifiers of the one undrawn qualifying draw).
       find.descendant(of: panel, matching: find.text(enL.topBarDrawPending)),
-      findsNWidgets(windowSize),
+      findsNWidgets(math.min(windowSize, UpcomingStrip.cards)),
     );
 
     await tester.runAsync(

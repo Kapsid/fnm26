@@ -543,6 +543,37 @@ class AppLocalizationsDa extends AppLocalizations {
   String get recordsBiggestWin => 'Største sejr';
 
   @override
+  String get recordsTileMatches => 'Kampe';
+
+  @override
+  String get recordsTileWins => 'Sejre';
+
+  @override
+  String get recordsTileTrophies => 'Titler';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct %';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Ingen endnu';
+
+  @override
+  String get recordsBiggestDefeat => 'Største nederlag';
+
+  @override
+  String get recordsRecordHolders => 'Rekordholdere';
+
+  @override
+  String get recordsMostCleanSheets => 'FLEST CLEAN SHEETS';
+
+  @override
   String get recordsSeeAllMeetings => 'Se alle opgør';
 
   @override
@@ -7699,6 +7730,15 @@ class AppLocalizationsDa extends AppLocalizations {
   String rankingMovedFromTo(int from, int now) {
     return 'Nr. $from til nr. $now';
   }
+
+  @override
+  String get rankingSinceWcDrawShort => 'siden VM-lodtrækningen';
+
+  @override
+  String get rankingSinceCycleStartShort => 'i denne kampagne';
+
+  @override
+  String get rankingTrend => 'Ranglisteudvikling';
 
   @override
   String msgCapsTitle(String name, int count) {
@@ -17594,4 +17634,58 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Administrer stadioner';
+
+  @override
+  String get scheduleHome => 'Hjemme';
+
+  @override
+  String get scheduleAway => 'Ude';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'Gruppe $name';
+  }
+
+  @override
+  String get scheduleFilterMine => 'Mine';
+
+  @override
+  String get scheduleFilterCompetitions => 'Turneringer';
+
+  @override
+  String get scheduleFilterDraws => 'Lodtrækninger';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return 'Lodtrækning: $competition';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'Lodtrækningsceremoni';
+
+  @override
+  String get scheduleNoDraws => 'Ingen kommende lodtrækninger';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Udtagelsen lukker om $count dage',
+      one: 'Udtagelsen lukker i morgen',
+      zero: 'Udtagelsen lukker i dag',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count kampe mere',
+      one: '1 kamp mere',
+    );
+    return '$month: $_temp0';
+  }
 }

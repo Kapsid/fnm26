@@ -549,6 +549,37 @@ class AppLocalizationsHr extends AppLocalizations {
   String get recordsBiggestWin => 'Najveća pobjeda';
 
   @override
+  String get recordsTileMatches => 'Utakmice';
+
+  @override
+  String get recordsTileWins => 'Pobjede';
+
+  @override
+  String get recordsTileTrophies => 'Trofeji';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct %';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Još nijedan';
+
+  @override
+  String get recordsBiggestDefeat => 'Najteži poraz';
+
+  @override
+  String get recordsRecordHolders => 'Rekorderi';
+
+  @override
+  String get recordsMostCleanSheets => 'NAJVIŠE UTAKMICA BEZ PRIMLJENOG GOLA';
+
+  @override
   String get recordsSeeAllMeetings => 'Prikaži sve susrete';
 
   @override
@@ -7883,6 +7914,15 @@ class AppLocalizationsHr extends AppLocalizations {
   String rankingMovedFromTo(int from, int now) {
     return '#$from na #$now';
   }
+
+  @override
+  String get rankingSinceWcDrawShort => 'od ždrijeba SP-a';
+
+  @override
+  String get rankingSinceCycleStartShort => 'u ovoj kampanji';
+
+  @override
+  String get rankingTrend => 'Kretanje na ljestvici';
 
   @override
   String msgCapsTitle(String name, int count) {
@@ -17934,4 +17974,60 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Upravljaj stadionima';
+
+  @override
+  String get scheduleHome => 'Doma';
+
+  @override
+  String get scheduleAway => 'U gostima';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'Skupina $name';
+  }
+
+  @override
+  String get scheduleFilterMine => 'Moje';
+
+  @override
+  String get scheduleFilterCompetitions => 'Natjecanja';
+
+  @override
+  String get scheduleFilterDraws => 'Ždrijebovi';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return 'Ždrijeb: $competition';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'Ceremonija ždrijeba';
+
+  @override
+  String get scheduleNoDraws => 'Nema nadolazećih ždrijebova';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Pozivi se zatvaraju za $count dana',
+      few: 'Pozivi se zatvaraju za $count dana',
+      one: 'Pozivi se zatvaraju za $count dan',
+      zero: 'Pozivi se zatvaraju danas',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'još $count utakmica',
+      few: 'još $count utakmice',
+      one: 'još $count utakmica',
+    );
+    return '$month: $_temp0';
+  }
 }

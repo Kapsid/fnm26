@@ -548,6 +548,37 @@ class AppLocalizationsId extends AppLocalizations {
   String get recordsBiggestWin => 'Kemenangan terbesar';
 
   @override
+  String get recordsTileMatches => 'Laga';
+
+  @override
+  String get recordsTileWins => 'Menang';
+
+  @override
+  String get recordsTileTrophies => 'Trofi';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct%';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Belum ada';
+
+  @override
+  String get recordsBiggestDefeat => 'Kekalahan terbesar';
+
+  @override
+  String get recordsRecordHolders => 'Pemegang rekor';
+
+  @override
+  String get recordsMostCleanSheets => 'CLEAN SHEET TERBANYAK';
+
+  @override
   String get recordsSeeAllMeetings => 'Lihat semua pertemuan';
 
   @override
@@ -7614,6 +7645,15 @@ class AppLocalizationsId extends AppLocalizations {
   String rankingMovedFromTo(int from, int now) {
     return '#$from ke #$now';
   }
+
+  @override
+  String get rankingSinceWcDrawShort => 'sejak undian KD';
+
+  @override
+  String get rankingSinceCycleStartShort => 'kampanye ini';
+
+  @override
+  String get rankingTrend => 'Tren peringkat';
 
   @override
   String msgCapsTitle(String name, int count) {
@@ -17505,4 +17545,57 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Kelola stadion';
+
+  @override
+  String get scheduleHome => 'Kandang';
+
+  @override
+  String get scheduleAway => 'Tandang';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'Grup $name';
+  }
+
+  @override
+  String get scheduleFilterMine => 'Saya';
+
+  @override
+  String get scheduleFilterCompetitions => 'Kompetisi';
+
+  @override
+  String get scheduleFilterDraws => 'Undian';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return 'Undian $competition';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'Upacara undian';
+
+  @override
+  String get scheduleNoDraws => 'Tidak ada undian mendatang';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Pemanggilan pemain ditutup dalam $count hari',
+      one: 'Pemanggilan pemain ditutup besok',
+      zero: 'Pemanggilan pemain ditutup hari ini',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count laga lagi',
+    );
+    return '$month: $_temp0';
+  }
 }

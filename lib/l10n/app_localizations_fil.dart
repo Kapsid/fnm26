@@ -550,6 +550,37 @@ class AppLocalizationsFil extends AppLocalizations {
   String get recordsBiggestWin => 'Pinakamalaking panalo';
 
   @override
+  String get recordsTileMatches => 'Laro';
+
+  @override
+  String get recordsTileWins => 'Panalo';
+
+  @override
+  String get recordsTileTrophies => 'Tropeo';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct%';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Wala pa';
+
+  @override
+  String get recordsBiggestDefeat => 'Pinakamalaking talo';
+
+  @override
+  String get recordsRecordHolders => 'Mga may hawak ng rekord';
+
+  @override
+  String get recordsMostCleanSheets => 'PINAKAMARAMING CLEAN SHEET';
+
+  @override
   String get recordsSeeAllMeetings => 'Tingnan lahat ng pagkikita';
 
   @override
@@ -7673,6 +7704,15 @@ class AppLocalizationsFil extends AppLocalizations {
   String rankingMovedFromTo(int from, int now) {
     return '#$from papuntang #$now';
   }
+
+  @override
+  String get rankingSinceWcDrawShort => 'mula sa draw ng KM';
+
+  @override
+  String get rankingSinceCycleStartShort => 'sa kampanyang ito';
+
+  @override
+  String get rankingTrend => 'Takbo ng ranggo';
 
   @override
   String msgCapsTitle(String name, int count) {
@@ -17604,4 +17644,58 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Pamahalaan ang mga stadium';
+
+  @override
+  String get scheduleHome => 'Home';
+
+  @override
+  String get scheduleAway => 'Away';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'Grupo $name';
+  }
+
+  @override
+  String get scheduleFilterMine => 'Akin';
+
+  @override
+  String get scheduleFilterCompetitions => 'Mga Kompetisyon';
+
+  @override
+  String get scheduleFilterDraws => 'Mga Bunutan';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return 'Bunutan ng $competition';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'Seremonya ng bunutan';
+
+  @override
+  String get scheduleNoDraws => 'Walang paparating na bunutan';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Magsasara ang call-up sa loob ng $count araw',
+      one: 'Magsasara ang call-up bukas',
+      zero: 'Magsasara ang call-up ngayon',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pang laro',
+      one: '1 pang laro',
+    );
+    return '$month: $_temp0';
+  }
 }

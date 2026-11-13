@@ -544,6 +544,37 @@ class AppLocalizationsUk extends AppLocalizations {
   String get recordsBiggestWin => 'Найбільша перемога';
 
   @override
+  String get recordsTileMatches => 'Матчі';
+
+  @override
+  String get recordsTileWins => 'Перемоги';
+
+  @override
+  String get recordsTileTrophies => 'Трофеї';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct%';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Поки жодного';
+
+  @override
+  String get recordsBiggestDefeat => 'Найбільша поразка';
+
+  @override
+  String get recordsRecordHolders => 'Рекордсмени';
+
+  @override
+  String get recordsMostCleanSheets => 'НАЙБІЛЬШЕ СУХИХ МАТЧІВ';
+
+  @override
   String get recordsSeeAllMeetings => 'Усі зустрічі';
 
   @override
@@ -7836,6 +7867,15 @@ class AppLocalizationsUk extends AppLocalizations {
   String rankingMovedFromTo(int from, int now) {
     return 'з #$from на #$now';
   }
+
+  @override
+  String get rankingSinceWcDrawShort => 'від жеребкування ЧС';
+
+  @override
+  String get rankingSinceCycleStartShort => 'у цій кампанії';
+
+  @override
+  String get rankingTrend => 'Динаміка рейтингу';
 
   @override
   String msgCapsTitle(String name, int count) {
@@ -17920,4 +17960,62 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Керувати стадіонами';
+
+  @override
+  String get scheduleHome => 'Вдома';
+
+  @override
+  String get scheduleAway => 'У гостях';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'Група $name';
+  }
+
+  @override
+  String get scheduleFilterMine => 'Мої';
+
+  @override
+  String get scheduleFilterCompetitions => 'Турніри';
+
+  @override
+  String get scheduleFilterDraws => 'Жеребкування';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return 'Жеребкування: $competition';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'Церемонія жеребкування';
+
+  @override
+  String get scheduleNoDraws => 'Немає майбутніх жеребкувань';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Виклик закривається через $count дня',
+      many: 'Виклик закривається через $count днів',
+      few: 'Виклик закривається через $count дні',
+      one: 'Виклик закривається через $count день',
+      zero: 'Виклик закривається сьогодні',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'ще $count матчу',
+      many: 'ще $count матчів',
+      few: 'ще $count матчі',
+      one: 'ще $count матч',
+    );
+    return '$month: $_temp0';
+  }
 }

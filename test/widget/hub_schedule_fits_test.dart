@@ -117,12 +117,18 @@ Override _worstCase() => scheduleProvider(kSeededCareerId).overrideWith((
 /// pieces.
 void _expectRowsFit(WidgetTester tester, String where) {
   final rows = find.byWidgetPredicate(
-    (w) => w is ScheduleFixtureRow || w is SchedulePendingRow,
+    (w) =>
+        w is ScheduleFixtureRow ||
+        w is SchedulePendingRow ||
+        w is ScheduleDrawRow ||
+        w is UpcomingFixtureCard,
   );
   expect(rows, findsWidgets, reason: 'no schedule rows on $where');
   for (final row in rows.evaluate()) {
     final w = row.widget;
-    final worst = w is ScheduleFixtureRow && w.fixture.id >= _worstId;
+    final worst =
+        (w is ScheduleFixtureRow && w.fixture.id >= _worstId) ||
+        (w is UpcomingFixtureCard && w.fixture.id >= _worstId);
     for (final element
         in find
             .descendant(of: find.byWidget(w), matching: find.byType(RichText))

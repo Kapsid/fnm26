@@ -540,6 +540,37 @@ class AppLocalizationsRo extends AppLocalizations {
   String get recordsBiggestWin => 'Cea mai mare victorie';
 
   @override
+  String get recordsTileMatches => 'Meciuri';
+
+  @override
+  String get recordsTileWins => 'Victorii';
+
+  @override
+  String get recordsTileTrophies => 'Trofee';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct%';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Niciunul încă';
+
+  @override
+  String get recordsBiggestDefeat => 'Cea mai grea înfrângere';
+
+  @override
+  String get recordsRecordHolders => 'Recordmeni';
+
+  @override
+  String get recordsMostCleanSheets => 'CELE MAI MULTE MECIURI FĂRĂ GOL PRIMIT';
+
+  @override
   String get recordsSeeAllMeetings => 'Vedeți toate întâlnirile';
 
   @override
@@ -7926,6 +7957,15 @@ class AppLocalizationsRo extends AppLocalizations {
   String rankingMovedFromTo(int from, int now) {
     return 'De pe #$from pe #$now';
   }
+
+  @override
+  String get rankingSinceWcDrawShort => 'de la tragerea CM';
+
+  @override
+  String get rankingSinceCycleStartShort => 'în această campanie';
+
+  @override
+  String get rankingTrend => 'Evoluția în clasament';
 
   @override
   String msgCapsTitle(String name, int count) {
@@ -18014,4 +18054,60 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Administrează stadioanele';
+
+  @override
+  String get scheduleHome => 'Acasă';
+
+  @override
+  String get scheduleAway => 'Deplasare';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'Grupa $name';
+  }
+
+  @override
+  String get scheduleFilterMine => 'Ale mele';
+
+  @override
+  String get scheduleFilterCompetitions => 'Competiții';
+
+  @override
+  String get scheduleFilterDraws => 'Trageri la sorți';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return 'Tragerea la sorți: $competition';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'Ceremonia tragerii la sorți';
+
+  @override
+  String get scheduleNoDraws => 'Nicio tragere la sorți în curând';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Convocările se închid în $count de zile',
+      few: 'Convocările se închid în $count zile',
+      one: 'Convocările se închid mâine',
+      zero: 'Convocările se închid azi',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'încă $count de meciuri',
+      few: 'încă $count meciuri',
+      one: 'încă 1 meci',
+    );
+    return '$month: $_temp0';
+  }
 }

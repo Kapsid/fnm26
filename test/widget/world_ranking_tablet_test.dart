@@ -42,6 +42,8 @@ void main() {
       expect(find.byType(PhoneWidthFrame), findsNothing);
       expect(find.byType(AppBottomNav), findsNothing);
       expect(_grid, findsOneWidget);
+      // The phone's "your team" card sits over the table here too.
+      expect(find.byKey(WorldRankingScreen.teamCardKey), findsOneWidget);
       expect(
         tester.widget<NationView>(find.byType(NationView)).nationId,
         save.nationId,

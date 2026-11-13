@@ -121,3 +121,65 @@ int longestUnbeatenOf(Iterable<NationResult> results) {
   }
   return longest;
 }
+
+/// The heaviest defeat in [results]: the biggest margin, and the most goals
+/// conceded where two defeats share a margin. Null if the nation has never
+/// lost.
+NationResult? biggestDefeatOf(Iterable<NationResult> results) {
+  NationResult? worst;
+  for (final r in results) {
+    if (r.scored >= r.conceded) continue;
+    final margin = r.conceded - r.scored;
+    if (worst == null) {
+      worst = r;
+      continue;
+    }
+    final worstMargin = worst.conceded - worst.scored;
+    if (margin > worstMargin ||
+        (margin == worstMargin && r.conceded > worst.conceded)) {
+      worst = r;
+    }
+  }
+  return worst;
+}
+
+/// A nation's all-time totals over its results: played, won, drawn, lost and
+/// the goals either way.
+typedef NationTotals = ({
+  int played,
+  int wins,
+  int draws,
+  int losses,
+  int goalsFor,
+  int goalsAgainst,
+});
+
+/// [results] added up into one line (see [NationTotals]).
+NationTotals nationTotalsOf(Iterable<NationResult> results) {
+  var played = 0;
+  var wins = 0;
+  var draws = 0;
+  var losses = 0;
+  var gf = 0;
+  var ga = 0;
+  for (final r in results) {
+    played++;
+    gf += r.scored;
+    ga += r.conceded;
+    if (r.scored > r.conceded) {
+      wins++;
+    } else if (r.scored == r.conceded) {
+      draws++;
+    } else {
+      losses++;
+    }
+  }
+  return (
+    played: played,
+    wins: wins,
+    draws: draws,
+    losses: losses,
+    goalsFor: gf,
+    goalsAgainst: ga,
+  );
+}

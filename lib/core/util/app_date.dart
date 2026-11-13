@@ -141,6 +141,37 @@ abstract final class AppDate {
         cs: 'EEE d. MMM',
       ).capsIn(Localizations.localeOf(context).languageCode);
 
+  /// `ČT` / `THU`: the day of the week, abbreviated and set as a label, for
+  /// the schedule's date column (`ČT 6`) and the hub's fixture cards.
+  static String weekdayCaps(BuildContext context, DateTime date) => DateFormat(
+    'EEE',
+    _locale(context),
+  ).format(date).capsIn(Localizations.localeOf(context).languageCode);
+
+  /// `ZÁŘÍ 2033` / `SEPTEMBER 2033`: a month written out, for the schedule's
+  /// month headers. The stand-alone month (`LLLL`), so Czech and Polish read
+  /// the nominative (`září`, `wrzesień`), not the genitive a date uses.
+  static String monthYearLongCaps(BuildContext context, DateTime date) {
+    final locale = _locale(context);
+    final text = const {'ja', 'ko', 'hu'}.contains(locale)
+        ? DateFormat.yMMMM(locale).format(date)
+        : DateFormat('LLLL yyyy', locale).format(date);
+    return text.capsIn(Localizations.localeOf(context).languageCode);
+  }
+
+  /// `říjen` / `October`: a month alone, written out (stand-alone form), for
+  /// a screen reader where the card shows [monthShortCaps].
+  static String monthLong(BuildContext context, DateTime date) =>
+      DateFormat('LLLL', _locale(context)).format(date);
+
+  /// `ŘÍJ` / `OCT`: a month alone, abbreviated (stand-alone form), for the
+  /// hub's small "next window" card.
+  static String monthShortCaps(BuildContext context, DateTime date) =>
+      DateFormat(
+        'LLL',
+        _locale(context),
+      ).format(date).capsIn(Localizations.localeOf(context).languageCode);
+
   /// `09/30` — a tick label on the ranking chart's x-axis.
   ///
   /// The only format here that takes no context, because it is the only one

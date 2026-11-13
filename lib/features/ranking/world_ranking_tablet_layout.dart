@@ -6,7 +6,7 @@ part of 'world_ranking_screen.dart';
 
 /// The world ranking on a tablet: every nation in a sortable table, the
 /// picked one's record in the pane beside it (the manager's own until he
-/// picks another). The phone's two reads, nothing more.
+/// picks another). Above the table, the phone's "your team" card.
 class _WorldRankingTabletLayout extends ConsumerStatefulWidget {
   const _WorldRankingTabletLayout({required this.careerId});
 
@@ -153,6 +153,20 @@ class _WorldRankingTabletLayoutState
                                   ),
                                 ],
                               ),
+                            ),
+                          ),
+                          // The phone's "your team" card, the same tap to
+                          // the full chart (a dialog here).
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                              AppSpacing.md,
+                              AppSpacing.xs,
+                              AppSpacing.md,
+                              0,
+                            ),
+                            child: RankTeamCard(
+                              careerId: careerId,
+                              data: data,
                             ),
                           ),
                           _RegionFilter(

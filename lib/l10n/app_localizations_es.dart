@@ -551,6 +551,37 @@ class AppLocalizationsEs extends AppLocalizations {
   String get recordsBiggestWin => 'Mayor victoria';
 
   @override
+  String get recordsTileMatches => 'Partidos';
+
+  @override
+  String get recordsTileWins => 'Victorias';
+
+  @override
+  String get recordsTileTrophies => 'Títulos';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct %';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Ninguno aún';
+
+  @override
+  String get recordsBiggestDefeat => 'Peor derrota';
+
+  @override
+  String get recordsRecordHolders => 'Plusmarquistas';
+
+  @override
+  String get recordsMostCleanSheets => 'MÁS PORTERÍAS A CERO';
+
+  @override
   String get recordsSeeAllMeetings => 'Ver todos los duelos';
 
   @override
@@ -7751,6 +7782,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String rankingMovedFromTo(int from, int now) {
     return 'Del n.º $from al n.º $now';
   }
+
+  @override
+  String get rankingSinceWcDrawShort => 'desde el sorteo del CM';
+
+  @override
+  String get rankingSinceCycleStartShort => 'en esta campaña';
+
+  @override
+  String get rankingTrend => 'Tendencia en el ranking';
 
   @override
   String msgCapsTitle(String name, int count) {
@@ -17685,4 +17725,58 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Gestionar estadios';
+
+  @override
+  String get scheduleHome => 'Local';
+
+  @override
+  String get scheduleAway => 'Visitante';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'Grupo $name';
+  }
+
+  @override
+  String get scheduleFilterMine => 'Míos';
+
+  @override
+  String get scheduleFilterCompetitions => 'Competiciones';
+
+  @override
+  String get scheduleFilterDraws => 'Sorteos';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return 'Sorteo: $competition';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'Ceremonia del sorteo';
+
+  @override
+  String get scheduleNoDraws => 'No hay sorteos próximos';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'La convocatoria se cierra en $count días',
+      one: 'La convocatoria se cierra mañana',
+      zero: 'La convocatoria se cierra hoy',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count partidos más',
+      one: '1 partido más',
+    );
+    return '$month: $_temp0';
+  }
 }

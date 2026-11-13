@@ -548,6 +548,37 @@ class AppLocalizationsHu extends AppLocalizations {
   String get recordsBiggestWin => 'Legnagyobb győzelem';
 
   @override
+  String get recordsTileMatches => 'Meccsek';
+
+  @override
+  String get recordsTileWins => 'Győzelmek';
+
+  @override
+  String get recordsTileTrophies => 'Trófeák';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct%';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Még nincs';
+
+  @override
+  String get recordsBiggestDefeat => 'Legsúlyosabb vereség';
+
+  @override
+  String get recordsRecordHolders => 'Rekorderek';
+
+  @override
+  String get recordsMostCleanSheets => 'LEGTÖBB KAPOTT GÓL NÉLKÜLI MECCS';
+
+  @override
   String get recordsSeeAllMeetings => 'Összes találkozó';
 
   @override
@@ -7653,6 +7684,15 @@ class AppLocalizationsHu extends AppLocalizations {
   String rankingMovedFromTo(int from, int now) {
     return '$from. helyről $now. helyre';
   }
+
+  @override
+  String get rankingSinceWcDrawShort => 'a VB-sorsolás óta';
+
+  @override
+  String get rankingSinceCycleStartShort => 'ebben a kampányban';
+
+  @override
+  String get rankingTrend => 'Helyezés alakulása';
 
   @override
   String msgCapsTitle(String name, int count) {
@@ -17539,4 +17579,57 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Stadionok kezelése';
+
+  @override
+  String get scheduleHome => 'Hazai';
+
+  @override
+  String get scheduleAway => 'Idegen';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return '$name csoport';
+  }
+
+  @override
+  String get scheduleFilterMine => 'Saját';
+
+  @override
+  String get scheduleFilterCompetitions => 'Versenyek';
+
+  @override
+  String get scheduleFilterDraws => 'Sorsolások';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return 'Sorsolás: $competition';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'Sorsolási ceremónia';
+
+  @override
+  String get scheduleNoDraws => 'Nincs közelgő sorsolás';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'A keretkijelölés $count nap múlva zárul',
+      one: 'A keretkijelölés holnap zárul',
+      zero: 'A keretkijelölés ma zárul',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'még $count meccs',
+    );
+    return '$month: $_temp0';
+  }
 }

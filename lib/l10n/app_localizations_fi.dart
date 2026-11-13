@@ -553,6 +553,37 @@ class AppLocalizationsFi extends AppLocalizations {
   String get recordsBiggestWin => 'Suurin voitto';
 
   @override
+  String get recordsTileMatches => 'Ottelut';
+
+  @override
+  String get recordsTileWins => 'Voitot';
+
+  @override
+  String get recordsTileTrophies => 'Mestaruudet';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct %';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Ei vielä yhtään';
+
+  @override
+  String get recordsBiggestDefeat => 'Suurin tappio';
+
+  @override
+  String get recordsRecordHolders => 'Ennätysten haltijat';
+
+  @override
+  String get recordsMostCleanSheets => 'ENITEN NOLLAPELEJÄ';
+
+  @override
   String get recordsSeeAllMeetings => 'Näytä kaikki kohtaamiset';
 
   @override
@@ -7759,6 +7790,15 @@ class AppLocalizationsFi extends AppLocalizations {
   String rankingMovedFromTo(int from, int now) {
     return '#$from → #$now';
   }
+
+  @override
+  String get rankingSinceWcDrawShort => 'MM-arvonnasta';
+
+  @override
+  String get rankingSinceCycleStartShort => 'tässä kampanjassa';
+
+  @override
+  String get rankingTrend => 'Sijoituksen kehitys';
 
   @override
   String msgCapsTitle(String name, int count) {
@@ -17669,4 +17709,58 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Hallinnoi stadioneita';
+
+  @override
+  String get scheduleHome => 'Koti';
+
+  @override
+  String get scheduleAway => 'Vieras';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'Lohko $name';
+  }
+
+  @override
+  String get scheduleFilterMine => 'Omat';
+
+  @override
+  String get scheduleFilterCompetitions => 'Turnaukset';
+
+  @override
+  String get scheduleFilterDraws => 'Arvonnat';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return 'Arvonta: $competition';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'Arvontaseremonia';
+
+  @override
+  String get scheduleNoDraws => 'Ei tulevia arvontoja';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Valinnat sulkeutuvat $count päivän päästä',
+      one: 'Valinnat sulkeutuvat huomenna',
+      zero: 'Valinnat sulkeutuvat tänään',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'vielä $count ottelua',
+      one: 'vielä 1 ottelu',
+    );
+    return '$month: $_temp0';
+  }
 }

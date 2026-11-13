@@ -4,11 +4,12 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 part of 'record_book_screen.dart';
 
-/// The record book on a tablet: the way to the legends, the world's records
-/// and head to head in a strip at the top; the team's headline records
-/// beside the fiercest rival; the three leaderboards as tabs over sortable
-/// grids; the picked player's card in the pane beside them. The phone's two
-/// reads, nothing more.
+/// The record book on a tablet: the phone's three headline tiles across the
+/// top; the team's headline records beside the fiercest rival; the record
+/// holders' boards as tabs over sortable grids (the man on top of each is
+/// its record holder); the way to the legends, the world's records and head
+/// to head in a strip at the bottom; the picked player's card in the pane
+/// beside them.
 class _RecordBookTabletLayout extends ConsumerStatefulWidget {
   const _RecordBookTabletLayout({required this.careerId});
 
@@ -50,6 +51,7 @@ class _RecordBookTabletLayoutState
             return _NoHistoryYet(nationName: book.nationName);
           }
           final rivalry = ref.watch(rivalryProvider(careerId)).valueOrNull;
+          final boards = _boards(l, book);
           return DetailPaneScope(
             controller: _pane,
             child: ListenableBuilder(
@@ -64,10 +66,13 @@ class _RecordBookTabletLayoutState
                   minFraction: 0.45,
                   maxFraction: 0.7,
                   minDetailWidth: 320,
-                  master: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                  // A scrolling column: the headline tiles, the team records
+                  // and the rival above the boards leave a short window too
+                  // little room for a board, so each board keeps its own
+                  // height (all five places) and the column scrolls instead.
+                  master: ListView(
                     children: [
-                      LegacyTiles(careerId: careerId, dense: true),
+                      _StatTiles(book: book),
                       const SizedBox(height: AppSpacing.md),
                       // Side by side only when the team records get room
                       // for their values whole; otherwise one over the
@@ -103,41 +108,30 @@ class _RecordBookTabletLayoutState
                         },
                       ),
                       const SizedBox(height: AppSpacing.md),
-                      Expanded(
+                      SizedBox(
+                        height: _boardHeight,
                         child: PanelBox(
                           child: DefaultTabController(
-                            length: 3,
+                            length: boards.length,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 TabletTabBar(
                                   tabs: [
-                                    SegmentTab(l.recordsMostCaps),
-                                    SegmentTab(l.recordsTopScorers),
-                                    SegmentTab(l.recordsMostAssists),
+                                    for (final b in boards)
+                                      SegmentTab(b.category),
                                   ],
                                 ),
                                 Expanded(
                                   child: TabBarView(
                                     children: [
-                                      _LeaderGrid(
-                                        leaders: book.mostCaps,
-                                        valueLabel: l.playerStatCaps,
-                                        careerId: careerId,
-                                        selectedId: selectedId,
-                                      ),
-                                      _LeaderGrid(
-                                        leaders: book.topScorers,
-                                        valueLabel: l.playerStatGoals,
-                                        careerId: careerId,
-                                        selectedId: selectedId,
-                                      ),
-                                      _LeaderGrid(
-                                        leaders: book.topAssists,
-                                        valueLabel: l.playerStatAssists,
-                                        careerId: careerId,
-                                        selectedId: selectedId,
-                                      ),
+                                      for (final b in boards)
+                                        _LeaderGrid(
+                                          leaders: b.leaders,
+                                          valueLabel: b.category,
+                                          careerId: careerId,
+                                          selectedId: selectedId,
+                                        ),
                                     ],
                                   ),
                                 ),
@@ -146,6 +140,8 @@ class _RecordBookTabletLayoutState
                           ),
                         ),
                       ),
+                      const SizedBox(height: AppSpacing.md),
+                      LegacyTiles(careerId: careerId, dense: true),
                     ],
                   ),
                   detail: PanelBox(
@@ -164,6 +160,10 @@ class _RecordBookTabletLayoutState
   }
 }
 
+/// A board's panel: the tabs, the grid's header and all five places.
+const double _boardHeight =
+    64 + DataGrid.headerHeight + 5 * DataGrid.rowHeight + 16;
+
 /// The master column's least width for the team records and the rival side
 /// by side: below it each half is too narrow for "2-0 v Argentina" whole.
 const double _sideBySideRecordsWidth = 640;
@@ -181,26 +181,8 @@ class _TeamRecordTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final win = book.biggestWin;
-    final rows = <(String, String, String?)>[
-      (l.recordsBestFinish, book.bestFinish, null),
-      (
-        l.recordsLongestUnbeaten,
-        l.recordsMatchesCount(book.longestUnbeaten),
-        null,
-      ),
-      if (win != null)
-        (
-          l.recordsBiggestWin,
-          l.recordsBiggestWinValue(
-            win.gf,
-            win.ga,
-            book.nations[win.oppId]?.name ?? 'Unknown',
-          ),
-          book.nations[win.oppId]?.code ?? '??',
-        ),
-    ];
-    final flags = rows.any((r) => r.$3 != null);
+    final rows = _teamRecords(l, book);
+    final flags = rows.any((r) => r.code != null);
     return Table(
       columnWidths: {
         // As wide as the longest label, but never more than 45%: a long
@@ -214,7 +196,7 @@ class _TeamRecordTable extends StatelessWidget {
       },
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: [
-        for (final (label, value, code) in rows)
+        for (final (:label, :value, :code) in rows)
           TableRow(
             children: [
               Padding(

@@ -535,6 +535,37 @@ class AppLocalizationsTh extends AppLocalizations {
   String get recordsBiggestWin => 'ชนะขาดที่สุด';
 
   @override
+  String get recordsTileMatches => 'นัด';
+
+  @override
+  String get recordsTileWins => 'ชนะ';
+
+  @override
+  String get recordsTileTrophies => 'ถ้วยรางวัล';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct%';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'ยังไม่มี';
+
+  @override
+  String get recordsBiggestDefeat => 'แพ้ขาดที่สุด';
+
+  @override
+  String get recordsRecordHolders => 'เจ้าของสถิติ';
+
+  @override
+  String get recordsMostCleanSheets => 'คลีนชีตมากที่สุด';
+
+  @override
   String get recordsSeeAllMeetings => 'ดูการพบกันทั้งหมด';
 
   @override
@@ -7560,6 +7591,15 @@ class AppLocalizationsTh extends AppLocalizations {
   String rankingMovedFromTo(int from, int now) {
     return '#$from เป็น #$now';
   }
+
+  @override
+  String get rankingSinceWcDrawShort => 'นับจากจับสลากแชมป์โลก';
+
+  @override
+  String get rankingSinceCycleStartShort => 'ในแคมเปญนี้';
+
+  @override
+  String get rankingTrend => 'แนวโน้มอันดับ';
 
   @override
   String msgCapsTitle(String name, int count) {
@@ -17289,4 +17329,57 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'จัดการสนามกีฬา';
+
+  @override
+  String get scheduleHome => 'เหย้า';
+
+  @override
+  String get scheduleAway => 'เยือน';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'กลุ่ม $name';
+  }
+
+  @override
+  String get scheduleFilterMine => 'ของฉัน';
+
+  @override
+  String get scheduleFilterCompetitions => 'รายการแข่งขัน';
+
+  @override
+  String get scheduleFilterDraws => 'การจับสลาก';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return 'จับสลาก$competition';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'พิธีจับสลาก';
+
+  @override
+  String get scheduleNoDraws => 'ไม่มีการจับสลากที่กำลังจะมาถึง';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'ปิดการเรียกตัวในอีก $count วัน',
+      one: 'ปิดการเรียกตัวพรุ่งนี้',
+      zero: 'ปิดการเรียกตัววันนี้',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'อีก $count นัด',
+    );
+    return '$month: $_temp0';
+  }
 }

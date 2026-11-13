@@ -509,6 +509,37 @@ class AppLocalizationsKo extends AppLocalizations {
   String get recordsBiggestWin => '최다 점수 차 승리';
 
   @override
+  String get recordsTileMatches => '경기';
+
+  @override
+  String get recordsTileWins => '승리';
+
+  @override
+  String get recordsTileTrophies => '트로피';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct%';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => '아직 없음';
+
+  @override
+  String get recordsBiggestDefeat => '최다 점수 차 패배';
+
+  @override
+  String get recordsRecordHolders => '기록 보유자';
+
+  @override
+  String get recordsMostCleanSheets => '최다 무실점';
+
+  @override
   String get recordsSeeAllMeetings => '모든 맞대결 보기';
 
   @override
@@ -7475,6 +7506,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String rankingMovedFromTo(int from, int now) {
     return '$from위에서 $now위로';
   }
+
+  @override
+  String get rankingSinceWcDrawShort => '세계선수권 추첨 이후';
+
+  @override
+  String get rankingSinceCycleStartShort => '이번 캠페인';
+
+  @override
+  String get rankingTrend => '순위 추이';
 
   @override
   String msgCapsTitle(String name, int count) {
@@ -17013,4 +17053,57 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get nationManageStadiums => '경기장 관리';
+
+  @override
+  String get scheduleHome => '홈';
+
+  @override
+  String get scheduleAway => '원정';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return '$name조';
+  }
+
+  @override
+  String get scheduleFilterMine => '내 경기';
+
+  @override
+  String get scheduleFilterCompetitions => '대회';
+
+  @override
+  String get scheduleFilterDraws => '추첨';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return '$competition 추첨';
+  }
+
+  @override
+  String get scheduleDrawCeremony => '추첨식';
+
+  @override
+  String get scheduleNoDraws => '예정된 추첨 없음';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '소집 마감까지 $count일',
+      one: '소집 마감 내일',
+      zero: '소집 마감 오늘',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count경기 더',
+    );
+    return '$month: $_temp0';
+  }
 }

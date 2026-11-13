@@ -1098,6 +1098,60 @@ abstract class AppLocalizations {
   /// **'Biggest win'**
   String get recordsBiggestWin;
 
+  /// Record book: label of the stat tile that shows how many matches the nation has played, with wins, draws and losses under it. Shown in capitals.
+  ///
+  /// In en, this message translates to:
+  /// **'Matches'**
+  String get recordsTileMatches;
+
+  /// Record book: label of the stat tile that shows the share of matches won (as a percentage), with goals for and against under it. Shown in capitals.
+  ///
+  /// In en, this message translates to:
+  /// **'Wins'**
+  String get recordsTileWins;
+
+  /// Record book: label of the stat tile that counts the titles the nation has won, with the latest one under it. Shown in capitals.
+  ///
+  /// In en, this message translates to:
+  /// **'Trophies'**
+  String get recordsTileTrophies;
+
+  /// Record book: the share of matches won, as a percentage, in the wins tile.
+  ///
+  /// In en, this message translates to:
+  /// **'{pct}%'**
+  String recordsWinSharePercent(String pct);
+
+  /// Record book: the newest title under the trophy count, a short competition tag and its year (like EC 2032).
+  ///
+  /// In en, this message translates to:
+  /// **'{competition} {year}'**
+  String recordsTrophyLatest(String competition, String year);
+
+  /// Record book: under the trophy count when the nation has not won a title yet in this save.
+  ///
+  /// In en, this message translates to:
+  /// **'None yet'**
+  String get recordsNoTrophiesYet;
+
+  /// Team-record row label: the nation's heaviest defeat.
+  ///
+  /// In en, this message translates to:
+  /// **'Biggest defeat'**
+  String get recordsBiggestDefeat;
+
+  /// Record book: heading over the card naming the nation's record holders (caps, goals, assists, clean sheets).
+  ///
+  /// In en, this message translates to:
+  /// **'Record holders'**
+  String get recordsRecordHolders;
+
+  /// Record book: heading of the goalkeepers' clean-sheets leaderboard.
+  ///
+  /// In en, this message translates to:
+  /// **'MOST CLEAN SHEETS'**
+  String get recordsMostCleanSheets;
+
   /// Button opening the full meetings list.
   ///
   /// In en, this message translates to:
@@ -11847,6 +11901,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'#{from} to #{now}'**
   String rankingMovedFromTo(int from, int now);
+
+  /// Ranking screen, your-team card: short mono caption after the movement figure (e.g. '▼4 since the WC draw · 1951'), shown in capitals. WC is the tiny tag for the World Championship. Keep it about 20 characters or fewer.
+  ///
+  /// In en, this message translates to:
+  /// **'since the WC draw'**
+  String get rankingSinceWcDrawShort;
+
+  /// Ranking screen, your-team card: short mono caption after the movement figure before any World Championship draw exists (e.g. '▲3 this campaign · 1951'), shown in capitals. Keep it about 20 characters or fewer.
+  ///
+  /// In en, this message translates to:
+  /// **'this campaign'**
+  String get rankingSinceCycleStartShort;
+
+  /// Ranking screen, your-team card: accessibility label of the small line showing how your world place has moved over recent releases. Tapping the card opens the full chart.
+  ///
+  /// In en, this message translates to:
+  /// **'Ranking trend'**
+  String get rankingTrend;
 
   /// Inbox: caps milestone headline.
   ///
@@ -26617,6 +26689,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Manage stadiums'**
   String get nationManageStadiums;
+
+  /// Schedule and hub fixture cards: the nation plays this match at home. Set in capitals in a small mono line.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get scheduleHome;
+
+  /// Schedule and hub fixture cards: the nation plays this match away. Set in capitals in a small mono line.
+  ///
+  /// In en, this message translates to:
+  /// **'Away'**
+  String get scheduleAway;
+
+  /// Schedule and hub fixture cards: the group the match belongs to, e.g. "Group A". Set in capitals in a small mono line.
+  ///
+  /// In en, this message translates to:
+  /// **'Group {name}'**
+  String scheduleGroupTag(String name);
+
+  /// Schedule screen filter chip: every event of the manager's own nation (matches and draws). Short.
+  ///
+  /// In en, this message translates to:
+  /// **'Mine'**
+  String get scheduleFilterMine;
+
+  /// Schedule screen filter chip: competitive matches only, friendlies hidden. Short.
+  ///
+  /// In en, this message translates to:
+  /// **'Competitions'**
+  String get scheduleFilterCompetitions;
+
+  /// Schedule screen filter chip: only the draw ceremonies still to come. Short.
+  ///
+  /// In en, this message translates to:
+  /// **'Draws'**
+  String get scheduleFilterDraws;
+
+  /// Schedule screen: a draw ceremony still to come, e.g. "Continental qualifying draw". {competition} is the competition name.
+  ///
+  /// In en, this message translates to:
+  /// **'{competition} draw'**
+  String scheduleDrawOf(String competition);
+
+  /// Schedule screen: small capitals line under a draw row, saying it is a draw ceremony.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw ceremony'**
+  String get scheduleDrawCeremony;
+
+  /// Schedule screen, Draws filter: shown when no draw is still to come.
+  ///
+  /// In en, this message translates to:
+  /// **'No draws to come'**
+  String get scheduleNoDraws;
+
+  /// Hub, under the upcoming fixtures: warning that the squad call-up must be named within this many days. Set in capitals.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Call-up closes today} =1{Call-up closes tomorrow} other{Call-up closes in {count} days}}'**
+  String hubCallUpClosesIn(int count);
+
+  /// Hub, screen-reader label of the small card after the next fixtures: the month and how many more matches the nation plays in it.
+  ///
+  /// In en, this message translates to:
+  /// **'{month}: {count, plural, =1{1 more match} other{{count} more matches}}'**
+  String hubNextWindowLabel(String month, int count);
 }
 
 class _AppLocalizationsDelegate

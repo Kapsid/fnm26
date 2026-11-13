@@ -543,6 +543,37 @@ class AppLocalizationsTr extends AppLocalizations {
   String get recordsBiggestWin => 'En büyük galibiyet';
 
   @override
+  String get recordsTileMatches => 'Maçlar';
+
+  @override
+  String get recordsTileWins => 'Galibiyetler';
+
+  @override
+  String get recordsTileTrophies => 'Kupalar';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '%$pct';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Henüz yok';
+
+  @override
+  String get recordsBiggestDefeat => 'En ağır yenilgi';
+
+  @override
+  String get recordsRecordHolders => 'Rekortmenler';
+
+  @override
+  String get recordsMostCleanSheets => 'EN ÇOK GOL YEMEDEN MAÇ';
+
+  @override
   String get recordsSeeAllMeetings => 'Tüm karşılaşmaları gör';
 
   @override
@@ -7626,6 +7657,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String rankingMovedFromTo(int from, int now) {
     return '#$from → #$now';
   }
+
+  @override
+  String get rankingSinceWcDrawShort => 'DŞ kurasından beri';
+
+  @override
+  String get rankingSinceCycleStartShort => 'bu kampanyada';
+
+  @override
+  String get rankingTrend => 'Sıralama eğilimi';
 
   @override
   String msgCapsTitle(String name, int count) {
@@ -17505,4 +17545,58 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Stadyumları yönet';
+
+  @override
+  String get scheduleHome => 'İç saha';
+
+  @override
+  String get scheduleAway => 'Deplasman';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return '$name Grubu';
+  }
+
+  @override
+  String get scheduleFilterMine => 'Benim';
+
+  @override
+  String get scheduleFilterCompetitions => 'Turnuvalar';
+
+  @override
+  String get scheduleFilterDraws => 'Kuralar';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return '$competition kurası';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'Kura töreni';
+
+  @override
+  String get scheduleNoDraws => 'Yaklaşan kura yok';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Kadro bildirimi $count gün içinde kapanıyor',
+      one: 'Kadro bildirimi yarın kapanıyor',
+      zero: 'Kadro bildirimi bugün kapanıyor',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count maç daha',
+      one: '1 maç daha',
+    );
+    return '$month: $_temp0';
+  }
 }

@@ -52,25 +52,23 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  Widget rankRow(int movement) => RankRow(
-    nation: nation(4, 'Peru'),
-    rank: 4,
-    points: 1987,
-    movement: movement,
-    // Not the manager's own row: that one carries a "your team" chip beside
-    // the name, and the chip plus a long name overflows the row's name column
-    // under the test font. That is its own fault, older than this change, and
-    // nothing to do with the movement cell being measured here.
-    isPlayer: false,
-    onTap: () {},
-  );
+  Widget rankRow(int movement, {bool isPlayer = false, String name = 'Peru'}) =>
+      RankRow(
+        nation: nation(4, name),
+        rank: 4,
+        points: 1987,
+        movement: movement,
+        isPlayer: isPlayer,
+        onTap: () {},
+      );
 
   /// The row as the list lays it out: the list's own side padding, so the row
   /// gets exactly the width it gets on the screen.
-  Widget row(int movement) => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16),
-    child: rankRow(movement),
-  );
+  Widget row(int movement, {bool isPlayer = false, String name = 'Peru'}) =>
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: rankRow(movement, isPlayer: isPlayer, name: name),
+      );
 
   group('a nation movement is on the row', () {
     testWidgets('a climb draws an up arrow and the number of places', (
@@ -78,33 +76,28 @@ void main() {
     ) async {
       await pumpAt(tester, row(21), width: 360, locale: 'en');
 
-      expect(find.byIcon(Icons.arrow_drop_up), findsOneWidget);
-      expect(find.byIcon(Icons.arrow_drop_down), findsNothing);
-      expect(find.text('21'), findsOneWidget);
+      expect(find.text('▲21'), findsOneWidget);
     });
 
     testWidgets('a slide draws a down arrow', (tester) async {
       await pumpAt(tester, row(-13), width: 360, locale: 'en');
 
-      expect(find.byIcon(Icons.arrow_drop_down), findsOneWidget);
-      expect(find.byIcon(Icons.arrow_drop_up), findsNothing);
       // The direction is the arrow; the figure itself is the distance, never
       // a minus sign the manager has to read twice.
-      expect(find.text('13'), findsOneWidget);
+      expect(find.text('▼13'), findsOneWidget);
     });
 
     testWidgets('standing still draws neither arrow', (tester) async {
       await pumpAt(tester, row(0), width: 360, locale: 'en');
 
-      expect(find.byIcon(Icons.arrow_drop_up), findsNothing);
-      expect(find.byIcon(Icons.arrow_drop_down), findsNothing);
-      expect(find.byIcon(Icons.remove), findsOneWidget);
+      expect(find.textContaining('▲'), findsNothing);
+      expect(find.textContaining('▼'), findsNothing);
+      expect(find.text('–'), findsOneWidget);
     });
 
-    // A moved row draws a 3px outline where a steady one draws 1px, which is
-    // 4px more height. The row height has to carry it: at 56 the flag was
-    // quietly squashed to 36x34 on exactly the rows a championship moves.
-    for (final movement in [0, -13]) {
+    // The dense row is 44 high: its flag must still come out round, on the
+    // manager's own row (with its tag) as on any other.
+    for (final (movement, mine) in [(0, false), (-13, true)]) {
       testWidgets('the flag stays square at the row height ($movement)', (
         tester,
       ) async {
@@ -114,13 +107,14 @@ void main() {
             height: kRankRowHeight,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: rankRow(movement),
+              child: rankRow(movement, isPlayer: mine),
             ),
           ),
           width: 360,
           locale: 'en',
         );
-        expect(tester.getSize(find.byType(FlagDisc)), const Size(36, 36));
+        expect(tester.getSize(find.byType(FlagDisc)), const Size(22, 22));
+        expectNothingCut(tester);
       });
     }
 
@@ -129,7 +123,22 @@ void main() {
         testWidgets('the figure is whole at $width in $locale', (tester) async {
           // Three digits: the worst a 200-nation table can produce.
           await pumpAt(tester, row(-104), width: width, locale: locale);
-          expectWhole(find.text('104'), 'the movement figure');
+          expectWhole(find.text('▼104'), 'the movement figure');
+          expectNothingCut(tester);
+        });
+
+        testWidgets('the own row with its tag fits at $width in $locale', (
+          tester,
+        ) async {
+          await pumpAt(
+            tester,
+            row(-104, isPlayer: true, name: 'Bosnia and Herzegovina'),
+            width: width,
+            locale: locale,
+          );
+          final l = AppLocalizations.of(tester.element(find.byType(RankRow)));
+          expectWhole(find.text(l.rankingYourTeam), 'the your-team tag');
+          expectWhole(find.text('1987'), 'the points');
           expectNothingCut(tester);
         });
       }
@@ -161,7 +170,7 @@ void main() {
             find.text(l.rankingMovedFromTo(125, 4)),
             'the from-and-to figure',
           );
-          expectWhole(find.text('121'), 'the header movement figure');
+          expectWhole(find.text('▲121'), 'the header movement figure');
           expectNothingCut(tester);
         });
 

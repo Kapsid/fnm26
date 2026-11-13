@@ -558,6 +558,37 @@ class AppLocalizationsEl extends AppLocalizations {
   String get recordsBiggestWin => 'Μεγαλύτερη νίκη';
 
   @override
+  String get recordsTileMatches => 'Αγώνες';
+
+  @override
+  String get recordsTileWins => 'Νίκες';
+
+  @override
+  String get recordsTileTrophies => 'Τρόπαια';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct%';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Κανένα ακόμη';
+
+  @override
+  String get recordsBiggestDefeat => 'Βαρύτερη ήττα';
+
+  @override
+  String get recordsRecordHolders => 'Κάτοχοι ρεκόρ';
+
+  @override
+  String get recordsMostCleanSheets => 'ΠΕΡΙΣΣΟΤΕΡΑ ΜΗΔΕΝ ΠΑΘΗΤΙΚΑ';
+
+  @override
   String get recordsSeeAllMeetings => 'Δες όλες τις αναμετρήσεις';
 
   @override
@@ -7744,6 +7775,15 @@ class AppLocalizationsEl extends AppLocalizations {
   String rankingMovedFromTo(int from, int now) {
     return '#$from σε #$now';
   }
+
+  @override
+  String get rankingSinceWcDrawShort => 'από την κλήρωση ΠΠ';
+
+  @override
+  String get rankingSinceCycleStartShort => 'σε αυτή την εκστρατεία';
+
+  @override
+  String get rankingTrend => 'Τάση κατάταξης';
 
   @override
   String msgCapsTitle(String name, int count) {
@@ -17686,4 +17726,58 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Διαχείριση γηπέδων';
+
+  @override
+  String get scheduleHome => 'Εντός';
+
+  @override
+  String get scheduleAway => 'Εκτός';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'Όμιλος $name';
+  }
+
+  @override
+  String get scheduleFilterMine => 'Δικά μου';
+
+  @override
+  String get scheduleFilterCompetitions => 'Διοργανώσεις';
+
+  @override
+  String get scheduleFilterDraws => 'Κληρώσεις';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return 'Κλήρωση: $competition';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'Τελετή κλήρωσης';
+
+  @override
+  String get scheduleNoDraws => 'Καμία επερχόμενη κλήρωση';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Οι κλήσεις κλείνουν σε $count ημέρες',
+      one: 'Οι κλήσεις κλείνουν αύριο',
+      zero: 'Οι κλήσεις κλείνουν σήμερα',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'ακόμη $count αγώνες',
+      one: 'ακόμη 1 αγώνας',
+    );
+    return '$month: $_temp0';
+  }
 }
