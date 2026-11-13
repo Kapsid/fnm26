@@ -46,6 +46,7 @@ abstract interface class CareerRepository {
     required int nationId,
     required int rngSeed,
     required DateTime startDate,
+    int? managerBirthYear,
   });
 
   /// All saves, most recently PLAYED first (falling back to creation order for
@@ -115,6 +116,10 @@ abstract interface class CareerRepository {
 
   /// Marks the Y feed read up to [date] — the in-game date of its newest post.
   Future<void> setYReadAt(int id, DateTime date);
+
+  /// Records the manager's birth year: the one-time answer an old save (no
+  /// age on record) gives the hub's prompt.
+  Future<void> setManagerBirthYear(int id, int birthYear);
 
   /// Adds [seconds] of real-world play time to a save.
   ///

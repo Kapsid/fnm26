@@ -78,5 +78,10 @@ abstract class Career with _$Career {
     /// order, when the captain cannot play. Intent, like [captainPlayerId].
     int? viceCaptain1PlayerId,
     int? viceCaptain2PlayerId,
+
+    /// The year the manager was born, or null when no age was ever given (a
+    /// save from before ages, until the one-time prompt is answered). Only
+    /// ever shown; nothing in the sim reads it. See `ManagerAge`.
+    int? managerBirthYear,
   }) = _Career;
 }

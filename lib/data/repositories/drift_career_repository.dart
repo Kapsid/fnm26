@@ -26,6 +26,7 @@ class DriftCareerRepository implements CareerRepository {
     required int nationId,
     required int rngSeed,
     required DateTime startDate,
+    int? managerBirthYear,
   }) async {
     final id = await _db
         .into(_db.careers)
@@ -39,6 +40,7 @@ class DriftCareerRepository implements CareerRepository {
             // A brand-new save counts as just played, so it opens at the top
             // of the list rather than below older saves.
             lastPlayedAt: Value(DateTime.now()),
+            managerBirthYear: Value(managerBirthYear),
           ),
         );
     final row = await (_db.select(
@@ -166,6 +168,13 @@ class DriftCareerRepository implements CareerRepository {
   Future<void> setBudget(int id, int budget) async {
     await (_db.update(_db.careers)..where((t) => t.id.equals(id))).write(
       CareersCompanion(budget: Value(budget)),
+    );
+  }
+
+  @override
+  Future<void> setManagerBirthYear(int id, int birthYear) async {
+    await (_db.update(_db.careers)..where((t) => t.id.equals(id))).write(
+      CareersCompanion(managerBirthYear: Value(birthYear)),
     );
   }
 

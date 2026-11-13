@@ -78,6 +78,7 @@ const int _newgenIdBase = 1000000000;
     ManagerTies,
     PackVersions,
     PackVersionImages,
+    DrawSlots,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -98,7 +99,7 @@ class AppDatabase extends _$AppDatabase {
   /// full set of upgrade paths from it — see `schema_migration_test.dart`.
   /// A hand-written list of paths is a step somebody forgets on the bump that
   /// matters.
-  static const int currentSchemaVersion = 56;
+  static const int currentSchemaVersion = 57;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -357,6 +358,20 @@ class AppDatabase extends _$AppDatabase {
         from55To56: (m, schema) async {
           await m.createTable(schema.packVersions);
           await m.createTable(schema.packVersionImages);
+        },
+        // 56 -> 57 is the one bump release 1.1.2 makes, carrying all three of
+        // its changes, every one additive:
+        //  - careers.manager_birth_year, nullable: an upgraded save has no age
+        //    on record until the manager answers the hub's one-time prompt,
+        //    and nothing in the sim reads it;
+        //  - competitions.edition, default 0: every competition already saved
+        //    is the only one of its kind in its cycle, which is edition 0;
+        //  - draw_slots, a new empty table: no stored draw has placeholders
+        //    yet, so an upgraded career has none.
+        from56To57: (m, schema) async {
+          await m.addColumn(schema.careers, schema.careers.managerBirthYear);
+          await m.addColumn(schema.competitions, schema.competitions.edition);
+          await m.createTable(schema.drawSlots);
         },
       )(m, from, to);
     },

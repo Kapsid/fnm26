@@ -14,6 +14,7 @@ import '../../generated_migrations/schema_v52.dart' as v52;
 import '../../generated_migrations/schema_v53.dart' as v53;
 import '../../generated_migrations/schema_v54.dart' as v54;
 import '../../generated_migrations/schema_v55.dart' as v55;
+import '../../generated_migrations/schema_v56.dart' as v56;
 
 /// Guards the promise that a save survives a schema bump.
 ///
@@ -517,6 +518,93 @@ void main() {
       expect(await db.select(db.packVersionImages).get(), isEmpty);
     },
   );
+
+  test(
+    '56 -> 57 keeps every career and competition, with no age and edition 0',
+    () async {
+      // 57 is release 1.1.2's one bump: the manager's birth year (nullable),
+      // a competition's edition (default 0) and the stored draw slots (a new
+      // empty table). All additive: an old save has no age on record, every
+      // competition is the only one of its kind in its cycle, no draw holds a
+      // placeholder.
+      expect(AppDatabase.currentSchemaVersion, greaterThanOrEqualTo(57));
+      final schema = await verifier.schemaAt(56);
+      final old = v56.DatabaseAtV56(schema.newConnection());
+      await old.customStatement(
+        'INSERT INTO careers (id, nation_id, manager_name, created_at, '
+        'in_game_date, rng_seed, cycle_pointer, budget) '
+        "VALUES (1, 1, 'Veteran', 0, 0, 7, 2, 0)",
+      );
+      await old.customStatement(
+        'INSERT INTO competitions (id, career_id, confederation, name, kind, '
+        "cycle) VALUES (4, 1, 'europe', 'Nations Cup', 'nationsLeague', 2)",
+      );
+      await old.close();
+
+      final db = AppDatabase.forTesting(schema.newConnection());
+      addTearDown(db.close);
+      await verifier.migrateAndValidate(db, 57);
+
+      final career = await db.select(db.careers).getSingle();
+      expect(career.managerName, 'Veteran');
+      expect(career.cyclePointer, 2);
+      expect(career.managerBirthYear, isNull);
+      final comp = await db.select(db.competitions).getSingle();
+      expect(
+        (comp.id, comp.name, comp.cycle, comp.edition),
+        (4, 'Nations Cup', 2, 0),
+      );
+      expect(await db.select(db.drawSlots).get(), isEmpty);
+
+      // And the new shapes take writes straight away.
+      await (db.update(db.careers)..where((t) => t.id.equals(1))).write(
+        const CareersCompanion(managerBirthYear: Value(1980)),
+      );
+      expect((await db.select(db.careers).getSingle()).managerBirthYear, 1980);
+      await db
+          .into(db.drawSlots)
+          .insert(
+            DrawSlotsCompanion.insert(
+              careerId: 1,
+              cycle: 2,
+              competitionKind: 'euroFinals',
+              groupName: 'A',
+              position: 3,
+              placeholderKey: const Value('UEFA-A'),
+            ),
+          );
+      expect(await db.select(db.drawSlots).get(), hasLength(1));
+    },
+  );
+
+  test('a v52 career reaches today with its data and no age', () async {
+    // An older save, several steps back, takes the whole path to today.
+    final schema = await verifier.schemaAt(52);
+    final old = v52.DatabaseAtV52(schema.newConnection());
+    await old.customStatement(
+      'INSERT INTO careers (id, nation_id, manager_name, created_at, '
+      'in_game_date, rng_seed, cycle_pointer, budget, captain_player_id) '
+      "VALUES (1, 3, 'Old hand', 0, 0, 7, 1, 5000000, 77)",
+    );
+    await old.customStatement(
+      'INSERT INTO competitions (id, career_id, confederation, name, kind, '
+      "cycle) VALUES (9, 1, 'europe', 'Qualifiers', 'worldCupQualifying', 1)",
+    );
+    await old.close();
+
+    final db = AppDatabase.forTesting(schema.newConnection());
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, AppDatabase.currentSchemaVersion);
+
+    final career = await db.select(db.careers).getSingle();
+    expect(
+      (career.managerName, career.budget, career.captainPlayerId),
+      ('Old hand', 5000000, 77),
+    );
+    expect(career.managerBirthYear, isNull);
+    final comp = await db.select(db.competitions).getSingle();
+    expect((comp.id, comp.edition), (9, 0));
+  });
 
   for (final MapEntry(key: from, value: to) in upgrades.entries) {
     test('a save migrates from v$from to v$to with its data intact', () async {

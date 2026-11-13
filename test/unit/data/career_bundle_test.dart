@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:drift/drift.dart' show DriftSqlType, Value, Variable;
+import 'package:drift/drift.dart'
+    show DriftSqlType, OrderingTerm, Value, Variable;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/db/app_database.dart';
@@ -403,6 +404,130 @@ void main() {
     expect(ties.single.tieNo, 7);
     expect(ties.single.managerId, 502);
     expect(ties.single.delta, -2);
+  });
+
+  test(
+    'the age, competition editions and draw slots travel with the career',
+    () async {
+      final original = await aCareerNamed('Slots');
+      await (db.update(db.careers)..where((t) => t.id.equals(original))).write(
+        const CareersCompanion(managerBirthYear: Value(1981)),
+      );
+      await db
+          .into(db.competitions)
+          .insert(
+            CompetitionsCompanion.insert(
+              careerId: original,
+              name: 'Nations Cup',
+              kind: const Value(CompetitionKind.nationsLeague),
+              confederation: Confederation.europe,
+              edition: const Value(1),
+            ),
+          );
+      // Somebody else's slot, so the imported ids cannot coincide by luck.
+      final other = await aCareerNamed('Other');
+      for (final (career, pos, nation, key) in [
+        (other, 0, 5, null),
+        (original, 0, 7, null),
+        (original, 1, null, 'UEFA-A'),
+      ]) {
+        await db
+            .into(db.drawSlots)
+            .insert(
+              DrawSlotsCompanion.insert(
+                careerId: career,
+                cycle: 0,
+                competitionKind: 'euroFinals',
+                confederation: const Value(Confederation.europe),
+                groupName: 'B',
+                position: pos,
+                nationId: Value(nation),
+                placeholderKey: Value(key),
+              ),
+            );
+      }
+      await (db.update(db.drawSlots)
+            ..where((t) => t.placeholderKey.equals('UEFA-A')))
+          .write(const DrawSlotsCompanion(resolvedNationId: Value(12)));
+
+      final bundle = CareerBundle.decode(
+        CareerBundle.encode(await CareerBundle.export(db, original)),
+      ).bundle!;
+      expect((bundle['tables']! as Map)['draw_slots'], hasLength(2));
+      final imported = await CareerBundle.import(db, bundle);
+
+      final career = await (db.select(
+        db.careers,
+      )..where((t) => t.id.equals(imported))).getSingle();
+      expect(career.managerBirthYear, 1981);
+      final editions = await (db.select(
+        db.competitions,
+      )..where((t) => t.careerId.equals(imported))).get();
+      expect({for (final c in editions) c.name: c.edition}, {
+        'Slots Cup': 0,
+        'Nations Cup': 1,
+      });
+      final slots =
+          await (db.select(db.drawSlots)
+                ..where((t) => t.careerId.equals(imported))
+                ..orderBy([(t) => OrderingTerm(expression: t.position)]))
+              .get();
+      expect(
+        [
+          for (final s in slots)
+            (
+              s.position,
+              s.nationId,
+              s.placeholderKey,
+              s.resolvedNationId,
+              s.confederation,
+            ),
+        ],
+        [
+          (0, 7, null, null, Confederation.europe),
+          (1, null, 'UEFA-A', 12, Confederation.europe),
+        ],
+      );
+      // Renumbered on the way in: new rows, the originals untouched.
+      final all = await db.select(db.drawSlots).get();
+      expect(all, hasLength(5));
+      expect(all.map((s) => s.id).toSet(), hasLength(5));
+    },
+  );
+
+  test('a bundle from 56 imports with no age and no draw slots', () async {
+    final original = await aCareerNamed('Pre57');
+    final bundle = await CareerBundle.export(db, original);
+    // What a schema-56 build wrote: no draw slots, no age, no edition.
+    bundle['schemaVersion'] = 56;
+    final tables = bundle['tables']! as Map;
+    tables.remove('draw_slots');
+    for (final row in tables['careers'] as List) {
+      (row as Map).remove('manager_birth_year');
+    }
+    for (final row in tables['competitions'] as List) {
+      (row as Map).remove('edition');
+    }
+
+    final decoded = CareerBundle.decode(CareerBundle.encode(bundle));
+    expect(decoded.rejection, isNull);
+    final imported = await CareerBundle.import(db, decoded.bundle!);
+
+    final career = await (db.select(
+      db.careers,
+    )..where((t) => t.id.equals(imported))).getSingle();
+    expect(career.managerName, 'Pre57');
+    expect(career.managerBirthYear, isNull);
+    final comps = await (db.select(
+      db.competitions,
+    )..where((t) => t.careerId.equals(imported))).get();
+    expect(comps.single.edition, 0);
+    expect(
+      await (db.select(
+        db.drawSlots,
+      )..where((t) => t.careerId.equals(imported))).get(),
+      isEmpty,
+    );
   });
 
   test('a bundle from 54 imports with no manager rows', () async {
