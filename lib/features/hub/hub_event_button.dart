@@ -10,6 +10,7 @@ import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/app_date.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/features/awards/award_providers.dart';
 import 'package:fnm/features/awards/awards_ceremony_screen.dart';
@@ -25,6 +26,7 @@ import 'package:fnm/features/press/press_copy.dart';
 import 'package:fnm/features/press/press_desk.dart';
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/press/press_sheet.dart';
+import 'package:fnm/features/press/press_ticker.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
 import 'package:fnm/features/squad/grievance_sheet.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -280,6 +282,16 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
           final names = await ref
               .read(conferenceServiceProvider)
               .playerNames(hub.career, conference!);
+          // The group letters the ticker names its matches by. Display only:
+          // a failure costs the letter, never the conference.
+          var groupNames = const <int, String>{};
+          try {
+            groupNames = await ref
+                .read(competitionRepositoryProvider)
+                .groupNames(careerId);
+          } on Object catch (e, st) {
+            AppLog.error('press-groups', e, st);
+          }
           if (!context.mounted) return;
           unawaited(
             showAdaptiveSheet<void>(
@@ -290,6 +302,21 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
               enableDrag: false,
               builder: (sheetContext) {
                 final facts = conference!.facts.preview;
+                final l = AppLocalizations.of(sheetContext);
+                // What the room is about: the fixture or results across the
+                // top, and the fixtures a promise made in it is judged on.
+                final room = pressContextFor(
+                  l,
+                  conference: conference,
+                  nationId: hub.career.nationId,
+                  fixtures: hub.fixtures,
+                  nations: hub.nations,
+                  group: hub.group,
+                  groupNames: groupNames,
+                  dateLabel: (d) =>
+                      '${AppDate.weekdayCaps(sheetContext, d)} '
+                      '${AppDate.dayMonthNumeric(sheetContext, d)}',
+                );
                 return PressSheet(
                   careerId: careerId,
                   conference: conference,
@@ -299,13 +326,16 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
                   competitionName: facts == null
                       ? ''
                       : previewCompetitionName(
-                          AppLocalizations.of(sheetContext),
+                          l,
                           facts.campaign,
                           hub.nations[hub.career.nationId]?.confederation,
                         ),
                   rivalName: facts?.rivalNationId == null
                       ? ''
                       : hub.nations[facts!.rivalNationId]?.name ?? '',
+                  ticker: room.ticker,
+                  opener: room.opener,
+                  next: room.next,
                 );
               },
             ),

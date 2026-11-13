@@ -117,7 +117,7 @@ void main() {
     );
     await tester.tap(find.text('HOST'));
     await tester.pumpAndSettle();
-    expect(find.text(l.pressQuestionOf(1, 3)), findsOneWidget);
+    expect(find.text(l.pressFloor(1, 3)), findsOneWidget);
 
     // The first demandMore answer on the opening beat.
     final demandMore = [
@@ -135,7 +135,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(fake.answers.single.$2, AnswerKind.demandMore);
-    expect(find.text(l.pressQuestionOf(2, 3)), findsOneWidget);
+    expect(find.text(l.pressFloor(2, 3)), findsOneWidget);
     expect(find.textContaining('Novák'), findsWidgets);
     expect(find.textContaining('On the record'), findsOneWidget);
 
@@ -144,11 +144,11 @@ void main() {
     await tester.pumpAndSettle();
     expect(fake.answers.last.$2, AnswerKind.blamePlayer);
     // Throwback is question 3 of 3.
-    expect(find.text(l.pressQuestionOf(3, 3)), findsOneWidget);
+    expect(find.text(l.pressFloor(3, 3)), findsOneWidget);
     await tester.tap(find.byType(InkWell).first);
     await tester.pumpAndSettle();
 
-    expect(find.text(l.pressTomorrowsHeadline), findsOneWidget);
+    expect(find.text(l.pressAfterTitle), findsOneWidget);
   }
 
   testWidgets('three beats, the record line, the verdict and leaving', (
@@ -156,8 +156,8 @@ void main() {
   ) async {
     final fake = _FakeService();
     await toVerdict(tester, fake);
-    await tester.tap(find.text(l.pressLeaveRoom));
-    await tester.tap(find.text(l.pressLeaveRoom), warnIfMissed: false);
+    await tester.tap(find.text(l.hubContinue));
+    await tester.tap(find.text(l.hubContinue), warnIfMissed: false);
     await tester.pumpAndSettle();
     expect(fake.finished, [42]);
     // Only the sheet popped: the route under it is still there.
@@ -165,19 +165,12 @@ void main() {
     expect(find.byType(PressSheet), findsNothing);
   });
 
-  testWidgets('the arrows stay masked until the conference is over', (
+  testWidgets('the effects stay masked until the conference is over', (
     tester,
   ) async {
     // Playtest: the dressing-room and board arrows on every answer turned
-    // the conference into picking the greenest tile. They come out only in
-    // the verdict, as the overall swing.
-    Finder arrows() => find.byWidgetPredicate(
-      (w) =>
-          w is Icon &&
-          (w.icon == Icons.arrow_upward_rounded ||
-              w.icon == Icons.arrow_downward_rounded),
-    );
-    var duringBeats = 0;
+    // the conference into picking the greenest tile. The swings come out
+    // only at the end (1.1.2, variant C: three signed tiles).
     final fake = _FakeService();
     await tester.binding.setSurfaceSize(const Size(500, 1400));
     addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -194,18 +187,15 @@ void main() {
     );
     await tester.pumpAndSettle();
     for (var beat = 0; beat < 3; beat++) {
-      expect(find.text(l.pressTomorrowsHeadline), findsNothing);
-      duringBeats += arrows().evaluate().length;
-      expect(find.text(l.pressSquad), findsNothing);
-      expect(find.text(l.pressBoard), findsNothing);
-      expect(find.text(l.pressNoEffect), findsNothing);
+      expect(find.text(l.pressAfterTitle), findsNothing);
+      expect(find.byType(PressEffectTile), findsNothing);
+      expect(find.byType(PressSwing), findsNothing);
       await tester.tap(find.byType(InkWell).first);
       await tester.pumpAndSettle();
     }
-    expect(duringBeats, 0, reason: 'an answer showed its arrows');
 
-    // Over: the verdict draws the overall swing.
-    expect(find.text(l.pressTomorrowsHeadline), findsOneWidget);
+    // Over: the end screen shows the overall swing.
+    expect(find.text(l.pressAfterTitle), findsOneWidget);
     final total = fake.answers.fold<PressEffect>((morale: 0, board: 0), (
       t,
       a,
@@ -213,15 +203,16 @@ void main() {
       final e = ConferenceBuilder.effectOf(a.$2, conference.credibility);
       return (morale: t.morale + e.morale, board: t.board + e.board);
     });
-    final expected =
-        Press.arrowsFor(total.morale) + Press.arrowsFor(total.board);
-    expect(arrows(), findsNWidgets(expected));
+    final tiles = tester
+        .widgetList<PressEffectTile>(find.byType(PressEffectTile))
+        .toList();
+    expect(tiles.map((t) => t.value).take(2), [total.morale, total.board]);
   });
 
   testWidgets('a finish that throws still lets him leave', (tester) async {
     final fake = _FakeService(failFinish: true);
     await toVerdict(tester, fake);
-    await tester.tap(find.text(l.pressLeaveRoom));
+    await tester.tap(find.text(l.hubContinue));
     await tester.pumpAndSettle();
     expect(find.text('HOST'), findsOneWidget);
     expect(find.byType(PressSheet), findsNothing);
@@ -275,7 +266,7 @@ void main() {
       overrides: [conferenceServiceProvider.overrideWithValue(fake)],
     );
     await tester.pumpAndSettle();
-    expect(find.text(l.pressQuestionOf(1, 3)), findsOneWidget);
+    expect(find.text(l.pressFloor(1, 3)), findsOneWidget);
     expect(find.textContaining('World Championship'), findsOneWidget);
     // Aiming higher than a quarter-final brief states the semi-finals.
     expect(
@@ -296,7 +287,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(fake.answers.single, (0, AnswerKind.matchBrief));
 
-    expect(find.text(l.pressQuestionOf(2, 3)), findsOneWidget);
+    expect(find.text(l.pressFloor(2, 3)), findsOneWidget);
     expect(find.textContaining('Argentina'), findsOneWidget);
     await tester.tap(
       find.byWidgetPredicate(
@@ -310,7 +301,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text(l.pressQuestionOf(3, 3)), findsOneWidget);
+    expect(find.text(l.pressFloor(3, 3)), findsOneWidget);
     expect(find.textContaining('Svoboda'), findsWidgets);
     await tester.tap(
       find.byWidgetPredicate(
@@ -328,7 +319,7 @@ void main() {
       AnswerKind.fearNobody,
       AnswerKind.teamFirst,
     ]);
-    expect(find.text(l.pressTomorrowsHeadline), findsOneWidget);
+    expect(find.text(l.pressAfterTitle), findsOneWidget);
   });
 
   // Players, 1.1.0: "If  is not at his best, does the side have anything?"
@@ -386,7 +377,7 @@ void main() {
         overrides: [conferenceServiceProvider.overrideWithValue(fake)],
       );
       await tester.pumpAndSettle();
-      expect(find.text(l.pressQuestionOf(1, 2)), findsOneWidget);
+      expect(find.text(l.pressFloor(1, 2)), findsOneWidget);
       for (var beat = 0; beat < 2; beat++) {
         for (final t in tester.widgetList<Text>(find.byType(Text))) {
           expect((t.data ?? '').contains('  '), isFalse, reason: t.data);
@@ -395,7 +386,7 @@ void main() {
         await tester.pumpAndSettle();
       }
       expect(fake.answers, hasLength(2));
-      expect(find.text(l.pressTomorrowsHeadline), findsOneWidget);
+      expect(find.text(l.pressAfterTitle), findsOneWidget);
     });
   }
 

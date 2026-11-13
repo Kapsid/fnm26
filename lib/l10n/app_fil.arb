@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation}: magreretiro si {name} ({age}) sa pagma-manage",
   "editorManagerAge": "Edad",
   "editorManagerAgeHint": "Walang laman: ang laro ang pipili",
-  "editorIssueManagerAge": "Dapat mula {min} hanggang {max} ang edad ng manager."
+  "editorIssueManagerAge": "Dapat mula {min} hanggang {max} ang edad ng manager.",
+  "pressFloor": "IKAW NA ANG MAGSASALITA · {index}/{total}",
+  "pressTickerStanding": "{code} {points} PTS · {place}",
+  "pressAfterTitle": "PAGKATAPOS NG PRESS CONFERENCE",
+  "pressTileMorale": "Morale",
+  "pressTilePress": "Media",
+  "pressPromiseHeading": "IPINANGAKO MO",
+  "pressPromiseWinNext": "Panalo sa susunod na laban.",
+  "pressPromiseJob": "Ang trabaho mo sa susunod na tatlong laban.",
+  "pressPromiseJudgedCampaign": "Huhusgahan ito ng board kapag tapos na ang kampanya.",
+  "pressPromiseJudgedMatch": "Huhusgahan sa resulta ng susunod na laban."
 }

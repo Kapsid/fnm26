@@ -206,12 +206,13 @@ void main() {
         ),
       ),
     );
-    expect(find.text('Ann Bun'), findsOneWidget);
-    expect(find.text('Grill Post'), findsOneWidget);
-    expect(find.text(renamed.name), findsNothing);
+    // The byline is one mono line in capitals: "NAME · OUTLET".
+    Finder line(String text) =>
+        find.textContaining(text.toUpperCase(), findRichText: true);
+    expect(line('Ann Bun · Grill Post'), findsOneWidget);
+    expect(line(renamed.name), findsNothing);
     // A blank name keeps the reporter's own; the outlet he was given shows.
-    expect(find.text(other.name), findsOneWidget);
-    expect(find.text('The Skewer'), findsOneWidget);
+    expect(line('${other.name} · The Skewer'), findsOneWidget);
   });
 
   test('a renamed Y account handle is its name without spaces, capped', () {

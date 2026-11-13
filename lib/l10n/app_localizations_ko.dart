@@ -17191,4 +17191,38 @@ class AppLocalizationsKo extends AppLocalizations {
   String editorIssueManagerAge(int min, int max) {
     return '감독의 나이는 $min~$max세여야 합니다.';
   }
+
+  @override
+  String pressFloor(int index, int total) {
+    return '발언 차례 · $index/$total';
+  }
+
+  @override
+  String pressTickerStanding(String code, int points, String place) {
+    return '$code 승점 $points · $place';
+  }
+
+  @override
+  String get pressAfterTitle => '기자회견 후';
+
+  @override
+  String get pressTileMorale => '사기';
+
+  @override
+  String get pressTilePress => '언론';
+
+  @override
+  String get pressPromiseHeading => '당신의 약속';
+
+  @override
+  String get pressPromiseWinNext => '다음 경기 승리.';
+
+  @override
+  String get pressPromiseJob => '다음 세 경기에 거는 자리.';
+
+  @override
+  String get pressPromiseJudgedCampaign => '대회가 결정되면 이사회가 판단합니다.';
+
+  @override
+  String get pressPromiseJudgedMatch => '다음 경기 결과로 판단합니다.';
 }

@@ -17621,4 +17621,39 @@ class AppLocalizationsVi extends AppLocalizations {
   String editorIssueManagerAge(int min, int max) {
     return 'Tuổi của huấn luyện viên phải từ $min đến $max.';
   }
+
+  @override
+  String pressFloor(int index, int total) {
+    return 'ĐẾN LƯỢT BẠN · $index/$total';
+  }
+
+  @override
+  String pressTickerStanding(String code, int points, String place) {
+    return '$code $points ĐIỂM · $place';
+  }
+
+  @override
+  String get pressAfterTitle => 'SAU HỌP BÁO';
+
+  @override
+  String get pressTileMorale => 'Tinh thần';
+
+  @override
+  String get pressTilePress => 'Báo chí';
+
+  @override
+  String get pressPromiseHeading => 'BẠN ĐÃ HỨA';
+
+  @override
+  String get pressPromiseWinNext => 'Một chiến thắng ở trận tới.';
+
+  @override
+  String get pressPromiseJob => 'Chiếc ghế của bạn trong ba trận tới.';
+
+  @override
+  String get pressPromiseJudgedCampaign =>
+      'Ban lãnh đạo sẽ đánh giá khi chiến dịch ngã ngũ.';
+
+  @override
+  String get pressPromiseJudgedMatch => 'Đánh giá bằng kết quả trận tới.';
 }

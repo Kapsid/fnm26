@@ -17860,4 +17860,39 @@ class AppLocalizationsBg extends AppLocalizations {
   String editorIssueManagerAge(int min, int max) {
     return 'Възрастта на селекционера трябва да е от $min до $max.';
   }
+
+  @override
+  String pressFloor(int index, int total) {
+    return 'ДУМАТА Е ВАША · $index/$total';
+  }
+
+  @override
+  String pressTickerStanding(String code, int points, String place) {
+    return '$code $points Т. · $place МЯСТО';
+  }
+
+  @override
+  String get pressAfterTitle => 'СЛЕД ПРЕСКОНФЕРЕНЦИЯТА';
+
+  @override
+  String get pressTileMorale => 'Морал';
+
+  @override
+  String get pressTilePress => 'Медии';
+
+  @override
+  String get pressPromiseHeading => 'ОБЕЩАХТЕ';
+
+  @override
+  String get pressPromiseWinNext => 'Победа в следващия мач.';
+
+  @override
+  String get pressPromiseJob => 'Поста си в следващите три мача.';
+
+  @override
+  String get pressPromiseJudgedCampaign =>
+      'Съветът ще отсъди, когато кампанията приключи.';
+
+  @override
+  String get pressPromiseJudgedMatch => 'Решава резултатът от следващия мач.';
 }

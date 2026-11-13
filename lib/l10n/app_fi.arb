@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation}: {name} ({age}) jättää valmennustyöt",
   "editorManagerAge": "Ikä",
   "editorManagerAgeHint": "Tyhjä: peli valitsee",
-  "editorIssueManagerAge": "Valmentajan iän on oltava välillä {min} ja {max}."
+  "editorIssueManagerAge": "Valmentajan iän on oltava välillä {min} ja {max}.",
+  "pressFloor": "PUHEENVUORO ON SINULLA · {index}/{total}",
+  "pressTickerStanding": "{code} {points} P · {place} SIJA",
+  "pressAfterTitle": "LEHDISTÖTILAISUUDEN JÄLKEEN",
+  "pressTileMorale": "Moraali",
+  "pressTilePress": "Media",
+  "pressPromiseHeading": "LUPASIT",
+  "pressPromiseWinNext": "Voiton seuraavassa ottelussa.",
+  "pressPromiseJob": "Paikkasi seuraavissa kolmessa ottelussa.",
+  "pressPromiseJudgedCampaign": "Hallitus arvioi sen, kun kampanja on ratkennut.",
+  "pressPromiseJudgedMatch": "Ratkaisee seuraavan ottelun tulos."
 }

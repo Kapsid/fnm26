@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation}: {name} ({age}) stopper som træner",
   "editorManagerAge": "Alder",
   "editorManagerAgeHint": "Tom: spillet vælger en",
-  "editorIssueManagerAge": "Trænerens alder skal være fra {min} til {max}."
+  "editorIssueManagerAge": "Trænerens alder skal være fra {min} til {max}.",
+  "pressFloor": "DU HAR ORDET · {index}/{total}",
+  "pressTickerStanding": "{code} {points} P · {place} PLADS",
+  "pressAfterTitle": "EFTER PRESSEMØDET",
+  "pressTileMorale": "Moral",
+  "pressTilePress": "Pressen",
+  "pressPromiseHeading": "DU LOVEDE",
+  "pressPromiseWinNext": "En sejr i næste kamp.",
+  "pressPromiseJob": "Dit job på de næste tre kampe.",
+  "pressPromiseJudgedCampaign": "Bestyrelsen dømmer, når kampagnen er afgjort.",
+  "pressPromiseJudgedMatch": "Afgøres af resultatet i næste kamp."
 }

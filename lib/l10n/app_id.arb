@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation}: {name} ({age}) pensiun dari dunia kepelatihan",
   "editorManagerAge": "Usia",
   "editorManagerAgeHint": "Kosong: permainan yang memilih",
-  "editorIssueManagerAge": "Usia pelatih harus antara {min} dan {max}."
+  "editorIssueManagerAge": "Usia pelatih harus antara {min} dan {max}.",
+  "pressFloor": "GILIRAN ANDA BICARA · {index}/{total}",
+  "pressTickerStanding": "{code} {points} POIN · PERINGKAT {place}",
+  "pressAfterTitle": "SETELAH KONFERENSI PERS",
+  "pressTileMorale": "Moral",
+  "pressTilePress": "Media",
+  "pressPromiseHeading": "ANDA BERJANJI",
+  "pressPromiseWinNext": "Menang di laga berikutnya.",
+  "pressPromiseJob": "Jabatan Anda dalam tiga laga berikutnya.",
+  "pressPromiseJudgedCampaign": "Dewan menilainya saat kampanye selesai.",
+  "pressPromiseJudgedMatch": "Dinilai dari hasil laga berikutnya."
 }

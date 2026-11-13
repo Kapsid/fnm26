@@ -17760,4 +17760,39 @@ class AppLocalizationsSv extends AppLocalizations {
   String editorIssueManagerAge(int min, int max) {
     return 'Förbundskaptenens ålder måste vara från $min till $max.';
   }
+
+  @override
+  String pressFloor(int index, int total) {
+    return 'ORDET ÄR DITT · $index/$total';
+  }
+
+  @override
+  String pressTickerStanding(String code, int points, String place) {
+    return '$code $points P · $place PLATS';
+  }
+
+  @override
+  String get pressAfterTitle => 'EFTER PRESSKONFERENSEN';
+
+  @override
+  String get pressTileMorale => 'Moral';
+
+  @override
+  String get pressTilePress => 'Pressen';
+
+  @override
+  String get pressPromiseHeading => 'DU LOVADE';
+
+  @override
+  String get pressPromiseWinNext => 'Seger i nästa match.';
+
+  @override
+  String get pressPromiseJob => 'Ditt jobb på de tre nästa matcherna.';
+
+  @override
+  String get pressPromiseJudgedCampaign =>
+      'Styrelsen dömer när kampanjen är avgjord.';
+
+  @override
+  String get pressPromiseJudgedMatch => 'Avgörs av resultatet i nästa match.';
 }

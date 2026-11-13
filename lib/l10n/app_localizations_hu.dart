@@ -17719,4 +17719,39 @@ class AppLocalizationsHu extends AppLocalizations {
   String editorIssueManagerAge(int min, int max) {
     return 'A kapitány életkorának $min és $max között kell lennie.';
   }
+
+  @override
+  String pressFloor(int index, int total) {
+    return 'ÖNÉ A SZÓ · $index/$total';
+  }
+
+  @override
+  String pressTickerStanding(String code, int points, String place) {
+    return '$code $points P · $place HELY';
+  }
+
+  @override
+  String get pressAfterTitle => 'A SAJTÓTÁJÉKOZTATÓ UTÁN';
+
+  @override
+  String get pressTileMorale => 'Morál';
+
+  @override
+  String get pressTilePress => 'Sajtó';
+
+  @override
+  String get pressPromiseHeading => 'AZ ÍGÉRETED';
+
+  @override
+  String get pressPromiseWinNext => 'Győzelem a következő meccsen.';
+
+  @override
+  String get pressPromiseJob => 'Az állásod a következő három meccsen.';
+
+  @override
+  String get pressPromiseJudgedCampaign =>
+      'A vezetőség akkor ítél, amikor eldőlt a sorozat.';
+
+  @override
+  String get pressPromiseJudgedMatch => 'A következő meccs eredménye dönt.';
 }

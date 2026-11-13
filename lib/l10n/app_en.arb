@@ -27353,5 +27353,64 @@
         "type": "int"
       }
     }
+  },
+  "pressFloor": "YOU HAVE THE FLOOR · {index}/{total}",
+  "@pressFloor": {
+    "description": "Press conference: the line under the microphone, whose turn it is and which question of how many.",
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pressTickerStanding": "{code} {points, plural, =1{1 PT} other{{points} PTS}} · {place}",
+  "@pressTickerStanding": {
+    "description": "Press conference ticker: his side's group line. {code} is the nation code, {place} the group place (campaignPlace).",
+    "placeholders": {
+      "code": {
+        "type": "String"
+      },
+      "points": {
+        "type": "int"
+      },
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAfterTitle": "AFTER THE CONFERENCE",
+  "@pressAfterTitle": {
+    "description": "Press conference end screen title."
+  },
+  "pressTileMorale": "Morale",
+  "@pressTileMorale": {
+    "description": "Press end screen: the dressing-room morale tile."
+  },
+  "pressTilePress": "Press",
+  "@pressTilePress": {
+    "description": "Press end screen: the press (credibility) tile."
+  },
+  "pressPromiseHeading": "YOU PROMISED",
+  "@pressPromiseHeading": {
+    "description": "Press end screen: heading of the card with a promise made in the room."
+  },
+  "pressPromiseWinNext": "A win in the next match.",
+  "@pressPromiseWinNext": {
+    "description": "Press end screen promise card: he promised to win the next match."
+  },
+  "pressPromiseJob": "Your job on the next three matches.",
+  "@pressPromiseJob": {
+    "description": "Press end screen promise card: he put his job on the next three matches."
+  },
+  "pressPromiseJudgedCampaign": "The board judges it when the campaign is settled.",
+  "@pressPromiseJudgedCampaign": {
+    "description": "Press end screen promise card: a stated target is judged when the campaign is decided."
+  },
+  "pressPromiseJudgedMatch": "Judged on the result of the next match.",
+  "@pressPromiseJudgedMatch": {
+    "description": "Press end screen promise card: a match promise is judged on the next match."
   }
 }

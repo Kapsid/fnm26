@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation}: {name} ({age}) visszavonul az edzősködéstől",
   "editorManagerAge": "Életkor",
   "editorManagerAgeHint": "Üres: a játék választ",
-  "editorIssueManagerAge": "A kapitány életkorának {min} és {max} között kell lennie."
+  "editorIssueManagerAge": "A kapitány életkorának {min} és {max} között kell lennie.",
+  "pressFloor": "ÖNÉ A SZÓ · {index}/{total}",
+  "pressTickerStanding": "{code} {points} P · {place} HELY",
+  "pressAfterTitle": "A SAJTÓTÁJÉKOZTATÓ UTÁN",
+  "pressTileMorale": "Morál",
+  "pressTilePress": "Sajtó",
+  "pressPromiseHeading": "AZ ÍGÉRETED",
+  "pressPromiseWinNext": "Győzelem a következő meccsen.",
+  "pressPromiseJob": "Az állásod a következő három meccsen.",
+  "pressPromiseJudgedCampaign": "A vezetőség akkor ítél, amikor eldőlt a sorozat.",
+  "pressPromiseJudgedMatch": "A következő meccs eredménye dönt."
 }

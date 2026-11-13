@@ -17146,4 +17146,38 @@ class AppLocalizationsJa extends AppLocalizations {
   String editorIssueManagerAge(int min, int max) {
     return '監督の年齢は$min〜$max歳にしてください。';
   }
+
+  @override
+  String pressFloor(int index, int total) {
+    return 'あなたの発言 · $index/$total';
+  }
+
+  @override
+  String pressTickerStanding(String code, int points, String place) {
+    return '$code 勝点$points · $place';
+  }
+
+  @override
+  String get pressAfterTitle => '会見を終えて';
+
+  @override
+  String get pressTileMorale => '士気';
+
+  @override
+  String get pressTilePress => '記者';
+
+  @override
+  String get pressPromiseHeading => 'あなたの約束';
+
+  @override
+  String get pressPromiseWinNext => '次の試合での勝利。';
+
+  @override
+  String get pressPromiseJob => '次の3試合に職を懸ける。';
+
+  @override
+  String get pressPromiseJudgedCampaign => '大会の結果が決まった時点で協会が判断します。';
+
+  @override
+  String get pressPromiseJudgedMatch => '次の試合の結果で判断されます。';
 }

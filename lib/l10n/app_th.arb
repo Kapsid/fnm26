@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation}: {name} ({age}) ประกาศเลิกคุมทีม",
   "editorManagerAge": "อายุ",
   "editorManagerAgeHint": "เว้นว่าง: เกมจะเลือกให้",
-  "editorIssueManagerAge": "อายุของผู้จัดการทีมต้องอยู่ระหว่าง {min} ถึง {max}"
+  "editorIssueManagerAge": "อายุของผู้จัดการทีมต้องอยู่ระหว่าง {min} ถึง {max}",
+  "pressFloor": "ถึงตาคุณพูด · {index}/{total}",
+  "pressTickerStanding": "{code} {points} แต้ม · {place}",
+  "pressAfterTitle": "หลังแถลงข่าว",
+  "pressTileMorale": "ขวัญกำลังใจ",
+  "pressTilePress": "สื่อ",
+  "pressPromiseHeading": "คุณสัญญาไว้",
+  "pressPromiseWinNext": "ชนะในนัดถัดไป",
+  "pressPromiseJob": "เดิมพันตำแหน่งกับสามนัดถัดไป",
+  "pressPromiseJudgedCampaign": "บอร์ดจะตัดสินเมื่อแคมเปญจบลง",
+  "pressPromiseJudgedMatch": "ตัดสินจากผลนัดถัดไป"
 }

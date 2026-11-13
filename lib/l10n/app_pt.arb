@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation}: {name} ({age}) termina a carreira de treinador",
   "editorManagerAge": "Idade",
   "editorManagerAgeHint": "Vazio: o jogo escolhe",
-  "editorIssueManagerAge": "A idade do treinador deve ser de {min} a {max}."
+  "editorIssueManagerAge": "A idade do treinador deve ser de {min} a {max}.",
+  "pressFloor": "A PALAVRA É SUA · {index}/{total}",
+  "pressTickerStanding": "{code} {points} PTS · {place} LUGAR",
+  "pressAfterTitle": "DEPOIS DA COLETIVA",
+  "pressTileMorale": "Moral",
+  "pressTilePress": "Imprensa",
+  "pressPromiseHeading": "VOCÊ PROMETEU",
+  "pressPromiseWinNext": "Uma vitória no próximo jogo.",
+  "pressPromiseJob": "Seu cargo nos próximos três jogos.",
+  "pressPromiseJudgedCampaign": "A direção julga quando a campanha estiver decidida.",
+  "pressPromiseJudgedMatch": "Julgado pelo resultado do próximo jogo."
 }

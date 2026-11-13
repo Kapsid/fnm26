@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation}: {name} ({age}) se retira de los banquillos",
   "editorManagerAge": "Edad",
   "editorManagerAgeHint": "Vacío: lo elige el juego",
-  "editorIssueManagerAge": "La edad del seleccionador debe estar entre {min} y {max}."
+  "editorIssueManagerAge": "La edad del seleccionador debe estar entre {min} y {max}.",
+  "pressFloor": "TIENE LA PALABRA · {index}/{total}",
+  "pressTickerStanding": "{code} {points} PT. · {place} PUESTO",
+  "pressAfterTitle": "TRAS LA RUEDA DE PRENSA",
+  "pressTileMorale": "Moral",
+  "pressTilePress": "Prensa",
+  "pressPromiseHeading": "PROMETISTE",
+  "pressPromiseWinNext": "Una victoria en el próximo partido.",
+  "pressPromiseJob": "Tu puesto en los próximos tres partidos.",
+  "pressPromiseJudgedCampaign": "La directiva lo juzgará cuando se decida la campaña.",
+  "pressPromiseJudgedMatch": "Se juzga por el resultado del próximo partido."
 }
