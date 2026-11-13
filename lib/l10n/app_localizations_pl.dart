@@ -1180,15 +1180,25 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get tacticsPenaltiesBlurb =>
-      'Kto strzela rzuty karne. Gdy pierwszego nie ma na boisku, strzela drugi.';
+      'Kto strzela rzuty karne, do trzech w kolejności. Gdy pierwszego nie ma na boisku, strzela następny.';
 
   @override
   String get tacticsFreeKicksBlurb =>
-      'Kto wykonuje rzuty wolne w zasięgu bramki, a także rzuty rożne. Gdy pierwszego nie ma na boisku, wykonuje drugi.';
+      'Kto wykonuje rzuty wolne w zasięgu bramki, do trzech w kolejności. Gdy pierwszego nie ma na boisku, wykonuje następny.';
 
   @override
   String get tacticsCornersBlurb =>
-      'Rzuty rożne z obu stron wykonuje twój egzekutor rzutów wolnych, więc zmiana tutaj zmienia też rzuty wolne. Gdy pierwszego nie ma na boisku, wykonuje drugi.';
+      'Rzuty rożne z każdej strony mają własnych wykonawców, do dwóch w kolejności. Gdy pierwszego nie ma na boisku, wykonuje następny.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Stukaj zawodników w kolejności, w jakiej mają wykonywać. Stuknij zawodnika z numerem, aby usunąć go z listy.';
+
+  @override
+  String get tacticsCornersLeft => 'Z lewej';
+
+  @override
+  String get tacticsCornersRight => 'Z prawej';
 
   @override
   String get tacticsThrowInsBlurb =>

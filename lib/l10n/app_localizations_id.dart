@@ -1184,15 +1184,25 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get tacticsPenaltiesBlurb =>
-      'Siapa yang mengambil penalti. Jika yang pertama tidak di lapangan, yang kedua mengambilnya.';
+      'Siapa yang mengambil penalti, hingga tiga orang berurutan. Jika yang pertama tidak di lapangan, yang berikutnya mengambilnya.';
 
   @override
   String get tacticsFreeKicksBlurb =>
-      'Siapa yang mengambil tendangan bebas dalam jangkauan gawang, juga sepak pojok. Jika yang pertama tidak di lapangan, yang kedua mengambilnya.';
+      'Siapa yang mengambil tendangan bebas dalam jangkauan gawang, hingga tiga orang berurutan. Jika yang pertama tidak di lapangan, yang berikutnya mengambilnya.';
 
   @override
   String get tacticsCornersBlurb =>
-      'Sepak pojok dari kedua sisi diambil eksekutor tendangan bebas Anda, jadi perubahan di sini juga mengubah tendangan bebas. Jika yang pertama tidak di lapangan, yang kedua mengambilnya.';
+      'Sepak pojok dari tiap sisi punya eksekutor sendiri, hingga dua orang berurutan. Jika yang pertama tidak di lapangan, yang berikutnya mengambilnya.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Ketuk pemain sesuai urutan mereka mengambil bola. Ketuk pemain bernomor untuk mengeluarkannya dari daftar.';
+
+  @override
+  String get tacticsCornersLeft => 'Dari kiri';
+
+  @override
+  String get tacticsCornersRight => 'Dari kanan';
 
   @override
   String get tacticsThrowInsBlurb =>

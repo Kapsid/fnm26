@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/domain/entities/set_piece_order.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
@@ -623,7 +624,7 @@ void main() {
               formation: Formation.f433,
               instructions: const TacticalInstructions(),
               xi: base.xi,
-              takers: (penalty: second.id, deadBall: null),
+              takers: SetPieceOrder.single(penalty: second.id),
             ),
           ],
         );

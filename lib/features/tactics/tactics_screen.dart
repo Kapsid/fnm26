@@ -58,27 +58,28 @@ part 'tactics_tablet_layout.dart';
 /// their chips read. The name is what `?sub=` carries in a route.
 enum RolesSection { roles, captain, penalties, freeKicks, corners, throwIns }
 
-/// Drops a designated set-piece taker who is no longer in the eleven, once
+/// Drops designated set-piece takers who are no longer in the eleven, once
 /// this frame is done — a build must not write to a provider.
 ///
 /// The store is captured by the caller rather than read in here, so the write
 /// still lands if the screen has been left in the meantime.
-void _clearTakerAfterFrame(
+void _clearTakersAfterFrame(
   SetPieceTakersStore store,
-  int careerId, {
-  required bool penalty,
-}) {
+  int careerId,
+  Set<int> xiIds,
+) {
   WidgetsBinding.instance.addPostFrameCallback((_) {
-    store.set(careerId, penalty: penalty, playerId: null);
+    store.keepOnly(careerId, xiIds);
   });
 }
 
-/// The eleven as named, and who takes the set pieces: the manager's man where
-/// he has named one who is still in the side, otherwise the engine's own pick.
+/// The eleven as named, and who takes the set pieces: the manager's orders
+/// with anyone no longer in the side dropped ([named]), and the first-choice
+/// penalty and free-kick men: the first named, otherwise the engine's own
+/// pick.
 typedef _Takers = ({
   List<Player> xi,
-  int? namedPenalty,
-  int? namedDeadBall,
+  SetPieceTakers named,
   int? penaltyId,
   int? deadBallId,
   int? namedThrowIn,
@@ -98,18 +99,13 @@ _Takers _resolveTakers(
     for (final id in data.tactic.lineup.whereType<int>()) ?data.byId[id],
   ];
   final xiIds = {for (final p in xi) p.id};
-  final namedPenalty = xiIds.contains(takers?.penalty) ? takers?.penalty : null;
-  final namedDeadBall = xiIds.contains(takers?.deadBall)
-      ? takers?.deadBall
-      : null;
-  if (takers != null && xi.isNotEmpty) {
-    final store = ref.read(setPieceTakersStoreProvider);
-    if (takers.penalty != null && namedPenalty == null) {
-      _clearTakerAfterFrame(store, careerId, penalty: true);
-    }
-    if (takers.deadBall != null && namedDeadBall == null) {
-      _clearTakerAfterFrame(store, careerId, penalty: false);
-    }
+  final named = (takers ?? SetPieceOrder.none).where(xiIds.contains);
+  if (takers != null && xi.isNotEmpty && named != takers) {
+    _clearTakersAfterFrame(
+      ref.read(setPieceTakersStoreProvider),
+      careerId,
+      xiIds,
+    );
   }
   // The throw-in taker lives in the save, not the preferences (see
   // [throwInTakerProvider]), so he is read here rather than passed in.
@@ -126,10 +122,9 @@ _Takers _resolveTakers(
   }
   return (
     xi: xi,
-    namedPenalty: namedPenalty,
-    namedDeadBall: namedDeadBall,
-    penaltyId: namedPenalty ?? SetPiecePicks.penalty(xi),
-    deadBallId: namedDeadBall ?? SetPiecePicks.deadBall(xi),
+    named: named,
+    penaltyId: named.penalty ?? SetPiecePicks.penalty(xi),
+    deadBallId: named.deadBall ?? SetPiecePicks.deadBall(xi),
     namedThrowIn: namedThrowIn,
     throwInId: namedThrowIn ?? SetPiecePicks.throwIn(xi),
   );
@@ -162,6 +157,14 @@ class TacticsScreen extends ConsumerWidget {
   /// A taker list's "Pick best" button, for tests.
   static Key pickBestKey(RolesSection section) =>
       ValueKey('tactics.pickBest.${section.name}');
+
+  /// One starter's row in a corner flag's taker list, for tests.
+  static Key cornerRowKey({required bool left, required int playerId}) =>
+      ValueKey('tactics.taker.corners.${left ? 'left' : 'right'}.$playerId');
+
+  /// A corner flag's "Pick best" button, for tests.
+  static Key cornerPickBestKey({required bool left}) =>
+      ValueKey('tactics.pickBest.corners.${left ? 'left' : 'right'}');
 
   /// The free kicks' "Same as penalties" button, for tests.
   static const Key sameAsPenaltiesKey = Key('tactics.sameAsPenalties');

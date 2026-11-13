@@ -1178,15 +1178,25 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get tacticsPenaltiesBlurb =>
-      'Хто б’є пенальті. Якщо першого немає на полі, б’є другий.';
+      'Хто б’є пенальті, до трьох по черзі. Якщо першого немає на полі, б’є наступний.';
 
   @override
   String get tacticsFreeKicksBlurb =>
-      'Хто б’є штрафні в зоні удару, а також кутові. Якщо першого немає на полі, б’є другий.';
+      'Хто б’є штрафні в зоні удару, до трьох по черзі. Якщо першого немає на полі, б’є наступний.';
 
   @override
   String get tacticsCornersBlurb =>
-      'Кутові з обох боків подає твій виконавець штрафних, тож зміна тут змінює і штрафні. Якщо першого немає на полі, подає другий.';
+      'Кутові з кожного боку мають своїх виконавців, до двох по черзі. Якщо першого немає на полі, б’є наступний.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Торкайся гравців у тому порядку, в якому вони мають бити. Торкнися гравця з номером, щоб прибрати його зі списку.';
+
+  @override
+  String get tacticsCornersLeft => 'Зліва';
+
+  @override
+  String get tacticsCornersRight => 'Справа';
 
   @override
   String get tacticsThrowInsBlurb =>

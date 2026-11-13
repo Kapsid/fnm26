@@ -13,10 +13,12 @@ part of 'tactics_screen.dart';
 /// the men who are good at it instead of hunting for a badge.
 ///
 /// The same stores as before: the set-piece takers in the preferences, the
-/// throw-in taker and style in the save. One taker per duty, as the engine
-/// knows it; the "2." beside the list is not a second choice stored anywhere
-/// but who the engine sends up when the first is off the pitch (the best of
-/// the rest, by the same rule as the automatic pick).
+/// throw-in taker and style in the save. Penalties and free kicks take an
+/// order of up to three men, each corner flag an order of up to two (see
+/// [SetPieceOrder]): the engine sends up the first listed still on the
+/// pitch. The throw-ins keep one taker; their "2." is not a second choice
+/// stored anywhere but who the engine sends up when the first is off the
+/// pitch (the best of the rest, by the same rule as the automatic pick).
 class _RolesSetPiecesTab extends ConsumerStatefulWidget {
   const _RolesSetPiecesTab({
     required this.screen,
@@ -132,41 +134,62 @@ class _RolesSetPiecesTabState extends ConsumerState<_RolesSetPiecesTab> {
           ),
         ];
       case RolesSection.penalties:
-        return _takerSection(
-          l,
-          section: RolesSection.penalties,
-          blurb: l.tacticsPenaltiesBlurb,
-          named: t.namedPenalty,
-          ordered: _byTechnical(t.xi),
-          attrLabel: l.playerAttrTechnical,
-          attr: (p) => p.attributes.technical,
-          write: (id) => ref
-              .read(setPieceTakersStoreProvider)
-              .set(_careerId, penalty: true, playerId: id),
-        );
+        return [
+          _blurb(l.tacticsPenaltiesBlurb),
+          const SizedBox(height: AppSpacing.xs),
+          _blurb(l.tacticsOrderTapHint),
+          const SizedBox(height: AppSpacing.md - 4),
+          ..._orderList(
+            l,
+            duty: SetPieceDuty.penalties,
+            rowKey: (id) => TacticsScreen.takerRowKey(_section, id),
+            pickBestKey: TacticsScreen.pickBestKey(_section),
+          ),
+        ];
       case RolesSection.freeKicks:
+        // The penalty order as it stands (the coach's man when nobody is
+        // named), for the free kicks to copy.
+        final penalties = t.named.penalties.isNotEmpty
+            ? t.named.penalties
+            : [?t.penaltyId];
+        return [
+          _blurb(l.tacticsFreeKicksBlurb),
+          const SizedBox(height: AppSpacing.xs),
+          _blurb(l.tacticsOrderTapHint),
+          const SizedBox(height: AppSpacing.md - 4),
+          ..._orderList(
+            l,
+            duty: SetPieceDuty.freeKicks,
+            rowKey: (id) => TacticsScreen.takerRowKey(_section, id),
+            pickBestKey: TacticsScreen.pickBestKey(_section),
+            sameAsPenalties: penalties.isEmpty
+                ? null
+                : (
+                    enabled: !_sameOrder(t.named.freeKicks, penalties),
+                    ids: penalties,
+                  ),
+          ),
+        ];
       case RolesSection.corners:
-        // One dead-ball man takes both, as the engine has it: the two chips
-        // are two ways in to the same choice, and the corners say so.
-        final freeKicks = _section == RolesSection.freeKicks;
-        return _takerSection(
-          l,
-          section: _section,
-          blurb: freeKicks ? l.tacticsFreeKicksBlurb : l.tacticsCornersBlurb,
-          named: t.namedDeadBall,
-          ordered: _byTechnical(t.xi),
-          attrLabel: l.playerAttrTechnical,
-          attr: (p) => p.attributes.technical,
-          write: (id) => ref
-              .read(setPieceTakersStoreProvider)
-              .set(_careerId, penalty: false, playerId: id),
-          sameAsPenalties: freeKicks && t.penaltyId != null
-              ? (
-                  enabled: t.namedDeadBall != t.penaltyId,
-                  penaltyId: t.penaltyId!,
-                )
-              : null,
-        );
+        // Each flag its own order: an inswinger from one side is an
+        // outswinger from the other, and a manager may want two men.
+        return [
+          _blurb(l.tacticsCornersBlurb),
+          const SizedBox(height: AppSpacing.xs),
+          _blurb(l.tacticsOrderTapHint),
+          for (final left in const [true, false]) ...[
+            const SizedBox(height: AppSpacing.md),
+            _heading(left ? l.tacticsCornersLeft : l.tacticsCornersRight),
+            const SizedBox(height: AppSpacing.sm),
+            ..._orderList(
+              l,
+              duty: left ? SetPieceDuty.cornersLeft : SetPieceDuty.cornersRight,
+              rowKey: (id) =>
+                  TacticsScreen.cornerRowKey(left: left, playerId: id),
+              pickBestKey: TacticsScreen.cornerPickBestKey(left: left),
+            ),
+          ],
+        ];
       case RolesSection.throwIns:
         return [
           ..._takerSection(
@@ -194,8 +217,103 @@ class _RolesSetPiecesTabState extends ConsumerState<_RolesSetPiecesTab> {
     }
   }
 
-  /// One set piece: what it is, the starters best first with the taker
-  /// marked "1." and the man after him "2.", and the shortcuts under them.
+  /// One ordered duty: the starters best first, the men in [duty]'s order
+  /// marked "1.", "2.", "3.", and the shortcuts under them.
+  ///
+  /// A tap on an unmarked man adds him to the end of the order (in place of
+  /// the last when the order is full, so no tap is ever dead); a tap on a
+  /// marked man takes him off it, and the men behind him move up. With
+  /// nobody named, the engine's own pick is marked "1." as automatic.
+  List<Widget> _orderList(
+    AppLocalizations l, {
+    required SetPieceDuty duty,
+    required Key Function(int playerId) rowKey,
+    required Key pickBestKey,
+    ({bool enabled, List<int> ids})? sameAsPenalties,
+  }) {
+    final ranked = _byTechnical(widget.takers.xi);
+    final named = widget.takers.named.of(duty);
+    final autoId = named.isEmpty ? ranked.firstOrNull?.id : null;
+    final best = [for (final p in ranked.take(duty.maxTakers)) p.id];
+    Future<void> write(List<int> ids) =>
+        ref.read(setPieceTakersStoreProvider).setDuty(_careerId, duty, ids);
+    final attrLabel = l.playerAttrTechnical.capsIn(l.localeName);
+    return [
+      if (ranked.isNotEmpty)
+        _RowsCard(
+          children: [
+            for (final p in ranked)
+              _TakerRow(
+                key: rowKey(p.id),
+                player: p,
+                attrLine: '$attrLabel ${p.attributes.technical}',
+                autoLabel: l.tacticsTakerAuto.capsIn(l.localeName),
+                order: named.contains(p.id)
+                    ? named.indexOf(p.id) + 1
+                    : p.id == autoId
+                    ? 1
+                    : null,
+                isAuto: p.id == autoId,
+                onTap: () => write(_tapped(named, p.id, duty.maxTakers)),
+              ),
+          ],
+        ),
+      const SizedBox(height: AppSpacing.md - 4),
+      Row(
+        children: [
+          Expanded(
+            child: _TakerButton(
+              key: pickBestKey,
+              label: l.tacticsPickBest,
+              // The best men, in order. Also how a manager says the coach's
+              // pick is his own, which settles the pre-match warning; once
+              // they ARE the order there is nothing left to press.
+              onPressed: best.isEmpty || _sameOrder(named, best)
+                  ? null
+                  : () => write(best),
+            ),
+          ),
+          if (sameAsPenalties != null) ...[
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: _TakerButton(
+                key: TacticsScreen.sameAsPenaltiesKey,
+                label: l.tacticsSameAsPenalties,
+                onPressed: sameAsPenalties.enabled
+                    ? () => write(sameAsPenalties.ids)
+                    : null,
+              ),
+            ),
+          ],
+        ],
+      ),
+    ];
+  }
+
+  /// [named] after a tap on [id]: off the order if he is on it, else on the
+  /// end of it (in place of the last man when it already holds [max]).
+  static List<int> _tapped(List<int> named, int id, int max) {
+    if (named.contains(id)) return [...named.where((x) => x != id)];
+    if (named.length < max) return [...named, id];
+    return [...named.take(max - 1), id];
+  }
+
+  static bool _sameOrder(List<int> a, List<int> b) =>
+      a.length == b.length &&
+      [for (var i = 0; i < a.length; i++) a[i] == b[i]].every((same) => same);
+
+  /// A small heading over one corner flag's list.
+  Widget _heading(String text) => Text(
+    text.capsIn(AppLocalizations.of(context).localeName),
+    style: AppTypography.labelSmall.copyWith(
+      color: AppColors.onSurfaceVariant,
+      letterSpacing: 1,
+    ),
+  );
+
+  /// One set piece with a single taker (the throw-ins): what it is, the
+  /// starters best first with the taker marked "1." and the man after him
+  /// "2.", and the shortcut under them.
   ///
   /// [named] is the manager's own choice, or null when the engine picks; the
   /// first of [ordered] is then the man it picks, and he is marked as such.
@@ -208,7 +326,6 @@ class _RolesSetPiecesTabState extends ConsumerState<_RolesSetPiecesTab> {
     required String attrLabel,
     required int Function(Player) attr,
     required Future<void> Function(int? playerId) write,
-    ({bool enabled, int penaltyId})? sameAsPenalties,
   }) {
     final firstId = named ?? (ordered.isEmpty ? null : ordered.first.id);
     final secondId = ordered
@@ -257,18 +374,6 @@ class _RolesSetPiecesTabState extends ConsumerState<_RolesSetPiecesTab> {
                   : () => write(best.id),
             ),
           ),
-          if (sameAsPenalties != null) ...[
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: _TakerButton(
-                key: TacticsScreen.sameAsPenaltiesKey,
-                label: l.tacticsSameAsPenalties,
-                onPressed: sameAsPenalties.enabled
-                    ? () => write(sameAsPenalties.penaltyId)
-                    : null,
-              ),
-            ),
-          ],
         ],
       ),
     ];
@@ -394,8 +499,8 @@ class _RowsCard extends StatelessWidget {
 }
 
 /// One starter in a taker list: his position, his name and the number that
-/// makes him suited to it, and on the right "1." for the taker and "2." for
-/// the man after him.
+/// makes him suited to it, and on the right his place in the order ("1.",
+/// "2.", "3.").
 class _TakerRow extends StatelessWidget {
   const _TakerRow({
     required this.player,
@@ -413,7 +518,7 @@ class _TakerRow extends StatelessWidget {
   final String attrLine;
   final String autoLabel;
 
-  /// 1 for the taker, 2 for the man after him, null for the rest.
+  /// His place in the order (1 for the taker), null for the rest.
   final int? order;
 
   /// The taker is the coach's pick, not the manager's: marked, not filled.
@@ -480,7 +585,7 @@ class _TakerRow extends StatelessWidget {
 }
 
 /// "1." filled for the named taker (outlined in the accent while it is the
-/// coach's pick), "2." outlined for the man after him.
+/// coach's pick), "2." and on outlined for the men after him.
 class _OrderMark extends StatelessWidget {
   const _OrderMark({required this.order, required this.isAuto});
 

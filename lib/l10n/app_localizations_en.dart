@@ -1221,15 +1221,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tacticsPenaltiesBlurb =>
-      'Who takes the penalties. If the first is not on the pitch, the second takes them.';
+      'Who takes the penalties, up to three in order. If the first is not on the pitch, the next one takes them.';
 
   @override
   String get tacticsFreeKicksBlurb =>
-      'Who takes free kicks within range of goal, and the corners too. If the first is not on the pitch, the second takes them.';
+      'Who takes free kicks within range of goal, up to three in order. If the first is not on the pitch, the next one takes them.';
 
   @override
   String get tacticsCornersBlurb =>
-      'Corners from both sides go to your free-kick taker, so a change here changes free kicks too. If the first is not on the pitch, the second takes them.';
+      'Corners from each side have their own takers, up to two in order. If the first is not on the pitch, the next one takes them.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Tap players in the order they should take it. Tap a numbered player to take him off the list.';
+
+  @override
+  String get tacticsCornersLeft => 'From the left';
+
+  @override
+  String get tacticsCornersRight => 'From the right';
 
   @override
   String get tacticsThrowInsBlurb =>

@@ -1215,15 +1215,25 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get tacticsPenaltiesBlurb =>
-      'Vem som slår straffarna. Om den förste inte är på planen slår den andre.';
+      'Vem som slår straffarna, upp till tre i ordning. Om den förste inte är på planen slår nästa.';
 
   @override
   String get tacticsFreeKicksBlurb =>
-      'Vem som slår frisparkar inom skotthåll, och hörnorna också. Om den förste inte är på planen slår den andre.';
+      'Vem som slår frisparkar inom skotthåll, upp till tre i ordning. Om den förste inte är på planen slår nästa.';
 
   @override
   String get tacticsCornersBlurb =>
-      'Hörnor från båda sidor går till din frisparksläggare, så en ändring här ändrar även frisparkarna. Om den förste inte är på planen slår den andre.';
+      'Hörnor från varje sida har egna läggare, upp till två i ordning. Om den förste inte är på planen slår nästa.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Tryck på spelarna i den ordning de ska slå. Tryck på en numrerad spelare för att ta bort honom från listan.';
+
+  @override
+  String get tacticsCornersLeft => 'Från vänster';
+
+  @override
+  String get tacticsCornersRight => 'Från höger';
 
   @override
   String get tacticsThrowInsBlurb =>

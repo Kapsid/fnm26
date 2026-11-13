@@ -1137,15 +1137,25 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get tacticsPenaltiesBlurb =>
-      '페널티킥을 차는 선수. 첫 번째 선수가 경기장에 없으면 두 번째 선수가 찹니다.';
+      '페널티킥을 차는 선수, 순서대로 최대 세 명. 첫 번째 선수가 경기장에 없으면 다음 선수가 찹니다.';
 
   @override
   String get tacticsFreeKicksBlurb =>
-      '골문을 노릴 수 있는 프리킥과 코너킥을 차는 선수. 첫 번째 선수가 경기장에 없으면 두 번째 선수가 찹니다.';
+      '골문을 노릴 수 있는 프리킥을 차는 선수, 순서대로 최대 세 명. 첫 번째 선수가 경기장에 없으면 다음 선수가 찹니다.';
 
   @override
   String get tacticsCornersBlurb =>
-      '양쪽 코너킥 모두 프리킥 키커가 차므로, 여기서 바꾸면 프리킥도 바뀝니다. 첫 번째 선수가 경기장에 없으면 두 번째 선수가 찹니다.';
+      '코너킥은 양쪽마다 키커가 따로 있으며, 순서대로 최대 두 명입니다. 첫 번째 선수가 경기장에 없으면 다음 선수가 찹니다.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      '차는 순서대로 선수를 탭하세요. 번호가 붙은 선수를 탭하면 목록에서 빠집니다.';
+
+  @override
+  String get tacticsCornersLeft => '왼쪽에서';
+
+  @override
+  String get tacticsCornersRight => '오른쪽에서';
 
   @override
   String get tacticsThrowInsBlurb =>

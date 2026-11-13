@@ -1237,15 +1237,25 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get tacticsPenaltiesBlurb =>
-      'Kdo kope penalty. Když první není na hřišti, kope druhý.';
+      'Kdo kope penalty, až tři hráči v pořadí. Když první není na hřišti, kope další.';
 
   @override
   String get tacticsFreeKicksBlurb =>
-      'Kdo kope přímé kopy v dosahu brány a k tomu i rohy. Když první není na hřišti, kope druhý.';
+      'Kdo kope přímé kopy v dosahu brány, až tři hráči v pořadí. Když první není na hřišti, kope další.';
 
   @override
   String get tacticsCornersBlurb =>
-      'Rohy z obou stran kope váš exekutor přímých kopů, takže změna tady změní i přímé kopy. Když první není na hřišti, kope druhý.';
+      'Rohy z každé strany mají vlastní exekutory, až dva v pořadí. Když první není na hřišti, kope další.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Klepejte na hráče v pořadí, v jakém mají kopat. Klepnutím na očíslovaného hráče ho ze seznamu odeberete.';
+
+  @override
+  String get tacticsCornersLeft => 'Zleva';
+
+  @override
+  String get tacticsCornersRight => 'Zprava';
 
   @override
   String get tacticsThrowInsBlurb =>

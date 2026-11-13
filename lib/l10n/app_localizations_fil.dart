@@ -1185,15 +1185,25 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get tacticsPenaltiesBlurb =>
-      'Sino ang kukuha ng mga penalty. Kung wala sa laro ang una, ang pangalawa ang kukuha.';
+      'Sino ang kukuha ng mga penalty, hanggang tatlo ayon sa pagkakasunod. Kung wala sa laro ang una, ang susunod ang kukuha.';
 
   @override
   String get tacticsFreeKicksBlurb =>
-      'Sino ang kukuha ng mga free kick na abot ang goal, pati ang mga corner. Kung wala sa laro ang una, ang pangalawa ang kukuha.';
+      'Sino ang kukuha ng mga free kick na abot ang goal, hanggang tatlo ayon sa pagkakasunod. Kung wala sa laro ang una, ang susunod ang kukuha.';
 
   @override
   String get tacticsCornersBlurb =>
-      'Ang mga corner sa magkabilang panig ay sa free-kick taker mo, kaya ang pagbabago rito ay nagbabago rin sa mga free kick. Kung wala sa laro ang una, ang pangalawa ang kukuha.';
+      'May sariling taker ang mga corner sa bawat panig, hanggang dalawa ayon sa pagkakasunod. Kung wala sa laro ang una, ang susunod ang kukuha.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'I-tap ang mga manlalaro ayon sa pagkakasunod ng pagkuha nila. I-tap ang manlalarong may numero para alisin siya sa listahan.';
+
+  @override
+  String get tacticsCornersLeft => 'Mula sa kaliwa';
+
+  @override
+  String get tacticsCornersRight => 'Mula sa kanan';
 
   @override
   String get tacticsThrowInsBlurb =>

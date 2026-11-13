@@ -1184,15 +1184,25 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get tacticsPenaltiesBlurb =>
-      'Ki rúgja a tizenegyeseket. Ha az első nincs a pályán, a második rúgja.';
+      'Ki rúgja a tizenegyeseket, legfeljebb hárman sorrendben. Ha az első nincs a pályán, a következő rúgja.';
 
   @override
   String get tacticsFreeKicksBlurb =>
-      'Ki rúgja a kapu közeli szabadrúgásokat, és a szögleteket is. Ha az első nincs a pályán, a második rúgja.';
+      'Ki rúgja a kapu közeli szabadrúgásokat, legfeljebb hárman sorrendben. Ha az első nincs a pályán, a következő rúgja.';
 
   @override
   String get tacticsCornersBlurb =>
-      'A szögleteket mindkét oldalon a szabadrúgás-specialistád végzi el, így az itteni változás a szabadrúgásokat is módosítja. Ha az első nincs a pályán, a második rúgja.';
+      'Mindkét oldal szögleteinek saját rúgója van, legfeljebb ketten sorrendben. Ha az első nincs a pályán, a következő rúgja.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Koppints a játékosokra abban a sorrendben, ahogy rúgniuk kell. Egy számozott játékosra koppintva leveszed a listáról.';
+
+  @override
+  String get tacticsCornersLeft => 'Balról';
+
+  @override
+  String get tacticsCornersRight => 'Jobbról';
 
   @override
   String get tacticsThrowInsBlurb =>

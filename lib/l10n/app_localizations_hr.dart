@@ -1234,15 +1234,25 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get tacticsPenaltiesBlurb =>
-      'Tko izvodi jedanaesterce. Ako prvi nije na terenu, izvodi drugi.';
+      'Tko izvodi jedanaesterce, do trojice redom. Ako prvi nije na terenu, izvodi sljedeći.';
 
   @override
   String get tacticsFreeKicksBlurb =>
-      'Tko izvodi slobodne udarce s pucačke udaljenosti, a i kornere. Ako prvi nije na terenu, izvodi drugi.';
+      'Tko izvodi slobodne udarce s pucačke udaljenosti, do trojice redom. Ako prvi nije na terenu, izvodi sljedeći.';
 
   @override
   String get tacticsCornersBlurb =>
-      'Kornere s obje strane izvodi tvoj izvođač slobodnih udaraca, pa promjena ovdje mijenja i slobodne udarce. Ako prvi nije na terenu, izvodi drugi.';
+      'Korneri sa svake strane imaju svoje izvođače, do dvojice redom. Ako prvi nije na terenu, izvodi sljedeći.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Dodiruj igrače redom kojim trebaju izvoditi. Dodirni igrača s brojem da ga makneš s popisa.';
+
+  @override
+  String get tacticsCornersLeft => 'S lijeve strane';
+
+  @override
+  String get tacticsCornersRight => 'S desne strane';
 
   @override
   String get tacticsThrowInsBlurb =>

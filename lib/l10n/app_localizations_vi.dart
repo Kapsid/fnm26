@@ -1180,15 +1180,25 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get tacticsPenaltiesBlurb =>
-      'Ai sút phạt đền. Nếu người thứ nhất không có trên sân, người thứ hai sẽ sút.';
+      'Ai sút phạt đền, tối đa ba người theo thứ tự. Nếu người thứ nhất không có trên sân, người tiếp theo sẽ sút.';
 
   @override
   String get tacticsFreeKicksBlurb =>
-      'Ai đá phạt trong tầm sút, và cả phạt góc. Nếu người thứ nhất không có trên sân, người thứ hai sẽ đá.';
+      'Ai đá phạt trong tầm sút, tối đa ba người theo thứ tự. Nếu người thứ nhất không có trên sân, người tiếp theo sẽ đá.';
 
   @override
   String get tacticsCornersBlurb =>
-      'Phạt góc ở cả hai bên do người đá phạt của bạn thực hiện, nên thay đổi ở đây cũng thay đổi đá phạt. Nếu người thứ nhất không có trên sân, người thứ hai sẽ đá.';
+      'Phạt góc mỗi bên có người đá riêng, tối đa hai người theo thứ tự. Nếu người thứ nhất không có trên sân, người tiếp theo sẽ đá.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Chạm vào các cầu thủ theo thứ tự đá. Chạm vào cầu thủ đã có số để bỏ khỏi danh sách.';
+
+  @override
+  String get tacticsCornersLeft => 'Bên trái';
+
+  @override
+  String get tacticsCornersRight => 'Bên phải';
 
   @override
   String get tacticsThrowInsBlurb =>

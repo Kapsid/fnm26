@@ -1134,15 +1134,24 @@ class AppLocalizationsJa extends AppLocalizations {
   String get tacticsTakerTapHint => '選手をタップして指名します。もう一度タップするとコーチに任せます。';
 
   @override
-  String get tacticsPenaltiesBlurb => 'PKを蹴る選手。1人目がピッチにいなければ2人目が蹴ります。';
+  String get tacticsPenaltiesBlurb => 'PKを蹴る選手を順番に最大3人。1人目がピッチにいなければ次の選手が蹴ります。';
 
   @override
   String get tacticsFreeKicksBlurb =>
-      'ゴールを狙える位置のFKを蹴る選手。CKも担当します。1人目がピッチにいなければ2人目が蹴ります。';
+      'ゴールを狙える位置のFKを蹴る選手を順番に最大3人。1人目がピッチにいなければ次の選手が蹴ります。';
 
   @override
   String get tacticsCornersBlurb =>
-      '左右どちらのCKもFKキッカーが蹴るため、ここで変更するとFKも変わります。1人目がピッチにいなければ2人目が蹴ります。';
+      'CKは左右それぞれにキッカーを順番に最大2人。1人目がピッチにいなければ次の選手が蹴ります。';
+
+  @override
+  String get tacticsOrderTapHint => '蹴る順番に選手をタップします。番号の付いた選手をタップするとリストから外れます。';
+
+  @override
+  String get tacticsCornersLeft => '左から';
+
+  @override
+  String get tacticsCornersRight => '右から';
 
   @override
   String get tacticsThrowInsBlurb => 'ロングスローを投げる選手。1人目がピッチにいなければ2人目が投げます。';

@@ -1230,15 +1230,25 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get tacticsPenaltiesBlurb =>
-      'Quem cobra os pênaltis. Se o primeiro não estiver em campo, cobra o segundo.';
+      'Quem cobra os pênaltis, até três em ordem. Se o primeiro não estiver em campo, cobra o seguinte.';
 
   @override
   String get tacticsFreeKicksBlurb =>
-      'Quem cobra as faltas perto da área, e também os escanteios. Se o primeiro não estiver em campo, cobra o segundo.';
+      'Quem cobra as faltas perto da área, até três em ordem. Se o primeiro não estiver em campo, cobra o seguinte.';
 
   @override
   String get tacticsCornersBlurb =>
-      'Os escanteios dos dois lados ficam com o seu cobrador de faltas, então uma mudança aqui muda também as faltas. Se o primeiro não estiver em campo, cobra o segundo.';
+      'Os escanteios de cada lado têm seus próprios cobradores, até dois em ordem. Se o primeiro não estiver em campo, cobra o seguinte.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Toque nos jogadores na ordem em que devem cobrar. Toque em um jogador numerado para tirá-lo da lista.';
+
+  @override
+  String get tacticsCornersLeft => 'Pela esquerda';
+
+  @override
+  String get tacticsCornersRight => 'Pela direita';
 
   @override
   String get tacticsThrowInsBlurb =>

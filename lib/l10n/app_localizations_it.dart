@@ -1224,15 +1224,25 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get tacticsPenaltiesBlurb =>
-      'Chi tira i rigori. Se il primo non è in campo, tira il secondo.';
+      'Chi tira i rigori, fino a tre in ordine. Se il primo non è in campo, tira il successivo.';
 
   @override
   String get tacticsFreeKicksBlurb =>
-      'Chi batte le punizioni dalla distanza utile, e anche gli angoli. Se il primo non è in campo, batte il secondo.';
+      'Chi batte le punizioni dalla distanza utile, fino a tre in ordine. Se il primo non è in campo, batte il successivo.';
 
   @override
   String get tacticsCornersBlurb =>
-      'Gli angoli da entrambi i lati li batte il tuo specialista delle punizioni, quindi un cambio qui cambia anche le punizioni. Se il primo non è in campo, batte il secondo.';
+      'Gli angoli da ogni lato hanno i propri battitori, fino a due in ordine. Se il primo non è in campo, batte il successivo.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Tocca i giocatori nell\'ordine in cui devono battere. Tocca un giocatore numerato per toglierlo dalla lista.';
+
+  @override
+  String get tacticsCornersLeft => 'Da sinistra';
+
+  @override
+  String get tacticsCornersRight => 'Da destra';
 
   @override
   String get tacticsThrowInsBlurb =>

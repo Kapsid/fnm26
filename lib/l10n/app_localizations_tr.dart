@@ -1179,15 +1179,25 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get tacticsPenaltiesBlurb =>
-      'Penaltıları kim kullanır. İlki sahada değilse ikincisi kullanır.';
+      'Penaltıları kim kullanır, sırayla en fazla üç kişi. İlki sahada değilse sıradaki kullanır.';
 
   @override
   String get tacticsFreeKicksBlurb =>
-      'Kaleye yakın serbest vuruşları ve kornerleri kim kullanır. İlki sahada değilse ikincisi kullanır.';
+      'Kaleye yakın serbest vuruşları kim kullanır, sırayla en fazla üç kişi. İlki sahada değilse sıradaki kullanır.';
 
   @override
   String get tacticsCornersBlurb =>
-      'İki taraftaki kornerleri de serbest vuruşçun kullanır, yani burada yapılan değişiklik serbest vuruşları da değiştirir. İlki sahada değilse ikincisi kullanır.';
+      'Her iki taraftaki kornerlerin kendi kullanıcıları var, sırayla en fazla iki kişi. İlki sahada değilse sıradaki kullanır.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Oyunculara kullanacakları sırayla dokun. Numaralı bir oyuncuya dokunarak onu listeden çıkar.';
+
+  @override
+  String get tacticsCornersLeft => 'Soldan';
+
+  @override
+  String get tacticsCornersRight => 'Sağdan';
 
   @override
   String get tacticsThrowInsBlurb =>

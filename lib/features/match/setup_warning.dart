@@ -140,11 +140,14 @@ final AutoDisposeFutureProviderFamily<SquadSetup, int> squadSetupProvider =
         // has named nobody since. The acknowledgement only holds while nothing
         // is named: once he picks somebody, the question becomes whether THAT
         // man can play, and an old "leave it" must not swallow the answer.
+        //
+        // An order counts as set when one of the men listed can play: the
+        // next one steps up when the first cannot.
         setPieces:
-            (takers.penalty == null &&
-                takers.deadBall == null &&
-                acceptedAuto) ||
-            (available(takers.penalty) && available(takers.deadBall)),
+            (takers.isEmpty && acceptedAuto) ||
+            SetPieceDuty.values.every(
+              (d) => takers.of(d).any(available),
+            ),
       );
     });
 

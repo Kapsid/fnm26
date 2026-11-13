@@ -1225,15 +1225,25 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get tacticsPenaltiesBlurb =>
-      'Wie de penalty\'s neemt. Staat de eerste niet op het veld, dan neemt de tweede ze.';
+      'Wie de penalty\'s neemt, tot drie op volgorde. Staat de eerste niet op het veld, dan neemt de volgende ze.';
 
   @override
   String get tacticsFreeKicksBlurb =>
-      'Wie de vrije trappen binnen schietafstand neemt, en ook de hoekschoppen. Staat de eerste niet op het veld, dan neemt de tweede ze.';
+      'Wie de vrije trappen binnen schietafstand neemt, tot drie op volgorde. Staat de eerste niet op het veld, dan neemt de volgende ze.';
 
   @override
   String get tacticsCornersBlurb =>
-      'Hoekschoppen aan beide kanten zijn voor je vrijetrapnemer, dus een wijziging hier verandert ook de vrije trappen. Staat de eerste niet op het veld, dan neemt de tweede ze.';
+      'Hoekschoppen van elke kant hebben hun eigen nemers, tot twee op volgorde. Staat de eerste niet op het veld, dan neemt de volgende ze.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Tik de spelers aan in de volgorde waarin ze moeten nemen. Tik op een genummerde speler om hem van de lijst te halen.';
+
+  @override
+  String get tacticsCornersLeft => 'Van links';
+
+  @override
+  String get tacticsCornersRight => 'Van rechts';
 
   @override
   String get tacticsThrowInsBlurb =>

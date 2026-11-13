@@ -1184,15 +1184,25 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get tacticsPenaltiesBlurb =>
-      'Siapa yang mengambil sepakan penalti. Jika yang pertama tiada di padang, yang kedua mengambilnya.';
+      'Siapa yang mengambil sepakan penalti, sehingga tiga orang mengikut giliran. Jika yang pertama tiada di padang, yang seterusnya mengambilnya.';
 
   @override
   String get tacticsFreeKicksBlurb =>
-      'Siapa yang mengambil sepakan percuma dalam jarak menjaringkan, dan juga sepakan sudut. Jika yang pertama tiada di padang, yang kedua mengambilnya.';
+      'Siapa yang mengambil sepakan percuma dalam jarak menjaringkan, sehingga tiga orang mengikut giliran. Jika yang pertama tiada di padang, yang seterusnya mengambilnya.';
 
   @override
   String get tacticsCornersBlurb =>
-      'Sepakan sudut dari kedua-dua belah diambil oleh penyepak sepakan percuma anda, jadi perubahan di sini turut mengubah sepakan percuma. Jika yang pertama tiada di padang, yang kedua mengambilnya.';
+      'Sepakan sudut dari setiap sisi ada penyepaknya sendiri, sehingga dua orang mengikut giliran. Jika yang pertama tiada di padang, yang seterusnya mengambilnya.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Ketik pemain mengikut giliran mereka menyepak. Ketik pemain bernombor untuk mengeluarkannya dari senarai.';
+
+  @override
+  String get tacticsCornersLeft => 'Dari kiri';
+
+  @override
+  String get tacticsCornersRight => 'Dari kanan';
 
   @override
   String get tacticsThrowInsBlurb =>

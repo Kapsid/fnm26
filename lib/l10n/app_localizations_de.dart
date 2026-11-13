@@ -1236,15 +1236,25 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tacticsPenaltiesBlurb =>
-      'Wer die Elfmeter schießt. Steht der Erste nicht auf dem Platz, schießt der Zweite.';
+      'Wer die Elfmeter schießt, bis zu drei in Reihenfolge. Steht der Erste nicht auf dem Platz, schießt der Nächste.';
 
   @override
   String get tacticsFreeKicksBlurb =>
-      'Wer die Freistöße in Tornähe schießt, dazu auch die Ecken. Steht der Erste nicht auf dem Platz, schießt der Zweite.';
+      'Wer die Freistöße in Tornähe schießt, bis zu drei in Reihenfolge. Steht der Erste nicht auf dem Platz, schießt der Nächste.';
 
   @override
   String get tacticsCornersBlurb =>
-      'Ecken von beiden Seiten tritt Ihr Freistoßschütze, eine Änderung hier ändert also auch die Freistöße. Steht der Erste nicht auf dem Platz, tritt der Zweite.';
+      'Ecken von jeder Seite haben eigene Schützen, bis zu zwei in Reihenfolge. Steht der Erste nicht auf dem Platz, tritt der Nächste.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Tippen Sie die Spieler in der Reihenfolge an, in der sie schießen sollen. Ein nummerierter Spieler wird durch Antippen von der Liste genommen.';
+
+  @override
+  String get tacticsCornersLeft => 'Von links';
+
+  @override
+  String get tacticsCornersRight => 'Von rechts';
 
   @override
   String get tacticsThrowInsBlurb =>

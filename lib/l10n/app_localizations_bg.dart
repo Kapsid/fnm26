@@ -1231,15 +1231,25 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get tacticsPenaltiesBlurb =>
-      'Кой бие дузпите. Ако първият не е на терена, бие вторият.';
+      'Кой бие дузпите, до трима по ред. Ако първият не е на терена, бие следващият.';
 
   @override
   String get tacticsFreeKicksBlurb =>
-      'Кой бие свободните удари в обсега на вратата, а също и корнерите. Ако първият не е на терена, бие вторият.';
+      'Кой бие свободните удари в обсега на вратата, до трима по ред. Ако първият не е на терена, бие следващият.';
 
   @override
   String get tacticsCornersBlurb =>
-      'Корнерите от двете страни ги бие твоят изпълнител на свободни удари, така че промяна тук променя и свободните удари. Ако първият не е на терена, бие вторият.';
+      'Корнерите от всяка страна имат свои изпълнители, до двама по ред. Ако първият не е на терена, бие следващият.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Докосвай играчите в реда, в който да изпълняват. Докосни номериран играч, за да го махнеш от списъка.';
+
+  @override
+  String get tacticsCornersLeft => 'Отляво';
+
+  @override
+  String get tacticsCornersRight => 'Отдясно';
 
   @override
   String get tacticsThrowInsBlurb =>

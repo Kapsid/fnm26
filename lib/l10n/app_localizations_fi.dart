@@ -1231,15 +1231,25 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get tacticsPenaltiesBlurb =>
-      'Kuka laukoo rangaistuspotkut. Jos ensimmäinen ei ole kentällä, laukoo toinen.';
+      'Kuka laukoo rangaistuspotkut, enintään kolme järjestyksessä. Jos ensimmäinen ei ole kentällä, laukoo seuraava.';
 
   @override
   String get tacticsFreeKicksBlurb =>
-      'Kuka potkaisee vapaapotkut ampumaetäisyydeltä, ja myös kulmapotkut. Jos ensimmäinen ei ole kentällä, potkaisee toinen.';
+      'Kuka potkaisee vapaapotkut ampumaetäisyydeltä, enintään kolme järjestyksessä. Jos ensimmäinen ei ole kentällä, potkaisee seuraava.';
 
   @override
   String get tacticsCornersBlurb =>
-      'Kulmapotkut molemmilta puolilta potkaisee vapaapotkujen potkija, joten muutos tässä muuttaa myös vapaapotkut. Jos ensimmäinen ei ole kentällä, potkaisee toinen.';
+      'Kummankin puolen kulmapotkuilla on omat potkaisijansa, enintään kaksi järjestyksessä. Jos ensimmäinen ei ole kentällä, potkaisee seuraava.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Napauta pelaajia siinä järjestyksessä, jossa heidän pitää potkaista. Napauta numeroitua pelaajaa poistaaksesi hänet listalta.';
+
+  @override
+  String get tacticsCornersLeft => 'Vasemmalta';
+
+  @override
+  String get tacticsCornersRight => 'Oikealta';
 
   @override
   String get tacticsThrowInsBlurb =>

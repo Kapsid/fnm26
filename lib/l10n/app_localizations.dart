@@ -2136,7 +2136,7 @@ abstract class AppLocalizations {
   /// **'Free kicks'**
   String get tacticsSectionFreeKicks;
 
-  /// Roles & set pieces tab, sub-tab chip: the corner taker (the same man as free kicks).
+  /// Roles & set pieces tab, sub-tab chip: the corner takers (left and right).
   ///
   /// In en, this message translates to:
   /// **'Corners'**
@@ -2148,23 +2148,41 @@ abstract class AppLocalizations {
   /// **'Tap a player to name him. Tap him again to leave it to the coach.'**
   String get tacticsTakerTapHint;
 
-  /// Penalties sub-tab intro. The man marked 1. takes them; 2. is who steps up if 1. is not on the pitch.
+  /// Penalties sub-tab intro. Up to three takers in order (marked 1., 2., 3.); the next one listed steps up if the first is not on the pitch.
   ///
   /// In en, this message translates to:
-  /// **'Who takes the penalties. If the first is not on the pitch, the second takes them.'**
+  /// **'Who takes the penalties, up to three in order. If the first is not on the pitch, the next one takes them.'**
   String get tacticsPenaltiesBlurb;
 
-  /// Free kicks sub-tab intro. The free-kick taker also takes the corners.
+  /// Free kicks sub-tab intro. Up to three takers in order; the next one listed steps up if the first is not on the pitch.
   ///
   /// In en, this message translates to:
-  /// **'Who takes free kicks within range of goal, and the corners too. If the first is not on the pitch, the second takes them.'**
+  /// **'Who takes free kicks within range of goal, up to three in order. If the first is not on the pitch, the next one takes them.'**
   String get tacticsFreeKicksBlurb;
 
-  /// Corners sub-tab intro. Corners and free kicks share one taker.
+  /// Corners sub-tab intro. Corners from the left and from the right each have their own ordered takers (up to two).
   ///
   /// In en, this message translates to:
-  /// **'Corners from both sides go to your free-kick taker, so a change here changes free kicks too. If the first is not on the pitch, the second takes them.'**
+  /// **'Corners from each side have their own takers, up to two in order. If the first is not on the pitch, the next one takes them.'**
   String get tacticsCornersBlurb;
+
+  /// Penalties, free kicks and corners sub-tabs: how the ordered taker list works. Tapping an unnumbered player adds him to the end of the order; tapping a numbered one removes him.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap players in the order they should take it. Tap a numbered player to take him off the list.'**
+  String get tacticsOrderTapHint;
+
+  /// Corners sub-tab: heading over the takers of corners taken from the left side.
+  ///
+  /// In en, this message translates to:
+  /// **'From the left'**
+  String get tacticsCornersLeft;
+
+  /// Corners sub-tab: heading over the takers of corners taken from the right side.
+  ///
+  /// In en, this message translates to:
+  /// **'From the right'**
+  String get tacticsCornersRight;
 
   /// Throw-ins sub-tab intro.
   ///

@@ -1213,15 +1213,25 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get tacticsPenaltiesBlurb =>
-      'Hvem som tar straffene. Er den første ikke på banen, tar den andre dem.';
+      'Hvem som tar straffene, opptil tre i rekkefølge. Er den første ikke på banen, tar den neste dem.';
 
   @override
   String get tacticsFreeKicksBlurb =>
-      'Hvem som tar frispark på skuddhold, og hjørnesparkene også. Er den første ikke på banen, tar den andre dem.';
+      'Hvem som tar frispark på skuddhold, opptil tre i rekkefølge. Er den første ikke på banen, tar den neste dem.';
 
   @override
   String get tacticsCornersBlurb =>
-      'Hjørnespark fra begge sider går til frisparkskytteren din, så en endring her endrer også frisparkene. Er den første ikke på banen, tar den andre dem.';
+      'Hjørnespark fra hver side har egne skyttere, opptil to i rekkefølge. Er den første ikke på banen, tar den neste dem.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Trykk på spillerne i den rekkefølgen de skal ta dem. Trykk på en nummerert spiller for å fjerne ham fra listen.';
+
+  @override
+  String get tacticsCornersLeft => 'Fra venstre';
+
+  @override
+  String get tacticsCornersRight => 'Fra høyre';
 
   @override
   String get tacticsThrowInsBlurb =>

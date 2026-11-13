@@ -1197,15 +1197,25 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get tacticsPenaltiesBlurb =>
-      'Cine execută penalty-urile. Dacă primul nu este pe teren, execută al doilea.';
+      'Cine execută penalty-urile, până la trei în ordine. Dacă primul nu este pe teren, execută următorul.';
 
   @override
   String get tacticsFreeKicksBlurb =>
-      'Cine execută loviturile libere din zona porții, precum și cornerele. Dacă primul nu este pe teren, execută al doilea.';
+      'Cine execută loviturile libere din zona porții, până la trei în ordine. Dacă primul nu este pe teren, execută următorul.';
 
   @override
   String get tacticsCornersBlurb =>
-      'Cornerele din ambele părți le execută specialistul dvs. la lovituri libere, deci o schimbare aici modifică și loviturile libere. Dacă primul nu este pe teren, execută al doilea.';
+      'Cornerele din fiecare parte au propriii executanți, până la doi în ordine. Dacă primul nu este pe teren, execută următorul.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Atingeți jucătorii în ordinea în care trebuie să execute. Atingeți un jucător numerotat pentru a-l scoate din listă.';
+
+  @override
+  String get tacticsCornersLeft => 'Din stânga';
+
+  @override
+  String get tacticsCornersRight => 'Din dreapta';
 
   @override
   String get tacticsThrowInsBlurb =>
