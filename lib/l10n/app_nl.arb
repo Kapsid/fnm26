@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation}: {name} ({age}) stopt als trainer",
   "editorManagerAge": "Leeftijd",
   "editorManagerAgeHint": "Leeg: het spel kiest er een",
-  "editorIssueManagerAge": "De leeftijd van de bondscoach moet tussen {min} en {max} liggen."
+  "editorIssueManagerAge": "De leeftijd van de bondscoach moet tussen {min} en {max} liggen.",
+  "pressFloor": "U HEBT HET WOORD · {index}/{total}",
+  "pressTickerStanding": "{code} {points} PT · {place} PLAATS",
+  "pressAfterTitle": "NA DE PERSCONFERENTIE",
+  "pressTileMorale": "Moraal",
+  "pressTilePress": "Pers",
+  "pressPromiseHeading": "U BELOOFDE",
+  "pressPromiseWinNext": "Een zege in de volgende wedstrijd.",
+  "pressPromiseJob": "Uw baan in de volgende drie wedstrijden.",
+  "pressPromiseJudgedCampaign": "Het bestuur oordeelt als de campagne beslist is.",
+  "pressPromiseJudgedMatch": "Beoordeeld op de uitslag van de volgende wedstrijd."
 }

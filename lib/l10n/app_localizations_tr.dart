@@ -17685,4 +17685,40 @@ class AppLocalizationsTr extends AppLocalizations {
   String editorIssueManagerAge(int min, int max) {
     return 'Teknik direktörün yaşı $min ile $max arasında olmalı.';
   }
+
+  @override
+  String pressFloor(int index, int total) {
+    return 'SÖZ SİZDE · $index/$total';
+  }
+
+  @override
+  String pressTickerStanding(String code, int points, String place) {
+    return '$code $points PUAN · $place SIRA';
+  }
+
+  @override
+  String get pressAfterTitle => 'BASIN TOPLANTISINDAN SONRA';
+
+  @override
+  String get pressTileMorale => 'Moral';
+
+  @override
+  String get pressTilePress => 'Basın';
+
+  @override
+  String get pressPromiseHeading => 'SÖZ VERDİNİZ';
+
+  @override
+  String get pressPromiseWinNext => 'Sıradaki maçta galibiyet.';
+
+  @override
+  String get pressPromiseJob => 'Önümüzdeki üç maçta göreviniz.';
+
+  @override
+  String get pressPromiseJudgedCampaign =>
+      'Yönetim, kampanya sonuçlandığında karar verecek.';
+
+  @override
+  String get pressPromiseJudgedMatch =>
+      'Sıradaki maçın sonucuyla değerlendirilir.';
 }

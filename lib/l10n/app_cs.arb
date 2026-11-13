@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation}: trenér {name} ({age}) končí s trénováním",
   "editorManagerAge": "Věk",
   "editorManagerAgeHint": "Prázdné: vybere hra",
-  "editorIssueManagerAge": "Věk trenéra musí být od {min} do {max}."
+  "editorIssueManagerAge": "Věk trenéra musí být od {min} do {max}.",
+  "pressFloor": "MÁTE SLOVO · {index}/{total}",
+  "pressTickerStanding": "{code} {points} B. · {place} MÍSTO",
+  "pressAfterTitle": "PO TISKOVCE",
+  "pressTileMorale": "Morálka",
+  "pressTilePress": "Novináři",
+  "pressPromiseHeading": "SLÍBILI JSTE",
+  "pressPromiseWinNext": "Výhru v příštím zápase.",
+  "pressPromiseJob": "Že vás posoudí podle příštích tří zápasů.",
+  "pressPromiseJudgedCampaign": "Vedení to vyhodnotí, až bude kampaň rozhodnutá.",
+  "pressPromiseJudgedMatch": "Rozhodne výsledek příštího zápasu."
 }

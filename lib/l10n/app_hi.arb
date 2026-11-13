@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation}: {name} ({age}) ने कोचिंग से संन्यास लिया",
   "editorManagerAge": "उम्र",
   "editorManagerAgeHint": "खाली: गेम खुद चुनेगा",
-  "editorIssueManagerAge": "मैनेजर की उम्र {min} से {max} के बीच होनी चाहिए।"
+  "editorIssueManagerAge": "मैनेजर की उम्र {min} से {max} के बीच होनी चाहिए।",
+  "pressFloor": "अब आपकी बारी · {index}/{total}",
+  "pressTickerStanding": "{code} {points} अंक · {place}",
+  "pressAfterTitle": "प्रेस कॉन्फ्रेंस के बाद",
+  "pressTileMorale": "मनोबल",
+  "pressTilePress": "मीडिया",
+  "pressPromiseHeading": "आपका वादा",
+  "pressPromiseWinNext": "अगले मैच में जीत।",
+  "pressPromiseJob": "अगले तीन मैचों पर आपकी नौकरी।",
+  "pressPromiseJudgedCampaign": "अभियान तय होने पर बोर्ड फैसला करेगा।",
+  "pressPromiseJudgedMatch": "अगले मैच के नतीजे से तय होगा।"
 }

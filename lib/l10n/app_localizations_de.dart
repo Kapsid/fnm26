@@ -17905,4 +17905,40 @@ class AppLocalizationsDe extends AppLocalizations {
   String editorIssueManagerAge(int min, int max) {
     return 'Das Alter des Trainers muss zwischen $min und $max liegen.';
   }
+
+  @override
+  String pressFloor(int index, int total) {
+    return 'SIE HABEN DAS WORT · $index/$total';
+  }
+
+  @override
+  String pressTickerStanding(String code, int points, String place) {
+    return '$code $points PKT. · $place PLATZ';
+  }
+
+  @override
+  String get pressAfterTitle => 'NACH DER PRESSEKONFERENZ';
+
+  @override
+  String get pressTileMorale => 'Moral';
+
+  @override
+  String get pressTilePress => 'Presse';
+
+  @override
+  String get pressPromiseHeading => 'IHR VERSPRECHEN';
+
+  @override
+  String get pressPromiseWinNext => 'Ein Sieg im nächsten Spiel.';
+
+  @override
+  String get pressPromiseJob => 'Ihr Job in den nächsten drei Spielen.';
+
+  @override
+  String get pressPromiseJudgedCampaign =>
+      'Das Präsidium urteilt, wenn die Kampagne entschieden ist.';
+
+  @override
+  String get pressPromiseJudgedMatch =>
+      'Entscheidend ist das Ergebnis des nächsten Spiels.';
 }

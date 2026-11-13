@@ -17468,4 +17468,38 @@ class AppLocalizationsTh extends AppLocalizations {
   String editorIssueManagerAge(int min, int max) {
     return 'อายุของผู้จัดการทีมต้องอยู่ระหว่าง $min ถึง $max';
   }
+
+  @override
+  String pressFloor(int index, int total) {
+    return 'ถึงตาคุณพูด · $index/$total';
+  }
+
+  @override
+  String pressTickerStanding(String code, int points, String place) {
+    return '$code $points แต้ม · $place';
+  }
+
+  @override
+  String get pressAfterTitle => 'หลังแถลงข่าว';
+
+  @override
+  String get pressTileMorale => 'ขวัญกำลังใจ';
+
+  @override
+  String get pressTilePress => 'สื่อ';
+
+  @override
+  String get pressPromiseHeading => 'คุณสัญญาไว้';
+
+  @override
+  String get pressPromiseWinNext => 'ชนะในนัดถัดไป';
+
+  @override
+  String get pressPromiseJob => 'เดิมพันตำแหน่งกับสามนัดถัดไป';
+
+  @override
+  String get pressPromiseJudgedCampaign => 'บอร์ดจะตัดสินเมื่อแคมเปญจบลง';
+
+  @override
+  String get pressPromiseJudgedMatch => 'ตัดสินจากผลนัดถัดไป';
 }

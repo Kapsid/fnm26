@@ -8,16 +8,21 @@ import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/domain/services/press/conference.dart';
 import 'package:fnm/domain/services/press/press.dart';
+import 'package:fnm/domain/services/press/statement.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
+import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/manager/manager_age_widgets.dart';
 import 'package:fnm/features/press/press_copy.dart';
-import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/press/press_providers.dart';
+import 'package:fnm/features/press/press_ticker.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/widgets/primary_button.dart';
 
 /// The press conference: a room of named reporters, two or three questions,
 /// and a back page written from what was said.
@@ -33,8 +38,23 @@ class PressSheet extends ConsumerStatefulWidget {
     required this.opponentName,
     this.competitionName = '',
     this.rivalName = '',
+    this.ticker,
+    this.opener,
+    this.next,
     super.key,
   });
+
+  /// What the conference is tied to, across the top of the room (see
+  /// [pressContextFor]); none leaves the strip out.
+  final PressTicker? ticker;
+
+  /// The fixture a preview's stated target is judged from: the one it is the
+  /// preview of.
+  final PressFixtureLine? opener;
+
+  /// The next competitive fixture, which a promise after a match is judged
+  /// on.
+  final PressFixtureLine? next;
 
   final int careerId;
   final PendingConference conference;
@@ -200,12 +220,57 @@ class _PressSheetState extends ConsumerState<PressSheet> {
     return pickVariant(options, _seed);
   }
 
+  /// The answer the back page quotes: the first one that put something on
+  /// the record, else the first one he gave, as it was said in the room.
+  String _quoted(AppLocalizations l) {
+    var pick = 0;
+    for (var i = 0; i < _said.length; i++) {
+      if (ConferenceBuilder.statementOf(_said[i]) != null) {
+        pick = i;
+        break;
+      }
+    }
+    if (_said.isEmpty) return '';
+    final a = _said[pick];
+    return answerLabel(
+      l,
+      a,
+      playerName: _nameOf(_beats[pick]),
+      seed: _seed + a.index * 7 + pick * 3,
+    );
+  }
+
+  /// The promises he made in this room that are judged on a fixture: a
+  /// stated target (on the campaign the preview opens), a win in the next
+  /// match, his job on the next three. "No promises" promises nothing.
+  List<_Promise> _promises(AppLocalizations l) => [
+    for (final a in _said)
+      if (a == AnswerKind.promiseWinNext)
+        _Promise(
+          text: l.pressPromiseWinNext,
+          judged: l.pressPromiseJudgedMatch,
+          fixture: widget.next,
+        )
+      else if (a == AnswerKind.jobOnTheLine)
+        _Promise(text: l.pressPromiseJob, fixture: widget.next)
+      else if (a != AnswerKind.playDown && _aimText(l, a).isNotEmpty)
+        _Promise(
+          text: _aimText(l, a),
+          judged: l.pressPromiseJudgedCampaign,
+          fixture: widget.opener,
+        ),
+  ];
+
+  /// How far the press's belief in him moved: every deflection costs a
+  /// little of it ([Credibility.deflectStep]); a promise moves it only once
+  /// it is judged.
+  int get _pressSwing =>
+      _said.where((a) => a == AnswerKind.deflect).length *
+      Credibility.deflectStep;
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final index = _said.length;
-    final beat = _beat;
-    final playerName = _nameOf(beat);
     return PopScope(
       canPop: _finished,
       child: SafeArea(
@@ -213,101 +278,265 @@ class _PressSheetState extends ConsumerState<PressSheet> {
           constraints: BoxConstraints(
             maxHeight: MediaQuery.of(context).size.height * 0.85,
           ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.marginMobile,
-            ),
+          child: _over ? _verdict(context, l) : _question(l),
+        ),
+      ),
+    );
+  }
+
+  /// Variant F: the ticker, the stage with its microphone, who is asking,
+  /// the question large and centred, and the answers as wide buttons.
+  Widget _question(AppLocalizations l) {
+    final index = _said.length;
+    final beat = _beat;
+    final playerName = _nameOf(beat);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (widget.ticker case final t?) PressTickerStrip(ticker: t),
+        Flexible(
+          child: SingleChildScrollView(
             child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: AppSpacing.md),
-                Row(
-                  children: [
-                    const Icon(Icons.mic_rounded, color: AppColors.primary),
-                    const SizedBox(width: AppSpacing.sm),
-                    Expanded(
-                      child: Text(
-                        l.pressConferenceTitle,
-                        style: AppTypography.headlineMedium,
-                      ),
-                    ),
-                    Text(
-                      l.pressQuestionOf((index + 1).clamp(1, _length), _length),
-                      style: AppTypography.labelSmall.copyWith(
-                        color: AppColors.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
+                _Stage(
+                  floor: l.pressFloor((index + 1).clamp(1, _length), _length),
+                  careerId: widget.careerId,
                 ),
-                // Who is facing the room: the manager, with his age.
-                ManagerNameAgeLine(careerId: widget.careerId),
-                const SizedBox(height: AppSpacing.md),
-                Flexible(
-                  child: SingleChildScrollView(
-                    child: _over
-                        ? _Verdict(
-                            headline: _headline(l),
-                            total: _total,
-                            onLeave: _leave,
-                          )
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              PressByline(
-                                reporter: _room[index % _room.length],
-                              ),
-                              const SizedBox(height: AppSpacing.sm),
-                              Text(
-                                beatQuestion(
-                                  l,
-                                  beat,
-                                  _c,
-                                  playerName: playerName,
-                                  opponentName: widget.opponentName,
-                                  seed: _seed + index,
-                                  competitionName: widget.competitionName,
-                                  rivalName: widget.rivalName,
-                                ),
-                                style: AppTypography.bodyMedium,
-                              ),
-                              const SizedBox(height: AppSpacing.lg),
-                              for (final a in beat.answers)
-                                AnswerTile(
-                                  label: answerLabel(
-                                    l,
-                                    a,
-                                    playerName: playerName,
-                                    seed: _seed + a.index * 7 + index * 3,
-                                  ),
-                                  note: onRecordLine(
-                                    l,
-                                    a,
-                                    playerName: playerName,
-                                    aim: _aimText(l, a),
-                                  ),
-                                  onTap: () => _answer(a),
-                                ),
-                            ],
-                          ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      PressByline(reporter: _room[index % _room.length]),
+                      const SizedBox(height: AppSpacing.md - 4),
+                      Text(
+                        beatQuestion(
+                          l,
+                          beat,
+                          _c,
+                          playerName: playerName,
+                          opponentName: widget.opponentName,
+                          seed: _seed + index,
+                          competitionName: widget.competitionName,
+                          rivalName: widget.rivalName,
+                        ),
+                        textAlign: TextAlign.center,
+                        style: AppTypography.headlineMedium.copyWith(
+                          fontWeight: FontWeight.w700,
+                          height: 1.25,
+                          letterSpacing: -0.3,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: AppSpacing.md),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.marginMobile,
+                    18,
+                    AppSpacing.marginMobile,
+                    10,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      for (final a in beat.answers)
+                        AnswerTile(
+                          label: answerLabel(
+                            l,
+                            a,
+                            playerName: playerName,
+                            seed: _seed + a.index * 7 + index * 3,
+                          ),
+                          note: onRecordLine(
+                            l,
+                            a,
+                            playerName: playerName,
+                            aim: _aimText(l, a),
+                          ),
+                          onTap: () => _answer(a),
+                        ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
         ),
+      ],
+    );
+  }
+
+  /// Variant C: tomorrow's paper, what the room moved, what he promised and
+  /// on which fixture it is judged, then on.
+  Widget _verdict(BuildContext context, AppLocalizations l) {
+    final reporter = pressReporterLabel(_room.first);
+    final promises = _promises(l);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SizedBox(
+          height: 56,
+          child: Center(
+            child: Text(
+              l.pressAfterTitle,
+              textAlign: TextAlign.center,
+              style: AppTypography.labelMedium.copyWith(letterSpacing: 2.8),
+            ),
+          ),
+        ),
+        Flexible(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.marginMobile,
+              4,
+              AppSpacing.marginMobile,
+              AppSpacing.md,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                PressPaper(
+                  outlet: reporter.outlet,
+                  date: AppDate.dayMonthYear(
+                    context,
+                    _c.row.triggeredOn.add(const Duration(days: 1)),
+                  ),
+                  headline: _headline(l),
+                  standfirst: _quoted(l),
+                ),
+                const SizedBox(height: 14),
+                Row(
+                  children: [
+                    Expanded(
+                      child: PressEffectTile(
+                        label: l.pressTileMorale,
+                        value: _total.morale,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: PressEffectTile(
+                        label: l.pressBoard,
+                        value: _total.board,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: PressEffectTile(
+                        label: l.pressTilePress,
+                        value: _pressSwing,
+                      ),
+                    ),
+                  ],
+                ),
+                for (final p in promises) ...[
+                  const SizedBox(height: 14),
+                  PressPromiseCard(
+                    text: p.text,
+                    judged: p.judged,
+                    fixture: p.fixture,
+                  ),
+                ],
+                const SizedBox(height: 14),
+                PrimaryButton(label: l.hubContinue, onPressed: _leave),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// A promise made in the room, as its card shows it.
+class _Promise {
+  const _Promise({required this.text, this.judged, this.fixture});
+
+  final String text;
+  final String? judged;
+  final PressFixtureLine? fixture;
+}
+
+/// The stage: a soft light behind a drawn microphone, and whose turn it is
+/// ("YOU HAVE THE FLOOR · 2/4") with the manager facing the room under it.
+class _Stage extends StatelessWidget {
+  const _Stage({required this.floor, required this.careerId});
+
+  final String floor;
+  final int careerId;
+
+  @override
+  Widget build(BuildContext context) {
+    final tablet = MediaQuery.sizeOf(context).shortestSide >= 600;
+    return Container(
+      // Room above the mic for the faint rings round its head.
+      padding: EdgeInsets.fromLTRB(0, tablet ? 46 : 32, 0, tablet ? 28 : 18),
+      decoration: BoxDecoration(
+        gradient: RadialGradient(
+          radius: 0.62,
+          colors: [
+            Color.lerp(
+              AppColors.surfaceContainerHighest,
+              AppColors.primary,
+              0.04,
+            )!,
+            AppColors.surfaceContainer.withValues(alpha: 0),
+          ],
+        ),
+      ),
+      child: Column(
+        children: [
+          PressMicrophone(width: tablet ? 110 : 84),
+          const SizedBox(height: 14),
+          Text(
+            floor,
+            textAlign: TextAlign.center,
+            style: AppTypography.labelSmall.copyWith(
+              letterSpacing: 2,
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+          // Who is facing the room: the manager, with his age.
+          ManagerNameAgeLine(
+            careerId: careerId,
+            style: AppTypography.labelSmall.copyWith(
+              fontSize: 11,
+              color: AppColors.outline,
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-/// Who is asking: a name, an outlet, and a colour for the kind of question
-/// they are about to put. The manager learns to brace for some of them.
+/// A reporter's name and outlet as this career prints them.
 ///
 /// A custom world may have renamed the reporter ([ActiveWorld.reporter], by
-/// his place in the press pack); a blank name or outlet keeps his own. The
-/// kind of question he asks is his whatever he is called.
+/// his place in the press pack); a blank name or outlet keeps his own. One
+/// the world added goes by his own name (in the app's language when the
+/// world gives one).
+({String name, String outlet}) pressReporterLabel(PressReporter reporter) {
+  final added = reporter.index >= kPackAddedIdBase
+      ? ActiveWorld.current.addedReporter(reporter.index)
+      : null;
+  final renamed = added == null
+      ? ActiveWorld.current.reporter(reporter.index)
+      : PackReporter(name: added.name, outlet: added.outlet);
+  return (
+    name: ActiveWorld.textOrNull(renamed?.name) ?? reporter.name,
+    outlet: ActiveWorld.textOrNull(renamed?.outlet) ?? reporter.outlet,
+  );
+}
+
+/// Who is asking, centred in mono: the name in a colour for the kind of
+/// question they are about to put (the manager learns to brace for some of
+/// them), then the outlet. The kind of question is his whatever a custom
+/// world calls him.
 class PressByline extends StatelessWidget {
   const PressByline({required this.reporter, super.key});
 
@@ -315,6 +544,7 @@ class PressByline extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final color = switch (reporter.angle) {
       PressAngle.tabloid => AppColors.error,
       PressAngle.broadsheet => AppColors.primary,
@@ -322,51 +552,37 @@ class PressByline extends StatelessWidget {
       PressAngle.local => AppColors.warning,
       PressAngle.foreign => AppColors.onSurfaceVariant,
     };
-    // One the world added goes by his own name (in the app's language when
-    // the world gives one); one of the game's by the world's rename.
-    final added = reporter.index >= kPackAddedIdBase
-        ? ActiveWorld.current.addedReporter(reporter.index)
-        : null;
-    final renamed = added == null
-        ? ActiveWorld.current.reporter(reporter.index)
-        : PackReporter(name: added.name, outlet: added.outlet);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Container(width: 3, height: 26, color: color),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    ActiveWorld.textOrNull(renamed?.name) ?? reporter.name,
-                    style: AppTypography.labelMedium.copyWith(color: color),
-                  ),
-                  Text(
-                    ActiveWorld.textOrNull(renamed?.outlet) ?? reporter.outlet,
-                    style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ],
+    final who = pressReporterLabel(reporter);
+    final style = AppTypography.labelSmall.copyWith(
+      fontSize: 11,
+      letterSpacing: 0.4,
+      color: AppColors.onSurfaceVariant,
+    );
+    return Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(
+            text: who.name.capsIn(l.localeName),
+            style: style.copyWith(color: color),
+          ),
+          TextSpan(text: ' · ${who.outlet.capsIn(l.localeName)}'),
+        ],
+      ),
+      textAlign: TextAlign.center,
+      style: style,
     );
   }
 }
 
-/// One answer, as it would be said.
+/// One answer, as it would be said: a wide outlined button.
 ///
 /// What it does to the dressing room and the board is NOT shown here. It used
 /// to be, as arrows on every answer, which turned the conference into picking
-/// the greenest tile. Playtest: keep the arrows masked until the conference
-/// is over, and let the verdict say how it went overall.
+/// the greenest tile. Playtest: keep the effects masked until the conference
+/// is over, and let the end screen say how it went overall. What it puts on
+/// the record ([note]) is shown: that is what he is choosing to say.
+///
+/// Every answer is outlined alike: none of them is the room's "main" one.
 class AnswerTile extends StatelessWidget {
   const AnswerTile({
     required this.label,
@@ -386,27 +602,48 @@ class AnswerTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: Material(
-        color: AppColors.surfaceContainerHigh,
-        borderRadius: AppRadii.baseAll,
+        color: Colors.transparent,
+        shape: const RoundedRectangleBorder(
+          borderRadius: AppRadii.mdAll,
+          side: BorderSide(color: AppColors.outlineVariant),
+        ),
         child: InkWell(
-          borderRadius: AppRadii.baseAll,
+          customBorder: const RoundedRectangleBorder(
+            borderRadius: AppRadii.mdAll,
+          ),
           onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('“$label”', style: AppTypography.bodyMedium),
-                if (note case final line?) ...[
-                  const SizedBox(height: AppSpacing.xs),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 48),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: 12,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                   Text(
-                    line,
-                    style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.primary,
+                    '“$label”',
+                    textAlign: TextAlign.center,
+                    style: AppTypography.bodyMedium.copyWith(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
+                  if (note case final line?) ...[
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      line,
+                      textAlign: TextAlign.center,
+                      style: AppTypography.labelSmall.copyWith(
+                        fontSize: 11,
+                        letterSpacing: 0.2,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         ),
@@ -415,66 +652,210 @@ class AnswerTile extends StatelessWidget {
   }
 }
 
-/// How the whole thing read: tomorrow's back page, and the two numbers the
-/// manager actually has to live with.
-class _Verdict extends StatelessWidget {
-  const _Verdict({
+/// Tomorrow's back page: a light newspaper cutting, tilted a touch, with the
+/// outlet and the date over a rule, the headline and the quote it leads on.
+class PressPaper extends StatelessWidget {
+  const PressPaper({
+    required this.outlet,
+    required this.date,
     required this.headline,
-    required this.total,
-    required this.onLeave,
+    required this.standfirst,
+    super.key,
   });
 
+  static const Key paperKey = Key('press.paper');
+
+  final String outlet;
+  final String date;
   final String headline;
-  final PressEffect total;
-  final VoidCallback onLeave;
+  final String standfirst;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          l.pressTomorrowsHeadline,
-          style: AppTypography.labelSmall.copyWith(color: AppColors.primary),
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(AppSpacing.md),
-          decoration: BoxDecoration(
-            color: AppColors.surfaceContainerHigh,
-            borderRadius: AppRadii.baseAll,
-            border: Border(
-              left: BorderSide(color: AppColors.primary, width: 3),
+    const ink = AppColors.surfaceContainerLow;
+    final mono = AppTypography.labelSmall.copyWith(
+      fontSize: 11,
+      color: ink,
+    );
+    return Transform.rotate(
+      angle: -0.0175,
+      child: Container(
+        key: paperKey,
+        padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
+        decoration: const BoxDecoration(
+          color: AppColors.onSurface,
+          borderRadius: AppRadii.baseAll,
+          boxShadow: [
+            BoxShadow(
+              color: Color(0x73000000),
+              blurRadius: 30,
+              offset: Offset(0, 10),
             ),
-          ),
-          child: Text(headline, style: AppTypography.headlineMedium),
-        ),
-        const SizedBox(height: AppSpacing.lg),
-        Row(
-          children: [
-            PressSwing(label: l.pressRoomVerdictSquad, value: total.morale),
-            const SizedBox(width: AppSpacing.lg),
-            PressSwing(label: l.pressRoomVerdictBoard, value: total.board),
-            if (total.morale == 0 && total.board == 0)
-              Text(
-                l.pressNoEffect,
-                style: AppTypography.labelSmall.copyWith(
-                  color: AppColors.onSurfaceVariant,
-                ),
-              ),
           ],
         ),
-        const SizedBox(height: AppSpacing.lg),
-        SizedBox(
-          width: double.infinity,
-          child: FilledButton(
-            onPressed: onLeave,
-            child: Text(l.pressLeaveRoom),
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              padding: const EdgeInsets.only(bottom: 6),
+              decoration: const BoxDecoration(
+                border: Border(bottom: BorderSide(color: ink, width: 2)),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      outlet.capsIn(l.localeName),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: mono.copyWith(letterSpacing: 2),
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Text(date, style: mono.copyWith(letterSpacing: 0)),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              headline,
+              style: AppTypography.headlineLargeMobile.copyWith(
+                fontWeight: FontWeight.w800,
+                height: 1.1,
+                letterSpacing: -0.5,
+                color: ink,
+              ),
+            ),
+            if (standfirst.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              Text(
+                '“$standfirst”',
+                style: AppTypography.bodySmall.copyWith(
+                  fontSize: 14,
+                  height: 1.4,
+                  color: AppColors.onPrimaryContainer,
+                ),
+              ),
+            ],
+          ],
         ),
-      ],
+      ),
+    );
+  }
+}
+
+/// One of the three swings on the end screen (morale, board, press), as a
+/// signed figure: green up, red down, grey for none.
+class PressEffectTile extends StatelessWidget {
+  const PressEffectTile({required this.label, required this.value, super.key});
+
+  final String label;
+  final int value;
+
+  /// "+3", "0", "−1" (a true minus sign, not a hyphen or a dash).
+  static String signed(int v) => v > 0
+      ? '+$v'
+      : v < 0
+      ? '−${-v}'
+      : '0';
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final color = value > 0
+        ? AppColors.positive
+        : value < 0
+        ? AppColors.error
+        : AppColors.onSurfaceVariant;
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainerHigh,
+        borderRadius: AppRadii.baseAll,
+        border: Border.all(color: AppColors.outlineVariant),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label.capsIn(l.localeName),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.labelSmall.copyWith(
+              fontSize: 11,
+              letterSpacing: 1.5,
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            signed(value),
+            style: AppTypography.titleMedium.copyWith(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              color: color,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// What he promised in the room and the fixture it is judged on.
+class PressPromiseCard extends StatelessWidget {
+  const PressPromiseCard({
+    required this.text,
+    this.judged,
+    this.fixture,
+    super.key,
+  });
+
+  static const Key cardKey = Key('press.promise');
+
+  final String text;
+  final String? judged;
+  final PressFixtureLine? fixture;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return Container(
+      key: cardKey,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainerHigh,
+        borderRadius: AppRadii.baseAll,
+        border: Border.all(color: AppColors.outlineVariant),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l.pressPromiseHeading,
+            style: AppTypography.labelSmall.copyWith(
+              letterSpacing: 1.8,
+              color: AppColors.warning,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(text, style: AppTypography.bodyMedium),
+          if (judged case final j?) ...[
+            const SizedBox(height: 2),
+            Text(
+              j,
+              style: AppTypography.bodySmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+          ],
+          if (fixture case final f?) ...[
+            const SizedBox(height: AppSpacing.sm + 4),
+            PressFixtureRow(line: f),
+          ],
+        ],
+      ),
     );
   }
 }
@@ -503,10 +884,6 @@ class PressSwing extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 3),
-        // One, two or three arrows rather than the raw figure. The number was
-        // a point on a hidden 0-100 scale the manager has never seen — "Squad
-        // 6" reads as six of something unknowable. How far the room moves is
-        // the whole of what it was trying to say.
         for (var i = 0; i < arrows; i++)
           Icon(
             up ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded,

@@ -17682,4 +17682,39 @@ class AppLocalizationsHi extends AppLocalizations {
   String editorIssueManagerAge(int min, int max) {
     return 'मैनेजर की उम्र $min से $max के बीच होनी चाहिए।';
   }
+
+  @override
+  String pressFloor(int index, int total) {
+    return 'अब आपकी बारी · $index/$total';
+  }
+
+  @override
+  String pressTickerStanding(String code, int points, String place) {
+    return '$code $points अंक · $place';
+  }
+
+  @override
+  String get pressAfterTitle => 'प्रेस कॉन्फ्रेंस के बाद';
+
+  @override
+  String get pressTileMorale => 'मनोबल';
+
+  @override
+  String get pressTilePress => 'मीडिया';
+
+  @override
+  String get pressPromiseHeading => 'आपका वादा';
+
+  @override
+  String get pressPromiseWinNext => 'अगले मैच में जीत।';
+
+  @override
+  String get pressPromiseJob => 'अगले तीन मैचों पर आपकी नौकरी।';
+
+  @override
+  String get pressPromiseJudgedCampaign =>
+      'अभियान तय होने पर बोर्ड फैसला करेगा।';
+
+  @override
+  String get pressPromiseJudgedMatch => 'अगले मैच के नतीजे से तय होगा।';
 }

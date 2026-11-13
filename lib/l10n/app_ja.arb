@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation}: {name}（{age}）が指導者を引退",
   "editorManagerAge": "年齢",
   "editorManagerAgeHint": "空欄: ゲームが決めます",
-  "editorIssueManagerAge": "監督の年齢は{min}〜{max}歳にしてください。"
+  "editorIssueManagerAge": "監督の年齢は{min}〜{max}歳にしてください。",
+  "pressFloor": "あなたの発言 · {index}/{total}",
+  "pressTickerStanding": "{code} 勝点{points} · {place}",
+  "pressAfterTitle": "会見を終えて",
+  "pressTileMorale": "士気",
+  "pressTilePress": "記者",
+  "pressPromiseHeading": "あなたの約束",
+  "pressPromiseWinNext": "次の試合での勝利。",
+  "pressPromiseJob": "次の3試合に職を懸ける。",
+  "pressPromiseJudgedCampaign": "大会の結果が決まった時点で協会が判断します。",
+  "pressPromiseJudgedMatch": "次の試合の結果で判断されます。"
 }

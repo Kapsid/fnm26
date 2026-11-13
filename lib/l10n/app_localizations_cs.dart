@@ -18169,4 +18169,39 @@ class AppLocalizationsCs extends AppLocalizations {
   String editorIssueManagerAge(int min, int max) {
     return 'Věk trenéra musí být od $min do $max.';
   }
+
+  @override
+  String pressFloor(int index, int total) {
+    return 'MÁTE SLOVO · $index/$total';
+  }
+
+  @override
+  String pressTickerStanding(String code, int points, String place) {
+    return '$code $points B. · $place MÍSTO';
+  }
+
+  @override
+  String get pressAfterTitle => 'PO TISKOVCE';
+
+  @override
+  String get pressTileMorale => 'Morálka';
+
+  @override
+  String get pressTilePress => 'Novináři';
+
+  @override
+  String get pressPromiseHeading => 'SLÍBILI JSTE';
+
+  @override
+  String get pressPromiseWinNext => 'Výhru v příštím zápase.';
+
+  @override
+  String get pressPromiseJob => 'Že vás posoudí podle příštích tří zápasů.';
+
+  @override
+  String get pressPromiseJudgedCampaign =>
+      'Vedení to vyhodnotí, až bude kampaň rozhodnutá.';
+
+  @override
+  String get pressPromiseJudgedMatch => 'Rozhodne výsledek příštího zápasu.';
 }

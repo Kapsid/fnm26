@@ -17785,4 +17785,40 @@ class AppLocalizationsFil extends AppLocalizations {
   String editorIssueManagerAge(int min, int max) {
     return 'Dapat mula $min hanggang $max ang edad ng manager.';
   }
+
+  @override
+  String pressFloor(int index, int total) {
+    return 'IKAW NA ANG MAGSASALITA · $index/$total';
+  }
+
+  @override
+  String pressTickerStanding(String code, int points, String place) {
+    return '$code $points PTS · $place';
+  }
+
+  @override
+  String get pressAfterTitle => 'PAGKATAPOS NG PRESS CONFERENCE';
+
+  @override
+  String get pressTileMorale => 'Morale';
+
+  @override
+  String get pressTilePress => 'Media';
+
+  @override
+  String get pressPromiseHeading => 'IPINANGAKO MO';
+
+  @override
+  String get pressPromiseWinNext => 'Panalo sa susunod na laban.';
+
+  @override
+  String get pressPromiseJob => 'Ang trabaho mo sa susunod na tatlong laban.';
+
+  @override
+  String get pressPromiseJudgedCampaign =>
+      'Huhusgahan ito ng board kapag tapos na ang kampanya.';
+
+  @override
+  String get pressPromiseJudgedMatch =>
+      'Huhusgahan sa resulta ng susunod na laban.';
 }

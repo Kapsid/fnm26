@@ -26899,6 +26899,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The manager\'s age must be from {min} to {max}.'**
   String editorIssueManagerAge(int min, int max);
+
+  /// Press conference: the line under the microphone, whose turn it is and which question of how many.
+  ///
+  /// In en, this message translates to:
+  /// **'YOU HAVE THE FLOOR · {index}/{total}'**
+  String pressFloor(int index, int total);
+
+  /// Press conference ticker: his side's group line. {code} is the nation code, {place} the group place (campaignPlace).
+  ///
+  /// In en, this message translates to:
+  /// **'{code} {points, plural, =1{1 PT} other{{points} PTS}} · {place}'**
+  String pressTickerStanding(String code, int points, String place);
+
+  /// Press conference end screen title.
+  ///
+  /// In en, this message translates to:
+  /// **'AFTER THE CONFERENCE'**
+  String get pressAfterTitle;
+
+  /// Press end screen: the dressing-room morale tile.
+  ///
+  /// In en, this message translates to:
+  /// **'Morale'**
+  String get pressTileMorale;
+
+  /// Press end screen: the press (credibility) tile.
+  ///
+  /// In en, this message translates to:
+  /// **'Press'**
+  String get pressTilePress;
+
+  /// Press end screen: heading of the card with a promise made in the room.
+  ///
+  /// In en, this message translates to:
+  /// **'YOU PROMISED'**
+  String get pressPromiseHeading;
+
+  /// Press end screen promise card: he promised to win the next match.
+  ///
+  /// In en, this message translates to:
+  /// **'A win in the next match.'**
+  String get pressPromiseWinNext;
+
+  /// Press end screen promise card: he put his job on the next three matches.
+  ///
+  /// In en, this message translates to:
+  /// **'Your job on the next three matches.'**
+  String get pressPromiseJob;
+
+  /// Press end screen promise card: a stated target is judged when the campaign is decided.
+  ///
+  /// In en, this message translates to:
+  /// **'The board judges it when the campaign is settled.'**
+  String get pressPromiseJudgedCampaign;
+
+  /// Press end screen promise card: a match promise is judged on the next match.
+  ///
+  /// In en, this message translates to:
+  /// **'Judged on the result of the next match.'**
+  String get pressPromiseJudgedMatch;
 }
 
 class _AppLocalizationsDelegate

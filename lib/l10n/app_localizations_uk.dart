@@ -18105,4 +18105,39 @@ class AppLocalizationsUk extends AppLocalizations {
   String editorIssueManagerAge(int min, int max) {
     return 'Вік тренера має бути від $min до $max.';
   }
+
+  @override
+  String pressFloor(int index, int total) {
+    return 'ВАШЕ СЛОВО · $index/$total';
+  }
+
+  @override
+  String pressTickerStanding(String code, int points, String place) {
+    return '$code $points ОЧ. · $place МІСЦЕ';
+  }
+
+  @override
+  String get pressAfterTitle => 'ПІСЛЯ ПРЕСКОНФЕРЕНЦІЇ';
+
+  @override
+  String get pressTileMorale => 'Мораль';
+
+  @override
+  String get pressTilePress => 'Преса';
+
+  @override
+  String get pressPromiseHeading => 'ВИ ПООБІЦЯЛИ';
+
+  @override
+  String get pressPromiseWinNext => 'Перемогу в наступному матчі.';
+
+  @override
+  String get pressPromiseJob => 'Свою посаду в наступних трьох матчах.';
+
+  @override
+  String get pressPromiseJudgedCampaign =>
+      'Рада вирішить, коли кампанія завершиться.';
+
+  @override
+  String get pressPromiseJudgedMatch => 'Вирішить результат наступного матчу.';
 }

@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation}: {name} ({age}) завершує тренерську кар’єру",
   "editorManagerAge": "Вік",
   "editorManagerAgeHint": "Порожньо: обирає гра",
-  "editorIssueManagerAge": "Вік тренера має бути від {min} до {max}."
+  "editorIssueManagerAge": "Вік тренера має бути від {min} до {max}.",
+  "pressFloor": "ВАШЕ СЛОВО · {index}/{total}",
+  "pressTickerStanding": "{code} {points} ОЧ. · {place} МІСЦЕ",
+  "pressAfterTitle": "ПІСЛЯ ПРЕСКОНФЕРЕНЦІЇ",
+  "pressTileMorale": "Мораль",
+  "pressTilePress": "Преса",
+  "pressPromiseHeading": "ВИ ПООБІЦЯЛИ",
+  "pressPromiseWinNext": "Перемогу в наступному матчі.",
+  "pressPromiseJob": "Свою посаду в наступних трьох матчах.",
+  "pressPromiseJudgedCampaign": "Рада вирішить, коли кампанія завершиться.",
+  "pressPromiseJudgedMatch": "Вирішить результат наступного матчу."
 }

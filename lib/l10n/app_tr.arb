@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation}: {name} ({age}) teknik direktörlüğü bırakıyor",
   "editorManagerAge": "Yaş",
   "editorManagerAgeHint": "Boş: oyun seçer",
-  "editorIssueManagerAge": "Teknik direktörün yaşı {min} ile {max} arasında olmalı."
+  "editorIssueManagerAge": "Teknik direktörün yaşı {min} ile {max} arasında olmalı.",
+  "pressFloor": "SÖZ SİZDE · {index}/{total}",
+  "pressTickerStanding": "{code} {points} PUAN · {place} SIRA",
+  "pressAfterTitle": "BASIN TOPLANTISINDAN SONRA",
+  "pressTileMorale": "Moral",
+  "pressTilePress": "Basın",
+  "pressPromiseHeading": "SÖZ VERDİNİZ",
+  "pressPromiseWinNext": "Sıradaki maçta galibiyet.",
+  "pressPromiseJob": "Önümüzdeki üç maçta göreviniz.",
+  "pressPromiseJudgedCampaign": "Yönetim, kampanya sonuçlandığında karar verecek.",
+  "pressPromiseJudgedMatch": "Sıradaki maçın sonucuyla değerlendirilir."
 }

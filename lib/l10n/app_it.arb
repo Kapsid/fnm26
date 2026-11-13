@@ -4443,5 +4443,15 @@
   "mgrNewsRetiredAge": "{nation}: {name} ({age}) lascia la panchina",
   "editorManagerAge": "Età",
   "editorManagerAgeHint": "Vuoto: la sceglie il gioco",
-  "editorIssueManagerAge": "L’età del CT deve essere tra {min} e {max}."
+  "editorIssueManagerAge": "L’età del CT deve essere tra {min} e {max}.",
+  "pressFloor": "A LEI LA PAROLA · {index}/{total}",
+  "pressTickerStanding": "{code} {points} PT · {place} POSTO",
+  "pressAfterTitle": "DOPO LA CONFERENZA",
+  "pressTileMorale": "Morale",
+  "pressTilePress": "Stampa",
+  "pressPromiseHeading": "HAI PROMESSO",
+  "pressPromiseWinNext": "Una vittoria nella prossima partita.",
+  "pressPromiseJob": "Il tuo posto nelle prossime tre partite.",
+  "pressPromiseJudgedCampaign": "La federazione giudicherà a campagna conclusa.",
+  "pressPromiseJudgedMatch": "Si giudica dal risultato della prossima partita."
 }

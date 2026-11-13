@@ -17858,4 +17858,40 @@ class AppLocalizationsNl extends AppLocalizations {
   String editorIssueManagerAge(int min, int max) {
     return 'De leeftijd van de bondscoach moet tussen $min en $max liggen.';
   }
+
+  @override
+  String pressFloor(int index, int total) {
+    return 'U HEBT HET WOORD · $index/$total';
+  }
+
+  @override
+  String pressTickerStanding(String code, int points, String place) {
+    return '$code $points PT · $place PLAATS';
+  }
+
+  @override
+  String get pressAfterTitle => 'NA DE PERSCONFERENTIE';
+
+  @override
+  String get pressTileMorale => 'Moraal';
+
+  @override
+  String get pressTilePress => 'Pers';
+
+  @override
+  String get pressPromiseHeading => 'U BELOOFDE';
+
+  @override
+  String get pressPromiseWinNext => 'Een zege in de volgende wedstrijd.';
+
+  @override
+  String get pressPromiseJob => 'Uw baan in de volgende drie wedstrijden.';
+
+  @override
+  String get pressPromiseJudgedCampaign =>
+      'Het bestuur oordeelt als de campagne beslist is.';
+
+  @override
+  String get pressPromiseJudgedMatch =>
+      'Beoordeeld op de uitslag van de volgende wedstrijd.';
 }

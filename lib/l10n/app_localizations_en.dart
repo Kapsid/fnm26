@@ -17800,4 +17800,46 @@ class AppLocalizationsEn extends AppLocalizations {
   String editorIssueManagerAge(int min, int max) {
     return 'The manager\'s age must be from $min to $max.';
   }
+
+  @override
+  String pressFloor(int index, int total) {
+    return 'YOU HAVE THE FLOOR · $index/$total';
+  }
+
+  @override
+  String pressTickerStanding(String code, int points, String place) {
+    String _temp0 = intl.Intl.pluralLogic(
+      points,
+      locale: localeName,
+      other: '$points PTS',
+      one: '1 PT',
+    );
+    return '$code $_temp0 · $place';
+  }
+
+  @override
+  String get pressAfterTitle => 'AFTER THE CONFERENCE';
+
+  @override
+  String get pressTileMorale => 'Morale';
+
+  @override
+  String get pressTilePress => 'Press';
+
+  @override
+  String get pressPromiseHeading => 'YOU PROMISED';
+
+  @override
+  String get pressPromiseWinNext => 'A win in the next match.';
+
+  @override
+  String get pressPromiseJob => 'Your job on the next three matches.';
+
+  @override
+  String get pressPromiseJudgedCampaign =>
+      'The board judges it when the campaign is settled.';
+
+  @override
+  String get pressPromiseJudgedMatch =>
+      'Judged on the result of the next match.';
 }

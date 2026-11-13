@@ -17849,4 +17849,39 @@ class AppLocalizationsFi extends AppLocalizations {
   String editorIssueManagerAge(int min, int max) {
     return 'Valmentajan iän on oltava välillä $min ja $max.';
   }
+
+  @override
+  String pressFloor(int index, int total) {
+    return 'PUHEENVUORO ON SINULLA · $index/$total';
+  }
+
+  @override
+  String pressTickerStanding(String code, int points, String place) {
+    return '$code $points P · $place SIJA';
+  }
+
+  @override
+  String get pressAfterTitle => 'LEHDISTÖTILAISUUDEN JÄLKEEN';
+
+  @override
+  String get pressTileMorale => 'Moraali';
+
+  @override
+  String get pressTilePress => 'Media';
+
+  @override
+  String get pressPromiseHeading => 'LUPASIT';
+
+  @override
+  String get pressPromiseWinNext => 'Voiton seuraavassa ottelussa.';
+
+  @override
+  String get pressPromiseJob => 'Paikkasi seuraavissa kolmessa ottelussa.';
+
+  @override
+  String get pressPromiseJudgedCampaign =>
+      'Hallitus arvioi sen, kun kampanja on ratkennut.';
+
+  @override
+  String get pressPromiseJudgedMatch => 'Ratkaisee seuraavan ottelun tulos.';
 }
