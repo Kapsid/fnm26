@@ -12,6 +12,7 @@ import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
@@ -404,12 +405,37 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
   // wanted from it.
   final ncConf = NationsCups.ofManager(conf);
   final ncCup = ncConf == null ? null : NationsCups.forConfederation(ncConf);
-  final ncTables = ncConf == null
+  // A calendar2 cycle plays Europe's cup twice; the board grades the second,
+  // the one in the slot every cycle's only cup had (owner, 2026-11-13). Its
+  // fixtures alone are read: the first edition's are in the cycle too.
+  final ncCal2 =
+      ncConf != null &&
+      Calendar2.twoEditions(ncConf) &&
+      await isCalendar2(comp, careerId, career.cyclePointer);
+  final ncEdition = ncConf == null
+      ? null
+      : Calendar2.gradedEdition(ncConf, calendar2: ncCal2);
+  final ncCompId = !ncCal2
+      ? null
+      : await comp.competitionIdOf(
+          careerId,
+          CompetitionKind.nationsLeague,
+          confederation: ncConf,
+          edition: ncEdition,
+        );
+  final ncReadFixtures = !ncCal2
+      ? fixtures
+      : [
+          for (final f in fixtures)
+            if (f.competitionId == ncCompId) f,
+        ];
+  final ncTables = ncConf == null || (ncCal2 && ncCompId == null)
       ? const <FinalsGroupTable>[]
       : await comp.tournamentGroupTables(
           careerId,
           CompetitionKind.nationsLeague,
           confederation: ncConf,
+          edition: ncEdition,
         );
   final myNcGroup = ncTables
       .where((t) => t.standings.any((s) => s.nationId == career.nationId))
@@ -455,18 +481,20 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
     // kicked: a table of nothing played lists its members in draw order, and
     // read as a place it printed "So far: top half" on day one. No place
     // until the side has played in its group (0: not progress).
-    final ncStarted = fixtures.any((f) => f.round == 'NGROUP' && f.hasResult);
+    final ncStarted = ncReadFixtures.any(
+      (f) => f.round == 'NGROUP' && f.hasResult,
+    );
     final actual = !ncStarted
         ? 0
         : _nationsCupOrdinal(
             standings: myNcGroup.standings,
-            fixtures: fixtures,
+            fixtures: ncReadFixtures,
             nationId: career.nationId,
           );
     // Settled once the league campaign is played out — and, for a side that
     // reached the finals, once those have been played too.
     final ncFixtures = [
-      for (final f in fixtures)
+      for (final f in ncReadFixtures)
         if (f.round == 'NGROUP' || FinalsRounds.nationsCup.contains(f.round)) f,
     ];
     var decided = ncFixtures.isNotEmpty && ncFixtures.every((f) => f.hasResult);
@@ -686,19 +714,32 @@ cycleObjectiveGapsProvider = FutureProvider.autoDispose
       // opened before the cup existed) or one already drawn without the
       // nation in it gets no row: no draw is coming to set a target.
       final comp = ref.watch(competitionRepositoryProvider);
+      // A calendar2 cycle's graded cup (Europe's second) is drawn only once
+      // the first is crowned: until then it is a draw still to come.
+      final twoCups =
+          ncCup != null &&
+          Calendar2.twoEditions(conf) &&
+          await isCalendar2(comp, careerId, career.cyclePointer);
       final ncAwaitingDraw =
           ncCup != null &&
           !have.contains(TournamentTier.nationsCup) &&
-          await comp.hasTournament(
-            careerId,
-            CompetitionKind.nationsLeague,
-            confederation: conf,
-          ) &&
-          !await comp.hasWatchedDraw(
-            careerId,
-            career.cyclePointer,
-            nationsCupDrawKind,
-          );
+          (twoCups &&
+                  !await comp.hasTournament(
+                    careerId,
+                    CompetitionKind.nationsLeague,
+                    confederation: conf,
+                    edition: Calendar2.secondEdition,
+                  ) ||
+              await comp.hasTournament(
+                    careerId,
+                    CompetitionKind.nationsLeague,
+                    confederation: conf,
+                  ) &&
+                  !await comp.hasWatchedDraw(
+                    careerId,
+                    career.cyclePointer,
+                    nationsCupDrawKind,
+                  ));
       return [
         if (cup != null && !have.contains(TournamentTier.continental))
           (

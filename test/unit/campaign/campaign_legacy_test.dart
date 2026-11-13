@@ -13,6 +13,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/campaign/campaign_grading.dart';
 import 'package:fnm/domain/services/campaign/campaigns.dart';
+import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
@@ -22,6 +23,7 @@ import 'package:fnm/features/career/nation_offers_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../helpers/calendar2_draws.dart';
 import '../../helpers/test_database.dart';
 
 /// Finish the Legacy: Spain, the reigning European champions, for one cycle.
@@ -91,11 +93,17 @@ void main() {
     return p!;
   }
 
-  Future<int> start() async =>
-      (await container
-              .read(campaignServiceProvider)
-              .start(Campaigns.legacy, managerName: 'Me'))
-          .id;
+  /// A run, with its second Nations Cup (the one between the two
+  /// championships, which the treble reads) drawn already: on calendar2 it
+  /// is drawn the summer after the first.
+  Future<int> start() async {
+    final id = (await container
+            .read(campaignServiceProvider)
+            .start(Campaigns.legacy, managerName: 'Me'))
+        .id;
+    await drawSecondNationsCupNow(container, id);
+    return id;
+  }
 
   List<int> europeans(int n) => [
     for (final x in nations)
@@ -248,9 +256,15 @@ void main() {
       (t) => t.standings.any((s) => s.nationId == spain),
     );
     expect(NationsCup.tierOfGroupName(mine.name), 0, reason: mine.name);
+    final second = await comp().competitionIdOf(
+      id,
+      CompetitionKind.nationsLeague,
+      confederation: Confederation.europe,
+      edition: Calendar2.secondEdition,
+    );
     final group = [
       for (final f in await comp().cycleFixturesForNation(id, spain))
-        if (f.round == 'NGROUP') f,
+        if (f.round == 'NGROUP' && f.competitionId == second) f,
     ];
     expect(group, isNotEmpty);
     // After the European Championship (June of the World Championship year
@@ -355,9 +369,14 @@ void main() {
     },
   );
 
-  test('the real schedule: the Finals Four of the Nations Cup falls in June '
-      'of the year before the World Championship', () async {
-    final id = await start();
+  test('the real schedule: the first Nations Cup\'s Finals Four falls in '
+      'June, three years before the World Championship', () async {
+    // calendar2: the second's falls in June of the year before it (see
+    // calendar2_cycle_test.dart).
+    final id = (await container
+            .read(campaignServiceProvider)
+            .start(Campaigns.legacy, managerName: 'Me'))
+        .id;
     final season = container.read(seasonServiceProvider);
     final wcYear = CareerService.worldCupYear(0);
     Future<List<DateTime>> semis() async => [
@@ -382,7 +401,7 @@ void main() {
     final dates = await semis();
     expect(dates, isNotEmpty, reason: 'the Finals Four is drawn in the cycle');
     for (final d in dates) {
-      expect(d.year, wcYear - 1, reason: '$d');
+      expect(d.year, wcYear - 3, reason: '$d');
       expect(d.month, 6, reason: '$d');
     }
   });

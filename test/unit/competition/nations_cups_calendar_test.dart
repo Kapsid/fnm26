@@ -46,7 +46,8 @@ class _World {
 
 /// [legacy] builds the world on the 1.0.6 starting ranking, the one
 /// [_europeSnapshot] was recorded on (1.0.7 moved to FIFA's of 1 October
-/// 2026; a save begun before keeps its own).
+/// 2026; a save begun before keeps its own), and on the calendar before
+/// 1.1.2's calendar2, which a save begun before keeps until its rollover.
 Future<_World> _create(
   Confederation conf,
   int seed, {
@@ -75,7 +76,12 @@ Future<_World> _create(
   final career =
       (await container
               .read(careerServiceProvider)
-              .create(nationId: player.id, managerName: 'M', rngSeed: seed))
+              .create(
+                nationId: player.id,
+                managerName: 'M',
+                rngSeed: seed,
+                calendar2: !legacy,
+              ))
           .valueOrNull!;
   return _World(container, career.id, nations);
 }
@@ -136,8 +142,12 @@ void main() {
       final cups = await _cups(w);
       expect(cups.keys.toSet(), NationsCups.allNames.toSet());
 
-      final year = CareerService.worldCupYear(0) - 2;
       for (final e in cups.entries) {
+        // Calendar2: Europe's first cup opens the cycle (2026), the others
+        // keep the autumn after the continental finals (2028).
+        final year = e.key == NationsCups.europe
+            ? CareerService.worldCupYear(0) - 4
+            : CareerService.worldCupYear(0) - 2;
         // Fluid windows: the ladders run September to November, Africa's
         // zones September to October (its knockouts own November).
         final months = e.key == NationsCups.africa ? [9, 10] : [9, 10, 11];

@@ -44,8 +44,12 @@ abstract final class WindowPlan {
   static const Map<int, int> _weight = {2: 3, 3: 3, 4: 1};
   static const Map<int, int> _juneWeight = {2: 1, 3: 3, 4: 2};
 
-  /// The windows of [span], in order.
-  static List<({int year, int month})> windowsOf(WindowSpan span) {
+  /// The windows of [span], in order, leaving out any whose month is in
+  /// [skipMonths] (a group whose sides play a Finals Four that June).
+  static List<({int year, int month})> windowsOf(
+    WindowSpan span, {
+    Set<int> skipMonths = const {},
+  }) {
     final out = <({int year, int month})>[];
     var seasonYear = span.start.year - 1;
     var wi = 0;
@@ -56,7 +60,8 @@ abstract final class WindowPlan {
       final first = DateTime(year, month);
       final last = DateTime(year, month + 1).subtract(const Duration(days: 1));
       if (first.isAfter(span.deadline)) break;
-      if (!last.isBefore(DateTime(span.start.year, span.start.month))) {
+      if (!last.isBefore(DateTime(span.start.year, span.start.month)) &&
+          !skipMonths.contains(month)) {
         out.add((year: year, month: month));
       }
       wi++;
@@ -69,9 +74,14 @@ abstract final class WindowPlan {
   }
 
   /// The [rounds] matchday dates for a campaign played across [span], or null
-  /// when no split of two to four matches a window fits it.
-  static List<DateTime>? dates(WindowSpan span, int rounds) {
-    final windows = windowsOf(span);
+  /// when no split of two to four matches a window fits it. [skipMonths] as in
+  /// [windowsOf].
+  static List<DateTime>? dates(
+    WindowSpan span,
+    int rounds, {
+    Set<int> skipMonths = const {},
+  }) {
+    final windows = windowsOf(span, skipMonths: skipMonths);
     if (windows.isEmpty) return null;
     // Every split over the first k windows, each window two to four matches.
     final splits = <List<int>>[];

@@ -126,6 +126,8 @@ void main() {
                     rngSeed: 10, // Grudge's seed on the 1.0.6 ranking
                     countsTowardSlots: false,
                     startingRanks: startingRanks,
+                    // A run of a build before calendar2: its calendar too.
+                    calendar2: false,
                   ))
               .valueOrNull!;
       await before

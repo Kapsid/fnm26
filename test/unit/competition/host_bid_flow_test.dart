@@ -532,9 +532,10 @@ void main() {
       final keys = await comp.messageKeys(w.careerId);
       expect(keys, contains('hostBid:cont:1'));
 
-      // The ordering pinned: the cycle's continental qualifying, built in the
-      // same rollover, already knows the host. A winner sits it out; a loser
-      // plays it.
+      // The ordering pinned: the cycle's continental qualifying already knows
+      // the host. A winner sits it out; a loser plays it. On calendar2 the
+      // European draw is made after the first Nations Cup, from the same
+      // field (see [WorldCupHosts.continentalQualifiers]).
       final world = await w.c
           .read(nationRepositoryProvider)
           .forCareer(w.careerId);
@@ -546,13 +547,18 @@ void main() {
       );
       expect(hosts.contains(_bidder.id), wanted);
       // Cycle 1's qualifiers only (the list is all-time).
-      bool cycle1Cq(Fixture f) =>
-          f.round == 'CQ' && !f.date.isBefore(CareerService.cycleOpens(1));
-      final mine = await comp.fixturesForNation(w.careerId, _bidder.id);
-      expect(mine.any(cycle1Cq), !wanted);
+      final field = {
+        for (final n in WorldCupHosts.continentalQualifiers(
+          confederation: Confederation.europe,
+          cycle: 1,
+          seed: seed,
+          nations: world,
+        ))
+          n.id,
+      };
+      expect(field.contains(_bidder.id), !wanted);
       for (final h in hosts) {
-        final theirs = await comp.fixturesForNation(w.careerId, h);
-        expect(theirs.where(cycle1Cq), isEmpty, reason: '$h');
+        expect(field.contains(h), isFalse, reason: '$h');
       }
 
       // A rollover retried from the top banks and charges nothing twice.

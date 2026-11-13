@@ -22,6 +22,7 @@ import 'package:fnm/domain/repositories/player_repository.dart'
         namePoolsV3Kind,
         namePoolsV4Kind,
         namePoolsV5Kind;
+import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/host_bidding.dart';
@@ -118,6 +119,14 @@ final FutureProviderFamily<Career?, int> careerByIdProvider =
 /// watched events, so no schema change; a cycle already under way in a save
 /// from 1.0.5 has no mark and keeps three matchdays a window.
 const fluidWindowsKind = 'fluidWindows1';
+
+/// Marks a cycle opened by 1.1.2 or later, which plays the four-year rhythm
+/// of [Calendar2]: Europe's two Nations Cups, Euro qualifying March to
+/// November, World Championship qualifying drawn in the December before it.
+/// Stamped at career creation and at every rollover, before the cycle's
+/// calendar is built; a cycle without it plays out on the calendar it was
+/// built with, and switches at its rollover.
+const String calendar2Kind = Calendar2.kind;
 
 /// Keeps the window sizes on a stream of their own, apart from the draw's.
 const int _fluidSalt = 0xF1D0;
@@ -274,6 +283,12 @@ class CareerService {
     /// rollover. Defaults to true. A test passes false to play a world as
     /// the build before them decided it (`HostBidding.rules2OffKind`).
     bool stadiumHostRules = true,
+
+    /// Whether its first cycle plays the 1.1.2 calendar (see calendar2Kind).
+    /// Defaults to true. A test passes false to open a world on the calendar
+    /// a save from before it has; its rollovers stamp the mark as every
+    /// save's do.
+    bool calendar2 = true,
 
     /// Whether its world includes the nations every career created from
     /// 1.0.9 on has (`DormantNations.forNewCareers`: Belarus). Defaults to
@@ -449,6 +464,9 @@ class CareerService {
     // (see hostVenuesV2Kind).
     await comp.markDrawWatched(career.id, 0, hostVenuesV2Kind);
     await comp.markDrawWatched(career.id, 0, fluidWindowsKind);
+    // Its calendar is the four-year rhythm of Calendar2 (see calendar2Kind),
+    // read by the calendar built below.
+    if (calendar2) await comp.markDrawWatched(career.id, 0, calendar2Kind);
     // Its national teams have managers of their own (see worldManagersKind),
     // seeded the first time something asks for them, never here.
     await comp.markDrawWatched(career.id, 0, worldManagersKind);
@@ -521,6 +539,9 @@ class CareerService {
     Map<int, int> nationsCupTiers = const {},
   }) async {
     if (!nations.any((n) => n.id == nationId)) return; // nothing to schedule
+    // A cycle on the 1.1.2 rhythm (see calendar2Kind); one without the mark
+    // is built exactly as before.
+    final cal2 = await isCalendar2(comp, careerId, cycle);
     int rankOf(Nation n) => rankById?[n.id] ?? n.ranking;
     final byConfederation = <Confederation, List<Nation>>{};
     for (final n in nations) {
@@ -583,34 +604,22 @@ class CareerService {
       // of that one continent. It also meant no other continent's cup was ever
       // WON by a side that had to earn its place in it.
       if (cont.qualifying && members.length > cont.size) {
-        final cq = const ScheduleGenerator().generate(
+        // A calendar2 cycle draws Europe's at the end of its first Nations
+        // Cup league phase instead, and plays it March to November of the
+        // year after (see [buildEuroQualifying]).
+        if (cal2 && confederation == Confederation.europe) continue;
+        await _saveContinentalQualifying(
+          comp: comp,
+          careerId: careerId,
+          cycle: cycle,
           confederation: confederation,
-          nations: members.where((n) => contField.contains(n.id)).toList(),
-          rngSeed: rngSeed ^ (cycle * 0x71) ^ 0xCAFE,
-          start: DateTime(cycleStart.year, 9),
-          // Groups of six (ten matchdays) spread qualifying across the first
-          // season instead of finishing in three months, so friendlies fall
-          // into shorter gaps between phases rather than one long block.
-          groupSize: 6,
+          name: '${cont.name} Qualifiers',
+          field: members.where((n) => contField.contains(n.id)).toList(),
+          rngSeed: rngSeed,
           rankById: rankById,
           // In windows of two to four, done by the June after.
-          windows: (
-            start: DateTime(cycleStart.year, 9),
-            deadline: DateTime(cycleStart.year + 1, 6, 30),
-            seed: rngSeed ^ (cycle * 0x71) ^ 0xCAFE ^ _fluidSalt,
-            fillAll: false,
-          ),
-        );
-        await comp.saveSchedule(
-          careerId: careerId,
-          schedule: GeneratedSchedule(
-            confederation: confederation,
-            name: '${cont.name} Qualifiers',
-            groups: cq.groups,
-          ),
-          cycle: cycle,
-          kind: CompetitionKind.continentalQualifying,
-          fixtureRound: 'CQ',
+          start: DateTime(cycleStart.year, 9),
+          deadline: DateTime(cycleStart.year + 1, 6, 30),
         );
       } else if (members.length >= (cont.qualifying ? cont.size : 4)) {
         // No group-stage qualifying — a Copa-style all-in cup, a qualifying
@@ -648,146 +657,282 @@ class CareerService {
     // 1c. The Nations Cups run AFTER the continental finals and before the
     //     World Cup — the real Nations League slot. Three confederations have
     //     one (see [NationsCups]), all scheduled together so the whole world's
-    //     cups are played whichever nation the manager takes.
-    //
-    //     Europe and North America play a persistent ladder of leagues (League
-    //     A, B, C…), each of groups of four home & away, every league played so
-    //     the whole ladder moves; League A's group winners contest a Finals
-    //     Four for the title. A ladder is seeded from the ranking only for its first
-    //     cup and then changes solely by promotion/relegation (see
-    //     [nationsCupTiers]). Africa plays four geographic zones instead.
+    //     cups are played whichever nation the manager takes. A calendar2
+    //     cycle plays Europe's twice: edition 1 opens the cycle, and edition 2
+    //     (the old slot) is drawn once edition 1 is crowned (see
+    //     [buildNationsCup]).
     for (final confederation in NationsCups.confederations) {
-      final info = NationsCups.forConfederation(confederation)!;
-      final members = (byConfederation[confederation] ?? <Nation>[]).toList()
-        ..sort((a, b) => rankOf(a).compareTo(rankOf(b)));
-      if (members.isEmpty) continue;
-      // Europe's index is 0, so its draw is byte-identical to the one it had
-      // when it was the only cup.
-      final confTerm = confederation.index * 7;
-      final allGroups = <GeneratedGroup>[];
-
-      if (info.format == NationsCupFormat.zones) {
-        for (final zone in AfricaZone.values) {
-          final ranked = [
-            for (final n in members)
-              if (NationsCups.africaZoneByCode[n.code] == zone) n,
-          ];
-          if (ranked.length < 3) continue;
-          final split = NationsCups.zoneGroups(
-            [for (final n in ranked) n.id],
-            rngSeed ^
-                (cycle * 0x71) ^
-                0x5A17 ^
-                (zone.index * 0x9E37) ^
-                confTerm,
-          );
-          final byId = {for (final n in ranked) n.id: n};
-          for (var i = 0; i < split.length; i++) {
-            final ids = split[i];
-            final gen = const ScheduleGenerator().generate(
-              confederation: confederation,
-              nations: [for (final id in ids) byId[id]!],
-              rngSeed:
-                  rngSeed ^
-                  (cycle * 0x71) ^
-                  0x5A17 ^
-                  (zone.index * 0x9E37) ^
-                  (i * 0x3D) ^
-                  confTerm,
-              start: DateTime(wcYear - 2, 9),
-              groupSize: ids.length,
-              rankById: rankById,
-              // Every zone on the same dates, done by October: the
-              // knockouts own November.
-              windows: (
-                start: DateTime(wcYear - 2, 9),
-                deadline: DateTime(wcYear - 2, 10, 31),
-                seed: rngSeed ^ (cycle * 0x71) ^ 0x5A17 ^ confTerm ^ _fluidSalt,
-                fillAll: false,
-              ),
-            );
-            allGroups.add(
-              GeneratedGroup(
-                name: '${NationsCups.zonePrefix(zone)}${i + 1}',
-                nationIds: gen.groups.single.nationIds,
-                fixtures: gen.groups.single.fixtures,
-              ),
-            );
-          }
-        }
-      } else {
-        // Effective ladder: the saved tiers, or a ranking seed for the first
-        // cup.
-        var tiers = nationsCupTiers;
-        if (tiers.isEmpty || !members.any((n) => tiers.containsKey(n.id))) {
-          tiers = NationsCup.seedTiers(nations, rankOf);
-        }
-        // EVERY league is played out (real, persistent promotion/relegation
-        // for the whole ladder). Groups are named with a league prefix ('B2' =
-        // League B, group 2) so each league's results can be read back at
-        // rollover.
-        // A league too small for a group stage joins the league above it (a
-        // confederation of 35 would otherwise strand three nations).
-        final ladder = NationsCup.mergeRemainders({
-          for (final n in members) n.id: tiers[n.id] ?? 0,
-        }, (_) => confederation);
-        final byTier = <int, List<Nation>>{};
-        for (final n in members) {
-          (byTier[ladder[n.id]!] ??= []).add(n);
-        }
-        for (final tier in byTier.keys.toList()..sort()) {
-          final league = byTier[tier]!;
-          if (league.length < 4) continue; // too small for a group stage
-          final gen = const ScheduleGenerator().generate(
-            confederation: confederation,
-            nations: league,
-            rngSeed:
-                rngSeed ^ (cycle * 0x71) ^ 0x5A17 ^ (tier * 0x9E37) ^ confTerm,
-            // Autumn of the continental-finals year (wcYear − 2), after the
-            // summer finals — the real Nations League slot before the World
-            // Cup.
-            start: DateTime(wcYear - 2, 9),
-            groupSize: 4,
-            rankById: rankById,
-            // Every league on the same dates, September to November.
-            windows: (
-              start: DateTime(wcYear - 2, 9),
-              deadline: DateTime(wcYear - 2, 11, 30),
-              seed: rngSeed ^ (cycle * 0x71) ^ 0x5A17 ^ confTerm ^ _fluidSalt,
-              fillAll: false,
-            ),
-          );
-          final letter = NationsCup.leagueLetter(tier);
-          for (var i = 0; i < gen.groups.length; i++) {
-            allGroups.add(
-              GeneratedGroup(
-                name: '$letter${i + 1}', // 'A1'..'A4', 'B1'..'B4', … league
-                nationIds: gen.groups[i].nationIds,
-                fixtures: gen.groups[i].fixtures,
-              ),
-            );
-          }
-        }
-      }
-
-      if (allGroups.isNotEmpty) {
-        await comp.saveSchedule(
-          careerId: careerId,
-          schedule: GeneratedSchedule(
-            confederation: confederation,
-            name: info.name,
-            groups: allGroups,
-          ),
-          cycle: cycle,
-          kind: CompetitionKind.nationsLeague,
-          fixtureRound: 'NGROUP',
-        );
-      }
+      await buildNationsCup(
+        comp: comp,
+        nations: nations,
+        careerId: careerId,
+        rngSeed: rngSeed,
+        cycle: cycle,
+        confederation: confederation,
+        leagueYear: Calendar2.nationsCupLeagueYear(
+          wcYear,
+          confederation,
+          Calendar2.firstEdition,
+          calendar2: cal2,
+        ),
+        rankById: rankById,
+        nationsCupTiers: nationsCupTiers,
+      );
     }
 
     // Friendlies are no longer auto-scheduled: the manager arranges 1–3 of them
     // per gap between competitive blocks, from the hub's "Arrange friendlies"
     // event (see friendliesProvider / FriendliesScreen).
+  }
+
+  /// Draws one confederation's Nations Cup [edition] with its league phase
+  /// in the autumn of [leagueYear] (see [buildCalendar], step 1c).
+  ///
+  /// Europe and North America play a persistent ladder of leagues (League
+  /// A, B, C...), each of groups of four home & away, every league played so
+  /// the whole ladder moves; League A's group winners contest a Finals Four
+  /// for the title. A ladder is seeded from the ranking only for its first
+  /// cup and then changes solely by promotion/relegation (see
+  /// [nationsCupTiers]). Africa plays four geographic zones instead.
+  static Future<void> buildNationsCup({
+    required CompetitionRepository comp,
+    required List<Nation> nations,
+    required int careerId,
+    required int rngSeed,
+    required int cycle,
+    required Confederation confederation,
+    required int leagueYear,
+    Map<int, int>? rankById,
+    Map<int, int> nationsCupTiers = const {},
+    int edition = 0,
+  }) async {
+    final info = NationsCups.forConfederation(confederation);
+    if (info == null) return;
+    int rankOf(Nation n) => rankById?[n.id] ?? n.ranking;
+    final members = [
+      for (final n in nations)
+        if (n.confederation == confederation) n,
+    ]..sort((a, b) => rankOf(a).compareTo(rankOf(b)));
+    if (members.isEmpty) return;
+    // Europe's index is 0, so its draw is byte-identical to the one it had
+    // when it was the only cup. A second edition draws off a stream of its
+    // own; the first keeps the one every cup always had.
+    final confTerm = (confederation.index * 7) ^ (edition * 0xED17);
+    final allGroups = <GeneratedGroup>[];
+
+    if (info.format == NationsCupFormat.zones) {
+      for (final zone in AfricaZone.values) {
+        final ranked = [
+          for (final n in members)
+            if (NationsCups.africaZoneByCode[n.code] == zone) n,
+        ];
+        if (ranked.length < 3) continue;
+        final split = NationsCups.zoneGroups(
+          [for (final n in ranked) n.id],
+          rngSeed ^ (cycle * 0x71) ^ 0x5A17 ^ (zone.index * 0x9E37) ^ confTerm,
+        );
+        final byId = {for (final n in ranked) n.id: n};
+        for (var i = 0; i < split.length; i++) {
+          final ids = split[i];
+          final gen = const ScheduleGenerator().generate(
+            confederation: confederation,
+            nations: [for (final id in ids) byId[id]!],
+            rngSeed:
+                rngSeed ^
+                (cycle * 0x71) ^
+                0x5A17 ^
+                (zone.index * 0x9E37) ^
+                (i * 0x3D) ^
+                confTerm,
+            start: DateTime(leagueYear, 9),
+            groupSize: ids.length,
+            rankById: rankById,
+            // Every zone on the same dates, done by October: the
+            // knockouts own November.
+            windows: (
+              start: DateTime(leagueYear, 9),
+              deadline: DateTime(leagueYear, 10, 31),
+              seed: rngSeed ^ (cycle * 0x71) ^ 0x5A17 ^ confTerm ^ _fluidSalt,
+              fillAll: false,
+            ),
+          );
+          allGroups.add(
+            GeneratedGroup(
+              name: '${NationsCups.zonePrefix(zone)}${i + 1}',
+              nationIds: gen.groups.single.nationIds,
+              fixtures: gen.groups.single.fixtures,
+            ),
+          );
+        }
+      }
+    } else {
+      // Effective ladder: the saved tiers, or a ranking seed for the first
+      // cup.
+      var tiers = nationsCupTiers;
+      if (tiers.isEmpty || !members.any((n) => tiers.containsKey(n.id))) {
+        tiers = NationsCup.seedTiers(nations, rankOf);
+      }
+      // EVERY league is played out (real, persistent promotion/relegation
+      // for the whole ladder). Groups are named with a league prefix ('B2' =
+      // League B, group 2) so each league's results can be read back at
+      // rollover.
+      // A league too small for a group stage joins the league above it (a
+      // confederation of 35 would otherwise strand three nations).
+      final ladder = NationsCup.mergeRemainders({
+        for (final n in members) n.id: tiers[n.id] ?? 0,
+      }, (_) => confederation);
+      final byTier = <int, List<Nation>>{};
+      for (final n in members) {
+        (byTier[ladder[n.id]!] ??= []).add(n);
+      }
+      for (final tier in byTier.keys.toList()..sort()) {
+        final league = byTier[tier]!;
+        if (league.length < 4) continue; // too small for a group stage
+        final gen = const ScheduleGenerator().generate(
+          confederation: confederation,
+          nations: league,
+          rngSeed:
+              rngSeed ^ (cycle * 0x71) ^ 0x5A17 ^ (tier * 0x9E37) ^ confTerm,
+          // Autumn of the continental-finals year (wcYear − 2), after the
+          // summer finals — the real Nations League slot before the World
+          // Cup.
+          start: DateTime(leagueYear, 9),
+          groupSize: 4,
+          rankById: rankById,
+          // Every league on the same dates, September to November.
+          windows: (
+            start: DateTime(leagueYear, 9),
+            deadline: DateTime(leagueYear, 11, 30),
+            seed: rngSeed ^ (cycle * 0x71) ^ 0x5A17 ^ confTerm ^ _fluidSalt,
+            fillAll: false,
+          ),
+        );
+        final letter = NationsCup.leagueLetter(tier);
+        for (var i = 0; i < gen.groups.length; i++) {
+          allGroups.add(
+            GeneratedGroup(
+              name: '$letter${i + 1}', // 'A1'..'A4', 'B1'..'B4', … league
+              nationIds: gen.groups[i].nationIds,
+              fixtures: gen.groups[i].fixtures,
+            ),
+          );
+        }
+      }
+    }
+
+    if (allGroups.isNotEmpty) {
+      await comp.saveSchedule(
+        careerId: careerId,
+        schedule: GeneratedSchedule(
+          confederation: confederation,
+          name: info.name,
+          groups: allGroups,
+        ),
+        cycle: cycle,
+        kind: CompetitionKind.nationsLeague,
+        fixtureRound: 'NGROUP',
+        edition: edition,
+      );
+    }
+  }
+
+  /// Saves one confederation's continental qualifying campaign: [field] drawn
+  /// into groups of six and played in fluid windows from [start] to
+  /// [deadline]. Groups holding a [noJuneNationIds] side skip June (see
+  /// [ScheduleGenerator.generate]).
+  static Future<void> _saveContinentalQualifying({
+    required CompetitionRepository comp,
+    required int careerId,
+    required int cycle,
+    required Confederation confederation,
+    required String name,
+    required List<Nation> field,
+    required int rngSeed,
+    required DateTime start,
+    required DateTime deadline,
+    Map<int, int>? rankById,
+    Set<int> noJuneNationIds = const {},
+  }) async {
+    final cq = const ScheduleGenerator().generate(
+      confederation: confederation,
+      nations: field,
+      rngSeed: rngSeed ^ (cycle * 0x71) ^ 0xCAFE,
+      start: start,
+      // Groups of six (ten matchdays) spread qualifying across a season
+      // instead of finishing in three months, so friendlies fall into shorter
+      // gaps between phases rather than one long block.
+      groupSize: 6,
+      rankById: rankById,
+      windows: (
+        start: start,
+        deadline: deadline,
+        seed: rngSeed ^ (cycle * 0x71) ^ 0xCAFE ^ _fluidSalt,
+        fillAll: false,
+      ),
+      noJuneNationIds: noJuneNationIds,
+    );
+    await comp.saveSchedule(
+      careerId: careerId,
+      schedule: GeneratedSchedule(
+        confederation: confederation,
+        name: name,
+        groups: cq.groups,
+      ),
+      cycle: cycle,
+      kind: CompetitionKind.continentalQualifying,
+      fixtureRound: 'CQ',
+    );
+  }
+
+  /// Draws Europe's qualifying for the continental finals in a calendar2
+  /// cycle: the same field and groups of six as ever, played March to
+  /// November of W-3 (see [Calendar2.euroQualifying]). The sides of the
+  /// first Nations Cup's Finals Four ([finalsFour]) are drawn into groups
+  /// that leave June free for it.
+  ///
+  /// The caller checks it does not exist yet.
+  static Future<void> buildEuroQualifying({
+    required CompetitionRepository comp,
+    required List<Nation> nations,
+    required int careerId,
+    required int rngSeed,
+    required int cycle,
+    required int wcYear,
+    Map<int, int>? rankById,
+    Set<int> finalsFour = const {},
+  }) async {
+    const confederation = Confederation.europe;
+    final cont = ContinentalCups.byConfederation[confederation];
+    if (cont == null || !cont.qualifying) return;
+    int rankOf(Nation n) => rankById?[n.id] ?? n.ranking;
+    final members = [
+      for (final n in nations)
+        if (n.confederation == confederation) n,
+    ]..sort((a, b) => rankOf(a).compareTo(rankOf(b)));
+    if (members.length <= cont.size) return;
+    final contField = {
+      for (final n in WorldCupHosts.continentalQualifiers(
+        confederation: confederation,
+        cycle: cycle,
+        seed: rngSeed,
+        nations: nations,
+      ))
+        n.id,
+    };
+    final span = Calendar2.euroQualifying(wcYear);
+    await _saveContinentalQualifying(
+      comp: comp,
+      careerId: careerId,
+      cycle: cycle,
+      confederation: confederation,
+      name: '${cont.name} Qualifiers',
+      field: members.where((n) => contField.contains(n.id)).toList(),
+      rngSeed: rngSeed,
+      rankById: rankById,
+      start: span.start,
+      deadline: span.deadline,
+      noJuneNationIds: finalsFour,
+    );
   }
 
   /// The month of the World Cup year − 1 in which every confederation's
@@ -823,9 +968,18 @@ class CareerService {
     required int cycle,
     required int wcYear,
     Map<int, int>? rankById,
+
+    /// Only these confederations' campaigns (a calendar2 cycle draws
+    /// CONMEBOL's apart from the rest); null draws every one.
+    Set<Confederation>? only,
+
+    /// Sides of a Finals Four played in June of the qualifying year: their
+    /// groups leave June free (calendar2 only).
+    Set<int> noJuneNationIds = const {},
   }) async {
     if (!nations.any((n) => n.id == nationId)) return;
     final me = nations.firstWhere((n) => n.id == nationId);
+    final cal2 = await isCalendar2(comp, careerId, cycle);
     final byConfederation = <Confederation, List<Nation>>{};
     for (final n in nations) {
       (byConfederation[n.confederation] ??= []).add(n);
@@ -842,19 +996,35 @@ class CareerService {
       seed: rngSeed,
     );
     for (final entry in byConfederation.entries) {
+      if (only != null && !only.contains(entry.key)) continue;
       final quals = entry.value
           .where((n) => !wcHostIds.contains(n.id))
           .toList();
       if (quals.length < 2) continue;
+      // A calendar2 cycle: CONMEBOL from September after the Copa, everyone
+      // else March to November, all done by November (see Calendar2).
+      final span2 = cal2 ? Calendar2.wcQualifying(wcYear, entry.key) : null;
       final schedule = const ScheduleGenerator().generate(
         confederation: entry.key,
         nations: quals,
         rngSeed: rngSeed ^ (cycle * 0x1B3D) ^ (entry.key.index * 0x9E37),
-        start: wcQualStart,
+        start: span2?.start ?? wcQualStart,
         rankById: rankById,
+        noJuneNationIds: span2 == null ? const {} : noJuneNationIds,
         // Done by November, or, for South America's eighteen matchdays, in
         // every window up to March, where the play-off follows as before.
-        windows: !fluid
+        windows: span2 != null
+            ? (
+                start: span2.start,
+                deadline: span2.deadline,
+                seed:
+                    rngSeed ^
+                    (cycle * 0x1B3D) ^
+                    (entry.key.index * 0x9E37) ^
+                    _fluidSalt,
+                fillAll: span2.fillAll,
+              )
+            : !fluid
             ? null
             : (
                 start: wcQualStart,

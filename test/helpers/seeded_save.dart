@@ -181,6 +181,9 @@ Future<SeededSave> seedSave(
                   // Belarus into new careers (see
                   // `DormantNations.forNewCareers`).
                   newCareerNations: false,
+                  // And its calendar as it was before 1.1.2's calendar2
+                  // (see `calendar2Kind`): the Euro qualifiers open it.
+                  calendar2: false,
                 ))
             .valueOrNull!;
     await container.read(messageInboxProvider(career.id).future);

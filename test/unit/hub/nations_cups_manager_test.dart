@@ -156,12 +156,13 @@ void main() {
     final outcomes = await s.c.read(
       cycleObjectiveOutcomesProvider(s.careerId).future,
     );
+    // On calendar2 his brief is set on Europe's second cup, drawn later:
+    // never on Africa's.
     expect(
       outcomes
           .where((o) => o.tier == TournamentTier.nationsCup)
-          .single
-          .competition,
-      NationsCups.europe,
+          .every((o) => o.competition == NationsCups.europe),
+      isTrue,
     );
   });
 

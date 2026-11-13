@@ -10,9 +10,9 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
-import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/hub/schedule_providers.dart';
+import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../helpers/test_database.dart';
@@ -78,17 +78,19 @@ void main() {
     expect(d.currentIndex, 1);
   });
 
-  test('a qualifier is hidden until its draw is watched', () async {
+  test('a drawn fixture is hidden until its draw is watched', () async {
+    // On calendar2 a European cycle opens with the Nations Cup; its
+    // qualifying for the continental finals is drawn after it.
     final d = (await c.read(scheduleProvider(careerId).future))!;
     final q = d.blocks
         .expand((b) => b.fixtures)
         .firstWhere(
-          (f) => f.round == 'CQ',
+          (f) => f.round == 'NGROUP',
         );
     expect(opponentKnown(d, q), isFalse);
     await c
         .read(competitionRepositoryProvider)
-        .markDrawWatched(careerId, cycle, continentalQualDrawKind);
+        .markDrawWatched(careerId, cycle, nationsCupDrawKind);
     expect(opponentKnown(await reread(), q), isTrue);
   });
 }

@@ -295,18 +295,18 @@ void main() {
               career.nationId,
             );
             expect(mine.length, before + 1);
+            // The warm-up on the first free date (a friendly the manager
+            // arranged with the same side may also be on the calendar).
+            final day = WarmUps.datesBefore(opener!)[accepted.length - 1];
             final f = mine.singleWhere(
               (f) =>
                   f.round == 'FRIENDLY' &&
                   (f.homeNationId == o.nationId ||
                       f.awayNationId == o.nationId) &&
-                  !f.hasResult,
+                  !f.hasResult &&
+                  f.date == day,
             );
-            expect(
-              f.date,
-              WarmUps.datesBefore(opener!)[accepted.length - 1],
-              reason: 'the first free warm-up date',
-            );
+            expect(f.date, day, reason: 'the first free warm-up date');
             expect(
               f.homeNationId,
               o.theyHost ? o.nationId : career.nationId,
@@ -322,13 +322,13 @@ void main() {
       final career = (await repo.byId(d.careerId))!;
       final mine = await comp.fixturesForNation(d.careerId, career.nationId);
       for (final o in accepted) {
-        final f = mine.singleWhere(
+        final f = mine.lastWhere(
           (f) =>
               f.round == 'FRIENDLY' &&
-              (f.homeNationId == o.nationId || f.awayNationId == o.nationId),
+              (f.homeNationId == o.nationId || f.awayNationId == o.nationId) &&
+              f.date.isBefore(opener!),
         );
         expect(f.hasResult, isTrue);
-        expect(f.date.isBefore(opener!), isTrue);
       }
       // The warm-ups were a window of their own, with a call-up.
       final first = mine

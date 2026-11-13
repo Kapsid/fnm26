@@ -54,6 +54,9 @@ void main() {
                   .create(
                     nationId: player.id,
                     managerName: 'A',
+                    // The calendar a save begun before 1.1.2 plays out
+                    // (calendar2_cycle_test.dart plays the new one).
+                    calendar2: false,
                   ))
               .valueOrNull!;
 

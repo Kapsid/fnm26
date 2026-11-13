@@ -76,6 +76,11 @@ class ScheduleGenerator {
     /// [WindowPlan]); without it every window holds three matchdays, as a
     /// cycle opened before 1.0.6 has them.
     WindowSpan? windows,
+
+    /// Nations busy in June (a Nations Cup Finals Four): a group holding any
+    /// of them plays its matchdays in the span's other windows, so its June is
+    /// free. Only read with [windows]; empty leaves every date as it was.
+    Set<int> noJuneNationIds = const {},
   }) {
     final rng = SeededRng(rngSeed ^ 0x5151A);
     final format = QualificationFormat.forConfederation(confederation);
@@ -93,10 +98,20 @@ class ScheduleGenerator {
     final dates =
         (windows == null ? null : WindowPlan.dates(windows, maxRounds)) ??
         _matchdayDates(start ?? DateTime(2026, 9), maxRounds);
+    // Drawn only when a group needs them, so every other schedule is exactly
+    // as before.
+    final noJuneDates =
+        windows == null || !groups.any((g) => g.any(noJuneNationIds.contains))
+        ? null
+        : WindowPlan.dates(windows, maxRounds, skipMonths: const {6});
 
     final result = <GeneratedGroup>[];
     for (var gi = 0; gi < groups.length; gi++) {
       final ids = groups[gi];
+      final groupDates =
+          noJuneDates != null && ids.any(noJuneNationIds.contains)
+          ? noJuneDates
+          : dates;
       final rounds = doubleRoundRobin(ids, rng: rng);
       final fixtures = <GeneratedFixture>[];
       for (var r = 0; r < rounds.length; r++) {
@@ -104,7 +119,7 @@ class ScheduleGenerator {
           fixtures.add(
             GeneratedFixture(
               matchday: r + 1,
-              date: dates[r],
+              date: groupDates[r],
               homeNationId: home,
               awayNationId: away,
             ),

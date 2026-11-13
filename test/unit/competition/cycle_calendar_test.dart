@@ -157,10 +157,19 @@ void main() {
               .map((f) => f.date)
               .toList()
             ..sort();
+      // CONMEBOL's league opens the September after the Copa (calendar2);
+      // everyone else's in the March window of the year before the finals.
       expect(
-        quals.first.month,
+        quals.first,
+        isA<DateTime>()
+            .having((d) => d.year, 'year', wcGroupStart.year - 2)
+            .having((d) => d.month, 'month', 9),
+        reason: "CONMEBOL's qualifying opens in September after the Copa",
+      );
+      expect(
+        quals.where((d) => d.year == wcGroupStart.year - 1).first.month,
         3,
-        reason: 'qualifying opens in the March window',
+        reason: 'the rest open in the March window',
       );
       expect(quals.last.isBefore(wcGroupStart), isTrue);
 

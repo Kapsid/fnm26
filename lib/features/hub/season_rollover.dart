@@ -178,6 +178,13 @@ extension SeasonRollover on SeasonService {
     // Read the tables BEFORE advancing the cycle (they are scoped to the
     // current, finishing cycle). A save from before a confederation had a cup
     // has no tables for it and is skipped.
+    // A calendar2 cycle moved Europe's ladder once already, on its first
+    // edition: this one reads the second, the cup in the old slot.
+    final closingCal2 = await isCalendar2(
+      _comp,
+      careerId,
+      career.cyclePointer,
+    );
     var ncTiers = await _careers.nationsCupTiers(careerId);
     if (ncTiers.isNotEmpty) {
       var moved = false;
@@ -190,6 +197,7 @@ extension SeasonRollover on SeasonService {
           careerId,
           CompetitionKind.nationsLeague,
           confederation: conf,
+          edition: Calendar2.gradedEdition(conf, calendar2: closingCal2),
         );
         if (ncTables.isEmpty) continue;
         final groups = [
@@ -292,6 +300,9 @@ extension SeasonRollover on SeasonService {
     await _comp.markDrawWatched(careerId, nextCycle, briefRulesV4Kind);
     await _comp.markDrawWatched(careerId, nextCycle, hostVenuesV2Kind);
     await _comp.markDrawWatched(careerId, nextCycle, fluidWindowsKind);
+    // Its calendar is the 1.1.2 rhythm (see calendar2Kind), marked before
+    // the calendar below is built from it.
+    await _comp.markDrawWatched(careerId, nextCycle, calendar2Kind);
     // Its national teams are run by world managers (see worldManagersKind).
     await _comp.markDrawWatched(careerId, nextCycle, worldManagersKind);
 
