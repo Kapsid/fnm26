@@ -212,7 +212,13 @@ void main() {
       final openerMatch = mine.firstWhere(
         (f) => f.round == 'CGROUP' && f.matchday == 1,
       );
-      expect(openerMatch.date, opener);
+      // His own first game: on the opener, or a day or two in when his
+      // group's slot comes later (staggered groups).
+      expect(openerMatch.date.isBefore(opener!), isFalse);
+      expect(
+        openerMatch.date.difference(opener).inDays,
+        lessThanOrEqualTo(Nomination.openerSlotDays),
+      );
       expect(openerMatch.hasResult, isTrue);
       expect(
         await comp.hasWatchedDraw(

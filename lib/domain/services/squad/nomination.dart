@@ -41,14 +41,24 @@ abstract final class Nomination {
   /// even then opened a fresh call-up in the middle of one (matchdays 1-2 in
   /// early September, 3 on the 12th with 4 in October). Windows now hold two
   /// to four matches, and the month is what a window is.
-  static bool isPeriodStart(Fixture f, Fixture? previous) {
+  ///
+  /// [spaced] is a cycle whose finals are dated by `TournamentCalendar`
+  /// (`TournamentCalendar.markerKind`): there a side's own opener may fall
+  /// [openerSlotDays] after the tournament's, and its warm-ups still belong
+  /// to the same camp. Every other cycle keeps the old reach exactly.
+  static bool isPeriodStart(
+    Fixture f,
+    Fixture? previous, {
+    bool spaced = false,
+  }) {
     if (previous == null) return true;
     // A finals opener straight after its warm-ups (see `WarmUps`) is the same
     // camp: one squad for the send-off friendlies and the tournament.
     if (f.matchday == 1 &&
         _tournamentRounds.contains(f.round) &&
         previous.round == 'FRIENDLY' &&
-        f.date.difference(previous.date).inDays <= warmUpCampDays) {
+        f.date.difference(previous.date).inDays <=
+            warmUpCampDays + (spaced ? openerSlotDays : 0)) {
       return false;
     }
     if (f.matchday == 1 && _periodStartRounds.contains(f.round)) return true;
@@ -88,14 +98,17 @@ abstract final class Nomination {
   /// squad covers: the run from the next unplayed fixture up to — but not
   /// including — the fixture that starts the following period. Empty when there
   /// are no upcoming matches.
-  static List<Fixture> currentPeriod(List<Fixture> fixtures) {
+  static List<Fixture> currentPeriod(
+    List<Fixture> fixtures, {
+    bool spaced = false,
+  }) {
     final sorted = [...fixtures]..sort((a, b) => a.date.compareTo(b.date));
     final firstUnplayedIndex = _currentIndex(sorted);
     if (firstUnplayedIndex == -1) return const [];
 
     final out = <Fixture>[sorted[firstUnplayedIndex]];
     for (var i = firstUnplayedIndex + 1; i < sorted.length; i++) {
-      if (isPeriodStart(sorted[i], sorted[i - 1])) break;
+      if (isPeriodStart(sorted[i], sorted[i - 1], spaced: spaced)) break;
       out.add(sorted[i]);
     }
     return out;
@@ -112,16 +125,27 @@ abstract final class Nomination {
 
   /// Whether a nomination window is open right now — i.e. the next unplayed
   /// fixture starts a period (so the squad may be edited before it kicks off).
-  static bool windowOpen(List<Fixture> fixtures) {
+  static bool windowOpen(List<Fixture> fixtures, {bool spaced = false}) {
     final sorted = [...fixtures]..sort((a, b) => a.date.compareTo(b.date));
     final idx = _currentIndex(sorted);
     if (idx == -1) return false;
-    return isPeriodStart(sorted[idx], idx == 0 ? null : sorted[idx - 1]);
+    return isPeriodStart(
+      sorted[idx],
+      idx == 0 ? null : sorted[idx - 1],
+      spaced: spaced,
+    );
   }
 
   /// How close before a finals opener a friendly must be to belong to its
   /// camp rather than to a window of its own.
   static const warmUpCampDays = 10;
+
+  /// How many days after the tournament's opener a side's own first game may
+  /// fall when the groups are staggered (`TournamentCalendar`: two groups a
+  /// day, so the World Championship's last pair opens five days in). The
+  /// warm-ups are dated off the tournament's opener, so in a spaced cycle
+  /// only the camp reaches that much further for its opener.
+  static const openerSlotDays = 5;
 
   /// How long before a window the squad is called up.
   static const callUpLeadDays = 10;
@@ -134,9 +158,9 @@ abstract final class Nomination {
   ///
   /// The squad used to be named the moment the previous window ended, so
   /// the March squad was picked in November on November's injuries and form.
-  static DateTime? callUpDay(List<Fixture> fixtures) {
-    if (!windowOpen(fixtures)) return null;
-    final period = currentPeriod(fixtures);
+  static DateTime? callUpDay(List<Fixture> fixtures, {bool spaced = false}) {
+    if (!windowOpen(fixtures, spaced: spaced)) return null;
+    final period = currentPeriod(fixtures, spaced: spaced);
     if (period.isEmpty) return null;
     final first = period.first.date;
     final opener = period
@@ -156,13 +180,19 @@ abstract final class Nomination {
   /// The matches of the current period already played: those from the
   /// period's first match up to the next unplayed one. Empty between periods
   /// (the next match opens a new one) and when the season is over.
-  static List<Fixture> playedInCurrentPeriod(List<Fixture> fixtures) {
+  static List<Fixture> playedInCurrentPeriod(
+    List<Fixture> fixtures, {
+    bool spaced = false,
+  }) {
     final sorted = [...fixtures]..sort((a, b) => a.date.compareTo(b.date));
     final idx = _currentIndex(sorted);
     if (idx <= 0) return const [];
-    if (isPeriodStart(sorted[idx], sorted[idx - 1])) return const [];
+    if (isPeriodStart(sorted[idx], sorted[idx - 1], spaced: spaced)) {
+      return const [];
+    }
     var start = idx - 1;
-    while (start > 0 && !isPeriodStart(sorted[start], sorted[start - 1])) {
+    while (start > 0 &&
+        !isPeriodStart(sorted[start], sorted[start - 1], spaced: spaced)) {
       start--;
     }
     return [

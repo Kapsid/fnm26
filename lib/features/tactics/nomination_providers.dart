@@ -4,6 +4,7 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/services/competition/tournament_calendar.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/squad/nomination.dart';
@@ -63,9 +64,14 @@ nominationWindowProvider = FutureProvider.autoDispose.family<NominationWindow, i
         in await ref.watch(nationRepositoryProvider).forCareer(careerId))
       n.id: n,
   };
+  final spaced = await TournamentCalendar.isSpaced(
+    ref.watch(competitionRepositoryProvider),
+    careerId,
+    career.cyclePointer,
+  );
   return (
-    open: Nomination.windowOpen(fixtures),
-    matches: Nomination.currentPeriod(fixtures),
+    open: Nomination.windowOpen(fixtures, spaced: spaced),
+    matches: Nomination.currentPeriod(fixtures, spaced: spaced),
     nations: nations,
     playerNationId: career.nationId,
   );

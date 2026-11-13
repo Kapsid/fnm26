@@ -4,6 +4,7 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/services/competition/tournament_calendar.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
@@ -43,6 +44,11 @@ final AutoDisposeFutureProviderFamily<ScheduleData?, int> scheduleProvider =
           comp,
           careerId,
           hub.nations[nationId]?.confederation,
+        ),
+        spaced: await TournamentCalendar.isSpaced(
+          comp,
+          careerId,
+          hub.career.cyclePointer,
         ),
       );
       // The same watched-draw check the Results feed and team page use, so all

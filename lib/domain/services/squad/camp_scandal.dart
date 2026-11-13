@@ -221,11 +221,19 @@ abstract final class CampScandal {
 
   /// The dates the call-up windows of a nation's cycle open on: the first
   /// match of every nomination period in [fixtures] (any order).
-  static List<DateTime> windowStarts(List<Fixture> fixtures) {
+  /// [spaced] as in `Nomination.isPeriodStart`.
+  static List<DateTime> windowStarts(
+    List<Fixture> fixtures, {
+    bool spaced = false,
+  }) {
     final sorted = [...fixtures]..sort((a, b) => a.date.compareTo(b.date));
     return [
       for (var i = 0; i < sorted.length; i++)
-        if (Nomination.isPeriodStart(sorted[i], i == 0 ? null : sorted[i - 1]))
+        if (Nomination.isPeriodStart(
+          sorted[i],
+          i == 0 ? null : sorted[i - 1],
+          spaced: spaced,
+        ))
           sorted[i].date,
     ];
   }

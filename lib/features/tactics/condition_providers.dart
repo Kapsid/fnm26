@@ -5,6 +5,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/services/club/club_form.dart';
+import 'package:fnm/domain/services/competition/tournament_calendar.dart';
 import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/press/statement.dart';
@@ -108,6 +109,15 @@ squadConditionProvider = FutureProvider.autoDispose
       // shows up as travel wear and a sharpness lift.
       final camp = await ref.watch(activeCampProvider(careerId).future);
       final asOf = career.inGameDate;
+      // A cycle whose finals are spaced (see TournamentCalendar) weighs each
+      // appearance by how recent it is; an older cycle keeps the plain count.
+      final weighted = await ref
+          .watch(competitionRepositoryProvider)
+          .hasWatchedDraw(
+            careerId,
+            career.cyclePointer,
+            TournamentCalendar.markerKind,
+          );
       // Where each man stands at his club this window — the third term beside form
       // and fatigue. A striker who has not started since October arrives rusty.
       final pool = await ref
@@ -152,6 +162,7 @@ squadConditionProvider = FutureProvider.autoDispose
                   : ClubForm.sharpnessDelta(standing),
               statementDelta: said[entry.key] ?? 0,
               clubStanding: standing,
+              weighted: weighted,
             );
           }(),
       };

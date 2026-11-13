@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/domain/services/competition/tournament_calendar.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/util/nation_label.dart';
@@ -710,8 +711,16 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
   // championship has no third-place play-off — its final is always the last
   // fixture of its tournament — which is the only reason it never showed this.
   // Mirrors the same guard in [SeasonService._advance].
+  //
+  // Not while his next is a group game: staggered groups (see
+  // `TournamentCalendar`) put other groups' days between his own, and those
+  // are caught up on his way to his match, as they always were.
   final finalsRoundBeforeOwn =
-      finalsDate != null && nextIsFinalsMatch && finalsDate.isBefore(next.date);
+      finalsDate != null &&
+      nextIsFinalsMatch &&
+      next.round != 'GROUP' &&
+      next.round != 'CGROUP' &&
+      finalsDate.isBefore(next.date);
   if (finalsDate != null &&
       !friendliesFirst(finalsDate) &&
       (finalsRoundBeforeOwn ||
@@ -1051,8 +1060,9 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
     //    Not before the call-up day, ten days ahead of the window: until then
     //    the world is advanced (see [pendingCallUpStop]), and the advance
     //    stops on the day.
-    if (Nomination.windowOpen(playerFixtures)) {
-      final period = Nomination.currentPeriod(playerFixtures);
+    final spaced = await TournamentCalendar.isSpaced(comp, careerId, cycle);
+    if (Nomination.windowOpen(playerFixtures, spaced: spaced)) {
+      final period = Nomination.currentPeriod(playerFixtures, spaced: spaced);
       if (period.isNotEmpty) {
         final periodKey = 'callup:${period.first.id}';
         if (!await comp.hasWatchedDraw(careerId, cycle, periodKey)) {
