@@ -4396,5 +4396,17 @@
   "nationHostThird": "Hạng ba",
   "nationCoHosts": "Đồng chủ nhà",
   "nationNoStadiums": "Không có sân vận động nào",
-  "nationManageStadiums": "Quản lý sân vận động"
+  "nationManageStadiums": "Quản lý sân vận động",
+  "careerManagerAge": "Tuổi",
+  "managerAgeRange": "Từ {min} đến {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Ban lãnh đạo hỏi về kế hoạch người kế nhiệm.",
+  "managerAgePromptTitle": "Huấn luyện viên của bạn bao nhiêu tuổi?",
+  "managerAgePromptBody": "Bản lưu này chưa có tuổi của huấn luyện viên. Đặt một lần và tuổi sẽ hiện cạnh tên bạn. Việc này không thay đổi gì trong game.",
+  "managerAgePromptSet": "Đặt tuổi",
+  "managerAgePromptSkip": "Bỏ qua",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) giải nghệ huấn luyện viên",
+  "editorManagerAge": "Tuổi",
+  "editorManagerAgeHint": "Để trống: game sẽ chọn",
+  "editorIssueManagerAge": "Tuổi của huấn luyện viên phải từ {min} đến {max}."
 }

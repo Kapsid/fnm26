@@ -17289,4 +17289,49 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'จัดการสนามกีฬา';
+
+  @override
+  String get careerManagerAge => 'อายุ';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'ตั้งแต่ $min ถึง $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession => 'บอร์ดสอบถามถึงแผนหาผู้สืบทอด';
+
+  @override
+  String get managerAgePromptTitle => 'ผู้จัดการทีมของคุณอายุเท่าไร?';
+
+  @override
+  String get managerAgePromptBody =>
+      'เซฟนี้ยังไม่มีอายุของผู้จัดการทีม ตั้งครั้งเดียวแล้วจะแสดงข้างชื่อของคุณ ไม่มีผลใดๆ ต่อเกม';
+
+  @override
+  String get managerAgePromptSet => 'ตั้งอายุ';
+
+  @override
+  String get managerAgePromptSkip => 'ข้าม';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) ประกาศเลิกคุมทีม';
+  }
+
+  @override
+  String get editorManagerAge => 'อายุ';
+
+  @override
+  String get editorManagerAgeHint => 'เว้นว่าง: เกมจะเลือกให้';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'อายุของผู้จัดการทีมต้องอยู่ระหว่าง $min ถึง $max';
+  }
 }

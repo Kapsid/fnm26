@@ -4396,5 +4396,17 @@
   "nationHostThird": "Dritter",
   "nationCoHosts": "Co-Gastgeber",
   "nationNoStadiums": "Keine Stadien verzeichnet",
-  "nationManageStadiums": "Stadien verwalten"
+  "nationManageStadiums": "Stadien verwalten",
+  "careerManagerAge": "Alter",
+  "managerAgeRange": "Von {min} bis {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Der Vorstand erkundigt sich nach Ihren Nachfolgeplänen.",
+  "managerAgePromptTitle": "Wie alt ist Ihr Trainer?",
+  "managerAgePromptBody": "Dieser Spielstand hat noch kein Alter für Ihren Trainer. Legen Sie es einmal fest, dann steht es neben Ihrem Namen. Am Spiel ändert es nichts.",
+  "managerAgePromptSet": "Alter festlegen",
+  "managerAgePromptSkip": "Überspringen",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) beendet die Trainerkarriere",
+  "editorManagerAge": "Alter",
+  "editorManagerAgeHint": "Leer: Das Spiel wählt eins",
+  "editorIssueManagerAge": "Das Alter des Trainers muss zwischen {min} und {max} liegen."
 }

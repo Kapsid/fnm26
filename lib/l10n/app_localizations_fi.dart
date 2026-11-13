@@ -17669,4 +17669,49 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Hallinnoi stadioneita';
+
+  @override
+  String get careerManagerAge => 'Ikä';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Välillä $min ja $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession => 'Johto kyselee seuraajasuunnitelmista.';
+
+  @override
+  String get managerAgePromptTitle => 'Kuinka vanha valmentajasi on?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Tässä tallennuksessa ei ole vielä valmentajasi ikää. Aseta se kerran, niin se näkyy nimesi vieressä. Se ei muuta pelissä mitään.';
+
+  @override
+  String get managerAgePromptSet => 'Aseta ikä';
+
+  @override
+  String get managerAgePromptSkip => 'Ohita';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) jättää valmennustyöt';
+  }
+
+  @override
+  String get editorManagerAge => 'Ikä';
+
+  @override
+  String get editorManagerAgeHint => 'Tyhjä: peli valitsee';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Valmentajan iän on oltava välillä $min ja $max.';
+  }
 }

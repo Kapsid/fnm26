@@ -463,10 +463,13 @@ void main() {
       final editions = await (db.select(
         db.competitions,
       )..where((t) => t.careerId.equals(imported))).get();
-      expect({for (final c in editions) c.name: c.edition}, {
-        'Slots Cup': 0,
-        'Nations Cup': 1,
-      });
+      expect(
+        {for (final c in editions) c.name: c.edition},
+        {
+          'Slots Cup': 0,
+          'Nations Cup': 1,
+        },
+      );
       final slots =
           await (db.select(db.drawSlots)
                 ..where((t) => t.careerId.equals(imported))

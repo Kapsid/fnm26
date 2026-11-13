@@ -8,9 +8,11 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/domain/services/manager/manager_age.dart';
 import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:fnm/domain/services/profanity/profanity_filter.dart';
 import 'package:fnm/features/federation/staff_card.dart';
+import 'package:fnm/features/manager/manager_age_widgets.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
@@ -66,7 +68,11 @@ class ManagerScreen extends ConsumerWidget {
             : ListView(
                 padding: const EdgeInsets.all(AppSpacing.marginMobile),
                 children: [
-                  _NameCard(careerId: careerId, name: view.career.managerName),
+                  _NameCard(
+                    careerId: careerId,
+                    name: view.career.managerName,
+                    age: managerAgeOf(view.career),
+                  ),
                   const SizedBox(height: AppSpacing.md),
                   _SkillsCard(careerId: careerId, view: view),
                   const SizedBox(height: AppSpacing.md),
@@ -84,12 +90,18 @@ class ManagerScreen extends ConsumerWidget {
   }
 }
 
-/// The manager's name, with a pencil to change it.
+/// The manager's name and age, with a pencil to change the name. The age is
+/// not editable inside a running career (the editor is where it changes); a
+/// save from before ages shows none until the hub's question is answered.
 class _NameCard extends ConsumerWidget {
-  const _NameCard({required this.careerId, required this.name});
+  const _NameCard({required this.careerId, required this.name, this.age});
+
+  static const Key ageKey = Key('manager.age');
+  static const Key successionKey = Key('manager.succession');
 
   final int careerId;
   final String name;
+  final int? age;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -100,11 +112,35 @@ class _NameCard extends ConsumerWidget {
           const Icon(Icons.person, color: AppColors.primary),
           const SizedBox(width: AppSpacing.md),
           Expanded(
-            child: Text(
-              name,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTypography.titleMedium,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.titleMedium,
+                ),
+                if (age case final a?) ...[
+                  Text(
+                    l.tacticsAgeOnly(a),
+                    key: ageKey,
+                    style: AppTypography.bodySmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                  ),
+                  // Flavour only: nothing ends a career at any age.
+                  if (a >= ManagerAge.successionAge)
+                    Text(
+                      l.managerSuccession,
+                      key: successionKey,
+                      style: AppTypography.bodySmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                ],
+              ],
             ),
           ),
           IconButton(

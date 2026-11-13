@@ -17677,4 +17677,50 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Stadions beheren';
+
+  @override
+  String get careerManagerAge => 'Leeftijd';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Van $min tot $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'Het bestuur vraagt naar je opvolgingsplannen.';
+
+  @override
+  String get managerAgePromptTitle => 'Hoe oud is je bondscoach?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Deze opslag heeft nog geen leeftijd voor je bondscoach. Stel die één keer in en hij staat naast je naam. Het verandert niets aan het spel.';
+
+  @override
+  String get managerAgePromptSet => 'Leeftijd instellen';
+
+  @override
+  String get managerAgePromptSkip => 'Overslaan';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) stopt als trainer';
+  }
+
+  @override
+  String get editorManagerAge => 'Leeftijd';
+
+  @override
+  String get editorManagerAgeHint => 'Leeg: het spel kiest er een';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'De leeftijd van de bondscoach moet tussen $min en $max liggen.';
+  }
 }

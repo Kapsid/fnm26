@@ -52,7 +52,7 @@ WorldPack _dirty() => WorldPack(
       sur: ['Kurva', for (var i = 0; i < 20; i++) 'Sur$i'],
     ),
   },
-  managers: const {7: (name: 'Píča Trenér', nationality: 'TST')},
+  managers: const {7: (name: 'Píča Trenér', nationality: 'TST', age: null)},
   addedClubs: const [
     PackClub(id: kPackAddedIdBase, name: 'Pussy Club', country: 'cze'),
   ],

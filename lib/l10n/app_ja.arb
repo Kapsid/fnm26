@@ -4396,5 +4396,17 @@
   "nationHostThird": "3位",
   "nationCoHosts": "共催",
   "nationNoStadiums": "登録されたスタジアムはない",
-  "nationManageStadiums": "スタジアムを管理"
+  "nationManageStadiums": "スタジアムを管理",
+  "careerManagerAge": "年齢",
+  "managerAgeRange": "{min}〜{max}歳",
+  "managerNameAge": "{name}（{age}）",
+  "managerSuccession": "協会が後継者の計画について尋ねています。",
+  "managerAgePromptTitle": "監督は何歳ですか？",
+  "managerAgePromptBody": "このセーブにはまだ監督の年齢がありません。一度設定すると名前の横に表示されます。ゲームの内容には影響しません。",
+  "managerAgePromptSet": "年齢を設定",
+  "managerAgePromptSkip": "スキップ",
+  "mgrNewsRetiredAge": "{nation}: {name}（{age}）が指導者を引退",
+  "editorManagerAge": "年齢",
+  "editorManagerAgeHint": "空欄: ゲームが決めます",
+  "editorIssueManagerAge": "監督の年齢は{min}〜{max}歳にしてください。"
 }

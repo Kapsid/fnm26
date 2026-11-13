@@ -27086,5 +27086,88 @@
   "nationManageStadiums": "Manage stadiums",
   "@nationManageStadiums": {
     "description": "Nation page, Stadiums tab on the manager's own nation: opens the screen where its stadiums are run."
+  },
+  "careerManagerAge": "Age",
+  "@careerManagerAge": {
+    "description": "New game: label of the manager's age field, beside his name."
+  },
+  "managerAgeRange": "From {min} to {max}",
+  "@managerAgeRange": {
+    "description": "Under an age field when the number typed is outside the allowed range.",
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "managerNameAge": "{name} ({age})",
+  "@managerNameAge": {
+    "description": "The manager's name with his age in brackets (offers, press room, career summary, managers list, match preview).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "managerSuccession": "The board asks about succession plans.",
+  "@managerSuccession": {
+    "description": "Manager page, under his age once he is 70 or older: flavour only, nothing ends the career."
+  },
+  "managerAgePromptTitle": "How old is your manager?",
+  "@managerAgePromptTitle": {
+    "description": "Hub card (once, on a save made before ages existed) and its dialog: asks the manager's age."
+  },
+  "managerAgePromptBody": "This save has no age for your manager yet. Set it once and it is shown beside your name. It changes nothing in the game.",
+  "@managerAgePromptBody": {
+    "description": "Hub card body under managerAgePromptTitle."
+  },
+  "managerAgePromptSet": "Set age",
+  "@managerAgePromptSet": {
+    "description": "Hub card button: opens the age dialog."
+  },
+  "managerAgePromptSkip": "Skip",
+  "@managerAgePromptSkip": {
+    "description": "Hub card button: puts the question away for good."
+  },
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) retires from management",
+  "@mgrNewsRetiredAge": {
+    "description": "News title when a world manager retires, with his age in brackets.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      },
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "editorManagerAge": "Age",
+  "@editorManagerAge": {
+    "description": "Editor, managers section: label of the day-one manager's age field."
+  },
+  "editorManagerAgeHint": "Empty: the game picks one",
+  "@editorManagerAgeHint": {
+    "description": "Editor, managers section: hint in the empty age field (the game then draws an age)."
+  },
+  "editorIssueManagerAge": "The manager's age must be from {min} to {max}.",
+  "@editorIssueManagerAge": {
+    "description": "Editor issue: a day-one manager's age outside the allowed range.",
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
   }
 }

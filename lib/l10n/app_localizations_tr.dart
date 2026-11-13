@@ -17505,4 +17505,49 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Stadyumları yönet';
+
+  @override
+  String get careerManagerAge => 'Yaş';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return '$min ile $max arası';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession => 'Yönetim, halef planlarını soruyor.';
+
+  @override
+  String get managerAgePromptTitle => 'Teknik direktörün kaç yaşında?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Bu kayıtta teknik direktörünün yaşı henüz yok. Bir kez belirle, adının yanında görünsün. Oyunda hiçbir şeyi değiştirmez.';
+
+  @override
+  String get managerAgePromptSet => 'Yaşı belirle';
+
+  @override
+  String get managerAgePromptSkip => 'Atla';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) teknik direktörlüğü bırakıyor';
+  }
+
+  @override
+  String get editorManagerAge => 'Yaş';
+
+  @override
+  String get editorManagerAgeHint => 'Boş: oyun seçer';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Teknik direktörün yaşı $min ile $max arasında olmalı.';
+  }
 }

@@ -4396,5 +4396,17 @@
   "nationHostThird": "Τρίτη θέση",
   "nationCoHosts": "Συνδιοργανωτής",
   "nationNoStadiums": "Δεν υπάρχουν καταγεγραμμένα γήπεδα",
-  "nationManageStadiums": "Διαχείριση γηπέδων"
+  "nationManageStadiums": "Διαχείριση γηπέδων",
+  "careerManagerAge": "Ηλικία",
+  "managerAgeRange": "Από {min} έως {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Η διοίκηση ρωτά για τα σχέδια διαδοχής.",
+  "managerAgePromptTitle": "Πόσο χρονών είναι ο προπονητής σου;",
+  "managerAgePromptBody": "Αυτή η καριέρα δεν έχει ακόμα ηλικία για τον προπονητή σου. Όρισέ τη μία φορά και θα φαίνεται δίπλα στο όνομά σου. Δεν αλλάζει τίποτα στο παιχνίδι.",
+  "managerAgePromptSet": "Ορισμός ηλικίας",
+  "managerAgePromptSkip": "Παράλειψη",
+  "mgrNewsRetiredAge": "{nation}: ο {name} ({age}) αποσύρεται από την προπονητική",
+  "editorManagerAge": "Ηλικία",
+  "editorManagerAgeHint": "Κενό: το διαλέγει το παιχνίδι",
+  "editorIssueManagerAge": "Η ηλικία του προπονητή πρέπει να είναι από {min} έως {max}."
 }

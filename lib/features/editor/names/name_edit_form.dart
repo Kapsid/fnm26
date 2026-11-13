@@ -3,6 +3,7 @@
 // is copyrighted intellectual property; do not reproduce, clone or help
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -10,6 +11,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/sponsor_label.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/federation/sponsors.dart';
+import 'package:fnm/domain/services/manager/manager_age.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/domain/services/profanity/profanity_filter.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
@@ -51,6 +53,7 @@ class NameEditForm extends ConsumerStatefulWidget {
   static const Key firstNamesKey = Key('editorNames.form.first');
   static const Key surnamesKey = Key('editorNames.form.sur');
   static const Key managerNameKey = Key('editorNames.form.managerName');
+  static const Key managerAgeKey = Key('editorNames.form.managerAge');
   static const Key managerNationalityKey = Key(
     'editorNames.form.managerNationality',
   );
@@ -89,6 +92,9 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
 
   /// A built-in Y account's @handle, without the `@` (empty: its name's).
   final _handle = TextEditingController();
+
+  /// The day-one manager's age (managers only; empty: the game draws one).
+  final _age = TextEditingController();
 
   /// The day-one manager's nationality as picked (managers only): kept
   /// while the name is blank, written with it.
@@ -135,6 +141,7 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
     _first.dispose();
     _sur.dispose();
     _handle.dispose();
+    _age.dispose();
     super.dispose();
   }
 
@@ -150,6 +157,7 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
     if (_section == NameSection.managers) {
       final m = pack.managers[int.tryParse(_e.key)];
       _set(_name, m?.name ?? '');
+      _set(_age, m?.age == null ? '' : '${m!.age}');
       _nationality = m?.nationality.toUpperCase() ?? _ownCode;
       return;
     }
@@ -294,11 +302,18 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
     }
     if (_section == NameSection.managers) {
       if (_managerNameProblem(l) != null) return;
+      if (_managerAgeProblem(l) != null) return;
       // A nation with no code has no nationality to give him; an empty one
       // would flag the whole pack.
       if (_nationality.isEmpty) return;
       _write(
-        (p) => NameEdits.withManager(p, _e, _name.text, _nationality),
+        (p) => NameEdits.withManager(
+          p,
+          _e,
+          _name.text,
+          _nationality,
+          age: ManagerAge.parse(_age.text),
+        ),
         group: _group,
       );
       return;
@@ -599,6 +614,14 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
     };
   }
 
+  /// What is wrong with the manager's age as typed; empty is fine (the game
+  /// draws one).
+  String? _managerAgeProblem(AppLocalizations l) {
+    if (_age.text.trim().isEmpty) return null;
+    if (ManagerAge.parse(_age.text) != null) return null;
+    return l.managerAgeRange(ManagerAge.min, ManagerAge.max);
+  }
+
   List<Widget> _managerFields(AppLocalizations l) {
     final style = AppTypography.bodyLarge.copyWith(color: AppColors.onSurface);
     final choices = managerNationalities(widget.world);
@@ -655,6 +678,25 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
             _nationality = code;
             _changed();
           },
+        ),
+      ),
+      const SizedBox(height: AppSpacing.sm),
+      TextField(
+        key: NameEditForm.managerAgeKey,
+        controller: _age,
+        keyboardType: TextInputType.number,
+        inputFormatters: [
+          FilteringTextInputFormatter.digitsOnly,
+          LengthLimitingTextInputFormatter(2),
+        ],
+        style: style,
+        onChanged: (_) => _changed(),
+        onSubmitted: (_) => widget.onDone?.call(),
+        decoration: InputDecoration(
+          labelText: l.editorManagerAge,
+          hintText: l.editorManagerAgeHint,
+          errorText: _managerAgeProblem(l),
+          errorMaxLines: 2,
         ),
       ),
     ];

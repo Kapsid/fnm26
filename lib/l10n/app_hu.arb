@@ -4396,5 +4396,17 @@
   "nationHostThird": "Harmadik",
   "nationCoHosts": "Társrendező",
   "nationNoStadiums": "Nincs nyilvántartott stadion",
-  "nationManageStadiums": "Stadionok kezelése"
+  "nationManageStadiums": "Stadionok kezelése",
+  "careerManagerAge": "Életkor",
+  "managerAgeRange": "{min} és {max} között",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "A vezetőség az utódlási tervekről érdeklődik.",
+  "managerAgePromptTitle": "Hány éves a kapitányod?",
+  "managerAgePromptBody": "Ebben a mentésben még nincs megadva a kapitány életkora. Add meg egyszer, és a neved mellett jelenik meg. A játékon semmit sem változtat.",
+  "managerAgePromptSet": "Életkor megadása",
+  "managerAgePromptSkip": "Kihagyás",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) visszavonul az edzősködéstől",
+  "editorManagerAge": "Életkor",
+  "editorManagerAgeHint": "Üres: a játék választ",
+  "editorIssueManagerAge": "A kapitány életkorának {min} és {max} között kell lennie."
 }

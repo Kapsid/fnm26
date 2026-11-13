@@ -8,6 +8,7 @@ import 'package:fnm/core/config/languages.dart';
 import '../../entities/enums.dart';
 import '../../entities/player_ids.dart';
 import '../club/clubs.dart';
+import '../manager/manager_age.dart';
 import '../player/golden_generation.dart';
 import '../player/player_traits.dart';
 import '../press/y_feed.dart';
@@ -520,7 +521,8 @@ abstract final class PackRules {
 
   /// The day-one managers (format 4): each name 1 to [nameMax] characters
   /// that can be shown, each nationality three letters, and (when the game's
-  /// codes [baseCodes] are known) one of them, in any case. Whether the
+  /// codes [baseCodes] are known) one of them, in any case; an age (format
+  /// 8), when given, from [ManagerAge.min] to [ManagerAge.max]. Whether the
   /// nation itself is the game's is [compatibility]'s.
   static void _managers(
     WorldPack p,
@@ -540,6 +542,11 @@ abstract final class PackRules {
         );
       } else if (codes.isNotEmpty && !codes.contains(code)) {
         out.add(BadField('managers.$id.nationality', FieldReason.outOfRange));
+      }
+      // Format 8: an age, when given, within what a manager can be.
+      if (m.age case final age?
+          when age < ManagerAge.min || age > ManagerAge.max) {
+        out.add(BadField('managers.$id.age', FieldReason.outOfRange));
       }
     }
   }

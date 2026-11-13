@@ -1016,7 +1016,14 @@ class _NameTile extends StatelessWidget {
       changed = m != null;
       name = entry.original;
       about = [
-        if (m == null) l.editorManagersHint else '${m.name} · ${m.nationality}',
+        if (m == null)
+          l.editorManagersHint
+        else
+          [
+            m.name,
+            m.nationality,
+            if (m.age case final a?) l.tacticsAgeOnly(a),
+          ].join(' · '),
       ];
     } else if (lang != null) {
       // In one language: its own name, else the main one (the same in every

@@ -17604,4 +17604,50 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Pamahalaan ang mga stadium';
+
+  @override
+  String get careerManagerAge => 'Edad';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Mula $min hanggang $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'Nagtatanong ang board tungkol sa plano kung sino ang papalit sa iyo.';
+
+  @override
+  String get managerAgePromptTitle => 'Ilang taon na ang manager mo?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Wala pang edad ang manager mo sa save na ito. Itakda ito nang isang beses at lalabas ito sa tabi ng pangalan mo. Wala itong binabago sa laro.';
+
+  @override
+  String get managerAgePromptSet => 'Itakda ang edad';
+
+  @override
+  String get managerAgePromptSkip => 'Laktawan';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: magreretiro si $name ($age) sa pagma-manage';
+  }
+
+  @override
+  String get editorManagerAge => 'Edad';
+
+  @override
+  String get editorManagerAgeHint => 'Walang laman: ang laro ang pipili';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Dapat mula $min hanggang $max ang edad ng manager.';
+  }
 }

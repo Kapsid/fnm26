@@ -18,6 +18,7 @@ import 'package:fnm/domain/services/world_pack/pack_status.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/campaign/campaign_record_store.dart';
 import 'package:fnm/features/campaign/campaign_stamp.dart';
+import 'package:fnm/features/manager/manager_age_widgets.dart';
 import 'package:fnm/features/campaign/campaign_ui.dart';
 import 'package:fnm/features/campaign/campaigns_screen.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -70,6 +71,10 @@ class _CampaignBriefScreenState extends ConsumerState<CampaignBriefScreen> {
   /// last save never overwrites what he wrote.
   bool _edited = false;
 
+  /// The manager's age as the latest save has it today, carried into the run
+  /// with his name; null when that save has none (the run's hub then asks).
+  int? _age;
+
   @override
   void initState() {
     super.initState();
@@ -78,6 +83,8 @@ class _CampaignBriefScreenState extends ConsumerState<CampaignBriefScreen> {
         if (!mounted || _edited || saves.isEmpty) return;
         final name = saves.first.managerName.trim();
         if (name.isNotEmpty) _controller.text = name;
+        // The same man, so the same age, when the last save knows it.
+        _age = managerAgeOf(saves.first);
       }, onError: (_) {}),
     );
   }
@@ -121,6 +128,7 @@ class _CampaignBriefScreenState extends ConsumerState<CampaignBriefScreen> {
       final career = await service.start(
         def,
         managerName: name,
+        managerAge: _age,
         worldPackId: worldPackId,
       );
       // A new run asks how to watch at its first match, once.

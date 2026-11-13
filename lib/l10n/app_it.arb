@@ -4396,5 +4396,17 @@
   "nationHostThird": "Terza",
   "nationCoHosts": "Co-ospitante",
   "nationNoStadiums": "Nessuno stadio registrato",
-  "nationManageStadiums": "Gestisci gli stadi"
+  "nationManageStadiums": "Gestisci gli stadi",
+  "careerManagerAge": "Età",
+  "managerAgeRange": "Da {min} a {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "La dirigenza chiede dei piani di successione.",
+  "managerAgePromptTitle": "Quanti anni ha il tuo CT?",
+  "managerAgePromptBody": "Questa partita non ha ancora l’età del tuo CT. Impostala una volta e comparirà accanto al tuo nome. Non cambia nulla nel gioco.",
+  "managerAgePromptSet": "Imposta età",
+  "managerAgePromptSkip": "Salta",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) lascia la panchina",
+  "editorManagerAge": "Età",
+  "editorManagerAgeHint": "Vuoto: la sceglie il gioco",
+  "editorIssueManagerAge": "L’età del CT deve essere tra {min} e {max}."
 }

@@ -4,6 +4,7 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/manager/manager_age.dart';
 import 'package:fnm/domain/services/profanity/profanity_filter.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
@@ -281,13 +282,16 @@ PackIssueText _badField(
         nationId: nationId,
       );
     case 'managers':
-      // `managers.<nationId>.name` or `.nationality`, under the nation.
+      // `managers.<nationId>.name`, `.nationality` or `.age`, under the
+      // nation.
       final nationId = idAt(1);
       final field = parts.length > 2 ? parts[2] : '';
       return (
         title: nationId == null ? sectionTitle : nation(nationId),
         detail: field == 'nationality'
             ? l.editorIssueManagerNationality
+            : field == 'age'
+            ? l.editorIssueManagerAge(ManagerAge.min, ManagerAge.max)
             : reason == FieldReason.notAllowed
             ? nameProblem(pack.managers[nationId]?.name ?? '')
             : l.editorIssueManagerName(PackRules.nameMax),

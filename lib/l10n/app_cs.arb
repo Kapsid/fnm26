@@ -4396,5 +4396,17 @@
   "nationHostThird": "Třetí",
   "nationCoHosts": "Spolupořadatel",
   "nationNoStadiums": "Žádné stadiony v záznamech",
-  "nationManageStadiums": "Spravovat stadiony"
+  "nationManageStadiums": "Spravovat stadiony",
+  "careerManagerAge": "Věk",
+  "managerAgeRange": "Od {min} do {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Vedení svazu se ptá, kdo by vás jednou mohl nahradit.",
+  "managerAgePromptTitle": "Kolik je vašemu trenérovi let?",
+  "managerAgePromptBody": "Tato hra zatím nemá uvedený věk trenéra. Zadejte ho jednou a bude se zobrazovat u vašeho jména. Na hru nemá žádný vliv.",
+  "managerAgePromptSet": "Zadat věk",
+  "managerAgePromptSkip": "Přeskočit",
+  "mgrNewsRetiredAge": "{nation}: trenér {name} ({age}) končí s trénováním",
+  "editorManagerAge": "Věk",
+  "editorManagerAgeHint": "Prázdné: vybere hra",
+  "editorIssueManagerAge": "Věk trenéra musí být od {min} do {max}."
 }

@@ -17686,4 +17686,49 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Διαχείριση γηπέδων';
+
+  @override
+  String get careerManagerAge => 'Ηλικία';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Από $min έως $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession => 'Η διοίκηση ρωτά για τα σχέδια διαδοχής.';
+
+  @override
+  String get managerAgePromptTitle => 'Πόσο χρονών είναι ο προπονητής σου;';
+
+  @override
+  String get managerAgePromptBody =>
+      'Αυτή η καριέρα δεν έχει ακόμα ηλικία για τον προπονητή σου. Όρισέ τη μία φορά και θα φαίνεται δίπλα στο όνομά σου. Δεν αλλάζει τίποτα στο παιχνίδι.';
+
+  @override
+  String get managerAgePromptSet => 'Ορισμός ηλικίας';
+
+  @override
+  String get managerAgePromptSkip => 'Παράλειψη';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: ο $name ($age) αποσύρεται από την προπονητική';
+  }
+
+  @override
+  String get editorManagerAge => 'Ηλικία';
+
+  @override
+  String get editorManagerAgeHint => 'Κενό: το διαλέγει το παιχνίδι';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Η ηλικία του προπονητή πρέπει να είναι από $min έως $max.';
+  }
 }

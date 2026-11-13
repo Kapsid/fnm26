@@ -17013,4 +17013,49 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get nationManageStadiums => '경기장 관리';
+
+  @override
+  String get careerManagerAge => '나이';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return '$min~$max세';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession => '협회가 후계 구도에 대해 묻고 있습니다.';
+
+  @override
+  String get managerAgePromptTitle => '감독의 나이는 몇 살인가요?';
+
+  @override
+  String get managerAgePromptBody =>
+      '이 저장 파일에는 아직 감독의 나이가 없습니다. 한 번 정하면 이름 옆에 표시됩니다. 게임에는 아무 영향이 없습니다.';
+
+  @override
+  String get managerAgePromptSet => '나이 설정';
+
+  @override
+  String get managerAgePromptSkip => '건너뛰기';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) 감독 은퇴';
+  }
+
+  @override
+  String get editorManagerAge => '나이';
+
+  @override
+  String get editorManagerAgeHint => '비워 두면 게임이 정합니다';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return '감독의 나이는 $min~$max세여야 합니다.';
+  }
 }

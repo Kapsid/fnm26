@@ -17724,4 +17724,50 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Stadien verwalten';
+
+  @override
+  String get careerManagerAge => 'Alter';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Von $min bis $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'Der Vorstand erkundigt sich nach Ihren Nachfolgeplänen.';
+
+  @override
+  String get managerAgePromptTitle => 'Wie alt ist Ihr Trainer?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Dieser Spielstand hat noch kein Alter für Ihren Trainer. Legen Sie es einmal fest, dann steht es neben Ihrem Namen. Am Spiel ändert es nichts.';
+
+  @override
+  String get managerAgePromptSet => 'Alter festlegen';
+
+  @override
+  String get managerAgePromptSkip => 'Überspringen';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) beendet die Trainerkarriere';
+  }
+
+  @override
+  String get editorManagerAge => 'Alter';
+
+  @override
+  String get editorManagerAgeHint => 'Leer: Das Spiel wählt eins';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Das Alter des Trainers muss zwischen $min und $max liegen.';
+  }
 }

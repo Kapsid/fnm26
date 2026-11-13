@@ -17501,4 +17501,50 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'स्टेडियम प्रबंधित करें';
+
+  @override
+  String get careerManagerAge => 'उम्र';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return '$min से $max तक';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'बोर्ड उत्तराधिकारी की योजना के बारे में पूछ रहा है।';
+
+  @override
+  String get managerAgePromptTitle => 'आपके मैनेजर की उम्र कितनी है?';
+
+  @override
+  String get managerAgePromptBody =>
+      'इस सेव में अभी आपके मैनेजर की उम्र नहीं है। इसे एक बार सेट करें, यह आपके नाम के साथ दिखेगी। इससे गेम में कुछ नहीं बदलता।';
+
+  @override
+  String get managerAgePromptSet => 'उम्र सेट करें';
+
+  @override
+  String get managerAgePromptSkip => 'छोड़ें';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) ने कोचिंग से संन्यास लिया';
+  }
+
+  @override
+  String get editorManagerAge => 'उम्र';
+
+  @override
+  String get editorManagerAgeHint => 'खाली: गेम खुद चुनेगा';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'मैनेजर की उम्र $min से $max के बीच होनी चाहिए।';
+  }
 }

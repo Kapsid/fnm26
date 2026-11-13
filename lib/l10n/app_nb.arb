@@ -4396,5 +4396,17 @@
   "nationHostThird": "Tredje",
   "nationCoHosts": "Medarrangør",
   "nationNoStadiums": "Ingen arenaer registrert",
-  "nationManageStadiums": "Administrer arenaer"
+  "nationManageStadiums": "Administrer arenaer",
+  "careerManagerAge": "Alder",
+  "managerAgeRange": "Fra {min} til {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Styret spør om planene for en etterfølger.",
+  "managerAgePromptTitle": "Hvor gammel er landslagssjefen din?",
+  "managerAgePromptBody": "Denne karrieren har ennå ingen alder for landslagssjefen din. Angi den én gang, så vises den ved navnet ditt. Den endrer ingenting i spillet.",
+  "managerAgePromptSet": "Angi alder",
+  "managerAgePromptSkip": "Hopp over",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) legger opp som trener",
+  "editorManagerAge": "Alder",
+  "editorManagerAgeHint": "Tomt: spillet velger",
+  "editorIssueManagerAge": "Alderen til treneren må være fra {min} til {max}."
 }

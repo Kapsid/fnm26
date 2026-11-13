@@ -17781,4 +17781,49 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Zarządzaj stadionami';
+
+  @override
+  String get careerManagerAge => 'Wiek';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Od $min do $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession => 'Zarząd pyta o plany sukcesji.';
+
+  @override
+  String get managerAgePromptTitle => 'Ile lat ma twój selekcjoner?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Ten zapis nie ma jeszcze wieku twojego selekcjonera. Ustaw go raz, a pojawi się obok twojego nazwiska. Nie zmienia niczego w grze.';
+
+  @override
+  String get managerAgePromptSet => 'Ustaw wiek';
+
+  @override
+  String get managerAgePromptSkip => 'Pomiń';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) kończy karierę trenerską';
+  }
+
+  @override
+  String get editorManagerAge => 'Wiek';
+
+  @override
+  String get editorManagerAgeHint => 'Puste: wybiera gra';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Wiek selekcjonera musi wynosić od $min do $max.';
+  }
 }

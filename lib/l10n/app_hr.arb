@@ -4396,5 +4396,17 @@
   "nationHostThird": "Treći",
   "nationCoHosts": "Sudomaćin",
   "nationNoStadiums": "Nema zabilježenih stadiona",
-  "nationManageStadiums": "Upravljaj stadionima"
+  "nationManageStadiums": "Upravljaj stadionima",
+  "careerManagerAge": "Dob",
+  "managerAgeRange": "Od {min} do {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Uprava pita za planove o nasljedniku.",
+  "managerAgePromptTitle": "Koliko godina ima tvoj izbornik?",
+  "managerAgePromptBody": "Ova karijera još nema upisanu dob izbornika. Postavi je jednom i prikazivat će se uz tvoje ime. U igri ne mijenja ništa.",
+  "managerAgePromptSet": "Postavi dob",
+  "managerAgePromptSkip": "Preskoči",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) završava trenersku karijeru",
+  "editorManagerAge": "Dob",
+  "editorManagerAgeHint": "Prazno: bira igra",
+  "editorIssueManagerAge": "Dob izbornika mora biti od {min} do {max}."
 }

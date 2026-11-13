@@ -62,6 +62,11 @@ class _HubTabletLayout extends ConsumerWidget {
                   WcHostBanner(theme: contHost!, code: code),
                   const SizedBox(height: AppSpacing.md),
                 ],
+                // A save from before ages: the one-time, skippable question.
+                ManagerAgeQuestionCard(
+                  careerId: careerId,
+                  gapBelow: AppSpacing.md,
+                ),
                 // Every tile must report an intrinsic height: no lists, no
                 // LayoutBuilder, no WholeText (see DashboardGrid).
                 DashboardGrid(

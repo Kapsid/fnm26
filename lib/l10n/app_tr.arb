@@ -4396,5 +4396,17 @@
   "nationHostThird": "Üçüncü",
   "nationCoHosts": "Ortak ev sahibi",
   "nationNoStadiums": "Kayıtlı stadyum yok",
-  "nationManageStadiums": "Stadyumları yönet"
+  "nationManageStadiums": "Stadyumları yönet",
+  "careerManagerAge": "Yaş",
+  "managerAgeRange": "{min} ile {max} arası",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Yönetim, halef planlarını soruyor.",
+  "managerAgePromptTitle": "Teknik direktörün kaç yaşında?",
+  "managerAgePromptBody": "Bu kayıtta teknik direktörünün yaşı henüz yok. Bir kez belirle, adının yanında görünsün. Oyunda hiçbir şeyi değiştirmez.",
+  "managerAgePromptSet": "Yaşı belirle",
+  "managerAgePromptSkip": "Atla",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) teknik direktörlüğü bırakıyor",
+  "editorManagerAge": "Yaş",
+  "editorManagerAgeHint": "Boş: oyun seçer",
+  "editorIssueManagerAge": "Teknik direktörün yaşı {min} ile {max} arasında olmalı."
 }

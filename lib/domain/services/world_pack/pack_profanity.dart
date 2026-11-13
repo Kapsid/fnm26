@@ -84,7 +84,11 @@ WorldPack _mask(WorldPack p) {
     },
     managers: {
       for (final e in p.managers.entries)
-        e.key: (name: m(e.value.name), nationality: e.value.nationality),
+        e.key: (
+          name: m(e.value.name),
+          nationality: e.value.nationality,
+          age: e.value.age,
+        ),
     },
     addedClubs: [for (final c in p.addedClubs) c.copyWith(name: m(c.name))],
     addedSponsors: [

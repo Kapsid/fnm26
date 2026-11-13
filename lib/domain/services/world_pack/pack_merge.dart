@@ -74,7 +74,8 @@ enum MergeField {
   /// A nation's name lists (`PackNameLists?`).
   nameLists,
 
-  /// A nation's day-one manager (`({String name, String nationality})?`).
+  /// A nation's day-one manager
+  /// (`({String name, String nationality, int? age})?`).
   manager,
 
   /// A nation's name and code (`({String name, String code})?`).

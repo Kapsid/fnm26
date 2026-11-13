@@ -36,6 +36,7 @@ import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/hub/schedule_widgets.dart';
 import 'package:fnm/features/messages/message_popup.dart';
+import 'package:fnm/features/manager/manager_age_widgets.dart';
 import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/messages/message_sheet.dart' show messageStyle;
 import 'package:fnm/features/onboarding/tour_keys.dart';
@@ -405,6 +406,9 @@ class _HubScreenState extends ConsumerState<HubScreen> {
                 HubEventButton(careerId: careerId),
                 // A campaign career's goal and progress; nothing for a normal one.
                 CampaignHubCard(careerId: careerId, gapAbove: true),
+                // A save from before ages: the one-time, skippable question.
+                // Under the event button, so it never stands before Continue.
+                ManagerAgeQuestionCard(careerId: careerId, gapAbove: true),
                 if (hub.championNationId == null) ...[
                   const SizedBox(height: AppSpacing.md),
                   _Upcoming(careerId: careerId),

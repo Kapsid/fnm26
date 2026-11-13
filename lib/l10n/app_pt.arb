@@ -4396,5 +4396,17 @@
   "nationHostThird": "Terceiro",
   "nationCoHosts": "Coanfitrião",
   "nationNoStadiums": "Nenhum estádio registado",
-  "nationManageStadiums": "Gerir estádios"
+  "nationManageStadiums": "Gerir estádios",
+  "careerManagerAge": "Idade",
+  "managerAgeRange": "De {min} a {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "A direção pergunta pelos planos de sucessão.",
+  "managerAgePromptTitle": "Qual é a idade do seu treinador?",
+  "managerAgePromptBody": "Este jogo salvo ainda não tem a idade do seu treinador. Defina-a uma vez e ela aparece ao lado do seu nome. Não muda nada no jogo.",
+  "managerAgePromptSet": "Definir idade",
+  "managerAgePromptSkip": "Pular",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) termina a carreira de treinador",
+  "editorManagerAge": "Idade",
+  "editorManagerAgeHint": "Vazio: o jogo escolhe",
+  "editorIssueManagerAge": "A idade do treinador deve ser de {min} a {max}."
 }

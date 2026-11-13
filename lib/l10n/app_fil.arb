@@ -4396,5 +4396,17 @@
   "nationHostThird": "Ikatlo",
   "nationCoHosts": "Kasamang host",
   "nationNoStadiums": "Walang nakatalang stadium",
-  "nationManageStadiums": "Pamahalaan ang mga stadium"
+  "nationManageStadiums": "Pamahalaan ang mga stadium",
+  "careerManagerAge": "Edad",
+  "managerAgeRange": "Mula {min} hanggang {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Nagtatanong ang board tungkol sa plano kung sino ang papalit sa iyo.",
+  "managerAgePromptTitle": "Ilang taon na ang manager mo?",
+  "managerAgePromptBody": "Wala pang edad ang manager mo sa save na ito. Itakda ito nang isang beses at lalabas ito sa tabi ng pangalan mo. Wala itong binabago sa laro.",
+  "managerAgePromptSet": "Itakda ang edad",
+  "managerAgePromptSkip": "Laktawan",
+  "mgrNewsRetiredAge": "{nation}: magreretiro si {name} ({age}) sa pagma-manage",
+  "editorManagerAge": "Edad",
+  "editorManagerAgeHint": "Walang laman: ang laro ang pipili",
+  "editorIssueManagerAge": "Dapat mula {min} hanggang {max} ang edad ng manager."
 }

@@ -4396,5 +4396,17 @@
   "nationHostThird": "Troisième",
   "nationCoHosts": "Co-organisateur",
   "nationNoStadiums": "Aucun stade enregistré",
-  "nationManageStadiums": "Gérer les stades"
+  "nationManageStadiums": "Gérer les stades",
+  "careerManagerAge": "Âge",
+  "managerAgeRange": "De {min} à {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "La direction s’interroge sur votre succession.",
+  "managerAgePromptTitle": "Quel âge a votre sélectionneur ?",
+  "managerAgePromptBody": "Cette partie n’indique pas encore l’âge de votre sélectionneur. Renseignez-le une fois et il s’affichera à côté de votre nom. Cela ne change rien au jeu.",
+  "managerAgePromptSet": "Indiquer l’âge",
+  "managerAgePromptSkip": "Passer",
+  "mgrNewsRetiredAge": "{nation} : {name} ({age}) met fin à sa carrière d’entraîneur",
+  "editorManagerAge": "Âge",
+  "editorManagerAgeHint": "Vide : le jeu en choisit un",
+  "editorIssueManagerAge": "L’âge du sélectionneur doit être compris entre {min} et {max}."
 }

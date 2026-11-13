@@ -4396,5 +4396,17 @@
   "nationHostThird": "Trzecie miejsce",
   "nationCoHosts": "Współgospodarz",
   "nationNoStadiums": "Brak stadionów w rejestrze",
-  "nationManageStadiums": "Zarządzaj stadionami"
+  "nationManageStadiums": "Zarządzaj stadionami",
+  "careerManagerAge": "Wiek",
+  "managerAgeRange": "Od {min} do {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Zarząd pyta o plany sukcesji.",
+  "managerAgePromptTitle": "Ile lat ma twój selekcjoner?",
+  "managerAgePromptBody": "Ten zapis nie ma jeszcze wieku twojego selekcjonera. Ustaw go raz, a pojawi się obok twojego nazwiska. Nie zmienia niczego w grze.",
+  "managerAgePromptSet": "Ustaw wiek",
+  "managerAgePromptSkip": "Pomiń",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) kończy karierę trenerską",
+  "editorManagerAge": "Wiek",
+  "editorManagerAgeHint": "Puste: wybiera gra",
+  "editorIssueManagerAge": "Wiek selekcjonera musi wynosić od {min} do {max}."
 }

@@ -1021,8 +1021,11 @@ class _ValueText {
             ? l.editorMergePoolOf(nationName(s.nationId))
             : l.editorMergeSquadOf(nationName(s.nationId)),
       final PackNameLists n => l.editorMergeNames(n.first.length, n.sur.length),
-      final ({String name, String nationality}) m =>
-        '${ProfanityFilter.mask(m.name)} (${m.nationality})',
+      final ({String name, String nationality, int? age}) m =>
+        '${ProfanityFilter.mask(m.name)} (${m.nationality})${switch (m.age) {
+          final a? => ', ${l.tacticsAgeOnly(a)}',
+          null => '',
+        }}',
       final ({String name, String code}) n =>
         '${ProfanityFilter.mask(n.name)} (${n.code})',
       final PackReporter r =>

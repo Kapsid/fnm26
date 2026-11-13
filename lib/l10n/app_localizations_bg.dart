@@ -17679,4 +17679,50 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Управление на стадионите';
+
+  @override
+  String get careerManagerAge => 'Възраст';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'От $min до $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'Ръководството пита за плановете за наследник.';
+
+  @override
+  String get managerAgePromptTitle => 'На колко години е селекционерът ти?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Тази кариера още няма възраст за селекционера. Задай я веднъж и тя ще се показва до името ти. В играта не променя нищо.';
+
+  @override
+  String get managerAgePromptSet => 'Задай възраст';
+
+  @override
+  String get managerAgePromptSkip => 'Пропусни';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) се оттегля от треньорството';
+  }
+
+  @override
+  String get editorManagerAge => 'Възраст';
+
+  @override
+  String get editorManagerAgeHint => 'Празно: играта избира';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Възрастта на селекционера трябва да е от $min до $max.';
+  }
 }

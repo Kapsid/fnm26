@@ -4396,5 +4396,17 @@
   "nationHostThird": "Трето място",
   "nationCoHosts": "Съдомакин",
   "nationNoStadiums": "Няма записани стадиони",
-  "nationManageStadiums": "Управление на стадионите"
+  "nationManageStadiums": "Управление на стадионите",
+  "careerManagerAge": "Възраст",
+  "managerAgeRange": "От {min} до {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Ръководството пита за плановете за наследник.",
+  "managerAgePromptTitle": "На колко години е селекционерът ти?",
+  "managerAgePromptBody": "Тази кариера още няма възраст за селекционера. Задай я веднъж и тя ще се показва до името ти. В играта не променя нищо.",
+  "managerAgePromptSet": "Задай възраст",
+  "managerAgePromptSkip": "Пропусни",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) се оттегля от треньорството",
+  "editorManagerAge": "Възраст",
+  "editorManagerAgeHint": "Празно: играта избира",
+  "editorIssueManagerAge": "Възрастта на селекционера трябва да е от {min} до {max}."
 }

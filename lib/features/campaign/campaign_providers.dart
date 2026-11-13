@@ -663,9 +663,12 @@ class CampaignService {
   /// renames a nation the campaign names. The run takes the database's
   /// squads and names but keeps the designed starting ranking (see
   /// `CareerService.create`), so its draws and hosts are the campaign's.
+  /// [managerAge] is the manager's age as the run starts (null: unset, and
+  /// the hub asks once).
   Future<Career> start(
     CampaignDef def, {
     required String managerName,
+    int? managerAge,
     int? worldPackId,
   }) async {
     if (def.needsPro && !_ref.read(premiumUnlockedProvider)) {
@@ -701,6 +704,7 @@ class CampaignService {
         .create(
           nationId: def.nationId,
           managerName: managerName,
+          managerAge: managerAge,
           rngSeed: def.rngSeed,
           countsTowardSlots: false,
           // Inside create, before the calendar is drawn: a dormant nation's

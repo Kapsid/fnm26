@@ -4396,5 +4396,17 @@
   "nationHostThird": "Pronssi",
   "nationCoHosts": "Toinen isäntä",
   "nationNoStadiums": "Ei stadioneita tiedossa",
-  "nationManageStadiums": "Hallinnoi stadioneita"
+  "nationManageStadiums": "Hallinnoi stadioneita",
+  "careerManagerAge": "Ikä",
+  "managerAgeRange": "Välillä {min} ja {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Johto kyselee seuraajasuunnitelmista.",
+  "managerAgePromptTitle": "Kuinka vanha valmentajasi on?",
+  "managerAgePromptBody": "Tässä tallennuksessa ei ole vielä valmentajasi ikää. Aseta se kerran, niin se näkyy nimesi vieressä. Se ei muuta pelissä mitään.",
+  "managerAgePromptSet": "Aseta ikä",
+  "managerAgePromptSkip": "Ohita",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) jättää valmennustyöt",
+  "editorManagerAge": "Ikä",
+  "editorManagerAgeHint": "Tyhjä: peli valitsee",
+  "editorIssueManagerAge": "Valmentajan iän on oltava välillä {min} ja {max}."
 }

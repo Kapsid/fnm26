@@ -18014,4 +18014,51 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Administrează stadioanele';
+
+  @override
+  String get careerManagerAge => 'Vârstă';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Între $min și $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'Conducerea întreabă despre planurile de succesiune.';
+
+  @override
+  String get managerAgePromptTitle =>
+      'Câți ani are selecționerul dumneavoastră?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Această carieră nu are încă vârsta selecționerului. Setați-o o dată și va apărea lângă numele dumneavoastră. Nu schimbă nimic în joc.';
+
+  @override
+  String get managerAgePromptSet => 'Setați vârsta';
+
+  @override
+  String get managerAgePromptSkip => 'Omiteți';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) se retrage din antrenorat';
+  }
+
+  @override
+  String get editorManagerAge => 'Vârstă';
+
+  @override
+  String get editorManagerAgeHint => 'Gol: alege jocul';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Vârsta selecționerului trebuie să fie între $min și $max.';
+  }
 }

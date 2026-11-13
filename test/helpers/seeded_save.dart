@@ -105,6 +105,9 @@ class SeededSave {
   List<Nation> get nations => _nations;
 }
 
+/// The seeded manager's age as his career starts (2026).
+const int seededManagerAge = 45;
+
 /// Seeds the real nations and players, starts a career with the strongest
 /// European nation (which opens on a drawn qualifying campaign, so there is a
 /// draw to be watched), and reads the welcome news so it does not pop over
@@ -123,11 +126,16 @@ class SeededSave {
 /// deadlocks, and the app has no such zone). The manager read itself is
 /// covered in a real zone by test/unit/world_managers/style_agreement_test.dart
 /// and test/unit/match/ai_tactics_blend_test.dart.
+///
+/// The manager is [seededManagerAge], as a career made today is. Pass
+/// [withoutManagerAge] for a save from before ages (no birth year, so the hub
+/// asks for one).
 Future<SeededSave> seedSave(
   WidgetTester tester, {
   FormFactor formFactor = FormFactor.phone,
   List<Override> overrides = const [],
   bool managerStyle = false,
+  bool withoutManagerAge = false,
 }) async {
   // Matches on the Timeline, as before the Pitch view: no Pitch or
   // Timeline question before kick-off.
@@ -162,6 +170,7 @@ Future<SeededSave> seedSave(
                 .create(
                   nationId: seededNationId,
                   managerName: 'M',
+                  managerAge: withoutManagerAge ? null : seededManagerAge,
                   rngSeed: 20260922,
                   // The world every golden and widget test was drawn on:
                   // its hosts as an older save decided them, before the

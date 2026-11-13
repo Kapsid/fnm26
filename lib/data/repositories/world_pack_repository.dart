@@ -22,7 +22,7 @@ typedef _Added = ({
   String? world,
   List<PackSponsor> sponsors,
   List<PackYAccount> yAccounts,
-  Map<int, ({String name, String nationality})> managers,
+  Map<int, ({String name, String nationality, int? age})> managers,
   List<PackStadium> stadiums,
 });
 
@@ -382,7 +382,7 @@ class WorldPackRepository {
   /// The day-one managers career [careerId]'s world names, by nation id;
   /// none for the default world. See [_addedFor]; a world that cannot be
   /// read throws.
-  Future<Map<int, ({String name, String nationality})>> managersFor(
+  Future<Map<int, ({String name, String nationality, int? age})>> managersFor(
     int careerId,
   ) async => (await _addedFor(careerId)).managers;
 
@@ -415,9 +415,10 @@ class WorldPackRepository {
       world: pack.uuid,
       sponsors: List<PackSponsor>.unmodifiable(pack.addedSponsors),
       yAccounts: List<PackYAccount>.unmodifiable(pack.addedYAccounts),
-      managers: Map<int, ({String name, String nationality})>.unmodifiable(
-        pack.managers,
-      ),
+      managers:
+          Map<int, ({String name, String nationality, int? age})>.unmodifiable(
+            pack.managers,
+          ),
       stadiums: List<PackStadium>.unmodifiable(pack.addedStadiums),
     );
     _added[careerId] = (pack: pack, value: value);
@@ -428,7 +429,7 @@ class WorldPackRepository {
     world: null,
     sponsors: <PackSponsor>[],
     yAccounts: <PackYAccount>[],
-    managers: <int, ({String name, String nationality})>{},
+    managers: <int, ({String name, String nationality, int? age})>{},
     stadiums: <PackStadium>[],
   );
 

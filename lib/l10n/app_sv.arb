@@ -4396,5 +4396,17 @@
   "nationHostThird": "Trea",
   "nationCoHosts": "Medvärd",
   "nationNoStadiums": "Inga arenor registrerade",
-  "nationManageStadiums": "Hantera arenor"
+  "nationManageStadiums": "Hantera arenor",
+  "careerManagerAge": "Ålder",
+  "managerAgeRange": "Från {min} till {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Styrelsen frågar om planerna för en efterträdare.",
+  "managerAgePromptTitle": "Hur gammal är din förbundskapten?",
+  "managerAgePromptBody": "Den här karriären har ännu ingen ålder för din förbundskapten. Ange den en gång så visas den vid ditt namn. Den ändrar ingenting i spelet.",
+  "managerAgePromptSet": "Ange ålder",
+  "managerAgePromptSkip": "Hoppa över",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) slutar som tränare",
+  "editorManagerAge": "Ålder",
+  "editorManagerAgeHint": "Tomt: spelet väljer",
+  "editorIssueManagerAge": "Förbundskaptenens ålder måste vara från {min} till {max}."
 }

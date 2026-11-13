@@ -4396,5 +4396,17 @@
   "nationHostThird": "Ketiga",
   "nationCoHosts": "Tuan rumah bersama",
   "nationNoStadiums": "Tiada stadium direkodkan",
-  "nationManageStadiums": "Urus stadium"
+  "nationManageStadiums": "Urus stadium",
+  "careerManagerAge": "Umur",
+  "managerAgeRange": "Dari {min} hingga {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Lembaga bertanya tentang rancangan pengganti.",
+  "managerAgePromptTitle": "Berapakah umur jurulatih anda?",
+  "managerAgePromptBody": "Simpanan ini belum ada umur jurulatih anda. Tetapkan sekali dan ia akan dipaparkan di sebelah nama anda. Ia tidak mengubah apa-apa dalam permainan.",
+  "managerAgePromptSet": "Tetapkan umur",
+  "managerAgePromptSkip": "Langkau",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) bersara daripada kejurulatihan",
+  "editorManagerAge": "Umur",
+  "editorManagerAgeHint": "Kosong: permainan yang memilih",
+  "editorIssueManagerAge": "Umur jurulatih mestilah antara {min} hingga {max}."
 }

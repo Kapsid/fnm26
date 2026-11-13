@@ -4396,5 +4396,17 @@
   "nationHostThird": "Tercero",
   "nationCoHosts": "Coanfitrión",
   "nationNoStadiums": "No hay estadios registrados",
-  "nationManageStadiums": "Gestionar estadios"
+  "nationManageStadiums": "Gestionar estadios",
+  "careerManagerAge": "Edad",
+  "managerAgeRange": "De {min} a {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "La directiva pregunta por los planes de sucesión.",
+  "managerAgePromptTitle": "¿Qué edad tiene tu seleccionador?",
+  "managerAgePromptBody": "Esta partida aún no tiene la edad de tu seleccionador. Indícala una vez y aparecerá junto a tu nombre. No cambia nada en el juego.",
+  "managerAgePromptSet": "Indicar edad",
+  "managerAgePromptSkip": "Omitir",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) se retira de los banquillos",
+  "editorManagerAge": "Edad",
+  "editorManagerAgeHint": "Vacío: lo elige el juego",
+  "editorIssueManagerAge": "La edad del seleccionador debe estar entre {min} y {max}."
 }

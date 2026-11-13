@@ -314,7 +314,7 @@ void main() {
 
     test('a format-3 file that holds managers -> badData', () async {
       final p = _pack().copyWith(
-        managers: {1: (name: 'Ota Brnak', nationality: 'AAA')},
+        managers: {1: (name: 'Ota Brnak', nationality: 'AAA', age: null)},
       );
       final raw = _raw(p);
       raw['format'] = 3;
@@ -380,7 +380,7 @@ void main() {
 
     test('export writes format 4 once the pack names a manager', () async {
       final p = _pack().copyWith(
-        managers: {1: (name: 'Ota Brnak', nationality: 'AAA')},
+        managers: {1: (name: 'Ota Brnak', nationality: 'AAA', age: null)},
       );
       final bytes = PackCodec.encode(p, const {});
       final top =
@@ -401,9 +401,9 @@ void main() {
       () async {
         final p = _pack().copyWith(
           managers: {
-            1: (name: 'Ota Brnak', nationality: 'bbb'),
-            2: (name: '  ', nationality: 'AAA'),
-            3: (name: 'Lew Ward', nationality: 'AAA'),
+            1: (name: 'Ota Brnak', nationality: 'bbb', age: null),
+            2: (name: '  ', nationality: 'AAA', age: null),
+            3: (name: 'Lew Ward', nationality: 'AAA', age: null),
           },
         );
         final r = await PackCodec.decode(
@@ -412,11 +412,13 @@ void main() {
         );
         expect(r, isA<PackDecoded>());
         expect((r as PackDecoded).pack.managers, {
-          1: (name: 'Ota Brnak', nationality: 'bbb'),
+          1: (name: 'Ota Brnak', nationality: 'bbb', age: null),
         });
         final unknownCode = await PackCodec.decode(
           PackCodec.encode(
-            _pack().copyWith(managers: {1: (name: 'X Y', nationality: 'ZZZ')}),
+            _pack().copyWith(
+              managers: {1: (name: 'X Y', nationality: 'ZZZ', age: null)},
+            ),
             const {},
           ),
           baseCodes: const {1: 'AAA'},
@@ -428,7 +430,9 @@ void main() {
     test('a usable manager with too long a name refuses the file', () async {
       final r = await PackCodec.decode(
         PackCodec.encode(
-          _pack().copyWith(managers: {1: (name: 'A' * 41, nationality: 'AAA')}),
+          _pack().copyWith(
+            managers: {1: (name: 'A' * 41, nationality: 'AAA', age: null)},
+          ),
           const {},
         ),
         baseCodes: const {1: 'AAA'},
