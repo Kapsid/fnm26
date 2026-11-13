@@ -432,6 +432,8 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
     traitsByPlayer: traitsOf(fullPool),
     penaltyTakerId: takers.penalty,
     deadBallTakerId: takers.deadBall,
+    // The whole order: the next man listed steps up when the first is off.
+    setPieceOrder: takers,
     throwInStyle: tactic?.throwInStyle ?? ThrowInStyle.neutral,
     throwInTakerId: throwInTaker,
   );

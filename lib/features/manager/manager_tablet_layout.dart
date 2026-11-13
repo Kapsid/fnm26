@@ -52,6 +52,7 @@ class _ManagerTabletLayout extends ConsumerWidget {
                           _NameCard(
                             careerId: careerId,
                             name: view.career.managerName,
+                            age: managerAgeOf(view.career),
                           ),
                           const SizedBox(height: AppSpacing.md),
                           // Read-only: hiring is on the budget screen, where

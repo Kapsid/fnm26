@@ -1214,8 +1214,49 @@ class AppLocalizationsRo extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ROLURI ȘI FAZE FIXE';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Dați fiecărui titular un rol. Atingeți insigna de penalty (⚽) sau lovitură liberă (▲) ca să alegeți executantul.';
+  String get tacticsSectionRoles => 'Roluri';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Lovituri libere';
+
+  @override
+  String get tacticsSectionCorners => 'Cornere';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Atingeți un jucător pentru a-l desemna. Atingeți-l din nou pentru a lăsa alegerea antrenorului.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Cine execută penalty-urile, până la trei în ordine. Dacă primul nu este pe teren, execută următorul.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Cine execută loviturile libere din zona porții, până la trei în ordine. Dacă primul nu este pe teren, execută următorul.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Cornerele din fiecare parte au propriii executanți, până la doi în ordine. Dacă primul nu este pe teren, execută următorul.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Atingeți jucătorii în ordinea în care trebuie să execute. Atingeți un jucător numerotat pentru a-l scoate din listă.';
+
+  @override
+  String get tacticsCornersLeft => 'Din stânga';
+
+  @override
+  String get tacticsCornersRight => 'Din dreapta';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Cine execută aruncările lungi de la margine. Dacă primul nu este pe teren, execută al doilea.';
+
+  @override
+  String get tacticsPickBest => 'Alegeți cel mai bun';
+
+  @override
+  String get tacticsSameAsPenalties => 'Ca la penalty-uri';
 
   @override
   String get tacticsTooltipCallUps => 'Convocări';
@@ -18109,5 +18150,52 @@ class AppLocalizationsRo extends AppLocalizations {
       one: 'încă 1 meci',
     );
     return '$month: $_temp0';
+  }
+
+  @override
+  String get careerManagerAge => 'Vârstă';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Între $min și $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'Conducerea întreabă despre planurile de succesiune.';
+
+  @override
+  String get managerAgePromptTitle =>
+      'Câți ani are selecționerul dumneavoastră?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Această carieră nu are încă vârsta selecționerului. Setați-o o dată și va apărea lângă numele dumneavoastră. Nu schimbă nimic în joc.';
+
+  @override
+  String get managerAgePromptSet => 'Setați vârsta';
+
+  @override
+  String get managerAgePromptSkip => 'Omiteți';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) se retrage din antrenorat';
+  }
+
+  @override
+  String get editorManagerAge => 'Vârstă';
+
+  @override
+  String get editorManagerAgeHint => 'Gol: alege jocul';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Vârsta selecționerului trebuie să fie între $min și $max.';
   }
 }

@@ -1197,8 +1197,49 @@ class AppLocalizationsPl extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ROLE I STAŁE FRAGMENTY';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Daj każdemu zawodnikowi z wyjściowego składu rolę. Dotknij plakietki rzutu karnego (⚽) lub rzutu wolnego (▲), by wyznaczyć wykonawcę.';
+  String get tacticsSectionRoles => 'Role';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Rzuty wolne';
+
+  @override
+  String get tacticsSectionCorners => 'Rożne';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Stuknij zawodnika, aby go wyznaczyć. Stuknij ponownie, aby zostawić wybór trenerowi.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Kto strzela rzuty karne, do trzech w kolejności. Gdy pierwszego nie ma na boisku, strzela następny.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Kto wykonuje rzuty wolne w zasięgu bramki, do trzech w kolejności. Gdy pierwszego nie ma na boisku, wykonuje następny.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Rzuty rożne z każdej strony mają własnych wykonawców, do dwóch w kolejności. Gdy pierwszego nie ma na boisku, wykonuje następny.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Stukaj zawodników w kolejności, w jakiej mają wykonywać. Stuknij zawodnika z numerem, aby usunąć go z listy.';
+
+  @override
+  String get tacticsCornersLeft => 'Z lewej';
+
+  @override
+  String get tacticsCornersRight => 'Z prawej';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Kto wykonuje długie wrzuty z autu. Gdy pierwszego nie ma na boisku, wykonuje drugi.';
+
+  @override
+  String get tacticsPickBest => 'Wybierz najlepszego';
+
+  @override
+  String get tacticsSameAsPenalties => 'Jak karne';
 
   @override
   String get tacticsTooltipCallUps => 'Powołania';
@@ -17878,5 +17919,50 @@ class AppLocalizationsPl extends AppLocalizations {
       one: 'jeszcze 1 mecz',
     );
     return '$month: $_temp0';
+  }
+
+  @override
+  String get careerManagerAge => 'Wiek';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Od $min do $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession => 'Zarząd pyta o plany sukcesji.';
+
+  @override
+  String get managerAgePromptTitle => 'Ile lat ma twój selekcjoner?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Ten zapis nie ma jeszcze wieku twojego selekcjonera. Ustaw go raz, a pojawi się obok twojego nazwiska. Nie zmienia niczego w grze.';
+
+  @override
+  String get managerAgePromptSet => 'Ustaw wiek';
+
+  @override
+  String get managerAgePromptSkip => 'Pomiń';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) kończy karierę trenerską';
+  }
+
+  @override
+  String get editorManagerAge => 'Wiek';
+
+  @override
+  String get editorManagerAgeHint => 'Puste: wybiera gra';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Wiek selekcjonera musi wynosić od $min do $max.';
   }
 }

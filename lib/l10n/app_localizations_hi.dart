@@ -1194,8 +1194,49 @@ class AppLocalizationsHi extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'रोल और सेट पीस';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'हर स्टार्टर को एक रोल दें। टेकर तय करने के लिए पेनल्टी (⚽) या फ़्री-किक (▲) बैज पर टैप करें।';
+  String get tacticsSectionRoles => 'भूमिकाएँ';
+
+  @override
+  String get tacticsSectionFreeKicks => 'फ़्री-किक';
+
+  @override
+  String get tacticsSectionCorners => 'कॉर्नर';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'किसी खिलाड़ी को चुनने के लिए टैप करें। दोबारा टैप करें तो फ़ैसला कोच पर छोड़ दिया जाएगा।';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'पेनल्टी कौन लेगा, क्रम से तीन तक। अगर पहला मैदान पर नहीं है, तो अगला लेगा।';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'गोल की रेंज में फ़्री-किक कौन लेगा, क्रम से तीन तक। अगर पहला मैदान पर नहीं है, तो अगला लेगा।';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'हर तरफ़ के कॉर्नर के अपने टेकर हैं, क्रम से दो तक। अगर पहला मैदान पर नहीं है, तो अगला लेगा।';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'खिलाड़ियों को उसी क्रम में टैप करें जिसमें उन्हें किक लेनी है। किसी नंबर वाले खिलाड़ी को सूची से हटाने के लिए उसे टैप करें।';
+
+  @override
+  String get tacticsCornersLeft => 'बाईं ओर से';
+
+  @override
+  String get tacticsCornersRight => 'दाईं ओर से';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'लंबे थ्रो-इन कौन लेगा। अगर पहला मैदान पर नहीं है, तो दूसरा लेगा।';
+
+  @override
+  String get tacticsPickBest => 'सर्वश्रेष्ठ चुनें';
+
+  @override
+  String get tacticsSameAsPenalties => 'पेनल्टी जैसा';
 
   @override
   String get tacticsTooltipCallUps => 'कॉल-अप';
@@ -17594,5 +17635,51 @@ class AppLocalizationsHi extends AppLocalizations {
       one: '1 और मैच',
     );
     return '$month: $_temp0';
+  }
+
+  @override
+  String get careerManagerAge => 'उम्र';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return '$min से $max तक';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'बोर्ड उत्तराधिकारी की योजना के बारे में पूछ रहा है।';
+
+  @override
+  String get managerAgePromptTitle => 'आपके मैनेजर की उम्र कितनी है?';
+
+  @override
+  String get managerAgePromptBody =>
+      'इस सेव में अभी आपके मैनेजर की उम्र नहीं है। इसे एक बार सेट करें, यह आपके नाम के साथ दिखेगी। इससे गेम में कुछ नहीं बदलता।';
+
+  @override
+  String get managerAgePromptSet => 'उम्र सेट करें';
+
+  @override
+  String get managerAgePromptSkip => 'छोड़ें';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) ने कोचिंग से संन्यास लिया';
+  }
+
+  @override
+  String get editorManagerAge => 'उम्र';
+
+  @override
+  String get editorManagerAgeHint => 'खाली: गेम खुद चुनेगा';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'मैनेजर की उम्र $min से $max के बीच होनी चाहिए।';
   }
 }

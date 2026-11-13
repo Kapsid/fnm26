@@ -1254,8 +1254,49 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ROLE A STANDARDKY';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Přiřaďte každému hráči roli. Klepnutím na odznak penalty (⚽) nebo přímého kopu (▲) určete vykonavatele.';
+  String get tacticsSectionRoles => 'Role';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Přímé kopy';
+
+  @override
+  String get tacticsSectionCorners => 'Rohy';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Klepnutím hráče určíte. Dalším klepnutím volbu necháte na trenérovi.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Kdo kope penalty, až tři hráči v pořadí. Když první není na hřišti, kope další.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Kdo kope přímé kopy v dosahu brány, až tři hráči v pořadí. Když první není na hřišti, kope další.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Rohy z každé strany mají vlastní exekutory, až dva v pořadí. Když první není na hřišti, kope další.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Klepejte na hráče v pořadí, v jakém mají kopat. Klepnutím na očíslovaného hráče ho ze seznamu odeberete.';
+
+  @override
+  String get tacticsCornersLeft => 'Zleva';
+
+  @override
+  String get tacticsCornersRight => 'Zprava';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Kdo hází dlouhé auty. Když první není na hřišti, hází druhý.';
+
+  @override
+  String get tacticsPickBest => 'Vybrat nejlepšího';
+
+  @override
+  String get tacticsSameAsPenalties => 'Jako penalty';
 
   @override
   String get tacticsTooltipCallUps => 'Nominace';
@@ -18081,5 +18122,51 @@ class AppLocalizationsCs extends AppLocalizations {
       one: 'ještě 1 zápas',
     );
     return '$month: $_temp0';
+  }
+
+  @override
+  String get careerManagerAge => 'Věk';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Od $min do $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'Vedení svazu se ptá, kdo by vás jednou mohl nahradit.';
+
+  @override
+  String get managerAgePromptTitle => 'Kolik je vašemu trenérovi let?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Tato hra zatím nemá uvedený věk trenéra. Zadejte ho jednou a bude se zobrazovat u vašeho jména. Na hru nemá žádný vliv.';
+
+  @override
+  String get managerAgePromptSet => 'Zadat věk';
+
+  @override
+  String get managerAgePromptSkip => 'Přeskočit';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: trenér $name ($age) končí s trénováním';
+  }
+
+  @override
+  String get editorManagerAge => 'Věk';
+
+  @override
+  String get editorManagerAgeHint => 'Prázdné: vybere hra';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Věk trenéra musí být od $min do $max.';
   }
 }

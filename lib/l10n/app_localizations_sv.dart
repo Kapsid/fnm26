@@ -1232,8 +1232,49 @@ class AppLocalizationsSv extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ROLLER & FASTA';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Ge varje startspelare en roll. Tryck på straff- (⚽) eller frisparksmärket (▲) för att utse din utförare.';
+  String get tacticsSectionRoles => 'Roller';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Frisparkar';
+
+  @override
+  String get tacticsSectionCorners => 'Hörnor';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Tryck på en spelare för att utse honom. Tryck igen för att låta tränaren välja.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Vem som slår straffarna, upp till tre i ordning. Om den förste inte är på planen slår nästa.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Vem som slår frisparkar inom skotthåll, upp till tre i ordning. Om den förste inte är på planen slår nästa.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Hörnor från varje sida har egna läggare, upp till två i ordning. Om den förste inte är på planen slår nästa.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Tryck på spelarna i den ordning de ska slå. Tryck på en numrerad spelare för att ta bort honom från listan.';
+
+  @override
+  String get tacticsCornersLeft => 'Från vänster';
+
+  @override
+  String get tacticsCornersRight => 'Från höger';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Vem som tar de långa inkasten. Om den förste inte är på planen tar den andre.';
+
+  @override
+  String get tacticsPickBest => 'Välj bästa';
+
+  @override
+  String get tacticsSameAsPenalties => 'Samma som straffar';
 
   @override
   String get tacticsTooltipCallUps => 'Uttagning';
@@ -17672,5 +17713,51 @@ class AppLocalizationsSv extends AppLocalizations {
       one: '1 match till',
     );
     return '$month: $_temp0';
+  }
+
+  @override
+  String get careerManagerAge => 'Ålder';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Från $min till $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'Styrelsen frågar om planerna för en efterträdare.';
+
+  @override
+  String get managerAgePromptTitle => 'Hur gammal är din förbundskapten?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Den här karriären har ännu ingen ålder för din förbundskapten. Ange den en gång så visas den vid ditt namn. Den ändrar ingenting i spelet.';
+
+  @override
+  String get managerAgePromptSet => 'Ange ålder';
+
+  @override
+  String get managerAgePromptSkip => 'Hoppa över';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) slutar som tränare';
+  }
+
+  @override
+  String get editorManagerAge => 'Ålder';
+
+  @override
+  String get editorManagerAgeHint => 'Tomt: spelet väljer';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Förbundskaptenens ålder måste vara från $min till $max.';
   }
 }

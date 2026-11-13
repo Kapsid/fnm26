@@ -1248,8 +1248,49 @@ class AppLocalizationsFi extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ROOLIT JA VAKIOT';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Anna jokaiselle aloittajalle rooli. Napauta rangaistuspotkun (⚽) tai vapaapotkun (▲) merkkiä valitaksesi potkijan.';
+  String get tacticsSectionRoles => 'Roolit';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Vapaapotkut';
+
+  @override
+  String get tacticsSectionCorners => 'Kulmapotkut';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Napauta pelaajaa valitaksesi hänet. Napauta uudelleen, niin valmentaja päättää.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Kuka laukoo rangaistuspotkut, enintään kolme järjestyksessä. Jos ensimmäinen ei ole kentällä, laukoo seuraava.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Kuka potkaisee vapaapotkut ampumaetäisyydeltä, enintään kolme järjestyksessä. Jos ensimmäinen ei ole kentällä, potkaisee seuraava.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Kummankin puolen kulmapotkuilla on omat potkaisijansa, enintään kaksi järjestyksessä. Jos ensimmäinen ei ole kentällä, potkaisee seuraava.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Napauta pelaajia siinä järjestyksessä, jossa heidän pitää potkaista. Napauta numeroitua pelaajaa poistaaksesi hänet listalta.';
+
+  @override
+  String get tacticsCornersLeft => 'Vasemmalta';
+
+  @override
+  String get tacticsCornersRight => 'Oikealta';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Kuka heittää pitkät rajaheitot. Jos ensimmäinen ei ole kentällä, heittää toinen.';
+
+  @override
+  String get tacticsPickBest => 'Valitse paras';
+
+  @override
+  String get tacticsSameAsPenalties => 'Kuten rangaistuspotkut';
 
   @override
   String get tacticsTooltipCallUps => 'Kutsut';
@@ -17762,5 +17803,50 @@ class AppLocalizationsFi extends AppLocalizations {
       one: 'vielä 1 ottelu',
     );
     return '$month: $_temp0';
+  }
+
+  @override
+  String get careerManagerAge => 'Ikä';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Välillä $min ja $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession => 'Johto kyselee seuraajasuunnitelmista.';
+
+  @override
+  String get managerAgePromptTitle => 'Kuinka vanha valmentajasi on?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Tässä tallennuksessa ei ole vielä valmentajasi ikää. Aseta se kerran, niin se näkyy nimesi vieressä. Se ei muuta pelissä mitään.';
+
+  @override
+  String get managerAgePromptSet => 'Aseta ikä';
+
+  @override
+  String get managerAgePromptSkip => 'Ohita';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) jättää valmennustyöt';
+  }
+
+  @override
+  String get editorManagerAge => 'Ikä';
+
+  @override
+  String get editorManagerAgeHint => 'Tyhjä: peli valitsee';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Valmentajan iän on oltava välillä $min ja $max.';
   }
 }

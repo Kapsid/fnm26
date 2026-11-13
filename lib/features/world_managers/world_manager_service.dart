@@ -731,6 +731,7 @@ class WorldManagerService {
     );
     if (news.isEmpty && !summary) return;
     final names = {for (final m in w.managers) m.managerId: m.name};
+    final born = {for (final m in w.managers) m.managerId: m.birthYear};
     final l = _ref.read(appLocalizationsProvider);
     for (final m in news) {
       final msg = ManagerNews.message(
@@ -738,6 +739,10 @@ class WorldManagerService {
         nation: byId[m.nationId]?.name ?? '',
         outgoing: names[m.outgoingId],
         incoming: names[m.incomingId],
+        outgoingAge: switch (born[m.outgoingId]) {
+          final year? => m.date.year - year,
+          null => null,
+        },
       );
       if (msg == null) continue;
       await comp.addTextMessage(

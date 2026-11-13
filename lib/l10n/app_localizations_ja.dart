@@ -1153,8 +1153,45 @@ class AppLocalizationsJa extends AppLocalizations {
   String get tacticsTabRolesSetPieces => '役割とセットプレー';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      '先発選手それぞれに役割を与えます。PK（⚽）またはFK（▲）のバッジをタップしてキッカーを決めます。';
+  String get tacticsSectionRoles => '役割';
+
+  @override
+  String get tacticsSectionFreeKicks => 'FK';
+
+  @override
+  String get tacticsSectionCorners => 'CK';
+
+  @override
+  String get tacticsTakerTapHint => '選手をタップして指名します。もう一度タップするとコーチに任せます。';
+
+  @override
+  String get tacticsPenaltiesBlurb => 'PKを蹴る選手を順番に最大3人。1人目がピッチにいなければ次の選手が蹴ります。';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'ゴールを狙える位置のFKを蹴る選手を順番に最大3人。1人目がピッチにいなければ次の選手が蹴ります。';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'CKは左右それぞれにキッカーを順番に最大2人。1人目がピッチにいなければ次の選手が蹴ります。';
+
+  @override
+  String get tacticsOrderTapHint => '蹴る順番に選手をタップします。番号の付いた選手をタップするとリストから外れます。';
+
+  @override
+  String get tacticsCornersLeft => '左から';
+
+  @override
+  String get tacticsCornersRight => '右から';
+
+  @override
+  String get tacticsThrowInsBlurb => 'ロングスローを投げる選手。1人目がピッチにいなければ2人目が投げます。';
+
+  @override
+  String get tacticsPickBest => '最適な選手を選ぶ';
+
+  @override
+  String get tacticsSameAsPenalties => 'PKと同じ';
 
   @override
   String get tacticsTooltipCallUps => '招集';
@@ -17063,5 +17100,50 @@ class AppLocalizationsJa extends AppLocalizations {
       other: 'あと$count試合',
     );
     return '$month: $_temp0';
+  }
+
+  @override
+  String get careerManagerAge => '年齢';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return '$min〜$max歳';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name（$age）';
+  }
+
+  @override
+  String get managerSuccession => '協会が後継者の計画について尋ねています。';
+
+  @override
+  String get managerAgePromptTitle => '監督は何歳ですか？';
+
+  @override
+  String get managerAgePromptBody =>
+      'このセーブにはまだ監督の年齢がありません。一度設定すると名前の横に表示されます。ゲームの内容には影響しません。';
+
+  @override
+  String get managerAgePromptSet => '年齢を設定';
+
+  @override
+  String get managerAgePromptSkip => 'スキップ';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name（$age）が指導者を引退';
+  }
+
+  @override
+  String get editorManagerAge => '年齢';
+
+  @override
+  String get editorManagerAgeHint => '空欄: ゲームが決めます';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return '監督の年齢は$min〜$max歳にしてください。';
   }
 }

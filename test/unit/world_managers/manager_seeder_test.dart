@@ -44,7 +44,7 @@ final DateTime _asOf = DateTime(2030, 9);
 
 ManagerWorld _seed(
   int seed, {
-  Map<int, ({String name, String nationality})> pack = const {},
+  Map<int, ({String name, String nationality, int? age})> pack = const {},
 }) => ManagerSeeder.seed(
   rngSeed: seed,
   seedCycle: 1,
@@ -334,8 +334,31 @@ void main() {
     );
   });
 
+  test('a pack manager with an age is that age on the day he is seeded', () {
+    const aged = (name: 'Ota Brnak', nationality: 'CZE', age: 63);
+    final w = _seed(5, pack: {1: aged});
+    final m = w.managers.firstWhere(
+      (m) => m.managerId == w.currentAt(1)!.managerId,
+    );
+    expect(m.name, 'Ota Brnak');
+    expect(m.birthYear, _asOf.year - 63);
+    // Every other draw is as the world without his age: the drawn age is
+    // still drawn.
+    const plainNamed = (name: 'Ota Brnak', nationality: 'CZE', age: null);
+    final plain = _seed(5, pack: {1: plainNamed});
+    for (final n in _nations.where((n) => n.id != 1 && n.id != _player)) {
+      final a = w.managers.firstWhere(
+        (m) => m.managerId == w.currentAt(n.id)!.managerId,
+      );
+      final b = plain.managers.firstWhere(
+        (m) => m.managerId == plain.currentAt(n.id)!.managerId,
+      );
+      expect((a.name, a.birthYear), (b.name, b.birthYear), reason: n.code);
+    }
+  });
+
   test('a pack manager keeps its name and nationality', () {
-    const named = (name: 'Ota Brnak', nationality: 'CZE');
+    const named = (name: 'Ota Brnak', nationality: 'CZE', age: null);
     final w = _seed(5, pack: {1: named, _player: named});
     final spell = w.currentAt(1)!;
     final m = w.managers.firstWhere((m) => m.managerId == spell.managerId);

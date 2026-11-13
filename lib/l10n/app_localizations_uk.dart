@@ -1195,8 +1195,49 @@ class AppLocalizationsUk extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'РОЛІ І СТАНДАРТИ';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Дай кожному гравцю основи роль. Торкнись значка пенальті (⚽) або штрафного (▲), щоб обрати виконавця.';
+  String get tacticsSectionRoles => 'Ролі';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Штрафні';
+
+  @override
+  String get tacticsSectionCorners => 'Кутові';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Торкнися гравця, щоб призначити його. Торкнися ще раз, щоб залишити вибір тренерові.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Хто б’є пенальті, до трьох по черзі. Якщо першого немає на полі, б’є наступний.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Хто б’є штрафні в зоні удару, до трьох по черзі. Якщо першого немає на полі, б’є наступний.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Кутові з кожного боку мають своїх виконавців, до двох по черзі. Якщо першого немає на полі, б’є наступний.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Торкайся гравців у тому порядку, в якому вони мають бити. Торкнися гравця з номером, щоб прибрати його зі списку.';
+
+  @override
+  String get tacticsCornersLeft => 'Зліва';
+
+  @override
+  String get tacticsCornersRight => 'Справа';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Хто виконує довгі вкидання. Якщо першого немає на полі, виконує другий.';
+
+  @override
+  String get tacticsPickBest => 'Обрати найкращого';
+
+  @override
+  String get tacticsSameAsPenalties => 'Як пенальті';
 
   @override
   String get tacticsTooltipCallUps => 'Виклики';
@@ -18017,5 +18058,51 @@ class AppLocalizationsUk extends AppLocalizations {
       one: 'ще $count матч',
     );
     return '$month: $_temp0';
+  }
+
+  @override
+  String get careerManagerAge => 'Вік';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Від $min до $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'Керівництво питає про плани щодо наступника.';
+
+  @override
+  String get managerAgePromptTitle => 'Скільки років твоєму тренерові?';
+
+  @override
+  String get managerAgePromptBody =>
+      'У цьому збереженні ще немає віку твого тренера. Вкажи його один раз, і він показуватиметься поруч з іменем. На гру це не впливає.';
+
+  @override
+  String get managerAgePromptSet => 'Вказати вік';
+
+  @override
+  String get managerAgePromptSkip => 'Пропустити';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) завершує тренерську кар’єру';
+  }
+
+  @override
+  String get editorManagerAge => 'Вік';
+
+  @override
+  String get editorManagerAgeHint => 'Порожньо: обирає гра';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Вік тренера має бути від $min до $max.';
   }
 }

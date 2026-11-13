@@ -1201,8 +1201,49 @@ class AppLocalizationsId extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'PERAN & BOLA MATI';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Beri tiap pemain inti sebuah peran. Ketuk lencana penalti (⚽) atau tendangan bebas (▲) untuk menunjuk eksekutor.';
+  String get tacticsSectionRoles => 'Peran';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Tendangan bebas';
+
+  @override
+  String get tacticsSectionCorners => 'Sepak pojok';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Ketuk pemain untuk menunjuknya. Ketuk lagi untuk menyerahkan pilihan kepada pelatih.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Siapa yang mengambil penalti, hingga tiga orang berurutan. Jika yang pertama tidak di lapangan, yang berikutnya mengambilnya.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Siapa yang mengambil tendangan bebas dalam jangkauan gawang, hingga tiga orang berurutan. Jika yang pertama tidak di lapangan, yang berikutnya mengambilnya.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Sepak pojok dari tiap sisi punya eksekutor sendiri, hingga dua orang berurutan. Jika yang pertama tidak di lapangan, yang berikutnya mengambilnya.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Ketuk pemain sesuai urutan mereka mengambil bola. Ketuk pemain bernomor untuk mengeluarkannya dari daftar.';
+
+  @override
+  String get tacticsCornersLeft => 'Dari kiri';
+
+  @override
+  String get tacticsCornersRight => 'Dari kanan';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Siapa yang melakukan lemparan ke dalam jauh. Jika yang pertama tidak di lapangan, yang kedua melakukannya.';
+
+  @override
+  String get tacticsPickBest => 'Pilih yang terbaik';
+
+  @override
+  String get tacticsSameAsPenalties => 'Sama dengan penalti';
 
   @override
   String get tacticsTooltipCallUps => 'Pemanggilan';
@@ -17597,5 +17638,50 @@ class AppLocalizationsId extends AppLocalizations {
       other: '$count laga lagi',
     );
     return '$month: $_temp0';
+  }
+
+  @override
+  String get careerManagerAge => 'Usia';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Dari $min sampai $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession => 'Dewan menanyakan rencana suksesi.';
+
+  @override
+  String get managerAgePromptTitle => 'Berapa usia pelatih Anda?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Simpanan ini belum memiliki usia pelatih Anda. Atur sekali dan usia akan tampil di samping nama Anda. Tidak mengubah apa pun dalam permainan.';
+
+  @override
+  String get managerAgePromptSet => 'Atur usia';
+
+  @override
+  String get managerAgePromptSkip => 'Lewati';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) pensiun dari dunia kepelatihan';
+  }
+
+  @override
+  String get editorManagerAge => 'Usia';
+
+  @override
+  String get editorManagerAgeHint => 'Kosong: permainan yang memilih';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Usia pelatih harus antara $min dan $max.';
   }
 }

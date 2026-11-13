@@ -2178,11 +2178,83 @@ abstract class AppLocalizations {
   /// **'ROLES & SET PIECES'**
   String get tacticsTabRolesSetPieces;
 
-  /// Blurb for the merged roles & set-pieces tab.
+  /// Roles & set pieces tab, sub-tab chip: each starter's role.
   ///
   /// In en, this message translates to:
-  /// **'Give each starter a role. Tap the penalty (⚽) or free-kick (▲) badge to set your taker.'**
-  String get tacticsRolesSetPiecesBlurb;
+  /// **'Roles'**
+  String get tacticsSectionRoles;
+
+  /// Roles & set pieces tab, sub-tab chip: the free-kick taker.
+  ///
+  /// In en, this message translates to:
+  /// **'Free kicks'**
+  String get tacticsSectionFreeKicks;
+
+  /// Roles & set pieces tab, sub-tab chip: the corner takers (left and right).
+  ///
+  /// In en, this message translates to:
+  /// **'Corners'**
+  String get tacticsSectionCorners;
+
+  /// Set-piece sub-tabs: how the taker list works. Tapping the named taker again hands the choice back to the automatic pick.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a player to name him. Tap him again to leave it to the coach.'**
+  String get tacticsTakerTapHint;
+
+  /// Penalties sub-tab intro. Up to three takers in order (marked 1., 2., 3.); the next one listed steps up if the first is not on the pitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Who takes the penalties, up to three in order. If the first is not on the pitch, the next one takes them.'**
+  String get tacticsPenaltiesBlurb;
+
+  /// Free kicks sub-tab intro. Up to three takers in order; the next one listed steps up if the first is not on the pitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Who takes free kicks within range of goal, up to three in order. If the first is not on the pitch, the next one takes them.'**
+  String get tacticsFreeKicksBlurb;
+
+  /// Corners sub-tab intro. Corners from the left and from the right each have their own ordered takers (up to two).
+  ///
+  /// In en, this message translates to:
+  /// **'Corners from each side have their own takers, up to two in order. If the first is not on the pitch, the next one takes them.'**
+  String get tacticsCornersBlurb;
+
+  /// Penalties, free kicks and corners sub-tabs: how the ordered taker list works. Tapping an unnumbered player adds him to the end of the order; tapping a numbered one removes him.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap players in the order they should take it. Tap a numbered player to take him off the list.'**
+  String get tacticsOrderTapHint;
+
+  /// Corners sub-tab: heading over the takers of corners taken from the left side.
+  ///
+  /// In en, this message translates to:
+  /// **'From the left'**
+  String get tacticsCornersLeft;
+
+  /// Corners sub-tab: heading over the takers of corners taken from the right side.
+  ///
+  /// In en, this message translates to:
+  /// **'From the right'**
+  String get tacticsCornersRight;
+
+  /// Throw-ins sub-tab intro.
+  ///
+  /// In en, this message translates to:
+  /// **'Who takes the long throws. If the first is not on the pitch, the second takes them.'**
+  String get tacticsThrowInsBlurb;
+
+  /// Set-piece sub-tabs: button naming the best-suited man as the taker.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick best'**
+  String get tacticsPickBest;
+
+  /// Free kicks sub-tab: button giving the free kicks to the penalty taker.
+  ///
+  /// In en, this message translates to:
+  /// **'Same as penalties'**
+  String get tacticsSameAsPenalties;
 
   /// Tooltip for the call-ups action.
   ///
@@ -26755,6 +26827,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{month}: {count, plural, =1{1 more match} other{{count} more matches}}'**
   String hubNextWindowLabel(String month, int count);
+
+  /// New game: label of the manager's age field, beside his name.
+  ///
+  /// In en, this message translates to:
+  /// **'Age'**
+  String get careerManagerAge;
+
+  /// Under an age field when the number typed is outside the allowed range.
+  ///
+  /// In en, this message translates to:
+  /// **'From {min} to {max}'**
+  String managerAgeRange(int min, int max);
+
+  /// The manager's name with his age in brackets (offers, press room, career summary, managers list, match preview).
+  ///
+  /// In en, this message translates to:
+  /// **'{name} ({age})'**
+  String managerNameAge(String name, int age);
+
+  /// Manager page, under his age once he is 70 or older: flavour only, nothing ends the career.
+  ///
+  /// In en, this message translates to:
+  /// **'The board asks about succession plans.'**
+  String get managerSuccession;
+
+  /// Hub card (once, on a save made before ages existed) and its dialog: asks the manager's age.
+  ///
+  /// In en, this message translates to:
+  /// **'How old is your manager?'**
+  String get managerAgePromptTitle;
+
+  /// Hub card body under managerAgePromptTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This save has no age for your manager yet. Set it once and it is shown beside your name. It changes nothing in the game.'**
+  String get managerAgePromptBody;
+
+  /// Hub card button: opens the age dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Set age'**
+  String get managerAgePromptSet;
+
+  /// Hub card button: puts the question away for good.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get managerAgePromptSkip;
+
+  /// News title when a world manager retires, with his age in brackets.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation}: {name} ({age}) retires from management'**
+  String mgrNewsRetiredAge(String nation, String name, int age);
+
+  /// Editor, managers section: label of the day-one manager's age field.
+  ///
+  /// In en, this message translates to:
+  /// **'Age'**
+  String get editorManagerAge;
+
+  /// Editor, managers section: hint in the empty age field (the game then draws an age).
+  ///
+  /// In en, this message translates to:
+  /// **'Empty: the game picks one'**
+  String get editorManagerAgeHint;
+
+  /// Editor issue: a day-one manager's age outside the allowed range.
+  ///
+  /// In en, this message translates to:
+  /// **'The manager\'s age must be from {min} to {max}.'**
+  String editorIssueManagerAge(int min, int max);
 }
 
 class _AppLocalizationsDelegate

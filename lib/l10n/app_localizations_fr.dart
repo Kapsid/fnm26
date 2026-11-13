@@ -1245,8 +1245,49 @@ class AppLocalizationsFr extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'RÔLES ET CPA';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Donnez un rôle à chaque titulaire. Touchez le badge penalty (⚽) ou coup franc (▲) pour désigner votre tireur.';
+  String get tacticsSectionRoles => 'Rôles';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Coups francs';
+
+  @override
+  String get tacticsSectionCorners => 'Corners';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Touchez un joueur pour le désigner. Touchez-le à nouveau pour laisser le choix à l’entraîneur.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Qui tire les penalties, jusqu’à trois dans l’ordre. Si le premier n’est pas sur le terrain, le suivant s’en charge.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Qui tire les coups francs à portée du but, jusqu’à trois dans l’ordre. Si le premier n’est pas sur le terrain, le suivant s’en charge.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Les corners de chaque côté ont leurs propres tireurs, jusqu’à deux dans l’ordre. Si le premier n’est pas sur le terrain, le suivant s’en charge.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Touchez les joueurs dans l’ordre où ils doivent tirer. Touchez un joueur numéroté pour le retirer de la liste.';
+
+  @override
+  String get tacticsCornersLeft => 'Côté gauche';
+
+  @override
+  String get tacticsCornersRight => 'Côté droit';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Qui effectue les longues touches. Si le premier n’est pas sur le terrain, le deuxième s’en charge.';
+
+  @override
+  String get tacticsPickBest => 'Choisir le meilleur';
+
+  @override
+  String get tacticsSameAsPenalties => 'Comme les penalties';
 
   @override
   String get tacticsTooltipCallUps => 'Convocations';
@@ -17849,5 +17890,51 @@ class AppLocalizationsFr extends AppLocalizations {
       one: 'encore 1 match',
     );
     return '$month : $_temp0';
+  }
+
+  @override
+  String get careerManagerAge => 'Âge';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'De $min à $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'La direction s’interroge sur votre succession.';
+
+  @override
+  String get managerAgePromptTitle => 'Quel âge a votre sélectionneur ?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Cette partie n’indique pas encore l’âge de votre sélectionneur. Renseignez-le une fois et il s’affichera à côté de votre nom. Cela ne change rien au jeu.';
+
+  @override
+  String get managerAgePromptSet => 'Indiquer l’âge';
+
+  @override
+  String get managerAgePromptSkip => 'Passer';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation : $name ($age) met fin à sa carrière d’entraîneur';
+  }
+
+  @override
+  String get editorManagerAge => 'Âge';
+
+  @override
+  String get editorManagerAgeHint => 'Vide : le jeu en choisit un';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'L’âge du sélectionneur doit être compris entre $min et $max.';
   }
 }

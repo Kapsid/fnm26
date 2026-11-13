@@ -1196,8 +1196,49 @@ class AppLocalizationsTr extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ROLLER VE DURAN TOPLAR';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Her ilk 11 oyuncusuna bir rol ver. Atıcını belirlemek için penaltı (⚽) ya da serbest vuruş (▲) rozetine dokun.';
+  String get tacticsSectionRoles => 'Roller';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Serbest vuruşlar';
+
+  @override
+  String get tacticsSectionCorners => 'Kornerler';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Bir oyuncuya dokunarak onu seç. Tekrar dokunursan seçimi teknik direktöre bırakırsın.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Penaltıları kim kullanır, sırayla en fazla üç kişi. İlki sahada değilse sıradaki kullanır.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Kaleye yakın serbest vuruşları kim kullanır, sırayla en fazla üç kişi. İlki sahada değilse sıradaki kullanır.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Her iki taraftaki kornerlerin kendi kullanıcıları var, sırayla en fazla iki kişi. İlki sahada değilse sıradaki kullanır.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Oyunculara kullanacakları sırayla dokun. Numaralı bir oyuncuya dokunarak onu listeden çıkar.';
+
+  @override
+  String get tacticsCornersLeft => 'Soldan';
+
+  @override
+  String get tacticsCornersRight => 'Sağdan';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Uzun taç atışlarını kim kullanır. İlki sahada değilse ikincisi kullanır.';
+
+  @override
+  String get tacticsPickBest => 'En iyisini seç';
+
+  @override
+  String get tacticsSameAsPenalties => 'Penaltılarla aynı';
 
   @override
   String get tacticsTooltipCallUps => 'Milli takım daveti';
@@ -17598,5 +17639,50 @@ class AppLocalizationsTr extends AppLocalizations {
       one: '1 maç daha',
     );
     return '$month: $_temp0';
+  }
+
+  @override
+  String get careerManagerAge => 'Yaş';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return '$min ile $max arası';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession => 'Yönetim, halef planlarını soruyor.';
+
+  @override
+  String get managerAgePromptTitle => 'Teknik direktörün kaç yaşında?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Bu kayıtta teknik direktörünün yaşı henüz yok. Bir kez belirle, adının yanında görünsün. Oyunda hiçbir şeyi değiştirmez.';
+
+  @override
+  String get managerAgePromptSet => 'Yaşı belirle';
+
+  @override
+  String get managerAgePromptSkip => 'Atla';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) teknik direktörlüğü bırakıyor';
+  }
+
+  @override
+  String get editorManagerAge => 'Yaş';
+
+  @override
+  String get editorManagerAgeHint => 'Boş: oyun seçer';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Teknik direktörün yaşı $min ile $max arasında olmalı.';
   }
 }

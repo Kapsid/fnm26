@@ -1251,8 +1251,49 @@ class AppLocalizationsHr extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ULOGE I STAJALICE';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Daj svakom igraču iz početne postave ulogu. Dodirni oznaku za jedanaesterac (⚽) ili slobodni udarac (▲) da odrediš izvođača.';
+  String get tacticsSectionRoles => 'Uloge';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Slobodni udarci';
+
+  @override
+  String get tacticsSectionCorners => 'Korneri';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Dodirni igrača da ga odrediš. Dodirni ga ponovno da izbor prepustiš treneru.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Tko izvodi jedanaesterce, do trojice redom. Ako prvi nije na terenu, izvodi sljedeći.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Tko izvodi slobodne udarce s pucačke udaljenosti, do trojice redom. Ako prvi nije na terenu, izvodi sljedeći.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Korneri sa svake strane imaju svoje izvođače, do dvojice redom. Ako prvi nije na terenu, izvodi sljedeći.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Dodiruj igrače redom kojim trebaju izvoditi. Dodirni igrača s brojem da ga makneš s popisa.';
+
+  @override
+  String get tacticsCornersLeft => 'S lijeve strane';
+
+  @override
+  String get tacticsCornersRight => 'S desne strane';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Tko izvodi duga ubacivanja iz auta. Ako prvi nije na terenu, izvodi drugi.';
+
+  @override
+  String get tacticsPickBest => 'Odaberi najboljeg';
+
+  @override
+  String get tacticsSameAsPenalties => 'Kao jedanaesterci';
 
   @override
   String get tacticsTooltipCallUps => 'Pozivi';
@@ -18029,5 +18070,50 @@ class AppLocalizationsHr extends AppLocalizations {
       one: 'još $count utakmica',
     );
     return '$month: $_temp0';
+  }
+
+  @override
+  String get careerManagerAge => 'Dob';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Od $min do $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession => 'Uprava pita za planove o nasljedniku.';
+
+  @override
+  String get managerAgePromptTitle => 'Koliko godina ima tvoj izbornik?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Ova karijera još nema upisanu dob izbornika. Postavi je jednom i prikazivat će se uz tvoje ime. U igri ne mijenja ništa.';
+
+  @override
+  String get managerAgePromptSet => 'Postavi dob';
+
+  @override
+  String get managerAgePromptSkip => 'Preskoči';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) završava trenersku karijeru';
+  }
+
+  @override
+  String get editorManagerAge => 'Dob';
+
+  @override
+  String get editorManagerAgeHint => 'Prazno: bira igra';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Dob izbornika mora biti od $min do $max.';
   }
 }

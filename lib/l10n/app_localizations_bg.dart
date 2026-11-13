@@ -1248,8 +1248,49 @@ class AppLocalizationsBg extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'РОЛИ И СТАТИЧНИ';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Дай роля на всеки титуляр. Докосни значката за дузпа (⚽) или свободен удар (▲), за да избереш изпълнител.';
+  String get tacticsSectionRoles => 'Роли';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Свободни удари';
+
+  @override
+  String get tacticsSectionCorners => 'Корнери';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Докосни играч, за да го определиш. Докосни го отново, за да оставиш избора на треньора.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Кой бие дузпите, до трима по ред. Ако първият не е на терена, бие следващият.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Кой бие свободните удари в обсега на вратата, до трима по ред. Ако първият не е на терена, бие следващият.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Корнерите от всяка страна имат свои изпълнители, до двама по ред. Ако първият не е на терена, бие следващият.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Докосвай играчите в реда, в който да изпълняват. Докосни номериран играч, за да го махнеш от списъка.';
+
+  @override
+  String get tacticsCornersLeft => 'Отляво';
+
+  @override
+  String get tacticsCornersRight => 'Отдясно';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Кой изпълнява дългите тъчове. Ако първият не е на терена, изпълнява вторият.';
+
+  @override
+  String get tacticsPickBest => 'Избери най-добрия';
+
+  @override
+  String get tacticsSameAsPenalties => 'Като дузпите';
 
   @override
   String get tacticsTooltipCallUps => 'Повиквания';
@@ -17772,5 +17813,51 @@ class AppLocalizationsBg extends AppLocalizations {
       one: 'още 1 мач',
     );
     return '$month: $_temp0';
+  }
+
+  @override
+  String get careerManagerAge => 'Възраст';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'От $min до $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'Ръководството пита за плановете за наследник.';
+
+  @override
+  String get managerAgePromptTitle => 'На колко години е селекционерът ти?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Тази кариера още няма възраст за селекционера. Задай я веднъж и тя ще се показва до името ти. В играта не променя нищо.';
+
+  @override
+  String get managerAgePromptSet => 'Задай възраст';
+
+  @override
+  String get managerAgePromptSkip => 'Пропусни';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) се оттегля от треньорството';
+  }
+
+  @override
+  String get editorManagerAge => 'Възраст';
+
+  @override
+  String get editorManagerAgeHint => 'Празно: играта избира';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Възрастта на селекционера трябва да е от $min до $max.';
   }
 }

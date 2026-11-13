@@ -224,6 +224,8 @@ class _BoardStepTablet extends ConsumerWidget {
                               color: AppColors.primary,
                             ),
                           ),
+                          // Who the offers are for, with his age.
+                          ManagerNameAgeLine(careerId: careerId),
                           const SizedBox(height: AppSpacing.xs),
                         ],
                         for (final o in offers)

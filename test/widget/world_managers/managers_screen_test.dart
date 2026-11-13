@@ -53,6 +53,30 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('every row says how old he is today', (tester) async {
+    final save = await seedSave(tester);
+    await _open(tester, save);
+    final rows = await _rows(tester, save);
+    final career = await tester.runAsync(
+      () => save.container.read(careerRepositoryProvider).byId(save.careerId),
+    );
+    for (final r in rows) {
+      expect(r.age, career!.inGameDate.year - r.m.birthYear);
+    }
+    final top =
+        ([
+              ...rows,
+            ]..sort((a, b) {
+              final c = b.reputation.compareTo(a.reputation);
+              return c != 0 ? c : a.m.name.compareTo(b.m.name);
+            }))
+            .first;
+    final detail = tester.widget<Text>(
+      find.byKey(ManagersScreen.rowDetailKey).first,
+    );
+    expect(detail.data, endsWith(enL.tacticsAgeOnly(top.age)));
+  });
+
   testWidgets('filter by confederation', (tester) async {
     final save = await seedSave(tester);
     await _open(tester, save);

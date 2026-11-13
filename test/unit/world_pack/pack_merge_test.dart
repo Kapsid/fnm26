@@ -330,7 +330,7 @@ void main() {
     test('stadiums, managers, name lists and nations, by nation', () {
       final theirs = _pack('Theirs').copyWith(
         stadiums: {'2:Brno': 'Tom Arena'},
-        managers: {1: (name: 'Tom Boss', nationality: 'CZE')},
+        managers: {1: (name: 'Tom Boss', nationality: 'CZE', age: null)},
         nameLists: {
           2: const PackNameLists(first: ['Ana'], sur: ['Novak']),
         },

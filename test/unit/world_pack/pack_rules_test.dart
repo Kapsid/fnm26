@@ -905,19 +905,24 @@ void main() {
 void _managerRules() {
   group('managers', () {
     const codes = {1: 'CZE', 2: 'SVK'};
-    WorldPack withManagers(Map<int, ({String name, String nationality})> m) =>
-        _pack().copyWith(managers: m);
+    WorldPack withManagers(
+      Map<int, ({String name, String nationality, int? age})> m,
+    ) => _pack().copyWith(managers: m);
     List<BadField> bad(WorldPack p) => [
       for (final i in PackRules.issues(p, baseCodes: codes))
         if (i is BadField && i.path.startsWith('managers.')) i,
     ];
 
     test('a manager name over 40 chars is refused', () {
-      final ok = withManagers({1: (name: 'A' * 40, nationality: 'CZE')});
+      final ok = withManagers({
+        1: (name: 'A' * 40, nationality: 'CZE', age: null),
+      });
       expect(bad(ok), isEmpty);
       expect(PackCodec.fieldsOk(ok, baseCodes: codes), isTrue);
 
-      final long = withManagers({1: (name: 'A' * 41, nationality: 'CZE')});
+      final long = withManagers({
+        1: (name: 'A' * 41, nationality: 'CZE', age: null),
+      });
       expect(
         bad(long).map((b) => (b.path, b.reason)),
         [('managers.1.name', FieldReason.tooLong)],
@@ -926,25 +931,56 @@ void _managerRules() {
       expect(PackCodec.fieldsOk(long, baseCodes: codes), isFalse);
 
       expect(
-        bad(withManagers({1: (name: '   ', nationality: 'CZE')})).map(
+        bad(
+          withManagers({1: (name: '   ', nationality: 'CZE', age: null)}),
+        ).map(
           (b) => (b.path, b.reason),
         ),
         [('managers.1.name', FieldReason.empty)],
       );
     });
 
+    test('an age, when given, is from 30 to 75', () {
+      for (final age in const [30, 58, 75]) {
+        expect(
+          bad(
+            withManagers({
+              1: (name: 'Ota Brnak', nationality: 'CZE', age: age),
+            }),
+          ),
+          isEmpty,
+          reason: '$age',
+        );
+      }
+      for (final age in const [29, 76, -1]) {
+        expect(
+          bad(
+            withManagers({
+              1: (name: 'Ota Brnak', nationality: 'CZE', age: age),
+            }),
+          ).map((b) => (b.path, b.reason)),
+          [('managers.1.age', FieldReason.outOfRange)],
+          reason: '$age',
+        );
+      }
+    });
+
     test('an unknown nationality is refused', () {
       expect(
-        bad(withManagers({1: (name: 'Ota Brnak', nationality: 'SVK')})),
+        bad(
+          withManagers({1: (name: 'Ota Brnak', nationality: 'SVK', age: null)}),
+        ),
         isEmpty,
       );
       // The case a file writes it in does not matter.
       expect(
-        bad(withManagers({1: (name: 'Ota Brnak', nationality: 'svk')})),
+        bad(
+          withManagers({1: (name: 'Ota Brnak', nationality: 'svk', age: null)}),
+        ),
         isEmpty,
       );
       final unknown = withManagers({
-        1: (name: 'Ota Brnak', nationality: 'ZZZ'),
+        1: (name: 'Ota Brnak', nationality: 'ZZZ', age: null),
       });
       expect(
         bad(unknown).map((b) => (b.path, b.reason)),
@@ -965,12 +1001,16 @@ void _managerRules() {
         fringeRanges: const {},
       );
       expect(
-        compat(withManagers({2: (name: 'Ota Brnak', nationality: 'CZE')})),
+        compat(
+          withManagers({2: (name: 'Ota Brnak', nationality: 'CZE', age: null)}),
+        ),
         isEmpty,
       );
       expect(
         compat(
-          withManagers({99: (name: 'Ota Brnak', nationality: 'CZE')}),
+          withManagers({
+            99: (name: 'Ota Brnak', nationality: 'CZE', age: null),
+          }),
         ).map((i) => i.where),
         ['managers.99'],
       );

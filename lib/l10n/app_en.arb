@@ -1838,9 +1838,57 @@
   "@tacticsTabRolesSetPieces": {
     "description": "Merged tab: player roles and set-piece takers."
   },
-  "tacticsRolesSetPiecesBlurb": "Give each starter a role. Tap the penalty (⚽) or free-kick (▲) badge to set your taker.",
-  "@tacticsRolesSetPiecesBlurb": {
-    "description": "Blurb for the merged roles & set-pieces tab."
+  "tacticsSectionRoles": "Roles",
+  "@tacticsSectionRoles": {
+    "description": "Roles & set pieces tab, sub-tab chip: each starter's role."
+  },
+  "tacticsSectionFreeKicks": "Free kicks",
+  "@tacticsSectionFreeKicks": {
+    "description": "Roles & set pieces tab, sub-tab chip: the free-kick taker."
+  },
+  "tacticsSectionCorners": "Corners",
+  "@tacticsSectionCorners": {
+    "description": "Roles & set pieces tab, sub-tab chip: the corner takers (left and right)."
+  },
+  "tacticsTakerTapHint": "Tap a player to name him. Tap him again to leave it to the coach.",
+  "@tacticsTakerTapHint": {
+    "description": "Set-piece sub-tabs: how the taker list works. Tapping the named taker again hands the choice back to the automatic pick."
+  },
+  "tacticsPenaltiesBlurb": "Who takes the penalties, up to three in order. If the first is not on the pitch, the next one takes them.",
+  "@tacticsPenaltiesBlurb": {
+    "description": "Penalties sub-tab intro. Up to three takers in order (marked 1., 2., 3.); the next one listed steps up if the first is not on the pitch."
+  },
+  "tacticsFreeKicksBlurb": "Who takes free kicks within range of goal, up to three in order. If the first is not on the pitch, the next one takes them.",
+  "@tacticsFreeKicksBlurb": {
+    "description": "Free kicks sub-tab intro. Up to three takers in order; the next one listed steps up if the first is not on the pitch."
+  },
+  "tacticsCornersBlurb": "Corners from each side have their own takers, up to two in order. If the first is not on the pitch, the next one takes them.",
+  "@tacticsCornersBlurb": {
+    "description": "Corners sub-tab intro. Corners from the left and from the right each have their own ordered takers (up to two)."
+  },
+  "tacticsOrderTapHint": "Tap players in the order they should take it. Tap a numbered player to take him off the list.",
+  "@tacticsOrderTapHint": {
+    "description": "Penalties, free kicks and corners sub-tabs: how the ordered taker list works. Tapping an unnumbered player adds him to the end of the order; tapping a numbered one removes him."
+  },
+  "tacticsCornersLeft": "From the left",
+  "@tacticsCornersLeft": {
+    "description": "Corners sub-tab: heading over the takers of corners taken from the left side."
+  },
+  "tacticsCornersRight": "From the right",
+  "@tacticsCornersRight": {
+    "description": "Corners sub-tab: heading over the takers of corners taken from the right side."
+  },
+  "tacticsThrowInsBlurb": "Who takes the long throws. If the first is not on the pitch, the second takes them.",
+  "@tacticsThrowInsBlurb": {
+    "description": "Throw-ins sub-tab intro."
+  },
+  "tacticsPickBest": "Pick best",
+  "@tacticsPickBest": {
+    "description": "Set-piece sub-tabs: button naming the best-suited man as the taker."
+  },
+  "tacticsSameAsPenalties": "Same as penalties",
+  "@tacticsSameAsPenalties": {
+    "description": "Free kicks sub-tab: button giving the free kicks to the penalty taker."
   },
   "tacticsTooltipCallUps": "Call-ups",
   "@tacticsTooltipCallUps": {
@@ -27220,6 +27268,89 @@
       "count": {
         "type": "int",
         "example": "2"
+      }
+    }
+  },
+  "careerManagerAge": "Age",
+  "@careerManagerAge": {
+    "description": "New game: label of the manager's age field, beside his name."
+  },
+  "managerAgeRange": "From {min} to {max}",
+  "@managerAgeRange": {
+    "description": "Under an age field when the number typed is outside the allowed range.",
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "managerNameAge": "{name} ({age})",
+  "@managerNameAge": {
+    "description": "The manager's name with his age in brackets (offers, press room, career summary, managers list, match preview).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "managerSuccession": "The board asks about succession plans.",
+  "@managerSuccession": {
+    "description": "Manager page, under his age once he is 70 or older: flavour only, nothing ends the career."
+  },
+  "managerAgePromptTitle": "How old is your manager?",
+  "@managerAgePromptTitle": {
+    "description": "Hub card (once, on a save made before ages existed) and its dialog: asks the manager's age."
+  },
+  "managerAgePromptBody": "This save has no age for your manager yet. Set it once and it is shown beside your name. It changes nothing in the game.",
+  "@managerAgePromptBody": {
+    "description": "Hub card body under managerAgePromptTitle."
+  },
+  "managerAgePromptSet": "Set age",
+  "@managerAgePromptSet": {
+    "description": "Hub card button: opens the age dialog."
+  },
+  "managerAgePromptSkip": "Skip",
+  "@managerAgePromptSkip": {
+    "description": "Hub card button: puts the question away for good."
+  },
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) retires from management",
+  "@mgrNewsRetiredAge": {
+    "description": "News title when a world manager retires, with his age in brackets.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      },
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "editorManagerAge": "Age",
+  "@editorManagerAge": {
+    "description": "Editor, managers section: label of the day-one manager's age field."
+  },
+  "editorManagerAgeHint": "Empty: the game picks one",
+  "@editorManagerAgeHint": {
+    "description": "Editor, managers section: hint in the empty age field (the game then draws an age)."
+  },
+  "editorIssueManagerAge": "The manager's age must be from {min} to {max}.",
+  "@editorIssueManagerAge": {
+    "description": "Editor issue: a day-one manager's age outside the allowed range.",
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
       }
     }
   }

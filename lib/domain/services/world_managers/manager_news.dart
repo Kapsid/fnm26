@@ -84,12 +84,14 @@ abstract final class ManagerNews {
   /// (names are never translated). The title says who left and why, or who
   /// was appointed when nobody left; the body names the new man, and is
   /// null when nobody has been appointed yet. Null when the move names
-  /// nobody it can say: no one left and no one came in.
+  /// nobody it can say: no one left and no one came in. A man who retires
+  /// is named with his age, [outgoingAge], when it is known: "X (61)".
   static ({MsgPart title, MsgPart? body})? message(
     ManagerMove m, {
     required String nation,
     required String? outgoing,
     required String? incoming,
+    int? outgoingAge,
   }) {
     final body = incoming == null
         ? null
@@ -99,6 +101,16 @@ abstract final class ManagerNews {
       if (incoming == null) return null;
       return (
         title: MsgText(MsgKey.mgrNewsAppointed, [nation, incoming]),
+        body: body,
+      );
+    }
+    if (why == SpellEnd.retired && outgoingAge != null) {
+      return (
+        title: MsgText(MsgKey.mgrNewsRetiredAge, [
+          nation,
+          outgoing,
+          outgoingAge,
+        ]),
         body: body,
       );
     }
@@ -134,6 +146,7 @@ abstract final class ManagerNews {
     MsgKey.mgrNewsResigned,
     MsgKey.mgrNewsPoached,
     MsgKey.mgrNewsRetired,
+    MsgKey.mgrNewsRetiredAge,
     MsgKey.mgrNewsContractEnd,
     MsgKey.mgrNewsReplacedByPlayer,
     MsgKey.mgrNewsAppointed,

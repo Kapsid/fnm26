@@ -206,7 +206,7 @@ class OpponentManagerLine extends ConsumerWidget {
           children: [
             Flexible(
               child: Text(
-                l.mgrPreviewLine(view.m.name),
+                l.mgrPreviewLine(l.managerNameAge(view.m.name, view.age)),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: AppTypography.labelMedium,

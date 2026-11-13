@@ -217,7 +217,9 @@ void main() {
     expect(plain.toJson().containsKey('managers'), isFalse);
     expect(plain.toJson().containsKey('clubStrengths'), isTrue);
     final withM = _v2Pack()
-        .copyWith(managers: {7: (name: 'Ota Brnak', nationality: 'CZE')})
+        .copyWith(
+          managers: {7: (name: 'Ota Brnak', nationality: 'CZE', age: null)},
+        )
         .asWritten;
     expect(withM.formatVersion, 4);
     expect(withM.toJson().containsKey('managers'), isTrue);
@@ -235,8 +237,8 @@ void main() {
   test('v4 round trip keeps managers', () {
     final p = _v2Pack().copyWith(
       managers: {
-        7: (name: 'Ota Brnak', nationality: 'CZE'),
-        9: (name: 'Lew Ward', nationality: 'ENG'),
+        7: (name: 'Ota Brnak', nationality: 'CZE', age: null),
+        9: (name: 'Lew Ward', nationality: 'ENG', age: null),
       },
     );
     expect(p.toJson()['formatVersion'], kPackFormatVersion);
@@ -246,13 +248,18 @@ void main() {
       ),
     );
     expect(back, p);
-    expect(back.managers[7], (name: 'Ota Brnak', nationality: 'CZE'));
+    expect(back.managers[7], (
+      name: 'Ota Brnak',
+      nationality: 'CZE',
+      age: null,
+    ));
     expect(back.managers[9]!.nationality, 'ENG');
     // A manager entry is read strictly, as every other part.
     for (final bad in <Object?>[
       {'name': 'X'},
       {'name': 'X', 'nationality': 3},
-      {'name': 'X', 'nationality': 'ENG', 'age': 50},
+      {'name': 'X', 'nationality': 'ENG', 'age': '50'},
+      {'name': 'X', 'nationality': 'ENG', 'born': 1970},
       'X',
     ]) {
       expect(
@@ -266,16 +273,105 @@ void main() {
     }
   });
 
-  test('migrate refuses format 8', () {
+  test('migrate refuses format 9', () {
     final json = _pack().toJson();
-    expect(kPackFormatVersion, 7);
+    expect(kPackFormatVersion, 8);
     expect(
-      () => WorldPack.migrate({...json, 'formatVersion': 8}),
+      () => WorldPack.migrate({...json, 'formatVersion': 9}),
       throwsFormatException,
     );
   });
 
-  test('migrate is identity at v7 and rejects newer or missing versions', () {
+  group('format 8: day-one manager ages', () {
+    WorldPack aged() => _v2Pack().copyWith(
+      managers: {
+        7: (name: 'Ota Brnak', nationality: 'CZE', age: 58),
+        9: (name: 'Lew Ward', nationality: 'ENG', age: null),
+      },
+    );
+
+    test('only a pack that gives an age is written as format 8', () {
+      expect(aged().asWritten.formatVersion, 8);
+      final none = _v2Pack().copyWith(
+        managers: {9: (name: 'Lew Ward', nationality: 'ENG', age: null)},
+      );
+      expect(none.asWritten.formatVersion, 4, reason: 'no age, no bump');
+      expect(
+        (none.asWritten.toJson()['managers']! as Map)['9'],
+        {'name': 'Lew Ward', 'nationality': 'ENG'},
+        reason: 'a manager without an age writes no age key',
+      );
+    });
+
+    test('an age round-trips, and an unset one stays unset', () {
+      final p = aged().asWritten;
+      final json = jsonDecode(jsonEncode(p.toJson())) as Map<String, Object?>;
+      expect((json['managers']! as Map)['7'], {
+        'name': 'Ota Brnak',
+        'nationality': 'CZE',
+        'age': 58,
+      });
+      final back = WorldPack.fromJson(WorldPack.migrate(json));
+      expect(back, p);
+      expect(back.managers[7]!.age, 58);
+      expect(back.managers[9]!.age, isNull);
+    });
+
+    test('a format-7 pack migrates with no ages', () {
+      final v7 = {
+        ..._v2Pack()
+            .copyWith(
+              managers: {7: (name: 'Ota Brnak', nationality: 'CZE', age: null)},
+            )
+            .toJson(),
+        'formatVersion': 7,
+      };
+      final back = WorldPack.fromJson(
+        WorldPack.migrate(jsonDecode(jsonEncode(v7)) as Map<String, Object?>),
+      );
+      expect(back.formatVersion, 8);
+      expect(back.managers[7], (
+        name: 'Ota Brnak',
+        nationality: 'CZE',
+        age: null,
+      ));
+    });
+
+    test('an old format-5 pack still imports, its managers without ages', () {
+      final v5 =
+          {
+              ..._v2Pack()
+                  .copyWith(
+                    managers: {
+                      7: (name: 'Ota Brnak', nationality: 'CZE', age: null),
+                    },
+                  )
+                  .toJson(),
+              'formatVersion': 5,
+            }
+            ..remove('addedReporters')
+            ..remove('addedStadiums')
+            ..remove('rankings');
+      final back = WorldPack.fromJson(
+        WorldPack.migrate(jsonDecode(jsonEncode(v5)) as Map<String, Object?>),
+      );
+      expect(back.formatVersion, kPackFormatVersion);
+      expect(back.managers[7]!.name, 'Ota Brnak');
+      expect(back.managers[7]!.age, isNull);
+    });
+
+    test('a format-7 file already carrying an age is no format-7 file', () {
+      final bad = {...aged().toJson(), 'formatVersion': 7};
+      expect(
+        () => WorldPack.migrate(
+          jsonDecode(jsonEncode(bad)) as Map<String, Object?>,
+        ),
+        throwsFormatException,
+      );
+    });
+  });
+
+  test('migrate is identity at v8 and rejects newer or missing versions', () {
     final json = _pack().toJson();
     expect(WorldPack.migrate(json), json);
     expect(

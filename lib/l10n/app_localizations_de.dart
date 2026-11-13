@@ -1253,8 +1253,49 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ROLLEN & STANDARDS';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Geben Sie jedem Startspieler eine Rolle. Tippen Sie auf das Elfmeter- (⚽) oder Freistoß-Abzeichen (▲), um den Schützen festzulegen.';
+  String get tacticsSectionRoles => 'Rollen';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Freistöße';
+
+  @override
+  String get tacticsSectionCorners => 'Ecken';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Tippen Sie auf einen Spieler, um ihn zu bestimmen. Ein zweites Tippen überlässt die Wahl dem Trainer.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Wer die Elfmeter schießt, bis zu drei in Reihenfolge. Steht der Erste nicht auf dem Platz, schießt der Nächste.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Wer die Freistöße in Tornähe schießt, bis zu drei in Reihenfolge. Steht der Erste nicht auf dem Platz, schießt der Nächste.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Ecken von jeder Seite haben eigene Schützen, bis zu zwei in Reihenfolge. Steht der Erste nicht auf dem Platz, tritt der Nächste.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Tippen Sie die Spieler in der Reihenfolge an, in der sie schießen sollen. Ein nummerierter Spieler wird durch Antippen von der Liste genommen.';
+
+  @override
+  String get tacticsCornersLeft => 'Von links';
+
+  @override
+  String get tacticsCornersRight => 'Von rechts';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Wer die langen Einwürfe ausführt. Steht der Erste nicht auf dem Platz, wirft der Zweite.';
+
+  @override
+  String get tacticsPickBest => 'Besten wählen';
+
+  @override
+  String get tacticsSameAsPenalties => 'Wie Elfmeter';
 
   @override
   String get tacticsTooltipCallUps => 'Nominierung';
@@ -17817,5 +17858,51 @@ class AppLocalizationsDe extends AppLocalizations {
       one: 'noch 1 Spiel',
     );
     return '$month: $_temp0';
+  }
+
+  @override
+  String get careerManagerAge => 'Alter';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Von $min bis $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'Der Vorstand erkundigt sich nach Ihren Nachfolgeplänen.';
+
+  @override
+  String get managerAgePromptTitle => 'Wie alt ist Ihr Trainer?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Dieser Spielstand hat noch kein Alter für Ihren Trainer. Legen Sie es einmal fest, dann steht es neben Ihrem Namen. Am Spiel ändert es nichts.';
+
+  @override
+  String get managerAgePromptSet => 'Alter festlegen';
+
+  @override
+  String get managerAgePromptSkip => 'Überspringen';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) beendet die Trainerkarriere';
+  }
+
+  @override
+  String get editorManagerAge => 'Alter';
+
+  @override
+  String get editorManagerAgeHint => 'Leer: Das Spiel wählt eins';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Das Alter des Trainers muss zwischen $min und $max liegen.';
   }
 }

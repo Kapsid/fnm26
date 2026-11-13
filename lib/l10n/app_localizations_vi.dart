@@ -1197,8 +1197,49 @@ class AppLocalizationsVi extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'VAI TRÒ & BÓNG CHẾT';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Giao vai trò cho từng cầu thủ đá chính. Chạm vào biểu tượng phạt đền (⚽) hoặc đá phạt (▲) để chọn người thực hiện.';
+  String get tacticsSectionRoles => 'Vai trò';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Đá phạt';
+
+  @override
+  String get tacticsSectionCorners => 'Phạt góc';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Chạm vào một cầu thủ để chọn. Chạm lại để huấn luyện viên tự chọn.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Ai sút phạt đền, tối đa ba người theo thứ tự. Nếu người thứ nhất không có trên sân, người tiếp theo sẽ sút.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Ai đá phạt trong tầm sút, tối đa ba người theo thứ tự. Nếu người thứ nhất không có trên sân, người tiếp theo sẽ đá.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Phạt góc mỗi bên có người đá riêng, tối đa hai người theo thứ tự. Nếu người thứ nhất không có trên sân, người tiếp theo sẽ đá.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Chạm vào các cầu thủ theo thứ tự đá. Chạm vào cầu thủ đã có số để bỏ khỏi danh sách.';
+
+  @override
+  String get tacticsCornersLeft => 'Bên trái';
+
+  @override
+  String get tacticsCornersRight => 'Bên phải';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Ai thực hiện ném biên dài. Nếu người thứ nhất không có trên sân, người thứ hai sẽ ném.';
+
+  @override
+  String get tacticsPickBest => 'Chọn người tốt nhất';
+
+  @override
+  String get tacticsSameAsPenalties => 'Giống phạt đền';
 
   @override
   String get tacticsTooltipCallUps => 'Triệu tập';
@@ -17533,5 +17574,51 @@ class AppLocalizationsVi extends AppLocalizations {
       other: 'thêm $count trận',
     );
     return '$month: $_temp0';
+  }
+
+  @override
+  String get careerManagerAge => 'Tuổi';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Từ $min đến $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'Ban lãnh đạo hỏi về kế hoạch người kế nhiệm.';
+
+  @override
+  String get managerAgePromptTitle => 'Huấn luyện viên của bạn bao nhiêu tuổi?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Bản lưu này chưa có tuổi của huấn luyện viên. Đặt một lần và tuổi sẽ hiện cạnh tên bạn. Việc này không thay đổi gì trong game.';
+
+  @override
+  String get managerAgePromptSet => 'Đặt tuổi';
+
+  @override
+  String get managerAgePromptSkip => 'Bỏ qua';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) giải nghệ huấn luyện viên';
+  }
+
+  @override
+  String get editorManagerAge => 'Tuổi';
+
+  @override
+  String get editorManagerAgeHint => 'Để trống: game sẽ chọn';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Tuổi của huấn luyện viên phải từ $min đến $max.';
   }
 }

@@ -1240,8 +1240,49 @@ class AppLocalizationsEl extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ΡΟΛΟΙ ΚΑΙ ΣΤΑΤΙΚΕΣ ΦΑΣΕΙΣ';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Δώσε ρόλο σε κάθε βασικό. Πάτα το σήμα πέναλτι (⚽) ή φάουλ (▲) για να ορίσεις εκτελεστή.';
+  String get tacticsSectionRoles => 'Ρόλοι';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Φάουλ';
+
+  @override
+  String get tacticsSectionCorners => 'Κόρνερ';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Πάτησε έναν παίκτη για να τον ορίσεις. Πάτησέ τον ξανά για να αφήσεις την επιλογή στον προπονητή.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Ποιος εκτελεί τα πέναλτι, έως τρεις με σειρά. Αν ο πρώτος δεν είναι στο γήπεδο, εκτελεί ο επόμενος.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Ποιος εκτελεί τα φάουλ κοντά στην εστία, έως τρεις με σειρά. Αν ο πρώτος δεν είναι στο γήπεδο, εκτελεί ο επόμενος.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Τα κόρνερ από κάθε πλευρά έχουν δικούς τους εκτελεστές, έως δύο με σειρά. Αν ο πρώτος δεν είναι στο γήπεδο, εκτελεί ο επόμενος.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Πάτα τους παίκτες με τη σειρά που θα εκτελούν. Πάτα έναν αριθμημένο παίκτη για να τον βγάλεις από τη λίστα.';
+
+  @override
+  String get tacticsCornersLeft => 'Από αριστερά';
+
+  @override
+  String get tacticsCornersRight => 'Από δεξιά';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Ποιος εκτελεί τα μακρινά πλάγια. Αν ο πρώτος δεν είναι στο γήπεδο, εκτελεί ο δεύτερος.';
+
+  @override
+  String get tacticsPickBest => 'Επίλεξε τον καλύτερο';
+
+  @override
+  String get tacticsSameAsPenalties => 'Όπως τα πέναλτι';
 
   @override
   String get tacticsTooltipCallUps => 'Κλήσεις';
@@ -17779,5 +17820,50 @@ class AppLocalizationsEl extends AppLocalizations {
       one: 'ακόμη 1 αγώνας',
     );
     return '$month: $_temp0';
+  }
+
+  @override
+  String get careerManagerAge => 'Ηλικία';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Από $min έως $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession => 'Η διοίκηση ρωτά για τα σχέδια διαδοχής.';
+
+  @override
+  String get managerAgePromptTitle => 'Πόσο χρονών είναι ο προπονητής σου;';
+
+  @override
+  String get managerAgePromptBody =>
+      'Αυτή η καριέρα δεν έχει ακόμα ηλικία για τον προπονητή σου. Όρισέ τη μία φορά και θα φαίνεται δίπλα στο όνομά σου. Δεν αλλάζει τίποτα στο παιχνίδι.';
+
+  @override
+  String get managerAgePromptSet => 'Ορισμός ηλικίας';
+
+  @override
+  String get managerAgePromptSkip => 'Παράλειψη';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: ο $name ($age) αποσύρεται από την προπονητική';
+  }
+
+  @override
+  String get editorManagerAge => 'Ηλικία';
+
+  @override
+  String get editorManagerAgeHint => 'Κενό: το διαλέγει το παιχνίδι';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Η ηλικία του προπονητή πρέπει να είναι από $min έως $max.';
   }
 }

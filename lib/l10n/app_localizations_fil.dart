@@ -1202,8 +1202,49 @@ class AppLocalizationsFil extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ROLE AT SET PIECE';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Bigyan ng role ang bawat starter. I-tap ang badge ng penalty (⚽) o free-kick (▲) para itakda ang taker mo.';
+  String get tacticsSectionRoles => 'Mga role';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Mga free kick';
+
+  @override
+  String get tacticsSectionCorners => 'Mga corner';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'I-tap ang manlalaro para piliin siya. I-tap ulit para ipaubaya sa coach.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Sino ang kukuha ng mga penalty, hanggang tatlo ayon sa pagkakasunod. Kung wala sa laro ang una, ang susunod ang kukuha.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Sino ang kukuha ng mga free kick na abot ang goal, hanggang tatlo ayon sa pagkakasunod. Kung wala sa laro ang una, ang susunod ang kukuha.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'May sariling taker ang mga corner sa bawat panig, hanggang dalawa ayon sa pagkakasunod. Kung wala sa laro ang una, ang susunod ang kukuha.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'I-tap ang mga manlalaro ayon sa pagkakasunod ng pagkuha nila. I-tap ang manlalarong may numero para alisin siya sa listahan.';
+
+  @override
+  String get tacticsCornersLeft => 'Mula sa kaliwa';
+
+  @override
+  String get tacticsCornersRight => 'Mula sa kanan';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Sino ang kukuha ng mahahabang throw-in. Kung wala sa laro ang una, ang pangalawa ang kukuha.';
+
+  @override
+  String get tacticsPickBest => 'Piliin ang pinakamahusay';
+
+  @override
+  String get tacticsSameAsPenalties => 'Gaya ng penalty';
 
   @override
   String get tacticsTooltipCallUps => 'Mga call-up';
@@ -17697,5 +17738,51 @@ class AppLocalizationsFil extends AppLocalizations {
       one: '1 pang laro',
     );
     return '$month: $_temp0';
+  }
+
+  @override
+  String get careerManagerAge => 'Edad';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Mula $min hanggang $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'Nagtatanong ang board tungkol sa plano kung sino ang papalit sa iyo.';
+
+  @override
+  String get managerAgePromptTitle => 'Ilang taon na ang manager mo?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Wala pang edad ang manager mo sa save na ito. Itakda ito nang isang beses at lalabas ito sa tabi ng pangalan mo. Wala itong binabago sa laro.';
+
+  @override
+  String get managerAgePromptSet => 'Itakda ang edad';
+
+  @override
+  String get managerAgePromptSkip => 'Laktawan';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: magreretiro si $name ($age) sa pagma-manage';
+  }
+
+  @override
+  String get editorManagerAge => 'Edad';
+
+  @override
+  String get editorManagerAgeHint => 'Walang laman: ang laro ang pipili';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Dapat mula $min hanggang $max ang edad ng manager.';
   }
 }

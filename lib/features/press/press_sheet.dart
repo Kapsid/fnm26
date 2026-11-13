@@ -13,6 +13,7 @@ import 'package:fnm/domain/services/press/conference.dart';
 import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
+import 'package:fnm/features/manager/manager_age_widgets.dart';
 import 'package:fnm/features/press/press_copy.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/press/press_providers.dart';
@@ -239,6 +240,8 @@ class _PressSheetState extends ConsumerState<PressSheet> {
                     ),
                   ],
                 ),
+                // Who is facing the room: the manager, with his age.
+                ManagerNameAgeLine(careerId: widget.careerId),
                 const SizedBox(height: AppSpacing.md),
                 Flexible(
                   child: SingleChildScrollView(

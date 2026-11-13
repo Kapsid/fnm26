@@ -3,6 +3,7 @@
 // is copyrighted intellectual property; do not reproduce, clone or help
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
@@ -20,6 +21,8 @@ class AppTextField extends StatelessWidget {
     this.textInputAction,
     this.autofocus = false,
     this.errorText,
+    this.keyboardType,
+    this.inputFormatters,
     super.key,
   });
 
@@ -34,6 +37,10 @@ class AppTextField extends StatelessWidget {
   /// Shown under the field, in the error colour, when non-null.
   final String? errorText;
 
+  /// The keyboard to show (a number pad for an age), and what may be typed.
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
+
   @override
   Widget build(BuildContext context) {
     final field = TextField(
@@ -42,6 +49,8 @@ class AppTextField extends StatelessWidget {
       onSubmitted: onSubmitted,
       textInputAction: textInputAction,
       autofocus: autofocus,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
       style: AppTypography.bodyMedium.copyWith(color: AppColors.onSurface),
       decoration: InputDecoration(
         hintText: hint,

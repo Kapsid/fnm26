@@ -21,17 +21,19 @@ import '../press/y_feed.dart';
 /// account's handle ([WorldPack.yHandles], [PackYAccount.handle]); format 6
 /// (1.1.1) adds the press reporters and the stadiums a pack adds
 /// ([WorldPack.addedReporters], [WorldPack.addedStadiums]); format 7 (1.1.1)
-/// adds each nation's starting world ranking ([WorldPack.rankings]).
-/// [WorldPack.migrate] lifts a format-1 to 6 pack to it, step by step.
+/// adds each nation's starting world ranking ([WorldPack.rankings]); format 8
+/// (1.1.2) adds a day-one manager's optional age ([WorldPack.managers]).
+/// [WorldPack.migrate] lifts a format-1 to 7 pack to it, step by step.
 ///
 /// A pack is written in the oldest format that holds it ([WorldPack.asWritten]):
 /// format 3 when it names no managers, so a 1.1.x build without managers still
 /// reads it, format 4 when it does, format 5 when it sets an industry or a
-/// handle, format 6 when it adds a reporter or a stadium, and format 7 only
-/// when it sets a nation's starting world ranking. A build
+/// handle, format 6 when it adds a reporter or a stadium, format 7 when it
+/// sets a nation's starting world ranking, and format 8 only when it gives a
+/// day-one manager an age. A build
 /// that reads only an older format says the file is from a newer version
 /// rather than calling it broken.
-const int kPackFormatVersion = 7;
+const int kPackFormatVersion = 8;
 
 /// Ids at or above this belong to players created in a pack.
 const int kPackPlayerIdBase = 800000000;
@@ -667,10 +669,11 @@ class WorldPack {
   /// Path (see `PackPaths`) -> language code -> value.
   final Map<String, Map<String, String>> localized;
 
-  /// nationId -> the name and nationality (upper-case FIFA code) of the
-  /// manager in charge on day one. Renames only the seeded incumbent; every
-  /// later manager is the game's own.
-  final Map<int, ({String name, String nationality})> managers;
+  /// nationId -> the name, nationality (upper-case FIFA code) and, from
+  /// format 8, the optional age of the manager in charge on day one. Renames
+  /// only the seeded incumbent; every later manager is the game's own. With
+  /// no age the game draws one, as it always has.
+  final Map<int, ({String name, String nationality, int? age})> managers;
 
   /// A built-in sponsor's `SponsorBrand.name` -> the industry it is shown
   /// in: another brand's name (that brand's trade) or a `SponsorIndustry`
@@ -693,6 +696,9 @@ class WorldPack {
   /// squads give it (`PackRanking.startingRanks`).
   final Map<int, int> rankings;
 
+  /// Whether the pack uses what only format 8 holds.
+  bool get _needsFormat8 => managers.values.any((m) => m.age != null);
+
   /// Whether the pack uses what only format 7 holds.
   bool get _needsFormat7 => rankings.isNotEmpty;
 
@@ -709,11 +715,14 @@ class WorldPack {
   /// This pack in the oldest format that holds it, as every writer stores
   /// and exports it: format 3 (which a 1.1.x build without managers reads)
   /// when it names no managers, 4 when it does, 5 when it sets a sponsor's
-  /// industry or a Y handle, 6 when it adds a reporter or a stadium, and
-  /// [kPackFormatVersion] (7) only when it sets a starting ranking.
+  /// industry or a Y handle, 6 when it adds a reporter or a stadium, 7 when
+  /// it sets a starting ranking, and [kPackFormatVersion] (8) only when it
+  /// gives a day-one manager an age.
   WorldPack get asWritten => copyWith(
-    formatVersion: _needsFormat7
+    formatVersion: _needsFormat8
         ? kPackFormatVersion
+        : _needsFormat7
+        ? 7
         : _needsFormat6
         ? 6
         : _needsFormat5
@@ -727,13 +736,13 @@ class WorldPack {
   /// nationality that is not one of [codes] (upper-case FIFA codes), or a
   /// nation id not in [nationIds]. Each one dropped is passed to [dropped].
   /// Light on purpose: a bad entry costs only itself, never the pack.
-  static Map<int, ({String name, String nationality})> usableManagers(
-    Map<int, ({String name, String nationality})> managers, {
+  static Map<int, ({String name, String nationality, int? age})> usableManagers(
+    Map<int, ({String name, String nationality, int? age})> managers, {
     required Set<int> nationIds,
     required Set<String> codes,
     void Function(int nationId, String why)? dropped,
   }) {
-    final out = <int, ({String name, String nationality})>{};
+    final out = <int, ({String name, String nationality, int? age})>{};
     for (final MapEntry(key: id, value: m) in managers.entries) {
       final why = m.name.trim().isEmpty
           ? 'blank name'
@@ -773,7 +782,7 @@ class WorldPack {
     List<PackSponsor>? addedSponsors,
     List<PackYAccount>? addedYAccounts,
     Map<String, Map<String, String>>? localized,
-    Map<int, ({String name, String nationality})>? managers,
+    Map<int, ({String name, String nationality, int? age})>? managers,
     Map<String, String>? sponsorIndustries,
     Map<String, String>? yHandles,
     List<PackAddedReporter>? addedReporters,
@@ -854,6 +863,8 @@ class WorldPack {
           '${e.key}': {
             'name': e.value.name,
             'nationality': e.value.nationality,
+            // Format 8 on, and only when set: a format-7 reader knows no age.
+            if (e.value.age case final age?) 'age': age,
           },
       },
     // Written from format 5 on (see [asWritten]): a format-4 reader knows
@@ -861,17 +872,21 @@ class WorldPack {
     if (formatVersion >= 5 ||
         _needsFormat5 ||
         _needsFormat6 ||
-        _needsFormat7) ...{
+        _needsFormat7 ||
+        _needsFormat8) ...{
       'sponsorIndustries': sponsorIndustries,
       'yHandles': yHandles,
     },
     // Written from format 6 on: a format-5 reader knows neither key.
-    if (formatVersion >= 6 || _needsFormat6 || _needsFormat7) ...{
+    if (formatVersion >= 6 ||
+        _needsFormat6 ||
+        _needsFormat7 ||
+        _needsFormat8) ...{
       'addedReporters': [for (final r in addedReporters) r.toJson()],
       'addedStadiums': [for (final s in addedStadiums) s.toJson()],
     },
     // Written from format 7 on: a format-6 reader knows no such key.
-    if (formatVersion >= 7 || _needsFormat7)
+    if (formatVersion >= 7 || _needsFormat7 || _needsFormat8)
       'rankings': {for (final e in rankings.entries) '${e.key}': e.value},
   };
 
@@ -991,7 +1006,7 @@ class WorldPack {
     );
   }
 
-  /// Upgrades older JSON step by step to [kPackFormatVersion]. Identity at v7
+  /// Upgrades older JSON step by step to [kPackFormatVersion]. Identity at v8
   /// for a pack naming no renamed club ([_retiredClubs]).
   /// Throws [FormatException] for a missing or newer version. Never changes
   /// [json] itself.
@@ -1015,6 +1030,7 @@ class WorldPack {
     if (v <= 4) out = _from4To5(out, v);
     if (v <= 5) out = _from5To6(out, v);
     if (v <= 6) out = _from6To7(out, v);
+    if (v <= 7) out = _from7To8(out, v);
     return _retiredClubs(out);
   }
 
@@ -1174,12 +1190,25 @@ class WorldPack {
     return {...json, 'rankings': <String, Object?>{}, 'formatVersion': 7};
   }
 
-  static ({String name, String nationality}) _manager(Object? raw) {
+  /// Format 7 to 8: no manager has an age, so the game draws every one as
+  /// it did. A pack of format [from] whose managers already carry an age is
+  /// not a file of that format.
+  static Map<String, Object?> _from7To8(Map<String, Object?> json, int from) {
+    final managers = json['managers'];
+    if (managers is Map &&
+        managers.values.any((m) => m is Map && m.containsKey('age'))) {
+      throw FormatException('Format $from pack has a format 8 manager age');
+    }
+    return {...json, 'formatVersion': 8};
+  }
+
+  static ({String name, String nationality, int? age}) _manager(Object? raw) {
     final m = _map(raw, 'manager');
-    _only(m, const {'name', 'nationality'}, 'manager');
+    _only(m, const {'name', 'nationality', 'age'}, 'manager');
     return (
       name: _str(m['name'], 'name'),
       nationality: _str(m['nationality'], 'nationality'),
+      age: m['age'] == null ? null : _int(m['age'], 'age'),
     );
   }
 

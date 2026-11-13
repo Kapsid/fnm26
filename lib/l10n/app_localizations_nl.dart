@@ -1242,8 +1242,49 @@ class AppLocalizationsNl extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ROLLEN EN STANDAARDSITUATIES';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Geef elke basisspeler een rol. Tik op de penalty-badge (⚽) of vrije-trap-badge (▲) om je nemer te kiezen.';
+  String get tacticsSectionRoles => 'Rollen';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Vrije trappen';
+
+  @override
+  String get tacticsSectionCorners => 'Hoekschoppen';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Tik op een speler om hem aan te wijzen. Tik nog eens om de keuze aan de trainer te laten.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Wie de penalty\'s neemt, tot drie op volgorde. Staat de eerste niet op het veld, dan neemt de volgende ze.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Wie de vrije trappen binnen schietafstand neemt, tot drie op volgorde. Staat de eerste niet op het veld, dan neemt de volgende ze.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Hoekschoppen van elke kant hebben hun eigen nemers, tot twee op volgorde. Staat de eerste niet op het veld, dan neemt de volgende ze.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Tik de spelers aan in de volgorde waarin ze moeten nemen. Tik op een genummerde speler om hem van de lijst te halen.';
+
+  @override
+  String get tacticsCornersLeft => 'Van links';
+
+  @override
+  String get tacticsCornersRight => 'Van rechts';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Wie de lange ingooien neemt. Staat de eerste niet op het veld, dan neemt de tweede ze.';
+
+  @override
+  String get tacticsPickBest => 'Beste kiezen';
+
+  @override
+  String get tacticsSameAsPenalties => 'Zelfde als penalty\'s';
 
   @override
   String get tacticsTooltipCallUps => 'Oproepen';
@@ -17770,5 +17811,51 @@ class AppLocalizationsNl extends AppLocalizations {
       one: 'nog 1 wedstrijd',
     );
     return '$month: $_temp0';
+  }
+
+  @override
+  String get careerManagerAge => 'Leeftijd';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Van $min tot $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'Het bestuur vraagt naar je opvolgingsplannen.';
+
+  @override
+  String get managerAgePromptTitle => 'Hoe oud is je bondscoach?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Deze opslag heeft nog geen leeftijd voor je bondscoach. Stel die één keer in en hij staat naast je naam. Het verandert niets aan het spel.';
+
+  @override
+  String get managerAgePromptSet => 'Leeftijd instellen';
+
+  @override
+  String get managerAgePromptSkip => 'Overslaan';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) stopt als trainer';
+  }
+
+  @override
+  String get editorManagerAge => 'Leeftijd';
+
+  @override
+  String get editorManagerAgeHint => 'Leeg: het spel kiest er een';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'De leeftijd van de bondscoach moet tussen $min en $max liggen.';
   }
 }

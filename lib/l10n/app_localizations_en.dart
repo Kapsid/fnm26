@@ -1238,8 +1238,49 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ROLES & SET PIECES';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Give each starter a role. Tap the penalty (⚽) or free-kick (▲) badge to set your taker.';
+  String get tacticsSectionRoles => 'Roles';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Free kicks';
+
+  @override
+  String get tacticsSectionCorners => 'Corners';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Tap a player to name him. Tap him again to leave it to the coach.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Who takes the penalties, up to three in order. If the first is not on the pitch, the next one takes them.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Who takes free kicks within range of goal, up to three in order. If the first is not on the pitch, the next one takes them.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Corners from each side have their own takers, up to two in order. If the first is not on the pitch, the next one takes them.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Tap players in the order they should take it. Tap a numbered player to take him off the list.';
+
+  @override
+  String get tacticsCornersLeft => 'From the left';
+
+  @override
+  String get tacticsCornersRight => 'From the right';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Who takes the long throws. If the first is not on the pitch, the second takes them.';
+
+  @override
+  String get tacticsPickBest => 'Pick best';
+
+  @override
+  String get tacticsSameAsPenalties => 'Same as penalties';
 
   @override
   String get tacticsTooltipCallUps => 'Call-ups';
@@ -17713,5 +17754,50 @@ class AppLocalizationsEn extends AppLocalizations {
       one: '1 more match',
     );
     return '$month: $_temp0';
+  }
+
+  @override
+  String get careerManagerAge => 'Age';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'From $min to $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession => 'The board asks about succession plans.';
+
+  @override
+  String get managerAgePromptTitle => 'How old is your manager?';
+
+  @override
+  String get managerAgePromptBody =>
+      'This save has no age for your manager yet. Set it once and it is shown beside your name. It changes nothing in the game.';
+
+  @override
+  String get managerAgePromptSet => 'Set age';
+
+  @override
+  String get managerAgePromptSkip => 'Skip';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) retires from management';
+  }
+
+  @override
+  String get editorManagerAge => 'Age';
+
+  @override
+  String get editorManagerAgeHint => 'Empty: the game picks one';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'The manager\'s age must be from $min to $max.';
   }
 }

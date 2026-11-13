@@ -1213,8 +1213,49 @@ class AppLocalizationsDa extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ROLLER OG DØDBOLDE';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Giv hver startspiller en rolle. Tryk på straffespark (⚽) eller frispark (▲) for at udpege din skytte.';
+  String get tacticsSectionRoles => 'Roller';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Frispark';
+
+  @override
+  String get tacticsSectionCorners => 'Hjørnespark';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Tryk på en spiller for at udpege ham. Tryk igen for at lade træneren vælge.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Hvem der tager straffesparkene, op til tre i rækkefølge. Er den første ikke på banen, tager den næste dem.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Hvem der tager frispark inden for skudafstand, op til tre i rækkefølge. Er den første ikke på banen, tager den næste dem.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Hjørnespark fra hver side har deres egne skytter, op til to i rækkefølge. Er den første ikke på banen, tager den næste dem.';
+
+  @override
+  String get tacticsOrderTapHint =>
+      'Tryk på spillerne i den rækkefølge, de skal tage dem. Tryk på en nummereret spiller for at fjerne ham fra listen.';
+
+  @override
+  String get tacticsCornersLeft => 'Fra venstre';
+
+  @override
+  String get tacticsCornersRight => 'Fra højre';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Hvem der tager de lange indkast. Er den første ikke på banen, tager den anden dem.';
+
+  @override
+  String get tacticsPickBest => 'Vælg den bedste';
+
+  @override
+  String get tacticsSameAsPenalties => 'Som straffespark';
 
   @override
   String get tacticsTooltipCallUps => 'Udtagelser';
@@ -17687,5 +17728,51 @@ class AppLocalizationsDa extends AppLocalizations {
       one: '1 kamp mere',
     );
     return '$month: $_temp0';
+  }
+
+  @override
+  String get careerManagerAge => 'Alder';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Fra $min til $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'Bestyrelsen spørger til planerne for en efterfølger.';
+
+  @override
+  String get managerAgePromptTitle => 'Hvor gammel er din træner?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Denne karriere har endnu ingen alder for din træner. Angiv den én gang, så vises den ved dit navn. Den ændrer intet i spillet.';
+
+  @override
+  String get managerAgePromptSet => 'Angiv alder';
+
+  @override
+  String get managerAgePromptSkip => 'Spring over';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) stopper som træner';
+  }
+
+  @override
+  String get editorManagerAge => 'Alder';
+
+  @override
+  String get editorManagerAgeHint => 'Tom: spillet vælger en';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Trænerens alder skal være fra $min til $max.';
   }
 }
