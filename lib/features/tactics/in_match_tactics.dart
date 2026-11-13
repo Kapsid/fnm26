@@ -1598,6 +1598,10 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     final standing = _standing(p);
     return ListTile(
       dense: true,
+      // Tighter sides and gap than a stock tile: on a 320 phone the name is
+      // what needs the width.
+      contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+      horizontalTitleGap: 10,
       enabled: !standing.blocked,
       leading: TacticalChip(p.position.label),
       title: playerNameWithCard(
@@ -1619,25 +1623,33 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       //
       // What DOES belong beside the age is the one thing the list
       // never said: whether he may come on at all.
-      subtitle: Text(
-        standing.note == null
-            ? l.tacticsAgeOnly(p.age)
-            : '${l.tacticsAgeOnly(p.age)} · ${standing.note}',
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: AppTypography.labelSmall.copyWith(
-          color: standing.note == null
-              ? AppColors.onSurfaceVariant
-              : standing.color,
-        ),
+      // The "On" mark rides on the age line, not beside the rating: there it
+      // took the room the name needed.
+      subtitle: Row(
+        children: [
+          Flexible(
+            child: Text(
+              standing.note == null
+                  ? l.tacticsAgeOnly(p.age)
+                  : '${l.tacticsAgeOnly(p.age)} · ${standing.note}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.labelSmall.copyWith(
+                color: standing.note == null
+                    ? AppColors.onSurfaceVariant
+                    : standing.color,
+              ),
+            ),
+          ),
+          if (onPitch.contains(p.id)) ...[
+            const SizedBox(width: AppSpacing.sm),
+            TacticalChip(l.tacticsOn),
+          ],
+        ],
       ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (onPitch.contains(p.id)) ...[
-            TacticalChip(l.tacticsOn),
-            const SizedBox(width: AppSpacing.sm),
-          ],
           // The rating in THIS slot leads — the number that decides
           // the match — in amber when it is a docked one, with the
           // player's own overall behind it for the comparison.

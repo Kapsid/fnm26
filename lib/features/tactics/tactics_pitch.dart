@@ -1875,6 +1875,10 @@ class SubDragRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final row = ListTile(
       dense: true,
+      // Tighter sides and gap than a stock tile: on a 320 phone the name is
+      // what needs the width.
+      contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+      horizontalTitleGap: 10,
       leading: SizedBox(width: 40, child: TacticalChip(player.position.label)),
       // Position is already shown by the leading chip — no role subtitle.
       title: playerNameWithCard(player.name, card),
@@ -1940,7 +1944,14 @@ class SubDragRow extends StatelessWidget {
 /// alone when he has none. Shared by every list a substitution is made from,
 /// so the mark sits in the same place in all of them.
 Widget playerNameWithCard(String name, MatchCard? card, {TextStyle? style}) {
-  final text = Text(name, style: style ?? AppTypography.bodyMedium);
+  // One line: a list row gives the name most of its width, and a name that
+  // still will not fit ends in an ellipsis rather than wrapping the row tall.
+  final text = Text(
+    name,
+    maxLines: 1,
+    overflow: TextOverflow.ellipsis,
+    style: style ?? AppTypography.bodyMedium,
+  );
   if (card == null) return text;
   return Row(
     children: [
