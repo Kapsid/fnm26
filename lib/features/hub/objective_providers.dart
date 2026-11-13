@@ -887,9 +887,7 @@ Future<({int ordinal, bool over})?> _storedDrawRun({
         EuroPlayoffs.rounds.contains(f.round) &&
         f.hasResult &&
         (f.homeNationId == nationId || f.awayNationId == nationId) &&
-        (f.homeNationId == nationId
-            ? f.homeScore! < f.awayScore!
-            : f.awayScore! < f.homeScore!),
+        _lostTie(f, nationId),
   );
   return (ordinal: 1, over: beaten);
 }
@@ -1511,3 +1509,16 @@ String _resultLabel(
     ),
   ),
 );
+
+/// Whether [nationId] lost the decided tie [f]: on the score, or level and
+/// out on penalties (a play-off tie goes to a shootout when level).
+bool _lostTie(Fixture f, int nationId) {
+  final home = f.homeNationId == nationId;
+  final mine = home ? f.homeScore! : f.awayScore!;
+  final theirs = home ? f.awayScore! : f.homeScore!;
+  if (mine != theirs) return mine < theirs;
+  if (!f.wentToShootout) return false;
+  final myPens = home ? f.homePenalties! : f.awayPenalties!;
+  final theirPens = home ? f.awayPenalties! : f.homePenalties!;
+  return myPens < theirPens;
+}
