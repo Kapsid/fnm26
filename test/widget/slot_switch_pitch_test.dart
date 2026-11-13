@@ -21,15 +21,24 @@ import '../helpers/fixtures.dart';
 void main() {
   const formation = Formation.f433;
 
+  var longNames = false;
+
   List<Player> squad() => [
     for (var i = 0; i < 11; i++)
       player(
         id: i + 1,
         nationId: 1,
-        name: 'Starter${i + 1}',
+        name: longNames
+            ? 'Bartolomej Wojciechowski-Hrabě${i + 1}'
+            : 'Starter${i + 1}',
         position: formation.positions[i],
       ),
-    for (var i = 12; i <= 16; i++) player(id: i, nationId: 1, name: 'Bench$i'),
+    for (var i = 12; i <= 16; i++)
+      player(
+        id: i,
+        nationId: 1,
+        name: longNames ? 'Maximilián Pavlíčkovský$i' : 'Bench$i',
+      ),
   ];
 
   late InMatchTacticsResult? result;
@@ -38,10 +47,11 @@ void main() {
     WidgetTester tester, {
     SlotSwitches switches = SlotSwitches.none,
     double width = 400,
+    double height = 2600,
     Locale locale = const Locale('en'),
   }) async {
     result = null;
-    await tester.binding.setSurfaceSize(Size(width, 2600));
+    await tester.binding.setSurfaceSize(Size(width, height));
     addTearDown(() => tester.binding.setSurfaceSize(null));
     await tester.pumpWidget(
       ProviderScope(
@@ -112,6 +122,47 @@ void main() {
     expect(result!.switches.bySlot, {6: PlayerPosition.dm});
     expect(result!.positions[6], PlayerPosition.dm);
     expect(result!.lineup, [for (var i = 1; i <= 11; i++) i]);
+  });
+
+  // Reported from Android: switching a player, the names in the picker
+  // wrapped over three lines. The "On" chip and the ratings took the right
+  // half of the row; the chip now rides on the age line instead.
+  testWidgets('a long name keeps one line and most of the row at 320', (
+    tester,
+  ) async {
+    longNames = true;
+    addTearDown(() => longNames = false);
+    // A real phone's window, so the picker is the phone's full-width bottom
+    // sheet (the test view's default size reads as a tablet: a dialog).
+    tester.view
+      ..devicePixelRatio = 1
+      ..physicalSize = const Size(320, 690);
+    addTearDown(tester.view.reset);
+    await open(tester, width: 320, height: 690, locale: const Locale('cs'));
+    await tester.tap(disc(6));
+    await tester.pumpAndSettle();
+    final names = find.byWidgetPredicate(
+      (w) =>
+          w is Text &&
+          (w.data ?? '').startsWith(RegExp('Bartolomej|Maximilián')),
+    );
+    expect(names, findsWidgets);
+    for (final e in names.evaluate()) {
+      final box = e.renderObject! as RenderBox;
+      final text = e.widget as Text;
+      final size = box.size;
+      final font = DefaultTextStyle.of(e).style.merge(text.style).fontSize!;
+      expect(size.height, lessThan(font * 2), reason: '${text.data} wraps');
+      final row = tester.getSize(
+        find.ancestor(of: find.byWidget(text), matching: find.byType(ListTile)),
+      );
+      expect(
+        size.width,
+        greaterThanOrEqualTo(row.width * 0.6),
+        reason: '${text.data} room',
+      );
+    }
+    expect(tester.takeException(), isNull);
   });
 
   for (final code in ['fi', 'de', 'cs', 'hu']) {

@@ -839,9 +839,18 @@ class TacticsScreen extends ConsumerWidget {
               final eff = PositionFit.effectiveOverall(p, position);
               return ListTile(
                 dense: true,
+                // Tighter sides and gap than a stock tile: on a 320 phone the
+                // name is what needs the width.
+                contentPadding: _pickerRowPadding,
+                horizontalTitleGap: _pickerRowGap,
                 leading: TacticalChip(p.position.label),
+                // ONE line: the trailing side is kept to the numbers, so the
+                // name has most of the row (it used to wrap over three lines
+                // on a narrow Android phone with the "In XI" chip beside it).
                 title: Text(
                   p.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: AppTypography.bodyMedium.copyWith(
                     color: inXi ? AppColors.onSurfaceVariant : null,
                     fontWeight: inXi ? FontWeight.w400 : FontWeight.w600,
@@ -855,21 +864,29 @@ class TacticsScreen extends ConsumerWidget {
                 // words made the row shout, and the amber that matters — the
                 // number the match is decided on — stopped standing out for
                 // being one of three.
-                subtitle: Text(
-                  l.tacticsAgeOnly(p.age),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTypography.labelSmall.copyWith(
-                    color: AppColors.onSurfaceVariant,
-                  ),
+                // The "In XI" mark rides on the age line, not beside the
+                // rating: there it took the room the name needed.
+                subtitle: Row(
+                  children: [
+                    Flexible(
+                      child: Text(
+                        l.tacticsAgeOnly(p.age),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.labelSmall.copyWith(
+                          color: AppColors.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                    if (inXi) ...[
+                      const SizedBox(width: AppSpacing.sm),
+                      TacticalChip(l.tacticsInXi),
+                    ],
+                  ],
                 ),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (inXi) ...[
-                      TacticalChip(l.tacticsInXi),
-                      const SizedBox(width: AppSpacing.sm),
-                    ],
                     // The rating in THIS slot leads — the number the match
                     // engine uses — in amber when it is docked, with the
                     // player's own overall behind it for the comparison.
@@ -1855,3 +1872,8 @@ class _PlayerTacticRow extends StatelessWidget {
     );
   }
 }
+
+/// The slot picker rows' side padding and chip-to-name gap: tighter than a
+/// stock [ListTile] so the player's name keeps most of a narrow phone's row.
+const EdgeInsets _pickerRowPadding = EdgeInsets.symmetric(horizontal: 8);
+const double _pickerRowGap = 10;
