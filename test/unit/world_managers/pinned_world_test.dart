@@ -34,6 +34,8 @@ void main() {
       // fixture of it is byte for byte the 1.1.1 world (re-pinned for
       // 1.1.2 from fixture 2697 on, the rollover into a calendar2 cycle).
       calendar2: false,
+      // And its finals on the old 3-day spacing (TournamentCalendar).
+      tournamentSpacing: false,
     );
     for (var i = 0; i < 120; i++) {
       await d.step();
