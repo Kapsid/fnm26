@@ -7628,6 +7628,15 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get rankingSinceWcDrawShort => 'DŞ kurasından beri';
+
+  @override
+  String get rankingSinceCycleStartShort => 'bu kampanyada';
+
+  @override
+  String get rankingTrend => 'Sıralama eğilimi';
+
+  @override
   String msgCapsTitle(String name, int count) {
     return '$name $count milli maça ulaştı';
   }

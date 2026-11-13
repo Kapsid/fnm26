@@ -7723,6 +7723,15 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get rankingSinceWcDrawShort => 'since the WC draw';
+
+  @override
+  String get rankingSinceCycleStartShort => 'this campaign';
+
+  @override
+  String get rankingTrend => 'Ranking trend';
+
+  @override
   String msgCapsTitle(String name, int count) {
     return '$name reaches $count caps';
   }

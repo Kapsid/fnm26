@@ -7746,6 +7746,15 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
+  String get rankingSinceWcDrawShort => 'από την κλήρωση ΠΠ';
+
+  @override
+  String get rankingSinceCycleStartShort => 'σε αυτή την εκστρατεία';
+
+  @override
+  String get rankingTrend => 'Τάση κατάταξης';
+
+  @override
   String msgCapsTitle(String name, int count) {
     return '$name: $count συμμετοχές';
   }

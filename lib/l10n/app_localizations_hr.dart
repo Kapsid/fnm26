@@ -7885,6 +7885,15 @@ class AppLocalizationsHr extends AppLocalizations {
   }
 
   @override
+  String get rankingSinceWcDrawShort => 'od ždrijeba SP-a';
+
+  @override
+  String get rankingSinceCycleStartShort => 'u ovoj kampanji';
+
+  @override
+  String get rankingTrend => 'Kretanje na ljestvici';
+
+  @override
   String msgCapsTitle(String name, int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

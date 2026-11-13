@@ -7477,6 +7477,15 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String get rankingSinceWcDrawShort => '세계선수권 추첨 이후';
+
+  @override
+  String get rankingSinceCycleStartShort => '이번 캠페인';
+
+  @override
+  String get rankingTrend => '순위 추이';
+
+  @override
   String msgCapsTitle(String name, int count) {
     return '$name, A매치 $count경기 달성';
   }

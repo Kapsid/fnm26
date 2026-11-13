@@ -7748,6 +7748,15 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String get rankingSinceWcDrawShort => 'dal sorteggio CM';
+
+  @override
+  String get rankingSinceCycleStartShort => 'in questa campagna';
+
+  @override
+  String get rankingTrend => 'Andamento nel ranking';
+
+  @override
   String msgCapsTitle(String name, int count) {
     return '$name raggiunge $count presenze';
   }

@@ -7760,6 +7760,15 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get rankingSinceWcDrawShort => 'seit der WM-Auslosung';
+
+  @override
+  String get rankingSinceCycleStartShort => 'in dieser Kampagne';
+
+  @override
+  String get rankingTrend => 'Ranglistentrend';
+
+  @override
   String msgCapsTitle(String name, int count) {
     return '$name erreicht $count Länderspiele';
   }

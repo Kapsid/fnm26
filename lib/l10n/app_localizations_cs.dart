@@ -7952,6 +7952,15 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String get rankingSinceWcDrawShort => 'od losu MS';
+
+  @override
+  String get rankingSinceCycleStartShort => 'v této kampani';
+
+  @override
+  String get rankingTrend => 'Vývoj pořadí';
+
+  @override
   String msgCapsTitle(String name, int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

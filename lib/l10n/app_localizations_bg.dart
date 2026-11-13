@@ -7751,6 +7751,15 @@ class AppLocalizationsBg extends AppLocalizations {
   }
 
   @override
+  String get rankingSinceWcDrawShort => 'от жребия за СП';
+
+  @override
+  String get rankingSinceCycleStartShort => 'в тази кампания';
+
+  @override
+  String get rankingTrend => 'Тенденция в класирането';
+
+  @override
   String msgCapsTitle(String name, int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

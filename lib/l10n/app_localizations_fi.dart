@@ -7761,6 +7761,15 @@ class AppLocalizationsFi extends AppLocalizations {
   }
 
   @override
+  String get rankingSinceWcDrawShort => 'MM-arvonnasta';
+
+  @override
+  String get rankingSinceCycleStartShort => 'tässä kampanjassa';
+
+  @override
+  String get rankingTrend => 'Sijoituksen kehitys';
+
+  @override
   String msgCapsTitle(String name, int count) {
     return '$name saavuttaa $count maaottelua';
   }
