@@ -13,6 +13,7 @@ import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../helpers/calendar2_draws.dart';
 import '../../helpers/test_database.dart';
 import 'greenland_fixtures.dart';
 
@@ -129,6 +130,10 @@ void main() {
       final without = await _start(seed, nationId, dormant: false);
       final id = withG.career.id;
       expect(without.career.id, id);
+      // On calendar2 Europe's qualifying is drawn after its first Nations
+      // Cup: drawn now in both worlds, with the inputs it would have then.
+      await drawEuroQualifyingNow(withG.c, id);
+      await drawEuroQualifyingNow(without.c, id);
       final repo = withG.c.read(nationRepositoryProvider);
 
       // Its world is the base world.

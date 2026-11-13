@@ -285,6 +285,10 @@ abstract interface class CompetitionRepository {
     int cycle = 0,
     CompetitionKind kind = CompetitionKind.worldCupQualifying,
     String? fixtureRound,
+
+    /// Which edition of [kind] in [cycle] this is (see `Competitions.edition`):
+    /// 0 for every competition but a calendar2 cycle's second Nations Cup.
+    int edition = 0,
   });
 
   /// A nation's fixtures, ordered by date.
@@ -438,6 +442,20 @@ abstract interface class CompetitionRepository {
   /// Whether the finals competition has been created for this save.
   Future<bool> hasFinals(int careerId);
 
+  /// Removes a draw-watched marker, so its ceremony is offered again. Only a
+  /// calendar2 cycle's second Nations Cup uses it: both editions share the
+  /// one ceremony key, which is cleared once the first is played out.
+  Future<void> unmarkDrawWatched(int careerId, int cycle, String kind);
+
+  /// The id of the current cycle's competition of [kind] (see
+  /// [tournamentGroupTables] for [confederation] and [edition]), or null.
+  Future<int?> competitionIdOf(
+    int careerId,
+    CompetitionKind kind, {
+    Confederation? confederation,
+    int? edition,
+  });
+
   /// Whether a continental-finals tournament is under way this cycle — it
   /// exists and still has an unplayed fixture. Lets the hub surface the
   /// continental championship even when the player's nation didn't qualify.
@@ -551,10 +569,15 @@ abstract interface class CompetitionRepository {
 
   /// Group tables for the current cycle's tournament of [kind], ordered by
   /// group name (empty if it has no group stage).
+  ///
+  /// A calendar2 cycle holds two Nations Cups for Europe: [edition] names
+  /// one. Null reads the latest edition the cycle has (the only one, in any
+  /// other cycle), which is the one being played or last played.
   Future<List<FinalsGroupTable>> tournamentGroupTables(
     int careerId,
     CompetitionKind kind, {
     Confederation? confederation,
+    int? edition,
   });
 
   /// Knockout fixtures for a [round] (`R16`/`QF`/`SF`/`3RD`/`FINAL`) of the
@@ -564,6 +587,7 @@ abstract interface class CompetitionRepository {
     String round, {
     CompetitionKind kind = CompetitionKind.worldCupFinals,
     Confederation? confederation,
+    int? edition,
   });
 
   /// All finals knockout fixtures (round ≠ `GROUP`), by date then id.
@@ -579,13 +603,16 @@ abstract interface class CompetitionRepository {
     CompetitionKind kind = CompetitionKind.worldCupFinals,
     Confederation? confederation,
     List<DateTime>? dates,
+    int? edition,
   });
 
-  /// Whether the current cycle has a tournament of [kind].
+  /// Whether the current cycle has a tournament of [kind] ([edition] as in
+  /// [tournamentGroupTables]; null: any edition).
   Future<bool> hasTournament(
     int careerId,
     CompetitionKind kind, {
     Confederation? confederation,
+    int? edition,
   });
 
   /// Creates a knockout tournament for the current cycle, seeding [pairings]

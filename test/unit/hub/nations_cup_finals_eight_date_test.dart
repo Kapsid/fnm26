@@ -55,6 +55,8 @@ void main() {
                     nationId: morocco.id,
                     managerName: 'M',
                     rngSeed: 12345,
+                    // The world the scenario was found in (before 1.1.2).
+                    calendar2: false,
                   ))
               .valueOrNull!;
       final comp = container.read(competitionRepositoryProvider);

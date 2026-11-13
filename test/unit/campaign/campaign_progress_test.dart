@@ -22,6 +22,7 @@ import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../helpers/calendar2_draws.dart';
 import '../../helpers/test_database.dart';
 
 /// A campaign's goal is graded from what the save has recorded: the Grudge
@@ -98,7 +99,10 @@ void main() {
   }
 
   /// The European qualifying group holding [nationId], as nation ids.
+  /// On calendar2 the draw is made after the first Nations Cup; it is made
+  /// here, with the inputs (and so the groups) it would be made with.
   Future<List<int>> qualifyingGroupOf(int careerId, int nationId) async {
+    await drawEuroQualifyingNow(container, careerId);
     final tables = await container
         .read(competitionRepositoryProvider)
         .tournamentGroupTables(

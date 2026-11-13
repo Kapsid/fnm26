@@ -12,6 +12,7 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/campaign/campaign_grading.dart';
 import 'package:fnm/domain/services/campaign/campaigns.dart';
+import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
@@ -349,6 +350,7 @@ campaignProgressProvider = FutureProvider.autoDispose
               confederation: conf,
               year: CareerService.continentalFinalsYear(cyclePointer),
               fixtures: fixtures,
+              calendar2: await isCalendar2(comp, careerId, cyclePointer),
             )
           : null;
       final bestOrdinal = cycleRuns
@@ -504,9 +506,30 @@ Future<({int ordinal, bool over})> campaignNationsCupRun({
   required Confederation confederation,
   required int year,
   required List<Fixture> fixtures,
+
+  /// A calendar2 cycle plays Europe's cup twice: the second edition (the one
+  /// filed under [year], the old slot) is the cycle's cup here, as it is for
+  /// the board.
+  bool calendar2 = false,
 }) async {
   final cup = NationsCups.forConfederation(confederation);
   if (cup == null) return (ordinal: 0, over: true);
+  final edition = Calendar2.gradedEdition(
+    confederation,
+    calendar2: calendar2,
+  );
+  if (calendar2 && Calendar2.twoEditions(confederation)) {
+    final compId = await comp.competitionIdOf(
+      careerId,
+      CompetitionKind.nationsLeague,
+      confederation: confederation,
+      edition: edition,
+    );
+    fixtures = [
+      for (final f in fixtures)
+        if (f.competitionId == compId) f,
+    ];
+  }
   final decided = await comp.hasHonour(careerId, cup.name, year);
   // The title, however the cup crowned it: a ladder with a lone League A
   // group winner crowns it outright, with no final to read.
@@ -535,6 +558,7 @@ Future<({int ordinal, bool over})> campaignNationsCupRun({
     careerId,
     CompetitionKind.nationsLeague,
     confederation: confederation,
+    edition: calendar2 ? edition : null,
   );
   final table = tables
       .where((t) => t.standings.any((s) => s.nationId == nationId))

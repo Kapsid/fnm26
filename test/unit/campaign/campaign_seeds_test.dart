@@ -16,6 +16,7 @@ import 'package:fnm/domain/services/nation/dormant_nations.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../helpers/calendar2_draws.dart';
 import '../../helpers/test_database.dart';
 import '../greenland/greenland_fixtures.dart';
 
@@ -192,6 +193,8 @@ void main() {
                   stadiumHostRules: false,
                 ))
             .valueOrNull!;
+    // On calendar2 drawn after the first Nations Cup, with these inputs.
+    await drawEuroQualifyingNow(c, career.id);
     final tables = await c
         .read(competitionRepositoryProvider)
         .tournamentGroupTables(
@@ -334,6 +337,7 @@ void main() {
                     newCareerNations: false,
                   ))
               .valueOrNull!;
+      await drawEuroQualifyingNow(c, career.id);
       final tables = await c
           .read(competitionRepositoryProvider)
           .tournamentGroupTables(
