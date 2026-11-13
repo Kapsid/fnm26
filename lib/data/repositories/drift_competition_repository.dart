@@ -1908,6 +1908,101 @@ class DriftCompetitionRepository implements CompetitionRepository {
   }
 
   @override
+  Future<List<DrawSlot>> drawSlots(
+    int careerId,
+    int cycle,
+    CompetitionKind kind, {
+    Confederation? confederation,
+  }) async {
+    final rows =
+        await (_db.select(_db.drawSlots)
+              ..where(
+                (t) =>
+                    t.careerId.equals(careerId) &
+                    t.cycle.equals(cycle) &
+                    t.competitionKind.equals(kind.name) &
+                    (confederation == null
+                        ? t.confederation.isNull()
+                        : t.confederation.equalsValue(confederation)),
+              )
+              ..orderBy([
+                (t) => OrderingTerm(expression: t.groupName),
+                (t) => OrderingTerm(expression: t.position),
+              ]))
+            .get();
+    return [
+      for (final r in rows)
+        (
+          groupName: r.groupName,
+          position: r.position,
+          nationId: r.nationId,
+          placeholderKey: r.placeholderKey,
+          resolvedNationId: r.resolvedNationId,
+        ),
+    ];
+  }
+
+  @override
+  Future<void> saveDrawSlots({
+    required int careerId,
+    required int cycle,
+    required CompetitionKind kind,
+    Confederation? confederation,
+    required List<DrawSlot> slots,
+  }) async {
+    await _db.transaction(() async {
+      await (_db.delete(_db.drawSlots)..where(
+            (t) =>
+                t.careerId.equals(careerId) &
+                t.cycle.equals(cycle) &
+                t.competitionKind.equals(kind.name) &
+                (confederation == null
+                    ? t.confederation.isNull()
+                    : t.confederation.equalsValue(confederation)),
+          ))
+          .go();
+      await _db.batch((b) {
+        b.insertAll(_db.drawSlots, [
+          for (final s in slots)
+            DrawSlotsCompanion.insert(
+              careerId: careerId,
+              cycle: cycle,
+              competitionKind: kind.name,
+              confederation: Value(confederation),
+              groupName: s.groupName,
+              position: s.position,
+              nationId: Value(s.nationId),
+              placeholderKey: Value(s.placeholderKey),
+              resolvedNationId: Value(s.resolvedNationId),
+            ),
+        ]);
+      });
+    });
+  }
+
+  @override
+  Future<void> resolveDrawSlot({
+    required int careerId,
+    required int cycle,
+    required CompetitionKind kind,
+    Confederation? confederation,
+    required String placeholderKey,
+    required int nationId,
+  }) async {
+    await (_db.update(_db.drawSlots)..where(
+          (t) =>
+              t.careerId.equals(careerId) &
+              t.cycle.equals(cycle) &
+              t.competitionKind.equals(kind.name) &
+              t.placeholderKey.equals(placeholderKey) &
+              (confederation == null
+                  ? t.confederation.isNull()
+                  : t.confederation.equalsValue(confederation)),
+        ))
+        .write(DrawSlotsCompanion(resolvedNationId: Value(nationId)));
+  }
+
+  @override
   Future<void> unmarkDrawWatched(int careerId, int cycle, String kind) async {
     await (_db.delete(_db.drawsWatched)..where(
           (t) =>

@@ -175,6 +175,7 @@ abstract final class GroupAdvancement {
       // A knockout, so it has no group table — this is never called for it, but
       // the switch must stay exhaustive.
       case CompetitionKind.worldCupPlayoff:
+      case CompetitionKind.continentalPlayoff:
         return (direct: 2, contention: null, relegate: 0);
     }
   }
@@ -246,6 +247,7 @@ abstract final class GroupAdvancement {
       case CompetitionKind.friendly:
       case CompetitionKind.finalissima:
       case CompetitionKind.worldCupPlayoff:
+      case CompetitionKind.continentalPlayoff:
         return '';
     }
   }

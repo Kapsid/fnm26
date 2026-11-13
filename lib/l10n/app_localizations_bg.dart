@@ -17895,4 +17895,81 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get pressPromiseJudgedMatch => 'Решава резултатът от следващия мач.';
+
+  @override
+  String get hubEventWatchEuroPlayoffDraw => 'Гледай жребия за плейофите';
+
+  @override
+  String get hubEventWatchEuroPlayoffs => 'Гледай плейофите';
+
+  @override
+  String get hubCallUpPlayoffs => 'Обяви състава за плейофите';
+
+  @override
+  String compPlayoffs(String competition) {
+    return '$competition: плейоф';
+  }
+
+  @override
+  String newsEuroPlayoffPathTitle(String cup, String path) {
+    return '$cup, плейоф: Път $path';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyHome(String opponent) {
+    return 'Полуфинал в един мач у дома срещу $opponent през март, а след него единичен финал за място на финалите.';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyAway(String opponent) {
+    return 'Полуфинал в един мач като гост на $opponent през март, а след него единичен финал за място на финалите.';
+  }
+
+  @override
+  String get euroPlayoffDrawTitle => 'ЖРЕБИЙ ЗА ПЛЕЙОФИТЕ';
+
+  @override
+  String get euroPlayoffIntro =>
+      'Първите два отбора от всяка квалификационна група са класирани. Останалите места се решават в плейоф пътища с по четири отбора, по един за всяка лига на Nations Cup: полуфинали в един мач при по-високо поставения през март, после единичен финал.';
+
+  @override
+  String euroPlayoffPath(String path) {
+    return 'Път $path';
+  }
+
+  @override
+  String get euroPlayoffYourPath => 'Вашият път';
+
+  @override
+  String euroPlayoffSemi(int number) {
+    return 'Полуфинал $number';
+  }
+
+  @override
+  String euroPlayoffFinalHost(int number) {
+    return 'Финал, домакин е победителят от полуфинал $number';
+  }
+
+  @override
+  String euroPlayoffFinalPending(int first, int second) {
+    return 'Победителят от полуфинал $first срещу победителя от полуфинал $second';
+  }
+
+  @override
+  String euroPlayoffWinnerToGroup(String group) {
+    return 'Победителят отива в група $group';
+  }
+
+  @override
+  String euroPlayoffWinnerPlaceholder(String path) {
+    return 'Победителят от Път $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWin(String path, String group) {
+    return 'Вашата група, ако спечелите Път $path: група $group';
+  }
+
+  @override
+  String get euroPlayoffBracketHeading => 'ПЛЕЙОФИ';
 }

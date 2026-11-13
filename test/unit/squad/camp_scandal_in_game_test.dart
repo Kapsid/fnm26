@@ -24,7 +24,14 @@ void main() {
     () async {
       final c = storyContainer();
       addTearDown(c.dispose);
-      final d = await StoryDriver.start(c, 11);
+      // Seed 12 (England): the walk must reach a World Championship camp.
+      // Seed 11's world played out differently once Europe's play-offs (and
+      // their fixtures) joined the calendar2 cycle: England finished second
+      // in its World Championship qualifying group on goal difference and
+      // only watched the finals, so no walk through it met that camp. That
+      // is football, not a scandal bug; seed 12 qualifies and meets every part
+      // of the cycle (early campaigns, the qualifiers, the finals camp).
+      final d = await StoryDriver.start(c, 12);
       final comp = c.read(competitionRepositoryProvider);
       final career = (await c.read(careerRepositoryProvider).byId(d.careerId))!;
       final seen =

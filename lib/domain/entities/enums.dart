@@ -59,6 +59,11 @@ enum CompetitionKind {
   /// The intercontinental play-off: a six-team knockout for the last two World
   /// Cup places, contested by the best qualifying also-rans.
   worldCupPlayoff,
+
+  /// A confederation's play-offs for its continental championship (Europe's,
+  /// on the calendar2 rhythm: four-team paths from the first Nations Cup).
+  /// Every lookup names its confederation.
+  continentalPlayoff,
 }
 
 /// Display helpers for [Confederation].

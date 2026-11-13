@@ -17902,4 +17902,81 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get pressPromiseJudgedMatch =>
       'Κρίνεται από το αποτέλεσμα του επόμενου ματς.';
+
+  @override
+  String get hubEventWatchEuroPlayoffDraw => 'Δες την κλήρωση των μπαράζ';
+
+  @override
+  String get hubEventWatchEuroPlayoffs => 'Δες τα μπαράζ';
+
+  @override
+  String get hubCallUpPlayoffs => 'Όρισε την αποστολή για τα μπαράζ';
+
+  @override
+  String compPlayoffs(String competition) {
+    return '$competition: Μπαράζ';
+  }
+
+  @override
+  String newsEuroPlayoffPathTitle(String cup, String path) {
+    return '$cup, μπαράζ: Διαδρομή $path';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyHome(String opponent) {
+    return 'Ημιτελικός σε έναν αγώνα εντός έδρας με την ομάδα $opponent τον Μάρτιο και μετά ένας μοναδικός τελικός για μια θέση στην τελική φάση.';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyAway(String opponent) {
+    return 'Ημιτελικός σε έναν αγώνα εκτός έδρας με την ομάδα $opponent τον Μάρτιο και μετά ένας μοναδικός τελικός για μια θέση στην τελική φάση.';
+  }
+
+  @override
+  String get euroPlayoffDrawTitle => 'ΚΛΗΡΩΣΗ ΜΠΑΡΑΖ';
+
+  @override
+  String get euroPlayoffIntro =>
+      'Οι δύο πρώτοι κάθε ομίλου προκριματικών προκρίνονται. Οι τελευταίες θέσεις κρίνονται σε διαδρομές μπαράζ τεσσάρων ομάδων, μία για κάθε λίγκα του Κυπέλλου Εθνών: ημιτελικοί σε έναν αγώνα στην έδρα της ψηλότερης κεφαλής τον Μάρτιο και μετά ένας μοναδικός τελικός.';
+
+  @override
+  String euroPlayoffPath(String path) {
+    return 'Διαδρομή $path';
+  }
+
+  @override
+  String get euroPlayoffYourPath => 'Η διαδρομή σου';
+
+  @override
+  String euroPlayoffSemi(int number) {
+    return 'Ημιτελικός $number';
+  }
+
+  @override
+  String euroPlayoffFinalHost(int number) {
+    return 'Τελικός, με γηπεδούχο τον νικητή του ημιτελικού $number';
+  }
+
+  @override
+  String euroPlayoffFinalPending(int first, int second) {
+    return 'Νικητής ημιτελικού $first εναντίον νικητή ημιτελικού $second';
+  }
+
+  @override
+  String euroPlayoffWinnerToGroup(String group) {
+    return 'Ο νικητής πηγαίνει στον όμιλο $group';
+  }
+
+  @override
+  String euroPlayoffWinnerPlaceholder(String path) {
+    return 'Νικητής διαδρομής $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWin(String path, String group) {
+    return 'Ο όμιλός σου αν κερδίσεις τη διαδρομή $path: όμιλος $group';
+  }
+
+  @override
+  String get euroPlayoffBracketHeading => 'ΜΠΑΡΑΖ';
 }

@@ -4,6 +4,7 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'dart:async';
 
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
@@ -25,6 +26,7 @@ import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/repositories/tactic_familiarity_repository.dart';
 import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
@@ -150,6 +152,7 @@ import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/messages/transfer_report.dart';
 
 part 'season_cycle.dart';
+part 'season_euro_playoffs.dart';
 part 'season_finals.dart';
 part 'season_rollover.dart';
 
@@ -2209,6 +2212,15 @@ class SeasonService {
     });
   }
 
+  /// Runs one pass of the season's progression (the draws, rounds and
+  /// finals that are due) without moving the clock or playing a match. For
+  /// tests that set results by hand.
+  @visibleForTesting
+  Future<void> progressForTest(int careerId) async {
+    await _ensureRank(careerId);
+    await _progress(careerId);
+  }
+
   /// Quick-sims the world to the player's next match, or — if the player has
   /// no fixture — fast-forwards through the rest of the cycle (other regions'
   /// qualifiers, the finals draw, and the knockout) to the champion.
@@ -2361,6 +2373,36 @@ class SeasonService {
         await _catchUp(
           careerId,
           finalsDate,
+          career.rngSeed,
+          excludeNationId: career.nationId,
+        );
+        break;
+      }
+
+      // 1a. Europe's play-offs (calendar2) are being played and the manager
+      //     is not in them, or is out: step them a day at a time, so they
+      //     are watched. An entrant is told from ANY unplayed play-off
+      //     fixture of his, never from his next one alone (a friendly before
+      //     it must not hand his semi to the catch-up). Mirrors
+      //     nextEventProvider.
+      final playoffDate = playerConf != Confederation.europe
+          ? null
+          : await _comp.earliestUnplayedDateOfKind(
+              careerId,
+              CompetitionKind.continentalPlayoff,
+              confederation: Confederation.europe,
+            );
+      final playerInPlayoff = playerFixtures.any(
+        (f) => !f.hasResult && EuroPlayoffs.rounds.contains(f.round),
+      );
+      if (playoffDate != null &&
+          !playerInPlayoff &&
+          (next == null || !playoffDate.isAfter(next.date))) {
+        if (await stopForVote(playoffDate)) break;
+        await _careers.updateInGameDate(careerId, playoffDate);
+        await _catchUp(
+          careerId,
+          playoffDate,
           career.rngSeed,
           excludeNationId: career.nationId,
         );

@@ -2,7 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/campaign/campaigns.dart';
+import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/campaign/campaign_record_store.dart';
 import 'package:fnm/features/hub/hub_event.dart';
@@ -74,12 +76,43 @@ void main() {
       final events = <HubEvent>[];
       int? verdictAt;
       int? firstAfterContinentalDraw;
+      // The first step at which Georgia's place in the finals field is known
+      // (see the verdict check below).
+      int? fieldKnownAt;
+      bool? playoffEntrant;
       var drawSeen = false;
       int? starsAtVerdict;
+      final comp = c.read(competitionRepositoryProvider);
+      final georgia = Campaigns.grudge.nationId;
       d.beforeEvent = (e) async {
         final i = events.length;
         events.add(e);
-        if (drawSeen) firstAfterContinentalDraw ??= i;
+        if (drawSeen) {
+          firstAfterContinentalDraw ??= i;
+          playoffEntrant ??= EuroPlayoffs.fromSlots(
+            await comp.drawSlots(
+              d.careerId,
+              0,
+              CompetitionKind.continentalPlayoff,
+              confederation: Confederation.europe,
+            ),
+          ).any((p) => p.seeds.contains(georgia));
+          if (fieldKnownAt == null) {
+            final played = [
+              for (final f in await comp.cycleFixturesForNation(
+                d.careerId,
+                georgia,
+              ))
+                if (EuroPlayoffs.rounds.contains(f.round) && f.hasResult) f,
+            ];
+            final pathDecided = played.any(
+              (f) =>
+                  f.round == EuroPlayoffs.finalRound ||
+                  !campaignNationWon(f, georgia),
+            );
+            if (!playoffEntrant! || pathDecided) fieldKnownAt = i;
+          }
+        }
         if (e.route != null &&
             Uri.parse(e.route!).path == Routes.continentalDraw) {
           drawSeen = true;
@@ -97,15 +130,32 @@ void main() {
         expect(++steps, lessThan(5000), reason: 'the run never ended');
       }
 
-      // The verdict arrived, once, no later than the step after the
-      // continental finals draw (when the finals field decides the Grudge).
+      // The verdict arrived, once, as soon as Georgia's place in the finals
+      // field was known (that decides the Grudge's "and qualify" star). On
+      // the calendar2 rhythm Europe's finals are drawn in November with a
+      // placeholder per play-off path and created after the March
+      // play-offs: a side drawn straight in, or in neither the draw nor a
+      // path, knows at the draw (the step after it, as before calendar2); a
+      // path's entrant only once its path is decided. Seed 240's Georgia
+      // finishes above Albania but outside the top two, a play-off
+      // entrant (a semi won on 21 March, the path final on the 26th). A side
+      // beaten there is then offered send-off friendlies by the qualified
+      // (hub order 1b-i, ahead of the verdict): those may come first.
       expect(verdictAt, isNotNull);
       expect(
         firstAfterContinentalDraw,
         isNotNull,
         reason: 'the continental finals draw event was seen',
       );
-      expect(verdictAt, lessThanOrEqualTo(firstAfterContinentalDraw!));
+      expect(fieldKnownAt, isNotNull, reason: 'the finals field was settled');
+      if (!playoffEntrant!) {
+        expect(fieldKnownAt, firstAfterContinentalDraw);
+      }
+      var verdictDue = fieldKnownAt!;
+      while (events[verdictDue].kind == HubEventKind.warmUpOffer) {
+        verdictDue++;
+      }
+      expect(verdictAt, lessThanOrEqualTo(verdictDue));
       final verdicts = events
           .where((e) => e.route?.startsWith(Routes.campaignVerdict) ?? false)
           .length;

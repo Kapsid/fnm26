@@ -8,6 +8,7 @@ import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/domain/services/competition/tournament_calendar.dart';
 import 'package:fnm/domain/services/competition/calendar2.dart';
+import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/util/nation_label.dart';
@@ -169,6 +170,7 @@ String _callUpLabel(AppLocalizations l, Fixture f) {
     'GROUP' => l.hubCallUpWorldCup,
     'CGROUP' => l.hubCallUpFinals,
     'NGROUP' => l.hubCallUpNationsCup,
+    EuroPlayoffs.semiRound || EuroPlayoffs.finalRound => l.hubCallUpPlayoffs,
     'CQ' || null => l.hubCallUpQualifying,
     _ => l.hubCallUpGeneric,
   };
@@ -545,14 +547,40 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
   //     A non-qualifier following their continent's draw is the point, not an
   //     edge case.
   final playerConf = hub.nations[hub.career.nationId]?.confederation;
-  // Named confederation: every continent's cup is a competition of this same
-  // kind, so an unqualified check fires on somebody else's tournament.
-  if (playerConf != null &&
-      await comp.hasTournament(
+  // 2a-0. Europe's play-off draw (a calendar2 cycle), read from the paths
+  //       stored the day qualifying was played out: before the finals draw
+  //       that names each path's winner as a placeholder.
+  final euroPlayoffDrawn =
+      playerConf == Confederation.europe &&
+      (await comp.drawSlots(
         careerId,
-        CompetitionKind.continentalFinals,
-        confederation: playerConf,
-      ) &&
+        cycle,
+        CompetitionKind.continentalPlayoff,
+        confederation: Confederation.europe,
+      )).isNotEmpty;
+  if (euroPlayoffDrawn &&
+      !await comp.hasWatchedDraw(
+        careerId,
+        cycle,
+        EuroPlayoffs.drawWatchedKind,
+      )) {
+    return HubEvent(
+      kind: HubEventKind.draw,
+      label: l.hubEventWatchEuroPlayoffDraw,
+      icon: Icons.casino,
+      route: '${Routes.euroPlayoffDraw}?careerId=$careerId',
+    );
+  }
+  // Named confederation: every continent's cup is a competition of this same
+  // kind, so an unqualified check fires on somebody else's tournament. A
+  // calendar2 EURO is drawn (with its placeholders) months before it exists.
+  if (playerConf != null &&
+      (euroPlayoffDrawn ||
+          await comp.hasTournament(
+            careerId,
+            CompetitionKind.continentalFinals,
+            confederation: playerConf,
+          )) &&
       !await comp.hasWatchedDraw(careerId, cycle, continentalFinalsDrawKind)) {
     return HubEvent(
       kind: HubEventKind.draw,
@@ -752,6 +780,36 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       route: conf == null
           ? null
           : '${Routes.continental}?careerId=$careerId&conf=${conf.name}',
+    );
+  }
+
+  // 2c-ii. Europe's play-offs are being played and the manager is not in
+  //        them (or is out): step them a day at a time, as a finals is, so
+  //        they are watched rather than skipped. An entrant is told from ANY
+  //        unplayed play-off fixture of his, not his next one (see
+  //        finals-participant guard, and its twin in [SeasonService]).
+  final playoffDate = playerConf != Confederation.europe
+      ? null
+      : await comp.earliestUnplayedDateOfKind(
+          careerId,
+          CompetitionKind.continentalPlayoff,
+          confederation: Confederation.europe,
+        );
+  final playerInPlayoff = hub.fixtures.any(
+    (f) => !f.hasResult && EuroPlayoffs.rounds.contains(f.round),
+  );
+  if (playoffDate != null &&
+      !playerInPlayoff &&
+      !friendliesFirst(playoffDate) &&
+      (next == null || !playoffDate.isAfter(next.date))) {
+    if (crossesVote(playoffDate)) return advanceToVote;
+    return HubEvent(
+      kind: HubEventKind.watchTournament,
+      label: l.hubEventWatchEuroPlayoffs,
+      icon: Icons.fast_forward_rounded,
+      route:
+          '${Routes.continental}?careerId=$careerId'
+          '&conf=${Confederation.europe.name}',
     );
   }
 
@@ -1017,7 +1075,18 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
           CompetitionKind.continentalQualifying,
           confederation: playerConf,
         );
+    // Europe's play-offs (calendar2) come between its qualifying and its
+    // finals, which exist only once every path is won.
+    final contPlayoffsPending =
+        playerConf == Confederation.europe &&
+        !hasContFinals &&
+        await comp.hasTournament(
+          careerId,
+          CompetitionKind.continentalPlayoff,
+          confederation: playerConf,
+        );
     final contCampaignPending =
+        contPlayoffsPending ||
         contQualUndrawn ||
         contQualUnfinished ||
         contFinalsUndrawn ||

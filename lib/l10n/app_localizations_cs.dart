@@ -18204,4 +18204,81 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get pressPromiseJudgedMatch => 'Rozhodne výsledek příštího zápasu.';
+
+  @override
+  String get hubEventWatchEuroPlayoffDraw => 'Sledovat los baráže';
+
+  @override
+  String get hubEventWatchEuroPlayoffs => 'Sledovat baráž';
+
+  @override
+  String get hubCallUpPlayoffs => 'Nominujte tým na baráž';
+
+  @override
+  String compPlayoffs(String competition) {
+    return 'Baráž: $competition';
+  }
+
+  @override
+  String newsEuroPlayoffPathTitle(String cup, String path) {
+    return 'Baráž $cup: cesta $path';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyHome(String opponent) {
+    return 'Semifinále v jednom zápase doma proti $opponent v březnu, poté jediné finále o místo na závěrečném turnaji.';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyAway(String opponent) {
+    return 'Semifinále v jednom zápase venku proti $opponent v březnu, poté jediné finále o místo na závěrečném turnaji.';
+  }
+
+  @override
+  String get euroPlayoffDrawTitle => 'LOS BARÁŽE';
+
+  @override
+  String get euroPlayoffIntro =>
+      'První dva týmy z každé kvalifikační skupiny jsou jistě dál. Poslední místa se rozhodnou v barážových cestách po čtyřech týmech, jedné pro každou ligu Poháru národů: semifinále na jeden zápas na hřišti výše nasazeného v březnu, poté jediné finále.';
+
+  @override
+  String euroPlayoffPath(String path) {
+    return 'Cesta $path';
+  }
+
+  @override
+  String get euroPlayoffYourPath => 'Vaše cesta';
+
+  @override
+  String euroPlayoffSemi(int number) {
+    return 'Semifinále $number';
+  }
+
+  @override
+  String euroPlayoffFinalHost(int number) {
+    return 'Finále, hostí vítěz semifinále $number';
+  }
+
+  @override
+  String euroPlayoffFinalPending(int first, int second) {
+    return 'Vítěz semifinále $first vs. vítěz semifinále $second';
+  }
+
+  @override
+  String euroPlayoffWinnerToGroup(String group) {
+    return 'Vítěz postupuje do skupiny $group';
+  }
+
+  @override
+  String euroPlayoffWinnerPlaceholder(String path) {
+    return 'Vítěz cesty $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWin(String path, String group) {
+    return 'Vaše skupina, pokud vyhrajete cestu $path: skupina $group';
+  }
+
+  @override
+  String get euroPlayoffBracketHeading => 'BARÁŽ';
 }

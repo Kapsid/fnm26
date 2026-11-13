@@ -80,6 +80,7 @@ import 'package:fnm/features/tournaments/continental_detail_screen.dart';
 import 'package:fnm/features/tournaments/continental_draw_screen.dart';
 import 'package:fnm/features/tournaments/cup_detail_screen.dart';
 import 'package:fnm/features/tournaments/finals_draw_screen.dart';
+import 'package:fnm/features/tournaments/euro_playoff_draw_screen.dart';
 import 'package:fnm/features/tournaments/intercontinental_playoff_screen.dart';
 import 'package:fnm/features/tournaments/tournament_kickoff_screen.dart';
 import 'package:fnm/features/tournaments/host_draw_screen.dart';
@@ -157,6 +158,10 @@ abstract final class Routes {
   static const trainingCamp = '/training-camp';
 
   static const intercontinentalPlayoff = '/intercontinental-playoff';
+
+  /// Europe's play-off draw ceremony (the paths, read from the stored draw).
+  /// Expects `?careerId=`.
+  static const euroPlayoffDraw = '/euro-playoff-draw';
 
   /// Qualifying group-draw ceremony. Expects `?careerId=` and `?worldCup=`
   /// ('true' for the World Cup qualifying draw, else the continental one).
@@ -360,6 +365,7 @@ abstract final class Routes {
     finalsDraw,
     continentalDraw,
     nationsCupDraw,
+    euroPlayoffDraw,
     tournamentKickoff,
     cycleRollover,
     gallery,
@@ -1148,6 +1154,17 @@ final routerProvider = Provider<GoRouter>((ref) {
             ) ??
             0;
         return IntercontinentalPlayoffScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.euroPlayoffDraw,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return EuroPlayoffDrawScreen(careerId: id);
       },
     ),
     GoRoute(

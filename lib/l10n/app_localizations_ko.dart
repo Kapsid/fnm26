@@ -17225,4 +17225,81 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get pressPromiseJudgedMatch => '다음 경기 결과로 판단합니다.';
+
+  @override
+  String get hubEventWatchEuroPlayoffDraw => '플레이오프 조 추첨 보기';
+
+  @override
+  String get hubEventWatchEuroPlayoffs => '플레이오프 보기';
+
+  @override
+  String get hubCallUpPlayoffs => '플레이오프 스쿼드 발표';
+
+  @override
+  String compPlayoffs(String competition) {
+    return '$competition 플레이오프';
+  }
+
+  @override
+  String newsEuroPlayoffPathTitle(String cup, String path) {
+    return '$cup 플레이오프: 패스 $path';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyHome(String opponent) {
+    return '3월에 $opponent와(과) 홈에서 단판 4강전을 치르고, 이어서 본선 진출권을 건 단판 결승전이 열립니다.';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyAway(String opponent) {
+    return '3월에 $opponent와(과) 원정에서 단판 4강전을 치르고, 이어서 본선 진출권을 건 단판 결승전이 열립니다.';
+  }
+
+  @override
+  String get euroPlayoffDrawTitle => '플레이오프 추첨';
+
+  @override
+  String get euroPlayoffIntro =>
+      '각 예선 조의 상위 2팀은 진출을 확정했습니다. 남은 자리는 4팀씩 겨루는 플레이오프 패스에서 가려지며, 네이션스컵 리그마다 하나씩 있습니다. 3월에 상위 시드 홈에서 단판 4강전을 치르고 이어서 단판 결승전이 열립니다.';
+
+  @override
+  String euroPlayoffPath(String path) {
+    return '패스 $path';
+  }
+
+  @override
+  String get euroPlayoffYourPath => '내 패스';
+
+  @override
+  String euroPlayoffSemi(int number) {
+    return '4강 $number';
+  }
+
+  @override
+  String euroPlayoffFinalHost(int number) {
+    return '결승, 4강 $number 승자가 개최';
+  }
+
+  @override
+  String euroPlayoffFinalPending(int first, int second) {
+    return '4강 $first 승자 vs 4강 $second 승자';
+  }
+
+  @override
+  String euroPlayoffWinnerToGroup(String group) {
+    return '승자는 $group조로 배정';
+  }
+
+  @override
+  String euroPlayoffWinnerPlaceholder(String path) {
+    return '패스 $path 승자';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWin(String path, String group) {
+    return '패스 $path에서 우승하면 내 조: $group조';
+  }
+
+  @override
+  String get euroPlayoffBracketHeading => '플레이오프';
 }

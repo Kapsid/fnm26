@@ -126,4 +126,14 @@ Map<String, String> _byEnglishName(AppLocalizations l) => {
     '${e.value.name}$_qualifiersSuffix': l.compQualifiers(
       continentalCupLabel(l, e.key),
     ),
+  // Europe's play-offs for its championship (calendar2), "European
+  // Championship Play-offs" as stored.
+  for (final e in ContinentalCups.byConfederation.entries)
+    '${e.value.name}$_playoffsSuffix': l.compPlayoffs(
+      continentalCupLabel(l, e.key),
+    ),
 };
+
+/// The stored suffix of a championship's play-off competition (see
+/// `EuroPlayoffs.nameSuffix`).
+const String _playoffsSuffix = ' Play-offs';

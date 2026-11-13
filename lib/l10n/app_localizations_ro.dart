@@ -18234,4 +18234,82 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get pressPromiseJudgedMatch =>
       'Se judecă după rezultatul meciului următor.';
+
+  @override
+  String get hubEventWatchEuroPlayoffDraw =>
+      'Urmăriți tragerea la sorți a barajului';
+
+  @override
+  String get hubEventWatchEuroPlayoffs => 'Urmăriți barajele';
+
+  @override
+  String get hubCallUpPlayoffs => 'Alegeți lotul pentru baraj';
+
+  @override
+  String compPlayoffs(String competition) {
+    return 'Baraj $competition';
+  }
+
+  @override
+  String newsEuroPlayoffPathTitle(String cup, String path) {
+    return 'Baraj $cup: Traseul $path';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyHome(String opponent) {
+    return 'O semifinală într-un singur meci acasă cu $opponent în martie, apoi o finală unică pentru un loc la turneul final.';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyAway(String opponent) {
+    return 'O semifinală într-un singur meci în deplasare cu $opponent în martie, apoi o finală unică pentru un loc la turneul final.';
+  }
+
+  @override
+  String get euroPlayoffDrawTitle => 'TRAGEREA LA SORȚI A BARAJELOR';
+
+  @override
+  String get euroPlayoffIntro =>
+      'Primele două din fiecare grupă de calificare s-au calificat. Ultimele locuri se decid în trasee de baraj cu patru echipe, câte unul pentru fiecare ligă a Cupei Națiunilor: semifinale într-un singur meci pe terenul capului de serie mai bun în martie, apoi o finală unică.';
+
+  @override
+  String euroPlayoffPath(String path) {
+    return 'Traseul $path';
+  }
+
+  @override
+  String get euroPlayoffYourPath => 'Traseul tău';
+
+  @override
+  String euroPlayoffSemi(int number) {
+    return 'Semifinala $number';
+  }
+
+  @override
+  String euroPlayoffFinalHost(int number) {
+    return 'Finala, găzduită de câștigătoarea semifinalei $number';
+  }
+
+  @override
+  String euroPlayoffFinalPending(int first, int second) {
+    return 'Câștigătoarea semifinalei $first vs. câștigătoarea semifinalei $second';
+  }
+
+  @override
+  String euroPlayoffWinnerToGroup(String group) {
+    return 'Câștigătoarea merge în grupa $group';
+  }
+
+  @override
+  String euroPlayoffWinnerPlaceholder(String path) {
+    return 'Câștigătoarea traseului $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWin(String path, String group) {
+    return 'Grupa ta dacă câștigi traseul $path: grupa $group';
+  }
+
+  @override
+  String get euroPlayoffBracketHeading => 'BARAJE';
 }

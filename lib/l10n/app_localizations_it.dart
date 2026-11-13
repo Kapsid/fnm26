@@ -17887,4 +17887,82 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get pressPromiseJudgedMatch =>
       'Si giudica dal risultato della prossima partita.';
+
+  @override
+  String get hubEventWatchEuroPlayoffDraw =>
+      'Guarda il sorteggio degli spareggi';
+
+  @override
+  String get hubEventWatchEuroPlayoffs => 'Guarda gli spareggi';
+
+  @override
+  String get hubCallUpPlayoffs => 'Convoca la rosa per gli spareggi';
+
+  @override
+  String compPlayoffs(String competition) {
+    return 'Spareggi $competition';
+  }
+
+  @override
+  String newsEuroPlayoffPathTitle(String cup, String path) {
+    return 'Spareggi $cup: Percorso $path';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyHome(String opponent) {
+    return 'Una semifinale in gara unica in casa contro $opponent a marzo, poi una finale secca per un posto alla fase finale.';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyAway(String opponent) {
+    return 'Una semifinale in gara unica in trasferta contro $opponent a marzo, poi una finale secca per un posto alla fase finale.';
+  }
+
+  @override
+  String get euroPlayoffDrawTitle => 'SORTEGGIO DEGLI SPAREGGI';
+
+  @override
+  String get euroPlayoffIntro =>
+      'Le prime due di ogni girone di qualificazione sono qualificate. Gli ultimi posti si assegnano in percorsi di spareggio a quattro squadre, uno per ogni lega della Coppa delle Nazioni: semifinali in gara unica in casa della testa di serie migliore a marzo, poi una finale secca.';
+
+  @override
+  String euroPlayoffPath(String path) {
+    return 'Percorso $path';
+  }
+
+  @override
+  String get euroPlayoffYourPath => 'Il tuo percorso';
+
+  @override
+  String euroPlayoffSemi(int number) {
+    return 'Semifinale $number';
+  }
+
+  @override
+  String euroPlayoffFinalHost(int number) {
+    return 'Finale, ospitata dalla vincente della semifinale $number';
+  }
+
+  @override
+  String euroPlayoffFinalPending(int first, int second) {
+    return 'Vincente della semifinale $first vs. vincente della semifinale $second';
+  }
+
+  @override
+  String euroPlayoffWinnerToGroup(String group) {
+    return 'La vincente va nel girone $group';
+  }
+
+  @override
+  String euroPlayoffWinnerPlaceholder(String path) {
+    return 'Vincente del Percorso $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWin(String path, String group) {
+    return 'Il tuo girone se vinci il Percorso $path: girone $group';
+  }
+
+  @override
+  String get euroPlayoffBracketHeading => 'SPAREGGI';
 }

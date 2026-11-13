@@ -17772,4 +17772,81 @@ class AppLocalizationsMs extends AppLocalizations {
   @override
   String get pressPromiseJudgedMatch =>
       'Dinilai melalui keputusan perlawanan seterusnya.';
+
+  @override
+  String get hubEventWatchEuroPlayoffDraw => 'Tonton cabutan undian play-off';
+
+  @override
+  String get hubEventWatchEuroPlayoffs => 'Tonton play-off';
+
+  @override
+  String get hubCallUpPlayoffs => 'Namakan skuad untuk play-off';
+
+  @override
+  String compPlayoffs(String competition) {
+    return 'Play-off $competition';
+  }
+
+  @override
+  String newsEuroPlayoffPathTitle(String cup, String path) {
+    return 'Play-off $cup: Laluan $path';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyHome(String opponent) {
+    return 'Separuh akhir satu perlawanan di tempat sendiri menentang $opponent pada Mac, kemudian satu perlawanan akhir untuk sebuah tempat di pusingan akhir.';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyAway(String opponent) {
+    return 'Separuh akhir satu perlawanan di tempat lawan menentang $opponent pada Mac, kemudian satu perlawanan akhir untuk sebuah tempat di pusingan akhir.';
+  }
+
+  @override
+  String get euroPlayoffDrawTitle => 'CABUTAN UNDIAN PLAY-OFF';
+
+  @override
+  String get euroPlayoffIntro =>
+      'Dua teratas setiap kumpulan kelayakan layak terus. Tempat terakhir ditentukan dalam laluan play-off empat pasukan, satu bagi setiap liga Piala Negara-Negara: separuh akhir satu perlawanan di tempat pasukan benih lebih tinggi pada Mac, kemudian satu perlawanan akhir.';
+
+  @override
+  String euroPlayoffPath(String path) {
+    return 'Laluan $path';
+  }
+
+  @override
+  String get euroPlayoffYourPath => 'Laluan anda';
+
+  @override
+  String euroPlayoffSemi(int number) {
+    return 'Separuh akhir $number';
+  }
+
+  @override
+  String euroPlayoffFinalHost(int number) {
+    return 'Akhir, dengan pemenang separuh akhir $number sebagai tuan rumah';
+  }
+
+  @override
+  String euroPlayoffFinalPending(int first, int second) {
+    return 'Pemenang separuh akhir $first lwn pemenang separuh akhir $second';
+  }
+
+  @override
+  String euroPlayoffWinnerToGroup(String group) {
+    return 'Pemenang akan ke Kumpulan $group';
+  }
+
+  @override
+  String euroPlayoffWinnerPlaceholder(String path) {
+    return 'Pemenang Laluan $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWin(String path, String group) {
+    return 'Kumpulan anda jika menang Laluan $path: Kumpulan $group';
+  }
+
+  @override
+  String get euroPlayoffBracketHeading => 'PLAY-OFF';
 }

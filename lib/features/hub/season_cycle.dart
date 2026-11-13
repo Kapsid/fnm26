@@ -1237,6 +1237,17 @@ extension SeasonCycle on SeasonService {
     // place — after which the board's continental objective could never be
     // graded, because the manager's cup had no champion.
     if (!await _comp.hasTournament(careerId, kind, confederation: conf)) {
+      // A calendar2 cycle decides Europe's last places in play-offs, and its
+      // finals are made from the draw stored before them (see
+      // [SeasonEuroPlayoffs]).
+      if (conf == Confederation.europe) {
+        final career = await _careers.byId(careerId);
+        if (career != null &&
+            await isCalendar2(_comp, careerId, career.cyclePointer)) {
+          await _progressEuroPlayoffs(careerId, isManagers: isManagers);
+          return;
+        }
+      }
       // Once THIS confederation's qualifying is complete, draw its finals from
       // its own qualifiers. Every qualifying confederation now runs a campaign,
       // so every one of them draws its field the same way the manager's does —
@@ -1839,6 +1850,23 @@ extension SeasonCycle on SeasonService {
         CompetitionKind.continentalFinals,
         confederation: entry.key,
       )) {
+        continue;
+      }
+      // Nor one waiting on its play-offs (Europe on the calendar2 rhythm):
+      // its finals are made from the draw stored before them, in March. The
+      // African and Asian finals end before that, and simulating it here
+      // played a EURO nobody had qualified for.
+      if (await _comp.hasTournament(
+            careerId,
+            CompetitionKind.continentalPlayoff,
+            confederation: entry.key,
+          ) ||
+          (await _comp.drawSlots(
+            careerId,
+            career.cyclePointer,
+            CompetitionKind.continentalFinals,
+            confederation: entry.key,
+          )).isNotEmpty) {
         continue;
       }
 

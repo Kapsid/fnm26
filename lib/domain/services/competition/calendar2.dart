@@ -19,6 +19,10 @@ Future<bool> isCalendar2(CompetitionRepository comp, int careerId, int cycle) =>
 ///   the world opens its continental qualifying as before).
 /// * End of that league phase: Euro qualifying is drawn.
 /// * Mar-Nov W-3: Euro qualifying; edition 1's Finals Four on 4/5 and 8 June.
+/// * The day it is played out: the play-off paths and the EURO's groups are
+///   drawn, a "Path A winner" in each path's slot.
+/// * 21 and 26 March W-2: the play-offs; the EURO is created from the stored
+///   draw once every path is won.
 /// * Jun-Jul W-2: the EURO and the other championships, as before.
 /// * Sep-Nov W-2: Nations Cup edition 2 (North America's and Africa's only
 ///   cup); CONMEBOL's World Championship qualifying opens.
@@ -114,6 +118,14 @@ abstract final class Calendar2 {
   /// normally made the day edition 1's league phase ends, when its Finals
   /// Four is known.
   static DateTime euroQualifyingDrawDue(int wcYear) => DateTime(wcYear - 4, 12);
+
+  /// Europe's play-offs for the continental finals (see `EuroPlayoffs`):
+  /// every path's semi-finals on 21 March of the finals' year and their
+  /// finals on 26 March, the Euro 2024 dates. Both draws (the paths, and the
+  /// finals' groups with a placeholder for each path's winner) are made the
+  /// day Euro qualifying is played out, in November W-3.
+  static ({DateTime semis, DateTime finalDay}) euroPlayoffs(int wcYear) =>
+      (semis: DateTime(wcYear - 2, 3, 21), finalDay: DateTime(wcYear - 2, 3, 26));
 
   /// World Championship qualifying's span for [conf]. CONMEBOL's league of
   /// eighteen matchdays opens after the Copa (September W-2) and ends in
