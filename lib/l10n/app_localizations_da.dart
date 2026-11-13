@@ -17594,4 +17594,58 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Administrer stadioner';
+
+  @override
+  String get scheduleHome => 'Hjemme';
+
+  @override
+  String get scheduleAway => 'Ude';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'Gruppe $name';
+  }
+
+  @override
+  String get scheduleFilterMine => 'Mine';
+
+  @override
+  String get scheduleFilterCompetitions => 'Turneringer';
+
+  @override
+  String get scheduleFilterDraws => 'Lodtrækninger';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return 'Lodtrækning: $competition';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'Lodtrækningsceremoni';
+
+  @override
+  String get scheduleNoDraws => 'Ingen kommende lodtrækninger';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Udtagelsen lukker om $count dage',
+      one: 'Udtagelsen lukker i morgen',
+      zero: 'Udtagelsen lukker i dag',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count kampe mere',
+      one: '1 kamp mere',
+    );
+    return '$month: $_temp0';
+  }
 }

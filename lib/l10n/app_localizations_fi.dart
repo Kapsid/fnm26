@@ -17669,4 +17669,58 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Hallinnoi stadioneita';
+
+  @override
+  String get scheduleHome => 'Koti';
+
+  @override
+  String get scheduleAway => 'Vieras';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'Lohko $name';
+  }
+
+  @override
+  String get scheduleFilterMine => 'Omat';
+
+  @override
+  String get scheduleFilterCompetitions => 'Turnaukset';
+
+  @override
+  String get scheduleFilterDraws => 'Arvonnat';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return 'Arvonta: $competition';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'Arvontaseremonia';
+
+  @override
+  String get scheduleNoDraws => 'Ei tulevia arvontoja';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Valinnat sulkeutuvat $count päivän päästä',
+      one: 'Valinnat sulkeutuvat huomenna',
+      zero: 'Valinnat sulkeutuvat tänään',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'vielä $count ottelua',
+      one: 'vielä 1 ottelu',
+    );
+    return '$month: $_temp0';
+  }
 }

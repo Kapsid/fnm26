@@ -4396,5 +4396,16 @@
   "nationHostThird": "อันดับสาม",
   "nationCoHosts": "เจ้าภาพร่วม",
   "nationNoStadiums": "ไม่มีสนามกีฬาในบันทึก",
-  "nationManageStadiums": "จัดการสนามกีฬา"
+  "nationManageStadiums": "จัดการสนามกีฬา",
+  "scheduleHome": "เหย้า",
+  "scheduleAway": "เยือน",
+  "scheduleGroupTag": "กลุ่ม {name}",
+  "scheduleFilterMine": "ของฉัน",
+  "scheduleFilterCompetitions": "รายการแข่งขัน",
+  "scheduleFilterDraws": "การจับสลาก",
+  "scheduleDrawOf": "จับสลาก{competition}",
+  "scheduleDrawCeremony": "พิธีจับสลาก",
+  "scheduleNoDraws": "ไม่มีการจับสลากที่กำลังจะมาถึง",
+  "hubCallUpClosesIn": "{count, plural, =0{ปิดการเรียกตัววันนี้} =1{ปิดการเรียกตัวพรุ่งนี้} other{ปิดการเรียกตัวในอีก {count} วัน}}",
+  "hubNextWindowLabel": "{month}: {count, plural, other{อีก {count} นัด}}"
 }

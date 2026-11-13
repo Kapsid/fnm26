@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
@@ -6,6 +6,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/competition/match_schedule.dart';
+import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/hub/hub_screen.dart';
 import 'package:fnm/features/hub/schedule_providers.dart';
@@ -52,19 +53,55 @@ Override _nothingCurrent({required bool pending}) =>
       );
     });
 
+/// Every match still to come this cycle, in order, from the current window.
+List<Fixture> _upcoming(ScheduleData d) => [
+  if (d.currentIndex >= 0)
+    for (var i = d.currentIndex; i < d.blocks.length; i++)
+      for (final f in d.blocks[i].fixtures)
+        if (!f.hasResult) f,
+];
+
+List<int> _cardIds(WidgetTester tester) => [
+  for (final c in tester.widgetList<UpcomingFixtureCard>(
+    find.byType(UpcomingFixtureCard),
+  ))
+    c.fixture.id,
+];
+
+Override _nextEvent(HubEvent event) =>
+    nextEventProvider(kSeededCareerId).overrideWith((ref) async => event);
+
 void main() {
-  testWidgets('the hub lists the current window and opens the schedule', (
+  testWidgets('the hub shows the next two matches and opens the schedule', (
     tester,
   ) async {
     final save = await seedSave(tester);
     await pumpRoute(tester, save, _hub(save));
-    expect(find.text(enL.hubUpcoming), findsOneWidget);
+    expect(find.text(enL.hubUpcoming.toUpperCase()), findsOneWidget);
     final d = (await tester.runAsync(
       () => save.container.read(scheduleProvider(save.careerId).future),
     ))!;
+    final upcoming = _upcoming(d);
+    expect(upcoming.length, greaterThan(UpcomingStrip.cards));
+    expect(_cardIds(tester), [
+      for (final f in upcoming.take(UpcomingStrip.cards)) f.id,
+    ]);
+    // The rest of the cycle is summed up in one dashed card: the month that
+    // comes next and how many more matches it holds.
+    final rest = upcoming.skip(UpcomingStrip.cards).toList();
+    final more = rest
+        .where(
+          (f) =>
+              f.date.year == rest.first.date.year &&
+              f.date.month == rest.first.date.month,
+        )
+        .length;
     expect(
-      find.byType(ScheduleFixtureRow),
-      findsNWidgets(d.blocks[d.currentIndex].fixtures.length),
+      find.descendant(
+        of: find.byKey(UpcomingStrip.nextWindowKey),
+        matching: find.text('+$more'),
+      ),
+      findsOneWidget,
     );
     await tester.ensureVisible(find.text(enL.hubFullSchedule));
     await tester.tap(find.text(enL.hubFullSchedule));
@@ -72,7 +109,9 @@ void main() {
     expect(find.byType(ScheduleScreen), findsOneWidget);
   });
 
-  testWidgets('the card moves on after the window is played', (tester) async {
+  testWidgets('the strip moves on after the window is played', (
+    tester,
+  ) async {
     final save = await seedSave(tester);
     await pumpRoute(tester, save, _hub(save));
     final d = (await tester.runAsync(
@@ -88,15 +127,15 @@ void main() {
     save.container.invalidate(hubDataProvider(save.careerId));
     await settle(tester);
     expect(
-      find.byType(ScheduleFixtureRow),
-      findsNWidgets(d.blocks[d.currentIndex + 1].fixtures.length),
+      _cardIds(tester).first,
+      d.blocks[d.currentIndex + 1].fixtures.first.id,
     );
     expect(find.text('1–0'), findsNothing);
   });
 
   // b8 item 2: the current window's first match, once played, used to stay
   // under UPCOMING with its score beside it until the whole window was done.
-  testWidgets('a match played leaves the upcoming list at once', (
+  testWidgets('a match played leaves the upcoming strip at once', (
     tester,
   ) async {
     final save = await seedSave(tester);
@@ -132,14 +171,59 @@ void main() {
       reason: 'the window is still the current one',
     );
     final played = before.blocks[b].fixtures.first;
-    final rows = tester
-        .widgetList<ScheduleFixtureRow>(find.byType(ScheduleFixtureRow))
-        .toList();
-    expect(rows, hasLength(before.blocks[b].fixtures.length - 1));
-    expect(rows.any((r) => r.fixture.id == played.id), isFalse);
-    expect(rows.every((r) => !r.fixture.hasResult), isTrue);
+    final ids = _cardIds(tester);
+    expect(ids.first, before.blocks[b].fixtures[1].id);
+    expect(ids, isNot(contains(played.id)));
     expect(find.text('3–1'), findsNothing);
     expect(find.text('1–3'), findsNothing);
+  });
+
+  testWidgets('an open call-up says how many days are left', (tester) async {
+    final save = await seedSave(
+      tester,
+      overrides: [
+        _nextEvent(
+          const HubEvent(
+            kind: HubEventKind.callUp,
+            label: 'Call up',
+            icon: Icons.groups,
+            route: '${Routes.callUps}?careerId=$kSeededCareerId',
+          ),
+        ),
+      ],
+    );
+    await pumpRoute(tester, save, _hub(save));
+    final d = (await tester.runAsync(
+      () => save.container.read(scheduleProvider(save.careerId).future),
+    ))!;
+    final days = DateUtils.dateOnly(
+      _upcoming(d).first.date,
+    ).difference(DateUtils.dateOnly(save.career.inGameDate)).inDays;
+    expect(
+      find.descendant(
+        of: find.byKey(UpcomingStrip.callUpWarningKey),
+        matching: find.text(enL.hubCallUpClosesIn(days).toUpperCase()),
+      ),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('no warning line once the squad is named', (tester) async {
+    final save = await seedSave(
+      tester,
+      overrides: [
+        _nextEvent(
+          const HubEvent(
+            kind: HubEventKind.match,
+            label: 'Play',
+            icon: Icons.play_arrow,
+          ),
+        ),
+      ],
+    );
+    await pumpRoute(tester, save, _hub(save));
+    expect(find.byType(UpcomingFixtureCard), findsWidgets);
+    expect(find.byKey(UpcomingStrip.callUpWarningKey), findsNothing);
   });
 
   testWidgets('a finished cycle says there is nothing more', (tester) async {
@@ -154,7 +238,7 @@ void main() {
       }
     });
     await pumpRoute(tester, save, _hub(save));
-    expect(find.byType(ScheduleFixtureRow), findsNothing);
+    expect(find.byType(UpcomingFixtureCard), findsNothing);
     expect(find.text(enL.hubNoMoreFixtures), findsOneWidget);
   });
 
@@ -167,7 +251,7 @@ void main() {
     );
     await pumpRoute(tester, save, _hub(save));
     expect(find.text(enL.scheduleKnockoutPending), findsOneWidget);
-    expect(find.byType(ScheduleFixtureRow), findsNothing);
+    expect(find.byType(UpcomingFixtureCard), findsNothing);
     expect(find.text(enL.hubNoMoreFixtures), findsNothing);
   });
 
@@ -181,7 +265,7 @@ void main() {
     expect(find.text(enL.scheduleKnockoutPending), findsNothing);
   });
 
-  testWidgets('the tablet panel shows the window and a full schedule link', (
+  testWidgets('the tablet panel shows the strip and a full schedule link', (
     tester,
   ) async {
     final save = await seedSave(tester, formFactor: FormFactor.tablet);
@@ -195,8 +279,8 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.descendant(of: panel, matching: find.byType(ScheduleFixtureRow)),
-      findsWidgets,
+      find.descendant(of: panel, matching: find.byType(UpcomingFixtureCard)),
+      findsNWidgets(UpcomingStrip.cards),
     );
     await tester.tap(
       find.descendant(of: panel, matching: find.text(enL.hubFullSchedule)),

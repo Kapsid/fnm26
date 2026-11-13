@@ -17579,4 +17579,58 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Hantera arenor';
+
+  @override
+  String get scheduleHome => 'Hemma';
+
+  @override
+  String get scheduleAway => 'Borta';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'Grupp $name';
+  }
+
+  @override
+  String get scheduleFilterMine => 'Mina';
+
+  @override
+  String get scheduleFilterCompetitions => 'Turneringar';
+
+  @override
+  String get scheduleFilterDraws => 'Lottningar';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return 'Lottning: $competition';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'Lottningsceremoni';
+
+  @override
+  String get scheduleNoDraws => 'Inga kommande lottningar';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Uttagningen stänger om $count dagar',
+      one: 'Uttagningen stänger i morgon',
+      zero: 'Uttagningen stänger i dag',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count matcher till',
+      one: '1 match till',
+    );
+    return '$month: $_temp0';
+  }
 }

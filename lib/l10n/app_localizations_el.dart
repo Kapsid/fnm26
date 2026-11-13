@@ -17686,4 +17686,58 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Διαχείριση γηπέδων';
+
+  @override
+  String get scheduleHome => 'Εντός';
+
+  @override
+  String get scheduleAway => 'Εκτός';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'Όμιλος $name';
+  }
+
+  @override
+  String get scheduleFilterMine => 'Δικά μου';
+
+  @override
+  String get scheduleFilterCompetitions => 'Διοργανώσεις';
+
+  @override
+  String get scheduleFilterDraws => 'Κληρώσεις';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return 'Κλήρωση: $competition';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'Τελετή κλήρωσης';
+
+  @override
+  String get scheduleNoDraws => 'Καμία επερχόμενη κλήρωση';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Οι κλήσεις κλείνουν σε $count ημέρες',
+      one: 'Οι κλήσεις κλείνουν αύριο',
+      zero: 'Οι κλήσεις κλείνουν σήμερα',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'ακόμη $count αγώνες',
+      one: 'ακόμη 1 αγώνας',
+    );
+    return '$month: $_temp0';
+  }
 }

@@ -17920,4 +17920,62 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Керувати стадіонами';
+
+  @override
+  String get scheduleHome => 'Вдома';
+
+  @override
+  String get scheduleAway => 'У гостях';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'Група $name';
+  }
+
+  @override
+  String get scheduleFilterMine => 'Мої';
+
+  @override
+  String get scheduleFilterCompetitions => 'Турніри';
+
+  @override
+  String get scheduleFilterDraws => 'Жеребкування';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return 'Жеребкування: $competition';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'Церемонія жеребкування';
+
+  @override
+  String get scheduleNoDraws => 'Немає майбутніх жеребкувань';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Виклик закривається через $count дня',
+      many: 'Виклик закривається через $count днів',
+      few: 'Виклик закривається через $count дні',
+      one: 'Виклик закривається через $count день',
+      zero: 'Виклик закривається сьогодні',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'ще $count матчу',
+      many: 'ще $count матчів',
+      few: 'ще $count матчі',
+      one: 'ще $count матч',
+    );
+    return '$month: $_temp0';
+  }
 }

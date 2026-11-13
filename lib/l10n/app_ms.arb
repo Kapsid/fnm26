@@ -4396,5 +4396,16 @@
   "nationHostThird": "Ketiga",
   "nationCoHosts": "Tuan rumah bersama",
   "nationNoStadiums": "Tiada stadium direkodkan",
-  "nationManageStadiums": "Urus stadium"
+  "nationManageStadiums": "Urus stadium",
+  "scheduleHome": "Laman sendiri",
+  "scheduleAway": "Tandang",
+  "scheduleGroupTag": "Kumpulan {name}",
+  "scheduleFilterMine": "Saya",
+  "scheduleFilterCompetitions": "Pertandingan",
+  "scheduleFilterDraws": "Cabutan",
+  "scheduleDrawOf": "Cabutan {competition}",
+  "scheduleDrawCeremony": "Majlis cabutan",
+  "scheduleNoDraws": "Tiada cabutan akan datang",
+  "hubCallUpClosesIn": "{count, plural, =0{Panggilan skuad ditutup hari ini} =1{Panggilan skuad ditutup esok} other{Panggilan skuad ditutup dalam {count} hari}}",
+  "hubNextWindowLabel": "{month}: {count, plural, other{{count} perlawanan lagi}}"
 }

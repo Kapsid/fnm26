@@ -4396,5 +4396,16 @@
   "nationHostThird": "Locul trei",
   "nationCoHosts": "Co-gazdă",
   "nationNoStadiums": "Niciun stadion înregistrat",
-  "nationManageStadiums": "Administrează stadioanele"
+  "nationManageStadiums": "Administrează stadioanele",
+  "scheduleHome": "Acasă",
+  "scheduleAway": "Deplasare",
+  "scheduleGroupTag": "Grupa {name}",
+  "scheduleFilterMine": "Ale mele",
+  "scheduleFilterCompetitions": "Competiții",
+  "scheduleFilterDraws": "Trageri la sorți",
+  "scheduleDrawOf": "Tragerea la sorți: {competition}",
+  "scheduleDrawCeremony": "Ceremonia tragerii la sorți",
+  "scheduleNoDraws": "Nicio tragere la sorți în curând",
+  "hubCallUpClosesIn": "{count, plural, =0{Convocările se închid azi} =1{Convocările se închid mâine} few{Convocările se închid în {count} zile} other{Convocările se închid în {count} de zile}}",
+  "hubNextWindowLabel": "{month}: {count, plural, =1{încă 1 meci} few{încă {count} meciuri} other{încă {count} de meciuri}}"
 }

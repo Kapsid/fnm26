@@ -4396,5 +4396,16 @@
   "nationHostThird": "Troisième",
   "nationCoHosts": "Co-organisateur",
   "nationNoStadiums": "Aucun stade enregistré",
-  "nationManageStadiums": "Gérer les stades"
+  "nationManageStadiums": "Gérer les stades",
+  "scheduleHome": "Domicile",
+  "scheduleAway": "Extérieur",
+  "scheduleGroupTag": "Groupe {name}",
+  "scheduleFilterMine": "Mes matchs",
+  "scheduleFilterCompetitions": "Compétitions",
+  "scheduleFilterDraws": "Tirages",
+  "scheduleDrawOf": "Tirage : {competition}",
+  "scheduleDrawCeremony": "Cérémonie du tirage",
+  "scheduleNoDraws": "Aucun tirage à venir",
+  "hubCallUpClosesIn": "{count, plural, =0{Les convocations ferment aujourd'hui} =1{Les convocations ferment demain} other{Les convocations ferment dans {count} jours}}",
+  "hubNextWindowLabel": "{month} : {count, plural, =1{encore 1 match} other{encore {count} matchs}}"
 }

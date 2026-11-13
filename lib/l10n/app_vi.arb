@@ -4396,5 +4396,16 @@
   "nationHostThird": "Hạng ba",
   "nationCoHosts": "Đồng chủ nhà",
   "nationNoStadiums": "Không có sân vận động nào",
-  "nationManageStadiums": "Quản lý sân vận động"
+  "nationManageStadiums": "Quản lý sân vận động",
+  "scheduleHome": "Sân nhà",
+  "scheduleAway": "Sân khách",
+  "scheduleGroupTag": "Bảng {name}",
+  "scheduleFilterMine": "Của tôi",
+  "scheduleFilterCompetitions": "Giải đấu",
+  "scheduleFilterDraws": "Bốc thăm",
+  "scheduleDrawOf": "Bốc thăm {competition}",
+  "scheduleDrawCeremony": "Lễ bốc thăm",
+  "scheduleNoDraws": "Không có lễ bốc thăm sắp tới",
+  "hubCallUpClosesIn": "{count, plural, =0{Hạn triệu tập đóng hôm nay} =1{Hạn triệu tập đóng ngày mai} other{Hạn triệu tập đóng sau {count} ngày}}",
+  "hubNextWindowLabel": "{month}: {count, plural, other{thêm {count} trận}}"
 }

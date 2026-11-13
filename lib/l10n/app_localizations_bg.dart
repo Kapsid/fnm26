@@ -17679,4 +17679,58 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Управление на стадионите';
+
+  @override
+  String get scheduleHome => 'Домакин';
+
+  @override
+  String get scheduleAway => 'Гост';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'Група $name';
+  }
+
+  @override
+  String get scheduleFilterMine => 'Моите';
+
+  @override
+  String get scheduleFilterCompetitions => 'Турнири';
+
+  @override
+  String get scheduleFilterDraws => 'Жребии';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return 'Жребий: $competition';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'Церемония по тегленето';
+
+  @override
+  String get scheduleNoDraws => 'Няма предстоящи жребии';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Повикванията се затварят след $count дни',
+      one: 'Повикванията се затварят утре',
+      zero: 'Повикванията се затварят днес',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'още $count мача',
+      one: 'още 1 мач',
+    );
+    return '$month: $_temp0';
+  }
 }

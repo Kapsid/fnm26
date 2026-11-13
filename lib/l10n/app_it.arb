@@ -4396,5 +4396,16 @@
   "nationHostThird": "Terza",
   "nationCoHosts": "Co-ospitante",
   "nationNoStadiums": "Nessuno stadio registrato",
-  "nationManageStadiums": "Gestisci gli stadi"
+  "nationManageStadiums": "Gestisci gli stadi",
+  "scheduleHome": "Casa",
+  "scheduleAway": "Trasferta",
+  "scheduleGroupTag": "Girone {name}",
+  "scheduleFilterMine": "Le mie",
+  "scheduleFilterCompetitions": "Competizioni",
+  "scheduleFilterDraws": "Sorteggi",
+  "scheduleDrawOf": "Sorteggio: {competition}",
+  "scheduleDrawCeremony": "Cerimonia del sorteggio",
+  "scheduleNoDraws": "Nessun sorteggio in arrivo",
+  "hubCallUpClosesIn": "{count, plural, =0{Le convocazioni chiudono oggi} =1{Le convocazioni chiudono domani} other{Le convocazioni chiudono tra {count} giorni}}",
+  "hubNextWindowLabel": "{month}: {count, plural, =1{ancora 1 partita} other{ancora {count} partite}}"
 }

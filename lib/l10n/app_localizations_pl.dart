@@ -17781,4 +17781,62 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get nationManageStadiums => 'Zarządzaj stadionami';
+
+  @override
+  String get scheduleHome => 'U siebie';
+
+  @override
+  String get scheduleAway => 'Na wyjeździe';
+
+  @override
+  String scheduleGroupTag(String name) {
+    return 'Grupa $name';
+  }
+
+  @override
+  String get scheduleFilterMine => 'Moje';
+
+  @override
+  String get scheduleFilterCompetitions => 'Rozgrywki';
+
+  @override
+  String get scheduleFilterDraws => 'Losowania';
+
+  @override
+  String scheduleDrawOf(String competition) {
+    return 'Losowanie: $competition';
+  }
+
+  @override
+  String get scheduleDrawCeremony => 'Ceremonia losowania';
+
+  @override
+  String get scheduleNoDraws => 'Brak nadchodzących losowań';
+
+  @override
+  String hubCallUpClosesIn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Powołania zamykają się za $count dni',
+      many: 'Powołania zamykają się za $count dni',
+      few: 'Powołania zamykają się za $count dni',
+      one: 'Powołania zamykają się jutro',
+      zero: 'Powołania zamykają się dziś',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubNextWindowLabel(String month, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'jeszcze $count meczu',
+      many: 'jeszcze $count meczów',
+      few: 'jeszcze $count mecze',
+      one: 'jeszcze 1 mecz',
+    );
+    return '$month: $_temp0';
+  }
 }

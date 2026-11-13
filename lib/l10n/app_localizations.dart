@@ -26617,6 +26617,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Manage stadiums'**
   String get nationManageStadiums;
+
+  /// Schedule and hub fixture cards: the nation plays this match at home. Set in capitals in a small mono line.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get scheduleHome;
+
+  /// Schedule and hub fixture cards: the nation plays this match away. Set in capitals in a small mono line.
+  ///
+  /// In en, this message translates to:
+  /// **'Away'**
+  String get scheduleAway;
+
+  /// Schedule and hub fixture cards: the group the match belongs to, e.g. "Group A". Set in capitals in a small mono line.
+  ///
+  /// In en, this message translates to:
+  /// **'Group {name}'**
+  String scheduleGroupTag(String name);
+
+  /// Schedule screen filter chip: every event of the manager's own nation (matches and draws). Short.
+  ///
+  /// In en, this message translates to:
+  /// **'Mine'**
+  String get scheduleFilterMine;
+
+  /// Schedule screen filter chip: competitive matches only, friendlies hidden. Short.
+  ///
+  /// In en, this message translates to:
+  /// **'Competitions'**
+  String get scheduleFilterCompetitions;
+
+  /// Schedule screen filter chip: only the draw ceremonies still to come. Short.
+  ///
+  /// In en, this message translates to:
+  /// **'Draws'**
+  String get scheduleFilterDraws;
+
+  /// Schedule screen: a draw ceremony still to come, e.g. "Continental qualifying draw". {competition} is the competition name.
+  ///
+  /// In en, this message translates to:
+  /// **'{competition} draw'**
+  String scheduleDrawOf(String competition);
+
+  /// Schedule screen: small capitals line under a draw row, saying it is a draw ceremony.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw ceremony'**
+  String get scheduleDrawCeremony;
+
+  /// Schedule screen, Draws filter: shown when no draw is still to come.
+  ///
+  /// In en, this message translates to:
+  /// **'No draws to come'**
+  String get scheduleNoDraws;
+
+  /// Hub, under the upcoming fixtures: warning that the squad call-up must be named within this many days. Set in capitals.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Call-up closes today} =1{Call-up closes tomorrow} other{Call-up closes in {count} days}}'**
+  String hubCallUpClosesIn(int count);
+
+  /// Hub, screen-reader label of the small card after the next fixtures: the month and how many more matches the nation plays in it.
+  ///
+  /// In en, this message translates to:
+  /// **'{month}: {count, plural, =1{1 more match} other{{count} more matches}}'**
+  String hubNextWindowLabel(String month, int count);
 }
 
 class _AppLocalizationsDelegate

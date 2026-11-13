@@ -4396,5 +4396,16 @@
   "nationHostThird": "Третє місце",
   "nationCoHosts": "Співгосподар",
   "nationNoStadiums": "Немає записаних стадіонів",
-  "nationManageStadiums": "Керувати стадіонами"
+  "nationManageStadiums": "Керувати стадіонами",
+  "scheduleHome": "Вдома",
+  "scheduleAway": "У гостях",
+  "scheduleGroupTag": "Група {name}",
+  "scheduleFilterMine": "Мої",
+  "scheduleFilterCompetitions": "Турніри",
+  "scheduleFilterDraws": "Жеребкування",
+  "scheduleDrawOf": "Жеребкування: {competition}",
+  "scheduleDrawCeremony": "Церемонія жеребкування",
+  "scheduleNoDraws": "Немає майбутніх жеребкувань",
+  "hubCallUpClosesIn": "{count, plural, =0{Виклик закривається сьогодні} one{Виклик закривається через {count} день} few{Виклик закривається через {count} дні} many{Виклик закривається через {count} днів} other{Виклик закривається через {count} дня}}",
+  "hubNextWindowLabel": "{month}: {count, plural, one{ще {count} матч} few{ще {count} матчі} many{ще {count} матчів} other{ще {count} матчу}}"
 }

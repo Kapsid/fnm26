@@ -4396,5 +4396,16 @@
   "nationHostThird": "Trea",
   "nationCoHosts": "Medvärd",
   "nationNoStadiums": "Inga arenor registrerade",
-  "nationManageStadiums": "Hantera arenor"
+  "nationManageStadiums": "Hantera arenor",
+  "scheduleHome": "Hemma",
+  "scheduleAway": "Borta",
+  "scheduleGroupTag": "Grupp {name}",
+  "scheduleFilterMine": "Mina",
+  "scheduleFilterCompetitions": "Turneringar",
+  "scheduleFilterDraws": "Lottningar",
+  "scheduleDrawOf": "Lottning: {competition}",
+  "scheduleDrawCeremony": "Lottningsceremoni",
+  "scheduleNoDraws": "Inga kommande lottningar",
+  "hubCallUpClosesIn": "{count, plural, =0{Uttagningen stänger i dag} =1{Uttagningen stänger i morgon} other{Uttagningen stänger om {count} dagar}}",
+  "hubNextWindowLabel": "{month}: {count, plural, =1{1 match till} other{{count} matcher till}}"
 }
