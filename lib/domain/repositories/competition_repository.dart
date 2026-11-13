@@ -56,6 +56,17 @@ const globallyContestedKinds = <CompetitionKind>{
   CompetitionKind.finalissima,
 };
 
+/// One ball of a stored draw that holds placeholders (see `DrawSlots`):
+/// a known [nationId], or a [placeholderKey] ("EURO-B", a path's winner)
+/// that [resolvedNationId] fills once its tie is decided.
+typedef DrawSlot = ({
+  String groupName,
+  int position,
+  int? nationId,
+  String? placeholderKey,
+  int? resolvedNationId,
+});
+
 /// A group table tagged with the confederation it belongs to.
 typedef ConfederationGroupTable = ({
   Confederation confederation,
@@ -446,6 +457,38 @@ abstract interface class CompetitionRepository {
   /// calendar2 cycle's second Nations Cup uses it: both editions share the
   /// one ceremony key, which is cleared once the first is played out.
   Future<void> unmarkDrawWatched(int careerId, int cycle, String kind);
+
+  /// The stored draw of [kind] for [confederation] in [cycle] that holds
+  /// placeholders (see `DrawSlots`), group by group in position order; empty
+  /// when no such draw was made.
+  Future<List<DrawSlot>> drawSlots(
+    int careerId,
+    int cycle,
+    CompetitionKind kind, {
+    Confederation? confederation,
+  });
+
+  /// Stores a draw holding placeholders, replacing any slots of the same
+  /// [kind] and [confederation] in [cycle] (a draw is made once; this keeps
+  /// a repeated call harmless).
+  Future<void> saveDrawSlots({
+    required int careerId,
+    required int cycle,
+    required CompetitionKind kind,
+    Confederation? confederation,
+    required List<DrawSlot> slots,
+  });
+
+  /// Records [nationId] as the side that fills the placeholder
+  /// [placeholderKey] of a stored draw.
+  Future<void> resolveDrawSlot({
+    required int careerId,
+    required int cycle,
+    required CompetitionKind kind,
+    Confederation? confederation,
+    required String placeholderKey,
+    required int nationId,
+  });
 
   /// The id of the current cycle's competition of [kind] (see
   /// [tournamentGroupTables] for [confederation] and [edition]), or null.

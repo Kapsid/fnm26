@@ -17842,4 +17842,81 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get pressPromiseJudgedMatch =>
       'Judged on the result of the next match.';
+
+  @override
+  String get hubEventWatchEuroPlayoffDraw => 'Watch the play-off draw';
+
+  @override
+  String get hubEventWatchEuroPlayoffs => 'Watch the play-offs';
+
+  @override
+  String get hubCallUpPlayoffs => 'Call up for the play-offs';
+
+  @override
+  String compPlayoffs(String competition) {
+    return '$competition Play-offs';
+  }
+
+  @override
+  String newsEuroPlayoffPathTitle(String cup, String path) {
+    return '$cup play-offs: Path $path';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyHome(String opponent) {
+    return 'A one-leg semi-final at home to $opponent in March, then a one-off final for a place at the finals.';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyAway(String opponent) {
+    return 'A one-leg semi-final away to $opponent in March, then a one-off final for a place at the finals.';
+  }
+
+  @override
+  String get euroPlayoffDrawTitle => 'PLAY-OFF DRAW';
+
+  @override
+  String get euroPlayoffIntro =>
+      'The top two of every qualifying group are through. The last places are won in four-team play-off paths, one per Nations Cup league: one-leg semi-finals at the higher seed in March, then a one-off final.';
+
+  @override
+  String euroPlayoffPath(String path) {
+    return 'Path $path';
+  }
+
+  @override
+  String get euroPlayoffYourPath => 'Your path';
+
+  @override
+  String euroPlayoffSemi(int number) {
+    return 'Semi-final $number';
+  }
+
+  @override
+  String euroPlayoffFinalHost(int number) {
+    return 'Final, hosted by the winner of semi-final $number';
+  }
+
+  @override
+  String euroPlayoffFinalPending(int first, int second) {
+    return 'Winner of semi-final $first v winner of semi-final $second';
+  }
+
+  @override
+  String euroPlayoffWinnerToGroup(String group) {
+    return 'The winner goes to Group $group';
+  }
+
+  @override
+  String euroPlayoffWinnerPlaceholder(String path) {
+    return 'Path $path winner';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWin(String path, String group) {
+    return 'Your group if you win Path $path: Group $group';
+  }
+
+  @override
+  String get euroPlayoffBracketHeading => 'PLAY-OFFS';
 }

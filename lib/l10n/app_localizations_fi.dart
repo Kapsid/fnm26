@@ -17884,4 +17884,81 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get pressPromiseJudgedMatch => 'Ratkaisee seuraavan ottelun tulos.';
+
+  @override
+  String get hubEventWatchEuroPlayoffDraw => 'Katso jatkokarsinnan arvonta';
+
+  @override
+  String get hubEventWatchEuroPlayoffs => 'Katso jatkokarsinta';
+
+  @override
+  String get hubCallUpPlayoffs => 'Nimeä joukkue jatkokarsintaan';
+
+  @override
+  String compPlayoffs(String competition) {
+    return '$competition: jatkokarsinta';
+  }
+
+  @override
+  String newsEuroPlayoffPathTitle(String cup, String path) {
+    return '$cup, jatkokarsinta: polku $path';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyHome(String opponent) {
+    return 'Yhden ottelun välierä kotona joukkuetta $opponent vastaan maaliskuussa, sitten yksittäinen finaali paikasta lopputurnauksessa.';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyAway(String opponent) {
+    return 'Yhden ottelun välierä vieraissa joukkuetta $opponent vastaan maaliskuussa, sitten yksittäinen finaali paikasta lopputurnauksessa.';
+  }
+
+  @override
+  String get euroPlayoffDrawTitle => 'JATKOKARSINNAN ARVONTA';
+
+  @override
+  String get euroPlayoffIntro =>
+      'Kunkin karsintalohkon kaksi parasta on jatkossa. Viimeiset paikat ratkaistaan neljän joukkueen jatkokarsintapoluissa, yksi jokaista Nations Cup -liigaa kohden: yhden ottelun välierät paremmin sijoitetun kentällä maaliskuussa, sitten yksittäinen finaali.';
+
+  @override
+  String euroPlayoffPath(String path) {
+    return 'Polku $path';
+  }
+
+  @override
+  String get euroPlayoffYourPath => 'Sinun polkusi';
+
+  @override
+  String euroPlayoffSemi(int number) {
+    return 'Välierä $number';
+  }
+
+  @override
+  String euroPlayoffFinalHost(int number) {
+    return 'Finaali, isäntänä välierän $number voittaja';
+  }
+
+  @override
+  String euroPlayoffFinalPending(int first, int second) {
+    return 'Välierän $first voittaja vs. välierän $second voittaja';
+  }
+
+  @override
+  String euroPlayoffWinnerToGroup(String group) {
+    return 'Voittaja menee lohkoon $group';
+  }
+
+  @override
+  String euroPlayoffWinnerPlaceholder(String path) {
+    return 'Polun $path voittaja';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWin(String path, String group) {
+    return 'Lohkosi, jos voitat polun $path: lohko $group';
+  }
+
+  @override
+  String get euroPlayoffBracketHeading => 'JATKOKARSINTA';
 }

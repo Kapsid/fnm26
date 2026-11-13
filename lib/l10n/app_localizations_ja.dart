@@ -17180,4 +17180,81 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get pressPromiseJudgedMatch => '次の試合の結果で判断されます。';
+
+  @override
+  String get hubEventWatchEuroPlayoffDraw => 'プレーオフの抽選を見る';
+
+  @override
+  String get hubEventWatchEuroPlayoffs => 'プレーオフを見る';
+
+  @override
+  String get hubCallUpPlayoffs => 'プレーオフのメンバーを選ぶ';
+
+  @override
+  String compPlayoffs(String competition) {
+    return '$competitionプレーオフ';
+  }
+
+  @override
+  String newsEuroPlayoffPathTitle(String cup, String path) {
+    return '$cupプレーオフ：パス$path';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyHome(String opponent) {
+    return '3月に$opponentとホームで一発勝負の準決勝、その後は本大会出場を懸けた一発勝負の決勝。';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyAway(String opponent) {
+    return '3月に$opponentとアウェーで一発勝負の準決勝、その後は本大会出場を懸けた一発勝負の決勝。';
+  }
+
+  @override
+  String get euroPlayoffDrawTitle => 'プレーオフ抽選';
+
+  @override
+  String get euroPlayoffIntro =>
+      '各予選グループの上位2チームは通過済み。残りの枠は4チームによるプレーオフパスで争われ、ネーションズカップのリーグごとに1つ。3月に上位シードのホームで一発勝負の準決勝、その後に決勝が行われます。';
+
+  @override
+  String euroPlayoffPath(String path) {
+    return 'パス$path';
+  }
+
+  @override
+  String get euroPlayoffYourPath => 'あなたのパス';
+
+  @override
+  String euroPlayoffSemi(int number) {
+    return '準決勝$number';
+  }
+
+  @override
+  String euroPlayoffFinalHost(int number) {
+    return '決勝、準決勝$numberの勝者がホスト';
+  }
+
+  @override
+  String euroPlayoffFinalPending(int first, int second) {
+    return '準決勝$firstの勝者 vs 準決勝$secondの勝者';
+  }
+
+  @override
+  String euroPlayoffWinnerToGroup(String group) {
+    return '勝者はグループ$groupへ';
+  }
+
+  @override
+  String euroPlayoffWinnerPlaceholder(String path) {
+    return 'パス$pathの勝者';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWin(String path, String group) {
+    return 'パス$pathを勝ち抜いた場合のグループ：グループ$group';
+  }
+
+  @override
+  String get euroPlayoffBracketHeading => 'プレーオフ';
 }

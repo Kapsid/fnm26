@@ -5,6 +5,7 @@ import 'package:drift/drift.dart' hide isNotNull, isNull;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -46,6 +47,7 @@ const List<String> _ceremonyKinds = [
   worldCupDrawKind,
   continentalFinalsDrawKind,
   nationsCupDrawKind,
+  EuroPlayoffs.drawWatchedKind,
   worldCupPlayoffKind,
   worldCupKickoffKind,
   continentalKickoffKind,

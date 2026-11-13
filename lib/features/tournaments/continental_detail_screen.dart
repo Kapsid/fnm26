@@ -21,6 +21,7 @@ import 'package:fnm/domain/services/competition/group_advancement.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/tournaments/best_thirds.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
+import 'package:fnm/features/tournaments/euro_playoff_draw_screen.dart';
 import 'package:fnm/features/tournaments/tournament_awards.dart';
 import 'package:fnm/features/tournaments/tournament_bracket.dart';
 import 'package:fnm/features/tournaments/tournament_history.dart';
@@ -91,6 +92,8 @@ class ContinentalDetailScreen extends ConsumerWidget {
     }
     if (data.knockout.isNotEmpty) return bracket;
     if (data.groups.isNotEmpty && data.finalsDrawWatched) return finals;
+    // Europe's play-offs under way, the finals still waiting on them.
+    if (data.playoffs != null) return bracket;
     // Qualifying when there is one, else the finals group stage.
     return 1;
   }
@@ -226,10 +229,14 @@ List<Widget> _continentalTabViews(
         ContinentalCups.byConfederation[data.confederation]?.size ?? 24;
     // Hosts reserve finals berths, so fewer teams (and fewer
     // best-thirds) come through qualifying.
-    final adv = GroupAdvancement.continentalQualifying(
-      (size - data.hostCount).clamp(1, size),
-      data.qualifyingGroups.length,
-    );
+    // On the calendar2 rhythm the top two go through and the rest of the
+    // places are won in the play-offs, not by the best thirds.
+    final adv = data.playoffRoute
+        ? (direct: 2, contention: null, contentionQualify: 0)
+        : GroupAdvancement.continentalQualifying(
+            (size - data.hostCount).clamp(1, size),
+            data.qualifyingGroups.length,
+          );
     return _Groups(
       careerId: careerId,
       groups: data.qualifyingGroups,
@@ -295,6 +302,16 @@ List<Widget> _continentalTabViews(
           grid: grid,
         );
       }()
+    else if (data.pendingDraw case final pending?
+        when data.finalsDrawWatched)
+      EuroPendingGroups(
+        draw: pending,
+        letters: data.pendingLetters,
+        playerNationId: data.playerNationId,
+        playerPathLetter: data.playoffs?.playerPath?.letter,
+        code: code,
+        name: name,
+      )
     else
       TournamentSoon(
         message: data.isPlayerRegion
@@ -332,6 +349,20 @@ List<Widget> _continentalTabViews(
         groupSeeds: groupSeedsOf(data.groups),
         code: code,
         name: name,
+      )
+    else if (data.playoffs case final playoffs?)
+      ListView(
+        padding: const EdgeInsets.all(AppSpacing.marginMobile),
+        children: [
+          Text(
+            l.euroPlayoffBracketHeading,
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          EuroPlayoffPaths(data: playoffs, careerId: careerId),
+        ],
       )
     else
       TournamentSoon(

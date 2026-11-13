@@ -17719,4 +17719,81 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get pressPromiseJudgedMatch => 'Dinilai dari hasil laga berikutnya.';
+
+  @override
+  String get hubEventWatchEuroPlayoffDraw => 'Tonton undian play-off';
+
+  @override
+  String get hubEventWatchEuroPlayoffs => 'Tonton play-off';
+
+  @override
+  String get hubCallUpPlayoffs => 'Tunjuk skuad untuk play-off';
+
+  @override
+  String compPlayoffs(String competition) {
+    return 'Play-off $competition';
+  }
+
+  @override
+  String newsEuroPlayoffPathTitle(String cup, String path) {
+    return 'Play-off $cup: Jalur $path';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyHome(String opponent) {
+    return 'Semifinal satu leg kandang melawan $opponent pada Maret, lalu final tunggal untuk satu tempat di putaran final.';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyAway(String opponent) {
+    return 'Semifinal satu leg tandang melawan $opponent pada Maret, lalu final tunggal untuk satu tempat di putaran final.';
+  }
+
+  @override
+  String get euroPlayoffDrawTitle => 'UNDIAN PLAY-OFF';
+
+  @override
+  String get euroPlayoffIntro =>
+      'Dua teratas dari setiap grup kualifikasi lolos. Tempat terakhir diperebutkan lewat jalur play-off berisi empat tim, satu untuk setiap liga Piala Bangsa-Bangsa: semifinal satu leg di kandang unggulan lebih tinggi pada Maret, lalu final tunggal.';
+
+  @override
+  String euroPlayoffPath(String path) {
+    return 'Jalur $path';
+  }
+
+  @override
+  String get euroPlayoffYourPath => 'Jalurmu';
+
+  @override
+  String euroPlayoffSemi(int number) {
+    return 'Semifinal $number';
+  }
+
+  @override
+  String euroPlayoffFinalHost(int number) {
+    return 'Final, tuan rumah adalah pemenang semifinal $number';
+  }
+
+  @override
+  String euroPlayoffFinalPending(int first, int second) {
+    return 'Pemenang semifinal $first vs. pemenang semifinal $second';
+  }
+
+  @override
+  String euroPlayoffWinnerToGroup(String group) {
+    return 'Pemenang masuk ke Grup $group';
+  }
+
+  @override
+  String euroPlayoffWinnerPlaceholder(String path) {
+    return 'Pemenang Jalur $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWin(String path, String group) {
+    return 'Grupmu jika menang di Jalur $path: Grup $group';
+  }
+
+  @override
+  String get euroPlayoffBracketHeading => 'PLAY-OFF';
 }

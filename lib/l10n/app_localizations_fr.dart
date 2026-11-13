@@ -17973,4 +17973,81 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get pressPromiseJudgedMatch =>
       'Jugé sur le résultat du prochain match.';
+
+  @override
+  String get hubEventWatchEuroPlayoffDraw => 'Suivre le tirage des barrages';
+
+  @override
+  String get hubEventWatchEuroPlayoffs => 'Suivre les barrages';
+
+  @override
+  String get hubCallUpPlayoffs => 'Convoquez votre liste pour les barrages';
+
+  @override
+  String compPlayoffs(String competition) {
+    return 'Barrages $competition';
+  }
+
+  @override
+  String newsEuroPlayoffPathTitle(String cup, String path) {
+    return 'Barrages $cup : Voie $path';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyHome(String opponent) {
+    return 'Une demi-finale en match sec à domicile contre $opponent en mars, puis une finale unique pour une place en phase finale.';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyAway(String opponent) {
+    return 'Une demi-finale en match sec à l\'extérieur contre $opponent en mars, puis une finale unique pour une place en phase finale.';
+  }
+
+  @override
+  String get euroPlayoffDrawTitle => 'TIRAGE DES BARRAGES';
+
+  @override
+  String get euroPlayoffIntro =>
+      'Les deux premiers de chaque groupe de qualification sont qualifiés. Les dernières places se jouent dans des voies de barrages à quatre équipes, une par ligue de la Coupe des Nations : demi-finales en match sec chez la mieux classée en mars, puis une finale unique.';
+
+  @override
+  String euroPlayoffPath(String path) {
+    return 'Voie $path';
+  }
+
+  @override
+  String get euroPlayoffYourPath => 'Votre voie';
+
+  @override
+  String euroPlayoffSemi(int number) {
+    return 'Demi-finale $number';
+  }
+
+  @override
+  String euroPlayoffFinalHost(int number) {
+    return 'Finale, organisée par le vainqueur de la demi-finale $number';
+  }
+
+  @override
+  String euroPlayoffFinalPending(int first, int second) {
+    return 'Vainqueur de la demi-finale $first contre vainqueur de la demi-finale $second';
+  }
+
+  @override
+  String euroPlayoffWinnerToGroup(String group) {
+    return 'Le vainqueur va dans le groupe $group';
+  }
+
+  @override
+  String euroPlayoffWinnerPlaceholder(String path) {
+    return 'Vainqueur de la Voie $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWin(String path, String group) {
+    return 'Votre groupe si vous gagnez la Voie $path : groupe $group';
+  }
+
+  @override
+  String get euroPlayoffBracketHeading => 'BARRAGES';
 }

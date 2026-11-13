@@ -17502,4 +17502,81 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get pressPromiseJudgedMatch => 'ตัดสินจากผลนัดถัดไป';
+
+  @override
+  String get hubEventWatchEuroPlayoffDraw => 'ชมการจับสลากเพลย์ออฟ';
+
+  @override
+  String get hubEventWatchEuroPlayoffs => 'ชมเพลย์ออฟ';
+
+  @override
+  String get hubCallUpPlayoffs => 'เรียกตัวสำหรับเพลย์ออฟ';
+
+  @override
+  String compPlayoffs(String competition) {
+    return 'เพลย์ออฟ$competition';
+  }
+
+  @override
+  String newsEuroPlayoffPathTitle(String cup, String path) {
+    return 'เพลย์ออฟ $cup: สาย $path';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyHome(String opponent) {
+    return 'รอบรองชนะเลิศนัดเดียวในบ้านพบ $opponent ในเดือนมีนาคม จากนั้นเป็นนัดชิงชนะเลิศนัดเดียวเพื่อชิงสิทธิ์เข้ารอบสุดท้าย';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyAway(String opponent) {
+    return 'รอบรองชนะเลิศนัดเดียวนอกบ้านพบ $opponent ในเดือนมีนาคม จากนั้นเป็นนัดชิงชนะเลิศนัดเดียวเพื่อชิงสิทธิ์เข้ารอบสุดท้าย';
+  }
+
+  @override
+  String get euroPlayoffDrawTitle => 'จับสลากเพลย์ออฟ';
+
+  @override
+  String get euroPlayoffIntro =>
+      'ทีมอันดับหนึ่งและสองของทุกกลุ่มรอบคัดเลือกผ่านเข้ารอบแล้ว ส่วนที่เหลือตัดสินกันในสายเพลย์ออฟสี่ทีม ลีกเนชันส์คัพละหนึ่งสาย โดยรอบรองชนะเลิศแข่งนัดเดียวที่สนามของทีมวางอันดับสูงกว่าในเดือนมีนาคม แล้วจึงชิงชนะเลิศนัดเดียว';
+
+  @override
+  String euroPlayoffPath(String path) {
+    return 'สาย $path';
+  }
+
+  @override
+  String get euroPlayoffYourPath => 'สายของคุณ';
+
+  @override
+  String euroPlayoffSemi(int number) {
+    return 'รอบรองชนะเลิศ $number';
+  }
+
+  @override
+  String euroPlayoffFinalHost(int number) {
+    return 'นัดชิงชนะเลิศ เจ้าภาพคือผู้ชนะรอบรองชนะเลิศ $number';
+  }
+
+  @override
+  String euroPlayoffFinalPending(int first, int second) {
+    return 'ผู้ชนะรอบรองชนะเลิศ $first พบ ผู้ชนะรอบรองชนะเลิศ $second';
+  }
+
+  @override
+  String euroPlayoffWinnerToGroup(String group) {
+    return 'ผู้ชนะไปอยู่กลุ่ม $group';
+  }
+
+  @override
+  String euroPlayoffWinnerPlaceholder(String path) {
+    return 'ผู้ชนะสาย $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWin(String path, String group) {
+    return 'กลุ่มของคุณถ้าชนะสาย $path: กลุ่ม $group';
+  }
+
+  @override
+  String get euroPlayoffBracketHeading => 'เพลย์ออฟ';
 }

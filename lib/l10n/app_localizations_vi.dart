@@ -17656,4 +17656,81 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get pressPromiseJudgedMatch => 'Đánh giá bằng kết quả trận tới.';
+
+  @override
+  String get hubEventWatchEuroPlayoffDraw => 'Xem lễ bốc thăm play-off';
+
+  @override
+  String get hubEventWatchEuroPlayoffs => 'Xem các trận play-off';
+
+  @override
+  String get hubCallUpPlayoffs => 'Chốt danh sách cho play-off';
+
+  @override
+  String compPlayoffs(String competition) {
+    return 'Play-off $competition';
+  }
+
+  @override
+  String newsEuroPlayoffPathTitle(String cup, String path) {
+    return 'Play-off $cup: Nhánh $path';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyHome(String opponent) {
+    return 'Bán kết một lượt trên sân nhà gặp $opponent vào tháng 3, sau đó là một trận chung kết duy nhất để giành suất dự vòng chung kết.';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyAway(String opponent) {
+    return 'Bán kết một lượt trên sân khách gặp $opponent vào tháng 3, sau đó là một trận chung kết duy nhất để giành suất dự vòng chung kết.';
+  }
+
+  @override
+  String get euroPlayoffDrawTitle => 'BỐC THĂM PLAY-OFF';
+
+  @override
+  String get euroPlayoffIntro =>
+      'Hai đội đứng đầu mỗi bảng vòng loại đã đi tiếp. Các suất cuối cùng được quyết định qua các nhánh play-off bốn đội, mỗi nhánh cho một giải đấu của Nations Cup: bán kết một lượt trên sân đội hạt giống cao hơn vào tháng 3, rồi một trận chung kết duy nhất.';
+
+  @override
+  String euroPlayoffPath(String path) {
+    return 'Nhánh $path';
+  }
+
+  @override
+  String get euroPlayoffYourPath => 'Nhánh của bạn';
+
+  @override
+  String euroPlayoffSemi(int number) {
+    return 'Bán kết $number';
+  }
+
+  @override
+  String euroPlayoffFinalHost(int number) {
+    return 'Chung kết, đội thắng bán kết $number làm chủ nhà';
+  }
+
+  @override
+  String euroPlayoffFinalPending(int first, int second) {
+    return 'Đội thắng bán kết $first gặp đội thắng bán kết $second';
+  }
+
+  @override
+  String euroPlayoffWinnerToGroup(String group) {
+    return 'Đội thắng sẽ vào bảng $group';
+  }
+
+  @override
+  String euroPlayoffWinnerPlaceholder(String path) {
+    return 'Đội thắng nhánh $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWin(String path, String group) {
+    return 'Bảng của bạn nếu thắng nhánh $path: bảng $group';
+  }
+
+  @override
+  String get euroPlayoffBracketHeading => 'PLAY-OFF';
 }

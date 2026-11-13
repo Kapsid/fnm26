@@ -8,7 +8,9 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/tournament_stars.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
@@ -25,6 +27,7 @@ import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/tournaments/drawn_groups.dart';
+import 'package:fnm/features/tournaments/euro_playoff_providers.dart';
 import 'package:fnm/features/tournaments/host_draw_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/tournaments/city_providers.dart';
@@ -67,7 +70,27 @@ class ContinentalData {
     this.topGames = const [],
     this.topCups = const [],
     this.myNationIds = const {},
+    this.playoffs,
+    this.playoffRoute = false,
+    this.pendingDraw,
+    this.pendingLetters = const {},
   });
+
+  /// Europe's play-offs (a calendar2 cycle) once their draw is watched, or
+  /// null.
+  final EuroPlayoffData? playoffs;
+
+  /// Whether this edition's last places go through play-offs (Europe on the
+  /// calendar2 rhythm): only the top two of each qualifying group go
+  /// straight through, and nobody qualifies as a best third.
+  final bool playoffRoute;
+
+  /// The finals' groups as drawn before the play-offs, a placeholder's slot
+  /// by a pseudo id (see [pendingLetters]), while the finals do not exist.
+  final FinalsDraw? pendingDraw;
+
+  /// [pendingDraw]'s placeholder ids and their path letters.
+  final Map<int, String> pendingLetters;
 
   /// The edition's best XI and best goalkeeper (empty until it's decided).
   final List<StarPlayer> teamOfTournament;
@@ -159,12 +182,76 @@ class ContinentalDrawData {
     required this.draw,
     required this.nations,
     required this.playerNationId,
+    this.placeholderLetters = const {},
+    this.playerPathLetter,
   });
   final FinalsDraw draw;
   final Map<int, Nation> nations;
 
   /// The player's nation, highlighted throughout the ceremony.
   final int playerNationId;
+
+  /// The balls in [draw] that stand for a play-off path's winner (a
+  /// calendar2 EURO drawn before its play-offs), by their id (below zero)
+  /// and the path's letter.
+  final Map<int, String> placeholderLetters;
+
+  /// The path the player's nation is in, when it is in one: its winner's
+  /// ball is the one to follow.
+  final String? playerPathLetter;
+
+  /// The ball the ceremony should keep lit: the player's nation, or the
+  /// placeholder of the path he is in.
+  int get highlightId {
+    final letter = playerPathLetter;
+    if (letter == null) return playerNationId;
+    for (final e in placeholderLetters.entries) {
+      if (e.value == letter) return e.key;
+    }
+    return playerNationId;
+  }
+
+  /// The group the player's path winner was drawn into, or null.
+  String? get playerPathGroup {
+    final id = highlightId;
+    if (playerPathLetter == null) return null;
+    for (final g in draw.groups) {
+      if (g.nationIds.contains(id)) return g.name;
+    }
+    return null;
+  }
+}
+
+/// A stored draw that holds placeholders (see `DrawSlots`) as a [FinalsDraw]
+/// of ids: each nation by its id, each placeholder's slot by a pseudo id
+/// below zero, its winner's once resolved.
+({FinalsDraw draw, Map<int, String> letters}) drawWithPlaceholders(
+  List<DrawSlot> slots,
+) {
+  final letters = <int, String>{};
+  final byGroup = <String, List<DrawSlot>>{};
+  for (final s in slots) {
+    (byGroup[s.groupName] ??= []).add(s);
+  }
+  final groups = <FinalsGroupDraw>[];
+  for (final name in byGroup.keys.toList()..sort()) {
+    final rows = byGroup[name]!
+      ..sort((a, b) => a.position.compareTo(b.position));
+    final ids = <int>[];
+    for (final r in rows) {
+      final letter = EuroPlayoffs.letterOf(r.placeholderKey);
+      final known = EuroPlayoffs.occupant(r);
+      if (known != null) {
+        ids.add(known);
+      } else if (letter != null) {
+        final id = EuroPlayoffs.pseudoId(letter.codeUnitAt(0) - 65);
+        letters[id] = letter;
+        ids.add(id);
+      }
+    }
+    groups.add(FinalsGroupDraw(name: name, nationIds: ids, fixtures: []));
+  }
+  return (draw: FinalsDraw(groups: groups), letters: letters);
 }
 
 /// Recomputes the player's continental group draw deterministically (same seed
@@ -190,7 +277,37 @@ continentalDrawProvider = FutureProvider.autoDispose.family<ContinentalDrawData?
     CompetitionKind.continentalFinals,
     confederation: key.confederation,
   )) {
-    return null;
+    // A calendar2 EURO is drawn before its play-offs, a placeholder for each
+    // path's winner, and stored: the ceremony reads it, never draws it.
+    final slots = await comp.drawSlots(
+      key.careerId,
+      career.cyclePointer,
+      CompetitionKind.continentalFinals,
+      confederation: key.confederation,
+    );
+    if (slots.isEmpty) return null;
+    final all = await ref
+        .watch(nationRepositoryProvider)
+        .forCareer(key.careerId);
+    final stored = drawWithPlaceholders(slots);
+    final paths = EuroPlayoffs.fromSlots(
+      await comp.drawSlots(
+        key.careerId,
+        career.cyclePointer,
+        CompetitionKind.continentalPlayoff,
+        confederation: key.confederation,
+      ),
+    );
+    return ContinentalDrawData(
+      draw: stored.draw,
+      nations: {for (final n in all) n.id: n},
+      playerNationId: career.nationId,
+      placeholderLetters: stored.letters,
+      playerPathLetter: paths
+          .where((p) => p.seeds.contains(career.nationId))
+          .firstOrNull
+          ?.letter,
+    );
   }
   final all = await ref.watch(nationRepositoryProvider).forCareer(key.careerId);
   if (all.firstWhere((n) => n.id == career.nationId).confederation !=
@@ -738,7 +855,36 @@ continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, 
     for (final h in hostIds) h: cities[h] ?? const <String>[],
   };
 
+  // Europe's play-offs (a calendar2 cycle) and the EURO's stored draw with
+  // its placeholders, before the finals exist. Only the manager's own region
+  // is shown in that detail; the other continents have none.
+  final playoffs = key.confederation != Confederation.europe
+      ? null
+      : await readEuroPlayoffs(
+          comp,
+          careerId: key.careerId,
+          cycle: career.cyclePointer,
+          playerNationId: career.nationId,
+          nations: nations,
+        );
+  final pendingDraw = playoffs == null || groups.isNotEmpty
+      ? null
+      : drawWithPlaceholders(playoffs.finalsSlots);
+  final playoffsWatched =
+      !isPlayerRegion ||
+      await comp.hasWatchedDraw(
+        key.careerId,
+        career.cyclePointer,
+        EuroPlayoffs.drawWatchedKind,
+      );
+
   return ContinentalData(
+    playoffs: playoffsWatched ? playoffs : null,
+    playoffRoute:
+        key.confederation == Confederation.europe &&
+        await isCalendar2(comp, key.careerId, career.cyclePointer),
+    pendingDraw: pendingDraw?.draw,
+    pendingLetters: pendingDraw?.letters ?? const {},
     name: config.name,
     confederation: key.confederation,
     isPlayerRegion: isPlayerRegion,

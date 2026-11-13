@@ -27412,5 +27412,141 @@
   "pressPromiseJudgedMatch": "Judged on the result of the next match.",
   "@pressPromiseJudgedMatch": {
     "description": "Press end screen promise card: a match promise is judged on the next match."
+  },
+  "hubEventWatchEuroPlayoffDraw": "Watch the play-off draw",
+  "@hubEventWatchEuroPlayoffDraw": {
+    "description": "Hub action: watch the draw of the European Championship play-off paths."
+  },
+  "hubEventWatchEuroPlayoffs": "Watch the play-offs",
+  "@hubEventWatchEuroPlayoffs": {
+    "description": "Hub action: step through the European Championship play-offs the manager is not playing in."
+  },
+  "hubCallUpPlayoffs": "Call up for the play-offs",
+  "@hubCallUpPlayoffs": {
+    "description": "Hub action: name the squad for the European Championship play-off matches."
+  },
+  "compPlayoffs": "{competition} Play-offs",
+  "@compPlayoffs": {
+    "description": "Competition name: a championship's qualifying play-offs, e.g. 'European Championship Play-offs'.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "newsEuroPlayoffPathTitle": "{cup} play-offs: Path {path}",
+  "@newsEuroPlayoffPathTitle": {
+    "description": "Inbox title: the manager's nation was drawn into a play-off path (path is a letter A to D).",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      },
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "newsEuroPlayoffPathBodyHome": "A one-leg semi-final at home to {opponent} in March, then a one-off final for a place at the finals.",
+  "@newsEuroPlayoffPathBodyHome": {
+    "description": "Inbox body: the manager's play-off path, semi-final at home.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "newsEuroPlayoffPathBodyAway": "A one-leg semi-final away to {opponent} in March, then a one-off final for a place at the finals.",
+  "@newsEuroPlayoffPathBodyAway": {
+    "description": "Inbox body: the manager's play-off path, semi-final away.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "euroPlayoffDrawTitle": "PLAY-OFF DRAW",
+  "@euroPlayoffDrawTitle": {
+    "description": "Screen title: the European Championship play-off draw. Upper case."
+  },
+  "euroPlayoffIntro": "The top two of every qualifying group are through. The last places are won in four-team play-off paths, one per Nations Cup league: one-leg semi-finals at the higher seed in March, then a one-off final.",
+  "@euroPlayoffIntro": {
+    "description": "Intro on the play-off draw screen explaining the format."
+  },
+  "euroPlayoffPath": "Path {path}",
+  "@euroPlayoffPath": {
+    "description": "Heading of one play-off path (path is a letter A to D).",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "euroPlayoffYourPath": "Your path",
+  "@euroPlayoffYourPath": {
+    "description": "Tag on the play-off path the manager's nation is in."
+  },
+  "euroPlayoffSemi": "Semi-final {number}",
+  "@euroPlayoffSemi": {
+    "description": "Label of a play-off path's semi-final (1 or 2).",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "euroPlayoffFinalHost": "Final, hosted by the winner of semi-final {number}",
+  "@euroPlayoffFinalHost": {
+    "description": "Label of a play-off path's final, whose venue was drawn.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "euroPlayoffFinalPending": "Winner of semi-final {first} v winner of semi-final {second}",
+  "@euroPlayoffFinalPending": {
+    "description": "A play-off final not yet known: the two semi-final winners, the host first.",
+    "placeholders": {
+      "first": {
+        "type": "int"
+      },
+      "second": {
+        "type": "int"
+      }
+    }
+  },
+  "euroPlayoffWinnerToGroup": "The winner goes to Group {group}",
+  "@euroPlayoffWinnerToGroup": {
+    "description": "Under a play-off path: the finals group its winner was drawn into.",
+    "placeholders": {
+      "group": {
+        "type": "String"
+      }
+    }
+  },
+  "euroPlayoffWinnerPlaceholder": "Path {path} winner",
+  "@euroPlayoffWinnerPlaceholder": {
+    "description": "A placeholder in the finals draw for the winner of a play-off path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "euroPlayoffYourGroupIfWin": "Your group if you win Path {path}: Group {group}",
+  "@euroPlayoffYourGroupIfWin": {
+    "description": "Banner on the finals draw for a manager still in the play-offs.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      },
+      "group": {
+        "type": "String"
+      }
+    }
+  },
+  "euroPlayoffBracketHeading": "PLAY-OFFS",
+  "@euroPlayoffBracketHeading": {
+    "description": "Heading above the play-off paths on the cup screen. Upper case."
   }
 }

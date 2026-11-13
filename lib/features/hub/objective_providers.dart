@@ -14,6 +14,7 @@ import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
@@ -369,6 +370,7 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
       nationId: career.nationId,
       confederation: conf,
       fixtures: fixtures,
+      cycle: career.cyclePointer,
     );
     final decided = run.over;
     var actual = run.ordinal;
@@ -787,7 +789,23 @@ Future<({int ordinal, bool over})> continentalRun({
   required int nationId,
   required Confederation confederation,
   required List<Fixture> fixtures,
+
+  /// The cycle [fixtures] belong to, when it is the current one: a calendar2
+  /// EURO is drawn (and stored, see `DrawSlots`) months before its finals
+  /// exist, and the draw is what this run is read off until then.
+  int? cycle,
 }) async {
+  if (cycle != null) {
+    final drawn = await _storedDrawRun(
+      comp: comp,
+      careerId: careerId,
+      cycle: cycle,
+      nationId: nationId,
+      confederation: confederation,
+      fixtures: fixtures,
+    );
+    if (drawn != null) return drawn;
+  }
   // Graded the moment the manager's OWN continental championship has a
   // winner, exactly as the World Cup objective is graded off the world
   // champion.
@@ -820,6 +838,60 @@ Future<({int ordinal, bool over})> continentalRun({
     ordinal: continentalFinishOrdinal(fixtures, nationId),
     over: decided,
   );
+}
+
+/// [continentalRun] read off a stored draw with placeholders, while its
+/// finals do not exist yet (Europe's on the calendar2 rhythm, drawn when
+/// qualifying ends and created after the March play-offs); null otherwise.
+///
+/// A side drawn into it, or a path's winner written into its slot, has
+/// qualified (2): the brief locks in at the draw, not in March. A play-off
+/// entrant stands on the rung below (1) and is not locked in; beaten in his
+/// path, or in neither the draw nor a path, his run is over.
+Future<({int ordinal, bool over})?> _storedDrawRun({
+  required CompetitionRepository comp,
+  required int careerId,
+  required int cycle,
+  required int nationId,
+  required Confederation confederation,
+  required List<Fixture> fixtures,
+}) async {
+  if (await comp.hasTournament(
+    careerId,
+    CompetitionKind.continentalFinals,
+    confederation: confederation,
+  )) {
+    return null;
+  }
+  final slots = await comp.drawSlots(
+    careerId,
+    cycle,
+    CompetitionKind.continentalFinals,
+    confederation: confederation,
+  );
+  if (slots.isEmpty) return null;
+  if (slots.any((s) => EuroPlayoffs.occupant(s) == nationId)) {
+    return (ordinal: 2, over: false);
+  }
+  final path = EuroPlayoffs.fromSlots(
+    await comp.drawSlots(
+      careerId,
+      cycle,
+      CompetitionKind.continentalPlayoff,
+      confederation: confederation,
+    ),
+  ).where((p) => p.seeds.contains(nationId)).firstOrNull;
+  if (path == null) return (ordinal: 0, over: true);
+  final beaten = fixtures.any(
+    (f) =>
+        EuroPlayoffs.rounds.contains(f.round) &&
+        f.hasResult &&
+        (f.homeNationId == nationId || f.awayNationId == nationId) &&
+        (f.homeNationId == nationId
+            ? f.homeScore! < f.awayScore!
+            : f.awayScore! < f.homeScore!),
+  );
+  return (ordinal: 1, over: beaten);
 }
 
 /// How far [nationId] went in the World Championship this cycle, and whether

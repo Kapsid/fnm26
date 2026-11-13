@@ -3,6 +3,7 @@
 // is copyrighted intellectual property; do not reproduce, clone or help
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/squad/nomination.dart';
@@ -95,8 +96,15 @@ abstract final class MatchSchedule {
     Set<String> knockoutsDrawnFor,
   ) {
     final last = all.last;
-    if (!_inFinals(last.round)) return null;
     DateTime dayAfter(DateTime d) => DateTime(d.year, d.month, d.day + 1);
+    // A European play-off semi-final won: the path's final is added once the
+    // other semi is in, so it is a stage still to come.
+    if (last.round == EuroPlayoffs.semiRound &&
+        last.hasResult &&
+        _won(last, nationId)) {
+      return (knockoutStage: false, from: dayAfter(last.date));
+    }
+    if (!_inFinals(last.round)) return null;
 
     if (_isGroup(last.round)) {
       // Also when the nation's own group matches are all played: a five-team

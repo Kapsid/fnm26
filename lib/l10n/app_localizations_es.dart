@@ -17902,4 +17902,81 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get pressPromiseJudgedMatch =>
       'Se juzga por el resultado del próximo partido.';
+
+  @override
+  String get hubEventWatchEuroPlayoffDraw => 'Ver el sorteo de la repesca';
+
+  @override
+  String get hubEventWatchEuroPlayoffs => 'Ver la repesca';
+
+  @override
+  String get hubCallUpPlayoffs => 'Da tu lista para la repesca';
+
+  @override
+  String compPlayoffs(String competition) {
+    return '$competition: repesca';
+  }
+
+  @override
+  String newsEuroPlayoffPathTitle(String cup, String path) {
+    return 'Repesca de $cup: Ruta $path';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyHome(String opponent) {
+    return 'Una semifinal a partido único en casa ante $opponent en marzo y después una final a partido único por una plaza en la fase final.';
+  }
+
+  @override
+  String newsEuroPlayoffPathBodyAway(String opponent) {
+    return 'Una semifinal a partido único a domicilio ante $opponent en marzo y después una final a partido único por una plaza en la fase final.';
+  }
+
+  @override
+  String get euroPlayoffDrawTitle => 'SORTEO DE LA REPESCA';
+
+  @override
+  String get euroPlayoffIntro =>
+      'Los dos primeros de cada grupo de clasificación ya están dentro. Las últimas plazas se deciden en rutas de repesca de cuatro equipos, una por cada liga de la Copa de las Naciones: semifinales a partido único en casa del mejor cabeza de serie en marzo y después una final a partido único.';
+
+  @override
+  String euroPlayoffPath(String path) {
+    return 'Ruta $path';
+  }
+
+  @override
+  String get euroPlayoffYourPath => 'Tu ruta';
+
+  @override
+  String euroPlayoffSemi(int number) {
+    return 'Semifinal $number';
+  }
+
+  @override
+  String euroPlayoffFinalHost(int number) {
+    return 'Final, con el ganador de la semifinal $number como anfitrión';
+  }
+
+  @override
+  String euroPlayoffFinalPending(int first, int second) {
+    return 'Ganador de la semifinal $first vs. ganador de la semifinal $second';
+  }
+
+  @override
+  String euroPlayoffWinnerToGroup(String group) {
+    return 'El ganador pasa al Grupo $group';
+  }
+
+  @override
+  String euroPlayoffWinnerPlaceholder(String path) {
+    return 'Ganador de la Ruta $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWin(String path, String group) {
+    return 'Tu grupo si ganas la Ruta $path: Grupo $group';
+  }
+
+  @override
+  String get euroPlayoffBracketHeading => 'REPESCA';
 }
