@@ -51,7 +51,12 @@ import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
+part 'tactics_roles_tab.dart';
 part 'tactics_tablet_layout.dart';
+
+/// The sub-tabs of the roles and set pieces tab, one job each, in the order
+/// their chips read. The name is what `?sub=` carries in a route.
+enum RolesSection { roles, captain, penalties, freeKicks, corners, throwIns }
 
 /// Drops a designated set-piece taker who is no longer in the eleven, once
 /// this frame is done — a build must not write to a provider.
@@ -134,12 +139,37 @@ _Takers _resolveTakers(
 /// and formation selector. Players can be tapped to pick, or dragged to swap
 /// positions / bring a substitute on. Instructions live behind the tune action.
 class TacticsScreen extends ConsumerWidget {
-  const TacticsScreen({required this.careerId, this.initialTab = 0, super.key});
+  const TacticsScreen({
+    required this.careerId,
+    this.initialTab = 0,
+    this.initialSection = RolesSection.roles,
+    super.key,
+  });
 
   final int careerId;
 
   /// The tablet layout's root, for tests.
   static const Key tabletLayoutKey = Key('tactics.tabletLayout');
+
+  /// The chip of one roles-and-set-pieces sub-tab, for tests.
+  static Key sectionChipKey(RolesSection section) =>
+      ValueKey('tactics.section.${section.name}');
+
+  /// One starter's row in a set-piece taker list, for tests.
+  static Key takerRowKey(RolesSection section, int playerId) =>
+      ValueKey('tactics.taker.${section.name}.$playerId');
+
+  /// A taker list's "Pick best" button, for tests.
+  static Key pickBestKey(RolesSection section) =>
+      ValueKey('tactics.pickBest.${section.name}');
+
+  /// The free kicks' "Same as penalties" button, for tests.
+  static const Key sameAsPenaltiesKey = Key('tactics.sameAsPenalties');
+
+  /// Which sub-tab of roles and set pieces to open on, when [initialTab] is
+  /// that tab. The pre-match strip names the armband or the takers, and lands
+  /// on the one it named rather than on the roles.
+  final RolesSection initialSection;
 
   /// Which tab to open on (0 lineup, 1 instructions, 2 roles & set pieces,
   /// 3 squad).
@@ -439,19 +469,15 @@ class TacticsScreen extends ConsumerWidget {
                   //    it. Half of what a tactic is, and it used to live behind
                   //    an icon in the app bar.
                   _InstructionsTab(careerId: careerId, tactic: tactic),
-                  // 3. ROLES & SET PIECES — one row per starter: their job, plus
-                  //    the penalty and free-kick badges (tap to make them taker).
-                  //    The armband sits at the top of it: naming a captain is the
-                  //    same kind of decision as naming a penalty taker — one job,
-                  //    one man. It used to be an armband button on EVERY row of
-                  //    the call-up list, twenty-odd of them, which read as a
-                  //    multiple choice and buried the one name that mattered.
-                  ListView(
-                    padding: AppBottomNav.padScroll(
-                      context,
-                      const EdgeInsets.all(AppSpacing.marginMobile),
-                    ),
-                    children: _rolesChildren(context, ref, l, data, t, roles),
+                  // 3. ROLES & SET PIECES — a row of chips, one job each: the
+                  //    starters' roles, the armband, and one taker list per set
+                  //    piece. See [_RolesSetPiecesTab].
+                  _RolesSetPiecesTab(
+                    screen: this,
+                    data: data,
+                    takers: t,
+                    roles: roles,
+                    bottomClearance: AppBottomNav.clearance(context),
                   ),
                   // 4. SQUAD — the nation's whole pool: every eligible player,
                   //    their club, age, form and international record, filterable
@@ -582,103 +608,6 @@ class TacticsScreen extends ConsumerWidget {
         ],
       ),
     );
-  }
-
-  /// The armband, the set-piece summary and one row per starter: the roles
-  /// and set pieces tab, on both layouts.
-  List<Widget> _rolesChildren(
-    BuildContext context,
-    WidgetRef ref,
-    AppLocalizations l,
-    TacticData data,
-    _Takers t,
-    Map<int, PlayerRole> roles,
-  ) {
-    final xi = t.xi;
-    final namedPenalty = t.namedPenalty;
-    final namedDeadBall = t.namedDeadBall;
-    final penaltyId = t.penaltyId;
-    final deadBallId = t.deadBallId;
-    final namedThrowIn = t.namedThrowIn;
-    final throwInId = t.throwInId;
-    return [
-      // The armband can go to a player nursing a knock — he is still the
-      // captain, he just isn't playing — so the squad offered here is the
-      // called-up group, not only the fit.
-      _CaptainCard(
-        careerId: careerId,
-        pool: [...data.pool, ...data.unavailable],
-      ),
-      const SizedBox(height: AppSpacing.md),
-      Text(
-        l.tacticsRolesSetPiecesBlurb,
-        style: AppTypography.labelSmall.copyWith(
-          color: AppColors.onSurfaceVariant,
-        ),
-      ),
-      const SizedBox(height: AppSpacing.sm),
-      AppCard(
-        child: SetPieceTakerSummary(
-          penaltyName: data.byId[penaltyId]?.name,
-          penaltyIsAuto: namedPenalty == null,
-          deadBallName: data.byId[deadBallId]?.name,
-          deadBallIsAuto: namedDeadBall == null,
-          showThrowIn: true,
-          throwInName: data.byId[throwInId]?.name,
-          throwInIsAuto: namedThrowIn == null,
-          // One tap makes the men already named above the manager's own
-          // choice. The names do not change; what changes is that they are
-          // now his, which is also what settles the "set-piece takers are not
-          // set" strip before kick-off.
-          onQuickPick: () async {
-            await ref
-                .read(setPieceTakersStoreProvider)
-                .setBoth(careerId, penalty: penaltyId, deadBall: deadBallId);
-            await ref.read(throwInTakerStoreProvider).set(careerId, throwInId);
-          },
-        ),
-      ),
-      const SizedBox(height: AppSpacing.sm),
-      for (final p in xi)
-        _PlayerTacticRow(
-          player: p,
-          role: roles[p.id] ?? PlayerRole.none,
-          isPenaltyTaker: namedPenalty == p.id,
-          isDeadBallTaker: namedDeadBall == p.id,
-          isAutoPenalty: namedPenalty == null && penaltyId == p.id,
-          isAutoDeadBall: namedDeadBall == null && deadBallId == p.id,
-          isThrowInTaker: namedThrowIn == p.id,
-          isAutoThrowIn: namedThrowIn == null && throwInId == p.id,
-          onToggleThrowIn: () => ref
-              .read(throwInTakerStoreProvider)
-              .set(careerId, namedThrowIn == p.id ? null : p.id),
-          onRole: () => _pickRole(context, ref, p),
-          onTogglePenalty: () => ref
-              .read(setPieceTakersStoreProvider)
-              .set(
-                careerId,
-                penalty: true,
-                playerId: namedPenalty == p.id ? null : p.id,
-              ),
-          onToggleDeadBall: () => ref
-              .read(setPieceTakersStoreProvider)
-              .set(
-                careerId,
-                penalty: false,
-                playerId: namedDeadBall == p.id ? null : p.id,
-              ),
-        ),
-      // How the throws are taken, under the men who take them: below the
-      // rows so the roles stay where a manager's thumb already knows them.
-      const SizedBox(height: AppSpacing.md),
-      AppCard(
-        child: ThrowInStylePicker(
-          value: data.tactic.throwInStyle,
-          onChanged: (style) =>
-              ref.read(tacticServiceProvider).setThrowInStyle(careerId, style),
-        ),
-      ),
-    ];
   }
 
   /// Opens the role picker for [player] — only the roles that suit their
@@ -1725,149 +1654,6 @@ class _ArmbandRow extends StatelessWidget {
             const Icon(Icons.chevron_right, color: AppColors.onSurfaceVariant),
           ],
         ),
-      ),
-    );
-  }
-}
-
-/// One player's role row in the tactics screen: position, name, and the role
-/// they've been given (tap to change).
-/// One starter in the merged roles & set-pieces list: their position and name,
-/// a tappable role, and penalty / free-kick badges that toggle them as the
-/// taker — so a player's whole tactical brief is set in one place.
-class _PlayerTacticRow extends StatelessWidget {
-  const _PlayerTacticRow({
-    required this.player,
-    required this.role,
-    required this.isPenaltyTaker,
-    required this.isDeadBallTaker,
-    required this.isAutoPenalty,
-    required this.isAutoDeadBall,
-    required this.onRole,
-    required this.onTogglePenalty,
-    required this.onToggleDeadBall,
-    required this.isThrowInTaker,
-    required this.isAutoThrowIn,
-    required this.onToggleThrowIn,
-  });
-
-  final Player player;
-  final PlayerRole role;
-  final bool isThrowInTaker;
-  final bool isAutoThrowIn;
-  final VoidCallback onToggleThrowIn;
-  final bool isPenaltyTaker;
-  final bool isDeadBallTaker;
-
-  /// Nobody has been named and this is the man the engine would pick.
-  final bool isAutoPenalty;
-  final bool isAutoDeadBall;
-
-  final VoidCallback onRole;
-  final VoidCallback onTogglePenalty;
-  final VoidCallback onToggleDeadBall;
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final assigned = role != PlayerRole.none;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        children: [
-          Expanded(
-            child: InkWell(
-              onTap: onRole,
-              borderRadius: AppRadii.smAll,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 36,
-                      child: TacticalChip(player.position.label),
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            player.name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTypography.bodyMedium,
-                          ),
-                          Text(
-                            assigned
-                                ? playerRoleLabel(l, role)
-                                : l.tacticsTapToAssign,
-                            style: AppTypography.labelSmall.copyWith(
-                              color: assigned
-                                  ? AppColors.primary
-                                  : AppColors.onSurfaceVariant,
-                              fontWeight: assigned
-                                  ? FontWeight.w700
-                                  : FontWeight.w400,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          // Technical ability — the quality that matters most for taking
-          // penalties and dead balls, so it's on hand while assigning takers.
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                l.playerAttrTechnical.capsIn(l.localeName),
-                style: AppTypography.labelSmall.copyWith(
-                  color: AppColors.onSurfaceVariant,
-                  fontSize: 9,
-                ),
-              ),
-              Text(
-                '${player.attributes.technical}',
-                style: AppTypography.labelMedium.copyWith(
-                  color: AppColors.ratingColor(
-                    player.attributes.technical / 10,
-                  ),
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(width: AppSpacing.md),
-          SetPieceBadge(
-            icon: Icons.sports_soccer,
-            active: isPenaltyTaker,
-            auto: isAutoPenalty,
-            tooltip: l.tacticsPenalties,
-            onTap: onTogglePenalty,
-          ),
-          const SizedBox(width: 6),
-          SetPieceBadge(
-            icon: Icons.flag_rounded,
-            active: isDeadBallTaker,
-            auto: isAutoDeadBall,
-            tooltip: l.tacticsCornersFreeKicks,
-            onTap: onToggleDeadBall,
-          ),
-          const SizedBox(width: 6),
-          SetPieceBadge(
-            key: ValueKey('throwInBadge.${player.id}'),
-            icon: SetPieceTakerSummary.throwInIcon,
-            active: isThrowInTaker,
-            auto: isAutoThrowIn,
-            tooltip: l.tacticsThrowIns,
-            onTap: onToggleThrowIn,
-          ),
-        ],
       ),
     );
   }

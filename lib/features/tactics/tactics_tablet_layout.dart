@@ -265,18 +265,12 @@ class _TacticsTabletLayout extends ConsumerWidget {
                                     ),
                                   ],
                                 ),
-                                ListView(
-                                  padding: const EdgeInsets.all(
-                                    AppSpacing.marginMobile,
-                                  ),
-                                  children: screen._rolesChildren(
-                                    context,
-                                    ref,
-                                    l,
-                                    data,
-                                    t,
-                                    roles,
-                                  ),
+                                // The phone's sub-tabs, as they are.
+                                _RolesSetPiecesTab(
+                                  screen: screen,
+                                  data: data,
+                                  takers: t,
+                                  roles: roles,
                                 ),
                                 _OppositionTab(careerId: careerId),
                               ],

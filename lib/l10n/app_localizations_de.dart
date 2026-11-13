@@ -1222,8 +1222,39 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ROLLEN & STANDARDS';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Geben Sie jedem Startspieler eine Rolle. Tippen Sie auf das Elfmeter- (⚽) oder Freistoß-Abzeichen (▲), um den Schützen festzulegen.';
+  String get tacticsSectionRoles => 'Rollen';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Freistöße';
+
+  @override
+  String get tacticsSectionCorners => 'Ecken';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Tippen Sie auf einen Spieler, um ihn zu bestimmen. Ein zweites Tippen überlässt die Wahl dem Trainer.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Wer die Elfmeter schießt. Steht der Erste nicht auf dem Platz, schießt der Zweite.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Wer die Freistöße in Tornähe schießt, dazu auch die Ecken. Steht der Erste nicht auf dem Platz, schießt der Zweite.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Ecken von beiden Seiten tritt Ihr Freistoßschütze, eine Änderung hier ändert also auch die Freistöße. Steht der Erste nicht auf dem Platz, tritt der Zweite.';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Wer die langen Einwürfe ausführt. Steht der Erste nicht auf dem Platz, wirft der Zweite.';
+
+  @override
+  String get tacticsPickBest => 'Besten wählen';
+
+  @override
+  String get tacticsSameAsPenalties => 'Wie Elfmeter';
 
   @override
   String get tacticsTooltipCallUps => 'Nominierung';

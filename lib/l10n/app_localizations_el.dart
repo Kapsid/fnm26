@@ -1209,8 +1209,39 @@ class AppLocalizationsEl extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ΡΟΛΟΙ ΚΑΙ ΣΤΑΤΙΚΕΣ ΦΑΣΕΙΣ';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Δώσε ρόλο σε κάθε βασικό. Πάτα το σήμα πέναλτι (⚽) ή φάουλ (▲) για να ορίσεις εκτελεστή.';
+  String get tacticsSectionRoles => 'Ρόλοι';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Φάουλ';
+
+  @override
+  String get tacticsSectionCorners => 'Κόρνερ';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Πάτησε έναν παίκτη για να τον ορίσεις. Πάτησέ τον ξανά για να αφήσεις την επιλογή στον προπονητή.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Ποιος εκτελεί τα πέναλτι. Αν ο πρώτος δεν είναι στο γήπεδο, εκτελεί ο δεύτερος.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Ποιος εκτελεί τα φάουλ κοντά στην εστία, καθώς και τα κόρνερ. Αν ο πρώτος δεν είναι στο γήπεδο, εκτελεί ο δεύτερος.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Τα κόρνερ και από τις δύο πλευρές τα εκτελεί ο εκτελεστής των φάουλ, οπότε μια αλλαγή εδώ αλλάζει και τα φάουλ. Αν ο πρώτος δεν είναι στο γήπεδο, εκτελεί ο δεύτερος.';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Ποιος εκτελεί τα μακρινά πλάγια. Αν ο πρώτος δεν είναι στο γήπεδο, εκτελεί ο δεύτερος.';
+
+  @override
+  String get tacticsPickBest => 'Επίλεξε τον καλύτερο';
+
+  @override
+  String get tacticsSameAsPenalties => 'Όπως τα πέναλτι';
 
   @override
   String get tacticsTooltipCallUps => 'Κλήσεις';

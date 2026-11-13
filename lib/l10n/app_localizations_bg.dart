@@ -1217,8 +1217,39 @@ class AppLocalizationsBg extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'РОЛИ И СТАТИЧНИ';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Дай роля на всеки титуляр. Докосни значката за дузпа (⚽) или свободен удар (▲), за да избереш изпълнител.';
+  String get tacticsSectionRoles => 'Роли';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Свободни удари';
+
+  @override
+  String get tacticsSectionCorners => 'Корнери';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Докосни играч, за да го определиш. Докосни го отново, за да оставиш избора на треньора.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Кой бие дузпите. Ако първият не е на терена, бие вторият.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Кой бие свободните удари в обсега на вратата, а също и корнерите. Ако първият не е на терена, бие вторият.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Корнерите от двете страни ги бие твоят изпълнител на свободни удари, така че промяна тук променя и свободните удари. Ако първият не е на терена, бие вторият.';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Кой изпълнява дългите тъчове. Ако първият не е на терена, изпълнява вторият.';
+
+  @override
+  String get tacticsPickBest => 'Избери най-добрия';
+
+  @override
+  String get tacticsSameAsPenalties => 'Като дузпите';
 
   @override
   String get tacticsTooltipCallUps => 'Повиквания';

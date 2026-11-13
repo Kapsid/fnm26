@@ -1170,8 +1170,39 @@ class AppLocalizationsHu extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'SZEREPEK ÉS PONTRÚGÁSOK';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Adj minden kezdőnek szerepet. Koppints a tizenegyes (⚽) vagy szabadrúgás (▲) jelvényre a rúgó kijelöléséhez.';
+  String get tacticsSectionRoles => 'Szerepek';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Szabadrúgások';
+
+  @override
+  String get tacticsSectionCorners => 'Szögletek';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Koppints egy játékosra a kijelöléséhez. Koppints rá újra, és az edző dönt.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Ki rúgja a tizenegyeseket. Ha az első nincs a pályán, a második rúgja.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Ki rúgja a kapu közeli szabadrúgásokat, és a szögleteket is. Ha az első nincs a pályán, a második rúgja.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'A szögleteket mindkét oldalon a szabadrúgás-specialistád végzi el, így az itteni változás a szabadrúgásokat is módosítja. Ha az első nincs a pályán, a második rúgja.';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Ki végzi el a hosszú bedobásokat. Ha az első nincs a pályán, a második dobja.';
+
+  @override
+  String get tacticsPickBest => 'Legjobb kiválasztása';
+
+  @override
+  String get tacticsSameAsPenalties => 'Mint a tizenegyesek';
 
   @override
   String get tacticsTooltipCallUps => 'Meghívók';

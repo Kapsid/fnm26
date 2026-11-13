@@ -2124,11 +2124,65 @@ abstract class AppLocalizations {
   /// **'ROLES & SET PIECES'**
   String get tacticsTabRolesSetPieces;
 
-  /// Blurb for the merged roles & set-pieces tab.
+  /// Roles & set pieces tab, sub-tab chip: each starter's role.
   ///
   /// In en, this message translates to:
-  /// **'Give each starter a role. Tap the penalty (⚽) or free-kick (▲) badge to set your taker.'**
-  String get tacticsRolesSetPiecesBlurb;
+  /// **'Roles'**
+  String get tacticsSectionRoles;
+
+  /// Roles & set pieces tab, sub-tab chip: the free-kick taker.
+  ///
+  /// In en, this message translates to:
+  /// **'Free kicks'**
+  String get tacticsSectionFreeKicks;
+
+  /// Roles & set pieces tab, sub-tab chip: the corner taker (the same man as free kicks).
+  ///
+  /// In en, this message translates to:
+  /// **'Corners'**
+  String get tacticsSectionCorners;
+
+  /// Set-piece sub-tabs: how the taker list works. Tapping the named taker again hands the choice back to the automatic pick.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a player to name him. Tap him again to leave it to the coach.'**
+  String get tacticsTakerTapHint;
+
+  /// Penalties sub-tab intro. The man marked 1. takes them; 2. is who steps up if 1. is not on the pitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Who takes the penalties. If the first is not on the pitch, the second takes them.'**
+  String get tacticsPenaltiesBlurb;
+
+  /// Free kicks sub-tab intro. The free-kick taker also takes the corners.
+  ///
+  /// In en, this message translates to:
+  /// **'Who takes free kicks within range of goal, and the corners too. If the first is not on the pitch, the second takes them.'**
+  String get tacticsFreeKicksBlurb;
+
+  /// Corners sub-tab intro. Corners and free kicks share one taker.
+  ///
+  /// In en, this message translates to:
+  /// **'Corners from both sides go to your free-kick taker, so a change here changes free kicks too. If the first is not on the pitch, the second takes them.'**
+  String get tacticsCornersBlurb;
+
+  /// Throw-ins sub-tab intro.
+  ///
+  /// In en, this message translates to:
+  /// **'Who takes the long throws. If the first is not on the pitch, the second takes them.'**
+  String get tacticsThrowInsBlurb;
+
+  /// Set-piece sub-tabs: button naming the best-suited man as the taker.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick best'**
+  String get tacticsPickBest;
+
+  /// Free kicks sub-tab: button giving the free kicks to the penalty taker.
+  ///
+  /// In en, this message translates to:
+  /// **'Same as penalties'**
+  String get tacticsSameAsPenalties;
 
   /// Tooltip for the call-ups action.
   ///

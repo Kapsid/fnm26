@@ -1171,8 +1171,39 @@ class AppLocalizationsFil extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ROLE AT SET PIECE';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Bigyan ng role ang bawat starter. I-tap ang badge ng penalty (⚽) o free-kick (▲) para itakda ang taker mo.';
+  String get tacticsSectionRoles => 'Mga role';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Mga free kick';
+
+  @override
+  String get tacticsSectionCorners => 'Mga corner';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'I-tap ang manlalaro para piliin siya. I-tap ulit para ipaubaya sa coach.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Sino ang kukuha ng mga penalty. Kung wala sa laro ang una, ang pangalawa ang kukuha.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Sino ang kukuha ng mga free kick na abot ang goal, pati ang mga corner. Kung wala sa laro ang una, ang pangalawa ang kukuha.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Ang mga corner sa magkabilang panig ay sa free-kick taker mo, kaya ang pagbabago rito ay nagbabago rin sa mga free kick. Kung wala sa laro ang una, ang pangalawa ang kukuha.';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Sino ang kukuha ng mahahabang throw-in. Kung wala sa laro ang una, ang pangalawa ang kukuha.';
+
+  @override
+  String get tacticsPickBest => 'Piliin ang pinakamahusay';
+
+  @override
+  String get tacticsSameAsPenalties => 'Gaya ng penalty';
 
   @override
   String get tacticsTooltipCallUps => 'Mga call-up';

@@ -1170,8 +1170,39 @@ class AppLocalizationsId extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'PERAN & BOLA MATI';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Beri tiap pemain inti sebuah peran. Ketuk lencana penalti (⚽) atau tendangan bebas (▲) untuk menunjuk eksekutor.';
+  String get tacticsSectionRoles => 'Peran';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Tendangan bebas';
+
+  @override
+  String get tacticsSectionCorners => 'Sepak pojok';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Ketuk pemain untuk menunjuknya. Ketuk lagi untuk menyerahkan pilihan kepada pelatih.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Siapa yang mengambil penalti. Jika yang pertama tidak di lapangan, yang kedua mengambilnya.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Siapa yang mengambil tendangan bebas dalam jangkauan gawang, juga sepak pojok. Jika yang pertama tidak di lapangan, yang kedua mengambilnya.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Sepak pojok dari kedua sisi diambil eksekutor tendangan bebas Anda, jadi perubahan di sini juga mengubah tendangan bebas. Jika yang pertama tidak di lapangan, yang kedua mengambilnya.';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Siapa yang melakukan lemparan ke dalam jauh. Jika yang pertama tidak di lapangan, yang kedua melakukannya.';
+
+  @override
+  String get tacticsPickBest => 'Pilih yang terbaik';
+
+  @override
+  String get tacticsSameAsPenalties => 'Sama dengan penalti';
 
   @override
   String get tacticsTooltipCallUps => 'Pemanggilan';

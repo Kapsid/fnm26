@@ -1166,8 +1166,39 @@ class AppLocalizationsPl extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ROLE I STAŁE FRAGMENTY';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Daj każdemu zawodnikowi z wyjściowego składu rolę. Dotknij plakietki rzutu karnego (⚽) lub rzutu wolnego (▲), by wyznaczyć wykonawcę.';
+  String get tacticsSectionRoles => 'Role';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Rzuty wolne';
+
+  @override
+  String get tacticsSectionCorners => 'Rożne';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Stuknij zawodnika, aby go wyznaczyć. Stuknij ponownie, aby zostawić wybór trenerowi.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Kto strzela rzuty karne. Gdy pierwszego nie ma na boisku, strzela drugi.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Kto wykonuje rzuty wolne w zasięgu bramki, a także rzuty rożne. Gdy pierwszego nie ma na boisku, wykonuje drugi.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Rzuty rożne z obu stron wykonuje twój egzekutor rzutów wolnych, więc zmiana tutaj zmienia też rzuty wolne. Gdy pierwszego nie ma na boisku, wykonuje drugi.';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Kto wykonuje długie wrzuty z autu. Gdy pierwszego nie ma na boisku, wykonuje drugi.';
+
+  @override
+  String get tacticsPickBest => 'Wybierz najlepszego';
+
+  @override
+  String get tacticsSameAsPenalties => 'Jak karne';
 
   @override
   String get tacticsTooltipCallUps => 'Powołania';

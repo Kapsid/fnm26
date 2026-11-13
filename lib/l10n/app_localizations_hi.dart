@@ -1163,8 +1163,39 @@ class AppLocalizationsHi extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'रोल और सेट पीस';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'हर स्टार्टर को एक रोल दें। टेकर तय करने के लिए पेनल्टी (⚽) या फ़्री-किक (▲) बैज पर टैप करें।';
+  String get tacticsSectionRoles => 'भूमिकाएँ';
+
+  @override
+  String get tacticsSectionFreeKicks => 'फ़्री-किक';
+
+  @override
+  String get tacticsSectionCorners => 'कॉर्नर';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'किसी खिलाड़ी को चुनने के लिए टैप करें। दोबारा टैप करें तो फ़ैसला कोच पर छोड़ दिया जाएगा।';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'पेनल्टी कौन लेगा। अगर पहला मैदान पर नहीं है, तो दूसरा लेगा।';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'गोल की रेंज में फ़्री-किक कौन लेगा, और कॉर्नर भी। अगर पहला मैदान पर नहीं है, तो दूसरा लेगा।';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'दोनों तरफ़ के कॉर्नर आपका फ़्री-किक टेकर लेता है, इसलिए यहाँ बदलाव से फ़्री-किक भी बदल जाती है। अगर पहला मैदान पर नहीं है, तो दूसरा लेगा।';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'लंबे थ्रो-इन कौन लेगा। अगर पहला मैदान पर नहीं है, तो दूसरा लेगा।';
+
+  @override
+  String get tacticsPickBest => 'सर्वश्रेष्ठ चुनें';
+
+  @override
+  String get tacticsSameAsPenalties => 'पेनल्टी जैसा';
 
   @override
   String get tacticsTooltipCallUps => 'कॉल-अप';

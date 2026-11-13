@@ -1214,8 +1214,39 @@ class AppLocalizationsFr extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'RÔLES ET CPA';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Donnez un rôle à chaque titulaire. Touchez le badge penalty (⚽) ou coup franc (▲) pour désigner votre tireur.';
+  String get tacticsSectionRoles => 'Rôles';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Coups francs';
+
+  @override
+  String get tacticsSectionCorners => 'Corners';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Touchez un joueur pour le désigner. Touchez-le à nouveau pour laisser le choix à l’entraîneur.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Qui tire les penalties. Si le premier n’est pas sur le terrain, le deuxième s’en charge.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Qui tire les coups francs à portée du but, ainsi que les corners. Si le premier n’est pas sur le terrain, le deuxième s’en charge.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Les corners des deux côtés reviennent à votre tireur de coups francs, donc un changement ici modifie aussi les coups francs. Si le premier n’est pas sur le terrain, le deuxième s’en charge.';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Qui effectue les longues touches. Si le premier n’est pas sur le terrain, le deuxième s’en charge.';
+
+  @override
+  String get tacticsPickBest => 'Choisir le meilleur';
+
+  @override
+  String get tacticsSameAsPenalties => 'Comme les penalties';
 
   @override
   String get tacticsTooltipCallUps => 'Convocations';

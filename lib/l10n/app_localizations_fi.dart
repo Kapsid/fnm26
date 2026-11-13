@@ -1217,8 +1217,39 @@ class AppLocalizationsFi extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ROOLIT JA VAKIOT';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Anna jokaiselle aloittajalle rooli. Napauta rangaistuspotkun (⚽) tai vapaapotkun (▲) merkkiä valitaksesi potkijan.';
+  String get tacticsSectionRoles => 'Roolit';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Vapaapotkut';
+
+  @override
+  String get tacticsSectionCorners => 'Kulmapotkut';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Napauta pelaajaa valitaksesi hänet. Napauta uudelleen, niin valmentaja päättää.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Kuka laukoo rangaistuspotkut. Jos ensimmäinen ei ole kentällä, laukoo toinen.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Kuka potkaisee vapaapotkut ampumaetäisyydeltä, ja myös kulmapotkut. Jos ensimmäinen ei ole kentällä, potkaisee toinen.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Kulmapotkut molemmilta puolilta potkaisee vapaapotkujen potkija, joten muutos tässä muuttaa myös vapaapotkut. Jos ensimmäinen ei ole kentällä, potkaisee toinen.';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Kuka heittää pitkät rajaheitot. Jos ensimmäinen ei ole kentällä, heittää toinen.';
+
+  @override
+  String get tacticsPickBest => 'Valitse paras';
+
+  @override
+  String get tacticsSameAsPenalties => 'Kuten rangaistuspotkut';
 
   @override
   String get tacticsTooltipCallUps => 'Kutsut';

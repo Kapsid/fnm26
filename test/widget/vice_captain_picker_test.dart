@@ -15,7 +15,7 @@ void main() {
     await pumpRoute(
       tester,
       save,
-      '${Routes.tactics}?careerId=${save.careerId}&tab=2',
+      '${Routes.tactics}?careerId=${save.careerId}&tab=2&sub=captain',
     );
     expect(tester.takeException(), isNull);
     expect(find.text(enL.viceCaptainFirst.toUpperCase()), findsOneWidget);

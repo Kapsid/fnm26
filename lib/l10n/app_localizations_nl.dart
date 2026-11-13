@@ -1211,8 +1211,39 @@ class AppLocalizationsNl extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ROLLEN EN STANDAARDSITUATIES';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Geef elke basisspeler een rol. Tik op de penalty-badge (⚽) of vrije-trap-badge (▲) om je nemer te kiezen.';
+  String get tacticsSectionRoles => 'Rollen';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Vrije trappen';
+
+  @override
+  String get tacticsSectionCorners => 'Hoekschoppen';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Tik op een speler om hem aan te wijzen. Tik nog eens om de keuze aan de trainer te laten.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Wie de penalty\'s neemt. Staat de eerste niet op het veld, dan neemt de tweede ze.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Wie de vrije trappen binnen schietafstand neemt, en ook de hoekschoppen. Staat de eerste niet op het veld, dan neemt de tweede ze.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Hoekschoppen aan beide kanten zijn voor je vrijetrapnemer, dus een wijziging hier verandert ook de vrije trappen. Staat de eerste niet op het veld, dan neemt de tweede ze.';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Wie de lange ingooien neemt. Staat de eerste niet op het veld, dan neemt de tweede ze.';
+
+  @override
+  String get tacticsPickBest => 'Beste kiezen';
+
+  @override
+  String get tacticsSameAsPenalties => 'Zelfde als penalty\'s';
 
   @override
   String get tacticsTooltipCallUps => 'Oproepen';

@@ -1786,9 +1786,45 @@
   "@tacticsTabRolesSetPieces": {
     "description": "Merged tab: player roles and set-piece takers."
   },
-  "tacticsRolesSetPiecesBlurb": "Give each starter a role. Tap the penalty (⚽) or free-kick (▲) badge to set your taker.",
-  "@tacticsRolesSetPiecesBlurb": {
-    "description": "Blurb for the merged roles & set-pieces tab."
+  "tacticsSectionRoles": "Roles",
+  "@tacticsSectionRoles": {
+    "description": "Roles & set pieces tab, sub-tab chip: each starter's role."
+  },
+  "tacticsSectionFreeKicks": "Free kicks",
+  "@tacticsSectionFreeKicks": {
+    "description": "Roles & set pieces tab, sub-tab chip: the free-kick taker."
+  },
+  "tacticsSectionCorners": "Corners",
+  "@tacticsSectionCorners": {
+    "description": "Roles & set pieces tab, sub-tab chip: the corner taker (the same man as free kicks)."
+  },
+  "tacticsTakerTapHint": "Tap a player to name him. Tap him again to leave it to the coach.",
+  "@tacticsTakerTapHint": {
+    "description": "Set-piece sub-tabs: how the taker list works. Tapping the named taker again hands the choice back to the automatic pick."
+  },
+  "tacticsPenaltiesBlurb": "Who takes the penalties. If the first is not on the pitch, the second takes them.",
+  "@tacticsPenaltiesBlurb": {
+    "description": "Penalties sub-tab intro. The man marked 1. takes them; 2. is who steps up if 1. is not on the pitch."
+  },
+  "tacticsFreeKicksBlurb": "Who takes free kicks within range of goal, and the corners too. If the first is not on the pitch, the second takes them.",
+  "@tacticsFreeKicksBlurb": {
+    "description": "Free kicks sub-tab intro. The free-kick taker also takes the corners."
+  },
+  "tacticsCornersBlurb": "Corners from both sides go to your free-kick taker, so a change here changes free kicks too. If the first is not on the pitch, the second takes them.",
+  "@tacticsCornersBlurb": {
+    "description": "Corners sub-tab intro. Corners and free kicks share one taker."
+  },
+  "tacticsThrowInsBlurb": "Who takes the long throws. If the first is not on the pitch, the second takes them.",
+  "@tacticsThrowInsBlurb": {
+    "description": "Throw-ins sub-tab intro."
+  },
+  "tacticsPickBest": "Pick best",
+  "@tacticsPickBest": {
+    "description": "Set-piece sub-tabs: button naming the best-suited man as the taker."
+  },
+  "tacticsSameAsPenalties": "Same as penalties",
+  "@tacticsSameAsPenalties": {
+    "description": "Free kicks sub-tab: button giving the free kicks to the penalty taker."
   },
   "tacticsTooltipCallUps": "Call-ups",
   "@tacticsTooltipCallUps": {

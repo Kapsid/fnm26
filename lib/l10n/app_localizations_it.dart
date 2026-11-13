@@ -1210,8 +1210,39 @@ class AppLocalizationsIt extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'COMPITI E PALLE INATTIVE';
 
   @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Dai un compito a ogni titolare. Tocca il badge rigore (⚽) o punizione (▲) per scegliere il tiratore.';
+  String get tacticsSectionRoles => 'Ruoli';
+
+  @override
+  String get tacticsSectionFreeKicks => 'Punizioni';
+
+  @override
+  String get tacticsSectionCorners => 'Angoli';
+
+  @override
+  String get tacticsTakerTapHint =>
+      'Tocca un giocatore per sceglierlo. Toccalo di nuovo per lasciare la scelta all\'allenatore.';
+
+  @override
+  String get tacticsPenaltiesBlurb =>
+      'Chi tira i rigori. Se il primo non è in campo, tira il secondo.';
+
+  @override
+  String get tacticsFreeKicksBlurb =>
+      'Chi batte le punizioni dalla distanza utile, e anche gli angoli. Se il primo non è in campo, batte il secondo.';
+
+  @override
+  String get tacticsCornersBlurb =>
+      'Gli angoli da entrambi i lati li batte il tuo specialista delle punizioni, quindi un cambio qui cambia anche le punizioni. Se il primo non è in campo, batte il secondo.';
+
+  @override
+  String get tacticsThrowInsBlurb =>
+      'Chi batte le rimesse lunghe. Se il primo non è in campo, batte il secondo.';
+
+  @override
+  String get tacticsPickBest => 'Scegli il migliore';
+
+  @override
+  String get tacticsSameAsPenalties => 'Come i rigori';
 
   @override
   String get tacticsTooltipCallUps => 'Convocazioni';
