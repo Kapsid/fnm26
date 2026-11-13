@@ -93,6 +93,8 @@ void main() {
                     managerName: 'M',
                     rngSeed: 77,
                     stadiumHostRules: false,
+                    // Found on the finals before TournamentCalendar spaced them.
+                    tournamentSpacing: false,
                   ))
               .valueOrNull!;
       await w.c.read(tacticServiceProvider).setFormation(career.id, shape);
@@ -110,6 +112,8 @@ void main() {
                     managerName: 'M',
                     rngSeed: 77,
                     stadiumHostRules: false,
+                    // Found on the finals before TournamentCalendar spaced them.
+                    tournamentSpacing: false,
                   ))
               .valueOrNull!;
       final refFam = ref.c.read(tacticFamiliarityRepositoryProvider);
@@ -175,6 +179,8 @@ void main() {
                     managerName: 'M',
                     rngSeed: 78,
                     stadiumHostRules: false,
+                    // Found on the finals before TournamentCalendar spaced them.
+                    tournamentSpacing: false,
                   ))
               .valueOrNull!;
       await w.c.read(tacticServiceProvider).setFormation(career.id, shape);
@@ -202,6 +208,8 @@ void main() {
                     managerName: 'M',
                     rngSeed: 78,
                     stadiumHostRules: false,
+                    // Found on the finals before TournamentCalendar spaced them.
+                    tournamentSpacing: false,
                   ))
               .valueOrNull!;
       final refFam = ref.c.read(tacticFamiliarityRepositoryProvider);
@@ -238,6 +246,8 @@ void main() {
                     rngSeed: 135,
                     startingRanks: legacySeedRanking,
                     stadiumHostRules: false,
+                    // Found on the finals before TournamentCalendar spaced them.
+                    tournamentSpacing: false,
                   ))
               .valueOrNull!;
       await w.c.read(tacticServiceProvider).setFormation(career.id, shape);
@@ -254,6 +264,8 @@ void main() {
                     rngSeed: 135,
                     startingRanks: legacySeedRanking,
                     stadiumHostRules: false,
+                    // Found on the finals before TournamentCalendar spaced them.
+                    tournamentSpacing: false,
                   ))
               .valueOrNull!;
       final refFam = ref.c.read(tacticFamiliarityRepositoryProvider);
@@ -306,6 +318,8 @@ void main() {
                     managerName: 'M',
                     rngSeed: 78,
                     stadiumHostRules: false,
+                    // Found on the finals before TournamentCalendar spaced them.
+                    tournamentSpacing: false,
                   ))
               .valueOrNull!;
       await w.c.read(tacticServiceProvider).setFormation(career.id, shape);
