@@ -365,6 +365,7 @@ abstract final class Routes {
     finalsDraw,
     continentalDraw,
     nationsCupDraw,
+    euroPlayoffDraw,
     tournamentKickoff,
     cycleRollover,
     gallery,

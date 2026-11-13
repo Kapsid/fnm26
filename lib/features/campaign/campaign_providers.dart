@@ -429,10 +429,18 @@ campaignProgressProvider = FutureProvider.autoDispose
         // Judged when the qualifying group is played out. Finishing below
         // the rival fails it there and then; finishing above waits for the
         // finals field (play-off winners included), which decides the
-        // "and qualify" star.
+        // "and qualify" star. A calendar2 EURO is drawn (and stored) in
+        // November but created only after the March play-offs: there the
+        // run read off the stored draw decides it sooner, at the draw for a
+        // side drawn straight in (ordinal 2), when its path is decided for
+        // a play-off entrant, and at once for a side in neither. In any
+        // other cycle `run` reads 0 and not over until the finals exist, so
+        // nothing changes there.
         CampaignGoal.aboveRival =>
           await _groupPlayedOut(comp, careerId, table) &&
               (!aboveRival ||
+                  run.ordinal >= 2 ||
+                  run.over ||
                   (await comp.fixturesByRound(
                     careerId,
                     'CGROUP',
