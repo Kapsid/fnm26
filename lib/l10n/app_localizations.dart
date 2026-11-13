@@ -26755,6 +26755,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{month}: {count, plural, =1{1 more match} other{{count} more matches}}'**
   String hubNextWindowLabel(String month, int count);
+
+  /// New game: label of the manager's age field, beside his name.
+  ///
+  /// In en, this message translates to:
+  /// **'Age'**
+  String get careerManagerAge;
+
+  /// Under an age field when the number typed is outside the allowed range.
+  ///
+  /// In en, this message translates to:
+  /// **'From {min} to {max}'**
+  String managerAgeRange(int min, int max);
+
+  /// The manager's name with his age in brackets (offers, press room, career summary, managers list, match preview).
+  ///
+  /// In en, this message translates to:
+  /// **'{name} ({age})'**
+  String managerNameAge(String name, int age);
+
+  /// Manager page, under his age once he is 70 or older: flavour only, nothing ends the career.
+  ///
+  /// In en, this message translates to:
+  /// **'The board asks about succession plans.'**
+  String get managerSuccession;
+
+  /// Hub card (once, on a save made before ages existed) and its dialog: asks the manager's age.
+  ///
+  /// In en, this message translates to:
+  /// **'How old is your manager?'**
+  String get managerAgePromptTitle;
+
+  /// Hub card body under managerAgePromptTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This save has no age for your manager yet. Set it once and it is shown beside your name. It changes nothing in the game.'**
+  String get managerAgePromptBody;
+
+  /// Hub card button: opens the age dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Set age'**
+  String get managerAgePromptSet;
+
+  /// Hub card button: puts the question away for good.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get managerAgePromptSkip;
+
+  /// News title when a world manager retires, with his age in brackets.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation}: {name} ({age}) retires from management'**
+  String mgrNewsRetiredAge(String nation, String name, int age);
+
+  /// Editor, managers section: label of the day-one manager's age field.
+  ///
+  /// In en, this message translates to:
+  /// **'Age'**
+  String get editorManagerAge;
+
+  /// Editor, managers section: hint in the empty age field (the game then draws an age).
+  ///
+  /// In en, this message translates to:
+  /// **'Empty: the game picks one'**
+  String get editorManagerAgeHint;
+
+  /// Editor issue: a day-one manager's age outside the allowed range.
+  ///
+  /// In en, this message translates to:
+  /// **'The manager\'s age must be from {min} to {max}.'**
+  String editorIssueManagerAge(int min, int max);
 }
 
 class _AppLocalizationsDelegate

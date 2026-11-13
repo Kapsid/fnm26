@@ -4419,5 +4419,17 @@
   "scheduleDrawCeremony": "Cerimônia do sorteio",
   "scheduleNoDraws": "Nenhum sorteio por vir",
   "hubCallUpClosesIn": "{count, plural, =0{A convocação fecha hoje} =1{A convocação fecha amanhã} other{A convocação fecha em {count} dias}}",
-  "hubNextWindowLabel": "{month}: {count, plural, =1{mais 1 jogo} other{mais {count} jogos}}"
+  "hubNextWindowLabel": "{month}: {count, plural, =1{mais 1 jogo} other{mais {count} jogos}}",
+  "careerManagerAge": "Idade",
+  "managerAgeRange": "De {min} a {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "A direção pergunta pelos planos de sucessão.",
+  "managerAgePromptTitle": "Qual é a idade do seu treinador?",
+  "managerAgePromptBody": "Este jogo salvo ainda não tem a idade do seu treinador. Defina-a uma vez e ela aparece ao lado do seu nome. Não muda nada no jogo.",
+  "managerAgePromptSet": "Definir idade",
+  "managerAgePromptSkip": "Pular",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) termina a carreira de treinador",
+  "editorManagerAge": "Idade",
+  "editorManagerAgeHint": "Vazio: o jogo escolhe",
+  "editorIssueManagerAge": "A idade do treinador deve ser de {min} a {max}."
 }

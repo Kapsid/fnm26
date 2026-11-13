@@ -4419,5 +4419,17 @@
   "scheduleDrawCeremony": "Sorsolási ceremónia",
   "scheduleNoDraws": "Nincs közelgő sorsolás",
   "hubCallUpClosesIn": "{count, plural, =0{A keretkijelölés ma zárul} =1{A keretkijelölés holnap zárul} other{A keretkijelölés {count} nap múlva zárul}}",
-  "hubNextWindowLabel": "{month}: {count, plural, other{még {count} meccs}}"
+  "hubNextWindowLabel": "{month}: {count, plural, other{még {count} meccs}}",
+  "careerManagerAge": "Életkor",
+  "managerAgeRange": "{min} és {max} között",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "A vezetőség az utódlási tervekről érdeklődik.",
+  "managerAgePromptTitle": "Hány éves a kapitányod?",
+  "managerAgePromptBody": "Ebben a mentésben még nincs megadva a kapitány életkora. Add meg egyszer, és a neved mellett jelenik meg. A játékon semmit sem változtat.",
+  "managerAgePromptSet": "Életkor megadása",
+  "managerAgePromptSkip": "Kihagyás",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) visszavonul az edzősködéstől",
+  "editorManagerAge": "Életkor",
+  "editorManagerAgeHint": "Üres: a játék választ",
+  "editorIssueManagerAge": "A kapitány életkorának {min} és {max} között kell lennie."
 }

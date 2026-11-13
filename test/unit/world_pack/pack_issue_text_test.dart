@@ -199,8 +199,8 @@ void main() {
       formatVersion: kPackFormatVersion,
       madeWithVersion: '1.1.0',
       managers: {
-        1: (name: 'A' * 41, nationality: 'ZZZ'),
-        99: (name: 'Ota Brnak', nationality: 'CZE'),
+        1: (name: 'A' * 41, nationality: 'ZZZ', age: null),
+        99: (name: 'Ota Brnak', nationality: 'CZE', age: null),
       },
     );
     final issues = [

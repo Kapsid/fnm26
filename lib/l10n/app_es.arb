@@ -4419,5 +4419,17 @@
   "scheduleDrawCeremony": "Ceremonia del sorteo",
   "scheduleNoDraws": "No hay sorteos próximos",
   "hubCallUpClosesIn": "{count, plural, =0{La convocatoria se cierra hoy} =1{La convocatoria se cierra mañana} other{La convocatoria se cierra en {count} días}}",
-  "hubNextWindowLabel": "{month}: {count, plural, =1{1 partido más} other{{count} partidos más}}"
+  "hubNextWindowLabel": "{month}: {count, plural, =1{1 partido más} other{{count} partidos más}}",
+  "careerManagerAge": "Edad",
+  "managerAgeRange": "De {min} a {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "La directiva pregunta por los planes de sucesión.",
+  "managerAgePromptTitle": "¿Qué edad tiene tu seleccionador?",
+  "managerAgePromptBody": "Esta partida aún no tiene la edad de tu seleccionador. Indícala una vez y aparecerá junto a tu nombre. No cambia nada en el juego.",
+  "managerAgePromptSet": "Indicar edad",
+  "managerAgePromptSkip": "Omitir",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) se retira de los banquillos",
+  "editorManagerAge": "Edad",
+  "editorManagerAgeHint": "Vacío: lo elige el juego",
+  "editorIssueManagerAge": "La edad del seleccionador debe estar entre {min} y {max}."
 }

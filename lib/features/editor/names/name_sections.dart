@@ -721,20 +721,26 @@ abstract final class NameEdits {
   };
 
   /// [pack] with nation [e]'s day-one manager named [name] (trimmed), of
-  /// nationality [nationality] (a FIFA code, kept upper-case). A blank name
-  /// is no manager of the database's: the entry goes, and the game picks
-  /// him when a career starts.
+  /// nationality [nationality] (a FIFA code, kept upper-case) and [age]
+  /// (null: the game draws one). A blank name is no manager of the
+  /// database's: the entry goes, his age with it, and the game picks him
+  /// when a career starts.
   static WorldPack withManager(
     WorldPack pack,
     NameEntry e,
     String name,
-    String nationality,
-  ) {
+    String nationality, {
+    int? age,
+  }) {
     final id = int.parse(e.key);
     final n = name.trim();
     final next = n.isEmpty
         ? null
-        : (name: n, nationality: nationality.trim().toUpperCase());
+        : (
+            name: n,
+            nationality: nationality.trim().toUpperCase(),
+            age: age,
+          );
     if (pack.managers[id] == next) return pack;
     return pack.copyWith(
       managers: {

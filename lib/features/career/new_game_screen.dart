@@ -13,10 +13,12 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
+import 'package:fnm/domain/services/manager/manager_age.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
 import 'package:fnm/domain/services/profanity/profanity_filter.dart';
 import 'package:fnm/domain/services/world_pack/pack_status.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/manager/manager_age_widgets.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/features/nations/nation_preview.dart';
 import 'package:fnm/features/nations/nation_select_providers.dart';
@@ -44,6 +46,12 @@ class NewGameScreen extends ConsumerStatefulWidget {
 
 class _NewGameScreenState extends ConsumerState<NewGameScreen> {
   final _controller = TextEditingController();
+
+  /// The manager's age, beside his name: [ManagerAge.defaultAge] until
+  /// changed.
+  final _ageController = TextEditingController(
+    text: '${ManagerAge.defaultAge}',
+  );
   bool _creating = false;
 
   /// Whether the save being made starts on a database: copying it and
@@ -53,6 +61,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
   @override
   void dispose() {
     _controller.dispose();
+    _ageController.dispose();
     super.dispose();
   }
 
@@ -66,11 +75,46 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
   /// The name changed: its error shows, or goes, as it is typed.
   void _typed() => setState(() {});
 
+  /// Whether Start can make the save: a name the game shows and an age a
+  /// manager can be.
+  bool _canStart(AppLocalizations l) =>
+      _nameError(l) == null && ManagerAgeField.valueOf(_ageController) != null;
+
+  /// The name field and, beside it, the age.
+  Widget _nameAndAge(AppLocalizations l) => Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Expanded(
+        child: AppTextField(
+          label: l.careerManagerName,
+          hint: l.careerManagerNameHint,
+          controller: _controller,
+          autofocus: true,
+          textInputAction: TextInputAction.done,
+          onChanged: (_) => _typed(),
+          errorText: _nameError(l),
+          onSubmitted: (_) => _start(),
+        ),
+      ),
+      const SizedBox(width: AppSpacing.md),
+      SizedBox(
+        width: 96,
+        child: ManagerAgeField(
+          controller: _ageController,
+          onChanged: (_) => _typed(),
+          onSubmitted: (_) => _start(),
+        ),
+      ),
+    ],
+  );
+
   Future<void> _start() async {
     // The button is disabled while a save is made, but the field's keyboard
     // Done also calls this: without the guard it would make a second save.
     if (_creating) return;
     if (ProfanityFilter.isOffensive(_controller.text)) return;
+    final age = ManagerAgeField.valueOf(_ageController);
+    if (age == null) return;
     setState(() => _creating = true);
     // Taken before the await: a resize across 1000 px rebuilds this page in
     // the other layout meanwhile, and a manager who has gone elsewhere (a
@@ -103,6 +147,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
       result = await careers.create(
         nationId: widget.nationId,
         managerName: _controller.text,
+        managerAge: age,
         worldPackId: worldPackId,
       );
     } finally {
@@ -253,16 +298,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
                             ),
                           ),
                           const SizedBox(height: AppSpacing.xl),
-                          AppTextField(
-                            label: l.careerManagerName,
-                            hint: l.careerManagerNameHint,
-                            controller: _controller,
-                            autofocus: true,
-                            textInputAction: TextInputAction.done,
-                            onChanged: (_) => _typed(),
-                            errorText: _nameError(l),
-                            onSubmitted: (_) => _start(),
-                          ),
+                          _nameAndAge(l),
                           const SizedBox(height: AppSpacing.md),
                           Text(
                             l.careerBeginsBlurb,
@@ -283,7 +319,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
                             label: l.careerStartCareer,
                             icon: Icons.play_arrow_rounded,
                             isLoading: _creating,
-                            onPressed: _creating || _nameError(l) != null
+                            onPressed: _creating || !_canStart(l)
                                 ? null
                                 : _start,
                           ),

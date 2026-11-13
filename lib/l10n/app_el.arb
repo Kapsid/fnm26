@@ -4419,5 +4419,17 @@
   "scheduleDrawCeremony": "Τελετή κλήρωσης",
   "scheduleNoDraws": "Καμία επερχόμενη κλήρωση",
   "hubCallUpClosesIn": "{count, plural, =0{Οι κλήσεις κλείνουν σήμερα} =1{Οι κλήσεις κλείνουν αύριο} other{Οι κλήσεις κλείνουν σε {count} ημέρες}}",
-  "hubNextWindowLabel": "{month}: {count, plural, =1{ακόμη 1 αγώνας} other{ακόμη {count} αγώνες}}"
+  "hubNextWindowLabel": "{month}: {count, plural, =1{ακόμη 1 αγώνας} other{ακόμη {count} αγώνες}}",
+  "careerManagerAge": "Ηλικία",
+  "managerAgeRange": "Από {min} έως {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Η διοίκηση ρωτά για τα σχέδια διαδοχής.",
+  "managerAgePromptTitle": "Πόσο χρονών είναι ο προπονητής σου;",
+  "managerAgePromptBody": "Αυτή η καριέρα δεν έχει ακόμα ηλικία για τον προπονητή σου. Όρισέ τη μία φορά και θα φαίνεται δίπλα στο όνομά σου. Δεν αλλάζει τίποτα στο παιχνίδι.",
+  "managerAgePromptSet": "Ορισμός ηλικίας",
+  "managerAgePromptSkip": "Παράλειψη",
+  "mgrNewsRetiredAge": "{nation}: ο {name} ({age}) αποσύρεται από την προπονητική",
+  "editorManagerAge": "Ηλικία",
+  "editorManagerAgeHint": "Κενό: το διαλέγει το παιχνίδι",
+  "editorIssueManagerAge": "Η ηλικία του προπονητή πρέπει να είναι από {min} έως {max}."
 }

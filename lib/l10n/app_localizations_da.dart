@@ -17688,4 +17688,50 @@ class AppLocalizationsDa extends AppLocalizations {
     );
     return '$month: $_temp0';
   }
+
+  @override
+  String get careerManagerAge => 'Alder';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Fra $min til $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'Bestyrelsen spørger til planerne for en efterfølger.';
+
+  @override
+  String get managerAgePromptTitle => 'Hvor gammel er din træner?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Denne karriere har endnu ingen alder for din træner. Angiv den én gang, så vises den ved dit navn. Den ændrer intet i spillet.';
+
+  @override
+  String get managerAgePromptSet => 'Angiv alder';
+
+  @override
+  String get managerAgePromptSkip => 'Spring over';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) stopper som træner';
+  }
+
+  @override
+  String get editorManagerAge => 'Alder';
+
+  @override
+  String get editorManagerAgeHint => 'Tom: spillet vælger en';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Trænerens alder skal være fra $min til $max.';
+  }
 }

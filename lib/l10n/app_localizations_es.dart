@@ -17779,4 +17779,50 @@ class AppLocalizationsEs extends AppLocalizations {
     );
     return '$month: $_temp0';
   }
+
+  @override
+  String get careerManagerAge => 'Edad';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'De $min a $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'La directiva pregunta por los planes de sucesión.';
+
+  @override
+  String get managerAgePromptTitle => '¿Qué edad tiene tu seleccionador?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Esta partida aún no tiene la edad de tu seleccionador. Indícala una vez y aparecerá junto a tu nombre. No cambia nada en el juego.';
+
+  @override
+  String get managerAgePromptSet => 'Indicar edad';
+
+  @override
+  String get managerAgePromptSkip => 'Omitir';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) se retira de los banquillos';
+  }
+
+  @override
+  String get editorManagerAge => 'Edad';
+
+  @override
+  String get editorManagerAgeHint => 'Vacío: lo elige el juego';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'La edad del seleccionador debe estar entre $min y $max.';
+  }
 }

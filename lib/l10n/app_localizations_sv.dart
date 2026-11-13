@@ -17673,4 +17673,50 @@ class AppLocalizationsSv extends AppLocalizations {
     );
     return '$month: $_temp0';
   }
+
+  @override
+  String get careerManagerAge => 'Ålder';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Från $min till $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'Styrelsen frågar om planerna för en efterträdare.';
+
+  @override
+  String get managerAgePromptTitle => 'Hur gammal är din förbundskapten?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Den här karriären har ännu ingen ålder för din förbundskapten. Ange den en gång så visas den vid ditt namn. Den ändrar ingenting i spelet.';
+
+  @override
+  String get managerAgePromptSet => 'Ange ålder';
+
+  @override
+  String get managerAgePromptSkip => 'Hoppa över';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) slutar som tränare';
+  }
+
+  @override
+  String get editorManagerAge => 'Ålder';
+
+  @override
+  String get editorManagerAgeHint => 'Tomt: spelet väljer';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Förbundskaptenens ålder måste vara från $min till $max.';
+  }
 }

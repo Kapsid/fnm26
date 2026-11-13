@@ -63,11 +63,17 @@ Future<NationManagerView> _pump(WidgetTester tester, SeededSave save) async {
 }
 
 void main() {
-  testWidgets('preview names the opposing manager', (tester) async {
+  testWidgets('preview names the opposing manager, with his age', (
+    tester,
+  ) async {
     final save = await seedSave(tester);
     final view = await _pump(tester, save);
     expect(find.byKey(OpponentManagerLine.lineKey), findsOneWidget);
-    expect(find.text(enL.mgrPreviewLine(view.m.name)), findsOneWidget);
+    expect(
+      find.text(enL.mgrPreviewLine(enL.managerNameAge(view.m.name, view.age))),
+      findsOneWidget,
+    );
+    expect(view.age, inInclusiveRange(30, 80));
   });
 
   testWidgets('tie chip only when not neutral', (tester) async {
@@ -154,7 +160,10 @@ void main() {
       '${Routes.matchPreview}?careerId=${save.careerId}',
     );
     expect(find.byKey(OpponentManagerLine.lineKey), findsOneWidget);
-    expect(find.text(enL.mgrPreviewLine(view.m.name)), findsOneWidget);
+    expect(
+      find.text(enL.mgrPreviewLine(enL.managerNameAge(view.m.name, view.age))),
+      findsOneWidget,
+    );
   });
 
   testWidgets("the tablet Tactics dossier names the fixture's manager", (
@@ -202,6 +211,9 @@ void main() {
     );
     await tester.tap(find.text(enL.matchDossierTitle.toUpperCase()));
     await settle(tester);
-    expect(find.text(enL.mgrPreviewLine(view.m.name)), findsOneWidget);
+    expect(
+      find.text(enL.mgrPreviewLine(enL.managerNameAge(view.m.name, view.age))),
+      findsOneWidget,
+    );
   });
 }

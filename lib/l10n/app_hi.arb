@@ -4419,5 +4419,17 @@
   "scheduleDrawCeremony": "ड्रॉ समारोह",
   "scheduleNoDraws": "कोई आगामी ड्रॉ नहीं",
   "hubCallUpClosesIn": "{count, plural, =0{कॉल-अप आज बंद होगा} =1{कॉल-अप कल बंद होगा} other{कॉल-अप {count} दिनों में बंद होगा}}",
-  "hubNextWindowLabel": "{month}: {count, plural, =1{1 और मैच} other{{count} और मैच}}"
+  "hubNextWindowLabel": "{month}: {count, plural, =1{1 और मैच} other{{count} और मैच}}",
+  "careerManagerAge": "उम्र",
+  "managerAgeRange": "{min} से {max} तक",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "बोर्ड उत्तराधिकारी की योजना के बारे में पूछ रहा है।",
+  "managerAgePromptTitle": "आपके मैनेजर की उम्र कितनी है?",
+  "managerAgePromptBody": "इस सेव में अभी आपके मैनेजर की उम्र नहीं है। इसे एक बार सेट करें, यह आपके नाम के साथ दिखेगी। इससे गेम में कुछ नहीं बदलता।",
+  "managerAgePromptSet": "उम्र सेट करें",
+  "managerAgePromptSkip": "छोड़ें",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) ने कोचिंग से संन्यास लिया",
+  "editorManagerAge": "उम्र",
+  "editorManagerAgeHint": "खाली: गेम खुद चुनेगा",
+  "editorIssueManagerAge": "मैनेजर की उम्र {min} से {max} के बीच होनी चाहिए।"
 }

@@ -18082,4 +18082,50 @@ class AppLocalizationsCs extends AppLocalizations {
     );
     return '$month: $_temp0';
   }
+
+  @override
+  String get careerManagerAge => 'Věk';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Od $min do $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'Vedení svazu se ptá, kdo by vás jednou mohl nahradit.';
+
+  @override
+  String get managerAgePromptTitle => 'Kolik je vašemu trenérovi let?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Tato hra zatím nemá uvedený věk trenéra. Zadejte ho jednou a bude se zobrazovat u vašeho jména. Na hru nemá žádný vliv.';
+
+  @override
+  String get managerAgePromptSet => 'Zadat věk';
+
+  @override
+  String get managerAgePromptSkip => 'Přeskočit';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: trenér $name ($age) končí s trénováním';
+  }
+
+  @override
+  String get editorManagerAge => 'Věk';
+
+  @override
+  String get editorManagerAgeHint => 'Prázdné: vybere hra';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Věk trenéra musí být od $min do $max.';
+  }
 }

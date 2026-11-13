@@ -17764,4 +17764,50 @@ class AppLocalizationsIt extends AppLocalizations {
     );
     return '$month: $_temp0';
   }
+
+  @override
+  String get careerManagerAge => 'Età';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Da $min a $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'La dirigenza chiede dei piani di successione.';
+
+  @override
+  String get managerAgePromptTitle => 'Quanti anni ha il tuo CT?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Questa partita non ha ancora l’età del tuo CT. Impostala una volta e comparirà accanto al tuo nome. Non cambia nulla nel gioco.';
+
+  @override
+  String get managerAgePromptSet => 'Imposta età';
+
+  @override
+  String get managerAgePromptSkip => 'Salta';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) lascia la panchina';
+  }
+
+  @override
+  String get editorManagerAge => 'Età';
+
+  @override
+  String get editorManagerAgeHint => 'Vuoto: la sceglie il gioco';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'L’età del CT deve essere tra $min e $max.';
+  }
 }

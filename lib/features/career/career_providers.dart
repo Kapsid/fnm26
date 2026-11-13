@@ -32,6 +32,7 @@ import 'package:fnm/domain/services/competition/real_history.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
+import 'package:fnm/domain/services/manager/manager_age.dart';
 import 'package:fnm/domain/services/manager/stints.dart';
 import 'package:fnm/domain/services/nation/dormant_nations.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
@@ -242,6 +243,10 @@ class CareerService {
   Future<Result<Career>> create({
     required int nationId,
     required String managerName,
+
+    /// The manager's age on the day the career starts (see [ManagerAge]),
+    /// stored as a birth year. Null leaves it unset: the hub then asks once.
+    int? managerAge,
     int? rngSeed,
     bool countsTowardSlots = true,
     List<String> worldMarkers = const [],
@@ -345,6 +350,9 @@ class CareerService {
         nationId: nationId,
         rngSeed: rngSeed ?? _seed(),
         startDate: cycleStart,
+        managerBirthYear: managerAge == null
+            ? null
+            : ManagerAge.birthYearFor(cycleStart.year, managerAge),
       );
       final markers = {
         ...worldMarkers,

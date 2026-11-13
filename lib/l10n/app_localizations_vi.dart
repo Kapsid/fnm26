@@ -17534,4 +17534,50 @@ class AppLocalizationsVi extends AppLocalizations {
     );
     return '$month: $_temp0';
   }
+
+  @override
+  String get careerManagerAge => 'Tuổi';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Từ $min đến $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'Ban lãnh đạo hỏi về kế hoạch người kế nhiệm.';
+
+  @override
+  String get managerAgePromptTitle => 'Huấn luyện viên của bạn bao nhiêu tuổi?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Bản lưu này chưa có tuổi của huấn luyện viên. Đặt một lần và tuổi sẽ hiện cạnh tên bạn. Việc này không thay đổi gì trong game.';
+
+  @override
+  String get managerAgePromptSet => 'Đặt tuổi';
+
+  @override
+  String get managerAgePromptSkip => 'Bỏ qua';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) giải nghệ huấn luyện viên';
+  }
+
+  @override
+  String get editorManagerAge => 'Tuổi';
+
+  @override
+  String get editorManagerAgeHint => 'Để trống: game sẽ chọn';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Tuổi của huấn luyện viên phải từ $min đến $max.';
+  }
 }

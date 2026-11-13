@@ -151,6 +151,13 @@ class Careers extends Table {
   /// changes nation.
   IntColumn get viceCaptain1PlayerId => integer().nullable()();
   IntColumn get viceCaptain2PlayerId => integer().nullable()();
+
+  /// The year the manager was born, or null when the age was never given (a
+  /// save from before schema 57, until the manager answers the one-time
+  /// prompt). Set at career creation as start year minus the age entered.
+  /// Nothing in the sim reads it, so null is safe everywhere: it only puts an
+  /// age beside the name.
+  IntColumn get managerBirthYear => integer().nullable()();
 }
 
 /// A nation's Nations Cup league (0 = League A, 1 = League B, …) within its
@@ -241,6 +248,40 @@ class Competitions extends Table {
   /// The 4-year cycle this competition belongs to (matches Careers.cyclePointer
   /// at creation time), so each endless cycle is queried independently.
   IntColumn get cycle => integer().withDefault(const Constant(0))();
+
+  /// Which edition of [kind] within [cycle] this is, from 0. Every
+  /// competition before schema 57 is the only one of its kind in its cycle,
+  /// so it reads 0; a cycle that holds two Nations Cup editions numbers the
+  /// second 1.
+  IntColumn get edition => integer().withDefault(const Constant(0))();
+}
+
+/// One ball in a stored draw that holds placeholders (a "Path A winner"
+/// drawn before its play-off is played).
+///
+/// Ceremonies and lock-in read these rows rather than re-running a draw. A
+/// slot holds either a known [nationId] or a [placeholderKey] (`UEFA-A`,
+/// `IC-1`), and [resolvedNationId] is filled in once the placeholder's tie is
+/// decided. Draws without placeholders are not stored here.
+@DataClassName('DrawSlotRow')
+class DrawSlots extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  IntColumn get cycle => integer()();
+
+  /// A [CompetitionKind] name, kept as text so a new kind needs no migration.
+  TextColumn get competitionKind => text()();
+
+  /// The confederation whose draw this is; null for a world draw.
+  TextColumn get confederation => textEnum<Confederation>().nullable()();
+  TextColumn get groupName => text()();
+
+  /// The slot within the group, from 0.
+  IntColumn get position => integer()();
+  IntColumn get nationId => integer().nullable()();
+  TextColumn get placeholderKey => text().nullable()();
+  IntColumn get resolvedNationId => integer().nullable()();
 }
 
 /// A qualifying group within a competition.

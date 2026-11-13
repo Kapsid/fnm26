@@ -17632,4 +17632,50 @@ class AppLocalizationsHu extends AppLocalizations {
     );
     return '$month: $_temp0';
   }
+
+  @override
+  String get careerManagerAge => 'Életkor';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return '$min és $max között';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'A vezetőség az utódlási tervekről érdeklődik.';
+
+  @override
+  String get managerAgePromptTitle => 'Hány éves a kapitányod?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Ebben a mentésben még nincs megadva a kapitány életkora. Add meg egyszer, és a neved mellett jelenik meg. A játékon semmit sem változtat.';
+
+  @override
+  String get managerAgePromptSet => 'Életkor megadása';
+
+  @override
+  String get managerAgePromptSkip => 'Kihagyás';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) visszavonul az edzősködéstől';
+  }
+
+  @override
+  String get editorManagerAge => 'Életkor';
+
+  @override
+  String get editorManagerAgeHint => 'Üres: a játék választ';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'A kapitány életkorának $min és $max között kell lennie.';
+  }
 }

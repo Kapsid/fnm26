@@ -17714,4 +17714,49 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$month: $_temp0';
   }
+
+  @override
+  String get careerManagerAge => 'Age';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'From $min to $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession => 'The board asks about succession plans.';
+
+  @override
+  String get managerAgePromptTitle => 'How old is your manager?';
+
+  @override
+  String get managerAgePromptBody =>
+      'This save has no age for your manager yet. Set it once and it is shown beside your name. It changes nothing in the game.';
+
+  @override
+  String get managerAgePromptSet => 'Set age';
+
+  @override
+  String get managerAgePromptSkip => 'Skip';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) retires from management';
+  }
+
+  @override
+  String get editorManagerAge => 'Age';
+
+  @override
+  String get editorManagerAgeHint => 'Empty: the game picks one';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'The manager\'s age must be from $min to $max.';
+  }
 }

@@ -4419,5 +4419,17 @@
   "scheduleDrawCeremony": "Cérémonie du tirage",
   "scheduleNoDraws": "Aucun tirage à venir",
   "hubCallUpClosesIn": "{count, plural, =0{Les convocations ferment aujourd'hui} =1{Les convocations ferment demain} other{Les convocations ferment dans {count} jours}}",
-  "hubNextWindowLabel": "{month} : {count, plural, =1{encore 1 match} other{encore {count} matchs}}"
+  "hubNextWindowLabel": "{month} : {count, plural, =1{encore 1 match} other{encore {count} matchs}}",
+  "careerManagerAge": "Âge",
+  "managerAgeRange": "De {min} à {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "La direction s’interroge sur votre succession.",
+  "managerAgePromptTitle": "Quel âge a votre sélectionneur ?",
+  "managerAgePromptBody": "Cette partie n’indique pas encore l’âge de votre sélectionneur. Renseignez-le une fois et il s’affichera à côté de votre nom. Cela ne change rien au jeu.",
+  "managerAgePromptSet": "Indiquer l’âge",
+  "managerAgePromptSkip": "Passer",
+  "mgrNewsRetiredAge": "{nation} : {name} ({age}) met fin à sa carrière d’entraîneur",
+  "editorManagerAge": "Âge",
+  "editorManagerAgeHint": "Vide : le jeu en choisit un",
+  "editorIssueManagerAge": "L’âge du sélectionneur doit être compris entre {min} et {max}."
 }

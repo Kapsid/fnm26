@@ -4419,5 +4419,17 @@
   "scheduleDrawCeremony": "Lodtrækningsceremoni",
   "scheduleNoDraws": "Ingen kommende lodtrækninger",
   "hubCallUpClosesIn": "{count, plural, =0{Udtagelsen lukker i dag} =1{Udtagelsen lukker i morgen} other{Udtagelsen lukker om {count} dage}}",
-  "hubNextWindowLabel": "{month}: {count, plural, =1{1 kamp mere} other{{count} kampe mere}}"
+  "hubNextWindowLabel": "{month}: {count, plural, =1{1 kamp mere} other{{count} kampe mere}}",
+  "careerManagerAge": "Alder",
+  "managerAgeRange": "Fra {min} til {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Bestyrelsen spørger til planerne for en efterfølger.",
+  "managerAgePromptTitle": "Hvor gammel er din træner?",
+  "managerAgePromptBody": "Denne karriere har endnu ingen alder for din træner. Angiv den én gang, så vises den ved dit navn. Den ændrer intet i spillet.",
+  "managerAgePromptSet": "Angiv alder",
+  "managerAgePromptSkip": "Spring over",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) stopper som træner",
+  "editorManagerAge": "Alder",
+  "editorManagerAgeHint": "Tom: spillet vælger en",
+  "editorIssueManagerAge": "Trænerens alder skal være fra {min} til {max}."
 }

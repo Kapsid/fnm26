@@ -17850,4 +17850,50 @@ class AppLocalizationsFr extends AppLocalizations {
     );
     return '$month : $_temp0';
   }
+
+  @override
+  String get careerManagerAge => 'Âge';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'De $min à $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession =>
+      'La direction s’interroge sur votre succession.';
+
+  @override
+  String get managerAgePromptTitle => 'Quel âge a votre sélectionneur ?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Cette partie n’indique pas encore l’âge de votre sélectionneur. Renseignez-le une fois et il s’affichera à côté de votre nom. Cela ne change rien au jeu.';
+
+  @override
+  String get managerAgePromptSet => 'Indiquer l’âge';
+
+  @override
+  String get managerAgePromptSkip => 'Passer';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation : $name ($age) met fin à sa carrière d’entraîneur';
+  }
+
+  @override
+  String get editorManagerAge => 'Âge';
+
+  @override
+  String get editorManagerAgeHint => 'Vide : le jeu en choisit un';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'L’âge du sélectionneur doit être compris entre $min et $max.';
+  }
 }

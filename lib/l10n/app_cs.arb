@@ -4419,5 +4419,17 @@
   "scheduleDrawCeremony": "Ceremoniál losu",
   "scheduleNoDraws": "Žádné nadcházející losy",
   "hubCallUpClosesIn": "{count, plural, =0{Nominace se uzavírá dnes} =1{Nominace se uzavírá zítra} few{Nominace se uzavírá za {count} dny} other{Nominace se uzavírá za {count} dní}}",
-  "hubNextWindowLabel": "{month}: {count, plural, =1{ještě 1 zápas} few{ještě {count} zápasy} other{ještě {count} zápasů}}"
+  "hubNextWindowLabel": "{month}: {count, plural, =1{ještě 1 zápas} few{ještě {count} zápasy} other{ještě {count} zápasů}}",
+  "careerManagerAge": "Věk",
+  "managerAgeRange": "Od {min} do {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Vedení svazu se ptá, kdo by vás jednou mohl nahradit.",
+  "managerAgePromptTitle": "Kolik je vašemu trenérovi let?",
+  "managerAgePromptBody": "Tato hra zatím nemá uvedený věk trenéra. Zadejte ho jednou a bude se zobrazovat u vašeho jména. Na hru nemá žádný vliv.",
+  "managerAgePromptSet": "Zadat věk",
+  "managerAgePromptSkip": "Přeskočit",
+  "mgrNewsRetiredAge": "{nation}: trenér {name} ({age}) končí s trénováním",
+  "editorManagerAge": "Věk",
+  "editorManagerAgeHint": "Prázdné: vybere hra",
+  "editorIssueManagerAge": "Věk trenéra musí být od {min} do {max}."
 }

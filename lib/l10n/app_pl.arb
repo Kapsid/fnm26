@@ -4419,5 +4419,17 @@
   "scheduleDrawCeremony": "Ceremonia losowania",
   "scheduleNoDraws": "Brak nadchodzących losowań",
   "hubCallUpClosesIn": "{count, plural, =0{Powołania zamykają się dziś} =1{Powołania zamykają się jutro} few{Powołania zamykają się za {count} dni} many{Powołania zamykają się za {count} dni} other{Powołania zamykają się za {count} dni}}",
-  "hubNextWindowLabel": "{month}: {count, plural, =1{jeszcze 1 mecz} few{jeszcze {count} mecze} many{jeszcze {count} meczów} other{jeszcze {count} meczu}}"
+  "hubNextWindowLabel": "{month}: {count, plural, =1{jeszcze 1 mecz} few{jeszcze {count} mecze} many{jeszcze {count} meczów} other{jeszcze {count} meczu}}",
+  "careerManagerAge": "Wiek",
+  "managerAgeRange": "Od {min} do {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Zarząd pyta o plany sukcesji.",
+  "managerAgePromptTitle": "Ile lat ma twój selekcjoner?",
+  "managerAgePromptBody": "Ten zapis nie ma jeszcze wieku twojego selekcjonera. Ustaw go raz, a pojawi się obok twojego nazwiska. Nie zmienia niczego w grze.",
+  "managerAgePromptSet": "Ustaw wiek",
+  "managerAgePromptSkip": "Pomiń",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) kończy karierę trenerską",
+  "editorManagerAge": "Wiek",
+  "editorManagerAgeHint": "Puste: wybiera gra",
+  "editorIssueManagerAge": "Wiek selekcjonera musi wynosić od {min} do {max}."
 }

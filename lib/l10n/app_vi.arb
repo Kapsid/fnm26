@@ -4419,5 +4419,17 @@
   "scheduleDrawCeremony": "Lễ bốc thăm",
   "scheduleNoDraws": "Không có lễ bốc thăm sắp tới",
   "hubCallUpClosesIn": "{count, plural, =0{Hạn triệu tập đóng hôm nay} =1{Hạn triệu tập đóng ngày mai} other{Hạn triệu tập đóng sau {count} ngày}}",
-  "hubNextWindowLabel": "{month}: {count, plural, other{thêm {count} trận}}"
+  "hubNextWindowLabel": "{month}: {count, plural, other{thêm {count} trận}}",
+  "careerManagerAge": "Tuổi",
+  "managerAgeRange": "Từ {min} đến {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Ban lãnh đạo hỏi về kế hoạch người kế nhiệm.",
+  "managerAgePromptTitle": "Huấn luyện viên của bạn bao nhiêu tuổi?",
+  "managerAgePromptBody": "Bản lưu này chưa có tuổi của huấn luyện viên. Đặt một lần và tuổi sẽ hiện cạnh tên bạn. Việc này không thay đổi gì trong game.",
+  "managerAgePromptSet": "Đặt tuổi",
+  "managerAgePromptSkip": "Bỏ qua",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) giải nghệ huấn luyện viên",
+  "editorManagerAge": "Tuổi",
+  "editorManagerAgeHint": "Để trống: game sẽ chọn",
+  "editorIssueManagerAge": "Tuổi của huấn luyện viên phải từ {min} đến {max}."
 }

@@ -7,6 +7,7 @@ import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/world_manager.dart';
 import 'package:fnm/domain/repositories/player_repository.dart';
+import 'package:fnm/domain/services/manager/manager_age.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
 import 'package:fnm/domain/services/world_managers/manager_names.dart';
 
@@ -82,7 +83,8 @@ abstract final class ManagerSeeder {
     required Map<int, int> rankById,
     required Set<int> playerNationIds,
     required Map<String, NamePoolLists> pools,
-    required Map<int, ({String name, String nationality})> packManagers,
+    required Map<int, ({String name, String nationality, int? age})>
+    packManagers,
     Set<String> realNames = const {},
     Map<String, NamePoolLists> defaultPools = const {},
   }) {
@@ -164,7 +166,12 @@ abstract final class ManagerSeeder {
         nationality = named.nationality.trim().toUpperCase();
       }
       final style = styleFor(home, nationality);
-      final age = rng.rangeInt(minAge, maxAge);
+      // Drawn even when the world gives his age, for the same reason.
+      final drawnAge = rng.rangeInt(minAge, maxAge);
+      final age = switch (packManagers[n.id]?.age) {
+        final set? => ManagerAge.clampAge(set),
+        null => drawnAge,
+      };
       final from = _daysBefore(asOf, rng.nextInt(maxTenureYears * 365 + 1));
       final years = rng.rangeInt(2, 6);
       var until = DateTime(from.year + years, from.month, from.day);

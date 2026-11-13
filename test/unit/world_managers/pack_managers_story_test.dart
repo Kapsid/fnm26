@@ -45,7 +45,7 @@ void main() {
       await packs.save(
         packId,
         (await packs.load(packId))!.copyWith(
-          managers: {cze: (name: 'Ota Brnák', nationality: 'SVK')},
+          managers: {cze: (name: 'Ota Brnák', nationality: 'SVK', age: null)},
           nameLists: {cze: PackNameLists(first: first, sur: sur)},
         ),
       );

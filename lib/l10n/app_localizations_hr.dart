@@ -18030,4 +18030,49 @@ class AppLocalizationsHr extends AppLocalizations {
     );
     return '$month: $_temp0';
   }
+
+  @override
+  String get careerManagerAge => 'Dob';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Od $min do $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession => 'Uprava pita za planove o nasljedniku.';
+
+  @override
+  String get managerAgePromptTitle => 'Koliko godina ima tvoj izbornik?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Ova karijera još nema upisanu dob izbornika. Postavi je jednom i prikazivat će se uz tvoje ime. U igri ne mijenja ništa.';
+
+  @override
+  String get managerAgePromptSet => 'Postavi dob';
+
+  @override
+  String get managerAgePromptSkip => 'Preskoči';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) završava trenersku karijeru';
+  }
+
+  @override
+  String get editorManagerAge => 'Dob';
+
+  @override
+  String get editorManagerAgeHint => 'Prazno: bira igra';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Dob izbornika mora biti od $min do $max.';
+  }
 }

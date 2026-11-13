@@ -4419,5 +4419,17 @@
   "scheduleDrawCeremony": "Upacara undian",
   "scheduleNoDraws": "Tidak ada undian mendatang",
   "hubCallUpClosesIn": "{count, plural, =0{Pemanggilan pemain ditutup hari ini} =1{Pemanggilan pemain ditutup besok} other{Pemanggilan pemain ditutup dalam {count} hari}}",
-  "hubNextWindowLabel": "{month}: {count, plural, other{{count} laga lagi}}"
+  "hubNextWindowLabel": "{month}: {count, plural, other{{count} laga lagi}}",
+  "careerManagerAge": "Usia",
+  "managerAgeRange": "Dari {min} sampai {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Dewan menanyakan rencana suksesi.",
+  "managerAgePromptTitle": "Berapa usia pelatih Anda?",
+  "managerAgePromptBody": "Simpanan ini belum memiliki usia pelatih Anda. Atur sekali dan usia akan tampil di samping nama Anda. Tidak mengubah apa pun dalam permainan.",
+  "managerAgePromptSet": "Atur usia",
+  "managerAgePromptSkip": "Lewati",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) pensiun dari dunia kepelatihan",
+  "editorManagerAge": "Usia",
+  "editorManagerAgeHint": "Kosong: permainan yang memilih",
+  "editorIssueManagerAge": "Usia pelatih harus antara {min} dan {max}."
 }

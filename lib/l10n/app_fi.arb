@@ -4419,5 +4419,17 @@
   "scheduleDrawCeremony": "Arvontaseremonia",
   "scheduleNoDraws": "Ei tulevia arvontoja",
   "hubCallUpClosesIn": "{count, plural, =0{Valinnat sulkeutuvat tänään} =1{Valinnat sulkeutuvat huomenna} other{Valinnat sulkeutuvat {count} päivän päästä}}",
-  "hubNextWindowLabel": "{month}: {count, plural, =1{vielä 1 ottelu} other{vielä {count} ottelua}}"
+  "hubNextWindowLabel": "{month}: {count, plural, =1{vielä 1 ottelu} other{vielä {count} ottelua}}",
+  "careerManagerAge": "Ikä",
+  "managerAgeRange": "Välillä {min} ja {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Johto kyselee seuraajasuunnitelmista.",
+  "managerAgePromptTitle": "Kuinka vanha valmentajasi on?",
+  "managerAgePromptBody": "Tässä tallennuksessa ei ole vielä valmentajasi ikää. Aseta se kerran, niin se näkyy nimesi vieressä. Se ei muuta pelissä mitään.",
+  "managerAgePromptSet": "Aseta ikä",
+  "managerAgePromptSkip": "Ohita",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) jättää valmennustyöt",
+  "editorManagerAge": "Ikä",
+  "editorManagerAgeHint": "Tyhjä: peli valitsee",
+  "editorIssueManagerAge": "Valmentajan iän on oltava välillä {min} ja {max}."
 }

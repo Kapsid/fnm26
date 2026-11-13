@@ -4419,5 +4419,17 @@
   "scheduleDrawCeremony": "Auslosungszeremonie",
   "scheduleNoDraws": "Keine anstehenden Auslosungen",
   "hubCallUpClosesIn": "{count, plural, =0{Nominierung endet heute} =1{Nominierung endet morgen} other{Nominierung endet in {count} Tagen}}",
-  "hubNextWindowLabel": "{month}: {count, plural, =1{noch 1 Spiel} other{noch {count} Spiele}}"
+  "hubNextWindowLabel": "{month}: {count, plural, =1{noch 1 Spiel} other{noch {count} Spiele}}",
+  "careerManagerAge": "Alter",
+  "managerAgeRange": "Von {min} bis {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Der Vorstand erkundigt sich nach Ihren Nachfolgeplänen.",
+  "managerAgePromptTitle": "Wie alt ist Ihr Trainer?",
+  "managerAgePromptBody": "Dieser Spielstand hat noch kein Alter für Ihren Trainer. Legen Sie es einmal fest, dann steht es neben Ihrem Namen. Am Spiel ändert es nichts.",
+  "managerAgePromptSet": "Alter festlegen",
+  "managerAgePromptSkip": "Überspringen",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) beendet die Trainerkarriere",
+  "editorManagerAge": "Alter",
+  "editorManagerAgeHint": "Leer: Das Spiel wählt eins",
+  "editorIssueManagerAge": "Das Alter des Trainers muss zwischen {min} und {max} liegen."
 }

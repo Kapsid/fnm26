@@ -4419,5 +4419,17 @@
   "scheduleDrawCeremony": "พิธีจับสลาก",
   "scheduleNoDraws": "ไม่มีการจับสลากที่กำลังจะมาถึง",
   "hubCallUpClosesIn": "{count, plural, =0{ปิดการเรียกตัววันนี้} =1{ปิดการเรียกตัวพรุ่งนี้} other{ปิดการเรียกตัวในอีก {count} วัน}}",
-  "hubNextWindowLabel": "{month}: {count, plural, other{อีก {count} นัด}}"
+  "hubNextWindowLabel": "{month}: {count, plural, other{อีก {count} นัด}}",
+  "careerManagerAge": "อายุ",
+  "managerAgeRange": "ตั้งแต่ {min} ถึง {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "บอร์ดสอบถามถึงแผนหาผู้สืบทอด",
+  "managerAgePromptTitle": "ผู้จัดการทีมของคุณอายุเท่าไร?",
+  "managerAgePromptBody": "เซฟนี้ยังไม่มีอายุของผู้จัดการทีม ตั้งครั้งเดียวแล้วจะแสดงข้างชื่อของคุณ ไม่มีผลใดๆ ต่อเกม",
+  "managerAgePromptSet": "ตั้งอายุ",
+  "managerAgePromptSkip": "ข้าม",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) ประกาศเลิกคุมทีม",
+  "editorManagerAge": "อายุ",
+  "editorManagerAgeHint": "เว้นว่าง: เกมจะเลือกให้",
+  "editorIssueManagerAge": "อายุของผู้จัดการทีมต้องอยู่ระหว่าง {min} ถึง {max}"
 }

@@ -1361,6 +1361,17 @@ class $CareersTable extends Careers with TableInfo<$CareersTable, CareerRow> {
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _managerBirthYearMeta = const VerificationMeta(
+    'managerBirthYear',
+  );
+  @override
+  late final GeneratedColumn<int> managerBirthYear = GeneratedColumn<int>(
+    'manager_birth_year',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1388,6 +1399,7 @@ class $CareersTable extends Careers with TableInfo<$CareersTable, CareerRow> {
     lastCycleBoard,
     viceCaptain1PlayerId,
     viceCaptain2PlayerId,
+    managerBirthYear,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1612,6 +1624,15 @@ class $CareersTable extends Careers with TableInfo<$CareersTable, CareerRow> {
         ),
       );
     }
+    if (data.containsKey('manager_birth_year')) {
+      context.handle(
+        _managerBirthYearMeta,
+        managerBirthYear.isAcceptableOrUnknown(
+          data['manager_birth_year']!,
+          _managerBirthYearMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -1721,6 +1742,10 @@ class $CareersTable extends Careers with TableInfo<$CareersTable, CareerRow> {
         DriftSqlType.int,
         data['${effectivePrefix}vice_captain2_player_id'],
       ),
+      managerBirthYear: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}manager_birth_year'],
+      ),
     );
   }
 
@@ -1812,6 +1837,13 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
   /// changes nation.
   final int? viceCaptain1PlayerId;
   final int? viceCaptain2PlayerId;
+
+  /// The year the manager was born, or null when the age was never given (a
+  /// save from before schema 57, until the manager answers the one-time
+  /// prompt). Set at career creation as start year minus the age entered.
+  /// Nothing in the sim reads it, so null is safe everywhere: it only puts an
+  /// age beside the name.
+  final int? managerBirthYear;
   const CareerRow({
     required this.id,
     required this.managerName,
@@ -1838,6 +1870,7 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
     this.lastCycleBoard,
     this.viceCaptain1PlayerId,
     this.viceCaptain2PlayerId,
+    this.managerBirthYear,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1884,6 +1917,9 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
     }
     if (!nullToAbsent || viceCaptain2PlayerId != null) {
       map['vice_captain2_player_id'] = Variable<int>(viceCaptain2PlayerId);
+    }
+    if (!nullToAbsent || managerBirthYear != null) {
+      map['manager_birth_year'] = Variable<int>(managerBirthYear);
     }
     return map;
   }
@@ -1933,6 +1969,9 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
       viceCaptain2PlayerId: viceCaptain2PlayerId == null && nullToAbsent
           ? const Value.absent()
           : Value(viceCaptain2PlayerId),
+      managerBirthYear: managerBirthYear == null && nullToAbsent
+          ? const Value.absent()
+          : Value(managerBirthYear),
     );
   }
 
@@ -1975,6 +2014,7 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
       viceCaptain2PlayerId: serializer.fromJson<int?>(
         json['viceCaptain2PlayerId'],
       ),
+      managerBirthYear: serializer.fromJson<int?>(json['managerBirthYear']),
     );
   }
   @override
@@ -2006,6 +2046,7 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
       'lastCycleBoard': serializer.toJson<int?>(lastCycleBoard),
       'viceCaptain1PlayerId': serializer.toJson<int?>(viceCaptain1PlayerId),
       'viceCaptain2PlayerId': serializer.toJson<int?>(viceCaptain2PlayerId),
+      'managerBirthYear': serializer.toJson<int?>(managerBirthYear),
     };
   }
 
@@ -2035,6 +2076,7 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
     Value<int?> lastCycleBoard = const Value.absent(),
     Value<int?> viceCaptain1PlayerId = const Value.absent(),
     Value<int?> viceCaptain2PlayerId = const Value.absent(),
+    Value<int?> managerBirthYear = const Value.absent(),
   }) => CareerRow(
     id: id ?? this.id,
     managerName: managerName ?? this.managerName,
@@ -2073,6 +2115,9 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
     viceCaptain2PlayerId: viceCaptain2PlayerId.present
         ? viceCaptain2PlayerId.value
         : this.viceCaptain2PlayerId,
+    managerBirthYear: managerBirthYear.present
+        ? managerBirthYear.value
+        : this.managerBirthYear,
   );
   CareerRow copyWithCompanion(CareersCompanion data) {
     return CareerRow(
@@ -2139,6 +2184,9 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
       viceCaptain2PlayerId: data.viceCaptain2PlayerId.present
           ? data.viceCaptain2PlayerId.value
           : this.viceCaptain2PlayerId,
+      managerBirthYear: data.managerBirthYear.present
+          ? data.managerBirthYear.value
+          : this.managerBirthYear,
     );
   }
 
@@ -2169,7 +2217,8 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
           ..write('staffFitnessCoachId: $staffFitnessCoachId, ')
           ..write('lastCycleBoard: $lastCycleBoard, ')
           ..write('viceCaptain1PlayerId: $viceCaptain1PlayerId, ')
-          ..write('viceCaptain2PlayerId: $viceCaptain2PlayerId')
+          ..write('viceCaptain2PlayerId: $viceCaptain2PlayerId, ')
+          ..write('managerBirthYear: $managerBirthYear')
           ..write(')'))
         .toString();
   }
@@ -2201,6 +2250,7 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
     lastCycleBoard,
     viceCaptain1PlayerId,
     viceCaptain2PlayerId,
+    managerBirthYear,
   ]);
   @override
   bool operator ==(Object other) =>
@@ -2230,7 +2280,8 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
           other.staffFitnessCoachId == this.staffFitnessCoachId &&
           other.lastCycleBoard == this.lastCycleBoard &&
           other.viceCaptain1PlayerId == this.viceCaptain1PlayerId &&
-          other.viceCaptain2PlayerId == this.viceCaptain2PlayerId);
+          other.viceCaptain2PlayerId == this.viceCaptain2PlayerId &&
+          other.managerBirthYear == this.managerBirthYear);
 }
 
 class CareersCompanion extends UpdateCompanion<CareerRow> {
@@ -2259,6 +2310,7 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
   final Value<int?> lastCycleBoard;
   final Value<int?> viceCaptain1PlayerId;
   final Value<int?> viceCaptain2PlayerId;
+  final Value<int?> managerBirthYear;
   const CareersCompanion({
     this.id = const Value.absent(),
     this.managerName = const Value.absent(),
@@ -2285,6 +2337,7 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
     this.lastCycleBoard = const Value.absent(),
     this.viceCaptain1PlayerId = const Value.absent(),
     this.viceCaptain2PlayerId = const Value.absent(),
+    this.managerBirthYear = const Value.absent(),
   });
   CareersCompanion.insert({
     this.id = const Value.absent(),
@@ -2312,6 +2365,7 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
     this.lastCycleBoard = const Value.absent(),
     this.viceCaptain1PlayerId = const Value.absent(),
     this.viceCaptain2PlayerId = const Value.absent(),
+    this.managerBirthYear = const Value.absent(),
   }) : managerName = Value(managerName),
        nationId = Value(nationId),
        rngSeed = Value(rngSeed),
@@ -2343,6 +2397,7 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
     Expression<int>? lastCycleBoard,
     Expression<int>? viceCaptain1PlayerId,
     Expression<int>? viceCaptain2PlayerId,
+    Expression<int>? managerBirthYear,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2375,6 +2430,7 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
         'vice_captain1_player_id': viceCaptain1PlayerId,
       if (viceCaptain2PlayerId != null)
         'vice_captain2_player_id': viceCaptain2PlayerId,
+      if (managerBirthYear != null) 'manager_birth_year': managerBirthYear,
     });
   }
 
@@ -2404,6 +2460,7 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
     Value<int?>? lastCycleBoard,
     Value<int?>? viceCaptain1PlayerId,
     Value<int?>? viceCaptain2PlayerId,
+    Value<int?>? managerBirthYear,
   }) {
     return CareersCompanion(
       id: id ?? this.id,
@@ -2432,6 +2489,7 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
       lastCycleBoard: lastCycleBoard ?? this.lastCycleBoard,
       viceCaptain1PlayerId: viceCaptain1PlayerId ?? this.viceCaptain1PlayerId,
       viceCaptain2PlayerId: viceCaptain2PlayerId ?? this.viceCaptain2PlayerId,
+      managerBirthYear: managerBirthYear ?? this.managerBirthYear,
     );
   }
 
@@ -2519,6 +2577,9 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
         viceCaptain2PlayerId.value,
       );
     }
+    if (managerBirthYear.present) {
+      map['manager_birth_year'] = Variable<int>(managerBirthYear.value);
+    }
     return map;
   }
 
@@ -2549,7 +2610,8 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
           ..write('staffFitnessCoachId: $staffFitnessCoachId, ')
           ..write('lastCycleBoard: $lastCycleBoard, ')
           ..write('viceCaptain1PlayerId: $viceCaptain1PlayerId, ')
-          ..write('viceCaptain2PlayerId: $viceCaptain2PlayerId')
+          ..write('viceCaptain2PlayerId: $viceCaptain2PlayerId, ')
+          ..write('managerBirthYear: $managerBirthYear')
           ..write(')'))
         .toString();
   }
@@ -2626,6 +2688,18 @@ class $CompetitionsTable extends Competitions
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _editionMeta = const VerificationMeta(
+    'edition',
+  );
+  @override
+  late final GeneratedColumn<int> edition = GeneratedColumn<int>(
+    'edition',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -2634,6 +2708,7 @@ class $CompetitionsTable extends Competitions
     name,
     kind,
     cycle,
+    edition,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2670,6 +2745,12 @@ class $CompetitionsTable extends Competitions
       context.handle(
         _cycleMeta,
         cycle.isAcceptableOrUnknown(data['cycle']!, _cycleMeta),
+      );
+    }
+    if (data.containsKey('edition')) {
+      context.handle(
+        _editionMeta,
+        edition.isAcceptableOrUnknown(data['edition']!, _editionMeta),
       );
     }
     return context;
@@ -2709,6 +2790,10 @@ class $CompetitionsTable extends Competitions
         DriftSqlType.int,
         data['${effectivePrefix}cycle'],
       )!,
+      edition: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}edition'],
+      )!,
     );
   }
 
@@ -2735,6 +2820,12 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
   /// The 4-year cycle this competition belongs to (matches Careers.cyclePointer
   /// at creation time), so each endless cycle is queried independently.
   final int cycle;
+
+  /// Which edition of [kind] within [cycle] this is, from 0. Every
+  /// competition before schema 57 is the only one of its kind in its cycle,
+  /// so it reads 0; a cycle that holds two Nations Cup editions numbers the
+  /// second 1.
+  final int edition;
   const CompetitionRow({
     required this.id,
     required this.careerId,
@@ -2742,6 +2833,7 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
     required this.name,
     required this.kind,
     required this.cycle,
+    required this.edition,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2760,6 +2852,7 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
       );
     }
     map['cycle'] = Variable<int>(cycle);
+    map['edition'] = Variable<int>(edition);
     return map;
   }
 
@@ -2771,6 +2864,7 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
       name: Value(name),
       kind: Value(kind),
       cycle: Value(cycle),
+      edition: Value(edition),
     );
   }
 
@@ -2790,6 +2884,7 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
         serializer.fromJson<String>(json['kind']),
       ),
       cycle: serializer.fromJson<int>(json['cycle']),
+      edition: serializer.fromJson<int>(json['edition']),
     );
   }
   @override
@@ -2806,6 +2901,7 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
         $CompetitionsTable.$converterkind.toJson(kind),
       ),
       'cycle': serializer.toJson<int>(cycle),
+      'edition': serializer.toJson<int>(edition),
     };
   }
 
@@ -2816,6 +2912,7 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
     String? name,
     CompetitionKind? kind,
     int? cycle,
+    int? edition,
   }) => CompetitionRow(
     id: id ?? this.id,
     careerId: careerId ?? this.careerId,
@@ -2823,6 +2920,7 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
     name: name ?? this.name,
     kind: kind ?? this.kind,
     cycle: cycle ?? this.cycle,
+    edition: edition ?? this.edition,
   );
   CompetitionRow copyWithCompanion(CompetitionsCompanion data) {
     return CompetitionRow(
@@ -2834,6 +2932,7 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
       name: data.name.present ? data.name.value : this.name,
       kind: data.kind.present ? data.kind.value : this.kind,
       cycle: data.cycle.present ? data.cycle.value : this.cycle,
+      edition: data.edition.present ? data.edition.value : this.edition,
     );
   }
 
@@ -2845,14 +2944,15 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
           ..write('confederation: $confederation, ')
           ..write('name: $name, ')
           ..write('kind: $kind, ')
-          ..write('cycle: $cycle')
+          ..write('cycle: $cycle, ')
+          ..write('edition: $edition')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode =>
-      Object.hash(id, careerId, confederation, name, kind, cycle);
+      Object.hash(id, careerId, confederation, name, kind, cycle, edition);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2862,7 +2962,8 @@ class CompetitionRow extends DataClass implements Insertable<CompetitionRow> {
           other.confederation == this.confederation &&
           other.name == this.name &&
           other.kind == this.kind &&
-          other.cycle == this.cycle);
+          other.cycle == this.cycle &&
+          other.edition == this.edition);
 }
 
 class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
@@ -2872,6 +2973,7 @@ class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
   final Value<String> name;
   final Value<CompetitionKind> kind;
   final Value<int> cycle;
+  final Value<int> edition;
   const CompetitionsCompanion({
     this.id = const Value.absent(),
     this.careerId = const Value.absent(),
@@ -2879,6 +2981,7 @@ class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
     this.name = const Value.absent(),
     this.kind = const Value.absent(),
     this.cycle = const Value.absent(),
+    this.edition = const Value.absent(),
   });
   CompetitionsCompanion.insert({
     this.id = const Value.absent(),
@@ -2887,6 +2990,7 @@ class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
     required String name,
     this.kind = const Value.absent(),
     this.cycle = const Value.absent(),
+    this.edition = const Value.absent(),
   }) : careerId = Value(careerId),
        confederation = Value(confederation),
        name = Value(name);
@@ -2897,6 +3001,7 @@ class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
     Expression<String>? name,
     Expression<String>? kind,
     Expression<int>? cycle,
+    Expression<int>? edition,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2905,6 +3010,7 @@ class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
       if (name != null) 'name': name,
       if (kind != null) 'kind': kind,
       if (cycle != null) 'cycle': cycle,
+      if (edition != null) 'edition': edition,
     });
   }
 
@@ -2915,6 +3021,7 @@ class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
     Value<String>? name,
     Value<CompetitionKind>? kind,
     Value<int>? cycle,
+    Value<int>? edition,
   }) {
     return CompetitionsCompanion(
       id: id ?? this.id,
@@ -2923,6 +3030,7 @@ class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
       name: name ?? this.name,
       kind: kind ?? this.kind,
       cycle: cycle ?? this.cycle,
+      edition: edition ?? this.edition,
     );
   }
 
@@ -2951,6 +3059,9 @@ class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
     if (cycle.present) {
       map['cycle'] = Variable<int>(cycle.value);
     }
+    if (edition.present) {
+      map['edition'] = Variable<int>(edition.value);
+    }
     return map;
   }
 
@@ -2962,7 +3073,8 @@ class CompetitionsCompanion extends UpdateCompanion<CompetitionRow> {
           ..write('confederation: $confederation, ')
           ..write('name: $name, ')
           ..write('kind: $kind, ')
-          ..write('cycle: $cycle')
+          ..write('cycle: $cycle, ')
+          ..write('edition: $edition')
           ..write(')'))
         .toString();
   }
@@ -19921,6 +20033,649 @@ class PackVersionImagesCompanion extends UpdateCompanion<PackVersionImageRow> {
   }
 }
 
+class $DrawSlotsTable extends DrawSlots
+    with TableInfo<$DrawSlotsTable, DrawSlotRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DrawSlotsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _careerIdMeta = const VerificationMeta(
+    'careerId',
+  );
+  @override
+  late final GeneratedColumn<int> careerId = GeneratedColumn<int>(
+    'career_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES careers (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _cycleMeta = const VerificationMeta('cycle');
+  @override
+  late final GeneratedColumn<int> cycle = GeneratedColumn<int>(
+    'cycle',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _competitionKindMeta = const VerificationMeta(
+    'competitionKind',
+  );
+  @override
+  late final GeneratedColumn<String> competitionKind = GeneratedColumn<String>(
+    'competition_kind',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<Confederation?, String>
+  confederation = GeneratedColumn<String>(
+    'confederation',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  ).withConverter<Confederation?>($DrawSlotsTable.$converterconfederationn);
+  static const VerificationMeta _groupNameMeta = const VerificationMeta(
+    'groupName',
+  );
+  @override
+  late final GeneratedColumn<String> groupName = GeneratedColumn<String>(
+    'group_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _positionMeta = const VerificationMeta(
+    'position',
+  );
+  @override
+  late final GeneratedColumn<int> position = GeneratedColumn<int>(
+    'position',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nationIdMeta = const VerificationMeta(
+    'nationId',
+  );
+  @override
+  late final GeneratedColumn<int> nationId = GeneratedColumn<int>(
+    'nation_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _placeholderKeyMeta = const VerificationMeta(
+    'placeholderKey',
+  );
+  @override
+  late final GeneratedColumn<String> placeholderKey = GeneratedColumn<String>(
+    'placeholder_key',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _resolvedNationIdMeta = const VerificationMeta(
+    'resolvedNationId',
+  );
+  @override
+  late final GeneratedColumn<int> resolvedNationId = GeneratedColumn<int>(
+    'resolved_nation_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    careerId,
+    cycle,
+    competitionKind,
+    confederation,
+    groupName,
+    position,
+    nationId,
+    placeholderKey,
+    resolvedNationId,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'draw_slots';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DrawSlotRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('career_id')) {
+      context.handle(
+        _careerIdMeta,
+        careerId.isAcceptableOrUnknown(data['career_id']!, _careerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_careerIdMeta);
+    }
+    if (data.containsKey('cycle')) {
+      context.handle(
+        _cycleMeta,
+        cycle.isAcceptableOrUnknown(data['cycle']!, _cycleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_cycleMeta);
+    }
+    if (data.containsKey('competition_kind')) {
+      context.handle(
+        _competitionKindMeta,
+        competitionKind.isAcceptableOrUnknown(
+          data['competition_kind']!,
+          _competitionKindMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_competitionKindMeta);
+    }
+    if (data.containsKey('group_name')) {
+      context.handle(
+        _groupNameMeta,
+        groupName.isAcceptableOrUnknown(data['group_name']!, _groupNameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_groupNameMeta);
+    }
+    if (data.containsKey('position')) {
+      context.handle(
+        _positionMeta,
+        position.isAcceptableOrUnknown(data['position']!, _positionMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_positionMeta);
+    }
+    if (data.containsKey('nation_id')) {
+      context.handle(
+        _nationIdMeta,
+        nationId.isAcceptableOrUnknown(data['nation_id']!, _nationIdMeta),
+      );
+    }
+    if (data.containsKey('placeholder_key')) {
+      context.handle(
+        _placeholderKeyMeta,
+        placeholderKey.isAcceptableOrUnknown(
+          data['placeholder_key']!,
+          _placeholderKeyMeta,
+        ),
+      );
+    }
+    if (data.containsKey('resolved_nation_id')) {
+      context.handle(
+        _resolvedNationIdMeta,
+        resolvedNationId.isAcceptableOrUnknown(
+          data['resolved_nation_id']!,
+          _resolvedNationIdMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  DrawSlotRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DrawSlotRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      careerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}career_id'],
+      )!,
+      cycle: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}cycle'],
+      )!,
+      competitionKind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}competition_kind'],
+      )!,
+      confederation: $DrawSlotsTable.$converterconfederationn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}confederation'],
+        ),
+      ),
+      groupName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}group_name'],
+      )!,
+      position: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}position'],
+      )!,
+      nationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}nation_id'],
+      ),
+      placeholderKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}placeholder_key'],
+      ),
+      resolvedNationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}resolved_nation_id'],
+      ),
+    );
+  }
+
+  @override
+  $DrawSlotsTable createAlias(String alias) {
+    return $DrawSlotsTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<Confederation, String, String>
+  $converterconfederation = const EnumNameConverter<Confederation>(
+    Confederation.values,
+  );
+  static JsonTypeConverter2<Confederation?, String?, String?>
+  $converterconfederationn = JsonTypeConverter2.asNullable(
+    $converterconfederation,
+  );
+}
+
+class DrawSlotRow extends DataClass implements Insertable<DrawSlotRow> {
+  final int id;
+  final int careerId;
+  final int cycle;
+
+  /// A [CompetitionKind] name, kept as text so a new kind needs no migration.
+  final String competitionKind;
+
+  /// The confederation whose draw this is; null for a world draw.
+  final Confederation? confederation;
+  final String groupName;
+
+  /// The slot within the group, from 0.
+  final int position;
+  final int? nationId;
+  final String? placeholderKey;
+  final int? resolvedNationId;
+  const DrawSlotRow({
+    required this.id,
+    required this.careerId,
+    required this.cycle,
+    required this.competitionKind,
+    this.confederation,
+    required this.groupName,
+    required this.position,
+    this.nationId,
+    this.placeholderKey,
+    this.resolvedNationId,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['career_id'] = Variable<int>(careerId);
+    map['cycle'] = Variable<int>(cycle);
+    map['competition_kind'] = Variable<String>(competitionKind);
+    if (!nullToAbsent || confederation != null) {
+      map['confederation'] = Variable<String>(
+        $DrawSlotsTable.$converterconfederationn.toSql(confederation),
+      );
+    }
+    map['group_name'] = Variable<String>(groupName);
+    map['position'] = Variable<int>(position);
+    if (!nullToAbsent || nationId != null) {
+      map['nation_id'] = Variable<int>(nationId);
+    }
+    if (!nullToAbsent || placeholderKey != null) {
+      map['placeholder_key'] = Variable<String>(placeholderKey);
+    }
+    if (!nullToAbsent || resolvedNationId != null) {
+      map['resolved_nation_id'] = Variable<int>(resolvedNationId);
+    }
+    return map;
+  }
+
+  DrawSlotsCompanion toCompanion(bool nullToAbsent) {
+    return DrawSlotsCompanion(
+      id: Value(id),
+      careerId: Value(careerId),
+      cycle: Value(cycle),
+      competitionKind: Value(competitionKind),
+      confederation: confederation == null && nullToAbsent
+          ? const Value.absent()
+          : Value(confederation),
+      groupName: Value(groupName),
+      position: Value(position),
+      nationId: nationId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nationId),
+      placeholderKey: placeholderKey == null && nullToAbsent
+          ? const Value.absent()
+          : Value(placeholderKey),
+      resolvedNationId: resolvedNationId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(resolvedNationId),
+    );
+  }
+
+  factory DrawSlotRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DrawSlotRow(
+      id: serializer.fromJson<int>(json['id']),
+      careerId: serializer.fromJson<int>(json['careerId']),
+      cycle: serializer.fromJson<int>(json['cycle']),
+      competitionKind: serializer.fromJson<String>(json['competitionKind']),
+      confederation: $DrawSlotsTable.$converterconfederationn.fromJson(
+        serializer.fromJson<String?>(json['confederation']),
+      ),
+      groupName: serializer.fromJson<String>(json['groupName']),
+      position: serializer.fromJson<int>(json['position']),
+      nationId: serializer.fromJson<int?>(json['nationId']),
+      placeholderKey: serializer.fromJson<String?>(json['placeholderKey']),
+      resolvedNationId: serializer.fromJson<int?>(json['resolvedNationId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'careerId': serializer.toJson<int>(careerId),
+      'cycle': serializer.toJson<int>(cycle),
+      'competitionKind': serializer.toJson<String>(competitionKind),
+      'confederation': serializer.toJson<String?>(
+        $DrawSlotsTable.$converterconfederationn.toJson(confederation),
+      ),
+      'groupName': serializer.toJson<String>(groupName),
+      'position': serializer.toJson<int>(position),
+      'nationId': serializer.toJson<int?>(nationId),
+      'placeholderKey': serializer.toJson<String?>(placeholderKey),
+      'resolvedNationId': serializer.toJson<int?>(resolvedNationId),
+    };
+  }
+
+  DrawSlotRow copyWith({
+    int? id,
+    int? careerId,
+    int? cycle,
+    String? competitionKind,
+    Value<Confederation?> confederation = const Value.absent(),
+    String? groupName,
+    int? position,
+    Value<int?> nationId = const Value.absent(),
+    Value<String?> placeholderKey = const Value.absent(),
+    Value<int?> resolvedNationId = const Value.absent(),
+  }) => DrawSlotRow(
+    id: id ?? this.id,
+    careerId: careerId ?? this.careerId,
+    cycle: cycle ?? this.cycle,
+    competitionKind: competitionKind ?? this.competitionKind,
+    confederation: confederation.present
+        ? confederation.value
+        : this.confederation,
+    groupName: groupName ?? this.groupName,
+    position: position ?? this.position,
+    nationId: nationId.present ? nationId.value : this.nationId,
+    placeholderKey: placeholderKey.present
+        ? placeholderKey.value
+        : this.placeholderKey,
+    resolvedNationId: resolvedNationId.present
+        ? resolvedNationId.value
+        : this.resolvedNationId,
+  );
+  DrawSlotRow copyWithCompanion(DrawSlotsCompanion data) {
+    return DrawSlotRow(
+      id: data.id.present ? data.id.value : this.id,
+      careerId: data.careerId.present ? data.careerId.value : this.careerId,
+      cycle: data.cycle.present ? data.cycle.value : this.cycle,
+      competitionKind: data.competitionKind.present
+          ? data.competitionKind.value
+          : this.competitionKind,
+      confederation: data.confederation.present
+          ? data.confederation.value
+          : this.confederation,
+      groupName: data.groupName.present ? data.groupName.value : this.groupName,
+      position: data.position.present ? data.position.value : this.position,
+      nationId: data.nationId.present ? data.nationId.value : this.nationId,
+      placeholderKey: data.placeholderKey.present
+          ? data.placeholderKey.value
+          : this.placeholderKey,
+      resolvedNationId: data.resolvedNationId.present
+          ? data.resolvedNationId.value
+          : this.resolvedNationId,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DrawSlotRow(')
+          ..write('id: $id, ')
+          ..write('careerId: $careerId, ')
+          ..write('cycle: $cycle, ')
+          ..write('competitionKind: $competitionKind, ')
+          ..write('confederation: $confederation, ')
+          ..write('groupName: $groupName, ')
+          ..write('position: $position, ')
+          ..write('nationId: $nationId, ')
+          ..write('placeholderKey: $placeholderKey, ')
+          ..write('resolvedNationId: $resolvedNationId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    careerId,
+    cycle,
+    competitionKind,
+    confederation,
+    groupName,
+    position,
+    nationId,
+    placeholderKey,
+    resolvedNationId,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DrawSlotRow &&
+          other.id == this.id &&
+          other.careerId == this.careerId &&
+          other.cycle == this.cycle &&
+          other.competitionKind == this.competitionKind &&
+          other.confederation == this.confederation &&
+          other.groupName == this.groupName &&
+          other.position == this.position &&
+          other.nationId == this.nationId &&
+          other.placeholderKey == this.placeholderKey &&
+          other.resolvedNationId == this.resolvedNationId);
+}
+
+class DrawSlotsCompanion extends UpdateCompanion<DrawSlotRow> {
+  final Value<int> id;
+  final Value<int> careerId;
+  final Value<int> cycle;
+  final Value<String> competitionKind;
+  final Value<Confederation?> confederation;
+  final Value<String> groupName;
+  final Value<int> position;
+  final Value<int?> nationId;
+  final Value<String?> placeholderKey;
+  final Value<int?> resolvedNationId;
+  const DrawSlotsCompanion({
+    this.id = const Value.absent(),
+    this.careerId = const Value.absent(),
+    this.cycle = const Value.absent(),
+    this.competitionKind = const Value.absent(),
+    this.confederation = const Value.absent(),
+    this.groupName = const Value.absent(),
+    this.position = const Value.absent(),
+    this.nationId = const Value.absent(),
+    this.placeholderKey = const Value.absent(),
+    this.resolvedNationId = const Value.absent(),
+  });
+  DrawSlotsCompanion.insert({
+    this.id = const Value.absent(),
+    required int careerId,
+    required int cycle,
+    required String competitionKind,
+    this.confederation = const Value.absent(),
+    required String groupName,
+    required int position,
+    this.nationId = const Value.absent(),
+    this.placeholderKey = const Value.absent(),
+    this.resolvedNationId = const Value.absent(),
+  }) : careerId = Value(careerId),
+       cycle = Value(cycle),
+       competitionKind = Value(competitionKind),
+       groupName = Value(groupName),
+       position = Value(position);
+  static Insertable<DrawSlotRow> custom({
+    Expression<int>? id,
+    Expression<int>? careerId,
+    Expression<int>? cycle,
+    Expression<String>? competitionKind,
+    Expression<String>? confederation,
+    Expression<String>? groupName,
+    Expression<int>? position,
+    Expression<int>? nationId,
+    Expression<String>? placeholderKey,
+    Expression<int>? resolvedNationId,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (careerId != null) 'career_id': careerId,
+      if (cycle != null) 'cycle': cycle,
+      if (competitionKind != null) 'competition_kind': competitionKind,
+      if (confederation != null) 'confederation': confederation,
+      if (groupName != null) 'group_name': groupName,
+      if (position != null) 'position': position,
+      if (nationId != null) 'nation_id': nationId,
+      if (placeholderKey != null) 'placeholder_key': placeholderKey,
+      if (resolvedNationId != null) 'resolved_nation_id': resolvedNationId,
+    });
+  }
+
+  DrawSlotsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? careerId,
+    Value<int>? cycle,
+    Value<String>? competitionKind,
+    Value<Confederation?>? confederation,
+    Value<String>? groupName,
+    Value<int>? position,
+    Value<int?>? nationId,
+    Value<String?>? placeholderKey,
+    Value<int?>? resolvedNationId,
+  }) {
+    return DrawSlotsCompanion(
+      id: id ?? this.id,
+      careerId: careerId ?? this.careerId,
+      cycle: cycle ?? this.cycle,
+      competitionKind: competitionKind ?? this.competitionKind,
+      confederation: confederation ?? this.confederation,
+      groupName: groupName ?? this.groupName,
+      position: position ?? this.position,
+      nationId: nationId ?? this.nationId,
+      placeholderKey: placeholderKey ?? this.placeholderKey,
+      resolvedNationId: resolvedNationId ?? this.resolvedNationId,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (careerId.present) {
+      map['career_id'] = Variable<int>(careerId.value);
+    }
+    if (cycle.present) {
+      map['cycle'] = Variable<int>(cycle.value);
+    }
+    if (competitionKind.present) {
+      map['competition_kind'] = Variable<String>(competitionKind.value);
+    }
+    if (confederation.present) {
+      map['confederation'] = Variable<String>(
+        $DrawSlotsTable.$converterconfederationn.toSql(confederation.value),
+      );
+    }
+    if (groupName.present) {
+      map['group_name'] = Variable<String>(groupName.value);
+    }
+    if (position.present) {
+      map['position'] = Variable<int>(position.value);
+    }
+    if (nationId.present) {
+      map['nation_id'] = Variable<int>(nationId.value);
+    }
+    if (placeholderKey.present) {
+      map['placeholder_key'] = Variable<String>(placeholderKey.value);
+    }
+    if (resolvedNationId.present) {
+      map['resolved_nation_id'] = Variable<int>(resolvedNationId.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DrawSlotsCompanion(')
+          ..write('id: $id, ')
+          ..write('careerId: $careerId, ')
+          ..write('cycle: $cycle, ')
+          ..write('competitionKind: $competitionKind, ')
+          ..write('confederation: $confederation, ')
+          ..write('groupName: $groupName, ')
+          ..write('position: $position, ')
+          ..write('nationId: $nationId, ')
+          ..write('placeholderKey: $placeholderKey, ')
+          ..write('resolvedNationId: $resolvedNationId')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -19987,6 +20742,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $PackVersionsTable packVersions = $PackVersionsTable(this);
   late final $PackVersionImagesTable packVersionImages =
       $PackVersionImagesTable(this);
+  late final $DrawSlotsTable drawSlots = $DrawSlotsTable(this);
   late final Index managerSpellsNation = Index(
     'manager_spells_nation',
     'CREATE INDEX manager_spells_nation ON manager_spells (career_id, nation_id)',
@@ -20041,6 +20797,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     managerTies,
     packVersions,
     packVersionImages,
+    drawSlots,
     managerSpellsNation,
   ];
   @override
@@ -20331,6 +21088,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('pack_version_images', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'careers',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('draw_slots', kind: UpdateKind.delete)],
     ),
   ]);
 }
@@ -21196,6 +21960,7 @@ typedef $$CareersTableCreateCompanionBuilder =
       Value<int?> lastCycleBoard,
       Value<int?> viceCaptain1PlayerId,
       Value<int?> viceCaptain2PlayerId,
+      Value<int?> managerBirthYear,
     });
 typedef $$CareersTableUpdateCompanionBuilder =
     CareersCompanion Function({
@@ -21224,6 +21989,7 @@ typedef $$CareersTableUpdateCompanionBuilder =
       Value<int?> lastCycleBoard,
       Value<int?> viceCaptain1PlayerId,
       Value<int?> viceCaptain2PlayerId,
+      Value<int?> managerBirthYear,
     });
 
 final class $$CareersTableReferences
@@ -21922,6 +22688,24 @@ final class $$CareersTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$DrawSlotsTable, List<DrawSlotRow>>
+  _drawSlotsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.drawSlots,
+    aliasName: 'careers__id__draw_slots__career_id',
+  );
+
+  $$DrawSlotsTableProcessedTableManager get drawSlotsRefs {
+    final manager = $$DrawSlotsTableTableManager(
+      $_db,
+      $_db.drawSlots,
+    ).filter((f) => f.careerId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_drawSlotsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$CareersTableFilterComposer
@@ -22050,6 +22834,11 @@ class $$CareersTableFilterComposer
 
   ColumnFilters<int> get viceCaptain2PlayerId => $composableBuilder(
     column: $table.viceCaptain2PlayerId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get managerBirthYear => $composableBuilder(
+    column: $table.managerBirthYear,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -22952,6 +23741,31 @@ class $$CareersTableFilterComposer
     );
     return f(composer);
   }
+
+  Expression<bool> drawSlotsRefs(
+    Expression<bool> Function($$DrawSlotsTableFilterComposer f) f,
+  ) {
+    final $$DrawSlotsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.drawSlots,
+      getReferencedColumn: (t) => t.careerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DrawSlotsTableFilterComposer(
+            $db: $db,
+            $table: $db.drawSlots,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$CareersTableOrderingComposer
@@ -23080,6 +23894,11 @@ class $$CareersTableOrderingComposer
 
   ColumnOrderings<int> get viceCaptain2PlayerId => $composableBuilder(
     column: $table.viceCaptain2PlayerId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get managerBirthYear => $composableBuilder(
+    column: $table.managerBirthYear,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -23223,6 +24042,11 @@ class $$CareersTableAnnotationComposer
 
   GeneratedColumn<int> get viceCaptain2PlayerId => $composableBuilder(
     column: $table.viceCaptain2PlayerId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get managerBirthYear => $composableBuilder(
+    column: $table.managerBirthYear,
     builder: (column) => column,
   );
 
@@ -24129,6 +24953,31 @@ class $$CareersTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> drawSlotsRefs<T extends Object>(
+    Expression<T> Function($$DrawSlotsTableAnnotationComposer a) f,
+  ) {
+    final $$DrawSlotsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.drawSlots,
+      getReferencedColumn: (t) => t.careerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DrawSlotsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.drawSlots,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$CareersTableTableManager
@@ -24181,6 +25030,7 @@ class $$CareersTableTableManager
             bool worldManagersRefs,
             bool managerSpellsRefs,
             bool managerTiesRefs,
+            bool drawSlotsRefs,
           })
         > {
   $$CareersTableTableManager(_$AppDatabase db, $CareersTable table)
@@ -24221,6 +25071,7 @@ class $$CareersTableTableManager
                 Value<int?> lastCycleBoard = const Value.absent(),
                 Value<int?> viceCaptain1PlayerId = const Value.absent(),
                 Value<int?> viceCaptain2PlayerId = const Value.absent(),
+                Value<int?> managerBirthYear = const Value.absent(),
               }) => CareersCompanion(
                 id: id,
                 managerName: managerName,
@@ -24247,6 +25098,7 @@ class $$CareersTableTableManager
                 lastCycleBoard: lastCycleBoard,
                 viceCaptain1PlayerId: viceCaptain1PlayerId,
                 viceCaptain2PlayerId: viceCaptain2PlayerId,
+                managerBirthYear: managerBirthYear,
               ),
           createCompanionCallback:
               ({
@@ -24275,6 +25127,7 @@ class $$CareersTableTableManager
                 Value<int?> lastCycleBoard = const Value.absent(),
                 Value<int?> viceCaptain1PlayerId = const Value.absent(),
                 Value<int?> viceCaptain2PlayerId = const Value.absent(),
+                Value<int?> managerBirthYear = const Value.absent(),
               }) => CareersCompanion.insert(
                 id: id,
                 managerName: managerName,
@@ -24301,6 +25154,7 @@ class $$CareersTableTableManager
                 lastCycleBoard: lastCycleBoard,
                 viceCaptain1PlayerId: viceCaptain1PlayerId,
                 viceCaptain2PlayerId: viceCaptain2PlayerId,
+                managerBirthYear: managerBirthYear,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -24348,6 +25202,7 @@ class $$CareersTableTableManager
                 worldManagersRefs = false,
                 managerSpellsRefs = false,
                 managerTiesRefs = false,
+                drawSlotsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -24387,6 +25242,7 @@ class $$CareersTableTableManager
                     if (worldManagersRefs) db.worldManagers,
                     if (managerSpellsRefs) db.managerSpells,
                     if (managerTiesRefs) db.managerTies,
+                    if (drawSlotsRefs) db.drawSlots,
                   ],
                   addJoins:
                       <
@@ -25157,6 +26013,27 @@ class $$CareersTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (drawSlotsRefs)
+                        await $_getPrefetchedData<
+                          CareerRow,
+                          $CareersTable,
+                          DrawSlotRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CareersTableReferences
+                              ._drawSlotsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CareersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).drawSlotsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.careerId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -25214,6 +26091,7 @@ typedef $$CareersTableProcessedTableManager =
         bool worldManagersRefs,
         bool managerSpellsRefs,
         bool managerTiesRefs,
+        bool drawSlotsRefs,
       })
     >;
 typedef $$CompetitionsTableCreateCompanionBuilder =
@@ -25224,6 +26102,7 @@ typedef $$CompetitionsTableCreateCompanionBuilder =
       required String name,
       Value<CompetitionKind> kind,
       Value<int> cycle,
+      Value<int> edition,
     });
 typedef $$CompetitionsTableUpdateCompanionBuilder =
     CompetitionsCompanion Function({
@@ -25233,6 +26112,7 @@ typedef $$CompetitionsTableUpdateCompanionBuilder =
       Value<String> name,
       Value<CompetitionKind> kind,
       Value<int> cycle,
+      Value<int> edition,
     });
 
 final class $$CompetitionsTableReferences
@@ -25346,6 +26226,11 @@ class $$CompetitionsTableFilterComposer
 
   ColumnFilters<int> get cycle => $composableBuilder(
     column: $table.cycle,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get edition => $composableBuilder(
+    column: $table.edition,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -25482,6 +26367,11 @@ class $$CompetitionsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get edition => $composableBuilder(
+    column: $table.edition,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$CareersTableOrderingComposer get careerId {
     final $$CareersTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -25532,6 +26422,9 @@ class $$CompetitionsTableAnnotationComposer
 
   GeneratedColumn<int> get cycle =>
       $composableBuilder(column: $table.cycle, builder: (column) => column);
+
+  GeneratedColumn<int> get edition =>
+      $composableBuilder(column: $table.edition, builder: (column) => column);
 
   $$CareersTableAnnotationComposer get careerId {
     final $$CareersTableAnnotationComposer composer = $composerBuilder(
@@ -25671,6 +26564,7 @@ class $$CompetitionsTableTableManager
                 Value<String> name = const Value.absent(),
                 Value<CompetitionKind> kind = const Value.absent(),
                 Value<int> cycle = const Value.absent(),
+                Value<int> edition = const Value.absent(),
               }) => CompetitionsCompanion(
                 id: id,
                 careerId: careerId,
@@ -25678,6 +26572,7 @@ class $$CompetitionsTableTableManager
                 name: name,
                 kind: kind,
                 cycle: cycle,
+                edition: edition,
               ),
           createCompanionCallback:
               ({
@@ -25687,6 +26582,7 @@ class $$CompetitionsTableTableManager
                 required String name,
                 Value<CompetitionKind> kind = const Value.absent(),
                 Value<int> cycle = const Value.absent(),
+                Value<int> edition = const Value.absent(),
               }) => CompetitionsCompanion.insert(
                 id: id,
                 careerId: careerId,
@@ -25694,6 +26590,7 @@ class $$CompetitionsTableTableManager
                 name: name,
                 kind: kind,
                 cycle: cycle,
+                edition: edition,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -41062,6 +41959,422 @@ typedef $$PackVersionImagesTableProcessedTableManager =
       PackVersionImageRow,
       PrefetchHooks Function({bool packId})
     >;
+typedef $$DrawSlotsTableCreateCompanionBuilder =
+    DrawSlotsCompanion Function({
+      Value<int> id,
+      required int careerId,
+      required int cycle,
+      required String competitionKind,
+      Value<Confederation?> confederation,
+      required String groupName,
+      required int position,
+      Value<int?> nationId,
+      Value<String?> placeholderKey,
+      Value<int?> resolvedNationId,
+    });
+typedef $$DrawSlotsTableUpdateCompanionBuilder =
+    DrawSlotsCompanion Function({
+      Value<int> id,
+      Value<int> careerId,
+      Value<int> cycle,
+      Value<String> competitionKind,
+      Value<Confederation?> confederation,
+      Value<String> groupName,
+      Value<int> position,
+      Value<int?> nationId,
+      Value<String?> placeholderKey,
+      Value<int?> resolvedNationId,
+    });
+
+final class $$DrawSlotsTableReferences
+    extends BaseReferences<_$AppDatabase, $DrawSlotsTable, DrawSlotRow> {
+  $$DrawSlotsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $CareersTable _careerIdTable(_$AppDatabase db) =>
+      db.careers.createAlias('draw_slots__career_id__careers__id');
+
+  $$CareersTableProcessedTableManager get careerId {
+    final $_column = $_itemColumn<int>('career_id')!;
+
+    final manager = $$CareersTableTableManager(
+      $_db,
+      $_db.careers,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_careerIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$DrawSlotsTableFilterComposer
+    extends Composer<_$AppDatabase, $DrawSlotsTable> {
+  $$DrawSlotsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get cycle => $composableBuilder(
+    column: $table.cycle,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get competitionKind => $composableBuilder(
+    column: $table.competitionKind,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<Confederation?, Confederation, String>
+  get confederation => $composableBuilder(
+    column: $table.confederation,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<String> get groupName => $composableBuilder(
+    column: $table.groupName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get position => $composableBuilder(
+    column: $table.position,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get nationId => $composableBuilder(
+    column: $table.nationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get placeholderKey => $composableBuilder(
+    column: $table.placeholderKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get resolvedNationId => $composableBuilder(
+    column: $table.resolvedNationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$CareersTableFilterComposer get careerId {
+    final $$CareersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.careerId,
+      referencedTable: $db.careers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CareersTableFilterComposer(
+            $db: $db,
+            $table: $db.careers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DrawSlotsTableOrderingComposer
+    extends Composer<_$AppDatabase, $DrawSlotsTable> {
+  $$DrawSlotsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get cycle => $composableBuilder(
+    column: $table.cycle,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get competitionKind => $composableBuilder(
+    column: $table.competitionKind,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get confederation => $composableBuilder(
+    column: $table.confederation,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get groupName => $composableBuilder(
+    column: $table.groupName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get position => $composableBuilder(
+    column: $table.position,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get nationId => $composableBuilder(
+    column: $table.nationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get placeholderKey => $composableBuilder(
+    column: $table.placeholderKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get resolvedNationId => $composableBuilder(
+    column: $table.resolvedNationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$CareersTableOrderingComposer get careerId {
+    final $$CareersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.careerId,
+      referencedTable: $db.careers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CareersTableOrderingComposer(
+            $db: $db,
+            $table: $db.careers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DrawSlotsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DrawSlotsTable> {
+  $$DrawSlotsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get cycle =>
+      $composableBuilder(column: $table.cycle, builder: (column) => column);
+
+  GeneratedColumn<String> get competitionKind => $composableBuilder(
+    column: $table.competitionKind,
+    builder: (column) => column,
+  );
+
+  GeneratedColumnWithTypeConverter<Confederation?, String> get confederation =>
+      $composableBuilder(
+        column: $table.confederation,
+        builder: (column) => column,
+      );
+
+  GeneratedColumn<String> get groupName =>
+      $composableBuilder(column: $table.groupName, builder: (column) => column);
+
+  GeneratedColumn<int> get position =>
+      $composableBuilder(column: $table.position, builder: (column) => column);
+
+  GeneratedColumn<int> get nationId =>
+      $composableBuilder(column: $table.nationId, builder: (column) => column);
+
+  GeneratedColumn<String> get placeholderKey => $composableBuilder(
+    column: $table.placeholderKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get resolvedNationId => $composableBuilder(
+    column: $table.resolvedNationId,
+    builder: (column) => column,
+  );
+
+  $$CareersTableAnnotationComposer get careerId {
+    final $$CareersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.careerId,
+      referencedTable: $db.careers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CareersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.careers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DrawSlotsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $DrawSlotsTable,
+          DrawSlotRow,
+          $$DrawSlotsTableFilterComposer,
+          $$DrawSlotsTableOrderingComposer,
+          $$DrawSlotsTableAnnotationComposer,
+          $$DrawSlotsTableCreateCompanionBuilder,
+          $$DrawSlotsTableUpdateCompanionBuilder,
+          (DrawSlotRow, $$DrawSlotsTableReferences),
+          DrawSlotRow,
+          PrefetchHooks Function({bool careerId})
+        > {
+  $$DrawSlotsTableTableManager(_$AppDatabase db, $DrawSlotsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DrawSlotsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DrawSlotsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$DrawSlotsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> careerId = const Value.absent(),
+                Value<int> cycle = const Value.absent(),
+                Value<String> competitionKind = const Value.absent(),
+                Value<Confederation?> confederation = const Value.absent(),
+                Value<String> groupName = const Value.absent(),
+                Value<int> position = const Value.absent(),
+                Value<int?> nationId = const Value.absent(),
+                Value<String?> placeholderKey = const Value.absent(),
+                Value<int?> resolvedNationId = const Value.absent(),
+              }) => DrawSlotsCompanion(
+                id: id,
+                careerId: careerId,
+                cycle: cycle,
+                competitionKind: competitionKind,
+                confederation: confederation,
+                groupName: groupName,
+                position: position,
+                nationId: nationId,
+                placeholderKey: placeholderKey,
+                resolvedNationId: resolvedNationId,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int careerId,
+                required int cycle,
+                required String competitionKind,
+                Value<Confederation?> confederation = const Value.absent(),
+                required String groupName,
+                required int position,
+                Value<int?> nationId = const Value.absent(),
+                Value<String?> placeholderKey = const Value.absent(),
+                Value<int?> resolvedNationId = const Value.absent(),
+              }) => DrawSlotsCompanion.insert(
+                id: id,
+                careerId: careerId,
+                cycle: cycle,
+                competitionKind: competitionKind,
+                confederation: confederation,
+                groupName: groupName,
+                position: position,
+                nationId: nationId,
+                placeholderKey: placeholderKey,
+                resolvedNationId: resolvedNationId,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$DrawSlotsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({careerId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (careerId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.careerId,
+                                referencedTable: $$DrawSlotsTableReferences
+                                    ._careerIdTable(db),
+                                referencedColumn: $$DrawSlotsTableReferences
+                                    ._careerIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$DrawSlotsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DrawSlotsTable,
+      DrawSlotRow,
+      $$DrawSlotsTableFilterComposer,
+      $$DrawSlotsTableOrderingComposer,
+      $$DrawSlotsTableAnnotationComposer,
+      $$DrawSlotsTableCreateCompanionBuilder,
+      $$DrawSlotsTableUpdateCompanionBuilder,
+      (DrawSlotRow, $$DrawSlotsTableReferences),
+      DrawSlotRow,
+      PrefetchHooks Function({bool careerId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -41156,4 +42469,6 @@ class $AppDatabaseManager {
       $$PackVersionsTableTableManager(_db, _db.packVersions);
   $$PackVersionImagesTableTableManager get packVersionImages =>
       $$PackVersionImagesTableTableManager(_db, _db.packVersionImages);
+  $$DrawSlotsTableTableManager get drawSlots =>
+      $$DrawSlotsTableTableManager(_db, _db.drawSlots);
 }

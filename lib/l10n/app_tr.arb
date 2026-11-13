@@ -4419,5 +4419,17 @@
   "scheduleDrawCeremony": "Kura töreni",
   "scheduleNoDraws": "Yaklaşan kura yok",
   "hubCallUpClosesIn": "{count, plural, =0{Kadro bildirimi bugün kapanıyor} =1{Kadro bildirimi yarın kapanıyor} other{Kadro bildirimi {count} gün içinde kapanıyor}}",
-  "hubNextWindowLabel": "{month}: {count, plural, =1{1 maç daha} other{{count} maç daha}}"
+  "hubNextWindowLabel": "{month}: {count, plural, =1{1 maç daha} other{{count} maç daha}}",
+  "careerManagerAge": "Yaş",
+  "managerAgeRange": "{min} ile {max} arası",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Yönetim, halef planlarını soruyor.",
+  "managerAgePromptTitle": "Teknik direktörün kaç yaşında?",
+  "managerAgePromptBody": "Bu kayıtta teknik direktörünün yaşı henüz yok. Bir kez belirle, adının yanında görünsün. Oyunda hiçbir şeyi değiştirmez.",
+  "managerAgePromptSet": "Yaşı belirle",
+  "managerAgePromptSkip": "Atla",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) teknik direktörlüğü bırakıyor",
+  "editorManagerAge": "Yaş",
+  "editorManagerAgeHint": "Boş: oyun seçer",
+  "editorIssueManagerAge": "Teknik direktörün yaşı {min} ile {max} arasında olmalı."
 }

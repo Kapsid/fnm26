@@ -4419,5 +4419,17 @@
   "scheduleDrawCeremony": "Ceremonija ždrijeba",
   "scheduleNoDraws": "Nema nadolazećih ždrijebova",
   "hubCallUpClosesIn": "{count, plural, =0{Pozivi se zatvaraju danas} one{Pozivi se zatvaraju za {count} dan} few{Pozivi se zatvaraju za {count} dana} other{Pozivi se zatvaraju za {count} dana}}",
-  "hubNextWindowLabel": "{month}: {count, plural, one{još {count} utakmica} few{još {count} utakmice} other{još {count} utakmica}}"
+  "hubNextWindowLabel": "{month}: {count, plural, one{još {count} utakmica} few{još {count} utakmice} other{još {count} utakmica}}",
+  "careerManagerAge": "Dob",
+  "managerAgeRange": "Od {min} do {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Uprava pita za planove o nasljedniku.",
+  "managerAgePromptTitle": "Koliko godina ima tvoj izbornik?",
+  "managerAgePromptBody": "Ova karijera još nema upisanu dob izbornika. Postavi je jednom i prikazivat će se uz tvoje ime. U igri ne mijenja ništa.",
+  "managerAgePromptSet": "Postavi dob",
+  "managerAgePromptSkip": "Preskoči",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) završava trenersku karijeru",
+  "editorManagerAge": "Dob",
+  "editorManagerAgeHint": "Prazno: bira igra",
+  "editorIssueManagerAge": "Dob izbornika mora biti od {min} do {max}."
 }

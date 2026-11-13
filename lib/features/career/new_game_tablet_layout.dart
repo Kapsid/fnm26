@@ -64,16 +64,7 @@ class _NewGameTabletLayout extends StatelessWidget {
                               vertical: AppSpacing.md,
                             ),
                             children: [
-                              AppTextField(
-                                label: l.careerManagerName,
-                                hint: l.careerManagerNameHint,
-                                controller: state._controller,
-                                autofocus: true,
-                                textInputAction: TextInputAction.done,
-                                onChanged: (_) => state._typed(),
-                                errorText: state._nameError(l),
-                                onSubmitted: (_) => state._start(),
-                              ),
+                              state._nameAndAge(l),
                               const SizedBox(height: AppSpacing.md),
                               Text(
                                 l.careerBeginsBlurb,
@@ -89,8 +80,7 @@ class _NewGameTabletLayout extends StatelessWidget {
                                 icon: Icons.play_arrow_rounded,
                                 isLoading: state._creating,
                                 onPressed:
-                                    state._creating ||
-                                        state._nameError(l) != null
+                                    state._creating || !state._canStart(l)
                                     ? null
                                     : state._start,
                               ),

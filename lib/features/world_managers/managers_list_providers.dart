@@ -11,13 +11,14 @@ import 'package:fnm/features/world_managers/world_manager_providers.dart';
 import 'package:fnm/features/world_managers/world_manager_service.dart';
 
 /// One line of the Current tab: the man, where he is in charge, his
-/// reputation today and the spell he is in.
+/// reputation and age today and the spell he is in.
 typedef ManagerListRow = ({
   WorldManager m,
   int nationId,
   Confederation conf,
   int reputation,
   ManagerSpell spell,
+  int age,
 });
 
 /// Every AI nation's manager today, with his reputation. The whole manager
@@ -63,6 +64,7 @@ managersListProvider = FutureProvider.autoDispose
             asOf: career.inGameDate,
           ),
           spell: s,
+          age: career.inGameDate.year - m.birthYear,
         ));
       }
       return rows;

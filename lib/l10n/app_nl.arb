@@ -4419,5 +4419,17 @@
   "scheduleDrawCeremony": "Lotingsceremonie",
   "scheduleNoDraws": "Geen lotingen op komst",
   "hubCallUpClosesIn": "{count, plural, =0{Selectie sluit vandaag} =1{Selectie sluit morgen} other{Selectie sluit over {count} dagen}}",
-  "hubNextWindowLabel": "{month}: {count, plural, =1{nog 1 wedstrijd} other{nog {count} wedstrijden}}"
+  "hubNextWindowLabel": "{month}: {count, plural, =1{nog 1 wedstrijd} other{nog {count} wedstrijden}}",
+  "careerManagerAge": "Leeftijd",
+  "managerAgeRange": "Van {min} tot {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Het bestuur vraagt naar je opvolgingsplannen.",
+  "managerAgePromptTitle": "Hoe oud is je bondscoach?",
+  "managerAgePromptBody": "Deze opslag heeft nog geen leeftijd voor je bondscoach. Stel die één keer in en hij staat naast je naam. Het verandert niets aan het spel.",
+  "managerAgePromptSet": "Leeftijd instellen",
+  "managerAgePromptSkip": "Overslaan",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) stopt als trainer",
+  "editorManagerAge": "Leeftijd",
+  "editorManagerAgeHint": "Leeg: het spel kiest er een",
+  "editorIssueManagerAge": "De leeftijd van de bondscoach moet tussen {min} en {max} liggen."
 }

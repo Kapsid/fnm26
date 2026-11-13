@@ -4419,5 +4419,17 @@
   "scheduleDrawCeremony": "Ceremonia tragerii la sorți",
   "scheduleNoDraws": "Nicio tragere la sorți în curând",
   "hubCallUpClosesIn": "{count, plural, =0{Convocările se închid azi} =1{Convocările se închid mâine} few{Convocările se închid în {count} zile} other{Convocările se închid în {count} de zile}}",
-  "hubNextWindowLabel": "{month}: {count, plural, =1{încă 1 meci} few{încă {count} meciuri} other{încă {count} de meciuri}}"
+  "hubNextWindowLabel": "{month}: {count, plural, =1{încă 1 meci} few{încă {count} meciuri} other{încă {count} de meciuri}}",
+  "careerManagerAge": "Vârstă",
+  "managerAgeRange": "Între {min} și {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Conducerea întreabă despre planurile de succesiune.",
+  "managerAgePromptTitle": "Câți ani are selecționerul dumneavoastră?",
+  "managerAgePromptBody": "Această carieră nu are încă vârsta selecționerului. Setați-o o dată și va apărea lângă numele dumneavoastră. Nu schimbă nimic în joc.",
+  "managerAgePromptSet": "Setați vârsta",
+  "managerAgePromptSkip": "Omiteți",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) se retrage din antrenorat",
+  "editorManagerAge": "Vârstă",
+  "editorManagerAgeHint": "Gol: alege jocul",
+  "editorIssueManagerAge": "Vârsta selecționerului trebuie să fie între {min} și {max}."
 }

@@ -4419,5 +4419,17 @@
   "scheduleDrawCeremony": "Trekningsseremoni",
   "scheduleNoDraws": "Ingen kommende trekninger",
   "hubCallUpClosesIn": "{count, plural, =0{Uttaket stenger i dag} =1{Uttaket stenger i morgen} other{Uttaket stenger om {count} dager}}",
-  "hubNextWindowLabel": "{month}: {count, plural, =1{1 kamp til} other{{count} kamper til}}"
+  "hubNextWindowLabel": "{month}: {count, plural, =1{1 kamp til} other{{count} kamper til}}",
+  "careerManagerAge": "Alder",
+  "managerAgeRange": "Fra {min} til {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Styret spør om planene for en etterfølger.",
+  "managerAgePromptTitle": "Hvor gammel er landslagssjefen din?",
+  "managerAgePromptBody": "Denne karrieren har ennå ingen alder for landslagssjefen din. Angi den én gang, så vises den ved navnet ditt. Den endrer ingenting i spillet.",
+  "managerAgePromptSet": "Angi alder",
+  "managerAgePromptSkip": "Hopp over",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) legger opp som trener",
+  "editorManagerAge": "Alder",
+  "editorManagerAgeHint": "Tomt: spillet velger",
+  "editorIssueManagerAge": "Alderen til treneren må være fra {min} til {max}."
 }

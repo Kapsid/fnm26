@@ -35,6 +35,7 @@ class _GatedCareers extends CareerService {
   Future<Result<Career>> create({
     required int nationId,
     required String managerName,
+    int? managerAge,
     int? rngSeed,
     bool stadiumHostRules = true,
     bool countsTowardSlots = true,
@@ -53,6 +54,7 @@ class _GatedCareers extends CareerService {
     return super.create(
       nationId: nationId,
       managerName: managerName,
+      managerAge: managerAge,
       rngSeed: rngSeed,
       stadiumHostRules: stadiumHostRules,
       countsTowardSlots: countsTowardSlots,
@@ -99,10 +101,13 @@ Future<List<Career>> _careers(WidgetTester tester, SeededSave save) async {
   return all;
 }
 
-Finder get _nameField => find.descendant(
-  of: find.byKey(NewGameScreen.tabletLayoutKey),
-  matching: find.byType(TextField),
-);
+/// The name field: the first of the two (the age sits beside it).
+Finder get _nameField => find
+    .descendant(
+      of: find.byKey(NewGameScreen.tabletLayoutKey),
+      matching: find.byType(TextField),
+    )
+    .first;
 
 /// Lets a save held at the gate through and pumps until the button's spinner
 /// has gone, offstage ones too (under a pushed page `settle` does not see it).
@@ -175,7 +180,7 @@ void main() {
     await settle(tester);
     expect(find.byKey(NewGameScreen.tabletLayoutKey), findsNothing);
     expect(
-      tester.widget<TextField>(find.byType(TextField)).controller!.text,
+      tester.widget<TextField>(find.byType(TextField).first).controller!.text,
       'Zola',
     );
     tester.view.physicalSize = kTabletSize;
@@ -236,7 +241,7 @@ void main() {
           save.careerId,
         ],
       );
-      await tester.enterText(find.byType(TextField), 'Zola');
+      await tester.enterText(find.byType(TextField).first, 'Zola');
       await tester.tap(find.text(enL.careerStartCareer));
       await tester.pump();
       await tester.testTextInput.receiveAction(TextInputAction.done);
@@ -273,7 +278,7 @@ void main() {
           save.container.read(careerServiceProvider) as _GatedCareers
             ..throwOnce = true;
       expect(await _careers(tester, save), hasLength(1));
-      await tester.enterText(find.byType(TextField), 'Zola');
+      await tester.enterText(find.byType(TextField).first, 'Zola');
       final start = find.widgetWithText(PrimaryButton, enL.careerStartCareer);
       // The failure escapes `_start` as it would on a device (to the zone's
       // handler, which logs it); caught here so it does not fail the test.

@@ -39,6 +39,9 @@ class ManagersScreen extends StatelessWidget {
   static const Key sortReputationKey = Key('managers.sort.reputation');
   static const Key sortNameKey = Key('managers.sort.name');
   static const Key rowKey = Key('managers.row');
+
+  /// The second line of a row: nation, style and age.
+  static const Key rowDetailKey = Key('managers.row.detail');
   static const Key moveKey = Key('managers.move');
 
   /// Where back goes: the ranking this opens from.
@@ -260,8 +263,11 @@ class _ManagersBodyState extends ConsumerState<ManagersBody>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(r.m.name, style: AppTypography.bodyLarge),
+                  // Where, how and how old: the age with the in-game date.
                   Text(
-                    '${nation?.name ?? ''}, ${managerStyleText(l, r.m.style)}',
+                    '${nation?.name ?? ''}, ${managerStyleText(l, r.m.style)}'
+                    ' · ${l.tacticsAgeOnly(r.age)}',
+                    key: ManagersScreen.rowDetailKey,
                     style: muted,
                   ),
                 ],
@@ -321,7 +327,11 @@ class _ManagersBodyState extends ConsumerState<ManagersBody>
           SpellEnd.sacked => l.mgrNewsSacked(nationName, out.name),
           SpellEnd.resigned => l.mgrNewsResigned(nationName, out.name),
           SpellEnd.poached => l.mgrNewsPoached(nationName, out.name),
-          SpellEnd.retired => l.mgrNewsRetired(nationName, out.name),
+          SpellEnd.retired => l.mgrNewsRetiredAge(
+            nationName,
+            out.name,
+            mv.date.year - out.birthYear,
+          ),
           SpellEnd.contractEnd => l.mgrNewsContractEnd(nationName, out.name),
           SpellEnd.replacedByPlayer => l.mgrNewsReplacedByPlayer(
             nationName,

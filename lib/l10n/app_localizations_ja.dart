@@ -17064,4 +17064,49 @@ class AppLocalizationsJa extends AppLocalizations {
     );
     return '$month: $_temp0';
   }
+
+  @override
+  String get careerManagerAge => '年齢';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return '$min〜$max歳';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name（$age）';
+  }
+
+  @override
+  String get managerSuccession => '協会が後継者の計画について尋ねています。';
+
+  @override
+  String get managerAgePromptTitle => '監督は何歳ですか？';
+
+  @override
+  String get managerAgePromptBody =>
+      'このセーブにはまだ監督の年齢がありません。一度設定すると名前の横に表示されます。ゲームの内容には影響しません。';
+
+  @override
+  String get managerAgePromptSet => '年齢を設定';
+
+  @override
+  String get managerAgePromptSkip => 'スキップ';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name（$age）が指導者を引退';
+  }
+
+  @override
+  String get editorManagerAge => '年齢';
+
+  @override
+  String get editorManagerAgeHint => '空欄: ゲームが決めます';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return '監督の年齢は$min〜$max歳にしてください。';
+  }
 }

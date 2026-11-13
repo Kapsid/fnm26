@@ -4419,5 +4419,17 @@
   "scheduleDrawCeremony": "Церемонія жеребкування",
   "scheduleNoDraws": "Немає майбутніх жеребкувань",
   "hubCallUpClosesIn": "{count, plural, =0{Виклик закривається сьогодні} one{Виклик закривається через {count} день} few{Виклик закривається через {count} дні} many{Виклик закривається через {count} днів} other{Виклик закривається через {count} дня}}",
-  "hubNextWindowLabel": "{month}: {count, plural, one{ще {count} матч} few{ще {count} матчі} many{ще {count} матчів} other{ще {count} матчу}}"
+  "hubNextWindowLabel": "{month}: {count, plural, one{ще {count} матч} few{ще {count} матчі} many{ще {count} матчів} other{ще {count} матчу}}",
+  "careerManagerAge": "Вік",
+  "managerAgeRange": "Від {min} до {max}",
+  "managerNameAge": "{name} ({age})",
+  "managerSuccession": "Керівництво питає про плани щодо наступника.",
+  "managerAgePromptTitle": "Скільки років твоєму тренерові?",
+  "managerAgePromptBody": "У цьому збереженні ще немає віку твого тренера. Вкажи його один раз, і він показуватиметься поруч з іменем. На гру це не впливає.",
+  "managerAgePromptSet": "Вказати вік",
+  "managerAgePromptSkip": "Пропустити",
+  "mgrNewsRetiredAge": "{nation}: {name} ({age}) завершує тренерську кар’єру",
+  "editorManagerAge": "Вік",
+  "editorManagerAgeHint": "Порожньо: обирає гра",
+  "editorIssueManagerAge": "Вік тренера має бути від {min} до {max}."
 }

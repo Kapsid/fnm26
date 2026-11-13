@@ -17598,4 +17598,49 @@ class AppLocalizationsId extends AppLocalizations {
     );
     return '$month: $_temp0';
   }
+
+  @override
+  String get careerManagerAge => 'Usia';
+
+  @override
+  String managerAgeRange(int min, int max) {
+    return 'Dari $min sampai $max';
+  }
+
+  @override
+  String managerNameAge(String name, int age) {
+    return '$name ($age)';
+  }
+
+  @override
+  String get managerSuccession => 'Dewan menanyakan rencana suksesi.';
+
+  @override
+  String get managerAgePromptTitle => 'Berapa usia pelatih Anda?';
+
+  @override
+  String get managerAgePromptBody =>
+      'Simpanan ini belum memiliki usia pelatih Anda. Atur sekali dan usia akan tampil di samping nama Anda. Tidak mengubah apa pun dalam permainan.';
+
+  @override
+  String get managerAgePromptSet => 'Atur usia';
+
+  @override
+  String get managerAgePromptSkip => 'Lewati';
+
+  @override
+  String mgrNewsRetiredAge(String nation, String name, int age) {
+    return '$nation: $name ($age) pensiun dari dunia kepelatihan';
+  }
+
+  @override
+  String get editorManagerAge => 'Usia';
+
+  @override
+  String get editorManagerAgeHint => 'Kosong: permainan yang memilih';
+
+  @override
+  String editorIssueManagerAge(int min, int max) {
+    return 'Usia pelatih harus antara $min dan $max.';
+  }
 }

@@ -33,6 +33,7 @@ import 'package:fnm/features/federation/sponsor_card.dart';
 import 'package:fnm/features/hub/board_objectives_screen.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
+import 'package:fnm/features/manager/manager_age_widgets.dart';
 import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/paywall/premium_gate_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -434,6 +435,8 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                           color: AppColors.primary,
                         ),
                       ),
+                      // Who the offers are for, with his age.
+                      ManagerNameAgeLine(careerId: widget.careerId),
                       const SizedBox(height: AppSpacing.xs),
                     ],
                     for (final o in offers)

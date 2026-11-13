@@ -116,5 +116,6 @@ extension CareerRowMapper on CareerRow {
     lastCycleBoard: lastCycleBoard,
     viceCaptain1PlayerId: viceCaptain1PlayerId,
     viceCaptain2PlayerId: viceCaptain2PlayerId,
+    managerBirthYear: managerBirthYear,
   );
 }

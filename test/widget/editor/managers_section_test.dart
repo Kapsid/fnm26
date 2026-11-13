@@ -50,7 +50,7 @@ void main() {
     await tester.pump();
     // His nationality starts as the nation's own.
     expect(_pack(c, id).managers, {
-      cze: (name: 'Ota Brnák', nationality: 'CZE'),
+      cze: (name: 'Ota Brnák', nationality: 'CZE', age: null),
     });
 
     // Another nationality, picked from the game's nations.
@@ -61,7 +61,7 @@ void main() {
         .onChanged!('SVK');
     await tester.pump();
     expect(_pack(c, id).managers, {
-      cze: (name: 'Ota Brnák', nationality: 'SVK'),
+      cze: (name: 'Ota Brnák', nationality: 'SVK', age: null),
     });
 
     // A name the game cannot show is refused, and not saved (the field
@@ -87,13 +87,61 @@ void main() {
     await tester.pump(const Duration(milliseconds: 450));
   });
 
+  testWidgets('a manager is given an age, which the pack keeps', (
+    tester,
+  ) async {
+    final c = await editorContainer(tester);
+    final id = await insertPack(tester, c, testPack('Managers'));
+    await pumpEditorRoute(tester, c, _at(id, nation: cze));
+    final row = find.byKey(NameSectionScreen.rowKey('$cze'));
+    await tester.tap(row);
+    await settle(tester);
+    await tester.enterText(
+      find.byKey(NameEditForm.managerNameKey),
+      'Ota Brnák',
+    );
+    await tester.pump();
+    await tester.enterText(find.byKey(NameEditForm.managerAgeKey), '58');
+    await tester.pump();
+    expect(_pack(c, id).managers, {
+      cze: (name: 'Ota Brnák', nationality: 'CZE', age: 58),
+    });
+    // The database now needs format 8, and says so when written.
+    expect(_pack(c, id).asWritten.formatVersion, 8);
+
+    // Out of range: said under the field, and not saved.
+    await tester.enterText(find.byKey(NameEditForm.managerAgeKey), '82');
+    await tester.pump();
+    expect(find.text(en.managerAgeRange(30, 75)), findsOneWidget);
+    expect(_pack(c, id).managers[cze]!.age, 58);
+
+    // Emptied: the game draws his age again.
+    await tester.enterText(find.byKey(NameEditForm.managerAgeKey), '');
+    await tester.pump();
+    expect(_pack(c, id).managers[cze]!.age, isNull);
+
+    await tester.enterText(find.byKey(NameEditForm.managerAgeKey), '61');
+    await tester.pump();
+    await tester.tap(find.byKey(NameEditForm.doneKey));
+    await settle(tester);
+    // The row says how old he is.
+    expect(
+      find.descendant(
+        of: row,
+        matching: find.textContaining(en.tacticsAgeOnly(61)),
+      ),
+      findsOneWidget,
+    );
+    await tester.pump(const Duration(milliseconds: 450));
+  });
+
   testWidgets('clearing the row removes it', (tester) async {
     final c = await editorContainer(tester);
     final id = await insertPack(
       tester,
       c,
       testPack('Managers').copyWith(
-        managers: {cze: (name: 'Ota Brnák', nationality: 'CZE')},
+        managers: {cze: (name: 'Ota Brnák', nationality: 'CZE', age: null)},
       ),
     );
     // Opened on Czechia (a jump from the home): its row is picked.
@@ -128,7 +176,7 @@ void main() {
     await tester.enterText(find.byKey(NameEditForm.managerNameKey), 'Lew Ward');
     await tester.pump();
     expect(_pack(c, id).managers, {
-      cze: (name: 'Lew Ward', nationality: 'CZE'),
+      cze: (name: 'Lew Ward', nationality: 'CZE', age: null),
     });
     expect(tester.takeException(), isNull);
     await tester.pump(const Duration(milliseconds: 450));

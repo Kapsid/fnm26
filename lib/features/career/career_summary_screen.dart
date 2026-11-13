@@ -11,6 +11,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/features/career/career_summary_providers.dart';
+import 'package:fnm/features/manager/manager_age_widgets.dart';
 import 'package:fnm/features/share/share_cabinet_button.dart';
 import 'package:fnm/features/stats/stats_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -157,7 +158,10 @@ class _Header extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  s.career.managerName,
+                  switch (managerAgeOf(s.career)) {
+                    final age? => l.managerNameAge(s.career.managerName, age),
+                    null => s.career.managerName,
+                  },
                   style: AppTypography.labelSmall.copyWith(
                     color: AppColors.onSurfaceVariant,
                   ),
