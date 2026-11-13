@@ -547,6 +547,37 @@ class AppLocalizationsCs extends AppLocalizations {
   String get recordsBiggestWin => 'Nejvyšší výhra';
 
   @override
+  String get recordsTileMatches => 'Zápasy';
+
+  @override
+  String get recordsTileWins => 'Výhry';
+
+  @override
+  String get recordsTileTrophies => 'Trofeje';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct %';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Zatím žádné';
+
+  @override
+  String get recordsBiggestDefeat => 'Nejvyšší prohra';
+
+  @override
+  String get recordsRecordHolders => 'Rekordmani';
+
+  @override
+  String get recordsMostCleanSheets => 'NEJVÍCE ČISTÝCH KONT';
+
+  @override
   String get recordsSeeAllMeetings => 'Zobrazit všechny zápasy';
 
   @override

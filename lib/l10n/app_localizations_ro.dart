@@ -540,6 +540,37 @@ class AppLocalizationsRo extends AppLocalizations {
   String get recordsBiggestWin => 'Cea mai mare victorie';
 
   @override
+  String get recordsTileMatches => 'Meciuri';
+
+  @override
+  String get recordsTileWins => 'Victorii';
+
+  @override
+  String get recordsTileTrophies => 'Trofee';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct%';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Niciunul încă';
+
+  @override
+  String get recordsBiggestDefeat => 'Cea mai grea înfrângere';
+
+  @override
+  String get recordsRecordHolders => 'Recordmeni';
+
+  @override
+  String get recordsMostCleanSheets => 'CELE MAI MULTE MECIURI FĂRĂ GOL PRIMIT';
+
+  @override
   String get recordsSeeAllMeetings => 'Vedeți toate întâlnirile';
 
   @override

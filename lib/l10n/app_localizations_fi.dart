@@ -553,6 +553,37 @@ class AppLocalizationsFi extends AppLocalizations {
   String get recordsBiggestWin => 'Suurin voitto';
 
   @override
+  String get recordsTileMatches => 'Ottelut';
+
+  @override
+  String get recordsTileWins => 'Voitot';
+
+  @override
+  String get recordsTileTrophies => 'Mestaruudet';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct %';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Ei vielä yhtään';
+
+  @override
+  String get recordsBiggestDefeat => 'Suurin tappio';
+
+  @override
+  String get recordsRecordHolders => 'Ennätysten haltijat';
+
+  @override
+  String get recordsMostCleanSheets => 'ENITEN NOLLAPELEJÄ';
+
+  @override
   String get recordsSeeAllMeetings => 'Näytä kaikki kohtaamiset';
 
   @override

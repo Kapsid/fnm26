@@ -548,6 +548,37 @@ class AppLocalizationsId extends AppLocalizations {
   String get recordsBiggestWin => 'Kemenangan terbesar';
 
   @override
+  String get recordsTileMatches => 'Laga';
+
+  @override
+  String get recordsTileWins => 'Menang';
+
+  @override
+  String get recordsTileTrophies => 'Trofi';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct%';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Belum ada';
+
+  @override
+  String get recordsBiggestDefeat => 'Kekalahan terbesar';
+
+  @override
+  String get recordsRecordHolders => 'Pemegang rekor';
+
+  @override
+  String get recordsMostCleanSheets => 'CLEAN SHEET TERBANYAK';
+
+  @override
   String get recordsSeeAllMeetings => 'Lihat semua pertemuan';
 
   @override

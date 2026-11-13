@@ -547,6 +547,37 @@ class AppLocalizationsNb extends AppLocalizations {
   String get recordsBiggestWin => 'Største seier';
 
   @override
+  String get recordsTileMatches => 'Kamper';
+
+  @override
+  String get recordsTileWins => 'Seire';
+
+  @override
+  String get recordsTileTrophies => 'Titler';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct %';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Ingen ennå';
+
+  @override
+  String get recordsBiggestDefeat => 'Største tap';
+
+  @override
+  String get recordsRecordHolders => 'Rekordholdere';
+
+  @override
+  String get recordsMostCleanSheets => 'FLEST HOLDT NULLEN';
+
+  @override
   String get recordsSeeAllMeetings => 'Se alle møter';
 
   @override

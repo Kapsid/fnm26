@@ -509,6 +509,37 @@ class AppLocalizationsKo extends AppLocalizations {
   String get recordsBiggestWin => '최다 점수 차 승리';
 
   @override
+  String get recordsTileMatches => '경기';
+
+  @override
+  String get recordsTileWins => '승리';
+
+  @override
+  String get recordsTileTrophies => '트로피';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct%';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => '아직 없음';
+
+  @override
+  String get recordsBiggestDefeat => '최다 점수 차 패배';
+
+  @override
+  String get recordsRecordHolders => '기록 보유자';
+
+  @override
+  String get recordsMostCleanSheets => '최다 무실점';
+
+  @override
   String get recordsSeeAllMeetings => '모든 맞대결 보기';
 
   @override

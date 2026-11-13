@@ -53,18 +53,36 @@ List<RecordLeader> _leaders(Iterable<Player> players, List<int> values) {
 
 /// The manager's record book after a few cycles: three boards of five, each
 /// drawn from a different slice of his squad. The team records are the ones
-/// [fakeMeetingsByOpponent] add up to: the 2-0 over the rival is the biggest
-/// win, and the last four results (W W D D) the longest unbeaten run.
+/// [fakeMeetingsByOpponent] add up to: six played (W2 D2 L2, 6-5), the 2-0
+/// over the rival is the biggest win, the 1-2 to the third nation the
+/// heaviest defeat, and the last four results (W W D D) the longest unbeaten
+/// run. The clean-sheet board is the squad's two keepers.
 RecordBook fakeRecordBook() {
   final squad = squadOf(seededNationId);
+  final keepers = [
+    for (final p in squad)
+      if (p.category == PositionCategory.goalkeeper) p,
+  ];
   return (
     nationName: realNationsById[seededNationId]!.name,
     mostCaps: _leaders(squad, const [61, 54, 48, 40, 33]),
     topScorers: _leaders(squad.skip(5), const [22, 17, 12, 9, 6]),
     topAssists: _leaders(squad.skip(10), const [14, 11, 8, 5, 3]),
+    topCleanSheets: _leaders(keepers, const [19, 7]),
+    totals: (
+      played: 6,
+      wins: 2,
+      draws: 2,
+      losses: 2,
+      goalsFor: 6,
+      goalsAgainst: 5,
+    ),
     biggestWin: (oppId: rivalNation.id, gf: 2, ga: 0),
+    biggestDefeat: (oppId: fieldOf(seededNationId, 3)[2].id, gf: 1, ga: 2),
     longestUnbeaten: 4,
     bestFinish: 'Quarter-finals',
+    trophies: 1,
+    latestTrophy: 'EC 2028',
     nations: realNationsById,
   );
 }

@@ -547,6 +547,37 @@ class AppLocalizationsBg extends AppLocalizations {
   String get recordsBiggestWin => 'Най-голяма победа';
 
   @override
+  String get recordsTileMatches => 'Мачове';
+
+  @override
+  String get recordsTileWins => 'Победи';
+
+  @override
+  String get recordsTileTrophies => 'Трофеи';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct%';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Все още няма';
+
+  @override
+  String get recordsBiggestDefeat => 'Най-тежка загуба';
+
+  @override
+  String get recordsRecordHolders => 'Рекордьори';
+
+  @override
+  String get recordsMostCleanSheets => 'НАЙ-МНОГО СУХИ МРЕЖИ';
+
+  @override
   String get recordsSeeAllMeetings => 'Виж всички срещи';
 
   @override

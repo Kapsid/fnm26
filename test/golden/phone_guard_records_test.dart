@@ -5,9 +5,10 @@ import 'package:fnm/core/routing/app_router.dart';
 import '../helpers/history_fixtures.dart';
 import '../helpers/seeded_save.dart';
 
-/// The phone record book, pinned before the tablet layout is added beside
-/// it: as a fresh save shows it (nothing played yet), and full (the fake
-/// book and rivalry), every card in a tall window.
+/// The phone record book: as a fresh save shows it (nothing played yet), and
+/// full (the fake book and rivalry), every card in a tall window. Since
+/// 1.1.2 the full book is the redesign: headline tiles, team records, record
+/// holders, the rival, the way out at the bottom.
 void main() {
   testWidgets('records_phone', (tester) async {
     final save = await seedSave(tester);
@@ -27,10 +28,10 @@ void main() {
       tester,
       save,
       '${Routes.records}?careerId=${save.careerId}',
-      size: const Size(390, 2400),
+      size: const Size(390, 1100),
     );
     expect(find.text(enL.recordsFiercestRival), findsOneWidget);
-    expect(find.text(enL.recordsMostAssists), findsOneWidget);
+    expect(find.text(enL.recordsRecordHolders.toUpperCase()), findsOneWidget);
     await expectAppGolden('goldens/records_phone_tall.png');
   });
 }

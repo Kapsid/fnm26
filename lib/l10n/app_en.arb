@@ -708,6 +708,58 @@
   "@recordsBiggestWin": {
     "description": "Team-record / stat-row label for biggest win."
   },
+  "recordsTileMatches": "Matches",
+  "@recordsTileMatches": {
+    "description": "Record book: label of the stat tile that shows how many matches the nation has played, with wins, draws and losses under it. Shown in capitals."
+  },
+  "recordsTileWins": "Wins",
+  "@recordsTileWins": {
+    "description": "Record book: label of the stat tile that shows the share of matches won (as a percentage), with goals for and against under it. Shown in capitals."
+  },
+  "recordsTileTrophies": "Trophies",
+  "@recordsTileTrophies": {
+    "description": "Record book: label of the stat tile that counts the titles the nation has won, with the latest one under it. Shown in capitals."
+  },
+  "recordsWinSharePercent": "{pct}%",
+  "@recordsWinSharePercent": {
+    "description": "Record book: the share of matches won, as a percentage, in the wins tile.",
+    "placeholders": {
+      "pct": {
+        "type": "String",
+        "example": "56"
+      }
+    }
+  },
+  "recordsTrophyLatest": "{competition} {year}",
+  "@recordsTrophyLatest": {
+    "description": "Record book: the newest title under the trophy count, a short competition tag and its year (like EC 2032).",
+    "placeholders": {
+      "competition": {
+        "type": "String",
+        "example": "EC"
+      },
+      "year": {
+        "type": "String",
+        "example": "2032"
+      }
+    }
+  },
+  "recordsNoTrophiesYet": "None yet",
+  "@recordsNoTrophiesYet": {
+    "description": "Record book: under the trophy count when the nation has not won a title yet in this save."
+  },
+  "recordsBiggestDefeat": "Biggest defeat",
+  "@recordsBiggestDefeat": {
+    "description": "Team-record row label: the nation's heaviest defeat."
+  },
+  "recordsRecordHolders": "Record holders",
+  "@recordsRecordHolders": {
+    "description": "Record book: heading over the card naming the nation's record holders (caps, goals, assists, clean sheets)."
+  },
+  "recordsMostCleanSheets": "MOST CLEAN SHEETS",
+  "@recordsMostCleanSheets": {
+    "description": "Record book: heading of the goalkeepers' clean-sheets leaderboard."
+  },
   "recordsSeeAllMeetings": "See all meetings",
   "@recordsSeeAllMeetings": {
     "description": "Button opening the full meetings list."

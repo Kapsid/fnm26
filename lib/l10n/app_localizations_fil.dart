@@ -550,6 +550,37 @@ class AppLocalizationsFil extends AppLocalizations {
   String get recordsBiggestWin => 'Pinakamalaking panalo';
 
   @override
+  String get recordsTileMatches => 'Laro';
+
+  @override
+  String get recordsTileWins => 'Panalo';
+
+  @override
+  String get recordsTileTrophies => 'Tropeo';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct%';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Wala pa';
+
+  @override
+  String get recordsBiggestDefeat => 'Pinakamalaking talo';
+
+  @override
+  String get recordsRecordHolders => 'Mga may hawak ng rekord';
+
+  @override
+  String get recordsMostCleanSheets => 'PINAKAMARAMING CLEAN SHEET';
+
+  @override
   String get recordsSeeAllMeetings => 'Tingnan lahat ng pagkikita';
 
   @override

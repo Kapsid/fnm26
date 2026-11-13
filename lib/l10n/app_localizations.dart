@@ -1098,6 +1098,60 @@ abstract class AppLocalizations {
   /// **'Biggest win'**
   String get recordsBiggestWin;
 
+  /// Record book: label of the stat tile that shows how many matches the nation has played, with wins, draws and losses under it. Shown in capitals.
+  ///
+  /// In en, this message translates to:
+  /// **'Matches'**
+  String get recordsTileMatches;
+
+  /// Record book: label of the stat tile that shows the share of matches won (as a percentage), with goals for and against under it. Shown in capitals.
+  ///
+  /// In en, this message translates to:
+  /// **'Wins'**
+  String get recordsTileWins;
+
+  /// Record book: label of the stat tile that counts the titles the nation has won, with the latest one under it. Shown in capitals.
+  ///
+  /// In en, this message translates to:
+  /// **'Trophies'**
+  String get recordsTileTrophies;
+
+  /// Record book: the share of matches won, as a percentage, in the wins tile.
+  ///
+  /// In en, this message translates to:
+  /// **'{pct}%'**
+  String recordsWinSharePercent(String pct);
+
+  /// Record book: the newest title under the trophy count, a short competition tag and its year (like EC 2032).
+  ///
+  /// In en, this message translates to:
+  /// **'{competition} {year}'**
+  String recordsTrophyLatest(String competition, String year);
+
+  /// Record book: under the trophy count when the nation has not won a title yet in this save.
+  ///
+  /// In en, this message translates to:
+  /// **'None yet'**
+  String get recordsNoTrophiesYet;
+
+  /// Team-record row label: the nation's heaviest defeat.
+  ///
+  /// In en, this message translates to:
+  /// **'Biggest defeat'**
+  String get recordsBiggestDefeat;
+
+  /// Record book: heading over the card naming the nation's record holders (caps, goals, assists, clean sheets).
+  ///
+  /// In en, this message translates to:
+  /// **'Record holders'**
+  String get recordsRecordHolders;
+
+  /// Record book: heading of the goalkeepers' clean-sheets leaderboard.
+  ///
+  /// In en, this message translates to:
+  /// **'MOST CLEAN SHEETS'**
+  String get recordsMostCleanSheets;
+
   /// Button opening the full meetings list.
   ///
   /// In en, this message translates to:

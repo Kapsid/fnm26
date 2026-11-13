@@ -509,6 +509,37 @@ class AppLocalizationsJa extends AppLocalizations {
   String get recordsBiggestWin => '最大差勝利';
 
   @override
+  String get recordsTileMatches => '試合';
+
+  @override
+  String get recordsTileWins => '勝利';
+
+  @override
+  String get recordsTileTrophies => 'タイトル';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct%';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'まだなし';
+
+  @override
+  String get recordsBiggestDefeat => '最大差敗戦';
+
+  @override
+  String get recordsRecordHolders => '記録保持者';
+
+  @override
+  String get recordsMostCleanSheets => '最多完封';
+
+  @override
   String get recordsSeeAllMeetings => '全対戦を見る';
 
   @override
