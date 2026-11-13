@@ -551,6 +551,37 @@ class AppLocalizationsEs extends AppLocalizations {
   String get recordsBiggestWin => 'Mayor victoria';
 
   @override
+  String get recordsTileMatches => 'Partidos';
+
+  @override
+  String get recordsTileWins => 'Victorias';
+
+  @override
+  String get recordsTileTrophies => 'Títulos';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct %';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Ninguno aún';
+
+  @override
+  String get recordsBiggestDefeat => 'Peor derrota';
+
+  @override
+  String get recordsRecordHolders => 'Plusmarquistas';
+
+  @override
+  String get recordsMostCleanSheets => 'MÁS PORTERÍAS A CERO';
+
+  @override
   String get recordsSeeAllMeetings => 'Ver todos los duelos';
 
   @override

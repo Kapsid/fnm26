@@ -91,10 +91,12 @@ void main() {
       final panel = _panel(enL.careerTeamRecords);
       final book = fakeRecordBook();
       final win = book.biggestWin!;
+      final defeat = book.biggestDefeat!;
       final labels = [
         enL.recordsBestFinish,
         enL.recordsLongestUnbeaten,
         enL.recordsBiggestWin,
+        enL.recordsBiggestDefeat,
       ];
       final values = [
         book.bestFinish,
@@ -103,6 +105,11 @@ void main() {
           win.gf,
           win.ga,
           book.nations[win.oppId]!.name,
+        ),
+        enL.recordsBiggestWinValue(
+          defeat.gf,
+          defeat.ga,
+          book.nations[defeat.oppId]!.name,
         ),
       ];
       Rect rectOf(String text) => tester.getRect(
@@ -161,6 +168,41 @@ void main() {
       tester.widget<DataGrid<RecordLeader>>(_grid).rows,
       fakeRecordBook().topAssists,
     );
+    await showTab(tester, 3);
+    expect(
+      tester.widget<DataGrid<RecordLeader>>(_grid).rows,
+      fakeRecordBook().topCleanSheets,
+    );
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('the headline tiles on top, the way out at the bottom', (
+    tester,
+  ) async {
+    await _open(tester, kTabletSize);
+    final tiles = tester.getRect(find.byKey(const Key('records.statTiles')));
+    final team = tester.getRect(_panel(enL.careerTeamRecords));
+    expect(tiles.bottom, lessThan(team.top));
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('records.statTiles')),
+        matching: find.text(fakeRecordBook().latestTrophy!),
+      ),
+      findsOneWidget,
+    );
+    // The column scrolls: the way out is under the boards.
+    await tester.scrollUntilVisible(
+      find.text(enL.recordsLegends),
+      200,
+      scrollable: find
+          .ancestor(
+            of: find.byKey(const Key('records.statTiles')),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
+    final legends = tester.getRect(find.text(enL.recordsLegends));
+    expect(legends.top, greaterThan(tester.getRect(_grid).bottom));
     await tester.pumpWidget(const SizedBox());
   });
 

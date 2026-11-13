@@ -5,7 +5,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/stats/nation_results.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -13,7 +16,6 @@ import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
-/// One leaderboard entry (a player and their tally).
 /// One line of a nation's record book: a player, his tally, and whether he is
 /// still playing — the same rule the pool retires on, so a record book reads
 /// as half history and half squad rather than as one flat list.
@@ -25,16 +27,59 @@ typedef RecordLeader = ({
 });
 
 /// The manager's nation's all-time record book, spanning every cycle.
+///
+/// `totals` adds up every result the nation has posted (the same results the
+/// biggest win and the unbeaten run are read from). `topCleanSheets` is the
+/// keepers' board: a clean sheet is logged on every row of the side that kept
+/// it, so only goalkeepers are ranked on it. `trophies` counts the titles
+/// won in this save's own editions (not the seeded history), and
+/// `latestTrophy` is the newest of them, written short ("EC 2032"), or null
+/// before the first.
 typedef RecordBook = ({
   String nationName,
   List<RecordLeader> mostCaps,
   List<RecordLeader> topScorers,
   List<RecordLeader> topAssists,
+  List<RecordLeader> topCleanSheets,
+  NationTotals totals,
   ({int oppId, int gf, int ga})? biggestWin,
+  ({int oppId, int gf, int ga})? biggestDefeat,
   int longestUnbeaten,
   String bestFinish,
+  int trophies,
+  String? latestTrophy,
   Map<int, Nation> nations,
 });
+
+/// A stored honour name as the fan's abbreviation the fixture tags use ("WC",
+/// "EC", "NC"), so a title fits a third of a phone's width with its year.
+/// Anything without one is written out in full.
+String trophyTag(AppLocalizations l, String stored) {
+  if (stored == 'World Championship') return l.matchTinyWorld;
+  if (stored == 'Continental Clash') return l.matchTinyClash;
+  for (final e in ContinentalCups.byConfederation.entries) {
+    if (e.value.name != stored) continue;
+    return switch (e.key) {
+      Confederation.europe => l.matchTinyEurope,
+      Confederation.southAmerica => l.matchTinySouthAmerica,
+      Confederation.northAmerica => l.matchTinyNorthAmerica,
+      Confederation.africa => l.matchTinyAfrica,
+      Confederation.asia => l.matchTinyAsia,
+      Confederation.oceania => l.matchTinyOceania,
+    };
+  }
+  if (const {
+    NationsCups.europe,
+    NationsCups.northAmerica,
+    NationsCups.africa,
+  }.contains(stored)) {
+    return l.matchTinyNationsCup;
+  }
+  return competitionLabel(l, stored);
+}
+
+/// How many places each of the record book's boards ranks.
+const _boardSize = 5;
 
 /// The deepest World Championship finals round reached, written for the
 /// manager.
@@ -82,8 +127,8 @@ recordBookProvider = FutureProvider.autoDispose.family<RecordBook?, int>((
       n.id: n,
   };
 
-  final playerCache = <int, ({String name, bool active})>{};
-  Future<({String name, bool active})> resolve(int id) async {
+  final playerCache = <int, ({String name, bool active, bool keeper})>{};
+  Future<({String name, bool active, bool keeper})> resolve(int id) async {
     final hit = playerCache[id];
     if (hit != null) return hit;
     final p = await playerRepo.byId(
@@ -97,12 +142,25 @@ recordBookProvider = FutureProvider.autoDispose.family<RecordBook?, int>((
     return playerCache[id] = (
       name: p?.name ?? 'Unknown',
       active: p != null && !PlayerLifecycle.hasRetiredAt(p.id, p.age, aging),
+      keeper: p?.category == PositionCategory.goalkeeper,
     );
   }
 
-  final capsRaw = await comp.nationTopAppearances(careerId, nationId, limit: 5);
-  final scorersRaw = await comp.nationTopScorers(careerId, nationId, limit: 5);
-  final assistsRaw = await comp.nationTopAssists(careerId, nationId, limit: 5);
+  final capsRaw = await comp.nationTopAppearances(
+    careerId,
+    nationId,
+    limit: _boardSize,
+  );
+  final scorersRaw = await comp.nationTopScorers(
+    careerId,
+    nationId,
+    limit: _boardSize,
+  );
+  final assistsRaw = await comp.nationTopAssists(
+    careerId,
+    nationId,
+    limit: _boardSize,
+  );
 
   final mostCaps = <RecordLeader>[
     for (final c in capsRaw)
@@ -132,6 +190,21 @@ recordBookProvider = FutureProvider.autoDispose.family<RecordBook?, int>((
       ),
   ];
 
+  // The keepers' clean sheets: the tally holds the whole side's rows, so walk
+  // it best first and keep the goalkeepers until the board is full.
+  final topCleanSheets = <RecordLeader>[];
+  for (final c in await comp.nationCleanSheetTallies(careerId, nationId)) {
+    if (topCleanSheets.length == _boardSize) break;
+    final who = await resolve(c.playerId);
+    if (!who.keeper) continue;
+    topCleanSheets.add((
+      playerId: c.playerId,
+      name: who.name,
+      value: c.cleanSheets,
+      active: who.active,
+    ));
+  }
+
   // Biggest win, longest unbeaten run, and deepest World Cup run — over every
   // result the nation has ever posted, friendlies included. The comment here
   // used to say "competitive" while the code counted everything; the rule is
@@ -145,6 +218,10 @@ recordBookProvider = FutureProvider.autoDispose.family<RecordBook?, int>((
   final biggestWin = best == null
       ? null
       : (oppId: best.opponentId, gf: best.scored, ga: best.conceded);
+  final worst = biggestDefeatOf(results);
+  final biggestDefeat = worst == null
+      ? null
+      : (oppId: worst.opponentId, gf: worst.scored, ga: worst.conceded);
   final longestUnbeaten = longestUnbeatenOf(results);
 
   var deepestRank = 0;
@@ -166,6 +243,21 @@ recordBookProvider = FutureProvider.autoDispose.family<RecordBook?, int>((
         CareerService.isOwnHonourYear(h.year),
   );
   final l = ref.watch(appLocalizationsProvider);
+  final titles =
+      honours
+          .where(
+            (h) =>
+                h.championId == nationId &&
+                CareerService.isOwnHonourYear(h.year),
+          )
+          .toList()
+        ..sort((a, b) => b.year.compareTo(a.year));
+  final latestTrophy = titles.isEmpty
+      ? null
+      : l.recordsTrophyLatest(
+          trophyTag(l, titles.first.competition),
+          '${titles.first.year}',
+        );
   final bestFinish = wonWc
       ? l.tourCupWorldChampionsTitle
       : deepestRound.isEmpty
@@ -177,9 +269,14 @@ recordBookProvider = FutureProvider.autoDispose.family<RecordBook?, int>((
     mostCaps: mostCaps,
     topScorers: topScorers,
     topAssists: topAssists,
+    topCleanSheets: topCleanSheets,
+    totals: nationTotalsOf(results),
     biggestWin: biggestWin,
+    biggestDefeat: biggestDefeat,
     longestUnbeaten: longestUnbeaten,
     bestFinish: bestFinish,
+    trophies: titles.length,
+    latestTrophy: latestTrophy,
     nations: nations,
   );
 });

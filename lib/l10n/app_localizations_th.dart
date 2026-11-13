@@ -535,6 +535,37 @@ class AppLocalizationsTh extends AppLocalizations {
   String get recordsBiggestWin => 'ชนะขาดที่สุด';
 
   @override
+  String get recordsTileMatches => 'นัด';
+
+  @override
+  String get recordsTileWins => 'ชนะ';
+
+  @override
+  String get recordsTileTrophies => 'ถ้วยรางวัล';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct%';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'ยังไม่มี';
+
+  @override
+  String get recordsBiggestDefeat => 'แพ้ขาดที่สุด';
+
+  @override
+  String get recordsRecordHolders => 'เจ้าของสถิติ';
+
+  @override
+  String get recordsMostCleanSheets => 'คลีนชีตมากที่สุด';
+
+  @override
   String get recordsSeeAllMeetings => 'ดูการพบกันทั้งหมด';
 
   @override

@@ -544,6 +544,37 @@ class AppLocalizationsUk extends AppLocalizations {
   String get recordsBiggestWin => 'Найбільша перемога';
 
   @override
+  String get recordsTileMatches => 'Матчі';
+
+  @override
+  String get recordsTileWins => 'Перемоги';
+
+  @override
+  String get recordsTileTrophies => 'Трофеї';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct%';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Поки жодного';
+
+  @override
+  String get recordsBiggestDefeat => 'Найбільша поразка';
+
+  @override
+  String get recordsRecordHolders => 'Рекордсмени';
+
+  @override
+  String get recordsMostCleanSheets => 'НАЙБІЛЬШЕ СУХИХ МАТЧІВ';
+
+  @override
   String get recordsSeeAllMeetings => 'Усі зустрічі';
 
   @override

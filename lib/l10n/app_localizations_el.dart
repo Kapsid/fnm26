@@ -558,6 +558,37 @@ class AppLocalizationsEl extends AppLocalizations {
   String get recordsBiggestWin => 'Μεγαλύτερη νίκη';
 
   @override
+  String get recordsTileMatches => 'Αγώνες';
+
+  @override
+  String get recordsTileWins => 'Νίκες';
+
+  @override
+  String get recordsTileTrophies => 'Τρόπαια';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct%';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Κανένα ακόμη';
+
+  @override
+  String get recordsBiggestDefeat => 'Βαρύτερη ήττα';
+
+  @override
+  String get recordsRecordHolders => 'Κάτοχοι ρεκόρ';
+
+  @override
+  String get recordsMostCleanSheets => 'ΠΕΡΙΣΣΟΤΕΡΑ ΜΗΔΕΝ ΠΑΘΗΤΙΚΑ';
+
+  @override
   String get recordsSeeAllMeetings => 'Δες όλες τις αναμετρήσεις';
 
   @override

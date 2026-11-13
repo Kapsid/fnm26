@@ -548,6 +548,37 @@ class AppLocalizationsHu extends AppLocalizations {
   String get recordsBiggestWin => 'Legnagyobb győzelem';
 
   @override
+  String get recordsTileMatches => 'Meccsek';
+
+  @override
+  String get recordsTileWins => 'Győzelmek';
+
+  @override
+  String get recordsTileTrophies => 'Trófeák';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct%';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Még nincs';
+
+  @override
+  String get recordsBiggestDefeat => 'Legsúlyosabb vereség';
+
+  @override
+  String get recordsRecordHolders => 'Rekorderek';
+
+  @override
+  String get recordsMostCleanSheets => 'LEGTÖBB KAPOTT GÓL NÉLKÜLI MECCS';
+
+  @override
   String get recordsSeeAllMeetings => 'Összes találkozó';
 
   @override

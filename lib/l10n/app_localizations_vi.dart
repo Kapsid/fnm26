@@ -543,6 +543,37 @@ class AppLocalizationsVi extends AppLocalizations {
   String get recordsBiggestWin => 'Trận thắng đậm nhất';
 
   @override
+  String get recordsTileMatches => 'Số trận';
+
+  @override
+  String get recordsTileWins => 'Thắng';
+
+  @override
+  String get recordsTileTrophies => 'Danh hiệu';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct%';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Chưa có';
+
+  @override
+  String get recordsBiggestDefeat => 'Trận thua đậm nhất';
+
+  @override
+  String get recordsRecordHolders => 'Người giữ kỷ lục';
+
+  @override
+  String get recordsMostCleanSheets => 'GIỮ SẠCH LƯỚI NHIỀU NHẤT';
+
+  @override
   String get recordsSeeAllMeetings => 'Xem tất cả các lần gặp';
 
   @override

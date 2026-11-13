@@ -549,6 +549,37 @@ class AppLocalizationsHr extends AppLocalizations {
   String get recordsBiggestWin => 'Najveća pobjeda';
 
   @override
+  String get recordsTileMatches => 'Utakmice';
+
+  @override
+  String get recordsTileWins => 'Pobjede';
+
+  @override
+  String get recordsTileTrophies => 'Trofeji';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '$pct %';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Još nijedan';
+
+  @override
+  String get recordsBiggestDefeat => 'Najteži poraz';
+
+  @override
+  String get recordsRecordHolders => 'Rekorderi';
+
+  @override
+  String get recordsMostCleanSheets => 'NAJVIŠE UTAKMICA BEZ PRIMLJENOG GOLA';
+
+  @override
   String get recordsSeeAllMeetings => 'Prikaži sve susrete';
 
   @override

@@ -2755,6 +2755,34 @@ class DriftCompetitionRepository implements CompetitionRepository {
   }
 
   @override
+  Future<List<({int playerId, int cleanSheets})>> nationCleanSheetTallies(
+    int careerId,
+    int nationId,
+  ) async {
+    final rows =
+        await (_db.select(_db.playerRatings)..where(
+              (t) =>
+                  t.careerId.equals(careerId) &
+                  t.nationId.equals(nationId) &
+                  t.cleanSheet.equals(true),
+            ))
+            .get();
+    final tally = <int, int>{};
+    for (final r in rows) {
+      tally.update(r.playerId, (v) => v + 1, ifAbsent: () => 1);
+    }
+    final sorted = tally.entries.toList()
+      ..sort(
+        (a, b) => b.value != a.value
+            ? b.value.compareTo(a.value)
+            : a.key.compareTo(b.key),
+      );
+    return [
+      for (final e in sorted) (playerId: e.key, cleanSheets: e.value),
+    ];
+  }
+
+  @override
   Future<void> recordPlayerHonour({
     required int careerId,
     required int playerId,

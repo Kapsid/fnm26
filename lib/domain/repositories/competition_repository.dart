@@ -919,6 +919,14 @@ abstract interface class CompetitionRepository {
     int limit,
   });
 
+  /// Every player who has kept a clean sheet for [nationId], with how many,
+  /// most first. A clean sheet is logged on every one of the side's rows, so
+  /// a reader that wants the keepers' record filters by position itself.
+  Future<List<({int playerId, int cleanSheets})>> nationCleanSheetTallies(
+    int careerId,
+    int nationId,
+  );
+
   /// One individual trophy a player has won.
   ///
   /// Stored rather than derived — see `PlayerHonours` for why.

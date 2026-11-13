@@ -158,4 +158,48 @@ void main() {
       expect(longestUnbeatenOf(const []), 0);
     });
   });
+
+  group('biggestDefeatOf', () {
+    test('the widest margin, then the most conceded', () {
+      final results = nationResults([
+        played(1, 2, 0, as: 2),
+        played(3, 1, 4, as: 2, day: 2),
+        played(1, 4, 5, as: 0, day: 3),
+        played(1, 5, 1, as: 3, day: 4),
+      ], 1);
+      final worst = biggestDefeatOf(results)!;
+      // 0-2 and 1-3 (and 2-4 away) share a two-goal margin; 4 conceded wins.
+      expect(worst.opponentId, 3);
+      expect(worst.scored, 2);
+      expect(worst.conceded, 4);
+    });
+
+    test('a nation that has never lost has no heaviest defeat', () {
+      final results = nationResults([played(1, 2, 1, as: 1)], 1);
+      expect(biggestDefeatOf(results), isNull);
+    });
+  });
+
+  group('nationTotalsOf', () {
+    test('adds up the results and the goals both ways', () {
+      final results = nationResults([
+        played(1, 2, 3, as: 0),
+        played(2, 1, 1, as: 1, day: 2),
+        played(3, 1, 2, as: 0, day: 3),
+        played(1, 4, 2, as: 1, day: 4),
+      ], 1);
+      final t = nationTotalsOf(results);
+      expect(t.played, 4);
+      expect(t.wins, 2);
+      expect(t.draws, 1);
+      expect(t.losses, 1);
+      expect(t.goalsFor, 6);
+      expect(t.goalsAgainst, 4);
+    });
+
+    test('nothing played is all zeros', () {
+      final t = nationTotalsOf(const []);
+      expect([t.played, t.wins, t.goalsFor, t.goalsAgainst], [0, 0, 0, 0]);
+    });
+  });
 }

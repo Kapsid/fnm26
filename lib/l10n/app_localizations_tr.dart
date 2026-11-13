@@ -543,6 +543,37 @@ class AppLocalizationsTr extends AppLocalizations {
   String get recordsBiggestWin => 'En büyük galibiyet';
 
   @override
+  String get recordsTileMatches => 'Maçlar';
+
+  @override
+  String get recordsTileWins => 'Galibiyetler';
+
+  @override
+  String get recordsTileTrophies => 'Kupalar';
+
+  @override
+  String recordsWinSharePercent(String pct) {
+    return '%$pct';
+  }
+
+  @override
+  String recordsTrophyLatest(String competition, String year) {
+    return '$competition $year';
+  }
+
+  @override
+  String get recordsNoTrophiesYet => 'Henüz yok';
+
+  @override
+  String get recordsBiggestDefeat => 'En ağır yenilgi';
+
+  @override
+  String get recordsRecordHolders => 'Rekortmenler';
+
+  @override
+  String get recordsMostCleanSheets => 'EN ÇOK GOL YEMEDEN MAÇ';
+
+  @override
   String get recordsSeeAllMeetings => 'Tüm karşılaşmaları gör';
 
   @override
