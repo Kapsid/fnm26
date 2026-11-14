@@ -4471,5 +4471,14 @@
   "euroPlayoffWinnerToGroup": "勝者はグループ{group}へ",
   "euroPlayoffWinnerPlaceholder": "パス{path}の勝者",
   "euroPlayoffYourGroupIfWin": "パス{path}を勝ち抜いた場合のグループ：グループ{group}",
-  "euroPlayoffBracketHeading": "プレーオフ"
+  "euroPlayoffBracketHeading": "プレーオフ",
+  "wcPlayoffIntro": "12のグループ首位は出場決定。欧州の残り枠は4チームによるプレーオフパスで争われます。成績上位のグループ2位と、まだ出場を決めていないネーションズカップのグループ首位の上位チームが出場し、3月に上位シードのホームで一発勝負の準決勝、その後に一発勝負の決勝。",
+  "icPlayoffIntro": "5つの連盟の6チームが最後の2枠を争います。ランキング上位2チームはパス決勝で待ち、残る4チームが準決勝を戦い、全試合が3月に開催国で行われます。",
+  "icPlayoffSeeded": "パス決勝にシード",
+  "icPlayoffFinalPending": "{nation}対準決勝の勝者",
+  "wcPlaceholderUefa": "欧州パス{path}の勝者",
+  "wcPlaceholderIc": "大陸間パス{path}の勝者",
+  "newsIcPlayoffTitle": "大陸間プレーオフ: パス{path}",
+  "newsIcPlayoffBodySemi": "3月に開催国で{opponent}と一発勝負の準決勝、その後は本大会出場を懸けたパス決勝。",
+  "newsIcPlayoffBodyBye": "3月に開催国で行われるパス決勝にシードされ、{first}対{second}の勝者と対戦。"
 }

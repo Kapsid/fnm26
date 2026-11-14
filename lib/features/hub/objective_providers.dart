@@ -15,6 +15,7 @@ import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
@@ -561,8 +562,17 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
         )
       : (target: wcUsual, graded: false);
   final wcTarget = wcBrief.target;
-  var wcActual = _finishOrdinal(fixtures, career.nationId);
-  if (wcActual == 0) {
+  // A calendar2 World Championship is drawn (and stored) the day qualifying
+  // ends, months before its finals exist: read the draw until then.
+  final wcDrawn = await _storedWorldDrawRun(
+    comp: comp,
+    careerId: careerId,
+    cycle: career.cyclePointer,
+    nationId: career.nationId,
+    fixtures: fixtures,
+  );
+  var wcActual = wcDrawn?.ordinal ?? _finishOrdinal(fixtures, career.nationId);
+  if (wcActual == 0 && wcDrawn == null) {
     wcActual = await _qualifyingOrdinal(
       comp: comp,
       careerId: careerId,
@@ -573,6 +583,7 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
   }
   final wcDecided =
       champion != null ||
+      (wcDrawn?.over ?? false) ||
       await _runIsOver(
         comp: comp,
         careerId: careerId,
@@ -901,7 +912,21 @@ Future<({int ordinal, bool over})> worldRun({
   required int careerId,
   required int nationId,
   required List<Fixture> fixtures,
+
+  /// The cycle [fixtures] belong to, when it is the current one: a calendar2
+  /// World Championship is drawn (and stored) before its finals exist.
+  int? cycle,
 }) async {
+  if (cycle != null) {
+    final drawn = await _storedWorldDrawRun(
+      comp: comp,
+      careerId: careerId,
+      cycle: cycle,
+      nationId: nationId,
+      fixtures: fixtures,
+    );
+    if (drawn != null) return drawn;
+  }
   final decided =
       await comp.worldChampion(careerId) != null ||
       await _runIsOver(
@@ -913,6 +938,54 @@ Future<({int ordinal, bool over})> worldRun({
         kind: CompetitionKind.worldCupFinals,
       );
   return (ordinal: worldFinishOrdinal(fixtures, nationId), over: decided);
+}
+
+/// [worldRun] read off the World Championship's stored draw while its
+/// finals do not exist yet (a calendar2 cycle, drawn the day qualifying is
+/// played out and created after the March play-offs); null otherwise.
+///
+/// Drawn into it, or a path's winner written into its slot: qualified (2),
+/// and the brief locks in at the draw. A play-off entrant stands on the rung
+/// below (1) and is not locked in; beaten in his path, or in neither the
+/// draw nor a path, his run is over.
+Future<({int ordinal, bool over})?> _storedWorldDrawRun({
+  required CompetitionRepository comp,
+  required int careerId,
+  required int cycle,
+  required int nationId,
+  required List<Fixture> fixtures,
+}) async {
+  if (await comp.hasFinals(careerId)) return null;
+  final slots = await comp.drawSlots(
+    careerId,
+    cycle,
+    CompetitionKind.worldCupFinals,
+  );
+  if (slots.isEmpty) return null;
+  if (slots.any((s) => EuroPlayoffs.occupant(s) == nationId)) {
+    return (ordinal: 2, over: false);
+  }
+  final inUefa = EuroPlayoffs.fromSlots(
+    await comp.drawSlots(
+      careerId,
+      cycle,
+      CompetitionKind.worldCupPlayoffEurope,
+      confederation: Confederation.europe,
+    ),
+  ).any((p) => p.seeds.contains(nationId));
+  final inIc = IcPlayoffs.fromSlots(
+    await comp.drawSlots(careerId, cycle, CompetitionKind.worldCupPlayoff),
+  ).any((p) => IcPlayoffs.members(p).contains(nationId));
+  if (!inUefa && !inIc) return (ordinal: 0, over: true);
+  final beaten = fixtures.any(
+    (f) =>
+        isWcPlayoffRound(f.round) &&
+        f.hasResult &&
+        (f.homeNationId == nationId || f.awayNationId == nationId) &&
+        (f.homeScore! >= f.awayScore! ? f.homeNationId : f.awayNationId) !=
+            nationId,
+  );
+  return (ordinal: 1, over: beaten);
 }
 
 /// [nationId]'s deepest World Championship finish in [fixtures] as an ordinal

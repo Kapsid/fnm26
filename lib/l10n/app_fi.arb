@@ -4471,5 +4471,14 @@
   "euroPlayoffWinnerToGroup": "Voittaja menee lohkoon {group}",
   "euroPlayoffWinnerPlaceholder": "Polun {path} voittaja",
   "euroPlayoffYourGroupIfWin": "Lohkosi, jos voitat polun {path}: lohko {group}",
-  "euroPlayoffBracketHeading": "JATKOKARSINTA"
+  "euroPlayoffBracketHeading": "JATKOKARSINTA",
+  "wcPlayoffIntro": "Kaksitoista lohkovoittajaa on jatkossa. Euroopan viimeiset paikat ratkaistaan neljän joukkueen jatkokarsintapoluilla: parhaat lohkokakkoset ja parhaat vielä jatkoon pääsemättömät Kansakuntien cupin lohkovoittajat, yhden ottelun välierät korkeammin sijoitetun kotona maaliskuussa, sitten yksi finaali.",
+  "icPlayoffIntro": "Kuusi joukkuetta viidestä maanosaliitosta pelaa kahdesta viimeisestä paikasta. Kaksi parhaiten rankattua odottaa polkujen finaaleissa, muut neljä pelaavat välierät, ja kaikki ottelut pelataan isäntämaassa maaliskuussa.",
+  "icPlayoffSeeded": "Suoraan polun finaaliin",
+  "icPlayoffFinalPending": "{nation} vastaan välierän voittaja",
+  "wcPlaceholderUefa": "Euroopan polun {path} voittaja",
+  "wcPlaceholderIc": "Mannertenvälisen polun {path} voittaja",
+  "newsIcPlayoffTitle": "Mannertenvälinen jatkokarsinta: polku {path}",
+  "newsIcPlayoffBodySemi": "Yhden ottelun välierä joukkuetta {opponent} vastaan maaliskuussa isäntämaassa, sitten polun finaali paikasta lopputurnaukseen.",
+  "newsIcPlayoffBodyBye": "Suoraan polun finaaliin maaliskuussa isäntämaassa, vastaan ottelun {first} vastaan {second} voittaja."
 }

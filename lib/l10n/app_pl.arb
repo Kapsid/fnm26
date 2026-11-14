@@ -4471,5 +4471,14 @@
   "euroPlayoffWinnerToGroup": "Zwycięzca trafia do grupy {group}",
   "euroPlayoffWinnerPlaceholder": "Zwycięzca ścieżki {path}",
   "euroPlayoffYourGroupIfWin": "Twoja grupa, jeśli wygrasz ścieżkę {path}: grupa {group}",
-  "euroPlayoffBracketHeading": "BARAŻE"
+  "euroPlayoffBracketHeading": "BARAŻE",
+  "wcPlayoffIntro": "Dwunastu zwycięzców grup ma awans. O ostatnich europejskich miejscach decydują czterozespołowe ścieżki baraży: najlepsze drużyny z drugich miejsc i najlepsi zwycięzcy grup Pucharu Narodów, którzy jeszcze nie awansowali. W marcu jednomeczowe półfinały u wyżej rozstawionego, potem jeden finał.",
+  "icPlayoffIntro": "Sześć drużyn z pięciu konfederacji walczy o ostatnie dwa miejsca. Dwie najwyżej notowane czekają w finałach ścieżek, pozostałe cztery grają półfinały, a wszystkie mecze odbywają się w marcu w kraju gospodarza.",
+  "icPlayoffSeeded": "Rozstawiony od razu w finale ścieżki",
+  "icPlayoffFinalPending": "{nation} kontra zwycięzca półfinału",
+  "wcPlaceholderUefa": "Zwycięzca europejskiej ścieżki {path}",
+  "wcPlaceholderIc": "Zwycięzca interkontynentalnej ścieżki {path}",
+  "newsIcPlayoffTitle": "Baraż interkontynentalny: ścieżka {path}",
+  "newsIcPlayoffBodySemi": "Jednomeczowy półfinał z {opponent} w marcu w kraju gospodarza, potem finał ścieżki o miejsce w turnieju finałowym.",
+  "newsIcPlayoffBodyBye": "Rozstawiony od razu w marcowym finale ścieżki w kraju gospodarza, przeciwko zwycięzcy meczu {first} kontra {second}."
 }

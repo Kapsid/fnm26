@@ -17919,4 +17919,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'PLAY-OFFS';
+
+  @override
+  String get wcPlayoffIntro =>
+      'The twelve group winners are through. Europe\'s last places are won in four-team play-off paths: the best runners-up and the best Nations Cup group winners still out, one-leg semi-finals at the higher seed in March, then a one-off final.';
+
+  @override
+  String get icPlayoffIntro =>
+      'Six sides from five confederations for the last two places. The two best-ranked wait in the path finals, the other four play semi-finals, and every match is played in the host nation in March.';
+
+  @override
+  String get icPlayoffSeeded => 'Seeded into the path final';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation v the winner of the semi-final';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return 'European Path $path winner';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return 'Intercontinental Path $path winner';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return 'Intercontinental play-off: Path $path';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return 'A one-off semi-final against $opponent in March, played in the host nation, then the path final for a place at the finals.';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return 'Seeded straight into the path final in March, played in the host nation, against the winner of $first v $second.';
+  }
 }

@@ -18281,4 +18281,45 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'BARÁŽ';
+
+  @override
+  String get wcPlayoffIntro =>
+      'Dvanáct vítězů skupin je jistých. O posledních evropských místech rozhodnou čtyřčlenné cesty baráže: nejlepší týmy z druhých míst a nejlepší vítězové skupin Poháru národů, kteří ještě nepostoupili. V březnu jednozápasová semifinále u výše nasazeného, pak jediné finále.';
+
+  @override
+  String get icPlayoffIntro =>
+      'Šest týmů z pěti konfederací hraje o poslední dvě místa. Dva nejlépe postavení čekají ve finále cest, zbylí čtyři hrají semifinále a všechny zápasy se v březnu hrají v pořadatelské zemi.';
+
+  @override
+  String get icPlayoffSeeded => 'Nasazen přímo do finále cesty';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation proti vítězi semifinále';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return 'Vítěz evropské cesty $path';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return 'Vítěz mezikontinentální cesty $path';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return 'Mezikontinentální baráž: cesta $path';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return 'Jednozápasové semifinále proti týmu $opponent v březnu v pořadatelské zemi, pak finále cesty o místo na závěrečném turnaji.';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return 'Nasazen přímo do březnového finále cesty v pořadatelské zemi proti vítězi zápasu $first proti $second.';
+  }
 }

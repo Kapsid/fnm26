@@ -17579,4 +17579,45 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'เพลย์ออฟ';
+
+  @override
+  String get wcPlayoffIntro =>
+      'แชมป์กลุ่มทั้งสิบสองทีมผ่านเข้ารอบแล้ว ที่นั่งสุดท้ายของยุโรปตัดสินในสายเพลย์ออฟสี่ทีม ได้แก่ทีมอันดับสองที่ดีที่สุดและแชมป์กลุ่มเนชันส์คัพที่ดีที่สุดที่ยังไม่ผ่านเข้ารอบ รอบรองชนะเลิศนัดเดียวในบ้านของทีมวางที่สูงกว่าในเดือนมีนาคม จากนั้นนัดชิงนัดเดียว';
+
+  @override
+  String get icPlayoffIntro =>
+      'หกทีมจากห้าสมาพันธ์ชิงสองที่นั่งสุดท้าย สองทีมอันดับสูงสุดรออยู่ในนัดชิงของสาย อีกสี่ทีมเล่นรอบรองชนะเลิศ และทุกนัดเล่นที่ประเทศเจ้าภาพในเดือนมีนาคม';
+
+  @override
+  String get icPlayoffSeeded => 'เข้าสู่นัดชิงของสายโดยตรง';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation พบผู้ชนะรอบรองชนะเลิศ';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return 'ผู้ชนะสายยุโรป $path';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return 'ผู้ชนะสายข้ามทวีป $path';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return 'เพลย์ออฟข้ามทวีป: สาย $path';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return 'รอบรองชนะเลิศนัดเดียวพบ $opponent ในเดือนมีนาคมที่ประเทศเจ้าภาพ จากนั้นนัดชิงของสายเพื่อชิงที่นั่งในรอบสุดท้าย';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return 'เข้าสู่นัดชิงของสายในเดือนมีนาคมที่ประเทศเจ้าภาพโดยตรง พบผู้ชนะระหว่าง $first กับ $second';
+  }
 }

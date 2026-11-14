@@ -17831,4 +17831,45 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'PÓTSELEJTEZŐK';
+
+  @override
+  String get wcPlayoffIntro =>
+      'A tizenkét csoportgyőztes továbbjutott. Európa utolsó helyeiről négycsapatos pótselejtező ágakon dől el: a legjobb csoportmásodikok és a Nemzetek Kupája még ki nem jutott legjobb csoportgyőztesei, márciusban egymérkőzéses elődöntők a magasabban kiemelt otthonában, majd egy döntő.';
+
+  @override
+  String get icPlayoffIntro =>
+      'Öt konföderáció hat csapata küzd az utolsó két helyért. A két legjobban rangsorolt az ágak döntőjében vár, a másik négy elődöntőt játszik, és minden mérkőzést márciusban a rendező országban játszanak.';
+
+  @override
+  String get icPlayoffSeeded => 'Egyenesen az ág döntőjében';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation az elődöntő győztese ellen';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return 'A(z) $path. európai ág győztese';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return 'A(z) $path. interkontinentális ág győztese';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return 'Interkontinentális pótselejtező: $path. ág';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return 'Egymérkőzéses elődöntő $opponent ellen márciusban a rendező országban, majd az ág döntője a világbajnoki helyért.';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return 'Egyenesen az ág márciusi döntőjében a rendező országban, a(z) $first és $second párharc győztese ellen.';
+  }
 }

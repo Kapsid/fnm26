@@ -4471,5 +4471,14 @@
   "euroPlayoffWinnerToGroup": "Der Sieger kommt in Gruppe {group}",
   "euroPlayoffWinnerPlaceholder": "Sieger Weg {path}",
   "euroPlayoffYourGroupIfWin": "Deine Gruppe bei einem Sieg in Weg {path}: Gruppe {group}",
-  "euroPlayoffBracketHeading": "PLAY-OFFS"
+  "euroPlayoffBracketHeading": "PLAY-OFFS",
+  "wcPlayoffIntro": "Die zwölf Gruppensieger sind durch. Europas letzte Plätze werden in Play-off-Wegen mit vier Teams ausgespielt: die besten Gruppenzweiten und die besten noch nicht qualifizierten Gruppensieger des Pokals der Nationen, Halbfinals mit nur einem Spiel beim besser gesetzten Team im März, dann ein einzelnes Finale.",
+  "icPlayoffIntro": "Sechs Teams aus fünf Konföderationen spielen um die letzten zwei Plätze. Die zwei bestplatzierten warten in den Weg-Finals, die anderen vier spielen Halbfinals, und jedes Spiel findet im März im Gastgeberland statt.",
+  "icPlayoffSeeded": "Direkt im Weg-Finale gesetzt",
+  "icPlayoffFinalPending": "{nation} gegen den Sieger des Halbfinals",
+  "wcPlaceholderUefa": "Sieger europäischer Weg {path}",
+  "wcPlaceholderIc": "Sieger interkontinentaler Weg {path}",
+  "newsIcPlayoffTitle": "Interkontinentales Play-off: Weg {path}",
+  "newsIcPlayoffBodySemi": "Ein Halbfinale mit nur einem Spiel gegen {opponent} im März im Gastgeberland, dann das Weg-Finale um einen Platz bei der Endrunde.",
+  "newsIcPlayoffBodyBye": "Direkt im Weg-Finale im März im Gastgeberland gesetzt, gegen den Sieger von {first} gegen {second}."
 }

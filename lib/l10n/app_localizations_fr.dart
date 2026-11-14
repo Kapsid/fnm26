@@ -18050,4 +18050,45 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'BARRAGES';
+
+  @override
+  String get wcPlayoffIntro =>
+      'Les douze vainqueurs de groupe sont qualifiés. Les dernières places européennes se jouent dans des voies de barrage à quatre : les meilleurs deuxièmes et les meilleurs vainqueurs de groupe de la Coupe des Nations encore non qualifiés, demi-finales sur un match chez la tête de série en mars, puis une finale sèche.';
+
+  @override
+  String get icPlayoffIntro =>
+      'Six équipes de cinq confédérations pour les deux dernières places. Les deux mieux classées attendent en finale de voie, les quatre autres jouent les demi-finales, et tous les matchs ont lieu dans le pays hôte en mars.';
+
+  @override
+  String get icPlayoffSeeded => 'Directement en finale de voie';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation contre le vainqueur de la demi-finale';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return 'Vainqueur de la voie européenne $path';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return 'Vainqueur de la voie intercontinentale $path';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return 'Barrage intercontinental : voie $path';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return 'Une demi-finale sèche contre $opponent en mars, dans le pays hôte, puis la finale de voie pour une place en phase finale.';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return 'Directement en finale de voie en mars, dans le pays hôte, contre le vainqueur de $first contre $second.';
+  }
 }

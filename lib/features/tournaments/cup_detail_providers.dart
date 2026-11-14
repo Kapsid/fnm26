@@ -3,6 +3,10 @@
 // is copyrighted intellectual property; do not reproduce, clone or help
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/domain/services/competition/calendar2.dart';
+import 'package:fnm/domain/services/competition/qualification_format.dart';
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
+import 'package:fnm/features/tournaments/wc_playoff_providers.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -66,7 +70,27 @@ class CupData {
     this.topCups = const [],
     this.myNationIds = const {},
     this.wcHostBerths = const {},
+    this.europePlayoffPaths = 0,
+    this.playoffs,
+    this.pendingDraw,
+    this.pendingKeys = const {},
   });
+
+  /// Europe's play-off paths on the calendar2 rhythm (0 in any other cycle):
+  /// every group winner goes through and that many places are won in the
+  /// paths, so the qualifying tables paint the runners-up as play-off sides
+  /// rather than a best-runners-up ladder.
+  final int europePlayoffPaths;
+
+  /// The World Championship's calendar2 play-offs, once drawn, or null.
+  final WcPlayoffData? playoffs;
+
+  /// The finals' groups as drawn before the play-offs, each placeholder's
+  /// slot by a pseudo id (see [pendingKeys]), while the finals do not exist.
+  final FinalsDraw? pendingDraw;
+
+  /// [pendingDraw]'s placeholder ids and their stored keys.
+  final Map<int, String> pendingKeys;
 
   /// How many of each confederation's nations host this World Cup: their
   /// places come out of its qualifying allocation (see
@@ -415,7 +439,10 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
   // which shortens those qualifying ladders.
   final wcHostBerths = await worldCupHostBerthsFor(ref, careerId);
   var playoffTies = const <PlayoffTie>[];
-  if (await comp.allQualifyingPlayed(careerId)) {
+  // A calendar2 cycle plays its play-off as fixtures (see `playoffs`): no
+  // modelled bracket.
+  if (await comp.allQualifyingPlayed(careerId) &&
+      !await isCalendar2(comp, careerId, career.cyclePointer)) {
     final grouped = <Confederation, List<List<GroupStanding>>>{};
     for (final t in groups) {
       (grouped[t.confederation] ??= []).add(t.standings);
@@ -506,7 +533,35 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
   final topGames = await topRecords((r) => r.games);
   final topCups = await topRecords((r) => r.finals);
 
+  // The calendar2 play-offs and the finals' stored draw with its
+  // placeholders, before the finals exist.
+  final playoffs = await readWcPlayoffs(
+    comp,
+    careerId: careerId,
+    cycle: career.cyclePointer,
+    playerNationId: career.nationId,
+    nations: nations,
+  );
+  final pending = playoffs == null || finalsGroups.isNotEmpty
+      ? null
+      : wcDrawWithPlaceholders(playoffs.finalsSlots);
+  final cal2 = await isCalendar2(comp, careerId, career.cyclePointer);
+  final euroGroupCount = groups
+      .where((g) => g.confederation == Confederation.europe)
+      .length;
+
   return CupData(
+    europePlayoffPaths: !cal2
+        ? 0
+        : UefaWcPlayoffs.pathCount(
+            berths: QualificationFormat.forConfederation(
+              Confederation.europe,
+            ).qualifyingBerths(wcHostBerths[Confederation.europe] ?? 0),
+            groupCount: euroGroupCount,
+          ),
+    playoffs: playoffs,
+    pendingDraw: pending?.draw,
+    pendingKeys: pending?.keys ?? const {},
     groups: groups,
     nations: nations,
     playerNationId: career.nationId,

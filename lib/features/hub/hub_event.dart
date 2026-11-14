@@ -9,6 +9,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/domain/services/competition/tournament_calendar.dart';
 import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/util/nation_label.dart';
@@ -170,7 +171,12 @@ String _callUpLabel(AppLocalizations l, Fixture f) {
     'GROUP' => l.hubCallUpWorldCup,
     'CGROUP' => l.hubCallUpFinals,
     'NGROUP' => l.hubCallUpNationsCup,
-    EuroPlayoffs.semiRound || EuroPlayoffs.finalRound => l.hubCallUpPlayoffs,
+    EuroPlayoffs.semiRound ||
+    EuroPlayoffs.finalRound ||
+    UefaWcPlayoffs.semiRound ||
+    UefaWcPlayoffs.finalRound ||
+    IcPlayoffs.semiRound ||
+    IcPlayoffs.finalRound => l.hubCallUpPlayoffs,
     'CQ' || null => l.hubCallUpQualifying,
     _ => l.hubCallUpGeneric,
   };
@@ -444,11 +450,66 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
   //     (a Grudge lost in the group need not wait for the finals).
   if (campaign != null && await verdictPending()) return verdictEvent;
 
+  // 1y. A calendar2 cycle draws the World Championship's play-offs and its
+  //     finals (with a placeholder for every path's winner) the day
+  //     qualifying is played out, stored, and each draw is a ceremony of its
+  //     own, in order: Europe's paths, the intercontinental paths, then the
+  //     finals' groups. Every manager watches all three: every one of them
+  //     decides somebody's place at the finals.
+  final wcCal2 = await isCalendar2(comp, careerId, cycle);
+  if (wcCal2 &&
+      (await comp.drawSlots(
+        careerId,
+        cycle,
+        CompetitionKind.worldCupFinals,
+      )).isNotEmpty) {
+    if ((await comp.drawSlots(
+          careerId,
+          cycle,
+          CompetitionKind.worldCupPlayoffEurope,
+          confederation: Confederation.europe,
+        )).isNotEmpty &&
+        !await comp.hasWatchedDraw(
+          careerId,
+          cycle,
+          UefaWcPlayoffs.drawWatchedKind,
+        )) {
+      return HubEvent(
+        kind: HubEventKind.draw,
+        label: l.hubEventWatchEuroPlayoffDraw,
+        icon: Icons.casino,
+        route: '${Routes.wcPlayoffDraw}?careerId=$careerId',
+      );
+    }
+    if ((await comp.drawSlots(
+          careerId,
+          cycle,
+          CompetitionKind.worldCupPlayoff,
+        )).isNotEmpty &&
+        !await comp.hasWatchedDraw(careerId, cycle, worldCupPlayoffKind)) {
+      return HubEvent(
+        kind: HubEventKind.draw,
+        label: l.hubEventIntercontinentalPlayoff,
+        icon: Icons.swap_calls_rounded,
+        route: '${Routes.wcPlayoffDraw}?careerId=$careerId&ic=1',
+      );
+    }
+    if (!await comp.hasWatchedDraw(careerId, cycle, worldCupDrawKind)) {
+      return HubEvent(
+        kind: HubEventKind.draw,
+        label: l.hubEventWatchWcDraw,
+        icon: Icons.casino,
+        route: '${Routes.finalsDraw}?careerId=$careerId',
+      );
+    }
+  }
+
   // 1z. The intercontinental play-off that settled the last two finals berths,
   //     shown as its own step BEFORE the finals draw (not buried on it). Gated
   //     on qualifying being complete so the tie results are real, never an empty
   //     "no play-off this cycle" screen shown before the games were played.
-  if (hub.hasFinals &&
+  if (!wcCal2 &&
+      hub.hasFinals &&
       await comp.allQualifyingPlayed(careerId) &&
       !await comp.hasWatchedDraw(careerId, cycle, worldCupPlayoffKind)) {
     return HubEvent(
@@ -460,7 +521,8 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
   }
 
   // 2. The World Cup finals draw, once it exists and the play-off has been seen.
-  if (hub.hasFinals &&
+  if (!wcCal2 &&
+      hub.hasFinals &&
       await comp.hasWatchedDraw(careerId, cycle, worldCupPlayoffKind) &&
       !await comp.hasWatchedDraw(careerId, cycle, worldCupDrawKind)) {
     return HubEvent(
@@ -810,6 +872,28 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       route:
           '${Routes.continental}?careerId=$careerId'
           '&conf=${Confederation.europe.name}',
+    );
+  }
+
+  // 2c-iii. The World Championship's play-offs (calendar2) are being played
+  //         and the manager is not in them, or is out: every path, European
+  //         and intercontinental, is stepped a day at a time and watched. An
+  //         entrant is told from ANY unplayed play-off fixture of his (the
+  //         twin of the guard in [SeasonService]).
+  final wcPlayoffDate = await wcPlayoffWatchDate(comp, careerId, cycle);
+  final playerInWcPlayoff = hub.fixtures.any(
+    (f) => !f.hasResult && isWcPlayoffRound(f.round),
+  );
+  if (wcPlayoffDate != null &&
+      !playerInWcPlayoff &&
+      !friendliesFirst(wcPlayoffDate) &&
+      (next == null || !wcPlayoffDate.isAfter(next.date))) {
+    if (crossesVote(wcPlayoffDate)) return advanceToVote;
+    return HubEvent(
+      kind: HubEventKind.watchTournament,
+      label: l.hubEventWatchEuroPlayoffs,
+      icon: Icons.fast_forward_rounded,
+      route: '${Routes.cup}?careerId=$careerId',
     );
   }
 

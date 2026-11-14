@@ -73,3 +73,30 @@ Future<void> drawSecondNationsCupNow(ProviderContainer c, int careerId) async {
     nationsCupDrawKind,
   );
 }
+
+/// Every confederation's World Championship qualifying, drawn now on the
+/// career's seed and the static ranking, and marked as made so the season
+/// does not draw it again.
+Future<void> drawWcQualifyingNow(ProviderContainer c, int careerId) async {
+  final career = (await c.read(careerRepositoryProvider).byId(careerId))!;
+  final comp = c.read(competitionRepositoryProvider);
+  if (await comp.hasTournament(
+    careerId,
+    CompetitionKind.worldCupQualifying,
+    confederation: Confederation.europe,
+  )) {
+    return;
+  }
+  await CareerService.buildWorldCupQualifying(
+    comp: comp,
+    nations: await c.read(nationRepositoryProvider).forCareer(careerId),
+    careerId: careerId,
+    nationId: career.nationId,
+    rngSeed: career.rngSeed,
+    cycle: career.cyclePointer,
+    wcYear: CareerService.worldCupYear(career.cyclePointer),
+  );
+  for (final kind in const ['cal2:wcqSouthAmerica', 'cal2:wcq']) {
+    await comp.markDrawWatched(careerId, career.cyclePointer, kind);
+  }
+}

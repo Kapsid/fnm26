@@ -4471,5 +4471,14 @@
   "euroPlayoffWinnerToGroup": "Pemenang masuk ke Grup {group}",
   "euroPlayoffWinnerPlaceholder": "Pemenang Jalur {path}",
   "euroPlayoffYourGroupIfWin": "Grupmu jika menang di Jalur {path}: Grup {group}",
-  "euroPlayoffBracketHeading": "PLAY-OFF"
+  "euroPlayoffBracketHeading": "PLAY-OFF",
+  "wcPlayoffIntro": "Dua belas juara grup sudah lolos. Tempat terakhir Eropa ditentukan di jalur play-off empat tim: runner-up terbaik dan juara grup Piala Bangsa-Bangsa terbaik yang belum lolos, semifinal satu laga di kandang unggulan lebih tinggi pada bulan Maret, lalu satu final.",
+  "icPlayoffIntro": "Enam tim dari lima konfederasi memperebutkan dua tempat terakhir. Dua tim berperingkat terbaik menunggu di final jalur, empat lainnya bermain semifinal, dan semua laga dimainkan di negara tuan rumah pada bulan Maret.",
+  "icPlayoffSeeded": "Langsung ke final jalur",
+  "icPlayoffFinalPending": "{nation} melawan pemenang semifinal",
+  "wcPlaceholderUefa": "Pemenang Jalur Eropa {path}",
+  "wcPlaceholderIc": "Pemenang Jalur Antarbenua {path}",
+  "newsIcPlayoffTitle": "Play-off antarbenua: Jalur {path}",
+  "newsIcPlayoffBodySemi": "Semifinal satu laga melawan {opponent} pada bulan Maret di negara tuan rumah, lalu final jalur untuk tempat di putaran final.",
+  "newsIcPlayoffBodyBye": "Langsung ke final jalur pada bulan Maret di negara tuan rumah, melawan pemenang {first} lawan {second}."
 }

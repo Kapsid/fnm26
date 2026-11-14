@@ -12,6 +12,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/features/tournaments/draw_ceremony.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
+import 'package:fnm/features/tournaments/wc_playoff_draw_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -27,6 +28,10 @@ class FinalsDrawScreen extends ConsumerStatefulWidget {
 
   /// The tablet pots view: the four pots side by side.
   static const Key potsLandscapeKey = Key('finalsDraw.potsLandscape');
+
+  /// The line telling a manager in the play-offs where his path's winner
+  /// was drawn.
+  static const Key pathNoteKey = Key('finalsDraw.pathNote');
 
   @override
   ConsumerState<FinalsDrawScreen> createState() => _FinalsDrawScreenState();
@@ -71,17 +76,49 @@ class _FinalsDrawScreenState extends ConsumerState<FinalsDrawScreen> {
             return Center(child: Text(l.tourContDrawNotReady));
           }
           if (_drawing) {
-            return DrawCeremony(
+            final ceremony = DrawCeremony(
               groups: [
                 for (final g in data.draw.groups)
                   (name: g.name, nationIds: g.nationIds),
               ],
               nations: data.nations,
-              highlightNationId: data.playerNationId,
+              highlightNationId: data.highlightId,
+              placeholders: {
+                for (final e in data.placeholderKeys.entries)
+                  e.key: (
+                    letter: wcPlaceholderMark(e.value),
+                    label: wcPlaceholderLabel(l, e.value),
+                  ),
+              },
               careerId: widget.careerId,
               potCount: 4,
               landscape: landscape,
               onContinue: () => _finishWatched(data),
+            );
+            // A manager in the play-offs follows his path's winner: say so.
+            final key = data.playerPathKey;
+            final group = data.playerPathGroup;
+            if (key == null || group == null) return ceremony;
+            return Column(
+              children: [
+                Container(
+                  key: FinalsDrawScreen.pathNoteKey,
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  color: AppColors.primary.withValues(alpha: 0.12),
+                  child: Text(
+                    l.euroPlayoffYourGroupIfWin(wcPlaceholderMark(key), group),
+                    textAlign: TextAlign.center,
+                    style: AppTypography.labelMedium.copyWith(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ),
+                Expanded(child: ceremony),
+              ],
             );
           }
           // Once watched, the ceremony never re-animates — the pots view leads
@@ -140,8 +177,16 @@ class _PotsPreview extends StatelessWidget {
       });
     }
 
-    String code(int id) => data.nations[id]?.code ?? '??';
-    String name(int id) => data.nations[id]?.name ?? '—';
+    // A placeholder (a play-off path's winner) is a plain ball with its
+    // path's mark, named for the path.
+    String code(int id) => switch (data.placeholderKeys[id]) {
+      final key? => '$drawPlaceholderPrefix${wcPlaceholderMark(key)}',
+      null => data.nations[id]?.code ?? '??',
+    };
+    String name(int id) => switch (data.placeholderKeys[id]) {
+      final key? => wcPlaceholderLabel(l, key),
+      null => data.nations[id]?.name ?? '—',
+    };
 
     if (landscape) {
       return Column(
@@ -180,7 +225,7 @@ class _PotsPreview extends StatelessWidget {
                               _potRow(
                                 code(id),
                                 name(id),
-                                isPlayer: id == data.playerNationId,
+                                isPlayer: id == data.highlightId,
                               ),
                           ],
                         ),
@@ -249,7 +294,7 @@ class _PotsPreview extends StatelessWidget {
                         _potRow(
                           code(id),
                           name(id),
-                          isPlayer: id == data.playerNationId,
+                          isPlayer: id == data.highlightId,
                         ),
                     ],
                   ),
@@ -287,7 +332,7 @@ class _PotsPreview extends StatelessWidget {
           : null,
       child: Row(
         children: [
-          FlagDisc(code, size: 20, highlighted: isPlayer),
+          DrawFlag(code, size: 20, highlighted: isPlayer),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(

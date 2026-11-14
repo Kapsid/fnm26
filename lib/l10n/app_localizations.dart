@@ -27067,6 +27067,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'PLAY-OFFS'**
   String get euroPlayoffBracketHeading;
+
+  /// Intro on the World Championship European play-off draw screen.
+  ///
+  /// In en, this message translates to:
+  /// **'The twelve group winners are through. Europe\'s last places are won in four-team play-off paths: the best runners-up and the best Nations Cup group winners still out, one-leg semi-finals at the higher seed in March, then a one-off final.'**
+  String get wcPlayoffIntro;
+
+  /// Intro on the intercontinental play-off draw screen (calendar2: every match a real fixture).
+  ///
+  /// In en, this message translates to:
+  /// **'Six sides from five confederations for the last two places. The two best-ranked wait in the path finals, the other four play semi-finals, and every match is played in the host nation in March.'**
+  String get icPlayoffIntro;
+
+  /// Label above the seeded side waiting in an intercontinental play-off path final.
+  ///
+  /// In en, this message translates to:
+  /// **'Seeded into the path final'**
+  String get icPlayoffSeeded;
+
+  /// An intercontinental path final not yet set: the seed against the semi-final winner.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} v the winner of the semi-final'**
+  String icPlayoffFinalPending(String nation);
+
+  /// A ball in the World Championship finals draw standing for a European play-off path's winner (path is a letter A to D).
+  ///
+  /// In en, this message translates to:
+  /// **'European Path {path} winner'**
+  String wcPlaceholderUefa(String path);
+
+  /// A ball in the World Championship finals draw standing for an intercontinental play-off path's winner (path is 1 or 2).
+  ///
+  /// In en, this message translates to:
+  /// **'Intercontinental Path {path} winner'**
+  String wcPlaceholderIc(String path);
+
+  /// Inbox title: the manager's nation is in the intercontinental play-off (path is 1 or 2).
+  ///
+  /// In en, this message translates to:
+  /// **'Intercontinental play-off: Path {path}'**
+  String newsIcPlayoffTitle(String path);
+
+  /// Inbox body: the manager's intercontinental play-off path, starting with a semi-final.
+  ///
+  /// In en, this message translates to:
+  /// **'A one-off semi-final against {opponent} in March, played in the host nation, then the path final for a place at the finals.'**
+  String newsIcPlayoffBodySemi(String opponent);
+
+  /// Inbox body: the manager's nation is seeded straight into an intercontinental path final.
+  ///
+  /// In en, this message translates to:
+  /// **'Seeded straight into the path final in March, played in the host nation, against the winner of {first} v {second}.'**
+  String newsIcPlayoffBodyBye(String first, String second);
 }
 
 class _AppLocalizationsDelegate

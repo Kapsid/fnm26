@@ -4471,5 +4471,14 @@
   "euroPlayoffWinnerToGroup": "Ang panalo ay mapupunta sa Group {group}",
   "euroPlayoffWinnerPlaceholder": "Panalo sa Landas {path}",
   "euroPlayoffYourGroupIfWin": "Ang group mo kung mananalo ka sa Landas {path}: Group {group}",
-  "euroPlayoffBracketHeading": "MGA PLAY-OFF"
+  "euroPlayoffBracketHeading": "MGA PLAY-OFF",
+  "wcPlayoffIntro": "Pasok na ang labindalawang nanalo sa grupo. Ang huling mga puwesto ng Europa ay pagpapasyahan sa mga landas ng play-off na may apat na koponan: ang pinakamahusay na pumangalawa at ang pinakamahusay na nanalo sa grupo ng Nations Cup na hindi pa pasok, semi-final na isang laro sa tahanan ng mas mataas na seed sa Marso, pagkatapos ay isang final.",
+  "icPlayoffIntro": "Anim na koponan mula sa limang kompederasyon para sa huling dalawang puwesto. Naghihintay ang dalawang pinakamataas ang ranggo sa mga final ng landas, naglalaro ng semi-final ang apat pa, at lahat ng laro ay sa bansang punong-abala sa Marso.",
+  "icPlayoffSeeded": "Diretso sa final ng landas",
+  "icPlayoffFinalPending": "{nation} laban sa panalo sa semi-final",
+  "wcPlaceholderUefa": "Panalo sa Landas ng Europa {path}",
+  "wcPlaceholderIc": "Panalo sa Intercontinental na Landas {path}",
+  "newsIcPlayoffTitle": "Intercontinental na play-off: Landas {path}",
+  "newsIcPlayoffBodySemi": "Isang laro na semi-final laban sa {opponent} sa Marso, sa bansang punong-abala, pagkatapos ay ang final ng landas para sa puwesto sa finals.",
+  "newsIcPlayoffBodyBye": "Diretso sa final ng landas sa Marso, sa bansang punong-abala, laban sa panalo ng {first} laban sa {second}."
 }

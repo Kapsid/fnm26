@@ -4471,5 +4471,14 @@
   "euroPlayoffWinnerToGroup": "Vinneren kommer i gruppe {group}",
   "euroPlayoffWinnerPlaceholder": "Vinner av sti {path}",
   "euroPlayoffYourGroupIfWin": "Gruppen din hvis du vinner sti {path}: gruppe {group}",
-  "euroPlayoffBracketHeading": "PLAY-OFF"
+  "euroPlayoffBracketHeading": "PLAY-OFF",
+  "wcPlayoffIntro": "De tolv gruppevinnerne er klare. Europas siste plasser avgjøres i playoff-veier med fire lag: de beste gruppetoerne og de beste gruppevinnerne i Nasjonscupen som ennå ikke er klare, semifinaler over én kamp hos det høyest seedede laget i mars, deretter én finale.",
+  "icPlayoffIntro": "Seks lag fra fem konføderasjoner spiller om de to siste plassene. De to høyest rangerte venter i veifinalene, de fire andre spiller semifinaler, og alle kampene spilles i vertslandet i mars.",
+  "icPlayoffSeeded": "Direkte til veifinalen",
+  "icPlayoffFinalPending": "{nation} mot vinneren av semifinalen",
+  "wcPlaceholderUefa": "Vinner europeisk vei {path}",
+  "wcPlaceholderIc": "Vinner interkontinental vei {path}",
+  "newsIcPlayoffTitle": "Interkontinental playoff: vei {path}",
+  "newsIcPlayoffBodySemi": "En semifinale over én kamp mot {opponent} i mars, i vertslandet, deretter veifinalen om en plass i sluttspillet.",
+  "newsIcPlayoffBodyBye": "Direkte til veifinalen i mars, i vertslandet, mot vinneren av {first} mot {second}."
 }

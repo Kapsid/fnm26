@@ -17849,4 +17849,45 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'PLAY-OFF';
+
+  @override
+  String get wcPlayoffIntro =>
+      'Dua belas juara kumpulan sudah layak. Tempat terakhir Eropah ditentukan dalam laluan play-off empat pasukan: naib juara terbaik dan juara kumpulan Piala Negara-Negara terbaik yang belum layak, separuh akhir satu perlawanan di tempat pilihan lebih tinggi pada bulan Mac, kemudian satu perlawanan akhir.';
+
+  @override
+  String get icPlayoffIntro =>
+      'Enam pasukan dari lima konfederasi merebut dua tempat terakhir. Dua pasukan ranking terbaik menunggu di perlawanan akhir laluan, empat yang lain bermain separuh akhir, dan semua perlawanan dimainkan di negara tuan rumah pada bulan Mac.';
+
+  @override
+  String get icPlayoffSeeded => 'Terus ke perlawanan akhir laluan';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation menentang pemenang separuh akhir';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return 'Pemenang Laluan Eropah $path';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return 'Pemenang Laluan Antara Benua $path';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return 'Play-off antara benua: Laluan $path';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return 'Separuh akhir satu perlawanan menentang $opponent pada bulan Mac di negara tuan rumah, kemudian perlawanan akhir laluan untuk tempat di pusingan akhir.';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return 'Terus ke perlawanan akhir laluan pada bulan Mac di negara tuan rumah, menentang pemenang $first lawan $second.';
+  }
 }

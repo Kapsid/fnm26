@@ -17794,4 +17794,45 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'प्ले-ऑफ़';
+
+  @override
+  String get wcPlayoffIntro =>
+      'बारह ग्रुप विजेता आगे बढ़ चुके हैं। यूरोप की आखिरी जगहें चार-चार टीमों के प्ले-ऑफ़ पाथ में तय होती हैं: सबसे अच्छी उपविजेता टीमें और नेशंस कप के सबसे अच्छे ग्रुप विजेता जो अभी बाहर हैं, मार्च में ऊँची सीड वाली टीम के मैदान पर एक मैच के सेमीफ़ाइनल, फिर एक ही मैच का फ़ाइनल।';
+
+  @override
+  String get icPlayoffIntro =>
+      'पाँच परिसंघों की छह टीमें आखिरी दो जगहों के लिए। सबसे ऊँची रैंकिंग वाली दो टीमें पाथ फ़ाइनल में इंतज़ार करती हैं, बाकी चार सेमीफ़ाइनल खेलती हैं, और हर मैच मार्च में मेज़बान देश में खेला जाता है।';
+
+  @override
+  String get icPlayoffSeeded => 'सीधे पाथ फ़ाइनल में';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation बनाम सेमीफ़ाइनल का विजेता';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return 'यूरोपीय पाथ $path का विजेता';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return 'अंतर-महाद्वीपीय पाथ $path का विजेता';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return 'अंतर-महाद्वीपीय प्ले-ऑफ़: पाथ $path';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return 'मार्च में मेज़बान देश में $opponent के खिलाफ एक मैच का सेमीफ़ाइनल, फिर फ़ाइनल्स में जगह के लिए पाथ फ़ाइनल।';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return 'मार्च में मेज़बान देश में सीधे पाथ फ़ाइनल में, $first बनाम $second के विजेता के खिलाफ।';
+  }
 }

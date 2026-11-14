@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
@@ -42,6 +43,7 @@ const List<String> _ceremonyKinds = [
   continentalFinalsDrawKind,
   nationsCupDrawKind,
   EuroPlayoffs.drawWatchedKind,
+  UefaWcPlayoffs.drawWatchedKind,
   worldCupPlayoffKind,
   worldCupKickoffKind,
   continentalKickoffKind,
