@@ -52,7 +52,12 @@ void main() {
         // A campaign run's world: no Belarus (DormantNations.forNewCareers),
         // or the two calendars part ways and the comparison means nothing.
         newCareerNations: false,
-        // A campaign run's hosts: drawn without the stadium bars.
+        // A campaign run's hosts: drawn without the stadium bars, and on
+        // the rules its seed was searched under (the manager's nation may
+        // host unbid): with the current rules the two worlds stage the
+        // World Championship in different countries, and the qualifying
+        // pools part ways.
+        currentHostRules: false,
         stadiumHostRules: false,
       );
       // Less the general sponsor's stops: a campaign run has no sponsor (it
