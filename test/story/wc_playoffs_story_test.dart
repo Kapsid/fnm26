@@ -30,7 +30,7 @@ import 'driver.dart';
 ///   in the exact December slot its placeholder was drawn into.
 /// * Northern Ireland wins its League C group in the second Nations Cup,
 ///   misses qualifying and comes in through pot 4.
-/// * Honduras, one of CONCACAF's two best runners-up, plays the
+/// * Curacao, one of CONCACAF's two best runners-up, plays the
 ///   intercontinental play-off in the finals' host nation.
 /// * England qualifies directly, is locked in at the draw and watches every
 ///   path from the stands.
@@ -40,7 +40,7 @@ void main() {
   const seed = 31;
   const poland = 40;
   const northernIreland = 38;
-  const honduras = 86;
+  const curacao = 78;
   final wcYear = CareerService.worldCupYear(0);
   final dates = Calendar2.wcPlayoffs(wcYear);
 
@@ -122,18 +122,25 @@ void main() {
 
     // The ceremonies, in order: Europe's paths, the intercontinental paths,
     // then the finals draw lighting the path's ball where it was drawn.
-    expect((await d.nextEvent()).route, startsWith(Routes.wcPlayoffDraw));
-    await d.step();
-    expect(
-      (await d.nextEvent()).route,
+    // (Whatever else is due on the day, the year's awards, comes first.)
+    final draws = <String>[];
+    for (var i = 0; i < 20 && draws.length < 3; i++) {
+      final e = await d.nextEvent();
+      if (e.kind == HubEventKind.draw) {
+        draws.add(e.route!);
+        if (e.route!.startsWith(Routes.finalsDraw)) {
+          final draw = (await c.read(finalsDrawProvider(id).future))!;
+          expect(draw.playerPathKey, key);
+          expect(draw.playerPathGroup, placeholder.groupName);
+        }
+      }
+      await d.step();
+    }
+    expect(draws, [
+      '${Routes.wcPlayoffDraw}?careerId=$id',
       '${Routes.wcPlayoffDraw}?careerId=$id&ic=1',
-    );
-    await d.step();
-    expect((await d.nextEvent()).route, startsWith(Routes.finalsDraw));
-    final draw = (await c.read(finalsDrawProvider(id).future))!;
-    expect(draw.playerPathKey, key);
-    expect(draw.playerPathGroup, placeholder.groupName);
-    await d.step();
+      '${Routes.finalsDraw}?careerId=$id',
+    ]);
 
     await toFinals(d, comp);
     final mine = [
@@ -268,7 +275,7 @@ void main() {
     final db = storyDb();
     final c = storyContainer(db);
     addTearDown(c.dispose);
-    final d = await StoryDriver.start(c, seed, nationId: honduras);
+    final d = await StoryDriver.start(c, seed, nationId: curacao);
     final id = d.careerId;
     final comp = c.read(competitionRepositoryProvider);
     final careers = c.read(careerRepositoryProvider);
@@ -281,9 +288,9 @@ void main() {
       await comp.drawSlots(id, 0, CompetitionKind.worldCupPlayoff),
     );
     final path = ic
-        .where((p) => IcPlayoffs.members(p).contains(honduras))
+        .where((p) => IcPlayoffs.members(p).contains(curacao))
         .firstOrNull;
-    expect(path, isNotNull, reason: 'Honduras in the play-off (re-find)');
+    expect(path, isNotNull, reason: 'Curacao in the play-off (re-find)');
     expect(
       (await finalsSlots(
         comp,
@@ -296,13 +303,13 @@ void main() {
 
     await toFinals(d, comp);
     final mine = [
-      for (final f in await comp.cycleFixturesForNation(id, honduras))
+      for (final f in await comp.cycleFixturesForNation(id, curacao))
         if (IcPlayoffs.rounds.contains(f.round)) f,
     ]..sort((a, b) => a.date.compareTo(b.date));
     expect(mine, isNotEmpty);
     expect(
       mine.first.date,
-      path!.seed == honduras ? dates.finalDay : dates.semis,
+      path!.seed == curacao ? dates.finalDay : dates.semis,
     );
     final career = (await careers.byId(id))!;
     final nations = await c.read(nationRepositoryProvider).forCareer(id);
@@ -330,14 +337,14 @@ void main() {
     final slot = (await finalsSlots(comp, id)).singleWhere(
       (s) => s.placeholderKey == IcPlayoffs.placeholderKey(path.path),
     );
-    final through = slot.resolvedNationId == honduras;
+    final through = slot.resolvedNationId == curacao;
     final keys = await comp.messageKeys(id);
     expect(keys.contains('wcmiss:$wcYear'), !through);
     final run = await worldRun(
       comp: comp,
       careerId: id,
-      nationId: honduras,
-      fixtures: await comp.cycleFixturesForNation(id, honduras),
+      nationId: curacao,
+      fixtures: await comp.cycleFixturesForNation(id, curacao),
       cycle: 0,
     );
     expect(run.ordinal, through ? 2 : 0);
