@@ -368,6 +368,7 @@ abstract final class Routes {
     hostDraw,
     qualifyingDraw,
     finalsDraw,
+    wcPlayoffDraw,
     continentalDraw,
     nationsCupDraw,
     tournamentKickoff,

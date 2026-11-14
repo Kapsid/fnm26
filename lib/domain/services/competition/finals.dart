@@ -304,8 +304,26 @@ abstract final class WorldCupFinals {
       return (tally[gi][c] ?? 0) < (caps[c] ?? 1 << 30);
     }
 
-    bool place(int i) {
-      if (i == n) return true;
+    // With multi-confederation placeholders (calendar2 World Championship)
+    // the most constrained balls are placed first, and the search gives up
+    // after a bounded number of tries rather than walk a factorial tree
+    // when no legal placement exists. Without them both are exactly as
+    // before.
+    final seq = anyOf.isEmpty
+        ? [for (var i = 0; i < n; i++) i]
+        : [
+            for (var i = 0; i < n; i++)
+              if (i < pinnedCount || anyOf.containsKey(slice[i])) i,
+            for (var i = 0; i < n; i++)
+              if (i >= pinnedCount && !anyOf.containsKey(slice[i])) i,
+          ];
+    var budget = anyOf.isEmpty ? -1 : 20000;
+
+    bool place(int k) {
+      if (k == n) return true;
+      if (budget == 0) return false;
+      if (budget > 0) budget--;
+      final i = seq[k];
       final team = slice[i];
       // A pinned host is not free to move: it takes its own group or nothing.
       final choices = i < pinnedCount ? [i] : order;
@@ -319,7 +337,7 @@ abstract final class WorldCupFinals {
         for (final m in multi ?? const <Confederation>{}) {
           tally[gi][m] = (tally[gi][m] ?? 0) + 1;
         }
-        if (place(i + 1)) return true;
+        if (place(k + 1)) return true;
         taken[gi] = false;
         out[i] = -1;
         if (c != null) tally[gi][c] = tally[gi][c]! - 1;
