@@ -4471,5 +4471,14 @@
   "euroPlayoffWinnerToGroup": "Vítěz postupuje do skupiny {group}",
   "euroPlayoffWinnerPlaceholder": "Vítěz cesty {path}",
   "euroPlayoffYourGroupIfWin": "Vaše skupina, pokud vyhrajete cestu {path}: skupina {group}",
-  "euroPlayoffBracketHeading": "BARÁŽ"
+  "euroPlayoffBracketHeading": "BARÁŽ",
+  "wcPlayoffIntro": "Dvanáct vítězů skupin je jistých. O posledních evropských místech rozhodnou čtyřčlenné cesty baráže: nejlepší týmy z druhých míst a nejlepší vítězové skupin Poháru národů, kteří ještě nepostoupili. V březnu jednozápasová semifinále u výše nasazeného, pak jediné finále.",
+  "icPlayoffIntro": "Šest týmů z pěti konfederací hraje o poslední dvě místa. Dva nejlépe postavení čekají ve finále cest, zbylí čtyři hrají semifinále a všechny zápasy se v březnu hrají v pořadatelské zemi.",
+  "icPlayoffSeeded": "Nasazen přímo do finále cesty",
+  "icPlayoffFinalPending": "{nation} proti vítězi semifinále",
+  "wcPlaceholderUefa": "Vítěz evropské cesty {path}",
+  "wcPlaceholderIc": "Vítěz mezikontinentální cesty {path}",
+  "newsIcPlayoffTitle": "Mezikontinentální baráž: cesta {path}",
+  "newsIcPlayoffBodySemi": "Jednozápasové semifinále proti týmu {opponent} v březnu v pořadatelské zemi, pak finále cesty o místo na závěrečném turnaji.",
+  "newsIcPlayoffBodyBye": "Nasazen přímo do březnového finále cesty v pořadatelské zemi proti vítězi zápasu {first} proti {second}."
 }

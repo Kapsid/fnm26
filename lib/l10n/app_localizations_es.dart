@@ -17979,4 +17979,45 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'REPESCA';
+
+  @override
+  String get wcPlayoffIntro =>
+      'Los doce ganadores de grupo están clasificados. Las últimas plazas europeas se deciden en rutas de repesca de cuatro equipos: los mejores segundos y los mejores ganadores de grupo de la Copa de Naciones aún fuera, semifinales a partido único en casa del mejor cabeza de serie en marzo y luego una final única.';
+
+  @override
+  String get icPlayoffIntro =>
+      'Seis selecciones de cinco confederaciones por las dos últimas plazas. Las dos mejor clasificadas esperan en las finales de ruta, las otras cuatro juegan semifinales y todos los partidos se disputan en el país anfitrión en marzo.';
+
+  @override
+  String get icPlayoffSeeded => 'Directo a la final de la ruta';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation contra el ganador de la semifinal';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return 'Ganador de la ruta europea $path';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return 'Ganador de la ruta intercontinental $path';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return 'Repesca intercontinental: ruta $path';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return 'Una semifinal a partido único contra $opponent en marzo, en el país anfitrión, y luego la final de la ruta por una plaza en la fase final.';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return 'Directo a la final de la ruta en marzo, en el país anfitrión, contra el ganador de $first contra $second.';
+  }
 }

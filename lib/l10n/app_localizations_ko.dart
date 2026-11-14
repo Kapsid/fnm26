@@ -17302,4 +17302,45 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => '플레이오프';
+
+  @override
+  String get wcPlayoffIntro =>
+      '12개 조 1위는 본선 진출이 확정되었습니다. 유럽의 남은 자리는 4팀 플레이오프 패스에서 결정됩니다. 성적이 좋은 조 2위 팀들과 아직 진출하지 못한 네이션스컵 조 1위 상위 팀들이 나서며, 3월에 상위 시드의 홈에서 단판 준결승, 이어 단판 결승을 치릅니다.';
+
+  @override
+  String get icPlayoffIntro =>
+      '5개 연맹의 6개 팀이 마지막 두 자리를 다툽니다. 랭킹 상위 두 팀은 패스 결승에서 기다리고, 나머지 네 팀이 준결승을 치르며, 모든 경기는 3월에 개최국에서 열립니다.';
+
+  @override
+  String get icPlayoffSeeded => '패스 결승에 시드 배정';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation 대 준결승 승자';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return '유럽 패스 $path 승자';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return '대륙간 패스 $path 승자';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return '대륙간 플레이오프: 패스 $path';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return '3월에 개최국에서 $opponent와 단판 준결승, 이어 본선 진출을 건 패스 결승.';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return '3월 개최국에서 열리는 패스 결승에 바로 진출, $first 대 $second 승자와 맞붙습니다.';
+  }
 }

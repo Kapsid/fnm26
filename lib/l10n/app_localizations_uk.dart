@@ -18217,4 +18217,45 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'ПЛЕЙ-ОФ';
+
+  @override
+  String get wcPlayoffIntro =>
+      'Дванадцять переможців груп пройшли. Останні європейські місця розіграють у шляхах плей-оф із чотирьох команд: найкращі другі місця і найкращі переможці груп Кубка націй, які ще не пройшли, півфінали в один матч у вищого сіяного в березні, потім один фінал.';
+
+  @override
+  String get icPlayoffIntro =>
+      'Шість команд із п\'яти конфедерацій грають за два останні місця. Дві найвище рейтинговані чекають у фіналах шляхів, інші чотири грають півфінали, і всі матчі проходять у країні-господарці в березні.';
+
+  @override
+  String get icPlayoffSeeded => 'Одразу у фіналі шляху';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation проти переможця півфіналу';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return 'Переможець європейського шляху $path';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return 'Переможець міжконтинентального шляху $path';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return 'Міжконтинентальний плей-оф: шлях $path';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return 'Один півфінальний матч проти $opponent у березні в країні-господарці, потім фінал шляху за місце у фінальному турнірі.';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return 'Одразу у фіналі шляху в березні в країні-господарці, проти переможця пари $first проти $second.';
+  }
 }

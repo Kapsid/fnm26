@@ -27,6 +27,7 @@ import 'package:fnm/domain/repositories/tactic_familiarity_repository.dart';
 import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
@@ -36,6 +37,7 @@ import 'package:fnm/domain/services/competition/kickoff_keys.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
+import 'package:fnm/domain/services/competition/qualification_format.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/competition/tournament_calendar.dart';
 import 'package:fnm/domain/services/match/ai_substitutions.dart';
@@ -154,6 +156,7 @@ import 'package:fnm/features/messages/transfer_report.dart';
 part 'season_cycle.dart';
 part 'season_euro_playoffs.dart';
 part 'season_finals.dart';
+part 'season_wc_playoffs.dart';
 part 'season_rollover.dart';
 
 /// Everything the Hub screen needs for a save, in one fetch.
@@ -300,6 +303,20 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
     final wcHosts = group.kind == CompetitionKind.worldCupQualifying
         ? (await worldCupHostBerthsFor(ref, careerId))[conf] ?? 0
         : 0;
+    // Europe's runners-up head for the play-off paths on the calendar2
+    // rhythm.
+    final wcPaths = group.kind != CompetitionKind.worldCupQualifying
+        ? 0
+        : UefaWcPlayoffs.pathsFor(
+            calendar2: await isCalendar2(
+              compRepo,
+              careerId,
+              career.cyclePointer,
+            ),
+            confederation: conf,
+            hosts: wcHosts,
+            groupCount: group.groupCount,
+          );
     final adv = GroupAdvancement.forGroup(
       kind: group.kind,
       confederation: conf,
@@ -307,15 +324,23 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
       continentalSize: size,
       isLowestLeague: isLowestLeague,
       worldCupHosts: wcHosts,
+      worldCupPlayoffPaths: wcPaths,
     );
     groupDirect = adv.direct;
     groupContention = adv.contention;
     groupRelegate = adv.relegate;
     if (group.kind == CompetitionKind.worldCupQualifying) {
-      groupPlayoff = GroupAdvancement.worldCupPlayoffNations(conf, [
-        for (final t in await compRepo.allGroupTablesByConfederation(careerId))
-          if (t.confederation == conf) t.standings,
-      ], hosts: wcHosts);
+      groupPlayoff = GroupAdvancement.worldCupPlayoffNations(
+        conf,
+        [
+          for (final t in await compRepo.allGroupTablesByConfederation(
+            careerId,
+          ))
+            if (t.confederation == conf) t.standings,
+        ],
+        hosts: wcHosts,
+        playoffPaths: wcPaths,
+      );
     }
     final gk = groupDrawKind(group.kind);
     if (gk != null) {
@@ -2403,6 +2428,34 @@ class SeasonService {
         await _catchUp(
           careerId,
           playoffDate,
+          career.rngSeed,
+          excludeNationId: career.nationId,
+        );
+        break;
+      }
+
+      // 1a-ii. The World Championship's play-offs (calendar2: Europe's paths
+      //        and the intercontinental play-off) are being played and the
+      //        manager is not in them, or is out: step them a day at a time,
+      //        so every path is watched. Told from ANY unplayed play-off
+      //        fixture of his (see the Euro guard above). Mirrors
+      //        nextEventProvider.
+      final wcPlayoffDate = await wcPlayoffWatchDate(
+        _comp,
+        careerId,
+        career.cyclePointer,
+      );
+      final playerInWcPlayoff = playerFixtures.any(
+        (f) => !f.hasResult && isWcPlayoffRound(f.round),
+      );
+      if (wcPlayoffDate != null &&
+          !playerInWcPlayoff &&
+          (next == null || !wcPlayoffDate.isAfter(next.date))) {
+        if (await stopForVote(wcPlayoffDate)) break;
+        await _careers.updateInGameDate(careerId, wcPlayoffDate);
+        await _catchUp(
+          careerId,
+          wcPlayoffDate,
           career.rngSeed,
           excludeNationId: career.nationId,
         );

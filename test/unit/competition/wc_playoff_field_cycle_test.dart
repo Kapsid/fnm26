@@ -6,6 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
+import 'package:fnm/domain/services/competition/calendar2.dart';
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
+import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -48,6 +51,7 @@ const List<String> _ceremonyKinds = [
   continentalFinalsDrawKind,
   nationsCupDrawKind,
   EuroPlayoffs.drawWatchedKind,
+  UefaWcPlayoffs.drawWatchedKind,
   worldCupPlayoffKind,
   worldCupKickoffKind,
   continentalKickoffKind,
@@ -83,21 +87,25 @@ void main() {
     'Peru',
     'Germany',
   ];
-  final cases = <(String, int)>[
-    ('Germany', 11),
-    ('El Salvador', 7),
-    ('United Arab Emirates', 99),
-    ('New Zealand', 31337),
+  // The last field says whether the career opens on the calendar2 rhythm
+  // (its play-offs real fixtures, see `UefaWcPlayoffs`); a career opened
+  // without it plays its first cycle on the legacy modelled play-off and
+  // switches at the rollover.
+  final cases = <(String, int, bool)>[
+    ('Germany', 11, true),
+    ('El Salvador', 7, false),
+    ('United Arab Emirates', 99, true),
+    ('New Zealand', 31337, false),
     if (sweep)
       for (var i = 0; i < 32; i++)
-        (managedPool[i % managedPool.length], 1000 + i * 7919),
+        (managedPool[i % managedPool.length], 1000 + i * 7919, i.isEven),
   ];
   const cycles = 2;
 
-  for (final (managed, seed) in cases) {
+  for (final (managed, seed, calendar2) in cases) {
     test(
-      'managing $managed (seed $seed): every finals = direct + hosts + '
-      'play-off winners',
+      'managing $managed (seed $seed${calendar2 ? '' : ', legacy first'}): '
+      'every finals = direct + hosts + play-off winners',
       () async {
         final db = createTestDatabase();
         final container = ProviderContainer(
@@ -121,6 +129,7 @@ void main() {
                       nationId: player.id,
                       managerName: 'M',
                       rngSeed: seed,
+                      calendar2: calendar2,
                     ))
                 .valueOrNull!;
         final season = container.read(seasonServiceProvider);
@@ -276,6 +285,10 @@ Future<void> _checkField(
     for (final t in await comp.finalsGroupTables(careerId))
       for (final s in t.standings) s.nationId,
   };
+  if (await isCalendar2(comp, careerId, c.cyclePointer)) {
+    await _checkCalendar2Field(comp, careerId, c.cyclePointer, field, label);
+    return;
+  }
   container.invalidate(intercontinentalPlayoffProvider);
   final view = await container.read(
     intercontinentalPlayoffProvider(careerId).future,
@@ -334,4 +347,67 @@ Future<void> _checkField(
     expect(field, isNot(contains(l)), reason: '$label: ${nm(l)} lost');
   }
   expect(field, expected, reason: label);
+}
+
+/// A calendar2 cycle: the field is exactly its stored draw, every
+/// placeholder filled by the winner of its path's final (played), and no
+/// beaten play-off side in it.
+Future<void> _checkCalendar2Field(
+  CompetitionRepository comp,
+  int careerId,
+  int cycle,
+  Set<int> field,
+  String label,
+) async {
+  final slots = await comp.drawSlots(
+    careerId,
+    cycle,
+    CompetitionKind.worldCupFinals,
+  );
+  expect(slots, hasLength(48), reason: '$label: the stored draw');
+  expect(
+    {for (final s in slots) EuroPlayoffs.occupant(s)},
+    field,
+    reason: '$label: the finals are the stored draw',
+  );
+  final finals = [
+    ...await comp.fixturesByRound(
+      careerId,
+      UefaWcPlayoffs.finalRound,
+      kind: CompetitionKind.worldCupPlayoffEurope,
+      confederation: Confederation.europe,
+    ),
+    ...await comp.fixturesByRound(
+      careerId,
+      IcPlayoffs.finalRound,
+      kind: CompetitionKind.worldCupPlayoff,
+    ),
+  ];
+  final semis = [
+    ...await comp.fixturesByRound(
+      careerId,
+      UefaWcPlayoffs.semiRound,
+      kind: CompetitionKind.worldCupPlayoffEurope,
+      confederation: Confederation.europe,
+    ),
+    ...await comp.fixturesByRound(
+      careerId,
+      IcPlayoffs.semiRound,
+      kind: CompetitionKind.worldCupPlayoff,
+    ),
+  ];
+  expect(
+    finals.length,
+    slots.where((s) => s.placeholderKey != null).length,
+    reason: '$label: one played final a placeholder',
+  );
+  for (final f in [...finals, ...semis]) {
+    expect(f.hasResult, isTrue, reason: label);
+    final won = f.homeScore! >= f.awayScore! ? f.homeNationId : f.awayNationId;
+    final beaten = won == f.homeNationId ? f.awayNationId : f.homeNationId;
+    expect(field, isNot(contains(beaten)), reason: '$label: $beaten out');
+    if (finals.contains(f)) {
+      expect(field, contains(won), reason: '$label: $won won its path');
+    }
+  }
 }

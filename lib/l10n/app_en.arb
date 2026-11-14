@@ -27548,5 +27548,74 @@
   "euroPlayoffBracketHeading": "PLAY-OFFS",
   "@euroPlayoffBracketHeading": {
     "description": "Heading above the play-off paths on the cup screen. Upper case."
+  },
+  "wcPlayoffIntro": "The twelve group winners are through. Europe's last places are won in four-team play-off paths: the best runners-up and the best Nations Cup group winners still out, one-leg semi-finals at the higher seed in March, then a one-off final.",
+  "@wcPlayoffIntro": {
+    "description": "Intro on the World Championship European play-off draw screen."
+  },
+  "icPlayoffIntro": "Six sides from five confederations for the last two places. The two best-ranked wait in the path finals, the other four play semi-finals, and every match is played in the host nation in March.",
+  "@icPlayoffIntro": {
+    "description": "Intro on the intercontinental play-off draw screen (calendar2: every match a real fixture)."
+  },
+  "icPlayoffSeeded": "Seeded into the path final",
+  "@icPlayoffSeeded": {
+    "description": "Label above the seeded side waiting in an intercontinental play-off path final."
+  },
+  "icPlayoffFinalPending": "{nation} v the winner of the semi-final",
+  "@icPlayoffFinalPending": {
+    "description": "An intercontinental path final not yet set: the seed against the semi-final winner.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "wcPlaceholderUefa": "European Path {path} winner",
+  "@wcPlaceholderUefa": {
+    "description": "A ball in the World Championship finals draw standing for a European play-off path's winner (path is a letter A to D).",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "wcPlaceholderIc": "Intercontinental Path {path} winner",
+  "@wcPlaceholderIc": {
+    "description": "A ball in the World Championship finals draw standing for an intercontinental play-off path's winner (path is 1 or 2).",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "newsIcPlayoffTitle": "Intercontinental play-off: Path {path}",
+  "@newsIcPlayoffTitle": {
+    "description": "Inbox title: the manager's nation is in the intercontinental play-off (path is 1 or 2).",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "newsIcPlayoffBodySemi": "A one-off semi-final against {opponent} in March, played in the host nation, then the path final for a place at the finals.",
+  "@newsIcPlayoffBodySemi": {
+    "description": "Inbox body: the manager's intercontinental play-off path, starting with a semi-final.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "newsIcPlayoffBodyBye": "Seeded straight into the path final in March, played in the host nation, against the winner of {first} v {second}.",
+  "@newsIcPlayoffBodyBye": {
+    "description": "Inbox body: the manager's nation is seeded straight into an intercontinental path final.",
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "second": {
+        "type": "String"
+      }
+    }
   }
 }

@@ -18018,4 +18018,45 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'PLAY-OFFS';
+
+  @override
+  String get wcPlayoffIntro =>
+      'Die zwölf Gruppensieger sind durch. Europas letzte Plätze werden in Play-off-Wegen mit vier Teams ausgespielt: die besten Gruppenzweiten und die besten noch nicht qualifizierten Gruppensieger des Pokals der Nationen, Halbfinals mit nur einem Spiel beim besser gesetzten Team im März, dann ein einzelnes Finale.';
+
+  @override
+  String get icPlayoffIntro =>
+      'Sechs Teams aus fünf Konföderationen spielen um die letzten zwei Plätze. Die zwei bestplatzierten warten in den Weg-Finals, die anderen vier spielen Halbfinals, und jedes Spiel findet im März im Gastgeberland statt.';
+
+  @override
+  String get icPlayoffSeeded => 'Direkt im Weg-Finale gesetzt';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation gegen den Sieger des Halbfinals';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return 'Sieger europäischer Weg $path';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return 'Sieger interkontinentaler Weg $path';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return 'Interkontinentales Play-off: Weg $path';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return 'Ein Halbfinale mit nur einem Spiel gegen $opponent im März im Gastgeberland, dann das Weg-Finale um einen Platz bei der Endrunde.';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return 'Direkt im Weg-Finale im März im Gastgeberland gesetzt, gegen den Sieger von $first gegen $second.';
+  }
 }

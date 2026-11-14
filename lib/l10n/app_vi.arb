@@ -4471,5 +4471,14 @@
   "euroPlayoffWinnerToGroup": "Đội thắng sẽ vào bảng {group}",
   "euroPlayoffWinnerPlaceholder": "Đội thắng nhánh {path}",
   "euroPlayoffYourGroupIfWin": "Bảng của bạn nếu thắng nhánh {path}: bảng {group}",
-  "euroPlayoffBracketHeading": "PLAY-OFF"
+  "euroPlayoffBracketHeading": "PLAY-OFF",
+  "wcPlayoffIntro": "Mười hai đội nhất bảng đã giành vé. Các suất cuối của châu Âu được định đoạt trong các nhánh play-off bốn đội: những đội nhì bảng xuất sắc nhất và những đội nhất bảng Cúp các Quốc gia xuất sắc nhất chưa giành vé, bán kết một trận trên sân đội hạt giống cao hơn vào tháng Ba, rồi một trận chung kết.",
+  "icPlayoffIntro": "Sáu đội từ năm liên đoàn tranh hai suất cuối cùng. Hai đội xếp hạng cao nhất chờ sẵn ở chung kết nhánh, bốn đội còn lại đá bán kết, và mọi trận đấu diễn ra tại nước chủ nhà vào tháng Ba.",
+  "icPlayoffSeeded": "Vào thẳng chung kết nhánh",
+  "icPlayoffFinalPending": "{nation} gặp đội thắng bán kết",
+  "wcPlaceholderUefa": "Đội thắng nhánh châu Âu {path}",
+  "wcPlaceholderIc": "Đội thắng nhánh liên lục địa {path}",
+  "newsIcPlayoffTitle": "Play-off liên lục địa: nhánh {path}",
+  "newsIcPlayoffBodySemi": "Một trận bán kết duy nhất gặp {opponent} vào tháng Ba tại nước chủ nhà, sau đó là chung kết nhánh để giành suất dự vòng chung kết.",
+  "newsIcPlayoffBodyBye": "Vào thẳng chung kết nhánh vào tháng Ba tại nước chủ nhà, gặp đội thắng trận {first} gặp {second}."
 }

@@ -18228,4 +18228,45 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'PLAY-OFF';
+
+  @override
+  String get wcPlayoffIntro =>
+      'Dvanaest pobjednika skupina je prošlo. O posljednjim europskim mjestima odlučuju doigravanja u stazama od četiri momčadi: najbolje drugoplasirane i najbolji pobjednici skupina Kupa nacija koji još nisu prošli, polufinala na jednu utakmicu kod više nositelja u ožujku, zatim jedno finale.';
+
+  @override
+  String get icPlayoffIntro =>
+      'Šest momčadi iz pet konfederacija igra za posljednja dva mjesta. Dvije najbolje rangirane čekaju u finalima staza, ostale četiri igraju polufinala, a sve se utakmice igraju u zemlji domaćinu u ožujku.';
+
+  @override
+  String get icPlayoffSeeded => 'Izravno u finalu staze';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation protiv pobjednika polufinala';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return 'Pobjednik europske staze $path';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return 'Pobjednik interkontinentalne staze $path';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return 'Interkontinentalno doigravanje: staza $path';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return 'Polufinale na jednu utakmicu protiv $opponent u ožujku, u zemlji domaćinu, zatim finale staze za mjesto na završnom turniru.';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return 'Izravno u finalu staze u ožujku, u zemlji domaćinu, protiv pobjednika utakmice $first protiv $second.';
+  }
 }

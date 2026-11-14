@@ -124,8 +124,19 @@ abstract final class Calendar2 {
   /// finals on 26 March, the Euro 2024 dates. Both draws (the paths, and the
   /// finals' groups with a placeholder for each path's winner) are made the
   /// day Euro qualifying is played out, in November W-3.
-  static ({DateTime semis, DateTime finalDay}) euroPlayoffs(int wcYear) =>
-      (semis: DateTime(wcYear - 2, 3, 21), finalDay: DateTime(wcYear - 2, 3, 26));
+  static ({DateTime semis, DateTime finalDay}) euroPlayoffs(int wcYear) => (
+    semis: DateTime(wcYear - 2, 3, 21),
+    finalDay: DateTime(wcYear - 2, 3, 26),
+  );
+
+  /// The World Championship's play-offs (see `UefaWcPlayoffs` and
+  /// `IcPlayoffs`): Europe's paths and the intercontinental play-off share
+  /// the late-March window of the finals' year, every semi-final on 26
+  /// March and every path final on 31 March (the 2026 dates). Their draws,
+  /// and the finals' draw with a placeholder for each path's winner, are made
+  /// the day World Championship qualifying is played out, in November W-1.
+  static ({DateTime semis, DateTime finalDay}) wcPlayoffs(int wcYear) =>
+      (semis: DateTime(wcYear, 3, 26), finalDay: DateTime(wcYear, 3, 31));
 
   /// World Championship qualifying's span for [conf]. CONMEBOL's league of
   /// eighteen matchdays opens after the Copa (September W-2) and ends in

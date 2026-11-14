@@ -15,9 +15,11 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/features/friendlies/other_friendlies_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
@@ -75,19 +77,37 @@ roundResultsViewProvider = FutureProvider.autoDispose.family<RoundResultsView?, 
     final wcHosts = results.kind == CompetitionKind.worldCupQualifying
         ? (await worldCupHostBerthsFor(ref, careerId))[conf] ?? 0
         : 0;
+    final wcPaths = results.kind != CompetitionKind.worldCupQualifying
+        ? 0
+        : UefaWcPlayoffs.pathsFor(
+            calendar2: await isCalendar2(
+              ref.watch(competitionRepositoryProvider),
+              careerId,
+              career.cyclePointer,
+            ),
+            confederation: conf,
+            hosts: wcHosts,
+            groupCount: results.groupCount,
+          );
     final adv = GroupAdvancement.forGroup(
       kind: results.kind,
       confederation: conf,
       groupCount: results.groupCount,
       continentalSize: size,
       worldCupHosts: wcHosts,
+      worldCupPlayoffPaths: wcPaths,
     );
     direct = adv.direct;
     contention = adv.contention;
     if (results.kind == CompetitionKind.worldCupQualifying) {
-      playoff = GroupAdvancement.worldCupPlayoffNations(conf, [
-        for (final g in results.groups) g.standings,
-      ], hosts: wcHosts);
+      playoff = GroupAdvancement.worldCupPlayoffNations(
+        conf,
+        [
+          for (final g in results.groups) g.standings,
+        ],
+        hosts: wcHosts,
+        playoffPaths: wcPaths,
+      );
     }
     relegate = adv.relegate;
     // The Nations Cup's lowest league has nowhere to fall — its groups show no

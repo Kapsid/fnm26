@@ -10,6 +10,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
@@ -53,6 +54,10 @@ const _knockoutRounds = <String, ({int order, String label})>{
   'NFINAL': (order: 3, label: 'Final'),
   'EPSF': (order: 0, label: 'Semi-finals'),
   'EPFINAL': (order: 1, label: 'Final'),
+  'UPSF': (order: 0, label: 'Semi-finals'),
+  'UPFINAL': (order: 1, label: 'Final'),
+  'ICSF': (order: 0, label: 'Semi-finals'),
+  'ICFINAL': (order: 1, label: 'Final'),
 };
 
 /// The localised name for a knockout [round] code (empty/unknown = group stage),
@@ -132,6 +137,21 @@ latestRoundPopupProvider = FutureProvider.autoDispose.family<RoundPopup?, int>((
             rounds: const [EuroPlayoffs.semiRound, EuroPlayoffs.finalRound],
             confederation: conf,
           ),
+        // The World Championship's play-offs (a calendar2 cycle), watched by
+        // every manager who is not in them: Europe's paths and the
+        // intercontinental play-off.
+        (
+          kind: CompetitionKind.worldCupPlayoffEurope,
+          name: UefaWcPlayoffs.name,
+          rounds: const [UefaWcPlayoffs.semiRound, UefaWcPlayoffs.finalRound],
+          confederation: Confederation.europe,
+        ),
+        (
+          kind: CompetitionKind.worldCupPlayoff,
+          name: IcPlayoffs.name,
+          rounds: const [IcPlayoffs.semiRound, IcPlayoffs.finalRound],
+          confederation: null,
+        ),
         // The manager's own confederation's Nations Cup, under its own name
         // and with its own finals rounds (Africa's knockouts open with a
         // Round of 16); none for a confederation that runs no cup.

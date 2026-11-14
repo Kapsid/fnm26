@@ -1157,7 +1157,16 @@ extension SeasonCycle on SeasonService {
   Future<void> _progressWorldCup(int careerId) async {
     if (!await _comp.hasFinals(careerId)) {
       if (await _comp.allQualifyingPlayed(careerId)) {
-        await _progressPlayoff(careerId);
+        // A calendar2 cycle plays its play-offs as fixtures in March, the
+        // finals drawn (and stored) before them; every other cycle keeps
+        // the legacy play-off exactly.
+        final career = await _careers.byId(careerId);
+        if (career != null &&
+            await isCalendar2(_comp, careerId, career.cyclePointer)) {
+          await _progressWcPlayoffs(careerId);
+        } else {
+          await _progressPlayoff(careerId);
+        }
       }
       return;
     }

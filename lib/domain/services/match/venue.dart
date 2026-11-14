@@ -42,6 +42,12 @@ const _continentalFinalsRounds = {
 /// neutral ground in a third country — as the real fixture is.
 const _clashRound = 'FFINAL';
 
+/// The intercontinental play-off on the calendar2 rhythm (`IcPlayoffs`):
+/// all five matches in the World Championship's host nation, in March of the
+/// finals' year. The legacy play-off's rounds (`POSF`, `POFINAL`) stay
+/// home-and-away.
+const _icPlayoffRounds = {'ICSF', 'ICFINAL'};
+
 /// The showpiece rounds, played at the tournament's marquee ground (the primary
 /// host's largest stadium) rather than moving around the country.
 const _showpieceRounds = {'FINAL', 'CFINAL', '3RD', 'C3RD', _clashRound};
@@ -53,6 +59,7 @@ bool isNeutralFinalsRound(String? round) =>
     round != null &&
     (round == _clashRound ||
         _wcFinalsRounds.contains(round) ||
+        _icPlayoffRounds.contains(round) ||
         _continentalFinalsRounds.contains(round));
 
 /// The third country that stages a Continental Clash: a well-supported nation
@@ -122,7 +129,8 @@ MatchVenue venueForFixture({
     );
   }
 
-  final isWc = _wcFinalsRounds.contains(round);
+  final isWc =
+      _wcFinalsRounds.contains(round) || _icPlayoffRounds.contains(round);
   final isCont = _continentalFinalsRounds.contains(round);
   if (!isWc && !isCont) {
     // Nations Cup groups and friendlies are genuine home-and-away games.
@@ -181,7 +189,7 @@ HostGroundPlan? groundPlanForFixture({
 }) {
   final round = fixture.round;
   if (round == null) return null;
-  if (_wcFinalsRounds.contains(round)) {
+  if (_wcFinalsRounds.contains(round) || _icPlayoffRounds.contains(round)) {
     return WorldCupHosts.worldCupGroundPlan(
       year: fixture.date.year,
       nations: nations,

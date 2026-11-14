@@ -4471,5 +4471,14 @@
   "euroPlayoffWinnerToGroup": "A győztes a(z) {group} csoportba kerül",
   "euroPlayoffWinnerPlaceholder": "A(z) {path} ág győztese",
   "euroPlayoffYourGroupIfWin": "A csoportod, ha megnyered a(z) {path} ágat: {group} csoport",
-  "euroPlayoffBracketHeading": "PÓTSELEJTEZŐK"
+  "euroPlayoffBracketHeading": "PÓTSELEJTEZŐK",
+  "wcPlayoffIntro": "A tizenkét csoportgyőztes továbbjutott. Európa utolsó helyeiről négycsapatos pótselejtező ágakon dől el: a legjobb csoportmásodikok és a Nemzetek Kupája még ki nem jutott legjobb csoportgyőztesei, márciusban egymérkőzéses elődöntők a magasabban kiemelt otthonában, majd egy döntő.",
+  "icPlayoffIntro": "Öt konföderáció hat csapata küzd az utolsó két helyért. A két legjobban rangsorolt az ágak döntőjében vár, a másik négy elődöntőt játszik, és minden mérkőzést márciusban a rendező országban játszanak.",
+  "icPlayoffSeeded": "Egyenesen az ág döntőjében",
+  "icPlayoffFinalPending": "{nation} az elődöntő győztese ellen",
+  "wcPlaceholderUefa": "A(z) {path}. európai ág győztese",
+  "wcPlaceholderIc": "A(z) {path}. interkontinentális ág győztese",
+  "newsIcPlayoffTitle": "Interkontinentális pótselejtező: {path}. ág",
+  "newsIcPlayoffBodySemi": "Egymérkőzéses elődöntő {opponent} ellen márciusban a rendező országban, majd az ág döntője a világbajnoki helyért.",
+  "newsIcPlayoffBodyBye": "Egyenesen az ág márciusi döntőjében a rendező országban, a(z) {first} és {second} párharc győztese ellen."
 }

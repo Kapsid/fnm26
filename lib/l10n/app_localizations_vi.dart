@@ -17733,4 +17733,45 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'PLAY-OFF';
+
+  @override
+  String get wcPlayoffIntro =>
+      'Mười hai đội nhất bảng đã giành vé. Các suất cuối của châu Âu được định đoạt trong các nhánh play-off bốn đội: những đội nhì bảng xuất sắc nhất và những đội nhất bảng Cúp các Quốc gia xuất sắc nhất chưa giành vé, bán kết một trận trên sân đội hạt giống cao hơn vào tháng Ba, rồi một trận chung kết.';
+
+  @override
+  String get icPlayoffIntro =>
+      'Sáu đội từ năm liên đoàn tranh hai suất cuối cùng. Hai đội xếp hạng cao nhất chờ sẵn ở chung kết nhánh, bốn đội còn lại đá bán kết, và mọi trận đấu diễn ra tại nước chủ nhà vào tháng Ba.';
+
+  @override
+  String get icPlayoffSeeded => 'Vào thẳng chung kết nhánh';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation gặp đội thắng bán kết';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return 'Đội thắng nhánh châu Âu $path';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return 'Đội thắng nhánh liên lục địa $path';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return 'Play-off liên lục địa: nhánh $path';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return 'Một trận bán kết duy nhất gặp $opponent vào tháng Ba tại nước chủ nhà, sau đó là chung kết nhánh để giành suất dự vòng chung kết.';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return 'Vào thẳng chung kết nhánh vào tháng Ba tại nước chủ nhà, gặp đội thắng trận $first gặp $second.';
+  }
 }

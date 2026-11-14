@@ -49,9 +49,16 @@ import 'package:fnm/l10n/app_localizations.dart';
       round: null,
       trophy: 'continentalclash',
     ),
-    'POSF' || 'POFINAL' => (
+    'POSF' || 'POFINAL' || 'ICSF' || 'ICFINAL' => (
       competition: l.compIntercontinentalPlayoff,
-      round: round == 'POFINAL' ? l.resultsStageFinal : l.resultsStageSemiFinal,
+      round: round == 'POFINAL' || round == 'ICFINAL'
+          ? l.resultsStageFinal
+          : l.resultsStageSemiFinal,
+      trophy: null,
+    ),
+    'UPSF' || 'UPFINAL' => (
+      competition: l.compPlayoffs(l.compWorldCup),
+      round: round == 'UPFINAL' ? l.resultsStageFinal : l.resultsStageSemiFinal,
       trophy: null,
     ),
     'CQ' => (

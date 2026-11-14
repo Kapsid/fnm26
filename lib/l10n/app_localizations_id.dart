@@ -17796,4 +17796,45 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'PLAY-OFF';
+
+  @override
+  String get wcPlayoffIntro =>
+      'Dua belas juara grup sudah lolos. Tempat terakhir Eropa ditentukan di jalur play-off empat tim: runner-up terbaik dan juara grup Piala Bangsa-Bangsa terbaik yang belum lolos, semifinal satu laga di kandang unggulan lebih tinggi pada bulan Maret, lalu satu final.';
+
+  @override
+  String get icPlayoffIntro =>
+      'Enam tim dari lima konfederasi memperebutkan dua tempat terakhir. Dua tim berperingkat terbaik menunggu di final jalur, empat lainnya bermain semifinal, dan semua laga dimainkan di negara tuan rumah pada bulan Maret.';
+
+  @override
+  String get icPlayoffSeeded => 'Langsung ke final jalur';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation melawan pemenang semifinal';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return 'Pemenang Jalur Eropa $path';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return 'Pemenang Jalur Antarbenua $path';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return 'Play-off antarbenua: Jalur $path';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return 'Semifinal satu laga melawan $opponent pada bulan Maret di negara tuan rumah, lalu final jalur untuk tempat di putaran final.';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return 'Langsung ke final jalur pada bulan Maret di negara tuan rumah, melawan pemenang $first lawan $second.';
+  }
 }

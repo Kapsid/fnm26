@@ -17972,4 +17972,45 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get euroPlayoffBracketHeading => 'ПЛЕЙОФИ';
+
+  @override
+  String get wcPlayoffIntro =>
+      'Дванадесетте победители в групите са класирани. Последните европейски места се решават в баражни пътеки от по четири отбора: най-добрите втори и най-добрите победители в групите на Купата на нациите, които още не са класирани, полуфинали в един мач при по-високо поставения през март, после един финал.';
+
+  @override
+  String get icPlayoffIntro =>
+      'Шест отбора от пет конфедерации за последните две места. Двата най-високо класирани чакат във финалите на пътеките, другите четири играят полуфинали, и всички мачове се играят в страната домакин през март.';
+
+  @override
+  String get icPlayoffSeeded => 'Направо във финала на пътеката';
+
+  @override
+  String icPlayoffFinalPending(String nation) {
+    return '$nation срещу победителя от полуфинала';
+  }
+
+  @override
+  String wcPlaceholderUefa(String path) {
+    return 'Победител в европейска пътека $path';
+  }
+
+  @override
+  String wcPlaceholderIc(String path) {
+    return 'Победител в междуконтинентална пътека $path';
+  }
+
+  @override
+  String newsIcPlayoffTitle(String path) {
+    return 'Междуконтинентален бараж: пътека $path';
+  }
+
+  @override
+  String newsIcPlayoffBodySemi(String opponent) {
+    return 'Полуфинал в един мач срещу $opponent през март в страната домакин, после финалът на пътеката за място на финалите.';
+  }
+
+  @override
+  String newsIcPlayoffBodyBye(String first, String second) {
+    return 'Направо във финала на пътеката през март в страната домакин, срещу победителя от $first срещу $second.';
+  }
 }

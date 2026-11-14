@@ -40,10 +40,15 @@ abstract final class GroupAdvancement {
     Confederation confederation,
     int groupCount, {
     required int hosts,
+
+    /// Places the confederation decides in its own play-off paths (Europe on
+    /// the calendar2 rhythm, see `UefaWcPlayoffs`): the groups hand out that
+    /// many fewer, and the runners-up are play-off sides, not a ladder.
+    int playoffPaths = 0,
   }) {
     final fmt = QualificationFormat.forConfederation(confederation);
     final groups = groupCount < 1 ? 1 : groupCount;
-    final berths = fmt.qualifyingBerths(hosts);
+    final berths = (fmt.qualifyingBerths(hosts) - playoffPaths).clamp(0, 99);
     final full = berths ~/ groups; // positions that all go through
     final rest = berths % groups; // best of the next position
     // Play-off entrants come from the same ladder, so the contested position is
@@ -65,8 +70,21 @@ abstract final class GroupAdvancement {
     Confederation confederation,
     List<List<GroupStanding>> groups, {
     required int hosts,
+
+    /// Europe's play-off paths on the calendar2 rhythm (see
+    /// [worldCupQualifying]): the best runners-up, three a path, are the
+    /// sides headed for them.
+    int playoffPaths = 0,
   }) {
     final fmt = QualificationFormat.forConfederation(confederation);
+    if (playoffPaths > 0) {
+      final berths = (fmt.qualifyingBerths(hosts) - playoffPaths).clamp(0, 99);
+      final direct = Qualification.qualifiers(groups, berths);
+      return Qualification.qualifiers(
+        groups,
+        berths + 3 * playoffPaths,
+      ).skip(direct.length).toSet();
+    }
     if (fmt.playoffEntrants <= 0) return const {};
     final berths = fmt.qualifyingBerths(hosts);
     final direct = Qualification.qualifiers(groups, berths);
@@ -137,6 +155,7 @@ abstract final class GroupAdvancement {
     required int continentalSize,
     bool isLowestLeague = false,
     int worldCupHosts = 0,
+    int worldCupPlayoffPaths = 0,
   }) {
     switch (kind) {
       case CompetitionKind.worldCupQualifying:
@@ -144,6 +163,7 @@ abstract final class GroupAdvancement {
           confederation,
           groupCount,
           hosts: worldCupHosts,
+          playoffPaths: worldCupPlayoffPaths,
         );
         return (direct: adv.direct, contention: adv.contention, relegate: 0);
       case CompetitionKind.continentalQualifying:
@@ -176,6 +196,7 @@ abstract final class GroupAdvancement {
       // the switch must stay exhaustive.
       case CompetitionKind.worldCupPlayoff:
       case CompetitionKind.continentalPlayoff:
+      case CompetitionKind.worldCupPlayoffEurope:
         return (direct: 2, contention: null, relegate: 0);
     }
   }
@@ -248,6 +269,7 @@ abstract final class GroupAdvancement {
       case CompetitionKind.finalissima:
       case CompetitionKind.worldCupPlayoff:
       case CompetitionKind.continentalPlayoff:
+      case CompetitionKind.worldCupPlayoffEurope:
         return '';
     }
   }
