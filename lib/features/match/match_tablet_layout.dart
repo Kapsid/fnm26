@@ -28,7 +28,12 @@ class _MatchTabletLayout extends StatelessWidget {
     this.pitchView,
     this.feed,
     this.tvHeader,
+    this.goals,
   });
+
+  /// The goals so far, pinned at the top of the left column so they stay in
+  /// view whichever tab is open; null before the first.
+  final Widget? goals;
 
   /// The share of the width each side column takes, within these bounds.
   static const double _sideShare = 0.26;
@@ -137,7 +142,21 @@ class _MatchTabletLayout extends StatelessWidget {
   /// momentum is under the TV's header, and the ground in it). Two short
   /// labels; should a long language need more than the column's width, the
   /// strip scrolls from the start with every label whole.
-  Widget _statsColumn(AppLocalizations l) => PanelBox(
+  Widget _statsColumn(AppLocalizations l) {
+    final tabs = _statsTabs(l);
+    final g = goals;
+    if (g == null) return tabs;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        PanelBox(child: g),
+        const SizedBox(height: AppSpacing.sm),
+        Expanded(child: tabs),
+      ],
+    );
+  }
+
+  Widget _statsTabs(AppLocalizations l) => PanelBox(
     child: DefaultTabController(
       length: 2,
       initialIndex: _pitchMode || ft ? 0 : 1,
@@ -304,4 +323,65 @@ class _MatchTabletLayout extends StatelessWidget {
       ),
     ),
   );
+}
+
+/// The goals so far on a tablet: each side's code over its scorers.
+class _GoalsPanel extends StatelessWidget {
+  const _GoalsPanel({
+    required this.homeCode,
+    required this.awayCode,
+    required this.home,
+    required this.away,
+  });
+
+  final String homeCode;
+  final String awayCode;
+  final List<String> home;
+  final List<String> away;
+
+  @override
+  Widget build(BuildContext context) {
+    final head = AppTypography.labelSmall.copyWith(
+      color: AppColors.onSurfaceVariant,
+      fontWeight: FontWeight.w800,
+    );
+    final line = AppTypography.bodySmall.copyWith(color: AppColors.onSurface);
+    Widget side(String code, List<String> goals, bool end) => Expanded(
+      child: Column(
+        crossAxisAlignment: end
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
+        children: [
+          Text(code, style: head),
+          for (final g in goals)
+            Text(
+              g,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: end ? TextAlign.end : TextAlign.start,
+              style: line,
+            ),
+        ],
+      ),
+    );
+    return Padding(
+      padding: const EdgeInsets.all(AppSpacing.sm),
+      child: ConstrainedBox(
+        // Never more than a third of the column: a goal-fest scrolls.
+        constraints: const BoxConstraints(maxHeight: 160),
+        child: SingleChildScrollView(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(Icons.sports_soccer, size: 14),
+              const SizedBox(width: AppSpacing.xs),
+              side(homeCode, home, false),
+              const SizedBox(width: AppSpacing.sm),
+              side(awayCode, away, true),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

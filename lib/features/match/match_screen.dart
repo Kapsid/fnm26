@@ -2255,6 +2255,22 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                         .length,
                   )
                 : null;
+            // Who scored so far, each side's in order ("Name 23'").
+            String goalLine(MatchEvent e) =>
+                '${e.playerName} '
+                "${e.stoppage > 0 ? '${e.minute}+${e.stoppage}' : '${e.minute}'}'";
+            final goalsSoFar = [
+              for (final e in shown)
+                if (e.type == MatchEventType.goal) e,
+            ];
+            final homeScorers = [
+              for (final e in goalsSoFar)
+                if (e.teamNationId == homeId) goalLine(e),
+            ];
+            final awayScorers = [
+              for (final e in goalsSoFar)
+                if (e.teamNationId != homeId) goalLine(e),
+            ];
             final scoreboard = MatchScoreboard(
               homeCode: code(homeId),
               awayCode: code(awayId),
@@ -2276,6 +2292,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               bugTheme: bugTheme,
               homeReds: homeReds,
               awayReds: awayReds,
+              // The phone's scoreboard lists them; the tablet keeps them in
+              // its left column (see _MatchTabletLayout.goals).
+              homeScorers: tablet ? const [] : homeScorers,
+              awayScorers: tablet ? const [] : awayScorers,
             );
             final Widget? momentum = !ft && !showingShootout
                 ? _MomentumBar(
@@ -2642,6 +2662,14 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                 stats: stats,
                 lineups: lineups,
                 summary: summary,
+                goals: goalsSoFar.isEmpty
+                    ? null
+                    : _GoalsPanel(
+                        homeCode: code(homeId),
+                        awayCode: code(awayId),
+                        home: homeScorers,
+                        away: awayScorers,
+                      ),
                 pitch: _livePitch(preview, r),
                 pitchView: _onPitch ? pitchSurface : null,
                 feed: _onPitch && picture

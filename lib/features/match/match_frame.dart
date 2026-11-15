@@ -185,7 +185,14 @@ class MatchScoreboard extends StatelessWidget {
     this.noticeForHome = false,
     this.homeReds = 0,
     this.awayReds = 0,
+    this.homeScorers = const [],
+    this.awayScorers = const [],
   });
+
+  /// Each side's goals so far ("Name 23'"), listed under the scoreline so
+  /// who scored stays in view (not on the [compact] bug).
+  final List<String> homeScorers;
+  final List<String> awayScorers;
 
   /// Each side's red cards so far, marked on the [compact] bug.
   final int homeReds;
@@ -380,9 +387,41 @@ class MatchScoreboard extends StatelessWidget {
               ),
             ],
           ),
-          // Under the scoreline only the half-time score: who scored is
-          // already told twice over (the goal flashes as it goes in, and
-          // the timeline tab keeps the full list).
+          // Under the scoreline, who scored, each side under its own name
+          // (players asked to keep the goals in view), then the half-time
+          // score.
+          if (homeScorers.isNotEmpty || awayScorers.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: AppSpacing.xs),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (final (list, end) in [
+                    (homeScorers, false),
+                    (awayScorers, true),
+                  ])
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: end
+                            ? CrossAxisAlignment.end
+                            : CrossAxisAlignment.start,
+                        children: [
+                          for (final t in list)
+                            Text(
+                              t,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: end ? TextAlign.end : TextAlign.start,
+                              style: AppTypography.labelSmall.copyWith(
+                                color: AppColors.onSurfaceVariant,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ),
           if (halfTime case final ht?)
             Padding(
               padding: const EdgeInsets.only(top: 2),
