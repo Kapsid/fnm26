@@ -24,6 +24,7 @@ class MatchSummaryTab extends StatelessWidget {
     this.weather,
     this.sameDay = const [],
     this.sameDayPhase = SameDayPhase.live,
+    this.scoresFirst = false,
     this.liveMinute,
     this.liveTable,
     this.codeOf,
@@ -48,6 +49,10 @@ class MatchSummaryTab extends StatelessWidget {
   static Key otherScoreKey(int fixtureId) =>
       Key('summary.other.$fixtureId.score');
 
+  /// The score of another match, while it is lit for a goal just scored.
+  static Key freshScoreKey(int fixtureId) =>
+      Key('summary.other.$fixtureId.fresh');
+
   /// The result, for the headline figures: given only at full time (the
   /// possession is a share of the whole match).
   final MatchResult? result;
@@ -67,6 +72,10 @@ class MatchSummaryTab extends StatelessWidget {
 
   /// How far they have got, by our clock.
   final SameDayPhase sameDayPhase;
+
+  /// Live, the day's other scores over the ground, under the table (the
+  /// tablet's column, where they are watched as they change).
+  final bool scoresFirst;
 
   /// Our match's minute while it is being played: the other matches' scores
   /// follow it (null: by [sameDayPhase] only, as at the breaks).
@@ -97,16 +106,20 @@ class MatchSummaryTab extends StatelessWidget {
     );
     final others = sameDay.isEmpty ? null : _otherMatches(context);
     const gap = SizedBox(height: AppSpacing.md);
-    // Live: the ground, then the rest of the day. At the whistle the man of
+    // Live: the table, the ground and the rest of the day. At the whistle the man of
     // the match leads, the day's results follow, then the ground and the
     // figures.
     final table = liveTable;
     final children = r == null
         ? [
-            // Live, the group as it stands this minute leads.
+            // Live, the group as it stands this minute leads. On the
+            // tablet the day's other scores sit with it, over the ground;
+            // the phone has the ground first and calls their goals out on
+            // a banner.
             if (table != null) ...[table, gap],
+            if (scoresFirst && others != null) ...[others, gap],
             stadium,
-            if (others != null) ...[gap, others],
+            if (!scoresFirst && others != null) ...[gap, others],
           ]
         : [
             if (homeId != null && awayId != null) ...[
@@ -253,6 +266,13 @@ class MatchSummaryTab extends StatelessWidget {
           ? s.scoreAtMinute(liveMinute!)
           : s.scoreAt(sameDayPhase);
       final ticking = sameDayPhase == SameDayPhase.live && liveMinute != null;
+      // A goal in the last few minutes of our clock lights its score, so
+      // the change is seen without a banner.
+      final fresh =
+          ticking &&
+          s.goalMinutes.any(
+            (g) => g.minute <= liveMinute! && g.minute > liveMinute! - 4,
+          );
       final pens = sameDayPhase == SameDayPhase.fullTime && f.wentToShootout
           ? l.recordsOnPenalties(f.homePenalties!, f.awayPenalties!)
           : null;
@@ -266,13 +286,25 @@ class MatchSummaryTab extends StatelessWidget {
           : Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  '${score.home} - ${score.away}',
-                  maxLines: 1,
-                  softWrap: false,
-                  style: AppTypography.titleMedium.copyWith(
-                    fontWeight: FontWeight.w800,
-                    fontFeatures: const [FontFeature.tabularFigures()],
+                AnimatedContainer(
+                  key: fresh ? freshScoreKey(f.id) : null,
+                  duration: const Duration(milliseconds: 250),
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  decoration: BoxDecoration(
+                    color: fresh
+                        ? AppColors.primary.withValues(alpha: 0.22)
+                        : Colors.transparent,
+                    borderRadius: AppRadii.smAll,
+                  ),
+                  child: Text(
+                    '${score.home} - ${score.away}',
+                    maxLines: 1,
+                    softWrap: false,
+                    style: AppTypography.titleMedium.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: fresh ? AppColors.primary : null,
+                      fontFeatures: const [FontFeature.tabularFigures()],
+                    ),
                   ),
                 ),
                 Text(

@@ -141,7 +141,20 @@ void main() {
       for (var i = 0; i < 100 && banner.evaluate().isEmpty; i++) {
         await tester.pump(const Duration(milliseconds: 16));
       }
-      expect(banner, findsOneWidget);
+      if (form == FormFactor.phone) {
+        expect(banner, findsOneWidget);
+      } else {
+        // The tablet has the day's scores in its Summary column: no banner,
+        // the fresh score lit there instead.
+        await tester.pump(const Duration(milliseconds: 300));
+        expect(banner, findsNothing);
+        for (final o in others) {
+          expect(
+            find.byKey(MatchSummaryTab.freshScoreKey(o.fixture.id)),
+            o.goalsBetween(36, 40).isEmpty ? findsNothing : findsOneWidget,
+          );
+        }
+      }
 
       // Our half time: theirs.
       final half = find.descendant(

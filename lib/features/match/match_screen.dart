@@ -2610,6 +2610,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               ),
               liveMinute: ft ? null : _minute,
               liveTable: liveTable,
+              scoresFirst: tablet,
               codeOf: code,
               nameOf: name,
               // The tablet's centre column already carries the score, so
@@ -2632,7 +2633,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                 ),
               // A goal in another match of the day, up from the foot of the
               // screen, on the Pitch and the Timeline alike.
-              if (_elsewhere case final g? when !ft && !_atInterval)
+              // (A phone only: the tablet's Summary column has the day's
+              // scores in view, and there a fresh goal lights its score.)
+              if (_elsewhere case final g? when !ft && !_atInterval && !tablet)
                 Positioned(
                   left: AppSpacing.marginMobile,
                   right: AppSpacing.marginMobile,
