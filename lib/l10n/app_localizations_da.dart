@@ -18000,4 +18000,19 @@ class AppLocalizationsDa extends AppLocalizations {
   String newsNcRelegatedBody(String cup) {
     return 'Sidst i gruppen i $cup: næste udgave spilles en liga lavere.';
   }
+
+  @override
+  String stadiumsBuildFrom(String cost) {
+    return 'Byg: fra $cost';
+  }
+
+  @override
+  String stadiumsConfirmBuildSized(String seats, String city, String cost) {
+    return 'Byg et stadion med $seats pladser i $city for $cost?';
+  }
+
+  @override
+  String stadiumsCapacityRange(String min, String max) {
+    return 'Kapacitet: dit valg, $min til $max pladser';
+  }
 }

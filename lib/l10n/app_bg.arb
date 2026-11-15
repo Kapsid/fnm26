@@ -4497,5 +4497,8 @@
   "newsNcPromotedTitle": "Повишение в Лига {league}",
   "newsNcPromotedBody": "Първо място в групата в {cup}: следващото издание се играе една лига по-високо, а повишението носи на федерацията 1 млн. €, изплатени в края на цикъла.",
   "newsNcRelegatedTitle": "Изпадане в Лига {league}",
-  "newsNcRelegatedBody": "Последно място в групата в {cup}: следващото издание се играе една лига по-ниско."
+  "newsNcRelegatedBody": "Последно място в групата в {cup}: следващото издание се играе една лига по-ниско.",
+  "stadiumsBuildFrom": "Строеж: от {cost}",
+  "stadiumsConfirmBuildSized": "Да се построи стадион с {seats} места в {city} за {cost}?",
+  "stadiumsCapacityRange": "Капацитет: по ваш избор, от {min} до {max} места"
 }

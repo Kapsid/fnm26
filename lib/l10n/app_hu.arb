@@ -4497,5 +4497,8 @@
   "newsNcPromotedTitle": "Feljutás a(z) {league} ligába",
   "newsNcPromotedBody": "Csoportelső a(z) {cup} sorozatban: a következő kiírást egy ligával feljebb játsszuk, és a feljutás 1 millió eurót ér a szövetségnek, a ciklus végén fizetve.",
   "newsNcRelegatedTitle": "Kiesés a(z) {league} ligába",
-  "newsNcRelegatedBody": "Csoportutolsó a(z) {cup} sorozatban: a következő kiírást egy ligával lejjebb játsszuk."
+  "newsNcRelegatedBody": "Csoportutolsó a(z) {cup} sorozatban: a következő kiírást egy ligával lejjebb játsszuk.",
+  "stadiumsBuildFrom": "Építés: {cost}-tól",
+  "stadiumsConfirmBuildSized": "Építsünk egy {seats} férőhelyes stadiont itt: {city}, {cost} áron?",
+  "stadiumsCapacityRange": "Befogadóképesség: tetszés szerint, {min}–{max} férőhely"
 }

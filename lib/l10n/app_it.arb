@@ -4497,5 +4497,8 @@
   "newsNcPromotedTitle": "Promozione nella Lega {league}",
   "newsNcPromotedBody": "Primi nel girone della {cup}: la prossima edizione si gioca una lega più su, e la promozione vale 1 milione di euro per la federazione, pagati a fine ciclo.",
   "newsNcRelegatedTitle": "Retrocessione nella Lega {league}",
-  "newsNcRelegatedBody": "Ultimi nel girone della {cup}: la prossima edizione si gioca una lega più giù."
+  "newsNcRelegatedBody": "Ultimi nel girone della {cup}: la prossima edizione si gioca una lega più giù.",
+  "stadiumsBuildFrom": "Costruisci: da {cost}",
+  "stadiumsConfirmBuildSized": "Costruire uno stadio da {seats} posti a {city} per {cost}?",
+  "stadiumsCapacityRange": "Capienza: a scelta, da {min} a {max} posti"
 }

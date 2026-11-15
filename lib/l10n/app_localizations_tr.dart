@@ -17911,4 +17911,19 @@ class AppLocalizationsTr extends AppLocalizations {
   String newsNcRelegatedBody(String cup) {
     return '$cup grubunda sonunculuk: bir sonraki turnuva bir alt ligde oynanacak.';
   }
+
+  @override
+  String stadiumsBuildFrom(String cost) {
+    return 'İnşa et: $cost itibarıyla';
+  }
+
+  @override
+  String stadiumsConfirmBuildSized(String seats, String city, String cost) {
+    return '$city şehrine $seats kişilik bir stadyum $cost karşılığında inşa edilsin mi?';
+  }
+
+  @override
+  String stadiumsCapacityRange(String min, String max) {
+    return 'Kapasite: seçim sizin, $min ile $max koltuk arası';
+  }
 }

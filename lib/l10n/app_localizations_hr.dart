@@ -18341,4 +18341,19 @@ class AppLocalizationsHr extends AppLocalizations {
   String newsNcRelegatedBody(String cup) {
     return 'Posljednje mjesto u skupini u $cup: sljedeće izdanje igra se ligu niže.';
   }
+
+  @override
+  String stadiumsBuildFrom(String cost) {
+    return 'Izgradnja: od $cost';
+  }
+
+  @override
+  String stadiumsConfirmBuildSized(String seats, String city, String cost) {
+    return 'Izgraditi stadion s $seats mjesta u gradu $city za $cost?';
+  }
+
+  @override
+  String stadiumsCapacityRange(String min, String max) {
+    return 'Kapacitet: po izboru, od $min do $max mjesta';
+  }
 }

@@ -4497,5 +4497,8 @@
   "newsNcPromotedTitle": "Awans do Dywizji {league}",
   "newsNcPromotedBody": "Pierwsze miejsce w grupie w {cup}: kolejna edycja rozgrywana jest dywizję wyżej, a awans jest wart dla związku 1 mln €, wypłacany na koniec cyklu.",
   "newsNcRelegatedTitle": "Spadek do Dywizji {league}",
-  "newsNcRelegatedBody": "Ostatnie miejsce w grupie w {cup}: kolejna edycja rozgrywana jest dywizję niżej."
+  "newsNcRelegatedBody": "Ostatnie miejsce w grupie w {cup}: kolejna edycja rozgrywana jest dywizję niżej.",
+  "stadiumsBuildFrom": "Budowa: od {cost}",
+  "stadiumsConfirmBuildSized": "Zbudować stadion na {seats} miejsc w mieście {city} za {cost}?",
+  "stadiumsCapacityRange": "Pojemność: do wyboru, od {min} do {max} miejsc"
 }

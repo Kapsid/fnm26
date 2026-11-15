@@ -4497,5 +4497,8 @@
   "newsNcPromotedTitle": "Promotion en Ligue {league}",
   "newsNcPromotedBody": "Premiers du groupe en {cup} : la prochaine édition se joue une ligue plus haut, et la promotion rapporte 1 M€ à la fédération, versés à la fin du cycle.",
   "newsNcRelegatedTitle": "Relégation en Ligue {league}",
-  "newsNcRelegatedBody": "Derniers du groupe en {cup} : la prochaine édition se joue une ligue plus bas."
+  "newsNcRelegatedBody": "Derniers du groupe en {cup} : la prochaine édition se joue une ligue plus bas.",
+  "stadiumsBuildFrom": "Construire : dès {cost}",
+  "stadiumsConfirmBuildSized": "Construire un stade de {seats} places à {city} pour {cost} ?",
+  "stadiumsCapacityRange": "Capacité : au choix, de {min} à {max} places"
 }

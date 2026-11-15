@@ -160,12 +160,15 @@ class StadiumWork {
        legacyLevel = 0,
        isBuild = false;
 
+  /// A new ground in [city]: of [seats] seats when the manager chose them
+  /// (1.1.2), else (0, every order before) [NationalStadiums.newCapacity].
   const StadiumWork.build({
     required this.nationId,
     required this.cycle,
     required String city,
+    int seats = 0,
   }) : stadium = (city: city, built: true),
-       capacity = 0,
+       capacity = seats,
        up = true,
        legacyLevel = 0,
        isBuild = true;
@@ -187,7 +190,9 @@ class StadiumWork {
   final int cycle;
   final StadiumRef stadium;
 
-  /// For a resize, the seats it leaves the ground with.
+  /// For a resize, the seats it leaves the ground with; for a build, the
+  /// seats chosen (0: [NationalStadiums.newCapacity], as every build before
+  /// the choice).
   final int capacity;
 
   /// An enlargement (or a build), rather than a downsizing.
@@ -201,10 +206,17 @@ class StadiumWork {
 
   static const String resizePrefix = 'stadiumSize:';
   static const String buildPrefix = 'stadiumBuild:';
+
+  /// A build whose seats were chosen: `stadiumBuild2:<nation>:<cycle>:<seats>:<city>`.
+  static const String sizedBuildPrefix = 'stadiumBuild2:';
   static const String legacyUpgradePrefix = 'stadiumUp:';
 
   String encode() {
-    if (isBuild) return '$buildPrefix$nationId:$cycle:${stadium.city}';
+    if (isBuild) {
+      return capacity > 0
+          ? '$sizedBuildPrefix$nationId:$cycle:$capacity:${stadium.city}'
+          : '$buildPrefix$nationId:$cycle:${stadium.city}';
+    }
     final which = stadium.built ? 'n' : 's';
     if (isLegacy) {
       return '$legacyUpgradePrefix$nationId:$cycle:$legacyLevel:$which:'
@@ -216,6 +228,27 @@ class StadiumWork {
 
   /// The work [kind] names, or null when it is not a stadium work.
   static StadiumWork? decode(String kind) {
+    if (kind.startsWith(sizedBuildPrefix)) {
+      final parts = kind.substring(sizedBuildPrefix.length).split(':');
+      if (parts.length < 4) return null;
+      final nation = int.tryParse(parts[0]);
+      final cycle = int.tryParse(parts[1]);
+      final seats = int.tryParse(parts[2]);
+      final city = parts.sublist(3).join(':');
+      if (nation == null ||
+          cycle == null ||
+          seats == null ||
+          seats <= 0 ||
+          city.isEmpty) {
+        return null;
+      }
+      return StadiumWork.build(
+        nationId: nation,
+        cycle: cycle,
+        city: city,
+        seats: seats,
+      );
+    }
     if (kind.startsWith(buildPrefix)) {
       final parts = kind.substring(buildPrefix.length).split(':');
       if (parts.length < 3) return null;
@@ -546,6 +579,27 @@ abstract final class NationalStadiums {
     return (20 + extra) * FederationFinance.investLevelPrice;
   }
 
+  /// The smallest and largest ground a manager may build, and the step the
+  /// choice moves in.
+  static const int minBuildSeats = 5000;
+  static const int maxBuildSeats = 90000;
+  static const int buildSeatsStep = 1000;
+
+  /// What a new ground of [seats] costs when the manager chooses its size:
+  /// €6M, plus €0.46M for every thousand seats, in whole millions. About
+  /// €8M for 5,000, €20M for 30,000, €36M for 65,000 (what the old fixed
+  /// build of that size cost), €47M for 90,000.
+  static int buildCostFor(int seats) {
+    final extra = (seats / 1000 * 0.46).round();
+    return (6 + extra) * FederationFinance.investLevelPrice;
+  }
+
+  /// [seats] held to what may be built, on the step.
+  static int buildSeats(int seats) {
+    final stepped = (seats / buildSeatsStep).round() * buildSeatsStep;
+    return stepped.clamp(minBuildSeats, maxBuildSeats);
+  }
+
   /// The name a new stadium in [city] takes: a proper name, stored and shown
   /// as it stands like every generated venue name ("Estadio Kastel"), and
   /// never one the static generator can produce, so it cannot read as a
@@ -736,7 +790,7 @@ abstract final class NationalStadiums {
           shaped(
             city: w.stadium.city,
             name: given[w.stadium.city] ?? newStadiumName(w.stadium.city),
-            base: newCapacity(nationId),
+            base: w.capacity > 0 ? w.capacity : newCapacity(nationId),
             built: true,
             opens: w.cycle + buildCycles,
           ),

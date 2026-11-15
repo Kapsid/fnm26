@@ -17846,4 +17846,19 @@ class AppLocalizationsVi extends AppLocalizations {
   String newsNcRelegatedBody(String cup) {
     return 'Bét bảng tại $cup: mùa giải tới thi đấu ở hạng thấp hơn.';
   }
+
+  @override
+  String stadiumsBuildFrom(String cost) {
+    return 'Xây: từ $cost';
+  }
+
+  @override
+  String stadiumsConfirmBuildSized(String seats, String city, String cost) {
+    return 'Xây sân $seats chỗ ở $city với giá $cost?';
+  }
+
+  @override
+  String stadiumsCapacityRange(String min, String max) {
+    return 'Sức chứa: tùy chọn, từ $min đến $max chỗ';
+  }
 }

@@ -18011,4 +18011,19 @@ class AppLocalizationsFil extends AppLocalizations {
   String newsNcRelegatedBody(String cup) {
     return 'Huli sa grupo sa $cup: ang susunod na edisyon ay lalaruin sa mas mababang liga.';
   }
+
+  @override
+  String stadiumsBuildFrom(String cost) {
+    return 'Magtayo: mula $cost';
+  }
+
+  @override
+  String stadiumsConfirmBuildSized(String seats, String city, String cost) {
+    return 'Magtayo ng stadium na may $seats upuan sa $city sa halagang $cost?';
+  }
+
+  @override
+  String stadiumsCapacityRange(String min, String max) {
+    return 'Kapasidad: ikaw ang pipili, $min hanggang $max upuan';
+  }
 }

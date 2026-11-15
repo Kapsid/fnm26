@@ -4497,5 +4497,8 @@
   "newsNcPromotedTitle": "Postup do ligy {league}",
   "newsNcPromotedBody": "Vítězství ve skupině v soutěži {cup}: příští ročník se hraje o ligu výš a postup přinese svazu 1 mil. €, vyplacený na konci cyklu.",
   "newsNcRelegatedTitle": "Sestup do ligy {league}",
-  "newsNcRelegatedBody": "Poslední místo ve skupině v soutěži {cup}: příští ročník se hraje o ligu níž."
+  "newsNcRelegatedBody": "Poslední místo ve skupině v soutěži {cup}: příští ročník se hraje o ligu níž.",
+  "stadiumsBuildFrom": "Postavit: od {cost}",
+  "stadiumsConfirmBuildSized": "Postavit stadion pro {seats} diváků ve městě {city} za {cost}?",
+  "stadiumsCapacityRange": "Kapacita: podle vás, {min} až {max} míst"
 }

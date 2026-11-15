@@ -18425,4 +18425,19 @@ class AppLocalizationsRo extends AppLocalizations {
   String newsNcRelegatedBody(String cup) {
     return 'Ultimul loc în grupă în $cup: următoarea ediție se joacă o ligă mai jos.';
   }
+
+  @override
+  String stadiumsBuildFrom(String cost) {
+    return 'Construiește: de la $cost';
+  }
+
+  @override
+  String stadiumsConfirmBuildSized(String seats, String city, String cost) {
+    return 'Construiești un stadion de $seats de locuri în $city pentru $cost?';
+  }
+
+  @override
+  String stadiumsCapacityRange(String min, String max) {
+    return 'Capacitate: la alegere, între $min și $max de locuri';
+  }
 }

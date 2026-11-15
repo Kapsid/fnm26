@@ -17944,4 +17944,19 @@ class AppLocalizationsHu extends AppLocalizations {
   String newsNcRelegatedBody(String cup) {
     return 'Csoportutolsó a(z) $cup sorozatban: a következő kiírást egy ligával lejjebb játsszuk.';
   }
+
+  @override
+  String stadiumsBuildFrom(String cost) {
+    return 'Építés: $cost-tól';
+  }
+
+  @override
+  String stadiumsConfirmBuildSized(String seats, String city, String cost) {
+    return 'Építsünk egy $seats férőhelyes stadiont itt: $city, $cost áron?';
+  }
+
+  @override
+  String stadiumsCapacityRange(String min, String max) {
+    return 'Befogadóképesség: tetszés szerint, $min–$max férőhely';
+  }
 }

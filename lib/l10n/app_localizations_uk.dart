@@ -18330,4 +18330,19 @@ class AppLocalizationsUk extends AppLocalizations {
   String newsNcRelegatedBody(String cup) {
     return 'Останнє місце в групі в $cup: наступний розіграш пройде на лігу нижче.';
   }
+
+  @override
+  String stadiumsBuildFrom(String cost) {
+    return 'Будувати: від $cost';
+  }
+
+  @override
+  String stadiumsConfirmBuildSized(String seats, String city, String cost) {
+    return 'Збудувати стадіон на $seats місць у місті $city за $cost?';
+  }
+
+  @override
+  String stadiumsCapacityRange(String min, String max) {
+    return 'Місткість: на ваш вибір, від $min до $max місць';
+  }
 }

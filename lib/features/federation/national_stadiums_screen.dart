@@ -43,6 +43,7 @@ class NationalStadiumsScreen extends ConsumerStatefulWidget {
 
   static const Key tabletLayoutKey = Key('stadiums.tabletLayout');
   static const Key buildKey = Key('stadiums.build');
+  static const Key seatsSliderKey = Key('stadiums.buildSeats');
   static const Key cityKey = Key('stadiums.city');
   static Key upgradeKey(int index) => Key('stadiums.upgrade.$index');
   static Key downsizeKey(int index) => Key('stadiums.downsize.$index');
@@ -156,19 +157,31 @@ class _NationalStadiumsScreenState
     String city,
   ) async {
     if (_busy) return false;
-    final name = await showDialog<String>(
+    final order = await showDialog<({String name, int seats})>(
       context: context,
-      builder: (context) => _StadiumNameDialog(
-        question: l.stadiumsConfirmBuild(city, formatEuros(view.buildCost)),
+      builder: (context) => _BuildStadiumDialog(
+        city: city,
         initial: NationalStadiums.newStadiumName(city),
+        min: NationalStadiums.minBuildSeats,
+        max: view.maxAffordableSeats,
+        start: view.defaultBuildSeats.clamp(
+          NationalStadiums.minBuildSeats,
+          view.maxAffordableSeats,
+        ),
+        costOf: view.buildCostFor,
       ),
     );
-    if (name == null || !mounted) return false;
+    if (order == null || !mounted) return false;
     return _order(
       null,
       () => ref
           .read(nationalStadiumServiceProvider)
-          .build(widget.careerId, city, name: name),
+          .build(
+            widget.careerId,
+            city,
+            name: order.name,
+            seats: order.seats,
+          ),
     );
   }
 
@@ -481,7 +494,9 @@ class _NationalStadiumsScreenState
           style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(48)),
           icon: const Icon(Icons.add_location_alt_rounded),
           label: Text(
-            l.stadiumsBuildButton(formatEuros(view.buildCost)),
+            l.stadiumsBuildFrom(
+              formatEuros(view.buildCostFor(NationalStadiums.minBuildSeats)),
+            ),
             textAlign: TextAlign.center,
           ),
         ),
@@ -647,7 +662,10 @@ class _NationalStadiumsScreenState
               ),
               const SizedBox(height: AppSpacing.xs),
               Text(
-                l.stadiumsCapacity(seats.format(view.newCapacity)),
+                l.stadiumsCapacityRange(
+                  seats.format(NationalStadiums.minBuildSeats),
+                  seats.format(NationalStadiums.maxBuildSeats),
+                ),
                 style: AppTypography.labelMedium,
               ),
               if (cities.isNotEmpty) ...[
@@ -696,7 +714,11 @@ class _NationalStadiumsScreenState
                 ),
                 icon: const Icon(Icons.stadium_rounded),
                 label: Text(
-                  l.stadiumsBuildButton(formatEuros(view.buildCost)),
+                  l.stadiumsBuildFrom(
+                    formatEuros(
+                      view.buildCostFor(NationalStadiums.minBuildSeats),
+                    ),
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -901,10 +923,9 @@ class _StadiumCard extends StatelessWidget {
 /// typed (the service cleans it, and a blank keeps the generated name), or
 /// null on cancel.
 class _StadiumNameDialog extends StatefulWidget {
-  const _StadiumNameDialog({required this.initial, this.question});
+  const _StadiumNameDialog({required this.initial});
 
   final String initial;
-  final String? question;
 
   @override
   State<_StadiumNameDialog> createState() => _StadiumNameDialogState();
@@ -933,22 +954,128 @@ class _StadiumNameDialogState extends State<_StadiumNameDialog> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final question = widget.question;
     return AlertDialog(
-      title: question == null ? Text(l.stadiumsRename) : null,
+      title: Text(l.stadiumsRename),
       scrollable: true,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (question != null) ...[
-            Text(question),
-            const SizedBox(height: AppSpacing.md),
-          ],
           TextField(
             key: NationalStadiumsScreen.nameFieldKey,
             controller: _name,
-            autofocus: question == null,
+            autofocus: true,
+            maxLength: StadiumName.maxLength,
+            textCapitalization: TextCapitalization.words,
+            textInputAction: TextInputAction.done,
+            onChanged: (_) => setState(() {}),
+            onSubmitted: (_) => _done(),
+            decoration: InputDecoration(
+              labelText: l.stadiumsNameLabel,
+              helperText: l.stadiumsNameHint,
+              helperMaxLines: 3,
+              errorText: _bad ? l.editorNameNotAllowed : null,
+              errorMaxLines: 2,
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(l.stadiumsCancel),
+        ),
+        TextButton(
+          onPressed: _bad ? null : _done,
+          child: Text(l.stadiumsConfirm),
+        ),
+      ],
+    );
+  }
+}
+
+/// A new ground's order: its size, picked on a slider from the smallest that
+/// may be built to the biggest the free funds pay for (the price follows),
+/// and its name. Pops the name and the seats, or nothing on cancel.
+class _BuildStadiumDialog extends StatefulWidget {
+  const _BuildStadiumDialog({
+    required this.city,
+    required this.initial,
+    required this.min,
+    required this.max,
+    required this.start,
+    required this.costOf,
+  });
+
+  final String city;
+  final String initial;
+  final int min;
+  final int max;
+  final int start;
+  final int Function(int seats) costOf;
+
+  @override
+  State<_BuildStadiumDialog> createState() => _BuildStadiumDialogState();
+}
+
+class _BuildStadiumDialogState extends State<_BuildStadiumDialog> {
+  late final TextEditingController _name = TextEditingController(
+    text: widget.initial,
+  );
+  late int _seats = widget.start;
+
+  @override
+  void dispose() {
+    _name.dispose();
+    super.dispose();
+  }
+
+  bool get _bad => ProfanityFilter.isOffensive(_name.text);
+
+  void _done() {
+    if (_bad) return;
+    Navigator.of(context).pop((name: _name.text, seats: _seats));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final format = NumberFormat.decimalPattern(l.localeName);
+    const step = NationalStadiums.buildSeatsStep;
+    final divisions = (widget.max - widget.min) ~/ step;
+    return AlertDialog(
+      scrollable: true,
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            l.stadiumsConfirmBuildSized(
+              format.format(_seats),
+              widget.city,
+              formatEuros(widget.costOf(_seats)),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          if (divisions > 0)
+            Slider(
+              key: NationalStadiumsScreen.seatsSliderKey,
+              value: _seats.toDouble(),
+              min: widget.min.toDouble(),
+              max: widget.max.toDouble(),
+              divisions: divisions,
+              label: format.format(_seats),
+              onChanged: (v) => setState(
+                () => _seats = ((v / step).round() * step).clamp(
+                  widget.min,
+                  widget.max,
+                ),
+              ),
+            ),
+          const SizedBox(height: AppSpacing.sm),
+          TextField(
+            key: NationalStadiumsScreen.nameFieldKey,
+            controller: _name,
             maxLength: StadiumName.maxLength,
             textCapitalization: TextCapitalization.words,
             textInputAction: TextInputAction.done,

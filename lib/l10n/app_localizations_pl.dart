@@ -18190,4 +18190,19 @@ class AppLocalizationsPl extends AppLocalizations {
   String newsNcRelegatedBody(String cup) {
     return 'Ostatnie miejsce w grupie w $cup: kolejna edycja rozgrywana jest dywizję niżej.';
   }
+
+  @override
+  String stadiumsBuildFrom(String cost) {
+    return 'Budowa: od $cost';
+  }
+
+  @override
+  String stadiumsConfirmBuildSized(String seats, String city, String cost) {
+    return 'Zbudować stadion na $seats miejsc w mieście $city za $cost?';
+  }
+
+  @override
+  String stadiumsCapacityRange(String min, String max) {
+    return 'Pojemność: do wyboru, od $min do $max miejsc';
+  }
 }

@@ -17692,4 +17692,19 @@ class AppLocalizationsTh extends AppLocalizations {
   String newsNcRelegatedBody(String cup) {
     return 'จบอันดับสุดท้ายของกลุ่มใน $cup: รายการครั้งหน้าจะแข่งในลีกที่ต่ำลงหนึ่งระดับ';
   }
+
+  @override
+  String stadiumsBuildFrom(String cost) {
+    return 'สร้าง: เริ่มต้น $cost';
+  }
+
+  @override
+  String stadiumsConfirmBuildSized(String seats, String city, String cost) {
+    return 'สร้างสนาม $seats ที่นั่งที่ $city ในราคา $cost หรือไม่';
+  }
+
+  @override
+  String stadiumsCapacityRange(String min, String max) {
+    return 'ความจุ: เลือกได้ $min ถึง $max ที่นั่ง';
+  }
 }

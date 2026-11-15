@@ -27733,5 +27733,41 @@
         "type": "String"
       }
     }
+  },
+  "stadiumsBuildFrom": "Build: from {cost}",
+  "@stadiumsBuildFrom": {
+    "description": "Button: build a new stadium; the price starts at {cost} and grows with the seats chosen.",
+    "placeholders": {
+      "cost": {
+        "type": "String"
+      }
+    }
+  },
+  "stadiumsConfirmBuildSized": "Build a {seats}-seat stadium in {city} for {cost}?",
+  "@stadiumsConfirmBuildSized": {
+    "description": "Build dialog: the seats chosen on the slider, the city and the price for that size.",
+    "placeholders": {
+      "seats": {
+        "type": "String"
+      },
+      "city": {
+        "type": "String"
+      },
+      "cost": {
+        "type": "String"
+      }
+    }
+  },
+  "stadiumsCapacityRange": "Capacity: your choice, {min} to {max} seats",
+  "@stadiumsCapacityRange": {
+    "description": "Build panel: the new stadium's size is picked when it is ordered.",
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
   }
 }

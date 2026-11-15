@@ -4497,5 +4497,8 @@
   "newsNcPromotedTitle": "Aufstieg in Liga {league}",
   "newsNcPromotedBody": "Gruppensieg im {cup}: Die nächste Ausgabe wird eine Liga höher gespielt, und der Aufstieg bringt dem Verband 1 Mio. €, ausgezahlt am Ende des Zyklus.",
   "newsNcRelegatedTitle": "Abstieg in Liga {league}",
-  "newsNcRelegatedBody": "Gruppenletzter im {cup}: Die nächste Ausgabe wird eine Liga tiefer gespielt."
+  "newsNcRelegatedBody": "Gruppenletzter im {cup}: Die nächste Ausgabe wird eine Liga tiefer gespielt.",
+  "stadiumsBuildFrom": "Bauen: ab {cost}",
+  "stadiumsConfirmBuildSized": "Ein Stadion mit {seats} Plätzen in {city} für {cost} bauen?",
+  "stadiumsCapacityRange": "Kapazität: nach Wahl, {min} bis {max} Plätze"
 }

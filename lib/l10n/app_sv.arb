@@ -4497,5 +4497,8 @@
   "newsNcPromotedTitle": "Uppflyttning till Liga {league}",
   "newsNcPromotedBody": "Gruppvinnare i {cup}: nästa upplaga spelas en liga högre, och uppflyttningen är värd 1 miljon € för förbundet, som betalas ut i slutet av cykeln.",
   "newsNcRelegatedTitle": "Nedflyttning till Liga {league}",
-  "newsNcRelegatedBody": "Sist i gruppen i {cup}: nästa upplaga spelas en liga lägre."
+  "newsNcRelegatedBody": "Sist i gruppen i {cup}: nästa upplaga spelas en liga lägre.",
+  "stadiumsBuildFrom": "Bygg: från {cost}",
+  "stadiumsConfirmBuildSized": "Bygga en arena med {seats} platser i {city} för {cost}?",
+  "stadiumsCapacityRange": "Kapacitet: ditt val, {min} till {max} platser"
 }

@@ -4497,5 +4497,8 @@
   "newsNcPromotedTitle": "Na-promote sa League {league}",
   "newsNcPromotedBody": "Nanguna sa grupo sa {cup}: ang susunod na edisyon ay lalaruin sa mas mataas na liga, at ang promotion ay nagkakahalaga ng €1M para sa pederasyon, ibabayad sa pagtatapos ng cycle.",
   "newsNcRelegatedTitle": "Na-relegate sa League {league}",
-  "newsNcRelegatedBody": "Huli sa grupo sa {cup}: ang susunod na edisyon ay lalaruin sa mas mababang liga."
+  "newsNcRelegatedBody": "Huli sa grupo sa {cup}: ang susunod na edisyon ay lalaruin sa mas mababang liga.",
+  "stadiumsBuildFrom": "Magtayo: mula {cost}",
+  "stadiumsConfirmBuildSized": "Magtayo ng stadium na may {seats} upuan sa {city} sa halagang {cost}?",
+  "stadiumsCapacityRange": "Kapasidad: ikaw ang pipili, {min} hanggang {max} upuan"
 }

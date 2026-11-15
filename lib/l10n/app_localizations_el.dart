@@ -18092,4 +18092,19 @@ class AppLocalizationsEl extends AppLocalizations {
   String newsNcRelegatedBody(String cup) {
     return 'Τελευταία θέση στον όμιλο στο $cup: η επόμενη διοργάνωση παίζεται μία λίγκα πιο κάτω.';
   }
+
+  @override
+  String stadiumsBuildFrom(String cost) {
+    return 'Κατασκευή: από $cost';
+  }
+
+  @override
+  String stadiumsConfirmBuildSized(String seats, String city, String cost) {
+    return 'Κατασκευή γηπέδου $seats θέσεων στην πόλη $city για $cost;';
+  }
+
+  @override
+  String stadiumsCapacityRange(String min, String max) {
+    return 'Χωρητικότητα: της επιλογής σας, $min έως $max θέσεις';
+  }
 }

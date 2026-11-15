@@ -4497,5 +4497,8 @@
   "newsNcPromotedTitle": "Yükselme: Lig {league}",
   "newsNcPromotedBody": "{cup} grubunda birincilik: bir sonraki turnuva bir üst ligde oynanacak ve yükselme federasyona döngü sonunda ödenecek 1 milyon € kazandırıyor.",
   "newsNcRelegatedTitle": "Düşme: Lig {league}",
-  "newsNcRelegatedBody": "{cup} grubunda sonunculuk: bir sonraki turnuva bir alt ligde oynanacak."
+  "newsNcRelegatedBody": "{cup} grubunda sonunculuk: bir sonraki turnuva bir alt ligde oynanacak.",
+  "stadiumsBuildFrom": "İnşa et: {cost} itibarıyla",
+  "stadiumsConfirmBuildSized": "{city} şehrine {seats} kişilik bir stadyum {cost} karşılığında inşa edilsin mi?",
+  "stadiumsCapacityRange": "Kapasite: seçim sizin, {min} ile {max} koltuk arası"
 }

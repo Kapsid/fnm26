@@ -4497,5 +4497,8 @@
   "newsNcPromotedTitle": "リーグ{league}へ昇格",
   "newsNcPromotedBody": "{cup}でグループ首位。次の大会は1つ上のリーグで戦い、昇格により連盟には100万ユーロがサイクル終了時に支払われます。",
   "newsNcRelegatedTitle": "リーグ{league}へ降格",
-  "newsNcRelegatedBody": "{cup}でグループ最下位。次の大会は1つ下のリーグで戦います。"
+  "newsNcRelegatedBody": "{cup}でグループ最下位。次の大会は1つ下のリーグで戦います。",
+  "stadiumsBuildFrom": "建設：{cost}から",
+  "stadiumsConfirmBuildSized": "{city}に{seats}席のスタジアムを{cost}で建設しますか？",
+  "stadiumsCapacityRange": "収容人数：{min}〜{max}席から選択"
 }

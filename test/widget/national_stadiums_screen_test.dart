@@ -418,7 +418,12 @@ class _RefusingService extends NationalStadiumService {
   Future<bool> downsize(int careerId, StadiumRef stadium) async => false;
 
   @override
-  Future<bool> build(int careerId, String city, {String? name}) async => false;
+  Future<bool> build(
+    int careerId,
+    String city, {
+    String? name,
+    int? seats,
+  }) async => false;
 
   @override
   Future<bool> rename(int careerId, String city, String name) async => false;
@@ -431,7 +436,12 @@ class _RecordingService extends NationalStadiumService {
   static final List<String> calls = [];
 
   @override
-  Future<bool> build(int careerId, String city, {String? name}) async {
+  Future<bool> build(
+    int careerId,
+    String city, {
+    String? name,
+    int? seats,
+  }) async {
     calls.add('build $city $name');
     return true;
   }

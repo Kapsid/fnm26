@@ -4497,5 +4497,8 @@
   "newsNcPromotedTitle": "Promotie naar Divisie {league}",
   "newsNcPromotedBody": "Groepswinnaar in de {cup}: de volgende editie wordt een divisie hoger gespeeld, en de promotie levert de bond € 1 mln op, uitbetaald aan het einde van de cyclus.",
   "newsNcRelegatedTitle": "Degradatie naar Divisie {league}",
-  "newsNcRelegatedBody": "Laatste in de groep in de {cup}: de volgende editie wordt een divisie lager gespeeld."
+  "newsNcRelegatedBody": "Laatste in de groep in de {cup}: de volgende editie wordt een divisie lager gespeeld.",
+  "stadiumsBuildFrom": "Bouwen: vanaf {cost}",
+  "stadiumsConfirmBuildSized": "Een stadion met {seats} plaatsen bouwen in {city} voor {cost}?",
+  "stadiumsCapacityRange": "Capaciteit: naar keuze, {min} tot {max} plaatsen"
 }

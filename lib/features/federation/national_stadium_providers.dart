@@ -262,6 +262,24 @@ class NationalStadiumsView {
   int get buildCost => NationalStadiums.buildCost(nationId);
   int get newCapacity => NationalStadiums.newCapacity(nationId);
 
+  /// What a new ground of [seats] costs (the manager picks the size).
+  int buildCostFor(int seats) => NationalStadiums.buildCostFor(seats);
+
+  /// The size a new ground starts at in the picker: the nation's usual new
+  /// ground, held to what may be built.
+  int get defaultBuildSeats => NationalStadiums.buildSeats(newCapacity);
+
+  /// The biggest ground the free funds pay for, on the picker's step (at
+  /// least the smallest, which [buildBlock] checks is affordable).
+  int get maxAffordableSeats {
+    var seats = NationalStadiums.maxBuildSeats;
+    while (seats > NationalStadiums.minBuildSeats &&
+        buildCostFor(seats) > freeFunds) {
+      seats -= NationalStadiums.buildSeatsStep;
+    }
+    return seats;
+  }
+
   /// What [s] earns at the next cycle start.
   int incomeOf(NationalStadium s) => s.openIn(cycle + 1)
       ? NationalStadiums.groundIncome(seats: s.capacity, nationId: nationId)
@@ -294,7 +312,10 @@ class NationalStadiumsView {
     if (building) return StadiumBlock.underConstruction;
     if (cities.isEmpty) return StadiumBlock.noCity;
     if (!window) return StadiumBlock.closed;
-    if (freeFunds < buildCost) return StadiumBlock.funds;
+    // The smallest ground is what has to be affordable: the size is chosen.
+    if (freeFunds < buildCostFor(NationalStadiums.minBuildSeats)) {
+      return StadiumBlock.funds;
+    }
     return null;
   }
 }
@@ -488,23 +509,37 @@ class NationalStadiumService {
   /// Orders a new stadium in [city]; it opens at the start of the next cycle.
   /// [name] is what the manager called it (see [StadiumName.clean]); blank,
   /// or the suggestion as it stood, and it keeps the generated name.
-  Future<bool> build(int careerId, String city, {String? name}) async {
+  /// Orders a new ground in [city]. With [seats] (the picker's choice) it is
+  /// that size, at [NationalStadiumsView.buildCostFor]; without, the
+  /// nation's usual new ground at the old fixed price.
+  Future<bool> build(
+    int careerId,
+    String city, {
+    String? name,
+    int? seats,
+  }) async {
     final view = await _loadView(_ref, careerId);
     if (view == null) return false;
     if (view.buildBlock != null || !view.cities.contains(city)) return false;
+    final chosen = seats == null ? 0 : NationalStadiums.buildSeats(seats);
+    final cost = chosen == 0 ? view.buildCost : view.buildCostFor(chosen);
+    if (view.freeFunds < cost) return false;
     final work = StadiumWork.build(
       nationId: view.nationId,
       cycle: view.cycle,
       city: city,
+      seats: chosen,
     );
     final given = _given(name, city);
     return _charge(
       careerId,
       view,
       work,
-      view.buildCost,
+      cost,
       allowed: (fresh) =>
-          fresh.buildBlock == null && fresh.cities.contains(city),
+          fresh.buildBlock == null &&
+          fresh.cities.contains(city) &&
+          fresh.freeFunds >= cost,
       // The first name of a new ground: written in the same transaction as
       // the order, so a refused order leaves no name behind.
       also: given == null

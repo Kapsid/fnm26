@@ -18074,4 +18074,19 @@ class AppLocalizationsFi extends AppLocalizations {
   String newsNcRelegatedBody(String cup) {
     return 'Lohkon viimeinen kilpailussa $cup: seuraava painos pelataan liigaa alempana.';
   }
+
+  @override
+  String stadiumsBuildFrom(String cost) {
+    return 'Rakenna: alkaen $cost';
+  }
+
+  @override
+  String stadiumsConfirmBuildSized(String seats, String city, String cost) {
+    return 'Rakennetaanko $seats paikan stadion kaupunkiin $city hintaan $cost?';
+  }
+
+  @override
+  String stadiumsCapacityRange(String min, String max) {
+    return 'Kapasiteetti: oma valinta, $min–$max paikkaa';
+  }
 }

@@ -4497,5 +4497,8 @@
   "newsNcPromotedTitle": "리그 {league} 승격",
   "newsNcPromotedBody": "{cup}에서 조 1위: 다음 대회는 한 단계 위 리그에서 치르며, 승격으로 협회는 주기 종료 시 100만 유로를 받습니다.",
   "newsNcRelegatedTitle": "리그 {league} 강등",
-  "newsNcRelegatedBody": "{cup}에서 조 최하위: 다음 대회는 한 단계 아래 리그에서 치릅니다."
+  "newsNcRelegatedBody": "{cup}에서 조 최하위: 다음 대회는 한 단계 아래 리그에서 치릅니다.",
+  "stadiumsBuildFrom": "건설: {cost}부터",
+  "stadiumsConfirmBuildSized": "{city}에 {seats}석 경기장을 {cost}에 건설할까요?",
+  "stadiumsCapacityRange": "수용 인원: {min}~{max}석 중 선택"
 }

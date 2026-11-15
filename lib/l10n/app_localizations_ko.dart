@@ -17415,4 +17415,19 @@ class AppLocalizationsKo extends AppLocalizations {
   String newsNcRelegatedBody(String cup) {
     return '$cup에서 조 최하위: 다음 대회는 한 단계 아래 리그에서 치릅니다.';
   }
+
+  @override
+  String stadiumsBuildFrom(String cost) {
+    return '건설: $cost부터';
+  }
+
+  @override
+  String stadiumsConfirmBuildSized(String seats, String city, String cost) {
+    return '$city에 $seats석 경기장을 $cost에 건설할까요?';
+  }
+
+  @override
+  String stadiumsCapacityRange(String min, String max) {
+    return '수용 인원: $min~$max석 중 선택';
+  }
 }

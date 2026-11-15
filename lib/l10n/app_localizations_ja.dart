@@ -17370,4 +17370,19 @@ class AppLocalizationsJa extends AppLocalizations {
   String newsNcRelegatedBody(String cup) {
     return '$cupでグループ最下位。次の大会は1つ下のリーグで戦います。';
   }
+
+  @override
+  String stadiumsBuildFrom(String cost) {
+    return '建設：$costから';
+  }
+
+  @override
+  String stadiumsConfirmBuildSized(String seats, String city, String cost) {
+    return '$cityに$seats席のスタジアムを$costで建設しますか？';
+  }
+
+  @override
+  String stadiumsCapacityRange(String min, String max) {
+    return '収容人数：$min〜$max席から選択';
+  }
 }

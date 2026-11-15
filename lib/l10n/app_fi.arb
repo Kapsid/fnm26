@@ -4497,5 +4497,8 @@
   "newsNcPromotedTitle": "Nousu liigaan {league}",
   "newsNcPromotedBody": "Lohkovoitto kilpailussa {cup}: seuraava painos pelataan liigaa ylempänä, ja nousu on liitolle miljoonan euron arvoinen, maksetaan syklin lopussa.",
   "newsNcRelegatedTitle": "Putoaminen liigaan {league}",
-  "newsNcRelegatedBody": "Lohkon viimeinen kilpailussa {cup}: seuraava painos pelataan liigaa alempana."
+  "newsNcRelegatedBody": "Lohkon viimeinen kilpailussa {cup}: seuraava painos pelataan liigaa alempana.",
+  "stadiumsBuildFrom": "Rakenna: alkaen {cost}",
+  "stadiumsConfirmBuildSized": "Rakennetaanko {seats} paikan stadion kaupunkiin {city} hintaan {cost}?",
+  "stadiumsCapacityRange": "Kapasiteetti: oma valinta, {min}–{max} paikkaa"
 }

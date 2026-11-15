@@ -4497,5 +4497,8 @@
   "newsNcPromotedTitle": "Rykket op i Liga {league}",
   "newsNcPromotedBody": "Gruppevinder i {cup}: næste udgave spilles en liga højere, og oprykningen er 1 mio. € værd for forbundet, udbetalt ved cyklussens afslutning.",
   "newsNcRelegatedTitle": "Rykket ned i Liga {league}",
-  "newsNcRelegatedBody": "Sidst i gruppen i {cup}: næste udgave spilles en liga lavere."
+  "newsNcRelegatedBody": "Sidst i gruppen i {cup}: næste udgave spilles en liga lavere.",
+  "stadiumsBuildFrom": "Byg: fra {cost}",
+  "stadiumsConfirmBuildSized": "Byg et stadion med {seats} pladser i {city} for {cost}?",
+  "stadiumsCapacityRange": "Kapacitet: dit valg, {min} til {max} pladser"
 }

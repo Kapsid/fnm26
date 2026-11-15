@@ -4497,5 +4497,8 @@
   "newsNcPromotedTitle": "लीग {league} में पदोन्नति",
   "newsNcPromotedBody": "{cup} में ग्रुप में शीर्ष: अगला संस्करण एक लीग ऊपर खेला जाएगा, और पदोन्नति से महासंघ को €1M मिलेंगे, जो चक्र के अंत में दिए जाएँगे।",
   "newsNcRelegatedTitle": "लीग {league} में पदावनति",
-  "newsNcRelegatedBody": "{cup} में ग्रुप में सबसे नीचे: अगला संस्करण एक लीग नीचे खेला जाएगा।"
+  "newsNcRelegatedBody": "{cup} में ग्रुप में सबसे नीचे: अगला संस्करण एक लीग नीचे खेला जाएगा।",
+  "stadiumsBuildFrom": "निर्माण: {cost} से",
+  "stadiumsConfirmBuildSized": "{city} में {seats} सीटों वाला स्टेडियम {cost} में बनाएँ?",
+  "stadiumsCapacityRange": "क्षमता: आपकी पसंद, {min} से {max} सीटें"
 }

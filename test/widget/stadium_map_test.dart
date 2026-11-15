@@ -211,7 +211,7 @@ void main() {
     }
     await tester.pumpAndSettle();
     expect(find.byType(AlertDialog), findsOneWidget);
-    expect(find.textContaining('Build a new stadium in'), findsOneWidget);
+    expect(find.textContaining('-seat stadium in'), findsOneWidget);
     await tester.tap(
       find.descendant(
         of: find.byType(AlertDialog),
@@ -236,7 +236,7 @@ void main() {
     expect(find.byKey(NationalStadiumsScreen.sheetKey), findsNothing);
     expect(
       find.textContaining(
-        'Build a new stadium in ${_view(58).stadiums.first.city}',
+        '-seat stadium in ${_view(58).stadiums.first.city}',
       ),
       findsOneWidget,
     );
@@ -262,7 +262,7 @@ void main() {
     expect(funchal, findsOneWidget);
     await tester.tap(funchal);
     await tester.pumpAndSettle();
-    expect(find.textContaining('Build a new stadium in Funchal'), findsOne);
+    expect(find.textContaining('-seat stadium in Funchal'), findsOne);
   });
 
   testWidgets('pinch-zoomed in, the fit button brings the country back', (

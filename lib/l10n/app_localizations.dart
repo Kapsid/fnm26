@@ -27223,6 +27223,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Bottom of the group in the {cup}: the next edition is played a league lower.'**
   String newsNcRelegatedBody(String cup);
+
+  /// Button: build a new stadium; the price starts at {cost} and grows with the seats chosen.
+  ///
+  /// In en, this message translates to:
+  /// **'Build: from {cost}'**
+  String stadiumsBuildFrom(String cost);
+
+  /// Build dialog: the seats chosen on the slider, the city and the price for that size.
+  ///
+  /// In en, this message translates to:
+  /// **'Build a {seats}-seat stadium in {city} for {cost}?'**
+  String stadiumsConfirmBuildSized(String seats, String city, String cost);
+
+  /// Build panel: the new stadium's size is picked when it is ordered.
+  ///
+  /// In en, this message translates to:
+  /// **'Capacity: your choice, {min} to {max} seats'**
+  String stadiumsCapacityRange(String min, String max);
 }
 
 class _AppLocalizationsDelegate

@@ -17995,4 +17995,19 @@ class AppLocalizationsNb extends AppLocalizations {
   String newsNcRelegatedBody(String cup) {
     return 'Sist i gruppen i $cup: neste utgave spilles én liga lavere.';
   }
+
+  @override
+  String stadiumsBuildFrom(String cost) {
+    return 'Bygg: fra $cost';
+  }
+
+  @override
+  String stadiumsConfirmBuildSized(String seats, String city, String cost) {
+    return 'Bygge et stadion med $seats plasser i $city for $cost?';
+  }
+
+  @override
+  String stadiumsCapacityRange(String min, String max) {
+    return 'Kapasitet: ditt valg, $min til $max plasser';
+  }
 }

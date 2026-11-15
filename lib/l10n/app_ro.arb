@@ -4497,5 +4497,8 @@
   "newsNcPromotedTitle": "Promovare în Liga {league}",
   "newsNcPromotedBody": "Primul loc în grupă în {cup}: următoarea ediție se joacă o ligă mai sus, iar promovarea aduce federației 1 milion €, plătit la finalul ciclului.",
   "newsNcRelegatedTitle": "Retrogradare în Liga {league}",
-  "newsNcRelegatedBody": "Ultimul loc în grupă în {cup}: următoarea ediție se joacă o ligă mai jos."
+  "newsNcRelegatedBody": "Ultimul loc în grupă în {cup}: următoarea ediție se joacă o ligă mai jos.",
+  "stadiumsBuildFrom": "Construiește: de la {cost}",
+  "stadiumsConfirmBuildSized": "Construiești un stadion de {seats} de locuri în {city} pentru {cost}?",
+  "stadiumsCapacityRange": "Capacitate: la alegere, între {min} și {max} de locuri"
 }

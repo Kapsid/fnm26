@@ -17907,4 +17907,19 @@ class AppLocalizationsHi extends AppLocalizations {
   String newsNcRelegatedBody(String cup) {
     return '$cup में ग्रुप में सबसे नीचे: अगला संस्करण एक लीग नीचे खेला जाएगा।';
   }
+
+  @override
+  String stadiumsBuildFrom(String cost) {
+    return 'निर्माण: $cost से';
+  }
+
+  @override
+  String stadiumsConfirmBuildSized(String seats, String city, String cost) {
+    return '$city में $seats सीटों वाला स्टेडियम $cost में बनाएँ?';
+  }
+
+  @override
+  String stadiumsCapacityRange(String min, String max) {
+    return 'क्षमता: आपकी पसंद, $min से $max सीटें';
+  }
 }

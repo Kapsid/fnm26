@@ -18394,4 +18394,19 @@ class AppLocalizationsCs extends AppLocalizations {
   String newsNcRelegatedBody(String cup) {
     return 'Poslední místo ve skupině v soutěži $cup: příští ročník se hraje o ligu níž.';
   }
+
+  @override
+  String stadiumsBuildFrom(String cost) {
+    return 'Postavit: od $cost';
+  }
+
+  @override
+  String stadiumsConfirmBuildSized(String seats, String city, String cost) {
+    return 'Postavit stadion pro $seats diváků ve městě $city za $cost?';
+  }
+
+  @override
+  String stadiumsCapacityRange(String min, String max) {
+    return 'Kapacita: podle vás, $min až $max míst';
+  }
 }

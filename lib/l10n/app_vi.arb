@@ -4497,5 +4497,8 @@
   "newsNcPromotedTitle": "Thăng hạng lên Hạng {league}",
   "newsNcPromotedBody": "Nhất bảng tại {cup}: mùa giải tới thi đấu ở hạng cao hơn, và suất thăng hạng mang về cho liên đoàn 1 triệu €, chi trả vào cuối chu kỳ.",
   "newsNcRelegatedTitle": "Xuống hạng {league}",
-  "newsNcRelegatedBody": "Bét bảng tại {cup}: mùa giải tới thi đấu ở hạng thấp hơn."
+  "newsNcRelegatedBody": "Bét bảng tại {cup}: mùa giải tới thi đấu ở hạng thấp hơn.",
+  "stadiumsBuildFrom": "Xây: từ {cost}",
+  "stadiumsConfirmBuildSized": "Xây sân {seats} chỗ ở {city} với giá {cost}?",
+  "stadiumsCapacityRange": "Sức chứa: tùy chọn, từ {min} đến {max} chỗ"
 }

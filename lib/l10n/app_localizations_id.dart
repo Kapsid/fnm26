@@ -17909,4 +17909,19 @@ class AppLocalizationsId extends AppLocalizations {
   String newsNcRelegatedBody(String cup) {
     return 'Juru kunci grup di $cup: edisi berikutnya dimainkan satu liga lebih rendah.';
   }
+
+  @override
+  String stadiumsBuildFrom(String cost) {
+    return 'Bangun: mulai $cost';
+  }
+
+  @override
+  String stadiumsConfirmBuildSized(String seats, String city, String cost) {
+    return 'Bangun stadion berkapasitas $seats kursi di $city seharga $cost?';
+  }
+
+  @override
+  String stadiumsCapacityRange(String min, String max) {
+    return 'Kapasitas: pilihanmu, $min hingga $max kursi';
+  }
 }

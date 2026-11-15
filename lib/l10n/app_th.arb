@@ -4497,5 +4497,8 @@
   "newsNcPromotedTitle": "เลื่อนชั้นสู่ลีก {league}",
   "newsNcPromotedBody": "จบอันดับหนึ่งของกลุ่มใน {cup}: รายการครั้งหน้าจะแข่งในลีกที่สูงขึ้นหนึ่งระดับ และการเลื่อนชั้นมีมูลค่า 1 ล้านยูโรสำหรับสมาคม จ่ายเมื่อจบรอบวงจร",
   "newsNcRelegatedTitle": "ตกชั้นสู่ลีก {league}",
-  "newsNcRelegatedBody": "จบอันดับสุดท้ายของกลุ่มใน {cup}: รายการครั้งหน้าจะแข่งในลีกที่ต่ำลงหนึ่งระดับ"
+  "newsNcRelegatedBody": "จบอันดับสุดท้ายของกลุ่มใน {cup}: รายการครั้งหน้าจะแข่งในลีกที่ต่ำลงหนึ่งระดับ",
+  "stadiumsBuildFrom": "สร้าง: เริ่มต้น {cost}",
+  "stadiumsConfirmBuildSized": "สร้างสนาม {seats} ที่นั่งที่ {city} ในราคา {cost} หรือไม่",
+  "stadiumsCapacityRange": "ความจุ: เลือกได้ {min} ถึง {max} ที่นั่ง"
 }

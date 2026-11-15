@@ -4497,5 +4497,8 @@
   "newsNcPromotedTitle": "Naik ke Liga {league}",
   "newsNcPromotedBody": "Juara kumpulan dalam {cup}: edisi seterusnya dimainkan satu liga lebih tinggi, dan kenaikan ini bernilai €1 juta kepada persekutuan, dibayar pada akhir kitaran.",
   "newsNcRelegatedTitle": "Turun ke Liga {league}",
-  "newsNcRelegatedBody": "Tercorot kumpulan dalam {cup}: edisi seterusnya dimainkan satu liga lebih rendah."
+  "newsNcRelegatedBody": "Tercorot kumpulan dalam {cup}: edisi seterusnya dimainkan satu liga lebih rendah.",
+  "stadiumsBuildFrom": "Bina: dari {cost}",
+  "stadiumsConfirmBuildSized": "Bina stadium {seats} tempat duduk di {city} dengan harga {cost}?",
+  "stadiumsCapacityRange": "Kapasiti: pilihan anda, {min} hingga {max} tempat duduk"
 }

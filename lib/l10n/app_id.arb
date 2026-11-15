@@ -4497,5 +4497,8 @@
   "newsNcPromotedTitle": "Promosi ke Liga {league}",
   "newsNcPromotedBody": "Juara grup di {cup}: edisi berikutnya dimainkan satu liga lebih tinggi, dan promosi ini bernilai €1 juta bagi federasi, dibayar di akhir siklus.",
   "newsNcRelegatedTitle": "Degradasi ke Liga {league}",
-  "newsNcRelegatedBody": "Juru kunci grup di {cup}: edisi berikutnya dimainkan satu liga lebih rendah."
+  "newsNcRelegatedBody": "Juru kunci grup di {cup}: edisi berikutnya dimainkan satu liga lebih rendah.",
+  "stadiumsBuildFrom": "Bangun: mulai {cost}",
+  "stadiumsConfirmBuildSized": "Bangun stadion berkapasitas {seats} kursi di {city} seharga {cost}?",
+  "stadiumsCapacityRange": "Kapasitas: pilihanmu, {min} hingga {max} kursi"
 }
