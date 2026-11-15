@@ -36,11 +36,20 @@ The branch holds `integ/stage4` merged with main, and on top of it:
 
 Tests: run with `TZ=Europe/Prague` (pinned dates and the daylight test assume CET). Goldens fail wholesale on a Flutter other than the owner's (fonts); ignore them off the owner's machine.
 
+## Done after the handoff (2026-11-15, same branch)
+
+| Area | What |
+|---|---|
+| Player stats | Schema 58: six counters on `player_ratings` (penalties taken/scored in play; a keeper's shots on target faced, saves, penalties faced/saved). Engine matches fill them from the shot record; background matches give the keeper box-score-derived saves (no RNG). Player page tiles. Migration test 57 -> 58. |
+| 2D picture | Offside line as the flag goes up (at the defending side's last outfield man, fading); keepers drawn at full stretch in a dive (read off the script's motion). More chances made on screen: through balls, one-twos and runs weigh more, an assist is played into space more often, a run with the ball takes on the defender who steps in (display only, results unchanged). |
+| Bracket | `BracketTree`: ties ordered between their feeders, elbow lines (the manager's road in the accent colour), rounds to come as empty boxes, trophy and champion at the end, shootouts with their real score and kicks; full names on wide panes. |
+| Y | Play-off draw posts: the draw leaves a `ypo:` draw-watched note (day, first opponent, competition), Y posts it as a landmark (`YTemplate.playoffDrawn`). |
+| Tablet | The first goal no longer resets the left column's tab; the WC play-off draw route is tablet-ready and swept. |
+
 ## Still to do
 
-1. **Stage 7, rest:** Y posts for the play-off draws (a draw's date is not stored, so a post has nothing honest to be dated by), re-tune the campaign star odds with `test/story/campaign_lab_test.dart` (every calendar2 change moved the worlds).
-2. **Owner's list, not done:** penalty conversion and keeper save stats on the player page (needs per-player penalty/save rows: a schema bump); a nicer bracket (iPad and iPhone); engine 2.0 (through balls, individual actions); offside lines and keeper dives on the 2D picture; matches fully live beyond the live table.
-3. **Before the build:** full suite incl. slow stories; device playtest of a calendar2 cycle (CAF/AFC/OFC steps, the two-legged tie, the live table).
+1. **Campaign star odds:** re-tune with `test/story/campaign_lab_test.dart` (every calendar2 change moved the worlds); see the latest lab numbers in the commit that touches `campaigns.dart`, if any.
+2. **Before the build:** full suite incl. slow stories; device playtest of a calendar2 cycle (CAF/AFC/OFC steps, the two-legged tie, the live table, the new bracket, penalties/saves on the player page).
 
 ## Known failing tests (pre-existing, not from 1.1.2)
 
