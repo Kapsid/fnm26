@@ -115,12 +115,13 @@ class MatchSummaryTab extends StatelessWidget {
         ? [
             // Live on the phone, the group as it stands this minute leads,
             // then the ground and the day (its goals called out on a
-            // banner). On the tablet the ground leads and the live table
-            // and the day's other scores sit together under it.
+            // banner). On the tablet the ground leads, the day's other
+            // scores under it and the live table under them.
             if (!scoresFirst && table != null) ...[table, gap],
             stadium,
+            if (scoresFirst && others != null) ...[gap, others],
             if (scoresFirst && table != null) ...[gap, table],
-            if (others != null) ...[gap, others],
+            if (!scoresFirst && others != null) ...[gap, others],
           ]
         : [
             if (homeId != null && awayId != null) ...[

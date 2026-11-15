@@ -148,18 +148,18 @@ void main() {
         // the fresh score lit there instead.
         await tester.pump(const Duration(milliseconds: 300));
         expect(banner, findsNothing);
-        // The ground leads the column; the live table and the day's
-        // scores sit together under it.
+        // The ground leads the column, the day's scores under it, the live
+        // table under them.
         expect(
           tester.getTopLeft(find.byKey(MatchSummaryTab.stadiumKey)).dy,
           lessThan(
-            tester.getTopLeft(find.text(enL.matchLiveTable.toUpperCase())).dy,
+            tester.getTopLeft(find.byKey(MatchSummaryTab.otherMatchesKey)).dy,
           ),
         );
         expect(
-          tester.getTopLeft(find.text(enL.matchLiveTable.toUpperCase())).dy,
+          tester.getTopLeft(find.byKey(MatchSummaryTab.otherMatchesKey)).dy,
           lessThan(
-            tester.getTopLeft(find.byKey(MatchSummaryTab.otherMatchesKey)).dy,
+            tester.getTopLeft(find.text(enL.matchLiveTable.toUpperCase())).dy,
           ),
         );
         for (final o in others) {
