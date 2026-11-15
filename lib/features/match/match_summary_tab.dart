@@ -73,8 +73,9 @@ class MatchSummaryTab extends StatelessWidget {
   /// How far they have got, by our clock.
   final SameDayPhase sameDayPhase;
 
-  /// Live, the day's other scores over the ground, under the table (the
-  /// tablet's column, where they are watched as they change).
+  /// Live, the ground first, then the table and the day's other scores
+  /// together under it (the tablet's column, where they are watched as they
+  /// change).
   final bool scoresFirst;
 
   /// Our match's minute while it is being played: the other matches' scores
@@ -112,14 +113,14 @@ class MatchSummaryTab extends StatelessWidget {
     final table = liveTable;
     final children = r == null
         ? [
-            // Live, the group as it stands this minute leads. On the
-            // tablet the day's other scores sit with it, over the ground;
-            // the phone has the ground first and calls their goals out on
-            // a banner.
-            if (table != null) ...[table, gap],
-            if (scoresFirst && others != null) ...[others, gap],
+            // Live on the phone, the group as it stands this minute leads,
+            // then the ground and the day (its goals called out on a
+            // banner). On the tablet the ground leads and the live table
+            // and the day's other scores sit together under it.
+            if (!scoresFirst && table != null) ...[table, gap],
             stadium,
-            if (!scoresFirst && others != null) ...[gap, others],
+            if (scoresFirst && table != null) ...[gap, table],
+            if (others != null) ...[gap, others],
           ]
         : [
             if (homeId != null && awayId != null) ...[
