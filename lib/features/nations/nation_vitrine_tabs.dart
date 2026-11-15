@@ -127,14 +127,18 @@ class _NextMatchCard extends ConsumerWidget {
                       overflow: TextOverflow.ellipsis,
                       style: AppTypography.titleMedium,
                     ),
-                    _muted(MatchStage.label(l, next), maxLines: 2),
+                    // Where and when on one line, the competition on the
+                    // next, each kept to its line: the date sat beside the
+                    // name and the long competition banner wrapped under
+                    // it, so the card ran over on a phone.
+                    _muted(
+                      '${next.homeNationId == nationId ? l.scheduleHome : l.scheduleAway}'
+                      ' · ${AppDate.dayMonthYear(context, next.date)}',
+                      maxLines: 1,
+                    ),
+                    _muted(MatchStage.labelCompact(l, next), maxLines: 1),
                   ],
                 ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Text(
-                AppDate.dayMonthYear(context, next.date),
-                style: AppTypography.labelMedium,
               ),
             ],
           ),
