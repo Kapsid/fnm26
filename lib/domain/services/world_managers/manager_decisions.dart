@@ -73,6 +73,14 @@ abstract final class ManagerDecisions {
   static const int contractMinYears = 2;
   static const int contractMaxYears = 4;
 
+  /// The worst-ranked job a manager whose best job was ranked [bestRank]
+  /// takes while still in demand: three times as far down, and 20 more
+  /// (rank 2: 26th; rank 10: 50th; rank 40: 140th).
+  static int stepDownLimit(int bestRank) => bestRank * 3 + 20;
+
+  /// Years out of work after which a manager takes any job.
+  static const int stepDownYears = 2;
+
   /// The best reputation a nation of [rank] can attract.
   static double attractCap(int rank) =>
       math.min(100, 40 + (ManagerReputation.unranked - rank) * 0.3);
@@ -369,8 +377,37 @@ abstract final class ManagerDecisions {
       date,
     );
 
-    WorldManager? pick(List<WorldManager> from, int nation) {
-      if (from.isEmpty) return null;
+    // A manager who has run a side near the top does not take a job far
+    // below it while he can still expect a better one: his best job's rank
+    // sets the worst he will consider (see [stepDownLimit]), until he has
+    // been out of work [stepDownYears] (a player's report: a world-class
+    // manager, sacked by a top side, took a minnow at the next window).
+    bool declines(WorldManager m, int nation) {
+      final spells = spellsOf[m.managerId] ?? const <ManagerSpell>[];
+      if (spells.isEmpty) return false;
+      var best = ManagerReputation.unranked;
+      DateTime? lastEnd;
+      for (final s in spells) {
+        final r = rankOf(s.nationId);
+        if (r < best) best = r;
+        final end = s.toDate ?? date;
+        if (lastEnd == null || end.isAfter(lastEnd)) lastEnd = end;
+      }
+      if (lastEnd != null &&
+          date.difference(lastEnd).inDays >= stepDownYears * 365) {
+        return false;
+      }
+      return rankOf(nation) > stepDownLimit(best);
+    }
+
+    WorldManager? pick(List<WorldManager> all, int nation) {
+      if (all.isEmpty) return null;
+      final willing = [
+        for (final m in all)
+          if (!declines(m, nation)) m,
+      ];
+      // A post must be filled: with nobody willing, everybody is asked.
+      final from = willing.isEmpty ? all : willing;
       final cap = attractCap(rankOf(nation));
       final code = codeById[nation]?.toUpperCase();
       int bonus(WorldManager m) {

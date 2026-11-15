@@ -87,6 +87,27 @@ DecisionContext _ctx({
 Set<int> _changed(ManagerChanges c) => {for (final m in c.moves) m.nationId};
 
 void main() {
+  test('a top-side manager does not step far down while still in demand', () {
+    expect(ManagerDecisions.stepDownLimit(2), 26);
+    // Nation 60 is vacant. Manager 1 was at rank 2 until last month, with a
+    // fine record; manager 2 ran rank 70.
+    ManagerWorld world(DateTime starOut) => ManagerWorld(
+      managers: [_m(1), _m(2)],
+      spells: [
+        _s(1, 1, 2, from: _ago(years: 6), to: starOut, briefNet: 3),
+        _s(2, 2, 70, from: _ago(years: 5), to: _ago(days: 30)),
+      ],
+    );
+    int? hired(ManagerWorld w) => ManagerDecisions.decide(
+      w,
+      const {},
+      _ctx(nations: 60, scope: {60}),
+    ).opened.where((s) => s.nationId == 60).firstOrNull?.managerId;
+    expect(hired(world(_ago(days: 30))), 2);
+    // Two years out of work, he takes it (the better reputation).
+    expect(hired(world(_ago(years: 2, days: 10))), 1);
+  });
+
   test('attractCap rises with rank and stops at 100', () {
     expect(ManagerDecisions.attractCap(1), 100);
     expect(ManagerDecisions.attractCap(200), closeTo(43.3, 1e-9));
