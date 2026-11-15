@@ -2580,12 +2580,30 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                 minute: ft ? null : _minute,
                 fullTime: ft,
               );
+              // The group's marks as the hub's table draws them: the hub
+              // reads them for the manager's current group, which is this
+              // match's.
+              final hub = ref
+                  .watch(hubDataProvider(widget.careerId))
+                  .valueOrNull;
+              final hubGroup = hub?.group;
               liveTable = LiveGroupTableCard(
                 now: t.now,
                 placeBefore: t.placeBefore,
                 code: code,
                 name: name,
                 highlightId: preview.playerNationId,
+                zones:
+                    hub != null &&
+                        hubGroup != null &&
+                        hubGroup.groupId == preview.fixture.groupId
+                    ? LiveTableZones(
+                        direct: hub.groupDirectCount,
+                        contention: hub.groupContentionPos,
+                        relegate: hub.groupRelegateCount,
+                        playoffNations: hub.groupPlayoffNations,
+                      )
+                    : null,
               );
             }
             final Widget summary = MatchSummaryTab(

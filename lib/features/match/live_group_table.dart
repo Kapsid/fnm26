@@ -78,8 +78,15 @@ class LiveGroupTableCard extends StatelessWidget {
     required this.code,
     required this.name,
     required this.highlightId,
+    this.zones,
     super.key,
   });
+
+  /// The group's places as the normal table marks them (see the hub's
+  /// group table): the outright qualifiers (green), the one place in
+  /// contention (amber), the play-off nations (yellow) and the drop (red).
+  /// Null: no marks.
+  final LiveTableZones? zones;
 
   final List<GroupStanding> now;
   final Map<int, int> placeBefore;
@@ -95,7 +102,7 @@ class LiveGroupTableCard extends StatelessWidget {
       fontWeight: FontWeight.w800,
     );
     Widget num(String t, TextStyle s) => SizedBox(
-      width: 30,
+      width: 26,
       child: Text(
         t,
         textAlign: TextAlign.end,
@@ -127,13 +134,34 @@ class LiveGroupTableCard extends StatelessWidget {
                 );
                 final was = placeBefore[s.nationId];
                 final moved = was == null ? 0 : was - i;
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 2),
+                final zone = zones?.colorAt(
+                  i + 1,
+                  s.nationId,
+                  count: now.length,
+                );
+                return Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      left: BorderSide(
+                        color: zone ?? Colors.transparent,
+                        width: 3,
+                      ),
+                    ),
+                  ),
+                  padding: const EdgeInsets.only(top: 2, bottom: 2, left: 4),
                   child: Row(
                     children: [
                       SizedBox(
                         width: 18,
-                        child: Text('${i + 1}', style: style),
+                        child: Text(
+                          '${i + 1}',
+                          style: zone == null
+                              ? style
+                              : style.copyWith(
+                                  color: zone,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                        ),
                       ),
                       SizedBox(
                         width: 16,
@@ -176,4 +204,39 @@ class LiveGroupTableCard extends StatelessWidget {
       ),
     );
   }
+}
+
+/// The places of a group the normal table marks, for [LiveGroupTableCard].
+class LiveTableZones {
+  const LiveTableZones({
+    required this.direct,
+    this.contention,
+    this.relegate = 0,
+    this.playoffNations = const {},
+  });
+
+  /// Places that go through outright.
+  final int direct;
+
+  /// The one place in contention (best runner-up, best third, play-off).
+  final int? contention;
+
+  /// Bottom places that go down.
+  final int relegate;
+
+  /// Nations whose place leads to the intercontinental play-off.
+  final Set<int> playoffNations;
+
+  /// The mark for [place] (1-based) held by [nationId] in a table of
+  /// [count], in the hub table's order of precedence; null for none.
+  Color? colorAt(int place, int nationId, {required int count}) =>
+      place <= direct
+      ? AppColors.positive
+      : playoffNations.contains(nationId)
+      ? AppColors.playoff
+      : place == contention
+      ? AppColors.warning
+      : relegate > 0 && place > count - relegate
+      ? AppColors.error
+      : null;
 }
