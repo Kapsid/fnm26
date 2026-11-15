@@ -182,12 +182,16 @@ void main() {
         isTrue,
       );
       // The first autumn of the cycle is no longer passed by on the way to
-      // the 1 December vote: the friendlies are offered in time.
+      // the 1 December vote: the host plays in it. Under calendar2 that is
+      // the Nations Cup's first edition (its windows are full); an older
+      // calendar offers friendlies there instead.
       final career = (await careers.byId(d.careerId))!;
       final mine = await comp.fixturesForNation(d.careerId, career.nationId);
       expect(
         mine.where(
-          (f) => f.round == 'FRIENDLY' && f.date.isBefore(DateTime(2026, 12)),
+          (f) =>
+              (f.round == 'FRIENDLY' || f.round == 'NGROUP') &&
+              f.date.isBefore(DateTime(2026, 12)),
         ),
         isNotEmpty,
       );
