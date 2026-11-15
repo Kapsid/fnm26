@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/kit_colors.dart';
 import 'package:fnm/domain/services/match/pitch/display_spacing.dart';
+import 'package:fnm/domain/services/match/pitch/pitch_geometry.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_script.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_view_geometry.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
@@ -247,6 +248,101 @@ class ActorsPainter extends CustomPainter {
     return _shadows!;
   }
 
+  /// How long the offside line stays after the flag goes up, in screen
+  /// seconds.
+  static const double offsideLineHold = 1.8;
+
+  /// A keeper moving across his goal faster than a man can run sideways
+  /// is in a dive: by how much (0 to 1) and along which screen angle.
+  /// Read off the picture itself (where he was a moment ago), so nothing
+  /// the script stages changes.
+  Map<int, ({double u, double angle})> _dives(PitchFrame f, Duration at) {
+    if (f.keepers.isEmpty || at < _diveLook) return const {};
+    final before = script.sample(at - _diveLook);
+    final out = <int, ({double u, double angle})>{};
+    for (final id in f.keepers) {
+      final p = f.players[id];
+      final q = before.players[id];
+      if (p == null || q == null) continue;
+      // Only in his own six-yard area or so.
+      if (p.x > 9 && p.x < PitchDims.length - 9) continue;
+      final dx = p.x - q.x;
+      final dy = p.y - q.y;
+      final speed = math.sqrt(dx * dx + dy * dy) / _diveLookSeconds;
+      // Faster than any dive: a cut or a reset moved him, not his legs.
+      if (speed > 20) continue;
+      final u = ((speed - 5.5) / 3).clamp(0.0, 1.0);
+      if (u <= 0) continue;
+      final a = projection.toScreenOpen(q.x, q.y);
+      final b = projection.toScreenOpen(p.x, p.y);
+      out[id] = (u: u, angle: math.atan2(b.dy - a.dy, b.dx - a.dx));
+    }
+    return out;
+  }
+
+  static const double _diveLookSeconds = 0.06;
+  static const Duration _diveLook = Duration(milliseconds: 60);
+
+  /// The offside line: as the flag goes up, a line across the pitch at the
+  /// defending side's last outfield man (where the flagged man was beyond),
+  /// fading out over [offsideLineHold].
+  void _offsideLine(Canvas canvas, double t) {
+    final w = script.windowAt(t);
+    if (w == null) return;
+    for (final c in w.cues) {
+      if (c.kind != PitchCueKind.offsideFlag) continue;
+      final age = t - c.t;
+      if (age < 0 || age > offsideLineHold) continue;
+      final x = _offsideX(c);
+      if (x == null) continue;
+      final alpha = age < 0.15
+          ? age / 0.15
+          : 1 - ((age - 0.15) / (offsideLineHold - 0.15)).clamp(0.0, 1.0);
+      final paint = Paint()
+        ..color = const Color(0xFFFFD54F).withValues(alpha: 0.9 * alpha)
+        ..strokeWidth = math.max(1.5, r0 * 0.18)
+        ..strokeCap = StrokeCap.round;
+      const steps = 34;
+      for (var i = 0; i < steps; i += 2) {
+        final y0 = PitchDims.width * i / steps;
+        final y1 = PitchDims.width * (i + 1) / steps;
+        canvas.drawLine(
+          projection.toScreenOpen(x, y0),
+          projection.toScreenOpen(x, y1),
+          paint,
+        );
+      }
+    }
+  }
+
+  final Map<double, double?> _offsideXs = {};
+
+  /// Where the line is drawn for [cue]: the flagged man's opponents' last
+  /// outfield man as the flag went up, measured from their own goal (the
+  /// one their keeper stands in front of).
+  double? _offsideX(PitchCue cue) => _offsideXs.putIfAbsent(cue.t, () {
+    final f = script.sample(Duration(microseconds: (cue.t * 1e6).round()));
+    final i = script.actorIndexOf(cue.playerId);
+    if (i == null) return null;
+    final side = script.actorList[i].teamNationId;
+    double? goalX;
+    final outfield = <double>[];
+    for (final a in script.actorList) {
+      if (a.teamNationId == side) continue;
+      final p = f.players[a.playerId];
+      if (p == null) continue;
+      if (f.keepers.contains(a.playerId)) {
+        goalX = p.x < PitchDims.length / 2 ? 0 : PitchDims.length;
+      } else {
+        outfield.add(p.x);
+      }
+    }
+    if (goalX == null || outfield.isEmpty) return null;
+    final g = goalX;
+    outfield.sort((a, b) => (a - g).abs().compareTo((b - g).abs()));
+    return outfield.first;
+  });
+
   void _frame(Canvas canvas, double t) {
     final at = Duration(microseconds: (t * 1e6).round());
     final f = script.sample(at);
@@ -286,6 +382,8 @@ class ActorsPainter extends CustomPainter {
     for (final m in men) {
       PlayerToken.paintShadow(canvas, m.c, m.r, shadows, _towers);
     }
+    _offsideLine(canvas, t);
+    final dive = _dives(f, at);
     final ball = f.ball;
     final ground = projection.toScreenOpen(ball.x, ball.y);
     final lifted = projection.toScreenOpen(ball.x, ball.y, f.ballHeight);
@@ -299,6 +397,17 @@ class ActorsPainter extends CustomPainter {
       final keeper = f.keepers.contains(m.id);
       final home = _homeOf[m.index];
       final dress = _dressOf[m.index];
+      // A keeper at full stretch: laid along his dive and off the grass.
+      final d = dive[m.id];
+      if (d != null) {
+        canvas
+          ..save()
+          ..translate(m.c.dx, m.c.dy - m.r * 0.7 * d.u)
+          ..rotate(d.angle)
+          ..scale(1 + 0.75 * d.u, 1 - 0.25 * d.u)
+          ..rotate(-d.angle)
+          ..translate(-m.c.dx, -m.c.dy);
+      }
       PlayerToken.paintShirt(
         canvas,
         m.c,
@@ -311,6 +420,7 @@ class ActorsPainter extends CustomPainter {
         facing: m.facing,
         cachedNumber: true,
       );
+      if (d != null) canvas.restore();
       if (breath) {
         WeatherOverlay.paintBreath(canvas, m.c, m.r, m.facing, t, m.index);
       }
