@@ -18103,4 +18103,7 @@ class AppLocalizationsNb extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'Playoff-trekning: $opponent. Slår vi dem, er $competition innen rekkevidde.';
   }
+
+  @override
+  String get matchElsewhereShout => 'MÅL ANDRE STEDER';
 }

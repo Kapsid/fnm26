@@ -18108,4 +18108,7 @@ class AppLocalizationsDa extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'Playoff-lodtrækning: $opponent. Slår vi dem, er $competition inden for rækkevidde.';
   }
+
+  @override
+  String get matchElsewhereShout => 'MÅL ANDETSTEDS';
 }

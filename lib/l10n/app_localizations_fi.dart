@@ -18182,4 +18182,7 @@ class AppLocalizationsFi extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'Jatkokarsinnan arvonta: $opponent. Voitetaan heidät, ja $competition on käden ulottuvilla.';
   }
+
+  @override
+  String get matchElsewhereShout => 'MAALI MUUALLA';
 }

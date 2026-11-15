@@ -18015,4 +18015,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'प्ले-ऑफ़ ड्रॉ: $opponent। इन्हें हराया तो $competition बस हाथ भर दूर।';
   }
+
+  @override
+  String get matchElsewhereShout => 'दूसरे मैच में गोल';
 }

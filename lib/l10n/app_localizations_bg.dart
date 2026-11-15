@@ -18193,4 +18193,7 @@ class AppLocalizationsBg extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'Жребий за плейофа: $opponent. Бием ли ги, $competition е на една ръка разстояние.';
   }
+
+  @override
+  String get matchElsewhereShout => 'ГОЛ В ДРУГ МАЧ';
 }

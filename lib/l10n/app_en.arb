@@ -27939,5 +27939,9 @@
         "type": "String"
       }
     }
+  },
+  "matchElsewhereShout": "GOAL ELSEWHERE",
+  "@matchElsewhereShout": {
+    "description": "Live match banner: a goal has just gone in in one of the day's other matches (same group or round). Short, uppercase."
   }
 }

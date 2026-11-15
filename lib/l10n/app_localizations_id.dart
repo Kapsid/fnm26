@@ -18017,4 +18017,7 @@ class AppLocalizationsId extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'Undian play-off: $opponent. Kalahkan mereka dan $competition sudah di depan mata.';
   }
+
+  @override
+  String get matchElsewhereShout => 'GOL DI LAGA LAIN';
 }

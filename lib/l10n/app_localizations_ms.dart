@@ -18070,4 +18070,7 @@ class AppLocalizationsMs extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'Cabutan play-off: $opponent. Kalahkan mereka dan $competition sudah di depan mata.';
   }
+
+  @override
+  String get matchElsewhereShout => 'GOL DI PERLAWANAN LAIN';
 }

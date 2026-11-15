@@ -17523,4 +17523,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return '플레이오프 추첨: $opponent. 이기면 $competition이 눈앞이다.';
   }
+
+  @override
+  String get matchElsewhereShout => '다른 경기 골';
 }

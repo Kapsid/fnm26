@@ -18449,4 +18449,7 @@ class AppLocalizationsHr extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'Ždrijeb doigravanja: $opponent. Pobijedimo li ih, $competition je nadohvat ruke.';
   }
+
+  @override
+  String get matchElsewhereShout => 'GOL NA DRUGOM TERENU';
 }

@@ -18052,4 +18052,7 @@ class AppLocalizationsHu extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'Pótselejtező-sorsolás: $opponent. Ha legyőzzük őket, karnyújtásnyira a(z) $competition.';
   }
+
+  @override
+  String get matchElsewhereShout => 'GÓL MÁSHOL';
 }

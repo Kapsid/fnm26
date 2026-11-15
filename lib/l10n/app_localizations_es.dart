@@ -18200,4 +18200,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'Sorteo de la repesca: $opponent. Si los ganamos, $competition está al alcance de la mano.';
   }
+
+  @override
+  String get matchElsewhereShout => 'GOL EN OTRO CAMPO';
 }

@@ -18019,4 +18019,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'Play-off kurası: $opponent. Onları yenersek $competition bir adım ötede.';
   }
+
+  @override
+  String get matchElsewhereShout => 'DİĞER MAÇTA GOL';
 }

@@ -4523,5 +4523,6 @@
   "yPlayoffDrawn0": "Loting play-offs voor {competition}: {opponent} staat tussen ons en het eindtoernooi.",
   "yPlayoffDrawn1": "Het wordt {opponent} in de play-offs voor {competition}. Eén duel, alles op het spel.",
   "yPlayoffDrawn2": "{opponent} in de play-offs. Ik moet nu al even gaan liggen. {competition}, we komen eraan. Misschien.",
-  "yPlayoffDrawn3": "Loting play-offs: {opponent}. Verslaan we ze, dan is {competition} binnen handbereik."
+  "yPlayoffDrawn3": "Loting play-offs: {opponent}. Verslaan we ze, dan is {competition} binnen handbereik.",
+  "matchElsewhereShout": "GOAL ELDERS"
 }

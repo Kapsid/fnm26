@@ -4523,5 +4523,6 @@
   "yPlayoffDrawn0": "Bốc thăm play-off {competition}: {opponent} đứng giữa chúng ta và vòng chung kết.",
   "yPlayoffDrawn1": "Gặp {opponent} ở play-off {competition}. Một trận, tất cả đặt cược.",
   "yPlayoffDrawn2": "{opponent} ở play-off. Tôi phải nằm xuống ngay bây giờ. {competition}, chúng ta đến đây. Có lẽ.",
-  "yPlayoffDrawn3": "Bốc thăm play-off: {opponent}. Thắng họ là {competition} trong tầm tay."
+  "yPlayoffDrawn3": "Bốc thăm play-off: {opponent}. Thắng họ là {competition} trong tầm tay.",
+  "matchElsewhereShout": "BÀN THẮNG Ở TRẬN KHÁC"
 }

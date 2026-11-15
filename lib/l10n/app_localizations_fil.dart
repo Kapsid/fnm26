@@ -18119,4 +18119,7 @@ class AppLocalizationsFil extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'Play-off draw: $opponent. Talunin natin sila at abot-kamay na ang $competition.';
   }
+
+  @override
+  String get matchElsewhereShout => 'GOL SA IBANG LARO';
 }

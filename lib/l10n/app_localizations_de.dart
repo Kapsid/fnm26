@@ -18239,4 +18239,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'Play-off-Los: $opponent. Schlagen wir sie, ist die $competition zum Greifen nah.';
   }
+
+  @override
+  String get matchElsewhereShout => 'TOR WOANDERS';
 }

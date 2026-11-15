@@ -4523,5 +4523,6 @@
   "yPlayoffDrawn0": "{competition}のプレーオフ抽選：本大会への道に{opponent}が立ちはだかる。",
   "yPlayoffDrawn1": "{competition}のプレーオフは{opponent}と。一発勝負、すべてが懸かる。",
   "yPlayoffDrawn2": "プレーオフは{opponent}。もう横にならないと無理。{competition}、待ってろ。たぶん。",
-  "yPlayoffDrawn3": "プレーオフ抽選：{opponent}。勝てば{competition}はもう目の前だ。"
+  "yPlayoffDrawn3": "プレーオフ抽選：{opponent}。勝てば{competition}はもう目の前だ。",
+  "matchElsewhereShout": "他会場でゴール"
 }

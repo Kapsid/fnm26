@@ -14,8 +14,8 @@ import 'package:fnm/shared/widgets/widgets.dart';
 import '../helpers/seeded_save.dart';
 
 /// The Summary's other matches of the group, on the real match screen: shown
-/// live (no score) through our first half, their half-time score from our
-/// break, their result at our whistle; and the score card gone for good.
+/// ticking along on our clock through both halves, their half-time score at
+/// our break, their result at our whistle, a banner for each goal elsewhere; and the score card gone for good.
 ///
 /// The seeded save opens on a qualifying group, so its first match has two
 /// other group matches that day.
@@ -127,9 +127,23 @@ void main() {
         );
       }
 
-      // Our half time: theirs.
       final screen = _probe(tester);
       final pb = screen.pitchMode.playback!;
+      // A goal elsewhere comes up on its banner as our clock passes it (the
+      // seeded day has first-half goals in both other matches).
+      expect(
+        others.any((s) => s.goalsBetween(0, 40).isNotEmpty),
+        isTrue,
+        reason: 'the seeded day has an early goal elsewhere',
+      );
+      screen.seekPitch(pb.halfTime * 40 ~/ 45);
+      final banner = find.byKey(matchElsewhereBannerKey);
+      for (var i = 0; i < 100 && banner.evaluate().isEmpty; i++) {
+        await tester.pump(const Duration(milliseconds: 16));
+      }
+      expect(banner, findsOneWidget);
+
+      // Our half time: theirs.
       final half = find.descendant(
         of: find.byType(HalfTimePrompt),
         matching: find.text(enL.matchContinue),
@@ -138,14 +152,27 @@ void main() {
       for (var i = 0; i < 400 && half.evaluate().isEmpty; i++) {
         await tester.pump(const Duration(milliseconds: 16));
       }
-      await tester.tap(half);
-      await tester.pump(const Duration(milliseconds: 500));
+      // The interval keeps the screen to its panel: no goal elsewhere over
+      // it.
+      expect(find.byKey(matchElsewhereBannerKey), findsNothing);
+      // The interval: their half-time score.
       await _show(tester, card);
       for (final s in others) {
         final ht = s.scoreAt(SameDayPhase.halfTime)!;
         expect(
           _score(tester, s.fixture.id),
           '${ht.home} - ${ht.away} | ${enL.matchSummaryHalfTimeMark}',
+        );
+      }
+      // The second half: they tick along with ours again, never frozen at
+      // the break.
+      await tester.tap(half);
+      await tester.pump(const Duration(milliseconds: 500));
+      await _show(tester, card);
+      for (final s in others) {
+        expect(
+          _score(tester, s.fixture.id),
+          endsWith(' | ${enL.matchSummaryLive}'),
         );
       }
 

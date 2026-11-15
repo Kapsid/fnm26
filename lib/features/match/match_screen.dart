@@ -87,6 +87,7 @@ part 'match_event_flash.dart';
 part 'match_score_bug.dart';
 part 'match_tablet_layout.dart';
 part 'match_red_card_banner.dart';
+part 'match_elsewhere_banner.dart';
 part 'match_tv_header.dart';
 part 'match_summary_tab.dart';
 
@@ -261,6 +262,14 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   /// hidden). It never holds the clock.
   MatchEvent? _redFlash;
   Timer? _redTimer;
+
+  /// The goal in another match of the day on its banner (null when hidden),
+  /// those still to show, and the minute of ours they have been read up to.
+  /// Never holds the clock.
+  ElsewhereGoal? _elsewhere;
+  final List<ElsewhereGoal> _elsewhereQueue = [];
+  int _elsewhereUpTo = 0;
+  Timer? _elsewhereTimer;
 
   /// The player's nation id (seeded with the live setup), used to spot an
   /// injury to one of the manager's own players as the clock reaches it.
@@ -596,6 +605,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     _eventTimer?.cancel();
     _penTimer?.cancel();
     _redTimer?.cancel();
+    _elsewhereTimer?.cancel();
     _stage?.dispose();
     _pc.dispose();
     super.dispose();
@@ -783,6 +793,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
           _flashEventsAt(_minute, 0);
           scored = _flashGoalAt(_minute, 0);
         }
+        _checkElsewhere();
         if (_clockDone) _whistleFullTime();
       });
       if (soundMinute case (final m, final st)) _soundTimelineMinute(m, st);
@@ -1513,6 +1524,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       _added = now.added;
       _held = now.held;
       if (before == null) return;
+      _checkElsewhere();
       final goals = <MatchEvent>[];
       MatchEvent? notice;
       MatchEvent? red;
@@ -1531,6 +1543,65 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     for (final e in arrived) {
       if (_checkInjury(e)) break;
     }
+  }
+
+  /// The goals of the day's other matches that our clock has just passed:
+  /// each on the banner in turn. Read only once the day's results are in,
+  /// so none is skipped while they load. Call inside `setState`.
+  void _checkElsewhere() {
+    final upTo = _minute;
+    if (upTo <= _elsewhereUpTo) return;
+    final preview = _livePreview;
+    if (preview == null) return;
+    final key = sameDayKey(preview.fixture);
+    final sameDay = ref.read(sameDayResultsProvider(key)).valueOrNull;
+    if (sameDay == null) return;
+    final after = _elsewhereUpTo;
+    _elsewhereUpTo = upTo;
+    if (sameDay.isEmpty) return;
+    final events = _result?.events ?? const <MatchEvent>[];
+    final homeId = preview.fixture.homeNationId;
+    final goals = elsewhereGoalsBetween(
+      sameDay: sameDay,
+      after: after,
+      upTo: upTo,
+      ours: preview.fixture,
+      ourNationId: preview.playerNationId,
+      group: ref.read(groupBeforeProvider(key)).valueOrNull,
+      ourScoreAt: (m) {
+        var h = 0;
+        var a = 0;
+        for (final e in events) {
+          if (e.type != MatchEventType.goal || e.minute > m) continue;
+          if (e.teamNationId == homeId) {
+            h++;
+          } else {
+            a++;
+          }
+        }
+        return (home: h, away: a);
+      },
+    );
+    if (goals.isEmpty) return;
+    _elsewhereQueue.addAll(goals);
+    if (_elsewhere == null) _nextElsewhere();
+  }
+
+  /// The next goal elsewhere on the banner; a long backlog (a fast clock)
+  /// keeps only its latest two. Call inside `setState`.
+  void _nextElsewhere() {
+    if (_elsewhereQueue.isEmpty) {
+      _elsewhere = null;
+      return;
+    }
+    if (_elsewhereQueue.length > 2) {
+      _elsewhereQueue.removeRange(0, _elsewhereQueue.length - 2);
+    }
+    _elsewhere = _elsewhereQueue.removeAt(0);
+    _elsewhereTimer?.cancel();
+    _elsewhereTimer = Timer(kElsewhereBannerHold, () {
+      if (mounted) setState(_nextElsewhere);
+    });
   }
 
   /// The 2D TV's red card banner for [e], shown as the referee raises the
@@ -1586,6 +1657,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     final askPreview = _isShootout && !_penOrderAsked ? _livePreview : null;
     setState(() {
       _minute = _fullTimeMinute;
+      _elsewhereUpTo = _fullTimeMinute;
+      _elsewhereQueue.clear();
+      _elsewhere = null;
       _added = _stoppage;
       _held = const {};
       _whistled = true;
@@ -2531,7 +2605,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               sameDay: sameDay,
               // Our half-time whistle, the interval included.
               sameDayPhase: SameDayPhase.of(
-                halfTime: _halfTimeTaken || halfTimeLabel != null,
+                halfTime: _atHalfTime,
                 fullTime: ft,
               ),
               liveMinute: ft ? null : _minute,
@@ -2555,6 +2629,34 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                   event: _goalFlash!,
                   flagCode: code(_goalFlash!.teamNationId),
                   goalNumber: homeScore + awayScore,
+                ),
+              // A goal in another match of the day, up from the foot of the
+              // screen, on the Pitch and the Timeline alike.
+              if (_elsewhere case final g? when !ft && !_atInterval)
+                Positioned(
+                  left: AppSpacing.marginMobile,
+                  right: AppSpacing.marginMobile,
+                  bottom: AppSpacing.sm,
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 460),
+                      child: _ElsewhereBanner(
+                        key: ValueKey((
+                          'elsewhere',
+                          g.fixtureId,
+                          g.minute,
+                          g.homeScore,
+                          g.awayScore,
+                        )),
+                        goal: g,
+                        code: code,
+                        ourCode: code(preview.playerNationId),
+                        still:
+                            MediaQuery.maybeDisableAnimationsOf(context) ??
+                            false,
+                      ),
+                    ),
+                  ),
                 ),
               // Half-time interval: play only resumes on Continue (the
               // manager may reshape the side first).

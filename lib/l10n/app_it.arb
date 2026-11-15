@@ -4523,5 +4523,6 @@
   "yPlayoffDrawn0": "Sorteggio dei playoff per {competition}: tra noi e la fase finale c'è {opponent}.",
   "yPlayoffDrawn1": "Sarà {opponent} nei playoff per {competition}. Una sfida, tutto in palio.",
   "yPlayoffDrawn2": "{opponent} ai playoff. Ho già bisogno di sdraiarmi. {competition}, arriviamo. Forse.",
-  "yPlayoffDrawn3": "Sorteggio playoff: {opponent}. Battiamoli e {competition} è a portata di mano."
+  "yPlayoffDrawn3": "Sorteggio playoff: {opponent}. Battiamoli e {competition} è a portata di mano.",
+  "matchElsewhereShout": "GOL ALTROVE"
 }

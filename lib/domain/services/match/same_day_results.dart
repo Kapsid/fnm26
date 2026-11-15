@@ -94,6 +94,35 @@ class SameDayResult {
     return (home: home, away: away);
   }
 
+  /// The goals scored after minute [after] and up to [upTo] (on our clock),
+  /// in the order they went in, each with the score it made: what the match
+  /// screen calls out as a goal elsewhere.
+  List<({int minute, bool home, int homeScore, int awayScore})> goalsBetween(
+    int after,
+    int upTo,
+  ) {
+    final ordered = [...goalMinutes]
+      ..sort((a, b) => a.minute.compareTo(b.minute));
+    var home = 0;
+    var away = 0;
+    final out = <({int minute, bool home, int homeScore, int awayScore})>[];
+    for (final g in ordered) {
+      if (g.home) {
+        home++;
+      } else {
+        away++;
+      }
+      if (g.minute <= after || g.minute > upTo) continue;
+      out.add((
+        minute: g.minute,
+        home: g.home,
+        homeScore: home,
+        awayScore: away,
+      ));
+    }
+    return out;
+  }
+
   /// The fixture, its score as stored (a shootout's winner one clear; see
   /// [Fixture.shownHomeScore]).
   final Fixture fixture;

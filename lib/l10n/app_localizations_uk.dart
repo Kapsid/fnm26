@@ -18438,4 +18438,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'Жеребкування плей-оф: $opponent. Здолаємо їх, і $competition буде на відстані витягнутої руки.';
   }
+
+  @override
+  String get matchElsewhereShout => 'ГОЛ В ІНШОМУ МАТЧІ';
 }

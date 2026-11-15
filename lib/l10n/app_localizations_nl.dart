@@ -18193,4 +18193,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'Loting play-offs: $opponent. Verslaan we ze, dan is $competition binnen handbereik.';
   }
+
+  @override
+  String get matchElsewhereShout => 'GOAL ELDERS';
 }

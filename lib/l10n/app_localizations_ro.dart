@@ -18533,4 +18533,7 @@ class AppLocalizationsRo extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'Tragerea barajului: $opponent. Îi batem și $competition e la un pas.';
   }
+
+  @override
+  String get matchElsewhereShout => 'GOL ÎN ALT MECI';
 }

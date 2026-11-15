@@ -4523,5 +4523,6 @@
   "yPlayoffDrawn0": "จับสลากเพลย์ออฟ{competition}: {opponent} ขวางทางเราสู่รอบสุดท้าย",
   "yPlayoffDrawn1": "เพลย์ออฟ{competition} เจอ{opponent} นัดเดียว ทุกอย่างอยู่ตรงนี้",
   "yPlayoffDrawn2": "{opponent} ในเพลย์ออฟ ฉันต้องนอนพักแล้ว {competition} เรามาแล้ว อาจจะนะ",
-  "yPlayoffDrawn3": "จับสลากเพลย์ออฟ: {opponent} ชนะพวกเขาแล้ว{competition}ก็อยู่แค่เอื้อม"
+  "yPlayoffDrawn3": "จับสลากเพลย์ออฟ: {opponent} ชนะพวกเขาแล้ว{competition}ก็อยู่แค่เอื้อม",
+  "matchElsewhereShout": "ประตูจากสนามอื่น"
 }

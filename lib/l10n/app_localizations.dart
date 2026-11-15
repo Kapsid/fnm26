@@ -27379,6 +27379,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Play-off draw: {opponent}. Beat them and the {competition} is within touching distance.'**
   String yPlayoffDrawn3(String competition, String opponent);
+
+  /// Live match banner: a goal has just gone in in one of the day's other matches (same group or round). Short, uppercase.
+  ///
+  /// In en, this message translates to:
+  /// **'GOAL ELSEWHERE'**
+  String get matchElsewhereShout;
 }
 
 class _AppLocalizationsDelegate

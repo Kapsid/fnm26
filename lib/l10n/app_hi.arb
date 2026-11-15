@@ -4523,5 +4523,6 @@
   "yPlayoffDrawn0": "{competition} प्ले-ऑफ़ ड्रॉ: हमारे और फ़ाइनल्स के बीच {opponent} खड़ा है।",
   "yPlayoffDrawn1": "{competition} प्ले-ऑफ़ में {opponent} से मुकाबला। एक मैच, सब कुछ दाँव पर।",
   "yPlayoffDrawn2": "प्ले-ऑफ़ में {opponent}। मुझे अभी से लेटना पड़ेगा। {competition}, हम आ रहे हैं। शायद।",
-  "yPlayoffDrawn3": "प्ले-ऑफ़ ड्रॉ: {opponent}। इन्हें हराया तो {competition} बस हाथ भर दूर।"
+  "yPlayoffDrawn3": "प्ले-ऑफ़ ड्रॉ: {opponent}। इन्हें हराया तो {competition} बस हाथ भर दूर।",
+  "matchElsewhereShout": "दूसरे मैच में गोल"
 }

@@ -18093,4 +18093,7 @@ class AppLocalizationsSv extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'Playofflottning: $opponent. Slår vi dem är $competition inom räckhåll.';
   }
+
+  @override
+  String get matchElsewhereShout => 'MÅL PÅ ANNAT HÅLL';
 }

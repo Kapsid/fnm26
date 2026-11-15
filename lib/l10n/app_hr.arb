@@ -4523,5 +4523,6 @@
   "yPlayoffDrawn0": "Ždrijeb doigravanja za {competition}: {opponent} stoji između nas i završnice.",
   "yPlayoffDrawn1": "U doigravanju za {competition} igramo protiv {opponent}. Jedna utakmica, sve na kocki.",
   "yPlayoffDrawn2": "{opponent} u doigravanju. Već moram leći. {competition}, stižemo. Možda.",
-  "yPlayoffDrawn3": "Ždrijeb doigravanja: {opponent}. Pobijedimo li ih, {competition} je nadohvat ruke."
+  "yPlayoffDrawn3": "Ždrijeb doigravanja: {opponent}. Pobijedimo li ih, {competition} je nadohvat ruke.",
+  "matchElsewhereShout": "GOL NA DRUGOM TERENU"
 }

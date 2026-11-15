@@ -18502,4 +18502,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'Los baráže: $opponent. Porazíme je a $competition je na dosah.';
   }
+
+  @override
+  String get matchElsewhereShout => 'GÓL JINDE';
 }

@@ -18140,4 +18140,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'Play-off draw: $opponent. Beat them and the $competition is within touching distance.';
   }
+
+  @override
+  String get matchElsewhereShout => 'GOAL ELSEWHERE';
 }

@@ -17954,4 +17954,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'Bốc thăm play-off: $opponent. Thắng họ là $competition trong tầm tay.';
   }
+
+  @override
+  String get matchElsewhereShout => 'BÀN THẮNG Ở TRẬN KHÁC';
 }

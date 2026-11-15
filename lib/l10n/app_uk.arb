@@ -4523,5 +4523,6 @@
   "yPlayoffDrawn0": "Жеребкування плей-оф за {competition}: між нами й фінальним турніром стоїть {opponent}.",
   "yPlayoffDrawn1": "У плей-оф за {competition} граємо з {opponent}. Один поєдинок, усе на кону.",
   "yPlayoffDrawn2": "{opponent} у плей-оф. Мені вже треба прилягти. {competition}, ми йдемо. Можливо.",
-  "yPlayoffDrawn3": "Жеребкування плей-оф: {opponent}. Здолаємо їх, і {competition} буде на відстані витягнутої руки."
+  "yPlayoffDrawn3": "Жеребкування плей-оф: {opponent}. Здолаємо їх, і {competition} буде на відстані витягнутої руки.",
+  "matchElsewhereShout": "ГОЛ В ІНШОМУ МАТЧІ"
 }

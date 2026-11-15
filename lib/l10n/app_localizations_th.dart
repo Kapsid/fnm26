@@ -17800,4 +17800,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'จับสลากเพลย์ออฟ: $opponent ชนะพวกเขาแล้ว$competitionก็อยู่แค่เอื้อม';
   }
+
+  @override
+  String get matchElsewhereShout => 'ประตูจากสนามอื่น';
 }

@@ -18271,4 +18271,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'Tirage des barrages : $opponent. Battons-les et $competition sera à portée de main.';
   }
+
+  @override
+  String get matchElsewhereShout => 'BUT AILLEURS';
 }

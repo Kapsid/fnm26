@@ -4523,5 +4523,6 @@
   "yPlayoffDrawn0": "Playoff-trekning til {competition}: {opponent} står mellom oss og sluttspillet.",
   "yPlayoffDrawn1": "Det blir {opponent} i playoff til {competition}. Én kamp, alt står på spill.",
   "yPlayoffDrawn2": "{opponent} i playoff. Jeg må allerede legge meg ned. {competition}, her kommer vi. Kanskje.",
-  "yPlayoffDrawn3": "Playoff-trekning: {opponent}. Slår vi dem, er {competition} innen rekkevidde."
+  "yPlayoffDrawn3": "Playoff-trekning: {opponent}. Slår vi dem, er {competition} innen rekkevidde.",
+  "matchElsewhereShout": "MÅL ANDRE STEDER"
 }

@@ -4523,5 +4523,6 @@
   "yPlayoffDrawn0": "Nabunot na ang play-off para sa {competition}: {opponent} ang nakaharang sa amin at sa finals.",
   "yPlayoffDrawn1": "{opponent} sa play-off ng {competition}. Isang laban, nakataya ang lahat.",
   "yPlayoffDrawn2": "{opponent} sa play-off. Kailangan ko nang humiga. {competition}, nandiyan na kami. Siguro.",
-  "yPlayoffDrawn3": "Play-off draw: {opponent}. Talunin natin sila at abot-kamay na ang {competition}."
+  "yPlayoffDrawn3": "Play-off draw: {opponent}. Talunin natin sila at abot-kamay na ang {competition}.",
+  "matchElsewhereShout": "GOL SA IBANG LARO"
 }

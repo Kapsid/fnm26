@@ -18200,4 +18200,7 @@ class AppLocalizationsEl extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'Κλήρωση μπαράζ: $opponent. Αν τους κερδίσουμε, το $competition είναι μια ανάσα μακριά.';
   }
+
+  @override
+  String get matchElsewhereShout => 'ΓΚΟΛ ΑΛΛΟΥ';
 }

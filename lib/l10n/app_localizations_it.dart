@@ -18186,4 +18186,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'Sorteggio playoff: $opponent. Battiamoli e $competition è a portata di mano.';
   }
+
+  @override
+  String get matchElsewhereShout => 'GOL ALTROVE';
 }

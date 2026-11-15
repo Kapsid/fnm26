@@ -17478,4 +17478,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String yPlayoffDrawn3(String competition, String opponent) {
     return 'プレーオフ抽選：$opponent。勝てば$competitionはもう目の前だ。';
   }
+
+  @override
+  String get matchElsewhereShout => '他会場でゴール';
 }

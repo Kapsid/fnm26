@@ -4523,5 +4523,6 @@
   "yPlayoffDrawn0": "Cabutan play-off {competition}: {opponent} menghalang kita daripada pusingan akhir.",
   "yPlayoffDrawn1": "Lawan kita {opponent} dalam play-off {competition}. Satu perlawanan, semuanya dipertaruhkan.",
   "yPlayoffDrawn2": "{opponent} dalam play-off. Saya sudah perlu berbaring. {competition}, kami datang. Mungkin.",
-  "yPlayoffDrawn3": "Cabutan play-off: {opponent}. Kalahkan mereka dan {competition} sudah di depan mata."
+  "yPlayoffDrawn3": "Cabutan play-off: {opponent}. Kalahkan mereka dan {competition} sudah di depan mata.",
+  "matchElsewhereShout": "GOL DI PERLAWANAN LAIN"
 }
