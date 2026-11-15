@@ -276,9 +276,9 @@ int _count(String kind) => _feedback.where((f) => f == kind).length;
 /// A goal's tone (desktop only, but asked for on every platform).
 const String _alert = 'SystemSound.play SystemSoundType.alert';
 
-/// [goals] goals, felt: each one a single medium haptic tap (the same as the
-/// full-time whistle's) with the goal tone right after it. Never a heavy
-/// tap, never the long `vibrate` buzz.
+/// [goals] goals, felt: each one the heavy haptic tap and the long
+/// `vibrate` buzz, with the goal tone right after them (the picture no
+/// longer blinks, so the hand has to feel it).
 Future<void> _expectGoalFelt(WidgetTester tester, int goals) async {
   // Nothing more is to come later: no delayed second tap.
   await tester.pump(const Duration(milliseconds: 200));
@@ -286,10 +286,12 @@ Future<void> _expectGoalFelt(WidgetTester tester, int goals) async {
   for (var i = 0; i < _feedback.length; i++) {
     if (_feedback[i] != _alert) continue;
     expect(i, greaterThan(0));
-    expect(_feedback[i - 1], _medium, reason: 'a medium tap with the tone');
+    expect(i, greaterThan(1));
+    expect(_feedback[i - 2], _heavy, reason: 'a heavy tap first');
+    expect(_feedback[i - 1], _buzz, reason: 'then the long buzz');
   }
-  expect(_count(_heavy), 0, reason: 'no heavy taps any more');
-  expect(_count(_buzz), 0, reason: 'a tap, never the long buzz');
+  expect(_count(_heavy), goals, reason: 'one heavy tap per goal');
+  expect(_count(_buzz), goals, reason: 'one buzz per goal');
 }
 
 bool _shout(WidgetTester tester) =>
@@ -365,7 +367,7 @@ void main() {
       await _expectGoalFelt(tester, 1);
       // Held under the flash: no second buzz for the same goal.
       await tester.pump(const Duration(seconds: 1));
-      expect((_count(_buzz), _count(_heavy), _count(_alert)), (0, 0, 1));
+      expect((_count(_buzz), _count(_heavy), _count(_alert)), (1, 1, 1));
     });
 
     testWidgets('2D TV: played from kick-off at match pace, the first goal '

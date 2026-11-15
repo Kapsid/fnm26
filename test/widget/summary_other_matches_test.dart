@@ -9,6 +9,8 @@ import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/features/match/same_day_providers.dart';
+import 'package:fnm/features/match/shot_map.dart';
+import 'package:fnm/features/match/pitch/pitch_match_view.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
 import '../helpers/seeded_save.dart';
@@ -143,6 +145,29 @@ void main() {
       }
       if (form == FormFactor.phone) {
         expect(banner, findsOneWidget);
+        // The ground leads the Summary, the live table under it, then the
+        // day's other matches.
+        final tableHead = find.text(enL.matchLiveTable.toUpperCase());
+        await tester.scrollUntilVisible(
+          find.byKey(MatchSummaryTab.stadiumKey),
+          -80,
+          scrollable: find
+              .descendant(
+                of: find.byType(MatchSummaryTab),
+                matching: find.byType(Scrollable),
+              )
+              .first,
+        );
+        await _show(tester, tableHead);
+        expect(
+          tester.getTopLeft(find.byKey(MatchSummaryTab.stadiumKey)).dy,
+          lessThan(tester.getTopLeft(tableHead).dy),
+        );
+        await _show(tester, card);
+        expect(
+          tester.getTopLeft(tableHead).dy,
+          lessThan(tester.getTopLeft(card).dy),
+        );
       } else {
         // The tablet has the day's scores in its Summary column: no banner,
         // the fresh score lit there instead.
@@ -236,6 +261,46 @@ void main() {
         top(MatchSummaryTab.potmKey),
         lessThan(top(MatchSummaryTab.otherMatchesKey)),
       );
+      if (form == FormFactor.phone) {
+        // The phone's shot map: in the Summary under the score and its
+        // scorers, never over the picture.
+        expect(
+          find.descendant(
+            of: find.byType(PitchMatchView),
+            matching: find.byKey(ShotMapView.viewKey),
+          ),
+          findsNothing,
+        );
+        await _show(tester, find.byKey(MatchSummaryTab.shotMapKey));
+        // In the Summary's order: the score and its scorers, the man of the
+        // match, the shot map, then the day.
+        final list = tester.widget<ListView>(
+          find
+              .descendant(
+                of: find.byType(MatchSummaryTab),
+                matching: find.byType(ListView),
+              )
+              .first,
+        );
+        final keys = [
+          for (final w
+              in (list.childrenDelegate as SliverChildListDelegate).children)
+            w.key,
+        ];
+        int at(Key k) => keys.indexOf(k);
+        expect(at(MatchSummaryTab.scoreboardKey), 0);
+        expect(
+          at(MatchSummaryTab.potmKey),
+          lessThan(at(MatchSummaryTab.shotMapKey)),
+        );
+        expect(
+          at(MatchSummaryTab.shotMapKey),
+          lessThan(at(MatchSummaryTab.otherMatchesKey)),
+        );
+      } else {
+        expect(find.byKey(MatchSummaryTab.shotMapKey), findsNothing);
+        expect(find.byKey(ShotMapView.viewKey), findsOneWidget);
+      }
       await _show(tester, find.byKey(MatchSummaryTab.stadiumKey));
       expect(
         top(MatchSummaryTab.otherMatchesKey),

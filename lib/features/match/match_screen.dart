@@ -2611,6 +2611,33 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               liveMinute: ft ? null : _minute,
               liveTable: liveTable,
               scoresFirst: tablet,
+              // The phone's shot map: in the Summary under the score and its
+              // scorers, not over the picture.
+              shotMap: ft && !tablet && !showingShootout
+                  ? LayoutBuilder(
+                      builder: (context, c) => SizedBox(
+                        // The pitch at its width, the caption, the totals
+                        // and the legend.
+                        height:
+                            (c.maxWidth - 2 * AppSpacing.sm) * 68 / 105 +
+                            96 * MediaQuery.textScalerOf(context).scale(1),
+                        child: ClipRRect(
+                          borderRadius: AppRadii.mdAll,
+                          child: ShotMapView(
+                            shots: [
+                              for (final m in r.moments)
+                                if (m is ShotMoment) m,
+                            ],
+                            homeId: homeId,
+                            homeCode: code(homeId),
+                            awayCode: code(awayId),
+                            homeColor: homeC,
+                            awayColor: awayC,
+                          ),
+                        ),
+                      ),
+                    )
+                  : null,
               codeOf: code,
               nameOf: name,
               // The tablet's centre column already carries the score, so
@@ -2767,9 +2794,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                                 false,
                           ),
                         ),
-                      // Full time: the shot map over the picture, which
-                      // otherwise stands still on its last frame (closable).
-                      if (ft && !_shotMapClosed && !showingShootout)
+                      // Full time on the tablet: the shot map over the
+                      // picture, which otherwise stands still on its last
+                      // frame (closable). The phone has it in the Summary.
+                      if (ft && tablet && !_shotMapClosed && !showingShootout)
                         Positioned.fill(
                           child: Stack(
                             children: [
@@ -2797,20 +2825,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                                 ),
                               ),
                             ],
-                          ),
-                        ),
-                      // A goal: the picture blinks in the scorers' colour,
-                      // so it cannot be missed (the score bug's banner
-                      // alone was easy to miss).
-                      if (_goalFlash case final g?
-                          when !(MediaQuery.maybeDisableAnimationsOf(context) ??
-                              false))
-                        Positioned.fill(
-                          child: IgnorePointer(
-                            child: GoalPitchFlash(
-                              key: ValueKey(('goalFlash', _keyOf(g))),
-                              color: g.teamNationId == homeId ? homeC : awayC,
-                            ),
                           ),
                         ),
                     ],

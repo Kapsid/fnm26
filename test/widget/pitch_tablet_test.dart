@@ -213,19 +213,13 @@ void main() {
         );
         final pitch = tester.getRect(find.byType(PitchMatchView));
         expect(tester.getRect(strip).bottom, lessThan(pitch.top));
-        // Nothing over the picture but the game (and the goal's blink,
-        // which lets every touch through).
+        // Nothing over the picture but the game.
         final over = find.descendant(
           of: find.ancestor(
             of: find.byType(PitchMatchView),
             matching: find.byType(AspectRatio),
           ),
-          matching: find.byWidgetPredicate(
-            (w) =>
-                w is Positioned &&
-                !(w.child is IgnorePointer &&
-                    (w.child! as IgnorePointer).child is GoalPitchFlash),
-          ),
+          matching: find.byType(Positioned),
         );
         expect(over, findsNothing);
         // The goal's pause over, the strip is the figures again (or the

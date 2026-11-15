@@ -263,6 +263,7 @@ bool _ready(WidgetTester tester) {
 final List<String> _feedback = [];
 
 const String _medium = 'HapticFeedback.vibrate HapticFeedbackType.mediumImpact';
+const String _heavy = 'HapticFeedback.vibrate HapticFeedbackType.heavyImpact';
 
 int _count(String kind) => _feedback.where((f) => f == kind).length;
 
@@ -352,7 +353,7 @@ void main() {
       if (shout && !wasShout) {
         if (up) {
           shoutInCloseUp = true;
-          tapsInCloseUp = _count(_medium);
+          tapsInCloseUp = _count(_medium) + _count(_heavy);
         } else {
           shoutOnPitch = true;
         }

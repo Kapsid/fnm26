@@ -84,7 +84,9 @@ void main() {
     tester,
   ) async {
     await tester.pumpApp(
-      Scaffold(body: SingleChildScrollView(child: EuroPlayoffPaths(data: data()))),
+      Scaffold(
+        body: SingleChildScrollView(child: EuroPlayoffPaths(data: data())),
+      ),
     );
     await tester.pumpAndSettle();
     expect(find.text('Path A'), findsOneWidget);

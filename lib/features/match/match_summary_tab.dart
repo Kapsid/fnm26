@@ -25,6 +25,7 @@ class MatchSummaryTab extends StatelessWidget {
     this.sameDay = const [],
     this.sameDayPhase = SameDayPhase.live,
     this.scoresFirst = false,
+    this.shotMap,
     this.liveMinute,
     this.liveTable,
     this.codeOf,
@@ -78,6 +79,13 @@ class MatchSummaryTab extends StatelessWidget {
   /// change).
   final bool scoresFirst;
 
+  /// At full time, the match's shots (see [ShotMapView]), under the score
+  /// and its scorers (the phone's; the tablet lays it over the picture).
+  final Widget? shotMap;
+
+  /// The shot map's place in the full-time Summary.
+  static const Key shotMapKey = Key('summary.shotMap');
+
   /// Our match's minute while it is being played: the other matches' scores
   /// follow it (null: by [sameDayPhase] only, as at the breaks).
   final int? liveMinute;
@@ -107,20 +115,19 @@ class MatchSummaryTab extends StatelessWidget {
     );
     final others = sameDay.isEmpty ? null : _otherMatches(context);
     const gap = SizedBox(height: AppSpacing.md);
-    // Live: the table, the ground and the rest of the day. At the whistle the man of
-    // the match leads, the day's results follow, then the ground and the
-    // figures.
+    // Live: the ground, then the table and the rest of the day. At the
+    // whistle the score and its scorers lead, the man of the match and the
+    // shot map follow, then the day's results, the ground and the figures.
     final table = liveTable;
     final children = r == null
         ? [
-            // Live on the phone, the group as it stands this minute leads,
-            // then the ground and the day (its goals called out on a
-            // banner). On the tablet the ground leads, the day's other
-            // scores under it and the live table under them.
-            if (!scoresFirst && table != null) ...[table, gap],
+            // The ground leads. On the phone the group as it stands this
+            // minute comes under it, then the day (its goals called out on
+            // a banner); on the tablet the day's other scores come first
+            // and the live table under them.
             stadium,
             if (scoresFirst && others != null) ...[gap, others],
-            if (scoresFirst && table != null) ...[gap, table],
+            if (table != null) ...[gap, table],
             if (!scoresFirst && others != null) ...[gap, others],
           ]
         : [
@@ -136,6 +143,10 @@ class MatchSummaryTab extends StatelessWidget {
                 clipBehavior: Clip.antiAlias,
                 child: InkWell(onTap: onOpenPlayer, child: p),
               ),
+              gap,
+            ],
+            if (shotMap case final m?) ...[
+              KeyedSubtree(key: shotMapKey, child: m),
               gap,
             ],
             if (others != null) ...[others, gap],

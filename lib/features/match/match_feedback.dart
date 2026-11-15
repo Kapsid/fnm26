@@ -15,14 +15,15 @@ abstract final class MatchFeedback {
   @visibleForTesting
   static void Function(String cue)? debugOnCue;
 
-  /// A goal: a single medium haptic tap (the same as the full-time
-  /// whistle's) and a short alert tone (desktop only; phones ignore it).
-  ///
-  /// A haptic tap only, never the long `vibrate` buzz.
+  /// A goal: the heavy haptic tap and the long `vibrate` buzz, and a short
+  /// alert tone (desktop only; phones ignore it).
   static void goal(bool enabled) {
     if (!enabled) return;
     debugOnCue?.call('goal');
-    HapticFeedback.mediumImpact();
+    // The strongest tap and a long buzz after it: a goal is felt in the
+    // hand (the picture does not blink for it).
+    HapticFeedback.heavyImpact();
+    HapticFeedback.vibrate();
     SystemSound.play(SystemSoundType.alert);
   }
 
