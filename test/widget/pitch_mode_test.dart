@@ -2198,4 +2198,34 @@ void _ownerFeedbackTests() {
       }
     });
   }
+
+  testWidgets('the scorers sit under the Pitch scoreboard, never the '
+      "Timeline's", (tester) async {
+    final preview = _preview();
+    final salt = _salt(
+      preview,
+      (r) =>
+          r.events.any((e) => e.type == MatchEventType.goal && e.minute < 40),
+    );
+    await _pump(
+      tester,
+      preview: preview,
+      salt: salt,
+      prefs: {kMatchViewModePrefsKey: 'pitch'},
+    );
+    await _until(tester, () => _ready(tester) && _clock(tester).playing);
+    await _seek(tester, _pb(tester).pacer.screenAt(41, 0, within: 0.5));
+    await tester.pump(const Duration(seconds: 3)); // the goal flash clears
+    List<String> scorers() {
+      final s = tester.widget<MatchScoreboard>(find.byType(MatchScoreboard));
+      return [...s.homeScorers, ...s.awayScorers];
+    }
+
+    expect(scorers(), isNotEmpty);
+    await _switch(tester);
+    expect(find.byType(PitchMatchView), findsNothing);
+    expect(scorers(), isEmpty, reason: 'the Timeline lists the goals itself');
+    await _switch(tester);
+    expect(scorers(), isNotEmpty);
+  });
 }

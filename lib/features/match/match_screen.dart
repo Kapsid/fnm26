@@ -2379,10 +2379,12 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               bugTheme: bugTheme,
               homeReds: homeReds,
               awayReds: awayReds,
-              // The phone's scoreboard lists them; the tablet keeps them in
-              // its left column (see _MatchTabletLayout.goals).
-              homeScorers: tablet ? const [] : homeScorers,
-              awayScorers: tablet ? const [] : awayScorers,
+              // The phone's Pitch scoreboard lists them; the Timeline lists
+              // every goal already, so its scoreboard stays as it was, and
+              // the tablet keeps them in its left column (see
+              // _MatchTabletLayout.goals).
+              homeScorers: tablet || !_onPitch ? const [] : homeScorers,
+              awayScorers: tablet || !_onPitch ? const [] : awayScorers,
             );
             final Widget? momentum = !ft && !showingShootout
                 ? _MomentumBar(
