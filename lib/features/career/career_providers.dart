@@ -725,6 +725,8 @@ class CareerService {
   }) async {
     final info = NationsCups.forConfederation(confederation);
     if (info == null) return;
+    // A calendar2 cycle spreads each side's home and away games.
+    final balanced = await isCalendar2(comp, careerId, cycle);
     int rankOf(Nation n) => rankById?[n.id] ?? n.ranking;
     final members = [
       for (final n in nations)
@@ -752,6 +754,7 @@ class CareerService {
         for (var i = 0; i < split.length; i++) {
           final ids = split[i];
           final gen = const ScheduleGenerator().generate(
+            balancedHomeAway: balanced,
             confederation: confederation,
             nations: [for (final id in ids) byId[id]!],
             rngSeed:
@@ -806,6 +809,7 @@ class CareerService {
         final league = byTier[tier]!;
         if (league.length < 4) continue; // too small for a group stage
         final gen = const ScheduleGenerator().generate(
+          balancedHomeAway: balanced,
           confederation: confederation,
           nations: league,
           rngSeed:
@@ -870,7 +874,9 @@ class CareerService {
     Map<int, int>? rankById,
     Set<int> noJuneNationIds = const {},
   }) async {
+    final balanced = await isCalendar2(comp, careerId, cycle);
     final cq = const ScheduleGenerator().generate(
+      balancedHomeAway: balanced,
       confederation: confederation,
       nations: field,
       rngSeed: rngSeed ^ (cycle * 0x71) ^ 0xCAFE,
@@ -997,6 +1003,7 @@ class CareerService {
     if (!nations.any((n) => n.id == nationId)) return;
     final me = nations.firstWhere((n) => n.id == nationId);
     final cal2 = await isCalendar2(comp, careerId, cycle);
+    final balanced = cal2;
     final byConfederation = <Confederation, List<Nation>>{};
     for (final n in nations) {
       (byConfederation[n.confederation] ??= []).add(n);
@@ -1022,6 +1029,7 @@ class CareerService {
       // else March to November, all done by November (see Calendar2).
       final span2 = cal2 ? Calendar2.wcQualifying(wcYear, entry.key) : null;
       final schedule = const ScheduleGenerator().generate(
+        balancedHomeAway: balanced,
         confederation: entry.key,
         nations: quals,
         rngSeed: rngSeed ^ (cycle * 0x1B3D) ^ (entry.key.index * 0x9E37),

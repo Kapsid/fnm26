@@ -62,3 +62,91 @@ List<List<Pairing>> _singleRoundRobin(List<int> teams) {
   }
   return rounds;
 }
+
+/// [doubleRoundRobin] with every side's home and away games spread as
+/// evenly as the rounds allow: never three home (or away) matches running
+/// in a group of three to six, a bye not counting as a break. The rounds,
+/// and who meets whom in each, are exactly [doubleRoundRobin]'s; only who
+/// is at home changes (and, in a group of four, the order of the second
+/// leg's rounds, which no orientation can spare its turn otherwise).
+///
+/// Searched exhaustively and deterministically (the first best in a fixed
+/// order). Larger groups are returned as [doubleRoundRobin] has them.
+List<List<Pairing>> balancedDoubleRoundRobin(
+  List<int> teamIds, {
+  required SeededRng rng,
+}) {
+  final plain = doubleRoundRobin(teamIds, rng: rng);
+  final n = teamIds.length;
+  if (n < 3 || n > 6) return plain;
+  final first = plain.sublist(0, plain.length ~/ 2);
+  final pairs = [
+    for (var r = 0; r < first.length; r++)
+      for (var j = 0; j < first[r].length; j++) (r, j),
+  ];
+  // The second leg's round orders tried: as mirrored, then each rotation
+  // (enough for a group of four).
+  final k = first.length;
+  final orders = [
+    for (var shift = 0; shift < (n == 4 ? k : 1); shift++)
+      [for (var i = 0; i < k; i++) (i + shift) % k],
+  ];
+  ({int worst, int breaks})? best;
+  List<List<Pairing>>? bestRounds;
+  for (final order in orders) {
+    for (var bits = 0; bits < (1 << pairs.length); bits++) {
+      final leg = [
+        for (final round in first) [...round],
+      ];
+      for (var p = 0; p < pairs.length; p++) {
+        if (bits & (1 << p) == 0) continue;
+        final (r, j) = pairs[p];
+        final (h, a) = leg[r][j];
+        leg[r][j] = (a, h);
+      }
+      final rounds = [
+        ...leg,
+        for (final i in order) [for (final (h, a) in leg[i]) (a, h)],
+      ];
+      final score = _homeAwayScore(rounds, teamIds);
+      if (best == null ||
+          score.worst < best.worst ||
+          (score.worst == best.worst && score.breaks < best.breaks)) {
+        best = score;
+        bestRounds = rounds;
+        if (score.worst <= 2 && score.breaks <= n - 2) break;
+      }
+    }
+    if (best != null && best.worst <= 2) break;
+  }
+  return bestRounds ?? plain;
+}
+
+/// The longest home or away run any side has in [rounds], and the breaks
+/// (two in a row) over every side.
+({int worst, int breaks}) _homeAwayScore(
+  List<List<Pairing>> rounds,
+  List<int> teams,
+) {
+  var worst = 0;
+  var breaks = 0;
+  for (final t in teams) {
+    int? last;
+    var run = 0;
+    for (final round in rounds) {
+      for (final (h, a) in round) {
+        final home = h == t ? 1 : (a == t ? 0 : null);
+        if (home == null) continue;
+        if (home == last) {
+          run++;
+          breaks++;
+        } else {
+          run = 1;
+        }
+        last = home;
+        if (run > worst) worst = run;
+      }
+    }
+  }
+  return (worst: worst, breaks: breaks);
+}

@@ -86,6 +86,11 @@ class ScheduleGenerator {
     /// of them plays its matchdays in the span's other windows, so its June is
     /// free. Only read with [windows]; empty leaves every date as it was.
     Set<int> noJuneNationIds = const {},
+
+    /// Spreads each side's home and away games (see
+    /// [balancedDoubleRoundRobin]): a calendar2 cycle's draws. Off keeps
+    /// every other draw exactly as it was.
+    bool balancedHomeAway = false,
   }) {
     final rng = SeededRng(rngSeed ^ 0x5151A);
     final format = QualificationFormat.forConfederation(confederation);
@@ -118,7 +123,9 @@ class ScheduleGenerator {
           noJuneDates != null && ids.any(noJuneNationIds.contains)
           ? noJuneDates
           : dates;
-      final rounds = doubleRoundRobin(ids, rng: rng);
+      final rounds = balancedHomeAway
+          ? balancedDoubleRoundRobin(ids, rng: rng)
+          : doubleRoundRobin(ids, rng: rng);
       final fixtures = <GeneratedFixture>[];
       for (var r = 0; r < rounds.length; r++) {
         for (final (home, away) in rounds[r]) {
