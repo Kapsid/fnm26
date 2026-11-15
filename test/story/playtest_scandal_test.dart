@@ -128,8 +128,8 @@ void main() {
     int careerId,
   ) => pumped(tester, () => pendingScandal(c.read(_refProvider), careerId));
 
-  /// The scandal of the Colombia save's Copa camp, broken and offered by the
-  /// hub.
+  /// The scandal of the Colombia save's camp (October 2027), broken and
+  /// offered by the hub.
   Future<({StoryDriver d, PendingScandal scandal})> reachScandal(
     WidgetTester tester,
     ProviderContainer c,
@@ -253,7 +253,8 @@ void main() {
       await real(tester, () async {
         d = await StoryDriver.start(c, 2, nationId: colombia);
       });
-      // The call-up for the Copa, whose camp has this save's scandal.
+      // The call-up whose camp has this save's scandal (October 2027 on the
+      // calendar2 rhythm; the Copa's in 2028 before it).
       await driveTo(
         tester,
         d,
@@ -265,7 +266,7 @@ void main() {
                       d.careerId,
                     ))!
                 .inGameDate
-                .isBefore(DateTime(2028, 5, 1)),
+                .isBefore(DateTime(2027, 9, 1)),
       );
       // The manager is on the hub before the squad is named: its Y badge
       // counts the feed, which holds the scandal read as it stood then (as
@@ -423,7 +424,7 @@ void main() {
       expect(find.text(l.hubEventScandal(scandal.playerName)), findsNothing);
       await unmount(tester);
 
-      // On through the window (the Copa camp and its matches) and a month
+      // On through the window (the camp and its matches) and a month
       // past it: every event is reached, and the story never comes back.
       final run = await pumped(tester, () async {
         final repo = c.read(careerRepositoryProvider);
