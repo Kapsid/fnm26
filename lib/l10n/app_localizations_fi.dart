@@ -18125,4 +18125,22 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'Sarjataulukko nyt';
+
+  @override
+  String get matchShotMap => 'Laukauskartta';
+
+  @override
+  String get shotGoal => 'Maali';
+
+  @override
+  String get shotSaved => 'Torjuttu';
+
+  @override
+  String get shotOffTarget => 'Ohi';
+
+  @override
+  String get shotBlocked => 'Blokattu';
+
+  @override
+  String get shotWoodwork => 'Tolppa/rima';
 }

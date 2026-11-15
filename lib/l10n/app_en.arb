@@ -27831,5 +27831,29 @@
   "matchLiveTable": "Live table",
   "@matchLiveTable": {
     "description": "Match summary: the group's table as it stands at this minute of the match."
+  },
+  "matchShotMap": "Shot map",
+  "@matchShotMap": {
+    "description": "Full time: the match's shots drawn on a pitch."
+  },
+  "shotGoal": "Goal",
+  "@shotGoal": {
+    "description": "Shot map legend: a shot that scored."
+  },
+  "shotSaved": "Saved",
+  "@shotSaved": {
+    "description": "Shot map legend: a shot the keeper saved."
+  },
+  "shotOffTarget": "Off target",
+  "@shotOffTarget": {
+    "description": "Shot map legend: a shot that missed."
+  },
+  "shotBlocked": "Blocked",
+  "@shotBlocked": {
+    "description": "Shot map legend: a shot a defender blocked."
+  },
+  "shotWoodwork": "Woodwork",
+  "@shotWoodwork": {
+    "description": "Shot map legend: a shot that hit the post or bar."
   }
 }

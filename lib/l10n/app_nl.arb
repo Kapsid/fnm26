@@ -4508,5 +4508,11 @@
   "pitchComHandballPenaltyRed": "{player} houdt hem met de hand tegen! Penalty, en hij wordt weggestuurd.",
   "pitchComHandballYellow": "{player} krijgt geel voor hands.",
   "pitchComHandballRed": "Opzettelijk hands! {player} wordt van het veld gestuurd.",
-  "matchLiveTable": "Live stand"
+  "matchLiveTable": "Live stand",
+  "matchShotMap": "Schotkaart",
+  "shotGoal": "Doelpunt",
+  "shotSaved": "Gered",
+  "shotOffTarget": "Naast",
+  "shotBlocked": "Geblokt",
+  "shotWoodwork": "Paal/lat"
 }

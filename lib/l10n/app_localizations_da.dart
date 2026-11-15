@@ -18051,4 +18051,22 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'Live-stilling';
+
+  @override
+  String get matchShotMap => 'Skudkort';
+
+  @override
+  String get shotGoal => 'Mål';
+
+  @override
+  String get shotSaved => 'Redning';
+
+  @override
+  String get shotOffTarget => 'Forbi';
+
+  @override
+  String get shotBlocked => 'Blokeret';
+
+  @override
+  String get shotWoodwork => 'Stolpe/overligger';
 }

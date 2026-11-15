@@ -4508,5 +4508,11 @@
   "pitchComHandballPenaltyRed": "{player} topu eliyle durduruyor! Penaltı ve kırmızı kart.",
   "pitchComHandballYellow": "{player} elle oynadığı için sarı kart görüyor.",
   "pitchComHandballRed": "Kasıtlı elle oynama! {player} oyundan atılıyor.",
-  "matchLiveTable": "Canlı puan durumu"
+  "matchLiveTable": "Canlı puan durumu",
+  "matchShotMap": "Şut haritası",
+  "shotGoal": "Gol",
+  "shotSaved": "Kurtarış",
+  "shotOffTarget": "İsabetsiz",
+  "shotBlocked": "Engellendi",
+  "shotWoodwork": "Direk"
 }

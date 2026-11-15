@@ -27289,6 +27289,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Live table'**
   String get matchLiveTable;
+
+  /// Full time: the match's shots drawn on a pitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Shot map'**
+  String get matchShotMap;
+
+  /// Shot map legend: a shot that scored.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal'**
+  String get shotGoal;
+
+  /// Shot map legend: a shot the keeper saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get shotSaved;
+
+  /// Shot map legend: a shot that missed.
+  ///
+  /// In en, this message translates to:
+  /// **'Off target'**
+  String get shotOffTarget;
+
+  /// Shot map legend: a shot a defender blocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Blocked'**
+  String get shotBlocked;
+
+  /// Shot map legend: a shot that hit the post or bar.
+  ///
+  /// In en, this message translates to:
+  /// **'Woodwork'**
+  String get shotWoodwork;
 }
 
 class _AppLocalizationsDelegate

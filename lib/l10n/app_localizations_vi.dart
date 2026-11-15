@@ -17897,4 +17897,22 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'Bảng xếp hạng trực tiếp';
+
+  @override
+  String get matchShotMap => 'Bản đồ cú sút';
+
+  @override
+  String get shotGoal => 'Bàn thắng';
+
+  @override
+  String get shotSaved => 'Bị cản phá';
+
+  @override
+  String get shotOffTarget => 'Chệch khung';
+
+  @override
+  String get shotBlocked => 'Bị chặn';
+
+  @override
+  String get shotWoodwork => 'Dội cột';
 }

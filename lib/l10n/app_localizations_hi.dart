@@ -17958,4 +17958,22 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'लाइव तालिका';
+
+  @override
+  String get matchShotMap => 'शॉट मैप';
+
+  @override
+  String get shotGoal => 'गोल';
+
+  @override
+  String get shotSaved => 'बचाया';
+
+  @override
+  String get shotOffTarget => 'निशाने से बाहर';
+
+  @override
+  String get shotBlocked => 'रोका गया';
+
+  @override
+  String get shotWoodwork => 'पोस्ट';
 }

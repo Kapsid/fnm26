@@ -4508,5 +4508,11 @@
   "pitchComHandballPenaltyRed": "{player} dùng tay cản bóng! Phạt đền, và anh bị đuổi.",
   "pitchComHandballYellow": "{player} nhận thẻ vàng vì chạm tay.",
   "pitchComHandballRed": "Cố tình chạm tay! {player} bị đuổi khỏi sân.",
-  "matchLiveTable": "Bảng xếp hạng trực tiếp"
+  "matchLiveTable": "Bảng xếp hạng trực tiếp",
+  "matchShotMap": "Bản đồ cú sút",
+  "shotGoal": "Bàn thắng",
+  "shotSaved": "Bị cản phá",
+  "shotOffTarget": "Chệch khung",
+  "shotBlocked": "Bị chặn",
+  "shotWoodwork": "Dội cột"
 }

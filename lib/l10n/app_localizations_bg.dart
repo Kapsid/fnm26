@@ -18136,4 +18136,22 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'Таблица на живо';
+
+  @override
+  String get matchShotMap => 'Карта на ударите';
+
+  @override
+  String get shotGoal => 'Гол';
+
+  @override
+  String get shotSaved => 'Спасен';
+
+  @override
+  String get shotOffTarget => 'Неточен';
+
+  @override
+  String get shotBlocked => 'Блокиран';
+
+  @override
+  String get shotWoodwork => 'Греда';
 }

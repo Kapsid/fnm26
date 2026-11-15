@@ -4508,5 +4508,11 @@
   "pitchComHandballPenaltyRed": "Ο {player} τη σταματά με το χέρι! Πέναλτι και αποβολή.",
   "pitchComHandballYellow": "Κίτρινη στον {player} για χέρι.",
   "pitchComHandballRed": "Σκόπιμο χέρι! Αποβάλλεται ο {player}.",
-  "matchLiveTable": "Βαθμολογία live"
+  "matchLiveTable": "Βαθμολογία live",
+  "matchShotMap": "Χάρτης σουτ",
+  "shotGoal": "Γκολ",
+  "shotSaved": "Απόκρουση",
+  "shotOffTarget": "Άουτ",
+  "shotBlocked": "Μπλοκ",
+  "shotWoodwork": "Δοκάρι"
 }

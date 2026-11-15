@@ -18036,4 +18036,22 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'Livetabell';
+
+  @override
+  String get matchShotMap => 'Skottkarta';
+
+  @override
+  String get shotGoal => 'Mål';
+
+  @override
+  String get shotSaved => 'Räddat';
+
+  @override
+  String get shotOffTarget => 'Utanför';
+
+  @override
+  String get shotBlocked => 'Blockerat';
+
+  @override
+  String get shotWoodwork => 'Stolpe/ribba';
 }

@@ -18392,4 +18392,22 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'Tablica uživo';
+
+  @override
+  String get matchShotMap => 'Karta udaraca';
+
+  @override
+  String get shotGoal => 'Gol';
+
+  @override
+  String get shotSaved => 'Obranjeno';
+
+  @override
+  String get shotOffTarget => 'Pokraj gola';
+
+  @override
+  String get shotBlocked => 'Blokirano';
+
+  @override
+  String get shotWoodwork => 'Okvir gola';
 }

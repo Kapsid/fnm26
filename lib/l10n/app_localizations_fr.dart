@@ -18214,4 +18214,22 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'Classement en direct';
+
+  @override
+  String get matchShotMap => 'Carte des tirs';
+
+  @override
+  String get shotGoal => 'But';
+
+  @override
+  String get shotSaved => 'Arrêté';
+
+  @override
+  String get shotOffTarget => 'Non cadré';
+
+  @override
+  String get shotBlocked => 'Contré';
+
+  @override
+  String get shotWoodwork => 'Montant';
 }

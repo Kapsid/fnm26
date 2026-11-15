@@ -18129,4 +18129,22 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'Classifica live';
+
+  @override
+  String get matchShotMap => 'Mappa dei tiri';
+
+  @override
+  String get shotGoal => 'Gol';
+
+  @override
+  String get shotSaved => 'Parato';
+
+  @override
+  String get shotOffTarget => 'Fuori';
+
+  @override
+  String get shotBlocked => 'Respinto';
+
+  @override
+  String get shotWoodwork => 'Legno';
 }

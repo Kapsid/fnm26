@@ -4508,5 +4508,11 @@
   "pitchComHandballPenaltyRed": "{player} kézzel menti a labdát! Tizenegyes, és kiállítják.",
   "pitchComHandballYellow": "{player} sárga lapot kap kezezésért.",
   "pitchComHandballRed": "Szándékos kezezés! {player}t kiállítják.",
-  "matchLiveTable": "Élő tabella"
+  "matchLiveTable": "Élő tabella",
+  "matchShotMap": "Lövéstérkép",
+  "shotGoal": "Gól",
+  "shotSaved": "Védve",
+  "shotOffTarget": "Mellé",
+  "shotBlocked": "Blokkolva",
+  "shotWoodwork": "Kapufa"
 }

@@ -18143,4 +18143,22 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'Βαθμολογία live';
+
+  @override
+  String get matchShotMap => 'Χάρτης σουτ';
+
+  @override
+  String get shotGoal => 'Γκολ';
+
+  @override
+  String get shotSaved => 'Απόκρουση';
+
+  @override
+  String get shotOffTarget => 'Άουτ';
+
+  @override
+  String get shotBlocked => 'Μπλοκ';
+
+  @override
+  String get shotWoodwork => 'Δοκάρι';
 }

@@ -17421,4 +17421,22 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'ライブ順位表';
+
+  @override
+  String get matchShotMap => 'シュートマップ';
+
+  @override
+  String get shotGoal => 'ゴール';
+
+  @override
+  String get shotSaved => 'セーブ';
+
+  @override
+  String get shotOffTarget => '枠外';
+
+  @override
+  String get shotBlocked => 'ブロック';
+
+  @override
+  String get shotWoodwork => 'ポスト';
 }

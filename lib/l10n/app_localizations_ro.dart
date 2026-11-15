@@ -18476,4 +18476,22 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'Clasament live';
+
+  @override
+  String get matchShotMap => 'Harta șuturilor';
+
+  @override
+  String get shotGoal => 'Gol';
+
+  @override
+  String get shotSaved => 'Apărat';
+
+  @override
+  String get shotOffTarget => 'Pe lângă';
+
+  @override
+  String get shotBlocked => 'Blocat';
+
+  @override
+  String get shotWoodwork => 'Bară';
 }

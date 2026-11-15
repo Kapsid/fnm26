@@ -4508,5 +4508,11 @@
   "pitchComHandballPenaltyRed": "{player} ใช้มือกันบอล! จุดโทษ และโดนไล่ออก",
   "pitchComHandballYellow": "{player} รับใบเหลืองจากแฮนด์บอล",
   "pitchComHandballRed": "จงใจแฮนด์บอล! {player} โดนไล่ออก",
-  "matchLiveTable": "ตารางสด"
+  "matchLiveTable": "ตารางสด",
+  "matchShotMap": "แผนที่การยิง",
+  "shotGoal": "ประตู",
+  "shotSaved": "เซฟได้",
+  "shotOffTarget": "ไม่ตรงกรอบ",
+  "shotBlocked": "ถูกบล็อก",
+  "shotWoodwork": "ชนเสา"
 }

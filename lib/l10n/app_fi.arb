@@ -4508,5 +4508,11 @@
   "pitchComHandballPenaltyRed": "{player} torjuu pallon kädellä! Rangaistuspotku ja ulosajo.",
   "pitchComHandballYellow": "{player} saa keltaisen käsivirheestä.",
   "pitchComHandballRed": "Tahallinen käsivirhe! {player} ajetaan ulos.",
-  "matchLiveTable": "Sarjataulukko nyt"
+  "matchLiveTable": "Sarjataulukko nyt",
+  "matchShotMap": "Laukauskartta",
+  "shotGoal": "Maali",
+  "shotSaved": "Torjuttu",
+  "shotOffTarget": "Ohi",
+  "shotBlocked": "Blokattu",
+  "shotWoodwork": "Tolppa/rima"
 }

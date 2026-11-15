@@ -4508,5 +4508,11 @@
   "pitchComHandballPenaltyRed": "{player} zatrzymuje piłkę ręką! Karny i czerwona kartka.",
   "pitchComHandballYellow": "{player} z żółtą kartką za zagranie ręką.",
   "pitchComHandballRed": "Celowe zagranie ręką! {player} wylatuje z boiska.",
-  "matchLiveTable": "Tabela na żywo"
+  "matchLiveTable": "Tabela na żywo",
+  "matchShotMap": "Mapa strzałów",
+  "shotGoal": "Gol",
+  "shotSaved": "Obroniony",
+  "shotOffTarget": "Niecelny",
+  "shotBlocked": "Zablokowany",
+  "shotWoodwork": "Słupek/poprzeczka"
 }

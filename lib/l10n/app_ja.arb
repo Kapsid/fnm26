@@ -4508,5 +4508,11 @@
   "pitchComHandballPenaltyRed": "{player}が手でボールを止めた！PK、そして退場です。",
   "pitchComHandballYellow": "{player}にハンドでイエローカード。",
   "pitchComHandballRed": "故意のハンド！{player}は退場です。",
-  "matchLiveTable": "ライブ順位表"
+  "matchLiveTable": "ライブ順位表",
+  "matchShotMap": "シュートマップ",
+  "shotGoal": "ゴール",
+  "shotSaved": "セーブ",
+  "shotOffTarget": "枠外",
+  "shotBlocked": "ブロック",
+  "shotWoodwork": "ポスト"
 }

@@ -18136,4 +18136,22 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'Live stand';
+
+  @override
+  String get matchShotMap => 'Schotkaart';
+
+  @override
+  String get shotGoal => 'Doelpunt';
+
+  @override
+  String get shotSaved => 'Gered';
+
+  @override
+  String get shotOffTarget => 'Naast';
+
+  @override
+  String get shotBlocked => 'Geblokt';
+
+  @override
+  String get shotWoodwork => 'Paal/lat';
 }

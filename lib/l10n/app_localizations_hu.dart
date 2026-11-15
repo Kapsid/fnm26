@@ -17995,4 +17995,22 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'Élő tabella';
+
+  @override
+  String get matchShotMap => 'Lövéstérkép';
+
+  @override
+  String get shotGoal => 'Gól';
+
+  @override
+  String get shotSaved => 'Védve';
+
+  @override
+  String get shotOffTarget => 'Mellé';
+
+  @override
+  String get shotBlocked => 'Blokkolva';
+
+  @override
+  String get shotWoodwork => 'Kapufa';
 }

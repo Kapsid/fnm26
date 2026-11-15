@@ -17960,4 +17960,22 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'Klasemen langsung';
+
+  @override
+  String get matchShotMap => 'Peta tembakan';
+
+  @override
+  String get shotGoal => 'Gol';
+
+  @override
+  String get shotSaved => 'Diselamatkan';
+
+  @override
+  String get shotOffTarget => 'Melenceng';
+
+  @override
+  String get shotBlocked => 'Diblok';
+
+  @override
+  String get shotWoodwork => 'Tiang';
 }

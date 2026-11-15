@@ -17466,4 +17466,22 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get matchLiveTable => '실시간 순위';
+
+  @override
+  String get matchShotMap => '슈팅 맵';
+
+  @override
+  String get shotGoal => '골';
+
+  @override
+  String get shotSaved => '선방';
+
+  @override
+  String get shotOffTarget => '골대 밖';
+
+  @override
+  String get shotBlocked => '블록';
+
+  @override
+  String get shotWoodwork => '골대';
 }

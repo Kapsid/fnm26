@@ -18046,4 +18046,22 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'Live-tabell';
+
+  @override
+  String get matchShotMap => 'Skuddkart';
+
+  @override
+  String get shotGoal => 'Mål';
+
+  @override
+  String get shotSaved => 'Redning';
+
+  @override
+  String get shotOffTarget => 'Utenfor';
+
+  @override
+  String get shotBlocked => 'Blokkert';
+
+  @override
+  String get shotWoodwork => 'Stolpe/tverrligger';
 }

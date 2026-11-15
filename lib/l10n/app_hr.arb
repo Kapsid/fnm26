@@ -4508,5 +4508,11 @@
   "pitchComHandballPenaltyRed": "{player} zaustavlja loptu rukom! Jedanaesterac i isključenje.",
   "pitchComHandballYellow": "{player} dobiva žuti karton zbog igranja rukom.",
   "pitchComHandballRed": "Namjerno igranje rukom! {player} je isključen.",
-  "matchLiveTable": "Tablica uživo"
+  "matchLiveTable": "Tablica uživo",
+  "matchShotMap": "Karta udaraca",
+  "shotGoal": "Gol",
+  "shotSaved": "Obranjeno",
+  "shotOffTarget": "Pokraj gola",
+  "shotBlocked": "Blokirano",
+  "shotWoodwork": "Okvir gola"
 }

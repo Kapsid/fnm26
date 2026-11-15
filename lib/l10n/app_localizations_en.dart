@@ -18083,4 +18083,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'Live table';
+
+  @override
+  String get matchShotMap => 'Shot map';
+
+  @override
+  String get shotGoal => 'Goal';
+
+  @override
+  String get shotSaved => 'Saved';
+
+  @override
+  String get shotOffTarget => 'Off target';
+
+  @override
+  String get shotBlocked => 'Blocked';
+
+  @override
+  String get shotWoodwork => 'Woodwork';
 }

@@ -4508,5 +4508,11 @@
   "pitchComHandballPenaltyRed": "{player} menahan bola dengan tangan! Penalti, dan dia dibuang padang.",
   "pitchComHandballYellow": "{player} dilayangkan kad kuning kerana bola tangan.",
   "pitchComHandballRed": "Bola tangan disengajakan! {player} dibuang padang.",
-  "matchLiveTable": "Kedudukan langsung"
+  "matchLiveTable": "Kedudukan langsung",
+  "matchShotMap": "Peta rembatan",
+  "shotGoal": "Gol",
+  "shotSaved": "Diselamatkan",
+  "shotOffTarget": "Tersasar",
+  "shotBlocked": "Disekat",
+  "shotWoodwork": "Tiang"
 }

@@ -18241,4 +18241,22 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'Tabela na żywo';
+
+  @override
+  String get matchShotMap => 'Mapa strzałów';
+
+  @override
+  String get shotGoal => 'Gol';
+
+  @override
+  String get shotSaved => 'Obroniony';
+
+  @override
+  String get shotOffTarget => 'Niecelny';
+
+  @override
+  String get shotBlocked => 'Zablokowany';
+
+  @override
+  String get shotWoodwork => 'Słupek/poprzeczka';
 }

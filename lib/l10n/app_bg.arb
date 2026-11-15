@@ -4508,5 +4508,11 @@
   "pitchComHandballPenaltyRed": "{player} спира топката с ръка! Дузпа и червен картон.",
   "pitchComHandballYellow": "{player} получава жълт картон за игра с ръка.",
   "pitchComHandballRed": "Умишлена игра с ръка! {player} е изгонен.",
-  "matchLiveTable": "Таблица на живо"
+  "matchLiveTable": "Таблица на живо",
+  "matchShotMap": "Карта на ударите",
+  "shotGoal": "Гол",
+  "shotSaved": "Спасен",
+  "shotOffTarget": "Неточен",
+  "shotBlocked": "Блокиран",
+  "shotWoodwork": "Греда"
 }

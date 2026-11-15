@@ -18062,4 +18062,22 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'Live na talaan';
+
+  @override
+  String get matchShotMap => 'Mapa ng tira';
+
+  @override
+  String get shotGoal => 'Gol';
+
+  @override
+  String get shotSaved => 'Nasalo';
+
+  @override
+  String get shotOffTarget => 'Sablay';
+
+  @override
+  String get shotBlocked => 'Naharang';
+
+  @override
+  String get shotWoodwork => 'Poste';
 }

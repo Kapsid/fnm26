@@ -4508,5 +4508,11 @@
   "pitchComHandballPenaltyRed": "{player} oprește mingea cu mâna! Penalty, și e eliminat.",
   "pitchComHandballYellow": "{player} primește galben pentru henț.",
   "pitchComHandballRed": "Henț intenționat! {player} este eliminat.",
-  "matchLiveTable": "Clasament live"
+  "matchLiveTable": "Clasament live",
+  "matchShotMap": "Harta șuturilor",
+  "shotGoal": "Gol",
+  "shotSaved": "Apărat",
+  "shotOffTarget": "Pe lângă",
+  "shotBlocked": "Blocat",
+  "shotWoodwork": "Bară"
 }

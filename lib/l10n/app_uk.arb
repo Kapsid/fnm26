@@ -4508,5 +4508,11 @@
   "pitchComHandballPenaltyRed": "{player} зупиняє м'яч рукою! Пенальті, і його вилучено.",
   "pitchComHandballYellow": "{player} отримує жовту за гру рукою.",
   "pitchComHandballRed": "Навмисна гра рукою! {player} вилучено.",
-  "matchLiveTable": "Таблиця наживо"
+  "matchLiveTable": "Таблиця наживо",
+  "matchShotMap": "Карта ударів",
+  "shotGoal": "Гол",
+  "shotSaved": "Відбито",
+  "shotOffTarget": "Повз",
+  "shotBlocked": "Заблоковано",
+  "shotWoodwork": "Каркас"
 }

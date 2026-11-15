@@ -52,6 +52,7 @@ import 'package:fnm/features/match/ground_card.dart';
 import 'package:fnm/features/match/penalty_order_sheet.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/live_group_table.dart';
+import 'package:fnm/features/match/shot_map.dart';
 import 'package:fnm/features/match/same_day_providers.dart';
 import 'package:fnm/features/match/pitch/match_dressing.dart';
 import 'package:fnm/features/match/pitch/pitch_clock.dart';
@@ -652,6 +653,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   /// Whether the shootout has begun (the takers are named): from here the
   /// kicks run, on whichever view the manager is on.
   bool _shootoutStarted = false;
+
+  /// The shot map shown over the picture at full time was closed (back to
+  /// the pitch's last frame).
+  bool _shotMapClosed = false;
 
   /// The shootout on the pitch, made when the first kick is staged.
   ShootoutStageController? _stage;
@@ -2655,6 +2660,38 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                             still:
                                 MediaQuery.maybeDisableAnimationsOf(context) ??
                                 false,
+                          ),
+                        ),
+                      // Full time: the shot map over the picture, which
+                      // otherwise stands still on its last frame (closable).
+                      if (ft && !_shotMapClosed && !showingShootout)
+                        Positioned.fill(
+                          child: Stack(
+                            children: [
+                              Positioned.fill(
+                                child: ShotMapView(
+                                  shots: [
+                                    for (final m in r.moments)
+                                      if (m is ShotMoment) m,
+                                  ],
+                                  homeId: homeId,
+                                  homeCode: code(homeId),
+                                  awayCode: code(awayId),
+                                  homeColor: homeC,
+                                  awayColor: awayC,
+                                ),
+                              ),
+                              Positioned(
+                                top: 0,
+                                right: 0,
+                                child: IconButton(
+                                  tooltip: l.assistantClose,
+                                  icon: const Icon(Icons.close_rounded),
+                                  onPressed: () =>
+                                      setState(() => _shotMapClosed = true),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       // A goal: the picture blinks in the scorers' colour,

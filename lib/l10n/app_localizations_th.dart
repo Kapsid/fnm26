@@ -17743,4 +17743,22 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'ตารางสด';
+
+  @override
+  String get matchShotMap => 'แผนที่การยิง';
+
+  @override
+  String get shotGoal => 'ประตู';
+
+  @override
+  String get shotSaved => 'เซฟได้';
+
+  @override
+  String get shotOffTarget => 'ไม่ตรงกรอบ';
+
+  @override
+  String get shotBlocked => 'ถูกบล็อก';
+
+  @override
+  String get shotWoodwork => 'ชนเสา';
 }

@@ -18381,4 +18381,22 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'Таблиця наживо';
+
+  @override
+  String get matchShotMap => 'Карта ударів';
+
+  @override
+  String get shotGoal => 'Гол';
+
+  @override
+  String get shotSaved => 'Відбито';
+
+  @override
+  String get shotOffTarget => 'Повз';
+
+  @override
+  String get shotBlocked => 'Заблоковано';
+
+  @override
+  String get shotWoodwork => 'Каркас';
 }

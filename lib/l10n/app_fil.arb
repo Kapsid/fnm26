@@ -4508,5 +4508,11 @@
   "pitchComHandballPenaltyRed": "Pinigilan ni {player} gamit ang kamay! Penalty, at pinaalis siya.",
   "pitchComHandballYellow": "Yellow card kay {player} dahil sa handball.",
   "pitchComHandballRed": "Sinadyang handball! Pinaalis si {player}.",
-  "matchLiveTable": "Live na talaan"
+  "matchLiveTable": "Live na talaan",
+  "matchShotMap": "Mapa ng tira",
+  "shotGoal": "Gol",
+  "shotSaved": "Nasalo",
+  "shotOffTarget": "Sablay",
+  "shotBlocked": "Naharang",
+  "shotWoodwork": "Poste"
 }

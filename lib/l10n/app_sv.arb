@@ -4508,5 +4508,11 @@
   "pitchComHandballPenaltyRed": "{player} stoppar bollen med handen! Straff, och han blir utvisad.",
   "pitchComHandballYellow": "{player} får gult kort för hands.",
   "pitchComHandballRed": "Avsiktlig hands! {player} blir utvisad.",
-  "matchLiveTable": "Livetabell"
+  "matchLiveTable": "Livetabell",
+  "matchShotMap": "Skottkarta",
+  "shotGoal": "Mål",
+  "shotSaved": "Räddat",
+  "shotOffTarget": "Utanför",
+  "shotBlocked": "Blockerat",
+  "shotWoodwork": "Stolpe/ribba"
 }

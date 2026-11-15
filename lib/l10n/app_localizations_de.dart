@@ -18182,4 +18182,22 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'Live-Tabelle';
+
+  @override
+  String get matchShotMap => 'Schusskarte';
+
+  @override
+  String get shotGoal => 'Tor';
+
+  @override
+  String get shotSaved => 'Gehalten';
+
+  @override
+  String get shotOffTarget => 'Daneben';
+
+  @override
+  String get shotBlocked => 'Geblockt';
+
+  @override
+  String get shotWoodwork => 'Aluminium';
 }

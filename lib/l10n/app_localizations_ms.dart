@@ -18013,4 +18013,22 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'Kedudukan langsung';
+
+  @override
+  String get matchShotMap => 'Peta rembatan';
+
+  @override
+  String get shotGoal => 'Gol';
+
+  @override
+  String get shotSaved => 'Diselamatkan';
+
+  @override
+  String get shotOffTarget => 'Tersasar';
+
+  @override
+  String get shotBlocked => 'Disekat';
+
+  @override
+  String get shotWoodwork => 'Tiang';
 }

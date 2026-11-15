@@ -18445,4 +18445,22 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'Živá tabulka';
+
+  @override
+  String get matchShotMap => 'Mapa střel';
+
+  @override
+  String get shotGoal => 'Gól';
+
+  @override
+  String get shotSaved => 'Chyceno';
+
+  @override
+  String get shotOffTarget => 'Mimo bránu';
+
+  @override
+  String get shotBlocked => 'Zblokováno';
+
+  @override
+  String get shotWoodwork => 'Tyč/břevno';
 }

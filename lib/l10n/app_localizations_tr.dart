@@ -17962,4 +17962,22 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'Canlı puan durumu';
+
+  @override
+  String get matchShotMap => 'Şut haritası';
+
+  @override
+  String get shotGoal => 'Gol';
+
+  @override
+  String get shotSaved => 'Kurtarış';
+
+  @override
+  String get shotOffTarget => 'İsabetsiz';
+
+  @override
+  String get shotBlocked => 'Engellendi';
+
+  @override
+  String get shotWoodwork => 'Direk';
 }

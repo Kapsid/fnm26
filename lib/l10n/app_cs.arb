@@ -4508,5 +4508,11 @@
   "pitchComHandballPenaltyRed": "{player} zastavuje míč rukou! Penalta a červená karta.",
   "pitchComHandballYellow": "{player} dostává žlutou za hru rukou.",
   "pitchComHandballRed": "Úmyslná ruka! {player} jde pod sprchy.",
-  "matchLiveTable": "Živá tabulka"
+  "matchLiveTable": "Živá tabulka",
+  "matchShotMap": "Mapa střel",
+  "shotGoal": "Gól",
+  "shotSaved": "Chyceno",
+  "shotOffTarget": "Mimo bránu",
+  "shotBlocked": "Zblokováno",
+  "shotWoodwork": "Tyč/břevno"
 }

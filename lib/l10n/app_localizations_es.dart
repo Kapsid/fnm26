@@ -18143,4 +18143,22 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get matchLiveTable => 'Clasificación en directo';
+
+  @override
+  String get matchShotMap => 'Mapa de tiros';
+
+  @override
+  String get shotGoal => 'Gol';
+
+  @override
+  String get shotSaved => 'Parado';
+
+  @override
+  String get shotOffTarget => 'Fuera';
+
+  @override
+  String get shotBlocked => 'Bloqueado';
+
+  @override
+  String get shotWoodwork => 'Palo';
 }
