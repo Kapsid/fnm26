@@ -29,6 +29,7 @@ import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/domain/services/competition/confed_playoffs.dart';
+import 'package:fnm/domain/services/squad/friendly_rotation.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
@@ -1387,8 +1388,27 @@ class SeasonService {
     // whether or not the manager is at that team. Fielding the XI first also
     // lets the scoreline be driven by the squad actually on the pitch (an
     // aging, evolving pool), not just the nation's static seeding.
-    final homeXi = await _fieldedXi(f.careerId, f.homeNationId);
-    final awayXi = await _fieldedXi(f.careerId, f.awayNationId);
+    // A friendly against the manager (calendar2): his opponent rests a few
+    // of its best men, as on the live screen (see [FriendlyRotation]).
+    final restFor =
+        f.round == Rounds.friendly &&
+            (f.homeNationId == career.nationId ||
+                f.awayNationId == career.nationId) &&
+            await isCalendar2(_comp, f.careerId, career.cyclePointer)
+        ? (f.homeNationId == career.nationId ? f.awayNationId : f.homeNationId)
+        : null;
+    final homeXi = await _fieldedXi(
+      f.careerId,
+      f.homeNationId,
+      restIn: restFor == f.homeNationId ? f : null,
+      restSeed: career.rngSeed,
+    );
+    final awayXi = await _fieldedXi(
+      f.careerId,
+      f.awayNationId,
+      restIn: restFor == f.awayNationId ? f : null,
+      restSeed: career.rngSeed,
+    );
     // …and the substitutes it brings on. Background sides used to play the
     // whole ninety with eleven men, so outside the manager's own fixtures no
     // substitute ever won a cap, scored, was booked or was marked — the rest of
@@ -2028,8 +2048,22 @@ class SeasonService {
   /// BEFORE that. So the first fixture any session simulated fielded every
   /// banned and injured man in it, the manager's own side included whenever he
   /// skipped a match rather than playing it out.
-  Future<List<Player>> _fieldedXi(int careerId, int nationId) async {
-    final pool = await _pool(nationId);
+  Future<List<Player>> _fieldedXi(
+    int careerId,
+    int nationId, {
+
+    /// A friendly in which this side rests a few of its best men (see
+    /// [FriendlyRotation]).
+    Fixture? restIn,
+    int restSeed = 0,
+  }) async {
+    var pool = await _pool(nationId);
+    if (restIn != null && pool.isNotEmpty) {
+      pool = FriendlyRotation.rested(
+        pool,
+        FriendlyRotation.rngFor(restSeed, restIn.id),
+      );
+    }
     if (pool.isEmpty) return const [];
     final mine = await _managerXi(careerId, nationId);
     if (mine != null) return mine;

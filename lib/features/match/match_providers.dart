@@ -13,7 +13,9 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
+import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/confed_playoffs.dart';
+import 'package:fnm/domain/services/squad/friendly_rotation.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
@@ -462,10 +464,24 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
   // asymmetry where the AI always fielded a full-strength side).
   // The opponent as the world fields it: without anyone naturalised away from
   // it, with anyone naturalised into it (see [careerPoolOf]).
-  final oppPool = selectable(
+  final fullOppPool = selectable(
     await careerPoolOf(ref, career, opponentId),
     absences,
   );
+  // A friendly (calendar2): the opponent rests a few of its best men, the
+  // same ones the skip path rests (see [FriendlyRotation]).
+  final oppPool =
+      fixture.round == Rounds.friendly &&
+          await isCalendar2(
+            ref.read(competitionRepositoryProvider),
+            careerId,
+            career.cyclePointer,
+          )
+      ? FriendlyRotation.rested(
+          fullOppPool,
+          FriendlyRotation.rngFor(career.rngSeed, fixture.id),
+        )
+      : fullOppPool;
   // Pick the AI's posture from how its strength compares to the player's:
   // favourites take the game to you, underdogs sit deep and counter. Keyed
   // to the fixture so it's stable across re-sims.
