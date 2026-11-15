@@ -12,6 +12,7 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/app_date.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/features/awards/award_providers.dart';
 import 'package:fnm/features/awards/awards_ceremony_screen.dart';
 import 'package:fnm/features/federation/sponsor_providers.dart'
@@ -62,6 +63,9 @@ class HubEventButton extends ConsumerStatefulWidget {
 
   /// The "simulate to the final" choice under a watch event, for tests.
   static const Key simToFinalKey = Key('hub.simToFinal');
+
+  /// The "let the assistant take it" choice under a friendly, for tests.
+  static const Key assistantKey = Key('hub.assistantFriendly');
 
   /// The top-bar variant: no subtitle under it. Whether it carries the tour's
   /// key is [tourTarget]'s call, not this flag's (one GlobalKey, one widget).
@@ -115,7 +119,34 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
     // in one go instead of a round at a time.
     final simToFinal = !failed && event?.kind == HubEventKind.watchTournament;
     void simulate() => _simulateToFinal(context, event!);
+    // A friendly may be left to the assistant: simulated with the manager's
+    // squad and tactics, as a skipped match is (see SeasonService.advance).
+    final hubNext = ref.watch(hubDataProvider(careerId)).valueOrNull?.next;
+    final assistant =
+        !failed &&
+        event?.kind == HubEventKind.match &&
+        hubNext?.round == Rounds.friendly;
+    void delegate() => _guarded(
+      context,
+      () => ref.read(seasonServiceProvider).advance(careerId),
+    );
     if (widget.compact) {
+      if (assistant) {
+        return Row(
+          children: [
+            Expanded(child: button),
+            IconButton(
+              key: HubEventButton.assistantKey,
+              tooltip: l.hubAssistantFriendly,
+              onPressed: busy ? null : delegate,
+              icon: const Icon(
+                Icons.assignment_ind_outlined,
+                color: AppColors.primary,
+              ),
+            ),
+          ],
+        );
+      }
       if (!simToFinal) return button;
       return Row(
         children: [
@@ -141,6 +172,15 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
             style: AppTypography.labelSmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),
+          ),
+        ],
+        if (assistant) ...[
+          const SizedBox(height: AppSpacing.xs),
+          TextButton.icon(
+            key: HubEventButton.assistantKey,
+            onPressed: busy ? null : delegate,
+            icon: const Icon(Icons.assignment_ind_outlined),
+            label: Text(l.hubAssistantFriendly),
           ),
         ],
         if (simToFinal) ...[

@@ -4500,5 +4500,6 @@
   "newsNcRelegatedBody": "Laatste in de groep in de {cup}: de volgende editie wordt een divisie lager gespeeld.",
   "stadiumsBuildFrom": "Bouwen: vanaf {cost}",
   "stadiumsConfirmBuildSized": "Een stadion met {seats} plaatsen bouwen in {city} voor {cost}?",
-  "stadiumsCapacityRange": "Capaciteit: naar keuze, {min} tot {max} plaatsen"
+  "stadiumsCapacityRange": "Capaciteit: naar keuze, {min} tot {max} plaatsen",
+  "hubAssistantFriendly": "Laat de assistent het doen"
 }

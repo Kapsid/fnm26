@@ -4500,5 +4500,6 @@
   "newsNcRelegatedBody": "Ultimi nel girone della {cup}: la prossima edizione si gioca una lega più giù.",
   "stadiumsBuildFrom": "Costruisci: da {cost}",
   "stadiumsConfirmBuildSized": "Costruire uno stadio da {seats} posti a {city} per {cost}?",
-  "stadiumsCapacityRange": "Capienza: a scelta, da {min} a {max} posti"
+  "stadiumsCapacityRange": "Capienza: a scelta, da {min} a {max} posti",
+  "hubAssistantFriendly": "Lascia fare al vice"
 }

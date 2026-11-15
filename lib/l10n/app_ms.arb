@@ -4500,5 +4500,6 @@
   "newsNcRelegatedBody": "Tercorot kumpulan dalam {cup}: edisi seterusnya dimainkan satu liga lebih rendah.",
   "stadiumsBuildFrom": "Bina: dari {cost}",
   "stadiumsConfirmBuildSized": "Bina stadium {seats} tempat duduk di {city} dengan harga {cost}?",
-  "stadiumsCapacityRange": "Kapasiti: pilihan anda, {min} hingga {max} tempat duduk"
+  "stadiumsCapacityRange": "Kapasiti: pilihan anda, {min} hingga {max} tempat duduk",
+  "hubAssistantFriendly": "Biar penolong uruskan"
 }

@@ -4500,5 +4500,6 @@
   "newsNcRelegatedBody": "Huli sa grupo sa {cup}: ang susunod na edisyon ay lalaruin sa mas mababang liga.",
   "stadiumsBuildFrom": "Magtayo: mula {cost}",
   "stadiumsConfirmBuildSized": "Magtayo ng stadium na may {seats} upuan sa {city} sa halagang {cost}?",
-  "stadiumsCapacityRange": "Kapasidad: ikaw ang pipili, {min} hanggang {max} upuan"
+  "stadiumsCapacityRange": "Kapasidad: ikaw ang pipili, {min} hanggang {max} upuan",
+  "hubAssistantFriendly": "Hayaan ang assistant ang humawak"
 }

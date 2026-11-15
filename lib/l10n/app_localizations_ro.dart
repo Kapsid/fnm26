@@ -18440,4 +18440,7 @@ class AppLocalizationsRo extends AppLocalizations {
   String stadiumsCapacityRange(String min, String max) {
     return 'Capacitate: la alegere, între $min și $max de locuri';
   }
+
+  @override
+  String get hubAssistantFriendly => 'Lasă-l pe secund să conducă';
 }

@@ -4500,5 +4500,6 @@
   "newsNcRelegatedBody": "{cup}でグループ最下位。次の大会は1つ下のリーグで戦います。",
   "stadiumsBuildFrom": "建設：{cost}から",
   "stadiumsConfirmBuildSized": "{city}に{seats}席のスタジアムを{cost}で建設しますか？",
-  "stadiumsCapacityRange": "収容人数：{min}〜{max}席から選択"
+  "stadiumsCapacityRange": "収容人数：{min}〜{max}席から選択",
+  "hubAssistantFriendly": "アシスタントに任せる"
 }

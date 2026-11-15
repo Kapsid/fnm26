@@ -17926,4 +17926,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String stadiumsCapacityRange(String min, String max) {
     return 'Kapasite: seçim sizin, $min ile $max koltuk arası';
   }
+
+  @override
+  String get hubAssistantFriendly => 'Yardımcı antrenöre bırak';
 }

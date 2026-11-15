@@ -18100,4 +18100,7 @@ class AppLocalizationsBg extends AppLocalizations {
   String stadiumsCapacityRange(String min, String max) {
     return 'Капацитет: по ваш избор, от $min до $max места';
   }
+
+  @override
+  String get hubAssistantFriendly => 'Остави помощника да го води';
 }

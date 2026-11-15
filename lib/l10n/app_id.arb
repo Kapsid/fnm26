@@ -4500,5 +4500,6 @@
   "newsNcRelegatedBody": "Juru kunci grup di {cup}: edisi berikutnya dimainkan satu liga lebih rendah.",
   "stadiumsBuildFrom": "Bangun: mulai {cost}",
   "stadiumsConfirmBuildSized": "Bangun stadion berkapasitas {seats} kursi di {city} seharga {cost}?",
-  "stadiumsCapacityRange": "Kapasitas: pilihanmu, {min} hingga {max} kursi"
+  "stadiumsCapacityRange": "Kapasitas: pilihanmu, {min} hingga {max} kursi",
+  "hubAssistantFriendly": "Serahkan ke asisten"
 }

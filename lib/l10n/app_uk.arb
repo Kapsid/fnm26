@@ -4500,5 +4500,6 @@
   "newsNcRelegatedBody": "Останнє місце в групі в {cup}: наступний розіграш пройде на лігу нижче.",
   "stadiumsBuildFrom": "Будувати: від {cost}",
   "stadiumsConfirmBuildSized": "Збудувати стадіон на {seats} місць у місті {city} за {cost}?",
-  "stadiumsCapacityRange": "Місткість: на ваш вибір, від {min} до {max} місць"
+  "stadiumsCapacityRange": "Місткість: на ваш вибір, від {min} до {max} місць",
+  "hubAssistantFriendly": "Доручити асистенту"
 }

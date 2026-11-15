@@ -4500,5 +4500,6 @@
   "newsNcRelegatedBody": "Posljednje mjesto u skupini u {cup}: sljedeće izdanje igra se ligu niže.",
   "stadiumsBuildFrom": "Izgradnja: od {cost}",
   "stadiumsConfirmBuildSized": "Izgraditi stadion s {seats} mjesta u gradu {city} za {cost}?",
-  "stadiumsCapacityRange": "Kapacitet: po izboru, od {min} do {max} mjesta"
+  "stadiumsCapacityRange": "Kapacitet: po izboru, od {min} do {max} mjesta",
+  "hubAssistantFriendly": "Prepusti pomoćniku"
 }

@@ -4500,5 +4500,6 @@
   "newsNcRelegatedBody": "{cup} grubunda sonunculuk: bir sonraki turnuva bir alt ligde oynanacak.",
   "stadiumsBuildFrom": "İnşa et: {cost} itibarıyla",
   "stadiumsConfirmBuildSized": "{city} şehrine {seats} kişilik bir stadyum {cost} karşılığında inşa edilsin mi?",
-  "stadiumsCapacityRange": "Kapasite: seçim sizin, {min} ile {max} koltuk arası"
+  "stadiumsCapacityRange": "Kapasite: seçim sizin, {min} ile {max} koltuk arası",
+  "hubAssistantFriendly": "Yardımcı antrenöre bırak"
 }

@@ -17430,4 +17430,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String stadiumsCapacityRange(String min, String max) {
     return '수용 인원: $min~$max석 중 선택';
   }
+
+  @override
+  String get hubAssistantFriendly => '코치에게 맡기기';
 }

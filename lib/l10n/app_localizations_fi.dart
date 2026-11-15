@@ -18089,4 +18089,7 @@ class AppLocalizationsFi extends AppLocalizations {
   String stadiumsCapacityRange(String min, String max) {
     return 'Kapasiteetti: oma valinta, $min–$max paikkaa';
   }
+
+  @override
+  String get hubAssistantFriendly => 'Anna apuvalmentajan hoitaa';
 }

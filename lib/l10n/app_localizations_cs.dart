@@ -18409,4 +18409,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String stadiumsCapacityRange(String min, String max) {
     return 'Kapacita: podle vás, $min až $max míst';
   }
+
+  @override
+  String get hubAssistantFriendly => 'Nech to na asistentovi';
 }

@@ -17922,4 +17922,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String stadiumsCapacityRange(String min, String max) {
     return 'क्षमता: आपकी पसंद, $min से $max सीटें';
   }
+
+  @override
+  String get hubAssistantFriendly => 'सहायक को संभालने दें';
 }

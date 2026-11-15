@@ -18026,4 +18026,7 @@ class AppLocalizationsFil extends AppLocalizations {
   String stadiumsCapacityRange(String min, String max) {
     return 'Kapasidad: ikaw ang pipili, $min hanggang $max upuan';
   }
+
+  @override
+  String get hubAssistantFriendly => 'Hayaan ang assistant ang humawak';
 }

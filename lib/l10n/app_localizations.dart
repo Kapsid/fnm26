@@ -27241,6 +27241,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Capacity: your choice, {min} to {max} seats'**
   String stadiumsCapacityRange(String min, String max);
+
+  /// Hub: under the Play button of a friendly; the match is simulated with the manager's squad and tactics instead of being watched.
+  ///
+  /// In en, this message translates to:
+  /// **'Let the assistant take it'**
+  String get hubAssistantFriendly;
 }
 
 class _AppLocalizationsDelegate

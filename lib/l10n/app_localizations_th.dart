@@ -17707,4 +17707,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String stadiumsCapacityRange(String min, String max) {
     return 'ความจุ: เลือกได้ $min ถึง $max ที่นั่ง';
   }
+
+  @override
+  String get hubAssistantFriendly => 'ให้ผู้ช่วยคุมทีม';
 }

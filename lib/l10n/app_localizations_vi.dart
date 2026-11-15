@@ -17861,4 +17861,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String stadiumsCapacityRange(String min, String max) {
     return 'Sức chứa: tùy chọn, từ $min đến $max chỗ';
   }
+
+  @override
+  String get hubAssistantFriendly => 'Để trợ lý dẫn dắt';
 }

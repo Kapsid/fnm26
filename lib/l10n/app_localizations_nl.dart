@@ -18100,4 +18100,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String stadiumsCapacityRange(String min, String max) {
     return 'Capaciteit: naar keuze, $min tot $max plaatsen';
   }
+
+  @override
+  String get hubAssistantFriendly => 'Laat de assistent het doen';
 }

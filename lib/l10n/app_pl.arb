@@ -4500,5 +4500,6 @@
   "newsNcRelegatedBody": "Ostatnie miejsce w grupie w {cup}: kolejna edycja rozgrywana jest dywizję niżej.",
   "stadiumsBuildFrom": "Budowa: od {cost}",
   "stadiumsConfirmBuildSized": "Zbudować stadion na {seats} miejsc w mieście {city} za {cost}?",
-  "stadiumsCapacityRange": "Pojemność: do wyboru, od {min} do {max} miejsc"
+  "stadiumsCapacityRange": "Pojemność: do wyboru, od {min} do {max} miejsc",
+  "hubAssistantFriendly": "Niech poprowadzi asystent"
 }

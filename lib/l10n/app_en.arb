@@ -27769,5 +27769,9 @@
         "type": "String"
       }
     }
+  },
+  "hubAssistantFriendly": "Let the assistant take it",
+  "@hubAssistantFriendly": {
+    "description": "Hub: under the Play button of a friendly; the match is simulated with the manager's squad and tactics instead of being watched."
   }
 }

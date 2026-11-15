@@ -4500,5 +4500,6 @@
   "newsNcRelegatedBody": "Poslední místo ve skupině v soutěži {cup}: příští ročník se hraje o ligu níž.",
   "stadiumsBuildFrom": "Postavit: od {cost}",
   "stadiumsConfirmBuildSized": "Postavit stadion pro {seats} diváků ve městě {city} za {cost}?",
-  "stadiumsCapacityRange": "Kapacita: podle vás, {min} až {max} míst"
+  "stadiumsCapacityRange": "Kapacita: podle vás, {min} až {max} míst",
+  "hubAssistantFriendly": "Nech to na asistentovi"
 }

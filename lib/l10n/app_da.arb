@@ -4500,5 +4500,6 @@
   "newsNcRelegatedBody": "Sidst i gruppen i {cup}: næste udgave spilles en liga lavere.",
   "stadiumsBuildFrom": "Byg: fra {cost}",
   "stadiumsConfirmBuildSized": "Byg et stadion med {seats} pladser i {city} for {cost}?",
-  "stadiumsCapacityRange": "Kapacitet: dit valg, {min} til {max} pladser"
+  "stadiumsCapacityRange": "Kapacitet: dit valg, {min} til {max} pladser",
+  "hubAssistantFriendly": "Lad assistenten tage den"
 }

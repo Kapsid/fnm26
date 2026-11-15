@@ -17385,4 +17385,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String stadiumsCapacityRange(String min, String max) {
     return '収容人数：$min〜$max席から選択';
   }
+
+  @override
+  String get hubAssistantFriendly => 'アシスタントに任せる';
 }

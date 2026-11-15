@@ -4500,5 +4500,6 @@
   "newsNcRelegatedBody": "Lohkon viimeinen kilpailussa {cup}: seuraava painos pelataan liigaa alempana.",
   "stadiumsBuildFrom": "Rakenna: alkaen {cost}",
   "stadiumsConfirmBuildSized": "Rakennetaanko {seats} paikan stadion kaupunkiin {city} hintaan {cost}?",
-  "stadiumsCapacityRange": "Kapasiteetti: oma valinta, {min}–{max} paikkaa"
+  "stadiumsCapacityRange": "Kapasiteetti: oma valinta, {min}–{max} paikkaa",
+  "hubAssistantFriendly": "Anna apuvalmentajan hoitaa"
 }

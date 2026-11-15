@@ -4500,5 +4500,6 @@
   "newsNcRelegatedBody": "{cup} में ग्रुप में सबसे नीचे: अगला संस्करण एक लीग नीचे खेला जाएगा।",
   "stadiumsBuildFrom": "निर्माण: {cost} से",
   "stadiumsConfirmBuildSized": "{city} में {seats} सीटों वाला स्टेडियम {cost} में बनाएँ?",
-  "stadiumsCapacityRange": "क्षमता: आपकी पसंद, {min} से {max} सीटें"
+  "stadiumsCapacityRange": "क्षमता: आपकी पसंद, {min} से {max} सीटें",
+  "hubAssistantFriendly": "सहायक को संभालने दें"
 }

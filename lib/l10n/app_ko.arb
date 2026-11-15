@@ -4500,5 +4500,6 @@
   "newsNcRelegatedBody": "{cup}에서 조 최하위: 다음 대회는 한 단계 아래 리그에서 치릅니다.",
   "stadiumsBuildFrom": "건설: {cost}부터",
   "stadiumsConfirmBuildSized": "{city}에 {seats}석 경기장을 {cost}에 건설할까요?",
-  "stadiumsCapacityRange": "수용 인원: {min}~{max}석 중 선택"
+  "stadiumsCapacityRange": "수용 인원: {min}~{max}석 중 선택",
+  "hubAssistantFriendly": "코치에게 맡기기"
 }

@@ -4500,5 +4500,6 @@
   "newsNcRelegatedBody": "Derniers du groupe en {cup} : la prochaine édition se joue une ligue plus bas.",
   "stadiumsBuildFrom": "Construire : dès {cost}",
   "stadiumsConfirmBuildSized": "Construire un stade de {seats} places à {city} pour {cost} ?",
-  "stadiumsCapacityRange": "Capacité : au choix, de {min} à {max} places"
+  "stadiumsCapacityRange": "Capacité : au choix, de {min} à {max} places",
+  "hubAssistantFriendly": "Confier le match à l'adjoint"
 }

@@ -17959,4 +17959,7 @@ class AppLocalizationsHu extends AppLocalizations {
   String stadiumsCapacityRange(String min, String max) {
     return 'Befogadóképesség: tetszés szerint, $min–$max férőhely';
   }
+
+  @override
+  String get hubAssistantFriendly => 'Bízd a segédedzőre';
 }

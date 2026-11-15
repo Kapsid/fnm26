@@ -4500,5 +4500,6 @@
   "newsNcRelegatedBody": "Последно място в групата в {cup}: следващото издание се играе една лига по-ниско.",
   "stadiumsBuildFrom": "Строеж: от {cost}",
   "stadiumsConfirmBuildSized": "Да се построи стадион с {seats} места в {city} за {cost}?",
-  "stadiumsCapacityRange": "Капацитет: по ваш избор, от {min} до {max} места"
+  "stadiumsCapacityRange": "Капацитет: по ваш избор, от {min} до {max} места",
+  "hubAssistantFriendly": "Остави помощника да го води"
 }
