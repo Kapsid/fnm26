@@ -1201,49 +1201,8 @@ class AppLocalizationsMs extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'PERANAN & BOLA MATI';
 
   @override
-  String get tacticsSectionRoles => 'Peranan';
-
-  @override
-  String get tacticsSectionFreeKicks => 'Sepakan percuma';
-
-  @override
-  String get tacticsSectionCorners => 'Sepakan sudut';
-
-  @override
-  String get tacticsTakerTapHint =>
-      'Ketik pemain untuk memilihnya. Ketik sekali lagi untuk membiarkan jurulatih memilih.';
-
-  @override
-  String get tacticsPenaltiesBlurb =>
-      'Siapa yang mengambil sepakan penalti, sehingga tiga orang mengikut giliran. Jika yang pertama tiada di padang, yang seterusnya mengambilnya.';
-
-  @override
-  String get tacticsFreeKicksBlurb =>
-      'Siapa yang mengambil sepakan percuma dalam jarak menjaringkan, sehingga tiga orang mengikut giliran. Jika yang pertama tiada di padang, yang seterusnya mengambilnya.';
-
-  @override
-  String get tacticsCornersBlurb =>
-      'Sepakan sudut dari setiap sisi ada penyepaknya sendiri, sehingga dua orang mengikut giliran. Jika yang pertama tiada di padang, yang seterusnya mengambilnya.';
-
-  @override
-  String get tacticsOrderTapHint =>
-      'Ketik pemain mengikut giliran mereka menyepak. Ketik pemain bernombor untuk mengeluarkannya dari senarai.';
-
-  @override
-  String get tacticsCornersLeft => 'Dari kiri';
-
-  @override
-  String get tacticsCornersRight => 'Dari kanan';
-
-  @override
-  String get tacticsThrowInsBlurb =>
-      'Siapa yang mengambil balingan ke dalam jauh. Jika yang pertama tiada di padang, yang kedua mengambilnya.';
-
-  @override
-  String get tacticsPickBest => 'Pilih yang terbaik';
-
-  @override
-  String get tacticsSameAsPenalties => 'Sama seperti penalti';
+  String get tacticsRolesSetPiecesBlurb =>
+      'Beri setiap pemain utama satu peranan. Ketik lencana penalti (⚽) atau sepakan percuma (▲) untuk menetapkan penyepak anda.';
 
   @override
   String get tacticsTooltipCallUps => 'Panggilan skuad';

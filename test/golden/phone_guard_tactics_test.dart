@@ -47,16 +47,6 @@ void main() {
     await expectAppGolden('goldens/tactics_roles_phone.png');
   });
 
-  testWidgets('phone tactics, free-kick taker sub-tab', (tester) async {
-    final save = await seedSave(tester);
-    await pumpRoute(
-      tester,
-      save,
-      '${Routes.tactics}?careerId=${save.careerId}&tab=2&sub=freeKicks',
-    );
-    await expectAppGolden('goldens/tactics_free_kicks_phone.png');
-  });
-
   testWidgets('phone squad tab', (tester) async {
     final save = await seedSave(tester);
     await pumpRoute(

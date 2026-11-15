@@ -72,10 +72,7 @@ void main() {
         setPieceAutoAcceptedProvider(1).overrideWith((ref) async => false),
         setPieceTakersProvider(
           1,
-        ).overrideWith(
-          (ref) async =>
-              SetPieceOrder.single(penalty: takerId, deadBall: takerId),
-        ),
+        ).overrideWith((ref) async => (penalty: takerId, deadBall: takerId)),
       ],
     );
     addTearDown(c.dispose);

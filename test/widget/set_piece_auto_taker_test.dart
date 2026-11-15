@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fnm/domain/entities/set_piece_order.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
@@ -58,7 +57,7 @@ void main() {
   Future<AppLocalizations> openTakers(
     WidgetTester tester, {
     List<int?>? lineup,
-    SetPieceOrder takers = SetPieceOrder.none,
+    ({int? penalty, int? deadBall}) takers = (penalty: null, deadBall: null),
     double width = 400,
     Locale locale = const Locale('en'),
   }) async {
@@ -144,10 +143,7 @@ void main() {
   });
 
   testWidgets('naming a man drops the automatic marker', (tester) async {
-    final l = await openTakers(
-      tester,
-      takers: SetPieceOrder.single(penalty: 3),
-    );
+    final l = await openTakers(tester, takers: (penalty: 3, deadBall: null));
 
     expect(summaryLabel(l.tacticsPenalties), findsOneWidget);
     expect(
@@ -169,7 +165,7 @@ void main() {
     final l = await openTakers(
       tester,
       lineup: [1, 2, 12, 4, 5, 6, 7, 8, 9, 10, 11],
-      takers: SetPieceOrder.single(penalty: 3),
+      takers: (penalty: 3, deadBall: null),
     );
 
     expect(
@@ -210,19 +206,13 @@ void main() {
   testWidgets('the quick pick is gone once both takers are named', (
     tester,
   ) async {
-    final l = await openTakers(
-      tester,
-      takers: SetPieceOrder.single(penalty: 3, deadBall: 4),
-    );
+    final l = await openTakers(tester, takers: (penalty: 3, deadBall: 4));
 
     expect(find.text(l.tacticsTakerQuickPick), findsNothing);
   });
 
   testWidgets('a half-named pair still offers the quick pick', (tester) async {
-    final l = await openTakers(
-      tester,
-      takers: SetPieceOrder.single(penalty: 3),
-    );
+    final l = await openTakers(tester, takers: (penalty: 3, deadBall: null));
 
     expect(find.text(l.tacticsTakerQuickPick), findsOneWidget);
     await tester.tap(find.text(l.tacticsTakerQuickPick));

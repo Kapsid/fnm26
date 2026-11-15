@@ -1247,49 +1247,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'FUNÇÕES E BOLAS PARADAS';
 
   @override
-  String get tacticsSectionRoles => 'Funções';
-
-  @override
-  String get tacticsSectionFreeKicks => 'Faltas';
-
-  @override
-  String get tacticsSectionCorners => 'Escanteios';
-
-  @override
-  String get tacticsTakerTapHint =>
-      'Toque em um jogador para escolhê-lo. Toque de novo para deixar a escolha com o treinador.';
-
-  @override
-  String get tacticsPenaltiesBlurb =>
-      'Quem cobra os pênaltis, até três em ordem. Se o primeiro não estiver em campo, cobra o seguinte.';
-
-  @override
-  String get tacticsFreeKicksBlurb =>
-      'Quem cobra as faltas perto da área, até três em ordem. Se o primeiro não estiver em campo, cobra o seguinte.';
-
-  @override
-  String get tacticsCornersBlurb =>
-      'Os escanteios de cada lado têm seus próprios cobradores, até dois em ordem. Se o primeiro não estiver em campo, cobra o seguinte.';
-
-  @override
-  String get tacticsOrderTapHint =>
-      'Toque nos jogadores na ordem em que devem cobrar. Toque em um jogador numerado para tirá-lo da lista.';
-
-  @override
-  String get tacticsCornersLeft => 'Pela esquerda';
-
-  @override
-  String get tacticsCornersRight => 'Pela direita';
-
-  @override
-  String get tacticsThrowInsBlurb =>
-      'Quem cobra os laterais longos. Se o primeiro não estiver em campo, cobra o segundo.';
-
-  @override
-  String get tacticsPickBest => 'Escolher o melhor';
-
-  @override
-  String get tacticsSameAsPenalties => 'Igual aos pênaltis';
+  String get tacticsRolesSetPiecesBlurb =>
+      'Dê uma função a cada titular. Toque no emblema de pênalti (⚽) ou de falta (▲) para definir o cobrador.';
 
   @override
   String get tacticsTooltipCallUps => 'Convocatória';

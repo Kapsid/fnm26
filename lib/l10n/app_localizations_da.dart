@@ -1213,49 +1213,8 @@ class AppLocalizationsDa extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ROLLER OG DØDBOLDE';
 
   @override
-  String get tacticsSectionRoles => 'Roller';
-
-  @override
-  String get tacticsSectionFreeKicks => 'Frispark';
-
-  @override
-  String get tacticsSectionCorners => 'Hjørnespark';
-
-  @override
-  String get tacticsTakerTapHint =>
-      'Tryk på en spiller for at udpege ham. Tryk igen for at lade træneren vælge.';
-
-  @override
-  String get tacticsPenaltiesBlurb =>
-      'Hvem der tager straffesparkene, op til tre i rækkefølge. Er den første ikke på banen, tager den næste dem.';
-
-  @override
-  String get tacticsFreeKicksBlurb =>
-      'Hvem der tager frispark inden for skudafstand, op til tre i rækkefølge. Er den første ikke på banen, tager den næste dem.';
-
-  @override
-  String get tacticsCornersBlurb =>
-      'Hjørnespark fra hver side har deres egne skytter, op til to i rækkefølge. Er den første ikke på banen, tager den næste dem.';
-
-  @override
-  String get tacticsOrderTapHint =>
-      'Tryk på spillerne i den rækkefølge, de skal tage dem. Tryk på en nummereret spiller for at fjerne ham fra listen.';
-
-  @override
-  String get tacticsCornersLeft => 'Fra venstre';
-
-  @override
-  String get tacticsCornersRight => 'Fra højre';
-
-  @override
-  String get tacticsThrowInsBlurb =>
-      'Hvem der tager de lange indkast. Er den første ikke på banen, tager den anden dem.';
-
-  @override
-  String get tacticsPickBest => 'Vælg den bedste';
-
-  @override
-  String get tacticsSameAsPenalties => 'Som straffespark';
+  String get tacticsRolesSetPiecesBlurb =>
+      'Giv hver startspiller en rolle. Tryk på straffespark (⚽) eller frispark (▲) for at udpege din skytte.';
 
   @override
   String get tacticsTooltipCallUps => 'Udtagelser';

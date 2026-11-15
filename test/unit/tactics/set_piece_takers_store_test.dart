@@ -17,7 +17,7 @@ void main() {
 
   test('nothing named reads as automatic on both duties', () async {
     final store = container().read(setPieceTakersStoreProvider);
-    expect(await store.load(1), SetPieceOrder.none);
+    expect(await store.load(1), (penalty: null, deadBall: null));
   });
 
   test('the quick pick names both men in one write', () async {
@@ -25,7 +25,7 @@ void main() {
 
     await store.setBoth(1, penalty: 7, deadBall: 4);
 
-    expect(await store.load(1), SetPieceOrder.single(penalty: 7, deadBall: 4));
+    expect(await store.load(1), (penalty: 7, deadBall: 4));
   });
 
   test('the quick pick replaces a pair already stored', () async {
@@ -37,7 +37,7 @@ void main() {
     // One write, both halves: setBoth does not re-read the stored pair to keep
     // the other side of it the way [SetPieceTakersStore.set] must, so there is
     // no read for a second call to race.
-    expect(await store.load(1), SetPieceOrder.single(penalty: 7, deadBall: 4));
+    expect(await store.load(1), (penalty: 7, deadBall: 4));
   });
 
   test(
@@ -48,10 +48,7 @@ void main() {
       await store.setBoth(1, penalty: 7, deadBall: 4);
       await store.set(1, penalty: true, playerId: 9);
 
-      expect(
-        await store.load(1),
-        SetPieceOrder.single(penalty: 9, deadBall: 4),
-      );
+      expect(await store.load(1), (penalty: 9, deadBall: 4));
     },
   );
 
@@ -61,10 +58,7 @@ void main() {
     await store.setBoth(1, penalty: 7, deadBall: 4);
     await store.set(1, penalty: true, playerId: null);
 
-    expect(
-      await store.load(1),
-      SetPieceOrder.single(deadBall: 4),
-    );
+    expect(await store.load(1), (penalty: null, deadBall: 4));
   });
 
   test('a write reaches the provider the screens watch', () async {
@@ -72,10 +66,10 @@ void main() {
     // and recompute on the next one whether or not the write invalidated it,
     // which is precisely what this is asking about.
     final c = container()..listen(setPieceTakersProvider(1), (_, _) {});
-    expect(
-      await c.read(setPieceTakersProvider(1).future),
-      SetPieceOrder.none,
-    );
+    expect(await c.read(setPieceTakersProvider(1).future), (
+      penalty: null,
+      deadBall: null,
+    ));
 
     await c
         .read(setPieceTakersStoreProvider)
@@ -89,10 +83,10 @@ void main() {
     // Riverpod calls circular: in a debug build the write landed in the prefs
     // and the screen was never told, so naming a taker looked like it did
     // nothing at all.
-    expect(
-      await c.read(setPieceTakersProvider(1).future),
-      SetPieceOrder.single(penalty: 7, deadBall: 4),
-    );
+    expect(await c.read(setPieceTakersProvider(1).future), (
+      penalty: 7,
+      deadBall: 4,
+    ));
   });
 
   test("one career's takers are not another's", () async {
@@ -100,6 +94,6 @@ void main() {
 
     await store.setBoth(1, penalty: 7, deadBall: 4);
 
-    expect(await store.load(2), SetPieceOrder.none);
+    expect(await store.load(2), (penalty: null, deadBall: null));
   });
 }

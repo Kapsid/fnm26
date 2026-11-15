@@ -1153,45 +1153,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get tacticsTabRolesSetPieces => '役割とセットプレー';
 
   @override
-  String get tacticsSectionRoles => '役割';
-
-  @override
-  String get tacticsSectionFreeKicks => 'FK';
-
-  @override
-  String get tacticsSectionCorners => 'CK';
-
-  @override
-  String get tacticsTakerTapHint => '選手をタップして指名します。もう一度タップするとコーチに任せます。';
-
-  @override
-  String get tacticsPenaltiesBlurb => 'PKを蹴る選手を順番に最大3人。1人目がピッチにいなければ次の選手が蹴ります。';
-
-  @override
-  String get tacticsFreeKicksBlurb =>
-      'ゴールを狙える位置のFKを蹴る選手を順番に最大3人。1人目がピッチにいなければ次の選手が蹴ります。';
-
-  @override
-  String get tacticsCornersBlurb =>
-      'CKは左右それぞれにキッカーを順番に最大2人。1人目がピッチにいなければ次の選手が蹴ります。';
-
-  @override
-  String get tacticsOrderTapHint => '蹴る順番に選手をタップします。番号の付いた選手をタップするとリストから外れます。';
-
-  @override
-  String get tacticsCornersLeft => '左から';
-
-  @override
-  String get tacticsCornersRight => '右から';
-
-  @override
-  String get tacticsThrowInsBlurb => 'ロングスローを投げる選手。1人目がピッチにいなければ2人目が投げます。';
-
-  @override
-  String get tacticsPickBest => '最適な選手を選ぶ';
-
-  @override
-  String get tacticsSameAsPenalties => 'PKと同じ';
+  String get tacticsRolesSetPiecesBlurb =>
+      '先発選手それぞれに役割を与えます。PK（⚽）またはFK（▲）のバッジをタップしてキッカーを決めます。';
 
   @override
   String get tacticsTooltipCallUps => '招集';

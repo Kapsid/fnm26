@@ -1254,49 +1254,8 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ROLE A STANDARDKY';
 
   @override
-  String get tacticsSectionRoles => 'Role';
-
-  @override
-  String get tacticsSectionFreeKicks => 'Přímé kopy';
-
-  @override
-  String get tacticsSectionCorners => 'Rohy';
-
-  @override
-  String get tacticsTakerTapHint =>
-      'Klepnutím hráče určíte. Dalším klepnutím volbu necháte na trenérovi.';
-
-  @override
-  String get tacticsPenaltiesBlurb =>
-      'Kdo kope penalty, až tři hráči v pořadí. Když první není na hřišti, kope další.';
-
-  @override
-  String get tacticsFreeKicksBlurb =>
-      'Kdo kope přímé kopy v dosahu brány, až tři hráči v pořadí. Když první není na hřišti, kope další.';
-
-  @override
-  String get tacticsCornersBlurb =>
-      'Rohy z každé strany mají vlastní exekutory, až dva v pořadí. Když první není na hřišti, kope další.';
-
-  @override
-  String get tacticsOrderTapHint =>
-      'Klepejte na hráče v pořadí, v jakém mají kopat. Klepnutím na očíslovaného hráče ho ze seznamu odeberete.';
-
-  @override
-  String get tacticsCornersLeft => 'Zleva';
-
-  @override
-  String get tacticsCornersRight => 'Zprava';
-
-  @override
-  String get tacticsThrowInsBlurb =>
-      'Kdo hází dlouhé auty. Když první není na hřišti, hází druhý.';
-
-  @override
-  String get tacticsPickBest => 'Vybrat nejlepšího';
-
-  @override
-  String get tacticsSameAsPenalties => 'Jako penalty';
+  String get tacticsRolesSetPiecesBlurb =>
+      'Přiřaďte každému hráči roli. Klepnutím na odznak penalty (⚽) nebo přímého kopu (▲) určete vykonavatele.';
 
   @override
   String get tacticsTooltipCallUps => 'Nominace';

@@ -1251,49 +1251,8 @@ class AppLocalizationsHr extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ULOGE I STAJALICE';
 
   @override
-  String get tacticsSectionRoles => 'Uloge';
-
-  @override
-  String get tacticsSectionFreeKicks => 'Slobodni udarci';
-
-  @override
-  String get tacticsSectionCorners => 'Korneri';
-
-  @override
-  String get tacticsTakerTapHint =>
-      'Dodirni igrača da ga odrediš. Dodirni ga ponovno da izbor prepustiš treneru.';
-
-  @override
-  String get tacticsPenaltiesBlurb =>
-      'Tko izvodi jedanaesterce, do trojice redom. Ako prvi nije na terenu, izvodi sljedeći.';
-
-  @override
-  String get tacticsFreeKicksBlurb =>
-      'Tko izvodi slobodne udarce s pucačke udaljenosti, do trojice redom. Ako prvi nije na terenu, izvodi sljedeći.';
-
-  @override
-  String get tacticsCornersBlurb =>
-      'Korneri sa svake strane imaju svoje izvođače, do dvojice redom. Ako prvi nije na terenu, izvodi sljedeći.';
-
-  @override
-  String get tacticsOrderTapHint =>
-      'Dodiruj igrače redom kojim trebaju izvoditi. Dodirni igrača s brojem da ga makneš s popisa.';
-
-  @override
-  String get tacticsCornersLeft => 'S lijeve strane';
-
-  @override
-  String get tacticsCornersRight => 'S desne strane';
-
-  @override
-  String get tacticsThrowInsBlurb =>
-      'Tko izvodi duga ubacivanja iz auta. Ako prvi nije na terenu, izvodi drugi.';
-
-  @override
-  String get tacticsPickBest => 'Odaberi najboljeg';
-
-  @override
-  String get tacticsSameAsPenalties => 'Kao jedanaesterci';
+  String get tacticsRolesSetPiecesBlurb =>
+      'Daj svakom igraču iz početne postave ulogu. Dodirni oznaku za jedanaesterac (⚽) ili slobodni udarac (▲) da odrediš izvođača.';
 
   @override
   String get tacticsTooltipCallUps => 'Pozivi';

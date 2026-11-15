@@ -8,15 +8,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/repositories/drift_tactics_repository.dart';
 import 'package:fnm/domain/entities/enums.dart';
-import 'package:fnm/domain/entities/set_piece_order.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-export 'package:fnm/domain/entities/set_piece_order.dart';
-
-/// The manager's designated set-piece takers for a save, in order on each
-/// duty (see [SetPieceOrder]). An empty list lets the engine pick the
-/// best-suited player automatically.
-typedef SetPieceTakers = SetPieceOrder;
+/// The manager's designated set-piece takers for a save: who steps up for
+/// penalties, and who whips in the corners / free-kicks. Null = let the engine
+/// pick the best-suited player automatically.
+typedef SetPieceTakers = ({int? penalty, int? deadBall});
 
 /// Prefs key — outside the save database (no schema bump), scoped per career.
 String _takersKey(int careerId) => 'set_piece_takers_v1:$careerId';
@@ -46,10 +43,7 @@ Future<bool> _loadAuto(int careerId) async {
   }
 }
 
-/// Reads a save's stored takers, outside any provider.
-///
-/// Either shape: the old pair (`penalty`, `deadBall`) reads back as one-man
-/// orders (see [SetPieceOrder.fromJson]).
+/// Reads a save's stored pair, outside any provider.
 ///
 /// Top level rather than a method on the store because the provider below must
 /// NOT depend on the store: the store invalidates that provider after a write,
@@ -59,19 +53,15 @@ Future<bool> _loadAuto(int careerId) async {
 Future<SetPieceTakers> _loadTakers(int careerId) async {
   final prefs = await SharedPreferences.getInstance();
   final raw = prefs.getString(_takersKey(careerId));
-  if (raw == null || raw.isEmpty) return SetPieceOrder.none;
+  if (raw == null || raw.isEmpty) return (penalty: null, deadBall: null);
   try {
     final map = jsonDecode(raw);
-    if (map is! Map) return SetPieceOrder.none;
-    return SetPieceOrder.fromJson(map);
+    if (map is! Map) return (penalty: null, deadBall: null);
+    int? id(Object? v) => v is int ? v : int.tryParse('$v');
+    return (penalty: id(map['penalty']), deadBall: id(map['deadBall']));
   } on FormatException {
-    return SetPieceOrder.none;
+    return (penalty: null, deadBall: null);
   }
-}
-
-Future<void> _writeTakers(int careerId, SetPieceTakers takers) async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.setString(_takersKey(careerId), jsonEncode(takers.toJson()));
 }
 
 /// Loads and saves a save's set-piece taker choices.
@@ -82,46 +72,22 @@ class SetPieceTakersStore {
 
   Future<SetPieceTakers> load(int careerId) => _loadTakers(careerId);
 
-  /// Sets the penalty order ([penalty] true) or the dead-ball orders (free
-  /// kicks and both corners) to [playerId] alone; a null [playerId] clears
-  /// them (back to automatic).
+  /// Sets the penalty taker ([penalty] true) or the dead-ball taker; a null
+  /// [playerId] clears that choice (back to automatic).
   Future<void> set(
     int careerId, {
     required bool penalty,
     required int? playerId,
   }) async {
     final cur = await load(careerId);
-    final ids = [?playerId];
     final next = penalty
-        ? cur.withDuty(SetPieceDuty.penalties, ids)
-        : cur
-              .withDuty(SetPieceDuty.freeKicks, ids)
-              .withDuty(SetPieceDuty.cornersLeft, ids)
-              .withDuty(SetPieceDuty.cornersRight, ids);
-    await save(careerId, next);
-  }
-
-  /// Sets one [duty]'s order to [ids], the rest left as stored.
-  Future<void> setDuty(
-    int careerId,
-    SetPieceDuty duty,
-    List<int> ids,
-  ) async {
-    final cur = await load(careerId);
-    await save(careerId, cur.withDuty(duty, ids));
-  }
-
-  /// Drops everyone not in [ids] from every order, the rest kept in order.
-  /// Re-reads the store, so it never writes back a stale order.
-  Future<void> keepOnly(int careerId, Set<int> ids) async {
-    final cur = await load(careerId);
-    final next = cur.where(ids.contains);
-    if (next != cur) await save(careerId, next);
-  }
-
-  /// Stores [takers] whole.
-  Future<void> save(int careerId, SetPieceTakers takers) async {
-    await _writeTakers(careerId, takers);
+        ? (penalty: playerId, deadBall: cur.deadBall)
+        : (penalty: cur.penalty, deadBall: playerId);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+      _takersKey(careerId),
+      jsonEncode({'penalty': next.penalty, 'deadBall': next.deadBall}),
+    );
     _ref.invalidate(setPieceTakersProvider(careerId));
   }
 
@@ -136,21 +102,23 @@ class SetPieceTakersStore {
     _ref.invalidate(setPieceAutoAcceptedProvider(careerId));
   }
 
-  /// Names BOTH takers at once — the quick pick: [penalty] alone on
-  /// penalties, [deadBall] alone on free kicks and both corners.
+  /// Names BOTH takers at once — the quick pick.
   ///
-  /// Not two calls to [set]: each of those re-reads the stored order to keep
-  /// the other half, so the second would race the first's write and the
-  /// penalty taker could be dropped again the moment the dead-ball man was
-  /// named.
+  /// Not two calls to [set]: each of those re-reads the stored pair to keep the
+  /// other half, so the second would race the first's write and the penalty
+  /// taker could be dropped again the moment the dead-ball man was named.
   Future<void> setBoth(
     int careerId, {
     required int? penalty,
     required int? deadBall,
-  }) => save(
-    careerId,
-    SetPieceOrder.single(penalty: penalty, deadBall: deadBall),
-  );
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+      _takersKey(careerId),
+      jsonEncode({'penalty': penalty, 'deadBall': deadBall}),
+    );
+    _ref.invalidate(setPieceTakersProvider(careerId));
+  }
 }
 
 final Provider<SetPieceTakersStore> setPieceTakersStoreProvider = Provider(
@@ -194,18 +162,23 @@ Future<SetPieceTakers> _sweepKeepers(
     // Nothing stored (a new save, or one left on automatic): nothing to
     // sweep, but mark it done now, or a keeper the manager names later
     // would be wiped by the first read after that.
-    if (takers.isEmpty) {
+    if (takers.penalty == null && takers.deadBall == null) {
       await prefs.setBool(_keeperSweepKey(careerId), true);
       return takers;
     }
     final isKeeper = ref.read(setPieceKeeperCheckProvider);
-    final keepers = <int>{
-      for (final d in SetPieceDuty.values)
-        for (final id in takers.of(d))
-          if (await isKeeper(careerId, id)) id,
-    };
-    final swept = takers.where((id) => !keepers.contains(id));
-    if (swept != takers) await _writeTakers(careerId, swept);
+    Future<int?> keep(int? id) async =>
+        id != null && await isKeeper(careerId, id) ? null : id;
+    final swept = (
+      penalty: await keep(takers.penalty),
+      deadBall: await keep(takers.deadBall),
+    );
+    if (swept != takers) {
+      await prefs.setString(
+        _takersKey(careerId),
+        jsonEncode({'penalty': swept.penalty, 'deadBall': swept.deadBall}),
+      );
+    }
     await prefs.setBool(_keeperSweepKey(careerId), true);
     return swept;
   } on Object {

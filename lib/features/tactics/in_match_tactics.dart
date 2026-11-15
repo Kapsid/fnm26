@@ -13,7 +13,6 @@ import 'package:fnm/core/util/squad_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
-import 'package:fnm/domain/entities/set_piece_order.dart';
 import 'package:fnm/domain/entities/tactic_preset.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/match/card_status.dart';
@@ -58,9 +57,9 @@ class InMatchTacticsResult {
   /// The place each slot of [lineup] plays.
   List<PlayerPosition> get positions => switches.apply(formation);
 
-  /// Who takes the set pieces from here on, in order. An empty list hands
-  /// that duty back to the engine's own pick.
-  final SetPieceOrder takers;
+  /// Who takes penalties and dead balls from here on. Either may be null,
+  /// which hands that duty back to the engine's own pick.
+  final ({int? penalty, int? deadBall}) takers;
 
   /// The throw-in style and thrower from here on (a null thrower is the
   /// engine's own pick).
@@ -85,7 +84,7 @@ Future<InMatchTacticsResult?> showInMatchTactics(
   required int maxSubs,
   FullBackPushes fullBacks = FullBackPushes.neutral,
   SlotSwitches switches = SlotSwitches.none,
-  SetPieceOrder takers = SetPieceOrder.none,
+  ({int? penalty, int? deadBall}) takers = (penalty: null, deadBall: null),
   ({ThrowInStyle style, int? taker}) throwIn = (
     style: ThrowInStyle.neutral,
     taker: null,
@@ -164,7 +163,7 @@ class _InMatchTacticsEditor extends StatefulWidget {
   final int maxSubs;
 
   /// The side's set-piece takers as the editor opens.
-  final SetPieceOrder takers;
+  final ({int? penalty, int? deadBall}) takers;
 
   /// The side's throw-in style and thrower as the editor opens.
   final ({ThrowInStyle style, int? taker}) throwIn;
@@ -233,7 +232,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
 
   /// The place each slot plays right now.
   List<PlayerPosition> get _positions => _switches.apply(_formation);
-  late SetPieceOrder _takers = widget.takers;
+  late ({int? penalty, int? deadBall}) _takers = widget.takers;
   late ThrowInStyle _throwInStyle = widget.throwIn.style;
   late int? _thrower = widget.throwIn.taker;
 
@@ -385,12 +384,12 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
   /// engine anyway, so the slot falls back to automatic rather than to nobody:
   /// null already means "let the engine pick", and a second state for "he has
   /// gone" would only be the same thing under another name.
-  ///
-  /// Each order keeps the men still on the pitch, in their order: the first
-  /// of them is who steps up now.
-  SetPieceOrder get _liveTakers {
+  ({int? penalty, int? deadBall}) get _liveTakers {
     final on = _onPitch;
-    return _takers.where(on.contains);
+    return (
+      penalty: on.contains(_takers.penalty) ? _takers.penalty : null,
+      deadBall: on.contains(_takers.deadBall) ? _takers.deadBall : null,
+    );
   }
 
   /// A sub is spent for every starter no longer on the pitch (chains of
@@ -1388,19 +1387,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                 // drifting with the eleven as it is picked apart by
                 // substitutions.
                 onQuickPick: () => setState(() {
-                  _takers = _takers.where(_onPitch.contains);
-                  if (penaltyId != null) {
-                    _takers = _takers.promote(
-                      const [SetPieceDuty.penalties],
-                      penaltyId,
-                    );
-                  }
-                  if (deadBallId != null) {
-                    _takers = _takers.promote(
-                      SetPieceOrder.deadBallDuties,
-                      deadBallId,
-                    );
-                  }
+                  _takers = (penalty: penaltyId, deadBall: deadBallId);
                   _thrower = throwInId;
                 }),
               ),
@@ -1417,21 +1404,17 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                   onToggleThrowIn: () => setState(() {
                     _thrower = thrower == p.id ? null : p.id;
                   }),
-                  // The first choice on the pitch, as the engine has him:
-                  // naming somebody puts him first (the men already listed
-                  // stay behind him); un-naming him hands the ball to the
-                  // next man listed.
                   onTogglePenalty: () => setState(() {
-                    const duties = [SetPieceDuty.penalties];
-                    _takers = live.penalty == p.id
-                        ? _takers.drop(duties, p.id)
-                        : _takers.promote(duties, p.id);
+                    _takers = (
+                      penalty: live.penalty == p.id ? null : p.id,
+                      deadBall: live.deadBall,
+                    );
                   }),
                   onToggleDeadBall: () => setState(() {
-                    const duties = SetPieceOrder.deadBallDuties;
-                    _takers = live.deadBall == p.id
-                        ? _takers.drop(duties, p.id)
-                        : _takers.promote(duties, p.id);
+                    _takers = (
+                      penalty: live.penalty,
+                      deadBall: live.deadBall == p.id ? null : p.id,
+                    );
                   }),
                 ),
             ],

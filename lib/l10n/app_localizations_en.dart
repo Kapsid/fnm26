@@ -1238,49 +1238,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tacticsTabRolesSetPieces => 'ROLES & SET PIECES';
 
   @override
-  String get tacticsSectionRoles => 'Roles';
-
-  @override
-  String get tacticsSectionFreeKicks => 'Free kicks';
-
-  @override
-  String get tacticsSectionCorners => 'Corners';
-
-  @override
-  String get tacticsTakerTapHint =>
-      'Tap a player to name him. Tap him again to leave it to the coach.';
-
-  @override
-  String get tacticsPenaltiesBlurb =>
-      'Who takes the penalties, up to three in order. If the first is not on the pitch, the next one takes them.';
-
-  @override
-  String get tacticsFreeKicksBlurb =>
-      'Who takes free kicks within range of goal, up to three in order. If the first is not on the pitch, the next one takes them.';
-
-  @override
-  String get tacticsCornersBlurb =>
-      'Corners from each side have their own takers, up to two in order. If the first is not on the pitch, the next one takes them.';
-
-  @override
-  String get tacticsOrderTapHint =>
-      'Tap players in the order they should take it. Tap a numbered player to take him off the list.';
-
-  @override
-  String get tacticsCornersLeft => 'From the left';
-
-  @override
-  String get tacticsCornersRight => 'From the right';
-
-  @override
-  String get tacticsThrowInsBlurb =>
-      'Who takes the long throws. If the first is not on the pitch, the second takes them.';
-
-  @override
-  String get tacticsPickBest => 'Pick best';
-
-  @override
-  String get tacticsSameAsPenalties => 'Same as penalties';
+  String get tacticsRolesSetPiecesBlurb =>
+      'Give each starter a role. Tap the penalty (⚽) or free-kick (▲) badge to set your taker.';
 
   @override
   String get tacticsTooltipCallUps => 'Call-ups';

@@ -15,8 +15,8 @@ Where 1.1.2 stands, so work can continue in another session (cloud). Read with:
 
 | Area | What | Gate / save safety |
 |---|---|---|
-| UI redesign | Record book (tiles), world ranking (team card + dense table), hub programme strip, full schedule (month cards + filters), set pieces in sub-tabs, press room (ticker + microphone, newspaper verdict) | UI only |
-| Set pieces | Ordered takers: penalties and free kicks 1-3, corners left/right 1-2; engine takes the first listed man on the pitch | prefs JSON, additive; old JSON reads as before; single-taker results byte-identical (determinism test) |
+| UI redesign | Record book (tiles), world ranking (team card + dense table), hub programme strip, full schedule (month cards + filters), press room (ticker + microphone, newspaper verdict) | UI only |
+| Set pieces | REVERTED on the owner's call (2026-11-15): the sub-tabs and the ordered takers (`ddbd37f3`, `da3c1d44`) are undone; set pieces are as in 1.1.1 (one screen, one taker each). Unreleased, so no save holds an order; the dev builds' JSON kept the old keys beside the lists, so it reads back. | |
 | Stage 1 | Manager ages (own manager at career start, world managers shown, editor field, pack format 8); schema 57 incl. `DrawSlots` table and `Competitions.edition` | stepwise migration 56 to 57, real old-save upgrade tests, bundle carries DrawSlots |
 | Stage 2 | `calendar2`: Europe Nations Cup twice a cycle (edition 0/1), ladder after each edition, Euro qualifying Mar-Nov Y+1, NC Finals Fours in June, WC qualifying draw after NC edition 2, CONMEBOL from Sep Y+2 | per-cycle marker `calendar2`; unmarked cycles unchanged |
 | Stage 6 | Tournament spacing (`TournamentCalendar`, rest of 4+ days, staggered groups), weighted fatigue, one round popup per matchday, camp slack | own marker `tourSpacing1`; unmarked cycles unchanged (byte-identical guard) |
