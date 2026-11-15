@@ -143,15 +143,20 @@ class _MatchTabletLayout extends StatelessWidget {
   /// labels; should a long language need more than the column's width, the
   /// strip scrolls from the start with every label whole.
   Widget _statsColumn(AppLocalizations l) {
-    final tabs = _statsTabs(l);
     final g = goals;
-    if (g == null) return tabs;
+    // One shape with or without the goals, so the first goal does not
+    // rebuild the tabs (and send them back to the Summary).
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        PanelBox(child: g),
-        const SizedBox(height: AppSpacing.sm),
-        Expanded(child: tabs),
+        if (g != null) ...[
+          PanelBox(child: g),
+          const SizedBox(height: AppSpacing.sm),
+        ],
+        Expanded(
+          key: const ValueKey('match.statsTabsSlot'),
+          child: _statsTabs(l),
+        ),
       ],
     );
   }

@@ -131,24 +131,22 @@ void main() {
             .first,
       );
       expect(groundCard, findsOneWidget);
-      expect(
-        tester.getRect(groundCard).top,
-        greaterThan(
-          tester
-              .getRect(
-                find.descendant(
-                  of: find.byType(MatchStatsPanel),
-                  matching: find.byWidgetPredicate(
-                    (w) =>
-                        w is Text &&
-                        w.data?.toLowerCase() ==
-                            enL.matchStatGoals.toLowerCase(),
-                  ),
-                ),
-              )
-              .bottom,
+      final goalsRow = find.descendant(
+        of: find.byType(MatchStatsPanel),
+        matching: find.byWidgetPredicate(
+          (w) =>
+              w is Text &&
+              w.data?.toLowerCase() == enL.matchStatGoals.toLowerCase(),
         ),
       );
+      // On a short column the figures may have scrolled away above it,
+      // which is where they belong.
+      if (goalsRow.evaluate().isNotEmpty) {
+        expect(
+          tester.getRect(groundCard).top,
+          greaterThan(tester.getRect(goalsRow).bottom),
+        );
+      }
       // Stats on the left, the feed and Your XI on the right.
       expect(
         tester.getCenter(find.byType(MatchStatsPanel)).dx,
@@ -215,13 +213,19 @@ void main() {
         );
         final pitch = tester.getRect(find.byType(PitchMatchView));
         expect(tester.getRect(strip).bottom, lessThan(pitch.top));
-        // Nothing over the picture but the game.
+        // Nothing over the picture but the game (and the goal's blink,
+        // which lets every touch through).
         final over = find.descendant(
           of: find.ancestor(
             of: find.byType(PitchMatchView),
             matching: find.byType(AspectRatio),
           ),
-          matching: find.byType(Positioned),
+          matching: find.byWidgetPredicate(
+            (w) =>
+                w is Positioned &&
+                !(w.child is IgnorePointer &&
+                    (w.child! as IgnorePointer).child is GoalPitchFlash),
+          ),
         );
         expect(over, findsNothing);
         // The goal's pause over, the strip is the figures again (or the

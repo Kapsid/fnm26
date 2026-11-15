@@ -66,6 +66,7 @@ Future<void> _sweepFullScreen(WidgetTester tester, Size size) async {
     Routes.continentalDraw: '?careerId=$id&conf=${me.confederation.name}',
     Routes.nationsCupDraw: '?careerId=$id',
     Routes.euroPlayoffDraw: '?careerId=$id',
+    Routes.wcPlayoffDraw: '?careerId=$id',
     Routes.tournamentKickoff: '?careerId=$id',
     Routes.cycleRollover: '?careerId=$id',
     Routes.qualifyingDraw: '?careerId=$id',
