@@ -71,8 +71,8 @@ void main() {
     await _pump(tester, wide: true);
     final r16 = tester.getCenter(find.text('R16'));
     final last = tester.getCenter(find.text('Final'));
-    // Four 150-wide columns 8 apart would put the centres 3 x 158 apart.
-    expect(last.dx - r16.dx, greaterThan(3 * 158 + 100));
+    // Four 150-wide columns 18 apart would put the centres 3 x 168 apart.
+    expect(last.dx - r16.dx, greaterThan(3 * 168 + 100));
     expect(find.byType(SingleChildScrollView), findsNothing);
     expect(tester.takeException(), isNull);
   });
@@ -88,6 +88,6 @@ void main() {
     await tester.pump();
     final r16 = tester.getCenter(find.text('R16'));
     final last = tester.getCenter(find.text('Final'));
-    expect(last.dx - r16.dx, 3 * 158);
+    expect(last.dx - r16.dx, 3 * 168);
   });
 }
