@@ -156,11 +156,6 @@ class PitchPacer {
   static const double _offside = 2.5;
   static const double _injurySeconds = 3;
   static const double _goalExtra = 2.5;
-
-  /// An open-play goal's build-up: time for the attack to be played from
-  /// wherever the ball is. Without it a third of open-play goals were
-  /// reached by a cut straight to the shot (players saw the move skipped).
-  static const double _goalBuildUp = 4;
   static const double _longThrow = 3.5;
   static const double _mergeExtra = 1.5;
 
@@ -218,7 +213,7 @@ class PitchPacer {
   ///   at 100% / 50% / 30%;
   ///
   /// and no moment drops below one second. A penalty's foul is a key moment
-  /// too, card or not: it is staged before the kick. A goal adds 2.5 s, and one from open play 4 s more for its build-up. A set piece
+  /// too, card or not: it is staged before the kick. A goal adds 2.5 s. A set piece
   /// that leads to a shot is one moment: its length plus 1.5 s, carried by the
   /// set piece (the folded shot reports zero). Moments that are not staged
   /// (routine set pieces, corners, free kicks and long throws that lead to
@@ -285,15 +280,7 @@ class PitchPacer {
       case ShotMoment s:
         final goal = s.outcome == ShotOutcome.goal ? _goalExtra : 0;
         if (_keyShot(s)) {
-          final buildUp =
-              s.outcome == ShotOutcome.goal &&
-                  s.origin != ShotOrigin.penalty &&
-                  !_fromSetPiece(s.origin)
-              ? _goalBuildUp
-              : 0.0;
-          return (s.origin == ShotOrigin.penalty ? _penalty : _shot) +
-              goal +
-              buildUp;
+          return (s.origin == ShotOrigin.penalty ? _penalty : _shot) + goal;
         }
         final minorShot =
             s.outcome == ShotOutcome.wide || s.outcome == ShotOutcome.blocked;
