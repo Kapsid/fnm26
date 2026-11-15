@@ -4501,5 +4501,11 @@
   "stadiumsBuildFrom": "건설: {cost}부터",
   "stadiumsConfirmBuildSized": "{city}에 {seats}석 경기장을 {cost}에 건설할까요?",
   "stadiumsCapacityRange": "수용 인원: {min}~{max}석 중 선택",
-  "hubAssistantFriendly": "코치에게 맡기기"
+  "hubAssistantFriendly": "코치에게 맡기기",
+  "pitchComHandballPenalty1": "핸드볼! {player}가 박스 안에서 손을 대 페널티킥입니다.",
+  "pitchComHandballPenalty2": "팔이 벌어져 있었습니다: {player}의 핸드볼로 페널티킥!",
+  "pitchComHandballPenaltyYellow": "박스 안 {player}의 핸드볼: 페널티킥과 옐로카드.",
+  "pitchComHandballPenaltyRed": "{player}가 손으로 막았습니다! 페널티킥에 퇴장입니다.",
+  "pitchComHandballYellow": "{player}, 핸드볼로 옐로카드.",
+  "pitchComHandballRed": "고의적인 핸드볼! {player} 퇴장."
 }

@@ -18096,4 +18096,34 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get hubAssistantFriendly => 'Lascia fare al vice';
+
+  @override
+  String pitchComHandballPenalty1(String player) {
+    return 'Mani! $player tocca con la mano in area, ed è rigore.';
+  }
+
+  @override
+  String pitchComHandballPenalty2(String player) {
+    return 'Il braccio era largo: rigore per il fallo di mano di $player!';
+  }
+
+  @override
+  String pitchComHandballPenaltyYellow(String player) {
+    return 'Mani di $player in area: rigore e cartellino giallo.';
+  }
+
+  @override
+  String pitchComHandballPenaltyRed(String player) {
+    return '$player la ferma con la mano! Rigore, ed è espulso.';
+  }
+
+  @override
+  String pitchComHandballYellow(String player) {
+    return '$player ammonito per fallo di mano.';
+  }
+
+  @override
+  String pitchComHandballRed(String player) {
+    return 'Mani volontario! $player è espulso.';
+  }
 }

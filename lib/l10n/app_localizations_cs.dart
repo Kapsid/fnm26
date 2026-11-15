@@ -18412,4 +18412,34 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get hubAssistantFriendly => 'Nech to na asistentovi';
+
+  @override
+  String pitchComHandballPenalty1(String player) {
+    return 'Ruka! $player hraje rukou ve vápně a je to penalta.';
+  }
+
+  @override
+  String pitchComHandballPenalty2(String player) {
+    return 'Ruka byla od těla: penalta za ruku hráče $player!';
+  }
+
+  @override
+  String pitchComHandballPenaltyYellow(String player) {
+    return 'Ruka hráče $player ve vápně: penalta a žlutá karta.';
+  }
+
+  @override
+  String pitchComHandballPenaltyRed(String player) {
+    return '$player zastavuje míč rukou! Penalta a červená karta.';
+  }
+
+  @override
+  String pitchComHandballYellow(String player) {
+    return '$player dostává žlutou za hru rukou.';
+  }
+
+  @override
+  String pitchComHandballRed(String player) {
+    return 'Úmyslná ruka! $player jde pod sprchy.';
+  }
 }

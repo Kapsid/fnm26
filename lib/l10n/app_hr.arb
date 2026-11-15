@@ -4501,5 +4501,11 @@
   "stadiumsBuildFrom": "Izgradnja: od {cost}",
   "stadiumsConfirmBuildSized": "Izgraditi stadion s {seats} mjesta u gradu {city} za {cost}?",
   "stadiumsCapacityRange": "Kapacitet: po izboru, od {min} do {max} mjesta",
-  "hubAssistantFriendly": "Prepusti pomoćniku"
+  "hubAssistantFriendly": "Prepusti pomoćniku",
+  "pitchComHandballPenalty1": "Igranje rukom! {player} igra rukom u kaznenom prostoru, jedanaesterac.",
+  "pitchComHandballPenalty2": "Ruka je bila odmaknuta: jedanaesterac zbog igranja rukom igrača {player}!",
+  "pitchComHandballPenaltyYellow": "Igranje rukom igrača {player} u šesnaestercu: jedanaesterac i žuti karton.",
+  "pitchComHandballPenaltyRed": "{player} zaustavlja loptu rukom! Jedanaesterac i isključenje.",
+  "pitchComHandballYellow": "{player} dobiva žuti karton zbog igranja rukom.",
+  "pitchComHandballRed": "Namjerno igranje rukom! {player} je isključen."
 }

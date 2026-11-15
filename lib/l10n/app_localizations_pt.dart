@@ -18118,4 +18118,34 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get hubAssistantFriendly => 'Deixar o adjunto comandar';
+
+  @override
+  String pitchComHandballPenalty1(String player) {
+    return 'Mão na bola! $player toca com a mão na área, e é pênalti.';
+  }
+
+  @override
+  String pitchComHandballPenalty2(String player) {
+    return 'O braço estava aberto: pênalti por mão de $player!';
+  }
+
+  @override
+  String pitchComHandballPenaltyYellow(String player) {
+    return 'Mão de $player na área: pênalti e cartão amarelo.';
+  }
+
+  @override
+  String pitchComHandballPenaltyRed(String player) {
+    return '$player tira com a mão! Pênalti, e ele é expulso.';
+  }
+
+  @override
+  String pitchComHandballYellow(String player) {
+    return '$player leva amarelo por mão na bola.';
+  }
+
+  @override
+  String pitchComHandballRed(String player) {
+    return 'Mão intencional! $player é expulso.';
+  }
 }

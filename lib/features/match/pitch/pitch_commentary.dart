@@ -106,6 +106,25 @@ String? pitchLine(
         ],
         SetPieceKind.throwIn || SetPieceKind.goalKick => const [],
       });
+    case final FoulMoment f when f.handball:
+      // A handball: the man whose arm it was.
+      final card = _card(f, events);
+      final h = name(f.foulerId);
+      if (_inBox(f.zone)) {
+        return pick(switch (card) {
+          null => [
+            l.pitchComHandballPenalty1(h),
+            l.pitchComHandballPenalty2(h),
+          ],
+          _Card.yellow => [l.pitchComHandballPenaltyYellow(h)],
+          _Card.secondYellow || _Card.red => [l.pitchComHandballPenaltyRed(h)],
+        });
+      }
+      return pick(switch (card) {
+        null => const [],
+        _Card.yellow => [l.pitchComHandballYellow(h)],
+        _Card.secondYellow || _Card.red => [l.pitchComHandballRed(h)],
+      });
     case final FoulMoment f:
       final card = _card(f, events);
       if (_inBox(f.zone)) {

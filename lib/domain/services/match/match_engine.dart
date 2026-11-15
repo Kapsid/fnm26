@@ -848,6 +848,9 @@ class MatchEngine {
     // re-credits a goal that was going in anyway (see [ownGoalOr]), so
     // every score, shot and card stays exactly what it was.
     final ownGoalRng = rng.fork(0x06A1);
+    // Handballs on an EIGHTH: a share of the fouls already drawn are said
+    // to be handball (see [FoulMoment.handball]); nothing else changes.
+    final handballRng = rng.fork(0x4A2D);
     // Moments as they happen, each with the event it points at (a goal, a
     // card, a sub), whose index is settled after the final sort of [events].
     final momentLog = <({MatchMoment moment, MatchEvent? event})>[];
@@ -1007,6 +1010,14 @@ class MatchEngine {
           fouledId: victim.id,
           zone: where,
           advantage: advantage,
+          handball: handballRng.chance(
+            where == PitchZone.boxCentre ||
+                    where == PitchZone.boxLeft ||
+                    where == PitchZone.boxRight ||
+                    where == PitchZone.sixYard
+                ? _handballInBoxShare
+                : _handballShare,
+          ),
         ),
         card,
       );
@@ -2900,6 +2911,11 @@ class MatchEngine {
 
   /// Midfield fouls the referee waves play on through.
   static const double _advantageShare = 0.12;
+
+  /// The share of fouls that are handballs: a quarter of the penalties
+  /// given, one foul in fourteen elsewhere.
+  static const double _handballInBoxShare = 0.25;
+  static const double _handballShare = 0.07;
 
   /// Routine throw-ins and goal kicks a minute, both sides together.
   static const double _throwInPerMinute = 0.45;

@@ -18013,4 +18013,34 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get hubAssistantFriendly => 'La assistenten ta den';
+
+  @override
+  String pitchComHandballPenalty1(String player) {
+    return 'Hands! $player tar ballen med hånden i feltet, og det er straffe.';
+  }
+
+  @override
+  String pitchComHandballPenalty2(String player) {
+    return 'Armen var ute: straffe for hands av $player!';
+  }
+
+  @override
+  String pitchComHandballPenaltyYellow(String player) {
+    return 'Hands av $player i feltet: straffe og gult kort.';
+  }
+
+  @override
+  String pitchComHandballPenaltyRed(String player) {
+    return '$player stopper ballen med hånden! Straffe, og han blir utvist.';
+  }
+
+  @override
+  String pitchComHandballYellow(String player) {
+    return '$player får gult kort for hands.';
+  }
+
+  @override
+  String pitchComHandballRed(String player) {
+    return 'Bevisst hands! $player blir utvist.';
+  }
 }

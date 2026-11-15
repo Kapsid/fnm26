@@ -18359,4 +18359,34 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get hubAssistantFriendly => 'Prepusti pomoćniku';
+
+  @override
+  String pitchComHandballPenalty1(String player) {
+    return 'Igranje rukom! $player igra rukom u kaznenom prostoru, jedanaesterac.';
+  }
+
+  @override
+  String pitchComHandballPenalty2(String player) {
+    return 'Ruka je bila odmaknuta: jedanaesterac zbog igranja rukom igrača $player!';
+  }
+
+  @override
+  String pitchComHandballPenaltyYellow(String player) {
+    return 'Igranje rukom igrača $player u šesnaestercu: jedanaesterac i žuti karton.';
+  }
+
+  @override
+  String pitchComHandballPenaltyRed(String player) {
+    return '$player zaustavlja loptu rukom! Jedanaesterac i isključenje.';
+  }
+
+  @override
+  String pitchComHandballYellow(String player) {
+    return '$player dobiva žuti karton zbog igranja rukom.';
+  }
+
+  @override
+  String pitchComHandballRed(String player) {
+    return 'Namjerno igranje rukom! $player je isključen.';
+  }
 }

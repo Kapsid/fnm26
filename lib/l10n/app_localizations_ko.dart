@@ -17433,4 +17433,34 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get hubAssistantFriendly => '코치에게 맡기기';
+
+  @override
+  String pitchComHandballPenalty1(String player) {
+    return '핸드볼! $player가 박스 안에서 손을 대 페널티킥입니다.';
+  }
+
+  @override
+  String pitchComHandballPenalty2(String player) {
+    return '팔이 벌어져 있었습니다: $player의 핸드볼로 페널티킥!';
+  }
+
+  @override
+  String pitchComHandballPenaltyYellow(String player) {
+    return '박스 안 $player의 핸드볼: 페널티킥과 옐로카드.';
+  }
+
+  @override
+  String pitchComHandballPenaltyRed(String player) {
+    return '$player가 손으로 막았습니다! 페널티킥에 퇴장입니다.';
+  }
+
+  @override
+  String pitchComHandballYellow(String player) {
+    return '$player, 핸드볼로 옐로카드.';
+  }
+
+  @override
+  String pitchComHandballRed(String player) {
+    return '고의적인 핸드볼! $player 퇴장.';
+  }
 }

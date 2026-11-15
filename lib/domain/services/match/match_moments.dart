@@ -278,6 +278,7 @@ final class FoulMoment extends MatchMoment {
     required this.zone,
     this.cardEventIndex,
     this.advantage = false,
+    this.handball = false,
   });
 
   @override
@@ -290,6 +291,10 @@ final class FoulMoment extends MatchMoment {
   /// The side fouled.
   @override
   final int teamNationId;
+
+  /// The offence was a handball by [foulerId] ([fouledId] is then the man
+  /// whose ball it struck): the same foul, said as it was.
+  final bool handball;
 
   final int foulerId;
   final int fouledId;
@@ -313,6 +318,7 @@ final class FoulMoment extends MatchMoment {
     zone: zone,
     cardEventIndex: index,
     advantage: advantage,
+    handball: handball,
   );
 
   @override
@@ -326,7 +332,8 @@ final class FoulMoment extends MatchMoment {
       other.fouledId == fouledId &&
       other.zone == zone &&
       other.cardEventIndex == cardEventIndex &&
-      other.advantage == advantage;
+      other.advantage == advantage &&
+      other.handball == handball;
 
   @override
   int get hashCode => Object.hash(

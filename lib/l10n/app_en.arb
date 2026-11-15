@@ -27773,5 +27773,59 @@
   "hubAssistantFriendly": "Let the assistant take it",
   "@hubAssistantFriendly": {
     "description": "Hub: under the Play button of a friendly; the match is simulated with the manager's squad and tactics instead of being watched."
+  },
+  "pitchComHandballPenalty1": "Handball! {player} handles it in the box, and it's a penalty.",
+  "@pitchComHandballPenalty1": {
+    "description": "Pitch commentary: a penalty given for handball; {player} is the defender.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComHandballPenalty2": "The arm was out: penalty for handball against {player}!",
+  "@pitchComHandballPenalty2": {
+    "description": "Pitch commentary: a penalty given for handball; {player} is the defender.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComHandballPenaltyYellow": "Handball by {player} in the box: a penalty, and a yellow card.",
+  "@pitchComHandballPenaltyYellow": {
+    "description": "Pitch commentary: a penalty for handball and the defender {player} booked.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComHandballPenaltyRed": "{player} keeps it out with his hand! Penalty, and he is sent off.",
+  "@pitchComHandballPenaltyRed": {
+    "description": "Pitch commentary: a goal-line handball, a penalty and a red card for {player}.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComHandballYellow": "{player} is booked for handball.",
+  "@pitchComHandballYellow": {
+    "description": "Pitch commentary: a yellow card for handball outside the box.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComHandballRed": "Deliberate handball! {player} is sent off.",
+  "@pitchComHandballRed": {
+    "description": "Pitch commentary: a red card (straight or second yellow) for handball.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
   }
 }

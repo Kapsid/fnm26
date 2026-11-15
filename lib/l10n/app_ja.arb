@@ -4501,5 +4501,11 @@
   "stadiumsBuildFrom": "建設：{cost}から",
   "stadiumsConfirmBuildSized": "{city}に{seats}席のスタジアムを{cost}で建設しますか？",
   "stadiumsCapacityRange": "収容人数：{min}〜{max}席から選択",
-  "hubAssistantFriendly": "アシスタントに任せる"
+  "hubAssistantFriendly": "アシスタントに任せる",
+  "pitchComHandballPenalty1": "ハンド！{player}がペナルティーエリア内で手に当て、PKです。",
+  "pitchComHandballPenalty2": "腕が広がっていた：{player}のハンドでPK！",
+  "pitchComHandballPenaltyYellow": "エリア内で{player}のハンド：PKとイエローカード。",
+  "pitchComHandballPenaltyRed": "{player}が手でボールを止めた！PK、そして退場です。",
+  "pitchComHandballYellow": "{player}にハンドでイエローカード。",
+  "pitchComHandballRed": "故意のハンド！{player}は退場です。"
 }

@@ -18110,4 +18110,34 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get hubAssistantFriendly => 'Άσε τον βοηθό να το αναλάβει';
+
+  @override
+  String pitchComHandballPenalty1(String player) {
+    return 'Χέρι! Ο $player την πιάνει με το χέρι μέσα στην περιοχή, πέναλτι.';
+  }
+
+  @override
+  String pitchComHandballPenalty2(String player) {
+    return 'Το χέρι ήταν ανοιχτό: πέναλτι για χέρι του $player!';
+  }
+
+  @override
+  String pitchComHandballPenaltyYellow(String player) {
+    return 'Χέρι του $player στην περιοχή: πέναλτι και κίτρινη κάρτα.';
+  }
+
+  @override
+  String pitchComHandballPenaltyRed(String player) {
+    return 'Ο $player τη σταματά με το χέρι! Πέναλτι και αποβολή.';
+  }
+
+  @override
+  String pitchComHandballYellow(String player) {
+    return 'Κίτρινη στον $player για χέρι.';
+  }
+
+  @override
+  String pitchComHandballRed(String player) {
+    return 'Σκόπιμο χέρι! Αποβάλλεται ο $player.';
+  }
 }

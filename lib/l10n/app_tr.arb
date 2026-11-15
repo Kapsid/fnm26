@@ -4501,5 +4501,11 @@
   "stadiumsBuildFrom": "İnşa et: {cost} itibarıyla",
   "stadiumsConfirmBuildSized": "{city} şehrine {seats} kişilik bir stadyum {cost} karşılığında inşa edilsin mi?",
   "stadiumsCapacityRange": "Kapasite: seçim sizin, {min} ile {max} koltuk arası",
-  "hubAssistantFriendly": "Yardımcı antrenöre bırak"
+  "hubAssistantFriendly": "Yardımcı antrenöre bırak",
+  "pitchComHandballPenalty1": "Elle oynama! {player} ceza sahasında topa elle dokunuyor, penaltı.",
+  "pitchComHandballPenalty2": "Kol açıktı: {player} elle oynadı, penaltı!",
+  "pitchComHandballPenaltyYellow": "{player} ceza sahasında elle oynadı: penaltı ve sarı kart.",
+  "pitchComHandballPenaltyRed": "{player} topu eliyle durduruyor! Penaltı ve kırmızı kart.",
+  "pitchComHandballYellow": "{player} elle oynadığı için sarı kart görüyor.",
+  "pitchComHandballRed": "Kasıtlı elle oynama! {player} oyundan atılıyor."
 }

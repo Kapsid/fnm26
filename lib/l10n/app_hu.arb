@@ -4501,5 +4501,11 @@
   "stadiumsBuildFrom": "Építés: {cost}-tól",
   "stadiumsConfirmBuildSized": "Építsünk egy {seats} férőhelyes stadiont itt: {city}, {cost} áron?",
   "stadiumsCapacityRange": "Befogadóképesség: tetszés szerint, {min}–{max} férőhely",
-  "hubAssistantFriendly": "Bízd a segédedzőre"
+  "hubAssistantFriendly": "Bízd a segédedzőre",
+  "pitchComHandballPenalty1": "Kezezés! {player} kézzel ér a labdához a tizenhatoson belül, tizenegyes.",
+  "pitchComHandballPenalty2": "Elállt a karja: tizenegyes {player} kezezése miatt!",
+  "pitchComHandballPenaltyYellow": "{player} kezezése a tizenhatoson belül: tizenegyes és sárga lap.",
+  "pitchComHandballPenaltyRed": "{player} kézzel menti a labdát! Tizenegyes, és kiállítják.",
+  "pitchComHandballYellow": "{player} sárga lapot kap kezezésért.",
+  "pitchComHandballRed": "Szándékos kezezés! {player}t kiállítják."
 }

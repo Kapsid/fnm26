@@ -4501,5 +4501,11 @@
   "stadiumsBuildFrom": "Bauen: ab {cost}",
   "stadiumsConfirmBuildSized": "Ein Stadion mit {seats} Plätzen in {city} für {cost} bauen?",
   "stadiumsCapacityRange": "Kapazität: nach Wahl, {min} bis {max} Plätze",
-  "hubAssistantFriendly": "Den Assistenten übernehmen lassen"
+  "hubAssistantFriendly": "Den Assistenten übernehmen lassen",
+  "pitchComHandballPenalty1": "Handspiel! {player} spielt ihn im Strafraum mit der Hand, Elfmeter.",
+  "pitchComHandballPenalty2": "Der Arm war ausgestreckt: Elfmeter wegen Handspiels von {player}!",
+  "pitchComHandballPenaltyYellow": "Handspiel von {player} im Strafraum: Elfmeter und Gelb.",
+  "pitchComHandballPenaltyRed": "{player} hält ihn mit der Hand auf! Elfmeter, und er fliegt vom Platz.",
+  "pitchComHandballYellow": "{player} sieht Gelb wegen Handspiels.",
+  "pitchComHandballRed": "Absichtliches Handspiel! {player} fliegt vom Platz."
 }

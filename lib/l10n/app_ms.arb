@@ -4501,5 +4501,11 @@
   "stadiumsBuildFrom": "Bina: dari {cost}",
   "stadiumsConfirmBuildSized": "Bina stadium {seats} tempat duduk di {city} dengan harga {cost}?",
   "stadiumsCapacityRange": "Kapasiti: pilihan anda, {min} hingga {max} tempat duduk",
-  "hubAssistantFriendly": "Biar penolong uruskan"
+  "hubAssistantFriendly": "Biar penolong uruskan",
+  "pitchComHandballPenalty1": "Bola tangan! {player} menyentuh bola dengan tangan di dalam kotak, sepakan penalti.",
+  "pitchComHandballPenalty2": "Lengannya terbuka: penalti kerana bola tangan {player}!",
+  "pitchComHandballPenaltyYellow": "Bola tangan {player} di dalam kotak: penalti dan kad kuning.",
+  "pitchComHandballPenaltyRed": "{player} menahan bola dengan tangan! Penalti, dan dia dibuang padang.",
+  "pitchComHandballYellow": "{player} dilayangkan kad kuning kerana bola tangan.",
+  "pitchComHandballRed": "Bola tangan disengajakan! {player} dibuang padang."
 }

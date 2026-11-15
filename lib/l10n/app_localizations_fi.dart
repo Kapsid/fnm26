@@ -18092,4 +18092,34 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get hubAssistantFriendly => 'Anna apuvalmentajan hoitaa';
+
+  @override
+  String pitchComHandballPenalty1(String player) {
+    return 'Käsivirhe! $player pelaa pallon kädellä rangaistusalueella, ja se on rangaistuspotku.';
+  }
+
+  @override
+  String pitchComHandballPenalty2(String player) {
+    return 'Käsi oli irti vartalosta: rangaistuspotku ${player}n käsivirheestä!';
+  }
+
+  @override
+  String pitchComHandballPenaltyYellow(String player) {
+    return '$player käsivirhe alueella: rangaistuspotku ja keltainen kortti.';
+  }
+
+  @override
+  String pitchComHandballPenaltyRed(String player) {
+    return '$player torjuu pallon kädellä! Rangaistuspotku ja ulosajo.';
+  }
+
+  @override
+  String pitchComHandballYellow(String player) {
+    return '$player saa keltaisen käsivirheestä.';
+  }
+
+  @override
+  String pitchComHandballRed(String player) {
+    return 'Tahallinen käsivirhe! $player ajetaan ulos.';
+  }
 }

@@ -4501,5 +4501,11 @@
   "stadiumsBuildFrom": "Bygg: från {cost}",
   "stadiumsConfirmBuildSized": "Bygga en arena med {seats} platser i {city} för {cost}?",
   "stadiumsCapacityRange": "Kapacitet: ditt val, {min} till {max} platser",
-  "hubAssistantFriendly": "Låt assisterande tränaren ta den"
+  "hubAssistantFriendly": "Låt assisterande tränaren ta den",
+  "pitchComHandballPenalty1": "Hands! {player} tar bollen med handen i straffområdet, straff.",
+  "pitchComHandballPenalty2": "Armen var ute: straff för hands av {player}!",
+  "pitchComHandballPenaltyYellow": "Hands av {player} i straffområdet: straff och gult kort.",
+  "pitchComHandballPenaltyRed": "{player} stoppar bollen med handen! Straff, och han blir utvisad.",
+  "pitchComHandballYellow": "{player} får gult kort för hands.",
+  "pitchComHandballRed": "Avsiktlig hands! {player} blir utvisad."
 }

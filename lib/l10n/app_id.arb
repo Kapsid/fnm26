@@ -4501,5 +4501,11 @@
   "stadiumsBuildFrom": "Bangun: mulai {cost}",
   "stadiumsConfirmBuildSized": "Bangun stadion berkapasitas {seats} kursi di {city} seharga {cost}?",
   "stadiumsCapacityRange": "Kapasitas: pilihanmu, {min} hingga {max} kursi",
-  "hubAssistantFriendly": "Serahkan ke asisten"
+  "hubAssistantFriendly": "Serahkan ke asisten",
+  "pitchComHandballPenalty1": "Handball! {player} menyentuh bola dengan tangan di kotak penalti, penalti.",
+  "pitchComHandballPenalty2": "Lengannya terbuka: penalti karena handball {player}!",
+  "pitchComHandballPenaltyYellow": "Handball {player} di kotak penalti: penalti dan kartu kuning.",
+  "pitchComHandballPenaltyRed": "{player} menahan bola dengan tangan! Penalti, dan dia diusir.",
+  "pitchComHandballYellow": "{player} diganjar kartu kuning karena handball.",
+  "pitchComHandballRed": "Handball disengaja! {player} diusir keluar."
 }

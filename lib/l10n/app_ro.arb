@@ -4501,5 +4501,11 @@
   "stadiumsBuildFrom": "Construiește: de la {cost}",
   "stadiumsConfirmBuildSized": "Construiești un stadion de {seats} de locuri în {city} pentru {cost}?",
   "stadiumsCapacityRange": "Capacitate: la alegere, între {min} și {max} de locuri",
-  "hubAssistantFriendly": "Lasă-l pe secund să conducă"
+  "hubAssistantFriendly": "Lasă-l pe secund să conducă",
+  "pitchComHandballPenalty1": "Henț! {player} atinge mingea cu mâna în careu, penalty.",
+  "pitchComHandballPenalty2": "Brațul era depărtat: penalty pentru henț al lui {player}!",
+  "pitchComHandballPenaltyYellow": "Henț al lui {player} în careu: penalty și cartonaș galben.",
+  "pitchComHandballPenaltyRed": "{player} oprește mingea cu mâna! Penalty, și e eliminat.",
+  "pitchComHandballYellow": "{player} primește galben pentru henț.",
+  "pitchComHandballRed": "Henț intenționat! {player} este eliminat."
 }

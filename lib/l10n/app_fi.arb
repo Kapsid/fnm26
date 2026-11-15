@@ -4501,5 +4501,11 @@
   "stadiumsBuildFrom": "Rakenna: alkaen {cost}",
   "stadiumsConfirmBuildSized": "Rakennetaanko {seats} paikan stadion kaupunkiin {city} hintaan {cost}?",
   "stadiumsCapacityRange": "Kapasiteetti: oma valinta, {min}–{max} paikkaa",
-  "hubAssistantFriendly": "Anna apuvalmentajan hoitaa"
+  "hubAssistantFriendly": "Anna apuvalmentajan hoitaa",
+  "pitchComHandballPenalty1": "Käsivirhe! {player} pelaa pallon kädellä rangaistusalueella, ja se on rangaistuspotku.",
+  "pitchComHandballPenalty2": "Käsi oli irti vartalosta: rangaistuspotku {player}n käsivirheestä!",
+  "pitchComHandballPenaltyYellow": "{player} käsivirhe alueella: rangaistuspotku ja keltainen kortti.",
+  "pitchComHandballPenaltyRed": "{player} torjuu pallon kädellä! Rangaistuspotku ja ulosajo.",
+  "pitchComHandballYellow": "{player} saa keltaisen käsivirheestä.",
+  "pitchComHandballRed": "Tahallinen käsivirhe! {player} ajetaan ulos."
 }

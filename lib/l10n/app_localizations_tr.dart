@@ -17929,4 +17929,34 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get hubAssistantFriendly => 'Yardımcı antrenöre bırak';
+
+  @override
+  String pitchComHandballPenalty1(String player) {
+    return 'Elle oynama! $player ceza sahasında topa elle dokunuyor, penaltı.';
+  }
+
+  @override
+  String pitchComHandballPenalty2(String player) {
+    return 'Kol açıktı: $player elle oynadı, penaltı!';
+  }
+
+  @override
+  String pitchComHandballPenaltyYellow(String player) {
+    return '$player ceza sahasında elle oynadı: penaltı ve sarı kart.';
+  }
+
+  @override
+  String pitchComHandballPenaltyRed(String player) {
+    return '$player topu eliyle durduruyor! Penaltı ve kırmızı kart.';
+  }
+
+  @override
+  String pitchComHandballYellow(String player) {
+    return '$player elle oynadığı için sarı kart görüyor.';
+  }
+
+  @override
+  String pitchComHandballRed(String player) {
+    return 'Kasıtlı elle oynama! $player oyundan atılıyor.';
+  }
 }

@@ -17980,4 +17980,34 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get hubAssistantFriendly => 'Biar penolong uruskan';
+
+  @override
+  String pitchComHandballPenalty1(String player) {
+    return 'Bola tangan! $player menyentuh bola dengan tangan di dalam kotak, sepakan penalti.';
+  }
+
+  @override
+  String pitchComHandballPenalty2(String player) {
+    return 'Lengannya terbuka: penalti kerana bola tangan $player!';
+  }
+
+  @override
+  String pitchComHandballPenaltyYellow(String player) {
+    return 'Bola tangan $player di dalam kotak: penalti dan kad kuning.';
+  }
+
+  @override
+  String pitchComHandballPenaltyRed(String player) {
+    return '$player menahan bola dengan tangan! Penalti, dan dia dibuang padang.';
+  }
+
+  @override
+  String pitchComHandballYellow(String player) {
+    return '$player dilayangkan kad kuning kerana bola tangan.';
+  }
+
+  @override
+  String pitchComHandballRed(String player) {
+    return 'Bola tangan disengajakan! $player dibuang padang.';
+  }
 }

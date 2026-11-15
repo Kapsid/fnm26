@@ -4501,5 +4501,11 @@
   "stadiumsBuildFrom": "Postavit: od {cost}",
   "stadiumsConfirmBuildSized": "Postavit stadion pro {seats} diváků ve městě {city} za {cost}?",
   "stadiumsCapacityRange": "Kapacita: podle vás, {min} až {max} míst",
-  "hubAssistantFriendly": "Nech to na asistentovi"
+  "hubAssistantFriendly": "Nech to na asistentovi",
+  "pitchComHandballPenalty1": "Ruka! {player} hraje rukou ve vápně a je to penalta.",
+  "pitchComHandballPenalty2": "Ruka byla od těla: penalta za ruku hráče {player}!",
+  "pitchComHandballPenaltyYellow": "Ruka hráče {player} ve vápně: penalta a žlutá karta.",
+  "pitchComHandballPenaltyRed": "{player} zastavuje míč rukou! Penalta a červená karta.",
+  "pitchComHandballYellow": "{player} dostává žlutou za hru rukou.",
+  "pitchComHandballRed": "Úmyslná ruka! {player} jde pod sprchy."
 }

@@ -18103,4 +18103,34 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get hubAssistantFriendly => 'Остави помощника да го води';
+
+  @override
+  String pitchComHandballPenalty1(String player) {
+    return 'Игра с ръка! $player докосва с ръка в наказателното поле и е дузпа.';
+  }
+
+  @override
+  String pitchComHandballPenalty2(String player) {
+    return 'Ръката беше встрани: дузпа за игра с ръка на $player!';
+  }
+
+  @override
+  String pitchComHandballPenaltyYellow(String player) {
+    return 'Игра с ръка на $player в полето: дузпа и жълт картон.';
+  }
+
+  @override
+  String pitchComHandballPenaltyRed(String player) {
+    return '$player спира топката с ръка! Дузпа и червен картон.';
+  }
+
+  @override
+  String pitchComHandballYellow(String player) {
+    return '$player получава жълт картон за игра с ръка.';
+  }
+
+  @override
+  String pitchComHandballRed(String player) {
+    return 'Умишлена игра с ръка! $player е изгонен.';
+  }
 }

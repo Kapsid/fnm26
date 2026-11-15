@@ -4501,5 +4501,11 @@
   "stadiumsBuildFrom": "สร้าง: เริ่มต้น {cost}",
   "stadiumsConfirmBuildSized": "สร้างสนาม {seats} ที่นั่งที่ {city} ในราคา {cost} หรือไม่",
   "stadiumsCapacityRange": "ความจุ: เลือกได้ {min} ถึง {max} ที่นั่ง",
-  "hubAssistantFriendly": "ให้ผู้ช่วยคุมทีม"
+  "hubAssistantFriendly": "ให้ผู้ช่วยคุมทีม",
+  "pitchComHandballPenalty1": "แฮนด์บอล! {player} ใช้มือสัมผัสบอลในกรอบเขตโทษ เป็นจุดโทษ",
+  "pitchComHandballPenalty2": "แขนกางออก: จุดโทษจากแฮนด์บอลของ {player}!",
+  "pitchComHandballPenaltyYellow": "{player} แฮนด์บอลในกรอบเขตโทษ: จุดโทษและใบเหลือง",
+  "pitchComHandballPenaltyRed": "{player} ใช้มือกันบอล! จุดโทษ และโดนไล่ออก",
+  "pitchComHandballYellow": "{player} รับใบเหลืองจากแฮนด์บอล",
+  "pitchComHandballRed": "จงใจแฮนด์บอล! {player} โดนไล่ออก"
 }

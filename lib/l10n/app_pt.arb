@@ -4501,5 +4501,11 @@
   "stadiumsBuildFrom": "Construir: a partir de {cost}",
   "stadiumsConfirmBuildSized": "Construir um estádio de {seats} lugares em {city} por {cost}?",
   "stadiumsCapacityRange": "Capacidade: à sua escolha, de {min} a {max} lugares",
-  "hubAssistantFriendly": "Deixar o adjunto comandar"
+  "hubAssistantFriendly": "Deixar o adjunto comandar",
+  "pitchComHandballPenalty1": "Mão na bola! {player} toca com a mão na área, e é pênalti.",
+  "pitchComHandballPenalty2": "O braço estava aberto: pênalti por mão de {player}!",
+  "pitchComHandballPenaltyYellow": "Mão de {player} na área: pênalti e cartão amarelo.",
+  "pitchComHandballPenaltyRed": "{player} tira com a mão! Pênalti, e ele é expulso.",
+  "pitchComHandballYellow": "{player} leva amarelo por mão na bola.",
+  "pitchComHandballRed": "Mão intencional! {player} é expulso."
 }

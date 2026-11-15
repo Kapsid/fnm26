@@ -4501,5 +4501,11 @@
   "stadiumsBuildFrom": "निर्माण: {cost} से",
   "stadiumsConfirmBuildSized": "{city} में {seats} सीटों वाला स्टेडियम {cost} में बनाएँ?",
   "stadiumsCapacityRange": "क्षमता: आपकी पसंद, {min} से {max} सीटें",
-  "hubAssistantFriendly": "सहायक को संभालने दें"
+  "hubAssistantFriendly": "सहायक को संभालने दें",
+  "pitchComHandballPenalty1": "हैंडबॉल! {player} बॉक्स में गेंद को हाथ लगाते हैं, और पेनल्टी है।",
+  "pitchComHandballPenalty2": "हाथ फैला हुआ था: {player} के हैंडबॉल पर पेनल्टी!",
+  "pitchComHandballPenaltyYellow": "बॉक्स में {player} का हैंडबॉल: पेनल्टी और पीला कार्ड।",
+  "pitchComHandballPenaltyRed": "{player} हाथ से गेंद रोकते हैं! पेनल्टी, और वे बाहर।",
+  "pitchComHandballYellow": "हैंडबॉल के लिए {player} को पीला कार्ड।",
+  "pitchComHandballRed": "जानबूझकर हैंडबॉल! {player} बाहर भेजे गए।"
 }

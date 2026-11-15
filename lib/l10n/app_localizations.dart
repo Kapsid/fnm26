@@ -27247,6 +27247,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Let the assistant take it'**
   String get hubAssistantFriendly;
+
+  /// Pitch commentary: a penalty given for handball; {player} is the defender.
+  ///
+  /// In en, this message translates to:
+  /// **'Handball! {player} handles it in the box, and it\'s a penalty.'**
+  String pitchComHandballPenalty1(String player);
+
+  /// Pitch commentary: a penalty given for handball; {player} is the defender.
+  ///
+  /// In en, this message translates to:
+  /// **'The arm was out: penalty for handball against {player}!'**
+  String pitchComHandballPenalty2(String player);
+
+  /// Pitch commentary: a penalty for handball and the defender {player} booked.
+  ///
+  /// In en, this message translates to:
+  /// **'Handball by {player} in the box: a penalty, and a yellow card.'**
+  String pitchComHandballPenaltyYellow(String player);
+
+  /// Pitch commentary: a goal-line handball, a penalty and a red card for {player}.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} keeps it out with his hand! Penalty, and he is sent off.'**
+  String pitchComHandballPenaltyRed(String player);
+
+  /// Pitch commentary: a yellow card for handball outside the box.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is booked for handball.'**
+  String pitchComHandballYellow(String player);
+
+  /// Pitch commentary: a red card (straight or second yellow) for handball.
+  ///
+  /// In en, this message translates to:
+  /// **'Deliberate handball! {player} is sent off.'**
+  String pitchComHandballRed(String player);
 }
 
 class _AppLocalizationsDelegate

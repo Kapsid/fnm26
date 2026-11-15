@@ -18208,4 +18208,34 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get hubAssistantFriendly => 'Niech poprowadzi asystent';
+
+  @override
+  String pitchComHandballPenalty1(String player) {
+    return 'Ręka! $player zagrywa ręką w polu karnym, rzut karny.';
+  }
+
+  @override
+  String pitchComHandballPenalty2(String player) {
+    return 'Ręka była odstawiona: karny za zagranie ręką $player!';
+  }
+
+  @override
+  String pitchComHandballPenaltyYellow(String player) {
+    return 'Ręka $player w polu karnym: rzut karny i żółta kartka.';
+  }
+
+  @override
+  String pitchComHandballPenaltyRed(String player) {
+    return '$player zatrzymuje piłkę ręką! Karny i czerwona kartka.';
+  }
+
+  @override
+  String pitchComHandballYellow(String player) {
+    return '$player z żółtą kartką za zagranie ręką.';
+  }
+
+  @override
+  String pitchComHandballRed(String player) {
+    return 'Celowe zagranie ręką! $player wylatuje z boiska.';
+  }
 }

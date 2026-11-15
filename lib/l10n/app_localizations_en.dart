@@ -18050,4 +18050,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hubAssistantFriendly => 'Let the assistant take it';
+
+  @override
+  String pitchComHandballPenalty1(String player) {
+    return 'Handball! $player handles it in the box, and it\'s a penalty.';
+  }
+
+  @override
+  String pitchComHandballPenalty2(String player) {
+    return 'The arm was out: penalty for handball against $player!';
+  }
+
+  @override
+  String pitchComHandballPenaltyYellow(String player) {
+    return 'Handball by $player in the box: a penalty, and a yellow card.';
+  }
+
+  @override
+  String pitchComHandballPenaltyRed(String player) {
+    return '$player keeps it out with his hand! Penalty, and he is sent off.';
+  }
+
+  @override
+  String pitchComHandballYellow(String player) {
+    return '$player is booked for handball.';
+  }
+
+  @override
+  String pitchComHandballRed(String player) {
+    return 'Deliberate handball! $player is sent off.';
+  }
 }

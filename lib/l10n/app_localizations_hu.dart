@@ -17962,4 +17962,34 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get hubAssistantFriendly => 'Bízd a segédedzőre';
+
+  @override
+  String pitchComHandballPenalty1(String player) {
+    return 'Kezezés! $player kézzel ér a labdához a tizenhatoson belül, tizenegyes.';
+  }
+
+  @override
+  String pitchComHandballPenalty2(String player) {
+    return 'Elállt a karja: tizenegyes $player kezezése miatt!';
+  }
+
+  @override
+  String pitchComHandballPenaltyYellow(String player) {
+    return '$player kezezése a tizenhatoson belül: tizenegyes és sárga lap.';
+  }
+
+  @override
+  String pitchComHandballPenaltyRed(String player) {
+    return '$player kézzel menti a labdát! Tizenegyes, és kiállítják.';
+  }
+
+  @override
+  String pitchComHandballYellow(String player) {
+    return '$player sárga lapot kap kezezésért.';
+  }
+
+  @override
+  String pitchComHandballRed(String player) {
+    return 'Szándékos kezezés! ${player}t kiállítják.';
+  }
 }

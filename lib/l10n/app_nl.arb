@@ -4501,5 +4501,11 @@
   "stadiumsBuildFrom": "Bouwen: vanaf {cost}",
   "stadiumsConfirmBuildSized": "Een stadion met {seats} plaatsen bouwen in {city} voor {cost}?",
   "stadiumsCapacityRange": "Capaciteit: naar keuze, {min} tot {max} plaatsen",
-  "hubAssistantFriendly": "Laat de assistent het doen"
+  "hubAssistantFriendly": "Laat de assistent het doen",
+  "pitchComHandballPenalty1": "Hands! {player} speelt de bal met de hand in het strafschopgebied, penalty.",
+  "pitchComHandballPenalty2": "De arm stond uit: penalty voor hands van {player}!",
+  "pitchComHandballPenaltyYellow": "Hands van {player} in de zestien: penalty en een gele kaart.",
+  "pitchComHandballPenaltyRed": "{player} houdt hem met de hand tegen! Penalty, en hij wordt weggestuurd.",
+  "pitchComHandballYellow": "{player} krijgt geel voor hands.",
+  "pitchComHandballRed": "Opzettelijk hands! {player} wordt van het veld gestuurd."
 }

@@ -4501,5 +4501,11 @@
   "stadiumsBuildFrom": "Κατασκευή: από {cost}",
   "stadiumsConfirmBuildSized": "Κατασκευή γηπέδου {seats} θέσεων στην πόλη {city} για {cost};",
   "stadiumsCapacityRange": "Χωρητικότητα: της επιλογής σας, {min} έως {max} θέσεις",
-  "hubAssistantFriendly": "Άσε τον βοηθό να το αναλάβει"
+  "hubAssistantFriendly": "Άσε τον βοηθό να το αναλάβει",
+  "pitchComHandballPenalty1": "Χέρι! Ο {player} την πιάνει με το χέρι μέσα στην περιοχή, πέναλτι.",
+  "pitchComHandballPenalty2": "Το χέρι ήταν ανοιχτό: πέναλτι για χέρι του {player}!",
+  "pitchComHandballPenaltyYellow": "Χέρι του {player} στην περιοχή: πέναλτι και κίτρινη κάρτα.",
+  "pitchComHandballPenaltyRed": "Ο {player} τη σταματά με το χέρι! Πέναλτι και αποβολή.",
+  "pitchComHandballYellow": "Κίτρινη στον {player} για χέρι.",
+  "pitchComHandballRed": "Σκόπιμο χέρι! Αποβάλλεται ο {player}."
 }

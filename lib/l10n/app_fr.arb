@@ -4501,5 +4501,11 @@
   "stadiumsBuildFrom": "Construire : dès {cost}",
   "stadiumsConfirmBuildSized": "Construire un stade de {seats} places à {city} pour {cost} ?",
   "stadiumsCapacityRange": "Capacité : au choix, de {min} à {max} places",
-  "hubAssistantFriendly": "Confier le match à l'adjoint"
+  "hubAssistantFriendly": "Confier le match à l'adjoint",
+  "pitchComHandballPenalty1": "Main ! {player} touche le ballon de la main dans la surface, penalty.",
+  "pitchComHandballPenalty2": "Le bras était décollé : penalty pour une main de {player} !",
+  "pitchComHandballPenaltyYellow": "Main de {player} dans la surface : penalty et carton jaune.",
+  "pitchComHandballPenaltyRed": "{player} sort le ballon de la main ! Penalty, et il est expulsé.",
+  "pitchComHandballYellow": "{player} est averti pour une main.",
+  "pitchComHandballRed": "Main volontaire ! {player} est expulsé."
 }

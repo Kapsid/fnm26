@@ -4501,5 +4501,11 @@
   "stadiumsBuildFrom": "Costruisci: da {cost}",
   "stadiumsConfirmBuildSized": "Costruire uno stadio da {seats} posti a {city} per {cost}?",
   "stadiumsCapacityRange": "Capienza: a scelta, da {min} a {max} posti",
-  "hubAssistantFriendly": "Lascia fare al vice"
+  "hubAssistantFriendly": "Lascia fare al vice",
+  "pitchComHandballPenalty1": "Mani! {player} tocca con la mano in area, ed è rigore.",
+  "pitchComHandballPenalty2": "Il braccio era largo: rigore per il fallo di mano di {player}!",
+  "pitchComHandballPenaltyYellow": "Mani di {player} in area: rigore e cartellino giallo.",
+  "pitchComHandballPenaltyRed": "{player} la ferma con la mano! Rigore, ed è espulso.",
+  "pitchComHandballYellow": "{player} ammonito per fallo di mano.",
+  "pitchComHandballRed": "Mani volontario! {player} è espulso."
 }

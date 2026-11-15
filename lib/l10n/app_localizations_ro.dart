@@ -18443,4 +18443,34 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get hubAssistantFriendly => 'Lasă-l pe secund să conducă';
+
+  @override
+  String pitchComHandballPenalty1(String player) {
+    return 'Henț! $player atinge mingea cu mâna în careu, penalty.';
+  }
+
+  @override
+  String pitchComHandballPenalty2(String player) {
+    return 'Brațul era depărtat: penalty pentru henț al lui $player!';
+  }
+
+  @override
+  String pitchComHandballPenaltyYellow(String player) {
+    return 'Henț al lui $player în careu: penalty și cartonaș galben.';
+  }
+
+  @override
+  String pitchComHandballPenaltyRed(String player) {
+    return '$player oprește mingea cu mâna! Penalty, și e eliminat.';
+  }
+
+  @override
+  String pitchComHandballYellow(String player) {
+    return '$player primește galben pentru henț.';
+  }
+
+  @override
+  String pitchComHandballRed(String player) {
+    return 'Henț intenționat! $player este eliminat.';
+  }
 }

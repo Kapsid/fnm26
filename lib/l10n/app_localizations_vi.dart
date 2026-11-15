@@ -17864,4 +17864,34 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get hubAssistantFriendly => 'Để trợ lý dẫn dắt';
+
+  @override
+  String pitchComHandballPenalty1(String player) {
+    return 'Chạm tay! $player để bóng chạm tay trong vòng cấm, phạt đền.';
+  }
+
+  @override
+  String pitchComHandballPenalty2(String player) {
+    return 'Tay mở rộng: phạt đền vì $player chạm tay!';
+  }
+
+  @override
+  String pitchComHandballPenaltyYellow(String player) {
+    return '$player chạm tay trong vòng cấm: phạt đền và thẻ vàng.';
+  }
+
+  @override
+  String pitchComHandballPenaltyRed(String player) {
+    return '$player dùng tay cản bóng! Phạt đền, và anh bị đuổi.';
+  }
+
+  @override
+  String pitchComHandballYellow(String player) {
+    return '$player nhận thẻ vàng vì chạm tay.';
+  }
+
+  @override
+  String pitchComHandballRed(String player) {
+    return 'Cố tình chạm tay! $player bị đuổi khỏi sân.';
+  }
 }

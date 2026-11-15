@@ -18181,4 +18181,34 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get hubAssistantFriendly => 'Confier le match à l\'adjoint';
+
+  @override
+  String pitchComHandballPenalty1(String player) {
+    return 'Main ! $player touche le ballon de la main dans la surface, penalty.';
+  }
+
+  @override
+  String pitchComHandballPenalty2(String player) {
+    return 'Le bras était décollé : penalty pour une main de $player !';
+  }
+
+  @override
+  String pitchComHandballPenaltyYellow(String player) {
+    return 'Main de $player dans la surface : penalty et carton jaune.';
+  }
+
+  @override
+  String pitchComHandballPenaltyRed(String player) {
+    return '$player sort le ballon de la main ! Penalty, et il est expulsé.';
+  }
+
+  @override
+  String pitchComHandballYellow(String player) {
+    return '$player est averti pour une main.';
+  }
+
+  @override
+  String pitchComHandballRed(String player) {
+    return 'Main volontaire ! $player est expulsé.';
+  }
 }
