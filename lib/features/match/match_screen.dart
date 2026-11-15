@@ -2629,6 +2629,20 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                                 false,
                           ),
                         ),
+                      // A goal: the picture blinks in the scorers' colour,
+                      // so it cannot be missed (the score bug's banner
+                      // alone was easy to miss).
+                      if (_goalFlash case final g?
+                          when !(MediaQuery.maybeDisableAnimationsOf(context) ??
+                              false))
+                        Positioned.fill(
+                          child: IgnorePointer(
+                            child: GoalPitchFlash(
+                              key: ValueKey(('goalFlash', _keyOf(g))),
+                              color: g.teamNationId == homeId ? homeC : awayC,
+                            ),
+                          ),
+                        ),
                     ],
                   )
                 : _pc.failed

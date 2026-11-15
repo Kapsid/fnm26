@@ -1101,3 +1101,60 @@ class _WholeNameState extends State<_WholeName> {
     },
   );
 }
+
+/// A goal on the 2D picture: three quick blinks in the scorers' colour over
+/// the whole pitch, a bright rim and a wash, then gone (about a second and
+/// a half). Keyed per goal by the caller, so each goal blinks once.
+class GoalPitchFlash extends StatefulWidget {
+  const GoalPitchFlash({required this.color, super.key});
+
+  /// The scoring side's colour (null: white).
+  final Color? color;
+
+  @override
+  State<GoalPitchFlash> createState() => _GoalPitchFlashState();
+}
+
+class _GoalPitchFlashState extends State<GoalPitchFlash>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1500),
+  )..forward();
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final base = widget.color ?? Colors.white;
+    return AnimatedBuilder(
+      animation: _c,
+      builder: (context, _) {
+        final t = _c.value;
+        // Three blinks, each a sharp rise and a fade, the last the longest.
+        final phase = (t * 3) % 1;
+        final blink = t >= 1 ? 0.0 : (1 - phase) * (1 - phase);
+        final fade = 1 - t * 0.6;
+        final a = (blink * fade).clamp(0.0, 1.0);
+        if (a <= 0.01) return const SizedBox.shrink();
+        return DecoratedBox(
+          decoration: BoxDecoration(
+            border: Border.all(color: base.withValues(alpha: a), width: 6),
+            gradient: RadialGradient(
+              colors: [
+                Colors.white.withValues(alpha: 0.35 * a),
+                base.withValues(alpha: 0.30 * a),
+                base.withValues(alpha: 0.55 * a),
+              ],
+              stops: const [0, 0.6, 1],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
