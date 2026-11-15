@@ -11632,7 +11632,7 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get campaignTransplantTwist =>
-      'Opt dintre cei mai buni italieni trec la San Marino';
+      'Șase dintre cei mai buni italieni trec la San Marino';
 
   @override
   String get campaignTransplantGoal => 'Calificarea la Campionatul European';
@@ -11648,7 +11648,7 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get campaignTransplantIntro =>
-      'San Marino n-a avut niciodată o campanie de preliminarii demnă de acest nume. Apoi opt dintre cei mai buni italieni primesc pașaportul și intră în echipă. Aveți un ciclu ca să transformați o curiozitate într-o echipă.';
+      'San Marino n-a avut niciodată o campanie de preliminarii demnă de acest nume. Apoi șase dintre cei mai buni italieni primesc pașaportul și intră în echipă. Aveți un ciclu ca să transformați o curiozitate într-o echipă.';
 
   @override
   String get campaignGrudgeIntro =>

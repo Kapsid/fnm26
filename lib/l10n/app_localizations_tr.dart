@@ -11192,7 +11192,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get campaignTransplantTwist =>
-      'İtalya\'nın en iyi sekiz oyuncusu San Marino\'ya geçiyor';
+      'İtalya\'nın en iyi altı oyuncusu San Marino\'ya geçiyor';
 
   @override
   String get campaignTransplantGoal =>
@@ -11209,7 +11209,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get campaignTransplantIntro =>
-      'San Marino\'nun hiç adı anılmaya değer bir eleme kampanyası olmadı. Sonra İtalya\'nın en iyi sekiz oyuncusu pasaportu alıp içeri giriyor. Bir meraklığı takıma dönüştürmek için tek bir dönemin var.';
+      'San Marino\'nun hiç adı anılmaya değer bir eleme kampanyası olmadı. Sonra İtalya\'nın en iyi altı oyuncusu pasaportu alıp içeri giriyor. Bir meraklığı takıma dönüştürmek için tek bir dönemin var.';
 
   @override
   String get campaignGrudgeIntro =>

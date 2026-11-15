@@ -11239,7 +11239,7 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get campaignTransplantTwist =>
-      'Lapan pemain terbaik Itali bertukar kesetiaan kepada San Marino';
+      'Enam pemain terbaik Itali bertukar kesetiaan kepada San Marino';
 
   @override
   String get campaignTransplantGoal => 'Layak ke Kejohanan Eropah';
@@ -11256,7 +11256,7 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get campaignTransplantIntro =>
-      'San Marino tidak pernah mempunyai kempen kelayakan yang layak disebut. Kemudian lapan pemain terbaik Itali mengambil pasport dan masuk. Anda ada satu kitaran untuk menjadikan sesuatu yang aneh sebuah pasukan.';
+      'San Marino tidak pernah mempunyai kempen kelayakan yang layak disebut. Kemudian enam pemain terbaik Itali mengambil pasport dan masuk. Anda ada satu kitaran untuk menjadikan sesuatu yang aneh sebuah pasukan.';
 
   @override
   String get campaignGrudgeIntro =>

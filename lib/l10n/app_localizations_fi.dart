@@ -11357,7 +11357,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get campaignTransplantTwist =>
-      'Kahdeksan Italian parhaista vaihtaa edustamaan San Marinoa';
+      'Kuusi Italian parhaista vaihtaa edustamaan San Marinoa';
 
   @override
   String get campaignTransplantGoal => 'Selviä EM-kisoihin';
@@ -11373,7 +11373,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get campaignTransplantIntro =>
-      'San Marinolla ei ole ollut koskaan karsintakampanjaa, jota sellaiseksi voisi kutsua. Sitten kahdeksan Italian parhaista ottaa passin ja astuu sisään. Sinulla on yksi kausi aikaa tehdä uteliaisuudesta joukkue.';
+      'San Marinolla ei ole ollut koskaan karsintakampanjaa, jota sellaiseksi voisi kutsua. Sitten kuusi Italian parhaista ottaa passin ja astuu sisään. Sinulla on yksi kausi aikaa tehdä uteliaisuudesta joukkue.';
 
   @override
   String get campaignGrudgeIntro =>

@@ -128,15 +128,18 @@ class CampaignDef {
 }
 
 abstract final class Campaigns {
-  /// San Marino with eight Italians naturalised in: qualify for the Euros.
-  /// Eight is the owner's pick (campaign_lab_test.dart): with five or six San
-  /// Marino all but never qualified; eight succeeds in about a fifth of
-  /// autopilot runs (nine was a quarter), the Grudge in about three in ten.
+  /// San Marino with six Italians naturalised in: qualify for the Euros.
+  /// Eight was the owner's first pick (campaign_lab_test.dart): with five or
+  /// six San Marino all but never qualified then, eight about a fifth of
+  /// autopilot runs. The calendar2 rhythm opened a second road, a Nations
+  /// Cup League D group won and its play-off path, and eight then qualified
+  /// in 11 of 16 lab runs; six (the owner's pick, 2026-11-15) did in 7 of
+  /// 12, four in 5 of 12.
   static const transplant = CampaignDef(
     id: 'transplant',
     nationId: 45, // San Marino
     donorNationId: 26, // Italy
-    transplantCount: 8,
+    transplantCount: 6,
     goal: CampaignGoal.qualifyContinental,
     starThresholds: [2, 3, 7],
     canContinue: false,

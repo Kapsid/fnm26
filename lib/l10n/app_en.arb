@@ -17456,9 +17456,9 @@
   },
   "campaignTransplantTitle": "The Transplant",
   "@campaignTransplantTitle": {
-    "description": "Name of the Transplant campaign (San Marino with eight Italians)."
+    "description": "Name of the Transplant campaign (San Marino with six Italians)."
   },
-  "campaignTransplantTwist": "Eight of Italy's best switch allegiance to San Marino",
+  "campaignTransplantTwist": "Six of Italy's best switch allegiance to San Marino",
   "@campaignTransplantTwist": {
     "description": "One-line twist of the Transplant campaign."
   },
@@ -17478,7 +17478,7 @@
   "@campaignGrudgeGoal": {
     "description": "Goal of the Grudge campaign."
   },
-  "campaignTransplantIntro": "San Marino have never had a qualifying campaign worth the name. Then eight of Italy's best take up the passport and walk in. You have one cycle to turn a curiosity into a team.",
+  "campaignTransplantIntro": "San Marino have never had a qualifying campaign worth the name. Then six of Italy's best take up the passport and walk in. You have one cycle to turn a curiosity into a team.",
   "@campaignTransplantIntro": {
     "description": "Brief screen introduction of the Transplant campaign."
   },

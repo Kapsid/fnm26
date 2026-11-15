@@ -11080,7 +11080,7 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get campaignTransplantTwist =>
-      'แปดยอดนักเตะของอิตาลีเปลี่ยนมาเล่นให้ซานมารีโน';
+      'หกยอดนักเตะของอิตาลีเปลี่ยนมาเล่นให้ซานมารีโน';
 
   @override
   String get campaignTransplantGoal => 'ผ่านเข้ารอบชิงแชมป์ยุโรป';
@@ -11096,7 +11096,7 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get campaignTransplantIntro =>
-      'ซานมารีโนไม่เคยมีแคมเปญรอบคัดเลือกที่น่าพูดถึง แล้วแปดยอดนักเตะของอิตาลีก็ถือพาสปอร์ตเดินเข้ามา คุณมีหนึ่งรอบเพื่อเปลี่ยนเรื่องแปลกให้กลายเป็นทีม';
+      'ซานมารีโนไม่เคยมีแคมเปญรอบคัดเลือกที่น่าพูดถึง แล้วหกยอดนักเตะของอิตาลีก็ถือพาสปอร์ตเดินเข้ามา คุณมีหนึ่งรอบเพื่อเปลี่ยนเรื่องแปลกให้กลายเป็นทีม';
 
   @override
   String get campaignGrudgeIntro =>

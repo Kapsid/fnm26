@@ -11201,7 +11201,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get campaignTransplantTwist =>
-      'इटली के आठ बेहतरीन खिलाड़ी सैन मरीनो के लिए खेलने को राज़ी';
+      'इटली के छह बेहतरीन खिलाड़ी सैन मरीनो के लिए खेलने को राज़ी';
 
   @override
   String get campaignTransplantGoal =>
@@ -11218,7 +11218,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get campaignTransplantIntro =>
-      'सैन मरीनो के पास कभी ऐसा क्वालिफ़ाइंग अभियान नहीं रहा जिसे अभियान कहा जा सके। फिर इटली के आठ बेहतरीन खिलाड़ी पासपोर्ट लेकर टीम में आ जाते हैं। एक कौतूहल को टीम बनाने के लिए आपके पास एक चक्र है।';
+      'सैन मरीनो के पास कभी ऐसा क्वालिफ़ाइंग अभियान नहीं रहा जिसे अभियान कहा जा सके। फिर इटली के छह बेहतरीन खिलाड़ी पासपोर्ट लेकर टीम में आ जाते हैं। एक कौतूहल को टीम बनाने के लिए आपके पास एक चक्र है।';
 
   @override
   String get campaignGrudgeIntro =>

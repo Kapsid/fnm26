@@ -11227,7 +11227,7 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get campaignTransplantTwist =>
-      'Olaszország nyolc legjobbja San Marinóra vált';
+      'Olaszország hat legjobbja San Marinóra vált';
 
   @override
   String get campaignTransplantGoal => 'Kijutni az Európa-bajnokságra';
@@ -11243,7 +11243,7 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get campaignTransplantIntro =>
-      'San Marinónak még sosem volt említésre méltó selejtezője. Aztán nyolc olasz sztár felveszi az útlevelet, és besétál. Egy ciklusod van, hogy a különlegességből csapatot formálj.';
+      'San Marinónak még sosem volt említésre méltó selejtezője. Aztán hat olasz sztár felveszi az útlevelet, és besétál. Egy ciklusod van, hogy a különlegességből csapatot formálj.';
 
   @override
   String get campaignGrudgeIntro =>

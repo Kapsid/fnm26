@@ -11393,7 +11393,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get campaignTransplantTwist =>
-      'Huit des meilleurs d’Italie changent d’allégeance pour Saint-Marin';
+      'Six des meilleurs d’Italie changent d’allégeance pour Saint-Marin';
 
   @override
   String get campaignTransplantGoal =>
@@ -11410,7 +11410,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get campaignTransplantIntro =>
-      'Saint-Marin n’a jamais connu de qualification digne de ce nom. Puis huit des meilleurs d’Italie prennent le passeport et entrent en jeu. Vous avez un cycle pour faire d’une curiosité une équipe.';
+      'Saint-Marin n’a jamais connu de qualification digne de ce nom. Puis six des meilleurs d’Italie prennent le passeport et entrent en jeu. Vous avez un cycle pour faire d’une curiosité une équipe.';
 
   @override
   String get campaignGrudgeIntro =>

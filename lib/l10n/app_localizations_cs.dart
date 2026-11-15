@@ -11660,7 +11660,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get campaignTransplantTwist =>
-      'Osm nejlepších Italů přijímá sanmarinské občanství';
+      'Šest nejlepších Italů přijímá sanmarinské občanství';
 
   @override
   String get campaignTransplantGoal => 'Postoupit na mistrovství Evropy';

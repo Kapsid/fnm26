@@ -11270,7 +11270,7 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get campaignTransplantTwist =>
-      'Walong pinakamahusay ng Italy ang lumipat ng katapatan sa San Marino';
+      'Animang pinakamahusay ng Italy ang lumipat ng katapatan sa San Marino';
 
   @override
   String get campaignTransplantGoal => 'Makapasok sa Kampeonato ng Europa';
@@ -11287,7 +11287,7 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get campaignTransplantIntro =>
-      'Hindi pa nagkaroon ng kampanya sa kwalipikasyon ang San Marino na karapat-dapat tawaging ganoon. Tapos walong pinakamahusay ng Italy ang kumuha ng pasaporte at pumasok. May isang cycle ka para gawing tunay na koponan ang isang kuryosidad.';
+      'Hindi pa nagkaroon ng kampanya sa kwalipikasyon ang San Marino na karapat-dapat tawaging ganoon. Tapos animang pinakamahusay ng Italy ang kumuha ng pasaporte at pumasok. May isang cycle ka para gawing tunay na koponan ang isang kuryosidad.';
 
   @override
   String get campaignGrudgeIntro =>

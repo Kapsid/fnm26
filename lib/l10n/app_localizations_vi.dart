@@ -11159,7 +11159,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get campaignTransplantTwist =>
-      'Tám ngôi sao hàng đầu của Ý chuyển sang khoác áo San Marino';
+      'Sáu ngôi sao hàng đầu của Ý chuyển sang khoác áo San Marino';
 
   @override
   String get campaignTransplantGoal => 'Giành vé dự Giải vô địch châu Âu';
@@ -11175,7 +11175,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get campaignTransplantIntro =>
-      'San Marino chưa từng có một chiến dịch vòng loại đáng gọi tên. Rồi tám ngôi sao hàng đầu của Ý nhận hộ chiếu và bước vào. Bạn có một chu kỳ để biến một điều kỳ lạ thành một đội bóng thực sự.';
+      'San Marino chưa từng có một chiến dịch vòng loại đáng gọi tên. Rồi sáu ngôi sao hàng đầu của Ý nhận hộ chiếu và bước vào. Bạn có một chu kỳ để biến một điều kỳ lạ thành một đội bóng thực sự.';
 
   @override
   String get campaignGrudgeIntro =>

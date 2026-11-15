@@ -114,14 +114,14 @@ void main() {
     expect(third.isSuccess, isFalse);
   });
 
-  test('the transplant is eight of the donor\'s best, naturalised', () async {
+  test('the transplant is six of the donor\'s best, naturalised', () async {
     final career = await container
         .read(campaignServiceProvider)
         .start(Campaigns.transplant, managerName: 'Me');
     final links = await container
         .read(careerRepositoryProvider)
         .acceptedNaturalizations(career.id);
-    expect(links, hasLength(8));
+    expect(links, hasLength(Campaigns.transplant.transplantCount));
     final italy = [
       ...await container
           .read(playerRepositoryProvider)
@@ -132,7 +132,10 @@ void main() {
             careerId: career.id,
           ),
     ]..sort((a, b) => b.overall.compareTo(a.overall));
-    final top = italy.take(8).map((p) => p.id).toSet();
+    final top = italy
+        .take(Campaigns.transplant.transplantCount)
+        .map((p) => p.id)
+        .toSet();
     expect(links.every((l) => l.sourceNationId == 26), isTrue);
     expect(links.map((l) => l.playerId).toSet().difference(top), isEmpty);
   });

@@ -17311,7 +17311,7 @@ abstract class AppLocalizations {
   /// **'Campaigns'**
   String get campaignsTitle;
 
-  /// Name of the Transplant campaign (San Marino with eight Italians).
+  /// Name of the Transplant campaign (San Marino with six Italians).
   ///
   /// In en, this message translates to:
   /// **'The Transplant'**
@@ -17320,7 +17320,7 @@ abstract class AppLocalizations {
   /// One-line twist of the Transplant campaign.
   ///
   /// In en, this message translates to:
-  /// **'Eight of Italy\'s best switch allegiance to San Marino'**
+  /// **'Six of Italy\'s best switch allegiance to San Marino'**
   String get campaignTransplantTwist;
 
   /// Goal of the Transplant campaign.
@@ -17350,7 +17350,7 @@ abstract class AppLocalizations {
   /// Brief screen introduction of the Transplant campaign.
   ///
   /// In en, this message translates to:
-  /// **'San Marino have never had a qualifying campaign worth the name. Then eight of Italy\'s best take up the passport and walk in. You have one cycle to turn a curiosity into a team.'**
+  /// **'San Marino have never had a qualifying campaign worth the name. Then six of Italy\'s best take up the passport and walk in. You have one cycle to turn a curiosity into a team.'**
   String get campaignTransplantIntro;
 
   /// Brief screen introduction of the Grudge campaign.

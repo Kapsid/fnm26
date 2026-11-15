@@ -10910,7 +10910,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get campaignTransplantTitle => '移植';
 
   @override
-  String get campaignTransplantTwist => 'イタリアの精鋭8人がサンマリノに代表変更';
+  String get campaignTransplantTwist => 'イタリアの精鋭6人がサンマリノに代表変更';
 
   @override
   String get campaignTransplantGoal => '欧州選手権出場';
@@ -10926,7 +10926,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get campaignTransplantIntro =>
-      'サンマリノはまともな予選を戦ったことがありません。そこへイタリアの精鋭8人がパスポートを手にやって来ます。1サイクルで、珍しい存在を本物のチームに変えましょう。';
+      'サンマリノはまともな予選を戦ったことがありません。そこへイタリアの精鋭6人がパスポートを手にやって来ます。1サイクルで、珍しい存在を本物のチームに変えましょう。';
 
   @override
   String get campaignGrudgeIntro =>

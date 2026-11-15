@@ -11403,7 +11403,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get campaignTransplantTwist =>
-      'Ośmiu najlepszych Włochów zmienia barwy na San Marino';
+      'Sześciu najlepszych Włochów zmienia barwy na San Marino';
 
   @override
   String get campaignTransplantGoal => 'Awansować na Mistrzostwa Europy';
@@ -11419,7 +11419,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get campaignTransplantIntro =>
-      'San Marino nigdy nie miało eliminacji wartych tej nazwy. Aż ośmiu najlepszych Włochów bierze paszport i wchodzi do gry. Masz jeden cykl, by z ciekawostki zrobić drużynę.';
+      'San Marino nigdy nie miało eliminacji wartych tej nazwy. Aż sześciu najlepszych Włochów bierze paszport i wchodzi do gry. Masz jeden cykl, by z ciekawostki zrobić drużynę.';
 
   @override
   String get campaignGrudgeIntro =>

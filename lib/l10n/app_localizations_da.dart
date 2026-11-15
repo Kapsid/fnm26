@@ -11282,7 +11282,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get campaignTransplantTwist =>
-      'Otte af Italiens bedste skifter til San Marino';
+      'Seks af Italiens bedste skifter til San Marino';
 
   @override
   String get campaignTransplantGoal => 'Kvalificér dig til Europamesterskabet';
@@ -11298,7 +11298,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get campaignTransplantIntro =>
-      'San Marino har aldrig haft en kvalifikationskampagne, der fortjente navnet. Så tager otte af Italiens bedste passet og går ind ad døren. Du har én cyklus til at gøre en kuriositet til et hold.';
+      'San Marino har aldrig haft en kvalifikationskampagne, der fortjente navnet. Så tager seks af Italiens bedste passet og går ind ad døren. Du har én cyklus til at gøre en kuriositet til et hold.';
 
   @override
   String get campaignGrudgeIntro =>

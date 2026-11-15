@@ -10935,7 +10935,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get campaignTransplantTitle => '이식';
 
   @override
-  String get campaignTransplantTwist => '이탈리아 최고의 선수 여덟 명이 산마리노로 국적을 바꾼다';
+  String get campaignTransplantTwist => '이탈리아 최고의 선수 여섯 명이 산마리노로 국적을 바꾼다';
 
   @override
   String get campaignTransplantGoal => '유럽 선수권 본선 진출';
@@ -10951,7 +10951,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get campaignTransplantIntro =>
-      '산마리노는 제대로 된 예선을 치러 본 적이 없습니다. 그런데 이탈리아 최고의 선수 여덟 명이 여권을 받아 합류합니다. 대회 주기 한 번 안에 이 진기한 조합을 진짜 팀으로 만드세요.';
+      '산마리노는 제대로 된 예선을 치러 본 적이 없습니다. 그런데 이탈리아 최고의 선수 여섯 명이 여권을 받아 합류합니다. 대회 주기 한 번 안에 이 진기한 조합을 진짜 팀으로 만드세요.';
 
   @override
   String get campaignGrudgeIntro =>
