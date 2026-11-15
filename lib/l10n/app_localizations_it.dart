@@ -18126,4 +18126,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String pitchComHandballRed(String player) {
     return 'Mani volontario! $player è espulso.';
   }
+
+  @override
+  String get matchLiveTable => 'Classifica live';
 }

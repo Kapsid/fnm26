@@ -18122,4 +18122,7 @@ class AppLocalizationsFi extends AppLocalizations {
   String pitchComHandballRed(String player) {
     return 'Tahallinen käsivirhe! $player ajetaan ulos.';
   }
+
+  @override
+  String get matchLiveTable => 'Sarjataulukko nyt';
 }

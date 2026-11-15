@@ -4507,5 +4507,6 @@
   "pitchComHandballPenaltyYellow": "Mani di {player} in area: rigore e cartellino giallo.",
   "pitchComHandballPenaltyRed": "{player} la ferma con la mano! Rigore, ed è espulso.",
   "pitchComHandballYellow": "{player} ammonito per fallo di mano.",
-  "pitchComHandballRed": "Mani volontario! {player} è espulso."
+  "pitchComHandballRed": "Mani volontario! {player} è espulso.",
+  "matchLiveTable": "Classifica live"
 }

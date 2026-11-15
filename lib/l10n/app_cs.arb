@@ -4507,5 +4507,6 @@
   "pitchComHandballPenaltyYellow": "Ruka hráče {player} ve vápně: penalta a žlutá karta.",
   "pitchComHandballPenaltyRed": "{player} zastavuje míč rukou! Penalta a červená karta.",
   "pitchComHandballYellow": "{player} dostává žlutou za hru rukou.",
-  "pitchComHandballRed": "Úmyslná ruka! {player} jde pod sprchy."
+  "pitchComHandballRed": "Úmyslná ruka! {player} jde pod sprchy.",
+  "matchLiveTable": "Živá tabulka"
 }

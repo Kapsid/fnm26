@@ -17955,4 +17955,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String pitchComHandballRed(String player) {
     return 'जानबूझकर हैंडबॉल! $player बाहर भेजे गए।';
   }
+
+  @override
+  String get matchLiveTable => 'लाइव तालिका';
 }

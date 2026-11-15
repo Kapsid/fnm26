@@ -4507,5 +4507,6 @@
   "pitchComHandballPenaltyYellow": "Игра с ръка на {player} в полето: дузпа и жълт картон.",
   "pitchComHandballPenaltyRed": "{player} спира топката с ръка! Дузпа и червен картон.",
   "pitchComHandballYellow": "{player} получава жълт картон за игра с ръка.",
-  "pitchComHandballRed": "Умишлена игра с ръка! {player} е изгонен."
+  "pitchComHandballRed": "Умишлена игра с ръка! {player} е изгонен.",
+  "matchLiveTable": "Таблица на живо"
 }

@@ -4507,5 +4507,6 @@
   "pitchComHandballPenaltyYellow": "박스 안 {player}의 핸드볼: 페널티킥과 옐로카드.",
   "pitchComHandballPenaltyRed": "{player}가 손으로 막았습니다! 페널티킥에 퇴장입니다.",
   "pitchComHandballYellow": "{player}, 핸드볼로 옐로카드.",
-  "pitchComHandballRed": "고의적인 핸드볼! {player} 퇴장."
+  "pitchComHandballRed": "고의적인 핸드볼! {player} 퇴장.",
+  "matchLiveTable": "실시간 순위"
 }

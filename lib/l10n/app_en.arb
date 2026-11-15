@@ -27827,5 +27827,9 @@
         "type": "String"
       }
     }
+  },
+  "matchLiveTable": "Live table",
+  "@matchLiveTable": {
+    "description": "Match summary: the group's table as it stands at this minute of the match."
   }
 }

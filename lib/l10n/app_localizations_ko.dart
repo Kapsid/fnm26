@@ -17463,4 +17463,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String pitchComHandballRed(String player) {
     return '고의적인 핸드볼! $player 퇴장.';
   }
+
+  @override
+  String get matchLiveTable => '실시간 순위';
 }

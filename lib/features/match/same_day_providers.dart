@@ -27,3 +27,15 @@ Fixture sameDayKey(Fixture f) => f.copyWith(
   homePenalties: null,
   awayPenalties: null,
 );
+
+/// [Fixture]'s group before its day (see `SeasonService.groupBefore`), for
+/// the live table; null outside a group. Keyed like [sameDayResultsProvider].
+final AutoDisposeFutureProviderFamily<
+  ({List<int> members, List<Fixture> before})?,
+  Fixture
+>
+groupBeforeProvider = FutureProvider.autoDispose
+    .family<({List<int> members, List<Fixture> before})?, Fixture>(
+      (ref, ours) =>
+          ref.read(seasonServiceProvider).groupBefore(ours.careerId, ours),
+    );

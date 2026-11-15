@@ -37,7 +37,12 @@ enum SameDayPhase {
 /// The half-time score is the goals at 45' or before: the same minutes the
 /// save keeps, so the HT shown is the HT any later screen could read back.
 class SameDayResult {
-  const SameDayResult._(this.fixture, this.homeHalfTime, this.awayHalfTime);
+  const SameDayResult._(
+    this.fixture,
+    this.homeHalfTime,
+    this.awayHalfTime, [
+    this.goalMinutes = const [],
+  ]);
 
   /// [fixture] with its result on it (as stored, or as it will be stored),
   /// and its goals with their minutes.
@@ -47,15 +52,46 @@ class SameDayResult {
   ) {
     var home = 0;
     var away = 0;
+    final minutes = <({int minute, bool home})>[];
     for (final g in goals) {
+      final isHome = g.nationId == fixture.homeNationId;
+      if (!isHome && g.nationId != fixture.awayNationId) continue;
+      minutes.add((minute: g.minute, home: isHome));
       if (g.minute > 45) continue;
-      if (g.nationId == fixture.homeNationId) {
+      if (isHome) {
         home++;
-      } else if (g.nationId == fixture.awayNationId) {
+      } else {
         away++;
       }
     }
-    return SameDayResult._(fixture, home, away);
+    return SameDayResult._(fixture, home, away, minutes);
+  }
+
+  /// Every goal of the match with its minute and side.
+  final List<({int minute, bool home})> goalMinutes;
+
+  /// The score after [minute] of play (played alongside ours, so on our
+  /// clock): the goals stored at that minute or before. The full result
+  /// once [minute] is past ninety (a shootout's extra goal never comes from
+  /// a minute).
+  ({int home, int away}) scoreAtMinute(int minute) {
+    if (minute >= 90 && goalMinutes.every((g) => g.minute <= minute)) {
+      return (
+        home: fixture.shownHomeScore ?? 0,
+        away: fixture.shownAwayScore ?? 0,
+      );
+    }
+    var home = 0;
+    var away = 0;
+    for (final g in goalMinutes) {
+      if (g.minute > minute) continue;
+      if (g.home) {
+        home++;
+      } else {
+        away++;
+      }
+    }
+    return (home: home, away: away);
   }
 
   /// The fixture, its score as stored (a shootout's winner one clear; see

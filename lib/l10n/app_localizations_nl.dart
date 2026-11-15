@@ -18133,4 +18133,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String pitchComHandballRed(String player) {
     return 'Opzettelijk hands! $player wordt van het veld gestuurd.';
   }
+
+  @override
+  String get matchLiveTable => 'Live stand';
 }

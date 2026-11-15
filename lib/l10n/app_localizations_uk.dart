@@ -18378,4 +18378,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String pitchComHandballRed(String player) {
     return 'Навмисна гра рукою! $player вилучено.';
   }
+
+  @override
+  String get matchLiveTable => 'Таблиця наживо';
 }

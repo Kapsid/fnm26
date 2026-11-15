@@ -4507,5 +4507,6 @@
   "pitchComHandballPenaltyYellow": "{player} käsivirhe alueella: rangaistuspotku ja keltainen kortti.",
   "pitchComHandballPenaltyRed": "{player} torjuu pallon kädellä! Rangaistuspotku ja ulosajo.",
   "pitchComHandballYellow": "{player} saa keltaisen käsivirheestä.",
-  "pitchComHandballRed": "Tahallinen käsivirhe! {player} ajetaan ulos."
+  "pitchComHandballRed": "Tahallinen käsivirhe! {player} ajetaan ulos.",
+  "matchLiveTable": "Sarjataulukko nyt"
 }

@@ -4507,5 +4507,6 @@
   "pitchComHandballPenaltyYellow": "Henț al lui {player} în careu: penalty și cartonaș galben.",
   "pitchComHandballPenaltyRed": "{player} oprește mingea cu mâna! Penalty, și e eliminat.",
   "pitchComHandballYellow": "{player} primește galben pentru henț.",
-  "pitchComHandballRed": "Henț intenționat! {player} este eliminat."
+  "pitchComHandballRed": "Henț intenționat! {player} este eliminat.",
+  "matchLiveTable": "Clasament live"
 }

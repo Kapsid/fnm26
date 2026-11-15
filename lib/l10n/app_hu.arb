@@ -4507,5 +4507,6 @@
   "pitchComHandballPenaltyYellow": "{player} kezezése a tizenhatoson belül: tizenegyes és sárga lap.",
   "pitchComHandballPenaltyRed": "{player} kézzel menti a labdát! Tizenegyes, és kiállítják.",
   "pitchComHandballYellow": "{player} sárga lapot kap kezezésért.",
-  "pitchComHandballRed": "Szándékos kezezés! {player}t kiállítják."
+  "pitchComHandballRed": "Szándékos kezezés! {player}t kiállítják.",
+  "matchLiveTable": "Élő tabella"
 }

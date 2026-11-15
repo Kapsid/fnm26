@@ -18010,4 +18010,7 @@ class AppLocalizationsMs extends AppLocalizations {
   String pitchComHandballRed(String player) {
     return 'Bola tangan disengajakan! $player dibuang padang.';
   }
+
+  @override
+  String get matchLiveTable => 'Kedudukan langsung';
 }

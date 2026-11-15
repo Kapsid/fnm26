@@ -17740,4 +17740,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String pitchComHandballRed(String player) {
     return 'จงใจแฮนด์บอล! $player โดนไล่ออก';
   }
+
+  @override
+  String get matchLiveTable => 'ตารางสด';
 }

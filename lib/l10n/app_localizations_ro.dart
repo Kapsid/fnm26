@@ -18473,4 +18473,7 @@ class AppLocalizationsRo extends AppLocalizations {
   String pitchComHandballRed(String player) {
     return 'Henț intenționat! $player este eliminat.';
   }
+
+  @override
+  String get matchLiveTable => 'Clasament live';
 }

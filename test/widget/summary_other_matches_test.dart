@@ -118,9 +118,13 @@ void main() {
       final card = find.byKey(MatchSummaryTab.otherMatchesKey);
       await _show(tester, card);
       expect(card, findsOneWidget);
-      // No score card on the Summary.
+      // No score card on the Summary; the other matches tick along on our
+      // clock, marked live.
       for (final s in others) {
-        expect(_score(tester, s.fixture.id), enL.matchSummaryLive);
+        expect(
+          _score(tester, s.fixture.id),
+          matches(RegExp('^\\d+ - \\d+ \\| ${enL.matchSummaryLive}\$')),
+        );
       }
 
       // Our half time: theirs.

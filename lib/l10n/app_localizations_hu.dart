@@ -17992,4 +17992,7 @@ class AppLocalizationsHu extends AppLocalizations {
   String pitchComHandballRed(String player) {
     return 'Szándékos kezezés! ${player}t kiállítják.';
   }
+
+  @override
+  String get matchLiveTable => 'Élő tabella';
 }

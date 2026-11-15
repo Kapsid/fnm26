@@ -18059,4 +18059,7 @@ class AppLocalizationsFil extends AppLocalizations {
   String pitchComHandballRed(String player) {
     return 'Sinadyang handball! Pinaalis si $player.';
   }
+
+  @override
+  String get matchLiveTable => 'Live na talaan';
 }

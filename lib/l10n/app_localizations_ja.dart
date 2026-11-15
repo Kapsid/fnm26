@@ -17418,4 +17418,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String pitchComHandballRed(String player) {
     return '故意のハンド！$playerは退場です。';
   }
+
+  @override
+  String get matchLiveTable => 'ライブ順位表';
 }

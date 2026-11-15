@@ -18133,4 +18133,7 @@ class AppLocalizationsBg extends AppLocalizations {
   String pitchComHandballRed(String player) {
     return 'Умишлена игра с ръка! $player е изгонен.';
   }
+
+  @override
+  String get matchLiveTable => 'Таблица на живо';
 }

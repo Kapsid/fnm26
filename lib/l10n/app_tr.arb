@@ -4507,5 +4507,6 @@
   "pitchComHandballPenaltyYellow": "{player} ceza sahasında elle oynadı: penaltı ve sarı kart.",
   "pitchComHandballPenaltyRed": "{player} topu eliyle durduruyor! Penaltı ve kırmızı kart.",
   "pitchComHandballYellow": "{player} elle oynadığı için sarı kart görüyor.",
-  "pitchComHandballRed": "Kasıtlı elle oynama! {player} oyundan atılıyor."
+  "pitchComHandballRed": "Kasıtlı elle oynama! {player} oyundan atılıyor.",
+  "matchLiveTable": "Canlı puan durumu"
 }

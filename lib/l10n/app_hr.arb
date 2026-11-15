@@ -4507,5 +4507,6 @@
   "pitchComHandballPenaltyYellow": "Igranje rukom igrača {player} u šesnaestercu: jedanaesterac i žuti karton.",
   "pitchComHandballPenaltyRed": "{player} zaustavlja loptu rukom! Jedanaesterac i isključenje.",
   "pitchComHandballYellow": "{player} dobiva žuti karton zbog igranja rukom.",
-  "pitchComHandballRed": "Namjerno igranje rukom! {player} je isključen."
+  "pitchComHandballRed": "Namjerno igranje rukom! {player} je isključen.",
+  "matchLiveTable": "Tablica uživo"
 }

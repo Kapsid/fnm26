@@ -17959,4 +17959,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String pitchComHandballRed(String player) {
     return 'Kasıtlı elle oynama! $player oyundan atılıyor.';
   }
+
+  @override
+  String get matchLiveTable => 'Canlı puan durumu';
 }

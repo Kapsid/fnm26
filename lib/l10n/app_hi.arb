@@ -4507,5 +4507,6 @@
   "pitchComHandballPenaltyYellow": "बॉक्स में {player} का हैंडबॉल: पेनल्टी और पीला कार्ड।",
   "pitchComHandballPenaltyRed": "{player} हाथ से गेंद रोकते हैं! पेनल्टी, और वे बाहर।",
   "pitchComHandballYellow": "हैंडबॉल के लिए {player} को पीला कार्ड।",
-  "pitchComHandballRed": "जानबूझकर हैंडबॉल! {player} बाहर भेजे गए।"
+  "pitchComHandballRed": "जानबूझकर हैंडबॉल! {player} बाहर भेजे गए।",
+  "matchLiveTable": "लाइव तालिका"
 }

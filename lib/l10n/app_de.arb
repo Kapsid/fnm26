@@ -4507,5 +4507,6 @@
   "pitchComHandballPenaltyYellow": "Handspiel von {player} im Strafraum: Elfmeter und Gelb.",
   "pitchComHandballPenaltyRed": "{player} hält ihn mit der Hand auf! Elfmeter, und er fliegt vom Platz.",
   "pitchComHandballYellow": "{player} sieht Gelb wegen Handspiels.",
-  "pitchComHandballRed": "Absichtliches Handspiel! {player} fliegt vom Platz."
+  "pitchComHandballRed": "Absichtliches Handspiel! {player} fliegt vom Platz.",
+  "matchLiveTable": "Live-Tabelle"
 }

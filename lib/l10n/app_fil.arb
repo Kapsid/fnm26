@@ -4507,5 +4507,6 @@
   "pitchComHandballPenaltyYellow": "Handball ni {player} sa kahon: penalty at yellow card.",
   "pitchComHandballPenaltyRed": "Pinigilan ni {player} gamit ang kamay! Penalty, at pinaalis siya.",
   "pitchComHandballYellow": "Yellow card kay {player} dahil sa handball.",
-  "pitchComHandballRed": "Sinadyang handball! Pinaalis si {player}."
+  "pitchComHandballRed": "Sinadyang handball! Pinaalis si {player}.",
+  "matchLiveTable": "Live na talaan"
 }

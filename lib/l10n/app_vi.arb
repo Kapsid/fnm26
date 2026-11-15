@@ -4507,5 +4507,6 @@
   "pitchComHandballPenaltyYellow": "{player} chạm tay trong vòng cấm: phạt đền và thẻ vàng.",
   "pitchComHandballPenaltyRed": "{player} dùng tay cản bóng! Phạt đền, và anh bị đuổi.",
   "pitchComHandballYellow": "{player} nhận thẻ vàng vì chạm tay.",
-  "pitchComHandballRed": "Cố tình chạm tay! {player} bị đuổi khỏi sân."
+  "pitchComHandballRed": "Cố tình chạm tay! {player} bị đuổi khỏi sân.",
+  "matchLiveTable": "Bảng xếp hạng trực tiếp"
 }

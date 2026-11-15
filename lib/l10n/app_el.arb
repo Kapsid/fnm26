@@ -4507,5 +4507,6 @@
   "pitchComHandballPenaltyYellow": "Χέρι του {player} στην περιοχή: πέναλτι και κίτρινη κάρτα.",
   "pitchComHandballPenaltyRed": "Ο {player} τη σταματά με το χέρι! Πέναλτι και αποβολή.",
   "pitchComHandballYellow": "Κίτρινη στον {player} για χέρι.",
-  "pitchComHandballRed": "Σκόπιμο χέρι! Αποβάλλεται ο {player}."
+  "pitchComHandballRed": "Σκόπιμο χέρι! Αποβάλλεται ο {player}.",
+  "matchLiveTable": "Βαθμολογία live"
 }

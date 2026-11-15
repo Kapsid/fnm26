@@ -18033,4 +18033,7 @@ class AppLocalizationsSv extends AppLocalizations {
   String pitchComHandballRed(String player) {
     return 'Avsiktlig hands! $player blir utvisad.';
   }
+
+  @override
+  String get matchLiveTable => 'Livetabell';
 }

@@ -4507,5 +4507,6 @@
   "pitchComHandballPenaltyYellow": "Mano de {player} en el área: penalti y tarjeta amarilla.",
   "pitchComHandballPenaltyRed": "¡{player} la saca con la mano! Penalti y expulsión.",
   "pitchComHandballYellow": "Amarilla para {player} por mano.",
-  "pitchComHandballRed": "¡Mano intencionada! {player} es expulsado."
+  "pitchComHandballRed": "¡Mano intencionada! {player} es expulsado.",
+  "matchLiveTable": "Clasificación en directo"
 }

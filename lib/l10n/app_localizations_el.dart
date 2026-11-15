@@ -18140,4 +18140,7 @@ class AppLocalizationsEl extends AppLocalizations {
   String pitchComHandballRed(String player) {
     return 'Σκόπιμο χέρι! Αποβάλλεται ο $player.';
   }
+
+  @override
+  String get matchLiveTable => 'Βαθμολογία live';
 }

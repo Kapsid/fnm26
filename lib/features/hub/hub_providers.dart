@@ -1604,6 +1604,38 @@ class SeasonService {
   ///
   /// Queued behind any running step like one ([_exclusive]): it reads the
   /// caches a step fills.
+  /// [ours]'s group as it stood before its day: its sides and every group
+  /// match already played on an earlier day (both from the sides' own
+  /// fixtures, a group being a round robin). Null outside a group.
+  Future<({List<int> members, List<Fixture> before})?> groupBefore(
+    int careerId,
+    Fixture ours,
+  ) async {
+    final group = ours.groupId;
+    if (group == null || ours.round == Rounds.friendly) return null;
+    final day = DateTime(ours.date.year, ours.date.month, ours.date.day);
+    bool inGroup(Fixture f) =>
+        f.groupId == group && f.competitionId == ours.competitionId;
+    final mine = [
+      for (final f in await _comp.cycleFixturesForNation(
+        careerId,
+        ours.homeNationId,
+      ))
+        if (inGroup(f)) f,
+    ];
+    final members = <int>{
+      for (final f in mine) ...[f.homeNationId, f.awayNationId],
+    };
+    if (members.length < 3) return null;
+    final byId = <int, Fixture>{};
+    for (final n in members) {
+      for (final f in await _comp.cycleFixturesForNation(careerId, n)) {
+        if (inGroup(f) && f.hasResult && f.date.isBefore(day)) byId[f.id] = f;
+      }
+    }
+    return (members: members.toList()..sort(), before: byId.values.toList());
+  }
+
   Future<List<SameDayResult>> sameDayResults(int careerId, Fixture ours) async {
     final out = <SameDayResult>[];
     await _exclusive(() async {

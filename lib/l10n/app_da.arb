@@ -4507,5 +4507,6 @@
   "pitchComHandballPenaltyYellow": "Hånd af {player} i feltet: straffespark og et gult kort.",
   "pitchComHandballPenaltyRed": "{player} holder den ude med hånden! Straffespark, og han bliver udvist.",
   "pitchComHandballYellow": "{player} får gult kort for hånd.",
-  "pitchComHandballRed": "Bevidst hånd! {player} bliver udvist."
+  "pitchComHandballRed": "Bevidst hånd! {player} bliver udvist.",
+  "matchLiveTable": "Live-stilling"
 }

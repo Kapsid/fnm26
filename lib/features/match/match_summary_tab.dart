@@ -24,6 +24,8 @@ class MatchSummaryTab extends StatelessWidget {
     this.weather,
     this.sameDay = const [],
     this.sameDayPhase = SameDayPhase.live,
+    this.liveMinute,
+    this.liveTable,
     this.codeOf,
     this.nameOf,
     this.homeId,
@@ -66,6 +68,14 @@ class MatchSummaryTab extends StatelessWidget {
   /// How far they have got, by our clock.
   final SameDayPhase sameDayPhase;
 
+  /// Our match's minute while it is being played: the other matches' scores
+  /// follow it (null: by [sameDayPhase] only, as at the breaks).
+  final int? liveMinute;
+
+  /// The group as it stands at this minute (see [LiveGroupTable]), or null
+  /// outside a group.
+  final Widget? liveTable;
+
   /// A nation's flag code and name, for [sameDay]'s rows.
   final String Function(int nationId)? codeOf;
   final String Function(int nationId)? nameOf;
@@ -90,8 +100,11 @@ class MatchSummaryTab extends StatelessWidget {
     // Live: the ground, then the rest of the day. At the whistle the man of
     // the match leads, the day's results follow, then the ground and the
     // figures.
+    final table = liveTable;
     final children = r == null
         ? [
+            // Live, the group as it stands this minute leads.
+            if (table != null) ...[table, gap],
             stadium,
             if (others != null) ...[gap, others],
           ]
@@ -111,6 +124,7 @@ class MatchSummaryTab extends StatelessWidget {
               gap,
             ],
             if (others != null) ...[others, gap],
+            if (table != null) ...[table, gap],
             stadium,
             gap,
             _headline(context, r),
@@ -233,7 +247,12 @@ class MatchSummaryTab extends StatelessWidget {
     );
     Widget row(SameDayResult s, {required bool wide}) {
       final f = s.fixture;
-      final score = s.scoreAt(sameDayPhase);
+      // Live, the other matches tick along on our clock (players asked for
+      // the day to be followed as it happens).
+      final score = sameDayPhase == SameDayPhase.live && liveMinute != null
+          ? s.scoreAtMinute(liveMinute!)
+          : s.scoreAt(sameDayPhase);
+      final ticking = sameDayPhase == SameDayPhase.live && liveMinute != null;
       final pens = sameDayPhase == SameDayPhase.fullTime && f.wentToShootout
           ? l.recordsOnPenalties(f.homePenalties!, f.awayPenalties!)
           : null;
@@ -257,7 +276,9 @@ class MatchSummaryTab extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  sameDayPhase == SameDayPhase.halfTime
+                  ticking
+                      ? l.matchSummaryLive
+                      : sameDayPhase == SameDayPhase.halfTime
                       ? l.matchSummaryHalfTimeMark
                       : f.afterExtraTime
                       ? l.matchSummaryExtraTimeMark

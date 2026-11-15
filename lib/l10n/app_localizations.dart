@@ -27283,6 +27283,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Deliberate handball! {player} is sent off.'**
   String pitchComHandballRed(String player);
+
+  /// Match summary: the group's table as it stands at this minute of the match.
+  ///
+  /// In en, this message translates to:
+  /// **'Live table'**
+  String get matchLiveTable;
 }
 
 class _AppLocalizationsDelegate

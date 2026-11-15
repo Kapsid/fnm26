@@ -18442,4 +18442,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String pitchComHandballRed(String player) {
     return 'Úmyslná ruka! $player jde pod sprchy.';
   }
+
+  @override
+  String get matchLiveTable => 'Živá tabulka';
 }

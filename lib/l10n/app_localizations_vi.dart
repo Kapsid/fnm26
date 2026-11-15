@@ -17894,4 +17894,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String pitchComHandballRed(String player) {
     return 'Cố tình chạm tay! $player bị đuổi khỏi sân.';
   }
+
+  @override
+  String get matchLiveTable => 'Bảng xếp hạng trực tiếp';
 }

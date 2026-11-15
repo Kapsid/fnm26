@@ -51,6 +51,7 @@ import 'package:fnm/features/match/match_flow_charts.dart';
 import 'package:fnm/features/match/ground_card.dart';
 import 'package:fnm/features/match/penalty_order_sheet.dart';
 import 'package:fnm/features/match/match_providers.dart';
+import 'package:fnm/features/match/live_group_table.dart';
 import 'package:fnm/features/match/same_day_providers.dart';
 import 'package:fnm/features/match/pitch/match_dressing.dart';
 import 'package:fnm/features/match/pitch/pitch_clock.dart';
@@ -2476,6 +2477,31 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                     .watch(sameDayResultsProvider(sameDayKey(preview.fixture)))
                     .valueOrNull ??
                 const <SameDayResult>[];
+            // The group as it stands this minute, the day's other matches
+            // ticking along on our clock (a group match only).
+            final groupBase = ref
+                .watch(groupBeforeProvider(sameDayKey(preview.fixture)))
+                .valueOrNull;
+            Widget? liveTable;
+            if (groupBase != null) {
+              final kicked = _minute > 0 || ft;
+              final t = LiveGroupTable.compute(
+                members: groupBase.members,
+                before: groupBase.before,
+                sameDay: sameDay,
+                ours: preview.fixture,
+                ourScore: kicked ? (home: homeScore, away: awayScore) : null,
+                minute: ft ? null : _minute,
+                fullTime: ft,
+              );
+              liveTable = LiveGroupTableCard(
+                now: t.now,
+                placeBefore: t.placeBefore,
+                code: code,
+                name: name,
+                highlightId: preview.playerNationId,
+              );
+            }
             final Widget summary = MatchSummaryTab(
               result: ft ? r : null,
               potm: motm == null
@@ -2503,6 +2529,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                 halfTime: _halfTimeTaken || halfTimeLabel != null,
                 fullTime: ft,
               ),
+              liveMinute: ft ? null : _minute,
+              liveTable: liveTable,
               codeOf: code,
               nameOf: name,
               // The tablet's centre column already carries the score, so

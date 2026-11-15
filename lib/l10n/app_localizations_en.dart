@@ -18080,4 +18080,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String pitchComHandballRed(String player) {
     return 'Deliberate handball! $player is sent off.';
   }
+
+  @override
+  String get matchLiveTable => 'Live table';
 }
