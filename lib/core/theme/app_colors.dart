@@ -135,6 +135,10 @@ abstract final class AppColors {
   /// The vertical "active" bar on a selected data-list row.
   static const Color activeBar = primary;
 
+  /// The player of the match's star beside his rating: a blue that reads on
+  /// every rating band's fill and on the dark surface.
+  static const Color motmStar = Color(0xFF4DA3FF);
+
   /// The full dark Material 3 colour scheme for the app.
   static const ColorScheme scheme = ColorScheme(
     brightness: Brightness.dark,

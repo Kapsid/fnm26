@@ -226,6 +226,9 @@ class ProfileHeaderCard extends StatelessWidget {
   /// Below this width the four key numbers go two by two.
   static const double narrowFrom = 240;
 
+  /// Below this width the name is set smaller, on up to three lines.
+  static const double narrowNameFrom = 320;
+
   @override
   Widget build(BuildContext context) {
     final lang = Localizations.localeOf(context).languageCode;
@@ -259,33 +262,46 @@ class ProfileHeaderCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              ProfileDisc(disc),
-              const SizedBox(width: AppSpacing.md),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTypography.headlineMedium.copyWith(
-                        fontWeight: FontWeight.w800,
-                        height: 1.15,
-                      ),
+          LayoutBuilder(
+            builder: (context, box) {
+              // A tablet's side column (the match's player of the match) is
+              // narrower than any phone: there the name takes a smaller size
+              // and a third line rather than losing its surname to an
+              // ellipsis.
+              final narrow = box.maxWidth < narrowNameFrom;
+              return Row(
+                children: [
+                  ProfileDisc(disc),
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          name,
+                          maxLines: narrow ? 3 : 2,
+                          overflow: TextOverflow.ellipsis,
+                          style:
+                              (narrow
+                                      ? AppTypography.titleMedium
+                                      : AppTypography.headlineMedium)
+                                  .copyWith(
+                                    fontWeight: FontWeight.w800,
+                                    height: 1.15,
+                                  ),
+                        ),
+                        const SizedBox(height: AppSpacing.xs),
+                        Row(children: meta),
+                        for (final n in notes) ...[
+                          const SizedBox(height: AppSpacing.xs),
+                          n,
+                        ],
+                      ],
                     ),
-                    const SizedBox(height: AppSpacing.xs),
-                    Row(children: meta),
-                    for (final n in notes) ...[
-                      const SizedBox(height: AppSpacing.xs),
-                      n,
-                    ],
-                  ],
-                ),
-              ),
-            ],
+                  ),
+                ],
+              );
+            },
           ),
           const SizedBox(height: AppSpacing.md),
           LayoutBuilder(

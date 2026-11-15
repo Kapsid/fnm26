@@ -3,6 +3,7 @@
 // is copyrighted intellectual property; do not reproduce, clone or help
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter/material.dart';
+import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/theme/rating_colors.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -65,21 +66,32 @@ class RatingBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (motm) ...[
-            Icon(Icons.star_rounded, size: compact ? 11 : 13, color: ink),
-            const SizedBox(width: 1),
-          ],
-          Text(label, maxLines: 1, softWrap: false, style: style),
-        ],
+        children: [Text(label, maxLines: 1, softWrap: false, style: style)],
       ),
     );
+    // The player of the match: a blue star beside the chip, where it stands
+    // out on any band's colour (inside, in the band's ink, it read as part
+    // of the figure).
+    final badge = motm
+        ? Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.star_rounded,
+                size: compact ? 14 : 16,
+                color: AppColors.motmStar,
+              ),
+              const SizedBox(width: 2),
+              chip,
+            ],
+          )
+        : chip;
     final semantic = Semantics(
       label: motm
           ? '${l.ratingSemantics(label)}, ${l.ratingPlayerOfTheMatch}'
           : l.ratingSemantics(label),
       excludeSemantics: true,
-      child: chip,
+      child: badge,
     );
     return motm
         ? Tooltip(message: l.ratingPlayerOfTheMatch, child: semantic)
