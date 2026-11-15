@@ -162,9 +162,6 @@ void main() {
             tester.getTopLeft(find.byKey(MatchSummaryTab.otherMatchesKey)).dy,
           ),
         );
-        await expectLater(
-          find.byType(MaterialApp),
-        );
         for (final o in others) {
           expect(
             find.byKey(MatchSummaryTab.freshScoreKey(o.fixture.id)),
