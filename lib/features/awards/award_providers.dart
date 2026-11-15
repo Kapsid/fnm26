@@ -241,6 +241,8 @@ class AwardService {
       fixtures: raw.fixtures,
       appearances: raw.appearances,
       rankOf: (id) => nations[id]?.ranking ?? 150,
+      // His own matches are rated by the full engine, on a wider scale.
+      engineNationIds: {career.nationId},
     );
 
     // The shortlist, on what each man could score in his best position, and

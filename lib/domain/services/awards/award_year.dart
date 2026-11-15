@@ -250,12 +250,31 @@ class AwardYear {
   static int loserOf(AwardFixture f) =>
       winnerOf(f) == f.homeNationId ? f.awayNationId : f.homeNationId;
 
+  /// The mark the vote pulls a live-engine rating towards (the world's mean
+  /// over a season) and how much of its distance it keeps: the manager's
+  /// matches are rated by the full match engine, whose marks spread wider
+  /// (a variance near 0.71 over a season) than the background model's the
+  /// rest of the world gets (near 0.49), so his men reached the vote's
+  /// extremes more often than anybody else's. sqrt(0.49 / 0.71) puts the
+  /// two on one scale.
+  static const double engineMean = 6.6;
+  static const double engineSpread = 0.83;
+
+  /// [rating] of a live-engine match on the background model's scale.
+  static double onWorldScale(double rating) =>
+      engineMean + (rating - engineMean) * engineSpread;
+
   /// Builds a year from its raw rows. Only fixtures dated in [year] count.
+  ///
+  /// [engineNationIds] are the sides whose matches the full engine rated (the
+  /// manager's): their fixtures' ratings are read on the world's scale (see
+  /// [onWorldScale]). Empty reads every rating as stored.
   static AwardYear build({
     required int year,
     required Iterable<AwardFixture> fixtures,
     required Iterable<AwardAppearance> appearances,
     int Function(int nationId)? rankOf,
+    Set<int> engineNationIds = const {},
   }) {
     final byId = <int, AwardFixture>{
       for (final f in fixtures)
@@ -275,15 +294,19 @@ class AwardYear {
       final w =
           weightOf(f) *
           (rankOf == null ? 1.0 : opponentFactor(rankOf(opponent)));
+      final engine =
+          engineNationIds.contains(f.homeNationId) ||
+          engineNationIds.contains(f.awayNationId);
+      final rating = engine ? onWorldScale(a.rating) : a.rating;
       l
         ..apps += 1
-        ..ratingSum += a.rating
+        ..ratingSum += rating
         ..goals += a.goals
         ..assists += a.assists
         ..motms += a.motm ? 1 : 0
         ..cleanSheets += a.cleanSheet ? 1 : 0
         ..weight += w
-        ..weightedRating += w * a.rating
+        ..weightedRating += w * rating
         ..weightedGoals += w * a.goals
         ..weightedAssists += w * a.assists
         ..weightedMotms += a.motm ? w : 0
@@ -294,7 +317,7 @@ class AwardYear {
       }
       final c = l.competitions.putIfAbsent(f.competitionId, CompetitionLine.new)
         ..apps += 1
-        ..ratingSum += a.rating
+        ..ratingSum += rating
         ..goals += a.goals
         ..assists += a.assists
         ..motms += a.motm ? 1 : 0
