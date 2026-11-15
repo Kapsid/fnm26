@@ -6,6 +6,9 @@ import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/competition/confed_playoffs.dart';
+import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
@@ -84,7 +87,18 @@ abstract final class MatchStage {
   };
 
   /// The competition a fixture belongs to, derived from its round code.
-  static String category(AppLocalizations l, String? round) {
+  ///
+  /// On a custom world (see [ActiveWorld]) a competition the world renamed
+  /// reads by its new name: the World Championship and the Clash always,
+  /// the continental championship and the Nations Cup when [conf] (the
+  /// manager's confederation, the only one whose cups he plays) is given.
+  static String category(
+    AppLocalizations l,
+    String? round, {
+    Confederation? conf,
+  }) {
+    final renamed = _renamedCategory(l, round, conf);
+    if (renamed != null) return renamed;
     if (round == null) return l.resultsCategoryWorldCupQualifying;
     if (round == 'FRIENDLY') return l.resultsCategoryFriendlies;
     if (round == 'FFINAL') return l.resultsCategoryContinentalClash;
@@ -106,10 +120,47 @@ abstract final class MatchStage {
     return l.resultsCategoryWorldCupFinals;
   }
 
+  /// [category] under a custom world's own name for the competition, or
+  /// null when the world is the game's own or kept the name.
+  static String? _renamedCategory(
+    AppLocalizations l,
+    String? round,
+    Confederation? conf,
+  ) {
+    final world = ActiveWorld.current;
+    if (world.isDefault || round == 'FRIENDLY') return null;
+    String? qualifiers(String? stored) {
+      final name = stored == null ? null : world.competition(stored);
+      return name == null ? null : l.compQualifiers(name);
+    }
+
+    final cup = conf == null ? null : ContinentalCups.byConfederation[conf];
+    if (round == null ||
+        isWcPlayoffRound(round) ||
+        ConfedPlayoffs.isRound(round)) {
+      return qualifiers('World Championship');
+    }
+    if (round == 'FFINAL') return world.competition('Continental Clash');
+    if (round.startsWith('N')) {
+      final nc = NationsCups.ofManager(conf);
+      return nc == null
+          ? null
+          : world.competition(NationsCups.forConfederation(nc)!.name);
+    }
+    if (round == 'CQ' || round == 'EPSF' || round == 'EPFINAL') {
+      return qualifiers(cup?.name);
+    }
+    if (round.startsWith('C')) {
+      return cup == null ? null : world.competition(cup.name);
+    }
+    return world.competition('World Championship');
+  }
+
   /// The one-line banner above a fixture: the competition and where in it the
   /// match falls ("WORLD CUP FINALS · QUARTER-FINAL"), or the matchday number
   /// for a qualifying campaign, which has rounds but no named stages.
-  static String label(AppLocalizations l, Fixture f) => _label(l, f, false);
+  static String label(AppLocalizations l, Fixture f, {Confederation? conf}) =>
+      _label(l, f, false, conf);
 
   /// [label] with the word "qualifying" written as a Q.
   ///
@@ -119,8 +170,11 @@ abstract final class MatchStage {
   /// read — which defeated the point of naming the competition at all. Only
   /// the qualifying campaigns say it differently; every other banner is short
   /// enough already and stays exactly as it reads elsewhere.
-  static String labelCompact(AppLocalizations l, Fixture f) =>
-      _label(l, f, true);
+  static String labelCompact(
+    AppLocalizations l,
+    Fixture f, {
+    Confederation? conf,
+  }) => _label(l, f, true, conf);
 
   /// The smallest way to say where a fixture belongs: a fan's abbreviation of
   /// the competition and, when there is one, the round ("WC Q" and "MD 1",
@@ -227,7 +281,12 @@ abstract final class MatchStage {
     return stage == null ? parts.competition : '${parts.competition} · $stage';
   }
 
-  static String _label(AppLocalizations l, Fixture f, bool compact) {
+  static String _label(
+    AppLocalizations l,
+    Fixture f,
+    bool compact,
+    Confederation? conf,
+  ) {
     final round = f.round;
     // A friendly and a Continental Clash are one-offs: naming them twice
     // ("FRIENDLIES · FRIENDLY") reads as a bug.
@@ -235,22 +294,24 @@ abstract final class MatchStage {
     if (round == 'FFINAL') {
       return l.resultsStageContinentalClash.capsIn(l.localeName);
     }
+    final renamed = _renamedCategory(l, round, conf);
     if (round == null || round == 'CQ') {
       final head =
-          (compact
-                  ? (round == null
-                        ? l.resultsCategoryWorldCupQualifyingShort
-                        : l.resultsCategoryContinentalQualifyingShort)
-                  : category(l, round))
+          (renamed ??
+                  (compact
+                      ? (round == null
+                            ? l.resultsCategoryWorldCupQualifyingShort
+                            : l.resultsCategoryContinentalQualifyingShort)
+                      : category(l, round, conf: conf)))
               .capsIn(l.localeName);
       return '$head · ${l.matchStageMatchday(f.matchday).capsIn(l.localeName)}';
     }
     // A group game is just the competition: "· GROUP STAGE" adds nothing the
     // manager needs, and on the narrow cards it pushed the line over.
     if (const {'GROUP', 'CGROUP', 'NGROUP', 'NL'}.contains(round)) {
-      return category(l, round).capsIn(l.localeName);
+      return category(l, round, conf: conf).capsIn(l.localeName);
     }
-    return '${category(l, round).capsIn(l.localeName)} · '
+    return '${category(l, round, conf: conf).capsIn(l.localeName)} · '
         '${stage(l, round).capsIn(l.localeName)}';
   }
 }

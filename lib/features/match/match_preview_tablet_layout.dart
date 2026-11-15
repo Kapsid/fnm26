@@ -83,7 +83,14 @@ class _MatchPreviewTabletLayout extends ConsumerWidget {
                     const SizedBox(width: AppSpacing.md),
                     Expanded(
                       child: Text(
-                        MatchStage.label(l10n, p.fixture),
+                        MatchStage.label(
+                          l10n,
+                          p.fixture,
+                          conf: p
+                              .preview
+                              .nations[p.preview.playerNationId]
+                              ?.confederation,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TabletText.barMeta.copyWith(

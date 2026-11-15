@@ -157,7 +157,14 @@ class MatchPreviewScreen extends ConsumerWidget {
               ],
               Center(
                 child: Text(
-                  MatchStage.label(l10n, p.fixture),
+                  MatchStage.label(
+                    l10n,
+                    p.fixture,
+                    conf: p
+                        .preview
+                        .nations[p.preview.playerNationId]
+                        ?.confederation,
+                  ),
                   style: AppTypography.labelSmall.copyWith(
                     color: p.hosted ? accent : AppColors.primary,
                   ),

@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/util/competition_label.dart';
+import 'package:fnm/core/util/match_stage.dart';
+import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/repositories/mappers.dart';
@@ -68,6 +70,50 @@ final _world = ActiveWorld(
 
 void main() {
   tearDown(() => ActiveWorld.current = ActiveWorld.none);
+
+  group('match banners (the top bar, the preview)', () {
+    Fixture f(String? round) => Fixture(
+      id: 1,
+      careerId: 1,
+      competitionId: 1,
+      matchday: 3,
+      date: DateTime(2030, 6, 12),
+      homeNationId: 1,
+      awayNationId: 2,
+      round: round,
+    );
+    final en = _l('en');
+
+    test('a renamed competition reads by the world\'s name', () {
+      ActiveWorld.current = _world;
+      expect(MatchStage.labelCompact(en, f('GROUP')), 'BURGER CUP');
+      expect(
+        MatchStage.labelCompact(en, f(null)),
+        startsWith(en.compQualifiers('Burger Cup').toUpperCase()),
+      );
+      expect(
+        MatchStage.label(en, f('CGROUP'), conf: Confederation.europe),
+        'EURO BURGER',
+      );
+      expect(
+        MatchStage.label(en, f('NGROUP'), conf: Confederation.europe),
+        'PATTY LEAGUE',
+      );
+      // Without the manager's confederation the continental cup keeps the
+      // game's name.
+      expect(
+        MatchStage.label(en, f('CGROUP')),
+        en.resultsCategoryContinentalCup.toUpperCase(),
+      );
+    });
+
+    test('the game\'s own world is unchanged', () {
+      expect(
+        MatchStage.labelCompact(en, f('GROUP')),
+        en.resultsCategoryWorldCupFinals.toUpperCase(),
+      );
+    });
+  });
 
   group('ActiveWorld', () {
     test('answers every override the pack holds, and null otherwise', () {

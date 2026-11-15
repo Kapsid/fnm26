@@ -2207,7 +2207,11 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             );
             final topBar = _TopBar(
               theme: finalsTheme,
-              occasion: MatchStage.label(l, preview.fixture),
+              occasion: MatchStage.label(
+                l,
+                preview.fixture,
+                conf: preview.nations[preview.playerNationId]?.confederation,
+              ),
             );
             // The colours each side is WEARING on the pitch: the bar reads the
             // same clash decision the 2D view dresses the players from, so it

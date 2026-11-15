@@ -218,7 +218,7 @@ class _NextChip extends StatelessWidget {
             TextSpan(text: teams, style: TabletText.barStrong),
             TextSpan(
               text:
-                  '  ${MatchStage.labelCompact(l, next)}, '
+                  '  ${MatchStage.labelCompact(l, next, conf: hub.nations[hub.career.nationId]?.confederation)}, '
                   '${AppDate.dayMonth(context, next.date)}',
               style: TabletText.barMeta,
             ),
