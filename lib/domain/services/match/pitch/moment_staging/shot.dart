@@ -496,6 +496,10 @@ class _OpenShotPlan extends _Plan {
   /// the team-mate it uses, how far through it is and when it began.
   _Route route = _Route.direct;
   int? helper;
+
+  /// On a run with the ball ([_Route.carry]): the defender who steps in to
+  /// stop him and is taken on and left behind. Display only.
+  int? beaten;
   int stage = 0;
   double? routeFrom;
 
@@ -864,7 +868,7 @@ class _OpenShotPlan extends _Plan {
     final lead = _strikeFrom(now);
     final run = sp.distanceTo(lead);
     final d = now.ball.distanceTo(lead);
-    if (run < 3 || run > 11 || d < 10 || depthOf(lead) <= depthOf(sp)) {
+    if (run < 3 || run > 14 || d < 10 || depthOf(lead) <= depthOf(sp)) {
       return null;
     }
     return KickAction(
@@ -995,7 +999,7 @@ class _OpenShotPlan extends _Plan {
     // The time from the cut to the latest strike the window allows.
     final spare = len - (end - strikeBy) - 0.3;
     final options = <_Route>[];
-    if (assister == null && spare > 1.3) options.add(_Route.carry);
+    if (assister == null && spare > 1.0) options.add(_Route.carry);
     // A ball in behind is run onto and finished in the box; one for a
     // chance from distance only now and then.
     final behind =
@@ -1009,7 +1013,7 @@ class _OpenShotPlan extends _Plan {
     // Weighted by how the side plays and what it plays against, the plain
     // finish keeping a share of its own.
     final weights = {
-      _Route.direct: 1.4,
+      _Route.direct: _style.weight(_Route.direct),
       for (final r in options) r: _style.weight(r),
     };
     var roll = _unit(c.seed, 71) * weights.values.fold(0.0, (a, b) => a + b);
@@ -1052,6 +1056,7 @@ class _OpenShotPlan extends _Plan {
   late final ({
     double through,
     double oneTwo,
+    double takeOn,
     double Function(_Route) weight,
   })
   _style = () {
@@ -1063,21 +1068,26 @@ class _OpenShotPlan extends _Plan {
     final breaks = counterIntent(side);
     final tempo = i.tempo / 100;
     double weight(_Route r) => switch (r) {
-      _Route.through => 0.9 + 2 * math.max(0, direct) + 1.5 * breaks + high,
-      _Route.oneTwo => 0.6 + 2 * math.max(0, -direct) + tempo,
-      _Route.cutBack => 0.6 + 2 * i.width / 100 + 1.5 * deep,
-      _Route.carry => 0.6 + 1.5 * deep,
-      _Route.direct => 1.4,
+      // A chance made is better to watch than one simply taken: the plain
+      // finish keeps a share, the made ones more of it than they had.
+      _Route.through => 1.0 + 3 * math.max(0, direct) + 1.5 * breaks + high,
+      _Route.oneTwo => 0.7 + 2.5 * math.max(0, -direct) + tempo,
+      _Route.cutBack => 0.8 + 2 * i.width / 100 + 1.5 * deep,
+      _Route.carry => 1.3 + 1.5 * deep,
+      _Route.direct => 1.0,
     };
     return (
-      through: (0.3 + 0.4 * math.max(0, direct) + 0.2 * breaks).clamp(
+      through: (0.42 + 0.45 * math.max(0, direct) + 0.2 * breaks).clamp(
         0.0,
-        0.8,
+        0.9,
       ),
       oneTwo: (0.2 + 0.35 * math.max(0, -direct) + 0.15 * tempo).clamp(
         0.0,
         0.7,
       ),
+      // Taking a man on: likelier against a deep block, where there is no
+      // space to pass into.
+      takeOn: (0.35 + 0.25 * deep).clamp(0.0, 0.6),
       weight: weight,
     );
   }();
@@ -1092,6 +1102,31 @@ class _OpenShotPlan extends _Plan {
     final s = m.shooterId;
     final sp = now.players[s];
     if (sp == null || now.carrierId != s) return;
+    // Or he takes on the man in front of him: a defender between him and
+    // where he strikes it, close enough to be beaten in a stride or two.
+    if (assister == null &&
+        strikeBy - t >= 1.1 &&
+        _unit(c.seed, 87) < _style.takeOn) {
+      final lead = _strikeFrom(now);
+      final ahead = available(now, opp, except: {?shot.blocker, ?closer}).where(
+        (id) {
+          if (now.keepers.contains(id)) return false;
+          final q = now.players[id]!;
+          final d = q.distanceTo(sp);
+          return d >= 2.5 &&
+              d <= 9 &&
+              depthOf(q) > depthOf(sp) &&
+              depthOf(q) < depthOf(lead) + 2;
+        },
+      );
+      final b = nearest(now, ahead, sp);
+      if (b != null) {
+        beaten = b;
+        route = _Route.carry;
+        routeFrom = t;
+        return;
+      }
+    }
     if (strikeBy - t < 2.0 || _unit(c.seed, 83) >= _style.oneTwo) return;
     final along = depthOf(sp);
     final across = latOf(sp) >= 0 ? -1.0 : 1.0;
@@ -1142,8 +1177,19 @@ class _OpenShotPlan extends _Plan {
     final h = helper;
     switch (route) {
       case _Route.carry:
-        // He picks it up well short and runs it in himself.
-        return cutToPhase(now, s, at(math.max(zd - 9, 53), zl * 0.6));
+        // He picks it up well short and runs it in himself, taking on the
+        // man who steps in to stop him on the way.
+        final start = at(math.max(zd - 12, 53), zl * 0.6);
+        final mid = at(math.max(zd - 6.5, 56), zl * 0.7);
+        beaten = nearest(
+          now,
+          available(now, opp, except: {?shot.blocker, ?closer}).where(
+            (id) => !now.keepers.contains(id),
+          ),
+          mid,
+        );
+        final b = beaten;
+        return cutToPhase(now, s, start, extra: {if (b != null) b: mid});
       case _Route.through:
         return cutToPhase(
           now,
@@ -1261,6 +1307,24 @@ class _OpenShotPlan extends _Plan {
     if (id == s) {
       if (shot.struck) return (target: now.players[id]!, maxSpeed: 2);
       if (f != null && f.toId == s) return null;
+      if (car == s && route == _Route.carry) {
+        // Taking his man on: at him, then a swerve past on the side away
+        // from where he stands, and on toward goal.
+        final me = now.players[s]!;
+        final b = beaten;
+        final bp = b == null ? null : now.players[b];
+        if (bp != null && depthOf(me) < depthOf(bp) + 0.5) {
+          final away = latOf(me) >= latOf(bp) ? 1.0 : -1.0;
+          final close = me.distanceTo(bp) < 4.5;
+          return (
+            target: at(
+              depthOf(bp) + (close ? 3 : -1.5),
+              latOf(bp) + away * (close ? 2.8 : 1.2),
+            ),
+            maxSpeed: close ? 7.6 : 6,
+          );
+        }
+      }
       if (car == s) {
         // Into a block he goes at the man closing him down.
         final bk = shot.blocker;
@@ -1280,6 +1344,19 @@ class _OpenShotPlan extends _Plan {
       final from = car == s ? now.ball : zone;
       final lane = from + (goal - from).unit * 2.0;
       return (target: lane, maxSpeed: 8.8);
+    }
+    if (id == beaten && route == _Route.carry) {
+      final me = now.players[s];
+      final bp = now.players[id]!;
+      if (me != null && depthOf(me) < depthOf(bp) + 0.5) {
+        // He steps in to meet the ball...
+        return (target: bp + (now.ball - bp).unit * 1.2, maxSpeed: 3.5);
+      }
+      // ...and is left turning, chasing a man already gone.
+      return (
+        target: me == null ? bp : bp + (me - bp).unit * 1.5,
+        maxSpeed: 2.5,
+      );
     }
     if (id == closer) {
       // He faces the ball as he steps across: never a backwards sprint.
