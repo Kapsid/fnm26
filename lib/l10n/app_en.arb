@@ -27891,5 +27891,53 @@
         "type": "String"
       }
     }
+  },
+  "yPlayoffDrawn0": "{competition} play-off drawn: {opponent} stand between us and the finals.",
+  "@yPlayoffDrawn0": {
+    "description": "Y post: the manager's side drawn into a play-off; the competition and the first opponent.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      },
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yPlayoffDrawn1": "It is {opponent} in the {competition} play-off. One tie, everything on it.",
+  "@yPlayoffDrawn1": {
+    "description": "Y post: play-off draw, variant 1.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      },
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yPlayoffDrawn2": "{opponent} in the play-off. I need a lie down already. {competition}, here we come. Maybe.",
+  "@yPlayoffDrawn2": {
+    "description": "Y post: play-off draw, a nervous fan, variant 2.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      },
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yPlayoffDrawn3": "Play-off draw: {opponent}. Beat them and the {competition} is within touching distance.",
+  "@yPlayoffDrawn3": {
+    "description": "Y post: play-off draw, variant 3.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      },
+      "opponent": {
+        "type": "String"
+      }
+    }
   }
 }

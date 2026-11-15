@@ -17997,4 +17997,24 @@ class AppLocalizationsId extends AppLocalizations {
   String playerStatOfValue(String done, String of) {
     return '$done/$of';
   }
+
+  @override
+  String yPlayoffDrawn0(String competition, String opponent) {
+    return 'Undian play-off $competition: $opponent berdiri di antara kita dan putaran final.';
+  }
+
+  @override
+  String yPlayoffDrawn1(String competition, String opponent) {
+    return 'Lawan kita $opponent di play-off $competition. Satu laga, semuanya dipertaruhkan.';
+  }
+
+  @override
+  String yPlayoffDrawn2(String competition, String opponent) {
+    return '$opponent di play-off. Aku sudah harus berbaring. $competition, kami datang. Mungkin.';
+  }
+
+  @override
+  String yPlayoffDrawn3(String competition, String opponent) {
+    return 'Undian play-off: $opponent. Kalahkan mereka dan $competition sudah di depan mata.';
+  }
 }

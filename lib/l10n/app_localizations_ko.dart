@@ -17503,4 +17503,24 @@ class AppLocalizationsKo extends AppLocalizations {
   String playerStatOfValue(String done, String of) {
     return '$done/$of';
   }
+
+  @override
+  String yPlayoffDrawn0(String competition, String opponent) {
+    return '$competition 플레이오프 추첨: 본선으로 가는 길목에 $opponent가 서 있다.';
+  }
+
+  @override
+  String yPlayoffDrawn1(String competition, String opponent) {
+    return '$competition 플레이오프 상대는 $opponent. 단판 승부, 모든 것이 걸렸다.';
+  }
+
+  @override
+  String yPlayoffDrawn2(String competition, String opponent) {
+    return '플레이오프에서 $opponent. 벌써 누워야겠다. $competition, 우리가 간다. 아마도.';
+  }
+
+  @override
+  String yPlayoffDrawn3(String competition, String opponent) {
+    return '플레이오프 추첨: $opponent. 이기면 $competition이 눈앞이다.';
+  }
 }

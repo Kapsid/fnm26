@@ -18120,4 +18120,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String playerStatOfValue(String done, String of) {
     return '$done/$of';
   }
+
+  @override
+  String yPlayoffDrawn0(String competition, String opponent) {
+    return '$competition play-off drawn: $opponent stand between us and the finals.';
+  }
+
+  @override
+  String yPlayoffDrawn1(String competition, String opponent) {
+    return 'It is $opponent in the $competition play-off. One tie, everything on it.';
+  }
+
+  @override
+  String yPlayoffDrawn2(String competition, String opponent) {
+    return '$opponent in the play-off. I need a lie down already. $competition, here we come. Maybe.';
+  }
+
+  @override
+  String yPlayoffDrawn3(String competition, String opponent) {
+    return 'Play-off draw: $opponent. Beat them and the $competition is within touching distance.';
+  }
 }

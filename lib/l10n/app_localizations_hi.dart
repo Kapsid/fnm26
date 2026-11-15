@@ -17995,4 +17995,24 @@ class AppLocalizationsHi extends AppLocalizations {
   String playerStatOfValue(String done, String of) {
     return '$done/$of';
   }
+
+  @override
+  String yPlayoffDrawn0(String competition, String opponent) {
+    return '$competition प्ले-ऑफ़ ड्रॉ: हमारे और फ़ाइनल्स के बीच $opponent खड़ा है।';
+  }
+
+  @override
+  String yPlayoffDrawn1(String competition, String opponent) {
+    return '$competition प्ले-ऑफ़ में $opponent से मुकाबला। एक मैच, सब कुछ दाँव पर।';
+  }
+
+  @override
+  String yPlayoffDrawn2(String competition, String opponent) {
+    return 'प्ले-ऑफ़ में $opponent। मुझे अभी से लेटना पड़ेगा। $competition, हम आ रहे हैं। शायद।';
+  }
+
+  @override
+  String yPlayoffDrawn3(String competition, String opponent) {
+    return 'प्ले-ऑफ़ ड्रॉ: $opponent। इन्हें हराया तो $competition बस हाथ भर दूर।';
+  }
 }

@@ -4519,5 +4519,9 @@
   "playerStatPenSaved": "Torjutut rangaistuspotkut",
   "playerStatPenalties": "Rangaistuspotkut",
   "playerStatRateValue": "{count} ({pct} %)",
-  "playerStatOfValue": "{done}/{of}"
+  "playerStatOfValue": "{done}/{of}",
+  "yPlayoffDrawn0": "{competition}: jatkokarsinnan arvonta tehty, {opponent} on meidän ja lopputurnauksen välissä.",
+  "yPlayoffDrawn1": "Jatkokarsinnassa vastaan tulee {opponent}. {competition} ratkeaa yhdessä ottelussa.",
+  "yPlayoffDrawn2": "{opponent} jatkokarsinnassa. Minun on jo pakko mennä makuulle. {competition}, täältä tullaan. Ehkä.",
+  "yPlayoffDrawn3": "Jatkokarsinnan arvonta: {opponent}. Voitetaan heidät, ja {competition} on käden ulottuvilla."
 }

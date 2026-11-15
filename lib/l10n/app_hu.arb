@@ -4519,5 +4519,9 @@
   "playerStatPenSaved": "Kivédett tizenegyesek",
   "playerStatPenalties": "Tizenegyesek",
   "playerStatRateValue": "{count} ({pct}%)",
-  "playerStatOfValue": "{done}/{of}"
+  "playerStatOfValue": "{done}/{of}",
+  "yPlayoffDrawn0": "Kisorsolták a(z) {competition} pótselejtezőjét: {opponent} áll köztünk és a döntő torna között.",
+  "yPlayoffDrawn1": "A(z) {competition} pótselejtezőjében {opponent} jön. Egy párharc, minden ezen múlik.",
+  "yPlayoffDrawn2": "{opponent} a pótselejtezőben. Már most le kell feküdnöm. {competition}, jövünk. Talán.",
+  "yPlayoffDrawn3": "Pótselejtező-sorsolás: {opponent}. Ha legyőzzük őket, karnyújtásnyira a(z) {competition}."
 }

@@ -17934,4 +17934,24 @@ class AppLocalizationsVi extends AppLocalizations {
   String playerStatOfValue(String done, String of) {
     return '$done/$of';
   }
+
+  @override
+  String yPlayoffDrawn0(String competition, String opponent) {
+    return 'Bốc thăm play-off $competition: $opponent đứng giữa chúng ta và vòng chung kết.';
+  }
+
+  @override
+  String yPlayoffDrawn1(String competition, String opponent) {
+    return 'Gặp $opponent ở play-off $competition. Một trận, tất cả đặt cược.';
+  }
+
+  @override
+  String yPlayoffDrawn2(String competition, String opponent) {
+    return '$opponent ở play-off. Tôi phải nằm xuống ngay bây giờ. $competition, chúng ta đến đây. Có lẽ.';
+  }
+
+  @override
+  String yPlayoffDrawn3(String competition, String opponent) {
+    return 'Bốc thăm play-off: $opponent. Thắng họ là $competition trong tầm tay.';
+  }
 }

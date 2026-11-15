@@ -18482,4 +18482,24 @@ class AppLocalizationsCs extends AppLocalizations {
   String playerStatOfValue(String done, String of) {
     return '$done/$of';
   }
+
+  @override
+  String yPlayoffDrawn0(String competition, String opponent) {
+    return 'Los baráže o $competition: mezi námi a závěrečným turnajem stojí $opponent.';
+  }
+
+  @override
+  String yPlayoffDrawn1(String competition, String opponent) {
+    return 'V baráži o $competition nás čeká $opponent. Jeden duel, všechno na kartě.';
+  }
+
+  @override
+  String yPlayoffDrawn2(String competition, String opponent) {
+    return '$opponent v baráži. Už teď si musím lehnout. $competition, jedeme. Možná.';
+  }
+
+  @override
+  String yPlayoffDrawn3(String competition, String opponent) {
+    return 'Los baráže: $opponent. Porazíme je a $competition je na dosah.';
+  }
 }

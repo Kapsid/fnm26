@@ -405,6 +405,15 @@ extension SeasonWcPlayoffs on SeasonService {
         ),
         year: wcYear - 1,
       );
+      await _comp.markDrawWatched(
+        careerId,
+        cycle,
+        PlayoffDrawNote.key(
+          date: career.inGameDate,
+          opponentId: atHome ? away : home,
+          competition: 'World Championship',
+        ),
+      );
       return true;
     }
     final ic = icPaths
@@ -428,6 +437,17 @@ extension SeasonWcPlayoffs on SeasonService {
               ]),
         year: wcYear - 1,
       );
+      if (ic.seed != me) {
+        await _comp.markDrawWatched(
+          careerId,
+          cycle,
+          PlayoffDrawNote.key(
+            date: career.inGameDate,
+            opponentId: ic.semiHome == me ? ic.semiAway : ic.semiHome,
+            competition: 'World Championship',
+          ),
+        );
+      }
       return true;
     }
     // Neither through nor in a path: the campaign is over.

@@ -4519,5 +4519,9 @@
   "playerStatPenSaved": "Penalty-uri apărate",
   "playerStatPenalties": "Penalty-uri",
   "playerStatRateValue": "{count} ({pct}%)",
-  "playerStatOfValue": "{done}/{of}"
+  "playerStatOfValue": "{done}/{of}",
+  "yPlayoffDrawn0": "Tragerea la sorți a barajului pentru {competition}: {opponent} stă între noi și turneul final.",
+  "yPlayoffDrawn1": "Avem {opponent} în barajul pentru {competition}. O dublă, totul e în joc.",
+  "yPlayoffDrawn2": "{opponent} în baraj. Deja trebuie să mă întind. {competition}, venim. Poate.",
+  "yPlayoffDrawn3": "Tragerea barajului: {opponent}. Îi batem și {competition} e la un pas."
 }

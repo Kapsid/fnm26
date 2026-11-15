@@ -18513,4 +18513,24 @@ class AppLocalizationsRo extends AppLocalizations {
   String playerStatOfValue(String done, String of) {
     return '$done/$of';
   }
+
+  @override
+  String yPlayoffDrawn0(String competition, String opponent) {
+    return 'Tragerea la sorți a barajului pentru $competition: $opponent stă între noi și turneul final.';
+  }
+
+  @override
+  String yPlayoffDrawn1(String competition, String opponent) {
+    return 'Avem $opponent în barajul pentru $competition. O dublă, totul e în joc.';
+  }
+
+  @override
+  String yPlayoffDrawn2(String competition, String opponent) {
+    return '$opponent în baraj. Deja trebuie să mă întind. $competition, venim. Poate.';
+  }
+
+  @override
+  String yPlayoffDrawn3(String competition, String opponent) {
+    return 'Tragerea barajului: $opponent. Îi batem și $competition e la un pas.';
+  }
 }

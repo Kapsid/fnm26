@@ -4519,5 +4519,9 @@
   "playerStatPenSaved": "Αποκρ. πέναλτι",
   "playerStatPenalties": "Πέναλτι",
   "playerStatRateValue": "{count} ({pct}%)",
-  "playerStatOfValue": "{done}/{of}"
+  "playerStatOfValue": "{done}/{of}",
+  "yPlayoffDrawn0": "Κλήρωση μπαράζ για το {competition}: η {opponent} στέκεται ανάμεσα σε εμάς και την τελική φάση.",
+  "yPlayoffDrawn1": "Η {opponent} στα μπαράζ για το {competition}. Ένα ζευγάρι, όλα παίζονται.",
+  "yPlayoffDrawn2": "{opponent} στα μπαράζ. Χρειάζομαι ήδη να ξαπλώσω. {competition}, ερχόμαστε. Ίσως.",
+  "yPlayoffDrawn3": "Κλήρωση μπαράζ: {opponent}. Αν τους κερδίσουμε, το {competition} είναι μια ανάσα μακριά."
 }

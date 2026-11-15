@@ -17780,4 +17780,24 @@ class AppLocalizationsTh extends AppLocalizations {
   String playerStatOfValue(String done, String of) {
     return '$done/$of';
   }
+
+  @override
+  String yPlayoffDrawn0(String competition, String opponent) {
+    return 'จับสลากเพลย์ออฟ$competition: $opponent ขวางทางเราสู่รอบสุดท้าย';
+  }
+
+  @override
+  String yPlayoffDrawn1(String competition, String opponent) {
+    return 'เพลย์ออฟ$competition เจอ$opponent นัดเดียว ทุกอย่างอยู่ตรงนี้';
+  }
+
+  @override
+  String yPlayoffDrawn2(String competition, String opponent) {
+    return '$opponent ในเพลย์ออฟ ฉันต้องนอนพักแล้ว $competition เรามาแล้ว อาจจะนะ';
+  }
+
+  @override
+  String yPlayoffDrawn3(String competition, String opponent) {
+    return 'จับสลากเพลย์ออฟ: $opponent ชนะพวกเขาแล้ว$competitionก็อยู่แค่เอื้อม';
+  }
 }

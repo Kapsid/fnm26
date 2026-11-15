@@ -18429,4 +18429,24 @@ class AppLocalizationsHr extends AppLocalizations {
   String playerStatOfValue(String done, String of) {
     return '$done/$of';
   }
+
+  @override
+  String yPlayoffDrawn0(String competition, String opponent) {
+    return 'Ždrijeb doigravanja za $competition: $opponent stoji između nas i završnice.';
+  }
+
+  @override
+  String yPlayoffDrawn1(String competition, String opponent) {
+    return 'U doigravanju za $competition igramo protiv $opponent. Jedna utakmica, sve na kocki.';
+  }
+
+  @override
+  String yPlayoffDrawn2(String competition, String opponent) {
+    return '$opponent u doigravanju. Već moram leći. $competition, stižemo. Možda.';
+  }
+
+  @override
+  String yPlayoffDrawn3(String competition, String opponent) {
+    return 'Ždrijeb doigravanja: $opponent. Pobijedimo li ih, $competition je nadohvat ruke.';
+  }
 }

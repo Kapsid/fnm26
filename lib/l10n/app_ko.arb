@@ -4519,5 +4519,9 @@
   "playerStatPenSaved": "PK 선방",
   "playerStatPenalties": "페널티킥",
   "playerStatRateValue": "{count} ({pct}%)",
-  "playerStatOfValue": "{done}/{of}"
+  "playerStatOfValue": "{done}/{of}",
+  "yPlayoffDrawn0": "{competition} 플레이오프 추첨: 본선으로 가는 길목에 {opponent}가 서 있다.",
+  "yPlayoffDrawn1": "{competition} 플레이오프 상대는 {opponent}. 단판 승부, 모든 것이 걸렸다.",
+  "yPlayoffDrawn2": "플레이오프에서 {opponent}. 벌써 누워야겠다. {competition}, 우리가 간다. 아마도.",
+  "yPlayoffDrawn3": "플레이오프 추첨: {opponent}. 이기면 {competition}이 눈앞이다."
 }

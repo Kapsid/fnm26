@@ -18180,4 +18180,24 @@ class AppLocalizationsEl extends AppLocalizations {
   String playerStatOfValue(String done, String of) {
     return '$done/$of';
   }
+
+  @override
+  String yPlayoffDrawn0(String competition, String opponent) {
+    return 'Κλήρωση μπαράζ για το $competition: η $opponent στέκεται ανάμεσα σε εμάς και την τελική φάση.';
+  }
+
+  @override
+  String yPlayoffDrawn1(String competition, String opponent) {
+    return 'Η $opponent στα μπαράζ για το $competition. Ένα ζευγάρι, όλα παίζονται.';
+  }
+
+  @override
+  String yPlayoffDrawn2(String competition, String opponent) {
+    return '$opponent στα μπαράζ. Χρειάζομαι ήδη να ξαπλώσω. $competition, ερχόμαστε. Ίσως.';
+  }
+
+  @override
+  String yPlayoffDrawn3(String competition, String opponent) {
+    return 'Κλήρωση μπαράζ: $opponent. Αν τους κερδίσουμε, το $competition είναι μια ανάσα μακριά.';
+  }
 }

@@ -18418,4 +18418,24 @@ class AppLocalizationsUk extends AppLocalizations {
   String playerStatOfValue(String done, String of) {
     return '$done/$of';
   }
+
+  @override
+  String yPlayoffDrawn0(String competition, String opponent) {
+    return 'Жеребкування плей-оф за $competition: між нами й фінальним турніром стоїть $opponent.';
+  }
+
+  @override
+  String yPlayoffDrawn1(String competition, String opponent) {
+    return 'У плей-оф за $competition граємо з $opponent. Один поєдинок, усе на кону.';
+  }
+
+  @override
+  String yPlayoffDrawn2(String competition, String opponent) {
+    return '$opponent у плей-оф. Мені вже треба прилягти. $competition, ми йдемо. Можливо.';
+  }
+
+  @override
+  String yPlayoffDrawn3(String competition, String opponent) {
+    return 'Жеребкування плей-оф: $opponent. Здолаємо їх, і $competition буде на відстані витягнутої руки.';
+  }
 }

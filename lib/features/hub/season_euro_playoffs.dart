@@ -238,7 +238,11 @@ extension SeasonEuroPlayoffs on SeasonService {
       );
     }
     if (paths.isEmpty) {
-      await _generateContinentalFinals(careerId, europe, isManagers: isManagers);
+      await _generateContinentalFinals(
+        careerId,
+        europe,
+        isManagers: isManagers,
+      );
       return false;
     }
     if (direct.length < berths - paths.length) return false;
@@ -348,6 +352,15 @@ extension SeasonEuroPlayoffs on SeasonService {
         [opponent],
       ),
       year: wcYear - 3,
+    );
+    await _comp.markDrawWatched(
+      careerId,
+      cycle,
+      PlayoffDrawNote.key(
+        date: career.inGameDate,
+        opponentId: atHome ? away : home,
+        competition: cont.name,
+      ),
     );
     return true;
   }

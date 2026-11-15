@@ -4519,5 +4519,9 @@
   "playerStatPenSaved": "Penalti ditepis",
   "playerStatPenalties": "Penalti",
   "playerStatRateValue": "{count} ({pct}%)",
-  "playerStatOfValue": "{done}/{of}"
+  "playerStatOfValue": "{done}/{of}",
+  "yPlayoffDrawn0": "Undian play-off {competition}: {opponent} berdiri di antara kita dan putaran final.",
+  "yPlayoffDrawn1": "Lawan kita {opponent} di play-off {competition}. Satu laga, semuanya dipertaruhkan.",
+  "yPlayoffDrawn2": "{opponent} di play-off. Aku sudah harus berbaring. {competition}, kami datang. Mungkin.",
+  "yPlayoffDrawn3": "Undian play-off: {opponent}. Kalahkan mereka dan {competition} sudah di depan mata."
 }

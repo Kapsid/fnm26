@@ -26,6 +26,7 @@ import 'package:fnm/domain/services/press/persona.dart' show YPersona;
 import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/domain/services/press/public_mood.dart';
 import 'package:fnm/domain/services/press/pundit_predictions.dart';
+import 'package:fnm/domain/services/press/playoff_draw_note.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/domain/services/press/y_locals.dart';
 import 'package:fnm/domain/services/press/y_tournaments.dart';
@@ -663,6 +664,29 @@ Future<YTimeline> _feedOf(
         nation: nation,
         seed: career.rngSeed,
         history: YFeed.standingsAsOf(datedStandings, call.date),
+      ),
+    );
+  }
+
+  // The day the side was drawn into a play-off, and who it meets: noted
+  // at the draw (see [PlayoffDrawNote]), since a draw's day is not stored.
+  for (final m
+      in await ref
+          .watch(competitionRepositoryProvider)
+          .watchedKindsWithPrefix(PlayoffDrawNote.prefix)) {
+    if (m.careerId != careerId) continue;
+    final note = PlayoffDrawNote.decode(m.kind);
+    final opponent = note == null ? null : nameOf[note.opponentId];
+    if (note == null || opponent == null) continue;
+    if (note.date.isAfter(career.inGameDate)) continue;
+    posts.addAll(
+      YFeed.forEvent(
+        template: YTemplate.playoffDrawn,
+        args: [note.competition, opponent],
+        date: note.date,
+        key: m.kind,
+        nation: nation,
+        seed: career.rngSeed,
       ),
     );
   }

@@ -4519,5 +4519,9 @@
   "playerStatPenSaved": "Obronione karne",
   "playerStatPenalties": "Rzuty karne",
   "playerStatRateValue": "{count} ({pct}%)",
-  "playerStatOfValue": "{done}/{of}"
+  "playerStatOfValue": "{done}/{of}",
+  "yPlayoffDrawn0": "Losowanie baraży o {competition}: między nami a turniejem finałowym stoi {opponent}.",
+  "yPlayoffDrawn1": "W barażach o {competition} gramy z {opponent}. Jeden mecz, wszystko na szali.",
+  "yPlayoffDrawn2": "{opponent} w barażach. Już muszę się położyć. {competition}, nadchodzimy. Może.",
+  "yPlayoffDrawn3": "Losowanie baraży: {opponent}. Pokonamy ich i {competition} jest na wyciągnięcie ręki."
 }

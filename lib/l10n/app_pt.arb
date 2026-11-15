@@ -4519,5 +4519,9 @@
   "playerStatPenSaved": "Pênaltis defendidos",
   "playerStatPenalties": "Pênaltis",
   "playerStatRateValue": "{count} ({pct}%)",
-  "playerStatOfValue": "{done}/{of}"
+  "playerStatOfValue": "{done}/{of}",
+  "yPlayoffDrawn0": "Sorteio do play-off para {competition}: {opponent} está entre nós e a fase final.",
+  "yPlayoffDrawn1": "Vai ser {opponent} no play-off para {competition}. Um confronto, tudo em jogo.",
+  "yPlayoffDrawn2": "{opponent} no play-off. Já preciso me deitar. {competition}, lá vamos nós. Talvez.",
+  "yPlayoffDrawn3": "Sorteio do play-off: {opponent}. Vencemos e {competition} fica ao alcance da mão."
 }

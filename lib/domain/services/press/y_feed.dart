@@ -116,6 +116,10 @@ enum YTemplate {
   eliminated,
   qualified,
   groupDrawn,
+
+  /// The manager's side drawn into a play-off: args the competition the
+  /// play-off is for and the side it meets first.
+  playoffDrawn,
   hostNamed,
   tournamentSoon,
 
@@ -2395,6 +2399,7 @@ abstract final class YFeed {
     YTemplate.exitAccepted,
     YTemplate.punditPick,
     YTemplate.groupDrawn,
+    YTemplate.playoffDrawn,
     YTemplate.hostNamed,
     YTemplate.tournamentSoon,
   };
@@ -2701,6 +2706,7 @@ abstract final class YFeed {
     YTemplate.drew ||
     YTemplate.rivalry ||
     YTemplate.groupDrawn ||
+    YTemplate.playoffDrawn ||
     YTemplate.hostNamed ||
     YTemplate.tournamentSoon ||
     YTemplate.reaction => YMood.shrug,

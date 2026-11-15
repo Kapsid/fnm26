@@ -4519,5 +4519,9 @@
   "playerStatPenSaved": "Chycené penalty",
   "playerStatPenalties": "Penalty",
   "playerStatRateValue": "{count} ({pct} %)",
-  "playerStatOfValue": "{done}/{of}"
+  "playerStatOfValue": "{done}/{of}",
+  "yPlayoffDrawn0": "Los baráže o {competition}: mezi námi a závěrečným turnajem stojí {opponent}.",
+  "yPlayoffDrawn1": "V baráži o {competition} nás čeká {opponent}. Jeden duel, všechno na kartě.",
+  "yPlayoffDrawn2": "{opponent} v baráži. Už teď si musím lehnout. {competition}, jedeme. Možná.",
+  "yPlayoffDrawn3": "Los baráže: {opponent}. Porazíme je a {competition} je na dosah."
 }

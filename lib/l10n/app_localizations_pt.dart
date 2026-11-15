@@ -18188,4 +18188,24 @@ class AppLocalizationsPt extends AppLocalizations {
   String playerStatOfValue(String done, String of) {
     return '$done/$of';
   }
+
+  @override
+  String yPlayoffDrawn0(String competition, String opponent) {
+    return 'Sorteio do play-off para $competition: $opponent está entre nós e a fase final.';
+  }
+
+  @override
+  String yPlayoffDrawn1(String competition, String opponent) {
+    return 'Vai ser $opponent no play-off para $competition. Um confronto, tudo em jogo.';
+  }
+
+  @override
+  String yPlayoffDrawn2(String competition, String opponent) {
+    return '$opponent no play-off. Já preciso me deitar. $competition, lá vamos nós. Talvez.';
+  }
+
+  @override
+  String yPlayoffDrawn3(String competition, String opponent) {
+    return 'Sorteio do play-off: $opponent. Vencemos e $competition fica ao alcance da mão.';
+  }
 }

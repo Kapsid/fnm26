@@ -27355,6 +27355,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{done}/{of}'**
   String playerStatOfValue(String done, String of);
+
+  /// Y post: the manager's side drawn into a play-off; the competition and the first opponent.
+  ///
+  /// In en, this message translates to:
+  /// **'{competition} play-off drawn: {opponent} stand between us and the finals.'**
+  String yPlayoffDrawn0(String competition, String opponent);
+
+  /// Y post: play-off draw, variant 1.
+  ///
+  /// In en, this message translates to:
+  /// **'It is {opponent} in the {competition} play-off. One tie, everything on it.'**
+  String yPlayoffDrawn1(String competition, String opponent);
+
+  /// Y post: play-off draw, a nervous fan, variant 2.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} in the play-off. I need a lie down already. {competition}, here we come. Maybe.'**
+  String yPlayoffDrawn2(String competition, String opponent);
+
+  /// Y post: play-off draw, variant 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Play-off draw: {opponent}. Beat them and the {competition} is within touching distance.'**
+  String yPlayoffDrawn3(String competition, String opponent);
 }
 
 class _AppLocalizationsDelegate

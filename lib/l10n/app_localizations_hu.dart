@@ -18032,4 +18032,24 @@ class AppLocalizationsHu extends AppLocalizations {
   String playerStatOfValue(String done, String of) {
     return '$done/$of';
   }
+
+  @override
+  String yPlayoffDrawn0(String competition, String opponent) {
+    return 'Kisorsolták a(z) $competition pótselejtezőjét: $opponent áll köztünk és a döntő torna között.';
+  }
+
+  @override
+  String yPlayoffDrawn1(String competition, String opponent) {
+    return 'A(z) $competition pótselejtezőjében $opponent jön. Egy párharc, minden ezen múlik.';
+  }
+
+  @override
+  String yPlayoffDrawn2(String competition, String opponent) {
+    return '$opponent a pótselejtezőben. Már most le kell feküdnöm. $competition, jövünk. Talán.';
+  }
+
+  @override
+  String yPlayoffDrawn3(String competition, String opponent) {
+    return 'Pótselejtező-sorsolás: $opponent. Ha legyőzzük őket, karnyújtásnyira a(z) $competition.';
+  }
 }

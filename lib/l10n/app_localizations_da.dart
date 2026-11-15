@@ -18088,4 +18088,24 @@ class AppLocalizationsDa extends AppLocalizations {
   String playerStatOfValue(String done, String of) {
     return '$done/$of';
   }
+
+  @override
+  String yPlayoffDrawn0(String competition, String opponent) {
+    return 'Playoff-lodtrækning til $competition: $opponent står mellem os og slutrunden.';
+  }
+
+  @override
+  String yPlayoffDrawn1(String competition, String opponent) {
+    return 'Det bliver $opponent i playoff til $competition. Ét opgør, alt står på spil.';
+  }
+
+  @override
+  String yPlayoffDrawn2(String competition, String opponent) {
+    return '$opponent i playoff. Jeg må allerede ligge ned. $competition, her kommer vi. Måske.';
+  }
+
+  @override
+  String yPlayoffDrawn3(String competition, String opponent) {
+    return 'Playoff-lodtrækning: $opponent. Slår vi dem, er $competition inden for rækkevidde.';
+  }
 }

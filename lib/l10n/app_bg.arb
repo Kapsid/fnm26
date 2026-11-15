@@ -4519,5 +4519,9 @@
   "playerStatPenSaved": "Спасени дузпи",
   "playerStatPenalties": "Дузпи",
   "playerStatRateValue": "{count} ({pct}%)",
-  "playerStatOfValue": "{done}/{of}"
+  "playerStatOfValue": "{done}/{of}",
+  "yPlayoffDrawn0": "Жребий за плейофа на {competition}: {opponent} стоят между нас и финалите.",
+  "yPlayoffDrawn1": "{opponent} в плейофа за {competition}. Един мач, всичко е на карта.",
+  "yPlayoffDrawn2": "{opponent} в плейофа. Вече ми трябва почивка. {competition}, идваме. Може би.",
+  "yPlayoffDrawn3": "Жребий за плейофа: {opponent}. Бием ли ги, {competition} е на една ръка разстояние."
 }

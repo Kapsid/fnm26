@@ -4519,5 +4519,9 @@
   "playerStatPenSaved": "Penalties arrêtés",
   "playerStatPenalties": "Penalties",
   "playerStatRateValue": "{count} ({pct} %)",
-  "playerStatOfValue": "{done}/{of}"
+  "playerStatOfValue": "{done}/{of}",
+  "yPlayoffDrawn0": "Tirage des barrages pour {competition}\u00a0: {opponent} se dresse entre nous et la phase finale.",
+  "yPlayoffDrawn1": "Ce sera {opponent} en barrage pour {competition}. Un match, tout en jeu.",
+  "yPlayoffDrawn2": "{opponent} en barrage. J'ai déjà besoin de m'allonger. {competition}, nous voilà. Peut-être.",
+  "yPlayoffDrawn3": "Tirage des barrages\u00a0: {opponent}. Battons-les et {competition} sera à portée de main."
 }

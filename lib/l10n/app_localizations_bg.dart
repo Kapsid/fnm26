@@ -18173,4 +18173,24 @@ class AppLocalizationsBg extends AppLocalizations {
   String playerStatOfValue(String done, String of) {
     return '$done/$of';
   }
+
+  @override
+  String yPlayoffDrawn0(String competition, String opponent) {
+    return 'Жребий за плейофа на $competition: $opponent стоят между нас и финалите.';
+  }
+
+  @override
+  String yPlayoffDrawn1(String competition, String opponent) {
+    return '$opponent в плейофа за $competition. Един мач, всичко е на карта.';
+  }
+
+  @override
+  String yPlayoffDrawn2(String competition, String opponent) {
+    return '$opponent в плейофа. Вече ми трябва почивка. $competition, идваме. Може би.';
+  }
+
+  @override
+  String yPlayoffDrawn3(String competition, String opponent) {
+    return 'Жребий за плейофа: $opponent. Бием ли ги, $competition е на една ръка разстояние.';
+  }
 }

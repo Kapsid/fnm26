@@ -18251,4 +18251,24 @@ class AppLocalizationsFr extends AppLocalizations {
   String playerStatOfValue(String done, String of) {
     return '$done/$of';
   }
+
+  @override
+  String yPlayoffDrawn0(String competition, String opponent) {
+    return 'Tirage des barrages pour $competition : $opponent se dresse entre nous et la phase finale.';
+  }
+
+  @override
+  String yPlayoffDrawn1(String competition, String opponent) {
+    return 'Ce sera $opponent en barrage pour $competition. Un match, tout en jeu.';
+  }
+
+  @override
+  String yPlayoffDrawn2(String competition, String opponent) {
+    return '$opponent en barrage. J\'ai déjà besoin de m\'allonger. $competition, nous voilà. Peut-être.';
+  }
+
+  @override
+  String yPlayoffDrawn3(String competition, String opponent) {
+    return 'Tirage des barrages : $opponent. Battons-les et $competition sera à portée de main.';
+  }
 }

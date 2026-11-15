@@ -18083,4 +18083,24 @@ class AppLocalizationsNb extends AppLocalizations {
   String playerStatOfValue(String done, String of) {
     return '$done/$of';
   }
+
+  @override
+  String yPlayoffDrawn0(String competition, String opponent) {
+    return 'Playoff-trekning til $competition: $opponent står mellom oss og sluttspillet.';
+  }
+
+  @override
+  String yPlayoffDrawn1(String competition, String opponent) {
+    return 'Det blir $opponent i playoff til $competition. Én kamp, alt står på spill.';
+  }
+
+  @override
+  String yPlayoffDrawn2(String competition, String opponent) {
+    return '$opponent i playoff. Jeg må allerede legge meg ned. $competition, her kommer vi. Kanskje.';
+  }
+
+  @override
+  String yPlayoffDrawn3(String competition, String opponent) {
+    return 'Playoff-trekning: $opponent. Slår vi dem, er $competition innen rekkevidde.';
+  }
 }

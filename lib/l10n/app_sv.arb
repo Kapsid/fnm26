@@ -4519,5 +4519,9 @@
   "playerStatPenSaved": "Räddade straffar",
   "playerStatPenalties": "Straffar",
   "playerStatRateValue": "{count} ({pct} %)",
-  "playerStatOfValue": "{done}/{of}"
+  "playerStatOfValue": "{done}/{of}",
+  "yPlayoffDrawn0": "Playofflottning till {competition}: {opponent} står mellan oss och slutspelet.",
+  "yPlayoffDrawn1": "Det blir {opponent} i playoff till {competition}. En match, allt står på spel.",
+  "yPlayoffDrawn2": "{opponent} i playoff. Jag måste redan lägga mig ner. {competition}, här kommer vi. Kanske.",
+  "yPlayoffDrawn3": "Playofflottning: {opponent}. Slår vi dem är {competition} inom räckhåll."
 }

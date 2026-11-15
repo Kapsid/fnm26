@@ -18162,4 +18162,24 @@ class AppLocalizationsFi extends AppLocalizations {
   String playerStatOfValue(String done, String of) {
     return '$done/$of';
   }
+
+  @override
+  String yPlayoffDrawn0(String competition, String opponent) {
+    return '$competition: jatkokarsinnan arvonta tehty, $opponent on meidän ja lopputurnauksen välissä.';
+  }
+
+  @override
+  String yPlayoffDrawn1(String competition, String opponent) {
+    return 'Jatkokarsinnassa vastaan tulee $opponent. $competition ratkeaa yhdessä ottelussa.';
+  }
+
+  @override
+  String yPlayoffDrawn2(String competition, String opponent) {
+    return '$opponent jatkokarsinnassa. Minun on jo pakko mennä makuulle. $competition, täältä tullaan. Ehkä.';
+  }
+
+  @override
+  String yPlayoffDrawn3(String competition, String opponent) {
+    return 'Jatkokarsinnan arvonta: $opponent. Voitetaan heidät, ja $competition on käden ulottuvilla.';
+  }
 }

@@ -4519,5 +4519,9 @@
   "playerStatPenSaved": "Kurtarılan penaltılar",
   "playerStatPenalties": "Penaltılar",
   "playerStatRateValue": "{count} (%{pct})",
-  "playerStatOfValue": "{done}/{of}"
+  "playerStatOfValue": "{done}/{of}",
+  "yPlayoffDrawn0": "{competition} play-off kurası çekildi: Bizimle finaller arasında {opponent} var.",
+  "yPlayoffDrawn1": "{competition} play-off'unda rakip {opponent}. Tek maç, her şey ortada.",
+  "yPlayoffDrawn2": "Play-off'ta {opponent}. Şimdiden uzanmam lazım. {competition}, geliyoruz. Belki.",
+  "yPlayoffDrawn3": "Play-off kurası: {opponent}. Onları yenersek {competition} bir adım ötede."
 }

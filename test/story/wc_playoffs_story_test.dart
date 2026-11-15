@@ -4,6 +4,9 @@ library;
 import 'package:drift/drift.dart' hide isNotNull, isNull;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/domain/services/press/playoff_draw_note.dart';
+import 'package:fnm/domain/services/press/y_feed.dart';
+import 'package:fnm/features/y/y_providers.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -225,6 +228,20 @@ void main() {
     expect(keys, contains('wcplayoff:$wcYear'));
     expect(keys, contains('qual:wc:$wcYear'));
     expect(keys.where((k) => k.startsWith('wcmiss:')), isEmpty);
+    // The draw left its day and the first opponent for the feed, and Y
+    // talks about it.
+    final notes = [
+      for (final m in await comp.watchedKindsWithPrefix(PlayoffDrawNote.prefix))
+        if (m.careerId == id) PlayoffDrawNote.decode(m.kind)!,
+    ];
+    expect(notes, hasLength(1));
+    expect(notes.single.competition, 'World Championship');
+    expect(notes.single.date.year, wcYear - 1);
+    final feed = (await c.read(yFeedProvider(id).future)).posts;
+    expect(
+      feed.any((p) => p.template == YTemplate.playoffDrawn),
+      isTrue,
+    );
   }, timeout: const Timeout(Duration(minutes: 40)));
 
   test('(b) a League C group winner of the second Nations Cup comes in '

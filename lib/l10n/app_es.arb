@@ -4519,5 +4519,9 @@
   "playerStatPenSaved": "Penaltis parados",
   "playerStatPenalties": "Penaltis",
   "playerStatRateValue": "{count} ({pct} %)",
-  "playerStatOfValue": "{done}/{of}"
+  "playerStatOfValue": "{done}/{of}",
+  "yPlayoffDrawn0": "Sorteo de la repesca para {competition}: {opponent} se interpone entre nosotros y la fase final.",
+  "yPlayoffDrawn1": "Nos toca {opponent} en la repesca para {competition}. Una eliminatoria, todo en juego.",
+  "yPlayoffDrawn2": "{opponent} en la repesca. Ya necesito tumbarme. {competition}, allá vamos. Quizá.",
+  "yPlayoffDrawn3": "Sorteo de la repesca: {opponent}. Si los ganamos, {competition} está al alcance de la mano."
 }

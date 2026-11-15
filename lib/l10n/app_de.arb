@@ -4519,5 +4519,9 @@
   "playerStatPenSaved": "Gehaltene Elfer",
   "playerStatPenalties": "Elfmeter",
   "playerStatRateValue": "{count} ({pct} %)",
-  "playerStatOfValue": "{done}/{of}"
+  "playerStatOfValue": "{done}/{of}",
+  "yPlayoffDrawn0": "Play-off-Auslosung für die {competition}: {opponent} steht zwischen uns und der Endrunde.",
+  "yPlayoffDrawn1": "Es wird {opponent} in den Play-offs zur {competition}. Ein Duell, alles steht auf dem Spiel.",
+  "yPlayoffDrawn2": "{opponent} in den Play-offs. Ich muss mich jetzt schon hinlegen. {competition}, wir kommen. Vielleicht.",
+  "yPlayoffDrawn3": "Play-off-Los: {opponent}. Schlagen wir sie, ist die {competition} zum Greifen nah."
 }

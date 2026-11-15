@@ -17999,4 +17999,24 @@ class AppLocalizationsTr extends AppLocalizations {
   String playerStatOfValue(String done, String of) {
     return '$done/$of';
   }
+
+  @override
+  String yPlayoffDrawn0(String competition, String opponent) {
+    return '$competition play-off kurası çekildi: Bizimle finaller arasında $opponent var.';
+  }
+
+  @override
+  String yPlayoffDrawn1(String competition, String opponent) {
+    return '$competition play-off\'unda rakip $opponent. Tek maç, her şey ortada.';
+  }
+
+  @override
+  String yPlayoffDrawn2(String competition, String opponent) {
+    return 'Play-off\'ta $opponent. Şimdiden uzanmam lazım. $competition, geliyoruz. Belki.';
+  }
+
+  @override
+  String yPlayoffDrawn3(String competition, String opponent) {
+    return 'Play-off kurası: $opponent. Onları yenersek $competition bir adım ötede.';
+  }
 }
