@@ -4514,5 +4514,10 @@
   "shotSaved": "Redning",
   "shotOffTarget": "Utenfor",
   "shotBlocked": "Blokkert",
-  "shotWoodwork": "Stolpe/tverrligger"
+  "shotWoodwork": "Stolpe/tverrligger",
+  "playerStatSaves": "Redninger",
+  "playerStatPenSaved": "Reddede straffer",
+  "playerStatPenalties": "Straffespark",
+  "playerStatRateValue": "{count} ({pct} %)",
+  "playerStatOfValue": "{done}/{of}"
 }

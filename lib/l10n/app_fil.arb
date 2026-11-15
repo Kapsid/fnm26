@@ -4514,5 +4514,10 @@
   "shotSaved": "Nasalo",
   "shotOffTarget": "Sablay",
   "shotBlocked": "Naharang",
-  "shotWoodwork": "Poste"
+  "shotWoodwork": "Poste",
+  "playerStatSaves": "Mga save",
+  "playerStatPenSaved": "Penalty na nasalo",
+  "playerStatPenalties": "Mga penalty",
+  "playerStatRateValue": "{count} ({pct}%)",
+  "playerStatOfValue": "{done}/{of}"
 }

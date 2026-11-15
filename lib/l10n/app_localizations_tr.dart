@@ -17980,4 +17980,23 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get shotWoodwork => 'Direk';
+
+  @override
+  String get playerStatSaves => 'Kurtarışlar';
+
+  @override
+  String get playerStatPenSaved => 'Kurtarılan penaltılar';
+
+  @override
+  String get playerStatPenalties => 'Penaltılar';
+
+  @override
+  String playerStatRateValue(String count, String pct) {
+    return '$count (%$pct)';
+  }
+
+  @override
+  String playerStatOfValue(String done, String of) {
+    return '$done/$of';
+  }
 }

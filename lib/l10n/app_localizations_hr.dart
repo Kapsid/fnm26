@@ -18410,4 +18410,23 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get shotWoodwork => 'Okvir gola';
+
+  @override
+  String get playerStatSaves => 'Obrane';
+
+  @override
+  String get playerStatPenSaved => 'Obranjeni penali';
+
+  @override
+  String get playerStatPenalties => 'Penali';
+
+  @override
+  String playerStatRateValue(String count, String pct) {
+    return '$count ($pct %)';
+  }
+
+  @override
+  String playerStatOfValue(String done, String of) {
+    return '$done/$of';
+  }
 }

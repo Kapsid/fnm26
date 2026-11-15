@@ -4514,5 +4514,10 @@
   "shotSaved": "Apărat",
   "shotOffTarget": "Pe lângă",
   "shotBlocked": "Blocat",
-  "shotWoodwork": "Bară"
+  "shotWoodwork": "Bară",
+  "playerStatSaves": "Parade",
+  "playerStatPenSaved": "Penalty-uri apărate",
+  "playerStatPenalties": "Penalty-uri",
+  "playerStatRateValue": "{count} ({pct}%)",
+  "playerStatOfValue": "{done}/{of}"
 }

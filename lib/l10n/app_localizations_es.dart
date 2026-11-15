@@ -18161,4 +18161,23 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get shotWoodwork => 'Palo';
+
+  @override
+  String get playerStatSaves => 'Paradas';
+
+  @override
+  String get playerStatPenSaved => 'Penaltis parados';
+
+  @override
+  String get playerStatPenalties => 'Penaltis';
+
+  @override
+  String playerStatRateValue(String count, String pct) {
+    return '$count ($pct %)';
+  }
+
+  @override
+  String playerStatOfValue(String done, String of) {
+    return '$done/$of';
+  }
 }

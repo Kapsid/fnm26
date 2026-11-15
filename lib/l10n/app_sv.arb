@@ -4514,5 +4514,10 @@
   "shotSaved": "Räddat",
   "shotOffTarget": "Utanför",
   "shotBlocked": "Blockerat",
-  "shotWoodwork": "Stolpe/ribba"
+  "shotWoodwork": "Stolpe/ribba",
+  "playerStatSaves": "Räddningar",
+  "playerStatPenSaved": "Räddade straffar",
+  "playerStatPenalties": "Straffar",
+  "playerStatRateValue": "{count} ({pct} %)",
+  "playerStatOfValue": "{done}/{of}"
 }

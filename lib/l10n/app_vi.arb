@@ -4514,5 +4514,10 @@
   "shotSaved": "Bị cản phá",
   "shotOffTarget": "Chệch khung",
   "shotBlocked": "Bị chặn",
-  "shotWoodwork": "Dội cột"
+  "shotWoodwork": "Dội cột",
+  "playerStatSaves": "Cứu thua",
+  "playerStatPenSaved": "Cản phạt đền",
+  "playerStatPenalties": "Phạt đền",
+  "playerStatRateValue": "{count} ({pct}%)",
+  "playerStatOfValue": "{done}/{of}"
 }

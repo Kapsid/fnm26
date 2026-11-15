@@ -4514,5 +4514,10 @@
   "shotSaved": "Спасен",
   "shotOffTarget": "Неточен",
   "shotBlocked": "Блокиран",
-  "shotWoodwork": "Греда"
+  "shotWoodwork": "Греда",
+  "playerStatSaves": "Спасявания",
+  "playerStatPenSaved": "Спасени дузпи",
+  "playerStatPenalties": "Дузпи",
+  "playerStatRateValue": "{count} ({pct}%)",
+  "playerStatOfValue": "{done}/{of}"
 }

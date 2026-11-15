@@ -99,7 +99,7 @@ class AppDatabase extends _$AppDatabase {
   /// full set of upgrade paths from it — see `schema_migration_test.dart`.
   /// A hand-written list of paths is a step somebody forgets on the bump that
   /// matters.
-  static const int currentSchemaVersion = 57;
+  static const int currentSchemaVersion = 58;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -372,6 +372,22 @@ class AppDatabase extends _$AppDatabase {
           await m.addColumn(schema.careers, schema.careers.managerBirthYear);
           await m.addColumn(schema.competitions, schema.competitions.edition);
           await m.createTable(schema.drawSlots);
+        },
+        // 57 -> 58: six counters on player_ratings, all default 0, for the
+        // player page's penalty and save figures. A dev save already at 57
+        // upgrades like any other; matches played before read as none.
+        from57To58: (m, schema) async {
+          final t = schema.playerRatings;
+          for (final c in [
+            t.penTaken,
+            t.penScored,
+            t.onTargetFaced,
+            t.saves,
+            t.penFaced,
+            t.penSaved,
+          ]) {
+            await m.addColumn(t, c);
+          }
         },
       )(m, from, to);
     },

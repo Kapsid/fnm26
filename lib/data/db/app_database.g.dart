@@ -11632,6 +11632,76 @@ class $PlayerRatingsTable extends PlayerRatings
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _penTakenMeta = const VerificationMeta(
+    'penTaken',
+  );
+  @override
+  late final GeneratedColumn<int> penTaken = GeneratedColumn<int>(
+    'pen_taken',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _penScoredMeta = const VerificationMeta(
+    'penScored',
+  );
+  @override
+  late final GeneratedColumn<int> penScored = GeneratedColumn<int>(
+    'pen_scored',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _onTargetFacedMeta = const VerificationMeta(
+    'onTargetFaced',
+  );
+  @override
+  late final GeneratedColumn<int> onTargetFaced = GeneratedColumn<int>(
+    'on_target_faced',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _savesMeta = const VerificationMeta('saves');
+  @override
+  late final GeneratedColumn<int> saves = GeneratedColumn<int>(
+    'saves',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _penFacedMeta = const VerificationMeta(
+    'penFaced',
+  );
+  @override
+  late final GeneratedColumn<int> penFaced = GeneratedColumn<int>(
+    'pen_faced',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _penSavedMeta = const VerificationMeta(
+    'penSaved',
+  );
+  @override
+  late final GeneratedColumn<int> penSaved = GeneratedColumn<int>(
+    'pen_saved',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     careerId,
@@ -11645,6 +11715,12 @@ class $PlayerRatingsTable extends PlayerRatings
     motm,
     yellows,
     reds,
+    penTaken,
+    penScored,
+    onTargetFaced,
+    saves,
+    penFaced,
+    penSaved,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -11732,6 +11808,45 @@ class $PlayerRatingsTable extends PlayerRatings
         reds.isAcceptableOrUnknown(data['reds']!, _redsMeta),
       );
     }
+    if (data.containsKey('pen_taken')) {
+      context.handle(
+        _penTakenMeta,
+        penTaken.isAcceptableOrUnknown(data['pen_taken']!, _penTakenMeta),
+      );
+    }
+    if (data.containsKey('pen_scored')) {
+      context.handle(
+        _penScoredMeta,
+        penScored.isAcceptableOrUnknown(data['pen_scored']!, _penScoredMeta),
+      );
+    }
+    if (data.containsKey('on_target_faced')) {
+      context.handle(
+        _onTargetFacedMeta,
+        onTargetFaced.isAcceptableOrUnknown(
+          data['on_target_faced']!,
+          _onTargetFacedMeta,
+        ),
+      );
+    }
+    if (data.containsKey('saves')) {
+      context.handle(
+        _savesMeta,
+        saves.isAcceptableOrUnknown(data['saves']!, _savesMeta),
+      );
+    }
+    if (data.containsKey('pen_faced')) {
+      context.handle(
+        _penFacedMeta,
+        penFaced.isAcceptableOrUnknown(data['pen_faced']!, _penFacedMeta),
+      );
+    }
+    if (data.containsKey('pen_saved')) {
+      context.handle(
+        _penSavedMeta,
+        penSaved.isAcceptableOrUnknown(data['pen_saved']!, _penSavedMeta),
+      );
+    }
     return context;
   }
 
@@ -11785,6 +11900,30 @@ class $PlayerRatingsTable extends PlayerRatings
         DriftSqlType.int,
         data['${effectivePrefix}reds'],
       )!,
+      penTaken: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pen_taken'],
+      )!,
+      penScored: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pen_scored'],
+      )!,
+      onTargetFaced: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}on_target_faced'],
+      )!,
+      saves: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}saves'],
+      )!,
+      penFaced: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pen_faced'],
+      )!,
+      penSaved: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pen_saved'],
+      )!,
     );
   }
 
@@ -11818,6 +11957,20 @@ class PlayerRatingRow extends DataClass implements Insertable<PlayerRatingRow> {
   /// Cards shown to the player in the match.
   final int yellows;
   final int reds;
+
+  /// Penalties the player took in open play (a shootout's kicks are not
+  /// counted) and how many of them went in (schema 58; 0 on older rows).
+  final int penTaken;
+  final int penScored;
+
+  /// For a goalkeeper: shots on target he faced (saved or scored past him)
+  /// and how many he saved; penalties faced and saved, likewise in play.
+  /// A match nobody watched has no shot-by-shot record, so its keeper's
+  /// figures are derived from the box score (see `BackgroundMatch`).
+  final int onTargetFaced;
+  final int saves;
+  final int penFaced;
+  final int penSaved;
   const PlayerRatingRow({
     required this.careerId,
     required this.fixtureId,
@@ -11830,6 +11983,12 @@ class PlayerRatingRow extends DataClass implements Insertable<PlayerRatingRow> {
     required this.motm,
     required this.yellows,
     required this.reds,
+    required this.penTaken,
+    required this.penScored,
+    required this.onTargetFaced,
+    required this.saves,
+    required this.penFaced,
+    required this.penSaved,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -11845,6 +12004,12 @@ class PlayerRatingRow extends DataClass implements Insertable<PlayerRatingRow> {
     map['motm'] = Variable<bool>(motm);
     map['yellows'] = Variable<int>(yellows);
     map['reds'] = Variable<int>(reds);
+    map['pen_taken'] = Variable<int>(penTaken);
+    map['pen_scored'] = Variable<int>(penScored);
+    map['on_target_faced'] = Variable<int>(onTargetFaced);
+    map['saves'] = Variable<int>(saves);
+    map['pen_faced'] = Variable<int>(penFaced);
+    map['pen_saved'] = Variable<int>(penSaved);
     return map;
   }
 
@@ -11861,6 +12026,12 @@ class PlayerRatingRow extends DataClass implements Insertable<PlayerRatingRow> {
       motm: Value(motm),
       yellows: Value(yellows),
       reds: Value(reds),
+      penTaken: Value(penTaken),
+      penScored: Value(penScored),
+      onTargetFaced: Value(onTargetFaced),
+      saves: Value(saves),
+      penFaced: Value(penFaced),
+      penSaved: Value(penSaved),
     );
   }
 
@@ -11881,6 +12052,12 @@ class PlayerRatingRow extends DataClass implements Insertable<PlayerRatingRow> {
       motm: serializer.fromJson<bool>(json['motm']),
       yellows: serializer.fromJson<int>(json['yellows']),
       reds: serializer.fromJson<int>(json['reds']),
+      penTaken: serializer.fromJson<int>(json['penTaken']),
+      penScored: serializer.fromJson<int>(json['penScored']),
+      onTargetFaced: serializer.fromJson<int>(json['onTargetFaced']),
+      saves: serializer.fromJson<int>(json['saves']),
+      penFaced: serializer.fromJson<int>(json['penFaced']),
+      penSaved: serializer.fromJson<int>(json['penSaved']),
     );
   }
   @override
@@ -11898,6 +12075,12 @@ class PlayerRatingRow extends DataClass implements Insertable<PlayerRatingRow> {
       'motm': serializer.toJson<bool>(motm),
       'yellows': serializer.toJson<int>(yellows),
       'reds': serializer.toJson<int>(reds),
+      'penTaken': serializer.toJson<int>(penTaken),
+      'penScored': serializer.toJson<int>(penScored),
+      'onTargetFaced': serializer.toJson<int>(onTargetFaced),
+      'saves': serializer.toJson<int>(saves),
+      'penFaced': serializer.toJson<int>(penFaced),
+      'penSaved': serializer.toJson<int>(penSaved),
     };
   }
 
@@ -11913,6 +12096,12 @@ class PlayerRatingRow extends DataClass implements Insertable<PlayerRatingRow> {
     bool? motm,
     int? yellows,
     int? reds,
+    int? penTaken,
+    int? penScored,
+    int? onTargetFaced,
+    int? saves,
+    int? penFaced,
+    int? penSaved,
   }) => PlayerRatingRow(
     careerId: careerId ?? this.careerId,
     fixtureId: fixtureId ?? this.fixtureId,
@@ -11925,6 +12114,12 @@ class PlayerRatingRow extends DataClass implements Insertable<PlayerRatingRow> {
     motm: motm ?? this.motm,
     yellows: yellows ?? this.yellows,
     reds: reds ?? this.reds,
+    penTaken: penTaken ?? this.penTaken,
+    penScored: penScored ?? this.penScored,
+    onTargetFaced: onTargetFaced ?? this.onTargetFaced,
+    saves: saves ?? this.saves,
+    penFaced: penFaced ?? this.penFaced,
+    penSaved: penSaved ?? this.penSaved,
   );
   PlayerRatingRow copyWithCompanion(PlayerRatingsCompanion data) {
     return PlayerRatingRow(
@@ -11941,6 +12136,14 @@ class PlayerRatingRow extends DataClass implements Insertable<PlayerRatingRow> {
       motm: data.motm.present ? data.motm.value : this.motm,
       yellows: data.yellows.present ? data.yellows.value : this.yellows,
       reds: data.reds.present ? data.reds.value : this.reds,
+      penTaken: data.penTaken.present ? data.penTaken.value : this.penTaken,
+      penScored: data.penScored.present ? data.penScored.value : this.penScored,
+      onTargetFaced: data.onTargetFaced.present
+          ? data.onTargetFaced.value
+          : this.onTargetFaced,
+      saves: data.saves.present ? data.saves.value : this.saves,
+      penFaced: data.penFaced.present ? data.penFaced.value : this.penFaced,
+      penSaved: data.penSaved.present ? data.penSaved.value : this.penSaved,
     );
   }
 
@@ -11957,7 +12160,13 @@ class PlayerRatingRow extends DataClass implements Insertable<PlayerRatingRow> {
           ..write('cleanSheet: $cleanSheet, ')
           ..write('motm: $motm, ')
           ..write('yellows: $yellows, ')
-          ..write('reds: $reds')
+          ..write('reds: $reds, ')
+          ..write('penTaken: $penTaken, ')
+          ..write('penScored: $penScored, ')
+          ..write('onTargetFaced: $onTargetFaced, ')
+          ..write('saves: $saves, ')
+          ..write('penFaced: $penFaced, ')
+          ..write('penSaved: $penSaved')
           ..write(')'))
         .toString();
   }
@@ -11975,6 +12184,12 @@ class PlayerRatingRow extends DataClass implements Insertable<PlayerRatingRow> {
     motm,
     yellows,
     reds,
+    penTaken,
+    penScored,
+    onTargetFaced,
+    saves,
+    penFaced,
+    penSaved,
   );
   @override
   bool operator ==(Object other) =>
@@ -11990,7 +12205,13 @@ class PlayerRatingRow extends DataClass implements Insertable<PlayerRatingRow> {
           other.cleanSheet == this.cleanSheet &&
           other.motm == this.motm &&
           other.yellows == this.yellows &&
-          other.reds == this.reds);
+          other.reds == this.reds &&
+          other.penTaken == this.penTaken &&
+          other.penScored == this.penScored &&
+          other.onTargetFaced == this.onTargetFaced &&
+          other.saves == this.saves &&
+          other.penFaced == this.penFaced &&
+          other.penSaved == this.penSaved);
 }
 
 class PlayerRatingsCompanion extends UpdateCompanion<PlayerRatingRow> {
@@ -12005,6 +12226,12 @@ class PlayerRatingsCompanion extends UpdateCompanion<PlayerRatingRow> {
   final Value<bool> motm;
   final Value<int> yellows;
   final Value<int> reds;
+  final Value<int> penTaken;
+  final Value<int> penScored;
+  final Value<int> onTargetFaced;
+  final Value<int> saves;
+  final Value<int> penFaced;
+  final Value<int> penSaved;
   final Value<int> rowid;
   const PlayerRatingsCompanion({
     this.careerId = const Value.absent(),
@@ -12018,6 +12245,12 @@ class PlayerRatingsCompanion extends UpdateCompanion<PlayerRatingRow> {
     this.motm = const Value.absent(),
     this.yellows = const Value.absent(),
     this.reds = const Value.absent(),
+    this.penTaken = const Value.absent(),
+    this.penScored = const Value.absent(),
+    this.onTargetFaced = const Value.absent(),
+    this.saves = const Value.absent(),
+    this.penFaced = const Value.absent(),
+    this.penSaved = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   PlayerRatingsCompanion.insert({
@@ -12032,6 +12265,12 @@ class PlayerRatingsCompanion extends UpdateCompanion<PlayerRatingRow> {
     this.motm = const Value.absent(),
     this.yellows = const Value.absent(),
     this.reds = const Value.absent(),
+    this.penTaken = const Value.absent(),
+    this.penScored = const Value.absent(),
+    this.onTargetFaced = const Value.absent(),
+    this.saves = const Value.absent(),
+    this.penFaced = const Value.absent(),
+    this.penSaved = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : careerId = Value(careerId),
        fixtureId = Value(fixtureId),
@@ -12049,6 +12288,12 @@ class PlayerRatingsCompanion extends UpdateCompanion<PlayerRatingRow> {
     Expression<bool>? motm,
     Expression<int>? yellows,
     Expression<int>? reds,
+    Expression<int>? penTaken,
+    Expression<int>? penScored,
+    Expression<int>? onTargetFaced,
+    Expression<int>? saves,
+    Expression<int>? penFaced,
+    Expression<int>? penSaved,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -12063,6 +12308,12 @@ class PlayerRatingsCompanion extends UpdateCompanion<PlayerRatingRow> {
       if (motm != null) 'motm': motm,
       if (yellows != null) 'yellows': yellows,
       if (reds != null) 'reds': reds,
+      if (penTaken != null) 'pen_taken': penTaken,
+      if (penScored != null) 'pen_scored': penScored,
+      if (onTargetFaced != null) 'on_target_faced': onTargetFaced,
+      if (saves != null) 'saves': saves,
+      if (penFaced != null) 'pen_faced': penFaced,
+      if (penSaved != null) 'pen_saved': penSaved,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -12079,6 +12330,12 @@ class PlayerRatingsCompanion extends UpdateCompanion<PlayerRatingRow> {
     Value<bool>? motm,
     Value<int>? yellows,
     Value<int>? reds,
+    Value<int>? penTaken,
+    Value<int>? penScored,
+    Value<int>? onTargetFaced,
+    Value<int>? saves,
+    Value<int>? penFaced,
+    Value<int>? penSaved,
     Value<int>? rowid,
   }) {
     return PlayerRatingsCompanion(
@@ -12093,6 +12350,12 @@ class PlayerRatingsCompanion extends UpdateCompanion<PlayerRatingRow> {
       motm: motm ?? this.motm,
       yellows: yellows ?? this.yellows,
       reds: reds ?? this.reds,
+      penTaken: penTaken ?? this.penTaken,
+      penScored: penScored ?? this.penScored,
+      onTargetFaced: onTargetFaced ?? this.onTargetFaced,
+      saves: saves ?? this.saves,
+      penFaced: penFaced ?? this.penFaced,
+      penSaved: penSaved ?? this.penSaved,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -12133,6 +12396,24 @@ class PlayerRatingsCompanion extends UpdateCompanion<PlayerRatingRow> {
     if (reds.present) {
       map['reds'] = Variable<int>(reds.value);
     }
+    if (penTaken.present) {
+      map['pen_taken'] = Variable<int>(penTaken.value);
+    }
+    if (penScored.present) {
+      map['pen_scored'] = Variable<int>(penScored.value);
+    }
+    if (onTargetFaced.present) {
+      map['on_target_faced'] = Variable<int>(onTargetFaced.value);
+    }
+    if (saves.present) {
+      map['saves'] = Variable<int>(saves.value);
+    }
+    if (penFaced.present) {
+      map['pen_faced'] = Variable<int>(penFaced.value);
+    }
+    if (penSaved.present) {
+      map['pen_saved'] = Variable<int>(penSaved.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -12153,6 +12434,12 @@ class PlayerRatingsCompanion extends UpdateCompanion<PlayerRatingRow> {
           ..write('motm: $motm, ')
           ..write('yellows: $yellows, ')
           ..write('reds: $reds, ')
+          ..write('penTaken: $penTaken, ')
+          ..write('penScored: $penScored, ')
+          ..write('onTargetFaced: $onTargetFaced, ')
+          ..write('saves: $saves, ')
+          ..write('penFaced: $penFaced, ')
+          ..write('penSaved: $penSaved, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -34759,6 +35046,12 @@ typedef $$PlayerRatingsTableCreateCompanionBuilder =
       Value<bool> motm,
       Value<int> yellows,
       Value<int> reds,
+      Value<int> penTaken,
+      Value<int> penScored,
+      Value<int> onTargetFaced,
+      Value<int> saves,
+      Value<int> penFaced,
+      Value<int> penSaved,
       Value<int> rowid,
     });
 typedef $$PlayerRatingsTableUpdateCompanionBuilder =
@@ -34774,6 +35067,12 @@ typedef $$PlayerRatingsTableUpdateCompanionBuilder =
       Value<bool> motm,
       Value<int> yellows,
       Value<int> reds,
+      Value<int> penTaken,
+      Value<int> penScored,
+      Value<int> onTargetFaced,
+      Value<int> saves,
+      Value<int> penFaced,
+      Value<int> penSaved,
       Value<int> rowid,
     });
 
@@ -34872,6 +35171,36 @@ class $$PlayerRatingsTableFilterComposer
 
   ColumnFilters<int> get reds => $composableBuilder(
     column: $table.reds,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get penTaken => $composableBuilder(
+    column: $table.penTaken,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get penScored => $composableBuilder(
+    column: $table.penScored,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get onTargetFaced => $composableBuilder(
+    column: $table.onTargetFaced,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get saves => $composableBuilder(
+    column: $table.saves,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get penFaced => $composableBuilder(
+    column: $table.penFaced,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get penSaved => $composableBuilder(
+    column: $table.penSaved,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -34976,6 +35305,36 @@ class $$PlayerRatingsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get penTaken => $composableBuilder(
+    column: $table.penTaken,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get penScored => $composableBuilder(
+    column: $table.penScored,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get onTargetFaced => $composableBuilder(
+    column: $table.onTargetFaced,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get saves => $composableBuilder(
+    column: $table.saves,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get penFaced => $composableBuilder(
+    column: $table.penFaced,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get penSaved => $composableBuilder(
+    column: $table.penSaved,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$CareersTableOrderingComposer get careerId {
     final $$CareersTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -35060,6 +35419,26 @@ class $$PlayerRatingsTableAnnotationComposer
 
   GeneratedColumn<int> get reds =>
       $composableBuilder(column: $table.reds, builder: (column) => column);
+
+  GeneratedColumn<int> get penTaken =>
+      $composableBuilder(column: $table.penTaken, builder: (column) => column);
+
+  GeneratedColumn<int> get penScored =>
+      $composableBuilder(column: $table.penScored, builder: (column) => column);
+
+  GeneratedColumn<int> get onTargetFaced => $composableBuilder(
+    column: $table.onTargetFaced,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get saves =>
+      $composableBuilder(column: $table.saves, builder: (column) => column);
+
+  GeneratedColumn<int> get penFaced =>
+      $composableBuilder(column: $table.penFaced, builder: (column) => column);
+
+  GeneratedColumn<int> get penSaved =>
+      $composableBuilder(column: $table.penSaved, builder: (column) => column);
 
   $$CareersTableAnnotationComposer get careerId {
     final $$CareersTableAnnotationComposer composer = $composerBuilder(
@@ -35147,6 +35526,12 @@ class $$PlayerRatingsTableTableManager
                 Value<bool> motm = const Value.absent(),
                 Value<int> yellows = const Value.absent(),
                 Value<int> reds = const Value.absent(),
+                Value<int> penTaken = const Value.absent(),
+                Value<int> penScored = const Value.absent(),
+                Value<int> onTargetFaced = const Value.absent(),
+                Value<int> saves = const Value.absent(),
+                Value<int> penFaced = const Value.absent(),
+                Value<int> penSaved = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => PlayerRatingsCompanion(
                 careerId: careerId,
@@ -35160,6 +35545,12 @@ class $$PlayerRatingsTableTableManager
                 motm: motm,
                 yellows: yellows,
                 reds: reds,
+                penTaken: penTaken,
+                penScored: penScored,
+                onTargetFaced: onTargetFaced,
+                saves: saves,
+                penFaced: penFaced,
+                penSaved: penSaved,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -35175,6 +35566,12 @@ class $$PlayerRatingsTableTableManager
                 Value<bool> motm = const Value.absent(),
                 Value<int> yellows = const Value.absent(),
                 Value<int> reds = const Value.absent(),
+                Value<int> penTaken = const Value.absent(),
+                Value<int> penScored = const Value.absent(),
+                Value<int> onTargetFaced = const Value.absent(),
+                Value<int> saves = const Value.absent(),
+                Value<int> penFaced = const Value.absent(),
+                Value<int> penSaved = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => PlayerRatingsCompanion.insert(
                 careerId: careerId,
@@ -35188,6 +35585,12 @@ class $$PlayerRatingsTableTableManager
                 motm: motm,
                 yellows: yellows,
                 reds: reds,
+                penTaken: penTaken,
+                penScored: penScored,
+                onTargetFaced: onTargetFaced,
+                saves: saves,
+                penFaced: penFaced,
+                penSaved: penSaved,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

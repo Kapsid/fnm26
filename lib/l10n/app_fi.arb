@@ -4514,5 +4514,10 @@
   "shotSaved": "Torjuttu",
   "shotOffTarget": "Ohi",
   "shotBlocked": "Blokattu",
-  "shotWoodwork": "Tolppa/rima"
+  "shotWoodwork": "Tolppa/rima",
+  "playerStatSaves": "Torjunnat",
+  "playerStatPenSaved": "Torjutut rangaistuspotkut",
+  "playerStatPenalties": "Rangaistuspotkut",
+  "playerStatRateValue": "{count} ({pct} %)",
+  "playerStatOfValue": "{done}/{of}"
 }

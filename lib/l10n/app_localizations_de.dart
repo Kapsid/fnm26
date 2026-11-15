@@ -18200,4 +18200,23 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get shotWoodwork => 'Aluminium';
+
+  @override
+  String get playerStatSaves => 'Paraden';
+
+  @override
+  String get playerStatPenSaved => 'Gehaltene Elfer';
+
+  @override
+  String get playerStatPenalties => 'Elfmeter';
+
+  @override
+  String playerStatRateValue(String count, String pct) {
+    return '$count ($pct %)';
+  }
+
+  @override
+  String playerStatOfValue(String done, String of) {
+    return '$done/$of';
+  }
 }

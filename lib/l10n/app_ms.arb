@@ -4514,5 +4514,10 @@
   "shotSaved": "Diselamatkan",
   "shotOffTarget": "Tersasar",
   "shotBlocked": "Disekat",
-  "shotWoodwork": "Tiang"
+  "shotWoodwork": "Tiang",
+  "playerStatSaves": "Selamatan",
+  "playerStatPenSaved": "Penalti diselamatkan",
+  "playerStatPenalties": "Penalti",
+  "playerStatRateValue": "{count} ({pct}%)",
+  "playerStatOfValue": "{done}/{of}"
 }

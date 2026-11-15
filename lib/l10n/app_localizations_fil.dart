@@ -18080,4 +18080,23 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get shotWoodwork => 'Poste';
+
+  @override
+  String get playerStatSaves => 'Mga save';
+
+  @override
+  String get playerStatPenSaved => 'Penalty na nasalo';
+
+  @override
+  String get playerStatPenalties => 'Mga penalty';
+
+  @override
+  String playerStatRateValue(String count, String pct) {
+    return '$count ($pct%)';
+  }
+
+  @override
+  String playerStatOfValue(String done, String of) {
+    return '$done/$of';
+  }
 }

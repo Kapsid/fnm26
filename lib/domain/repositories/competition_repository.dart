@@ -202,6 +202,21 @@ typedef PlayerMatchLine = ({
   int reds,
 });
 
+/// A player's penalty and goalkeeping counters for one match (taken and
+/// scored in play; a keeper's shots on target faced and saved, penalties
+/// faced and saved). Shootout kicks are not counted.
+typedef SpotLine = ({
+  int penTaken,
+  int penScored,
+  int onTargetFaced,
+  int saves,
+  int penFaced,
+  int penSaved,
+});
+
+/// [SpotLine] summed over a player's career.
+typedef SpotTotals = SpotLine;
+
 /// A player's aggregated career record (across every cycle in the save).
 typedef PlayerCareerStats = ({
   int caps,
@@ -892,8 +907,12 @@ abstract interface class CompetitionRepository {
   Future<void> recordPlayerMatchStats(
     int careerId,
     int fixtureId,
-    Iterable<PlayerMatchLine> lines,
-  );
+    Iterable<PlayerMatchLine> lines, {
+    Map<int, SpotLine> spot = const {},
+  });
+
+  /// [playerId]'s penalty and goalkeeping counters summed over the save.
+  Future<SpotTotals> playerSpotTotals(int careerId, int playerId);
 
   /// Persists a match's team box-score (shots, possession) for the fixture.
   Future<void> recordTeamStats(

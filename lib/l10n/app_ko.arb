@@ -4514,5 +4514,10 @@
   "shotSaved": "선방",
   "shotOffTarget": "골대 밖",
   "shotBlocked": "블록",
-  "shotWoodwork": "골대"
+  "shotWoodwork": "골대",
+  "playerStatSaves": "선방",
+  "playerStatPenSaved": "PK 선방",
+  "playerStatPenalties": "페널티킥",
+  "playerStatRateValue": "{count} ({pct}%)",
+  "playerStatOfValue": "{done}/{of}"
 }

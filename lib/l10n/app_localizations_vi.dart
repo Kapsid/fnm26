@@ -17915,4 +17915,23 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get shotWoodwork => 'Dội cột';
+
+  @override
+  String get playerStatSaves => 'Cứu thua';
+
+  @override
+  String get playerStatPenSaved => 'Cản phạt đền';
+
+  @override
+  String get playerStatPenalties => 'Phạt đền';
+
+  @override
+  String playerStatRateValue(String count, String pct) {
+    return '$count ($pct%)';
+  }
+
+  @override
+  String playerStatOfValue(String done, String of) {
+    return '$done/$of';
+  }
 }

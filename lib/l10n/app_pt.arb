@@ -4514,5 +4514,10 @@
   "shotSaved": "Defendido",
   "shotOffTarget": "Para fora",
   "shotBlocked": "Bloqueado",
-  "shotWoodwork": "Trave"
+  "shotWoodwork": "Trave",
+  "playerStatSaves": "Defesas",
+  "playerStatPenSaved": "Pênaltis defendidos",
+  "playerStatPenalties": "Pênaltis",
+  "playerStatRateValue": "{count} ({pct}%)",
+  "playerStatOfValue": "{done}/{of}"
 }

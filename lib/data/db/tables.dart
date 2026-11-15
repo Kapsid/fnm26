@@ -585,6 +585,20 @@ class PlayerRatings extends Table {
   IntColumn get yellows => integer().withDefault(const Constant(0))();
   IntColumn get reds => integer().withDefault(const Constant(0))();
 
+  /// Penalties the player took in open play (a shootout's kicks are not
+  /// counted) and how many of them went in (schema 58; 0 on older rows).
+  IntColumn get penTaken => integer().withDefault(const Constant(0))();
+  IntColumn get penScored => integer().withDefault(const Constant(0))();
+
+  /// For a goalkeeper: shots on target he faced (saved or scored past him)
+  /// and how many he saved; penalties faced and saved, likewise in play.
+  /// A match nobody watched has no shot-by-shot record, so its keeper's
+  /// figures are derived from the box score (see `BackgroundMatch`).
+  IntColumn get onTargetFaced => integer().withDefault(const Constant(0))();
+  IntColumn get saves => integer().withDefault(const Constant(0))();
+  IntColumn get penFaced => integer().withDefault(const Constant(0))();
+  IntColumn get penSaved => integer().withDefault(const Constant(0))();
+
   @override
   Set<Column> get primaryKey => {careerId, fixtureId, playerId};
 }

@@ -4514,5 +4514,10 @@
   "shotSaved": "Arrêté",
   "shotOffTarget": "Non cadré",
   "shotBlocked": "Contré",
-  "shotWoodwork": "Montant"
+  "shotWoodwork": "Montant",
+  "playerStatSaves": "Arrêts",
+  "playerStatPenSaved": "Penalties arrêtés",
+  "playerStatPenalties": "Penalties",
+  "playerStatRateValue": "{count} ({pct} %)",
+  "playerStatOfValue": "{done}/{of}"
 }

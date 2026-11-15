@@ -4514,5 +4514,10 @@
   "shotSaved": "Kurtarış",
   "shotOffTarget": "İsabetsiz",
   "shotBlocked": "Engellendi",
-  "shotWoodwork": "Direk"
+  "shotWoodwork": "Direk",
+  "playerStatSaves": "Kurtarışlar",
+  "playerStatPenSaved": "Kurtarılan penaltılar",
+  "playerStatPenalties": "Penaltılar",
+  "playerStatRateValue": "{count} (%{pct})",
+  "playerStatOfValue": "{done}/{of}"
 }

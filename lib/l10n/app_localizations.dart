@@ -27325,6 +27325,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Woodwork'**
   String get shotWoodwork;
+
+  /// Player page, keeper: saves made, with the share of shots on target saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saves'**
+  String get playerStatSaves;
+
+  /// Player page, keeper: penalties saved of those faced in play.
+  ///
+  /// In en, this message translates to:
+  /// **'Pens saved'**
+  String get playerStatPenSaved;
+
+  /// Player page: penalties scored of those taken in play (shootouts not counted).
+  ///
+  /// In en, this message translates to:
+  /// **'Penalties'**
+  String get playerStatPenalties;
+
+  /// A count with its success rate in percent.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} ({pct}%)'**
+  String playerStatRateValue(String count, String pct);
+
+  /// Successes out of attempts, e.g. 3/4.
+  ///
+  /// In en, this message translates to:
+  /// **'{done}/{of}'**
+  String playerStatOfValue(String done, String of);
 }
 
 class _AppLocalizationsDelegate

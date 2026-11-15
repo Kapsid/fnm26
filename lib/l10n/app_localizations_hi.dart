@@ -17976,4 +17976,23 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get shotWoodwork => 'पोस्ट';
+
+  @override
+  String get playerStatSaves => 'बचाव';
+
+  @override
+  String get playerStatPenSaved => 'पेनल्टी बचाईं';
+
+  @override
+  String get playerStatPenalties => 'पेनल्टी';
+
+  @override
+  String playerStatRateValue(String count, String pct) {
+    return '$count ($pct%)';
+  }
+
+  @override
+  String playerStatOfValue(String done, String of) {
+    return '$done/$of';
+  }
 }

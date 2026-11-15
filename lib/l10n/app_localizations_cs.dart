@@ -18463,4 +18463,23 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get shotWoodwork => 'Tyč/břevno';
+
+  @override
+  String get playerStatSaves => 'Zákroky';
+
+  @override
+  String get playerStatPenSaved => 'Chycené penalty';
+
+  @override
+  String get playerStatPenalties => 'Penalty';
+
+  @override
+  String playerStatRateValue(String count, String pct) {
+    return '$count ($pct %)';
+  }
+
+  @override
+  String playerStatOfValue(String done, String of) {
+    return '$done/$of';
+  }
 }

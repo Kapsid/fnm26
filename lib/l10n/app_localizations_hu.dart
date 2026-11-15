@@ -18013,4 +18013,23 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get shotWoodwork => 'Kapufa';
+
+  @override
+  String get playerStatSaves => 'Védések';
+
+  @override
+  String get playerStatPenSaved => 'Kivédett tizenegyesek';
+
+  @override
+  String get playerStatPenalties => 'Tizenegyesek';
+
+  @override
+  String playerStatRateValue(String count, String pct) {
+    return '$count ($pct%)';
+  }
+
+  @override
+  String playerStatOfValue(String done, String of) {
+    return '$done/$of';
+  }
 }

@@ -4514,5 +4514,10 @@
   "shotSaved": "Redning",
   "shotOffTarget": "Forbi",
   "shotBlocked": "Blokeret",
-  "shotWoodwork": "Stolpe/overligger"
+  "shotWoodwork": "Stolpe/overligger",
+  "playerStatSaves": "Redninger",
+  "playerStatPenSaved": "Reddede straffe",
+  "playerStatPenalties": "Straffespark",
+  "playerStatRateValue": "{count} ({pct} %)",
+  "playerStatOfValue": "{done}/{of}"
 }

@@ -4514,5 +4514,10 @@
   "shotSaved": "Obroniony",
   "shotOffTarget": "Niecelny",
   "shotBlocked": "Zablokowany",
-  "shotWoodwork": "Słupek/poprzeczka"
+  "shotWoodwork": "Słupek/poprzeczka",
+  "playerStatSaves": "Obrony",
+  "playerStatPenSaved": "Obronione karne",
+  "playerStatPenalties": "Rzuty karne",
+  "playerStatRateValue": "{count} ({pct}%)",
+  "playerStatOfValue": "{done}/{of}"
 }

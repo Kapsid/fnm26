@@ -4514,5 +4514,10 @@
   "shotSaved": "Gehalten",
   "shotOffTarget": "Daneben",
   "shotBlocked": "Geblockt",
-  "shotWoodwork": "Aluminium"
+  "shotWoodwork": "Aluminium",
+  "playerStatSaves": "Paraden",
+  "playerStatPenSaved": "Gehaltene Elfer",
+  "playerStatPenalties": "Elfmeter",
+  "playerStatRateValue": "{count} ({pct} %)",
+  "playerStatOfValue": "{done}/{of}"
 }

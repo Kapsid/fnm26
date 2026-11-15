@@ -4514,5 +4514,10 @@
   "shotSaved": "Diselamatkan",
   "shotOffTarget": "Melenceng",
   "shotBlocked": "Diblok",
-  "shotWoodwork": "Tiang"
+  "shotWoodwork": "Tiang",
+  "playerStatSaves": "Penyelamatan",
+  "playerStatPenSaved": "Penalti ditepis",
+  "playerStatPenalties": "Penalti",
+  "playerStatRateValue": "{count} ({pct}%)",
+  "playerStatOfValue": "{done}/{of}"
 }

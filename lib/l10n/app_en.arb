@@ -27855,5 +27855,41 @@
   "shotWoodwork": "Woodwork",
   "@shotWoodwork": {
     "description": "Shot map legend: a shot that hit the post or bar."
+  },
+  "playerStatSaves": "Saves",
+  "@playerStatSaves": {
+    "description": "Player page, keeper: saves made, with the share of shots on target saved."
+  },
+  "playerStatPenSaved": "Pens saved",
+  "@playerStatPenSaved": {
+    "description": "Player page, keeper: penalties saved of those faced in play."
+  },
+  "playerStatPenalties": "Penalties",
+  "@playerStatPenalties": {
+    "description": "Player page: penalties scored of those taken in play (shootouts not counted)."
+  },
+  "playerStatRateValue": "{count} ({pct}%)",
+  "@playerStatRateValue": {
+    "description": "A count with its success rate in percent.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      },
+      "pct": {
+        "type": "String"
+      }
+    }
+  },
+  "playerStatOfValue": "{done}/{of}",
+  "@playerStatOfValue": {
+    "description": "Successes out of attempts, e.g. 3/4.",
+    "placeholders": {
+      "done": {
+        "type": "String"
+      },
+      "of": {
+        "type": "String"
+      }
+    }
   }
 }

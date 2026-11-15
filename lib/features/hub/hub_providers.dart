@@ -23,6 +23,7 @@ import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/stats/spot_lines.dart';
 import 'package:fnm/domain/repositories/tactic_familiarity_repository.dart';
 import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
@@ -1817,9 +1818,23 @@ class SeasonService {
       saveSeed: _simSeed,
     );
 
+    // The keepers' saves, from the box score (no shot record here).
+    final spot = <int, SpotLine>{
+      for (final (xi, oppShots, conceded) in [
+        (homeXi, detail.awayShots, awayScore),
+        (awayXi, detail.homeShots, homeScore),
+      ])
+        if (xi.where((p) => p.category == PositionCategory.goalkeeper)
+            case final ks when ks.isNotEmpty)
+          ks.first.id: SpotLines.derivedKeeper(
+            opponentShots: oppShots,
+            conceded: conceded,
+          ),
+    };
     await _comp.recordPlayerMatchStats(
       f.careerId,
       f.id,
+      spot: spot,
       detail.lines.map(
         (l) => (
           playerId: l.playerId,
@@ -3182,6 +3197,7 @@ class SeasonService {
     await _comp.recordPlayerMatchStats(
       careerId,
       fixture.id,
+      spot: SpotLines.fromMoments(result.moments),
       result.ratings.map((r) {
         final conceded = r.teamNationId == fixture.homeNationId
             ? result.awayScore

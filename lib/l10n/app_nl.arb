@@ -4514,5 +4514,10 @@
   "shotSaved": "Gered",
   "shotOffTarget": "Naast",
   "shotBlocked": "Geblokt",
-  "shotWoodwork": "Paal/lat"
+  "shotWoodwork": "Paal/lat",
+  "playerStatSaves": "Reddingen",
+  "playerStatPenSaved": "Gestopte strafschoppen",
+  "playerStatPenalties": "Strafschoppen",
+  "playerStatRateValue": "{count} ({pct}%)",
+  "playerStatOfValue": "{done}/{of}"
 }

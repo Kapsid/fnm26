@@ -4514,5 +4514,10 @@
   "shotSaved": "เซฟได้",
   "shotOffTarget": "ไม่ตรงกรอบ",
   "shotBlocked": "ถูกบล็อก",
-  "shotWoodwork": "ชนเสา"
+  "shotWoodwork": "ชนเสา",
+  "playerStatSaves": "เซฟ",
+  "playerStatPenSaved": "เซฟจุดโทษ",
+  "playerStatPenalties": "จุดโทษ",
+  "playerStatRateValue": "{count} ({pct}%)",
+  "playerStatOfValue": "{done}/{of}"
 }

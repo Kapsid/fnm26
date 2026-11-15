@@ -4514,5 +4514,10 @@
   "shotSaved": "Parato",
   "shotOffTarget": "Fuori",
   "shotBlocked": "Respinto",
-  "shotWoodwork": "Legno"
+  "shotWoodwork": "Legno",
+  "playerStatSaves": "Parate",
+  "playerStatPenSaved": "Rigori parati",
+  "playerStatPenalties": "Rigori",
+  "playerStatRateValue": "{count} ({pct}%)",
+  "playerStatOfValue": "{done}/{of}"
 }

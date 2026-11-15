@@ -4514,5 +4514,10 @@
   "shotSaved": "Απόκρουση",
   "shotOffTarget": "Άουτ",
   "shotBlocked": "Μπλοκ",
-  "shotWoodwork": "Δοκάρι"
+  "shotWoodwork": "Δοκάρι",
+  "playerStatSaves": "Αποκρούσεις",
+  "playerStatPenSaved": "Αποκρ. πέναλτι",
+  "playerStatPenalties": "Πέναλτι",
+  "playerStatRateValue": "{count} ({pct}%)",
+  "playerStatOfValue": "{done}/{of}"
 }

@@ -15,6 +15,7 @@ import '../../generated_migrations/schema_v53.dart' as v53;
 import '../../generated_migrations/schema_v54.dart' as v54;
 import '../../generated_migrations/schema_v55.dart' as v55;
 import '../../generated_migrations/schema_v56.dart' as v56;
+import '../../generated_migrations/schema_v57.dart' as v57;
 
 /// Guards the promise that a save survives a schema bump.
 ///
@@ -574,6 +575,40 @@ void main() {
             ),
           );
       expect(await db.select(db.drawSlots).get(), hasLength(1));
+    },
+  );
+
+  test(
+    '57 -> 58 keeps every rating, with no penalties or saves on it',
+    () async {
+      // 58 adds six counters to player_ratings, all default 0: a match played
+      // before them reads as no penalty taken and no save made.
+      expect(AppDatabase.currentSchemaVersion, greaterThanOrEqualTo(58));
+      final schema = await verifier.schemaAt(57);
+      final old = v57.DatabaseAtV57(schema.newConnection());
+      await old.customStatement('PRAGMA foreign_keys = OFF');
+      await old.customStatement(
+        'INSERT INTO player_ratings (career_id, fixture_id, player_id, '
+        'nation_id, rating, goals) VALUES (1, 9, 77, 3, 7.5, 2)',
+      );
+      await old.close();
+
+      final db = AppDatabase.forTesting(schema.newConnection());
+      addTearDown(db.close);
+      await verifier.migrateAndValidate(db, 58);
+      final r = await db.select(db.playerRatings).getSingle();
+      expect((r.playerId, r.rating, r.goals), (77, 7.5, 2));
+      expect(
+        [
+          r.penTaken,
+          r.penScored,
+          r.onTargetFaced,
+          r.saves,
+          r.penFaced,
+          r.penSaved,
+        ],
+        [0, 0, 0, 0, 0, 0],
+      );
     },
   );
 

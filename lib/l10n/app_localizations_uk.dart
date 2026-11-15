@@ -18399,4 +18399,23 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get shotWoodwork => 'Каркас';
+
+  @override
+  String get playerStatSaves => 'Сейви';
+
+  @override
+  String get playerStatPenSaved => 'Відбиті пенальті';
+
+  @override
+  String get playerStatPenalties => 'Пенальті';
+
+  @override
+  String playerStatRateValue(String count, String pct) {
+    return '$count ($pct%)';
+  }
+
+  @override
+  String playerStatOfValue(String done, String of) {
+    return '$done/$of';
+  }
 }

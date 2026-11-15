@@ -18143,4 +18143,23 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get shotWoodwork => 'Tolppa/rima';
+
+  @override
+  String get playerStatSaves => 'Torjunnat';
+
+  @override
+  String get playerStatPenSaved => 'Torjutut rangaistuspotkut';
+
+  @override
+  String get playerStatPenalties => 'Rangaistuspotkut';
+
+  @override
+  String playerStatRateValue(String count, String pct) {
+    return '$count ($pct %)';
+  }
+
+  @override
+  String playerStatOfValue(String done, String of) {
+    return '$done/$of';
+  }
 }

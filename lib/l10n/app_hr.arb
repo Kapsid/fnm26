@@ -4514,5 +4514,10 @@
   "shotSaved": "Obranjeno",
   "shotOffTarget": "Pokraj gola",
   "shotBlocked": "Blokirano",
-  "shotWoodwork": "Okvir gola"
+  "shotWoodwork": "Okvir gola",
+  "playerStatSaves": "Obrane",
+  "playerStatPenSaved": "Obranjeni penali",
+  "playerStatPenalties": "Penali",
+  "playerStatRateValue": "{count} ({pct} %)",
+  "playerStatOfValue": "{done}/{of}"
 }

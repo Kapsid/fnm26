@@ -4514,5 +4514,10 @@
   "shotSaved": "बचाया",
   "shotOffTarget": "निशाने से बाहर",
   "shotBlocked": "रोका गया",
-  "shotWoodwork": "पोस्ट"
+  "shotWoodwork": "पोस्ट",
+  "playerStatSaves": "बचाव",
+  "playerStatPenSaved": "पेनल्टी बचाईं",
+  "playerStatPenalties": "पेनल्टी",
+  "playerStatRateValue": "{count} ({pct}%)",
+  "playerStatOfValue": "{done}/{of}"
 }

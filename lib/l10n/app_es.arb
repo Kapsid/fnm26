@@ -4514,5 +4514,10 @@
   "shotSaved": "Parado",
   "shotOffTarget": "Fuera",
   "shotBlocked": "Bloqueado",
-  "shotWoodwork": "Palo"
+  "shotWoodwork": "Palo",
+  "playerStatSaves": "Paradas",
+  "playerStatPenSaved": "Penaltis parados",
+  "playerStatPenalties": "Penaltis",
+  "playerStatRateValue": "{count} ({pct} %)",
+  "playerStatOfValue": "{done}/{of}"
 }

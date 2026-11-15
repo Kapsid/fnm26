@@ -4514,5 +4514,10 @@
   "shotSaved": "Védve",
   "shotOffTarget": "Mellé",
   "shotBlocked": "Blokkolva",
-  "shotWoodwork": "Kapufa"
+  "shotWoodwork": "Kapufa",
+  "playerStatSaves": "Védések",
+  "playerStatPenSaved": "Kivédett tizenegyesek",
+  "playerStatPenalties": "Tizenegyesek",
+  "playerStatRateValue": "{count} ({pct}%)",
+  "playerStatOfValue": "{done}/{of}"
 }

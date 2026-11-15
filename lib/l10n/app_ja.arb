@@ -4514,5 +4514,10 @@
   "shotSaved": "セーブ",
   "shotOffTarget": "枠外",
   "shotBlocked": "ブロック",
-  "shotWoodwork": "ポスト"
+  "shotWoodwork": "ポスト",
+  "playerStatSaves": "セーブ",
+  "playerStatPenSaved": "PKセーブ",
+  "playerStatPenalties": "PK",
+  "playerStatRateValue": "{count}（{pct}%）",
+  "playerStatOfValue": "{done}/{of}"
 }

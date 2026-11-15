@@ -18054,4 +18054,23 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get shotWoodwork => 'Stolpe/ribba';
+
+  @override
+  String get playerStatSaves => 'Räddningar';
+
+  @override
+  String get playerStatPenSaved => 'Räddade straffar';
+
+  @override
+  String get playerStatPenalties => 'Straffar';
+
+  @override
+  String playerStatRateValue(String count, String pct) {
+    return '$count ($pct %)';
+  }
+
+  @override
+  String playerStatOfValue(String done, String of) {
+    return '$done/$of';
+  }
 }

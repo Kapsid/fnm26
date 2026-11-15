@@ -2671,8 +2671,9 @@ class DriftCompetitionRepository implements CompetitionRepository {
   Future<void> recordPlayerMatchStats(
     int careerId,
     int fixtureId,
-    Iterable<PlayerMatchLine> lines,
-  ) async {
+    Iterable<PlayerMatchLine> lines, {
+    Map<int, SpotLine> spot = const {},
+  }) async {
     final list = lines.toList();
     if (list.isEmpty) return;
     await _db.batch((b) {
@@ -2690,9 +2691,41 @@ class DriftCompetitionRepository implements CompetitionRepository {
             motm: Value(r.motm),
             yellows: Value(r.yellows),
             reds: Value(r.reds),
+            penTaken: Value(spot[r.playerId]?.penTaken ?? 0),
+            penScored: Value(spot[r.playerId]?.penScored ?? 0),
+            onTargetFaced: Value(spot[r.playerId]?.onTargetFaced ?? 0),
+            saves: Value(spot[r.playerId]?.saves ?? 0),
+            penFaced: Value(spot[r.playerId]?.penFaced ?? 0),
+            penSaved: Value(spot[r.playerId]?.penSaved ?? 0),
           ),
       ]);
     });
+  }
+
+  @override
+  Future<SpotTotals> playerSpotTotals(int careerId, int playerId) async {
+    final rows =
+        await (_db.select(_db.playerRatings)..where(
+              (t) => t.careerId.equals(careerId) & t.playerId.equals(playerId),
+            ))
+            .get();
+    var taken = 0, scored = 0, faced = 0, saves = 0, penF = 0, penS = 0;
+    for (final r in rows) {
+      taken += r.penTaken;
+      scored += r.penScored;
+      faced += r.onTargetFaced;
+      saves += r.saves;
+      penF += r.penFaced;
+      penS += r.penSaved;
+    }
+    return (
+      penTaken: taken,
+      penScored: scored,
+      onTargetFaced: faced,
+      saves: saves,
+      penFaced: penF,
+      penSaved: penS,
+    );
   }
 
   @override

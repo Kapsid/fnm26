@@ -17978,4 +17978,23 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get shotWoodwork => 'Tiang';
+
+  @override
+  String get playerStatSaves => 'Penyelamatan';
+
+  @override
+  String get playerStatPenSaved => 'Penalti ditepis';
+
+  @override
+  String get playerStatPenalties => 'Penalti';
+
+  @override
+  String playerStatRateValue(String count, String pct) {
+    return '$count ($pct%)';
+  }
+
+  @override
+  String playerStatOfValue(String done, String of) {
+    return '$done/$of';
+  }
 }

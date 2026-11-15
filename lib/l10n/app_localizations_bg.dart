@@ -18154,4 +18154,23 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get shotWoodwork => 'Греда';
+
+  @override
+  String get playerStatSaves => 'Спасявания';
+
+  @override
+  String get playerStatPenSaved => 'Спасени дузпи';
+
+  @override
+  String get playerStatPenalties => 'Дузпи';
+
+  @override
+  String playerStatRateValue(String count, String pct) {
+    return '$count ($pct%)';
+  }
+
+  @override
+  String playerStatOfValue(String done, String of) {
+    return '$done/$of';
+  }
 }

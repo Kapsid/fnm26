@@ -17484,4 +17484,23 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get shotWoodwork => '골대';
+
+  @override
+  String get playerStatSaves => '선방';
+
+  @override
+  String get playerStatPenSaved => 'PK 선방';
+
+  @override
+  String get playerStatPenalties => '페널티킥';
+
+  @override
+  String playerStatRateValue(String count, String pct) {
+    return '$count ($pct%)';
+  }
+
+  @override
+  String playerStatOfValue(String done, String of) {
+    return '$done/$of';
+  }
 }

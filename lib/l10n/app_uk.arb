@@ -4514,5 +4514,10 @@
   "shotSaved": "Відбито",
   "shotOffTarget": "Повз",
   "shotBlocked": "Заблоковано",
-  "shotWoodwork": "Каркас"
+  "shotWoodwork": "Каркас",
+  "playerStatSaves": "Сейви",
+  "playerStatPenSaved": "Відбиті пенальті",
+  "playerStatPenalties": "Пенальті",
+  "playerStatRateValue": "{count} ({pct}%)",
+  "playerStatOfValue": "{done}/{of}"
 }

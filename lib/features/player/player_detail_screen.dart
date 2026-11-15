@@ -50,6 +50,9 @@ typedef _PlayerView = ({
   Nation? nation,
   int goals,
   PlayerCareerStats? stats,
+
+  /// Penalties taken and scored; a keeper's saves and penalties saved.
+  SpotTotals? spot,
   List<PlayerMatchStat> history,
   Map<int, Nation> nationsById,
 
@@ -108,6 +111,7 @@ _playerDetailProvider = FutureProvider.autoDispose
       Nation? nation;
       var goals = 0;
       PlayerCareerStats? stats;
+      SpotTotals? spot;
       var history = const <PlayerMatchStat>[];
       final nationsById = <int, Nation>{};
       if (player != null) {
@@ -141,6 +145,7 @@ _playerDetailProvider = FutureProvider.autoDispose
               .fold(0, (s, t) => s + t.goals);
         }
         stats = await comp.playerCareerStats(arg.careerId, player.id);
+        spot = await comp.playerSpotTotals(arg.careerId, player.id);
         history = await comp.playerMatchHistory(arg.careerId, player.id);
       }
       final retirement = career == null
@@ -161,6 +166,7 @@ _playerDetailProvider = FutureProvider.autoDispose
         nation: nation,
         goals: goals,
         stats: stats,
+        spot: spot,
         history: history,
         nationsById: nationsById,
       );
@@ -497,7 +503,12 @@ _playerSections(
       if (view.stats case final s?)
         ProfileBlock(
           title: l.playerCareerRecord,
-          child: _CareerStatsCard(stats: s, goals: view.goals),
+          child: _CareerStatsCard(
+            stats: s,
+            goals: view.goals,
+            spot: view.spot,
+            keeper: view.player?.category == PositionCategory.goalkeeper,
+          ),
         )
       else
         ProfileBlock(
@@ -918,9 +929,16 @@ String _potentialStars(
 
 /// The player's aggregated international record as a grid of stat tiles.
 class _CareerStatsCard extends StatelessWidget {
-  const _CareerStatsCard({required this.stats, required this.goals});
+  const _CareerStatsCard({
+    required this.stats,
+    required this.goals,
+    this.spot,
+    this.keeper = false,
+  });
 
   final PlayerCareerStats stats;
+  final SpotTotals? spot;
+  final bool keeper;
 
   /// All-time goals from the scorer charts (spans quick-simmed games too), used
   /// when it exceeds the rated-match goal tally.
@@ -940,6 +958,26 @@ class _CareerStatsCard extends StatelessWidget {
       (l.playerStatCleanSheets, '${stats.cleanSheets}'),
       (l.playerStatBestGame, stats.bestRating.toStringAsFixed(1)),
       (l.playerStatCards, l.playerCardsValue(stats.yellows, stats.reds)),
+      if (spot case final sp?) ...[
+        if (keeper && sp.onTargetFaced > 0)
+          (
+            l.playerStatSaves,
+            l.playerStatRateValue(
+              '${sp.saves}',
+              '${(100 * sp.saves / sp.onTargetFaced).round()}',
+            ),
+          ),
+        if (keeper && sp.penFaced > 0)
+          (
+            l.playerStatPenSaved,
+            l.playerStatOfValue('${sp.penSaved}', '${sp.penFaced}'),
+          ),
+        if (sp.penTaken > 0)
+          (
+            l.playerStatPenalties,
+            l.playerStatOfValue('${sp.penScored}', '${sp.penTaken}'),
+          ),
+      ],
     ];
     return Wrap(
       spacing: AppSpacing.md,

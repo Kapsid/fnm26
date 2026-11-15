@@ -4514,5 +4514,10 @@
   "shotSaved": "Chyceno",
   "shotOffTarget": "Mimo bránu",
   "shotBlocked": "Zblokováno",
-  "shotWoodwork": "Tyč/břevno"
+  "shotWoodwork": "Tyč/břevno",
+  "playerStatSaves": "Zákroky",
+  "playerStatPenSaved": "Chycené penalty",
+  "playerStatPenalties": "Penalty",
+  "playerStatRateValue": "{count} ({pct} %)",
+  "playerStatOfValue": "{done}/{of}"
 }
