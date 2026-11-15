@@ -17928,4 +17928,76 @@ class AppLocalizationsDa extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return 'Direkte i vejfinalen i marts, i værtslandet, mod vinderen af $first mod $second.';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return 'Afrikansk playoff: semifinale mod $opponent';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      'Afrikas fire bedste toere fra grupperne mødes i november hos værten for det afrikanske mesterskab: en enkelt semifinale, derefter finalen. Vinderen går videre til det interkontinentale playoff.';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return 'Asiens fjerde runde: gruppe $group';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return 'Én runde kampe i november mod $first og $second. Gruppevinderen kvalificerer sig; toeren spiller en femte runde over to kampe om en plads i det interkontinentale playoff.';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return 'Asiens femte runde: $opponent over to kampe';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      'Hjemme og ude i november. Vinderen samlet går videre til det interkontinentale playoff; står det lige efter returkampen, venter forlænget spilletid og straffespark.';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return 'Oceaniens finale: $opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      'Én kamp i november hos værten for Oceania Cup om Oceaniens plads ved slutrunden. Taberen går videre til det interkontinentale playoff.';
+
+  @override
+  String get matchTinyFirstLeg => '1. kamp';
+
+  @override
+  String get matchTinySecondLeg => '2. kamp';
+
+  @override
+  String get matchTinyFourthRound => '4. rd.';
+
+  @override
+  String get resultsStageFourthRound => 'Fjerde runde';
+
+  @override
+  String get resultsStageFifthRound => 'Femte runde';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return 'Rykket op i Liga $league';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return 'Gruppevinder i $cup: næste udgave spilles en liga højere, og oprykningen er 1 mio. € værd for forbundet, udbetalt ved cyklussens afslutning.';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return 'Rykket ned i Liga $league';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return 'Sidst i gruppen i $cup: næste udgave spilles en liga lavere.';
+  }
 }

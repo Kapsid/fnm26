@@ -18118,4 +18118,76 @@ class AppLocalizationsPl extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return 'Rozstawiony od razu w marcowym finale ścieżki w kraju gospodarza, przeciwko zwycięzcy meczu $first kontra $second.';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return 'Afrykańskie baraże: półfinał z $opponent';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      'Cztery najlepsze drużyny z drugich miejsc w grupach Afryki spotykają się w listopadzie u gospodarza Mistrzostw Afryki: jeden mecz półfinałowy, potem finał. Zwycięzca trafia do baraży interkontynentalnych.';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return 'Azjatycka czwarta runda: grupa $group';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return 'Jedna runda meczów w listopadzie z $first i $second. Zwycięzca grupy awansuje; druga drużyna gra dwumecz piątej rundy o miejsce w barażach interkontynentalnych.';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return 'Azjatycka piąta runda: dwumecz z $opponent';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      'U siebie i na wyjeździe w listopadzie. Zwycięzca dwumeczu trafia do baraży interkontynentalnych; przy remisie w dwumeczu po rewanżu są dogrywka i rzuty karne.';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return 'Finał Oceanii: $opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      'Jeden mecz w listopadzie, u gospodarza Pucharu Oceanii, o miejsce Oceanii w turnieju finałowym. Przegrany trafia do baraży interkontynentalnych.';
+
+  @override
+  String get matchTinyFirstLeg => '1. mecz';
+
+  @override
+  String get matchTinySecondLeg => 'rewanż';
+
+  @override
+  String get matchTinyFourthRound => '4. r.';
+
+  @override
+  String get resultsStageFourthRound => 'Czwarta runda';
+
+  @override
+  String get resultsStageFifthRound => 'Piąta runda';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return 'Awans do Dywizji $league';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return 'Pierwsze miejsce w grupie w $cup: kolejna edycja rozgrywana jest dywizję wyżej, a awans jest wart dla związku 1 mln €, wypłacany na koniec cyklu.';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return 'Spadek do Dywizji $league';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return 'Ostatnie miejsce w grupie w $cup: kolejna edycja rozgrywana jest dywizję niżej.';
+  }
 }

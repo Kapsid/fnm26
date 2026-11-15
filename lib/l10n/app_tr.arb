@@ -4480,5 +4480,22 @@
   "wcPlaceholderIc": "Kıtalararası {path} yolu galibi",
   "newsIcPlayoffTitle": "Kıtalararası play-off: {path} yolu",
   "newsIcPlayoffBodySemi": "Mart ayında ev sahibi ülkede {opponent} ile tek maçlık yarı final, ardından finallere katılım için yol finali.",
-  "newsIcPlayoffBodyBye": "Mart ayında ev sahibi ülkede doğrudan yol finalinde, {first} ile {second} maçının galibine karşı."
+  "newsIcPlayoffBodyBye": "Mart ayında ev sahibi ülkede doğrudan yol finalinde, {first} ile {second} maçının galibine karşı.",
+  "newsCafPlayoffTitle": "Afrika play-off'u: yarı finalde rakip {opponent}",
+  "newsCafPlayoffBody": "Afrika gruplarının en iyi dört ikincisi kasımda Afrika Şampiyonası'nın ev sahibinde karşılaşır: tek maçlık yarı final, ardından final. Kazanan kıtalararası play-off'a gider.",
+  "newsAfcFourthRoundTitle": "Asya dördüncü tur: {group} Grubu",
+  "newsAfcFourthRoundBody": "Kasımda {first} ve {second} ile birer maç. Grup birincisi finallere katılır; ikinci, kıtalararası play-off yeri için çift maçlı beşinci turu oynar.",
+  "newsAfcFifthRoundTitle": "Asya beşinci tur: {opponent} ile çift maç",
+  "newsAfcFifthRoundBody": "Kasımda iç saha ve deplasman. Toplamda kazanan kıtalararası play-off'a gider; rövanştan sonra toplam eşitse uzatma ve penaltılar oynanır.",
+  "newsOfcFinalTitle": "Okyanusya finali: {opponent}",
+  "newsOfcFinalBody": "Kasımda Okyanusya Kupası'nın ev sahibinde, Okyanusya'nın finallerdeki yeri için tek maç. Kaybeden kıtalararası play-off'a gider.",
+  "matchTinyFirstLeg": "1. maç",
+  "matchTinySecondLeg": "Rövanş",
+  "matchTinyFourthRound": "4. tur",
+  "resultsStageFourthRound": "Dördüncü tur",
+  "resultsStageFifthRound": "Beşinci tur",
+  "newsNcPromotedTitle": "Yükselme: Lig {league}",
+  "newsNcPromotedBody": "{cup} grubunda birincilik: bir sonraki turnuva bir üst ligde oynanacak ve yükselme federasyona döngü sonunda ödenecek 1 milyon € kazandırıyor.",
+  "newsNcRelegatedTitle": "Düşme: Lig {league}",
+  "newsNcRelegatedBody": "{cup} grubunda sonunculuk: bir sonraki turnuva bir alt ligde oynanacak."
 }

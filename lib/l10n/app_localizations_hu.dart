@@ -17872,4 +17872,76 @@ class AppLocalizationsHu extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return 'Egyenesen az ág márciusi döntőjében a rendező országban, a(z) $first és $second párharc győztese ellen.';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return 'Afrikai pótselejtező: elődöntő a(z) $opponent ellen';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      'Afrika négy legjobb csoportmásodikja novemberben a Afrikai Bajnokság rendezőjénél csap össze: egymérkőzéses elődöntő, majd döntő. A győztes az interkontinentális pótselejtezőbe jut.';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return 'Ázsiai negyedik forduló: $group csoport';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return 'Egy kör mérkőzés novemberben a(z) $first és a(z) $second ellen. A csoportgyőztes kijut; a második kétmérkőzéses ötödik fordulót játszik az interkontinentális pótselejtezős helyért.';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return 'Ázsiai ötödik forduló: $opponent két mérkőzésen';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      'Oda-visszavágó novemberben. Az összesítésben jobb az interkontinentális pótselejtezőbe jut; döntetlen összesítés esetén a visszavágó után hosszabbítás és tizenegyesek jönnek.';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return 'Óceániai döntő: $opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      'Egy mérkőzés novemberben az Óceánia-kupa rendezőjénél Óceánia világtorna-helyéért. A vesztes az interkontinentális pótselejtezőbe jut.';
+
+  @override
+  String get matchTinyFirstLeg => '1. mérk.';
+
+  @override
+  String get matchTinySecondLeg => '2. mérk.';
+
+  @override
+  String get matchTinyFourthRound => '4. ford.';
+
+  @override
+  String get resultsStageFourthRound => 'Negyedik forduló';
+
+  @override
+  String get resultsStageFifthRound => 'Ötödik forduló';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return 'Feljutás a(z) $league ligába';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return 'Csoportelső a(z) $cup sorozatban: a következő kiírást egy ligával feljebb játsszuk, és a feljutás 1 millió eurót ér a szövetségnek, a ciklus végén fizetve.';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return 'Kiesés a(z) $league ligába';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return 'Csoportutolsó a(z) $cup sorozatban: a következő kiírást egy ligával lejjebb játsszuk.';
+  }
 }

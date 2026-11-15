@@ -61,6 +61,11 @@ import 'package:fnm/l10n/app_localizations.dart';
       round: round == 'UPFINAL' ? l.resultsStageFinal : l.resultsStageSemiFinal,
       trophy: null,
     ),
+    'AFSF' || 'AFFINAL' || 'AQ4' || 'AQ5L1' || 'AQ5L2' || 'OFINAL' => (
+      competition: l.compPlayoffs(l.compWorldCup),
+      round: MatchStage.stage(l, round),
+      trophy: null,
+    ),
     'CQ' => (
       competition: MatchStage.category(l, round),
       round: l.matchStageMatchday(f.matchday),

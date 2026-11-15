@@ -4480,5 +4480,22 @@
   "wcPlaceholderIc": "Vencedor do caminho intercontinental {path}",
   "newsIcPlayoffTitle": "Repescagem intercontinental: caminho {path}",
   "newsIcPlayoffBodySemi": "Uma meia-final num só jogo contra {opponent} em março, no país anfitrião, e depois a final do caminho por uma vaga na fase final.",
-  "newsIcPlayoffBodyBye": "Direto à final do caminho em março, no país anfitrião, contra o vencedor de {first} contra {second}."
+  "newsIcPlayoffBodyBye": "Direto à final do caminho em março, no país anfitrião, contra o vencedor de {first} contra {second}.",
+  "newsCafPlayoffTitle": "Repescagem africana: semifinal contra {opponent}",
+  "newsCafPlayoffBody": "Os quatro melhores segundos colocados dos grupos da África se enfrentam em novembro na sede do Campeonato Africano: semifinal em jogo único e depois a final. O vencedor vai para a repescagem intercontinental.",
+  "newsAfcFourthRoundTitle": "Quarta fase asiática: grupo {group}",
+  "newsAfcFourthRoundBody": "Uma rodada de jogos em novembro contra {first} e {second}. O primeiro do grupo se classifica; o segundo disputa uma quinta fase em ida e volta por uma vaga na repescagem intercontinental.",
+  "newsAfcFifthRoundTitle": "Quinta fase asiática: {opponent} em ida e volta",
+  "newsAfcFifthRoundBody": "Ida e volta em novembro. O vencedor no agregado vai para a repescagem intercontinental; empatado após o jogo de volta, há prorrogação e pênaltis.",
+  "newsOfcFinalTitle": "Final da Oceania: {opponent}",
+  "newsOfcFinalBody": "Um jogo em novembro, na sede da Copa da Oceania, pela vaga da Oceania na fase final. O perdedor vai para a repescagem intercontinental.",
+  "matchTinyFirstLeg": "Ida",
+  "matchTinySecondLeg": "Volta",
+  "matchTinyFourthRound": "4ª f.",
+  "resultsStageFourthRound": "Quarta fase",
+  "resultsStageFifthRound": "Quinta fase",
+  "newsNcPromotedTitle": "Promoção para a Liga {league}",
+  "newsNcPromotedBody": "Primeiros do grupo na {cup}: a próxima edição é disputada uma liga acima, e a promoção vale 1 milhão de euros para a federação, pagos no fim do ciclo.",
+  "newsNcRelegatedTitle": "Rebaixamento para a Liga {league}",
+  "newsNcRelegatedBody": "Últimos do grupo na {cup}: a próxima edição é disputada uma liga abaixo."
 }

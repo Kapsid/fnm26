@@ -3,6 +3,7 @@
 // is copyrighted intellectual property; do not reproduce, clone or help
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
@@ -45,9 +46,34 @@ abstract final class GroupAdvancement {
     /// the calendar2 rhythm, see `UefaWcPlayoffs`): the groups hand out that
     /// many fewer, and the runners-up are play-off sides, not a ladder.
     int playoffPaths = 0,
+
+    /// Africa's, Asia's and Oceania's own play-off steps on the calendar2
+    /// rhythm (see `ConfedPlayoffs`): the groups hand out the places the
+    /// step does not hold back, and the sides below them go to the step.
+    bool confedSteps = false,
   }) {
     final fmt = QualificationFormat.forConfederation(confederation);
     final groups = groupCount < 1 ? 1 : groupCount;
+    if (confedSteps &&
+        ConfedPlayoffs.entrantCount(
+              confederation,
+              fmt.qualifyingBerths(hosts),
+            ) >
+            0) {
+      final berths = ConfedPlayoffs.groupBerths(confederation, hosts);
+      final full = berths ~/ groups;
+      final rest = berths % groups;
+      return (
+        direct: full,
+        contention: full + 1,
+        contentionQualify: rest > 0
+            ? rest
+            : ConfedPlayoffs.entrantCount(
+                confederation,
+                fmt.qualifyingBerths(hosts),
+              ),
+      );
+    }
     final berths = (fmt.qualifyingBerths(hosts) - playoffPaths).clamp(0, 99);
     final full = berths ~/ groups; // positions that all go through
     final rest = berths % groups; // best of the next position
@@ -75,8 +101,20 @@ abstract final class GroupAdvancement {
     /// [worldCupQualifying]): the best runners-up, three a path, are the
     /// sides headed for them.
     int playoffPaths = 0,
+
+    /// See [worldCupQualifying]: the sides headed for the confederation's
+    /// own step.
+    bool confedSteps = false,
   }) {
     final fmt = QualificationFormat.forConfederation(confederation);
+    if (confedSteps) {
+      final entrants = ConfedPlayoffs.entrants(
+        confederation,
+        groups,
+        hosts: hosts,
+      );
+      if (entrants.isNotEmpty) return entrants.toSet();
+    }
     if (playoffPaths > 0) {
       final berths = (fmt.qualifyingBerths(hosts) - playoffPaths).clamp(0, 99);
       final direct = Qualification.qualifiers(groups, berths);
@@ -156,6 +194,7 @@ abstract final class GroupAdvancement {
     bool isLowestLeague = false,
     int worldCupHosts = 0,
     int worldCupPlayoffPaths = 0,
+    bool worldCupConfedSteps = false,
   }) {
     switch (kind) {
       case CompetitionKind.worldCupQualifying:
@@ -164,6 +203,7 @@ abstract final class GroupAdvancement {
           groupCount,
           hosts: worldCupHosts,
           playoffPaths: worldCupPlayoffPaths,
+          confedSteps: worldCupConfedSteps,
         );
         return (direct: adv.direct, contention: adv.contention, relegate: 0);
       case CompetitionKind.continentalQualifying:
@@ -197,6 +237,7 @@ abstract final class GroupAdvancement {
       case CompetitionKind.worldCupPlayoff:
       case CompetitionKind.continentalPlayoff:
       case CompetitionKind.worldCupPlayoffEurope:
+      case CompetitionKind.worldCupQualifyingPlayoff:
         return (direct: 2, contention: null, relegate: 0);
     }
   }
@@ -270,6 +311,7 @@ abstract final class GroupAdvancement {
       case CompetitionKind.worldCupPlayoff:
       case CompetitionKind.continentalPlayoff:
       case CompetitionKind.worldCupPlayoffEurope:
+      case CompetitionKind.worldCupQualifyingPlayoff:
         return '';
     }
   }

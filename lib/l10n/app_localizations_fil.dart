@@ -17939,4 +17939,76 @@ class AppLocalizationsFil extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return 'Diretso sa final ng landas sa Marso, sa bansang punong-abala, laban sa panalo ng $first laban sa $second.';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return 'African play-off: semi-final laban sa $opponent';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      'Ang apat na pinakamahusay na pumangalawa sa mga grupo ng Africa ay maghaharap sa Nobyembre sa host ng African Championship: isang semi-final, saka ang final. Ang mananalo ay papasok sa intercontinental play-off.';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return 'Ikaapat na round ng Asia: Grupo $group';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return 'Isang round ng mga laro sa Nobyembre laban sa $first at $second. Ang nanguna sa grupo ay kwalipikado; ang pumangalawa ay maglalaro ng dalawang-leg na ikalimang round para sa puwesto sa intercontinental play-off.';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return 'Ikalimang round ng Asia: $opponent sa dalawang leg';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      'Home at away sa Nobyembre. Ang mananalo sa aggregate ay papasok sa intercontinental play-off; kung pantay pagkatapos ng ikalawang leg, may extra time at penalties.';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return 'Final ng Oceania: $opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      'Isang laro sa Nobyembre, sa host ng Oceania Cup, para sa puwesto ng Oceania sa finals. Ang matatalo ay papasok sa intercontinental play-off.';
+
+  @override
+  String get matchTinyFirstLeg => '1st leg';
+
+  @override
+  String get matchTinySecondLeg => '2nd leg';
+
+  @override
+  String get matchTinyFourthRound => 'Rd 4';
+
+  @override
+  String get resultsStageFourthRound => 'Ikaapat na round';
+
+  @override
+  String get resultsStageFifthRound => 'Ikalimang round';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return 'Na-promote sa League $league';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return 'Nanguna sa grupo sa $cup: ang susunod na edisyon ay lalaruin sa mas mataas na liga, at ang promotion ay nagkakahalaga ng €1M para sa pederasyon, ibabayad sa pagtatapos ng cycle.';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return 'Na-relegate sa League $league';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return 'Huli sa grupo sa $cup: ang susunod na edisyon ay lalaruin sa mas mababang liga.';
+  }
 }

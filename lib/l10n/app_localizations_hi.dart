@@ -17835,4 +17835,76 @@ class AppLocalizationsHi extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return 'मार्च में मेज़बान देश में सीधे पाथ फ़ाइनल में, $first बनाम $second के विजेता के खिलाफ।';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return 'अफ़्रीकी प्ले-ऑफ़: $opponent के ख़िलाफ़ सेमीफ़ाइनल';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      'अफ़्रीका के ग्रुपों में दूसरे स्थान की चार सबसे अच्छी टीमें नवंबर में अफ़्रीकी चैंपियनशिप के मेज़बान के यहाँ भिड़ती हैं: एक मैच का सेमीफ़ाइनल, फिर फ़ाइनल। विजेता अंतरमहाद्वीपीय प्ले-ऑफ़ में जाता है।';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return 'एशिया का चौथा दौर: ग्रुप $group';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return 'नवंबर में $first और $second के ख़िलाफ़ एक दौर के मैच। ग्रुप विजेता क्वालिफ़ाई करता है; दूसरे स्थान वाला अंतरमहाद्वीपीय प्ले-ऑफ़ में जगह के लिए दो चरणों का पाँचवाँ दौर खेलता है।';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return 'एशिया का पाँचवाँ दौर: $opponent के साथ दो चरण';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      'नवंबर में घर और बाहर। कुल स्कोर में विजेता अंतरमहाद्वीपीय प्ले-ऑफ़ में जाता है; दूसरे चरण के बाद बराबरी पर अतिरिक्त समय और पेनल्टी होते हैं।';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return 'ओशिनिया फ़ाइनल: $opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      'नवंबर में ओशिनिया कप के मेज़बान के यहाँ ओशिनिया की फ़ाइनल्स वाली जगह के लिए एक मैच। हारने वाला अंतरमहाद्वीपीय प्ले-ऑफ़ में जाता है।';
+
+  @override
+  String get matchTinyFirstLeg => 'पहला चरण';
+
+  @override
+  String get matchTinySecondLeg => 'दूसरा चरण';
+
+  @override
+  String get matchTinyFourthRound => 'दौर 4';
+
+  @override
+  String get resultsStageFourthRound => 'चौथा दौर';
+
+  @override
+  String get resultsStageFifthRound => 'पाँचवाँ दौर';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return 'लीग $league में पदोन्नति';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return '$cup में ग्रुप में शीर्ष: अगला संस्करण एक लीग ऊपर खेला जाएगा, और पदोन्नति से महासंघ को €1M मिलेंगे, जो चक्र के अंत में दिए जाएँगे।';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return 'लीग $league में पदावनति';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return '$cup में ग्रुप में सबसे नीचे: अगला संस्करण एक लीग नीचे खेला जाएगा।';
+  }
 }

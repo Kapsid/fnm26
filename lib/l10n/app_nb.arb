@@ -4480,5 +4480,22 @@
   "wcPlaceholderIc": "Vinner interkontinental vei {path}",
   "newsIcPlayoffTitle": "Interkontinental playoff: vei {path}",
   "newsIcPlayoffBodySemi": "En semifinale over én kamp mot {opponent} i mars, i vertslandet, deretter veifinalen om en plass i sluttspillet.",
-  "newsIcPlayoffBodyBye": "Direkte til veifinalen i mars, i vertslandet, mot vinneren av {first} mot {second}."
+  "newsIcPlayoffBodyBye": "Direkte til veifinalen i mars, i vertslandet, mot vinneren av {first} mot {second}.",
+  "newsCafPlayoffTitle": "Afrikansk playoff: semifinale mot {opponent}",
+  "newsCafPlayoffBody": "Afrikas fire beste gruppetoere møtes i november hos vertslandet for det afrikanske mesterskapet: én semifinale, så finalen. Vinneren går videre til det interkontinentale playoffet.",
+  "newsAfcFourthRoundTitle": "Asias fjerde runde: gruppe {group}",
+  "newsAfcFourthRoundBody": "Én runde kamper i november mot {first} og {second}. Gruppevinneren kvalifiserer seg; toeren spiller en femte runde over to kamper om en plass i det interkontinentale playoffet.",
+  "newsAfcFifthRoundTitle": "Asias femte runde: {opponent} over to kamper",
+  "newsAfcFifthRoundBody": "Hjemme og borte i november. Vinneren sammenlagt går videre til det interkontinentale playoffet; er det likt etter returkampen, blir det ekstraomganger og straffesparkkonkurranse.",
+  "newsOfcFinalTitle": "Oseanias finale: {opponent}",
+  "newsOfcFinalBody": "Én kamp i november hos vertslandet for Oseania-cupen om Oseanias plass i sluttspillet. Taperen går videre til det interkontinentale playoffet.",
+  "matchTinyFirstLeg": "1. kamp",
+  "matchTinySecondLeg": "2. kamp",
+  "matchTinyFourthRound": "4. rd.",
+  "resultsStageFourthRound": "Fjerde runde",
+  "resultsStageFifthRound": "Femte runde",
+  "newsNcPromotedTitle": "Opprykk til Liga {league}",
+  "newsNcPromotedBody": "Gruppevinner i {cup}: neste utgave spilles én liga høyere, og opprykket er verdt 1 mill. € for forbundet, utbetalt ved slutten av syklusen.",
+  "newsNcRelegatedTitle": "Nedrykk til Liga {league}",
+  "newsNcRelegatedBody": "Sist i gruppen i {cup}: neste utgave spilles én liga lavere."
 }

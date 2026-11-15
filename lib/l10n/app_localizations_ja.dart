@@ -17298,4 +17298,76 @@ class AppLocalizationsJa extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return '3月に開催国で行われるパス決勝にシードされ、$first対$secondの勝者と対戦。';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return 'アフリカ・プレーオフ：準決勝は$opponentと';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      'アフリカの各組2位のうち上位4チームが11月、アフリカ選手権の開催国に集まります。一発勝負の準決勝、そして決勝。勝者は大陸間プレーオフへ進みます。';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return 'アジア4次予選：グループ$group';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return '11月に$first、$secondと1回ずつ対戦します。グループ首位は本大会出場、2位は大陸間プレーオフ出場権をかけてホーム＆アウェーの5次予選に臨みます。';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return 'アジア5次予選：$opponentとのホーム＆アウェー';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      '11月にホームとアウェーで戦います。2試合合計の勝者が大陸間プレーオフへ。第2戦終了時に合計同点なら延長戦とPK戦です。';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return 'オセアニア決勝：$opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      '11月、オセアニア・カップの開催国で一発勝負。オセアニアの本大会出場枠をかけた試合で、敗者は大陸間プレーオフへ進みます。';
+
+  @override
+  String get matchTinyFirstLeg => '第1戦';
+
+  @override
+  String get matchTinySecondLeg => '第2戦';
+
+  @override
+  String get matchTinyFourthRound => '4次';
+
+  @override
+  String get resultsStageFourthRound => '4次予選';
+
+  @override
+  String get resultsStageFifthRound => '5次予選';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return 'リーグ$leagueへ昇格';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return '$cupでグループ首位。次の大会は1つ上のリーグで戦い、昇格により連盟には100万ユーロがサイクル終了時に支払われます。';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return 'リーグ$leagueへ降格';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return '$cupでグループ最下位。次の大会は1つ下のリーグで戦います。';
+  }
 }

@@ -25,9 +25,10 @@ import 'driver.dart';
 /// change to the world moves the sides below, re-find them: the first
 /// expectation of each story says which half broke).
 ///
-/// * Poland finishes second in its qualifying group, is drawn into a
+/// * Belgium finishes second in its qualifying group, is drawn into a
 ///   European path, plays its semi-final and final in late March and lands
-///   in the exact December slot its placeholder was drawn into.
+///   in the exact December slot its placeholder was drawn into. (Poland
+///   did until Africa's, Asia's and Oceania's own steps moved the world.)
 /// * Northern Ireland wins its League C group in the second Nations Cup,
 ///   misses qualifying and comes in through pot 4.
 /// * Curacao, one of CONCACAF's two best runners-up, plays the
@@ -38,7 +39,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   const europe = Confederation.europe;
   const seed = 31;
-  const poland = 40;
+  const belgium = 7;
   const northernIreland = 38;
   const curacao = 78;
   final wcYear = CareerService.worldCupYear(0);
@@ -86,7 +87,7 @@ void main() {
     final db = storyDb();
     final c = storyContainer(db);
     addTearDown(c.dispose);
-    final d = await StoryDriver.start(c, seed, nationId: poland);
+    final d = await StoryDriver.start(c, seed, nationId: belgium);
     final id = d.careerId;
     final comp = c.read(competitionRepositoryProvider);
     final careers = c.read(careerRepositoryProvider);
@@ -102,10 +103,10 @@ void main() {
     final path = (await uefaPaths(
       comp,
       id,
-    )).where((p) => p.seeds.contains(poland)).firstOrNull;
-    expect(path, isNotNull, reason: 'Poland is in a path (re-find)');
+    )).where((p) => p.seeds.contains(belgium)).firstOrNull;
+    expect(path, isNotNull, reason: 'Belgium is in a path (re-find)');
     // A runner-up: pots 1 to 3.
-    expect(path!.seeds.indexOf(poland), lessThan(3));
+    expect(path!.seeds.indexOf(belgium), lessThan(3));
     final key = UefaWcPlayoffs.placeholderKey(path.letter);
     final placeholder = (await finalsSlots(
       comp,
@@ -114,8 +115,8 @@ void main() {
     Future<({int ordinal, bool over})> run() async => worldRun(
       comp: comp,
       careerId: id,
-      nationId: poland,
-      fixtures: await comp.cycleFixturesForNation(id, poland),
+      nationId: belgium,
+      fixtures: await comp.cycleFixturesForNation(id, belgium),
       cycle: 0,
     );
     expect(await run(), (ordinal: 1, over: false));
@@ -144,7 +145,7 @@ void main() {
 
     await toFinals(d, comp);
     final mine = [
-      for (final f in await comp.cycleFixturesForNation(id, poland))
+      for (final f in await comp.cycleFixturesForNation(id, belgium))
         if (UefaWcPlayoffs.rounds.contains(f.round)) f,
     ]..sort((a, b) => a.date.compareTo(b.date));
     expect(mine.map((f) => f.round), [
@@ -154,12 +155,12 @@ void main() {
     expect(mine.first.date, dates.semis);
     expect(mine.last.date, dates.finalDay);
     // The semi at the higher seed's home; the final where the draw said.
-    expect(mine.first.homeNationId == poland, path.seeds.indexOf(poland) < 2);
+    expect(mine.first.homeNationId == belgium, path.seeds.indexOf(belgium) < 2);
     final semiIndex =
-        path.seeds.indexOf(poland) == 0 || path.seeds.indexOf(poland) == 3
+        path.seeds.indexOf(belgium) == 0 || path.seeds.indexOf(belgium) == 3
         ? 0
         : 1;
-    expect(mine.last.homeNationId == poland, semiIndex == path.finalHostSemi);
+    expect(mine.last.homeNationId == belgium, semiIndex == path.finalHostSemi);
     // Played by the manager: a call-up and the matches on the hub.
     expect(
       seen.where(
@@ -179,14 +180,14 @@ void main() {
       ),
       hasLength(greaterThanOrEqualTo(2)),
     );
-    expect(wonBy(mine.last, poland), isTrue, reason: 'won the path (re-find)');
+    expect(wonBy(mine.last, belgium), isTrue, reason: 'won the path (re-find)');
 
     // In the exact slot its placeholder was drawn into.
     final resolved = (await finalsSlots(
       comp,
       id,
     )).singleWhere((s) => s.placeholderKey == key);
-    expect(resolved.resolvedNationId, poland);
+    expect(resolved.resolvedNationId, belgium);
     final wcId =
         (await (db.select(db.competitions)..where(
                   (t) =>
@@ -213,7 +214,7 @@ void main() {
       members
           .map((m) => m.read<int>('nation_id'))
           .toList()[placeholder.position],
-      poland,
+      belgium,
     );
     expect(await run(), (ordinal: 2, over: false));
     final keys = await comp.messageKeys(id);

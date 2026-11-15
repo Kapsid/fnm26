@@ -2,7 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/competition/calendar2.dart';
+import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart';
 
 /// Makes now the draws a calendar2 cycle makes later in the season (see
@@ -98,5 +100,48 @@ Future<void> drawWcQualifyingNow(ProviderContainer c, int careerId) async {
   );
   for (final kind in const ['cal2:wcqSouthAmerica', 'cal2:wcq']) {
     await comp.markDrawWatched(careerId, career.cyclePointer, kind);
+  }
+}
+
+/// Plays Africa's, Asia's and Oceania's World Championship qualifying
+/// play-off steps (calendar2, see `ConfedPlayoffs`) by hand, the
+/// better-ranked side winning 2-0 every match, one progression pass at a
+/// time, until the World Championship's draws are made. For a test whose
+/// qualifying is already played out.
+Future<void> playConfedStepsNow(ProviderContainer c, int careerId) async {
+  final comp = c.read(competitionRepositoryProvider);
+  final season = c.read(seasonServiceProvider);
+  final career = (await c.read(careerRepositoryProvider).byId(careerId))!;
+  final rank = {
+    for (final n in await c.read(nationRepositoryProvider).forCareer(careerId))
+      n.id: n.ranking,
+  };
+  for (var pass = 0; pass < 12; pass++) {
+    await season.progressForTest(careerId);
+    if ((await comp.drawSlots(
+      careerId,
+      career.cyclePointer,
+      CompetitionKind.worldCupFinals,
+    )).isNotEmpty) {
+      return;
+    }
+    for (final conf in ConfedPlayoffs.confederations) {
+      for (final round in ConfedPlayoffs.rounds) {
+        for (final f in await comp.fixturesByRound(
+          careerId,
+          round,
+          kind: ConfedPlayoffs.kind,
+          confederation: conf,
+        )) {
+          if (f.played) continue;
+          final homeWins = rank[f.homeNationId]! < rank[f.awayNationId]!;
+          await comp.recordResult(
+            fixtureId: f.id,
+            homeScore: homeWins ? 2 : 0,
+            awayScore: homeWins ? 0 : 2,
+          );
+        }
+      }
+    }
   }
 }

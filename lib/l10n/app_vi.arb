@@ -4480,5 +4480,22 @@
   "wcPlaceholderIc": "Đội thắng nhánh liên lục địa {path}",
   "newsIcPlayoffTitle": "Play-off liên lục địa: nhánh {path}",
   "newsIcPlayoffBodySemi": "Một trận bán kết duy nhất gặp {opponent} vào tháng Ba tại nước chủ nhà, sau đó là chung kết nhánh để giành suất dự vòng chung kết.",
-  "newsIcPlayoffBodyBye": "Vào thẳng chung kết nhánh vào tháng Ba tại nước chủ nhà, gặp đội thắng trận {first} gặp {second}."
+  "newsIcPlayoffBodyBye": "Vào thẳng chung kết nhánh vào tháng Ba tại nước chủ nhà, gặp đội thắng trận {first} gặp {second}.",
+  "newsCafPlayoffTitle": "Play-off châu Phi: bán kết gặp {opponent}",
+  "newsCafPlayoffBody": "Bốn đội nhì bảng xuất sắc nhất châu Phi gặp nhau vào tháng 11 tại nước chủ nhà Giải vô địch châu Phi: bán kết một trận, rồi chung kết. Đội thắng vào play-off liên lục địa.",
+  "newsAfcFourthRoundTitle": "Vòng bốn châu Á: bảng {group}",
+  "newsAfcFourthRoundBody": "Một lượt trận vào tháng 11 gặp {first} và {second}. Đội nhất bảng giành vé; đội nhì đá vòng năm lượt đi lượt về để tranh suất play-off liên lục địa.",
+  "newsAfcFifthRoundTitle": "Vòng năm châu Á: {opponent} lượt đi lượt về",
+  "newsAfcFifthRoundBody": "Sân nhà và sân khách vào tháng 11. Đội thắng chung cuộc vào play-off liên lục địa; hòa tổng tỉ số sau lượt về thì đá hiệp phụ và luân lưu.",
+  "newsOfcFinalTitle": "Chung kết châu Đại Dương: {opponent}",
+  "newsOfcFinalBody": "Một trận vào tháng 11, tại nước chủ nhà Cúp châu Đại Dương, tranh suất của châu Đại Dương ở vòng chung kết. Đội thua vào play-off liên lục địa.",
+  "matchTinyFirstLeg": "Lượt đi",
+  "matchTinySecondLeg": "Lượt về",
+  "matchTinyFourthRound": "V4",
+  "resultsStageFourthRound": "Vòng bốn",
+  "resultsStageFifthRound": "Vòng năm",
+  "newsNcPromotedTitle": "Thăng hạng lên Hạng {league}",
+  "newsNcPromotedBody": "Nhất bảng tại {cup}: mùa giải tới thi đấu ở hạng cao hơn, và suất thăng hạng mang về cho liên đoàn 1 triệu €, chi trả vào cuối chu kỳ.",
+  "newsNcRelegatedTitle": "Xuống hạng {league}",
+  "newsNcRelegatedBody": "Bét bảng tại {cup}: mùa giải tới thi đấu ở hạng thấp hơn."
 }

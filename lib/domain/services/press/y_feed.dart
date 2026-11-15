@@ -876,6 +876,10 @@ abstract final class YFeed {
     // And the World Championship's calendar2 path finals (Europe's and the
     // intercontinental play-off's).
     if (round == 'UPFINAL' || round == 'ICFINAL') return YStakes.knockout;
+    // And Africa's and Oceania's qualifying play-off finals: a place, not a
+    // trophy. Asia's fifth round is a knockout over two legs.
+    if (round == 'AFFINAL' || round == 'OFINAL') return YStakes.knockout;
+    if (round == 'AQ5L1' || round == 'AQ5L2') return YStakes.knockout;
     if (round.endsWith('FINAL')) return YStakes.trophyFinal;
     if (Rounds.isKnockout(round)) return YStakes.knockout;
     if (round == 'GROUP' || round == 'CGROUP') return YStakes.finals;

@@ -27617,5 +27617,121 @@
         "type": "String"
       }
     }
+  },
+  "newsCafPlayoffTitle": "African play-off: semi-final against {opponent}",
+  "@newsCafPlayoffTitle": {
+    "description": "Inbox title: the manager's nation is in Africa's World Championship qualifying play-off (four best group runners-up).",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "newsCafPlayoffBody": "Africa's four best group runners-up meet in November at the African Championship's host: a one-off semi-final, then the final. The winner goes to the intercontinental play-off.",
+  "@newsCafPlayoffBody": {
+    "description": "Inbox body: how Africa's qualifying play-off works."
+  },
+  "newsAfcFourthRoundTitle": "Asian fourth round: Group {group}",
+  "@newsAfcFourthRoundTitle": {
+    "description": "Inbox title: the manager's nation is drawn into a group of three in Asia's fourth qualifying round (group is A or B).",
+    "placeholders": {
+      "group": {
+        "type": "String"
+      }
+    }
+  },
+  "newsAfcFourthRoundBody": "One round of matches in November against {first} and {second}. The group winner qualifies; the runner-up plays a two-legged fifth round for a place in the intercontinental play-off.",
+  "@newsAfcFourthRoundBody": {
+    "description": "Inbox body: Asia's fourth qualifying round; first and second are the other two nations of the group.",
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "second": {
+        "type": "String"
+      }
+    }
+  },
+  "newsAfcFifthRoundTitle": "Asian fifth round: {opponent} over two legs",
+  "@newsAfcFifthRoundTitle": {
+    "description": "Inbox title: the manager's nation plays Asia's two-legged fifth qualifying round.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "newsAfcFifthRoundBody": "Home and away in November. The winner on aggregate goes to the intercontinental play-off; level after the second leg, it goes to extra time and penalties.",
+  "@newsAfcFifthRoundBody": {
+    "description": "Inbox body: how Asia's two-legged fifth round is decided."
+  },
+  "newsOfcFinalTitle": "Oceania final: {opponent}",
+  "@newsOfcFinalTitle": {
+    "description": "Inbox title: the manager's nation plays Oceania's qualifying final.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "newsOfcFinalBody": "One match in November, at the Oceania Cup's host, for Oceania's place at the finals. The loser goes to the intercontinental play-off.",
+  "@newsOfcFinalBody": {
+    "description": "Inbox body: Oceania's qualifying final."
+  },
+  "matchTinyFirstLeg": "1st leg",
+  "@matchTinyFirstLeg": {
+    "description": "Very short label: the first leg of a two-legged tie."
+  },
+  "matchTinySecondLeg": "2nd leg",
+  "@matchTinySecondLeg": {
+    "description": "Very short label: the second leg of a two-legged tie."
+  },
+  "matchTinyFourthRound": "Rd 4",
+  "@matchTinyFourthRound": {
+    "description": "Very short label: Asia's fourth qualifying round (groups of three)."
+  },
+  "resultsStageFourthRound": "Fourth round",
+  "@resultsStageFourthRound": {
+    "description": "Results stage: Asia's fourth qualifying round."
+  },
+  "resultsStageFifthRound": "Fifth round",
+  "@resultsStageFifthRound": {
+    "description": "Results stage: Asia's two-legged fifth qualifying round."
+  },
+  "newsNcPromotedTitle": "Promoted to League {league}",
+  "@newsNcPromotedTitle": {
+    "description": "Inbox title: the manager's nation won its Nations Cup group and climbs a league (league is a letter).",
+    "placeholders": {
+      "league": {
+        "type": "String"
+      }
+    }
+  },
+  "newsNcPromotedBody": "Top of the group in the {cup}: the next edition is played a league higher, and the promotion is worth €1M to the federation, paid at the end of the cycle.",
+  "@newsNcPromotedBody": {
+    "description": "Inbox body: Nations Cup promotion and its €1M bonus.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      }
+    }
+  },
+  "newsNcRelegatedTitle": "Relegated to League {league}",
+  "@newsNcRelegatedTitle": {
+    "description": "Inbox title: the manager's nation finished bottom of its Nations Cup group and drops a league (league is a letter).",
+    "placeholders": {
+      "league": {
+        "type": "String"
+      }
+    }
+  },
+  "newsNcRelegatedBody": "Bottom of the group in the {cup}: the next edition is played a league lower.",
+  "@newsNcRelegatedBody": {
+    "description": "Inbox body: Nations Cup relegation.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      }
+    }
   }
 }

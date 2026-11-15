@@ -60,7 +60,10 @@ void main() {
       var total = 0;
       var completed = 0;
       final incomplete = <int>[];
-      for (final seed in [1, 7, 2026, 8080]) {
+      // 8080 was the fourth until Africa's, Asia's and Oceania's own play-off
+      // steps (calendar2) moved the world: its host, Spain, then won every
+      // game of its second cycle and never called a room.
+      for (final seed in [1, 7, 2026, 99]) {
         final run = await _drive(seed);
         try {
           final calls = await run.container

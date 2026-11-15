@@ -179,6 +179,7 @@ class AwardYear {
       case CompetitionKind.worldCupPlayoff:
       case CompetitionKind.continentalPlayoff:
       case CompetitionKind.worldCupPlayoffEurope:
+      case CompetitionKind.worldCupQualifyingPlayoff:
         return 1.3;
       case CompetitionKind.worldCupQualifying:
       case CompetitionKind.continentalQualifying:

@@ -17890,4 +17890,76 @@ class AppLocalizationsMs extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return 'Terus ke perlawanan akhir laluan pada bulan Mac di negara tuan rumah, menentang pemenang $first lawan $second.';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return 'Play-off Afrika: separuh akhir menentang $opponent';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      'Empat naib juara kumpulan terbaik Afrika bertemu pada November di tuan rumah Kejohanan Afrika: separuh akhir satu perlawanan, kemudian final. Pemenang ke play-off antara benua.';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return 'Pusingan keempat Asia: Kumpulan $group';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return 'Satu pusingan perlawanan pada November menentang $first dan $second. Juara kumpulan layak; naib juara bermain pusingan kelima dua pertemuan untuk tempat dalam play-off antara benua.';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return 'Pusingan kelima Asia: $opponent dua pertemuan';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      'Di tempat sendiri dan di tempat lawan pada November. Pemenang agregat ke play-off antara benua; jika seri selepas pertemuan kedua, ada masa tambahan dan sepakan penalti.';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return 'Final Oceania: $opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      'Satu perlawanan pada November, di tuan rumah Piala Oceania, untuk tempat Oceania di pusingan akhir. Yang tewas ke play-off antara benua.';
+
+  @override
+  String get matchTinyFirstLeg => 'Pertemuan 1';
+
+  @override
+  String get matchTinySecondLeg => 'Pertemuan 2';
+
+  @override
+  String get matchTinyFourthRound => 'Pus. 4';
+
+  @override
+  String get resultsStageFourthRound => 'Pusingan keempat';
+
+  @override
+  String get resultsStageFifthRound => 'Pusingan kelima';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return 'Naik ke Liga $league';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return 'Juara kumpulan dalam $cup: edisi seterusnya dimainkan satu liga lebih tinggi, dan kenaikan ini bernilai €1 juta kepada persekutuan, dibayar pada akhir kitaran.';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return 'Turun ke Liga $league';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return 'Tercorot kumpulan dalam $cup: edisi seterusnya dimainkan satu liga lebih rendah.';
+  }
 }

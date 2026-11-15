@@ -4480,5 +4480,22 @@
   "wcPlaceholderIc": "Sieger interkontinentaler Weg {path}",
   "newsIcPlayoffTitle": "Interkontinentales Play-off: Weg {path}",
   "newsIcPlayoffBodySemi": "Ein Halbfinale mit nur einem Spiel gegen {opponent} im März im Gastgeberland, dann das Weg-Finale um einen Platz bei der Endrunde.",
-  "newsIcPlayoffBodyBye": "Direkt im Weg-Finale im März im Gastgeberland gesetzt, gegen den Sieger von {first} gegen {second}."
+  "newsIcPlayoffBodyBye": "Direkt im Weg-Finale im März im Gastgeberland gesetzt, gegen den Sieger von {first} gegen {second}.",
+  "newsCafPlayoffTitle": "Afrikanisches Play-off: Halbfinale gegen {opponent}",
+  "newsCafPlayoffBody": "Afrikas vier beste Gruppenzweite treffen sich im November beim Gastgeber der Afrikameisterschaft: ein Halbfinale in einem Spiel, dann das Finale. Der Sieger geht ins interkontinentale Play-off.",
+  "newsAfcFourthRoundTitle": "Asiens vierte Runde: Gruppe {group}",
+  "newsAfcFourthRoundBody": "Eine Runde Spiele im November gegen {first} und {second}. Der Gruppensieger qualifiziert sich; der Zweite spielt eine fünfte Runde mit Hin- und Rückspiel um einen Platz im interkontinentalen Play-off.",
+  "newsAfcFifthRoundTitle": "Asiens fünfte Runde: {opponent} in Hin- und Rückspiel",
+  "newsAfcFifthRoundBody": "Heim und auswärts im November. Der Sieger nach beiden Spielen geht ins interkontinentale Play-off; steht es nach dem Rückspiel unentschieden, folgen Verlängerung und Elfmeterschießen.",
+  "newsOfcFinalTitle": "Ozeanien-Finale: {opponent}",
+  "newsOfcFinalBody": "Ein Spiel im November beim Gastgeber des Ozeanien-Pokals um Ozeaniens Platz bei der Endrunde. Der Verlierer geht ins interkontinentale Play-off.",
+  "matchTinyFirstLeg": "Hinspiel",
+  "matchTinySecondLeg": "Rückspiel",
+  "matchTinyFourthRound": "4. Rd.",
+  "resultsStageFourthRound": "Vierte Runde",
+  "resultsStageFifthRound": "Fünfte Runde",
+  "newsNcPromotedTitle": "Aufstieg in Liga {league}",
+  "newsNcPromotedBody": "Gruppensieg im {cup}: Die nächste Ausgabe wird eine Liga höher gespielt, und der Aufstieg bringt dem Verband 1 Mio. €, ausgezahlt am Ende des Zyklus.",
+  "newsNcRelegatedTitle": "Abstieg in Liga {league}",
+  "newsNcRelegatedBody": "Gruppenletzter im {cup}: Die nächste Ausgabe wird eine Liga tiefer gespielt."
 }

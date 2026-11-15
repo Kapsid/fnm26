@@ -17839,4 +17839,76 @@ class AppLocalizationsTr extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return 'Mart ayında ev sahibi ülkede doğrudan yol finalinde, $first ile $second maçının galibine karşı.';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return 'Afrika play-off\'u: yarı finalde rakip $opponent';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      'Afrika gruplarının en iyi dört ikincisi kasımda Afrika Şampiyonası\'nın ev sahibinde karşılaşır: tek maçlık yarı final, ardından final. Kazanan kıtalararası play-off\'a gider.';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return 'Asya dördüncü tur: $group Grubu';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return 'Kasımda $first ve $second ile birer maç. Grup birincisi finallere katılır; ikinci, kıtalararası play-off yeri için çift maçlı beşinci turu oynar.';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return 'Asya beşinci tur: $opponent ile çift maç';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      'Kasımda iç saha ve deplasman. Toplamda kazanan kıtalararası play-off\'a gider; rövanştan sonra toplam eşitse uzatma ve penaltılar oynanır.';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return 'Okyanusya finali: $opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      'Kasımda Okyanusya Kupası\'nın ev sahibinde, Okyanusya\'nın finallerdeki yeri için tek maç. Kaybeden kıtalararası play-off\'a gider.';
+
+  @override
+  String get matchTinyFirstLeg => '1. maç';
+
+  @override
+  String get matchTinySecondLeg => 'Rövanş';
+
+  @override
+  String get matchTinyFourthRound => '4. tur';
+
+  @override
+  String get resultsStageFourthRound => 'Dördüncü tur';
+
+  @override
+  String get resultsStageFifthRound => 'Beşinci tur';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return 'Yükselme: Lig $league';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return '$cup grubunda birincilik: bir sonraki turnuva bir üst ligde oynanacak ve yükselme federasyona döngü sonunda ödenecek 1 milyon € kazandırıyor.';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return 'Düşme: Lig $league';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return '$cup grubunda sonunculuk: bir sonraki turnuva bir alt ligde oynanacak.';
+  }
 }

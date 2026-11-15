@@ -44,13 +44,21 @@ abstract class Fixture with _$Fixture {
   /// scorer, so every screen shows these instead, beside the penalties.
   /// Both are the stored score for every other result, and old saves hold
   /// the same convention, so nothing needs migrating.
-  int? get shownHomeScore => _levelled(homeScore, awayScore);
+  int? get shownHomeScore =>
+      _levelled(homeScore, awayScore, homePenalties, awayPenalties);
 
   /// See [shownHomeScore].
-  int? get shownAwayScore => _levelled(awayScore, homeScore);
+  int? get shownAwayScore =>
+      _levelled(awayScore, homeScore, awayPenalties, homePenalties);
 
-  int? _levelled(int? mine, int? theirs) {
+  /// The shootout winner's stored goal taken back off. For a one-off tie
+  /// that is the lower of the two scores, as it always was; a two-legged
+  /// tie's second leg (level on aggregate, not on the night) need not end
+  /// level, so the goal is taken off the side that won the kicks.
+  int? _levelled(int? mine, int? theirs, int? myPens, int? theirPens) {
     if (mine == null || theirs == null || !wentToShootout) return mine;
-    return mine < theirs ? mine : theirs;
+    // Stored level already (a few real-history ties): as stored.
+    if (mine == theirs) return mine;
+    return myPens! > theirPens! ? mine - 1 : mine;
   }
 }

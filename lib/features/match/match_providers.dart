@@ -13,6 +13,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
+import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
@@ -223,6 +224,7 @@ class MatchPreview {
     this.bigMatch = false,
     required this.ground,
     this.homeFans,
+    this.secondLegMargin,
   });
 
   final Fixture fixture;
@@ -275,6 +277,19 @@ class MatchPreview {
   /// (null anywhere else): it is why the ground is as full as it is (see
   /// [FanMood.fillShift]).
   final FanMoodBand? homeFans;
+
+  /// The first leg's margin a second leg ends level on (see [TwoLegged]),
+  /// when this is a second leg whose first leg is in; else null.
+  final int? secondLegMargin;
+
+  /// The ninety-minute margin (home less away) at which this match goes to
+  /// extra time and penalties: level for a knockout, [secondLegMargin] for a
+  /// second leg, never for anything else.
+  int? get tieMargin => Rounds.isKnockout(fixture.round)
+      ? 0
+      : TwoLegged.isSecondLeg(fixture.round)
+      ? secondLegMargin
+      : null;
 
   bool get playerIsHome => fixture.homeNationId == playerNationId;
 
@@ -583,6 +598,25 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
   // A knockout tie is the occasion a big-game player rises to.
   final bigMatch = _isKnockout(fixture.round);
 
+  // A second leg goes to extra time when it leaves the tie level on
+  // aggregate, so the engine is told the first leg's margin.
+  int? secondLegMargin;
+  if (TwoLegged.isSecondLeg(fixture.round)) {
+    final first = TwoLegged.firstLegAmong(fixture, [
+      for (final c
+          in await ref
+              .read(competitionRepositoryProvider)
+              .fixturesForNation(
+                careerId,
+                fixture.homeNationId,
+              ))
+        if (c.competitionId == fixture.competitionId) c,
+    ]);
+    if (first != null && first.hasResult) {
+      secondLegMargin = TwoLegged.levelMargin(first);
+    }
+  }
+
   // The home supporters' mood fills or empties his own ground; an away crowd
   // and a neutral finals are somebody else's.
   final fans = !venue.neutral && playerIsHome
@@ -621,6 +655,7 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
       bigMatch: bigMatch,
       atmosphere: Attendance.atmosphere(ground),
       extraTimeIfLevel: Rounds.isKnockout(fixture.round),
+      extraTimeAtMargin: secondLegMargin,
       conditions: MatchPreview.conditionsFor(
         fixture,
         ground,
@@ -656,6 +691,7 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
     bigMatch: bigMatch,
     ground: ground,
     homeFans: fans?.band,
+    secondLegMargin: secondLegMargin,
   );
 });
 

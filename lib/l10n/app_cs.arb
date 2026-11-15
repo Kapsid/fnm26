@@ -4480,5 +4480,22 @@
   "wcPlaceholderIc": "Vítěz mezikontinentální cesty {path}",
   "newsIcPlayoffTitle": "Mezikontinentální baráž: cesta {path}",
   "newsIcPlayoffBodySemi": "Jednozápasové semifinále proti týmu {opponent} v březnu v pořadatelské zemi, pak finále cesty o místo na závěrečném turnaji.",
-  "newsIcPlayoffBodyBye": "Nasazen přímo do březnového finále cesty v pořadatelské zemi proti vítězi zápasu {first} proti {second}."
+  "newsIcPlayoffBodyBye": "Nasazen přímo do březnového finále cesty v pořadatelské zemi proti vítězi zápasu {first} proti {second}.",
+  "newsCafPlayoffTitle": "Africká baráž: semifinále proti týmu {opponent}",
+  "newsCafPlayoffBody": "Čtyři nejlepší týmy z druhých míst afrických skupin se v listopadu utkají u pořadatele Afrického šampionátu: jednozápasové semifinále, pak finále. Vítěz jde do mezikontinentální baráže.",
+  "newsAfcFourthRoundTitle": "Asijské 4. kolo: skupina {group}",
+  "newsAfcFourthRoundBody": "Jedno kolo zápasů v listopadu proti týmům {first} a {second}. Vítěz skupiny postupuje; druhý hraje dvojzápasové 5. kolo o místo v mezikontinentální baráži.",
+  "newsAfcFifthRoundTitle": "Asijské 5. kolo: {opponent} na dva zápasy",
+  "newsAfcFifthRoundBody": "Doma a venku v listopadu. Vítěz podle součtu skóre jde do mezikontinentální baráže; při rovnosti po odvetě rozhodne prodloužení a penalty.",
+  "newsOfcFinalTitle": "Finále Oceánie: {opponent}",
+  "newsOfcFinalBody": "Jeden zápas v listopadu u pořadatele Poháru Oceánie o místo Oceánie na závěrečném turnaji. Poražený jde do mezikontinentální baráže.",
+  "matchTinyFirstLeg": "1. zápas",
+  "matchTinySecondLeg": "odveta",
+  "matchTinyFourthRound": "4. kolo",
+  "resultsStageFourthRound": "4. kolo",
+  "resultsStageFifthRound": "5. kolo",
+  "newsNcPromotedTitle": "Postup do ligy {league}",
+  "newsNcPromotedBody": "Vítězství ve skupině v soutěži {cup}: příští ročník se hraje o ligu výš a postup přinese svazu 1 mil. €, vyplacený na konci cyklu.",
+  "newsNcRelegatedTitle": "Sestup do ligy {league}",
+  "newsNcRelegatedBody": "Poslední místo ve skupině v soutěži {cup}: příští ročník se hraje o ligu níž."
 }

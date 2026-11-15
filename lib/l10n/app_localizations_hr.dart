@@ -18269,4 +18269,76 @@ class AppLocalizationsHr extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return 'Izravno u finalu staze u ožujku, u zemlji domaćinu, protiv pobjednika utakmice $first protiv $second.';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return 'Afrički dodatne kvalifikacije: polufinale protiv $opponent';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      'Četiri najbolje drugoplasirane momčadi afričkih skupina sastaju se u studenom kod domaćina Afričkog prvenstva: jedna polufinalna utakmica, zatim finale. Pobjednik ide u interkontinentalne dodatne kvalifikacije.';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return 'Azijsko četvrto kolo: skupina $group';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return 'Jedno kolo utakmica u studenom protiv $first i $second. Pobjednik skupine se kvalificira; drugoplasirani igra peto kolo na dvije utakmice za mjesto u interkontinentalnim dodatnim kvalifikacijama.';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return 'Azijsko peto kolo: $opponent na dvije utakmice';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      'Kod kuće i u gostima u studenom. Pobjednik po zbroju ide u interkontinentalne dodatne kvalifikacije; uz neriješeno nakon uzvrata slijede produžeci i jedanaesterci.';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return 'Finale Oceanije: $opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      'Jedna utakmica u studenom kod domaćina Kupa Oceanije za mjesto Oceanije na završnom turniru. Poraženi ide u interkontinentalne dodatne kvalifikacije.';
+
+  @override
+  String get matchTinyFirstLeg => '1. utakm.';
+
+  @override
+  String get matchTinySecondLeg => 'uzvrat';
+
+  @override
+  String get matchTinyFourthRound => '4. kolo';
+
+  @override
+  String get resultsStageFourthRound => 'Četvrto kolo';
+
+  @override
+  String get resultsStageFifthRound => 'Peto kolo';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return 'Ulazak u Ligu $league';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return 'Prvo mjesto u skupini u $cup: sljedeće izdanje igra se ligu više, a ulazak donosi savezu 1 mil. €, isplaćenih na kraju ciklusa.';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return 'Ispadanje u Ligu $league';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return 'Posljednje mjesto u skupini u $cup: sljedeće izdanje igra se ligu niže.';
+  }
 }

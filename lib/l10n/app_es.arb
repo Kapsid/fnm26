@@ -4480,5 +4480,22 @@
   "wcPlaceholderIc": "Ganador de la ruta intercontinental {path}",
   "newsIcPlayoffTitle": "Repesca intercontinental: ruta {path}",
   "newsIcPlayoffBodySemi": "Una semifinal a partido único contra {opponent} en marzo, en el país anfitrión, y luego la final de la ruta por una plaza en la fase final.",
-  "newsIcPlayoffBodyBye": "Directo a la final de la ruta en marzo, en el país anfitrión, contra el ganador de {first} contra {second}."
+  "newsIcPlayoffBodyBye": "Directo a la final de la ruta en marzo, en el país anfitrión, contra el ganador de {first} contra {second}.",
+  "newsCafPlayoffTitle": "Repesca africana: semifinal contra {opponent}",
+  "newsCafPlayoffBody": "Los cuatro mejores segundos de grupo de África se enfrentan en noviembre en la sede del Campeonato de África: una semifinal a partido único y después la final. El ganador va a la repesca intercontinental.",
+  "newsAfcFourthRoundTitle": "Cuarta ronda asiática: grupo {group}",
+  "newsAfcFourthRoundBody": "Una vuelta de partidos en noviembre contra {first} y {second}. El primero del grupo se clasifica; el segundo juega una quinta ronda a ida y vuelta por una plaza en la repesca intercontinental.",
+  "newsAfcFifthRoundTitle": "Quinta ronda asiática: {opponent} a ida y vuelta",
+  "newsAfcFifthRoundBody": "Ida y vuelta en noviembre. El ganador en el global va a la repesca intercontinental; con empate tras la vuelta, hay prórroga y penaltis.",
+  "newsOfcFinalTitle": "Final de Oceanía: {opponent}",
+  "newsOfcFinalBody": "Un partido en noviembre, en la sede de la Copa de Oceanía, por la plaza de Oceanía en la fase final. El perdedor va a la repesca intercontinental.",
+  "matchTinyFirstLeg": "Ida",
+  "matchTinySecondLeg": "Vuelta",
+  "matchTinyFourthRound": "4.ª r.",
+  "resultsStageFourthRound": "Cuarta ronda",
+  "resultsStageFifthRound": "Quinta ronda",
+  "newsNcPromotedTitle": "Ascenso a la Liga {league}",
+  "newsNcPromotedBody": "Primeros de grupo en la {cup}: la próxima edición se juega una liga más arriba y el ascenso vale 1 M€ para la federación, que se pagan al final del ciclo.",
+  "newsNcRelegatedTitle": "Descenso a la Liga {league}",
+  "newsNcRelegatedBody": "Últimos de grupo en la {cup}: la próxima edición se juega una liga más abajo."
 }

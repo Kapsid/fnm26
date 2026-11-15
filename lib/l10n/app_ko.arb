@@ -4480,5 +4480,22 @@
   "wcPlaceholderIc": "대륙간 패스 {path} 승자",
   "newsIcPlayoffTitle": "대륙간 플레이오프: 패스 {path}",
   "newsIcPlayoffBodySemi": "3월에 개최국에서 {opponent}와 단판 준결승, 이어 본선 진출을 건 패스 결승.",
-  "newsIcPlayoffBodyBye": "3월 개최국에서 열리는 패스 결승에 바로 진출, {first} 대 {second} 승자와 맞붙습니다."
+  "newsIcPlayoffBodyBye": "3월 개최국에서 열리는 패스 결승에 바로 진출, {first} 대 {second} 승자와 맞붙습니다.",
+  "newsCafPlayoffTitle": "아프리카 플레이오프: {opponent}와 준결승",
+  "newsCafPlayoffBody": "아프리카 조 2위 중 상위 4팀이 11월 아프리카 선수권 개최국에서 맞붙습니다. 단판 준결승 뒤 결승을 치르며, 승자는 대륙 간 플레이오프에 나갑니다.",
+  "newsAfcFourthRoundTitle": "아시아 4차 예선: {group}조",
+  "newsAfcFourthRoundBody": "11월에 {first}, {second}와 한 번씩 경기합니다. 조 1위는 본선에 진출하고, 2위는 대륙 간 플레이오프 출전권을 놓고 홈 앤드 어웨이 5차 예선을 치릅니다.",
+  "newsAfcFifthRoundTitle": "아시아 5차 예선: {opponent}와 홈 앤드 어웨이",
+  "newsAfcFifthRoundBody": "11월에 홈과 원정으로 두 경기를 치릅니다. 합계 승자가 대륙 간 플레이오프에 나가며, 2차전 뒤 합계가 같으면 연장전과 승부차기를 합니다.",
+  "newsOfcFinalTitle": "오세아니아 결승: {opponent}",
+  "newsOfcFinalBody": "11월 오세아니아컵 개최국에서 오세아니아의 본선 티켓을 놓고 단판 승부를 벌입니다. 패자는 대륙 간 플레이오프에 나갑니다.",
+  "matchTinyFirstLeg": "1차전",
+  "matchTinySecondLeg": "2차전",
+  "matchTinyFourthRound": "4차",
+  "resultsStageFourthRound": "4차 예선",
+  "resultsStageFifthRound": "5차 예선",
+  "newsNcPromotedTitle": "리그 {league} 승격",
+  "newsNcPromotedBody": "{cup}에서 조 1위: 다음 대회는 한 단계 위 리그에서 치르며, 승격으로 협회는 주기 종료 시 100만 유로를 받습니다.",
+  "newsNcRelegatedTitle": "리그 {league} 강등",
+  "newsNcRelegatedBody": "{cup}에서 조 최하위: 다음 대회는 한 단계 아래 리그에서 치릅니다."
 }

@@ -216,6 +216,19 @@ extension SeasonWcPlayoffs on SeasonService {
     );
     final seedRanks = _ref.read(seedRankingRepositoryProvider);
 
+    // Africa's, Asia's and Oceania's own steps come first: until they are
+    // decided nobody knows who those confederations send through or to the
+    // intercontinental play-off, and nothing below is drawn or stored.
+    final steps = await _progressConfedPlayoffs(
+      careerId: careerId,
+      career: career,
+      grouped: grouped,
+      hostBerths: hostBerths,
+      nations: nations,
+      rankingById: live,
+    );
+    if (steps == null) return false;
+
     // Europe: every group winner through, the rest of its places in paths.
     final euroGroups = grouped[europe] ?? const <List<GroupStanding>>[];
     final euroBerths = QualificationFormat.forConfederation(
@@ -273,6 +286,7 @@ extension SeasonWcPlayoffs on SeasonService {
       byConfederation: grouped,
       rankingById: icRank,
       hostBerths: hostBerths,
+      entrantsOverride: steps.icEntrants,
     );
     final icPaths = IcPlayoffs.paths(pool, icRank);
     // An unusual field (not six) has no matches: its best-ranked go through.
@@ -292,7 +306,8 @@ extension SeasonWcPlayoffs on SeasonService {
       hosts: hosts,
       hostBerths: hostBerths,
       playoffWinnersOverride: icDirect,
-      heldBack: {europe: uefaPaths.length},
+      heldBack: {...steps.heldBack, europe: uefaPaths.length},
+      extraQualifiers: steps.qualified,
     );
     await seedRanks.snapshot(
       careerId,

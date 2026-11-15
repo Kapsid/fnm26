@@ -11,6 +11,7 @@ import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/wc_playoffs.dart';
+import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
@@ -58,6 +59,12 @@ const _knockoutRounds = <String, ({int order, String label})>{
   'UPFINAL': (order: 1, label: 'Final'),
   'ICSF': (order: 0, label: 'Semi-finals'),
   'ICFINAL': (order: 1, label: 'Final'),
+  'AFSF': (order: 0, label: 'Semi-finals'),
+  'AFFINAL': (order: 1, label: 'Final'),
+  'AQ4': (order: 0, label: 'Fourth round'),
+  'AQ5L1': (order: 1, label: 'Fifth round, first leg'),
+  'AQ5L2': (order: 2, label: 'Fifth round, second leg'),
+  'OFINAL': (order: 0, label: 'Final'),
 };
 
 /// The localised name for a knockout [round] code (empty/unknown = group stage),
@@ -152,6 +159,16 @@ latestRoundPopupProvider = FutureProvider.autoDispose.family<RoundPopup?, int>((
           rounds: const [IcPlayoffs.semiRound, IcPlayoffs.finalRound],
           confederation: null,
         ),
+        // His own confederation's qualifying play-off step (a calendar2
+        // cycle: Africa's, Asia's or Oceania's), watched when he is not in
+        // it.
+        if (ConfedPlayoffs.confederations.contains(conf))
+          (
+            kind: ConfedPlayoffs.kind,
+            name: ConfedPlayoffs.name,
+            rounds: ConfedPlayoffs.rounds.toList(),
+            confederation: conf,
+          ),
         // The manager's own confederation's Nations Cup, under its own name
         // and with its own finals rounds (Africa's knockouts open with a
         // Round of 16); none for a confederation that runs no cup.

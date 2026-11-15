@@ -18258,4 +18258,76 @@ class AppLocalizationsUk extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return 'Одразу у фіналі шляху в березні в країні-господарці, проти переможця пари $first проти $second.';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return 'Африканські плей-оф: півфінал проти $opponent';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      'Чотири найкращі другі команди африканських груп зустрічаються в листопаді в господаря Чемпіонату Африки: один півфінальний матч, потім фінал. Переможець їде на міжконтинентальні плей-оф.';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return 'Азійський четвертий раунд: група $group';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return 'Одне коло матчів у листопаді проти $first і $second. Переможець групи виходить на турнір; друга команда грає п\'ятий раунд з двох матчів за місце в міжконтинентальних плей-оф.';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return 'Азійський п\'ятий раунд: $opponent у двох матчах';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      'Вдома і на виїзді в листопаді. Переможець за сумою двох матчів їде на міжконтинентальні плей-оф; за нічиєї після матчу-відповіді грають додатковий час і серію пенальті.';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return 'Фінал Океанії: $opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      'Один матч у листопаді в господаря Кубка Океанії за місце Океанії у фінальному турнірі. Переможений їде на міжконтинентальні плей-оф.';
+
+  @override
+  String get matchTinyFirstLeg => '1-й матч';
+
+  @override
+  String get matchTinySecondLeg => 'відповідь';
+
+  @override
+  String get matchTinyFourthRound => '4-й р.';
+
+  @override
+  String get resultsStageFourthRound => 'Четвертий раунд';
+
+  @override
+  String get resultsStageFifthRound => 'П\'ятий раунд';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return 'Підвищення до Ліги $league';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return 'Перше місце в групі в $cup: наступний розіграш пройде на лігу вище, а підвищення принесе федерації 1 млн €, які виплатять наприкінці циклу.';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return 'Пониження до Ліги $league';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return 'Останнє місце в групі в $cup: наступний розіграш пройде на лігу нижче.';
+  }
 }

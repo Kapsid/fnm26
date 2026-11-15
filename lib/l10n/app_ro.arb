@@ -4480,5 +4480,22 @@
   "wcPlaceholderIc": "Câștigătoarea traseului intercontinental {path}",
   "newsIcPlayoffTitle": "Baraj intercontinental: traseul {path}",
   "newsIcPlayoffBodySemi": "O semifinală într-un singur meci cu {opponent} în martie, în țara gazdă, apoi finala traseului pentru un loc la turneul final.",
-  "newsIcPlayoffBodyBye": "Direct în finala traseului din martie, în țara gazdă, contra câștigătoarei meciului {first} contra {second}."
+  "newsIcPlayoffBodyBye": "Direct în finala traseului din martie, în țara gazdă, contra câștigătoarei meciului {first} contra {second}.",
+  "newsCafPlayoffTitle": "Baraj african: semifinală cu {opponent}",
+  "newsCafPlayoffBody": "Cele mai bune patru locuri doi din grupele Africii se întâlnesc în noiembrie la gazda Campionatului African: o semifinală într-un singur meci, apoi finala. Câștigătoarea merge la barajul intercontinental.",
+  "newsAfcFourthRoundTitle": "Turul al patrulea asiatic: grupa {group}",
+  "newsAfcFourthRoundBody": "O tură de meciuri în noiembrie cu {first} și {second}. Câștigătoarea grupei se califică; locul doi joacă turul al cincilea în dublă manșă pentru un loc la barajul intercontinental.",
+  "newsAfcFifthRoundTitle": "Turul al cincilea asiatic: {opponent} în dublă manșă",
+  "newsAfcFifthRoundBody": "Acasă și în deplasare în noiembrie. Câștigătoarea la general merge la barajul intercontinental; la egalitate după manșa a doua urmează prelungiri și lovituri de departajare.",
+  "newsOfcFinalTitle": "Finala Oceaniei: {opponent}",
+  "newsOfcFinalBody": "Un meci în noiembrie, la gazda Cupei Oceaniei, pentru locul Oceaniei la turneul final. Învinsa merge la barajul intercontinental.",
+  "matchTinyFirstLeg": "Tur",
+  "matchTinySecondLeg": "Retur",
+  "matchTinyFourthRound": "T. 4",
+  "resultsStageFourthRound": "Turul al patrulea",
+  "resultsStageFifthRound": "Turul al cincilea",
+  "newsNcPromotedTitle": "Promovare în Liga {league}",
+  "newsNcPromotedBody": "Primul loc în grupă în {cup}: următoarea ediție se joacă o ligă mai sus, iar promovarea aduce federației 1 milion €, plătit la finalul ciclului.",
+  "newsNcRelegatedTitle": "Retrogradare în Liga {league}",
+  "newsNcRelegatedBody": "Ultimul loc în grupă în {cup}: următoarea ediție se joacă o ligă mai jos."
 }

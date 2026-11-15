@@ -118,8 +118,11 @@ void main() {
       last = hub.career.inGameDate;
     }
 
+    // The side misses Europe's championship directly and goes through its
+    // play-offs (calendar2): a preview of their own, before the semi-final.
     expect(held, [
       PreviewCampaign.continentalQualifying,
+      PreviewCampaign.continentalPlayoff,
       PreviewCampaign.continentalFinals,
       PreviewCampaign.worldQualifying,
       PreviewCampaign.worldFinals,
@@ -132,11 +135,12 @@ void main() {
               .statements(career.id))
         if (s.kind == StatementKind.target) s,
     ];
-    expect(targets, hasLength(4));
-    // Both qualifying promises were kept: the side reached both finals.
-    expect(targets[0].status, StatementStatus.kept);
-    expect(targets[2].status, StatementStatus.kept);
+    expect(targets, hasLength(5));
+    // The play-off promise and the World Championship's were kept: the side
+    // reached both finals. The promise to qualify directly was not.
+    expect(targets[1].status, StatementStatus.kept);
+    expect(targets[3].status, StatementStatus.kept);
     // The finals targets are judged once the run is over.
-    expect(targets[1].status, isNot(StatementStatus.open));
+    expect(targets[2].status, isNot(StatementStatus.open));
   }, timeout: const Timeout(Duration(minutes: 20)));
 }

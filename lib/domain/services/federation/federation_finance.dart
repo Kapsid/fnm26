@@ -199,13 +199,21 @@ abstract final class FederationFinance {
   /// runs plus any titles won. [wcRounds]/[contRounds] are the finals rounds
   /// the nation appeared in; [titlesWon] the competitions it won (the
   /// continental cup is matched by name via [continentalName]).
+  /// The bonus for each Nations Cup promotion (a group won below the top
+  /// league) in a calendar2 cycle: the owner's figure for 1.1.2.
+  static const int ncPromotionBonus = 1000000;
+
   static int resultsPrize({
     required Set<String> wcRounds,
     required Set<String> contRounds,
     required Set<String> titlesWon,
     String? continentalName,
+
+    /// Nations Cup promotions won this cycle (see [ncPromotionBonus]); a
+    /// cycle off the calendar2 rhythm counts none.
+    int ncPromotions = 0,
   }) {
-    var prize = 0;
+    var prize = ncPromotions * ncPromotionBonus;
     prize += _deepest(wcRounds, _wcRunPrize);
     prize += _deepest(contRounds, _contRunPrize);
     for (final title in titlesWon) {

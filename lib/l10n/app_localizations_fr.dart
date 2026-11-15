@@ -18091,4 +18091,76 @@ class AppLocalizationsFr extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return 'Directement en finale de voie en mars, dans le pays hôte, contre le vainqueur de $first contre $second.';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return 'Barrage africain : demi-finale contre $opponent';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      'Les quatre meilleurs deuxièmes de groupe d\'Afrique se retrouvent en novembre chez l\'hôte du Championnat d\'Afrique : une demi-finale sèche, puis la finale. Le vainqueur va au barrage intercontinental.';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return 'Quatrième tour asiatique : groupe $group';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return 'Une série de matches en novembre contre $first et $second. Le premier du groupe se qualifie ; le deuxième dispute un cinquième tour aller-retour pour une place au barrage intercontinental.';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return 'Cinquième tour asiatique : $opponent en aller-retour';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      'Aller et retour en novembre. Le vainqueur sur l\'ensemble des deux matches va au barrage intercontinental ; à égalité après le retour, prolongation et tirs au but.';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return 'Finale d\'Océanie : $opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      'Un match en novembre, chez l\'hôte de la Coupe d\'Océanie, pour la place de l\'Océanie en phase finale. Le perdant va au barrage intercontinental.';
+
+  @override
+  String get matchTinyFirstLeg => 'Aller';
+
+  @override
+  String get matchTinySecondLeg => 'Retour';
+
+  @override
+  String get matchTinyFourthRound => '4e t.';
+
+  @override
+  String get resultsStageFourthRound => 'Quatrième tour';
+
+  @override
+  String get resultsStageFifthRound => 'Cinquième tour';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return 'Promotion en Ligue $league';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return 'Premiers du groupe en $cup : la prochaine édition se joue une ligue plus haut, et la promotion rapporte 1 M€ à la fédération, versés à la fin du cycle.';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return 'Relégation en Ligue $league';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return 'Derniers du groupe en $cup : la prochaine édition se joue une ligue plus bas.';
+  }
 }

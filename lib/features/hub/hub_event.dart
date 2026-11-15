@@ -10,6 +10,7 @@ import 'package:fnm/domain/services/competition/tournament_calendar.dart';
 import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/wc_playoffs.dart';
+import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/util/nation_label.dart';
@@ -176,7 +177,13 @@ String _callUpLabel(AppLocalizations l, Fixture f) {
     UefaWcPlayoffs.semiRound ||
     UefaWcPlayoffs.finalRound ||
     IcPlayoffs.semiRound ||
-    IcPlayoffs.finalRound => l.hubCallUpPlayoffs,
+    IcPlayoffs.finalRound ||
+    ConfedPlayoffs.cafSemi ||
+    ConfedPlayoffs.cafFinal ||
+    ConfedPlayoffs.afc4 ||
+    ConfedPlayoffs.afc5Leg1 ||
+    ConfedPlayoffs.afc5Leg2 ||
+    ConfedPlayoffs.ofcFinal => l.hubCallUpPlayoffs,
     'CQ' || null => l.hubCallUpQualifying,
     _ => l.hubCallUpGeneric,
   };
@@ -889,6 +896,34 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       !friendliesFirst(wcPlayoffDate) &&
       (next == null || !wcPlayoffDate.isAfter(next.date))) {
     if (crossesVote(wcPlayoffDate)) return advanceToVote;
+    return HubEvent(
+      kind: HubEventKind.watchTournament,
+      label: l.hubEventWatchEuroPlayoffs,
+      icon: Icons.fast_forward_rounded,
+      route: '${Routes.cup}?careerId=$careerId',
+    );
+  }
+
+  // 2c-iv. His own confederation's qualifying play-off step (calendar2:
+  //         Africa's, Asia's or Oceania's, see [ConfedPlayoffs]) is being
+  //         played and he is not in it, or is out: stepped a day at a time
+  //         and watched, like Europe's play-offs. The other continents' steps
+  //         resolve in the background. Mirrors [SeasonService.advance].
+  final stepDate = !ConfedPlayoffs.confederations.contains(playerConf)
+      ? null
+      : await comp.earliestUnplayedDateOfKind(
+          careerId,
+          ConfedPlayoffs.kind,
+          confederation: playerConf,
+        );
+  final playerInStep = hub.fixtures.any(
+    (f) => !f.hasResult && ConfedPlayoffs.isRound(f.round),
+  );
+  if (stepDate != null &&
+      !playerInStep &&
+      !friendliesFirst(stepDate) &&
+      (next == null || !stepDate.isAfter(next.date))) {
+    if (crossesVote(stepDate)) return advanceToVote;
     return HubEvent(
       kind: HubEventKind.watchTournament,
       label: l.hubEventWatchEuroPlayoffs,

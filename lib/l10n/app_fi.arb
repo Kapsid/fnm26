@@ -4480,5 +4480,22 @@
   "wcPlaceholderIc": "Mannertenvälisen polun {path} voittaja",
   "newsIcPlayoffTitle": "Mannertenvälinen jatkokarsinta: polku {path}",
   "newsIcPlayoffBodySemi": "Yhden ottelun välierä joukkuetta {opponent} vastaan maaliskuussa isäntämaassa, sitten polun finaali paikasta lopputurnaukseen.",
-  "newsIcPlayoffBodyBye": "Suoraan polun finaaliin maaliskuussa isäntämaassa, vastaan ottelun {first} vastaan {second} voittaja."
+  "newsIcPlayoffBodyBye": "Suoraan polun finaaliin maaliskuussa isäntämaassa, vastaan ottelun {first} vastaan {second} voittaja.",
+  "newsCafPlayoffTitle": "Afrikan karsintapudotuspelit: välierä vastaan {opponent}",
+  "newsCafPlayoffBody": "Afrikan neljä parasta lohkokakkosta kohtaavat marraskuussa Afrikan mestaruusturnauksen isäntämaassa: yhden ottelun välierä, sitten finaali. Voittaja pääsee mannertenvälisiin karsintapudotuspeleihin.",
+  "newsAfcFourthRoundTitle": "Aasian neljäs kierros: lohko {group}",
+  "newsAfcFourthRoundBody": "Yksi otteluiden kierros marraskuussa vastaan {first} ja {second}. Lohkovoittaja selviää; kakkonen pelaa kaksiosaisen viidennen kierroksen paikasta mannertenvälisissä karsintapudotuspeleissä.",
+  "newsAfcFifthRoundTitle": "Aasian viides kierros: {opponent} kahdessa ottelussa",
+  "newsAfcFifthRoundBody": "Koti- ja vierasottelu marraskuussa. Yhteismaaleissa parempi pääsee mannertenvälisiin karsintapudotuspeleihin; tasatilanteessa toisen ottelun jälkeen pelataan jatkoaika ja rangaistuspotkut.",
+  "newsOfcFinalTitle": "Oseanian finaali: {opponent}",
+  "newsOfcFinalBody": "Yksi ottelu marraskuussa Oseanian cupin isäntämaassa Oseanian paikasta lopputurnauksessa. Häviäjä pääsee mannertenvälisiin karsintapudotuspeleihin.",
+  "matchTinyFirstLeg": "1. ott.",
+  "matchTinySecondLeg": "2. ott.",
+  "matchTinyFourthRound": "4. kier.",
+  "resultsStageFourthRound": "Neljäs kierros",
+  "resultsStageFifthRound": "Viides kierros",
+  "newsNcPromotedTitle": "Nousu liigaan {league}",
+  "newsNcPromotedBody": "Lohkovoitto kilpailussa {cup}: seuraava painos pelataan liigaa ylempänä, ja nousu on liitolle miljoonan euron arvoinen, maksetaan syklin lopussa.",
+  "newsNcRelegatedTitle": "Putoaminen liigaan {league}",
+  "newsNcRelegatedBody": "Lohkon viimeinen kilpailussa {cup}: seuraava painos pelataan liigaa alempana."
 }

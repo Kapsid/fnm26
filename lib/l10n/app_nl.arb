@@ -4480,5 +4480,22 @@
   "wcPlaceholderIc": "Winnaar intercontinentale route {path}",
   "newsIcPlayoffTitle": "Intercontinentale play-off: route {path}",
   "newsIcPlayoffBodySemi": "Eén halve finale tegen {opponent} in maart, in het gastland, dan de routefinale om een plaats in de eindronde.",
-  "newsIcPlayoffBodyBye": "Direct geplaatst in de routefinale in maart, in het gastland, tegen de winnaar van {first} tegen {second}."
+  "newsIcPlayoffBodyBye": "Direct geplaatst in de routefinale in maart, in het gastland, tegen de winnaar van {first} tegen {second}.",
+  "newsCafPlayoffTitle": "Afrikaanse play-off: halve finale tegen {opponent}",
+  "newsCafPlayoffBody": "Afrika's vier beste groepsnummers twee treffen elkaar in november bij het gastland van het Afrikaans Kampioenschap: een halve finale over één wedstrijd, dan de finale. De winnaar gaat naar de intercontinentale play-off.",
+  "newsAfcFourthRoundTitle": "Aziatische vierde ronde: groep {group}",
+  "newsAfcFourthRoundBody": "Eén ronde wedstrijden in november tegen {first} en {second}. De groepswinnaar plaatst zich; de nummer twee speelt een vijfde ronde over twee wedstrijden om een plek in de intercontinentale play-off.",
+  "newsAfcFifthRoundTitle": "Aziatische vijfde ronde: {opponent} over twee wedstrijden",
+  "newsAfcFifthRoundBody": "Thuis en uit in november. De winnaar over twee duels gaat naar de intercontinentale play-off; gelijk na de return, dan volgen verlenging en strafschoppen.",
+  "newsOfcFinalTitle": "Finale van Oceanië: {opponent}",
+  "newsOfcFinalBody": "Eén wedstrijd in november, bij het gastland van de Oceania Cup, om de plek van Oceanië op het eindtoernooi. De verliezer gaat naar de intercontinentale play-off.",
+  "matchTinyFirstLeg": "Heen",
+  "matchTinySecondLeg": "Terug",
+  "matchTinyFourthRound": "4e r.",
+  "resultsStageFourthRound": "Vierde ronde",
+  "resultsStageFifthRound": "Vijfde ronde",
+  "newsNcPromotedTitle": "Promotie naar Divisie {league}",
+  "newsNcPromotedBody": "Groepswinnaar in de {cup}: de volgende editie wordt een divisie hoger gespeeld, en de promotie levert de bond € 1 mln op, uitbetaald aan het einde van de cyclus.",
+  "newsNcRelegatedTitle": "Degradatie naar Divisie {league}",
+  "newsNcRelegatedBody": "Laatste in de groep in de {cup}: de volgende editie wordt een divisie lager gespeeld."
 }

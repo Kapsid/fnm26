@@ -48,6 +48,11 @@ const _clashRound = 'FFINAL';
 /// home-and-away.
 const _icPlayoffRounds = {'ICSF', 'ICFINAL'};
 
+/// Africa's and Oceania's World Championship qualifying play-off steps on
+/// the calendar2 rhythm (`ConfedPlayoffs.neutralRounds`): played at the
+/// host of the confederation's championship, as the real ones were.
+const _confedPlayoffRounds = {'AFSF', 'AFFINAL', 'OFINAL'};
+
 /// The showpiece rounds, played at the tournament's marquee ground (the primary
 /// host's largest stadium) rather than moving around the country.
 const _showpieceRounds = {'FINAL', 'CFINAL', '3RD', 'C3RD', _clashRound};
@@ -60,6 +65,7 @@ bool isNeutralFinalsRound(String? round) =>
     (round == _clashRound ||
         _wcFinalsRounds.contains(round) ||
         _icPlayoffRounds.contains(round) ||
+        _confedPlayoffRounds.contains(round) ||
         _continentalFinalsRounds.contains(round));
 
 /// The third country that stages a Continental Clash: a well-supported nation
@@ -131,7 +137,9 @@ MatchVenue venueForFixture({
 
   final isWc =
       _wcFinalsRounds.contains(round) || _icPlayoffRounds.contains(round);
-  final isCont = _continentalFinalsRounds.contains(round);
+  final isCont =
+      _continentalFinalsRounds.contains(round) ||
+      _confedPlayoffRounds.contains(round);
   if (!isWc && !isCont) {
     // Nations Cup groups and friendlies are genuine home-and-away games.
     return homeAndAway;

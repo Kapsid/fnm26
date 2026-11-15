@@ -4480,5 +4480,22 @@
   "wcPlaceholderIc": "Zwycięzca interkontynentalnej ścieżki {path}",
   "newsIcPlayoffTitle": "Baraż interkontynentalny: ścieżka {path}",
   "newsIcPlayoffBodySemi": "Jednomeczowy półfinał z {opponent} w marcu w kraju gospodarza, potem finał ścieżki o miejsce w turnieju finałowym.",
-  "newsIcPlayoffBodyBye": "Rozstawiony od razu w marcowym finale ścieżki w kraju gospodarza, przeciwko zwycięzcy meczu {first} kontra {second}."
+  "newsIcPlayoffBodyBye": "Rozstawiony od razu w marcowym finale ścieżki w kraju gospodarza, przeciwko zwycięzcy meczu {first} kontra {second}.",
+  "newsCafPlayoffTitle": "Afrykańskie baraże: półfinał z {opponent}",
+  "newsCafPlayoffBody": "Cztery najlepsze drużyny z drugich miejsc w grupach Afryki spotykają się w listopadzie u gospodarza Mistrzostw Afryki: jeden mecz półfinałowy, potem finał. Zwycięzca trafia do baraży interkontynentalnych.",
+  "newsAfcFourthRoundTitle": "Azjatycka czwarta runda: grupa {group}",
+  "newsAfcFourthRoundBody": "Jedna runda meczów w listopadzie z {first} i {second}. Zwycięzca grupy awansuje; druga drużyna gra dwumecz piątej rundy o miejsce w barażach interkontynentalnych.",
+  "newsAfcFifthRoundTitle": "Azjatycka piąta runda: dwumecz z {opponent}",
+  "newsAfcFifthRoundBody": "U siebie i na wyjeździe w listopadzie. Zwycięzca dwumeczu trafia do baraży interkontynentalnych; przy remisie w dwumeczu po rewanżu są dogrywka i rzuty karne.",
+  "newsOfcFinalTitle": "Finał Oceanii: {opponent}",
+  "newsOfcFinalBody": "Jeden mecz w listopadzie, u gospodarza Pucharu Oceanii, o miejsce Oceanii w turnieju finałowym. Przegrany trafia do baraży interkontynentalnych.",
+  "matchTinyFirstLeg": "1. mecz",
+  "matchTinySecondLeg": "rewanż",
+  "matchTinyFourthRound": "4. r.",
+  "resultsStageFourthRound": "Czwarta runda",
+  "resultsStageFifthRound": "Piąta runda",
+  "newsNcPromotedTitle": "Awans do Dywizji {league}",
+  "newsNcPromotedBody": "Pierwsze miejsce w grupie w {cup}: kolejna edycja rozgrywana jest dywizję wyżej, a awans jest wart dla związku 1 mln €, wypłacany na koniec cyklu.",
+  "newsNcRelegatedTitle": "Spadek do Dywizji {league}",
+  "newsNcRelegatedBody": "Ostatnie miejsce w grupie w {cup}: kolejna edycja rozgrywana jest dywizję niżej."
 }

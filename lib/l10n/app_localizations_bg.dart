@@ -18013,4 +18013,76 @@ class AppLocalizationsBg extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return 'Направо във финала на пътеката през март в страната домакин, срещу победителя от $first срещу $second.';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return 'Африкански бараж: полуфинал срещу $opponent';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      'Четирите най-добри вторi отбора в групите на Африка се срещат през ноември при домакина на Африканското първенство: един полуфинален мач, после финал. Победителят отива на междуконтиненталния бараж.';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return 'Азиатски четвърти кръг: група $group';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return 'Един кръг мачове през ноември срещу $first и $second. Победителят в групата се класира; вторият играе петия кръг в два мача за място в междуконтиненталния бараж.';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return 'Азиатски пети кръг: $opponent в два мача';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      'Домакинство и гостуване през ноември. Победителят по общ резултат отива на междуконтиненталния бараж; при равенство след втория мач следват продължения и дузпи.';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return 'Финал на Океания: $opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      'Един мач през ноември при домакина на Купата на Океания за мястото на Океания на финалите. Загубилият отива на междуконтиненталния бараж.';
+
+  @override
+  String get matchTinyFirstLeg => '1-ви мач';
+
+  @override
+  String get matchTinySecondLeg => '2-ри мач';
+
+  @override
+  String get matchTinyFourthRound => '4-ти кр.';
+
+  @override
+  String get resultsStageFourthRound => 'Четвърти кръг';
+
+  @override
+  String get resultsStageFifthRound => 'Пети кръг';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return 'Повишение в Лига $league';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return 'Първо място в групата в $cup: следващото издание се играе една лига по-високо, а повишението носи на федерацията 1 млн. €, изплатени в края на цикъла.';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return 'Изпадане в Лига $league';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return 'Последно място в групата в $cup: следващото издание се играе една лига по-ниско.';
+  }
 }

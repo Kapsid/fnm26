@@ -18002,4 +18002,76 @@ class AppLocalizationsFi extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return 'Suoraan polun finaaliin maaliskuussa isäntämaassa, vastaan ottelun $first vastaan $second voittaja.';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return 'Afrikan karsintapudotuspelit: välierä vastaan $opponent';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      'Afrikan neljä parasta lohkokakkosta kohtaavat marraskuussa Afrikan mestaruusturnauksen isäntämaassa: yhden ottelun välierä, sitten finaali. Voittaja pääsee mannertenvälisiin karsintapudotuspeleihin.';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return 'Aasian neljäs kierros: lohko $group';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return 'Yksi otteluiden kierros marraskuussa vastaan $first ja $second. Lohkovoittaja selviää; kakkonen pelaa kaksiosaisen viidennen kierroksen paikasta mannertenvälisissä karsintapudotuspeleissä.';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return 'Aasian viides kierros: $opponent kahdessa ottelussa';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      'Koti- ja vierasottelu marraskuussa. Yhteismaaleissa parempi pääsee mannertenvälisiin karsintapudotuspeleihin; tasatilanteessa toisen ottelun jälkeen pelataan jatkoaika ja rangaistuspotkut.';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return 'Oseanian finaali: $opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      'Yksi ottelu marraskuussa Oseanian cupin isäntämaassa Oseanian paikasta lopputurnauksessa. Häviäjä pääsee mannertenvälisiin karsintapudotuspeleihin.';
+
+  @override
+  String get matchTinyFirstLeg => '1. ott.';
+
+  @override
+  String get matchTinySecondLeg => '2. ott.';
+
+  @override
+  String get matchTinyFourthRound => '4. kier.';
+
+  @override
+  String get resultsStageFourthRound => 'Neljäs kierros';
+
+  @override
+  String get resultsStageFifthRound => 'Viides kierros';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return 'Nousu liigaan $league';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return 'Lohkovoitto kilpailussa $cup: seuraava painos pelataan liigaa ylempänä, ja nousu on liitolle miljoonan euron arvoinen, maksetaan syklin lopussa.';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return 'Putoaminen liigaan $league';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return 'Lohkon viimeinen kilpailussa $cup: seuraava painos pelataan liigaa alempana.';
+  }
 }

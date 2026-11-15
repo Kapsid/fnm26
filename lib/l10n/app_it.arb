@@ -4480,5 +4480,22 @@
   "wcPlaceholderIc": "Vincente del percorso intercontinentale {path}",
   "newsIcPlayoffTitle": "Spareggio intercontinentale: percorso {path}",
   "newsIcPlayoffBodySemi": "Una semifinale secca contro {opponent} a marzo, nel paese ospitante, poi la finale del percorso per un posto alla fase finale.",
-  "newsIcPlayoffBodyBye": "Direttamente in finale del percorso a marzo, nel paese ospitante, contro la vincente di {first} contro {second}."
+  "newsIcPlayoffBodyBye": "Direttamente in finale del percorso a marzo, nel paese ospitante, contro la vincente di {first} contro {second}.",
+  "newsCafPlayoffTitle": "Spareggio africano: semifinale contro {opponent}",
+  "newsCafPlayoffBody": "Le quattro migliori seconde dei gironi africani si affrontano a novembre presso il paese ospitante del Campionato d'Africa: semifinale secca, poi finale. La vincitrice va allo spareggio intercontinentale.",
+  "newsAfcFourthRoundTitle": "Quarto turno asiatico: girone {group}",
+  "newsAfcFourthRoundBody": "Un turno di partite a novembre contro {first} e {second}. La prima del girone si qualifica; la seconda gioca un quinto turno di andata e ritorno per un posto nello spareggio intercontinentale.",
+  "newsAfcFifthRoundTitle": "Quinto turno asiatico: {opponent} in andata e ritorno",
+  "newsAfcFifthRoundBody": "Andata e ritorno a novembre. Chi vince nel doppio confronto va allo spareggio intercontinentale; in parità dopo il ritorno, supplementari e rigori.",
+  "newsOfcFinalTitle": "Finale d'Oceania: {opponent}",
+  "newsOfcFinalBody": "Una partita a novembre, presso il paese ospitante della Coppa d'Oceania, per il posto dell'Oceania alla fase finale. La perdente va allo spareggio intercontinentale.",
+  "matchTinyFirstLeg": "Andata",
+  "matchTinySecondLeg": "Ritorno",
+  "matchTinyFourthRound": "4° t.",
+  "resultsStageFourthRound": "Quarto turno",
+  "resultsStageFifthRound": "Quinto turno",
+  "newsNcPromotedTitle": "Promozione nella Lega {league}",
+  "newsNcPromotedBody": "Primi nel girone della {cup}: la prossima edizione si gioca una lega più su, e la promozione vale 1 milione di euro per la federazione, pagati a fine ciclo.",
+  "newsNcRelegatedTitle": "Retrocessione nella Lega {league}",
+  "newsNcRelegatedBody": "Ultimi nel girone della {cup}: la prossima edizione si gioca una lega più giù."
 }

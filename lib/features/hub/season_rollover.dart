@@ -224,7 +224,27 @@ extension SeasonRollover on SeasonService {
       final folded = NationsCup.mergeRemainders(ncTiers, (id) => confOf[id]);
       if (folded.entries.any((e) => ncTiers[e.key] != e.value)) moved = true;
       ncTiers = folded;
-      if (moved) await _careers.setNationsCupTiers(careerId, ncTiers);
+      if (moved) {
+        final before = await _careers.nationsCupTiers(careerId);
+        await _careers.setNationsCupTiers(careerId, ncTiers);
+        // A calendar2 cycle tells the manager where his nation moved (and
+        // pays the promotion at this very close, see FederationService).
+        final myConf = confOf[career.nationId];
+        final myCup = myConf == null
+            ? null
+            : NationsCups.forConfederation(myConf);
+        if (closingCal2 && myCup?.format == NationsCupFormat.ladder) {
+          await _fileLadderMove(
+            careerId,
+            cup: myCup!.name,
+            before: before,
+            after: ncTiers,
+            dedupKey:
+                'ncmove:${career.cyclePointer}:'
+                '${Calendar2.gradedEdition(myConf!, calendar2: true)}',
+          );
+        }
+      }
     }
 
     // Where the board finished, read BEFORE anything moves: satisfaction is

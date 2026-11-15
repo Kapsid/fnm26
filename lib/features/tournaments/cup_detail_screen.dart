@@ -22,6 +22,7 @@ import 'package:fnm/domain/services/competition/qualification_format.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/tournaments/all_time_scorers_legend.dart';
 import 'package:fnm/features/tournaments/best_thirds.dart';
+import 'package:fnm/features/tournaments/confed_playoffs_view.dart';
 import 'package:fnm/features/tournaments/cup_detail_providers.dart';
 import 'package:fnm/features/tournaments/euro_playoff_draw_screen.dart';
 import 'package:fnm/features/tournaments/intercontinental_playoff_bracket.dart';
@@ -202,7 +203,12 @@ List<Widget> _cupTabViews(
       ),
     // The intercontinental play-off — its own tab, shown as a
     // knockout bracket for the last two finals berths.
-    _PlayoffTab(careerId: careerId, playoffs: data.playoffs),
+    _PlayoffTab(
+      careerId: careerId,
+      playoffs: data.playoffs,
+      code: code,
+      playerNationId: data.playerNationId,
+    ),
     if (data.hasFinals && !data.finalsDrawWatched)
       _Soon(message: l.tourCupFinalsDrawSoon)
     else if (data.hasFinals)
@@ -303,9 +309,16 @@ List<Widget> _cupTabViews(
 /// berths, drawn as a bracket. Shows a "not yet" note until every
 /// confederation's qualifying is complete and the ties are decided.
 class _PlayoffTab extends ConsumerWidget {
-  const _PlayoffTab({required this.careerId, this.playoffs});
+  const _PlayoffTab({
+    required this.careerId,
+    required this.code,
+    required this.playerNationId,
+    this.playoffs,
+  });
 
   final int careerId;
+  final String Function(int) code;
+  final int playerNationId;
 
   /// The calendar2 play-offs (Europe's paths and the intercontinental
   /// play-off, every tie a fixture), read from their stored draws; null in
@@ -315,7 +328,20 @@ class _PlayoffTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
-    if (playoffs case final data?) {
+    // Africa's, Asia's and Oceania's own steps (calendar2), played before
+    // the play-off draws: shown above the paths, and alone while they run.
+    final steps =
+        ref.watch(confedStepFixturesProvider(careerId)).valueOrNull ??
+        const {};
+    final stepsView = steps.isEmpty
+        ? null
+        : ConfedPlayoffSteps(
+            steps: steps,
+            code: code,
+            playerNationId: playerNationId,
+            careerId: careerId,
+          );
+    if (playoffs != null || stepsView != null) {
       return ListView(
         padding: const EdgeInsets.all(AppSpacing.marginMobile),
         children: [
@@ -326,7 +352,9 @@ class _PlayoffTab extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.md),
-          WcPlayoffPaths(data: data, careerId: careerId, headings: true),
+          if (playoffs case final data?)
+            WcPlayoffPaths(data: data, careerId: careerId, headings: true),
+          ?stepsView,
         ],
       );
     }

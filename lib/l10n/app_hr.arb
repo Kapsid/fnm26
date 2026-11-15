@@ -4480,5 +4480,22 @@
   "wcPlaceholderIc": "Pobjednik interkontinentalne staze {path}",
   "newsIcPlayoffTitle": "Interkontinentalno doigravanje: staza {path}",
   "newsIcPlayoffBodySemi": "Polufinale na jednu utakmicu protiv {opponent} u ožujku, u zemlji domaćinu, zatim finale staze za mjesto na završnom turniru.",
-  "newsIcPlayoffBodyBye": "Izravno u finalu staze u ožujku, u zemlji domaćinu, protiv pobjednika utakmice {first} protiv {second}."
+  "newsIcPlayoffBodyBye": "Izravno u finalu staze u ožujku, u zemlji domaćinu, protiv pobjednika utakmice {first} protiv {second}.",
+  "newsCafPlayoffTitle": "Afrički dodatne kvalifikacije: polufinale protiv {opponent}",
+  "newsCafPlayoffBody": "Četiri najbolje drugoplasirane momčadi afričkih skupina sastaju se u studenom kod domaćina Afričkog prvenstva: jedna polufinalna utakmica, zatim finale. Pobjednik ide u interkontinentalne dodatne kvalifikacije.",
+  "newsAfcFourthRoundTitle": "Azijsko četvrto kolo: skupina {group}",
+  "newsAfcFourthRoundBody": "Jedno kolo utakmica u studenom protiv {first} i {second}. Pobjednik skupine se kvalificira; drugoplasirani igra peto kolo na dvije utakmice za mjesto u interkontinentalnim dodatnim kvalifikacijama.",
+  "newsAfcFifthRoundTitle": "Azijsko peto kolo: {opponent} na dvije utakmice",
+  "newsAfcFifthRoundBody": "Kod kuće i u gostima u studenom. Pobjednik po zbroju ide u interkontinentalne dodatne kvalifikacije; uz neriješeno nakon uzvrata slijede produžeci i jedanaesterci.",
+  "newsOfcFinalTitle": "Finale Oceanije: {opponent}",
+  "newsOfcFinalBody": "Jedna utakmica u studenom kod domaćina Kupa Oceanije za mjesto Oceanije na završnom turniru. Poraženi ide u interkontinentalne dodatne kvalifikacije.",
+  "matchTinyFirstLeg": "1. utakm.",
+  "matchTinySecondLeg": "uzvrat",
+  "matchTinyFourthRound": "4. kolo",
+  "resultsStageFourthRound": "Četvrto kolo",
+  "resultsStageFifthRound": "Peto kolo",
+  "newsNcPromotedTitle": "Ulazak u Ligu {league}",
+  "newsNcPromotedBody": "Prvo mjesto u skupini u {cup}: sljedeće izdanje igra se ligu više, a ulazak donosi savezu 1 mil. €, isplaćenih na kraju ciklusa.",
+  "newsNcRelegatedTitle": "Ispadanje u Ligu {league}",
+  "newsNcRelegatedBody": "Posljednje mjesto u skupini u {cup}: sljedeće izdanje igra se ligu niže."
 }

@@ -114,6 +114,9 @@ Map<String, String> _byEnglishName(AppLocalizations l) => {
   NationsCups.africa: l.compAfricanNationsCup,
   'Continental Clash': l.compContinentalClash,
   'Intercontinental Play-off': l.compIntercontinentalPlayoff,
+  // Africa's, Asia's and Oceania's own qualifying play-off steps
+  // (`ConfedPlayoffs.name`).
+  'World Championship Qualifying Play-off': l.compPlayoffs(l.compWorldCup),
   'Continental Championship': l.compContinentalChampionship,
   for (final e in ContinentalCups.byConfederation.entries)
     e.value.name: continentalCupLabel(l, e.key),

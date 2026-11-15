@@ -18,12 +18,27 @@ enum PreviewCampaign {
   worldQualifying,
   continentalQualifying,
   worldFinals,
-  continentalFinals;
+  continentalFinals,
+
+  /// The World Championship's play-offs (calendar2): Europe's paths, the
+  /// intercontinental play-off, and Africa's, Asia's and Oceania's own
+  /// steps. Opened by the side's first play-off match of the cycle.
+  worldPlayoff,
+
+  /// Europe's play-offs for its championship (calendar2).
+  continentalPlayoff;
 
   bool get isQualifying =>
-      this == worldQualifying || this == continentalQualifying;
+      this == worldQualifying ||
+      this == continentalQualifying ||
+      this == worldPlayoff ||
+      this == continentalPlayoff;
 
-  bool get isWorld => this == worldQualifying || this == worldFinals;
+  bool get isWorld =>
+      this == worldQualifying || this == worldFinals || this == worldPlayoff;
+
+  /// A play-off: no group, so no group rival to be asked about.
+  bool get isPlayoff => this == worldPlayoff || this == continentalPlayoff;
 
   /// The brief the press hold him to, from the board's [boardTarget] for the
   /// tier. Qualifying asks only that the side gets there; at the finals,
@@ -39,6 +54,17 @@ enum PreviewCampaign {
     'CQ' => continentalQualifying,
     'GROUP' => worldFinals,
     'CGROUP' => continentalFinals,
+    // The first match a side can play in each play-off: a path's
+    // semi-final, an intercontinental seed's path final, the first round of
+    // each confederation's own step.
+    'UPSF' ||
+    'ICSF' ||
+    'ICFINAL' ||
+    'AFSF' ||
+    'AQ4' ||
+    'AQ5L1' ||
+    'OFINAL' => worldPlayoff,
+    'EPSF' => continentalPlayoff,
     _ => null,
   };
 }

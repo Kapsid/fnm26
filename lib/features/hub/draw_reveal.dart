@@ -101,7 +101,8 @@ String? groupDrawKind(CompetitionKind kind) => switch (kind) {
   CompetitionKind.finalissima ||
   CompetitionKind.worldCupPlayoff ||
   CompetitionKind.continentalPlayoff ||
-  CompetitionKind.worldCupPlayoffEurope => null,
+  CompetitionKind.worldCupPlayoffEurope ||
+  CompetitionKind.worldCupQualifyingPlayoff => null,
 };
 
 /// Whether the draw for the player's next fixture has been watched, so the hub

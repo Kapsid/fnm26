@@ -4480,5 +4480,22 @@
   "wcPlaceholderIc": "Pemenang Jalur Antarbenua {path}",
   "newsIcPlayoffTitle": "Play-off antarbenua: Jalur {path}",
   "newsIcPlayoffBodySemi": "Semifinal satu laga melawan {opponent} pada bulan Maret di negara tuan rumah, lalu final jalur untuk tempat di putaran final.",
-  "newsIcPlayoffBodyBye": "Langsung ke final jalur pada bulan Maret di negara tuan rumah, melawan pemenang {first} lawan {second}."
+  "newsIcPlayoffBodyBye": "Langsung ke final jalur pada bulan Maret di negara tuan rumah, melawan pemenang {first} lawan {second}.",
+  "newsCafPlayoffTitle": "Play-off Afrika: semifinal melawan {opponent}",
+  "newsCafPlayoffBody": "Empat runner-up grup terbaik Afrika bertemu pada November di tuan rumah Kejuaraan Afrika: semifinal satu laga, lalu final. Pemenangnya masuk play-off antarbenua.",
+  "newsAfcFourthRoundTitle": "Babak keempat Asia: Grup {group}",
+  "newsAfcFourthRoundBody": "Satu putaran laga pada November melawan {first} dan {second}. Juara grup lolos; runner-up memainkan babak kelima dua leg untuk tempat di play-off antarbenua.",
+  "newsAfcFifthRoundTitle": "Babak kelima Asia: {opponent} dua leg",
+  "newsAfcFifthRoundBody": "Kandang dan tandang pada November. Pemenang agregat masuk play-off antarbenua; jika imbang setelah leg kedua, ada perpanjangan waktu dan adu penalti.",
+  "newsOfcFinalTitle": "Final Oseania: {opponent}",
+  "newsOfcFinalBody": "Satu laga pada November, di tuan rumah Piala Oseania, untuk jatah Oseania di putaran final. Yang kalah masuk play-off antarbenua.",
+  "matchTinyFirstLeg": "Leg 1",
+  "matchTinySecondLeg": "Leg 2",
+  "matchTinyFourthRound": "Bbk 4",
+  "resultsStageFourthRound": "Babak keempat",
+  "resultsStageFifthRound": "Babak kelima",
+  "newsNcPromotedTitle": "Promosi ke Liga {league}",
+  "newsNcPromotedBody": "Juara grup di {cup}: edisi berikutnya dimainkan satu liga lebih tinggi, dan promosi ini bernilai €1 juta bagi federasi, dibayar di akhir siklus.",
+  "newsNcRelegatedTitle": "Degradasi ke Liga {league}",
+  "newsNcRelegatedBody": "Juru kunci grup di {cup}: edisi berikutnya dimainkan satu liga lebih rendah."
 }

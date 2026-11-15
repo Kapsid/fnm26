@@ -4480,5 +4480,22 @@
   "wcPlaceholderIc": "A(z) {path}. interkontinentális ág győztese",
   "newsIcPlayoffTitle": "Interkontinentális pótselejtező: {path}. ág",
   "newsIcPlayoffBodySemi": "Egymérkőzéses elődöntő {opponent} ellen márciusban a rendező országban, majd az ág döntője a világbajnoki helyért.",
-  "newsIcPlayoffBodyBye": "Egyenesen az ág márciusi döntőjében a rendező országban, a(z) {first} és {second} párharc győztese ellen."
+  "newsIcPlayoffBodyBye": "Egyenesen az ág márciusi döntőjében a rendező országban, a(z) {first} és {second} párharc győztese ellen.",
+  "newsCafPlayoffTitle": "Afrikai pótselejtező: elődöntő a(z) {opponent} ellen",
+  "newsCafPlayoffBody": "Afrika négy legjobb csoportmásodikja novemberben a Afrikai Bajnokság rendezőjénél csap össze: egymérkőzéses elődöntő, majd döntő. A győztes az interkontinentális pótselejtezőbe jut.",
+  "newsAfcFourthRoundTitle": "Ázsiai negyedik forduló: {group} csoport",
+  "newsAfcFourthRoundBody": "Egy kör mérkőzés novemberben a(z) {first} és a(z) {second} ellen. A csoportgyőztes kijut; a második kétmérkőzéses ötödik fordulót játszik az interkontinentális pótselejtezős helyért.",
+  "newsAfcFifthRoundTitle": "Ázsiai ötödik forduló: {opponent} két mérkőzésen",
+  "newsAfcFifthRoundBody": "Oda-visszavágó novemberben. Az összesítésben jobb az interkontinentális pótselejtezőbe jut; döntetlen összesítés esetén a visszavágó után hosszabbítás és tizenegyesek jönnek.",
+  "newsOfcFinalTitle": "Óceániai döntő: {opponent}",
+  "newsOfcFinalBody": "Egy mérkőzés novemberben az Óceánia-kupa rendezőjénél Óceánia világtorna-helyéért. A vesztes az interkontinentális pótselejtezőbe jut.",
+  "matchTinyFirstLeg": "1. mérk.",
+  "matchTinySecondLeg": "2. mérk.",
+  "matchTinyFourthRound": "4. ford.",
+  "resultsStageFourthRound": "Negyedik forduló",
+  "resultsStageFifthRound": "Ötödik forduló",
+  "newsNcPromotedTitle": "Feljutás a(z) {league} ligába",
+  "newsNcPromotedBody": "Csoportelső a(z) {cup} sorozatban: a következő kiírást egy ligával feljebb játsszuk, és a feljutás 1 millió eurót ér a szövetségnek, a ciklus végén fizetve.",
+  "newsNcRelegatedTitle": "Kiesés a(z) {league} ligába",
+  "newsNcRelegatedBody": "Csoportutolsó a(z) {cup} sorozatban: a következő kiírást egy ligával lejjebb játsszuk."
 }

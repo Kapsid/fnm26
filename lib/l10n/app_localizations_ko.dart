@@ -17343,4 +17343,76 @@ class AppLocalizationsKo extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return '3월 개최국에서 열리는 패스 결승에 바로 진출, $first 대 $second 승자와 맞붙습니다.';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return '아프리카 플레이오프: $opponent와 준결승';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      '아프리카 조 2위 중 상위 4팀이 11월 아프리카 선수권 개최국에서 맞붙습니다. 단판 준결승 뒤 결승을 치르며, 승자는 대륙 간 플레이오프에 나갑니다.';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return '아시아 4차 예선: $group조';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return '11월에 $first, $second와 한 번씩 경기합니다. 조 1위는 본선에 진출하고, 2위는 대륙 간 플레이오프 출전권을 놓고 홈 앤드 어웨이 5차 예선을 치릅니다.';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return '아시아 5차 예선: $opponent와 홈 앤드 어웨이';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      '11월에 홈과 원정으로 두 경기를 치릅니다. 합계 승자가 대륙 간 플레이오프에 나가며, 2차전 뒤 합계가 같으면 연장전과 승부차기를 합니다.';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return '오세아니아 결승: $opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      '11월 오세아니아컵 개최국에서 오세아니아의 본선 티켓을 놓고 단판 승부를 벌입니다. 패자는 대륙 간 플레이오프에 나갑니다.';
+
+  @override
+  String get matchTinyFirstLeg => '1차전';
+
+  @override
+  String get matchTinySecondLeg => '2차전';
+
+  @override
+  String get matchTinyFourthRound => '4차';
+
+  @override
+  String get resultsStageFourthRound => '4차 예선';
+
+  @override
+  String get resultsStageFifthRound => '5차 예선';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return '리그 $league 승격';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return '$cup에서 조 1위: 다음 대회는 한 단계 위 리그에서 치르며, 승격으로 협회는 주기 종료 시 100만 유로를 받습니다.';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return '리그 $league 강등';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return '$cup에서 조 최하위: 다음 대회는 한 단계 아래 리그에서 치릅니다.';
+  }
 }

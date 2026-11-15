@@ -18059,4 +18059,76 @@ class AppLocalizationsDe extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return 'Direkt im Weg-Finale im März im Gastgeberland gesetzt, gegen den Sieger von $first gegen $second.';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return 'Afrikanisches Play-off: Halbfinale gegen $opponent';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      'Afrikas vier beste Gruppenzweite treffen sich im November beim Gastgeber der Afrikameisterschaft: ein Halbfinale in einem Spiel, dann das Finale. Der Sieger geht ins interkontinentale Play-off.';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return 'Asiens vierte Runde: Gruppe $group';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return 'Eine Runde Spiele im November gegen $first und $second. Der Gruppensieger qualifiziert sich; der Zweite spielt eine fünfte Runde mit Hin- und Rückspiel um einen Platz im interkontinentalen Play-off.';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return 'Asiens fünfte Runde: $opponent in Hin- und Rückspiel';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      'Heim und auswärts im November. Der Sieger nach beiden Spielen geht ins interkontinentale Play-off; steht es nach dem Rückspiel unentschieden, folgen Verlängerung und Elfmeterschießen.';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return 'Ozeanien-Finale: $opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      'Ein Spiel im November beim Gastgeber des Ozeanien-Pokals um Ozeaniens Platz bei der Endrunde. Der Verlierer geht ins interkontinentale Play-off.';
+
+  @override
+  String get matchTinyFirstLeg => 'Hinspiel';
+
+  @override
+  String get matchTinySecondLeg => 'Rückspiel';
+
+  @override
+  String get matchTinyFourthRound => '4. Rd.';
+
+  @override
+  String get resultsStageFourthRound => 'Vierte Runde';
+
+  @override
+  String get resultsStageFifthRound => 'Fünfte Runde';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return 'Aufstieg in Liga $league';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return 'Gruppensieg im $cup: Die nächste Ausgabe wird eine Liga höher gespielt, und der Aufstieg bringt dem Verband 1 Mio. €, ausgezahlt am Ende des Zyklus.';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return 'Abstieg in Liga $league';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return 'Gruppenletzter im $cup: Die nächste Ausgabe wird eine Liga tiefer gespielt.';
+  }
 }

@@ -762,6 +762,9 @@ class MatchEngine {
   /// after regulation is over, so the regulation score and events are the
   /// same either way. Subs, changes and talks timed 91-120 fire on their
   /// minute; the result's [MatchResult.extraTime] holds the totals.
+  /// [extraTimeAtMargin] plays them instead when the ninety ends on that
+  /// margin (home less away): a second leg that leaves its tie level on
+  /// aggregate (`TwoLegged.levelMargin`); 0 is [extraTimeIfLevel].
   MatchResult play({
     required MatchTeam home,
     required MatchTeam away,
@@ -777,6 +780,7 @@ class MatchEngine {
     bool bigMatch = false,
     double atmosphere = 1.0,
     bool extraTimeIfLevel = false,
+    int? extraTimeAtMargin,
     MatchConditions conditions = MatchConditions.none,
   }) {
     // What the weather does to the match: every factor exactly 1.0 under a
@@ -1982,7 +1986,10 @@ class MatchEngine {
     // carries on into the totals.
     final regulationHome = homeScore;
     final regulationAway = awayScore;
-    final playExtraTime = extraTimeIfLevel && homeScore == awayScore;
+    final playExtraTime =
+        (extraTimeIfLevel && homeScore == awayScore) ||
+        (extraTimeAtMargin != null &&
+            homeScore - awayScore == extraTimeAtMargin);
     if (playExtraTime) {
       for (var minute = 91; minute <= 120; minute++) {
         playMinute(minute, 0);

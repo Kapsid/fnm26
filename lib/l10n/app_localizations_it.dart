@@ -18006,4 +18006,76 @@ class AppLocalizationsIt extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return 'Direttamente in finale del percorso a marzo, nel paese ospitante, contro la vincente di $first contro $second.';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return 'Spareggio africano: semifinale contro $opponent';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      'Le quattro migliori seconde dei gironi africani si affrontano a novembre presso il paese ospitante del Campionato d\'Africa: semifinale secca, poi finale. La vincitrice va allo spareggio intercontinentale.';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return 'Quarto turno asiatico: girone $group';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return 'Un turno di partite a novembre contro $first e $second. La prima del girone si qualifica; la seconda gioca un quinto turno di andata e ritorno per un posto nello spareggio intercontinentale.';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return 'Quinto turno asiatico: $opponent in andata e ritorno';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      'Andata e ritorno a novembre. Chi vince nel doppio confronto va allo spareggio intercontinentale; in parità dopo il ritorno, supplementari e rigori.';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return 'Finale d\'Oceania: $opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      'Una partita a novembre, presso il paese ospitante della Coppa d\'Oceania, per il posto dell\'Oceania alla fase finale. La perdente va allo spareggio intercontinentale.';
+
+  @override
+  String get matchTinyFirstLeg => 'Andata';
+
+  @override
+  String get matchTinySecondLeg => 'Ritorno';
+
+  @override
+  String get matchTinyFourthRound => '4° t.';
+
+  @override
+  String get resultsStageFourthRound => 'Quarto turno';
+
+  @override
+  String get resultsStageFifthRound => 'Quinto turno';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return 'Promozione nella Lega $league';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return 'Primi nel girone della $cup: la prossima edizione si gioca una lega più su, e la promozione vale 1 milione di euro per la federazione, pagati a fine ciclo.';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return 'Retrocessione nella Lega $league';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return 'Ultimi nel girone della $cup: la prossima edizione si gioca una lega più giù.';
+  }
 }

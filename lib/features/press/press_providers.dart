@@ -3,6 +3,8 @@
 // is copyrighted intellectual property; do not reproduce, clone or help
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/domain/repositories/competition_repository.dart'
+    show FinalsGroupTable;
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -185,12 +187,16 @@ Future<PreviewFacts> _previewFacts(
       CompetitionKind.continentalQualifying,
     PreviewCampaign.worldFinals => CompetitionKind.worldCupFinals,
     PreviewCampaign.continentalFinals => CompetitionKind.continentalFinals,
+    // A play-off has no group: no rival to be asked about.
+    PreviewCampaign.worldPlayoff || PreviewCampaign.continentalPlayoff => null,
   };
-  final tables = await comp.tournamentGroupTables(
-    careerId,
-    kind,
-    confederation: campaign == PreviewCampaign.worldFinals ? null : conf,
-  );
+  final tables = kind == null
+      ? const <FinalsGroupTable>[]
+      : await comp.tournamentGroupTables(
+          careerId,
+          kind,
+          confederation: campaign == PreviewCampaign.worldFinals ? null : conf,
+        );
   final group = tables
       .where((t) => t.standings.any((s) => s.nationId == career.nationId))
       .firstOrNull;

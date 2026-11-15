@@ -97,6 +97,21 @@ class KnockoutOutcome {
   /// Whether the home side won the tie (in extra time or on penalties).
   bool get homeWon =>
       wentToShootout ? homePens > awayPens : homeScore > awayScore;
+
+  /// The same outcome with [by] goals more to the home side: a second leg
+  /// settled as a level tie (see `TwoLegged`) is drawn level and then put
+  /// back on its real score, the kicks unchanged.
+  KnockoutOutcome shiftedHome(int by) => by == 0
+      ? this
+      : KnockoutOutcome(
+          homeScore: homeScore + by,
+          awayScore: awayScore,
+          afterExtraTime: afterExtraTime,
+          homeKicks: homeKicks,
+          awayKicks: awayKicks,
+          homeDetail: homeDetail,
+          awayDetail: awayDetail,
+        );
 }
 
 /// World Cup finals: a pot-based group draw (by world ranking) and the knockout
@@ -166,6 +181,11 @@ abstract final class WorldCupFinals {
     /// groups (Europe's paths on the calendar2 rhythm): its group ladder
     /// hands out that many fewer. Empty keeps every ladder as it was.
     Map<Confederation, int> heldBack = const {},
+
+    /// Sides through by a confederation's own play-off step (Africa's,
+    /// Asia's and Oceania's on the calendar2 rhythm, see `ConfedPlayoffs`):
+    /// the places [heldBack] kept from their groups.
+    List<int> extraQualifiers = const [],
   }) {
     int rank(int id) => rankingById[id] ?? 9999;
     final qualifiers = <int>[];
@@ -181,6 +201,9 @@ abstract final class WorldCupFinals {
           (berths - (heldBack[entry.key] ?? 0)).clamp(0, berths),
         ),
       );
+    }
+    for (final id in extraQualifiers) {
+      if (!qualifiers.contains(id)) qualifiers.add(id);
     }
     // The two remaining places go through the intercontinental play-off. A
     // caller that has actually PLAYED the play-off passes its real winners in
@@ -891,12 +914,20 @@ abstract final class WorldCupFinals {
     required Map<Confederation, List<List<GroupStanding>>> byConfederation,
     required Map<int, int> rankingById,
     required Map<Confederation, int> hostBerths,
+
+    /// A confederation's entrants decided by its own play-off step (see
+    /// `ConfedPlayoffs`), in place of the ones its ladder would name.
+    Map<Confederation, List<int>> entrantsOverride = const {},
   }) {
     int rank(int id) => rankingById[id] ?? 9999;
     final pool = <int>[];
     for (final entry in byConfederation.entries) {
       final fmt = QualificationFormat.forConfederation(entry.key);
       if (fmt.playoffEntrants <= 0) continue;
+      if (entrantsOverride[entry.key] case final decided?) {
+        pool.addAll(decided);
+        continue;
+      }
       final berths = fmt.qualifyingBerths(hostBerths[entry.key] ?? 0);
       final direct = Qualification.qualifiers(entry.value, berths);
       final withEntrants = Qualification.qualifiers(

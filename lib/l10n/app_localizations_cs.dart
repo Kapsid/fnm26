@@ -18322,4 +18322,76 @@ class AppLocalizationsCs extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return 'Nasazen přímo do březnového finále cesty v pořadatelské zemi proti vítězi zápasu $first proti $second.';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return 'Africká baráž: semifinále proti týmu $opponent';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      'Čtyři nejlepší týmy z druhých míst afrických skupin se v listopadu utkají u pořadatele Afrického šampionátu: jednozápasové semifinále, pak finále. Vítěz jde do mezikontinentální baráže.';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return 'Asijské 4. kolo: skupina $group';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return 'Jedno kolo zápasů v listopadu proti týmům $first a $second. Vítěz skupiny postupuje; druhý hraje dvojzápasové 5. kolo o místo v mezikontinentální baráži.';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return 'Asijské 5. kolo: $opponent na dva zápasy';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      'Doma a venku v listopadu. Vítěz podle součtu skóre jde do mezikontinentální baráže; při rovnosti po odvetě rozhodne prodloužení a penalty.';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return 'Finále Oceánie: $opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      'Jeden zápas v listopadu u pořadatele Poháru Oceánie o místo Oceánie na závěrečném turnaji. Poražený jde do mezikontinentální baráže.';
+
+  @override
+  String get matchTinyFirstLeg => '1. zápas';
+
+  @override
+  String get matchTinySecondLeg => 'odveta';
+
+  @override
+  String get matchTinyFourthRound => '4. kolo';
+
+  @override
+  String get resultsStageFourthRound => '4. kolo';
+
+  @override
+  String get resultsStageFifthRound => '5. kolo';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return 'Postup do ligy $league';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return 'Vítězství ve skupině v soutěži $cup: příští ročník se hraje o ligu výš a postup přinese svazu 1 mil. €, vyplacený na konci cyklu.';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return 'Sestup do ligy $league';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return 'Poslední místo ve skupině v soutěži $cup: příští ročník se hraje o ligu níž.';
+  }
 }

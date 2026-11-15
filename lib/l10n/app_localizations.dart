@@ -27121,6 +27121,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Seeded straight into the path final in March, played in the host nation, against the winner of {first} v {second}.'**
   String newsIcPlayoffBodyBye(String first, String second);
+
+  /// Inbox title: the manager's nation is in Africa's World Championship qualifying play-off (four best group runners-up).
+  ///
+  /// In en, this message translates to:
+  /// **'African play-off: semi-final against {opponent}'**
+  String newsCafPlayoffTitle(String opponent);
+
+  /// Inbox body: how Africa's qualifying play-off works.
+  ///
+  /// In en, this message translates to:
+  /// **'Africa\'s four best group runners-up meet in November at the African Championship\'s host: a one-off semi-final, then the final. The winner goes to the intercontinental play-off.'**
+  String get newsCafPlayoffBody;
+
+  /// Inbox title: the manager's nation is drawn into a group of three in Asia's fourth qualifying round (group is A or B).
+  ///
+  /// In en, this message translates to:
+  /// **'Asian fourth round: Group {group}'**
+  String newsAfcFourthRoundTitle(String group);
+
+  /// Inbox body: Asia's fourth qualifying round; first and second are the other two nations of the group.
+  ///
+  /// In en, this message translates to:
+  /// **'One round of matches in November against {first} and {second}. The group winner qualifies; the runner-up plays a two-legged fifth round for a place in the intercontinental play-off.'**
+  String newsAfcFourthRoundBody(String first, String second);
+
+  /// Inbox title: the manager's nation plays Asia's two-legged fifth qualifying round.
+  ///
+  /// In en, this message translates to:
+  /// **'Asian fifth round: {opponent} over two legs'**
+  String newsAfcFifthRoundTitle(String opponent);
+
+  /// Inbox body: how Asia's two-legged fifth round is decided.
+  ///
+  /// In en, this message translates to:
+  /// **'Home and away in November. The winner on aggregate goes to the intercontinental play-off; level after the second leg, it goes to extra time and penalties.'**
+  String get newsAfcFifthRoundBody;
+
+  /// Inbox title: the manager's nation plays Oceania's qualifying final.
+  ///
+  /// In en, this message translates to:
+  /// **'Oceania final: {opponent}'**
+  String newsOfcFinalTitle(String opponent);
+
+  /// Inbox body: Oceania's qualifying final.
+  ///
+  /// In en, this message translates to:
+  /// **'One match in November, at the Oceania Cup\'s host, for Oceania\'s place at the finals. The loser goes to the intercontinental play-off.'**
+  String get newsOfcFinalBody;
+
+  /// Very short label: the first leg of a two-legged tie.
+  ///
+  /// In en, this message translates to:
+  /// **'1st leg'**
+  String get matchTinyFirstLeg;
+
+  /// Very short label: the second leg of a two-legged tie.
+  ///
+  /// In en, this message translates to:
+  /// **'2nd leg'**
+  String get matchTinySecondLeg;
+
+  /// Very short label: Asia's fourth qualifying round (groups of three).
+  ///
+  /// In en, this message translates to:
+  /// **'Rd 4'**
+  String get matchTinyFourthRound;
+
+  /// Results stage: Asia's fourth qualifying round.
+  ///
+  /// In en, this message translates to:
+  /// **'Fourth round'**
+  String get resultsStageFourthRound;
+
+  /// Results stage: Asia's two-legged fifth qualifying round.
+  ///
+  /// In en, this message translates to:
+  /// **'Fifth round'**
+  String get resultsStageFifthRound;
+
+  /// Inbox title: the manager's nation won its Nations Cup group and climbs a league (league is a letter).
+  ///
+  /// In en, this message translates to:
+  /// **'Promoted to League {league}'**
+  String newsNcPromotedTitle(String league);
+
+  /// Inbox body: Nations Cup promotion and its €1M bonus.
+  ///
+  /// In en, this message translates to:
+  /// **'Top of the group in the {cup}: the next edition is played a league higher, and the promotion is worth €1M to the federation, paid at the end of the cycle.'**
+  String newsNcPromotedBody(String cup);
+
+  /// Inbox title: the manager's nation finished bottom of its Nations Cup group and drops a league (league is a letter).
+  ///
+  /// In en, this message translates to:
+  /// **'Relegated to League {league}'**
+  String newsNcRelegatedTitle(String league);
+
+  /// Inbox body: Nations Cup relegation.
+  ///
+  /// In en, this message translates to:
+  /// **'Bottom of the group in the {cup}: the next edition is played a league lower.'**
+  String newsNcRelegatedBody(String cup);
 }
 
 class _AppLocalizationsDelegate

@@ -17960,4 +17960,76 @@ class AppLocalizationsEn extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return 'Seeded straight into the path final in March, played in the host nation, against the winner of $first v $second.';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return 'African play-off: semi-final against $opponent';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      'Africa\'s four best group runners-up meet in November at the African Championship\'s host: a one-off semi-final, then the final. The winner goes to the intercontinental play-off.';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return 'Asian fourth round: Group $group';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return 'One round of matches in November against $first and $second. The group winner qualifies; the runner-up plays a two-legged fifth round for a place in the intercontinental play-off.';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return 'Asian fifth round: $opponent over two legs';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      'Home and away in November. The winner on aggregate goes to the intercontinental play-off; level after the second leg, it goes to extra time and penalties.';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return 'Oceania final: $opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      'One match in November, at the Oceania Cup\'s host, for Oceania\'s place at the finals. The loser goes to the intercontinental play-off.';
+
+  @override
+  String get matchTinyFirstLeg => '1st leg';
+
+  @override
+  String get matchTinySecondLeg => '2nd leg';
+
+  @override
+  String get matchTinyFourthRound => 'Rd 4';
+
+  @override
+  String get resultsStageFourthRound => 'Fourth round';
+
+  @override
+  String get resultsStageFifthRound => 'Fifth round';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return 'Promoted to League $league';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return 'Top of the group in the $cup: the next edition is played a league higher, and the promotion is worth €1M to the federation, paid at the end of the cycle.';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return 'Relegated to League $league';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return 'Bottom of the group in the $cup: the next edition is played a league lower.';
+  }
 }

@@ -18020,4 +18020,76 @@ class AppLocalizationsEs extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return 'Directo a la final de la ruta en marzo, en el país anfitrión, contra el ganador de $first contra $second.';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return 'Repesca africana: semifinal contra $opponent';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      'Los cuatro mejores segundos de grupo de África se enfrentan en noviembre en la sede del Campeonato de África: una semifinal a partido único y después la final. El ganador va a la repesca intercontinental.';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return 'Cuarta ronda asiática: grupo $group';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return 'Una vuelta de partidos en noviembre contra $first y $second. El primero del grupo se clasifica; el segundo juega una quinta ronda a ida y vuelta por una plaza en la repesca intercontinental.';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return 'Quinta ronda asiática: $opponent a ida y vuelta';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      'Ida y vuelta en noviembre. El ganador en el global va a la repesca intercontinental; con empate tras la vuelta, hay prórroga y penaltis.';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return 'Final de Oceanía: $opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      'Un partido en noviembre, en la sede de la Copa de Oceanía, por la plaza de Oceanía en la fase final. El perdedor va a la repesca intercontinental.';
+
+  @override
+  String get matchTinyFirstLeg => 'Ida';
+
+  @override
+  String get matchTinySecondLeg => 'Vuelta';
+
+  @override
+  String get matchTinyFourthRound => '4.ª r.';
+
+  @override
+  String get resultsStageFourthRound => 'Cuarta ronda';
+
+  @override
+  String get resultsStageFifthRound => 'Quinta ronda';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return 'Ascenso a la Liga $league';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return 'Primeros de grupo en la $cup: la próxima edición se juega una liga más arriba y el ascenso vale 1 M€ para la federación, que se pagan al final del ciclo.';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return 'Descenso a la Liga $league';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return 'Últimos de grupo en la $cup: la próxima edición se juega una liga más abajo.';
+  }
 }

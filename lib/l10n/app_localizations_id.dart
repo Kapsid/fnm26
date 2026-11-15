@@ -17837,4 +17837,76 @@ class AppLocalizationsId extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return 'Langsung ke final jalur pada bulan Maret di negara tuan rumah, melawan pemenang $first lawan $second.';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return 'Play-off Afrika: semifinal melawan $opponent';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      'Empat runner-up grup terbaik Afrika bertemu pada November di tuan rumah Kejuaraan Afrika: semifinal satu laga, lalu final. Pemenangnya masuk play-off antarbenua.';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return 'Babak keempat Asia: Grup $group';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return 'Satu putaran laga pada November melawan $first dan $second. Juara grup lolos; runner-up memainkan babak kelima dua leg untuk tempat di play-off antarbenua.';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return 'Babak kelima Asia: $opponent dua leg';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      'Kandang dan tandang pada November. Pemenang agregat masuk play-off antarbenua; jika imbang setelah leg kedua, ada perpanjangan waktu dan adu penalti.';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return 'Final Oseania: $opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      'Satu laga pada November, di tuan rumah Piala Oseania, untuk jatah Oseania di putaran final. Yang kalah masuk play-off antarbenua.';
+
+  @override
+  String get matchTinyFirstLeg => 'Leg 1';
+
+  @override
+  String get matchTinySecondLeg => 'Leg 2';
+
+  @override
+  String get matchTinyFourthRound => 'Bbk 4';
+
+  @override
+  String get resultsStageFourthRound => 'Babak keempat';
+
+  @override
+  String get resultsStageFifthRound => 'Babak kelima';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return 'Promosi ke Liga $league';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return 'Juara grup di $cup: edisi berikutnya dimainkan satu liga lebih tinggi, dan promosi ini bernilai €1 juta bagi federasi, dibayar di akhir siklus.';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return 'Degradasi ke Liga $league';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return 'Juru kunci grup di $cup: edisi berikutnya dimainkan satu liga lebih rendah.';
+  }
 }

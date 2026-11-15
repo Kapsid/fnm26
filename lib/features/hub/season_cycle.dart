@@ -543,12 +543,52 @@ extension SeasonCycle on SeasonService {
         for (final n in (await _nationsById(careerId)).values)
           n.id: n.confederation,
       };
-      await _careers.setNationsCupTiers(
+      final before = await _careers.nationsCupTiers(careerId);
+      final after = NationsCup.mergeRemainders(tiers, (id) => confOf[id]);
+      await _careers.setNationsCupTiers(careerId, after);
+      await _fileLadderMove(
         careerId,
-        NationsCup.mergeRemainders(tiers, (id) => confOf[id]),
+        cup: NationsCups.europe,
+        before: before,
+        after: after,
+        dedupKey: 'ncmove:$cycle:${Calendar2.firstEdition}',
       );
     }
     await _comp.markDrawWatched(careerId, cycle, ncFirstLadderKind);
+  }
+
+  /// The manager's nation moved up or down its Nations Cup ladder (a
+  /// calendar2 cycle): one message, the promotion with its bonus (see
+  /// `FederationFinance.ncPromotionBonus`).
+  Future<void> _fileLadderMove(
+    int careerId, {
+    required String cup,
+    required Map<int, int> before,
+    required Map<int, int> after,
+    required String dedupKey,
+  }) async {
+    final career = await _careers.byId(careerId);
+    if (career == null) return;
+    final me = career.nationId;
+    final was = before[me];
+    final now = after[me];
+    if (was == null || now == null || was == now) return;
+    final up = now < was;
+    await _comp.addTextMessage(
+      l: _l,
+      careerId: careerId,
+      dedupKey: dedupKey,
+      category: up ? 'qualify' : 'eliminated',
+      title: MsgText(
+        up ? MsgKey.newsNcPromotedTitle : MsgKey.newsNcRelegatedTitle,
+        [NationsCup.leagueLetter(now)],
+      ),
+      body: MsgText(
+        up ? MsgKey.newsNcPromotedBody : MsgKey.newsNcRelegatedBody,
+        [MsgComp(cup)],
+      ),
+      year: career.inGameDate.year,
+    );
   }
 
   /// Opens a qualifying campaign the manager's nation sits out as host.

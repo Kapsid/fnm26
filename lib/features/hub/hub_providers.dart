@@ -28,6 +28,7 @@ import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/wc_playoffs.dart';
+import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
@@ -157,6 +158,7 @@ part 'season_cycle.dart';
 part 'season_euro_playoffs.dart';
 part 'season_finals.dart';
 part 'season_wc_playoffs.dart';
+part 'season_confed_playoffs.dart';
 part 'season_rollover.dart';
 
 /// Everything the Hub screen needs for a save, in one fetch.
@@ -305,14 +307,13 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
         : 0;
     // Europe's runners-up head for the play-off paths on the calendar2
     // rhythm.
+    final wcCal2 =
+        group.kind == CompetitionKind.worldCupQualifying &&
+        await isCalendar2(compRepo, careerId, career.cyclePointer);
     final wcPaths = group.kind != CompetitionKind.worldCupQualifying
         ? 0
         : UefaWcPlayoffs.pathsFor(
-            calendar2: await isCalendar2(
-              compRepo,
-              careerId,
-              career.cyclePointer,
-            ),
+            calendar2: wcCal2,
             confederation: conf,
             hosts: wcHosts,
             groupCount: group.groupCount,
@@ -325,6 +326,7 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
       isLowestLeague: isLowestLeague,
       worldCupHosts: wcHosts,
       worldCupPlayoffPaths: wcPaths,
+      worldCupConfedSteps: wcCal2,
     );
     groupDirect = adv.direct;
     groupContention = adv.contention;
@@ -340,6 +342,7 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
         ],
         hosts: wcHosts,
         playoffPaths: wcPaths,
+        confedSteps: wcCal2,
       );
     }
     final gk = groupDrawKind(group.kind);
@@ -1208,11 +1211,6 @@ class SeasonService {
 
   /// The frozen seeding ranking for [cycle] (nationId → position), falling back
   /// to the static seed ranking when the cycle was never snapshotted.
-  /// Whether a fixture is a knockout tie (so a level score is settled by a
-  /// shootout). Group and qualifying rounds are never knockouts — note the
-  /// continental group round is `CGROUP`, which must not be mistaken for one.
-  static bool _isKnockout(Fixture f) => Rounds.isKnockout(f.round);
-
   /// The altitude and heat a background fixture is played in, at the ground
   /// [resolveMatchGround] picks: the one helper the match screen uses too, so
   /// a skipped tie and the shown one are the same ground (his estate, a
@@ -1489,9 +1487,13 @@ class SeasonService {
     var aet = false;
     int? homePens;
     int? awayPens;
-    if (_isKnockout(f) && hs == as) {
+    // A knockout level at ninety, or a second leg that leaves its tie level
+    // on aggregate (see [TwoLegged]): extra time, then penalties. The second
+    // leg is drawn as a level game and put back on its real score.
+    final margin = await _tieMargin(f);
+    if (margin != null && hs - as == margin) {
       final ko = WorldCupFinals.decideKnockout(
-        hs,
+        as,
         as,
         SeededRng.forFixture(rngSeed, f.id ^ 0x7F),
         // `decideKnockout` splits extra time and the shootout by the SHARE of
@@ -1505,7 +1507,7 @@ class SeasonService {
           homeStrength + finalsEdge,
         ),
         awayStrength: RatingMatchSimulator.knockoutWeight(awayStrength),
-      );
+      ).shiftedHome(margin);
       aet = true;
       // The extra-time goals are attributed with 91'–120' minutes so they show
       // up in the scorer charts, not just on the scoreboard.
@@ -2462,6 +2464,39 @@ class SeasonService {
         break;
       }
 
+      // 1a-iii. His own confederation's qualifying play-off step (calendar2:
+      //         Africa's, Asia's or Oceania's) is being played and he is not
+      //         in it, or is out: step it a day at a time, so it is watched.
+      //         Mirrors nextEventProvider.
+      final stepDate = !ConfedPlayoffs.confederations.contains(playerConf)
+          ? null
+          : await _comp.earliestUnplayedDateOfKind(
+              careerId,
+              ConfedPlayoffs.kind,
+              confederation: playerConf,
+            );
+      final playerInStep = playerFixtures.any(
+        (f) => !f.hasResult && ConfedPlayoffs.isRound(f.round),
+      );
+      if (stepDate != null &&
+          !playerInStep &&
+          (next == null || !stepDate.isAfter(next.date))) {
+        // Never backwards: a step day a long catch-up left behind the clock
+        // is played today.
+        final to = stepDate.isBefore(career.inGameDate)
+            ? career.inGameDate
+            : stepDate;
+        if (await stopForVote(to)) break;
+        await _careers.updateInGameDate(careerId, to);
+        await _catchUp(
+          careerId,
+          to,
+          career.rngSeed,
+          excludeNationId: career.nationId,
+        );
+        break;
+      }
+
       // 1b. The manager's Nations Cup finals are under way and the player
       //     isn't in them — step them one matchday at a time, like the main
       //     finals, so they are watched rather than silently fast-forwarded. A
@@ -2880,7 +2915,8 @@ class SeasonService {
     var aet = false;
     int? homePens;
     int? awayPens;
-    if (_isKnockout(fixture) && hs == as) {
+    final margin = await _tieMargin(fixture);
+    if (margin != null && hs - as == margin) {
       final et = result.extraTime;
       // A live knockout carries the extra time the engine played (its goals
       // already sit in [MatchResult.events] with real scorers and minutes), so
@@ -2891,11 +2927,11 @@ class SeasonService {
           knockout ??
           (et == null
               ? WorldCupFinals.decideKnockout(
-                  hs,
+                  as,
                   as,
                   SeededRng.forFixture(career.rngSeed, fixture.id ^ 0x7F),
-                )
-              : et.homeScore == et.awayScore
+                ).shiftedHome(margin)
+              : et.homeScore - et.awayScore == margin
               ? WorldCupFinals.decideShootout(
                   et.homeScore,
                   et.awayScore,
@@ -3433,6 +3469,21 @@ class SeasonService {
 
   static bool _isFinalsMatch(Fixture f) =>
       f.round != null && _finalsMatchRounds.contains(f.round);
+
+  /// The ninety-minute margin (home less away) at which [f] still needs a
+  /// winner, so goes to extra time and penalties: level (0) for a knockout,
+  /// the margin that levels the aggregate for a second leg whose first leg
+  /// is in (see [TwoLegged]); null for every other match, a draw standing.
+  Future<int?> _tieMargin(Fixture f) async {
+    if (Rounds.isKnockout(f.round)) return 0;
+    if (!TwoLegged.isSecondLeg(f.round)) return null;
+    final first = TwoLegged.firstLegAmong(f, [
+      for (final c in await _comp.fixturesForNation(f.careerId, f.homeNationId))
+        if (c.competitionId == f.competitionId) c,
+    ]);
+    if (first == null || !first.hasResult) return null;
+    return TwoLegged.levelMargin(first);
+  }
 
   static int _winner(Fixture f) =>
       f.homeScore! >= f.awayScore! ? f.homeNationId : f.awayNationId;

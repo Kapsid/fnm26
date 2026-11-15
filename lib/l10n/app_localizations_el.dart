@@ -18020,4 +18020,76 @@ class AppLocalizationsEl extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return 'Απευθείας στον τελικό της διαδρομής τον Μάρτιο, στη διοργανώτρια χώρα, με τον νικητή του $first εναντίον $second.';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return 'Αφρικανικά μπαράζ: ημιτελικός με $opponent';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      'Οι τέσσερις καλύτεροι δεύτεροι των ομίλων της Αφρικής συναντιούνται τον Νοέμβριο στη διοργανώτρια του Πρωταθλήματος Αφρικής: ένας ημιτελικός, μετά ο τελικός. Ο νικητής πάει στα διηπειρωτικά μπαράζ.';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return 'Τέταρτος γύρος Ασίας: όμιλος $group';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return 'Ένας γύρος αγώνων τον Νοέμβριο με $first και $second. Ο πρώτος του ομίλου προκρίνεται· ο δεύτερος παίζει πέμπτο γύρο σε δύο αγώνες για μια θέση στα διηπειρωτικά μπαράζ.';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return 'Πέμπτος γύρος Ασίας: $opponent σε δύο αγώνες';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      'Εντός και εκτός τον Νοέμβριο. Ο νικητής στο σύνολο πάει στα διηπειρωτικά μπαράζ· με ισοπαλία μετά τον επαναληπτικό ακολουθούν παράταση και πέναλτι.';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return 'Τελικός Ωκεανίας: $opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      'Ένας αγώνας τον Νοέμβριο στη διοργανώτρια του Κυπέλλου Ωκεανίας για τη θέση της Ωκεανίας στην τελική φάση. Ο ηττημένος πάει στα διηπειρωτικά μπαράζ.';
+
+  @override
+  String get matchTinyFirstLeg => '1ος αγ.';
+
+  @override
+  String get matchTinySecondLeg => '2ος αγ.';
+
+  @override
+  String get matchTinyFourthRound => '4ος γ.';
+
+  @override
+  String get resultsStageFourthRound => 'Τέταρτος γύρος';
+
+  @override
+  String get resultsStageFifthRound => 'Πέμπτος γύρος';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return 'Άνοδος στη Λίγκα $league';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return 'Πρώτη θέση στον όμιλο στο $cup: η επόμενη διοργάνωση παίζεται μία λίγκα πιο πάνω και η άνοδος αξίζει 1 εκατ. € στην ομοσπονδία, που καταβάλλονται στο τέλος του κύκλου.';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return 'Υποβιβασμός στη Λίγκα $league';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return 'Τελευταία θέση στον όμιλο στο $cup: η επόμενη διοργάνωση παίζεται μία λίγκα πιο κάτω.';
+  }
 }

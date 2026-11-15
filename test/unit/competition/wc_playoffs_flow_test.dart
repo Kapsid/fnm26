@@ -167,7 +167,9 @@ void main() {
       ];
       expect(euroGroups, hasLength(12));
 
-      await season.progressForTest(id);
+      // Africa's, Asia's and Oceania's own steps first (see
+      // confed_playoffs_flow_test): the draws wait for them.
+      await playConfedStepsNow(c, id);
       expect(await comp.hasFinals(id), isFalse);
 
       final hosts = WorldCupHosts.hostsFor(

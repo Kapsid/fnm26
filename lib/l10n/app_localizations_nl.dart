@@ -18013,4 +18013,76 @@ class AppLocalizationsNl extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return 'Direct geplaatst in de routefinale in maart, in het gastland, tegen de winnaar van $first tegen $second.';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return 'Afrikaanse play-off: halve finale tegen $opponent';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      'Afrika\'s vier beste groepsnummers twee treffen elkaar in november bij het gastland van het Afrikaans Kampioenschap: een halve finale over één wedstrijd, dan de finale. De winnaar gaat naar de intercontinentale play-off.';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return 'Aziatische vierde ronde: groep $group';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return 'Eén ronde wedstrijden in november tegen $first en $second. De groepswinnaar plaatst zich; de nummer twee speelt een vijfde ronde over twee wedstrijden om een plek in de intercontinentale play-off.';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return 'Aziatische vijfde ronde: $opponent over twee wedstrijden';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      'Thuis en uit in november. De winnaar over twee duels gaat naar de intercontinentale play-off; gelijk na de return, dan volgen verlenging en strafschoppen.';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return 'Finale van Oceanië: $opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      'Eén wedstrijd in november, bij het gastland van de Oceania Cup, om de plek van Oceanië op het eindtoernooi. De verliezer gaat naar de intercontinentale play-off.';
+
+  @override
+  String get matchTinyFirstLeg => 'Heen';
+
+  @override
+  String get matchTinySecondLeg => 'Terug';
+
+  @override
+  String get matchTinyFourthRound => '4e r.';
+
+  @override
+  String get resultsStageFourthRound => 'Vierde ronde';
+
+  @override
+  String get resultsStageFifthRound => 'Vijfde ronde';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return 'Promotie naar Divisie $league';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return 'Groepswinnaar in de $cup: de volgende editie wordt een divisie hoger gespeeld, en de promotie levert de bond € 1 mln op, uitbetaald aan het einde van de cyclus.';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return 'Degradatie naar Divisie $league';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return 'Laatste in de groep in de $cup: de volgende editie wordt een divisie lager gespeeld.';
+  }
 }

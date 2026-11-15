@@ -5,7 +5,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
+import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/nations_cup.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/sponsor_providers.dart';
@@ -76,11 +80,40 @@ class FederationService {
         ? null
         : ContinentalCups.byConfederation[conf]?.name;
 
+    // A calendar2 cycle pays for every Nations Cup promotion (a group won
+    // below the top league): Europe's two editions, every other ladder's
+    // one. Read off the cycle's own tables, so only while it is current.
+    var ncPromotions = 0;
+    if (conf != null &&
+        cycle == career.cyclePointer &&
+        NationsCups.forConfederation(conf)?.format == NationsCupFormat.ladder &&
+        await isCalendar2(comp, careerId, cycle)) {
+      for (final edition in Calendar2.editionsOf(conf, calendar2: true)) {
+        final tables = await comp.tournamentGroupTables(
+          careerId,
+          CompetitionKind.nationsLeague,
+          confederation: conf,
+          edition: edition,
+        );
+        for (final t in tables) {
+          if (t.standings.isEmpty) continue;
+          if (NationsCup.tierOfGroupName(t.name) == 0) continue;
+          if (t.standings.first.nationId != career.nationId) continue;
+          // Only a finished league phase promotes: home and away with
+          // every other side of the group.
+          if (t.standings.first.played >= (t.standings.length - 1) * 2) {
+            ncPromotions++;
+          }
+        }
+      }
+    }
+
     final prize = FederationFinance.resultsPrize(
       wcRounds: wcRounds,
       contRounds: contRounds,
       titlesWon: titlesWon,
       continentalName: contName,
+      ncPromotions: ncPromotions,
     );
 
     final invest = await _ref

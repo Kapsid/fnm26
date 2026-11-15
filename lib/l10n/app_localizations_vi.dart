@@ -17774,4 +17774,76 @@ class AppLocalizationsVi extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return 'Vào thẳng chung kết nhánh vào tháng Ba tại nước chủ nhà, gặp đội thắng trận $first gặp $second.';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return 'Play-off châu Phi: bán kết gặp $opponent';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      'Bốn đội nhì bảng xuất sắc nhất châu Phi gặp nhau vào tháng 11 tại nước chủ nhà Giải vô địch châu Phi: bán kết một trận, rồi chung kết. Đội thắng vào play-off liên lục địa.';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return 'Vòng bốn châu Á: bảng $group';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return 'Một lượt trận vào tháng 11 gặp $first và $second. Đội nhất bảng giành vé; đội nhì đá vòng năm lượt đi lượt về để tranh suất play-off liên lục địa.';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return 'Vòng năm châu Á: $opponent lượt đi lượt về';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      'Sân nhà và sân khách vào tháng 11. Đội thắng chung cuộc vào play-off liên lục địa; hòa tổng tỉ số sau lượt về thì đá hiệp phụ và luân lưu.';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return 'Chung kết châu Đại Dương: $opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      'Một trận vào tháng 11, tại nước chủ nhà Cúp châu Đại Dương, tranh suất của châu Đại Dương ở vòng chung kết. Đội thua vào play-off liên lục địa.';
+
+  @override
+  String get matchTinyFirstLeg => 'Lượt đi';
+
+  @override
+  String get matchTinySecondLeg => 'Lượt về';
+
+  @override
+  String get matchTinyFourthRound => 'V4';
+
+  @override
+  String get resultsStageFourthRound => 'Vòng bốn';
+
+  @override
+  String get resultsStageFifthRound => 'Vòng năm';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return 'Thăng hạng lên Hạng $league';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return 'Nhất bảng tại $cup: mùa giải tới thi đấu ở hạng cao hơn, và suất thăng hạng mang về cho liên đoàn 1 triệu €, chi trả vào cuối chu kỳ.';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return 'Xuống hạng $league';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return 'Bét bảng tại $cup: mùa giải tới thi đấu ở hạng thấp hơn.';
+  }
 }

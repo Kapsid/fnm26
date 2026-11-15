@@ -70,6 +70,14 @@ enum CompetitionKind {
   /// and `UPFINAL`, group name the path letter. Every lookup names its
   /// confederation.
   worldCupPlayoffEurope,
+
+  /// Africa's, Asia's and Oceania's own play-off steps for the World
+  /// Championship (calendar2, see `ConfedPlayoffs`): Africa's semi-finals and
+  /// final, Asia's fourth round and two-legged fifth round, Oceania's final.
+  /// They decide those confederations' last places and their
+  /// intercontinental play-off entrants. Every lookup names its
+  /// confederation.
+  worldCupQualifyingPlayoff,
 }
 
 /// Display helpers for [Confederation].

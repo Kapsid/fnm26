@@ -4480,5 +4480,22 @@
   "wcPlaceholderIc": "Vinnare interkontinental väg {path}",
   "newsIcPlayoffTitle": "Interkontinentalt playoff: väg {path}",
   "newsIcPlayoffBodySemi": "En semifinal i en match mot {opponent} i mars, i värdlandet, sedan vägfinalen om en plats i slutspelet.",
-  "newsIcPlayoffBodyBye": "Direkt till vägfinalen i mars, i värdlandet, mot vinnaren av {first} mot {second}."
+  "newsIcPlayoffBodyBye": "Direkt till vägfinalen i mars, i värdlandet, mot vinnaren av {first} mot {second}.",
+  "newsCafPlayoffTitle": "Afrikanskt playoff: semifinal mot {opponent}",
+  "newsCafPlayoffBody": "Afrikas fyra bästa grupptvåor möts i november hos värdlandet för afrikanska mästerskapet: en semifinal i en match, sedan finalen. Vinnaren går vidare till det interkontinentala playoffet.",
+  "newsAfcFourthRoundTitle": "Asiens fjärde omgång: grupp {group}",
+  "newsAfcFourthRoundBody": "En omgång matcher i november mot {first} och {second}. Gruppvinnaren kvalificerar sig; tvåan spelar en femte omgång över två matcher om en plats i det interkontinentala playoffet.",
+  "newsAfcFifthRoundTitle": "Asiens femte omgång: {opponent} över två matcher",
+  "newsAfcFifthRoundBody": "Hemma och borta i november. Vinnaren sammanlagt går vidare till det interkontinentala playoffet; är det lika efter returen blir det förlängning och straffar.",
+  "newsOfcFinalTitle": "Oceaniens final: {opponent}",
+  "newsOfcFinalBody": "En match i november, hos värdlandet för Oceaniska cupen, om Oceaniens plats i slutspelet. Förloraren går vidare till det interkontinentala playoffet.",
+  "matchTinyFirstLeg": "1:a match",
+  "matchTinySecondLeg": "Retur",
+  "matchTinyFourthRound": "4:e omg.",
+  "resultsStageFourthRound": "Fjärde omgången",
+  "resultsStageFifthRound": "Femte omgången",
+  "newsNcPromotedTitle": "Uppflyttning till Liga {league}",
+  "newsNcPromotedBody": "Gruppvinnare i {cup}: nästa upplaga spelas en liga högre, och uppflyttningen är värd 1 miljon € för förbundet, som betalas ut i slutet av cykeln.",
+  "newsNcRelegatedTitle": "Nedflyttning till Liga {league}",
+  "newsNcRelegatedBody": "Sist i gruppen i {cup}: nästa upplaga spelas en liga lägre."
 }

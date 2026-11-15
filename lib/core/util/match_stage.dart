@@ -5,6 +5,7 @@
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
@@ -29,14 +30,20 @@ abstract final class MatchStage {
         'POSF' ||
         'EPSF' ||
         'UPSF' ||
-        'ICSF' => l.matchTinySemiFinal,
+        'ICSF' ||
+        'AFSF' => l.matchTinySemiFinal,
         'FINAL' ||
         'NFINAL' ||
         'CFINAL' ||
         'POFINAL' ||
         'EPFINAL' ||
         'UPFINAL' ||
-        'ICFINAL' => l.matchTinyFinal,
+        'ICFINAL' ||
+        'AFFINAL' ||
+        'OFINAL' => l.matchTinyFinal,
+        'AQ4' => l.matchTinyFourthRound,
+        'AQ5L1' => l.matchTinyFirstLeg,
+        'AQ5L2' => l.matchTinySecondLeg,
         '3RD' || 'C3RD' => l.matchTinyThirdPlace,
         _ => round,
       };
@@ -65,8 +72,14 @@ abstract final class MatchStage {
     'CSF' => l.resultsStageSemiFinal,
     'C3RD' => l.resultsStageThirdPlace,
     'CFINAL' => l.resultsStageFinal,
-    'EPSF' || 'UPSF' || 'ICSF' => l.resultsStageSemiFinal,
-    'EPFINAL' || 'UPFINAL' || 'ICFINAL' => l.resultsStageFinal,
+    'EPSF' || 'UPSF' || 'ICSF' || 'AFSF' => l.resultsStageSemiFinal,
+    'EPFINAL' ||
+    'UPFINAL' ||
+    'ICFINAL' ||
+    'AFFINAL' ||
+    'OFINAL' => l.resultsStageFinal,
+    'AQ4' => l.resultsStageFourthRound,
+    'AQ5L1' || 'AQ5L2' => l.resultsStageFifthRound,
     _ => round,
   };
 
@@ -87,7 +100,9 @@ abstract final class MatchStage {
     if (round.startsWith('C')) return l.resultsCategoryContinentalCup;
     // The World Championship's calendar2 play-offs (Europe's paths, the
     // intercontinental play-off) are the last of its qualifying.
-    if (isWcPlayoffRound(round)) return l.resultsCategoryWorldCupQualifying;
+    if (isWcPlayoffRound(round) || ConfedPlayoffs.isRound(round)) {
+      return l.resultsCategoryWorldCupQualifying;
+    }
     return l.resultsCategoryWorldCupFinals;
   }
 
@@ -143,14 +158,20 @@ abstract final class MatchStage {
       'POSF' ||
       'EPSF' ||
       'UPSF' ||
-      'ICSF' => l.matchTinySemiFinal,
+      'ICSF' ||
+      'AFSF' => l.matchTinySemiFinal,
       'FINAL' ||
       'NFINAL' ||
       'CFINAL' ||
       'POFINAL' ||
       'EPFINAL' ||
       'UPFINAL' ||
-      'ICFINAL' => l.matchTinyFinal,
+      'ICFINAL' ||
+      'AFFINAL' ||
+      'OFINAL' => l.matchTinyFinal,
+      'AQ4' => l.matchTinyFourthRound,
+      'AQ5L1' => l.matchTinyFirstLeg,
+      'AQ5L2' => l.matchTinySecondLeg,
       '3RD' || 'C3RD' => l.matchTinyThirdPlace,
       _ => null,
     };
@@ -169,7 +190,14 @@ abstract final class MatchStage {
         competition: l.matchTinyQualifying(cup),
         stage: knockout(round),
       ),
-      'UPSF' || 'UPFINAL' => (
+      'UPSF' ||
+      'UPFINAL' ||
+      'AFSF' ||
+      'AFFINAL' ||
+      'AQ4' ||
+      'AQ5L1' ||
+      'AQ5L2' ||
+      'OFINAL' => (
         competition: l.matchTinyQualifying(l.matchTinyWorld),
         stage: knockout(round),
       ),

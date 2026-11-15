@@ -5,6 +5,7 @@
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/wc_playoffs.dart';
+import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/squad/nomination.dart';
@@ -102,7 +103,8 @@ abstract final class MatchSchedule {
     // other semi is in, so it is a stage still to come.
     if ((last.round == EuroPlayoffs.semiRound ||
             last.round == UefaWcPlayoffs.semiRound ||
-            last.round == IcPlayoffs.semiRound) &&
+            last.round == IcPlayoffs.semiRound ||
+            last.round == ConfedPlayoffs.cafSemi) &&
         last.hasResult &&
         _won(last, nationId)) {
       return (knockoutStage: false, from: dayAfter(last.date));

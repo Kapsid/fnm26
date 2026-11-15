@@ -4480,5 +4480,22 @@
   "wcPlaceholderIc": "Pemenang Laluan Antara Benua {path}",
   "newsIcPlayoffTitle": "Play-off antara benua: Laluan {path}",
   "newsIcPlayoffBodySemi": "Separuh akhir satu perlawanan menentang {opponent} pada bulan Mac di negara tuan rumah, kemudian perlawanan akhir laluan untuk tempat di pusingan akhir.",
-  "newsIcPlayoffBodyBye": "Terus ke perlawanan akhir laluan pada bulan Mac di negara tuan rumah, menentang pemenang {first} lawan {second}."
+  "newsIcPlayoffBodyBye": "Terus ke perlawanan akhir laluan pada bulan Mac di negara tuan rumah, menentang pemenang {first} lawan {second}.",
+  "newsCafPlayoffTitle": "Play-off Afrika: separuh akhir menentang {opponent}",
+  "newsCafPlayoffBody": "Empat naib juara kumpulan terbaik Afrika bertemu pada November di tuan rumah Kejohanan Afrika: separuh akhir satu perlawanan, kemudian final. Pemenang ke play-off antara benua.",
+  "newsAfcFourthRoundTitle": "Pusingan keempat Asia: Kumpulan {group}",
+  "newsAfcFourthRoundBody": "Satu pusingan perlawanan pada November menentang {first} dan {second}. Juara kumpulan layak; naib juara bermain pusingan kelima dua pertemuan untuk tempat dalam play-off antara benua.",
+  "newsAfcFifthRoundTitle": "Pusingan kelima Asia: {opponent} dua pertemuan",
+  "newsAfcFifthRoundBody": "Di tempat sendiri dan di tempat lawan pada November. Pemenang agregat ke play-off antara benua; jika seri selepas pertemuan kedua, ada masa tambahan dan sepakan penalti.",
+  "newsOfcFinalTitle": "Final Oceania: {opponent}",
+  "newsOfcFinalBody": "Satu perlawanan pada November, di tuan rumah Piala Oceania, untuk tempat Oceania di pusingan akhir. Yang tewas ke play-off antara benua.",
+  "matchTinyFirstLeg": "Pertemuan 1",
+  "matchTinySecondLeg": "Pertemuan 2",
+  "matchTinyFourthRound": "Pus. 4",
+  "resultsStageFourthRound": "Pusingan keempat",
+  "resultsStageFifthRound": "Pusingan kelima",
+  "newsNcPromotedTitle": "Naik ke Liga {league}",
+  "newsNcPromotedBody": "Juara kumpulan dalam {cup}: edisi seterusnya dimainkan satu liga lebih tinggi, dan kenaikan ini bernilai €1 juta kepada persekutuan, dibayar pada akhir kitaran.",
+  "newsNcRelegatedTitle": "Turun ke Liga {league}",
+  "newsNcRelegatedBody": "Tercorot kumpulan dalam {cup}: edisi seterusnya dimainkan satu liga lebih rendah."
 }

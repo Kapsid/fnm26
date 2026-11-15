@@ -18353,4 +18353,76 @@ class AppLocalizationsRo extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return 'Direct în finala traseului din martie, în țara gazdă, contra câștigătoarei meciului $first contra $second.';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return 'Baraj african: semifinală cu $opponent';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      'Cele mai bune patru locuri doi din grupele Africii se întâlnesc în noiembrie la gazda Campionatului African: o semifinală într-un singur meci, apoi finala. Câștigătoarea merge la barajul intercontinental.';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return 'Turul al patrulea asiatic: grupa $group';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return 'O tură de meciuri în noiembrie cu $first și $second. Câștigătoarea grupei se califică; locul doi joacă turul al cincilea în dublă manșă pentru un loc la barajul intercontinental.';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return 'Turul al cincilea asiatic: $opponent în dublă manșă';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      'Acasă și în deplasare în noiembrie. Câștigătoarea la general merge la barajul intercontinental; la egalitate după manșa a doua urmează prelungiri și lovituri de departajare.';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return 'Finala Oceaniei: $opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      'Un meci în noiembrie, la gazda Cupei Oceaniei, pentru locul Oceaniei la turneul final. Învinsa merge la barajul intercontinental.';
+
+  @override
+  String get matchTinyFirstLeg => 'Tur';
+
+  @override
+  String get matchTinySecondLeg => 'Retur';
+
+  @override
+  String get matchTinyFourthRound => 'T. 4';
+
+  @override
+  String get resultsStageFourthRound => 'Turul al patrulea';
+
+  @override
+  String get resultsStageFifthRound => 'Turul al cincilea';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return 'Promovare în Liga $league';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return 'Primul loc în grupă în $cup: următoarea ediție se joacă o ligă mai sus, iar promovarea aduce federației 1 milion €, plătit la finalul ciclului.';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return 'Retrogradare în Liga $league';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return 'Ultimul loc în grupă în $cup: următoarea ediție se joacă o ligă mai jos.';
+  }
 }

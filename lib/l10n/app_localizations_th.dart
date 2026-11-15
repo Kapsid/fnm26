@@ -17620,4 +17620,76 @@ class AppLocalizationsTh extends AppLocalizations {
   String newsIcPlayoffBodyBye(String first, String second) {
     return 'เข้าสู่นัดชิงของสายในเดือนมีนาคมที่ประเทศเจ้าภาพโดยตรง พบผู้ชนะระหว่าง $first กับ $second';
   }
+
+  @override
+  String newsCafPlayoffTitle(String opponent) {
+    return 'เพลย์ออฟแอฟริกา: รอบรองชนะเลิศพบ $opponent';
+  }
+
+  @override
+  String get newsCafPlayoffBody =>
+      'ทีมอันดับสองของกลุ่มที่ดีที่สุดสี่ทีมของแอฟริกาพบกันในเดือนพฤศจิกายนที่เจ้าภาพชิงแชมป์แอฟริกา: รอบรองชนะเลิศนัดเดียว แล้วจึงนัดชิง ผู้ชนะได้ไปเพลย์ออฟข้ามทวีป';
+
+  @override
+  String newsAfcFourthRoundTitle(String group) {
+    return 'รอบสี่ของเอเชีย: กลุ่ม $group';
+  }
+
+  @override
+  String newsAfcFourthRoundBody(String first, String second) {
+    return 'แข่งหนึ่งรอบในเดือนพฤศจิกายนพบ $first และ $second แชมป์กลุ่มผ่านเข้ารอบสุดท้าย ส่วนอันดับสองเล่นรอบห้าแบบเหย้าเยือนเพื่อชิงสิทธิ์เพลย์ออฟข้ามทวีป';
+  }
+
+  @override
+  String newsAfcFifthRoundTitle(String opponent) {
+    return 'รอบห้าของเอเชีย: พบ $opponent สองนัด';
+  }
+
+  @override
+  String get newsAfcFifthRoundBody =>
+      'เหย้าและเยือนในเดือนพฤศจิกายน ผู้ชนะสกอร์รวมได้ไปเพลย์ออฟข้ามทวีป หากเสมอกันหลังนัดที่สองจะต่อเวลาและดวลจุดโทษ';
+
+  @override
+  String newsOfcFinalTitle(String opponent) {
+    return 'นัดชิงโอเชียเนีย: $opponent';
+  }
+
+  @override
+  String get newsOfcFinalBody =>
+      'หนึ่งนัดในเดือนพฤศจิกายนที่เจ้าภาพโอเชียเนียคัพ ชิงโควตาของโอเชียเนียในรอบสุดท้าย ผู้แพ้ได้ไปเพลย์ออฟข้ามทวีป';
+
+  @override
+  String get matchTinyFirstLeg => 'นัดแรก';
+
+  @override
+  String get matchTinySecondLeg => 'นัดสอง';
+
+  @override
+  String get matchTinyFourthRound => 'รอบ 4';
+
+  @override
+  String get resultsStageFourthRound => 'รอบสี่';
+
+  @override
+  String get resultsStageFifthRound => 'รอบห้า';
+
+  @override
+  String newsNcPromotedTitle(String league) {
+    return 'เลื่อนชั้นสู่ลีก $league';
+  }
+
+  @override
+  String newsNcPromotedBody(String cup) {
+    return 'จบอันดับหนึ่งของกลุ่มใน $cup: รายการครั้งหน้าจะแข่งในลีกที่สูงขึ้นหนึ่งระดับ และการเลื่อนชั้นมีมูลค่า 1 ล้านยูโรสำหรับสมาคม จ่ายเมื่อจบรอบวงจร';
+  }
+
+  @override
+  String newsNcRelegatedTitle(String league) {
+    return 'ตกชั้นสู่ลีก $league';
+  }
+
+  @override
+  String newsNcRelegatedBody(String cup) {
+    return 'จบอันดับสุดท้ายของกลุ่มใน $cup: รายการครั้งหน้าจะแข่งในลีกที่ต่ำลงหนึ่งระดับ';
+  }
 }

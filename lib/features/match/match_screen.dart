@@ -25,6 +25,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactic_preset.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
+import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/card_status.dart';
@@ -1089,14 +1090,13 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   /// is handed to the season service as is, so the drama shown and the stored
   /// result never disagree.
   KnockoutOutcome? _knockoutOutcome(MatchPreview preview, MatchResult r) {
-    if (!_isKnockoutFixture(preview.fixture) || r.homeScore != r.awayScore) {
-      return null;
-    }
+    final margin = preview.tieMargin;
+    if (margin == null || r.homeScore - r.awayScore != margin) return null;
     // A level ninety without engine extra time is only a hand-built result
     // (the screen always asks for it): read it as extra time that changed
     // nothing, so the tie still goes to penalties rather than nowhere.
     final et = r.extraTime ?? (homeScore: r.homeScore, awayScore: r.awayScore);
-    if (et.homeScore != et.awayScore) {
+    if (et.homeScore - et.awayScore != margin) {
       return KnockoutOutcome(
         homeScore: et.homeScore,
         awayScore: et.awayScore,
@@ -1889,6 +1889,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       bigMatch: preview.bigMatch,
       atmosphere: Attendance.atmosphere(preview.ground),
       extraTimeIfLevel: _isKnockoutFixture(preview.fixture),
+      extraTimeAtMargin: TwoLegged.isSecondLeg(preview.fixture.round)
+          ? preview.secondLegMargin
+          : null,
       conditions: preview.conditions,
     ),
     aiSubs: preview.opponentSubs,
