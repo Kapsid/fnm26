@@ -48,8 +48,9 @@ Tests: run with `TZ=Europe/Prague` (pinned dates and the daylight test assume CE
 
 ## Still to do
 
-1. **Campaign star odds:** re-tune with `test/story/campaign_lab_test.dart` (every calendar2 change moved the worlds); see the latest lab numbers in the commit that touches `campaigns.dart`, if any.
-2. **Before the build:** full suite incl. slow stories; device playtest of a calendar2 cycle (CAF/AFC/OFC steps, the two-legged tie, the live table, the new bracket, penalties/saves on the player page).
+1. **Before the build:** a full-suite run including the slow stories, plus a device playtest of a calendar2 cycle (CAF/AFC/OFC steps, the two-legged tie, the live table with goals elsewhere, the new bracket, penalties/saves on the player page).
+
+Done since: campaign odds re-tuned (the Transplant with six Italians, 58% in a 12-run lab); goals elsewhere live (phone banner, tablet lit scores, Summary scores tick through the second half).
 
 ## Known failing tests (pre-existing, not from 1.1.2)
 
