@@ -167,12 +167,15 @@ void main() {
         // ratedTeam's keeper is the first slot: id nation*100.
         expect(s.keeperId, defending * 100);
         expect(s.shooterId ~/ 100, s.teamNationId);
-        expect(
-          s.header,
-          s.origin == ShotOrigin.corner ||
-              s.origin == ShotOrigin.freeKickCross ||
-              s.origin == ShotOrigin.longThrow,
-        );
+        // A delivery is always met with the head; a penalty or a direct
+        // free kick never is; open play may be (a cross, 1.1.2).
+        if (s.origin == ShotOrigin.corner ||
+            s.origin == ShotOrigin.freeKickCross ||
+            s.origin == ShotOrigin.longThrow) {
+          expect(s.header, isTrue);
+        } else if (s.origin != ShotOrigin.openPlay) {
+          expect(s.header, isFalse);
+        }
         const box = [
           PitchZone.sixYard,
           PitchZone.boxCentre,

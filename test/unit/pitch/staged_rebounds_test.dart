@@ -206,6 +206,7 @@ void main() {
       h = ((h * 31) ^ before) & 0xFFFFFFFF;
     }
     // Measured on main before rebounds were drawn: the same 80 results.
-    expect(h, 1000692943);
+    // Re-pinned for the 1.1.2 engine (2026-11-16).
+    expect(h, 2980295276);
   });
 }

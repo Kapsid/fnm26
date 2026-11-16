@@ -264,7 +264,9 @@ void main() {
     );
     expect(total, greaterThan(300));
     expect(wall / total, closeTo(0.25, 0.05));
-    expect(goals / total, closeTo(0.07, 0.03));
+    // About one in eight goes in (raised from 7%, 1.1.2): a goal from one
+    // about every seven matches.
+    expect(goals / total, closeTo(0.13, 0.03));
     expect(outcomes.keys, containsAll(ShotOutcome.values));
   });
 

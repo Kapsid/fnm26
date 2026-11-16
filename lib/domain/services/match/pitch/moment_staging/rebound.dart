@@ -6,7 +6,7 @@ part of '../moment_staging.dart';
 
 /// The share of eligible goals (open play, on the ground, recorded in the
 /// box, not own goals) the picture draws as a rebound.
-const double reboundShare = 0.17;
+const double reboundShare = 0.2;
 
 /// Whether [z] is inside the penalty area.
 bool _boxZone(PitchZone z) =>
@@ -74,6 +74,8 @@ class _Rebound {
     }
     if (_unit(c.seed, 109) >= reboundShare) return null;
     if (p.keeperOf(now, p.opp, m.keeperId) == null) return null;
+    // The keeper the shot was at, on the pitch to parry it.
+    if (m.keeperId == null || now.players[m.keeperId] == null) return null;
     // The time it needs: the cut, the shot, the parry, the follow-up and
     // the goal's half second before the cut to the kick-off.
     if (math.min(p.end, c.hardEnd) - now.t < _needs) return null;

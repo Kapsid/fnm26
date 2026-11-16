@@ -111,4 +111,5 @@ void main() {
   });
 }
 
-const _before = '802c3040';
+// Re-pinned for the 1.1.2 engine (free kicks, styles, open-play headers).
+const _before = 'd487f63a';

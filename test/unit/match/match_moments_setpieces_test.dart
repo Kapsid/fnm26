@@ -90,7 +90,9 @@ void main() {
       final ms = r.moments;
       for (var k = 0; k < ms.length; k++) {
         final s = ms[k];
+        // (An open-play header is a cross from play, 1.1.2: no set piece.)
         if (s is! ShotMoment || !s.header) continue;
+        if (s.origin == ShotOrigin.openPlay) continue;
         final before = ms[k - 1];
         expect(before, isA<SetPieceMoment>(), reason: '$s');
         final sp = before as SetPieceMoment;
