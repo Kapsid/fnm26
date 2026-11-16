@@ -225,7 +225,9 @@ void main() {
     expect(lens[0].momentLength(wide), const Duration(milliseconds: 3500));
     expect(lens[1].momentLength(wide), const Duration(milliseconds: 1750));
     expect(lens[2].momentLength(wide), const Duration(milliseconds: 1050));
-    for (final p in lens) {
+    // At the quickest (5x) a minor moment is left out altogether.
+    expect(lens[3].momentLength(wide), Duration.zero);
+    for (final p in lens.take(3)) {
       expect(
         p.momentLength(wide),
         greaterThanOrEqualTo(const Duration(seconds: 1)),

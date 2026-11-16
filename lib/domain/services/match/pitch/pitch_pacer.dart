@@ -397,7 +397,11 @@ class PitchPacer {
       case OffsideMoment o:
         return o.endsAttack ? at(_offside, _Tier.minor) : 0;
       case SubMoment _:
-        return at(_sub, _Tier.minor);
+        // Always shown: the man going off has to leave while play is
+        // stopped, at the quickest too.
+        return speed == PitchSpeed.turbo
+            ? _tier(_sub, std, minor, _Tier.standard)
+            : at(_sub, _Tier.minor);
     }
   }
 

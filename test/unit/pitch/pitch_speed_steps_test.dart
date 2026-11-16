@@ -38,7 +38,8 @@ void main() {
 
   test('out-of-range steps clamp', () {
     expect(pitchSpeedForStep(-1), PitchSpeed.slow);
-    expect(pitchSpeedForStep(9), PitchSpeed.fast);
-    expect(pitchRateForStep(9), pitchRateForStep(2));
+    // 5x (step 3) is the quickest: anything past it reads as it.
+    expect(pitchSpeedForStep(9), PitchSpeed.turbo);
+    expect(pitchRateForStep(9), pitchRateForStep(3));
   });
 }

@@ -93,6 +93,9 @@ abstract class _DeadBallPlan extends _Plan {
     return t + need > latest + (room - len) - 0.3;
   }
 
+  /// The furthest the side taking a set piece leaves its keeper out.
+  static const double _ownKeeperDepth = 14;
+
   /// The cut to the set piece ready: the taker at the ball, everybody in
   /// his place, the defending keeper in his.
   CutAction cutTo(double t, ScriptState now, {Offset2? keeperAt}) {
@@ -101,6 +104,13 @@ abstract class _DeadBallPlan extends _Plan {
     final positions = <int, Offset2>{...marks, taker: takerSpot};
     final k = keeperOf(now, opp, shotMoment?.keeperId);
     if (k != null && keeperAt != null) positions[k] = keeperAt;
+    // Their own keeper stays home: one the last moment drew out of his area
+    // is back in it when the picture comes back.
+    final own = keeperOf(now, side);
+    final op = own == null ? null : now.players[own];
+    if (own != null && op != null && depthOf(op) > _ownKeeperDepth) {
+      positions[own] = at(_ownKeeperDepth - 2, latOf(op) * 0.4);
+    }
     // A header that is blocked: its blocker right on the man who meets it.
     final s = shotMoment;
     if (s != null &&
