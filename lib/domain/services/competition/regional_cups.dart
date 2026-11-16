@@ -221,9 +221,13 @@ abstract final class RegionalCups {
     return [for (final n in members.take(cup.fieldSize)) n.id];
   }
 
+  /// Members never given an edition to host: Yemen has staged one Gulf Cup
+  /// in half a century.
+  static const Set<String> _neverHosts = {'YEM'};
+
   /// The host of [cup]'s edition in [year], or 0 for a cup without one.
-  /// Every member hosts in turn, in an order drawn once per save [seed], so
-  /// no side hosts twice running.
+  /// Every member that can host does so in turn, in an order drawn once per
+  /// save [seed], so no side hosts twice running.
   static int hostOf(
     RegionalCup cup,
     int year,
@@ -233,7 +237,8 @@ abstract final class RegionalCups {
     if (!cup.hosted) return 0;
     final members = [
       for (final n in nations)
-        if (cup.memberCodes.contains(n.code)) n.id,
+        if (cup.memberCodes.contains(n.code) && !_neverHosts.contains(n.code))
+          n.id,
     ]..sort();
     if (members.isEmpty) return 0;
     final order = SeededRng(seed ^ 0x6C0F ^ (cup.index * 0x1F3)).shuffled(
@@ -242,10 +247,10 @@ abstract final class RegionalCups {
     return order[(year ~/ 2) % order.length];
   }
 
-  /// The draw: [field] (best ranked first) into two groups, each pair of
-  /// neighbours in the ranking split between them, every pair's order drawn
-  /// from [seed]. The host, when it plays, heads group A. Each group is a
-  /// single round-robin.
+  /// The draw: [field] (best ranked first) into two groups, the two best
+  /// apart and every later pair of neighbours in the ranking split between
+  /// them, each pair's order drawn from [seed]. The host, when it plays,
+  /// heads group A. Each group is a single round-robin.
   static FinalsDraw draw(
     RegionalCup cup,
     List<int> field, {
@@ -253,20 +258,21 @@ abstract final class RegionalCups {
     int host = 0,
   }) {
     final rng = SeededRng(seed ^ 0x2E61 ^ (cup.index * 0x5B));
-    final ordered = [
-      if (field.contains(host)) host,
+    // The two best of the rest head a group each (the host, when it plays,
+    // heads A and the best of the rest B), then each later pair of
+    // neighbours is split in a drawn order, the first into the shorter
+    // group.
+    final rest = [
       for (final id in field)
         if (id != host) id,
     ];
-    final a = <int>[];
-    final b = <int>[];
-    for (var i = 0; i < ordered.length; i += 2) {
-      final pair = ordered.sublist(i, (i + 2).clamp(0, ordered.length));
-      // The host's pair keeps it in group A.
-      final flip = !(i == 0 && field.contains(host)) && rng.nextInt(2) == 1;
-      final first = flip ? pair.reversed.toList() : pair;
-      a.add(first.first);
-      if (first.length > 1) b.add(first[1]);
+    final hosting = field.contains(host);
+    final a = hosting ? [host, rest[1]] : [rest[0]];
+    final b = hosting ? [rest[0]] : [rest[1]];
+    void put(int id) => (a.length <= b.length ? a : b).add(id);
+    for (var i = 2; i < rest.length; i += 2) {
+      final pair = rest.sublist(i, (i + 2).clamp(0, rest.length));
+      (rng.nextInt(2) == 1 ? pair.reversed : pair).forEach(put);
     }
     FinalsGroupDraw group(String name, List<int> ids, int salt) {
       final rounds = singleRoundRobin(ids, rng: rng.fork(salt));
