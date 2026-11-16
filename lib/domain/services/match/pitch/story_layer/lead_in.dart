@@ -12,8 +12,9 @@ extension _LeadIn on _Builder {
     for (var k = wi; k < windows.length; k++) {
       final w = windows[k];
       if (w.start <= t + 1e-9) continue;
-      if (w.start - t > LeadIn.ball || w.moments.isEmpty) return null;
+      if (w.moments.isEmpty) return null;
       final m = w.moments.first;
+      if (w.start - t > _leadHorizon(m)) return null;
       if (m is SubMoment) return null;
       final s = m.teamNationId == lineups.home.nationId ? 0 : 1;
       final dir = _dir(s, m.minute);
@@ -31,6 +32,34 @@ extension _LeadIn on _Builder {
       return (s, p);
     }
     return null;
+  }
+
+  /// How far ahead the build-up leads into [m]: a goal given a build-up
+  /// (see `PitchPacer.buildUpOf`) is led into from the start of it.
+  double _leadHorizon(MatchMoment m) => LeadIn.ball + pacer.buildUpOf(m);
+
+  /// The build-up of the window the ball is being led into at [t], or 0.
+  double _buildUpAhead(double t) {
+    for (var k = wi; k < windows.length; k++) {
+      final w = windows[k];
+      if (w.start <= t + 1e-9) continue;
+      if (w.moments.isEmpty) return 0;
+      final m = w.moments.first;
+      return w.start - t <= _leadHorizon(m) ? pacer.buildUpOf(m) : 0;
+    }
+    return 0;
+  }
+
+  /// The windows the build-up leads into from [t]: the next one, within its
+  /// lead horizon.
+  List<StagedWindow> _leadWindows(double t) {
+    for (var k = wi; k < windows.length; k++) {
+      final w = windows[k];
+      if (w.start <= t + 1e-9) continue;
+      if (w.moments.isEmpty) return const [];
+      return w.start - t <= _leadHorizon(w.moments.first) ? [w] : const [];
+    }
+    return const [];
   }
 
   /// The windows opening after [t] and within [horizon] of it, in order.

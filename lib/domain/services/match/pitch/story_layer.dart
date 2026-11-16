@@ -336,7 +336,13 @@ class StagingContext {
     this.resuming = false,
     this.hardEnd = double.infinity,
     this.instructions = const {},
+    this.buildUp = 0,
   });
+
+  /// The build-up the pacer gave this window's goal (screen seconds; see
+  /// `PitchPacer.buildUpOf`): time to play the move before the shot, not
+  /// after it.
+  final double buildUp;
 
   /// Each side's instructions as it plays them now (nation id -> dials):
   /// the team sheet's, the manager's live changes and the AI's drift.
@@ -1192,6 +1198,7 @@ class _Builder {
           for (final side in sides) side.team.nationId: side.instr,
         },
         resuming: resumeAt != null && (t - resumeAt!).abs() < 1e-9,
+        buildUp: w.moments.isEmpty ? 0 : pacer.buildUpOf(w.moments.first),
         hardEnd: [
           for (final r in [...resets, total])
             if (r >= w.end - 1e-9 && r <= w.end + _spill) r,
@@ -2089,7 +2096,10 @@ class _Builder {
     // opens. When it is not, it changes hands now if the side on it has had
     // more than its share, else at the last moment.
     final handover = leadSide != null && leadSide != a.side;
-    final latest = stop - _lateHandover;
+    // Into a goal's build-up the scorers win the ball as it starts, so the
+    // move is theirs to play up the pitch.
+    final buildUp = _buildUpAhead(t);
+    final latest = stop - (buildUp > 0 ? buildUp : _lateHandover);
     final handoverDue = handover && (t >= latest - 1e-9 || ahead > 0);
     if (handover && !handoverDue) wakeAt = latest;
     if (t < nextAction - 1e-9 && !handoverDue) return;
@@ -2267,7 +2277,7 @@ class _Builder {
     // The moments ahead: the man the next one turns on is looked for; the
     // men due elsewhere (a set piece's taker on his way, a man about to be
     // flagged offside) are not.
-    final next = _upcoming(t, LeadIn.ball);
+    final next = _leadWindows(t);
     final wanted = next.isEmpty ? null : _wantedOnBall(next.first);
     final avoid = _busyAhead(t);
     // Nobody is found in an offside position.

@@ -484,6 +484,9 @@ class _OpenShotPlan extends _Plan {
   /// The man on the ball when the run was last read for a chance to make.
   int? _lastRunCarrier;
 
+  /// How far from the chance a set-up man can play it in from.
+  static const double _assistReach = 25;
+
   /// The furthest a keeper who sets the goal up stands from his line.
   static const double _keeperAssistDepth = 15;
   int? crosser;
@@ -579,7 +582,12 @@ class _OpenShotPlan extends _Plan {
     final holder = assister ?? m.shooterId;
     final hp = now.players[holder];
     if (hp == null) return false;
-    var need = ballTo(now, holder) + hp.distanceTo(zone) / 6.5 * 0.6;
+    // A set-up man plays it in from a pass's length away: he has to get
+    // within reach of the chance, not to it.
+    final reach = assister != null && !keeperAssist ? _assistReach : 0.0;
+    var need =
+        ballTo(now, holder) +
+        math.max(0.0, hp.distanceTo(zone) - reach) / 6.5 * 0.6;
     if (assister != null) need += 0.7;
     need += zone.distanceTo(goal) / 24 + shot.tail;
     if (m.outcome == ShotOutcome.blocked) {
@@ -796,7 +804,12 @@ class _OpenShotPlan extends _Plan {
         pass: true,
       );
     }
-    if (late && x != null && !delivered && atFeet(x)) {
+    final inReach =
+        x != null &&
+        now.players[x] != null &&
+        now.players[x]!.distanceTo(zone) <= _assistReach &&
+        t >= earliest;
+    if ((late || inReach) && x != null && !delivered && atFeet(x)) {
       // Only ever to a man onside.
       if (!onside(now, s)) {
         if (onsideCut) return null;

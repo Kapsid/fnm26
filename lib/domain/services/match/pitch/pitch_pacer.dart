@@ -41,6 +41,8 @@ class PitchPacer {
     final extra = r.extraTime != null ? 30 : 0;
     final slotCount = 90 + _stoppage + extra;
     final staged = List<double>.filled(slotCount, 0);
+    // Open play added to a slot after its moments (the goals' build-ups).
+    final openAfter = List<double>.filled(slotCount, 0);
     var stagedCount = 0;
 
     void add(int minute, int stoppage, double seconds) {
@@ -139,9 +141,24 @@ class PitchPacer {
       final each = (spare / goals.length).clamp(0.0, _goalBuildUp);
       if (each > 0) {
         for (final g in goals) {
-          _lengths[g] = _lengths[g]! + each;
-          _buildUps[g] = each;
-          staged[_slotOf(g.minute, g.stoppage, slotCount)] += each;
+          // Played in the minute before the goal's, as open play (the
+          // quiet play leads the ball into the chance): never across a
+          // break, nor before the first minute.
+          final slot = _slotOf(g.minute, g.stoppage, slotCount);
+          final kickOff =
+              g.stoppage == 0 &&
+              (g.minute == 1 ||
+                  g.minute == 46 ||
+                  g.minute == 91 ||
+                  g.minute == 106);
+          if (slot == 0 || kickOff) continue;
+          // Part before the shot's window as open play, part inside it for
+          // the move itself.
+          final inside = each * _buildUpInWindow;
+          _buildUps[g] = each - inside;
+          openAfter[slot - 1] += each - inside;
+          _lengths[g] = _lengths[g]! + inside;
+          staged[slot] += inside;
           stagedTotal += each;
         }
       }
@@ -155,7 +172,8 @@ class PitchPacer {
 
     _start = List<double>.filled(slotCount + 1, 0);
     for (var i = 0; i < slotCount; i++) {
-      _start[i + 1] = _start[i] + (staged[i] == 0 ? quiet : staged[i]);
+      _start[i + 1] =
+          _start[i] + (staged[i] == 0 ? quiet : staged[i]) + openAfter[i];
     }
   }
 
@@ -194,6 +212,10 @@ class PitchPacer {
   /// wherever the ball is. Without it a third of open-play goals were
   /// reached by a cut straight to the shot (players saw the move skipped).
   static const double _goalBuildUp = 4;
+
+  /// The share of a goal's build-up given to its own window (the move into
+  /// the chance); the rest is open play in the minute before.
+  static const double _buildUpInWindow = 0.5;
 
   /// How far over its budget the screen may run for the goals' build-ups.
   static const double _buildUpOverrun = 0.12;
@@ -262,8 +284,9 @@ class PitchPacer {
   /// no shot, fouls without a card that give no penalty, offsides that end
   /// nothing) have no length.
   /// The build-up [m] was given (seconds; 0 for anything but an open-play
-  /// goal, or a match with no time to spare): ball time its side has
-  /// before the shot, which the quiet play around it evens out.
+  /// goal, or a match with no time to spare): open play in the minute
+  /// before it, the ball its side's, which the quiet play around it evens
+  /// out.
   double buildUpOf(MatchMoment m) => _buildUps[m] ?? 0;
 
   final Map<MatchMoment, double> _buildUps = Map.identity();
