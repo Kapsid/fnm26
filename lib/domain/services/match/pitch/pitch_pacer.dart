@@ -192,7 +192,7 @@ class PitchPacer {
   static const (double, double) slowBand = (180.0, 240.0);
   static const (double, double) midBand = (120.0, 180.0);
   static const (double, double) fastBand = (60.0, 120.0);
-  static const (double, double) turboBand = (40.0, 75.0);
+  static const (double, double) turboBand = (45.0, 90.0);
 
   /// The band of [speed].
   static (double, double) bandOf(PitchSpeed speed) => switch (speed) {

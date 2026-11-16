@@ -48,6 +48,7 @@ void main() {
     PitchSpeed.slow: (180.0, 240.0),
     PitchSpeed.mid: (120.0, 180.0),
     PitchSpeed.fast: (60.0, 120.0),
+    PitchSpeed.turbo: (45.0, 90.0),
   };
   // Stoppage 0 keeps the band exact (scale 1).
   test('a quiet 0-0 lands in each band\'s lower half', () {
