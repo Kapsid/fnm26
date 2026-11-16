@@ -18464,4 +18464,18 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get matchElsewhereShout => 'GÓL JINDE';
+
+  @override
+  String get assistantMatchTitle => 'Zápas vede asistent';
+
+  @override
+  String assistantMatchBody(String opponent) {
+    return 'Proti týmu $opponent nasadí vaši sestavu a vaši taktiku. Chcete-li, nejdřív je upravte.';
+  }
+
+  @override
+  String get assistantMatchPlay => 'Ať hraje';
+
+  @override
+  String get assistantMatchResult => 'Zápas pod vedením asistenta';
 }

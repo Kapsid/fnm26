@@ -4512,5 +4512,9 @@
   "yPlayoffDrawn1": "Het wordt {opponent} in de play-offs voor {competition}. Eén duel, alles op het spel.",
   "yPlayoffDrawn2": "{opponent} in de play-offs. Ik moet nu al even gaan liggen. {competition}, we komen eraan. Misschien.",
   "yPlayoffDrawn3": "Loting play-offs: {opponent}. Verslaan we ze, dan is {competition} binnen handbereik.",
-  "matchElsewhereShout": "GOAL ELDERS"
+  "matchElsewhereShout": "GOAL ELDERS",
+  "assistantMatchTitle": "De assistent neemt het over",
+  "assistantMatchBody": "Tegen {opponent} speelt hij met jouw selectie en jouw tactiek. Stel ze eerst in als je wilt.",
+  "assistantMatchPlay": "Laat hem spelen",
+  "assistantMatchResult": "De wedstrijd van de assistent"
 }

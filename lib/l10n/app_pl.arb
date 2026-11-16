@@ -4512,5 +4512,9 @@
   "yPlayoffDrawn1": "W barażach o {competition} gramy z {opponent}. Jeden mecz, wszystko na szali.",
   "yPlayoffDrawn2": "{opponent} w barażach. Już muszę się położyć. {competition}, nadchodzimy. Może.",
   "yPlayoffDrawn3": "Losowanie baraży: {opponent}. Pokonamy ich i {competition} jest na wyciągnięcie ręki.",
-  "matchElsewhereShout": "GOL NA INNYM BOISKU"
+  "matchElsewhereShout": "GOL NA INNYM BOISKU",
+  "assistantMatchTitle": "Mecz prowadzi asystent",
+  "assistantMatchBody": "Przeciwko {opponent} zagra twoim składem i twoją taktyką. Jeśli chcesz, najpierw je ustaw.",
+  "assistantMatchPlay": "Niech gra",
+  "assistantMatchResult": "Mecz asystenta"
 }

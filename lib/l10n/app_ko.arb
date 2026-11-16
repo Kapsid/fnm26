@@ -4512,5 +4512,9 @@
   "yPlayoffDrawn1": "{competition} 플레이오프 상대는 {opponent}. 단판 승부, 모든 것이 걸렸다.",
   "yPlayoffDrawn2": "플레이오프에서 {opponent}. 벌써 누워야겠다. {competition}, 우리가 간다. 아마도.",
   "yPlayoffDrawn3": "플레이오프 추첨: {opponent}. 이기면 {competition}이 눈앞이다.",
-  "matchElsewhereShout": "다른 경기 골"
+  "matchElsewhereShout": "다른 경기 골",
+  "assistantMatchTitle": "어시스턴트에게 맡기기",
+  "assistantMatchBody": "{opponent}전에서 당신의 선수단과 전술로 경기합니다. 원하면 먼저 설정하세요.",
+  "assistantMatchPlay": "맡기기",
+  "assistantMatchResult": "어시스턴트의 경기"
 }

@@ -18055,4 +18055,18 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get matchElsewhereShout => 'MÅL PÅ ANNAT HÅLL';
+
+  @override
+  String get assistantMatchTitle => 'Assistenten tar den';
+
+  @override
+  String assistantMatchBody(String opponent) {
+    return 'Mot $opponent spelar han med din trupp och din taktik. Ställ in dem först om du vill.';
+  }
+
+  @override
+  String get assistantMatchPlay => 'Låt honom spela';
+
+  @override
+  String get assistantMatchResult => 'Assistentens match';
 }

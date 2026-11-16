@@ -4512,5 +4512,9 @@
   "yPlayoffDrawn1": "A(z) {competition} pótselejtezőjében {opponent} jön. Egy párharc, minden ezen múlik.",
   "yPlayoffDrawn2": "{opponent} a pótselejtezőben. Már most le kell feküdnöm. {competition}, jövünk. Talán.",
   "yPlayoffDrawn3": "Pótselejtező-sorsolás: {opponent}. Ha legyőzzük őket, karnyújtásnyira a(z) {competition}.",
-  "matchElsewhereShout": "GÓL MÁSHOL"
+  "matchElsewhereShout": "GÓL MÁSHOL",
+  "assistantMatchTitle": "A segítő viszi a meccset",
+  "assistantMatchBody": "A(z) {opponent} ellen a te keretedet és taktikádat játssza. Ha szeretnéd, előbb állítsd be őket.",
+  "assistantMatchPlay": "Hadd játsszon",
+  "assistantMatchResult": "A segítő meccse"
 }

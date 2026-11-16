@@ -17444,4 +17444,18 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get matchElsewhereShout => '他会場でゴール';
+
+  @override
+  String get assistantMatchTitle => 'アシスタントに任せる';
+
+  @override
+  String assistantMatchBody(String opponent) {
+    return '$opponent戦では、あなたのメンバーと戦術で戦います。必要なら先に設定してください。';
+  }
+
+  @override
+  String get assistantMatchPlay => '任せる';
+
+  @override
+  String get assistantMatchResult => 'アシスタントの試合';
 }

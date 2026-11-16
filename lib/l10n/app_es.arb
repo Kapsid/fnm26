@@ -4512,5 +4512,9 @@
   "yPlayoffDrawn1": "Nos toca {opponent} en la repesca para {competition}. Una eliminatoria, todo en juego.",
   "yPlayoffDrawn2": "{opponent} en la repesca. Ya necesito tumbarme. {competition}, allá vamos. Quizá.",
   "yPlayoffDrawn3": "Sorteo de la repesca: {opponent}. Si los ganamos, {competition} está al alcance de la mano.",
-  "matchElsewhereShout": "GOL EN OTRO CAMPO"
+  "matchElsewhereShout": "GOL EN OTRO CAMPO",
+  "assistantMatchTitle": "Lo dirige el asistente",
+  "assistantMatchBody": "Contra {opponent} juega con tu convocatoria y tu táctica. Ajústalas antes si quieres.",
+  "assistantMatchPlay": "Que juegue",
+  "assistantMatchResult": "El partido del asistente"
 }

@@ -4512,5 +4512,9 @@
   "yPlayoffDrawn1": "{competition} play-off'unda rakip {opponent}. Tek maç, her şey ortada.",
   "yPlayoffDrawn2": "Play-off'ta {opponent}. Şimdiden uzanmam lazım. {competition}, geliyoruz. Belki.",
   "yPlayoffDrawn3": "Play-off kurası: {opponent}. Onları yenersek {competition} bir adım ötede.",
-  "matchElsewhereShout": "DİĞER MAÇTA GOL"
+  "matchElsewhereShout": "DİĞER MAÇTA GOL",
+  "assistantMatchTitle": "Maçı yardımcı yönetsin",
+  "assistantMatchBody": "{opponent} karşısında senin kadronla ve taktiğinle oynar. İstersen önce bunları ayarla.",
+  "assistantMatchPlay": "Oynasın",
+  "assistantMatchResult": "Yardımcının maçı"
 }

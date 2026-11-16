@@ -18162,4 +18162,18 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get matchElsewhereShout => 'GOL EN OTRO CAMPO';
+
+  @override
+  String get assistantMatchTitle => 'Lo dirige el asistente';
+
+  @override
+  String assistantMatchBody(String opponent) {
+    return 'Contra $opponent juega con tu convocatoria y tu táctica. Ajústalas antes si quieres.';
+  }
+
+  @override
+  String get assistantMatchPlay => 'Que juegue';
+
+  @override
+  String get assistantMatchResult => 'El partido del asistente';
 }

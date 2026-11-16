@@ -4512,5 +4512,9 @@
   "yPlayoffDrawn1": "Lawan kita {opponent} dalam play-off {competition}. Satu perlawanan, semuanya dipertaruhkan.",
   "yPlayoffDrawn2": "{opponent} dalam play-off. Saya sudah perlu berbaring. {competition}, kami datang. Mungkin.",
   "yPlayoffDrawn3": "Cabutan play-off: {opponent}. Kalahkan mereka dan {competition} sudah di depan mata.",
-  "matchElsewhereShout": "GOL DI PERLAWANAN LAIN"
+  "matchElsewhereShout": "GOL DI PERLAWANAN LAIN",
+  "assistantMatchTitle": "Pembantu mengambil alih",
+  "assistantMatchBody": "Menentang {opponent}, dia memakai skuad dan taktik anda. Tetapkan dahulu jika mahu.",
+  "assistantMatchPlay": "Biar dia bermain",
+  "assistantMatchResult": "Perlawanan pembantu"
 }

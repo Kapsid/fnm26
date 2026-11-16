@@ -18155,4 +18155,18 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get matchElsewhereShout => 'ГОЛ В ДРУГ МАЧ';
+
+  @override
+  String get assistantMatchTitle => 'Асистентът поема мача';
+
+  @override
+  String assistantMatchBody(String opponent) {
+    return 'Срещу $opponent той играе с вашия състав и вашата тактика. Ако искате, първо ги настройте.';
+  }
+
+  @override
+  String get assistantMatchPlay => 'Нека играе';
+
+  @override
+  String get assistantMatchResult => 'Мачът на асистента';
 }

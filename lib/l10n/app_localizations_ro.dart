@@ -18495,4 +18495,18 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get matchElsewhereShout => 'GOL ÎN ALT MECI';
+
+  @override
+  String get assistantMatchTitle => 'Preia secundul';
+
+  @override
+  String assistantMatchBody(String opponent) {
+    return 'Împotriva $opponent joacă cu lotul și tactica ta. Setează-le întâi, dacă vrei.';
+  }
+
+  @override
+  String get assistantMatchPlay => 'Lasă-l să joace';
+
+  @override
+  String get assistantMatchResult => 'Meciul secundului';
 }

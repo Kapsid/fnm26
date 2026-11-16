@@ -4512,5 +4512,9 @@
   "yPlayoffDrawn1": "{opponent} в плейофа за {competition}. Един мач, всичко е на карта.",
   "yPlayoffDrawn2": "{opponent} в плейофа. Вече ми трябва почивка. {competition}, идваме. Може би.",
   "yPlayoffDrawn3": "Жребий за плейофа: {opponent}. Бием ли ги, {competition} е на една ръка разстояние.",
-  "matchElsewhereShout": "ГОЛ В ДРУГ МАЧ"
+  "matchElsewhereShout": "ГОЛ В ДРУГ МАЧ",
+  "assistantMatchTitle": "Асистентът поема мача",
+  "assistantMatchBody": "Срещу {opponent} той играе с вашия състав и вашата тактика. Ако искате, първо ги настройте.",
+  "assistantMatchPlay": "Нека играе",
+  "assistantMatchResult": "Мачът на асистента"
 }

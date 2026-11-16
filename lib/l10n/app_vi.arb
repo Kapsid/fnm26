@@ -4512,5 +4512,9 @@
   "yPlayoffDrawn1": "Gặp {opponent} ở play-off {competition}. Một trận, tất cả đặt cược.",
   "yPlayoffDrawn2": "{opponent} ở play-off. Tôi phải nằm xuống ngay bây giờ. {competition}, chúng ta đến đây. Có lẽ.",
   "yPlayoffDrawn3": "Bốc thăm play-off: {opponent}. Thắng họ là {competition} trong tầm tay.",
-  "matchElsewhereShout": "BÀN THẮNG Ở TRẬN KHÁC"
+  "matchElsewhereShout": "BÀN THẮNG Ở TRẬN KHÁC",
+  "assistantMatchTitle": "Để trợ lý dẫn dắt",
+  "assistantMatchBody": "Gặp {opponent}, anh ấy dùng đội hình và chiến thuật của bạn. Hãy chỉnh trước nếu muốn.",
+  "assistantMatchPlay": "Để anh ấy dẫn dắt",
+  "assistantMatchResult": "Trận đấu của trợ lý"
 }

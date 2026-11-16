@@ -4512,5 +4512,9 @@
   "yPlayoffDrawn1": "Sarà {opponent} nei playoff per {competition}. Una sfida, tutto in palio.",
   "yPlayoffDrawn2": "{opponent} ai playoff. Ho già bisogno di sdraiarmi. {competition}, arriviamo. Forse.",
   "yPlayoffDrawn3": "Sorteggio playoff: {opponent}. Battiamoli e {competition} è a portata di mano.",
-  "matchElsewhereShout": "GOL ALTROVE"
+  "matchElsewhereShout": "GOL ALTROVE",
+  "assistantMatchTitle": "Ci pensa il vice",
+  "assistantMatchBody": "Contro {opponent} gioca con la tua rosa e la tua tattica. Se vuoi, impostale prima.",
+  "assistantMatchPlay": "Lascialo giocare",
+  "assistantMatchResult": "La partita del vice"
 }

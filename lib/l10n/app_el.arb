@@ -4512,5 +4512,9 @@
   "yPlayoffDrawn1": "Η {opponent} στα μπαράζ για το {competition}. Ένα ζευγάρι, όλα παίζονται.",
   "yPlayoffDrawn2": "{opponent} στα μπαράζ. Χρειάζομαι ήδη να ξαπλώσω. {competition}, ερχόμαστε. Ίσως.",
   "yPlayoffDrawn3": "Κλήρωση μπαράζ: {opponent}. Αν τους κερδίσουμε, το {competition} είναι μια ανάσα μακριά.",
-  "matchElsewhereShout": "ΓΚΟΛ ΑΛΛΟΥ"
+  "matchElsewhereShout": "ΓΚΟΛ ΑΛΛΟΥ",
+  "assistantMatchTitle": "Το αναλαμβάνει ο βοηθός",
+  "assistantMatchBody": "Απέναντι στην ομάδα {opponent} παίζει με το ρόστερ και την τακτική σας. Ρυθμίστε τα πρώτα, αν θέλετε.",
+  "assistantMatchPlay": "Ας παίξει",
+  "assistantMatchResult": "Ο αγώνας του βοηθού"
 }

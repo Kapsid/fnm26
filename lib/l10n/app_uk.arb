@@ -4512,5 +4512,9 @@
   "yPlayoffDrawn1": "У плей-оф за {competition} граємо з {opponent}. Один поєдинок, усе на кону.",
   "yPlayoffDrawn2": "{opponent} у плей-оф. Мені вже треба прилягти. {competition}, ми йдемо. Можливо.",
   "yPlayoffDrawn3": "Жеребкування плей-оф: {opponent}. Здолаємо їх, і {competition} буде на відстані витягнутої руки.",
-  "matchElsewhereShout": "ГОЛ В ІНШОМУ МАТЧІ"
+  "matchElsewhereShout": "ГОЛ В ІНШОМУ МАТЧІ",
+  "assistantMatchTitle": "Матч веде асистент",
+  "assistantMatchBody": "Проти команди {opponent} він грає вашим складом і вашою тактикою. За бажання спершу налаштуйте їх.",
+  "assistantMatchPlay": "Нехай грає",
+  "assistantMatchResult": "Матч асистента"
 }

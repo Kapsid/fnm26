@@ -27313,6 +27313,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'GOAL ELSEWHERE'**
   String get matchElsewhereShout;
+
+  /// Sheet over the hub: the manager leaves a friendly to his assistant.
+  ///
+  /// In en, this message translates to:
+  /// **'The assistant takes it'**
+  String get assistantMatchTitle;
+
+  /// Sheet body: the assistant uses the manager's own line-up and tactics; the manager may change them before.
+  ///
+  /// In en, this message translates to:
+  /// **'Against {opponent} he plays your squad and your tactics. Set them first if you like.'**
+  String assistantMatchBody(String opponent);
+
+  /// Sheet button: the assistant plays the friendly now.
+  ///
+  /// In en, this message translates to:
+  /// **'Let him play'**
+  String get assistantMatchPlay;
+
+  /// Dialog title over the result of a friendly the assistant played.
+  ///
+  /// In en, this message translates to:
+  /// **'The assistant\'s match'**
+  String get assistantMatchResult;
 }
 
 class _AppLocalizationsDelegate

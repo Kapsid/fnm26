@@ -17762,4 +17762,18 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get matchElsewhereShout => 'ประตูจากสนามอื่น';
+
+  @override
+  String get assistantMatchTitle => 'ให้ผู้ช่วยคุมเกม';
+
+  @override
+  String assistantMatchBody(String opponent) {
+    return 'พบ $opponent เขาจะใช้ทีมและแท็กติกของคุณ ตั้งค่าก่อนได้หากต้องการ';
+  }
+
+  @override
+  String get assistantMatchPlay => 'ให้เขาคุม';
+
+  @override
+  String get assistantMatchResult => 'เกมของผู้ช่วย';
 }

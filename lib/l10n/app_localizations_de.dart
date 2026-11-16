@@ -18201,4 +18201,18 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get matchElsewhereShout => 'TOR WOANDERS';
+
+  @override
+  String get assistantMatchTitle => 'Der Assistent übernimmt';
+
+  @override
+  String assistantMatchBody(String opponent) {
+    return 'Gegen $opponent spielt er mit deinem Kader und deiner Taktik. Stell sie vorher ein, wenn du willst.';
+  }
+
+  @override
+  String get assistantMatchPlay => 'Lass ihn spielen';
+
+  @override
+  String get assistantMatchResult => 'Das Spiel des Assistenten';
 }

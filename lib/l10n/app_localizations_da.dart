@@ -18070,4 +18070,18 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get matchElsewhereShout => 'MÅL ANDETSTEDS';
+
+  @override
+  String get assistantMatchTitle => 'Assistenten tager den';
+
+  @override
+  String assistantMatchBody(String opponent) {
+    return 'Mod $opponent spiller han med din trup og din taktik. Indstil dem først, hvis du vil.';
+  }
+
+  @override
+  String get assistantMatchPlay => 'Lad ham spille';
+
+  @override
+  String get assistantMatchResult => 'Assistentens kamp';
 }

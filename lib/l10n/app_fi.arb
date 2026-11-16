@@ -4512,5 +4512,9 @@
   "yPlayoffDrawn1": "Jatkokarsinnassa vastaan tulee {opponent}. {competition} ratkeaa yhdessä ottelussa.",
   "yPlayoffDrawn2": "{opponent} jatkokarsinnassa. Minun on jo pakko mennä makuulle. {competition}, täältä tullaan. Ehkä.",
   "yPlayoffDrawn3": "Jatkokarsinnan arvonta: {opponent}. Voitetaan heidät, ja {competition} on käden ulottuvilla.",
-  "matchElsewhereShout": "MAALI MUUALLA"
+  "matchElsewhereShout": "MAALI MUUALLA",
+  "assistantMatchTitle": "Avustaja hoitaa ottelun",
+  "assistantMatchBody": "Vastaan {opponent} hän pelaa sinun ryhmälläsi ja taktiikallasi. Säädä ne ensin, jos haluat.",
+  "assistantMatchPlay": "Anna hänen pelata",
+  "assistantMatchResult": "Avustajan ottelu"
 }

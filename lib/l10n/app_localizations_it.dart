@@ -18148,4 +18148,18 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get matchElsewhereShout => 'GOL ALTROVE';
+
+  @override
+  String get assistantMatchTitle => 'Ci pensa il vice';
+
+  @override
+  String assistantMatchBody(String opponent) {
+    return 'Contro $opponent gioca con la tua rosa e la tua tattica. Se vuoi, impostale prima.';
+  }
+
+  @override
+  String get assistantMatchPlay => 'Lascialo giocare';
+
+  @override
+  String get assistantMatchResult => 'La partita del vice';
 }

@@ -17981,4 +17981,18 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get matchElsewhereShout => 'DİĞER MAÇTA GOL';
+
+  @override
+  String get assistantMatchTitle => 'Maçı yardımcı yönetsin';
+
+  @override
+  String assistantMatchBody(String opponent) {
+    return '$opponent karşısında senin kadronla ve taktiğinle oynar. İstersen önce bunları ayarla.';
+  }
+
+  @override
+  String get assistantMatchPlay => 'Oynasın';
+
+  @override
+  String get assistantMatchResult => 'Yardımcının maçı';
 }
