@@ -18126,4 +18126,17 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get regionalCupGroups => 'CSOPORTOK';
+
+  @override
+  String get ncWcPlayoffLegend => 'Sárga: úton a vb-pótselejtező felé';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return 'Pótselejtező mint biztonsági háló: $finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return 'A(z) $cup tabellái szerint jelenleg pótselejtezős helyen álltok. Ha a közvetlen kijutás nem sikerül, ez egy második út a tornára ($finals). Az ágakat a selejtező végén sorsolják.';
+  }
 }

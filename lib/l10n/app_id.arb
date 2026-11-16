@@ -4541,5 +4541,8 @@
   "regionalCupChampion": "Juara: {name}",
   "regionalCupHosted": "Tuan rumah: {host}",
   "regionalCupHomeAndAway": "Grup dimainkan kandang dan tandang",
-  "regionalCupGroups": "GRUP"
+  "regionalCupGroups": "GRUP",
+  "ncWcPlayoffLegend": "Kuning: menuju play-off Kejuaraan Dunia",
+  "newsNcPlayoffNetTitle": "Play-off sebagai jaring pengaman: {finals}",
+  "newsNcPlayoffNetBody": "Menurut klasemen {cup}, saat ini Anda memegang tempat di play-off. Jika gagal lolos langsung, itu jalan kedua menuju {finals}. Jalur play-off diundi setelah kualifikasi selesai."
 }

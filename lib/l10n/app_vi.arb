@@ -4541,5 +4541,8 @@
   "regionalCupChampion": "Vô địch: {name}",
   "regionalCupHosted": "Chủ nhà: {host}",
   "regionalCupHomeAndAway": "Vòng bảng đá sân nhà và sân khách",
-  "regionalCupGroups": "CÁC BẢNG"
+  "regionalCupGroups": "CÁC BẢNG",
+  "ncWcPlayoffLegend": "Vàng: đang hướng tới play-off giải vô địch thế giới",
+  "newsNcPlayoffNetTitle": "Play-off là lưới an toàn: {finals}",
+  "newsNcPlayoffNetBody": "Theo bảng xếp hạng {cup}, hiện bạn đang giữ một suất play-off. Nếu không giành vé trực tiếp, đó là con đường thứ hai tới {finals}. Các nhánh play-off được bốc thăm khi vòng loại kết thúc."
 }

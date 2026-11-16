@@ -18261,4 +18261,17 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get regionalCupGroups => 'GIRONI';
+
+  @override
+  String get ncWcPlayoffLegend => 'Giallo: in corsa per gli spareggi mondiali';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return 'Gli spareggi come rete di sicurezza: $finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return 'Secondo le classifiche del torneo $cup, al momento hai un posto negli spareggi. Se la qualificazione diretta non arriva, avrai una seconda strada verso il torneo $finals. I percorsi si sorteggiano a fine qualificazioni.';
+  }
 }

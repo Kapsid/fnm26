@@ -4541,5 +4541,8 @@
   "regionalCupChampion": "Победител: {name}",
   "regionalCupHosted": "Домакин: {host}",
   "regionalCupHomeAndAway": "Групите се играят като домакин и гост",
-  "regionalCupGroups": "ГРУПИ"
+  "regionalCupGroups": "ГРУПИ",
+  "ncWcPlayoffLegend": "Жълто: по пътя към плейофа за световното",
+  "newsNcPlayoffNetTitle": "Плейофът като предпазна мрежа: {finals}",
+  "newsNcPlayoffNetBody": "Според класиранията в турнира {cup} засега имате място в плейофите. Ако не се класирате директно, имате втори път към турнира {finals}. Пътищата се теглят след края на квалификациите."
 }

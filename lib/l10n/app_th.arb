@@ -4541,5 +4541,8 @@
   "regionalCupChampion": "แชมป์: {name}",
   "regionalCupHosted": "เจ้าภาพ: {host}",
   "regionalCupHomeAndAway": "รอบแบ่งกลุ่มเล่นในบ้านและนอกบ้าน",
-  "regionalCupGroups": "กลุ่ม"
+  "regionalCupGroups": "กลุ่ม",
+  "ncWcPlayoffLegend": "สีเหลือง: กำลังมุ่งสู่เพลย์ออฟชิงแชมป์โลก",
+  "newsNcPlayoffNetTitle": "เพลย์ออฟเป็นทางสำรอง: {finals}",
+  "newsNcPlayoffNetBody": "ตามตารางคะแนน {cup} ตอนนี้คุณอยู่ในโซนเพลย์ออฟ หากไม่ผ่านเข้ารอบโดยตรง ยังมีทางที่สองสู่ {finals} สายเพลย์ออฟจะจับสลากหลังรอบคัดเลือกจบ"
 }

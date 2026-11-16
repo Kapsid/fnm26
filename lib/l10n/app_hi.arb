@@ -4541,5 +4541,8 @@
   "regionalCupChampion": "विजेता: {name}",
   "regionalCupHosted": "मेज़बान: {host}",
   "regionalCupHomeAndAway": "ग्रुप घरेलू और बाहरी मैदान पर खेले जाते हैं",
-  "regionalCupGroups": "ग्रुप"
+  "regionalCupGroups": "ग्रुप",
+  "ncWcPlayoffLegend": "पीला: विश्व चैंपियनशिप प्ले-ऑफ़ की राह पर",
+  "newsNcPlayoffNetTitle": "प्ले-ऑफ़ का सहारा: {finals}",
+  "newsNcPlayoffNetBody": "{cup} की तालिकाओं के अनुसार अभी आपके पास प्ले-ऑफ़ में जगह है। सीधे क्वालिफ़ाई न कर पाए तो {finals} तक पहुँचने का यह दूसरा रास्ता है। प्ले-ऑफ़ के रास्ते क्वालिफ़ाइंग ख़त्म होने पर निकाले जाते हैं।"
 }

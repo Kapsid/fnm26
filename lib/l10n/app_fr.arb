@@ -4541,5 +4541,8 @@
   "regionalCupChampion": "Vainqueur : {name}",
   "regionalCupHosted": "Pays hôte : {host}",
   "regionalCupHomeAndAway": "Phase de groupes à domicile et à l'extérieur",
-  "regionalCupGroups": "GROUPES"
+  "regionalCupGroups": "GROUPES",
+  "ncWcPlayoffLegend": "Jaune : en route pour les barrages du Mondial",
+  "newsNcPlayoffNetTitle": "Un filet de sécurité en barrages : {finals}",
+  "newsNcPlayoffNetBody": "D'après les classements de la compétition {cup}, vous tenez pour l'instant une place en barrages. Si la qualification directe échoue, ils vous ouvrent une seconde voie vers la phase finale ({finals}). Les tableaux sont tirés à la fin des qualifications."
 }

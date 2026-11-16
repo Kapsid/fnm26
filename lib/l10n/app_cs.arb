@@ -4541,5 +4541,8 @@
   "regionalCupChampion": "Vítěz: {name}",
   "regionalCupHosted": "Pořadatel: {host}",
   "regionalCupHomeAndAway": "Skupiny se hrají doma a venku",
-  "regionalCupGroups": "SKUPINY"
+  "regionalCupGroups": "SKUPINY",
+  "ncWcPlayoffLegend": "Žlutě: míří do baráže o mistrovství světa",
+  "newsNcPlayoffNetTitle": "Pojistka v baráži: {finals}",
+  "newsNcPlayoffNetBody": "Podle tabulek soutěže {cup} máte zatím místo v baráži. Kdyby přímý postup nevyšel, máte druhou cestu na turnaj {finals}. Cesty baráže se losují po skončení kvalifikace."
 }

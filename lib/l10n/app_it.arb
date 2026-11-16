@@ -4541,5 +4541,8 @@
   "regionalCupChampion": "Vincitore: {name}",
   "regionalCupHosted": "Paese ospitante: {host}",
   "regionalCupHomeAndAway": "Gironi giocati in casa e in trasferta",
-  "regionalCupGroups": "GIRONI"
+  "regionalCupGroups": "GIRONI",
+  "ncWcPlayoffLegend": "Giallo: in corsa per gli spareggi mondiali",
+  "newsNcPlayoffNetTitle": "Gli spareggi come rete di sicurezza: {finals}",
+  "newsNcPlayoffNetBody": "Secondo le classifiche del torneo {cup}, al momento hai un posto negli spareggi. Se la qualificazione diretta non arriva, avrai una seconda strada verso il torneo {finals}. I percorsi si sorteggiano a fine qualificazioni."
 }

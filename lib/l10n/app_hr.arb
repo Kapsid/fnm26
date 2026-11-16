@@ -4541,5 +4541,8 @@
   "regionalCupChampion": "Pobjednik: {name}",
   "regionalCupHosted": "Domaćin: {host}",
   "regionalCupHomeAndAway": "Skupine se igraju kod kuće i u gostima",
-  "regionalCupGroups": "SKUPINE"
+  "regionalCupGroups": "SKUPINE",
+  "ncWcPlayoffLegend": "Žuto: na putu prema doigravanju za Svjetsko prvenstvo",
+  "newsNcPlayoffNetTitle": "Doigravanje kao sigurnosna mreža: {finals}",
+  "newsNcPlayoffNetBody": "Prema tablicama turnira {cup} zasad imate mjesto u doigravanju. Ako izravan plasman ne uspije, to je drugi put do turnira {finals}. Putovi doigravanja izvlače se nakon kvalifikacija."
 }

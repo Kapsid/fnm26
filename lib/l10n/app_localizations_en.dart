@@ -18213,4 +18213,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get regionalCupGroups => 'GROUPS';
+
+  @override
+  String get ncWcPlayoffLegend =>
+      'Yellow: on course for the World Championship play-off';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return 'A play-off safety net: $finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return 'As the $cup tables stand, you hold a play-off place. Should you not qualify directly, it gives you a second route to the $finals. The paths are drawn once qualifying ends.';
+  }
 }

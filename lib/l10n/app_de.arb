@@ -4541,5 +4541,8 @@
   "regionalCupChampion": "Sieger: {name}",
   "regionalCupHosted": "Gastgeber: {host}",
   "regionalCupHomeAndAway": "Gruppenspiele mit Hin- und Rückspielort",
-  "regionalCupGroups": "GRUPPEN"
+  "regionalCupGroups": "GRUPPEN",
+  "ncWcPlayoffLegend": "Gelb: auf Kurs für das WM-Play-off",
+  "newsNcPlayoffNetTitle": "Play-off als Rettungsnetz: {finals}",
+  "newsNcPlayoffNetBody": "Nach den Tabellen des Wettbewerbs {cup} hast du derzeit einen Play-off-Platz. Klappt die direkte Qualifikation nicht, bleibt dir ein zweiter Weg zum Turnier {finals}. Die Play-off-Wege werden nach der Qualifikation ausgelost."
 }

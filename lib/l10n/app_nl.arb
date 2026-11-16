@@ -4541,5 +4541,8 @@
   "regionalCupChampion": "Winnaar: {name}",
   "regionalCupHosted": "Gastland: {host}",
   "regionalCupHomeAndAway": "Groepen thuis en uit gespeeld",
-  "regionalCupGroups": "GROEPEN"
+  "regionalCupGroups": "GROEPEN",
+  "ncWcPlayoffLegend": "Geel: op koers voor de WK-play-offs",
+  "newsNcPlayoffNetTitle": "Een vangnet via de play-offs: {finals}",
+  "newsNcPlayoffNetBody": "Volgens de standen van het toernooi {cup} heb je voorlopig een plek in de play-offs. Lukt directe kwalificatie niet, dan is dat een tweede weg naar het toernooi {finals}. De play-offroutes worden na de kwalificatie geloot."
 }

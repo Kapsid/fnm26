@@ -269,7 +269,11 @@ mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
             ),
             if (v.playoffNations.isNotEmpty) ...[
               const SizedBox(height: AppSpacing.xs),
-              _PlayoffLegend(text: l.ncEuroPlayoffLegend),
+              _PlayoffLegend(
+                text: v.playoffForWorld
+                    ? l.ncWcPlayoffLegend
+                    : l.ncEuroPlayoffLegend,
+              ),
             ],
             const SizedBox(height: AppSpacing.md),
             if (grid) ...[

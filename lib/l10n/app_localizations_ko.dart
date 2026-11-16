@@ -17596,4 +17596,17 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get regionalCupGroups => '조별리그';
+
+  @override
+  String get ncWcPlayoffLegend => '노란색: 세계선수권 플레이오프 진출권';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return '플레이오프라는 안전망: $finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return '$cup 순위표 기준으로 현재 플레이오프 진출권에 있습니다. 직행에 실패해도 $finals로 가는 두 번째 길이 있습니다. 플레이오프 대진은 예선이 끝난 뒤 추첨합니다.';
+  }
 }

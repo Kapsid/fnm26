@@ -87,6 +87,7 @@ Future<void> _sweepShell(WidgetTester tester, Size size) async {
     Routes.cup: '',
     Routes.continental: '&conf=${me.confederation.name}',
     Routes.continentalClash: '',
+    Routes.regionalCup: '&cup=G',
     Routes.ranking: '',
     Routes.managers: '',
     Routes.worldManager: '&managerId=1',

@@ -10,6 +10,7 @@ import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/cross_group.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
+import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
 
 /// Europe's play-offs for the World Championship on the calendar2 rhythm
@@ -158,6 +159,63 @@ abstract final class UefaWcPlayoffs {
       paths--;
     }
     return (runnersUp: const [], nationsCup: const []);
+  }
+
+  /// The Nations Cup sides on course for pot 4 as the tables stand: the
+  /// sides [entrants] would give today, the paths cut as the draw cuts them
+  /// when the cup cannot fill them. [groups] are Europe's qualifying tables
+  /// (before a match of it is played, the cup's order alone, less the
+  /// [hosts]), [europeCount] Europe's nations, for the groups it will be
+  /// drawn into.
+  static List<int> onCourseNationsCup({
+    required List<List<GroupStanding>> groups,
+    required List<NcTable> ncTables,
+    required Set<int> hosts,
+    required int europeCount,
+    List<int> fallback = const [],
+  }) {
+    if (ncTables.isEmpty) return const [];
+    final berths = QualificationFormat.forConfederation(
+      Confederation.europe,
+    ).qualifyingBerths(hosts.length);
+    final drawn = groups.where((g) => g.isNotEmpty).toList();
+    var count = pathCount(
+      berths: berths,
+      groupCount: drawn.isNotEmpty
+          ? drawn.length
+          : groupCount(europeCount - hosts.length),
+    );
+    if (count <= 0) return const [];
+    // Qualifying not under way yet (undrawn, or not a match played): nobody
+    // is through or a runner-up, so the cup's order alone.
+    final started = drawn.any((g) => g.any((s) => s.played > 0));
+    final played = started ? drawn : const <List<GroupStanding>>[];
+    if (played.isEmpty) {
+      final winners = {
+        for (final t in ncTables)
+          if (t.standings.isNotEmpty) t.standings.first.nationId,
+      };
+      final overall = EuroPlayoffs.overallRanking(ncTables);
+      return [
+        for (final id in overall)
+          if (winners.contains(id) && !hosts.contains(id)) id,
+        for (final id in overall)
+          if (!winners.contains(id) && !hosts.contains(id)) id,
+      ].take(count).toList();
+    }
+    ({List<int> runnersUp, List<int> nationsCup}) at(int n) => entrants(
+      groups: played,
+      ncTables: ncTables,
+      ineligible: {...Qualification.qualifiers(played, berths - n), ...hosts},
+      count: n,
+      fallback: fallback,
+    );
+    var e = at(count);
+    if (e.nationsCup.length < count) {
+      count = e.nationsCup.length;
+      e = at(count);
+    }
+    return e.nationsCup;
   }
 
   /// Draws the paths from the [entrants]: pots 1-3 the runners-up by

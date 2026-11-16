@@ -18281,4 +18281,17 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get regionalCupGroups => 'GRUPOS';
+
+  @override
+  String get ncWcPlayoffLegend => 'Amarelo: a caminho do play-off do Mundial';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return 'O play-off como rede de segurança: $finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return 'Pelas tabelas do torneio $cup, por enquanto você tem vaga no play-off. Se não se classificar diretamente, terá um segundo caminho para o torneio $finals. Os caminhos são sorteados no fim das eliminatórias.';
+  }
 }

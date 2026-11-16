@@ -17554,4 +17554,17 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get regionalCupGroups => 'グループ';
+
+  @override
+  String get ncWcPlayoffLegend => '黄色：世界選手権プレーオフ圏内';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return 'プレーオフという保険：$finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return '$cupの順位表では、現時点でプレーオフ出場圏にいる。ストレートで予選を突破できなくても、$finalsへの2つ目の道がある。プレーオフの組み合わせは予選終了後に抽選される。';
+  }
 }

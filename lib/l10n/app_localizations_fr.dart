@@ -18345,4 +18345,18 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get regionalCupGroups => 'GROUPES';
+
+  @override
+  String get ncWcPlayoffLegend =>
+      'Jaune : en route pour les barrages du Mondial';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return 'Un filet de sécurité en barrages : $finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return 'D\'après les classements de la compétition $cup, vous tenez pour l\'instant une place en barrages. Si la qualification directe échoue, ils vous ouvrent une seconde voie vers la phase finale ($finals). Les tableaux sont tirés à la fin des qualifications.';
+  }
 }

@@ -18091,4 +18091,17 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get regionalCupGroups => 'GRUPLAR';
+
+  @override
+  String get ncWcPlayoffLegend => 'Sarı: Dünya Şampiyonası play-off yolunda';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return 'Güvence olarak play-off: $finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return '$cup tablolarına göre şu an play-off yerindesin. Doğrudan katılım olmazsa, $finals için ikinci bir yolun var. Play-off yolları elemeler bitince çekilir.';
+  }
 }

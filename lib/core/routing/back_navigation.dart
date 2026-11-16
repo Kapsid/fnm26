@@ -73,6 +73,7 @@ const Map<String, String> _inSaveParents = {
   Routes.cup: Routes.tournaments,
   Routes.continental: Routes.tournaments,
   Routes.continentalClash: Routes.tournaments,
+  Routes.regionalCup: Routes.tournaments,
   Routes.nationsCup: Routes.tournaments,
   Routes.nationVitrine: Routes.ranking,
   Routes.worldManager: Routes.managers,

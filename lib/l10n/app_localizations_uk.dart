@@ -18512,4 +18512,18 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get regionalCupGroups => 'ГРУПИ';
+
+  @override
+  String get ncWcPlayoffLegend =>
+      'Жовтий: на шляху до плей-оф чемпіонату світу';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return 'Плей-оф як запасний шлях: $finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return 'За таблицями турніру $cup ви поки маєте місце в плей-оф. Якщо пряма путівка не вийде, це другий шлях на турнір $finals. Шляхи плей-оф розігрують після кваліфікації.';
+  }
 }

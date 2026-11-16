@@ -18165,4 +18165,17 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get regionalCupGroups => 'GRUPPER';
+
+  @override
+  String get ncWcPlayoffLegend => 'Gul: på väg mot VM-playoff';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return 'Playoff som skyddsnät: $finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return 'Enligt tabellerna i turneringen $cup har ni just nu en playoffplats. Går ni inte vidare direkt får ni en andra väg till turneringen $finals. Playoffvägarna lottas när kvalet är slut.';
+  }
 }

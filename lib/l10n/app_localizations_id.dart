@@ -18089,4 +18089,17 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get regionalCupGroups => 'GRUP';
+
+  @override
+  String get ncWcPlayoffLegend => 'Kuning: menuju play-off Kejuaraan Dunia';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return 'Play-off sebagai jaring pengaman: $finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return 'Menurut klasemen $cup, saat ini Anda memegang tempat di play-off. Jika gagal lolos langsung, itu jalan kedua menuju $finals. Jalur play-off diundi setelah kualifikasi selesai.';
+  }
 }

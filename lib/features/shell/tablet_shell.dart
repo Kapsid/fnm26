@@ -35,6 +35,7 @@ const Set<String> tabletReadyPaths = <String>{
   Routes.continental,
   Routes.nationsCup,
   Routes.continentalClash,
+  Routes.regionalCup,
   Routes.intercontinentalPlayoff,
   Routes.tournaments,
   Routes.qualifyingDraw,

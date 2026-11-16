@@ -18267,4 +18267,17 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get regionalCupGroups => 'GROEPEN';
+
+  @override
+  String get ncWcPlayoffLegend => 'Geel: op koers voor de WK-play-offs';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return 'Een vangnet via de play-offs: $finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return 'Volgens de standen van het toernooi $cup heb je voorlopig een plek in de play-offs. Lukt directe kwalificatie niet, dan is dat een tweede weg naar het toernooi $finals. De play-offroutes worden na de kwalificatie geloot.';
+  }
 }

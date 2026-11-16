@@ -4541,5 +4541,8 @@
   "regionalCupChampion": "Şampiyon: {name}",
   "regionalCupHosted": "Ev sahibi: {host}",
   "regionalCupHomeAndAway": "Gruplar iç saha ve deplasmanda oynanır",
-  "regionalCupGroups": "GRUPLAR"
+  "regionalCupGroups": "GRUPLAR",
+  "ncWcPlayoffLegend": "Sarı: Dünya Şampiyonası play-off yolunda",
+  "newsNcPlayoffNetTitle": "Güvence olarak play-off: {finals}",
+  "newsNcPlayoffNetBody": "{cup} tablolarına göre şu an play-off yerindesin. Doğrudan katılım olmazsa, {finals} için ikinci bir yolun var. Play-off yolları elemeler bitince çekilir."
 }

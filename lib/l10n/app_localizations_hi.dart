@@ -18088,4 +18088,17 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get regionalCupGroups => 'ग्रुप';
+
+  @override
+  String get ncWcPlayoffLegend => 'पीला: विश्व चैंपियनशिप प्ले-ऑफ़ की राह पर';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return 'प्ले-ऑफ़ का सहारा: $finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return '$cup की तालिकाओं के अनुसार अभी आपके पास प्ले-ऑफ़ में जगह है। सीधे क्वालिफ़ाई न कर पाए तो $finals तक पहुँचने का यह दूसरा रास्ता है। प्ले-ऑफ़ के रास्ते क्वालिफ़ाइंग ख़त्म होने पर निकाले जाते हैं।';
+  }
 }

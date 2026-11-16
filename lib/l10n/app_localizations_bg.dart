@@ -18265,4 +18265,17 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get regionalCupGroups => 'ГРУПИ';
+
+  @override
+  String get ncWcPlayoffLegend => 'Жълто: по пътя към плейофа за световното';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return 'Плейофът като предпазна мрежа: $finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return 'Според класиранията в турнира $cup засега имате място в плейофите. Ако не се класирате директно, имате втори път към турнира $finals. Пътищата се теглят след края на квалификациите.';
+  }
 }

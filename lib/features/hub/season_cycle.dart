@@ -19,6 +19,9 @@ const String _cal2EuroQualKind = 'cal2:euroQual';
 const String _cal2ConmebolKind = 'cal2:wcqSouthAmerica';
 const String _cal2WcQualKind = 'cal2:wcq';
 
+/// The once-an-edition check of `SeasonService._fileNcPlayoffSafetyNets`.
+const String ncPlayoffNetKind = 'cal2:ncPlayoffNet';
+
 extension SeasonCycle on SeasonService {
   Future<bool> _roundComplete(
     int careerId,
@@ -211,6 +214,7 @@ extension SeasonCycle on SeasonService {
     final cal2 = await isCalendar2(_comp, careerId, career.cyclePointer);
     if (cal2) {
       await _calendar2Draws(careerId);
+      await _fileNcPlayoffSafetyNets(careerId);
     } else {
       await _drawWorldCupQualifyingIfDue(careerId);
     }
@@ -493,6 +497,82 @@ extension SeasonCycle on SeasonService {
         );
         await _comp.markDrawWatched(careerId, cycle, _cal2WcQualKind);
       }
+    }
+  }
+
+  /// Once a European Nations Cup league phase is played out (calendar2), a
+  /// manager whose side it puts on course for a play-off path hears so: the
+  /// first edition's for the continental finals, the second's for the World
+  /// Championship. A safety net, should qualifying not go his way; the paths
+  /// themselves are drawn when qualifying ends. Checked once an edition.
+  Future<void> _fileNcPlayoffSafetyNets(int careerId) async {
+    final career = await _careers.byId(careerId);
+    if (career == null) return;
+    const europe = Confederation.europe;
+    final cycle = career.cyclePointer;
+    for (final edition in const [
+      Calendar2.firstEdition,
+      Calendar2.secondEdition,
+    ]) {
+      final key = '$ncPlayoffNetKind:$edition';
+      if (await _comp.hasWatchedDraw(careerId, cycle, key)) continue;
+      if (!await _roundComplete(
+        careerId,
+        'NGROUP',
+        kind: CompetitionKind.nationsLeague,
+        confederation: europe,
+        edition: edition,
+      )) {
+        continue;
+      }
+      await _comp.markDrawWatched(careerId, cycle, key);
+      final nations = await _nationsById(careerId);
+      if (nations[career.nationId]?.confederation != europe) continue;
+      final world = edition == Calendar2.secondEdition;
+      // Already drawn: the draw's own news says where the side stands.
+      if ((await _comp.drawSlots(
+        careerId,
+        cycle,
+        world
+            ? CompetitionKind.worldCupPlayoffEurope
+            : CompetitionKind.continentalPlayoff,
+        confederation: europe,
+      )).isNotEmpty) {
+        continue;
+      }
+      final marks = world
+          ? await wcPlayoffMarks(
+              _comp,
+              careerId: careerId,
+              cycle: cycle,
+              rngSeed: career.rngSeed,
+              nations: nations,
+            )
+          : await euroPlayoffMarks(
+              _comp,
+              careerId: careerId,
+              cycle: cycle,
+              rngSeed: career.rngSeed,
+              nations: nations,
+            );
+      if (!marks.contains(career.nationId)) continue;
+      final finals = MsgComp(
+        world
+            ? 'World Championship'
+            : ContinentalCups.byConfederation[europe]!.name,
+      );
+      await _comp.addTextMessage(
+        l: _l,
+        careerId: careerId,
+        dedupKey: 'ncnet:$cycle:$edition',
+        category: 'qualify',
+        title: MsgText(MsgKey.newsNcPlayoffNetTitle, [finals]),
+        body: MsgText(MsgKey.newsNcPlayoffNetBody, [
+          const MsgComp(NationsCups.europe),
+          finals,
+        ]),
+        year: career.inGameDate.year,
+      );
     }
   }
 

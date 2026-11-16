@@ -18027,4 +18027,18 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get regionalCupGroups => 'CÁC BẢNG';
+
+  @override
+  String get ncWcPlayoffLegend =>
+      'Vàng: đang hướng tới play-off giải vô địch thế giới';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return 'Play-off là lưới an toàn: $finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return 'Theo bảng xếp hạng $cup, hiện bạn đang giữ một suất play-off. Nếu không giành vé trực tiếp, đó là con đường thứ hai tới $finals. Các nhánh play-off được bốc thăm khi vòng loại kết thúc.';
+  }
 }

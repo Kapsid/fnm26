@@ -46,9 +46,14 @@ typedef NationsCupData = ({
   /// nowhere to fall, so they aren't shown as relegated.
   int maxTier,
 
-  /// Europe's first cup on the calendar2 rhythm: the sides on course for
-  /// the continental finals' play-off paths (yellow), read off this cup.
+  /// Europe's cups on the calendar2 rhythm: the sides on course for a
+  /// play-off read off this cup (yellow): the continental finals' paths off
+  /// the first, the World Championship's (pot 4) off the second.
   Set<int> playoffNations,
+
+  /// Whether [playoffNations] are headed for the World Championship's
+  /// play-off (the second cup) rather than the continental finals'.
+  bool playoffForWorld,
 });
 
 /// Which cup: `confederation`'s, or (null) the manager's own, Europe's for a
@@ -163,6 +168,9 @@ nationsCupProvider = FutureProvider.autoDispose.family<NationsCupData?, NationsC
     if (p != null) playerNames[id] = p.name;
   }
 
+  final firstShown =
+      conf == Confederation.europe &&
+      await showsFirstNationsCup(comp, careerId: careerId);
   return (
     confederation: conf,
     cupName: cup.name,
@@ -186,9 +194,9 @@ nationsCupProvider = FutureProvider.autoDispose.family<NationsCupData?, NationsC
     },
     nations: nations,
     maxTier: maxTier,
-    playoffNations:
-        conf == Confederation.europe &&
-            await showsFirstNationsCup(comp, careerId: careerId)
+    playoffNations: conf != Confederation.europe
+        ? const <int>{}
+        : firstShown
         ? await euroPlayoffMarks(
             comp,
             careerId: careerId,
@@ -196,6 +204,13 @@ nationsCupProvider = FutureProvider.autoDispose.family<NationsCupData?, NationsC
             rngSeed: career.rngSeed,
             nations: nations,
           )
-        : const <int>{},
+        : await wcPlayoffMarks(
+            comp,
+            careerId: careerId,
+            cycle: career.cyclePointer,
+            rngSeed: career.rngSeed,
+            nations: nations,
+          ),
+    playoffForWorld: conf == Confederation.europe && !firstShown,
   );
 });

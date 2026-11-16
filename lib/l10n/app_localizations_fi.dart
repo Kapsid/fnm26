@@ -18257,4 +18257,17 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get regionalCupGroups => 'LOHKOT';
+
+  @override
+  String get ncWcPlayoffLegend => 'Keltainen: matkalla MM-jatkokarsintaan';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return 'Jatkokarsinta varmistuksena: $finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return 'Turnauksen $cup taulukoiden mukaan teillä on tällä hetkellä paikka jatkokarsinnoissa. Jos suora paikka ei irtoa, se on toinen tie turnaukseen $finals. Karsintapolut arvotaan karsintojen päätyttyä.';
+  }
 }

@@ -18606,4 +18606,17 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get regionalCupGroups => 'GRUPE';
+
+  @override
+  String get ncWcPlayoffLegend => 'Galben: pe drumul spre barajul mondial';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return 'Barajul ca plasă de siguranță: $finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return 'Conform clasamentelor din turneul $cup, deocamdată aveți loc în baraj. Dacă nu vă calificați direct, aveți un al doilea drum spre turneul $finals. Traseele se trag la sorți la finalul preliminariilor.';
+  }
 }

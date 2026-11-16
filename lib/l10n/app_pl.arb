@@ -4541,5 +4541,8 @@
   "regionalCupChampion": "Zwycięzca: {name}",
   "regionalCupHosted": "Gospodarz: {host}",
   "regionalCupHomeAndAway": "Grupy rozgrywane u siebie i na wyjeździe",
-  "regionalCupGroups": "GRUPY"
+  "regionalCupGroups": "GRUPY",
+  "ncWcPlayoffLegend": "Żółty: na drodze do baraży o mistrzostwa świata",
+  "newsNcPlayoffNetTitle": "Baraże jako zabezpieczenie: {finals}",
+  "newsNcPlayoffNetBody": "Według tabel turnieju {cup} masz na razie miejsce w barażach. Jeśli bezpośredni awans się nie uda, to druga droga na turniej {finals}. Ścieżki barażowe losuje się po zakończeniu eliminacji."
 }

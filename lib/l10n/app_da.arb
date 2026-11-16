@@ -4541,5 +4541,8 @@
   "regionalCupChampion": "Vinder: {name}",
   "regionalCupHosted": "Værtsland: {host}",
   "regionalCupHomeAndAway": "Grupperne spilles hjemme og ude",
-  "regionalCupGroups": "GRUPPER"
+  "regionalCupGroups": "GRUPPER",
+  "ncWcPlayoffLegend": "Gul: på vej mod VM-playoff",
+  "newsNcPlayoffNetTitle": "Playoff som sikkerhedsnet: {finals}",
+  "newsNcPlayoffNetBody": "Ifølge tabellerne i turneringen {cup} har I lige nu en playoffplads. Kvalificerer I jer ikke direkte, får I en anden vej til turneringen {finals}. Playoffvejene trækkes, når kvalifikationen er slut."
 }

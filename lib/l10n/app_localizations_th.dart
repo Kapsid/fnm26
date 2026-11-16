@@ -17872,4 +17872,17 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get regionalCupGroups => 'กลุ่ม';
+
+  @override
+  String get ncWcPlayoffLegend => 'สีเหลือง: กำลังมุ่งสู่เพลย์ออฟชิงแชมป์โลก';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return 'เพลย์ออฟเป็นทางสำรอง: $finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return 'ตามตารางคะแนน $cup ตอนนี้คุณอยู่ในโซนเพลย์ออฟ หากไม่ผ่านเข้ารอบโดยตรง ยังมีทางที่สองสู่ $finals สายเพลย์ออฟจะจับสลากหลังรอบคัดเลือกจบ';
+  }
 }

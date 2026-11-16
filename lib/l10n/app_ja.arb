@@ -4541,5 +4541,8 @@
   "regionalCupChampion": "優勝：{name}",
   "regionalCupHosted": "開催国：{host}",
   "regionalCupHomeAndAway": "グループはホーム＆アウェーで開催",
-  "regionalCupGroups": "グループ"
+  "regionalCupGroups": "グループ",
+  "ncWcPlayoffLegend": "黄色：世界選手権プレーオフ圏内",
+  "newsNcPlayoffNetTitle": "プレーオフという保険：{finals}",
+  "newsNcPlayoffNetBody": "{cup}の順位表では、現時点でプレーオフ出場圏にいる。ストレートで予選を突破できなくても、{finals}への2つ目の道がある。プレーオフの組み合わせは予選終了後に抽選される。"
 }

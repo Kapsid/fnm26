@@ -339,18 +339,27 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
     groupContention = adv.contention;
     groupRelegate = adv.relegate;
     if (group.kind == CompetitionKind.nationsLeague &&
-        conf == Confederation.europe &&
-        await showsFirstNationsCup(compRepo, careerId: careerId)) {
+        conf == Confederation.europe) {
       // Europe's play-off paths on the calendar2 rhythm are read from the
-      // first Nations Cup: its sides on course for them, marked there (not
-      // in the qualifying groups, where they can stand anywhere).
-      groupPlayoff = await euroPlayoffMarks(
-        compRepo,
-        careerId: careerId,
-        cycle: career.cyclePointer,
-        rngSeed: career.rngSeed,
-        nations: nations,
-      );
+      // Nations Cup (the continental finals' from the first edition, the
+      // World Championship's pot 4 from the second): its sides on course
+      // for them, marked there (not in the qualifying groups, where they can
+      // stand anywhere).
+      groupPlayoff = await showsFirstNationsCup(compRepo, careerId: careerId)
+          ? await euroPlayoffMarks(
+              compRepo,
+              careerId: careerId,
+              cycle: career.cyclePointer,
+              rngSeed: career.rngSeed,
+              nations: nations,
+            )
+          : await wcPlayoffMarks(
+              compRepo,
+              careerId: careerId,
+              cycle: career.cyclePointer,
+              rngSeed: career.rngSeed,
+              nations: nations,
+            );
     }
     if (group.kind == CompetitionKind.worldCupQualifying) {
       groupPlayoff = GroupAdvancement.worldCupPlayoffNations(

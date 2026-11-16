@@ -18522,4 +18522,18 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get regionalCupGroups => 'SKUPINE';
+
+  @override
+  String get ncWcPlayoffLegend =>
+      'Žuto: na putu prema doigravanju za Svjetsko prvenstvo';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return 'Doigravanje kao sigurnosna mreža: $finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return 'Prema tablicama turnira $cup zasad imate mjesto u doigravanju. Ako izravan plasman ne uspije, to je drugi put do turnira $finals. Putovi doigravanja izvlače se nakon kvalifikacija.';
+  }
 }

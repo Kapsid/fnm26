@@ -12,6 +12,8 @@ import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
+import 'package:fnm/features/career/career_providers.dart' show CareerService;
 
 /// Europe's play-offs as stored: the paths, every tie played or to come,
 /// and the EURO's draw with each path winner's slot.
@@ -210,6 +212,73 @@ Future<Set<int>> euroPlayoffMarks(
   )).paths)
     ...p.seeds,
 };
+
+/// The sides of the cycle's SECOND Nations Cup on course for the World
+/// Championship play-off paths (pot 4, see [UefaWcPlayoffs.entrants]): once
+/// drawn, the drawn ones; before, the ones the tables would give now (see
+/// [UefaWcPlayoffs.onCourseNationsCup]). Empty on any older calendar or
+/// before the second edition has a table. Its tables mark them (yellow).
+Future<Set<int>> wcPlayoffMarks(
+  CompetitionRepository comp, {
+  required int careerId,
+  required int cycle,
+  required int rngSeed,
+  required Map<int, Nation> nations,
+}) async {
+  const europe = Confederation.europe;
+  if (!await isCalendar2(comp, careerId, cycle)) return const {};
+  final drawn = EuroPlayoffs.fromSlots(
+    await comp.drawSlots(
+      careerId,
+      cycle,
+      CompetitionKind.worldCupPlayoffEurope,
+      confederation: europe,
+    ),
+  );
+  if (drawn.isNotEmpty) {
+    return {
+      for (final p in drawn)
+        if (p.seeds.length == 4) p.seeds[3],
+    };
+  }
+  final tables = [
+    for (final t in await comp.tournamentGroupTables(
+      careerId,
+      CompetitionKind.nationsLeague,
+      confederation: europe,
+      edition: Calendar2.secondEdition,
+    ))
+      (name: t.name, standings: t.standings),
+  ];
+  if (tables.isEmpty) return const {};
+  final groups = [
+    for (final t in await comp.tournamentGroupTables(
+      careerId,
+      CompetitionKind.worldCupQualifying,
+      confederation: europe,
+    ))
+      t.standings,
+  ];
+  final hosts = {
+    for (final id in WorldCupHosts.hostsFor(
+      year: CareerService.worldCupYear(cycle),
+      nations: nations.values.toList(),
+      seed: rngSeed,
+    ))
+      if (nations[id]?.confederation == europe) id,
+  };
+  final fallback = [
+    for (final n in nations.values)
+      if (n.confederation == europe) n.id,
+  ]..sort((a, b) => nations[a]!.ranking.compareTo(nations[b]!.ranking));
+  return UefaWcPlayoffs.onCourseNationsCup(
+    groups: groups,
+    ncTables: tables,
+    hosts: hosts,
+    europeCount: fallback.length,
+    fallback: fallback,
+  ).toSet();
+}
 
 /// Whether Europe's Nations Cup tables on show are its FIRST edition's (the
 /// one the play-off paths are read from): the second has no tables yet.

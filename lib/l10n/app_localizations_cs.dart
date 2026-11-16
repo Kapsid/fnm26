@@ -18574,4 +18574,17 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get regionalCupGroups => 'SKUPINY';
+
+  @override
+  String get ncWcPlayoffLegend => 'Žlutě: míří do baráže o mistrovství světa';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return 'Pojistka v baráži: $finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return 'Podle tabulek soutěže $cup máte zatím místo v baráži. Kdyby přímý postup nevyšel, máte druhou cestu na turnaj $finals. Cesty baráže se losují po skončení kvalifikace.';
+  }
 }

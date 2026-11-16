@@ -27487,6 +27487,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'GROUPS'**
   String get regionalCupGroups;
+
+  /// Nations Cup tables (Europe, second edition): legend of the yellow mark, sides on course for the World Championship play-off.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow: on course for the World Championship play-off'**
+  String get ncWcPlayoffLegend;
+
+  /// Inbox title: the Nations Cup puts the manager's side on course for a play-off path to a finals tournament (a safety net if qualifying goes wrong).
+  ///
+  /// In en, this message translates to:
+  /// **'A play-off safety net: {finals}'**
+  String newsNcPlayoffNetTitle(String finals);
+
+  /// Inbox body: as the Nations Cup ({cup}) tables stand, the manager's side holds a play-off place; if it does not qualify directly it has a second route to the finals ({finals}). Paths are drawn after qualifying.
+  ///
+  /// In en, this message translates to:
+  /// **'As the {cup} tables stand, you hold a play-off place. Should you not qualify directly, it gives you a second route to the {finals}. The paths are drawn once qualifying ends.'**
+  String newsNcPlayoffNetBody(String cup, String finals);
 }
 
 class _AppLocalizationsDelegate

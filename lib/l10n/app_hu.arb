@@ -4541,5 +4541,8 @@
   "regionalCupChampion": "Győztes: {name}",
   "regionalCupHosted": "Házigazda: {host}",
   "regionalCupHomeAndAway": "A csoportkör oda-vissza, hazai és idegen pályán",
-  "regionalCupGroups": "CSOPORTOK"
+  "regionalCupGroups": "CSOPORTOK",
+  "ncWcPlayoffLegend": "Sárga: úton a vb-pótselejtező felé",
+  "newsNcPlayoffNetTitle": "Pótselejtező mint biztonsági háló: {finals}",
+  "newsNcPlayoffNetBody": "A(z) {cup} tabellái szerint jelenleg pótselejtezős helyen álltok. Ha a közvetlen kijutás nem sikerül, ez egy második út a tornára ({finals}). Az ágakat a selejtező végén sorsolják."
 }

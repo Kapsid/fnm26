@@ -18274,4 +18274,17 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get regionalCupGroups => 'GRUPOS';
+
+  @override
+  String get ncWcPlayoffLegend => 'Amarillo: camino de la repesca mundialista';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return 'La repesca como red de seguridad: $finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return 'Según las clasificaciones del torneo $cup, de momento tienes plaza en la repesca. Si no te clasificas directamente, tendrás un segundo camino hacia el torneo $finals. Los cruces se sortean al terminar la clasificación.';
+  }
 }

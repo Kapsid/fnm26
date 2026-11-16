@@ -118,17 +118,22 @@ void main() {
       last = hub.career.inGameDate;
     }
 
-    // One preview per campaign, in the cycle's order; Europe's play-offs
-    // (calendar2) bring one of their own, before the semi-final, when the
-    // side goes through them.
+    // One preview per campaign, in the cycle's order; a play-off (Europe's,
+    // on calendar2, or the world's) brings one of its own, before the
+    // semi-final, when the side goes through it.
     final playoff = held.contains(PreviewCampaign.continentalPlayoff);
+    final worldPlayoff = held.contains(PreviewCampaign.worldPlayoff);
+    final worldFinals = held.contains(PreviewCampaign.worldFinals);
     expect(held, [
       PreviewCampaign.continentalQualifying,
       if (playoff) PreviewCampaign.continentalPlayoff,
       PreviewCampaign.continentalFinals,
       PreviewCampaign.worldQualifying,
-      PreviewCampaign.worldFinals,
+      if (worldPlayoff) PreviewCampaign.worldPlayoff,
+      if (worldFinals) PreviewCampaign.worldFinals,
     ]);
+    // Straight through, or at least as far as the play-off.
+    expect(worldFinals || worldPlayoff, isTrue);
 
     final targets = [
       for (final s
@@ -140,11 +145,16 @@ void main() {
     expect(targets, hasLength(held.length));
     final o = playoff ? 1 : 0;
     // The promise that got the side to Europe's finals (the play-off's, or
-    // qualifying's when it went straight through) and the World
-    // Championship's were kept: it reached both finals.
+    // qualifying's when it went straight through) was kept: it reached them.
     expect(targets[o].status, StatementStatus.kept);
-    expect(targets[2 + o].status, StatementStatus.kept);
-    // The finals targets are judged once the run is over.
-    expect(targets[1 + o].status, isNot(StatementStatus.open));
+    // The World Championship's last promise before its finals was kept
+    // when the side got there.
+    if (worldFinals) {
+      expect(targets[held.length - 2].status, StatementStatus.kept);
+    }
+    // Every target is judged once the run is over.
+    for (final t in targets) {
+      expect(t.status, isNot(StatementStatus.open));
+    }
   }, timeout: const Timeout(Duration(minutes: 20)));
 }

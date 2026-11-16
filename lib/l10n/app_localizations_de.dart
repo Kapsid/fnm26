@@ -18313,4 +18313,17 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get regionalCupGroups => 'GRUPPEN';
+
+  @override
+  String get ncWcPlayoffLegend => 'Gelb: auf Kurs für das WM-Play-off';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return 'Play-off als Rettungsnetz: $finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return 'Nach den Tabellen des Wettbewerbs $cup hast du derzeit einen Play-off-Platz. Klappt die direkte Qualifikation nicht, bleibt dir ein zweiter Weg zum Turnier $finals. Die Play-off-Wege werden nach der Qualifikation ausgelost.';
+  }
 }

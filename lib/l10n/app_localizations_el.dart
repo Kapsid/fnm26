@@ -18275,4 +18275,18 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get regionalCupGroups => 'ΟΜΙΛΟΙ';
+
+  @override
+  String get ncWcPlayoffLegend =>
+      'Κίτρινο: σε τροχιά για το μπαράζ του Παγκοσμίου';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return 'Το μπαράζ ως δίχτυ ασφαλείας: $finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return 'Με βάση τις βαθμολογίες της διοργάνωσης $cup, προς το παρόν έχεις θέση στα μπαράζ. Αν δεν προκριθείς απευθείας, έχεις δεύτερο δρόμο για τη διοργάνωση $finals. Τα μονοπάτια κληρώνονται μετά τα προκριματικά.';
+  }
 }

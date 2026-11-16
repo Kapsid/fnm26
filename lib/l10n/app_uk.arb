@@ -4541,5 +4541,8 @@
   "regionalCupChampion": "Переможець: {name}",
   "regionalCupHosted": "Господар: {host}",
   "regionalCupHomeAndAway": "Групи грають удома та на виїзді",
-  "regionalCupGroups": "ГРУПИ"
+  "regionalCupGroups": "ГРУПИ",
+  "ncWcPlayoffLegend": "Жовтий: на шляху до плей-оф чемпіонату світу",
+  "newsNcPlayoffNetTitle": "Плей-оф як запасний шлях: {finals}",
+  "newsNcPlayoffNetBody": "За таблицями турніру {cup} ви поки маєте місце в плей-оф. Якщо пряма путівка не вийде, це другий шлях на турнір {finals}. Шляхи плей-оф розігрують після кваліфікації."
 }

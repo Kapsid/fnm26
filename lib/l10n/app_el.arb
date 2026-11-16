@@ -4541,5 +4541,8 @@
   "regionalCupChampion": "Νικητής: {name}",
   "regionalCupHosted": "Διοργανώτρια: {host}",
   "regionalCupHomeAndAway": "Οι όμιλοι παίζονται εντός και εκτός έδρας",
-  "regionalCupGroups": "ΟΜΙΛΟΙ"
+  "regionalCupGroups": "ΟΜΙΛΟΙ",
+  "ncWcPlayoffLegend": "Κίτρινο: σε τροχιά για το μπαράζ του Παγκοσμίου",
+  "newsNcPlayoffNetTitle": "Το μπαράζ ως δίχτυ ασφαλείας: {finals}",
+  "newsNcPlayoffNetBody": "Με βάση τις βαθμολογίες της διοργάνωσης {cup}, προς το παρόν έχεις θέση στα μπαράζ. Αν δεν προκριθείς απευθείας, έχεις δεύτερο δρόμο για τη διοργάνωση {finals}. Τα μονοπάτια κληρώνονται μετά τα προκριματικά."
 }

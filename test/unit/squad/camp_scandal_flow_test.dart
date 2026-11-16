@@ -52,6 +52,9 @@ void main() {
           uiLanguageCodeProvider.overrideWithValue(language),
         appDatabaseProvider.overrideWithValue(db),
         campScandalsEnabledProvider.overrideWithValue(true),
+        // The scenario's world (the calendar before 1.1.2) has no regional
+        // cups: their draw day would stop the jump to the window early.
+        regionalCupsEnabledProvider.overrideWithValue(false),
         premiumUnlockedProvider.overrideWith((ref) => true),
         seedSourceProvider.overrideWithValue(
           InMemorySeedSource(nationList: nations, playerList: players),

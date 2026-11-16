@@ -18373,4 +18373,18 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get regionalCupGroups => 'GRUPY';
+
+  @override
+  String get ncWcPlayoffLegend =>
+      'Żółty: na drodze do baraży o mistrzostwa świata';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return 'Baraże jako zabezpieczenie: $finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return 'Według tabel turnieju $cup masz na razie miejsce w barażach. Jeśli bezpośredni awans się nie uda, to druga droga na turniej $finals. Ścieżki barażowe losuje się po zakończeniu eliminacji.';
+  }
 }

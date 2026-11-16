@@ -5,6 +5,7 @@ import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
+import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 
 /// A row with [points] (and as many goals), for hand-made tables.
@@ -436,6 +437,78 @@ void main() {
           Confederation.europe,
           groups,
           hosts: 0,
+        ),
+        isEmpty,
+      );
+    });
+  });
+
+  group('UefaWcPlayoffs.onCourseNationsCup', () {
+    final cup = [...league('A', 100), ...league('B', 200)];
+
+    test('before qualifying: the best group winners, hosts left out', () {
+      expect(
+        UefaWcPlayoffs.onCourseNationsCup(
+          groups: const [],
+          ncTables: cup,
+          hosts: const {},
+          europeCount: 53,
+        ),
+        [100, 104, 108, 112],
+      );
+      expect(
+        UefaWcPlayoffs.onCourseNationsCup(
+          groups: const [],
+          ncTables: cup,
+          hosts: const {104},
+          europeCount: 53,
+        ),
+        // A host's place comes out of Europe's: three paths.
+        [100, 108, 112],
+      );
+    });
+
+    test('drawn but unplayed qualifying reads as not started', () {
+      final unplayed = [
+        for (var g = 0; g < 12; g++)
+          [for (var p = 0; p < 4; p++) GroupStanding(g * 10 + p)],
+      ];
+      expect(
+        UefaWcPlayoffs.onCourseNationsCup(
+          groups: unplayed,
+          ncTables: cup,
+          hosts: const {},
+          europeCount: 53,
+        ),
+        [100, 104, 108, 112],
+      );
+    });
+
+    test('under way: pot 4 as the draw would take it today', () {
+      final groups = qualifying();
+      expect(
+        UefaWcPlayoffs.onCourseNationsCup(
+          groups: groups,
+          ncTables: cup,
+          hosts: const {},
+          europeCount: 53,
+        ),
+        UefaWcPlayoffs.entrants(
+          groups: groups,
+          ncTables: cup,
+          ineligible: {...Qualification.qualifiers(groups, 12)},
+          count: 4,
+        ).nationsCup,
+      );
+    });
+
+    test('no cup table, no marks', () {
+      expect(
+        UefaWcPlayoffs.onCourseNationsCup(
+          groups: qualifying(),
+          ncTables: const [],
+          hosts: const {},
+          europeCount: 53,
         ),
         isEmpty,
       );

@@ -101,18 +101,23 @@ roundResultsViewProvider = FutureProvider.autoDispose.family<RoundResultsView?, 
     direct = adv.direct;
     contention = adv.contention;
     if (results.kind == CompetitionKind.nationsLeague &&
-        conf == Confederation.europe &&
-        await showsFirstNationsCup(
-          ref.watch(competitionRepositoryProvider),
-          careerId: careerId,
-        )) {
-      playoff = await euroPlayoffMarks(
-        ref.watch(competitionRepositoryProvider),
-        careerId: careerId,
-        cycle: career.cyclePointer,
-        rngSeed: career.rngSeed,
-        nations: nations,
-      );
+        conf == Confederation.europe) {
+      final comp = ref.watch(competitionRepositoryProvider);
+      playoff = await showsFirstNationsCup(comp, careerId: careerId)
+          ? await euroPlayoffMarks(
+              comp,
+              careerId: careerId,
+              cycle: career.cyclePointer,
+              rngSeed: career.rngSeed,
+              nations: nations,
+            )
+          : await wcPlayoffMarks(
+              comp,
+              careerId: careerId,
+              cycle: career.cyclePointer,
+              rngSeed: career.rngSeed,
+              nations: nations,
+            );
     }
     if (results.kind == CompetitionKind.worldCupQualifying) {
       playoff = GroupAdvancement.worldCupPlayoffNations(

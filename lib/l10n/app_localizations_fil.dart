@@ -18192,4 +18192,18 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get regionalCupGroups => 'MGA GROUP';
+
+  @override
+  String get ncWcPlayoffLegend =>
+      'Dilaw: patungo sa play-off ng World Championship';
+
+  @override
+  String newsNcPlayoffNetTitle(String finals) {
+    return 'Play-off bilang safety net: $finals';
+  }
+
+  @override
+  String newsNcPlayoffNetBody(String cup, String finals) {
+    return 'Ayon sa mga talaan ng $cup, may puwesto ka ngayon sa play-off. Kung hindi direktang makapasok, ito ang ikalawang daan papunta sa $finals. Binubunot ang mga path pagkatapos ng qualifying.';
+  }
 }

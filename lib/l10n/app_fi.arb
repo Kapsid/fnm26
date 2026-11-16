@@ -4541,5 +4541,8 @@
   "regionalCupChampion": "Voittaja: {name}",
   "regionalCupHosted": "Isäntä: {host}",
   "regionalCupHomeAndAway": "Lohkot pelataan koti- ja vierasotteluin",
-  "regionalCupGroups": "LOHKOT"
+  "regionalCupGroups": "LOHKOT",
+  "ncWcPlayoffLegend": "Keltainen: matkalla MM-jatkokarsintaan",
+  "newsNcPlayoffNetTitle": "Jatkokarsinta varmistuksena: {finals}",
+  "newsNcPlayoffNetBody": "Turnauksen {cup} taulukoiden mukaan teillä on tällä hetkellä paikka jatkokarsinnoissa. Jos suora paikka ei irtoa, se on toinen tie turnaukseen {finals}. Karsintapolut arvotaan karsintojen päätyttyä."
 }

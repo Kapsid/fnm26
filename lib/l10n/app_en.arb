@@ -28087,5 +28087,30 @@
   "regionalCupGroups": "GROUPS",
   "@regionalCupGroups": {
     "description": "Regional cup page: heading over the two group tables."
+  },
+  "ncWcPlayoffLegend": "Yellow: on course for the World Championship play-off",
+  "@ncWcPlayoffLegend": {
+    "description": "Nations Cup tables (Europe, second edition): legend of the yellow mark, sides on course for the World Championship play-off."
+  },
+  "newsNcPlayoffNetTitle": "A play-off safety net: {finals}",
+  "@newsNcPlayoffNetTitle": {
+    "description": "Inbox title: the Nations Cup puts the manager's side on course for a play-off path to a finals tournament (a safety net if qualifying goes wrong).",
+    "placeholders": {
+      "finals": {
+        "type": "String"
+      }
+    }
+  },
+  "newsNcPlayoffNetBody": "As the {cup} tables stand, you hold a play-off place. Should you not qualify directly, it gives you a second route to the {finals}. The paths are drawn once qualifying ends.",
+  "@newsNcPlayoffNetBody": {
+    "description": "Inbox body: as the Nations Cup ({cup}) tables stand, the manager's side holds a play-off place; if it does not qualify directly it has a second route to the finals ({finals}). Paths are drawn after qualifying.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      },
+      "finals": {
+        "type": "String"
+      }
+    }
   }
 }

@@ -4541,5 +4541,8 @@
   "regionalCupChampion": "우승: {name}",
   "regionalCupHosted": "개최국: {host}",
   "regionalCupHomeAndAway": "조별리그는 홈 앤드 어웨이로 진행",
-  "regionalCupGroups": "조별리그"
+  "regionalCupGroups": "조별리그",
+  "ncWcPlayoffLegend": "노란색: 세계선수권 플레이오프 진출권",
+  "newsNcPlayoffNetTitle": "플레이오프라는 안전망: {finals}",
+  "newsNcPlayoffNetBody": "{cup} 순위표 기준으로 현재 플레이오프 진출권에 있습니다. 직행에 실패해도 {finals}로 가는 두 번째 길이 있습니다. 플레이오프 대진은 예선이 끝난 뒤 추첨합니다."
 }

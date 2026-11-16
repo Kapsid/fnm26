@@ -4541,5 +4541,8 @@
   "regionalCupChampion": "Câștigătoare: {name}",
   "regionalCupHosted": "Gazdă: {host}",
   "regionalCupHomeAndAway": "Grupe jucate acasă și în deplasare",
-  "regionalCupGroups": "GRUPE"
+  "regionalCupGroups": "GRUPE",
+  "ncWcPlayoffLegend": "Galben: pe drumul spre barajul mondial",
+  "newsNcPlayoffNetTitle": "Barajul ca plasă de siguranță: {finals}",
+  "newsNcPlayoffNetBody": "Conform clasamentelor din turneul {cup}, deocamdată aveți loc în baraj. Dacă nu vă calificați direct, aveți un al doilea drum spre turneul {finals}. Traseele se trag la sorți la finalul preliminariilor."
 }
