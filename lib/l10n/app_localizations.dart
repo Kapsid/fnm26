@@ -27337,6 +27337,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The assistant\'s match'**
   String get assistantMatchResult;
+
+  /// Card under Europe's qualifying tables: the last places of the continental finals go through play-off paths decided by the first Nations Cup.
+  ///
+  /// In en, this message translates to:
+  /// **'Play-off via the Nations Cup'**
+  String get euroPlayoffCourseTitle;
+
+  /// Card under Europe's qualifying tables: explains the play-off paths; followed by each path's sides.
+  ///
+  /// In en, this message translates to:
+  /// **'The top two of every group go straight through. The last places go to play-off paths for the best Nations Cup sides who are not through. As things stand:'**
+  String get euroPlayoffCourseNote;
+
+  /// Nations Cup tables: what a yellow row means (sides on course for the continental finals' play-off paths, read off this cup).
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow: on course for the play-off for the continental finals'**
+  String get ncEuroPlayoffLegend;
 }
 
 class _AppLocalizationsDelegate

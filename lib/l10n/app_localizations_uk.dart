@@ -18414,4 +18414,15 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'Матч асистента';
+
+  @override
+  String get euroPlayoffCourseTitle => 'Плей-оф через Nations Cup';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      'Дві найкращі команди кожної групи виходять напряму. Останні місця розігрують у плей-оф найкращі команди Nations Cup, які не пройшли. Станом на зараз:';
+
+  @override
+  String get ncEuroPlayoffLegend =>
+      'Жовтий: на шляху до плей-оф фінального турніру';
 }

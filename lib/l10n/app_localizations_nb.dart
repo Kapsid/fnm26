@@ -18079,4 +18079,14 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'Assistentens kamp';
+
+  @override
+  String get euroPlayoffCourseTitle => 'Playoff via Nations Cup';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      'De to beste i hver gruppe går rett videre. De siste plassene går til playoff for Nations Cups beste lag som ikke er videre. Slik det står nå:';
+
+  @override
+  String get ncEuroPlayoffLegend => 'Gul: på vei mot playoff til sluttspillet';
 }

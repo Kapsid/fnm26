@@ -18509,4 +18509,15 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'Meciul secundului';
+
+  @override
+  String get euroPlayoffCourseTitle => 'Baraj prin Cupa Națiunilor';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      'Primele două din fiecare grupă se califică direct. Ultimele locuri se joacă în baraj între cele mai bune echipe din Cupa Națiunilor care nu s-au calificat. Situația acum:';
+
+  @override
+  String get ncEuroPlayoffLegend =>
+      'Galben: pe drumul spre barajul turneului final';
 }

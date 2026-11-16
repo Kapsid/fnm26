@@ -18176,4 +18176,15 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'Ο αγώνας του βοηθού';
+
+  @override
+  String get euroPlayoffCourseTitle => 'Μπαράζ μέσω του Κυπέλλου Εθνών';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      'Οι δύο πρώτοι κάθε ομίλου προκρίνονται απευθείας. Οι τελευταίες θέσεις κρίνονται σε μπαράζ για τις καλύτερες ομάδες του Κυπέλλου Εθνών που δεν προκρίθηκαν. Όπως είναι τώρα:';
+
+  @override
+  String get ncEuroPlayoffLegend =>
+      'Κίτρινο: σε τροχιά για το μπαράζ της τελικής φάσης';
 }

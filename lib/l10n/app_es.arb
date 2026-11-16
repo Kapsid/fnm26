@@ -4516,5 +4516,8 @@
   "assistantMatchTitle": "Lo dirige el asistente",
   "assistantMatchBody": "Contra {opponent} juega con tu convocatoria y tu táctica. Ajústalas antes si quieres.",
   "assistantMatchPlay": "Que juegue",
-  "assistantMatchResult": "El partido del asistente"
+  "assistantMatchResult": "El partido del asistente",
+  "euroPlayoffCourseTitle": "Repesca por la Copa de las Naciones",
+  "euroPlayoffCourseNote": "Los dos primeros de cada grupo se clasifican directamente. Las últimas plazas se juegan en una repesca entre los mejores de la Copa de las Naciones que no se clasificaron. Tal como está:",
+  "ncEuroPlayoffLegend": "Amarillo: camino de la repesca para la fase final"
 }

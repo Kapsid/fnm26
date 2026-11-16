@@ -18274,4 +18274,15 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'Mecz asystenta';
+
+  @override
+  String get euroPlayoffCourseTitle => 'Baraże przez Puchar Narodów';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      'Dwie najlepsze drużyny z każdej grupy awansują bezpośrednio. O ostatnie miejsca grają w barażach najlepsze drużyny Pucharu Narodów, które nie awansowały. Na tę chwilę:';
+
+  @override
+  String get ncEuroPlayoffLegend =>
+      'Żółty: na drodze do baraży o turniej finałowy';
 }

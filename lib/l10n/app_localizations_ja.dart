@@ -17458,4 +17458,14 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'アシスタントの試合';
+
+  @override
+  String get euroPlayoffCourseTitle => 'ネーションズカップ経由のプレーオフ';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      '各グループ上位2チームがストレートインします。残りの枠は、ネーションズカップの上位でまだ出場が決まっていないチームによるプレーオフで争われます。現時点では：';
+
+  @override
+  String get ncEuroPlayoffLegend => '黄色：本大会プレーオフ圏内';
 }

@@ -252,6 +252,7 @@ mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
           name: name,
           code: code,
           isLowestLeague: NationsCup.tierOfGroupName(g.name) >= v.maxTier,
+          playoffNations: v.playoffNations,
         );
         return ListView(
           padding: const EdgeInsets.all(AppSpacing.marginMobile),
@@ -266,6 +267,10 @@ mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
                 color: AppColors.primary,
               ),
             ),
+            if (v.playoffNations.isNotEmpty) ...[
+              const SizedBox(height: AppSpacing.xs),
+              _PlayoffLegend(text: l.ncEuroPlayoffLegend),
+            ],
             const SizedBox(height: AppSpacing.md),
             if (grid) ...[
               ColumnFlow(children: [for (final g in shown) card(g)]),
@@ -490,10 +495,14 @@ class _GroupCard extends StatelessWidget {
     required this.name,
     required this.code,
     required this.isLowestLeague,
+    this.playoffNations = const {},
   });
 
   final int careerId;
   final FinalsGroupTable group;
+
+  /// Sides on course for the continental finals' play-off paths: yellow.
+  final Set<int> playoffNations;
 
   /// Whose cup the group is in: a ladder group sends its winner up and its
   /// bottom side down, an African zone group relegates nobody.
@@ -543,6 +552,8 @@ class _GroupCard extends StatelessWidget {
     );
     final zone = pos <= adv.direct
         ? AppColors.positive
+        : playoffNations.contains(s.nationId)
+        ? AppColors.playoff
         : pos == adv.contention
         ? AppColors.warning
         : adv.relegate > 0 && pos > total - adv.relegate
@@ -766,4 +777,30 @@ class _FinalsCard extends StatelessWidget {
       ),
     );
   }
+}
+
+/// One line under a league's heading: what the yellow rows mean.
+class _PlayoffLegend extends StatelessWidget {
+  const _PlayoffLegend({required this.text});
+
+  final String text;
+
+  static const Key legendKey = Key('nationsCup.playoffLegend');
+
+  @override
+  Widget build(BuildContext context) => Row(
+    key: legendKey,
+    children: [
+      Container(width: 3, height: 14, color: AppColors.playoff),
+      const SizedBox(width: AppSpacing.sm),
+      Expanded(
+        child: Text(
+          text,
+          style: AppTypography.labelSmall.copyWith(
+            color: AppColors.onSurfaceVariant,
+          ),
+        ),
+      ),
+    ],
+  );
 }

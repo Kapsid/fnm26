@@ -4516,5 +4516,8 @@
   "assistantMatchTitle": "A segítő viszi a meccset",
   "assistantMatchBody": "A(z) {opponent} ellen a te keretedet és taktikádat játssza. Ha szeretnéd, előbb állítsd be őket.",
   "assistantMatchPlay": "Hadd játsszon",
-  "assistantMatchResult": "A segítő meccse"
+  "assistantMatchResult": "A segítő meccse",
+  "euroPlayoffCourseTitle": "Pótselejtező a Nations Cupon át",
+  "euroPlayoffCourseNote": "Minden csoport első kettője egyenesen továbbjut. Az utolsó helyekért a Nations Cup legjobb, még nem továbbjutott csapatai játszanak pótselejtezőt. Jelenleg:",
+  "ncEuroPlayoffLegend": "Sárga: úton a zárótorna pótselejtezője felé"
 }

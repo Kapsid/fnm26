@@ -18176,4 +18176,15 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'El partido del asistente';
+
+  @override
+  String get euroPlayoffCourseTitle => 'Repesca por la Copa de las Naciones';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      'Los dos primeros de cada grupo se clasifican directamente. Las últimas plazas se juegan en una repesca entre los mejores de la Copa de las Naciones que no se clasificaron. Tal como está:';
+
+  @override
+  String get ncEuroPlayoffLegend =>
+      'Amarillo: camino de la repesca para la fase final';
 }

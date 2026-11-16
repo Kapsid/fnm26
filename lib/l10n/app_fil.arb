@@ -4516,5 +4516,8 @@
   "assistantMatchTitle": "Ang assistant ang hahawak",
   "assistantMatchBody": "Laban sa {opponent}, gagamitin niya ang iyong squad at taktika. Ayusin mo muna kung gusto mo.",
   "assistantMatchPlay": "Hayaan siyang maglaro",
-  "assistantMatchResult": "Ang laro ng assistant"
+  "assistantMatchResult": "Ang laro ng assistant",
+  "euroPlayoffCourseTitle": "Play-off sa pamamagitan ng Nations Cup",
+  "euroPlayoffCourseNote": "Diretsong pasok ang nangungunang dalawa sa bawat grupo. Ang huling mga puwesto ay pag-aagawan sa play-off ng pinakamahuhusay sa Nations Cup na hindi pa pasok. Sa ngayon:",
+  "ncEuroPlayoffLegend": "Dilaw: patungo sa play-off para sa finals"
 }

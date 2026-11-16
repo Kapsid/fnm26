@@ -17995,4 +17995,14 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'Yardımcının maçı';
+
+  @override
+  String get euroPlayoffCourseTitle => 'Uluslar Kupası üzerinden play-off';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      'Her grubun ilk ikisi doğrudan katılır. Son yerler, Uluslar Kupası\'nın henüz katılamamış en iyi takımları arasındaki play-off ile belirlenir. Şu anki duruma göre:';
+
+  @override
+  String get ncEuroPlayoffLegend => 'Sarı: final turnuvası play-off yolunda';
 }

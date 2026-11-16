@@ -4516,5 +4516,8 @@
   "assistantMatchTitle": "Pembantu mengambil alih",
   "assistantMatchBody": "Menentang {opponent}, dia memakai skuad dan taktik anda. Tetapkan dahulu jika mahu.",
   "assistantMatchPlay": "Biar dia bermain",
-  "assistantMatchResult": "Perlawanan pembantu"
+  "assistantMatchResult": "Perlawanan pembantu",
+  "euroPlayoffCourseTitle": "Play-off melalui Piala Negara-Negara",
+  "euroPlayoffCourseNote": "Dua teratas setiap kumpulan layak terus. Tempat terakhir direbut dalam play-off oleh pasukan terbaik Piala Negara-Negara yang belum layak. Setakat ini:",
+  "ncEuroPlayoffLegend": "Kuning: menuju play-off pusingan akhir"
 }

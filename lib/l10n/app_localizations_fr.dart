@@ -18247,4 +18247,15 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'Le match de l\'adjoint';
+
+  @override
+  String get euroPlayoffCourseTitle => 'Barrages via la Coupe des nations';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      'Les deux premiers de chaque groupe sont qualifiés directement. Les dernières places se jouent en barrages entre les meilleures équipes de la Coupe des nations non qualifiées. En l\'état :';
+
+  @override
+  String get ncEuroPlayoffLegend =>
+      'Jaune : en route pour les barrages de la phase finale';
 }

@@ -4516,5 +4516,8 @@
   "assistantMatchTitle": "Preia secundul",
   "assistantMatchBody": "Împotriva {opponent} joacă cu lotul și tactica ta. Setează-le întâi, dacă vrei.",
   "assistantMatchPlay": "Lasă-l să joace",
-  "assistantMatchResult": "Meciul secundului"
+  "assistantMatchResult": "Meciul secundului",
+  "euroPlayoffCourseTitle": "Baraj prin Cupa Națiunilor",
+  "euroPlayoffCourseNote": "Primele două din fiecare grupă se califică direct. Ultimele locuri se joacă în baraj între cele mai bune echipe din Cupa Națiunilor care nu s-au calificat. Situația acum:",
+  "ncEuroPlayoffLegend": "Galben: pe drumul spre barajul turneului final"
 }

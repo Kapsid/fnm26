@@ -335,10 +335,12 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
     groupDirect = adv.direct;
     groupContention = adv.contention;
     groupRelegate = adv.relegate;
-    if (group.kind == CompetitionKind.continentalQualifying &&
-        conf == Confederation.europe) {
-      // Europe's play-off paths on the calendar2 rhythm: the sides on
-      // course for them, marked as the groups stand.
+    if (group.kind == CompetitionKind.nationsLeague &&
+        conf == Confederation.europe &&
+        await showsFirstNationsCup(compRepo, careerId: careerId)) {
+      // Europe's play-off paths on the calendar2 rhythm are read from the
+      // first Nations Cup: its sides on course for them, marked there (not
+      // in the qualifying groups, where they can stand anywhere).
       groupPlayoff = await euroPlayoffMarks(
         compRepo,
         careerId: careerId,

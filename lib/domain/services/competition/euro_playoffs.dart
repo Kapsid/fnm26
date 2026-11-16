@@ -166,18 +166,18 @@ abstract final class EuroPlayoffs {
     return (direct: direct, paths: paths);
   }
 
-  /// The sides on course for the paths as the groups stand (every seed of
-  /// every path [settle] would draw now): the qualifying tables mark them
-  /// before the draw is made.
-  static Set<int> onCourse({
+  /// The paths as they would be drawn now, the groups as they stand (no
+  /// groups yet: the cup's own best, before qualifying): what the tables
+  /// show as on course for them before the draw is made.
+  static List<PlayoffPath> onCoursePaths({
     required List<List<GroupStanding>> groups,
     required List<NcTable> tables,
     required Set<int> hosts,
     required int size,
     List<int> fallback = const [],
   }) {
-    if (tables.isEmpty || groups.isEmpty) return const {};
-    final (direct: _, :paths) = settle(
+    if (tables.isEmpty) return const [];
+    return settle(
       groups: groups,
       tables: tables,
       hosts: hosts,
@@ -185,9 +185,26 @@ abstract final class EuroPlayoffs {
       // Only a final's venue is drawn: the seeds never read it.
       rng: () => SeededRng(0),
       fallback: fallback,
-    );
-    return {for (final p in paths) ...p.seeds};
+    ).paths;
   }
+
+  /// Every side of [onCoursePaths].
+  static Set<int> onCourse({
+    required List<List<GroupStanding>> groups,
+    required List<NcTable> tables,
+    required Set<int> hosts,
+    required int size,
+    List<int> fallback = const [],
+  }) => {
+    for (final p in onCoursePaths(
+      groups: groups,
+      tables: tables,
+      hosts: hosts,
+      size: size,
+      fallback: fallback,
+    ))
+      ...p.seeds,
+  };
 
   /// Draws the [count] paths from the first Nations Cup's [tables].
   ///

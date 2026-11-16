@@ -18215,4 +18215,15 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'Das Spiel des Assistenten';
+
+  @override
+  String get euroPlayoffCourseTitle => 'Play-off über den Nationenpokal';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      'Die ersten zwei jeder Gruppe sind direkt qualifiziert. Die letzten Plätze gehen in Play-offs an die besten Teams des Nationenpokals, die nicht durch sind. Stand jetzt:';
+
+  @override
+  String get ncEuroPlayoffLegend =>
+      'Gelb: auf Kurs für das Play-off zur Endrunde';
 }

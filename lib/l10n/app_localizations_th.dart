@@ -17776,4 +17776,14 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'เกมของผู้ช่วย';
+
+  @override
+  String get euroPlayoffCourseTitle => 'เพลย์ออฟผ่านเนชันส์คัพ';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      'สองอันดับแรกของแต่ละกลุ่มผ่านเข้ารอบทันที ที่นั่งสุดท้ายตัดสินจากเพลย์ออฟของทีมที่ดีที่สุดในเนชันส์คัพที่ยังไม่ผ่าน ณ ตอนนี้:';
+
+  @override
+  String get ncEuroPlayoffLegend => 'สีเหลือง: กำลังมุ่งสู่เพลย์ออฟรอบสุดท้าย';
 }

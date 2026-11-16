@@ -130,11 +130,11 @@ Future<EuroPlayoffData?> readEuroPlayoffs(
   );
 }
 
-/// The European sides the qualifying tables mark for the play-off paths
-/// (yellow), on the calendar2 rhythm: before the draw, those on course for
-/// them as the groups stand (see [EuroPlayoffs.onCourse]); once drawn, the
-/// paths' own sides. Empty on any older calendar.
-Future<Set<int>> euroPlayoffMarks(
+/// Europe's play-off paths on the calendar2 rhythm as they stand: once
+/// drawn, the drawn ones ([drawn] true); before, the ones the tables would
+/// give now (see [EuroPlayoffs.onCoursePaths]). Empty on any older calendar
+/// or before the first Nations Cup has a table.
+Future<({List<PlayoffPath> paths, bool drawn})> euroPlayoffCourse(
   CompetitionRepository comp, {
   required int careerId,
   required int cycle,
@@ -142,7 +142,8 @@ Future<Set<int>> euroPlayoffMarks(
   required Map<int, Nation> nations,
 }) async {
   const europe = Confederation.europe;
-  if (!await isCalendar2(comp, careerId, cycle)) return const {};
+  const none = (paths: <PlayoffPath>[], drawn: false);
+  if (!await isCalendar2(comp, careerId, cycle)) return none;
   final drawn = EuroPlayoffs.fromSlots(
     await comp.drawSlots(
       careerId,
@@ -151,7 +152,7 @@ Future<Set<int>> euroPlayoffMarks(
       confederation: europe,
     ),
   );
-  if (drawn.isNotEmpty) return {for (final p in drawn) ...p.seeds};
+  if (drawn.isNotEmpty) return (paths: drawn, drawn: true);
   final groups = [
     for (final t in await comp.tournamentGroupTables(
       careerId,
@@ -179,11 +180,45 @@ Future<Set<int>> euroPlayoffMarks(
     for (final n in nations.values)
       if (n.confederation == europe) n.id,
   ]..sort((a, b) => nations[a]!.ranking.compareTo(nations[b]!.ranking));
-  return EuroPlayoffs.onCourse(
-    groups: groups,
-    tables: tables,
-    hosts: hosts.toSet(),
-    size: ContinentalCups.byConfederation[europe]!.size,
-    fallback: fallback,
+  return (
+    paths: EuroPlayoffs.onCoursePaths(
+      groups: groups,
+      tables: tables,
+      hosts: hosts.toSet(),
+      size: ContinentalCups.byConfederation[europe]!.size,
+      fallback: fallback,
+    ),
+    drawn: false,
   );
 }
+
+/// Every side of [euroPlayoffCourse]'s paths: the first Nations Cup's
+/// tables mark them (yellow).
+Future<Set<int>> euroPlayoffMarks(
+  CompetitionRepository comp, {
+  required int careerId,
+  required int cycle,
+  required int rngSeed,
+  required Map<int, Nation> nations,
+}) async => {
+  for (final p in (await euroPlayoffCourse(
+    comp,
+    careerId: careerId,
+    cycle: cycle,
+    rngSeed: rngSeed,
+    nations: nations,
+  )).paths)
+    ...p.seeds,
+};
+
+/// Whether Europe's Nations Cup tables on show are its FIRST edition's (the
+/// one the play-off paths are read from): the second has no tables yet.
+Future<bool> showsFirstNationsCup(
+  CompetitionRepository comp, {
+  required int careerId,
+}) async => (await comp.tournamentGroupTables(
+  careerId,
+  CompetitionKind.nationsLeague,
+  confederation: Confederation.europe,
+  edition: Calendar2.secondEdition,
+)).isEmpty;

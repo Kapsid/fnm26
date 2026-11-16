@@ -4516,5 +4516,8 @@
   "assistantMatchTitle": "L'adjoint s'en charge",
   "assistantMatchBody": "Contre {opponent}, il joue avec votre effectif et votre tactique. Réglez-les d'abord si vous le souhaitez.",
   "assistantMatchPlay": "Qu'il joue",
-  "assistantMatchResult": "Le match de l'adjoint"
+  "assistantMatchResult": "Le match de l'adjoint",
+  "euroPlayoffCourseTitle": "Barrages via la Coupe des nations",
+  "euroPlayoffCourseNote": "Les deux premiers de chaque groupe sont qualifiés directement. Les dernières places se jouent en barrages entre les meilleures équipes de la Coupe des nations non qualifiées. En l'état :",
+  "ncEuroPlayoffLegend": "Jaune : en route pour les barrages de la phase finale"
 }

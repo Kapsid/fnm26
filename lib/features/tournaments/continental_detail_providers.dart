@@ -72,7 +72,7 @@ class ContinentalData {
     this.myNationIds = const {},
     this.playoffs,
     this.playoffRoute = false,
-    this.playoffMarks = const {},
+    this.playoffCourse = const [],
     this.pendingDraw,
     this.pendingLetters = const {},
   });
@@ -86,9 +86,10 @@ class ContinentalData {
   /// straight through, and nobody qualifies as a best third.
   final bool playoffRoute;
 
-  /// The qualifying sides marked for the play-off paths (see
-  /// [euroPlayoffMarks]): yellow in the qualifying tables.
-  final Set<int> playoffMarks;
+  /// Europe's play-off paths as they stand (see [euroPlayoffCourse]),
+  /// listed under the qualifying tables: their sides are read off the first
+  /// Nations Cup, not off a qualifying group's places.
+  final List<PlayoffPath> playoffCourse;
 
   /// The finals' groups as drawn before the play-offs, a placeholder's slot
   /// by a pseudo id (see [pendingLetters]), while the finals do not exist.
@@ -883,18 +884,18 @@ continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, 
         EuroPlayoffs.drawWatchedKind,
       );
 
-  final playoffMarks = key.confederation == Confederation.europe
-      ? await euroPlayoffMarks(
+  final playoffCourse = key.confederation == Confederation.europe
+      ? (await euroPlayoffCourse(
           comp,
           careerId: key.careerId,
           cycle: career.cyclePointer,
           rngSeed: career.rngSeed,
           nations: nations,
-        )
-      : const <int>{};
+        )).paths
+      : const <PlayoffPath>[];
 
   return ContinentalData(
-    playoffMarks: playoffMarks,
+    playoffCourse: playoffCourse,
     playoffs: playoffsWatched ? playoffs : null,
     playoffRoute:
         key.confederation == Confederation.europe &&

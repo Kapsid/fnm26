@@ -18478,4 +18478,14 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'Zápas pod vedením asistenta';
+
+  @override
+  String get euroPlayoffCourseTitle => 'Baráž přes Pohár národů';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      'První dva z každé skupiny postupují přímo. O poslední místa se hraje baráž mezi nejlepšími týmy Poháru národů, které nepostoupily. Podle aktuálního stavu:';
+
+  @override
+  String get ncEuroPlayoffLegend => 'Žlutě: míří do baráže o závěrečný turnaj';
 }

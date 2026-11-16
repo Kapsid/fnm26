@@ -18028,4 +18028,15 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'A segítő meccse';
+
+  @override
+  String get euroPlayoffCourseTitle => 'Pótselejtező a Nations Cupon át';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      'Minden csoport első kettője egyenesen továbbjut. Az utolsó helyekért a Nations Cup legjobb, még nem továbbjutott csapatai játszanak pótselejtezőt. Jelenleg:';
+
+  @override
+  String get ncEuroPlayoffLegend =>
+      'Sárga: úton a zárótorna pótselejtezője felé';
 }

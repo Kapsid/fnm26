@@ -4516,5 +4516,8 @@
   "assistantMatchTitle": "Zápas vede asistent",
   "assistantMatchBody": "Proti týmu {opponent} nasadí vaši sestavu a vaši taktiku. Chcete-li, nejdřív je upravte.",
   "assistantMatchPlay": "Ať hraje",
-  "assistantMatchResult": "Zápas pod vedením asistenta"
+  "assistantMatchResult": "Zápas pod vedením asistenta",
+  "euroPlayoffCourseTitle": "Baráž přes Pohár národů",
+  "euroPlayoffCourseNote": "První dva z každé skupiny postupují přímo. O poslední místa se hraje baráž mezi nejlepšími týmy Poháru národů, které nepostoupily. Podle aktuálního stavu:",
+  "ncEuroPlayoffLegend": "Žlutě: míří do baráže o závěrečný turnaj"
 }

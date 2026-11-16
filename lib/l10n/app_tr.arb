@@ -4516,5 +4516,8 @@
   "assistantMatchTitle": "Maçı yardımcı yönetsin",
   "assistantMatchBody": "{opponent} karşısında senin kadronla ve taktiğinle oynar. İstersen önce bunları ayarla.",
   "assistantMatchPlay": "Oynasın",
-  "assistantMatchResult": "Yardımcının maçı"
+  "assistantMatchResult": "Yardımcının maçı",
+  "euroPlayoffCourseTitle": "Uluslar Kupası üzerinden play-off",
+  "euroPlayoffCourseNote": "Her grubun ilk ikisi doğrudan katılır. Son yerler, Uluslar Kupası'nın henüz katılamamış en iyi takımları arasındaki play-off ile belirlenir. Şu anki duruma göre:",
+  "ncEuroPlayoffLegend": "Sarı: final turnuvası play-off yolunda"
 }

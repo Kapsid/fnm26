@@ -17993,4 +17993,14 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'Laga sang asisten';
+
+  @override
+  String get euroPlayoffCourseTitle => 'Play-off lewat Piala Bangsa-Bangsa';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      'Dua teratas tiap grup lolos langsung. Tempat terakhir diperebutkan di play-off oleh tim terbaik Piala Bangsa-Bangsa yang belum lolos. Saat ini:';
+
+  @override
+  String get ncEuroPlayoffLegend => 'Kuning: menuju play-off putaran final';
 }

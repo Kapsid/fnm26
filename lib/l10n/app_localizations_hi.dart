@@ -17991,4 +17991,14 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'सहायक का मैच';
+
+  @override
+  String get euroPlayoffCourseTitle => 'नेशंस कप के ज़रिए प्ले-ऑफ़';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      'हर ग्रुप की शीर्ष दो टीमें सीधे क्वालीफ़ाई करती हैं। आख़िरी जगहें नेशंस कप की उन सर्वश्रेष्ठ टीमों के प्ले-ऑफ़ से तय होती हैं जो सीधे नहीं पहुँचीं। अभी की स्थिति:';
+
+  @override
+  String get ncEuroPlayoffLegend => 'पीला: फ़ाइनल्स के प्ले-ऑफ़ की राह पर';
 }

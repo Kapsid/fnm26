@@ -18425,4 +18425,15 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'Pomoćnikova utakmica';
+
+  @override
+  String get euroPlayoffCourseTitle => 'Doigravanje preko Nations Cupa';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      'Prve dvije iz svake skupine prolaze izravno. Posljednja mjesta osvajaju se u doigravanju najboljih momčadi Nations Cupa koje nisu prošle. Trenutačno stanje:';
+
+  @override
+  String get ncEuroPlayoffLegend =>
+      'Žuto: na putu prema doigravanju za završni turnir';
 }

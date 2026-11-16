@@ -4516,5 +4516,8 @@
   "assistantMatchTitle": "Để trợ lý dẫn dắt",
   "assistantMatchBody": "Gặp {opponent}, anh ấy dùng đội hình và chiến thuật của bạn. Hãy chỉnh trước nếu muốn.",
   "assistantMatchPlay": "Để anh ấy dẫn dắt",
-  "assistantMatchResult": "Trận đấu của trợ lý"
+  "assistantMatchResult": "Trận đấu của trợ lý",
+  "euroPlayoffCourseTitle": "Play-off qua Nations Cup",
+  "euroPlayoffCourseNote": "Hai đội đầu mỗi bảng giành vé trực tiếp. Các suất cuối thuộc về play-off giữa những đội mạnh nhất Nations Cup chưa giành vé. Hiện tại:",
+  "ncEuroPlayoffLegend": "Vàng: đang hướng tới play-off vòng chung kết"
 }

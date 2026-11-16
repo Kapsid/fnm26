@@ -12,6 +12,7 @@ import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart';
+import 'package:fnm/features/tournaments/euro_playoff_providers.dart';
 
 /// Everything a Nations Cup screen shows: whose cup, its format, the manager's
 /// league and group, the tables, the finals rounds, the honours and the
@@ -44,6 +45,10 @@ typedef NationsCupData = ({
   /// The lowest league in the cup's confederation — its bottom sides have
   /// nowhere to fall, so they aren't shown as relegated.
   int maxTier,
+
+  /// Europe's first cup on the calendar2 rhythm: the sides on course for
+  /// the continental finals' play-off paths (yellow), read off this cup.
+  Set<int> playoffNations,
 });
 
 /// Which cup: `confederation`'s, or (null) the manager's own, Europe's for a
@@ -181,5 +186,16 @@ nationsCupProvider = FutureProvider.autoDispose.family<NationsCupData?, NationsC
     },
     nations: nations,
     maxTier: maxTier,
+    playoffNations:
+        conf == Confederation.europe &&
+            await showsFirstNationsCup(comp, careerId: careerId)
+        ? await euroPlayoffMarks(
+            comp,
+            careerId: careerId,
+            cycle: career.cyclePointer,
+            rngSeed: career.rngSeed,
+            nations: nations,
+          )
+        : const <int>{},
   );
 });

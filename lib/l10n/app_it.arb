@@ -4516,5 +4516,8 @@
   "assistantMatchTitle": "Ci pensa il vice",
   "assistantMatchBody": "Contro {opponent} gioca con la tua rosa e la tua tattica. Se vuoi, impostale prima.",
   "assistantMatchPlay": "Lascialo giocare",
-  "assistantMatchResult": "La partita del vice"
+  "assistantMatchResult": "La partita del vice",
+  "euroPlayoffCourseTitle": "Spareggi tramite la Coppa delle Nazioni",
+  "euroPlayoffCourseNote": "Le prime due di ogni girone si qualificano direttamente. Gli ultimi posti si assegnano negli spareggi tra le migliori della Coppa delle Nazioni non qualificate. Allo stato attuale:",
+  "ncEuroPlayoffLegend": "Giallo: in corsa per gli spareggi della fase finale"
 }

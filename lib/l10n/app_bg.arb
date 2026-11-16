@@ -4516,5 +4516,8 @@
   "assistantMatchTitle": "Асистентът поема мача",
   "assistantMatchBody": "Срещу {opponent} той играе с вашия състав и вашата тактика. Ако искате, първо ги настройте.",
   "assistantMatchPlay": "Нека играе",
-  "assistantMatchResult": "Мачът на асистента"
+  "assistantMatchResult": "Мачът на асистента",
+  "euroPlayoffCourseTitle": "Плейоф през Nations Cup",
+  "euroPlayoffCourseNote": "Първите два от всяка група се класират директно. Последните места се разиграват в плейоф между най-добрите отбори от Nations Cup, които не са се класирали. Към момента:",
+  "ncEuroPlayoffLegend": "Жълто: по пътя към плейофа за финалите"
 }

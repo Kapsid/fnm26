@@ -4516,5 +4516,8 @@
   "assistantMatchTitle": "Assistenten tar den",
   "assistantMatchBody": "Mot {opponent} spiller han med din tropp og din taktikk. Still dem inn først om du vil.",
   "assistantMatchPlay": "La ham spille",
-  "assistantMatchResult": "Assistentens kamp"
+  "assistantMatchResult": "Assistentens kamp",
+  "euroPlayoffCourseTitle": "Playoff via Nations Cup",
+  "euroPlayoffCourseNote": "De to beste i hver gruppe går rett videre. De siste plassene går til playoff for Nations Cups beste lag som ikke er videre. Slik det står nå:",
+  "ncEuroPlayoffLegend": "Gul: på vei mot playoff til sluttspillet"
 }

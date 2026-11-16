@@ -18046,4 +18046,14 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'Perlawanan pembantu';
+
+  @override
+  String get euroPlayoffCourseTitle => 'Play-off melalui Piala Negara-Negara';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      'Dua teratas setiap kumpulan layak terus. Tempat terakhir direbut dalam play-off oleh pasukan terbaik Piala Negara-Negara yang belum layak. Setakat ini:';
+
+  @override
+  String get ncEuroPlayoffLegend => 'Kuning: menuju play-off pusingan akhir';
 }

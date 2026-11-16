@@ -18158,4 +18158,15 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'Avustajan ottelu';
+
+  @override
+  String get euroPlayoffCourseTitle => 'Jatkokarsinta Nations Cupin kautta';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      'Lohkojen kaksi parasta pääsevät suoraan. Viimeiset paikat ratkaistaan jatkokarsinnassa, jossa pelaavat Nations Cupin parhaat, jotka eivät ole jo selvinneet. Tilanne nyt:';
+
+  @override
+  String get ncEuroPlayoffLegend =>
+      'Keltainen: matkalla lopputurnauksen jatkokarsintaan';
 }

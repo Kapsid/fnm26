@@ -4516,5 +4516,8 @@
   "assistantMatchTitle": "De assistent neemt het over",
   "assistantMatchBody": "Tegen {opponent} speelt hij met jouw selectie en jouw tactiek. Stel ze eerst in als je wilt.",
   "assistantMatchPlay": "Laat hem spelen",
-  "assistantMatchResult": "De wedstrijd van de assistent"
+  "assistantMatchResult": "De wedstrijd van de assistent",
+  "euroPlayoffCourseTitle": "Play-offs via de Nations Cup",
+  "euroPlayoffCourseNote": "De nummers een en twee van elke groep plaatsen zich direct. De laatste plaatsen gaan via play-offs naar de beste Nations Cup-landen die nog niet geplaatst zijn. Zoals het nu staat:",
+  "ncEuroPlayoffLegend": "Geel: op koers voor de play-offs voor het eindtoernooi"
 }

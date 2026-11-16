@@ -4516,5 +4516,8 @@
   "assistantMatchTitle": "Der Assistent übernimmt",
   "assistantMatchBody": "Gegen {opponent} spielt er mit deinem Kader und deiner Taktik. Stell sie vorher ein, wenn du willst.",
   "assistantMatchPlay": "Lass ihn spielen",
-  "assistantMatchResult": "Das Spiel des Assistenten"
+  "assistantMatchResult": "Das Spiel des Assistenten",
+  "euroPlayoffCourseTitle": "Play-off über den Nationenpokal",
+  "euroPlayoffCourseNote": "Die ersten zwei jeder Gruppe sind direkt qualifiziert. Die letzten Plätze gehen in Play-offs an die besten Teams des Nationenpokals, die nicht durch sind. Stand jetzt:",
+  "ncEuroPlayoffLegend": "Gelb: auf Kurs für das Play-off zur Endrunde"
 }

@@ -4516,5 +4516,8 @@
   "assistantMatchTitle": "Asisten yang memimpin",
   "assistantMatchBody": "Melawan {opponent}, ia memakai skuad dan taktikmu. Atur dulu jika kamu mau.",
   "assistantMatchPlay": "Biarkan ia bermain",
-  "assistantMatchResult": "Laga sang asisten"
+  "assistantMatchResult": "Laga sang asisten",
+  "euroPlayoffCourseTitle": "Play-off lewat Piala Bangsa-Bangsa",
+  "euroPlayoffCourseNote": "Dua teratas tiap grup lolos langsung. Tempat terakhir diperebutkan di play-off oleh tim terbaik Piala Bangsa-Bangsa yang belum lolos. Saat ini:",
+  "ncEuroPlayoffLegend": "Kuning: menuju play-off putaran final"
 }

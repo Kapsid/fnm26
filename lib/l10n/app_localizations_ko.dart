@@ -17500,4 +17500,14 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get assistantMatchResult => '어시스턴트의 경기';
+
+  @override
+  String get euroPlayoffCourseTitle => '네이션스컵을 통한 플레이오프';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      '각 조 상위 2팀이 바로 진출합니다. 마지막 자리는 아직 진출하지 못한 네이션스컵 상위 팀들의 플레이오프로 결정됩니다. 현재 기준:';
+
+  @override
+  String get ncEuroPlayoffLegend => '노란색: 본선 플레이오프 진출권';
 }

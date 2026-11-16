@@ -18184,4 +18184,15 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'O jogo do adjunto';
+
+  @override
+  String get euroPlayoffCourseTitle => 'Play-off pela Copa das Nações';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      'Os dois primeiros de cada grupo apuram-se diretamente. Os últimos lugares decidem-se num play-off entre as melhores seleções da Copa das Nações ainda não apuradas. Neste momento:';
+
+  @override
+  String get ncEuroPlayoffLegend =>
+      'Amarelo: a caminho do play-off da fase final';
 }

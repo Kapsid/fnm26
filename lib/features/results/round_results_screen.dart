@@ -100,8 +100,12 @@ roundResultsViewProvider = FutureProvider.autoDispose.family<RoundResultsView?, 
     );
     direct = adv.direct;
     contention = adv.contention;
-    if (results.kind == CompetitionKind.continentalQualifying &&
-        conf == Confederation.europe) {
+    if (results.kind == CompetitionKind.nationsLeague &&
+        conf == Confederation.europe &&
+        await showsFirstNationsCup(
+          ref.watch(competitionRepositoryProvider),
+          careerId: careerId,
+        )) {
       playoff = await euroPlayoffMarks(
         ref.watch(competitionRepositoryProvider),
         careerId: careerId,

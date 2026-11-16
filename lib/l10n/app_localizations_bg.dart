@@ -18169,4 +18169,14 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'Мачът на асистента';
+
+  @override
+  String get euroPlayoffCourseTitle => 'Плейоф през Nations Cup';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      'Първите два от всяка група се класират директно. Последните места се разиграват в плейоф между най-добрите отбори от Nations Cup, които не са се класирали. Към момента:';
+
+  @override
+  String get ncEuroPlayoffLegend => 'Жълто: по пътя към плейофа за финалите';
 }

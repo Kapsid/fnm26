@@ -18169,4 +18169,15 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'De wedstrijd van de assistent';
+
+  @override
+  String get euroPlayoffCourseTitle => 'Play-offs via de Nations Cup';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      'De nummers een en twee van elke groep plaatsen zich direct. De laatste plaatsen gaan via play-offs naar de beste Nations Cup-landen die nog niet geplaatst zijn. Zoals het nu staat:';
+
+  @override
+  String get ncEuroPlayoffLegend =>
+      'Geel: op koers voor de play-offs voor het eindtoernooi';
 }

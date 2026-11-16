@@ -18116,4 +18116,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'The assistant\'s match';
+
+  @override
+  String get euroPlayoffCourseTitle => 'Play-off via the Nations Cup';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      'The top two of every group go straight through. The last places go to play-off paths for the best Nations Cup sides who are not through. As things stand:';
+
+  @override
+  String get ncEuroPlayoffLegend =>
+      'Yellow: on course for the play-off for the continental finals';
 }

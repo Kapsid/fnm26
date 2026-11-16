@@ -18162,4 +18162,16 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'La partita del vice';
+
+  @override
+  String get euroPlayoffCourseTitle =>
+      'Spareggi tramite la Coppa delle Nazioni';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      'Le prime due di ogni girone si qualificano direttamente. Gli ultimi posti si assegnano negli spareggi tra le migliori della Coppa delle Nazioni non qualificate. Allo stato attuale:';
+
+  @override
+  String get ncEuroPlayoffLegend =>
+      'Giallo: in corsa per gli spareggi della fase finale';
 }

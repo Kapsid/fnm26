@@ -17930,4 +17930,15 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'Trận đấu của trợ lý';
+
+  @override
+  String get euroPlayoffCourseTitle => 'Play-off qua Nations Cup';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      'Hai đội đầu mỗi bảng giành vé trực tiếp. Các suất cuối thuộc về play-off giữa những đội mạnh nhất Nations Cup chưa giành vé. Hiện tại:';
+
+  @override
+  String get ncEuroPlayoffLegend =>
+      'Vàng: đang hướng tới play-off vòng chung kết';
 }

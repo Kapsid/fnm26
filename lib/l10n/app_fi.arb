@@ -4516,5 +4516,8 @@
   "assistantMatchTitle": "Avustaja hoitaa ottelun",
   "assistantMatchBody": "Vastaan {opponent} hän pelaa sinun ryhmälläsi ja taktiikallasi. Säädä ne ensin, jos haluat.",
   "assistantMatchPlay": "Anna hänen pelata",
-  "assistantMatchResult": "Avustajan ottelu"
+  "assistantMatchResult": "Avustajan ottelu",
+  "euroPlayoffCourseTitle": "Jatkokarsinta Nations Cupin kautta",
+  "euroPlayoffCourseNote": "Lohkojen kaksi parasta pääsevät suoraan. Viimeiset paikat ratkaistaan jatkokarsinnassa, jossa pelaavat Nations Cupin parhaat, jotka eivät ole jo selvinneet. Tilanne nyt:",
+  "ncEuroPlayoffLegend": "Keltainen: matkalla lopputurnauksen jatkokarsintaan"
 }

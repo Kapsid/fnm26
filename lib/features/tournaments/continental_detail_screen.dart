@@ -19,6 +19,7 @@ import 'package:fnm/domain/services/competition/cross_group.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
+import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/features/tournaments/best_thirds.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/features/tournaments/euro_playoff_draw_screen.dart';
@@ -244,7 +245,7 @@ List<Widget> _continentalTabViews(
       directCount: adv.direct,
       contentionPos: adv.contention,
       contentionQualify: adv.contentionQualify,
-      playoffNations: data.playoffMarks,
+      playoffCourse: data.playoffRoute ? data.playoffCourse : const [],
       // The contested places lead to the finals here, not to a
       // knockout round.
       contentionDestination: l.tourCupDestFinals,
@@ -418,15 +419,16 @@ class _Groups extends StatelessWidget {
     this.contentionQualify = 0,
     this.contentionDestination,
     this.grid = false,
-    this.playoffNations = const {},
+    this.playoffCourse = const [],
   });
 
   final int careerId;
   final List<FinalsGroupTable> groups;
   final int playerNationId;
 
-  /// Sides on course for (or drawn into) the play-off paths: yellow.
-  final Set<int> playoffNations;
+  /// The play-off paths as they stand, listed under the tables (their
+  /// sides come from the Nations Cup, so no row here is marked for them).
+  final List<PlayoffPath> playoffCourse;
 
   /// Positions that advance/qualify outright (green).
   final int directCount;
@@ -500,6 +502,15 @@ class _Groups extends StatelessWidget {
             card(g),
             const SizedBox(height: AppSpacing.sm),
           ],
+        if (playoffCourse.isNotEmpty) ...[
+          _PlayoffCourseCard(
+            paths: playoffCourse,
+            playerNationId: playerNationId,
+            code: code,
+            name: name,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+        ],
         if (contentionPos case final pos?)
           if (contentionQualify > 0 && contended.length > contentionQualify)
             BestThirdsCard(
@@ -524,8 +535,6 @@ class _Groups extends StatelessWidget {
     final inContention = pos == contentionPos;
     final accent = advancing
         ? AppColors.positive
-        : playoffNations.contains(s.nationId)
-        ? AppColors.playoff
         : inContention
         ? AppColors.warning
         : null;
@@ -794,4 +803,82 @@ class _ContFinalsGroupsState extends State<_ContFinalsGroups> {
           ),
         ),
       );
+}
+
+/// Under Europe's qualifying tables on the calendar2 rhythm: the last places
+/// go through play-off paths read off the first Nations Cup, and who is on
+/// course for them as things stand, path by path.
+class _PlayoffCourseCard extends StatelessWidget {
+  const _PlayoffCourseCard({
+    required this.paths,
+    required this.playerNationId,
+    required this.code,
+    required this.name,
+  });
+
+  final List<PlayoffPath> paths;
+  final int playerNationId;
+  final String Function(int) code;
+  final String Function(int) name;
+
+  static const Key cardKey = Key('continental.playoffCourse');
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return AppCard(
+      key: cardKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l.euroPlayoffCourseTitle.capsIn(l.localeName),
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.primary,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            l.euroPlayoffCourseNote,
+            style: AppTypography.bodySmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+          for (final p in paths) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              l.euroPlayoffPath(p.letter),
+              style: AppTypography.labelMedium.copyWith(
+                color: AppColors.playoff,
+              ),
+            ),
+            const SizedBox(height: 2),
+            for (final id in p.seeds)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 2),
+                child: Row(
+                  children: [
+                    FlagDisc(code(id), size: 18),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: Text(
+                        name(id),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.bodySmall.copyWith(
+                          fontWeight: id == playerNationId
+                              ? FontWeight.w800
+                              : FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ],
+      ),
+    );
+  }
 }

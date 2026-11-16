@@ -18095,4 +18095,14 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get assistantMatchResult => 'Ang laro ng assistant';
+
+  @override
+  String get euroPlayoffCourseTitle => 'Play-off sa pamamagitan ng Nations Cup';
+
+  @override
+  String get euroPlayoffCourseNote =>
+      'Diretsong pasok ang nangungunang dalawa sa bawat grupo. Ang huling mga puwesto ay pag-aagawan sa play-off ng pinakamahuhusay sa Nations Cup na hindi pa pasok. Sa ngayon:';
+
+  @override
+  String get ncEuroPlayoffLegend => 'Dilaw: patungo sa play-off para sa finals';
 }

@@ -4516,5 +4516,8 @@
   "assistantMatchTitle": "Матч веде асистент",
   "assistantMatchBody": "Проти команди {opponent} він грає вашим складом і вашою тактикою. За бажання спершу налаштуйте їх.",
   "assistantMatchPlay": "Нехай грає",
-  "assistantMatchResult": "Матч асистента"
+  "assistantMatchResult": "Матч асистента",
+  "euroPlayoffCourseTitle": "Плей-оф через Nations Cup",
+  "euroPlayoffCourseNote": "Дві найкращі команди кожної групи виходять напряму. Останні місця розігрують у плей-оф найкращі команди Nations Cup, які не пройшли. Станом на зараз:",
+  "ncEuroPlayoffLegend": "Жовтий: на шляху до плей-оф фінального турніру"
 }
