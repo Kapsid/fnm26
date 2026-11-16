@@ -2395,7 +2395,16 @@ class SeasonService {
       // rather than whenever the manager's next match happens to fall.
       // Nothing of his is due by then, so nothing of his is played.
       Future<bool> stopForVote(DateTime target) async {
-        final stop = voteStopBefore(career.inGameDate, target);
+        // A regional cup's draw day the step would carry the clock over
+        // stops it the same way, so the cup is drawn on its day however far
+        // the clock was going (see [_regionalDrawStopBefore]).
+        final vote = voteStopBefore(career.inGameDate, target);
+        final draw = await _regionalDrawStopBefore(career, target);
+        final stop = vote == null
+            ? draw
+            : draw == null || vote.isBefore(draw)
+            ? vote
+            : draw;
         if (stop == null) return false;
         await _careers.updateInGameDate(careerId, stop);
         await _catchUp(

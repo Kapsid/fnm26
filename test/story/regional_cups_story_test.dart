@@ -11,6 +11,7 @@ import 'package:fnm/domain/services/competition/regional_history.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/features/hub/hub_event.dart';
+import 'package:fnm/features/hub/hub_providers.dart' show seasonServiceProvider;
 import 'package:fnm/features/hub/objective_providers.dart';
 
 import 'driver.dart';
@@ -110,4 +111,36 @@ void main() {
     expect(legs.length.isEven, isTrue);
     expect(legs.every((Fixture f) => f.hasResult), isTrue);
   }, timeout: const Timeout(Duration(minutes: 30)));
+
+  test('a save made before the regional cups gets their history', () async {
+    final db = storyDb();
+    final c = storyContainer(db);
+    addTearDown(c.dispose);
+    final d = await StoryDriver.start(c, 7, nationId: thailand);
+    final comp = c.read(competitionRepositoryProvider);
+    // As an older build left it: no regional honours at all.
+    await db.customStatement(
+      "DELETE FROM honours WHERE competition IN "
+      "('Gulf Cup', 'Southeast Asian Championship')",
+    );
+    expect(
+      (await comp.honours(d.careerId)).where(
+        (h) => RegionalCups.names.contains(h.competition),
+      ),
+      isEmpty,
+    );
+    await c.read(seasonServiceProvider).progressForTest(d.careerId);
+    final again = (await comp.honours(d.careerId)).where(
+      (h) => RegionalCups.names.contains(h.competition),
+    );
+    expect(again, hasLength(RegionalHistory.editions.length));
+    // And only once.
+    await c.read(seasonServiceProvider).progressForTest(d.careerId);
+    expect(
+      (await comp.honours(d.careerId)).where(
+        (h) => RegionalCups.names.contains(h.competition),
+      ),
+      hasLength(RegionalHistory.editions.length),
+    );
+  });
 }

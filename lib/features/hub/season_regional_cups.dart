@@ -18,6 +18,34 @@ final regionalCupsEnabledProvider = Provider<bool>((_) => true);
 /// one. Background editions are played like every other match of the world;
 /// the manager's own are his to play.
 extension SeasonRegionalCups on SeasonService {
+  /// The draw day of a regional cup edition still to be drawn that a step of
+  /// the clock from [career]'s date to [target] would pass over, or null.
+  /// The step stops on it (as on the vote's day), so an edition is never
+  /// missed by a manager whose own calendar is empty that autumn.
+  Future<DateTime?> _regionalDrawStopBefore(
+    Career career,
+    DateTime target,
+  ) async {
+    if (!_ref.read(regionalCupsEnabledProvider)) return null;
+    final clock = career.inGameDate;
+    final wcYear = SeasonService.finalsYear(career.cyclePointer);
+    for (final (slot, year) in RegionalCups.yearsOf(wcYear).indexed) {
+      final day = RegionalCups.drawDay(year);
+      if (!clock.isBefore(day) || !target.isAfter(day)) continue;
+      for (final cup in RegionalCups.all) {
+        if (!await _comp.hasTournament(
+          career.id,
+          RegionalCups.kind,
+          confederation: RegionalCups.confederation,
+          edition: RegionalCups.editionOf(cup, slot),
+        )) {
+          return day;
+        }
+      }
+    }
+    return null;
+  }
+
   Future<void> _progressRegionalCups(int careerId) async {
     if (!_ref.read(regionalCupsEnabledProvider)) return;
     final career = await _careers.byId(careerId);
