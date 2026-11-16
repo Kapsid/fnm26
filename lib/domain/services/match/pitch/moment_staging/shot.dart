@@ -480,6 +480,9 @@ class _OpenShotPlan extends _Plan {
   /// The assister is his side's keeper: he never leaves his area, so he
   /// sets the goal up with a long ball from it.
   bool keeperAssist = false;
+
+  /// The furthest a keeper who sets the goal up stands from his line.
+  static const double _keeperAssistDepth = 15;
   int? crosser;
   bool delivered = false;
   late final double earliest;
@@ -1373,6 +1376,14 @@ class _OpenShotPlan extends _Plan {
         );
       }
       final p = now.players[id]!;
+      if (keeperAssist) {
+        // A keeper waits for it in his area, however long the build-up:
+        // stepping up with the play walked him upfield.
+        return (
+          target: at(math.min(depthOf(p) + 2, _keeperAssistDepth), latOf(p)),
+          maxSpeed: 3,
+        );
+      }
       return (
         target: keepOnside(now, at(depthOf(p) + 2, latOf(p))),
         maxSpeed: 4,
