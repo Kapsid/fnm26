@@ -116,4 +116,19 @@ void main() {
     final na = ScoreBugTheme.all[ScoreBugThemeKind.northAmerica]!;
     expect(na.divider?.toARGB32(), 0xFFC8102E);
   });
+
+  test('the regional cups wear their own looks in every round', () {
+    for (final r in ['XGGROUP', 'XGSF', 'XGFINAL']) {
+      expect(
+        ScoreBugTheme.kindFor(r, Confederation.asia),
+        ScoreBugThemeKind.gulfCup,
+      );
+    }
+    for (final r in ['XAGROUP', 'XASFL1', 'XASFL2', 'XAFL1', 'XAFL2']) {
+      expect(
+        ScoreBugTheme.kindFor(r, Confederation.asia),
+        ScoreBugThemeKind.southeastAsia,
+      );
+    }
+  });
 }

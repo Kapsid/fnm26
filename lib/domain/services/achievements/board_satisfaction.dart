@@ -9,7 +9,11 @@ enum MatchOutcome { win, draw, loss }
 
 /// The competitions the board weighs, in descending prestige. A World Cup is
 /// the point of the cycle; a Continental Clash is an exhibition.
-enum TournamentTier { world, continental, nationsCup, clash }
+///
+/// [regional] is a regional cup (the Gulf Cup, the Southeast Asian
+/// Championship): a trophy the board is glad of, worth less than a Nations
+/// Cup and briefed more lightly.
+enum TournamentTier { world, continental, nationsCup, clash, regional }
 
 /// Where the manager's nation finished a tournament.
 enum Placing { champion, runnerUp, third }
@@ -201,6 +205,11 @@ abstract final class BoardSatisfaction {
       Placing.runnerUp: 2,
       Placing.third: 1,
     },
+    TournamentTier.regional: {
+      Placing.champion: 7,
+      Placing.runnerUp: 3,
+      Placing.third: 1,
+    },
   };
 
   /// What a [placing] in [tier] is worth to the board.
@@ -331,6 +340,7 @@ abstract final class BoardSatisfaction {
         TournamentTier.continental => (met: 12, step: 5),
         TournamentTier.nationsCup => (met: 5, step: 2),
         TournamentTier.clash => (met: 2, step: 1),
+        TournamentTier.regional => (met: 3, step: 1),
       };
 
   /// How much harder a board judges the brief it actually set, by the height of

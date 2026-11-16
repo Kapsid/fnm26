@@ -4,6 +4,7 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 
 /// A local clock time at the ground.
 class KickOffTime {
@@ -85,6 +86,7 @@ abstract final class KickOff {
     'CSF' ||
     'C3RD' ||
     'CFINAL' => CompetitionKind.continentalFinals,
+    _ when RegionalCups.isRound(round) => CompetitionKind.regionalCup,
     _ => CompetitionKind.worldCupQualifying,
   };
 
@@ -104,6 +106,7 @@ abstract final class KickOff {
     return switch (competition) {
       CompetitionKind.worldCupFinals ||
       CompetitionKind.continentalFinals ||
+      CompetitionKind.regionalCup ||
       CompetitionKind.finalissima =>
         afternoon
             ? const KickOffTime(15, 0)

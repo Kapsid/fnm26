@@ -26,6 +26,8 @@ import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart'
     show nationsCupDrawKind;
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
+import 'package:fnm/features/career/career_providers.dart' show CareerService;
 
 /// One of the board's expectations for the cycle, and — once that tournament is
 /// over — whether it was met. Fully DERIVED (no storage): the target comes from
@@ -525,6 +527,30 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
     ));
   }
 
+  // --- A regional cup ---------------------------------------------------------
+  // A lighter brief, for the sides that contest one (see [RegionalCups]): the
+  // cycle's first edition still to be played, or the one under way. Only
+  // the field's best four are set a target; the rest are judged on results.
+  final regional = me == null
+      ? null
+      : RegionalCups.all
+            .where((c) => c.memberCodes.contains(me.code))
+            .firstOrNull;
+  if (regional != null) {
+    final brief = await _regionalBrief(
+      comp: comp,
+      careerId: careerId,
+      cup: regional,
+      wcYear: CareerService.worldCupYear(career.cyclePointer),
+      today: career.inGameDate,
+      nations: nations,
+      baseline: baseline,
+      nationId: career.nationId,
+      fixtures: fixtures,
+    );
+    if (brief != null) out.add(brief);
+  }
+
   // --- The World Cup ---------------------------------------------------------
   final champion = await comp.worldChampion(careerId);
   final wcUsual = !v2
@@ -607,6 +633,92 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
 
   return out;
 });
+
+/// The board's brief for [cup] this cycle, or null when it sets none.
+///
+/// The edition briefed is the cycle's first one drawn, or before either is,
+/// the next still to be drawn. The target follows the side's place in the
+/// cup's field at the start of the cycle: the best side is told to win it,
+/// the second to reach the final, the third and fourth the semi-finals; the
+/// rest get no brief. Settled the day the cup's honour is filed.
+Future<ObjectiveOutcome?> _regionalBrief({
+  required CompetitionRepository comp,
+  required int careerId,
+  required RegionalCup cup,
+  required int wcYear,
+  required DateTime today,
+  required List<Nation> nations,
+  required Map<int, int> baseline,
+  required int nationId,
+  required List<Fixture> fixtures,
+}) async {
+  final years = RegionalCups.yearsOf(wcYear);
+  int? slot;
+  for (var i = 0; i < years.length && slot == null; i++) {
+    if (await comp.hasTournament(
+      careerId,
+      RegionalCups.kind,
+      confederation: RegionalCups.confederation,
+      edition: RegionalCups.editionOf(cup, i),
+    )) {
+      slot = i;
+    }
+  }
+  if (slot == null) {
+    for (var i = 0; i < years.length && slot == null; i++) {
+      if (!today.isAfter(RegionalCups.latestDraw(years[i]))) slot = i;
+    }
+  }
+  if (slot == null) return null;
+  final year = years[slot];
+  final field = RegionalCups.fieldOf(
+    cup,
+    nations,
+    rankById: baseline.isEmpty ? null : baseline,
+  );
+  final place = field.indexOf(nationId) + 1;
+  if (place == 0 || place > 4) return null;
+  final target = switch (place) {
+    1 => 7,
+    2 => 6,
+    _ => 5,
+  };
+  final honour = (await comp.honours(
+    careerId,
+  )).where((h) => h.competition == cup.name && h.year == year).firstOrNull;
+  final r = RegionalCups.roundsOf(cup);
+  final mine = [
+    for (final f in fixtures)
+      if (RegionalCups.ofRound(f.round) == cup && f.date.year == year) f,
+  ];
+  bool reached(Set<String> rounds) => mine.any((f) => rounds.contains(f.round));
+  final actual = honour != null
+      ? (honour.championId == nationId
+            ? 7
+            : honour.runnerUpId == nationId
+            ? 6
+            : honour.thirdId == nationId || honour.thirdId2 == nationId
+            ? 5
+            : 2)
+      : reached({r.finalRound, r.finalLeg1, r.finalLeg2})
+      ? 6
+      : reached({r.semi, r.semiLeg1, r.semiLeg2})
+      ? 5
+      : mine.any((f) => f.hasResult)
+      ? 2
+      : 0;
+  final decided = honour != null;
+  return (
+    tier: TournamentTier.regional,
+    competition: cup.name,
+    target: target,
+    decided: decided,
+    met: decided && actual >= target,
+    actual: actual,
+    offTheBottom: false,
+    graded: false,
+  );
+}
 
 /// The World Cup's own name, for [cycleObjectiveOutcomesProvider], which has no
 /// localisations to read. The UI substitutes `l.objectiveWorldCup` for it.

@@ -9,7 +9,9 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/competition/regional_cups.dart';
 import 'package:fnm/domain/services/competition/regional_history.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/features/hub/hub_event.dart';
+import 'package:fnm/features/hub/objective_providers.dart';
 
 import 'driver.dart';
 
@@ -44,6 +46,20 @@ void main() {
       );
     }
 
+    // The board briefs the cup, lightly: only the field's best four.
+    Future<ObjectiveOutcome?> brief() async {
+      c.invalidate(cycleObjectiveOutcomesProvider(id));
+      return (await c.read(
+        cycleObjectiveOutcomesProvider(id).future,
+      )).where((o) => o.tier == TournamentTier.regional).firstOrNull;
+    }
+
+    final before = await brief();
+    expect(before, isNotNull);
+    expect(before!.competition, RegionalCups.southeastAsia.name);
+    expect(before.target, inInclusiveRange(5, 7));
+    expect(before.decided, isFalse);
+
     final seen = <(HubEventKind, String)>[];
     d.beforeEvent = (e) async => seen.add((e.kind, e.label));
     var steps = 0;
@@ -63,6 +79,14 @@ void main() {
       expect(won.single.thirdId2, isNotNull);
       expect(won.single.finalHomeScore, isNotNull);
     }
+
+    final after = (await brief())!;
+    expect(after.decided, isTrue);
+    expect(after.actual, isIn([2, 5, 6, 7]));
+    expect(
+      await comp.messageKeys(id),
+      contains('objective:${career.cyclePointer}:regional'),
+    );
 
     // Thailand played four group games, home and away, all in December.
     final mine = [

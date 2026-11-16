@@ -272,7 +272,8 @@ class _ObjectiveBody extends StatelessWidget {
 }
 
 /// The objectives and the competitions without one, in the board's order:
-/// the continental championship, the Nations Cup, the World Championship.
+/// the continental championship, the Nations Cup, a regional cup, the World
+/// Championship.
 /// Exactly one of each row's fields is set.
 List<({CycleObjective? objective, ObjectiveGap? gap})> objectiveRows(
   List<CycleObjective> objectives,
@@ -281,8 +282,9 @@ List<({CycleObjective? objective, ObjectiveGap? gap})> objectiveRows(
   int order(TournamentTier t) => switch (t) {
     TournamentTier.continental => 0,
     TournamentTier.nationsCup => 1,
-    TournamentTier.world => 2,
-    TournamentTier.clash => 3,
+    TournamentTier.regional => 2,
+    TournamentTier.world => 3,
+    TournamentTier.clash => 4,
   };
   final rows = <({CycleObjective? objective, ObjectiveGap? gap})>[
     for (final o in objectives) (objective: o, gap: null),

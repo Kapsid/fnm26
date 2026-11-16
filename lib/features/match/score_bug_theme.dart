@@ -5,6 +5,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 
 /// Which colours the match's header strip and 2D TV score bar wear.
 ///
@@ -14,7 +15,10 @@ import 'package:fnm/domain/entities/enums.dart';
 /// BRONZE, and the other rounds wear their tournament's own colours. The
 /// Continental Clash (a one-off, round `FFINAL`) wears its own violet, and
 /// every Nations Cup match its graphite and ice blue (its final the gold).
-/// Qualifiers, friendlies and play-offs keep the plain silver.
+/// The regional cups wear their own looks in every round, their finals
+/// included: the Gulf Cup the desert's sand and dusk, the Southeast Asian
+/// Championship a light tropical green. Qualifiers, friendlies and
+/// play-offs keep the plain silver.
 enum ScoreBugThemeKind {
   /// The final of any finals tournament.
   finalGold,
@@ -34,6 +38,12 @@ enum ScoreBugThemeKind {
 
   /// Every Nations Cup match but its final (which is gold).
   nationsCup,
+
+  /// Every Gulf Cup match: the desert.
+  gulfCup,
+
+  /// Every Southeast Asian Championship match: a light, tropical green.
+  southeastAsia,
 }
 
 /// The colours of a tournament-dressed score bar. The silver bar is not one
@@ -188,6 +198,27 @@ class ScoreBugTheme {
       clockText: Color(0xFF8FD3FF),
       accent: Color(0xFF8FD3FF),
     ),
+    // The Gulf Cup: dusk-brown plates, a sand score block warming to dune
+    // gold, a sun-gold clock and a terracotta rim.
+    ScoreBugThemeKind.gulfCup: ScoreBugTheme(
+      kind: ScoreBugThemeKind.gulfCup,
+      plates: [Color(0xFF3A2614), Color(0xFF1A1009)],
+      score: [Color(0xFFFBF0D9), Color(0xFFE8CB91), Color(0xFFD2A55E)],
+      scoreText: Color(0xFF2A1808),
+      clockText: Color(0xFFF2C878),
+      accent: Color(0xFFF2C878),
+      rim: Color(0xFFB8673A),
+    ),
+    // The Southeast Asian Championship: deep jungle plates under a light,
+    // fresh green score block and a lime-mint clock.
+    ScoreBugThemeKind.southeastAsia: ScoreBugTheme(
+      kind: ScoreBugThemeKind.southeastAsia,
+      plates: [Color(0xFF12452F), Color(0xFF072218)],
+      score: [Color(0xFFF1FCEB), Color(0xFFB9EBA6), Color(0xFF8FD87E)],
+      scoreText: Color(0xFF0B2A17),
+      clockText: Color(0xFFA9F08F),
+      accent: Color(0xFFA9F08F),
+    ),
   };
 
   /// The Continental Clash's round (a one-off between two continental
@@ -232,6 +263,12 @@ class ScoreBugTheme {
     Confederation? confederation,
   ) {
     if (round == null) return null;
+    final regional = RegionalCups.ofRound(round);
+    if (regional != null) {
+      return regional.index == RegionalCups.gulf.index
+          ? ScoreBugThemeKind.gulfCup
+          : ScoreBugThemeKind.southeastAsia;
+    }
     final continental = _continentalFinals.contains(round);
     if (continental && confederation == null) return null;
     if (_finals.contains(round)) return ScoreBugThemeKind.finalGold;

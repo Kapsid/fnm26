@@ -21,6 +21,7 @@ import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/stats/stats_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 
 /// The localised (title, description) for an achievement, resolved from its
 /// stable [AchievementDef.id]. Falls back to the catalogue's English if an id
@@ -173,6 +174,8 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
   final honours = <({TournamentTier tier, Placing placing})>[];
   for (final h in await comp.honours(careerId)) {
     if (h.year < career.inGameDate.year - 1) continue;
+    // The real history (a regional cup's 2026 edition is one) is nobody's.
+    if (!CareerService.isOwnHonourYear(h.year)) continue;
     // Nor is he credited with a trophy lifted before he arrived.
     if (spell.arrivalCycle > 0 &&
         h.year <= CareerService.worldCupYear(spell.arrivalCycle - 1)) {
@@ -191,6 +194,8 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
       final name when NationsCups.isNationsCup(name) =>
         TournamentTier.nationsCup,
       'Continental Clash' => TournamentTier.clash,
+      final name when RegionalCups.names.contains(name) =>
+        TournamentTier.regional,
       final name when name == continentalName => TournamentTier.continental,
       // Another confederation's cup can't be won by this nation, so anything
       // left is a competition the board doesn't weigh.

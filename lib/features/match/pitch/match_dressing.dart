@@ -6,6 +6,7 @@ import 'dart:ui' show Color;
 
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 
 enum DressingKind { none, tournament, theFinal }
 
@@ -56,6 +57,23 @@ class MatchDressing {
           return theFinal;
         }
         return MatchDressing.tournament(colour ?? AppColors.primary);
+      // A regional cup in its own colour (the Gulf's sand, Southeast Asia's
+      // green), its final, either leg, in gold.
+      case CompetitionKind.regionalCup:
+        final cup = RegionalCups.ofRound(round);
+        if (cup == null) return none;
+        final r = RegionalCups.roundsOf(cup);
+        if (round == r.finalRound ||
+            round == r.finalLeg1 ||
+            round == r.finalLeg2) {
+          return theFinal;
+        }
+        return MatchDressing.tournament(
+          colour ??
+              (cup.index == RegionalCups.gulf.index
+                  ? const Color(0xFFE8CB91)
+                  : const Color(0xFFB9EBA6)),
+        );
       default:
         return none;
     }
