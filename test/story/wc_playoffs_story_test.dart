@@ -33,9 +33,9 @@ import 'driver.dart';
 ///   in the exact December slot its placeholder was drawn into. (Poland,
 ///   then Belgium, did until Africa's, Asia's and Oceania's own steps and
 ///   the balanced home and away draw moved the world.)
-/// * Northern Ireland wins its League C group in the second Nations Cup,
-///   misses qualifying and comes in through pot 4.
-/// * Curacao (seed 37), one of CONCACAF's two best runners-up, plays the
+/// * Northern Ireland (seed 40) wins its League C group in the second
+///   Nations Cup, misses qualifying and comes in through pot 4.
+/// * Curacao (seed 39), one of CONCACAF's two best runners-up, plays the
 ///   intercontinental play-off in the finals' host nation.
 /// * England (seed 31) qualifies directly, is locked in at the draw and
 ///   watches every path from the stands.
@@ -47,8 +47,11 @@ void main() {
   const northernIreland = 38;
   const curacao = 78;
   // Curacao's own world: on seed 35 no managed CONCACAF side reaches the
-  // intercontinental play-off since the balanced home and away draw.
-  const curacaoSeed = 37;
+  // intercontinental play-off since the balanced home and away draw (seed
+  // 39 since the regional cups moved the world).
+  const curacaoSeed = 39;
+  // Northern Ireland's: since the regional cups it misses pot 4 on seed 35.
+  const northernIrelandSeed = 40;
   // England's: on seed 35 it misses direct qualification since the 1.1.2
   // engine tuning.
   const englandSeed = 31;
@@ -252,7 +255,11 @@ void main() {
     final db = storyDb();
     final c = storyContainer(db);
     addTearDown(c.dispose);
-    final d = await StoryDriver.start(c, seed, nationId: northernIreland);
+    final d = await StoryDriver.start(
+      c,
+      northernIrelandSeed,
+      nationId: northernIreland,
+    );
     final id = d.careerId;
     final comp = c.read(competitionRepositoryProvider);
     await toDraw(d, comp);
