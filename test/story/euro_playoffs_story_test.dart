@@ -15,6 +15,7 @@ import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
+import 'package:fnm/features/tournaments/euro_playoff_providers.dart';
 
 import 'driver.dart';
 
@@ -69,7 +70,21 @@ void main() {
       cycle: 0,
     );
 
-    // To the end of qualifying: the paths are drawn and stored.
+    // To the end of qualifying: the paths are drawn and stored. On the way
+    // the tables mark the sides on course for them: a full path's worth,
+    // none of them a group's top two.
+    final nations = {
+      for (final n in await c.read(nationRepositoryProvider).forCareer(id))
+        n.id: n,
+    };
+    Future<Set<int>> marks() async => euroPlayoffMarks(
+      comp,
+      careerId: id,
+      cycle: 0,
+      rngSeed: (await careers.byId(id))!.rngSeed,
+      nations: nations,
+    );
+    var markedMidway = false;
     var steps = 0;
     while ((await slotsOf(
       comp,
@@ -77,11 +92,35 @@ void main() {
       CompetitionKind.continentalPlayoff,
     )).isEmpty) {
       if (++steps > 4000) fail('no play-off draw');
+      final today = (await careers.byId(id))!.inGameDate;
+      if (!markedMidway && today.isAfter(DateTime(2027, 6, 30))) {
+        markedMidway = true;
+        final marked = await marks();
+        expect(marked, isNotEmpty, reason: 'nothing marked mid-qualifying');
+        expect(marked.length % 4, 0, reason: 'whole paths');
+        for (final t in await comp.tournamentGroupTables(
+          id,
+          CompetitionKind.continentalQualifying,
+          confederation: europe,
+        )) {
+          for (final s in t.standings.take(2)) {
+            expect(marked, isNot(contains(s.nationId)));
+          }
+        }
+      }
       await d.step(stopAtRollover: true);
     }
+    expect(markedMidway, isTrue);
     final drawnOn = (await careers.byId(id))!.inGameDate;
     expect(drawnOn.year, 2027);
     expect(drawnOn.month, 11);
+    // Once drawn, the marks are the paths' own sides.
+    expect(await marks(), {
+      for (final p in EuroPlayoffs.fromSlots(
+        await slotsOf(comp, id, CompetitionKind.continentalPlayoff),
+      ))
+        ...p.seeds,
+    });
     final path = EuroPlayoffs.fromSlots(
       await slotsOf(comp, id, CompetitionKind.continentalPlayoff),
     ).where((p) => p.seeds.contains(me)).firstOrNull;

@@ -941,7 +941,12 @@ String drawBallLabel(String code) => code.startsWith(drawPlaceholderPrefix)
 /// A nation's flag, or for a placeholder (see [drawPlaceholderPrefix]) a
 /// plain disc carrying its path's letter.
 class DrawFlag extends StatelessWidget {
-  const DrawFlag(this.code, {required this.size, this.highlighted = false, super.key});
+  const DrawFlag(
+    this.code, {
+    required this.size,
+    this.highlighted = false,
+    super.key,
+  });
 
   final String code;
   final double size;

@@ -211,32 +211,16 @@ extension SeasonEuroPlayoffs on SeasonService {
     SeededRng venueRng() =>
         SeededRng(career.rngSeed ^ (cycle * 0x5E11) ^ 0xE0F0);
 
-    var count = EuroPlayoffs.pathCount(
-      size: cont.size,
-      hosts: hosts.length,
-      groupCount: tables.length,
-    );
-    var direct = Qualification.qualifiers(groups, berths - count);
-    var paths = EuroPlayoffs.draw(
+    final settled = EuroPlayoffs.settle(
+      groups: groups,
       tables: ncTables,
-      ineligible: {...direct, ...hosts},
-      count: count,
-      rng: venueRng(),
+      hosts: hosts.toSet(),
+      size: cont.size,
+      rng: venueRng,
       fallback: fallback,
     );
-    if (paths.length < count) {
-      // Not enough sides to fill every path: the places left go to the best
-      // of the groups instead.
-      count = paths.length;
-      direct = Qualification.qualifiers(groups, berths - count);
-      paths = EuroPlayoffs.draw(
-        tables: ncTables,
-        ineligible: {...direct, ...hosts},
-        count: count,
-        rng: venueRng(),
-        fallback: fallback,
-      );
-    }
+    final direct = settled.direct;
+    final paths = settled.paths;
     if (paths.isEmpty) {
       await _generateContinentalFinals(
         careerId,

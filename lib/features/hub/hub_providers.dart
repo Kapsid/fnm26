@@ -156,6 +156,7 @@ import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/club/transfer_window.dart';
 import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/messages/transfer_report.dart';
+import 'package:fnm/features/tournaments/euro_playoff_providers.dart';
 
 part 'season_cycle.dart';
 part 'season_euro_playoffs.dart';
@@ -334,6 +335,18 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
     groupDirect = adv.direct;
     groupContention = adv.contention;
     groupRelegate = adv.relegate;
+    if (group.kind == CompetitionKind.continentalQualifying &&
+        conf == Confederation.europe) {
+      // Europe's play-off paths on the calendar2 rhythm: the sides on
+      // course for them, marked as the groups stand.
+      groupPlayoff = await euroPlayoffMarks(
+        compRepo,
+        careerId: careerId,
+        cycle: career.cyclePointer,
+        rngSeed: career.rngSeed,
+        nations: nations,
+      );
+    }
     if (group.kind == CompetitionKind.worldCupQualifying) {
       groupPlayoff = GroupAdvancement.worldCupPlayoffNations(
         conf,

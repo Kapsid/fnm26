@@ -244,6 +244,7 @@ List<Widget> _continentalTabViews(
       directCount: adv.direct,
       contentionPos: adv.contention,
       contentionQualify: adv.contentionQualify,
+      playoffNations: data.playoffMarks,
       // The contested places lead to the finals here, not to a
       // knockout round.
       contentionDestination: l.tourCupDestFinals,
@@ -302,8 +303,7 @@ List<Widget> _continentalTabViews(
           grid: grid,
         );
       }()
-    else if (data.pendingDraw case final pending?
-        when data.finalsDrawWatched)
+    else if (data.pendingDraw case final pending? when data.finalsDrawWatched)
       EuroPendingGroups(
         draw: pending,
         letters: data.pendingLetters,
@@ -418,11 +418,15 @@ class _Groups extends StatelessWidget {
     this.contentionQualify = 0,
     this.contentionDestination,
     this.grid = false,
+    this.playoffNations = const {},
   });
 
   final int careerId;
   final List<FinalsGroupTable> groups;
   final int playerNationId;
+
+  /// Sides on course for (or drawn into) the play-off paths: yellow.
+  final Set<int> playoffNations;
 
   /// Positions that advance/qualify outright (green).
   final int directCount;
@@ -520,6 +524,8 @@ class _Groups extends StatelessWidget {
     final inContention = pos == contentionPos;
     final accent = advancing
         ? AppColors.positive
+        : playoffNations.contains(s.nationId)
+        ? AppColors.playoff
         : inContention
         ? AppColors.warning
         : null;

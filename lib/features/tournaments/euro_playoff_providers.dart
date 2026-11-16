@@ -8,7 +8,10 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/competition/calendar2.dart';
+import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
+import 'package:fnm/domain/services/competition/hosts.dart';
 
 /// Europe's play-offs as stored: the paths, every tie played or to come,
 /// and the EURO's draw with each path winner's slot.
@@ -66,24 +69,25 @@ class EuroPlayoffData {
 /// (any cycle before calendar2, or one whose places were all decided in the
 /// qualifying groups).
 final AutoDisposeFutureProviderFamily<EuroPlayoffData?, int>
-euroPlayoffProvider = FutureProvider.autoDispose
-    .family<EuroPlayoffData?, int>((ref, careerId) async {
-      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
-      if (career == null) return null;
-      final comp = ref.watch(competitionRepositoryProvider);
-      return readEuroPlayoffs(
-        comp,
-        careerId: careerId,
-        cycle: career.cyclePointer,
-        playerNationId: career.nationId,
-        nations: {
-          for (final n in await ref
-              .watch(nationRepositoryProvider)
-              .forCareer(careerId))
-            n.id: n,
-        },
-      );
-    });
+euroPlayoffProvider = FutureProvider.autoDispose.family<EuroPlayoffData?, int>((
+  ref,
+  careerId,
+) async {
+  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+  if (career == null) return null;
+  final comp = ref.watch(competitionRepositoryProvider);
+  return readEuroPlayoffs(
+    comp,
+    careerId: careerId,
+    cycle: career.cyclePointer,
+    playerNationId: career.nationId,
+    nations: {
+      for (final n
+          in await ref.watch(nationRepositoryProvider).forCareer(careerId))
+        n.id: n,
+    },
+  );
+});
 
 /// [euroPlayoffProvider]'s reading, for callers outside a provider.
 Future<EuroPlayoffData?> readEuroPlayoffs(
@@ -123,5 +127,63 @@ Future<EuroPlayoffData?> readEuroPlayoffs(
     ),
     nations: nations,
     playerNationId: playerNationId,
+  );
+}
+
+/// The European sides the qualifying tables mark for the play-off paths
+/// (yellow), on the calendar2 rhythm: before the draw, those on course for
+/// them as the groups stand (see [EuroPlayoffs.onCourse]); once drawn, the
+/// paths' own sides. Empty on any older calendar.
+Future<Set<int>> euroPlayoffMarks(
+  CompetitionRepository comp, {
+  required int careerId,
+  required int cycle,
+  required int rngSeed,
+  required Map<int, Nation> nations,
+}) async {
+  const europe = Confederation.europe;
+  if (!await isCalendar2(comp, careerId, cycle)) return const {};
+  final drawn = EuroPlayoffs.fromSlots(
+    await comp.drawSlots(
+      careerId,
+      cycle,
+      CompetitionKind.continentalPlayoff,
+      confederation: europe,
+    ),
+  );
+  if (drawn.isNotEmpty) return {for (final p in drawn) ...p.seeds};
+  final groups = [
+    for (final t in await comp.tournamentGroupTables(
+      careerId,
+      CompetitionKind.continentalQualifying,
+      confederation: europe,
+    ))
+      t.standings,
+  ];
+  final tables = [
+    for (final t in await comp.tournamentGroupTables(
+      careerId,
+      CompetitionKind.nationsLeague,
+      confederation: europe,
+      edition: Calendar2.firstEdition,
+    ))
+      (name: t.name, standings: t.standings),
+  ];
+  final hosts = WorldCupHosts.continentalHostsFor(
+    confederation: europe,
+    cycle: cycle,
+    seed: rngSeed,
+    nations: nations.values.toList(),
+  );
+  final fallback = [
+    for (final n in nations.values)
+      if (n.confederation == europe) n.id,
+  ]..sort((a, b) => nations[a]!.ranking.compareTo(nations[b]!.ranking));
+  return EuroPlayoffs.onCourse(
+    groups: groups,
+    tables: tables,
+    hosts: hosts.toSet(),
+    size: ContinentalCups.byConfederation[europe]!.size,
+    fallback: fallback,
   );
 }
