@@ -24,7 +24,7 @@ import 'package:fnm/features/tournaments/finals_draw_providers.dart';
 import 'driver.dart';
 
 /// The World Championship's play-offs on the calendar2 rhythm, played
-/// through the hub on one world (seed 31, found with a seed search; if a
+/// through the hub on one world (seed 35, found with a seed search; if a
 /// change to the world moves the sides below, re-find them: the first
 /// expectation of each story says which half broke).
 ///
@@ -37,18 +37,21 @@ import 'driver.dart';
 ///   misses qualifying and comes in through pot 4.
 /// * Curacao (seed 37), one of CONCACAF's two best runners-up, plays the
 ///   intercontinental play-off in the finals' host nation.
-/// * England qualifies directly, is locked in at the draw and watches every
-///   path from the stands.
+/// * England (seed 31) qualifies directly, is locked in at the draw and
+///   watches every path from the stands.
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   const europe = Confederation.europe;
-  const seed = 31;
+  const seed = 35;
   const turkiye = 53;
   const northernIreland = 38;
   const curacao = 78;
-  // Curacao's own world: on seed 31 no managed CONCACAF side reaches the
+  // Curacao's own world: on seed 35 no managed CONCACAF side reaches the
   // intercontinental play-off since the balanced home and away draw.
   const curacaoSeed = 37;
+  // England's: on seed 35 it misses direct qualification since the 1.1.2
+  // engine tuning.
+  const englandSeed = 31;
   final wcYear = CareerService.worldCupYear(0);
   final dates = Calendar2.wcPlayoffs(wcYear);
 
@@ -230,12 +233,12 @@ void main() {
     expect(keys.where((k) => k.startsWith('wcmiss:')), isEmpty);
     // The draw left its day and the first opponent for the feed, and Y
     // talks about it.
+    // (A Euro play-off from the first Nations Cup leaves its own.)
     final notes = [
       for (final m in await comp.watchedKindsWithPrefix(PlayoffDrawNote.prefix))
         if (m.careerId == id) PlayoffDrawNote.decode(m.kind)!,
-    ];
+    ].where((n) => n.competition == 'World Championship');
     expect(notes, hasLength(1));
-    expect(notes.single.competition, 'World Championship');
     expect(notes.single.date.year, wcYear - 1);
     final feed = (await c.read(yFeedProvider(id).future)).posts;
     expect(
@@ -377,7 +380,7 @@ void main() {
     final db = storyDb();
     final c = storyContainer(db);
     addTearDown(c.dispose);
-    final d = await StoryDriver.start(c, seed);
+    final d = await StoryDriver.start(c, englandSeed);
     final id = d.careerId;
     final comp = c.read(competitionRepositoryProvider);
     final careers = c.read(careerRepositoryProvider);
