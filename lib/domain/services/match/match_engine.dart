@@ -874,6 +874,21 @@ class MatchEngine {
       PitchZone? zone,
       ShotOutcome? outcome,
     }) {
+      // Where it was struck from and how a miss ends, drawn in that order
+      // as always (one draw each from the detail stream).
+      final where =
+          zone ??
+          (header
+              ? _headerZone(xg, detailRng)
+              : _shotZone(xg, detailRng, goal: goal != null));
+      final how =
+          outcome ??
+          (goal != null ? ShotOutcome.goal : _missOutcome(xg, detailRng));
+      // An open-play cross met with the head is never charged down by a man
+      // in front of it: a blocked one was struck with the foot.
+      final headed =
+          header &&
+          !(origin == ShotOrigin.openPlay && how == ShotOutcome.blocked);
       logMoment(
         ShotMoment(
           minute: minute,
@@ -887,16 +902,10 @@ class MatchEngine {
               ? goal.assistPlayerId
               : deliverer?.id,
           keeperId: _keeperOf(def)?.id,
-          zone:
-              zone ??
-              (header
-                  ? _headerZone(xg, detailRng)
-                  : _shotZone(xg, detailRng, goal: goal != null)),
+          zone: where,
           xg: xg,
-          outcome:
-              outcome ??
-              (goal != null ? ShotOutcome.goal : _missOutcome(xg, detailRng)),
-          header: header,
+          outcome: how,
+          header: headed,
           origin: origin,
         ),
         goal,

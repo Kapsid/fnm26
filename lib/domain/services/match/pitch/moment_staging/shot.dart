@@ -1345,8 +1345,11 @@ class _OpenShotPlan extends _Plan {
       if (f != null && f.toId == id) return null;
       final p = now.players[id]!;
       if (route == _Route.cutBack && car == id) {
-        // On to the byline before he pulls it back.
-        return (target: at(99.5, latOf(p)), maxSpeed: 3.5);
+        // On to the byline before he pulls it back (from where the cut put
+        // him; from the run he pulls it back a stride short, before the
+        // defenders are pinned on their line).
+        final line = depthOf(p) >= 98 ? 99.5 : 96.5;
+        return (target: at(line, latOf(p)), maxSpeed: 3.5);
       }
       if (car == id) return (target: p, maxSpeed: 1.5);
       // Stays for the return, onside.
