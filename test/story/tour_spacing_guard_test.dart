@@ -85,6 +85,10 @@ void main() {
         5,
         nationId: sanMarino,
         tournamentSpacing: false,
+        // An old save's cycle: the old calendar too (calendar2, merged
+        // after this guard was recorded, re-schedules a new career's
+        // cycle by design).
+        calendar2: false,
       );
       await driveCycle(d);
       final dump = await finalsDump(d);
