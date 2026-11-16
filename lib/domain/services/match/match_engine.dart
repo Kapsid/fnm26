@@ -2788,22 +2788,25 @@ class MatchEngine {
   }
 
   /// A direct free kick's conversion for an ordinary dead-ball man (technical
-  /// 75) against a keeper.
-  static const double _freeKickBase = 0.07;
+  /// 75) against a keeper. Raised from 0.07 (owner, 1.1.2): one goes in
+  /// about once in six to eight matches, more often with a real taker.
+  static const double _freeKickBase = 0.13;
 
   /// The chance [taker]'s direct free kick goes in: better technique bends
   /// it in more often, a set-piece specialist more again, an empty goal
   /// twice as often.
   static double _freeKickGoalChance(_Live atk, Player taker, Player? keeper) {
-    final technique = (1 + (taker.attributes.technical - 75) / 60).clamp(
-      0.6,
-      1.5,
+    // The taker decides: a fine technician bends it in far more often than
+    // an ordinary one.
+    final technique = (1 + (taker.attributes.technical - 75) / 40).clamp(
+      0.45,
+      1.8,
     );
     final specialist = atk.team.hasTrait(taker.id, PlayerTrait.setPiece)
         ? PlayerTraits.setPieceFactor
         : 1.0;
     return (_freeKickBase * technique * specialist * (keeper == null ? 2 : 1))
-        .clamp(0.02, 0.25);
+        .clamp(0.02, 0.4);
   }
 
   /// How a direct free kick scored at [p] ends, from one [roll] in [0, 1):
