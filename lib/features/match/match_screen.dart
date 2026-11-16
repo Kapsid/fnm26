@@ -2443,7 +2443,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               penalties: penalties,
               homeColor: homeC,
               awayColor: awayC,
-              // The tablet's 2D TV has the ground in its header band.
+              // The ground is the Summary's: the Stats are the figures only.
+              showGround: false,
             );
             List<MatchEvent> subsOf(int nationId) => shown
                 .where(
