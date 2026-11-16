@@ -106,8 +106,8 @@ void main() {
       await tester.tap(find.text(enL.matchTabStats));
       await tester.pumpAndSettle(const Duration(milliseconds: 100));
       expect(find.byType(MatchSummaryTab), findsNothing);
-      // The ground's line is in the header, and its card closes the stats:
-      // under the figures, never over them.
+      // The ground's line is in the header; the Stats are the figures only
+      // (the ground's card is the Summary's).
       expect(
         find.descendant(
           of: find.byType(MatchTvHeader),
@@ -115,38 +115,13 @@ void main() {
         ),
         findsOneWidget,
       );
-      final groundCard = find.descendant(
-        of: find.byType(MatchStatsPanel),
-        matching: find.byType(GroundCard),
-      );
-      // (Under the tab strip the list may be too short to build it yet.)
-      await tester.scrollUntilVisible(
-        groundCard,
-        80,
-        scrollable: find
-            .descendant(
-              of: find.byType(MatchStatsPanel),
-              matching: find.byType(Scrollable),
-            )
-            .first,
-      );
-      expect(groundCard, findsOneWidget);
-      final goalsRow = find.descendant(
-        of: find.byType(MatchStatsPanel),
-        matching: find.byWidgetPredicate(
-          (w) =>
-              w is Text &&
-              w.data?.toLowerCase() == enL.matchStatGoals.toLowerCase(),
+      expect(
+        find.descendant(
+          of: find.byType(MatchStatsPanel),
+          matching: find.byType(GroundCard),
         ),
+        findsNothing,
       );
-      // On a short column the figures may have scrolled away above it,
-      // which is where they belong.
-      if (goalsRow.evaluate().isNotEmpty) {
-        expect(
-          tester.getRect(groundCard).top,
-          greaterThan(tester.getRect(goalsRow).bottom),
-        );
-      }
       // Stats on the left, the feed and Your XI on the right.
       expect(
         tester.getCenter(find.byType(MatchStatsPanel)).dx,
