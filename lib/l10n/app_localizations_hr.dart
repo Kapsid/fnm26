@@ -18442,4 +18442,7 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get euroPlayoffQualified => 'Plasman';
+
+  @override
+  String get playerOtherPositions => 'Na svakoj poziciji';
 }

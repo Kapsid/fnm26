@@ -27367,6 +27367,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Qualified'**
   String get euroPlayoffQualified;
+
+  /// Player page: block listing the rating the player plays at in each position (his own outlined), best first.
+  ///
+  /// In en, this message translates to:
+  /// **'In every position'**
+  String get playerOtherPositions;
 }
 
 class _AppLocalizationsDelegate

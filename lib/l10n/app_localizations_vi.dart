@@ -17947,4 +17947,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get euroPlayoffQualified => 'Giành vé';
+
+  @override
+  String get playerOtherPositions => 'Ở từng vị trí';
 }

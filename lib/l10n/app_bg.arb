@@ -4521,5 +4521,6 @@
   "euroPlayoffCourseNote": "Първите два от всяка група се класират директно. Последните места се разиграват в плейоф между най-добрите отбори от Nations Cup, които не са се класирали. Към момента:",
   "ncEuroPlayoffLegend": "Жълто: по пътя към плейофа за финалите",
   "euroPlayoffToFinal": "Към финала",
-  "euroPlayoffQualified": "Класира се"
+  "euroPlayoffQualified": "Класира се",
+  "playerOtherPositions": "Във всеки пост"
 }

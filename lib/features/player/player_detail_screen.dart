@@ -18,6 +18,7 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/services/tactics/position_fit.dart';
 import 'package:fnm/domain/services/club/club_form.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/features/tactics/condition_mark.dart';
@@ -217,6 +218,10 @@ class PlayerDetailScreen extends ConsumerWidget {
   static const Key tabletLayoutKey = Key('player.tabletLayout');
   static const Key profileKey = Key('player.profile');
   static const Key recordKey = Key('player.record');
+
+  /// The block of his rating in every position.
+  static const Key positionsKey = Key('player.positions');
+
   static const Key clubKey = Key('player.club');
   static const Key headerKey = Key('player.header');
   static const Key tabOverviewKey = Key('player.tab.overview');
@@ -497,6 +502,13 @@ _playerSections(
             _fact(l.playerValue, PlayerDetailScreen.money(p.value)),
           ],
         ),
+      ),
+      // How good he is everywhere else: the rating he would play at in each
+      // position (the match engine's own out-of-position docking).
+      ProfileBlock(
+        key: PlayerDetailScreen.positionsKey,
+        title: l.playerOtherPositions,
+        child: _PositionRatings(player: p),
       ),
     ],
     stats: [
@@ -1354,6 +1366,80 @@ class PlayerTraitGlyphs extends StatelessWidget {
               ),
             );
           }(),
+      ],
+    );
+  }
+}
+
+/// Every position with the rating [player] plays at there, best first: his
+/// own outlined, each coloured as his attribute bars are.
+class _PositionRatings extends StatelessWidget {
+  const _PositionRatings({required this.player});
+
+  final Player player;
+
+  static Key chipKey(PlayerPosition p) => Key('player.position.${p.name}');
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final rows =
+        [
+          for (final pos in PlayerPosition.values)
+            (pos: pos, rating: PositionFit.effectiveOverall(player, pos)),
+        ]..sort((a, b) {
+          final by = b.rating.compareTo(a.rating);
+          if (by != 0) return by;
+          if (a.pos == player.position) return -1;
+          if (b.pos == player.position) return 1;
+          return a.pos.index.compareTo(b.pos.index);
+        });
+    return Wrap(
+      spacing: AppSpacing.sm,
+      runSpacing: AppSpacing.sm,
+      children: [
+        for (final r in rows)
+          Tooltip(
+            message: positionName(l, r.pos),
+            child: Container(
+              key: chipKey(r.pos),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.sm,
+                vertical: 4,
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.surfaceContainerHigh,
+                borderRadius: AppRadii.smAll,
+                border: Border.all(
+                  color: r.pos == player.position
+                      ? AppColors.primary
+                      : AppColors.outlineVariant,
+                  width: r.pos == player.position ? 1.5 : 1,
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    r.pos.label,
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    '${r.rating}',
+                    style: AppTypography.labelMedium.copyWith(
+                      color: _AttributeBars._color(r.rating),
+                      fontWeight: FontWeight.w800,
+                      fontFeatures: const [FontFeature.tabularFigures()],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
       ],
     );
   }

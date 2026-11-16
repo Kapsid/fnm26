@@ -18045,4 +18045,7 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get euroPlayoffQualified => 'Kijutott';
+
+  @override
+  String get playerOtherPositions => 'Minden poszton';
 }

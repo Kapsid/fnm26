@@ -18193,4 +18193,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get euroPlayoffQualified => 'Clasificado';
+
+  @override
+  String get playerOtherPositions => 'En cada posición';
 }

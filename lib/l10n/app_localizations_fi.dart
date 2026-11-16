@@ -18175,4 +18175,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get euroPlayoffQualified => 'Selviytyi';
+
+  @override
+  String get playerOtherPositions => 'Eri pelipaikoilla';
 }

@@ -18186,4 +18186,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get euroPlayoffQualified => 'Geplaatst';
+
+  @override
+  String get playerOtherPositions => 'Op elke positie';
 }

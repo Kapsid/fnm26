@@ -115,4 +115,52 @@ void main() {
     expect(uri.queryParameters['careerId'], '${save.careerId}');
     await tester.pumpWidget(const SizedBox());
   });
+
+  testWidgets('his rating in every position: all twelve, best first, his own '
+      'at his overall', (tester) async {
+    final save = await _open(tester, const Size(1080, 810));
+    expect(tester.takeException(), isNull);
+    final block = find.byKey(PlayerDetailScreen.positionsKey);
+    await tester.scrollUntilVisible(
+      block,
+      80,
+      scrollable: find
+          .descendant(
+            of: find.byKey(PlayerDetailScreen.profileKey),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
+    expect(block, findsOneWidget);
+    final chips = tester
+        .widgetList<Container>(
+          find.descendant(
+            of: block,
+            matching: find.byWidgetPredicate(
+              (w) =>
+                  w is Container &&
+                  (w.key?.toString().contains('player.position.') ?? false),
+            ),
+          ),
+        )
+        .toList();
+    expect(chips, hasLength(12));
+    // The numbers run best first.
+    final numbers = [
+      for (final c in chips)
+        int.parse(
+          (tester
+              .widgetList<Text>(
+                find.descendant(
+                  of: find.byWidget(c),
+                  matching: find.byType(Text),
+                ),
+              )
+              .last
+              .data)!,
+        ),
+    ];
+    expect(numbers, [...numbers]..sort((a, b) => b - a));
+    expect(save.careerId, isPositive);
+  });
 }

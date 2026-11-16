@@ -18431,4 +18431,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get euroPlayoffQualified => 'Кваліфікувалася';
+
+  @override
+  String get playerOtherPositions => 'На кожній позиції';
 }

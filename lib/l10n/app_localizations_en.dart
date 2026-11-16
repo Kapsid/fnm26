@@ -18133,4 +18133,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get euroPlayoffQualified => 'Qualified';
+
+  @override
+  String get playerOtherPositions => 'In every position';
 }

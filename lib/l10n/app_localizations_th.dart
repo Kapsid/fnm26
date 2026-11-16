@@ -17792,4 +17792,7 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get euroPlayoffQualified => 'ผ่านเข้ารอบ';
+
+  @override
+  String get playerOtherPositions => 'ในแต่ละตำแหน่ง';
 }

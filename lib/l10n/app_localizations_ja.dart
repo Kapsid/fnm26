@@ -17474,4 +17474,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get euroPlayoffQualified => '出場決定';
+
+  @override
+  String get playerOtherPositions => '各ポジションでの評価';
 }

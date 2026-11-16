@@ -18494,4 +18494,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get euroPlayoffQualified => 'Postup na turnaj';
+
+  @override
+  String get playerOtherPositions => 'Na jednotlivých postech';
 }

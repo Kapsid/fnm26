@@ -18011,4 +18011,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get euroPlayoffQualified => 'Katıldı';
+
+  @override
+  String get playerOtherPositions => 'Her mevkide';
 }

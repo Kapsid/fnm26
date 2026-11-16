@@ -4521,5 +4521,6 @@
   "euroPlayoffCourseNote": "Dwie najlepsze drużyny z każdej grupy awansują bezpośrednio. O ostatnie miejsca grają w barażach najlepsze drużyny Pucharu Narodów, które nie awansowały. Na tę chwilę:",
   "ncEuroPlayoffLegend": "Żółty: na drodze do baraży o turniej finałowy",
   "euroPlayoffToFinal": "Do finału",
-  "euroPlayoffQualified": "Awans"
+  "euroPlayoffQualified": "Awans",
+  "playerOtherPositions": "Na każdej pozycji"
 }

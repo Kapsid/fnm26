@@ -4521,5 +4521,6 @@
   "euroPlayoffCourseNote": "Les deux premiers de chaque groupe sont qualifiés directement. Les dernières places se jouent en barrages entre les meilleures équipes de la Coupe des nations non qualifiées. En l'état :",
   "ncEuroPlayoffLegend": "Jaune : en route pour les barrages de la phase finale",
   "euroPlayoffToFinal": "En finale",
-  "euroPlayoffQualified": "Qualifié"
+  "euroPlayoffQualified": "Qualifié",
+  "playerOtherPositions": "À chaque poste"
 }

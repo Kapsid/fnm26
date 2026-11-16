@@ -18100,4 +18100,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get euroPlayoffQualified => 'Kvalificeret';
+
+  @override
+  String get playerOtherPositions => 'På hver position';
 }

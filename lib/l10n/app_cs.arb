@@ -4521,5 +4521,6 @@
   "euroPlayoffCourseNote": "První dva z každé skupiny postupují přímo. O poslední místa se hraje baráž mezi nejlepšími týmy Poháru národů, které nepostoupily. Podle aktuálního stavu:",
   "ncEuroPlayoffLegend": "Žlutě: míří do baráže o závěrečný turnaj",
   "euroPlayoffToFinal": "Do finále",
-  "euroPlayoffQualified": "Postup na turnaj"
+  "euroPlayoffQualified": "Postup na turnaj",
+  "playerOtherPositions": "Na jednotlivých postech"
 }

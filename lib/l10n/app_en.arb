@@ -27936,5 +27936,9 @@
   "euroPlayoffQualified": "Qualified",
   "@euroPlayoffQualified": {
     "description": "Play-off path: tag beside the path final's winner, who goes to the continental finals."
+  },
+  "playerOtherPositions": "In every position",
+  "@playerOtherPositions": {
+    "description": "Player page: block listing the rating the player plays at in each position (his own outlined), best first."
   }
 }

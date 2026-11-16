@@ -4521,5 +4521,6 @@
   "euroPlayoffCourseNote": "De två bästa i varje grupp går direkt vidare. De sista platserna går till playoff för Nations Cups bästa lag som inte är klara. Som det ser ut nu:",
   "ncEuroPlayoffLegend": "Gul: på väg mot playoff till slutspelet",
   "euroPlayoffToFinal": "Till finalen",
-  "euroPlayoffQualified": "Kvalificerat"
+  "euroPlayoffQualified": "Kvalificerat",
+  "playerOtherPositions": "På varje position"
 }

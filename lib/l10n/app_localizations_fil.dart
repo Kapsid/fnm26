@@ -18111,4 +18111,7 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get euroPlayoffQualified => 'Pasok na';
+
+  @override
+  String get playerOtherPositions => 'Sa bawat posisyon';
 }

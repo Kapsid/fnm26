@@ -4521,5 +4521,6 @@
   "euroPlayoffCourseNote": "Los dos primeros de cada grupo se clasifican directamente. Las últimas plazas se juegan en una repesca entre los mejores de la Copa de las Naciones que no se clasificaron. Tal como está:",
   "ncEuroPlayoffLegend": "Amarillo: camino de la repesca para la fase final",
   "euroPlayoffToFinal": "A la final",
-  "euroPlayoffQualified": "Clasificado"
+  "euroPlayoffQualified": "Clasificado",
+  "playerOtherPositions": "En cada posición"
 }

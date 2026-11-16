@@ -18185,4 +18185,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get euroPlayoffQualified => 'Класира се';
+
+  @override
+  String get playerOtherPositions => 'Във всеки пост';
 }

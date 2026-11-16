@@ -4521,5 +4521,6 @@
   "euroPlayoffCourseNote": "Primele două din fiecare grupă se califică direct. Ultimele locuri se joacă în baraj între cele mai bune echipe din Cupa Națiunilor care nu s-au calificat. Situația acum:",
   "ncEuroPlayoffLegend": "Galben: pe drumul spre barajul turneului final",
   "euroPlayoffToFinal": "În finală",
-  "euroPlayoffQualified": "Calificată"
+  "euroPlayoffQualified": "Calificată",
+  "playerOtherPositions": "Pe fiecare post"
 }

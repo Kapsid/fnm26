@@ -4521,5 +4521,6 @@
   "euroPlayoffCourseNote": "Os dois primeiros de cada grupo apuram-se diretamente. Os últimos lugares decidem-se num play-off entre as melhores seleções da Copa das Nações ainda não apuradas. Neste momento:",
   "ncEuroPlayoffLegend": "Amarelo: a caminho do play-off da fase final",
   "euroPlayoffToFinal": "À final",
-  "euroPlayoffQualified": "Apurado"
+  "euroPlayoffQualified": "Apurado",
+  "playerOtherPositions": "Em cada posição"
 }

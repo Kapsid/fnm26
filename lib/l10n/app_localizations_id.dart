@@ -18009,4 +18009,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get euroPlayoffQualified => 'Lolos';
+
+  @override
+  String get playerOtherPositions => 'Di setiap posisi';
 }

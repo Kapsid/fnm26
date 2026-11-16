@@ -18007,4 +18007,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get euroPlayoffQualified => 'क्वालीफ़ाई';
+
+  @override
+  String get playerOtherPositions => 'हर पोज़िशन पर';
 }

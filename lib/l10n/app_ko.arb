@@ -4521,5 +4521,6 @@
   "euroPlayoffCourseNote": "각 조 상위 2팀이 바로 진출합니다. 마지막 자리는 아직 진출하지 못한 네이션스컵 상위 팀들의 플레이오프로 결정됩니다. 현재 기준:",
   "ncEuroPlayoffLegend": "노란색: 본선 플레이오프 진출권",
   "euroPlayoffToFinal": "결승 진출",
-  "euroPlayoffQualified": "본선 진출"
+  "euroPlayoffQualified": "본선 진출",
+  "playerOtherPositions": "포지션별 능력치"
 }

@@ -17516,4 +17516,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get euroPlayoffQualified => '본선 진출';
+
+  @override
+  String get playerOtherPositions => '포지션별 능력치';
 }

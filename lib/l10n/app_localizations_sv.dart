@@ -18085,4 +18085,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get euroPlayoffQualified => 'Kvalificerat';
+
+  @override
+  String get playerOtherPositions => 'På varje position';
 }

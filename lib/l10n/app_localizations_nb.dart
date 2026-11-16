@@ -18095,4 +18095,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get euroPlayoffQualified => 'Kvalifisert';
+
+  @override
+  String get playerOtherPositions => 'På hver posisjon';
 }
