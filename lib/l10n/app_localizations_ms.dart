@@ -18032,4 +18032,18 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get matchElsewhereShout => 'GOL DI PERLAWANAN LAIN';
+
+  @override
+  String get assistantMatchTitle => 'Pembantu mengambil alih';
+
+  @override
+  String assistantMatchBody(String opponent) {
+    return 'Menentang $opponent, dia memakai skuad dan taktik anda. Tetapkan dahulu jika mahu.';
+  }
+
+  @override
+  String get assistantMatchPlay => 'Biar dia bermain';
+
+  @override
+  String get assistantMatchResult => 'Perlawanan pembantu';
 }

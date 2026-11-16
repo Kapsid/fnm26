@@ -18081,4 +18081,18 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get matchElsewhereShout => 'GOL SA IBANG LARO';
+
+  @override
+  String get assistantMatchTitle => 'Ang assistant ang hahawak';
+
+  @override
+  String assistantMatchBody(String opponent) {
+    return 'Laban sa $opponent, gagamitin niya ang iyong squad at taktika. Ayusin mo muna kung gusto mo.';
+  }
+
+  @override
+  String get assistantMatchPlay => 'Hayaan siyang maglaro';
+
+  @override
+  String get assistantMatchResult => 'Ang laro ng assistant';
 }

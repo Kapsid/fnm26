@@ -33,6 +33,8 @@ import 'package:fnm/features/squad/grievance_sheet.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/adaptive_sheet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
+import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/features/hub/assistant_match.dart';
 import 'package:go_router/go_router.dart';
 
 /// Whether a world-simulating step started by a hub action is running.
@@ -126,10 +128,7 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
         !failed &&
         event?.kind == HubEventKind.match &&
         hubNext?.round == Rounds.friendly;
-    void delegate() => _guarded(
-      context,
-      () => ref.read(seasonServiceProvider).advance(careerId),
-    );
+    void delegate() => _delegate(context);
     if (widget.compact) {
       if (assistant) {
         return Row(
@@ -222,6 +221,47 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
   /// became an unhandled async error, so the hub silently failed to move and
   /// the player was left tapping a button that looked dead. Now the error is
   /// recorded for Settings → Diagnostics and shown as a snackbar.
+  /// The friendly left to the assistant: first the sheet (the manager may
+  /// set his tactics, which the assistant plays), then the match simulated
+  /// as a skipped one is, then its result.
+  Future<void> _delegate(BuildContext context) async {
+    final hub = ref.read(hubDataProvider(careerId)).valueOrNull;
+    final next = hub?.next;
+    if (hub == null || next == null) return;
+    final mine = hub.career.nationId;
+    final opponentId = next.homeNationId == mine
+        ? next.awayNationId
+        : next.homeNationId;
+    final choice = await showModalBottomSheet<AssistantChoice>(
+      context: context,
+      backgroundColor: AppColors.surfaceContainer,
+      builder: (_) => AssistantMatchSheet(
+        opponent: hub.nations[opponentId]?.name ?? '',
+      ),
+    );
+    if (!context.mounted || choice == null) return;
+    if (choice == AssistantChoice.tactics) {
+      unawaited(context.push('${Routes.tactics}?careerId=$careerId'));
+      return;
+    }
+    _guarded(context, () async {
+      await ref.read(seasonServiceProvider).advance(careerId);
+      final result = await readAssistantResult(
+        ref.read(competitionRepositoryProvider),
+        ref.read(playerRepositoryProvider),
+        careerId: careerId,
+        nationId: mine,
+        fixtureId: next.id,
+      );
+      if (result == null || !context.mounted) return;
+      await showDialog<void>(
+        context: context,
+        builder: (_) =>
+            AssistantResultDialog(result: result, nations: hub.nations),
+      );
+    });
+  }
+
   void _guarded(BuildContext context, Future<void> Function() op) {
     // Read once: the notifier outlives this widget, `ref` does not.
     final busy = ref.read(hubActionBusyProvider(careerId).notifier);

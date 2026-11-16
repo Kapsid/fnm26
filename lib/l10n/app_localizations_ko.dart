@@ -17486,4 +17486,18 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get matchElsewhereShout => '다른 경기 골';
+
+  @override
+  String get assistantMatchTitle => '어시스턴트에게 맡기기';
+
+  @override
+  String assistantMatchBody(String opponent) {
+    return '$opponent전에서 당신의 선수단과 전술로 경기합니다. 원하면 먼저 설정하세요.';
+  }
+
+  @override
+  String get assistantMatchPlay => '맡기기';
+
+  @override
+  String get assistantMatchResult => '어시스턴트의 경기';
 }

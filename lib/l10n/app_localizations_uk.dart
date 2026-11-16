@@ -18400,4 +18400,18 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get matchElsewhereShout => 'ГОЛ В ІНШОМУ МАТЧІ';
+
+  @override
+  String get assistantMatchTitle => 'Матч веде асистент';
+
+  @override
+  String assistantMatchBody(String opponent) {
+    return 'Проти команди $opponent він грає вашим складом і вашою тактикою. За бажання спершу налаштуйте їх.';
+  }
+
+  @override
+  String get assistantMatchPlay => 'Нехай грає';
+
+  @override
+  String get assistantMatchResult => 'Матч асистента';
 }

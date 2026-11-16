@@ -4512,5 +4512,9 @@
   "yPlayoffDrawn1": "{competition}のプレーオフは{opponent}と。一発勝負、すべてが懸かる。",
   "yPlayoffDrawn2": "プレーオフは{opponent}。もう横にならないと無理。{competition}、待ってろ。たぶん。",
   "yPlayoffDrawn3": "プレーオフ抽選：{opponent}。勝てば{competition}はもう目の前だ。",
-  "matchElsewhereShout": "他会場でゴール"
+  "matchElsewhereShout": "他会場でゴール",
+  "assistantMatchTitle": "アシスタントに任せる",
+  "assistantMatchBody": "{opponent}戦では、あなたのメンバーと戦術で戦います。必要なら先に設定してください。",
+  "assistantMatchPlay": "任せる",
+  "assistantMatchResult": "アシスタントの試合"
 }

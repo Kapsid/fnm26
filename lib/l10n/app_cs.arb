@@ -4512,5 +4512,9 @@
   "yPlayoffDrawn1": "V baráži o {competition} nás čeká {opponent}. Jeden duel, všechno na kartě.",
   "yPlayoffDrawn2": "{opponent} v baráži. Už teď si musím lehnout. {competition}, jedeme. Možná.",
   "yPlayoffDrawn3": "Los baráže: {opponent}. Porazíme je a {competition} je na dosah.",
-  "matchElsewhereShout": "GÓL JINDE"
+  "matchElsewhereShout": "GÓL JINDE",
+  "assistantMatchTitle": "Zápas vede asistent",
+  "assistantMatchBody": "Proti týmu {opponent} nasadí vaši sestavu a vaši taktiku. Chcete-li, nejdřív je upravte.",
+  "assistantMatchPlay": "Ať hraje",
+  "assistantMatchResult": "Zápas pod vedením asistenta"
 }

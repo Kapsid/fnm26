@@ -4512,5 +4512,9 @@
   "yPlayoffDrawn1": "Vai ser {opponent} no play-off para {competition}. Um confronto, tudo em jogo.",
   "yPlayoffDrawn2": "{opponent} no play-off. Já preciso me deitar. {competition}, lá vamos nós. Talvez.",
   "yPlayoffDrawn3": "Sorteio do play-off: {opponent}. Vencemos e {competition} fica ao alcance da mão.",
-  "matchElsewhereShout": "GOLO NOUTRO JOGO"
+  "matchElsewhereShout": "GOLO NOUTRO JOGO",
+  "assistantMatchTitle": "O adjunto assume",
+  "assistantMatchBody": "Contra {opponent} ele joga com o seu plantel e a sua tática. Ajuste-os antes, se quiser.",
+  "assistantMatchPlay": "Deixá-lo jogar",
+  "assistantMatchResult": "O jogo do adjunto"
 }

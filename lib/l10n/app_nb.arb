@@ -4512,5 +4512,9 @@
   "yPlayoffDrawn1": "Det blir {opponent} i playoff til {competition}. Én kamp, alt står på spill.",
   "yPlayoffDrawn2": "{opponent} i playoff. Jeg må allerede legge meg ned. {competition}, her kommer vi. Kanskje.",
   "yPlayoffDrawn3": "Playoff-trekning: {opponent}. Slår vi dem, er {competition} innen rekkevidde.",
-  "matchElsewhereShout": "MÅL ANDRE STEDER"
+  "matchElsewhereShout": "MÅL ANDRE STEDER",
+  "assistantMatchTitle": "Assistenten tar den",
+  "assistantMatchBody": "Mot {opponent} spiller han med din tropp og din taktikk. Still dem inn først om du vil.",
+  "assistantMatchPlay": "La ham spille",
+  "assistantMatchResult": "Assistentens kamp"
 }

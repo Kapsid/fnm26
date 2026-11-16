@@ -4512,5 +4512,9 @@
   "yPlayoffDrawn1": "Avem {opponent} în barajul pentru {competition}. O dublă, totul e în joc.",
   "yPlayoffDrawn2": "{opponent} în baraj. Deja trebuie să mă întind. {competition}, venim. Poate.",
   "yPlayoffDrawn3": "Tragerea barajului: {opponent}. Îi batem și {competition} e la un pas.",
-  "matchElsewhereShout": "GOL ÎN ALT MECI"
+  "matchElsewhereShout": "GOL ÎN ALT MECI",
+  "assistantMatchTitle": "Preia secundul",
+  "assistantMatchBody": "Împotriva {opponent} joacă cu lotul și tactica ta. Setează-le întâi, dacă vrei.",
+  "assistantMatchPlay": "Lasă-l să joace",
+  "assistantMatchResult": "Meciul secundului"
 }

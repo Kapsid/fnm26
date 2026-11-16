@@ -18233,4 +18233,18 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get matchElsewhereShout => 'BUT AILLEURS';
+
+  @override
+  String get assistantMatchTitle => 'L\'adjoint s\'en charge';
+
+  @override
+  String assistantMatchBody(String opponent) {
+    return 'Contre $opponent, il joue avec votre effectif et votre tactique. Réglez-les d\'abord si vous le souhaitez.';
+  }
+
+  @override
+  String get assistantMatchPlay => 'Qu\'il joue';
+
+  @override
+  String get assistantMatchResult => 'Le match de l\'adjoint';
 }

@@ -18411,4 +18411,18 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get matchElsewhereShout => 'GOL NA DRUGOM TERENU';
+
+  @override
+  String get assistantMatchTitle => 'Utakmicu vodi pomoćnik';
+
+  @override
+  String assistantMatchBody(String opponent) {
+    return 'Protiv momčadi $opponent igra s vašim sastavom i vašom taktikom. Ako želite, prvo ih podesite.';
+  }
+
+  @override
+  String get assistantMatchPlay => 'Neka igra';
+
+  @override
+  String get assistantMatchResult => 'Pomoćnikova utakmica';
 }

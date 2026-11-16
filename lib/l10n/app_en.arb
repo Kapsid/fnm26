@@ -27895,5 +27895,26 @@
   "matchElsewhereShout": "GOAL ELSEWHERE",
   "@matchElsewhereShout": {
     "description": "Live match banner: a goal has just gone in in one of the day's other matches (same group or round). Short, uppercase."
+  },
+  "assistantMatchTitle": "The assistant takes it",
+  "@assistantMatchTitle": {
+    "description": "Sheet over the hub: the manager leaves a friendly to his assistant."
+  },
+  "assistantMatchBody": "Against {opponent} he plays your squad and your tactics. Set them first if you like.",
+  "@assistantMatchBody": {
+    "description": "Sheet body: the assistant uses the manager's own line-up and tactics; the manager may change them before.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantMatchPlay": "Let him play",
+  "@assistantMatchPlay": {
+    "description": "Sheet button: the assistant plays the friendly now."
+  },
+  "assistantMatchResult": "The assistant's match",
+  "@assistantMatchResult": {
+    "description": "Dialog title over the result of a friendly the assistant played."
   }
 }

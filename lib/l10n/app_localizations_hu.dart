@@ -18014,4 +18014,18 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get matchElsewhereShout => 'GÓL MÁSHOL';
+
+  @override
+  String get assistantMatchTitle => 'A segítő viszi a meccset';
+
+  @override
+  String assistantMatchBody(String opponent) {
+    return 'A(z) $opponent ellen a te keretedet és taktikádat játssza. Ha szeretnéd, előbb állítsd be őket.';
+  }
+
+  @override
+  String get assistantMatchPlay => 'Hadd játsszon';
+
+  @override
+  String get assistantMatchResult => 'A segítő meccse';
 }

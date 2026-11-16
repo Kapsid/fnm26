@@ -18170,4 +18170,18 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get matchElsewhereShout => 'GOLO NOUTRO JOGO';
+
+  @override
+  String get assistantMatchTitle => 'O adjunto assume';
+
+  @override
+  String assistantMatchBody(String opponent) {
+    return 'Contra $opponent ele joga com o seu plantel e a sua tática. Ajuste-os antes, se quiser.';
+  }
+
+  @override
+  String get assistantMatchPlay => 'Deixá-lo jogar';
+
+  @override
+  String get assistantMatchResult => 'O jogo do adjunto';
 }

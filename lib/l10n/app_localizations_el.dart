@@ -18162,4 +18162,18 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get matchElsewhereShout => 'ΓΚΟΛ ΑΛΛΟΥ';
+
+  @override
+  String get assistantMatchTitle => 'Το αναλαμβάνει ο βοηθός';
+
+  @override
+  String assistantMatchBody(String opponent) {
+    return 'Απέναντι στην ομάδα $opponent παίζει με το ρόστερ και την τακτική σας. Ρυθμίστε τα πρώτα, αν θέλετε.';
+  }
+
+  @override
+  String get assistantMatchPlay => 'Ας παίξει';
+
+  @override
+  String get assistantMatchResult => 'Ο αγώνας του βοηθού';
 }

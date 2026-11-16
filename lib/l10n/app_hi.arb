@@ -4512,5 +4512,9 @@
   "yPlayoffDrawn1": "{competition} प्ले-ऑफ़ में {opponent} से मुकाबला। एक मैच, सब कुछ दाँव पर।",
   "yPlayoffDrawn2": "प्ले-ऑफ़ में {opponent}। मुझे अभी से लेटना पड़ेगा। {competition}, हम आ रहे हैं। शायद।",
   "yPlayoffDrawn3": "प्ले-ऑफ़ ड्रॉ: {opponent}। इन्हें हराया तो {competition} बस हाथ भर दूर।",
-  "matchElsewhereShout": "दूसरे मैच में गोल"
+  "matchElsewhereShout": "दूसरे मैच में गोल",
+  "assistantMatchTitle": "सहायक मैच संभालेंगे",
+  "assistantMatchBody": "{opponent} के ख़िलाफ़ वे आपकी टीम और आपकी रणनीति से खेलेंगे। चाहें तो पहले इन्हें सेट कर लें।",
+  "assistantMatchPlay": "उन्हें खेलने दें",
+  "assistantMatchResult": "सहायक का मैच"
 }

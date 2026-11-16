@@ -4512,5 +4512,9 @@
   "yPlayoffDrawn1": "เพลย์ออฟ{competition} เจอ{opponent} นัดเดียว ทุกอย่างอยู่ตรงนี้",
   "yPlayoffDrawn2": "{opponent} ในเพลย์ออฟ ฉันต้องนอนพักแล้ว {competition} เรามาแล้ว อาจจะนะ",
   "yPlayoffDrawn3": "จับสลากเพลย์ออฟ: {opponent} ชนะพวกเขาแล้ว{competition}ก็อยู่แค่เอื้อม",
-  "matchElsewhereShout": "ประตูจากสนามอื่น"
+  "matchElsewhereShout": "ประตูจากสนามอื่น",
+  "assistantMatchTitle": "ให้ผู้ช่วยคุมเกม",
+  "assistantMatchBody": "พบ {opponent} เขาจะใช้ทีมและแท็กติกของคุณ ตั้งค่าก่อนได้หากต้องการ",
+  "assistantMatchPlay": "ให้เขาคุม",
+  "assistantMatchResult": "เกมของผู้ช่วย"
 }

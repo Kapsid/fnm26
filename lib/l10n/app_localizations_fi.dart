@@ -18144,4 +18144,18 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get matchElsewhereShout => 'MAALI MUUALLA';
+
+  @override
+  String get assistantMatchTitle => 'Avustaja hoitaa ottelun';
+
+  @override
+  String assistantMatchBody(String opponent) {
+    return 'Vastaan $opponent hän pelaa sinun ryhmälläsi ja taktiikallasi. Säädä ne ensin, jos haluat.';
+  }
+
+  @override
+  String get assistantMatchPlay => 'Anna hänen pelata';
+
+  @override
+  String get assistantMatchResult => 'Avustajan ottelu';
 }

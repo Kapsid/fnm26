@@ -17977,4 +17977,18 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get matchElsewhereShout => 'दूसरे मैच में गोल';
+
+  @override
+  String get assistantMatchTitle => 'सहायक मैच संभालेंगे';
+
+  @override
+  String assistantMatchBody(String opponent) {
+    return '$opponent के ख़िलाफ़ वे आपकी टीम और आपकी रणनीति से खेलेंगे। चाहें तो पहले इन्हें सेट कर लें।';
+  }
+
+  @override
+  String get assistantMatchPlay => 'उन्हें खेलने दें';
+
+  @override
+  String get assistantMatchResult => 'सहायक का मैच';
 }

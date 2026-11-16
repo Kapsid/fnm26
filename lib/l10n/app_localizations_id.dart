@@ -17979,4 +17979,18 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get matchElsewhereShout => 'GOL DI LAGA LAIN';
+
+  @override
+  String get assistantMatchTitle => 'Asisten yang memimpin';
+
+  @override
+  String assistantMatchBody(String opponent) {
+    return 'Melawan $opponent, ia memakai skuad dan taktikmu. Atur dulu jika kamu mau.';
+  }
+
+  @override
+  String get assistantMatchPlay => 'Biarkan ia bermain';
+
+  @override
+  String get assistantMatchResult => 'Laga sang asisten';
 }

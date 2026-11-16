@@ -17916,4 +17916,18 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get matchElsewhereShout => 'BÀN THẮNG Ở TRẬN KHÁC';
+
+  @override
+  String get assistantMatchTitle => 'Để trợ lý dẫn dắt';
+
+  @override
+  String assistantMatchBody(String opponent) {
+    return 'Gặp $opponent, anh ấy dùng đội hình và chiến thuật của bạn. Hãy chỉnh trước nếu muốn.';
+  }
+
+  @override
+  String get assistantMatchPlay => 'Để anh ấy dẫn dắt';
+
+  @override
+  String get assistantMatchResult => 'Trận đấu của trợ lý';
 }
