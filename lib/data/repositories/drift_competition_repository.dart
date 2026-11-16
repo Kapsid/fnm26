@@ -1271,8 +1271,14 @@ class DriftCompetitionRepository implements CompetitionRepository {
     required DateTime groupStart,
     String round = 'GROUP',
     bool spaced = false,
+    int edition = 0,
+    List<DateTime>? matchdayDates,
   }) async {
-    final dateOf = _groupDating(draw, groupStart, spaced: spaced);
+    final dated = _groupDating(draw, groupStart, spaced: spaced);
+    DateTime dateOf(int gi, int matchday) =>
+        matchdayDates != null && matchday <= matchdayDates.length
+        ? matchdayDates[matchday - 1]
+        : dated(gi, matchday);
     await _db.transaction(() async {
       final compId = await _db
           .into(_db.competitions)
@@ -1283,6 +1289,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
               name: name,
               kind: Value(kind),
               cycle: Value(cycle),
+              edition: Value(edition),
             ),
           );
       for (final (gi, group) in draw.groups.indexed) {

@@ -15,6 +15,8 @@ import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
+import 'package:fnm/core/util/match_stage.dart';
 
 /// One line of a nation's record book: a player, his tally, and whether he is
 /// still playing — the same rule the pool retires on, so a record book reads
@@ -57,6 +59,10 @@ typedef RecordBook = ({
 String trophyTag(AppLocalizations l, String stored) {
   if (stored == 'World Championship') return l.matchTinyWorld;
   if (stored == 'Continental Clash') return l.matchTinyClash;
+  final regional = RegionalCups.byName(stored);
+  if (regional != null) {
+    return MatchStage.regionalCupLabel(l, regional, tiny: true);
+  }
   for (final e in ContinentalCups.byConfederation.entries) {
     if (e.value.name != stored) continue;
     return switch (e.key) {

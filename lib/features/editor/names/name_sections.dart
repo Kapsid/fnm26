@@ -29,6 +29,7 @@ import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/editor/players/players_ui.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 
 /// The editor sections that rename what the game names: each a list of
 /// (game name, the database's name) rows. Nations are not among them: their
@@ -304,6 +305,8 @@ List<NameGroup> nameGroups(
         for (var i = 0; i < NationsCups.allNames.length; i++)
           (NationsCups.allNames[i], NationsCups.confederations[i]),
         for (final s in kPackWorldCompetitions.skip(1)) (s, null),
+        for (final cup in RegionalCups.all)
+          (cup.name, RegionalCups.confederation),
       ];
       return one(
         _inDefaultWorld(

@@ -18012,4 +18012,81 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get playerOtherPositions => 'Di setiap posisi';
+
+  @override
+  String get compGulfCup => 'Piala Teluk';
+
+  @override
+  String get compSoutheastAsianChampionship => 'Kejuaraan Asia Tenggara';
+
+  @override
+  String get matchTinyGulfCup => 'Teluk';
+
+  @override
+  String get matchTinySoutheastAsia => 'ASTeng';
+
+  @override
+  String hubCallUpRegional(String cup) {
+    return 'Panggil skuad untuk $cup';
+  }
+
+  @override
+  String newsRegionalDrawTitle(String cup, String group) {
+    return '$cup: Grup $group';
+  }
+
+  @override
+  String newsRegionalDrawBody(String cup, String rivals) {
+    return 'Undian $cup sudah dilakukan. Pada bulan Desember Anda menghadapi $rivals.';
+  }
+
+  @override
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host) {
+    return 'Undian $cup sudah dilakukan. Pada bulan Desember Anda menghadapi $rivals, dengan $host sebagai tuan rumah.';
+  }
+
+  @override
+  String newsRegionalWonTitle(String cup) {
+    return '$cup dimenangkan!';
+  }
+
+  @override
+  String newsRegionalWonBody(String cup, String opponent, String score) {
+    return 'Anda menjuarai $cup setelah mengalahkan $opponent $score di final.';
+  }
+
+  @override
+  String get tourZoneGulf => 'TELUK';
+
+  @override
+  String get tourZoneSoutheastAsia => 'ASIA TENGGARA';
+
+  @override
+  String regionalCupNext(int year) {
+    return 'Edisi berikutnya dimainkan pada Desember $year.';
+  }
+
+  @override
+  String get regionalCupNoWinners => 'Belum ada juara.';
+
+  @override
+  String regionalCupEdition(String cup, int year) {
+    return '$cup $year';
+  }
+
+  @override
+  String regionalCupChampion(String name) {
+    return 'Juara: $name';
+  }
+
+  @override
+  String regionalCupHosted(String host) {
+    return 'Tuan rumah: $host';
+  }
+
+  @override
+  String get regionalCupHomeAndAway => 'Grup dimainkan kandang dan tandang';
+
+  @override
+  String get regionalCupGroups => 'GRUP';
 }

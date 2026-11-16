@@ -14,6 +14,7 @@ import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/features/onboarding/tour_keys.dart';
@@ -21,6 +22,7 @@ import 'package:fnm/features/tournaments/continental_clash_screen.dart';
 import 'package:fnm/features/tournaments/continental_detail_screen.dart';
 import 'package:fnm/features/tournaments/cup_detail_screen.dart';
 import 'package:fnm/features/tournaments/nations_cup_screen.dart';
+import 'package:fnm/features/tournaments/regional_cup_screen.dart';
 import 'package:fnm/features/tournaments/tournaments_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
@@ -112,12 +114,15 @@ String _zoneAfrica(AppLocalizations l) => l.tourZoneAfrica;
 String _zoneAsia(AppLocalizations l) => l.tourZoneAsia;
 String _zoneOceania(AppLocalizations l) => l.tourZoneOceania;
 String _zoneIntercontinental(AppLocalizations l) => l.tourZoneIntercontinental;
+String _zoneGulf(AppLocalizations l) => l.tourZoneGulf;
+String _zoneSoutheastAsia(AppLocalizations l) => l.tourZoneSoutheastAsia;
 
 /// What the overview can open.
-enum _PickKind { worldChampionship, continental, nationsCup, clash }
+enum _PickKind { worldChampionship, continental, nationsCup, clash, regional }
 
 /// One openable competition: its kind, and whose it is where that matters.
-typedef _Pick = ({_PickKind kind, Confederation? conf});
+/// [letter] names a regional cup.
+typedef _Pick = ({_PickKind kind, Confederation? conf, String? letter});
 
 /// One competition as both layouts list it: how its tile looks, where it
 /// stands, who won it, where its own page is, and what the tablet opens.
@@ -280,6 +285,7 @@ class TournamentsScreen extends ConsumerWidget {
             ? _PickKind.worldChampionship
             : _PickKind.continental,
         conf: conf,
+        letter: null,
       ),
     );
   }
@@ -308,7 +314,7 @@ class TournamentsScreen extends ConsumerWidget {
       championCode: overview.nations[status.championId]?.code,
       championYear: status.championId == null ? null : status.championYear,
       route: '${Routes.nationsCup}?careerId=$careerId&conf=${conf.name}',
-      pick: (kind: _PickKind.nationsCup, conf: conf),
+      pick: (kind: _PickKind.nationsCup, conf: conf, letter: null),
     );
   }
 
@@ -337,8 +343,35 @@ class TournamentsScreen extends ConsumerWidget {
         ? null
         : overview.continentalClash!.championYear,
     route: '${Routes.continentalClash}?careerId=$careerId',
-    pick: (kind: _PickKind.clash, conf: null),
+    pick: (kind: _PickKind.clash, conf: null, letter: null),
   );
+
+  /// A regional cup's tile.
+  static _Spec _regionalSpec(
+    int careerId,
+    TournamentsOverview overview,
+    RegionalCup cup,
+  ) {
+    final status = overview.regionalCups[cup.name];
+    final champ = status?.championId;
+    return (
+      championship: _Championship(
+        name: cup.name,
+        zone: cup.index == RegionalCups.gulf.index
+            ? _zoneGulf
+            : _zoneSoutheastAsia,
+        icon: cup.index == RegionalCups.gulf.index
+            ? Icons.waves_rounded
+            : Icons.forest_rounded,
+      ),
+      status: status,
+      championName: champ == null ? null : overview.nations[champ]?.name,
+      championCode: champ == null ? null : overview.nations[champ]?.code,
+      championYear: champ == null ? null : status?.championYear,
+      route: '${Routes.regionalCup}?careerId=$careerId&cup=${cup.letter}',
+      pick: (kind: _PickKind.regional, conf: null, letter: cup.letter),
+    );
+  }
 
   /// Your competitions: the World Championship and your own continental cup,
   /// your Nations Cup, and the Continental Clash when your nation is one of
@@ -361,6 +394,10 @@ class TournamentsScreen extends ConsumerWidget {
       // nation is one of the two entrants; otherwise it drops to the others.
       if (overview?.continentalClash != null && overview!.clashInvolvesPlayer)
         _clashSpec(careerId, overview),
+      if (overview != null)
+        for (final cup in RegionalCups.all)
+          if (overview.regionalMine.contains(cup.name))
+            _regionalSpec(careerId, overview, cup),
     ];
   }
 
@@ -377,6 +414,10 @@ class TournamentsScreen extends ConsumerWidget {
           _nationsCupSpec(careerId, overview, e.key, e.value),
       if (overview?.continentalClash != null && !overview!.clashInvolvesPlayer)
         _clashSpec(careerId, overview),
+      if (overview != null)
+        for (final cup in RegionalCups.all)
+          if (!overview.regionalMine.contains(cup.name))
+            _regionalSpec(careerId, overview, cup),
     ];
   }
 

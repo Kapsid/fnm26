@@ -12,6 +12,8 @@ import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/core/util/match_stage.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/data/data_providers.dart';
@@ -164,6 +166,10 @@ const worldCupPlayoffKind = 'worldCupPlayoff';
 /// finals are named for the finals, not as a friendly window.
 String _callUpLabel(AppLocalizations l, Fixture f) {
   if (f.round == 'FRIENDLY') return l.hubCallUpFriendlies;
+  final regional = RegionalCups.ofRound(f.round);
+  if (regional != null) {
+    return l.hubCallUpRegional(MatchStage.regionalCupLabel(l, regional));
+  }
   // A later window of a campaign already under way.
   if ((f.round == null || f.round == 'CQ') && f.matchday > 1) {
     return l.hubCallUpRequalify;

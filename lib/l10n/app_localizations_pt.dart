@@ -18204,4 +18204,81 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get playerOtherPositions => 'Em cada posição';
+
+  @override
+  String get compGulfCup => 'Taça do Golfo';
+
+  @override
+  String get compSoutheastAsianChampionship => 'Campeonato do Sudeste Asiático';
+
+  @override
+  String get matchTinyGulfCup => 'Golfo';
+
+  @override
+  String get matchTinySoutheastAsia => 'SEA';
+
+  @override
+  String hubCallUpRegional(String cup) {
+    return 'Convoque o plantel para o torneio $cup';
+  }
+
+  @override
+  String newsRegionalDrawTitle(String cup, String group) {
+    return '$cup: grupo $group';
+  }
+
+  @override
+  String newsRegionalDrawBody(String cup, String rivals) {
+    return 'O sorteio do torneio $cup foi realizado. Em dezembro você enfrenta $rivals.';
+  }
+
+  @override
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host) {
+    return 'O sorteio do torneio $cup foi realizado. Em dezembro você enfrenta $rivals, com $host como anfitrião.';
+  }
+
+  @override
+  String newsRegionalWonTitle(String cup) {
+    return '$cup conquistada!';
+  }
+
+  @override
+  String newsRegionalWonBody(String cup, String opponent, String score) {
+    return 'Você venceu o torneio $cup, derrotando $opponent por $score na final.';
+  }
+
+  @override
+  String get tourZoneGulf => 'GOLFO';
+
+  @override
+  String get tourZoneSoutheastAsia => 'SUDESTE ASIÁTICO';
+
+  @override
+  String regionalCupNext(int year) {
+    return 'A próxima edição é disputada em dezembro de $year.';
+  }
+
+  @override
+  String get regionalCupNoWinners => 'Ainda não há campeões.';
+
+  @override
+  String regionalCupEdition(String cup, int year) {
+    return '$cup $year';
+  }
+
+  @override
+  String regionalCupChampion(String name) {
+    return 'Campeão: $name';
+  }
+
+  @override
+  String regionalCupHosted(String host) {
+    return 'Anfitrião: $host';
+  }
+
+  @override
+  String get regionalCupHomeAndAway => 'Grupos disputados em casa e fora';
+
+  @override
+  String get regionalCupGroups => 'GRUPOS';
 }

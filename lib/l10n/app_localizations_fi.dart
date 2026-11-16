@@ -18178,4 +18178,83 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get playerOtherPositions => 'Eri pelipaikoilla';
+
+  @override
+  String get compGulfCup => 'Persianlahden cup';
+
+  @override
+  String get compSoutheastAsianChampionship =>
+      'Kaakkois-Aasian mestaruusturnaus';
+
+  @override
+  String get matchTinyGulfCup => 'Persianl.';
+
+  @override
+  String get matchTinySoutheastAsia => 'KA-Aasia';
+
+  @override
+  String hubCallUpRegional(String cup) {
+    return 'Nimeä joukkueesi turnaukseen $cup';
+  }
+
+  @override
+  String newsRegionalDrawTitle(String cup, String group) {
+    return '$cup: lohko $group';
+  }
+
+  @override
+  String newsRegionalDrawBody(String cup, String rivals) {
+    return 'Turnauksen $cup arvonta on tehty. Joulukuussa vastaan tulevat $rivals.';
+  }
+
+  @override
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host) {
+    return 'Turnauksen $cup arvonta on tehty. Joulukuussa vastaan tulevat $rivals, isäntänä $host.';
+  }
+
+  @override
+  String newsRegionalWonTitle(String cup) {
+    return '$cup voitettu!';
+  }
+
+  @override
+  String newsRegionalWonBody(String cup, String opponent, String score) {
+    return 'Voititte turnauksen $cup, finaalissa kaatui $opponent $score.';
+  }
+
+  @override
+  String get tourZoneGulf => 'PERSIANLAHTI';
+
+  @override
+  String get tourZoneSoutheastAsia => 'KAAKKOIS-AASIA';
+
+  @override
+  String regionalCupNext(int year) {
+    return 'Seuraava turnaus pelataan joulukuussa $year.';
+  }
+
+  @override
+  String get regionalCupNoWinners => 'Ei vielä voittajia.';
+
+  @override
+  String regionalCupEdition(String cup, int year) {
+    return '$cup $year';
+  }
+
+  @override
+  String regionalCupChampion(String name) {
+    return 'Voittaja: $name';
+  }
+
+  @override
+  String regionalCupHosted(String host) {
+    return 'Isäntä: $host';
+  }
+
+  @override
+  String get regionalCupHomeAndAway =>
+      'Lohkot pelataan koti- ja vierasotteluin';
+
+  @override
+  String get regionalCupGroups => 'LOHKOT';
 }

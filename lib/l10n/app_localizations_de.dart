@@ -18235,4 +18235,82 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get playerOtherPositions => 'Auf jeder Position';
+
+  @override
+  String get compGulfCup => 'Golfpokal';
+
+  @override
+  String get compSoutheastAsianChampionship => 'Südostasienmeisterschaft';
+
+  @override
+  String get matchTinyGulfCup => 'Golf';
+
+  @override
+  String get matchTinySoutheastAsia => 'SOA';
+
+  @override
+  String hubCallUpRegional(String cup) {
+    return 'Nominiere deinen Kader für den Wettbewerb $cup';
+  }
+
+  @override
+  String newsRegionalDrawTitle(String cup, String group) {
+    return '$cup: Gruppe $group';
+  }
+
+  @override
+  String newsRegionalDrawBody(String cup, String rivals) {
+    return 'Die Auslosung für den Wettbewerb $cup ist erfolgt. Im Dezember triffst du auf $rivals.';
+  }
+
+  @override
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host) {
+    return 'Die Auslosung für den Wettbewerb $cup ist erfolgt. Im Dezember triffst du auf $rivals, Gastgeber ist $host.';
+  }
+
+  @override
+  String newsRegionalWonTitle(String cup) {
+    return '$cup gewonnen!';
+  }
+
+  @override
+  String newsRegionalWonBody(String cup, String opponent, String score) {
+    return 'Du hast den Wettbewerb $cup gewonnen und im Finale $opponent mit $score geschlagen.';
+  }
+
+  @override
+  String get tourZoneGulf => 'GOLFREGION';
+
+  @override
+  String get tourZoneSoutheastAsia => 'SÜDOSTASIEN';
+
+  @override
+  String regionalCupNext(int year) {
+    return 'Die nächste Ausgabe wird im Dezember $year gespielt.';
+  }
+
+  @override
+  String get regionalCupNoWinners => 'Noch keine Sieger.';
+
+  @override
+  String regionalCupEdition(String cup, int year) {
+    return '$cup $year';
+  }
+
+  @override
+  String regionalCupChampion(String name) {
+    return 'Sieger: $name';
+  }
+
+  @override
+  String regionalCupHosted(String host) {
+    return 'Gastgeber: $host';
+  }
+
+  @override
+  String get regionalCupHomeAndAway =>
+      'Gruppenspiele mit Hin- und Rückspielort';
+
+  @override
+  String get regionalCupGroups => 'GRUPPEN';
 }

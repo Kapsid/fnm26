@@ -18188,4 +18188,81 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get playerOtherPositions => 'Във всеки пост';
+
+  @override
+  String get compGulfCup => 'Купа на Залива';
+
+  @override
+  String get compSoutheastAsianChampionship => 'Първенство на Югоизточна Азия';
+
+  @override
+  String get matchTinyGulfCup => 'Залив';
+
+  @override
+  String get matchTinySoutheastAsia => 'ЮИА';
+
+  @override
+  String hubCallUpRegional(String cup) {
+    return 'Повикай състава за турнира $cup';
+  }
+
+  @override
+  String newsRegionalDrawTitle(String cup, String group) {
+    return '$cup: група $group';
+  }
+
+  @override
+  String newsRegionalDrawBody(String cup, String rivals) {
+    return 'Жребият за турнира $cup е изтеглен. През декември срещате $rivals.';
+  }
+
+  @override
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host) {
+    return 'Жребият за турнира $cup е изтеглен. През декември срещате $rivals, домакин е $host.';
+  }
+
+  @override
+  String newsRegionalWonTitle(String cup) {
+    return '$cup е спечелена!';
+  }
+
+  @override
+  String newsRegionalWonBody(String cup, String opponent, String score) {
+    return 'Спечелихте турнира $cup, побеждавайки $opponent с $score на финала.';
+  }
+
+  @override
+  String get tourZoneGulf => 'ЗАЛИВЪТ';
+
+  @override
+  String get tourZoneSoutheastAsia => 'ЮГОИЗТОЧНА АЗИЯ';
+
+  @override
+  String regionalCupNext(int year) {
+    return 'Следващото издание се играе през декември $year.';
+  }
+
+  @override
+  String get regionalCupNoWinners => 'Все още няма победители.';
+
+  @override
+  String regionalCupEdition(String cup, int year) {
+    return '$cup $year';
+  }
+
+  @override
+  String regionalCupChampion(String name) {
+    return 'Победител: $name';
+  }
+
+  @override
+  String regionalCupHosted(String host) {
+    return 'Домакин: $host';
+  }
+
+  @override
+  String get regionalCupHomeAndAway => 'Групите се играят като домакин и гост';
+
+  @override
+  String get regionalCupGroups => 'ГРУПИ';
 }

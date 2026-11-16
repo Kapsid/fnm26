@@ -8,6 +8,7 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -20,10 +21,41 @@ import 'package:fnm/l10n/app_localizations.dart';
 /// Czech save doesn't say "WC FINALS · QUARTER-FINAL" on the one screen that
 /// matters most and "ČTVRTFINÁLE" on the next.
 abstract final class MatchStage {
+  /// A regional cup's round as the stage it is: `G` group, `S` semi-final,
+  /// `F` final, with the leg (0 for a one-off), or null for any other round.
+  static ({String stage, int leg})? _regional(String? round) {
+    final cup = RegionalCups.ofRound(round);
+    if (cup == null) return null;
+    final r = RegionalCups.roundsOf(cup);
+    return switch (round) {
+      _ when round == r.group => (stage: 'G', leg: 0),
+      _ when round == r.semi => (stage: 'S', leg: 0),
+      _ when round == r.semiLeg1 => (stage: 'S', leg: 1),
+      _ when round == r.semiLeg2 => (stage: 'S', leg: 2),
+      _ when round == r.finalRound => (stage: 'F', leg: 0),
+      _ when round == r.finalLeg1 => (stage: 'F', leg: 1),
+      _ when round == r.finalLeg2 => (stage: 'F', leg: 2),
+      _ => null,
+    };
+  }
+
+  /// A regional cup's name, translated: its short form when [tiny].
+  static String regionalCupLabel(
+    AppLocalizations l,
+    RegionalCup cup, {
+    bool tiny = false,
+  }) => cup.index == RegionalCups.gulf.index
+      ? (tiny ? l.matchTinyGulfCup : l.compGulfCup)
+      : (tiny ? l.matchTinySoutheastAsia : l.compSoutheastAsianChampionship);
+
   /// The short column heading for a knockout round in a visual bracket
   /// ("QF", "čtvrtf."). Unknown codes are returned as they are.
   static String ladderLabel(AppLocalizations l, String round) =>
       switch (round) {
+        _ when _regional(round) != null =>
+          _regional(round)!.stage == 'F'
+              ? l.matchTinyFinal
+              : l.matchTinySemiFinal,
         'R32' => l.matchTinyRoundOf32,
         'R16' || 'NR16' || 'CR16' => l.matchTinyRoundOf16,
         'QF' || 'NQF' || 'CQF' => l.matchTinyQuarterFinal,
@@ -54,6 +86,7 @@ abstract final class MatchStage {
   /// The round on its own ("Quarter-final"). Unknown codes are returned as
   /// they are, which is what an untranslated new competition should show.
   static String stage(AppLocalizations l, String? round) => switch (round) {
+    _ when _regional(round) != null => _regionalStage(l, _regional(round)!),
     null || 'CQ' => l.resultsStageQualifier,
     'FRIENDLY' => l.resultsStageFriendly,
     'NL' || 'NGROUP' => l.resultsStageGroupStage,
@@ -86,6 +119,22 @@ abstract final class MatchStage {
     _ => round,
   };
 
+  static String _regionalStage(
+    AppLocalizations l,
+    ({String stage, int leg}) r,
+  ) {
+    final base = switch (r.stage) {
+      'G' => l.resultsStageGroupStage,
+      'S' => l.resultsStageSemiFinal,
+      _ => l.resultsStageFinal,
+    };
+    return switch (r.leg) {
+      1 => '$base, ${l.matchTinyFirstLeg}',
+      2 => '$base, ${l.matchTinySecondLeg}',
+      _ => base,
+    };
+  }
+
   /// The competition a fixture belongs to, derived from its round code.
   ///
   /// On a custom world (see [ActiveWorld]) a competition the world renamed
@@ -97,6 +146,11 @@ abstract final class MatchStage {
     String? round, {
     Confederation? conf,
   }) {
+    final regional = RegionalCups.ofRound(round);
+    if (regional != null) {
+      return ActiveWorld.current.competition(regional.name) ??
+          regionalCupLabel(l, regional);
+    }
     final renamed = _renamedCategory(l, round, conf);
     if (renamed != null) return renamed;
     if (round == null) return l.resultsCategoryWorldCupQualifying;
@@ -230,6 +284,20 @@ abstract final class MatchStage {
       _ => null,
     };
     final matchday = l.matchTinyMatchday(f.matchday);
+    final regional = RegionalCups.ofRound(round);
+    if (regional != null) {
+      final r = _regional(round)!;
+      return (
+        competition: regionalCupLabel(l, regional, tiny: true),
+        stage: switch (r) {
+          (stage: 'G', leg: _) => null,
+          (stage: _, leg: 1) => l.matchTinyFirstLeg,
+          (stage: _, leg: 2) => l.matchTinySecondLeg,
+          (stage: 'S', leg: _) => l.matchTinySemiFinal,
+          _ => l.matchTinyFinal,
+        },
+      );
+    }
     return switch (round) {
       null => (
         competition: l.matchTinyQualifying(l.matchTinyWorld),
@@ -308,7 +376,8 @@ abstract final class MatchStage {
     }
     // A group game is just the competition: "· GROUP STAGE" adds nothing the
     // manager needs, and on the narrow cards it pushed the line over.
-    if (const {'GROUP', 'CGROUP', 'NGROUP', 'NL'}.contains(round)) {
+    if (const {'GROUP', 'CGROUP', 'NGROUP', 'NL'}.contains(round) ||
+        RegionalCups.isGroupRound(round)) {
       return category(l, round, conf: conf).capsIn(l.localeName);
     }
     return '${category(l, round, conf: conf).capsIn(l.localeName)} · '

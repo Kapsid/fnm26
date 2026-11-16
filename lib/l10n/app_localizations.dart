@@ -27373,6 +27373,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'In every position'**
   String get playerOtherPositions;
+
+  /// Competition name: the regional cup of the Gulf nations.
+  ///
+  /// In en, this message translates to:
+  /// **'Gulf Cup'**
+  String get compGulfCup;
+
+  /// Competition name: the regional championship of Southeast Asia.
+  ///
+  /// In en, this message translates to:
+  /// **'Southeast Asian Championship'**
+  String get compSoutheastAsianChampionship;
+
+  /// Very short tag for the Gulf Cup on small fixture tiles.
+  ///
+  /// In en, this message translates to:
+  /// **'Gulf'**
+  String get matchTinyGulfCup;
+
+  /// Very short tag for the Southeast Asian Championship on small fixture tiles.
+  ///
+  /// In en, this message translates to:
+  /// **'SEA'**
+  String get matchTinySoutheastAsia;
+
+  /// Hub call-up label before a regional cup (Gulf Cup, Southeast Asian Championship).
+  ///
+  /// In en, this message translates to:
+  /// **'Name your squad for the {cup}'**
+  String hubCallUpRegional(String cup);
+
+  /// Inbox title: the manager's side is drawn into a group of a regional cup.
+  ///
+  /// In en, this message translates to:
+  /// **'{cup}: Group {group}'**
+  String newsRegionalDrawTitle(String cup, String group);
+
+  /// Inbox body: the regional cup draw is made; who the manager meets in December.
+  ///
+  /// In en, this message translates to:
+  /// **'The {cup} draw is made. In December you meet {rivals}.'**
+  String newsRegionalDrawBody(String cup, String rivals);
+
+  /// Inbox body: the regional cup draw is made, with the host nation named.
+  ///
+  /// In en, this message translates to:
+  /// **'The {cup} draw is made. In December you meet {rivals}, with {host} hosting.'**
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host);
+
+  /// Inbox title: the manager's side won a regional cup.
+  ///
+  /// In en, this message translates to:
+  /// **'{cup} won!'**
+  String newsRegionalWonTitle(String cup);
+
+  /// Inbox body: the manager's side won a regional cup, beating the opponent in the final with this score (aggregate when two-legged).
+  ///
+  /// In en, this message translates to:
+  /// **'You won the {cup}, beating {opponent} {score} in the final.'**
+  String newsRegionalWonBody(String cup, String opponent, String score);
+
+  /// Competitions list: zone strap of the Gulf Cup (upper case like the other zone straps).
+  ///
+  /// In en, this message translates to:
+  /// **'GULF'**
+  String get tourZoneGulf;
+
+  /// Competitions list: zone strap of the Southeast Asian Championship (upper case like the other zone straps).
+  ///
+  /// In en, this message translates to:
+  /// **'SOUTHEAST ASIA'**
+  String get tourZoneSoutheastAsia;
+
+  /// Regional cup page before an edition is drawn: when the next one is played.
+  ///
+  /// In en, this message translates to:
+  /// **'The next edition is played in December {year}.'**
+  String regionalCupNext(int year);
+
+  /// Regional cup page, history tab: no winners on file yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No winners yet.'**
+  String get regionalCupNoWinners;
+
+  /// Regional cup page heading: the cup and the year of the edition shown.
+  ///
+  /// In en, this message translates to:
+  /// **'{cup} {year}'**
+  String regionalCupEdition(String cup, int year);
+
+  /// Regional cup page: who won the edition shown.
+  ///
+  /// In en, this message translates to:
+  /// **'Won by {name}'**
+  String regionalCupChampion(String name);
+
+  /// Regional cup page: the edition's host nation.
+  ///
+  /// In en, this message translates to:
+  /// **'Hosted by {host}'**
+  String regionalCupHosted(String host);
+
+  /// Regional cup page: the edition has no host; its groups are played home and away.
+  ///
+  /// In en, this message translates to:
+  /// **'Groups played home and away'**
+  String get regionalCupHomeAndAway;
+
+  /// Regional cup page: heading over the two group tables.
+  ///
+  /// In en, this message translates to:
+  /// **'GROUPS'**
+  String get regionalCupGroups;
 }
 
 class _AppLocalizationsDelegate

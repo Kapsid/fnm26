@@ -176,6 +176,10 @@ class AwardYear {
         return FinalsRounds.nationsCup.contains(round) ? 1.5 : 1.0;
       case CompetitionKind.finalissima:
         return 1.6;
+      // A regional cup: more than a friendly, a trophy, but not a
+      // championship.
+      case CompetitionKind.regionalCup:
+        return ko ? 1.3 : 1.0;
       case CompetitionKind.worldCupPlayoff:
       case CompetitionKind.continentalPlayoff:
       case CompetitionKind.worldCupPlayoffEurope:

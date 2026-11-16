@@ -18497,4 +18497,81 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get playerOtherPositions => 'Na jednotlivých postech';
+
+  @override
+  String get compGulfCup => 'Pohár Perského zálivu';
+
+  @override
+  String get compSoutheastAsianChampionship => 'Mistrovství jihovýchodní Asie';
+
+  @override
+  String get matchTinyGulfCup => 'Záliv';
+
+  @override
+  String get matchTinySoutheastAsia => 'JV Asie';
+
+  @override
+  String hubCallUpRegional(String cup) {
+    return 'Nominujte kádr na turnaj $cup';
+  }
+
+  @override
+  String newsRegionalDrawTitle(String cup, String group) {
+    return '$cup: skupina $group';
+  }
+
+  @override
+  String newsRegionalDrawBody(String cup, String rivals) {
+    return 'Los turnaje $cup je hotový. V prosinci se utkáte s týmy $rivals.';
+  }
+
+  @override
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host) {
+    return 'Los turnaje $cup je hotový. V prosinci se utkáte s týmy $rivals, pořádá $host.';
+  }
+
+  @override
+  String newsRegionalWonTitle(String cup) {
+    return 'Turnaj $cup je váš!';
+  }
+
+  @override
+  String newsRegionalWonBody(String cup, String opponent, String score) {
+    return 'Vyhráli jste turnaj $cup, ve finále jste porazili tým $opponent $score.';
+  }
+
+  @override
+  String get tourZoneGulf => 'PERSKÝ ZÁLIV';
+
+  @override
+  String get tourZoneSoutheastAsia => 'JIHOVÝCHODNÍ ASIE';
+
+  @override
+  String regionalCupNext(int year) {
+    return 'Další ročník se hraje v prosinci $year.';
+  }
+
+  @override
+  String get regionalCupNoWinners => 'Zatím žádní vítězové.';
+
+  @override
+  String regionalCupEdition(String cup, int year) {
+    return '$cup $year';
+  }
+
+  @override
+  String regionalCupChampion(String name) {
+    return 'Vítěz: $name';
+  }
+
+  @override
+  String regionalCupHosted(String host) {
+    return 'Pořadatel: $host';
+  }
+
+  @override
+  String get regionalCupHomeAndAway => 'Skupiny se hrají doma a venku';
+
+  @override
+  String get regionalCupGroups => 'SKUPINY';
 }

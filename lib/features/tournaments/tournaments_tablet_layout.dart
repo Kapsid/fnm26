@@ -64,7 +64,8 @@ class _TournamentsTabletLayoutState
               );
           Widget row(_Spec s) => _CompetitionListRow(
             key: Key(
-              'competition.${s.pick.kind.name}.${s.pick.conf?.name ?? 'world'}',
+              'competition.${s.pick.kind.name}.'
+              '${s.pick.conf?.name ?? s.pick.letter ?? 'world'}',
             ),
             spec: s,
             selected: s.pick == shown.pick,
@@ -140,6 +141,10 @@ class _TournamentsTabletLayoutState
         confederation: s.pick.conf,
       ),
       _PickKind.clash => ContinentalClashView(careerId: careerId),
+      _PickKind.regional => RegionalCupView(
+        careerId: careerId,
+        letter: s.pick.letter ?? RegionalCups.gulf.letter,
+      ),
     };
   }
 }

@@ -18183,4 +18183,82 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get playerOtherPositions => 'In ogni ruolo';
+
+  @override
+  String get compGulfCup => 'Coppa del Golfo';
+
+  @override
+  String get compSoutheastAsianChampionship =>
+      'Campionato del Sud-est asiatico';
+
+  @override
+  String get matchTinyGulfCup => 'Golfo';
+
+  @override
+  String get matchTinySoutheastAsia => 'SEA';
+
+  @override
+  String hubCallUpRegional(String cup) {
+    return 'Convoca la rosa per il torneo $cup';
+  }
+
+  @override
+  String newsRegionalDrawTitle(String cup, String group) {
+    return '$cup: girone $group';
+  }
+
+  @override
+  String newsRegionalDrawBody(String cup, String rivals) {
+    return 'Il sorteggio del torneo $cup è stato effettuato. A dicembre affronti $rivals.';
+  }
+
+  @override
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host) {
+    return 'Il sorteggio del torneo $cup è stato effettuato. A dicembre affronti $rivals, paese ospitante $host.';
+  }
+
+  @override
+  String newsRegionalWonTitle(String cup) {
+    return '$cup: è vostra!';
+  }
+
+  @override
+  String newsRegionalWonBody(String cup, String opponent, String score) {
+    return 'Hai vinto il torneo $cup battendo $opponent $score in finale.';
+  }
+
+  @override
+  String get tourZoneGulf => 'GOLFO';
+
+  @override
+  String get tourZoneSoutheastAsia => 'SUD-EST ASIATICO';
+
+  @override
+  String regionalCupNext(int year) {
+    return 'La prossima edizione si gioca a dicembre $year.';
+  }
+
+  @override
+  String get regionalCupNoWinners => 'Ancora nessun vincitore.';
+
+  @override
+  String regionalCupEdition(String cup, int year) {
+    return '$cup $year';
+  }
+
+  @override
+  String regionalCupChampion(String name) {
+    return 'Vincitore: $name';
+  }
+
+  @override
+  String regionalCupHosted(String host) {
+    return 'Paese ospitante: $host';
+  }
+
+  @override
+  String get regionalCupHomeAndAway => 'Gironi giocati in casa e in trasferta';
+
+  @override
+  String get regionalCupGroups => 'GIRONI';
 }

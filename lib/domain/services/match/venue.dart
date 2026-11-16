@@ -8,6 +8,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 import 'package:fnm/domain/services/competition/venues.dart';
 
 /// Where a match is played.
@@ -62,7 +63,8 @@ const _showpieceRounds = {'FINAL', 'CFINAL', '3RD', 'C3RD', _clashRound};
 /// game.
 bool isNeutralFinalsRound(String? round) =>
     round != null &&
-    (round == _clashRound ||
+    ((RegionalCups.ofRound(round)?.hosted ?? false) ||
+        round == _clashRound ||
         _wcFinalsRounds.contains(round) ||
         _icPlayoffRounds.contains(round) ||
         _confedPlayoffRounds.contains(round) ||
@@ -133,6 +135,25 @@ MatchVenue venueForFixture({
       hostId: 0,
       tournamentHostIds: host == 0 ? const <int>[] : <int>[host],
     );
+  }
+
+  // A hosted regional cup (the Gulf Cup): every match at the edition's host,
+  // which alone keeps its crowd. One played home and away falls through.
+  final regional = RegionalCups.ofRound(round);
+  if (regional != null && regional.hosted) {
+    final host = RegionalCups.hostOf(
+      regional,
+      fixture.date.year,
+      seed,
+      nations,
+    );
+    if (host != 0) {
+      final playingHost =
+          host == fixture.homeNationId || host == fixture.awayNationId
+          ? host
+          : 0;
+      return (neutral: true, hostId: playingHost, tournamentHostIds: [host]);
+    }
   }
 
   final isWc =

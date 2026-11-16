@@ -10,6 +10,7 @@ import '../federation/sponsors.dart';
 import '../press/y_feed.dart';
 import 'pack_rules.dart';
 import 'world_pack.dart';
+import '../competition/regional_cups.dart';
 
 /// The stored names of the competitions a database can rename that are not
 /// a continent's own: the World Championship first, the two inter-continental
@@ -28,6 +29,7 @@ List<String> get packCompetitionNames => [
   for (final cup in ContinentalCups.byConfederation.values) cup.name,
   ...NationsCups.allNames,
   ...kPackWorldCompetitions.skip(1),
+  for (final cup in RegionalCups.all) cup.name,
 ];
 
 /// What the current game has for a database's overrides to refer to: the

@@ -5,6 +5,7 @@ import 'package:drift/drift.dart' show Variable;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/features/world_managers/world_manager_providers.dart';
+import 'package:fnm/features/hub/hub_providers.dart' show regionalCupsEnabledProvider;
 
 import '../../story/driver.dart';
 
@@ -20,6 +21,8 @@ void main() {
     // Manager style off: the world managers' one effect on play.
     final c = storyContainer(db, 0, [
       worldManagerStyleEnabledProvider.overrideWithValue(false),
+      // And no regional cups (1.1.2): the world pinned before them.
+      regionalCupsEnabledProvider.overrideWithValue(false),
     ]);
     addTearDown(() async {
       c.dispose();

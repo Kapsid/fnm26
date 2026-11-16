@@ -18189,4 +18189,82 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get playerOtherPositions => 'Op elke positie';
+
+  @override
+  String get compGulfCup => 'Golfbeker';
+
+  @override
+  String get compSoutheastAsianChampionship =>
+      'Zuidoost-Aziatisch kampioenschap';
+
+  @override
+  String get matchTinyGulfCup => 'Golf';
+
+  @override
+  String get matchTinySoutheastAsia => 'ZOA';
+
+  @override
+  String hubCallUpRegional(String cup) {
+    return 'Kies je selectie voor het toernooi $cup';
+  }
+
+  @override
+  String newsRegionalDrawTitle(String cup, String group) {
+    return '$cup: groep $group';
+  }
+
+  @override
+  String newsRegionalDrawBody(String cup, String rivals) {
+    return 'De loting voor het toernooi $cup is verricht. In december speel je tegen $rivals.';
+  }
+
+  @override
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host) {
+    return 'De loting voor het toernooi $cup is verricht. In december speel je tegen $rivals, met $host als gastland.';
+  }
+
+  @override
+  String newsRegionalWonTitle(String cup) {
+    return '$cup gewonnen!';
+  }
+
+  @override
+  String newsRegionalWonBody(String cup, String opponent, String score) {
+    return 'Je hebt het toernooi $cup gewonnen door $opponent in de finale met $score te verslaan.';
+  }
+
+  @override
+  String get tourZoneGulf => 'GOLFREGIO';
+
+  @override
+  String get tourZoneSoutheastAsia => 'ZUIDOOST-AZIË';
+
+  @override
+  String regionalCupNext(int year) {
+    return 'De volgende editie wordt in december $year gespeeld.';
+  }
+
+  @override
+  String get regionalCupNoWinners => 'Nog geen winnaars.';
+
+  @override
+  String regionalCupEdition(String cup, int year) {
+    return '$cup $year';
+  }
+
+  @override
+  String regionalCupChampion(String name) {
+    return 'Winnaar: $name';
+  }
+
+  @override
+  String regionalCupHosted(String host) {
+    return 'Gastland: $host';
+  }
+
+  @override
+  String get regionalCupHomeAndAway => 'Groepen thuis en uit gespeeld';
+
+  @override
+  String get regionalCupGroups => 'GROEPEN';
 }

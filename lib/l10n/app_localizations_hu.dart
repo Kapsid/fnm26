@@ -18048,4 +18048,82 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get playerOtherPositions => 'Minden poszton';
+
+  @override
+  String get compGulfCup => 'Öböl-kupa';
+
+  @override
+  String get compSoutheastAsianChampionship => 'Délkelet-ázsiai bajnokság';
+
+  @override
+  String get matchTinyGulfCup => 'Öböl';
+
+  @override
+  String get matchTinySoutheastAsia => 'DK-Ázsia';
+
+  @override
+  String hubCallUpRegional(String cup) {
+    return 'Hirdesd ki a keretet a tornára ($cup)';
+  }
+
+  @override
+  String newsRegionalDrawTitle(String cup, String group) {
+    return '$cup: $group csoport';
+  }
+
+  @override
+  String newsRegionalDrawBody(String cup, String rivals) {
+    return 'Kisorsolták a tornát ($cup). Decemberben ellenfeleid: $rivals.';
+  }
+
+  @override
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host) {
+    return 'Kisorsolták a tornát ($cup). Decemberben ellenfeleid: $rivals. Házigazda: $host.';
+  }
+
+  @override
+  String newsRegionalWonTitle(String cup) {
+    return 'Megnyertétek: $cup!';
+  }
+
+  @override
+  String newsRegionalWonBody(String cup, String opponent, String score) {
+    return 'Megnyertétek a tornát ($cup), a döntőben $score a(z) $opponent ellen.';
+  }
+
+  @override
+  String get tourZoneGulf => 'ÖBÖL';
+
+  @override
+  String get tourZoneSoutheastAsia => 'DÉLKELET-ÁZSIA';
+
+  @override
+  String regionalCupNext(int year) {
+    return 'A következő torna $year decemberében lesz.';
+  }
+
+  @override
+  String get regionalCupNoWinners => 'Még nincs győztes.';
+
+  @override
+  String regionalCupEdition(String cup, int year) {
+    return '$cup $year';
+  }
+
+  @override
+  String regionalCupChampion(String name) {
+    return 'Győztes: $name';
+  }
+
+  @override
+  String regionalCupHosted(String host) {
+    return 'Házigazda: $host';
+  }
+
+  @override
+  String get regionalCupHomeAndAway =>
+      'A csoportkör oda-vissza, hazai és idegen pályán';
+
+  @override
+  String get regionalCupGroups => 'CSOPORTOK';
 }

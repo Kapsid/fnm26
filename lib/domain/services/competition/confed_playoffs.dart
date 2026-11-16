@@ -9,6 +9,7 @@ import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 
 /// A tie played over two legs: the second leg's home side was the first
 /// leg's away side, and the tie goes to the side ahead on aggregate. Level on
@@ -22,11 +23,14 @@ import 'package:fnm/domain/services/competition/qualification_format.dart';
 abstract final class TwoLegged {
   /// The second legs' round codes. A first leg is an ordinary match (a draw
   /// stands); only the second leg can need extra time.
-  static const Set<String> secondLegs = {ConfedPlayoffs.afc5Leg2};
+  /// Asia's fifth round, and the regional cups' two-legged semi-finals and
+  /// finals.
+  static final Set<String> secondLegs = {...firstLegOf.keys};
 
   /// Each second leg's first leg.
-  static const Map<String, String> firstLegOf = {
+  static final Map<String, String> firstLegOf = {
     ConfedPlayoffs.afc5Leg2: ConfedPlayoffs.afc5Leg1,
+    ...RegionalCups.firstLegOf,
   };
 
   /// Whether [round] is the second leg of a two-legged tie.

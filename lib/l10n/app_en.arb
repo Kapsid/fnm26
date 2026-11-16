@@ -27940,5 +27940,152 @@
   "playerOtherPositions": "In every position",
   "@playerOtherPositions": {
     "description": "Player page: block listing the rating the player plays at in each position (his own outlined), best first."
+  },
+  "compGulfCup": "Gulf Cup",
+  "@compGulfCup": {
+    "description": "Competition name: the regional cup of the Gulf nations."
+  },
+  "compSoutheastAsianChampionship": "Southeast Asian Championship",
+  "@compSoutheastAsianChampionship": {
+    "description": "Competition name: the regional championship of Southeast Asia."
+  },
+  "matchTinyGulfCup": "Gulf",
+  "@matchTinyGulfCup": {
+    "description": "Very short tag for the Gulf Cup on small fixture tiles."
+  },
+  "matchTinySoutheastAsia": "SEA",
+  "@matchTinySoutheastAsia": {
+    "description": "Very short tag for the Southeast Asian Championship on small fixture tiles."
+  },
+  "hubCallUpRegional": "Name your squad for the {cup}",
+  "@hubCallUpRegional": {
+    "description": "Hub call-up label before a regional cup (Gulf Cup, Southeast Asian Championship).",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      }
+    }
+  },
+  "newsRegionalDrawTitle": "{cup}: Group {group}",
+  "@newsRegionalDrawTitle": {
+    "description": "Inbox title: the manager's side is drawn into a group of a regional cup.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      },
+      "group": {
+        "type": "String"
+      }
+    }
+  },
+  "newsRegionalDrawBody": "The {cup} draw is made. In December you meet {rivals}.",
+  "@newsRegionalDrawBody": {
+    "description": "Inbox body: the regional cup draw is made; who the manager meets in December.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      },
+      "rivals": {
+        "type": "String"
+      }
+    }
+  },
+  "newsRegionalDrawBodyHosted": "The {cup} draw is made. In December you meet {rivals}, with {host} hosting.",
+  "@newsRegionalDrawBodyHosted": {
+    "description": "Inbox body: the regional cup draw is made, with the host nation named.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      },
+      "rivals": {
+        "type": "String"
+      },
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "newsRegionalWonTitle": "{cup} won!",
+  "@newsRegionalWonTitle": {
+    "description": "Inbox title: the manager's side won a regional cup.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      }
+    }
+  },
+  "newsRegionalWonBody": "You won the {cup}, beating {opponent} {score} in the final.",
+  "@newsRegionalWonBody": {
+    "description": "Inbox body: the manager's side won a regional cup, beating the opponent in the final with this score (aggregate when two-legged).",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      },
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "tourZoneGulf": "GULF",
+  "@tourZoneGulf": {
+    "description": "Competitions list: zone strap of the Gulf Cup (upper case like the other zone straps)."
+  },
+  "tourZoneSoutheastAsia": "SOUTHEAST ASIA",
+  "@tourZoneSoutheastAsia": {
+    "description": "Competitions list: zone strap of the Southeast Asian Championship (upper case like the other zone straps)."
+  },
+  "regionalCupNext": "The next edition is played in December {year}.",
+  "@regionalCupNext": {
+    "description": "Regional cup page before an edition is drawn: when the next one is played.",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "regionalCupNoWinners": "No winners yet.",
+  "@regionalCupNoWinners": {
+    "description": "Regional cup page, history tab: no winners on file yet."
+  },
+  "regionalCupEdition": "{cup} {year}",
+  "@regionalCupEdition": {
+    "description": "Regional cup page heading: the cup and the year of the edition shown.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "regionalCupChampion": "Won by {name}",
+  "@regionalCupChampion": {
+    "description": "Regional cup page: who won the edition shown.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "regionalCupHosted": "Hosted by {host}",
+  "@regionalCupHosted": {
+    "description": "Regional cup page: the edition's host nation.",
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "regionalCupHomeAndAway": "Groups played home and away",
+  "@regionalCupHomeAndAway": {
+    "description": "Regional cup page: the edition has no host; its groups are played home and away."
+  },
+  "regionalCupGroups": "GROUPS",
+  "@regionalCupGroups": {
+    "description": "Regional cup page: heading over the two group tables."
   }
 }

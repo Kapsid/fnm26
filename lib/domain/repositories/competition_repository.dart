@@ -613,6 +613,10 @@ abstract interface class CompetitionRepository {
   /// championship), labelling its fixtures [round] and spacing matchdays from
   /// [groupStart] (staggered by group when [spaced], as [saveFinals]).
   /// Creates the competition.
+  ///
+  /// [edition] numbers it among its kind in the cycle (a regional cup's
+  /// names the cup and its slot); [matchdayDates], when given, dates each
+  /// matchday (from 1) in place of the spacing from [groupStart].
   Future<void> saveTournamentGroups({
     required int careerId,
     required int cycle,
@@ -623,6 +627,8 @@ abstract interface class CompetitionRepository {
     required DateTime groupStart,
     String round = 'GROUP',
     bool spaced = false,
+    int edition = 0,
+    List<DateTime>? matchdayDates,
   });
 
   /// Group tables for the current cycle's tournament of [kind], ordered by

@@ -5,6 +5,7 @@
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
@@ -113,6 +114,8 @@ Map<String, String> _byEnglishName(AppLocalizations l) => {
   NationsCups.northAmerica: l.compNorthAmericaNationsCup,
   NationsCups.africa: l.compAfricanNationsCup,
   'Continental Clash': l.compContinentalClash,
+  RegionalCups.gulf.name: l.compGulfCup,
+  RegionalCups.southeastAsia.name: l.compSoutheastAsianChampionship,
   'Intercontinental Play-off': l.compIntercontinentalPlayoff,
   // Africa's, Asia's and Oceania's own qualifying play-off steps
   // (`ConfedPlayoffs.name`).

@@ -18088,4 +18088,81 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get playerOtherPositions => 'På varje position';
+
+  @override
+  String get compGulfCup => 'Gulfcupen';
+
+  @override
+  String get compSoutheastAsianChampionship => 'Sydostasiatiska mästerskapet';
+
+  @override
+  String get matchTinyGulfCup => 'Gulf';
+
+  @override
+  String get matchTinySoutheastAsia => 'SOA';
+
+  @override
+  String hubCallUpRegional(String cup) {
+    return 'Ta ut din trupp till turneringen $cup';
+  }
+
+  @override
+  String newsRegionalDrawTitle(String cup, String group) {
+    return '$cup: grupp $group';
+  }
+
+  @override
+  String newsRegionalDrawBody(String cup, String rivals) {
+    return 'Lottningen till turneringen $cup är klar. I december möter du $rivals.';
+  }
+
+  @override
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host) {
+    return 'Lottningen till turneringen $cup är klar. I december möter du $rivals, med $host som värd.';
+  }
+
+  @override
+  String newsRegionalWonTitle(String cup) {
+    return '$cup vunnen!';
+  }
+
+  @override
+  String newsRegionalWonBody(String cup, String opponent, String score) {
+    return 'Du har vunnit turneringen $cup efter $score mot $opponent i finalen.';
+  }
+
+  @override
+  String get tourZoneGulf => 'GULFEN';
+
+  @override
+  String get tourZoneSoutheastAsia => 'SYDOSTASIEN';
+
+  @override
+  String regionalCupNext(int year) {
+    return 'Nästa upplaga spelas i december $year.';
+  }
+
+  @override
+  String get regionalCupNoWinners => 'Inga vinnare än.';
+
+  @override
+  String regionalCupEdition(String cup, int year) {
+    return '$cup $year';
+  }
+
+  @override
+  String regionalCupChampion(String name) {
+    return 'Vinnare: $name';
+  }
+
+  @override
+  String regionalCupHosted(String host) {
+    return 'Värdland: $host';
+  }
+
+  @override
+  String get regionalCupHomeAndAway => 'Grupperna spelas hemma och borta';
+
+  @override
+  String get regionalCupGroups => 'GRUPPER';
 }

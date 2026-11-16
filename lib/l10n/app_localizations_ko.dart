@@ -17519,4 +17519,81 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get playerOtherPositions => '포지션별 능력치';
+
+  @override
+  String get compGulfCup => '걸프컵';
+
+  @override
+  String get compSoutheastAsianChampionship => '동남아시아 선수권';
+
+  @override
+  String get matchTinyGulfCup => '걸프';
+
+  @override
+  String get matchTinySoutheastAsia => '동남아';
+
+  @override
+  String hubCallUpRegional(String cup) {
+    return '$cup 소집 명단을 정하세요';
+  }
+
+  @override
+  String newsRegionalDrawTitle(String cup, String group) {
+    return '$cup: $group조';
+  }
+
+  @override
+  String newsRegionalDrawBody(String cup, String rivals) {
+    return '$cup 조 추첨이 끝났습니다. 12월에 $rivals와 맞붙습니다.';
+  }
+
+  @override
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host) {
+    return '$cup 조 추첨이 끝났습니다. 12월에 $rivals와 맞붙으며, 개최국은 $host입니다.';
+  }
+
+  @override
+  String newsRegionalWonTitle(String cup) {
+    return '$cup 우승!';
+  }
+
+  @override
+  String newsRegionalWonBody(String cup, String opponent, String score) {
+    return '$cup에서 우승했습니다. 결승에서 $opponent를 $score로 꺾었습니다.';
+  }
+
+  @override
+  String get tourZoneGulf => '걸프';
+
+  @override
+  String get tourZoneSoutheastAsia => '동남아시아';
+
+  @override
+  String regionalCupNext(int year) {
+    return '다음 대회는 $year년 12월에 열립니다.';
+  }
+
+  @override
+  String get regionalCupNoWinners => '아직 우승국이 없습니다.';
+
+  @override
+  String regionalCupEdition(String cup, int year) {
+    return '$cup $year';
+  }
+
+  @override
+  String regionalCupChampion(String name) {
+    return '우승: $name';
+  }
+
+  @override
+  String regionalCupHosted(String host) {
+    return '개최국: $host';
+  }
+
+  @override
+  String get regionalCupHomeAndAway => '조별리그는 홈 앤드 어웨이로 진행';
+
+  @override
+  String get regionalCupGroups => '조별리그';
 }

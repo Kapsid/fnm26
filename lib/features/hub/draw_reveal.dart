@@ -103,6 +103,8 @@ String? groupDrawKind(CompetitionKind kind) => switch (kind) {
   CompetitionKind.continentalPlayoff ||
   CompetitionKind.worldCupPlayoffEurope ||
   CompetitionKind.worldCupQualifyingPlayoff => null,
+  // A regional cup is drawn without a ceremony: its groups are news.
+  CompetitionKind.regionalCup => null,
 };
 
 /// Whether the draw for the player's next fixture has been watched, so the hub

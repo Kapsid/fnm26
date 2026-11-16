@@ -17795,4 +17795,81 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get playerOtherPositions => 'ในแต่ละตำแหน่ง';
+
+  @override
+  String get compGulfCup => 'กัลฟ์คัพ';
+
+  @override
+  String get compSoutheastAsianChampionship => 'ชิงแชมป์เอเชียตะวันออกเฉียงใต้';
+
+  @override
+  String get matchTinyGulfCup => 'กัลฟ์';
+
+  @override
+  String get matchTinySoutheastAsia => 'อาเซียน';
+
+  @override
+  String hubCallUpRegional(String cup) {
+    return 'เรียกตัวผู้เล่นสำหรับ $cup';
+  }
+
+  @override
+  String newsRegionalDrawTitle(String cup, String group) {
+    return '$cup: กลุ่ม $group';
+  }
+
+  @override
+  String newsRegionalDrawBody(String cup, String rivals) {
+    return 'จับสลาก $cup เรียบร้อยแล้ว เดือนธันวาคมคุณจะพบกับ $rivals';
+  }
+
+  @override
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host) {
+    return 'จับสลาก $cup เรียบร้อยแล้ว เดือนธันวาคมคุณจะพบกับ $rivals โดยมี $host เป็นเจ้าภาพ';
+  }
+
+  @override
+  String newsRegionalWonTitle(String cup) {
+    return 'คว้าแชมป์ $cup!';
+  }
+
+  @override
+  String newsRegionalWonBody(String cup, String opponent, String score) {
+    return 'คุณคว้าแชมป์ $cup โดยชนะ $opponent $score ในนัดชิงชนะเลิศ';
+  }
+
+  @override
+  String get tourZoneGulf => 'อ่าวเปอร์เซีย';
+
+  @override
+  String get tourZoneSoutheastAsia => 'เอเชียตะวันออกเฉียงใต้';
+
+  @override
+  String regionalCupNext(int year) {
+    return 'ครั้งต่อไปจะแข่งขันในเดือนธันวาคม $year';
+  }
+
+  @override
+  String get regionalCupNoWinners => 'ยังไม่มีแชมป์';
+
+  @override
+  String regionalCupEdition(String cup, int year) {
+    return '$cup $year';
+  }
+
+  @override
+  String regionalCupChampion(String name) {
+    return 'แชมป์: $name';
+  }
+
+  @override
+  String regionalCupHosted(String host) {
+    return 'เจ้าภาพ: $host';
+  }
+
+  @override
+  String get regionalCupHomeAndAway => 'รอบแบ่งกลุ่มเล่นในบ้านและนอกบ้าน';
+
+  @override
+  String get regionalCupGroups => 'กลุ่ม';
 }

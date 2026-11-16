@@ -18010,4 +18010,82 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get playerOtherPositions => 'हर पोज़िशन पर';
+
+  @override
+  String get compGulfCup => 'गल्फ़ कप';
+
+  @override
+  String get compSoutheastAsianChampionship => 'दक्षिण-पूर्व एशियाई चैंपियनशिप';
+
+  @override
+  String get matchTinyGulfCup => 'गल्फ़';
+
+  @override
+  String get matchTinySoutheastAsia => 'द.पू. एशिया';
+
+  @override
+  String hubCallUpRegional(String cup) {
+    return '$cup के लिए अपना दल चुनें';
+  }
+
+  @override
+  String newsRegionalDrawTitle(String cup, String group) {
+    return '$cup: ग्रुप $group';
+  }
+
+  @override
+  String newsRegionalDrawBody(String cup, String rivals) {
+    return '$cup का ड्रॉ हो गया है। दिसंबर में आपका सामना $rivals से होगा।';
+  }
+
+  @override
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host) {
+    return '$cup का ड्रॉ हो गया है। दिसंबर में आपका सामना $rivals से होगा, मेज़बान $host है।';
+  }
+
+  @override
+  String newsRegionalWonTitle(String cup) {
+    return '$cup जीत लिया!';
+  }
+
+  @override
+  String newsRegionalWonBody(String cup, String opponent, String score) {
+    return 'आपने $cup जीत लिया, फ़ाइनल में $opponent को $score से हराकर।';
+  }
+
+  @override
+  String get tourZoneGulf => 'खाड़ी';
+
+  @override
+  String get tourZoneSoutheastAsia => 'दक्षिण-पूर्व एशिया';
+
+  @override
+  String regionalCupNext(int year) {
+    return 'अगला संस्करण दिसंबर $year में खेला जाएगा।';
+  }
+
+  @override
+  String get regionalCupNoWinners => 'अभी तक कोई विजेता नहीं।';
+
+  @override
+  String regionalCupEdition(String cup, int year) {
+    return '$cup $year';
+  }
+
+  @override
+  String regionalCupChampion(String name) {
+    return 'विजेता: $name';
+  }
+
+  @override
+  String regionalCupHosted(String host) {
+    return 'मेज़बान: $host';
+  }
+
+  @override
+  String get regionalCupHomeAndAway =>
+      'ग्रुप घरेलू और बाहरी मैदान पर खेले जाते हैं';
+
+  @override
+  String get regionalCupGroups => 'ग्रुप';
 }

@@ -76,6 +76,7 @@ import 'package:fnm/features/stats/team_stats_screen.dart';
 import 'package:fnm/features/tactics/call_up_screen.dart';
 import 'package:fnm/features/tactics/tactics_screen.dart';
 import 'package:fnm/features/tournaments/continental_clash_screen.dart';
+import 'package:fnm/features/tournaments/regional_cup_screen.dart';
 import 'package:fnm/features/tournaments/continental_detail_screen.dart';
 import 'package:fnm/features/tournaments/continental_draw_screen.dart';
 import 'package:fnm/features/tournaments/cup_detail_screen.dart';
@@ -295,6 +296,7 @@ abstract final class Routes {
   /// The Continental Clash (champions-of-champions) detail. Expects
   /// `?careerId=`.
   static const continentalClash = '/continental-clash';
+  static const regionalCup = '/regional-cup';
 
   /// The list of campaigns, where an unmoved campaign's cycle ends.
   static const campaigns = '/campaigns';
@@ -1043,6 +1045,20 @@ final routerProvider = Provider<GoRouter>((ref) {
             ) ??
             0;
         return ContinentalClashScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.regionalCup,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return RegionalCupScreen(
+          careerId: id,
+          letter: state.uri.queryParameters['cup'] ?? 'G',
+        );
       },
     ),
     GoRoute(

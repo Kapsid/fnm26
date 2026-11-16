@@ -18014,4 +18014,81 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get playerOtherPositions => 'Her mevkide';
+
+  @override
+  String get compGulfCup => 'Körfez Kupası';
+
+  @override
+  String get compSoutheastAsianChampionship => 'Güneydoğu Asya Şampiyonası';
+
+  @override
+  String get matchTinyGulfCup => 'Körfez';
+
+  @override
+  String get matchTinySoutheastAsia => 'GDA';
+
+  @override
+  String hubCallUpRegional(String cup) {
+    return '$cup için kadronu belirle';
+  }
+
+  @override
+  String newsRegionalDrawTitle(String cup, String group) {
+    return '$cup: $group Grubu';
+  }
+
+  @override
+  String newsRegionalDrawBody(String cup, String rivals) {
+    return '$cup kuraları çekildi. Aralık ayında rakiplerin: $rivals.';
+  }
+
+  @override
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host) {
+    return '$cup kuraları çekildi. Aralık ayında rakiplerin: $rivals. Ev sahibi: $host.';
+  }
+
+  @override
+  String newsRegionalWonTitle(String cup) {
+    return '$cup kazanıldı!';
+  }
+
+  @override
+  String newsRegionalWonBody(String cup, String opponent, String score) {
+    return '$cup şampiyonu oldun, finalde $opponent karşısında $score.';
+  }
+
+  @override
+  String get tourZoneGulf => 'KÖRFEZ';
+
+  @override
+  String get tourZoneSoutheastAsia => 'GÜNEYDOĞU ASYA';
+
+  @override
+  String regionalCupNext(int year) {
+    return 'Bir sonraki turnuva Aralık $year tarihinde oynanacak.';
+  }
+
+  @override
+  String get regionalCupNoWinners => 'Henüz şampiyon yok.';
+
+  @override
+  String regionalCupEdition(String cup, int year) {
+    return '$cup $year';
+  }
+
+  @override
+  String regionalCupChampion(String name) {
+    return 'Şampiyon: $name';
+  }
+
+  @override
+  String regionalCupHosted(String host) {
+    return 'Ev sahibi: $host';
+  }
+
+  @override
+  String get regionalCupHomeAndAway => 'Gruplar iç saha ve deplasmanda oynanır';
+
+  @override
+  String get regionalCupGroups => 'GRUPLAR';
 }

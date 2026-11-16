@@ -18445,4 +18445,81 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get playerOtherPositions => 'Na svakoj poziciji';
+
+  @override
+  String get compGulfCup => 'Kup Zaljeva';
+
+  @override
+  String get compSoutheastAsianChampionship => 'Prvenstvo jugoistočne Azije';
+
+  @override
+  String get matchTinyGulfCup => 'Zaljev';
+
+  @override
+  String get matchTinySoutheastAsia => 'JI Azija';
+
+  @override
+  String hubCallUpRegional(String cup) {
+    return 'Pozovi momčad za turnir $cup';
+  }
+
+  @override
+  String newsRegionalDrawTitle(String cup, String group) {
+    return '$cup: skupina $group';
+  }
+
+  @override
+  String newsRegionalDrawBody(String cup, String rivals) {
+    return 'Ždrijeb turnira $cup je obavljen. U prosincu igrate protiv: $rivals.';
+  }
+
+  @override
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host) {
+    return 'Ždrijeb turnira $cup je obavljen. U prosincu igrate protiv: $rivals. Domaćin: $host.';
+  }
+
+  @override
+  String newsRegionalWonTitle(String cup) {
+    return '$cup osvojen!';
+  }
+
+  @override
+  String newsRegionalWonBody(String cup, String opponent, String score) {
+    return 'Osvojili ste turnir $cup, u finalu ste pobijedili $opponent $score.';
+  }
+
+  @override
+  String get tourZoneGulf => 'ZALJEV';
+
+  @override
+  String get tourZoneSoutheastAsia => 'JUGOISTOČNA AZIJA';
+
+  @override
+  String regionalCupNext(int year) {
+    return 'Sljedeće izdanje igra se u prosincu $year.';
+  }
+
+  @override
+  String get regionalCupNoWinners => 'Još nema pobjednika.';
+
+  @override
+  String regionalCupEdition(String cup, int year) {
+    return '$cup $year';
+  }
+
+  @override
+  String regionalCupChampion(String name) {
+    return 'Pobjednik: $name';
+  }
+
+  @override
+  String regionalCupHosted(String host) {
+    return 'Domaćin: $host';
+  }
+
+  @override
+  String get regionalCupHomeAndAway => 'Skupine se igraju kod kuće i u gostima';
+
+  @override
+  String get regionalCupGroups => 'SKUPINE';
 }

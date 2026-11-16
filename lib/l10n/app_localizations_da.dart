@@ -18103,4 +18103,81 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get playerOtherPositions => 'På hver position';
+
+  @override
+  String get compGulfCup => 'Golfcuppen';
+
+  @override
+  String get compSoutheastAsianChampionship => 'Sydøstasiatisk mesterskab';
+
+  @override
+  String get matchTinyGulfCup => 'Golf';
+
+  @override
+  String get matchTinySoutheastAsia => 'SØA';
+
+  @override
+  String hubCallUpRegional(String cup) {
+    return 'Udtag din trup til turneringen $cup';
+  }
+
+  @override
+  String newsRegionalDrawTitle(String cup, String group) {
+    return '$cup: gruppe $group';
+  }
+
+  @override
+  String newsRegionalDrawBody(String cup, String rivals) {
+    return 'Lodtrækningen til turneringen $cup er foretaget. I december møder I $rivals.';
+  }
+
+  @override
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host) {
+    return 'Lodtrækningen til turneringen $cup er foretaget. I december møder I $rivals, med $host som vært.';
+  }
+
+  @override
+  String newsRegionalWonTitle(String cup) {
+    return '$cup vundet!';
+  }
+
+  @override
+  String newsRegionalWonBody(String cup, String opponent, String score) {
+    return 'I har vundet turneringen $cup efter $score mod $opponent i finalen.';
+  }
+
+  @override
+  String get tourZoneGulf => 'GOLFEN';
+
+  @override
+  String get tourZoneSoutheastAsia => 'SYDØSTASIEN';
+
+  @override
+  String regionalCupNext(int year) {
+    return 'Næste udgave spilles i december $year.';
+  }
+
+  @override
+  String get regionalCupNoWinners => 'Ingen vindere endnu.';
+
+  @override
+  String regionalCupEdition(String cup, int year) {
+    return '$cup $year';
+  }
+
+  @override
+  String regionalCupChampion(String name) {
+    return 'Vinder: $name';
+  }
+
+  @override
+  String regionalCupHosted(String host) {
+    return 'Værtsland: $host';
+  }
+
+  @override
+  String get regionalCupHomeAndAway => 'Grupperne spilles hjemme og ude';
+
+  @override
+  String get regionalCupGroups => 'GRUPPER';
 }

@@ -17477,4 +17477,81 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get playerOtherPositions => '各ポジションでの評価';
+
+  @override
+  String get compGulfCup => 'ガルフカップ';
+
+  @override
+  String get compSoutheastAsianChampionship => '東南アジア選手権';
+
+  @override
+  String get matchTinyGulfCup => 'ガルフ';
+
+  @override
+  String get matchTinySoutheastAsia => '東南ア';
+
+  @override
+  String hubCallUpRegional(String cup) {
+    return '$cupの招集メンバーを決める';
+  }
+
+  @override
+  String newsRegionalDrawTitle(String cup, String group) {
+    return '$cup：グループ$group';
+  }
+
+  @override
+  String newsRegionalDrawBody(String cup, String rivals) {
+    return '$cupの組み合わせ抽選が行われた。12月の対戦相手は$rivals。';
+  }
+
+  @override
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host) {
+    return '$cupの組み合わせ抽選が行われた。12月の対戦相手は$rivals。開催国は$host。';
+  }
+
+  @override
+  String newsRegionalWonTitle(String cup) {
+    return '$cup優勝！';
+  }
+
+  @override
+  String newsRegionalWonBody(String cup, String opponent, String score) {
+    return '$cupで優勝した。決勝で$opponentに$scoreで勝利。';
+  }
+
+  @override
+  String get tourZoneGulf => '湾岸';
+
+  @override
+  String get tourZoneSoutheastAsia => '東南アジア';
+
+  @override
+  String regionalCupNext(int year) {
+    return '次回大会は$year年12月に開催される。';
+  }
+
+  @override
+  String get regionalCupNoWinners => 'まだ優勝国はない。';
+
+  @override
+  String regionalCupEdition(String cup, int year) {
+    return '$cup $year';
+  }
+
+  @override
+  String regionalCupChampion(String name) {
+    return '優勝：$name';
+  }
+
+  @override
+  String regionalCupHosted(String host) {
+    return '開催国：$host';
+  }
+
+  @override
+  String get regionalCupHomeAndAway => 'グループはホーム＆アウェーで開催';
+
+  @override
+  String get regionalCupGroups => 'グループ';
 }

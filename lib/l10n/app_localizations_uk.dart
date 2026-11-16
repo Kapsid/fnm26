@@ -18434,4 +18434,82 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get playerOtherPositions => 'На кожній позиції';
+
+  @override
+  String get compGulfCup => 'Кубок Перської затоки';
+
+  @override
+  String get compSoutheastAsianChampionship =>
+      'Чемпіонат Південно-Східної Азії';
+
+  @override
+  String get matchTinyGulfCup => 'Затока';
+
+  @override
+  String get matchTinySoutheastAsia => 'ПСА';
+
+  @override
+  String hubCallUpRegional(String cup) {
+    return 'Оголосіть склад на турнір $cup';
+  }
+
+  @override
+  String newsRegionalDrawTitle(String cup, String group) {
+    return '$cup: група $group';
+  }
+
+  @override
+  String newsRegionalDrawBody(String cup, String rivals) {
+    return 'Жеребкування турніру $cup відбулося. У грудні ви зіграєте з: $rivals.';
+  }
+
+  @override
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host) {
+    return 'Жеребкування турніру $cup відбулося. У грудні ви зіграєте з: $rivals. Господар: $host.';
+  }
+
+  @override
+  String newsRegionalWonTitle(String cup) {
+    return '$cup виграно!';
+  }
+
+  @override
+  String newsRegionalWonBody(String cup, String opponent, String score) {
+    return 'Ви виграли турнір $cup, перемігши у фіналі $opponent з рахунком $score.';
+  }
+
+  @override
+  String get tourZoneGulf => 'ПЕРСЬКА ЗАТОКА';
+
+  @override
+  String get tourZoneSoutheastAsia => 'ПІВДЕННО-СХІДНА АЗІЯ';
+
+  @override
+  String regionalCupNext(int year) {
+    return 'Наступний турнір пройде в грудні $year.';
+  }
+
+  @override
+  String get regionalCupNoWinners => 'Переможців поки немає.';
+
+  @override
+  String regionalCupEdition(String cup, int year) {
+    return '$cup $year';
+  }
+
+  @override
+  String regionalCupChampion(String name) {
+    return 'Переможець: $name';
+  }
+
+  @override
+  String regionalCupHosted(String host) {
+    return 'Господар: $host';
+  }
+
+  @override
+  String get regionalCupHomeAndAway => 'Групи грають удома та на виїзді';
+
+  @override
+  String get regionalCupGroups => 'ГРУПИ';
 }

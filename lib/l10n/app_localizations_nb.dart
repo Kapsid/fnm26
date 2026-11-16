@@ -18098,4 +18098,81 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get playerOtherPositions => 'På hver posisjon';
+
+  @override
+  String get compGulfCup => 'Gulfcupen';
+
+  @override
+  String get compSoutheastAsianChampionship => 'Sørøstasiatisk mesterskap';
+
+  @override
+  String get matchTinyGulfCup => 'Gulf';
+
+  @override
+  String get matchTinySoutheastAsia => 'SØA';
+
+  @override
+  String hubCallUpRegional(String cup) {
+    return 'Ta ut troppen til turneringen $cup';
+  }
+
+  @override
+  String newsRegionalDrawTitle(String cup, String group) {
+    return '$cup: gruppe $group';
+  }
+
+  @override
+  String newsRegionalDrawBody(String cup, String rivals) {
+    return 'Trekningen til turneringen $cup er gjort. I desember møter dere $rivals.';
+  }
+
+  @override
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host) {
+    return 'Trekningen til turneringen $cup er gjort. I desember møter dere $rivals, med $host som vertsland.';
+  }
+
+  @override
+  String newsRegionalWonTitle(String cup) {
+    return '$cup vunnet!';
+  }
+
+  @override
+  String newsRegionalWonBody(String cup, String opponent, String score) {
+    return 'Dere har vunnet turneringen $cup etter $score mot $opponent i finalen.';
+  }
+
+  @override
+  String get tourZoneGulf => 'GULFEN';
+
+  @override
+  String get tourZoneSoutheastAsia => 'SØRØST-ASIA';
+
+  @override
+  String regionalCupNext(int year) {
+    return 'Neste utgave spilles i desember $year.';
+  }
+
+  @override
+  String get regionalCupNoWinners => 'Ingen vinnere ennå.';
+
+  @override
+  String regionalCupEdition(String cup, int year) {
+    return '$cup $year';
+  }
+
+  @override
+  String regionalCupChampion(String name) {
+    return 'Vinner: $name';
+  }
+
+  @override
+  String regionalCupHosted(String host) {
+    return 'Vertsland: $host';
+  }
+
+  @override
+  String get regionalCupHomeAndAway => 'Gruppene spilles hjemme og borte';
+
+  @override
+  String get regionalCupGroups => 'GRUPPER';
 }

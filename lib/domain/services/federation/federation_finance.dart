@@ -193,6 +193,9 @@ abstract final class FederationFinance {
     NationsCups.northAmerica: 4000000,
     NationsCups.africa: 4000000,
     'Continental Clash': 3000000,
+    // The regional cups (`RegionalCups`).
+    'Gulf Cup': 1500000,
+    'Southeast Asian Championship': 1500000,
   };
 
   /// Prize money for a finished cycle: the deepest World Cup and continental

@@ -18136,4 +18136,81 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get playerOtherPositions => 'In every position';
+
+  @override
+  String get compGulfCup => 'Gulf Cup';
+
+  @override
+  String get compSoutheastAsianChampionship => 'Southeast Asian Championship';
+
+  @override
+  String get matchTinyGulfCup => 'Gulf';
+
+  @override
+  String get matchTinySoutheastAsia => 'SEA';
+
+  @override
+  String hubCallUpRegional(String cup) {
+    return 'Name your squad for the $cup';
+  }
+
+  @override
+  String newsRegionalDrawTitle(String cup, String group) {
+    return '$cup: Group $group';
+  }
+
+  @override
+  String newsRegionalDrawBody(String cup, String rivals) {
+    return 'The $cup draw is made. In December you meet $rivals.';
+  }
+
+  @override
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host) {
+    return 'The $cup draw is made. In December you meet $rivals, with $host hosting.';
+  }
+
+  @override
+  String newsRegionalWonTitle(String cup) {
+    return '$cup won!';
+  }
+
+  @override
+  String newsRegionalWonBody(String cup, String opponent, String score) {
+    return 'You won the $cup, beating $opponent $score in the final.';
+  }
+
+  @override
+  String get tourZoneGulf => 'GULF';
+
+  @override
+  String get tourZoneSoutheastAsia => 'SOUTHEAST ASIA';
+
+  @override
+  String regionalCupNext(int year) {
+    return 'The next edition is played in December $year.';
+  }
+
+  @override
+  String get regionalCupNoWinners => 'No winners yet.';
+
+  @override
+  String regionalCupEdition(String cup, int year) {
+    return '$cup $year';
+  }
+
+  @override
+  String regionalCupChampion(String name) {
+    return 'Won by $name';
+  }
+
+  @override
+  String regionalCupHosted(String host) {
+    return 'Hosted by $host';
+  }
+
+  @override
+  String get regionalCupHomeAndAway => 'Groups played home and away';
+
+  @override
+  String get regionalCupGroups => 'GROUPS';
 }

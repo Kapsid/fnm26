@@ -24,6 +24,7 @@ import 'package:fnm/features/federation/national_stadium_providers.dart'
     show stadiumWorks;
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 
 /// How many smaller nations from other continents join the offers at the end
 /// of a cycle, on top of the three read off the manager's standing.
@@ -324,6 +325,8 @@ int _reputation(Career career, Map<int, int> stints, List<Honour> honours) {
       case final name when NationsCups.isNationsCup(name):
         other++;
       case 'Continental Clash':
+        other++;
+      case final name when RegionalCups.names.contains(name):
         other++;
       default:
         cont++; // continental championships

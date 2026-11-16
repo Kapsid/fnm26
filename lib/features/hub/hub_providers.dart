@@ -43,6 +43,8 @@ import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
+import 'package:fnm/domain/services/competition/regional_history.dart';
 import 'package:fnm/domain/services/competition/tournament_calendar.dart';
 import 'package:fnm/domain/services/match/ai_substitutions.dart';
 import 'package:fnm/domain/services/competition/world_pedigree.dart';
@@ -163,6 +165,7 @@ part 'season_euro_playoffs.dart';
 part 'season_finals.dart';
 part 'season_wc_playoffs.dart';
 part 'season_confed_playoffs.dart';
+part 'season_regional_cups.dart';
 part 'season_rollover.dart';
 
 /// Everything the Hub screen needs for a save, in one fetch.

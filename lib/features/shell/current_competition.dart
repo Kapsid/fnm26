@@ -9,6 +9,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 
 /// The competition the managed nation is in right now, as the tablet
 /// sidebar's quick link: the stored (English) name, printed through
@@ -50,6 +51,13 @@ CurrentCompetition? currentCompetitionFor({
     return (
       name: n ?? 'Continental Clash',
       location: at(Routes.continentalClash),
+    );
+  }
+  final regional = RegionalCups.ofRound(round) ?? RegionalCups.byName(n);
+  if (regional != null) {
+    return (
+      name: regional.name,
+      location: '${at(Routes.regionalCup)}&cup=${regional.letter}',
     );
   }
   if (n == 'Intercontinental Play-off') {

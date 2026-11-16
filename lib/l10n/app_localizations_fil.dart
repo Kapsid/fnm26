@@ -18114,4 +18114,82 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get playerOtherPositions => 'Sa bawat posisyon';
+
+  @override
+  String get compGulfCup => 'Gulf Cup';
+
+  @override
+  String get compSoutheastAsianChampionship =>
+      'Kampeonato ng Timog-Silangang Asya';
+
+  @override
+  String get matchTinyGulfCup => 'Gulf';
+
+  @override
+  String get matchTinySoutheastAsia => 'TSA';
+
+  @override
+  String hubCallUpRegional(String cup) {
+    return 'Pangalanan ang squad mo para sa $cup';
+  }
+
+  @override
+  String newsRegionalDrawTitle(String cup, String group) {
+    return '$cup: Group $group';
+  }
+
+  @override
+  String newsRegionalDrawBody(String cup, String rivals) {
+    return 'Tapos na ang draw ng $cup. Sa Disyembre, makakaharap mo ang $rivals.';
+  }
+
+  @override
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host) {
+    return 'Tapos na ang draw ng $cup. Sa Disyembre, makakaharap mo ang $rivals, at $host ang host.';
+  }
+
+  @override
+  String newsRegionalWonTitle(String cup) {
+    return 'Panalo sa $cup!';
+  }
+
+  @override
+  String newsRegionalWonBody(String cup, String opponent, String score) {
+    return 'Nanalo ka sa $cup, tinalo ang $opponent $score sa final.';
+  }
+
+  @override
+  String get tourZoneGulf => 'GULF';
+
+  @override
+  String get tourZoneSoutheastAsia => 'TIMOG-SILANGANG ASYA';
+
+  @override
+  String regionalCupNext(int year) {
+    return 'Lalaruin ang susunod na edisyon sa Disyembre $year.';
+  }
+
+  @override
+  String get regionalCupNoWinners => 'Wala pang nanalo.';
+
+  @override
+  String regionalCupEdition(String cup, int year) {
+    return '$cup $year';
+  }
+
+  @override
+  String regionalCupChampion(String name) {
+    return 'Nanalo: $name';
+  }
+
+  @override
+  String regionalCupHosted(String host) {
+    return 'Host: $host';
+  }
+
+  @override
+  String get regionalCupHomeAndAway => 'Ang grupo ay nilalaro sa home at away';
+
+  @override
+  String get regionalCupGroups => 'MGA GROUP';
 }

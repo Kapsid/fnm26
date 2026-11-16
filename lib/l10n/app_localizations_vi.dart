@@ -17950,4 +17950,81 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get playerOtherPositions => 'Ở từng vị trí';
+
+  @override
+  String get compGulfCup => 'Cúp vùng Vịnh';
+
+  @override
+  String get compSoutheastAsianChampionship => 'Giải vô địch Đông Nam Á';
+
+  @override
+  String get matchTinyGulfCup => 'Vịnh';
+
+  @override
+  String get matchTinySoutheastAsia => 'ĐNA';
+
+  @override
+  String hubCallUpRegional(String cup) {
+    return 'Triệu tập đội hình cho $cup';
+  }
+
+  @override
+  String newsRegionalDrawTitle(String cup, String group) {
+    return '$cup: bảng $group';
+  }
+
+  @override
+  String newsRegionalDrawBody(String cup, String rivals) {
+    return 'Lễ bốc thăm $cup đã diễn ra. Tháng 12 bạn sẽ gặp $rivals.';
+  }
+
+  @override
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host) {
+    return 'Lễ bốc thăm $cup đã diễn ra. Tháng 12 bạn sẽ gặp $rivals, chủ nhà là $host.';
+  }
+
+  @override
+  String newsRegionalWonTitle(String cup) {
+    return 'Vô địch $cup!';
+  }
+
+  @override
+  String newsRegionalWonBody(String cup, String opponent, String score) {
+    return 'Bạn đã vô địch $cup, thắng $opponent $score trong trận chung kết.';
+  }
+
+  @override
+  String get tourZoneGulf => 'VÙNG VỊNH';
+
+  @override
+  String get tourZoneSoutheastAsia => 'ĐÔNG NAM Á';
+
+  @override
+  String regionalCupNext(int year) {
+    return 'Kỳ tiếp theo diễn ra vào tháng 12 năm $year.';
+  }
+
+  @override
+  String get regionalCupNoWinners => 'Chưa có nhà vô địch.';
+
+  @override
+  String regionalCupEdition(String cup, int year) {
+    return '$cup $year';
+  }
+
+  @override
+  String regionalCupChampion(String name) {
+    return 'Vô địch: $name';
+  }
+
+  @override
+  String regionalCupHosted(String host) {
+    return 'Chủ nhà: $host';
+  }
+
+  @override
+  String get regionalCupHomeAndAway => 'Vòng bảng đá sân nhà và sân khách';
+
+  @override
+  String get regionalCupGroups => 'CÁC BẢNG';
 }

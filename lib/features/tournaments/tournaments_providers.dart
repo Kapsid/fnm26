@@ -12,6 +12,7 @@ import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
@@ -67,6 +68,8 @@ class TournamentsOverview {
     this.otherNationsCups = const {},
     this.continentalClash,
     this.clashInvolvesPlayer = false,
+    this.regionalCups = const {},
+    this.regionalMine = const {},
   });
 
   final Map<Confederation?, TournamentStatus> statuses;
@@ -91,6 +94,13 @@ class TournamentsOverview {
   /// Whether the manager's nation is one of the two Continental Clash entrants
   /// this cycle — if not, the Clash belongs among the "other" competitions.
   final bool clashInvolvesPlayer;
+
+  /// Every regional cup's status, by its stored name (see [RegionalCups]).
+  final Map<String, TournamentStatus> regionalCups;
+
+  /// The regional cups the manager's nation belongs to: listed among his
+  /// own competitions, the rest among the others.
+  final Set<String> regionalMine;
 
   /// The host nation of this cycle's World Cup (deterministic from the start).
   final int? worldCupHostId;
@@ -451,7 +461,44 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
     );
   }
 
+  // The regional cups: live from the draw of an edition of this cycle until
+  // its honour is filed, else their last winner.
+  final regionalCups = <String, TournamentStatus>{};
+  final regionalMine = <String>{};
+  final wcYear = CareerService.worldCupYear(career.cyclePointer);
+  final myCode = nations[career.nationId]?.code;
+  for (final cup in RegionalCups.all) {
+    if (cup.memberCodes.contains(myCode)) regionalMine.add(cup.name);
+    var live = false;
+    for (final (slot, year) in RegionalCups.yearsOf(wcYear).indexed) {
+      if (await comp.hasTournament(
+            careerId,
+            RegionalCups.kind,
+            confederation: RegionalCups.confederation,
+            edition: RegionalCups.editionOf(cup, slot),
+          ) &&
+          !honours.any((h) => h.competition == cup.name && h.year == year)) {
+        live = true;
+      }
+    }
+    final last = latestHonour(cup.name);
+    regionalCups[cup.name] = live
+        ? TournamentStatus(
+            phase: TournamentPhase.live,
+            label: l.tourStatusInProgress,
+            championId: null,
+          )
+        : TournamentStatus(
+            phase: TournamentPhase.history,
+            label: l.tourSharedPastWinners,
+            championId: last?.championId,
+            championYear: last?.year,
+          );
+  }
+
   return TournamentsOverview(
+    regionalCups: regionalCups,
+    regionalMine: regionalMine,
     statuses: statuses,
     nations: nations,
     playerConfederation: playerConf,

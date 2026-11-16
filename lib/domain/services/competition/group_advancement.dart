@@ -213,6 +213,9 @@ abstract final class GroupAdvancement {
       case CompetitionKind.continentalFinals:
         final adv = finalsGroup(groupCount, continentalSize);
         return (direct: adv.direct, contention: adv.contention, relegate: 0);
+      // A regional cup's two groups: the top two go to the semi-finals.
+      case CompetitionKind.regionalCup:
+        return (direct: 2, contention: null, relegate: 0);
       case CompetitionKind.nationsLeague:
         // The African cup's zone groups: every winner goes through to the
         // Round of 16, a runner-up MAY (the two best across all groups do),
@@ -306,6 +309,8 @@ abstract final class GroupAdvancement {
         return adv.contention != null
             ? '${top(adv.direct)} advance; the best third-placed teams join them'
             : '${top(adv.direct)} advance';
+      case CompetitionKind.regionalCup:
+        return '${top(adv.direct)} reach the semi-finals';
       case CompetitionKind.friendly:
       case CompetitionKind.finalissima:
       case CompetitionKind.worldCupPlayoff:

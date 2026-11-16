@@ -12,6 +12,7 @@ import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 
 /// Which nation's vitrine to show, within a given save.
 typedef NationVitrineArg = ({int careerId, int nationId});
@@ -194,7 +195,9 @@ nationVitrineProvider = FutureProvider.autoDispose
       // confederation's continental cup.
       // A Nations Cup is only ever contested by its own confederation, so
       // any of the three on a nation's record is its own.
-      const globalCups = {'Continental Clash'};
+      // A regional cup is only ever contested by its members, so any on a
+      // nation's record is its own too.
+      final globalCups = {'Continental Clash', ...RegionalCups.names};
       for (final h in honours) {
         final isWc = h.competition == 'World Championship';
         if (!isWc &&

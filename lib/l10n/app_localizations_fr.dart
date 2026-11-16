@@ -18267,4 +18267,82 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get playerOtherPositions => 'À chaque poste';
+
+  @override
+  String get compGulfCup => 'Coupe du Golfe';
+
+  @override
+  String get compSoutheastAsianChampionship => 'Championnat d\'Asie du Sud-Est';
+
+  @override
+  String get matchTinyGulfCup => 'Golfe';
+
+  @override
+  String get matchTinySoutheastAsia => 'ASE';
+
+  @override
+  String hubCallUpRegional(String cup) {
+    return 'Convoquez votre groupe pour la compétition $cup';
+  }
+
+  @override
+  String newsRegionalDrawTitle(String cup, String group) {
+    return '$cup : groupe $group';
+  }
+
+  @override
+  String newsRegionalDrawBody(String cup, String rivals) {
+    return 'Le tirage de la compétition $cup a eu lieu. En décembre, vous affrontez $rivals.';
+  }
+
+  @override
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host) {
+    return 'Le tirage de la compétition $cup a eu lieu. En décembre, vous affrontez $rivals, avec $host comme pays hôte.';
+  }
+
+  @override
+  String newsRegionalWonTitle(String cup) {
+    return '$cup : victoire !';
+  }
+
+  @override
+  String newsRegionalWonBody(String cup, String opponent, String score) {
+    return 'Vous remportez la compétition $cup en battant $opponent $score en finale.';
+  }
+
+  @override
+  String get tourZoneGulf => 'GOLFE';
+
+  @override
+  String get tourZoneSoutheastAsia => 'ASIE DU SUD-EST';
+
+  @override
+  String regionalCupNext(int year) {
+    return 'La prochaine édition se joue en décembre $year.';
+  }
+
+  @override
+  String get regionalCupNoWinners => 'Pas encore de vainqueur.';
+
+  @override
+  String regionalCupEdition(String cup, int year) {
+    return '$cup $year';
+  }
+
+  @override
+  String regionalCupChampion(String name) {
+    return 'Vainqueur : $name';
+  }
+
+  @override
+  String regionalCupHosted(String host) {
+    return 'Pays hôte : $host';
+  }
+
+  @override
+  String get regionalCupHomeAndAway =>
+      'Phase de groupes à domicile et à l\'extérieur';
+
+  @override
+  String get regionalCupGroups => 'GROUPES';
 }

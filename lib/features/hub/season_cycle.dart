@@ -219,6 +219,7 @@ extension SeasonCycle on SeasonService {
     await _progressContinental(careerId);
     await _progressNationsLeague(careerId);
     await _progressFinalissima(careerId);
+    await _progressRegionalCups(careerId);
   }
 
   /// Draws World Cup qualifying once the cycle reaches it.

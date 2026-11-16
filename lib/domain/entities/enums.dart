@@ -78,6 +78,11 @@ enum CompetitionKind {
   /// intercontinental play-off entrants. Every lookup names its
   /// confederation.
   worldCupQualifyingPlayoff,
+
+  /// A regional cup (the Gulf Cup, the Southeast Asian Championship; see
+  /// `RegionalCups`), played in December every two years. Stored under Asia,
+  /// its edition naming the cup and its slot in the cycle.
+  regionalCup,
 }
 
 /// Display helpers for [Confederation].

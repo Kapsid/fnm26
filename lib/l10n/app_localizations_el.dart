@@ -18196,4 +18196,83 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get playerOtherPositions => 'Σε κάθε θέση';
+
+  @override
+  String get compGulfCup => 'Κύπελλο του Κόλπου';
+
+  @override
+  String get compSoutheastAsianChampionship =>
+      'Πρωτάθλημα Νοτιοανατολικής Ασίας';
+
+  @override
+  String get matchTinyGulfCup => 'Κόλπος';
+
+  @override
+  String get matchTinySoutheastAsia => 'ΝΑ Ασία';
+
+  @override
+  String hubCallUpRegional(String cup) {
+    return 'Κάλεσε την αποστολή για τη διοργάνωση $cup';
+  }
+
+  @override
+  String newsRegionalDrawTitle(String cup, String group) {
+    return '$cup: όμιλος $group';
+  }
+
+  @override
+  String newsRegionalDrawBody(String cup, String rivals) {
+    return 'Η κλήρωση της διοργάνωσης $cup έγινε. Τον Δεκέμβριο αντιμετωπίζεις: $rivals.';
+  }
+
+  @override
+  String newsRegionalDrawBodyHosted(String cup, String rivals, String host) {
+    return 'Η κλήρωση της διοργάνωσης $cup έγινε. Τον Δεκέμβριο αντιμετωπίζεις: $rivals. Διοργανώτρια: $host.';
+  }
+
+  @override
+  String newsRegionalWonTitle(String cup) {
+    return '$cup: το κατακτήσατε!';
+  }
+
+  @override
+  String newsRegionalWonBody(String cup, String opponent, String score) {
+    return 'Κατέκτησες τη διοργάνωση $cup, νικώντας $opponent με $score στον τελικό.';
+  }
+
+  @override
+  String get tourZoneGulf => 'ΚΟΛΠΟΣ';
+
+  @override
+  String get tourZoneSoutheastAsia => 'ΝΟΤΙΟΑΝΑΤΟΛΙΚΗ ΑΣΙΑ';
+
+  @override
+  String regionalCupNext(int year) {
+    return 'Η επόμενη διοργάνωση διεξάγεται τον Δεκέμβριο του $year.';
+  }
+
+  @override
+  String get regionalCupNoWinners => 'Δεν υπάρχουν ακόμη νικητές.';
+
+  @override
+  String regionalCupEdition(String cup, int year) {
+    return '$cup $year';
+  }
+
+  @override
+  String regionalCupChampion(String name) {
+    return 'Νικητής: $name';
+  }
+
+  @override
+  String regionalCupHosted(String host) {
+    return 'Διοργανώτρια: $host';
+  }
+
+  @override
+  String get regionalCupHomeAndAway =>
+      'Οι όμιλοι παίζονται εντός και εκτός έδρας';
+
+  @override
+  String get regionalCupGroups => 'ΟΜΙΛΟΙ';
 }

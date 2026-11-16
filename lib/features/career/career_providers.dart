@@ -31,6 +31,7 @@ import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/real_history.dart';
+import 'package:fnm/domain/services/competition/regional_history.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/domain/services/competition/tournament_calendar.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
@@ -1131,6 +1132,7 @@ class CareerService {
         finalAwayScore: e.finalAway,
       );
     }
+    await RegionalHistory.seed(compRepo, career.id, nations);
   }
 
   /// Picks a sensible starting XI (best players in a 4-3-3) so a new save is
