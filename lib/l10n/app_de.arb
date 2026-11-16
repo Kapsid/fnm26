@@ -4519,7 +4519,7 @@
   "assistantMatchResult": "Das Spiel des Assistenten",
   "euroPlayoffCourseTitle": "Play-off über den Nationenpokal",
   "euroPlayoffCourseNote": "Die ersten zwei jeder Gruppe sind direkt qualifiziert. Die letzten Plätze gehen in Play-offs an die besten Teams des Nationenpokals, die nicht durch sind. Stand jetzt:",
-  "ncEuroPlayoffLegend": "Gelb: auf Kurs für das Play-off zur Endrunde",
+  "ncEuroPlayoffLegend": "Auf Kurs fürs Play-off zur Endrunde, falls die Qualifikation scheitert",
   "euroPlayoffToFinal": "Ins Finale",
   "euroPlayoffQualified": "Qualifiziert",
   "playerOtherPositions": "Auf jeder Position",
@@ -4542,7 +4542,12 @@
   "regionalCupHosted": "Gastgeber: {host}",
   "regionalCupHomeAndAway": "Gruppenspiele mit Hin- und Rückspielort",
   "regionalCupGroups": "GRUPPEN",
-  "ncWcPlayoffLegend": "Gelb: auf Kurs für das WM-Play-off",
+  "ncWcPlayoffLegend": "Auf Kurs fürs Play-off zur Weltmeisterschaft, falls die Qualifikation scheitert",
   "newsNcPlayoffNetTitle": "Play-off als Rettungsnetz: {finals}",
-  "newsNcPlayoffNetBody": "Nach den Tabellen des Wettbewerbs {cup} hast du derzeit einen Play-off-Platz. Klappt die direkte Qualifikation nicht, bleibt dir ein zweiter Weg zum Turnier {finals}. Die Play-off-Wege werden nach der Qualifikation ausgelost."
+  "newsNcPlayoffNetBody": "Nach den Tabellen des Wettbewerbs {cup} hast du derzeit einen Play-off-Platz. Klappt die direkte Qualifikation nicht, bleibt dir ein zweiter Weg zum Turnier {finals}. Die Play-off-Wege werden nach der Qualifikation ausgelost.",
+  "ncLegendWinnerUp": "Gruppensieger: Aufstieg in die höhere Liga",
+  "ncLegendWinnerFinalsFour": "Gruppensieger: Finalturnier der letzten Vier",
+  "ncLegendLastDown": "Letzter: Abstieg in die niedrigere Liga",
+  "playoffBadgeLetter": "P",
+  "playoffBadgeTooltip": "Auf Kurs fürs Play-off: eine zweite Chance, falls die Qualifikation scheitert"
 }

@@ -18186,7 +18186,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend =>
-      'Amarillo: camino de la repesca para la fase final';
+      'Camino de la repesca para la fase final si falla la clasificación';
 
   @override
   String get euroPlayoffToFinal => 'A la final';
@@ -18277,7 +18277,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get ncWcPlayoffLegend =>
-      'Amarillo: camino de la repesca del Campeonato del Mundo';
+      'Camino de la repesca del Campeonato del Mundo si falla la clasificación';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -18288,4 +18288,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return 'Según las clasificaciones del torneo $cup, de momento tienes plaza en la repesca. Si no te clasificas directamente, tendrás un segundo camino hacia el torneo $finals. Los cruces se sortean al terminar la clasificación.';
   }
+
+  @override
+  String get ncLegendWinnerUp => 'Ganador del grupo: asciende de liga';
+
+  @override
+  String get ncLegendWinnerFinalsFour =>
+      'Ganador del grupo: a la fase final a cuatro';
+
+  @override
+  String get ncLegendLastDown => 'Último: desciende de liga';
+
+  @override
+  String get playoffBadgeLetter => 'R';
+
+  @override
+  String get playoffBadgeTooltip =>
+      'Camino de la repesca: una segunda oportunidad si falla la clasificación';
 }

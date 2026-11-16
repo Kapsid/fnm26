@@ -4519,7 +4519,7 @@
   "assistantMatchResult": "アシスタントの試合",
   "euroPlayoffCourseTitle": "ネーションズカップ経由のプレーオフ",
   "euroPlayoffCourseNote": "各グループ上位2チームがストレートインします。残りの枠は、ネーションズカップの上位でまだ出場が決まっていないチームによるプレーオフで争われます。現時点では：",
-  "ncEuroPlayoffLegend": "黄色：本大会プレーオフ圏内",
+  "ncEuroPlayoffLegend": "予選で失敗した場合、本大会プレーオフへ",
   "euroPlayoffToFinal": "決勝へ",
   "euroPlayoffQualified": "出場決定",
   "playerOtherPositions": "各ポジションでの評価",
@@ -4542,7 +4542,12 @@
   "regionalCupHosted": "開催国：{host}",
   "regionalCupHomeAndAway": "グループはホーム＆アウェーで開催",
   "regionalCupGroups": "グループ",
-  "ncWcPlayoffLegend": "黄色：世界選手権プレーオフ圏内",
+  "ncWcPlayoffLegend": "予選で失敗した場合、世界選手権プレーオフへ",
   "newsNcPlayoffNetTitle": "プレーオフという保険：{finals}",
-  "newsNcPlayoffNetBody": "{cup}の順位表では、現時点でプレーオフ出場圏にいる。ストレートで予選を突破できなくても、{finals}への2つ目の道がある。プレーオフの組み合わせは予選終了後に抽選される。"
+  "newsNcPlayoffNetBody": "{cup}の順位表では、現時点でプレーオフ出場圏にいる。ストレートで予選を突破できなくても、{finals}への2つ目の道がある。プレーオフの組み合わせは予選終了後に抽選される。",
+  "ncLegendWinnerUp": "グループ首位：上位リーグへ昇格",
+  "ncLegendWinnerFinalsFour": "グループ首位：ファイナルフォーへ",
+  "ncLegendLastDown": "最下位：下位リーグへ降格",
+  "playoffBadgeLetter": "PO",
+  "playoffBadgeTooltip": "プレーオフ圏内：予選で失敗しても二度目のチャンス"
 }

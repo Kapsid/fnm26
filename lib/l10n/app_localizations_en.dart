@@ -18126,7 +18126,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend =>
-      'Yellow: on course for the play-off for the continental finals';
+      'Headed for the play-off for the continental finals, should qualifying fail';
 
   @override
   String get euroPlayoffToFinal => 'To the final';
@@ -18216,7 +18216,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ncWcPlayoffLegend =>
-      'Yellow: on course for the World Championship play-off';
+      'Headed for the World Championship play-off, should qualifying fail';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -18227,4 +18227,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return 'As the $cup tables stand, you hold a play-off place. Should you not qualify directly, it gives you a second route to the $finals. The paths are drawn once qualifying ends.';
   }
+
+  @override
+  String get ncLegendWinnerUp => 'Group winner: promoted a league';
+
+  @override
+  String get ncLegendWinnerFinalsFour => 'Group winner: into the Finals Four';
+
+  @override
+  String get ncLegendLastDown => 'Bottom: relegated a league';
+
+  @override
+  String get playoffBadgeLetter => 'P';
+
+  @override
+  String get playoffBadgeTooltip =>
+      'Headed for a play-off path: a second chance if qualifying fails';
 }

@@ -4519,7 +4519,7 @@
   "assistantMatchResult": "Assistentens match",
   "euroPlayoffCourseTitle": "Playoff via Nations Cup",
   "euroPlayoffCourseNote": "De två bästa i varje grupp går direkt vidare. De sista platserna går till playoff för Nations Cups bästa lag som inte är klara. Som det ser ut nu:",
-  "ncEuroPlayoffLegend": "Gul: på väg mot playoff till slutspelet",
+  "ncEuroPlayoffLegend": "På väg mot playoff till slutspelet om kvalet misslyckas",
   "euroPlayoffToFinal": "Till finalen",
   "euroPlayoffQualified": "Kvalificerat",
   "playerOtherPositions": "På varje position",
@@ -4542,7 +4542,12 @@
   "regionalCupHosted": "Värdland: {host}",
   "regionalCupHomeAndAway": "Grupperna spelas hemma och borta",
   "regionalCupGroups": "GRUPPER",
-  "ncWcPlayoffLegend": "Gul: på väg mot VM-playoff",
+  "ncWcPlayoffLegend": "På väg mot playoff till Världsmästerskapet om kvalet misslyckas",
   "newsNcPlayoffNetTitle": "Playoff som skyddsnät: {finals}",
-  "newsNcPlayoffNetBody": "Enligt tabellerna i turneringen {cup} har ni just nu en playoffplats. Går ni inte vidare direkt får ni en andra väg till turneringen {finals}. Playoffvägarna lottas när kvalet är slut."
+  "newsNcPlayoffNetBody": "Enligt tabellerna i turneringen {cup} har ni just nu en playoffplats. Går ni inte vidare direkt får ni en andra väg till turneringen {finals}. Playoffvägarna lottas när kvalet är slut.",
+  "ncLegendWinnerUp": "Gruppvinnare: flyttas upp en liga",
+  "ncLegendWinnerFinalsFour": "Gruppvinnare: till slutspelet med fyra lag",
+  "ncLegendLastDown": "Sist: flyttas ner en liga",
+  "playoffBadgeLetter": "P",
+  "playoffBadgeTooltip": "På väg mot playoff: en andra chans om kvalet misslyckas"
 }

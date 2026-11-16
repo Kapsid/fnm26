@@ -18179,7 +18179,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend =>
-      'Geel: op koers voor de play-offs voor het eindtoernooi';
+      'Op koers voor de play-offs voor het eindtoernooi als de kwalificatie mislukt';
 
   @override
   String get euroPlayoffToFinal => 'Naar de finale';
@@ -18269,7 +18269,8 @@ class AppLocalizationsNl extends AppLocalizations {
   String get regionalCupGroups => 'GROEPEN';
 
   @override
-  String get ncWcPlayoffLegend => 'Geel: op koers voor de WK-play-offs';
+  String get ncWcPlayoffLegend =>
+      'Op koers voor de play-offs voor het Wereldkampioenschap als de kwalificatie mislukt';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -18280,4 +18281,22 @@ class AppLocalizationsNl extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return 'Volgens de standen van het toernooi $cup heb je voorlopig een plek in de play-offs. Lukt directe kwalificatie niet, dan is dat een tweede weg naar het toernooi $finals. De play-offroutes worden na de kwalificatie geloot.';
   }
+
+  @override
+  String get ncLegendWinnerUp =>
+      'Groepswinnaar: promotie naar een hogere league';
+
+  @override
+  String get ncLegendWinnerFinalsFour =>
+      'Groepswinnaar: naar de finaleronde met vier';
+
+  @override
+  String get ncLegendLastDown => 'Laatste: degradatie naar een lagere league';
+
+  @override
+  String get playoffBadgeLetter => 'P';
+
+  @override
+  String get playoffBadgeTooltip =>
+      'Op koers voor de play-offs: een tweede kans als de kwalificatie mislukt';
 }

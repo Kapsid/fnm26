@@ -18284,7 +18284,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend =>
-      'Żółty: na drodze do baraży o turniej finałowy';
+      'Na drodze do baraży o turniej finałowy, gdyby eliminacje nie wyszły';
 
   @override
   String get euroPlayoffToFinal => 'Do finału';
@@ -18376,7 +18376,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get ncWcPlayoffLegend =>
-      'Żółty: na drodze do baraży o mistrzostwa świata';
+      'Na drodze do baraży o mistrzostwa świata, gdyby eliminacje nie wyszły';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -18387,4 +18387,21 @@ class AppLocalizationsPl extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return 'Według tabel turnieju $cup masz na razie miejsce w barażach. Jeśli bezpośredni awans się nie uda, to druga droga na turniej $finals. Ścieżki barażowe losuje się po zakończeniu eliminacji.';
   }
+
+  @override
+  String get ncLegendWinnerUp => 'Zwycięzca grupy: awans do wyższej ligi';
+
+  @override
+  String get ncLegendWinnerFinalsFour =>
+      'Zwycięzca grupy: turniej finałowy czwórki';
+
+  @override
+  String get ncLegendLastDown => 'Ostatni: spadek do niższej ligi';
+
+  @override
+  String get playoffBadgeLetter => 'B';
+
+  @override
+  String get playoffBadgeTooltip =>
+      'Na drodze do baraży: druga szansa, gdyby eliminacje nie wyszły';
 }

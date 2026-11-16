@@ -18435,7 +18435,7 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend =>
-      'Žuto: na putu prema doigravanju za završni turnir';
+      'Na putu prema doigravanju za završni turnir ako kvalifikacije ne uspiju';
 
   @override
   String get euroPlayoffToFinal => 'U finale';
@@ -18525,7 +18525,7 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get ncWcPlayoffLegend =>
-      'Žuto: na putu prema doigravanju za Svjetsko prvenstvo';
+      'Na putu prema doigravanju za Svjetsko prvenstvo ako kvalifikacije ne uspiju';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -18536,4 +18536,21 @@ class AppLocalizationsHr extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return 'Prema tablicama turnira $cup zasad imate mjesto u doigravanju. Ako izravan plasman ne uspije, to je drugi put do turnira $finals. Putovi doigravanja izvlače se nakon kvalifikacija.';
   }
+
+  @override
+  String get ncLegendWinnerUp => 'Pobjednik skupine: ulazak u višu ligu';
+
+  @override
+  String get ncLegendWinnerFinalsFour =>
+      'Pobjednik skupine: u završnicu četiri momčadi';
+
+  @override
+  String get ncLegendLastDown => 'Posljednji: ispadanje u nižu ligu';
+
+  @override
+  String get playoffBadgeLetter => 'D';
+
+  @override
+  String get playoffBadgeTooltip =>
+      'Na putu prema doigravanju: druga prilika ako kvalifikacije ne uspiju';
 }

@@ -17467,7 +17467,7 @@ class AppLocalizationsJa extends AppLocalizations {
       '各グループ上位2チームがストレートインします。残りの枠は、ネーションズカップの上位でまだ出場が決まっていないチームによるプレーオフで争われます。現時点では：';
 
   @override
-  String get ncEuroPlayoffLegend => '黄色：本大会プレーオフ圏内';
+  String get ncEuroPlayoffLegend => '予選で失敗した場合、本大会プレーオフへ';
 
   @override
   String get euroPlayoffToFinal => '決勝へ';
@@ -17556,7 +17556,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get regionalCupGroups => 'グループ';
 
   @override
-  String get ncWcPlayoffLegend => '黄色：世界選手権プレーオフ圏内';
+  String get ncWcPlayoffLegend => '予選で失敗した場合、世界選手権プレーオフへ';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -17567,4 +17567,19 @@ class AppLocalizationsJa extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return '$cupの順位表では、現時点でプレーオフ出場圏にいる。ストレートで予選を突破できなくても、$finalsへの2つ目の道がある。プレーオフの組み合わせは予選終了後に抽選される。';
   }
+
+  @override
+  String get ncLegendWinnerUp => 'グループ首位：上位リーグへ昇格';
+
+  @override
+  String get ncLegendWinnerFinalsFour => 'グループ首位：ファイナルフォーへ';
+
+  @override
+  String get ncLegendLastDown => '最下位：下位リーグへ降格';
+
+  @override
+  String get playoffBadgeLetter => 'PO';
+
+  @override
+  String get playoffBadgeTooltip => 'プレーオフ圏内：予選で失敗しても二度目のチャンス';
 }

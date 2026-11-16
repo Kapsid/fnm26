@@ -4519,7 +4519,7 @@
   "assistantMatchResult": "O jogo do adjunto",
   "euroPlayoffCourseTitle": "Play-off pela Copa das Nações",
   "euroPlayoffCourseNote": "Os dois primeiros de cada grupo apuram-se diretamente. Os últimos lugares decidem-se num play-off entre as melhores seleções da Copa das Nações ainda não apuradas. Neste momento:",
-  "ncEuroPlayoffLegend": "Amarelo: a caminho do play-off da fase final",
+  "ncEuroPlayoffLegend": "A caminho do play-off da fase final se as eliminatórias falharem",
   "euroPlayoffToFinal": "À final",
   "euroPlayoffQualified": "Apurado",
   "playerOtherPositions": "Em cada posição",
@@ -4542,7 +4542,12 @@
   "regionalCupHosted": "Anfitrião: {host}",
   "regionalCupHomeAndAway": "Grupos disputados em casa e fora",
   "regionalCupGroups": "GRUPOS",
-  "ncWcPlayoffLegend": "Amarelo: a caminho do play-off do Campeonato Mundial",
+  "ncWcPlayoffLegend": "A caminho do play-off do Campeonato Mundial se as eliminatórias falharem",
   "newsNcPlayoffNetTitle": "O play-off como rede de segurança: {finals}",
-  "newsNcPlayoffNetBody": "Pelas tabelas do torneio {cup}, por enquanto você tem vaga no play-off. Se não se classificar diretamente, terá um segundo caminho para o torneio {finals}. Os caminhos são sorteados no fim das eliminatórias."
+  "newsNcPlayoffNetBody": "Pelas tabelas do torneio {cup}, por enquanto você tem vaga no play-off. Se não se classificar diretamente, terá um segundo caminho para o torneio {finals}. Os caminhos são sorteados no fim das eliminatórias.",
+  "ncLegendWinnerUp": "Vencedor do grupo: sobe de liga",
+  "ncLegendWinnerFinalsFour": "Vencedor do grupo: vai à fase final a quatro",
+  "ncLegendLastDown": "Último: desce de liga",
+  "playoffBadgeLetter": "P",
+  "playoffBadgeTooltip": "A caminho do play-off: uma segunda chance se as eliminatórias falharem"
 }

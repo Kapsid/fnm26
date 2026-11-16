@@ -4519,7 +4519,7 @@
   "assistantMatchResult": "Meciul secundului",
   "euroPlayoffCourseTitle": "Baraj prin Cupa Națiunilor",
   "euroPlayoffCourseNote": "Primele două din fiecare grupă se califică direct. Ultimele locuri se joacă în baraj între cele mai bune echipe din Cupa Națiunilor care nu s-au calificat. Situația acum:",
-  "ncEuroPlayoffLegend": "Galben: pe drumul spre barajul turneului final",
+  "ncEuroPlayoffLegend": "Pe drumul spre barajul turneului final dacă preliminariile eșuează",
   "euroPlayoffToFinal": "În finală",
   "euroPlayoffQualified": "Calificată",
   "playerOtherPositions": "Pe fiecare post",
@@ -4542,7 +4542,12 @@
   "regionalCupHosted": "Gazdă: {host}",
   "regionalCupHomeAndAway": "Grupe jucate acasă și în deplasare",
   "regionalCupGroups": "GRUPE",
-  "ncWcPlayoffLegend": "Galben: pe drumul spre barajul Campionatului Mondial",
+  "ncWcPlayoffLegend": "Pe drumul spre barajul Campionatului Mondial dacă preliminariile eșuează",
   "newsNcPlayoffNetTitle": "Barajul ca plasă de siguranță: {finals}",
-  "newsNcPlayoffNetBody": "Conform clasamentelor din turneul {cup}, deocamdată aveți loc în baraj. Dacă nu vă calificați direct, aveți un al doilea drum spre turneul {finals}. Traseele se trag la sorți la finalul preliminariilor."
+  "newsNcPlayoffNetBody": "Conform clasamentelor din turneul {cup}, deocamdată aveți loc în baraj. Dacă nu vă calificați direct, aveți un al doilea drum spre turneul {finals}. Traseele se trag la sorți la finalul preliminariilor.",
+  "ncLegendWinnerUp": "Câștigătoarea grupei: promovează într-o ligă superioară",
+  "ncLegendWinnerFinalsFour": "Câștigătoarea grupei: în turneul final de patru",
+  "ncLegendLastDown": "Ultima: retrogradează într-o ligă inferioară",
+  "playoffBadgeLetter": "B",
+  "playoffBadgeTooltip": "Pe drumul spre baraj: a doua șansă dacă preliminariile eșuează"
 }

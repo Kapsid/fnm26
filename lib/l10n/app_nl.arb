@@ -4519,7 +4519,7 @@
   "assistantMatchResult": "De wedstrijd van de assistent",
   "euroPlayoffCourseTitle": "Play-offs via de Nations Cup",
   "euroPlayoffCourseNote": "De nummers een en twee van elke groep plaatsen zich direct. De laatste plaatsen gaan via play-offs naar de beste Nations Cup-landen die nog niet geplaatst zijn. Zoals het nu staat:",
-  "ncEuroPlayoffLegend": "Geel: op koers voor de play-offs voor het eindtoernooi",
+  "ncEuroPlayoffLegend": "Op koers voor de play-offs voor het eindtoernooi als de kwalificatie mislukt",
   "euroPlayoffToFinal": "Naar de finale",
   "euroPlayoffQualified": "Geplaatst",
   "playerOtherPositions": "Op elke positie",
@@ -4542,7 +4542,12 @@
   "regionalCupHosted": "Gastland: {host}",
   "regionalCupHomeAndAway": "Groepen thuis en uit gespeeld",
   "regionalCupGroups": "GROEPEN",
-  "ncWcPlayoffLegend": "Geel: op koers voor de WK-play-offs",
+  "ncWcPlayoffLegend": "Op koers voor de play-offs voor het Wereldkampioenschap als de kwalificatie mislukt",
   "newsNcPlayoffNetTitle": "Een vangnet via de play-offs: {finals}",
-  "newsNcPlayoffNetBody": "Volgens de standen van het toernooi {cup} heb je voorlopig een plek in de play-offs. Lukt directe kwalificatie niet, dan is dat een tweede weg naar het toernooi {finals}. De play-offroutes worden na de kwalificatie geloot."
+  "newsNcPlayoffNetBody": "Volgens de standen van het toernooi {cup} heb je voorlopig een plek in de play-offs. Lukt directe kwalificatie niet, dan is dat een tweede weg naar het toernooi {finals}. De play-offroutes worden na de kwalificatie geloot.",
+  "ncLegendWinnerUp": "Groepswinnaar: promotie naar een hogere league",
+  "ncLegendWinnerFinalsFour": "Groepswinnaar: naar de finaleronde met vier",
+  "ncLegendLastDown": "Laatste: degradatie naar een lagere league",
+  "playoffBadgeLetter": "P",
+  "playoffBadgeTooltip": "Op koers voor de play-offs: een tweede kans als de kwalificatie mislukt"
 }

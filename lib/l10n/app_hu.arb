@@ -4519,7 +4519,7 @@
   "assistantMatchResult": "A segítő meccse",
   "euroPlayoffCourseTitle": "Pótselejtező a Nations Cupon át",
   "euroPlayoffCourseNote": "Minden csoport első kettője egyenesen továbbjut. Az utolsó helyekért a Nations Cup legjobb, még nem továbbjutott csapatai játszanak pótselejtezőt. Jelenleg:",
-  "ncEuroPlayoffLegend": "Sárga: úton a zárótorna pótselejtezője felé",
+  "ncEuroPlayoffLegend": "Úton a zárótorna pótselejtezője felé, ha a selejtező nem jön össze",
   "euroPlayoffToFinal": "Döntőbe",
   "euroPlayoffQualified": "Kijutott",
   "playerOtherPositions": "Minden poszton",
@@ -4542,7 +4542,12 @@
   "regionalCupHosted": "Házigazda: {host}",
   "regionalCupHomeAndAway": "A csoportkör oda-vissza, hazai és idegen pályán",
   "regionalCupGroups": "CSOPORTOK",
-  "ncWcPlayoffLegend": "Sárga: úton a vb-pótselejtező felé",
+  "ncWcPlayoffLegend": "Úton a világbajnokság pótselejtezője felé, ha a selejtező nem jön össze",
   "newsNcPlayoffNetTitle": "Pótselejtező mint biztonsági háló: {finals}",
-  "newsNcPlayoffNetBody": "A(z) {cup} tabellái szerint jelenleg pótselejtezős helyen álltok. Ha a közvetlen kijutás nem sikerül, ez egy második út a tornára ({finals}). Az ágakat a selejtező végén sorsolják."
+  "newsNcPlayoffNetBody": "A(z) {cup} tabellái szerint jelenleg pótselejtezős helyen álltok. Ha a közvetlen kijutás nem sikerül, ez egy második út a tornára ({finals}). Az ágakat a selejtező végén sorsolják.",
+  "ncLegendWinnerUp": "Csoportgyőztes: feljut a magasabb ligába",
+  "ncLegendWinnerFinalsFour": "Csoportgyőztes: a négyes döntőbe jut",
+  "ncLegendLastDown": "Utolsó: kiesik az alacsonyabb ligába",
+  "playoffBadgeLetter": "P",
+  "playoffBadgeTooltip": "Úton a pótselejtező felé: második esély, ha a selejtező nem jön össze"
 }

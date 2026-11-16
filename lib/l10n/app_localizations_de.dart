@@ -18225,7 +18225,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend =>
-      'Gelb: auf Kurs für das Play-off zur Endrunde';
+      'Auf Kurs fürs Play-off zur Endrunde, falls die Qualifikation scheitert';
 
   @override
   String get euroPlayoffToFinal => 'Ins Finale';
@@ -18315,7 +18315,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get regionalCupGroups => 'GRUPPEN';
 
   @override
-  String get ncWcPlayoffLegend => 'Gelb: auf Kurs für das WM-Play-off';
+  String get ncWcPlayoffLegend =>
+      'Auf Kurs fürs Play-off zur Weltmeisterschaft, falls die Qualifikation scheitert';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -18326,4 +18327,21 @@ class AppLocalizationsDe extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return 'Nach den Tabellen des Wettbewerbs $cup hast du derzeit einen Play-off-Platz. Klappt die direkte Qualifikation nicht, bleibt dir ein zweiter Weg zum Turnier $finals. Die Play-off-Wege werden nach der Qualifikation ausgelost.';
   }
+
+  @override
+  String get ncLegendWinnerUp => 'Gruppensieger: Aufstieg in die höhere Liga';
+
+  @override
+  String get ncLegendWinnerFinalsFour =>
+      'Gruppensieger: Finalturnier der letzten Vier';
+
+  @override
+  String get ncLegendLastDown => 'Letzter: Abstieg in die niedrigere Liga';
+
+  @override
+  String get playoffBadgeLetter => 'P';
+
+  @override
+  String get playoffBadgeTooltip =>
+      'Auf Kurs fürs Play-off: eine zweite Chance, falls die Qualifikation scheitert';
 }

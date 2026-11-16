@@ -4519,7 +4519,7 @@
   "assistantMatchResult": "Trận đấu của trợ lý",
   "euroPlayoffCourseTitle": "Play-off qua Nations Cup",
   "euroPlayoffCourseNote": "Hai đội đầu mỗi bảng giành vé trực tiếp. Các suất cuối thuộc về play-off giữa những đội mạnh nhất Nations Cup chưa giành vé. Hiện tại:",
-  "ncEuroPlayoffLegend": "Vàng: đang hướng tới play-off vòng chung kết",
+  "ncEuroPlayoffLegend": "Hướng tới play-off vòng chung kết nếu vòng loại thất bại",
   "euroPlayoffToFinal": "Vào chung kết",
   "euroPlayoffQualified": "Giành vé",
   "playerOtherPositions": "Ở từng vị trí",
@@ -4542,7 +4542,12 @@
   "regionalCupHosted": "Chủ nhà: {host}",
   "regionalCupHomeAndAway": "Vòng bảng đá sân nhà và sân khách",
   "regionalCupGroups": "CÁC BẢNG",
-  "ncWcPlayoffLegend": "Vàng: đang hướng tới play-off giải vô địch thế giới",
+  "ncWcPlayoffLegend": "Hướng tới play-off giải vô địch thế giới nếu vòng loại thất bại",
   "newsNcPlayoffNetTitle": "Play-off là lưới an toàn: {finals}",
-  "newsNcPlayoffNetBody": "Theo bảng xếp hạng {cup}, hiện bạn đang giữ một suất play-off. Nếu không giành vé trực tiếp, đó là con đường thứ hai tới {finals}. Các nhánh play-off được bốc thăm khi vòng loại kết thúc."
+  "newsNcPlayoffNetBody": "Theo bảng xếp hạng {cup}, hiện bạn đang giữ một suất play-off. Nếu không giành vé trực tiếp, đó là con đường thứ hai tới {finals}. Các nhánh play-off được bốc thăm khi vòng loại kết thúc.",
+  "ncLegendWinnerUp": "Nhất bảng: thăng lên hạng đấu cao hơn",
+  "ncLegendWinnerFinalsFour": "Nhất bảng: vào vòng chung kết bốn đội",
+  "ncLegendLastDown": "Cuối bảng: xuống hạng đấu thấp hơn",
+  "playoffBadgeLetter": "PO",
+  "playoffBadgeTooltip": "Hướng tới play-off: cơ hội thứ hai nếu vòng loại thất bại"
 }

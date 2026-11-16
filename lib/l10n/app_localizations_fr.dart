@@ -18257,7 +18257,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend =>
-      'Jaune : en route pour les barrages de la phase finale';
+      'En route pour les barrages de la phase finale si les qualifications échouent';
 
   @override
   String get euroPlayoffToFinal => 'En finale';
@@ -18348,7 +18348,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get ncWcPlayoffLegend =>
-      'Jaune : en route pour les barrages du Championnat du monde';
+      'En route pour les barrages du Championnat du monde si les qualifications échouent';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -18359,4 +18359,22 @@ class AppLocalizationsFr extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return 'D\'après les classements de la compétition $cup, vous tenez pour l\'instant une place en barrages. Si la qualification directe échoue, ils vous ouvrent une seconde voie vers la phase finale ($finals). Les tableaux sont tirés à la fin des qualifications.';
   }
+
+  @override
+  String get ncLegendWinnerUp =>
+      'Vainqueur du groupe : promu dans la ligue supérieure';
+
+  @override
+  String get ncLegendWinnerFinalsFour =>
+      'Vainqueur du groupe : phase finale à quatre';
+
+  @override
+  String get ncLegendLastDown => 'Dernier : relégué dans la ligue inférieure';
+
+  @override
+  String get playoffBadgeLetter => 'B';
+
+  @override
+  String get playoffBadgeTooltip =>
+      'En route pour les barrages : une seconde chance si les qualifications échouent';
 }

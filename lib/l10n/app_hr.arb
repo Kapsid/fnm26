@@ -4519,7 +4519,7 @@
   "assistantMatchResult": "Pomoćnikova utakmica",
   "euroPlayoffCourseTitle": "Doigravanje preko Nations Cupa",
   "euroPlayoffCourseNote": "Prve dvije iz svake skupine prolaze izravno. Posljednja mjesta osvajaju se u doigravanju najboljih momčadi Nations Cupa koje nisu prošle. Trenutačno stanje:",
-  "ncEuroPlayoffLegend": "Žuto: na putu prema doigravanju za završni turnir",
+  "ncEuroPlayoffLegend": "Na putu prema doigravanju za završni turnir ako kvalifikacije ne uspiju",
   "euroPlayoffToFinal": "U finale",
   "euroPlayoffQualified": "Plasman",
   "playerOtherPositions": "Na svakoj poziciji",
@@ -4542,7 +4542,12 @@
   "regionalCupHosted": "Domaćin: {host}",
   "regionalCupHomeAndAway": "Skupine se igraju kod kuće i u gostima",
   "regionalCupGroups": "SKUPINE",
-  "ncWcPlayoffLegend": "Žuto: na putu prema doigravanju za Svjetsko prvenstvo",
+  "ncWcPlayoffLegend": "Na putu prema doigravanju za Svjetsko prvenstvo ako kvalifikacije ne uspiju",
   "newsNcPlayoffNetTitle": "Doigravanje kao sigurnosna mreža: {finals}",
-  "newsNcPlayoffNetBody": "Prema tablicama turnira {cup} zasad imate mjesto u doigravanju. Ako izravan plasman ne uspije, to je drugi put do turnira {finals}. Putovi doigravanja izvlače se nakon kvalifikacija."
+  "newsNcPlayoffNetBody": "Prema tablicama turnira {cup} zasad imate mjesto u doigravanju. Ako izravan plasman ne uspije, to je drugi put do turnira {finals}. Putovi doigravanja izvlače se nakon kvalifikacija.",
+  "ncLegendWinnerUp": "Pobjednik skupine: ulazak u višu ligu",
+  "ncLegendWinnerFinalsFour": "Pobjednik skupine: u završnicu četiri momčadi",
+  "ncLegendLastDown": "Posljednji: ispadanje u nižu ligu",
+  "playoffBadgeLetter": "D",
+  "playoffBadgeTooltip": "Na putu prema doigravanju: druga prilika ako kvalifikacije ne uspiju"
 }

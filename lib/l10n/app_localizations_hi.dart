@@ -18000,7 +18000,8 @@ class AppLocalizationsHi extends AppLocalizations {
       'हर ग्रुप की शीर्ष दो टीमें सीधे क्वालीफ़ाई करती हैं। आख़िरी जगहें नेशंस कप की उन सर्वश्रेष्ठ टीमों के प्ले-ऑफ़ से तय होती हैं जो सीधे नहीं पहुँचीं। अभी की स्थिति:';
 
   @override
-  String get ncEuroPlayoffLegend => 'पीला: फ़ाइनल्स के प्ले-ऑफ़ की राह पर';
+  String get ncEuroPlayoffLegend =>
+      'क्वालिफ़ाइंग नाकाम हो तो फ़ाइनल्स के प्ले-ऑफ़ की राह पर';
 
   @override
   String get euroPlayoffToFinal => 'फ़ाइनल में';
@@ -18090,7 +18091,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get regionalCupGroups => 'ग्रुप';
 
   @override
-  String get ncWcPlayoffLegend => 'पीला: विश्व चैंपियनशिप प्ले-ऑफ़ की राह पर';
+  String get ncWcPlayoffLegend =>
+      'क्वालिफ़ाइंग नाकाम हो तो विश्व चैंपियनशिप प्ले-ऑफ़ की राह पर';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -18101,4 +18103,20 @@ class AppLocalizationsHi extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return '$cup की तालिकाओं के अनुसार अभी आपके पास प्ले-ऑफ़ में जगह है। सीधे क्वालिफ़ाई न कर पाए तो $finals तक पहुँचने का यह दूसरा रास्ता है। प्ले-ऑफ़ के रास्ते क्वालिफ़ाइंग ख़त्म होने पर निकाले जाते हैं।';
   }
+
+  @override
+  String get ncLegendWinnerUp => 'ग्रुप विजेता: ऊपरी लीग में पदोन्नति';
+
+  @override
+  String get ncLegendWinnerFinalsFour => 'ग्रुप विजेता: फ़ाइनल फ़ोर में';
+
+  @override
+  String get ncLegendLastDown => 'अंतिम: निचली लीग में';
+
+  @override
+  String get playoffBadgeLetter => 'PO';
+
+  @override
+  String get playoffBadgeTooltip =>
+      'प्ले-ऑफ़ की राह पर: क्वालिफ़ाइंग नाकाम हो तो दूसरा मौका';
 }

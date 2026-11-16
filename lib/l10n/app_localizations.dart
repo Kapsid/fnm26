@@ -27350,10 +27350,10 @@ abstract class AppLocalizations {
   /// **'The top two of every group go straight through. The last places go to play-off paths for the best Nations Cup sides who are not through. As things stand:'**
   String get euroPlayoffCourseNote;
 
-  /// Nations Cup tables: what a yellow row means (sides on course for the continental finals' play-off paths, read off this cup).
+  /// Nations Cup legend: the play-off tag, sides headed for the continental finals play-off (a second chance if qualifying fails).
   ///
   /// In en, this message translates to:
-  /// **'Yellow: on course for the play-off for the continental finals'**
+  /// **'Headed for the play-off for the continental finals, should qualifying fail'**
   String get ncEuroPlayoffLegend;
 
   /// Play-off path: tag beside the semi-final's winner.
@@ -27488,10 +27488,10 @@ abstract class AppLocalizations {
   /// **'GROUPS'**
   String get regionalCupGroups;
 
-  /// Nations Cup tables (Europe, second edition): legend of the yellow mark, sides on course for the World Championship play-off.
+  /// Nations Cup legend (second edition): the play-off tag, sides headed for the World Championship play-off (a second chance if qualifying fails).
   ///
   /// In en, this message translates to:
-  /// **'Yellow: on course for the World Championship play-off'**
+  /// **'Headed for the World Championship play-off, should qualifying fail'**
   String get ncWcPlayoffLegend;
 
   /// Inbox title: the Nations Cup puts the manager's side on course for a play-off path to a finals tournament (a safety net if qualifying goes wrong).
@@ -27505,6 +27505,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'As the {cup} tables stand, you hold a play-off place. Should you not qualify directly, it gives you a second route to the {finals}. The paths are drawn once qualifying ends.'**
   String newsNcPlayoffNetBody(String cup, String finals);
+
+  /// Nations Cup league legend: the green stripe, the group winner goes up a league.
+  ///
+  /// In en, this message translates to:
+  /// **'Group winner: promoted a league'**
+  String get ncLegendWinnerUp;
+
+  /// Nations Cup league legend, League A: the green stripe, the group winner reaches the Finals Four.
+  ///
+  /// In en, this message translates to:
+  /// **'Group winner: into the Finals Four'**
+  String get ncLegendWinnerFinalsFour;
+
+  /// Nations Cup league legend: the red stripe, the bottom side drops a league.
+  ///
+  /// In en, this message translates to:
+  /// **'Bottom: relegated a league'**
+  String get ncLegendLastDown;
+
+  /// A one- or two-letter tag on a side headed for a play-off path (first letter of the local word for play-off).
+  ///
+  /// In en, this message translates to:
+  /// **'P'**
+  String get playoffBadgeLetter;
+
+  /// Tooltip of the play-off tag beside a Nations Cup side.
+  ///
+  /// In en, this message translates to:
+  /// **'Headed for a play-off path: a second chance if qualifying fails'**
+  String get playoffBadgeTooltip;
 }
 
 class _AppLocalizationsDelegate

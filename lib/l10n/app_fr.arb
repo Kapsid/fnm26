@@ -4519,7 +4519,7 @@
   "assistantMatchResult": "Le match de l'adjoint",
   "euroPlayoffCourseTitle": "Barrages via la Coupe des nations",
   "euroPlayoffCourseNote": "Les deux premiers de chaque groupe sont qualifiés directement. Les dernières places se jouent en barrages entre les meilleures équipes de la Coupe des nations non qualifiées. En l'état :",
-  "ncEuroPlayoffLegend": "Jaune : en route pour les barrages de la phase finale",
+  "ncEuroPlayoffLegend": "En route pour les barrages de la phase finale si les qualifications échouent",
   "euroPlayoffToFinal": "En finale",
   "euroPlayoffQualified": "Qualifié",
   "playerOtherPositions": "À chaque poste",
@@ -4542,7 +4542,12 @@
   "regionalCupHosted": "Pays hôte : {host}",
   "regionalCupHomeAndAway": "Phase de groupes à domicile et à l'extérieur",
   "regionalCupGroups": "GROUPES",
-  "ncWcPlayoffLegend": "Jaune : en route pour les barrages du Championnat du monde",
+  "ncWcPlayoffLegend": "En route pour les barrages du Championnat du monde si les qualifications échouent",
   "newsNcPlayoffNetTitle": "Un filet de sécurité en barrages : {finals}",
-  "newsNcPlayoffNetBody": "D'après les classements de la compétition {cup}, vous tenez pour l'instant une place en barrages. Si la qualification directe échoue, ils vous ouvrent une seconde voie vers la phase finale ({finals}). Les tableaux sont tirés à la fin des qualifications."
+  "newsNcPlayoffNetBody": "D'après les classements de la compétition {cup}, vous tenez pour l'instant une place en barrages. Si la qualification directe échoue, ils vous ouvrent une seconde voie vers la phase finale ({finals}). Les tableaux sont tirés à la fin des qualifications.",
+  "ncLegendWinnerUp": "Vainqueur du groupe : promu dans la ligue supérieure",
+  "ncLegendWinnerFinalsFour": "Vainqueur du groupe : phase finale à quatre",
+  "ncLegendLastDown": "Dernier : relégué dans la ligue inférieure",
+  "playoffBadgeLetter": "B",
+  "playoffBadgeTooltip": "En route pour les barrages : une seconde chance si les qualifications échouent"
 }

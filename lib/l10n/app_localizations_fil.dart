@@ -18104,7 +18104,8 @@ class AppLocalizationsFil extends AppLocalizations {
       'Diretsong pasok ang nangungunang dalawa sa bawat grupo. Ang huling mga puwesto ay pag-aagawan sa play-off ng pinakamahuhusay sa Nations Cup na hindi pa pasok. Sa ngayon:';
 
   @override
-  String get ncEuroPlayoffLegend => 'Dilaw: patungo sa play-off para sa finals';
+  String get ncEuroPlayoffLegend =>
+      'Patungo sa play-off para sa finals kung pumalya ang qualifying';
 
   @override
   String get euroPlayoffToFinal => 'Sa final';
@@ -18195,7 +18196,7 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get ncWcPlayoffLegend =>
-      'Dilaw: patungo sa play-off ng World Championship';
+      'Patungo sa play-off ng World Championship kung pumalya ang qualifying';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -18206,4 +18207,21 @@ class AppLocalizationsFil extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return 'Ayon sa mga talaan ng $cup, may puwesto ka ngayon sa play-off. Kung hindi direktang makapasok, ito ang ikalawang daan papunta sa $finals. Binubunot ang mga path pagkatapos ng qualifying.';
   }
+
+  @override
+  String get ncLegendWinnerUp => 'Nanalo sa grupo: aakyat ng liga';
+
+  @override
+  String get ncLegendWinnerFinalsFour =>
+      'Nanalo sa grupo: pasok sa Finals Four';
+
+  @override
+  String get ncLegendLastDown => 'Huli: bababa ng liga';
+
+  @override
+  String get playoffBadgeLetter => 'P';
+
+  @override
+  String get playoffBadgeTooltip =>
+      'Patungo sa play-off: pangalawang tsansa kung pumalya ang qualifying';
 }

@@ -425,6 +425,7 @@ class _HubScreenState extends ConsumerState<HubScreen> {
                       directCount: hub.groupDirectCount,
                       contentionPos: hub.groupContentionPos,
                       playoffNations: hub.groupPlayoffNations,
+                      playoffBadge: hub.groupPlayoffBadge,
                       relegateCount: hub.groupRelegateCount,
                       code: code,
                       name: name,
@@ -981,6 +982,7 @@ class _GroupTable extends StatelessWidget {
     required this.directCount,
     required this.contentionPos,
     this.playoffNations = const {},
+    this.playoffBadge = const {},
     required this.code,
     required this.name,
     this.relegateCount = 0,
@@ -999,6 +1001,9 @@ class _GroupTable extends StatelessWidget {
 
   /// Nations whose place leads to the intercontinental play-off (yellow).
   final Set<int> playoffNations;
+
+  /// Nations tagged for a Nations Cup play-off path (see [PlayoffBadge]).
+  final Set<int> playoffBadge;
 
   /// How many bottom places go down (red) — the Nations Cup relegates each
   /// group's last side.
@@ -1122,6 +1127,10 @@ class _GroupTable extends StatelessWidget {
                       ),
                     ),
                   ),
+                  if (playoffBadge.contains(s.nationId)) ...[
+                    const SizedBox(width: AppSpacing.xs),
+                    const PlayoffBadge(),
+                  ],
                 ],
               ),
             ),

@@ -267,14 +267,16 @@ mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
                 color: AppColors.primary,
               ),
             ),
-            if (v.playoffNations.isNotEmpty) ...[
-              const SizedBox(height: AppSpacing.xs),
-              _PlayoffLegend(
-                text: v.playoffForWorld
-                    ? l.ncWcPlayoffLegend
-                    : l.ncEuroPlayoffLegend,
-              ),
-            ],
+            const SizedBox(height: AppSpacing.xs),
+            _LeagueLegend(
+              top: NationsCup.tierOfGroupName(shown.first.name) == 0,
+              lowest: NationsCup.tierOfGroupName(shown.first.name) >= v.maxTier,
+              playoff: v.playoffNations.isEmpty
+                  ? null
+                  : v.playoffForWorld
+                  ? l.ncWcPlayoffLegend
+                  : l.ncEuroPlayoffLegend,
+            ),
             const SizedBox(height: AppSpacing.md),
             if (grid) ...[
               ColumnFlow(children: [for (final g in shown) card(g)]),
@@ -554,10 +556,10 @@ class _GroupCard extends StatelessWidget {
       continentalSize: 0,
       isLowestLeague: isLowestLeague,
     );
+    // A play-off path is its own tag beside the name (a group winner on
+    // course for one keeps its green).
     final zone = pos <= adv.direct
         ? AppColors.positive
-        : playoffNations.contains(s.nationId)
-        ? AppColors.playoff
         : pos == adv.contention
         ? AppColors.warning
         : adv.relegate > 0 && pos > total - adv.relegate
@@ -603,6 +605,10 @@ class _GroupCard extends StatelessWidget {
                       ),
                     ),
                   ),
+                  if (playoffNations.contains(s.nationId)) ...[
+                    const SizedBox(width: AppSpacing.xs),
+                    const PlayoffBadge(),
+                  ],
                 ],
               ),
             ),
@@ -783,28 +789,61 @@ class _FinalsCard extends StatelessWidget {
   }
 }
 
-/// One line under a league's heading: what the yellow rows mean.
-class _PlayoffLegend extends StatelessWidget {
-  const _PlayoffLegend({required this.text});
+/// The key over a league's groups: what the green and red stripes mean
+/// there, and the play-off tag when any side carries it.
+class _LeagueLegend extends StatelessWidget {
+  const _LeagueLegend({
+    required this.top,
+    required this.lowest,
+    this.playoff,
+  });
 
-  final String text;
+  /// League A: its winners go to the Finals Four, not up.
+  final bool top;
 
-  static const Key legendKey = Key('nationsCup.playoffLegend');
+  /// The lowest league: nobody goes down.
+  final bool lowest;
+
+  /// What the play-off tag means here, or null when no side carries it.
+  final String? playoff;
+
+  static const Key legendKey = Key('nationsCup.legend');
+  static const Key playoffKey = Key('nationsCup.playoffLegend');
 
   @override
-  Widget build(BuildContext context) => Row(
-    key: legendKey,
-    children: [
-      Container(width: 3, height: 14, color: AppColors.playoff),
-      const SizedBox(width: AppSpacing.sm),
-      Expanded(
-        child: Text(
-          text,
-          style: AppTypography.labelSmall.copyWith(
-            color: AppColors.onSurfaceVariant,
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    Widget stripe(Color c) => Container(width: 3, height: 14, color: c);
+    Widget line(Widget mark, String text, {Key? key}) => Padding(
+      key: key,
+      padding: const EdgeInsets.only(top: 2),
+      child: Row(
+        children: [
+          SizedBox(width: 22, child: Center(child: mark)),
+          const SizedBox(width: AppSpacing.xs),
+          Expanded(
+            child: Text(
+              text,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
           ),
-        ),
+        ],
       ),
-    ],
-  );
+    );
+    return Column(
+      key: legendKey,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        line(
+          stripe(AppColors.positive),
+          top ? l.ncLegendWinnerFinalsFour : l.ncLegendWinnerUp,
+        ),
+        if (!lowest) line(stripe(AppColors.error), l.ncLegendLastDown),
+        if (playoff case final text?)
+          line(const PlayoffBadge(), text, key: playoffKey),
+      ],
+    );
+  }
 }

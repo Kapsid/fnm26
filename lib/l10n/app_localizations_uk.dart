@@ -18424,7 +18424,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend =>
-      'Жовтий: на шляху до плей-оф фінального турніру';
+      'На шляху до плей-оф фінального турніру, якщо кваліфікація не вдасться';
 
   @override
   String get euroPlayoffToFinal => 'У фінал';
@@ -18515,7 +18515,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get ncWcPlayoffLegend =>
-      'Жовтий: на шляху до плей-оф чемпіонату світу';
+      'На шляху до плей-оф чемпіонату світу, якщо кваліфікація не вдасться';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -18526,4 +18526,20 @@ class AppLocalizationsUk extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return 'За таблицями турніру $cup ви поки маєте місце в плей-оф. Якщо пряма путівка не вийде, це другий шлях на турнір $finals. Шляхи плей-оф розігрують після кваліфікації.';
   }
+
+  @override
+  String get ncLegendWinnerUp => 'Переможець групи: підвищення до вищої ліги';
+
+  @override
+  String get ncLegendWinnerFinalsFour => 'Переможець групи: до фіналу чотирьох';
+
+  @override
+  String get ncLegendLastDown => 'Останній: пониження до нижчої ліги';
+
+  @override
+  String get playoffBadgeLetter => 'П';
+
+  @override
+  String get playoffBadgeTooltip =>
+      'На шляху до плей-оф: другий шанс, якщо кваліфікація не вдасться';
 }

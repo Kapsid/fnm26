@@ -27925,9 +27925,9 @@
   "@euroPlayoffCourseNote": {
     "description": "Card under Europe's qualifying tables: explains the play-off paths; followed by each path's sides."
   },
-  "ncEuroPlayoffLegend": "Yellow: on course for the play-off for the continental finals",
+  "ncEuroPlayoffLegend": "Headed for the play-off for the continental finals, should qualifying fail",
   "@ncEuroPlayoffLegend": {
-    "description": "Nations Cup tables: what a yellow row means (sides on course for the continental finals' play-off paths, read off this cup)."
+    "description": "Nations Cup legend: the play-off tag, sides headed for the continental finals play-off (a second chance if qualifying fails)."
   },
   "euroPlayoffToFinal": "To the final",
   "@euroPlayoffToFinal": {
@@ -28088,9 +28088,9 @@
   "@regionalCupGroups": {
     "description": "Regional cup page: heading over the two group tables."
   },
-  "ncWcPlayoffLegend": "Yellow: on course for the World Championship play-off",
+  "ncWcPlayoffLegend": "Headed for the World Championship play-off, should qualifying fail",
   "@ncWcPlayoffLegend": {
-    "description": "Nations Cup tables (Europe, second edition): legend of the yellow mark, sides on course for the World Championship play-off."
+    "description": "Nations Cup legend (second edition): the play-off tag, sides headed for the World Championship play-off (a second chance if qualifying fails)."
   },
   "newsNcPlayoffNetTitle": "A play-off safety net: {finals}",
   "@newsNcPlayoffNetTitle": {
@@ -28112,5 +28112,25 @@
         "type": "String"
       }
     }
+  },
+  "ncLegendWinnerUp": "Group winner: promoted a league",
+  "@ncLegendWinnerUp": {
+    "description": "Nations Cup league legend: the green stripe, the group winner goes up a league."
+  },
+  "ncLegendWinnerFinalsFour": "Group winner: into the Finals Four",
+  "@ncLegendWinnerFinalsFour": {
+    "description": "Nations Cup league legend, League A: the green stripe, the group winner reaches the Finals Four."
+  },
+  "ncLegendLastDown": "Bottom: relegated a league",
+  "@ncLegendLastDown": {
+    "description": "Nations Cup league legend: the red stripe, the bottom side drops a league."
+  },
+  "playoffBadgeLetter": "P",
+  "@playoffBadgeLetter": {
+    "description": "A one- or two-letter tag on a side headed for a play-off path (first letter of the local word for play-off)."
+  },
+  "playoffBadgeTooltip": "Headed for a play-off path: a second chance if qualifying fails",
+  "@playoffBadgeTooltip": {
+    "description": "Tooltip of the play-off tag beside a Nations Cup side."
   }
 }

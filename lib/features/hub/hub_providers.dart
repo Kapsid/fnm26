@@ -185,6 +185,7 @@ class HubData {
     this.groupDirectCount = 2,
     this.groupContentionPos,
     this.groupPlayoffNations = const {},
+    this.groupPlayoffBadge = const {},
     this.groupRelegateCount = 0,
   });
 
@@ -207,6 +208,11 @@ class HubData {
   /// Nations in [group]'s confederation currently on course for the
   /// intercontinental play-off (yellow), World Championship qualifying only.
   final Set<int> groupPlayoffNations;
+
+  /// Nations of a European Nations Cup [group] on course for a play-off
+  /// path (calendar2): tagged beside the name (see `PlayoffBadge`), apart
+  /// from the promotion and relegation stripe.
+  final Set<int> groupPlayoffBadge;
 
   /// How many bottom places in [group] are relegated (red) — the Nations Cup
   /// drops each group's last side a league.
@@ -287,6 +293,7 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
   var groupDirect = 2;
   int? groupContention;
   var groupPlayoff = const <int>{};
+  var groupBadge = const <int>{};
   var groupRelegate = 0;
   var groupDrawWatched = true;
   if (group != null) {
@@ -345,7 +352,7 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
       // World Championship's pot 4 from the second): its sides on course
       // for them, marked there (not in the qualifying groups, where they can
       // stand anywhere).
-      groupPlayoff = await showsFirstNationsCup(compRepo, careerId: careerId)
+      groupBadge = await showsFirstNationsCup(compRepo, careerId: careerId)
           ? await euroPlayoffMarks(
               compRepo,
               careerId: careerId,
@@ -400,6 +407,7 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
     groupDirectCount: groupDirect,
     groupContentionPos: groupContention,
     groupPlayoffNations: groupPlayoff,
+    groupPlayoffBadge: groupBadge,
     groupRelegateCount: groupRelegate,
   );
 });

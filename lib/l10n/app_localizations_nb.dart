@@ -18088,7 +18088,8 @@ class AppLocalizationsNb extends AppLocalizations {
       'De to beste i hver gruppe går rett videre. De siste plassene går til playoff for Nations Cups beste lag som ikke er videre. Slik det står nå:';
 
   @override
-  String get ncEuroPlayoffLegend => 'Gul: på vei mot playoff til sluttspillet';
+  String get ncEuroPlayoffLegend =>
+      'På vei mot playoff til sluttspillet om kvalifiseringen slår feil';
 
   @override
   String get euroPlayoffToFinal => 'Til finalen';
@@ -18177,7 +18178,8 @@ class AppLocalizationsNb extends AppLocalizations {
   String get regionalCupGroups => 'GRUPPER';
 
   @override
-  String get ncWcPlayoffLegend => 'Gul: på vei mot VM-playoff';
+  String get ncWcPlayoffLegend =>
+      'På vei mot playoff til Verdensmesterskapet om kvalifiseringen slår feil';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -18188,4 +18190,21 @@ class AppLocalizationsNb extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return 'Etter tabellene i turneringen $cup har dere nå en playoffplass. Kvalifiserer dere dere ikke direkte, får dere en ny vei til turneringen $finals. Playoffveiene trekkes når kvalifiseringen er over.';
   }
+
+  @override
+  String get ncLegendWinnerUp => 'Gruppevinner: rykker opp en liga';
+
+  @override
+  String get ncLegendWinnerFinalsFour =>
+      'Gruppevinner: til finalespillet med fire lag';
+
+  @override
+  String get ncLegendLastDown => 'Sist: rykker ned en liga';
+
+  @override
+  String get playoffBadgeLetter => 'P';
+
+  @override
+  String get playoffBadgeTooltip =>
+      'På vei mot playoff: en ny sjanse om kvalifiseringen slår feil';
 }

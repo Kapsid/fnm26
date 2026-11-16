@@ -18178,7 +18178,8 @@ class AppLocalizationsBg extends AppLocalizations {
       'Първите два от всяка група се класират директно. Последните места се разиграват в плейоф между най-добрите отбори от Nations Cup, които не са се класирали. Към момента:';
 
   @override
-  String get ncEuroPlayoffLegend => 'Жълто: по пътя към плейофа за финалите';
+  String get ncEuroPlayoffLegend =>
+      'По пътя към плейофа за финалите, ако квалификациите се провалят';
 
   @override
   String get euroPlayoffToFinal => 'Към финала';
@@ -18268,7 +18269,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get ncWcPlayoffLegend =>
-      'Жълто: по пътя към плейофа за Световното първенство';
+      'По пътя към плейофа за Световното първенство, ако квалификациите се провалят';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -18279,4 +18280,22 @@ class AppLocalizationsBg extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return 'Според класиранията в турнира $cup засега имате място в плейофите. Ако не се класирате директно, имате втори път към турнира $finals. Пътищата се теглят след края на квалификациите.';
   }
+
+  @override
+  String get ncLegendWinnerUp =>
+      'Победител в групата: изкачва се в по-горна лига';
+
+  @override
+  String get ncLegendWinnerFinalsFour =>
+      'Победител в групата: във финалната четворка';
+
+  @override
+  String get ncLegendLastDown => 'Последен: изпада в по-долна лига';
+
+  @override
+  String get playoffBadgeLetter => 'П';
+
+  @override
+  String get playoffBadgeTooltip =>
+      'По пътя към плейофа: втори шанс, ако квалификациите се провалят';
 }

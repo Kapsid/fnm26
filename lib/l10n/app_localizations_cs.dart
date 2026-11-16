@@ -18487,7 +18487,8 @@ class AppLocalizationsCs extends AppLocalizations {
       'První dva z každé skupiny postupují přímo. O poslední místa se hraje baráž mezi nejlepšími týmy Poháru národů, které nepostoupily. Podle aktuálního stavu:';
 
   @override
-  String get ncEuroPlayoffLegend => 'Žlutě: míří do baráže o závěrečný turnaj';
+  String get ncEuroPlayoffLegend =>
+      'Míří do baráže o závěrečný turnaj, kdyby nevyšla kvalifikace';
 
   @override
   String get euroPlayoffToFinal => 'Do finále';
@@ -18576,7 +18577,8 @@ class AppLocalizationsCs extends AppLocalizations {
   String get regionalCupGroups => 'SKUPINY';
 
   @override
-  String get ncWcPlayoffLegend => 'Žlutě: míří do baráže o mistrovství světa';
+  String get ncWcPlayoffLegend =>
+      'Míří do baráže o mistrovství světa, kdyby nevyšla kvalifikace';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -18587,4 +18589,20 @@ class AppLocalizationsCs extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return 'Podle tabulek soutěže $cup máte zatím místo v baráži. Kdyby přímý postup nevyšel, máte druhou cestu na turnaj $finals. Cesty baráže se losují po skončení kvalifikace.';
   }
+
+  @override
+  String get ncLegendWinnerUp => 'Vítěz skupiny: postup do vyšší ligy';
+
+  @override
+  String get ncLegendWinnerFinalsFour => 'Vítěz skupiny: finálová čtyřka';
+
+  @override
+  String get ncLegendLastDown => 'Poslední: sestup do nižší ligy';
+
+  @override
+  String get playoffBadgeLetter => 'B';
+
+  @override
+  String get playoffBadgeTooltip =>
+      'Míří do baráže: druhá šance, kdyby nevyšla kvalifikace';
 }

@@ -4519,7 +4519,7 @@
   "assistantMatchResult": "Yardımcının maçı",
   "euroPlayoffCourseTitle": "Uluslar Kupası üzerinden play-off",
   "euroPlayoffCourseNote": "Her grubun ilk ikisi doğrudan katılır. Son yerler, Uluslar Kupası'nın henüz katılamamış en iyi takımları arasındaki play-off ile belirlenir. Şu anki duruma göre:",
-  "ncEuroPlayoffLegend": "Sarı: final turnuvası play-off yolunda",
+  "ncEuroPlayoffLegend": "Elemeler kötü giderse final turnuvası play-off yolunda",
   "euroPlayoffToFinal": "Finale",
   "euroPlayoffQualified": "Katıldı",
   "playerOtherPositions": "Her mevkide",
@@ -4542,7 +4542,12 @@
   "regionalCupHosted": "Ev sahibi: {host}",
   "regionalCupHomeAndAway": "Gruplar iç saha ve deplasmanda oynanır",
   "regionalCupGroups": "GRUPLAR",
-  "ncWcPlayoffLegend": "Sarı: Dünya Şampiyonası play-off yolunda",
+  "ncWcPlayoffLegend": "Elemeler kötü giderse Dünya Şampiyonası play-off yolunda",
   "newsNcPlayoffNetTitle": "Güvence olarak play-off: {finals}",
-  "newsNcPlayoffNetBody": "{cup} tablolarına göre şu an play-off yerindesin. Doğrudan katılım olmazsa, {finals} için ikinci bir yolun var. Play-off yolları elemeler bitince çekilir."
+  "newsNcPlayoffNetBody": "{cup} tablolarına göre şu an play-off yerindesin. Doğrudan katılım olmazsa, {finals} için ikinci bir yolun var. Play-off yolları elemeler bitince çekilir.",
+  "ncLegendWinnerUp": "Grup birincisi: üst lige yükselir",
+  "ncLegendWinnerFinalsFour": "Grup birincisi: dörtlü finale",
+  "ncLegendLastDown": "Sonuncu: alt lige düşer",
+  "playoffBadgeLetter": "P",
+  "playoffBadgeTooltip": "Play-off yolunda: elemeler kötü giderse ikinci bir şans"
 }

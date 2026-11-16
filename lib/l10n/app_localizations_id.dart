@@ -18002,7 +18002,8 @@ class AppLocalizationsId extends AppLocalizations {
       'Dua teratas tiap grup lolos langsung. Tempat terakhir diperebutkan di play-off oleh tim terbaik Piala Bangsa-Bangsa yang belum lolos. Saat ini:';
 
   @override
-  String get ncEuroPlayoffLegend => 'Kuning: menuju play-off putaran final';
+  String get ncEuroPlayoffLegend =>
+      'Menuju play-off putaran final jika kualifikasi gagal';
 
   @override
   String get euroPlayoffToFinal => 'Ke final';
@@ -18091,7 +18092,8 @@ class AppLocalizationsId extends AppLocalizations {
   String get regionalCupGroups => 'GRUP';
 
   @override
-  String get ncWcPlayoffLegend => 'Kuning: menuju play-off Kejuaraan Dunia';
+  String get ncWcPlayoffLegend =>
+      'Menuju play-off Kejuaraan Dunia jika kualifikasi gagal';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -18102,4 +18104,20 @@ class AppLocalizationsId extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return 'Menurut klasemen $cup, saat ini Anda memegang tempat di play-off. Jika gagal lolos langsung, itu jalan kedua menuju $finals. Jalur play-off diundi setelah kualifikasi selesai.';
   }
+
+  @override
+  String get ncLegendWinnerUp => 'Juara grup: naik ke liga lebih tinggi';
+
+  @override
+  String get ncLegendWinnerFinalsFour => 'Juara grup: ke babak empat besar';
+
+  @override
+  String get ncLegendLastDown => 'Terbawah: turun ke liga lebih rendah';
+
+  @override
+  String get playoffBadgeLetter => 'P';
+
+  @override
+  String get playoffBadgeTooltip =>
+      'Menuju play-off: kesempatan kedua jika kualifikasi gagal';
 }

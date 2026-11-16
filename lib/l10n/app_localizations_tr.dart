@@ -18004,7 +18004,8 @@ class AppLocalizationsTr extends AppLocalizations {
       'Her grubun ilk ikisi doğrudan katılır. Son yerler, Uluslar Kupası\'nın henüz katılamamış en iyi takımları arasındaki play-off ile belirlenir. Şu anki duruma göre:';
 
   @override
-  String get ncEuroPlayoffLegend => 'Sarı: final turnuvası play-off yolunda';
+  String get ncEuroPlayoffLegend =>
+      'Elemeler kötü giderse final turnuvası play-off yolunda';
 
   @override
   String get euroPlayoffToFinal => 'Finale';
@@ -18093,7 +18094,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get regionalCupGroups => 'GRUPLAR';
 
   @override
-  String get ncWcPlayoffLegend => 'Sarı: Dünya Şampiyonası play-off yolunda';
+  String get ncWcPlayoffLegend =>
+      'Elemeler kötü giderse Dünya Şampiyonası play-off yolunda';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -18104,4 +18106,20 @@ class AppLocalizationsTr extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return '$cup tablolarına göre şu an play-off yerindesin. Doğrudan katılım olmazsa, $finals için ikinci bir yolun var. Play-off yolları elemeler bitince çekilir.';
   }
+
+  @override
+  String get ncLegendWinnerUp => 'Grup birincisi: üst lige yükselir';
+
+  @override
+  String get ncLegendWinnerFinalsFour => 'Grup birincisi: dörtlü finale';
+
+  @override
+  String get ncLegendLastDown => 'Sonuncu: alt lige düşer';
+
+  @override
+  String get playoffBadgeLetter => 'P';
+
+  @override
+  String get playoffBadgeTooltip =>
+      'Play-off yolunda: elemeler kötü giderse ikinci bir şans';
 }

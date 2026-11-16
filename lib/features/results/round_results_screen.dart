@@ -39,6 +39,9 @@ typedef RoundResultsView = ({
   int directCount,
   int? contentionPos,
   Set<int> playoffNations,
+
+  /// Nations tagged for a Nations Cup play-off path (see `PlayoffBadge`).
+  Set<int> playoffBadge,
   int relegateCount,
   Set<String> noRelegationGroups,
 });
@@ -67,6 +70,7 @@ roundResultsViewProvider = FutureProvider.autoDispose.family<RoundResultsView?, 
   var direct = 2;
   int? contention;
   var playoff = const <int>{};
+  var badge = const <int>{};
   var relegate = 0;
   final noRelegation = <String>{};
   if (results != null && results.groupCount > 0) {
@@ -103,7 +107,7 @@ roundResultsViewProvider = FutureProvider.autoDispose.family<RoundResultsView?, 
     if (results.kind == CompetitionKind.nationsLeague &&
         conf == Confederation.europe) {
       final comp = ref.watch(competitionRepositoryProvider);
-      playoff = await showsFirstNationsCup(comp, careerId: careerId)
+      badge = await showsFirstNationsCup(comp, careerId: careerId)
           ? await euroPlayoffMarks(
               comp,
               careerId: careerId,
@@ -155,6 +159,7 @@ roundResultsViewProvider = FutureProvider.autoDispose.family<RoundResultsView?, 
     directCount: direct,
     contentionPos: contention,
     playoffNations: playoff,
+    playoffBadge: badge,
     relegateCount: relegate,
     noRelegationGroups: noRelegation,
   );
@@ -289,6 +294,7 @@ class RoundResultsScreen extends ConsumerWidget {
                     directCount: view.directCount,
                     contentionPos: view.contentionPos,
                     playoffNations: view.playoffNations,
+                    playoffBadge: view.playoffBadge,
                     relegateCount: view.noRelegationGroups.contains(g.name)
                         ? 0
                         : view.relegateCount,
@@ -323,6 +329,7 @@ class _GroupBlock extends StatelessWidget {
     required this.directCount,
     required this.contentionPos,
     required this.playoffNations,
+    required this.playoffBadge,
     required this.relegateCount,
     required this.code,
     required this.name,
@@ -335,6 +342,7 @@ class _GroupBlock extends StatelessWidget {
   final int directCount;
   final int? contentionPos;
   final Set<int> playoffNations;
+  final Set<int> playoffBadge;
 
   /// How many bottom places go down (red) — the Nations Cup relegates each
   /// group's last side (bar the lowest league's).
@@ -376,6 +384,7 @@ class _GroupBlock extends StatelessWidget {
                 directCount: directCount,
                 contentionPos: contentionPos,
                 playoffNations: playoffNations,
+                playoffBadge: playoffBadge,
                 relegated:
                     relegateCount > 0 &&
                     i + 1 > group.standings.length - relegateCount,
@@ -519,6 +528,7 @@ class _StandingRow extends StatelessWidget {
     required this.directCount,
     required this.contentionPos,
     required this.playoffNations,
+    required this.playoffBadge,
     required this.relegated,
     required this.name,
     required this.code,
@@ -532,6 +542,9 @@ class _StandingRow extends StatelessWidget {
   final int directCount;
   final int? contentionPos;
   final Set<int> playoffNations;
+
+  /// Nations tagged for a Nations Cup play-off path (see [PlayoffBadge]).
+  final Set<int> playoffBadge;
 
   /// Whether this position drops a league (Nations Cup groups).
   final bool relegated;
@@ -593,6 +606,10 @@ class _StandingRow extends StatelessWidget {
                       ),
                     ),
                   ),
+                  if (playoffBadge.contains(standing.nationId)) ...[
+                    const SizedBox(width: AppSpacing.xs),
+                    const PlayoffBadge(size: 13),
+                  ],
                 ],
               ),
             ),

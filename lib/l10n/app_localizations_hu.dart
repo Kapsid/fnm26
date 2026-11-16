@@ -18038,7 +18038,7 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend =>
-      'Sárga: úton a zárótorna pótselejtezője felé';
+      'Úton a zárótorna pótselejtezője felé, ha a selejtező nem jön össze';
 
   @override
   String get euroPlayoffToFinal => 'Döntőbe';
@@ -18128,7 +18128,8 @@ class AppLocalizationsHu extends AppLocalizations {
   String get regionalCupGroups => 'CSOPORTOK';
 
   @override
-  String get ncWcPlayoffLegend => 'Sárga: úton a vb-pótselejtező felé';
+  String get ncWcPlayoffLegend =>
+      'Úton a világbajnokság pótselejtezője felé, ha a selejtező nem jön össze';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -18139,4 +18140,20 @@ class AppLocalizationsHu extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return 'A(z) $cup tabellái szerint jelenleg pótselejtezős helyen álltok. Ha a közvetlen kijutás nem sikerül, ez egy második út a tornára ($finals). Az ágakat a selejtező végén sorsolják.';
   }
+
+  @override
+  String get ncLegendWinnerUp => 'Csoportgyőztes: feljut a magasabb ligába';
+
+  @override
+  String get ncLegendWinnerFinalsFour => 'Csoportgyőztes: a négyes döntőbe jut';
+
+  @override
+  String get ncLegendLastDown => 'Utolsó: kiesik az alacsonyabb ligába';
+
+  @override
+  String get playoffBadgeLetter => 'P';
+
+  @override
+  String get playoffBadgeTooltip =>
+      'Úton a pótselejtező felé: második esély, ha a selejtező nem jön össze';
 }

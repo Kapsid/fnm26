@@ -18173,7 +18173,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend =>
-      'Giallo: in corsa per gli spareggi della fase finale';
+      'In corsa per gli spareggi della fase finale se le qualificazioni vanno male';
 
   @override
   String get euroPlayoffToFinal => 'In finale';
@@ -18264,7 +18264,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get ncWcPlayoffLegend =>
-      'Giallo: in corsa per gli spareggi del Campionato del mondo';
+      'In corsa per gli spareggi del Campionato del mondo se le qualificazioni vanno male';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -18275,4 +18275,22 @@ class AppLocalizationsIt extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return 'Secondo le classifiche del torneo $cup, al momento hai un posto negli spareggi. Se la qualificazione diretta non arriva, avrai una seconda strada verso il torneo $finals. I percorsi si sorteggiano a fine qualificazioni.';
   }
+
+  @override
+  String get ncLegendWinnerUp =>
+      'Vincitore del girone: promosso nella lega superiore';
+
+  @override
+  String get ncLegendWinnerFinalsFour =>
+      'Vincitore del girone: alla fase finale a quattro';
+
+  @override
+  String get ncLegendLastDown => 'Ultimo: retrocesso nella lega inferiore';
+
+  @override
+  String get playoffBadgeLetter => 'S';
+
+  @override
+  String get playoffBadgeTooltip =>
+      'In corsa per gli spareggi: una seconda possibilità se le qualificazioni vanno male';
 }

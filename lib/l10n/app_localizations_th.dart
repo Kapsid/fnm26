@@ -17785,7 +17785,8 @@ class AppLocalizationsTh extends AppLocalizations {
       'สองอันดับแรกของแต่ละกลุ่มผ่านเข้ารอบทันที ที่นั่งสุดท้ายตัดสินจากเพลย์ออฟของทีมที่ดีที่สุดในเนชันส์คัพที่ยังไม่ผ่าน ณ ตอนนี้:';
 
   @override
-  String get ncEuroPlayoffLegend => 'สีเหลือง: กำลังมุ่งสู่เพลย์ออฟรอบสุดท้าย';
+  String get ncEuroPlayoffLegend =>
+      'มุ่งสู่เพลย์ออฟรอบสุดท้ายหากรอบคัดเลือกพลาด';
 
   @override
   String get euroPlayoffToFinal => 'เข้ารอบชิง';
@@ -17874,7 +17875,8 @@ class AppLocalizationsTh extends AppLocalizations {
   String get regionalCupGroups => 'กลุ่ม';
 
   @override
-  String get ncWcPlayoffLegend => 'สีเหลือง: กำลังมุ่งสู่เพลย์ออฟชิงแชมป์โลก';
+  String get ncWcPlayoffLegend =>
+      'มุ่งสู่เพลย์ออฟชิงแชมป์โลกหากรอบคัดเลือกพลาด';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -17885,4 +17887,20 @@ class AppLocalizationsTh extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return 'ตามตารางคะแนน $cup ตอนนี้คุณอยู่ในโซนเพลย์ออฟ หากไม่ผ่านเข้ารอบโดยตรง ยังมีทางที่สองสู่ $finals สายเพลย์ออฟจะจับสลากหลังรอบคัดเลือกจบ';
   }
+
+  @override
+  String get ncLegendWinnerUp => 'แชมป์กลุ่ม: เลื่อนขึ้นลีกที่สูงกว่า';
+
+  @override
+  String get ncLegendWinnerFinalsFour => 'แชมป์กลุ่ม: เข้ารอบสี่ทีมสุดท้าย';
+
+  @override
+  String get ncLegendLastDown => 'อันดับสุดท้าย: ตกชั้นสู่ลีกที่ต่ำกว่า';
+
+  @override
+  String get playoffBadgeLetter => 'PO';
+
+  @override
+  String get playoffBadgeTooltip =>
+      'กำลังมุ่งสู่เพลย์ออฟ: โอกาสที่สองหากรอบคัดเลือกพลาด';
 }

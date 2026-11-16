@@ -64,6 +64,7 @@ void main() {
       directCount: full.directCount,
       contentionPos: full.contentionPos,
       playoffNations: full.playoffNations,
+      playoffBadge: full.playoffBadge,
       relegateCount: full.relegateCount,
       noRelegationGroups: full.noRelegationGroups,
     );

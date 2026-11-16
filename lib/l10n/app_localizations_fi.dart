@@ -18168,7 +18168,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend =>
-      'Keltainen: matkalla lopputurnauksen jatkokarsintaan';
+      'Matkalla lopputurnauksen jatkokarsintaan, jos karsinnat menevät pieleen';
 
   @override
   String get euroPlayoffToFinal => 'Finaaliin';
@@ -18259,7 +18259,8 @@ class AppLocalizationsFi extends AppLocalizations {
   String get regionalCupGroups => 'LOHKOT';
 
   @override
-  String get ncWcPlayoffLegend => 'Keltainen: matkalla MM-jatkokarsintaan';
+  String get ncWcPlayoffLegend =>
+      'Matkalla MM-kisojen jatkokarsintaan, jos karsinnat menevät pieleen';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -18270,4 +18271,21 @@ class AppLocalizationsFi extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return 'Turnauksen $cup taulukoiden mukaan teillä on tällä hetkellä paikka jatkokarsinnoissa. Jos suora paikka ei irtoa, se on toinen tie turnaukseen $finals. Karsintapolut arvotaan karsintojen päätyttyä.';
   }
+
+  @override
+  String get ncLegendWinnerUp => 'Lohkovoittaja: nousu ylempään liigaan';
+
+  @override
+  String get ncLegendWinnerFinalsFour =>
+      'Lohkovoittaja: neljän joukkueen lopputurnaukseen';
+
+  @override
+  String get ncLegendLastDown => 'Viimeinen: putoaminen alempaan liigaan';
+
+  @override
+  String get playoffBadgeLetter => 'J';
+
+  @override
+  String get playoffBadgeTooltip =>
+      'Matkalla jatkokarsintaan: toinen mahdollisuus, jos karsinnat menevät pieleen';
 }

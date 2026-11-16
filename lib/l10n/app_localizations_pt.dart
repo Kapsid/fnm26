@@ -18194,7 +18194,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend =>
-      'Amarelo: a caminho do play-off da fase final';
+      'A caminho do play-off da fase final se as eliminatórias falharem';
 
   @override
   String get euroPlayoffToFinal => 'À final';
@@ -18284,7 +18284,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get ncWcPlayoffLegend =>
-      'Amarelo: a caminho do play-off do Campeonato Mundial';
+      'A caminho do play-off do Campeonato Mundial se as eliminatórias falharem';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -18295,4 +18295,21 @@ class AppLocalizationsPt extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return 'Pelas tabelas do torneio $cup, por enquanto você tem vaga no play-off. Se não se classificar diretamente, terá um segundo caminho para o torneio $finals. Os caminhos são sorteados no fim das eliminatórias.';
   }
+
+  @override
+  String get ncLegendWinnerUp => 'Vencedor do grupo: sobe de liga';
+
+  @override
+  String get ncLegendWinnerFinalsFour =>
+      'Vencedor do grupo: vai à fase final a quatro';
+
+  @override
+  String get ncLegendLastDown => 'Último: desce de liga';
+
+  @override
+  String get playoffBadgeLetter => 'P';
+
+  @override
+  String get playoffBadgeTooltip =>
+      'A caminho do play-off: uma segunda chance se as eliminatórias falharem';
 }

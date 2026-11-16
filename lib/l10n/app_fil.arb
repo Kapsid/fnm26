@@ -4519,7 +4519,7 @@
   "assistantMatchResult": "Ang laro ng assistant",
   "euroPlayoffCourseTitle": "Play-off sa pamamagitan ng Nations Cup",
   "euroPlayoffCourseNote": "Diretsong pasok ang nangungunang dalawa sa bawat grupo. Ang huling mga puwesto ay pag-aagawan sa play-off ng pinakamahuhusay sa Nations Cup na hindi pa pasok. Sa ngayon:",
-  "ncEuroPlayoffLegend": "Dilaw: patungo sa play-off para sa finals",
+  "ncEuroPlayoffLegend": "Patungo sa play-off para sa finals kung pumalya ang qualifying",
   "euroPlayoffToFinal": "Sa final",
   "euroPlayoffQualified": "Pasok na",
   "playerOtherPositions": "Sa bawat posisyon",
@@ -4542,7 +4542,12 @@
   "regionalCupHosted": "Host: {host}",
   "regionalCupHomeAndAway": "Ang grupo ay nilalaro sa home at away",
   "regionalCupGroups": "MGA GROUP",
-  "ncWcPlayoffLegend": "Dilaw: patungo sa play-off ng World Championship",
+  "ncWcPlayoffLegend": "Patungo sa play-off ng World Championship kung pumalya ang qualifying",
   "newsNcPlayoffNetTitle": "Play-off bilang safety net: {finals}",
-  "newsNcPlayoffNetBody": "Ayon sa mga talaan ng {cup}, may puwesto ka ngayon sa play-off. Kung hindi direktang makapasok, ito ang ikalawang daan papunta sa {finals}. Binubunot ang mga path pagkatapos ng qualifying."
+  "newsNcPlayoffNetBody": "Ayon sa mga talaan ng {cup}, may puwesto ka ngayon sa play-off. Kung hindi direktang makapasok, ito ang ikalawang daan papunta sa {finals}. Binubunot ang mga path pagkatapos ng qualifying.",
+  "ncLegendWinnerUp": "Nanalo sa grupo: aakyat ng liga",
+  "ncLegendWinnerFinalsFour": "Nanalo sa grupo: pasok sa Finals Four",
+  "ncLegendLastDown": "Huli: bababa ng liga",
+  "playoffBadgeLetter": "P",
+  "playoffBadgeTooltip": "Patungo sa play-off: pangalawang tsansa kung pumalya ang qualifying"
 }

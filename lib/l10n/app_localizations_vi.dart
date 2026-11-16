@@ -17940,7 +17940,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend =>
-      'Vàng: đang hướng tới play-off vòng chung kết';
+      'Hướng tới play-off vòng chung kết nếu vòng loại thất bại';
 
   @override
   String get euroPlayoffToFinal => 'Vào chung kết';
@@ -18030,7 +18030,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get ncWcPlayoffLegend =>
-      'Vàng: đang hướng tới play-off giải vô địch thế giới';
+      'Hướng tới play-off giải vô địch thế giới nếu vòng loại thất bại';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -18041,4 +18041,21 @@ class AppLocalizationsVi extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return 'Theo bảng xếp hạng $cup, hiện bạn đang giữ một suất play-off. Nếu không giành vé trực tiếp, đó là con đường thứ hai tới $finals. Các nhánh play-off được bốc thăm khi vòng loại kết thúc.';
   }
+
+  @override
+  String get ncLegendWinnerUp => 'Nhất bảng: thăng lên hạng đấu cao hơn';
+
+  @override
+  String get ncLegendWinnerFinalsFour =>
+      'Nhất bảng: vào vòng chung kết bốn đội';
+
+  @override
+  String get ncLegendLastDown => 'Cuối bảng: xuống hạng đấu thấp hơn';
+
+  @override
+  String get playoffBadgeLetter => 'PO';
+
+  @override
+  String get playoffBadgeTooltip =>
+      'Hướng tới play-off: cơ hội thứ hai nếu vòng loại thất bại';
 }

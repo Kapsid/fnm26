@@ -124,6 +124,7 @@ void main() {
       directCount: v.directCount,
       contentionPos: v.contentionPos,
       playoffNations: v.playoffNations,
+      playoffBadge: v.playoffBadge,
       relegateCount: v.relegateCount,
       noRelegationGroups: v.noRelegationGroups,
     );

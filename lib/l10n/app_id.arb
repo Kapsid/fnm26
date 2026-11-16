@@ -4519,7 +4519,7 @@
   "assistantMatchResult": "Laga sang asisten",
   "euroPlayoffCourseTitle": "Play-off lewat Piala Bangsa-Bangsa",
   "euroPlayoffCourseNote": "Dua teratas tiap grup lolos langsung. Tempat terakhir diperebutkan di play-off oleh tim terbaik Piala Bangsa-Bangsa yang belum lolos. Saat ini:",
-  "ncEuroPlayoffLegend": "Kuning: menuju play-off putaran final",
+  "ncEuroPlayoffLegend": "Menuju play-off putaran final jika kualifikasi gagal",
   "euroPlayoffToFinal": "Ke final",
   "euroPlayoffQualified": "Lolos",
   "playerOtherPositions": "Di setiap posisi",
@@ -4542,7 +4542,12 @@
   "regionalCupHosted": "Tuan rumah: {host}",
   "regionalCupHomeAndAway": "Grup dimainkan kandang dan tandang",
   "regionalCupGroups": "GRUP",
-  "ncWcPlayoffLegend": "Kuning: menuju play-off Kejuaraan Dunia",
+  "ncWcPlayoffLegend": "Menuju play-off Kejuaraan Dunia jika kualifikasi gagal",
   "newsNcPlayoffNetTitle": "Play-off sebagai jaring pengaman: {finals}",
-  "newsNcPlayoffNetBody": "Menurut klasemen {cup}, saat ini Anda memegang tempat di play-off. Jika gagal lolos langsung, itu jalan kedua menuju {finals}. Jalur play-off diundi setelah kualifikasi selesai."
+  "newsNcPlayoffNetBody": "Menurut klasemen {cup}, saat ini Anda memegang tempat di play-off. Jika gagal lolos langsung, itu jalan kedua menuju {finals}. Jalur play-off diundi setelah kualifikasi selesai.",
+  "ncLegendWinnerUp": "Juara grup: naik ke liga lebih tinggi",
+  "ncLegendWinnerFinalsFour": "Juara grup: ke babak empat besar",
+  "ncLegendLastDown": "Terbawah: turun ke liga lebih rendah",
+  "playoffBadgeLetter": "P",
+  "playoffBadgeTooltip": "Menuju play-off: kesempatan kedua jika kualifikasi gagal"
 }

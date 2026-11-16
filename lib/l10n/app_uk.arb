@@ -4519,7 +4519,7 @@
   "assistantMatchResult": "Матч асистента",
   "euroPlayoffCourseTitle": "Плей-оф через Nations Cup",
   "euroPlayoffCourseNote": "Дві найкращі команди кожної групи виходять напряму. Останні місця розігрують у плей-оф найкращі команди Nations Cup, які не пройшли. Станом на зараз:",
-  "ncEuroPlayoffLegend": "Жовтий: на шляху до плей-оф фінального турніру",
+  "ncEuroPlayoffLegend": "На шляху до плей-оф фінального турніру, якщо кваліфікація не вдасться",
   "euroPlayoffToFinal": "У фінал",
   "euroPlayoffQualified": "Кваліфікувалася",
   "playerOtherPositions": "На кожній позиції",
@@ -4542,7 +4542,12 @@
   "regionalCupHosted": "Господар: {host}",
   "regionalCupHomeAndAway": "Групи грають удома та на виїзді",
   "regionalCupGroups": "ГРУПИ",
-  "ncWcPlayoffLegend": "Жовтий: на шляху до плей-оф чемпіонату світу",
+  "ncWcPlayoffLegend": "На шляху до плей-оф чемпіонату світу, якщо кваліфікація не вдасться",
   "newsNcPlayoffNetTitle": "Плей-оф як запасний шлях: {finals}",
-  "newsNcPlayoffNetBody": "За таблицями турніру {cup} ви поки маєте місце в плей-оф. Якщо пряма путівка не вийде, це другий шлях на турнір {finals}. Шляхи плей-оф розігрують після кваліфікації."
+  "newsNcPlayoffNetBody": "За таблицями турніру {cup} ви поки маєте місце в плей-оф. Якщо пряма путівка не вийде, це другий шлях на турнір {finals}. Шляхи плей-оф розігрують після кваліфікації.",
+  "ncLegendWinnerUp": "Переможець групи: підвищення до вищої ліги",
+  "ncLegendWinnerFinalsFour": "Переможець групи: до фіналу чотирьох",
+  "ncLegendLastDown": "Останній: пониження до нижчої ліги",
+  "playoffBadgeLetter": "П",
+  "playoffBadgeTooltip": "На шляху до плей-оф: другий шанс, якщо кваліфікація не вдасться"
 }

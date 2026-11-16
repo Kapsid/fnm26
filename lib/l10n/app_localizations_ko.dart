@@ -17509,7 +17509,7 @@ class AppLocalizationsKo extends AppLocalizations {
       '각 조 상위 2팀이 바로 진출합니다. 마지막 자리는 아직 진출하지 못한 네이션스컵 상위 팀들의 플레이오프로 결정됩니다. 현재 기준:';
 
   @override
-  String get ncEuroPlayoffLegend => '노란색: 본선 플레이오프 진출권';
+  String get ncEuroPlayoffLegend => '예선 실패 시 본선 플레이오프 진출권';
 
   @override
   String get euroPlayoffToFinal => '결승 진출';
@@ -17598,7 +17598,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get regionalCupGroups => '조별리그';
 
   @override
-  String get ncWcPlayoffLegend => '노란색: 세계선수권 플레이오프 진출권';
+  String get ncWcPlayoffLegend => '예선 실패 시 세계선수권 플레이오프 진출권';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -17609,4 +17609,19 @@ class AppLocalizationsKo extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return '$cup 순위표 기준으로 현재 플레이오프 진출권에 있습니다. 직행에 실패해도 $finals로 가는 두 번째 길이 있습니다. 플레이오프 대진은 예선이 끝난 뒤 추첨합니다.';
   }
+
+  @override
+  String get ncLegendWinnerUp => '조 1위: 상위 리그로 승격';
+
+  @override
+  String get ncLegendWinnerFinalsFour => '조 1위: 파이널 포 진출';
+
+  @override
+  String get ncLegendLastDown => '최하위: 하위 리그로 강등';
+
+  @override
+  String get playoffBadgeLetter => 'PO';
+
+  @override
+  String get playoffBadgeTooltip => '플레이오프 진출권: 예선이 실패해도 두 번째 기회';
 }

@@ -4519,7 +4519,7 @@
   "assistantMatchResult": "El partido del asistente",
   "euroPlayoffCourseTitle": "Repesca por la Copa de las Naciones",
   "euroPlayoffCourseNote": "Los dos primeros de cada grupo se clasifican directamente. Las últimas plazas se juegan en una repesca entre los mejores de la Copa de las Naciones que no se clasificaron. Tal como está:",
-  "ncEuroPlayoffLegend": "Amarillo: camino de la repesca para la fase final",
+  "ncEuroPlayoffLegend": "Camino de la repesca para la fase final si falla la clasificación",
   "euroPlayoffToFinal": "A la final",
   "euroPlayoffQualified": "Clasificado",
   "playerOtherPositions": "En cada posición",
@@ -4542,7 +4542,12 @@
   "regionalCupHosted": "Anfitrión: {host}",
   "regionalCupHomeAndAway": "Grupos a ida y vuelta, en casa y fuera",
   "regionalCupGroups": "GRUPOS",
-  "ncWcPlayoffLegend": "Amarillo: camino de la repesca del Campeonato del Mundo",
+  "ncWcPlayoffLegend": "Camino de la repesca del Campeonato del Mundo si falla la clasificación",
   "newsNcPlayoffNetTitle": "La repesca como red de seguridad: {finals}",
-  "newsNcPlayoffNetBody": "Según las clasificaciones del torneo {cup}, de momento tienes plaza en la repesca. Si no te clasificas directamente, tendrás un segundo camino hacia el torneo {finals}. Los cruces se sortean al terminar la clasificación."
+  "newsNcPlayoffNetBody": "Según las clasificaciones del torneo {cup}, de momento tienes plaza en la repesca. Si no te clasificas directamente, tendrás un segundo camino hacia el torneo {finals}. Los cruces se sortean al terminar la clasificación.",
+  "ncLegendWinnerUp": "Ganador del grupo: asciende de liga",
+  "ncLegendWinnerFinalsFour": "Ganador del grupo: a la fase final a cuatro",
+  "ncLegendLastDown": "Último: desciende de liga",
+  "playoffBadgeLetter": "R",
+  "playoffBadgeTooltip": "Camino de la repesca: una segunda oportunidad si falla la clasificación"
 }

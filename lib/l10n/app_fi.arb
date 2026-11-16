@@ -4519,7 +4519,7 @@
   "assistantMatchResult": "Avustajan ottelu",
   "euroPlayoffCourseTitle": "Jatkokarsinta Nations Cupin kautta",
   "euroPlayoffCourseNote": "Lohkojen kaksi parasta pääsevät suoraan. Viimeiset paikat ratkaistaan jatkokarsinnassa, jossa pelaavat Nations Cupin parhaat, jotka eivät ole jo selvinneet. Tilanne nyt:",
-  "ncEuroPlayoffLegend": "Keltainen: matkalla lopputurnauksen jatkokarsintaan",
+  "ncEuroPlayoffLegend": "Matkalla lopputurnauksen jatkokarsintaan, jos karsinnat menevät pieleen",
   "euroPlayoffToFinal": "Finaaliin",
   "euroPlayoffQualified": "Selviytyi",
   "playerOtherPositions": "Eri pelipaikoilla",
@@ -4542,7 +4542,12 @@
   "regionalCupHosted": "Isäntä: {host}",
   "regionalCupHomeAndAway": "Lohkot pelataan koti- ja vierasotteluin",
   "regionalCupGroups": "LOHKOT",
-  "ncWcPlayoffLegend": "Keltainen: matkalla MM-jatkokarsintaan",
+  "ncWcPlayoffLegend": "Matkalla MM-kisojen jatkokarsintaan, jos karsinnat menevät pieleen",
   "newsNcPlayoffNetTitle": "Jatkokarsinta varmistuksena: {finals}",
-  "newsNcPlayoffNetBody": "Turnauksen {cup} taulukoiden mukaan teillä on tällä hetkellä paikka jatkokarsinnoissa. Jos suora paikka ei irtoa, se on toinen tie turnaukseen {finals}. Karsintapolut arvotaan karsintojen päätyttyä."
+  "newsNcPlayoffNetBody": "Turnauksen {cup} taulukoiden mukaan teillä on tällä hetkellä paikka jatkokarsinnoissa. Jos suora paikka ei irtoa, se on toinen tie turnaukseen {finals}. Karsintapolut arvotaan karsintojen päätyttyä.",
+  "ncLegendWinnerUp": "Lohkovoittaja: nousu ylempään liigaan",
+  "ncLegendWinnerFinalsFour": "Lohkovoittaja: neljän joukkueen lopputurnaukseen",
+  "ncLegendLastDown": "Viimeinen: putoaminen alempaan liigaan",
+  "playoffBadgeLetter": "J",
+  "playoffBadgeTooltip": "Matkalla jatkokarsintaan: toinen mahdollisuus, jos karsinnat menevät pieleen"
 }

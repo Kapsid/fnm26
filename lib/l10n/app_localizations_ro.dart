@@ -18519,7 +18519,7 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend =>
-      'Galben: pe drumul spre barajul turneului final';
+      'Pe drumul spre barajul turneului final dacă preliminariile eșuează';
 
   @override
   String get euroPlayoffToFinal => 'În finală';
@@ -18609,7 +18609,7 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get ncWcPlayoffLegend =>
-      'Galben: pe drumul spre barajul Campionatului Mondial';
+      'Pe drumul spre barajul Campionatului Mondial dacă preliminariile eșuează';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -18620,4 +18620,22 @@ class AppLocalizationsRo extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return 'Conform clasamentelor din turneul $cup, deocamdată aveți loc în baraj. Dacă nu vă calificați direct, aveți un al doilea drum spre turneul $finals. Traseele se trag la sorți la finalul preliminariilor.';
   }
+
+  @override
+  String get ncLegendWinnerUp =>
+      'Câștigătoarea grupei: promovează într-o ligă superioară';
+
+  @override
+  String get ncLegendWinnerFinalsFour =>
+      'Câștigătoarea grupei: în turneul final de patru';
+
+  @override
+  String get ncLegendLastDown => 'Ultima: retrogradează într-o ligă inferioară';
+
+  @override
+  String get playoffBadgeLetter => 'B';
+
+  @override
+  String get playoffBadgeTooltip =>
+      'Pe drumul spre baraj: a doua șansă dacă preliminariile eșuează';
 }

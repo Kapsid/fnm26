@@ -4519,7 +4519,7 @@
   "assistantMatchResult": "Perlawanan pembantu",
   "euroPlayoffCourseTitle": "Play-off melalui Piala Negara-Negara",
   "euroPlayoffCourseNote": "Dua teratas setiap kumpulan layak terus. Tempat terakhir direbut dalam play-off oleh pasukan terbaik Piala Negara-Negara yang belum layak. Setakat ini:",
-  "ncEuroPlayoffLegend": "Kuning: menuju play-off pusingan akhir",
+  "ncEuroPlayoffLegend": "Menuju play-off pusingan akhir jika kelayakan gagal",
   "euroPlayoffToFinal": "Ke final",
   "euroPlayoffQualified": "Layak",
   "playerOtherPositions": "Di setiap posisi",
@@ -4542,7 +4542,12 @@
   "regionalCupHosted": "Tuan rumah: {host}",
   "regionalCupHomeAndAway": "Kumpulan dimainkan di laman sendiri dan di tempat lawan",
   "regionalCupGroups": "KUMPULAN",
-  "ncWcPlayoffLegend": "Kuning: menuju play-off Kejohanan Dunia",
+  "ncWcPlayoffLegend": "Menuju play-off Kejohanan Dunia jika kelayakan gagal",
   "newsNcPlayoffNetTitle": "Play-off sebagai jaring keselamatan: {finals}",
-  "newsNcPlayoffNetBody": "Menurut kedudukan {cup}, buat masa ini anda memegang tempat dalam play-off. Jika gagal layak terus, itu laluan kedua ke {finals}. Laluan play-off dicabut selepas kelayakan tamat."
+  "newsNcPlayoffNetBody": "Menurut kedudukan {cup}, buat masa ini anda memegang tempat dalam play-off. Jika gagal layak terus, itu laluan kedua ke {finals}. Laluan play-off dicabut selepas kelayakan tamat.",
+  "ncLegendWinnerUp": "Juara kumpulan: naik ke liga lebih tinggi",
+  "ncLegendWinnerFinalsFour": "Juara kumpulan: ke peringkat empat akhir",
+  "ncLegendLastDown": "Tercorot: turun ke liga lebih rendah",
+  "playoffBadgeLetter": "P",
+  "playoffBadgeTooltip": "Menuju play-off: peluang kedua jika kelayakan gagal"
 }

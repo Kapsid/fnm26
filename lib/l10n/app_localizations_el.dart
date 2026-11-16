@@ -18186,7 +18186,7 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend =>
-      'Κίτρινο: σε τροχιά για το μπαράζ της τελικής φάσης';
+      'Σε τροχιά για τα μπαράζ της τελικής φάσης, αν τα προκριματικά αποτύχουν';
 
   @override
   String get euroPlayoffToFinal => 'Στον τελικό';
@@ -18278,7 +18278,7 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get ncWcPlayoffLegend =>
-      'Κίτρινο: σε τροχιά για το μπαράζ του Παγκόσμιου Πρωταθλήματος';
+      'Σε τροχιά για τα μπαράζ του Παγκόσμιου Πρωταθλήματος, αν τα προκριματικά αποτύχουν';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
@@ -18289,4 +18289,20 @@ class AppLocalizationsEl extends AppLocalizations {
   String newsNcPlayoffNetBody(String cup, String finals) {
     return 'Με βάση τις βαθμολογίες της διοργάνωσης $cup, προς το παρόν έχεις θέση στα μπαράζ. Αν δεν προκριθείς απευθείας, έχεις δεύτερο δρόμο για τη διοργάνωση $finals. Τα μονοπάτια κληρώνονται μετά τα προκριματικά.';
   }
+
+  @override
+  String get ncLegendWinnerUp => 'Νικητής ομίλου: ανεβαίνει κατηγορία';
+
+  @override
+  String get ncLegendWinnerFinalsFour => 'Νικητής ομίλου: στο φάιναλ φορ';
+
+  @override
+  String get ncLegendLastDown => 'Τελευταίος: υποβιβάζεται κατηγορία';
+
+  @override
+  String get playoffBadgeLetter => 'Μ';
+
+  @override
+  String get playoffBadgeTooltip =>
+      'Σε τροχιά για τα μπαράζ: δεύτερη ευκαιρία αν τα προκριματικά αποτύχουν';
 }
