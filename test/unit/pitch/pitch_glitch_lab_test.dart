@@ -31,7 +31,10 @@ void main() {
     expect(sum('ball off the pitch'), lessThanOrEqualTo(1));
     // A man within 3.5 m of the ball (a blocker closing a shot) keeps his
     // eyes on it: the rest of the 15,345.
-    expect(sum('sprinting backwards'), lessThanOrEqualTo(100));
+    // The goals' build-ups (1.1.2) hand the ball over more often in open
+    // play, and a few more men recover a stride or two backwards: under two
+    // a match.
+    expect(sum('sprinting backwards'), lessThanOrEqualTo(115));
     expect(sum('pass to nobody'), 0);
     expect(
       sum('ball through a man') + sum('ball through a man (turnover)'),

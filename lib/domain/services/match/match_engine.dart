@@ -2765,7 +2765,10 @@ class MatchEngine {
     required bool goal,
   }) {
     final t = ((xg - _lowXg) / (_highXg - _lowXg)).clamp(0.0, 1.0);
-    final tilt = 0.24 * (t - 0.5);
+    // The better chance is struck from nearer goal: a missed one leans in
+    // more (0.24) than a goal, whose spread holds the share of goals from
+    // outside the box (0.16, as measured).
+    final tilt = (goal ? 0.16 : 0.24) * (t - 0.5);
     final (six, box, edge) = goal
         ? (0.27, 0.61 + tilt / 2, 0.09 - tilt * 0.3)
         : (0.05, 0.47 + tilt, 0.27 - tilt * 0.5);

@@ -526,6 +526,8 @@ class PitchAudit {
         }
         count(post ? 'woodwork post' : 'woodwork bar');
       case ShotOutcome.blocked:
+        // A strike the picture cuts on at once is never seen in flight.
+        if (shot.t1 - shot.t0 < 1e-3) break;
         final b = shot.toActor;
         if (b == null ||
             team(b) == m.teamNationId ||

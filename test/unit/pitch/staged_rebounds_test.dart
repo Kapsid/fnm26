@@ -207,6 +207,6 @@ void main() {
     }
     // Measured on main before rebounds were drawn: the same 80 results.
     // Re-pinned for the 1.1.2 engine (2026-11-16).
-    expect(h, 2980295276);
+    expect(h, 2860896500);
   });
 }
