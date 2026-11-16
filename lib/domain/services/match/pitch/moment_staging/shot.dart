@@ -481,6 +481,9 @@ class _OpenShotPlan extends _Plan {
   /// sets the goal up with a long ball from it.
   bool keeperAssist = false;
 
+  /// The man on the ball when the run was last read for a chance to make.
+  int? _lastRunCarrier;
+
   /// The furthest a keeper who sets the goal up stands from his line.
   static const double _keeperAssistDepth = 15;
   int? crosser;
@@ -670,6 +673,16 @@ class _OpenShotPlan extends _Plan {
       } else {
         _chooseOnTheRun(t, now);
       }
+    } else if (!cutWanted! &&
+        route == _Route.direct &&
+        helper == null &&
+        beaten == null &&
+        !delivered &&
+        now.carrierId != _lastRunCarrier) {
+      // The ball has moved on to another man: the chance can still be
+      // made from the run (a ball slipped through, one pulled back).
+      _lastRunCarrier = now.carrierId;
+      _chooseOnTheRun(t, now);
     }
     final rb = rebound;
     if (rb != null && !rb.done) {
@@ -1060,6 +1073,7 @@ class _OpenShotPlan extends _Plan {
     double through,
     double oneTwo,
     double takeOn,
+    double cutBack,
     double Function(_Route) weight,
   })
   _style = () {
@@ -1091,6 +1105,9 @@ class _OpenShotPlan extends _Plan {
       // Taking a man on: likelier against a deep block, where there is no
       // space to pass into.
       takeOn: (0.35 + 0.25 * deep).clamp(0.0, 0.6),
+      // Pulling it back from the byline: a wide side's chance, likelier
+      // against a deep block packed in front of goal.
+      cutBack: (0.35 + 0.35 * i.width / 100 + 0.2 * deep).clamp(0.0, 0.8),
       weight: weight,
     );
   }();
@@ -1104,7 +1121,38 @@ class _OpenShotPlan extends _Plan {
     if (m.outcome == ShotOutcome.blocked) return;
     final s = m.shooterId;
     final sp = now.players[s];
-    if (sp == null || now.carrierId != s) return;
+    if (sp == null) return;
+    // A team-mate on the ball (the assist's maker, for a goal he sets up):
+    // the chance is made from the run, not cut to. From the byline he pulls
+    // it back; with the shooter ahead of the ball he slips him in behind.
+    final car = now.carrierId;
+    if (car != null &&
+        car != s &&
+        (assister == null || car == assister) &&
+        available(now, side, except: {s}).contains(car) &&
+        !now.keepers.contains(car) &&
+        strikeBy - t >= 2.2) {
+      final cp = now.players[car]!;
+      if (depthOf(cp) >= 82 &&
+          latOf(cp).abs() >= 12 &&
+          _unit(c.seed, 91) < _style.cutBack) {
+        helper = car;
+        route = _Route.cutBack;
+        routeFrom = t;
+        return;
+      }
+      final gap = depthOf(sp) - depthOf(cp);
+      if (gap >= 6 &&
+          gap <= 32 &&
+          clearlyOnside(now, s) &&
+          _unit(c.seed, 89) < _style.through) {
+        helper = car;
+        route = _Route.through;
+        routeFrom = t;
+        return;
+      }
+    }
+    if (now.carrierId != s) return;
     // Or he takes on the man in front of him: a defender between him and
     // where he strikes it, close enough to be beaten in a stride or two.
     if (assister == null &&
