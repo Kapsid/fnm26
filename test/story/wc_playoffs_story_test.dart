@@ -35,7 +35,7 @@ import 'driver.dart';
 ///   the balanced home and away draw moved the world.)
 /// * Northern Ireland wins its League C group in the second Nations Cup,
 ///   misses qualifying and comes in through pot 4.
-/// * Curacao (seed 32), one of CONCACAF's two best runners-up, plays the
+/// * Curacao (seed 37), one of CONCACAF's two best runners-up, plays the
 ///   intercontinental play-off in the finals' host nation.
 /// * England qualifies directly, is locked in at the draw and watches every
 ///   path from the stands.
@@ -48,7 +48,7 @@ void main() {
   const curacao = 78;
   // Curacao's own world: on seed 31 no managed CONCACAF side reaches the
   // intercontinental play-off since the balanced home and away draw.
-  const curacaoSeed = 32;
+  const curacaoSeed = 37;
   final wcYear = CareerService.worldCupYear(0);
   final dates = Calendar2.wcPlayoffs(wcYear);
 
