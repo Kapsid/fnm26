@@ -16,6 +16,7 @@ import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/tournaments/draw_ceremony.dart';
 import 'package:fnm/features/tournaments/euro_playoff_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/column_flow.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -310,8 +311,12 @@ class EuroPendingGroups extends StatelessWidget {
     required this.name,
     this.playerPathLetter,
     this.labels = const {},
+    this.grid = false,
     super.key,
   });
+
+  /// A tablet: the groups in columns, as the finals' group stage has them.
+  final bool grid;
 
   final FinalsDraw draw;
 
@@ -329,34 +334,78 @@ class EuroPendingGroups extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return ListView(
-      padding: const EdgeInsets.all(AppSpacing.marginMobile),
-      children: [
-        for (final g in draw.groups) ...[
-          Text(
-            l.tourSharedGroupName(g.name),
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
-            ),
+    final head = AppTypography.labelSmall.copyWith(
+      color: AppColors.onSurfaceVariant,
+      fontWeight: FontWeight.w700,
+    );
+    Widget cell(String t, TextStyle style, {double width = 30}) => SizedBox(
+      width: width,
+      child: Text(
+        t,
+        textAlign: TextAlign.end,
+        style: style.copyWith(
+          fontFeatures: const [FontFeature.tabularFigures()],
+        ),
+      ),
+    );
+    // Each group as the finals' group stage shows it, every side on nought,
+    // a path's winner in its place until the path is played.
+    Widget card(FinalsGroupDraw g) => AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(l.tourSharedGroupName(g.name), style: head),
+              ),
+              cell(l.hubTblP, head),
+              cell(l.hubTblGd, head),
+              cell(l.hubTblPts, head),
+            ],
           ),
           const SizedBox(height: AppSpacing.xs),
-          for (final id in g.nationIds)
+          for (final (i, id) in g.nationIds.indexed)
             Builder(
               builder: (context) {
                 final letter = letters[id];
                 final lit = letter == null
                     ? id == playerNationId
                     : letter == playerPathLetter;
-                return Padding(
+                final style = AppTypography.bodySmall.copyWith(
+                  color: lit
+                      ? AppColors.primary
+                      : letter == null
+                      ? AppColors.onSurface
+                      : AppColors.onSurfaceVariant,
+                  fontWeight: lit ? FontWeight.w700 : FontWeight.w400,
+                  fontStyle: letter == null
+                      ? FontStyle.normal
+                      : FontStyle.italic,
+                );
+                return Container(
                   key: letter == null ? null : Key('euroPending.path.$letter'),
-                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  color: lit ? AppColors.surfaceContainerHigh : null,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 5,
+                    horizontal: 4,
+                  ),
                   child: Row(
                     children: [
+                      SizedBox(
+                        width: 18,
+                        child: Text(
+                          '${i + 1}',
+                          style: AppTypography.labelSmall.copyWith(
+                            color: AppColors.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
                       DrawFlag(
                         letter == null
                             ? code(id)
                             : '$drawPlaceholderPrefix$letter',
-                        size: 18,
+                        size: 20,
                         highlighted: lit,
                       ),
                       const SizedBox(width: AppSpacing.sm),
@@ -366,25 +415,32 @@ class EuroPendingGroups extends StatelessWidget {
                               ? name(id)
                               : labels[id] ??
                                     l.euroPlayoffWinnerPlaceholder(letter),
-                          style: AppTypography.labelMedium.copyWith(
-                            color: lit
-                                ? AppColors.primary
-                                : letter == null
-                                ? AppColors.onSurface
-                                : AppColors.onSurfaceVariant,
-                            fontStyle: letter == null
-                                ? FontStyle.normal
-                                : FontStyle.italic,
-                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: style,
                         ),
                       ),
+                      cell('0', style),
+                      cell('0', style),
+                      cell('0', style),
                     ],
                   ),
                 );
               },
             ),
-          const SizedBox(height: AppSpacing.md),
         ],
+      ),
+    );
+    return ListView(
+      padding: const EdgeInsets.all(AppSpacing.marginMobile),
+      children: [
+        if (grid)
+          ColumnFlow(children: [for (final g in draw.groups) card(g)])
+        else
+          for (final g in draw.groups) ...[
+            card(g),
+            const SizedBox(height: AppSpacing.sm),
+          ],
       ],
     );
   }

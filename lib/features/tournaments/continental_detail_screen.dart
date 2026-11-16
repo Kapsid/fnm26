@@ -23,6 +23,7 @@ import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/features/tournaments/best_thirds.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/features/tournaments/euro_playoff_draw_screen.dart';
+import 'package:fnm/features/tournaments/euro_playoff_providers.dart';
 import 'package:fnm/features/tournaments/tournament_awards.dart';
 import 'package:fnm/features/tournaments/tournament_bracket.dart';
 import 'package:fnm/features/tournaments/tournament_history.dart';
@@ -93,8 +94,9 @@ class ContinentalDetailScreen extends ConsumerWidget {
     }
     if (data.knockout.isNotEmpty) return bracket;
     if (data.groups.isNotEmpty && data.finalsDrawWatched) return finals;
-    // Europe's play-offs under way, the finals still waiting on them.
-    if (data.playoffs != null) return bracket;
+    // Europe's play-offs under way, the finals still waiting on them: they
+    // are under the qualifying groups.
+    if (data.playoffs != null) return 1;
     // Qualifying when there is one, else the finals group stage.
     return 1;
   }
@@ -246,6 +248,7 @@ List<Widget> _continentalTabViews(
       contentionPos: adv.contention,
       contentionQualify: adv.contentionQualify,
       playoffCourse: data.playoffRoute ? data.playoffCourse : const [],
+      playoffs: data.playoffs,
       // The contested places lead to the finals here, not to a
       // knockout round.
       contentionDestination: l.tourCupDestFinals,
@@ -312,6 +315,7 @@ List<Widget> _continentalTabViews(
         playerPathLetter: data.playoffs?.playerPath?.letter,
         code: code,
         name: name,
+        grid: grid,
       )
     else
       TournamentSoon(
@@ -350,20 +354,6 @@ List<Widget> _continentalTabViews(
         groupSeeds: groupSeedsOf(data.groups),
         code: code,
         name: name,
-      )
-    else if (data.playoffs case final playoffs?)
-      ListView(
-        padding: const EdgeInsets.all(AppSpacing.marginMobile),
-        children: [
-          Text(
-            l.euroPlayoffBracketHeading,
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          EuroPlayoffPaths(data: playoffs, careerId: careerId),
-        ],
       )
     else
       TournamentSoon(
@@ -420,11 +410,16 @@ class _Groups extends StatelessWidget {
     this.contentionDestination,
     this.grid = false,
     this.playoffCourse = const [],
+    this.playoffs,
   });
 
   final int careerId;
   final List<FinalsGroupTable> groups;
   final int playerNationId;
+
+  /// Europe's play-offs once drawn (and watched): played under the groups
+  /// they come from, and kept there once the finals are on.
+  final EuroPlayoffData? playoffs;
 
   /// The play-off paths as they stand, listed under the tables (their
   /// sides come from the Nations Cup, so no row here is marked for them).
@@ -502,7 +497,18 @@ class _Groups extends StatelessWidget {
             card(g),
             const SizedBox(height: AppSpacing.sm),
           ],
-        if (playoffCourse.isNotEmpty) ...[
+        if (playoffs case final p?) ...[
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            l.euroPlayoffBracketHeading,
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          EuroPlayoffPaths(data: p, careerId: careerId),
+          const SizedBox(height: AppSpacing.sm),
+        ] else if (playoffCourse.isNotEmpty) ...[
           _PlayoffCourseCard(
             paths: playoffCourse,
             playerNationId: playerNationId,

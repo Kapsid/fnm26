@@ -34,8 +34,8 @@ import 'driver.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   const europe = Confederation.europe;
-  const entrantSeed = 32;
-  const entrantIndex = 22;
+  const entrantSeed = 33;
+  const entrantIndex = 24;
   const watcherSeed = 31;
 
   Future<List<DrawSlot>> slotsOf(
