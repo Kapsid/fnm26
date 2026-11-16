@@ -2964,6 +2964,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                         children: [
                           topBar,
                           scoreboard,
+                          // A shootout's kicks stay in view, as on the
+                          // Timeline.
+                          ?shootout,
                           const MatchDetailTabs(withTimeline: false),
                           Expanded(
                             child: TabBarView(
