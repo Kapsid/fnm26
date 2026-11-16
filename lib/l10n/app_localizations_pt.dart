@@ -18283,7 +18283,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get regionalCupGroups => 'GRUPOS';
 
   @override
-  String get ncWcPlayoffLegend => 'Amarelo: a caminho do play-off do Mundial';
+  String get ncWcPlayoffLegend =>
+      'Amarelo: a caminho do play-off do Campeonato Mundial';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {

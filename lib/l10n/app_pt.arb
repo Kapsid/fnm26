@@ -4542,7 +4542,7 @@
   "regionalCupHosted": "Anfitrião: {host}",
   "regionalCupHomeAndAway": "Grupos disputados em casa e fora",
   "regionalCupGroups": "GRUPOS",
-  "ncWcPlayoffLegend": "Amarelo: a caminho do play-off do Mundial",
+  "ncWcPlayoffLegend": "Amarelo: a caminho do play-off do Campeonato Mundial",
   "newsNcPlayoffNetTitle": "O play-off como rede de segurança: {finals}",
   "newsNcPlayoffNetBody": "Pelas tabelas do torneio {cup}, por enquanto você tem vaga no play-off. Se não se classificar diretamente, terá um segundo caminho para o torneio {finals}. Os caminhos são sorteados no fim das eliminatórias."
 }

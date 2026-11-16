@@ -18267,7 +18267,8 @@ class AppLocalizationsBg extends AppLocalizations {
   String get regionalCupGroups => 'ГРУПИ';
 
   @override
-  String get ncWcPlayoffLegend => 'Жълто: по пътя към плейофа за световното';
+  String get ncWcPlayoffLegend =>
+      'Жълто: по пътя към плейофа за Световното първенство';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {

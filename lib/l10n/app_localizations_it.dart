@@ -18263,7 +18263,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get regionalCupGroups => 'GIRONI';
 
   @override
-  String get ncWcPlayoffLegend => 'Giallo: in corsa per gli spareggi mondiali';
+  String get ncWcPlayoffLegend =>
+      'Giallo: in corsa per gli spareggi del Campionato del mondo';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {

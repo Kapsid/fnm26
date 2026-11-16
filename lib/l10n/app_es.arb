@@ -4542,7 +4542,7 @@
   "regionalCupHosted": "Anfitrión: {host}",
   "regionalCupHomeAndAway": "Grupos a ida y vuelta, en casa y fuera",
   "regionalCupGroups": "GRUPOS",
-  "ncWcPlayoffLegend": "Amarillo: camino de la repesca mundialista",
+  "ncWcPlayoffLegend": "Amarillo: camino de la repesca del Campeonato del Mundo",
   "newsNcPlayoffNetTitle": "La repesca como red de seguridad: {finals}",
   "newsNcPlayoffNetBody": "Según las clasificaciones del torneo {cup}, de momento tienes plaza en la repesca. Si no te clasificas directamente, tendrás un segundo camino hacia el torneo {finals}. Los cruces se sortean al terminar la clasificación."
 }

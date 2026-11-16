@@ -18276,7 +18276,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get regionalCupGroups => 'GRUPOS';
 
   @override
-  String get ncWcPlayoffLegend => 'Amarillo: camino de la repesca mundialista';
+  String get ncWcPlayoffLegend =>
+      'Amarillo: camino de la repesca del Campeonato del Mundo';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {

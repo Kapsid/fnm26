@@ -18278,7 +18278,7 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get ncWcPlayoffLegend =>
-      'Κίτρινο: σε τροχιά για το μπαράζ του Παγκοσμίου';
+      'Κίτρινο: σε τροχιά για το μπαράζ του Παγκόσμιου Πρωταθλήματος';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {

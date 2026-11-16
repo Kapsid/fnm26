@@ -18348,7 +18348,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get ncWcPlayoffLegend =>
-      'Jaune : en route pour les barrages du Mondial';
+      'Jaune : en route pour les barrages du Championnat du monde';
 
   @override
   String newsNcPlayoffNetTitle(String finals) {
