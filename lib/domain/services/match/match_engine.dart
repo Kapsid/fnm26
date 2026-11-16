@@ -2549,7 +2549,7 @@ class MatchEngine {
   /// keeps the ball, a counter-attacking one cedes it. Neutral is 0.
   static double possessionTilt(TacticalInstructions i) {
     final (:patient, :counter, hurried: _, wide: _) = _styleParts(i);
-    return 11 * patient - 14 * counter;
+    return 8 * patient - 10 * counter;
   }
 
   /// How far [i] is patient, counter-attacking, hurried (direct from a

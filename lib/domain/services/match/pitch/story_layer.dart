@@ -1013,7 +1013,7 @@ class _Builder {
         activeWindow!.exit = _state(t);
         activeWindow = null;
         activePlan = null;
-        spellEnd = t + _spellLength(possession);
+        spellEnd = t + _spellLength(possession, t);
         nextAction = math.max(nextAction, t + 0.15);
       }
       // A kick-off after a goal: the picture cuts from the celebration to
@@ -1958,7 +1958,7 @@ class _Builder {
     _reseed(t0);
     final minute = pacer.matchAt(_dur(t0)).minute;
     spellStart = t0;
-    spellEnd = t0 + _spellLength(possession);
+    spellEnd = t0 + _spellLength(possession, t0);
     spellDepth = _depthTarget(possession, minute);
     nextAction = t0 + 0.3;
     _record(t0);
@@ -2057,7 +2057,7 @@ class _Builder {
     possession = kicking;
     spellStart = t;
     nextAction = t + 0.6;
-    spellEnd = t + _spellLength(kicking);
+    spellEnd = t + _spellLength(kicking, t);
     spellDepth = _depthTarget(kicking, minute);
     cameraX = centre.x;
   }
@@ -2084,7 +2084,7 @@ class _Builder {
     final stop = _nextStop(t);
     final lead = _leadFor(t);
     final leadSide = lead?.$1;
-    final ahead = _ahead(a.side);
+    final ahead = _ahead(a.side, t);
     // The ball has to be with the side the next moment belongs to as it
     // opens. When it is not, it changes hands now if the side on it has had
     // more than its share, else at the last moment.
@@ -2152,10 +2152,35 @@ class _Builder {
   /// How many screen seconds more than its possession share side [s] has
   /// had the ball for so far, staged moments included (negative when it is
   /// owed time).
-  double _ahead(int s) {
-    final played = homeBallTime + awayBallTime;
-    final had = s == 0 ? homeBallTime : awayBallTime;
+  double _ahead(int s, double t) {
+    // The goals' build-ups still to come are ball time their side will
+    // have: counted now, so the quiet play evens them out ahead of time
+    // rather than leaving the scorers well over their share.
+    final (home, away) = _buildUpsAfter(t);
+    final played = homeBallTime + awayBallTime + home + away;
+    final had = (s == 0 ? homeBallTime + home : awayBallTime + away);
     return had - _share(s) * played;
+  }
+
+  /// The open-play goals' build-up seconds still to come after [t], for
+  /// each side.
+  (double, double) _buildUpsAfter(double t) {
+    var home = 0.0;
+    var away = 0.0;
+    for (var k = wi; k < windows.length; k++) {
+      final w = windows[k];
+      if (w.start <= t) continue;
+      for (final m in w.moments) {
+        final b = pacer.buildUpOf(m);
+        if (b == 0) continue;
+        if (m.teamNationId == lineups.home.nationId) {
+          home += b;
+        } else {
+          away += b;
+        }
+      }
+    }
+    return (home, away);
   }
 
   /// Whether the side on the ball gives it up now: its spell has run its
@@ -2354,12 +2379,14 @@ class _Builder {
   /// How long side [s] keeps the ball before giving it up, in screen
   /// seconds: its possession share of a typical spell, corrected by how far
   /// the ball time so far has strayed from that share.
-  double _spellLength(int s) {
+  double _spellLength(int s, double t) {
     final share = _share(s);
-    final played = homeBallTime + awayBallTime;
+    // The build-ups still to come count as had (see [_ahead]).
+    final (home, away) = _buildUpsAfter(t);
+    final played = homeBallTime + awayBallTime + home + away;
     final h = played < 1
         ? share
-        : (s == 0 ? homeBallTime : awayBallTime) / played;
+        : (s == 0 ? homeBallTime + home : awayBallTime + away) / played;
     final corr = (1 + 6 * (share - h)).clamp(0.3, 3.0);
     final base = 1.6 + 1.6 * rng.nextDouble();
     return (base * share / 0.5 * corr).clamp(0.8, 10.0);

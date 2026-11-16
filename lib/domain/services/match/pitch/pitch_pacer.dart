@@ -140,6 +140,7 @@ class PitchPacer {
       if (each > 0) {
         for (final g in goals) {
           _lengths[g] = _lengths[g]! + each;
+          _buildUps[g] = each;
           staged[_slotOf(g.minute, g.stoppage, slotCount)] += each;
           stagedTotal += each;
         }
@@ -260,6 +261,13 @@ class PitchPacer {
   /// (routine set pieces, corners, free kicks and long throws that lead to
   /// no shot, fouls without a card that give no penalty, offsides that end
   /// nothing) have no length.
+  /// The build-up [m] was given (seconds; 0 for anything but an open-play
+  /// goal, or a match with no time to spare): ball time its side has
+  /// before the shot, which the quiet play around it evens out.
+  double buildUpOf(MatchMoment m) => _buildUps[m] ?? 0;
+
+  final Map<MatchMoment, double> _buildUps = Map.identity();
+
   Duration momentLength(MatchMoment m) =>
       _dur(_lengths[m] ?? _seconds(m, _speed, null));
 

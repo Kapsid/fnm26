@@ -485,7 +485,7 @@ extension _BallMechanics on _Builder {
       sides[possession].counterUntil = -1;
       possession = to.side;
       spellStart = t;
-      spellEnd = t + _spellLength(possession);
+      spellEnd = t + _spellLength(possession, t);
       final minute = pacer.matchAt(_Builder._dur(t)).minute;
       spellDepth = _depthTarget(possession, minute);
       // Won in open play, short of the other third: a counter-minded side

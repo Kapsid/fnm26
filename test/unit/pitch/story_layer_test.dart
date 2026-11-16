@@ -313,7 +313,11 @@ void main() {
     // it; a match whose quiet time is cut into slivers between moments of
     // the same side leans toward that side (see the report).
     expect(missSum / steered, lessThanOrEqualTo(3));
-    expect(worstSplit, lessThanOrEqualTo(10));
+    // An open-play goal's build-up is its side's ball by design (up to 4 s
+    // each, evened out ahead of time where the quiet play can): a match
+    // with several of them from the side with less of the ball runs a
+    // point or two further off than before (10).
+    expect(worstSplit, lessThanOrEqualTo(12));
   });
 
   test('a red card leaves the side with 10 and the shape re-forms', () {
@@ -356,9 +360,11 @@ void main() {
     );
     // He walks to the nearest boundary at a walk and leaves the picture
     // there, however long that takes.
-    // (An interval that comes first takes him off with it.)
+    // (An interval or a cut that comes first takes him off with it.)
     final lastSeen = _lastSeen(s, id, start);
-    if (!s.resets.contains(lastSeen)) {
+    // An interval or a cut takes him off with it: he left while the camera
+    // was away (see `_offAtCut`).
+    if (!s.resets.contains(lastSeen) && !s.cuts.contains(lastSeen)) {
       final p = s.sample(_at(lastSeen - 1e-5)).players[id]!;
       expect(_toBoundary(p), lessThanOrEqualTo(1));
       final from = s.sample(_at(start)).players[id]!;
