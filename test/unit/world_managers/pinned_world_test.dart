@@ -32,7 +32,8 @@ void main() {
       stadiumHostRules: false,
       // And its first cycle on the calendar before calendar2 (1.1.2): every
       // fixture of it is byte for byte the 1.1.1 world (re-pinned for
-      // 1.1.2 from fixture 2697 on, the rollover into a calendar2 cycle).
+      // 1.1.2 from fixture 2697 on, the rollover into a calendar2 cycle;
+      // scores re-pinned again for the 1.1.2 engine tuning).
       calendar2: false,
       // And its finals on the old 3-day spacing (TournamentCalendar).
       tournamentSpacing: false,

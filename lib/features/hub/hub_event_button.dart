@@ -232,7 +232,7 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
     final opponentId = next.homeNationId == mine
         ? next.awayNationId
         : next.homeNationId;
-    final choice = await showModalBottomSheet<AssistantChoice>(
+    final choice = await showAdaptiveSheet<AssistantChoice>(
       context: context,
       backgroundColor: AppColors.surfaceContainer,
       builder: (_) => AssistantMatchSheet(
