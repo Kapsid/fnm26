@@ -838,6 +838,10 @@ class MatchEngine {
     // Handballs on an EIGHTH: a share of the fouls already drawn are said
     // to be handball (see [FoulMoment.handball]); nothing else changes.
     final handballRng = rng.fork(0x4A2D);
+    // Crosses on a NINTH: which open-play chances are met with the head (a
+    // wide side crosses more). Forked like the others, never advancing
+    // [rng]; a header and a shot draw the same from the detail stream.
+    final crossRng = rng.fork(0xC2055);
     // Moments as they happen, each with the event it points at (a goal, a
     // card, a sub), whose index is settled after the final sort of [events].
     final momentLog = <({MatchMoment moment, MatchEvent? event})>[];
@@ -1514,6 +1518,7 @@ class MatchEngine {
         homeShare,
         damping:
             legs *
+            styleShape(liveHome.instructions).rate *
             weather.tempo *
             weather.longBallOn(liveHome.instructions.directness) *
             homeFlanks *
@@ -1530,8 +1535,16 @@ class MatchEngine {
         // The player taking the shot is chosen now, so their fatigue can affect
         // the finish — a spent striker underperforms the chance.
         final shooter = _pickScorer(liveHome, rng);
+        // The side's style shapes the chance: a patient or counter-attacking
+        // side makes fewer, better ones; a cross is met with the head, a
+        // little harder to put away.
+        final shape = styleShape(liveHome.instructions);
+        final header = crossRng.chance(shape.cross);
         final baseP =
-            _goalProbability(homeAttack, awayDefence) * weather.passing;
+            _goalProbability(homeAttack, awayDefence) *
+            weather.passing *
+            shape.quality *
+            (header ? _openPlayHeaderFactor : 1);
         final p =
             (baseP *
                     _finishingSharpness(liveHome.energyOf(shooter.id)) *
@@ -1581,6 +1594,7 @@ class MatchEngine {
             xg: baseP,
             origin: ShotOrigin.openPlay,
             goal: goal,
+            header: header,
           );
         }
       }
@@ -1592,6 +1606,7 @@ class MatchEngine {
         1 - homeShare,
         damping:
             legs *
+            styleShape(liveAway.instructions).rate *
             weather.tempo *
             weather.longBallOn(liveAway.instructions.directness) *
             awayFlanks *
@@ -1606,8 +1621,16 @@ class MatchEngine {
       )) {
         awayShots++;
         final shooter = _pickScorer(liveAway, rng);
+        // The side's style shapes the chance: a patient or counter-attacking
+        // side makes fewer, better ones; a cross is met with the head, a
+        // little harder to put away.
+        final shape = styleShape(liveAway.instructions);
+        final header = crossRng.chance(shape.cross);
         final baseP =
-            _goalProbability(awayAttack, homeDefence) * weather.passing;
+            _goalProbability(awayAttack, homeDefence) *
+            weather.passing *
+            shape.quality *
+            (header ? _openPlayHeaderFactor : 1);
         final p =
             (baseP *
                     _finishingSharpness(liveAway.energyOf(shooter.id)) *
@@ -1657,6 +1680,7 @@ class MatchEngine {
             xg: baseP,
             origin: ShotOrigin.openPlay,
             goal: goal,
+            header: header,
           );
         }
       }
@@ -1975,8 +1999,16 @@ class MatchEngine {
 
     final homeControl = _control(liveHome);
     final awayControl = _control(liveAway);
-    final homePossession = (100 * homeControl / (homeControl + awayControl))
-        .round();
+    // The share as the midfields earn it, tilted by the two styles: a
+    // patient side keeps the ball, a counter-attacking one gives it away on
+    // purpose. Display and the pitch view's ball time only: the chances above
+    // were played off the midfields alone.
+    final homePossession =
+        (100 * homeControl / (homeControl + awayControl) +
+                possessionTilt(liveHome.instructions) -
+                possessionTilt(liveAway.instructions))
+            .clamp(25.0, 75.0)
+            .round();
 
     // Order by minute, then by added-time index so a 90+3 goal sits after the
     // 90' events rather than being scrambled among them.
@@ -2486,6 +2518,61 @@ class MatchEngine {
     if (!leaderIsBold) return open;
     return margin > 0 ? 1 / open : open * open;
   }
+
+  /// What a side's style does to its open-play chances (owner, 1.1.2: the
+  /// styles should be seen in the match, not only in its result):
+  ///
+  /// - a PATIENT side (low directness) works the ball until a good chance
+  ///   comes: fewer chances, better ones;
+  /// - a COUNTER-attacking side (direct from a deep line) waits for the
+  ///   space: the fewest chances, the best of them;
+  /// - a DIRECT side from a normal line hurries: more chances, poorer ones;
+  /// - a WIDE side crosses: more chances, more of them met with the head.
+  ///
+  /// [rate] multiplies how often chances come, [quality] how good they are
+  /// (their xG); the two are sized so a style costs and buys about the same
+  /// number of goals, and the matchups decide who wins. [cross] is the share
+  /// of open-play chances that are headers. Neutral is exactly 1, 1.
+  static ({double rate, double quality, double cross}) styleShape(
+    TacticalInstructions i,
+  ) {
+    final (:patient, :counter, :hurried, :wide) = _styleParts(i);
+    return (
+      rate: 1 - 0.36 * patient - 0.58 * counter + 0.18 * hurried + 0.08 * wide,
+      quality:
+          1 + 0.50 * patient + 0.90 * counter - 0.15 * hurried - 0.02 * wide,
+      cross: _openPlayCrossBase + 0.24 * wide,
+    );
+  }
+
+  /// Points of possession a side's style takes (or gives): a patient one
+  /// keeps the ball, a counter-attacking one cedes it. Neutral is 0.
+  static double possessionTilt(TacticalInstructions i) {
+    final (:patient, :counter, hurried: _, wide: _) = _styleParts(i);
+    return 11 * patient - 14 * counter;
+  }
+
+  /// How far [i] is patient, counter-attacking, hurried (direct from a
+  /// normal line) and wide, each 0..1.
+  static ({double patient, double counter, double hurried, double wide})
+  _styleParts(TacticalInstructions i) {
+    double up(int v, double from, double span) =>
+        ((v - from) / span).clamp(0.0, 1.0);
+    final direct = up(i.directness, 50, 50);
+    final deep = up(55 - i.defensiveLine, 0, 35);
+    return (
+      patient: up(50 - i.directness, 0, 50),
+      counter: direct * deep,
+      hurried: direct * (1 - deep),
+      wide: up(i.width, 50, 50),
+    );
+  }
+
+  /// The share of a neutral side's open-play chances met with the head.
+  static const double _openPlayCrossBase = 0.08;
+
+  /// An open-play header's chance against the same chance with the foot.
+  static const double _openPlayHeaderFactor = 0.85;
 
   bool _chance(
     SeededRng rng,
