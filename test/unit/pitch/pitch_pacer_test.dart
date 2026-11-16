@@ -95,14 +95,17 @@ void main() {
   test('moments never shorter than their fixed length', () {
     final goal = _shots(1, outcome: ShotOutcome.goal).single;
     final p = PitchPacer(_result([goal], stoppage: 0), PitchSpeed.fast);
-    expect(p.momentLength(goal), const Duration(milliseconds: 6000));
+    // 6 s, and an open-play goal's build-up on top when the match has the
+    // time (a quiet one does): never more than 4 s of it.
+    expect(p.momentLength(goal).inMilliseconds, inInclusiveRange(6000, 10000));
     final span = p.screenAt(goal.minute + 1, 0) - p.screenAt(goal.minute, 0);
     expect(span, greaterThanOrEqualTo(p.momentLength(goal)));
-    // A key moment keeps its full length at every speed.
+    // A key moment keeps its full length at every speed (the build-up
+    // aside, which only ever adds).
     for (final sp in PitchSpeed.values) {
       expect(
-        PitchPacer(_result([goal]), sp).momentLength(goal),
-        const Duration(milliseconds: 6000),
+        PitchPacer(_result([goal]), sp).momentLength(goal).inMilliseconds,
+        inInclusiveRange(6000, 10000),
       );
     }
     const corner = SetPieceMoment(
@@ -298,7 +301,12 @@ void main() {
         'max ${v.last.toStringAsFixed(1)} | within ceiling+15%: ${inBand[s]}/200',
       );
       expect(inBand[s]!, greaterThanOrEqualTo(180), reason: '$s');
-      expect(v[v.length ~/ 2], inInclusiveRange(lo, hi), reason: '$s median');
+      // The goals' build-ups may run a match up to 12% over its band.
+      expect(
+        v[v.length ~/ 2],
+        inInclusiveRange(lo, hi * 1.12),
+        reason: '$s median',
+      );
     }
   });
 

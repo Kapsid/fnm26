@@ -9,6 +9,8 @@
 /// Pure Dart: no Flutter.
 library;
 
+import 'dart:math' as math;
+
 import '../match_engine.dart';
 import '../match_moments.dart';
 
@@ -113,9 +115,39 @@ class PitchPacer {
       stagedTotal += s;
       if (s == 0) quietSlots++;
     }
+    // An open-play goal's build-up (see [_goalBuildUp]): the screen may run
+    // up to [_buildUpOverrun] over its budget for them.
+    final goals = [
+      for (final m in r.moments)
+        if (m is ShotMoment &&
+            m.outcome == ShotOutcome.goal &&
+            m.origin == ShotOrigin.openPlay &&
+            !mergedInto.containsKey(m))
+          m,
+    ];
+    // The quiet minutes keep the time they had before the build-ups: the
+    // build-ups are the overrun.
+    final momentsOnly = stagedTotal;
+    if (goals.isNotEmpty) {
+      // Up to the overrun allowed, less whatever the moments alone already
+      // run over (a match crowded with them gets nothing).
+      final over = math.max(
+        0.0,
+        momentsOnly + quietSlots * minQuietSeconds - budget,
+      );
+      final spare = budget * _buildUpOverrun - over;
+      final each = (spare / goals.length).clamp(0.0, _goalBuildUp);
+      if (each > 0) {
+        for (final g in goals) {
+          _lengths[g] = _lengths[g]! + each;
+          staged[_slotOf(g.minute, g.stoppage, slotCount)] += each;
+          stagedTotal += each;
+        }
+      }
+    }
     final quiet = quietSlots == 0
         ? 0.0
-        : ((budget - stagedTotal) / quietSlots).clamp(
+        : ((budget - momentsOnly) / quietSlots).clamp(
             minQuietSeconds,
             double.infinity,
           );
@@ -161,6 +193,10 @@ class PitchPacer {
   /// wherever the ball is. Without it a third of open-play goals were
   /// reached by a cut straight to the shot (players saw the move skipped).
   static const double _goalBuildUp = 4;
+
+  /// How far over its budget the screen may run for the goals' build-ups.
+  static const double _buildUpOverrun = 0.12;
+
   static const double _longThrow = 3.5;
   static const double _mergeExtra = 1.5;
 
@@ -285,15 +321,7 @@ class PitchPacer {
       case ShotMoment s:
         final goal = s.outcome == ShotOutcome.goal ? _goalExtra : 0;
         if (_keyShot(s)) {
-          final buildUp =
-              s.outcome == ShotOutcome.goal &&
-                  s.origin != ShotOrigin.penalty &&
-                  !_fromSetPiece(s.origin)
-              ? _goalBuildUp
-              : 0.0;
-          return (s.origin == ShotOrigin.penalty ? _penalty : _shot) +
-              goal +
-              buildUp;
+          return (s.origin == ShotOrigin.penalty ? _penalty : _shot) + goal;
         }
         final minorShot =
             s.outcome == ShotOutcome.wide || s.outcome == ShotOutcome.blocked;
