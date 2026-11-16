@@ -331,8 +331,7 @@ class _PlayoffTab extends ConsumerWidget {
     // Africa's, Asia's and Oceania's own steps (calendar2), played before
     // the play-off draws: shown above the paths, and alone while they run.
     final steps =
-        ref.watch(confedStepFixturesProvider(careerId)).valueOrNull ??
-        const {};
+        ref.watch(confedStepFixturesProvider(careerId)).valueOrNull ?? const {};
     final stepsView = steps.isEmpty
         ? null
         : ConfedPlayoffSteps(

@@ -26,6 +26,7 @@ import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fnm/features/tournaments/wc_host_berths.dart';
+import 'package:fnm/features/tournaments/euro_playoff_providers.dart';
 
 part 'round_results_tablet_layout.dart';
 
@@ -99,6 +100,16 @@ roundResultsViewProvider = FutureProvider.autoDispose.family<RoundResultsView?, 
     );
     direct = adv.direct;
     contention = adv.contention;
+    if (results.kind == CompetitionKind.continentalQualifying &&
+        conf == Confederation.europe) {
+      playoff = await euroPlayoffMarks(
+        ref.watch(competitionRepositoryProvider),
+        careerId: careerId,
+        cycle: career.cyclePointer,
+        rngSeed: career.rngSeed,
+        nations: nations,
+      );
+    }
     if (results.kind == CompetitionKind.worldCupQualifying) {
       playoff = GroupAdvancement.worldCupPlayoffNations(
         conf,

@@ -8,6 +8,7 @@ import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/cross_group.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
+import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/round_robin.dart';
 
 /// One play-off path: its [letter] (the Nations Cup league it is drawn from),
@@ -120,6 +121,72 @@ abstract final class EuroPlayoffs {
       }
     }
     return out;
+  }
+
+  /// The direct qualifiers and the paths, from Euro qualifying's [groups]
+  /// and the first Nations Cup's [tables]: [size] places, [hosts] of them
+  /// held, the top two of each group and the best runners-up through (as
+  /// many as the paths leave), the paths drawn with [rng] as [draw] does.
+  /// When the cup cannot fill every path the places left go to the best of
+  /// the groups instead. Read as the groups stand: the draw on the day
+  /// qualifying is played out, and the tables' marks before it.
+  static ({List<int> direct, List<PlayoffPath> paths}) settle({
+    required List<List<GroupStanding>> groups,
+    required List<NcTable> tables,
+    required Set<int> hosts,
+    required int size,
+    required SeededRng Function() rng,
+    List<int> fallback = const [],
+  }) {
+    final berths = (size - hosts.length).clamp(1, size);
+    var count = pathCount(
+      size: size,
+      hosts: hosts.length,
+      groupCount: groups.length,
+    );
+    var direct = Qualification.qualifiers(groups, berths - count);
+    var paths = draw(
+      tables: tables,
+      ineligible: {...direct, ...hosts},
+      count: count,
+      rng: rng(),
+      fallback: fallback,
+    );
+    if (paths.length < count) {
+      count = paths.length;
+      direct = Qualification.qualifiers(groups, berths - count);
+      paths = draw(
+        tables: tables,
+        ineligible: {...direct, ...hosts},
+        count: count,
+        rng: rng(),
+        fallback: fallback,
+      );
+    }
+    return (direct: direct, paths: paths);
+  }
+
+  /// The sides on course for the paths as the groups stand (every seed of
+  /// every path [settle] would draw now): the qualifying tables mark them
+  /// before the draw is made.
+  static Set<int> onCourse({
+    required List<List<GroupStanding>> groups,
+    required List<NcTable> tables,
+    required Set<int> hosts,
+    required int size,
+    List<int> fallback = const [],
+  }) {
+    if (tables.isEmpty || groups.isEmpty) return const {};
+    final (direct: _, :paths) = settle(
+      groups: groups,
+      tables: tables,
+      hosts: hosts,
+      size: size,
+      // Only a final's venue is drawn: the seeds never read it.
+      rng: () => SeededRng(0),
+      fallback: fallback,
+    );
+    return {for (final p in paths) ...p.seeds};
   }
 
   /// Draws the [count] paths from the first Nations Cup's [tables].
@@ -239,8 +306,7 @@ abstract final class EuroPlayoffs {
         ..sort((a, b) => a.position.compareTo(b.position));
       final seeds = [
         for (final r in rows)
-          if (r.nationId != null && r.position < finalHostPosition)
-            r.nationId!,
+          if (r.nationId != null && r.position < finalHostPosition) r.nationId!,
       ];
       if (seeds.length != 4) continue;
       final host = rows
