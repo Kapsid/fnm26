@@ -18003,4 +18003,10 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend => 'Kuning: menuju play-off putaran final';
+
+  @override
+  String get euroPlayoffToFinal => 'Ke final';
+
+  @override
+  String get euroPlayoffQualified => 'Lolos';
 }

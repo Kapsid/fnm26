@@ -18094,4 +18094,10 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend => 'Gul: på vej mod playoff til slutrunden';
+
+  @override
+  String get euroPlayoffToFinal => 'Til finalen';
+
+  @override
+  String get euroPlayoffQualified => 'Kvalificeret';
 }

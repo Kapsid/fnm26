@@ -4519,5 +4519,7 @@
   "assistantMatchResult": "La partita del vice",
   "euroPlayoffCourseTitle": "Spareggi tramite la Coppa delle Nazioni",
   "euroPlayoffCourseNote": "Le prime due di ogni girone si qualificano direttamente. Gli ultimi posti si assegnano negli spareggi tra le migliori della Coppa delle Nazioni non qualificate. Allo stato attuale:",
-  "ncEuroPlayoffLegend": "Giallo: in corsa per gli spareggi della fase finale"
+  "ncEuroPlayoffLegend": "Giallo: in corsa per gli spareggi della fase finale",
+  "euroPlayoffToFinal": "In finale",
+  "euroPlayoffQualified": "Qualificata"
 }

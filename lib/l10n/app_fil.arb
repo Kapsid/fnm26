@@ -4519,5 +4519,7 @@
   "assistantMatchResult": "Ang laro ng assistant",
   "euroPlayoffCourseTitle": "Play-off sa pamamagitan ng Nations Cup",
   "euroPlayoffCourseNote": "Diretsong pasok ang nangungunang dalawa sa bawat grupo. Ang huling mga puwesto ay pag-aagawan sa play-off ng pinakamahuhusay sa Nations Cup na hindi pa pasok. Sa ngayon:",
-  "ncEuroPlayoffLegend": "Dilaw: patungo sa play-off para sa finals"
+  "ncEuroPlayoffLegend": "Dilaw: patungo sa play-off para sa finals",
+  "euroPlayoffToFinal": "Sa final",
+  "euroPlayoffQualified": "Pasok na"
 }

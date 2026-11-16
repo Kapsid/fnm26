@@ -4519,5 +4519,7 @@
   "assistantMatchResult": "Le match de l'adjoint",
   "euroPlayoffCourseTitle": "Barrages via la Coupe des nations",
   "euroPlayoffCourseNote": "Les deux premiers de chaque groupe sont qualifiés directement. Les dernières places se jouent en barrages entre les meilleures équipes de la Coupe des nations non qualifiées. En l'état :",
-  "ncEuroPlayoffLegend": "Jaune : en route pour les barrages de la phase finale"
+  "ncEuroPlayoffLegend": "Jaune : en route pour les barrages de la phase finale",
+  "euroPlayoffToFinal": "En finale",
+  "euroPlayoffQualified": "Qualifié"
 }

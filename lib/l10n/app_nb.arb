@@ -4519,5 +4519,7 @@
   "assistantMatchResult": "Assistentens kamp",
   "euroPlayoffCourseTitle": "Playoff via Nations Cup",
   "euroPlayoffCourseNote": "De to beste i hver gruppe går rett videre. De siste plassene går til playoff for Nations Cups beste lag som ikke er videre. Slik det står nå:",
-  "ncEuroPlayoffLegend": "Gul: på vei mot playoff til sluttspillet"
+  "ncEuroPlayoffLegend": "Gul: på vei mot playoff til sluttspillet",
+  "euroPlayoffToFinal": "Til finalen",
+  "euroPlayoffQualified": "Kvalifisert"
 }

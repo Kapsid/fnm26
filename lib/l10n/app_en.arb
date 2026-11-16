@@ -27928,5 +27928,13 @@
   "ncEuroPlayoffLegend": "Yellow: on course for the play-off for the continental finals",
   "@ncEuroPlayoffLegend": {
     "description": "Nations Cup tables: what a yellow row means (sides on course for the continental finals' play-off paths, read off this cup)."
+  },
+  "euroPlayoffToFinal": "To the final",
+  "@euroPlayoffToFinal": {
+    "description": "Play-off path: tag beside the semi-final's winner."
+  },
+  "euroPlayoffQualified": "Qualified",
+  "@euroPlayoffQualified": {
+    "description": "Play-off path: tag beside the path final's winner, who goes to the continental finals."
   }
 }

@@ -4519,5 +4519,7 @@
   "assistantMatchResult": "Zápas pod vedením asistenta",
   "euroPlayoffCourseTitle": "Baráž přes Pohár národů",
   "euroPlayoffCourseNote": "První dva z každé skupiny postupují přímo. O poslední místa se hraje baráž mezi nejlepšími týmy Poháru národů, které nepostoupily. Podle aktuálního stavu:",
-  "ncEuroPlayoffLegend": "Žlutě: míří do baráže o závěrečný turnaj"
+  "ncEuroPlayoffLegend": "Žlutě: míří do baráže o závěrečný turnaj",
+  "euroPlayoffToFinal": "Do finále",
+  "euroPlayoffQualified": "Postup na turnaj"
 }

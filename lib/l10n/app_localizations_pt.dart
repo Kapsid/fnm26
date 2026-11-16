@@ -18195,4 +18195,10 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get ncEuroPlayoffLegend =>
       'Amarelo: a caminho do play-off da fase final';
+
+  @override
+  String get euroPlayoffToFinal => 'À final';
+
+  @override
+  String get euroPlayoffQualified => 'Apurado';
 }

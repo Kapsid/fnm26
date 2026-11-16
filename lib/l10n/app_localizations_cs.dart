@@ -18488,4 +18488,10 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend => 'Žlutě: míří do baráže o závěrečný turnaj';
+
+  @override
+  String get euroPlayoffToFinal => 'Do finále';
+
+  @override
+  String get euroPlayoffQualified => 'Postup na turnaj';
 }

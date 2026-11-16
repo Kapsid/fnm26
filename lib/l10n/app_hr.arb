@@ -4519,5 +4519,7 @@
   "assistantMatchResult": "Pomoćnikova utakmica",
   "euroPlayoffCourseTitle": "Doigravanje preko Nations Cupa",
   "euroPlayoffCourseNote": "Prve dvije iz svake skupine prolaze izravno. Posljednja mjesta osvajaju se u doigravanju najboljih momčadi Nations Cupa koje nisu prošle. Trenutačno stanje:",
-  "ncEuroPlayoffLegend": "Žuto: na putu prema doigravanju za završni turnir"
+  "ncEuroPlayoffLegend": "Žuto: na putu prema doigravanju za završni turnir",
+  "euroPlayoffToFinal": "U finale",
+  "euroPlayoffQualified": "Plasman"
 }

@@ -27355,6 +27355,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Yellow: on course for the play-off for the continental finals'**
   String get ncEuroPlayoffLegend;
+
+  /// Play-off path: tag beside the semi-final's winner.
+  ///
+  /// In en, this message translates to:
+  /// **'To the final'**
+  String get euroPlayoffToFinal;
+
+  /// Play-off path: tag beside the path final's winner, who goes to the continental finals.
+  ///
+  /// In en, this message translates to:
+  /// **'Qualified'**
+  String get euroPlayoffQualified;
 }
 
 class _AppLocalizationsDelegate

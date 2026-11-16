@@ -17786,4 +17786,10 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend => 'สีเหลือง: กำลังมุ่งสู่เพลย์ออฟรอบสุดท้าย';
+
+  @override
+  String get euroPlayoffToFinal => 'เข้ารอบชิง';
+
+  @override
+  String get euroPlayoffQualified => 'ผ่านเข้ารอบ';
 }

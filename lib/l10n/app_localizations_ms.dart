@@ -18056,4 +18056,10 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend => 'Kuning: menuju play-off pusingan akhir';
+
+  @override
+  String get euroPlayoffToFinal => 'Ke final';
+
+  @override
+  String get euroPlayoffQualified => 'Layak';
 }

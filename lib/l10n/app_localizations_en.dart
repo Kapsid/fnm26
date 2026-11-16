@@ -18127,4 +18127,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get ncEuroPlayoffLegend =>
       'Yellow: on course for the play-off for the continental finals';
+
+  @override
+  String get euroPlayoffToFinal => 'To the final';
+
+  @override
+  String get euroPlayoffQualified => 'Qualified';
 }

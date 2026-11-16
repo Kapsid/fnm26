@@ -18174,4 +18174,10 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get ncEuroPlayoffLegend =>
       'Giallo: in corsa per gli spareggi della fase finale';
+
+  @override
+  String get euroPlayoffToFinal => 'In finale';
+
+  @override
+  String get euroPlayoffQualified => 'Qualificata';
 }

@@ -18169,4 +18169,10 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String get ncEuroPlayoffLegend =>
       'Keltainen: matkalla lopputurnauksen jatkokarsintaan';
+
+  @override
+  String get euroPlayoffToFinal => 'Finaaliin';
+
+  @override
+  String get euroPlayoffQualified => 'Selviytyi';
 }

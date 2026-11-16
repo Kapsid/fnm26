@@ -4519,5 +4519,7 @@
   "assistantMatchResult": "Laga sang asisten",
   "euroPlayoffCourseTitle": "Play-off lewat Piala Bangsa-Bangsa",
   "euroPlayoffCourseNote": "Dua teratas tiap grup lolos langsung. Tempat terakhir diperebutkan di play-off oleh tim terbaik Piala Bangsa-Bangsa yang belum lolos. Saat ini:",
-  "ncEuroPlayoffLegend": "Kuning: menuju play-off putaran final"
+  "ncEuroPlayoffLegend": "Kuning: menuju play-off putaran final",
+  "euroPlayoffToFinal": "Ke final",
+  "euroPlayoffQualified": "Lolos"
 }

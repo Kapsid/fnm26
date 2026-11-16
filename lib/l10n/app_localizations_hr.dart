@@ -18436,4 +18436,10 @@ class AppLocalizationsHr extends AppLocalizations {
   @override
   String get ncEuroPlayoffLegend =>
       'Žuto: na putu prema doigravanju za završni turnir';
+
+  @override
+  String get euroPlayoffToFinal => 'U finale';
+
+  @override
+  String get euroPlayoffQualified => 'Plasman';
 }

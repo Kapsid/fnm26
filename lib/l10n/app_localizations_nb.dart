@@ -18089,4 +18089,10 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend => 'Gul: på vei mot playoff til sluttspillet';
+
+  @override
+  String get euroPlayoffToFinal => 'Til finalen';
+
+  @override
+  String get euroPlayoffQualified => 'Kvalifisert';
 }

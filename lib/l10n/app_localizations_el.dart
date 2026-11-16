@@ -18187,4 +18187,10 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get ncEuroPlayoffLegend =>
       'Κίτρινο: σε τροχιά για το μπαράζ της τελικής φάσης';
+
+  @override
+  String get euroPlayoffToFinal => 'Στον τελικό';
+
+  @override
+  String get euroPlayoffQualified => 'Προκρίθηκε';
 }

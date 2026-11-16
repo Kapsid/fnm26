@@ -17941,4 +17941,10 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get ncEuroPlayoffLegend =>
       'Vàng: đang hướng tới play-off vòng chung kết';
+
+  @override
+  String get euroPlayoffToFinal => 'Vào chung kết';
+
+  @override
+  String get euroPlayoffQualified => 'Giành vé';
 }

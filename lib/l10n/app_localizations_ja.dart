@@ -17468,4 +17468,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend => '黄色：本大会プレーオフ圏内';
+
+  @override
+  String get euroPlayoffToFinal => '決勝へ';
+
+  @override
+  String get euroPlayoffQualified => '出場決定';
 }

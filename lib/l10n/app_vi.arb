@@ -4519,5 +4519,7 @@
   "assistantMatchResult": "Trận đấu của trợ lý",
   "euroPlayoffCourseTitle": "Play-off qua Nations Cup",
   "euroPlayoffCourseNote": "Hai đội đầu mỗi bảng giành vé trực tiếp. Các suất cuối thuộc về play-off giữa những đội mạnh nhất Nations Cup chưa giành vé. Hiện tại:",
-  "ncEuroPlayoffLegend": "Vàng: đang hướng tới play-off vòng chung kết"
+  "ncEuroPlayoffLegend": "Vàng: đang hướng tới play-off vòng chung kết",
+  "euroPlayoffToFinal": "Vào chung kết",
+  "euroPlayoffQualified": "Giành vé"
 }

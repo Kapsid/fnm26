@@ -4519,5 +4519,7 @@
   "assistantMatchResult": "Meciul secundului",
   "euroPlayoffCourseTitle": "Baraj prin Cupa Națiunilor",
   "euroPlayoffCourseNote": "Primele două din fiecare grupă se califică direct. Ultimele locuri se joacă în baraj între cele mai bune echipe din Cupa Națiunilor care nu s-au calificat. Situația acum:",
-  "ncEuroPlayoffLegend": "Galben: pe drumul spre barajul turneului final"
+  "ncEuroPlayoffLegend": "Galben: pe drumul spre barajul turneului final",
+  "euroPlayoffToFinal": "În finală",
+  "euroPlayoffQualified": "Calificată"
 }

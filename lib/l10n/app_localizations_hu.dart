@@ -18039,4 +18039,10 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get ncEuroPlayoffLegend =>
       'Sárga: úton a zárótorna pótselejtezője felé';
+
+  @override
+  String get euroPlayoffToFinal => 'Döntőbe';
+
+  @override
+  String get euroPlayoffQualified => 'Kijutott';
 }

@@ -4519,5 +4519,7 @@
   "assistantMatchResult": "De wedstrijd van de assistent",
   "euroPlayoffCourseTitle": "Play-offs via de Nations Cup",
   "euroPlayoffCourseNote": "De nummers een en twee van elke groep plaatsen zich direct. De laatste plaatsen gaan via play-offs naar de beste Nations Cup-landen die nog niet geplaatst zijn. Zoals het nu staat:",
-  "ncEuroPlayoffLegend": "Geel: op koers voor de play-offs voor het eindtoernooi"
+  "ncEuroPlayoffLegend": "Geel: op koers voor de play-offs voor het eindtoernooi",
+  "euroPlayoffToFinal": "Naar de finale",
+  "euroPlayoffQualified": "Geplaatst"
 }

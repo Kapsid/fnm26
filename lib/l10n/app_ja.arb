@@ -4519,5 +4519,7 @@
   "assistantMatchResult": "アシスタントの試合",
   "euroPlayoffCourseTitle": "ネーションズカップ経由のプレーオフ",
   "euroPlayoffCourseNote": "各グループ上位2チームがストレートインします。残りの枠は、ネーションズカップの上位でまだ出場が決まっていないチームによるプレーオフで争われます。現時点では：",
-  "ncEuroPlayoffLegend": "黄色：本大会プレーオフ圏内"
+  "ncEuroPlayoffLegend": "黄色：本大会プレーオフ圏内",
+  "euroPlayoffToFinal": "決勝へ",
+  "euroPlayoffQualified": "出場決定"
 }

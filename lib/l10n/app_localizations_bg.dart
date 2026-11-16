@@ -18179,4 +18179,10 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend => 'Жълто: по пътя към плейофа за финалите';
+
+  @override
+  String get euroPlayoffToFinal => 'Към финала';
+
+  @override
+  String get euroPlayoffQualified => 'Класира се';
 }

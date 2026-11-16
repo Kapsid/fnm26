@@ -17510,4 +17510,10 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend => '노란색: 본선 플레이오프 진출권';
+
+  @override
+  String get euroPlayoffToFinal => '결승 진출';
+
+  @override
+  String get euroPlayoffQualified => '본선 진출';
 }

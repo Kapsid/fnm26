@@ -91,6 +91,24 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Path A'), findsOneWidget);
     expect(find.text('Path B'), findsOneWidget);
+    // Each round's winners are marked through: Path A's semis are played
+    // (1 beat 4, 3 beat 2); Path B's are not.
+    expect(
+      find.byKey(const Key('euroPlayoff.through.semi.1')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('euroPlayoff.through.semi.3')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('euroPlayoff.through.semi.4')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const Key('euroPlayoff.through.semi.5')),
+      findsNothing,
+    );
     // The manager's path is marked, once.
     expect(find.text('Your path'), findsOneWidget);
     expect(

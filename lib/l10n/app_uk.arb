@@ -4519,5 +4519,7 @@
   "assistantMatchResult": "Матч асистента",
   "euroPlayoffCourseTitle": "Плей-оф через Nations Cup",
   "euroPlayoffCourseNote": "Дві найкращі команди кожної групи виходять напряму. Останні місця розігрують у плей-оф найкращі команди Nations Cup, які не пройшли. Станом на зараз:",
-  "ncEuroPlayoffLegend": "Жовтий: на шляху до плей-оф фінального турніру"
+  "ncEuroPlayoffLegend": "Жовтий: на шляху до плей-оф фінального турніру",
+  "euroPlayoffToFinal": "У фінал",
+  "euroPlayoffQualified": "Кваліфікувалася"
 }

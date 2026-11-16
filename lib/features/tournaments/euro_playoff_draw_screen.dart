@@ -201,6 +201,7 @@ class _PathCard extends StatelessWidget {
               home: fin.homeNationId,
               away: fin.awayNationId,
               fixture: fin,
+              isFinal: true,
             )
           else
             Padding(
@@ -236,7 +237,12 @@ class _PathCard extends StatelessWidget {
     ),
   );
 
-  Widget _tie({required int home, required int away, Fixture? fixture}) {
+  Widget _tie({
+    required int home,
+    required int away,
+    Fixture? fixture,
+    bool isFinal = false,
+  }) {
     final played = fixture != null && fixture.hasResult;
     final winner = !played
         ? null
@@ -246,8 +252,11 @@ class _PathCard extends StatelessWidget {
     Widget side(int id, int? score) {
       final isPlayer = id == data.playerNationId;
       final won = winner == id;
+      final out = winner != null && !won;
       final color = won
           ? AppColors.positive
+          : out
+          ? AppColors.onSurfaceVariant.withValues(alpha: 0.6)
           : isPlayer
           ? AppColors.primary
           : AppColors.onSurface;
@@ -277,6 +286,20 @@ class _PathCard extends StatelessWidget {
                 ),
               ),
             ),
+            if (won)
+              Padding(
+                padding: const EdgeInsets.only(right: AppSpacing.sm),
+                child: Text(
+                  isFinal ? l.euroPlayoffQualified : l.euroPlayoffToFinal,
+                  key: Key(
+                    'euroPlayoff.through.${isFinal ? 'final' : 'semi'}.$id',
+                  ),
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.positive,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
             if (score != null)
               Text(
                 '$score',

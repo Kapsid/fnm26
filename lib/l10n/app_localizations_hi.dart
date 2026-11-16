@@ -18001,4 +18001,10 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend => 'पीला: फ़ाइनल्स के प्ले-ऑफ़ की राह पर';
+
+  @override
+  String get euroPlayoffToFinal => 'फ़ाइनल में';
+
+  @override
+  String get euroPlayoffQualified => 'क्वालीफ़ाई';
 }

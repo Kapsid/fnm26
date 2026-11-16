@@ -18105,4 +18105,10 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend => 'Dilaw: patungo sa play-off para sa finals';
+
+  @override
+  String get euroPlayoffToFinal => 'Sa final';
+
+  @override
+  String get euroPlayoffQualified => 'Pasok na';
 }

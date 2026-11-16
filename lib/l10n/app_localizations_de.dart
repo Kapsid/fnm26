@@ -18226,4 +18226,10 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get ncEuroPlayoffLegend =>
       'Gelb: auf Kurs für das Play-off zur Endrunde';
+
+  @override
+  String get euroPlayoffToFinal => 'Ins Finale';
+
+  @override
+  String get euroPlayoffQualified => 'Qualifiziert';
 }

@@ -18520,4 +18520,10 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get ncEuroPlayoffLegend =>
       'Galben: pe drumul spre barajul turneului final';
+
+  @override
+  String get euroPlayoffToFinal => 'În finală';
+
+  @override
+  String get euroPlayoffQualified => 'Calificată';
 }

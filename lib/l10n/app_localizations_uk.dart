@@ -18425,4 +18425,10 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get ncEuroPlayoffLegend =>
       'Жовтий: на шляху до плей-оф фінального турніру';
+
+  @override
+  String get euroPlayoffToFinal => 'У фінал';
+
+  @override
+  String get euroPlayoffQualified => 'Кваліфікувалася';
 }

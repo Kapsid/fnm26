@@ -18005,4 +18005,10 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get ncEuroPlayoffLegend => 'Sarı: final turnuvası play-off yolunda';
+
+  @override
+  String get euroPlayoffToFinal => 'Finale';
+
+  @override
+  String get euroPlayoffQualified => 'Katıldı';
 }
