@@ -193,7 +193,7 @@ abstract interface class MatchScreenProbe {
 class _MatchScreenState extends ConsumerState<MatchScreen>
     with TickerProviderStateMixin
     implements MatchScreenProbe {
-  static const _speeds = [1, 2, 3];
+  static const _speeds = [1, 2, 3, 5];
   static const _engine = MatchEngine();
 
   /// This attempt's salt on the fixture seed (see [matchAttemptSaltProvider]).

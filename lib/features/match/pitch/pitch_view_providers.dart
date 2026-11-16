@@ -374,19 +374,21 @@ matchViewModeProvider =
 /// quicker through its clock rate ([pitchRateForStep]) alone: a tighter
 /// pacing band squeezes the staged picture (goal lines, restarts, offside
 /// cuts) where a faster clock plays the same picture faster.
-PitchSpeed pitchSpeedForStep(int index) =>
-    const [PitchSpeed.slow, PitchSpeed.fast, PitchSpeed.fast][index.clamp(
-      0,
-      2,
-    )];
+PitchSpeed pitchSpeedForStep(int index) => const [
+  PitchSpeed.slow,
+  PitchSpeed.fast,
+  PitchSpeed.fast,
+  PitchSpeed.turbo,
+][index.clamp(0, 3)];
 
 /// The Pitch clock's playback rate for the speed step [index], on top of
 /// the pacing [pitchSpeedForStep] picks: every staged second plays this
 /// much faster. 1x runs 30% faster; 2x is the old 3x (fast pacing at 1.5);
 /// 3x is that a quarter faster again (1.5 x 1.25).
 /// The shootout keeps its own fixed 4 s a kick.
+/// 5x is the quickest pacing (see [PitchSpeed.turbo]) at twice the speed.
 double pitchRateForStep(int index) =>
-    const [1.3, 1.5, 1.5 * 1.25][index.clamp(0, 2)];
+    const [1.3, 1.5, 1.5 * 1.25, 2.0][index.clamp(0, 3)];
 
 /// The competition a fixture's [round] code belongs to, as far as the
 /// ground's dressing and its kick-off slots care.

@@ -1425,6 +1425,8 @@ class _Builder {
           cur += len;
         } else if (last != null &&
             m is ShotMoment &&
+            m.origin != ShotOrigin.openPlay &&
+            m.origin != ShotOrigin.penalty &&
             last.moments.first is SetPieceMoment &&
             last.moments.length == 1) {
           last.moments.add(m);

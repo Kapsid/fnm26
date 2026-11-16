@@ -15,7 +15,16 @@ import '../match_engine.dart';
 import '../match_moments.dart';
 
 /// How fast the Pitch view plays a match.
-enum PitchSpeed { slow, mid, fast }
+enum PitchSpeed {
+  slow,
+  mid,
+  fast,
+
+  /// The quickest: the match's key moments and its standard ones cut short,
+  /// the minor ones (wide and blocked shots, offsides) not shown at all,
+  /// and no build-up before a goal.
+  turbo,
+}
 
 /// Pacing of one match on screen.
 ///
@@ -130,7 +139,7 @@ class PitchPacer {
     // The quiet minutes keep the time they had before the build-ups: the
     // build-ups are the overrun.
     final momentsOnly = stagedTotal;
-    if (goals.isNotEmpty) {
+    if (goals.isNotEmpty && speed != PitchSpeed.turbo) {
       // Up to the overrun allowed, less whatever the moments alone already
       // run over (a match crowded with them gets nothing).
       final over = math.max(
@@ -183,12 +192,14 @@ class PitchPacer {
   static const (double, double) slowBand = (180.0, 240.0);
   static const (double, double) midBand = (120.0, 180.0);
   static const (double, double) fastBand = (60.0, 120.0);
+  static const (double, double) turboBand = (40.0, 75.0);
 
   /// The band of [speed].
   static (double, double) bandOf(PitchSpeed speed) => switch (speed) {
     PitchSpeed.slow => slowBand,
     PitchSpeed.mid => midBand,
     PitchSpeed.fast => fastBand,
+    PitchSpeed.turbo => turboBand,
   };
 
   /// The least screen time a quiet minute gets.
@@ -346,8 +357,13 @@ class PitchPacer {
       PitchSpeed.slow => (1.0, 1.0),
       PitchSpeed.mid => (0.7, 0.5),
       PitchSpeed.fast => (0.45, 0.3),
+      PitchSpeed.turbo => (0.35, 0.0),
     };
-    double at(double base, _Tier t) => _tier(base, std, minor, t);
+    // At the quickest a minor moment is not shown at all.
+    double at(double base, _Tier t) =>
+        speed == PitchSpeed.turbo && t == _Tier.minor
+        ? 0
+        : _tier(base, std, minor, t);
     switch (m) {
       case ShotMoment s:
         final goal = s.outcome == ShotOutcome.goal ? _goalExtra : 0;
