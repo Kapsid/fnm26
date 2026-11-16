@@ -2950,6 +2950,37 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                     : null,
               );
             }
+            if (_onPitch && ft) {
+              // Pitch mode at the whistle: the picture has done its work.
+              // The score and the Summary, Stats and Line-ups take the
+              // screen, as on the Timeline (the shot map is in the Summary).
+              return DefaultTabController(
+                length: 3,
+                key: const ValueKey(('pitch', true)),
+                child: SafeArea(
+                  child: Stack(
+                    children: [
+                      Column(
+                        children: [
+                          topBar,
+                          scoreboard,
+                          // A shootout's kicks stay in view, as on the
+                          // Timeline.
+                          ?shootout,
+                          const MatchDetailTabs(withTimeline: false),
+                          Expanded(
+                            child: TabBarView(
+                              children: [summary, stats, lineups],
+                            ),
+                          ),
+                        ],
+                      ),
+                      ...overlays,
+                    ],
+                  ),
+                ),
+              );
+            }
             if (_onPitch) {
               // Pitch mode: the match on the pitch under the score, one line
               // of commentary under it, then the momentum and the details.
