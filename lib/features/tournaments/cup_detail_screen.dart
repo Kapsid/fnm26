@@ -580,7 +580,7 @@ class _QualifyingState extends State<_Qualifying> {
           if (conf == Confederation.europe &&
               widget.europePlayoffPaths > 0 &&
               widget.nationsCupCourse.isNotEmpty)
-            const PlayoffStripeLegend(),
+            const PlayoffStripeLegend(worldChampionship: true),
           ..._groupCards(conf, byConf),
           // The cross-group ladder for the CONTESTED position — usually the
           // second-placed teams ranked against each other, but the group

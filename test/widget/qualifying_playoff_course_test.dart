@@ -5,6 +5,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/features/tournaments/continental_detail_screen.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 
 import '../helpers/competition_fixtures.dart';
 import '../helpers/seeded_save.dart';
@@ -74,5 +75,26 @@ void main() {
         );
     final border = (row.decoration! as BoxDecoration).border! as Border;
     expect(border.left.color, AppColors.playoff);
+  });
+
+  // Yellow names its source: the latest Nations Cup on the EURO's tables,
+  // and on the World Championship's the best runners-up too.
+  testWidgets('the key says where yellow comes from', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const Scaffold(
+          body: Column(
+            children: [
+              PlayoffStripeLegend(),
+              PlayoffStripeLegend(worldChampionship: true),
+            ],
+          ),
+        ),
+      ),
+    );
+    expect(find.textContaining('latest Nations Cup'), findsNWidgets(2));
+    expect(find.textContaining('best runners-up'), findsOneWidget);
   });
 }

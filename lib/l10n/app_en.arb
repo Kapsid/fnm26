@@ -28234,7 +28234,11 @@
   "@wcPlayoffCourseNote": {
     "description": "World Championship qualifying, under Europe's groups: who goes to the play-off paths (the best runners-up, in yellow, and the best Nations Cup group winners not through), then the Nations Cup sides on course for them, listed below."
   },
-  "playoffCourseLegend": "Yellow: headed for a play-off path, as things stand (see below)",
+  "playoffCourseLegend": "Yellow: headed for a play-off path through its ranking in the latest Nations Cup, as things stand (see below)",
+  "playoffCourseLegendWc": "Yellow: headed for a play-off path, as one of the best runners-up or through its ranking in the latest Nations Cup, as things stand (see below)",
+  "@playoffCourseLegendWc": {
+    "description": "World Championship qualifying groups in Europe: the legend of the yellow stripe, which marks both the best runners-up headed for a play-off path and the sides headed for one through their ranking in the latest Nations Cup."
+  },
   "playoffCourseFooter": "Why they are here: the Nations Cup gives its group winners, then the next best of each league, a play-off place if they do not go through directly. This is only how things stand today: it changes after every round.",
   "@playoffCourseLegend": {
     "description": "Qualifying tables: the key to the yellow stripe on the sides headed for a play-off path as things stand; the card under the tables explains it."

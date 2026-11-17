@@ -18393,7 +18393,11 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get playoffCourseLegend =>
-      'Amarelo: a caminho do play-off, neste momento (ver abaixo)';
+      'Amarelo: a caminho de um play-off pela classificação na última Taça das Nações, como as coisas estão (ver abaixo)';
+
+  @override
+  String get playoffCourseLegendWc =>
+      'Amarelo: a caminho de um play-off, como um dos melhores segundos ou pela classificação na última Taça das Nações, como as coisas estão (ver abaixo)';
 
   @override
   String get playoffCourseFooter =>

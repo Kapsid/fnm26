@@ -18196,7 +18196,11 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get playoffCourseLegend =>
-      'Sarı: şu anki duruma göre play-off yolunda (aşağıya bakın)';
+      'Sarı: son Uluslar Kupası\'ndaki sıralaması sayesinde play-off yolunda, şu anki duruma göre (açıklama aşağıda)';
+
+  @override
+  String get playoffCourseLegendWc =>
+      'Sarı: en iyi ikincilerden biri olarak ya da son Uluslar Kupası\'ndaki sıralaması sayesinde play-off yolunda, şu anki duruma göre (açıklama aşağıda)';
 
   @override
   String get playoffCourseFooter =>

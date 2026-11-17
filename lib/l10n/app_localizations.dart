@@ -27639,8 +27639,14 @@ abstract class AppLocalizations {
   /// Qualifying tables: the key to the yellow stripe on the sides headed for a play-off path as things stand; the card under the tables explains it.
   ///
   /// In en, this message translates to:
-  /// **'Yellow: headed for a play-off path, as things stand (see below)'**
+  /// **'Yellow: headed for a play-off path through its ranking in the latest Nations Cup, as things stand (see below)'**
   String get playoffCourseLegend;
+
+  /// World Championship qualifying groups in Europe: the legend of the yellow stripe, which marks both the best runners-up headed for a play-off path and the sides headed for one through their ranking in the latest Nations Cup.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow: headed for a play-off path, as one of the best runners-up or through its ranking in the latest Nations Cup, as things stand (see below)'**
+  String get playoffCourseLegendWc;
 
   /// Footnote under the play-off course card of a qualifying screen: why the Nations Cup sides listed are there, and that it is only the current state.
   ///

@@ -18225,7 +18225,11 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get playoffCourseLegend =>
-      'Sárga: úton a pótselejtező felé, a jelenlegi állás szerint (lásd lent)';
+      'Sárga: pótselejtező felé tart a legutóbbi Nemzetek Kupája-helyezése alapján, a jelenlegi állás szerint (lásd lent)';
+
+  @override
+  String get playoffCourseLegendWc =>
+      'Sárga: pótselejtező felé tart, mint az egyik legjobb második vagy a legutóbbi Nemzetek Kupája-helyezése alapján, a jelenlegi állás szerint (lásd lent)';
 
   @override
   String get playoffCourseFooter =>

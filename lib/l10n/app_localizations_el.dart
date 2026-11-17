@@ -18376,7 +18376,11 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get playoffCourseLegend =>
-      'Κίτρινο: σε τροχιά για τα μπαράζ, όπως είναι τώρα (δείτε παρακάτω)';
+      'Κίτρινο: προς τα μπαράζ χάρη στη θέση στο τελευταίο Κύπελλο Εθνών, με τα σημερινά δεδομένα (δείτε παρακάτω)';
+
+  @override
+  String get playoffCourseLegendWc =>
+      'Κίτρινο: προς τα μπαράζ ως μία από τις καλύτερες δεύτερες ή χάρη στη θέση στο τελευταίο Κύπελλο Εθνών, με τα σημερινά δεδομένα (δείτε παρακάτω)';
 
   @override
   String get playoffCourseFooter =>

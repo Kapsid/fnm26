@@ -44,6 +44,7 @@ void main() {
     MatchTeam t,
     int redId, {
     Map<int, int> goals = const {},
+    Map<int, int> ownGoals = const {},
   }) async {
     tester.view
       ..physicalSize = const Size(400, 1200)
@@ -57,6 +58,7 @@ void main() {
       kit: null,
       cards: {redId: MatchCard.red},
       goals: goals,
+      ownGoals: ownGoals,
     );
     final other = (
       nationId: 2,
@@ -71,6 +73,7 @@ void main() {
       kit: null,
       cards: const <int, MatchCard>{},
       goals: const <int, int>{},
+      ownGoals: const <int, int>{},
     );
     await tester.pumpWidget(
       MaterialApp(
@@ -149,11 +152,20 @@ void main() {
       t,
       t.xi[5].id,
       goals: {t.xi[9].id: 2, t.xi[10].id: 1},
+      ownGoals: {t.xi[3].id: 1},
     );
     expect(tester.takeException(), isNull);
     expect(find.byKey(const ValueKey('pitchGoals9')), findsOneWidget);
     expect(find.byKey(const ValueKey('pitchGoals10')), findsOneWidget);
     expect(find.byKey(const ValueKey('pitchGoals8')), findsNothing);
+    // An own goal: a red ball on his shoulder too.
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('pitchGoals3')),
+        matching: find.byKey(const ValueKey('pitchOwnGoal')),
+      ),
+      findsOneWidget,
+    );
     expect(
       find.descendant(
         of: find.byKey(const ValueKey('pitchGoals9')),

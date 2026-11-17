@@ -899,8 +899,14 @@ class _PlayoffCourseCard extends StatelessWidget {
 
 /// The yellow stripe's key over qualifying tables that mark the sides on
 /// course for a play-off path (the card under the tables says why).
+///
+/// On the EURO's tables yellow is the Nations Cup's way in alone; on the
+/// World Championship's ([worldChampionship]) it is also the best
+/// runners-up's, and the key says both.
 class PlayoffStripeLegend extends StatelessWidget {
-  const PlayoffStripeLegend({super.key});
+  const PlayoffStripeLegend({this.worldChampionship = false, super.key});
+
+  final bool worldChampionship;
 
   static const Key legendKey = Key('qualifying.playoffLegend');
 
@@ -916,7 +922,9 @@ class PlayoffStripeLegend extends StatelessWidget {
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(
-              l.playoffCourseLegend,
+              worldChampionship
+                  ? l.playoffCourseLegendWc
+                  : l.playoffCourseLegend,
               style: AppTypography.labelSmall.copyWith(
                 color: AppColors.onSurfaceVariant,
               ),

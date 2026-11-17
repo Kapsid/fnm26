@@ -579,6 +579,7 @@ class MatchStatsPanel extends StatelessWidget {
             ?.teamNationId ??
         -1;
     final goals = goalsByPlayerOf(result.events, nationId: nationId);
+    final ownGoals = ownGoalsByPlayerOf(result.events, nationId: nationId);
     final cards = cardStatusFor(
       result.events,
       nationId: nationId,
@@ -630,6 +631,7 @@ class MatchStatsPanel extends StatelessWidget {
                   ),
                   ...matchMarks(
                     goals: goals[r.playerId] ?? 0,
+                    ownGoals: ownGoals[r.playerId] ?? 0,
                     card: cards[r.playerId],
                   ),
                   const SizedBox(width: AppSpacing.xs),
@@ -2456,6 +2458,9 @@ typedef FullTimeSide = ({
 
   /// Goals each of the side's players scored (own goals not counted).
   Map<int, int> goals,
+
+  /// Own goals each of the side's players put past his own keeper.
+  Map<int, int> ownGoals,
 });
 
 /// The line-ups after the final whistle: one side at a time on the pitch, in
@@ -2585,6 +2590,7 @@ class _MatchFullTimeLineupsState extends State<MatchFullTimeLineups> {
                     teamColors: side.kit,
                     cardsByPlayer: side.cards,
                     goalsByPlayer: side.goals,
+                    ownGoalsByPlayer: side.ownGoals,
                     ratingByPlayer: widget.ratings,
                     motmId: widget.motmId,
                     onTapSlot: (_) {},
@@ -2620,6 +2626,7 @@ class _MatchFullTimeLineupsState extends State<MatchFullTimeLineups> {
                         rating: widget.ratings[p.id],
                         motm: p.id == widget.motmId,
                         goals: side.goals[p.id] ?? 0,
+                        ownGoals: side.ownGoals[p.id] ?? 0,
                         card: side.cards[p.id],
                       ),
                   ],
@@ -2743,6 +2750,7 @@ class _CameOnChip extends StatelessWidget {
     required this.rating,
     required this.motm,
     this.goals = 0,
+    this.ownGoals = 0,
     this.card,
     super.key,
   });
@@ -2751,6 +2759,7 @@ class _CameOnChip extends StatelessWidget {
   final double? rating;
   final bool motm;
   final int goals;
+  final int ownGoals;
   final MatchCard? card;
 
   @override
@@ -2773,7 +2782,7 @@ class _CameOnChip extends StatelessWidget {
             maxLines: 1,
             style: AppTypography.bodySmall,
           ),
-          ...matchMarks(goals: goals, card: card),
+          ...matchMarks(goals: goals, ownGoals: ownGoals, card: card),
           if (r != null) ...[
             const SizedBox(width: 6),
             RatingBadge(r, compact: true, motm: motm),
@@ -2877,6 +2886,24 @@ class MissedPenaltyMark extends StatelessWidget {
 
 /// Goals each of [nationId]'s players scored in [events]: own goals are the
 /// other side's, never a goal of the man who put the ball in his own net.
+/// The key of an own goal's red ball beside a player's name.
+const ownGoalMarkKey = ValueKey('ownGoalMark');
+
+/// The own goals each of [nationId]'s players put past his own keeper (an
+/// own goal is the OTHER side's goal, carried under its culprit's id).
+Map<int, int> ownGoalsByPlayerOf(
+  Iterable<MatchEvent> events, {
+  required int nationId,
+}) {
+  final out = <int, int>{};
+  for (final e in events) {
+    if (e.type != MatchEventType.goal || !e.ownGoal) continue;
+    if (e.teamNationId == nationId) continue;
+    out[e.playerId] = (out[e.playerId] ?? 0) + 1;
+  }
+  return out;
+}
+
 Map<int, int> goalsByPlayerOf(
   Iterable<MatchEvent> events, {
   required int nationId,
@@ -2891,8 +2918,13 @@ Map<int, int> goalsByPlayerOf(
 }
 
 /// A player's goals and card beside his name in a list: a ball per goal
-/// (a count beside one ball from three), then the card.
-List<Widget> matchMarks({required int goals, MatchCard? card}) => [
+/// (a count beside one ball from three), a red ball per own goal, then the
+/// card.
+List<Widget> matchMarks({
+  required int goals,
+  int ownGoals = 0,
+  MatchCard? card,
+}) => [
   if (goals > 0) ...[
     const SizedBox(width: 4),
     for (var i = 0; i < (goals > 2 ? 1 : goals); i++)
@@ -2906,6 +2938,19 @@ List<Widget> matchMarks({required int goals, MatchCard? card}) => [
         style: AppTypography.labelSmall.copyWith(
           fontSize: 10,
           color: AppColors.onSurfaceVariant,
+        ),
+      ),
+  ],
+  if (ownGoals > 0) ...[
+    const SizedBox(width: 4),
+    for (var i = 0; i < ownGoals; i++)
+      Padding(
+        key: ownGoalMarkKey,
+        padding: const EdgeInsets.only(left: 1),
+        child: const Icon(
+          Icons.sports_soccer,
+          size: 13,
+          color: AppColors.error,
         ),
       ),
   ],

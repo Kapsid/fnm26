@@ -18425,7 +18425,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get playoffCourseLegend =>
-      'Gelb: auf Kurs fürs Play-off, nach aktuellem Stand (siehe unten)';
+      'Gelb: auf Kurs für einen Play-off-Weg dank der Platzierung im letzten Nations Cup, nach aktuellem Stand (siehe unten)';
+
+  @override
+  String get playoffCourseLegendWc =>
+      'Gelb: auf Kurs für einen Play-off-Weg, als einer der besten Gruppenzweiten oder dank der Platzierung im letzten Nations Cup, nach aktuellem Stand (siehe unten)';
 
   @override
   String get playoffCourseFooter =>

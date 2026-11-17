@@ -18386,7 +18386,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get playoffCourseLegend =>
-      'Amarillo: camino de la repesca, tal como está (ver abajo)';
+      'Amarillo: rumbo a una repesca por su clasificación en la última Copa de Naciones, según la situación actual (ver abajo)';
+
+  @override
+  String get playoffCourseLegendWc =>
+      'Amarillo: rumbo a una repesca, como uno de los mejores segundos o por su clasificación en la última Copa de Naciones, según la situación actual (ver abajo)';
 
   @override
   String get playoffCourseFooter =>

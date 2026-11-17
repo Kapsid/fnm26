@@ -18624,7 +18624,11 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get playoffCourseLegend =>
-      'Žuto: na putu prema doigravanju, prema trenutačnom stanju (vidi niže)';
+      'Žuto: ide prema doigravanju zahvaljujući plasmanu u posljednjem Kupu nacija, prema trenutačnom stanju (objašnjenje niže)';
+
+  @override
+  String get playoffCourseLegendWc =>
+      'Žuto: ide prema doigravanju kao jedna od najboljih drugoplasiranih ili zahvaljujući plasmanu u posljednjem Kupu nacija, prema trenutačnom stanju (objašnjenje niže)';
 
   @override
   String get playoffCourseFooter =>

@@ -18189,7 +18189,11 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get playoffCourseLegend =>
-      'Kuning: menuju play-off, untuk saat ini (lihat di bawah)';
+      'Kuning: menuju babak play-off berkat peringkat di Piala Bangsa-Bangsa terakhir, sesuai keadaan saat ini (lihat di bawah)';
+
+  @override
+  String get playoffCourseLegendWc =>
+      'Kuning: menuju babak play-off sebagai salah satu runner-up terbaik atau berkat peringkat di Piala Bangsa-Bangsa terakhir, sesuai keadaan saat ini (lihat di bawah)';
 
   @override
   String get playoffCourseFooter =>

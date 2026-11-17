@@ -18710,7 +18710,11 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get playoffCourseLegend =>
-      'Galben: pe drumul spre baraj, conform situației actuale (vezi mai jos)';
+      'Galben: spre baraj datorită locului din ultima Cupă a Națiunilor, conform situației actuale (vezi mai jos)';
+
+  @override
+  String get playoffCourseLegendWc =>
+      'Galben: spre baraj, ca una dintre cele mai bune ocupante ale locului doi sau datorită locului din ultima Cupă a Națiunilor, conform situației actuale (vezi mai jos)';
 
   @override
   String get playoffCourseFooter =>

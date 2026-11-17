@@ -18131,7 +18131,11 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get playoffCourseLegend =>
-      'Vàng: đang hướng tới play-off, theo tình hình hiện tại (xem bên dưới)';
+      'Vàng: đang hướng tới vòng play-off nhờ thứ hạng ở Cúp các quốc gia gần nhất, theo tình hình hiện tại (xem bên dưới)';
+
+  @override
+  String get playoffCourseLegendWc =>
+      'Vàng: đang hướng tới vòng play-off, là một trong các đội nhì bảng tốt nhất hoặc nhờ thứ hạng ở Cúp các quốc gia gần nhất, theo tình hình hiện tại (xem bên dưới)';
 
   @override
   String get playoffCourseFooter =>

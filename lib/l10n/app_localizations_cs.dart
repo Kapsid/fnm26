@@ -18673,7 +18673,11 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get playoffCourseLegend =>
-      'Žlutě: míří do baráže, podle aktuálního stavu (vysvětlení níže)';
+      'Žlutě: míří do baráže díky umístění v posledním Poháru národů, podle aktuálního stavu (vysvětlení níže)';
+
+  @override
+  String get playoffCourseLegendWc =>
+      'Žlutě: míří do baráže jako jeden z nejlepších týmů na druhých místech, nebo díky umístění v posledním Poháru národů, podle aktuálního stavu (vysvětlení níže)';
 
   @override
   String get playoffCourseFooter =>

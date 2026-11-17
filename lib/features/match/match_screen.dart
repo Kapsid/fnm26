@@ -2547,6 +2547,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                   upToMinute: 200,
                 ),
                 goals: goalsByPlayerOf(r.events, nationId: team.nationId),
+                ownGoals: ownGoalsByPlayerOf(
+                  r.events,
+                  nationId: team.nationId,
+                ),
               );
             }
 

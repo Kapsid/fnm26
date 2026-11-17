@@ -1822,6 +1822,7 @@ void _cameOnTest() {
       kit: null,
       cards: const {},
       goals: const <int, int>{},
+      ownGoals: const <int, int>{},
     );
     final ratings = {
       for (final x in [...p.homeTeam.xi, ...away.xi]) x.id: 6.5,

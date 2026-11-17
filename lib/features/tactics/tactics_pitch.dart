@@ -384,6 +384,7 @@ class TacticsPitch extends StatelessWidget {
     this.cardsByPlayer = const {},
     this.ratingByPlayer = const {},
     this.goalsByPlayer = const {},
+    this.ownGoalsByPlayer = const {},
     this.motmId,
     this.teamColors,
     this.fullBacks = FullBackPushes.neutral,
@@ -441,6 +442,10 @@ class TacticsPitch extends StatelessWidget {
   /// his disc's left shoulder after the final whistle. Empty (the default)
   /// hides it.
   final Map<int, int> goalsByPlayer;
+
+  /// Own goals each player put past his own keeper, shown as a red ball on
+  /// the same shoulder as [goalsByPlayer]'s (empty draws nothing).
+  final Map<int, int> ownGoalsByPlayer;
 
   /// The card each player is carrying in a live match — see [cardStatusFor],
   /// which the substitution lists read too, so the pitch and the lists can
@@ -701,10 +706,13 @@ class TacticsPitch extends StatelessWidget {
                         motm: lineup[slot] != null && lineup[slot] == motmId,
                         card: cardsByPlayer[lineup[slot]],
                         goals: goalsByPlayer[lineup[slot]] ?? 0,
+                        ownGoals: ownGoalsByPlayer[lineup[slot]] ?? 0,
                         teamColors: teamColors,
                         // A scorer's ball takes the arrow's shoulder.
                         fullBackSide:
-                            showArrow && (goalsByPlayer[lineup[slot]] ?? 0) == 0
+                            showArrow &&
+                                (goalsByPlayer[lineup[slot]] ?? 0) == 0 &&
+                                (ownGoalsByPlayer[lineup[slot]] ?? 0) == 0
                             ? side
                             : null,
                         push: showArrow ? push : null,
@@ -925,6 +933,7 @@ class _PlayerNode extends StatelessWidget {
     this.motm = false,
     this.card,
     this.goals = 0,
+    this.ownGoals = 0,
     this.fullBackSide,
     this.push,
     this.onCyclePush,
@@ -977,6 +986,9 @@ class _PlayerNode extends StatelessWidget {
 
   /// The goals he scored, after the final whistle (0 draws nothing).
   final int goals;
+
+  /// The own goals he put past his own keeper (0 draws nothing).
+  final int ownGoals;
 
   /// Whether the assigned player is banned or injured for the next match.
   final bool absent;
@@ -1236,12 +1248,16 @@ class _PlayerNode extends StatelessWidget {
               ),
             // His goals, on the other shoulder from the card: a ball, and
             // how many when more than one.
-            if (p != null && goals > 0 && !dead)
+            if (p != null && goals + ownGoals > 0 && !dead)
               Positioned(
                 key: ValueKey('pitchGoals$slot'),
                 top: overhang + metrics.disc * 0.12,
                 left: (metrics.node - metrics.disc) / 2 - metrics.disc * 0.06,
-                child: _GoalMark(goals: goals, size: metrics.disc * 0.32),
+                child: _GoalMark(
+                  goals: goals,
+                  ownGoals: ownGoals,
+                  size: metrics.disc * 0.32,
+                ),
               ),
             // The full-back's arrow, on the other shoulder from the card:
             // inside his own node, so it never reaches a team-mate's ball.
@@ -2039,15 +2055,46 @@ class BenchChip extends StatelessWidget {
 /// A scorer's mark on his disc: a ball on a light chip, readable over any
 /// kit, with the count beside it when he scored more than once.
 class _GoalMark extends StatelessWidget {
-  const _GoalMark({required this.goals, required this.size});
+  const _GoalMark({
+    required this.goals,
+    required this.size,
+    this.ownGoals = 0,
+  });
 
   final int goals;
+
+  /// Own goals: a red ball after the goals' one (with its count from two).
+  final int ownGoals;
   final double size;
+
+  Widget _ball(int count, Color color) => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Icon(Icons.sports_soccer, size: size * 0.82, color: color),
+      if (count > 1)
+        Padding(
+          padding: EdgeInsets.only(left: size * 0.06),
+          child: Text(
+            '$count',
+            style: TextStyle(
+              fontSize: size * 0.62,
+              height: 1,
+              fontWeight: FontWeight.w800,
+              color: color,
+            ),
+          ),
+        ),
+    ],
+  );
 
   @override
   Widget build(BuildContext context) => Container(
     height: size,
-    padding: EdgeInsets.symmetric(horizontal: goals > 1 ? size * 0.12 : 0),
+    padding: EdgeInsets.symmetric(
+      horizontal: goals > 1 || ownGoals > 1 || (goals > 0 && ownGoals > 0)
+          ? size * 0.12
+          : 0,
+    ),
     constraints: BoxConstraints(minWidth: size),
     decoration: BoxDecoration(
       color: Colors.white,
@@ -2058,19 +2105,11 @@ class _GoalMark extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.sports_soccer, size: size * 0.82, color: Colors.black87),
-        if (goals > 1)
-          Padding(
-            padding: EdgeInsets.only(left: size * 0.06),
-            child: Text(
-              '$goals',
-              style: TextStyle(
-                fontSize: size * 0.62,
-                height: 1,
-                fontWeight: FontWeight.w800,
-                color: Colors.black87,
-              ),
-            ),
+        if (goals > 0) _ball(goals, Colors.black87),
+        if (ownGoals > 0)
+          KeyedSubtree(
+            key: const ValueKey('pitchOwnGoal'),
+            child: _ball(ownGoals, const Color(0xFFD32F2F)),
           ),
       ],
     ),

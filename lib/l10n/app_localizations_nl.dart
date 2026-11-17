@@ -18380,7 +18380,11 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get playoffCourseLegend =>
-      'Geel: op koers voor de play-offs, zoals het nu staat (zie onder)';
+      'Geel: op koers voor een play-offroute dankzij de plek in de laatste Nations Cup, zoals het nu staat (zie onder)';
+
+  @override
+  String get playoffCourseLegendWc =>
+      'Geel: op koers voor een play-offroute, als een van de beste nummers twee of dankzij de plek in de laatste Nations Cup, zoals het nu staat (zie onder)';
 
   @override
   String get playoffCourseFooter =>
