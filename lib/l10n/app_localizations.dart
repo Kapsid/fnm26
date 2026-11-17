@@ -27584,16 +27584,16 @@ abstract class AppLocalizations {
   /// **'Reunited'**
   String get campaignCzechoslovakiaTitle;
 
-  /// One-line twist of the Czechoslovakia campaign: Czechia and Slovakia merged into one side, with every international of both, for two cycles.
+  /// One-line twist of the Czechoslovakia campaign: Czechia and Slovakia merged into one side, with every international of both, for four cycles.
   ///
   /// In en, this message translates to:
-  /// **'Czechia and Slovakia play as one again, for two cycles'**
+  /// **'Czechia and Slovakia play as one again, for four cycles'**
   String get campaignCzechoslovakiaTwist;
 
-  /// Brief screen introduction of the Czechoslovakia campaign: Czechia and Slovakia merged again, the two nations gone from Europe, starting just inside the world's top thirty, for two cycles. Names no real player.
+  /// Brief screen introduction of the Czechoslovakia campaign: Czechia and Slovakia merged again, the two nations gone from Europe, starting just inside the world's top thirty, for four cycles. Names no real player.
   ///
   /// In en, this message translates to:
-  /// **'Czechoslovakia won the European Championship in 1976 and twice reached the final of the World Championship, then split in two in 1993. In this world the two have come back together: every international of Czechia and Slovakia plays for one side again, and the two nations are gone from Europe. You start just inside the world\'s top thirty with the pick of both squads. You have two cycles to take Czechoslovakia to a World Championship, then win the European Championship and the World Championship.'**
+  /// **'Czechoslovakia won the European Championship in 1976 and twice reached the final of the World Championship, then split in two in 1993. In this world the two have come back together: every international of Czechia and Slovakia plays for one side again, and the two nations are gone from Europe. You start just inside the world\'s top thirty with the pick of both squads. You have four cycles to take Czechoslovakia to a World Championship, then win the European Championship and the World Championship.'**
   String get campaignCzechoslovakiaIntro;
 
   /// One-line goal of the Czechoslovakia campaign (its first star): qualify for a World Championship.

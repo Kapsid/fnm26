@@ -18238,11 +18238,11 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get campaignCzechoslovakiaTwist =>
-      'Tsjekkia og Slovakia spiller som ett lag igjen, i to sykluser';
+      'Tsjekkia og Slovakia spiller som ett lag igjen, i fire sykluser';
 
   @override
   String get campaignCzechoslovakiaIntro =>
-      'Tsjekkoslovakia vant Europamesterskapet i 1976 og nådde finalen i Verdensmesterskapet to ganger, før landet ble delt i to i 1993. I denne verdenen er de to gjenforent: alle landslagsspillerne fra Tsjekkia og Slovakia spiller igjen for ett lag, og de to nasjonene er borte fra Europa. Du starter like innenfor verdens topp 30 og kan velge fra begge troppene. Du har to sykluser på å føre Tsjekkoslovakia til et VM, og deretter vinne Europamesterskapet og Verdensmesterskapet.';
+      'Tsjekkoslovakia vant Europamesterskapet i 1976 og nådde finalen i Verdensmesterskapet to ganger, før landet ble delt i to i 1993. I denne verdenen er de to gjenforent: alle landslagsspillerne fra Tsjekkia og Slovakia spiller igjen for ett lag, og de to nasjonene er borte fra Europa. Du starter like innenfor verdens topp 30 og kan velge fra begge troppene. Du har fire sykluser på å føre Tsjekkoslovakia til et VM, og deretter vinne Europamesterskapet og Verdensmesterskapet.';
 
   @override
   String get campaignCzechoslovakiaGoal => 'Kvalifiser deg til et VM';

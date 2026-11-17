@@ -18205,11 +18205,11 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get campaignCzechoslovakiaTwist =>
-      'Republik Czech dan Slovakia bermain sebagai satu pasukan semula, selama dua kitaran';
+      'Republik Czech dan Slovakia bermain sebagai satu pasukan semula, selama empat kitaran';
 
   @override
   String get campaignCzechoslovakiaIntro =>
-      'Czechoslovakia menjuarai Kejohanan Eropah pada 1976 dan dua kali mara ke final Kejohanan Dunia, kemudian berpecah dua pada 1993. Dalam dunia ini kedua-duanya telah bersatu semula: setiap pemain antarabangsa Republik Czech dan Slovakia kembali bermain untuk satu pasukan, dan kedua-dua negara itu telah hilang dari Eropah. Anda bermula betul-betul di dalam 30 teratas dunia dengan pilihan daripada kedua-dua skuad. Anda ada dua kitaran untuk membawa Czechoslovakia ke Kejohanan Dunia, kemudian menjuarai Kejohanan Eropah dan Kejohanan Dunia.';
+      'Czechoslovakia menjuarai Kejohanan Eropah pada 1976 dan dua kali mara ke final Kejohanan Dunia, kemudian berpecah dua pada 1993. Dalam dunia ini kedua-duanya telah bersatu semula: setiap pemain antarabangsa Republik Czech dan Slovakia kembali bermain untuk satu pasukan, dan kedua-dua negara itu telah hilang dari Eropah. Anda bermula betul-betul di dalam 30 teratas dunia dengan pilihan daripada kedua-dua skuad. Anda ada empat kitaran untuk membawa Czechoslovakia ke Kejohanan Dunia, kemudian menjuarai Kejohanan Eropah dan Kejohanan Dunia.';
 
   @override
   String get campaignCzechoslovakiaGoal => 'Layak ke Kejohanan Dunia';

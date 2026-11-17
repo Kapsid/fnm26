@@ -18155,11 +18155,11 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get campaignCzechoslovakiaTwist =>
-      'Çekya ve Slovakya iki dönem boyunca yeniden tek takım olarak oynuyor';
+      'Çekya ve Slovakya dört dönem boyunca yeniden tek takım olarak oynuyor';
 
   @override
   String get campaignCzechoslovakiaIntro =>
-      'Çekoslovakya 1976\'da Avrupa Şampiyonası\'nı kazandı ve iki kez Dünya Şampiyonası finaline yükseldi, ardından 1993\'te ikiye ayrıldı. Bu dünyada ikisi yeniden birleşti: Çekya ve Slovakya\'nın tüm milli oyuncuları yine tek bir takımda oynuyor ve iki ülke Avrupa\'dan silindi. Dünya sıralamasında ilk otuzun hemen içinden başlıyorsun ve iki kadronun da oyuncularını seçebilirsin. Çekoslovakya\'yı bir Dünya Şampiyonası\'na taşımak, ardından Avrupa Şampiyonası\'nı ve Dünya Şampiyonası\'nı kazanmak için iki dönemin var.';
+      'Çekoslovakya 1976\'da Avrupa Şampiyonası\'nı kazandı ve iki kez Dünya Şampiyonası finaline yükseldi, ardından 1993\'te ikiye ayrıldı. Bu dünyada ikisi yeniden birleşti: Çekya ve Slovakya\'nın tüm milli oyuncuları yine tek bir takımda oynuyor ve iki ülke Avrupa\'dan silindi. Dünya sıralamasında ilk otuzun hemen içinden başlıyorsun ve iki kadronun da oyuncularını seçebilirsin. Çekoslovakya\'yı bir Dünya Şampiyonası\'na taşımak, ardından Avrupa Şampiyonası\'nı ve Dünya Şampiyonası\'nı kazanmak için dört dönemin var.';
 
   @override
   String get campaignCzechoslovakiaGoal =>

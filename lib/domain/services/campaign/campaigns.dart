@@ -314,14 +314,15 @@ abstract final class Campaigns {
     rngSeed: 214,
   );
 
-  /// Reunited: Czechoslovakia, Czechia and Slovakia made one again, for two
-  /// cycles. Every seeded international of both joins it (see
+  /// Reunited: Czechoslovakia, Czechia and Slovakia made one again, for four
+  /// cycles (two were too few: the lab had it at a World Championship in
+  /// half its runs and a title in none). Every seeded international of both joins it (see
   /// [CampaignDef.donorNationIds]), its own stored pool is the depth and
   /// the youth to come, and the two nations are out of the world: Europe
   /// plays with 52. It starts 30th, above both. Pro. The stars are a World
   /// Championship finals, then the European Championship, then the World
   /// Championship (the 1976 champions' unfinished business). Seed 215, the
-  /// first searched, keeps it from hosting either championship in both
+  /// first searched, keeps it from hosting either championship in all four
   /// cycles (campaign_seeds_test.dart). A settled run may be moved into the
   /// saves: the world is a fair one, one strong nation in two's place.
   static const czechoslovakia = CampaignDef(
@@ -330,7 +331,7 @@ abstract final class Campaigns {
     dormantNationId: 215,
     donorNationIds: [12, 48], // Czechia, Slovakia
     goal: CampaignGoal.qualifyWorldThenTitles,
-    cycles: 2,
+    cycles: 4,
     needsPro: true,
     difficulty: CampaignDifficulty.medium,
     rngSeed: 215,

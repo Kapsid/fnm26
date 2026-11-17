@@ -192,7 +192,7 @@ void main() {
     expect(Campaigns.byId('isleOfMan'), def);
   });
 
-  test('Reunited: Pro, two cycles, Czechoslovakia in the place of Czechia '
+  test('Reunited: Pro, four cycles, Czechoslovakia in the place of Czechia '
       'and Slovakia with both their squads', () {
     const def = Campaigns.czechoslovakia;
     expect(def.nationId, 215);
@@ -200,7 +200,7 @@ void main() {
     expect(DormantNations.replacedBy(215), {12, 48});
     expect(def.donorNationIds, [12, 48]);
     expect(def.namedNations, containsAll([215, 12, 48]));
-    expect(def.cycles, 2);
+    expect(def.cycles, 4);
     expect(def.needsPro, isTrue);
     expect(def.canContinue, isTrue);
     expect(def.goal, CampaignGoal.qualifyWorldThenTitles);

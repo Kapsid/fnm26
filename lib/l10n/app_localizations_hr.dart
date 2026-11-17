@@ -18583,11 +18583,11 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get campaignCzechoslovakiaTwist =>
-      'Češka i Slovačka ponovno igraju kao jedna momčad, kroz dva ciklusa';
+      'Češka i Slovačka ponovno igraju kao jedna momčad, kroz četiri ciklusa';
 
   @override
   String get campaignCzechoslovakiaIntro =>
-      'Čehoslovačka je 1976. osvojila Europsko prvenstvo i dvaput stigla do finala Svjetskog prvenstva, a 1993. podijelila se na dvije države. U ovom svijetu dvije su se zemlje ponovno ujedinile: svi reprezentativci Češke i Slovačke opet igraju za jednu momčad, a dvije su nacije nestale iz Europe. Počinješ tik unutar prvih trideset na svjetskoj ljestvici i biraš iz obaju sastava. Imaš dva ciklusa da odvedeš Čehoslovačku na Svjetsko prvenstvo, a zatim osvojiš Europsko prvenstvo i Svjetsko prvenstvo.';
+      'Čehoslovačka je 1976. osvojila Europsko prvenstvo i dvaput stigla do finala Svjetskog prvenstva, a 1993. podijelila se na dvije države. U ovom svijetu dvije su se zemlje ponovno ujedinile: svi reprezentativci Češke i Slovačke opet igraju za jednu momčad, a dvije su nacije nestale iz Europe. Počinješ tik unutar prvih trideset na svjetskoj ljestvici i biraš iz obaju sastava. Imaš četiri ciklusa da odvedeš Čehoslovačku na Svjetsko prvenstvo, a zatim osvojiš Europsko prvenstvo i Svjetsko prvenstvo.';
 
   @override
   String get campaignCzechoslovakiaGoal =>

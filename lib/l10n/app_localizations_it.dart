@@ -18325,11 +18325,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get campaignCzechoslovakiaTwist =>
-      'Repubblica Ceca e Slovacchia giocano di nuovo come una sola nazionale, per due cicli';
+      'Repubblica Ceca e Slovacchia giocano di nuovo come una sola nazionale, per quattro cicli';
 
   @override
   String get campaignCzechoslovakiaIntro =>
-      'La Cecoslovacchia ha vinto il Campionato europeo nel 1976 e ha raggiunto due volte la finale del Campionato del mondo, prima di dividersi in due nel 1993. In questo mondo le due si sono riunite: tutti i nazionali della Repubblica Ceca e della Slovacchia giocano di nuovo in un\'unica squadra, e le due nazioni sono sparite dall\'Europa. Parti appena dentro la top 30 mondiale e puoi pescare da entrambe le rose. Hai due cicli per portare la Cecoslovacchia a un Campionato del mondo, poi vincere il Campionato europeo e il Campionato del mondo.';
+      'La Cecoslovacchia ha vinto il Campionato europeo nel 1976 e ha raggiunto due volte la finale del Campionato del mondo, prima di dividersi in due nel 1993. In questo mondo le due si sono riunite: tutti i nazionali della Repubblica Ceca e della Slovacchia giocano di nuovo in un\'unica squadra, e le due nazioni sono sparite dall\'Europa. Parti appena dentro la top 30 mondiale e puoi pescare da entrambe le rose. Hai quattro cicli per portare la Cecoslovacchia a un Campionato del mondo, poi vincere il Campionato europeo e il Campionato del mondo.';
 
   @override
   String get campaignCzechoslovakiaGoal =>

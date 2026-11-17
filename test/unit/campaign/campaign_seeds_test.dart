@@ -496,10 +496,10 @@ void main() {
 
     test(
       'seed 215 keeps Czechoslovakia from hosting either championship in all '
-      '2 cycles of its run',
+      '4 cycles of its run',
       () {
         expect(def.rngSeed, 215);
-        expect(def.cycles, 2);
+        expect(def.cycles, 4);
         for (var cycle = 0; cycle < def.cycles; cycle++) {
           final world0 = WorldCupHosts.hostsFor(
             year: CareerService.worldCupYear(cycle),

@@ -18150,11 +18150,11 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get campaignCzechoslovakiaTwist =>
-      'Ceko dan Slovakia kembali bermain sebagai satu tim, selama dua siklus';
+      'Ceko dan Slovakia kembali bermain sebagai satu tim, selama empat siklus';
 
   @override
   String get campaignCzechoslovakiaIntro =>
-      'Cekoslowakia menjuarai Kejuaraan Eropa pada 1976 dan dua kali mencapai final Kejuaraan Dunia, lalu terpecah menjadi dua pada 1993. Di dunia ini keduanya bersatu kembali: semua pemain internasional Ceko dan Slovakia kembali membela satu tim, dan kedua negara itu menghilang dari Eropa. Anda memulai tepat di dalam 30 besar dunia dan bisa memilih dari kedua skuad. Anda punya dua siklus untuk membawa Cekoslowakia ke Kejuaraan Dunia, lalu menjuarai Kejuaraan Eropa dan Kejuaraan Dunia.';
+      'Cekoslowakia menjuarai Kejuaraan Eropa pada 1976 dan dua kali mencapai final Kejuaraan Dunia, lalu terpecah menjadi dua pada 1993. Di dunia ini keduanya bersatu kembali: semua pemain internasional Ceko dan Slovakia kembali membela satu tim, dan kedua negara itu menghilang dari Eropa. Anda memulai tepat di dalam 30 besar dunia dan bisa memilih dari kedua skuad. Anda punya empat siklus untuk membawa Cekoslowakia ke Kejuaraan Dunia, lalu menjuarai Kejuaraan Eropa dan Kejuaraan Dunia.';
 
   @override
   String get campaignCzechoslovakiaGoal => 'Lolos ke sebuah Kejuaraan Dunia';

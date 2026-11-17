@@ -18229,11 +18229,11 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get campaignCzechoslovakiaTwist =>
-      'Tjeckien och Slovakien spelar som ett lag igen, i två cykler';
+      'Tjeckien och Slovakien spelar som ett lag igen, i fyra cykler';
 
   @override
   String get campaignCzechoslovakiaIntro =>
-      'Tjeckoslovakien vann Europamästerskapet 1976 och nådde två gånger finalen i Världsmästerskapet, innan landet delades i två 1993. I den här världen har de två förenats igen: varje landslagsspelare från Tjeckien och Slovakien spelar för ett och samma lag, och de två nationerna har försvunnit från Europa. Du börjar precis innanför topp trettio på världsrankingen och kan välja bland spelarna i båda trupperna. Du har två cykler på dig att ta Tjeckoslovakien till ett VM, och sedan vinna Europamästerskapet och Världsmästerskapet.';
+      'Tjeckoslovakien vann Europamästerskapet 1976 och nådde två gånger finalen i Världsmästerskapet, innan landet delades i två 1993. I den här världen har de två förenats igen: varje landslagsspelare från Tjeckien och Slovakien spelar för ett och samma lag, och de två nationerna har försvunnit från Europa. Du börjar precis innanför topp trettio på världsrankingen och kan välja bland spelarna i båda trupperna. Du har fyra cykler på dig att ta Tjeckoslovakien till ett VM, och sedan vinna Europamästerskapet och Världsmästerskapet.';
 
   @override
   String get campaignCzechoslovakiaGoal => 'Kvalificera dig för ett VM';

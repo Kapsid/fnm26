@@ -52,7 +52,8 @@ void main() {
     expect(find.text('Best of Guineas'), findsOneWidget);
     expect(find.text('3 cycles'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('Reunited'), 200);
-    expect(find.text('2 cycles'), findsNWidgets(2));
+    expect(find.text('2 cycles'), findsOneWidget);
+    expect(find.text('4 cycles'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('The Three Legs'), 200);
     expect(find.text('THE LONG HAUL · 3'), findsOneWidget);
     expect(find.text('A Greenland Century'), findsOneWidget);

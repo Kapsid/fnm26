@@ -18256,11 +18256,11 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get campaignCzechoslovakiaTwist =>
-      'Muling naglalaro bilang iisang koponan ang Czech Republic at Slovakia, sa loob ng dalawang cycle';
+      'Muling naglalaro bilang iisang koponan ang Czech Republic at Slovakia, sa loob ng apat na cycle';
 
   @override
   String get campaignCzechoslovakiaIntro =>
-      'Napanalunan ng Czechoslovakia ang Kampeonato ng Europa noong 1976 at dalawang beses itong umabot sa final ng Kampeonato ng Mundo, bago nahati sa dalawa noong 1993. Sa mundong ito, muling nagsama ang dalawa: bawat internasyonal na manlalaro ng Czech Republic at Slovakia ay muling naglalaro para sa iisang koponan, at nawala na sa Europa ang dalawang bansa. Nagsisimula ka sa loob mismo ng top 30 ng mundo, at makakapili ka mula sa dalawang squad. May dalawang cycle ka para dalhin ang Czechoslovakia sa isang Kampeonato ng Mundo, tapos ipanalo ang Kampeonato ng Europa at ang Kampeonato ng Mundo.';
+      'Napanalunan ng Czechoslovakia ang Kampeonato ng Europa noong 1976 at dalawang beses itong umabot sa final ng Kampeonato ng Mundo, bago nahati sa dalawa noong 1993. Sa mundong ito, muling nagsama ang dalawa: bawat internasyonal na manlalaro ng Czech Republic at Slovakia ay muling naglalaro para sa iisang koponan, at nawala na sa Europa ang dalawang bansa. Nagsisimula ka sa loob mismo ng top 30 ng mundo, at makakapili ka mula sa dalawang squad. May apat na cycle ka para dalhin ang Czechoslovakia sa isang Kampeonato ng Mundo, tapos ipanalo ang Kampeonato ng Europa at ang Kampeonato ng Mundo.';
 
   @override
   String get campaignCzechoslovakiaGoal =>

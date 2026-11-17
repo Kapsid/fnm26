@@ -18338,11 +18338,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get campaignCzechoslovakiaTwist =>
-      'Chequia y Eslovaquia vuelven a jugar como una sola selección, durante dos ciclos';
+      'Chequia y Eslovaquia vuelven a jugar como una sola selección, durante cuatro ciclos';
 
   @override
   String get campaignCzechoslovakiaIntro =>
-      'Checoslovaquia ganó el Campeonato de Europa en 1976 y llegó dos veces a la final del Campeonato del Mundo, antes de dividirse en dos en 1993. En este mundo ambas han vuelto a unirse: todos los internacionales de Chequia y Eslovaquia juegan de nuevo en una sola selección, y las dos naciones han desaparecido de Europa. Empiezas justo dentro del top 30 mundial y puedes elegir entre las dos plantillas. Tienes dos ciclos para llevar a Checoslovaquia a un Campeonato del Mundo y después ganar el Campeonato de Europa y el Campeonato del Mundo.';
+      'Checoslovaquia ganó el Campeonato de Europa en 1976 y llegó dos veces a la final del Campeonato del Mundo, antes de dividirse en dos en 1993. En este mundo ambas han vuelto a unirse: todos los internacionales de Chequia y Eslovaquia juegan de nuevo en una sola selección, y las dos naciones han desaparecido de Europa. Empiezas justo dentro del top 30 mundial y puedes elegir entre las dos plantillas. Tienes cuatro ciclos para llevar a Checoslovaquia a un Campeonato del Mundo y después ganar el Campeonato de Europa y el Campeonato del Mundo.';
 
   @override
   String get campaignCzechoslovakiaGoal =>

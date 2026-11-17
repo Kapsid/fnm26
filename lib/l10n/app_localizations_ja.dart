@@ -17609,11 +17609,11 @@ class AppLocalizationsJa extends AppLocalizations {
   String get campaignCzechoslovakiaTitle => '再びひとつに';
 
   @override
-  String get campaignCzechoslovakiaTwist => 'チェコとスロバキアが再びひとつに、2サイクル';
+  String get campaignCzechoslovakiaTwist => 'チェコとスロバキアが再びひとつに、4サイクル';
 
   @override
   String get campaignCzechoslovakiaIntro =>
-      'チェコスロバキアは1976年に欧州選手権を制し、世界選手権では2度決勝に進みましたが、1993年に二つの国に分かれました。この世界では両国が再びひとつになり、チェコとスロバキアの代表選手は全員ひとつのチームでプレーします。両国は欧州から姿を消しました。世界ランキング30位以内ぎりぎりからのスタートで、両国の選手から自由に選べます。2サイクルでチェコスロバキアを世界選手権に導き、さらに欧州選手権と世界選手権を制しましょう。';
+      'チェコスロバキアは1976年に欧州選手権を制し、世界選手権では2度決勝に進みましたが、1993年に二つの国に分かれました。この世界では両国が再びひとつになり、チェコとスロバキアの代表選手は全員ひとつのチームでプレーします。両国は欧州から姿を消しました。世界ランキング30位以内ぎりぎりからのスタートで、両国の選手から自由に選べます。4サイクルでチェコスロバキアを世界選手権に導き、さらに欧州選手権と世界選手権を制しましょう。';
 
   @override
   String get campaignCzechoslovakiaGoal => '世界選手権出場';

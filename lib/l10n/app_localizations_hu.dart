@@ -18186,11 +18186,11 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get campaignCzechoslovakiaTwist =>
-      'Csehország és Szlovákia két cikluson át ismét egy csapatként játszik';
+      'Csehország és Szlovákia négy cikluson át ismét egy csapatként játszik';
 
   @override
   String get campaignCzechoslovakiaIntro =>
-      'Csehszlovákia 1976-ban megnyerte az Európa-bajnokságot, és kétszer jutott be a világbajnokság döntőjébe, majd 1993-ban kettévált. Ebben a világban a két ország újra egyesült: Csehország és Szlovákia minden válogatott játékosa ismét egy csapatban játszik, a két nemzet pedig eltűnt Európából. Épp hogy a világranglista első harminc helyén belül kezdesz, és mindkét keretből válogathatsz. Két ciklusod van, hogy kivezesd Csehszlovákiát egy világbajnokságra, aztán megnyerd az Európa-bajnokságot és a világbajnokságot.';
+      'Csehszlovákia 1976-ban megnyerte az Európa-bajnokságot, és kétszer jutott be a világbajnokság döntőjébe, majd 1993-ban kettévált. Ebben a világban a két ország újra egyesült: Csehország és Szlovákia minden válogatott játékosa ismét egy csapatban játszik, a két nemzet pedig eltűnt Európából. Épp hogy a világranglista első harminc helyén belül kezdesz, és mindkét keretből válogathatsz. Négy ciklusod van, hogy kivezesd Csehszlovákiát egy világbajnokságra, aztán megnyerd az Európa-bajnokságot és a világbajnokságot.';
 
   @override
   String get campaignCzechoslovakiaGoal => 'Kijutni egy világbajnokságra';

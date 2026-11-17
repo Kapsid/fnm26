@@ -18273,11 +18273,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get campaignCzechoslovakiaTwist =>
-      'Czechia and Slovakia play as one again, for two cycles';
+      'Czechia and Slovakia play as one again, for four cycles';
 
   @override
   String get campaignCzechoslovakiaIntro =>
-      'Czechoslovakia won the European Championship in 1976 and twice reached the final of the World Championship, then split in two in 1993. In this world the two have come back together: every international of Czechia and Slovakia plays for one side again, and the two nations are gone from Europe. You start just inside the world\'s top thirty with the pick of both squads. You have two cycles to take Czechoslovakia to a World Championship, then win the European Championship and the World Championship.';
+      'Czechoslovakia won the European Championship in 1976 and twice reached the final of the World Championship, then split in two in 1993. In this world the two have come back together: every international of Czechia and Slovakia plays for one side again, and the two nations are gone from Europe. You start just inside the world\'s top thirty with the pick of both squads. You have four cycles to take Czechoslovakia to a World Championship, then win the European Championship and the World Championship.';
 
   @override
   String get campaignCzechoslovakiaGoal => 'Qualify for a World Championship';

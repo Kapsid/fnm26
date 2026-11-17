@@ -18332,11 +18332,11 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get campaignCzechoslovakiaTwist =>
-      'Tsjechië en Slowakije spelen weer als één ploeg, voor twee cycli';
+      'Tsjechië en Slowakije spelen weer als één ploeg, voor vier cycli';
 
   @override
   String get campaignCzechoslovakiaIntro =>
-      'Tsjecho-Slowakije won in 1976 het Europees Kampioenschap en haalde twee keer de finale van het Wereldkampioenschap, waarna het in 1993 in tweeën uiteenviel. In deze wereld zijn de twee weer samengegaan: elke international van Tsjechië en Slowakije speelt weer voor één ploeg, en de twee landen zijn uit Europa verdwenen. Je begint net binnen de top dertig van de wereld en kunt kiezen uit beide selecties. Je hebt twee cycli om Tsjecho-Slowakije naar een Wereldkampioenschap te leiden en daarna het Europees Kampioenschap en het Wereldkampioenschap te winnen.';
+      'Tsjecho-Slowakije won in 1976 het Europees Kampioenschap en haalde twee keer de finale van het Wereldkampioenschap, waarna het in 1993 in tweeën uiteenviel. In deze wereld zijn de twee weer samengegaan: elke international van Tsjechië en Slowakije speelt weer voor één ploeg, en de twee landen zijn uit Europa verdwenen. Je begint net binnen de top dertig van de wereld en kunt kiezen uit beide selecties. Je hebt vier cycli om Tsjecho-Slowakije naar een Wereldkampioenschap te leiden en daarna het Europees Kampioenschap en het Wereldkampioenschap te winnen.';
 
   @override
   String get campaignCzechoslovakiaGoal =>

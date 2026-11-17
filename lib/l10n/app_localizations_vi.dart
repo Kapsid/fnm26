@@ -18090,11 +18090,11 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get campaignCzechoslovakiaTwist =>
-      'CH Séc và Slovakia lại thi đấu chung một đội, trong hai chu kỳ';
+      'CH Séc và Slovakia lại thi đấu chung một đội, trong bốn chu kỳ';
 
   @override
   String get campaignCzechoslovakiaIntro =>
-      'Tiệp Khắc từng vô địch Giải vô địch châu Âu năm 1976 và hai lần vào chung kết Giải vô địch thế giới, rồi tách làm hai vào năm 1993. Trong thế giới này, hai nước đã hợp nhất trở lại: mọi tuyển thủ của CH Séc và Slovakia lại cùng khoác áo một đội tuyển, còn hai quốc gia kia đã biến mất khỏi châu Âu. Bạn khởi đầu ở ngay trong top 30 thế giới và được chọn cầu thủ từ cả hai đội hình. Bạn có hai chu kỳ để đưa Tiệp Khắc đến một kỳ Giải vô địch thế giới, rồi giành Giải vô địch châu Âu và Giải vô địch thế giới.';
+      'Tiệp Khắc từng vô địch Giải vô địch châu Âu năm 1976 và hai lần vào chung kết Giải vô địch thế giới, rồi tách làm hai vào năm 1993. Trong thế giới này, hai nước đã hợp nhất trở lại: mọi tuyển thủ của CH Séc và Slovakia lại cùng khoác áo một đội tuyển, còn hai quốc gia kia đã biến mất khỏi châu Âu. Bạn khởi đầu ở ngay trong top 30 thế giới và được chọn cầu thủ từ cả hai đội hình. Bạn có bốn chu kỳ để đưa Tiệp Khắc đến một kỳ Giải vô địch thế giới, rồi giành Giải vô địch châu Âu và Giải vô địch thế giới.';
 
   @override
   String get campaignCzechoslovakiaGoal =>

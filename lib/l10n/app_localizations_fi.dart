@@ -18317,11 +18317,11 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get campaignCzechoslovakiaTwist =>
-      'Tšekki ja Slovakia pelaavat taas yhtenä joukkueena kahden kauden ajan';
+      'Tšekki ja Slovakia pelaavat taas yhtenä joukkueena neljän kauden ajan';
 
   @override
   String get campaignCzechoslovakiaIntro =>
-      'Tšekkoslovakia voitti EM-kisat vuonna 1976 ja pelasi kahdesti MM-kisojen finaalissa, kunnes se jakautui kahtia vuonna 1993. Tässä maailmassa maat ovat yhdistyneet uudelleen: jokainen Tšekin ja Slovakian maajoukkuepelaaja pelaa taas samassa joukkueessa, eikä kumpaakaan maata enää ole Euroopassa. Aloitat juuri ja juuri maailmanrankingin 30 parhaan joukosta ja voit valita pelaajat kummastakin joukkueesta. Sinulla on kaksi kautta aikaa viedä Tšekkoslovakia MM-kisoihin ja voittaa sitten EM-kisat ja MM-kisat.';
+      'Tšekkoslovakia voitti EM-kisat vuonna 1976 ja pelasi kahdesti MM-kisojen finaalissa, kunnes se jakautui kahtia vuonna 1993. Tässä maailmassa maat ovat yhdistyneet uudelleen: jokainen Tšekin ja Slovakian maajoukkuepelaaja pelaa taas samassa joukkueessa, eikä kumpaakaan maata enää ole Euroopassa. Aloitat juuri ja juuri maailmanrankingin 30 parhaan joukosta ja voit valita pelaajat kummastakin joukkueesta. Sinulla on neljä kautta aikaa viedä Tšekkoslovakia MM-kisoihin ja voittaa sitten EM-kisat ja MM-kisat.';
 
   @override
   String get campaignCzechoslovakiaGoal => 'Selviä MM-kisoihin';

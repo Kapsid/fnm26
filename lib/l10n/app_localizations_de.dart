@@ -18377,11 +18377,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get campaignCzechoslovakiaTwist =>
-      'Tschechien und die Slowakei spielen wieder gemeinsam, für zwei Zyklen';
+      'Tschechien und die Slowakei spielen wieder gemeinsam, für vier Zyklen';
 
   @override
   String get campaignCzechoslovakiaIntro =>
-      'Die Tschechoslowakei gewann 1976 die Europameisterschaft und stand zweimal im Finale der Weltmeisterschaft, bevor sie sich 1993 in zwei Staaten teilte. In dieser Welt sind beide wieder vereint: Jeder Nationalspieler Tschechiens und der Slowakei spielt wieder für dieselbe Mannschaft, und die beiden Nationen sind aus Europa verschwunden. Sie starten knapp innerhalb der Top 30 der Welt und können aus beiden Kadern wählen. Sie haben zwei Zyklen, um die Tschechoslowakei zu einer Weltmeisterschaft zu führen und dann die Europameisterschaft und die Weltmeisterschaft zu gewinnen.';
+      'Die Tschechoslowakei gewann 1976 die Europameisterschaft und stand zweimal im Finale der Weltmeisterschaft, bevor sie sich 1993 in zwei Staaten teilte. In dieser Welt sind beide wieder vereint: Jeder Nationalspieler Tschechiens und der Slowakei spielt wieder für dieselbe Mannschaft, und die beiden Nationen sind aus Europa verschwunden. Sie starten knapp innerhalb der Top 30 der Welt und können aus beiden Kadern wählen. Sie haben vier Zyklen, um die Tschechoslowakei zu einer Weltmeisterschaft zu führen und dann die Europameisterschaft und die Weltmeisterschaft zu gewinnen.';
 
   @override
   String get campaignCzechoslovakiaGoal =>

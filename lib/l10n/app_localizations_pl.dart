@@ -18434,11 +18434,11 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get campaignCzechoslovakiaTwist =>
-      'Czechy i Słowacja znów grają jako jedna drużyna, na dwa cykle';
+      'Czechy i Słowacja znów grają jako jedna drużyna, na cztery cykle';
 
   @override
   String get campaignCzechoslovakiaIntro =>
-      'Czechosłowacja wygrała Mistrzostwa Europy w 1976 roku i dwa razy dotarła do finału Mistrzostw Świata, a w 1993 roku rozpadła się na dwa państwa. W tym świecie oba kraje znów się połączyły: każdy reprezentant Czech i Słowacji ponownie gra w jednej drużynie, a oba państwa zniknęły z Europy. Zaczynasz tuż w pierwszej trzydziestce światowego rankingu i możesz wybierać z obu kadr. Masz dwa cykle, by zaprowadzić Czechosłowację na Mistrzostwa Świata, a potem wygrać Mistrzostwa Europy i Mistrzostwa Świata.';
+      'Czechosłowacja wygrała Mistrzostwa Europy w 1976 roku i dwa razy dotarła do finału Mistrzostw Świata, a w 1993 roku rozpadła się na dwa państwa. W tym świecie oba kraje znów się połączyły: każdy reprezentant Czech i Słowacji ponownie gra w jednej drużynie, a oba państwa zniknęły z Europy. Zaczynasz tuż w pierwszej trzydziestce światowego rankingu i możesz wybierać z obu kadr. Masz cztery cykle, by zaprowadzić Czechosłowację na Mistrzostwa Świata, a potem wygrać Mistrzostwa Europy i Mistrzostwa Świata.';
 
   @override
   String get campaignCzechoslovakiaGoal => 'Awansować na Mistrzostwa Świata';

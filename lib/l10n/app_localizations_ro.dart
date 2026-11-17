@@ -18668,11 +18668,11 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get campaignCzechoslovakiaTwist =>
-      'Cehia și Slovacia joacă din nou ca o singură echipă, timp de două cicluri';
+      'Cehia și Slovacia joacă din nou ca o singură echipă, timp de patru cicluri';
 
   @override
   String get campaignCzechoslovakiaIntro =>
-      'Cehoslovacia a câștigat Campionatul European în 1976 și a jucat de două ori finala Campionatului Mondial, înainte să se despartă în două state în 1993. În această lume, cele două s-au reunit: toți internaționalii Cehiei și ai Slovaciei joacă din nou pentru o singură echipă, iar cele două națiuni au dispărut din Europa. Porniți la limita primelor treizeci de locuri din clasamentul mondial și puteți alege din ambele loturi. Aveți două cicluri ca să duceți Cehoslovacia la un Campionat Mondial, apoi să câștigați Campionatul European și Campionatul Mondial.';
+      'Cehoslovacia a câștigat Campionatul European în 1976 și a jucat de două ori finala Campionatului Mondial, înainte să se despartă în două state în 1993. În această lume, cele două s-au reunit: toți internaționalii Cehiei și ai Slovaciei joacă din nou pentru o singură echipă, iar cele două națiuni au dispărut din Europa. Porniți la limita primelor treizeci de locuri din clasamentul mondial și puteți alege din ambele loturi. Aveți patru cicluri ca să duceți Cehoslovacia la un Campionat Mondial, apoi să câștigați Campionatul European și Campionatul Mondial.';
 
   @override
   String get campaignCzechoslovakiaGoal =>

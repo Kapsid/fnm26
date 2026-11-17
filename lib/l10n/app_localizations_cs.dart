@@ -18634,11 +18634,11 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get campaignCzechoslovakiaTwist =>
-      'Česko a Slovensko opět hrají jako jeden tým, na dva cykly';
+      'Česko a Slovensko opět hrají jako jeden tým, na čtyři cykly';
 
   @override
   String get campaignCzechoslovakiaIntro =>
-      'Československo vyhrálo v roce 1976 mistrovství Evropy a dvakrát se probojovalo do finále mistrovství světa, než se v roce 1993 rozdělilo na dva státy. V tomto světě se obě země znovu spojily: všichni reprezentanti Česka a Slovenska opět hrají za jeden tým a samostatné Česko ani Slovensko už v Evropě nenajdete. Začínáte těsně v první třicítce světového žebříčku a vybírat můžete z obou kádrů. Máte dva cykly na to, abyste Československo dovedli na mistrovství světa a pak vyhráli mistrovství Evropy i mistrovství světa.';
+      'Československo vyhrálo v roce 1976 mistrovství Evropy a dvakrát se probojovalo do finále mistrovství světa, než se v roce 1993 rozdělilo na dva státy. V tomto světě se obě země znovu spojily: všichni reprezentanti Česka a Slovenska opět hrají za jeden tým a samostatné Česko ani Slovensko už v Evropě nenajdete. Začínáte těsně v první třicítce světového žebříčku a vybírat můžete z obou kádrů. Máte čtyři cykly na to, abyste Československo dovedli na mistrovství světa a pak vyhráli mistrovství Evropy i mistrovství světa.';
 
   @override
   String get campaignCzechoslovakiaGoal => 'Postoupit na mistrovství světa';
