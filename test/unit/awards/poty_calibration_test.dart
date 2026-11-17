@@ -132,6 +132,27 @@ void main() {
     expect(winnerChampion / cont.length, greaterThanOrEqualTo(0.6));
   });
 
+  test("the winner is one of his nation's best, not a squad player on a "
+      'lucky run', () {
+    var ranks = <int>[];
+    for (final y in full) {
+      final top = vote(y).top;
+      if (top.isEmpty) continue;
+      final w = top.first;
+      final mates = [
+        for (final p in y.profiles.entries)
+          if (y.awardYear.lines[p.key]?.nationId == w.nationId) p.value.overall,
+      ]..sort((a, b) => b.compareTo(a));
+      ranks = [...ranks, mates.where((o) => o > w.profile.overall).length + 1];
+    }
+    final topThree = ranks.where((r) => r <= 3).length / ranks.length;
+    // ignore: avoid_print
+    print(
+      'POTY winner within his nation: top three ${(topThree * 100).round()}%',
+    );
+    expect(topThree, greaterThanOrEqualTo(0.6));
+  });
+
   test('a nation that won nothing can reach the top five, rarely the top', () {
     final big = full.where((y) => isWc(y) || isContinental(y)).toList();
     var inTop5 = 0;
@@ -224,8 +245,12 @@ void main() {
   });
 
   test('a weak man\'s numbers count for little', () {
-    expect(PlayerOfYear.standing(90), 1.0);
+    expect(PlayerOfYear.standing(90), closeTo(1.25, 0.001));
     expect(PlayerOfYear.standing(85), 1.0);
+    // The voters know the great players: belief keeps rising above 85, to
+    // a cap.
+    expect(PlayerOfYear.standing(92), greaterThan(PlayerOfYear.standing(84)));
+    expect(PlayerOfYear.standing(99), PlayerOfYear.standingMax);
     expect(PlayerOfYear.standing(70), closeTo(0.5, 0.01));
     expect(PlayerOfYear.standing(50), PlayerOfYear.standingMin);
   });

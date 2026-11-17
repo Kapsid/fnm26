@@ -493,18 +493,34 @@ abstract final class PlayerOfYear {
     return 1 + (overall - bar) * 1.0 + math.min(form, 0.9);
   }
 
-  /// How much a voter believes a man's numbers, by how good he is: full
-  /// from [standingFull] up, a little at [standingFloor] and below (owner,
-  /// 1.0.9: a 50-rated side's forwards topped the vote on goals against
-  /// minnows, while the side went out in every group stage).
-  static double standing(int overall) =>
-      ((overall - standingFloor) / (standingFull - standingFloor)).clamp(
+  /// How much a voter believes a man's numbers, by how good he is: full at
+  /// [standingFull], a little at [standingFloor] and below (owner, 1.0.9: a
+  /// 50-rated side's forwards topped the vote on goals against minnows,
+  /// while the side went out in every group stage), and MORE above it, up
+  /// to [standingMax] (1.1.2: flat at the top, a year's marks decided the
+  /// ballot alone among the elite, and a nation's tenth-best winger at 84
+  /// beat its 92-rated star on a few lucky matches; the voters know who the
+  /// great players are).
+  static double standing(int overall) {
+    if (overall <= standingFull) {
+      return ((overall - standingFloor) / (standingFull - standingFloor)).clamp(
         standingMin,
         1.0,
       );
+    }
+    return math.min(
+      standingMax,
+      1.0 + (overall - standingFull) * standingAbove,
+    );
+  }
+
   static const int standingFloor = 55;
   static const int standingFull = 85;
   static const double standingMin = 0.1;
+
+  /// Belief gained a point above [standingFull], to [standingMax].
+  static const double standingAbove = 0.05;
+  static const double standingMax = 1.5;
 
   /// The overall a man needs to be on the ballot at all (owner, 1.0.9:
   /// the vote is the world's very best; a 50-rated side's men, or a
