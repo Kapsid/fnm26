@@ -383,6 +383,7 @@ class TacticsPitch extends StatelessWidget {
     this.energyByPlayer = const {},
     this.cardsByPlayer = const {},
     this.ratingByPlayer = const {},
+    this.goalsByPlayer = const {},
     this.motmId,
     this.teamColors,
     this.fullBacks = FullBackPushes.neutral,
@@ -435,6 +436,11 @@ class TacticsPitch extends StatelessWidget {
 
   /// The player of the match, whose rating wears the star; null for none.
   final int? motmId;
+
+  /// Goals each player scored (own goals not counted), shown as a ball on
+  /// his disc's left shoulder after the final whistle. Empty (the default)
+  /// hides it.
+  final Map<int, int> goalsByPlayer;
 
   /// The card each player is carrying in a live match — see [cardStatusFor],
   /// which the substitution lists read too, so the pitch and the lists can
@@ -694,8 +700,13 @@ class TacticsPitch extends StatelessWidget {
                         rating: ratingByPlayer[lineup[slot]],
                         motm: lineup[slot] != null && lineup[slot] == motmId,
                         card: cardsByPlayer[lineup[slot]],
+                        goals: goalsByPlayer[lineup[slot]] ?? 0,
                         teamColors: teamColors,
-                        fullBackSide: showArrow ? side : null,
+                        // A scorer's ball takes the arrow's shoulder.
+                        fullBackSide:
+                            showArrow && (goalsByPlayer[lineup[slot]] ?? 0) == 0
+                            ? side
+                            : null,
                         push: showArrow ? push : null,
                         onCyclePush: showArrow && cycle != null
                             ? () => cycle(side)
@@ -913,6 +924,7 @@ class _PlayerNode extends StatelessWidget {
     this.rating,
     this.motm = false,
     this.card,
+    this.goals = 0,
     this.fullBackSide,
     this.push,
     this.onCyclePush,
@@ -962,6 +974,9 @@ class _PlayerNode extends StatelessWidget {
 
   /// The card he is carrying in a live match, or null when he has none.
   final MatchCard? card;
+
+  /// The goals he scored, after the final whistle (0 draws nothing).
+  final int goals;
 
   /// Whether the assigned player is banned or injured for the next match.
   final bool absent;
@@ -1218,6 +1233,15 @@ class _PlayerNode extends StatelessWidget {
                 top: overhang + metrics.disc * 0.16,
                 right: 0,
                 child: CardMark(card!, size: metrics.disc * 0.30, onKit: true),
+              ),
+            // His goals, on the other shoulder from the card: a ball, and
+            // how many when more than one.
+            if (p != null && goals > 0 && !dead)
+              Positioned(
+                key: ValueKey('pitchGoals$slot'),
+                top: overhang + metrics.disc * 0.12,
+                left: (metrics.node - metrics.disc) / 2 - metrics.disc * 0.06,
+                child: _GoalMark(goals: goals, size: metrics.disc * 0.32),
               ),
             // The full-back's arrow, on the other shoulder from the card:
             // inside his own node, so it never reaches a team-mate's ball.
@@ -2010,4 +2034,45 @@ class BenchChip extends StatelessWidget {
       child: chip(),
     );
   }
+}
+
+/// A scorer's mark on his disc: a ball on a light chip, readable over any
+/// kit, with the count beside it when he scored more than once.
+class _GoalMark extends StatelessWidget {
+  const _GoalMark({required this.goals, required this.size});
+
+  final int goals;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    height: size,
+    padding: EdgeInsets.symmetric(horizontal: goals > 1 ? size * 0.12 : 0),
+    constraints: BoxConstraints(minWidth: size),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(size / 2),
+      border: Border.all(color: Colors.black26, width: 0.8),
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.sports_soccer, size: size * 0.82, color: Colors.black87),
+        if (goals > 1)
+          Padding(
+            padding: EdgeInsets.only(left: size * 0.06),
+            child: Text(
+              '$goals',
+              style: TextStyle(
+                fontSize: size * 0.62,
+                height: 1,
+                fontWeight: FontWeight.w800,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+      ],
+    ),
+  );
 }

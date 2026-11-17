@@ -2529,6 +2529,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                   nationId: team.nationId,
                   upToMinute: 200,
                 ),
+                goals: goalsByPlayerOf(r.events, nationId: team.nationId),
               );
             }
 

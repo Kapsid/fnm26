@@ -39,7 +39,12 @@ void main() {
     ],
   );
 
-  Future<void> pump(WidgetTester tester, MatchTeam t, int redId) async {
+  Future<void> pump(
+    WidgetTester tester,
+    MatchTeam t,
+    int redId, {
+    Map<int, int> goals = const {},
+  }) async {
     tester.view
       ..physicalSize = const Size(400, 1200)
       ..devicePixelRatio = 1.0;
@@ -51,6 +56,7 @@ void main() {
       cameOn: const <Player>[],
       kit: null,
       cards: {redId: MatchCard.red},
+      goals: goals,
     );
     final other = (
       nationId: 2,
@@ -64,6 +70,7 @@ void main() {
       cameOn: const <Player>[],
       kit: null,
       cards: const <int, MatchCard>{},
+      goals: const <int, int>{},
     );
     await tester.pumpWidget(
       MaterialApp(
@@ -132,4 +139,27 @@ void main() {
       );
     });
   }
+
+  testWidgets('a scorer wears a ball on his disc, with the count from two', (
+    tester,
+  ) async {
+    final t = team(Formation.f343);
+    await pump(
+      tester,
+      t,
+      t.xi[5].id,
+      goals: {t.xi[9].id: 2, t.xi[10].id: 1},
+    );
+    expect(tester.takeException(), isNull);
+    expect(find.byKey(const ValueKey('pitchGoals9')), findsOneWidget);
+    expect(find.byKey(const ValueKey('pitchGoals10')), findsOneWidget);
+    expect(find.byKey(const ValueKey('pitchGoals8')), findsNothing);
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('pitchGoals9')),
+        matching: find.text('2'),
+      ),
+      findsOneWidget,
+    );
+  });
 }
