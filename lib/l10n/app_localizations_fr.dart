@@ -18458,11 +18458,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get playoffCourseLegend =>
-      'Jaune : en route vers un barrage grâce à son classement dans la dernière Coupe des nations, en l\'état actuel (voir ci-dessous)';
-
-  @override
-  String get playoffCourseLegendWc =>
-      'Jaune : en route vers un barrage, comme l\'un des meilleurs deuxièmes ou grâce à son classement dans la dernière Coupe des nations, en l\'état actuel (voir ci-dessous)';
+      'Jaune : en route vers un barrage comme l\'un des meilleurs deuxièmes, en l\'état actuel';
 
   @override
   String get playoffCourseFooter =>

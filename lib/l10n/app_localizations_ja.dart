@@ -17650,11 +17650,7 @@ class AppLocalizationsJa extends AppLocalizations {
       '各グループの1位はストレートインします。残りの枠は、成績上位のグループ2位（グループ表で黄色）と、まだ出場が決まっていないネーションズカップの上位グループ1位によるプレーオフで争われます。ネーションズカップからは、現時点で：';
 
   @override
-  String get playoffCourseLegend => '黄色：直近のネーションズカップの順位により、現時点でプレーオフ進出圏（下記参照）';
-
-  @override
-  String get playoffCourseLegendWc =>
-      '黄色：2位の上位チームとして、または直近のネーションズカップの順位により、現時点でプレーオフ進出圏（下記参照）';
+  String get playoffCourseLegend => '黄色：2位の上位チームとして、現時点でプレーオフ進出圏';
 
   @override
   String get playoffCourseFooter =>

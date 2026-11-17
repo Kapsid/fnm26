@@ -18193,11 +18193,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get playoffCourseLegend =>
-      'पीला: पिछले नेशंस कप की रैंकिंग के दम पर प्ले-ऑफ़ की ओर, मौजूदा स्थिति के अनुसार (नीचे देखें)';
-
-  @override
-  String get playoffCourseLegendWc =>
-      'पीला: सबसे अच्छी उपविजेता टीमों में से एक के रूप में या पिछले नेशंस कप की रैंकिंग के दम पर प्ले-ऑफ़ की ओर, मौजूदा स्थिति के अनुसार (नीचे देखें)';
+      'पीला: सबसे अच्छी उपविजेता टीमों में से एक के रूप में प्ले-ऑफ़ की ओर, मौजूदा स्थिति के अनुसार';
 
   @override
   String get playoffCourseFooter =>

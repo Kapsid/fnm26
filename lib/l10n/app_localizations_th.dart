@@ -17971,11 +17971,7 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get playoffCourseLegend =>
-      'สีเหลือง: กำลังเข้ารอบเพลย์ออฟจากอันดับในเนชันส์คัพครั้งล่าสุด ตามสถานการณ์ปัจจุบัน (ดูคำอธิบายด้านล่าง)';
-
-  @override
-  String get playoffCourseLegendWc =>
-      'สีเหลือง: กำลังเข้ารอบเพลย์ออฟ ในฐานะทีมอันดับสองที่ดีที่สุด หรือจากอันดับในเนชันส์คัพครั้งล่าสุด ตามสถานการณ์ปัจจุบัน (ดูคำอธิบายด้านล่าง)';
+      'สีเหลือง: กำลังเข้ารอบเพลย์ออฟในฐานะทีมอันดับสองที่ดีที่สุด ตามสถานการณ์ปัจจุบัน';
 
   @override
   String get playoffCourseFooter =>

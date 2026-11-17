@@ -18356,11 +18356,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get playoffCourseLegend =>
-      'Keltainen: matkalla jatkokarsintaan viimeisimmän Kansakuntien cupin sijoituksen ansiosta, nykytilanteen mukaan (selitys alla)';
-
-  @override
-  String get playoffCourseLegendWc =>
-      'Keltainen: matkalla jatkokarsintaan yhtenä parhaista kakkosista tai viimeisimmän Kansakuntien cupin sijoituksen ansiosta, nykytilanteen mukaan (selitys alla)';
+      'Keltainen: matkalla jatkokarsintaan yhtenä parhaista kakkosista, nykytilanteen mukaan';
 
   @override
   String get playoffCourseFooter =>

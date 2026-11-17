@@ -18612,11 +18612,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get playoffCourseLegend =>
-      'Жовтий: прямує до плей-оф завдяки місцю в останньому Кубку націй, за поточним станом (пояснення нижче)';
-
-  @override
-  String get playoffCourseLegendWc =>
-      'Жовтий: прямує до плей-оф як одна з найкращих других команд або завдяки місцю в останньому Кубку націй, за поточним станом (пояснення нижче)';
+      'Жовтий: прямує до плей-оф як одна з найкращих других команд, за поточним станом';
 
   @override
   String get playoffCourseFooter =>

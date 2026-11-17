@@ -18368,11 +18368,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get playoffCourseLegend =>
-      'Жълто: на път за баражи благодарение на класирането в последната Купа на нациите, към момента (вижте по-долу)';
-
-  @override
-  String get playoffCourseLegendWc =>
-      'Жълто: на път за баражи като един от най-добрите втори или благодарение на класирането в последната Купа на нациите, към момента (вижте по-долу)';
+      'Жълто: на път за баражи като един от най-добрите втори, към момента';
 
   @override
   String get playoffCourseFooter =>

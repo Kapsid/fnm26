@@ -517,9 +517,9 @@ class _QualifyingState extends State<_Qualifying> {
     );
     // Who is on course for the intercontinental play-off (yellow), from the
     // real format and the live cross-group ladder, never a fixed position.
-    // Europe's runners-up on course for its own paths, on calendar2.
-    // And the Nations Cup's sides on course for Europe's paths (pot 4),
-    // wherever they stand in their qualifying group.
+    // Europe's runners-up on course for its own paths, on calendar2. The
+    // Nations Cup's sides on course for pot 4 are listed under the tables,
+    // never marked in them: where they stand in their group is not why.
     final playoff = {
       ...GroupAdvancement.worldCupPlayoffNations(
         conf,
@@ -527,7 +527,6 @@ class _QualifyingState extends State<_Qualifying> {
         hosts: hosts,
         playoffPaths: paths,
       ),
-      if (paths > 0) ...widget.nationsCupCourse,
     };
     final cards = [
       for (final g in _mineFirst(byConf[conf]!, widget.playerNationId))
@@ -577,10 +576,8 @@ class _QualifyingState extends State<_Qualifying> {
               ),
             ),
           ),
-          if (conf == Confederation.europe &&
-              widget.europePlayoffPaths > 0 &&
-              widget.nationsCupCourse.isNotEmpty)
-            const PlayoffStripeLegend(worldChampionship: true),
+          if (conf == Confederation.europe && widget.europePlayoffPaths > 0)
+            const PlayoffStripeLegend(),
           ..._groupCards(conf, byConf),
           // The cross-group ladder for the CONTESTED position — usually the
           // second-placed teams ranked against each other, but the group

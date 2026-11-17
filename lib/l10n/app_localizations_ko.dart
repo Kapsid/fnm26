@@ -17693,12 +17693,7 @@ class AppLocalizationsKo extends AppLocalizations {
       '각 조 1위는 바로 진출합니다. 마지막 자리는 성적이 좋은 조 2위 팀(조 순위표에서 노란색)과 아직 진출하지 못한 네이션스컵 상위 조 1위 팀들의 플레이오프로 결정됩니다. 네이션스컵에서는 현재 기준:';
 
   @override
-  String get playoffCourseLegend =>
-      '노란색: 최근 네이션스컵 순위 덕분에 현재 플레이오프 진출권 (아래 설명 참고)';
-
-  @override
-  String get playoffCourseLegendWc =>
-      '노란색: 2위 상위 팀으로 또는 최근 네이션스컵 순위 덕분에 현재 플레이오프 진출권 (아래 설명 참고)';
+  String get playoffCourseLegend => '노란색: 2위 상위 팀으로 현재 플레이오프 진출권';
 
   @override
   String get playoffCourseFooter =>

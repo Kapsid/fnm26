@@ -18473,11 +18473,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get playoffCourseLegend =>
-      'Żółty: zmierza do baraży dzięki miejscu w ostatnim Pucharze Narodów, według obecnego stanu (wyjaśnienie niżej)';
-
-  @override
-  String get playoffCourseLegendWc =>
-      'Żółty: zmierza do baraży jako jeden z najlepszych zespołów z drugich miejsc lub dzięki miejscu w ostatnim Pucharze Narodów, według obecnego stanu (wyjaśnienie niżej)';
+      'Żółty: zmierza do baraży jako jeden z najlepszych zespołów z drugich miejsc, według obecnego stanu';
 
   @override
   String get playoffCourseFooter =>

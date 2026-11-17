@@ -18289,11 +18289,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get playoffCourseLegend =>
-      'Gul: på vej mod en playoff takket være placeringen i seneste Nations Cup, som det ser ud nu (se nedenfor)';
-
-  @override
-  String get playoffCourseLegendWc =>
-      'Gul: på vej mod en playoff, som en af de bedste toere eller takket være placeringen i seneste Nations Cup, som det ser ud nu (se nedenfor)';
+      'Gul: på vej mod en playoff som en af de bedste toere, som det ser ud nu';
 
   @override
   String get playoffCourseFooter =>

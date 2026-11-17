@@ -18373,11 +18373,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get playoffCourseLegend =>
-      'Giallo: verso uno spareggio grazie al piazzamento nell\'ultima Nations Cup, allo stato attuale (vedi sotto)';
-
-  @override
-  String get playoffCourseLegendWc =>
-      'Giallo: verso uno spareggio, come una delle migliori seconde o grazie al piazzamento nell\'ultima Nations Cup, allo stato attuale (vedi sotto)';
+      'Giallo: verso uno spareggio come una delle migliori seconde, allo stato attuale';
 
   @override
   String get playoffCourseFooter =>

@@ -10,14 +10,14 @@ import 'package:fnm/l10n/app_localizations.dart';
 import '../helpers/competition_fixtures.dart';
 import '../helpers/seeded_save.dart';
 
-/// Europe's qualifying, before its play-off paths are drawn: the sides the
-/// Nations Cup puts on course for them are marked yellow in the qualifying
-/// tables, a key over the tables says so, and the card under them lists
-/// the paths, says why those sides are there and that it is only how things
-/// stand. (The Nations Cup's own tables carry no such mark.)
+/// Europe's qualifying, before its play-off paths are drawn: the card under
+/// the tables lists the sides the Nations Cup puts on course for them, says
+/// why those sides are there and that it is only how things stand. The
+/// tables themselves never mark them (owner, 1.1.2: a yellow fourth place
+/// only puzzled), nor do the Nations Cup's own tables.
 void main() {
-  testWidgets('the paths on course: yellow in the tables, a key, a card '
-      'that explains them', (tester) async {
+  testWidgets('the paths on course: a card that explains them, nothing '
+      'marked in the tables', (tester) async {
     final base = fakeContinentalData(seededNationId);
     // The third of each of the first four groups: never a top-two side.
     final seeds = [
@@ -57,12 +57,12 @@ void main() {
       size: const Size(390, 4000),
     );
     expect(tester.takeException(), isNull);
-    expect(find.byKey(PlayoffStripeLegend.legendKey), findsOneWidget);
-    expect(find.text(enL.playoffCourseLegend), findsOneWidget);
+    // The tables read off the tables alone: no yellow, no key.
+    expect(find.byKey(PlayoffStripeLegend.legendKey), findsNothing);
     expect(find.text(enL.playoffCourseFooter), findsOneWidget);
     expect(find.text(enL.euroPlayoffPath('D')), findsOneWidget);
 
-    // A marked side's row carries the yellow stripe.
+    // A side on course, third in its group, carries no stripe of it.
     final name = base.nations[seeds.first]!.name;
     final row = find
         .ancestor(of: find.text(name).first, matching: find.byType(Container))
@@ -74,27 +74,20 @@ void main() {
               (c.decoration! as BoxDecoration).border != null,
         );
     final border = (row.decoration! as BoxDecoration).border! as Border;
-    expect(border.left.color, AppColors.playoff);
+    expect(border.left.color, isNot(AppColors.playoff));
   });
 
-  // Yellow names its source: the latest Nations Cup on the EURO's tables,
-  // and on the World Championship's the best runners-up too.
-  testWidgets('the key says where yellow comes from', (tester) async {
+  // Yellow on the World Championship's tables is the best runners-up
+  // alone, and the key says so.
+  testWidgets('the key says yellow is the best runners-up', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: const Scaffold(
-          body: Column(
-            children: [
-              PlayoffStripeLegend(),
-              PlayoffStripeLegend(worldChampionship: true),
-            ],
-          ),
-        ),
+        home: const Scaffold(body: PlayoffStripeLegend()),
       ),
     );
-    expect(find.textContaining('latest Nations Cup'), findsNWidgets(2));
     expect(find.textContaining('best runners-up'), findsOneWidget);
+    expect(find.textContaining('Nations Cup'), findsNothing);
   });
 }

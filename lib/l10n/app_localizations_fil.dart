@@ -18297,11 +18297,7 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get playoffCourseLegend =>
-      'Dilaw: papunta sa play-off dahil sa puwesto sa pinakahuling Nations Cup, sa kasalukuyang lagay (tingnan sa ibaba)';
-
-  @override
-  String get playoffCourseLegendWc =>
-      'Dilaw: papunta sa play-off bilang isa sa pinakamahusay na pumangalawa o dahil sa puwesto sa pinakahuling Nations Cup, sa kasalukuyang lagay (tingnan sa ibaba)';
+      'Dilaw: papunta sa play-off bilang isa sa pinakamahusay na pumangalawa, sa kasalukuyang lagay';
 
   @override
   String get playoffCourseFooter =>

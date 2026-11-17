@@ -18319,11 +18319,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get playoffCourseLegend =>
-      'Yellow: headed for a play-off path through its ranking in the latest Nations Cup, as things stand (see below)';
-
-  @override
-  String get playoffCourseLegendWc =>
-      'Yellow: headed for a play-off path, as one of the best runners-up or through its ranking in the latest Nations Cup, as things stand (see below)';
+      'Yellow: headed for a play-off path as one of the best runners-up, as things stand';
 
   @override
   String get playoffCourseFooter =>

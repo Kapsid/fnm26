@@ -27636,17 +27636,11 @@ abstract class AppLocalizations {
   /// **'Every group winner goes straight through. The last places go to play-off paths: the best runners-up (yellow in the groups) and the best Nations Cup group winners who are not through. From the Nations Cup, as things stand:'**
   String get wcPlayoffCourseNote;
 
-  /// Qualifying tables: the key to the yellow stripe on the sides headed for a play-off path as things stand; the card under the tables explains it.
+  /// Europe's World Championship qualifying tables: the key to the yellow stripe on the best runners-up headed for a play-off path as things stand. The Nations Cup's way in is listed in a card under the tables, never marked in them.
   ///
   /// In en, this message translates to:
-  /// **'Yellow: headed for a play-off path through its ranking in the latest Nations Cup, as things stand (see below)'**
+  /// **'Yellow: headed for a play-off path as one of the best runners-up, as things stand'**
   String get playoffCourseLegend;
-
-  /// World Championship qualifying groups in Europe: the legend of the yellow stripe, which marks both the best runners-up headed for a play-off path and the sides headed for one through their ranking in the latest Nations Cup.
-  ///
-  /// In en, this message translates to:
-  /// **'Yellow: headed for a play-off path, as one of the best runners-up or through its ranking in the latest Nations Cup, as things stand (see below)'**
-  String get playoffCourseLegendWc;
 
   /// Footnote under the play-off course card of a qualifying screen: why the Nations Cup sides listed are there, and that it is only the current state.
   ///

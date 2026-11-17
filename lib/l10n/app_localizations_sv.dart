@@ -18275,11 +18275,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get playoffCourseLegend =>
-      'Gult: på väg mot ett playoff tack vare placeringen i senaste Nations Cup, som det ser ut nu (se nedan)';
-
-  @override
-  String get playoffCourseLegendWc =>
-      'Gult: på väg mot ett playoff, som en av de bästa grupptvåorna eller tack vare placeringen i senaste Nations Cup, som det ser ut nu (se nedan)';
+      'Gult: på väg mot ett playoff som en av de bästa grupptvåorna, som det ser ut nu';
 
   @override
   String get playoffCourseFooter =>

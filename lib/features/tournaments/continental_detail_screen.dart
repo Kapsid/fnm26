@@ -421,13 +421,12 @@ class _Groups extends StatelessWidget {
   /// they come from, and kept there once the finals are on.
   final EuroPlayoffData? playoffs;
 
-  /// The play-off paths as they stand: their sides marked yellow in the
-  /// tables (a key over them) and listed path by path under them.
+  /// The play-off paths as they stand, listed path by path under the
+  /// tables. Never marked IN the tables: a side's way in through the Nations
+  /// Cup has nothing to do with where it stands in its group, and a yellow
+  /// fourth place only puzzled (owner, 1.1.2). The tables' colours read off
+  /// the tables alone.
   final List<PlayoffPath> playoffCourse;
-
-  /// Every side of [playoffCourse], once the paths are not yet drawn.
-  Set<int> get _onCourse =>
-      playoffs != null ? const {} : {for (final p in playoffCourse) ...p.seeds};
 
   /// Positions that advance/qualify outright (green).
   final int directCount;
@@ -493,7 +492,6 @@ class _Groups extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
-        if (_onCourse.isNotEmpty) const PlayoffStripeLegend(),
         if (grid) ...[
           ColumnFlow(children: [for (final g in ordered) card(g)]),
           const SizedBox(height: AppSpacing.sm),
@@ -546,8 +544,6 @@ class _Groups extends StatelessWidget {
     final inContention = pos == contentionPos;
     final accent = advancing
         ? AppColors.positive
-        : _onCourse.contains(s.nationId)
-        ? AppColors.playoff
         : inContention
         ? AppColors.warning
         : null;
@@ -863,7 +859,7 @@ class _PlayoffCourseCard extends StatelessWidget {
             Text(
               l.euroPlayoffPath(p.letter),
               style: AppTypography.labelMedium.copyWith(
-                color: AppColors.playoff,
+                color: AppColors.primary,
               ),
             ),
             const SizedBox(height: 2),
@@ -897,16 +893,12 @@ class _PlayoffCourseCard extends StatelessWidget {
   }
 }
 
-/// The yellow stripe's key over qualifying tables that mark the sides on
-/// course for a play-off path (the card under the tables says why).
-///
-/// On the EURO's tables yellow is the Nations Cup's way in alone; on the
-/// World Championship's ([worldChampionship]) it is also the best
-/// runners-up's, and the key says both.
+/// The yellow stripe's key over Europe's World Championship qualifying
+/// tables: the best runners-up, headed for a play-off path as things stand.
+/// The Nations Cup's way in is never marked in the tables (see the card
+/// under them).
 class PlayoffStripeLegend extends StatelessWidget {
-  const PlayoffStripeLegend({this.worldChampionship = false, super.key});
-
-  final bool worldChampionship;
+  const PlayoffStripeLegend({super.key});
 
   static const Key legendKey = Key('qualifying.playoffLegend');
 
@@ -922,9 +914,7 @@ class PlayoffStripeLegend extends StatelessWidget {
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(
-              worldChampionship
-                  ? l.playoffCourseLegendWc
-                  : l.playoffCourseLegend,
+              l.playoffCourseLegend,
               style: AppTypography.labelSmall.copyWith(
                 color: AppColors.onSurfaceVariant,
               ),
