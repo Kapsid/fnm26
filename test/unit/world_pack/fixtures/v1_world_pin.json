@@ -2279,7 +2279,9 @@
     67,
     "Parramatta Wanderers",
     "aus",
-    []
+    [
+     "penaltyStopper"
+    ]
    ],
    "2322": [
     "Ernő Nyári",
@@ -2363,7 +2365,9 @@
     66,
     "Port Said Green",
     "egy",
-    []
+    [
+     "penaltyStopper"
+    ]
    ],
    "10001727": [
     "Nimród Horváth",
@@ -2897,7 +2901,9 @@
     76,
     "Vienna Green-White",
     "aut",
-    []
+    [
+     "shotStopper"
+    ]
    ],
    "10001701": [
     "Krisztián Pap",
@@ -3132,7 +3138,9 @@
     68,
     "Geneva Purple",
     "sui",
-    []
+    [
+     "penaltyStopper"
+    ]
    ],
    "10001717": [
     "Vince Magyar",
@@ -3204,7 +3212,9 @@
     66,
     "Thessaloniki Yellow",
     "gre",
-    []
+    [
+     "penaltyStopper"
+    ]
    ],
    "10001729": [
     "Szilárd Szalai",
@@ -7955,7 +7965,9 @@
     67,
     "Parramatta Wanderers",
     "aus",
-    []
+    [
+     "penaltyStopper"
+    ]
    ],
    "10001722": [
     "Henrik Kovács",
@@ -7997,7 +8009,9 @@
     66,
     "Port Said Green",
     "egy",
-    []
+    [
+     "penaltyStopper"
+    ]
    ],
    "10001701": [
     "Krisztián Pap",
@@ -8566,7 +8580,9 @@
     76,
     "Vienna Green-White",
     "aut",
-    []
+    [
+     "shotStopper"
+    ]
    ],
    "1023002002": [
     "Zsombor Vida",
@@ -8822,7 +8838,9 @@
     68,
     "Geneva Purple",
     "sui",
-    []
+    [
+     "penaltyStopper"
+    ]
    ],
    "10001736": [
     "Norbert Szabados",
@@ -8873,7 +8891,9 @@
     66,
     "Thessaloniki Yellow",
     "gre",
-    []
+    [
+     "penaltyStopper"
+    ]
    ],
    "10001729": [
     "Szilárd Szalai",
