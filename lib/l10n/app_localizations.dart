@@ -18909,6 +18909,40 @@ abstract class AppLocalizations {
   /// **'You hosted one of the last three editions.'**
   String get hostBidRecentHost;
 
+  /// Hosting-bids card: the stadium bar a host is held to (newer rules): how many grounds of the minimum size, the final ground's seats and the semi-final grounds (count × seats). All seat values are formatted numbers, e.g. 50,000.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs {grounds} stadiums of {otherSeats}+ seats. Final: {finalSeats}+ seats. Semi-finals: {semiGrounds} × {semiSeats}+ seats.'**
+  String hostBidBarRequirement(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+    int semiGrounds,
+    String semiSeats,
+  );
+
+  /// Hosting-bids card: the stadium bar for a tournament without semi-final grounds (Oceania): grounds of the minimum size and the final ground's seats. Formatted numbers.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs {grounds} stadiums of {otherSeats}+ seats. Final: {finalSeats}+ seats.'**
+  String hostBidBarRequirementNoSemis(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+  );
+
+  /// Hosting-bids card: the nation has no ground big enough for the final. seats is a formatted number.
+  ///
+  /// In en, this message translates to:
+  /// **'You need a stadium of {seats}+ seats for the final.'**
+  String hostBidNeedFinalGround(String seats);
+
+  /// Hosting-bids card: how many more grounds big enough for the semi-finals the nation needs. seats is a formatted number.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{You need 1 more stadium of {seats}+ seats for the semi-finals.} other{You need {count} more stadiums of {seats}+ seats for the semi-finals.}}'**
+  String hostBidNeedSemiGrounds(int count, String seats);
+
   /// Hosting-bids card: under the stadium requirements, the nation's grounds fall short, so it may not bid.
   ///
   /// In en, this message translates to:

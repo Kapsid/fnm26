@@ -12276,6 +12276,36 @@ class AppLocalizationsVi extends AppLocalizations {
   String get hostBidRecentHost => 'Bạn đã đăng cai một trong ba kỳ gần nhất.';
 
   @override
+  String hostBidBarRequirement(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+    int semiGrounds,
+    String semiSeats,
+  ) {
+    return 'Yêu cầu: $grounds sân $otherSeats+ chỗ. Chung kết: $finalSeats+ chỗ. Bán kết: $semiGrounds × $semiSeats+ chỗ.';
+  }
+
+  @override
+  String hostBidBarRequirementNoSemis(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+  ) {
+    return 'Yêu cầu: $grounds sân $otherSeats+ chỗ. Chung kết: $finalSeats+ chỗ.';
+  }
+
+  @override
+  String hostBidNeedFinalGround(String seats) {
+    return 'Bạn còn thiếu một sân $seats+ chỗ cho trận chung kết.';
+  }
+
+  @override
+  String hostBidNeedSemiGrounds(int count, String seats) {
+    return 'Bạn còn thiếu $count sân $seats+ chỗ cho các trận bán kết.';
+  }
+
+  @override
   String get hostBidBelowBar =>
       'Các sân của bạn chưa đáp ứng yêu cầu của giải này.';
 

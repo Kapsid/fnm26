@@ -12171,6 +12171,36 @@ class AppLocalizationsTh extends AppLocalizations {
   String get hostBidRecentHost => 'คุณเป็นเจ้าภาพหนึ่งในสามครั้งล่าสุด';
 
   @override
+  String hostBidBarRequirement(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+    int semiGrounds,
+    String semiSeats,
+  ) {
+    return 'เงื่อนไข: สนามความจุ $otherSeats+ ที่นั่ง $grounds แห่ง รอบชิงชนะเลิศ: $finalSeats+ ที่นั่ง รอบรองชนะเลิศ: $semiGrounds × $semiSeats+ ที่นั่ง';
+  }
+
+  @override
+  String hostBidBarRequirementNoSemis(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+  ) {
+    return 'เงื่อนไข: สนามความจุ $otherSeats+ ที่นั่ง $grounds แห่ง รอบชิงชนะเลิศ: $finalSeats+ ที่นั่ง';
+  }
+
+  @override
+  String hostBidNeedFinalGround(String seats) {
+    return 'คุณยังขาดสนามความจุ $seats+ ที่นั่งสำหรับรอบชิงชนะเลิศ';
+  }
+
+  @override
+  String hostBidNeedSemiGrounds(int count, String seats) {
+    return 'คุณยังขาดสนามความจุ $seats+ ที่นั่งสำหรับรอบรองชนะเลิศอีก $count แห่ง';
+  }
+
+  @override
   String get hostBidBelowBar =>
       'สนามของคุณยังไม่ตรงตามเงื่อนไขของทัวร์นาเมนต์นี้';
 

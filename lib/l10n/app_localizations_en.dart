@@ -12429,6 +12429,43 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hostBidRecentHost => 'You hosted one of the last three editions.';
 
   @override
+  String hostBidBarRequirement(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+    int semiGrounds,
+    String semiSeats,
+  ) {
+    return 'Needs $grounds stadiums of $otherSeats+ seats. Final: $finalSeats+ seats. Semi-finals: $semiGrounds × $semiSeats+ seats.';
+  }
+
+  @override
+  String hostBidBarRequirementNoSemis(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+  ) {
+    return 'Needs $grounds stadiums of $otherSeats+ seats. Final: $finalSeats+ seats.';
+  }
+
+  @override
+  String hostBidNeedFinalGround(String seats) {
+    return 'You need a stadium of $seats+ seats for the final.';
+  }
+
+  @override
+  String hostBidNeedSemiGrounds(int count, String seats) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'You need $count more stadiums of $seats+ seats for the semi-finals.',
+      one: 'You need 1 more stadium of $seats+ seats for the semi-finals.',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get hostBidBelowBar =>
       'Your grounds don\'t meet this tournament\'s stadium requirements.';
 

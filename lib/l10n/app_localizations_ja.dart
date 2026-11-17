@@ -11960,6 +11960,36 @@ class AppLocalizationsJa extends AppLocalizations {
   String get hostBidRecentHost => '直近3大会のいずれかを開催しています。';
 
   @override
+  String hostBidBarRequirement(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+    int semiGrounds,
+    String semiSeats,
+  ) {
+    return '条件：$otherSeats席以上のスタジアム$groundsか所。決勝：$finalSeats席以上。準決勝：$semiSeats席以上 × $semiGrounds。';
+  }
+
+  @override
+  String hostBidBarRequirementNoSemis(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+  ) {
+    return '条件：$otherSeats席以上のスタジアム$groundsか所。決勝：$finalSeats席以上。';
+  }
+
+  @override
+  String hostBidNeedFinalGround(String seats) {
+    return '決勝用の$seats席以上のスタジアムが足りません。';
+  }
+
+  @override
+  String hostBidNeedSemiGrounds(int count, String seats) {
+    return '準決勝用の$seats席以上のスタジアムがあと$countか所足りません。';
+  }
+
+  @override
   String get hostBidBelowBar => 'スタジアムがこの大会の基準を満たしていません。';
 
   @override

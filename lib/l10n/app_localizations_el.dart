@@ -12472,6 +12472,36 @@ class AppLocalizationsEl extends AppLocalizations {
       'Διοργανώσατε μία από τις τρεις τελευταίες διοργανώσεις.';
 
   @override
+  String hostBidBarRequirement(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+    int semiGrounds,
+    String semiSeats,
+  ) {
+    return 'Απαίτηση: $grounds γήπεδα $otherSeats+ θέσεων. Τελικός: $finalSeats+ θέσεις. Ημιτελικοί: $semiGrounds × $semiSeats+ θέσεις.';
+  }
+
+  @override
+  String hostBidBarRequirementNoSemis(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+  ) {
+    return 'Απαίτηση: $grounds γήπεδα $otherSeats+ θέσεων. Τελικός: $finalSeats+ θέσεις.';
+  }
+
+  @override
+  String hostBidNeedFinalGround(String seats) {
+    return 'Σας λείπει γήπεδο $seats+ θέσεων για τον τελικό.';
+  }
+
+  @override
+  String hostBidNeedSemiGrounds(int count, String seats) {
+    return 'Γήπεδα $seats+ θέσεων που λείπουν για τους ημιτελικούς: $count.';
+  }
+
+  @override
   String get hostBidBelowBar =>
       'Τα γήπεδά σου δεν πληρούν τις απαιτήσεις αυτής της διοργάνωσης.';
 

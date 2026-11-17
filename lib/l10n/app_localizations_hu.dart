@@ -12345,6 +12345,36 @@ class AppLocalizationsHu extends AppLocalizations {
       'A legutóbbi három torna egyikét te rendezted.';
 
   @override
+  String hostBidBarRequirement(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+    int semiGrounds,
+    String semiSeats,
+  ) {
+    return 'Feltétel: $grounds stadion $otherSeats+ férőhellyel. Döntő: $finalSeats+ férőhely. Elődöntők: $semiGrounds × $semiSeats+ férőhely.';
+  }
+
+  @override
+  String hostBidBarRequirementNoSemis(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+  ) {
+    return 'Feltétel: $grounds stadion $otherSeats+ férőhellyel. Döntő: $finalSeats+ férőhely.';
+  }
+
+  @override
+  String hostBidNeedFinalGround(String seats) {
+    return 'A döntőhöz hiányzik egy $seats+ férőhelyes stadion.';
+  }
+
+  @override
+  String hostBidNeedSemiGrounds(int count, String seats) {
+    return 'Az elődöntőkhöz még ennyi $seats+ férőhelyes stadion hiányzik: $count.';
+  }
+
+  @override
   String get hostBidBelowBar =>
       'A stadionjaid nem felelnek meg e torna követelményeinek.';
 

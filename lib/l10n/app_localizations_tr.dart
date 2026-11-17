@@ -12319,6 +12319,36 @@ class AppLocalizationsTr extends AppLocalizations {
       'Son üç turnuvadan birine ev sahipliği yaptınız.';
 
   @override
+  String hostBidBarRequirement(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+    int semiGrounds,
+    String semiSeats,
+  ) {
+    return 'Şart: $otherSeats+ kapasiteli $grounds stadyum. Final: $finalSeats+ koltuk. Yarı finaller: $semiGrounds × $semiSeats+ koltuk.';
+  }
+
+  @override
+  String hostBidBarRequirementNoSemis(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+  ) {
+    return 'Şart: $otherSeats+ kapasiteli $grounds stadyum. Final: $finalSeats+ koltuk.';
+  }
+
+  @override
+  String hostBidNeedFinalGround(String seats) {
+    return 'Final için $seats+ kapasiteli bir stadyumunuz eksik.';
+  }
+
+  @override
+  String hostBidNeedSemiGrounds(int count, String seats) {
+    return 'Yarı finaller için eksik $seats+ kapasiteli stadyum sayısı: $count.';
+  }
+
+  @override
   String get hostBidBelowBar =>
       'Stadyumların bu turnuvanın şartlarını karşılamıyor.';
 

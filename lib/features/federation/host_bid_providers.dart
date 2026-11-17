@@ -150,6 +150,8 @@ class HostBidStatus {
     this.rulesPending = false,
     this.otherBidLodged = false,
     this.belowBar = false,
+    this.bar,
+    this.barShortfall,
     this.pledge,
   });
 
@@ -208,6 +210,14 @@ class HostBidStatus {
   /// nation's qualifying grounds, as they will stand for it, fall short of
   /// its bar (`HostStadiumRules`): it may not bid.
   final bool belowBar;
+
+  /// The stadium bar the edition holds the bid to (host rules v2), or null
+  /// when it keeps the older [requirement] alone. When set, it is what the
+  /// card states: it asks more than [requirement].
+  final HostBar? bar;
+
+  /// What the nation's qualifying grounds lack against [bar].
+  final HostShortfall? barShortfall;
 
   /// The grounds are big enough.
   bool get estateOk =>
@@ -378,6 +388,21 @@ Future<bool> belowHostBar(
   HostBidComp comp,
   int editionCycle,
 ) async {
+  final check = await hostBarCheck(ref, careerId, nation, comp, editionCycle);
+  return !HostStadiumRules.meets(check.seats, check.bar);
+}
+
+/// [comp]'s stadium bar for [nation] in [editionCycle], the nation's
+/// qualifying seats as they will stand by then, and what they lack against
+/// the bar: the one reading [belowHostBar] and the bid card share, so the
+/// card always states the bar the bid is actually held to.
+Future<({HostBar bar, List<int> seats, HostShortfall shortfall})> hostBarCheck(
+  Ref ref,
+  int careerId,
+  Nation nation,
+  HostBidComp comp,
+  int editionCycle,
+) async {
   final estate = await careerStadiumsFor(
     ref,
     careerId,
@@ -390,13 +415,15 @@ Future<bool> belowHostBar(
     estate: estate,
   );
   final comps = ref.read(competitionRepositoryProvider);
-  return !HostStadiumRules.meets(
-    seats,
-    HostStadiumRules.of(
-      comp,
-      nation.confederation,
-      lighter: await lighterBarsFor(comps, careerId, editionCycle),
-    ),
+  final bar = HostStadiumRules.of(
+    comp,
+    nation.confederation,
+    lighter: await lighterBarsFor(comps, careerId, editionCycle),
+  );
+  return (
+    bar: bar,
+    seats: seats,
+    shortfall: HostStadiumRules.shortfall(seats, bar),
   );
 }
 
@@ -557,12 +584,15 @@ hostBidStatusProvider = FutureProvider.autoDispose
       );
       final seats = [for (final s in stadiums) s.capacity];
       // Under the stadium bars a nation short of the bar may not bid.
-      final barred2 = await stadiumRulesFor(comp, careerId, edition)
+      final barChecks = await stadiumRulesFor(comp, careerId, edition)
           ? {
               for (final c in HostBidComp.values)
-                c: await belowHostBar(ref, careerId, me, c, edition),
+                c: await hostBarCheck(ref, careerId, me, c, edition),
             }
-          : const <HostBidComp, bool>{};
+          : const <
+              HostBidComp,
+              ({HostBar bar, List<int> seats, HostShortfall shortfall})
+            >{};
       final size = HostBidOdds.sizeScore(
         await nationStadiumsFor(ref, careerId, me.id, atCycle: edition),
       );
@@ -589,7 +619,9 @@ hostBidStatusProvider = FutureProvider.autoDispose
         final settled = _settled(kinds, c, edition, me.id);
         final other = HostBidComp.values.firstWhere((o) => o != c);
         final otherLodged = !lodged && _lodged(kinds, other, edition, me.id);
-        final below = barred2[c] ?? false;
+        final check = barChecks[c];
+        final below =
+            check != null && !HostStadiumRules.meets(check.seats, check.bar);
         final ok =
             short.grounds == 0 &&
             short.bigGrounds == 0 &&
@@ -609,6 +641,8 @@ hostBidStatusProvider = FutureProvider.autoDispose
           rulesPending: pending && barred == null && !recent && !backToBack,
           otherBidLodged: otherLodged,
           belowBar: below,
+          bar: check?.bar,
+          barShortfall: check?.shortfall,
           lodged: lodged,
           pledge: lodged ? _bidOf(kinds, c, edition, me.id) : null,
           declined: _declined(kinds, c, edition, me.id),

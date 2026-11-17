@@ -12762,6 +12762,36 @@ class AppLocalizationsRo extends AppLocalizations {
       'Ați găzduit una dintre ultimele trei ediții.';
 
   @override
+  String hostBidBarRequirement(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+    int semiGrounds,
+    String semiSeats,
+  ) {
+    return 'Cerință: $grounds stadioane de $otherSeats+ locuri. Finala: $finalSeats+ locuri. Semifinalele: $semiGrounds × $semiSeats+ locuri.';
+  }
+
+  @override
+  String hostBidBarRequirementNoSemis(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+  ) {
+    return 'Cerință: $grounds stadioane de $otherSeats+ locuri. Finala: $finalSeats+ locuri.';
+  }
+
+  @override
+  String hostBidNeedFinalGround(String seats) {
+    return 'Îți lipsește un stadion de $seats+ locuri pentru finală.';
+  }
+
+  @override
+  String hostBidNeedSemiGrounds(int count, String seats) {
+    return 'Stadioane de $seats+ locuri care lipsesc pentru semifinale: $count.';
+  }
+
+  @override
   String get hostBidBelowBar =>
       'Stadioanele tale nu îndeplinesc cerințele acestui turneu.';
 

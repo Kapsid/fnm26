@@ -12308,6 +12308,36 @@ class AppLocalizationsId extends AppLocalizations {
       'Anda menjadi tuan rumah salah satu dari tiga edisi terakhir.';
 
   @override
+  String hostBidBarRequirement(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+    int semiGrounds,
+    String semiSeats,
+  ) {
+    return 'Syarat: $grounds stadion berkapasitas $otherSeats+ kursi. Final: $finalSeats+ kursi. Semifinal: $semiGrounds × $semiSeats+ kursi.';
+  }
+
+  @override
+  String hostBidBarRequirementNoSemis(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+  ) {
+    return 'Syarat: $grounds stadion berkapasitas $otherSeats+ kursi. Final: $finalSeats+ kursi.';
+  }
+
+  @override
+  String hostBidNeedFinalGround(String seats) {
+    return 'Anda masih kekurangan stadion berkapasitas $seats+ kursi untuk final.';
+  }
+
+  @override
+  String hostBidNeedSemiGrounds(int count, String seats) {
+    return 'Anda masih kekurangan $count stadion berkapasitas $seats+ kursi untuk semifinal.';
+  }
+
+  @override
   String get hostBidBelowBar =>
       'Stadion Anda belum memenuhi syarat turnamen ini.';
 

@@ -12326,6 +12326,36 @@ class AppLocalizationsHi extends AppLocalizations {
       'आपने पिछले तीन संस्करणों में से एक की मेज़बानी की थी।';
 
   @override
+  String hostBidBarRequirement(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+    int semiGrounds,
+    String semiSeats,
+  ) {
+    return 'शर्त: $otherSeats+ सीटों वाले $grounds स्टेडियम। फ़ाइनल: $finalSeats+ सीटें। सेमीफ़ाइनल: $semiGrounds × $semiSeats+ सीटें।';
+  }
+
+  @override
+  String hostBidBarRequirementNoSemis(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+  ) {
+    return 'शर्त: $otherSeats+ सीटों वाले $grounds स्टेडियम। फ़ाइनल: $finalSeats+ सीटें।';
+  }
+
+  @override
+  String hostBidNeedFinalGround(String seats) {
+    return 'फ़ाइनल के लिए आपके पास $seats+ सीटों वाला स्टेडियम नहीं है।';
+  }
+
+  @override
+  String hostBidNeedSemiGrounds(int count, String seats) {
+    return 'सेमीफ़ाइनल के लिए $seats+ सीटों वाले $count और स्टेडियम चाहिए।';
+  }
+
+  @override
   String get hostBidBelowBar =>
       'आपके स्टेडियम इस टूर्नामेंट की शर्तें पूरी नहीं करते।';
 

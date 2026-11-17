@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/host_bidding.dart';
+import 'package:fnm/domain/services/competition/host_stadium_rules.dart';
 import 'package:fnm/features/federation/host_bid_providers.dart';
 import 'package:fnm/features/federation/host_bid_screen.dart';
 
@@ -201,6 +203,76 @@ void main() {
       );
       expect(find.text('Submit bid'), findsNothing);
       expect(find.byType(HostBidForm), findsNothing);
+    },
+  );
+
+  // A report from play: the card named the older requirement (five grounds
+  // of 15,000, two of 20,000), the nation met it, and the bid was still
+  // refused for the stadium bar. The card now states the bar the bid is
+  // held to, and what is missing against it.
+  testWidgets(
+    'under the stadium bars the card states the bar and what is missing',
+    (tester) async {
+      tester.view.physicalSize = phone;
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final bar = HostStadiumRules.continentalLighter(Confederation.europe);
+      // Seven grounds of 20,000+, the old requirement met, but the biggest
+      // is 45,000 (the final needs 50,000) and only one more reaches
+      // 30,000 (the semi-finals need two).
+      const grounds = [45000, 32000, 28000, 26000, 24000, 22000, 21000];
+      final short = HostStadiumRules.shortfall(grounds, bar);
+      expect(short, (grounds: 0, finalGround: true, semiGrounds: 1));
+      final req = HostingRequirements.of(
+        HostBidComp.continental,
+        Confederation.europe,
+      );
+      expect(HostingRequirements.meets(grounds, req), isTrue);
+      final below = HostBidStatus(
+        comp: HostBidComp.continental,
+        editionCycle: 1,
+        year: 2032,
+        nation: _nation,
+        requirement: req,
+        shortfall: HostingRequirements.shortfall(grounds, req),
+        barredConfederation: null,
+        recentHost: false,
+        lodged: false,
+        declined: false,
+        windowOpen: false,
+        offer: null,
+        belowBar: true,
+        bar: bar,
+        barShortfall: short,
+      );
+      await tester.pumpApp(
+        Scaffold(
+          body: HostBidStatusRow(
+            status: below,
+            seats: NumberFormat.decimalPattern('en'),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      expect(
+        find.text(
+          'Needs 6 stadiums of 20,000+ seats. Final: 50,000+ seats. '
+          'Semi-finals: 2 × 30,000+ seats.',
+        ),
+        findsOneWidget,
+      );
+      expect(find.textContaining('15,000'), findsNothing);
+      expect(
+        find.text('You need a stadium of 50,000+ seats for the final.'),
+        findsOneWidget,
+      );
+      expect(
+        find.text(
+          'You need 1 more stadium of 30,000+ seats for the semi-finals.',
+        ),
+        findsOneWidget,
+      );
     },
   );
 

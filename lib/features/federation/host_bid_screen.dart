@@ -664,6 +664,35 @@ class HostBidStatusRow extends StatelessWidget {
       if (s.recentHost) lines.add((l.hostBidRecentHost, AppColors.warning));
       if (s.belowBar) lines.add((l.hostBidBelowBar, AppColors.warning));
       if (s.backToBack) lines.add((l.hostBidBackToBack, AppColors.warning));
+      // Under the stadium bar, exactly what is missing against it (the bar
+      // the bid is held to), before the older requirement's shortfall.
+      if (s.bar case final bar? when s.belowBar) {
+        final short = s.barShortfall!;
+        if (short.finalGround) {
+          lines.add((
+            l.hostBidNeedFinalGround(seats.format(bar.finalSeats)),
+            AppColors.warning,
+          ));
+        }
+        if (short.semiGrounds > 0) {
+          lines.add((
+            l.hostBidNeedSemiGrounds(
+              short.semiGrounds,
+              seats.format(bar.semiSeats),
+            ),
+            AppColors.warning,
+          ));
+        }
+        if (short.grounds > 0) {
+          lines.add((
+            l.hostBidNeedStadiums(
+              short.grounds,
+              seats.format(bar.otherSeats),
+            ),
+            AppColors.warning,
+          ));
+        }
+      }
       if (s.shortfall.bigGrounds > 0) {
         lines.add((
           l.hostBidNeedStadiums(
@@ -701,12 +730,29 @@ class HostBidStatusRow extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  l.hostBidRequirement(
-                    req.grounds,
-                    seats.format(req.minSeats),
-                    req.bigGrounds,
-                    seats.format(req.bigSeats),
-                  ),
+                  switch (s.bar) {
+                    // The bar the bid is actually held to: it asks more
+                    // than the older requirement, so it is the one shown.
+                    final bar? when bar.semiGrounds > 0 =>
+                      l.hostBidBarRequirement(
+                        bar.grounds,
+                        seats.format(bar.otherSeats),
+                        seats.format(bar.finalSeats),
+                        bar.semiGrounds,
+                        seats.format(bar.semiSeats),
+                      ),
+                    final bar? => l.hostBidBarRequirementNoSemis(
+                      bar.grounds,
+                      seats.format(bar.otherSeats),
+                      seats.format(bar.finalSeats),
+                    ),
+                    null => l.hostBidRequirement(
+                      req.grounds,
+                      seats.format(req.minSeats),
+                      req.bigGrounds,
+                      seats.format(req.bigSeats),
+                    ),
+                  },
                   style: AppTypography.labelSmall.copyWith(color: muted),
                 ),
                 for (final (text, color) in lines)

@@ -12731,6 +12731,36 @@ class AppLocalizationsHr extends AppLocalizations {
       'Bili ste domaćin jednog od posljednja tri izdanja.';
 
   @override
+  String hostBidBarRequirement(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+    int semiGrounds,
+    String semiSeats,
+  ) {
+    return 'Uvjet: stadioni s $otherSeats+ mjesta: $grounds. Finale: $finalSeats+ mjesta. Polufinala: $semiGrounds × $semiSeats+ mjesta.';
+  }
+
+  @override
+  String hostBidBarRequirementNoSemis(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+  ) {
+    return 'Uvjet: stadioni s $otherSeats+ mjesta: $grounds. Finale: $finalSeats+ mjesta.';
+  }
+
+  @override
+  String hostBidNeedFinalGround(String seats) {
+    return 'Za finale vam nedostaje stadion s $seats+ mjesta.';
+  }
+
+  @override
+  String hostBidNeedSemiGrounds(int count, String seats) {
+    return 'Stadioni s $seats+ mjesta koji nedostaju za polufinala: $count.';
+  }
+
+  @override
   String get hostBidBelowBar =>
       'Vaši stadioni ne ispunjavaju uvjete ovog turnira.';
 

@@ -12474,6 +12474,36 @@ class AppLocalizationsFi extends AppLocalizations {
   String get hostBidRecentHost => 'Isännöit yhtä kolmesta viime turnauksesta.';
 
   @override
+  String hostBidBarRequirement(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+    int semiGrounds,
+    String semiSeats,
+  ) {
+    return 'Vaatimus: $otherSeats+ paikan stadioneja: $grounds. Finaali: $finalSeats+ paikkaa. Välierät: $semiGrounds × $semiSeats+ paikkaa.';
+  }
+
+  @override
+  String hostBidBarRequirementNoSemis(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+  ) {
+    return 'Vaatimus: $otherSeats+ paikan stadioneja: $grounds. Finaali: $finalSeats+ paikkaa.';
+  }
+
+  @override
+  String hostBidNeedFinalGround(String seats) {
+    return 'Finaalia varten sinulta puuttuu $seats+ paikan stadion.';
+  }
+
+  @override
+  String hostBidNeedSemiGrounds(int count, String seats) {
+    return 'Välieriä varten puuttuvia $seats+ paikan stadioneja: $count.';
+  }
+
+  @override
   String get hostBidBelowBar =>
       'Stadionisi eivät täytä tämän turnauksen vaatimuksia.';
 

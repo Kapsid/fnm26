@@ -12396,6 +12396,36 @@ class AppLocalizationsFil extends AppLocalizations {
       'Nag-host ka ng isa sa huling tatlong edisyon.';
 
   @override
+  String hostBidBarRequirement(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+    int semiGrounds,
+    String semiSeats,
+  ) {
+    return 'Kailangan: $grounds istadyum na may $otherSeats+ upuan. Final: $finalSeats+ upuan. Semifinal: $semiGrounds × $semiSeats+ upuan.';
+  }
+
+  @override
+  String hostBidBarRequirementNoSemis(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+  ) {
+    return 'Kailangan: $grounds istadyum na may $otherSeats+ upuan. Final: $finalSeats+ upuan.';
+  }
+
+  @override
+  String hostBidNeedFinalGround(String seats) {
+    return 'Kulang ka pa ng istadyum na may $seats+ upuan para sa final.';
+  }
+
+  @override
+  String hostBidNeedSemiGrounds(int count, String seats) {
+    return 'Kulang ka pa ng $count istadyum na may $seats+ upuan para sa semifinal.';
+  }
+
+  @override
   String get hostBidBelowBar =>
       'Hindi tumutugon ang mga istadyum mo sa mga kinakailangan ng torneong ito.';
 

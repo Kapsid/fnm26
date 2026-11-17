@@ -12397,6 +12397,43 @@ class AppLocalizationsSv extends AppLocalizations {
       'Du var värd för en av de tre senaste upplagorna.';
 
   @override
+  String hostBidBarRequirement(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+    int semiGrounds,
+    String semiSeats,
+  ) {
+    return 'Krav: $grounds arenor med $otherSeats+ platser. Final: $finalSeats+ platser. Semifinaler: $semiGrounds × $semiSeats+ platser.';
+  }
+
+  @override
+  String hostBidBarRequirementNoSemis(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+  ) {
+    return 'Krav: $grounds arenor med $otherSeats+ platser. Final: $finalSeats+ platser.';
+  }
+
+  @override
+  String hostBidNeedFinalGround(String seats) {
+    return 'Du saknar en arena med $seats+ platser för finalen.';
+  }
+
+  @override
+  String hostBidNeedSemiGrounds(int count, String seats) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Du saknar $count arenor till med $seats+ platser för semifinalerna.',
+      one: 'Du saknar 1 arena till med $seats+ platser för semifinalerna.',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get hostBidBelowBar => 'Dina arenor uppfyller inte turneringens krav.';
 
   @override

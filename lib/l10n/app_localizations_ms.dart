@@ -12356,6 +12356,36 @@ class AppLocalizationsMs extends AppLocalizations {
       'Anda menjadi tuan rumah salah satu daripada tiga edisi terakhir.';
 
   @override
+  String hostBidBarRequirement(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+    int semiGrounds,
+    String semiSeats,
+  ) {
+    return 'Syarat: $grounds stadium berkapasiti $otherSeats+ tempat duduk. Final: $finalSeats+ tempat duduk. Separuh akhir: $semiGrounds × $semiSeats+ tempat duduk.';
+  }
+
+  @override
+  String hostBidBarRequirementNoSemis(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+  ) {
+    return 'Syarat: $grounds stadium berkapasiti $otherSeats+ tempat duduk. Final: $finalSeats+ tempat duduk.';
+  }
+
+  @override
+  String hostBidNeedFinalGround(String seats) {
+    return 'Anda masih kekurangan stadium berkapasiti $seats+ tempat duduk untuk final.';
+  }
+
+  @override
+  String hostBidNeedSemiGrounds(int count, String seats) {
+    return 'Anda masih kekurangan $count stadium berkapasiti $seats+ tempat duduk untuk separuh akhir.';
+  }
+
+  @override
   String get hostBidBelowBar =>
       'Stadium anda tidak memenuhi syarat kejohanan ini.';
 

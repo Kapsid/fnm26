@@ -11990,6 +11990,36 @@ class AppLocalizationsKo extends AppLocalizations {
   String get hostBidRecentHost => '최근 3개 대회 중 하나를 개최했습니다.';
 
   @override
+  String hostBidBarRequirement(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+    int semiGrounds,
+    String semiSeats,
+  ) {
+    return '조건: $otherSeats석 이상 경기장 $grounds곳. 결승: $finalSeats석 이상. 준결승: $semiSeats석 이상 × $semiGrounds.';
+  }
+
+  @override
+  String hostBidBarRequirementNoSemis(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+  ) {
+    return '조건: $otherSeats석 이상 경기장 $grounds곳. 결승: $finalSeats석 이상.';
+  }
+
+  @override
+  String hostBidNeedFinalGround(String seats) {
+    return '결승에 쓸 $seats석 이상 경기장이 부족합니다.';
+  }
+
+  @override
+  String hostBidNeedSemiGrounds(int count, String seats) {
+    return '준결승에 쓸 $seats석 이상 경기장이 $count곳 더 필요합니다.';
+  }
+
+  @override
   String get hostBidBelowBar => '경기장이 이 대회의 요건을 충족하지 않습니다.';
 
   @override

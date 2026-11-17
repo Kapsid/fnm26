@@ -12779,6 +12779,36 @@ class AppLocalizationsCs extends AppLocalizations {
       'Pořádali jste jeden z posledních tří ročníků.';
 
   @override
+  String hostBidBarRequirement(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+    int semiGrounds,
+    String semiSeats,
+  ) {
+    return 'Podmínka: stadiony s kapacitou $otherSeats+ míst: $grounds. Finále: $finalSeats+ míst. Semifinále: $semiGrounds × $semiSeats+ míst.';
+  }
+
+  @override
+  String hostBidBarRequirementNoSemis(
+    int grounds,
+    String otherSeats,
+    String finalSeats,
+  ) {
+    return 'Podmínka: stadiony s kapacitou $otherSeats+ míst: $grounds. Finále: $finalSeats+ míst.';
+  }
+
+  @override
+  String hostBidNeedFinalGround(String seats) {
+    return 'Pro finále vám chybí stadion s kapacitou $seats+ míst.';
+  }
+
+  @override
+  String hostBidNeedSemiGrounds(int count, String seats) {
+    return 'Pro semifinále chybí stadiony s kapacitou $seats+ míst: $count.';
+  }
+
+  @override
   String get hostBidBelowBar =>
       'Vaše stadiony nesplňují požadavky tohoto turnaje.';
 
