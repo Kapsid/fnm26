@@ -4562,5 +4562,9 @@
   "campaignStars3Czechoslovakia": "Vencer o Campeonato Mundial",
   "wcPlayoffCourseNote": "Cada vencedor de grupo apura-se diretamente. Os últimos lugares decidem-se num play-off entre os melhores segundos (a amarelo nos grupos) e os melhores vencedores de grupo da Copa das Nações ainda não apurados. Da Copa das Nações, neste momento:",
   "playoffCourseLegend": "Amarelo: a caminho do play-off, neste momento (ver abaixo)",
-  "playoffCourseFooter": "Porque estão aqui: a Copa das Nações dá aos vencedores de grupo, e depois aos melhores seguintes de cada liga, um lugar no play-off se não se apurarem diretamente. É só a situação atual e muda após cada jornada."
+  "playoffCourseFooter": "Porque estão aqui: a Copa das Nações dá aos vencedores de grupo, e depois aos melhores seguintes de cada liga, um lugar no play-off se não se apurarem diretamente. É só a situação atual e muda após cada jornada.",
+  "traitShotStopper": "Grande defensor de remates",
+  "traitShotStopperBlurb": "Defende mais remates do que seria de esperar.",
+  "traitPenaltyStopper": "Defensor de penáltis",
+  "traitPenaltyStopperBlurb": "Defende mais penáltis, no jogo e nas disputas."
 }

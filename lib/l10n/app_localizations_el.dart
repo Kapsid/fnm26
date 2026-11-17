@@ -18351,4 +18351,18 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       'Γιατί είναι εδώ: το Κύπελλο Εθνών δίνει στους νικητές ομίλων του, και μετά στους επόμενους καλύτερους κάθε κατηγορίας, θέση στα μπαράζ αν δεν προκριθούν απευθείας. Είναι μόνο η τρέχουσα εικόνα και αλλάζει μετά από κάθε αγωνιστική.';
+
+  @override
+  String get traitShotStopper => 'Εξαιρετικός στις αποκρούσεις';
+
+  @override
+  String get traitShotStopperBlurb =>
+      'Αποκρούει περισσότερα σουτ από το αναμενόμενο.';
+
+  @override
+  String get traitPenaltyStopper => 'Ειδικός στα πέναλτι';
+
+  @override
+  String get traitPenaltyStopperBlurb =>
+      'Αποκρούει περισσότερα πέναλτι, στο παιχνίδι και στη διαδικασία των πέναλτι.';
 }

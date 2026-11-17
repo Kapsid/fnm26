@@ -18448,4 +18448,18 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       'Dlaczego tu są: Puchar Narodów daje zwycięzcom grup, a potem kolejnym najlepszym z każdej ligi, miejsce w barażach, jeśli nie awansują bezpośrednio. To tylko obecny stan, zmienia się po każdej kolejce.';
+
+  @override
+  String get traitShotStopper => 'Świetny w obronie strzałów';
+
+  @override
+  String get traitShotStopperBlurb =>
+      'Broni więcej strzałów, niż można się spodziewać.';
+
+  @override
+  String get traitPenaltyStopper => 'Pogromca karnych';
+
+  @override
+  String get traitPenaltyStopperBlurb =>
+      'Broni więcej rzutów karnych, w meczu i w serii jedenastek.';
 }

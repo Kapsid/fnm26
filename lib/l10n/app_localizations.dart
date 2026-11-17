@@ -27613,6 +27613,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Why they are here: the Nations Cup gives its group winners, then the next best of each league, a play-off place if they do not go through directly. This is only how things stand today: it changes after every round.'**
   String get playoffCourseFooter;
+
+  /// Player trait (goalkeepers): known for keeping out more shots than expected.
+  ///
+  /// In en, this message translates to:
+  /// **'Quality shot stopper'**
+  String get traitShotStopper;
+
+  /// One-line blurb of the shot-stopper goalkeeper trait.
+  ///
+  /// In en, this message translates to:
+  /// **'Keeps out more than his share of shots.'**
+  String get traitShotStopperBlurb;
+
+  /// Player trait (goalkeepers): known for saving penalties.
+  ///
+  /// In en, this message translates to:
+  /// **'Premier PK stopper'**
+  String get traitPenaltyStopper;
+
+  /// One-line blurb of the penalty-stopper goalkeeper trait.
+  ///
+  /// In en, this message translates to:
+  /// **'Saves more penalties, in matches and in shootouts.'**
+  String get traitPenaltyStopperBlurb;
 }
 
 class _AppLocalizationsDelegate

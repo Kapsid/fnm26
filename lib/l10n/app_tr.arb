@@ -4562,5 +4562,9 @@
   "campaignStars3Czechoslovakia": "Dünya Şampiyonası'nı kazan",
   "wcPlayoffCourseNote": "Her grup birincisi doğrudan katılır. Son yerler, en iyi grup ikincileri (gruplarda sarı) ile Uluslar Kupası'nın henüz katılamamış en iyi grup birincileri arasındaki play-off ile belirlenir. Uluslar Kupası'ndan, şu anki duruma göre:",
   "playoffCourseLegend": "Sarı: şu anki duruma göre play-off yolunda (aşağıya bakın)",
-  "playoffCourseFooter": "Neden buradalar: Uluslar Kupası, grup birincilerine ve ardından her ligin sonraki en iyilerine, doğrudan katılamazlarsa play-off yeri verir. Bu yalnızca şu anki durumdur ve her haftadan sonra değişir."
+  "playoffCourseFooter": "Neden buradalar: Uluslar Kupası, grup birincilerine ve ardından her ligin sonraki en iyilerine, doğrudan katılamazlarsa play-off yeri verir. Bu yalnızca şu anki durumdur ve her haftadan sonra değişir.",
+  "traitShotStopper": "Kaliteli şut kurtarıcı",
+  "traitShotStopperBlurb": "Beklenenden fazla şutu kurtarır.",
+  "traitPenaltyStopper": "Penaltı canavarı",
+  "traitPenaltyStopperBlurb": "Maçta ve seri penaltılarda daha çok penaltı kurtarır."
 }

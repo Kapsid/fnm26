@@ -18341,4 +18341,17 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       'Perché sono qui: la Coppa delle Nazioni dà alle vincitrici dei gironi, e poi alle migliori successive di ogni lega, un posto negli spareggi se non si qualificano direttamente. È solo la situazione attuale e cambia dopo ogni giornata.';
+
+  @override
+  String get traitShotStopper => 'Grande para-tiri';
+
+  @override
+  String get traitShotStopperBlurb => 'Respinge più tiri del previsto.';
+
+  @override
+  String get traitPenaltyStopper => 'Pararigori';
+
+  @override
+  String get traitPenaltyStopperBlurb =>
+      'Para più rigori, in partita e ai rigori.';
 }

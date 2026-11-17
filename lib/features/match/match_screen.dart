@@ -27,6 +27,7 @@ import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
+import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/card_status.dart';
 import 'package:fnm/domain/services/match/live_rating.dart';
@@ -1140,16 +1141,32 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       unavailable: _sentOff(r, oppTeam.nationId),
       traitsByPlayer: oppTeam.traitsByPlayer,
     );
-    final oppSkill = PenaltyTakers.skillOrder(
+    final rawOppSkill = PenaltyTakers.skillOrder(
       oppTakers,
       traitsByPlayer: oppTeam.traitsByPlayer,
     );
+    // A penalty stopper in either goal makes every kick against him harder.
+    double stopper(MatchTeam team, Iterable<Player> onPitch) {
+      final keeper = onPitch
+          .where((p) => p.category == PositionCategory.goalkeeper)
+          .firstOrNull;
+      return keeper != null &&
+              team.hasTrait(keeper.id, PlayerTrait.penaltyStopper)
+          ? PlayerTraits.penaltyStopperFactor
+          : 1.0;
+    }
+
+    final myTeam = _playerTeam(preview);
+    final theirKeeper = stopper(oppTeam, _opponentOnPitch(preview, r));
+    final myKeeper = stopper(myTeam, myTeam.xi);
+    final mySkillVsKeeper = [for (final s in mySkill) s / theirKeeper];
+    final oppSkill = [for (final s in rawOppSkill) s / myKeeper];
     return WorldCupFinals.decideShootout(
       et.homeScore,
       et.awayScore,
       SeededRng.forFixture(_seed(preview), preview.fixture.id ^ 0x7F),
-      homeTakerSkill: preview.playerIsHome ? mySkill : oppSkill,
-      awayTakerSkill: preview.playerIsHome ? oppSkill : mySkill,
+      homeTakerSkill: preview.playerIsHome ? mySkillVsKeeper : oppSkill,
+      awayTakerSkill: preview.playerIsHome ? oppSkill : mySkillVsKeeper,
       homeTakerIds: [
         for (final p in preview.playerIsHome ? myTakers : oppTakers) p.id,
       ],

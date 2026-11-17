@@ -18219,4 +18219,18 @@ class AppLocalizationsMs extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       'Mengapa mereka di sini: Piala Negara-Negara memberi juara kumpulannya, kemudian pasukan terbaik seterusnya dalam setiap liga, tempat dalam play-off jika mereka tidak layak terus. Ini hanya kedudukan semasa dan berubah selepas setiap pusingan.';
+
+  @override
+  String get traitShotStopper => 'Penyelamat rembatan hebat';
+
+  @override
+  String get traitShotStopperBlurb =>
+      'Menyelamatkan lebih banyak rembatan daripada dijangka.';
+
+  @override
+  String get traitPenaltyStopper => 'Pakar menahan penalti';
+
+  @override
+  String get traitPenaltyStopperBlurb =>
+      'Menahan lebih banyak penalti, dalam perlawanan dan sepakan penalti.';
 }

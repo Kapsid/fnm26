@@ -4562,5 +4562,9 @@
   "campaignStars3Czechoslovakia": "Ganar el Campeonato del Mundo",
   "wcPlayoffCourseNote": "Cada ganador de grupo se clasifica directamente. Las últimas plazas se juegan en una repesca entre los mejores segundos (en amarillo en los grupos) y los mejores ganadores de grupo de la Copa de las Naciones que no se clasificaron. De la Copa de las Naciones, tal como está:",
   "playoffCourseLegend": "Amarillo: camino de la repesca, tal como está (ver abajo)",
-  "playoffCourseFooter": "Por qué están aquí: la Copa de las Naciones da a sus ganadores de grupo, y después a los siguientes mejores de cada liga, una plaza en la repesca si no se clasifican directamente. Es solo la situación actual y cambia tras cada jornada."
+  "playoffCourseFooter": "Por qué están aquí: la Copa de las Naciones da a sus ganadores de grupo, y después a los siguientes mejores de cada liga, una plaza en la repesca si no se clasifican directamente. Es solo la situación actual y cambia tras cada jornada.",
+  "traitShotStopper": "Gran parador",
+  "traitShotStopperBlurb": "Detiene más tiros de lo esperado.",
+  "traitPenaltyStopper": "Paratiros de penaltis",
+  "traitPenaltyStopperBlurb": "Para más penaltis, en el partido y en las tandas."
 }

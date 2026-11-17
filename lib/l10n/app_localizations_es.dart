@@ -18354,4 +18354,17 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       'Por qué están aquí: la Copa de las Naciones da a sus ganadores de grupo, y después a los siguientes mejores de cada liga, una plaza en la repesca si no se clasifican directamente. Es solo la situación actual y cambia tras cada jornada.';
+
+  @override
+  String get traitShotStopper => 'Gran parador';
+
+  @override
+  String get traitShotStopperBlurb => 'Detiene más tiros de lo esperado.';
+
+  @override
+  String get traitPenaltyStopper => 'Paratiros de penaltis';
+
+  @override
+  String get traitPenaltyStopperBlurb =>
+      'Para más penaltis, en el partido y en las tandas.';
 }

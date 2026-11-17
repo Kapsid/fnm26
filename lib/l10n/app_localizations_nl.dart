@@ -18348,4 +18348,17 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       'Waarom ze hier staan: de Nations Cup geeft zijn groepswinnaars, en daarna de volgende besten van elke league, een plek in de play-offs als ze zich niet direct plaatsen. Dit is alleen de huidige stand en verandert na elke speelronde.';
+
+  @override
+  String get traitShotStopper => 'Sterke shotstopper';
+
+  @override
+  String get traitShotStopperBlurb => 'Houdt meer schoten tegen dan verwacht.';
+
+  @override
+  String get traitPenaltyStopper => 'Penaltykiller';
+
+  @override
+  String get traitPenaltyStopperBlurb =>
+      'Stopt meer penalty\'s, in de wedstrijd en bij strafschoppen.';
 }

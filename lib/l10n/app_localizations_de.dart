@@ -18393,4 +18393,17 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       'Warum sie hier stehen: Der Nationenpokal gibt seinen Gruppensiegern, danach den nächstbesten jeder Liga, einen Play-off-Platz, wenn sie sich nicht direkt qualifizieren. Das ist nur der aktuelle Stand und ändert sich nach jedem Spieltag.';
+
+  @override
+  String get traitShotStopper => 'Starker Shot-Stopper';
+
+  @override
+  String get traitShotStopperBlurb => 'Hält mehr Schüsse als erwartet.';
+
+  @override
+  String get traitPenaltyStopper => 'Elfmeterkiller';
+
+  @override
+  String get traitPenaltyStopperBlurb =>
+      'Hält mehr Elfmeter, im Spiel und im Elfmeterschießen.';
 }

@@ -1212,7 +1212,7 @@ class MatchEngine {
 
       final taker = _penaltyTaker(atk);
       final keeper = _keeperOf(def);
-      final p = _penaltyGoalChance(atk, taker, keeper);
+      final p = _penaltyGoalChance(atk, taker, keeper, def: def);
       final outcome = _penaltyOutcome(playRng.nextDouble(), p, keeper);
       final goal = outcome == ShotOutcome.goal
           ? MatchEvent(
@@ -1558,6 +1558,7 @@ class MatchEngine {
             (baseP *
                     _finishingSharpness(liveHome.energyOf(shooter.id)) *
                     _finishTrait(liveHome, shooter.id) *
+                    _keeperTrait(liveAway) *
                     weather.finishing *
                     weather.longRangeOn(baseP))
                 .clamp(0.04, 0.44);
@@ -1644,6 +1645,7 @@ class MatchEngine {
             (baseP *
                     _finishingSharpness(liveAway.energyOf(shooter.id)) *
                     _finishTrait(liveAway, shooter.id) *
+                    _keeperTrait(liveHome) *
                     weather.finishing *
                     weather.longRangeOn(baseP))
                 .clamp(0.04, 0.44);
@@ -2732,6 +2734,16 @@ class MatchEngine {
 
   /// The goalkeeper [team] has on the pitch right now, or null when it has
   /// none (sent off with no keeper to bring on).
+  /// A shot stopper in [def]'s goal keeps a little more out (see
+  /// [PlayerTraits.shotStopperFactor]); 1 for anyone else.
+  double _keeperTrait(_Live def) {
+    final keeper = _keeperOf(def);
+    return keeper != null &&
+            def.team.hasTrait(keeper.id, PlayerTrait.shotStopper)
+        ? PlayerTraits.shotStopperFactor
+        : 1.0;
+  }
+
   Player? _keeperOf(_Live team) {
     for (final p in team.xi) {
       if (p.category == PositionCategory.goalkeeper) return p;
@@ -2861,15 +2873,26 @@ class MatchEngine {
 
   /// The chance [taker] scores a penalty against [keeper] (null: nobody in
   /// goal). Composure from [PenaltyTakers.skillOf]; a keeper ten points
-  /// above 75 saves about 4% more, one below about 4% less.
-  static double _penaltyGoalChance(_Live atk, Player taker, Player? keeper) {
+  /// above 75 saves about 4% more, one below about 4% less; a penalty
+  /// stopper ([PlayerTrait.penaltyStopper]) more again.
+  static double _penaltyGoalChance(
+    _Live atk,
+    Player taker,
+    Player? keeper, {
+    _Live? def,
+  }) {
     final skill = PenaltyTakers.skillOf(
       taker,
       atk.team.traitsByPlayer[taker.id] ?? const [],
     );
+    final stopper =
+        keeper != null &&
+            (def?.team.hasTrait(keeper.id, PlayerTrait.penaltyStopper) ?? false)
+        ? PlayerTraits.penaltyStopperFactor
+        : 1.0;
     final keeping = keeper == null
         ? 0.8
-        : (1 + (keeper.overall - 75) / 250).clamp(0.9, 1.1);
+        : (1 + (keeper.overall - 75) / 250).clamp(0.9, 1.1) * stopper;
     return (_penaltyBase * skill / keeping).clamp(0.5, 0.95);
   }
 

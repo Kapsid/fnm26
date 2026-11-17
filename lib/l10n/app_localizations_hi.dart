@@ -18168,4 +18168,17 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       'ये यहाँ क्यों हैं: नेशंस कप अपने ग्रुप विजेताओं को, फिर हर लीग की अगली सबसे अच्छी टीमों को, सीधे क्वालीफ़ाई न करने पर प्ले-ऑफ़ में जगह देता है। यह सिर्फ़ अभी की स्थिति है और हर राउंड के बाद बदलती है।';
+
+  @override
+  String get traitShotStopper => 'बेहतरीन शॉट-रोकू';
+
+  @override
+  String get traitShotStopperBlurb => 'उम्मीद से ज़्यादा शॉट रोकता है।';
+
+  @override
+  String get traitPenaltyStopper => 'पेनल्टी रोकने में माहिर';
+
+  @override
+  String get traitPenaltyStopperBlurb =>
+      'मैच में और शूटआउट में ज़्यादा पेनल्टी रोकता है।';
 }

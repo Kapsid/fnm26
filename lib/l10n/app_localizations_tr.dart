@@ -18171,4 +18171,17 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       'Neden buradalar: Uluslar Kupası, grup birincilerine ve ardından her ligin sonraki en iyilerine, doğrudan katılamazlarsa play-off yeri verir. Bu yalnızca şu anki durumdur ve her haftadan sonra değişir.';
+
+  @override
+  String get traitShotStopper => 'Kaliteli şut kurtarıcı';
+
+  @override
+  String get traitShotStopperBlurb => 'Beklenenden fazla şutu kurtarır.';
+
+  @override
+  String get traitPenaltyStopper => 'Penaltı canavarı';
+
+  @override
+  String get traitPenaltyStopperBlurb =>
+      'Maçta ve seri penaltılarda daha çok penaltı kurtarır.';
 }

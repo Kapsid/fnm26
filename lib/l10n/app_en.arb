@@ -28184,5 +28184,21 @@
   },
   "@playoffCourseFooter": {
     "description": "Footnote under the play-off course card of a qualifying screen: why the Nations Cup sides listed are there, and that it is only the current state."
+  },
+  "traitShotStopper": "Quality shot stopper",
+  "traitShotStopperBlurb": "Keeps out more than his share of shots.",
+  "traitPenaltyStopper": "Premier PK stopper",
+  "traitPenaltyStopperBlurb": "Saves more penalties, in matches and in shootouts.",
+  "@traitShotStopper": {
+    "description": "Player trait (goalkeepers): known for keeping out more shots than expected."
+  },
+  "@traitShotStopperBlurb": {
+    "description": "One-line blurb of the shot-stopper goalkeeper trait."
+  },
+  "@traitPenaltyStopper": {
+    "description": "Player trait (goalkeepers): known for saving penalties."
+  },
+  "@traitPenaltyStopperBlurb": {
+    "description": "One-line blurb of the penalty-stopper goalkeeper trait."
   }
 }

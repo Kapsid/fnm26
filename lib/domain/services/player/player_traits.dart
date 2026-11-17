@@ -42,6 +42,12 @@ enum PlayerTrait {
 
   /// Wasteful with good chances.
   wasteful,
+
+  /// A goalkeeper who keeps out more than his share of shots.
+  shotStopper,
+
+  /// A goalkeeper who saves penalties, in a match and in a shootout.
+  penaltyStopper,
 }
 
 /// A trait's presentation and its effect, so screens and the engine agree.
@@ -98,8 +104,25 @@ abstract final class PlayerTraits {
       }
     }
 
+    // A keeper's own traits come last, and only into room left over, so no
+    // trait a player already carried (before 1.1.2) is ever displaced: one
+    // of the world's best keepers is a shot stopper, and about one keeper in
+    // five of some standing is known for saving penalties.
+    if (p.category == PositionCategory.goalkeeper) {
+      if (out.length < maxTraits && p.overall >= shotStopperOverall) {
+        out.add(PlayerTrait.shotStopper);
+      }
+      if (out.length < maxTraits && p.overall >= 66 && (h >> 12) % 100 < 20) {
+        out.add(PlayerTrait.penaltyStopper);
+      }
+    }
+
     return out.take(maxTraits).toList();
   }
+
+  /// The rating a keeper needs to be known as a shot stopper: about the
+  /// world's best twenty or so.
+  static const int shotStopperOverall = 75;
 
   /// Whether a player in [position] would plausibly stand over a dead ball.
   static bool _takesSetPieces(PlayerPosition position) =>
@@ -140,4 +163,12 @@ abstract final class PlayerTraits {
 
   /// The rating a leader adds to EVERY OTHER player on the pitch.
   static const int leaderTeamBonus = 1;
+
+  /// How much of an open-play chance a shot stopper's opponents still
+  /// convert.
+  static const double shotStopperFactor = 0.92;
+
+  /// How much harder a penalty stopper makes every penalty and shootout
+  /// kick against him (the taker's chance is divided by it).
+  static const double penaltyStopperFactor = 1.12;
 }

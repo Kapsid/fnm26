@@ -4562,5 +4562,9 @@
   "campaignStars3Czechoslovakia": "Voita MM-kisat",
   "wcPlayoffCourseNote": "Jokainen lohkovoittaja pääsee suoraan. Viimeiset paikat ratkaistaan jatkokarsinnassa, jossa pelaavat parhaat lohkokakkoset (keltaisella lohkoissa) ja Nations Cupin parhaat lohkovoittajat, jotka eivät ole jo selvinneet. Nations Cupista, tilanne nyt:",
   "playoffCourseLegend": "Keltainen: matkalla jatkokarsintaan, tämänhetkisen tilanteen mukaan (ks. alla)",
-  "playoffCourseFooter": "Miksi he ovat tässä: Nations Cup antaa lohkovoittajilleen ja sitten kunkin liigan seuraaville parhaille paikan jatkokarsinnassa, jos he eivät pääse suoraan. Tämä on vain nykytilanne, ja se muuttuu jokaisen kierroksen jälkeen."
+  "playoffCourseFooter": "Miksi he ovat tässä: Nations Cup antaa lohkovoittajilleen ja sitten kunkin liigan seuraaville parhaille paikan jatkokarsinnassa, jos he eivät pääse suoraan. Tämä on vain nykytilanne, ja se muuttuu jokaisen kierroksen jälkeen.",
+  "traitShotStopper": "Laadukas torjuja",
+  "traitShotStopperBlurb": "Torjuu enemmän laukauksia kuin odottaisi.",
+  "traitPenaltyStopper": "Rangaistuspotkujen torjuja",
+  "traitPenaltyStopperBlurb": "Torjuu enemmän rangaistuspotkuja, otteluissa ja rangaistuspotkukilpailuissa."
 }

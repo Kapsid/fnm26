@@ -98,4 +98,47 @@ void main() {
       }
     });
   });
+
+  group('keeper traits (1.1.2)', () {
+    const keeperOnly = {PlayerTrait.shotStopper, PlayerTrait.penaltyStopper};
+
+    test('only keepers carry them, and a fine handler is a shot stopper', () {
+      var stoppers = 0;
+      var penalty = 0;
+      for (var id = 1; id < 600; id++) {
+        final out = PlayerTraits.of(_p(id: id, technical: 85));
+        expect(out.where(keeperOnly.contains), isEmpty, reason: 'outfield $id');
+        final k = PlayerTraits.of(
+          _p(id: id, position: PlayerPosition.gk, technical: 85),
+        );
+        if (k.contains(PlayerTrait.shotStopper)) stoppers++;
+        if (k.contains(PlayerTrait.penaltyStopper)) penalty++;
+        expect(k.length, lessThanOrEqualTo(PlayerTraits.maxTraits));
+      }
+      // Every fine handler with room for it; some known for penalties.
+      expect(stoppers, greaterThan(500));
+      expect(penalty, inInclusiveRange(30, 200));
+    });
+
+    test('they never displace a trait a keeper already carried', () {
+      for (var id = 1; id < 600; id++) {
+        final k = _p(id: id, position: PlayerPosition.gk, technical: 85);
+        final traits = PlayerTraits.of(k);
+        final older = traits.where((t) => !keeperOnly.contains(t)).toList();
+        // The older traits come first and in their old order.
+        expect(traits.take(older.length).toList(), older);
+      }
+    });
+
+    test('an ordinary keeper is no shot stopper', () {
+      for (var id = 1; id < 200; id++) {
+        expect(
+          PlayerTraits.of(
+            _p(id: id, position: PlayerPosition.gk, technical: 70),
+          ),
+          isNot(contains(PlayerTrait.shotStopper)),
+        );
+      }
+    });
+  });
 }

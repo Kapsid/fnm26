@@ -18685,4 +18685,18 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       'De ce sunt aici: Cupa Națiunilor dă câștigătoarelor de grupă, apoi următoarelor cele mai bune din fiecare ligă, un loc în baraj dacă nu se califică direct. Este doar situația de acum și se schimbă după fiecare etapă.';
+
+  @override
+  String get traitShotStopper => 'Portar excelent la șuturi';
+
+  @override
+  String get traitShotStopperBlurb =>
+      'Apără mai multe șuturi decât te-ai aștepta.';
+
+  @override
+  String get traitPenaltyStopper => 'Specialist la penalty-uri';
+
+  @override
+  String get traitPenaltyStopperBlurb =>
+      'Apără mai multe penalty-uri, în meci și la loviturile de departajare.';
 }

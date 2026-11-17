@@ -18587,4 +18587,18 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       'Чому вони тут: Nations Cup дає переможцям груп, а потім наступним найкращим з кожної ліги, місце в плей-оф, якщо вони не пройдуть напряму. Це лише поточний стан, він змінюється після кожного туру.';
+
+  @override
+  String get traitShotStopper => 'Чудово рятує від ударів';
+
+  @override
+  String get traitShotStopperBlurb =>
+      'Відбиває більше ударів, ніж можна очікувати.';
+
+  @override
+  String get traitPenaltyStopper => 'Майстер пенальті';
+
+  @override
+  String get traitPenaltyStopperBlurb =>
+      'Відбиває більше пенальті, у матчі та в серії пенальті.';
 }

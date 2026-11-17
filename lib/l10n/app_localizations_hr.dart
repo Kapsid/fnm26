@@ -18599,4 +18599,18 @@ class AppLocalizationsHr extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       'Zašto su ovdje: Nations Cup daje pobjednicima skupina, a zatim sljedećima najboljima u svakoj ligi, mjesto u doigravanju ako ne prođu izravno. Ovo je samo trenutačno stanje i mijenja se nakon svakog kola.';
+
+  @override
+  String get traitShotStopper => 'Vrhunski branič udaraca';
+
+  @override
+  String get traitShotStopperBlurb =>
+      'Obrani više udaraca nego što bi se očekivalo.';
+
+  @override
+  String get traitPenaltyStopper => 'Ubojica jedanaesteraca';
+
+  @override
+  String get traitPenaltyStopperBlurb =>
+      'Brani više jedanaesteraca, u utakmici i u izvođenju jedanaesteraca.';
 }

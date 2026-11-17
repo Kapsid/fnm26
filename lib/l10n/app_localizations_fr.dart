@@ -18426,4 +18426,18 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       'Pourquoi ces équipes : la Coupe des nations offre à ses vainqueurs de groupe, puis aux meilleurs suivants de chaque ligue, une place en barrages s\'ils ne se qualifient pas directement. Ce n\'est que la situation actuelle : elle change après chaque journée.';
+
+  @override
+  String get traitShotStopper => 'Grand arrêteur de tirs';
+
+  @override
+  String get traitShotStopperBlurb =>
+      'Arrête plus de tirs qu\'on ne l\'attendrait.';
+
+  @override
+  String get traitPenaltyStopper => 'Spécialiste des penalties';
+
+  @override
+  String get traitPenaltyStopperBlurb =>
+      'Arrête plus de penalties, en match comme aux tirs au but.';
 }

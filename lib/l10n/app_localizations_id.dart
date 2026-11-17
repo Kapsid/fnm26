@@ -18164,4 +18164,18 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       'Mengapa mereka di sini: Piala Bangsa-Bangsa memberi juara grupnya, lalu tim terbaik berikutnya di tiap liga, tempat di play-off jika mereka tidak lolos langsung. Ini hanya keadaan saat ini dan berubah setiap putaran.';
+
+  @override
+  String get traitShotStopper => 'Penjaga gawang tangguh';
+
+  @override
+  String get traitShotStopperBlurb =>
+      'Menahan lebih banyak tembakan dari yang diharapkan.';
+
+  @override
+  String get traitPenaltyStopper => 'Spesialis penalti';
+
+  @override
+  String get traitPenaltyStopperBlurb =>
+      'Menahan lebih banyak penalti, di laga dan adu penalti.';
 }

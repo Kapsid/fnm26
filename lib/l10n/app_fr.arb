@@ -4562,5 +4562,9 @@
   "campaignStars3Czechoslovakia": "Gagner le Championnat du monde",
   "wcPlayoffCourseNote": "Chaque vainqueur de groupe est qualifié directement. Les dernières places se jouent en barrages entre les meilleurs deuxièmes (en jaune dans les groupes) et les meilleurs vainqueurs de groupe de la Coupe des nations non qualifiés. Depuis la Coupe des nations, en l'état :",
   "playoffCourseLegend": "Jaune : en route pour les barrages, en l'état (voir plus bas)",
-  "playoffCourseFooter": "Pourquoi ces équipes : la Coupe des nations offre à ses vainqueurs de groupe, puis aux meilleurs suivants de chaque ligue, une place en barrages s'ils ne se qualifient pas directement. Ce n'est que la situation actuelle : elle change après chaque journée."
+  "playoffCourseFooter": "Pourquoi ces équipes : la Coupe des nations offre à ses vainqueurs de groupe, puis aux meilleurs suivants de chaque ligue, une place en barrages s'ils ne se qualifient pas directement. Ce n'est que la situation actuelle : elle change après chaque journée.",
+  "traitShotStopper": "Grand arrêteur de tirs",
+  "traitShotStopperBlurb": "Arrête plus de tirs qu'on ne l'attendrait.",
+  "traitPenaltyStopper": "Spécialiste des penalties",
+  "traitPenaltyStopperBlurb": "Arrête plus de penalties, en match comme aux tirs au but."
 }

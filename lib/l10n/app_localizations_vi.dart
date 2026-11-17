@@ -18106,4 +18106,17 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       'Vì sao các đội này ở đây: Nations Cup trao suất play-off cho các đội nhất bảng, rồi đến những đội tốt nhất tiếp theo của mỗi hạng đấu, nếu họ không giành vé trực tiếp. Đây chỉ là tình hình hiện tại và thay đổi sau mỗi lượt trận.';
+
+  @override
+  String get traitShotStopper => 'Thủ môn cản phá xuất sắc';
+
+  @override
+  String get traitShotStopperBlurb => 'Cản phá nhiều cú sút hơn dự kiến.';
+
+  @override
+  String get traitPenaltyStopper => 'Chuyên gia bắt penalty';
+
+  @override
+  String get traitPenaltyStopperBlurb =>
+      'Cản phá nhiều quả penalty hơn, cả trong trận và loạt sút luân lưu.';
 }

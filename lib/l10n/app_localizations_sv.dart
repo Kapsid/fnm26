@@ -18243,4 +18243,17 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       'Varför de är här: Nations Cup ger sina gruppvinnare, och sedan de näst bästa i varje liga, en playoffplats om de inte går vidare direkt. Det här är bara läget just nu och ändras efter varje omgång.';
+
+  @override
+  String get traitShotStopper => 'Stark skottstoppare';
+
+  @override
+  String get traitShotStopperBlurb => 'Räddar fler skott än väntat.';
+
+  @override
+  String get traitPenaltyStopper => 'Straffräddare';
+
+  @override
+  String get traitPenaltyStopperBlurb =>
+      'Räddar fler straffar, i matcher och i straffläggningar.';
 }

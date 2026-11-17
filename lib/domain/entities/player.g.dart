@@ -63,4 +63,6 @@ const _$PlayerTraitEnumMap = {
   PlayerTrait.pacey: 'pacey',
   PlayerTrait.oldHead: 'oldHead',
   PlayerTrait.wasteful: 'wasteful',
+  PlayerTrait.shotStopper: 'shotStopper',
+  PlayerTrait.penaltyStopper: 'penaltyStopper',
 };

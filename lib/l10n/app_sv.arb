@@ -4562,5 +4562,9 @@
   "campaignStars3Czechoslovakia": "Vinn Världsmästerskapet",
   "wcPlayoffCourseNote": "Varje gruppvinnare går direkt vidare. De sista platserna går till playoff för de bästa grupptvåorna (gula i grupperna) och Nations Cups bästa gruppvinnare som inte är klara. Från Nations Cup, som det ser ut nu:",
   "playoffCourseLegend": "Gul: på väg mot playoff, som det ser ut nu (se nedan)",
-  "playoffCourseFooter": "Varför de är här: Nations Cup ger sina gruppvinnare, och sedan de näst bästa i varje liga, en playoffplats om de inte går vidare direkt. Det här är bara läget just nu och ändras efter varje omgång."
+  "playoffCourseFooter": "Varför de är här: Nations Cup ger sina gruppvinnare, och sedan de näst bästa i varje liga, en playoffplats om de inte går vidare direkt. Det här är bara läget just nu och ändras efter varje omgång.",
+  "traitShotStopper": "Stark skottstoppare",
+  "traitShotStopperBlurb": "Räddar fler skott än väntat.",
+  "traitPenaltyStopper": "Straffräddare",
+  "traitPenaltyStopperBlurb": "Räddar fler straffar, i matcher och i straffläggningar."
 }

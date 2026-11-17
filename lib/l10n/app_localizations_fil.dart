@@ -18272,4 +18272,18 @@ class AppLocalizationsFil extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       'Bakit sila narito: binibigyan ng Nations Cup ng puwesto sa play-off ang mga nanalo sa grupo nito, saka ang mga susunod na pinakamahuhusay sa bawat liga, kung hindi sila diretsong makakapasok. Ito ay lagay lamang ngayon at nagbabago pagkatapos ng bawat round.';
+
+  @override
+  String get traitShotStopper => 'Mahusay humarang ng tira';
+
+  @override
+  String get traitShotStopperBlurb =>
+      'Mas maraming tira ang nasasalo kaysa inaasahan.';
+
+  @override
+  String get traitPenaltyStopper => 'Bihasang humarang ng penalty';
+
+  @override
+  String get traitPenaltyStopperBlurb =>
+      'Mas maraming penalty ang nasasalo, sa laro at sa shootout.';
 }

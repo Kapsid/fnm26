@@ -4562,5 +4562,9 @@
   "campaignStars3Czechoslovakia": "Vyhrát mistrovství světa",
   "wcPlayoffCourseNote": "Všichni vítězové skupin postupují přímo. O posledních místech rozhodne baráž: nejlepší týmy z druhých míst (žlutě ve skupinách) a nejlepší vítězové skupin Poháru národů, kteří nepostoupili. Z Poháru národů podle aktuálního stavu:",
   "playoffCourseLegend": "Žlutě: míří do baráže, podle aktuálního stavu (vysvětlení níže)",
-  "playoffCourseFooter": "Proč tu jsou: Pohár národů dává vítězům skupin a po nich dalším nejlepším z každé ligy místo v baráži, pokud nepostoupí přímo. Jde jen o aktuální stav, mění se po každém kole."
+  "playoffCourseFooter": "Proč tu jsou: Pohár národů dává vítězům skupin a po nich dalším nejlepším z každé ligy místo v baráži, pokud nepostoupí přímo. Jde jen o aktuální stav, mění se po každém kole.",
+  "traitShotStopper": "Skvělý brankář na střely",
+  "traitShotStopperBlurb": "Chytí víc střel, než by se dalo čekat.",
+  "traitPenaltyStopper": "Postrach penaltistů",
+  "traitPenaltyStopperBlurb": "Chytá víc penalt, v zápase i v rozstřelu."
 }

@@ -18200,4 +18200,17 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       'Miért vannak itt: a Nations Cup a csoportgyőzteseinek, utánuk pedig minden liga következő legjobbjainak pótselejtezős helyet ad, ha nem jutnak ki egyenesen. Ez csak a jelenlegi állás, minden forduló után változik.';
+
+  @override
+  String get traitShotStopper => 'Kiváló lövésvédő';
+
+  @override
+  String get traitShotStopperBlurb => 'Több lövést véd, mint várnánk.';
+
+  @override
+  String get traitPenaltyStopper => 'Tizenegyesölő';
+
+  @override
+  String get traitPenaltyStopperBlurb =>
+      'Több tizenegyest véd, meccsen és büntetőpárbajban is.';
 }

@@ -17668,4 +17668,16 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       '이 팀들이 여기 있는 이유: 네이션스컵은 바로 진출하지 못한 조 1위 팀, 그다음 각 리그의 상위 팀에게 플레이오프 자리를 줍니다. 현재 기준일 뿐이며 매 라운드 후 바뀝니다.';
+
+  @override
+  String get traitShotStopper => '뛰어난 슈팅 선방';
+
+  @override
+  String get traitShotStopperBlurb => '예상보다 많은 슈팅을 막아낸다.';
+
+  @override
+  String get traitPenaltyStopper => '페널티킥 킬러';
+
+  @override
+  String get traitPenaltyStopperBlurb => '경기와 승부차기 모두에서 페널티킥을 더 많이 막는다.';
 }

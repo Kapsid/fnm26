@@ -4562,5 +4562,9 @@
   "campaignStars3Czechoslovakia": "Win het Wereldkampioenschap",
   "wcPlayoffCourseNote": "Elke groepswinnaar plaatst zich direct. De laatste plaatsen gaan via play-offs naar de beste nummers twee (geel in de groepen) en de beste groepswinnaars van de Nations Cup die nog niet geplaatst zijn. Uit de Nations Cup, zoals het nu staat:",
   "playoffCourseLegend": "Geel: op koers voor de play-offs, zoals het nu staat (zie onder)",
-  "playoffCourseFooter": "Waarom ze hier staan: de Nations Cup geeft zijn groepswinnaars, en daarna de volgende besten van elke league, een plek in de play-offs als ze zich niet direct plaatsen. Dit is alleen de huidige stand en verandert na elke speelronde."
+  "playoffCourseFooter": "Waarom ze hier staan: de Nations Cup geeft zijn groepswinnaars, en daarna de volgende besten van elke league, een plek in de play-offs als ze zich niet direct plaatsen. Dit is alleen de huidige stand en verandert na elke speelronde.",
+  "traitShotStopper": "Sterke shotstopper",
+  "traitShotStopperBlurb": "Houdt meer schoten tegen dan verwacht.",
+  "traitPenaltyStopper": "Penaltykiller",
+  "traitPenaltyStopperBlurb": "Stopt meer penalty's, in de wedstrijd en bij strafschoppen."
 }

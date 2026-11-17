@@ -18361,4 +18361,18 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       'Porque estão aqui: a Copa das Nações dá aos vencedores de grupo, e depois aos melhores seguintes de cada liga, um lugar no play-off se não se apurarem diretamente. É só a situação atual e muda após cada jornada.';
+
+  @override
+  String get traitShotStopper => 'Grande defensor de remates';
+
+  @override
+  String get traitShotStopperBlurb =>
+      'Defende mais remates do que seria de esperar.';
+
+  @override
+  String get traitPenaltyStopper => 'Defensor de penáltis';
+
+  @override
+  String get traitPenaltyStopperBlurb =>
+      'Defende mais penáltis, no jogo e nas disputas.';
 }

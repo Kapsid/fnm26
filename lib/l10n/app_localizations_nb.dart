@@ -18252,4 +18252,17 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       'Hvorfor de er her: Nations Cup gir sine gruppevinnere, og deretter de nest beste i hver liga, en playoffplass om de ikke går rett videre. Dette er bare stillingen nå og endrer seg etter hver runde.';
+
+  @override
+  String get traitShotStopper => 'Sterk skuddstopper';
+
+  @override
+  String get traitShotStopperBlurb => 'Redder flere skudd enn ventet.';
+
+  @override
+  String get traitPenaltyStopper => 'Straffedreper';
+
+  @override
+  String get traitPenaltyStopperBlurb =>
+      'Redder flere straffer, i kamper og i straffekonkurranser.';
 }

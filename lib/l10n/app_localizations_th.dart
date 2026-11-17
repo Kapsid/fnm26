@@ -17946,4 +17946,17 @@ class AppLocalizationsTh extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       'ทำไมทีมเหล่านี้อยู่ตรงนี้: เนชันส์คัพให้สิทธิ์เพลย์ออฟแก่แชมป์กลุ่ม แล้วตามด้วยทีมที่ดีที่สุดถัดไปของแต่ละลีก หากไม่ได้ผ่านเข้ารอบโดยตรง นี่เป็นเพียงสถานการณ์ปัจจุบันและเปลี่ยนแปลงหลังทุกนัด';
+
+  @override
+  String get traitShotStopper => 'จอมเซฟลูกยิง';
+
+  @override
+  String get traitShotStopperBlurb => 'เซฟลูกยิงได้มากกว่าที่คาด';
+
+  @override
+  String get traitPenaltyStopper => 'จอมเซฟจุดโทษ';
+
+  @override
+  String get traitPenaltyStopperBlurb =>
+      'เซฟจุดโทษได้มากขึ้น ทั้งในเกมและการดวลจุดโทษ';
 }

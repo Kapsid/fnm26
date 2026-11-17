@@ -18648,4 +18648,17 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       'Proč tu jsou: Pohár národů dává vítězům skupin a po nich dalším nejlepším z každé ligy místo v baráži, pokud nepostoupí přímo. Jde jen o aktuální stav, mění se po každém kole.';
+
+  @override
+  String get traitShotStopper => 'Skvělý brankář na střely';
+
+  @override
+  String get traitShotStopperBlurb => 'Chytí víc střel, než by se dalo čekat.';
+
+  @override
+  String get traitPenaltyStopper => 'Postrach penaltistů';
+
+  @override
+  String get traitPenaltyStopperBlurb =>
+      'Chytá víc penalt, v zápase i v rozstřelu.';
 }

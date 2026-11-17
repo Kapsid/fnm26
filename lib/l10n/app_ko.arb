@@ -4562,5 +4562,9 @@
   "campaignStars3Czechoslovakia": "세계 선수권 우승",
   "wcPlayoffCourseNote": "각 조 1위는 바로 진출합니다. 마지막 자리는 성적이 좋은 조 2위 팀(조 순위표에서 노란색)과 아직 진출하지 못한 네이션스컵 상위 조 1위 팀들의 플레이오프로 결정됩니다. 네이션스컵에서는 현재 기준:",
   "playoffCourseLegend": "노란색: 현재 기준 플레이오프 진출권 (아래 설명 참조)",
-  "playoffCourseFooter": "이 팀들이 여기 있는 이유: 네이션스컵은 바로 진출하지 못한 조 1위 팀, 그다음 각 리그의 상위 팀에게 플레이오프 자리를 줍니다. 현재 기준일 뿐이며 매 라운드 후 바뀝니다."
+  "playoffCourseFooter": "이 팀들이 여기 있는 이유: 네이션스컵은 바로 진출하지 못한 조 1위 팀, 그다음 각 리그의 상위 팀에게 플레이오프 자리를 줍니다. 현재 기준일 뿐이며 매 라운드 후 바뀝니다.",
+  "traitShotStopper": "뛰어난 슈팅 선방",
+  "traitShotStopperBlurb": "예상보다 많은 슈팅을 막아낸다.",
+  "traitPenaltyStopper": "페널티킥 킬러",
+  "traitPenaltyStopperBlurb": "경기와 승부차기 모두에서 페널티킥을 더 많이 막는다."
 }

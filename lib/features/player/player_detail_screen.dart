@@ -1329,6 +1329,18 @@ class _TraitRow extends StatelessWidget {
     l.traitWastefulBlurb,
     false,
   ),
+  PlayerTrait.shotStopper => (
+    Icons.back_hand_rounded,
+    l.traitShotStopper,
+    l.traitShotStopperBlurb,
+    true,
+  ),
+  PlayerTrait.penaltyStopper => (
+    Icons.sports_handball_rounded,
+    l.traitPenaltyStopper,
+    l.traitPenaltyStopperBlurb,
+    true,
+  ),
 };
 
 /// The compact glyph strip used in squad lists, where there is no room for

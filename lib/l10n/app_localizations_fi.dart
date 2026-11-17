@@ -18331,4 +18331,18 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       'Miksi he ovat tässä: Nations Cup antaa lohkovoittajilleen ja sitten kunkin liigan seuraaville parhaille paikan jatkokarsinnassa, jos he eivät pääse suoraan. Tämä on vain nykytilanne, ja se muuttuu jokaisen kierroksen jälkeen.';
+
+  @override
+  String get traitShotStopper => 'Laadukas torjuja';
+
+  @override
+  String get traitShotStopperBlurb =>
+      'Torjuu enemmän laukauksia kuin odottaisi.';
+
+  @override
+  String get traitPenaltyStopper => 'Rangaistuspotkujen torjuja';
+
+  @override
+  String get traitPenaltyStopperBlurb =>
+      'Torjuu enemmän rangaistuspotkuja, otteluissa ja rangaistuspotkukilpailuissa.';
 }

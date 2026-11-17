@@ -17625,4 +17625,16 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get playoffCourseFooter =>
       'ここにいる理由：ネーションズカップは、ストレートインできなかった場合に、各グループの1位、次いで各リーグの上位チームにプレーオフ出場権を与えます。これはあくまで現時点の状況で、節ごとに変わります。';
+
+  @override
+  String get traitShotStopper => 'シュートストッパー';
+
+  @override
+  String get traitShotStopperBlurb => '期待以上にシュートを止める。';
+
+  @override
+  String get traitPenaltyStopper => 'PKストッパー';
+
+  @override
+  String get traitPenaltyStopperBlurb => '試合中もPK戦でも、より多くのPKを止める。';
 }

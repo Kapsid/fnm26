@@ -4562,5 +4562,9 @@
   "campaignStars3Czechoslovakia": "Vincere il Campionato del mondo",
   "wcPlayoffCourseNote": "Ogni vincitrice di girone si qualifica direttamente. Gli ultimi posti si assegnano negli spareggi tra le migliori seconde (in giallo nei gironi) e le migliori vincitrici di girone della Coppa delle Nazioni non qualificate. Dalla Coppa delle Nazioni, allo stato attuale:",
   "playoffCourseLegend": "Giallo: in corsa per gli spareggi, allo stato attuale (vedi sotto)",
-  "playoffCourseFooter": "Perché sono qui: la Coppa delle Nazioni dà alle vincitrici dei gironi, e poi alle migliori successive di ogni lega, un posto negli spareggi se non si qualificano direttamente. È solo la situazione attuale e cambia dopo ogni giornata."
+  "playoffCourseFooter": "Perché sono qui: la Coppa delle Nazioni dà alle vincitrici dei gironi, e poi alle migliori successive di ogni lega, un posto negli spareggi se non si qualificano direttamente. È solo la situazione attuale e cambia dopo ogni giornata.",
+  "traitShotStopper": "Grande para-tiri",
+  "traitShotStopperBlurb": "Respinge più tiri del previsto.",
+  "traitPenaltyStopper": "Pararigori",
+  "traitPenaltyStopperBlurb": "Para più rigori, in partita e ai rigori."
 }
