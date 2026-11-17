@@ -46,8 +46,23 @@ playerAwardsProvider = FutureProvider.autoDispose
 String potyDueKind(int year) => 'potyDue:$year';
 
 /// Marks a year whose vote could not be held (nobody qualified, or the vote
-/// failed), so it is not tried again at every step and hub moment.
+/// failed [potyMaxFailures] times), so it is not tried again at every step
+/// and hub moment.
 String potyVoidKind(int year) => 'potyVoid:$year';
+
+/// Marks a [potyVoidKind] this build wrote (1.1.2). A void without it was
+/// written by an older build, which voided a year on the FIRST error of its
+/// vote (a report from play: no Player of the Year 2027): such a year is
+/// tried once more, and voided for good (with this mark) only if it still
+/// cannot be held.
+String potyVoidCheckedKind(int year) => 'potyVoidChecked:$year';
+
+/// The prefix of the marks counting a year's failed votes (one per error).
+String potyFailPrefix(int year) => 'potyFail:$year:';
+
+/// The errors a year's vote is allowed before it is voided: one error (a
+/// pool that could not be read on that step) never costs a year its award.
+const int potyMaxFailures = 3;
 
 /// Marks a year's ceremony as taken: watched, skipped to the list, or
 /// simulated past.
@@ -169,12 +184,27 @@ class AwardService {
         ok = await _settle(career, year, latest: latest);
       } on Object catch (e, st) {
         AppLog.error('awards:settle $year', e, st);
+        // An error is retried at the next step, up to [potyMaxFailures]:
+        // only a year that keeps failing is voided.
+        final fails = [
+          for (final r in await comp.watchedKindsWithPrefix(
+            potyFailPrefix(year),
+          ))
+            if (r.careerId == careerId) r,
+        ].length;
+        await comp.markDrawWatched(
+          careerId,
+          0,
+          '${potyFailPrefix(year)}$fails',
+        );
+        if (fails + 1 < potyMaxFailures) continue;
         ok = false;
       }
       if (ok) {
         filed.add(year);
       } else {
         await comp.markDrawWatched(careerId, 0, potyVoidKind(year));
+        await comp.markDrawWatched(careerId, 0, potyVoidCheckedKind(year));
       }
     }
     // A catch-up of several years at once offers ONE ceremony, the most
@@ -200,7 +230,14 @@ class AwardService {
     return [
       for (var y = CareerService.cycleStart.year; y <= latest; y++)
         if (!voted.contains('poty:$y') &&
-            !await comp.hasWatchedDraw(career.id, 0, potyVoidKind(y)))
+            // A void of an older build is retried once (see
+            // [potyVoidCheckedKind]).
+            (!await comp.hasWatchedDraw(career.id, 0, potyVoidKind(y)) ||
+                !await comp.hasWatchedDraw(
+                  career.id,
+                  0,
+                  potyVoidCheckedKind(y),
+                )))
           y,
     ];
   }

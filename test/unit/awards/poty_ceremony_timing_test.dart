@@ -158,8 +158,14 @@ void main() {
           );
           await db.customStatement(
             'DELETE FROM draws_watched WHERE career_id = ? '
-            'AND kind IN (?, ?, ?)',
-            [d.careerId, potyDueKind(y), potySeenKind(y), potyVoidKind(y)],
+            'AND kind IN (?, ?, ?, ?)',
+            [
+              d.careerId,
+              potyDueKind(y),
+              potySeenKind(y),
+              potyVoidKind(y),
+              potyVoidCheckedKind(y),
+            ],
           );
         }
       }
@@ -236,6 +242,23 @@ void main() {
         await comp.hasWatchedDraw(d.careerId, 0, potyVoidKind(2031)),
         isTrue,
       );
+      expect(
+        await comp.hasWatchedDraw(d.careerId, 0, potyVoidCheckedKind(2031)),
+        isTrue,
+      );
+      expect(await c.read(awardServiceProvider).behind(d.careerId), isFalse);
+
+      // A year an older build voided on its vote's first error (a report
+      // from play: no Player of the Year 2027) is tried once more and, its
+      // football still there, filed, with its ceremony: 2031 is void, so
+      // 2030 is the newest year held.
+      await forget([2030]);
+      await comp.markDrawWatched(d.careerId, 0, potyVoidKind(2030));
+      expect(await c.read(awardServiceProvider).behind(d.careerId), isTrue);
+      expect(await ceremony(), 2030);
+      expect(await comp.messageKeys(d.careerId), contains('poty:2030'));
+      await c.read(awardServiceProvider).takeCeremony(d.careerId, 2030);
+      expect(await ceremony(), isNull);
       expect(await c.read(awardServiceProvider).behind(d.careerId), isFalse);
     },
     timeout: const Timeout(Duration(minutes: 10)),
