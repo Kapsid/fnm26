@@ -17785,10 +17785,6 @@ class AppLocalizationsTh extends AppLocalizations {
       'สองอันดับแรกของแต่ละกลุ่มผ่านเข้ารอบทันที ที่นั่งสุดท้ายตัดสินจากเพลย์ออฟของทีมที่ดีที่สุดในเนชันส์คัพที่ยังไม่ผ่าน ณ ตอนนี้:';
 
   @override
-  String get ncEuroPlayoffLegend =>
-      'มุ่งสู่เพลย์ออฟรอบสุดท้ายหากรอบคัดเลือกพลาด';
-
-  @override
   String get euroPlayoffToFinal => 'เข้ารอบชิง';
 
   @override
@@ -17875,10 +17871,6 @@ class AppLocalizationsTh extends AppLocalizations {
   String get regionalCupGroups => 'กลุ่ม';
 
   @override
-  String get ncWcPlayoffLegend =>
-      'มุ่งสู่เพลย์ออฟชิงแชมป์โลกหากรอบคัดเลือกพลาด';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'เพลย์ออฟเป็นทางสำรอง: $finals';
   }
@@ -17896,13 +17888,6 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'อันดับสุดท้าย: ตกชั้นสู่ลีกที่ต่ำกว่า';
-
-  @override
-  String get playoffBadgeLetter => 'PO';
-
-  @override
-  String get playoffBadgeTooltip =>
-      'กำลังมุ่งสู่เพลย์ออฟ: โอกาสที่สองหากรอบคัดเลือกพลาด';
 
   @override
   String get campaignIsleOfManTitle => 'สามขา';
@@ -17949,4 +17934,16 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'คว้าแชมป์ชิงแชมป์โลก';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      'แชมป์ทุกกลุ่มผ่านเข้ารอบทันที ที่นั่งสุดท้ายตัดสินจากเพลย์ออฟของรองแชมป์กลุ่มที่ดีที่สุด (สีเหลืองในกลุ่ม) และแชมป์กลุ่มที่ดีที่สุดในเนชันส์คัพที่ยังไม่ผ่าน จากเนชันส์คัพ ณ ตอนนี้:';
+
+  @override
+  String get playoffCourseLegend =>
+      'สีเหลือง: กำลังมุ่งสู่เพลย์ออฟ ณ ตอนนี้ (ดูคำอธิบายด้านล่าง)';
+
+  @override
+  String get playoffCourseFooter =>
+      'ทำไมทีมเหล่านี้อยู่ตรงนี้: เนชันส์คัพให้สิทธิ์เพลย์ออฟแก่แชมป์กลุ่ม แล้วตามด้วยทีมที่ดีที่สุดถัดไปของแต่ละลีก หากไม่ได้ผ่านเข้ารอบโดยตรง นี่เป็นเพียงสถานการณ์ปัจจุบันและเปลี่ยนแปลงหลังทุกนัด';
 }

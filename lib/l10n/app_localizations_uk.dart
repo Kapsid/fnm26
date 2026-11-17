@@ -18423,10 +18423,6 @@ class AppLocalizationsUk extends AppLocalizations {
       'Дві найкращі команди кожної групи виходять напряму. Останні місця розігрують у плей-оф найкращі команди Nations Cup, які не пройшли. Станом на зараз:';
 
   @override
-  String get ncEuroPlayoffLegend =>
-      'На шляху до плей-оф фінального турніру, якщо кваліфікація не вдасться';
-
-  @override
   String get euroPlayoffToFinal => 'У фінал';
 
   @override
@@ -18514,10 +18510,6 @@ class AppLocalizationsUk extends AppLocalizations {
   String get regionalCupGroups => 'ГРУПИ';
 
   @override
-  String get ncWcPlayoffLegend =>
-      'На шляху до плей-оф чемпіонату світу, якщо кваліфікація не вдасться';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'Плей-оф як запасний шлях: $finals';
   }
@@ -18535,13 +18527,6 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Останній: пониження до нижчої ліги';
-
-  @override
-  String get playoffBadgeLetter => 'П';
-
-  @override
-  String get playoffBadgeTooltip =>
-      'На шляху до плей-оф: другий шанс, якщо кваліфікація не вдасться';
 
   @override
   String get campaignIsleOfManTitle => 'Три ноги';
@@ -18590,4 +18575,16 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Виграти Чемпіонат світу';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      'Кожен переможець групи виходить напряму. Останні місця розігрують у плей-оф найкращі команди з других місць (жовтим у групах) і найкращі переможці груп Nations Cup, які не пройшли. З Nations Cup, станом на зараз:';
+
+  @override
+  String get playoffCourseLegend =>
+      'Жовтий: на шляху до плей-оф, станом на зараз (див. нижче)';
+
+  @override
+  String get playoffCourseFooter =>
+      'Чому вони тут: Nations Cup дає переможцям груп, а потім наступним найкращим з кожної ліги, місце в плей-оф, якщо вони не пройдуть напряму. Це лише поточний стан, він змінюється після кожного туру.';
 }

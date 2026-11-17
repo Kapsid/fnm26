@@ -18487,10 +18487,6 @@ class AppLocalizationsCs extends AppLocalizations {
       'První dva z každé skupiny postupují přímo. O poslední místa se hraje baráž mezi nejlepšími týmy Poháru národů, které nepostoupily. Podle aktuálního stavu:';
 
   @override
-  String get ncEuroPlayoffLegend =>
-      'Míří do baráže o závěrečný turnaj, kdyby nevyšla kvalifikace';
-
-  @override
   String get euroPlayoffToFinal => 'Do finále';
 
   @override
@@ -18577,10 +18573,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get regionalCupGroups => 'SKUPINY';
 
   @override
-  String get ncWcPlayoffLegend =>
-      'Míří do baráže o mistrovství světa, kdyby nevyšla kvalifikace';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'Pojistka v baráži: $finals';
   }
@@ -18598,13 +18590,6 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Poslední: sestup do nižší ligy';
-
-  @override
-  String get playoffBadgeLetter => 'B';
-
-  @override
-  String get playoffBadgeTooltip =>
-      'Míří do baráže: druhá šance, kdyby nevyšla kvalifikace';
 
   @override
   String get campaignIsleOfManTitle => 'Tři nohy';
@@ -18651,4 +18636,16 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Vyhrát mistrovství světa';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      'Všichni vítězové skupin postupují přímo. O posledních místech rozhodne baráž: nejlepší týmy z druhých míst (žlutě ve skupinách) a nejlepší vítězové skupin Poháru národů, kteří nepostoupili. Z Poháru národů podle aktuálního stavu:';
+
+  @override
+  String get playoffCourseLegend =>
+      'Žlutě: míří do baráže, podle aktuálního stavu (vysvětlení níže)';
+
+  @override
+  String get playoffCourseFooter =>
+      'Proč tu jsou: Pohár národů dává vítězům skupin a po nich dalším nejlepším z každé ligy místo v baráži, pokud nepostoupí přímo. Jde jen o aktuální stav, mění se po každém kole.';
 }

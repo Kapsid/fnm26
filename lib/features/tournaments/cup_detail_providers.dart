@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
 import 'package:fnm/domain/services/competition/wc_playoffs.dart';
+import 'package:fnm/features/tournaments/euro_playoff_providers.dart';
 import 'package:fnm/features/tournaments/wc_playoff_providers.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/data/data_providers.dart';
@@ -71,6 +72,7 @@ class CupData {
     this.myNationIds = const {},
     this.wcHostBerths = const {},
     this.europePlayoffPaths = 0,
+    this.europeNationsCupCourse = const [],
     this.playoffs,
     this.pendingDraw,
     this.pendingKeys = const {},
@@ -81,6 +83,12 @@ class CupData {
   /// paths, so the qualifying tables paint the runners-up as play-off sides
   /// rather than a best-runners-up ladder.
   final int europePlayoffPaths;
+
+  /// The second Nations Cup's sides on course for Europe's play-off paths
+  /// (pot 4) as the tables stand, before the paths are drawn (see
+  /// `wcPlayoffCourse`); shown under Europe's qualifying groups. Empty once
+  /// drawn (the Play-off tab has the paths) and on any older calendar.
+  final List<int> europeNationsCupCourse;
 
   /// The World Championship's calendar2 play-offs, once drawn, or null.
   final WcPlayoffData? playoffs;
@@ -550,7 +558,18 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
       .where((g) => g.confederation == Confederation.europe)
       .length;
 
+  final nationsCupCourse = !cal2 || playoffs != null
+      ? const <int>[]
+      : await wcPlayoffCourse(
+          comp,
+          careerId: careerId,
+          cycle: career.cyclePointer,
+          rngSeed: career.rngSeed,
+          nations: nations,
+        );
+
   return CupData(
+    europeNationsCupCourse: nationsCupCourse,
     europePlayoffPaths: !cal2
         ? 0
         : UefaWcPlayoffs.pathCount(

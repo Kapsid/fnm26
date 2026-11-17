@@ -17509,9 +17509,6 @@ class AppLocalizationsKo extends AppLocalizations {
       '각 조 상위 2팀이 바로 진출합니다. 마지막 자리는 아직 진출하지 못한 네이션스컵 상위 팀들의 플레이오프로 결정됩니다. 현재 기준:';
 
   @override
-  String get ncEuroPlayoffLegend => '예선 실패 시 본선 플레이오프 진출권';
-
-  @override
   String get euroPlayoffToFinal => '결승 진출';
 
   @override
@@ -17598,9 +17595,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get regionalCupGroups => '조별리그';
 
   @override
-  String get ncWcPlayoffLegend => '예선 실패 시 세계선수권 플레이오프 진출권';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return '플레이오프라는 안전망: $finals';
   }
@@ -17618,12 +17612,6 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => '최하위: 하위 리그로 강등';
-
-  @override
-  String get playoffBadgeLetter => 'PO';
-
-  @override
-  String get playoffBadgeTooltip => '플레이오프 진출권: 예선이 실패해도 두 번째 기회';
 
   @override
   String get campaignIsleOfManTitle => '세 개의 다리';
@@ -17669,4 +17657,15 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => '세계 선수권 우승';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      '각 조 1위는 바로 진출합니다. 마지막 자리는 성적이 좋은 조 2위 팀(조 순위표에서 노란색)과 아직 진출하지 못한 네이션스컵 상위 조 1위 팀들의 플레이오프로 결정됩니다. 네이션스컵에서는 현재 기준:';
+
+  @override
+  String get playoffCourseLegend => '노란색: 현재 기준 플레이오프 진출권 (아래 설명 참조)';
+
+  @override
+  String get playoffCourseFooter =>
+      '이 팀들이 여기 있는 이유: 네이션스컵은 바로 진출하지 못한 조 1위 팀, 그다음 각 리그의 상위 팀에게 플레이오프 자리를 줍니다. 현재 기준일 뿐이며 매 라운드 후 바뀝니다.';
 }

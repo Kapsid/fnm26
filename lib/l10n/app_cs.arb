@@ -4519,7 +4519,6 @@
   "assistantMatchResult": "Zápas pod vedením asistenta",
   "euroPlayoffCourseTitle": "Baráž přes Pohár národů",
   "euroPlayoffCourseNote": "První dva z každé skupiny postupují přímo. O poslední místa se hraje baráž mezi nejlepšími týmy Poháru národů, které nepostoupily. Podle aktuálního stavu:",
-  "ncEuroPlayoffLegend": "Míří do baráže o závěrečný turnaj, kdyby nevyšla kvalifikace",
   "euroPlayoffToFinal": "Do finále",
   "euroPlayoffQualified": "Postup na turnaj",
   "playerOtherPositions": "Na jednotlivých postech",
@@ -4542,14 +4541,11 @@
   "regionalCupHosted": "Pořadatel: {host}",
   "regionalCupHomeAndAway": "Skupiny se hrají doma a venku",
   "regionalCupGroups": "SKUPINY",
-  "ncWcPlayoffLegend": "Míří do baráže o mistrovství světa, kdyby nevyšla kvalifikace",
   "newsNcPlayoffNetTitle": "Pojistka v baráži: {finals}",
   "newsNcPlayoffNetBody": "Podle tabulek soutěže {cup} máte zatím místo v baráži. Kdyby přímý postup nevyšel, máte druhou cestu na turnaj {finals}. Cesty baráže se losují po skončení kvalifikace.",
   "ncLegendWinnerUp": "Vítěz skupiny: postup do vyšší ligy",
   "ncLegendWinnerFinalsFour": "Vítěz skupiny: finálová čtyřka",
   "ncLegendLastDown": "Poslední: sestup do nižší ligy",
-  "playoffBadgeLetter": "B",
-  "playoffBadgeTooltip": "Míří do baráže: druhá šance, kdyby nevyšla kvalifikace",
   "campaignIsleOfManTitle": "Tři nohy",
   "campaignIsleOfManTwist": "Ostrov Man zaujímá místo Andorry v Evropě, na sto let",
   "campaignIsleOfManIntro": "Ostrov Man má vlastní fotbalový svaz, vlastní ligu i reprezentaci, která hraje na ostrovních hrách, ale v evropském ani světovém fotbale nemá místo. V tomto světě zaujal místo Andorry v Evropě a začíná blízko dna světového žebříčku: hráči při zaměstnání, malé hřiště v Douglasu a vítr od Irského moře v každém zápase. Máte sto let, tedy pětadvacet cyklů, abyste se dostali na mistrovství Evropy, pak na mistrovství světa a, pokud si troufnete snít, jedno z nich vyhráli.",
@@ -4563,5 +4559,8 @@
   "campaignCzechoslovakiaGoal": "Postoupit na mistrovství světa",
   "campaignStars1Czechoslovakia": "Postoupit na mistrovství světa",
   "campaignStars2Czechoslovakia": "Vyhrát mistrovství Evropy",
-  "campaignStars3Czechoslovakia": "Vyhrát mistrovství světa"
+  "campaignStars3Czechoslovakia": "Vyhrát mistrovství světa",
+  "wcPlayoffCourseNote": "Všichni vítězové skupin postupují přímo. O posledních místech rozhodne baráž: nejlepší týmy z druhých míst (žlutě ve skupinách) a nejlepší vítězové skupin Poháru národů, kteří nepostoupili. Z Poháru národů podle aktuálního stavu:",
+  "playoffCourseLegend": "Žlutě: míří do baráže, podle aktuálního stavu (vysvětlení níže)",
+  "playoffCourseFooter": "Proč tu jsou: Pohár národů dává vítězům skupin a po nich dalším nejlepším z každé ligy místo v baráži, pokud nepostoupí přímo. Jde jen o aktuální stav, mění se po každém kole."
 }

@@ -18434,10 +18434,6 @@ class AppLocalizationsHr extends AppLocalizations {
       'Prve dvije iz svake skupine prolaze izravno. Posljednja mjesta osvajaju se u doigravanju najboljih momčadi Nations Cupa koje nisu prošle. Trenutačno stanje:';
 
   @override
-  String get ncEuroPlayoffLegend =>
-      'Na putu prema doigravanju za završni turnir ako kvalifikacije ne uspiju';
-
-  @override
   String get euroPlayoffToFinal => 'U finale';
 
   @override
@@ -18524,10 +18520,6 @@ class AppLocalizationsHr extends AppLocalizations {
   String get regionalCupGroups => 'SKUPINE';
 
   @override
-  String get ncWcPlayoffLegend =>
-      'Na putu prema doigravanju za Svjetsko prvenstvo ako kvalifikacije ne uspiju';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'Doigravanje kao sigurnosna mreža: $finals';
   }
@@ -18546,13 +18538,6 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Posljednji: ispadanje u nižu ligu';
-
-  @override
-  String get playoffBadgeLetter => 'D';
-
-  @override
-  String get playoffBadgeTooltip =>
-      'Na putu prema doigravanju: druga prilika ako kvalifikacije ne uspiju';
 
   @override
   String get campaignIsleOfManTitle => 'Tri noge';
@@ -18602,4 +18587,16 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Osvoji Svjetsko prvenstvo';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      'Svaki pobjednik skupine prolazi izravno. Posljednja mjesta osvajaju se u doigravanju najboljih drugoplasiranih (žuto u skupinama) i najboljih pobjednika skupina Nations Cupa koji nisu prošli. Iz Nations Cupa, trenutačno stanje:';
+
+  @override
+  String get playoffCourseLegend =>
+      'Žuto: na putu prema doigravanju, prema trenutačnom stanju (vidi niže)';
+
+  @override
+  String get playoffCourseFooter =>
+      'Zašto su ovdje: Nations Cup daje pobjednicima skupina, a zatim sljedećima najboljima u svakoj ligi, mjesto u doigravanju ako ne prođu izravno. Ovo je samo trenutačno stanje i mijenja se nakon svakog kola.';
 }

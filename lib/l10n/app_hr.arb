@@ -4519,7 +4519,6 @@
   "assistantMatchResult": "Pomoćnikova utakmica",
   "euroPlayoffCourseTitle": "Doigravanje preko Nations Cupa",
   "euroPlayoffCourseNote": "Prve dvije iz svake skupine prolaze izravno. Posljednja mjesta osvajaju se u doigravanju najboljih momčadi Nations Cupa koje nisu prošle. Trenutačno stanje:",
-  "ncEuroPlayoffLegend": "Na putu prema doigravanju za završni turnir ako kvalifikacije ne uspiju",
   "euroPlayoffToFinal": "U finale",
   "euroPlayoffQualified": "Plasman",
   "playerOtherPositions": "Na svakoj poziciji",
@@ -4542,14 +4541,11 @@
   "regionalCupHosted": "Domaćin: {host}",
   "regionalCupHomeAndAway": "Skupine se igraju kod kuće i u gostima",
   "regionalCupGroups": "SKUPINE",
-  "ncWcPlayoffLegend": "Na putu prema doigravanju za Svjetsko prvenstvo ako kvalifikacije ne uspiju",
   "newsNcPlayoffNetTitle": "Doigravanje kao sigurnosna mreža: {finals}",
   "newsNcPlayoffNetBody": "Prema tablicama turnira {cup} zasad imate mjesto u doigravanju. Ako izravan plasman ne uspije, to je drugi put do turnira {finals}. Putovi doigravanja izvlače se nakon kvalifikacija.",
   "ncLegendWinnerUp": "Pobjednik skupine: ulazak u višu ligu",
   "ncLegendWinnerFinalsFour": "Pobjednik skupine: u završnicu četiri momčadi",
   "ncLegendLastDown": "Posljednji: ispadanje u nižu ligu",
-  "playoffBadgeLetter": "D",
-  "playoffBadgeTooltip": "Na putu prema doigravanju: druga prilika ako kvalifikacije ne uspiju",
   "campaignIsleOfManTitle": "Tri noge",
   "campaignIsleOfManTwist": "Otok Man zauzima mjesto Andore u Europi, na sto godina",
   "campaignIsleOfManIntro": "Otok Man ima vlastiti nogometni savez, vlastitu ligu i reprezentaciju koja igra na Otočkim igrama, ali nema mjesta ni u europskom ni u svjetskom nogometu. U ovom svijetu zauzeo je mjesto Andore u Europi i kreće blizu dna svjetske ljestvice: poluprofesionalni igrači, malo igralište u Douglasu i vjetar s Irskog mora na svakoj utakmici. Imaš sto godina, dvadeset i pet ciklusa, da stigneš do Europskog prvenstva, zatim do Svjetskog prvenstva i, ako se usudiš sanjati, osvojiš jedno od njih.",
@@ -4563,5 +4559,8 @@
   "campaignCzechoslovakiaGoal": "Kvalificiraj se na Svjetsko prvenstvo",
   "campaignStars1Czechoslovakia": "Kvalificiraj se na Svjetsko prvenstvo",
   "campaignStars2Czechoslovakia": "Osvoji Europsko prvenstvo",
-  "campaignStars3Czechoslovakia": "Osvoji Svjetsko prvenstvo"
+  "campaignStars3Czechoslovakia": "Osvoji Svjetsko prvenstvo",
+  "wcPlayoffCourseNote": "Svaki pobjednik skupine prolazi izravno. Posljednja mjesta osvajaju se u doigravanju najboljih drugoplasiranih (žuto u skupinama) i najboljih pobjednika skupina Nations Cupa koji nisu prošli. Iz Nations Cupa, trenutačno stanje:",
+  "playoffCourseLegend": "Žuto: na putu prema doigravanju, prema trenutačnom stanju (vidi niže)",
+  "playoffCourseFooter": "Zašto su ovdje: Nations Cup daje pobjednicima skupina, a zatim sljedećima najboljima u svakoj ligi, mjesto u doigravanju ako ne prođu izravno. Ovo je samo trenutačno stanje i mijenja se nakon svakog kola."
 }

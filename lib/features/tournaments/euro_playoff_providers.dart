@@ -194,8 +194,7 @@ Future<({List<PlayoffPath> paths, bool drawn})> euroPlayoffCourse(
   );
 }
 
-/// Every side of [euroPlayoffCourse]'s paths: the first Nations Cup's
-/// tables mark them (yellow).
+/// Every side of [euroPlayoffCourse]'s paths.
 Future<Set<int>> euroPlayoffMarks(
   CompetitionRepository comp, {
   required int careerId,
@@ -214,11 +213,11 @@ Future<Set<int>> euroPlayoffMarks(
 };
 
 /// The sides of the cycle's SECOND Nations Cup on course for the World
-/// Championship play-off paths (pot 4, see [UefaWcPlayoffs.entrants]): once
-/// drawn, the drawn ones; before, the ones the tables would give now (see
-/// [UefaWcPlayoffs.onCourseNationsCup]). Empty on any older calendar or
-/// before the second edition has a table. Its tables mark them (yellow).
-Future<Set<int>> wcPlayoffMarks(
+/// Championship play-off paths (pot 4, see [UefaWcPlayoffs.entrants]), as
+/// the tables give them now (see [UefaWcPlayoffs.onCourseNationsCup]), in
+/// the cup's order; once the paths are drawn, the drawn pot 4. Empty on any
+/// older calendar or before the second edition has a table.
+Future<List<int>> wcPlayoffCourse(
   CompetitionRepository comp, {
   required int careerId,
   required int cycle,
@@ -226,7 +225,7 @@ Future<Set<int>> wcPlayoffMarks(
   required Map<int, Nation> nations,
 }) async {
   const europe = Confederation.europe;
-  if (!await isCalendar2(comp, careerId, cycle)) return const {};
+  if (!await isCalendar2(comp, careerId, cycle)) return const [];
   final drawn = EuroPlayoffs.fromSlots(
     await comp.drawSlots(
       careerId,
@@ -236,10 +235,10 @@ Future<Set<int>> wcPlayoffMarks(
     ),
   );
   if (drawn.isNotEmpty) {
-    return {
+    return [
       for (final p in drawn)
         if (p.seeds.length == 4) p.seeds[3],
-    };
+    ];
   }
   final tables = [
     for (final t in await comp.tournamentGroupTables(
@@ -250,7 +249,7 @@ Future<Set<int>> wcPlayoffMarks(
     ))
       (name: t.name, standings: t.standings),
   ];
-  if (tables.isEmpty) return const {};
+  if (tables.isEmpty) return const [];
   final groups = [
     for (final t in await comp.tournamentGroupTables(
       careerId,
@@ -277,8 +276,23 @@ Future<Set<int>> wcPlayoffMarks(
     hosts: hosts,
     europeCount: fallback.length,
     fallback: fallback,
-  ).toSet();
+  );
 }
+
+/// Every side of [wcPlayoffCourse].
+Future<Set<int>> wcPlayoffMarks(
+  CompetitionRepository comp, {
+  required int careerId,
+  required int cycle,
+  required int rngSeed,
+  required Map<int, Nation> nations,
+}) async => (await wcPlayoffCourse(
+  comp,
+  careerId: careerId,
+  cycle: cycle,
+  rngSeed: rngSeed,
+  nations: nations,
+)).toSet();
 
 /// Whether Europe's Nations Cup tables on show are its FIRST edition's (the
 /// one the play-off paths are read from): the second has no tables yet.

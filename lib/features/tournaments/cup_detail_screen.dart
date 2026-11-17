@@ -24,6 +24,8 @@ import 'package:fnm/features/tournaments/all_time_scorers_legend.dart';
 import 'package:fnm/features/tournaments/best_thirds.dart';
 import 'package:fnm/features/tournaments/confed_playoffs_view.dart';
 import 'package:fnm/features/tournaments/cup_detail_providers.dart';
+import 'package:fnm/features/tournaments/continental_detail_screen.dart'
+    show PlayoffCourseFooter, PlayoffStripeLegend;
 import 'package:fnm/features/tournaments/euro_playoff_draw_screen.dart';
 import 'package:fnm/features/tournaments/intercontinental_playoff_bracket.dart';
 import 'package:fnm/features/tournaments/wc_playoff_draw_screen.dart';
@@ -200,6 +202,7 @@ List<Widget> _cupTabViews(
         name: name,
         hostBerths: data.wcHostBerths,
         europePlayoffPaths: data.europePlayoffPaths,
+        nationsCupCourse: data.europeNationsCupCourse,
       ),
     // The intercontinental play-off — its own tab, shown as a
     // knockout bracket for the last two finals berths.
@@ -388,10 +391,15 @@ class _Qualifying extends StatefulWidget {
     this.grid = false,
     this.hostBerths = const {},
     this.europePlayoffPaths = 0,
+    this.nationsCupCourse = const [],
   });
 
   final int careerId;
   final List<ConfederationGroupTable> groups;
+
+  /// The Nations Cup's sides on course for Europe's paths (see
+  /// `CupData.europeNationsCupCourse`).
+  final List<int> nationsCupCourse;
 
   /// Europe's play-off paths on the calendar2 rhythm (see
   /// `CupData.europePlayoffPaths`); 0 otherwise.
@@ -510,12 +518,17 @@ class _QualifyingState extends State<_Qualifying> {
     // Who is on course for the intercontinental play-off (yellow), from the
     // real format and the live cross-group ladder, never a fixed position.
     // Europe's runners-up on course for its own paths, on calendar2.
-    final playoff = GroupAdvancement.worldCupPlayoffNations(
-      conf,
-      [for (final g in byConf[conf]!) g.standings],
-      hosts: hosts,
-      playoffPaths: paths,
-    );
+    // And the Nations Cup's sides on course for Europe's paths (pot 4),
+    // wherever they stand in their qualifying group.
+    final playoff = {
+      ...GroupAdvancement.worldCupPlayoffNations(
+        conf,
+        [for (final g in byConf[conf]!) g.standings],
+        hosts: hosts,
+        playoffPaths: paths,
+      ),
+      if (paths > 0) ...widget.nationsCupCourse,
+    };
     final cards = [
       for (final g in _mineFirst(byConf[conf]!, widget.playerNationId))
         _GroupCard(
@@ -564,6 +577,10 @@ class _QualifyingState extends State<_Qualifying> {
               ),
             ),
           ),
+          if (conf == Confederation.europe &&
+              widget.europePlayoffPaths > 0 &&
+              widget.nationsCupCourse.isNotEmpty)
+            const PlayoffStripeLegend(),
           ..._groupCards(conf, byConf),
           // The cross-group ladder for the CONTESTED position — usually the
           // second-placed teams ranked against each other, but the group
@@ -572,9 +589,22 @@ class _QualifyingState extends State<_Qualifying> {
           // reads.
           () {
             // Europe's paths (calendar2) are no ladder: every runner-up
-            // painted for them is in the group cards.
+            // painted for them is in the group cards. The Nations Cup's
+            // sides for them are listed here, with the tournament they lead
+            // to rather than in the cup's own tables.
             if (conf == Confederation.europe && widget.europePlayoffPaths > 0) {
-              return const SizedBox.shrink();
+              if (widget.nationsCupCourse.isEmpty) {
+                return const SizedBox.shrink();
+              }
+              return Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                child: _NationsCupCourseCard(
+                  nationIds: widget.nationsCupCourse,
+                  playerNationId: widget.playerNationId,
+                  code: widget.code,
+                  name: widget.name,
+                ),
+              );
             }
             final ladder = _contentionLadder(
               conf,
@@ -1474,6 +1504,75 @@ class _Soon extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Under Europe's qualifying groups on the calendar2 rhythm: the Nations
+/// Cup's sides on course for pot 4 of the play-off paths, as things stand.
+class _NationsCupCourseCard extends StatelessWidget {
+  const _NationsCupCourseCard({
+    required this.nationIds,
+    required this.playerNationId,
+    required this.code,
+    required this.name,
+  });
+
+  final List<int> nationIds;
+  final int playerNationId;
+  final String Function(int) code;
+  final String Function(int) name;
+
+  static const Key cardKey = Key('cup.nationsCupCourse');
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return AppCard(
+      key: cardKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l.euroPlayoffCourseTitle.capsIn(l.localeName),
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.primary,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            l.wcPlayoffCourseNote,
+            style: AppTypography.bodySmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          for (final id in nationIds)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+              child: Row(
+                children: [
+                  FlagDisc(code(id), size: 18),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      name(id),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.bodySmall.copyWith(
+                        fontWeight: id == playerNationId
+                            ? FontWeight.w800
+                            : FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          const PlayoffCourseFooter(),
+        ],
       ),
     );
   }

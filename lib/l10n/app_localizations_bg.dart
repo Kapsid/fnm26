@@ -18178,10 +18178,6 @@ class AppLocalizationsBg extends AppLocalizations {
       'Първите два от всяка група се класират директно. Последните места се разиграват в плейоф между най-добрите отбори от Nations Cup, които не са се класирали. Към момента:';
 
   @override
-  String get ncEuroPlayoffLegend =>
-      'По пътя към плейофа за финалите, ако квалификациите се провалят';
-
-  @override
   String get euroPlayoffToFinal => 'Към финала';
 
   @override
@@ -18268,10 +18264,6 @@ class AppLocalizationsBg extends AppLocalizations {
   String get regionalCupGroups => 'ГРУПИ';
 
   @override
-  String get ncWcPlayoffLegend =>
-      'По пътя към плейофа за Световното първенство, ако квалификациите се провалят';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'Плейофът като предпазна мрежа: $finals';
   }
@@ -18291,13 +18283,6 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Последен: изпада в по-долна лига';
-
-  @override
-  String get playoffBadgeLetter => 'П';
-
-  @override
-  String get playoffBadgeTooltip =>
-      'По пътя към плейофа: втори шанс, ако квалификациите се провалят';
 
   @override
   String get campaignIsleOfManTitle => 'Трите крака';
@@ -18346,4 +18331,16 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Спечели Световното първенство';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      'Всеки победител в група се класира директно. Последните места се разиграват в плейоф между най-добрите втори (в жълто в групите) и най-добрите победители в групи от Nations Cup, които не са се класирали. От Nations Cup, към момента:';
+
+  @override
+  String get playoffCourseLegend =>
+      'Жълто: по пътя към плейофа, към момента (вижте по-долу)';
+
+  @override
+  String get playoffCourseFooter =>
+      'Защо са тук: Nations Cup дава на победителите в групите, а след тях на следващите най-добри от всяка лига, място в плейофа, ако не се класират директно. Това е само текущото положение и се променя след всеки кръг.';
 }

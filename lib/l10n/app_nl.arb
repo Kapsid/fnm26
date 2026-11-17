@@ -4519,7 +4519,6 @@
   "assistantMatchResult": "De wedstrijd van de assistent",
   "euroPlayoffCourseTitle": "Play-offs via de Nations Cup",
   "euroPlayoffCourseNote": "De nummers een en twee van elke groep plaatsen zich direct. De laatste plaatsen gaan via play-offs naar de beste Nations Cup-landen die nog niet geplaatst zijn. Zoals het nu staat:",
-  "ncEuroPlayoffLegend": "Op koers voor de play-offs voor het eindtoernooi als de kwalificatie mislukt",
   "euroPlayoffToFinal": "Naar de finale",
   "euroPlayoffQualified": "Geplaatst",
   "playerOtherPositions": "Op elke positie",
@@ -4542,14 +4541,11 @@
   "regionalCupHosted": "Gastland: {host}",
   "regionalCupHomeAndAway": "Groepen thuis en uit gespeeld",
   "regionalCupGroups": "GROEPEN",
-  "ncWcPlayoffLegend": "Op koers voor de play-offs voor het Wereldkampioenschap als de kwalificatie mislukt",
   "newsNcPlayoffNetTitle": "Een vangnet via de play-offs: {finals}",
   "newsNcPlayoffNetBody": "Volgens de standen van het toernooi {cup} heb je voorlopig een plek in de play-offs. Lukt directe kwalificatie niet, dan is dat een tweede weg naar het toernooi {finals}. De play-offroutes worden na de kwalificatie geloot.",
   "ncLegendWinnerUp": "Groepswinnaar: promotie naar een hogere league",
   "ncLegendWinnerFinalsFour": "Groepswinnaar: naar de finaleronde met vier",
   "ncLegendLastDown": "Laatste: degradatie naar een lagere league",
-  "playoffBadgeLetter": "P",
-  "playoffBadgeTooltip": "Op koers voor de play-offs: een tweede kans als de kwalificatie mislukt",
   "campaignIsleOfManTitle": "De drie benen",
   "campaignIsleOfManTwist": "Man neemt de plaats van Andorra in Europa in, voor honderd jaar",
   "campaignIsleOfManIntro": "Man heeft een eigen voetbalbond, een eigen competitie en een nationaal elftal dat op de Eilandspelen speelt, maar geen plek in het Europese of het wereldvoetbal. In deze wereld heeft het de plaats van Andorra in Europa ingenomen en begint het vlak bij de onderkant van de wereldranglijst: parttime spelers, een klein stadion in Douglas en de wind van de Ierse Zee in elke wedstrijd. Je hebt honderd jaar, vijfentwintig cycli, om een Europees Kampioenschap te halen, daarna een Wereldkampioenschap en, als je durft te dromen, er een te winnen.",
@@ -4563,5 +4559,8 @@
   "campaignCzechoslovakiaGoal": "Plaats je voor een Wereldkampioenschap",
   "campaignStars1Czechoslovakia": "Plaats je voor een Wereldkampioenschap",
   "campaignStars2Czechoslovakia": "Win het Europees Kampioenschap",
-  "campaignStars3Czechoslovakia": "Win het Wereldkampioenschap"
+  "campaignStars3Czechoslovakia": "Win het Wereldkampioenschap",
+  "wcPlayoffCourseNote": "Elke groepswinnaar plaatst zich direct. De laatste plaatsen gaan via play-offs naar de beste nummers twee (geel in de groepen) en de beste groepswinnaars van de Nations Cup die nog niet geplaatst zijn. Uit de Nations Cup, zoals het nu staat:",
+  "playoffCourseLegend": "Geel: op koers voor de play-offs, zoals het nu staat (zie onder)",
+  "playoffCourseFooter": "Waarom ze hier staan: de Nations Cup geeft zijn groepswinnaars, en daarna de volgende besten van elke league, een plek in de play-offs als ze zich niet direct plaatsen. Dit is alleen de huidige stand en verandert na elke speelronde."
 }

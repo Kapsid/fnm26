@@ -18172,10 +18172,6 @@ class AppLocalizationsIt extends AppLocalizations {
       'Le prime due di ogni girone si qualificano direttamente. Gli ultimi posti si assegnano negli spareggi tra le migliori della Coppa delle Nazioni non qualificate. Allo stato attuale:';
 
   @override
-  String get ncEuroPlayoffLegend =>
-      'In corsa per gli spareggi della fase finale se le qualificazioni vanno male';
-
-  @override
   String get euroPlayoffToFinal => 'In finale';
 
   @override
@@ -18263,10 +18259,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get regionalCupGroups => 'GIRONI';
 
   @override
-  String get ncWcPlayoffLegend =>
-      'In corsa per gli spareggi del Campionato del mondo se le qualificazioni vanno male';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'Gli spareggi come rete di sicurezza: $finals';
   }
@@ -18286,13 +18278,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Ultimo: retrocesso nella lega inferiore';
-
-  @override
-  String get playoffBadgeLetter => 'S';
-
-  @override
-  String get playoffBadgeTooltip =>
-      'In corsa per gli spareggi: una seconda possibilità se le qualificazioni vanno male';
 
   @override
   String get campaignIsleOfManTitle => 'Le tre gambe';
@@ -18344,4 +18329,16 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Vincere il Campionato del mondo';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      'Ogni vincitrice di girone si qualifica direttamente. Gli ultimi posti si assegnano negli spareggi tra le migliori seconde (in giallo nei gironi) e le migliori vincitrici di girone della Coppa delle Nazioni non qualificate. Dalla Coppa delle Nazioni, allo stato attuale:';
+
+  @override
+  String get playoffCourseLegend =>
+      'Giallo: in corsa per gli spareggi, allo stato attuale (vedi sotto)';
+
+  @override
+  String get playoffCourseFooter =>
+      'Perché sono qui: la Coppa delle Nazioni dà alle vincitrici dei gironi, e poi alle migliori successive di ogni lega, un posto negli spareggi se non si qualificano direttamente. È solo la situazione attuale e cambia dopo ogni giornata.';
 }

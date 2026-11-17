@@ -18167,10 +18167,6 @@ class AppLocalizationsFi extends AppLocalizations {
       'Lohkojen kaksi parasta pääsevät suoraan. Viimeiset paikat ratkaistaan jatkokarsinnassa, jossa pelaavat Nations Cupin parhaat, jotka eivät ole jo selvinneet. Tilanne nyt:';
 
   @override
-  String get ncEuroPlayoffLegend =>
-      'Matkalla lopputurnauksen jatkokarsintaan, jos karsinnat menevät pieleen';
-
-  @override
   String get euroPlayoffToFinal => 'Finaaliin';
 
   @override
@@ -18259,10 +18255,6 @@ class AppLocalizationsFi extends AppLocalizations {
   String get regionalCupGroups => 'LOHKOT';
 
   @override
-  String get ncWcPlayoffLegend =>
-      'Matkalla MM-kisojen jatkokarsintaan, jos karsinnat menevät pieleen';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'Jatkokarsinta varmistuksena: $finals';
   }
@@ -18281,13 +18273,6 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Viimeinen: putoaminen alempaan liigaan';
-
-  @override
-  String get playoffBadgeLetter => 'J';
-
-  @override
-  String get playoffBadgeTooltip =>
-      'Matkalla jatkokarsintaan: toinen mahdollisuus, jos karsinnat menevät pieleen';
 
   @override
   String get campaignIsleOfManTitle => 'Kolme jalkaa';
@@ -18334,4 +18319,16 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Voita MM-kisat';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      'Jokainen lohkovoittaja pääsee suoraan. Viimeiset paikat ratkaistaan jatkokarsinnassa, jossa pelaavat parhaat lohkokakkoset (keltaisella lohkoissa) ja Nations Cupin parhaat lohkovoittajat, jotka eivät ole jo selvinneet. Nations Cupista, tilanne nyt:';
+
+  @override
+  String get playoffCourseLegend =>
+      'Keltainen: matkalla jatkokarsintaan, tämänhetkisen tilanteen mukaan (ks. alla)';
+
+  @override
+  String get playoffCourseFooter =>
+      'Miksi he ovat tässä: Nations Cup antaa lohkovoittajilleen ja sitten kunkin liigan seuraaville parhaille paikan jatkokarsinnassa, jos he eivät pääse suoraan. Tämä on vain nykytilanne, ja se muuttuu jokaisen kierroksen jälkeen.';
 }

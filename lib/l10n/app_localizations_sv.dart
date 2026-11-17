@@ -18078,10 +18078,6 @@ class AppLocalizationsSv extends AppLocalizations {
       'De två bästa i varje grupp går direkt vidare. De sista platserna går till playoff för Nations Cups bästa lag som inte är klara. Som det ser ut nu:';
 
   @override
-  String get ncEuroPlayoffLegend =>
-      'På väg mot playoff till slutspelet om kvalet misslyckas';
-
-  @override
   String get euroPlayoffToFinal => 'Till finalen';
 
   @override
@@ -18168,10 +18164,6 @@ class AppLocalizationsSv extends AppLocalizations {
   String get regionalCupGroups => 'GRUPPER';
 
   @override
-  String get ncWcPlayoffLegend =>
-      'På väg mot playoff till Världsmästerskapet om kvalet misslyckas';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'Playoff som skyddsnät: $finals';
   }
@@ -18190,13 +18182,6 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Sist: flyttas ner en liga';
-
-  @override
-  String get playoffBadgeLetter => 'P';
-
-  @override
-  String get playoffBadgeTooltip =>
-      'På väg mot playoff: en andra chans om kvalet misslyckas';
 
   @override
   String get campaignIsleOfManTitle => 'De tre benen';
@@ -18246,4 +18231,16 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Vinn Världsmästerskapet';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      'Varje gruppvinnare går direkt vidare. De sista platserna går till playoff för de bästa grupptvåorna (gula i grupperna) och Nations Cups bästa gruppvinnare som inte är klara. Från Nations Cup, som det ser ut nu:';
+
+  @override
+  String get playoffCourseLegend =>
+      'Gul: på väg mot playoff, som det ser ut nu (se nedan)';
+
+  @override
+  String get playoffCourseFooter =>
+      'Varför de är här: Nations Cup ger sina gruppvinnare, och sedan de näst bästa i varje liga, en playoffplats om de inte går vidare direkt. Det här är bara läget just nu och ändras efter varje omgång.';
 }

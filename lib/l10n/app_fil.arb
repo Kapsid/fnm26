@@ -4519,7 +4519,6 @@
   "assistantMatchResult": "Ang laro ng assistant",
   "euroPlayoffCourseTitle": "Play-off sa pamamagitan ng Nations Cup",
   "euroPlayoffCourseNote": "Diretsong pasok ang nangungunang dalawa sa bawat grupo. Ang huling mga puwesto ay pag-aagawan sa play-off ng pinakamahuhusay sa Nations Cup na hindi pa pasok. Sa ngayon:",
-  "ncEuroPlayoffLegend": "Patungo sa play-off para sa finals kung pumalya ang qualifying",
   "euroPlayoffToFinal": "Sa final",
   "euroPlayoffQualified": "Pasok na",
   "playerOtherPositions": "Sa bawat posisyon",
@@ -4542,14 +4541,11 @@
   "regionalCupHosted": "Host: {host}",
   "regionalCupHomeAndAway": "Ang grupo ay nilalaro sa home at away",
   "regionalCupGroups": "MGA GROUP",
-  "ncWcPlayoffLegend": "Patungo sa play-off ng World Championship kung pumalya ang qualifying",
   "newsNcPlayoffNetTitle": "Play-off bilang safety net: {finals}",
   "newsNcPlayoffNetBody": "Ayon sa mga talaan ng {cup}, may puwesto ka ngayon sa play-off. Kung hindi direktang makapasok, ito ang ikalawang daan papunta sa {finals}. Binubunot ang mga path pagkatapos ng qualifying.",
   "ncLegendWinnerUp": "Nanalo sa grupo: aakyat ng liga",
   "ncLegendWinnerFinalsFour": "Nanalo sa grupo: pasok sa Finals Four",
   "ncLegendLastDown": "Huli: bababa ng liga",
-  "playoffBadgeLetter": "P",
-  "playoffBadgeTooltip": "Patungo sa play-off: pangalawang tsansa kung pumalya ang qualifying",
   "campaignIsleOfManTitle": "Ang Tatlong Binti",
   "campaignIsleOfManTwist": "Pumalit ang Isle of Man sa puwesto ng Andorra sa Europa, sa loob ng isandaang taon",
   "campaignIsleOfManIntro": "May sariling football association, sariling liga at pambansang koponang naglalaro sa Island Games ang Isle of Man, pero wala silang puwesto sa football ng Europa o ng mundo. Sa mundong ito, pumalit sila sa puwesto ng Andorra sa Europa, at nagsisimula sila malapit sa ilalim ng world ranking: mga part-time na manlalaro, isang maliit na istadyum sa Douglas, at ang hangin ng Irish Sea sa bawat laban. May isandaang taon ka, dalawampu't limang cycle, para makarating sa Kampeonato ng Europa, pagkatapos sa Kampeonato ng Mundo at, kung maglalakas-loob kang mangarap, ipanalo ang isa sa mga ito.",
@@ -4563,5 +4559,8 @@
   "campaignCzechoslovakiaGoal": "Makapasok sa isang Kampeonato ng Mundo",
   "campaignStars1Czechoslovakia": "Makapasok sa isang Kampeonato ng Mundo",
   "campaignStars2Czechoslovakia": "Ipanalo ang Kampeonato ng Europa",
-  "campaignStars3Czechoslovakia": "Ipanalo ang Kampeonato ng Mundo"
+  "campaignStars3Czechoslovakia": "Ipanalo ang Kampeonato ng Mundo",
+  "wcPlayoffCourseNote": "Diretsong pasok ang bawat nanalo sa grupo. Ang huling mga puwesto ay pag-aagawan sa play-off ng pinakamahuhusay na pumangalawa (dilaw sa mga grupo) at ng pinakamahuhusay na nanalo sa grupo sa Nations Cup na hindi pa pasok. Mula sa Nations Cup, sa ngayon:",
+  "playoffCourseLegend": "Dilaw: patungo sa play-off, sa ngayon (tingnan sa ibaba)",
+  "playoffCourseFooter": "Bakit sila narito: binibigyan ng Nations Cup ng puwesto sa play-off ang mga nanalo sa grupo nito, saka ang mga susunod na pinakamahuhusay sa bawat liga, kung hindi sila diretsong makakapasok. Ito ay lagay lamang ngayon at nagbabago pagkatapos ng bawat round."
 }

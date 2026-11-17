@@ -4519,7 +4519,6 @@
   "assistantMatchResult": "El partido del asistente",
   "euroPlayoffCourseTitle": "Repesca por la Copa de las Naciones",
   "euroPlayoffCourseNote": "Los dos primeros de cada grupo se clasifican directamente. Las últimas plazas se juegan en una repesca entre los mejores de la Copa de las Naciones que no se clasificaron. Tal como está:",
-  "ncEuroPlayoffLegend": "Camino de la repesca para la fase final si falla la clasificación",
   "euroPlayoffToFinal": "A la final",
   "euroPlayoffQualified": "Clasificado",
   "playerOtherPositions": "En cada posición",
@@ -4542,14 +4541,11 @@
   "regionalCupHosted": "Anfitrión: {host}",
   "regionalCupHomeAndAway": "Grupos a ida y vuelta, en casa y fuera",
   "regionalCupGroups": "GRUPOS",
-  "ncWcPlayoffLegend": "Camino de la repesca del Campeonato del Mundo si falla la clasificación",
   "newsNcPlayoffNetTitle": "La repesca como red de seguridad: {finals}",
   "newsNcPlayoffNetBody": "Según las clasificaciones del torneo {cup}, de momento tienes plaza en la repesca. Si no te clasificas directamente, tendrás un segundo camino hacia el torneo {finals}. Los cruces se sortean al terminar la clasificación.",
   "ncLegendWinnerUp": "Ganador del grupo: asciende de liga",
   "ncLegendWinnerFinalsFour": "Ganador del grupo: a la fase final a cuatro",
   "ncLegendLastDown": "Último: desciende de liga",
-  "playoffBadgeLetter": "R",
-  "playoffBadgeTooltip": "Camino de la repesca: una segunda oportunidad si falla la clasificación",
   "campaignIsleOfManTitle": "Las tres piernas",
   "campaignIsleOfManTwist": "La Isla de Man ocupa el lugar de Andorra en Europa, durante cien años",
   "campaignIsleOfManIntro": "La Isla de Man tiene su propia federación de fútbol, su propia liga y una selección que juega los Juegos de las Islas, pero ningún sitio en el fútbol europeo ni en el fútbol mundial. En este mundo ha ocupado el lugar de Andorra en Europa y empieza cerca de lo más bajo del ranking mundial: jugadores a tiempo parcial, un estadio pequeño en Douglas y el viento del mar de Irlanda en cada partido. Tienes cien años, veinticinco ciclos, para llegar a un Campeonato de Europa, después a un Campeonato del Mundo y, si te atreves a soñar, ganar uno de ellos.",
@@ -4563,5 +4559,8 @@
   "campaignCzechoslovakiaGoal": "Clasificarse para un Campeonato del Mundo",
   "campaignStars1Czechoslovakia": "Clasificarse para un Campeonato del Mundo",
   "campaignStars2Czechoslovakia": "Ganar el Campeonato de Europa",
-  "campaignStars3Czechoslovakia": "Ganar el Campeonato del Mundo"
+  "campaignStars3Czechoslovakia": "Ganar el Campeonato del Mundo",
+  "wcPlayoffCourseNote": "Cada ganador de grupo se clasifica directamente. Las últimas plazas se juegan en una repesca entre los mejores segundos (en amarillo en los grupos) y los mejores ganadores de grupo de la Copa de las Naciones que no se clasificaron. De la Copa de las Naciones, tal como está:",
+  "playoffCourseLegend": "Amarillo: camino de la repesca, tal como está (ver abajo)",
+  "playoffCourseFooter": "Por qué están aquí: la Copa de las Naciones da a sus ganadores de grupo, y después a los siguientes mejores de cada liga, una plaza en la repesca si no se clasifican directamente. Es solo la situación actual y cambia tras cada jornada."
 }

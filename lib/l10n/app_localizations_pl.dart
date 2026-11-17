@@ -18283,10 +18283,6 @@ class AppLocalizationsPl extends AppLocalizations {
       'Dwie najlepsze drużyny z każdej grupy awansują bezpośrednio. O ostatnie miejsca grają w barażach najlepsze drużyny Pucharu Narodów, które nie awansowały. Na tę chwilę:';
 
   @override
-  String get ncEuroPlayoffLegend =>
-      'Na drodze do baraży o turniej finałowy, gdyby eliminacje nie wyszły';
-
-  @override
   String get euroPlayoffToFinal => 'Do finału';
 
   @override
@@ -18375,10 +18371,6 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionalCupGroups => 'GRUPY';
 
   @override
-  String get ncWcPlayoffLegend =>
-      'Na drodze do baraży o mistrzostwa świata, gdyby eliminacje nie wyszły';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'Baraże jako zabezpieczenie: $finals';
   }
@@ -18397,13 +18389,6 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Ostatni: spadek do niższej ligi';
-
-  @override
-  String get playoffBadgeLetter => 'B';
-
-  @override
-  String get playoffBadgeTooltip =>
-      'Na drodze do baraży: druga szansa, gdyby eliminacje nie wyszły';
 
   @override
   String get campaignIsleOfManTitle => 'Trzy nogi';
@@ -18451,4 +18436,16 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Wygrać Mistrzostwa Świata';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      'Każdy zwycięzca grupy awansuje bezpośrednio. O ostatnie miejsca grają w barażach najlepsze drużyny z drugich miejsc (na żółto w grupach) i najlepsi zwycięzcy grup Pucharu Narodów, którzy nie awansowali. Z Pucharu Narodów, na tę chwilę:';
+
+  @override
+  String get playoffCourseLegend =>
+      'Żółty: na drodze do baraży, na tę chwilę (wyjaśnienie niżej)';
+
+  @override
+  String get playoffCourseFooter =>
+      'Dlaczego tu są: Puchar Narodów daje zwycięzcom grup, a potem kolejnym najlepszym z każdej ligi, miejsce w barażach, jeśli nie awansują bezpośrednio. To tylko obecny stan, zmienia się po każdej kolejce.';
 }

@@ -4519,7 +4519,6 @@
   "assistantMatchResult": "어시스턴트의 경기",
   "euroPlayoffCourseTitle": "네이션스컵을 통한 플레이오프",
   "euroPlayoffCourseNote": "각 조 상위 2팀이 바로 진출합니다. 마지막 자리는 아직 진출하지 못한 네이션스컵 상위 팀들의 플레이오프로 결정됩니다. 현재 기준:",
-  "ncEuroPlayoffLegend": "예선 실패 시 본선 플레이오프 진출권",
   "euroPlayoffToFinal": "결승 진출",
   "euroPlayoffQualified": "본선 진출",
   "playerOtherPositions": "포지션별 능력치",
@@ -4542,14 +4541,11 @@
   "regionalCupHosted": "개최국: {host}",
   "regionalCupHomeAndAway": "조별리그는 홈 앤드 어웨이로 진행",
   "regionalCupGroups": "조별리그",
-  "ncWcPlayoffLegend": "예선 실패 시 세계선수권 플레이오프 진출권",
   "newsNcPlayoffNetTitle": "플레이오프라는 안전망: {finals}",
   "newsNcPlayoffNetBody": "{cup} 순위표 기준으로 현재 플레이오프 진출권에 있습니다. 직행에 실패해도 {finals}로 가는 두 번째 길이 있습니다. 플레이오프 대진은 예선이 끝난 뒤 추첨합니다.",
   "ncLegendWinnerUp": "조 1위: 상위 리그로 승격",
   "ncLegendWinnerFinalsFour": "조 1위: 파이널 포 진출",
   "ncLegendLastDown": "최하위: 하위 리그로 강등",
-  "playoffBadgeLetter": "PO",
-  "playoffBadgeTooltip": "플레이오프 진출권: 예선이 실패해도 두 번째 기회",
   "campaignIsleOfManTitle": "세 개의 다리",
   "campaignIsleOfManTwist": "맨섬이 유럽에서 안도라의 자리를 대신한다, 100년 동안",
   "campaignIsleOfManIntro": "맨섬에는 자체 축구협회와 리그, 그리고 아일랜드 게임에 나서는 대표팀이 있지만, 유럽 축구에도 세계 축구에도 자리가 없습니다. 이 세계에서 맨섬은 유럽에서 안도라의 자리를 대신하며, 세계 랭킹 바닥 근처에서 시작합니다: 생업을 병행하는 선수, 더글러스의 작은 경기장, 매 경기 불어오는 아이리시해의 바람. 100년, 25번의 대회 주기 안에 유럽 선수권, 이어서 세계 선수권 본선에 오르고, 감히 꿈꾼다면 그중 하나를 우승하세요.",
@@ -4563,5 +4559,8 @@
   "campaignCzechoslovakiaGoal": "세계 선수권 본선 진출",
   "campaignStars1Czechoslovakia": "세계 선수권 본선 진출",
   "campaignStars2Czechoslovakia": "유럽 선수권 우승",
-  "campaignStars3Czechoslovakia": "세계 선수권 우승"
+  "campaignStars3Czechoslovakia": "세계 선수권 우승",
+  "wcPlayoffCourseNote": "각 조 1위는 바로 진출합니다. 마지막 자리는 성적이 좋은 조 2위 팀(조 순위표에서 노란색)과 아직 진출하지 못한 네이션스컵 상위 조 1위 팀들의 플레이오프로 결정됩니다. 네이션스컵에서는 현재 기준:",
+  "playoffCourseLegend": "노란색: 현재 기준 플레이오프 진출권 (아래 설명 참조)",
+  "playoffCourseFooter": "이 팀들이 여기 있는 이유: 네이션스컵은 바로 진출하지 못한 조 1위 팀, 그다음 각 리그의 상위 팀에게 플레이오프 자리를 줍니다. 현재 기준일 뿐이며 매 라운드 후 바뀝니다."
 }

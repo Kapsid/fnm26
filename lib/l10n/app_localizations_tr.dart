@@ -18004,10 +18004,6 @@ class AppLocalizationsTr extends AppLocalizations {
       'Her grubun ilk ikisi doğrudan katılır. Son yerler, Uluslar Kupası\'nın henüz katılamamış en iyi takımları arasındaki play-off ile belirlenir. Şu anki duruma göre:';
 
   @override
-  String get ncEuroPlayoffLegend =>
-      'Elemeler kötü giderse final turnuvası play-off yolunda';
-
-  @override
   String get euroPlayoffToFinal => 'Finale';
 
   @override
@@ -18094,10 +18090,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get regionalCupGroups => 'GRUPLAR';
 
   @override
-  String get ncWcPlayoffLegend =>
-      'Elemeler kötü giderse Dünya Şampiyonası play-off yolunda';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'Güvence olarak play-off: $finals';
   }
@@ -18115,13 +18107,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Sonuncu: alt lige düşer';
-
-  @override
-  String get playoffBadgeLetter => 'P';
-
-  @override
-  String get playoffBadgeTooltip =>
-      'Play-off yolunda: elemeler kötü giderse ikinci bir şans';
 
   @override
   String get campaignIsleOfManTitle => 'Üç Bacak';
@@ -18174,4 +18159,16 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Dünya Şampiyonası\'nı kazan';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      'Her grup birincisi doğrudan katılır. Son yerler, en iyi grup ikincileri (gruplarda sarı) ile Uluslar Kupası\'nın henüz katılamamış en iyi grup birincileri arasındaki play-off ile belirlenir. Uluslar Kupası\'ndan, şu anki duruma göre:';
+
+  @override
+  String get playoffCourseLegend =>
+      'Sarı: şu anki duruma göre play-off yolunda (aşağıya bakın)';
+
+  @override
+  String get playoffCourseFooter =>
+      'Neden buradalar: Uluslar Kupası, grup birincilerine ve ardından her ligin sonraki en iyilerine, doğrudan katılamazlarsa play-off yeri verir. Bu yalnızca şu anki durumdur ve her haftadan sonra değişir.';
 }

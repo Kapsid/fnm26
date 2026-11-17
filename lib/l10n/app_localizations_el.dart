@@ -18185,10 +18185,6 @@ class AppLocalizationsEl extends AppLocalizations {
       'Οι δύο πρώτοι κάθε ομίλου προκρίνονται απευθείας. Οι τελευταίες θέσεις κρίνονται σε μπαράζ για τις καλύτερες ομάδες του Κυπέλλου Εθνών που δεν προκρίθηκαν. Όπως είναι τώρα:';
 
   @override
-  String get ncEuroPlayoffLegend =>
-      'Σε τροχιά για τα μπαράζ της τελικής φάσης, αν τα προκριματικά αποτύχουν';
-
-  @override
   String get euroPlayoffToFinal => 'Στον τελικό';
 
   @override
@@ -18277,10 +18273,6 @@ class AppLocalizationsEl extends AppLocalizations {
   String get regionalCupGroups => 'ΟΜΙΛΟΙ';
 
   @override
-  String get ncWcPlayoffLegend =>
-      'Σε τροχιά για τα μπαράζ του Παγκόσμιου Πρωταθλήματος, αν τα προκριματικά αποτύχουν';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'Το μπαράζ ως δίχτυ ασφαλείας: $finals';
   }
@@ -18298,13 +18290,6 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Τελευταίος: υποβιβάζεται κατηγορία';
-
-  @override
-  String get playoffBadgeLetter => 'Μ';
-
-  @override
-  String get playoffBadgeTooltip =>
-      'Σε τροχιά για τα μπαράζ: δεύτερη ευκαιρία αν τα προκριματικά αποτύχουν';
 
   @override
   String get campaignIsleOfManTitle => 'Τα τρία πόδια';
@@ -18354,4 +18339,16 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get campaignStars3Czechoslovakia =>
       'Κατάκτηση του Παγκόσμιου Πρωταθλήματος';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      'Κάθε νικητής ομίλου προκρίνεται απευθείας. Οι τελευταίες θέσεις κρίνονται σε μπαράζ για τους καλύτερους δεύτερους (με κίτρινο στους ομίλους) και τους καλύτερους νικητές ομίλων του Κυπέλλου Εθνών που δεν προκρίθηκαν. Από το Κύπελλο Εθνών, όπως είναι τώρα:';
+
+  @override
+  String get playoffCourseLegend =>
+      'Κίτρινο: σε τροχιά για τα μπαράζ, όπως είναι τώρα (δείτε παρακάτω)';
+
+  @override
+  String get playoffCourseFooter =>
+      'Γιατί είναι εδώ: το Κύπελλο Εθνών δίνει στους νικητές ομίλων του, και μετά στους επόμενους καλύτερους κάθε κατηγορίας, θέση στα μπαράζ αν δεν προκριθούν απευθείας. Είναι μόνο η τρέχουσα εικόνα και αλλάζει μετά από κάθε αγωνιστική.';
 }

@@ -247,7 +247,6 @@ class _GroupResultsPanel extends StatelessWidget {
                     directCount: view.directCount,
                     contentionPos: view.contentionPos,
                     playoffNations: view.playoffNations,
-                    playoffBadge: view.playoffBadge,
                     relegated:
                         relegateCount > 0 &&
                         i + 1 > group.standings.length - relegateCount,

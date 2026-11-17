@@ -4519,7 +4519,6 @@
   "assistantMatchResult": "O jogo do adjunto",
   "euroPlayoffCourseTitle": "Play-off pela Copa das Nações",
   "euroPlayoffCourseNote": "Os dois primeiros de cada grupo apuram-se diretamente. Os últimos lugares decidem-se num play-off entre as melhores seleções da Copa das Nações ainda não apuradas. Neste momento:",
-  "ncEuroPlayoffLegend": "A caminho do play-off da fase final se as eliminatórias falharem",
   "euroPlayoffToFinal": "À final",
   "euroPlayoffQualified": "Apurado",
   "playerOtherPositions": "Em cada posição",
@@ -4542,14 +4541,11 @@
   "regionalCupHosted": "Anfitrião: {host}",
   "regionalCupHomeAndAway": "Grupos disputados em casa e fora",
   "regionalCupGroups": "GRUPOS",
-  "ncWcPlayoffLegend": "A caminho do play-off do Campeonato Mundial se as eliminatórias falharem",
   "newsNcPlayoffNetTitle": "O play-off como rede de segurança: {finals}",
   "newsNcPlayoffNetBody": "Pelas tabelas do torneio {cup}, por enquanto você tem vaga no play-off. Se não se classificar diretamente, terá um segundo caminho para o torneio {finals}. Os caminhos são sorteados no fim das eliminatórias.",
   "ncLegendWinnerUp": "Vencedor do grupo: sobe de liga",
   "ncLegendWinnerFinalsFour": "Vencedor do grupo: vai à fase final a quatro",
   "ncLegendLastDown": "Último: desce de liga",
-  "playoffBadgeLetter": "P",
-  "playoffBadgeTooltip": "A caminho do play-off: uma segunda chance se as eliminatórias falharem",
   "campaignIsleOfManTitle": "As três pernas",
   "campaignIsleOfManTwist": "A Ilha de Man ocupa o lugar de Andorra na Europa, por cem anos",
   "campaignIsleOfManIntro": "A Ilha de Man tem sua própria federação de futebol, sua própria liga e uma seleção que disputa os Jogos das Ilhas, mas nenhum lugar no futebol europeu ou mundial. Neste mundo, ela ocupou o lugar de Andorra na Europa e começa perto do fundo do ranking mundial: jogadores semiprofissionais, um estádio pequeno em Douglas e o vento do Mar da Irlanda em cada partida. Você tem cem anos, vinte e cinco ciclos, para chegar a um Campeonato Europeu, depois a um Campeonato Mundial e, se ousar sonhar, vencer um deles.",
@@ -4563,5 +4559,8 @@
   "campaignCzechoslovakiaGoal": "Classificar-se para um Campeonato Mundial",
   "campaignStars1Czechoslovakia": "Classificar-se para um Campeonato Mundial",
   "campaignStars2Czechoslovakia": "Vencer o Campeonato Europeu",
-  "campaignStars3Czechoslovakia": "Vencer o Campeonato Mundial"
+  "campaignStars3Czechoslovakia": "Vencer o Campeonato Mundial",
+  "wcPlayoffCourseNote": "Cada vencedor de grupo apura-se diretamente. Os últimos lugares decidem-se num play-off entre os melhores segundos (a amarelo nos grupos) e os melhores vencedores de grupo da Copa das Nações ainda não apurados. Da Copa das Nações, neste momento:",
+  "playoffCourseLegend": "Amarelo: a caminho do play-off, neste momento (ver abaixo)",
+  "playoffCourseFooter": "Porque estão aqui: a Copa das Nações dá aos vencedores de grupo, e depois aos melhores seguintes de cada liga, um lugar no play-off se não se apurarem diretamente. É só a situação atual e muda após cada jornada."
 }

@@ -4519,7 +4519,6 @@
   "assistantMatchResult": "Perlawanan pembantu",
   "euroPlayoffCourseTitle": "Play-off melalui Piala Negara-Negara",
   "euroPlayoffCourseNote": "Dua teratas setiap kumpulan layak terus. Tempat terakhir direbut dalam play-off oleh pasukan terbaik Piala Negara-Negara yang belum layak. Setakat ini:",
-  "ncEuroPlayoffLegend": "Menuju play-off pusingan akhir jika kelayakan gagal",
   "euroPlayoffToFinal": "Ke final",
   "euroPlayoffQualified": "Layak",
   "playerOtherPositions": "Di setiap posisi",
@@ -4542,14 +4541,11 @@
   "regionalCupHosted": "Tuan rumah: {host}",
   "regionalCupHomeAndAway": "Kumpulan dimainkan di laman sendiri dan di tempat lawan",
   "regionalCupGroups": "KUMPULAN",
-  "ncWcPlayoffLegend": "Menuju play-off Kejohanan Dunia jika kelayakan gagal",
   "newsNcPlayoffNetTitle": "Play-off sebagai jaring keselamatan: {finals}",
   "newsNcPlayoffNetBody": "Menurut kedudukan {cup}, buat masa ini anda memegang tempat dalam play-off. Jika gagal layak terus, itu laluan kedua ke {finals}. Laluan play-off dicabut selepas kelayakan tamat.",
   "ncLegendWinnerUp": "Juara kumpulan: naik ke liga lebih tinggi",
   "ncLegendWinnerFinalsFour": "Juara kumpulan: ke peringkat empat akhir",
   "ncLegendLastDown": "Tercorot: turun ke liga lebih rendah",
-  "playoffBadgeLetter": "P",
-  "playoffBadgeTooltip": "Menuju play-off: peluang kedua jika kelayakan gagal",
   "campaignIsleOfManTitle": "Tiga Kaki",
   "campaignIsleOfManTwist": "Pulau Man mengambil tempat Andorra di Eropah, selama seratus tahun",
   "campaignIsleOfManIntro": "Pulau Man mempunyai persatuan bola sepak, liga dan pasukan kebangsaannya sendiri yang bermain di Island Games, tetapi tiada tempat dalam bola sepak Eropah atau dunia. Dalam dunia ini mereka telah mengambil tempat Andorra di Eropah, dan mereka bermula hampir di dasar ranking dunia: pemain separuh masa, padang kecil di Douglas dan angin Laut Ireland dalam setiap perlawanan. Anda ada seratus tahun, dua puluh lima kitaran, untuk mara ke Kejohanan Eropah, kemudian Kejohanan Dunia dan, jika anda berani bermimpi, menjuarai salah satunya.",
@@ -4563,5 +4559,8 @@
   "campaignCzechoslovakiaGoal": "Layak ke Kejohanan Dunia",
   "campaignStars1Czechoslovakia": "Layak ke Kejohanan Dunia",
   "campaignStars2Czechoslovakia": "Menangi Kejohanan Eropah",
-  "campaignStars3Czechoslovakia": "Menangi Kejohanan Dunia"
+  "campaignStars3Czechoslovakia": "Menangi Kejohanan Dunia",
+  "wcPlayoffCourseNote": "Setiap juara kumpulan layak terus. Tempat terakhir direbut dalam play-off oleh naib juara terbaik (kuning dalam kumpulan) dan juara kumpulan terbaik Piala Negara-Negara yang belum layak. Daripada Piala Negara-Negara, setakat ini:",
+  "playoffCourseLegend": "Kuning: menuju play-off, setakat ini (lihat di bawah)",
+  "playoffCourseFooter": "Mengapa mereka di sini: Piala Negara-Negara memberi juara kumpulannya, kemudian pasukan terbaik seterusnya dalam setiap liga, tempat dalam play-off jika mereka tidak layak terus. Ini hanya kedudukan semasa dan berubah selepas setiap pusingan."
 }

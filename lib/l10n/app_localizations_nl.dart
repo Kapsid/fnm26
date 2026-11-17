@@ -18178,10 +18178,6 @@ class AppLocalizationsNl extends AppLocalizations {
       'De nummers een en twee van elke groep plaatsen zich direct. De laatste plaatsen gaan via play-offs naar de beste Nations Cup-landen die nog niet geplaatst zijn. Zoals het nu staat:';
 
   @override
-  String get ncEuroPlayoffLegend =>
-      'Op koers voor de play-offs voor het eindtoernooi als de kwalificatie mislukt';
-
-  @override
   String get euroPlayoffToFinal => 'Naar de finale';
 
   @override
@@ -18269,10 +18265,6 @@ class AppLocalizationsNl extends AppLocalizations {
   String get regionalCupGroups => 'GROEPEN';
 
   @override
-  String get ncWcPlayoffLegend =>
-      'Op koers voor de play-offs voor het Wereldkampioenschap als de kwalificatie mislukt';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'Een vangnet via de play-offs: $finals';
   }
@@ -18292,13 +18284,6 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Laatste: degradatie naar een lagere league';
-
-  @override
-  String get playoffBadgeLetter => 'P';
-
-  @override
-  String get playoffBadgeTooltip =>
-      'Op koers voor de play-offs: een tweede kans als de kwalificatie mislukt';
 
   @override
   String get campaignIsleOfManTitle => 'De drie benen';
@@ -18351,4 +18336,16 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Win het Wereldkampioenschap';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      'Elke groepswinnaar plaatst zich direct. De laatste plaatsen gaan via play-offs naar de beste nummers twee (geel in de groepen) en de beste groepswinnaars van de Nations Cup die nog niet geplaatst zijn. Uit de Nations Cup, zoals het nu staat:';
+
+  @override
+  String get playoffCourseLegend =>
+      'Geel: op koers voor de play-offs, zoals het nu staat (zie onder)';
+
+  @override
+  String get playoffCourseFooter =>
+      'Waarom ze hier staan: de Nations Cup geeft zijn groepswinnaars, en daarna de volgende besten van elke league, een plek in de play-offs als ze zich niet direct plaatsen. Dit is alleen de huidige stand en verandert na elke speelronde.';
 }

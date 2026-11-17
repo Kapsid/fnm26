@@ -18104,10 +18104,6 @@ class AppLocalizationsFil extends AppLocalizations {
       'Diretsong pasok ang nangungunang dalawa sa bawat grupo. Ang huling mga puwesto ay pag-aagawan sa play-off ng pinakamahuhusay sa Nations Cup na hindi pa pasok. Sa ngayon:';
 
   @override
-  String get ncEuroPlayoffLegend =>
-      'Patungo sa play-off para sa finals kung pumalya ang qualifying';
-
-  @override
   String get euroPlayoffToFinal => 'Sa final';
 
   @override
@@ -18195,10 +18191,6 @@ class AppLocalizationsFil extends AppLocalizations {
   String get regionalCupGroups => 'MGA GROUP';
 
   @override
-  String get ncWcPlayoffLegend =>
-      'Patungo sa play-off ng World Championship kung pumalya ang qualifying';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'Play-off bilang safety net: $finals';
   }
@@ -18217,13 +18209,6 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Huli: bababa ng liga';
-
-  @override
-  String get playoffBadgeLetter => 'P';
-
-  @override
-  String get playoffBadgeTooltip =>
-      'Patungo sa play-off: pangalawang tsansa kung pumalya ang qualifying';
 
   @override
   String get campaignIsleOfManTitle => 'Ang Tatlong Binti';
@@ -18275,4 +18260,16 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Ipanalo ang Kampeonato ng Mundo';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      'Diretsong pasok ang bawat nanalo sa grupo. Ang huling mga puwesto ay pag-aagawan sa play-off ng pinakamahuhusay na pumangalawa (dilaw sa mga grupo) at ng pinakamahuhusay na nanalo sa grupo sa Nations Cup na hindi pa pasok. Mula sa Nations Cup, sa ngayon:';
+
+  @override
+  String get playoffCourseLegend =>
+      'Dilaw: patungo sa play-off, sa ngayon (tingnan sa ibaba)';
+
+  @override
+  String get playoffCourseFooter =>
+      'Bakit sila narito: binibigyan ng Nations Cup ng puwesto sa play-off ang mga nanalo sa grupo nito, saka ang mga susunod na pinakamahuhusay sa bawat liga, kung hindi sila diretsong makakapasok. Ito ay lagay lamang ngayon at nagbabago pagkatapos ng bawat round.';
 }

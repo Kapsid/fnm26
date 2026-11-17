@@ -18037,10 +18037,6 @@ class AppLocalizationsHu extends AppLocalizations {
       'Minden csoport első kettője egyenesen továbbjut. Az utolsó helyekért a Nations Cup legjobb, még nem továbbjutott csapatai játszanak pótselejtezőt. Jelenleg:';
 
   @override
-  String get ncEuroPlayoffLegend =>
-      'Úton a zárótorna pótselejtezője felé, ha a selejtező nem jön össze';
-
-  @override
   String get euroPlayoffToFinal => 'Döntőbe';
 
   @override
@@ -18128,10 +18124,6 @@ class AppLocalizationsHu extends AppLocalizations {
   String get regionalCupGroups => 'CSOPORTOK';
 
   @override
-  String get ncWcPlayoffLegend =>
-      'Úton a világbajnokság pótselejtezője felé, ha a selejtező nem jön össze';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'Pótselejtező mint biztonsági háló: $finals';
   }
@@ -18149,13 +18141,6 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Utolsó: kiesik az alacsonyabb ligába';
-
-  @override
-  String get playoffBadgeLetter => 'P';
-
-  @override
-  String get playoffBadgeTooltip =>
-      'Úton a pótselejtező felé: második esély, ha a selejtező nem jön össze';
 
   @override
   String get campaignIsleOfManTitle => 'A három láb';
@@ -18203,4 +18188,16 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Megnyerni a világbajnokságot';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      'Minden csoportgyőztes egyenesen továbbjut. Az utolsó helyekért pótselejtezőt játszanak a legjobb csoportmásodikok (sárgával a csoportokban) és a Nations Cup legjobb, még nem továbbjutott csoportgyőztesei. A Nations Cupból jelenleg:';
+
+  @override
+  String get playoffCourseLegend =>
+      'Sárga: úton a pótselejtező felé, a jelenlegi állás szerint (lásd lent)';
+
+  @override
+  String get playoffCourseFooter =>
+      'Miért vannak itt: a Nations Cup a csoportgyőzteseinek, utánuk pedig minden liga következő legjobbjainak pótselejtezős helyet ad, ha nem jutnak ki egyenesen. Ez csak a jelenlegi állás, minden forduló után változik.';
 }

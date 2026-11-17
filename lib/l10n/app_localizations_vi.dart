@@ -17939,10 +17939,6 @@ class AppLocalizationsVi extends AppLocalizations {
       'Hai đội đầu mỗi bảng giành vé trực tiếp. Các suất cuối thuộc về play-off giữa những đội mạnh nhất Nations Cup chưa giành vé. Hiện tại:';
 
   @override
-  String get ncEuroPlayoffLegend =>
-      'Hướng tới play-off vòng chung kết nếu vòng loại thất bại';
-
-  @override
   String get euroPlayoffToFinal => 'Vào chung kết';
 
   @override
@@ -18029,10 +18025,6 @@ class AppLocalizationsVi extends AppLocalizations {
   String get regionalCupGroups => 'CÁC BẢNG';
 
   @override
-  String get ncWcPlayoffLegend =>
-      'Hướng tới play-off giải vô địch thế giới nếu vòng loại thất bại';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'Play-off là lưới an toàn: $finals';
   }
@@ -18051,13 +18043,6 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Cuối bảng: xuống hạng đấu thấp hơn';
-
-  @override
-  String get playoffBadgeLetter => 'PO';
-
-  @override
-  String get playoffBadgeTooltip =>
-      'Hướng tới play-off: cơ hội thứ hai nếu vòng loại thất bại';
 
   @override
   String get campaignIsleOfManTitle => 'Ba chân';
@@ -18109,4 +18094,16 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Vô địch Giải vô địch thế giới';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      'Mọi đội nhất bảng giành vé trực tiếp. Các suất cuối thuộc về play-off giữa những đội nhì bảng tốt nhất (màu vàng trong các bảng) và những đội nhất bảng tốt nhất của Nations Cup chưa giành vé. Từ Nations Cup, hiện tại:';
+
+  @override
+  String get playoffCourseLegend =>
+      'Vàng: đang hướng tới play-off, theo tình hình hiện tại (xem bên dưới)';
+
+  @override
+  String get playoffCourseFooter =>
+      'Vì sao các đội này ở đây: Nations Cup trao suất play-off cho các đội nhất bảng, rồi đến những đội tốt nhất tiếp theo của mỗi hạng đấu, nếu họ không giành vé trực tiếp. Đây chỉ là tình hình hiện tại và thay đổi sau mỗi lượt trận.';
 }

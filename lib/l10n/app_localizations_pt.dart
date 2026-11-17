@@ -18193,10 +18193,6 @@ class AppLocalizationsPt extends AppLocalizations {
       'Os dois primeiros de cada grupo apuram-se diretamente. Os últimos lugares decidem-se num play-off entre as melhores seleções da Copa das Nações ainda não apuradas. Neste momento:';
 
   @override
-  String get ncEuroPlayoffLegend =>
-      'A caminho do play-off da fase final se as eliminatórias falharem';
-
-  @override
   String get euroPlayoffToFinal => 'À final';
 
   @override
@@ -18283,10 +18279,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get regionalCupGroups => 'GRUPOS';
 
   @override
-  String get ncWcPlayoffLegend =>
-      'A caminho do play-off do Campeonato Mundial se as eliminatórias falharem';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'O play-off como rede de segurança: $finals';
   }
@@ -18305,13 +18297,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Último: desce de liga';
-
-  @override
-  String get playoffBadgeLetter => 'P';
-
-  @override
-  String get playoffBadgeTooltip =>
-      'A caminho do play-off: uma segunda chance se as eliminatórias falharem';
 
   @override
   String get campaignIsleOfManTitle => 'As três pernas';
@@ -18364,4 +18349,16 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Vencer o Campeonato Mundial';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      'Cada vencedor de grupo apura-se diretamente. Os últimos lugares decidem-se num play-off entre os melhores segundos (a amarelo nos grupos) e os melhores vencedores de grupo da Copa das Nações ainda não apurados. Da Copa das Nações, neste momento:';
+
+  @override
+  String get playoffCourseLegend =>
+      'Amarelo: a caminho do play-off, neste momento (ver abaixo)';
+
+  @override
+  String get playoffCourseFooter =>
+      'Porque estão aqui: a Copa das Nações dá aos vencedores de grupo, e depois aos melhores seguintes de cada liga, um lugar no play-off se não se apurarem diretamente. É só a situação atual e muda após cada jornada.';
 }

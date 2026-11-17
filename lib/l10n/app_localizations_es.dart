@@ -18185,10 +18185,6 @@ class AppLocalizationsEs extends AppLocalizations {
       'Los dos primeros de cada grupo se clasifican directamente. Las últimas plazas se juegan en una repesca entre los mejores de la Copa de las Naciones que no se clasificaron. Tal como está:';
 
   @override
-  String get ncEuroPlayoffLegend =>
-      'Camino de la repesca para la fase final si falla la clasificación';
-
-  @override
   String get euroPlayoffToFinal => 'A la final';
 
   @override
@@ -18276,10 +18272,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get regionalCupGroups => 'GRUPOS';
 
   @override
-  String get ncWcPlayoffLegend =>
-      'Camino de la repesca del Campeonato del Mundo si falla la clasificación';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'La repesca como red de seguridad: $finals';
   }
@@ -18298,13 +18290,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Último: desciende de liga';
-
-  @override
-  String get playoffBadgeLetter => 'R';
-
-  @override
-  String get playoffBadgeTooltip =>
-      'Camino de la repesca: una segunda oportunidad si falla la clasificación';
 
   @override
   String get campaignIsleOfManTitle => 'Las tres piernas';
@@ -18357,4 +18342,16 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Ganar el Campeonato del Mundo';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      'Cada ganador de grupo se clasifica directamente. Las últimas plazas se juegan en una repesca entre los mejores segundos (en amarillo en los grupos) y los mejores ganadores de grupo de la Copa de las Naciones que no se clasificaron. De la Copa de las Naciones, tal como está:';
+
+  @override
+  String get playoffCourseLegend =>
+      'Amarillo: camino de la repesca, tal como está (ver abajo)';
+
+  @override
+  String get playoffCourseFooter =>
+      'Por qué están aquí: la Copa de las Naciones da a sus ganadores de grupo, y después a los siguientes mejores de cada liga, una plaza en la repesca si no se clasifican directamente. Es solo la situación actual y cambia tras cada jornada.';
 }

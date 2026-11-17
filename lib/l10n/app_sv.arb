@@ -4519,7 +4519,6 @@
   "assistantMatchResult": "Assistentens match",
   "euroPlayoffCourseTitle": "Playoff via Nations Cup",
   "euroPlayoffCourseNote": "De två bästa i varje grupp går direkt vidare. De sista platserna går till playoff för Nations Cups bästa lag som inte är klara. Som det ser ut nu:",
-  "ncEuroPlayoffLegend": "På väg mot playoff till slutspelet om kvalet misslyckas",
   "euroPlayoffToFinal": "Till finalen",
   "euroPlayoffQualified": "Kvalificerat",
   "playerOtherPositions": "På varje position",
@@ -4542,14 +4541,11 @@
   "regionalCupHosted": "Värdland: {host}",
   "regionalCupHomeAndAway": "Grupperna spelas hemma och borta",
   "regionalCupGroups": "GRUPPER",
-  "ncWcPlayoffLegend": "På väg mot playoff till Världsmästerskapet om kvalet misslyckas",
   "newsNcPlayoffNetTitle": "Playoff som skyddsnät: {finals}",
   "newsNcPlayoffNetBody": "Enligt tabellerna i turneringen {cup} har ni just nu en playoffplats. Går ni inte vidare direkt får ni en andra väg till turneringen {finals}. Playoffvägarna lottas när kvalet är slut.",
   "ncLegendWinnerUp": "Gruppvinnare: flyttas upp en liga",
   "ncLegendWinnerFinalsFour": "Gruppvinnare: till slutspelet med fyra lag",
   "ncLegendLastDown": "Sist: flyttas ner en liga",
-  "playoffBadgeLetter": "P",
-  "playoffBadgeTooltip": "På väg mot playoff: en andra chans om kvalet misslyckas",
   "campaignIsleOfManTitle": "De tre benen",
   "campaignIsleOfManTwist": "Isle of Man tar Andorras plats i Europa, i hundra år",
   "campaignIsleOfManIntro": "Isle of Man har ett eget fotbollsförbund, en egen liga och ett landslag som spelar i Island Games, men ingen plats i europeisk fotboll eller i världsfotbollen. I den här världen har de tagit Andorras plats i Europa, och de börjar nära botten av världsrankingen: deltidsspelare, en liten arena i Douglas och vinden från Irländska sjön i varje match. Du har hundra år, tjugofem cykler, på dig att nå ett Europamästerskap, sedan ett Världsmästerskap och, om du vågar drömma, vinna ett av dem.",
@@ -4563,5 +4559,8 @@
   "campaignCzechoslovakiaGoal": "Kvalificera dig för ett VM",
   "campaignStars1Czechoslovakia": "Kvalificera dig för ett VM",
   "campaignStars2Czechoslovakia": "Vinn Europamästerskapet",
-  "campaignStars3Czechoslovakia": "Vinn Världsmästerskapet"
+  "campaignStars3Czechoslovakia": "Vinn Världsmästerskapet",
+  "wcPlayoffCourseNote": "Varje gruppvinnare går direkt vidare. De sista platserna går till playoff för de bästa grupptvåorna (gula i grupperna) och Nations Cups bästa gruppvinnare som inte är klara. Från Nations Cup, som det ser ut nu:",
+  "playoffCourseLegend": "Gul: på väg mot playoff, som det ser ut nu (se nedan)",
+  "playoffCourseFooter": "Varför de är här: Nations Cup ger sina gruppvinnare, och sedan de näst bästa i varje liga, en playoffplats om de inte går vidare direkt. Det här är bara läget just nu och ändras efter varje omgång."
 }

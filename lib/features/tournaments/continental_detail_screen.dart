@@ -421,9 +421,13 @@ class _Groups extends StatelessWidget {
   /// they come from, and kept there once the finals are on.
   final EuroPlayoffData? playoffs;
 
-  /// The play-off paths as they stand, listed under the tables (their
-  /// sides come from the Nations Cup, so no row here is marked for them).
+  /// The play-off paths as they stand: their sides marked yellow in the
+  /// tables (a key over them) and listed path by path under them.
   final List<PlayoffPath> playoffCourse;
+
+  /// Every side of [playoffCourse], once the paths are not yet drawn.
+  Set<int> get _onCourse =>
+      playoffs != null ? const {} : {for (final p in playoffCourse) ...p.seeds};
 
   /// Positions that advance/qualify outright (green).
   final int directCount;
@@ -489,6 +493,7 @@ class _Groups extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
+        if (_onCourse.isNotEmpty) const PlayoffStripeLegend(),
         if (grid) ...[
           ColumnFlow(children: [for (final g in ordered) card(g)]),
           const SizedBox(height: AppSpacing.sm),
@@ -541,6 +546,8 @@ class _Groups extends StatelessWidget {
     final inContention = pos == contentionPos;
     final accent = advancing
         ? AppColors.positive
+        : _onCourse.contains(s.nationId)
+        ? AppColors.playoff
         : inContention
         ? AppColors.warning
         : null;
@@ -883,7 +890,60 @@ class _PlayoffCourseCard extends StatelessWidget {
                 ),
               ),
           ],
+          const PlayoffCourseFooter(),
         ],
+      ),
+    );
+  }
+}
+
+/// The yellow stripe's key over qualifying tables that mark the sides on
+/// course for a play-off path (the card under the tables says why).
+class PlayoffStripeLegend extends StatelessWidget {
+  const PlayoffStripeLegend({super.key});
+
+  static const Key legendKey = Key('qualifying.playoffLegend');
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return Padding(
+      key: legendKey,
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: Row(
+        children: [
+          Container(width: 3, height: 14, color: AppColors.playoff),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Text(
+              l.playoffCourseLegend,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The footnote under a play-off course card: why these sides, and that it
+/// is only how things stand today.
+class PlayoffCourseFooter extends StatelessWidget {
+  const PlayoffCourseFooter({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.sm),
+      child: Text(
+        l.playoffCourseFooter,
+        style: AppTypography.labelSmall.copyWith(
+          color: AppColors.onSurfaceVariant,
+          fontStyle: FontStyle.italic,
+        ),
       ),
     );
   }

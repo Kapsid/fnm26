@@ -4519,7 +4519,6 @@
   "assistantMatchResult": "Laga sang asisten",
   "euroPlayoffCourseTitle": "Play-off lewat Piala Bangsa-Bangsa",
   "euroPlayoffCourseNote": "Dua teratas tiap grup lolos langsung. Tempat terakhir diperebutkan di play-off oleh tim terbaik Piala Bangsa-Bangsa yang belum lolos. Saat ini:",
-  "ncEuroPlayoffLegend": "Menuju play-off putaran final jika kualifikasi gagal",
   "euroPlayoffToFinal": "Ke final",
   "euroPlayoffQualified": "Lolos",
   "playerOtherPositions": "Di setiap posisi",
@@ -4542,14 +4541,11 @@
   "regionalCupHosted": "Tuan rumah: {host}",
   "regionalCupHomeAndAway": "Grup dimainkan kandang dan tandang",
   "regionalCupGroups": "GRUP",
-  "ncWcPlayoffLegend": "Menuju play-off Kejuaraan Dunia jika kualifikasi gagal",
   "newsNcPlayoffNetTitle": "Play-off sebagai jaring pengaman: {finals}",
   "newsNcPlayoffNetBody": "Menurut klasemen {cup}, saat ini Anda memegang tempat di play-off. Jika gagal lolos langsung, itu jalan kedua menuju {finals}. Jalur play-off diundi setelah kualifikasi selesai.",
   "ncLegendWinnerUp": "Juara grup: naik ke liga lebih tinggi",
   "ncLegendWinnerFinalsFour": "Juara grup: ke babak empat besar",
   "ncLegendLastDown": "Terbawah: turun ke liga lebih rendah",
-  "playoffBadgeLetter": "P",
-  "playoffBadgeTooltip": "Menuju play-off: kesempatan kedua jika kualifikasi gagal",
   "campaignIsleOfManTitle": "Tiga Kaki",
   "campaignIsleOfManTwist": "Pulau Man menggantikan Andorra di Eropa, selama seratus tahun",
   "campaignIsleOfManIntro": "Pulau Man punya federasi sepak bola, liga, dan tim nasional sendiri yang bermain di Island Games, tetapi tidak punya tempat di sepak bola Eropa maupun dunia. Di dunia ini mereka menggantikan tempat Andorra di Eropa, dan memulai dari dekat dasar peringkat dunia: pemain paruh waktu, stadion kecil di Douglas, dan angin Laut Irlandia di setiap laga. Anda punya seratus tahun, dua puluh lima siklus, untuk lolos ke Kejuaraan Eropa, lalu ke Kejuaraan Dunia, dan, jika berani bermimpi, menjuarai salah satunya.",
@@ -4563,5 +4559,8 @@
   "campaignCzechoslovakiaGoal": "Lolos ke sebuah Kejuaraan Dunia",
   "campaignStars1Czechoslovakia": "Lolos ke sebuah Kejuaraan Dunia",
   "campaignStars2Czechoslovakia": "Juara Kejuaraan Eropa",
-  "campaignStars3Czechoslovakia": "Juara Kejuaraan Dunia"
+  "campaignStars3Czechoslovakia": "Juara Kejuaraan Dunia",
+  "wcPlayoffCourseNote": "Setiap juara grup lolos langsung. Tempat terakhir diperebutkan di play-off oleh runner-up terbaik (kuning di grup) dan juara grup terbaik Piala Bangsa-Bangsa yang belum lolos. Dari Piala Bangsa-Bangsa, saat ini:",
+  "playoffCourseLegend": "Kuning: menuju play-off, untuk saat ini (lihat di bawah)",
+  "playoffCourseFooter": "Mengapa mereka di sini: Piala Bangsa-Bangsa memberi juara grupnya, lalu tim terbaik berikutnya di tiap liga, tempat di play-off jika mereka tidak lolos langsung. Ini hanya keadaan saat ini dan berubah setiap putaran."
 }

@@ -4519,7 +4519,6 @@
   "assistantMatchResult": "La partita del vice",
   "euroPlayoffCourseTitle": "Spareggi tramite la Coppa delle Nazioni",
   "euroPlayoffCourseNote": "Le prime due di ogni girone si qualificano direttamente. Gli ultimi posti si assegnano negli spareggi tra le migliori della Coppa delle Nazioni non qualificate. Allo stato attuale:",
-  "ncEuroPlayoffLegend": "In corsa per gli spareggi della fase finale se le qualificazioni vanno male",
   "euroPlayoffToFinal": "In finale",
   "euroPlayoffQualified": "Qualificata",
   "playerOtherPositions": "In ogni ruolo",
@@ -4542,14 +4541,11 @@
   "regionalCupHosted": "Paese ospitante: {host}",
   "regionalCupHomeAndAway": "Gironi giocati in casa e in trasferta",
   "regionalCupGroups": "GIRONI",
-  "ncWcPlayoffLegend": "In corsa per gli spareggi del Campionato del mondo se le qualificazioni vanno male",
   "newsNcPlayoffNetTitle": "Gli spareggi come rete di sicurezza: {finals}",
   "newsNcPlayoffNetBody": "Secondo le classifiche del torneo {cup}, al momento hai un posto negli spareggi. Se la qualificazione diretta non arriva, avrai una seconda strada verso il torneo {finals}. I percorsi si sorteggiano a fine qualificazioni.",
   "ncLegendWinnerUp": "Vincitore del girone: promosso nella lega superiore",
   "ncLegendWinnerFinalsFour": "Vincitore del girone: alla fase finale a quattro",
   "ncLegendLastDown": "Ultimo: retrocesso nella lega inferiore",
-  "playoffBadgeLetter": "S",
-  "playoffBadgeTooltip": "In corsa per gli spareggi: una seconda possibilità se le qualificazioni vanno male",
   "campaignIsleOfManTitle": "Le tre gambe",
   "campaignIsleOfManTwist": "L'Isola di Man prende il posto di Andorra in Europa, per cento anni",
   "campaignIsleOfManIntro": "L'Isola di Man ha una sua federazione calcistica, un suo campionato e una nazionale che gioca i Giochi delle isole, ma nessun posto nel calcio europeo né in quello mondiale. In questo mondo ha preso il posto di Andorra in Europa e parte vicino all'ultimo gradino del ranking mondiale: giocatori part-time, un piccolo stadio a Douglas e il vento del Mare d'Irlanda in ogni partita. Hai cento anni, venticinque cicli, per arrivare a un Campionato europeo, poi a un Campionato del mondo e, se osi sognare, vincerne uno.",
@@ -4563,5 +4559,8 @@
   "campaignCzechoslovakiaGoal": "Qualificarsi per un Campionato del mondo",
   "campaignStars1Czechoslovakia": "Qualificarsi per un Campionato del mondo",
   "campaignStars2Czechoslovakia": "Vincere il Campionato europeo",
-  "campaignStars3Czechoslovakia": "Vincere il Campionato del mondo"
+  "campaignStars3Czechoslovakia": "Vincere il Campionato del mondo",
+  "wcPlayoffCourseNote": "Ogni vincitrice di girone si qualifica direttamente. Gli ultimi posti si assegnano negli spareggi tra le migliori seconde (in giallo nei gironi) e le migliori vincitrici di girone della Coppa delle Nazioni non qualificate. Dalla Coppa delle Nazioni, allo stato attuale:",
+  "playoffCourseLegend": "Giallo: in corsa per gli spareggi, allo stato attuale (vedi sotto)",
+  "playoffCourseFooter": "Perché sono qui: la Coppa delle Nazioni dà alle vincitrici dei gironi, e poi alle migliori successive di ogni lega, un posto negli spareggi se non si qualificano direttamente. È solo la situazione attuale e cambia dopo ogni giornata."
 }

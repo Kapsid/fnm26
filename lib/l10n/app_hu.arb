@@ -4519,7 +4519,6 @@
   "assistantMatchResult": "A segítő meccse",
   "euroPlayoffCourseTitle": "Pótselejtező a Nations Cupon át",
   "euroPlayoffCourseNote": "Minden csoport első kettője egyenesen továbbjut. Az utolsó helyekért a Nations Cup legjobb, még nem továbbjutott csapatai játszanak pótselejtezőt. Jelenleg:",
-  "ncEuroPlayoffLegend": "Úton a zárótorna pótselejtezője felé, ha a selejtező nem jön össze",
   "euroPlayoffToFinal": "Döntőbe",
   "euroPlayoffQualified": "Kijutott",
   "playerOtherPositions": "Minden poszton",
@@ -4542,14 +4541,11 @@
   "regionalCupHosted": "Házigazda: {host}",
   "regionalCupHomeAndAway": "A csoportkör oda-vissza, hazai és idegen pályán",
   "regionalCupGroups": "CSOPORTOK",
-  "ncWcPlayoffLegend": "Úton a világbajnokság pótselejtezője felé, ha a selejtező nem jön össze",
   "newsNcPlayoffNetTitle": "Pótselejtező mint biztonsági háló: {finals}",
   "newsNcPlayoffNetBody": "A(z) {cup} tabellái szerint jelenleg pótselejtezős helyen álltok. Ha a közvetlen kijutás nem sikerül, ez egy második út a tornára ({finals}). Az ágakat a selejtező végén sorsolják.",
   "ncLegendWinnerUp": "Csoportgyőztes: feljut a magasabb ligába",
   "ncLegendWinnerFinalsFour": "Csoportgyőztes: a négyes döntőbe jut",
   "ncLegendLastDown": "Utolsó: kiesik az alacsonyabb ligába",
-  "playoffBadgeLetter": "P",
-  "playoffBadgeTooltip": "Úton a pótselejtező felé: második esély, ha a selejtező nem jön össze",
   "campaignIsleOfManTitle": "A három láb",
   "campaignIsleOfManTwist": "A Man-sziget száz évre átveszi Andorra helyét Európában",
   "campaignIsleOfManIntro": "A Man-szigetnek saját labdarúgó-szövetsége, saját bajnoksága és a szigetjátékokon szereplő válogatottja van, de sem az európai, sem a világ futballjában nincs helye. Ebben a világban átvette Andorra helyét Európában, és a világranglista alja közeléből indul: részmunkaidős játékosok, egy kis stadion Douglasben és az Ír-tenger szele minden meccsen. Száz éved, huszonöt ciklusod van, hogy kijuss egy Európa-bajnokságra, aztán egy világbajnokságra, és ha mersz álmodni, megnyerd valamelyiket.",
@@ -4563,5 +4559,8 @@
   "campaignCzechoslovakiaGoal": "Kijutni egy világbajnokságra",
   "campaignStars1Czechoslovakia": "Kijutni egy világbajnokságra",
   "campaignStars2Czechoslovakia": "Megnyerni az Európa-bajnokságot",
-  "campaignStars3Czechoslovakia": "Megnyerni a világbajnokságot"
+  "campaignStars3Czechoslovakia": "Megnyerni a világbajnokságot",
+  "wcPlayoffCourseNote": "Minden csoportgyőztes egyenesen továbbjut. Az utolsó helyekért pótselejtezőt játszanak a legjobb csoportmásodikok (sárgával a csoportokban) és a Nations Cup legjobb, még nem továbbjutott csoportgyőztesei. A Nations Cupból jelenleg:",
+  "playoffCourseLegend": "Sárga: úton a pótselejtező felé, a jelenlegi állás szerint (lásd lent)",
+  "playoffCourseFooter": "Miért vannak itt: a Nations Cup a csoportgyőzteseinek, utánuk pedig minden liga következő legjobbjainak pótselejtezős helyet ad, ha nem jutnak ki egyenesen. Ez csak a jelenlegi állás, minden forduló után változik."
 }

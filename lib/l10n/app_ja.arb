@@ -4519,7 +4519,6 @@
   "assistantMatchResult": "アシスタントの試合",
   "euroPlayoffCourseTitle": "ネーションズカップ経由のプレーオフ",
   "euroPlayoffCourseNote": "各グループ上位2チームがストレートインします。残りの枠は、ネーションズカップの上位でまだ出場が決まっていないチームによるプレーオフで争われます。現時点では：",
-  "ncEuroPlayoffLegend": "予選で失敗した場合、本大会プレーオフへ",
   "euroPlayoffToFinal": "決勝へ",
   "euroPlayoffQualified": "出場決定",
   "playerOtherPositions": "各ポジションでの評価",
@@ -4542,14 +4541,11 @@
   "regionalCupHosted": "開催国：{host}",
   "regionalCupHomeAndAway": "グループはホーム＆アウェーで開催",
   "regionalCupGroups": "グループ",
-  "ncWcPlayoffLegend": "予選で失敗した場合、世界選手権プレーオフへ",
   "newsNcPlayoffNetTitle": "プレーオフという保険：{finals}",
   "newsNcPlayoffNetBody": "{cup}の順位表では、現時点でプレーオフ出場圏にいる。ストレートで予選を突破できなくても、{finals}への2つ目の道がある。プレーオフの組み合わせは予選終了後に抽選される。",
   "ncLegendWinnerUp": "グループ首位：上位リーグへ昇格",
   "ncLegendWinnerFinalsFour": "グループ首位：ファイナルフォーへ",
   "ncLegendLastDown": "最下位：下位リーグへ降格",
-  "playoffBadgeLetter": "PO",
-  "playoffBadgeTooltip": "プレーオフ圏内：予選で失敗しても二度目のチャンス",
   "campaignIsleOfManTitle": "三本の脚",
   "campaignIsleOfManTwist": "マン島がアンドラに代わり欧州へ、100年間",
   "campaignIsleOfManIntro": "マン島には独自のサッカー協会とリーグ、そしてアイランドゲームズに出場する代表チームがありますが、欧州にも世界のサッカーにも居場所がありません。この世界ではアンドラに代わって欧州に加わり、世界ランキングの最下位近くからのスタートです。兼業の選手たち、ダグラスの小さなグラウンド、毎試合吹きつけるアイリッシュ海の風。100年、25サイクルのうちに欧州選手権へ、そして世界選手権へ。夢を見る勇気があるなら、そのどちらかを制しましょう。",
@@ -4563,5 +4559,8 @@
   "campaignCzechoslovakiaGoal": "世界選手権出場",
   "campaignStars1Czechoslovakia": "世界選手権出場",
   "campaignStars2Czechoslovakia": "欧州選手権優勝",
-  "campaignStars3Czechoslovakia": "世界選手権優勝"
+  "campaignStars3Czechoslovakia": "世界選手権優勝",
+  "wcPlayoffCourseNote": "各グループの1位はストレートインします。残りの枠は、成績上位のグループ2位（グループ表で黄色）と、まだ出場が決まっていないネーションズカップの上位グループ1位によるプレーオフで争われます。ネーションズカップからは、現時点で：",
+  "playoffCourseLegend": "黄色：現時点でプレーオフ圏内（下の説明を参照）",
+  "playoffCourseFooter": "ここにいる理由：ネーションズカップは、ストレートインできなかった場合に、各グループの1位、次いで各リーグの上位チームにプレーオフ出場権を与えます。これはあくまで現時点の状況で、節ごとに変わります。"
 }

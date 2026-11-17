@@ -27925,10 +27925,6 @@
   "@euroPlayoffCourseNote": {
     "description": "Card under Europe's qualifying tables: explains the play-off paths; followed by each path's sides."
   },
-  "ncEuroPlayoffLegend": "Headed for the play-off for the continental finals, should qualifying fail",
-  "@ncEuroPlayoffLegend": {
-    "description": "Nations Cup legend: the play-off tag, sides headed for the continental finals play-off (a second chance if qualifying fails)."
-  },
   "euroPlayoffToFinal": "To the final",
   "@euroPlayoffToFinal": {
     "description": "Play-off path: tag beside the semi-final's winner."
@@ -28088,10 +28084,6 @@
   "@regionalCupGroups": {
     "description": "Regional cup page: heading over the two group tables."
   },
-  "ncWcPlayoffLegend": "Headed for the World Championship play-off, should qualifying fail",
-  "@ncWcPlayoffLegend": {
-    "description": "Nations Cup legend (second edition): the play-off tag, sides headed for the World Championship play-off (a second chance if qualifying fails)."
-  },
   "newsNcPlayoffNetTitle": "A play-off safety net: {finals}",
   "@newsNcPlayoffNetTitle": {
     "description": "Inbox title: the Nations Cup puts the manager's side on course for a play-off path to a finals tournament (a safety net if qualifying goes wrong).",
@@ -28124,14 +28116,6 @@
   "ncLegendLastDown": "Bottom: relegated a league",
   "@ncLegendLastDown": {
     "description": "Nations Cup league legend: the red stripe, the bottom side drops a league."
-  },
-  "playoffBadgeLetter": "P",
-  "@playoffBadgeLetter": {
-    "description": "A one- or two-letter tag on a side headed for a play-off path (first letter of the local word for play-off)."
-  },
-  "playoffBadgeTooltip": "Headed for a play-off path: a second chance if qualifying fails",
-  "@playoffBadgeTooltip": {
-    "description": "Tooltip of the play-off tag beside a Nations Cup side."
   },
   "campaignIsleOfManTitle": "The Three Legs",
   "@campaignIsleOfManTitle": {
@@ -28188,5 +28172,17 @@
   "campaignStars3Czechoslovakia": "Win the World Championship",
   "@campaignStars3Czechoslovakia": {
     "description": "What earns the third star in the Czechoslovakia campaign: win the World Championship, in either cycle."
+  },
+  "wcPlayoffCourseNote": "Every group winner goes straight through. The last places go to play-off paths: the best runners-up (yellow in the groups) and the best Nations Cup group winners who are not through. From the Nations Cup, as things stand:",
+  "@wcPlayoffCourseNote": {
+    "description": "World Championship qualifying, under Europe's groups: who goes to the play-off paths (the best runners-up, in yellow, and the best Nations Cup group winners not through), then the Nations Cup sides on course for them, listed below."
+  },
+  "playoffCourseLegend": "Yellow: headed for a play-off path, as things stand (see below)",
+  "playoffCourseFooter": "Why they are here: the Nations Cup gives its group winners, then the next best of each league, a play-off place if they do not go through directly. This is only how things stand today: it changes after every round.",
+  "@playoffCourseLegend": {
+    "description": "Qualifying tables: the key to the yellow stripe on the sides headed for a play-off path as things stand; the card under the tables explains it."
+  },
+  "@playoffCourseFooter": {
+    "description": "Footnote under the play-off course card of a qualifying screen: why the Nations Cup sides listed are there, and that it is only the current state."
   }
 }

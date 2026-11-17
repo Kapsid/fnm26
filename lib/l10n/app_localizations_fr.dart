@@ -18256,10 +18256,6 @@ class AppLocalizationsFr extends AppLocalizations {
       'Les deux premiers de chaque groupe sont qualifiés directement. Les dernières places se jouent en barrages entre les meilleures équipes de la Coupe des nations non qualifiées. En l\'état :';
 
   @override
-  String get ncEuroPlayoffLegend =>
-      'En route pour les barrages de la phase finale si les qualifications échouent';
-
-  @override
   String get euroPlayoffToFinal => 'En finale';
 
   @override
@@ -18347,10 +18343,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get regionalCupGroups => 'GROUPES';
 
   @override
-  String get ncWcPlayoffLegend =>
-      'En route pour les barrages du Championnat du monde si les qualifications échouent';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'Un filet de sécurité en barrages : $finals';
   }
@@ -18370,13 +18362,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Dernier : relégué dans la ligue inférieure';
-
-  @override
-  String get playoffBadgeLetter => 'B';
-
-  @override
-  String get playoffBadgeTooltip =>
-      'En route pour les barrages : une seconde chance si les qualifications échouent';
 
   @override
   String get campaignIsleOfManTitle => 'Les trois jambes';
@@ -18429,4 +18414,16 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Gagner le Championnat du monde';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      'Chaque vainqueur de groupe est qualifié directement. Les dernières places se jouent en barrages entre les meilleurs deuxièmes (en jaune dans les groupes) et les meilleurs vainqueurs de groupe de la Coupe des nations non qualifiés. Depuis la Coupe des nations, en l\'état :';
+
+  @override
+  String get playoffCourseLegend =>
+      'Jaune : en route pour les barrages, en l\'état (voir plus bas)';
+
+  @override
+  String get playoffCourseFooter =>
+      'Pourquoi ces équipes : la Coupe des nations offre à ses vainqueurs de groupe, puis aux meilleurs suivants de chaque ligue, une place en barrages s\'ils ne se qualifient pas directement. Ce n\'est que la situation actuelle : elle change après chaque journée.';
 }

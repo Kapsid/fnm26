@@ -4519,7 +4519,6 @@
   "assistantMatchResult": "Yardımcının maçı",
   "euroPlayoffCourseTitle": "Uluslar Kupası üzerinden play-off",
   "euroPlayoffCourseNote": "Her grubun ilk ikisi doğrudan katılır. Son yerler, Uluslar Kupası'nın henüz katılamamış en iyi takımları arasındaki play-off ile belirlenir. Şu anki duruma göre:",
-  "ncEuroPlayoffLegend": "Elemeler kötü giderse final turnuvası play-off yolunda",
   "euroPlayoffToFinal": "Finale",
   "euroPlayoffQualified": "Katıldı",
   "playerOtherPositions": "Her mevkide",
@@ -4542,14 +4541,11 @@
   "regionalCupHosted": "Ev sahibi: {host}",
   "regionalCupHomeAndAway": "Gruplar iç saha ve deplasmanda oynanır",
   "regionalCupGroups": "GRUPLAR",
-  "ncWcPlayoffLegend": "Elemeler kötü giderse Dünya Şampiyonası play-off yolunda",
   "newsNcPlayoffNetTitle": "Güvence olarak play-off: {finals}",
   "newsNcPlayoffNetBody": "{cup} tablolarına göre şu an play-off yerindesin. Doğrudan katılım olmazsa, {finals} için ikinci bir yolun var. Play-off yolları elemeler bitince çekilir.",
   "ncLegendWinnerUp": "Grup birincisi: üst lige yükselir",
   "ncLegendWinnerFinalsFour": "Grup birincisi: dörtlü finale",
   "ncLegendLastDown": "Sonuncu: alt lige düşer",
-  "playoffBadgeLetter": "P",
-  "playoffBadgeTooltip": "Play-off yolunda: elemeler kötü giderse ikinci bir şans",
   "campaignIsleOfManTitle": "Üç Bacak",
   "campaignIsleOfManTwist": "Man Adası yüz yıl boyunca Avrupa'da Andorra'nın yerini alıyor",
   "campaignIsleOfManIntro": "Man Adası'nın kendi futbol federasyonu, kendi ligi ve Ada Oyunları'nda forma giyen bir milli takımı var, ama ne Avrupa futbolunda ne de dünya futbolunda bir yeri var. Bu dünyada Avrupa'da Andorra'nın yerini aldı ve dünya sıralamasının dibine yakın bir yerden başlıyor: yarı profesyonel oyuncular, Douglas'ta küçük bir saha ve her maçta İrlanda Denizi'nin rüzgârı. Bir Avrupa Şampiyonası'na, ardından bir Dünya Şampiyonası'na ulaşmak ve hayal kurmaya cesaretin varsa bunlardan birini kazanmak için yüz yılın, yani yirmi beş dönemin var.",
@@ -4563,5 +4559,8 @@
   "campaignCzechoslovakiaGoal": "Bir Dünya Şampiyonası'na katılma hakkı kazan",
   "campaignStars1Czechoslovakia": "Bir Dünya Şampiyonası'na katılma hakkı kazan",
   "campaignStars2Czechoslovakia": "Avrupa Şampiyonası'nı kazan",
-  "campaignStars3Czechoslovakia": "Dünya Şampiyonası'nı kazan"
+  "campaignStars3Czechoslovakia": "Dünya Şampiyonası'nı kazan",
+  "wcPlayoffCourseNote": "Her grup birincisi doğrudan katılır. Son yerler, en iyi grup ikincileri (gruplarda sarı) ile Uluslar Kupası'nın henüz katılamamış en iyi grup birincileri arasındaki play-off ile belirlenir. Uluslar Kupası'ndan, şu anki duruma göre:",
+  "playoffCourseLegend": "Sarı: şu anki duruma göre play-off yolunda (aşağıya bakın)",
+  "playoffCourseFooter": "Neden buradalar: Uluslar Kupası, grup birincilerine ve ardından her ligin sonraki en iyilerine, doğrudan katılamazlarsa play-off yeri verir. Bu yalnızca şu anki durumdur ve her haftadan sonra değişir."
 }

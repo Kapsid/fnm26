@@ -216,8 +216,6 @@ NationsCupData fakeNationsCup(int playerNationId) {
     myNationIds: {playerNationId},
     nations: realNationsById,
     maxTier: 1,
-    playoffNations: const {},
-    playoffForWorld: false,
   );
 }
 
@@ -372,7 +370,5 @@ NationsCupData fakeAfricanNationsCup(int playerNationId) {
     myNationIds: {playerNationId},
     nations: realNationsById,
     maxTier: 0,
-    playoffNations: const {},
-    playoffForWorld: false,
   );
 }

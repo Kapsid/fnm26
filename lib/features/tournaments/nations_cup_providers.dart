@@ -12,7 +12,6 @@ import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart';
-import 'package:fnm/features/tournaments/euro_playoff_providers.dart';
 
 /// Everything a Nations Cup screen shows: whose cup, its format, the manager's
 /// league and group, the tables, the finals rounds, the honours and the
@@ -45,15 +44,6 @@ typedef NationsCupData = ({
   /// The lowest league in the cup's confederation — its bottom sides have
   /// nowhere to fall, so they aren't shown as relegated.
   int maxTier,
-
-  /// Europe's cups on the calendar2 rhythm: the sides on course for a
-  /// play-off read off this cup (yellow): the continental finals' paths off
-  /// the first, the World Championship's (pot 4) off the second.
-  Set<int> playoffNations,
-
-  /// Whether [playoffNations] are headed for the World Championship's
-  /// play-off (the second cup) rather than the continental finals'.
-  bool playoffForWorld,
 });
 
 /// Which cup: `confederation`'s, or (null) the manager's own, Europe's for a
@@ -168,9 +158,6 @@ nationsCupProvider = FutureProvider.autoDispose.family<NationsCupData?, NationsC
     if (p != null) playerNames[id] = p.name;
   }
 
-  final firstShown =
-      conf == Confederation.europe &&
-      await showsFirstNationsCup(comp, careerId: careerId);
   return (
     confederation: conf,
     cupName: cup.name,
@@ -194,23 +181,5 @@ nationsCupProvider = FutureProvider.autoDispose.family<NationsCupData?, NationsC
     },
     nations: nations,
     maxTier: maxTier,
-    playoffNations: conf != Confederation.europe
-        ? const <int>{}
-        : firstShown
-        ? await euroPlayoffMarks(
-            comp,
-            careerId: careerId,
-            cycle: career.cyclePointer,
-            rngSeed: career.rngSeed,
-            nations: nations,
-          )
-        : await wcPlayoffMarks(
-            comp,
-            careerId: careerId,
-            cycle: career.cyclePointer,
-            rngSeed: career.rngSeed,
-            nations: nations,
-          ),
-    playoffForWorld: conf == Confederation.europe && !firstShown,
   );
 });

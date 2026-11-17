@@ -187,11 +187,6 @@ class LiveGroupTableCard extends StatelessWidget {
                           style: style,
                         ),
                       ),
-                      if (zones?.playoffBadge.contains(s.nationId) ?? false)
-                        const Padding(
-                          padding: EdgeInsets.only(right: AppSpacing.xs),
-                          child: PlayoffBadge(size: 13),
-                        ),
                       num('${s.played}', style),
                       num(
                         s.goalDifference > 0
@@ -218,7 +213,6 @@ class LiveTableZones {
     this.contention,
     this.relegate = 0,
     this.playoffNations = const {},
-    this.playoffBadge = const {},
   });
 
   /// Places that go through outright.
@@ -232,9 +226,6 @@ class LiveTableZones {
 
   /// Nations whose place leads to the intercontinental play-off.
   final Set<int> playoffNations;
-
-  /// Nations tagged for a Nations Cup play-off path (see `PlayoffBadge`).
-  final Set<int> playoffBadge;
 
   /// The mark for [place] (1-based) held by [nationId] in a table of
   /// [count], in the hub table's order of precedence; null for none.

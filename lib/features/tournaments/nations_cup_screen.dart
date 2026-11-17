@@ -252,7 +252,6 @@ mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
           name: name,
           code: code,
           isLowestLeague: NationsCup.tierOfGroupName(g.name) >= v.maxTier,
-          playoffNations: v.playoffNations,
         );
         return ListView(
           padding: const EdgeInsets.all(AppSpacing.marginMobile),
@@ -271,11 +270,6 @@ mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
             _LeagueLegend(
               top: NationsCup.tierOfGroupName(shown.first.name) == 0,
               lowest: NationsCup.tierOfGroupName(shown.first.name) >= v.maxTier,
-              playoff: v.playoffNations.isEmpty
-                  ? null
-                  : v.playoffForWorld
-                  ? l.ncWcPlayoffLegend
-                  : l.ncEuroPlayoffLegend,
             ),
             const SizedBox(height: AppSpacing.md),
             if (grid) ...[
@@ -501,14 +495,10 @@ class _GroupCard extends StatelessWidget {
     required this.name,
     required this.code,
     required this.isLowestLeague,
-    this.playoffNations = const {},
   });
 
   final int careerId;
   final FinalsGroupTable group;
-
-  /// Sides on course for the continental finals' play-off paths: yellow.
-  final Set<int> playoffNations;
 
   /// Whose cup the group is in: a ladder group sends its winner up and its
   /// bottom side down, an African zone group relegates nobody.
@@ -556,8 +546,6 @@ class _GroupCard extends StatelessWidget {
       continentalSize: 0,
       isLowestLeague: isLowestLeague,
     );
-    // A play-off path is its own tag beside the name (a group winner on
-    // course for one keeps its green).
     final zone = pos <= adv.direct
         ? AppColors.positive
         : pos == adv.contention
@@ -605,10 +593,6 @@ class _GroupCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (playoffNations.contains(s.nationId)) ...[
-                    const SizedBox(width: AppSpacing.xs),
-                    const PlayoffBadge(),
-                  ],
                 ],
               ),
             ),
@@ -790,12 +774,12 @@ class _FinalsCard extends StatelessWidget {
 }
 
 /// The key over a league's groups: what the green and red stripes mean
-/// there, and the play-off tag when any side carries it.
+/// there. (Who the cup sends to a play-off path is shown with the
+/// tournament the path leads to, not here: see `_PlayoffCourseCard`.)
 class _LeagueLegend extends StatelessWidget {
   const _LeagueLegend({
     required this.top,
     required this.lowest,
-    this.playoff,
   });
 
   /// League A: its winners go to the Finals Four, not up.
@@ -804,18 +788,13 @@ class _LeagueLegend extends StatelessWidget {
   /// The lowest league: nobody goes down.
   final bool lowest;
 
-  /// What the play-off tag means here, or null when no side carries it.
-  final String? playoff;
-
   static const Key legendKey = Key('nationsCup.legend');
-  static const Key playoffKey = Key('nationsCup.playoffLegend');
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     Widget stripe(Color c) => Container(width: 3, height: 14, color: c);
-    Widget line(Widget mark, String text, {Key? key}) => Padding(
-      key: key,
+    Widget line(Widget mark, String text) => Padding(
       padding: const EdgeInsets.only(top: 2),
       child: Row(
         children: [
@@ -841,8 +820,6 @@ class _LeagueLegend extends StatelessWidget {
           top ? l.ncLegendWinnerFinalsFour : l.ncLegendWinnerUp,
         ),
         if (!lowest) line(stripe(AppColors.error), l.ncLegendLastDown),
-        if (playoff case final text?)
-          line(const PlayoffBadge(), text, key: playoffKey),
       ],
     );
   }

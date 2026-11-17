@@ -18093,10 +18093,6 @@ class AppLocalizationsDa extends AppLocalizations {
       'De to bedste i hver gruppe går direkte videre. De sidste pladser går til playoff for Nations Cups bedste hold, som ikke er videre. Som det står nu:';
 
   @override
-  String get ncEuroPlayoffLegend =>
-      'På vej mod playoff til slutrunden, hvis kvalifikationen slår fejl';
-
-  @override
   String get euroPlayoffToFinal => 'Til finalen';
 
   @override
@@ -18183,10 +18179,6 @@ class AppLocalizationsDa extends AppLocalizations {
   String get regionalCupGroups => 'GRUPPER';
 
   @override
-  String get ncWcPlayoffLegend =>
-      'På vej mod playoff til Verdensmesterskabet, hvis kvalifikationen slår fejl';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'Playoff som sikkerhedsnet: $finals';
   }
@@ -18205,13 +18197,6 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Sidst: rykker ned i en lavere liga';
-
-  @override
-  String get playoffBadgeLetter => 'P';
-
-  @override
-  String get playoffBadgeTooltip =>
-      'På vej mod playoff: en ekstra chance, hvis kvalifikationen slår fejl';
 
   @override
   String get campaignIsleOfManTitle => 'De tre ben';
@@ -18260,4 +18245,16 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Vind Verdensmesterskabet';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      'Hver gruppevinder går direkte videre. De sidste pladser går til playoff for de bedste toere (gule i grupperne) og Nations Cups bedste gruppevindere, som ikke er videre. Fra Nations Cup, som det står nu:';
+
+  @override
+  String get playoffCourseLegend =>
+      'Gul: på vej mod playoff, som det står nu (se nedenfor)';
+
+  @override
+  String get playoffCourseFooter =>
+      'Hvorfor de er her: Nations Cup giver sine gruppevindere, og derefter de næstbedste i hver liga, en playoffplads, hvis de ikke går direkte videre. Det er kun stillingen lige nu og ændrer sig efter hver runde.';
 }

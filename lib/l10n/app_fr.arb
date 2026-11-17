@@ -4519,7 +4519,6 @@
   "assistantMatchResult": "Le match de l'adjoint",
   "euroPlayoffCourseTitle": "Barrages via la Coupe des nations",
   "euroPlayoffCourseNote": "Les deux premiers de chaque groupe sont qualifiés directement. Les dernières places se jouent en barrages entre les meilleures équipes de la Coupe des nations non qualifiées. En l'état :",
-  "ncEuroPlayoffLegend": "En route pour les barrages de la phase finale si les qualifications échouent",
   "euroPlayoffToFinal": "En finale",
   "euroPlayoffQualified": "Qualifié",
   "playerOtherPositions": "À chaque poste",
@@ -4542,14 +4541,11 @@
   "regionalCupHosted": "Pays hôte : {host}",
   "regionalCupHomeAndAway": "Phase de groupes à domicile et à l'extérieur",
   "regionalCupGroups": "GROUPES",
-  "ncWcPlayoffLegend": "En route pour les barrages du Championnat du monde si les qualifications échouent",
   "newsNcPlayoffNetTitle": "Un filet de sécurité en barrages : {finals}",
   "newsNcPlayoffNetBody": "D'après les classements de la compétition {cup}, vous tenez pour l'instant une place en barrages. Si la qualification directe échoue, ils vous ouvrent une seconde voie vers la phase finale ({finals}). Les tableaux sont tirés à la fin des qualifications.",
   "ncLegendWinnerUp": "Vainqueur du groupe : promu dans la ligue supérieure",
   "ncLegendWinnerFinalsFour": "Vainqueur du groupe : phase finale à quatre",
   "ncLegendLastDown": "Dernier : relégué dans la ligue inférieure",
-  "playoffBadgeLetter": "B",
-  "playoffBadgeTooltip": "En route pour les barrages : une seconde chance si les qualifications échouent",
   "campaignIsleOfManTitle": "Les trois jambes",
   "campaignIsleOfManTwist": "L’Île de Man prend la place d’Andorre en Europe, pour cent ans",
   "campaignIsleOfManIntro": "L’Île de Man a sa propre fédération de football, son propre championnat et une sélection qui dispute les Jeux des îles, mais aucune place dans le football européen ni mondial. Dans ce monde, elle a pris la place d’Andorre en Europe et part près du bas du classement mondial : des joueurs à temps partiel, un petit stade à Douglas et le vent de la mer d’Irlande à chaque match. Vous avez cent ans, soit vingt-cinq cycles, pour atteindre un Championnat d’Europe, puis un Championnat du monde et, si vous osez rêver, en remporter un.",
@@ -4563,5 +4559,8 @@
   "campaignCzechoslovakiaGoal": "Se qualifier pour un Championnat du monde",
   "campaignStars1Czechoslovakia": "Se qualifier pour un Championnat du monde",
   "campaignStars2Czechoslovakia": "Gagner le Championnat d’Europe",
-  "campaignStars3Czechoslovakia": "Gagner le Championnat du monde"
+  "campaignStars3Czechoslovakia": "Gagner le Championnat du monde",
+  "wcPlayoffCourseNote": "Chaque vainqueur de groupe est qualifié directement. Les dernières places se jouent en barrages entre les meilleurs deuxièmes (en jaune dans les groupes) et les meilleurs vainqueurs de groupe de la Coupe des nations non qualifiés. Depuis la Coupe des nations, en l'état :",
+  "playoffCourseLegend": "Jaune : en route pour les barrages, en l'état (voir plus bas)",
+  "playoffCourseFooter": "Pourquoi ces équipes : la Coupe des nations offre à ses vainqueurs de groupe, puis aux meilleurs suivants de chaque ligue, une place en barrages s'ils ne se qualifient pas directement. Ce n'est que la situation actuelle : elle change après chaque journée."
 }

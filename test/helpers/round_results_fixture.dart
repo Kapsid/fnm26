@@ -62,7 +62,6 @@ RoundResultsView fourGroupsView() {
     directCount: 2,
     contentionPos: 3,
     playoffNations: const <int>{},
-    playoffBadge: const <int>{},
     relegateCount: 0,
     noRelegationGroups: const <String>{},
   );
@@ -98,7 +97,6 @@ RoundResultsView knockoutView() {
     directCount: 2,
     contentionPos: null,
     playoffNations: const <int>{},
-    playoffBadge: const <int>{},
     relegateCount: 0,
     noRelegationGroups: const <String>{},
   );
@@ -112,7 +110,6 @@ RoundResultsView emptyRoundView() => (
   directCount: 2,
   contentionPos: null,
   playoffNations: const <int>{},
-  playoffBadge: const <int>{},
   relegateCount: 0,
   noRelegationGroups: const <String>{},
 );

@@ -18224,10 +18224,6 @@ class AppLocalizationsDe extends AppLocalizations {
       'Die ersten zwei jeder Gruppe sind direkt qualifiziert. Die letzten Plätze gehen in Play-offs an die besten Teams des Nationenpokals, die nicht durch sind. Stand jetzt:';
 
   @override
-  String get ncEuroPlayoffLegend =>
-      'Auf Kurs fürs Play-off zur Endrunde, falls die Qualifikation scheitert';
-
-  @override
   String get euroPlayoffToFinal => 'Ins Finale';
 
   @override
@@ -18315,10 +18311,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get regionalCupGroups => 'GRUPPEN';
 
   @override
-  String get ncWcPlayoffLegend =>
-      'Auf Kurs fürs Play-off zur Weltmeisterschaft, falls die Qualifikation scheitert';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'Play-off als Rettungsnetz: $finals';
   }
@@ -18337,13 +18329,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Letzter: Abstieg in die niedrigere Liga';
-
-  @override
-  String get playoffBadgeLetter => 'P';
-
-  @override
-  String get playoffBadgeTooltip =>
-      'Auf Kurs fürs Play-off: eine zweite Chance, falls die Qualifikation scheitert';
 
   @override
   String get campaignIsleOfManTitle => 'Die drei Beine';
@@ -18396,4 +18381,16 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Die Weltmeisterschaft gewinnen';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      'Jeder Gruppensieger ist direkt qualifiziert. Die letzten Plätze gehen in Play-offs an die besten Gruppenzweiten (gelb in den Gruppen) und die besten Gruppensieger des Nationenpokals, die nicht durch sind. Aus dem Nationenpokal, Stand jetzt:';
+
+  @override
+  String get playoffCourseLegend =>
+      'Gelb: auf Kurs fürs Play-off, nach aktuellem Stand (siehe unten)';
+
+  @override
+  String get playoffCourseFooter =>
+      'Warum sie hier stehen: Der Nationenpokal gibt seinen Gruppensiegern, danach den nächstbesten jeder Liga, einen Play-off-Platz, wenn sie sich nicht direkt qualifizieren. Das ist nur der aktuelle Stand und ändert sich nach jedem Spieltag.';
 }

@@ -18125,10 +18125,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'The top two of every group go straight through. The last places go to play-off paths for the best Nations Cup sides who are not through. As things stand:';
 
   @override
-  String get ncEuroPlayoffLegend =>
-      'Headed for the play-off for the continental finals, should qualifying fail';
-
-  @override
   String get euroPlayoffToFinal => 'To the final';
 
   @override
@@ -18215,10 +18211,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get regionalCupGroups => 'GROUPS';
 
   @override
-  String get ncWcPlayoffLegend =>
-      'Headed for the World Championship play-off, should qualifying fail';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'A play-off safety net: $finals';
   }
@@ -18236,13 +18228,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Bottom: relegated a league';
-
-  @override
-  String get playoffBadgeLetter => 'P';
-
-  @override
-  String get playoffBadgeTooltip =>
-      'Headed for a play-off path: a second chance if qualifying fails';
 
   @override
   String get campaignIsleOfManTitle => 'The Three Legs';
@@ -18290,4 +18275,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Win the World Championship';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      'Every group winner goes straight through. The last places go to play-off paths: the best runners-up (yellow in the groups) and the best Nations Cup group winners who are not through. From the Nations Cup, as things stand:';
+
+  @override
+  String get playoffCourseLegend =>
+      'Yellow: headed for a play-off path, as things stand (see below)';
+
+  @override
+  String get playoffCourseFooter =>
+      'Why they are here: the Nations Cup gives its group winners, then the next best of each league, a play-off place if they do not go through directly. This is only how things stand today: it changes after every round.';
 }

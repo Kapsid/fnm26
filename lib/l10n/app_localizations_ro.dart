@@ -18518,10 +18518,6 @@ class AppLocalizationsRo extends AppLocalizations {
       'Primele două din fiecare grupă se califică direct. Ultimele locuri se joacă în baraj între cele mai bune echipe din Cupa Națiunilor care nu s-au calificat. Situația acum:';
 
   @override
-  String get ncEuroPlayoffLegend =>
-      'Pe drumul spre barajul turneului final dacă preliminariile eșuează';
-
-  @override
   String get euroPlayoffToFinal => 'În finală';
 
   @override
@@ -18608,10 +18604,6 @@ class AppLocalizationsRo extends AppLocalizations {
   String get regionalCupGroups => 'GRUPE';
 
   @override
-  String get ncWcPlayoffLegend =>
-      'Pe drumul spre barajul Campionatului Mondial dacă preliminariile eșuează';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'Barajul ca plasă de siguranță: $finals';
   }
@@ -18631,13 +18623,6 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Ultima: retrogradează într-o ligă inferioară';
-
-  @override
-  String get playoffBadgeLetter => 'B';
-
-  @override
-  String get playoffBadgeTooltip =>
-      'Pe drumul spre baraj: a doua șansă dacă preliminariile eșuează';
 
   @override
   String get campaignIsleOfManTitle => 'Cele trei picioare';
@@ -18688,4 +18673,16 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Câștigarea Campionatului Mondial';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      'Fiecare câștigătoare de grupă se califică direct. Ultimele locuri se joacă în baraj între cele mai bune ocupante ale locului doi (cu galben în grupe) și cele mai bune câștigătoare de grupă din Cupa Națiunilor care nu s-au calificat. Din Cupa Națiunilor, situația acum:';
+
+  @override
+  String get playoffCourseLegend =>
+      'Galben: pe drumul spre baraj, conform situației actuale (vezi mai jos)';
+
+  @override
+  String get playoffCourseFooter =>
+      'De ce sunt aici: Cupa Națiunilor dă câștigătoarelor de grupă, apoi următoarelor cele mai bune din fiecare ligă, un loc în baraj dacă nu se califică direct. Este doar situația de acum și se schimbă după fiecare etapă.';
 }

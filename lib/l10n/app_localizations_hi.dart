@@ -18000,10 +18000,6 @@ class AppLocalizationsHi extends AppLocalizations {
       'हर ग्रुप की शीर्ष दो टीमें सीधे क्वालीफ़ाई करती हैं। आख़िरी जगहें नेशंस कप की उन सर्वश्रेष्ठ टीमों के प्ले-ऑफ़ से तय होती हैं जो सीधे नहीं पहुँचीं। अभी की स्थिति:';
 
   @override
-  String get ncEuroPlayoffLegend =>
-      'क्वालिफ़ाइंग नाकाम हो तो फ़ाइनल्स के प्ले-ऑफ़ की राह पर';
-
-  @override
   String get euroPlayoffToFinal => 'फ़ाइनल में';
 
   @override
@@ -18091,10 +18087,6 @@ class AppLocalizationsHi extends AppLocalizations {
   String get regionalCupGroups => 'ग्रुप';
 
   @override
-  String get ncWcPlayoffLegend =>
-      'क्वालिफ़ाइंग नाकाम हो तो विश्व चैंपियनशिप प्ले-ऑफ़ की राह पर';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'प्ले-ऑफ़ का सहारा: $finals';
   }
@@ -18112,13 +18104,6 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'अंतिम: निचली लीग में';
-
-  @override
-  String get playoffBadgeLetter => 'PO';
-
-  @override
-  String get playoffBadgeTooltip =>
-      'प्ले-ऑफ़ की राह पर: क्वालिफ़ाइंग नाकाम हो तो दूसरा मौका';
 
   @override
   String get campaignIsleOfManTitle => 'तीन टाँगें';
@@ -18171,4 +18156,16 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'विश्व चैंपियनशिप जीतें';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      'हर ग्रुप विजेता सीधे क्वालीफ़ाई करता है। आख़िरी जगहें प्ले-ऑफ़ से तय होती हैं: सबसे अच्छे उपविजेता (ग्रुपों में पीले) और नेशंस कप के वे सबसे अच्छे ग्रुप विजेता जो सीधे नहीं पहुँचे। नेशंस कप से, अभी की स्थिति:';
+
+  @override
+  String get playoffCourseLegend =>
+      'पीला: अभी की स्थिति में प्ले-ऑफ़ की राह पर (नीचे देखें)';
+
+  @override
+  String get playoffCourseFooter =>
+      'ये यहाँ क्यों हैं: नेशंस कप अपने ग्रुप विजेताओं को, फिर हर लीग की अगली सबसे अच्छी टीमों को, सीधे क्वालीफ़ाई न करने पर प्ले-ऑफ़ में जगह देता है। यह सिर्फ़ अभी की स्थिति है और हर राउंड के बाद बदलती है।';
 }

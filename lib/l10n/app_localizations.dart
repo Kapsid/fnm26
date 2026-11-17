@@ -27350,12 +27350,6 @@ abstract class AppLocalizations {
   /// **'The top two of every group go straight through. The last places go to play-off paths for the best Nations Cup sides who are not through. As things stand:'**
   String get euroPlayoffCourseNote;
 
-  /// Nations Cup legend: the play-off tag, sides headed for the continental finals play-off (a second chance if qualifying fails).
-  ///
-  /// In en, this message translates to:
-  /// **'Headed for the play-off for the continental finals, should qualifying fail'**
-  String get ncEuroPlayoffLegend;
-
   /// Play-off path: tag beside the semi-final's winner.
   ///
   /// In en, this message translates to:
@@ -27488,12 +27482,6 @@ abstract class AppLocalizations {
   /// **'GROUPS'**
   String get regionalCupGroups;
 
-  /// Nations Cup legend (second edition): the play-off tag, sides headed for the World Championship play-off (a second chance if qualifying fails).
-  ///
-  /// In en, this message translates to:
-  /// **'Headed for the World Championship play-off, should qualifying fail'**
-  String get ncWcPlayoffLegend;
-
   /// Inbox title: the Nations Cup puts the manager's side on course for a play-off path to a finals tournament (a safety net if qualifying goes wrong).
   ///
   /// In en, this message translates to:
@@ -27523,18 +27511,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Bottom: relegated a league'**
   String get ncLegendLastDown;
-
-  /// A one- or two-letter tag on a side headed for a play-off path (first letter of the local word for play-off).
-  ///
-  /// In en, this message translates to:
-  /// **'P'**
-  String get playoffBadgeLetter;
-
-  /// Tooltip of the play-off tag beside a Nations Cup side.
-  ///
-  /// In en, this message translates to:
-  /// **'Headed for a play-off path: a second chance if qualifying fails'**
-  String get playoffBadgeTooltip;
 
   /// Campaign title: the Three Legs, the triskelion on the Isle of Man's flag, for a hundred years (25 cycles) of the Isle of Man, a nation added to the world for this campaign.
   ///
@@ -27619,6 +27595,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Win the World Championship'**
   String get campaignStars3Czechoslovakia;
+
+  /// World Championship qualifying, under Europe's groups: who goes to the play-off paths (the best runners-up, in yellow, and the best Nations Cup group winners not through), then the Nations Cup sides on course for them, listed below.
+  ///
+  /// In en, this message translates to:
+  /// **'Every group winner goes straight through. The last places go to play-off paths: the best runners-up (yellow in the groups) and the best Nations Cup group winners who are not through. From the Nations Cup, as things stand:'**
+  String get wcPlayoffCourseNote;
+
+  /// Qualifying tables: the key to the yellow stripe on the sides headed for a play-off path as things stand; the card under the tables explains it.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow: headed for a play-off path, as things stand (see below)'**
+  String get playoffCourseLegend;
+
+  /// Footnote under the play-off course card of a qualifying screen: why the Nations Cup sides listed are there, and that it is only the current state.
+  ///
+  /// In en, this message translates to:
+  /// **'Why they are here: the Nations Cup gives its group winners, then the next best of each league, a play-off place if they do not go through directly. This is only how things stand today: it changes after every round.'**
+  String get playoffCourseFooter;
 }
 
 class _AppLocalizationsDelegate

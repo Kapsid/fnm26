@@ -17467,9 +17467,6 @@ class AppLocalizationsJa extends AppLocalizations {
       '各グループ上位2チームがストレートインします。残りの枠は、ネーションズカップの上位でまだ出場が決まっていないチームによるプレーオフで争われます。現時点では：';
 
   @override
-  String get ncEuroPlayoffLegend => '予選で失敗した場合、本大会プレーオフへ';
-
-  @override
   String get euroPlayoffToFinal => '決勝へ';
 
   @override
@@ -17556,9 +17553,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get regionalCupGroups => 'グループ';
 
   @override
-  String get ncWcPlayoffLegend => '予選で失敗した場合、世界選手権プレーオフへ';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'プレーオフという保険：$finals';
   }
@@ -17576,12 +17570,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => '最下位：下位リーグへ降格';
-
-  @override
-  String get playoffBadgeLetter => 'PO';
-
-  @override
-  String get playoffBadgeTooltip => 'プレーオフ圏内：予選で失敗しても二度目のチャンス';
 
   @override
   String get campaignIsleOfManTitle => '三本の脚';
@@ -17626,4 +17614,15 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => '世界選手権優勝';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      '各グループの1位はストレートインします。残りの枠は、成績上位のグループ2位（グループ表で黄色）と、まだ出場が決まっていないネーションズカップの上位グループ1位によるプレーオフで争われます。ネーションズカップからは、現時点で：';
+
+  @override
+  String get playoffCourseLegend => '黄色：現時点でプレーオフ圏内（下の説明を参照）';
+
+  @override
+  String get playoffCourseFooter =>
+      'ここにいる理由：ネーションズカップは、ストレートインできなかった場合に、各グループの1位、次いで各リーグの上位チームにプレーオフ出場権を与えます。これはあくまで現時点の状況で、節ごとに変わります。';
 }

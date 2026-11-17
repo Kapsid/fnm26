@@ -18055,10 +18055,6 @@ class AppLocalizationsMs extends AppLocalizations {
       'Dua teratas setiap kumpulan layak terus. Tempat terakhir direbut dalam play-off oleh pasukan terbaik Piala Negara-Negara yang belum layak. Setakat ini:';
 
   @override
-  String get ncEuroPlayoffLegend =>
-      'Menuju play-off pusingan akhir jika kelayakan gagal';
-
-  @override
   String get euroPlayoffToFinal => 'Ke final';
 
   @override
@@ -18146,10 +18142,6 @@ class AppLocalizationsMs extends AppLocalizations {
   String get regionalCupGroups => 'KUMPULAN';
 
   @override
-  String get ncWcPlayoffLegend =>
-      'Menuju play-off Kejohanan Dunia jika kelayakan gagal';
-
-  @override
   String newsNcPlayoffNetTitle(String finals) {
     return 'Play-off sebagai jaring keselamatan: $finals';
   }
@@ -18168,13 +18160,6 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Tercorot: turun ke liga lebih rendah';
-
-  @override
-  String get playoffBadgeLetter => 'P';
-
-  @override
-  String get playoffBadgeTooltip =>
-      'Menuju play-off: peluang kedua jika kelayakan gagal';
 
   @override
   String get campaignIsleOfManTitle => 'Tiga Kaki';
@@ -18222,4 +18207,16 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Menangi Kejohanan Dunia';
+
+  @override
+  String get wcPlayoffCourseNote =>
+      'Setiap juara kumpulan layak terus. Tempat terakhir direbut dalam play-off oleh naib juara terbaik (kuning dalam kumpulan) dan juara kumpulan terbaik Piala Negara-Negara yang belum layak. Daripada Piala Negara-Negara, setakat ini:';
+
+  @override
+  String get playoffCourseLegend =>
+      'Kuning: menuju play-off, setakat ini (lihat di bawah)';
+
+  @override
+  String get playoffCourseFooter =>
+      'Mengapa mereka di sini: Piala Negara-Negara memberi juara kumpulannya, kemudian pasukan terbaik seterusnya dalam setiap liga, tempat dalam play-off jika mereka tidak layak terus. Ini hanya kedudukan semasa dan berubah selepas setiap pusingan.';
 }
