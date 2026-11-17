@@ -48,13 +48,16 @@ void main() {
     expect(find.text('Finish the Legacy'), findsOneWidget);
     expect(find.text('1 cycle'), findsNWidgets(3));
     await tester.scrollUntilVisible(find.text('Young Finns'), 200);
-    expect(find.text('A FEW CYCLES · 2'), findsOneWidget);
+    expect(find.text('A FEW CYCLES · 3'), findsOneWidget);
     expect(find.text('Best of Guineas'), findsOneWidget);
     expect(find.text('3 cycles'), findsOneWidget);
-    await tester.scrollUntilVisible(find.text('Zanzibar Rising'), 200);
-    expect(find.text('THE LONG HAUL · 2'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Reunited'), 200);
+    expect(find.text('2 cycles'), findsNWidgets(2));
+    await tester.scrollUntilVisible(find.text('The Three Legs'), 200);
+    expect(find.text('THE LONG HAUL · 3'), findsOneWidget);
     expect(find.text('A Greenland Century'), findsOneWidget);
-    expect(find.text('25 cycles'), findsNWidgets(2));
+    expect(find.text('Zanzibar Rising'), findsOneWidget);
+    expect(find.text('25 cycles'), findsNWidgets(3));
     expect(find.byKey(CampaignTile.starsKey), findsNothing);
     expect(find.byKey(CampaignTile.inProgressKey), findsNothing);
   });
@@ -420,6 +423,9 @@ void main() {
           reason: def.id,
         );
       }
+      // Back up to it: the list is longer than the screen.
+      await tester.scrollUntilVisible(tile('grudge'), -200);
+      await tester.pumpAndSettle();
       expect(
         find.descendant(
           of: tile('grudge'),
