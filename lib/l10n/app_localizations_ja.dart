@@ -17582,4 +17582,48 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get playoffBadgeTooltip => 'プレーオフ圏内：予選で失敗しても二度目のチャンス';
+
+  @override
+  String get campaignIsleOfManTitle => '三本の脚';
+
+  @override
+  String get campaignIsleOfManTwist => 'マン島がアンドラに代わり欧州へ、100年間';
+
+  @override
+  String get campaignIsleOfManIntro =>
+      'マン島には独自のサッカー協会とリーグ、そしてアイランドゲームズに出場する代表チームがありますが、欧州にも世界のサッカーにも居場所がありません。この世界ではアンドラに代わって欧州に加わり、世界ランキングの最下位近くからのスタートです。兼業の選手たち、ダグラスの小さなグラウンド、毎試合吹きつけるアイリッシュ海の風。100年、25サイクルのうちに欧州選手権へ、そして世界選手権へ。夢を見る勇気があるなら、そのどちらかを制しましょう。';
+
+  @override
+  String get campaignIsleOfManGoal => '欧州選手権出場';
+
+  @override
+  String get campaignStars1IsleOfMan => '欧州選手権出場';
+
+  @override
+  String get campaignStars2IsleOfMan => '世界選手権出場';
+
+  @override
+  String get campaignStars3IsleOfMan => '欧州選手権または世界選手権優勝';
+
+  @override
+  String get campaignCzechoslovakiaTitle => '再びひとつに';
+
+  @override
+  String get campaignCzechoslovakiaTwist => 'チェコとスロバキアが再びひとつに、2サイクル';
+
+  @override
+  String get campaignCzechoslovakiaIntro =>
+      'チェコスロバキアは1976年に欧州選手権を制し、世界選手権では2度決勝に進みましたが、1993年に二つの国に分かれました。この世界では両国が再びひとつになり、チェコとスロバキアの代表選手は全員ひとつのチームでプレーします。両国は欧州から姿を消しました。世界ランキング30位以内ぎりぎりからのスタートで、両国の選手から自由に選べます。2サイクルでチェコスロバキアを世界選手権に導き、さらに欧州選手権と世界選手権を制しましょう。';
+
+  @override
+  String get campaignCzechoslovakiaGoal => '世界選手権出場';
+
+  @override
+  String get campaignStars1Czechoslovakia => '世界選手権出場';
+
+  @override
+  String get campaignStars2Czechoslovakia => '欧州選手権優勝';
+
+  @override
+  String get campaignStars3Czechoslovakia => '世界選手権優勝';
 }

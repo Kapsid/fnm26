@@ -268,6 +268,8 @@ abstract final class NationNames {
     'YEM': 'Jemen',
     'ZAM': 'Zambie',
     'ZAN': 'Zanzibar',
+    'IMN': 'Ostrov Man',
+    'TCH': 'Československo',
     'ZIM': 'Zimbabwe',
   };
 
@@ -503,6 +505,8 @@ abstract final class NationNames {
     'YEM': 'Jemenu',
     'ZAM': 'Zambii',
     'ZAN': 'Zanzibaru',
+    'IMN': 'Ostrovu Man',
+    'TCH': 'Československu',
     'ZIM': 'Zimbabwe',
   };
 

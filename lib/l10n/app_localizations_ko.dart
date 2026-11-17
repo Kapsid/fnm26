@@ -17624,4 +17624,49 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get playoffBadgeTooltip => '플레이오프 진출권: 예선이 실패해도 두 번째 기회';
+
+  @override
+  String get campaignIsleOfManTitle => '세 개의 다리';
+
+  @override
+  String get campaignIsleOfManTwist => '맨섬이 유럽에서 안도라의 자리를 대신한다, 100년 동안';
+
+  @override
+  String get campaignIsleOfManIntro =>
+      '맨섬에는 자체 축구협회와 리그, 그리고 아일랜드 게임에 나서는 대표팀이 있지만, 유럽 축구에도 세계 축구에도 자리가 없습니다. 이 세계에서 맨섬은 유럽에서 안도라의 자리를 대신하며, 세계 랭킹 바닥 근처에서 시작합니다: 생업을 병행하는 선수, 더글러스의 작은 경기장, 매 경기 불어오는 아이리시해의 바람. 100년, 25번의 대회 주기 안에 유럽 선수권, 이어서 세계 선수권 본선에 오르고, 감히 꿈꾼다면 그중 하나를 우승하세요.';
+
+  @override
+  String get campaignIsleOfManGoal => '유럽 선수권 본선 진출';
+
+  @override
+  String get campaignStars1IsleOfMan => '유럽 선수권 본선 진출';
+
+  @override
+  String get campaignStars2IsleOfMan => '세계 선수권 본선 진출';
+
+  @override
+  String get campaignStars3IsleOfMan => '유럽 선수권 또는 세계 선수권 우승';
+
+  @override
+  String get campaignCzechoslovakiaTitle => '다시 하나로';
+
+  @override
+  String get campaignCzechoslovakiaTwist =>
+      '체코와 슬로바키아가 다시 한 팀으로 뛴다, 두 번의 대회 주기 동안';
+
+  @override
+  String get campaignCzechoslovakiaIntro =>
+      '체코슬로바키아는 1976년 유럽 선수권에서 우승했고 세계 선수권 결승에 두 번 올랐지만, 1993년 둘로 나뉘었습니다. 이 세계에서 두 나라는 다시 하나가 되었습니다: 체코와 슬로바키아의 모든 국가대표 선수가 다시 한 팀에서 뛰고, 두 나라는 유럽에서 사라졌습니다. 세계 랭킹 30위 안쪽 끝자락에서 시작하며, 두 나라 선수단에서 골라 쓸 수 있습니다. 두 번의 대회 주기 안에 체코슬로바키아를 세계 선수권 본선에 올린 뒤, 유럽 선수권과 세계 선수권 우승에 도전하세요.';
+
+  @override
+  String get campaignCzechoslovakiaGoal => '세계 선수권 본선 진출';
+
+  @override
+  String get campaignStars1Czechoslovakia => '세계 선수권 본선 진출';
+
+  @override
+  String get campaignStars2Czechoslovakia => '유럽 선수권 우승';
+
+  @override
+  String get campaignStars3Czechoslovakia => '세계 선수권 우승';
 }

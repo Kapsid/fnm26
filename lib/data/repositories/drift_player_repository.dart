@@ -1377,12 +1377,24 @@ class DriftPlayerRepository implements PlayerRepository {
     final v5Guard = era.atLeast(_PoolEra.v5)
         ? guardedNamesPoolsV5ByNation[nationId]
         : null;
+    // A dormant nation made of others (Czechoslovakia, see
+    // DormantNations.alsoReplaces) shares their name pools and plays beside
+    // their real players, so it also steps over every name their stored
+    // rows hold.
+    final merged = dormant && DormantNations.alsoReplaces.containsKey(nationId)
+        ? {
+            for (final n in DormantNations.replacedBy(nationId))
+              for (final p in await _seededRows(n)) p.name,
+          }
+        : null;
     if (guard != null ||
         fullGuard != null ||
         v4Guard != null ||
-        v5Guard != null) {
+        v5Guard != null ||
+        merged != null) {
       final raw = nameAt;
       bool guarded(String name) =>
+          (merged?.contains(name) ?? false) ||
           (guard?.contains(name) ?? false) ||
           (fullGuard?.contains(name) ?? false) ||
           (v4Guard?.contains(name) ?? false) ||

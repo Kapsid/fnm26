@@ -18312,4 +18312,56 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get playoffBadgeTooltip =>
       'A caminho do play-off: uma segunda chance se as eliminatórias falharem';
+
+  @override
+  String get campaignIsleOfManTitle => 'As três pernas';
+
+  @override
+  String get campaignIsleOfManTwist =>
+      'A Ilha de Man ocupa o lugar de Andorra na Europa, por cem anos';
+
+  @override
+  String get campaignIsleOfManIntro =>
+      'A Ilha de Man tem sua própria federação de futebol, sua própria liga e uma seleção que disputa os Jogos das Ilhas, mas nenhum lugar no futebol europeu ou mundial. Neste mundo, ela ocupou o lugar de Andorra na Europa e começa perto do fundo do ranking mundial: jogadores semiprofissionais, um estádio pequeno em Douglas e o vento do Mar da Irlanda em cada partida. Você tem cem anos, vinte e cinco ciclos, para chegar a um Campeonato Europeu, depois a um Campeonato Mundial e, se ousar sonhar, vencer um deles.';
+
+  @override
+  String get campaignIsleOfManGoal =>
+      'Classificar-se para um Campeonato Europeu';
+
+  @override
+  String get campaignStars1IsleOfMan =>
+      'Classificar-se para um Campeonato Europeu';
+
+  @override
+  String get campaignStars2IsleOfMan =>
+      'Classificar-se para um Campeonato Mundial';
+
+  @override
+  String get campaignStars3IsleOfMan =>
+      'Vencer o Campeonato Europeu ou o Campeonato Mundial';
+
+  @override
+  String get campaignCzechoslovakiaTitle => 'Juntos de novo';
+
+  @override
+  String get campaignCzechoslovakiaTwist =>
+      'Tchéquia e Eslováquia voltam a jogar como uma só seleção, por dois ciclos';
+
+  @override
+  String get campaignCzechoslovakiaIntro =>
+      'A Checoslováquia venceu o Campeonato Europeu em 1976 e chegou duas vezes à final do Campeonato Mundial, antes de se dividir em duas em 1993. Neste mundo, as duas voltaram a se unir: todos os jogadores de seleção da Tchéquia e da Eslováquia voltam a jogar por uma só equipe, e as duas nações sumiram da Europa. Você começa logo dentro do top 30 mundial e pode escolher entre os dois elencos. Você tem dois ciclos para levar a Checoslováquia a um Campeonato Mundial e depois vencer o Campeonato Europeu e o Campeonato Mundial.';
+
+  @override
+  String get campaignCzechoslovakiaGoal =>
+      'Classificar-se para um Campeonato Mundial';
+
+  @override
+  String get campaignStars1Czechoslovakia =>
+      'Classificar-se para um Campeonato Mundial';
+
+  @override
+  String get campaignStars2Czechoslovakia => 'Vencer o Campeonato Europeu';
+
+  @override
+  String get campaignStars3Czechoslovakia => 'Vencer o Campeonato Mundial';
 }

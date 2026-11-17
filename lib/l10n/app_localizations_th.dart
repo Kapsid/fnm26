@@ -17903,4 +17903,50 @@ class AppLocalizationsTh extends AppLocalizations {
   @override
   String get playoffBadgeTooltip =>
       'กำลังมุ่งสู่เพลย์ออฟ: โอกาสที่สองหากรอบคัดเลือกพลาด';
+
+  @override
+  String get campaignIsleOfManTitle => 'สามขา';
+
+  @override
+  String get campaignIsleOfManTwist =>
+      'เกาะแมนเข้ามาแทนที่อันดอร์ราในยุโรป เป็นเวลาร้อยปี';
+
+  @override
+  String get campaignIsleOfManIntro =>
+      'เกาะแมนมีสมาคมฟุตบอล ลีก และทีมชาติที่ลงเล่นในไอแลนด์เกมส์เป็นของตัวเอง แต่ไม่มีที่ยืนทั้งในฟุตบอลยุโรปและเวทีระดับโลก ในโลกนี้พวกเขาเข้ามาแทนที่อันดอร์ราในยุโรป และเริ่มต้นจากเกือบท้ายสุดของอันดับโลก: นักเตะพาร์ตไทม์ สนามเล็กๆ ในดักลาส และลมจากทะเลไอริชในทุกนัด คุณมีร้อยปี ยี่สิบห้ารอบ เพื่อไปชิงแชมป์ยุโรป แล้วชิงแชมป์โลก และถ้ากล้าฝัน ก็คว้าแชมป์สักรายการ';
+
+  @override
+  String get campaignIsleOfManGoal => 'ผ่านเข้ารอบชิงแชมป์ยุโรป';
+
+  @override
+  String get campaignStars1IsleOfMan => 'ผ่านเข้ารอบชิงแชมป์ยุโรป';
+
+  @override
+  String get campaignStars2IsleOfMan => 'ผ่านเข้ารอบชิงแชมป์โลก';
+
+  @override
+  String get campaignStars3IsleOfMan => 'คว้าแชมป์ชิงแชมป์ยุโรปหรือชิงแชมป์โลก';
+
+  @override
+  String get campaignCzechoslovakiaTitle => 'กลับมารวมกัน';
+
+  @override
+  String get campaignCzechoslovakiaTwist =>
+      'เช็กเกียและสโลวาเกียกลับมาเล่นเป็นทีมเดียว สองรอบ';
+
+  @override
+  String get campaignCzechoslovakiaIntro =>
+      'เชโกสโลวาเกียเคยคว้าแชมป์ชิงแชมป์ยุโรปในปี 1976 และเข้ารอบชิงชนะเลิศของชิงแชมป์โลกสองครั้ง ก่อนจะแยกเป็นสองประเทศในปี 1993 ในโลกนี้ทั้งสองกลับมารวมกันอีกครั้ง: นักเตะทีมชาติทุกคนของเช็กเกียและสโลวาเกียกลับมาเล่นให้ทีมเดียวกัน และทั้งสองชาติได้หายไปจากยุโรป คุณเริ่มต้นที่ท้ายๆ ของ 30 อันดับแรกของโลก พร้อมเลือกนักเตะได้จากทั้งสองทีม คุณมีสองรอบเพื่อพาเชโกสโลวาเกียไปชิงแชมป์โลก แล้วคว้าแชมป์ชิงแชมป์ยุโรปและชิงแชมป์โลก';
+
+  @override
+  String get campaignCzechoslovakiaGoal => 'ผ่านเข้ารอบชิงแชมป์โลก';
+
+  @override
+  String get campaignStars1Czechoslovakia => 'ผ่านเข้ารอบชิงแชมป์โลก';
+
+  @override
+  String get campaignStars2Czechoslovakia => 'คว้าแชมป์ชิงแชมป์ยุโรป';
+
+  @override
+  String get campaignStars3Czechoslovakia => 'คว้าแชมป์ชิงแชมป์โลก';
 }

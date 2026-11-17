@@ -179,6 +179,12 @@ abstract final class NationIdentity {
       pedigree: 3,
     ),
     'RSA': (nickname: 'Gold and Green', style: NationStyle.flair, pedigree: 4),
+    // The Isle of Man, a dormant nation (see DormantNations): the three legs
+    // of the flag.
+    'IMN': (nickname: 'The Three Legs', style: NationStyle.direct, pedigree: 5),
+    // Czechoslovakia, a dormant nation: European champions in 1976, World
+    // Championship finalists twice.
+    'TCH': (nickname: null, style: NationStyle.balanced, pedigree: 2),
     // Zanzibar, a dormant nation (see DormantNations).
     'ZAN': (
       nickname: 'Zanzibar Heroes',

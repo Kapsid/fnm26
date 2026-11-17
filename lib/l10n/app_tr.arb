@@ -4549,5 +4549,19 @@
   "ncLegendWinnerFinalsFour": "Grup birincisi: dörtlü finale",
   "ncLegendLastDown": "Sonuncu: alt lige düşer",
   "playoffBadgeLetter": "P",
-  "playoffBadgeTooltip": "Play-off yolunda: elemeler kötü giderse ikinci bir şans"
+  "playoffBadgeTooltip": "Play-off yolunda: elemeler kötü giderse ikinci bir şans",
+  "campaignIsleOfManTitle": "Üç Bacak",
+  "campaignIsleOfManTwist": "Man Adası yüz yıl boyunca Avrupa'da Andorra'nın yerini alıyor",
+  "campaignIsleOfManIntro": "Man Adası'nın kendi futbol federasyonu, kendi ligi ve Ada Oyunları'nda forma giyen bir milli takımı var, ama ne Avrupa futbolunda ne de dünya futbolunda bir yeri var. Bu dünyada Avrupa'da Andorra'nın yerini aldı ve dünya sıralamasının dibine yakın bir yerden başlıyor: yarı profesyonel oyuncular, Douglas'ta küçük bir saha ve her maçta İrlanda Denizi'nin rüzgârı. Bir Avrupa Şampiyonası'na, ardından bir Dünya Şampiyonası'na ulaşmak ve hayal kurmaya cesaretin varsa bunlardan birini kazanmak için yüz yılın, yani yirmi beş dönemin var.",
+  "campaignIsleOfManGoal": "Bir Avrupa Şampiyonası'na katılma hakkı kazan",
+  "campaignStars1IsleOfMan": "Bir Avrupa Şampiyonası'na katılma hakkı kazan",
+  "campaignStars2IsleOfMan": "Bir Dünya Şampiyonası'na katılma hakkı kazan",
+  "campaignStars3IsleOfMan": "Avrupa Şampiyonası'nı ya da Dünya Şampiyonası'nı kazan",
+  "campaignCzechoslovakiaTitle": "Yeniden Bir Arada",
+  "campaignCzechoslovakiaTwist": "Çekya ve Slovakya iki dönem boyunca yeniden tek takım olarak oynuyor",
+  "campaignCzechoslovakiaIntro": "Çekoslovakya 1976'da Avrupa Şampiyonası'nı kazandı ve iki kez Dünya Şampiyonası finaline yükseldi, ardından 1993'te ikiye ayrıldı. Bu dünyada ikisi yeniden birleşti: Çekya ve Slovakya'nın tüm milli oyuncuları yine tek bir takımda oynuyor ve iki ülke Avrupa'dan silindi. Dünya sıralamasında ilk otuzun hemen içinden başlıyorsun ve iki kadronun da oyuncularını seçebilirsin. Çekoslovakya'yı bir Dünya Şampiyonası'na taşımak, ardından Avrupa Şampiyonası'nı ve Dünya Şampiyonası'nı kazanmak için iki dönemin var.",
+  "campaignCzechoslovakiaGoal": "Bir Dünya Şampiyonası'na katılma hakkı kazan",
+  "campaignStars1Czechoslovakia": "Bir Dünya Şampiyonası'na katılma hakkı kazan",
+  "campaignStars2Czechoslovakia": "Avrupa Şampiyonası'nı kazan",
+  "campaignStars3Czechoslovakia": "Dünya Şampiyonası'nı kazan"
 }

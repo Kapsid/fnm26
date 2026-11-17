@@ -134,6 +134,31 @@ final List<Player> _labZanzibar = () {
   ];
 }();
 
+/// The Isle of Man's squad, or (LAB_ISLE_OF_MAN_FACTOR, the campaign lab
+/// only) the same squad rebuilt from Andorra's attributes at another factor,
+/// the way `isleOfManSquad` was written.
+final List<Player> _labIsleOfMan = () {
+  final f = double.tryParse(
+    Platform.environment['LAB_ISLE_OF_MAN_FACTOR'] ?? '',
+  );
+  if (f == null) return isleOfManSquad;
+  final andorra = [
+    for (final p in _players)
+      if (p.nationId == 2) p,
+  ];
+  int scaled(int v) => (v * f).round().clamp(25, 99);
+  return [
+    for (var i = 0; i < isleOfManSquad.length; i++)
+      isleOfManSquad[i].copyWith(
+        attributes: PlayerAttributes(
+          physical: scaled(andorra[i].attributes.physical),
+          technical: scaled(andorra[i].attributes.technical),
+          stamina: scaled(andorra[i].attributes.stamina),
+        ),
+      ),
+  ];
+}();
+
 /// LAB_ENGAGED=1 (the campaign lab only): the autopilot plays an engaged
 /// manager. All the federation money into the youth academy (the rest into
 /// the naturalisation office), every naturalisation offer accepted, every
@@ -198,7 +223,13 @@ ProviderContainer _storyContainer(
           // Their 23 base players, like every other nation here
           // (players.json unexpanded).
           dormantNations: DormantNations.all,
-          dormantPlayers: [..._labGreenland, ..._labZanzibar, ...belarusSquad],
+          dormantPlayers: [
+            ..._labGreenland,
+            ..._labZanzibar,
+            ...belarusSquad,
+            ..._labIsleOfMan,
+            ...czechoslovakiaSquad,
+          ],
         ),
       ),
       formFactorProvider.overrideWithValue(FormFactor.phone),

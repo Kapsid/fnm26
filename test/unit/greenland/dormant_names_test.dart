@@ -213,12 +213,16 @@ void main() {
       'GRL': 'scandinavia',
       'ZAN': 'eastAfrica',
       'BLR': 'easternEurope',
+      'IMN': 'britishIsles',
+      'TCH': 'centralEurope',
     };
+    // Every one a minnow but Czechoslovakia, the 1976 European champions.
+    const pedigree = {'TCH': 2};
     for (final n in DormantNations.all) {
       expect(NationNames.csByCode[n.code], isNotNull);
       expect(NationNames.csDativeByCode[n.code], isNotNull);
       expect(NationGeography.subregionByCode[n.code], subregions[n.code]);
-      expect(NationIdentity.of(n.code).pedigree, 5);
+      expect(NationIdentity.of(n.code).pedigree, pedigree[n.code] ?? 5);
       expect(nationalStadiumCapacity[n.id], isNotNull);
       expect(_json('country_cities.json')['${n.id}'], isNotEmpty);
       expect(_json('country_names.json')['${n.id}'], isNotNull);
@@ -237,5 +241,23 @@ void main() {
     expect(NationNames.displayDative('ZAN', 'Zanzibar', 'cs'), 'Zanzibaru');
     expect(NationNames.display('ZAN', 'Zanzibar', 'de'), 'Sansibar');
     expect(NationNames.display('ZAN', 'Zanzibar', 'en'), 'Zanzibar');
+    expect(NationNames.display('IMN', 'Isle of Man', 'cs'), 'Ostrov Man');
+    expect(
+      NationNames.displayDative('IMN', 'Isle of Man', 'cs'),
+      'Ostrovu Man',
+    );
+    expect(NationNames.display('IMN', 'Isle of Man', 'fr'), 'Île de Man');
+    expect(
+      NationNames.display('TCH', 'Czechoslovakia', 'cs'),
+      'Československo',
+    );
+    expect(
+      NationNames.displayDative('TCH', 'Czechoslovakia', 'cs'),
+      'Československu',
+    );
+    expect(
+      NationNames.display('TCH', 'Czechoslovakia', 'de'),
+      'Tschechoslowakei',
+    );
   });
 }

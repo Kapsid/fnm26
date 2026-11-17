@@ -97,10 +97,11 @@ void main() {
   /// championships, which the treble reads) drawn already: on calendar2 it
   /// is drawn the summer after the first.
   Future<int> start() async {
-    final id = (await container
-            .read(campaignServiceProvider)
-            .start(Campaigns.legacy, managerName: 'Me'))
-        .id;
+    final id =
+        (await container
+                .read(campaignServiceProvider)
+                .start(Campaigns.legacy, managerName: 'Me'))
+            .id;
     await drawSecondNationsCupNow(container, id);
     return id;
   }
@@ -373,10 +374,11 @@ void main() {
       'June, three years before the World Championship', () async {
     // calendar2: the second's falls in June of the year before it (see
     // calendar2_cycle_test.dart).
-    final id = (await container
-            .read(campaignServiceProvider)
-            .start(Campaigns.legacy, managerName: 'Me'))
-        .id;
+    final id =
+        (await container
+                .read(campaignServiceProvider)
+                .start(Campaigns.legacy, managerName: 'Me'))
+            .id;
     final season = container.read(seasonServiceProvider);
     final wcYear = CareerService.worldCupYear(0);
     Future<List<DateTime>> semis() async => [

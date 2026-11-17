@@ -43,6 +43,16 @@ abstract final class RealHistory {
     'Turkey': 'Türkiye',
   };
 
+  /// Where a nation's history goes in a world that lacks it but has the
+  /// nation it was part of: Czechoslovakia's run (see `DormantNations`)
+  /// holds the records of Czechia and Slovakia since the split as well as
+  /// its own. Tried only when neither the name nor its [aliases] resolve.
+  static const mergedInto = <String, String>{
+    'Czechia': 'Czechoslovakia',
+    'Czech Republic': 'Czechoslovakia',
+    'Slovakia': 'Czechoslovakia',
+  };
+
   /// Titles a successor state shares with the one [aliases] maps the winner
   /// onto, keyed `"competition|year"`: the nation also credited with it.
   ///

@@ -18344,4 +18344,56 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get playoffBadgeTooltip =>
       'Auf Kurs fürs Play-off: eine zweite Chance, falls die Qualifikation scheitert';
+
+  @override
+  String get campaignIsleOfManTitle => 'Die drei Beine';
+
+  @override
+  String get campaignIsleOfManTwist =>
+      'Die Isle of Man nimmt Andorras Platz in Europa ein, für hundert Jahre';
+
+  @override
+  String get campaignIsleOfManIntro =>
+      'Die Isle of Man hat einen eigenen Fußballverband, eine eigene Liga und eine Auswahl, die bei Inselspielen antritt, aber keinen Platz im europäischen oder im Weltfußball. In dieser Welt hat sie Andorras Platz in Europa eingenommen und startet weit unten in der Weltrangliste: Teilzeitspieler, ein kleines Stadion in Douglas und der Wind der Irischen See in jedem Spiel. Sie haben hundert Jahre, also fünfundzwanzig Zyklen, um eine Europameisterschaft zu erreichen, dann eine Weltmeisterschaft und, wenn Sie zu träumen wagen, eine davon zu gewinnen.';
+
+  @override
+  String get campaignIsleOfManGoal =>
+      'Für eine Europameisterschaft qualifizieren';
+
+  @override
+  String get campaignStars1IsleOfMan =>
+      'Für eine Europameisterschaft qualifizieren';
+
+  @override
+  String get campaignStars2IsleOfMan =>
+      'Für eine Weltmeisterschaft qualifizieren';
+
+  @override
+  String get campaignStars3IsleOfMan =>
+      'Die Europameisterschaft oder die Weltmeisterschaft gewinnen';
+
+  @override
+  String get campaignCzechoslovakiaTitle => 'Wiedervereint';
+
+  @override
+  String get campaignCzechoslovakiaTwist =>
+      'Tschechien und die Slowakei spielen wieder gemeinsam, für zwei Zyklen';
+
+  @override
+  String get campaignCzechoslovakiaIntro =>
+      'Die Tschechoslowakei gewann 1976 die Europameisterschaft und stand zweimal im Finale der Weltmeisterschaft, bevor sie sich 1993 in zwei Staaten teilte. In dieser Welt sind beide wieder vereint: Jeder Nationalspieler Tschechiens und der Slowakei spielt wieder für dieselbe Mannschaft, und die beiden Nationen sind aus Europa verschwunden. Sie starten knapp innerhalb der Top 30 der Welt und können aus beiden Kadern wählen. Sie haben zwei Zyklen, um die Tschechoslowakei zu einer Weltmeisterschaft zu führen und dann die Europameisterschaft und die Weltmeisterschaft zu gewinnen.';
+
+  @override
+  String get campaignCzechoslovakiaGoal =>
+      'Für eine Weltmeisterschaft qualifizieren';
+
+  @override
+  String get campaignStars1Czechoslovakia =>
+      'Für eine Weltmeisterschaft qualifizieren';
+
+  @override
+  String get campaignStars2Czechoslovakia => 'Die Europameisterschaft gewinnen';
+
+  @override
+  String get campaignStars3Czechoslovakia => 'Die Weltmeisterschaft gewinnen';
 }

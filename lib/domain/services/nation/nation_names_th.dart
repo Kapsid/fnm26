@@ -215,5 +215,7 @@ const Map<String, String> nationNamesTh = <String, String>{
   'YEM': 'เยเมน',
   'ZAM': 'แซมเบีย',
   'ZAN': 'แซนซิบาร์',
+  'IMN': 'เกาะแมน',
+  'TCH': 'เชโกสโลวาเกีย',
   'ZIM': 'ซิมบับเว',
 };

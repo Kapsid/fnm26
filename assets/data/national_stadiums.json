@@ -5134,5 +5134,61 @@
    "city": "Chake-Chake",
    "seats": 10000
   }
+ ],
+ "214": [
+  {
+   "city": "Douglas",
+   "seats": 3500
+  },
+  {
+   "city": "Ramsey",
+   "seats": 1500
+  },
+  {
+   "city": "Peel",
+   "seats": 1000
+  }
+ ],
+ "215": [
+  {
+   "city": "Bratislava",
+   "seats": 22500
+  },
+  {
+   "city": "Prague",
+   "seats": 19400
+  },
+  {
+   "city": "Trnava",
+   "seats": 19000
+  },
+  {
+   "city": "Teplice",
+   "seats": 18000
+  },
+  {
+   "city": "Ostrava",
+   "seats": 15000
+  },
+  {
+   "city": "Dunajská Streda",
+   "seats": 12700
+  },
+  {
+   "city": "Olomouc",
+   "seats": 12500
+  },
+  {
+   "city": "Košice",
+   "seats": 12500
+  },
+  {
+   "city": "Brno",
+   "seats": 12000
+  },
+  {
+   "city": "Plzeň",
+   "seats": 11700
+  }
  ]
 }

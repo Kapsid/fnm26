@@ -125,7 +125,7 @@ void main() {
         for (final c in Campaigns.all)
           if (c.dormantNationId != null) c.id,
       ],
-      ['greenland', 'zanzibar'],
+      ['greenland', 'zanzibar', 'isleOfMan', 'czechoslovakia'],
     );
   });
 
@@ -175,7 +175,36 @@ void main() {
     expect(def.friendlyNationId, isNull);
     expect(def.goal, CampaignGoal.qualifyBothThenWorldTitle);
     expect(def.difficulty, CampaignDifficulty.hard);
-    expect(Campaigns.all.last, def);
     expect(Campaigns.byId('zanzibar'), def);
+  });
+
+  test("The Three Legs: Pro, 25 cycles, can be continued, its dormant world "
+      "in Andorra's place", () {
+    const def = Campaigns.isleOfMan;
+    expect(def.nationId, 214);
+    expect(def.dormantNationId, 214);
+    expect(DormantNations.replaces[214], 2);
+    expect(DormantNations.alsoReplaces[214], isNull);
+    expect(def.cycles, 25);
+    expect(def.needsPro, isTrue);
+    expect(def.canContinue, isTrue);
+    expect(def.goal, CampaignGoal.qualifyBothThenTitle);
+    expect(Campaigns.byId('isleOfMan'), def);
+  });
+
+  test('Reunited: Pro, two cycles, Czechoslovakia in the place of Czechia '
+      'and Slovakia with both their squads', () {
+    const def = Campaigns.czechoslovakia;
+    expect(def.nationId, 215);
+    expect(def.dormantNationId, 215);
+    expect(DormantNations.replacedBy(215), {12, 48});
+    expect(def.donorNationIds, [12, 48]);
+    expect(def.namedNations, containsAll([215, 12, 48]));
+    expect(def.cycles, 2);
+    expect(def.needsPro, isTrue);
+    expect(def.canContinue, isTrue);
+    expect(def.goal, CampaignGoal.qualifyWorldThenTitles);
+    expect(Campaigns.all.last, def);
+    expect(Campaigns.byId('czechoslovakia'), def);
   });
 }

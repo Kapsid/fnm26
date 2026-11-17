@@ -18288,4 +18288,50 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String get playoffBadgeTooltip =>
       'Matkalla jatkokarsintaan: toinen mahdollisuus, jos karsinnat menevät pieleen';
+
+  @override
+  String get campaignIsleOfManTitle => 'Kolme jalkaa';
+
+  @override
+  String get campaignIsleOfManTwist =>
+      'Mansaari ottaa Andorran paikan Euroopassa sadaksi vuodeksi';
+
+  @override
+  String get campaignIsleOfManIntro =>
+      'Mansaarella on oma jalkapalloliitto, oma sarja ja maajoukkue, joka pelaa saarikisoissa, mutta ei paikkaa Euroopan eikä maailman jalkapallossa. Tässä maailmassa se on ottanut Andorran paikan Euroopassa ja aloittaa maailmanrankingin loppupäästä: osa-aikaisia pelaajia, pieni kenttä Douglasissa ja Irlanninmeren tuuli joka ottelussa. Sinulla on sata vuotta, kaksikymmentäviisi kautta, aikaa selviytyä EM-kisoihin, sitten MM-kisoihin ja, jos uskallat unelmoida, voittaa toinen niistä.';
+
+  @override
+  String get campaignIsleOfManGoal => 'Selviä EM-kisoihin';
+
+  @override
+  String get campaignStars1IsleOfMan => 'Selviä EM-kisoihin';
+
+  @override
+  String get campaignStars2IsleOfMan => 'Selviä MM-kisoihin';
+
+  @override
+  String get campaignStars3IsleOfMan => 'Voita EM-kisat tai MM-kisat';
+
+  @override
+  String get campaignCzechoslovakiaTitle => 'Jälleen yhdessä';
+
+  @override
+  String get campaignCzechoslovakiaTwist =>
+      'Tšekki ja Slovakia pelaavat taas yhtenä joukkueena kahden kauden ajan';
+
+  @override
+  String get campaignCzechoslovakiaIntro =>
+      'Tšekkoslovakia voitti EM-kisat vuonna 1976 ja pelasi kahdesti MM-kisojen finaalissa, kunnes se jakautui kahtia vuonna 1993. Tässä maailmassa maat ovat yhdistyneet uudelleen: jokainen Tšekin ja Slovakian maajoukkuepelaaja pelaa taas samassa joukkueessa, eikä kumpaakaan maata enää ole Euroopassa. Aloitat juuri ja juuri maailmanrankingin 30 parhaan joukosta ja voit valita pelaajat kummastakin joukkueesta. Sinulla on kaksi kautta aikaa viedä Tšekkoslovakia MM-kisoihin ja voittaa sitten EM-kisat ja MM-kisat.';
+
+  @override
+  String get campaignCzechoslovakiaGoal => 'Selviä MM-kisoihin';
+
+  @override
+  String get campaignStars1Czechoslovakia => 'Selviä MM-kisoihin';
+
+  @override
+  String get campaignStars2Czechoslovakia => 'Voita EM-kisat';
+
+  @override
+  String get campaignStars3Czechoslovakia => 'Voita MM-kisat';
 }

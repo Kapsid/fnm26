@@ -55,6 +55,11 @@ const Map<int, int> nationalStadiumCapacity = {
   // Zanzibar (dormant): the New Amaan Complex in Zanzibar City, rebuilt
   // for about 15,000.
   213: 15000,
+  // The Isle of Man (dormant): the Bowl in Douglas, about 3,500.
+  214: 3500,
+  // Czechoslovakia (dormant): Bratislava's Tehelné pole, the larger of the
+  // two national grounds.
+  215: 22500,
   // Belarus (dormant, in new careers from 1.0.9): the Dinamo Stadium in
   // Minsk, rebuilt in 2018 for about 22,000.
   6: 22000,

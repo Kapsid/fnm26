@@ -18377,4 +18377,56 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get playoffBadgeTooltip =>
       'En route pour les barrages : une seconde chance si les qualifications échouent';
+
+  @override
+  String get campaignIsleOfManTitle => 'Les trois jambes';
+
+  @override
+  String get campaignIsleOfManTwist =>
+      'L’Île de Man prend la place d’Andorre en Europe, pour cent ans';
+
+  @override
+  String get campaignIsleOfManIntro =>
+      'L’Île de Man a sa propre fédération de football, son propre championnat et une sélection qui dispute les Jeux des îles, mais aucune place dans le football européen ni mondial. Dans ce monde, elle a pris la place d’Andorre en Europe et part près du bas du classement mondial : des joueurs à temps partiel, un petit stade à Douglas et le vent de la mer d’Irlande à chaque match. Vous avez cent ans, soit vingt-cinq cycles, pour atteindre un Championnat d’Europe, puis un Championnat du monde et, si vous osez rêver, en remporter un.';
+
+  @override
+  String get campaignIsleOfManGoal =>
+      'Se qualifier pour un Championnat d’Europe';
+
+  @override
+  String get campaignStars1IsleOfMan =>
+      'Se qualifier pour un Championnat d’Europe';
+
+  @override
+  String get campaignStars2IsleOfMan =>
+      'Se qualifier pour un Championnat du monde';
+
+  @override
+  String get campaignStars3IsleOfMan =>
+      'Gagner le Championnat d’Europe ou le Championnat du monde';
+
+  @override
+  String get campaignCzechoslovakiaTitle => 'Retrouvailles';
+
+  @override
+  String get campaignCzechoslovakiaTwist =>
+      'La Tchéquie et la Slovaquie jouent de nouveau ensemble, pour deux cycles';
+
+  @override
+  String get campaignCzechoslovakiaIntro =>
+      'La Tchécoslovaquie a remporté le Championnat d’Europe en 1976 et atteint deux fois la finale du Championnat du monde, avant de se scinder en deux en 1993. Dans ce monde, les deux pays se sont réunis : chaque international de Tchéquie et de Slovaquie joue de nouveau pour une seule sélection, et les deux nations ont disparu d’Europe. Vous partez tout juste dans le top 30 mondial et pouvez puiser dans les deux effectifs. Vous avez deux cycles pour mener la Tchécoslovaquie à un Championnat du monde, puis remporter le Championnat d’Europe et le Championnat du monde.';
+
+  @override
+  String get campaignCzechoslovakiaGoal =>
+      'Se qualifier pour un Championnat du monde';
+
+  @override
+  String get campaignStars1Czechoslovakia =>
+      'Se qualifier pour un Championnat du monde';
+
+  @override
+  String get campaignStars2Czechoslovakia => 'Gagner le Championnat d’Europe';
+
+  @override
+  String get campaignStars3Czechoslovakia => 'Gagner le Championnat du monde';
 }

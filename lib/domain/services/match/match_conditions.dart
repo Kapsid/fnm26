@@ -467,6 +467,11 @@ abstract final class MatchClimate {
     211: ClimateBand.tropical, 212: ClimateBand.nordic,
     // Zanzibar (dormant), in Chad's place: the islands' monsoon heat.
     213: ClimateBand.tropical,
+    // The Isle of Man (dormant), in Andorra's place: the Irish Sea's mild
+    // wet weather.
+    214: ClimateBand.cool,
+    // Czechoslovakia (dormant): Czechia's and Slovakia's climate.
+    215: ClimateBand.cool,
     // Belarus (dormant, in new careers from 1.0.9): cold winters, warm
     // summers.
     6: ClimateBand.continental,

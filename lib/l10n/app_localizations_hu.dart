@@ -18156,4 +18156,51 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get playoffBadgeTooltip =>
       'Úton a pótselejtező felé: második esély, ha a selejtező nem jön össze';
+
+  @override
+  String get campaignIsleOfManTitle => 'A három láb';
+
+  @override
+  String get campaignIsleOfManTwist =>
+      'A Man-sziget száz évre átveszi Andorra helyét Európában';
+
+  @override
+  String get campaignIsleOfManIntro =>
+      'A Man-szigetnek saját labdarúgó-szövetsége, saját bajnoksága és a szigetjátékokon szereplő válogatottja van, de sem az európai, sem a világ futballjában nincs helye. Ebben a világban átvette Andorra helyét Európában, és a világranglista alja közeléből indul: részmunkaidős játékosok, egy kis stadion Douglasben és az Ír-tenger szele minden meccsen. Száz éved, huszonöt ciklusod van, hogy kijuss egy Európa-bajnokságra, aztán egy világbajnokságra, és ha mersz álmodni, megnyerd valamelyiket.';
+
+  @override
+  String get campaignIsleOfManGoal => 'Kijutni egy Európa-bajnokságra';
+
+  @override
+  String get campaignStars1IsleOfMan => 'Kijutni egy Európa-bajnokságra';
+
+  @override
+  String get campaignStars2IsleOfMan => 'Kijutni egy világbajnokságra';
+
+  @override
+  String get campaignStars3IsleOfMan =>
+      'Megnyerni az Európa-bajnokságot vagy a világbajnokságot';
+
+  @override
+  String get campaignCzechoslovakiaTitle => 'Újra együtt';
+
+  @override
+  String get campaignCzechoslovakiaTwist =>
+      'Csehország és Szlovákia két cikluson át ismét egy csapatként játszik';
+
+  @override
+  String get campaignCzechoslovakiaIntro =>
+      'Csehszlovákia 1976-ban megnyerte az Európa-bajnokságot, és kétszer jutott be a világbajnokság döntőjébe, majd 1993-ban kettévált. Ebben a világban a két ország újra egyesült: Csehország és Szlovákia minden válogatott játékosa ismét egy csapatban játszik, a két nemzet pedig eltűnt Európából. Épp hogy a világranglista első harminc helyén belül kezdesz, és mindkét keretből válogathatsz. Két ciklusod van, hogy kivezesd Csehszlovákiát egy világbajnokságra, aztán megnyerd az Európa-bajnokságot és a világbajnokságot.';
+
+  @override
+  String get campaignCzechoslovakiaGoal => 'Kijutni egy világbajnokságra';
+
+  @override
+  String get campaignStars1Czechoslovakia => 'Kijutni egy világbajnokságra';
+
+  @override
+  String get campaignStars2Czechoslovakia => 'Megnyerni az Európa-bajnokságot';
+
+  @override
+  String get campaignStars3Czechoslovakia => 'Megnyerni a világbajnokságot';
 }

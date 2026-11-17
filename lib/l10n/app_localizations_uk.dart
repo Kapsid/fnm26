@@ -18542,4 +18542,52 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get playoffBadgeTooltip =>
       'На шляху до плей-оф: другий шанс, якщо кваліфікація не вдасться';
+
+  @override
+  String get campaignIsleOfManTitle => 'Три ноги';
+
+  @override
+  String get campaignIsleOfManTwist =>
+      'Острів Мен займає місце Андорри в Європі, на сто років';
+
+  @override
+  String get campaignIsleOfManIntro =>
+      'Острів Мен має власну футбольну федерацію, власну лігу і збірну, яка грає на Острівних іграх, але не має місця ні в європейському, ні у світовому футболі. У цьому світі він посів місце Андорри в Європі й починає майже з дна світового рейтингу: напівпрофесійні гравці, маленький стадіон у Дугласі та вітер з Ірландського моря в кожному матчі. У тебе сто років, двадцять п’ять циклів, щоб пробитися на Чемпіонат Європи, потім на Чемпіонат світу і, якщо наважишся мріяти, виграти один із них.';
+
+  @override
+  String get campaignIsleOfManGoal => 'Кваліфікуватися на Чемпіонат Європи';
+
+  @override
+  String get campaignStars1IsleOfMan => 'Кваліфікуватися на Чемпіонат Європи';
+
+  @override
+  String get campaignStars2IsleOfMan => 'Кваліфікуватися на Чемпіонат світу';
+
+  @override
+  String get campaignStars3IsleOfMan =>
+      'Виграти Чемпіонат Європи або Чемпіонат світу';
+
+  @override
+  String get campaignCzechoslovakiaTitle => 'Знову разом';
+
+  @override
+  String get campaignCzechoslovakiaTwist =>
+      'Чехія і Словаччина знову грають як одна команда, протягом двох циклів';
+
+  @override
+  String get campaignCzechoslovakiaIntro =>
+      'Чехословаччина виграла Чемпіонат Європи 1976 року й двічі доходила до фіналу Чемпіонату світу, а 1993 року розділилася на дві країни. У цьому світі вони знову об’єдналися: усі гравці збірних Чехії та Словаччини знову грають за одну команду, а дві країни зникли з Європи. Ти стартуєш на самій межі першої тридцятки світового рейтингу й можеш обирати гравців з обох збірних. У тебе два цикли, щоб довести Чехословаччину до Чемпіонату світу, а потім виграти Чемпіонат Європи та Чемпіонат світу.';
+
+  @override
+  String get campaignCzechoslovakiaGoal => 'Кваліфікуватися на Чемпіонат світу';
+
+  @override
+  String get campaignStars1Czechoslovakia =>
+      'Кваліфікуватися на Чемпіонат світу';
+
+  @override
+  String get campaignStars2Czechoslovakia => 'Виграти Чемпіонат Європи';
+
+  @override
+  String get campaignStars3Czechoslovakia => 'Виграти Чемпіонат світу';
 }

@@ -1106,7 +1106,9 @@ class CareerService {
     };
     int? resolve(String? name) {
       if (name == null) return null;
-      return idByName[name] ?? idByName[RealHistory.aliases[name] ?? name];
+      return idByName[name] ??
+          idByName[RealHistory.aliases[name] ?? name] ??
+          idByName[RealHistory.mergedInto[RealHistory.aliases[name] ?? name]];
     }
 
     final compRepo = _ref.read(competitionRepositoryProvider);

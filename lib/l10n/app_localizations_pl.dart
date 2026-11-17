@@ -18404,4 +18404,51 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get playoffBadgeTooltip =>
       'Na drodze do baraży: druga szansa, gdyby eliminacje nie wyszły';
+
+  @override
+  String get campaignIsleOfManTitle => 'Trzy nogi';
+
+  @override
+  String get campaignIsleOfManTwist =>
+      'Wyspa Man zajmuje miejsce Andory w Europie, na sto lat';
+
+  @override
+  String get campaignIsleOfManIntro =>
+      'Wyspa Man ma własny związek piłkarski, własną ligę i reprezentację, która gra w Igrzyskach Wysp, ale nie ma miejsca ani w europejskim, ani w światowym futbolu. W tym świecie zajęła miejsce Andory w Europie i zaczyna blisko dna światowego rankingu: półzawodowi piłkarze, małe boisko w Douglas i wiatr znad Morza Irlandzkiego w każdym meczu. Masz sto lat, czyli dwadzieścia pięć cykli, by awansować na Mistrzostwa Europy, potem na Mistrzostwa Świata i, jeśli odważysz się marzyć, wygrać jedne z nich.';
+
+  @override
+  String get campaignIsleOfManGoal => 'Awansować na Mistrzostwa Europy';
+
+  @override
+  String get campaignStars1IsleOfMan => 'Awansować na Mistrzostwa Europy';
+
+  @override
+  String get campaignStars2IsleOfMan => 'Awansować na Mistrzostwa Świata';
+
+  @override
+  String get campaignStars3IsleOfMan =>
+      'Wygrać Mistrzostwa Europy lub Mistrzostwa Świata';
+
+  @override
+  String get campaignCzechoslovakiaTitle => 'Znów razem';
+
+  @override
+  String get campaignCzechoslovakiaTwist =>
+      'Czechy i Słowacja znów grają jako jedna drużyna, na dwa cykle';
+
+  @override
+  String get campaignCzechoslovakiaIntro =>
+      'Czechosłowacja wygrała Mistrzostwa Europy w 1976 roku i dwa razy dotarła do finału Mistrzostw Świata, a w 1993 roku rozpadła się na dwa państwa. W tym świecie oba kraje znów się połączyły: każdy reprezentant Czech i Słowacji ponownie gra w jednej drużynie, a oba państwa zniknęły z Europy. Zaczynasz tuż w pierwszej trzydziestce światowego rankingu i możesz wybierać z obu kadr. Masz dwa cykle, by zaprowadzić Czechosłowację na Mistrzostwa Świata, a potem wygrać Mistrzostwa Europy i Mistrzostwa Świata.';
+
+  @override
+  String get campaignCzechoslovakiaGoal => 'Awansować na Mistrzostwa Świata';
+
+  @override
+  String get campaignStars1Czechoslovakia => 'Awansować na Mistrzostwa Świata';
+
+  @override
+  String get campaignStars2Czechoslovakia => 'Wygrać Mistrzostwa Europy';
+
+  @override
+  String get campaignStars3Czechoslovakia => 'Wygrać Mistrzostwa Świata';
 }

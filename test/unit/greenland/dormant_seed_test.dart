@@ -268,6 +268,182 @@ void main() {
     });
   });
 
+  group('Isle of Man seed data', () {
+    test('ids sit in their own fixed ranges', () {
+      final pool = isleOfManPool();
+      expect(pool, hasLength(23 + PoolGenerator.extraPerNation));
+      expect(pool.every((p) => p.nationId == 214), isTrue);
+      expect(
+        [for (final p in isleOfManSquad) p.id],
+        [for (var i = 21401; i <= 21423; i++) i],
+      );
+      expect(
+        [for (final p in pool.skip(23)) p.id],
+        [for (var i = 20214000; i <= 20214079; i++) i],
+      );
+      final taken = {
+        for (final p in PoolGenerator.expand(_base)) p.id,
+        for (final p in dormantPool())
+          if (p.nationId != 214) p.id,
+      };
+      expect(pool.where((p) => taken.contains(p.id)), isEmpty);
+    });
+
+    test("the squad copies Andorra's positions and ages, scaled by the "
+        'factor', () {
+      final base = _base.where((p) => p.nationId == 2).toList();
+      expect(
+        [for (final p in isleOfManSquad) p.position],
+        [for (final p in base) p.position],
+      );
+      expect(
+        [for (final p in isleOfManSquad) p.age],
+        [for (final p in base) p.age],
+      );
+      for (var i = 0; i < base.length; i++) {
+        int scaled(int v) =>
+            (v * isleOfManAttributeFactor).round().clamp(25, 99);
+        final a = base[i].attributes;
+        final z = isleOfManSquad[i].attributes;
+        expect(z.physical, scaled(a.physical), reason: 'slot $i');
+        expect(z.technical, scaled(a.technical), reason: 'slot $i');
+        expect(z.stamina, scaled(a.stamina), reason: 'slot $i');
+      }
+    });
+
+    test("Isle of Man starts at its level and in Andorra's place", () {
+      double mean(List<Player> ps) =>
+          ps.fold<int>(0, (s, p) => s + p.overall) / ps.length;
+      final base = mean(_base.where((p) => p.nationId == 2).toList());
+      expect(mean(isleOfManSquad) / base, inInclusiveRange(0.9, 1.1));
+      final row = _nations.firstWhere((n) => n.id == 2);
+      expect(DormantNations.isleOfMan.ranking, row.ranking);
+      expect(DormantNations.isleOfMan.confederation, row.confederation);
+      expect(DormantNations.replaces[214], 2);
+    });
+
+    test('the Dart name pools mirror country_names.json', () {
+      expect(_names[214]!.first, isleOfManFirstNames);
+      expect(_names[214]!.sur, isleOfManSurnames);
+    });
+
+    test('Isle of Man is in neither seed file', () {
+      expect(
+        _nations.where(
+          (n) => n.id == 214 || n.code == DormantNations.isleOfMan.code,
+        ),
+        isEmpty,
+      );
+      expect(_base.where((p) => p.nationId == 214), isEmpty);
+    });
+
+    test('a fresh database gets Isle of Man and its 103 players', () async {
+      final db = createTestDatabase();
+      addTearDown(db.close);
+      await SeedLoader(db, _source(players: _base)).ensureSeeded();
+      expect(
+        await _count(db, 'SELECT COUNT(*) AS c FROM nations WHERE id = 214'),
+        1,
+      );
+      expect(
+        await _count(
+          db,
+          'SELECT COUNT(*) AS c FROM players WHERE nation_id = 214',
+        ),
+        103,
+      );
+    });
+  });
+
+  group('Czechoslovakia seed data', () {
+    test('ids sit in their own fixed ranges', () {
+      final pool = czechoslovakiaPool();
+      expect(pool, hasLength(23 + PoolGenerator.extraPerNation));
+      expect(pool.every((p) => p.nationId == 215), isTrue);
+      expect(
+        [for (final p in czechoslovakiaSquad) p.id],
+        [for (var i = 21501; i <= 21523; i++) i],
+      );
+      expect(
+        [for (final p in pool.skip(23)) p.id],
+        [for (var i = 20215000; i <= 20215079; i++) i],
+      );
+      final taken = {
+        for (final p in PoolGenerator.expand(_base)) p.id,
+        for (final p in dormantPool())
+          if (p.nationId != 215) p.id,
+      };
+      expect(pool.where((p) => taken.contains(p.id)), isEmpty);
+    });
+
+    test("the squad copies Czechia's positions and ages, scaled by the "
+        'factor', () {
+      final base = _base.where((p) => p.nationId == 12).toList();
+      expect(
+        [for (final p in czechoslovakiaSquad) p.position],
+        [for (final p in base) p.position],
+      );
+      expect(
+        [for (final p in czechoslovakiaSquad) p.age],
+        [for (final p in base) p.age],
+      );
+      for (var i = 0; i < base.length; i++) {
+        int scaled(int v) =>
+            (v * czechoslovakiaAttributeFactor).round().clamp(25, 99);
+        final a = base[i].attributes;
+        final z = czechoslovakiaSquad[i].attributes;
+        expect(z.physical, scaled(a.physical), reason: 'slot $i');
+        expect(z.technical, scaled(a.technical), reason: 'slot $i');
+        expect(z.stamina, scaled(a.stamina), reason: 'slot $i');
+      }
+    });
+
+    test("Czechoslovakia starts at its level and in Czechia's place", () {
+      double mean(List<Player> ps) =>
+          ps.fold<int>(0, (s, p) => s + p.overall) / ps.length;
+      final base = mean(_base.where((p) => p.nationId == 12).toList());
+      expect(mean(czechoslovakiaSquad) / base, inInclusiveRange(0.8, 0.95));
+      final row = _nations.firstWhere((n) => n.id == 12);
+      // Above both nations it is made of.
+      expect(DormantNations.czechoslovakia.ranking, lessThan(row.ranking));
+      expect(DormantNations.alsoReplaces[215], {48});
+      expect(DormantNations.czechoslovakia.confederation, row.confederation);
+      expect(DormantNations.replaces[215], 12);
+    });
+
+    test('the Dart name pools mirror country_names.json', () {
+      expect(_names[215]!.first, czechoslovakiaFirstNames);
+      expect(_names[215]!.sur, czechoslovakiaSurnames);
+    });
+
+    test('Czechoslovakia is in neither seed file', () {
+      expect(
+        _nations.where(
+          (n) => n.id == 215 || n.code == DormantNations.czechoslovakia.code,
+        ),
+        isEmpty,
+      );
+      expect(_base.where((p) => p.nationId == 215), isEmpty);
+    });
+
+    test('a fresh database gets Czechoslovakia and its 103 players', () async {
+      final db = createTestDatabase();
+      addTearDown(db.close);
+      await SeedLoader(db, _source(players: _base)).ensureSeeded();
+      expect(
+        await _count(db, 'SELECT COUNT(*) AS c FROM nations WHERE id = 215'),
+        1,
+      );
+      expect(
+        await _count(
+          db,
+          'SELECT COUNT(*) AS c FROM players WHERE nation_id = 215',
+        ),
+        103,
+      );
+    });
+  });
+
   group('Belarus seed data', () {
     test('ids sit in their own fixed ranges, the squad on its old 601-623', () {
       final pool = belarusPool();

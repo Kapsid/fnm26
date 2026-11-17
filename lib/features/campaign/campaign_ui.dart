@@ -88,6 +88,28 @@ CampaignWords campaignWords(AppLocalizations l, CampaignDef def) =>
           l.campaignStars3Zanzibar,
         ],
       ),
+      'isleOfMan' => (
+        title: l.campaignIsleOfManTitle,
+        twist: l.campaignIsleOfManTwist,
+        intro: l.campaignIsleOfManIntro,
+        goal: l.campaignIsleOfManGoal,
+        stars: [
+          l.campaignStars1IsleOfMan,
+          l.campaignStars2IsleOfMan,
+          l.campaignStars3IsleOfMan,
+        ],
+      ),
+      'czechoslovakia' => (
+        title: l.campaignCzechoslovakiaTitle,
+        twist: l.campaignCzechoslovakiaTwist,
+        intro: l.campaignCzechoslovakiaIntro,
+        goal: l.campaignCzechoslovakiaGoal,
+        stars: [
+          l.campaignStars1Czechoslovakia,
+          l.campaignStars2Czechoslovakia,
+          l.campaignStars3Czechoslovakia,
+        ],
+      ),
       _ => (
         title: l.campaignTransplantTitle,
         twist: l.campaignTransplantTwist,

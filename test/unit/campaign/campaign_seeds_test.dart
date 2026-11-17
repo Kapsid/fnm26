@@ -444,4 +444,90 @@ void main() {
       expect(stored.where((g) => g.contains(213)), hasLength(1));
     });
   });
+
+  group('Isle of Man', () {
+    const def = Campaigns.isleOfMan;
+    final world = DormantNations.worldFrom(
+      nations,
+      {DormantNations.isleOfManId},
+      dormant: (_) => DormantNations.isleOfMan,
+    );
+
+    test('seed 214 keeps Isle of Man from hosting either championship in all '
+        '25 cycles of its run', () {
+      expect(def.rngSeed, 214);
+      expect(def.cycles, 25);
+      for (var cycle = 0; cycle < def.cycles; cycle++) {
+        final world0 = WorldCupHosts.hostsFor(
+          year: CareerService.worldCupYear(cycle),
+          nations: world,
+          seed: def.rngSeed,
+        );
+        final euro = WorldCupHosts.continentalHostsFor(
+          confederation: Confederation.europe,
+          cycle: cycle,
+          seed: def.rngSeed,
+          nations: world,
+        );
+        expect(world0, isNot(contains(214)), reason: 'cycle $cycle');
+        expect(euro, isNot(contains(214)), reason: 'cycle $cycle');
+      }
+    });
+
+    test('seed 214 draws the Isle of Man into a European qualifying group '
+        'of six, Andorra nowhere', () {
+      final mine = euroQualifyingGroups(
+        def.rngSeed,
+        world,
+      ).where((g) => g.contains(214)).toList();
+      expect(mine, hasLength(1));
+      expect(mine.single.length, 6);
+      expect(world.map((n) => n.id), isNot(contains(2)));
+    });
+  });
+
+  group('Czechoslovakia', () {
+    const def = Campaigns.czechoslovakia;
+    final world = DormantNations.worldFrom(
+      nations,
+      {DormantNations.czechoslovakiaId},
+      dormant: (_) => DormantNations.czechoslovakia,
+    );
+
+    test(
+      'seed 215 keeps Czechoslovakia from hosting either championship in all '
+      '2 cycles of its run',
+      () {
+        expect(def.rngSeed, 215);
+        expect(def.cycles, 2);
+        for (var cycle = 0; cycle < def.cycles; cycle++) {
+          final world0 = WorldCupHosts.hostsFor(
+            year: CareerService.worldCupYear(cycle),
+            nations: world,
+            seed: def.rngSeed,
+          );
+          final euro = WorldCupHosts.continentalHostsFor(
+            confederation: Confederation.europe,
+            cycle: cycle,
+            seed: def.rngSeed,
+            nations: world,
+          );
+          expect(world0, isNot(contains(215)), reason: 'cycle $cycle');
+          expect(euro, isNot(contains(215)), reason: 'cycle $cycle');
+        }
+      },
+    );
+
+    test('its world has neither Czechia nor Slovakia, and one European '
+        'nation fewer', () {
+      expect(world.map((n) => n.id), isNot(contains(12)));
+      expect(world.map((n) => n.id), isNot(contains(48)));
+      expect(world, hasLength(nations.length - 1));
+      final mine = euroQualifyingGroups(
+        def.rngSeed,
+        world,
+      ).where((g) => g.contains(215)).toList();
+      expect(mine, hasLength(1));
+    });
+  });
 }

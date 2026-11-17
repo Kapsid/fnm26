@@ -18119,4 +18119,56 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get playoffBadgeTooltip =>
       'प्ले-ऑफ़ की राह पर: क्वालिफ़ाइंग नाकाम हो तो दूसरा मौका';
+
+  @override
+  String get campaignIsleOfManTitle => 'तीन टाँगें';
+
+  @override
+  String get campaignIsleOfManTwist =>
+      'आइल ऑफ़ मैन सौ साल के लिए यूरोप में अंडोरा की जगह लेता है';
+
+  @override
+  String get campaignIsleOfManIntro =>
+      'आइल ऑफ़ मैन का अपना फ़ुटबॉल संघ, अपनी लीग और आइलैंड गेम्स में खेलने वाली राष्ट्रीय टीम है, लेकिन यूरोपीय या विश्व फ़ुटबॉल में उसकी कोई जगह नहीं है। इस दुनिया में उसने यूरोप में अंडोरा की जगह ले ली है, और वह विश्व रैंकिंग में लगभग सबसे नीचे से शुरुआत करता है: पार्ट-टाइम खिलाड़ी, डगलस में एक छोटा मैदान और हर मैच में आयरिश सागर की हवा। आपके पास सौ साल, यानी पच्चीस चक्र हैं: यूरोपीय चैंपियनशिप तक पहुँचें, फिर विश्व चैंपियनशिप तक और, अगर सपने देखने की हिम्मत है, तो इनमें से एक जीतें।';
+
+  @override
+  String get campaignIsleOfManGoal =>
+      'किसी यूरोपीय चैंपियनशिप के लिए क्वालिफ़ाई करें';
+
+  @override
+  String get campaignStars1IsleOfMan =>
+      'किसी यूरोपीय चैंपियनशिप के लिए क्वालिफ़ाई करें';
+
+  @override
+  String get campaignStars2IsleOfMan =>
+      'विश्व चैंपियनशिप के लिए क्वालिफ़ाई करें';
+
+  @override
+  String get campaignStars3IsleOfMan =>
+      'यूरोपीय चैंपियनशिप या विश्व चैंपियनशिप जीतें';
+
+  @override
+  String get campaignCzechoslovakiaTitle => 'फिर एक साथ';
+
+  @override
+  String get campaignCzechoslovakiaTwist =>
+      'चेकिया और स्लोवाकिया दो चक्रों के लिए फिर एक टीम बनकर खेलते हैं';
+
+  @override
+  String get campaignCzechoslovakiaIntro =>
+      'चेकोस्लोवाकिया ने 1976 में यूरोपीय चैंपियनशिप जीती और दो बार विश्व चैंपियनशिप के फ़ाइनल तक पहुँचा, फिर 1993 में दो हिस्सों में बँट गया। इस दुनिया में दोनों फिर एक हो गए हैं: चेकिया और स्लोवाकिया के सभी अंतरराष्ट्रीय खिलाड़ी फिर से एक ही टीम के लिए खेलते हैं, और दोनों देश यूरोप से गायब हो गए हैं। आप विश्व रैंकिंग में शीर्ष तीस के ठीक भीतर से शुरुआत करते हैं और दोनों टीमों में से खिलाड़ी चुन सकते हैं। चेकोस्लोवाकिया को विश्व चैंपियनशिप तक ले जाने के लिए आपके पास दो चक्र हैं, फिर यूरोपीय चैंपियनशिप और विश्व चैंपियनशिप जीतें।';
+
+  @override
+  String get campaignCzechoslovakiaGoal =>
+      'विश्व चैंपियनशिप के लिए क्वालिफ़ाई करें';
+
+  @override
+  String get campaignStars1Czechoslovakia =>
+      'विश्व चैंपियनशिप के लिए क्वालिफ़ाई करें';
+
+  @override
+  String get campaignStars2Czechoslovakia => 'यूरोपीय चैंपियनशिप जीतें';
+
+  @override
+  String get campaignStars3Czechoslovakia => 'विश्व चैंपियनशिप जीतें';
 }

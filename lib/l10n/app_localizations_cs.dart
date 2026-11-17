@@ -18605,4 +18605,50 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get playoffBadgeTooltip =>
       'Míří do baráže: druhá šance, kdyby nevyšla kvalifikace';
+
+  @override
+  String get campaignIsleOfManTitle => 'Tři nohy';
+
+  @override
+  String get campaignIsleOfManTwist =>
+      'Ostrov Man zaujímá místo Andorry v Evropě, na sto let';
+
+  @override
+  String get campaignIsleOfManIntro =>
+      'Ostrov Man má vlastní fotbalový svaz, vlastní ligu i reprezentaci, která hraje na ostrovních hrách, ale v evropském ani světovém fotbale nemá místo. V tomto světě zaujal místo Andorry v Evropě a začíná blízko dna světového žebříčku: hráči při zaměstnání, malé hřiště v Douglasu a vítr od Irského moře v každém zápase. Máte sto let, tedy pětadvacet cyklů, abyste se dostali na mistrovství Evropy, pak na mistrovství světa a, pokud si troufnete snít, jedno z nich vyhráli.';
+
+  @override
+  String get campaignIsleOfManGoal => 'Postoupit na mistrovství Evropy';
+
+  @override
+  String get campaignStars1IsleOfMan => 'Postoupit na mistrovství Evropy';
+
+  @override
+  String get campaignStars2IsleOfMan => 'Postoupit na mistrovství světa';
+
+  @override
+  String get campaignStars3IsleOfMan => 'Vyhrát mistrovství Evropy nebo světa';
+
+  @override
+  String get campaignCzechoslovakiaTitle => 'Znovu spolu';
+
+  @override
+  String get campaignCzechoslovakiaTwist =>
+      'Česko a Slovensko opět hrají jako jeden tým, na dva cykly';
+
+  @override
+  String get campaignCzechoslovakiaIntro =>
+      'Československo vyhrálo v roce 1976 mistrovství Evropy a dvakrát se probojovalo do finále mistrovství světa, než se v roce 1993 rozdělilo na dva státy. V tomto světě se obě země znovu spojily: všichni reprezentanti Česka a Slovenska opět hrají za jeden tým a samostatné Česko ani Slovensko už v Evropě nenajdete. Začínáte těsně v první třicítce světového žebříčku a vybírat můžete z obou kádrů. Máte dva cykly na to, abyste Československo dovedli na mistrovství světa a pak vyhráli mistrovství Evropy i mistrovství světa.';
+
+  @override
+  String get campaignCzechoslovakiaGoal => 'Postoupit na mistrovství světa';
+
+  @override
+  String get campaignStars1Czechoslovakia => 'Postoupit na mistrovství světa';
+
+  @override
+  String get campaignStars2Czechoslovakia => 'Vyhrát mistrovství Evropy';
+
+  @override
+  String get campaignStars3Czechoslovakia => 'Vyhrát mistrovství světa';
 }

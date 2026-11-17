@@ -1383,4 +1383,19 @@ const Map<int, List<(String, int)>> nationalStadiumData = {
   211: [('Port Vila', 6500), ('Luganville', 3000)],
   212: [('Nuuk', 2000), ('Sisimiut', 1000), ('Ilulissat', 1000)],
   213: [('Zanzibar City', 15000), ('Chake-Chake', 10000)],
+  // The Isle of Man (dormant): the Bowl in Douglas, the island's ground.
+  214: [('Douglas', 3500), ('Ramsey', 1500), ('Peel', 1000)],
+  // Czechoslovakia (dormant): Czechia's grounds and Slovakia's.
+  215: [
+    ('Bratislava', 22500),
+    ('Prague', 19400),
+    ('Trnava', 19000),
+    ('Teplice', 18000),
+    ('Ostrava', 15000),
+    ('Dunajská Streda', 12700),
+    ('Olomouc', 12500),
+    ('Košice', 12500),
+    ('Brno', 12000),
+    ('Plzeň', 11700),
+  ],
 };

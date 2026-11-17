@@ -27535,6 +27535,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Headed for a play-off path: a second chance if qualifying fails'**
   String get playoffBadgeTooltip;
+
+  /// Campaign title: the Three Legs, the triskelion on the Isle of Man's flag, for a hundred years (25 cycles) of the Isle of Man, a nation added to the world for this campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'The Three Legs'**
+  String get campaignIsleOfManTitle;
+
+  /// One-line twist of the Isle of Man campaign: the Isle of Man in Andorra's place in Europe for a hundred years (25 cycles).
+  ///
+  /// In en, this message translates to:
+  /// **'The Isle of Man take Andorra\'s place in Europe, for a hundred years'**
+  String get campaignIsleOfManTwist;
+
+  /// Brief screen introduction of the Isle of Man campaign: the Isle of Man take Andorra's place in Europe, from near the bottom of the world ranking, for a hundred years (25 cycles). Names no real player.
+  ///
+  /// In en, this message translates to:
+  /// **'The Isle of Man have their own football association, their own league and a national side that plays island games, but no seat in European or world football. In this world they have taken Andorra\'s place in Europe, and they start near the bottom of the world ranking: part-time players, a small ground in Douglas and the Irish Sea\'s wind in every match. You have a hundred years, twenty-five cycles, to reach a European Championship, then a World Championship and, if you dare to dream, win one of them.'**
+  String get campaignIsleOfManIntro;
+
+  /// One-line goal of the Isle of Man campaign (its first star): qualify for a European Championship.
+  ///
+  /// In en, this message translates to:
+  /// **'Qualify for a European Championship'**
+  String get campaignIsleOfManGoal;
+
+  /// What earns the first star in the Isle of Man campaign: qualify for a European Championship, in any cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Qualify for a European Championship'**
+  String get campaignStars1IsleOfMan;
+
+  /// What earns the second star in the Isle of Man campaign: qualify for a World Championship, in any cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Qualify for a World Championship'**
+  String get campaignStars2IsleOfMan;
+
+  /// What earns the third star in the Isle of Man campaign: win the European Championship or the World Championship, in any cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Win the European or the World Championship'**
+  String get campaignStars3IsleOfMan;
+
+  /// Campaign title: Czechia and Slovakia reunited as Czechoslovakia, a nation brought back to the world for this campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'Reunited'**
+  String get campaignCzechoslovakiaTitle;
+
+  /// One-line twist of the Czechoslovakia campaign: Czechia and Slovakia merged into one side, with every international of both, for two cycles.
+  ///
+  /// In en, this message translates to:
+  /// **'Czechia and Slovakia play as one again, for two cycles'**
+  String get campaignCzechoslovakiaTwist;
+
+  /// Brief screen introduction of the Czechoslovakia campaign: Czechia and Slovakia merged again, the two nations gone from Europe, starting just inside the world's top thirty, for two cycles. Names no real player.
+  ///
+  /// In en, this message translates to:
+  /// **'Czechoslovakia won the European Championship in 1976 and twice reached the final of the World Championship, then split in two in 1993. In this world the two have come back together: every international of Czechia and Slovakia plays for one side again, and the two nations are gone from Europe. You start just inside the world\'s top thirty with the pick of both squads. You have two cycles to take Czechoslovakia to a World Championship, then win the European Championship and the World Championship.'**
+  String get campaignCzechoslovakiaIntro;
+
+  /// One-line goal of the Czechoslovakia campaign (its first star): qualify for a World Championship.
+  ///
+  /// In en, this message translates to:
+  /// **'Qualify for a World Championship'**
+  String get campaignCzechoslovakiaGoal;
+
+  /// What earns the first star in the Czechoslovakia campaign: qualify for a World Championship, in either cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Qualify for a World Championship'**
+  String get campaignStars1Czechoslovakia;
+
+  /// What earns the second star in the Czechoslovakia campaign: win the European Championship, in either cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Win the European Championship'**
+  String get campaignStars2Czechoslovakia;
+
+  /// What earns the third star in the Czechoslovakia campaign: win the World Championship, in either cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Win the World Championship'**
+  String get campaignStars3Czechoslovakia;
 }
 
 class _AppLocalizationsDelegate

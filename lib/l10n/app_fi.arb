@@ -4549,5 +4549,19 @@
   "ncLegendWinnerFinalsFour": "Lohkovoittaja: neljän joukkueen lopputurnaukseen",
   "ncLegendLastDown": "Viimeinen: putoaminen alempaan liigaan",
   "playoffBadgeLetter": "J",
-  "playoffBadgeTooltip": "Matkalla jatkokarsintaan: toinen mahdollisuus, jos karsinnat menevät pieleen"
+  "playoffBadgeTooltip": "Matkalla jatkokarsintaan: toinen mahdollisuus, jos karsinnat menevät pieleen",
+  "campaignIsleOfManTitle": "Kolme jalkaa",
+  "campaignIsleOfManTwist": "Mansaari ottaa Andorran paikan Euroopassa sadaksi vuodeksi",
+  "campaignIsleOfManIntro": "Mansaarella on oma jalkapalloliitto, oma sarja ja maajoukkue, joka pelaa saarikisoissa, mutta ei paikkaa Euroopan eikä maailman jalkapallossa. Tässä maailmassa se on ottanut Andorran paikan Euroopassa ja aloittaa maailmanrankingin loppupäästä: osa-aikaisia pelaajia, pieni kenttä Douglasissa ja Irlanninmeren tuuli joka ottelussa. Sinulla on sata vuotta, kaksikymmentäviisi kautta, aikaa selviytyä EM-kisoihin, sitten MM-kisoihin ja, jos uskallat unelmoida, voittaa toinen niistä.",
+  "campaignIsleOfManGoal": "Selviä EM-kisoihin",
+  "campaignStars1IsleOfMan": "Selviä EM-kisoihin",
+  "campaignStars2IsleOfMan": "Selviä MM-kisoihin",
+  "campaignStars3IsleOfMan": "Voita EM-kisat tai MM-kisat",
+  "campaignCzechoslovakiaTitle": "Jälleen yhdessä",
+  "campaignCzechoslovakiaTwist": "Tšekki ja Slovakia pelaavat taas yhtenä joukkueena kahden kauden ajan",
+  "campaignCzechoslovakiaIntro": "Tšekkoslovakia voitti EM-kisat vuonna 1976 ja pelasi kahdesti MM-kisojen finaalissa, kunnes se jakautui kahtia vuonna 1993. Tässä maailmassa maat ovat yhdistyneet uudelleen: jokainen Tšekin ja Slovakian maajoukkuepelaaja pelaa taas samassa joukkueessa, eikä kumpaakaan maata enää ole Euroopassa. Aloitat juuri ja juuri maailmanrankingin 30 parhaan joukosta ja voit valita pelaajat kummastakin joukkueesta. Sinulla on kaksi kautta aikaa viedä Tšekkoslovakia MM-kisoihin ja voittaa sitten EM-kisat ja MM-kisat.",
+  "campaignCzechoslovakiaGoal": "Selviä MM-kisoihin",
+  "campaignStars1Czechoslovakia": "Selviä MM-kisoihin",
+  "campaignStars2Czechoslovakia": "Voita EM-kisat",
+  "campaignStars3Czechoslovakia": "Voita MM-kisat"
 }

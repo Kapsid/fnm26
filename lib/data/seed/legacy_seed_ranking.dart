@@ -255,6 +255,9 @@ Map<int, int> careerWorldRanks(
     final replaced = DormantNations.replaces[d];
     if (replaced != null) {
       if (world.remove(replaced) == null) continue;
+      for (final also in DormantNations.alsoReplaces[d] ?? const <int>{}) {
+        world.remove(also);
+      }
     } else if (!DormantNations.additions.contains(d) || world.containsKey(d)) {
       continue;
     }

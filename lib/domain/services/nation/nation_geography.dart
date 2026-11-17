@@ -26,6 +26,9 @@ abstract final class NationGeography {
     // Greenland, a dormant nation (see DormantNations): a realm neighbour of
     // Iceland, the Faroes and Denmark.
     'GRL': 'scandinavia',
+    // The Isle of Man and Czechoslovakia, dormant nations.
+    'IMN': 'britishIsles',
+    'TCH': 'centralEurope',
     'FIN': 'scandinavia',
     'FRA': 'westEurope',
     'GEO': 'caucasus',

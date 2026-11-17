@@ -516,6 +516,116 @@ const Set<String> realBelarusNames = {
   'Zianon Pazniak',
 };
 
+/// Real people of the Isle of Man whose names no Isle of Man player may be
+/// given, in the two-name form the game prints: the island's best-known
+/// sportsmen (its cyclists and its road racers), musicians and public
+/// figures, and the commonest pairings of its surnames with the English
+/// first names the pool gives (several of them real island footballers).
+/// The namer steps over every one for the Isle of Man (see
+/// [guardedNamesByNation]).
+const Set<String> realIsleOfManNames = {
+  'Adam Corlett',
+  'Barry Gibb',
+  'Callum Kelly',
+  'Chris Bass',
+  'Edward Christian',
+  'Fletcher Christian',
+  'Hall Caine',
+  'Ian Hislop',
+  'Illiam Dhone',
+  'Joey Dunlop',
+  'Jonny Bellis',
+  'Kelly Moore',
+  'Mark Cavendish',
+  'Mark Kelly',
+  'Mark Quayle',
+  'Maurice Gibb',
+  'Mike Kelly',
+  'Neil Moore',
+  'Norman Wisdom',
+  'Paul Quayle',
+  'Peter Kennaugh',
+  'Robin Gibb',
+  'Ryan Kelly',
+  'Sam Caine',
+  'Tim Kennaugh',
+  'Tom Quayle',
+  'Tony Quayle',
+  'William Christian',
+};
+
+/// Real Czechoslovakia, Czechia and Slovakia internationals and coaches
+/// whose names no Czechoslovakia player may be given, across the decades:
+/// the 1934 and 1962 finalists, the 1976 champions, the sides since the
+/// split. Not exhaustive and not meant to be: the stored squad's names are
+/// also checked against the two nations' real players (see
+/// `dormant_seed_test.dart`).
+const Set<String> realCzechoslovakiaNames = {
+  'Adolf Scherer',
+  'Andrej Kvašňák',
+  'Anton Ondruš',
+  'Antonín Barák',
+  'Antonín Panenka',
+  'Dušan Uhrin',
+  'František Plánička',
+  'Ivan Hašek',
+  'Ivo Viktor',
+  'Jan Koller',
+  'Jan Kopic',
+  'Jiří Pavlenka',
+  'Josef Bican',
+  'Josef Masopust',
+  'Jozef Adamec',
+  'Juraj Kucka',
+  'Ján Pivarník',
+  'Ján Popluhár',
+  'Ján Ďurica',
+  'Karel Brückner',
+  'Karel Poborský',
+  'Koloman Gögh',
+  'Ladislav Kuna',
+  'Ladislav Novák',
+  'Ladislav Vízek',
+  'Luboš Kubík',
+  'Marek Hamšík',
+  'Marek Jankulovski',
+  'Marián Masný',
+  'Martin Dúbravka',
+  'Martin Škrtel',
+  'Michal Bílek',
+  'Milan Baroš',
+  'Milan Škriniar',
+  'Miroslav Stoch',
+  'Oldřich Nejedlý',
+  'Ondrej Duda',
+  'Ondřej Kúdela',
+  'Patrik Berger',
+  'Patrik Schick',
+  'Pavel Kuka',
+  'Pavel Nedvěd',
+  'Peter Dubovský',
+  'Peter Pekarík',
+  'Petr Čech',
+  'Róbert Vittek',
+  'Stanislav Lobotka',
+  'Svatopluk Pluskal',
+  'Tomáš Galásek',
+  'Tomáš Rosický',
+  'Tomáš Skuhravý',
+  'Tomáš Souček',
+  'Tomáš Ujfaluši',
+  'Tomáš Vaclík',
+  'Viliam Schrojf',
+  'Vladimír Coufal',
+  'Vladimír Weiss',
+  'Vladimír Šmicer',
+  'Václav Jílek',
+  'Zdeněk Grygera',
+  'Zdeněk Nehoda',
+  'Ľubomír Luhový',
+  'Ľubomír Moravčík',
+};
+
 /// The real-name guard per nation, applied by the namer only to dormant
 /// nations (see `DormantNations`): widening it to an ordinary nation would
 /// rename players in that nation's existing saves.
@@ -523,6 +633,8 @@ const Map<int, Set<String>> guardedNamesByNation = {
   212: realGreenlandInternationals,
   213: realZanzibarInternationals,
   6: realBelarusNames,
+  214: realIsleOfManNames,
+  215: realCzechoslovakiaNames,
 };
 
 /// The extra real-name guard per nation for careers on the full pools (see

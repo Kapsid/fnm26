@@ -18224,4 +18224,55 @@ class AppLocalizationsFil extends AppLocalizations {
   @override
   String get playoffBadgeTooltip =>
       'Patungo sa play-off: pangalawang tsansa kung pumalya ang qualifying';
+
+  @override
+  String get campaignIsleOfManTitle => 'Ang Tatlong Binti';
+
+  @override
+  String get campaignIsleOfManTwist =>
+      'Pumalit ang Isle of Man sa puwesto ng Andorra sa Europa, sa loob ng isandaang taon';
+
+  @override
+  String get campaignIsleOfManIntro =>
+      'May sariling football association, sariling liga at pambansang koponang naglalaro sa Island Games ang Isle of Man, pero wala silang puwesto sa football ng Europa o ng mundo. Sa mundong ito, pumalit sila sa puwesto ng Andorra sa Europa, at nagsisimula sila malapit sa ilalim ng world ranking: mga part-time na manlalaro, isang maliit na istadyum sa Douglas, at ang hangin ng Irish Sea sa bawat laban. May isandaang taon ka, dalawampu\'t limang cycle, para makarating sa Kampeonato ng Europa, pagkatapos sa Kampeonato ng Mundo at, kung maglalakas-loob kang mangarap, ipanalo ang isa sa mga ito.';
+
+  @override
+  String get campaignIsleOfManGoal => 'Makapasok sa isang Kampeonato ng Europa';
+
+  @override
+  String get campaignStars1IsleOfMan =>
+      'Makapasok sa isang Kampeonato ng Europa';
+
+  @override
+  String get campaignStars2IsleOfMan =>
+      'Makapasok sa isang Kampeonato ng Mundo';
+
+  @override
+  String get campaignStars3IsleOfMan =>
+      'Ipanalo ang Kampeonato ng Europa o ang Kampeonato ng Mundo';
+
+  @override
+  String get campaignCzechoslovakiaTitle => 'Muling Nagkaisa';
+
+  @override
+  String get campaignCzechoslovakiaTwist =>
+      'Muling naglalaro bilang iisang koponan ang Czech Republic at Slovakia, sa loob ng dalawang cycle';
+
+  @override
+  String get campaignCzechoslovakiaIntro =>
+      'Napanalunan ng Czechoslovakia ang Kampeonato ng Europa noong 1976 at dalawang beses itong umabot sa final ng Kampeonato ng Mundo, bago nahati sa dalawa noong 1993. Sa mundong ito, muling nagsama ang dalawa: bawat internasyonal na manlalaro ng Czech Republic at Slovakia ay muling naglalaro para sa iisang koponan, at nawala na sa Europa ang dalawang bansa. Nagsisimula ka sa loob mismo ng top 30 ng mundo, at makakapili ka mula sa dalawang squad. May dalawang cycle ka para dalhin ang Czechoslovakia sa isang Kampeonato ng Mundo, tapos ipanalo ang Kampeonato ng Europa at ang Kampeonato ng Mundo.';
+
+  @override
+  String get campaignCzechoslovakiaGoal =>
+      'Makapasok sa isang Kampeonato ng Mundo';
+
+  @override
+  String get campaignStars1Czechoslovakia =>
+      'Makapasok sa isang Kampeonato ng Mundo';
+
+  @override
+  String get campaignStars2Czechoslovakia => 'Ipanalo ang Kampeonato ng Europa';
+
+  @override
+  String get campaignStars3Czechoslovakia => 'Ipanalo ang Kampeonato ng Mundo';
 }

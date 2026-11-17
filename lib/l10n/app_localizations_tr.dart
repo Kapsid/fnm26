@@ -18122,4 +18122,56 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get playoffBadgeTooltip =>
       'Play-off yolunda: elemeler kötü giderse ikinci bir şans';
+
+  @override
+  String get campaignIsleOfManTitle => 'Üç Bacak';
+
+  @override
+  String get campaignIsleOfManTwist =>
+      'Man Adası yüz yıl boyunca Avrupa\'da Andorra\'nın yerini alıyor';
+
+  @override
+  String get campaignIsleOfManIntro =>
+      'Man Adası\'nın kendi futbol federasyonu, kendi ligi ve Ada Oyunları\'nda forma giyen bir milli takımı var, ama ne Avrupa futbolunda ne de dünya futbolunda bir yeri var. Bu dünyada Avrupa\'da Andorra\'nın yerini aldı ve dünya sıralamasının dibine yakın bir yerden başlıyor: yarı profesyonel oyuncular, Douglas\'ta küçük bir saha ve her maçta İrlanda Denizi\'nin rüzgârı. Bir Avrupa Şampiyonası\'na, ardından bir Dünya Şampiyonası\'na ulaşmak ve hayal kurmaya cesaretin varsa bunlardan birini kazanmak için yüz yılın, yani yirmi beş dönemin var.';
+
+  @override
+  String get campaignIsleOfManGoal =>
+      'Bir Avrupa Şampiyonası\'na katılma hakkı kazan';
+
+  @override
+  String get campaignStars1IsleOfMan =>
+      'Bir Avrupa Şampiyonası\'na katılma hakkı kazan';
+
+  @override
+  String get campaignStars2IsleOfMan =>
+      'Bir Dünya Şampiyonası\'na katılma hakkı kazan';
+
+  @override
+  String get campaignStars3IsleOfMan =>
+      'Avrupa Şampiyonası\'nı ya da Dünya Şampiyonası\'nı kazan';
+
+  @override
+  String get campaignCzechoslovakiaTitle => 'Yeniden Bir Arada';
+
+  @override
+  String get campaignCzechoslovakiaTwist =>
+      'Çekya ve Slovakya iki dönem boyunca yeniden tek takım olarak oynuyor';
+
+  @override
+  String get campaignCzechoslovakiaIntro =>
+      'Çekoslovakya 1976\'da Avrupa Şampiyonası\'nı kazandı ve iki kez Dünya Şampiyonası finaline yükseldi, ardından 1993\'te ikiye ayrıldı. Bu dünyada ikisi yeniden birleşti: Çekya ve Slovakya\'nın tüm milli oyuncuları yine tek bir takımda oynuyor ve iki ülke Avrupa\'dan silindi. Dünya sıralamasında ilk otuzun hemen içinden başlıyorsun ve iki kadronun da oyuncularını seçebilirsin. Çekoslovakya\'yı bir Dünya Şampiyonası\'na taşımak, ardından Avrupa Şampiyonası\'nı ve Dünya Şampiyonası\'nı kazanmak için iki dönemin var.';
+
+  @override
+  String get campaignCzechoslovakiaGoal =>
+      'Bir Dünya Şampiyonası\'na katılma hakkı kazan';
+
+  @override
+  String get campaignStars1Czechoslovakia =>
+      'Bir Dünya Şampiyonası\'na katılma hakkı kazan';
+
+  @override
+  String get campaignStars2Czechoslovakia => 'Avrupa Şampiyonası\'nı kazan';
+
+  @override
+  String get campaignStars3Czechoslovakia => 'Dünya Şampiyonası\'nı kazan';
 }

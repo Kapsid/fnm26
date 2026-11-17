@@ -4549,5 +4549,19 @@
   "ncLegendWinnerFinalsFour": "Gruppevinner: til finalespillet med fire lag",
   "ncLegendLastDown": "Sist: rykker ned en liga",
   "playoffBadgeLetter": "P",
-  "playoffBadgeTooltip": "På vei mot playoff: en ny sjanse om kvalifiseringen slår feil"
+  "playoffBadgeTooltip": "På vei mot playoff: en ny sjanse om kvalifiseringen slår feil",
+  "campaignIsleOfManTitle": "De tre beina",
+  "campaignIsleOfManTwist": "Man tar Andorras plass i Europa, i hundre år",
+  "campaignIsleOfManIntro": "Man har sitt eget fotballforbund, sin egen liga og et landslag som spiller i Island Games, men ingen plass i europeisk fotball eller i verdensfotballen. I denne verdenen har de tatt Andorras plass i Europa, og de starter nær bunnen av verdensrankingen: deltidsspillere, et lite stadion i Douglas og vinden fra Irskesjøen i hver kamp. Du har hundre år, tjuefem sykluser, på å nå et Europamesterskap, så et Verdensmesterskap og, om du tør å drømme, vinne ett av dem.",
+  "campaignIsleOfManGoal": "Kvalifiser deg til et Europamesterskap",
+  "campaignStars1IsleOfMan": "Kvalifiser deg til et Europamesterskap",
+  "campaignStars2IsleOfMan": "Kvalifiser deg til et VM",
+  "campaignStars3IsleOfMan": "Vinn Europamesterskapet eller Verdensmesterskapet",
+  "campaignCzechoslovakiaTitle": "Gjenforent",
+  "campaignCzechoslovakiaTwist": "Tsjekkia og Slovakia spiller som ett lag igjen, i to sykluser",
+  "campaignCzechoslovakiaIntro": "Tsjekkoslovakia vant Europamesterskapet i 1976 og nådde finalen i Verdensmesterskapet to ganger, før landet ble delt i to i 1993. I denne verdenen er de to gjenforent: alle landslagsspillerne fra Tsjekkia og Slovakia spiller igjen for ett lag, og de to nasjonene er borte fra Europa. Du starter like innenfor verdens topp 30 og kan velge fra begge troppene. Du har to sykluser på å føre Tsjekkoslovakia til et VM, og deretter vinne Europamesterskapet og Verdensmesterskapet.",
+  "campaignCzechoslovakiaGoal": "Kvalifiser deg til et VM",
+  "campaignStars1Czechoslovakia": "Kvalifiser deg til et VM",
+  "campaignStars2Czechoslovakia": "Vinn Europamesterskapet",
+  "campaignStars3Czechoslovakia": "Vinn Verdensmesterskapet"
 }

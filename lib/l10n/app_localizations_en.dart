@@ -18243,4 +18243,51 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get playoffBadgeTooltip =>
       'Headed for a play-off path: a second chance if qualifying fails';
+
+  @override
+  String get campaignIsleOfManTitle => 'The Three Legs';
+
+  @override
+  String get campaignIsleOfManTwist =>
+      'The Isle of Man take Andorra\'s place in Europe, for a hundred years';
+
+  @override
+  String get campaignIsleOfManIntro =>
+      'The Isle of Man have their own football association, their own league and a national side that plays island games, but no seat in European or world football. In this world they have taken Andorra\'s place in Europe, and they start near the bottom of the world ranking: part-time players, a small ground in Douglas and the Irish Sea\'s wind in every match. You have a hundred years, twenty-five cycles, to reach a European Championship, then a World Championship and, if you dare to dream, win one of them.';
+
+  @override
+  String get campaignIsleOfManGoal => 'Qualify for a European Championship';
+
+  @override
+  String get campaignStars1IsleOfMan => 'Qualify for a European Championship';
+
+  @override
+  String get campaignStars2IsleOfMan => 'Qualify for a World Championship';
+
+  @override
+  String get campaignStars3IsleOfMan =>
+      'Win the European or the World Championship';
+
+  @override
+  String get campaignCzechoslovakiaTitle => 'Reunited';
+
+  @override
+  String get campaignCzechoslovakiaTwist =>
+      'Czechia and Slovakia play as one again, for two cycles';
+
+  @override
+  String get campaignCzechoslovakiaIntro =>
+      'Czechoslovakia won the European Championship in 1976 and twice reached the final of the World Championship, then split in two in 1993. In this world the two have come back together: every international of Czechia and Slovakia plays for one side again, and the two nations are gone from Europe. You start just inside the world\'s top thirty with the pick of both squads. You have two cycles to take Czechoslovakia to a World Championship, then win the European Championship and the World Championship.';
+
+  @override
+  String get campaignCzechoslovakiaGoal => 'Qualify for a World Championship';
+
+  @override
+  String get campaignStars1Czechoslovakia => 'Qualify for a World Championship';
+
+  @override
+  String get campaignStars2Czechoslovakia => 'Win the European Championship';
+
+  @override
+  String get campaignStars3Czechoslovakia => 'Win the World Championship';
 }

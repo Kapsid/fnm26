@@ -671,6 +671,15 @@ const List<_League> _moreLeagues = [
     'Medan Owls',
     'Semarang Golds',
   ]),
+  // The Isle of Man (dormant)
+  _League('imn', 5, destination: false, [
+    'Douglas Gulls',
+    'Douglas Harbour',
+    'Ramsey Northerners',
+    'Peel Herring',
+    'Port Erin Mariners',
+    'Laxey Wheelers',
+  ]),
   // India
   _League('ind', 5, destination: false, [
     'Mumbai Falcons',
@@ -1420,6 +1429,19 @@ const List<_League> _moreLeagues = [
     'Grand Turk Hawks',
     'Bottle Creek Saints',
     'Balfour Town Foxes',
+  ]),
+  // Czechoslovakia (dormant): Czechia's clubs and Slovakia's in one league.
+  _League('tch', 3, destination: false, [
+    'Prague Red-White',
+    'Prague Iron',
+    'Bratislava Golds',
+    'Plzeň Brewers',
+    'Košice Miners',
+    'Ostrava Miners',
+    'Žilina Students',
+    'Brno Shooters',
+    'Trnava Wolves',
+    'Liberec Lynxes',
   ]),
   // Tonga
   _League('tga', 5, destination: false, [

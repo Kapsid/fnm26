@@ -18553,4 +18553,53 @@ class AppLocalizationsHr extends AppLocalizations {
   @override
   String get playoffBadgeTooltip =>
       'Na putu prema doigravanju: druga prilika ako kvalifikacije ne uspiju';
+
+  @override
+  String get campaignIsleOfManTitle => 'Tri noge';
+
+  @override
+  String get campaignIsleOfManTwist =>
+      'Otok Man zauzima mjesto Andore u Europi, na sto godina';
+
+  @override
+  String get campaignIsleOfManIntro =>
+      'Otok Man ima vlastiti nogometni savez, vlastitu ligu i reprezentaciju koja igra na Otočkim igrama, ali nema mjesta ni u europskom ni u svjetskom nogometu. U ovom svijetu zauzeo je mjesto Andore u Europi i kreće blizu dna svjetske ljestvice: poluprofesionalni igrači, malo igralište u Douglasu i vjetar s Irskog mora na svakoj utakmici. Imaš sto godina, dvadeset i pet ciklusa, da stigneš do Europskog prvenstva, zatim do Svjetskog prvenstva i, ako se usudiš sanjati, osvojiš jedno od njih.';
+
+  @override
+  String get campaignIsleOfManGoal => 'Kvalificiraj se na Europsko prvenstvo';
+
+  @override
+  String get campaignStars1IsleOfMan => 'Kvalificiraj se na Europsko prvenstvo';
+
+  @override
+  String get campaignStars2IsleOfMan => 'Kvalificiraj se na Svjetsko prvenstvo';
+
+  @override
+  String get campaignStars3IsleOfMan =>
+      'Osvoji Europsko ili Svjetsko prvenstvo';
+
+  @override
+  String get campaignCzechoslovakiaTitle => 'Ponovno zajedno';
+
+  @override
+  String get campaignCzechoslovakiaTwist =>
+      'Češka i Slovačka ponovno igraju kao jedna momčad, kroz dva ciklusa';
+
+  @override
+  String get campaignCzechoslovakiaIntro =>
+      'Čehoslovačka je 1976. osvojila Europsko prvenstvo i dvaput stigla do finala Svjetskog prvenstva, a 1993. podijelila se na dvije države. U ovom svijetu dvije su se zemlje ponovno ujedinile: svi reprezentativci Češke i Slovačke opet igraju za jednu momčad, a dvije su nacije nestale iz Europe. Počinješ tik unutar prvih trideset na svjetskoj ljestvici i biraš iz obaju sastava. Imaš dva ciklusa da odvedeš Čehoslovačku na Svjetsko prvenstvo, a zatim osvojiš Europsko prvenstvo i Svjetsko prvenstvo.';
+
+  @override
+  String get campaignCzechoslovakiaGoal =>
+      'Kvalificiraj se na Svjetsko prvenstvo';
+
+  @override
+  String get campaignStars1Czechoslovakia =>
+      'Kvalificiraj se na Svjetsko prvenstvo';
+
+  @override
+  String get campaignStars2Czechoslovakia => 'Osvoji Europsko prvenstvo';
+
+  @override
+  String get campaignStars3Czechoslovakia => 'Osvoji Svjetsko prvenstvo';
 }

@@ -18120,4 +18120,51 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get playoffBadgeTooltip =>
       'Menuju play-off: kesempatan kedua jika kualifikasi gagal';
+
+  @override
+  String get campaignIsleOfManTitle => 'Tiga Kaki';
+
+  @override
+  String get campaignIsleOfManTwist =>
+      'Pulau Man menggantikan Andorra di Eropa, selama seratus tahun';
+
+  @override
+  String get campaignIsleOfManIntro =>
+      'Pulau Man punya federasi sepak bola, liga, dan tim nasional sendiri yang bermain di Island Games, tetapi tidak punya tempat di sepak bola Eropa maupun dunia. Di dunia ini mereka menggantikan tempat Andorra di Eropa, dan memulai dari dekat dasar peringkat dunia: pemain paruh waktu, stadion kecil di Douglas, dan angin Laut Irlandia di setiap laga. Anda punya seratus tahun, dua puluh lima siklus, untuk lolos ke Kejuaraan Eropa, lalu ke Kejuaraan Dunia, dan, jika berani bermimpi, menjuarai salah satunya.';
+
+  @override
+  String get campaignIsleOfManGoal => 'Lolos ke sebuah Kejuaraan Eropa';
+
+  @override
+  String get campaignStars1IsleOfMan => 'Lolos ke sebuah Kejuaraan Eropa';
+
+  @override
+  String get campaignStars2IsleOfMan => 'Lolos ke sebuah Kejuaraan Dunia';
+
+  @override
+  String get campaignStars3IsleOfMan =>
+      'Juara Kejuaraan Eropa atau Kejuaraan Dunia';
+
+  @override
+  String get campaignCzechoslovakiaTitle => 'Bersatu Kembali';
+
+  @override
+  String get campaignCzechoslovakiaTwist =>
+      'Ceko dan Slovakia kembali bermain sebagai satu tim, selama dua siklus';
+
+  @override
+  String get campaignCzechoslovakiaIntro =>
+      'Cekoslowakia menjuarai Kejuaraan Eropa pada 1976 dan dua kali mencapai final Kejuaraan Dunia, lalu terpecah menjadi dua pada 1993. Di dunia ini keduanya bersatu kembali: semua pemain internasional Ceko dan Slovakia kembali membela satu tim, dan kedua negara itu menghilang dari Eropa. Anda memulai tepat di dalam 30 besar dunia dan bisa memilih dari kedua skuad. Anda punya dua siklus untuk membawa Cekoslowakia ke Kejuaraan Dunia, lalu menjuarai Kejuaraan Eropa dan Kejuaraan Dunia.';
+
+  @override
+  String get campaignCzechoslovakiaGoal => 'Lolos ke sebuah Kejuaraan Dunia';
+
+  @override
+  String get campaignStars1Czechoslovakia => 'Lolos ke sebuah Kejuaraan Dunia';
+
+  @override
+  String get campaignStars2Czechoslovakia => 'Juara Kejuaraan Eropa';
+
+  @override
+  String get campaignStars3Czechoslovakia => 'Juara Kejuaraan Dunia';
 }

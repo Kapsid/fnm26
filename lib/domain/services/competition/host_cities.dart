@@ -23,6 +23,8 @@ const Map<int, List<String>> extraHostCities = {
   ], // Belgium
   10: ['Šibenik', 'Velika Gorica', 'Slavonski Brod'], // Croatia
   12: ['Teplice', 'Zlín'], // Czechia
+  // Czechoslovakia (dormant): Czechia's, as the grounds it inherits.
+  215: ['Teplice', 'Zlín'],
   13: [
     'Vejle', 'Horsens', 'Silkeborg', 'Viborg', //
     'Kolding', 'Lyngby', 'Næstved', 'Hjørring',

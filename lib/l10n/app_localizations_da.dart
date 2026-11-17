@@ -18212,4 +18212,52 @@ class AppLocalizationsDa extends AppLocalizations {
   @override
   String get playoffBadgeTooltip =>
       'På vej mod playoff: en ekstra chance, hvis kvalifikationen slår fejl';
+
+  @override
+  String get campaignIsleOfManTitle => 'De tre ben';
+
+  @override
+  String get campaignIsleOfManTwist =>
+      'Isle of Man tager Andorras plads i Europa, i hundrede år';
+
+  @override
+  String get campaignIsleOfManIntro =>
+      'Isle of Man har sit eget fodboldforbund, sin egen liga og et landshold, der spiller ved Island Games, men ingen plads i europæisk fodbold eller i verdensfodbolden. I denne verden har de taget Andorras plads i Europa, og de starter nær bunden af verdensranglisten: deltidsspillere, et lille stadion i Douglas og vinden fra Det Irske Hav i hver kamp. Du har hundrede år, femogtyve cyklusser, til at nå et Europamesterskab, derefter et Verdensmesterskab og, hvis du tør drømme, vinde et af dem.';
+
+  @override
+  String get campaignIsleOfManGoal => 'Kvalificér dig til et Europamesterskab';
+
+  @override
+  String get campaignStars1IsleOfMan =>
+      'Kvalificér dig til et Europamesterskab';
+
+  @override
+  String get campaignStars2IsleOfMan => 'Kvalificér dig til et VM';
+
+  @override
+  String get campaignStars3IsleOfMan =>
+      'Vind Europamesterskabet eller Verdensmesterskabet';
+
+  @override
+  String get campaignCzechoslovakiaTitle => 'Genforenet';
+
+  @override
+  String get campaignCzechoslovakiaTwist =>
+      'Tjekkiet og Slovakiet spiller som ét hold igen, i to cyklusser';
+
+  @override
+  String get campaignCzechoslovakiaIntro =>
+      'Tjekkoslovakiet vandt Europamesterskabet i 1976 og nåede to gange finalen ved Verdensmesterskabet, før landet blev delt i to i 1993. I denne verden er de to blevet genforenet: alle landsholdsspillere fra Tjekkiet og Slovakiet spiller igen for ét hold, og de to nationer er forsvundet fra Europa. Du starter lige inden for verdens top 30 og kan vælge fra begge trupper. Du har to cyklusser til at føre Tjekkoslovakiet til et VM og derefter vinde Europamesterskabet og Verdensmesterskabet.';
+
+  @override
+  String get campaignCzechoslovakiaGoal => 'Kvalificér dig til et VM';
+
+  @override
+  String get campaignStars1Czechoslovakia => 'Kvalificér dig til et VM';
+
+  @override
+  String get campaignStars2Czechoslovakia => 'Vind Europamesterskabet';
+
+  @override
+  String get campaignStars3Czechoslovakia => 'Vind Verdensmesterskabet';
 }

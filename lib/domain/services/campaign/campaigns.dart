@@ -63,6 +63,7 @@ class CampaignDef {
     this.rivalNationIds = const [],
     this.friendlyNationId,
     this.donorNationId,
+    this.donorNationIds = const [],
     this.transplantCount = 0,
     this.starThresholds = const [],
     this.canContinue = true,
@@ -88,6 +89,13 @@ class CampaignDef {
   /// start.
   final int? donorNationId;
   final int transplantCount;
+
+  /// Nations whose core players (the seeded internationals, not the
+  /// generated fringe) ALL join [nationId] at the start, naturalised as
+  /// [donorNationId]'s best are: a nation made of two (Czechoslovakia, of
+  /// Czechia and Slovakia). Their own nations are out of the run's world
+  /// (see `DormantNations.alsoReplaces`).
+  final List<int> donorNationIds;
   final int cycles;
   final bool needsPro;
   final CampaignDifficulty difficulty;
@@ -124,6 +132,7 @@ class CampaignDef {
     ...rivalNationIds,
     ?friendlyNationId,
     ?donorNationId,
+    ...donorNationIds,
   };
 }
 
@@ -282,6 +291,51 @@ abstract final class Campaigns {
     rngSeed: 2024,
   );
 
+  /// The Three Legs: the Isle of Man, a nation the world does not have,
+  /// takes Andorra's place in Europe for 25 cycles (a hundred years), from
+  /// Andorra's place near the bottom of the world ranking (170th). Built the
+  /// way A Greenland Century was: its players come through the same youth
+  /// pyramid, newgens and aging as any nation's, from its own stored pool.
+  /// Pro, and a settled run may be moved into the saves (one minnow swapped
+  /// for another). The stars are a European Championship, a World
+  /// Championship, then winning either. Seed 214, the first searched, keeps
+  /// the Isle of Man from hosting either championship in all 25 cycles and
+  /// draws it into a European qualifying group of six
+  /// (campaign_seeds_test.dart). Its strength was tuned on the lab
+  /// (campaign_lab_test.dart).
+  static const isleOfMan = CampaignDef(
+    id: 'isleOfMan',
+    nationId: 214, // DormantNations.isleOfManId
+    dormantNationId: 214,
+    goal: CampaignGoal.qualifyBothThenTitle,
+    cycles: 25,
+    needsPro: true,
+    difficulty: CampaignDifficulty.hard,
+    rngSeed: 214,
+  );
+
+  /// Reunited: Czechoslovakia, Czechia and Slovakia made one again, for two
+  /// cycles. Every seeded international of both joins it (see
+  /// [CampaignDef.donorNationIds]), its own stored pool is the depth and
+  /// the youth to come, and the two nations are out of the world: Europe
+  /// plays with 52. It starts 30th, above both. Pro. The stars are a World
+  /// Championship finals, then the European Championship, then the World
+  /// Championship (the 1976 champions' unfinished business). Seed 215, the
+  /// first searched, keeps it from hosting either championship in both
+  /// cycles (campaign_seeds_test.dart). A settled run may be moved into the
+  /// saves: the world is a fair one, one strong nation in two's place.
+  static const czechoslovakia = CampaignDef(
+    id: 'czechoslovakia',
+    nationId: 215, // DormantNations.czechoslovakiaId
+    dormantNationId: 215,
+    donorNationIds: [12, 48], // Czechia, Slovakia
+    goal: CampaignGoal.qualifyWorldThenTitles,
+    cycles: 2,
+    needsPro: true,
+    difficulty: CampaignDifficulty.medium,
+    rngSeed: 215,
+  );
+
   static const List<CampaignDef> all = [
     transplant,
     grudge,
@@ -290,6 +344,8 @@ abstract final class Campaigns {
     youngFinns,
     greenland,
     zanzibar,
+    isleOfMan,
+    czechoslovakia,
   ];
 
   static CampaignDef? byId(String id) {

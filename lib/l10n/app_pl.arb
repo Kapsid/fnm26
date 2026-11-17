@@ -4549,5 +4549,19 @@
   "ncLegendWinnerFinalsFour": "Zwycięzca grupy: turniej finałowy czwórki",
   "ncLegendLastDown": "Ostatni: spadek do niższej ligi",
   "playoffBadgeLetter": "B",
-  "playoffBadgeTooltip": "Na drodze do baraży: druga szansa, gdyby eliminacje nie wyszły"
+  "playoffBadgeTooltip": "Na drodze do baraży: druga szansa, gdyby eliminacje nie wyszły",
+  "campaignIsleOfManTitle": "Trzy nogi",
+  "campaignIsleOfManTwist": "Wyspa Man zajmuje miejsce Andory w Europie, na sto lat",
+  "campaignIsleOfManIntro": "Wyspa Man ma własny związek piłkarski, własną ligę i reprezentację, która gra w Igrzyskach Wysp, ale nie ma miejsca ani w europejskim, ani w światowym futbolu. W tym świecie zajęła miejsce Andory w Europie i zaczyna blisko dna światowego rankingu: półzawodowi piłkarze, małe boisko w Douglas i wiatr znad Morza Irlandzkiego w każdym meczu. Masz sto lat, czyli dwadzieścia pięć cykli, by awansować na Mistrzostwa Europy, potem na Mistrzostwa Świata i, jeśli odważysz się marzyć, wygrać jedne z nich.",
+  "campaignIsleOfManGoal": "Awansować na Mistrzostwa Europy",
+  "campaignStars1IsleOfMan": "Awansować na Mistrzostwa Europy",
+  "campaignStars2IsleOfMan": "Awansować na Mistrzostwa Świata",
+  "campaignStars3IsleOfMan": "Wygrać Mistrzostwa Europy lub Mistrzostwa Świata",
+  "campaignCzechoslovakiaTitle": "Znów razem",
+  "campaignCzechoslovakiaTwist": "Czechy i Słowacja znów grają jako jedna drużyna, na dwa cykle",
+  "campaignCzechoslovakiaIntro": "Czechosłowacja wygrała Mistrzostwa Europy w 1976 roku i dwa razy dotarła do finału Mistrzostw Świata, a w 1993 roku rozpadła się na dwa państwa. W tym świecie oba kraje znów się połączyły: każdy reprezentant Czech i Słowacji ponownie gra w jednej drużynie, a oba państwa zniknęły z Europy. Zaczynasz tuż w pierwszej trzydziestce światowego rankingu i możesz wybierać z obu kadr. Masz dwa cykle, by zaprowadzić Czechosłowację na Mistrzostwa Świata, a potem wygrać Mistrzostwa Europy i Mistrzostwa Świata.",
+  "campaignCzechoslovakiaGoal": "Awansować na Mistrzostwa Świata",
+  "campaignStars1Czechoslovakia": "Awansować na Mistrzostwa Świata",
+  "campaignStars2Czechoslovakia": "Wygrać Mistrzostwa Europy",
+  "campaignStars3Czechoslovakia": "Wygrać Mistrzostwa Świata"
 }

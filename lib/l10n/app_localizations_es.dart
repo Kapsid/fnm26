@@ -18305,4 +18305,56 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get playoffBadgeTooltip =>
       'Camino de la repesca: una segunda oportunidad si falla la clasificación';
+
+  @override
+  String get campaignIsleOfManTitle => 'Las tres piernas';
+
+  @override
+  String get campaignIsleOfManTwist =>
+      'La Isla de Man ocupa el lugar de Andorra en Europa, durante cien años';
+
+  @override
+  String get campaignIsleOfManIntro =>
+      'La Isla de Man tiene su propia federación de fútbol, su propia liga y una selección que juega los Juegos de las Islas, pero ningún sitio en el fútbol europeo ni en el fútbol mundial. En este mundo ha ocupado el lugar de Andorra en Europa y empieza cerca de lo más bajo del ranking mundial: jugadores a tiempo parcial, un estadio pequeño en Douglas y el viento del mar de Irlanda en cada partido. Tienes cien años, veinticinco ciclos, para llegar a un Campeonato de Europa, después a un Campeonato del Mundo y, si te atreves a soñar, ganar uno de ellos.';
+
+  @override
+  String get campaignIsleOfManGoal =>
+      'Clasificarse para un Campeonato de Europa';
+
+  @override
+  String get campaignStars1IsleOfMan =>
+      'Clasificarse para un Campeonato de Europa';
+
+  @override
+  String get campaignStars2IsleOfMan =>
+      'Clasificarse para un Campeonato del Mundo';
+
+  @override
+  String get campaignStars3IsleOfMan =>
+      'Ganar el Campeonato de Europa o el Campeonato del Mundo';
+
+  @override
+  String get campaignCzechoslovakiaTitle => 'Juntos de nuevo';
+
+  @override
+  String get campaignCzechoslovakiaTwist =>
+      'Chequia y Eslovaquia vuelven a jugar como una sola selección, durante dos ciclos';
+
+  @override
+  String get campaignCzechoslovakiaIntro =>
+      'Checoslovaquia ganó el Campeonato de Europa en 1976 y llegó dos veces a la final del Campeonato del Mundo, antes de dividirse en dos en 1993. En este mundo ambas han vuelto a unirse: todos los internacionales de Chequia y Eslovaquia juegan de nuevo en una sola selección, y las dos naciones han desaparecido de Europa. Empiezas justo dentro del top 30 mundial y puedes elegir entre las dos plantillas. Tienes dos ciclos para llevar a Checoslovaquia a un Campeonato del Mundo y después ganar el Campeonato de Europa y el Campeonato del Mundo.';
+
+  @override
+  String get campaignCzechoslovakiaGoal =>
+      'Clasificarse para un Campeonato del Mundo';
+
+  @override
+  String get campaignStars1Czechoslovakia =>
+      'Clasificarse para un Campeonato del Mundo';
+
+  @override
+  String get campaignStars2Czechoslovakia => 'Ganar el Campeonato de Europa';
+
+  @override
+  String get campaignStars3Czechoslovakia => 'Ganar el Campeonato del Mundo';
 }

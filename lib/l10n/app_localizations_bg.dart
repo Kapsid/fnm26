@@ -18298,4 +18298,52 @@ class AppLocalizationsBg extends AppLocalizations {
   @override
   String get playoffBadgeTooltip =>
       'По пътя към плейофа: втори шанс, ако квалификациите се провалят';
+
+  @override
+  String get campaignIsleOfManTitle => 'Трите крака';
+
+  @override
+  String get campaignIsleOfManTwist =>
+      'Остров Ман заема мястото на Андора в Европа, за сто години';
+
+  @override
+  String get campaignIsleOfManIntro =>
+      'Остров Ман има своя футболна федерация, свое първенство и национален отбор, който играе на Островните игри, но няма място нито в европейския, нито в световния футбол. В този свят той е заел мястото на Андора в Европа и започва близо до дъното на световната ранглиста: полупрофесионални футболисти, малък стадион в Дъглас и вятърът от Ирландско море във всеки мач. Имаш сто години, двадесет и пет цикъла, за да стигнеш до Европейско първенство, после до Световно първенство и, ако смееш да мечтаеш, да спечелиш едно от тях.';
+
+  @override
+  String get campaignIsleOfManGoal => 'Класирай се за Европейско първенство';
+
+  @override
+  String get campaignStars1IsleOfMan => 'Класирай се за Европейско първенство';
+
+  @override
+  String get campaignStars2IsleOfMan => 'Класирай се за Световно първенство';
+
+  @override
+  String get campaignStars3IsleOfMan =>
+      'Спечели Европейското или Световното първенство';
+
+  @override
+  String get campaignCzechoslovakiaTitle => 'Отново заедно';
+
+  @override
+  String get campaignCzechoslovakiaTwist =>
+      'Чехия и Словакия отново играят като един отбор, за два цикъла';
+
+  @override
+  String get campaignCzechoslovakiaIntro =>
+      'Чехословакия спечели Европейското първенство през 1976 г. и два пъти стигна до финала на Световното първенство, а през 1993 г. се раздели на две. В този свят двете отново са се обединили: всички национали на Чехия и Словакия пак играят за един отбор, а двете държави са изчезнали от Европа. Започваш точно в рамките на първите тридесет в световната ранглиста и можеш да избираш от двата състава. Имаш два цикъла, за да заведеш Чехословакия на Световно първенство, а после да спечелиш Европейското първенство и Световното първенство.';
+
+  @override
+  String get campaignCzechoslovakiaGoal => 'Класирай се за Световно първенство';
+
+  @override
+  String get campaignStars1Czechoslovakia =>
+      'Класирай се за Световно първенство';
+
+  @override
+  String get campaignStars2Czechoslovakia => 'Спечели Европейското първенство';
+
+  @override
+  String get campaignStars3Czechoslovakia => 'Спечели Световното първенство';
 }

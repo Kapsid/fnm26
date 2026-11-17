@@ -60,7 +60,7 @@ abstract final class MatchWeather {
   /// Nordic coast.
   static const Set<String> wetNorth = {
     'ENG', 'SCO', 'WAL', 'NIR', 'IRL', 'NED', 'BEL', 'DEN', 'NOR', 'ISL', //
-    'FRO', 'GRL',
+    'FRO', 'GRL', 'IMN',
   };
 
   /// The Gulf, where summer heat shimmers over the ground.
@@ -77,7 +77,7 @@ abstract final class MatchWeather {
   /// Greenland and New Zealand. (Patagonia is a corner of Argentina and
   /// Chile: see [_windyChance].)
   static const Set<String> windy = {
-    'ENG', 'SCO', 'WAL', 'NIR', 'IRL', 'ISL', 'FRO', 'GRL', 'NZL', //
+    'ENG', 'SCO', 'WAL', 'NIR', 'IRL', 'ISL', 'FRO', 'GRL', 'NZL', 'IMN', //
   };
 
   /// Southeast Asia and West and Central Africa: thunderstorms in the wet

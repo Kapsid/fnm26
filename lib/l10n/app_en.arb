@@ -28132,5 +28132,61 @@
   "playoffBadgeTooltip": "Headed for a play-off path: a second chance if qualifying fails",
   "@playoffBadgeTooltip": {
     "description": "Tooltip of the play-off tag beside a Nations Cup side."
+  },
+  "campaignIsleOfManTitle": "The Three Legs",
+  "@campaignIsleOfManTitle": {
+    "description": "Campaign title: the Three Legs, the triskelion on the Isle of Man's flag, for a hundred years (25 cycles) of the Isle of Man, a nation added to the world for this campaign."
+  },
+  "campaignIsleOfManTwist": "The Isle of Man take Andorra's place in Europe, for a hundred years",
+  "@campaignIsleOfManTwist": {
+    "description": "One-line twist of the Isle of Man campaign: the Isle of Man in Andorra's place in Europe for a hundred years (25 cycles)."
+  },
+  "campaignIsleOfManIntro": "The Isle of Man have their own football association, their own league and a national side that plays island games, but no seat in European or world football. In this world they have taken Andorra's place in Europe, and they start near the bottom of the world ranking: part-time players, a small ground in Douglas and the Irish Sea's wind in every match. You have a hundred years, twenty-five cycles, to reach a European Championship, then a World Championship and, if you dare to dream, win one of them.",
+  "@campaignIsleOfManIntro": {
+    "description": "Brief screen introduction of the Isle of Man campaign: the Isle of Man take Andorra's place in Europe, from near the bottom of the world ranking, for a hundred years (25 cycles). Names no real player."
+  },
+  "campaignIsleOfManGoal": "Qualify for a European Championship",
+  "@campaignIsleOfManGoal": {
+    "description": "One-line goal of the Isle of Man campaign (its first star): qualify for a European Championship."
+  },
+  "campaignStars1IsleOfMan": "Qualify for a European Championship",
+  "@campaignStars1IsleOfMan": {
+    "description": "What earns the first star in the Isle of Man campaign: qualify for a European Championship, in any cycle."
+  },
+  "campaignStars2IsleOfMan": "Qualify for a World Championship",
+  "@campaignStars2IsleOfMan": {
+    "description": "What earns the second star in the Isle of Man campaign: qualify for a World Championship, in any cycle."
+  },
+  "campaignStars3IsleOfMan": "Win the European or the World Championship",
+  "@campaignStars3IsleOfMan": {
+    "description": "What earns the third star in the Isle of Man campaign: win the European Championship or the World Championship, in any cycle."
+  },
+  "campaignCzechoslovakiaTitle": "Reunited",
+  "@campaignCzechoslovakiaTitle": {
+    "description": "Campaign title: Czechia and Slovakia reunited as Czechoslovakia, a nation brought back to the world for this campaign."
+  },
+  "campaignCzechoslovakiaTwist": "Czechia and Slovakia play as one again, for two cycles",
+  "@campaignCzechoslovakiaTwist": {
+    "description": "One-line twist of the Czechoslovakia campaign: Czechia and Slovakia merged into one side, with every international of both, for two cycles."
+  },
+  "campaignCzechoslovakiaIntro": "Czechoslovakia won the European Championship in 1976 and twice reached the final of the World Championship, then split in two in 1993. In this world the two have come back together: every international of Czechia and Slovakia plays for one side again, and the two nations are gone from Europe. You start just inside the world's top thirty with the pick of both squads. You have two cycles to take Czechoslovakia to a World Championship, then win the European Championship and the World Championship.",
+  "@campaignCzechoslovakiaIntro": {
+    "description": "Brief screen introduction of the Czechoslovakia campaign: Czechia and Slovakia merged again, the two nations gone from Europe, starting just inside the world's top thirty, for two cycles. Names no real player."
+  },
+  "campaignCzechoslovakiaGoal": "Qualify for a World Championship",
+  "@campaignCzechoslovakiaGoal": {
+    "description": "One-line goal of the Czechoslovakia campaign (its first star): qualify for a World Championship."
+  },
+  "campaignStars1Czechoslovakia": "Qualify for a World Championship",
+  "@campaignStars1Czechoslovakia": {
+    "description": "What earns the first star in the Czechoslovakia campaign: qualify for a World Championship, in either cycle."
+  },
+  "campaignStars2Czechoslovakia": "Win the European Championship",
+  "@campaignStars2Czechoslovakia": {
+    "description": "What earns the second star in the Czechoslovakia campaign: win the European Championship, in either cycle."
+  },
+  "campaignStars3Czechoslovakia": "Win the World Championship",
+  "@campaignStars3Czechoslovakia": {
+    "description": "What earns the third star in the Czechoslovakia campaign: win the World Championship, in either cycle."
   }
 }

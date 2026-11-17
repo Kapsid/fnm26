@@ -18293,4 +18293,55 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get playoffBadgeTooltip =>
       'In corsa per gli spareggi: una seconda possibilità se le qualificazioni vanno male';
+
+  @override
+  String get campaignIsleOfManTitle => 'Le tre gambe';
+
+  @override
+  String get campaignIsleOfManTwist =>
+      'L\'Isola di Man prende il posto di Andorra in Europa, per cento anni';
+
+  @override
+  String get campaignIsleOfManIntro =>
+      'L\'Isola di Man ha una sua federazione calcistica, un suo campionato e una nazionale che gioca i Giochi delle isole, ma nessun posto nel calcio europeo né in quello mondiale. In questo mondo ha preso il posto di Andorra in Europa e parte vicino all\'ultimo gradino del ranking mondiale: giocatori part-time, un piccolo stadio a Douglas e il vento del Mare d\'Irlanda in ogni partita. Hai cento anni, venticinque cicli, per arrivare a un Campionato europeo, poi a un Campionato del mondo e, se osi sognare, vincerne uno.';
+
+  @override
+  String get campaignIsleOfManGoal => 'Qualificarsi per un Campionato europeo';
+
+  @override
+  String get campaignStars1IsleOfMan =>
+      'Qualificarsi per un Campionato europeo';
+
+  @override
+  String get campaignStars2IsleOfMan =>
+      'Qualificarsi per un Campionato del mondo';
+
+  @override
+  String get campaignStars3IsleOfMan =>
+      'Vincere il Campionato europeo o il Campionato del mondo';
+
+  @override
+  String get campaignCzechoslovakiaTitle => 'Di nuovo insieme';
+
+  @override
+  String get campaignCzechoslovakiaTwist =>
+      'Repubblica Ceca e Slovacchia giocano di nuovo come una sola nazionale, per due cicli';
+
+  @override
+  String get campaignCzechoslovakiaIntro =>
+      'La Cecoslovacchia ha vinto il Campionato europeo nel 1976 e ha raggiunto due volte la finale del Campionato del mondo, prima di dividersi in due nel 1993. In questo mondo le due si sono riunite: tutti i nazionali della Repubblica Ceca e della Slovacchia giocano di nuovo in un\'unica squadra, e le due nazioni sono sparite dall\'Europa. Parti appena dentro la top 30 mondiale e puoi pescare da entrambe le rose. Hai due cicli per portare la Cecoslovacchia a un Campionato del mondo, poi vincere il Campionato europeo e il Campionato del mondo.';
+
+  @override
+  String get campaignCzechoslovakiaGoal =>
+      'Qualificarsi per un Campionato del mondo';
+
+  @override
+  String get campaignStars1Czechoslovakia =>
+      'Qualificarsi per un Campionato del mondo';
+
+  @override
+  String get campaignStars2Czechoslovakia => 'Vincere il Campionato europeo';
+
+  @override
+  String get campaignStars3Czechoslovakia => 'Vincere il Campionato del mondo';
 }

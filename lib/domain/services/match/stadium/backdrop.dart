@@ -191,7 +191,10 @@ abstract final class NationBackdrops {
     'SVK': (_oe, _hills), 'SVN': (_oe, _alps), 'ESP': (_oe, _plains),
     'SWE': (_nb, _hills), 'SUI': (_oe, _alps), 'TUR': (_mi, _sea),
     'UKR': (_sb, _plains), 'WAL': (_nb, _hills), 'BLR': (_sb, _plains),
-    'GRL': (_st, _fjords), 'RUS': (_sb, _plains),
+    'GRL': (_st, _fjords),
+    'IMN': (_st, _sea),
+    'TCH': (_oe, _hills),
+    'RUS': (_sb, _plains),
     // South America
     'ARG': (_la, _plains), 'BOL': (_la, _andes), 'BRA': (_la, _sea),
     'CHI': (_la, _andes), 'COL': (_la, _andes), 'ECU': (_la, _volc),

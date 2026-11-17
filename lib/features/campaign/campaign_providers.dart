@@ -9,6 +9,7 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/entities/player_ids.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/campaign/campaign_grading.dart';
 import 'package:fnm/domain/services/campaign/campaigns.dart';
@@ -810,6 +811,26 @@ class CampaignService {
         // The default XI was picked when the career was created, before the
         // transplant: re-pick it, or the new arrivals start on the bench
         // until the manager thinks to redo the lineup by hand.
+        await _repickLineup(career, def.nationId);
+      }
+      if (def.donorNationIds.isNotEmpty) {
+        // A nation made of others: every seeded international of each joins
+        // it, best first as the pool reads them. The generated fringe stays
+        // behind with its nation, out of the world.
+        final repo = _ref.read(careerRepositoryProvider);
+        for (final donor in def.donorNationIds) {
+          final pool = await careerPoolOf(_ref, career, donor);
+          for (final p in pool) {
+            if (p.id >= kFirstFringeId) continue;
+            await repo.addNaturalizationOffer(
+              careerId: career.id,
+              playerId: p.id,
+              sourceNationId: donor,
+              cycle: 0,
+            );
+            await repo.setNaturalizationStatus(career.id, p.id, 'accepted');
+          }
+        }
         await _repickLineup(career, def.nationId);
       }
     } catch (_) {

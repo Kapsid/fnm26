@@ -18299,4 +18299,56 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get playoffBadgeTooltip =>
       'Op koers voor de play-offs: een tweede kans als de kwalificatie mislukt';
+
+  @override
+  String get campaignIsleOfManTitle => 'De drie benen';
+
+  @override
+  String get campaignIsleOfManTwist =>
+      'Man neemt de plaats van Andorra in Europa in, voor honderd jaar';
+
+  @override
+  String get campaignIsleOfManIntro =>
+      'Man heeft een eigen voetbalbond, een eigen competitie en een nationaal elftal dat op de Eilandspelen speelt, maar geen plek in het Europese of het wereldvoetbal. In deze wereld heeft het de plaats van Andorra in Europa ingenomen en begint het vlak bij de onderkant van de wereldranglijst: parttime spelers, een klein stadion in Douglas en de wind van de Ierse Zee in elke wedstrijd. Je hebt honderd jaar, vijfentwintig cycli, om een Europees Kampioenschap te halen, daarna een Wereldkampioenschap en, als je durft te dromen, er een te winnen.';
+
+  @override
+  String get campaignIsleOfManGoal =>
+      'Plaats je voor een Europees Kampioenschap';
+
+  @override
+  String get campaignStars1IsleOfMan =>
+      'Plaats je voor een Europees Kampioenschap';
+
+  @override
+  String get campaignStars2IsleOfMan =>
+      'Plaats je voor een Wereldkampioenschap';
+
+  @override
+  String get campaignStars3IsleOfMan =>
+      'Win het Europees Kampioenschap of het Wereldkampioenschap';
+
+  @override
+  String get campaignCzechoslovakiaTitle => 'Herenigd';
+
+  @override
+  String get campaignCzechoslovakiaTwist =>
+      'Tsjechië en Slowakije spelen weer als één ploeg, voor twee cycli';
+
+  @override
+  String get campaignCzechoslovakiaIntro =>
+      'Tsjecho-Slowakije won in 1976 het Europees Kampioenschap en haalde twee keer de finale van het Wereldkampioenschap, waarna het in 1993 in tweeën uiteenviel. In deze wereld zijn de twee weer samengegaan: elke international van Tsjechië en Slowakije speelt weer voor één ploeg, en de twee landen zijn uit Europa verdwenen. Je begint net binnen de top dertig van de wereld en kunt kiezen uit beide selecties. Je hebt twee cycli om Tsjecho-Slowakije naar een Wereldkampioenschap te leiden en daarna het Europees Kampioenschap en het Wereldkampioenschap te winnen.';
+
+  @override
+  String get campaignCzechoslovakiaGoal =>
+      'Plaats je voor een Wereldkampioenschap';
+
+  @override
+  String get campaignStars1Czechoslovakia =>
+      'Plaats je voor een Wereldkampioenschap';
+
+  @override
+  String get campaignStars2Czechoslovakia => 'Win het Europees Kampioenschap';
+
+  @override
+  String get campaignStars3Czechoslovakia => 'Win het Wereldkampioenschap';
 }

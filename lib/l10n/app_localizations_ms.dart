@@ -18175,4 +18175,51 @@ class AppLocalizationsMs extends AppLocalizations {
   @override
   String get playoffBadgeTooltip =>
       'Menuju play-off: peluang kedua jika kelayakan gagal';
+
+  @override
+  String get campaignIsleOfManTitle => 'Tiga Kaki';
+
+  @override
+  String get campaignIsleOfManTwist =>
+      'Pulau Man mengambil tempat Andorra di Eropah, selama seratus tahun';
+
+  @override
+  String get campaignIsleOfManIntro =>
+      'Pulau Man mempunyai persatuan bola sepak, liga dan pasukan kebangsaannya sendiri yang bermain di Island Games, tetapi tiada tempat dalam bola sepak Eropah atau dunia. Dalam dunia ini mereka telah mengambil tempat Andorra di Eropah, dan mereka bermula hampir di dasar ranking dunia: pemain separuh masa, padang kecil di Douglas dan angin Laut Ireland dalam setiap perlawanan. Anda ada seratus tahun, dua puluh lima kitaran, untuk mara ke Kejohanan Eropah, kemudian Kejohanan Dunia dan, jika anda berani bermimpi, menjuarai salah satunya.';
+
+  @override
+  String get campaignIsleOfManGoal => 'Layak ke Kejohanan Eropah';
+
+  @override
+  String get campaignStars1IsleOfMan => 'Layak ke Kejohanan Eropah';
+
+  @override
+  String get campaignStars2IsleOfMan => 'Layak ke Kejohanan Dunia';
+
+  @override
+  String get campaignStars3IsleOfMan =>
+      'Menangi Kejohanan Eropah atau Kejohanan Dunia';
+
+  @override
+  String get campaignCzechoslovakiaTitle => 'Bersatu Semula';
+
+  @override
+  String get campaignCzechoslovakiaTwist =>
+      'Republik Czech dan Slovakia bermain sebagai satu pasukan semula, selama dua kitaran';
+
+  @override
+  String get campaignCzechoslovakiaIntro =>
+      'Czechoslovakia menjuarai Kejohanan Eropah pada 1976 dan dua kali mara ke final Kejohanan Dunia, kemudian berpecah dua pada 1993. Dalam dunia ini kedua-duanya telah bersatu semula: setiap pemain antarabangsa Republik Czech dan Slovakia kembali bermain untuk satu pasukan, dan kedua-dua negara itu telah hilang dari Eropah. Anda bermula betul-betul di dalam 30 teratas dunia dengan pilihan daripada kedua-dua skuad. Anda ada dua kitaran untuk membawa Czechoslovakia ke Kejohanan Dunia, kemudian menjuarai Kejohanan Eropah dan Kejohanan Dunia.';
+
+  @override
+  String get campaignCzechoslovakiaGoal => 'Layak ke Kejohanan Dunia';
+
+  @override
+  String get campaignStars1Czechoslovakia => 'Layak ke Kejohanan Dunia';
+
+  @override
+  String get campaignStars2Czechoslovakia => 'Menangi Kejohanan Eropah';
+
+  @override
+  String get campaignStars3Czechoslovakia => 'Menangi Kejohanan Dunia';
 }

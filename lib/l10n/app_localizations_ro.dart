@@ -18638,4 +18638,54 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get playoffBadgeTooltip =>
       'Pe drumul spre baraj: a doua șansă dacă preliminariile eșuează';
+
+  @override
+  String get campaignIsleOfManTitle => 'Cele trei picioare';
+
+  @override
+  String get campaignIsleOfManTwist =>
+      'Insula Man ia locul Andorrei în Europa, pentru o sută de ani';
+
+  @override
+  String get campaignIsleOfManIntro =>
+      'Insula Man are propria federație de fotbal, propria ligă și o echipă națională care joacă la Jocurile Insulelor, dar niciun loc în fotbalul european sau mondial. În această lume a luat locul Andorrei în Europa și pornește de aproape de coada clasamentului mondial: jucători semiprofesioniști, un stadion mic în Douglas și vântul Mării Irlandei la fiecare meci. Aveți o sută de ani, douăzeci și cinci de cicluri, ca să ajungeți la un Campionat European, apoi la un Campionat Mondial și, dacă îndrăzniți să visați, să câștigați unul dintre ele.';
+
+  @override
+  String get campaignIsleOfManGoal => 'Calificarea la un Campionat European';
+
+  @override
+  String get campaignStars1IsleOfMan => 'Calificarea la un Campionat European';
+
+  @override
+  String get campaignStars2IsleOfMan => 'Calificarea la un Campionat Mondial';
+
+  @override
+  String get campaignStars3IsleOfMan =>
+      'Câștigarea Campionatului European sau Mondial';
+
+  @override
+  String get campaignCzechoslovakiaTitle => 'Din nou împreună';
+
+  @override
+  String get campaignCzechoslovakiaTwist =>
+      'Cehia și Slovacia joacă din nou ca o singură echipă, timp de două cicluri';
+
+  @override
+  String get campaignCzechoslovakiaIntro =>
+      'Cehoslovacia a câștigat Campionatul European în 1976 și a jucat de două ori finala Campionatului Mondial, înainte să se despartă în două state în 1993. În această lume, cele două s-au reunit: toți internaționalii Cehiei și ai Slovaciei joacă din nou pentru o singură echipă, iar cele două națiuni au dispărut din Europa. Porniți la limita primelor treizeci de locuri din clasamentul mondial și puteți alege din ambele loturi. Aveți două cicluri ca să duceți Cehoslovacia la un Campionat Mondial, apoi să câștigați Campionatul European și Campionatul Mondial.';
+
+  @override
+  String get campaignCzechoslovakiaGoal =>
+      'Calificarea la un Campionat Mondial';
+
+  @override
+  String get campaignStars1Czechoslovakia =>
+      'Calificarea la un Campionat Mondial';
+
+  @override
+  String get campaignStars2Czechoslovakia =>
+      'Câștigarea Campionatului European';
+
+  @override
+  String get campaignStars3Czechoslovakia => 'Câștigarea Campionatului Mondial';
 }

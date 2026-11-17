@@ -62,9 +62,56 @@ abstract final class DormantNations {
     secondaryColor: '#007C30',
   );
 
-  static const List<Nation> all = [greenland, zanzibar, belarus];
+  /// The Isle of Man, the fourth dormant nation: the next free id after
+  /// Zanzibar. It takes Andorra's place in Europe and starts where Andorra
+  /// stands on the starting ranking (170th). Its colours are the flag's:
+  /// the red field and the white of the three legs.
+  static const int isleOfManId = 214;
 
-  static const Set<int> ids = {greenlandId, zanzibarId, belarusId};
+  static const Nation isleOfMan = Nation(
+    id: isleOfManId,
+    name: 'Isle of Man',
+    code: 'IMN',
+    confederation: Confederation.europe,
+    ranking: 170,
+    primaryColor: '#CF142B',
+    secondaryColor: '#FFFFFF',
+  );
+
+  /// Czechoslovakia, the fifth: the two nations it was split into, Czechia
+  /// and Slovakia, made one again (see [alsoReplaces]). Its own pool is
+  /// depth only: the run hands it the best players of both (see
+  /// `CampaignDef.donorNationIds`). It starts above both (Slovakia 44th,
+  /// Czechia 47th), at 30th, where a side with the pick of two such squads
+  /// would stand. Its colours are the flag's red and blue; the white is the
+  /// away shirt's.
+  static const int czechoslovakiaId = 215;
+
+  static const Nation czechoslovakia = Nation(
+    id: czechoslovakiaId,
+    name: 'Czechoslovakia',
+    code: 'TCH',
+    confederation: Confederation.europe,
+    ranking: 30,
+    primaryColor: '#D7141A',
+    secondaryColor: '#11457E',
+  );
+
+  static const List<Nation> all = [
+    greenland,
+    zanzibar,
+    belarus,
+    isleOfMan,
+    czechoslovakia,
+  ];
+
+  static const Set<int> ids = {
+    greenlandId,
+    zanzibarId,
+    belarusId,
+    isleOfManId,
+    czechoslovakiaId,
+  };
 
   /// Dormant nations that join a world without standing in for anyone: the
   /// world grows by one (Europe's 53 become 54).
@@ -80,6 +127,22 @@ abstract final class DormantNations {
   static const Map<int, int> replaces = {
     greenlandId: 45, // San Marino
     zanzibarId: 110, // Chad
+    isleOfManId: 2, // Andorra
+    czechoslovakiaId: 12, // Czechia
+  };
+
+  /// Nations a dormant nation takes out of the world as well as the one it
+  /// [replaces]: Czechoslovakia stands for Slovakia too. Its world is one
+  /// nation smaller (Europe's 53 become 52).
+  static const Map<int, Set<int>> alsoReplaces = {
+    czechoslovakiaId: {48}, // Slovakia
+  };
+
+  /// Every nation [dormantId]'s world goes without: the one it [replaces]
+  /// and any it [alsoReplaces].
+  static Set<int> replacedBy(int dormantId) => {
+    ?replaces[dormantId],
+    ...?alsoReplaces[dormantId],
   };
 
   /// The `draws_watched` kind (cycle 0) that makes [nationId] part of a
@@ -100,7 +163,8 @@ abstract final class DormantNations {
   /// ranking-ordered base world) minus each replaced nation, plus each
   /// dormant one, re-sorted by ranking. A dormant nation whose replaced
   /// nation is missing from [base] is left out, so a swap never changes the
-  /// count; an [additions] nation always comes in, one more nation.
+  /// count; an [additions] nation always comes in, one more nation; one
+  /// that [alsoReplaces] others takes those out too.
   /// Returns [base] itself when nothing changes, so a normal career's world
   /// is the very same list.
   static List<Nation> worldFrom(
@@ -122,7 +186,7 @@ abstract final class DormantNations {
     };
     if (swapped.isEmpty) return base;
     final dropped = {
-      for (final d in swapped) ?replaces[d],
+      for (final d in swapped) ...replacedBy(d),
     };
     final out = [
       for (final n in base)
