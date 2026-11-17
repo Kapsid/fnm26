@@ -5,6 +5,7 @@ import 'package:drift/native.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/domain/services/nation/dormant_nations.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/db/career_bundle.dart';
@@ -28,6 +29,12 @@ import 'driver.dart';
 /// Opens the saves of earlier builds (test/fixtures/saves) with today's code
 /// and checks nothing they hold is lost or rewritten: the owner's rule is
 /// "never break saves". Later tasks append their own assertions here.
+/// The dormant nations no fixture build knew: the upgrade writes them in.
+final Set<int> _newDormant = {
+  DormantNations.isleOfManId,
+  DormantNations.czechoslovakiaId,
+};
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -157,9 +164,25 @@ void main() {
             await close(db, c);
             final after = await dumpTables(file.path);
             for (final MapEntry(key: table, value: rows) in before.entries) {
-              final now = after[table];
+              var now = after[table];
               expect(now, isNotNull, reason: '$table dropped');
-              expect(now!.length, rows.length, reason: '$table row count');
+              // The one thing an upgrade adds: the dormant nations a later
+              // build ships (1.1.2: the Isle of Man and Czechoslovakia),
+              // their rows and their players' written after the old ones.
+              final had = {
+                for (final r in rows)
+                  if (table == 'nations') r['id'],
+              };
+              now = [
+                for (final r in now!)
+                  if (!(table == 'nations' &&
+                          _newDormant.contains(r['id']) &&
+                          !had.contains(r['id'])) &&
+                      !(table == 'players' &&
+                          _newDormant.contains(r['nation_id'])))
+                    r,
+              ];
+              expect(now.length, rows.length, reason: '$table row count');
               for (var i = 0; i < rows.length; i++) {
                 expect(
                   rowOn(now[i], rows[i].keys),
