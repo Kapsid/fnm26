@@ -5,10 +5,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
-import 'package:fnm/domain/services/manager/staff.dart';
-import 'package:fnm/domain/services/manager/manager_skills.dart';
+import 'package:fnm/domain/services/match/big_game_difficulty.dart';
+import 'package:fnm/domain/services/player/growth_difficulty.dart';
 import 'package:fnm/domain/services/player/intake_standing.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/youth_hand.dart';
 
 /// The talent shift applied to the manager's nation's newgen intakes, keyed by
 /// the cycle each intake was born in. Two things feed it, and both are derived
@@ -40,15 +41,32 @@ youthBonusByCycleProvider = FutureProvider.autoDispose.family<Map<int, double>, 
   // ones: a manager who develops players does so whether or not the federation
   // has written a cheque, and a cycle with no academy money should still show
   // his hand.
+  //
+  // A cycle on the 1.1.2 difficulty (`difficulty2`, see [GrowthDifficulty])
+  // is credited only with the hand he had while it ran (recorded by
+  // [stampYouthHand]), and its whole bonus is capped below; every older
+  // cycle keeps the old rule, his current hand.
   final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+  final comp = ref.watch(competitionRepositoryProvider);
+  final marked = <int>{};
   if (career != null) {
-    final fromManager =
-        ManagerSkills.youthTalentBonus(career.skillYouthDevelopment) +
-        Staff.youthTalentBonus(career.staffAssistant);
-    if (fromManager != 0) {
-      for (var cycle = 0; cycle <= career.cyclePointer; cycle++) {
-        bonuses[cycle] = (bonuses[cycle] ?? 0) + fromManager;
-      }
+    for (var cycle = 0; cycle <= career.cyclePointer; cycle++) {
+      if (await isDifficulty2(comp, careerId, cycle)) marked.add(cycle);
+    }
+    final fromManager = youthHandOf(career);
+    final recorded = marked.isEmpty
+        ? const <int, double>{}
+        : GrowthDifficulty.youthHandByCycle([
+            for (final m in await comp.watchedKindsWithPrefix(
+              GrowthDifficulty.youthHandPrefix,
+            ))
+              if (m.careerId == careerId) m.kind,
+          ]);
+    for (var cycle = 0; cycle <= career.cyclePointer; cycle++) {
+      final hand = marked.contains(cycle)
+          ? GrowthDifficulty.youthHandFor(cycle, recorded)
+          : fromManager;
+      if (hand != 0) bonuses[cycle] = (bonuses[cycle] ?? 0) + hand;
     }
   }
 
@@ -59,6 +77,11 @@ youthBonusByCycleProvider = FutureProvider.autoDispose.family<Map<int, double>, 
   );
   for (final e in standing.entries) {
     bonuses[e.key] = (bonuses[e.key] ?? 0) + e.value;
+  }
+  // The difficulty2 ceiling on everything together.
+  for (final cycle in marked) {
+    final b = bonuses[cycle];
+    if (b != null) bonuses[cycle] = GrowthDifficulty.cappedIntake(b);
   }
   return bonuses;
 });

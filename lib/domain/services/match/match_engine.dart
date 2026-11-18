@@ -736,7 +736,9 @@ class MatchEngine {
   /// is worth more than a half-empty one, and it is the only thing the crowd
   /// touches — a neutral or empty venue simply leaves the advantage at zero.
   /// [talks] are timed team talks that shift a side's edge for the rest of the
-  /// match. [aiManagedNationIds] name the sides whose instructions the engine
+  /// match; [talkScaleByNation] scales the lift (never the downside) a
+  /// side's talks give it, 1.0 for any side not named.
+  /// [aiManagedNationIds] name the sides whose instructions the engine
   /// reactively manages by the scoreline and clock (typically the human's AI
   /// opponent) — a trailing side commits forward late, a leading side protects.
   /// [conditions] are the ground's altitude and heat: each side's energy
@@ -762,6 +764,7 @@ class MatchEngine {
     Set<int> aiManagedNationIds = const {},
     Map<int, double> injuryFactorByNation = const {},
     Map<int, double> chemistryByNation = const {},
+    Map<int, double> talkScaleByNation = const {},
     bool neutralVenue = false,
     int? venueHostId,
     bool bigMatch = false,
@@ -1405,9 +1408,13 @@ class MatchEngine {
               ? liveHome
               : liveAway;
           final (a, d) = t.tone.effect;
+          // A side's talks may lift it less than the tone's face value (the
+          // 1.1.2 big-game difficulty, the manager's side only); a downside
+          // is never softened. No key leaves the talk exactly as it was.
+          final scale = talkScaleByNation[t.teamNationId] ?? 1.0;
           live
-            ..talkAttack = a
-            ..talkDefence = d;
+            ..talkAttack = a > 0 ? a * scale : a
+            ..talkDefence = d > 0 ? d * scale : d;
         }
       }
 

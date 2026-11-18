@@ -23,6 +23,8 @@ import 'package:fnm/domain/repositories/player_repository.dart'
         namePoolsV4Kind,
         namePoolsV5Kind;
 import 'package:fnm/domain/services/competition/calendar2.dart';
+import 'package:fnm/domain/services/match/big_game_difficulty.dart';
+import 'package:fnm/features/federation/youth_hand.dart';
 import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
@@ -299,6 +301,11 @@ class CareerService {
     /// keep the shape a world was pinned on. Its rollovers stamp it as
     /// every save's do.
     bool euroQuali2 = true,
+    /// Whether its first cycle plays the 1.1.2 difficulty (see
+    /// `BigGameDifficulty.kind`). Defaults to true. A test passes false to
+    /// play a first cycle as a save from before it does; its rollovers stamp
+    /// the mark as every save's do.
+    bool difficulty2 = true,
 
     /// Whether its world includes the nations every career created from
     /// 1.0.9 on has (`DormantNations.forNewCareers`: Belarus). Defaults to
@@ -489,6 +496,13 @@ class CareerService {
     // And Europe's World Championship qualifying in the real UEFA shape.
     if (calendar2 && euroQuali2) {
       await comp.markDrawWatched(career.id, 0, UefaWcPlayoffs.kind2);
+    }
+    // Its big games and its own talent's growth follow the 1.1.2 difficulty
+    // (see BigGameDifficulty and GrowthDifficulty), with the manager's hand
+    // in the first intake recorded as it stands (see stampYouthHand).
+    if (difficulty2) {
+      await comp.markDrawWatched(career.id, 0, BigGameDifficulty.kind);
+      await stampYouthHand(comp, career);
     }
     // Its national teams have managers of their own (see worldManagersKind),
     // seeded the first time something asks for them, never here.

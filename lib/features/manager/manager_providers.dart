@@ -10,6 +10,7 @@ import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
+import 'package:fnm/features/federation/youth_hand.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
@@ -100,6 +101,7 @@ class ManagerService {
       return false;
     }
     await _ref.read(careerRepositoryProvider).raiseSkill(careerId, skill);
+    if (skill == ManagerSkill.youthDevelopment) await _stampYouthHand(careerId);
     _invalidate(careerId);
     return true;
   }
@@ -124,6 +126,7 @@ class ManagerService {
     await _ref
         .read(careerRepositoryProvider)
         .setStaff(careerId, role, candidateId);
+    if (role == StaffRole.assistant) await _stampYouthHand(careerId);
     if (left != null) {
       // He enters the world managers' free pool, off the tap's path (it may
       // seed a career's managers first), one departure after another.
@@ -133,6 +136,14 @@ class ManagerService {
       );
     }
     _invalidate(careerId);
+  }
+
+  /// Records his hand in the current cycle's intake after it may have
+  /// changed (a `difficulty2` cycle only, see [stampYouthHand]).
+  Future<void> _stampYouthHand(int careerId) async {
+    final career = await _ref.read(careerRepositoryProvider).byId(careerId);
+    if (career == null) return;
+    await stampYouthHand(_ref.read(competitionRepositoryProvider), career);
   }
 
   /// The world-manager work of the assistants let go so far, done once it

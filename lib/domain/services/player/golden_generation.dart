@@ -136,6 +136,7 @@ abstract final class GoldenGeneration {
     return PlayerLifecycle.withCareerDev(
       aged,
       careerStartsByPlayer[g.id] ?? 0,
+      markedStarts: PlayerLifecycle.markedStartsOf(careerStartsByPlayer, g.id),
       minutesFactor: PlayerLifecycle.minutesFactorFor(aged, years, clubSeed),
     );
   }

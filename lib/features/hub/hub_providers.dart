@@ -56,6 +56,7 @@ import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/match/ai_counter.dart';
 import 'package:fnm/domain/services/match/ai_tactics.dart';
 import 'package:fnm/domain/services/match/background_match.dart';
+import 'package:fnm/domain/services/match/big_game_difficulty.dart';
 import 'package:fnm/domain/services/match/goal_attribution.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_conditions.dart';
@@ -79,6 +80,7 @@ import 'package:fnm/features/squad/international_retirement_providers.dart';
 import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/federation/federation_service.dart';
+import 'package:fnm/features/federation/youth_hand.dart';
 import 'package:fnm/features/federation/sponsor_providers.dart';
 import 'package:fnm/features/federation/host_bid_providers.dart';
 import 'package:fnm/features/federation/national_stadium_providers.dart';
@@ -620,6 +622,7 @@ class SeasonService {
       // And the finals pedigree: the roll of honour is re-read per operation
       // (a restored or edited save may hold a different one).
       _pedigreeCache.clear();
+      _difficulty2Cache.clear();
       // Counted, so the automatic backup never snapshots a half-run step.
       return SimActivity.track(body);
     }
@@ -1271,6 +1274,58 @@ class SeasonService {
     );
   }
 
+  /// Whether each (career, cycle) carries the 1.1.2 difficulty marker
+  /// ([BigGameDifficulty.kind]). Loaded once per operation (cleared in
+  /// [_exclusive]) and only for the manager's own fixtures.
+  final Map<(int, int), bool> _difficulty2Cache = {};
+
+  Future<bool> _difficulty2(int careerId, int cycle) async =>
+      _difficulty2Cache[(careerId, cycle)] ??= await isDifficulty2(
+        _comp,
+        careerId,
+        cycle,
+      );
+
+  /// The skipped twin of the big-game term the live engine applies on the
+  /// chemistry seam (`match_providers`): the edge, in strength points and as
+  /// the HOME side's, in a World Championship or continental finals knockout
+  /// the manager skipped in a `difficulty2` cycle (see
+  /// [BigGameDifficulty.skippedEdge]). Read off the same two elevens and the
+  /// same pedigree the AI-v-AI edge reads; 0 for every other fixture.
+  Future<double> _bigGameEdge(
+    Fixture f,
+    Map<int, Nation> nations, {
+    required int managerNationId,
+    required List<Player> homeXi,
+    required List<Player> awayXi,
+  }) async {
+    if (BigGameDifficulty.finalsKnockoutStage(f.round) == null) return 0;
+    double avg(List<Player> ps) =>
+        ps.isEmpty ? 0 : ps.fold<int>(0, (s, p) => s + p.overall) / ps.length;
+    final managerHome = f.homeNationId == managerNationId;
+    final year = f.date.year;
+    final pedigree = BigGameDifficulty.isWorldFinalsRound(f.round)
+        ? _pedigreeCache[(f.careerId, year)] ??= await worldPedigreeFor(
+            _comp,
+            f.careerId,
+            year,
+            nations.values,
+          )
+        : const <int, double>{};
+    final against = BigGameDifficulty.skippedEdge(
+      await bigGameTerm(
+        _comp,
+        fixture: f,
+        nations: nations.values,
+        managerNationId: managerNationId,
+        mine: avg(managerHome ? homeXi : awayXi),
+        theirs: avg(managerHome ? awayXi : homeXi),
+        pedigree: pedigree,
+      ),
+    );
+    return managerHome ? against : -against;
+  }
+
   Future<void> _simAndRecord(
     Fixture f,
     Map<int, Nation> nations,
@@ -1442,6 +1497,13 @@ class SeasonService {
     // back as it went in, with no openness, so the world plays as before.
     final homeBase = _squadStrength(homeXi, home);
     final awayBase = _squadStrength(awayXi, away);
+    // The manager's own fixture in a cycle on the 1.1.2 difficulty (see
+    // [BigGameDifficulty]); read only for his fixtures, so the world's never
+    // touch the marker at all.
+    final managerFixture =
+        f.homeNationId == career.nationId || f.awayNationId == career.nationId;
+    final hard =
+        managerFixture && await _difficulty2(f.careerId, career.cyclePointer);
     final asHome = await _withManagerTactics(
       f.careerId,
       f.homeNationId,
@@ -1450,6 +1512,7 @@ class SeasonService {
       opponent: away,
       fixtureId: f.id,
       date: f.date,
+      wide: hard,
     );
     final asAway = await _withManagerTactics(
       f.careerId,
@@ -1459,15 +1522,28 @@ class SeasonService {
       opponent: home,
       fixtureId: f.id,
       date: f.date,
+      wide: hard,
     );
     final homeStrength = asHome?.strength ?? homeBase;
     final awayStrength = asAway?.strength ?? awayBase;
     // A World Championship finals knockout between two background sides
     // reads the gap louder and adds each side's pedigree (see
-    // [_worldFinalsEdge]). 0 for every other fixture, and for any tie of the
-    // manager's, which plays as his played match would.
-    final finalsEdge = asHome == null && asAway == null
+    // [_worldFinalsEdge]). 0 for every other fixture. A tie of the manager's
+    // never takes that edge: in a difficulty2 cycle it takes the skipped
+    // twin of the big-game term instead (see [_bigGameEdge]; World
+    // Championship and continental finals knockouts), and in any older
+    // cycle nothing, as his played match would.
+    final managerTie = asHome != null || asAway != null;
+    final finalsEdge = !managerTie
         ? await _worldFinalsEdge(f, nations, homeStrength, awayStrength)
+        : hard
+        ? await _bigGameEdge(
+            f,
+            nations,
+            managerNationId: career.nationId,
+            homeXi: homeXi,
+            awayXi: awayXi,
+          )
         : 0.0;
     const sim = RatingMatchSimulator();
     final outcome = sim.simulate(
@@ -1940,6 +2016,10 @@ class SeasonService {
     required Nation opponent,
     required int fixtureId,
     required DateTime date,
+
+    /// A `difficulty2` cycle: the mid-tier band reaches higher
+    /// ([MidTierDifficulty.weight]).
+    bool wide = false,
   }) async {
     final setup = await _ensureManagerSetup(careerId);
     if (setup == null || setup.nationId != nationId) return null;
@@ -2013,6 +2093,7 @@ class SeasonService {
         lift: plan + chemistry * _chemistryPoints,
         fieldedRating: avg(xi),
         rng: MidTierDifficulty.ditherRng(setup.rngSeed, fixtureId),
+        wide: wide,
       ),
       // The throw-in style as one openness, the same way as the arrows; the
       // neutral default is exactly 1 and multiplies nothing.

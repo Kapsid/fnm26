@@ -23,7 +23,6 @@ import 'package:fnm/domain/services/competition/kickoff_keys.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
-import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:fnm/domain/services/match/penalty_takers.dart';
@@ -271,6 +270,7 @@ class StoryDriver {
     bool tournamentSpacing = true,
     bool calendar2 = true,
     bool euroQuali2 = true,
+    bool difficulty2 = true,
   }) async {
     await c.read(seedLoaderProvider).ensureSeeded();
     final career =
@@ -287,6 +287,7 @@ class StoryDriver {
                   tournamentSpacing: tournamentSpacing,
                   calendar2: calendar2,
                   euroQuali2: euroQuali2,
+                  difficulty2: difficulty2,
                 ))
             .valueOrNull!;
     return StoryDriver(c, career.id);
@@ -689,10 +690,11 @@ MatchResult _attemptFor(MatchPreview p, int salt) {
       aiManagedNationIds: {opp.nationId},
       injuryFactorByNation: p.injuryFactorByNation,
       chemistryByNation: p.chemistryByNation,
+      talkScaleByNation: p.talkScaleByNation,
       neutralVenue: p.neutralVenue,
       venueHostId: p.venueHostId,
       bigMatch: p.bigMatch,
-      atmosphere: Attendance.atmosphere(p.ground),
+      atmosphere: p.atmosphere,
       extraTimeIfLevel: Rounds.isKnockout(p.fixture.round),
     ),
     aiSubs: p.opponentSubs,
@@ -755,6 +757,8 @@ KnockoutOutcome? _knockoutFor(MatchPreview p, MatchResult r, int salt) {
     et.homeScore,
     et.awayScore,
     SeededRng.forFixture(p.saveSeed ^ salt, p.fixture.id ^ 0x7F),
+    homeStrength: p.shootoutWeights?.$1 ?? 1,
+    awayStrength: p.shootoutWeights?.$2 ?? 1,
     homeTakerSkill: p.playerIsHome ? mySkill : oppSkill,
     awayTakerSkill: p.playerIsHome ? oppSkill : mySkill,
     homeTakerIds: [for (final t in p.playerIsHome ? myTakers : oppTakers) t.id],

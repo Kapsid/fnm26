@@ -55,6 +55,16 @@ abstract final class MidTierDifficulty {
   /// fifteen).
   static const double eliteEdge = 84;
 
+  /// [bandHigh] in a cycle carrying the `difficulty2` marker
+  /// (`BigGameDifficulty.kind`, release 1.1.2): the near-elite sides (best
+  /// elevens of 79 to 81, about world ranks 20 to 35) found the finals too
+  /// kind, so the full term reaches three points higher.
+  static const double bandHighWide = 81;
+
+  /// [eliteEdge] in a `difficulty2` cycle: the ramp keeps its six points, so
+  /// it now runs out at 87 (about the top eight).
+  static const double eliteEdgeWide = 87;
+
   /// Rating points a skipped match takes off per unit of [engineFactor]
   /// deficit. Measured, not borrowed: the skip path credits chemistry at 30
   /// points a unit, but the skipped side's strength is rounded to a whole
@@ -67,38 +77,50 @@ abstract final class MidTierDifficulty {
   /// How much of the term applies to a side fielding [rating]: 0 outside
   /// ([minnowEdge], [eliteEdge]), 1 inside [[bandLow], [bandHigh]], and a
   /// smoothstep ramp between, so no rating point is a cliff.
-  static double weight(double rating) {
-    if (rating <= minnowEdge || rating >= eliteEdge) return 0;
+  ///
+  /// [wide] (a `difficulty2` cycle) reads the top of the band at
+  /// [bandHighWide] and [eliteEdgeWide] instead; off, it is exactly the band
+  /// every older cycle plays.
+  static double weight(double rating, {bool wide = false}) {
+    final high = wide ? bandHighWide : bandHigh;
+    final elite = wide ? eliteEdgeWide : eliteEdge;
+    if (rating <= minnowEdge || rating >= elite) return 0;
     if (rating < bandLow) {
       return _smooth((rating - minnowEdge) / (bandLow - minnowEdge));
     }
-    if (rating > bandHigh) {
-      return _smooth((eliteEdge - rating) / (eliteEdge - bandHigh));
+    if (rating > high) {
+      return _smooth((elite - rating) / (elite - high));
     }
     return 1;
   }
 
   /// The multiplier the live engine applies to the manager's side (on top of
   /// its chemistry): 1.0 for elite and minnow sides.
-  static double engineFactor(double rating) => 1 - peak * weight(rating);
+  static double engineFactor(double rating, {bool wide = false}) =>
+      1 - peak * weight(rating, wide: wide);
 
   /// The same term for a skipped match, in rating points (zero or negative).
-  static double skipPoints(double rating) =>
-      -peak * weight(rating) * skipPointsPerUnit;
+  static double skipPoints(double rating, {bool wide = false}) =>
+      -peak * weight(rating, wide: wide) * skipPointsPerUnit;
 
   /// THE PLAYED SEAM: the chemistry map the live engine is handed for the
   /// manager's match (`match_providers`). His drilled shape
   /// ([TeamChemistry.factor] of [familiarity]) times [engineFactor] of the
   /// eleven he fields. Only [managerNationId] is a key: the opponent is not
   /// in it, so the engine plays it at a neutral 1.0 and it never feels the
-  /// term.
+  /// term (the 1.1.2 big-game term, `BigGameDifficulty`, adds an opponent key
+  /// of its own on top, in a finals knockout only).
+  ///
+  /// [wide] is [weight]'s (a `difficulty2` cycle).
   static Map<int, double> chemistryByNation({
     required int managerNationId,
     required double familiarity,
     required double fieldedRating,
+    bool wide = false,
   }) => {
     managerNationId:
-        TeamChemistry.factor(familiarity) * engineFactor(fieldedRating),
+        TeamChemistry.factor(familiarity) *
+        engineFactor(fieldedRating, wide: wide),
   };
 
   /// The salt on the career seed for [skippedStrength]'s dither stream (see
@@ -126,14 +148,15 @@ abstract final class MidTierDifficulty {
   /// fixture's stream keeps the result the same every time it is played.
   ///
   /// A side with no term (elite, minnow) draws nothing and comes out exactly
-  /// as `lift.round()`, as before the term existed.
+  /// as `lift.round()`, as before the term existed. [wide] is [weight]'s.
   static int skippedStrength({
     required double lift,
     required double fieldedRating,
     required SeededRng rng,
+    bool wide = false,
   }) {
     final whole = lift.round();
-    final term = skipPoints(fieldedRating);
+    final term = skipPoints(fieldedRating, wide: wide);
     if (term == 0) return whole;
     final floor = term.floor();
     final frac = term - floor;

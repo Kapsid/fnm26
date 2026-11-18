@@ -40,6 +40,9 @@ void main() {
       calendar2: false,
       // And its finals on the old 3-day spacing (TournamentCalendar).
       tournamentSpacing: false,
+      // And its first cycle before the 1.1.2 difficulty (BigGameDifficulty,
+      // GrowthDifficulty): an unmarked cycle plays byte for byte as before.
+      difficulty2: false,
     );
     for (var i = 0; i < 120; i++) {
       await d.step();

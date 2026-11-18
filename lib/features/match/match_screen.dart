@@ -1056,14 +1056,15 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   }
 
   /// How much the extra-time turnaround talk steadies the manager's takers, as
-  /// a multiplier on their per-kick conversion.
-  double _shootoutComposure() {
+  /// a multiplier on their per-kick conversion, at most
+  /// [MatchPreview.composureCap] (1.04 in a `difficulty2` cycle, else 1.08).
+  double _shootoutComposure(MatchPreview preview) {
     final tone = _extraTimeHalfTalk;
     if (tone == null) return 1;
     // Composure, not aggression: settling the side is worth more from the spot
     // than demanding more of it.
     final (atk, def) = tone.effect;
-    return (1 + (def - atk * 0.5) * 0.02).clamp(0.94, 1.08);
+    return (1 + (def - atk * 0.5) * 0.02).clamp(0.94, preview.composureCap);
   }
 
   /// Applies a talk given at one of the extra-time intervals.
@@ -1126,7 +1127,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     // Who takes them decides them. The kicks have a stream of their own, so
     // naming takers changes the kicks and never the extra time the manager
     // just watched.
-    final composure = _shootoutComposure();
+    final composure = _shootoutComposure(preview);
     final myTakers = _penTakers(preview);
     final mySkill = [
       for (final s in PenaltyTakers.skillOrder(
@@ -1161,10 +1162,15 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     final myKeeper = stopper(myTeam, myTeam.xi);
     final mySkillVsKeeper = [for (final s in mySkill) s / theirKeeper];
     final oppSkill = [for (final s in rawOppSkill) s / myKeeper];
+    // In a difficulty2 cycle the kicks lean a little to the stronger eleven
+    // ([MatchPreview.shootoutWeights]); otherwise the takers alone decide.
+    final weights = preview.shootoutWeights;
     return WorldCupFinals.decideShootout(
       et.homeScore,
       et.awayScore,
       SeededRng.forFixture(_seed(preview), preview.fixture.id ^ 0x7F),
+      homeStrength: weights?.$1 ?? 1,
+      awayStrength: weights?.$2 ?? 1,
       homeTakerSkill: preview.playerIsHome ? mySkillVsKeeper : oppSkill,
       awayTakerSkill: preview.playerIsHome ? oppSkill : mySkillVsKeeper,
       homeTakerIds: [
@@ -1981,13 +1987,14 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       aiManagedNationIds: {_opponentNationId(preview)},
       injuryFactorByNation: preview.injuryFactorByNation,
       chemistryByNation: preview.chemistryByNation,
+      talkScaleByNation: preview.talkScaleByNation,
       neutralVenue: preview.neutralVenue,
       venueHostId: preview.venueHostId,
       // Carried through so a re-sim after a substitution or team talk keeps
       // the big-game trait and the crowd applied exactly as the first
       // simulation did.
       bigMatch: preview.bigMatch,
-      atmosphere: Attendance.atmosphere(preview.ground),
+      atmosphere: preview.atmosphere,
       extraTimeIfLevel: _isKnockoutFixture(preview.fixture),
       extraTimeAtMargin: TwoLegged.isSecondLeg(preview.fixture.round)
           ? preview.secondLegMargin
