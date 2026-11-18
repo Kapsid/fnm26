@@ -3310,6 +3310,18 @@ class AppLocalizationsRo extends AppLocalizations {
   String get achTitleClashDesc => 'Câștigați Duelul Continentelor.';
 
   @override
+  String get achTitleGulf => 'Câștigătorii Cupei Golfului';
+
+  @override
+  String get achTitleGulfDesc => 'Câștigă Cupa Golfului.';
+
+  @override
+  String get achTitleSea => 'Campionii Asiei de Sud-Est';
+
+  @override
+  String get achTitleSeaDesc => 'Câștigă Campionatul Asiei de Sud-Est.';
+
+  @override
   String get achMarksman => 'Tunarul Campionatului Mondial';
 
   @override

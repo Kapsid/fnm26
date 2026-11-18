@@ -3178,6 +3178,18 @@ class AppLocalizationsTh extends AppLocalizations {
   String get achTitleClashDesc => 'คว้าแชมป์คอนติเนนทัล แคลช';
 
   @override
+  String get achTitleGulf => 'แชมป์กัลฟ์คัพ';
+
+  @override
+  String get achTitleGulfDesc => 'คว้าแชมป์กัลฟ์คัพ';
+
+  @override
+  String get achTitleSea => 'แชมป์เอเชียตะวันออกเฉียงใต้';
+
+  @override
+  String get achTitleSeaDesc => 'คว้าแชมป์ชิงแชมป์เอเชียตะวันออกเฉียงใต้';
+
+  @override
   String get achMarksman => 'จอมถล่มชิงแชมป์โลก';
 
   @override

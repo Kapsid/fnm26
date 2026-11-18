@@ -3216,6 +3216,18 @@ class AppLocalizationsVi extends AppLocalizations {
   String get achTitleClashDesc => 'Giành chức vô địch Continental Clash.';
 
   @override
+  String get achTitleGulf => 'Nhà vô địch Cúp vùng Vịnh';
+
+  @override
+  String get achTitleGulfDesc => 'Vô địch Cúp vùng Vịnh.';
+
+  @override
+  String get achTitleSea => 'Nhà vô địch Đông Nam Á';
+
+  @override
+  String get achTitleSeaDesc => 'Vô địch Giải vô địch Đông Nam Á.';
+
+  @override
   String get achMarksman => 'Xạ thủ giải vô địch thế giới';
 
   @override

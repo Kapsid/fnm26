@@ -3132,6 +3132,18 @@ class AppLocalizationsKo extends AppLocalizations {
   String get achTitleClashDesc => '대륙 대항전에서 우승하세요.';
 
   @override
+  String get achTitleGulf => '걸프컵 우승';
+
+  @override
+  String get achTitleGulfDesc => '걸프컵에서 우승하세요.';
+
+  @override
+  String get achTitleSea => '동남아시아 챔피언';
+
+  @override
+  String get achTitleSeaDesc => '동남아시아 선수권에서 우승하세요.';
+
+  @override
   String get achMarksman => '세계 선수권 골잡이';
 
   @override

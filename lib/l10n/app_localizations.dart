@@ -5511,6 +5511,30 @@ abstract class AppLocalizations {
   /// Achievement title.
   ///
   /// In en, this message translates to:
+  /// **'Gulf Cup Winners'**
+  String get achTitleGulf;
+
+  /// Achievement description.
+  ///
+  /// In en, this message translates to:
+  /// **'Win the Gulf Cup.'**
+  String get achTitleGulfDesc;
+
+  /// Achievement title.
+  ///
+  /// In en, this message translates to:
+  /// **'Southeast Asian Champions'**
+  String get achTitleSea;
+
+  /// Achievement description.
+  ///
+  /// In en, this message translates to:
+  /// **'Win the Southeast Asian Championship.'**
+  String get achTitleSeaDesc;
+
+  /// Achievement title.
+  ///
+  /// In en, this message translates to:
   /// **'World Championship Marksman'**
   String get achMarksman;
 

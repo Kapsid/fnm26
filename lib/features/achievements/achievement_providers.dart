@@ -98,6 +98,8 @@ import 'package:fnm/domain/services/competition/regional_cups.dart';
       title: l.achTitleClash,
       description: l.achTitleClashDesc,
     ),
+    'title_gulf' => (title: l.achTitleGulf, description: l.achTitleGulfDesc),
+    'title_sea' => (title: l.achTitleSea, description: l.achTitleSeaDesc),
     'wc_marksman' => (title: l.achMarksman, description: l.achMarksmanDesc),
     'mega_sweep' => (title: l.achSweep, description: l.achSweepDesc),
     'mega_allstar' => (title: l.achAllstar, description: l.achAllstarDesc),

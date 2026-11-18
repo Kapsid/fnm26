@@ -3213,6 +3213,18 @@ class AppLocalizationsId extends AppLocalizations {
   String get achTitleClashDesc => 'Juarai Duel Benua.';
 
   @override
+  String get achTitleGulf => 'Juara Piala Teluk';
+
+  @override
+  String get achTitleGulfDesc => 'Menangkan Piala Teluk.';
+
+  @override
+  String get achTitleSea => 'Juara Asia Tenggara';
+
+  @override
+  String get achTitleSeaDesc => 'Menangkan Kejuaraan Asia Tenggara.';
+
+  @override
   String get achMarksman => 'Penembak Jitu Kejuaraan Dunia';
 
   @override

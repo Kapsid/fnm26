@@ -3210,6 +3210,18 @@ class AppLocalizationsTr extends AppLocalizations {
   String get achTitleClashDesc => 'Kıtalar Arası Çarpışma\'yı kazan.';
 
   @override
+  String get achTitleGulf => 'Körfez Kupası Kazananları';
+
+  @override
+  String get achTitleGulfDesc => 'Körfez Kupası\'nı kazan.';
+
+  @override
+  String get achTitleSea => 'Güneydoğu Asya Şampiyonları';
+
+  @override
+  String get achTitleSeaDesc => 'Güneydoğu Asya Şampiyonası\'nı kazan.';
+
+  @override
   String get achMarksman => 'Dünya Şampiyonası Nişancısı';
 
   @override

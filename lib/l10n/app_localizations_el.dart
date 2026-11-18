@@ -3276,6 +3276,19 @@ class AppLocalizationsEl extends AppLocalizations {
   String get achTitleClashDesc => 'Κέρδισε την Ηπειρωτική Αναμέτρηση.';
 
   @override
+  String get achTitleGulf => 'Νικητές Κυπέλλου του Κόλπου';
+
+  @override
+  String get achTitleGulfDesc => 'Κατάκτησε το Κύπελλο του Κόλπου.';
+
+  @override
+  String get achTitleSea => 'Πρωταθλητές Νοτιοανατολικής Ασίας';
+
+  @override
+  String get achTitleSeaDesc =>
+      'Κατάκτησε το Πρωτάθλημα Νοτιοανατολικής Ασίας.';
+
+  @override
   String get achMarksman => 'Σκόρερ του Παγκοσμίου';
 
   @override

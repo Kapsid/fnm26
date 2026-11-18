@@ -3286,6 +3286,18 @@ class AppLocalizationsBg extends AppLocalizations {
   String get achTitleClashDesc => 'Спечели Continental Clash.';
 
   @override
+  String get achTitleGulf => 'Победители в Купата на Залива';
+
+  @override
+  String get achTitleGulfDesc => 'Спечелете Купата на Залива.';
+
+  @override
+  String get achTitleSea => 'Шампиони на Югоизточна Азия';
+
+  @override
+  String get achTitleSeaDesc => 'Спечелете Първенството на Югоизточна Азия.';
+
+  @override
   String get achMarksman => 'Стрелец на Световното първенство';
 
   @override

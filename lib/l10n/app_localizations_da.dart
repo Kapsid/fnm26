@@ -3239,6 +3239,18 @@ class AppLocalizationsDa extends AppLocalizations {
   String get achTitleClashDesc => 'Vind Continental Clash.';
 
   @override
+  String get achTitleGulf => 'Golfcup-vindere';
+
+  @override
+  String get achTitleGulfDesc => 'Vind Golfcuppen.';
+
+  @override
+  String get achTitleSea => 'Sydøstasiatiske mestre';
+
+  @override
+  String get achTitleSeaDesc => 'Vind det sydøstasiatiske mesterskab.';
+
+  @override
   String get achMarksman => 'VM-skytte';
 
   @override

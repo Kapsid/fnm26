@@ -9,6 +9,7 @@
 library;
 
 import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 
 /// The sections achievements are grouped under on the achievements screen.
 enum AchievementCategory {
@@ -343,6 +344,24 @@ abstract final class AchievementCatalog {
       description: 'Win the Continental Clash.',
       isEarned: (s) => s.titlesWon.contains('Continental Clash'),
       tier: AchievementTier.gold,
+    ),
+    // The regional cups: only their members can win one, so like the
+    // continental titles they are collected across nations.
+    AchievementDef(
+      id: 'title_gulf',
+      category: AchievementCategory.titles,
+      title: 'Gulf Cup Winners',
+      description: 'Win the Gulf Cup.',
+      isEarned: (s) => s.titlesWon.contains(RegionalCups.gulf.name),
+      tier: AchievementTier.silver,
+    ),
+    AchievementDef(
+      id: 'title_sea',
+      category: AchievementCategory.titles,
+      title: 'Southeast Asian Champions',
+      description: 'Win the Southeast Asian Championship.',
+      isEarned: (s) => s.titlesWon.contains(RegionalCups.southeastAsia.name),
+      tier: AchievementTier.silver,
     ),
     // ---- Misc ----
     AchievementDef(

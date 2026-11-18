@@ -3232,6 +3232,18 @@ class AppLocalizationsFil extends AppLocalizations {
   String get achTitleClashDesc => 'Manalo ng Continental Clash.';
 
   @override
+  String get achTitleGulf => 'Nanalo ng Gulf Cup';
+
+  @override
+  String get achTitleGulfDesc => 'Manalo sa Gulf Cup.';
+
+  @override
+  String get achTitleSea => 'Kampeon ng Timog-Silangang Asya';
+
+  @override
+  String get achTitleSeaDesc => 'Manalo sa Kampeonato ng Timog-Silangang Asya.';
+
+  @override
   String get achMarksman => 'Sharpshooter ng Kampeonato ng Mundo';
 
   @override

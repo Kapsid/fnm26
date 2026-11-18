@@ -3205,6 +3205,18 @@ class AppLocalizationsHi extends AppLocalizations {
   String get achTitleClashDesc => 'कॉन्टिनेंटल क्लैश जीतें।';
 
   @override
+  String get achTitleGulf => 'गल्फ़ कप विजेता';
+
+  @override
+  String get achTitleGulfDesc => 'गल्फ़ कप जीतें।';
+
+  @override
+  String get achTitleSea => 'दक्षिण-पूर्व एशियाई चैंपियन';
+
+  @override
+  String get achTitleSeaDesc => 'दक्षिण-पूर्व एशियाई चैंपियनशिप जीतें।';
+
+  @override
   String get achMarksman => 'विश्व चैंपियनशिप निशानेबाज़';
 
   @override

@@ -3224,6 +3224,18 @@ class AppLocalizationsMs extends AppLocalizations {
   String get achTitleClashDesc => 'Menangi Pertembungan Benua.';
 
   @override
+  String get achTitleGulf => 'Juara Piala Teluk';
+
+  @override
+  String get achTitleGulfDesc => 'Menangi Piala Teluk.';
+
+  @override
+  String get achTitleSea => 'Juara Asia Tenggara';
+
+  @override
+  String get achTitleSeaDesc => 'Menangi Kejohanan Asia Tenggara.';
+
+  @override
   String get achMarksman => 'Penembak Tepat Kejohanan Dunia';
 
   @override

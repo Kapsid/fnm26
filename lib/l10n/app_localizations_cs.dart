@@ -3330,6 +3330,18 @@ class AppLocalizationsCs extends AppLocalizations {
   String get achTitleClashDesc => 'Vyhrajte Kontinentální souboj.';
 
   @override
+  String get achTitleGulf => 'Vítězové Poháru Perského zálivu';
+
+  @override
+  String get achTitleGulfDesc => 'Vyhrajte Pohár Perského zálivu.';
+
+  @override
+  String get achTitleSea => 'Mistři jihovýchodní Asie';
+
+  @override
+  String get achTitleSeaDesc => 'Vyhrajte Mistrovství jihovýchodní Asie.';
+
+  @override
   String get achMarksman => 'Kanonýr MS';
 
   @override

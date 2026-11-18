@@ -3126,6 +3126,18 @@ class AppLocalizationsJa extends AppLocalizations {
   String get achTitleClashDesc => 'コンチネンタル・クラッシュで優勝する。';
 
   @override
+  String get achTitleGulf => 'ガルフカップ王者';
+
+  @override
+  String get achTitleGulfDesc => 'ガルフカップで優勝する。';
+
+  @override
+  String get achTitleSea => '東南アジア王者';
+
+  @override
+  String get achTitleSeaDesc => '東南アジア選手権で優勝する。';
+
+  @override
   String get achMarksman => '世界選手権のストライカー';
 
   @override

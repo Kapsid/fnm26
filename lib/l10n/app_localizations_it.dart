@@ -3275,6 +3275,18 @@ class AppLocalizationsIt extends AppLocalizations {
   String get achTitleClashDesc => 'Vinci la Sfida continentale.';
 
   @override
+  String get achTitleGulf => 'Vincitori della Coppa del Golfo';
+
+  @override
+  String get achTitleGulfDesc => 'Vinci la Coppa del Golfo.';
+
+  @override
+  String get achTitleSea => 'Campioni del Sud-est asiatico';
+
+  @override
+  String get achTitleSeaDesc => 'Vinci il Campionato del Sud-est asiatico.';
+
+  @override
   String get achMarksman => 'Cecchino del Campionato del mondo';
 
   @override

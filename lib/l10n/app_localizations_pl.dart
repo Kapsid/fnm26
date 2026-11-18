@@ -3263,6 +3263,19 @@ class AppLocalizationsPl extends AppLocalizations {
   String get achTitleClashDesc => 'Wygraj Starcie Kontynentów.';
 
   @override
+  String get achTitleGulf => 'Zwycięzcy Pucharu Zatoki Perskiej';
+
+  @override
+  String get achTitleGulfDesc => 'Wygraj Puchar Zatoki Perskiej.';
+
+  @override
+  String get achTitleSea => 'Mistrzowie Azji Południowo-Wschodniej';
+
+  @override
+  String get achTitleSeaDesc =>
+      'Wygraj Mistrzostwa Azji Południowo-Wschodniej.';
+
+  @override
   String get achMarksman => 'Snajper Mistrzostw Świata';
 
   @override

@@ -4407,6 +4407,22 @@
   "@achTitleClashDesc": {
     "description": "Achievement description."
   },
+  "achTitleGulf": "Gulf Cup Winners",
+  "@achTitleGulf": {
+    "description": "Achievement title."
+  },
+  "achTitleGulfDesc": "Win the Gulf Cup.",
+  "@achTitleGulfDesc": {
+    "description": "Achievement description."
+  },
+  "achTitleSea": "Southeast Asian Champions",
+  "@achTitleSea": {
+    "description": "Achievement title."
+  },
+  "achTitleSeaDesc": "Win the Southeast Asian Championship.",
+  "@achTitleSeaDesc": {
+    "description": "Achievement description."
+  },
   "achMarksman": "World Championship Marksman",
   "@achMarksman": {
     "description": "Achievement title."

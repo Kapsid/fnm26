@@ -3274,6 +3274,18 @@ class AppLocalizationsFi extends AppLocalizations {
   String get achTitleClashDesc => 'Voita Continental Clash.';
 
   @override
+  String get achTitleGulf => 'Persianlahden cupin voittajat';
+
+  @override
+  String get achTitleGulfDesc => 'Voita Persianlahden cup.';
+
+  @override
+  String get achTitleSea => 'Kaakkois-Aasian mestarit';
+
+  @override
+  String get achTitleSeaDesc => 'Voita Kaakkois-Aasian mestaruusturnaus.';
+
+  @override
   String get achMarksman => 'MM-kisojen tarkka-ampuja';
 
   @override

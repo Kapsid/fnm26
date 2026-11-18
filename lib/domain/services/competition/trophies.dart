@@ -5,17 +5,26 @@
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 
 /// Maps competitions to their bundled trophy artwork (assets/trophies/*.png),
-/// so the World Cup, each continental championship, the Nations Cup and the
-/// Continental Clash all show their own trophy across the cup screens and the
-/// manager's trophy cabinet.
+/// so the World Cup, each continental championship, the Nations Cup, the
+/// Continental Clash and each regional cup all show their own trophy across
+/// the cup screens and the manager's trophy cabinet.
 abstract final class Trophies {
   static const _base = 'assets/trophies';
 
   static const worldCup = '$_base/world.png';
   static const nationsCup = '$_base/nationscup.png';
   static const continentalClash = '$_base/continentalclash.png';
+
+  /// The regional cups' trophies (see [RegionalCups]).
+  static const gulfCup = '$_base/gulfcup.png';
+  static const southeastAsia = '$_base/southeastasia.png';
+
+  /// A regional cup's trophy key, by its index in [RegionalCups.all].
+  static const _regionalKeys = ['gulfcup', 'southeastasia'];
+  static const _regionalAssets = [gulfCup, southeastAsia];
 
   /// A confederation's continental-championship trophy.
   static String forConfederation(Confederation c) => switch (c) {
@@ -36,6 +45,9 @@ abstract final class Trophies {
         return worldCup;
       case 'Continental Clash':
         return continentalClash;
+    }
+    if (RegionalCups.byName(name) case final cup?) {
+      return _regionalAssets[cup.index];
     }
     for (final e in ContinentalCups.byConfederation.entries) {
       if (e.value.name == name) return forConfederation(e.key);
@@ -68,6 +80,9 @@ abstract final class Trophies {
         return 'world';
       case 'Continental Clash':
         return 'continentalclash';
+    }
+    if (RegionalCups.byName(name) case final cup?) {
+      return _regionalKeys[cup.index];
     }
     for (final e in ContinentalCups.byConfederation.entries) {
       if (e.value.name == name) return e.key.name;
@@ -118,6 +133,13 @@ abstract final class Trophies {
         asset: continentalClash,
         label: 'Continental Clash',
       ),
+      // The regional cups last: the smallest titles on the shelf.
+      for (final cup in RegionalCups.all)
+        (
+          key: _regionalKeys[cup.index],
+          asset: _regionalAssets[cup.index],
+          label: cup.name,
+        ),
     ];
   }
 }

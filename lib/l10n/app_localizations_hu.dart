@@ -3228,6 +3228,18 @@ class AppLocalizationsHu extends AppLocalizations {
   String get achTitleClashDesc => 'Nyerd meg a Continental Clasht.';
 
   @override
+  String get achTitleGulf => 'Öböl-kupa-győztesek';
+
+  @override
+  String get achTitleGulfDesc => 'Nyerd meg az Öböl-kupát.';
+
+  @override
+  String get achTitleSea => 'Délkelet-ázsiai bajnokok';
+
+  @override
+  String get achTitleSeaDesc => 'Nyerd meg a délkelet-ázsiai bajnokságot.';
+
+  @override
   String get achMarksman => 'Vb-gólvadász';
 
   @override
