@@ -25,6 +25,7 @@ import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/features/tournaments/wc_host_berths.dart';
 
 part 'round_results_tablet_layout.dart';
@@ -89,6 +90,19 @@ roundResultsViewProvider = FutureProvider.autoDispose.family<RoundResultsView?, 
             hosts: wcHosts,
             groupCount: results.groupCount,
           );
+    // A continental qualifying table: hosts take berths, and Europe's
+    // places past the top two go to the play-offs on the calendar2 rhythm,
+    // exactly as the championship's own screen colours it.
+    final contShape = results.kind == CompetitionKind.continentalQualifying
+        ? await continentalQualifyingShape(
+            ref.watch(competitionRepositoryProvider),
+            careerId: careerId,
+            cycle: career.cyclePointer,
+            rngSeed: career.rngSeed,
+            confederation: conf,
+            nations: nations.values,
+          )
+        : null;
     final adv = GroupAdvancement.forGroup(
       kind: results.kind,
       confederation: conf,
@@ -96,6 +110,8 @@ roundResultsViewProvider = FutureProvider.autoDispose.family<RoundResultsView?, 
       continentalSize: size,
       worldCupHosts: wcHosts,
       worldCupPlayoffPaths: wcPaths,
+      continentalHosts: contShape?.hosts ?? 0,
+      continentalPlayoffRoute: contShape?.playoffRoute ?? false,
     );
     direct = adv.direct;
     contention = adv.contention;

@@ -948,3 +948,26 @@ continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, 
     goldenGlove: goldenGlove,
   );
 });
+
+/// What shapes a continental qualifying table for [confederation] this
+/// cycle, so the hub and the round results colour it as this screen does:
+/// how many hosts take berths, and whether the places past the top two go
+/// to Europe's play-offs (calendar2) rather than the best runners-up.
+Future<({int hosts, bool playoffRoute})> continentalQualifyingShape(
+  CompetitionRepository comp, {
+  required int careerId,
+  required int cycle,
+  required int rngSeed,
+  required Confederation confederation,
+  required Iterable<Nation> nations,
+}) async => (
+  hosts: WorldCupHosts.continentalHostsFor(
+    confederation: confederation,
+    cycle: cycle,
+    seed: rngSeed,
+    nations: nations.toList(),
+  ).length,
+  playoffRoute:
+      confederation == Confederation.europe &&
+      await isCalendar2(comp, careerId, cycle),
+);

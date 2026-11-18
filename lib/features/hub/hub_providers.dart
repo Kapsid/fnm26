@@ -327,6 +327,19 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
             hosts: wcHosts,
             groupCount: group.groupCount,
           );
+    // A continental qualifying table: hosts take berths, and Europe's
+    // places past the top two go to the play-offs on the calendar2 rhythm,
+    // exactly as the championship's own screen colours it.
+    final contShape = group.kind == CompetitionKind.continentalQualifying
+        ? await continentalQualifyingShape(
+            compRepo,
+            careerId: careerId,
+            cycle: career.cyclePointer,
+            rngSeed: career.rngSeed,
+            confederation: conf,
+            nations: nations.values,
+          )
+        : null;
     final adv = GroupAdvancement.forGroup(
       kind: group.kind,
       confederation: conf,
@@ -335,6 +348,8 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
       isLowestLeague: isLowestLeague,
       worldCupHosts: wcHosts,
       worldCupPlayoffPaths: wcPaths,
+      continentalHosts: contShape?.hosts ?? 0,
+      continentalPlayoffRoute: contShape?.playoffRoute ?? false,
       worldCupConfedSteps: wcCal2,
     );
     groupDirect = adv.direct;

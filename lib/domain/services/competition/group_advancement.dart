@@ -210,6 +210,8 @@ abstract final class GroupAdvancement {
     int worldCupHosts = 0,
     int worldCupPlayoffPaths = 0,
     bool worldCupConfedSteps = false,
+    int continentalHosts = 0,
+    bool continentalPlayoffRoute = false,
   }) {
     switch (kind) {
       case CompetitionKind.worldCupQualifying:
@@ -222,7 +224,16 @@ abstract final class GroupAdvancement {
         );
         return (direct: adv.direct, contention: adv.contention, relegate: 0);
       case CompetitionKind.continentalQualifying:
-        final adv = continentalQualifying(continentalSize, groupCount);
+        // Europe on the calendar2 rhythm: the top two go through and the rest
+        // of the places are won in the play-offs, not by the best thirds.
+        if (continentalPlayoffRoute) {
+          return (direct: 2, contention: null, relegate: 0);
+        }
+        // Hosts reserve finals berths, so fewer come through qualifying.
+        final adv = continentalQualifying(
+          (continentalSize - continentalHosts).clamp(1, continentalSize),
+          groupCount,
+        );
         return (direct: adv.direct, contention: adv.contention, relegate: 0);
       case CompetitionKind.worldCupFinals:
       case CompetitionKind.continentalFinals:

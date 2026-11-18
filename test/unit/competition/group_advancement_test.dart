@@ -198,6 +198,36 @@ void main() {
     });
   });
 
+  group('forGroup: continental qualifying as the hub colours it', () {
+    Advancement euro({int hosts = 0, bool playoffRoute = false}) =>
+        GroupAdvancement.forGroup(
+          kind: CompetitionKind.continentalQualifying,
+          confederation: Confederation.europe,
+          groupCount: 10,
+          continentalSize: 24,
+          continentalHosts: hosts,
+          continentalPlayoffRoute: playoffRoute,
+        );
+
+    test('on the play-off route the top two go and nobody is amber', () {
+      final adv = euro(hosts: 1, playoffRoute: true);
+      expect(adv.direct, 2);
+      expect(adv.contention, isNull);
+    });
+
+    test('off it, a host takes a berth before the thirds are counted', () {
+      // 24 over 10 groups leaves four thirds in contention; a host's
+      // berth leaves three.
+      expect(euro().contention, 3);
+      expect(
+        GroupAdvancement.continentalQualifying(23, 10).contentionQualify,
+        3,
+      );
+      expect(euro(hosts: 1).direct, 2);
+      expect(euro(hosts: 1).contention, 3);
+    });
+  });
+
   test('ordinals read correctly', () {
     expect(GroupAdvancement.ordinal(1), '1st');
     expect(GroupAdvancement.ordinal(2), '2nd');
