@@ -382,11 +382,13 @@ class _TrophySlot extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 3),
+          // Three lines: "Southeast Asian Championship" (and longer in Polish
+          // or Finnish) does not fit two at this width.
           SizedBox(
-            height: 30,
+            height: 33,
             child: Text(
               label,
-              maxLines: 2,
+              maxLines: 3,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
               style: AppTypography.labelSmall.copyWith(

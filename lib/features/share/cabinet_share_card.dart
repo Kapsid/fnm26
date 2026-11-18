@@ -553,16 +553,24 @@ class _Shelf extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final n = trophies.length;
-    final cols = story ? (n <= 4 ? n : (n <= 6 ? 3 : 4)) : (n <= 4 ? n : 4);
+    // Never a third row: past eight (the regional cups made it ten) the
+    // shelf takes five a row.
+    final cols = n <= 4
+        ? n
+        : n > 8
+        ? 5
+        : story
+        ? (n <= 6 ? 3 : 4)
+        : 4;
     final rows = <List<ShareTrophy>>[
       for (var i = 0; i < n; i += cols)
         trophies.sublist(i, (i + cols).clamp(0, n)),
     ];
     final art = story
         ? (rows.length > 1
-              ? (cols <= 3 ? 124.0 : 112.0)
+              ? (cols <= 3 ? 124.0 : (cols == 4 ? 112.0 : 96.0))
               : (cols <= 3 ? 180.0 : 150.0))
-        : (rows.length > 1 ? 82.0 : 112.0);
+        : (rows.length > 1 ? (cols == 5 ? 72.0 : 82.0) : 112.0);
     return LayoutBuilder(
       builder: (context, c) => Column(
         children: [
