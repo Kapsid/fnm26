@@ -194,7 +194,10 @@ void main() {
       );
       expect(count, greaterThan(0));
 
-      // Europe's paths: three runners-up and a Nations Cup side each.
+      // Europe's paths: three runners-up and a Nations Cup side each; in the
+      // real UEFA shape (euroQuali2) with a European host, every pot is a
+      // runner-up and all twelve play.
+      final hostCycle = count < UefaWcPlayoffs.maxPaths;
       final uefa = EuroPlayoffs.fromSlots(
         await comp.drawSlots(
           id,
@@ -206,9 +209,12 @@ void main() {
       expect(uefa, hasLength(count));
       final winners = {for (final g in euroGroups) g.first.nationId};
       final runnersUp = {for (final g in euroGroups) g[1].nationId};
+      if (hostCycle) {
+        expect({for (final p in uefa) ...p.seeds}, runnersUp);
+      }
       for (final p in uefa) {
         expect(p.seeds.take(3).every(runnersUp.contains), isTrue);
-        expect(runnersUp.contains(p.seeds[3]), isFalse);
+        expect(runnersUp.contains(p.seeds[3]), hostCycle);
         expect(winners.contains(p.seeds[3]), isFalse);
         expect(confOf[p.seeds[3]], europe);
       }
