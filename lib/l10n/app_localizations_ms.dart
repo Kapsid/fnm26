@@ -18263,4 +18263,7 @@ class AppLocalizationsMs extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Menahan lebih banyak penalti, dalam perlawanan dan sepakan penalti.';
+
+  @override
+  String get statsTabHistory => 'Sejarah';
 }

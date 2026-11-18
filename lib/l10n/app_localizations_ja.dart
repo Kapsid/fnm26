@@ -17667,4 +17667,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get traitPenaltyStopperBlurb => '試合中もPK戦でも、より多くのPKを止める。';
+
+  @override
+  String get statsTabHistory => '歴史';
 }

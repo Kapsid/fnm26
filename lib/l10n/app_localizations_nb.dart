@@ -18302,4 +18302,7 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Redder flere straffer, i kamper og i straffekonkurranser.';
+
+  @override
+  String get statsTabHistory => 'Historikk';
 }

@@ -124,6 +124,22 @@ abstract final class AppColors {
   static const medalBronze = Color(0xFFCD8B62);
   static const medalPlatinum = Color(0xFF8AD9D2);
 
+  // --- Silver boxes (the record podium's leader) ----------------------------
+  /// The bright end of a silver box's sheen.
+  static const silverHigh = Color(0xFFEEF1F5);
+
+  /// The middle of a silver box, and the chosen record tab's underline.
+  static const silverMid = medalSilver;
+
+  /// The shaded end of a silver box.
+  static const silverLow = Color(0xFF7D858F);
+
+  /// Text on a silver box.
+  static const silverInk = Color(0xFF1A1C1E);
+
+  /// The edge of a bronze place.
+  static const bronze = medalBronze;
+
   // --- Movement (rank moved up / down since the campaign began) ------------
   static const up = ratingGreat;
   static const down = ratingPoor;

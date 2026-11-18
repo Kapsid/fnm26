@@ -4570,5 +4570,6 @@
   "traitShotStopper": "Stark skottstoppare",
   "traitShotStopperBlurb": "Räddar fler skott än väntat.",
   "traitPenaltyStopper": "Straffräddare",
-  "traitPenaltyStopperBlurb": "Räddar fler straffar, i matcher och i straffläggningar."
+  "traitPenaltyStopperBlurb": "Räddar fler straffar, i matcher och i straffläggningar.",
+  "statsTabHistory": "Historik"
 }

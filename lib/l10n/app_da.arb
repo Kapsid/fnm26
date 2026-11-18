@@ -4570,5 +4570,6 @@
   "traitShotStopper": "Stærk skudstopper",
   "traitShotStopperBlurb": "Redder flere skud end forventet.",
   "traitPenaltyStopper": "Straffesparksdræber",
-  "traitPenaltyStopperBlurb": "Redder flere straffespark, i kampe og i straffesparkskonkurrencer."
+  "traitPenaltyStopperBlurb": "Redder flere straffespark, i kampe og i straffesparkskonkurrencer.",
+  "statsTabHistory": "Historik"
 }

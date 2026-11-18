@@ -18443,4 +18443,7 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Hält mehr Elfmeter, im Spiel und im Elfmeterschießen.';
+
+  @override
+  String get statsTabHistory => 'Verlauf';
 }

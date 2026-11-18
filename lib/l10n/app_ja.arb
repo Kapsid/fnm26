@@ -4570,5 +4570,6 @@
   "traitShotStopper": "シュートストッパー",
   "traitShotStopperBlurb": "期待以上にシュートを止める。",
   "traitPenaltyStopper": "PKストッパー",
-  "traitPenaltyStopperBlurb": "試合中もPK戦でも、より多くのPKを止める。"
+  "traitPenaltyStopperBlurb": "試合中もPK戦でも、より多くのPKを止める。",
+  "statsTabHistory": "歴史"
 }

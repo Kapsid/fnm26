@@ -18386,4 +18386,7 @@ class AppLocalizationsBg extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Спасява повече дузпи, в мача и при дузпите.';
+
+  @override
+  String get statsTabHistory => 'История';
 }

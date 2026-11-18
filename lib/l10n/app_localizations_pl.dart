@@ -18492,4 +18492,7 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Broni więcej rzutów karnych, w meczu i w serii jedenastek.';
+
+  @override
+  String get statsTabHistory => 'Historia';
 }

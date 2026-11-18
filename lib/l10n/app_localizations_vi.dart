@@ -18149,4 +18149,7 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Cản phá nhiều quả penalty hơn, cả trong trận và loạt sút luân lưu.';
+
+  @override
+  String get statsTabHistory => 'Lịch sử';
 }

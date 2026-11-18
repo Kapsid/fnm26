@@ -4570,5 +4570,6 @@
   "traitShotStopper": "뛰어난 슈팅 선방",
   "traitShotStopperBlurb": "예상보다 많은 슈팅을 막아낸다.",
   "traitPenaltyStopper": "페널티킥 킬러",
-  "traitPenaltyStopperBlurb": "경기와 승부차기 모두에서 페널티킥을 더 많이 막는다."
+  "traitPenaltyStopperBlurb": "경기와 승부차기 모두에서 페널티킥을 더 많이 막는다.",
+  "statsTabHistory": "역사"
 }

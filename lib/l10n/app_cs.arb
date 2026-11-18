@@ -4570,5 +4570,6 @@
   "traitShotStopper": "Skvělý brankář na střely",
   "traitShotStopperBlurb": "Chytí víc střel, než by se dalo čekat.",
   "traitPenaltyStopper": "Postrach penaltistů",
-  "traitPenaltyStopperBlurb": "Chytá víc penalt, v zápase i v rozstřelu."
+  "traitPenaltyStopperBlurb": "Chytá víc penalt, v zápase i v rozstřelu.",
+  "statsTabHistory": "Historie"
 }

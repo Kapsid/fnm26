@@ -4570,5 +4570,6 @@
   "traitShotStopper": "Kaliteli şut kurtarıcı",
   "traitShotStopperBlurb": "Beklenenden fazla şutu kurtarır.",
   "traitPenaltyStopper": "Penaltı canavarı",
-  "traitPenaltyStopperBlurb": "Maçta ve seri penaltılarda daha çok penaltı kurtarır."
+  "traitPenaltyStopperBlurb": "Maçta ve seri penaltılarda daha çok penaltı kurtarır.",
+  "statsTabHistory": "Geçmiş"
 }

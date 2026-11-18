@@ -18412,4 +18412,7 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Defende mais penáltis, no jogo e nas disputas.';
+
+  @override
+  String get statsTabHistory => 'História';
 }

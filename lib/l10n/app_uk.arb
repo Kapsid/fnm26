@@ -4570,5 +4570,6 @@
   "traitShotStopper": "Чудово рятує від ударів",
   "traitShotStopperBlurb": "Відбиває більше ударів, ніж можна очікувати.",
   "traitPenaltyStopper": "Майстер пенальті",
-  "traitPenaltyStopperBlurb": "Відбиває більше пенальті, у матчі та в серії пенальті."
+  "traitPenaltyStopperBlurb": "Відбиває більше пенальті, у матчі та в серії пенальті.",
+  "statsTabHistory": "Історія"
 }

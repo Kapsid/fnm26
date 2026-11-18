@@ -4570,5 +4570,6 @@
   "traitShotStopper": "Отличен на удари",
   "traitShotStopperBlurb": "Спасява повече удари от очакваното.",
   "traitPenaltyStopper": "Убиец на дузпи",
-  "traitPenaltyStopperBlurb": "Спасява повече дузпи, в мача и при дузпите."
+  "traitPenaltyStopperBlurb": "Спасява повече дузпи, в мача и при дузпите.",
+  "statsTabHistory": "История"
 }

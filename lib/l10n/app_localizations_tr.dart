@@ -18214,4 +18214,7 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Maçta ve seri penaltılarda daha çok penaltı kurtarır.';
+
+  @override
+  String get statsTabHistory => 'Geçmiş';
 }

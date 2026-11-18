@@ -27671,6 +27671,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Saves more penalties, in matches and in shootouts.'**
   String get traitPenaltyStopperBlurb;
+
+  /// Team records, fifth tab: the side's overall over time and the way to the record book, legends and all-time world screens.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get statsTabHistory;
 }
 
 class _AppLocalizationsDelegate

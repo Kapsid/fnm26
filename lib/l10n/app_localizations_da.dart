@@ -18307,4 +18307,7 @@ class AppLocalizationsDa extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Redder flere straffespark, i kampe og i straffesparkskonkurrencer.';
+
+  @override
+  String get statsTabHistory => 'Historik';
 }

@@ -4570,5 +4570,6 @@
   "traitShotStopper": "Vrhunski branič udaraca",
   "traitShotStopperBlurb": "Obrani više udaraca nego što bi se očekivalo.",
   "traitPenaltyStopper": "Ubojica jedanaesteraca",
-  "traitPenaltyStopperBlurb": "Brani više jedanaesteraca, u utakmici i u izvođenju jedanaesteraca."
+  "traitPenaltyStopperBlurb": "Brani više jedanaesteraca, u utakmici i u izvođenju jedanaesteraca.",
+  "statsTabHistory": "Povijest"
 }

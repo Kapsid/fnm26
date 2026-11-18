@@ -18729,4 +18729,7 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Apără mai multe penalty-uri, în meci și la loviturile de departajare.';
+
+  @override
+  String get statsTabHistory => 'Istoric';
 }

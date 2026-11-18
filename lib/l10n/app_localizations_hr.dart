@@ -18643,4 +18643,7 @@ class AppLocalizationsHr extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Brani više jedanaesteraca, u utakmici i u izvođenju jedanaesteraca.';
+
+  @override
+  String get statsTabHistory => 'Povijest';
 }

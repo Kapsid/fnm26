@@ -4570,5 +4570,6 @@
   "traitShotStopper": "Gran parador",
   "traitShotStopperBlurb": "Detiene más tiros de lo esperado.",
   "traitPenaltyStopper": "Paratiros de penaltis",
-  "traitPenaltyStopperBlurb": "Para más penaltis, en el partido y en las tandas."
+  "traitPenaltyStopperBlurb": "Para más penaltis, en el partido y en las tandas.",
+  "statsTabHistory": "Historia"
 }

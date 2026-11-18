@@ -28257,5 +28257,9 @@
   },
   "@traitPenaltyStopperBlurb": {
     "description": "One-line blurb of the penalty-stopper goalkeeper trait."
+  },
+  "statsTabHistory": "History",
+  "@statsTabHistory": {
+    "description": "Team records, fifth tab: the side's overall over time and the way to the record book, legends and all-time world screens."
   }
 }

@@ -18631,4 +18631,7 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Відбиває більше пенальті, у матчі та в серії пенальті.';
+
+  @override
+  String get statsTabHistory => 'Історія';
 }

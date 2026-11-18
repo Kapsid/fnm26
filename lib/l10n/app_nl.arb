@@ -4570,5 +4570,6 @@
   "traitShotStopper": "Sterke shotstopper",
   "traitShotStopperBlurb": "Houdt meer schoten tegen dan verwacht.",
   "traitPenaltyStopper": "Penaltykiller",
-  "traitPenaltyStopperBlurb": "Stopt meer penalty's, in de wedstrijd en bij strafschoppen."
+  "traitPenaltyStopperBlurb": "Stopt meer penalty's, in de wedstrijd en bij strafschoppen.",
+  "statsTabHistory": "Historie"
 }

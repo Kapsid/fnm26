@@ -17710,4 +17710,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get traitPenaltyStopperBlurb => '경기와 승부차기 모두에서 페널티킥을 더 많이 막는다.';
+
+  @override
+  String get statsTabHistory => '역사';
 }

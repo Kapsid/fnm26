@@ -4570,5 +4570,6 @@
   "traitShotStopper": "Laadukas torjuja",
   "traitShotStopperBlurb": "Torjuu enemmän laukauksia kuin odottaisi.",
   "traitPenaltyStopper": "Rangaistuspotkujen torjuja",
-  "traitPenaltyStopperBlurb": "Torjuu enemmän rangaistuspotkuja, otteluissa ja rangaistuspotkukilpailuissa."
+  "traitPenaltyStopperBlurb": "Torjuu enemmän rangaistuspotkuja, otteluissa ja rangaistuspotkukilpailuissa.",
+  "statsTabHistory": "Historia"
 }

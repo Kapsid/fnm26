@@ -18211,4 +18211,7 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'मैच में और शूटआउट में ज़्यादा पेनल्टी रोकता है।';
+
+  @override
+  String get statsTabHistory => 'इतिहास';
 }

@@ -18375,4 +18375,7 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Torjuu enemmän rangaistuspotkuja, otteluissa ja rangaistuspotkukilpailuissa.';
+
+  @override
+  String get statsTabHistory => 'Historia';
 }

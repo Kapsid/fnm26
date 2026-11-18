@@ -17989,4 +17989,7 @@ class AppLocalizationsTh extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'เซฟจุดโทษได้มากขึ้น ทั้งในเกมและการดวลจุดโทษ';
+
+  @override
+  String get statsTabHistory => 'ประวัติ';
 }

@@ -4570,5 +4570,6 @@
   "traitShotStopper": "Starker Shot-Stopper",
   "traitShotStopperBlurb": "Hält mehr Schüsse als erwartet.",
   "traitPenaltyStopper": "Elfmeterkiller",
-  "traitPenaltyStopperBlurb": "Hält mehr Elfmeter, im Spiel und im Elfmeterschießen."
+  "traitPenaltyStopperBlurb": "Hält mehr Elfmeter, im Spiel und im Elfmeterschießen.",
+  "statsTabHistory": "Verlauf"
 }

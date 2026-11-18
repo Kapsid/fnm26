@@ -4570,5 +4570,6 @@
   "traitShotStopper": "Grande para-tiri",
   "traitShotStopperBlurb": "Respinge più tiri del previsto.",
   "traitPenaltyStopper": "Pararigori",
-  "traitPenaltyStopperBlurb": "Para più rigori, in partita e ai rigori."
+  "traitPenaltyStopperBlurb": "Para più rigori, in partita e ai rigori.",
+  "statsTabHistory": "Storia"
 }

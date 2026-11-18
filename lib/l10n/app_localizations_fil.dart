@@ -18316,4 +18316,7 @@ class AppLocalizationsFil extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Mas maraming penalty ang nasasalo, sa laro at sa shootout.';
+
+  @override
+  String get statsTabHistory => 'Kasaysayan';
 }

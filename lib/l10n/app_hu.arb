@@ -4570,5 +4570,6 @@
   "traitShotStopper": "Kiváló lövésvédő",
   "traitShotStopperBlurb": "Több lövést véd, mint várnánk.",
   "traitPenaltyStopper": "Tizenegyesölő",
-  "traitPenaltyStopperBlurb": "Több tizenegyest véd, meccsen és büntetőpárbajban is."
+  "traitPenaltyStopperBlurb": "Több tizenegyest véd, meccsen és büntetőpárbajban is.",
+  "statsTabHistory": "Történet"
 }

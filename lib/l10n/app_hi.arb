@@ -4570,5 +4570,6 @@
   "traitShotStopper": "बेहतरीन शॉट-रोकू",
   "traitShotStopperBlurb": "उम्मीद से ज़्यादा शॉट रोकता है।",
   "traitPenaltyStopper": "पेनल्टी रोकने में माहिर",
-  "traitPenaltyStopperBlurb": "मैच में और शूटआउट में ज़्यादा पेनल्टी रोकता है।"
+  "traitPenaltyStopperBlurb": "मैच में और शूटआउट में ज़्यादा पेनल्टी रोकता है।",
+  "statsTabHistory": "इतिहास"
 }

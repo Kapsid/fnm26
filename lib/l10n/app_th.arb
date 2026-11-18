@@ -4570,5 +4570,6 @@
   "traitShotStopper": "จอมเซฟลูกยิง",
   "traitShotStopperBlurb": "เซฟลูกยิงได้มากกว่าที่คาด",
   "traitPenaltyStopper": "จอมเซฟจุดโทษ",
-  "traitPenaltyStopperBlurb": "เซฟจุดโทษได้มากขึ้น ทั้งในเกมและการดวลจุดโทษ"
+  "traitPenaltyStopperBlurb": "เซฟจุดโทษได้มากขึ้น ทั้งในเกมและการดวลจุดโทษ",
+  "statsTabHistory": "ประวัติ"
 }

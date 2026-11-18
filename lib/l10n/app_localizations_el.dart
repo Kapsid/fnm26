@@ -18395,4 +18395,7 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Αποκρούει περισσότερα πέναλτι, στο παιχνίδι και στη διαδικασία των πέναλτι.';
+
+  @override
+  String get statsTabHistory => 'Ιστορικό';
 }

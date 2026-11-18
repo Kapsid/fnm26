@@ -18293,4 +18293,7 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Räddar fler straffar, i matcher och i straffläggningar.';
+
+  @override
+  String get statsTabHistory => 'Historik';
 }

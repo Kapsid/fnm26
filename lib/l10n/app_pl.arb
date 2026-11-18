@@ -4570,5 +4570,6 @@
   "traitShotStopper": "Świetny w obronie strzałów",
   "traitShotStopperBlurb": "Broni więcej strzałów, niż można się spodziewać.",
   "traitPenaltyStopper": "Pogromca karnych",
-  "traitPenaltyStopperBlurb": "Broni więcej rzutów karnych, w meczu i w serii jedenastek."
+  "traitPenaltyStopperBlurb": "Broni więcej rzutów karnych, w meczu i w serii jedenastek.",
+  "statsTabHistory": "Historia"
 }

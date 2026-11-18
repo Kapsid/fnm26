@@ -18337,4 +18337,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Saves more penalties, in matches and in shootouts.';
+
+  @override
+  String get statsTabHistory => 'History';
 }

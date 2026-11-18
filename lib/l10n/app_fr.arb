@@ -4570,5 +4570,6 @@
   "traitShotStopper": "Grand arrêteur de tirs",
   "traitShotStopperBlurb": "Arrête plus de tirs qu'on ne l'attendrait.",
   "traitPenaltyStopper": "Spécialiste des penalties",
-  "traitPenaltyStopperBlurb": "Arrête plus de penalties, en match comme aux tirs au but."
+  "traitPenaltyStopperBlurb": "Arrête plus de penalties, en match comme aux tirs au but.",
+  "statsTabHistory": "Historique"
 }

@@ -18691,4 +18691,7 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Chytá víc penalt, v zápase i v rozstřelu.';
+
+  @override
+  String get statsTabHistory => 'Historie';
 }

@@ -18391,4 +18391,7 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Para più rigori, in partita e ai rigori.';
+
+  @override
+  String get statsTabHistory => 'Storia';
 }

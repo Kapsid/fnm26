@@ -18243,4 +18243,7 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Több tizenegyest véd, meccsen és büntetőpárbajban is.';
+
+  @override
+  String get statsTabHistory => 'Történet';
 }

@@ -18477,4 +18477,7 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Arrête plus de penalties, en match comme aux tirs au but.';
+
+  @override
+  String get statsTabHistory => 'Historique';
 }
