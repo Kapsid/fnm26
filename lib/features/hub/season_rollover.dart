@@ -328,6 +328,12 @@ extension SeasonRollover on SeasonService {
     // Its calendar is the 1.1.2 rhythm (see calendar2Kind), marked before
     // the calendar below is built from it.
     await _comp.markDrawWatched(careerId, nextCycle, calendar2Kind);
+    // Its big games and its own talent's growth follow the 1.1.2 difficulty
+    // (see BigGameDifficulty), with the manager's hand in its intake
+    // recorded as it stands when the cycle opens (see stampYouthHand).
+    await _comp.markDrawWatched(careerId, nextCycle, BigGameDifficulty.kind);
+    final opened = await _careers.byId(careerId);
+    if (opened != null) await stampYouthHand(_comp, opened);
     // Its national teams are run by world managers (see worldManagersKind).
     await _comp.markDrawWatched(careerId, nextCycle, worldManagersKind);
 

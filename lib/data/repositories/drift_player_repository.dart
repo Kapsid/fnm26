@@ -825,6 +825,7 @@ class DriftPlayerRepository implements PlayerRepository {
     final aged = PlayerLifecycle.withCareerDev(
       agedOnly,
       careerStartsByPlayer[id] ?? 0,
+      markedStarts: PlayerLifecycle.markedStartsOf(careerStartsByPlayer, id),
       minutesFactor: PlayerLifecycle.minutesFactorFor(
         agedOnly,
         agingYears,

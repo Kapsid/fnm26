@@ -11,6 +11,7 @@ import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/club/club_form.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/player/depth_chart.dart';
+import 'package:fnm/domain/services/player/growth_difficulty.dart';
 import 'package:fnm/domain/services/player/player_aging.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
@@ -211,6 +212,7 @@ abstract final class PlayerLifecycle {
           withCareerDev(
             aged,
             careerStartsByPlayer[aged.id] ?? 0,
+            markedStarts: markedStartsOf(careerStartsByPlayer, aged.id),
             minutesFactor: factorFor(aged),
           ),
         );
@@ -229,6 +231,7 @@ abstract final class PlayerLifecycle {
           withCareerDev(
             aged,
             careerStartsByPlayer[aged.id] ?? 0,
+            markedStarts: markedStartsOf(careerStartsByPlayer, aged.id),
             minutesFactor: factorFor(aged),
           ),
         );
@@ -287,6 +290,12 @@ abstract final class PlayerLifecycle {
   static int cycleOfIntake(int intakeYear) =>
       intakeYear < 0 ? -1 : intakeYear ~/ 4;
 
+  /// The part of player [id]'s starts in [starts] banked in a `difficulty2`
+  /// cycle: [CareerStarts.marked] when the map carries it, 0 for a plain map
+  /// (every caller before 1.1.2, and any test), which grows as before.
+  static int markedStartsOf(Map<int, int> starts, int id) =>
+      starts is CareerStarts ? starts.marked[id] ?? 0 : 0;
+
   /// The career-development bump: a player who has started many tournament
   /// matches grows, faster if they play in a strong club league AND have the
   /// hidden ceiling to kick on (see [developmentPotential]). A small, capped,
@@ -297,10 +306,18 @@ abstract final class PlayerLifecycle {
   /// Potential is what turns game time into a gamble worth caring about: two
   /// prospects who debut alike diverge as they play — a gem kicks on toward
   /// stardom, a bust plateaus however many caps you give them.
+  ///
+  /// [markedStarts] is the part of [starts] banked in a `difficulty2` cycle
+  /// (1.1.2, see [GrowthDifficulty]): those count at the slower
+  /// [GrowthDifficulty.devCoefficient] and bring the cap down to
+  /// [GrowthDifficulty.devCap], but never below what his other starts had
+  /// already earned him, so nobody gets worse when a cycle rolls over. 0
+  /// (every older cycle) is exactly the old bump.
   static Player withCareerDev(
     Player aged,
     int starts, {
     double minutesFactor = 1,
+    int markedStarts = 0,
   }) {
     if (starts <= 0) return aged;
     // A pack player in a career on a custom world grows toward the potential
@@ -318,14 +335,33 @@ abstract final class PlayerLifecycle {
     // running alongside it. At the old rate a regular picked up the cap in a
     // single cycle and the two effects compounded into squads that improved
     // faster than they could possibly age out.
-    final delta =
-        (sqrt(starts) *
-                0.30 *
-                tierWeight *
-                developmentPotential(aged.id, overall: aged.overall) *
-                minutesFactor)
-            .clamp(0.0, 3.0)
-            .round();
+    final grow =
+        tierWeight *
+        developmentPotential(aged.id, overall: aged.overall) *
+        minutesFactor;
+    int bump(int n, double coefficient, double cap) =>
+        (sqrt(n) * coefficient * grow).clamp(0.0, cap).round();
+    final marked = markedStarts.clamp(0, starts);
+    final delta = marked == 0
+        ? (sqrt(starts) *
+                  0.30 *
+                  tierWeight *
+                  developmentPotential(aged.id, overall: aged.overall) *
+                  minutesFactor)
+              .clamp(0.0, 3.0)
+              .round()
+        : max(
+            // What his starts from older cycles earned him on the old rule…
+            bump(starts - marked, 0.30, 3),
+            // …or all of them at the blended, slower rate under the new cap.
+            bump(
+              starts,
+              (0.30 * (starts - marked) +
+                      GrowthDifficulty.devCoefficient * marked) /
+                  starts,
+              GrowthDifficulty.devCap.toDouble(),
+            ),
+          );
     if (delta == 0) return aged;
     if (target == null) {
       return aged.copyWith(attributes: _bumpAll(aged.attributes, delta));
@@ -552,6 +588,7 @@ abstract final class PlayerLifecycle {
       return withCareerDev(
         aged,
         careerStartsByPlayer[aged.id] ?? 0,
+        markedStarts: markedStartsOf(careerStartsByPlayer, aged.id),
         minutesFactor: minutesFactorFor(aged, agingYears, clubSeed),
       );
     }

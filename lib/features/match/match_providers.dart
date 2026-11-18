@@ -22,6 +22,7 @@ import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/match/ai_counter.dart';
 import 'package:fnm/domain/services/match/ai_substitutions.dart';
 import 'package:fnm/domain/services/match/ai_tactics.dart';
+import 'package:fnm/domain/services/match/big_game_difficulty.dart';
 import 'package:fnm/domain/services/match/match_conditions.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/mid_tier_difficulty.dart';
@@ -227,7 +228,31 @@ class MatchPreview {
     required this.ground,
     this.homeFans,
     this.secondLegMargin,
+    this.talkScaleByNation = const {},
+    this.atmosphereScale = 1.0,
+    this.shootoutWeights,
+    this.composureCap = 1.08,
   });
+
+  /// How much of a team talk's lift each side gets (the manager's side 0.7 in
+  /// a `difficulty2` cycle, see `BigGameDifficulty.talkScale`; empty, every
+  /// talk at face value). Passed to the engine on every (re-)sim.
+  final Map<int, double> talkScaleByNation;
+
+  /// A factor on [Attendance.atmosphere] (`BigGameDifficulty.hostCrowdScale`
+  /// when the manager hosts the finals in a `difficulty2` cycle; else 1.0).
+  final double atmosphereScale;
+
+  /// The strength pair (home, away) the live shootout leans by
+  /// (`BigGameDifficulty.shootoutWeight`), or null for the shootout as it
+  /// always was: taker skills only.
+  final (double, double)? shootoutWeights;
+
+  /// The most the extra-time turnaround talk may steady his penalty takers.
+  final double composureCap;
+
+  /// What the crowd is worth this match, as the engine is handed it.
+  double get atmosphere => Attendance.atmosphere(ground) * atmosphereScale;
 
   final Fixture fixture;
   final MatchResult result;
@@ -373,9 +398,22 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
     ),
     ...await naturalizedPlayersFor(ref, career),
   ];
+  // A cycle on the 1.1.2 difficulty (see [BigGameDifficulty]); one without
+  // the mark plays every match below exactly as before.
+  final hard = await isDifficulty2(compRepo, careerId, career.cyclePointer);
+  final finalsKnockout =
+      hard && BigGameDifficulty.finalsKnockoutStage(fixture.round) != null;
   final conditionDeltas = {
     for (final e in condition.entries)
-      if (e.value.overallDelta != 0) e.key: e.value.overallDelta,
+      if (e.value.overallDelta != 0)
+        // In a finals knockout of a difficulty2 cycle a man in top condition
+        // is worth at most +3 (`BigGameDifficulty.knockoutConditionCap`).
+        e.key: finalsKnockout
+            ? math.min(
+                e.value.overallDelta,
+                BigGameDifficulty.knockoutConditionCap,
+              )
+            : e.value.overallDelta,
   };
   // Traits (derived, never stored) are what make individual players stick
   // in the memory — and they change the match, so the engine gets them.
@@ -590,11 +628,34 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
   // side's attack and defence when the eleven he fields is mid-table
   // strength, nothing for an elite or a minnow side (see [MidTierDifficulty];
   // a skipped match applies the same term in `_withManagerTactics`).
-  final chemistryByNation = MidTierDifficulty.chemistryByNation(
+  //
+  // In a difficulty2 cycle the mid-tier band reaches three points higher,
+  // and a World Championship or continental finals knockout against a
+  // stronger side (or one with more pedigree) adds the big-game term both
+  // ways: his side a little down, the opponent a little up (see
+  // [BigGameDifficulty.withTerm]; a skipped tie applies its twin in
+  // `_playBackground`).
+  final midTier = MidTierDifficulty.chemistryByNation(
     managerNationId: playerNationId,
     familiarity: drilling[playerFormation]?.familiarity ?? 0,
     fieldedRating: avg(playerXi),
+    wide: hard,
   );
+  final chemistryByNation = finalsKnockout
+      ? BigGameDifficulty.withTerm(
+          midTier,
+          managerNationId: playerNationId,
+          opponentNationId: opponentId,
+          term: await bigGameTerm(
+            compRepo,
+            fixture: fixture,
+            nations: allNations,
+            managerNationId: playerNationId,
+            mine: avg(playerXi),
+            theirs: avg(oppXi),
+          ),
+        )
+      : midTier;
 
   final playerIsHome = fixture.homeNationId == playerNationId;
   final homeTeam = playerIsHome ? playerTeam : oppTeam;
@@ -651,6 +712,28 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
     moodFill: fans == null ? 0 : FanMood.fillShift(fans.score),
   );
 
+  // The rest of the 1.1.2 difficulty (a difficulty2 cycle only; every value
+  // below is the neutral one otherwise): his talks lift him less, his own
+  // crowd at a finals he hosts is worth half, and a live shootout leans a
+  // little to the stronger eleven (see [BigGameDifficulty]).
+  final talkScaleByNation = hard
+      ? {playerNationId: BigGameDifficulty.talkScale}
+      : const <int, double>{};
+  final atmosphereScale =
+      hard &&
+          venue.neutral &&
+          venue.hostId == playerNationId &&
+          BigGameDifficulty.isFinalsRound(fixture.round)
+      ? BigGameDifficulty.hostCrowdScale
+      : 1.0;
+  final shootoutWeights = hard && Rounds.isKnockout(fixture.round)
+      ? (
+          BigGameDifficulty.shootoutWeight(avg(homeTeam.xi)),
+          BigGameDifficulty.shootoutWeight(avg(awayTeam.xi)),
+        )
+      : null;
+  final composureCap = hard ? BigGameDifficulty.composureCap : 1.08;
+
   // A knockout level at ninety plays on through extra time in the engine, so
   // the live screen shows the extra time the manager can still change.
   final result = playWithAiExtraTimeSub(
@@ -664,10 +747,11 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
       aiManagedNationIds: {opponentId},
       injuryFactorByNation: injuryFactorByNation,
       chemistryByNation: chemistryByNation,
+      talkScaleByNation: talkScaleByNation,
       neutralVenue: venue.neutral,
       venueHostId: venue.hostId,
       bigMatch: bigMatch,
-      atmosphere: Attendance.atmosphere(ground),
+      atmosphere: Attendance.atmosphere(ground) * atmosphereScale,
       extraTimeIfLevel: Rounds.isKnockout(fixture.round),
       extraTimeAtMargin: secondLegMargin,
       conditions: MatchPreview.conditionsFor(
@@ -706,6 +790,10 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
     ground: ground,
     homeFans: fans?.band,
     secondLegMargin: secondLegMargin,
+    talkScaleByNation: talkScaleByNation,
+    atmosphereScale: atmosphereScale,
+    shootoutWeights: shootoutWeights,
+    composureCap: composureCap,
   );
 });
 

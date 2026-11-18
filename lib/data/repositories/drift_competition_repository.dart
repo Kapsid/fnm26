@@ -7,6 +7,8 @@ import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/repositories/mappers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/awards/award_year.dart';
+import 'package:fnm/domain/services/match/big_game_difficulty.dart';
+import 'package:fnm/domain/services/player/growth_difficulty.dart';
 import 'package:fnm/domain/services/awards/awards.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
@@ -2289,7 +2291,29 @@ class DriftCompetitionRepository implements CompetitionRepository {
     final rows = await (_db.select(
       _db.tournamentAppearances,
     )..where((t) => t.careerId.equals(careerId))).get();
+    // Which of them were banked in a cycle on the 1.1.2 difficulty (see
+    // `GrowthDifficulty`): a competition's starts belong to its cycle. With
+    // no such cycle nothing is marked and the bump grows as before.
+    final markedCycles = {
+      for (final m
+          in await (_db.select(_db.drawsWatched)..where(
+                (t) =>
+                    t.careerId.equals(careerId) &
+                    t.kind.equals(BigGameDifficulty.kind),
+              ))
+              .get())
+        m.cycle,
+    };
+    final markedComps = markedCycles.isEmpty
+        ? const <int>{}
+        : {
+            for (final c in await (_db.select(
+              _db.competitions,
+            )..where((t) => t.careerId.equals(careerId))).get())
+              if (markedCycles.contains(c.cycle)) c.id,
+          };
     final byPlayer = <int, int>{};
+    final marked = <int, int>{};
     for (final r in rows) {
       if (r.starts <= 0) continue;
       if (unfinished.contains(r.competitionId)) continue;
@@ -2302,8 +2326,15 @@ class DriftCompetitionRepository implements CompetitionRepository {
         (v) => v + r.starts,
         ifAbsent: () => r.starts,
       );
+      if (markedComps.contains(r.competitionId)) {
+        marked.update(
+          r.playerId,
+          (v) => v + r.starts,
+          ifAbsent: () => r.starts,
+        );
+      }
     }
-    return byPlayer;
+    return CareerStarts(byPlayer, marked: marked);
   }
 
   /// When the earliest finals tournament that is currently IN PROGRESS kicked

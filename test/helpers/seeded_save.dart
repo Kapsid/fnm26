@@ -184,6 +184,9 @@ Future<SeededSave> seedSave(
                   // And its calendar as it was before 1.1.2's calendar2
                   // (see `calendar2Kind`): the Euro qualifiers open it.
                   calendar2: false,
+                  // And its first cycle before the 1.1.2 difficulty (see
+                  // `BigGameDifficulty.kind`).
+                  difficulty2: false,
                 ))
             .valueOrNull!;
     await container.read(messageInboxProvider(career.id).future);
