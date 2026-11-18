@@ -250,6 +250,9 @@ void main() {
                     tournamentSpacing: false,
                     // The calendar the seed was found on (before 1.1.2).
                     calendar2: false,
+                    // And the knockouts before the 1.1.2 difficulty: the
+                    // big-game term moves its skipped extra time.
+                    difficulty2: false,
                   ))
               .valueOrNull!;
       await w.c.read(tacticServiceProvider).setFormation(career.id, shape);
@@ -270,6 +273,9 @@ void main() {
                     tournamentSpacing: false,
                     // The calendar the seed was found on (before 1.1.2).
                     calendar2: false,
+                    // And the knockouts before the 1.1.2 difficulty: the
+                    // big-game term moves its skipped extra time.
+                    difficulty2: false,
                   ))
               .valueOrNull!;
       final refFam = ref.c.read(tacticFamiliarityRepositoryProvider);
