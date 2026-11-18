@@ -139,8 +139,8 @@ class _TeamStatsScreenState extends ConsumerState<TeamStatsScreen> {
   }
 }
 
-/// The record tabs: text labels underlined in silver when chosen, scrolling
-/// sideways when they do not fit (five on a phone).
+/// The record tabs: the app's segmented control, scrolling sideways
+/// when the five labels do not fit (as on a phone).
 class RecordTabs extends StatelessWidget {
   const RecordTabs({
     required this.labels,
@@ -157,52 +157,14 @@ class RecordTabs extends StatelessWidget {
   static Key tabKey(int i) => Key('teamRecords.tab$i');
 
   @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    return DecoratedBox(
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: AppColors.surfaceVariant)),
-      ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            for (final (i, label) in labels.indexed)
-              InkWell(
-                key: tabKey(i),
-                onTap: () => onSelect(i),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.sm + 2,
-                    vertical: AppSpacing.sm + 1,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: i == selected
-                            ? AppColors.silverMid
-                            : Colors.transparent,
-                        width: 2,
-                      ),
-                    ),
-                  ),
-                  child: Text(
-                    label.capsIn(l.localeName),
-                    maxLines: 1,
-                    style: AppTypography.labelSmall.copyWith(
-                      color: i == selected
-                          ? AppColors.onSurface
-                          : AppColors.outline,
-                      letterSpacing: 0.8,
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => AppSegmentedControl(
+    tabs: [
+      for (final (i, label) in labels.indexed)
+        SegmentTab(label, key: tabKey(i)),
+    ],
+    selected: selected,
+    onSelect: onSelect,
+  );
 }
 
 /// One place on a [RecordPodium].
@@ -376,12 +338,12 @@ class _PodiumPlace extends StatelessWidget {
                 const SizedBox(height: 4),
                 // On the silver box the badge's green needs a dark ground.
                 if (first)
-                  DecoratedBox(
+                  const DecoratedBox(
                     decoration: BoxDecoration(
                       color: AppColors.surface,
                       borderRadius: AppRadii.smAll,
                     ),
-                    child: const ActiveBadge(),
+                    child: ActiveBadge(),
                   )
                 else
                   const ActiveBadge(),
