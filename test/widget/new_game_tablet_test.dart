@@ -47,6 +47,7 @@ class _GatedCareers extends CareerService {
     int? worldPackId,
     bool tournamentSpacing = true,
     bool calendar2 = true,
+    bool euroQuali2 = true,
     bool difficulty2 = true,
   }) async {
     await gate?.future;
@@ -69,6 +70,7 @@ class _GatedCareers extends CareerService {
       worldPackId: worldPackId,
       tournamentSpacing: tournamentSpacing,
       calendar2: calendar2,
+      euroQuali2: euroQuali2,
       difficulty2: difficulty2,
     );
   }
