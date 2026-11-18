@@ -18263,4 +18263,54 @@ class AppLocalizationsMs extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Menahan lebih banyak penalti, dalam perlawanan dan sepakan penalti.';
+
+  @override
+  String get playoffCourseLegendAll =>
+      'Kuning: semua naib juara kumpulan ke play-off';
+
+  @override
+  String get wcRunnersUpTableTitle =>
+      'Naib juara kumpulan: semuanya ke play-off';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      'Disusun mengikut rekod yang setara. Pot play-off disusun mengikut ranking dunia selepas kelayakan tamat.';
+
+  @override
+  String ncRouteNote(int count) {
+    return 'Tempat Piala Negara-Negara dalam pot 4 play-off: $count. Diberi dahulu kepada juara kumpulan terbaiknya yang tidak menjuarai kumpulan kelayakan dan tidak menjadi naib juara, kemudian mengikut kedudukannya. Mengikut keadaan semasa:';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return 'Negara Eropah menjadi tuan rumah Kejohanan Dunia ini, jadi $runnersUp naib juara mengisi semua $paths laluan play-off dan kitaran ini tiada tempat melalui Piala Negara-Negara.';
+  }
+
+  @override
+  String get ncRouteTagHolds => 'Ada tempat';
+
+  @override
+  String get ncRouteTagQualified => 'Layak';
+
+  @override
+  String get ncRouteTagRunnerUp => 'Naib juara';
+
+  @override
+  String get ncRouteTagWaiting => 'Menunggu';
+
+  @override
+  String get ncRouteLegendHolds =>
+      'Memegang tempat dalam pot 4, mengikut keadaan semasa';
+
+  @override
+  String get ncRouteLegendQualified =>
+      'Mendahului kumpulan kelayakan: layak terus, tempatnya beralih kepada pasukan seterusnya';
+
+  @override
+  String get ncRouteLegendRunnerUp =>
+      'Naib juara kumpulan kelayakan: tetap ke play-off, tempatnya beralih kepada pasukan seterusnya';
+
+  @override
+  String get ncRouteLegendWaiting =>
+      'Seterusnya, jika pasukan di hadapan terkeluar dari laluan ini';
 }

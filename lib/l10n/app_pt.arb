@@ -4570,5 +4570,18 @@
   "traitShotStopper": "Grande defensor de remates",
   "traitShotStopperBlurb": "Defende mais remates do que seria de esperar.",
   "traitPenaltyStopper": "Defensor de penáltis",
-  "traitPenaltyStopperBlurb": "Defende mais penáltis, no jogo e nas disputas."
+  "traitPenaltyStopperBlurb": "Defende mais penáltis, no jogo e nas disputas.",
+  "playoffCourseLegendAll": "Amarelo: todos os segundos colocados vão ao play-off",
+  "wcRunnersUpTableTitle": "Segundos colocados: todos vão ao play-off",
+  "wcRunnersUpTableNote": "Ordenados por registos comparáveis. Os potes do play-off são formados pelo ranking mundial no fim da qualificação.",
+  "ncRouteNote": "Vagas da Copa das Nações no pote 4 do play-off: {count}. Vão primeiro para os seus melhores vencedores de grupo que não vencem o seu grupo de qualificação nem ficam em segundo, e depois pela sua classificação. Como as coisas estão:",
+  "ncRouteHostCycle": "Um país europeu organiza este Campeonato do Mundo, por isso os {runnersUp} segundos colocados preenchem todos os {paths} caminhos do play-off e nenhuma vaga passa pela Copa das Nações neste ciclo.",
+  "ncRouteTagHolds": "Tem vaga",
+  "ncRouteTagQualified": "Qualificado",
+  "ncRouteTagRunnerUp": "Segundo",
+  "ncRouteTagWaiting": "A seguir",
+  "ncRouteLegendHolds": "Ocupa uma vaga do pote 4, como as coisas estão",
+  "ncRouteLegendQualified": "Lidera o seu grupo de qualificação: qualifica-se diretamente e a sua vaga passa ao seguinte",
+  "ncRouteLegendRunnerUp": "Segundo no seu grupo de qualificação: vai ao play-off de qualquer forma e a sua vaga passa ao seguinte",
+  "ncRouteLegendWaiting": "O próximo, se uma equipa à frente sair deste caminho"
 }

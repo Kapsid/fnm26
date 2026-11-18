@@ -18492,4 +18492,54 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Broni więcej rzutów karnych, w meczu i w serii jedenastek.';
+
+  @override
+  String get playoffCourseLegendAll =>
+      'Żółty: wszystkie drużyny z drugich miejsc grają w barażach';
+
+  @override
+  String get wcRunnersUpTableTitle =>
+      'Drużyny z drugich miejsc: wszystkie grają w barażach';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      'Uszeregowane według porównywalnych wyników. Koszyki baraży powstają według rankingu światowego po zakończeniu eliminacji.';
+
+  @override
+  String ncRouteNote(int count) {
+    return 'Miejsca dla Pucharu Narodów w koszyku 4 baraży: $count. Dostają je najpierw jego najlepsi zwycięzcy grup, którzy nie wygrywają swojej grupy eliminacyjnej ani nie kończą jej na drugim miejscu, a potem kolejni według jego rankingu. Według obecnego stanu:';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return 'Mistrzostwa świata organizuje kraj europejski, więc drużyny z drugich miejsc ($runnersUp) wypełniają wszystkie ścieżki baraży ($paths) i w tym cyklu żadne miejsce nie przechodzi przez Puchar Narodów.';
+  }
+
+  @override
+  String get ncRouteTagHolds => 'Ma miejsce';
+
+  @override
+  String get ncRouteTagQualified => 'Awans';
+
+  @override
+  String get ncRouteTagRunnerUp => 'Drugie miejsce';
+
+  @override
+  String get ncRouteTagWaiting => 'Czeka';
+
+  @override
+  String get ncRouteLegendHolds =>
+      'Zajmuje miejsce w koszyku 4, według obecnego stanu';
+
+  @override
+  String get ncRouteLegendQualified =>
+      'Prowadzi w swojej grupie eliminacyjnej: awansuje bezpośrednio, jego miejsce przechodzi dalej';
+
+  @override
+  String get ncRouteLegendRunnerUp =>
+      'Drugi w swojej grupie eliminacyjnej: i tak gra w barażach, jego miejsce przechodzi dalej';
+
+  @override
+  String get ncRouteLegendWaiting =>
+      'Następny w kolejce, gdyby ktoś przed nim wypadł z tej ścieżki';
 }

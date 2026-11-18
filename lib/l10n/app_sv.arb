@@ -4570,5 +4570,18 @@
   "traitShotStopper": "Stark skottstoppare",
   "traitShotStopperBlurb": "Räddar fler skott än väntat.",
   "traitPenaltyStopper": "Straffräddare",
-  "traitPenaltyStopperBlurb": "Räddar fler straffar, i matcher och i straffläggningar."
+  "traitPenaltyStopperBlurb": "Räddar fler straffar, i matcher och i straffläggningar.",
+  "playoffCourseLegendAll": "Gult: varje grupptvåa går till playoff",
+  "wcRunnersUpTableTitle": "Grupptvåor: alla går till playoff",
+  "wcRunnersUpTableNote": "Rangordnade på jämförbara resultat. Playoffens seedningsgrupper bildas efter världsrankingen när kvalet är slut.",
+  "ncRouteNote": "Platser för Nations Cup i seedningsgrupp 4 av playoffen: {count}. De går först till dess bästa gruppvinnare som varken vinner sin kvalgrupp eller blir tvåa, sedan vidare efter dess ranking. Som det ser ut nu:",
+  "ncRouteHostCycle": "Ett europeiskt land arrangerar detta världsmästerskap, så de {runnersUp} grupptvåorna fyller alla {paths} playoffvägar och ingen plats går via Nations Cup den här cykeln.",
+  "ncRouteTagHolds": "Har plats",
+  "ncRouteTagQualified": "Klar",
+  "ncRouteTagRunnerUp": "Tvåa",
+  "ncRouteTagWaiting": "Näst på tur",
+  "ncRouteLegendHolds": "Har en plats i seedningsgrupp 4, som det ser ut nu",
+  "ncRouteLegendQualified": "Vinner sin kvalgrupp: direkt klar, platsen går vidare",
+  "ncRouteLegendRunnerUp": "Tvåa i sin kvalgrupp: går till playoff ändå, platsen går vidare",
+  "ncRouteLegendWaiting": "Näst på tur om ett lag ovanför faller bort från vägen"
 }

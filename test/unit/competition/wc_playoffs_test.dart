@@ -514,4 +514,163 @@ void main() {
       );
     });
   });
+
+  // The real UEFA shape (1.1.2, `UefaWcPlayoffs.kind2`): every runner-up
+  // goes to the play-off. In a cycle a European nation hosts (the owner's
+  // choice) there are three paths, all twelve runners-up fill them and the
+  // Nations Cup has no place; otherwise nothing differs.
+  group('the real UEFA shape (euroQuali2)', () {
+    final groups = qualifying();
+    final winners = {for (final g in groups) g.first.nationId};
+    final runnersUp = {for (final g in groups) g[1].nationId};
+    final cup = [...league('A', 1000), ...league('B', 2000)];
+
+    test('a European host: three paths of the twelve runners-up, no Nations '
+        'Cup place', () {
+      final ent = UefaWcPlayoffs.entrants(
+        groups: groups,
+        ncTables: cup,
+        ineligible: winners,
+        count: 3,
+        allRunnersUp: true,
+      );
+      expect(ent.runnersUp.toSet(), runnersUp);
+      expect(ent.nationsCup, isEmpty);
+      final paths = UefaWcPlayoffs.draw(
+        entrants: ent,
+        rankingById: {for (var i = 0; i < 300; i++) i: i},
+        rng: SeededRng(7),
+      );
+      expect(paths, hasLength(3));
+      expect({for (final p in paths) ...p.seeds}, runnersUp);
+      // Pots by rank: the best three runners-up are the path seeds.
+      final ranked = [...runnersUp]..sort();
+      expect({for (final p in paths) p.seeds[0]}, ranked.take(3).toSet());
+    });
+
+    test('no European host: the same twelve and four as before', () {
+      final before = UefaWcPlayoffs.entrants(
+        groups: groups,
+        ncTables: cup,
+        ineligible: {...winners, 1000},
+        count: 4,
+      );
+      final after = UefaWcPlayoffs.entrants(
+        groups: groups,
+        ncTables: cup,
+        ineligible: {...winners, 1000},
+        count: 4,
+        allRunnersUp: true,
+      );
+      expect(after.runnersUp.toSet(), before.runnersUp.toSet());
+      expect(after.nationsCup, before.nationsCup);
+    });
+
+    test('the tables mark every runner-up, with a host too', () {
+      for (final paths in const [3, 4]) {
+        expect(
+          GroupAdvancement.worldCupPlayoffNations(
+            Confederation.europe,
+            groups,
+            hosts: 4 - paths,
+            playoffPaths: paths,
+            allRunnersUp: true,
+          ),
+          runnersUp,
+          reason: '$paths paths',
+        );
+      }
+      // The old shape with a host leaves three runners-up out.
+      expect(
+        GroupAdvancement.worldCupPlayoffNations(
+          Confederation.europe,
+          groups,
+          hosts: 1,
+          playoffPaths: 3,
+        ),
+        hasLength(9),
+      );
+    });
+
+    test('on course: none with a host, the old four without', () {
+      expect(
+        UefaWcPlayoffs.onCourseNationsCup(
+          groups: groups,
+          ncTables: cup,
+          hosts: const {999},
+          europeCount: 53,
+          allRunnersUp: true,
+        ),
+        isEmpty,
+      );
+      expect(
+        UefaWcPlayoffs.onCourseNationsCup(
+          groups: const [],
+          ncTables: cup,
+          hosts: const {999},
+          europeCount: 53,
+          allRunnersUp: true,
+        ),
+        isEmpty,
+      );
+      expect(
+        UefaWcPlayoffs.onCourseNationsCup(
+          groups: groups,
+          ncTables: cup,
+          hosts: const {},
+          europeCount: 53,
+          allRunnersUp: true,
+        ),
+        UefaWcPlayoffs.onCourseNationsCup(
+          groups: groups,
+          ncTables: cup,
+          hosts: const {},
+          europeCount: 53,
+        ),
+      );
+    });
+
+    test('the Nations Cup route: who holds a place, who is through or a '
+        'runner-up, who is next', () {
+      // 1000 (A1 winner) tops qualifying group 0, 1004 (A2 winner) is
+      // second in group 1; the other cup sides are low in their groups.
+      final played = [
+        for (final (i, g) in groups.indexed)
+          if (i == 0)
+            [row(1000, 30), g[1], g[2], g[3]]
+          else if (i == 1)
+            [g[0], row(1004, 16), g[2], g[3]]
+          else
+            g,
+      ];
+      final holding = UefaWcPlayoffs.onCourseNationsCup(
+        groups: played,
+        ncTables: cup,
+        hosts: const {},
+        europeCount: 53,
+        allRunnersUp: true,
+      );
+      expect(holding, [1008, 1012, 2000, 2004]);
+      final route = UefaWcPlayoffs.nationsCupRoute(
+        groups: played,
+        ncTables: cup,
+        hosts: const {},
+        holding: holding,
+      );
+      NcRouteStatus of(int id) =>
+          route.firstWhere((e) => e.nationId == id).status;
+      expect(of(1000), NcRouteStatus.qualified);
+      expect(of(1004), NcRouteStatus.runnerUp);
+      for (final id in holding) {
+        expect(of(id), NcRouteStatus.holds);
+      }
+      // Two sides past the last holder, next in line.
+      expect(route.length, 8);
+      expect(
+        route.skip(6).map((e) => e.status),
+        everyElement(NcRouteStatus.waiting),
+      );
+      expect(route.first.groupWinner, isTrue);
+    });
+  });
 }

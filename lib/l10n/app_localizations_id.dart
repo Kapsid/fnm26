@@ -18208,4 +18208,53 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Menahan lebih banyak penalti, di laga dan adu penalti.';
+
+  @override
+  String get playoffCourseLegendAll =>
+      'Kuning: semua runner-up grup masuk play-off';
+
+  @override
+  String get wcRunnersUpTableTitle => 'Runner-up grup: semuanya masuk play-off';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      'Diurutkan berdasarkan hasil yang setara. Pot play-off disusun menurut peringkat dunia setelah kualifikasi berakhir.';
+
+  @override
+  String ncRouteNote(int count) {
+    return 'Jatah Piala Bangsa-Bangsa di pot 4 play-off: $count. Diberikan lebih dulu kepada juara grup terbaiknya yang tidak menjuarai grup kualifikasi dan tidak menjadi runner-up, lalu menurut peringkatnya. Sesuai keadaan saat ini:';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return 'Negara Eropa menjadi tuan rumah Kejuaraan Dunia ini, jadi $runnersUp runner-up mengisi semua $paths jalur play-off dan siklus ini tidak ada tempat lewat Piala Bangsa-Bangsa.';
+  }
+
+  @override
+  String get ncRouteTagHolds => 'Dapat tempat';
+
+  @override
+  String get ncRouteTagQualified => 'Lolos';
+
+  @override
+  String get ncRouteTagRunnerUp => 'Runner-up';
+
+  @override
+  String get ncRouteTagWaiting => 'Menunggu';
+
+  @override
+  String get ncRouteLegendHolds =>
+      'Memegang tempat di pot 4, sesuai keadaan saat ini';
+
+  @override
+  String get ncRouteLegendQualified =>
+      'Memimpin grup kualifikasinya: lolos langsung, tempatnya beralih ke tim berikutnya';
+
+  @override
+  String get ncRouteLegendRunnerUp =>
+      'Runner-up grup kualifikasinya: tetap masuk play-off, tempatnya beralih ke tim berikutnya';
+
+  @override
+  String get ncRouteLegendWaiting =>
+      'Berikutnya, jika tim di depannya keluar dari jalur ini';
 }

@@ -18243,4 +18243,54 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Több tizenegyest véd, meccsen és büntetőpárbajban is.';
+
+  @override
+  String get playoffCourseLegendAll =>
+      'Sárga: minden csoportmásodik pótselejtezőt játszik';
+
+  @override
+  String get wcRunnersUpTableTitle =>
+      'Csoportmásodikok: mind pótselejtezőt játszanak';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      'Összevethető eredmények szerint rangsorolva. A pótselejtező kalapjait a selejtező végén a világranglista alapján állítják össze.';
+
+  @override
+  String ncRouteNote(int count) {
+    return 'A Nations Cup helyei a pótselejtező 4. kalapjában: $count. Ezeket először a legjobb csoportgyőztesei kapják, akik nem nyerik meg a selejtezőcsoportjukat és nem is lesznek másodikak, utána a rangsora szerint a következők. A jelenlegi állás szerint:';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return 'Ezt a világbajnokságot európai ország rendezi, ezért a csoportmásodikok ($runnersUp) töltik ki mind a pótselejtező-ágakat ($paths), és ebben a ciklusban egy hely sem jut a Nations Cupon át.';
+  }
+
+  @override
+  String get ncRouteTagHolds => 'Helye van';
+
+  @override
+  String get ncRouteTagQualified => 'Kijutott';
+
+  @override
+  String get ncRouteTagRunnerUp => 'Második';
+
+  @override
+  String get ncRouteTagWaiting => 'Következő';
+
+  @override
+  String get ncRouteLegendHolds =>
+      'A jelenlegi állás szerint helye van a 4. kalapban';
+
+  @override
+  String get ncRouteLegendQualified =>
+      'Vezeti a selejtezőcsoportját: egyenesen kijut, a helye továbbszáll';
+
+  @override
+  String get ncRouteLegendRunnerUp =>
+      'Második a selejtezőcsoportjában: úgyis pótselejtezőt játszik, a helye továbbszáll';
+
+  @override
+  String get ncRouteLegendWaiting =>
+      'Következik, ha egy előtte álló csapat kiesik erről az útról';
 }

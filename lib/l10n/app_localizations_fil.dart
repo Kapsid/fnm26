@@ -18316,4 +18316,54 @@ class AppLocalizationsFil extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Mas maraming penalty ang nasasalo, sa laro at sa shootout.';
+
+  @override
+  String get playoffCourseLegendAll =>
+      'Dilaw: lahat ng pumangalawa sa grupo ay papunta sa play-off';
+
+  @override
+  String get wcRunnersUpTableTitle =>
+      'Mga pumangalawa sa grupo: lahat papunta sa play-off';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      'Nakaayos ayon sa maihahambing na rekord. Ang mga pot ng play-off ay ayon sa world ranking pagkatapos ng qualifying.';
+
+  @override
+  String ncRouteNote(int count) {
+    return 'Puwesto ng Nations Cup sa pot 4 ng play-off: $count. Mauuna ang pinakamahusay nitong mga nanalo sa grupo na hindi nanguna o pumangalawa sa kanilang qualifying group, saka ang susunod ayon sa ranking nito. Sa kasalukuyang lagay:';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return 'Isang bansang Europeo ang host ng World Championship na ito, kaya pinupuno ng $runnersUp pumangalawa ang lahat ng $paths landas ng play-off at walang puwesto sa pamamagitan ng Nations Cup ngayong siklo.';
+  }
+
+  @override
+  String get ncRouteTagHolds => 'May puwesto';
+
+  @override
+  String get ncRouteTagQualified => 'Pasok';
+
+  @override
+  String get ncRouteTagRunnerUp => 'Pangalawa';
+
+  @override
+  String get ncRouteTagWaiting => 'Naghihintay';
+
+  @override
+  String get ncRouteLegendHolds =>
+      'May hawak na puwesto sa pot 4, sa kasalukuyang lagay';
+
+  @override
+  String get ncRouteLegendQualified =>
+      'Nangunguna sa qualifying group: direktang pasok, ang puwesto ay mapupunta sa susunod';
+
+  @override
+  String get ncRouteLegendRunnerUp =>
+      'Pangalawa sa qualifying group: nasa play-off na rin, ang puwesto ay mapupunta sa susunod';
+
+  @override
+  String get ncRouteLegendWaiting =>
+      'Susunod sa pila kung may koponang nauna na mawala sa landas na ito';
 }

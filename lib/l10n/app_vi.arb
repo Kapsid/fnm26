@@ -4570,5 +4570,18 @@
   "traitShotStopper": "Thủ môn cản phá xuất sắc",
   "traitShotStopperBlurb": "Cản phá nhiều cú sút hơn dự kiến.",
   "traitPenaltyStopper": "Chuyên gia bắt penalty",
-  "traitPenaltyStopperBlurb": "Cản phá nhiều quả penalty hơn, cả trong trận và loạt sút luân lưu."
+  "traitPenaltyStopperBlurb": "Cản phá nhiều quả penalty hơn, cả trong trận và loạt sút luân lưu.",
+  "playoffCourseLegendAll": "Vàng: mọi đội nhì bảng đều vào vòng play-off",
+  "wcRunnersUpTableTitle": "Các đội nhì bảng: tất cả vào vòng play-off",
+  "wcRunnersUpTableNote": "Xếp theo thành tích có thể so sánh. Các nhóm hạt giống của vòng play-off được chia theo bảng xếp hạng thế giới khi vòng loại kết thúc.",
+  "ncRouteNote": "Suất của Nations Cup ở nhóm 4 vòng play-off: {count}. Ưu tiên các đội nhất bảng Nations Cup không đứng nhất cũng không đứng nhì bảng vòng loại, sau đó theo thứ hạng Nations Cup. Theo tình hình hiện tại:",
+  "ncRouteHostCycle": "Một nước châu Âu đăng cai giải vô địch thế giới này, nên {runnersUp} đội nhì bảng lấp đầy cả {paths} nhánh play-off và chu kỳ này không có suất nào qua Nations Cup.",
+  "ncRouteTagHolds": "Có suất",
+  "ncRouteTagQualified": "Đi tiếp",
+  "ncRouteTagRunnerUp": "Nhì bảng",
+  "ncRouteTagWaiting": "Chờ",
+  "ncRouteLegendHolds": "Đang giữ một suất ở nhóm 4, theo tình hình hiện tại",
+  "ncRouteLegendQualified": "Dẫn đầu bảng vòng loại: đi tiếp trực tiếp, suất của đội chuyển cho đội kế tiếp",
+  "ncRouteLegendRunnerUp": "Nhì bảng vòng loại: vẫn vào play-off, suất của đội chuyển cho đội kế tiếp",
+  "ncRouteLegendWaiting": "Đội kế tiếp, nếu một đội phía trên rời con đường này"
 }

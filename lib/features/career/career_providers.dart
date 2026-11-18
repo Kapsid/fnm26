@@ -293,6 +293,13 @@ class CareerService {
     /// save's do.
     bool calendar2 = true,
 
+    /// Whether its first cycle, on the 1.1.2 calendar, runs Europe's World
+    /// Championship qualifying in the real UEFA shape
+    /// (`UefaWcPlayoffs.kind2`). Defaults to true; a test passes false to
+    /// keep the shape a world was pinned on. Its rollovers stamp it as
+    /// every save's do.
+    bool euroQuali2 = true,
+
     /// Whether its world includes the nations every career created from
     /// 1.0.9 on has (`DormantNations.forNewCareers`: Belarus). Defaults to
     /// [countsTowardSlots]: an ordinary career, whichever way it was started,
@@ -479,6 +486,10 @@ class CareerService {
     // Its calendar is the four-year rhythm of Calendar2 (see calendar2Kind),
     // read by the calendar built below.
     if (calendar2) await comp.markDrawWatched(career.id, 0, calendar2Kind);
+    // And Europe's World Championship qualifying in the real UEFA shape.
+    if (calendar2 && euroQuali2) {
+      await comp.markDrawWatched(career.id, 0, UefaWcPlayoffs.kind2);
+    }
     // Its national teams have managers of their own (see worldManagersKind),
     // seeded the first time something asks for them, never here.
     await comp.markDrawWatched(career.id, 0, worldManagersKind);

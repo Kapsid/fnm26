@@ -4570,5 +4570,18 @@
   "traitShotStopper": "Kaliteli şut kurtarıcı",
   "traitShotStopperBlurb": "Beklenenden fazla şutu kurtarır.",
   "traitPenaltyStopper": "Penaltı canavarı",
-  "traitPenaltyStopperBlurb": "Maçta ve seri penaltılarda daha çok penaltı kurtarır."
+  "traitPenaltyStopperBlurb": "Maçta ve seri penaltılarda daha çok penaltı kurtarır.",
+  "playoffCourseLegendAll": "Sarı: tüm ikinciler play-off'a gider",
+  "wcRunnersUpTableTitle": "Grup ikincileri: hepsi play-off'a gider",
+  "wcRunnersUpTableNote": "Karşılaştırılabilir sonuçlara göre sıralandı. Play-off torbaları elemeler bitince dünya sıralamasına göre oluşturulur.",
+  "ncRouteNote": "Play-off'un 4. torbasında Uluslar Kupası'na ayrılan yer sayısı: {count}. Bu yerler önce eleme grubunu kazanamayan ve ikinci de olamayan en iyi grup birincilerine, sonra sıralamasına göre diğerlerine gider. Şu anki duruma göre:",
+  "ncRouteHostCycle": "Bu Dünya Şampiyonası'nı bir Avrupa ülkesi düzenliyor, bu yüzden grup ikincileri ({runnersUp}) tüm play-off yollarını ({paths}) dolduruyor ve bu döngüde Uluslar Kupası üzerinden hiçbir yer verilmiyor.",
+  "ncRouteTagHolds": "Yeri var",
+  "ncRouteTagQualified": "Katıldı",
+  "ncRouteTagRunnerUp": "İkinci",
+  "ncRouteTagWaiting": "Sırada",
+  "ncRouteLegendHolds": "Şu anki duruma göre 4. torbada bir yeri var",
+  "ncRouteLegendQualified": "Eleme grubunda lider: doğrudan katılıyor, yeri bir sonrakine geçer",
+  "ncRouteLegendRunnerUp": "Eleme grubunda ikinci: zaten play-off'ta, yeri bir sonrakine geçer",
+  "ncRouteLegendWaiting": "Öndeki bir takım bu yoldan düşerse sıradaki"
 }

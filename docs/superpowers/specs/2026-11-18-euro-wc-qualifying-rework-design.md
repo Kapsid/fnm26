@@ -1,6 +1,6 @@
 # Europe's World Championship qualifying: the real UEFA shape (handoff spec, 2026-11-18)
 
-Status: NOT STARTED. Written so a cloud session can build it. One owner decision is still open (see "Open decision").
+Status: BUILT (2026-11-18, cloud session). The owner chose option 2 for a European host (see "Open decision").
 
 ## Why (owner)
 
@@ -67,7 +67,7 @@ The owner sees Europe's qualifying sending "only the best through and some best 
 - No em dashes. Never "World Cup" in English copy (it is "World Championship"). In Czech the Nations Cup is "Spojená liga".
 - Display only: stored names stay canonical.
 
-## Open decision (ask the owner first; the recommendation is option 1)
+## Open decision: DECIDED, option 2 (owner, 2026-11-18)
 
 With a European HOST: 12 winners + 4 path winners + the host = 17 for Europe's 16 places.
 
@@ -84,3 +84,25 @@ With a European HOST: 12 winners + 4 path winners + the host = 17 for Europe's 1
 - **Tests run with `TZ=Europe/Prague`.** Use targeted tests per change, then ONE full suite before a build. Known pre-existing failures: `test/unit/pitch/tactical_style_test.dart` and `test/widget/preview_tactics_reach_kickoff_test.dart`.
 - **Riverpod without codegen.** `build_runner` needs `--force-jit`.
 - **Tablet:** the qualifying screens have tablet layouts, so check both.
+
+## As built
+
+- **Marker:** `UefaWcPlayoffs.kind2` = `euroQuali2`, read by `isEuroQuali2`.
+  - Stamped at `CareerService.create` for cycle 0 when the career is on `calendar2` (param `euroQuali2`, default true).
+  - Stamped in `season_rollover.dart` for every new cycle.
+- **Entrants:** `UefaWcPlayoffs.entrants(allRunnersUp:)` takes every runner-up (up to four a path), and the Nations Cup fills only what they leave.
+  - With a European host: 3 paths, all 12 runners-up, no Nations Cup place (option 2).
+  - Without one: the same 12 + 4 as before.
+- **Draw:** `UefaWcPlayoffs.draw` cuts the runners-up (by rank) then the cup's sides into four pots. For the old shape's inputs this is the same draw, byte for byte.
+- **Marks:** `GroupAdvancement.worldCupPlayoffNations(allRunnersUp:)` marks every runner-up.
+  - The bar is unchanged: 1st green, no ladder below 2nd.
+- **Screen** (`cup_detail_screen.dart`):
+  - `PlayoffStripeLegend(allRunnersUp:)`.
+  - `_RealShapeUnderTables`: the runners-up table (`BestThirdsCard` with `summary`, all yellow) and the Nations Cup route panel (`UefaWcPlayoffs.nationsCupRoute`: holds / qualified / runner-up / waiting, with a legend). In a host cycle, a note instead of the panel.
+  - The tablet uses the same widgets.
+- **Colour:** the existing play-off colour (`AppColors.playoff`, a yellow) rather than a new orange, to match every other play-off mark in the game.
+- **Czech copy:** keeps "Pohár národů", the name used everywhere else in the Czech ARB. "Spojená liga" appears nowhere in it.
+- **Tests:**
+  - `wc_playoffs_test` group "the real UEFA shape".
+  - `euro_quali2_marker_test`.
+  - `wc_qualifying_playoff_marker_test`: real shape, host cycle, tablet.

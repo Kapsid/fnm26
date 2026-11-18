@@ -18412,4 +18412,54 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Defende mais penáltis, no jogo e nas disputas.';
+
+  @override
+  String get playoffCourseLegendAll =>
+      'Amarelo: todos os segundos colocados vão ao play-off';
+
+  @override
+  String get wcRunnersUpTableTitle =>
+      'Segundos colocados: todos vão ao play-off';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      'Ordenados por registos comparáveis. Os potes do play-off são formados pelo ranking mundial no fim da qualificação.';
+
+  @override
+  String ncRouteNote(int count) {
+    return 'Vagas da Copa das Nações no pote 4 do play-off: $count. Vão primeiro para os seus melhores vencedores de grupo que não vencem o seu grupo de qualificação nem ficam em segundo, e depois pela sua classificação. Como as coisas estão:';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return 'Um país europeu organiza este Campeonato do Mundo, por isso os $runnersUp segundos colocados preenchem todos os $paths caminhos do play-off e nenhuma vaga passa pela Copa das Nações neste ciclo.';
+  }
+
+  @override
+  String get ncRouteTagHolds => 'Tem vaga';
+
+  @override
+  String get ncRouteTagQualified => 'Qualificado';
+
+  @override
+  String get ncRouteTagRunnerUp => 'Segundo';
+
+  @override
+  String get ncRouteTagWaiting => 'A seguir';
+
+  @override
+  String get ncRouteLegendHolds =>
+      'Ocupa uma vaga do pote 4, como as coisas estão';
+
+  @override
+  String get ncRouteLegendQualified =>
+      'Lidera o seu grupo de qualificação: qualifica-se diretamente e a sua vaga passa ao seguinte';
+
+  @override
+  String get ncRouteLegendRunnerUp =>
+      'Segundo no seu grupo de qualificação: vai ao play-off de qualquer forma e a sua vaga passa ao seguinte';
+
+  @override
+  String get ncRouteLegendWaiting =>
+      'O próximo, se uma equipa à frente sair deste caminho';
 }

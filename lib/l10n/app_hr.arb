@@ -4570,5 +4570,18 @@
   "traitShotStopper": "Vrhunski branič udaraca",
   "traitShotStopperBlurb": "Obrani više udaraca nego što bi se očekivalo.",
   "traitPenaltyStopper": "Ubojica jedanaesteraca",
-  "traitPenaltyStopperBlurb": "Brani više jedanaesteraca, u utakmici i u izvođenju jedanaesteraca."
+  "traitPenaltyStopperBlurb": "Brani više jedanaesteraca, u utakmici i u izvođenju jedanaesteraca.",
+  "playoffCourseLegendAll": "Žuto: sve drugoplasirane momčadi idu u doigravanje",
+  "wcRunnersUpTableTitle": "Drugoplasirani: svi idu u doigravanje",
+  "wcRunnersUpTableNote": "Poredano prema usporedivim rezultatima. Šeširi doigravanja slažu se prema svjetskoj ljestvici na kraju kvalifikacija.",
+  "ncRouteNote": "Mjesta za Nations Cup u šeširu 4 doigravanja: {count}. Dobivaju ih najprije njegovi najbolji pobjednici skupina koji ne osvoje svoju kvalifikacijsku skupinu niti budu drugi, a zatim sljedeći prema njegovu poretku. Prema trenutačnom stanju:",
+  "ncRouteHostCycle": "Ovo Svjetsko prvenstvo organizira europska zemlja, pa drugoplasirani ({runnersUp}) popunjavaju sve putove doigravanja ({paths}) i u ovom ciklusu nijedno mjesto ne ide preko Nations Cupa.",
+  "ncRouteTagHolds": "Ima mjesto",
+  "ncRouteTagQualified": "Prolazi",
+  "ncRouteTagRunnerUp": "Drugi",
+  "ncRouteTagWaiting": "Čeka",
+  "ncRouteLegendHolds": "Drži mjesto u šeširu 4, prema trenutačnom stanju",
+  "ncRouteLegendQualified": "Vodi u svojoj kvalifikacijskoj skupini: prolazi izravno, njegovo mjesto ide dalje",
+  "ncRouteLegendRunnerUp": "Drugi u svojoj kvalifikacijskoj skupini: ionako ide u doigravanje, njegovo mjesto ide dalje",
+  "ncRouteLegendWaiting": "Sljedeći na redu ako netko ispred ispadne s ovog puta"
 }

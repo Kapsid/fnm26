@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/calendar2.dart';
@@ -216,8 +217,62 @@ Future<Set<int>> euroPlayoffMarks(
 /// Championship play-off paths (pot 4, see [UefaWcPlayoffs.entrants]), as
 /// the tables give them now (see [UefaWcPlayoffs.onCourseNationsCup]), in
 /// the cup's order; once the paths are drawn, the drawn pot 4. Empty on any
-/// older calendar or before the second edition has a table.
+/// older calendar or before the second edition has a table, and in a cycle
+/// of the real UEFA shape a European nation hosts (no Nations Cup places).
 Future<List<int>> wcPlayoffCourse(
+  CompetitionRepository comp, {
+  required int careerId,
+  required int cycle,
+  required int rngSeed,
+  required Map<int, Nation> nations,
+}) async =>
+    (await _wcNationsCupState(
+      comp,
+      careerId: careerId,
+      cycle: cycle,
+      rngSeed: rngSeed,
+      nations: nations,
+    ))?.course ??
+    const [];
+
+/// The Nations Cup's route to the World Championship play-off paths for the
+/// panel under Europe's qualifying tables (see
+/// [UefaWcPlayoffs.nationsCupRoute]): empty when there is no route to show
+/// (an older calendar, no second-edition table yet, the paths drawn, or a
+/// European host's cycle of the real UEFA shape).
+Future<List<NcRouteEntry>> wcNationsCupRoute(
+  CompetitionRepository comp, {
+  required int careerId,
+  required int cycle,
+  required int rngSeed,
+  required Map<int, Nation> nations,
+}) async {
+  final state = await _wcNationsCupState(
+    comp,
+    careerId: careerId,
+    cycle: cycle,
+    rngSeed: rngSeed,
+    nations: nations,
+  );
+  if (state == null || state.drawn || state.course.isEmpty) return const [];
+  return UefaWcPlayoffs.nationsCupRoute(
+    groups: state.groups,
+    ncTables: state.tables,
+    hosts: state.hosts,
+    holding: state.course,
+  );
+}
+
+Future<
+  ({
+    List<int> course,
+    bool drawn,
+    List<List<GroupStanding>> groups,
+    List<NcTable> tables,
+    Set<int> hosts,
+  })?
+>
+_wcNationsCupState(
   CompetitionRepository comp, {
   required int careerId,
   required int cycle,
@@ -225,7 +280,7 @@ Future<List<int>> wcPlayoffCourse(
   required Map<int, Nation> nations,
 }) async {
   const europe = Confederation.europe;
-  if (!await isCalendar2(comp, careerId, cycle)) return const [];
+  if (!await isCalendar2(comp, careerId, cycle)) return null;
   final drawn = EuroPlayoffs.fromSlots(
     await comp.drawSlots(
       careerId,
@@ -234,11 +289,21 @@ Future<List<int>> wcPlayoffCourse(
       confederation: europe,
     ),
   );
+  final allRunnersUp = await isEuroQuali2(comp, careerId, cycle);
   if (drawn.isNotEmpty) {
-    return [
-      for (final p in drawn)
-        if (p.seeds.length == 4) p.seeds[3],
-    ];
+    return (
+      course: [
+        for (final p in drawn)
+          // Pot 4 holds the Nations Cup's side, unless every pot went to
+          // the runners-up (a European host's cycle of the real shape).
+          if (p.seeds.length == 4 && !(allRunnersUp && drawn.length < 4))
+            p.seeds[3],
+      ],
+      drawn: true,
+      groups: const <List<GroupStanding>>[],
+      tables: const <NcTable>[],
+      hosts: const <int>{},
+    );
   }
   final tables = [
     for (final t in await comp.tournamentGroupTables(
@@ -249,7 +314,7 @@ Future<List<int>> wcPlayoffCourse(
     ))
       (name: t.name, standings: t.standings),
   ];
-  if (tables.isEmpty) return const [];
+  if (tables.isEmpty) return null;
   final groups = [
     for (final t in await comp.tournamentGroupTables(
       careerId,
@@ -270,12 +335,19 @@ Future<List<int>> wcPlayoffCourse(
     for (final n in nations.values)
       if (n.confederation == europe) n.id,
   ]..sort((a, b) => nations[a]!.ranking.compareTo(nations[b]!.ranking));
-  return UefaWcPlayoffs.onCourseNationsCup(
+  return (
+    course: UefaWcPlayoffs.onCourseNationsCup(
+      groups: groups,
+      ncTables: tables,
+      hosts: hosts,
+      europeCount: fallback.length,
+      fallback: fallback,
+      allRunnersUp: allRunnersUp,
+    ),
+    drawn: false,
     groups: groups,
-    ncTables: tables,
+    tables: tables,
     hosts: hosts,
-    europeCount: fallback.length,
-    fallback: fallback,
   );
 }
 

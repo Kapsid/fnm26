@@ -4570,5 +4570,18 @@
   "traitShotStopper": "シュートストッパー",
   "traitShotStopperBlurb": "期待以上にシュートを止める。",
   "traitPenaltyStopper": "PKストッパー",
-  "traitPenaltyStopperBlurb": "試合中もPK戦でも、より多くのPKを止める。"
+  "traitPenaltyStopperBlurb": "試合中もPK戦でも、より多くのPKを止める。",
+  "playoffCourseLegendAll": "黄色：各組2位はすべてプレーオフへ",
+  "wcRunnersUpTableTitle": "各組2位：全チームがプレーオフへ",
+  "wcRunnersUpTableNote": "比較可能な成績で順位付け。プレーオフのポットは予選終了時の世界ランキングで決まります。",
+  "ncRouteNote": "プレーオフのポット4のネーションズカップ枠：{count}。予選グループで1位にも2位にもならなかったネーションズカップのグループ首位チームから順に、その後はネーションズカップの順位で割り当てられます。現時点では：",
+  "ncRouteHostCycle": "今回の世界選手権はヨーロッパの国が開催するため、各組2位の{runnersUp}チームがプレーオフの{paths}つの組み合わせをすべて埋め、このサイクルではネーションズカップ経由の枠はありません。",
+  "ncRouteTagHolds": "枠あり",
+  "ncRouteTagQualified": "突破",
+  "ncRouteTagRunnerUp": "2位",
+  "ncRouteTagWaiting": "次点",
+  "ncRouteLegendHolds": "現時点でポット4の枠を確保",
+  "ncRouteLegendQualified": "予選グループ首位：直接出場のため、枠は次へ回る",
+  "ncRouteLegendRunnerUp": "予選グループ2位：いずれにせよプレーオフへ進むため、枠は次へ回る",
+  "ncRouteLegendWaiting": "上位のチームがこのルートから外れた場合の次点"
 }

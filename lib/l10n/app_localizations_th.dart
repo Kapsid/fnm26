@@ -17989,4 +17989,52 @@ class AppLocalizationsTh extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'เซฟจุดโทษได้มากขึ้น ทั้งในเกมและการดวลจุดโทษ';
+
+  @override
+  String get playoffCourseLegendAll =>
+      'สีเหลือง: ทีมอันดับสองทุกทีมได้ไปเพลย์ออฟ';
+
+  @override
+  String get wcRunnersUpTableTitle =>
+      'ทีมอันดับสองของกลุ่ม: ทุกทีมได้ไปเพลย์ออฟ';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      'เรียงตามผลงานที่เทียบกันได้ โถของเพลย์ออฟจัดตามอันดับโลกเมื่อรอบคัดเลือกจบ';
+
+  @override
+  String ncRouteNote(int count) {
+    return 'ที่นั่งของเนชันส์คัพในโถ 4 ของเพลย์ออฟ: $count ที่ มอบให้ทีมแชมป์กลุ่มของเนชันส์คัพที่ไม่ได้เป็นที่หนึ่งหรือที่สองของกลุ่มคัดเลือกก่อน จากนั้นไล่ตามอันดับของเนชันส์คัพ ตามสถานการณ์ปัจจุบัน:';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return 'ชาติยุโรปเป็นเจ้าภาพเวิลด์แชมเปียนชิพครั้งนี้ ทีมอันดับสอง $runnersUp ทีมจึงเต็มเส้นทางเพลย์ออฟทั้ง $paths สาย และรอบนี้ไม่มีที่นั่งผ่านเนชันส์คัพ';
+  }
+
+  @override
+  String get ncRouteTagHolds => 'มีที่นั่ง';
+
+  @override
+  String get ncRouteTagQualified => 'ผ่านเข้ารอบ';
+
+  @override
+  String get ncRouteTagRunnerUp => 'อันดับสอง';
+
+  @override
+  String get ncRouteTagWaiting => 'รอคิว';
+
+  @override
+  String get ncRouteLegendHolds => 'ครองที่นั่งในโถ 4 ตามสถานการณ์ปัจจุบัน';
+
+  @override
+  String get ncRouteLegendQualified =>
+      'เป็นจ่าฝูงกลุ่มคัดเลือก: ผ่านเข้ารอบโดยตรง ที่นั่งจึงตกไปยังทีมถัดไป';
+
+  @override
+  String get ncRouteLegendRunnerUp =>
+      'อันดับสองของกลุ่มคัดเลือก: ได้ไปเพลย์ออฟอยู่แล้ว ที่นั่งจึงตกไปยังทีมถัดไป';
+
+  @override
+  String get ncRouteLegendWaiting => 'ทีมถัดไป หากทีมข้างหน้าหลุดจากเส้นทางนี้';
 }

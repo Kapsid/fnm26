@@ -18337,4 +18337,58 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Saves more penalties, in matches and in shootouts.';
+
+  @override
+  String get playoffCourseLegendAll =>
+      'Yellow: every runner-up goes to the play-off';
+
+  @override
+  String get wcRunnersUpTableTitle => 'Runners-up: all go to the play-off';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      'Ranked on comparable records. The play-off pots are drawn by world ranking once qualifying ends.';
+
+  @override
+  String ncRouteNote(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Pot 4 of the play-off holds $count places for the Nations Cup.',
+      one: 'Pot 4 of the play-off holds 1 place for the Nations Cup.',
+    );
+    return '$_temp0 They go first to its best group winners who neither top their qualifying group nor finish runner-up, then down its ranking. As things stand:';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return 'A European nation hosts this World Championship, so the $runnersUp runners-up fill all $paths play-off paths and no place goes through the Nations Cup this cycle.';
+  }
+
+  @override
+  String get ncRouteTagHolds => 'Holds a place';
+
+  @override
+  String get ncRouteTagQualified => 'Through';
+
+  @override
+  String get ncRouteTagRunnerUp => 'Runner-up';
+
+  @override
+  String get ncRouteTagWaiting => 'Next in line';
+
+  @override
+  String get ncRouteLegendHolds => 'Holds a pot 4 place, as things stand';
+
+  @override
+  String get ncRouteLegendQualified =>
+      'Tops its qualifying group: through directly, so its place passes on';
+
+  @override
+  String get ncRouteLegendRunnerUp =>
+      'Second in its qualifying group: in the play-off anyway, so its place passes on';
+
+  @override
+  String get ncRouteLegendWaiting =>
+      'Next in line, should a side above drop off the route';
 }

@@ -4570,5 +4570,18 @@
   "traitShotStopper": "Penyelamat rembatan hebat",
   "traitShotStopperBlurb": "Menyelamatkan lebih banyak rembatan daripada dijangka.",
   "traitPenaltyStopper": "Pakar menahan penalti",
-  "traitPenaltyStopperBlurb": "Menahan lebih banyak penalti, dalam perlawanan dan sepakan penalti."
+  "traitPenaltyStopperBlurb": "Menahan lebih banyak penalti, dalam perlawanan dan sepakan penalti.",
+  "playoffCourseLegendAll": "Kuning: semua naib juara kumpulan ke play-off",
+  "wcRunnersUpTableTitle": "Naib juara kumpulan: semuanya ke play-off",
+  "wcRunnersUpTableNote": "Disusun mengikut rekod yang setara. Pot play-off disusun mengikut ranking dunia selepas kelayakan tamat.",
+  "ncRouteNote": "Tempat Piala Negara-Negara dalam pot 4 play-off: {count}. Diberi dahulu kepada juara kumpulan terbaiknya yang tidak menjuarai kumpulan kelayakan dan tidak menjadi naib juara, kemudian mengikut kedudukannya. Mengikut keadaan semasa:",
+  "ncRouteHostCycle": "Negara Eropah menjadi tuan rumah Kejohanan Dunia ini, jadi {runnersUp} naib juara mengisi semua {paths} laluan play-off dan kitaran ini tiada tempat melalui Piala Negara-Negara.",
+  "ncRouteTagHolds": "Ada tempat",
+  "ncRouteTagQualified": "Layak",
+  "ncRouteTagRunnerUp": "Naib juara",
+  "ncRouteTagWaiting": "Menunggu",
+  "ncRouteLegendHolds": "Memegang tempat dalam pot 4, mengikut keadaan semasa",
+  "ncRouteLegendQualified": "Mendahului kumpulan kelayakan: layak terus, tempatnya beralih kepada pasukan seterusnya",
+  "ncRouteLegendRunnerUp": "Naib juara kumpulan kelayakan: tetap ke play-off, tempatnya beralih kepada pasukan seterusnya",
+  "ncRouteLegendWaiting": "Seterusnya, jika pasukan di hadapan terkeluar dari laluan ini"
 }

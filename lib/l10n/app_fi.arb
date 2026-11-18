@@ -4570,5 +4570,18 @@
   "traitShotStopper": "Laadukas torjuja",
   "traitShotStopperBlurb": "Torjuu enemmän laukauksia kuin odottaisi.",
   "traitPenaltyStopper": "Rangaistuspotkujen torjuja",
-  "traitPenaltyStopperBlurb": "Torjuu enemmän rangaistuspotkuja, otteluissa ja rangaistuspotkukilpailuissa."
+  "traitPenaltyStopperBlurb": "Torjuu enemmän rangaistuspotkuja, otteluissa ja rangaistuspotkukilpailuissa.",
+  "playoffCourseLegendAll": "Keltainen: kaikki kakkoset menevät jatkokarsintaan",
+  "wcRunnersUpTableTitle": "Lohkokakkoset: kaikki menevät jatkokarsintaan",
+  "wcRunnersUpTableNote": "Järjestetty vertailukelpoisten tulosten mukaan. Jatkokarsinnan korit muodostetaan maailmanlistan mukaan karsinnan päätyttyä.",
+  "ncRouteNote": "Nations Cupin paikkoja jatkokarsinnan korissa 4: {count}. Ne menevät ensin sen parhaille lohkovoittajille, jotka eivät voita karsintalohkoaan eivätkä sijoitu toiseksi, sitten sen sijoitusten mukaan. Nykytilanteen mukaan:",
+  "ncRouteHostCycle": "Eurooppalainen maa järjestää tämän maailmanmestaruusturnauksen, joten lohkokakkoset ({runnersUp}) täyttävät kaikki jatkokarsinnan polut ({paths}) eikä Nations Cupin kautta mene tässä syklissä yhtään paikkaa.",
+  "ncRouteTagHolds": "Paikka",
+  "ncRouteTagQualified": "Jatkoon",
+  "ncRouteTagRunnerUp": "Kakkonen",
+  "ncRouteTagWaiting": "Jonossa",
+  "ncRouteLegendHolds": "Pitää paikkaa korissa 4, nykytilanteen mukaan",
+  "ncRouteLegendQualified": "Johtaa karsintalohkoaan: pääsee suoraan, paikka siirtyy seuraavalle",
+  "ncRouteLegendRunnerUp": "Toisena karsintalohkossaan: jatkokarsinnassa joka tapauksessa, paikka siirtyy seuraavalle",
+  "ncRouteLegendWaiting": "Seuraavana vuorossa, jos edellä oleva putoaa tältä reitiltä"
 }

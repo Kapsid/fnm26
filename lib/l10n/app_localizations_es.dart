@@ -18404,4 +18404,54 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Para más penaltis, en el partido y en las tandas.';
+
+  @override
+  String get playoffCourseLegendAll =>
+      'Amarillo: todos los segundos van a la repesca';
+
+  @override
+  String get wcRunnersUpTableTitle =>
+      'Segundos de grupo: todos van a la repesca';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      'Ordenados por registros comparables. Los bombos de la repesca se forman por el ranking mundial al terminar la clasificación.';
+
+  @override
+  String ncRouteNote(int count) {
+    return 'Plazas para la Copa de las Naciones en el bombo 4 de la repesca: $count. Van primero a sus mejores ganadores de grupo que no ganan su grupo de clasificación ni quedan segundos, y después según su clasificación. Según la situación actual:';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return 'Un país europeo organiza este Campeonato del Mundo, así que los $runnersUp segundos llenan los $paths caminos de repesca y ninguna plaza pasa por la Copa de las Naciones en este ciclo.';
+  }
+
+  @override
+  String get ncRouteTagHolds => 'Tiene plaza';
+
+  @override
+  String get ncRouteTagQualified => 'Clasificado';
+
+  @override
+  String get ncRouteTagRunnerUp => 'Segundo';
+
+  @override
+  String get ncRouteTagWaiting => 'Siguiente';
+
+  @override
+  String get ncRouteLegendHolds =>
+      'Ocupa una plaza del bombo 4, según la situación actual';
+
+  @override
+  String get ncRouteLegendQualified =>
+      'Lidera su grupo de clasificación: se clasifica directamente y su plaza pasa al siguiente';
+
+  @override
+  String get ncRouteLegendRunnerUp =>
+      'Segundo de su grupo de clasificación: va a la repesca igualmente y su plaza pasa al siguiente';
+
+  @override
+  String get ncRouteLegendWaiting =>
+      'El siguiente, si un equipo por delante sale de esta vía';
 }

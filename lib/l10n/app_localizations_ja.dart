@@ -17667,4 +17667,48 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get traitPenaltyStopperBlurb => '試合中もPK戦でも、より多くのPKを止める。';
+
+  @override
+  String get playoffCourseLegendAll => '黄色：各組2位はすべてプレーオフへ';
+
+  @override
+  String get wcRunnersUpTableTitle => '各組2位：全チームがプレーオフへ';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      '比較可能な成績で順位付け。プレーオフのポットは予選終了時の世界ランキングで決まります。';
+
+  @override
+  String ncRouteNote(int count) {
+    return 'プレーオフのポット4のネーションズカップ枠：$count。予選グループで1位にも2位にもならなかったネーションズカップのグループ首位チームから順に、その後はネーションズカップの順位で割り当てられます。現時点では：';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return '今回の世界選手権はヨーロッパの国が開催するため、各組2位の$runnersUpチームがプレーオフの$pathsつの組み合わせをすべて埋め、このサイクルではネーションズカップ経由の枠はありません。';
+  }
+
+  @override
+  String get ncRouteTagHolds => '枠あり';
+
+  @override
+  String get ncRouteTagQualified => '突破';
+
+  @override
+  String get ncRouteTagRunnerUp => '2位';
+
+  @override
+  String get ncRouteTagWaiting => '次点';
+
+  @override
+  String get ncRouteLegendHolds => '現時点でポット4の枠を確保';
+
+  @override
+  String get ncRouteLegendQualified => '予選グループ首位：直接出場のため、枠は次へ回る';
+
+  @override
+  String get ncRouteLegendRunnerUp => '予選グループ2位：いずれにせよプレーオフへ進むため、枠は次へ回る';
+
+  @override
+  String get ncRouteLegendWaiting => '上位のチームがこのルートから外れた場合の次点';
 }

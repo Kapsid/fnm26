@@ -4570,5 +4570,18 @@
   "traitShotStopper": "Penjaga gawang tangguh",
   "traitShotStopperBlurb": "Menahan lebih banyak tembakan dari yang diharapkan.",
   "traitPenaltyStopper": "Spesialis penalti",
-  "traitPenaltyStopperBlurb": "Menahan lebih banyak penalti, di laga dan adu penalti."
+  "traitPenaltyStopperBlurb": "Menahan lebih banyak penalti, di laga dan adu penalti.",
+  "playoffCourseLegendAll": "Kuning: semua runner-up grup masuk play-off",
+  "wcRunnersUpTableTitle": "Runner-up grup: semuanya masuk play-off",
+  "wcRunnersUpTableNote": "Diurutkan berdasarkan hasil yang setara. Pot play-off disusun menurut peringkat dunia setelah kualifikasi berakhir.",
+  "ncRouteNote": "Jatah Piala Bangsa-Bangsa di pot 4 play-off: {count}. Diberikan lebih dulu kepada juara grup terbaiknya yang tidak menjuarai grup kualifikasi dan tidak menjadi runner-up, lalu menurut peringkatnya. Sesuai keadaan saat ini:",
+  "ncRouteHostCycle": "Negara Eropa menjadi tuan rumah Kejuaraan Dunia ini, jadi {runnersUp} runner-up mengisi semua {paths} jalur play-off dan siklus ini tidak ada tempat lewat Piala Bangsa-Bangsa.",
+  "ncRouteTagHolds": "Dapat tempat",
+  "ncRouteTagQualified": "Lolos",
+  "ncRouteTagRunnerUp": "Runner-up",
+  "ncRouteTagWaiting": "Menunggu",
+  "ncRouteLegendHolds": "Memegang tempat di pot 4, sesuai keadaan saat ini",
+  "ncRouteLegendQualified": "Memimpin grup kualifikasinya: lolos langsung, tempatnya beralih ke tim berikutnya",
+  "ncRouteLegendRunnerUp": "Runner-up grup kualifikasinya: tetap masuk play-off, tempatnya beralih ke tim berikutnya",
+  "ncRouteLegendWaiting": "Berikutnya, jika tim di depannya keluar dari jalur ini"
 }

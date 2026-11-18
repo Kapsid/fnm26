@@ -18398,4 +18398,54 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Stopt meer penalty\'s, in de wedstrijd en bij strafschoppen.';
+
+  @override
+  String get playoffCourseLegendAll =>
+      'Geel: elke nummer twee gaat naar de play-offs';
+
+  @override
+  String get wcRunnersUpTableTitle =>
+      'Nummers twee: ze gaan allemaal naar de play-offs';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      'Gerangschikt op vergelijkbare resultaten. De potten van de play-offs worden na afloop van de kwalificatie op de wereldranglijst gevormd.';
+
+  @override
+  String ncRouteNote(int count) {
+    return 'Plaatsen voor de Nations Cup in pot 4 van de play-offs: $count. Ze gaan eerst naar de beste groepswinnaars die hun kwalificatiegroep niet winnen en ook geen tweede worden, daarna verder op de ranglijst. Zoals het nu staat:';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return 'Een Europees land organiseert dit wereldkampioenschap, dus de $runnersUp nummers twee vullen alle $paths play-offroutes en deze cyclus gaat er geen plaats via de Nations Cup.';
+  }
+
+  @override
+  String get ncRouteTagHolds => 'Heeft plaats';
+
+  @override
+  String get ncRouteTagQualified => 'Geplaatst';
+
+  @override
+  String get ncRouteTagRunnerUp => 'Tweede';
+
+  @override
+  String get ncRouteTagWaiting => 'Volgende';
+
+  @override
+  String get ncRouteLegendHolds =>
+      'Heeft een plaats in pot 4, zoals het nu staat';
+
+  @override
+  String get ncRouteLegendQualified =>
+      'Wint zijn kwalificatiegroep: direct geplaatst, zijn plaats gaat naar de volgende';
+
+  @override
+  String get ncRouteLegendRunnerUp =>
+      'Tweede in zijn kwalificatiegroep: toch al in de play-offs, zijn plaats gaat naar de volgende';
+
+  @override
+  String get ncRouteLegendWaiting =>
+      'De volgende, als een ploeg erboven van deze route afvalt';
 }

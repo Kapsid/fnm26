@@ -18477,4 +18477,54 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Arrête plus de penalties, en match comme aux tirs au but.';
+
+  @override
+  String get playoffCourseLegendAll =>
+      'Jaune : chaque deuxième de groupe va en barrage';
+
+  @override
+  String get wcRunnersUpTableTitle =>
+      'Deuxièmes de groupe : tous vont en barrage';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      'Classés sur des bilans comparables. Les chapeaux des barrages sont formés selon le classement mondial à la fin des qualifications.';
+
+  @override
+  String ncRouteNote(int count) {
+    return 'Places pour la Coupe des nations dans le chapeau 4 des barrages : $count. Elles vont d\'abord à ses meilleurs vainqueurs de groupe qui ne terminent ni premiers ni deuxièmes de leur groupe de qualification, puis selon son classement. En l\'état actuel :';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return 'Un pays européen organise ce Championnat du monde : les $runnersUp deuxièmes de groupe remplissent les $paths voies de barrage et aucune place ne passe par la Coupe des nations lors de ce cycle.';
+  }
+
+  @override
+  String get ncRouteTagHolds => 'A une place';
+
+  @override
+  String get ncRouteTagQualified => 'Qualifié';
+
+  @override
+  String get ncRouteTagRunnerUp => 'Deuxième';
+
+  @override
+  String get ncRouteTagWaiting => 'Suivant';
+
+  @override
+  String get ncRouteLegendHolds =>
+      'Occupe une place du chapeau 4, en l\'état actuel';
+
+  @override
+  String get ncRouteLegendQualified =>
+      'Premier de son groupe de qualification : qualifié directement, sa place passe au suivant';
+
+  @override
+  String get ncRouteLegendRunnerUp =>
+      'Deuxième de son groupe de qualification : en barrage de toute façon, sa place passe au suivant';
+
+  @override
+  String get ncRouteLegendWaiting =>
+      'Le suivant, si une équipe devant lui quitte cette voie';
 }

@@ -4570,5 +4570,18 @@
   "traitShotStopper": "Mahusay humarang ng tira",
   "traitShotStopperBlurb": "Mas maraming tira ang nasasalo kaysa inaasahan.",
   "traitPenaltyStopper": "Bihasang humarang ng penalty",
-  "traitPenaltyStopperBlurb": "Mas maraming penalty ang nasasalo, sa laro at sa shootout."
+  "traitPenaltyStopperBlurb": "Mas maraming penalty ang nasasalo, sa laro at sa shootout.",
+  "playoffCourseLegendAll": "Dilaw: lahat ng pumangalawa sa grupo ay papunta sa play-off",
+  "wcRunnersUpTableTitle": "Mga pumangalawa sa grupo: lahat papunta sa play-off",
+  "wcRunnersUpTableNote": "Nakaayos ayon sa maihahambing na rekord. Ang mga pot ng play-off ay ayon sa world ranking pagkatapos ng qualifying.",
+  "ncRouteNote": "Puwesto ng Nations Cup sa pot 4 ng play-off: {count}. Mauuna ang pinakamahusay nitong mga nanalo sa grupo na hindi nanguna o pumangalawa sa kanilang qualifying group, saka ang susunod ayon sa ranking nito. Sa kasalukuyang lagay:",
+  "ncRouteHostCycle": "Isang bansang Europeo ang host ng World Championship na ito, kaya pinupuno ng {runnersUp} pumangalawa ang lahat ng {paths} landas ng play-off at walang puwesto sa pamamagitan ng Nations Cup ngayong siklo.",
+  "ncRouteTagHolds": "May puwesto",
+  "ncRouteTagQualified": "Pasok",
+  "ncRouteTagRunnerUp": "Pangalawa",
+  "ncRouteTagWaiting": "Naghihintay",
+  "ncRouteLegendHolds": "May hawak na puwesto sa pot 4, sa kasalukuyang lagay",
+  "ncRouteLegendQualified": "Nangunguna sa qualifying group: direktang pasok, ang puwesto ay mapupunta sa susunod",
+  "ncRouteLegendRunnerUp": "Pangalawa sa qualifying group: nasa play-off na rin, ang puwesto ay mapupunta sa susunod",
+  "ncRouteLegendWaiting": "Susunod sa pila kung may koponang nauna na mawala sa landas na ito"
 }

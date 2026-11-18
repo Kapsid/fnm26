@@ -30,7 +30,47 @@ import 'package:fnm/domain/services/competition/qualification_format.dart';
 /// A path is the same shape as a European Championship path, so the stored
 /// rows, the semi-final pairings and the finals' resolution are
 /// [EuroPlayoffs]'s; only the entrants and the keys differ. Pure.
+/// Whether [cycle] of [careerId] runs Europe's World Championship
+/// qualifying in the real UEFA shape (1.1.2, see [UefaWcPlayoffs.kind2]).
+Future<bool> isEuroQuali2(
+  CompetitionRepository comp,
+  int careerId,
+  int cycle,
+) => comp.hasWatchedDraw(careerId, cycle, UefaWcPlayoffs.kind2);
+
+/// A Nations Cup side's standing on the World Championship play-off route
+/// (pot 4), as the tables stand (see [UefaWcPlayoffs.nationsCupRoute]).
+enum NcRouteStatus {
+  /// Holds one of the pot-4 places.
+  holds,
+
+  /// Tops its qualifying group: through directly, so not on this route.
+  qualified,
+
+  /// Second in its qualifying group: in the play-off as a runner-up anyway.
+  runnerUp,
+
+  /// Behind the sides holding the places: next in line.
+  waiting,
+}
+
+/// One side on the Nations Cup route: [groupWinner] when it won its Nations
+/// Cup group (those are offered the places first).
+typedef NcRouteEntry = ({
+  int nationId,
+  NcRouteStatus status,
+  bool groupWinner,
+});
+
 abstract final class UefaWcPlayoffs {
+  /// The per-cycle marker of the real UEFA shape (1.1.2): every runner-up
+  /// goes to the play-off, the qualifying tables mark the group winners and
+  /// every runner-up, and in a cycle a European nation hosts there are only
+  /// as many paths as the runners-up fill (three, no Nations Cup places;
+  /// the owner's choice). Stamped at creation and at every rollover; a
+  /// cycle without it keeps the rules it was built with.
+  static const String kind2 = 'euroQuali2';
+
   /// The semi-finals' round code.
   static const String semiRound = 'UPSF';
 
@@ -109,6 +149,12 @@ abstract final class UefaWcPlayoffs {
     required Set<int> ineligible,
     required int count,
     List<int> fallback = const [],
+
+    /// The real UEFA shape ([kind2]): EVERY runner-up is an entrant (up to
+    /// four a path), and the Nations Cup fills only what they leave, so in
+    /// a cycle a European nation hosts (three paths, twelve runners-up) it
+    /// has none.
+    bool allRunnersUp = false,
   }) {
     if (count <= 0) return (runnersUp: const [], nationsCup: const []);
     // The ladder below the winners, a place at a time: every runner-up
@@ -147,6 +193,24 @@ abstract final class UefaWcPlayoffs {
     fallback.forEach(offer);
 
     var paths = count.clamp(0, maxPaths);
+    if (allRunnersUp) {
+      final runnersUp = [
+        for (final id in ladder)
+          if (secondPlace.contains(id)) id,
+      ];
+      while (paths > 0) {
+        final ru = runnersUp.take(4 * paths).toList();
+        final pot4 = [
+          for (final id in nc)
+            if (!ru.contains(id)) id,
+        ].take(4 * paths - ru.length).toList();
+        if (ru.length + pot4.length == 4 * paths) {
+          return (runnersUp: ru, nationsCup: pot4);
+        }
+        paths--;
+      }
+      return (runnersUp: const [], nationsCup: const []);
+    }
     while (paths > 0) {
       final ru = ladder.take(3 * paths).toList();
       final pot4 = [
@@ -173,6 +237,9 @@ abstract final class UefaWcPlayoffs {
     required Set<int> hosts,
     required int europeCount,
     List<int> fallback = const [],
+
+    /// The real UEFA shape (see [entrants]).
+    bool allRunnersUp = false,
   }) {
     if (ncTables.isEmpty) return const [];
     final berths = QualificationFormat.forConfederation(
@@ -186,6 +253,12 @@ abstract final class UefaWcPlayoffs {
           : groupCount(europeCount - hosts.length),
     );
     if (count <= 0) return const [];
+    // Under the real UEFA shape the runners-up fill the paths first: in a
+    // cycle a European nation hosts (one path fewer) the cup has no place.
+    final runnersUpGroups = drawn.isNotEmpty
+        ? drawn.length
+        : groupCount(europeCount - hosts.length);
+    if (allRunnersUp && runnersUpGroups >= 4 * count) return const [];
     // Qualifying not under way yet (undrawn, or not a match played): nobody
     // is through or a runner-up, so the cup's order alone.
     final started = drawn.any((g) => g.any((s) => s.played > 0));
@@ -201,7 +274,7 @@ abstract final class UefaWcPlayoffs {
           if (winners.contains(id) && !hosts.contains(id)) id,
         for (final id in overall)
           if (!winners.contains(id) && !hosts.contains(id)) id,
-      ].take(count).toList();
+      ].take(allRunnersUp ? 4 * count - runnersUpGroups : count).toList();
     }
     ({List<int> runnersUp, List<int> nationsCup}) at(int n) => entrants(
       groups: played,
@@ -209,13 +282,77 @@ abstract final class UefaWcPlayoffs {
       ineligible: {...Qualification.qualifiers(played, berths - n), ...hosts},
       count: n,
       fallback: fallback,
+      allRunnersUp: allRunnersUp,
     );
     var e = at(count);
+    if (allRunnersUp) {
+      final fits = (e.runnersUp.length + e.nationsCup.length) ~/ 4;
+      if (fits < count) e = at(fits);
+      return e.nationsCup;
+    }
     if (e.nationsCup.length < count) {
       count = e.nationsCup.length;
       e = at(count);
     }
     return e.nationsCup;
+  }
+
+  /// The Nations Cup's route to pot 4 as the tables stand, for the panel
+  /// under Europe's qualifying tables: the sides the cup offers the places
+  /// to, in its order (its group winners first, then down its overall
+  /// ranking, never a host), each with its [NcRouteStatus]. [holding] are
+  /// the sides on course for the places (see [onCourseNationsCup]); the
+  /// list runs to two sides past the last of them, at most [limit].
+  static List<NcRouteEntry> nationsCupRoute({
+    required List<List<GroupStanding>> groups,
+    required List<NcTable> ncTables,
+    required Set<int> hosts,
+    required List<int> holding,
+    int limit = 10,
+  }) {
+    if (ncTables.isEmpty) return const [];
+    final overall = EuroPlayoffs.overallRanking(ncTables);
+    final winners = {
+      for (final t in ncTables)
+        if (t.standings.isNotEmpty) t.standings.first.nationId,
+    };
+    final order = [
+      for (final id in overall)
+        if (winners.contains(id) && !hosts.contains(id)) id,
+      for (final id in overall)
+        if (!winners.contains(id) && !hosts.contains(id)) id,
+    ];
+    final started = groups.any((g) => g.any((s) => s.played > 0));
+    final place = <int, int>{
+      if (started)
+        for (final g in groups)
+          for (final (i, s) in g.indexed) s.nationId: i,
+    };
+    final out = <NcRouteEntry>[];
+    var lastHeld = -1;
+    for (final id in order) {
+      final status = holding.contains(id)
+          ? NcRouteStatus.holds
+          : switch (place[id]) {
+              0 => NcRouteStatus.qualified,
+              1 => NcRouteStatus.runnerUp,
+              _ => NcRouteStatus.waiting,
+            };
+      out.add((
+        nationId: id,
+        status: status,
+        groupWinner: winners.contains(id),
+      ));
+      if (status == NcRouteStatus.holds) lastHeld = out.length - 1;
+      if (out.length >= limit) break;
+      if (holding.isNotEmpty &&
+          out.where((e) => e.status == NcRouteStatus.holds).length ==
+              holding.length &&
+          out.length >= lastHeld + 3) {
+        break;
+      }
+    }
+    return out;
   }
 
   /// Draws the paths from the [entrants]: pots 1-3 the runners-up by
@@ -226,18 +363,25 @@ abstract final class UefaWcPlayoffs {
     required Map<int, int> rankingById,
     required SeededRng rng,
   }) {
-    final paths = entrants.nationsCup.length;
-    if (paths == 0 || entrants.runnersUp.length != 3 * paths) return const [];
+    // Four sides a path: the runners-up by rank, then the Nations Cup's,
+    // cut into four pots of one ball a path. Three pots of runners-up and a
+    // Nations Cup pot 4 as before; under the real UEFA shape in a cycle a
+    // European nation hosts, every pot is runners-up.
+    final all = entrants.runnersUp.length + entrants.nationsCup.length;
+    final paths = all ~/ 4;
+    if (paths == 0 || all != 4 * paths) return const [];
     int rank(int id) => rankingById[id] ?? 9999;
     int byRank(int a, int b) {
       final r = rank(a).compareTo(rank(b));
       return r != 0 ? r : a.compareTo(b);
     }
 
-    final seeded = [...entrants.runnersUp]..sort(byRank);
+    final seeded = [
+      ...[...entrants.runnersUp]..sort(byRank),
+      ...[...entrants.nationsCup]..sort(byRank),
+    ];
     final pots = [
-      for (var p = 0; p < 3; p++) seeded.sublist(p * paths, (p + 1) * paths),
-      [...entrants.nationsCup]..sort(byRank),
+      for (var p = 0; p < 4; p++) seeded.sublist(p * paths, (p + 1) * paths),
     ];
     final drawn = [for (final pot in pots) rng.shuffled(pot)];
     return [

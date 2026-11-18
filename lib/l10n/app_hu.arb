@@ -4570,5 +4570,18 @@
   "traitShotStopper": "Kiváló lövésvédő",
   "traitShotStopperBlurb": "Több lövést véd, mint várnánk.",
   "traitPenaltyStopper": "Tizenegyesölő",
-  "traitPenaltyStopperBlurb": "Több tizenegyest véd, meccsen és büntetőpárbajban is."
+  "traitPenaltyStopperBlurb": "Több tizenegyest véd, meccsen és büntetőpárbajban is.",
+  "playoffCourseLegendAll": "Sárga: minden csoportmásodik pótselejtezőt játszik",
+  "wcRunnersUpTableTitle": "Csoportmásodikok: mind pótselejtezőt játszanak",
+  "wcRunnersUpTableNote": "Összevethető eredmények szerint rangsorolva. A pótselejtező kalapjait a selejtező végén a világranglista alapján állítják össze.",
+  "ncRouteNote": "A Nations Cup helyei a pótselejtező 4. kalapjában: {count}. Ezeket először a legjobb csoportgyőztesei kapják, akik nem nyerik meg a selejtezőcsoportjukat és nem is lesznek másodikak, utána a rangsora szerint a következők. A jelenlegi állás szerint:",
+  "ncRouteHostCycle": "Ezt a világbajnokságot európai ország rendezi, ezért a csoportmásodikok ({runnersUp}) töltik ki mind a pótselejtező-ágakat ({paths}), és ebben a ciklusban egy hely sem jut a Nations Cupon át.",
+  "ncRouteTagHolds": "Helye van",
+  "ncRouteTagQualified": "Kijutott",
+  "ncRouteTagRunnerUp": "Második",
+  "ncRouteTagWaiting": "Következő",
+  "ncRouteLegendHolds": "A jelenlegi állás szerint helye van a 4. kalapban",
+  "ncRouteLegendQualified": "Vezeti a selejtezőcsoportját: egyenesen kijut, a helye továbbszáll",
+  "ncRouteLegendRunnerUp": "Második a selejtezőcsoportjában: úgyis pótselejtezőt játszik, a helye továbbszáll",
+  "ncRouteLegendWaiting": "Következik, ha egy előtte álló csapat kiesik erről az útról"
 }

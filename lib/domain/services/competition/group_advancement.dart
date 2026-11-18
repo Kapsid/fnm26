@@ -4,6 +4,7 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/competition/confed_playoffs.dart';
+import 'package:fnm/domain/services/competition/cross_group.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
@@ -105,8 +106,22 @@ abstract final class GroupAdvancement {
     /// See [worldCupQualifying]: the sides headed for the confederation's
     /// own step.
     bool confedSteps = false,
+
+    /// Europe in the real UEFA shape (`UefaWcPlayoffs.kind2`): EVERY
+    /// runner-up is headed for the paths (up to four a path), not the best
+    /// three a path.
+    bool allRunnersUp = false,
   }) {
     final fmt = QualificationFormat.forConfederation(confederation);
+    if (allRunnersUp && playoffPaths > 0) {
+      final runnersUp = [
+        for (final g in CrossGroup.comparable(groups))
+          if (g.length > 1) g[1],
+      ]..sort(CrossGroup.rank);
+      return {
+        for (final s in runnersUp.take(4 * playoffPaths)) s.nationId,
+      };
+    }
     if (confedSteps) {
       final entrants = ConfedPlayoffs.entrants(
         confederation,

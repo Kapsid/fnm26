@@ -27671,6 +27671,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Saves more penalties, in matches and in shootouts.'**
   String get traitPenaltyStopperBlurb;
+
+  /// Europe's World Championship qualifying tables in the real UEFA shape: the key to the yellow stripe on every group runner-up, all bound for the play-off.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow: every runner-up goes to the play-off'**
+  String get playoffCourseLegendAll;
+
+  /// Heading of the runners-up table under Europe's World Championship qualifying groups: every runner-up goes to the play-off.
+  ///
+  /// In en, this message translates to:
+  /// **'Runners-up: all go to the play-off'**
+  String get wcRunnersUpTableTitle;
+
+  /// Under the runners-up table's heading: the table ranks them on comparable records; the play-off pots are drawn by world ranking at the end of qualifying.
+  ///
+  /// In en, this message translates to:
+  /// **'Ranked on comparable records. The play-off pots are drawn by world ranking once qualifying ends.'**
+  String get wcRunnersUpTableNote;
+
+  /// Nations Cup route panel under Europe's World Championship qualifying: how many pot 4 places go through the Nations Cup and who gets them first; the list of sides follows.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Pot 4 of the play-off holds 1 place for the Nations Cup.} other{Pot 4 of the play-off holds {count} places for the Nations Cup.}} They go first to its best group winners who neither top their qualifying group nor finish runner-up, then down its ranking. As things stand:'**
+  String ncRouteNote(int count);
+
+  /// Nations Cup route panel in a cycle a European nation hosts the World Championship: the runners-up fill every play-off path, so there is no Nations Cup route.
+  ///
+  /// In en, this message translates to:
+  /// **'A European nation hosts this World Championship, so the {runnersUp} runners-up fill all {paths} play-off paths and no place goes through the Nations Cup this cycle.'**
+  String ncRouteHostCycle(int paths, int runnersUp);
+
+  /// Short tag on the Nations Cup route panel: the side holds a pot 4 place as things stand.
+  ///
+  /// In en, this message translates to:
+  /// **'Holds a place'**
+  String get ncRouteTagHolds;
+
+  /// Short tag on the Nations Cup route panel: the side tops its qualifying group, so it goes through directly.
+  ///
+  /// In en, this message translates to:
+  /// **'Through'**
+  String get ncRouteTagQualified;
+
+  /// Short tag on the Nations Cup route panel: the side is second in its qualifying group, so it is in the play-off anyway.
+  ///
+  /// In en, this message translates to:
+  /// **'Runner-up'**
+  String get ncRouteTagRunnerUp;
+
+  /// Short tag on the Nations Cup route panel: next in line for a pot 4 place.
+  ///
+  /// In en, this message translates to:
+  /// **'Next in line'**
+  String get ncRouteTagWaiting;
+
+  /// Legend line of the 'holds a place' tag on the Nations Cup route panel.
+  ///
+  /// In en, this message translates to:
+  /// **'Holds a pot 4 place, as things stand'**
+  String get ncRouteLegendHolds;
+
+  /// Legend line of the 'through' tag on the Nations Cup route panel.
+  ///
+  /// In en, this message translates to:
+  /// **'Tops its qualifying group: through directly, so its place passes on'**
+  String get ncRouteLegendQualified;
+
+  /// Legend line of the 'runner-up' tag on the Nations Cup route panel.
+  ///
+  /// In en, this message translates to:
+  /// **'Second in its qualifying group: in the play-off anyway, so its place passes on'**
+  String get ncRouteLegendRunnerUp;
+
+  /// Legend line of the 'next in line' tag on the Nations Cup route panel.
+  ///
+  /// In en, this message translates to:
+  /// **'Next in line, should a side above drop off the route'**
+  String get ncRouteLegendWaiting;
 }
 
 class _AppLocalizationsDelegate

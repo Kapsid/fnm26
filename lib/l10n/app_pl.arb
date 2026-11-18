@@ -4570,5 +4570,18 @@
   "traitShotStopper": "Świetny w obronie strzałów",
   "traitShotStopperBlurb": "Broni więcej strzałów, niż można się spodziewać.",
   "traitPenaltyStopper": "Pogromca karnych",
-  "traitPenaltyStopperBlurb": "Broni więcej rzutów karnych, w meczu i w serii jedenastek."
+  "traitPenaltyStopperBlurb": "Broni więcej rzutów karnych, w meczu i w serii jedenastek.",
+  "playoffCourseLegendAll": "Żółty: wszystkie drużyny z drugich miejsc grają w barażach",
+  "wcRunnersUpTableTitle": "Drużyny z drugich miejsc: wszystkie grają w barażach",
+  "wcRunnersUpTableNote": "Uszeregowane według porównywalnych wyników. Koszyki baraży powstają według rankingu światowego po zakończeniu eliminacji.",
+  "ncRouteNote": "Miejsca dla Pucharu Narodów w koszyku 4 baraży: {count}. Dostają je najpierw jego najlepsi zwycięzcy grup, którzy nie wygrywają swojej grupy eliminacyjnej ani nie kończą jej na drugim miejscu, a potem kolejni według jego rankingu. Według obecnego stanu:",
+  "ncRouteHostCycle": "Mistrzostwa świata organizuje kraj europejski, więc drużyny z drugich miejsc ({runnersUp}) wypełniają wszystkie ścieżki baraży ({paths}) i w tym cyklu żadne miejsce nie przechodzi przez Puchar Narodów.",
+  "ncRouteTagHolds": "Ma miejsce",
+  "ncRouteTagQualified": "Awans",
+  "ncRouteTagRunnerUp": "Drugie miejsce",
+  "ncRouteTagWaiting": "Czeka",
+  "ncRouteLegendHolds": "Zajmuje miejsce w koszyku 4, według obecnego stanu",
+  "ncRouteLegendQualified": "Prowadzi w swojej grupie eliminacyjnej: awansuje bezpośrednio, jego miejsce przechodzi dalej",
+  "ncRouteLegendRunnerUp": "Drugi w swojej grupie eliminacyjnej: i tak gra w barażach, jego miejsce przechodzi dalej",
+  "ncRouteLegendWaiting": "Następny w kolejce, gdyby ktoś przed nim wypadł z tej ścieżki"
 }

@@ -18375,4 +18375,54 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Torjuu enemmän rangaistuspotkuja, otteluissa ja rangaistuspotkukilpailuissa.';
+
+  @override
+  String get playoffCourseLegendAll =>
+      'Keltainen: kaikki kakkoset menevät jatkokarsintaan';
+
+  @override
+  String get wcRunnersUpTableTitle =>
+      'Lohkokakkoset: kaikki menevät jatkokarsintaan';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      'Järjestetty vertailukelpoisten tulosten mukaan. Jatkokarsinnan korit muodostetaan maailmanlistan mukaan karsinnan päätyttyä.';
+
+  @override
+  String ncRouteNote(int count) {
+    return 'Nations Cupin paikkoja jatkokarsinnan korissa 4: $count. Ne menevät ensin sen parhaille lohkovoittajille, jotka eivät voita karsintalohkoaan eivätkä sijoitu toiseksi, sitten sen sijoitusten mukaan. Nykytilanteen mukaan:';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return 'Eurooppalainen maa järjestää tämän maailmanmestaruusturnauksen, joten lohkokakkoset ($runnersUp) täyttävät kaikki jatkokarsinnan polut ($paths) eikä Nations Cupin kautta mene tässä syklissä yhtään paikkaa.';
+  }
+
+  @override
+  String get ncRouteTagHolds => 'Paikka';
+
+  @override
+  String get ncRouteTagQualified => 'Jatkoon';
+
+  @override
+  String get ncRouteTagRunnerUp => 'Kakkonen';
+
+  @override
+  String get ncRouteTagWaiting => 'Jonossa';
+
+  @override
+  String get ncRouteLegendHolds =>
+      'Pitää paikkaa korissa 4, nykytilanteen mukaan';
+
+  @override
+  String get ncRouteLegendQualified =>
+      'Johtaa karsintalohkoaan: pääsee suoraan, paikka siirtyy seuraavalle';
+
+  @override
+  String get ncRouteLegendRunnerUp =>
+      'Toisena karsintalohkossaan: jatkokarsinnassa joka tapauksessa, paikka siirtyy seuraavalle';
+
+  @override
+  String get ncRouteLegendWaiting =>
+      'Seuraavana vuorossa, jos edellä oleva putoaa tältä reitiltä';
 }

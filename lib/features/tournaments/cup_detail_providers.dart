@@ -73,6 +73,8 @@ class CupData {
     this.wcHostBerths = const {},
     this.europePlayoffPaths = 0,
     this.europeNationsCupCourse = const [],
+    this.europeAllRunnersUp = false,
+    this.europeNationsCupRoute = const [],
     this.playoffs,
     this.pendingDraw,
     this.pendingKeys = const {},
@@ -89,6 +91,18 @@ class CupData {
   /// `wcPlayoffCourse`); shown under Europe's qualifying groups. Empty once
   /// drawn (the Play-off tab has the paths) and on any older calendar.
   final List<int> europeNationsCupCourse;
+
+  /// Europe's qualifying runs in the real UEFA shape this cycle
+  /// (`UefaWcPlayoffs.kind2`): EVERY runner-up goes to the paths, the
+  /// tables mark them all, a runners-up table seeds them, and the Nations
+  /// Cup's route has a panel of its own ([europeNationsCupRoute]).
+  final bool europeAllRunnersUp;
+
+  /// The Nations Cup's route to the paths' pot 4, side by side with where
+  /// each stands, while the paths are not drawn (see `wcNationsCupRoute`).
+  /// Only under [europeAllRunnersUp]; empty when there is no route (a
+  /// European host's cycle: every pot goes to the runners-up).
+  final List<NcRouteEntry> europeNationsCupRoute;
 
   /// The World Championship's calendar2 play-offs, once drawn, or null.
   final WcPlayoffData? playoffs;
@@ -568,8 +582,22 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
           nations: nations,
         );
 
+  final allRunnersUp =
+      cal2 && await isEuroQuali2(comp, careerId, career.cyclePointer);
+  final ncRoute = !allRunnersUp || playoffs != null
+      ? const <NcRouteEntry>[]
+      : await wcNationsCupRoute(
+          comp,
+          careerId: careerId,
+          cycle: career.cyclePointer,
+          rngSeed: career.rngSeed,
+          nations: nations,
+        );
+
   return CupData(
     europeNationsCupCourse: nationsCupCourse,
+    europeAllRunnersUp: allRunnersUp,
+    europeNationsCupRoute: ncRoute,
     europePlayoffPaths: !cal2
         ? 0
         : UefaWcPlayoffs.pathCount(

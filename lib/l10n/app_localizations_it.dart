@@ -18391,4 +18391,54 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Para più rigori, in partita e ai rigori.';
+
+  @override
+  String get playoffCourseLegendAll =>
+      'Giallo: tutte le seconde vanno agli spareggi';
+
+  @override
+  String get wcRunnersUpTableTitle =>
+      'Seconde classificate: vanno tutte agli spareggi';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      'Ordinate su risultati comparabili. Le urne degli spareggi si formano in base al ranking mondiale alla fine delle qualificazioni.';
+
+  @override
+  String ncRouteNote(int count) {
+    return 'Posti per la Coppa delle Nazioni nell\'urna 4 degli spareggi: $count. Vanno prima alle sue migliori vincitrici di girone che non vincono il proprio girone di qualificazione né arrivano seconde, poi secondo la sua classifica. Allo stato attuale:';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return 'Un paese europeo ospita questo Campionato del mondo, quindi le $runnersUp seconde riempiono tutti i $paths percorsi degli spareggi e in questo ciclo nessun posto passa dalla Coppa delle Nazioni.';
+  }
+
+  @override
+  String get ncRouteTagHolds => 'Ha un posto';
+
+  @override
+  String get ncRouteTagQualified => 'Qualificata';
+
+  @override
+  String get ncRouteTagRunnerUp => 'Seconda';
+
+  @override
+  String get ncRouteTagWaiting => 'In attesa';
+
+  @override
+  String get ncRouteLegendHolds =>
+      'Occupa un posto dell\'urna 4, allo stato attuale';
+
+  @override
+  String get ncRouteLegendQualified =>
+      'Prima nel suo girone di qualificazione: qualificata direttamente, il suo posto passa alla successiva';
+
+  @override
+  String get ncRouteLegendRunnerUp =>
+      'Seconda nel suo girone di qualificazione: va comunque agli spareggi, il suo posto passa alla successiva';
+
+  @override
+  String get ncRouteLegendWaiting =>
+      'La prossima, se una squadra davanti esce da questa strada';
 }

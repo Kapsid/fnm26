@@ -4570,5 +4570,18 @@
   "traitShotStopper": "뛰어난 슈팅 선방",
   "traitShotStopperBlurb": "예상보다 많은 슈팅을 막아낸다.",
   "traitPenaltyStopper": "페널티킥 킬러",
-  "traitPenaltyStopperBlurb": "경기와 승부차기 모두에서 페널티킥을 더 많이 막는다."
+  "traitPenaltyStopperBlurb": "경기와 승부차기 모두에서 페널티킥을 더 많이 막는다.",
+  "playoffCourseLegendAll": "노란색: 모든 조 2위 팀은 플레이오프로",
+  "wcRunnersUpTableTitle": "조 2위 팀: 모두 플레이오프로",
+  "wcRunnersUpTableNote": "비교 가능한 성적으로 순위를 매깁니다. 플레이오프 포트는 예선이 끝난 뒤 세계 랭킹으로 정해집니다.",
+  "ncRouteNote": "플레이오프 4포트의 네이션스컵 몫: {count}자리. 예선 조에서 1위도 2위도 하지 못한 네이션스컵 조 1위 팀부터, 그다음은 네이션스컵 순위대로 배정됩니다. 현재 상황:",
+  "ncRouteHostCycle": "이번 세계선수권은 유럽 국가가 개최하므로 조 2위 {runnersUp}팀이 플레이오프 {paths}개 경로를 모두 채우고, 이번 사이클에는 네이션스컵을 통한 자리가 없습니다.",
+  "ncRouteTagHolds": "자리 확보",
+  "ncRouteTagQualified": "본선 직행",
+  "ncRouteTagRunnerUp": "조 2위",
+  "ncRouteTagWaiting": "대기",
+  "ncRouteLegendHolds": "현재 4포트 자리를 확보",
+  "ncRouteLegendQualified": "예선 조 1위: 본선 직행이라 자리는 다음 팀에게",
+  "ncRouteLegendRunnerUp": "예선 조 2위: 어차피 플레이오프에 나가므로 자리는 다음 팀에게",
+  "ncRouteLegendWaiting": "앞선 팀이 이 경로에서 빠지면 다음 차례"
 }

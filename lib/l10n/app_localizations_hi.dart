@@ -18211,4 +18211,52 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'मैच में और शूटआउट में ज़्यादा पेनल्टी रोकता है।';
+
+  @override
+  String get playoffCourseLegendAll =>
+      'पीला: ग्रुप की हर उपविजेता टीम प्ले-ऑफ़ में जाती है';
+
+  @override
+  String get wcRunnersUpTableTitle => 'ग्रुप उपविजेता: सभी प्ले-ऑफ़ में';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      'तुलनीय रिकॉर्ड के आधार पर क्रम। क्वालीफ़ाइंग ख़त्म होने पर प्ले-ऑफ़ के पॉट विश्व रैंकिंग से तय होते हैं।';
+
+  @override
+  String ncRouteNote(int count) {
+    return 'प्ले-ऑफ़ के पॉट 4 में नेशंस कप की जगहें: $count। ये पहले उसके उन सबसे अच्छे ग्रुप विजेताओं को मिलती हैं जो अपने क्वालीफ़ाइंग ग्रुप में न पहले हैं न दूसरे, फिर उसकी रैंकिंग के अनुसार। मौजूदा स्थिति के अनुसार:';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return 'इस विश्व चैंपियनशिप की मेज़बानी एक यूरोपीय देश कर रहा है, इसलिए $runnersUp उपविजेता टीमें प्ले-ऑफ़ के सभी $paths रास्ते भर देती हैं और इस चक्र में नेशंस कप के ज़रिए कोई जगह नहीं है।';
+  }
+
+  @override
+  String get ncRouteTagHolds => 'जगह है';
+
+  @override
+  String get ncRouteTagQualified => 'क्वालीफ़ाई';
+
+  @override
+  String get ncRouteTagRunnerUp => 'उपविजेता';
+
+  @override
+  String get ncRouteTagWaiting => 'इंतज़ार';
+
+  @override
+  String get ncRouteLegendHolds => 'मौजूदा स्थिति के अनुसार पॉट 4 में जगह पर';
+
+  @override
+  String get ncRouteLegendQualified =>
+      'अपने क्वालीफ़ाइंग ग्रुप में सबसे ऊपर: सीधे क्वालीफ़ाई, उसकी जगह अगली टीम को';
+
+  @override
+  String get ncRouteLegendRunnerUp =>
+      'अपने क्वालीफ़ाइंग ग्रुप में दूसरे: वैसे भी प्ले-ऑफ़ में, उसकी जगह अगली टीम को';
+
+  @override
+  String get ncRouteLegendWaiting =>
+      'अगर आगे की कोई टीम इस रास्ते से हटे तो अगली बारी';
 }

@@ -18302,4 +18302,52 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Redder flere straffer, i kamper og i straffekonkurranser.';
+
+  @override
+  String get playoffCourseLegendAll => 'Gul: alle toere går til playoff';
+
+  @override
+  String get wcRunnersUpTableTitle => 'Toere: alle går til playoff';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      'Rangert etter sammenlignbare resultater. Seedingsgruppene i playoffen settes etter verdensrankingen når kvalifiseringen er over.';
+
+  @override
+  String ncRouteNote(int count) {
+    return 'Plasser for Nations Cup i seedingsgruppe 4 av playoffen: $count. De går først til de beste gruppevinnerne som verken vinner kvalifiseringsgruppen sin eller blir toer, deretter videre etter rankingen. Slik det står nå:';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return 'Et europeisk land arrangerer dette verdensmesterskapet, så de $runnersUp toerne fyller alle $paths playoffveiene, og ingen plass går via Nations Cup i denne syklusen.';
+  }
+
+  @override
+  String get ncRouteTagHolds => 'Har plass';
+
+  @override
+  String get ncRouteTagQualified => 'Kvalifisert';
+
+  @override
+  String get ncRouteTagRunnerUp => 'Toer';
+
+  @override
+  String get ncRouteTagWaiting => 'Neste';
+
+  @override
+  String get ncRouteLegendHolds =>
+      'Har en plass i seedingsgruppe 4, slik det står nå';
+
+  @override
+  String get ncRouteLegendQualified =>
+      'Vinner kvalifiseringsgruppen sin: direkte kvalifisert, plassen går videre';
+
+  @override
+  String get ncRouteLegendRunnerUp =>
+      'Toer i kvalifiseringsgruppen sin: i playoff uansett, plassen går videre';
+
+  @override
+  String get ncRouteLegendWaiting =>
+      'Neste i køen hvis et lag foran faller fra denne veien';
 }

@@ -4570,5 +4570,18 @@
   "traitShotStopper": "Skvělý brankář na střely",
   "traitShotStopperBlurb": "Chytí víc střel, než by se dalo čekat.",
   "traitPenaltyStopper": "Postrach penaltistů",
-  "traitPenaltyStopperBlurb": "Chytá víc penalt, v zápase i v rozstřelu."
+  "traitPenaltyStopperBlurb": "Chytá víc penalt, v zápase i v rozstřelu.",
+  "playoffCourseLegendAll": "Žlutě: do baráže jdou všechny týmy z druhých míst",
+  "wcRunnersUpTableTitle": "Týmy na druhých místech: všechny jdou do baráže",
+  "wcRunnersUpTableNote": "Seřazeno podle srovnatelných výsledků. Koše baráže se losují podle světového žebříčku po skončení kvalifikace.",
+  "ncRouteNote": "Míst pro Pohár národů v koši 4 baráže: {count}. Dostanou je nejdřív nejlepší vítězové jeho skupin, kteří nevyhrají svou kvalifikační skupinu ani neskončí druzí, potom další podle jeho pořadí. Podle aktuálního stavu:",
+  "ncRouteHostCycle": "Mistrovství světa pořádá evropská země, takže všechny {paths} cesty baráže zaplní týmy z druhých míst ({runnersUp}) a přes Pohár národů v tomto cyklu nepostupuje nikdo.",
+  "ncRouteTagHolds": "Má místo",
+  "ncRouteTagQualified": "Postupuje",
+  "ncRouteTagRunnerUp": "Druhé místo",
+  "ncRouteTagWaiting": "Čeká",
+  "ncRouteLegendHolds": "Drží místo v koši 4, podle aktuálního stavu",
+  "ncRouteLegendQualified": "Vede svou kvalifikační skupinu: postupuje přímo, jeho místo připadne dalšímu",
+  "ncRouteLegendRunnerUp": "Je druhý ve své kvalifikační skupině: do baráže jde tak jako tak, jeho místo připadne dalšímu",
+  "ncRouteLegendWaiting": "Další na řadě, kdyby někdo před ním z této cesty vypadl"
 }

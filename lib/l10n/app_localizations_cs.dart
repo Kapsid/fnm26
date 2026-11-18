@@ -18691,4 +18691,54 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Chytá víc penalt, v zápase i v rozstřelu.';
+
+  @override
+  String get playoffCourseLegendAll =>
+      'Žlutě: do baráže jdou všechny týmy z druhých míst';
+
+  @override
+  String get wcRunnersUpTableTitle =>
+      'Týmy na druhých místech: všechny jdou do baráže';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      'Seřazeno podle srovnatelných výsledků. Koše baráže se losují podle světového žebříčku po skončení kvalifikace.';
+
+  @override
+  String ncRouteNote(int count) {
+    return 'Míst pro Pohár národů v koši 4 baráže: $count. Dostanou je nejdřív nejlepší vítězové jeho skupin, kteří nevyhrají svou kvalifikační skupinu ani neskončí druzí, potom další podle jeho pořadí. Podle aktuálního stavu:';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return 'Mistrovství světa pořádá evropská země, takže všechny $paths cesty baráže zaplní týmy z druhých míst ($runnersUp) a přes Pohár národů v tomto cyklu nepostupuje nikdo.';
+  }
+
+  @override
+  String get ncRouteTagHolds => 'Má místo';
+
+  @override
+  String get ncRouteTagQualified => 'Postupuje';
+
+  @override
+  String get ncRouteTagRunnerUp => 'Druhé místo';
+
+  @override
+  String get ncRouteTagWaiting => 'Čeká';
+
+  @override
+  String get ncRouteLegendHolds =>
+      'Drží místo v koši 4, podle aktuálního stavu';
+
+  @override
+  String get ncRouteLegendQualified =>
+      'Vede svou kvalifikační skupinu: postupuje přímo, jeho místo připadne dalšímu';
+
+  @override
+  String get ncRouteLegendRunnerUp =>
+      'Je druhý ve své kvalifikační skupině: do baráže jde tak jako tak, jeho místo připadne dalšímu';
+
+  @override
+  String get ncRouteLegendWaiting =>
+      'Další na řadě, kdyby někdo před ním z této cesty vypadl';
 }

@@ -18214,4 +18214,53 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Maçta ve seri penaltılarda daha çok penaltı kurtarır.';
+
+  @override
+  String get playoffCourseLegendAll => 'Sarı: tüm ikinciler play-off\'a gider';
+
+  @override
+  String get wcRunnersUpTableTitle =>
+      'Grup ikincileri: hepsi play-off\'a gider';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      'Karşılaştırılabilir sonuçlara göre sıralandı. Play-off torbaları elemeler bitince dünya sıralamasına göre oluşturulur.';
+
+  @override
+  String ncRouteNote(int count) {
+    return 'Play-off\'un 4. torbasında Uluslar Kupası\'na ayrılan yer sayısı: $count. Bu yerler önce eleme grubunu kazanamayan ve ikinci de olamayan en iyi grup birincilerine, sonra sıralamasına göre diğerlerine gider. Şu anki duruma göre:';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return 'Bu Dünya Şampiyonası\'nı bir Avrupa ülkesi düzenliyor, bu yüzden grup ikincileri ($runnersUp) tüm play-off yollarını ($paths) dolduruyor ve bu döngüde Uluslar Kupası üzerinden hiçbir yer verilmiyor.';
+  }
+
+  @override
+  String get ncRouteTagHolds => 'Yeri var';
+
+  @override
+  String get ncRouteTagQualified => 'Katıldı';
+
+  @override
+  String get ncRouteTagRunnerUp => 'İkinci';
+
+  @override
+  String get ncRouteTagWaiting => 'Sırada';
+
+  @override
+  String get ncRouteLegendHolds =>
+      'Şu anki duruma göre 4. torbada bir yeri var';
+
+  @override
+  String get ncRouteLegendQualified =>
+      'Eleme grubunda lider: doğrudan katılıyor, yeri bir sonrakine geçer';
+
+  @override
+  String get ncRouteLegendRunnerUp =>
+      'Eleme grubunda ikinci: zaten play-off\'ta, yeri bir sonrakine geçer';
+
+  @override
+  String get ncRouteLegendWaiting =>
+      'Öndeki bir takım bu yoldan düşerse sıradaki';
 }

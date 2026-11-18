@@ -18386,4 +18386,52 @@ class AppLocalizationsBg extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Спасява повече дузпи, в мача и при дузпите.';
+
+  @override
+  String get playoffCourseLegendAll =>
+      'Жълто: всички втори отбори отиват на баражи';
+
+  @override
+  String get wcRunnersUpTableTitle => 'Вторите отбори: всички отиват на баражи';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      'Подредени по съпоставими резултати. Урните за баражите се определят по световната ранглиста след края на квалификациите.';
+
+  @override
+  String ncRouteNote(int count) {
+    return 'Места за Nations Cup в урна 4 на баражите: $count. Получават ги първо най-добрите победители в групите му, които нито печелят квалификационната си група, нито завършват втори, а после следващите по класирането му. Към момента:';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return 'Това световно първенство се домакинства от европейска страна, затова вторите отбори ($runnersUp) запълват всички пътища на баражите ($paths) и в този цикъл нито едно място не минава през Nations Cup.';
+  }
+
+  @override
+  String get ncRouteTagHolds => 'Има място';
+
+  @override
+  String get ncRouteTagQualified => 'Класиран';
+
+  @override
+  String get ncRouteTagRunnerUp => 'Втори';
+
+  @override
+  String get ncRouteTagWaiting => 'Чака';
+
+  @override
+  String get ncRouteLegendHolds => 'Заема място в урна 4, към момента';
+
+  @override
+  String get ncRouteLegendQualified =>
+      'Води в квалификационната си група: класира се директно, мястото му отива нататък';
+
+  @override
+  String get ncRouteLegendRunnerUp =>
+      'Втори в квалификационната си група: и без това е на баражи, мястото му отива нататък';
+
+  @override
+  String get ncRouteLegendWaiting =>
+      'Следващ на ред, ако някой пред него отпадне от този път';
 }

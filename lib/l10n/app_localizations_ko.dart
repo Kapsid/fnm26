@@ -17710,4 +17710,48 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get traitPenaltyStopperBlurb => '경기와 승부차기 모두에서 페널티킥을 더 많이 막는다.';
+
+  @override
+  String get playoffCourseLegendAll => '노란색: 모든 조 2위 팀은 플레이오프로';
+
+  @override
+  String get wcRunnersUpTableTitle => '조 2위 팀: 모두 플레이오프로';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      '비교 가능한 성적으로 순위를 매깁니다. 플레이오프 포트는 예선이 끝난 뒤 세계 랭킹으로 정해집니다.';
+
+  @override
+  String ncRouteNote(int count) {
+    return '플레이오프 4포트의 네이션스컵 몫: $count자리. 예선 조에서 1위도 2위도 하지 못한 네이션스컵 조 1위 팀부터, 그다음은 네이션스컵 순위대로 배정됩니다. 현재 상황:';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return '이번 세계선수권은 유럽 국가가 개최하므로 조 2위 $runnersUp팀이 플레이오프 $paths개 경로를 모두 채우고, 이번 사이클에는 네이션스컵을 통한 자리가 없습니다.';
+  }
+
+  @override
+  String get ncRouteTagHolds => '자리 확보';
+
+  @override
+  String get ncRouteTagQualified => '본선 직행';
+
+  @override
+  String get ncRouteTagRunnerUp => '조 2위';
+
+  @override
+  String get ncRouteTagWaiting => '대기';
+
+  @override
+  String get ncRouteLegendHolds => '현재 4포트 자리를 확보';
+
+  @override
+  String get ncRouteLegendQualified => '예선 조 1위: 본선 직행이라 자리는 다음 팀에게';
+
+  @override
+  String get ncRouteLegendRunnerUp => '예선 조 2위: 어차피 플레이오프에 나가므로 자리는 다음 팀에게';
+
+  @override
+  String get ncRouteLegendWaiting => '앞선 팀이 이 경로에서 빠지면 다음 차례';
 }

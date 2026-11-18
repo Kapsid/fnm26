@@ -328,6 +328,9 @@ extension SeasonRollover on SeasonService {
     // Its calendar is the 1.1.2 rhythm (see calendar2Kind), marked before
     // the calendar below is built from it.
     await _comp.markDrawWatched(careerId, nextCycle, calendar2Kind);
+    // And Europe's World Championship qualifying in the real UEFA shape
+    // (1.1.2): from the next cycle on, never the one under way.
+    await _comp.markDrawWatched(careerId, nextCycle, UefaWcPlayoffs.kind2);
     // Its national teams are run by world managers (see worldManagersKind).
     await _comp.markDrawWatched(careerId, nextCycle, worldManagersKind);
 

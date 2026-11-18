@@ -18729,4 +18729,54 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Apără mai multe penalty-uri, în meci și la loviturile de departajare.';
+
+  @override
+  String get playoffCourseLegendAll =>
+      'Galben: toate ocupantele locului doi merg la baraj';
+
+  @override
+  String get wcRunnersUpTableTitle =>
+      'Ocupantele locului doi: toate merg la baraj';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      'Clasate după rezultate comparabile. Urnele barajului se formează după clasamentul mondial la finalul preliminariilor.';
+
+  @override
+  String ncRouteNote(int count) {
+    return 'Locuri pentru Cupa Națiunilor în urna 4 a barajului: $count. Le primesc mai întâi cele mai bune câștigătoare de grupă ale ei care nu își câștigă grupa preliminară și nici nu termină pe locul doi, apoi următoarele din clasamentul ei. Conform situației actuale:';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return 'O țară europeană găzduiește acest Campionat Mondial, așa că ocupantele locului doi ($runnersUp) umplu toate drumurile barajului ($paths) și niciun loc nu trece prin Cupa Națiunilor în acest ciclu.';
+  }
+
+  @override
+  String get ncRouteTagHolds => 'Are loc';
+
+  @override
+  String get ncRouteTagQualified => 'Calificată';
+
+  @override
+  String get ncRouteTagRunnerUp => 'Locul doi';
+
+  @override
+  String get ncRouteTagWaiting => 'Următoarea';
+
+  @override
+  String get ncRouteLegendHolds =>
+      'Ocupă un loc din urna 4, conform situației actuale';
+
+  @override
+  String get ncRouteLegendQualified =>
+      'Conduce grupa preliminară: se califică direct, locul ei trece mai departe';
+
+  @override
+  String get ncRouteLegendRunnerUp =>
+      'Pe locul doi în grupa preliminară: merge oricum la baraj, locul ei trece mai departe';
+
+  @override
+  String get ncRouteLegendWaiting =>
+      'Următoarea, dacă o echipă din față iese de pe acest drum';
 }

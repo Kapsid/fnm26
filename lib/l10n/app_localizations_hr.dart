@@ -18643,4 +18643,53 @@ class AppLocalizationsHr extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Brani više jedanaesteraca, u utakmici i u izvođenju jedanaesteraca.';
+
+  @override
+  String get playoffCourseLegendAll =>
+      'Žuto: sve drugoplasirane momčadi idu u doigravanje';
+
+  @override
+  String get wcRunnersUpTableTitle => 'Drugoplasirani: svi idu u doigravanje';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      'Poredano prema usporedivim rezultatima. Šeširi doigravanja slažu se prema svjetskoj ljestvici na kraju kvalifikacija.';
+
+  @override
+  String ncRouteNote(int count) {
+    return 'Mjesta za Nations Cup u šeširu 4 doigravanja: $count. Dobivaju ih najprije njegovi najbolji pobjednici skupina koji ne osvoje svoju kvalifikacijsku skupinu niti budu drugi, a zatim sljedeći prema njegovu poretku. Prema trenutačnom stanju:';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return 'Ovo Svjetsko prvenstvo organizira europska zemlja, pa drugoplasirani ($runnersUp) popunjavaju sve putove doigravanja ($paths) i u ovom ciklusu nijedno mjesto ne ide preko Nations Cupa.';
+  }
+
+  @override
+  String get ncRouteTagHolds => 'Ima mjesto';
+
+  @override
+  String get ncRouteTagQualified => 'Prolazi';
+
+  @override
+  String get ncRouteTagRunnerUp => 'Drugi';
+
+  @override
+  String get ncRouteTagWaiting => 'Čeka';
+
+  @override
+  String get ncRouteLegendHolds =>
+      'Drži mjesto u šeširu 4, prema trenutačnom stanju';
+
+  @override
+  String get ncRouteLegendQualified =>
+      'Vodi u svojoj kvalifikacijskoj skupini: prolazi izravno, njegovo mjesto ide dalje';
+
+  @override
+  String get ncRouteLegendRunnerUp =>
+      'Drugi u svojoj kvalifikacijskoj skupini: ionako ide u doigravanje, njegovo mjesto ide dalje';
+
+  @override
+  String get ncRouteLegendWaiting =>
+      'Sljedeći na redu ako netko ispred ispadne s ovog puta';
 }

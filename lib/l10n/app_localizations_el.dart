@@ -18395,4 +18395,53 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Αποκρούει περισσότερα πέναλτι, στο παιχνίδι και στη διαδικασία των πέναλτι.';
+
+  @override
+  String get playoffCourseLegendAll =>
+      'Κίτρινο: όλες οι δεύτερες ομάδες πάνε στα μπαράζ';
+
+  @override
+  String get wcRunnersUpTableTitle => 'Δεύτερες ομάδες: όλες πάνε στα μπαράζ';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      'Κατάταξη με συγκρίσιμα αποτελέσματα. Τα γκρουπ δυναμικότητας των μπαράζ ορίζονται με την παγκόσμια κατάταξη στο τέλος των προκριματικών.';
+
+  @override
+  String ncRouteNote(int count) {
+    return 'Θέσεις για το Κύπελλο Εθνών στο γκρουπ 4 των μπαράζ: $count. Τις παίρνουν πρώτα οι καλύτεροι νικητές ομίλων του που ούτε κερδίζουν τον προκριματικό τους όμιλο ούτε τερματίζουν δεύτεροι, και μετά οι επόμενοι με βάση την κατάταξή του. Με τα σημερινά δεδομένα:';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return 'Αυτό το Παγκόσμιο Πρωτάθλημα το διοργανώνει ευρωπαϊκή χώρα, οπότε οι δεύτερες ομάδες ($runnersUp) γεμίζουν όλες τις διαδρομές των μπαράζ ($paths) και σε αυτόν τον κύκλο καμία θέση δεν περνά από το Κύπελλο Εθνών.';
+  }
+
+  @override
+  String get ncRouteTagHolds => 'Έχει θέση';
+
+  @override
+  String get ncRouteTagQualified => 'Προκρίθηκε';
+
+  @override
+  String get ncRouteTagRunnerUp => 'Δεύτερη';
+
+  @override
+  String get ncRouteTagWaiting => 'Επόμενη';
+
+  @override
+  String get ncRouteLegendHolds =>
+      'Κρατά θέση στο γκρουπ 4, με τα σημερινά δεδομένα';
+
+  @override
+  String get ncRouteLegendQualified =>
+      'Πρώτη στον προκριματικό της όμιλο: προκρίνεται απευθείας, η θέση της περνά παρακάτω';
+
+  @override
+  String get ncRouteLegendRunnerUp =>
+      'Δεύτερη στον προκριματικό της όμιλο: πάει ούτως ή άλλως στα μπαράζ, η θέση της περνά παρακάτω';
+
+  @override
+  String get ncRouteLegendWaiting =>
+      'Η επόμενη, αν κάποια ομάδα μπροστά βγει από αυτή τη διαδρομή';
 }

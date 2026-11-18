@@ -251,6 +251,8 @@ extension SeasonWcPlayoffs on SeasonService {
       for (final n in nations.values)
         if (n.confederation == europe) n.id,
     ]..sort((a, b) => (live[a] ?? 9999).compareTo(live[b] ?? 9999));
+    // The real UEFA shape (1.1.2): every runner-up an entrant.
+    final allRunnersUp = await isEuroQuali2(_comp, careerId, cycle);
     ({List<int> runnersUp, List<int> nationsCup}) entrantsFor(int n) =>
         UefaWcPlayoffs.entrants(
           groups: euroGroups,
@@ -261,9 +263,17 @@ extension SeasonWcPlayoffs on SeasonService {
           },
           count: n,
           fallback: fallback,
+          allRunnersUp: allRunnersUp,
         );
     var entrants = entrantsFor(count);
-    if (entrants.nationsCup.length < count) {
+    if (allRunnersUp) {
+      final fits =
+          (entrants.runnersUp.length + entrants.nationsCup.length) ~/ 4;
+      if (fits < count) {
+        count = fits;
+        entrants = entrantsFor(count);
+      }
+    } else if (entrants.nationsCup.length < count) {
       // Not enough sides for every path: the places left go to the best of
       // the groups instead.
       count = entrants.nationsCup.length;

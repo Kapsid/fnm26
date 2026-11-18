@@ -18149,4 +18149,54 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Cản phá nhiều quả penalty hơn, cả trong trận và loạt sút luân lưu.';
+
+  @override
+  String get playoffCourseLegendAll =>
+      'Vàng: mọi đội nhì bảng đều vào vòng play-off';
+
+  @override
+  String get wcRunnersUpTableTitle =>
+      'Các đội nhì bảng: tất cả vào vòng play-off';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      'Xếp theo thành tích có thể so sánh. Các nhóm hạt giống của vòng play-off được chia theo bảng xếp hạng thế giới khi vòng loại kết thúc.';
+
+  @override
+  String ncRouteNote(int count) {
+    return 'Suất của Nations Cup ở nhóm 4 vòng play-off: $count. Ưu tiên các đội nhất bảng Nations Cup không đứng nhất cũng không đứng nhì bảng vòng loại, sau đó theo thứ hạng Nations Cup. Theo tình hình hiện tại:';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return 'Một nước châu Âu đăng cai giải vô địch thế giới này, nên $runnersUp đội nhì bảng lấp đầy cả $paths nhánh play-off và chu kỳ này không có suất nào qua Nations Cup.';
+  }
+
+  @override
+  String get ncRouteTagHolds => 'Có suất';
+
+  @override
+  String get ncRouteTagQualified => 'Đi tiếp';
+
+  @override
+  String get ncRouteTagRunnerUp => 'Nhì bảng';
+
+  @override
+  String get ncRouteTagWaiting => 'Chờ';
+
+  @override
+  String get ncRouteLegendHolds =>
+      'Đang giữ một suất ở nhóm 4, theo tình hình hiện tại';
+
+  @override
+  String get ncRouteLegendQualified =>
+      'Dẫn đầu bảng vòng loại: đi tiếp trực tiếp, suất của đội chuyển cho đội kế tiếp';
+
+  @override
+  String get ncRouteLegendRunnerUp =>
+      'Nhì bảng vòng loại: vẫn vào play-off, suất của đội chuyển cho đội kế tiếp';
+
+  @override
+  String get ncRouteLegendWaiting =>
+      'Đội kế tiếp, nếu một đội phía trên rời con đường này';
 }

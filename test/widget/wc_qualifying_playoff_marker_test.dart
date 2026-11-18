@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/tournaments/cup_detail_providers.dart';
@@ -195,5 +196,102 @@ void main() {
       await _green(t, _withHosts(asia, {Confederation.europe: 1})),
       greaterThan(0),
     );
+  });
+
+  // The real UEFA shape (1.1.2): 1st green, EVERY 2nd yellow, a runners-up
+  // table under the groups (all twelve yellow), and the Nations Cup route
+  // panel, or in a European host's cycle a note that there is none.
+  CupData realShape({
+    required int hosts,
+    List<NcRouteEntry> route = const [],
+  }) {
+    final d = _data(Confederation.europe, 12, 4);
+    return CupData(
+      groups: d.groups,
+      nations: d.nations,
+      playerNationId: d.playerNationId,
+      playerConfederation: d.playerConfederation,
+      finalsGroups: d.finalsGroups,
+      knockout: d.knockout,
+      champion: d.champion,
+      hostId: d.hostId,
+      scorersQualifying: d.scorersQualifying,
+      scorersFinals: d.scorersFinals,
+      honours: d.honours,
+      playerNames: d.playerNames,
+      wcHostBerths: {Confederation.europe: hosts},
+      europePlayoffPaths: 4 - hosts,
+      europeAllRunnersUp: true,
+      europeNationsCupRoute: route,
+    );
+  }
+
+  Future<void> pumpCup(WidgetTester t, CupData data) async {
+    final save = await seedSave(
+      t,
+      overrides: [
+        cupDetailProvider(kSeededCareerId).overrideWith((ref) async => data),
+      ],
+    );
+    await pumpRoute(
+      t,
+      save,
+      '${Routes.cup}?careerId=${save.careerId}',
+      size: const Size(390, 12000),
+    );
+  }
+
+  testWidgets('the real shape: winners green, every runner-up yellow in the '
+      'groups and in their own table, the Nations Cup route below', (t) async {
+    final ids = [
+      for (final n in realNations)
+        if (n.confederation == Confederation.europe) n.id,
+    ];
+    final route = <NcRouteEntry>[
+      (nationId: ids[48], status: NcRouteStatus.holds, groupWinner: true),
+      (nationId: ids[0], status: NcRouteStatus.qualified, groupWinner: true),
+      (nationId: ids[49], status: NcRouteStatus.waiting, groupWinner: false),
+    ];
+    await pumpCup(t, realShape(hosts: 0, route: route));
+    expect(t.takeException(), isNull);
+    // Twelve winners, and the route's "through" tag (row and legend).
+    expect(_greenRows(t), 14);
+    // Twelve in the groups, twelve in the runners-up table, and the route's
+    // "holds a place" tag (row and legend).
+    expect(_yellowRows(t), 26);
+    expect(find.text(enL.playoffCourseLegendAll), findsOneWidget);
+    expect(find.text(enL.wcRunnersUpTableTitle), findsOneWidget);
+    expect(find.text(enL.ncRouteTagHolds), findsNWidgets(2));
+    expect(find.text(enL.ncRouteLegendQualified), findsOneWidget);
+    expect(find.text(enL.ncRouteLegendRunnerUp), findsNothing);
+    expect(find.byKey(ValueKey('ncRoute${ids[48]}')), findsOneWidget);
+  });
+
+  testWidgets('the real shape with a European host: all twelve runners-up, '
+      'three paths, no Nations Cup route', (t) async {
+    await pumpCup(t, realShape(hosts: 1));
+    expect(t.takeException(), isNull);
+    expect(_yellowRows(t), 24);
+    expect(find.text(enL.ncRouteHostCycle(3, 12)), findsOneWidget);
+    expect(find.text(enL.ncRouteTagHolds), findsNothing);
+  });
+
+  testWidgets('the real shape fits a tablet', (t) async {
+    final save = await seedSave(
+      t,
+      overrides: [
+        cupDetailProvider(
+          kSeededCareerId,
+        ).overrideWith((ref) async => realShape(hosts: 0)),
+      ],
+    );
+    await pumpRoute(
+      t,
+      save,
+      '${Routes.cup}?careerId=${save.careerId}',
+      size: const Size(1280, 4000),
+    );
+    expect(t.takeException(), isNull);
+    expect(find.text(enL.wcRunnersUpTableTitle), findsOneWidget);
   });
 }

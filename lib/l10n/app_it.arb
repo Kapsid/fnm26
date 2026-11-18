@@ -4570,5 +4570,18 @@
   "traitShotStopper": "Grande para-tiri",
   "traitShotStopperBlurb": "Respinge più tiri del previsto.",
   "traitPenaltyStopper": "Pararigori",
-  "traitPenaltyStopperBlurb": "Para più rigori, in partita e ai rigori."
+  "traitPenaltyStopperBlurb": "Para più rigori, in partita e ai rigori.",
+  "playoffCourseLegendAll": "Giallo: tutte le seconde vanno agli spareggi",
+  "wcRunnersUpTableTitle": "Seconde classificate: vanno tutte agli spareggi",
+  "wcRunnersUpTableNote": "Ordinate su risultati comparabili. Le urne degli spareggi si formano in base al ranking mondiale alla fine delle qualificazioni.",
+  "ncRouteNote": "Posti per la Coppa delle Nazioni nell'urna 4 degli spareggi: {count}. Vanno prima alle sue migliori vincitrici di girone che non vincono il proprio girone di qualificazione né arrivano seconde, poi secondo la sua classifica. Allo stato attuale:",
+  "ncRouteHostCycle": "Un paese europeo ospita questo Campionato del mondo, quindi le {runnersUp} seconde riempiono tutti i {paths} percorsi degli spareggi e in questo ciclo nessun posto passa dalla Coppa delle Nazioni.",
+  "ncRouteTagHolds": "Ha un posto",
+  "ncRouteTagQualified": "Qualificata",
+  "ncRouteTagRunnerUp": "Seconda",
+  "ncRouteTagWaiting": "In attesa",
+  "ncRouteLegendHolds": "Occupa un posto dell'urna 4, allo stato attuale",
+  "ncRouteLegendQualified": "Prima nel suo girone di qualificazione: qualificata direttamente, il suo posto passa alla successiva",
+  "ncRouteLegendRunnerUp": "Seconda nel suo girone di qualificazione: va comunque agli spareggi, il suo posto passa alla successiva",
+  "ncRouteLegendWaiting": "La prossima, se una squadra davanti esce da questa strada"
 }

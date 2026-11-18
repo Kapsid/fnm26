@@ -18631,4 +18631,53 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Відбиває більше пенальті, у матчі та в серії пенальті.';
+
+  @override
+  String get playoffCourseLegendAll =>
+      'Жовтий: усі другі команди йдуть у плей-оф';
+
+  @override
+  String get wcRunnersUpTableTitle => 'Другі команди: усі йдуть у плей-оф';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      'Упорядковано за порівнянними результатами. Кошики плей-оф формують за світовим рейтингом після завершення кваліфікації.';
+
+  @override
+  String ncRouteNote(int count) {
+    return 'Місць для Nations Cup у кошику 4 плей-оф: $count. Їх отримують спершу його найкращі переможці груп, які не виграють свою кваліфікаційну групу й не посідають друге місце, а далі наступні за його рейтингом. За поточним станом:';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return 'Цей чемпіонат світу приймає європейська країна, тож другі команди ($runnersUp) заповнюють усі шляхи плей-оф ($paths), і в цьому циклі жодне місце не йде через Nations Cup.';
+  }
+
+  @override
+  String get ncRouteTagHolds => 'Має місце';
+
+  @override
+  String get ncRouteTagQualified => 'Пройшов';
+
+  @override
+  String get ncRouteTagRunnerUp => 'Друге місце';
+
+  @override
+  String get ncRouteTagWaiting => 'Чекає';
+
+  @override
+  String get ncRouteLegendHolds =>
+      'Утримує місце в кошику 4, за поточним станом';
+
+  @override
+  String get ncRouteLegendQualified =>
+      'Очолює свою кваліфікаційну групу: проходить напряму, його місце переходить далі';
+
+  @override
+  String get ncRouteLegendRunnerUp =>
+      'Другий у своїй кваліфікаційній групі: і так у плей-оф, його місце переходить далі';
+
+  @override
+  String get ncRouteLegendWaiting =>
+      'Наступний у черзі, якщо хтось попереду випаде з цього шляху';
 }

@@ -53,6 +53,7 @@ class BestThirdsCard extends StatelessWidget {
     this.playoffNations = const {},
     this.playoffDestination,
     this.title,
+    this.summary,
     this.adjustedForGroupSize = false,
     this.careerId,
     super.key,
@@ -85,6 +86,11 @@ class BestThirdsCard extends StatelessWidget {
   /// third-placed ladder, which is what most of them are.
   final String? title;
 
+  /// A line under the heading in place of the "N advance to ..." lines: a
+  /// table that ranks a tier rather than cuts it (Europe's runners-up in the
+  /// real UEFA shape, every one of them bound for the play-off).
+  final String? summary;
+
   /// Whether the groups behind this ladder are of different sizes, so the
   /// totals shown are the reduced ones the comparison actually uses. Says so on
   /// the card, otherwise a team's points here wouldn't match its group table.
@@ -111,15 +117,16 @@ class BestThirdsCard extends StatelessWidget {
             style: AppTypography.labelSmall.copyWith(color: AppColors.primary),
           ),
           Text(
-            l.tourThirdsAdvance(
-              qualifyCount,
-              destination ?? l.tourCupDestKnockouts,
-            ),
+            summary ??
+                l.tourThirdsAdvance(
+                  qualifyCount,
+                  destination ?? l.tourCupDestKnockouts,
+                ),
             style: AppTypography.labelSmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),
           ),
-          if (playoffCount > 0 && playoffDestination != null)
+          if (summary == null && playoffCount > 0 && playoffDestination != null)
             Text(
               l.tourThirdsNextAdvance(playoffCount, playoffDestination!),
               style: AppTypography.labelSmall.copyWith(

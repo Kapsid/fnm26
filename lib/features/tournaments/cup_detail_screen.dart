@@ -16,6 +16,7 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/cross_group.dart';
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
@@ -203,6 +204,8 @@ List<Widget> _cupTabViews(
         hostBerths: data.wcHostBerths,
         europePlayoffPaths: data.europePlayoffPaths,
         nationsCupCourse: data.europeNationsCupCourse,
+        allRunnersUp: data.europeAllRunnersUp,
+        nationsCupRoute: data.europeNationsCupRoute,
       ),
     // The intercontinental play-off — its own tab, shown as a
     // knockout bracket for the last two finals berths.
@@ -392,9 +395,17 @@ class _Qualifying extends StatefulWidget {
     this.hostBerths = const {},
     this.europePlayoffPaths = 0,
     this.nationsCupCourse = const [],
+    this.allRunnersUp = false,
+    this.nationsCupRoute = const [],
   });
 
   final int careerId;
+
+  /// Europe in the real UEFA shape (see `CupData.europeAllRunnersUp`).
+  final bool allRunnersUp;
+
+  /// The Nations Cup's route (see `CupData.europeNationsCupRoute`).
+  final List<NcRouteEntry> nationsCupRoute;
   final List<ConfederationGroupTable> groups;
 
   /// The Nations Cup's sides on course for Europe's paths (see
@@ -526,6 +537,7 @@ class _QualifyingState extends State<_Qualifying> {
         [for (final g in byConf[conf]!) g.standings],
         hosts: hosts,
         playoffPaths: paths,
+        allRunnersUp: widget.allRunnersUp,
       ),
     };
     final cards = [
@@ -577,7 +589,7 @@ class _QualifyingState extends State<_Qualifying> {
             ),
           ),
           if (conf == Confederation.europe && widget.europePlayoffPaths > 0)
-            const PlayoffStripeLegend(),
+            PlayoffStripeLegend(allRunnersUp: widget.allRunnersUp),
           ..._groupCards(conf, byConf),
           // The cross-group ladder for the CONTESTED position — usually the
           // second-placed teams ranked against each other, but the group
@@ -589,6 +601,19 @@ class _QualifyingState extends State<_Qualifying> {
             // painted for them is in the group cards. The Nations Cup's
             // sides for them are listed here, with the tournament they lead
             // to rather than in the cup's own tables.
+            if (conf == Confederation.europe &&
+                widget.europePlayoffPaths > 0 &&
+                widget.allRunnersUp) {
+              return _RealShapeUnderTables(
+                groups: byConf[conf]!,
+                paths: widget.europePlayoffPaths,
+                route: widget.nationsCupRoute,
+                playerNationId: widget.playerNationId,
+                code: widget.code,
+                name: widget.name,
+                careerId: widget.careerId,
+              );
+            }
             if (conf == Confederation.europe && widget.europePlayoffPaths > 0) {
               if (widget.nationsCupCourse.isEmpty) {
                 return const SizedBox.shrink();
@@ -1570,6 +1595,218 @@ class _NationsCupCourseCard extends StatelessWidget {
             ),
           const PlayoffCourseFooter(),
         ],
+      ),
+    );
+  }
+}
+
+/// Under Europe's qualifying tables in the real UEFA shape
+/// (`UefaWcPlayoffs.kind2`): the runners-up table (every one of them goes
+/// to the play-off; it ranks them, the pots are drawn by world ranking),
+/// then the Nations Cup's route to the paths' pot 4, or, in a cycle a
+/// European nation hosts, a note that this cycle there is none.
+class _RealShapeUnderTables extends StatelessWidget {
+  const _RealShapeUnderTables({
+    required this.groups,
+    required this.paths,
+    required this.route,
+    required this.playerNationId,
+    required this.code,
+    required this.name,
+    required this.careerId,
+  });
+
+  final List<ConfederationGroupTable> groups;
+  final int paths;
+  final List<NcRouteEntry> route;
+  final int playerNationId;
+  final String Function(int) code;
+  final String Function(int) name;
+  final int careerId;
+
+  static const Key runnersUpKey = Key('cup.runnersUpTable');
+  static const Key routeKey = Key('cup.nationsCupRoute');
+  static const Key hostNoteKey = Key('cup.nationsCupRouteHost');
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final tables = [for (final g in groups) g.standings];
+    final runnersUp = crossGroupTier(tables, 1);
+    // Every runner-up fills the paths: a European host's cycle (one path
+    // fewer, twelve runners-up for twelve places) leaves the cup none.
+    final hostCycle = groups.length >= 4 * paths;
+    final muted = AppTypography.bodySmall.copyWith(
+      color: AppColors.onSurfaceVariant,
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (runnersUp.length > 1)
+          Padding(
+            key: runnersUpKey,
+            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+            child: BestThirdsCard(
+              thirds: runnersUp,
+              qualifyCount: 0,
+              playerNationId: playerNationId,
+              code: code,
+              name: name,
+              title: l.wcRunnersUpTableTitle,
+              summary: l.wcRunnersUpTableNote,
+              playoffNations: {for (final s in runnersUp) s.nationId},
+              adjustedForGroupSize: CrossGroup.isUneven(tables),
+              careerId: careerId,
+            ),
+          ),
+        if (hostCycle)
+          Padding(
+            key: hostNoteKey,
+            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+            child: AppCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l.euroPlayoffCourseTitle.capsIn(l.localeName),
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    l.ncRouteHostCycle(paths, runnersUp.length),
+                    style: muted,
+                  ),
+                ],
+              ),
+            ),
+          )
+        else if (route.isNotEmpty)
+          Padding(
+            key: routeKey,
+            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+            child: AppCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l.euroPlayoffCourseTitle.capsIn(l.localeName),
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    l.ncRouteNote(4 * paths - runnersUp.length),
+                    style: muted,
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  for (final e in route)
+                    Padding(
+                      key: ValueKey('ncRoute${e.nationId}'),
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 3,
+                            height: 18,
+                            color: e.status == NcRouteStatus.holds
+                                ? AppColors.playoff
+                                : Colors.transparent,
+                          ),
+                          const SizedBox(width: AppSpacing.xs),
+                          FlagDisc(code(e.nationId), size: 18),
+                          const SizedBox(width: AppSpacing.sm),
+                          Expanded(
+                            child: Text(
+                              name(e.nationId),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTypography.bodySmall.copyWith(
+                                fontWeight: e.nationId == playerNationId
+                                    ? FontWeight.w800
+                                    : FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: AppSpacing.xs),
+                          _NcRouteTag(e.status),
+                        ],
+                      ),
+                    ),
+                  const SizedBox(height: AppSpacing.xs),
+                  for (final status in NcRouteStatus.values)
+                    if (route.any((e) => e.status == status))
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _NcRouteTag(status),
+                            const SizedBox(width: AppSpacing.sm),
+                            Expanded(
+                              child: Text(
+                                ncRouteLegend(l, status),
+                                style: AppTypography.labelSmall.copyWith(
+                                  color: AppColors.onSurfaceVariant,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  const PlayoffCourseFooter(),
+                ],
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+/// The short tag of an [NcRouteStatus] on the Nations Cup route panel.
+String ncRouteTag(AppLocalizations l, NcRouteStatus s) => switch (s) {
+  NcRouteStatus.holds => l.ncRouteTagHolds,
+  NcRouteStatus.qualified => l.ncRouteTagQualified,
+  NcRouteStatus.runnerUp => l.ncRouteTagRunnerUp,
+  NcRouteStatus.waiting => l.ncRouteTagWaiting,
+};
+
+/// What an [NcRouteStatus] tag means, for the panel's legend.
+String ncRouteLegend(AppLocalizations l, NcRouteStatus s) => switch (s) {
+  NcRouteStatus.holds => l.ncRouteLegendHolds,
+  NcRouteStatus.qualified => l.ncRouteLegendQualified,
+  NcRouteStatus.runnerUp => l.ncRouteLegendRunnerUp,
+  NcRouteStatus.waiting => l.ncRouteLegendWaiting,
+};
+
+class _NcRouteTag extends StatelessWidget {
+  const _NcRouteTag(this.status);
+
+  final NcRouteStatus status;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final color = switch (status) {
+      NcRouteStatus.holds => AppColors.playoff,
+      NcRouteStatus.qualified => AppColors.positive,
+      NcRouteStatus.runnerUp => AppColors.onSurfaceVariant,
+      NcRouteStatus.waiting => AppColors.onSurfaceVariant,
+    };
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color),
+      ),
+      child: Text(
+        ncRouteTag(l, status),
+        style: AppTypography.labelSmall.copyWith(color: color, fontSize: 10),
       ),
     );
   }

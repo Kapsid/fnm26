@@ -4570,5 +4570,18 @@
   "traitShotStopper": "Portar excelent la șuturi",
   "traitShotStopperBlurb": "Apără mai multe șuturi decât te-ai aștepta.",
   "traitPenaltyStopper": "Specialist la penalty-uri",
-  "traitPenaltyStopperBlurb": "Apără mai multe penalty-uri, în meci și la loviturile de departajare."
+  "traitPenaltyStopperBlurb": "Apără mai multe penalty-uri, în meci și la loviturile de departajare.",
+  "playoffCourseLegendAll": "Galben: toate ocupantele locului doi merg la baraj",
+  "wcRunnersUpTableTitle": "Ocupantele locului doi: toate merg la baraj",
+  "wcRunnersUpTableNote": "Clasate după rezultate comparabile. Urnele barajului se formează după clasamentul mondial la finalul preliminariilor.",
+  "ncRouteNote": "Locuri pentru Cupa Națiunilor în urna 4 a barajului: {count}. Le primesc mai întâi cele mai bune câștigătoare de grupă ale ei care nu își câștigă grupa preliminară și nici nu termină pe locul doi, apoi următoarele din clasamentul ei. Conform situației actuale:",
+  "ncRouteHostCycle": "O țară europeană găzduiește acest Campionat Mondial, așa că ocupantele locului doi ({runnersUp}) umplu toate drumurile barajului ({paths}) și niciun loc nu trece prin Cupa Națiunilor în acest ciclu.",
+  "ncRouteTagHolds": "Are loc",
+  "ncRouteTagQualified": "Calificată",
+  "ncRouteTagRunnerUp": "Locul doi",
+  "ncRouteTagWaiting": "Următoarea",
+  "ncRouteLegendHolds": "Ocupă un loc din urna 4, conform situației actuale",
+  "ncRouteLegendQualified": "Conduce grupa preliminară: se califică direct, locul ei trece mai departe",
+  "ncRouteLegendRunnerUp": "Pe locul doi în grupa preliminară: merge oricum la baraj, locul ei trece mai departe",
+  "ncRouteLegendWaiting": "Următoarea, dacă o echipă din față iese de pe acest drum"
 }

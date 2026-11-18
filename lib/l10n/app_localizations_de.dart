@@ -18443,4 +18443,54 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get traitPenaltyStopperBlurb =>
       'Hält mehr Elfmeter, im Spiel und im Elfmeterschießen.';
+
+  @override
+  String get playoffCourseLegendAll =>
+      'Gelb: Jeder Gruppenzweite geht in die Play-offs';
+
+  @override
+  String get wcRunnersUpTableTitle =>
+      'Gruppenzweite: alle gehen in die Play-offs';
+
+  @override
+  String get wcRunnersUpTableNote =>
+      'Nach vergleichbaren Bilanzen geordnet. Die Töpfe der Play-offs werden nach Ende der Qualifikation nach der Weltrangliste gebildet.';
+
+  @override
+  String ncRouteNote(int count) {
+    return 'Plätze für den Nationenpokal in Topf 4 der Play-offs: $count. Sie gehen zuerst an seine besten Gruppensieger, die ihre Qualifikationsgruppe weder gewinnen noch als Zweite beenden, dann weiter nach seiner Rangliste. Nach aktuellem Stand:';
+  }
+
+  @override
+  String ncRouteHostCycle(int paths, int runnersUp) {
+    return 'Ein europäisches Land richtet diese Weltmeisterschaft aus, daher füllen die $runnersUp Gruppenzweiten alle $paths Play-off-Wege, und in diesem Zyklus führt kein Platz über den Nationenpokal.';
+  }
+
+  @override
+  String get ncRouteTagHolds => 'Hat einen Platz';
+
+  @override
+  String get ncRouteTagQualified => 'Qualifiziert';
+
+  @override
+  String get ncRouteTagRunnerUp => 'Gruppenzweiter';
+
+  @override
+  String get ncRouteTagWaiting => 'Nächster';
+
+  @override
+  String get ncRouteLegendHolds =>
+      'Hält nach aktuellem Stand einen Platz in Topf 4';
+
+  @override
+  String get ncRouteLegendQualified =>
+      'Führt seine Qualifikationsgruppe an: direkt qualifiziert, sein Platz geht weiter';
+
+  @override
+  String get ncRouteLegendRunnerUp =>
+      'Zweiter seiner Qualifikationsgruppe: ohnehin in den Play-offs, sein Platz geht weiter';
+
+  @override
+  String get ncRouteLegendWaiting =>
+      'Als Nächster dran, falls eine Mannschaft davor von diesem Weg fällt';
 }

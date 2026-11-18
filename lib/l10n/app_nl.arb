@@ -4570,5 +4570,18 @@
   "traitShotStopper": "Sterke shotstopper",
   "traitShotStopperBlurb": "Houdt meer schoten tegen dan verwacht.",
   "traitPenaltyStopper": "Penaltykiller",
-  "traitPenaltyStopperBlurb": "Stopt meer penalty's, in de wedstrijd en bij strafschoppen."
+  "traitPenaltyStopperBlurb": "Stopt meer penalty's, in de wedstrijd en bij strafschoppen.",
+  "playoffCourseLegendAll": "Geel: elke nummer twee gaat naar de play-offs",
+  "wcRunnersUpTableTitle": "Nummers twee: ze gaan allemaal naar de play-offs",
+  "wcRunnersUpTableNote": "Gerangschikt op vergelijkbare resultaten. De potten van de play-offs worden na afloop van de kwalificatie op de wereldranglijst gevormd.",
+  "ncRouteNote": "Plaatsen voor de Nations Cup in pot 4 van de play-offs: {count}. Ze gaan eerst naar de beste groepswinnaars die hun kwalificatiegroep niet winnen en ook geen tweede worden, daarna verder op de ranglijst. Zoals het nu staat:",
+  "ncRouteHostCycle": "Een Europees land organiseert dit wereldkampioenschap, dus de {runnersUp} nummers twee vullen alle {paths} play-offroutes en deze cyclus gaat er geen plaats via de Nations Cup.",
+  "ncRouteTagHolds": "Heeft plaats",
+  "ncRouteTagQualified": "Geplaatst",
+  "ncRouteTagRunnerUp": "Tweede",
+  "ncRouteTagWaiting": "Volgende",
+  "ncRouteLegendHolds": "Heeft een plaats in pot 4, zoals het nu staat",
+  "ncRouteLegendQualified": "Wint zijn kwalificatiegroep: direct geplaatst, zijn plaats gaat naar de volgende",
+  "ncRouteLegendRunnerUp": "Tweede in zijn kwalificatiegroep: toch al in de play-offs, zijn plaats gaat naar de volgende",
+  "ncRouteLegendWaiting": "De volgende, als een ploeg erboven van deze route afvalt"
 }

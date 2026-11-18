@@ -4570,5 +4570,18 @@
   "traitShotStopper": "Grand arrêteur de tirs",
   "traitShotStopperBlurb": "Arrête plus de tirs qu'on ne l'attendrait.",
   "traitPenaltyStopper": "Spécialiste des penalties",
-  "traitPenaltyStopperBlurb": "Arrête plus de penalties, en match comme aux tirs au but."
+  "traitPenaltyStopperBlurb": "Arrête plus de penalties, en match comme aux tirs au but.",
+  "playoffCourseLegendAll": "Jaune : chaque deuxième de groupe va en barrage",
+  "wcRunnersUpTableTitle": "Deuxièmes de groupe : tous vont en barrage",
+  "wcRunnersUpTableNote": "Classés sur des bilans comparables. Les chapeaux des barrages sont formés selon le classement mondial à la fin des qualifications.",
+  "ncRouteNote": "Places pour la Coupe des nations dans le chapeau 4 des barrages : {count}. Elles vont d'abord à ses meilleurs vainqueurs de groupe qui ne terminent ni premiers ni deuxièmes de leur groupe de qualification, puis selon son classement. En l'état actuel :",
+  "ncRouteHostCycle": "Un pays européen organise ce Championnat du monde : les {runnersUp} deuxièmes de groupe remplissent les {paths} voies de barrage et aucune place ne passe par la Coupe des nations lors de ce cycle.",
+  "ncRouteTagHolds": "A une place",
+  "ncRouteTagQualified": "Qualifié",
+  "ncRouteTagRunnerUp": "Deuxième",
+  "ncRouteTagWaiting": "Suivant",
+  "ncRouteLegendHolds": "Occupe une place du chapeau 4, en l'état actuel",
+  "ncRouteLegendQualified": "Premier de son groupe de qualification : qualifié directement, sa place passe au suivant",
+  "ncRouteLegendRunnerUp": "Deuxième de son groupe de qualification : en barrage de toute façon, sa place passe au suivant",
+  "ncRouteLegendWaiting": "Le suivant, si une équipe devant lui quitte cette voie"
 }
