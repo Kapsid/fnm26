@@ -4583,5 +4583,6 @@
   "ncRouteLegendHolds": "Zajmuje miejsce w koszyku 4, według obecnego stanu",
   "ncRouteLegendQualified": "Prowadzi w swojej grupie eliminacyjnej: awansuje bezpośrednio, jego miejsce przechodzi dalej",
   "ncRouteLegendRunnerUp": "Drugi w swojej grupie eliminacyjnej: i tak gra w barażach, jego miejsce przechodzi dalej",
-  "ncRouteLegendWaiting": "Następny w kolejce, gdyby ktoś przed nim wypadł z tej ścieżki"
+  "ncRouteLegendWaiting": "Następny w kolejce, gdyby ktoś przed nim wypadł z tej ścieżki",
+  "statsTabHistory": "Historia"
 }

@@ -18779,4 +18779,7 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get ncRouteLegendWaiting =>
       'Următoarea, dacă o echipă din față iese de pe acest drum';
+
+  @override
+  String get statsTabHistory => 'Istoric';
 }

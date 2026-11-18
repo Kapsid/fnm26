@@ -18391,4 +18391,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get ncRouteLegendWaiting =>
       'Next in line, should a side above drop off the route';
+
+  @override
+  String get statsTabHistory => 'History';
 }

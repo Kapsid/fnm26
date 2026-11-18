@@ -18355,4 +18355,7 @@ class AppLocalizationsDa extends AppLocalizations {
   @override
   String get ncRouteLegendWaiting =>
       'Den næste, hvis et hold foran falder fra denne vej';
+
+  @override
+  String get statsTabHistory => 'Historik';
 }

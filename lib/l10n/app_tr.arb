@@ -4583,5 +4583,6 @@
   "ncRouteLegendHolds": "Şu anki duruma göre 4. torbada bir yeri var",
   "ncRouteLegendQualified": "Eleme grubunda lider: doğrudan katılıyor, yeri bir sonrakine geçer",
   "ncRouteLegendRunnerUp": "Eleme grubunda ikinci: zaten play-off'ta, yeri bir sonrakine geçer",
-  "ncRouteLegendWaiting": "Öndeki bir takım bu yoldan düşerse sıradaki"
+  "ncRouteLegendWaiting": "Öndeki bir takım bu yoldan düşerse sıradaki",
+  "statsTabHistory": "Geçmiş"
 }

@@ -4583,5 +4583,6 @@
   "ncRouteLegendHolds": "A jelenlegi állás szerint helye van a 4. kalapban",
   "ncRouteLegendQualified": "Vezeti a selejtezőcsoportját: egyenesen kijut, a helye továbbszáll",
   "ncRouteLegendRunnerUp": "Második a selejtezőcsoportjában: úgyis pótselejtezőt játszik, a helye továbbszáll",
-  "ncRouteLegendWaiting": "Következik, ha egy előtte álló csapat kiesik erről az útról"
+  "ncRouteLegendWaiting": "Következik, ha egy előtte álló csapat kiesik erről az útról",
+  "statsTabHistory": "Történet"
 }

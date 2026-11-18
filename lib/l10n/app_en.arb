@@ -28322,5 +28322,9 @@
   "ncRouteLegendWaiting": "Next in line, should a side above drop off the route",
   "@ncRouteLegendWaiting": {
     "description": "Legend line of the 'next in line' tag on the Nations Cup route panel."
+  },
+  "statsTabHistory": "History",
+  "@statsTabHistory": {
+    "description": "Team records, fifth tab: the side's overall over time and the way to the record book, legends and all-time world screens."
   }
 }

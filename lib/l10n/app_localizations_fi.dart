@@ -18425,4 +18425,7 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String get ncRouteLegendWaiting =>
       'Seuraavana vuorossa, jos edellä oleva putoaa tältä reitiltä';
+
+  @override
+  String get statsTabHistory => 'Historia';
 }

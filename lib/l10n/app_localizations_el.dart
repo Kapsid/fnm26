@@ -18444,4 +18444,7 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get ncRouteLegendWaiting =>
       'Η επόμενη, αν κάποια ομάδα μπροστά βγει από αυτή τη διαδρομή';
+
+  @override
+  String get statsTabHistory => 'Ιστορικό';
 }

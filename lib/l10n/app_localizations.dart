@@ -27749,6 +27749,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Next in line, should a side above drop off the route'**
   String get ncRouteLegendWaiting;
+
+  /// Team records, fifth tab: the side's overall over time and the way to the record book, legends and all-time world screens.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get statsTabHistory;
 }
 
 class _AppLocalizationsDelegate

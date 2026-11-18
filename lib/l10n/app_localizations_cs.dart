@@ -18741,4 +18741,7 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get ncRouteLegendWaiting =>
       'Další na řadě, kdyby někdo před ním z této cesty vypadl';
+
+  @override
+  String get statsTabHistory => 'Historie';
 }

@@ -17754,4 +17754,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get ncRouteLegendWaiting => '앞선 팀이 이 경로에서 빠지면 다음 차례';
+
+  @override
+  String get statsTabHistory => '역사';
 }

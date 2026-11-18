@@ -221,50 +221,105 @@ class _BoardGrid extends StatelessWidget {
         ),
       );
     }
-    return DataGrid<TeamStatEntry>(
-      rows: rows,
-      columnSets: [
-        GridColumnSet<TeamStatEntry>(
-          id: 'overview',
-          label: l.gridViewOverview,
-          columns: [
-            GridColumn<TeamStatEntry>(
-              id: 'rank',
-              label: l.gridColRank,
-              width: 64,
-              sortKey: rows.indexOf,
-              cell: (r) => Text(
-                '${rows.indexOf(r) + 1}',
-                style: TabletText.cellNumeric,
+    return _WithPodium(
+      podium: RecordPodium(
+        flagCode: view.nation?.code,
+        selectedId: selectedId,
+        onOpen: (id) => openPlayer(context, careerId: careerId, playerId: id),
+        entries: [
+          for (final s in rows.take(3))
+            (
+              playerId: s.playerId,
+              name: view.names[s.playerId] ?? l.statsUnknown,
+              value: '${s.value}',
+              unit: valueLabel,
+              active: view.active.contains(s.playerId),
+            ),
+        ],
+      ),
+      grid: DataGrid<TeamStatEntry>(
+        rows: rows,
+        columnSets: [
+          GridColumnSet<TeamStatEntry>(
+            id: 'overview',
+            label: l.gridViewOverview,
+            columns: [
+              GridColumn<TeamStatEntry>(
+                id: 'rank',
+                label: l.gridColRank,
+                width: 64,
+                sortKey: rows.indexOf,
+                cell: (r) => Text(
+                  '${rows.indexOf(r) + 1}',
+                  style: TabletText.cellNumeric,
+                ),
               ),
-            ),
-            GridColumn<TeamStatEntry>(
-              id: 'player',
-              label: l.gridColPlayer,
-              flex: 3,
-              sortKey: (r) => view.names[r.playerId] ?? '',
-              cell: (r) => Text(view.names[r.playerId] ?? l.statsUnknown),
-            ),
-            GridColumn<TeamStatEntry>(
-              id: 'value',
-              label: valueLabel,
-              width: 80,
-              numeric: true,
-              sortKey: (r) => r.value,
-              cell: (r) => Text('${r.value}'),
-            ),
-            activeGridColumn<TeamStatEntry>(
-              label: l.gridColActive,
-              isActive: (r) => view.active.contains(r.playerId),
-            ),
-          ],
-        ),
-      ],
-      selected: rows.where((r) => r.playerId == selectedId).firstOrNull,
-      onSelect: (r) =>
-          openPlayer(context, careerId: careerId, playerId: r.playerId),
+              GridColumn<TeamStatEntry>(
+                id: 'player',
+                label: l.gridColPlayer,
+                flex: 3,
+                sortKey: (r) => view.names[r.playerId] ?? '',
+                cell: (r) => Text(view.names[r.playerId] ?? l.statsUnknown),
+              ),
+              GridColumn<TeamStatEntry>(
+                id: 'value',
+                label: valueLabel,
+                width: 80,
+                numeric: true,
+                sortKey: (r) => r.value,
+                cell: (r) => Text('${r.value}'),
+              ),
+              activeGridColumn<TeamStatEntry>(
+                label: l.gridColActive,
+                isActive: (r) => view.active.contains(r.playerId),
+              ),
+            ],
+          ),
+        ],
+        selected: rows.where((r) => r.playerId == selectedId).firstOrNull,
+        onSelect: (r) =>
+            openPlayer(context, careerId: careerId, playerId: r.playerId),
+      ),
     );
   }
+}
+
+/// A board's podium over its table: the top three in their places, the
+/// whole board (them included) sortable below.
+class _WithPodium extends StatelessWidget {
+  const _WithPodium({required this.podium, required this.grid});
+
+  final Widget podium;
+  final Widget grid;
+
+  /// The least height the board keeps for its table under the podium: on
+  /// a short tablet the table wins and the podium steps aside.
+  static const double minTable = 220;
+
+  /// About what the podium takes, padding included.
+  static const double podiumHeight = 200;
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, c) {
+      if (c.maxHeight < minTable + podiumHeight) return grid;
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 520),
+                child: podium,
+              ),
+            ),
+          ),
+          Expanded(child: grid),
+        ],
+      );
+    },
+  );
 }
 
 /// The ratings board as a table: caps, man-of-the-match awards and the
@@ -294,63 +349,71 @@ class _RatingsGrid extends StatelessWidget {
         ),
       );
     }
-    return DataGrid<TeamRatingEntry>(
-      rows: rows,
-      columnSets: [
-        GridColumnSet<TeamRatingEntry>(
-          id: 'overview',
-          label: l.gridViewOverview,
-          columns: [
-            GridColumn<TeamRatingEntry>(
-              id: 'rank',
-              label: l.gridColRank,
-              width: 64,
-              sortKey: rows.indexOf,
-              cell: (r) => Text(
-                '${rows.indexOf(r) + 1}',
-                style: TabletText.cellNumeric,
+    return _WithPodium(
+      podium: RecordPodium(
+        flagCode: view.nation?.code,
+        selectedId: selectedId,
+        onOpen: (id) => openPlayer(context, careerId: careerId, playerId: id),
+        entries: ratingPodium(l, view),
+      ),
+      grid: DataGrid<TeamRatingEntry>(
+        rows: rows,
+        columnSets: [
+          GridColumnSet<TeamRatingEntry>(
+            id: 'overview',
+            label: l.gridViewOverview,
+            columns: [
+              GridColumn<TeamRatingEntry>(
+                id: 'rank',
+                label: l.gridColRank,
+                width: 64,
+                sortKey: rows.indexOf,
+                cell: (r) => Text(
+                  '${rows.indexOf(r) + 1}',
+                  style: TabletText.cellNumeric,
+                ),
               ),
-            ),
-            GridColumn<TeamRatingEntry>(
-              id: 'player',
-              label: l.gridColPlayer,
-              flex: 3,
-              sortKey: (r) => view.names[r.playerId] ?? '',
-              cell: (r) => Text(view.names[r.playerId] ?? l.statsUnknown),
-            ),
-            GridColumn<TeamRatingEntry>(
-              id: 'caps',
-              label: l.playerStatCaps,
-              width: 72,
-              numeric: true,
-              sortKey: (r) => r.apps,
-              cell: (r) => Text('${r.apps}'),
-            ),
-            GridColumn<TeamRatingEntry>(
-              id: 'motm',
-              label: l.gridColMotm,
-              width: 72,
-              numeric: true,
-              sortKey: (r) => r.motms,
-              cell: (r) => Text('${r.motms}'),
-            ),
-            GridColumn<TeamRatingEntry>(
-              id: 'avg',
-              label: l.gridColAvg,
-              width: 72,
-              numeric: true,
-              sortKey: (r) => r.meanRating,
-              cell: (r) => Align(
-                alignment: Alignment.centerRight,
-                child: RatingBadge(r.meanRating, compact: true, decimals: 2),
+              GridColumn<TeamRatingEntry>(
+                id: 'player',
+                label: l.gridColPlayer,
+                flex: 3,
+                sortKey: (r) => view.names[r.playerId] ?? '',
+                cell: (r) => Text(view.names[r.playerId] ?? l.statsUnknown),
               ),
-            ),
-          ],
-        ),
-      ],
-      selected: rows.where((r) => r.playerId == selectedId).firstOrNull,
-      onSelect: (r) =>
-          openPlayer(context, careerId: careerId, playerId: r.playerId),
+              GridColumn<TeamRatingEntry>(
+                id: 'caps',
+                label: l.playerStatCaps,
+                width: 72,
+                numeric: true,
+                sortKey: (r) => r.apps,
+                cell: (r) => Text('${r.apps}'),
+              ),
+              GridColumn<TeamRatingEntry>(
+                id: 'motm',
+                label: l.gridColMotm,
+                width: 72,
+                numeric: true,
+                sortKey: (r) => r.motms,
+                cell: (r) => Text('${r.motms}'),
+              ),
+              GridColumn<TeamRatingEntry>(
+                id: 'avg',
+                label: l.gridColAvg,
+                width: 72,
+                numeric: true,
+                sortKey: (r) => r.meanRating,
+                cell: (r) => Align(
+                  alignment: Alignment.centerRight,
+                  child: RatingBadge(r.meanRating, compact: true, decimals: 2),
+                ),
+              ),
+            ],
+          ),
+        ],
+        selected: rows.where((r) => r.playerId == selectedId).firstOrNull,
+        onSelect: (r) =>
+            openPlayer(context, careerId: careerId, playerId: r.playerId),
+      ),
     );
   }
 }

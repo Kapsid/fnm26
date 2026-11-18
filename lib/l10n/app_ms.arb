@@ -4583,5 +4583,6 @@
   "ncRouteLegendHolds": "Memegang tempat dalam pot 4, mengikut keadaan semasa",
   "ncRouteLegendQualified": "Mendahului kumpulan kelayakan: layak terus, tempatnya beralih kepada pasukan seterusnya",
   "ncRouteLegendRunnerUp": "Naib juara kumpulan kelayakan: tetap ke play-off, tempatnya beralih kepada pasukan seterusnya",
-  "ncRouteLegendWaiting": "Seterusnya, jika pasukan di hadapan terkeluar dari laluan ini"
+  "ncRouteLegendWaiting": "Seterusnya, jika pasukan di hadapan terkeluar dari laluan ini",
+  "statsTabHistory": "Sejarah"
 }

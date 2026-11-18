@@ -18462,4 +18462,7 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get ncRouteLegendWaiting =>
       'O próximo, se uma equipa à frente sair deste caminho';
+
+  @override
+  String get statsTabHistory => 'História';
 }

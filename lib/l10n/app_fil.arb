@@ -4583,5 +4583,6 @@
   "ncRouteLegendHolds": "May hawak na puwesto sa pot 4, sa kasalukuyang lagay",
   "ncRouteLegendQualified": "Nangunguna sa qualifying group: direktang pasok, ang puwesto ay mapupunta sa susunod",
   "ncRouteLegendRunnerUp": "Pangalawa sa qualifying group: nasa play-off na rin, ang puwesto ay mapupunta sa susunod",
-  "ncRouteLegendWaiting": "Susunod sa pila kung may koponang nauna na mawala sa landas na ito"
+  "ncRouteLegendWaiting": "Susunod sa pila kung may koponang nauna na mawala sa landas na ito",
+  "statsTabHistory": "Kasaysayan"
 }

@@ -4583,5 +4583,6 @@
   "ncRouteLegendHolds": "Drží místo v koši 4, podle aktuálního stavu",
   "ncRouteLegendQualified": "Vede svou kvalifikační skupinu: postupuje přímo, jeho místo připadne dalšímu",
   "ncRouteLegendRunnerUp": "Je druhý ve své kvalifikační skupině: do baráže jde tak jako tak, jeho místo připadne dalšímu",
-  "ncRouteLegendWaiting": "Další na řadě, kdyby někdo před ním z této cesty vypadl"
+  "ncRouteLegendWaiting": "Další na řadě, kdyby někdo před ním z této cesty vypadl",
+  "statsTabHistory": "Historie"
 }

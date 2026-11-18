@@ -4583,5 +4583,6 @@
   "ncRouteLegendHolds": "Đang giữ một suất ở nhóm 4, theo tình hình hiện tại",
   "ncRouteLegendQualified": "Dẫn đầu bảng vòng loại: đi tiếp trực tiếp, suất của đội chuyển cho đội kế tiếp",
   "ncRouteLegendRunnerUp": "Nhì bảng vòng loại: vẫn vào play-off, suất của đội chuyển cho đội kế tiếp",
-  "ncRouteLegendWaiting": "Đội kế tiếp, nếu một đội phía trên rời con đường này"
+  "ncRouteLegendWaiting": "Đội kế tiếp, nếu một đội phía trên rời con đường này",
+  "statsTabHistory": "Lịch sử"
 }

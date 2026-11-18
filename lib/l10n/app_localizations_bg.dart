@@ -18434,4 +18434,7 @@ class AppLocalizationsBg extends AppLocalizations {
   @override
   String get ncRouteLegendWaiting =>
       'Следващ на ред, ако някой пред него отпадне от този път';
+
+  @override
+  String get statsTabHistory => 'История';
 }

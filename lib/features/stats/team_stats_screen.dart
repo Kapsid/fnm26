@@ -37,21 +37,13 @@ class TeamStatsScreen extends ConsumerStatefulWidget {
 }
 
 class _TeamStatsScreenState extends ConsumerState<TeamStatsScreen> {
-  /// 0 top scorers · 1 most games · 2 best ratings · 3 the manager's career.
+  /// 0 top scorers · 1 most games · 2 best ratings · 3 the manager's career
+  /// · 4 history (the side's overall over time and the legacy screens).
   int _tab = 0;
 
-  /// One segment of the leaderboard selector, its label clipped to a single
-  /// line so it can never overrun the segment it sits in.
-  ButtonSegment<int> _segment(int value, String label) => ButtonSegment(
-    value: value,
-    label: Text(
-      label,
-      maxLines: 1,
-      softWrap: false,
-      overflow: TextOverflow.ellipsis,
-      textAlign: TextAlign.center,
-      style: AppTypography.labelSmall,
-    ),
+  /// Opens [playerId]'s page.
+  void _open(int playerId) => context.push(
+    '${Routes.player}?careerId=${widget.careerId}&playerId=$playerId',
   );
 
   @override
@@ -82,15 +74,13 @@ class _TeamStatsScreenState extends ConsumerState<TeamStatsScreen> {
             Center(child: Text(l.statsCouldNotLoadStats(e.toString()))),
         data: (view) {
           if (view == null) return Center(child: Text(l.statsNoData));
-          final list = _tab == 0 ? view.scorers : view.appearances;
-          final unit = _tab == 0 ? l.recordsUnitGoals : '';
-
           return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // One header, not three. The nation, the manager's record under
-              // it, and the way out to the legacy screens all sit in the space
-              // the old flag-and-name row used on its own — so a leaderboard is
-              // visible on the first screenful instead of below 300px of chrome.
+              // One line: the nation and its overall. The manager's record
+              // lives in the Career tab, the overall curve and the legacy
+              // screens in History, so a leaderboard fills the first
+              // screenful.
               Padding(
                 padding: const EdgeInsets.fromLTRB(
                   AppSpacing.marginMobile,
@@ -101,125 +91,44 @@ class _TeamStatsScreenState extends ConsumerState<TeamStatsScreen> {
                 child: _TeamHeader(
                   careerId: widget.careerId,
                   nation: view.nation,
+                  compact: true,
                 ),
               ),
-              const SizedBox(height: AppSpacing.sm),
-              // How the side has developed under this manager — the number on
-              // the match preview, read back through the save.
+              const SizedBox(height: AppSpacing.xs),
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppSpacing.marginMobile,
                 ),
-                child: TeamOverallHistoryCard(
-                  key: const Key('team-overall-history'),
-                  history:
-                      ref
-                          .watch(teamOverallHistoryProvider(widget.careerId))
-                          .valueOrNull ??
-                      const [],
-                ),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              // The all-time sections — the legends XI, the world records, the
-              // head-to-head archive — used to hide behind a single unlabelled
-              // icon in the app bar. They are the point of a long career, so
-              // they stay named and on the page, as one compact strip.
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.marginMobile,
-                ),
-                child: LegacyTiles(
-                  careerId: widget.careerId,
-                  includeRecordBook: true,
-                  dense: true,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.marginMobile,
-                ),
-                // The segment names the list, so the list needs no heading of
-                // its own — that duplicate line is gone.
-                child: SegmentedButton<int>(
-                  showSelectedIcon: false,
-                  style: const ButtonStyle(
-                    visualDensity: VisualDensity.compact,
-                    padding: WidgetStatePropertyAll(
-                      EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-                    ),
-                  ),
-                  // Four equal segments on a phone leave very little room per
-                  // label, and a translated one ("Nejlepší střelci") ran
-                  // straight out of its segment. Each label is now a single
-                  // ellipsised line, so a long word shortens instead of
-                  // spilling over the button's edge.
-                  segments: [
-                    _segment(0, l.statsTopScorersShort),
-                    _segment(1, l.statsMostGamesShort),
-                    _segment(2, l.statsBestRated),
-                    _segment(3, l.statsMyCareer),
+                child: RecordTabs(
+                  labels: [
+                    l.statsTopScorersShort,
+                    l.statsMostGamesShort,
+                    l.statsBestRated,
+                    l.statsMyCareer,
+                    l.statsTabHistory,
                   ],
-                  selected: {_tab},
-                  onSelectionChanged: (s) => setState(() => _tab = s.first),
+                  selected: _tab,
+                  onSelect: (i) => setState(() => _tab = i),
                 ),
               ),
               const SizedBox(height: AppSpacing.sm),
               Expanded(
                 child: switch (_tab) {
+                  4 => _HistoryTab(careerId: widget.careerId),
                   3 => _CareerRecord(careerId: widget.careerId),
-                  2 =>
-                    view.ratings.isEmpty
-                        ? Center(child: Text(l.statsNoRatingsRecorded))
-                        : ListView.builder(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.marginMobile,
-                            ),
-                            itemCount: view.ratings.length,
-                            itemBuilder: (context, i) {
-                              final r = view.ratings[i];
-                              return _RatingRow(
-                                rank: i + 1,
-                                name: view.names[r.playerId] ?? l.statsUnknown,
-                                flagCode: view.nation?.code,
-                                entry: r,
-                                onInfo: () => context.push(
-                                  '${Routes.player}?careerId=${widget.careerId}'
-                                  '&playerId=${r.playerId}',
-                                ),
-                              );
-                            },
-                          ),
-                  _ =>
-                    list.isEmpty
-                        ? Center(child: Text(l.statsNoGoalsRecorded))
-                        : ListView.builder(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.marginMobile,
-                            ),
-                            itemCount: list.length,
-                            itemBuilder: (context, i) {
-                              final s = list[i];
-                              return LeaderRow(
-                                rank: i + 1,
-                                name: view.names[s.playerId] ?? l.statsUnknown,
-                                flagCode: view.nation?.code,
-                                value: unit.isEmpty
-                                    ? '${s.value}'
-                                    : '${s.value} $unit',
-                                trailing: view.active.contains(s.playerId)
-                                    ? const ActiveBadge()
-                                    : null,
-                                reserveTrailing: list.any(
-                                  (r) => view.active.contains(r.playerId),
-                                ),
-                                onTap: () => context.push(
-                                  '${Routes.player}?careerId=${widget.careerId}'
-                                  '&playerId=${s.playerId}',
-                                ),
-                              );
-                            },
-                          ),
+                  2 => _RatingsBoard(view: view, onOpen: _open),
+                  1 => _CountBoard(
+                    rows: view.appearances,
+                    view: view,
+                    unit: l.playerStatCaps,
+                    onOpen: _open,
+                  ),
+                  _ => _CountBoard(
+                    rows: view.scorers,
+                    view: view,
+                    unit: l.recordsUnitGoals,
+                    onOpen: _open,
+                  ),
                 },
               ),
             ],
@@ -230,18 +139,403 @@ class _TeamStatsScreenState extends ConsumerState<TeamStatsScreen> {
   }
 }
 
-/// The screen's one header: who the team is and what the manager has done with
-/// it, on a single card.
-///
-/// The flag and the nation's name used to have a whole headline row to
-/// themselves, above a "Legacy" caption and a grid of four tall cards — three
-/// stacked blocks of chrome before a single record appeared. The record itself
-/// is the interesting part of a records screen, so it leads here.
+/// The record tabs: text labels underlined in silver when chosen, scrolling
+/// sideways when they do not fit (five on a phone).
+class RecordTabs extends StatelessWidget {
+  const RecordTabs({
+    required this.labels,
+    required this.selected,
+    required this.onSelect,
+    super.key,
+  });
+
+  final List<String> labels;
+  final int selected;
+  final ValueChanged<int> onSelect;
+
+  /// The key of tab [i].
+  static Key tabKey(int i) => Key('teamRecords.tab$i');
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: AppColors.surfaceVariant)),
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            for (final (i, label) in labels.indexed)
+              InkWell(
+                key: tabKey(i),
+                onTap: () => onSelect(i),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm + 2,
+                    vertical: AppSpacing.sm + 1,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: i == selected
+                            ? AppColors.silverMid
+                            : Colors.transparent,
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                  child: Text(
+                    label.capsIn(l.localeName),
+                    maxLines: 1,
+                    style: AppTypography.labelSmall.copyWith(
+                      color: i == selected
+                          ? AppColors.onSurface
+                          : AppColors.outline,
+                      letterSpacing: 0.8,
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// One place on a [RecordPodium].
+typedef PodiumEntry = ({
+  int playerId,
+  String name,
+  String value,
+  String unit,
+  bool active,
+});
+
+/// The top three of a leaderboard on a podium: the leader in the middle in
+/// a silver box, second and third either side, lower.
+class RecordPodium extends StatelessWidget {
+  const RecordPodium({
+    required this.entries,
+    required this.onOpen,
+    this.flagCode,
+    this.selectedId,
+    super.key,
+  });
+
+  /// The leaderboard's first three (fewer when it is shorter), best first.
+  final List<PodiumEntry> entries;
+  final ValueChanged<int> onOpen;
+  final String? flagCode;
+  final int? selectedId;
+
+  static const Key podiumKey = Key('teamRecords.podium');
+
+  /// The key of the podium's place [rank] (1-based).
+  static Key placeKey(int rank) => Key('teamRecords.podium$rank');
+
+  @override
+  Widget build(BuildContext context) {
+    if (entries.isEmpty) return const SizedBox.shrink();
+    Widget place(int rank) => rank > entries.length
+        ? const SizedBox.shrink()
+        : _PodiumPlace(
+            key: placeKey(rank),
+            rank: rank,
+            entry: entries[rank - 1],
+            flagCode: flagCode,
+            selected: entries[rank - 1].playerId == selectedId,
+            onTap: () => onOpen(entries[rank - 1].playerId),
+          );
+    return Row(
+      key: podiumKey,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Expanded(flex: 20, child: place(2)),
+        const SizedBox(width: AppSpacing.sm),
+        Expanded(flex: 23, child: place(1)),
+        const SizedBox(width: AppSpacing.sm),
+        Expanded(flex: 20, child: place(3)),
+      ],
+    );
+  }
+}
+
+class _PodiumPlace extends StatelessWidget {
+  const _PodiumPlace({
+    required this.rank,
+    required this.entry,
+    required this.flagCode,
+    required this.selected,
+    required this.onTap,
+    super.key,
+  });
+
+  final int rank;
+  final PodiumEntry entry;
+  final String? flagCode;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final first = rank == 1;
+    final ink = first ? AppColors.silverInk : AppColors.onSurface;
+    final soft = first
+        ? AppColors.silverInk.withValues(alpha: 0.7)
+        : AppColors.onSurfaceVariant;
+    final edge = switch (rank) {
+      2 => AppColors.silverMid.withValues(alpha: 0.55),
+      3 => AppColors.bronze.withValues(alpha: 0.5),
+      _ => Colors.transparent,
+    };
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: AppRadii.baseAll,
+        child: Ink(
+          padding: EdgeInsets.fromLTRB(
+            AppSpacing.xs,
+            first ? AppSpacing.md : AppSpacing.sm,
+            AppSpacing.xs,
+            AppSpacing.sm,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: AppRadii.baseAll,
+            gradient: first
+                ? const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      AppColors.silverHigh,
+                      AppColors.silverMid,
+                      AppColors.silverLow,
+                    ],
+                    stops: [0, 0.5, 1],
+                  )
+                : null,
+            color: first ? null : AppColors.surfaceContainerHigh,
+            border: Border.all(
+              color: selected ? AppColors.primary : edge,
+              width: selected ? 2 : 1,
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '$rank',
+                style: AppTypography.labelSmall.copyWith(
+                  color: soft,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              if (flagCode != null) ...[
+                const SizedBox(height: 2),
+                FlagDisc(flagCode!, size: 18),
+              ],
+              const SizedBox(height: 4),
+              Text(
+                entry.name,
+                maxLines: 2,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                style: AppTypography.labelMedium.copyWith(
+                  color: ink,
+                  fontWeight: FontWeight.w700,
+                  height: 1.15,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                entry.value,
+                maxLines: 1,
+                style: AppTypography.titleMedium.copyWith(
+                  fontFamily: AppFonts.mono,
+                  color: ink,
+                  fontWeight: FontWeight.w700,
+                  fontSize: first ? 28 : 21,
+                  height: 1,
+                ),
+              ),
+              Text(
+                entry.unit.capsIn(l.localeName),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTypography.labelSmall.copyWith(
+                  color: soft,
+                  fontSize: 9,
+                  letterSpacing: 0.8,
+                ),
+              ),
+              if (entry.active) ...[
+                const SizedBox(height: 4),
+                // On the silver box the badge's green needs a dark ground.
+                if (first)
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: AppColors.surface,
+                      borderRadius: AppRadii.smAll,
+                    ),
+                    child: const ActiveBadge(),
+                  )
+                else
+                  const ActiveBadge(),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A counting leaderboard (goals, caps) on a phone: the podium, then from
+/// fourth down.
+class _CountBoard extends StatelessWidget {
+  const _CountBoard({
+    required this.rows,
+    required this.view,
+    required this.unit,
+    required this.onOpen,
+  });
+
+  final List<TeamStatEntry> rows;
+  final TeamStatsData view;
+  final String unit;
+  final ValueChanged<int> onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    if (rows.isEmpty) return Center(child: Text(l.statsNoGoalsRecorded));
+    final rest = rows.skip(3).toList();
+    return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.marginMobile),
+      children: [
+        RecordPodium(
+          flagCode: view.nation?.code,
+          onOpen: onOpen,
+          entries: [
+            for (final s in rows.take(3))
+              (
+                playerId: s.playerId,
+                name: view.names[s.playerId] ?? l.statsUnknown,
+                value: '${s.value}',
+                unit: unit,
+                active: view.active.contains(s.playerId),
+              ),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        for (final (i, s) in rest.indexed)
+          LeaderRow(
+            rank: i + 4,
+            name: view.names[s.playerId] ?? l.statsUnknown,
+            flagCode: view.nation?.code,
+            value: '${s.value}',
+            trailing: view.active.contains(s.playerId)
+                ? const ActiveBadge()
+                : null,
+            reserveTrailing: rest.any((r) => view.active.contains(r.playerId)),
+            onTap: () => onOpen(s.playerId),
+          ),
+        const SizedBox(height: AppSpacing.xl),
+      ],
+    );
+  }
+}
+
+/// The ratings board on a phone: the podium, then from fourth down.
+class _RatingsBoard extends StatelessWidget {
+  const _RatingsBoard({required this.view, required this.onOpen});
+
+  final TeamStatsData view;
+  final ValueChanged<int> onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    if (view.ratings.isEmpty) {
+      return Center(child: Text(l.statsNoRatingsRecorded));
+    }
+    final rest = view.ratings.skip(3).toList();
+    return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.marginMobile),
+      children: [
+        RecordPodium(
+          flagCode: view.nation?.code,
+          onOpen: onOpen,
+          entries: ratingPodium(l, view),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        for (final (i, r) in rest.indexed)
+          _RatingRow(
+            rank: i + 4,
+            name: view.names[r.playerId] ?? l.statsUnknown,
+            flagCode: view.nation?.code,
+            entry: r,
+            onInfo: () => onOpen(r.playerId),
+          ),
+        const SizedBox(height: AppSpacing.xl),
+      ],
+    );
+  }
+}
+
+/// The ratings board's first three as podium places.
+List<PodiumEntry> ratingPodium(AppLocalizations l, TeamStatsData view) => [
+  for (final r in view.ratings.take(3))
+    (
+      playerId: r.playerId,
+      name: view.names[r.playerId] ?? l.statsUnknown,
+      value: r.meanRating.toStringAsFixed(2),
+      unit: l.statsAppsShort(r.apps),
+      active: view.active.contains(r.playerId),
+    ),
+];
+
+/// History on a phone: how the side's overall has moved under the manager,
+/// and the way to the record book, the legends and the all-time world.
+class _HistoryTab extends ConsumerWidget {
+  const _HistoryTab({required this.careerId});
+
+  final int careerId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => ListView(
+    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.marginMobile),
+    children: [
+      TeamOverallHistoryCard(
+        key: const Key('team-overall-history'),
+        history:
+            ref.watch(teamOverallHistoryProvider(careerId)).valueOrNull ??
+            const [],
+      ),
+      const SizedBox(height: AppSpacing.md),
+      LegacyTiles(careerId: careerId, includeRecordBook: true),
+      const SizedBox(height: AppSpacing.xl),
+    ],
+  );
+}
+
 class _TeamHeader extends ConsumerWidget {
-  const _TeamHeader({required this.careerId, required this.nation});
+  const _TeamHeader({
+    required this.careerId,
+    required this.nation,
+    this.compact = false,
+  });
 
   final int careerId;
   final Nation? nation;
+
+  /// The nation and its overall alone, without the manager's record (the
+  /// phone's Career tab carries it).
+  final bool compact;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -285,7 +579,7 @@ class _TeamHeader extends ConsumerWidget {
               ],
             ],
           ),
-          if (stats != null && stats.played > 0) ...[
+          if (!compact && stats != null && stats.played > 0) ...[
             const SizedBox(height: AppSpacing.sm),
             Row(
               children: [

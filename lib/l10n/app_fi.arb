@@ -4583,5 +4583,6 @@
   "ncRouteLegendHolds": "Pitää paikkaa korissa 4, nykytilanteen mukaan",
   "ncRouteLegendQualified": "Johtaa karsintalohkoaan: pääsee suoraan, paikka siirtyy seuraavalle",
   "ncRouteLegendRunnerUp": "Toisena karsintalohkossaan: jatkokarsinnassa joka tapauksessa, paikka siirtyy seuraavalle",
-  "ncRouteLegendWaiting": "Seuraavana vuorossa, jos edellä oleva putoaa tältä reitiltä"
+  "ncRouteLegendWaiting": "Seuraavana vuorossa, jos edellä oleva putoaa tältä reitiltä",
+  "statsTabHistory": "Historia"
 }

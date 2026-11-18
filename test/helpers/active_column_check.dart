@@ -15,7 +15,11 @@ void expectActiveBadgesClear(WidgetTester tester, String valueLabel) {
   final active = tester.getRect(
     find.descendant(of: header, matching: find.text(enL.gridColActive)),
   );
-  final badges = find.byType(ActiveBadge);
+  // The grid's own badges: a podium above it carries its leaders' too.
+  final badges = find.descendant(
+    of: find.byWidgetPredicate((w) => w is DataGrid),
+    matching: find.byType(ActiveBadge),
+  );
   expect(badges, findsWidgets);
   for (final e in badges.evaluate()) {
     // The badges are one const widget: measure each by its own element.

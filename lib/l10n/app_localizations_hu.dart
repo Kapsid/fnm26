@@ -18293,4 +18293,7 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get ncRouteLegendWaiting =>
       'Következik, ha egy előtte álló csapat kiesik erről az útról';
+
+  @override
+  String get statsTabHistory => 'Történet';
 }

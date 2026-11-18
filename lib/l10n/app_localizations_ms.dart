@@ -18313,4 +18313,7 @@ class AppLocalizationsMs extends AppLocalizations {
   @override
   String get ncRouteLegendWaiting =>
       'Seterusnya, jika pasukan di hadapan terkeluar dari laluan ini';
+
+  @override
+  String get statsTabHistory => 'Sejarah';
 }

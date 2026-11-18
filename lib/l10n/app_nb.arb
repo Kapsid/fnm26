@@ -4583,5 +4583,6 @@
   "ncRouteLegendHolds": "Har en plass i seedingsgruppe 4, slik det står nå",
   "ncRouteLegendQualified": "Vinner kvalifiseringsgruppen sin: direkte kvalifisert, plassen går videre",
   "ncRouteLegendRunnerUp": "Toer i kvalifiseringsgruppen sin: i playoff uansett, plassen går videre",
-  "ncRouteLegendWaiting": "Neste i køen hvis et lag foran faller fra denne veien"
+  "ncRouteLegendWaiting": "Neste i køen hvis et lag foran faller fra denne veien",
+  "statsTabHistory": "Historikk"
 }

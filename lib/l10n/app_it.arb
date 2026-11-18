@@ -4583,5 +4583,6 @@
   "ncRouteLegendHolds": "Occupa un posto dell'urna 4, allo stato attuale",
   "ncRouteLegendQualified": "Prima nel suo girone di qualificazione: qualificata direttamente, il suo posto passa alla successiva",
   "ncRouteLegendRunnerUp": "Seconda nel suo girone di qualificazione: va comunque agli spareggi, il suo posto passa alla successiva",
-  "ncRouteLegendWaiting": "La prossima, se una squadra davanti esce da questa strada"
+  "ncRouteLegendWaiting": "La prossima, se una squadra davanti esce da questa strada",
+  "statsTabHistory": "Storia"
 }

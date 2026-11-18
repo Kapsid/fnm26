@@ -4583,5 +4583,6 @@
   "ncRouteLegendHolds": "Hält nach aktuellem Stand einen Platz in Topf 4",
   "ncRouteLegendQualified": "Führt seine Qualifikationsgruppe an: direkt qualifiziert, sein Platz geht weiter",
   "ncRouteLegendRunnerUp": "Zweiter seiner Qualifikationsgruppe: ohnehin in den Play-offs, sein Platz geht weiter",
-  "ncRouteLegendWaiting": "Als Nächster dran, falls eine Mannschaft davor von diesem Weg fällt"
+  "ncRouteLegendWaiting": "Als Nächster dran, falls eine Mannschaft davor von diesem Weg fällt",
+  "statsTabHistory": "Verlauf"
 }

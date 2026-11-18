@@ -4583,5 +4583,6 @@
   "ncRouteLegendHolds": "Ocupa uma vaga do pote 4, como as coisas estão",
   "ncRouteLegendQualified": "Lidera o seu grupo de qualificação: qualifica-se diretamente e a sua vaga passa ao seguinte",
   "ncRouteLegendRunnerUp": "Segundo no seu grupo de qualificação: vai ao play-off de qualquer forma e a sua vaga passa ao seguinte",
-  "ncRouteLegendWaiting": "O próximo, se uma equipa à frente sair deste caminho"
+  "ncRouteLegendWaiting": "O próximo, se uma equipa à frente sair deste caminho",
+  "statsTabHistory": "História"
 }

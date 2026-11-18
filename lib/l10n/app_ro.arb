@@ -4583,5 +4583,6 @@
   "ncRouteLegendHolds": "Ocupă un loc din urna 4, conform situației actuale",
   "ncRouteLegendQualified": "Conduce grupa preliminară: se califică direct, locul ei trece mai departe",
   "ncRouteLegendRunnerUp": "Pe locul doi în grupa preliminară: merge oricum la baraj, locul ei trece mai departe",
-  "ncRouteLegendWaiting": "Următoarea, dacă o echipă din față iese de pe acest drum"
+  "ncRouteLegendWaiting": "Următoarea, dacă o echipă din față iese de pe acest drum",
+  "statsTabHistory": "Istoric"
 }

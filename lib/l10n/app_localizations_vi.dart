@@ -18199,4 +18199,7 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get ncRouteLegendWaiting =>
       'Đội kế tiếp, nếu một đội phía trên rời con đường này';
+
+  @override
+  String get statsTabHistory => 'Lịch sử';
 }

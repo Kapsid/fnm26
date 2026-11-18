@@ -4583,5 +4583,6 @@
   "ncRouteLegendHolds": "Memegang tempat di pot 4, sesuai keadaan saat ini",
   "ncRouteLegendQualified": "Memimpin grup kualifikasinya: lolos langsung, tempatnya beralih ke tim berikutnya",
   "ncRouteLegendRunnerUp": "Runner-up grup kualifikasinya: tetap masuk play-off, tempatnya beralih ke tim berikutnya",
-  "ncRouteLegendWaiting": "Berikutnya, jika tim di depannya keluar dari jalur ini"
+  "ncRouteLegendWaiting": "Berikutnya, jika tim di depannya keluar dari jalur ini",
+  "statsTabHistory": "Riwayat"
 }

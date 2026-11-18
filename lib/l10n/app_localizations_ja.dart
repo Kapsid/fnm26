@@ -17711,4 +17711,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get ncRouteLegendWaiting => '上位のチームがこのルートから外れた場合の次点';
+
+  @override
+  String get statsTabHistory => '歴史';
 }

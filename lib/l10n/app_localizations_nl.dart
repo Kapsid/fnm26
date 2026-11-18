@@ -18448,4 +18448,7 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get ncRouteLegendWaiting =>
       'De volgende, als een ploeg erboven van deze route afvalt';
+
+  @override
+  String get statsTabHistory => 'Historie';
 }

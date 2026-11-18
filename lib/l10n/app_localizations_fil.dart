@@ -18366,4 +18366,7 @@ class AppLocalizationsFil extends AppLocalizations {
   @override
   String get ncRouteLegendWaiting =>
       'Susunod sa pila kung may koponang nauna na mawala sa landas na ito';
+
+  @override
+  String get statsTabHistory => 'Kasaysayan';
 }

@@ -4583,5 +4583,6 @@
   "ncRouteLegendHolds": "Drži mjesto u šeširu 4, prema trenutačnom stanju",
   "ncRouteLegendQualified": "Vodi u svojoj kvalifikacijskoj skupini: prolazi izravno, njegovo mjesto ide dalje",
   "ncRouteLegendRunnerUp": "Drugi u svojoj kvalifikacijskoj skupini: ionako ide u doigravanje, njegovo mjesto ide dalje",
-  "ncRouteLegendWaiting": "Sljedeći na redu ako netko ispred ispadne s ovog puta"
+  "ncRouteLegendWaiting": "Sljedeći na redu ako netko ispred ispadne s ovog puta",
+  "statsTabHistory": "Povijest"
 }

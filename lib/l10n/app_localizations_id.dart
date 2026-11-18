@@ -18257,4 +18257,7 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get ncRouteLegendWaiting =>
       'Berikutnya, jika tim di depannya keluar dari jalur ini';
+
+  @override
+  String get statsTabHistory => 'Riwayat';
 }

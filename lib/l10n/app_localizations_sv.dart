@@ -18341,4 +18341,7 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get ncRouteLegendWaiting =>
       'Näst på tur om ett lag ovanför faller bort från vägen';
+
+  @override
+  String get statsTabHistory => 'Historik';
 }

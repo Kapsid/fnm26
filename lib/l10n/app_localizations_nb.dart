@@ -18350,4 +18350,7 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get ncRouteLegendWaiting =>
       'Neste i køen hvis et lag foran faller fra denne veien';
+
+  @override
+  String get statsTabHistory => 'Historikk';
 }

@@ -18263,4 +18263,7 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get ncRouteLegendWaiting =>
       'Öndeki bir takım bu yoldan düşerse sıradaki';
+
+  @override
+  String get statsTabHistory => 'Geçmiş';
 }

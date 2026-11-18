@@ -4583,5 +4583,6 @@
   "ncRouteLegendHolds": "Heeft een plaats in pot 4, zoals het nu staat",
   "ncRouteLegendQualified": "Wint zijn kwalificatiegroep: direct geplaatst, zijn plaats gaat naar de volgende",
   "ncRouteLegendRunnerUp": "Tweede in zijn kwalificatiegroep: toch al in de play-offs, zijn plaats gaat naar de volgende",
-  "ncRouteLegendWaiting": "De volgende, als een ploeg erboven van deze route afvalt"
+  "ncRouteLegendWaiting": "De volgende, als een ploeg erboven van deze route afvalt",
+  "statsTabHistory": "Historie"
 }

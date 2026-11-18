@@ -4583,5 +4583,6 @@
   "ncRouteLegendHolds": "현재 4포트 자리를 확보",
   "ncRouteLegendQualified": "예선 조 1위: 본선 직행이라 자리는 다음 팀에게",
   "ncRouteLegendRunnerUp": "예선 조 2위: 어차피 플레이오프에 나가므로 자리는 다음 팀에게",
-  "ncRouteLegendWaiting": "앞선 팀이 이 경로에서 빠지면 다음 차례"
+  "ncRouteLegendWaiting": "앞선 팀이 이 경로에서 빠지면 다음 차례",
+  "statsTabHistory": "역사"
 }

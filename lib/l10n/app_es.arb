@@ -4583,5 +4583,6 @@
   "ncRouteLegendHolds": "Ocupa una plaza del bombo 4, según la situación actual",
   "ncRouteLegendQualified": "Lidera su grupo de clasificación: se clasifica directamente y su plaza pasa al siguiente",
   "ncRouteLegendRunnerUp": "Segundo de su grupo de clasificación: va a la repesca igualmente y su plaza pasa al siguiente",
-  "ncRouteLegendWaiting": "El siguiente, si un equipo por delante sale de esta vía"
+  "ncRouteLegendWaiting": "El siguiente, si un equipo por delante sale de esta vía",
+  "statsTabHistory": "Historia"
 }

@@ -18680,4 +18680,7 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get ncRouteLegendWaiting =>
       'Наступний у черзі, якщо хтось попереду випаде з цього шляху';
+
+  @override
+  String get statsTabHistory => 'Історія';
 }

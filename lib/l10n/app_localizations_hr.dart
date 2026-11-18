@@ -18692,4 +18692,7 @@ class AppLocalizationsHr extends AppLocalizations {
   @override
   String get ncRouteLegendWaiting =>
       'Sljedeći na redu ako netko ispred ispadne s ovog puta';
+
+  @override
+  String get statsTabHistory => 'Povijest';
 }

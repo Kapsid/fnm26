@@ -4583,5 +4583,6 @@
   "ncRouteLegendHolds": "Occupe une place du chapeau 4, en l'état actuel",
   "ncRouteLegendQualified": "Premier de son groupe de qualification : qualifié directement, sa place passe au suivant",
   "ncRouteLegendRunnerUp": "Deuxième de son groupe de qualification : en barrage de toute façon, sa place passe au suivant",
-  "ncRouteLegendWaiting": "Le suivant, si une équipe devant lui quitte cette voie"
+  "ncRouteLegendWaiting": "Le suivant, si une équipe devant lui quitte cette voie",
+  "statsTabHistory": "Historique"
 }
