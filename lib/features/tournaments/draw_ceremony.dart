@@ -46,8 +46,13 @@ class DrawCeremony extends StatefulWidget {
     this.crossAxisCount = 2,
     this.landscape = false,
     this.placeholders = const {},
+    this.placeholderSeeds = const {},
     super.key,
   });
+
+  /// The nations still in each placeholder's path, by its id, as their
+  /// codes: the group shows the letter and their flags ("D 🏳/🏳/🏳/🏳").
+  final Map<int, List<String>> placeholderSeeds;
 
   /// Balls that stand for a side still to be decided, by the id they carry
   /// in [groups] (below zero): a play-off path's winner, drawn before its
@@ -231,6 +236,7 @@ class DrawCeremonyState extends State<DrawCeremony> {
   String _code(int id) => widget.placeholders.containsKey(id)
       ? '$drawPlaceholderPrefix${widget.placeholders[id]!.letter}'
       : widget.nations[id]?.code ?? '??';
+  List<String>? _seeds(int id) => widget.placeholderSeeds[id];
   String _name(int id) =>
       widget.placeholders[id]?.label ?? widget.nations[id]?.name ?? '—';
 
@@ -278,6 +284,7 @@ class DrawCeremonyState extends State<DrawCeremony> {
           : (frame.revealedByGroup[last.groupIndex] ?? const []),
       code: _code,
       name: _name,
+      seeds: _seeds,
     );
   }
 
@@ -302,6 +309,7 @@ class DrawCeremonyState extends State<DrawCeremony> {
       highlightNationId: widget.highlightNationId,
       code: _code,
       name: _name,
+      seeds: _seeds,
     );
   }
 
@@ -724,8 +732,10 @@ class _Stage extends StatelessWidget {
     required this.groupMembers,
     required this.code,
     required this.name,
+    required this.seeds,
   });
 
+  final List<String>? Function(int) seeds;
   final bool done;
   final _Step? step;
   final String groupName;
@@ -786,6 +796,8 @@ class _Stage extends StatelessWidget {
                         name(step!.nationId),
                         style: AppTypography.titleMedium,
                       ),
+                      if (seeds(step!.nationId) case final codes?)
+                        PathSeedFlags(codes, size: 16),
                       Text(
                         '→ ${l.tourSharedGroupName(groupName)}',
                         style: AppTypography.labelMedium.copyWith(
@@ -829,8 +841,10 @@ class _GroupCard extends StatelessWidget {
     required this.highlightNationId,
     required this.code,
     required this.name,
+    required this.seeds,
   });
 
+  final List<String>? Function(int) seeds;
   final int? careerId;
   final String title;
   final int slots;
@@ -892,15 +906,23 @@ class _GroupCard extends StatelessWidget {
             DrawFlag(code(nationId), size: 18, highlighted: emphasise),
             const SizedBox(width: AppSpacing.xs),
             Expanded(
-              child: Text(
-                name(nationId),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTypography.bodySmall.copyWith(
-                  color: emphasise ? AppColors.primary : AppColors.onSurface,
-                  fontWeight: emphasise ? FontWeight.w700 : FontWeight.w400,
+              child: switch (seeds(nationId)) {
+                // A path's winner: its letter on the ball, its nations after.
+                final codes? => PathSeedFlags(
+                  codes,
+                  size: 14,
+                  highlighted: emphasise,
                 ),
-              ),
+                null => Text(
+                  name(nationId),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.bodySmall.copyWith(
+                    color: emphasise ? AppColors.primary : AppColors.onSurface,
+                    fontWeight: emphasise ? FontWeight.w700 : FontWeight.w400,
+                  ),
+                ),
+              },
             ),
           ],
         ),
@@ -979,4 +1001,48 @@ class DrawFlag extends StatelessWidget {
       ),
     );
   }
+}
+
+/// A play-off path's nations as flags in a line, "🏳/🏳/🏳/🏳": the side its
+/// winner's ball stands for. Shrinks rather than wraps when the room is
+/// short.
+class PathSeedFlags extends StatelessWidget {
+  const PathSeedFlags(
+    this.codes, {
+    required this.size,
+    this.highlighted = false,
+    super.key,
+  });
+
+  final List<String> codes;
+  final double size;
+  final bool highlighted;
+
+  @override
+  Widget build(BuildContext context) => Align(
+    alignment: Alignment.centerLeft,
+    child: FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (final (i, code) in codes.indexed) ...[
+            if (i > 0)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2),
+                child: Text(
+                  '/',
+                  style: AppTypography.labelSmall.copyWith(
+                    color: highlighted
+                        ? AppColors.primary
+                        : AppColors.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            FlagDisc(code, size: size),
+          ],
+        ],
+      ),
+    ),
+  );
 }

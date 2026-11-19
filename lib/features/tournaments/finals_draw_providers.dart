@@ -8,6 +8,8 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/competition/euro_playoffs.dart';
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -28,8 +30,13 @@ class FinalsDrawData {
     required this.cycle,
     required this.alreadyWatched,
     this.placeholderKeys = const {},
+    this.pathSeeds = const {},
     this.playerPathKey,
   });
+
+  /// Each play-off path's nations, by its placeholder key: a European
+  /// path's four, an intercontinental path's three.
+  final Map<String, List<int>> pathSeeds;
 
   /// The balls in [draw] standing for a play-off path's winner (a calendar2
   /// draw made before its play-offs), by their id (below zero) and stored
@@ -130,6 +137,12 @@ finalsDrawProvider = FutureProvider.autoDispose.family<FinalsDrawData?, int>((
         worldCupDrawKind,
       ),
       placeholderKeys: stored.keys,
+      pathSeeds: {
+        for (final p in playoffs?.uefaPaths ?? const <PlayoffPath>[])
+          UefaWcPlayoffs.placeholderKey(p.letter): p.seeds,
+        for (final p in playoffs?.icPaths ?? const <IcPath>[])
+          IcPlayoffs.placeholderKey(p.path): [p.seed, p.semiHome, p.semiAway],
+      },
       playerPathKey: playoffs?.playerPathKey,
     );
   }

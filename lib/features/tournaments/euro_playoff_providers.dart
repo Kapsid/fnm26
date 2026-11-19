@@ -15,6 +15,7 @@ import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/features/career/career_providers.dart' show CareerService;
+import 'package:fnm/features/hub/hub_event.dart' show continentalFinalsDrawKind;
 
 /// Europe's play-offs as stored: the paths, every tie played or to come,
 /// and the EURO's draw with each path winner's slot.
@@ -25,7 +26,13 @@ class EuroPlayoffData {
     required this.finalsSlots,
     required this.nations,
     required this.playerNationId,
+    this.finalsDrawWatched = true,
   });
+
+  /// Whether the EURO's own draw has been watched. Its groups are stored the
+  /// day the play-offs are drawn, but until that ceremony a path's group is
+  /// not known to anyone, so [groupOfPath] keeps it.
+  final bool finalsDrawWatched;
 
   /// The paths in letter order, as drawn (see [EuroPlayoffs.fromSlots]).
   final List<PlayoffPath> paths;
@@ -62,10 +69,14 @@ class EuroPlayoffData {
       .firstOrNull;
 
   /// The finals group a path's winner was drawn into, or null.
-  String? groupOfPath(String letter) => finalsSlots
-      .where((s) => s.placeholderKey == EuroPlayoffs.placeholderKey(letter))
-      .firstOrNull
-      ?.groupName;
+  String? groupOfPath(String letter) => !finalsDrawWatched
+      ? null
+      : finalsSlots
+            .where(
+              (s) => s.placeholderKey == EuroPlayoffs.placeholderKey(letter),
+            )
+            .firstOrNull
+            ?.groupName;
 }
 
 /// The current cycle's European play-offs, or null when there are none
@@ -130,6 +141,11 @@ Future<EuroPlayoffData?> readEuroPlayoffs(
     ),
     nations: nations,
     playerNationId: playerNationId,
+    // Only the manager's own continent's draw is watched; anyone else's
+    // counts as drawn.
+    finalsDrawWatched:
+        nations[playerNationId]?.confederation != europe ||
+        await comp.hasWatchedDraw(careerId, cycle, continentalFinalsDrawKind),
   );
 }
 

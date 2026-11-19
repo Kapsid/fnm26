@@ -90,6 +90,13 @@ class _FinalsDrawScreenState extends ConsumerState<FinalsDrawScreen> {
                     label: wcPlaceholderLabel(l, e.value),
                   ),
               },
+              placeholderSeeds: {
+                for (final e in data.placeholderKeys.entries)
+                  if (data.pathSeeds[e.value] case final seeds?)
+                    e.key: [
+                      for (final id in seeds) data.nations[id]?.code ?? '??',
+                    ],
+              },
               careerId: widget.careerId,
               potCount: 4,
               landscape: landscape,

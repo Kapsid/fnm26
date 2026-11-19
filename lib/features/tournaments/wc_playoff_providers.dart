@@ -11,6 +11,8 @@ import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/wc_playoffs.dart';
+import 'package:fnm/features/tournaments/finals_draw_providers.dart'
+    show worldCupDrawKind;
 
 /// The World Championship's calendar2 play-offs as stored: Europe's paths,
 /// the intercontinental paths, every tie played or to come, and the finals'
@@ -23,7 +25,12 @@ class WcPlayoffData {
     required this.finalsSlots,
     required this.nations,
     required this.playerNationId,
+    this.finalsDrawWatched = true,
   });
+
+  /// Whether the World Championship's draw has been watched: until then a
+  /// path's group is not known, so [groupOf] keeps it.
+  final bool finalsDrawWatched;
 
   /// Europe's paths in letter order (see [EuroPlayoffs.fromSlots]).
   final List<PlayoffPath> uefaPaths;
@@ -94,10 +101,12 @@ class WcPlayoffData {
       .firstOrNull;
 
   /// The finals group the winner behind [placeholderKey] was drawn into.
-  String? groupOf(String placeholderKey) => finalsSlots
-      .where((s) => s.placeholderKey == placeholderKey)
-      .firstOrNull
-      ?.groupName;
+  String? groupOf(String placeholderKey) => !finalsDrawWatched
+      ? null
+      : finalsSlots
+            .where((s) => s.placeholderKey == placeholderKey)
+            .firstOrNull
+            ?.groupName;
 }
 
 /// The current cycle's World Championship play-offs, or null when there are
@@ -168,6 +177,11 @@ Future<WcPlayoffData?> readWcPlayoffs(
     finalsSlots: finalsSlots,
     nations: nations,
     playerNationId: playerNationId,
+    finalsDrawWatched: await comp.hasWatchedDraw(
+      careerId,
+      cycle,
+      worldCupDrawKind,
+    ),
   );
 }
 

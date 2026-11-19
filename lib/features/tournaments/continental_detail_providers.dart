@@ -189,9 +189,13 @@ class ContinentalDrawData {
     required this.nations,
     required this.playerNationId,
     this.placeholderLetters = const {},
+    this.pathSeeds = const {},
     this.playerPathLetter,
   });
   final FinalsDraw draw;
+
+  /// Each play-off path's four nations, by its letter.
+  final Map<String, List<int>> pathSeeds;
   final Map<int, Nation> nations;
 
   /// The player's nation, highlighted throughout the ceremony.
@@ -309,6 +313,7 @@ continentalDrawProvider = FutureProvider.autoDispose.family<ContinentalDrawData?
       nations: {for (final n in all) n.id: n},
       playerNationId: career.nationId,
       placeholderLetters: stored.letters,
+      pathSeeds: {for (final p in paths) p.letter: p.seeds},
       playerPathLetter: paths
           .where((p) => p.seeds.contains(career.nationId))
           .firstOrNull

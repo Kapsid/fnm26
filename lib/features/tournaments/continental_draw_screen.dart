@@ -119,6 +119,13 @@ class _ContinentalDrawScreenState extends ConsumerState<ContinentalDrawScreen> {
                   label: l.euroPlayoffWinnerPlaceholder(e.value),
                 ),
             },
+            placeholderSeeds: {
+              for (final e in data.placeholderLetters.entries)
+                if (data.pathSeeds[e.value] case final seeds?)
+                  e.key: [
+                    for (final id in seeds) data.nations[id]?.code ?? '??',
+                  ],
+            },
             careerId: widget.careerId,
             // Derive the pot count from the actual group size, so a
             // groups-of-five draw (Copa América) reveals all five pots rather

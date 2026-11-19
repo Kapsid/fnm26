@@ -8,6 +8,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -69,6 +70,36 @@ nationsCupProvider = FutureProvider.autoDispose.family<NationsCupData?, NationsC
   final cup = NationsCups.forConfederation(conf);
   if (cup == null) return null;
   final isMine = conf == mine;
+  // Only the manager's own cup is drawn at a ceremony; the others are there to
+  // browse from the start.
+  var drawWatched =
+      !isMine ||
+      await comp.hasWatchedDraw(
+        careerId,
+        career.cyclePointer,
+        nationsCupDrawKind,
+      );
+  // Europe's second edition (calendar2) is built in the July after the first
+  // is crowned but drawn only before its first match, more than a year on.
+  // Until that draw the cup shows the first edition, whose tables decided
+  // the Euro's play-off paths, rather than nothing at all.
+  int? edition;
+  if (!drawWatched &&
+      await comp.hasTournament(
+        careerId,
+        CompetitionKind.nationsLeague,
+        confederation: conf,
+        edition: Calendar2.secondEdition,
+      ) &&
+      await comp.hasTournament(
+        careerId,
+        CompetitionKind.nationsLeague,
+        confederation: conf,
+        edition: Calendar2.firstEdition,
+      )) {
+    edition = Calendar2.firstEdition;
+    drawWatched = true;
+  }
   // Every lookup names the cup: all three live in the cycle as competitions
   // of the same kind.
   final groups =
@@ -76,6 +107,7 @@ nationsCupProvider = FutureProvider.autoDispose.family<NationsCupData?, NationsC
           careerId,
           CompetitionKind.nationsLeague,
           confederation: conf,
+          edition: edition,
         )
         ..sort((a, b) => a.name.compareTo(b.name));
   final tiers = await ref
@@ -106,6 +138,7 @@ nationsCupProvider = FutureProvider.autoDispose.family<NationsCupData?, NationsC
     r,
     kind: CompetitionKind.nationsLeague,
     confederation: conf,
+    edition: edition,
   );
   // The finals: a ladder cup's Finals Four (League A's group winners contest
   // two semis then a final), or Africa's knockouts, which open with a Round
@@ -114,15 +147,6 @@ nationsCupProvider = FutureProvider.autoDispose.family<NationsCupData?, NationsC
   final quarters = await round('NQF');
   final semis = await round('NSF');
   final finalFx = await round('NFINAL');
-  // Only the manager's own cup is drawn at a ceremony; the others are there to
-  // browse from the start.
-  final drawWatched =
-      !isMine ||
-      await comp.hasWatchedDraw(
-        careerId,
-        career.cyclePointer,
-        nationsCupDrawKind,
-      );
   final maxTier = NationsCup.lowestTier(
     tiers: tiers,
     confederation: conf,
