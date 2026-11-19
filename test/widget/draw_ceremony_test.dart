@@ -211,4 +211,50 @@ void main() {
       expect(heights, hasLength(1), reason: 'the active pot is no bigger');
     });
   }
+
+  testWidgets('a path winner shows its four flags, ball by ball, on the '
+      'smallest phone', (tester) async {
+    tester.view
+      ..physicalSize = const Size(320, 568)
+      ..devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    final nations = {
+      for (var i = 1; i <= 27; i++) i: nation(id: i, name: 'Nation $i'),
+    };
+    const path = -1;
+    await tester.pumpApp(
+      Scaffold(
+        body: DrawCeremony(
+          groups: [
+            for (var g = 0; g < 6; g++)
+              (
+                name: String.fromCharCode(65 + g),
+                nationIds: [
+                  for (var i = 0; i < 4; i++)
+                    if (g == 0 && i == 3) path else g * 4 + i + 1,
+                ],
+              ),
+          ],
+          nations: nations,
+          potCount: 4,
+          highlightNationId: path,
+          placeholders: const {path: (letter: 'D', label: 'Path D winner')},
+          placeholderSeeds: const {
+            path: ['N24', 'N25', 'N26', 'N27'],
+          },
+          onContinue: () {},
+        ),
+      ),
+    );
+    await tester.pump();
+    var seen = false;
+    // Every ball but the last, so the stage still shows the latest one.
+    for (var i = 0; i < 23; i++) {
+      await tester.tapAt(const Offset(160, 450));
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(tester.takeException(), isNull, reason: 'ball ${i + 1}');
+      if (find.byType(PathSeedFlags).evaluate().isNotEmpty) seen = true;
+    }
+    expect(seen, isTrue, reason: 'the path ball was drawn with its flags');
+  });
 }

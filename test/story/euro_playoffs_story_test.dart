@@ -16,6 +16,7 @@ import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/features/tournaments/euro_playoff_providers.dart';
+import 'package:fnm/features/tournaments/nations_cup_providers.dart';
 
 import 'driver.dart';
 
@@ -143,6 +144,21 @@ void main() {
     // Not locked in: a rung below qualifying.
     expect(await run(), (ordinal: 1, over: false));
 
+    // The paths are drawn but the finals draw is not watched yet: no path
+    // may give away the group its winner was drawn into.
+    final before = await c.read(euroPlayoffProvider(id).future);
+    expect(before!.groupOfPath(path.letter), isNull);
+    // The Nations Cup still shows the edition that seeded the paths, not
+    // the next one's undrawn (hidden) tables.
+    final cup = await c.read(
+      nationsCupProvider((careerId: id, confederation: null)).future,
+    );
+    expect(cup!.drawWatched, isTrue);
+    expect(
+      cup.groups.expand((g) => g.standings).map((s) => s.nationId),
+      contains(me),
+    );
+
     // The two ceremonies, in order: the paths, then the finals draw, which
     // lights the path's ball in the group it was drawn into.
     final first = await d.nextEvent();
@@ -156,7 +172,15 @@ void main() {
     expect(draw, isNotNull);
     expect(draw!.playerPathLetter, path.letter);
     expect(draw.playerPathGroup, placeholder.groupName);
+    // The path's ball carries its four nations' flags.
+    expect(draw.pathSeeds[path.letter], path.seeds);
     await d.step();
+    // Watched: now the path card may name the group.
+    c.invalidate(euroPlayoffProvider(id));
+    expect(
+      (await c.read(euroPlayoffProvider(id).future))!.groupOfPath(path.letter),
+      placeholder.groupName,
+    );
 
     // On to the finals: the play-offs are played in March.
     while (!await comp.hasTournament(
