@@ -90,6 +90,17 @@ class ManagerSpell {
 
   bool get current => toDate == null;
 
+  /// No real spell's score comes near this: a window adds a few points at
+  /// most, and a long spell a few dozen at the very worst.
+  static const int briefNetSane = 40;
+
+  /// A stored [briefNet] as it is read. A save that ran a cycle with the
+  /// regional cups or a qualifying league before 1.1.2's fix counted every
+  /// one of their games as a championship settled, and filed scores in the
+  /// hundreds; such a score is noise, read as none.
+  static int healedBriefNet(int stored) =>
+      stored.abs() > briefNetSane ? 0 : stored;
+
   /// The same spell, ended on [on] for [why].
   ManagerSpell close(DateTime on, SpellEnd why) => ManagerSpell(
     spellNo: spellNo,

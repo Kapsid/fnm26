@@ -49,12 +49,19 @@ class ManagerWindows {
         CompetitionKind.continentalFinals => 'CFINAL',
         _ => null,
       };
-      if (f.round != finalRound) continue;
+      // Only a finals tournament's own final settles a brief. A fixture with
+      // no round (a regional cup's, a qualifying league's) used to match the
+      // null "final round" of every other kind and file a continental
+      // championship as settled once per game, dozens of times a cycle,
+      // each counted into its managers' scores.
+      if (finalRound == null || f.round != finalRound) continue;
       final world = comp.kind == CompetitionKind.worldCupFinals;
+      final key = world
+          ? worldKey(f.date.year)
+          : continentalKey(comp.confederation, f.date.year);
+      if (decided.any((t) => t.key == key)) continue;
       decided.add((
-        key: world
-            ? worldKey(f.date.year)
-            : continentalKey(comp.confederation, f.date.year),
+        key: key,
         confederation: world ? null : comp.confederation,
         finalOn: f.date,
       ));

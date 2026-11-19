@@ -227,7 +227,7 @@ class DriftWorldManagerRepository implements WorldManagerRepository {
         ? null
         : SpellEnd.values.byName(r.endReason!),
     contractUntil: r.contractUntil,
-    briefNet: r.briefNet,
+    briefNet: ManagerSpell.healedBriefNet(r.briefNet),
   );
 
   static ManagerSpellsCompanion _spellRow(int careerId, ManagerSpell s) =>

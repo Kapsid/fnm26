@@ -124,9 +124,56 @@ void main() {
       ],
     );
     final r = ManagerReputation.of(1, w, {1: 1, 2: 2}, {1: 2}, asOf: _d);
-    final years = _ago(years: 2).difference(_ago(years: 4)).inDays / 365.25;
+    final years = ManagerReputation.weightedYears(
+      _ago(years: 4),
+      _ago(years: 2),
+      _d,
+    );
     expect(r, (20 + years * 210 / 211 * 6 + 2 * 8 + 4).round());
     expect(ManagerReputation.of(2, w, {1: 1, 2: 2}, const {}, asOf: _d), 0);
+  });
+
+  test('a year in charge counts half after eight years', () {
+    final recent = ManagerReputation.weightedYears(
+      _ago(years: 1),
+      _d,
+      _d,
+    );
+    final old = ManagerReputation.weightedYears(
+      _ago(years: 9),
+      _ago(years: 8),
+      _d,
+    );
+    expect(recent, closeTo(1, 0.05));
+    expect(old / recent, closeTo(0.5, 0.01));
+  });
+
+  test('a lifetime at the top is not 100 on its own; titles make it', () {
+    final w = ManagerWorld(
+      managers: [_m(1)],
+      spells: [_s(1, 1, 1, from: _ago(years: 40))],
+    );
+    final alone = ManagerReputation.of(1, w, {1: 1}, const {}, asOf: _d);
+    expect(alone, inInclusiveRange(80, 90));
+    expect(ManagerReputation.of(1, w, {1: 1}, {1: 3}, asOf: _d), 100);
+  });
+
+  test('a run of verdicts moves a name only so far', () {
+    final w = ManagerWorld(
+      managers: [_m(1)],
+      spells: [_rep(1, 1, 30)],
+    );
+    expect(
+      ManagerReputation.of(1, w, const {}, const {}, asOf: _d),
+      20 + ManagerReputation.briefCap,
+    );
+  });
+
+  test('a stored score no window could reach is read as none', () {
+    expect(ManagerSpell.healedBriefNet(-703), 0);
+    expect(ManagerSpell.healedBriefNet(176), 0);
+    expect(ManagerSpell.healedBriefNet(13), 13);
+    expect(ManagerSpell.healedBriefNet(-9), -9);
   });
 
   test('no results sack inside 12 months', () {

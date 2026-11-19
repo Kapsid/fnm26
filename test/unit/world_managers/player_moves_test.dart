@@ -153,11 +153,15 @@ void main() {
         ),
         isNotEmpty,
       );
-      final grudge = (await ties(
-        s,
-      )).where((t) => t.managerId == incumbent.managerId).toList();
+      // He may also be the man the nation left hires (a successor tie): the
+      // grudge is the one this move must leave, and only one.
+      final grudge = (await ties(s))
+          .where(
+            (t) =>
+                t.managerId == incumbent.managerId && t.kind == TieKind.grudge,
+          )
+          .toList();
       expect(grudge, hasLength(1));
-      expect(grudge.single.kind, TieKind.grudge);
       expect(grudge.single.delta, -25);
       expect(await marked(s, 1, mgrRolloverKind), isTrue);
     },
