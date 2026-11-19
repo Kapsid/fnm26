@@ -115,6 +115,10 @@ void main() {
             .valueOrNull!;
     await playNationsCupGroup(career, win: false);
     await drawFinalsFourWithout(career);
+    // On after the group: the feed shows nothing dated after today.
+    await container
+        .read(careerRepositoryProvider)
+        .updateInGameDate(career.id, DateTime(2030, 6, 18));
 
     final feed = (await open().read(yFeedProvider(career.id).future)).posts;
     expect(

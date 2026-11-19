@@ -854,7 +854,10 @@ Future<YTimeline> _feedOf(
           careerId: career.id,
         ))?.name;
     if (name == null) continue;
-    final on = CampScandal.brokeOn(window);
+    // The day it broke, or today if the manager is already answering it
+    // before that day: the story is out once the decision is his.
+    final brokeOn = CampScandal.brokeOn(window);
+    final on = brokeOn.isAfter(career.inGameDate) ? career.inGameDate : brokeOn;
     final then = YFeed.standingsAsOf(datedStandings, on);
     posts.addAll(
       YFeed.forScandal(
@@ -933,7 +936,13 @@ Future<YTimeline> _feedOf(
   // app's language, take their shown names last, on the finished feed, so
   // each keeps the voice it posted in.
   return YFeed.renamedIn(
-    YFeed.timeline(withLocals),
+    YFeed.timeline([
+      // Nothing is posted ahead of the day it is written on. A post's date
+      // is when it happened, so one past today is a story that has not
+      // happened yet (a player reported 2032 posts in 2031).
+      for (final p in withLocals)
+        if (!p.date.isAfter(career.inGameDate)) p,
+    ]),
     world,
     added: YAccountsScope.current,
     addedWorld: addedWorld,

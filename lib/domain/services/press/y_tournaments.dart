@@ -17,6 +17,10 @@ import 'package:fnm/domain/services/press/y_feed.dart';
 /// it needs is passed in: the nation's fixtures, the world's, and the
 /// competition names.
 abstract final class YTournaments {
+  /// How long before a finals tournament's first match the feed starts
+  /// anticipating it.
+  static const int soonDays = 7;
+
   /// A qualifying campaign counts as a place BOOKED when the nation turns up
   /// at a finals within this long of its last qualifier. Two years: qualifying
   /// ends roughly a year before the tournament it feeds, and a slack window is
@@ -104,9 +108,10 @@ abstract final class YTournaments {
         }
       }
 
-      // And the one that has not started yet. Dated at its first match rather
-      // than invented: the feed sorts by date, and a post about a tournament
-      // must not land before the results it is anticipating.
+      // And the one that has not started yet. Dated [soonDays] before its
+      // first match: the feed shows nothing dated after today, and a post
+      // dated at the first match itself sat in the feed for months ahead of
+      // it with a date still to come.
       //
       // Never the NATIONS CUP. Its fixtures are written for the whole cycle at
       // once and played off in the background, so "it is nearly here" was true
@@ -123,7 +128,7 @@ abstract final class YTournaments {
         milestones.add((
           template: YTemplate.tournamentSoon,
           args: [competition],
-          date: firstUnplayed.date,
+          date: firstUnplayed.date.subtract(const Duration(days: soonDays)),
           key: 'soon:${entry.key}',
         ));
       }

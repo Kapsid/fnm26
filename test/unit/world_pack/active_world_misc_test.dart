@@ -370,6 +370,10 @@ void main() {
           awayScore: home ? them : us,
         );
       }
+      // The day of the last of them: the feed shows nothing dated after it.
+      await c
+          .read(careerRepositoryProvider)
+          .updateInGameDate(career.id, fixtures.take(8).last.date);
       await c
           .read(careerRepositoryProvider)
           .recordPressAnswer(

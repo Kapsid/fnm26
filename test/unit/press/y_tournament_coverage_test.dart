@@ -204,7 +204,16 @@ void main() {
           posts.map((m) => m.template),
           soon,
           reason: '${f.name}: the wrong thing was said about it starting',
-        );
+        ); // A week before the first match, not on it: the feed shows nothing
+        // dated after today, and a post dated at the tournament itself sat
+        // in it for months with a date still to come.
+        for (final p in posts) {
+          if (p.template != YTemplate.tournamentSoon) continue;
+          expect(
+            p.date,
+            start.subtract(const Duration(days: YTournaments.soonDays)),
+          );
+        }
       });
 
       test('${f.name}: survives a cycle of match reports on top of it', () {
