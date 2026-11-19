@@ -3210,10 +3210,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get achTitleClashDesc => 'Kıtalar Arası Çarpışma\'yı kazan.';
 
   @override
-  String get achTitleGulf => 'Körfez Kupası Kazananları';
+  String get achTitleGulf => 'Vaha Kupası Kazananları';
 
   @override
-  String get achTitleGulfDesc => 'Körfez Kupası\'nı kazan.';
+  String get achTitleGulfDesc => 'Vaha Kupası\'nı kazan.';
 
   @override
   String get achTitleSea => 'Güneydoğu Asya Şampiyonları';
@@ -18055,13 +18055,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get playerOtherPositions => 'Her mevkide';
 
   @override
-  String get compGulfCup => 'Körfez Kupası';
+  String get compGulfCup => 'Vaha Kupası';
 
   @override
   String get compSoutheastAsianChampionship => 'Güneydoğu Asya Şampiyonası';
 
   @override
-  String get matchTinyGulfCup => 'Körfez';
+  String get matchTinyGulfCup => 'Vaha';
 
   @override
   String get matchTinySoutheastAsia => 'GDA';

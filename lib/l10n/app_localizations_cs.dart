@@ -3330,10 +3330,10 @@ class AppLocalizationsCs extends AppLocalizations {
   String get achTitleClashDesc => 'Vyhrajte Kontinentální souboj.';
 
   @override
-  String get achTitleGulf => 'Vítězové Poháru Perského zálivu';
+  String get achTitleGulf => 'Vítězové Poháru oázy';
 
   @override
-  String get achTitleGulfDesc => 'Vyhrajte Pohár Perského zálivu.';
+  String get achTitleGulfDesc => 'Vyhrajte Pohár oázy.';
 
   @override
   String get achTitleSea => 'Mistři jihovýchodní Asie';
@@ -18538,13 +18538,13 @@ class AppLocalizationsCs extends AppLocalizations {
   String get playerOtherPositions => 'Na jednotlivých postech';
 
   @override
-  String get compGulfCup => 'Pohár Perského zálivu';
+  String get compGulfCup => 'Pohár oázy';
 
   @override
   String get compSoutheastAsianChampionship => 'Mistrovství jihovýchodní Asie';
 
   @override
-  String get matchTinyGulfCup => 'Záliv';
+  String get matchTinyGulfCup => 'Oáza';
 
   @override
   String get matchTinySoutheastAsia => 'JV Asie';

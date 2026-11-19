@@ -3224,10 +3224,10 @@ class AppLocalizationsMs extends AppLocalizations {
   String get achTitleClashDesc => 'Menangi Pertembungan Benua.';
 
   @override
-  String get achTitleGulf => 'Juara Piala Teluk';
+  String get achTitleGulf => 'Juara Piala Oasis';
 
   @override
-  String get achTitleGulfDesc => 'Menangi Piala Teluk.';
+  String get achTitleGulfDesc => 'Menangi Piala Oasis.';
 
   @override
   String get achTitleSea => 'Juara Asia Tenggara';
@@ -18106,13 +18106,13 @@ class AppLocalizationsMs extends AppLocalizations {
   String get playerOtherPositions => 'Di setiap posisi';
 
   @override
-  String get compGulfCup => 'Piala Teluk';
+  String get compGulfCup => 'Piala Oasis';
 
   @override
   String get compSoutheastAsianChampionship => 'Kejohanan Asia Tenggara';
 
   @override
-  String get matchTinyGulfCup => 'Teluk';
+  String get matchTinyGulfCup => 'Oasis';
 
   @override
   String get matchTinySoutheastAsia => 'ASTeng';

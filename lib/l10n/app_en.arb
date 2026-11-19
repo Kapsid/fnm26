@@ -4407,11 +4407,11 @@
   "@achTitleClashDesc": {
     "description": "Achievement description."
   },
-  "achTitleGulf": "Gulf Cup Winners",
+  "achTitleGulf": "Oasis Cup Winners",
   "@achTitleGulf": {
     "description": "Achievement title."
   },
-  "achTitleGulfDesc": "Win the Gulf Cup.",
+  "achTitleGulfDesc": "Win the Oasis Cup.",
   "@achTitleGulfDesc": {
     "description": "Achievement description."
   },
@@ -28010,15 +28010,15 @@
   "@playerOtherPositions": {
     "description": "Player page: block listing the rating the player plays at in each position (his own outlined), best first."
   },
-  "compGulfCup": "Gulf Cup",
+  "compGulfCup": "Oasis Cup",
   "@compGulfCup": {
-    "description": "Competition name: the regional cup of the Gulf nations."
+    "description": "Competition name: the regional cup of the Gulf nations, an invented name (never the real tournament's)."
   },
   "compSoutheastAsianChampionship": "Southeast Asian Championship",
   "@compSoutheastAsianChampionship": {
     "description": "Competition name: the regional championship of Southeast Asia."
   },
-  "matchTinyGulfCup": "Gulf",
+  "matchTinyGulfCup": "Oasis",
   "@matchTinyGulfCup": {
     "description": "Very short tag for the Gulf Cup on small fixture tiles."
   },

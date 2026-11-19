@@ -3274,10 +3274,10 @@ class AppLocalizationsFi extends AppLocalizations {
   String get achTitleClashDesc => 'Voita Continental Clash.';
 
   @override
-  String get achTitleGulf => 'Persianlahden cupin voittajat';
+  String get achTitleGulf => 'Keidascupin voittajat';
 
   @override
-  String get achTitleGulfDesc => 'Voita Persianlahden cup.';
+  String get achTitleGulfDesc => 'Voita Keidascup.';
 
   @override
   String get achTitleSea => 'Kaakkois-Aasian mestarit';
@@ -18218,14 +18218,14 @@ class AppLocalizationsFi extends AppLocalizations {
   String get playerOtherPositions => 'Eri pelipaikoilla';
 
   @override
-  String get compGulfCup => 'Persianlahden cup';
+  String get compGulfCup => 'Keidascup';
 
   @override
   String get compSoutheastAsianChampionship =>
       'Kaakkois-Aasian mestaruusturnaus';
 
   @override
-  String get matchTinyGulfCup => 'Persianl.';
+  String get matchTinyGulfCup => 'Keidas';
 
   @override
   String get matchTinySoutheastAsia => 'KA-Aasia';

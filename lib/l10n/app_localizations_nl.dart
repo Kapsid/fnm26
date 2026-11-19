@@ -3275,10 +3275,10 @@ class AppLocalizationsNl extends AppLocalizations {
   String get achTitleClashDesc => 'Win de Continental Clash.';
 
   @override
-  String get achTitleGulf => 'Winnaars Golfbeker';
+  String get achTitleGulf => 'Winnaars Oasebeker';
 
   @override
-  String get achTitleGulfDesc => 'Win de Golfbeker.';
+  String get achTitleGulfDesc => 'Win de Oasebeker.';
 
   @override
   String get achTitleSea => 'Zuidoost-Aziatische kampioenen';
@@ -18236,14 +18236,14 @@ class AppLocalizationsNl extends AppLocalizations {
   String get playerOtherPositions => 'Op elke positie';
 
   @override
-  String get compGulfCup => 'Golfbeker';
+  String get compGulfCup => 'Oasebeker';
 
   @override
   String get compSoutheastAsianChampionship =>
       'Zuidoost-Aziatisch kampioenschap';
 
   @override
-  String get matchTinyGulfCup => 'Golf';
+  String get matchTinyGulfCup => 'Oase';
 
   @override
   String get matchTinySoutheastAsia => 'ZOA';

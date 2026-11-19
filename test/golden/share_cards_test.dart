@@ -567,7 +567,7 @@ final List<(String, Locale, CabinetShareData)> _cabinetsLocalized = [
               'Pohár Oceánie',
               'Pohár národů',
               'Souboj kontinentů',
-              'Pohár Perského zálivu',
+              'Pohár oázy',
               'Mistrovství jihovýchodní Asie',
             ][i],
             asset: t.asset,

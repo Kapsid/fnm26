@@ -3286,10 +3286,10 @@ class AppLocalizationsBg extends AppLocalizations {
   String get achTitleClashDesc => 'Спечели Continental Clash.';
 
   @override
-  String get achTitleGulf => 'Победители в Купата на Залива';
+  String get achTitleGulf => 'Победители в Купата на оазиса';
 
   @override
-  String get achTitleGulfDesc => 'Спечелете Купата на Залива.';
+  String get achTitleGulfDesc => 'Спечелете Купата на оазиса.';
 
   @override
   String get achTitleSea => 'Шампиони на Югоизточна Азия';
@@ -18229,13 +18229,13 @@ class AppLocalizationsBg extends AppLocalizations {
   String get playerOtherPositions => 'Във всеки пост';
 
   @override
-  String get compGulfCup => 'Купа на Залива';
+  String get compGulfCup => 'Купа на оазиса';
 
   @override
   String get compSoutheastAsianChampionship => 'Първенство на Югоизточна Азия';
 
   @override
-  String get matchTinyGulfCup => 'Залив';
+  String get matchTinyGulfCup => 'Оазис';
 
   @override
   String get matchTinySoutheastAsia => 'ЮИА';

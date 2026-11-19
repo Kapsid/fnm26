@@ -3263,10 +3263,10 @@ class AppLocalizationsPl extends AppLocalizations {
   String get achTitleClashDesc => 'Wygraj Starcie Kontynentów.';
 
   @override
-  String get achTitleGulf => 'Zwycięzcy Pucharu Zatoki Perskiej';
+  String get achTitleGulf => 'Zwycięzcy Pucharu Oazy';
 
   @override
-  String get achTitleGulfDesc => 'Wygraj Puchar Zatoki Perskiej.';
+  String get achTitleGulfDesc => 'Wygraj Puchar Oazy.';
 
   @override
   String get achTitleSea => 'Mistrzowie Azji Południowo-Wschodniej';
@@ -18335,14 +18335,14 @@ class AppLocalizationsPl extends AppLocalizations {
   String get playerOtherPositions => 'Na każdej pozycji';
 
   @override
-  String get compGulfCup => 'Puchar Zatoki Perskiej';
+  String get compGulfCup => 'Puchar Oazy';
 
   @override
   String get compSoutheastAsianChampionship =>
       'Mistrzostwa Azji Południowo-Wschodniej';
 
   @override
-  String get matchTinyGulfCup => 'Zatoka';
+  String get matchTinyGulfCup => 'Oaza';
 
   @override
   String get matchTinySoutheastAsia => 'APW';

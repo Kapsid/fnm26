@@ -3254,10 +3254,10 @@ class AppLocalizationsSv extends AppLocalizations {
   String get achTitleClashDesc => 'Vinn Continental Clash.';
 
   @override
-  String get achTitleGulf => 'Gulfcupvinnare';
+  String get achTitleGulf => 'Oascupvinnare';
 
   @override
-  String get achTitleGulfDesc => 'Vinn Gulfcupen.';
+  String get achTitleGulfDesc => 'Vinn Oascupen.';
 
   @override
   String get achTitleSea => 'Sydostasiatiska mästare';
@@ -18136,13 +18136,13 @@ class AppLocalizationsSv extends AppLocalizations {
   String get playerOtherPositions => 'På varje position';
 
   @override
-  String get compGulfCup => 'Gulfcupen';
+  String get compGulfCup => 'Oascupen';
 
   @override
   String get compSoutheastAsianChampionship => 'Sydostasiatiska mästerskapet';
 
   @override
-  String get matchTinyGulfCup => 'Gulf';
+  String get matchTinyGulfCup => 'Oas';
 
   @override
   String get matchTinySoutheastAsia => 'SOA';

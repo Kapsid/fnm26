@@ -3228,10 +3228,10 @@ class AppLocalizationsHu extends AppLocalizations {
   String get achTitleClashDesc => 'Nyerd meg a Continental Clasht.';
 
   @override
-  String get achTitleGulf => 'Öböl-kupa-győztesek';
+  String get achTitleGulf => 'Oázis-kupa-győztesek';
 
   @override
-  String get achTitleGulfDesc => 'Nyerd meg az Öböl-kupát.';
+  String get achTitleGulfDesc => 'Nyerd meg az Oázis-kupát.';
 
   @override
   String get achTitleSea => 'Délkelet-ázsiai bajnokok';
@@ -18088,13 +18088,13 @@ class AppLocalizationsHu extends AppLocalizations {
   String get playerOtherPositions => 'Minden poszton';
 
   @override
-  String get compGulfCup => 'Öböl-kupa';
+  String get compGulfCup => 'Oázis-kupa';
 
   @override
   String get compSoutheastAsianChampionship => 'Délkelet-ázsiai bajnokság';
 
   @override
-  String get matchTinyGulfCup => 'Öböl';
+  String get matchTinyGulfCup => 'Oázis';
 
   @override
   String get matchTinySoutheastAsia => 'DK-Ázsia';

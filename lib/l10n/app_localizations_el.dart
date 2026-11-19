@@ -3276,10 +3276,10 @@ class AppLocalizationsEl extends AppLocalizations {
   String get achTitleClashDesc => 'Κέρδισε την Ηπειρωτική Αναμέτρηση.';
 
   @override
-  String get achTitleGulf => 'Νικητές Κυπέλλου του Κόλπου';
+  String get achTitleGulf => 'Νικητές Κυπέλλου της Όασης';
 
   @override
-  String get achTitleGulfDesc => 'Κατάκτησε το Κύπελλο του Κόλπου.';
+  String get achTitleGulfDesc => 'Κατάκτησε το Κύπελλο της Όασης.';
 
   @override
   String get achTitleSea => 'Πρωταθλητές Νοτιοανατολικής Ασίας';
@@ -18237,14 +18237,14 @@ class AppLocalizationsEl extends AppLocalizations {
   String get playerOtherPositions => 'Σε κάθε θέση';
 
   @override
-  String get compGulfCup => 'Κύπελλο του Κόλπου';
+  String get compGulfCup => 'Κύπελλο της Όασης';
 
   @override
   String get compSoutheastAsianChampionship =>
       'Πρωτάθλημα Νοτιοανατολικής Ασίας';
 
   @override
-  String get matchTinyGulfCup => 'Κόλπος';
+  String get matchTinyGulfCup => 'Όαση';
 
   @override
   String get matchTinySoutheastAsia => 'ΝΑ Ασία';

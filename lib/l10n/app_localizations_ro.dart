@@ -3310,10 +3310,10 @@ class AppLocalizationsRo extends AppLocalizations {
   String get achTitleClashDesc => 'Câștigați Duelul Continentelor.';
 
   @override
-  String get achTitleGulf => 'Câștigătorii Cupei Golfului';
+  String get achTitleGulf => 'Câștigătorii Cupei Oazei';
 
   @override
-  String get achTitleGulfDesc => 'Câștigă Cupa Golfului.';
+  String get achTitleGulfDesc => 'Câștigă Cupa Oazei.';
 
   @override
   String get achTitleSea => 'Campionii Asiei de Sud-Est';
@@ -18569,13 +18569,13 @@ class AppLocalizationsRo extends AppLocalizations {
   String get playerOtherPositions => 'Pe fiecare post';
 
   @override
-  String get compGulfCup => 'Cupa Golfului';
+  String get compGulfCup => 'Cupa Oazei';
 
   @override
   String get compSoutheastAsianChampionship => 'Campionatul Asiei de Sud-Est';
 
   @override
-  String get matchTinyGulfCup => 'Golf';
+  String get matchTinyGulfCup => 'Oază';
 
   @override
   String get matchTinySoutheastAsia => 'ASE';

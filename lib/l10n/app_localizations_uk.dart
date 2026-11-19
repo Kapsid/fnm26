@@ -3252,10 +3252,10 @@ class AppLocalizationsUk extends AppLocalizations {
   String get achTitleClashDesc => 'Виграй Continental Clash.';
 
   @override
-  String get achTitleGulf => 'Переможці Кубка Перської затоки';
+  String get achTitleGulf => 'Переможці Кубка оазису';
 
   @override
-  String get achTitleGulfDesc => 'Виграйте Кубок Перської затоки.';
+  String get achTitleGulfDesc => 'Виграйте Кубок оазису.';
 
   @override
   String get achTitleSea => 'Чемпіони Південно-Східної Азії';
@@ -18474,14 +18474,14 @@ class AppLocalizationsUk extends AppLocalizations {
   String get playerOtherPositions => 'На кожній позиції';
 
   @override
-  String get compGulfCup => 'Кубок Перської затоки';
+  String get compGulfCup => 'Кубок оазису';
 
   @override
   String get compSoutheastAsianChampionship =>
       'Чемпіонат Південно-Східної Азії';
 
   @override
-  String get matchTinyGulfCup => 'Затока';
+  String get matchTinyGulfCup => 'Оазис';
 
   @override
   String get matchTinySoutheastAsia => 'ПСА';

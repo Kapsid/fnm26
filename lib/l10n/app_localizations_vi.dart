@@ -3216,10 +3216,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get achTitleClashDesc => 'Giành chức vô địch Continental Clash.';
 
   @override
-  String get achTitleGulf => 'Nhà vô địch Cúp vùng Vịnh';
+  String get achTitleGulf => 'Nhà vô địch Cúp Ốc đảo';
 
   @override
-  String get achTitleGulfDesc => 'Vô địch Cúp vùng Vịnh.';
+  String get achTitleGulfDesc => 'Vô địch Cúp Ốc đảo.';
 
   @override
   String get achTitleSea => 'Nhà vô địch Đông Nam Á';
@@ -17990,13 +17990,13 @@ class AppLocalizationsVi extends AppLocalizations {
   String get playerOtherPositions => 'Ở từng vị trí';
 
   @override
-  String get compGulfCup => 'Cúp vùng Vịnh';
+  String get compGulfCup => 'Cúp Ốc đảo';
 
   @override
   String get compSoutheastAsianChampionship => 'Giải vô địch Đông Nam Á';
 
   @override
-  String get matchTinyGulfCup => 'Vịnh';
+  String get matchTinyGulfCup => 'Ốc đảo';
 
   @override
   String get matchTinySoutheastAsia => 'ĐNA';

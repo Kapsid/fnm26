@@ -3132,10 +3132,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get achTitleClashDesc => '대륙 대항전에서 우승하세요.';
 
   @override
-  String get achTitleGulf => '걸프컵 우승';
+  String get achTitleGulf => '오아시스컵 우승';
 
   @override
-  String get achTitleGulfDesc => '걸프컵에서 우승하세요.';
+  String get achTitleGulfDesc => '오아시스컵에서 우승하세요.';
 
   @override
   String get achTitleSea => '동남아시아 챔피언';
@@ -17560,13 +17560,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get playerOtherPositions => '포지션별 능력치';
 
   @override
-  String get compGulfCup => '걸프컵';
+  String get compGulfCup => '오아시스컵';
 
   @override
   String get compSoutheastAsianChampionship => '동남아시아 선수권';
 
   @override
-  String get matchTinyGulfCup => '걸프';
+  String get matchTinyGulfCup => '오아시스';
 
   @override
   String get matchTinySoutheastAsia => '동남아';

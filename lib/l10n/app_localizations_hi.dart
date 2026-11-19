@@ -3205,10 +3205,10 @@ class AppLocalizationsHi extends AppLocalizations {
   String get achTitleClashDesc => 'कॉन्टिनेंटल क्लैश जीतें।';
 
   @override
-  String get achTitleGulf => 'गल्फ़ कप विजेता';
+  String get achTitleGulf => 'ओएसिस कप विजेता';
 
   @override
-  String get achTitleGulfDesc => 'गल्फ़ कप जीतें।';
+  String get achTitleGulfDesc => 'ओएसिस कप जीतें।';
 
   @override
   String get achTitleSea => 'दक्षिण-पूर्व एशियाई चैंपियन';
@@ -18051,13 +18051,13 @@ class AppLocalizationsHi extends AppLocalizations {
   String get playerOtherPositions => 'हर पोज़िशन पर';
 
   @override
-  String get compGulfCup => 'गल्फ़ कप';
+  String get compGulfCup => 'ओएसिस कप';
 
   @override
   String get compSoutheastAsianChampionship => 'दक्षिण-पूर्व एशियाई चैंपियनशिप';
 
   @override
-  String get matchTinyGulfCup => 'गल्फ़';
+  String get matchTinyGulfCup => 'ओएसिस';
 
   @override
   String get matchTinySoutheastAsia => 'द.पू. एशिया';

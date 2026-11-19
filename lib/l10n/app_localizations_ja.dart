@@ -3126,10 +3126,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get achTitleClashDesc => 'コンチネンタル・クラッシュで優勝する。';
 
   @override
-  String get achTitleGulf => 'ガルフカップ王者';
+  String get achTitleGulf => 'オアシスカップ王者';
 
   @override
-  String get achTitleGulfDesc => 'ガルフカップで優勝する。';
+  String get achTitleGulfDesc => 'オアシスカップで優勝する。';
 
   @override
   String get achTitleSea => '東南アジア王者';
@@ -17518,13 +17518,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get playerOtherPositions => '各ポジションでの評価';
 
   @override
-  String get compGulfCup => 'ガルフカップ';
+  String get compGulfCup => 'オアシスカップ';
 
   @override
   String get compSoutheastAsianChampionship => '東南アジア選手権';
 
   @override
-  String get matchTinyGulfCup => 'ガルフ';
+  String get matchTinyGulfCup => 'オアシス';
 
   @override
   String get matchTinySoutheastAsia => '東南ア';

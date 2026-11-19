@@ -5511,13 +5511,13 @@ abstract class AppLocalizations {
   /// Achievement title.
   ///
   /// In en, this message translates to:
-  /// **'Gulf Cup Winners'**
+  /// **'Oasis Cup Winners'**
   String get achTitleGulf;
 
   /// Achievement description.
   ///
   /// In en, this message translates to:
-  /// **'Win the Gulf Cup.'**
+  /// **'Win the Oasis Cup.'**
   String get achTitleGulfDesc;
 
   /// Achievement title.
@@ -27426,10 +27426,10 @@ abstract class AppLocalizations {
   /// **'In every position'**
   String get playerOtherPositions;
 
-  /// Competition name: the regional cup of the Gulf nations.
+  /// Competition name: the regional cup of the Gulf nations, an invented name (never the real tournament's).
   ///
   /// In en, this message translates to:
-  /// **'Gulf Cup'**
+  /// **'Oasis Cup'**
   String get compGulfCup;
 
   /// Competition name: the regional championship of Southeast Asia.
@@ -27441,7 +27441,7 @@ abstract class AppLocalizations {
   /// Very short tag for the Gulf Cup on small fixture tiles.
   ///
   /// In en, this message translates to:
-  /// **'Gulf'**
+  /// **'Oasis'**
   String get matchTinyGulfCup;
 
   /// Very short tag for the Southeast Asian Championship on small fixture tiles.
