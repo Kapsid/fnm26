@@ -240,6 +240,11 @@ List<Widget> _cupTabViews(
           for (final e in data.pendingKeys.entries)
             e.key: wcPlaceholderLabel(l, e.value),
         },
+        seeds: {
+          for (final e in data.pendingKeys.entries)
+            if (data.playoffs?.pathSeeds[e.value] case final ids?)
+              e.key: [for (final id in ids) code(id)],
+        },
         playerNationId: data.playerNationId,
         playerPathLetter: switch (data.playoffs?.playerPathKey) {
           final key? => wcPlaceholderMark(key),

@@ -334,9 +334,14 @@ class EuroPendingGroups extends StatelessWidget {
     required this.name,
     this.playerPathLetter,
     this.labels = const {},
+    this.seeds = const {},
     this.grid = false,
     super.key,
   });
+
+  /// A placeholder's path nations, as codes, by its id: the row shows its
+  /// mark and their flags ("D 🏳/🏳/🏳/🏳") in place of "Path D winner".
+  final Map<int, List<String>> seeds;
 
   /// A tablet: the groups in columns, as the finals' group stage has them.
   final bool grid;
@@ -433,15 +438,22 @@ class EuroPendingGroups extends StatelessWidget {
                       ),
                       const SizedBox(width: AppSpacing.sm),
                       Expanded(
-                        child: Text(
-                          letter == null
-                              ? name(id)
-                              : labels[id] ??
-                                    l.euroPlayoffWinnerPlaceholder(letter),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: style,
-                        ),
+                        child: switch (seeds[id]) {
+                          final codes? when letter != null => PathSeedFlags(
+                            codes,
+                            size: 16,
+                            highlighted: lit,
+                          ),
+                          _ => Text(
+                            letter == null
+                                ? name(id)
+                                : labels[id] ??
+                                      l.euroPlayoffWinnerPlaceholder(letter),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: style,
+                          ),
+                        },
                       ),
                       cell('0', style),
                       cell('0', style),

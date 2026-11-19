@@ -9,6 +9,7 @@ import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/features/tournaments/continental_draw_screen.dart';
+import 'package:fnm/features/tournaments/draw_ceremony.dart';
 import 'package:fnm/features/tournaments/euro_playoff_draw_screen.dart';
 import 'package:fnm/features/tournaments/euro_playoff_providers.dart';
 
@@ -136,6 +137,37 @@ void main() {
     expect(find.text('2'), findsOneWidget);
     expect(find.text('The winner goes to Group B'), findsOneWidget);
     expect(find.text('The winner goes to Group A'), findsOneWidget);
+  });
+
+  testWidgets('a path winner\'s row shows its nations\' flags, on the '
+      'smallest phone', (tester) async {
+    tester.view
+      ..physicalSize = const Size(320, 568)
+      ..devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    final stored = drawWithPlaceholders(finalsSlots);
+    await tester.pumpApp(
+      Scaffold(
+        body: EuroPendingGroups(
+          draw: stored.draw,
+          letters: stored.letters,
+          seeds: {
+            for (final id in stored.letters.keys)
+              id: const ['N1', 'N2', 'N3', 'N4'],
+          },
+          playerNationId: 16,
+          playerPathLetter: 'B',
+          code: (id) => nations[id]?.code ?? '??',
+          name: (id) => nations[id]?.name ?? '?',
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    expect(find.byType(PathSeedFlags), findsNWidgets(stored.letters.length));
+    // The flags stand in for the "Path B winner" line.
+    expect(find.text('Path B winner'), findsNothing);
+    expect(find.byKey(const Key('euroPending.path.B')), findsOneWidget);
   });
 
   testWidgets('the EURO groups name each path winner until it is won', (

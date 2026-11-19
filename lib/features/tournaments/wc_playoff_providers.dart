@@ -100,6 +100,14 @@ class WcPlayoffData {
       )
       .firstOrNull;
 
+  /// Each path's nations by its placeholder key: a European path's four,
+  /// an intercontinental path's three.
+  Map<String, List<int>> get pathSeeds => {
+    for (final p in uefaPaths) UefaWcPlayoffs.placeholderKey(p.letter): p.seeds,
+    for (final p in icPaths)
+      IcPlayoffs.placeholderKey(p.path): [p.seed, p.semiHome, p.semiAway],
+  };
+
   /// The finals group the winner behind [placeholderKey] was drawn into.
   String? groupOf(String placeholderKey) => !finalsDrawWatched
       ? null

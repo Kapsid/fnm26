@@ -311,6 +311,14 @@ List<Widget> _continentalTabViews(
       EuroPendingGroups(
         draw: pending,
         letters: data.pendingLetters,
+        seeds: {
+          for (final e in data.pendingLetters.entries)
+            if (data.playoffs?.paths
+                    .where((p) => p.letter == e.value)
+                    .firstOrNull
+                case final path?)
+              e.key: [for (final id in path.seeds) code(id)],
+        },
         playerNationId: data.playerNationId,
         playerPathLetter: data.playoffs?.playerPath?.letter,
         code: code,
