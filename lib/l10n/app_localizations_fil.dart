@@ -1689,6 +1689,22 @@ class AppLocalizationsFil extends AppLocalizations {
   String get hubBoardJobAtRisk => 'Nanganganib ang trabaho';
 
   @override
+  String get boardRemarkNoted =>
+      'Napansin ng pamunuan ang resulta. Hindi nagbabago ang pagtatasa nito sa cycle.';
+
+  @override
+  String get boardRemarkEncouraged =>
+      'Tinatanggap ng pamunuan ang resulta laban sa mas malakas na kalaban.';
+
+  @override
+  String get boardRemarkExpected =>
+      'Inaasahan ang pagkatalo sa mas malakas na kalaban. Hindi nagbabago ang pagtatasa ng pamunuan.';
+
+  @override
+  String get boardRemarkConcerned =>
+      'Napansin ng pamunuan ang pagkatalo at umaasa ito ng tugon.';
+
+  @override
   String get hubBoard => 'BOARD';
 
   @override

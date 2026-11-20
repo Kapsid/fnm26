@@ -1619,6 +1619,18 @@ class AppLocalizationsJa extends AppLocalizations {
   String get hubBoardJobAtRisk => '解任の危機';
 
   @override
+  String get boardRemarkNoted => '理事会は結果を確認した。サイクルに対する評価に変わりはない。';
+
+  @override
+  String get boardRemarkEncouraged => '理事会は格上相手の結果を歓迎する。';
+
+  @override
+  String get boardRemarkExpected => '格上相手の敗戦は想定内だった。理事会の評価に変わりはない。';
+
+  @override
+  String get boardRemarkConcerned => '理事会は敗戦を確認し、立て直しを求めている。';
+
+  @override
   String get hubBoard => '協会';
 
   @override

@@ -1680,6 +1680,22 @@ class AppLocalizationsVi extends AppLocalizations {
   String get hubBoardJobAtRisk => 'Ghế nóng';
 
   @override
+  String get boardRemarkNoted =>
+      'Ban lãnh đạo ghi nhận kết quả. Đánh giá của họ về chu kỳ không thay đổi.';
+
+  @override
+  String get boardRemarkEncouraged =>
+      'Ban lãnh đạo hoan nghênh kết quả trước đối thủ mạnh hơn.';
+
+  @override
+  String get boardRemarkExpected =>
+      'Thất bại trước đối thủ mạnh hơn đã được lường trước. Đánh giá của ban lãnh đạo không thay đổi.';
+
+  @override
+  String get boardRemarkConcerned =>
+      'Ban lãnh đạo đã ghi nhận thất bại và mong đợi sự phản ứng.';
+
+  @override
   String get hubBoard => 'BAN LÃNH ĐẠO';
 
   @override

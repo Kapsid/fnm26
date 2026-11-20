@@ -62,7 +62,12 @@ class BoardObjectivesScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.marginMobile),
         children: [
-          AppCard(child: _ConfidenceRow(value: value)),
+          AppCard(
+            child: _ConfidenceRow(
+              value: value,
+              remark: ref.watch(boardRemarkProvider(careerId)).valueOrNull,
+            ),
+          ),
           const SizedBox(height: AppSpacing.md),
           if (objectives.isEmpty && gaps.isEmpty)
             AppCard(
@@ -134,15 +139,20 @@ String objectiveStatusLabel(AppLocalizations l, CycleObjective o) => !o.decided
 /// The board's confidence: the gavel, the verdict and the figure, in the
 /// verdict's colour.
 class _ConfidenceRow extends StatelessWidget {
-  const _ConfidenceRow({required this.value});
+  const _ConfidenceRow({required this.value, this.remark});
 
   final int? value;
+
+  /// The board's word on the latest result, under the verdict.
+  final BoardRemark? remark;
+
+  static const Key remarkKey = Key('board.remark');
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final (color, verdict) = boardVerdict(l, value);
-    return Row(
+    final row = Row(
       children: [
         Icon(Icons.gavel, color: color, size: 26),
         const SizedBox(width: AppSpacing.md),
@@ -169,8 +179,34 @@ class _ConfidenceRow extends StatelessWidget {
         ),
       ],
     );
+    final said = remark;
+    if (said == null) return row;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        row,
+        const SizedBox(height: AppSpacing.sm),
+        Text(
+          boardRemarkText(l, said),
+          key: remarkKey,
+          style: AppTypography.bodySmall.copyWith(
+            color: AppColors.onSurfaceVariant,
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+      ],
+    );
   }
 }
+
+/// The board's line for [remark], in its official voice.
+String boardRemarkText(AppLocalizations l, BoardRemark remark) =>
+    switch (remark) {
+      BoardRemark.noted => l.boardRemarkNoted,
+      BoardRemark.encouraged => l.boardRemarkEncouraged,
+      BoardRemark.expected => l.boardRemarkExpected,
+      BoardRemark.concerned => l.boardRemarkConcerned,
+    };
 
 /// What stands in for the objectives when there are none to list: still
 /// loading, failed (said, not hidden), or a board with nothing to ask.

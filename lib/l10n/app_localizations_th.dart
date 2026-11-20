@@ -1660,6 +1660,22 @@ class AppLocalizationsTh extends AppLocalizations {
   String get hubBoardJobAtRisk => 'เก้าอี้สั่นคลอน';
 
   @override
+  String get boardRemarkNoted =>
+      'คณะกรรมการรับทราบผลการแข่งขัน การประเมินรอบนี้ยังคงเดิม';
+
+  @override
+  String get boardRemarkEncouraged =>
+      'คณะกรรมการยินดีกับผลงานที่ทำได้กับคู่แข่งที่แข็งแกร่งกว่า';
+
+  @override
+  String get boardRemarkExpected =>
+      'ความพ่ายแพ้ต่อคู่แข่งที่แข็งแกร่งกว่าเป็นสิ่งที่คาดไว้แล้ว การประเมินของคณะกรรมการยังคงเดิม';
+
+  @override
+  String get boardRemarkConcerned =>
+      'คณะกรรมการรับทราบความพ่ายแพ้และคาดหวังการตอบสนอง';
+
+  @override
   String get hubBoard => 'บอร์ดบริหาร';
 
   @override

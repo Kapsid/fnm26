@@ -1736,6 +1736,22 @@ class AppLocalizationsNl extends AppLocalizations {
   String get hubBoardJobAtRisk => 'Baan in gevaar';
 
   @override
+  String get boardRemarkNoted =>
+      'Het bestuur neemt kennis van de uitslag. Zijn oordeel over de cyclus blijft ongewijzigd.';
+
+  @override
+  String get boardRemarkEncouraged =>
+      'Het bestuur verwelkomt het resultaat tegen een sterkere tegenstander.';
+
+  @override
+  String get boardRemarkExpected =>
+      'Een nederlaag tegen een sterkere tegenstander was verwacht. Het oordeel van het bestuur blijft ongewijzigd.';
+
+  @override
+  String get boardRemarkConcerned =>
+      'Het bestuur heeft kennisgenomen van de nederlaag en verwacht een reactie.';
+
+  @override
   String get hubBoard => 'BESTUUR';
 
   @override

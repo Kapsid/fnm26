@@ -516,3 +516,30 @@ abstract final class BoardSatisfaction {
         .clamp(0, 100);
   }
 }
+
+/// The board's word on the latest result, in the measured voice of an
+/// official statement (see [boardRemarkFor]).
+enum BoardRemark {
+  /// A win, or a draw: noted, the cycle's assessment unchanged.
+  noted,
+
+  /// A win over a clearly better side.
+  encouraged,
+
+  /// A defeat by a clearly better side: anticipated.
+  expected,
+
+  /// Any other defeat.
+  concerned,
+}
+
+/// What the board says about one result (see [BoardRemark]), [underdog]
+/// being how far the side played as the underdog
+/// ([BoardSatisfaction.underdogDegree]).
+BoardRemark boardRemarkFor(MatchOutcome outcome, double underdog) =>
+    switch (outcome) {
+      MatchOutcome.win when underdog >= 0.3 => BoardRemark.encouraged,
+      MatchOutcome.win || MatchOutcome.draw => BoardRemark.noted,
+      MatchOutcome.loss when underdog >= 0.5 => BoardRemark.expected,
+      MatchOutcome.loss => BoardRemark.concerned,
+    };

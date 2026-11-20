@@ -1724,6 +1724,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hubBoardJobAtRisk => 'Job at risk';
 
   @override
+  String get boardRemarkNoted =>
+      'The board notes the result. Its assessment of the cycle is unchanged.';
+
+  @override
+  String get boardRemarkEncouraged =>
+      'The board welcomes a result against stronger opposition.';
+
+  @override
+  String get boardRemarkExpected =>
+      'A defeat against stronger opposition was anticipated. The board\'s assessment is unchanged.';
+
+  @override
+  String get boardRemarkConcerned =>
+      'The board has noted the defeat and expects a response.';
+
+  @override
   String get hubBoard => 'BOARD';
 
   @override

@@ -1624,6 +1624,19 @@ class AppLocalizationsKo extends AppLocalizations {
   String get hubBoardJobAtRisk => '경질 위기';
 
   @override
+  String get boardRemarkNoted => '이사회는 결과를 확인했습니다. 사이클에 대한 평가는 변함없습니다.';
+
+  @override
+  String get boardRemarkEncouraged => '이사회는 더 강한 상대를 상대로 거둔 결과를 환영합니다.';
+
+  @override
+  String get boardRemarkExpected =>
+      '더 강한 상대에게 진 것은 예상된 일이었습니다. 이사회의 평가는 변함없습니다.';
+
+  @override
+  String get boardRemarkConcerned => '이사회는 패배를 확인했으며 반등을 기대합니다.';
+
+  @override
   String get hubBoard => '협회 이사회';
 
   @override

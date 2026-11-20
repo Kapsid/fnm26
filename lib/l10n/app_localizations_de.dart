@@ -1744,6 +1744,22 @@ class AppLocalizationsDe extends AppLocalizations {
   String get hubBoardJobAtRisk => 'Job in Gefahr';
 
   @override
+  String get boardRemarkNoted =>
+      'Der Vorstand nimmt das Ergebnis zur Kenntnis. Seine Bewertung des Zyklus bleibt unverändert.';
+
+  @override
+  String get boardRemarkEncouraged =>
+      'Der Vorstand begrüßt das Ergebnis gegen einen stärkeren Gegner.';
+
+  @override
+  String get boardRemarkExpected =>
+      'Eine Niederlage gegen einen stärkeren Gegner war zu erwarten. Die Bewertung des Vorstands bleibt unverändert.';
+
+  @override
+  String get boardRemarkConcerned =>
+      'Der Vorstand hat die Niederlage zur Kenntnis genommen und erwartet eine Reaktion.';
+
+  @override
   String get hubBoard => 'PRÄSIDIUM';
 
   @override

@@ -137,6 +137,51 @@ String achievementTierLabel(AppLocalizations l, AchievementTier t) =>
       AchievementTier.platinum => l.achTierPlatinum,
     };
 
+/// The board's word on the manager's latest result this cycle (see
+/// [boardRemarkFor]), or null before he has played: the measured line under
+/// its confidence. Weighed on the world ranking as it stands.
+final AutoDisposeFutureProviderFamily<BoardRemark?, int> boardRemarkProvider =
+    FutureProvider.autoDispose.family<BoardRemark?, int>((ref, careerId) async {
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      if (career == null) return null;
+      final played =
+          [
+            for (final f
+                in await ref
+                    .watch(competitionRepositoryProvider)
+                    .cycleFixturesForNation(careerId, career.nationId))
+              if (f.hasResult) f,
+          ]..sort((a, b) {
+            final c = a.date.compareTo(b.date);
+            return c != 0 ? c : a.id.compareTo(b.id);
+          });
+      final last = played.lastOrNull;
+      if (last == null) return null;
+      final rank = {
+        for (final n
+            in await ref.watch(nationRepositoryProvider).forCareer(careerId))
+          n.id: n.ranking,
+      };
+      final home = last.homeNationId == career.nationId;
+      final mine = home ? last.homeScore! : last.awayScore!;
+      final theirs = home ? last.awayScore! : last.homeScore!;
+      final own = rank[career.nationId];
+      final opponent = rank[home ? last.awayNationId : last.homeNationId];
+      return boardRemarkFor(
+        mine > theirs
+            ? MatchOutcome.win
+            : mine == theirs
+            ? MatchOutcome.draw
+            : MatchOutcome.loss,
+        own == null || opponent == null
+            ? 0
+            : BoardSatisfaction.underdogDegree(
+                ownRank: own,
+                opponentRank: opponent,
+              ),
+      );
+    });
+
 /// Board/fan satisfaction (0–100) for the save. Recent form nudges it match to
 /// match; a tournament result is what actually moves it. See
 /// [BoardSatisfaction] for the weights and why they are sized as they are.

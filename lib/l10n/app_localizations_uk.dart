@@ -1687,6 +1687,22 @@ class AppLocalizationsUk extends AppLocalizations {
   String get hubBoardJobAtRisk => 'Робота під загрозою';
 
   @override
+  String get boardRemarkNoted =>
+      'Керівництво бере результат до відома. Його оцінка циклу не змінюється.';
+
+  @override
+  String get boardRemarkEncouraged =>
+      'Керівництво вітає результат проти сильнішого суперника.';
+
+  @override
+  String get boardRemarkExpected =>
+      'Поразки від сильнішого суперника очікували. Оцінка керівництва не змінюється.';
+
+  @override
+  String get boardRemarkConcerned =>
+      'Керівництво взяло поразку до відома й очікує реакції.';
+
+  @override
   String get hubBoard => 'РАДА';
 
   @override

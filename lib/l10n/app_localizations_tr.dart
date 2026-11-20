@@ -1678,6 +1678,22 @@ class AppLocalizationsTr extends AppLocalizations {
   String get hubBoardJobAtRisk => 'Görev risk altında';
 
   @override
+  String get boardRemarkNoted =>
+      'Yönetim sonucu not etti. Döneme ilişkin değerlendirmesi değişmedi.';
+
+  @override
+  String get boardRemarkEncouraged =>
+      'Yönetim, daha güçlü bir rakibe karşı alınan sonucu memnuniyetle karşılıyor.';
+
+  @override
+  String get boardRemarkExpected =>
+      'Daha güçlü bir rakibe yenilgi bekleniyordu. Yönetimin değerlendirmesi değişmedi.';
+
+  @override
+  String get boardRemarkConcerned =>
+      'Yönetim yenilgiyi not etti ve bir tepki bekliyor.';
+
+  @override
   String get hubBoard => 'YÖNETİM KURULU';
 
   @override

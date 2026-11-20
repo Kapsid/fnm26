@@ -1686,6 +1686,22 @@ class AppLocalizationsMs extends AppLocalizations {
   String get hubBoardJobAtRisk => 'Jawatan terancam';
 
   @override
+  String get boardRemarkNoted =>
+      'Lembaga mengambil maklum keputusan ini. Penilaiannya terhadap kitaran tidak berubah.';
+
+  @override
+  String get boardRemarkEncouraged =>
+      'Lembaga mengalu-alukan keputusan menentang lawan yang lebih kuat.';
+
+  @override
+  String get boardRemarkExpected =>
+      'Kekalahan kepada lawan yang lebih kuat sudah dijangka. Penilaian lembaga tidak berubah.';
+
+  @override
+  String get boardRemarkConcerned =>
+      'Lembaga telah mengambil maklum kekalahan ini dan mengharapkan reaksi.';
+
+  @override
   String get hubBoard => 'LEMBAGA';
 
   @override

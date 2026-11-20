@@ -1688,6 +1688,22 @@ class AppLocalizationsHu extends AppLocalizations {
   String get hubBoardJobAtRisk => 'Veszélyben a munkád';
 
   @override
+  String get boardRemarkNoted =>
+      'A vezetőség tudomásul veszi az eredményt. A ciklusról alkotott értékelése nem változik.';
+
+  @override
+  String get boardRemarkEncouraged =>
+      'A vezetőség üdvözli az erősebb ellenfél elleni eredményt.';
+
+  @override
+  String get boardRemarkExpected =>
+      'Az erősebb ellenféltől elszenvedett vereség várható volt. A vezetőség értékelése nem változik.';
+
+  @override
+  String get boardRemarkConcerned =>
+      'A vezetőség tudomásul vette a vereséget, és választ vár.';
+
+  @override
   String get hubBoard => 'VEZETŐSÉG';
 
   @override

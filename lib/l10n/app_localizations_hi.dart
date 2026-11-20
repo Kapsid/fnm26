@@ -1674,6 +1674,22 @@ class AppLocalizationsHi extends AppLocalizations {
   String get hubBoardJobAtRisk => 'नौकरी ख़तरे में';
 
   @override
+  String get boardRemarkNoted =>
+      'बोर्ड परिणाम को दर्ज करता है। चक्र के बारे में उसका आकलन नहीं बदला है।';
+
+  @override
+  String get boardRemarkEncouraged =>
+      'बोर्ड मज़बूत प्रतिद्वंद्वी के ख़िलाफ़ इस परिणाम का स्वागत करता है।';
+
+  @override
+  String get boardRemarkExpected =>
+      'मज़बूत प्रतिद्वंद्वी से हार अपेक्षित थी। बोर्ड का आकलन नहीं बदला है।';
+
+  @override
+  String get boardRemarkConcerned =>
+      'बोर्ड ने हार को दर्ज किया है और जवाब की अपेक्षा करता है।';
+
+  @override
   String get hubBoard => 'बोर्ड';
 
   @override

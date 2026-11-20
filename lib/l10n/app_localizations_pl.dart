@@ -1693,6 +1693,22 @@ class AppLocalizationsPl extends AppLocalizations {
   String get hubBoardJobAtRisk => 'Posada zagrożona';
 
   @override
+  String get boardRemarkNoted =>
+      'Zarząd przyjmuje wynik do wiadomości. Jego ocena cyklu pozostaje bez zmian.';
+
+  @override
+  String get boardRemarkEncouraged =>
+      'Zarząd z zadowoleniem przyjmuje wynik z silniejszym rywalem.';
+
+  @override
+  String get boardRemarkExpected =>
+      'Porażka z silniejszym rywalem była spodziewana. Ocena zarządu pozostaje bez zmian.';
+
+  @override
+  String get boardRemarkConcerned =>
+      'Zarząd przyjął porażkę do wiadomości i oczekuje reakcji.';
+
+  @override
   String get hubBoard => 'ZARZĄD';
 
   @override

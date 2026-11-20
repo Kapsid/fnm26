@@ -1743,6 +1743,22 @@ class AppLocalizationsFr extends AppLocalizations {
   String get hubBoardJobAtRisk => 'Poste menacé';
 
   @override
+  String get boardRemarkNoted =>
+      'La direction prend acte du résultat. Son évaluation du cycle reste inchangée.';
+
+  @override
+  String get boardRemarkEncouraged =>
+      'La direction salue un résultat face à un adversaire plus fort.';
+
+  @override
+  String get boardRemarkExpected =>
+      'Une défaite face à un adversaire plus fort était attendue. L\'évaluation de la direction reste inchangée.';
+
+  @override
+  String get boardRemarkConcerned =>
+      'La direction prend acte de la défaite et attend une réaction.';
+
+  @override
   String get hubBoard => 'DIRECTION';
 
   @override

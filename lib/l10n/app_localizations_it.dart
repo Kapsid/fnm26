@@ -1731,6 +1731,22 @@ class AppLocalizationsIt extends AppLocalizations {
   String get hubBoardJobAtRisk => 'Panchina a rischio';
 
   @override
+  String get boardRemarkNoted =>
+      'La dirigenza prende atto del risultato. La sua valutazione del ciclo resta invariata.';
+
+  @override
+  String get boardRemarkEncouraged =>
+      'La dirigenza accoglie con favore il risultato contro un avversario più forte.';
+
+  @override
+  String get boardRemarkExpected =>
+      'Una sconfitta contro un avversario più forte era prevista. La valutazione della dirigenza resta invariata.';
+
+  @override
+  String get boardRemarkConcerned =>
+      'La dirigenza prende atto della sconfitta e si aspetta una reazione.';
+
+  @override
   String get hubBoard => 'FEDERAZIONE';
 
   @override

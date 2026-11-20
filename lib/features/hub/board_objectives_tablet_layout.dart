@@ -35,7 +35,10 @@ class _BoardObjectivesTabletLayout extends ConsumerWidget {
               span: 4,
               child: Panel(
                 title: l.boardObjectivesConfidence,
-                child: _ConfidenceRow(value: value),
+                child: _ConfidenceRow(
+                  value: value,
+                  remark: ref.watch(boardRemarkProvider(careerId)).valueOrNull,
+                ),
               ),
             ),
             if (objectives.isEmpty && gaps.isEmpty)

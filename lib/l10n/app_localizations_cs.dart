@@ -1746,6 +1746,22 @@ class AppLocalizationsCs extends AppLocalizations {
   String get hubBoardJobAtRisk => 'Místo v ohrožení';
 
   @override
+  String get boardRemarkNoted =>
+      'Vedení bere výsledek na vědomí. Jeho hodnocení cyklu se nemění.';
+
+  @override
+  String get boardRemarkEncouraged =>
+      'Vedení vítá výsledek proti silnějšímu soupeři.';
+
+  @override
+  String get boardRemarkExpected =>
+      'Porážka se silnějším soupeřem se dala čekat. Hodnocení vedení se nemění.';
+
+  @override
+  String get boardRemarkConcerned =>
+      'Vedení porážku bere na vědomí a očekává odpověď.';
+
+  @override
   String get hubBoard => 'VEDENÍ';
 
   @override

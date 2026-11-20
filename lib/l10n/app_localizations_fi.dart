@@ -1736,6 +1736,22 @@ class AppLocalizationsFi extends AppLocalizations {
   String get hubBoardJobAtRisk => 'Työ vaarassa';
 
   @override
+  String get boardRemarkNoted =>
+      'Johto panee tuloksen merkille. Sen arvio kaudesta ei muutu.';
+
+  @override
+  String get boardRemarkEncouraged =>
+      'Johto pitää tulosta vahvempaa vastustajaa vastaan tervetulleena.';
+
+  @override
+  String get boardRemarkExpected =>
+      'Tappio vahvemmalle vastustajalle oli odotettavissa. Johdon arvio ei muutu.';
+
+  @override
+  String get boardRemarkConcerned =>
+      'Johto on pannut tappion merkille ja odottaa vastausta.';
+
+  @override
   String get hubBoard => 'HALLITUS';
 
   @override

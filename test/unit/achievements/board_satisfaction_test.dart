@@ -404,4 +404,15 @@ void main() {
       }
     });
   });
+
+  test("the board's word on a result, in its official voice", () {
+    expect(boardRemarkFor(MatchOutcome.draw, 0), BoardRemark.noted);
+    expect(boardRemarkFor(MatchOutcome.win, 0), BoardRemark.noted);
+    expect(boardRemarkFor(MatchOutcome.win, 0.75), BoardRemark.encouraged);
+    // A 50 side beaten by an 80 one: anticipated, not held against him.
+    expect(boardRemarkFor(MatchOutcome.loss, 1), BoardRemark.expected);
+    expect(boardRemarkFor(MatchOutcome.loss, 0.2), BoardRemark.concerned);
+    expect(boardRemarkFor(MatchOutcome.loss, 0), BoardRemark.concerned);
+  });
 }
+

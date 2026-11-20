@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
+import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/hub/board_objectives_screen.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
 
@@ -27,6 +28,11 @@ void main() {
     ],
   );
 
+  // The board's word on the latest result, the longest of its lines.
+  final remark = boardRemarkProvider(
+    kSeededCareerId,
+  ).overrideWith((ref) async => BoardRemark.expected);
+
   String route(SeededSave s) =>
       '${Routes.boardObjectives}?careerId=${s.careerId}';
 
@@ -44,11 +50,19 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets("the board's word on the latest result sits under its "
+      'confidence', (tester) async {
+    final save = await seedSave(tester, overrides: [gaps, remark]);
+    await pumpRoute(tester, save, route(save));
+    expect(find.text(enL.boardRemarkExpected), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   for (final code in const ['de', 'fi', 'hu', 'el', 'pt', 'cs']) {
     testWidgets('fits 360 wide at text 1.4 ($code)', (tester) async {
       tester.platformDispatcher.textScaleFactorTestValue = 1.4;
       addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
-      final save = await seedSave(tester, overrides: [gaps]);
+      final save = await seedSave(tester, overrides: [gaps, remark]);
       await pumpRoute(
         tester,
         save,

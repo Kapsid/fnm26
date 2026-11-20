@@ -2970,6 +2970,30 @@ abstract class AppLocalizations {
   /// **'Job at risk'**
   String get hubBoardJobAtRisk;
 
+  /// Board screen: the board's measured line under its confidence after a win or a draw. Official, neutral tone.
+  ///
+  /// In en, this message translates to:
+  /// **'The board notes the result. Its assessment of the cycle is unchanged.'**
+  String get boardRemarkNoted;
+
+  /// Board screen: the board's line after a win over a clearly stronger side. Official tone.
+  ///
+  /// In en, this message translates to:
+  /// **'The board welcomes a result against stronger opposition.'**
+  String get boardRemarkEncouraged;
+
+  /// Board screen: the board's line after a defeat by a clearly stronger side. Official, understanding tone.
+  ///
+  /// In en, this message translates to:
+  /// **'A defeat against stronger opposition was anticipated. The board\'s assessment is unchanged.'**
+  String get boardRemarkExpected;
+
+  /// Board screen: the board's line after any other defeat. Official, firm but not hostile.
+  ///
+  /// In en, this message translates to:
+  /// **'The board has noted the defeat and expects a response.'**
+  String get boardRemarkConcerned;
+
   /// Heading of the board panel.
   ///
   /// In en, this message translates to:

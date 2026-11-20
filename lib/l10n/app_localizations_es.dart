@@ -1737,6 +1737,22 @@ class AppLocalizationsEs extends AppLocalizations {
   String get hubBoardJobAtRisk => 'Cargo en peligro';
 
   @override
+  String get boardRemarkNoted =>
+      'La directiva toma nota del resultado. Su valoración del ciclo no cambia.';
+
+  @override
+  String get boardRemarkEncouraged =>
+      'La directiva celebra el resultado ante un rival más fuerte.';
+
+  @override
+  String get boardRemarkExpected =>
+      'Una derrota ante un rival más fuerte era previsible. La valoración de la directiva no cambia.';
+
+  @override
+  String get boardRemarkConcerned =>
+      'La directiva toma nota de la derrota y espera una reacción.';
+
+  @override
   String get hubBoard => 'DIRECTIVA';
 
   @override

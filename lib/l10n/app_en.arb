@@ -2498,6 +2498,22 @@
   "@hubBoardJobAtRisk": {
     "description": "Board-confidence level: job at risk."
   },
+  "boardRemarkNoted": "The board notes the result. Its assessment of the cycle is unchanged.",
+  "@boardRemarkNoted": {
+    "description": "Board screen: the board's measured line under its confidence after a win or a draw. Official, neutral tone."
+  },
+  "boardRemarkEncouraged": "The board welcomes a result against stronger opposition.",
+  "@boardRemarkEncouraged": {
+    "description": "Board screen: the board's line after a win over a clearly stronger side. Official tone."
+  },
+  "boardRemarkExpected": "A defeat against stronger opposition was anticipated. The board's assessment is unchanged.",
+  "@boardRemarkExpected": {
+    "description": "Board screen: the board's line after a defeat by a clearly stronger side. Official, understanding tone."
+  },
+  "boardRemarkConcerned": "The board has noted the defeat and expects a response.",
+  "@boardRemarkConcerned": {
+    "description": "Board screen: the board's line after any other defeat. Official, firm but not hostile."
+  },
   "hubBoard": "BOARD",
   "@hubBoard": {
     "description": "Heading of the board panel."

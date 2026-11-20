@@ -1708,6 +1708,22 @@ class AppLocalizationsRo extends AppLocalizations {
   String get hubBoardJobAtRisk => 'Post în pericol';
 
   @override
+  String get boardRemarkNoted =>
+      'Conducerea ia act de rezultat. Evaluarea sa asupra ciclului rămâne neschimbată.';
+
+  @override
+  String get boardRemarkEncouraged =>
+      'Conducerea salută rezultatul împotriva unui adversar mai puternic.';
+
+  @override
+  String get boardRemarkExpected =>
+      'O înfrângere în fața unui adversar mai puternic era de așteptat. Evaluarea conducerii rămâne neschimbată.';
+
+  @override
+  String get boardRemarkConcerned =>
+      'Conducerea a luat act de înfrângere și așteaptă o reacție.';
+
+  @override
   String get hubBoard => 'FEDERAȚIA';
 
   @override

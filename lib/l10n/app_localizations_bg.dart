@@ -1738,6 +1738,22 @@ class AppLocalizationsBg extends AppLocalizations {
   String get hubBoardJobAtRisk => 'Постът е в риск';
 
   @override
+  String get boardRemarkNoted =>
+      'Ръководството отбелязва резултата. Оценката му за цикъла остава непроменена.';
+
+  @override
+  String get boardRemarkEncouraged =>
+      'Ръководството приветства резултата срещу по-силен съперник.';
+
+  @override
+  String get boardRemarkExpected =>
+      'Загубата от по-силен съперник беше очаквана. Оценката на ръководството остава непроменена.';
+
+  @override
+  String get boardRemarkConcerned =>
+      'Ръководството отбелязва загубата и очаква реакция.';
+
+  @override
   String get hubBoard => 'СЪВЕТ';
 
   @override

@@ -1728,6 +1728,22 @@ class AppLocalizationsEl extends AppLocalizations {
   String get hubBoardJobAtRisk => 'Η θέση σου κινδυνεύει';
 
   @override
+  String get boardRemarkNoted =>
+      'Η διοίκηση σημειώνει το αποτέλεσμα. Η αξιολόγησή της για τον κύκλο παραμένει αμετάβλητη.';
+
+  @override
+  String get boardRemarkEncouraged =>
+      'Η διοίκηση χαιρετίζει το αποτέλεσμα απέναντι σε ισχυρότερο αντίπαλο.';
+
+  @override
+  String get boardRemarkExpected =>
+      'Μια ήττα από ισχυρότερο αντίπαλο ήταν αναμενόμενη. Η αξιολόγηση της διοίκησης παραμένει αμετάβλητη.';
+
+  @override
+  String get boardRemarkConcerned =>
+      'Η διοίκηση σημειώνει την ήττα και αναμένει αντίδραση.';
+
+  @override
   String get hubBoard => 'ΔΙΟΙΚΗΣΗ';
 
   @override

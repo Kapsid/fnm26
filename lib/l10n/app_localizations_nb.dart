@@ -1712,6 +1712,22 @@ class AppLocalizationsNb extends AppLocalizations {
   String get hubBoardJobAtRisk => 'Jobben i fare';
 
   @override
+  String get boardRemarkNoted =>
+      'Styret noterer resultatet. Vurderingen av syklusen er uendret.';
+
+  @override
+  String get boardRemarkEncouraged =>
+      'Styret ønsker resultatet mot sterkere motstand velkommen.';
+
+  @override
+  String get boardRemarkExpected =>
+      'Et tap mot sterkere motstand var ventet. Styrets vurdering er uendret.';
+
+  @override
+  String get boardRemarkConcerned =>
+      'Styret har notert tapet og forventer en reaksjon.';
+
+  @override
   String get hubBoard => 'STYRET';
 
   @override
