@@ -97,6 +97,9 @@ class NationDetail {
   bool get isPlayerNation => vitrine.isPlayerNation;
 }
 
+/// An AI side's squad on its page: a tournament squad's size.
+const int nationSquadSize = 26;
+
 /// The oldest a "best young player" may be.
 const int nationYouthMaxAge = 21;
 
@@ -207,8 +210,18 @@ Future<NationDetail?> loadNationDetail(Ref ref, NationVitrineArg arg) async {
       limit: 1,
     ).firstOrNull;
   }
+  // Where the SQUAD plays: the manager's called-up men on his own page, an
+  // AI side's best [nationSquadSize] elsewhere. Its whole pool, youth intake
+  // and fringe included, read 49 English players in England by 2031.
+  final squad = isOwn
+      ? pool
+      : ([...pool]..sort((a, b) {
+              final c = b.overall.compareTo(a.overall);
+              return c != 0 ? c : a.id.compareTo(b.id);
+            }))
+            .take(nationSquadSize);
   final byCountry = <String, int>{};
-  for (final p in pool) {
+  for (final p in squad) {
     if (p.clubCountry.isEmpty) continue;
     final code = p.clubCountry.toUpperCase();
     byCountry[code] = (byCountry[code] ?? 0) + 1;
