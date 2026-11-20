@@ -29,7 +29,13 @@ extension SeasonRegionalCups on SeasonService {
     if (!_ref.read(regionalCupsEnabledProvider)) return null;
     final clock = career.inGameDate;
     final wcYear = SeasonService.finalsYear(career.cyclePointer);
-    for (final (slot, year) in RegionalCups.yearsOf(wcYear).indexed) {
+    final years = await RegionalCups.yearsFor(
+      _comp,
+      career.id,
+      career.cyclePointer,
+      wcYear,
+    );
+    for (final (slot, year) in years.indexed) {
       final day = RegionalCups.drawDay(year);
       if (!clock.isBefore(day) || !target.isAfter(day)) continue;
       for (final cup in RegionalCups.all) {
@@ -61,8 +67,14 @@ extension SeasonRegionalCups on SeasonService {
     }
     final wcYear = SeasonService.finalsYear(career.cyclePointer);
     final today = career.inGameDate;
+    final years = await RegionalCups.yearsFor(
+      _comp,
+      careerId,
+      career.cyclePointer,
+      wcYear,
+    );
     for (final cup in RegionalCups.all) {
-      for (final (slot, year) in RegionalCups.yearsOf(wcYear).indexed) {
+      for (final (slot, year) in years.indexed) {
         if (today.isBefore(RegionalCups.drawDay(year))) continue;
         if (await _comp.hasHonour(careerId, cup.name, year)) continue;
         await _progressRegionalCup(

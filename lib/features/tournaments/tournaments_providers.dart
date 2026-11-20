@@ -466,11 +466,17 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
   final regionalCups = <String, TournamentStatus>{};
   final regionalMine = <String>{};
   final wcYear = CareerService.worldCupYear(career.cyclePointer);
+  final regionalYears = await RegionalCups.yearsFor(
+    comp,
+    careerId,
+    career.cyclePointer,
+    wcYear,
+  );
   final myCode = nations[career.nationId]?.code;
   for (final cup in RegionalCups.all) {
     if (cup.memberCodes.contains(myCode)) regionalMine.add(cup.name);
     var live = false;
-    for (final (slot, year) in RegionalCups.yearsOf(wcYear).indexed) {
+    for (final (slot, year) in regionalYears.indexed) {
       if (await comp.hasTournament(
             careerId,
             RegionalCups.kind,

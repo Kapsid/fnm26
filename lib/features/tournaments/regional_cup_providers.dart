@@ -50,7 +50,12 @@ regionalCupProvider = FutureProvider.autoDispose
           n.id: n,
       };
       final wcYear = CareerService.worldCupYear(career.cyclePointer);
-      final years = RegionalCups.yearsOf(wcYear);
+      final years = await RegionalCups.yearsFor(
+        comp,
+        careerId,
+        career.cyclePointer,
+        wcYear,
+      );
 
       // The cycle's latest edition on the calendar.
       int? year;
@@ -98,7 +103,8 @@ regionalCupProvider = FutureProvider.autoDispose
       final today = career.inGameDate.year;
       final nextYear = [
         ...years,
-        ...RegionalCups.yearsOf(wcYear + 4),
+        // Every cycle a rollover opens is on the 1.1.2 calendar.
+        ...RegionalCups.yearsOf(wcYear + 4, cal2: true),
       ].firstWhere((y) => y >= today && y != year, orElse: () => years.last);
       final honours =
           (await comp.honours(

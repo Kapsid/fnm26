@@ -436,10 +436,18 @@ class DriftCompetitionRepository implements CompetitionRepository {
             .getSingleOrNull();
 
     QualifyingGroupRow? group;
+    // 0. A regional cup is a tournament of its own, played in December
+    //    while the continental finals are drawn for January: its group game
+    //    next is what the hub shows, not the finals group a month away.
+    final nextGroup = nextFx?.groupId;
+    if (nextGroup != null &&
+        kindByComp[nextFx!.competitionId] == CompetitionKind.regionalCup) {
+      group = groupById[nextGroup];
+    }
     // 1. A live finals group the player is in wins — the active tournament is
     //    always what the hub shows, even if a qualifier's fixture falls sooner.
     var best = 1 << 30;
-    for (final m in memberships) {
+    for (final m in group == null ? memberships : const <GroupMemberRow>[]) {
       final g = groupById[m.groupId];
       if (g == null || !liveComps.contains(g.competitionId)) continue;
       if (!finalsKinds.contains(kindByComp[g.competitionId])) continue;

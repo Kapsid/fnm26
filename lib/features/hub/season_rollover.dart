@@ -331,6 +331,9 @@ extension SeasonRollover on SeasonService {
     // And Europe's World Championship qualifying in the real UEFA shape
     // (1.1.2): from the next cycle on, never the one under way.
     await _comp.markDrawWatched(careerId, nextCycle, UefaWcPlayoffs.kind2);
+    // And its regional cups in the Decembers clear of the Asian
+    // Championship (see RegionalCups.yearsOf).
+    await _comp.markDrawWatched(careerId, nextCycle, RegionalCups.cal2Kind);
     // Its big games and its own talent's growth follow the 1.1.2 difficulty
     // (see BigGameDifficulty), with the manager's hand in its intake
     // recorded as it stands when the cycle opens (see stampYouthHand).

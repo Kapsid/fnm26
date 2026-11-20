@@ -541,6 +541,7 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
       comp: comp,
       careerId: careerId,
       cup: regional,
+      cycle: career.cyclePointer,
       wcYear: CareerService.worldCupYear(career.cyclePointer),
       today: career.inGameDate,
       nations: nations,
@@ -645,6 +646,7 @@ Future<ObjectiveOutcome?> _regionalBrief({
   required CompetitionRepository comp,
   required int careerId,
   required RegionalCup cup,
+  required int cycle,
   required int wcYear,
   required DateTime today,
   required List<Nation> nations,
@@ -652,7 +654,7 @@ Future<ObjectiveOutcome?> _regionalBrief({
   required int nationId,
   required List<Fixture> fixtures,
 }) async {
-  final years = RegionalCups.yearsOf(wcYear);
+  final years = await RegionalCups.yearsFor(comp, careerId, cycle, wcYear);
   int? slot;
   for (var i = 0; i < years.length && slot == null; i++) {
     if (await comp.hasTournament(
@@ -665,7 +667,15 @@ Future<ObjectiveOutcome?> _regionalBrief({
     }
   }
   if (slot == null) {
+    // Not an edition already on file as real history (the 1.1.2 calendar
+    // opens a new career's first cycle on December 2026, the last edition
+    // the history holds): there is nothing left to brief in it.
+    final filed = {
+      for (final h in await comp.honours(careerId))
+        if (h.competition == cup.name) h.year,
+    };
     for (var i = 0; i < years.length && slot == null; i++) {
+      if (filed.contains(years[i])) continue;
       if (!today.isAfter(RegionalCups.latestDraw(years[i]))) slot = i;
     }
   }

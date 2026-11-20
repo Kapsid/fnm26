@@ -22,6 +22,7 @@ import 'package:fnm/domain/repositories/player_repository.dart'
         namePoolsV3Kind,
         namePoolsV4Kind,
         namePoolsV5Kind;
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/match/big_game_difficulty.dart';
 import 'package:fnm/features/federation/youth_hand.dart';
@@ -301,6 +302,12 @@ class CareerService {
     /// keep the shape a world was pinned on. Its rollovers stamp it as
     /// every save's do.
     bool euroQuali2 = true,
+
+    /// Whether the regional cups play on the 1.1.2 calendar, clear of the
+    /// Asian Championship (`RegionalCups.cal2Kind`). Defaults to true; a
+    /// test whose seed was found on the old dates passes false.
+    bool regionalCal2 = true,
+
     /// Whether its first cycle plays the 1.1.2 difficulty (see
     /// `BigGameDifficulty.kind`). Defaults to true. A test passes false to
     /// play a first cycle as a save from before it does; its rollovers stamp
@@ -496,6 +503,10 @@ class CareerService {
     // And Europe's World Championship qualifying in the real UEFA shape.
     if (calendar2 && euroQuali2) {
       await comp.markDrawWatched(career.id, 0, UefaWcPlayoffs.kind2);
+    }
+    // And its regional cups clear of the Asian Championship.
+    if (regionalCal2) {
+      await comp.markDrawWatched(career.id, 0, RegionalCups.cal2Kind);
     }
     // Its big games and its own talent's growth follow the 1.1.2 difficulty
     // (see BigGameDifficulty and GrowthDifficulty), with the manager's hand

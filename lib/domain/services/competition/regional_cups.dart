@@ -7,6 +7,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/round_robin.dart';
 
@@ -155,11 +156,29 @@ abstract final class RegionalCups {
     return cup != null && round != roundsOf(cup).group;
   }
 
-  /// The two slots of a four-year cycle: December three years and one year
-  /// before the World Championship [wcYear], clear of the continental
-  /// championship (January and June two years before) and of the World
-  /// Championship itself.
-  static List<int> yearsOf(int wcYear) => [wcYear - 3, wcYear - 1];
+  /// The two slots of a four-year cycle, in December. A cycle marked
+  /// [cal2Kind] ([cal2]) plays them four and two years before the World
+  /// Championship [wcYear]: after it, and after the Asian Championship in
+  /// the January, two years apart. Before that, three years and one year
+  /// before it, the first ending a week before the Asian Championship,
+  /// whose call-ups it clashed with (a tester's report).
+  static List<int> yearsOf(int wcYear, {bool cal2 = false}) =>
+      cal2 ? [wcYear - 4, wcYear - 2] : [wcYear - 3, wcYear - 1];
+
+  /// The per-cycle marker (`draws_watched`) of the 1.1.2 calendar: set for
+  /// a new career's first cycle and every cycle a rollover opens.
+  static const String cal2Kind = 'regionalCal2';
+
+  /// [yearsOf] for career [careerId]'s [cycle], read off its marker.
+  static Future<List<int>> yearsFor(
+    CompetitionRepository comp,
+    int careerId,
+    int cycle,
+    int wcYear,
+  ) async => yearsOf(
+    wcYear,
+    cal2: await comp.hasWatchedDraw(careerId, cycle, cal2Kind),
+  );
 
   /// The edition column of [cup]'s [slot] (0 or 1) in a cycle.
   static int editionOf(RegionalCup cup, int slot) => cup.index * 2 + slot;

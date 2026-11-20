@@ -14,6 +14,10 @@ import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart' show seasonServiceProvider;
 import 'package:fnm/features/hub/objective_providers.dart';
 
+import 'package:fnm/features/hub/draw_reveal.dart';
+
+import 'package:fnm/domain/entities/enums.dart';
+
 import 'driver.dart';
 
 /// The regional cups through the hub: Thailand's manager is told of the
@@ -33,9 +37,17 @@ void main() {
     final comp = c.read(competitionRepositoryProvider);
     final careers = c.read(careerRepositoryProvider);
     final career = (await careers.byId(id))!;
-    final year = RegionalCups.yearsOf(
+    // The first edition still to be played: on the 1.1.2 calendar a new
+    // career's cycle opens on December 2026, already in the real history,
+    // so its first is December 2028, after the Asian Championship.
+    final filed = {for (final e in RegionalHistory.editions) e.year};
+    final year = (await RegionalCups.yearsFor(
+      comp,
+      id,
+      career.cyclePointer,
       CareerService.worldCupYear(career.cyclePointer),
-    ).first;
+    )).firstWhere((y) => !filed.contains(y));
+    expect(year, 2028);
 
     // The real history is on file from the start.
     final honours = await comp.honours(id);
@@ -64,12 +76,25 @@ void main() {
     final seen = <(HubEventKind, String)>[];
     d.beforeEvent = (e) async => seen.add((e.kind, e.label));
     var steps = 0;
+    var regionalNext = 0;
     while ((await careers.byId(id))!.inGameDate.isBefore(
       DateTime(year + 1, 1, 10),
     )) {
       if (++steps > 4000) fail('stuck');
       if (!await d.step(stopAtRollover: true)) break;
+      // With a regional cup game next, the hub shows it: no "draw to come"
+      // (the cup is drawn without a ceremony) and its group, not the
+      // continental finals' drawn for the January.
+      final next = await comp.nextFixtureForNation(id, thailand);
+      if (next != null && RegionalCups.isGroupRound(next.round)) {
+        regionalNext++;
+        c.invalidate(nextDrawWatchedProvider(id));
+        expect(await c.read(nextDrawWatchedProvider(id).future), isTrue);
+        final table = await comp.groupTableForNation(id, thailand);
+        expect(table?.kind, CompetitionKind.regionalCup);
+      }
     }
+    expect(regionalNext, greaterThan(0), reason: 'never saw the cup coming');
 
     for (final cup in RegionalCups.all) {
       final won = (await comp.honours(

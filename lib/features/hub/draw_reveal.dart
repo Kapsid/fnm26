@@ -8,6 +8,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/features/hub/hub_event.dart';
@@ -33,6 +34,11 @@ String? drawKindForFixture(Fixture f) {
   // "draw pending" until the finals draw was watched. The Continental Clash
   // ('FFINAL') is the same: two champions, nothing drawn.
   if (round == Rounds.friendly || round == 'FFINAL') return null;
+  // A regional cup is drawn without a ceremony (its groups are news), so its
+  // games are there to see from the draw. Its rounds ('XGGROUP', 'XASF'...)
+  // used to fall through to the World Championship key and hide behind
+  // "draw to come" until December of the finals' year.
+  if (RegionalCups.isRound(round)) return null;
   if (round == 'CQ') return continentalQualDrawKind;
   // Europe's play-offs (EPSF, EPFINAL): their own ceremony, the paths. They
   // would otherwise fall through to the World Championship key at the bottom.
