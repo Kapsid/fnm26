@@ -12680,6 +12680,13 @@ class AppLocalizationsRo extends AppLocalizations {
   String get stadiumsBuildTitle => 'Construiți un stadion nou';
 
   @override
+  String get stadiumsOtherGrounds => 'Alte stadioane';
+
+  @override
+  String get stadiumsOtherGroundsBody =>
+      'Adăugate în baza ta de date. Găzduiesc unele meciuri de acasă; turneele finale, candidaturile de organizare și veniturile din stadioane vin din setul național de mai sus.';
+
+  @override
   String get stadiumsBuildBody =>
       'Destul de scump: un stadion nou în orașul ales, deschis de la începutul ciclului următor.';
 

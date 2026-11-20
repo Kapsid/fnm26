@@ -12198,6 +12198,13 @@ class AppLocalizationsVi extends AppLocalizations {
   String get stadiumsBuildTitle => 'Xây sân vận động mới';
 
   @override
+  String get stadiumsOtherGrounds => 'Các sân khác';
+
+  @override
+  String get stadiumsOtherGroundsBody =>
+      'Được thêm trong cơ sở dữ liệu của bạn. Các sân này tổ chức một số trận sân nhà; vòng chung kết, hồ sơ đăng cai và doanh thu sân lấy từ bộ sân quốc gia ở trên.';
+
+  @override
   String get stadiumsBuildBody =>
       'Khá tốn kém: một sân mới ở thành phố bạn chọn, mở cửa từ đầu chu kỳ sau.';
 

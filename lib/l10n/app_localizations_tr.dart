@@ -12240,6 +12240,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get stadiumsBuildTitle => 'Yeni stadyum yap';
 
   @override
+  String get stadiumsOtherGrounds => 'Diğer stadyumlar';
+
+  @override
+  String get stadiumsOtherGroundsBody =>
+      'Veritabanında eklendi. Bazı iç saha maçlarına ev sahipliği yaparlar; turnuvalar, ev sahipliği adaylıkları ve stadyum gelirleri yukarıdaki ulusal setten gelir.';
+
+  @override
   String get stadiumsBuildBody =>
       'Oldukça pahalı: seçtiğin şehirde yeni bir stadyum, bir sonraki dönemin başından itibaren açık.';
 

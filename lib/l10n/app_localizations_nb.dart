@@ -12326,6 +12326,13 @@ class AppLocalizationsNb extends AppLocalizations {
   String get stadiumsBuildTitle => 'Bygg et nytt stadion';
 
   @override
+  String get stadiumsOtherGrounds => 'Andre stadioner';
+
+  @override
+  String get stadiumsOtherGroundsBody =>
+      'Lagt til i databasen din. De arrangerer noen hjemmekamper; sluttspill, vertsbud og stadioninntekter kommer fra det nasjonale settet ovenfor.';
+
+  @override
   String get stadiumsBuildBody =>
       'Ganske dyrt: et nytt stadion i byen du velger, åpent fra starten av neste syklus.';
 

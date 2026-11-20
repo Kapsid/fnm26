@@ -3074,6 +3074,8 @@
   "stadiumsTopLevel": "Pinakamataas na antas",
   "stadiumsOpens": "Itinatayo pa, magbubukas sa {year}",
   "stadiumsBuildTitle": "Magtayo ng bagong stadium",
+  "stadiumsOtherGrounds": "Iba pang istadyum",
+  "stadiumsOtherGroundsBody": "Idinagdag sa iyong database. Nagho-host sila ng ilang home game; ang finals, mga bid sa pagho-host at kita ng istadyum ay mula sa pambansang set sa itaas.",
   "stadiumsBuildBody": "Medyo mahal: bagong stadium sa lungsod na pipiliin mo, bukas mula sa simula ng susunod na cycle.",
   "stadiumsBuildCity": "Lungsod",
   "stadiumsBuildButton": "Itayo: {cost}",

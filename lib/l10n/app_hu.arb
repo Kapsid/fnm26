@@ -3074,6 +3074,8 @@
   "stadiumsTopLevel": "Legmagasabb szint",
   "stadiumsOpens": "Épül, nyitás: {year}",
   "stadiumsBuildTitle": "Új stadion építése",
+  "stadiumsOtherGrounds": "További stadionok",
+  "stadiumsOtherGroundsBody": "Az adatbázisodban hozzáadva. Néhány hazai meccsnek adnak otthont; a tornák, a rendezési pályázatok és a stadionbevételek a fenti nemzeti készletből származnak.",
   "stadiumsBuildBody": "Elég drága: új stadion az általad választott városban, a következő ciklus elejétől használható.",
   "stadiumsBuildCity": "Város",
   "stadiumsBuildButton": "Építés: {cost}",

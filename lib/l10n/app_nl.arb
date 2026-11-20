@@ -3074,6 +3074,8 @@
   "stadiumsTopLevel": "Hoogste niveau",
   "stadiumsOpens": "In aanbouw, opent in {year}",
   "stadiumsBuildTitle": "Een nieuw stadion bouwen",
+  "stadiumsOtherGrounds": "Andere stadions",
+  "stadiumsOtherGroundsBody": "Toegevoegd in je database. Ze ontvangen een deel van de thuisduels; eindtoernooien, kandidaturen en stadioninkomsten komen uit de nationale set hierboven.",
   "stadiumsBuildBody": "Behoorlijk duur: een nieuw stadion in de stad van je keuze, open vanaf het begin van de volgende cyclus.",
   "stadiumsBuildCity": "Stad",
   "stadiumsBuildButton": "Bouwen: {cost}",

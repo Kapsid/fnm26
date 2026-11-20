@@ -12096,6 +12096,13 @@ class AppLocalizationsTh extends AppLocalizations {
   String get stadiumsBuildTitle => 'สร้างสนามใหม่';
 
   @override
+  String get stadiumsOtherGrounds => 'สนามอื่น ๆ';
+
+  @override
+  String get stadiumsOtherGroundsBody =>
+      'เพิ่มในฐานข้อมูลของคุณ ใช้จัดเกมเหย้าบางนัด ส่วนรอบสุดท้าย การยื่นเป็นเจ้าภาพ และรายได้สนามมาจากชุดสนามแห่งชาติด้านบน';
+
+  @override
   String get stadiumsBuildBody =>
       'ค่อนข้างแพง: สนามใหม่ในเมืองที่คุณเลือก เปิดใช้ตั้งแต่เริ่มรอบถัดไป';
 

@@ -217,6 +217,7 @@ class NationalStadiumsView {
     required this.nationId,
     required this.cycle,
     required this.stadiums,
+    this.otherGrounds = const [],
     required this.cities,
     required this.window,
     required this.freeFunds,
@@ -233,6 +234,10 @@ class NationalStadiumsView {
   /// The national stadiums: the [NationalStadiums.setSize] biggest seed
   /// grounds and every stadium built (open or not), in that order.
   final List<NationalStadium> stadiums;
+
+  /// The grounds the career's database added outside the national set (see
+  /// [NationalStadiums.otherGrounds]): shown, not managed.
+  final List<NationalStadium> otherGrounds;
 
   /// The cities a new stadium can go in: the nation's cities that have not
   /// had one built yet.
@@ -364,6 +369,7 @@ Future<NationalStadiumsView?> _loadView(Ref ref, int careerId) async {
     nationId: nationId,
     cycle: cycle,
     stadiums: set,
+    otherGrounds: NationalStadiums.otherGrounds(all),
     cities: [
       for (final c in cityPool)
         if (!builtIn.contains(c)) c,

@@ -175,6 +175,28 @@ void main() {
       expect(withAdded.indexOf(testford), lessThan(plain.length));
     });
 
+    test('one too small for the national set is still listed', () {
+      final estate = NationalStadiums.forNation(
+        nationId: _england,
+        seed: seed,
+        works: const [],
+        added: added[_england]!,
+      );
+      final set = NationalStadiums.nationalSet(estate);
+      final others = NationalStadiums.otherGrounds(estate);
+      // The big one is in the set; the small one is not, and is listed on
+      // its own rather than missing from every screen.
+      expect(set.map((s) => s.city), contains('Testford'));
+      expect(set.map((s) => s.city), isNot(contains('Smallbury')));
+      expect(others.map((s) => s.city), ['Smallbury']);
+      // Never a ground of the game's own, and never one twice.
+      expect(others.every((s) => s.added), isTrue);
+      expect(
+        others.where((s) => set.any((t) => t.site == s.site)),
+        isEmpty,
+      );
+    });
+
     test('a work on an added ground lands on it alone', () {
       final work = StadiumWork.resize(
         nationId: _england,

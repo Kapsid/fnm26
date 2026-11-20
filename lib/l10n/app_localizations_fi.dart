@@ -12397,6 +12397,13 @@ class AppLocalizationsFi extends AppLocalizations {
   String get stadiumsBuildTitle => 'Rakenna uusi stadion';
 
   @override
+  String get stadiumsOtherGrounds => 'Muut stadionit';
+
+  @override
+  String get stadiumsOtherGroundsBody =>
+      'Lisätty tietokantaasi. Niillä pelataan osa kotiotteluista; lopputurnaukset, isännyyshakemukset ja stadiontulot tulevat yllä olevasta kansallisesta joukosta.';
+
+  @override
   String get stadiumsBuildBody =>
       'Melko kallis: uusi stadion valitsemaasi kaupunkiin, käytössä seuraavan kauden alusta.';
 

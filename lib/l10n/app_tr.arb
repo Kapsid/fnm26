@@ -3074,6 +3074,8 @@
   "stadiumsTopLevel": "En üst seviye",
   "stadiumsOpens": "İnşaat hâlinde, {year} yılında açılacak",
   "stadiumsBuildTitle": "Yeni stadyum yap",
+  "stadiumsOtherGrounds": "Diğer stadyumlar",
+  "stadiumsOtherGroundsBody": "Veritabanında eklendi. Bazı iç saha maçlarına ev sahipliği yaparlar; turnuvalar, ev sahipliği adaylıkları ve stadyum gelirleri yukarıdaki ulusal setten gelir.",
   "stadiumsBuildBody": "Oldukça pahalı: seçtiğin şehirde yeni bir stadyum, bir sonraki dönemin başından itibaren açık.",
   "stadiumsBuildCity": "Şehir",
   "stadiumsBuildButton": "Yap: {cost}",

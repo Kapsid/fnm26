@@ -12351,6 +12351,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stadiumsBuildTitle => 'Build a new stadium';
 
   @override
+  String get stadiumsOtherGrounds => 'Other grounds';
+
+  @override
+  String get stadiumsOtherGroundsBody =>
+      'Added in your database. They host some home games; finals, host bids and stadium income come from the national set above.';
+
+  @override
   String get stadiumsBuildBody =>
       'Quite expensive: a new ground in the city you choose, open from the start of the next cycle.';
 

@@ -12245,6 +12245,13 @@ class AppLocalizationsHi extends AppLocalizations {
   String get stadiumsBuildTitle => 'नया स्टेडियम बनवाएँ';
 
   @override
+  String get stadiumsOtherGrounds => 'अन्य स्टेडियम';
+
+  @override
+  String get stadiumsOtherGroundsBody =>
+      'आपके डेटाबेस में जोड़े गए। ये कुछ घरेलू मैचों की मेज़बानी करते हैं; फ़ाइनल, मेज़बानी बोलियाँ और स्टेडियम आय ऊपर दिए राष्ट्रीय सेट से आती हैं।';
+
+  @override
   String get stadiumsBuildBody =>
       'काफ़ी महँगा: आपके चुने शहर में नया स्टेडियम, अगले चक्र की शुरुआत से खुला।';
 

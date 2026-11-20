@@ -3074,6 +3074,8 @@
   "stadiumsTopLevel": "Høyeste nivå",
   "stadiumsOpens": "Under bygging, åpner i {year}",
   "stadiumsBuildTitle": "Bygg et nytt stadion",
+  "stadiumsOtherGrounds": "Andre stadioner",
+  "stadiumsOtherGroundsBody": "Lagt til i databasen din. De arrangerer noen hjemmekamper; sluttspill, vertsbud og stadioninntekter kommer fra det nasjonale settet ovenfor.",
   "stadiumsBuildBody": "Ganske dyrt: et nytt stadion i byen du velger, åpent fra starten av neste syklus.",
   "stadiumsBuildCity": "By",
   "stadiumsBuildButton": "Bygg: {cost}",

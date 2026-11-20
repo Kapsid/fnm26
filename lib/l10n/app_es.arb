@@ -3074,6 +3074,8 @@
   "stadiumsTopLevel": "Nivel máximo",
   "stadiumsOpens": "En construcción, se inaugura en {year}",
   "stadiumsBuildTitle": "Construir un estadio nuevo",
+  "stadiumsOtherGrounds": "Otros estadios",
+  "stadiumsOtherGroundsBody": "Añadidos en tu base de datos. Acogen algunos partidos como local; las fases finales, las candidaturas y los ingresos de estadios salen del conjunto nacional de arriba.",
   "stadiumsBuildBody": "Bastante caro: un estadio nuevo en la ciudad que elijas, abierto desde el inicio del próximo ciclo.",
   "stadiumsBuildCity": "Ciudad",
   "stadiumsBuildButton": "Construir: {cost}",

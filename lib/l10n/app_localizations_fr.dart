@@ -12446,6 +12446,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get stadiumsBuildTitle => 'Construire un nouveau stade';
 
   @override
+  String get stadiumsOtherGrounds => 'Autres stades';
+
+  @override
+  String get stadiumsOtherGroundsBody =>
+      'Ajoutés dans votre base de données. Ils accueillent certains matchs à domicile ; les phases finales, les candidatures et les recettes des stades viennent de l\'ensemble national ci-dessus.';
+
+  @override
   String get stadiumsBuildBody =>
       'Assez coûteux : un nouveau stade dans la ville de votre choix, ouvert dès le début du prochain cycle.';
 

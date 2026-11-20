@@ -12226,6 +12226,13 @@ class AppLocalizationsId extends AppLocalizations {
   String get stadiumsBuildTitle => 'Bangun stadion baru';
 
   @override
+  String get stadiumsOtherGrounds => 'Stadion lain';
+
+  @override
+  String get stadiumsOtherGroundsBody =>
+      'Ditambahkan di basis data Anda. Stadion ini menggelar sebagian laga kandang; turnamen akhir, pencalonan tuan rumah, dan pendapatan stadion berasal dari kumpulan nasional di atas.';
+
+  @override
   String get stadiumsBuildBody =>
       'Cukup mahal: stadion baru di kota pilihan Anda, dibuka sejak awal siklus berikutnya.';
 

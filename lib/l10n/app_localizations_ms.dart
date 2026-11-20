@@ -12274,6 +12274,13 @@ class AppLocalizationsMs extends AppLocalizations {
   String get stadiumsBuildTitle => 'Bina stadium baharu';
 
   @override
+  String get stadiumsOtherGrounds => 'Stadium lain';
+
+  @override
+  String get stadiumsOtherGroundsBody =>
+      'Ditambah dalam pangkalan data anda. Ia menjadi tuan rumah sebahagian perlawanan di laman sendiri; kejohanan akhir, bidaan tuan rumah dan pendapatan stadium datang daripada set kebangsaan di atas.';
+
+  @override
   String get stadiumsBuildBody =>
       'Agak mahal: stadium baharu di bandar pilihan anda, dibuka mulai awal kitaran seterusnya.';
 

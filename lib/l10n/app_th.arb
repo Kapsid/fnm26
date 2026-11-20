@@ -3074,6 +3074,8 @@
   "stadiumsTopLevel": "ระดับสูงสุด",
   "stadiumsOpens": "กำลังก่อสร้าง เปิดใช้ปี {year}",
   "stadiumsBuildTitle": "สร้างสนามใหม่",
+  "stadiumsOtherGrounds": "สนามอื่น ๆ",
+  "stadiumsOtherGroundsBody": "เพิ่มในฐานข้อมูลของคุณ ใช้จัดเกมเหย้าบางนัด ส่วนรอบสุดท้าย การยื่นเป็นเจ้าภาพ และรายได้สนามมาจากชุดสนามแห่งชาติด้านบน",
   "stadiumsBuildBody": "ค่อนข้างแพง: สนามใหม่ในเมืองที่คุณเลือก เปิดใช้ตั้งแต่เริ่มรอบถัดไป",
   "stadiumsBuildCity": "เมือง",
   "stadiumsBuildButton": "สร้าง: {cost}",

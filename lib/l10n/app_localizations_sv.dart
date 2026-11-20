@@ -12317,6 +12317,13 @@ class AppLocalizationsSv extends AppLocalizations {
   String get stadiumsBuildTitle => 'Bygg en ny arena';
 
   @override
+  String get stadiumsOtherGrounds => 'Andra arenor';
+
+  @override
+  String get stadiumsOtherGroundsBody =>
+      'Tillagda i din databas. De tar emot vissa hemmamatcher; slutspel, värdansökningar och arenaintäkter kommer från den nationella uppsättningen ovan.';
+
+  @override
   String get stadiumsBuildBody =>
       'Ganska dyrt: en ny arena i staden du väljer, öppen från början av nästa cykel.';
 

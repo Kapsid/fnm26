@@ -12323,6 +12323,13 @@ class AppLocalizationsDa extends AppLocalizations {
   String get stadiumsBuildTitle => 'Byg et nyt stadion';
 
   @override
+  String get stadiumsOtherGrounds => 'Andre stadioner';
+
+  @override
+  String get stadiumsOtherGroundsBody =>
+      'Tilføjet i din database. De lægger græs til nogle hjemmekampe; slutrunder, værtsbud og stadionindtægter kommer fra det nationale sæt ovenfor.';
+
+  @override
   String get stadiumsBuildBody =>
       'Ret dyrt: et nyt stadion i den by, du vælger, åbent fra starten af næste cyklus.';
 

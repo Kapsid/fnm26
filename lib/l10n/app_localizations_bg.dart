@@ -12407,6 +12407,13 @@ class AppLocalizationsBg extends AppLocalizations {
   String get stadiumsBuildTitle => 'Построй нов стадион';
 
   @override
+  String get stadiumsOtherGrounds => 'Други стадиони';
+
+  @override
+  String get stadiumsOtherGroundsBody =>
+      'Добавени във вашата база данни. Приемат някои домакински мачове; финалите, кандидатурите за домакинство и приходите от стадиони идват от националния набор по-горе.';
+
+  @override
   String get stadiumsBuildBody =>
       'Доста скъпо: нов стадион в избран от вас град, отворен от началото на следващия цикъл.';
 

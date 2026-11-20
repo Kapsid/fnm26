@@ -45,6 +45,7 @@ class NationalStadiumsScreen extends ConsumerStatefulWidget {
   static const Key buildKey = Key('stadiums.build');
   static const Key seatsSliderKey = Key('stadiums.buildSeats');
   static const Key cityKey = Key('stadiums.city');
+  static const Key otherGroundsKey = Key('stadiums.otherGrounds');
   static Key upgradeKey(int index) => Key('stadiums.upgrade.$index');
   static Key downsizeKey(int index) => Key('stadiums.downsize.$index');
   static const Key viewToggleKey = Key('stadiums.viewToggle');
@@ -632,6 +633,52 @@ class _NationalStadiumsScreenState
             onRename: () => unawaited(_rename(l, view.stadiums[i])),
           ),
           const SizedBox(height: AppSpacing.sm),
+        ],
+        if (view.otherGrounds.isNotEmpty) ...[
+          const SizedBox(height: AppSpacing.sm),
+          AppCard(
+            key: NationalStadiumsScreen.otherGroundsKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(l.stadiumsOtherGrounds, style: AppTypography.labelLarge),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  l.stadiumsOtherGroundsBody,
+                  style: AppTypography.bodySmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                for (final s in view.otherGrounds)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(s.name, style: AppTypography.bodyMedium),
+                              Text(
+                                s.city,
+                                style: AppTypography.labelSmall.copyWith(
+                                  color: AppColors.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Text(
+                          seats.format(s.capacity),
+                          style: AppTypography.labelMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ),
         ],
         const SizedBox(height: AppSpacing.sm),
         AppCard(

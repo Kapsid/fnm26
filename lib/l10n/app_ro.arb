@@ -3074,6 +3074,8 @@
   "stadiumsTopLevel": "Nivel maxim",
   "stadiumsOpens": "În construcție, se deschide în {year}",
   "stadiumsBuildTitle": "Construiți un stadion nou",
+  "stadiumsOtherGrounds": "Alte stadioane",
+  "stadiumsOtherGroundsBody": "Adăugate în baza ta de date. Găzduiesc unele meciuri de acasă; turneele finale, candidaturile de organizare și veniturile din stadioane vin din setul național de mai sus.",
   "stadiumsBuildBody": "Destul de scump: un stadion nou în orașul ales, deschis de la începutul ciclului următor.",
   "stadiumsBuildCity": "Oraș",
   "stadiumsBuildButton": "Construcție: {cost}",

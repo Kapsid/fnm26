@@ -18795,6 +18795,18 @@ abstract class AppLocalizations {
   /// **'Build a new stadium'**
   String get stadiumsBuildTitle;
 
+  /// National stadiums screen: heading of the card listing grounds a custom database added outside the national set.
+  ///
+  /// In en, this message translates to:
+  /// **'Other grounds'**
+  String get stadiumsOtherGrounds;
+
+  /// National stadiums screen: what the added grounds are for. Keep the meaning: they host some home games; finals, host bids and income use the national set.
+  ///
+  /// In en, this message translates to:
+  /// **'Added in your database. They host some home games; finals, host bids and stadium income come from the national set above.'**
+  String get stadiumsOtherGroundsBody;
+
   /// National stadiums screen: what building a new stadium means.
   ///
   /// In en, this message translates to:

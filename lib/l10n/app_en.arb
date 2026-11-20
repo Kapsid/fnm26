@@ -18997,6 +18997,14 @@
   "@stadiumsBuildTitle": {
     "description": "National stadiums screen: heading of the new-stadium card."
   },
+  "stadiumsOtherGrounds": "Other grounds",
+  "@stadiumsOtherGrounds": {
+    "description": "National stadiums screen: heading of the card listing grounds a custom database added outside the national set."
+  },
+  "stadiumsOtherGroundsBody": "Added in your database. They host some home games; finals, host bids and stadium income come from the national set above.",
+  "@stadiumsOtherGroundsBody": {
+    "description": "National stadiums screen: what the added grounds are for. Keep the meaning: they host some home games; finals, host bids and income use the national set."
+  },
   "stadiumsBuildBody": "Quite expensive: a new ground in the city you choose, open from the start of the next cycle.",
   "@stadiumsBuildBody": {
     "description": "National stadiums screen: what building a new stadium means."

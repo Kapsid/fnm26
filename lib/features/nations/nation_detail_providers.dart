@@ -317,7 +317,13 @@ nationNextGroundProvider = FutureProvider.autoDispose
 final AutoDisposeFutureProviderFamily<List<NationalStadium>, NationVitrineArg>
 nationGroundsProvider = FutureProvider.autoDispose
     .family<List<NationalStadium>, NationVitrineArg>(
-      (ref, arg) async => NationalStadiums.nationalSet(
-        await careerStadiumsFor(ref, arg.careerId, arg.nationId),
-      ),
+      (ref, arg) async {
+        final all = await careerStadiumsFor(ref, arg.careerId, arg.nationId);
+        // Every ground it plays at: the set, then any its database added
+        // outside it.
+        return [
+          ...NationalStadiums.nationalSet(all),
+          ...NationalStadiums.otherGrounds(all),
+        ];
+      },
     );

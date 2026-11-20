@@ -12316,6 +12316,13 @@ class AppLocalizationsFil extends AppLocalizations {
   String get stadiumsBuildTitle => 'Magtayo ng bagong stadium';
 
   @override
+  String get stadiumsOtherGrounds => 'Iba pang istadyum';
+
+  @override
+  String get stadiumsOtherGroundsBody =>
+      'Idinagdag sa iyong database. Nagho-host sila ng ilang home game; ang finals, mga bid sa pagho-host at kita ng istadyum ay mula sa pambansang set sa itaas.';
+
+  @override
   String get stadiumsBuildBody =>
       'Medyo mahal: bagong stadium sa lungsod na pipiliin mo, bukas mula sa simula ng susunod na cycle.';
 

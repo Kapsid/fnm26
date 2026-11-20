@@ -12388,6 +12388,13 @@ class AppLocalizationsNl extends AppLocalizations {
   String get stadiumsBuildTitle => 'Een nieuw stadion bouwen';
 
   @override
+  String get stadiumsOtherGrounds => 'Andere stadions';
+
+  @override
+  String get stadiumsOtherGroundsBody =>
+      'Toegevoegd in je database. Ze ontvangen een deel van de thuisduels; eindtoernooien, kandidaturen en stadioninkomsten komen uit de nationale set hierboven.';
+
+  @override
   String get stadiumsBuildBody =>
       'Behoorlijk duur: een nieuw stadion in de stad van je keuze, open vanaf het begin van de volgende cyclus.';
 

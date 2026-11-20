@@ -12699,6 +12699,13 @@ class AppLocalizationsCs extends AppLocalizations {
   String get stadiumsBuildTitle => 'Postavit nový stadion';
 
   @override
+  String get stadiumsOtherGrounds => 'Další stadiony';
+
+  @override
+  String get stadiumsOtherGroundsBody =>
+      'Přidané ve vaší databázi. Hostí některé domácí zápasy; závěrečné turnaje, kandidatury na pořadatelství a příjmy ze stadionů se počítají z národní sady výše.';
+
+  @override
   String get stadiumsBuildBody =>
       'Docela drahé: nový stadion ve městě podle vašeho výběru, otevřený od začátku příštího cyklu.';
 

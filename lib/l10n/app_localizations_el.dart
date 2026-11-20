@@ -12390,6 +12390,13 @@ class AppLocalizationsEl extends AppLocalizations {
   String get stadiumsBuildTitle => 'Χτίσε νέο γήπεδο';
 
   @override
+  String get stadiumsOtherGrounds => 'Άλλα γήπεδα';
+
+  @override
+  String get stadiumsOtherGroundsBody =>
+      'Προστέθηκαν στη βάση δεδομένων σας. Φιλοξενούν ορισμένους εντός έδρας αγώνες· οι τελικές φάσεις, οι υποψηφιότητες διοργάνωσης και τα έσοδα γηπέδων προέρχονται από το εθνικό σύνολο παραπάνω.';
+
+  @override
   String get stadiumsBuildBody =>
       'Αρκετά ακριβό: ένα νέο γήπεδο στην πόλη που θα διαλέξεις, ανοιχτό από την αρχή του επόμενου κύκλου.';
 

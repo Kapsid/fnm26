@@ -3074,6 +3074,8 @@
   "stadiumsTopLevel": "Cấp cao nhất",
   "stadiumsOpens": "Đang xây, khánh thành năm {year}",
   "stadiumsBuildTitle": "Xây sân vận động mới",
+  "stadiumsOtherGrounds": "Các sân khác",
+  "stadiumsOtherGroundsBody": "Được thêm trong cơ sở dữ liệu của bạn. Các sân này tổ chức một số trận sân nhà; vòng chung kết, hồ sơ đăng cai và doanh thu sân lấy từ bộ sân quốc gia ở trên.",
   "stadiumsBuildBody": "Khá tốn kém: một sân mới ở thành phố bạn chọn, mở cửa từ đầu chu kỳ sau.",
   "stadiumsBuildCity": "Thành phố",
   "stadiumsBuildButton": "Xây: {cost}",

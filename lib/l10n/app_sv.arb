@@ -3074,6 +3074,8 @@
   "stadiumsTopLevel": "Högsta nivå",
   "stadiumsOpens": "Under byggnad, öppnar {year}",
   "stadiumsBuildTitle": "Bygg en ny arena",
+  "stadiumsOtherGrounds": "Andra arenor",
+  "stadiumsOtherGroundsBody": "Tillagda i din databas. De tar emot vissa hemmamatcher; slutspel, värdansökningar och arenaintäkter kommer från den nationella uppsättningen ovan.",
   "stadiumsBuildBody": "Ganska dyrt: en ny arena i staden du väljer, öppen från början av nästa cykel.",
   "stadiumsBuildCity": "Stad",
   "stadiumsBuildButton": "Bygg: {cost}",

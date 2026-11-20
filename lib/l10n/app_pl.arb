@@ -3074,6 +3074,8 @@
   "stadiumsTopLevel": "Najwyższy poziom",
   "stadiumsOpens": "W budowie, otwarcie w {year} roku",
   "stadiumsBuildTitle": "Zbuduj nowy stadion",
+  "stadiumsOtherGrounds": "Inne stadiony",
+  "stadiumsOtherGroundsBody": "Dodane w twojej bazie danych. Goszczą część meczów u siebie; turnieje finałowe, kandydatury do organizacji i przychody ze stadionów pochodzą z zestawu krajowego powyżej.",
   "stadiumsBuildBody": "Dość drogie: nowy stadion w wybranym przez ciebie mieście, otwarty od początku następnego cyklu.",
   "stadiumsBuildCity": "Miasto",
   "stadiumsBuildButton": "Zbuduj: {cost}",

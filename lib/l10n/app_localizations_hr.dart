@@ -12650,6 +12650,13 @@ class AppLocalizationsHr extends AppLocalizations {
   String get stadiumsBuildTitle => 'Izgradi novi stadion';
 
   @override
+  String get stadiumsOtherGrounds => 'Ostali stadioni';
+
+  @override
+  String get stadiumsOtherGroundsBody =>
+      'Dodani u vašu bazu podataka. Ugošćuju neke domaće utakmice; završni turniri, kandidature za domaćinstvo i prihodi od stadiona dolaze iz nacionalnog skupa iznad.';
+
+  @override
   String get stadiumsBuildBody =>
       'Prilično skupo: novi stadion u gradu koji odabereš, otvoren od početka sljedećeg ciklusa.';
 

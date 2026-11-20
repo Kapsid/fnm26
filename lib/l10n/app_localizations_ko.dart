@@ -11916,6 +11916,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get stadiumsBuildTitle => '새 경기장 건설';
 
   @override
+  String get stadiumsOtherGrounds => '기타 경기장';
+
+  @override
+  String get stadiumsOtherGroundsBody =>
+      '내 데이터베이스에서 추가된 경기장입니다. 일부 홈경기를 개최하며, 본선·개최 신청·경기장 수입은 위의 국가 경기장 세트에서 정해집니다.';
+
+  @override
   String get stadiumsBuildBody =>
       '비용이 꽤 큽니다. 선택한 도시에 새 경기장을 지으며, 다음 주기 시작부터 사용할 수 있습니다.';
 

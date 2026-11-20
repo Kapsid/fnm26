@@ -3074,6 +3074,8 @@
   "stadiumsTopLevel": "最高レベル",
   "stadiumsOpens": "建設中、{year}年開場",
   "stadiumsBuildTitle": "新スタジアムを建設",
+  "stadiumsOtherGrounds": "その他のスタジアム",
+  "stadiumsOtherGroundsBody": "あなたのデータベースで追加されたもの。一部のホームゲームを開催しますが、本大会・開催地立候補・スタジアム収入は上のナショナルセットから算出されます。",
   "stadiumsBuildBody": "費用はかなり高額です。選んだ都市に新スタジアムを建て、次のサイクル開始から使用できます。",
   "stadiumsBuildCity": "都市",
   "stadiumsBuildButton": "建設: {cost}",

@@ -11886,6 +11886,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get stadiumsBuildTitle => '新スタジアムを建設';
 
   @override
+  String get stadiumsOtherGrounds => 'その他のスタジアム';
+
+  @override
+  String get stadiumsOtherGroundsBody =>
+      'あなたのデータベースで追加されたもの。一部のホームゲームを開催しますが、本大会・開催地立候補・スタジアム収入は上のナショナルセットから算出されます。';
+
+  @override
   String get stadiumsBuildBody =>
       '費用はかなり高額です。選んだ都市に新スタジアムを建て、次のサイクル開始から使用できます。';
 

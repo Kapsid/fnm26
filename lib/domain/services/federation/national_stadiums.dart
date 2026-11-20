@@ -823,4 +823,18 @@ abstract final class NationalStadiums {
     ...all.where((s) => !s.built).take(setSize),
     ...all.where((s) => s.built),
   ];
+
+  /// The grounds a database added (see [NationalStadium.added]) that are not
+  /// in the [nationalSet]: they host some of the nation's home games but are
+  /// not among the grounds its finals, host bids and income are drawn from.
+  /// Listed on their own, so an added ground smaller than the eighth seed
+  /// ground is not simply missing from every screen (a tester: "the editor
+  /// adds stadiums, but the game has only 8").
+  static List<NationalStadium> otherGrounds(List<NationalStadium> all) {
+    final set = {for (final s in nationalSet(all)) s.site};
+    return [
+      for (final s in all)
+        if (s.added && !set.contains(s.site)) s,
+    ];
+  }
 }

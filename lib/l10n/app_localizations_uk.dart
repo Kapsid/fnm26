@@ -12601,6 +12601,13 @@ class AppLocalizationsUk extends AppLocalizations {
   String get stadiumsBuildTitle => 'Збудувати новий стадіон';
 
   @override
+  String get stadiumsOtherGrounds => 'Інші стадіони';
+
+  @override
+  String get stadiumsOtherGroundsBody =>
+      'Додані у вашій базі даних. Вони приймають деякі домашні матчі; фінальні турніри, заявки на проведення та доходи від стадіонів беруться з національного набору вище.';
+
+  @override
   String get stadiumsBuildBody =>
       'Досить дорого: новий стадіон у місті на ваш вибір, відкритий з початку наступного циклу.';
 

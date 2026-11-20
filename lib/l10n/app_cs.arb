@@ -3074,6 +3074,8 @@
   "stadiumsTopLevel": "Nejvyšší úroveň",
   "stadiumsOpens": "Ve výstavbě, otevře se v roce {year}",
   "stadiumsBuildTitle": "Postavit nový stadion",
+  "stadiumsOtherGrounds": "Další stadiony",
+  "stadiumsOtherGroundsBody": "Přidané ve vaší databázi. Hostí některé domácí zápasy; závěrečné turnaje, kandidatury na pořadatelství a příjmy ze stadionů se počítají z národní sady výše.",
   "stadiumsBuildBody": "Docela drahé: nový stadion ve městě podle vašeho výběru, otevřený od začátku příštího cyklu.",
   "stadiumsBuildCity": "Město",
   "stadiumsBuildButton": "Postavit: {cost}",

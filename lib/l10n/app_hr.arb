@@ -3074,6 +3074,8 @@
   "stadiumsTopLevel": "Najviša razina",
   "stadiumsOpens": "U izgradnji, otvara se {year}.",
   "stadiumsBuildTitle": "Izgradi novi stadion",
+  "stadiumsOtherGrounds": "Ostali stadioni",
+  "stadiumsOtherGroundsBody": "Dodani u vašu bazu podataka. Ugošćuju neke domaće utakmice; završni turniri, kandidature za domaćinstvo i prihodi od stadiona dolaze iz nacionalnog skupa iznad.",
   "stadiumsBuildBody": "Prilično skupo: novi stadion u gradu koji odabereš, otvoren od početka sljedećeg ciklusa.",
   "stadiumsBuildCity": "Grad",
   "stadiumsBuildButton": "Izgradi: {cost}",

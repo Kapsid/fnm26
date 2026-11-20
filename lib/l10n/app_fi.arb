@@ -3074,6 +3074,8 @@
   "stadiumsTopLevel": "Ylin taso",
   "stadiumsOpens": "Rakenteilla, avataan vuonna {year}",
   "stadiumsBuildTitle": "Rakenna uusi stadion",
+  "stadiumsOtherGrounds": "Muut stadionit",
+  "stadiumsOtherGroundsBody": "Lisätty tietokantaasi. Niillä pelataan osa kotiotteluista; lopputurnaukset, isännyyshakemukset ja stadiontulot tulevat yllä olevasta kansallisesta joukosta.",
   "stadiumsBuildBody": "Melko kallis: uusi stadion valitsemaasi kaupunkiin, käytössä seuraavan kauden alusta.",
   "stadiumsBuildCity": "Kaupunki",
   "stadiumsBuildButton": "Rakenna: {cost}",

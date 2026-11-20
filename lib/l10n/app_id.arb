@@ -3074,6 +3074,8 @@
   "stadiumsTopLevel": "Level tertinggi",
   "stadiumsOpens": "Sedang dibangun, dibuka tahun {year}",
   "stadiumsBuildTitle": "Bangun stadion baru",
+  "stadiumsOtherGrounds": "Stadion lain",
+  "stadiumsOtherGroundsBody": "Ditambahkan di basis data Anda. Stadion ini menggelar sebagian laga kandang; turnamen akhir, pencalonan tuan rumah, dan pendapatan stadion berasal dari kumpulan nasional di atas.",
   "stadiumsBuildBody": "Cukup mahal: stadion baru di kota pilihan Anda, dibuka sejak awal siklus berikutnya.",
   "stadiumsBuildCity": "Kota",
   "stadiumsBuildButton": "Bangun: {cost}",

@@ -12265,6 +12265,13 @@ class AppLocalizationsHu extends AppLocalizations {
   String get stadiumsBuildTitle => 'Új stadion építése';
 
   @override
+  String get stadiumsOtherGrounds => 'További stadionok';
+
+  @override
+  String get stadiumsOtherGroundsBody =>
+      'Az adatbázisodban hozzáadva. Néhány hazai meccsnek adnak otthont; a tornák, a rendezési pályázatok és a stadionbevételek a fenti nemzeti készletből származnak.';
+
+  @override
   String get stadiumsBuildBody =>
       'Elég drága: új stadion az általad választott városban, a következő ciklus elejétől használható.';
 
