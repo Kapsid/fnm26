@@ -2120,8 +2120,29 @@ class _Builder {
     var intercept = false;
     // In a short quiet spell the ball changes hands quickly or not at all.
     final quick = handoverDue || stop - t < 1.5;
-    if (handoverDue || (!keep && !handover && _spellOver(t, ahead))) {
+    final giveAway =
+        handoverDue || (!keep && !handover && _spellOver(t, ahead));
+    // A keeper never rolls the ball to a forward. With time to spare he
+    // plays it out to his own men and they lose it, as a side does; when it
+    // must change hands now he kicks it long, and it is won in midfield.
+    // (A tester saw keepers pass to the opposition time and again: a save
+    // left the ball in his hands, and the next moment was often the other
+    // side's, so the handover was his.)
+    final keeper = a.slot == sides[a.side].gkSlot;
+    // Now and then he does get it wrong: a keeper's error, a few in a
+    // hundred of his passes (owner, 2026-11-20: at most 1-2%).
+    final howler = keeper && giveAway && rng.nextDouble() < _keeperHowler;
+    if (howler) {
       target = _pickInterceptor(a, t, short: quick);
+      intercept = true;
+    } else if (giveAway && keeper && !handoverDue) {
+      final minute = pacer.matchAt(_dur(t)).minute;
+      target = _pickReceiver(a, t, minute, lead?.$2);
+    } else if (giveAway) {
+      target = keeper
+          ? (_pickInterceptor(a, t, long: true) ??
+                _pickInterceptor(a, t, short: quick))
+          : _pickInterceptor(a, t, short: quick);
       intercept = true;
     } else {
       final minute = pacer.matchAt(_dur(t)).minute;
@@ -2357,7 +2378,20 @@ class _Builder {
     );
   }
 
-  _Agent? _pickInterceptor(_Agent a, double t, {bool short = false}) {
+  /// The opponent who wins a pass from [a]: one in its path, 9 to 32
+  /// metres off ([short]: at most 16). [long]: a keeper's long kick, won in
+  /// midfield, 35 to 65 metres up the pitch.
+  /// The chance that a keeper who must give the ball up hands it straight
+  /// to a forward: about one in three of his passes is such a moment, so
+  /// this puts his errors at 1-2% of his passes.
+  static const double _keeperHowler = 0.02;
+
+  _Agent? _pickInterceptor(
+    _Agent a,
+    double t, {
+    bool short = false,
+    bool long = false,
+  }) {
     final s = a.side;
     final minute = pacer.matchAt(_dur(t)).minute;
     final dir = _dir(s, minute);
@@ -2369,6 +2403,17 @@ class _Builder {
       if (!o.present || o.side == s || o.walkStart != null) continue;
       if (_departsWithin(o, t, 6)) continue;
       final d = o.pos.distanceTo(ball);
+      if (long) {
+        final up = xToDepth(o.pos.x, dir) - ballDepth;
+        if (d < 35 || d > 65 || up < 25) continue;
+        if (o.slot == sides[o.side].gkSlot) continue;
+        final score = -(d - 45).abs() / 8 + rng.nextDouble();
+        if (score > bestScore) {
+          bestScore = score;
+          best = o;
+        }
+        continue;
+      }
       if (d < 9 || d > 32) continue;
       if (o.slot == sides[o.side].gkSlot && ballDepth < 75) continue;
       final ahead = xToDepth(o.pos.x, dir) - ballDepth;
