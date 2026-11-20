@@ -408,6 +408,19 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
   if (allMet && base < BoardSatisfaction.neutral) {
     return BoardSatisfaction.neutral;
   }
+  // The world's bottom tenth: a board that knows its level all but never
+  // turns on its manager (see BoardSatisfaction.bottomTenthFloor).
+  final floor = BoardSatisfaction.bottomTenthFloor(
+    worldRank: ranking?.position[career.nationId],
+    rankedCount: ranking?.position.length ?? 0,
+    humiliations: [
+      for (final r in chronological.reversed.take(
+        BoardSatisfaction.formWindow,
+      ))
+        if (r.humiliation) r,
+    ].length,
+  );
+  if (floor != null && base < floor) return floor;
   return base;
 });
 

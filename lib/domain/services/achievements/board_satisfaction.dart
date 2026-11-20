@@ -106,20 +106,33 @@ abstract final class BoardSatisfaction {
       0.0,
       1.0,
     );
-    if (world <= 0 || confederationSize <= 1) return 0;
+    if (world <= 0) return 0;
+    if (confederationSize <= 1) return world * minnowConfederationFloor;
     final share = confederationRank / confederationSize;
     final conf =
         ((share - (1 - minnowConfederationShare)) /
                 (minnowConfederationShare - minnowConfederationFull))
             .clamp(0.0, 1.0);
-    return world * conf;
+    // A side's place at home tempers its patience rather than switching it
+    // off: a weak side near the top of a weak confederation still gets half.
+    return world *
+        (minnowConfederationFloor + (1 - minnowConfederationFloor) * conf);
   }
 
   /// See [minnowFactor].
-  static const int minnowWorldFrom = 120;
-  static const int minnowWorldSpan = 50;
-  static const double minnowConfederationShare = 0.3;
-  static const double minnowConfederationFull = 0.15;
+  ///
+  /// Widened in 1.1.2 (players: the board is far too harsh on low and
+  /// near-low sides; "even one win for San Marino should be an
+  /// achievement"): patience begins at the 60th place, is full from the
+  /// 150th, and a side's standing in its confederation only tempers it.
+  static const int minnowWorldFrom = 60;
+  static const int minnowWorldSpan = 90;
+  static const double minnowConfederationShare = 0.6;
+  static const double minnowConfederationFull = 0.3;
+
+  /// How much of its world patience a side near the top of its own
+  /// confederation keeps (see [minnowFactor]).
+  static const double minnowConfederationFloor = 0.5;
 
   /// The minnow's form weights at a [minnowFactor] of 1, each slid toward
   /// from the ordinary one as the factor rises.
@@ -130,9 +143,40 @@ abstract final class BoardSatisfaction {
   /// What still costs the full [loss] is a HUMILIATION (see [isHumiliation]):
   /// a heavy defeat by a fellow minnow, which is what a genuinely bad manager
   /// of a minnow keeps producing.
-  static const int minnowDraw = 1;
-  static const int minnowLoss = -2;
+  ///
+  /// A win is an event: it earns [minnowWin], [minnowWinAsUnderdog] over a
+  /// clearly better side, where an ordinary side gets [win] and
+  /// [winAsUnderdog].
+  static const int minnowDraw = 2;
+  static const int minnowLoss = -1;
   static const int minnowLossAsUnderdog = 0;
+  static const int minnowWin = 6;
+  static const int minnowWinAsUnderdog = 9;
+
+  /// The lowest the gauge goes for a side in the bottom [bottomShare] of
+  /// the world ranking, or null for any other side (or one that keeps
+  /// [floorBreakingHumiliations] humiliations in its last [formWindow]).
+  ///
+  /// The owner, 2026-11-20: for the bottom tenth, make an unhappy board
+  /// nearly impossible. Such a board knows San Marino loses; it never drops
+  /// to "Concerned", let alone "Job at risk", on results a side of that
+  /// level is expected to take. What still breaks the floor is a manager who
+  /// keeps getting hammered by his fellow minnows.
+  static int? bottomTenthFloor({
+    required int? worldRank,
+    required int rankedCount,
+    required int humiliations,
+  }) {
+    if (worldRank == null || rankedCount <= 0) return null;
+    if (worldRank <= rankedCount * (1 - bottomShare)) return null;
+    if (humiliations >= floorBreakingHumiliations) return null;
+    return bottomFloor;
+  }
+
+  /// See [bottomTenthFloor].
+  static const double bottomShare = 0.1;
+  static const int bottomFloor = 40;
+  static const int floorBreakingHumiliations = 3;
 
   /// The margin of defeat that is a humiliation (see [isHumiliation]).
   static const int humiliationMargin = 4;
@@ -154,7 +198,7 @@ abstract final class BoardSatisfaction {
 
   /// How much of a missed brief's penalty the weakest side of all still pays
   /// (see [objectiveSwing]). Meeting a brief is worth the same everywhere.
-  static const double minnowMissedShare = 0.5;
+  static const double minnowMissedShare = 0.3;
 
   /// How many recent matches count toward form.
   static const int formWindow = 10;
@@ -293,7 +337,11 @@ abstract final class BoardSatisfaction {
       final humiliation = d < 1 && i < humiliated.length && humiliated[i];
       i++;
       points += switch (outcome) {
-        MatchOutcome.win => between(win, winAsUnderdog, d),
+        MatchOutcome.win => between(
+          slide(win, minnowWin),
+          slide(winAsUnderdog, minnowWinAsUnderdog),
+          d,
+        ),
         MatchOutcome.draw => between(
           slide(draw, minnowDraw),
           drawAsUnderdog,

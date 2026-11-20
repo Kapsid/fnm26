@@ -46,32 +46,31 @@ void main() {
       expect(minnowOf('Andorra'), greaterThan(0.8));
     });
 
-    test('nobody ranked 120th or better is one, nor any side high in its '
-        'confederation', () {
+    test('nobody ranked ${BoardSatisfaction.minnowWorldFrom}th or better is '
+        'one, and a side high in its confederation gets half at most', () {
       for (final n in nations) {
         final m = boardMinnowFactor(baseline, nations, n.id);
         if (n.ranking <= BoardSatisfaction.minnowWorldFrom) {
           expect(m, 0, reason: n.name);
         }
       }
-      // Oceania's sides are all ranked low, but its strong ones are no
-      // minnows there.
+      // Oceania's sides are all ranked low; its strong ones keep only half
+      // of the patience their world rank would give.
       final oceania = [
         for (final n in nations)
           if (n.confederation.name == 'oceania') n,
       ]..sort((a, b) => a.ranking.compareTo(b.ranking));
-      for (final n in oceania.take(oceania.length * 2 ~/ 3)) {
-        expect(
-          boardMinnowFactor(baseline, nations, n.id),
-          0,
-          reason: n.name,
-        );
-      }
+      final best = oceania.first;
+      expect(
+        boardMinnowFactor(baseline, nations, best.id),
+        lessThanOrEqualTo(BoardSatisfaction.minnowConfederationFloor),
+        reason: best.name,
+      );
     });
 
     test('the factor rises smoothly down a confederation', () {
-      var last = 0.0;
-      for (var rank = 30; rank <= 55; rank++) {
+      var last = BoardSatisfaction.minnowConfederationFloor;
+      for (var rank = 1; rank <= 55; rank++) {
         final m = BoardSatisfaction.minnowFactor(
           worldRank: 200,
           confederationRank: rank,
@@ -382,5 +381,45 @@ void main() {
     for (final o in await briefsOf('Scotland')) {
       expect(o.offTheBottom, isFalse);
     }
+  });
+
+  group('1.1.2: the bottom of the world is judged as it should be', () {
+    test("one win is San Marino's event", () {
+      // Nine defeats by better sides and one win over one, at a full minnow.
+      final week = [
+        MatchOutcome.win,
+        for (var i = 0; i < 9; i++) MatchOutcome.loss,
+      ];
+      final minnow = BoardSatisfaction.formPoints(
+        week,
+        asUnderdog: List.filled(10, 1.0),
+        minnow: 1,
+      );
+      final ordinary = BoardSatisfaction.formPoints(
+        week,
+        asUnderdog: List.filled(10, 1.0),
+      );
+      expect(minnow, BoardSatisfaction.minnowWinAsUnderdog);
+      expect(minnow, greaterThan(ordinary));
+    });
+
+    test('the bottom tenth all but never has an unhappy board', () {
+      int? floor(int rank, {int humiliations = 0}) =>
+          BoardSatisfaction.bottomTenthFloor(
+            worldRank: rank,
+            rankedCount: 210,
+            humiliations: humiliations,
+          );
+      expect(floor(200), BoardSatisfaction.bottomFloor);
+      expect(floor(190), BoardSatisfaction.bottomFloor);
+      // Not the side above the bottom tenth, nor a side with none.
+      expect(floor(150), isNull);
+      expect(floor(20), isNull);
+      // A manager who keeps being hammered by his fellow minnows breaks it.
+      expect(floor(200, humiliations: 3), isNull);
+      expect(floor(200, humiliations: 2), BoardSatisfaction.bottomFloor);
+      // The floor is "Expecting more", never "Concerned" or "Job at risk".
+      expect(BoardSatisfaction.bottomFloor, greaterThanOrEqualTo(40));
+    });
   });
 }
