@@ -42,3 +42,15 @@ class PlayerAbsence {
         injuryMatches: injuryMatches ?? this.injuryMatches,
       );
 }
+
+/// [absences] as they stand for a FRIENDLY: a card ban is served only in
+/// competitive games and does not keep a man out of a friendly (he serves it
+/// in the next competitive match), so only injuries rule anyone out. A
+/// tester saw a man banned in a qualifier unable to play four friendlies in
+/// a row.
+Map<int, PlayerAbsence> absencesForFriendly(
+  Map<int, PlayerAbsence> absences,
+) => {
+  for (final e in absences.entries)
+    e.key: e.value.banMatches == 0 ? e.value : e.value.copyWith(banMatches: 0),
+};

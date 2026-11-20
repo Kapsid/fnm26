@@ -1478,12 +1478,14 @@ class SeasonService {
       f.homeNationId,
       restIn: restFor == f.homeNationId ? f : null,
       restSeed: career.rngSeed,
+      friendly: f.round == Rounds.friendly,
     );
     final awayXi = await _fieldedXi(
       f.careerId,
       f.awayNationId,
       restIn: restFor == f.awayNationId ? f : null,
       restSeed: career.rngSeed,
+      friendly: f.round == Rounds.friendly,
     );
     // …and the substitutes it brings on. Background sides used to play the
     // whole ninety with eleven men, so outside the manager's own fixtures no
@@ -1499,12 +1501,14 @@ class SeasonService {
       f.homeNationId,
       homeXi,
       count: AiSubstitutions.drawCount(subsRng, friendly: friendly),
+      friendly: friendly,
     );
     final awaySubs = await _fieldedSubs(
       f.careerId,
       f.awayNationId,
       awayXi,
       count: AiSubstitutions.drawCount(subsRng, friendly: friendly),
+      friendly: friendly,
     );
     // Both sides' strengths first; then, if either is the manager's, his
     // side is converted against the other (his plan, the opponent's counter
@@ -2127,13 +2131,20 @@ class SeasonService {
   /// His pool reads down to the call-up floor, as the match screen's does: a
   /// U-17 he named plays in a match he skipped. [availableSquad] keeps the boys
   /// he did not name out.
-  Future<List<Player>> _managerSquad(int careerId, int nationId) async {
+  Future<List<Player>> _managerSquad(
+    int careerId,
+    int nationId, {
+    bool friendly = false,
+  }) async {
     final setup = await _ensureManagerSetup(careerId);
     if (setup == null || setup.nationId != nationId) return const [];
     final pool = await _pool(nationId, minAge: PlayerLifecycle.callUpMinAge);
+    final absences = await _ensureAbsences(careerId);
+    // A card ban does not keep his man out of a friendly (see
+    // absencesForFriendly).
     return selectable(
       availableSquad(pool, setup.callUps),
-      await _ensureAbsences(careerId),
+      friendly ? absencesForFriendly(absences) : absences,
     );
   }
 
@@ -2150,8 +2161,12 @@ class SeasonService {
   /// (throw the whole XI away the moment one name is stale) is how the live
   /// match screen does it, and it would hand a skipped match back to the
   /// automatic selection for the sake of one hamstring.
-  Future<List<Player>?> _managerXi(int careerId, int nationId) async {
-    final squad = await _managerSquad(careerId, nationId);
+  Future<List<Player>?> _managerXi(
+    int careerId,
+    int nationId, {
+    bool friendly = false,
+  }) async {
+    final squad = await _managerSquad(careerId, nationId, friendly: friendly);
     if (squad.isEmpty) return null;
     final setup = _managerSetup!;
     final shape = setup.tactic?.formation ?? Formation.f433;
@@ -2204,6 +2219,9 @@ class SeasonService {
     /// [FriendlyRotation]).
     Fixture? restIn,
     int restSeed = 0,
+
+    /// The match is a friendly: the manager's banned men may play it.
+    bool friendly = false,
   }) async {
     var pool = await _pool(nationId);
     if (restIn != null && pool.isNotEmpty) {
@@ -2213,7 +2231,7 @@ class SeasonService {
       );
     }
     if (pool.isEmpty) return const [];
-    final mine = await _managerXi(careerId, nationId);
+    final mine = await _managerXi(careerId, nationId, friendly: friendly);
     if (mine != null) return mine;
     // A suspended or injured player does not play — for ANY nation, not just
     // the manager's. This is what makes the world's cards and knocks mean
@@ -2239,6 +2257,7 @@ class SeasonService {
     int nationId,
     List<Player> xi, {
     required int count,
+    bool friendly = false,
   }) async {
     if (xi.isEmpty) return const [];
     final pool = await _pool(nationId);
@@ -2247,7 +2266,7 @@ class SeasonService {
     // The manager's bench is drawn from the squad HE named, like his XI — a
     // man he left at home does not come on in the 60th minute of a match he
     // skipped. Every other nation benches its best available.
-    final mine = await _managerSquad(careerId, nationId);
+    final mine = await _managerSquad(careerId, nationId, friendly: friendly);
     final fit = mine.isEmpty ? selectable(pool, absences) : mine;
     final available =
         [

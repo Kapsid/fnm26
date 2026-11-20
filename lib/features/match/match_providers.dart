@@ -7,6 +7,7 @@ import 'dart:math' as math;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/nation.dart';
@@ -426,9 +427,12 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
   final callUps = await ref.watch(squadRepositoryProvider).callUps(careerId);
   // Drop suspended and injured players — they can't be fielded, so a
   // saved lineup that names one auto-fills their slot from who's fit.
-  final absences = await ref
-      .watch(absenceRepositoryProvider)
-      .forCareer(careerId);
+  final stored = await ref.watch(absenceRepositoryProvider).forCareer(careerId);
+  // A friendly: a card ban does not keep anyone out of it (see
+  // absencesForFriendly).
+  final absences = fixture.round == Rounds.friendly
+      ? absencesForFriendly(stored)
+      : stored;
   final calledUp = availableSquad(fullPool, callUps);
   // "Can he play THIS match" has one helper — [selectable] — and every caller
   // that asks it uses that helper: the tactics screen, the reshape pool, the

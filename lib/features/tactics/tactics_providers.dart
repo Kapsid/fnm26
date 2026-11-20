@@ -10,6 +10,7 @@ import 'package:fnm/domain/entities/library_tactic.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -63,6 +64,22 @@ List<Player> availableSquad(List<Player> pool, Set<int> callUps) {
 /// would quietly refuse to field him.
 List<Player> selectable(List<Player> pool, Map<int, PlayerAbsence> absences) =>
     pool.where((p) => absences[p.id]?.isAvailable ?? true).toList();
+
+/// The career's absences as they stand for its manager's next match: a
+/// friendly next, a card ban does not keep anyone out (see
+/// [absencesForFriendly]).
+Future<Map<int, PlayerAbsence>> absencesForNextMatch(
+  Ref ref,
+  int careerId,
+) async {
+  final stored = await ref.read(absenceRepositoryProvider).forCareer(careerId);
+  final career = await ref.read(careerRepositoryProvider).byId(careerId);
+  if (career == null) return stored;
+  final next = await ref
+      .read(competitionRepositoryProvider)
+      .nextFixtureForNation(careerId, career.nationId);
+  return next?.round == Rounds.friendly ? absencesForFriendly(stored) : stored;
+}
 
 /// Everything the tactics screen needs for a save.
 class TacticData {
@@ -147,9 +164,15 @@ tacticDataProvider = FutureProvider.autoDispose.family<TacticData?, int>((
   // manager picks from. The match already refuses to field him — but it did so
   // silently, discarding the whole saved XI and re-picking eleven fresh names,
   // so the side that kicked off was not the side on this screen.
-  final absences = await ref
-      .watch(absenceRepositoryProvider)
-      .forCareer(careerId);
+  final stored = await ref.watch(absenceRepositoryProvider).forCareer(careerId);
+  // The next match a friendly: a card ban does not keep anyone out of it
+  // (see absencesForFriendly); he serves it in the next competitive game.
+  final next = await ref
+      .watch(competitionRepositoryProvider)
+      .nextFixtureForNation(careerId, career.nationId);
+  final absences = next?.round == Rounds.friendly
+      ? absencesForFriendly(stored)
+      : stored;
   final called = availableSquad(fullPool, callUps);
   final pool = selectable(called, absences);
   return TacticData(
@@ -336,10 +359,9 @@ class TacticService {
       ...await naturalizedPlayersFor(_ref, career),
     ]..sort((a, b) => b.overall.compareTo(a.overall));
     final callUps = await _ref.read(squadRepositoryProvider).callUps(careerId);
-    // Reshaping the side must not fill a slot with someone serving a ban.
-    final absences = await _ref
-        .read(absenceRepositoryProvider)
-        .forCareer(careerId);
+    // Reshaping the side must not fill a slot with someone serving a ban
+    // (a card ban that does not apply to a friendly next aside).
+    final absences = await absencesForNextMatch(_ref, careerId);
     return selectable(availableSquad(pool, callUps), absences);
   }
 
@@ -585,9 +607,7 @@ class SquadService {
       // A squad may now legitimately include banned/injured players (the
       // manager picks the squad; the game decides who can play), so the XI is
       // refilled from those actually available for the next match.
-      final absences = await _ref
-          .read(absenceRepositoryProvider)
-          .forCareer(careerId);
+      final absences = await absencesForNextMatch(_ref, careerId);
       final squad = selectable(availableSquad(pool, ids), absences);
       final dropped = tactic.lineup.whereType<int>().any(
         (id) => !ids.contains(id),
