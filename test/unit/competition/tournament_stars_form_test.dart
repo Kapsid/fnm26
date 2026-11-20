@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
@@ -106,5 +108,72 @@ void main() {
       ),
       isNull,
     );
+  });
+
+  test('three right-backs and two strikers do not all make one team', () {
+    // The reported team: GK, LB, RB, RB, RB, DM, CM, DM, ST, RW, ST.
+    final players = [
+      _p(101, PlayerPosition.gk, 70),
+      _p(102, PlayerPosition.lb, 70),
+      for (var i = 0; i < 3; i++) _p(110 + i, PlayerPosition.rb, 70),
+      for (var i = 0; i < 2; i++) _p(120 + i, PlayerPosition.cb, 70),
+      for (var i = 0; i < 3; i++) _p(130 + i, PlayerPosition.cm, 70),
+      for (var i = 0; i < 2; i++) _p(140 + i, PlayerPosition.st, 70),
+      _p(150, PlayerPosition.lw, 70),
+      _p(151, PlayerPosition.rw, 70),
+    ];
+    final xi = TournamentStars.teamOfTournament(
+      candidates: players,
+      goalsByPlayer: const {},
+      runByNation: const {},
+      formByPlayer: {
+        for (final p in players)
+          // The right-backs and the strikers had the best tournaments.
+          p.id: (
+            apps: 5,
+            meanRating:
+                p.position == PlayerPosition.rb ||
+                    p.position == PlayerPosition.st
+                ? 8.0
+                : 6.8,
+            motms: 0,
+          ),
+      },
+    );
+    int at(PlayerPosition p) => xi.where((s) => s.position == p).length;
+    expect(xi, hasLength(11));
+    expect(at(PlayerPosition.gk), 1);
+    expect(at(PlayerPosition.lb), 1);
+    expect(at(PlayerPosition.cb), 2);
+    expect(at(PlayerPosition.rb), 1);
+    expect(at(PlayerPosition.cm), 3);
+    expect(at(PlayerPosition.lw), 1);
+    expect(at(PlayerPosition.st), 1);
+    expect(at(PlayerPosition.rw), 1);
+    // Still best first: the head of the team is its Golden Ball.
+    expect(xi.first.score, xi.map((s) => s.score).reduce(math.max));
+  });
+
+  test('a place nobody of its position earned goes to its line', () {
+    // No left-back took part: a right-back fills the place.
+    final players = [
+      _p(101, PlayerPosition.gk, 70),
+      for (var i = 0; i < 2; i++) _p(110 + i, PlayerPosition.rb, 70),
+      for (var i = 0; i < 2; i++) _p(120 + i, PlayerPosition.cb, 70),
+      for (var i = 0; i < 3; i++) _p(130 + i, PlayerPosition.cm, 70),
+      _p(140, PlayerPosition.st, 70),
+      _p(150, PlayerPosition.lw, 70),
+      _p(151, PlayerPosition.rw, 70),
+    ];
+    final xi = TournamentStars.teamOfTournament(
+      candidates: players,
+      goalsByPlayer: const {},
+      runByNation: const {},
+      formByPlayer: {
+        for (final p in players) p.id: (apps: 5, meanRating: 7.0, motms: 0),
+      },
+    );
+    expect(xi, hasLength(11));
+    expect(xi.where((s) => s.position == PlayerPosition.rb), hasLength(2));
   });
 }

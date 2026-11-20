@@ -47,14 +47,6 @@ class StarPlayer {
 /// never make it, and a player who had a poor tournament kept their place on
 /// reputation. Every match in the world is rated now, so the XI can be earned.
 abstract final class TournamentStars {
-  /// The shape of the team: goalkeepers, defenders, midfielders, forwards.
-  static const Map<PositionCategory, int> _slots = {
-    PositionCategory.goalkeeper: 1,
-    PositionCategory.defender: 4,
-    PositionCategory.midfielder: 3,
-    PositionCategory.forward: 3,
-  };
-
   /// The fewest appearances a player needs before a strong average counts.
   /// One brilliant game in a group stage is not a tournament.
   static const int minApps = 2;
@@ -133,18 +125,55 @@ abstract final class TournamentStars {
     }
     scored.sort((a, b) => b.score.compareTo(a.score));
 
-    final remaining = {..._slots};
-    final xi = <StarPlayer>[];
+    // Each of the 4-3-3's places takes a man of its own position, best
+    // first; only a place nobody of its position earned is filled from the
+    // rest of its line (a right-back at centre-back). Filled by line alone,
+    // a team came out with three right-backs and two strikers.
+    final placed = List<StarPlayer?>.filled(_shape.length, null);
+    final taken = <int>{};
     for (final s in scored) {
-      final cat = s.position.category;
-      final left = remaining[cat] ?? 0;
-      if (left <= 0) continue;
-      xi.add(s);
-      remaining[cat] = left - 1;
-      if (remaining.values.every((n) => n == 0)) break;
+      for (var i = 0; i < _shape.length; i++) {
+        if (placed[i] == null && _shape[i].contains(s.position)) {
+          placed[i] = s;
+          taken.add(s.id);
+          break;
+        }
+      }
     }
-    return xi;
+    for (var i = 0; i < _shape.length; i++) {
+      if (placed[i] != null) continue;
+      final line = _shape[i].first.category;
+      for (final s in scored) {
+        if (taken.contains(s.id) || s.position.category != line) continue;
+        placed[i] = s;
+        taken.add(s.id);
+        break;
+      }
+    }
+    // Best first, as it always was: the head of the team is its Golden
+    // Ball. The screens lay it out by position themselves.
+    return [
+      for (final s in scored)
+        if (taken.contains(s.id)) s,
+    ];
   }
+
+  /// The places of the team's 4-3-3, each with the positions that fill it.
+  /// A wide midfielder (LM, RM) is a midfielder: he plays in the middle three
+  /// only when they cannot be filled from the centre.
+  static const List<Set<PlayerPosition>> _shape = [
+    {PlayerPosition.gk},
+    {PlayerPosition.lb},
+    {PlayerPosition.cb},
+    {PlayerPosition.cb},
+    {PlayerPosition.rb},
+    {PlayerPosition.dm, PlayerPosition.cm, PlayerPosition.am},
+    {PlayerPosition.cm, PlayerPosition.dm, PlayerPosition.am},
+    {PlayerPosition.am, PlayerPosition.cm, PlayerPosition.dm},
+    {PlayerPosition.lw},
+    {PlayerPosition.st},
+    {PlayerPosition.rw},
+  ];
 
   /// The tournament's best goalkeeper, from the keepers who actually played.
   ///
