@@ -288,7 +288,7 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
   // same frozen ranks. The form term walks them in order (see
   // BoardSatisfaction.stickyFormPoints), so a win never lowers it.
   final chronological =
-      <({MatchOutcome outcome, bool underdog, bool humiliation})>[];
+      <({MatchOutcome outcome, double underdog, bool humiliation})>[];
   for (final f in played.reversed) {
     final ranks = await ranksFor(f);
     final isHome = f.homeNationId == career.nationId;
@@ -303,9 +303,9 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
           : mine == against
           ? MatchOutcome.draw
           : MatchOutcome.loss,
-      underdog:
-          known &&
-          BoardSatisfaction.isUnderdog(ownRank: own, opponentRank: theirs),
+      underdog: known
+          ? BoardSatisfaction.underdogDegree(ownRank: own, opponentRank: theirs)
+          : 0.0,
       humiliation:
           known &&
           BoardSatisfaction.isHumiliation(

@@ -367,4 +367,41 @@ void main() {
       expect(thenLostThree, greaterThan(BoardSatisfaction.neutral));
     });
   });
+
+  group('a result weighed against how much better the opponent is', () {
+    double d(int own, int opp) =>
+        BoardSatisfaction.underdogDegree(ownRank: own, opponentRank: opp);
+    int lossTo(int own, int opp) => BoardSatisfaction.formPoints(
+      const [MatchOutcome.loss],
+      asUnderdog: [d(own, opp)],
+    );
+
+    test('an equal or weaker side is no excuse', () {
+      expect(d(30, 28), 0);
+      expect(d(100, 90), 0);
+      expect(d(20, 40), 0);
+      expect(lossTo(30, 28), BoardSatisfaction.loss);
+    });
+
+    test('a clearly better side softens a defeat by degrees', () {
+      // 40th beaten by 22nd: three quarters of the way to the underdog's.
+      expect(d(40, 22), closeTo(0.75, 1e-9));
+      expect(lossTo(40, 22), -2);
+      // 10th beaten by the best: a little.
+      expect(lossTo(10, 1), -4);
+      // The clear underdog, as before.
+      expect(d(90, 20), 1);
+      expect(lossTo(90, 20), BoardSatisfaction.lossAsUnderdog);
+    });
+
+    test('never harsher than the old yes-or-no reading', () {
+      for (var own = 1; own <= 200; own += 7) {
+        for (var opp = 1; opp <= 200; opp += 5) {
+          if (BoardSatisfaction.isUnderdog(ownRank: own, opponentRank: opp)) {
+            expect(d(own, opp), 1, reason: '$own v $opp');
+          }
+        }
+      }
+    });
+  });
 }

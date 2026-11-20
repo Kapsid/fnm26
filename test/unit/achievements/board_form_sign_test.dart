@@ -3,10 +3,10 @@ import 'dart:math';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 
-typedef _R = ({MatchOutcome outcome, bool underdog, bool humiliation});
+typedef _R = ({MatchOutcome outcome, double underdog, bool humiliation});
 
 _R _r(MatchOutcome o, {bool underdog = false, bool humiliation = false}) =>
-    (outcome: o, underdog: underdog, humiliation: humiliation);
+    (outcome: o, underdog: underdog ? 1.0 : 0.0, humiliation: humiliation);
 
 int _sticky(List<_R> rs, {double minnow = 0}) =>
     BoardSatisfaction.stickyFormPoints(rs, minnow: minnow);

@@ -92,7 +92,10 @@ void main() {
         for (final b in outcomes) {
           for (final under in [true, false]) {
             final recent = [a, b, a, a, b, b, a, b, a, b];
-            final flags = [under, !under, under, under, false, true];
+            final flags = [
+              for (final u in [under, !under, under, under, false, true])
+                u ? 1.0 : 0.0,
+            ];
             final humiliated = [true, false, true, true, false, true];
             expect(
               BoardSatisfaction.formPoints(
@@ -217,7 +220,7 @@ void main() {
         final byGiants = BoardSatisfaction.formPoints(
           tenLosses,
           minnow: 1,
-          asUnderdog: List.filled(10, true),
+          asUnderdog: List.filled(10, 1.0),
           humiliations: List.filled(10, true),
         );
         expect(plain, 10 * BoardSatisfaction.minnowLoss);
@@ -262,16 +265,16 @@ void main() {
           MatchOutcome.loss,
         ],
         recentAsUnderdog: const [
-          true,
-          true,
-          false,
-          false,
-          false,
-          true,
-          false,
-          false,
-          false,
-          false,
+          1.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
         ],
         recentHumiliations: List.filled(10, false),
         honours: const [],
@@ -288,16 +291,16 @@ void main() {
           recent: [...List.filled(9, MatchOutcome.loss)]
             ..insert(2, MatchOutcome.draw),
           recentAsUnderdog: const [
-            true,
-            true,
-            false,
-            false,
-            false,
-            true,
-            false,
-            false,
-            false,
-            false,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
           ],
           honours: const [],
           worldRank: 203,

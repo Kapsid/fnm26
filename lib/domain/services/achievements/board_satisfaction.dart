@@ -229,6 +229,26 @@ abstract final class BoardSatisfaction {
   static bool isUnderdog({required int ownRank, required int opponentRank}) =>
       opponentRank * 2 <= ownRank && ownRank - opponentRank >= 10;
 
+  /// How far a side ranked [ownRank] plays [opponentRank] as the underdog,
+  /// 0 (an equal, or a weaker side) to 1 (the clear underdog, see
+  /// [isUnderdog]): the result's weights slide that far toward the
+  /// underdog's. Both the gap and the ratio have to be real: 40th against
+  /// 22nd is three quarters of the way, 10th against 1st under a third, 100th
+  /// against 90th nothing. A defeat by a clearly better side that was not
+  /// twice as high used to cost the board as much as one by an equal (a
+  /// tester: "you won't be disappointed when a 50 side loses to an 80 one").
+  static double underdogDegree({
+    required int ownRank,
+    required int opponentRank,
+  }) {
+    if (isUnderdog(ownRank: ownRank, opponentRank: opponentRank)) return 1;
+    final gap = ownRank - opponentRank;
+    if (gap <= 0 || ownRank <= 0) return 0;
+    final byGap = ((gap - 3) / 20).clamp(0.0, 1.0);
+    final byRatio = ((1 - opponentRank / ownRank - 0.1) / 0.4).clamp(0.0, 1.0);
+    return byGap < byRatio ? byGap : byRatio;
+  }
+
   /// The form contribution of [recent] (most recent first); only the newest
   /// [formWindow] matches count. [asUnderdog] runs alongside it, true for a
   /// match played as the clear underdog; missing entries count as level.
@@ -240,43 +260,53 @@ abstract final class BoardSatisfaction {
   /// weights are exactly the ordinary ones.
   static int formPoints(
     Iterable<MatchOutcome> recent, {
-    Iterable<bool> asUnderdog = const [],
+    Iterable<double> asUnderdog = const [],
     double minnow = 0,
     Iterable<bool> humiliations = const [],
   }) {
     final underdog = asUnderdog.toList();
     final m = minnow.clamp(0.0, 1.0);
+    double between(num level, num under, double d) =>
+        level + (under - level) * d;
     if (m <= 0) {
-      var points = 0;
+      var points = 0.0;
       var i = 0;
       for (final outcome in recent.take(formWindow)) {
-        final under = i < underdog.length && underdog[i];
+        final d = i < underdog.length ? underdog[i].clamp(0.0, 1.0) : 0.0;
         i++;
         points += switch (outcome) {
-          MatchOutcome.win => under ? winAsUnderdog : win,
-          MatchOutcome.draw => under ? drawAsUnderdog : draw,
-          MatchOutcome.loss => under ? lossAsUnderdog : loss,
+          MatchOutcome.win => between(win, winAsUnderdog, d),
+          MatchOutcome.draw => between(draw, drawAsUnderdog, d),
+          MatchOutcome.loss => between(loss, lossAsUnderdog, d),
         };
       }
-      return points;
+      return points.round();
     }
     double slide(int from, int to) => from + (to - from) * m;
     final humiliated = humiliations.toList();
     var points = 0.0;
     var i = 0;
     for (final outcome in recent.take(formWindow)) {
-      final under = i < underdog.length && underdog[i];
-      final humiliation = !under && i < humiliated.length && humiliated[i];
+      final d = i < underdog.length ? underdog[i].clamp(0.0, 1.0) : 0.0;
+      // A humiliation keeps its full weight unless it came as the clear
+      // underdog.
+      final humiliation = d < 1 && i < humiliated.length && humiliated[i];
       i++;
       points += switch (outcome) {
-        MatchOutcome.win => under ? winAsUnderdog : win,
-        MatchOutcome.draw => under ? drawAsUnderdog : slide(draw, minnowDraw),
+        MatchOutcome.win => between(win, winAsUnderdog, d),
+        MatchOutcome.draw => between(
+          slide(draw, minnowDraw),
+          drawAsUnderdog,
+          d,
+        ),
         MatchOutcome.loss =>
-          under
-              ? slide(lossAsUnderdog, minnowLossAsUnderdog)
-              : humiliation
+          humiliation
               ? loss
-              : slide(loss, minnowLoss),
+              : between(
+                  slide(loss, minnowLoss),
+                  slide(lossAsUnderdog, minnowLossAsUnderdog),
+                  d,
+                ),
       };
     }
     return points.round();
@@ -299,7 +329,7 @@ abstract final class BoardSatisfaction {
   /// with the same underdog and humiliation flags [formPoints] takes. Pure and
   /// derived from the results alone, so nothing is stored per match.
   static int stickyFormPoints(
-    List<({MatchOutcome outcome, bool underdog, bool humiliation})>
+    List<({MatchOutcome outcome, double underdog, bool humiliation})>
     chronological, {
     double minnow = 0,
   }) {
@@ -431,7 +461,7 @@ abstract final class BoardSatisfaction {
 
     /// Alongside [recent]: which of those matches were played as the clear
     /// underdog (see [formPoints]).
-    Iterable<bool> recentAsUnderdog = const [],
+    Iterable<double> recentAsUnderdog = const [],
     required Iterable<({TournamentTier tier, Placing placing})> honours,
     required int? worldRank,
     Iterable<ObjectiveResult> objectives = const [],
