@@ -96,6 +96,8 @@ abstract final class ClubService {
     Map<String, List<String>> added = const {},
     ClubWorld? world,
     bool strength = false,
+    List<String> homeRegion = const [],
+    bool exports = false,
   }) {
     final clubs =
         world ?? (added.isEmpty ? ClubWorld.none : ClubWorld(added: added));
@@ -165,7 +167,9 @@ abstract final class ClubService {
     // that would be a domestic club dressed up as a transfer.
     final abroad = leagues.where((l) => l.country != homeCode).toList();
     final pool = abroad.isEmpty ? leagues : abroad;
-    final league = pool[h % pool.length];
+    final league = exports && homeRegion.isNotEmpty
+        ? _regionalPick(pool, tier, homeRegion, homeCode, h)
+        : pool[h % pool.length];
     if (strength) {
       return (
         name: clubs._pick(league.country, level, h)!,
@@ -631,6 +635,59 @@ abstract final class ClubService {
   }
 
   static int _tierFor(int overall) => tierForOverall(overall);
+
+  /// How much likelier one of an export's own region's leagues is than any
+  /// other league he could join (see [_regionalPick]). The elite leagues buy
+  /// from the whole world; below them a player moves to his neighbours'
+  /// leagues far more often than across the world.
+  static int regionWeight(int tier) => tier <= 1 ? 1 : 6;
+
+  /// An export's league: one of [pool] (his [tier]'s leagues abroad), or one
+  /// of his region's ([homeRegion]: his confederation's countries, lower
+  /// case) a tier either side, or two when there is none that near (a
+  /// Jamaican squad man to the American or Mexican league). Each of his
+  /// region's is weighted by [regionWeight]; drawn on [hash]. Without it a
+  /// Czech squad man played in Morocco or Colombia as often as in Austria:
+  /// the fourth tier holds no European league at all.
+  static _League _regionalPick(
+    List<_League> pool,
+    int tier,
+    List<String> homeRegion,
+    String homeCode,
+    int hash,
+  ) {
+    final candidates = [...pool];
+    if (tier > 1) {
+      for (final reach in const [1, 2]) {
+        final near = [
+          for (final l in _allLeagues)
+            if (l.destination &&
+                l.country != homeCode &&
+                homeRegion.contains(l.country) &&
+                l.tier != tier &&
+                l.tier > 1 &&
+                (l.tier - tier).abs() <= reach &&
+                !candidates.contains(l))
+              l,
+        ];
+        if (near.isNotEmpty || reach == 2) {
+          candidates.addAll(near);
+          if (near.isNotEmpty) break;
+        }
+      }
+    }
+    final regional = regionWeight(tier);
+    final weights = [
+      for (final l in candidates) homeRegion.contains(l.country) ? regional : 1,
+    ];
+    final total = weights.fold<int>(0, (a, b) => a + b);
+    var r = hash % total;
+    for (var i = 0; i < candidates.length; i++) {
+      if (r < weights[i]) return candidates[i];
+      r -= weights[i];
+    }
+    return candidates.last;
+  }
 
   /// A stable non-negative hash (avalanche mix) for spreading picks.
   static int _hash(int x) {

@@ -17,6 +17,7 @@ import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/repositories/player_repository.dart'
     show
+        clubExportsKind,
         clubStrengthKind,
         namePoolsV2Kind,
         namePoolsV3Kind,
@@ -486,6 +487,8 @@ class CareerService {
     // clubStrengthKind), before briefRulesV2Kind for the same reason: the
     // repository settles a career's club rule on that mark.
     await comp.markDrawWatched(career.id, 0, clubStrengthKind);
+    // And its exports lean to their own region's leagues.
+    await comp.markDrawWatched(career.id, 0, clubExportsKind);
     await comp.markDrawWatched(career.id, 0, briefRulesV2Kind);
     await comp.markDrawWatched(career.id, 0, briefRulesV3Kind);
     await comp.markDrawWatched(career.id, 0, briefRulesV4Kind);

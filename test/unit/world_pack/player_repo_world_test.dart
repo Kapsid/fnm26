@@ -9,7 +9,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/repositories/player_repository.dart'
-    show clubStrengthKind;
+    show clubExportsKind, clubStrengthKind;
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
@@ -149,12 +149,14 @@ void main() {
                   .create(nationId: 1, managerName: 'M', rngSeed: _goldenSeed))
               .valueOrNull!;
       // A career as every build before club strength made it: without the
-      // mark. Read by a fresh app (container), as an upgraded build opens
-      // an old save. The golden was written before club strength existed
-      // (and is never rewritten for it): every club stays where it was.
+      // mark, nor the later export rule's. Read by a fresh app (container),
+      // as an upgraded build opens an old save. The golden was written
+      // before club strength existed (and is never rewritten for it): every
+      // club stays where it was.
       await (db.delete(db.drawsWatched)..where(
             (t) =>
-                t.careerId.equals(career.id) & t.kind.equals(clubStrengthKind),
+                t.careerId.equals(career.id) &
+                t.kind.isIn(const [clubStrengthKind, clubExportsKind]),
           ))
           .go();
       final c = greenlandContainer(db);

@@ -57,6 +57,12 @@ const namePoolsV5Kind = 'namePools5';
 /// version) keeps the draw it was created with, exactly.
 const clubStrengthKind = 'clubStrength1';
 
+/// The per-career marker (cycle 0) of the 1.1.2 export rule: a player
+/// leaving his own league goes more often to his region's leagues below the
+/// elite ones (see `ClubService.regionWeight`). Set when a career is
+/// created; a career without it keeps every club it had.
+const clubExportsKind = 'clubExports1';
+
 /// Read access to the player reference data.
 ///
 /// `agingYears` ages the returned players by that many years (0 = the base seed

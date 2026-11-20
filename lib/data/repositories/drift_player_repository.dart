@@ -23,7 +23,7 @@ import 'package:fnm/data/seed/mononyms.dart';
 import 'package:fnm/data/seed/pool_generator.dart';
 import 'package:fnm/data/seed/real_internationals.dart';
 import 'package:fnm/data/seed/seed_source.dart';
-import 'package:fnm/domain/entities/enums.dart' show YouthLevel;
+import 'package:fnm/domain/entities/enums.dart' show Confederation, YouthLevel;
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/repositories/player_repository.dart';
@@ -286,6 +286,10 @@ class DriftPlayerRepository implements PlayerRepository {
       careerId,
       newCareer: newCareerNames,
     );
+    final exports = await _exportsByRegion(
+      careerId,
+      newCareer: newCareerNames,
+    );
     return [
       for (final p in selectable)
         _finish(
@@ -293,8 +297,10 @@ class DriftPlayerRepository implements PlayerRepository {
           saveSeed,
           homeCode: home.code,
           homeCities: home.cities,
+          homeRegion: home.region,
           world: world,
           strength: strength,
+          exports: exports,
         ),
     ];
   }
@@ -390,6 +396,7 @@ class DriftPlayerRepository implements PlayerRepository {
     final name = await _namerFor(nationId, seeded, saveSeed, careerId);
     final home = await _home(nationId);
     final strength = await _drawsByStrength(careerId);
+    final exports = await _exportsByRegion(careerId);
     return [
       for (final p in pool)
         _finish(
@@ -397,8 +404,10 @@ class DriftPlayerRepository implements PlayerRepository {
           saveSeed,
           homeCode: home.code,
           homeCities: home.cities,
+          homeRegion: home.region,
           world: world,
           strength: strength,
+          exports: exports,
         ),
     ];
   }
@@ -430,6 +439,8 @@ class DriftPlayerRepository implements PlayerRepository {
     List<String> homeCities = const [],
     _CareerWorld? world,
     bool strength = false,
+    List<String> homeRegion = const [],
+    bool exports = false,
   }) {
     final clubs = world?.clubWorld ?? ClubWorld.none;
     var c = ClubService.clubForSeed(
@@ -439,6 +450,8 @@ class DriftPlayerRepository implements PlayerRepository {
       homeCities: homeCities,
       world: clubs,
       strength: strength,
+      homeRegion: homeRegion,
+      exports: exports,
     );
     final dayOne = world?.packPlayer(p.id);
     if (dayOne != null &&
@@ -497,16 +510,55 @@ class DriftPlayerRepository implements PlayerRepository {
 
   /// The FIFA code and cities of [nationId] — the "home country" context the
   /// club assignment needs.
-  Future<({String code, List<String> cities})> _home(int nationId) async {
-    final codes = _codes ??= {
-      for (final n in await _db.select(_db.nations).get()) n.id: n.code,
-    };
+  Future<({String code, List<String> cities, List<String> region})> _home(
+    int nationId,
+  ) async {
+    final rows = _nationRows ??= await _db.select(_db.nations).get();
+    final codes = _codes ??= {for (final n in rows) n.id: n.code};
+    final conf = {for (final n in rows) n.id: n.confederation}[nationId];
+    final region = _regions[conf] ??= [
+      for (final n in rows)
+        if (n.confederation == conf) n.code.toLowerCase(),
+    ];
     return (
       // Lower-cased to match the league table's country keys (and the flag
       // asset names), which are all lowercase FIFA codes.
       code: (codes[nationId] ?? '').toLowerCase(),
       cities: (await _cityLists())[nationId] ?? const <String>[],
+      region: conf == null ? const <String>[] : region,
     );
+  }
+
+  List<NationRow>? _nationRows;
+  final Map<Confederation?, List<String>> _regions = {};
+
+  /// Careers known to carry [clubExportsKind], and careers known not to.
+  final Map<int, bool> _exportCareers = {};
+
+  /// Whether [careerId]'s exports lean to their own region's leagues
+  /// ([clubExportsKind], a career created since 1.1.2). No career at all
+  /// reads what a career created now gets when [newCareer].
+  Future<bool> _exportsByRegion(int? careerId, {bool newCareer = false}) async {
+    if (careerId == null) return newCareer;
+    if (_exportCareers[careerId] case final known?) return known;
+    final kinds =
+        await (_db.selectOnly(_db.drawsWatched)
+              ..addColumns([_db.drawsWatched.kind])
+              ..where(
+                _db.drawsWatched.careerId.equals(careerId) &
+                    _db.drawsWatched.cycle.equals(0) &
+                    _db.drawsWatched.kind.isIn(const [
+                      clubExportsKind,
+                      fullPoolsSettledKind,
+                    ]),
+              ))
+            .map((r) => r.read(_db.drawsWatched.kind))
+            .get();
+    final yes = kinds.contains(clubExportsKind);
+    if (yes || kinds.contains(fullPoolsSettledKind)) {
+      _exportCareers[careerId] = yes;
+    }
+    return yes;
   }
 
   /// The per-nation city lists, from the injected seed source (once). Empty
@@ -606,7 +658,9 @@ class DriftPlayerRepository implements PlayerRepository {
             saveSeed,
             homeCode: home.code,
             homeCities: home.cities,
+            homeRegion: home.region,
             strength: newCareerNames,
+            exports: newCareerNames,
           ),
     ];
   });
@@ -641,8 +695,10 @@ class DriftPlayerRepository implements PlayerRepository {
             saveSeed,
             homeCode: home.code,
             homeCities: home.cities,
+            homeRegion: home.region,
             // As a career created now places him, like his name.
             strength: true,
+            exports: true,
           ),
     ];
   });
@@ -738,6 +794,10 @@ class DriftPlayerRepository implements PlayerRepository {
       careerId,
       newCareer: newCareerNames,
     );
+    final exports = await _exportsByRegion(
+      careerId,
+      newCareer: newCareerNames,
+    );
     if (GoldenGeneration.isGoldenId(id)) {
       // A cohort member is resolved from his id alone, like a newgen: only a
       // marked career ever fields him, so no marker is needed to name him.
@@ -762,8 +822,10 @@ class DriftPlayerRepository implements PlayerRepository {
         saveSeed,
         homeCode: home.code,
         homeCities: home.cities,
+        homeRegion: home.region,
         world: world,
         strength: strength,
+        exports: exports,
       );
     }
     if (PlayerLifecycle.isNewgenId(id)) {
@@ -791,8 +853,10 @@ class DriftPlayerRepository implements PlayerRepository {
         saveSeed,
         homeCode: home.code,
         homeCities: home.cities,
+        homeRegion: home.region,
         world: world,
         strength: strength,
+        exports: exports,
       );
     }
     // A career on a custom world reads its core players from the world: an
@@ -845,8 +909,10 @@ class DriftPlayerRepository implements PlayerRepository {
       saveSeed,
       homeCode: home.code,
       homeCities: home.cities,
+      homeRegion: home.region,
       world: world,
       strength: strength,
+      exports: exports,
     );
   }
 
