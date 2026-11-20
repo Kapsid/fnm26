@@ -58,6 +58,7 @@ dependencies:
   sqlite3_flutter_libs: ^0.6.0+eol # Bundled native SQLite.
   flutter_svg: ^2.3.0
   shared_preferences: ^2.5.5
+  in_app_review: ^2.0.10 # The store's own rating dialog, asked for rarely (see ReviewPrompt).
   share_plus: ^12.0.0 # Hands an exported save to the OS share sheet.
   file_picker: ^11.0.3 # Picks a save file back off the device to restore.
   url_launcher: ^6.3.3

@@ -66,6 +66,7 @@ import 'package:fnm/features/match/pitch/shootout_stage.dart';
 import 'package:fnm/features/match/score_bug_theme.dart';
 import 'package:fnm/features/match/sound/match_audio.dart';
 import 'package:fnm/features/match/sound/match_sound_director.dart';
+import 'package:fnm/features/review/review_prompt.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
@@ -1746,6 +1747,11 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
           unlocked,
           compact: compactUnlocked,
         );
+      }
+      // A good day, from the third cycle or after a trophy: the store's own
+      // rating dialog, rarely (see ReviewPrompt).
+      if (mounted) {
+        await maybeAskForReview(ref, widget.careerId, preview.fixture.id);
       }
       if (mounted) {
         // Show the round's other results (grouped) before returning to the hub.
