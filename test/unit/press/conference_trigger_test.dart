@@ -105,6 +105,23 @@ void main() {
     expect(reason(played, count: 6, job: true), ConferenceReason.jobVerdict);
   });
 
+  test('a promise broken on a win is not the story', () {
+    // One win in three, the third a 5-2 over a side nine places higher: the
+    // room talks about the win, not "you failed it against them".
+    final played = [
+      om(1, 0, 1),
+      om(2, 1, 1),
+      om(3, 5, 2, standing: ResultStanding.heroic),
+    ];
+    final r = reason(played, job: true);
+    expect(r, isNot(ConferenceReason.jobVerdict));
+    // Broken on a draw or a defeat, it still is.
+    expect(
+      reason([om(1, 1, 0), om(2, 0, 1), om(3, 1, 1)], job: true),
+      ConferenceReason.jobVerdict,
+    );
+  });
+
   test('startsRun: two wins then a heroic win (run of 3) is a big win', () {
     expect(
       reason([

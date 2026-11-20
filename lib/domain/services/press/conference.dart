@@ -197,7 +197,6 @@ abstract final class ConferenceTrigger {
     // Callers pass post-match conferences only: a preview is called on its
     // own calendar and neither counts toward the cap nor starts the quiet.
     if (played.isEmpty) return null;
-    if (jobJustBroken) return ConferenceReason.jobVerdict;
     final ms = [...played]
       ..sort((a, b) {
         final dateCompare = a.date.compareTo(b.date);
@@ -206,6 +205,13 @@ abstract final class ConferenceTrigger {
             : a.fixtureId.compareTo(b.fixtureId);
       });
     final latest = ms.last;
+    // A promise broken on a defeat or a draw is the story. One broken on a
+    // win (one win in three, the third won) is not: the room does not open
+    // with "you failed it against them, will you resign?" about the side he
+    // has just beaten 5-2 (a tester's report). The board still marks it.
+    if (jobJustBroken && latest.scored <= latest.conceded) {
+      return ConferenceReason.jobVerdict;
+    }
     if (lastConference != null &&
         latest.date.difference(lastConference).inDays < quietDays) {
       return null;
