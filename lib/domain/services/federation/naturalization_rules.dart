@@ -20,3 +20,25 @@ const int kMaxCapsToSwitch = 10;
 /// Whether a player with [capsForCurrentNation] caps may still switch.
 bool canSwitchAllegiance(int capsForCurrentNation) =>
     capsForCurrentNation <= kMaxCapsToSwitch;
+
+/// The best a naturalisation candidate of [age] may be rated, or null when
+/// he is too old to be offered: a young man may come in good, an older one
+/// only a little below that. A world-class player at 29 switching federation
+/// read as unreal (the owner, 2026-11-21); the ones who do are the young,
+/// still finding their level, and the older, a notch below the elite.
+int? naturalizationCeiling(int age) => switch (age) {
+  <= 23 => 82,
+  <= 26 => 79,
+  <= 29 => 76,
+  <= kNaturalizationMaxAge => 73,
+  _ => null,
+};
+
+/// The oldest a naturalisation candidate may be.
+const int kNaturalizationMaxAge = 32;
+
+/// The rare star a naturalisation can bring: only ever a young one (see
+/// [naturalizationCeiling]), rated between these.
+const int kNaturalizationStarMaxAge = 23;
+const int kNaturalizationStarMin = 80;
+const int kNaturalizationStarMax = 88;

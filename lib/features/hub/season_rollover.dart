@@ -795,19 +795,24 @@ extension SeasonRollover on SeasonService {
       );
       if (rng.nextDouble() >= chance) continue;
 
-      // A small chance the candidate is a genuine star — but only ever from a
-      // strong footballing nation (the top of the ranking), so the quality is
-      // believable. Otherwise a mid-tier player from anywhere. Kept rare: a
-      // man significantly better than the squad should be a lucky find.
+      // A small chance the candidate is a rising star — only ever a young
+      // one, and only from a strong footballing nation (the top of the
+      // ranking), so the quality is believable. Otherwise a player from
+      // anywhere, as good as his age allows (naturalizationCeiling): the
+      // young may come in good, the older a notch below. Kept rare: a man
+      // significantly better than the squad should be a lucky find.
       final marquee = rng.nextDouble() < 0.02;
       final sources = marquee
           ? others
                 .take(20)
                 .toList() // only strong nations breed stars
           : others;
-      final minR = marquee ? 85 : 64;
-      final maxR = marquee ? 91 : 82;
-      final maxAge = marquee ? 32 : 29;
+      final minR = marquee ? kNaturalizationStarMin : 64;
+      final maxAge = marquee
+          ? kNaturalizationStarMaxAge
+          : kNaturalizationMaxAge;
+      int? maxFor(int age) =>
+          marquee ? kNaturalizationStarMax : naturalizationCeiling(age);
 
       final candidates = <Player>[];
       for (var i = 0; i < 8 && candidates.length < 12; i++) {
@@ -819,7 +824,9 @@ extension SeasonRollover on SeasonService {
           careerId: career.id,
         );
         for (final p in pool) {
+          final maxR = maxFor(p.age);
           if (p.age > maxAge ||
+              maxR == null ||
               p.overall < minR ||
               p.overall > maxR ||
               taken.contains(p.id)) {
