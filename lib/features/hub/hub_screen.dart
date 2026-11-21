@@ -424,8 +424,10 @@ class _HubScreenState extends ConsumerState<HubScreen> {
                       playerNationId: hub.career.nationId,
                       directCount: hub.groupDirectCount,
                       contentionPos: hub.groupContentionPos,
+                      contentionThrough: hub.groupContentionThrough,
                       playoffNations: hub.groupPlayoffNations,
                       relegateCount: hub.groupRelegateCount,
+                      undecided: hub.groupUndecided,
                       code: code,
                       name: name,
                       onTap: () => _openGroup(context, hub),
@@ -980,10 +982,12 @@ class _GroupTable extends StatelessWidget {
     required this.playerNationId,
     required this.directCount,
     required this.contentionPos,
+    this.contentionThrough,
     this.playoffNations = const {},
     required this.code,
     required this.name,
     this.relegateCount = 0,
+    this.undecided = const {},
     this.onTap,
     this.framed = true,
   });
@@ -997,12 +1001,19 @@ class _GroupTable extends StatelessWidget {
   final int directCount;
   final int? contentionPos;
 
+  /// The last position in contention when several are (see
+  /// [HubData.groupContentionThrough]).
+  final int? contentionThrough;
+
   /// Nations whose place leads to the intercontinental play-off (yellow).
   final Set<int> playoffNations;
 
   /// How many bottom places go down (red) — the Nations Cup relegates each
   /// group's last side.
   final int relegateCount;
+
+  /// Nations Cup winners and bottom sides still short of a move (amber).
+  final Set<int> undecided;
 
   final String Function(int) code;
   final String Function(int) name;
@@ -1064,10 +1075,15 @@ class _GroupTable extends StatelessWidget {
     // using the same format the tournament detail screens compute, so the two
     // never disagree.
     final direct = pos <= directCount;
-    final inContention = pos == contentionPos;
+    final inContention =
+        contentionPos != null &&
+        pos >= contentionPos! &&
+        pos <= (contentionThrough ?? contentionPos!);
     final relegated =
         relegateCount > 0 && pos > group.standings.length - relegateCount;
-    final zoneColor = direct
+    final zoneColor = (direct || relegated) && undecided.contains(s.nationId)
+        ? AppColors.warning
+        : direct
         ? AppColors.positive
         : playoffNations.contains(s.nationId)
         ? AppColors.playoff

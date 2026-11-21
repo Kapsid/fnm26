@@ -13104,6 +13104,13 @@ class AppLocalizationsVi extends AppLocalizations {
       'Ban lãnh đạo sẽ đặt mục tiêu này sau khi bốc thăm chia bảng.';
 
   @override
+  String get boardObjectiveLaterEdition => 'Mục tiêu ở cúp thứ hai';
+
+  @override
+  String get boardObjectiveLaterEditionBody =>
+      'Chu kỳ này có hai Nations Cup và ban lãnh đạo chỉ đánh giá cúp thứ hai. Cúp này không có mục tiêu, nhưng kết quả vẫn đưa bạn lên hoặc xuống một hạng trước lễ bốc thăm cúp thứ hai.';
+
+  @override
   String tourThirdsNextAdvance(int count, String destination) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -18108,6 +18115,10 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Cuối bảng: xuống hạng đấu thấp hơn';
+
+  @override
+  String get ncLegendMayMove =>
+      'Chưa chắc: số suất ít hơn số bảng, nên trong cả hạng đấu chỉ những đội nhất bảng tốt nhất được thăng hạng và những đội cuối bảng tệ nhất bị xuống hạng';
 
   @override
   String get campaignIsleOfManTitle => 'Ba chân';

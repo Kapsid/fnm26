@@ -413,6 +413,12 @@ abstract interface class CompetitionRepository {
   /// The group table containing [nationId] for this save, or null.
   Future<GroupTable?> groupTableForNation(int careerId, int nationId);
 
+  /// Every group table of the competition the group [groupId] belongs to,
+  /// the group itself included (empty when the group is unknown). The
+  /// Nations Cup ladder needs them all: who drops out of a league depends on
+  /// the bottom sides of every group in it.
+  Future<List<FinalsGroupTable>> siblingGroupTables(int groupId);
+
   /// The results of the group-stage round [nationId] most recently played,
   /// grouped by every group in that competition. Null when the last played
   /// match wasn't a group-stage fixture (e.g. a knockout tie or a friendly).
@@ -554,6 +560,16 @@ abstract interface class CompetitionRepository {
   /// [playerConfederation] limits the continental finals considered to the
   /// player's own region — every region's cup exists as fixtures, but only the
   /// player's is stepped day by day (the rest resolve in the background).
+  /// The last day of the finals round [earliestUnplayedFinalsDate] opens:
+  /// the latest date among the unplayed fixtures of the same competition,
+  /// round and matchday as the earliest one. A watched finals is stepped a
+  /// whole round at a time, since `TournamentCalendar` spreads a matchday over
+  /// several days (two groups a day). Null when nothing is left.
+  Future<DateTime?> unplayedFinalsRoundEnd(
+    int careerId, {
+    Confederation? playerConfederation,
+  });
+
   Future<DateTime?> earliestUnplayedFinalsDate(
     int careerId, {
     Confederation? playerConfederation,

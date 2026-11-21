@@ -221,4 +221,57 @@ void main() {
       expect([count(0), count(1), count(2)], [2, 4, 2]);
     });
   });
+
+  group('ladderUndecided', () {
+    // League C (tier 2) has four groups, League D (tier 3) two: two places
+    // each way, so only the two worst of C's four bottom sides are going
+    // down; the other two are amber. D's two winners both climb.
+    final groups = <LadderGroup>[
+      for (var g = 0; g < 4; g++)
+        (tier: 0, winner: _row(1 + g, points: 15), bottom: _row(5 + g)),
+      for (var g = 0; g < 4; g++)
+        (tier: 1, winner: _row(10 + g, points: 15), bottom: _row(20 + g)),
+      for (var g = 0; g < 4; g++)
+        (
+          tier: 2,
+          winner: _row(100 + g, points: 15),
+          bottom: _row(200 + g, points: g * 3),
+        ),
+      (tier: 3, winner: _row(300, points: 9), bottom: _row(400)),
+      (tier: 3, winner: _row(301, points: 6), bottom: _row(401)),
+    ];
+
+    test('marks only the bottom sides a short boundary spares', () {
+      final undecided = NationsCup.ladderUndecided(groups);
+      expect(undecided, {202, 203});
+      // The same sides promoteRelegate actually moves are the ones left red.
+      final next = NationsCup.promoteRelegate(
+        tiers: {for (var i = 0; i < 1000; i++) i: 0},
+        groups: groups,
+      );
+      expect(next[200], 3);
+      expect(next[201], 3);
+      expect(next[202], isNot(3));
+      expect(next[203], isNot(3));
+    });
+
+    test('a winner short of a place is amber too', () {
+      final undecided = NationsCup.ladderUndecided([
+        (tier: 0, winner: _row(1, points: 9), bottom: _row(2)),
+        (tier: 1, winner: _row(3, points: 9), bottom: _row(4)),
+        (tier: 1, winner: _row(5, points: 3), bottom: _row(6)),
+      ]);
+      expect(undecided, {5});
+    });
+
+    test('an even boundary leaves nothing undecided', () {
+      expect(
+        NationsCup.ladderUndecided([
+          (tier: 0, winner: _row(1), bottom: _row(2)),
+          (tier: 1, winner: _row(3), bottom: _row(4)),
+        ]),
+        isEmpty,
+      );
+    });
+  });
 }

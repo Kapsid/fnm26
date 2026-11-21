@@ -20058,6 +20058,18 @@ abstract class AppLocalizations {
   /// **'The board sets this target once the groups are drawn.'**
   String get boardObjectiveAwaitingDrawBody;
 
+  /// Board objectives screen: title of the Nations Cup card in a cycle with two Nations Cups, before the second (the graded one) exists.
+  ///
+  /// In en, this message translates to:
+  /// **'Target in the second cup'**
+  String get boardObjectiveLaterEdition;
+
+  /// Board objectives screen: explanation under the later-edition title: only the second Nations Cup of the cycle is graded; the first still moves the ladder.
+  ///
+  /// In en, this message translates to:
+  /// **'This cycle has two Nations Cups and the board judges only the second one. This one sets no target, but its results still move you up or down a league before the second is drawn.'**
+  String get boardObjectiveLaterEditionBody;
+
   /// Cross-group ladder: how many of the teams just below the advancing ones go to the intercontinental play-off, and where.
   ///
   /// In en, this message translates to:
@@ -27605,6 +27617,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Bottom: relegated a league'**
   String get ncLegendLastDown;
+
+  /// Nations Cup league legend: the amber stripe, a group winner or bottom side that may not move because the boundary has fewer places than groups.
+  ///
+  /// In en, this message translates to:
+  /// **'Not certain: fewer places than groups, so only the best winners go up and the worst bottom sides go down across the league'**
+  String get ncLegendMayMove;
 
   /// Campaign title: the Three Legs, the triskelion on the Isle of Man's flag, for a hundred years (25 cycles) of the Isle of Man, a nation added to the world for this campaign.
   ///

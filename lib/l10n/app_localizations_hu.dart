@@ -13174,6 +13174,13 @@ class AppLocalizationsHu extends AppLocalizations {
       'A vezetőség a csoportsorsolás után tűzi ki ezt a célt.';
 
   @override
+  String get boardObjectiveLaterEdition => 'Cél csak a második kupában';
+
+  @override
+  String get boardObjectiveLaterEditionBody =>
+      'Ebben a ciklusban két Nations Cup van, és a vezetés csak a másodikat értékeli. Ennek nincs célja, de az eredményei a második sorsolása előtt még feljebb vagy lejjebb visznek egy ligával.';
+
+  @override
   String tourThirdsNextAdvance(int count, String destination) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -18206,6 +18213,10 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Utolsó: kiesik az alacsonyabb ligába';
+
+  @override
+  String get ncLegendMayMove =>
+      'Bizonytalan: kevesebb a hely, mint a csoport, így az egész ligában csak a legjobb győztesek jutnak fel és csak a leggyengébb utolsók esnek ki';
 
   @override
   String get campaignIsleOfManTitle => 'A három láb';

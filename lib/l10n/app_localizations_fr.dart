@@ -13375,6 +13375,13 @@ class AppLocalizationsFr extends AppLocalizations {
       'La direction fixera cet objectif une fois les groupes tirés au sort.';
 
   @override
+  String get boardObjectiveLaterEdition => 'Objectif dans la deuxième coupe';
+
+  @override
+  String get boardObjectiveLaterEditionBody =>
+      'Ce cycle compte deux Coupes des Nations et la direction ne juge que la deuxième. Celle-ci n\'a pas d\'objectif, mais ses résultats vous font encore monter ou descendre d\'une ligue avant le tirage de la deuxième.';
+
+  @override
   String tourThirdsNextAdvance(int count, String destination) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -18434,6 +18441,10 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Dernier : relégué dans la ligue inférieure';
+
+  @override
+  String get ncLegendMayMove =>
+      'Incertain : moins de places que de groupes, seuls les meilleurs vainqueurs montent et les pires derniers descendent sur toute la ligue';
 
   @override
   String get campaignIsleOfManTitle => 'Les trois jambes';

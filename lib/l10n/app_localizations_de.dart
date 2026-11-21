@@ -13352,6 +13352,13 @@ class AppLocalizationsDe extends AppLocalizations {
       'Das Präsidium setzt dieses Ziel, sobald die Gruppen ausgelost sind.';
 
   @override
+  String get boardObjectiveLaterEdition => 'Ziel erst im zweiten Pokal';
+
+  @override
+  String get boardObjectiveLaterEditionBody =>
+      'In diesem Zyklus gibt es zwei Pokale der Nationen, und die Verbandsführung bewertet nur den zweiten. Dieser hat kein Ziel, seine Ergebnisse bringen dich vor der Auslosung des zweiten aber noch eine Liga auf oder ab.';
+
+  @override
   String tourThirdsNextAdvance(int count, String destination) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -18401,6 +18408,10 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Letzter: Abstieg in die niedrigere Liga';
+
+  @override
+  String get ncLegendMayMove =>
+      'Unsicher: weniger Plätze als Gruppen, ligaweit steigen nur die besten Sieger auf und nur die schwächsten Letzten ab';
 
   @override
   String get campaignIsleOfManTitle => 'Die drei Beine';

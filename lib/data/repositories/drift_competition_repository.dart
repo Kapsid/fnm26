@@ -18,6 +18,7 @@ import 'package:fnm/domain/services/competition/real_history.dart';
 import 'package:fnm/domain/services/competition/cycle_finish.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/domain/services/competition/tournament_calendar.dart';
@@ -608,10 +609,21 @@ class DriftCompetitionRepository implements CompetitionRepository {
 
   /// Whether a round label is a knockout tie (continental rounds are 'C'-
   /// prefixed; group and qualifying rounds never are).
-  static bool _isKnockoutRound(String round) => Rounds.isKnockout(round);
+  /// A regional cup's two-legged ties ('XASFL1', 'XAFL2') count too, which
+  /// [Rounds.isKnockout] (the simulator's "go to penalties" test) must not:
+  /// a first leg left level is not decided. Without them a Southeast Asian
+  /// Championship knockout showed no other results at all.
+  static bool _isKnockoutRound(String round) =>
+      Rounds.isKnockout(round) || RegionalCups.isKnockoutRound(round);
 
   /// A human label for a knockout round (prefix-agnostic).
   static String _stageLabel(String round) {
+    // A regional cup's rounds ('XASFL1', 'XGFINAL'): its semi-finals and
+    // final, either leg.
+    if (RegionalCups.isRound(round)) {
+      final r = round.substring(2);
+      return r.startsWith('SF') ? 'Semi-finals' : 'Final';
+    }
     final core = round.startsWith('C') ? round.substring(1) : round;
     return switch (core) {
       'R32' => 'Round of 32',
@@ -1002,6 +1014,69 @@ class DriftCompetitionRepository implements CompetitionRepository {
   }
 
   @override
+  Future<DateTime?> unplayedFinalsRoundEnd(
+    int careerId, {
+    Confederation? playerConfederation,
+  }) async {
+    final ids = await _steppedFinalsIds(careerId, playerConfederation);
+    if (ids.isEmpty) return null;
+    final first =
+        await (_db.select(_db.fixtures)
+              ..where(
+                (t) =>
+                    t.careerId.equals(careerId) &
+                    t.played.equals(false) &
+                    t.competitionId.isIn(ids),
+              )
+              ..orderBy([
+                (t) => OrderingTerm(expression: t.date),
+                (t) => OrderingTerm(expression: t.id),
+              ])
+              ..limit(1))
+            .getSingleOrNull();
+    if (first == null) return null;
+    final round = first.round;
+    final last =
+        await (_db.select(_db.fixtures)
+              ..where(
+                (t) =>
+                    t.competitionId.equals(first.competitionId) &
+                    t.played.equals(false) &
+                    t.matchday.equals(first.matchday) &
+                    (round == null ? t.round.isNull() : t.round.equals(round)),
+              )
+              ..orderBy([
+                (t) =>
+                    OrderingTerm(expression: t.date, mode: OrderingMode.desc),
+              ])
+              ..limit(1))
+            .getSingleOrNull();
+    return last?.date ?? first.date;
+  }
+
+  /// The finals competitions a manager steps through day by day: the World
+  /// Cup and his own confederation's continental finals.
+  Future<List<int>> _steppedFinalsIds(
+    int careerId,
+    Confederation? playerConfederation,
+  ) async {
+    final comps =
+        await (_db.select(_db.competitions)..where(
+              (t) =>
+                  t.careerId.equals(careerId) &
+                  (t.kind.equalsValue(CompetitionKind.worldCupFinals) |
+                      (t.kind.equalsValue(CompetitionKind.continentalFinals) &
+                          (playerConfederation == null
+                              ? const Constant(true)
+                              : t.confederation.equalsValue(
+                                  playerConfederation,
+                                )))),
+            ))
+            .get();
+    return comps.map((c) => c.id).toList();
+  }
+
+  @override
   Future<DateTime?> earliestUnplayedFinalsDate(
     int careerId, {
     Confederation? playerConfederation,
@@ -1242,6 +1317,18 @@ class DriftCompetitionRepository implements CompetitionRepository {
       edition: edition,
     ),
   );
+
+  @override
+  Future<List<FinalsGroupTable>> siblingGroupTables(int groupId) async {
+    final group = await (_db.select(
+      _db.qualifyingGroups,
+    )..where((t) => t.id.equals(groupId))).getSingleOrNull();
+    if (group == null) return [];
+    final comp = await (_db.select(
+      _db.competitions,
+    )..where((t) => t.id.equals(group.competitionId))).getSingleOrNull();
+    return _groupTables(comp);
+  }
 
   /// Builds the group tables for [comp] (empty if it has no group stage).
   Future<List<FinalsGroupTable>> _groupTables(CompetitionRow? comp) async {

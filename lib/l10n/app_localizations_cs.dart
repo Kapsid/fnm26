@@ -13608,6 +13608,13 @@ class AppLocalizationsCs extends AppLocalizations {
       'Vedení tento cíl stanoví, jakmile se vylosují skupiny.';
 
   @override
+  String get boardObjectiveLaterEdition => 'Cíl až ve druhém poháru';
+
+  @override
+  String get boardObjectiveLaterEditionBody =>
+      'V tomto cyklu jsou dva poháry národů a vedení hodnotí jen ten druhý. Tento cíl nemá, jeho výsledky vás ale ještě před losováním druhého posunou o ligu výš nebo níž.';
+
+  @override
   String tourThirdsNextAdvance(int count, String destination) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -18655,6 +18662,10 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Poslední: sestup do nižší ligy';
+
+  @override
+  String get ncLegendMayMove =>
+      'Nejisté: míst je méně než skupin, takže napříč ligou postupují jen nejlepší vítězové a sestupují jen nejhorší poslední';
 
   @override
   String get campaignIsleOfManTitle => 'Tři nohy';

@@ -236,4 +236,44 @@ void main() {
     expect(GroupAdvancement.ordinal(11), '11th');
     expect(GroupAdvancement.ordinal(21), '21st');
   });
+
+  group('worldCupContentionThrough', () {
+    test("Asia's calendar2 step keeps first and second place live", () {
+      // Six group places over eight groups go to the best winners; the step
+      // takes the last two winners and the four best runners-up.
+      final adv = GroupAdvancement.worldCupQualifying(
+        Confederation.asia,
+        8,
+        hosts: 0,
+        confedSteps: true,
+      );
+      expect(adv.direct, 0);
+      expect(adv.contention, 1);
+      expect(
+        GroupAdvancement.worldCupContentionThrough(
+          Confederation.asia,
+          8,
+          hosts: 0,
+          confedSteps: true,
+        ),
+        2,
+      );
+    });
+
+    test('without the step it is the single contested position', () {
+      final adv = GroupAdvancement.worldCupQualifying(
+        Confederation.asia,
+        8,
+        hosts: 0,
+      );
+      expect(
+        GroupAdvancement.worldCupContentionThrough(
+          Confederation.asia,
+          8,
+          hosts: 0,
+        ),
+        adv.contention,
+      );
+    });
+  });
 }

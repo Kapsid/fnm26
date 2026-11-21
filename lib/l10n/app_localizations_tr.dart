@@ -13147,6 +13147,13 @@ class AppLocalizationsTr extends AppLocalizations {
       'Yönetim bu hedefi gruplar çekildikten sonra belirleyecek.';
 
   @override
+  String get boardObjectiveLaterEdition => 'Hedef ikinci kupada';
+
+  @override
+  String get boardObjectiveLaterEditionBody =>
+      'Bu döngüde iki Uluslar Kupası var ve yönetim yalnızca ikincisini değerlendiriyor. Bunun bir hedefi yok, ama sonuçları ikincisinin kurasından önce seni yine bir lig yukarı ya da aşağı taşır.';
+
+  @override
   String tourThirdsNextAdvance(int count, String destination) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -18172,6 +18179,10 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Sonuncu: alt lige düşer';
+
+  @override
+  String get ncLegendMayMove =>
+      'Belirsiz: yer sayısı grup sayısından az, bu yüzden lig genelinde yalnızca en iyi grup birincileri yükselir ve en kötü sonuncular düşer';
 
   @override
   String get campaignIsleOfManTitle => 'Üç Bacak';

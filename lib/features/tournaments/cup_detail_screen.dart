@@ -19,6 +19,7 @@ import 'package:fnm/domain/services/competition/cross_group.dart';
 import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
+import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/tournaments/all_time_scorers_legend.dart';
@@ -205,6 +206,7 @@ List<Widget> _cupTabViews(
         europePlayoffPaths: data.europePlayoffPaths,
         nationsCupCourse: data.europeNationsCupCourse,
         allRunnersUp: data.europeAllRunnersUp,
+        confedSteps: data.confedSteps,
         nationsCupRoute: data.europeNationsCupRoute,
       ),
     // The intercontinental play-off — its own tab, shown as a
@@ -401,6 +403,7 @@ class _Qualifying extends StatefulWidget {
     this.europePlayoffPaths = 0,
     this.nationsCupCourse = const [],
     this.allRunnersUp = false,
+    this.confedSteps = false,
     this.nationsCupRoute = const [],
   });
 
@@ -408,6 +411,9 @@ class _Qualifying extends StatefulWidget {
 
   /// Europe in the real UEFA shape (see `CupData.europeAllRunnersUp`).
   final bool allRunnersUp;
+
+  /// Calendar2's confederation steps (see `CupData.confedSteps`).
+  final bool confedSteps;
 
   /// The Nations Cup's route (see `CupData.europeNationsCupRoute`).
   final List<NcRouteEntry> nationsCupRoute;
@@ -525,11 +531,23 @@ class _QualifyingState extends State<_Qualifying> {
   ) {
     final hosts = widget.hostBerths[conf] ?? 0;
     final paths = conf == Confederation.europe ? widget.europePlayoffPaths : 0;
+    // Africa, Asia and Oceania hand some places to their own step on
+    // calendar2 (only for Asia's eight groups does that leave more than one
+    // position live): coloured exactly as the hub colours them.
+    final steps = widget.confedSteps && conf != Confederation.europe;
     final adv = GroupAdvancement.worldCupQualifying(
       conf,
       byConf[conf]!.length,
       hosts: hosts,
       playoffPaths: paths,
+      confedSteps: steps,
+    );
+    final through = GroupAdvancement.worldCupContentionThrough(
+      conf,
+      byConf[conf]!.length,
+      hosts: hosts,
+      playoffPaths: paths,
+      confedSteps: steps,
     );
     // Who is on course for the intercontinental play-off (yellow), from the
     // real format and the live cross-group ladder, never a fixed position.
@@ -542,6 +560,7 @@ class _QualifyingState extends State<_Qualifying> {
         [for (final g in byConf[conf]!) g.standings],
         hosts: hosts,
         playoffPaths: paths,
+        confedSteps: steps,
         allRunnersUp: widget.allRunnersUp,
       ),
     };
@@ -556,6 +575,7 @@ class _QualifyingState extends State<_Qualifying> {
           name: widget.name,
           directCount: adv.direct,
           contentionPos: adv.contention,
+          contentionThrough: through,
         ),
     ];
     if (widget.grid) {
@@ -638,6 +658,7 @@ class _QualifyingState extends State<_Qualifying> {
               byConf[conf]!,
               l,
               hosts: widget.hostBerths[conf] ?? 0,
+              confedSteps: widget.confedSteps && conf != Confederation.europe,
             );
             if (ladder == null) return const SizedBox.shrink();
             return Padding(
@@ -733,6 +754,7 @@ _contentionLadder(
   List<ConfederationGroupTable> groups,
   AppLocalizations l, {
   required int hosts,
+  bool confedSteps = false,
 }) {
   if (groups.length < 2) return null;
   final fmt = QualificationFormat.forConfederation(conf);
@@ -740,7 +762,11 @@ _contentionLadder(
     conf,
     groups.length,
     hosts: hosts,
+    confedSteps: confedSteps,
   );
+  final steps =
+      confedSteps &&
+      ConfedPlayoffs.entrantCount(conf, fmt.qualifyingBerths(hosts)) > 0;
   final pos = adv.contention;
   if (pos == null || adv.contentionQualify < 1) return null;
   final tables = [for (final g in groups) g.standings];
@@ -752,7 +778,11 @@ _contentionLadder(
   // winner goes to the finals and the other winner to the play-off. The card
   // used to head both with "the finals play-off" over the one green row, which
   // read as the best winner being the one sent to the play-off.
-  final directHere = fmt.qualifyingBerths(hosts) % groups.length;
+  final directHere =
+      (steps
+          ? ConfedPlayoffs.groupBerths(conf, hosts)
+          : fmt.qualifyingBerths(hosts)) %
+      groups.length;
   final destination = directHere > 0
       ? l.tourCupDestFinals
       : l.tourCupDestIntercontPlayoff;
@@ -764,7 +794,12 @@ _contentionLadder(
     // Behind a band of direct places, the rows going to the play-off are
     // marked as such, from the same ladder the finalist selection uses.
     playoff: directHere > 0
-        ? GroupAdvancement.worldCupPlayoffNations(conf, tables, hosts: hosts)
+        ? GroupAdvancement.worldCupPlayoffNations(
+            conf,
+            tables,
+            hosts: hosts,
+            confedSteps: steps,
+          )
         : const <int>{},
     uneven: CrossGroup.isUneven(tables),
   );
@@ -795,6 +830,7 @@ class _GroupCard extends StatelessWidget {
     required this.name,
     this.directCount = 2,
     this.contentionPos,
+    this.contentionThrough,
     this.playoffNations = const {},
     this.matches = const [],
   });
@@ -811,6 +847,9 @@ class _GroupCard extends StatelessWidget {
   /// A single position marked amber — "in contention" (best runner-up / best
   /// third / play-off place), not yet safe. Null when there is no such spot.
   final int? contentionPos;
+
+  /// The last position in contention when several are (Asia's step).
+  final int? contentionThrough;
 
   /// Nations whose current place leads to the intercontinental play-off: marked
   /// yellow, over the amber "in contention" stripe.
@@ -849,7 +888,10 @@ class _GroupCard extends StatelessWidget {
   Widget _row(int pos, GroupStanding s) {
     final isPlayer = s.nationId == playerNationId;
     final advancing = pos <= directCount;
-    final inContention = pos == contentionPos;
+    final inContention =
+        contentionPos != null &&
+        pos >= contentionPos! &&
+        pos <= (contentionThrough ?? contentionPos!);
     final accent = advancing
         ? AppColors.positive
         : playoffNations.contains(s.nationId)

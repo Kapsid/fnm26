@@ -13230,6 +13230,13 @@ class AppLocalizationsFil extends AppLocalizations {
       'Itatakda ng board ang layuning ito kapag nabunot na ang mga grupo.';
 
   @override
+  String get boardObjectiveLaterEdition => 'Target sa ikalawang tasa';
+
+  @override
+  String get boardObjectiveLaterEditionBody =>
+      'May dalawang Nations Cup sa siklong ito at ang ikalawa lang ang hinuhusgahan ng board. Walang target ang isang ito, pero ang resulta nito ay magpapaakyat o magpapababa pa rin sa iyo ng isang liga bago ang draw ng ikalawa.';
+
+  @override
   String tourThirdsNextAdvance(int count, String destination) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -18274,6 +18281,10 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Huli: bababa ng liga';
+
+  @override
+  String get ncLegendMayMove =>
+      'Hindi pa tiyak: mas kaunti ang puwesto kaysa grupo, kaya sa buong liga ang pinakamahuhusay na nanalo lang ang aakyat at ang pinakamahihinang huli lang ang bababa';
 
   @override
   String get campaignIsleOfManTitle => 'Ang Tatlong Binti';

@@ -13156,6 +13156,13 @@ class AppLocalizationsHi extends AppLocalizations {
       'समूहों का ड्रॉ होते ही बोर्ड यह लक्ष्य तय करेगा।';
 
   @override
+  String get boardObjectiveLaterEdition => 'लक्ष्य दूसरे कप में';
+
+  @override
+  String get boardObjectiveLaterEditionBody =>
+      'इस चक्र में दो नेशंस कप हैं और बोर्ड केवल दूसरे को आंकता है। इसका कोई लक्ष्य नहीं है, लेकिन इसके नतीजे दूसरे के ड्रॉ से पहले आपको एक लीग ऊपर या नीचे ले जाते हैं।';
+
+  @override
   String tourThirdsNextAdvance(int count, String destination) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -18169,6 +18176,10 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'अंतिम: निचली लीग में';
+
+  @override
+  String get ncLegendMayMove =>
+      'अनिश्चित: स्थान समूहों से कम हैं, इसलिए पूरी लीग में केवल सबसे अच्छे विजेता ऊपर जाते हैं और केवल सबसे खराब अंतिम टीमें नीचे जाती हैं';
 
   @override
   String get campaignIsleOfManTitle => 'तीन टाँगें';

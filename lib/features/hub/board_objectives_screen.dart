@@ -356,7 +356,20 @@ class ObjectiveGapBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final awaiting = gap.reason == ObjectiveGapReason.awaitingDraw;
+    final (title, body) = switch (gap.reason) {
+      ObjectiveGapReason.awaitingDraw => (
+        l.boardObjectiveAwaitingDraw,
+        l.boardObjectiveAwaitingDrawBody,
+      ),
+      ObjectiveGapReason.laterEdition => (
+        l.boardObjectiveLaterEdition,
+        l.boardObjectiveLaterEditionBody,
+      ),
+      ObjectiveGapReason.noBrief => (
+        l.boardObjectiveNoBrief,
+        l.boardObjectiveNoBriefBody,
+      ),
+    };
     return Column(
       key: keyFor(gap.tier),
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -383,14 +396,12 @@ class ObjectiveGapBody extends StatelessWidget {
           const SizedBox(height: AppSpacing.xs),
         ],
         Text(
-          awaiting ? l.boardObjectiveAwaitingDraw : l.boardObjectiveNoBrief,
+          title,
           style: AppTypography.titleMedium,
         ),
         const SizedBox(height: AppSpacing.xs),
         Text(
-          awaiting
-              ? l.boardObjectiveAwaitingDrawBody
-              : l.boardObjectiveNoBriefBody,
+          body,
           style: AppTypography.bodySmall.copyWith(
             color: AppColors.onSurfaceVariant,
           ),

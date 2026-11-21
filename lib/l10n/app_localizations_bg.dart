@@ -13316,6 +13316,13 @@ class AppLocalizationsBg extends AppLocalizations {
       'Съветът ще постави тази цел, щом групите бъдат изтеглени.';
 
   @override
+  String get boardObjectiveLaterEdition => 'Цел едва във втория турнир';
+
+  @override
+  String get boardObjectiveLaterEditionBody =>
+      'Този цикъл има два Nations Cup турнира и ръководството оценява само втория. Този няма цел, но резултатите му още преди жребия за втория ви качват или свалят с една лига.';
+
+  @override
   String tourThirdsNextAdvance(int count, String destination) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -18348,6 +18355,10 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Последен: изпада в по-долна лига';
+
+  @override
+  String get ncLegendMayMove =>
+      'Несигурно: местата са по-малко от групите, затова в цялата лига се изкачват само най-добрите победители и изпадат само най-слабите последни';
 
   @override
   String get campaignIsleOfManTitle => 'Трите крака';

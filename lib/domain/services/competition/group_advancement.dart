@@ -88,6 +88,44 @@ abstract final class GroupAdvancement {
     );
   }
 
+  /// The last table position still in contention in World Cup qualifying:
+  /// usually just [worldCupQualifying]'s `contention`, but Asia's step on the
+  /// calendar2 rhythm reaches further. Its six group places over eight groups
+  /// go to the best winners, and the step takes the next six, the last two
+  /// winners and the four best runners-up, so first AND second place are
+  /// both live. The hub and the cup's own tables paint every position from
+  /// `contention` to this one amber.
+  static int? worldCupContentionThrough(
+    Confederation confederation,
+    int groupCount, {
+    required int hosts,
+    int playoffPaths = 0,
+    bool confedSteps = false,
+  }) {
+    final adv = worldCupQualifying(
+      confederation,
+      groupCount,
+      hosts: hosts,
+      playoffPaths: playoffPaths,
+      confedSteps: confedSteps,
+    );
+    final pos = adv.contention;
+    if (pos == null || !confedSteps) return pos;
+    final berths = QualificationFormat.forConfederation(
+      confederation,
+    ).qualifyingBerths(hosts);
+    final entrants = ConfedPlayoffs.entrantCount(confederation, berths);
+    if (entrants <= 0) return pos;
+    final groups = groupCount < 1 ? 1 : groupCount;
+    final reach =
+        (ConfedPlayoffs.groupBerths(confederation, hosts) +
+            entrants +
+            groups -
+            1) ~/
+        groups;
+    return reach > pos ? reach : pos;
+  }
+
   /// The nations that currently sit in [confederation]'s intercontinental
   /// play-off places, from the real format: the entrants just below the direct
   /// berths on the same position-at-a-time ladder the finalist selection uses

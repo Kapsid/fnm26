@@ -216,6 +216,8 @@ class _GroupResultsPanel extends StatelessWidget {
     final relegateCount = view.noRelegationGroups.contains(group.name)
         ? 0
         : view.relegateCount;
+    final results = view.results;
+    final undecided = results == null ? const <int>{} : roundUndecided(results);
     return Panel(
       title: l.resultsGroup(group.name),
       child: Row(
@@ -250,6 +252,9 @@ class _GroupResultsPanel extends StatelessWidget {
                     relegated:
                         relegateCount > 0 &&
                         i + 1 > group.standings.length - relegateCount,
+                    undecided: undecided.contains(
+                      group.standings[i].nationId,
+                    ),
                     name: name,
                     code: code,
                     careerId: careerId,

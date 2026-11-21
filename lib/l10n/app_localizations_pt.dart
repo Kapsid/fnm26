@@ -13332,6 +13332,13 @@ class AppLocalizationsPt extends AppLocalizations {
       'A direção define este objetivo assim que os grupos forem sorteados.';
 
   @override
+  String get boardObjectiveLaterEdition => 'Objetivo na segunda copa';
+
+  @override
+  String get boardObjectiveLaterEditionBody =>
+      'Este ciclo tem duas Copas das Nações e a direção avalia só a segunda. Esta não tem objetivo, mas os seus resultados ainda te sobem ou descem de liga antes do sorteio da segunda.';
+
+  @override
   String tourThirdsNextAdvance(int count, String destination) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -18369,6 +18376,10 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Último: desce de liga';
+
+  @override
+  String get ncLegendMayMove =>
+      'Incerto: há menos vagas do que grupos, por isso em toda a liga só sobem os melhores vencedores e descem os piores últimos';
 
   @override
   String get campaignIsleOfManTitle => 'As três pernas';

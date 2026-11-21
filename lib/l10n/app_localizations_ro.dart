@@ -13615,6 +13615,13 @@ class AppLocalizationsRo extends AppLocalizations {
       'Federația stabilește acest obiectiv după tragerea la sorți a grupelor.';
 
   @override
+  String get boardObjectiveLaterEdition => 'Obiectiv abia în a doua cupă';
+
+  @override
+  String get boardObjectiveLaterEditionBody =>
+      'Acest ciclu are două Cupe ale Națiunilor, iar conducerea o judecă doar pe a doua. Aceasta nu are obiectiv, dar rezultatele ei te urcă sau te coboară încă o ligă înainte de tragerea la sorți a celei de-a doua.';
+
+  @override
   String tourThirdsNextAdvance(int count, String destination) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -18688,6 +18695,10 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Ultima: retrogradează într-o ligă inferioară';
+
+  @override
+  String get ncLegendMayMove =>
+      'Incert: sunt mai puține locuri decât grupe, deci în toată liga urcă doar cei mai buni câștigători și coboară doar cele mai slabe ultime clasate';
 
   @override
   String get campaignIsleOfManTitle => 'Cele trei picioare';

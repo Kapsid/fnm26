@@ -13559,6 +13559,13 @@ class AppLocalizationsHr extends AppLocalizations {
       'Odbor će postaviti ovaj cilj nakon ždrijeba skupina.';
 
   @override
+  String get boardObjectiveLaterEdition => 'Cilj tek u drugom kupu';
+
+  @override
+  String get boardObjectiveLaterEditionBody =>
+      'Ovaj ciklus ima dva Nations Cupa, a uprava ocjenjuje samo drugi. Ovaj nema cilj, ali vas njegovi rezultati još prije ždrijeba drugog pomiču ligu gore ili dolje.';
+
+  @override
   String tourThirdsNextAdvance(int count, String destination) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -18603,6 +18610,10 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Posljednji: ispadanje u nižu ligu';
+
+  @override
+  String get ncLegendMayMove =>
+      'Nesigurno: mjesta je manje nego skupina, pa u cijeloj ligi napreduju samo najbolji pobjednici, a ispadaju samo najlošiji posljednji';
 
   @override
   String get campaignIsleOfManTitle => 'Tri noge';

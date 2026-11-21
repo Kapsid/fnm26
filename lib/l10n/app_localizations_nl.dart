@@ -13312,6 +13312,13 @@ class AppLocalizationsNl extends AppLocalizations {
       'Het bestuur stelt dit doel zodra de groepen geloot zijn.';
 
   @override
+  String get boardObjectiveLaterEdition => 'Doel pas in de tweede beker';
+
+  @override
+  String get boardObjectiveLaterEditionBody =>
+      'Deze cyclus heeft twee Nations Cups en het bestuur beoordeelt alleen de tweede. Deze heeft geen doel, maar de resultaten laten je nog een divisie stijgen of dalen voor de loting van de tweede.';
+
+  @override
   String tourThirdsNextAdvance(int count, String destination) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -18356,6 +18363,10 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Laatste: degradatie naar een lagere league';
+
+  @override
+  String get ncLegendMayMove =>
+      'Onzeker: minder plaatsen dan groepen, dus over de hele divisie promoveren alleen de beste winnaars en degraderen alleen de slechtste nummers laatst';
 
   @override
   String get campaignIsleOfManTitle => 'De drie benen';

@@ -186,8 +186,10 @@ class HubData {
     this.groupDrawWatched = true,
     this.groupDirectCount = 2,
     this.groupContentionPos,
+    this.groupContentionThrough,
     this.groupPlayoffNations = const {},
     this.groupRelegateCount = 0,
+    this.groupUndecided = const {},
   });
 
   final Career career;
@@ -206,6 +208,11 @@ class HubData {
   final int groupDirectCount;
   final int? groupContentionPos;
 
+  /// The last position in contention, when more than one is (Asia's step on
+  /// calendar2, see [GroupAdvancement.worldCupContentionThrough]); null means
+  /// [groupContentionPos] alone.
+  final int? groupContentionThrough;
+
   /// Nations in [group]'s confederation currently on course for the
   /// intercontinental play-off (yellow), World Championship qualifying only.
   final Set<int> groupPlayoffNations;
@@ -213,6 +220,12 @@ class HubData {
   /// How many bottom places in [group] are relegated (red) — the Nations Cup
   /// drops each group's last side a league.
   final int groupRelegateCount;
+
+  /// Nations Cup group winners and bottom sides that would NOT move if the
+  /// tables ended now, because the boundary has fewer places than groups
+  /// (see [NationsCup.ladderUndecided]): shown amber, "may move", not green
+  /// or red.
+  final Set<int> groupUndecided;
 
   final Fixture? next;
   final List<Fixture> fixtures;
@@ -288,8 +301,10 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
   // draw has been watched (the table stays hidden until it has).
   var groupDirect = 2;
   int? groupContention;
+  int? groupContentionThrough;
   var groupPlayoff = const <int>{};
   var groupRelegate = 0;
+  var groupUndecided = const <int>{};
   var groupDrawWatched = true;
   if (group != null) {
     final conf =
@@ -307,6 +322,9 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
         tiers: tiers,
         confederation: conf,
         confederationOf: (id) => nations[id]?.confederation,
+      );
+      groupUndecided = NationsCup.ladderUndecidedOf(
+        await compRepo.siblingGroupTables(group.groupId),
       );
     }
     // World Cup hosts' places come out of their own confederation's
@@ -356,6 +374,13 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
     groupContention = adv.contention;
     groupRelegate = adv.relegate;
     if (group.kind == CompetitionKind.worldCupQualifying) {
+      groupContentionThrough = GroupAdvancement.worldCupContentionThrough(
+        conf,
+        group.groupCount,
+        hosts: wcHosts,
+        playoffPaths: wcPaths,
+        confedSteps: wcCal2,
+      );
       groupPlayoff = GroupAdvancement.worldCupPlayoffNations(
         conf,
         [
@@ -393,8 +418,10 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
     groupDrawWatched: groupDrawWatched,
     groupDirectCount: groupDirect,
     groupContentionPos: groupContention,
+    groupContentionThrough: groupContentionThrough,
     groupPlayoffNations: groupPlayoff,
     groupRelegateCount: groupRelegate,
+    groupUndecided: groupUndecided,
   );
 });
 
@@ -2605,11 +2632,29 @@ class SeasonService {
           );
           break;
         }
-        if (await stopForVote(finalsDate)) break;
-        await _careers.updateInGameDate(careerId, finalsDate);
+        // A whole round at a time, not a day: the calendar spreads a
+        // matchday over several days (two groups a day), and a step that
+        // played one of them showed nothing until the matchday was in, so
+        // the manager pressed again and again to see a round. Never past his
+        // own next match (the catch-up leaves his fixtures alone), and the
+        // third-place play-off before his final stays a step of its own.
+        var stepTo = finalsDate;
+        if (!finalsRoundBeforeOwn) {
+          final end = await _comp.unplayedFinalsRoundEnd(
+            careerId,
+            playerConfederation: playerConf,
+          );
+          if (end != null &&
+              end.isAfter(finalsDate) &&
+              (next == null || end.isBefore(next.date))) {
+            stepTo = end;
+          }
+        }
+        if (await stopForVote(stepTo)) break;
+        await _careers.updateInGameDate(careerId, stepTo);
         await _catchUp(
           careerId,
-          finalsDate,
+          stepTo,
           career.rngSeed,
           excludeNationId: career.nationId,
         );

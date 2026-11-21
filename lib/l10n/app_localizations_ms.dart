@@ -13185,6 +13185,13 @@ class AppLocalizationsMs extends AppLocalizations {
       'Lembaga akan menetapkan objektif ini selepas cabutan kumpulan.';
 
   @override
+  String get boardObjectiveLaterEdition => 'Sasaran dalam piala kedua';
+
+  @override
+  String get boardObjectiveLaterEditionBody =>
+      'Kitaran ini ada dua Piala Negara-Negara dan lembaga hanya menilai yang kedua. Yang ini tiada sasaran, tetapi keputusannya masih menaikkan atau menurunkan anda satu liga sebelum cabutan yang kedua.';
+
+  @override
   String tourThirdsNextAdvance(int count, String destination) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -18225,6 +18232,10 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Tercorot: turun ke liga lebih rendah';
+
+  @override
+  String get ncLegendMayMove =>
+      'Belum pasti: tempat lebih sedikit daripada kumpulan, jadi di seluruh liga hanya juara kumpulan terbaik naik dan tercorot terburuk turun';
 
   @override
   String get campaignIsleOfManTitle => 'Tiga Kaki';

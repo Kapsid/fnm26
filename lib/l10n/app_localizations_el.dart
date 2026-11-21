@@ -13302,6 +13302,13 @@ class AppLocalizationsEl extends AppLocalizations {
       'Η διοίκηση θα θέσει αυτόν τον στόχο μόλις κληρωθούν οι όμιλοι.';
 
   @override
+  String get boardObjectiveLaterEdition => 'Στόχος στο δεύτερο κύπελλο';
+
+  @override
+  String get boardObjectiveLaterEditionBody =>
+      'Αυτός ο κύκλος έχει δύο Κύπελλα Εθνών και η διοίκηση κρίνει μόνο το δεύτερο. Αυτό δεν έχει στόχο, αλλά τα αποτελέσματά του σε ανεβάζουν ή σε κατεβάζουν μια λίγκα πριν από την κλήρωση του δεύτερου.';
+
+  @override
   String tourThirdsNextAdvance(int count, String destination) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -18356,6 +18363,10 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Τελευταίος: υποβιβάζεται κατηγορία';
+
+  @override
+  String get ncLegendMayMove =>
+      'Αβέβαιο: λιγότερες θέσεις από ομίλους, άρα σε όλη τη λίγκα ανεβαίνουν μόνο οι καλύτεροι νικητές και πέφτουν μόνο οι χειρότεροι τελευταίοι';
 
   @override
   String get campaignIsleOfManTitle => 'Τα τρία πόδια';

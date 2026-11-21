@@ -13232,6 +13232,13 @@ class AppLocalizationsSv extends AppLocalizations {
       'Styrelsen sätter det här målet när grupperna är lottade.';
 
   @override
+  String get boardObjectiveLaterEdition => 'Mål först i andra cupen';
+
+  @override
+  String get boardObjectiveLaterEditionBody =>
+      'Den här cykeln har två Nations Cuper och styrelsen bedömer bara den andra. Den här har inget mål, men resultaten flyttar dig ändå upp eller ner en liga innan den andra lottas.';
+
+  @override
   String tourThirdsNextAdvance(int count, String destination) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -18254,6 +18261,10 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Sist: flyttas ner en liga';
+
+  @override
+  String get ncLegendMayMove =>
+      'Osäkert: färre platser än grupper, så i hela ligan går bara de bästa vinnarna upp och de sämsta jumbona ner';
 
   @override
   String get campaignIsleOfManTitle => 'De tre benen';

@@ -12784,6 +12784,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get boardObjectiveAwaitingDrawBody => '조 추첨이 끝나면 이사회가 이 목표를 정합니다.';
 
   @override
+  String get boardObjectiveLaterEdition => '목표는 두 번째 컵에서';
+
+  @override
+  String get boardObjectiveLaterEditionBody =>
+      '이번 사이클에는 네이션스컵이 두 번 있으며 이사회는 두 번째만 평가합니다. 이번 대회에는 목표가 없지만, 결과에 따라 두 번째 대회 추첨 전에 리그가 오르거나 내려갑니다.';
+
+  @override
   String tourThirdsNextAdvance(int count, String destination) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -17674,6 +17681,10 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => '최하위: 하위 리그로 강등';
+
+  @override
+  String get ncLegendMayMove =>
+      '미확정: 자리가 조 수보다 적어 리그 전체에서 가장 좋은 조 1위만 승격하고 가장 나쁜 꼴찌만 강등됩니다';
 
   @override
   String get campaignIsleOfManTitle => '세 개의 다리';

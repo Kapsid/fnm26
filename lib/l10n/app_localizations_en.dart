@@ -13265,6 +13265,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'The board sets this target once the groups are drawn.';
 
   @override
+  String get boardObjectiveLaterEdition => 'Target in the second cup';
+
+  @override
+  String get boardObjectiveLaterEditionBody =>
+      'This cycle has two Nations Cups and the board judges only the second one. This one sets no target, but its results still move you up or down a league before the second is drawn.';
+
+  @override
   String tourThirdsNextAdvance(int count, String destination) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -18300,6 +18307,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Bottom: relegated a league';
+
+  @override
+  String get ncLegendMayMove =>
+      'Not certain: fewer places than groups, so only the best winners go up and the worst bottom sides go down across the league';
 
   @override
   String get campaignIsleOfManTitle => 'The Three Legs';

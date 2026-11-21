@@ -13366,6 +13366,13 @@ class AppLocalizationsPl extends AppLocalizations {
       'Zarząd wyznaczy ten cel po losowaniu grup.';
 
   @override
+  String get boardObjectiveLaterEdition => 'Cel dopiero w drugim pucharze';
+
+  @override
+  String get boardObjectiveLaterEditionBody =>
+      'W tym cyklu są dwa Puchary Narodów, a zarząd ocenia tylko drugi. Ten nie ma celu, ale jego wyniki jeszcze przed losowaniem drugiego przesuną cię o ligę w górę lub w dół.';
+
+  @override
   String tourThirdsNextAdvance(int count, String destination) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -18455,6 +18462,10 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Ostatni: spadek do niższej ligi';
+
+  @override
+  String get ncLegendMayMove =>
+      'Niepewne: miejsc jest mniej niż grup, więc w całej lidze awansują tylko najlepsi zwycięzcy, a spadają tylko najsłabsi z ostatnich';
 
   @override
   String get campaignIsleOfManTitle => 'Trzy nogi';

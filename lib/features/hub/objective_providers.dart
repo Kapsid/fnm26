@@ -804,6 +804,12 @@ enum ObjectiveGapReason {
   /// This cycle's Nations Cup exists but its draw is still to come, so there
   /// is no group to set a target in yet.
   awaitingDraw,
+
+  /// A cycle with two Nations Cups (calendar2) while the second is not yet
+  /// built: the board grades only the second, so the first, even while it is
+  /// being played, carries no target. It still moves the side up or down a
+  /// league before the second is drawn.
+  laterEdition,
 }
 
 /// A competition the nation plays this cycle that carries no objective, so
@@ -855,16 +861,20 @@ cycleObjectiveGapsProvider = FutureProvider.autoDispose
           ncCup != null &&
           Calendar2.twoEditions(conf) &&
           await isCalendar2(comp, careerId, career.cyclePointer);
+      final ncLaterEdition =
+          ncCup != null &&
+          !have.contains(TournamentTier.nationsCup) &&
+          twoCups &&
+          !await comp.hasTournament(
+            careerId,
+            CompetitionKind.nationsLeague,
+            confederation: conf,
+            edition: Calendar2.secondEdition,
+          );
       final ncAwaitingDraw =
           ncCup != null &&
           !have.contains(TournamentTier.nationsCup) &&
-          (twoCups &&
-                  !await comp.hasTournament(
-                    careerId,
-                    CompetitionKind.nationsLeague,
-                    confederation: conf,
-                    edition: Calendar2.secondEdition,
-                  ) ||
+          (ncLaterEdition ||
               await comp.hasTournament(
                     careerId,
                     CompetitionKind.nationsLeague,
@@ -888,7 +898,9 @@ cycleObjectiveGapsProvider = FutureProvider.autoDispose
             competition: ncCup.name == _nationsCupName
                 ? l.careerNationsCupLabel
                 : competitionLabel(l, ncCup.name),
-            reason: ObjectiveGapReason.awaitingDraw,
+            reason: ncLaterEdition
+                ? ObjectiveGapReason.laterEdition
+                : ObjectiveGapReason.awaitingDraw,
           ),
         if (!have.contains(TournamentTier.world))
           (

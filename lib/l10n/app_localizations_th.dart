@@ -12990,6 +12990,13 @@ class AppLocalizationsTh extends AppLocalizations {
       'บอร์ดจะตั้งเป้าหมายนี้หลังจับสลากแบ่งกลุ่ม';
 
   @override
+  String get boardObjectiveLaterEdition => 'เป้าหมายอยู่ที่ถ้วยที่สอง';
+
+  @override
+  String get boardObjectiveLaterEditionBody =>
+      'รอบนี้มีเนชันส์คัพสองครั้ง และบอร์ดจะประเมินเฉพาะครั้งที่สอง ครั้งนี้จึงไม่มีเป้าหมาย แต่ผลงานยังทำให้คุณเลื่อนหรือตกลีกก่อนการจับสลากครั้งที่สอง';
+
+  @override
   String tourThirdsNextAdvance(int count, String destination) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -17953,6 +17960,10 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'อันดับสุดท้าย: ตกชั้นสู่ลีกที่ต่ำกว่า';
+
+  @override
+  String get ncLegendMayMove =>
+      'ยังไม่แน่นอน: ที่ว่างน้อยกว่าจำนวนกลุ่ม ทั้งลีกจึงเลื่อนชั้นเฉพาะแชมป์กลุ่มที่ดีที่สุดและตกชั้นเฉพาะทีมบ๊วยที่แย่ที่สุด';
 
   @override
   String get campaignIsleOfManTitle => 'สามขา';

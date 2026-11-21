@@ -20388,6 +20388,14 @@
   "@boardObjectiveAwaitingDrawBody": {
     "description": "Board objectives screen: explanation under 'Target after the draw' for the Nations Cup."
   },
+  "boardObjectiveLaterEdition": "Target in the second cup",
+  "@boardObjectiveLaterEdition": {
+    "description": "Board objectives screen: title of the Nations Cup card in a cycle with two Nations Cups, before the second (the graded one) exists."
+  },
+  "boardObjectiveLaterEditionBody": "This cycle has two Nations Cups and the board judges only the second one. This one sets no target, but its results still move you up or down a league before the second is drawn.",
+  "@boardObjectiveLaterEditionBody": {
+    "description": "Board objectives screen: explanation under the later-edition title: only the second Nations Cup of the cycle is graded; the first still moves the ladder."
+  },
   "tourThirdsNextAdvance": "{count, plural, one{The next team goes to {destination}} other{The next {count} go to {destination}}}",
   "@tourThirdsNextAdvance": {
     "description": "Cross-group ladder: how many of the teams just below the advancing ones go to the intercontinental play-off, and where.",
@@ -28213,6 +28221,10 @@
   "ncLegendLastDown": "Bottom: relegated a league",
   "@ncLegendLastDown": {
     "description": "Nations Cup league legend: the red stripe, the bottom side drops a league."
+  },
+  "ncLegendMayMove": "Not certain: fewer places than groups, so only the best winners go up and the worst bottom sides go down across the league",
+  "@ncLegendMayMove": {
+    "description": "Nations Cup league legend: the amber stripe, a group winner or bottom side that may not move because the boundary has fewer places than groups."
   },
   "campaignIsleOfManTitle": "The Three Legs",
   "@campaignIsleOfManTitle": {

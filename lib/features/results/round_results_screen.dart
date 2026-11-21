@@ -156,6 +156,16 @@ roundResultsViewProvider = FutureProvider.autoDispose.family<RoundResultsView?, 
   );
 });
 
+/// The Nations Cup winners and bottom sides a short boundary leaves where
+/// they are (amber, "may move"): see [NationsCup.ladderUndecided]. Empty for
+/// every other competition.
+Set<int> roundUndecided(RoundResults results) =>
+    results.kind != CompetitionKind.nationsLeague
+    ? const {}
+    : NationsCup.ladderUndecidedOf([
+        for (final g in results.groups) (name: g.name, standings: g.standings),
+      ]);
+
 /// Shown after the player finishes a group-stage match: the rest of that
 /// round's results, grouped by group, with the live standings. Continues to the
 /// hub.
@@ -288,6 +298,7 @@ class RoundResultsScreen extends ConsumerWidget {
                     relegateCount: view.noRelegationGroups.contains(g.name)
                         ? 0
                         : view.relegateCount,
+                    undecided: roundUndecided(results),
                     code: code,
                     name: name,
                     careerId: careerId,
@@ -323,10 +334,14 @@ class _GroupBlock extends StatelessWidget {
     required this.code,
     required this.name,
     required this.careerId,
+    this.undecided = const {},
   });
 
   final int careerId;
   final RoundResultGroup group;
+
+  /// Nations Cup winners and bottom sides still short of a move (amber).
+  final Set<int> undecided;
   final int playerNationId;
   final int directCount;
   final int? contentionPos;
@@ -375,6 +390,7 @@ class _GroupBlock extends StatelessWidget {
                 relegated:
                     relegateCount > 0 &&
                     i + 1 > group.standings.length - relegateCount,
+                undecided: undecided.contains(group.standings[i].nationId),
                 name: name,
                 code: code,
                 careerId: careerId,
@@ -519,6 +535,7 @@ class _StandingRow extends StatelessWidget {
     required this.name,
     required this.code,
     required this.careerId,
+    this.undecided = false,
   });
 
   final int careerId;
@@ -531,6 +548,9 @@ class _StandingRow extends StatelessWidget {
 
   /// Whether this position drops a league (Nations Cup groups).
   final bool relegated;
+
+  /// A Nations Cup winner or bottom side not yet sure to move: amber.
+  final bool undecided;
   final String Function(int) name;
   final String Function(int) code;
 
@@ -538,7 +558,9 @@ class _StandingRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final advancing = pos <= directCount;
     final inContention = pos == contentionPos;
-    final accent = advancing
+    final accent = (advancing || relegated) && undecided
+        ? AppColors.warning
+        : advancing
         ? AppColors.positive
         : playoffNations.contains(standing.nationId)
         ? AppColors.playoff

@@ -13139,6 +13139,13 @@ class AppLocalizationsId extends AppLocalizations {
       'Dewan menetapkan target ini setelah grup diundi.';
 
   @override
+  String get boardObjectiveLaterEdition => 'Target di piala kedua';
+
+  @override
+  String get boardObjectiveLaterEditionBody =>
+      'Siklus ini punya dua Piala Bangsa-Bangsa dan pengurus hanya menilai yang kedua. Yang ini tidak punya target, tetapi hasilnya tetap membuatmu naik atau turun satu liga sebelum undian yang kedua.';
+
+  @override
   String tourThirdsNextAdvance(int count, String destination) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -18170,6 +18177,10 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Terbawah: turun ke liga lebih rendah';
+
+  @override
+  String get ncLegendMayMove =>
+      'Belum pasti: tempat lebih sedikit dari grup, jadi di seluruh liga hanya juara grup terbaik yang promosi dan juru kunci terburuk yang terdegradasi';
 
   @override
   String get campaignIsleOfManTitle => 'Tiga Kaki';

@@ -138,16 +138,14 @@ void main() {
     final gaps = await read(cycleObjectiveGapsProvider(career.id));
     expect(gaps.where((g) => g.reason == ObjectiveGapReason.noBrief), isEmpty);
     // On calendar2 the board grades the second Nations Cup, drawn once the
-    // first is crowned: until then its row waits for that draw.
+    // first is crowned: until then its row says the first carries no target.
     expect(
       briefs.where((o) => o.tier == TournamentTier.nationsCup),
       isEmpty,
     );
     expect(
-      gaps
-          .singleWhere((g) => g.tier == TournamentTier.nationsCup)
-          .reason,
-      ObjectiveGapReason.awaitingDraw,
+      gaps.singleWhere((g) => g.tier == TournamentTier.nationsCup).reason,
+      ObjectiveGapReason.laterEdition,
     );
   });
 }

@@ -12746,6 +12746,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get boardObjectiveAwaitingDrawBody => 'グループ抽選の後、協会がこの目標を設定します。';
 
   @override
+  String get boardObjectiveLaterEdition => '目標は2回目のカップで';
+
+  @override
+  String get boardObjectiveLaterEditionBody =>
+      'このサイクルにはネーションズカップが2回あり、理事会が評価するのは2回目だけです。今回は目標がありませんが、結果は2回目の抽選前にリーグの昇格・降格に反映されます。';
+
+  @override
   String tourThirdsNextAdvance(int count, String destination) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -17631,6 +17638,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => '最下位：下位リーグへ降格';
+
+  @override
+  String get ncLegendMayMove =>
+      '未確定：枠がグループ数より少ないため、リーグ全体で成績上位の首位だけが昇格し、成績下位の最下位だけが降格します';
 
   @override
   String get campaignIsleOfManTitle => '三本の脚';

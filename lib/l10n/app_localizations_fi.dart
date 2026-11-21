@@ -13303,6 +13303,13 @@ class AppLocalizationsFi extends AppLocalizations {
       'Hallitus asettaa tämän tavoitteen, kun lohkot on arvottu.';
 
   @override
+  String get boardObjectiveLaterEdition => 'Tavoite vasta toisessa cupissa';
+
+  @override
+  String get boardObjectiveLaterEditionBody =>
+      'Tässä syklissä on kaksi Nations Cupia, ja johto arvioi vain toisen. Tällä ei ole tavoitetta, mutta sen tulokset nostavat tai laskevat sinua vielä sarjatason ennen toisen arvontaa.';
+
+  @override
   String tourThirdsNextAdvance(int count, String destination) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -18338,6 +18345,10 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Viimeinen: putoaminen alempaan liigaan';
+
+  @override
+  String get ncLegendMayMove =>
+      'Epävarma: paikkoja on vähemmän kuin lohkoja, joten koko sarjassa nousevat vain parhaat voittajat ja putoavat vain huonoimmat jumbot';
 
   @override
   String get campaignIsleOfManTitle => 'Kolme jalkaa';

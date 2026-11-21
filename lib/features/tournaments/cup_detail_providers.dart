@@ -72,6 +72,7 @@ class CupData {
     this.myNationIds = const {},
     this.wcHostBerths = const {},
     this.europePlayoffPaths = 0,
+    this.confedSteps = false,
     this.europeNationsCupCourse = const [],
     this.europeAllRunnersUp = false,
     this.europeNationsCupRoute = const [],
@@ -85,6 +86,11 @@ class CupData {
   /// paths, so the qualifying tables paint the runners-up as play-off sides
   /// rather than a best-runners-up ladder.
   final int europePlayoffPaths;
+
+  /// Whether this cycle runs on calendar2, where Africa's, Asia's and
+  /// Oceania's groups feed their own play-off steps (see `ConfedPlayoffs`):
+  /// the tables are coloured from those steps, as the hub's are.
+  final bool confedSteps;
 
   /// The second Nations Cup's sides on course for Europe's play-off paths
   /// (pot 4) as the tables stand, before the paths are drawn (see
@@ -597,6 +603,7 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
   return CupData(
     europeNationsCupCourse: nationsCupCourse,
     europeAllRunnersUp: allRunnersUp,
+    confedSteps: cal2,
     europeNationsCupRoute: ncRoute,
     europePlayoffPaths: !cal2
         ? 0

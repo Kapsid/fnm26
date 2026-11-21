@@ -250,17 +250,24 @@ latestRoundPopupProvider = FutureProvider.autoDispose.family<RoundPopup?, int>((
     );
   }
 
-  // Everything that competition played on its most recent date — the day the
-  // player just stepped.
+  // Every tie of the round(s) that competition played on its most recent
+  // date. The step plays a whole round (its days are spread out, see
+  // `SeasonService._advance`), so the popup lists all of it, not only the
+  // ties of the last day.
   final latestDate = latest.fixture.date;
+  final dayRounds = {
+    for (final f in byName[latest.name]!)
+      if (f.date.isAtSameMomentAs(latestDate)) f.round,
+  };
   final sameDay =
-      byName[latest.name]!
-          .where((f) => f.date.isAtSameMomentAs(latestDate))
-          .toList()
+      byName[latest.name]!.where((f) => dayRounds.contains(f.round)).toList()
         ..sort((a, b) {
           final ao = _knockoutRounds[a.round ?? '']?.order ?? -1;
           final bo = _knockoutRounds[b.round ?? '']?.order ?? -1;
-          return ao.compareTo(bo);
+          final c = ao.compareTo(bo);
+          if (c != 0) return c;
+          final d = a.date.compareTo(b.date);
+          return d != 0 ? d : a.id.compareTo(b.id);
         });
   // Title by the day's most important round: should a play-off and the final
   // ever share a day, the popup reads "Final" (with the final listed last)

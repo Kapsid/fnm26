@@ -166,6 +166,49 @@ abstract final class NationsCup {
     return next;
   }
 
+  /// The group winners and bottom sides that [promoteRelegate] would leave
+  /// where they are if the tables ended now: when a boundary has fewer places
+  /// than groups (League C's four groups over League D's two), only the best
+  /// winners climb and only the worst bottom sides drop. The rest are still
+  /// in the race, so the tables mark them "may move" (amber) rather than
+  /// promoted or relegated. Built from [groups] exactly as the ladder moves.
+  static Set<int> ladderUndecided(List<LadderGroup> groups) {
+    final byTier = <int, List<LadderGroup>>{};
+    for (final g in groups) {
+      (byTier[g.tier] ??= []).add(g);
+    }
+    final out = <int>{};
+    final tiers = byTier.keys.toList()..sort();
+    for (final tier in tiers) {
+      if (tier == 0) continue;
+      final up = [...byTier[tier]!]
+        ..sort((a, b) => _strongerFirst(a.winner, b.winner));
+      final down = [...?byTier[tier - 1]]
+        ..sort((a, b) => _strongerFirst(b.bottom, a.bottom));
+      final places = up.length < down.length ? up.length : down.length;
+      for (var i = places; i < up.length; i++) {
+        out.add(up[i].winner.nationId);
+      }
+      for (var i = places; i < down.length; i++) {
+        out.add(down[i].bottom.nationId);
+      }
+    }
+    return out;
+  }
+
+  /// [ladderUndecided] straight from a confederation's group tables.
+  static Set<int> ladderUndecidedOf(
+    Iterable<({String name, List<GroupStanding> standings})> tables,
+  ) => ladderUndecided([
+    for (final t in tables)
+      if (t.standings.length >= 2)
+        (
+          tier: tierOfGroupName(t.name),
+          winner: t.standings.first,
+          bottom: t.standings.last,
+        ),
+  ]);
+
   /// Orders two rows best-first: points, then goal difference, then goals.
   static int _strongerFirst(GroupStanding a, GroupStanding b) {
     final byPoints = b.points.compareTo(a.points);

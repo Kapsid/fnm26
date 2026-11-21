@@ -1740,7 +1740,18 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       final unlocked = await ref
           .read(achievementServiceProvider)
           .checkAndRecord(widget.careerId);
-      if (mounted) {
+      // After a final its result comes first: the round's results, then the
+      // hub's news with these. Shown here, they and the news they come with
+      // buried the final's own result.
+      final round = preview.fixture.round ?? '';
+      final isFinal =
+          round.endsWith('FINAL') || round.endsWith('FL2') || round == 'FFINAL';
+      if (isFinal && unlocked.isNotEmpty) {
+        final pending = ref.read(
+          pendingAchievementUnlocksProvider(widget.careerId).notifier,
+        );
+        pending.state = [...pending.state, ...unlocked];
+      } else if (mounted) {
         await showAchievementsUnlocked(
           context,
           unlocked,

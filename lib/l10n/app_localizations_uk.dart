@@ -13515,6 +13515,13 @@ class AppLocalizationsUk extends AppLocalizations {
       'Рада поставить це завдання після жеребкування груп.';
 
   @override
+  String get boardObjectiveLaterEdition => 'Ціль лише в другому кубку';
+
+  @override
+  String get boardObjectiveLaterEditionBody =>
+      'У цьому циклі два турніри Nations Cup, і керівництво оцінює лише другий. Цей не має цілі, але його результати ще до жеребкування другого піднімуть або опустять вас на лігу.';
+
+  @override
   String tourThirdsNextAdvance(int count, String destination) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -18592,6 +18599,10 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get ncLegendLastDown => 'Останній: пониження до нижчої ліги';
+
+  @override
+  String get ncLegendMayMove =>
+      'Невизначено: місць менше, ніж груп, тож у всій лізі підвищуються лише найкращі переможці й вибувають лише найгірші останні';
 
   @override
   String get campaignIsleOfManTitle => 'Три ноги';

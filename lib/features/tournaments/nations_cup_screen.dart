@@ -229,6 +229,9 @@ mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
       if (v.isMine) v.playerLeague,
     }.toList()..sort();
 
+    // Winners and bottom sides that a short boundary leaves where they are
+    // (League C's four bottom sides over League D's two groups: two drop).
+    final undecided = NationsCup.ladderUndecidedOf(v.groups);
     return _LeagueTabs(
       capitals: grid,
       leagues: leagues,
@@ -252,6 +255,7 @@ mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
           name: name,
           code: code,
           isLowestLeague: NationsCup.tierOfGroupName(g.name) >= v.maxTier,
+          undecided: undecided,
         );
         return ListView(
           padding: const EdgeInsets.all(AppSpacing.marginMobile),
@@ -270,6 +274,9 @@ mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
             _LeagueLegend(
               top: NationsCup.tierOfGroupName(shown.first.name) == 0,
               lowest: NationsCup.tierOfGroupName(shown.first.name) >= v.maxTier,
+              uncertain: shown.any(
+                (g) => g.standings.any((s) => undecided.contains(s.nationId)),
+              ),
             ),
             const SizedBox(height: AppSpacing.md),
             if (grid) ...[
@@ -495,6 +502,7 @@ class _GroupCard extends StatelessWidget {
     required this.name,
     required this.code,
     required this.isLowestLeague,
+    this.undecided = const {},
   });
 
   final int careerId;
@@ -509,6 +517,9 @@ class _GroupCard extends StatelessWidget {
 
   /// The lowest league has nowhere to fall, so its bottom side isn't relegated.
   final bool isLowestLeague;
+
+  /// Winners and bottom sides still short of a move: amber, not green or red.
+  final Set<int> undecided;
 
   @override
   Widget build(BuildContext context) {
@@ -546,7 +557,11 @@ class _GroupCard extends StatelessWidget {
       continentalSize: 0,
       isLowestLeague: isLowestLeague,
     );
-    final zone = pos <= adv.direct
+    final moves =
+        pos <= adv.direct || (adv.relegate > 0 && pos > total - adv.relegate);
+    final zone = moves && undecided.contains(s.nationId)
+        ? AppColors.warning
+        : pos <= adv.direct
         ? AppColors.positive
         : pos == adv.contention
         ? AppColors.warning
@@ -780,6 +795,7 @@ class _LeagueLegend extends StatelessWidget {
   const _LeagueLegend({
     required this.top,
     required this.lowest,
+    this.uncertain = false,
   });
 
   /// League A: its winners go to the Finals Four, not up.
@@ -787,6 +803,9 @@ class _LeagueLegend extends StatelessWidget {
 
   /// The lowest league: nobody goes down.
   final bool lowest;
+
+  /// Some winner or bottom side here is amber: fewer places than groups.
+  final bool uncertain;
 
   static const Key legendKey = Key('nationsCup.legend');
 
@@ -820,6 +839,7 @@ class _LeagueLegend extends StatelessWidget {
           top ? l.ncLegendWinnerFinalsFour : l.ncLegendWinnerUp,
         ),
         if (!lowest) line(stripe(AppColors.error), l.ncLegendLastDown),
+        if (uncertain) line(stripe(AppColors.warning), l.ncLegendMayMove),
       ],
     );
   }
