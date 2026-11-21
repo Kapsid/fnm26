@@ -608,6 +608,7 @@ class TacticsScreen extends ConsumerWidget {
       _CaptainCard(
         careerId: careerId,
         pool: [...data.pool, ...data.unavailable],
+        unavailable: {for (final p in data.unavailable) p.id},
       ),
       const SizedBox(height: AppSpacing.md),
       Text(
@@ -1526,12 +1527,19 @@ class _NamePresetDialogState extends State<_NamePresetDialog> {
 /// cannot play, so the manager does not have to come back and move it every
 /// time somebody misses a match.
 class _CaptainCard extends ConsumerWidget {
-  const _CaptainCard({required this.careerId, required this.pool});
+  const _CaptainCard({
+    required this.careerId,
+    required this.pool,
+    this.unavailable = const {},
+  });
 
   final int careerId;
 
   /// The squad the armband can be given to.
   final List<Player> pool;
+
+  /// Who of [pool] is out (injured or banned): offered last.
+  final Set<int> unavailable;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -1617,10 +1625,20 @@ class _CaptainCard extends ConsumerWidget {
       ArmbandRole.vice1 => l.viceCaptainFirst,
       ArmbandRole.vice2 => l.viceCaptainSecond,
     };
-    // Best first — the armband usually goes to a senior name, and the fit tag
-    // says who actually carries it.
+    // The fittest for the armband first (a tester: advise by it), then the
+    // better player; anyone out injured or banned last. The fit tag says
+    // which is which.
+    int lead(Player p) => Captaincy.leadership(p, saveSeed: saveSeed);
     final candidates = [...pool]
-      ..sort((a, b) => b.overall.compareTo(a.overall));
+      ..sort((a, b) {
+        final out = (unavailable.contains(a.id) ? 1 : 0).compareTo(
+          unavailable.contains(b.id) ? 1 : 0,
+        );
+        if (out != 0) return out;
+        final byFit = lead(b).compareTo(lead(a));
+        if (byFit != 0) return byFit;
+        return b.overall.compareTo(a.overall);
+      });
     final picked = await showAdaptiveSheet<int>(
       context: context,
       backgroundColor: AppColors.surfaceContainer,

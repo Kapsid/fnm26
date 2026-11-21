@@ -2367,8 +2367,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                   )
                 : null;
             // Who scored so far, each side's in order ("Name 23'").
+            // The tablet's goals panel is narrow: surnames, which fit.
             String goalLine(MatchEvent e) =>
-                '${e.playerName} '
+                '${tablet ? surnameOf(e.playerName) : e.playerName} '
                 "${e.stoppage > 0 ? '${e.minute}+${e.stoppage}' : '${e.minute}'}'";
             final goalsSoFar = [
               for (final e in shown)
@@ -2623,7 +2624,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                 now: t.now,
                 placeBefore: t.placeBefore,
                 code: code,
-                name: name,
+                // The tablet's live table is narrow beside the pitch: its
+                // sides by their codes, which always fit.
+                name: tablet ? code : name,
                 highlightId: preview.playerNationId,
                 zones:
                     hub != null &&

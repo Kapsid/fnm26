@@ -62,12 +62,6 @@ class _BudgetSetupTabletLayout extends StatelessWidget {
                     // Said once, on the right.
                     showEffects: false,
                   ),
-                  // Hosting and the national stadiums, under the sliders.
-                  if (!state.widget.grant) ...[
-                    const SizedBox(height: AppSpacing.md),
-                    HostBidStatusCard(careerId: careerId),
-                    NationalStadiumsEntry(careerId: careerId),
-                  ],
                 ],
               ),
             ),
@@ -84,6 +78,14 @@ class _BudgetSetupTabletLayout extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      // Hosting and the national stadiums first, in sight:
+                      // under the long slider list a tester never found
+                      // whether his nation could host.
+                      if (!state.widget.grant) ...[
+                        HostBidStatusCard(careerId: careerId),
+                        NationalStadiumsEntry(careerId: careerId),
+                        const SizedBox(height: AppSpacing.md),
+                      ],
                       StaffCard(key: TourKeys.budgetStaff, careerId: careerId),
                       const SizedBox(height: AppSpacing.md),
                       Panel(
