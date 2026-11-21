@@ -81,6 +81,10 @@ abstract final class ManagerDecisions {
   /// Years out of work after which a manager takes any job.
   static const int stepDownYears = 2;
 
+  /// How far back a trophy or a final shields its manager (see
+  /// [decide]'s `recentSuccess`): the honour's year or the one before.
+  static const int successWindowYears = 1;
+
   /// The best reputation a nation of [rank] can attract.
   static double attractCap(int rank) =>
       math.min(100, 40 + (ManagerReputation.unranked - rank) * 0.3);
@@ -110,6 +114,11 @@ abstract final class ManagerDecisions {
     List<WorldManager> entrants = const [],
     Map<int, DateTime> finalsBriefMetOn = const {},
     Map<int, String> codeById = const {},
+
+    /// The nations that won a tournament, or played in its final, within
+    /// the last year and a half (see [successWindowYears]): their man is
+    /// neither sacked nor walks out, and an expiring contract is renewed.
+    Set<int> recentSuccess = const {},
   }) {
     final date = ctx.date;
     final yearAgo = DateTime(date.year - 1, date.month, date.day);
@@ -297,6 +306,12 @@ abstract final class ManagerDecisions {
       // the score its spell has carried so far.
       final contractScore = win == null ? net.toDouble() : score;
 
+      // A manager who has just brought a trophy home (or reached a final)
+      // is not sacked for the window around it: a tester saw France's man
+      // sacked the day his side became world champions, and trophy winners
+      // of every size were let go at the next point.
+      final successful = recentSuccess.contains(n);
+      final safe = shielded || successful;
       SpellEnd? why;
       if (!guarded) {
         final p = score < bigSackBelow
@@ -304,9 +319,9 @@ abstract final class ManagerDecisions {
             : score < smallSackBelow
             ? smallSackChance
             : 0.0;
-        if (!shielded && r.sack < p) {
+        if (!safe && r.sack < p) {
           why = SpellEnd.sacked;
-        } else if (!shielded &&
+        } else if (!safe &&
             !ctx.rollover &&
             score < bigSackBelow &&
             (win?.anyBriefSettled ?? false) &&
@@ -316,7 +331,7 @@ abstract final class ManagerDecisions {
           // finals brief. A met finals brief keeps him safe, so the shield
           // blocks walking out as well as the sack.
           why = SpellEnd.resigned;
-        } else if (expired && contractScore < 0) {
+        } else if (expired && contractScore < 0 && !successful) {
           why = SpellEnd.contractEnd;
         }
       }

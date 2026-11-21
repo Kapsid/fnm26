@@ -522,7 +522,19 @@ class WorldManagerService {
       key: key,
       rollover: rollover,
     );
-    final honours = honoursByManager(await comp.honours(careerId), w);
+    final allHonours = await comp.honours(careerId);
+    final honours = honoursByManager(allHonours, w);
+    // Who has just won something, or played in a final: their man is safe
+    // (see ManagerDecisions.decide). This career's own honours only.
+    final recentSuccess = <int>{
+      for (final h in allHonours)
+        if (CareerService.isOwnHonourYear(h.year) &&
+            h.year >= date.year - ManagerDecisions.successWindowYears &&
+            h.year <= date.year) ...[
+          ...h.champions,
+          h.runnerUpId,
+        ],
+    };
     final codeById = {for (final n in nations) n.id: n.code};
     ManagerChanges decide(List<WorldManager> entrants) =>
         ManagerDecisions.decide(
@@ -533,6 +545,7 @@ class WorldManagerService {
           entrants: entrants,
           finalsBriefMetOn: metOn,
           codeById: codeById,
+          recentSuccess: recentSuccess,
         );
 
     var changes = decide(const []);

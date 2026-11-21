@@ -176,6 +176,32 @@ void main() {
     expect(ManagerSpell.healedBriefNet(-9), -9);
   });
 
+  test('a man who has just won a trophy, or played in a final, stays', () {
+    var sacked = 0;
+    var sackedWithout = 0;
+    for (var k = 0; k < 30; k++) {
+      final w = ManagerWorld(
+        managers: [_m(1), _m(2), _m(3)],
+        spells: [_s(1, 1, 1, from: _ago(days: 400))],
+      );
+      final shielded = ManagerDecisions.decide(
+        w,
+        {1: _w(-10)},
+        _ctx(nations: 1, key: 's$k'),
+        recentSuccess: const {1},
+      );
+      if (shielded.closed.isNotEmpty) sacked++;
+      final plain = ManagerDecisions.decide(w, {
+        1: _w(-10),
+      }, _ctx(nations: 1, key: 's$k'));
+      if (plain.closed.any((s) => s.endReason == SpellEnd.sacked)) {
+        sackedWithout++;
+      }
+    }
+    expect(sacked, 0, reason: 'a champion is not let go');
+    expect(sackedWithout, greaterThan(10), reason: 'the same run, no trophy');
+  });
+
   test('no results sack inside 12 months', () {
     var youngSacked = 0;
     var oldSacked = 0;
