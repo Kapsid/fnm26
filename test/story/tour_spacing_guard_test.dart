@@ -199,7 +199,8 @@ void main() {
       }
 
       // One summary per World Championship group matchday, with all 24 of
-      // its games, after days that showed nothing.
+      // its games. Each watched step plays a whole matchday, so no step
+      // shows nothing (a tester pressed on through empty days to see one).
       final wcGroups = shown
           .where(
             (s) => s.competition == 'World Cup' && s.stage == 'Group Stage',
@@ -207,7 +208,7 @@ void main() {
           .toList();
       expect(wcGroups, hasLength(3));
       expect(wcGroups.every((s) => s.fixtures == 24), isTrue);
-      expect(waiting, greaterThan(0));
+      expect(waiting, 0);
       expect(shown.last.stage, 'Final');
     },
     timeout: const Timeout(Duration(minutes: 20)),

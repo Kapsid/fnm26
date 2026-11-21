@@ -2638,8 +2638,15 @@ class SeasonService {
         // the manager pressed again and again to see a round. Never past his
         // own next match (the catch-up leaves his fixtures alone), and the
         // third-place play-off before his final stays a step of its own.
+        // Spaced finals only: an older cycle plays a matchday on one day, and
+        // its results stay exactly as they were.
         var stepTo = finalsDate;
-        if (!finalsRoundBeforeOwn) {
+        if (!finalsRoundBeforeOwn &&
+            await TournamentCalendar.isSpaced(
+              _comp,
+              careerId,
+              career.cyclePointer,
+            )) {
           final end = await _comp.unplayedFinalsRoundEnd(
             careerId,
             playerConfederation: playerConf,
