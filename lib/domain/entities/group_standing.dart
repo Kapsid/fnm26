@@ -86,12 +86,15 @@ class GroupStanding {
 
   /// Computes the ordered table for a group from its [members] and [fixtures].
   ///
-  /// Ordering: points first, then — among teams level on points — the
-  /// head-to-head record between exactly those teams (head-to-head points,
-  /// then head-to-head goal difference, then head-to-head goals), as UEFA
-  /// resolves a group. Only if that is still level does it fall back to overall
-  /// goal difference then overall goals. Teams that never drew level on points
-  /// are unaffected, so the common case is unchanged.
+  /// Ordering: points first. Two teams level on points are split by their
+  /// meeting(s) (points, goal difference, goals between them), then overall
+  /// goal difference and goals. Three or more level on points are split by
+  /// overall goal difference, then overall goals, and only then by their
+  /// mini-table (points, goal difference, goals among them); two of them
+  /// still level after that go by their own meeting (the owner, 2026-11-21:
+  /// "head to head for two, the score for three" — players read a three-way
+  /// tie by its goal difference). Teams that never drew level on points are
+  /// unaffected.
   static List<GroupStanding> table(
     List<int> members,
     List<Fixture> fixtures,
@@ -139,7 +142,11 @@ class GroupStanding {
         j++;
       }
       final cluster = all.sublist(i, j);
-      if (cluster.length > 1) _orderByHeadToHead(cluster, fixtures);
+      if (cluster.length == 2) {
+        _orderByHeadToHead(cluster, fixtures);
+      } else if (cluster.length > 2) {
+        _orderByScore(cluster, fixtures);
+      }
       ordered.addAll(cluster);
       i = j;
     }
@@ -191,5 +198,37 @@ class GroupStanding {
       if (byOverallGd != 0) return byOverallGd;
       return b.goalsFor.compareTo(a.goalsFor);
     });
+  }
+
+  /// Reorders [cluster] (three or more teams level on points) by overall
+  /// goal difference, then overall goals; those still level by their
+  /// mini-table (see [_orderByHeadToHead]), which for two of them is their
+  /// own meeting.
+  static void _orderByScore(
+    List<GroupStanding> cluster,
+    List<Fixture> fixtures,
+  ) {
+    cluster.sort((a, b) {
+      final byGd = b.goalDifference.compareTo(a.goalDifference);
+      if (byGd != 0) return byGd;
+      return b.goalsFor.compareTo(a.goalsFor);
+    });
+    // The runs still level on both go by their head-to-head among
+    // themselves.
+    var i = 0;
+    while (i < cluster.length) {
+      var j = i + 1;
+      while (j < cluster.length &&
+          cluster[j].goalDifference == cluster[i].goalDifference &&
+          cluster[j].goalsFor == cluster[i].goalsFor) {
+        j++;
+      }
+      if (j - i > 1) {
+        final run = cluster.sublist(i, j);
+        _orderByHeadToHead(run, fixtures);
+        cluster.setRange(i, j, run);
+      }
+      i = j;
+    }
   }
 }
