@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/repositories/drift_player_repository.dart';
 import 'package:fnm/data/seed/dormant_seed.dart';
@@ -289,7 +291,15 @@ void main() {
         careerId: career.id,
         agingYears: 10,
       );
-      final names = {for (final p in pool) p.id: p.name};
+      // Less the wonderkids no academy releases since 1.1.2: the names
+      // pinned are the 127 players the career fielded before.
+      bool spared(Player p) =>
+          PlayerLifecycle.releasedAgeFor(p.id) == null &&
+          (PlayerLifecycle.randomReleaseAgeFor(p.id) ?? 99) <= p.age;
+      final names = {
+        for (final p in pool)
+          if (!spared(p)) p.id: p.name,
+      };
       expect(names, hasLength(127), reason: '$seed $label');
       for (final MapEntry(key: id, value: name) in pinned.entries) {
         expect(names[id], name, reason: '$seed $label $id');

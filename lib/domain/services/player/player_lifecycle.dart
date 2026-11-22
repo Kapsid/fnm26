@@ -134,6 +134,13 @@ abstract final class PlayerLifecycle {
   /// such a boy is back in the pyramid if he is still of academy age.
   static int? releasedAgeFor(int playerId) {
     if (developmentPotential(playerId) >= wonderkidCeiling) return null;
+    return randomReleaseAgeFor(playerId);
+  }
+
+  /// The age the release draw alone picks for [playerId], before a
+  /// wonderkid is spared (see [releasedAgeFor]): what every release was
+  /// before 1.1.2.
+  static int? randomReleaseAgeFor(int playerId) {
     final h = (_mix(playerId ^ 0x2E1EA5E) >> 5) & 0xffffff;
     if (h % 100 >= releasedPercent) return null;
     return 12 + (h ~/ 100) % 5; // 12 … 16

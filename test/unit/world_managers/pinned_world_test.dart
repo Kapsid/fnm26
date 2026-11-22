@@ -44,7 +44,10 @@ void main() {
       // GrowthDifficulty): an unmarked cycle plays byte for byte as before.
       difficulty2: false,
     );
-    for (var i = 0; i < 120; i++) {
+    // 121 steps reach the rollover into the second cycle (a wonderkid no
+    // academy releases since 1.1.2 is one more event on the way, and the
+    // scores from fixture 1013 on are re-pinned for him).
+    for (var i = 0; i < 121; i++) {
       await d.step();
     }
     final rows = await db
