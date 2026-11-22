@@ -68,6 +68,8 @@
   "ceremonyHostTbc": "TUAN RUMAH BELUM DITENTUKAN",
   "matchHalfTime": "TURUN MINUM",
   "matchHalfTimeScore": "Babak I {home} : {away}",
+  "matchAggregateScore": "Agregat {home} : {away}",
+  "resultAggregate": "agr. {home}-{away}",
   "matchContinue": "Lanjutkan",
   "matchContinuing": "Melanjutkan…",
   "matchTacticsWithSubs": "Taktik · {used}/{max} pergantian",

@@ -68,6 +68,8 @@
   "ceremonyHostTbc": "ISÄNTÄ VAHVISTETAAN",
   "matchHalfTime": "PUOLIAIKA",
   "matchHalfTimeScore": "Puoliaika {home} : {away}",
+  "matchAggregateScore": "Yhteensä {home} : {away}",
+  "resultAggregate": "yht. {home}-{away}",
   "matchContinue": "Jatka",
   "matchContinuing": "Jatketaan…",
   "matchTacticsWithSubs": "Taktiikka · {used}/{max} vaihtoa",

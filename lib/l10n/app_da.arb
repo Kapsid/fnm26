@@ -68,6 +68,8 @@
   "ceremonyHostTbc": "VÆRT ENDNU IKKE BEKRÆFTET",
   "matchHalfTime": "PAUSE",
   "matchHalfTimeScore": "Halvleg {home} : {away}",
+  "matchAggregateScore": "Samlet {home} : {away}",
+  "resultAggregate": "samlet {home}-{away}",
   "matchContinue": "Fortsæt",
   "matchContinuing": "Fortsætter…",
   "matchTacticsWithSubs": "Taktik · {used}/{max} skift",

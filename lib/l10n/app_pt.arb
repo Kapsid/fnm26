@@ -68,6 +68,8 @@
   "ceremonyHostTbc": "SEDE A CONFIRMAR",
   "matchHalfTime": "INTERVALO",
   "matchHalfTimeScore": "Intervalo {home} : {away}",
+  "matchAggregateScore": "Agregado {home} : {away}",
+  "resultAggregate": "agr. {home}-{away}",
   "matchContinue": "Continuar",
   "matchContinuing": "Aguarde…",
   "matchTacticsWithSubs": "Tática · {used}/{max} subst.",

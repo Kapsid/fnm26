@@ -55,7 +55,7 @@ class RegionalCupScreen extends ConsumerWidget {
       );
     }
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -91,7 +91,7 @@ class RegionalCupView extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -107,6 +107,7 @@ class RegionalCupView extends StatelessWidget {
 
 List<SegmentTab> _tabs(AppLocalizations l) => [
   SegmentTab(l.tourContTabThisCycle),
+  SegmentTab(l.tourContTabScorers),
   SegmentTab(l.tourContTabHistory),
 ];
 
@@ -149,6 +150,16 @@ class _Body extends ConsumerWidget {
               )
             else
               edition,
+            TournamentScorers(
+              scorers: data.scorers,
+              playerNames: data.playerNames,
+              code: code,
+              emptyMessage: l.tourContNoGoalsYet,
+              highlightNations: {data.playerNationId},
+              onPlayerTap: (id) => context.push(
+                '${Routes.player}?careerId=$careerId&playerId=$id',
+              ),
+            ),
             TournamentHistory(
               honours: data.honours,
               name: name,
@@ -330,6 +341,9 @@ class _Ties extends StatelessWidget {
                     careerId: careerId,
                     emphasiseNationId: data.playerNationId,
                     emphasiseWinner: true,
+                    firstLeg: TwoLegged.isSecondLeg(f.round)
+                        ? TwoLegged.firstLegAmong(f, fixtures)
+                        : null,
                   ),
                 ],
               ),

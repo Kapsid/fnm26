@@ -268,6 +268,16 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
+  String matchAggregateScore(int home, int away) {
+    return 'Συνολικά $home : $away';
+  }
+
+  @override
+  String resultAggregate(int home, int away) {
+    return 'σύνολο $home-$away';
+  }
+
+  @override
   String get matchContinue => 'Συνέχεια';
 
   @override

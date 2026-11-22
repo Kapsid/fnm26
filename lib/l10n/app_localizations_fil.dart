@@ -261,6 +261,16 @@ class AppLocalizationsFil extends AppLocalizations {
   }
 
   @override
+  String matchAggregateScore(int home, int away) {
+    return 'Kabuuan $home : $away';
+  }
+
+  @override
+  String resultAggregate(int home, int away) {
+    return 'kab. $home-$away';
+  }
+
+  @override
   String get matchContinue => 'Magpatuloy';
 
   @override

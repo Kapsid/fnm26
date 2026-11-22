@@ -68,6 +68,8 @@
   "ceremonyHostTbc": "ДОМАКИНЪТ СЕ УТОЧНЯВА",
   "matchHalfTime": "ПОЧИВКА",
   "matchHalfTimeScore": "Полувреме {home} : {away}",
+  "matchAggregateScore": "Общо {home} : {away}",
+  "resultAggregate": "общо {home}-{away}",
   "matchContinue": "Продължи",
   "matchContinuing": "Продължава…",
   "matchTacticsWithSubs": "Тактика · {used}/{max} смени",

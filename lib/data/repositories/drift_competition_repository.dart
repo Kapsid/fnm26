@@ -5,6 +5,7 @@
 import 'package:drift/drift.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/repositories/mappers.dart';
+import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/awards/award_year.dart';
 import 'package:fnm/domain/services/match/big_game_difficulty.dart';
@@ -548,6 +549,17 @@ class DriftCompetitionRepository implements CompetitionRepository {
         groups: const <RoundResultGroup>[],
         stage: _stageLabel(round),
         knockoutFixtures: ties.map((r) => r.toDomain()).toList(),
+        firstLegs: [
+          if (TwoLegged.firstLegOf[round] case final first?)
+            for (final r
+                in await (_db.select(_db.fixtures)..where(
+                      (t) =>
+                          t.competitionId.equals(played.competitionId) &
+                          t.round.equals(first),
+                    ))
+                    .get())
+              r.toDomain(),
+        ],
       );
     }
 
@@ -604,6 +616,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
       groups: result,
       stage: null,
       knockoutFixtures: const <Fixture>[],
+      firstLegs: const <Fixture>[],
     );
   }
 
@@ -1778,6 +1791,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
     CompetitionKind? kind,
     Confederation? confederation,
     int limit = 20,
+    int? edition,
   }) async {
     // Scope to the current cycle's competitions (optionally of one kind, and
     // of one confederation — each region's cup now has its own scorer chart).
@@ -1792,7 +1806,10 @@ class DriftCompetitionRepository implements CompetitionRepository {
                       : t.kind.equalsValue(kind)) &
                   (confederation == null
                       ? const Constant(true)
-                      : t.confederation.equalsValue(confederation)),
+                      : t.confederation.equalsValue(confederation)) &
+                  (edition == null
+                      ? const Constant(true)
+                      : t.edition.equals(edition)),
             ))
             .get();
     final compIds = comps.map((c) => c.id).toSet();

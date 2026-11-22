@@ -68,6 +68,8 @@
   "ceremonyHostTbc": "मेज़बान की पुष्टि बाक़ी",
   "matchHalfTime": "हाफ़ टाइम",
   "matchHalfTimeScore": "हाफ़ टाइम {home} : {away}",
+  "matchAggregateScore": "कुल {home} : {away}",
+  "resultAggregate": "कुल {home}-{away}",
   "matchContinue": "जारी रखें",
   "matchContinuing": "जारी है…",
   "matchTacticsWithSubs": "टैक्टिक्स · {used}/{max} सब",

@@ -68,6 +68,8 @@
   "ceremonyHostTbc": "ANFITRIÓN POR CONFIRMAR",
   "matchHalfTime": "DESCANSO",
   "matchHalfTimeScore": "Descanso {home} : {away}",
+  "matchAggregateScore": "Global {home} : {away}",
+  "resultAggregate": "global {home}-{away}",
   "matchContinue": "Continuar",
   "matchContinuing": "Continuando…",
   "matchTacticsWithSubs": "Táctica · {used}/{max} cambios",

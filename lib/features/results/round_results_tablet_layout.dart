@@ -149,6 +149,10 @@ class _RoundResultsTabletLayout extends ConsumerWidget {
                           code: code,
                           emphasiseNationId: view.playerNationId,
                           careerId: careerId,
+                          firstLeg: TwoLegged.firstLegAmong(
+                            f,
+                            results.firstLegs,
+                          ),
                         ),
                     ],
                   ),

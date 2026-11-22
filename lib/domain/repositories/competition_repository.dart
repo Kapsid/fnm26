@@ -97,6 +97,10 @@ typedef RoundResults = ({
   List<RoundResultGroup> groups,
   String? stage,
   List<Fixture> knockoutFixtures,
+
+  /// When the round is a tie's second leg (a regional cup's semi or final,
+  /// Asia's fifth round): its first legs, so each tie shows its aggregate.
+  List<Fixture> firstLegs,
 });
 
 /// A player's aggregated performance across one competition.
@@ -774,6 +778,10 @@ abstract interface class CompetitionRepository {
     CompetitionKind? kind,
     Confederation? confederation,
     int limit,
+
+    /// One edition only, for a competition played twice a cycle (a
+    /// regional cup, the Nations Cup on calendar2).
+    int? edition,
   });
 
   /// All-time top scorers across every cycle for a competition [kind] — the

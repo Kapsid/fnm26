@@ -233,6 +233,16 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String matchAggregateScore(int home, int away) {
+    return '合計 $home : $away';
+  }
+
+  @override
+  String resultAggregate(int home, int away) {
+    return '合計 $home-$away';
+  }
+
+  @override
   String get matchContinue => '続ける';
 
   @override

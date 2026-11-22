@@ -264,6 +264,16 @@ class AppLocalizationsSv extends AppLocalizations {
   }
 
   @override
+  String matchAggregateScore(int home, int away) {
+    return 'Totalt $home : $away';
+  }
+
+  @override
+  String resultAggregate(int home, int away) {
+    return 'tot. $home-$away';
+  }
+
+  @override
   String get matchContinue => 'Fortsätt';
 
   @override

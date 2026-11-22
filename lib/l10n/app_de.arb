@@ -68,6 +68,8 @@
   "ceremonyHostTbc": "AUSRICHTER STEHT NOCH NICHT FEST",
   "matchHalfTime": "HALBZEIT",
   "matchHalfTimeScore": "Halbzeit {home} : {away}",
+  "matchAggregateScore": "Gesamt {home} : {away}",
+  "resultAggregate": "ges. {home}-{away}",
   "matchContinue": "Weiter",
   "matchContinuing": "Weiter…",
   "matchTacticsWithSubs": "Taktik · {used}/{max} Wechsel",

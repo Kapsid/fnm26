@@ -173,6 +173,7 @@ class MatchScoreboard extends StatelessWidget {
     required this.clock,
     required this.live,
     this.halfTime,
+    this.aggregate,
     this.wholeNames = false,
     this.compact = false,
     this.viewSwitch,
@@ -216,6 +217,10 @@ class MatchScoreboard extends StatelessWidget {
   /// half is under way; null before then.
   final String? halfTime;
 
+  /// A second leg's aggregate so far ("AGG 3 : 2"), under the scoreline and
+  /// under the [compact] bug; null for any other match.
+  final String? aggregate;
+
   /// The tablet's scoreboard, set in the match's centre column: no margin of
   /// its own (the column has one), the two sides given more of the row than
   /// the scoreline, and each name written out WHOLE on up to three lines,
@@ -252,7 +257,7 @@ class MatchScoreboard extends StatelessWidget {
     final scoreFlex = wholeNames ? 2 : 1;
     final viewSwitch = this.viewSwitch;
     if (compact) {
-      return _ScoreBug(
+      final bug = _ScoreBug(
         homeCode: homeCode,
         awayCode: awayCode,
         homeScore: homeScore,
@@ -268,6 +273,33 @@ class MatchScoreboard extends StatelessWidget {
         noticeForHome: noticeForHome,
         homeReds: homeReds,
         awayReds: awayReds,
+      );
+      final agg = aggregate;
+      if (agg == null) return bug;
+      // A second leg: the aggregate on a small plate under the bug.
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          bug,
+          Container(
+            margin: const EdgeInsets.only(top: 2),
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+            decoration: const BoxDecoration(
+              color: AppColors.surfaceContainerHighest,
+              borderRadius: AppRadii.smAll,
+            ),
+            child: Text(
+              agg,
+              key: const ValueKey('matchScoreboard.aggregate'),
+              maxLines: 1,
+              style: AppTypography.labelSmall.copyWith(
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
+            ),
+          ),
+        ],
       );
     }
     final card = AppCard(
@@ -420,6 +452,22 @@ class MatchScoreboard extends StatelessWidget {
                       ),
                     ),
                 ],
+              ),
+            ),
+          if (aggregate case final agg?)
+            Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Text(
+                agg,
+                key: const ValueKey('matchScoreboard.aggregate'),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurface,
+                  fontWeight: FontWeight.w700,
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                ),
               ),
             ),
           if (halfTime case final ht?)

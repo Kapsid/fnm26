@@ -68,6 +68,8 @@
   "ceremonyHostTbc": "EV SAHİBİ BELLİ DEĞİL",
   "matchHalfTime": "DEVRE ARASI",
   "matchHalfTimeScore": "İlk yarı {home} : {away}",
+  "matchAggregateScore": "Toplam {home} : {away}",
+  "resultAggregate": "toplam {home}-{away}",
   "matchContinue": "Devam",
   "matchContinuing": "Devam ediliyor…",
   "matchTacticsWithSubs": "Taktik · {used}/{max} değişiklik",

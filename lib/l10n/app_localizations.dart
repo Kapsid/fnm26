@@ -558,6 +558,18 @@ abstract class AppLocalizations {
   /// **'HT {home} : {away}'**
   String matchHalfTimeScore(int home, int away);
 
+  /// Live match, a two-legged tie's second leg: the aggregate score so far (both legs), under the scoreline. Keep it short.
+  ///
+  /// In en, this message translates to:
+  /// **'Aggregate {home} : {away}'**
+  String matchAggregateScore(int home, int away);
+
+  /// A second leg's result row: the tie's aggregate score, tiny text under the score chip. Very short.
+  ///
+  /// In en, this message translates to:
+  /// **'agg {home}-{away}'**
+  String resultAggregate(int home, int away);
+
   /// Button that resumes play from the interval, and the full-time button that leaves the match.
   ///
   /// In en, this message translates to:

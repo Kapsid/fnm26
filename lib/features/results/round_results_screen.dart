@@ -11,6 +11,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
@@ -283,6 +284,10 @@ class RoundResultsScreen extends ConsumerWidget {
                           code: code,
                           emphasiseNationId: view.playerNationId,
                           careerId: careerId,
+                          firstLeg: TwoLegged.firstLegAmong(
+                            f,
+                            results.firstLegs,
+                          ),
                         ),
                     ],
                   ),

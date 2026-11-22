@@ -23,6 +23,10 @@ typedef RegionalCupData = ({
   Map<int, Nation> nations,
   int playerNationId,
   List<Honour> honours,
+
+  /// The edition's scorer chart, best first, and the scorers' names.
+  List<ScorerTally> scorers,
+  Map<int, String> playerNames,
 });
 
 /// The regional cup lettered [letter] (`G`, `A`) of career [careerId].
@@ -59,6 +63,7 @@ regionalCupProvider = FutureProvider.autoDispose
 
       // The cycle's latest edition on the calendar.
       int? year;
+      int? shownEdition;
       var groups = <FinalsGroupTable>[];
       var knockout = <Fixture>[];
       for (var slot = years.length - 1; slot >= 0; slot--) {
@@ -72,6 +77,7 @@ regionalCupProvider = FutureProvider.autoDispose
           continue;
         }
         year = years[slot];
+        shownEdition = edition;
         groups = await comp.tournamentGroupTables(
           careerId,
           RegionalCups.kind,
@@ -111,6 +117,27 @@ regionalCupProvider = FutureProvider.autoDispose
               careerId,
             )).where((h) => h.competition == cup.name).toList()
             ..sort((a, b) => b.year.compareTo(a.year));
+      // The edition's scorers, as every other cup has them.
+      final scorers = shownEdition == null
+          ? const <ScorerTally>[]
+          : await comp.topScorers(
+              careerId,
+              kind: RegionalCups.kind,
+              confederation: RegionalCups.confederation,
+              edition: shownEdition,
+              limit: 15,
+            );
+      final playerRepo = ref.watch(playerRepositoryProvider);
+      final playerNames = <int, String>{};
+      for (final id in {for (final s in scorers) s.playerId}) {
+        final p = await playerRepo.byId(
+          id,
+          agingYears: CareerService.agingYears(career),
+          saveSeed: career.rngSeed,
+          careerId: career.id,
+        );
+        if (p != null) playerNames[id] = p.name;
+      }
       return (
         cup: cup,
         year: year,
@@ -123,5 +150,7 @@ regionalCupProvider = FutureProvider.autoDispose
         nations: nations,
         playerNationId: career.nationId,
         honours: honours,
+        scorers: scorers,
+        playerNames: playerNames,
       );
     });

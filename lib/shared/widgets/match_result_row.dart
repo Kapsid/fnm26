@@ -8,7 +8,9 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/flag_disc.dart';
 import 'package:fnm/shared/widgets/nation_tap.dart';
 
@@ -24,10 +26,15 @@ class MatchResultRow extends StatelessWidget {
     this.emphasiseNationId,
     this.emphasiseWinner = false,
     this.careerId,
+    this.firstLeg,
     super.key,
   });
 
   final Fixture fixture;
+
+  /// The first leg, when [fixture] is a tie's second: the row then shows the
+  /// aggregate under the score, and bolds the side it sends through.
+  final Fixture? firstLeg;
   final String Function(int) code;
 
   /// Bolds this nation's side — the manager's own, on screens where they took
@@ -60,9 +67,19 @@ class MatchResultRow extends StatelessWidget {
         ? 'AET'
         : null;
 
+    final leg = firstLeg;
+    final aggregate = played && leg != null && leg.hasResult
+        ? TwoLegged.aggregate(leg, fixture)
+        : null;
+    final tieWinner = aggregate == null
+        ? null
+        : TwoLegged.winner(leg!, fixture);
+
     bool bold(int nationId) {
       if (emphasiseNationId != null) return nationId == emphasiseNationId;
-      if (!played || !emphasiseWinner || drawn) return false;
+      if (!played || !emphasiseWinner) return false;
+      if (tieWinner != null) return nationId == tieWinner;
+      if (drawn) return false;
       return nationId == home ? hs >= as : as > hs;
     }
 
@@ -98,6 +115,15 @@ class MatchResultRow extends StatelessWidget {
                 if (marker != null)
                   Text(
                     marker,
+                    style: AppTypography.labelSmall.copyWith(
+                      fontSize: 8,
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                  ),
+                if (aggregate case (final h, final a))
+                  Text(
+                    AppLocalizations.of(context).resultAggregate(h, a),
+                    key: const ValueKey('matchResultRow.aggregate'),
                     style: AppTypography.labelSmall.copyWith(
                       fontSize: 8,
                       color: AppColors.onSurfaceVariant,

@@ -68,6 +68,8 @@
   "ceremonyHostTbc": "開催国未定",
   "matchHalfTime": "ハーフタイム",
   "matchHalfTimeScore": "前半 {home} : {away}",
+  "matchAggregateScore": "合計 {home} : {away}",
+  "resultAggregate": "合計 {home}-{away}",
   "matchContinue": "続ける",
   "matchContinuing": "処理中…",
   "matchTacticsWithSubs": "戦術 · 交代 {used}/{max}",

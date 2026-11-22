@@ -260,6 +260,16 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
+  String matchAggregateScore(int home, int away) {
+    return 'Загалом $home : $away';
+  }
+
+  @override
+  String resultAggregate(int home, int away) {
+    return 'заг. $home-$away';
+  }
+
+  @override
   String get matchContinue => 'Продовжити';
 
   @override

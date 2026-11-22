@@ -108,6 +108,10 @@ class ConfedPlayoffSteps extends StatelessWidget {
             emphasiseNationId: mine ? playerNationId : null,
             emphasiseWinner: !mine,
             careerId: careerId,
+            // Asia's fifth round is two legs: its second shows the aggregate.
+            firstLeg: TwoLegged.isSecondLeg(f.round)
+                ? TwoLegged.firstLegAmong(f, e.value)
+                : null,
           ),
         );
       }

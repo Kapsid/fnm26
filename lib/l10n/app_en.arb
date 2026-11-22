@@ -327,6 +327,30 @@
       }
     }
   },
+  "matchAggregateScore": "Aggregate {home} : {away}",
+  "@matchAggregateScore": {
+    "description": "Live match, a two-legged tie's second leg: the aggregate score so far (both legs), under the scoreline. Keep it short.",
+    "placeholders": {
+      "home": {
+        "type": "int"
+      },
+      "away": {
+        "type": "int"
+      }
+    }
+  },
+  "resultAggregate": "agg {home}-{away}",
+  "@resultAggregate": {
+    "description": "A second leg's result row: the tie's aggregate score, tiny text under the score chip. Very short.",
+    "placeholders": {
+      "home": {
+        "type": "int"
+      },
+      "away": {
+        "type": "int"
+      }
+    }
+  },
   "matchContinue": "Continue",
   "@matchContinue": {
     "description": "Button that resumes play from the interval, and the full-time button that leaves the match."
