@@ -33,7 +33,7 @@ import 'driver.dart';
 ///   in the exact December slot its placeholder was drawn into. (Poland,
 ///   then Belgium, did until Africa's, Asia's and Oceania's own steps and
 ///   the balanced home and away draw moved the world.)
-/// * Northern Ireland (seed 40) wins its League C group in the second
+/// * Northern Ireland (seed 45) wins its League C group in the second
 ///   Nations Cup, misses qualifying and comes in through pot 4.
 /// * Curacao (seed 39), one of CONCACAF's two best runners-up, plays the
 ///   intercontinental play-off in the finals' host nation.
@@ -50,8 +50,9 @@ void main() {
   // intercontinental play-off since the balanced home and away draw (seed
   // 39 since the regional cups moved the world).
   const curacaoSeed = 39;
-  // Northern Ireland's: since the regional cups it misses pot 4 on seed 35.
-  const northernIrelandSeed = 40;
+  // Northern Ireland's: since the regional cups it misses pot 4 on seed 35
+  // (seed 45 since the wonderkids no academy releases moved the world).
+  const northernIrelandSeed = 45;
   // England's: on seed 35 it misses direct qualification since the 1.1.2
   // engine tuning.
   const englandSeed = 31;
