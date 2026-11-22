@@ -121,7 +121,9 @@ void main() {
           aFinal.awayScore,
         ),
       );
-      expect(taps, lessThan(steps ~/ 3), reason: '$taps taps, $steps steps');
+      // A watched step plays a whole round now, so stepping itself takes far
+      // fewer presses than it did; the simulation is still well under half.
+      expect(taps, lessThan(steps ~/ 2), reason: '$taps taps, $steps steps');
       // And the hub's next step is the rollover, the champion known.
       expect((await fast.nextEvent()).kind, HubEventKind.cycleRollover);
     },
