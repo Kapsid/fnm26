@@ -742,6 +742,8 @@ class CampaignService {
           managerAge: managerAge,
           rngSeed: def.rngSeed,
           countsTowardSlots: false,
+          // Europe's scenarios include Belarus, as an ordinary career does.
+          newCareerNations: def.withBelarus,
           // Inside create, before the calendar is drawn: a dormant nation's
           // world must be the one every draw is made from.
           worldMarkers: [

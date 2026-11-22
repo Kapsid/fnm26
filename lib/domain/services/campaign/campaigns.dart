@@ -69,6 +69,7 @@ class CampaignDef {
     this.canContinue = true,
     this.goldenGeneration = false,
     this.dormantNationId,
+    this.withBelarus = false,
   });
 
   final String id;
@@ -123,6 +124,14 @@ class CampaignDef {
   /// is built with it.
   final int? dormantNationId;
 
+  /// Whether a run started now includes Belarus, as every ordinary career
+  /// does (`DormantNations.forNewCareers`): Europe's real 54, so the Nations
+  /// Cup's bottom league is two groups of three, not three and two. True for
+  /// every European scenario; each seed was checked to keep its promises on
+  /// that world (campaign_seeds_test.dart). A run begun before keeps the
+  /// world it was started on: the marker is written at creation only.
+  final bool withBelarus;
+
   /// Every nation the campaign's story and goal name: its own, its rivals,
   /// its opening friendly's and its donor. A custom database that renames
   /// one of them cannot start it: the brief would tell another story.
@@ -145,6 +154,7 @@ abstract final class Campaigns {
   /// in 11 of 16 lab runs; six (the owner's pick, 2026-11-15) did in 7 of
   /// 12, four in 5 of 12.
   static const transplant = CampaignDef(
+    withBelarus: true,
     id: 'transplant',
     nationId: 45, // San Marino
     donorNationId: 26, // Italy
@@ -164,11 +174,13 @@ abstract final class Campaigns {
   /// almost never caught). On the real starting ranking (Albania 66th,
   /// Georgia 71st) seed 240 draws the two together with neither hosting the
   /// European Championship: Netherlands, Austria, Albania, Georgia,
-  /// Kazakhstan, Andorra (campaign_seeds_test.dart). Of the seeds that do,
+  /// Kazakhstan, Andorra (campaign_seeds_test.dart); on the world with
+  /// Belarus (runs from 1.1.2) Armenia takes Kazakhstan's place. Of the seeds that do,
   /// it is the one the lab plays closest to the 1.0.6 run's rate (about 30%
   /// of autopilot runs finish above Albania, as seed 10 did on the old
   /// ranking); the first, seed 24, fell to 15%.
   static const grudge = CampaignDef(
+    withBelarus: true,
     id: 'grudge',
     nationId: 19, // Georgia
     rivalNationId: 1, // Albania
@@ -215,6 +227,7 @@ abstract final class Campaigns {
   /// Cannot be continued: a career with a manufactured generation is no fair
   /// save. The cohort's strength was tuned on the lab (campaign_lab_test.dart).
   static const youngFinns = CampaignDef(
+    withBelarus: true,
     id: 'youngFinns',
     nationId: 17, // Finland
     goal: CampaignGoal.qualifyWorldThenTitles,
@@ -238,6 +251,7 @@ abstract final class Campaigns {
   /// European qualifying group of six (campaign_seeds_test.dart). Greenland's
   /// strength was tuned on the lab (campaign_lab_test.dart).
   static const greenland = CampaignDef(
+    withBelarus: true,
     id: 'greenland',
     nationId: 212, // DormantNations.greenlandId
     dormantNationId: 212,
@@ -282,6 +296,7 @@ abstract final class Campaigns {
   /// 2024, for the title they hold, keeps Spain from hosting either
   /// championship (campaign_seeds_test.dart): every place is earned.
   static const legacy = CampaignDef(
+    withBelarus: true,
     id: 'legacy',
     nationId: 50, // Spain
     goal: CampaignGoal.titleTreble,
@@ -304,6 +319,7 @@ abstract final class Campaigns {
   /// (campaign_seeds_test.dart). Its strength was tuned on the lab
   /// (campaign_lab_test.dart).
   static const isleOfMan = CampaignDef(
+    withBelarus: true,
     id: 'isleOfMan',
     nationId: 214, // DormantNations.isleOfManId
     dormantNationId: 214,
@@ -326,6 +342,7 @@ abstract final class Campaigns {
   /// cycles (campaign_seeds_test.dart). A settled run may be moved into the
   /// saves: the world is a fair one, one strong nation in two's place.
   static const czechoslovakia = CampaignDef(
+    withBelarus: true,
     id: 'czechoslovakia',
     nationId: 215, // DormantNations.czechoslovakiaId
     dormantNationId: 215,

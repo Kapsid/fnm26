@@ -107,7 +107,9 @@ void main() {
     expect(await comp.hasWatchedDraw(id, 0, marker), isTrue);
     final world = await repo.forCareer(id);
     final base = await repo.all();
-    expect(world, hasLength(base.length));
+    // A swap, plus Belarus (a European run's world, CampaignDef.withBelarus).
+    final grown = def.withBelarus ? 1 : 0;
+    expect(world, hasLength(base.length + grown));
     expect(world.map((n) => n.id), contains(greenland));
     expect(world.map((n) => n.id), isNot(contains(sanMarino)));
     bool european(int id) =>
@@ -115,7 +117,7 @@ void main() {
         Confederation.europe;
     expect(
       world.where((n) => european(n.id)).length,
-      base.where((n) => n.confederation == Confederation.europe).length,
+      base.where((n) => n.confederation == Confederation.europe).length + grown,
     );
 
     // A European qualifying group, and the bottom Nations Cup league. On
@@ -144,7 +146,7 @@ void main() {
     // Last in the world ranking on day one.
     final ranking = (await c.read(worldRankingProvider(id).future))!;
     expect(ranking.nations.last.id, greenland);
-    expect(ranking.nations, hasLength(base.length));
+    expect(ranking.nations, hasLength(base.length + grown));
 
     // The default XI is Greenland's own.
     final tactic = await c.read(tacticsRepositoryProvider).tacticForCareer(id);

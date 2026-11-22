@@ -65,6 +65,19 @@ List<List<int>> qualifyingGroups(
   return [for (final g in cq.groups) g.nationIds];
 }
 
+/// The world a run of [def] started now is drawn from: the seed's nations,
+/// its dormant nation in place of the one it replaces, and Belarus for a
+/// European scenario ([CampaignDef.withBelarus]), as an ordinary career has.
+List<Nation> campaignWorld(CampaignDef def, List<Nation> nations) =>
+    DormantNations.worldFrom(
+      nations,
+      {
+        if (def.withBelarus) DormantNations.belarusId,
+        ?def.dormantNationId,
+      },
+      dormant: (id) => DormantNations.all.firstWhere((n) => n.id == id),
+    );
+
 void main() {
   // A new campaign run starts on the current starting ranking, the one in
   // nations.json (see CampaignService.start).
@@ -79,7 +92,7 @@ void main() {
         confederation: Confederation.europe,
         cycle: 0,
         seed: c.rngSeed,
-        nations: nations,
+        nations: campaignWorld(c, nations),
       );
       expect(hosts, isNot(contains(c.nationId)), reason: c.id);
       if (c.rivalNationId case final rival?) {
@@ -105,18 +118,19 @@ void main() {
   test('Young Finns: Finland hosts neither the World nor the European '
       'Championship in any of its three cycles', () {
     const def = Campaigns.youngFinns;
+    final finWorld = campaignWorld(def, nations);
     expect(def.cycles, 3);
     for (var cycle = 0; cycle < def.cycles; cycle++) {
       final world = WorldCupHosts.hostsFor(
         year: CareerService.worldCupYear(cycle),
-        nations: nations,
+        nations: finWorld,
         seed: def.rngSeed,
       );
       final euro = WorldCupHosts.continentalHostsFor(
         confederation: Confederation.europe,
         cycle: cycle,
         seed: def.rngSeed,
-        nations: nations,
+        nations: finWorld,
       );
       expect(world, isNot(contains(def.nationId)), reason: 'cycle $cycle');
       expect(euro, isNot(contains(def.nationId)), reason: 'cycle $cycle');
@@ -126,7 +140,7 @@ void main() {
           confederation: Confederation.europe,
           cycle: cycle,
           seed: def.rngSeed,
-          nations: nations,
+          nations: finWorld,
         ).map((n) => n.id),
         contains(def.nationId),
         reason: 'cycle $cycle',
@@ -151,7 +165,10 @@ void main() {
   });
 
   test('Grudge draws Georgia and Albania into the same qualifying group', () {
-    final groups = euroQualifyingGroups(Campaigns.grudge.rngSeed, nations);
+    final groups = euroQualifyingGroups(
+      Campaigns.grudge.rngSeed,
+      campaignWorld(Campaigns.grudge, nations),
+    );
     expect(groups.where((g) => g.contains(19) && g.contains(1)), hasLength(1));
   });
 
@@ -159,7 +176,7 @@ void main() {
     expect(
       euroQualifyingGroups(
         Campaigns.transplant.rngSeed,
-        nations,
+        campaignWorld(Campaigns.transplant, nations),
       ).expand((g) => g),
       contains(45),
     );
@@ -169,18 +186,8 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     final db = createTestDatabase();
     addTearDown(db.close);
-    final c = ProviderContainer(
-      overrides: [
-        appDatabaseProvider.overrideWithValue(db),
-        premiumUnlockedProvider.overrideWith((ref) => true),
-        seedSourceProvider.overrideWithValue(
-          InMemorySeedSource(
-            nationList: nations,
-            playerList: _load('players.json', Player.fromJson),
-          ),
-        ),
-      ],
-    );
+    // A Grudge run's world: Belarus in (the dormant source supplies it).
+    final c = greenlandContainer(db);
     addTearDown(c.dispose);
     await c.read(seedLoaderProvider).ensureSeeded();
     final career =
@@ -191,6 +198,7 @@ void main() {
                   managerName: 'M',
                   rngSeed: Campaigns.grudge.rngSeed,
                   stadiumHostRules: false,
+                  newCareerNations: Campaigns.grudge.withBelarus,
                 ))
             .valueOrNull!;
     // On calendar2 drawn after the first Nations Cup, with these inputs.
@@ -210,7 +218,10 @@ void main() {
       hasLength(1),
     );
     final rebuilt = [
-      for (final g in euroQualifyingGroups(Campaigns.grudge.rngSeed, nations))
+      for (final g in euroQualifyingGroups(
+        Campaigns.grudge.rngSeed,
+        campaignWorld(Campaigns.grudge, nations),
+      ))
         [...g]..sort(),
     ];
     expect(
@@ -281,11 +292,7 @@ void main() {
   group('Greenland', () {
     const def = Campaigns.greenland;
     // Its world: San Marino out, Greenland in (what forCareer gives the run).
-    final world = DormantNations.worldFrom(
-      nations,
-      {DormantNations.greenlandId},
-      dormant: (_) => DormantNations.greenland,
-    );
+    final world = campaignWorld(def, nations);
 
     test('seed 212 keeps Greenland from hosting either championship in '
         'all 25 cycles of its century', () {
@@ -333,8 +340,8 @@ void main() {
                     rngSeed: def.rngSeed,
                     stadiumHostRules: false,
                     worldMarkers: [DormantNations.markerFor(212)],
-                    // A campaign run's world: never Belarus.
-                    newCareerNations: false,
+                    // A run's world: Belarus in, as for every European run.
+                    newCareerNations: def.withBelarus,
                   ))
               .valueOrNull!;
       await drawEuroQualifyingNow(c, career.id);
@@ -447,11 +454,7 @@ void main() {
 
   group('Isle of Man', () {
     const def = Campaigns.isleOfMan;
-    final world = DormantNations.worldFrom(
-      nations,
-      {DormantNations.isleOfManId},
-      dormant: (_) => DormantNations.isleOfMan,
-    );
+    final world = campaignWorld(def, nations);
 
     test('seed 214 keeps Isle of Man from hosting either championship in all '
         '25 cycles of its run', () {
@@ -483,16 +486,18 @@ void main() {
       expect(mine, hasLength(1));
       expect(mine.single.length, 6);
       expect(world.map((n) => n.id), isNot(contains(2)));
+      // Europe's real 54: the Nations Cup's bottom league is two groups of
+      // three.
+      expect(
+        world.where((n) => n.confederation == Confederation.europe),
+        hasLength(54),
+      );
     });
   });
 
   group('Czechoslovakia', () {
     const def = Campaigns.czechoslovakia;
-    final world = DormantNations.worldFrom(
-      nations,
-      {DormantNations.czechoslovakiaId},
-      dormant: (_) => DormantNations.czechoslovakia,
-    );
+    final world = campaignWorld(def, nations);
 
     test(
       'seed 215 keeps Czechoslovakia from hosting either championship in all '
@@ -522,7 +527,13 @@ void main() {
         'nation fewer', () {
       expect(world.map((n) => n.id), isNot(contains(12)));
       expect(world.map((n) => n.id), isNot(contains(48)));
-      expect(world, hasLength(nations.length - 1));
+      // One fewer than the run's world before the merge: Belarus joins, two
+      // become one, so Europe has 53.
+      expect(world, hasLength(nations.length));
+      expect(
+        world.where((n) => n.confederation == Confederation.europe),
+        hasLength(53),
+      );
       final mine = euroQualifyingGroups(
         def.rngSeed,
         world,

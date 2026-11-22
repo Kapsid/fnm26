@@ -102,7 +102,9 @@ void main() {
     expect(await comp.hasWatchedDraw(id, 0, marker), isTrue);
     final world = await repo.forCareer(id);
     final base = await repo.all();
-    expect(world, hasLength(base.length));
+    // A swap, plus Belarus (a European run's world, CampaignDef.withBelarus).
+    expect(world, hasLength(base.length + 1));
+    expect(world.map((n) => n.id), contains(DormantNations.belarusId));
     expect(world.map((n) => n.id), contains(isle));
     expect(world.map((n) => n.id), isNot(contains(andorra)));
     // Greenland stays out: only this campaign's dormant nation joins.
@@ -113,8 +115,17 @@ void main() {
         Confederation.europe;
     expect(
       world.where((n) => european(n.id)).length,
-      base.where((n) => n.confederation == Confederation.europe).length,
+      base.where((n) => n.confederation == Confederation.europe).length + 1,
     );
+    // Europe's real 54: the Nations Cup's bottom league is six sides, two
+    // groups of three, not three and two.
+    final tiers = await c.read(careerRepositoryProvider).nationsCupTiers(id);
+    final europe = [
+      for (final e in tiers.entries)
+        if (european(e.key)) e.value,
+    ];
+    final bottom = europe.reduce((a, b) => a > b ? a : b);
+    expect(europe.where((t) => t == bottom), hasLength(6));
 
     // A European qualifying group of five or more. On calendar2 the
     // qualifying draw comes after the first Nations Cup.
@@ -132,9 +143,12 @@ void main() {
 
     // On day one the Isle of Man stands where Andorra would.
     final ranking = (await c.read(worldRankingProvider(id).future))!;
-    expect(ranking.nations, hasLength(base.length));
+    expect(ranking.nations, hasLength(base.length + 1));
     expect(
-      ranking.nations.indexWhere((n) => n.id == isle),
+      ranking.nations
+          .where((n) => n.id != DormantNations.belarusId)
+          .toList()
+          .indexWhere((n) => n.id == isle),
       base.indexWhere((n) => n.id == andorra),
     );
 

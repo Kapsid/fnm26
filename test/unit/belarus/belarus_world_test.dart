@@ -261,23 +261,30 @@ void main() {
     );
   });
 
-  test('campaign runs keep their world: no Belarus', () async {
-    final c = storyContainer();
-    addTearDown(c.dispose);
-    for (final def in [Campaigns.greenland, Campaigns.zanzibar]) {
-      final d = await StoryDriver.startCampaign(c, def);
-      final comp = c.read(competitionRepositoryProvider);
-      expect(await comp.hasWatchedDraw(d.careerId, 0, marker), isFalse);
-      final world = await c
-          .read(nationRepositoryProvider)
-          .forCareer(d.careerId);
-      expect(world.map((n) => n.id), isNot(contains(belarus)));
-      expect(
-        (await comp.allFixtures(d.careerId)).where((f) => plays(f, belarus)),
-        isEmpty,
-      );
-    }
-  });
+  test(
+    'a European campaign run started now has Belarus; another does not',
+    () async {
+      final c = storyContainer();
+      addTearDown(c.dispose);
+      for (final def in [Campaigns.greenland, Campaigns.zanzibar]) {
+        final d = await StoryDriver.startCampaign(c, def);
+        final comp = c.read(competitionRepositoryProvider);
+        expect(
+          await comp.hasWatchedDraw(d.careerId, 0, marker),
+          def.withBelarus,
+          reason: def.id,
+        );
+        final world = await c
+            .read(nationRepositoryProvider)
+            .forCareer(d.careerId);
+        expect(
+          world.map((n) => n.id).contains(belarus),
+          def.withBelarus,
+          reason: def.id,
+        );
+      }
+    },
+  );
 
   test('a manager can take Belarus itself', () async {
     final c = storyContainer();

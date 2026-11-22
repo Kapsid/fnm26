@@ -58,13 +58,14 @@ void main() {
     expect(await comp.hasWatchedDraw(id, 0, marker), isTrue);
     final world = await repo.forCareer(id);
     final base = await repo.all();
-    expect(world, hasLength(base.length - 1));
+    // Two become one, and Belarus joins (CampaignDef.withBelarus).
+    expect(world, hasLength(base.length));
     expect(world.map((n) => n.id), contains(tch));
     expect(world.map((n) => n.id), isNot(contains(czechia)));
     expect(world.map((n) => n.id), isNot(contains(slovakia)));
     expect(
       world.where((n) => n.confederation == Confederation.europe).length,
-      base.where((n) => n.confederation == Confederation.europe).length - 1,
+      base.where((n) => n.confederation == Confederation.europe).length,
     );
 
     // Every seeded international of both, naturalised in at the start.

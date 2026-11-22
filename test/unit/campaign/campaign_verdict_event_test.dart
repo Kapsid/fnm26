@@ -49,9 +49,10 @@ void main() {
         n,
         Campaigns.grudge.rngSeed,
         nationId: Campaigns.grudge.nationId,
-        // A campaign run's world: no Belarus (DormantNations.forNewCareers),
-        // or the two calendars part ways and the comparison means nothing.
-        newCareerNations: false,
+        // A Grudge run's world: Belarus in, as for every European run
+        // (CampaignDef.withBelarus), or the two calendars part ways and the
+        // comparison means nothing.
+        newCareerNations: Campaigns.grudge.withBelarus,
         // A campaign run's hosts: drawn without the stadium bars, and on
         // the rules its seed was searched under (the manager's nation may
         // host unbid): with the current rules the two worlds stage the
