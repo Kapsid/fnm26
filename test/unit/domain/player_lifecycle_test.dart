@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
+import 'package:fnm/domain/services/player/prospects.dart';
 
 import '../../helpers/fixtures.dart';
 
@@ -87,6 +88,16 @@ void main() {
       final pct = released / sample * 100;
       expect(pct, greaterThan(15));
       expect(pct, lessThan(27));
+    });
+
+    test('no academy releases a wonderkid', () {
+      var wonderkids = 0;
+      for (var id = 1; id <= 20000; id++) {
+        if (Prospects.trueStars(id) < 5) continue;
+        wonderkids++;
+        expect(PlayerLifecycle.releasedAgeFor(id), isNull, reason: 'id $id');
+      }
+      expect(wonderkids, greaterThan(100));
     });
 
     test('a released boy is released between twelve and sixteen', () {

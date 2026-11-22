@@ -111,6 +111,10 @@ abstract final class PlayerLifecycle {
   /// Roughly what share of an intake is released before reaching seventeen.
   static const int releasedPercent = 21;
 
+  /// The born ceiling of a five-star prospect (`Prospects.trueStars`): an
+  /// academy never releases a boy at or above it.
+  static const double wonderkidCeiling = 1.50;
+
   /// The offset that keeps the backfilled (negative) intake years positive in
   /// the encoded id.
   static const int _bornYearOffset = 8;
@@ -121,7 +125,15 @@ abstract final class PlayerLifecycle {
   /// [retirementAgeFor]: how good a boy was going to be must not decide whether
   /// he is let go, or the pyramid would quietly be a ranked queue with the
   /// bottom lopped off instead of a set of careers.
+  ///
+  /// The one exception is a wonderkid (a five-star ceiling, see
+  /// `Prospects.trueStars`, a late bloomer's included): no academy lets that
+  /// one go. Released at
+  /// random, about one in five of them walked out, and a manager watched a
+  /// generational talent leave his academy. Read live, so in a running save
+  /// such a boy is back in the pyramid if he is still of academy age.
   static int? releasedAgeFor(int playerId) {
+    if (developmentPotential(playerId) >= wonderkidCeiling) return null;
     final h = (_mix(playerId ^ 0x2E1EA5E) >> 5) & 0xffffff;
     if (h % 100 >= releasedPercent) return null;
     return 12 + (h ~/ 100) % 5; // 12 … 16

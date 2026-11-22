@@ -108,7 +108,7 @@ abstract final class Prospects {
     // five-star ceiling; at 1.50 it is one in seventeen, which at seven boys a
     // year is one every two or three intakes — a generation, which is what the
     // word is supposed to mean.
-    if (potential >= 1.50) return 5;
+    if (potential >= PlayerLifecycle.wonderkidCeiling) return 5;
     if (potential >= 1.2) return 4;
     if (potential >= 0.95) return 3;
     if (potential >= 0.7) return 2;
