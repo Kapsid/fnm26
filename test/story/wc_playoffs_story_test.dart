@@ -28,35 +28,38 @@ import 'driver.dart';
 /// change to the world moves the sides below, re-find them: the first
 /// expectation of each story says which half broke).
 ///
-/// * Türkiye finishes second in its qualifying group, is drawn into a
+/// * Türkiye (seed 40) finishes second in its qualifying group, is drawn into a
 ///   European path, plays its semi-final and final in late March and lands
 ///   in the exact December slot its placeholder was drawn into. (Poland,
 ///   then Belgium, did until Africa's, Asia's and Oceania's own steps and
 ///   the balanced home and away draw moved the world.)
 /// * Northern Ireland (seed 45) wins its League C group in the second
 ///   Nations Cup, misses qualifying and comes in through pot 4.
-/// * Curacao (seed 48), one of CONCACAF's two best runners-up, plays the
+/// * Curacao (seed 53), one of CONCACAF's two best runners-up, plays the
 ///   intercontinental play-off in the finals' host nation.
 /// * England (seed 31) qualifies directly, is locked in at the draw and
 ///   watches every path from the stands.
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   const europe = Confederation.europe;
-  const seed = 35;
   const turkiye = 53;
   const northernIreland = 38;
   const curacao = 78;
   // Curacao's own world: on seed 35 no managed CONCACAF side reaches the
   // intercontinental play-off since the balanced home and away draw (seed
   // 39 since the regional cups moved the world, 48 since the wonderkids no
-  // academy releases did).
-  const curacaoSeed = 48;
+  // academy releases did, 53 since the manager's default XI keeps to its
+  // lines).
+  const curacaoSeed = 53;
   // Northern Ireland's: since the regional cups it misses pot 4 on seed 35
   // (seed 45 since the wonderkids no academy releases moved the world).
   const northernIrelandSeed = 45;
   // England's: on seed 35 it misses direct qualification since the 1.1.2
   // engine tuning.
   const englandSeed = 31;
+  // Türkiye's: on seed 35 it no longer finishes runner-up since the
+  // manager's default XI keeps to its lines.
+  const turkiyeSeed = 40;
   final wcYear = CareerService.worldCupYear(0);
   final dates = Calendar2.wcPlayoffs(wcYear);
 
@@ -102,7 +105,7 @@ void main() {
     final db = storyDb();
     final c = storyContainer(db);
     addTearDown(c.dispose);
-    final d = await StoryDriver.start(c, seed, nationId: turkiye);
+    final d = await StoryDriver.start(c, turkiyeSeed, nationId: turkiye);
     final id = d.careerId;
     final comp = c.read(competitionRepositoryProvider);
     final careers = c.read(careerRepositoryProvider);

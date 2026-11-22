@@ -35,7 +35,7 @@ import 'driver.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   const europe = Confederation.europe;
-  const entrantSeed = 33;
+  const entrantSeed = 45;
   const entrantIndex = 24;
   const watcherSeed = 31;
 
