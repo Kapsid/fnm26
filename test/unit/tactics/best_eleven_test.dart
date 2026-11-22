@@ -197,4 +197,96 @@ void main() {
       expect(xi.where(keepers.contains), hasLength(1));
     });
   });
+
+  group('the eleven is picked as a whole', () {
+    // A squad thin at the back and rich up front: the forwards must start
+    // up front and the natural defenders at the back, never a striker at
+    // left-back because his slot was filled first.
+    final squad = [
+      player(
+        id: 100,
+        nationId: 1,
+        position: PlayerPosition.gk,
+        attributes: flatAttributes(70),
+      ),
+      player(
+        id: 101,
+        nationId: 1,
+        position: PlayerPosition.lb,
+        attributes: flatAttributes(66),
+      ),
+      player(
+        id: 102,
+        nationId: 1,
+        position: PlayerPosition.cb,
+        attributes: flatAttributes(68),
+      ),
+      player(
+        id: 103,
+        nationId: 1,
+        position: PlayerPosition.cb,
+        attributes: flatAttributes(67),
+      ),
+      player(
+        id: 104,
+        nationId: 1,
+        position: PlayerPosition.rb,
+        attributes: flatAttributes(65),
+      ),
+      for (var i = 0; i < 3; i++)
+        player(
+          id: 110 + i,
+          nationId: 1,
+          position: PlayerPosition.cm,
+          attributes: flatAttributes(72),
+        ),
+      player(
+        id: 120,
+        nationId: 1,
+        position: PlayerPosition.st,
+        attributes: flatAttributes(86),
+      ),
+      player(
+        id: 121,
+        nationId: 1,
+        position: PlayerPosition.lw,
+        attributes: flatAttributes(84),
+      ),
+      player(
+        id: 122,
+        nationId: 1,
+        position: PlayerPosition.rw,
+        attributes: flatAttributes(83),
+      ),
+      // A fourth forward, better than every defender: still on the bench,
+      // a striker at full-back costs more than he brings.
+      player(
+        id: 123,
+        nationId: 1,
+        position: PlayerPosition.st,
+        attributes: flatAttributes(80),
+      ),
+    ];
+
+    test('forwards up front, defenders at the back', () {
+      final xi = bestEleven(Formation.f433, squad);
+      final slots = Formation.f433.positions;
+      final byId = {for (final p in squad) p.id: p};
+      for (var i = 0; i < 11; i++) {
+        final p = byId[xi[i]]!;
+        expect(
+          p.position.category,
+          slots[i].category,
+          reason: 'slot ${slots[i]} took ${p.position} ${p.id}',
+        );
+      }
+      expect(xi, isNot(contains(123)));
+    });
+
+    test('a short pool leaves the spare slots empty', () {
+      final xi = bestEleven(Formation.f433, squad.take(8).toList());
+      expect(xi.whereType<int>(), hasLength(8));
+      expect(xi.where((id) => id == null), hasLength(3));
+    });
+  });
 }
