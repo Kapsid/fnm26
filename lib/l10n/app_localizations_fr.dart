@@ -269,7 +269,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String matchAggregateScore(int home, int away) {
-    return 'Cumul $home : $away';
+    return 'Cumul $home : $away';
   }
 
   @override

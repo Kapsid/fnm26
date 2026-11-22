@@ -68,7 +68,7 @@
   "ceremonyHostTbc": "PAYS HÔTE À CONFIRMER",
   "matchHalfTime": "MI-TEMPS",
   "matchHalfTimeScore": "Mi-temps {home} : {away}",
-  "matchAggregateScore": "Cumul {home} : {away}",
+  "matchAggregateScore": "Cumul {home} : {away}",
   "resultAggregate": "cumul {home}-{away}",
   "matchContinue": "Continuer",
   "matchContinuing": "Reprise…",
