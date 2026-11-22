@@ -33,7 +33,7 @@ void main() {
         if (n.confederation == europe) n,
     ]..sort((a, b) => a.ranking.compareTo(b.ranking));
     final me = europeans[24].id;
-    final d = await StoryDriver.start(c, 33, nationId: me);
+    final d = await StoryDriver.start(c, 44, nationId: me);
     final id = d.careerId;
     final comp = c.read(competitionRepositoryProvider);
     final careers = c.read(careerRepositoryProvider);
