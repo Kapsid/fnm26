@@ -403,7 +403,13 @@ class _HubScreenState extends ConsumerState<HubScreen> {
                 const SizedBox(height: AppSpacing.md),
                 // The primary action is whatever the next timeline event is
                 // (a draw, the next match, a tournament to follow, or rollover).
-                HubEventButton(careerId: careerId),
+                // Keyed: the banners above it come and go (the host's strip
+                // leaves with a tournament's final), and the button must stay
+                // the same one through the step that removes them.
+                HubEventButton(
+                  key: const ValueKey('hub.eventButton'),
+                  careerId: careerId,
+                ),
                 // A campaign career's goal and progress; nothing for a normal one.
                 CampaignHubCard(careerId: careerId, gapAbove: true),
                 // A save from before ages: the one-time, skippable question.
