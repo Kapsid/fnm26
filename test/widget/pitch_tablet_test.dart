@@ -172,6 +172,21 @@ void main() {
         final gi = r.events.indexWhere((e) => e.type == MatchEventType.goal);
         expect(gi, isNonNegative, reason: 'the seeded match has a goal');
         final goal = r.events[gi];
+        // Any earlier moments (cards) told and gone first, as they would be
+        // when watched: the strip then has the goal to itself.
+        if (gi > 0) {
+          screen.seekPitch(
+            Duration(
+              microseconds: ((pb.revealAt(gi - 1) + 0.05) * 1e6).round(),
+            ),
+          );
+          await tester.pump();
+          for (var i = 0; i < kTvEventQueueMax + 2; i++) {
+            await tester.pump(kTvEventHold);
+            await tester.pump(const Duration(milliseconds: 300));
+          }
+          expect(strip, findsNothing);
+        }
         screen.seekPitch(
           Duration(microseconds: ((pb.revealAt(gi) + 0.05) * 1e6).round()),
         );
@@ -285,9 +300,10 @@ void main() {
     // Early on there is nothing to say yet.
     expect(find.byKey(const Key('match.pitchFeed')), findsNothing);
     // To the end of the first half: every line said by then.
-    final t = pb.halfTime;
-    screen.seekPitch(t);
+    screen.seekPitch(pb.halfTime);
     await tester.pump();
+    // Where the clock landed (a jump can round a microsecond short).
+    final t = screen.pitchMode.clock!.value;
     final l = enL;
     final said = pb.linesUpTo(l, t, screen.pitchMode.names, seed);
     expect(pb.lineCountAt(t), said.length);

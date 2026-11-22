@@ -187,10 +187,14 @@ void main() {
             tester.getTopLeft(find.text(enL.matchLiveTable.toUpperCase())).dy,
           ),
         );
+        // Lit for a goal in the last four minutes of our clock, wherever
+        // it stands after the pumps above.
+        final m = screen.liveMinute;
         for (final o in others) {
           expect(
             find.byKey(MatchSummaryTab.freshScoreKey(o.fixture.id)),
-            o.goalsBetween(36, 40).isEmpty ? findsNothing : findsOneWidget,
+            o.goalsBetween(m - 4, m).isEmpty ? findsNothing : findsOneWidget,
+            reason: 'at $m\'',
           );
         }
       }

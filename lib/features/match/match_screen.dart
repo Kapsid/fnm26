@@ -179,6 +179,9 @@ abstract interface class MatchScreenProbe {
   MatchResult? get result;
   MatchViewMode? get mode;
 
+  /// The minute on the match clock.
+  int get liveMinute;
+
   /// The events on show (the score, the Timeline and the stats read these).
   List<MatchEvent> get shownEvents;
 
@@ -404,6 +407,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   MatchResult? get result => _result;
   @override
   MatchViewMode? get mode => _mode;
+
+  @override
+  int get liveMinute => _minute;
   @override
   List<MatchEvent> get shownEvents => [
     for (final e in _result?.events ?? const <MatchEvent>[])

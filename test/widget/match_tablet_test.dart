@@ -82,11 +82,17 @@ void main() {
       tester.getCenter(find.byType(TacticsPitch)).dx,
       greaterThan(score.right),
     );
+    // Short pumps, not settling: the live clock would run on to half time
+    // and its team talk would cover the tabs.
     await tester.tap(find.text(enL.matchTabLineups));
-    await tester.pumpAndSettle();
+    for (var i = 0; i < 10; i++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
     expect(find.byType(TacticsPitch), findsNothing);
     await tester.tap(find.text(enL.matchYourXi));
-    await tester.pumpAndSettle();
+    for (var i = 0; i < 10; i++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
     expect(find.byType(TacticsPitch), findsOneWidget);
     await tester.pumpWidget(const SizedBox());
   });
