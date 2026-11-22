@@ -96,7 +96,9 @@ void main() {
       // same seed must still give the same finals, day for day and goal for
       // goal.
       expect(dump.split('\n'), hasLength(330));
-      expect(fnv(dump), '77fb137c049863fd');
+      // Re-pinned in 1.1.2: the match engine's own changes (keeper errors
+      // among them) move the scores; the schedule, day for day, is the same.
+      expect(fnv(dump), '7444386f862ea5cc');
     },
     timeout: const Timeout(Duration(minutes: 20)),
   );
