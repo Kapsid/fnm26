@@ -467,7 +467,7 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
       ? selected
       : _xiFrom(
           playerPool,
-          bestEleven(playerFormation, playerPool, slots: tactic?.positions),
+          defaultEleven(playerFormation, playerPool, slots: tactic?.positions),
         );
   final startingIds = playerXi.map((p) => p.id).toSet();
   final bench = playerPool.where((p) => !startingIds.contains(p.id)).toList()

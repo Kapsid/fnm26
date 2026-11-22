@@ -705,7 +705,7 @@ extension SeasonRollover on SeasonService {
           careerId,
           Tactic(
             formation: formation,
-            lineup: bestEleven(formation, players),
+            lineup: defaultEleven(formation, players),
           ),
         );
 

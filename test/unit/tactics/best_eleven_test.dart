@@ -198,7 +198,7 @@ void main() {
     });
   });
 
-  group('the eleven is picked as a whole', () {
+  group("defaultEleven: the manager's default keeps each man to his line", () {
     // A squad thin at the back and rich up front: the forwards must start
     // up front and the natural defenders at the back, never a striker at
     // left-back because his slot was filled first.
@@ -269,7 +269,7 @@ void main() {
     ];
 
     test('forwards up front, defenders at the back', () {
-      final xi = bestEleven(Formation.f433, squad);
+      final xi = defaultEleven(Formation.f433, squad);
       final slots = Formation.f433.positions;
       final byId = {for (final p in squad) p.id: p};
       for (var i = 0; i < 11; i++) {
@@ -284,9 +284,56 @@ void main() {
     });
 
     test('a short pool leaves the spare slots empty', () {
-      final xi = bestEleven(Formation.f433, squad.take(8).toList());
+      final xi = defaultEleven(Formation.f433, squad.take(8).toList());
       expect(xi.whereType<int>(), hasLength(8));
       expect(xi.where((id) => id == null), hasLength(3));
+    });
+
+    test('a centre-back may fill in at left-back; a forward may not', () {
+      // No left-back at all: the spare centre-back covers, not a forward.
+      final noLb = [
+        for (final p in squad)
+          if (p.position != PlayerPosition.lb) p,
+        player(
+          id: 105,
+          nationId: 1,
+          position: PlayerPosition.cb,
+          attributes: flatAttributes(60),
+        ),
+      ];
+      final xi = defaultEleven(Formation.f433, noLb);
+      expect(xi[1], 105, reason: 'the left-back slot');
+    });
+
+    test('a line with nobody left takes a midfielder before a forward', () {
+      // Three defenders for a back four: the fourth comes from midfield.
+      final short = [
+        for (final p in squad)
+          if (p.id != 101) p,
+        player(
+          id: 113,
+          nationId: 1,
+          position: PlayerPosition.cm,
+          attributes: flatAttributes(60),
+        ),
+      ];
+      final xi = defaultEleven(Formation.f433, short);
+      final byId = {for (final p in short) p.id: p};
+      final back = [for (var i = 1; i <= 4; i++) byId[xi[i]]!.position];
+      expect(
+        back.where((p) => p.category == PositionCategory.forward),
+        isEmpty,
+      );
+      expect(
+        back.where((p) => p.category == PositionCategory.midfielder),
+        hasLength(1),
+      );
+    });
+
+    test('every other side is still picked exactly as before', () {
+      // bestEleven, unchanged: slot by slot from the back.
+      final xi = bestEleven(Formation.f433, squad);
+      expect(xi[1], 120, reason: 'the old pick took the striker at LB');
     });
   });
 }

@@ -856,7 +856,7 @@ class CampaignService {
     final mine = await careerPoolOf(_ref, career, nationId);
     await tactics.saveTactic(
       career.id,
-      tactic.copyWith(lineup: bestEleven(tactic.formation, mine)),
+      tactic.copyWith(lineup: defaultEleven(tactic.formation, mine)),
     );
   }
 

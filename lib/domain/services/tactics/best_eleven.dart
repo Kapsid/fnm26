@@ -8,20 +8,13 @@ import 'package:fnm/domain/entities/player.dart';
 
 /// Picks the strongest starting XI for [formation] from a [pool] of players.
 ///
-/// Every slot is worth a man's overall, less a penalty for playing out of
-/// position. A natural fits free; another position in the same line (a
-/// centre-back at right-back) costs [sameLinePenalty]; the next line (a
-/// midfielder at full-back, a winger in midfield) [otherLinePenalty]; two
-/// lines away (a striker at the back) [farLinePenalty]; a keeper outfield or
-/// an outfielder in goal [keeperPenalty], so it only happens when no one else
-/// is left. Returns slot→playerId (length 11), with `null` only if the pool is
-/// exhausted.
-///
-/// The eleven is chosen as a whole, for the best total (an assignment, not a
-/// slot at a time). Filled slot by slot from the back, the left-back's slot
-/// took the best forward on the books (85 less a penalty beat a 68-rated
-/// natural) before the forward slots were ever looked at, so a side's best
-/// attackers were started at full-back and centre-back.
+/// Each slot (in order) takes the unused player who scores best for it: his
+/// overall, less a penalty for playing out of position. A natural fits free;
+/// another position in the same line (a centre-back at right-back) costs
+/// [sameLinePenalty]; another line costs [otherLinePenalty]; a keeper outfield
+/// or an outfielder in goal costs [keeperPenalty], so it only happens when no
+/// one else is left. Returns slot→playerId (length 11), with `null` only if
+/// the pool is exhausted.
 ///
 /// It used to take ANY natural before anyone else, whatever his rating, so a
 /// side whose one right-back was a 32-rated boy started him over an 80-rated
@@ -32,6 +25,62 @@ import 'package:fnm/domain/entities/player.dart';
 /// changed within the formation (`Tactic.positions`); null reads
 /// [formation]'s own.
 List<int?> bestEleven(
+  Formation formation,
+  List<Player> pool, {
+  List<PlayerPosition>? slots,
+}) {
+  final available = [...pool]..sort((a, b) => b.overall.compareTo(a.overall));
+  final used = <int>{};
+  final places = slots ?? formation.positions;
+  final picked = List<int?>.filled(11, null);
+
+  for (var i = 0; i < 11; i++) {
+    final wanted = i < places.length ? places[i] : formation.positions[i];
+    Player? pick;
+    var best = double.negativeInfinity;
+    for (final p in available) {
+      if (used.contains(p.id)) continue;
+      final score = p.overall - _misfit(wanted, p.position);
+      // Sorted by overall, so a tie keeps the stronger man.
+      if (score > best) {
+        best = score;
+        pick = p;
+      }
+    }
+    if (pick != null) {
+      picked[i] = pick.id;
+      used.add(pick.id);
+    }
+  }
+  return picked;
+}
+
+/// What playing a man away from his position costs, in rating points.
+const double sameLinePenalty = 4;
+const double otherLinePenalty = 15;
+const double keeperPenalty = 60;
+
+double _misfit(PlayerPosition slot, PlayerPosition own) {
+  if (slot == own) return 0;
+  final keeperInvolved = slot == PlayerPosition.gk || own == PlayerPosition.gk;
+  if (keeperInvolved) return keeperPenalty;
+  return slot.category == own.category ? sameLinePenalty : otherLinePenalty;
+}
+
+/// The manager's own default XI: [bestEleven]'s pick, kept to each man's
+/// line. A slot takes the best of its own line (a centre-back may fill in
+/// at left-back), and a man from another line only once its own has nobody
+/// left (a midfielder before a forward at the back); a keeper never plays
+/// outfield nor an outfielder in goal while anyone else is free. The eleven
+/// is chosen as a whole, for the best total within those lines.
+///
+/// [bestEleven] filled the slots one at a time from the back, so the
+/// left-back's slot took the best forward on the books (85 less 15 beat a
+/// 68-rated natural) before the forward slots were looked at: the manager's
+/// best attackers were started at full-back and centre-back by default.
+/// Every other side's XI is still picked by [bestEleven], exactly as before;
+/// and the manager may still put anyone anywhere himself.
+List<int?> defaultEleven(
   Formation formation,
   List<Player> pool, {
   List<PlayerPosition>? slots,
@@ -50,7 +99,7 @@ List<int?> bestEleven(
   ];
   final score = [
     for (final slot in wanted)
-      [for (final p in players) p.overall - _misfit(slot, p.position)],
+      [for (final p in players) p.overall - _lineMisfit(slot, p.position)],
   ];
   final columns = _bestAssignment(score, players.length);
   return [
@@ -58,21 +107,17 @@ List<int?> bestEleven(
   ];
 }
 
-/// What playing a man away from his position costs, in rating points.
-const double sameLinePenalty = 4;
-const double otherLinePenalty = 15;
-const double farLinePenalty = 30;
-const double keeperPenalty = 60;
-
-double _misfit(PlayerPosition slot, PlayerPosition own) {
+/// [defaultEleven]'s costs: more than any rating gap once a man leaves his
+/// line, so he only does when it is empty.
+double _lineMisfit(PlayerPosition slot, PlayerPosition own) {
   if (slot == own) return 0;
   final keeperInvolved = slot == PlayerPosition.gk || own == PlayerPosition.gk;
-  if (keeperInvolved) return keeperPenalty;
+  if (keeperInvolved) return 400;
   final apart = (_line(slot.category) - _line(own.category)).abs();
   return switch (apart) {
     0 => sameLinePenalty,
-    1 => otherLinePenalty,
-    _ => farLinePenalty,
+    1 => 100,
+    _ => 200,
   };
 }
 

@@ -1192,7 +1192,10 @@ class CareerService {
         .read(tacticsRepositoryProvider)
         .saveTactic(
           career.id,
-          Tactic(formation: formation, lineup: bestEleven(formation, players)),
+          Tactic(
+            formation: formation,
+            lineup: defaultEleven(formation, players),
+          ),
         );
   }
 

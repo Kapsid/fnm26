@@ -552,8 +552,8 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       // mean nothing in it.
       _switches = SlotSwitches.none;
       _comingOff = null;
-      // Short by however many have walked: bestEleven leaves those slots null.
-      _lineup = bestEleven(f, reshapePool(_eligible, _onPitch));
+      // Short by however many have walked: defaultEleven leaves those slots null.
+      _lineup = defaultEleven(f, reshapePool(_eligible, _onPitch));
       // A reshape re-derives the whole XI against a different set of slots, so
       // the lineups remembered under the old shape no longer mean anything:
       // restoring one would put players in positions they were never picked

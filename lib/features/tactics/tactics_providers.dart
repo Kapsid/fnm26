@@ -371,7 +371,7 @@ class TacticService {
     careerId,
     (t, pool) => t.copyWith(
       formation: formation,
-      lineup: bestEleven(formation, pool),
+      lineup: defaultEleven(formation, pool),
       switches: SlotSwitches.none,
     ),
   );
@@ -389,7 +389,7 @@ class TacticService {
           : [...current, ...pool.where((p) => !ids.contains(p.id))];
       return t.copyWith(
         formation: formation,
-        lineup: bestEleven(formation, fitPool),
+        lineup: defaultEleven(formation, fitPool),
         // A reshape is a change of structure; switches reset with it.
         switches: SlotSwitches.none,
       );
@@ -434,7 +434,7 @@ class TacticService {
     final valid = switches.validFor(formation);
     return t.copyWith(
       formation: formation,
-      lineup: bestEleven(formation, pool, slots: valid.apply(formation)),
+      lineup: defaultEleven(formation, pool, slots: valid.apply(formation)),
       instructions: instructions,
       playstyle: PlaystyleX.matching(instructions),
       fullBacks: t.fullBacks.overlaidWith(fullBacks),
@@ -502,7 +502,7 @@ class TacticService {
     LibraryFit? fit;
     await _update(careerId, (t, pool) {
       final switches = library.switches.validFor(library.formation);
-      final lineup = bestEleven(
+      final lineup = defaultEleven(
         library.formation,
         pool,
         slots: switches.apply(library.formation),
@@ -616,7 +616,7 @@ class SquadService {
         await tacticRepo.saveTactic(
           careerId,
           tactic.copyWith(
-            lineup: bestEleven(
+            lineup: defaultEleven(
               tactic.formation,
               squad,
               slots: tactic.positions,
