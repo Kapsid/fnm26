@@ -97,8 +97,9 @@ void main() {
       // goal.
       expect(dump.split('\n'), hasLength(330));
       // Re-pinned in 1.1.2: the match engine's own changes (keeper errors
-      // among them) move the scores; the schedule, day for day, is the same.
-      expect(fnv(dump), '7444386f862ea5cc');
+      // among them) and the wonderkids no academy releases any more move the
+      // scores; the schedule, day for day, is the same.
+      expect(fnv(dump), '16cea9bc59b978d7');
     },
     timeout: const Timeout(Duration(minutes: 20)),
   );

@@ -152,7 +152,9 @@ void main() {
       // mark, nor the later export rule's. Read by a fresh app (container),
       // as an upgraded build opens an old save. The golden was written
       // before club strength existed (and is never rewritten for it): every
-      // club stays where it was.
+      // club stays where it was. Re-pinned once in 1.1.2, for the wonderkids
+      // no academy releases any more: each takes a weak fringe player's
+      // place, and nobody else's row moves.
       await (db.delete(db.drawsWatched)..where(
             (t) =>
                 t.careerId.equals(career.id) &

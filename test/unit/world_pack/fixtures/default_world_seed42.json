@@ -4256,6 +4256,15 @@
    "Shandong Orange",
    "chn"
   ],
+  "10000136": [
+   "Marcel Sans",
+   26,
+   49,
+   42,
+   49,
+   "Cairo Ceramic",
+   "egy"
+  ],
   "10000089": [
    "Carlos Armengol",
    33,
@@ -4273,6 +4282,15 @@
    46,
    "New Taipei Ships FC",
    "tpe"
+  ],
+  "10000141": [
+   "Aniol Font",
+   27,
+   46,
+   46,
+   45,
+   "Zürich Hoppers",
+   "sui"
   ],
   "10000118": [
    "Joan Ayala",
@@ -4301,24 +4319,6 @@
    "Ulsan Tigers",
    "kor"
   ],
-  "10000136": [
-   "Marcel Sans",
-   26,
-   49,
-   42,
-   49,
-   "Cairo Ceramic",
-   "egy"
-  ],
-  "10000141": [
-   "Aniol Font",
-   27,
-   46,
-   46,
-   45,
-   "Zürich Hoppers",
-   "sui"
-  ],
   "10000116": [
    "Marc Marimon",
    30,
@@ -4337,15 +4337,6 @@
    "Stavanger Vikings",
    "nor"
   ],
-  "1002005005": [
-   "Kevin Cadena",
-   22,
-   50,
-   41,
-   43,
-   "Söder Green",
-   "swe"
-  ],
   "10000107": [
    "Ricardo Guàrdia",
    28,
@@ -4354,6 +4345,15 @@
    46,
    "Soweto Chiefs",
    "rsa"
+  ],
+  "1002005005": [
+   "Kevin Cadena",
+   22,
+   50,
+   41,
+   43,
+   "Söder Green",
+   "swe"
   ],
   "218": [
    "Tiago Vicente",
@@ -4391,15 +4391,6 @@
    "Aba Elephants",
    "nga"
   ],
-  "203": [
-   "Domènec Sonejee",
-   33,
-   43,
-   46,
-   41,
-   "Asunción Red-Blue",
-   "par"
-  ],
   "207": [
    "Eduard Marot",
    33,
@@ -4409,23 +4400,14 @@
    "Malmö Sky Blue",
    "swe"
   ],
-  "219": [
-   "Gabriel Gomes",
-   30,
+  "203": [
+   "Domènec Sonejee",
+   33,
    43,
-   44,
-   43,
-   "Asunción Yellow-Black",
+   46,
+   41,
+   "Asunción Red-Blue",
    "par"
-  ],
-  "10000130": [
-   "Santiago Coma",
-   29,
-   44,
-   42,
-   45,
-   "Rabat Sky Blue",
-   "mar"
   ],
   "10000153": [
    "Miquel Anglada",
@@ -4436,6 +4418,15 @@
    "Shandong Orange",
    "chn"
   ],
+  "219": [
+   "Gabriel Gomes",
+   30,
+   43,
+   44,
+   43,
+   "Asunción Yellow-Black",
+   "par"
+  ],
   "1002003000": [
    "Mario Navarro",
    24,
@@ -4444,6 +4435,15 @@
    42,
    "Thessaloniki Yellow",
    "gre"
+  ],
+  "10000130": [
+   "Santiago Coma",
+   29,
+   44,
+   42,
+   45,
+   "Rabat Sky Blue",
+   "mar"
   ],
   "10000138": [
    "Rui Díaz",
@@ -4454,14 +4454,14 @@
    "Tainan Hawks FC",
    "tpe"
   ],
-  "208": [
-   "Pablo Llorens",
-   34,
-   37,
-   49,
-   34,
-   "Zürich Blue-White",
-   "sui"
+  "1002003003": [
+   "Moisés Ribas",
+   24,
+   46,
+   40,
+   40,
+   "Asunción Red-Blue",
+   "par"
   ],
   "1002004004": [
    "Moisés Alaez",
@@ -4472,15 +4472,6 @@
    "Thessaloniki Yellow",
    "gre"
   ],
-  "10000109": [
-   "Adam Alaez",
-   32,
-   40,
-   44,
-   40,
-   "Aarhus White-Blue",
-   "den"
-  ],
   "10000131": [
    "Jofre Silva",
    30,
@@ -4489,6 +4480,15 @@
    38,
    "Kano Pillars",
    "nga"
+  ],
+  "208": [
+   "Pablo Llorens",
+   34,
+   37,
+   49,
+   34,
+   "Zürich Blue-White",
+   "sui"
   ],
   "213": [
    "Mateu Tomàs",
@@ -4499,50 +4499,14 @@
    "Adelaide Red",
    "aus"
   ],
-  "1002003003": [
-   "Moisés Ribas",
-   24,
-   46,
-   40,
-   40,
-   "Asunción Red-Blue",
-   "par"
-  ],
-  "10000103": [
-   "David Planes",
+  "10000109": [
+   "Adam Alaez",
    32,
-   37,
-   46,
-   37,
-   "Jos Plateau FC",
-   "nga"
-  ],
-  "1002008001": [
-   "Oscar Maestre",
-   19,
-   43,
-   41,
    40,
-   "Soweto Pirates",
-   "rsa"
-  ],
-  "10000108": [
-   "Kevin Mas",
-   32,
-   35,
-   47,
-   36,
-   "Piraeus Red-White",
-   "gre"
-  ],
-  "1002003006": [
-   "Daniel Carvalho",
-   24,
-   41,
-   42,
-   37,
-   "Athens Shamrock",
-   "gre"
+   44,
+   40,
+   "Aarhus White-Blue",
+   "den"
   ],
   "1002003002": [
    "David Gallardo",
@@ -4553,6 +4517,51 @@
    "Ayrshire Blue-White",
    "sco"
   ],
+  "10000103": [
+   "David Planes",
+   32,
+   37,
+   46,
+   37,
+   "Jos Plateau FC",
+   "nga"
+  ],
+  "1002003006": [
+   "Daniel Carvalho",
+   24,
+   41,
+   42,
+   37,
+   "Athens Shamrock",
+   "gre"
+  ],
+  "10000108": [
+   "Kevin Mas",
+   32,
+   35,
+   47,
+   36,
+   "Piraeus Red-White",
+   "gre"
+  ],
+  "1002008001": [
+   "Oscar Maestre",
+   19,
+   43,
+   41,
+   40,
+   "Soweto Pirates",
+   "rsa"
+  ],
+  "1002002005": [
+   "Ferran Pla",
+   25,
+   44,
+   36,
+   39,
+   "Gothenburg Angels",
+   "swe"
+  ],
   "10000113": [
    "Lluc Pla",
    32,
@@ -4561,6 +4570,15 @@
    42,
    "Taichung Future FC",
    "tpe"
+  ],
+  "10000133": [
+   "Kevin Tarrés",
+   31,
+   36,
+   43,
+   34,
+   "Ticino Black-White",
+   "sui"
   ],
   "1002008005": [
    "Alexandre Ayala",
@@ -4589,14 +4607,14 @@
    "Aarhus White-Blue",
    "den"
   ],
-  "10000133": [
-   "Kevin Tarrés",
-   31,
-   36,
-   43,
-   34,
-   "Ticino Black-White",
-   "sui"
+  "1002006006": [
+   "Domènec Vales",
+   21,
+   42,
+   40,
+   40,
+   "Ulsan Tigers",
+   "kor"
   ],
   "10000082": [
    "Diego Guiu",
@@ -4607,24 +4625,6 @@
    "Suwon Blue Wings",
    "kor"
   ],
-  "1002006006": [
-   "Domènec Vales",
-   21,
-   42,
-   40,
-   40,
-   "Ulsan Tigers",
-   "kor"
-  ],
-  "1002002005": [
-   "Ferran Pla",
-   25,
-   44,
-   36,
-   39,
-   "Gothenburg Angels",
-   "swe"
-  ],
   "10000111": [
    "Santiago Vidal",
    32,
@@ -4633,6 +4633,33 @@
    35,
    "Taichung Rockers FC",
    "tpe"
+  ],
+  "223": [
+   "Emili Rebés",
+   29,
+   36,
+   42,
+   36,
+   "Chengdu Phoenix",
+   "chn"
+  ],
+  "1002005001": [
+   "Pol Fonseca",
+   22,
+   37,
+   40,
+   40,
+   "Prague Red-White",
+   "cze"
+  ],
+  "1002007000": [
+   "Diego Correia",
+   20,
+   38,
+   41,
+   38,
+   "Tshwane United",
+   "rsa"
   ],
   "210": [
    "Ramon Farré",
@@ -4652,68 +4679,14 @@
    "Jutland Black-Red",
    "den"
   ],
-  "223": [
-   "Emili Rebés",
-   29,
+  "1002006004": [
+   "Cristian Babot",
+   21,
    36,
-   42,
-   36,
-   "Chengdu Phoenix",
-   "chn"
-  ],
-  "1002007000": [
-   "Diego Correia",
-   20,
    38,
-   41,
-   38,
-   "Tshwane United",
-   "rsa"
-  ],
-  "1002005001": [
-   "Pol Fonseca",
-   22,
-   37,
    40,
-   40,
-   "Prague Red-White",
-   "cze"
-  ],
-  "220": [
-   "Kilian Marot",
-   33,
-   34,
-   40,
-   37,
-   "Sagamu Stars",
-   "nga"
-  ],
-  "1002003005": [
-   "Tiago Gallardo",
-   24,
-   40,
-   37,
-   36,
-   "Tyrol Green",
-   "aut"
-  ],
-  "1002004003": [
-   "Aniol Fonseca",
-   23,
-   38,
-   38,
-   41,
-   "Parramatta Wanderers",
-   "aus"
-  ],
-  "10000152": [
-   "Rubén Sonejee",
-   30,
-   36,
-   40,
-   35,
-   "Stockholm Blue-Stripes",
-   "swe"
+   "Silkeborg Green",
+   "den"
   ],
   "1002007001": [
    "Tiago Obiols",
@@ -4723,15 +4696,6 @@
    39,
    "Jeonju Motors",
    "kor"
-  ],
-  "1002006004": [
-   "Cristian Babot",
-   21,
-   36,
-   38,
-   40,
-   "Silkeborg Green",
-   "den"
   ],
   "10000159": [
    "Kevin Iglesias",
@@ -4751,6 +4715,15 @@
    "Limpopo United",
    "rsa"
   ],
+  "10000152": [
+   "Rubén Sonejee",
+   30,
+   36,
+   40,
+   35,
+   "Stockholm Blue-Stripes",
+   "swe"
+  ],
   "10000102": [
    "Unai Roca",
    34,
@@ -4759,6 +4732,42 @@
    37,
    "Casablanca Red",
    "mar"
+  ],
+  "1002003005": [
+   "Tiago Gallardo",
+   24,
+   40,
+   37,
+   36,
+   "Tyrol Green",
+   "aut"
+  ],
+  "220": [
+   "Kilian Marot",
+   33,
+   34,
+   40,
+   37,
+   "Sagamu Stars",
+   "nga"
+  ],
+  "1002004003": [
+   "Aniol Fonseca",
+   23,
+   38,
+   38,
+   41,
+   "Parramatta Wanderers",
+   "aus"
+  ],
+  "10000124": [
+   "Gerard Moles",
+   33,
+   35,
+   41,
+   34,
+   "Guayaquil Yellow",
+   "ecu"
   ],
   "10000121": [
    "Jacob Cervós",
@@ -4777,15 +4786,6 @@
    33,
    "Jos Plateau FC",
    "nga"
-  ],
-  "10000124": [
-   "Gerard Moles",
-   33,
-   35,
-   41,
-   34,
-   "Guayaquil Yellow",
-   "ecu"
   ],
   "1002007002": [
    "Lluís Sala",
@@ -4823,6 +4823,15 @@
    "Rabat Sky Blue",
    "mar"
   ],
+  "1002006001": [
+   "Mateu Nogués",
+   21,
+   34,
+   35,
+   36,
+   "Sangolquí Valley FC",
+   "ecu"
+  ],
   "10000114": [
    "Aaron Escales",
    33,
@@ -4850,6 +4859,24 @@
    "Prague Red-White",
    "cze"
   ],
+  "1002005002": [
+   "Rubén Bernaus",
+   22,
+   33,
+   36,
+   33,
+   "Thessaloniki Black-White",
+   "gre"
+  ],
+  "1002005004": [
+   "Alejandro Machado",
+   22,
+   32,
+   37,
+   31,
+   "Fès Maroon",
+   "mar"
+  ],
   "1002007006": [
    "Alberto Vila",
    20,
@@ -4876,24 +4903,6 @@
    37,
    "Zürich Hoppers",
    "sui"
-  ],
-  "1002005002": [
-   "Rubén Bernaus",
-   22,
-   33,
-   36,
-   33,
-   "Thessaloniki Black-White",
-   "gre"
-  ],
-  "1002005004": [
-   "Alejandro Machado",
-   22,
-   32,
-   37,
-   31,
-   "Fès Maroon",
-   "mar"
   ],
   "1002009000": [
    "Kilian Llovera",
@@ -4976,6 +4985,15 @@
    "Gothenburg Angels",
    "swe"
   ],
+  "10000098": [
+   "Ramon Serra",
+   41,
+   24,
+   37,
+   23,
+   "Pretoria Brazilians",
+   "rsa"
+  ],
   "1002008003": [
    "Kilian Farré",
    19,
@@ -5003,15 +5021,6 @@
    "Guayaquil Yellow",
    "ecu"
   ],
-  "10000098": [
-   "Ramon Serra",
-   41,
-   24,
-   37,
-   23,
-   "Pretoria Brazilians",
-   "rsa"
-  ],
   "1002010001": [
    "Marcel Pinto",
    17,
@@ -5020,15 +5029,6 @@
    36,
    "Shandong Orange",
    "chn"
-  ],
-  "10000096": [
-   "Daniel Rodrigues",
-   37,
-   24,
-   35,
-   24,
-   "Asunción Red-Blue",
-   "par"
   ],
   "10000143": [
    "Roger Llorens",
@@ -5039,14 +5039,14 @@
    "Pretoria Brazilians",
    "rsa"
   ],
-  "1002010004": [
-   "Diego Carvalho",
-   17,
-   30,
-   26,
-   29,
-   "Jutland Black-Red",
-   "den"
+  "10000096": [
+   "Daniel Rodrigues",
+   37,
+   24,
+   35,
+   24,
+   "Asunción Red-Blue",
+   "par"
   ],
   "10000155": [
    "Diego Riera",
@@ -5056,6 +5056,15 @@
    23,
    "Jos Plateau FC",
    "nga"
+  ],
+  "1002010004": [
+   "Diego Carvalho",
+   17,
+   30,
+   26,
+   29,
+   "Jutland Black-Red",
+   "den"
   ],
   "214": [
    "Lluc Ribas",
@@ -5111,6 +5120,15 @@
    "Casablanca Green",
    "mar"
   ],
+  "1002009001": [
+   "Kilian Vales",
+   18,
+   23,
+   21,
+   29,
+   "Luque Blue-White",
+   "par"
+  ],
   "10000154": [
    "Aleix Casals",
    37,
@@ -5118,6 +5136,15 @@
    25,
    20,
    "Shanghai Blue",
+   "chn"
+  ],
+  "1002010005": [
+   "Enric Pinto",
+   17,
+   24,
+   22,
+   20,
+   "Beijing Green",
    "chn"
   ],
   "1002010006": [
@@ -5129,23 +5156,14 @@
    "Stockholm Black-Gold",
    "swe"
   ],
-  "1002010005": [
-   "Enric Pinto",
-   17,
-   24,
-   22,
-   20,
-   "Beijing Green",
-   "chn"
-  ],
-  "1002009001": [
-   "Kilian Vales",
-   18,
-   23,
+  "1002012005": [
+   "Aaron Torres",
+   15,
    21,
-   29,
-   "Luque Blue-White",
-   "par"
+   21,
+   20,
+   "Limpopo United",
+   "rsa"
   ],
   "1002010002": [
    "Sergio Dolset",
@@ -5156,32 +5174,14 @@
    "Taipei Rainy Bank FC",
    "tpe"
   ],
-  "1002012005": [
-   "Aaron Torres",
-   15,
-   21,
-   21,
-   20,
-   "Limpopo United",
-   "rsa"
-  ],
-  "1002011003": [
-   "Gabriel Rossell",
-   16,
+  "1002010003": [
+   "Moisés Llovera",
+   17,
    20,
    20,
    20,
-   "Shandong Orange",
-   "chn"
-  ],
-  "1002012006": [
-   "Hugo Guiu",
-   15,
-   20,
-   20,
-   20,
-   "Sagamu Stars",
-   "nga"
+   "Borås Yellow-Black",
+   "swe"
   ],
   "1002011006": [
    "Roc Bernaus",
@@ -5237,14 +5237,23 @@
    "Seoul Red-Black",
    "kor"
   ],
-  "1002010003": [
-   "Moisés Llovera",
-   17,
+  "1002012006": [
+   "Hugo Guiu",
+   15,
    20,
    20,
    20,
-   "Borås Yellow-Black",
-   "swe"
+   "Sagamu Stars",
+   "nga"
+  ],
+  "1002011003": [
+   "Gabriel Rossell",
+   16,
+   20,
+   20,
+   20,
+   "Shandong Orange",
+   "chn"
   ]
  },
  "2/youth/0": {
@@ -5898,15 +5907,6 @@
    "Brussels Purple",
    "bel"
   ],
-  "10000641": [
-   "Jerko Jozić",
-   32,
-   87,
-   87,
-   92,
-   "Vigo Sky Blue",
-   "esp"
-  ],
   "10000653": [
    "Krunoslav Knežević",
    24,
@@ -5915,6 +5915,15 @@
    90,
    "Groningen Green-White",
    "ned"
+  ],
+  "10000641": [
+   "Jerko Jozić",
+   32,
+   87,
+   87,
+   92,
+   "Vigo Sky Blue",
+   "esp"
   ],
   "10000651": [
    "Kristijan Rukavina",
@@ -5961,14 +5970,14 @@
    "Heidenheim Red-Blue",
    "ger"
   ],
-  "10000662": [
-   "Matija Knežević",
-   27,
-   84,
+  "10000667": [
+   "Dominik Marić",
+   29,
+   85,
    85,
    87,
-   "Genoa Blue-Ring",
-   "ita"
+   "North London Red",
+   "eng"
   ],
   "1003": [
    "Petar Petrović",
@@ -5997,15 +6006,6 @@
    "Catalan Parrots",
    "esp"
   ],
-  "10000667": [
-   "Dominik Marić",
-   29,
-   85,
-   85,
-   87,
-   "North London Red",
-   "eng"
-  ],
   "10000652": [
    "Grgur Anić",
    27,
@@ -6014,6 +6014,24 @@
    84,
    "Seville Red",
    "esp"
+  ],
+  "10000662": [
+   "Matija Knežević",
+   27,
+   84,
+   85,
+   87,
+   "Genoa Blue-Ring",
+   "ita"
+  ],
+  "10000645": [
+   "Neven Kos",
+   23,
+   84,
+   82,
+   88,
+   "Berlin Blue-White",
+   "ger"
   ],
   "10000642": [
    "Niko Gudelj",
@@ -6033,15 +6051,6 @@
    "Brest Pirates",
    "fra"
   ],
-  "10000645": [
-   "Neven Kos",
-   23,
-   84,
-   82,
-   88,
-   "Berlin Blue-White",
-   "ger"
-  ],
   "10000646": [
    "Dominik Klarić",
    25,
@@ -6060,15 +6069,6 @@
    "Sivas Red-White",
    "tur"
   ],
-  "10000679": [
-   "Leon Zorić",
-   30,
-   84,
-   82,
-   83,
-   "Brentside Bees",
-   "eng"
-  ],
   "10000647": [
    "Šime Čizmić",
    32,
@@ -6078,14 +6078,23 @@
    "Cádiz Coast",
    "esp"
   ],
-  "10000664": [
-   "Jere Barbarić",
-   23,
-   80,
+  "10000679": [
+   "Leon Zorić",
+   30,
    84,
    82,
-   "Thessaloniki Black-White",
-   "gre"
+   83,
+   "Brentside Bees",
+   "eng"
+  ],
+  "1008": [
+   "Goran Maras",
+   22,
+   79,
+   83,
+   82,
+   "Kashima Deer",
+   "jpn"
   ],
   "10000672": [
    "Sandro Brajković",
@@ -6096,6 +6105,15 @@
    "North London Red",
    "eng"
   ],
+  "10000664": [
+   "Jere Barbarić",
+   23,
+   80,
+   84,
+   82,
+   "Thessaloniki Black-White",
+   "gre"
+  ],
   "10000669": [
    "Pavao Hrstić",
    22,
@@ -6104,15 +6122,6 @@
    78,
    "Montpellier Orange-Blue",
    "fra"
-  ],
-  "1008": [
-   "Goran Maras",
-   22,
-   79,
-   83,
-   82,
-   "Kashima Deer",
-   "jpn"
   ],
   "10000655": [
    "Stjepan Lukić",
@@ -6141,14 +6150,14 @@
    "Bergamo Black-Blue",
    "ita"
   ],
-  "10000658": [
-   "Mateo Krznarić",
-   28,
-   80,
+  "10000673": [
+   "Bartol Jerković",
+   31,
+   81,
    78,
-   84,
-   "Fortaleza Lions",
-   "bra"
+   83,
+   "Adana Navy",
+   "tur"
   ],
   "10000654": [
    "Ilija Sever",
@@ -6159,6 +6168,15 @@
    "Bruges Green",
    "bel"
   ],
+  "10000658": [
+   "Mateo Krznarić",
+   28,
+   80,
+   78,
+   84,
+   "Fortaleza Lions",
+   "bra"
+  ],
   "10000668": [
    "Bruno Tkalčić",
    33,
@@ -6167,24 +6185,6 @@
    77,
    "Angers Black-White",
    "fra"
-  ],
-  "10000673": [
-   "Bartol Jerković",
-   31,
-   81,
-   78,
-   83,
-   "Adana Navy",
-   "tur"
-  ],
-  "1014": [
-   "Dominik Stanić",
-   31,
-   80,
-   77,
-   83,
-   "Palace Eagles",
-   "eng"
   ],
   "1011": [
    "Stjepan Župan",
@@ -6195,6 +6195,15 @@
    "Famalicão Blue-White",
    "por"
   ],
+  "1014": [
+   "Dominik Stanić",
+   31,
+   80,
+   77,
+   83,
+   "Palace Eagles",
+   "eng"
+  ],
   "1009": [
    "Robert Matić",
    20,
@@ -6203,42 +6212,6 @@
    79,
    "Marseille White",
    "fra"
-  ],
-  "10000684": [
-   "Matija Perković",
-   32,
-   78,
-   79,
-   76,
-   "Vallecas Lightning",
-   "esp"
-  ],
-  "10000656": [
-   "Denis Jukić",
-   23,
-   79,
-   77,
-   79,
-   "Glasgow Blue",
-   "sco"
-  ],
-  "1015": [
-   "Jure Pavić",
-   31,
-   78,
-   75,
-   82,
-   "Boca Blue-Gold",
-   "arg"
-  ],
-  "10000661": [
-   "Bartol Kovačić",
-   21,
-   75,
-   76,
-   83,
-   "Bologna Red-Blue",
-   "ita"
   ],
   "10000649": [
    "Bartol Kos",
@@ -6249,32 +6222,50 @@
    "Turin Stripes",
    "ita"
   ],
-  "1020": [
-   "Goran Obad",
-   26,
-   74,
-   76,
-   80,
-   "Cyclone FC",
+  "1015": [
+   "Jure Pavić",
+   31,
+   78,
+   75,
+   82,
+   "Boca Blue-Gold",
    "arg"
   ],
-  "10000663": [
-   "Silvio Anić",
-   22,
-   80,
-   75,
-   79,
-   "Athens Shamrock",
-   "gre"
-  ],
-  "1017": [
-   "Pero Martinović",
-   30,
-   73,
+  "10000684": [
+   "Matija Perković",
+   32,
    78,
    79,
-   "Tijuana Hounds",
-   "mex"
+   76,
+   "Vallecas Lightning",
+   "esp"
+  ],
+  "10000661": [
+   "Bartol Kovačić",
+   21,
+   75,
+   76,
+   83,
+   "Bologna Red-Blue",
+   "ita"
+  ],
+  "10000656": [
+   "Denis Jukić",
+   23,
+   79,
+   77,
+   79,
+   "Glasgow Blue",
+   "sco"
+  ],
+  "10000676": [
+   "Slaven Musa",
+   23,
+   78,
+   75,
+   82,
+   "St. Gallen Green-White",
+   "sui"
   ],
   "1019": [
    "Dominik Kovač",
@@ -6285,13 +6276,49 @@
    "Chelston Blue",
    "eng"
   ],
-  "10000676": [
-   "Slaven Musa",
-   23,
-   78,
+  "10000663": [
+   "Silvio Anić",
+   22,
+   80,
    75,
-   82,
-   "St. Gallen Green-White",
+   79,
+   "Athens Shamrock",
+   "gre"
+  ],
+  "1020": [
+   "Goran Obad",
+   26,
+   74,
+   76,
+   80,
+   "Cyclone FC",
+   "arg"
+  ],
+  "1017": [
+   "Pero Martinović",
+   30,
+   73,
+   78,
+   79,
+   "Tijuana Hounds",
+   "mex"
+  ],
+  "10000682": [
+   "Alan Šimić",
+   30,
+   77,
+   78,
+   73,
+   "Bogotá Cardinals",
+   "col"
+  ],
+  "10000696": [
+   "Leon Hrstić",
+   26,
+   78,
+   74,
+   76,
+   "Lucerne Blue-White",
    "sui"
   ],
   "10000671": [
@@ -6303,23 +6330,14 @@
    "Sardinia Red-Blue",
    "ita"
   ],
-  "10000696": [
-   "Leon Hrstić",
-   26,
-   78,
+  "10000692": [
+   "Pavle Bilić",
+   27,
    74,
-   76,
-   "Lucerne Blue-White",
-   "sui"
-  ],
-  "10000682": [
-   "Alan Šimić",
-   30,
-   77,
-   78,
-   73,
-   "Bogotá Cardinals",
-   "col"
+   72,
+   80,
+   "Suwon Blue Wings",
+   "kor"
   ],
   "10000683": [
    "Jakov Franjić",
@@ -6330,15 +6348,6 @@
    "Dortmund Yellow",
    "ger"
   ],
-  "10000692": [
-   "Pavle Bilić",
-   27,
-   74,
-   72,
-   80,
-   "Suwon Blue Wings",
-   "kor"
-  ],
   "10000688": [
    "Slaven Žagar",
    25,
@@ -6348,23 +6357,14 @@
    "Rabat Army FC",
    "mar"
   ],
-  "1021": [
-   "Ivan Barišić",
-   29,
-   78,
+  "10000685": [
+   "Grgur Šimić",
+   22,
+   77,
+   74,
    73,
-   68,
-   "Athens Shamrock",
-   "gre"
-  ],
-  "1001": [
-   "Vedran Perković",
-   34,
-   78,
-   73,
-   72,
-   "Nice Eagles",
-   "fra"
+   "Man Red",
+   "eng"
   ],
   "10000693": [
    "Davor Bošnjak",
@@ -6375,14 +6375,32 @@
    "Tijuana Hounds",
    "mex"
   ],
-  "10000685": [
-   "Grgur Šimić",
-   22,
-   77,
-   74,
+  "1001": [
+   "Vedran Perković",
+   34,
+   78,
    73,
-   "Man Red",
-   "eng"
+   72,
+   "Nice Eagles",
+   "fra"
+  ],
+  "1021": [
+   "Ivan Barišić",
+   29,
+   78,
+   73,
+   68,
+   "Athens Shamrock",
+   "gre"
+  ],
+  "10000698": [
+   "Duje Čizmić",
+   24,
+   71,
+   73,
+   75,
+   "Luque Blue-White",
+   "par"
   ],
   "10000666": [
    "Damir Novosel",
@@ -6411,15 +6429,6 @@
    "Girona Red-White",
    "esp"
   ],
-  "10000698": [
-   "Duje Čizmić",
-   24,
-   71,
-   73,
-   75,
-   "Luque Blue-White",
-   "par"
-  ],
   "10000691": [
    "Ivica Kos",
    31,
@@ -6428,15 +6437,6 @@
    77,
    "Arnhem Yellow-Black",
    "ned"
-  ],
-  "10000650": [
-   "Dominik Kos",
-   18,
-   72,
-   72,
-   73,
-   "Philadelphia Snakes",
-   "usa"
   ],
   "10000665": [
    "Neven Nikolić",
@@ -6447,14 +6447,23 @@
    "Cairo Red",
    "egy"
   ],
-  "1018": [
-   "Krešimir Čizmić",
-   18,
+  "10000680": [
+   "Tihomir Orešković",
+   21,
    72,
    71,
-   74,
-   "Guadalajara Goats",
-   "mex"
+   72,
+   "Sassuolo Green-Black",
+   "ita"
+  ],
+  "10000650": [
+   "Dominik Kos",
+   18,
+   72,
+   72,
+   73,
+   "Philadelphia Snakes",
+   "usa"
   ],
   "1022": [
    "Nino Tadić",
@@ -6465,68 +6474,14 @@
    "Ulsan Tigers",
    "kor"
   ],
-  "10000680": [
-   "Tihomir Orešković",
-   21,
-   72,
-   71,
-   72,
-   "Sassuolo Green-Black",
-   "ita"
-  ],
-  "10000701": [
-   "Antonio Pavlović",
-   25,
-   70,
-   70,
-   75,
-   "Casablanca Red",
-   "mar"
-  ],
-  "10000700": [
-   "Davor Sertić",
-   25,
-   73,
-   71,
-   68,
-   "Jeonju Motors",
-   "kor"
-  ],
-  "1012": [
-   "Jure Vidaković",
-   32,
-   76,
-   69,
-   72,
-   "Lucerne Blue-White",
-   "sui"
-  ],
-  "10000670": [
-   "Jozo Pavić",
+  "1018": [
+   "Krešimir Čizmić",
    18,
-   69,
-   73,
-   70,
-   "Brighton Seagulls",
-   "eng"
-  ],
-  "10000677": [
-   "Dario Franjić",
-   22,
+   72,
    71,
-   71,
-   71,
-   "Emerald City FC",
-   "usa"
-  ],
-  "10000686": [
-   "Hrvoje Obad",
-   19,
-   71,
-   70,
    74,
-   "Chelston Blue",
-   "eng"
+   "Guadalajara Goats",
+   "mex"
   ],
   "10000695": [
    "Jurica Musa",
@@ -6537,6 +6492,60 @@
    "Gulf Coast FC",
    "ksa"
   ],
+  "10000686": [
+   "Hrvoje Obad",
+   19,
+   71,
+   70,
+   74,
+   "Chelston Blue",
+   "eng"
+  ],
+  "10000701": [
+   "Antonio Pavlović",
+   25,
+   70,
+   70,
+   75,
+   "Casablanca Red",
+   "mar"
+  ],
+  "1012": [
+   "Jure Vidaković",
+   32,
+   76,
+   69,
+   72,
+   "Lucerne Blue-White",
+   "sui"
+  ],
+  "10000677": [
+   "Dario Franjić",
+   22,
+   71,
+   71,
+   71,
+   "Emerald City FC",
+   "usa"
+  ],
+  "10000700": [
+   "Davor Sertić",
+   25,
+   73,
+   71,
+   68,
+   "Jeonju Motors",
+   "kor"
+  ],
+  "10000670": [
+   "Jozo Pavić",
+   18,
+   69,
+   73,
+   70,
+   "Brighton Seagulls",
+   "eng"
+  ],
   "10000687": [
    "Bruno Jelić",
    23,
@@ -6546,15 +6555,6 @@
    "Port Harcourt United",
    "nga"
   ],
-  "10000675": [
-   "Lovro Lukić",
-   18,
-   73,
-   69,
-   70,
-   "Como Lake FC",
-   "ita"
-  ],
   "1023": [
    "Jurica Petrović",
    33,
@@ -6563,6 +6563,15 @@
    67,
    "Mainz Carnival",
    "ger"
+  ],
+  "10000675": [
+   "Lovro Lukić",
+   18,
+   73,
+   69,
+   70,
+   "Como Lake FC",
+   "ita"
   ],
   "10000702": [
    "Kruno Barbarić",
@@ -6582,23 +6591,14 @@
    "Porto Chequers",
    "por"
   ],
-  "1010002004": [
-   "Tonči Rogić",
-   17,
-   71,
-   69,
-   65,
-   "Cyclone FC",
-   "arg"
-  ],
-  "10000694": [
-   "Bruno Fabijanić",
-   20,
-   70,
-   68,
-   70,
-   "Rhine Red-Black",
-   "ger"
+  "10000714": [
+   "Davor Marić",
+   31,
+   72,
+   66,
+   73,
+   "Linz Black-White",
+   "aut"
   ],
   "1016": [
    "Branimir Marić",
@@ -6618,6 +6618,33 @@
    "Berkane Orange",
    "mar"
   ],
+  "10000694": [
+   "Bruno Fabijanić",
+   20,
+   70,
+   68,
+   70,
+   "Rhine Red-Black",
+   "ger"
+  ],
+  "10000717": [
+   "Dino Matić",
+   30,
+   68,
+   71,
+   68,
+   "Cincinnati Orange-Blue",
+   "usa"
+  ],
+  "1010002004": [
+   "Tonči Rogić",
+   17,
+   71,
+   69,
+   65,
+   "Cyclone FC",
+   "arg"
+  ],
   "10000707": [
    "Krunoslav Jurković",
    27,
@@ -6635,24 +6662,6 @@
    68,
    "Brøndby Yellow",
    "den"
-  ],
-  "10000714": [
-   "Davor Marić",
-   31,
-   72,
-   66,
-   73,
-   "Linz Black-White",
-   "aut"
-  ],
-  "10000717": [
-   "Dino Matić",
-   30,
-   68,
-   71,
-   68,
-   "Cincinnati Orange-Blue",
-   "usa"
   ],
   "10000699": [
    "Niko Jerković",
@@ -6699,15 +6708,6 @@
    "Casablanca Green",
    "mar"
   ],
-  "10000711": [
-   "Damir Cindrić",
-   29,
-   68,
-   64,
-   72,
-   "Rio Flamingos",
-   "bra"
-  ],
   "10000716": [
    "Mario Zorić",
    32,
@@ -6717,23 +6717,14 @@
    "Estoril Coast",
    "por"
   ],
-  "10000674": [
-   "Davor Tolić",
-   19,
-   66,
-   66,
-   67,
-   "Ibagué Gold",
-   "col"
-  ],
-  "10000706": [
-   "Matija Vidaković",
-   28,
-   69,
-   67,
-   63,
-   "Rabat Sky Blue",
-   "mar"
+  "10000711": [
+   "Damir Cindrić",
+   29,
+   68,
+   64,
+   72,
+   "Rio Flamingos",
+   "bra"
   ],
   "10000705": [
    "Pero Maras",
@@ -6744,6 +6735,15 @@
    "Fès Maroon",
    "mar"
   ],
+  "10000674": [
+   "Davor Tolić",
+   19,
+   66,
+   66,
+   67,
+   "Ibagué Gold",
+   "col"
+  ],
   "1013": [
    "Alen Čačić",
    33,
@@ -6752,6 +6752,15 @@
    63,
    "Giza Pyramids FC",
    "egy"
+  ],
+  "10000706": [
+   "Matija Vidaković",
+   28,
+   69,
+   67,
+   63,
+   "Rabat Sky Blue",
+   "mar"
   ],
   "1010003003": [
    "Pero Kovačević",
@@ -6762,24 +6771,6 @@
    "Thessaloniki Black-White",
    "gre"
   ],
-  "1010003002": [
-   "Vedran Bilobrk",
-   16,
-   64,
-   60,
-   67,
-   "Berlin Iron",
-   "ger"
-  ],
-  "10000715": [
-   "Zoran Kovačević",
-   29,
-   64,
-   63,
-   63,
-   "Zürich Hoppers",
-   "sui"
-  ],
   "10000719": [
    "Pavle Barbarić",
    34,
@@ -6788,6 +6779,15 @@
    68,
    "Soweto Chiefs",
    "rsa"
+  ],
+  "1010003002": [
+   "Vedran Bilobrk",
+   16,
+   64,
+   60,
+   67,
+   "Berlin Iron",
+   "ger"
   ],
   "10000690": [
    "Rafael Cindrić",
@@ -6798,14 +6798,14 @@
    "Port Said Green",
    "egy"
   ],
-  "10000697": [
-   "Nikša Kovač",
-   18,
-   65,
+  "10000715": [
+   "Zoran Kovačević",
+   29,
+   64,
    63,
-   59,
-   "Man Blue",
-   "eng"
+   63,
+   "Zürich Hoppers",
+   "sui"
   ],
   "1010003001": [
    "Petar Cindrić",
@@ -6815,6 +6815,15 @@
    65,
    "Istanbul Lions",
    "tur"
+  ],
+  "10000697": [
+   "Nikša Kovač",
+   18,
+   65,
+   63,
+   59,
+   "Man Blue",
+   "eng"
   ],
   "10000710": [
    "Vjeran Milić",
@@ -6860,6 +6869,15 @@
    56,
    "Edinburgh Maroon",
    "sco"
+  ],
+  "1010002006": [
+   "Gabrijel Stanić",
+   17,
+   53,
+   54,
+   52,
+   "Melbourne Sky Blue",
+   "aus"
   ],
   "1010004000": [
    "Domagoj Nekić",
@@ -7061,15 +7079,6 @@
    "Toulouse Violets",
    "fra"
   ],
-  "10000675": [
-   "Lovro Lukić",
-   26,
-   87,
-   83,
-   84,
-   "Como Lake FC",
-   "ita"
-  ],
   "1004": [
    "Zoran Šunjić",
    31,
@@ -7096,6 +7105,15 @@
    84,
    "Elland Whites",
    "eng"
+  ],
+  "10000675": [
+   "Lovro Lukić",
+   26,
+   87,
+   83,
+   84,
+   "Como Lake FC",
+   "ita"
   ],
   "1008": [
    "Goran Maras",
@@ -7133,15 +7151,6 @@
    "Bochum Blue-White",
    "ger"
   ],
-  "10000686": [
-   "Hrvoje Obad",
-   27,
-   82,
-   81,
-   85,
-   "Black Sea Storm",
-   "tur"
-  ],
   "1010003001": [
    "Petar Cindrić",
    24,
@@ -7150,6 +7159,15 @@
    86,
    "Brussels Purple",
    "bel"
+  ],
+  "10000686": [
+   "Hrvoje Obad",
+   27,
+   82,
+   81,
+   85,
+   "Black Sea Storm",
+   "tur"
   ],
   "1005": [
    "Alen Anić",
@@ -7160,15 +7178,6 @@
    "Cincinnati Orange-Blue",
    "usa"
   ],
-  "1010005000": [
-   "Bruno Bošnjak",
-   22,
-   79,
-   82,
-   79,
-   "Jeddah Green",
-   "ksa"
-  ],
   "1007": [
    "Grgur Kolar",
    34,
@@ -7177,6 +7186,15 @@
    77,
    "Hollywood Galaxy",
    "usa"
+  ],
+  "1010005000": [
+   "Bruno Bošnjak",
+   22,
+   79,
+   82,
+   79,
+   "Jeddah Green",
+   "ksa"
   ],
   "10000660": [
    "Igor Dragić",
@@ -7214,15 +7232,6 @@
    "Paris Blue",
    "fra"
   ],
-  "1010004001": [
-   "Marino Radman",
-   23,
-   78,
-   79,
-   83,
-   "Tyrol Green",
-   "aut"
-  ],
   "10000678": [
    "Roko Kranjec",
    29,
@@ -7231,6 +7240,15 @@
    79,
    "Antalya Coast",
    "tur"
+  ],
+  "1010004001": [
+   "Marino Radman",
+   23,
+   78,
+   79,
+   83,
+   "Tyrol Green",
+   "aut"
   ],
   "10000646": [
    "Dominik Klarić",
@@ -7277,14 +7295,23 @@
    "Guimarães White-Black",
    "por"
   ],
-  "10000680": [
-   "Tihomir Orešković",
-   29,
+  "10000683": [
+   "Jakov Franjić",
+   30,
    77,
-   77,
-   77,
-   "Kadıköy Canaries",
+   75,
+   81,
+   "Black Sea Storm",
    "tur"
+  ],
+  "1010002000": [
+   "Zvonimir Tomić",
+   25,
+   76,
+   77,
+   76,
+   "Cairo Ceramic",
+   "egy"
   ],
   "10000676": [
    "Slaven Musa",
@@ -7295,6 +7322,15 @@
    "Man Red",
    "eng"
   ],
+  "10000680": [
+   "Tihomir Orešković",
+   29,
+   77,
+   77,
+   77,
+   "Kadıköy Canaries",
+   "tur"
+  ],
   "10000662": [
    "Matija Knežević",
    35,
@@ -7303,15 +7339,6 @@
    73,
    "Rhine Red-Black",
    "ger"
-  ],
-  "10000683": [
-   "Jakov Franjić",
-   30,
-   77,
-   75,
-   81,
-   "Black Sea Storm",
-   "tur"
   ],
   "10000685": [
    "Grgur Šimić",
@@ -7331,15 +7358,6 @@
    "Elland Whites",
    "eng"
   ],
-  "10000694": [
-   "Bruno Fabijanić",
-   28,
-   78,
-   76,
-   78,
-   "Rhine Red-Black",
-   "ger"
-  ],
   "10000674": [
    "Davor Tolić",
    27,
@@ -7358,23 +7376,14 @@
    "Boca Blue-Gold",
    "arg"
   ],
-  "1010002000": [
-   "Zvonimir Tomić",
-   25,
+  "10000694": [
+   "Bruno Fabijanić",
+   28,
+   78,
    76,
-   77,
-   76,
-   "Cairo Ceramic",
-   "egy"
-  ],
-  "10000642": [
-   "Niko Gudelj",
-   35,
-   73,
-   77,
-   76,
-   "Bruges Green",
-   "bel"
+   78,
+   "Rhine Red-Black",
+   "ger"
   ],
   "10000702": [
    "Kruno Barbarić",
@@ -7385,24 +7394,6 @@
    "Porto Alegre Blue-Black",
    "bra"
   ],
-  "10000697": [
-   "Nikša Kovač",
-   26,
-   79,
-   77,
-   73,
-   "Cairo Red",
-   "egy"
-  ],
-  "10000648": [
-   "Dominik Novosel",
-   35,
-   71,
-   83,
-   67,
-   "Monte Carlo FC",
-   "fra"
-  ],
   "1010003000": [
    "Dominik Ivančić",
    24,
@@ -7411,6 +7402,24 @@
    77,
    "Riyadh Crescent",
    "ksa"
+  ],
+  "10000642": [
+   "Niko Gudelj",
+   35,
+   73,
+   77,
+   76,
+   "Bruges Green",
+   "bel"
+  ],
+  "10000697": [
+   "Nikša Kovač",
+   26,
+   79,
+   77,
+   73,
+   "Cairo Red",
+   "egy"
   ],
   "10000703": [
    "Marin Novak",
@@ -7421,14 +7430,14 @@
    "Limpopo United",
    "rsa"
   ],
-  "10000710": [
-   "Vjeran Milić",
-   26,
-   72,
-   77,
-   75,
-   "Belo Horizonte Roosters",
-   "bra"
+  "10000648": [
+   "Dominik Novosel",
+   35,
+   71,
+   83,
+   67,
+   "Monte Carlo FC",
+   "fra"
   ],
   "1010004000": [
    "Domagoj Nekić",
@@ -7439,14 +7448,23 @@
    "Nijmegen Red",
    "ned"
   ],
-  "10000677": [
-   "Dario Franjić",
-   30,
+  "1010007000": [
+   "Tihomir Salopek",
+   20,
+   74,
+   76,
+   73,
+   "Rosario Blue-Yellow",
+   "arg"
+  ],
+  "10000710": [
+   "Vjeran Milić",
+   26,
    72,
+   77,
    75,
-   72,
-   "Milan Red",
-   "ita"
+   "Belo Horizonte Roosters",
+   "bra"
   ],
   "10000690": [
    "Rafael Cindrić",
@@ -7457,14 +7475,14 @@
    "Amsterdam Red-White",
    "ned"
   ],
-  "1010008004": [
-   "Petar Jozić",
-   19,
-   74,
+  "10000677": [
+   "Dario Franjić",
+   30,
    72,
+   75,
    72,
-   "Rio Ave Green-White",
-   "por"
+   "Milan Red",
+   "ita"
   ],
   "10000667": [
    "Dominik Marić",
@@ -7484,14 +7502,14 @@
    "Kobe Crimson",
    "jpn"
   ],
-  "10000688": [
-   "Slaven Žagar",
-   33,
-   69,
-   73,
-   73,
-   "Alpha Olomouc",
-   "cze"
+  "1010008004": [
+   "Petar Jozić",
+   19,
+   74,
+   72,
+   72,
+   "Rio Ave Green-White",
+   "por"
   ],
   "10000704": [
    "Anton Ilić",
@@ -7502,14 +7520,14 @@
    "Avellaneda Sky-Blue",
    "arg"
   ],
-  "1020": [
-   "Goran Obad",
-   34,
-   64,
-   75,
-   70,
-   "Eindhoven Bulbs",
-   "ned"
+  "10000688": [
+   "Slaven Žagar",
+   33,
+   69,
+   73,
+   73,
+   "Alpha Olomouc",
+   "cze"
   ],
   "10000698": [
    "Duje Čizmić",
@@ -7520,32 +7538,14 @@
    "Port Harcourt United",
    "nga"
   ],
-  "10000687": [
-   "Bruno Jelić",
-   31,
-   68,
-   71,
-   69,
-   "Cairo Red",
-   "egy"
-  ],
-  "10000696": [
-   "Leon Hrstić",
+  "1020": [
+   "Goran Obad",
    34,
-   68,
-   73,
-   66,
-   "Lucerne Blue-White",
-   "sui"
-  ],
-  "1010007004": [
-   "Marino Lukić",
-   20,
+   64,
+   75,
    70,
-   69,
-   70,
-   "Guimarães White-Black",
-   "por"
+   "Eindhoven Bulbs",
+   "ned"
   ],
   "1010006000": [
    "Zlatko Vuković",
@@ -7556,23 +7556,32 @@
    "Crete Black-White",
    "gre"
   ],
-  "10000679": [
-   "Leon Zorić",
-   38,
-   62,
-   74,
-   61,
-   "Solent Saints",
-   "eng"
+  "10000696": [
+   "Leon Hrstić",
+   34,
+   68,
+   73,
+   66,
+   "Lucerne Blue-White",
+   "sui"
   ],
-  "10000713": [
-   "Fran Stanić",
-   30,
+  "10000687": [
+   "Bruno Jelić",
+   31,
+   68,
    71,
    69,
-   67,
-   "Casablanca Red",
-   "mar"
+   "Cairo Red",
+   "egy"
+  ],
+  "1010007004": [
+   "Marino Lukić",
+   20,
+   70,
+   69,
+   70,
+   "Guimarães White-Black",
+   "por"
   ],
   "1010003005": [
    "Marin Žanić",
@@ -7583,23 +7592,32 @@
    "Asunción Yellow-Black",
    "par"
   ],
-  "1010008006": [
-   "Ivica Matković",
-   19,
-   65,
-   69,
-   68,
-   "Barranquilla Sharks",
-   "col"
-  ],
-  "10000700": [
-   "Davor Sertić",
-   33,
-   65,
+  "10000713": [
+   "Fran Stanić",
+   30,
    71,
-   60,
-   "Lanarkshire Steel",
-   "sco"
+   69,
+   67,
+   "Casablanca Red",
+   "mar"
+  ],
+  "10000679": [
+   "Leon Zorić",
+   38,
+   62,
+   74,
+   61,
+   "Solent Saints",
+   "eng"
+  ],
+  "1010005003": [
+   "Lovro Klarić",
+   22,
+   71,
+   65,
+   70,
+   "Enugu Antelopes",
+   "nga"
   ],
   "10000658": [
    "Mateo Krznarić",
@@ -7610,14 +7628,50 @@
    "Guadalajara Goats",
    "mex"
   ],
-  "1010005003": [
-   "Lovro Klarić",
-   22,
-   71,
+  "10000700": [
+   "Davor Sertić",
+   33,
    65,
-   70,
-   "Enugu Antelopes",
-   "nga"
+   71,
+   60,
+   "Lanarkshire Steel",
+   "sco"
+  ],
+  "1010008006": [
+   "Ivica Matković",
+   19,
+   65,
+   69,
+   68,
+   "Barranquilla Sharks",
+   "col"
+  ],
+  "1010006001": [
+   "Domagoj Vrban",
+   21,
+   69,
+   66,
+   67,
+   "Arnhem Yellow-Black",
+   "ned"
+  ],
+  "1010002006": [
+   "Gabrijel Stanić",
+   25,
+   67,
+   68,
+   66,
+   "Melbourne Sky Blue",
+   "aus"
+  ],
+  "1010009003": [
+   "Kruno Čačić",
+   18,
+   65,
+   67,
+   71,
+   "Vallecas Lightning",
+   "esp"
   ],
   "1010007005": [
    "Natko Dragić",
@@ -7636,24 +7690,6 @@
    61,
    "Saint-Green",
    "fra"
-  ],
-  "1010006001": [
-   "Domagoj Vrban",
-   21,
-   69,
-   66,
-   67,
-   "Arnhem Yellow-Black",
-   "ned"
-  ],
-  "1010009003": [
-   "Kruno Čačić",
-   18,
-   65,
-   67,
-   71,
-   "Vallecas Lightning",
-   "esp"
   ],
   "10000701": [
    "Antonio Pavlović",
@@ -7691,15 +7727,6 @@
    "Stockholm Blue-Stripes",
    "swe"
   ],
-  "1010002002": [
-   "Grgur Hodak",
-   25,
-   65,
-   64,
-   66,
-   "Bergen Red",
-   "nor"
-  ],
   "1010005002": [
    "Robert Horvatić",
    22,
@@ -7709,14 +7736,14 @@
    "Sangolquí Valley FC",
    "ecu"
   ],
-  "1010011000": [
-   "Karlo Vidović",
-   16,
-   62,
+  "1010002002": [
+   "Grgur Hodak",
+   25,
    65,
-   63,
-   "Gladbach Foals",
-   "ger"
+   64,
+   66,
+   "Bergen Red",
+   "nor"
   ],
   "1010003006": [
    "Damir Filipović",
@@ -7727,6 +7754,15 @@
    "Shanghai Blue",
    "chn"
   ],
+  "1010011000": [
+   "Karlo Vidović",
+   16,
+   62,
+   65,
+   63,
+   "Gladbach Foals",
+   "ger"
+  ],
   "1010006003": [
    "Krunoslav Lazić",
    21,
@@ -7735,6 +7771,15 @@
    71,
    "Casablanca Green",
    "mar"
+  ],
+  "1010005001": [
+   "Goran Sever",
+   22,
+   68,
+   59,
+   62,
+   "Tainan Hawks FC",
+   "tpe"
   ],
   "1010011006": [
    "Hrvoje Lučić",
@@ -7754,32 +7799,14 @@
    "Blue Cross FC",
    "mex"
   ],
-  "1010005001": [
-   "Goran Sever",
-   22,
-   68,
+  "1010009004": [
+   "Jakov Novosel",
+   18,
+   66,
    59,
-   62,
-   "Tainan Hawks FC",
-   "tpe"
-  ],
-  "1010007001": [
-   "Rafael Blažević",
-   20,
-   65,
-   60,
-   60,
-   "Asunción Black-White",
-   "par"
-  ],
-  "1010005004": [
-   "Viktor Pejić",
-   22,
-   61,
    63,
-   62,
-   "Asunción Yellow-Black",
-   "par"
+   "Bologna Red-Blue",
+   "ita"
   ],
   "1010003004": [
    "Marko Škarica",
@@ -7790,14 +7817,14 @@
    "Beijing Green",
    "chn"
   ],
-  "1010009004": [
-   "Jakov Novosel",
-   18,
-   66,
-   59,
+  "1010005004": [
+   "Viktor Pejić",
+   22,
+   61,
    63,
-   "Bologna Red-Blue",
-   "ita"
+   62,
+   "Asunción Yellow-Black",
+   "par"
   ],
   "1010012005": [
    "Marko Tadić",
@@ -7808,14 +7835,14 @@
    "Toulouse Violets",
    "fra"
   ],
-  "10000681": [
-   "Teo Radman",
-   36,
-   53,
-   71,
-   59,
-   "Piraeus Red-White",
-   "gre"
+  "1010007001": [
+   "Rafael Blažević",
+   20,
+   65,
+   60,
+   60,
+   "Asunción Black-White",
+   "par"
   ],
   "10000693": [
    "Davor Bošnjak",
@@ -7833,6 +7860,15 @@
    66,
    48,
    "Athens Shamrock",
+   "gre"
+  ],
+  "10000681": [
+   "Teo Radman",
+   36,
+   53,
+   71,
+   59,
+   "Piraeus Red-White",
    "gre"
   ],
   "10000712": [
@@ -7871,15 +7907,6 @@
    "Ibagué Gold",
    "col"
   ],
-  "1010002003": [
-   "Šime Jozić",
-   25,
-   58,
-   53,
-   61,
-   "Molde Blue",
-   "nor"
-  ],
   "1010010000": [
    "Goran Kranjec",
    17,
@@ -7889,6 +7916,15 @@
    "Melbourne Sky Blue",
    "aus"
   ],
+  "1010002003": [
+   "Šime Jozić",
+   25,
+   58,
+   53,
+   61,
+   "Molde Blue",
+   "nor"
+  ],
   "1010005006": [
    "Tin Tolić",
    22,
@@ -7897,15 +7933,6 @@
    55,
    "Chengdu Phoenix",
    "chn"
-  ],
-  "1010012001": [
-   "Karlo Hodak",
-   15,
-   53,
-   55,
-   60,
-   "Jos Plateau FC",
-   "nga"
   ],
   "10000705": [
    "Pero Maras",
@@ -7931,6 +7958,15 @@
    52,
    62,
    46,
+   "Jos Plateau FC",
+   "nga"
+  ],
+  "1010012001": [
+   "Karlo Hodak",
+   15,
+   53,
+   55,
+   60,
    "Jos Plateau FC",
    "nga"
   ],
@@ -7961,15 +7997,6 @@
    "Gothenburg Angels",
    "swe"
   ],
-  "1010011005": [
-   "Karlo Lukić",
-   16,
-   58,
-   50,
-   54,
-   "Zürich Hoppers",
-   "sui"
-  ],
   "10000711": [
    "Damir Cindrić",
    37,
@@ -7978,6 +8005,15 @@
    52,
    "Liberec Lynxes",
    "cze"
+  ],
+  "1010011005": [
+   "Karlo Lukić",
+   16,
+   58,
+   50,
+   54,
+   "Zürich Hoppers",
+   "sui"
   ],
   "1010004005": [
    "Teo Franjić",
@@ -8006,15 +8042,6 @@
    "Cairo Red",
    "egy"
   ],
-  "1010007002": [
-   "Hrvoje Barbarić",
-   20,
-   53,
-   48,
-   48,
-   "Söder Green",
-   "swe"
-  ],
   "1010006004": [
    "Marko Mandić",
    21,
@@ -8024,6 +8051,15 @@
    "Berkane Orange",
    "mar"
   ],
+  "1010007002": [
+   "Hrvoje Barbarić",
+   20,
+   53,
+   48,
+   48,
+   "Söder Green",
+   "swe"
+  ],
   "10000689": [
    "Jozo Horvatić",
    39,
@@ -8032,15 +8068,6 @@
    47,
    "Brussels Yellow-Blue",
    "bel"
-  ],
-  "1010006005": [
-   "Josip Horvat",
-   21,
-   51,
-   46,
-   49,
-   "Graz Storm",
-   "aut"
   ],
   "10000715": [
    "Zoran Kovačević",
@@ -8059,6 +8086,15 @@
    49,
    "Rabat Army FC",
    "mar"
+  ],
+  "1010006005": [
+   "Josip Horvat",
+   21,
+   51,
+   46,
+   49,
+   "Graz Storm",
+   "aut"
   ],
   "1010007003": [
    "Sandro Čizmić",
@@ -8104,6 +8140,15 @@
    43,
    "Tainan Hawks FC",
    "tpe"
+  ],
+  "1010010006": [
+   "Ivica Jelić",
+   17,
+   40,
+   44,
+   40,
+   "Lillestrøm Yellow",
+   "nor"
   ],
   "1010010003": [
    "Krešimir Erceg",
@@ -8395,6 +8440,15 @@
    "Jeddah Green",
    "ksa"
   ],
+  "1010002006": [
+   "Gabrijel Stanić",
+   17,
+   53,
+   54,
+   52,
+   "Melbourne Sky Blue",
+   "aus"
+  ],
   "1010004000": [
    "Domagoj Nekić",
    15,
@@ -8439,6 +8493,15 @@
    48,
    "Volos Argonauts",
    "gre"
+  ],
+  "1010007000": [
+   "Tihomir Salopek",
+   12,
+   40,
+   44,
+   39,
+   "San Sebastián Blue",
+   "esp"
   ],
   "1010004004": [
    "Davor Vukelić",
@@ -8629,15 +8692,6 @@
    "Gothenburg Angels",
    "swe"
   ],
-  "1010006005": [
-   "Josip Horvat",
-   13,
-   20,
-   20,
-   20,
-   "Athens Shamrock",
-   "gre"
-  ],
   "1010006006": [
    "Patrik Rogić",
    13,
@@ -8646,6 +8700,15 @@
    21,
    "Asunción Black-White",
    "par"
+  ],
+  "1010006004": [
+   "Marko Mandić",
+   13,
+   20,
+   21,
+   20,
+   "Chengdu Phoenix",
+   "chn"
   ],
   "1010007002": [
    "Hrvoje Barbarić",
@@ -8683,14 +8746,14 @@
    "Harbour Sky Blue",
    "aus"
   ],
-  "1010006004": [
-   "Marko Mandić",
+  "1010006005": [
+   "Josip Horvat",
    13,
    20,
-   21,
    20,
-   "Chengdu Phoenix",
-   "chn"
+   20,
+   "Athens Shamrock",
+   "gre"
   ]
  }
 }
