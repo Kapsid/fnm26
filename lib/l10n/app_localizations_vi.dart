@@ -260,11 +260,6 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String matchAggregateScore(int home, int away) {
-    return 'Tổng $home : $away';
-  }
-
-  @override
   String resultAggregate(int home, int away) {
     return 'tổng $home-$away';
   }

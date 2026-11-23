@@ -68,7 +68,6 @@
   "ceremonyHostTbc": "CHƯA XÁC ĐỊNH CHỦ NHÀ",
   "matchHalfTime": "NGHỈ GIỮA HIỆP",
   "matchHalfTimeScore": "Hiệp 1 {home} : {away}",
-  "matchAggregateScore": "Tổng {home} : {away}",
   "resultAggregate": "tổng {home}-{away}",
   "matchContinue": "Tiếp tục",
   "matchContinuing": "Đang tiếp tục…",

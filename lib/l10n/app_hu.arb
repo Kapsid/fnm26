@@ -68,7 +68,6 @@
   "ceremonyHostTbc": "A RENDEZŐ MÉG NEM DŐLT EL",
   "matchHalfTime": "FÉLIDŐ",
   "matchHalfTimeScore": "Félidő {home} : {away}",
-  "matchAggregateScore": "Összesítés {home} : {away}",
   "resultAggregate": "össz. {home}-{away}",
   "matchContinue": "Tovább",
   "matchContinuing": "Folytatás…",

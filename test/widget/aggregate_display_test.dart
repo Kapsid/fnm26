@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/entities/fixture.dart';
-import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/shared/widgets/match_result_row.dart';
 
 import '../helpers/pump_app.dart';
 
 /// A two-legged tie's second leg shows the aggregate: on the result row (the
-/// round's results, the cup's bracket) and live, under the scoreline and the
-/// pitch's score bug.
+/// round's results, the cup's bracket). The live scoreboard does not show it.
 void main() {
   // First leg: 1 at home to 2, 2-0. Second leg: 2 at home to 1, 1-0.
   final first = Fixture(
@@ -76,33 +74,4 @@ void main() {
       findsNothing,
     );
   });
-
-  for (final compact in [false, true]) {
-    testWidgets('the live scoreboard carries it (compact: $compact)', (
-      tester,
-    ) async {
-      await tester.pumpApp(
-        Scaffold(
-          body: MatchScoreboard(
-            homeCode: 'N2',
-            awayCode: 'N1',
-            homeName: 'Two',
-            awayName: 'One',
-            homeScore: 1,
-            awayScore: 0,
-            clock: "67'",
-            live: true,
-            compact: compact,
-            aggregate: 'Aggregate 1 : 2',
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-      expect(
-        find.byKey(const ValueKey('matchScoreboard.aggregate')),
-        findsOneWidget,
-      );
-      expect(tester.takeException(), isNull);
-    });
-  }
 }

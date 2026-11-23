@@ -68,7 +68,6 @@
   "ceremonyHostTbc": "DOMAĆIN JOŠ NIJE POTVRĐEN",
   "matchHalfTime": "POLUVRIJEME",
   "matchHalfTimeScore": "Poluvrijeme {home} : {away}",
-  "matchAggregateScore": "Ukupno {home} : {away}",
   "resultAggregate": "ukupno {home}-{away}",
   "matchContinue": "Nastavi",
   "matchContinuing": "Nastavljam…",

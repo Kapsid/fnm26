@@ -68,7 +68,6 @@
   "ceremonyHostTbc": "TUAN RUMAH BELUM DISAHKAN",
   "matchHalfTime": "SEPARUH MASA",
   "matchHalfTimeScore": "Separuh masa {home} : {away}",
-  "matchAggregateScore": "Agregat {home} : {away}",
   "resultAggregate": "agr. {home}-{away}",
   "matchContinue": "Teruskan",
   "matchContinuing": "Meneruskan…",

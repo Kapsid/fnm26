@@ -258,11 +258,6 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
-  String matchAggregateScore(int home, int away) {
-    return 'कुल $home : $away';
-  }
-
-  @override
   String resultAggregate(int home, int away) {
     return 'कुल $home-$away';
   }

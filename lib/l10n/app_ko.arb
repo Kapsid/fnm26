@@ -68,7 +68,6 @@
   "ceremonyHostTbc": "개최국 미정",
   "matchHalfTime": "하프타임",
   "matchHalfTimeScore": "전반 {home} : {away}",
-  "matchAggregateScore": "합계 {home} : {away}",
   "resultAggregate": "합계 {home}-{away}",
   "matchContinue": "계속",
   "matchContinuing": "진행 중…",

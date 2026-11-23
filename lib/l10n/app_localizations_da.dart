@@ -258,11 +258,6 @@ class AppLocalizationsDa extends AppLocalizations {
   }
 
   @override
-  String matchAggregateScore(int home, int away) {
-    return 'Samlet $home : $away';
-  }
-
-  @override
   String resultAggregate(int home, int away) {
     return 'samlet $home-$away';
   }

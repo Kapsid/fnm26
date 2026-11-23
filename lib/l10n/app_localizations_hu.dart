@@ -260,11 +260,6 @@ class AppLocalizationsHu extends AppLocalizations {
   }
 
   @override
-  String matchAggregateScore(int home, int away) {
-    return 'Összesítés $home : $away';
-  }
-
-  @override
   String resultAggregate(int home, int away) {
     return 'össz. $home-$away';
   }

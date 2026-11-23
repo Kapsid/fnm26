@@ -68,7 +68,6 @@
   "ceremonyHostTbc": "GOSPODARZ DO USTALENIA",
   "matchHalfTime": "PRZERWA",
   "matchHalfTimeScore": "Do przerwy {home} : {away}",
-  "matchAggregateScore": "Dwumecz {home} : {away}",
   "resultAggregate": "dwumecz {home}-{away}",
   "matchContinue": "Dalej",
   "matchContinuing": "Zapisywanie…",

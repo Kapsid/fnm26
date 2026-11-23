@@ -68,7 +68,6 @@
   "ceremonyHostTbc": "ГОСПОДАРЯ ЩЕ НЕ ВИЗНАЧЕНО",
   "matchHalfTime": "ПЕРЕРВА",
   "matchHalfTimeScore": "Перший тайм {home} : {away}",
-  "matchAggregateScore": "Загалом {home} : {away}",
   "resultAggregate": "заг. {home}-{away}",
   "matchContinue": "Продовжити",
   "matchContinuing": "Продовжуємо…",

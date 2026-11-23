@@ -68,7 +68,6 @@
   "ceremonyHostTbc": "POŘADATEL BUDE POTVRZEN",
   "matchHalfTime": "POLOČAS",
   "matchHalfTimeScore": "Poločas {home} : {away}",
-  "matchAggregateScore": "Celkem {home} : {away}",
   "resultAggregate": "celkem {home}-{away}",
   "matchContinue": "Pokračovat",
   "matchContinuing": "Ukládám…",

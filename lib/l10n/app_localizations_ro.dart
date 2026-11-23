@@ -257,11 +257,6 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String matchAggregateScore(int home, int away) {
-    return 'General $home : $away';
-  }
-
-  @override
   String resultAggregate(int home, int away) {
     return 'gen. $home-$away';
   }
