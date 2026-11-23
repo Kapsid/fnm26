@@ -332,7 +332,7 @@ class _PreviewParts {
     children: [
       GroundCard(
         ground: preview.ground,
-        neutral: preview.neutralVenue,
+        neutral: preview.neutralGround,
         groundNationCode: code(preview.ground.groundNationId),
         fans: preview.homeFans,
         kickOff: shown.kickOff,
