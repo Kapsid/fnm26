@@ -218,6 +218,7 @@ List<Widget> _cupTabViews(
       code: code,
       name: name,
       playerNationId: data.playerNationId,
+      playerConfederation: data.playerConfederation,
     ),
     if (data.hasFinals && !data.finalsDrawWatched)
       _Soon(message: l.tourCupFinalsDrawSoon)
@@ -323,12 +324,13 @@ List<Widget> _cupTabViews(
 /// The intercontinental play-off tab: the knockout for the last two finals
 /// berths, drawn as a bracket. Shows a "not yet" note until every
 /// confederation's qualifying is complete and the ties are decided.
-class _PlayoffTab extends ConsumerWidget {
+class _PlayoffTab extends ConsumerStatefulWidget {
   const _PlayoffTab({
     required this.careerId,
     required this.code,
     required this.name,
     required this.playerNationId,
+    this.playerConfederation,
     this.playoffs,
   });
 
@@ -337,28 +339,78 @@ class _PlayoffTab extends ConsumerWidget {
   final String Function(int) name;
   final int playerNationId;
 
+  /// The manager's confederation: its sub-tab is the one shown first.
+  final Confederation? playerConfederation;
+
   /// The calendar2 play-offs (Europe's paths and the intercontinental
   /// play-off, every tie a fixture), read from their stored draws; null in
   /// a cycle on the legacy play-off.
   final WcPlayoffData? playoffs;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_PlayoffTab> createState() => _PlayoffTabState();
+}
+
+class _PlayoffTabState extends ConsumerState<_PlayoffTab> {
+  /// The sub-tab picked by hand: a confederation, or null for the
+  /// intercontinental play-off. Unset until the manager picks one.
+  ({Confederation? conf})? _picked;
+
+  @override
+  Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final careerId = widget.careerId;
+    final code = widget.code;
+    final name = widget.name;
+    final playerNationId = widget.playerNationId;
+    final playoffs = widget.playoffs;
     // Africa's, Asia's and Oceania's own steps (calendar2), played before
-    // the play-off draws: shown above the paths, and alone while they run.
+    // the play-off draws.
     final steps =
         ref.watch(confedStepFixturesProvider(careerId)).valueOrNull ?? const {};
-    final stepsView = steps.isEmpty
-        ? null
-        : ConfedPlayoffSteps(
-            steps: steps,
-            code: code,
-            playerNationId: playerNationId,
-            careerId: careerId,
-            name: name,
-          );
-    if (playoffs != null || stepsView != null) {
+    if (playoffs != null || steps.isNotEmpty) {
+      // One sub-tab per confederation with a play-off of its own, then the
+      // intercontinental play-off: a page each, not all on one.
+      final sections = <({Confederation? conf, String label, Widget body})>[
+        if (playoffs case final data? when data.uefaPaths.isNotEmpty)
+          (
+            conf: Confederation.europe,
+            label: confederationLabel(l, Confederation.europe),
+            body: WcPlayoffPaths(
+              data: data,
+              careerId: careerId,
+              intercontinental: false,
+            ),
+          ),
+        for (final e in steps.entries)
+          (
+            conf: e.key,
+            label: confederationLabel(l, e.key),
+            body: ConfedPlayoffSteps(
+              steps: {e.key: e.value},
+              code: code,
+              playerNationId: playerNationId,
+              careerId: careerId,
+              name: name,
+              headings: false,
+            ),
+          ),
+        if (playoffs case final data? when data.icPaths.isNotEmpty)
+          (
+            conf: null,
+            label: l.compIntercontinentalPlayoff,
+            body: WcPlayoffPaths(data: data, careerId: careerId, europe: false),
+          ),
+      ];
+      if (sections.isEmpty) return _Soon(message: l.tourCupPlayoffSoon);
+      int indexOf(Confederation? conf) =>
+          sections.indexWhere((x) => x.conf == conf);
+      var selected = _picked == null ? -1 : indexOf(_picked!.conf);
+      if (selected < 0) selected = indexOf(widget.playerConfederation);
+      // A side with no play-off of its own (the Americas) starts on the
+      // intercontinental one.
+      if (selected < 0) selected = indexOf(null);
+      if (selected < 0) selected = 0;
       return ListView(
         padding: const EdgeInsets.all(AppSpacing.marginMobile),
         children: [
@@ -369,9 +421,23 @@ class _PlayoffTab extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.md),
-          if (playoffs case final data?)
-            WcPlayoffPaths(data: data, careerId: careerId, headings: true),
-          ?stepsView,
+          if (sections.length > 1) ...[
+            AppSegmentedControl(
+              key: const ValueKey('wcPlayoff.subtabs'),
+              tabs: [
+                for (final x in sections)
+                  SegmentTab(
+                    x.label,
+                    key: ValueKey('wcPlayoff.subtab.${x.conf?.name ?? 'ic'}'),
+                  ),
+              ],
+              selected: selected,
+              onSelect: (i) =>
+                  setState(() => _picked = (conf: sections[i].conf)),
+            ),
+            const SizedBox(height: AppSpacing.md),
+          ],
+          sections[selected].body,
         ],
       );
     }

@@ -61,8 +61,12 @@ class ConfedPlayoffSteps extends StatelessWidget {
     required this.playerNationId,
     this.careerId,
     this.name,
+    this.headings = true,
     super.key,
   });
+
+  /// Whether each confederation gets a heading (off when a sub-tab names it).
+  final bool headings;
 
   final Map<Confederation, List<Fixture>> steps;
   final String Function(int) code;
@@ -77,20 +81,22 @@ class ConfedPlayoffSteps extends StatelessWidget {
     final l = AppLocalizations.of(context);
     final children = <Widget>[];
     for (final e in steps.entries) {
-      children.add(
-        Padding(
-          padding: const EdgeInsets.only(
-            top: AppSpacing.md,
-            bottom: AppSpacing.sm,
-          ),
-          child: Text(
-            confederationLabel(l, e.key).toUpperCase(),
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
+      if (headings) {
+        children.add(
+          Padding(
+            padding: const EdgeInsets.only(
+              top: AppSpacing.md,
+              bottom: AppSpacing.sm,
+            ),
+            child: Text(
+              confederationLabel(l, e.key).toUpperCase(),
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
             ),
           ),
-        ),
-      );
+        );
+      }
       String? lastRound;
       for (final f in e.value) {
         if (f.round != lastRound) {
