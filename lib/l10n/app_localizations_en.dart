@@ -14536,7 +14536,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get matchTinyNorthAmerica => 'NAC';
 
   @override
-  String get matchTinyAfrica => 'AfC';
+  String get matchTinyAfrica => 'AfrC';
 
   @override
   String get matchTinyAsia => 'AsC';

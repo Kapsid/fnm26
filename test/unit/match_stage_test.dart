@@ -181,4 +181,38 @@ void main() {
       }
     });
   });
+
+  test('the continental header names the manager\'s own cup', () {
+    Fixture at(String round) => Fixture(
+      id: 1,
+      careerId: 1,
+      competitionId: 1,
+      matchday: 1,
+      date: DateTime(2030, 6),
+      homeNationId: 1,
+      awayNationId: 2,
+      round: round,
+    );
+    final eu = MatchStage.label(l, at('CR16'), conf: Confederation.europe);
+    final oc = MatchStage.label(l, at('CSF'), conf: Confederation.oceania);
+    expect(eu, isNot(contains('CONTINENTAL CUP')));
+    expect(oc, isNot(contains('CONTINENTAL CUP')));
+    expect(eu, contains(l.compEuropeanChampionship.toUpperCase()));
+    expect(oc, contains(l.compOceaniaCup.toUpperCase()));
+  });
+
+  test('Africa\'s qualifier tag is not "AFC"', () {
+    final f = Fixture(
+      id: 1,
+      careerId: 1,
+      competitionId: 1,
+      matchday: 1,
+      date: DateTime(2030, 6),
+      homeNationId: 1,
+      awayNationId: 2,
+      round: 'CQ',
+    );
+    final tag = MatchStage.tinyParts(l, f, Confederation.africa).competition;
+    expect(tag.toUpperCase(), isNot(startsWith('AFC')));
+  });
 }

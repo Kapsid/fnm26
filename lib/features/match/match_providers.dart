@@ -292,6 +292,16 @@ class MatchPreview {
   final bool neutralVenue;
   final int? venueHostId;
 
+  /// Whether the badge "neutral ground" is true: a neutral finals match where
+  /// the tournament's host is NOT one of the two sides. A host (or co-host)
+  /// playing in its own country is at home, however the venue is keyed.
+  bool get neutralGround =>
+      neutralVenue &&
+      !(venueHostId != null &&
+          venueHostId != 0 &&
+          (venueHostId == homeTeam.nationId ||
+              venueHostId == awayTeam.nationId));
+
   /// Whether this is a knockout tie, so every re-simulation the live screen
   /// runs applies the big-game trait exactly as the first one did.
   final bool bigMatch;

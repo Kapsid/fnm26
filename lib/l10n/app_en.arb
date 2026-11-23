@@ -22413,7 +22413,7 @@
   "@matchTinyNorthAmerica": {
     "description": "Tiny abbreviation of the North America Cup for a compact fixture tile. 2 to 5 characters."
   },
-  "matchTinyAfrica": "AfC",
+  "matchTinyAfrica": "AfrC",
   "@matchTinyAfrica": {
     "description": "Tiny abbreviation of the African Championship for a compact fixture tile. Must differ from the Asian one. 2 to 5 characters."
   },

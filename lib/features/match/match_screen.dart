@@ -2470,7 +2470,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               awayCode: code(awayId),
               homeNationId: homeId,
               ground: preview.ground,
-              neutral: preview.neutralVenue,
+              neutral: preview.neutralGround,
               groundCode: code(preview.ground.groundNationId),
               homeFans: preview.homeFans,
               // The 2D TV's own kick-off and weather, whichever view.
@@ -2982,7 +2982,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                         awayReds: awayReds,
                         ground: GroundStrip(
                           ground: preview.ground,
-                          neutral: preview.neutralVenue,
+                          neutral: preview.neutralGround,
                           groundNationCode: code(
                             preview.ground.groundNationId,
                           ),
