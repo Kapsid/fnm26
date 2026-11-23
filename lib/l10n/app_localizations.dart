@@ -27845,6 +27845,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'History'**
   String get statsTabHistory;
+
+  /// World Championship qualifying ladder: where Asia's sides below the direct places go (its own fourth round), written for the slot in tourThirdsAdvance / tourThirdsNextAdvance.
+  ///
+  /// In en, this message translates to:
+  /// **'the Asian fourth round'**
+  String get tourCupDestAfcFourthRound;
+
+  /// World Championship qualifying ladder: where Africa's best runners-up go (its own play-off), written for the slot in tourThirdsAdvance / tourThirdsNextAdvance.
+  ///
+  /// In en, this message translates to:
+  /// **'the African play-off'**
+  String get tourCupDestCafPlayoff;
+
+  /// World Championship qualifying ladder: where Oceania's group winners go (its own one-off final), written for the slot in tourThirdsAdvance / tourThirdsNextAdvance.
+  ///
+  /// In en, this message translates to:
+  /// **'the Oceania final'**
+  String get tourCupDestOfcFinal;
+
+  /// Legend line over a confederation's World Championship qualifying tables: the green stripe.
+  ///
+  /// In en, this message translates to:
+  /// **'Green: on course for the finals, as things stand'**
+  String get qualLegendDirect;
+
+  /// Legend line over Asia's qualifying tables: the yellow stripe marks sides headed for Asia's fourth round.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow: on course for the Asian fourth round'**
+  String get qualLegendAfcStep;
+
+  /// Legend line over Africa's qualifying tables: the yellow stripe marks sides headed for Africa's own play-off.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow: on course for the African play-off'**
+  String get qualLegendCafStep;
+
+  /// Legend line over Oceania's qualifying tables: the yellow stripe marks sides headed for Oceania's one-off final.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow: on course for the Oceania final'**
+  String get qualLegendOfcStep;
+
+  /// Legend line over a confederation's qualifying tables: the yellow stripe marks sides headed for the intercontinental play-off.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow: on course for the intercontinental play-off'**
+  String get qualLegendIntercont;
+
+  /// Legend line over a confederation's qualifying tables: the orange stripe marks sides that can still reach a place but are outside them today.
+  ///
+  /// In en, this message translates to:
+  /// **'Orange: still in the race, but outside those places for now'**
+  String get qualLegendContention;
 }
 
 class _AppLocalizationsDelegate

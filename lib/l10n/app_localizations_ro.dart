@@ -18838,4 +18838,32 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get statsTabHistory => 'Istoric';
+
+  @override
+  String get tourCupDestAfcFourthRound => 'turul al patrulea asiatic';
+
+  @override
+  String get tourCupDestCafPlayoff => 'barajul african';
+
+  @override
+  String get tourCupDestOfcFinal => 'finala Oceaniei';
+
+  @override
+  String get qualLegendDirect => 'Verde: deocamdată, direct la turneul final';
+
+  @override
+  String get qualLegendAfcStep => 'Galben: spre turul al patrulea asiatic';
+
+  @override
+  String get qualLegendCafStep => 'Galben: spre barajul african';
+
+  @override
+  String get qualLegendOfcStep => 'Galben: spre finala Oceaniei';
+
+  @override
+  String get qualLegendIntercont => 'Galben: spre barajul intercontinental';
+
+  @override
+  String get qualLegendContention =>
+      'Portocaliu: încă în cursă, dar deocamdată în afara acestor locuri';
 }

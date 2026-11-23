@@ -4599,5 +4599,14 @@
   "ncRouteLegendQualified": "अपने क्वालीफ़ाइंग ग्रुप में सबसे ऊपर: सीधे क्वालीफ़ाई, उसकी जगह अगली टीम को",
   "ncRouteLegendRunnerUp": "अपने क्वालीफ़ाइंग ग्रुप में दूसरे: वैसे भी प्ले-ऑफ़ में, उसकी जगह अगली टीम को",
   "ncRouteLegendWaiting": "अगर आगे की कोई टीम इस रास्ते से हटे तो अगली बारी",
-  "statsTabHistory": "इतिहास"
+  "statsTabHistory": "इतिहास",
+  "tourCupDestAfcFourthRound": "एशिया के चौथे दौर",
+  "tourCupDestCafPlayoff": "अफ़्रीकी प्ले-ऑफ़",
+  "tourCupDestOfcFinal": "ओशिनिया फ़ाइनल",
+  "qualLegendDirect": "हरा: अभी की स्थिति में सीधे फ़ाइनल्स की ओर",
+  "qualLegendAfcStep": "पीला: एशिया के चौथे दौर की ओर",
+  "qualLegendCafStep": "पीला: अफ़्रीकी प्ले-ऑफ़ की ओर",
+  "qualLegendOfcStep": "पीला: ओशिनिया फ़ाइनल की ओर",
+  "qualLegendIntercont": "पीला: अंतर-महाद्वीपीय प्ले-ऑफ़ की ओर",
+  "qualLegendContention": "नारंगी: अभी दौड़ में, पर फ़िलहाल इन स्थानों से बाहर"
 }

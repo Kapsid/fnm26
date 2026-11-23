@@ -18318,4 +18318,32 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get statsTabHistory => 'इतिहास';
+
+  @override
+  String get tourCupDestAfcFourthRound => 'एशिया के चौथे दौर';
+
+  @override
+  String get tourCupDestCafPlayoff => 'अफ़्रीकी प्ले-ऑफ़';
+
+  @override
+  String get tourCupDestOfcFinal => 'ओशिनिया फ़ाइनल';
+
+  @override
+  String get qualLegendDirect => 'हरा: अभी की स्थिति में सीधे फ़ाइनल्स की ओर';
+
+  @override
+  String get qualLegendAfcStep => 'पीला: एशिया के चौथे दौर की ओर';
+
+  @override
+  String get qualLegendCafStep => 'पीला: अफ़्रीकी प्ले-ऑफ़ की ओर';
+
+  @override
+  String get qualLegendOfcStep => 'पीला: ओशिनिया फ़ाइनल की ओर';
+
+  @override
+  String get qualLegendIntercont => 'पीला: अंतर-महाद्वीपीय प्ले-ऑफ़ की ओर';
+
+  @override
+  String get qualLegendContention =>
+      'नारंगी: अभी दौड़ में, पर फ़िलहाल इन स्थानों से बाहर';
 }

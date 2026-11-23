@@ -4599,5 +4599,14 @@
   "ncRouteLegendQualified": "Mendahului kumpulan kelayakan: layak terus, tempatnya beralih kepada pasukan seterusnya",
   "ncRouteLegendRunnerUp": "Naib juara kumpulan kelayakan: tetap ke play-off, tempatnya beralih kepada pasukan seterusnya",
   "ncRouteLegendWaiting": "Seterusnya, jika pasukan di hadapan terkeluar dari laluan ini",
-  "statsTabHistory": "Sejarah"
+  "statsTabHistory": "Sejarah",
+  "tourCupDestAfcFourthRound": "pusingan keempat Asia",
+  "tourCupDestCafPlayoff": "play-off Afrika",
+  "tourCupDestOfcFinal": "final Oceania",
+  "qualLegendDirect": "Hijau: buat masa ini, terus ke pusingan akhir",
+  "qualLegendAfcStep": "Kuning: menuju pusingan keempat Asia",
+  "qualLegendCafStep": "Kuning: menuju play-off Afrika",
+  "qualLegendOfcStep": "Kuning: menuju final Oceania",
+  "qualLegendIntercont": "Kuning: menuju play-off antara benua",
+  "qualLegendContention": "Jingga: masih bersaing, tetapi buat masa ini di luar tempat itu"
 }

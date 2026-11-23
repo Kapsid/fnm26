@@ -4599,5 +4599,14 @@
   "ncRouteLegendQualified": "予選グループ首位：直接出場のため、枠は次へ回る",
   "ncRouteLegendRunnerUp": "予選グループ2位：いずれにせよプレーオフへ進むため、枠は次へ回る",
   "ncRouteLegendWaiting": "上位のチームがこのルートから外れた場合の次点",
-  "statsTabHistory": "歴史"
+  "statsTabHistory": "歴史",
+  "tourCupDestAfcFourthRound": "アジア4次予選",
+  "tourCupDestCafPlayoff": "アフリカのプレーオフ",
+  "tourCupDestOfcFinal": "オセアニア決勝",
+  "qualLegendDirect": "緑：現時点で本大会へストレートイン",
+  "qualLegendAfcStep": "黄：アジア4次予選へ",
+  "qualLegendCafStep": "黄：アフリカのプレーオフへ",
+  "qualLegendOfcStep": "黄：オセアニア決勝へ",
+  "qualLegendIntercont": "黄：大陸間プレーオフへ",
+  "qualLegendContention": "オレンジ：まだ可能性あり、ただし現時点では圏外"
 }

@@ -42,6 +42,15 @@ typedef RoundResultsView = ({
   Set<int> playoffNations,
   int relegateCount,
   Set<String> noRelegationGroups,
+
+  /// Nations on course for the finals straight from the groups where their
+  /// position is only partly covered (green, World Championship qualifying;
+  /// see `GroupAdvancement.worldCupDirectNations`).
+  Set<int> directNations,
+
+  /// The last position in contention when several are (Asia's step on
+  /// calendar2); null means [contentionPos] alone.
+  int? contentionThrough,
 });
 
 /// The last round the manager played, grouped, with the zones each table
@@ -68,6 +77,8 @@ roundResultsViewProvider = FutureProvider.autoDispose.family<RoundResultsView?, 
   var direct = 2;
   int? contention;
   var playoff = const <int>{};
+  var directNations = const <int>{};
+  int? contentionThrough;
   var relegate = 0;
   final noRelegation = <String>{};
   if (results != null && results.groupCount > 0) {
@@ -79,14 +90,19 @@ roundResultsViewProvider = FutureProvider.autoDispose.family<RoundResultsView?, 
     final wcHosts = results.kind == CompetitionKind.worldCupQualifying
         ? (await worldCupHostBerthsFor(ref, careerId))[conf] ?? 0
         : 0;
+    // Africa's, Asia's and Oceania's own steps and Europe's paths, on the
+    // calendar2 rhythm, exactly as the hub reads them.
+    final wcCal2 =
+        results.kind == CompetitionKind.worldCupQualifying &&
+        await isCalendar2(
+          ref.watch(competitionRepositoryProvider),
+          careerId,
+          career.cyclePointer,
+        );
     final wcPaths = results.kind != CompetitionKind.worldCupQualifying
         ? 0
         : UefaWcPlayoffs.pathsFor(
-            calendar2: await isCalendar2(
-              ref.watch(competitionRepositoryProvider),
-              careerId,
-              career.cyclePointer,
-            ),
+            calendar2: wcCal2,
             confederation: conf,
             hosts: wcHosts,
             groupCount: results.groupCount,
@@ -113,17 +129,32 @@ roundResultsViewProvider = FutureProvider.autoDispose.family<RoundResultsView?, 
       worldCupPlayoffPaths: wcPaths,
       continentalHosts: contShape?.hosts ?? 0,
       continentalPlayoffRoute: contShape?.playoffRoute ?? false,
+      worldCupConfedSteps: wcCal2,
     );
     direct = adv.direct;
     contention = adv.contention;
     if (results.kind == CompetitionKind.worldCupQualifying) {
+      final tables = [for (final g in results.groups) g.standings];
       playoff = GroupAdvancement.worldCupPlayoffNations(
         conf,
-        [
-          for (final g in results.groups) g.standings,
-        ],
+        tables,
         hosts: wcHosts,
         playoffPaths: wcPaths,
+        confedSteps: wcCal2,
+      );
+      directNations = GroupAdvancement.worldCupDirectNations(
+        conf,
+        tables,
+        hosts: wcHosts,
+        playoffPaths: wcPaths,
+        confedSteps: wcCal2,
+      );
+      contentionThrough = GroupAdvancement.worldCupContentionThrough(
+        conf,
+        results.groupCount,
+        hosts: wcHosts,
+        playoffPaths: wcPaths,
+        confedSteps: wcCal2,
       );
     }
     relegate = adv.relegate;
@@ -154,6 +185,8 @@ roundResultsViewProvider = FutureProvider.autoDispose.family<RoundResultsView?, 
     playoffNations: playoff,
     relegateCount: relegate,
     noRelegationGroups: noRelegation,
+    directNations: directNations,
+    contentionThrough: contentionThrough,
   );
 });
 
@@ -300,6 +333,8 @@ class RoundResultsScreen extends ConsumerWidget {
                     directCount: view.directCount,
                     contentionPos: view.contentionPos,
                     playoffNations: view.playoffNations,
+                    directNations: view.directNations,
+                    contentionThrough: view.contentionThrough,
                     relegateCount: view.noRelegationGroups.contains(g.name)
                         ? 0
                         : view.relegateCount,
@@ -340,6 +375,8 @@ class _GroupBlock extends StatelessWidget {
     required this.name,
     required this.careerId,
     this.undecided = const {},
+    this.directNations = const {},
+    this.contentionThrough,
   });
 
   final int careerId;
@@ -351,6 +388,10 @@ class _GroupBlock extends StatelessWidget {
   final int directCount;
   final int? contentionPos;
   final Set<int> playoffNations;
+
+  /// See [RoundResultsView]'s `directNations` and `contentionThrough`.
+  final Set<int> directNations;
+  final int? contentionThrough;
 
   /// How many bottom places go down (red) — the Nations Cup relegates each
   /// group's last side (bar the lowest league's).
@@ -392,6 +433,8 @@ class _GroupBlock extends StatelessWidget {
                 directCount: directCount,
                 contentionPos: contentionPos,
                 playoffNations: playoffNations,
+                directNations: directNations,
+                contentionThrough: contentionThrough,
                 relegated:
                     relegateCount > 0 &&
                     i + 1 > group.standings.length - relegateCount,
@@ -541,6 +584,8 @@ class _StandingRow extends StatelessWidget {
     required this.code,
     required this.careerId,
     this.undecided = false,
+    this.directNations = const {},
+    this.contentionThrough,
   });
 
   final int careerId;
@@ -550,6 +595,10 @@ class _StandingRow extends StatelessWidget {
   final int directCount;
   final int? contentionPos;
   final Set<int> playoffNations;
+
+  /// See [RoundResultsView]'s `directNations` and `contentionThrough`.
+  final Set<int> directNations;
+  final int? contentionThrough;
 
   /// Whether this position drops a league (Nations Cup groups).
   final bool relegated;
@@ -561,8 +610,12 @@ class _StandingRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final advancing = pos <= directCount;
-    final inContention = pos == contentionPos;
+    final advancing =
+        pos <= directCount || directNations.contains(standing.nationId);
+    final inContention =
+        contentionPos != null &&
+        pos >= contentionPos! &&
+        pos <= (contentionThrough ?? contentionPos!);
     final accent = (advancing || relegated) && undecided
         ? AppColors.warning
         : advancing

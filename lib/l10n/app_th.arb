@@ -4599,5 +4599,14 @@
   "ncRouteLegendQualified": "เป็นจ่าฝูงกลุ่มคัดเลือก: ผ่านเข้ารอบโดยตรง ที่นั่งจึงตกไปยังทีมถัดไป",
   "ncRouteLegendRunnerUp": "อันดับสองของกลุ่มคัดเลือก: ได้ไปเพลย์ออฟอยู่แล้ว ที่นั่งจึงตกไปยังทีมถัดไป",
   "ncRouteLegendWaiting": "ทีมถัดไป หากทีมข้างหน้าหลุดจากเส้นทางนี้",
-  "statsTabHistory": "ประวัติ"
+  "statsTabHistory": "ประวัติ",
+  "tourCupDestAfcFourthRound": "รอบสี่ของเอเชีย",
+  "tourCupDestCafPlayoff": "เพลย์ออฟแอฟริกา",
+  "tourCupDestOfcFinal": "รอบชิงชนะเลิศโอเชียเนีย",
+  "qualLegendDirect": "เขียว: ตามสถานการณ์ตอนนี้ ผ่านเข้ารอบสุดท้ายโดยตรง",
+  "qualLegendAfcStep": "เหลือง: มุ่งสู่รอบสี่ของเอเชีย",
+  "qualLegendCafStep": "เหลือง: มุ่งสู่เพลย์ออฟแอฟริกา",
+  "qualLegendOfcStep": "เหลือง: มุ่งสู่รอบชิงชนะเลิศโอเชียเนีย",
+  "qualLegendIntercont": "เหลือง: มุ่งสู่เพลย์ออฟข้ามทวีป",
+  "qualLegendContention": "ส้ม: ยังมีลุ้น แต่ตอนนี้อยู่นอกตำแหน่งเหล่านั้น"
 }

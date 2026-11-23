@@ -4599,5 +4599,14 @@
   "ncRouteLegendQualified": "Prowadzi w swojej grupie eliminacyjnej: awansuje bezpośrednio, jego miejsce przechodzi dalej",
   "ncRouteLegendRunnerUp": "Drugi w swojej grupie eliminacyjnej: i tak gra w barażach, jego miejsce przechodzi dalej",
   "ncRouteLegendWaiting": "Następny w kolejce, gdyby ktoś przed nim wypadł z tej ścieżki",
-  "statsTabHistory": "Historia"
+  "statsTabHistory": "Historia",
+  "tourCupDestAfcFourthRound": "azjatyckiej czwartej rundy",
+  "tourCupDestCafPlayoff": "baraży afrykańskich",
+  "tourCupDestOfcFinal": "finału Oceanii",
+  "qualLegendDirect": "Zielony: według obecnego stanu prosto do turnieju finałowego",
+  "qualLegendAfcStep": "Żółty: w drodze do azjatyckiej czwartej rundy",
+  "qualLegendCafStep": "Żółty: w drodze do baraży afrykańskich",
+  "qualLegendOfcStep": "Żółty: w drodze do finału Oceanii",
+  "qualLegendIntercont": "Żółty: w drodze do baraży interkontynentalnych",
+  "qualLegendContention": "Pomarańczowy: wciąż w grze, ale na razie poza tymi miejscami"
 }

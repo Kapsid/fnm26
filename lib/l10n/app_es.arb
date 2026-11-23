@@ -4599,5 +4599,14 @@
   "ncRouteLegendQualified": "Lidera su grupo de clasificación: se clasifica directamente y su plaza pasa al siguiente",
   "ncRouteLegendRunnerUp": "Segundo de su grupo de clasificación: va a la repesca igualmente y su plaza pasa al siguiente",
   "ncRouteLegendWaiting": "El siguiente, si un equipo por delante sale de esta vía",
-  "statsTabHistory": "Historia"
+  "statsTabHistory": "Historia",
+  "tourCupDestAfcFourthRound": "la cuarta ronda asiática",
+  "tourCupDestCafPlayoff": "la repesca africana",
+  "tourCupDestOfcFinal": "la final de Oceanía",
+  "qualLegendDirect": "Verde: por ahora, rumbo directo a la fase final",
+  "qualLegendAfcStep": "Amarillo: rumbo a la cuarta ronda asiática",
+  "qualLegendCafStep": "Amarillo: rumbo a la repesca africana",
+  "qualLegendOfcStep": "Amarillo: rumbo a la final de Oceanía",
+  "qualLegendIntercont": "Amarillo: rumbo a la repesca intercontinental",
+  "qualLegendContention": "Naranja: aún en la pelea, pero por ahora fuera de esas plazas"
 }

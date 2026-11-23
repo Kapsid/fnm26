@@ -18450,4 +18450,35 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statsTabHistory => 'History';
+
+  @override
+  String get tourCupDestAfcFourthRound => 'the Asian fourth round';
+
+  @override
+  String get tourCupDestCafPlayoff => 'the African play-off';
+
+  @override
+  String get tourCupDestOfcFinal => 'the Oceania final';
+
+  @override
+  String get qualLegendDirect =>
+      'Green: on course for the finals, as things stand';
+
+  @override
+  String get qualLegendAfcStep =>
+      'Yellow: on course for the Asian fourth round';
+
+  @override
+  String get qualLegendCafStep => 'Yellow: on course for the African play-off';
+
+  @override
+  String get qualLegendOfcStep => 'Yellow: on course for the Oceania final';
+
+  @override
+  String get qualLegendIntercont =>
+      'Yellow: on course for the intercontinental play-off';
+
+  @override
+  String get qualLegendContention =>
+      'Orange: still in the race, but outside those places for now';
 }

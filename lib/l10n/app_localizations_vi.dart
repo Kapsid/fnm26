@@ -18258,4 +18258,33 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get statsTabHistory => 'Lịch sử';
+
+  @override
+  String get tourCupDestAfcFourthRound => 'vòng bốn châu Á';
+
+  @override
+  String get tourCupDestCafPlayoff => 'play-off châu Phi';
+
+  @override
+  String get tourCupDestOfcFinal => 'chung kết châu Đại Dương';
+
+  @override
+  String get qualLegendDirect =>
+      'Xanh lá: theo hiện tại, vào thẳng vòng chung kết';
+
+  @override
+  String get qualLegendAfcStep => 'Vàng: hướng tới vòng bốn châu Á';
+
+  @override
+  String get qualLegendCafStep => 'Vàng: hướng tới play-off châu Phi';
+
+  @override
+  String get qualLegendOfcStep => 'Vàng: hướng tới chung kết châu Đại Dương';
+
+  @override
+  String get qualLegendIntercont => 'Vàng: hướng tới play-off liên lục địa';
+
+  @override
+  String get qualLegendContention =>
+      'Cam: vẫn còn cơ hội, nhưng tạm thời ngoài các vị trí đó';
 }

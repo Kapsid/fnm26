@@ -4599,5 +4599,14 @@
   "ncRouteLegendQualified": "Води в квалификационната си група: класира се директно, мястото му отива нататък",
   "ncRouteLegendRunnerUp": "Втори в квалификационната си група: и без това е на баражи, мястото му отива нататък",
   "ncRouteLegendWaiting": "Следващ на ред, ако някой пред него отпадне от този път",
-  "statsTabHistory": "История"
+  "statsTabHistory": "История",
+  "tourCupDestAfcFourthRound": "азиатския четвърти кръг",
+  "tourCupDestCafPlayoff": "африканския плейоф",
+  "tourCupDestOfcFinal": "финала на Океания",
+  "qualLegendDirect": "Зелено: засега се насочва директно към финалите",
+  "qualLegendAfcStep": "Жълто: насочва се към азиатския четвърти кръг",
+  "qualLegendCafStep": "Жълто: насочва се към африканския плейоф",
+  "qualLegendOfcStep": "Жълто: насочва се към финала на Океания",
+  "qualLegendIntercont": "Жълто: насочва се към междуконтиненталния плейоф",
+  "qualLegendContention": "Оранжево: още в играта, но засега извън тези места"
 }

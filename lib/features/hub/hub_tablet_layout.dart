@@ -286,6 +286,7 @@ class _GroupPanel extends ConsumerWidget {
         contentionPos: hub.groupContentionPos,
         contentionThrough: hub.groupContentionThrough,
         playoffNations: hub.groupPlayoffNations,
+        directNations: hub.groupDirectNations,
         relegateCount: hub.groupRelegateCount,
         undecided: hub.groupUndecided,
         code: (id) => hub.nations[id]?.code ?? '??',

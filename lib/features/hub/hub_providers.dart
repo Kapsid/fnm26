@@ -188,6 +188,7 @@ class HubData {
     this.groupContentionPos,
     this.groupContentionThrough,
     this.groupPlayoffNations = const {},
+    this.groupDirectNations = const {},
     this.groupRelegateCount = 0,
     this.groupUndecided = const {},
   });
@@ -216,6 +217,12 @@ class HubData {
   /// Nations in [group]'s confederation currently on course for the
   /// intercontinental play-off (yellow), World Championship qualifying only.
   final Set<int> groupPlayoffNations;
+
+  /// Nations in [group]'s confederation on course for the finals straight
+  /// from the groups where their position is only partly covered (Asia's
+  /// best six winners), green like [groupDirectCount]; World Championship
+  /// qualifying only (see [GroupAdvancement.worldCupDirectNations]).
+  final Set<int> groupDirectNations;
 
   /// How many bottom places in [group] are relegated (red) — the Nations Cup
   /// drops each group's last side a league.
@@ -303,6 +310,7 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
   int? groupContention;
   int? groupContentionThrough;
   var groupPlayoff = const <int>{};
+  var groupDirectNations = const <int>{};
   var groupRelegate = 0;
   var groupUndecided = const <int>{};
   var groupDrawWatched = true;
@@ -381,14 +389,22 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
         playoffPaths: wcPaths,
         confedSteps: wcCal2,
       );
+      final tables = [
+        for (final t in await compRepo.allGroupTablesByConfederation(
+          careerId,
+        ))
+          if (t.confederation == conf) t.standings,
+      ];
       groupPlayoff = GroupAdvancement.worldCupPlayoffNations(
         conf,
-        [
-          for (final t in await compRepo.allGroupTablesByConfederation(
-            careerId,
-          ))
-            if (t.confederation == conf) t.standings,
-        ],
+        tables,
+        hosts: wcHosts,
+        playoffPaths: wcPaths,
+        confedSteps: wcCal2,
+      );
+      groupDirectNations = GroupAdvancement.worldCupDirectNations(
+        conf,
+        tables,
         hosts: wcHosts,
         playoffPaths: wcPaths,
         confedSteps: wcCal2,
@@ -420,6 +436,7 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
     groupContentionPos: groupContention,
     groupContentionThrough: groupContentionThrough,
     groupPlayoffNations: groupPlayoff,
+    groupDirectNations: groupDirectNations,
     groupRelegateCount: groupRelegate,
     groupUndecided: groupUndecided,
   );

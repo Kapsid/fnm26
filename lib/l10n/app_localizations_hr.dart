@@ -18751,4 +18751,33 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get statsTabHistory => 'Povijest';
+
+  @override
+  String get tourCupDestAfcFourthRound => 'azijsko četvrto kolo';
+
+  @override
+  String get tourCupDestCafPlayoff => 'afrički play-off';
+
+  @override
+  String get tourCupDestOfcFinal => 'finale Oceanije';
+
+  @override
+  String get qualLegendDirect =>
+      'Zeleno: prema trenutačnom stanju ide izravno u završnicu';
+
+  @override
+  String get qualLegendAfcStep => 'Žuto: ide u azijsko četvrto kolo';
+
+  @override
+  String get qualLegendCafStep => 'Žuto: ide u afrički play-off';
+
+  @override
+  String get qualLegendOfcStep => 'Žuto: ide u finale Oceanije';
+
+  @override
+  String get qualLegendIntercont => 'Žuto: ide u interkontinentalni play-off';
+
+  @override
+  String get qualLegendContention =>
+      'Narančasto: još u igri, ali zasad izvan tih mjesta';
 }

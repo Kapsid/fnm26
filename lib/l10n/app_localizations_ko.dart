@@ -17810,4 +17810,31 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get statsTabHistory => '역사';
+
+  @override
+  String get tourCupDestAfcFourthRound => '아시아 4차 예선';
+
+  @override
+  String get tourCupDestCafPlayoff => '아프리카 플레이오프';
+
+  @override
+  String get tourCupDestOfcFinal => '오세아니아 결승';
+
+  @override
+  String get qualLegendDirect => '초록: 현재 기준 본선 직행';
+
+  @override
+  String get qualLegendAfcStep => '노랑: 아시아 4차 예선 진출';
+
+  @override
+  String get qualLegendCafStep => '노랑: 아프리카 플레이오프 진출';
+
+  @override
+  String get qualLegendOfcStep => '노랑: 오세아니아 결승 진출';
+
+  @override
+  String get qualLegendIntercont => '노랑: 대륙 간 플레이오프 진출';
+
+  @override
+  String get qualLegendContention => '주황: 아직 가능성 있음, 현재는 해당 순위 밖';
 }

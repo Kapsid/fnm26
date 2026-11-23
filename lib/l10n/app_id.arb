@@ -4599,5 +4599,14 @@
   "ncRouteLegendQualified": "Memimpin grup kualifikasinya: lolos langsung, tempatnya beralih ke tim berikutnya",
   "ncRouteLegendRunnerUp": "Runner-up grup kualifikasinya: tetap masuk play-off, tempatnya beralih ke tim berikutnya",
   "ncRouteLegendWaiting": "Berikutnya, jika tim di depannya keluar dari jalur ini",
-  "statsTabHistory": "Riwayat"
+  "statsTabHistory": "Riwayat",
+  "tourCupDestAfcFourthRound": "babak keempat Asia",
+  "tourCupDestCafPlayoff": "play-off Afrika",
+  "tourCupDestOfcFinal": "final Oseania",
+  "qualLegendDirect": "Hijau: untuk saat ini, langsung menuju putaran final",
+  "qualLegendAfcStep": "Kuning: menuju babak keempat Asia",
+  "qualLegendCafStep": "Kuning: menuju play-off Afrika",
+  "qualLegendOfcStep": "Kuning: menuju final Oseania",
+  "qualLegendIntercont": "Kuning: menuju play-off antarbenua",
+  "qualLegendContention": "Oranye: masih bersaing, tetapi untuk sementara di luar posisi itu"
 }

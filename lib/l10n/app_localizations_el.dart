@@ -18504,4 +18504,34 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get statsTabHistory => 'Ιστορικό';
+
+  @override
+  String get tourCupDestAfcFourthRound => 'στον τέταρτο γύρο της Ασίας';
+
+  @override
+  String get tourCupDestCafPlayoff => 'στα αφρικανικά μπαράζ';
+
+  @override
+  String get tourCupDestOfcFinal => 'στον τελικό της Ωκεανίας';
+
+  @override
+  String get qualLegendDirect =>
+      'Πράσινο: με τα σημερινά δεδομένα, πηγαίνει απευθείας στην τελική φάση';
+
+  @override
+  String get qualLegendAfcStep =>
+      'Κίτρινο: πηγαίνει στον τέταρτο γύρο της Ασίας';
+
+  @override
+  String get qualLegendCafStep => 'Κίτρινο: πηγαίνει στα αφρικανικά μπαράζ';
+
+  @override
+  String get qualLegendOfcStep => 'Κίτρινο: πηγαίνει στον τελικό της Ωκεανίας';
+
+  @override
+  String get qualLegendIntercont => 'Κίτρινο: πηγαίνει στα διηπειρωτικά μπαράζ';
+
+  @override
+  String get qualLegendContention =>
+      'Πορτοκαλί: ακόμη μέσα, αλλά προς το παρόν εκτός αυτών των θέσεων';
 }

@@ -126,6 +126,8 @@ void main() {
       playoffNations: v.playoffNations,
       relegateCount: v.relegateCount,
       noRelegationGroups: v.noRelegationGroups,
+      directNations: v.directNations,
+      contentionThrough: v.contentionThrough,
     );
     await tester.pumpApp(
       const TabletShellScope(child: RoundResultsScreen(careerId: 1)),

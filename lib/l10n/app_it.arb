@@ -4599,5 +4599,14 @@
   "ncRouteLegendQualified": "Prima nel suo girone di qualificazione: qualificata direttamente, il suo posto passa alla successiva",
   "ncRouteLegendRunnerUp": "Seconda nel suo girone di qualificazione: va comunque agli spareggi, il suo posto passa alla successiva",
   "ncRouteLegendWaiting": "La prossima, se una squadra davanti esce da questa strada",
-  "statsTabHistory": "Storia"
+  "statsTabHistory": "Storia",
+  "tourCupDestAfcFourthRound": "il quarto turno asiatico",
+  "tourCupDestCafPlayoff": "lo spareggio africano",
+  "tourCupDestOfcFinal": "la finale dell'Oceania",
+  "qualLegendDirect": "Verde: per ora, diretta alla fase finale",
+  "qualLegendAfcStep": "Giallo: diretta al quarto turno asiatico",
+  "qualLegendCafStep": "Giallo: diretta allo spareggio africano",
+  "qualLegendOfcStep": "Giallo: diretta alla finale dell'Oceania",
+  "qualLegendIntercont": "Giallo: diretta allo spareggio intercontinentale",
+  "qualLegendContention": "Arancione: ancora in corsa, ma per ora fuori da quei posti"
 }

@@ -18513,4 +18513,34 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get statsTabHistory => 'Historia';
+
+  @override
+  String get tourCupDestAfcFourthRound => 'la cuarta ronda asiática';
+
+  @override
+  String get tourCupDestCafPlayoff => 'la repesca africana';
+
+  @override
+  String get tourCupDestOfcFinal => 'la final de Oceanía';
+
+  @override
+  String get qualLegendDirect =>
+      'Verde: por ahora, rumbo directo a la fase final';
+
+  @override
+  String get qualLegendAfcStep => 'Amarillo: rumbo a la cuarta ronda asiática';
+
+  @override
+  String get qualLegendCafStep => 'Amarillo: rumbo a la repesca africana';
+
+  @override
+  String get qualLegendOfcStep => 'Amarillo: rumbo a la final de Oceanía';
+
+  @override
+  String get qualLegendIntercont =>
+      'Amarillo: rumbo a la repesca intercontinental';
+
+  @override
+  String get qualLegendContention =>
+      'Naranja: aún en la pelea, pero por ahora fuera de esas plazas';
 }

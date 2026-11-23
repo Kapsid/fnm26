@@ -4599,5 +4599,14 @@
   "ncRouteLegendQualified": "Dẫn đầu bảng vòng loại: đi tiếp trực tiếp, suất của đội chuyển cho đội kế tiếp",
   "ncRouteLegendRunnerUp": "Nhì bảng vòng loại: vẫn vào play-off, suất của đội chuyển cho đội kế tiếp",
   "ncRouteLegendWaiting": "Đội kế tiếp, nếu một đội phía trên rời con đường này",
-  "statsTabHistory": "Lịch sử"
+  "statsTabHistory": "Lịch sử",
+  "tourCupDestAfcFourthRound": "vòng bốn châu Á",
+  "tourCupDestCafPlayoff": "play-off châu Phi",
+  "tourCupDestOfcFinal": "chung kết châu Đại Dương",
+  "qualLegendDirect": "Xanh lá: theo hiện tại, vào thẳng vòng chung kết",
+  "qualLegendAfcStep": "Vàng: hướng tới vòng bốn châu Á",
+  "qualLegendCafStep": "Vàng: hướng tới play-off châu Phi",
+  "qualLegendOfcStep": "Vàng: hướng tới chung kết châu Đại Dương",
+  "qualLegendIntercont": "Vàng: hướng tới play-off liên lục địa",
+  "qualLegendContention": "Cam: vẫn còn cơ hội, nhưng tạm thời ngoài các vị trí đó"
 }

@@ -4599,5 +4599,14 @@
   "ncRouteLegendQualified": "Premier de son groupe de qualification : qualifié directement, sa place passe au suivant",
   "ncRouteLegendRunnerUp": "Deuxième de son groupe de qualification : en barrage de toute façon, sa place passe au suivant",
   "ncRouteLegendWaiting": "Le suivant, si une équipe devant lui quitte cette voie",
-  "statsTabHistory": "Historique"
+  "statsTabHistory": "Historique",
+  "tourCupDestAfcFourthRound": "le quatrième tour asiatique",
+  "tourCupDestCafPlayoff": "le barrage africain",
+  "tourCupDestOfcFinal": "la finale de l'Océanie",
+  "qualLegendDirect": "Vert : en route directe pour la phase finale, en l'état",
+  "qualLegendAfcStep": "Jaune : en route pour le quatrième tour asiatique",
+  "qualLegendCafStep": "Jaune : en route pour le barrage africain",
+  "qualLegendOfcStep": "Jaune : en route pour la finale de l'Océanie",
+  "qualLegendIntercont": "Jaune : en route pour le barrage intercontinental",
+  "qualLegendContention": "Orange : encore dans la course, mais hors de ces places pour l'instant"
 }

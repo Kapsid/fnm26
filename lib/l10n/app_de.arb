@@ -4599,5 +4599,14 @@
   "ncRouteLegendQualified": "Führt seine Qualifikationsgruppe an: direkt qualifiziert, sein Platz geht weiter",
   "ncRouteLegendRunnerUp": "Zweiter seiner Qualifikationsgruppe: ohnehin in den Play-offs, sein Platz geht weiter",
   "ncRouteLegendWaiting": "Als Nächster dran, falls eine Mannschaft davor von diesem Weg fällt",
-  "statsTabHistory": "Verlauf"
+  "statsTabHistory": "Verlauf",
+  "tourCupDestAfcFourthRound": "die vierte Runde Asiens",
+  "tourCupDestCafPlayoff": "das afrikanische Play-off",
+  "tourCupDestOfcFinal": "das Ozeanien-Finale",
+  "qualLegendDirect": "Grün: nach aktuellem Stand direkt auf Kurs zur Endrunde",
+  "qualLegendAfcStep": "Gelb: auf Kurs zur vierten Runde Asiens",
+  "qualLegendCafStep": "Gelb: auf Kurs zum afrikanischen Play-off",
+  "qualLegendOfcStep": "Gelb: auf Kurs zum Ozeanien-Finale",
+  "qualLegendIntercont": "Gelb: auf Kurs zum interkontinentalen Play-off",
+  "qualLegendContention": "Orange: noch im Rennen, aber vorerst außerhalb dieser Plätze"
 }

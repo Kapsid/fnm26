@@ -4599,5 +4599,14 @@
   "ncRouteLegendQualified": "Eleme grubunda lider: doğrudan katılıyor, yeri bir sonrakine geçer",
   "ncRouteLegendRunnerUp": "Eleme grubunda ikinci: zaten play-off'ta, yeri bir sonrakine geçer",
   "ncRouteLegendWaiting": "Öndeki bir takım bu yoldan düşerse sıradaki",
-  "statsTabHistory": "Geçmiş"
+  "statsTabHistory": "Geçmiş",
+  "tourCupDestAfcFourthRound": "Asya dördüncü turuna",
+  "tourCupDestCafPlayoff": "Afrika play-off'una",
+  "tourCupDestOfcFinal": "Okyanusya finaline",
+  "qualLegendDirect": "Yeşil: şu anki duruma göre doğrudan final turnuvasına",
+  "qualLegendAfcStep": "Sarı: Asya dördüncü turuna gidiyor",
+  "qualLegendCafStep": "Sarı: Afrika play-off'una gidiyor",
+  "qualLegendOfcStep": "Sarı: Okyanusya finaline gidiyor",
+  "qualLegendIntercont": "Sarı: kıtalar arası play-off'a gidiyor",
+  "qualLegendContention": "Turuncu: hâlâ yarışta, ama şimdilik bu sıraların dışında"
 }

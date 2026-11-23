@@ -18507,4 +18507,35 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get statsTabHistory => 'Historie';
+
+  @override
+  String get tourCupDestAfcFourthRound => 'de Aziatische vierde ronde';
+
+  @override
+  String get tourCupDestCafPlayoff => 'de Afrikaanse play-off';
+
+  @override
+  String get tourCupDestOfcFinal => 'de finale van Oceanië';
+
+  @override
+  String get qualLegendDirect =>
+      'Groen: zoals het nu staat rechtstreeks naar de eindronde';
+
+  @override
+  String get qualLegendAfcStep =>
+      'Geel: op weg naar de Aziatische vierde ronde';
+
+  @override
+  String get qualLegendCafStep => 'Geel: op weg naar de Afrikaanse play-off';
+
+  @override
+  String get qualLegendOfcStep => 'Geel: op weg naar de finale van Oceanië';
+
+  @override
+  String get qualLegendIntercont =>
+      'Geel: op weg naar de intercontinentale play-off';
+
+  @override
+  String get qualLegendContention =>
+      'Oranje: nog in de race, maar voorlopig buiten die plaatsen';
 }

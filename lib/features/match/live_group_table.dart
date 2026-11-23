@@ -213,6 +213,7 @@ class LiveTableZones {
     this.contention,
     this.relegate = 0,
     this.playoffNations = const {},
+    this.directNations = const {},
   });
 
   /// Places that go through outright.
@@ -227,10 +228,14 @@ class LiveTableZones {
   /// Nations whose place leads to the intercontinental play-off.
   final Set<int> playoffNations;
 
+  /// Nations on course for the finals straight from the groups although
+  /// their place is only partly covered (Asia's best six winners): green.
+  final Set<int> directNations;
+
   /// The mark for [place] (1-based) held by [nationId] in a table of
   /// [count], in the hub table's order of precedence; null for none.
   Color? colorAt(int place, int nationId, {required int count}) =>
-      place <= direct
+      place <= direct || directNations.contains(nationId)
       ? AppColors.positive
       : playoffNations.contains(nationId)
       ? AppColors.playoff

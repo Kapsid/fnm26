@@ -432,6 +432,7 @@ class _HubScreenState extends ConsumerState<HubScreen> {
                       contentionPos: hub.groupContentionPos,
                       contentionThrough: hub.groupContentionThrough,
                       playoffNations: hub.groupPlayoffNations,
+                      directNations: hub.groupDirectNations,
                       relegateCount: hub.groupRelegateCount,
                       undecided: hub.groupUndecided,
                       code: code,
@@ -990,6 +991,7 @@ class _GroupTable extends StatelessWidget {
     required this.contentionPos,
     this.contentionThrough,
     this.playoffNations = const {},
+    this.directNations = const {},
     required this.code,
     required this.name,
     this.relegateCount = 0,
@@ -1013,6 +1015,11 @@ class _GroupTable extends StatelessWidget {
 
   /// Nations whose place leads to the intercontinental play-off (yellow).
   final Set<int> playoffNations;
+
+  /// Nations on course for the finals straight from the groups although
+  /// their position is only partly covered (green, see
+  /// [HubData.groupDirectNations]).
+  final Set<int> directNations;
 
   /// How many bottom places go down (red) — the Nations Cup relegates each
   /// group's last side.
@@ -1080,7 +1087,7 @@ class _GroupTable extends StatelessWidget {
     // (best runner-up / best third / play-off) and reds the relegation places,
     // using the same format the tournament detail screens compute, so the two
     // never disagree.
-    final direct = pos <= directCount;
+    final direct = pos <= directCount || directNations.contains(s.nationId);
     final inContention =
         contentionPos != null &&
         pos >= contentionPos! &&

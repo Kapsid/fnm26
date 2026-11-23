@@ -18352,4 +18352,34 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get statsTabHistory => 'Történet';
+
+  @override
+  String get tourCupDestAfcFourthRound => 'az ázsiai negyedik fordulóba';
+
+  @override
+  String get tourCupDestCafPlayoff => 'az afrikai pótselejtezőbe';
+
+  @override
+  String get tourCupDestOfcFinal => 'az óceániai döntőbe';
+
+  @override
+  String get qualLegendDirect =>
+      'Zöld: a jelenlegi állás szerint egyenesen a döntő tornára jut';
+
+  @override
+  String get qualLegendAfcStep => 'Sárga: az ázsiai negyedik fordulóba tart';
+
+  @override
+  String get qualLegendCafStep => 'Sárga: az afrikai pótselejtezőbe tart';
+
+  @override
+  String get qualLegendOfcStep => 'Sárga: az óceániai döntőbe tart';
+
+  @override
+  String get qualLegendIntercont =>
+      'Sárga: a kontinensek közötti pótselejtezőre tart';
+
+  @override
+  String get qualLegendContention =>
+      'Narancs: még versenyben, de egyelőre ezeken a helyeken kívül';
 }

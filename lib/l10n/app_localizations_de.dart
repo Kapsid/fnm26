@@ -18552,4 +18552,34 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get statsTabHistory => 'Verlauf';
+
+  @override
+  String get tourCupDestAfcFourthRound => 'die vierte Runde Asiens';
+
+  @override
+  String get tourCupDestCafPlayoff => 'das afrikanische Play-off';
+
+  @override
+  String get tourCupDestOfcFinal => 'das Ozeanien-Finale';
+
+  @override
+  String get qualLegendDirect =>
+      'Grün: nach aktuellem Stand direkt auf Kurs zur Endrunde';
+
+  @override
+  String get qualLegendAfcStep => 'Gelb: auf Kurs zur vierten Runde Asiens';
+
+  @override
+  String get qualLegendCafStep => 'Gelb: auf Kurs zum afrikanischen Play-off';
+
+  @override
+  String get qualLegendOfcStep => 'Gelb: auf Kurs zum Ozeanien-Finale';
+
+  @override
+  String get qualLegendIntercont =>
+      'Gelb: auf Kurs zum interkontinentalen Play-off';
+
+  @override
+  String get qualLegendContention =>
+      'Orange: noch im Rennen, aber vorerst außerhalb dieser Plätze';
 }

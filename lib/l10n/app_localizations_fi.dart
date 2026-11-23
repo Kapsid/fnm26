@@ -18484,4 +18484,36 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get statsTabHistory => 'Historia';
+
+  @override
+  String get tourCupDestAfcFourthRound => 'Aasian neljännelle kierrokselle';
+
+  @override
+  String get tourCupDestCafPlayoff => 'Afrikan karsintapudotuspeleihin';
+
+  @override
+  String get tourCupDestOfcFinal => 'Oseanian finaaliin';
+
+  @override
+  String get qualLegendDirect =>
+      'Vihreä: tämänhetkisen tilanteen mukaan suoraan lopputurnaukseen';
+
+  @override
+  String get qualLegendAfcStep =>
+      'Keltainen: matkalla Aasian neljännelle kierrokselle';
+
+  @override
+  String get qualLegendCafStep =>
+      'Keltainen: matkalla Afrikan karsintapudotuspeleihin';
+
+  @override
+  String get qualLegendOfcStep => 'Keltainen: matkalla Oseanian finaaliin';
+
+  @override
+  String get qualLegendIntercont =>
+      'Keltainen: matkalla mannertenvälisiin karsintapudotuspeleihin';
+
+  @override
+  String get qualLegendContention =>
+      'Oranssi: yhä mukana, mutta toistaiseksi näiden paikkojen ulkopuolella';
 }

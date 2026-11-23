@@ -4599,5 +4599,14 @@
   "ncRouteLegendQualified": "Johtaa karsintalohkoaan: pääsee suoraan, paikka siirtyy seuraavalle",
   "ncRouteLegendRunnerUp": "Toisena karsintalohkossaan: jatkokarsinnassa joka tapauksessa, paikka siirtyy seuraavalle",
   "ncRouteLegendWaiting": "Seuraavana vuorossa, jos edellä oleva putoaa tältä reitiltä",
-  "statsTabHistory": "Historia"
+  "statsTabHistory": "Historia",
+  "tourCupDestAfcFourthRound": "Aasian neljännelle kierrokselle",
+  "tourCupDestCafPlayoff": "Afrikan karsintapudotuspeleihin",
+  "tourCupDestOfcFinal": "Oseanian finaaliin",
+  "qualLegendDirect": "Vihreä: tämänhetkisen tilanteen mukaan suoraan lopputurnaukseen",
+  "qualLegendAfcStep": "Keltainen: matkalla Aasian neljännelle kierrokselle",
+  "qualLegendCafStep": "Keltainen: matkalla Afrikan karsintapudotuspeleihin",
+  "qualLegendOfcStep": "Keltainen: matkalla Oseanian finaaliin",
+  "qualLegendIntercont": "Keltainen: matkalla mannertenvälisiin karsintapudotuspeleihin",
+  "qualLegendContention": "Oranssi: yhä mukana, mutta toistaiseksi näiden paikkojen ulkopuolella"
 }

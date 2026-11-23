@@ -18372,4 +18372,33 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get statsTabHistory => 'Sejarah';
+
+  @override
+  String get tourCupDestAfcFourthRound => 'pusingan keempat Asia';
+
+  @override
+  String get tourCupDestCafPlayoff => 'play-off Afrika';
+
+  @override
+  String get tourCupDestOfcFinal => 'final Oceania';
+
+  @override
+  String get qualLegendDirect =>
+      'Hijau: buat masa ini, terus ke pusingan akhir';
+
+  @override
+  String get qualLegendAfcStep => 'Kuning: menuju pusingan keempat Asia';
+
+  @override
+  String get qualLegendCafStep => 'Kuning: menuju play-off Afrika';
+
+  @override
+  String get qualLegendOfcStep => 'Kuning: menuju final Oceania';
+
+  @override
+  String get qualLegendIntercont => 'Kuning: menuju play-off antara benua';
+
+  @override
+  String get qualLegendContention =>
+      'Jingga: masih bersaing, tetapi buat masa ini di luar tempat itu';
 }

@@ -18739,4 +18739,35 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get statsTabHistory => 'Історія';
+
+  @override
+  String get tourCupDestAfcFourthRound => 'азійського четвертого раунду';
+
+  @override
+  String get tourCupDestCafPlayoff => 'африканського плей-оф';
+
+  @override
+  String get tourCupDestOfcFinal => 'фіналу Океанії';
+
+  @override
+  String get qualLegendDirect =>
+      'Зелений: за поточним станом прямо до фінальної частини';
+
+  @override
+  String get qualLegendAfcStep =>
+      'Жовтий: шлях до азійського четвертого раунду';
+
+  @override
+  String get qualLegendCafStep => 'Жовтий: шлях до африканського плей-оф';
+
+  @override
+  String get qualLegendOfcStep => 'Жовтий: шлях до фіналу Океанії';
+
+  @override
+  String get qualLegendIntercont =>
+      'Жовтий: шлях до міжконтинентального плей-оф';
+
+  @override
+  String get qualLegendContention =>
+      'Помаранчевий: ще в боротьбі, але поки поза цими місцями';
 }

@@ -18602,4 +18602,35 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get statsTabHistory => 'Historia';
+
+  @override
+  String get tourCupDestAfcFourthRound => 'azjatyckiej czwartej rundy';
+
+  @override
+  String get tourCupDestCafPlayoff => 'baraży afrykańskich';
+
+  @override
+  String get tourCupDestOfcFinal => 'finału Oceanii';
+
+  @override
+  String get qualLegendDirect =>
+      'Zielony: według obecnego stanu prosto do turnieju finałowego';
+
+  @override
+  String get qualLegendAfcStep =>
+      'Żółty: w drodze do azjatyckiej czwartej rundy';
+
+  @override
+  String get qualLegendCafStep => 'Żółty: w drodze do baraży afrykańskich';
+
+  @override
+  String get qualLegendOfcStep => 'Żółty: w drodze do finału Oceanii';
+
+  @override
+  String get qualLegendIntercont =>
+      'Żółty: w drodze do baraży interkontynentalnych';
+
+  @override
+  String get qualLegendContention =>
+      'Pomarańczowy: wciąż w grze, ale na razie poza tymi miejscami';
 }

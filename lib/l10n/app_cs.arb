@@ -4599,5 +4599,14 @@
   "ncRouteLegendQualified": "Vede svou kvalifikační skupinu: postupuje přímo, jeho místo připadne dalšímu",
   "ncRouteLegendRunnerUp": "Je druhý ve své kvalifikační skupině: do baráže jde tak jako tak, jeho místo připadne dalšímu",
   "ncRouteLegendWaiting": "Další na řadě, kdyby někdo před ním z této cesty vypadl",
-  "statsTabHistory": "Historie"
+  "statsTabHistory": "Historie",
+  "tourCupDestAfcFourthRound": "asijského 4. kola",
+  "tourCupDestCafPlayoff": "africké baráže",
+  "tourCupDestOfcFinal": "finále Oceánie",
+  "qualLegendDirect": "Zeleně: podle aktuálního stavu míří přímo na finálový turnaj",
+  "qualLegendAfcStep": "Žlutě: míří do asijského 4. kola",
+  "qualLegendCafStep": "Žlutě: míří do africké baráže",
+  "qualLegendOfcStep": "Žlutě: míří do finále Oceánie",
+  "qualLegendIntercont": "Žlutě: míří do mezikontinentální baráže",
+  "qualLegendContention": "Oranžově: ještě ve hře, ale zatím mimo tato místa"
 }

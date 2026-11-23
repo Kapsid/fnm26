@@ -18586,4 +18586,36 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get statsTabHistory => 'Historique';
+
+  @override
+  String get tourCupDestAfcFourthRound => 'le quatrième tour asiatique';
+
+  @override
+  String get tourCupDestCafPlayoff => 'le barrage africain';
+
+  @override
+  String get tourCupDestOfcFinal => 'la finale de l\'Océanie';
+
+  @override
+  String get qualLegendDirect =>
+      'Vert : en route directe pour la phase finale, en l\'état';
+
+  @override
+  String get qualLegendAfcStep =>
+      'Jaune : en route pour le quatrième tour asiatique';
+
+  @override
+  String get qualLegendCafStep => 'Jaune : en route pour le barrage africain';
+
+  @override
+  String get qualLegendOfcStep =>
+      'Jaune : en route pour la finale de l\'Océanie';
+
+  @override
+  String get qualLegendIntercont =>
+      'Jaune : en route pour le barrage intercontinental';
+
+  @override
+  String get qualLegendContention =>
+      'Orange : encore dans la course, mais hors de ces places pour l\'instant';
 }

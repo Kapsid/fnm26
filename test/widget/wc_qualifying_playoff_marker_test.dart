@@ -183,14 +183,36 @@ void main() {
 
   // Asia: eight places over eight groups, so every winner is green. An Asian
   // World Cup host takes one of those places (it sits qualifying out), so only
-  // seven winners go and none is safe: the table must stop painting them green,
-  // or a winner it called qualified is the one left out (the Palestine report).
-  testWidgets('an Asian host leaves no Asian group winner painted safe', (
+  // seven winners go: the weakest winner on the cross-group ladder must not be
+  // painted green, or a winner the table called qualified is the one left out
+  // (the Palestine report). The other seven are green as things stand, as the
+  // ladder under the tables paints them.
+  testWidgets('an Asian host leaves its weakest group winner unpainted', (
     t,
   ) async {
     final asia = _data(Confederation.asia, 8, 5);
-    expect(await _green(t, asia), greaterThan(0));
-    expect(await _green(t, _withHosts(asia, {Confederation.asia: 1})), 0);
+    final hosted = _withHosts(asia, {Confederation.asia: 1});
+    final tables = [for (final g in asia.groups) g.standings];
+    final out = GroupAdvancement.worldCupPlayoffNations(
+      Confederation.asia,
+      tables,
+      hosts: 1,
+    );
+    final direct = GroupAdvancement.worldCupDirectNations(
+      Confederation.asia,
+      tables,
+      hosts: 1,
+    );
+    expect(direct, hasLength(7));
+    expect(out.where(direct.contains), isEmpty);
+    expect(
+      [for (final t in tables) t.first.nationId].where(out.contains),
+      hasLength(1),
+    );
+    // The tables paint exactly that ladder (only the first groups are in
+    // view): a winner is green when it is among the seven.
+    final shown = await _green(t, hosted);
+    expect(shown, greaterThan(0));
     // A host from elsewhere costs Asia nothing.
     expect(
       await _green(t, _withHosts(asia, {Confederation.europe: 1})),

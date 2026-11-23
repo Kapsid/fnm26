@@ -4599,5 +4599,14 @@
   "ncRouteLegendQualified": "Wint zijn kwalificatiegroep: direct geplaatst, zijn plaats gaat naar de volgende",
   "ncRouteLegendRunnerUp": "Tweede in zijn kwalificatiegroep: toch al in de play-offs, zijn plaats gaat naar de volgende",
   "ncRouteLegendWaiting": "De volgende, als een ploeg erboven van deze route afvalt",
-  "statsTabHistory": "Historie"
+  "statsTabHistory": "Historie",
+  "tourCupDestAfcFourthRound": "de Aziatische vierde ronde",
+  "tourCupDestCafPlayoff": "de Afrikaanse play-off",
+  "tourCupDestOfcFinal": "de finale van Oceanië",
+  "qualLegendDirect": "Groen: zoals het nu staat rechtstreeks naar de eindronde",
+  "qualLegendAfcStep": "Geel: op weg naar de Aziatische vierde ronde",
+  "qualLegendCafStep": "Geel: op weg naar de Afrikaanse play-off",
+  "qualLegendOfcStep": "Geel: op weg naar de finale van Oceanië",
+  "qualLegendIntercont": "Geel: op weg naar de intercontinentale play-off",
+  "qualLegendContention": "Oranje: nog in de race, maar voorlopig buiten die plaatsen"
 }

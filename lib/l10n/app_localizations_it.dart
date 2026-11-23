@@ -18500,4 +18500,33 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get statsTabHistory => 'Storia';
+
+  @override
+  String get tourCupDestAfcFourthRound => 'il quarto turno asiatico';
+
+  @override
+  String get tourCupDestCafPlayoff => 'lo spareggio africano';
+
+  @override
+  String get tourCupDestOfcFinal => 'la finale dell\'Oceania';
+
+  @override
+  String get qualLegendDirect => 'Verde: per ora, diretta alla fase finale';
+
+  @override
+  String get qualLegendAfcStep => 'Giallo: diretta al quarto turno asiatico';
+
+  @override
+  String get qualLegendCafStep => 'Giallo: diretta allo spareggio africano';
+
+  @override
+  String get qualLegendOfcStep => 'Giallo: diretta alla finale dell\'Oceania';
+
+  @override
+  String get qualLegendIntercont =>
+      'Giallo: diretta allo spareggio intercontinentale';
+
+  @override
+  String get qualLegendContention =>
+      'Arancione: ancora in corsa, ma per ora fuori da quei posti';
 }

@@ -4599,5 +4599,14 @@
   "ncRouteLegendQualified": "Conduce grupa preliminară: se califică direct, locul ei trece mai departe",
   "ncRouteLegendRunnerUp": "Pe locul doi în grupa preliminară: merge oricum la baraj, locul ei trece mai departe",
   "ncRouteLegendWaiting": "Următoarea, dacă o echipă din față iese de pe acest drum",
-  "statsTabHistory": "Istoric"
+  "statsTabHistory": "Istoric",
+  "tourCupDestAfcFourthRound": "turul al patrulea asiatic",
+  "tourCupDestCafPlayoff": "barajul african",
+  "tourCupDestOfcFinal": "finala Oceaniei",
+  "qualLegendDirect": "Verde: deocamdată, direct la turneul final",
+  "qualLegendAfcStep": "Galben: spre turul al patrulea asiatic",
+  "qualLegendCafStep": "Galben: spre barajul african",
+  "qualLegendOfcStep": "Galben: spre finala Oceaniei",
+  "qualLegendIntercont": "Galben: spre barajul intercontinental",
+  "qualLegendContention": "Portocaliu: încă în cursă, dar deocamdată în afara acestor locuri"
 }

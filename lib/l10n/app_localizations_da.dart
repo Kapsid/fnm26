@@ -18414,4 +18414,34 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get statsTabHistory => 'Historik';
+
+  @override
+  String get tourCupDestAfcFourthRound => 'Asiens fjerde runde';
+
+  @override
+  String get tourCupDestCafPlayoff => 'det afrikanske play-off';
+
+  @override
+  String get tourCupDestOfcFinal => 'Oceaniens finale';
+
+  @override
+  String get qualLegendDirect =>
+      'Grøn: på vej direkte til slutrunden, som det står nu';
+
+  @override
+  String get qualLegendAfcStep => 'Gul: på vej til Asiens fjerde runde';
+
+  @override
+  String get qualLegendCafStep => 'Gul: på vej til det afrikanske play-off';
+
+  @override
+  String get qualLegendOfcStep => 'Gul: på vej til Oceaniens finale';
+
+  @override
+  String get qualLegendIntercont =>
+      'Gul: på vej til det interkontinentale play-off';
+
+  @override
+  String get qualLegendContention =>
+      'Orange: stadig med, men uden for de pladser lige nu';
 }

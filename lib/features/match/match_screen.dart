@@ -2669,6 +2669,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                         contention: hub.groupContentionPos,
                         relegate: hub.groupRelegateCount,
                         playoffNations: hub.groupPlayoffNations,
+                        directNations: hub.groupDirectNations,
                       )
                     : null,
               );

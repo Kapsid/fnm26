@@ -126,6 +126,46 @@ abstract final class GroupAdvancement {
     return reach > pos ? reach : pos;
   }
 
+  /// Whether [confederation] plays its own play-off step this cycle (see
+  /// [ConfedPlayoffs]): calendar2, and places left to carry it once its
+  /// [hosts] have taken theirs.
+  static bool worldCupHasStep(
+    Confederation confederation, {
+    required int hosts,
+    bool confedSteps = false,
+  }) =>
+      confedSteps &&
+      ConfedPlayoffs.entrantCount(
+            confederation,
+            QualificationFormat.forConfederation(
+              confederation,
+            ).qualifyingBerths(hosts),
+          ) >
+          0;
+
+  /// The nations on course for the finals straight from their group, as
+  /// things stand: the top of the same position-at-a-time ladder the finalist
+  /// selection reads. Where a position is only partly covered (Asia's six
+  /// places over eight groups, Oceania's one over two) its best sides are
+  /// here and the rest are not, so a group table can paint a winner green
+  /// exactly when the cross-group ladder under it does. Arguments as for
+  /// [worldCupPlayoffNations].
+  static Set<int> worldCupDirectNations(
+    Confederation confederation,
+    List<List<GroupStanding>> groups, {
+    required int hosts,
+    int playoffPaths = 0,
+    bool confedSteps = false,
+  }) {
+    final fmt = QualificationFormat.forConfederation(confederation);
+    final berths =
+        worldCupHasStep(confederation, hosts: hosts, confedSteps: confedSteps)
+        ? ConfedPlayoffs.groupBerths(confederation, hosts)
+        : (fmt.qualifyingBerths(hosts) - playoffPaths).clamp(0, 99);
+    if (berths <= 0) return const {};
+    return Qualification.qualifiers(groups, berths).toSet();
+  }
+
   /// The nations that currently sit in [confederation]'s intercontinental
   /// play-off places, from the real format: the entrants just below the direct
   /// berths on the same position-at-a-time ladder the finalist selection uses

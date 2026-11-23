@@ -4599,5 +4599,14 @@
   "ncRouteLegendQualified": "Очолює свою кваліфікаційну групу: проходить напряму, його місце переходить далі",
   "ncRouteLegendRunnerUp": "Другий у своїй кваліфікаційній групі: і так у плей-оф, його місце переходить далі",
   "ncRouteLegendWaiting": "Наступний у черзі, якщо хтось попереду випаде з цього шляху",
-  "statsTabHistory": "Історія"
+  "statsTabHistory": "Історія",
+  "tourCupDestAfcFourthRound": "азійського четвертого раунду",
+  "tourCupDestCafPlayoff": "африканського плей-оф",
+  "tourCupDestOfcFinal": "фіналу Океанії",
+  "qualLegendDirect": "Зелений: за поточним станом прямо до фінальної частини",
+  "qualLegendAfcStep": "Жовтий: шлях до азійського четвертого раунду",
+  "qualLegendCafStep": "Жовтий: шлях до африканського плей-оф",
+  "qualLegendOfcStep": "Жовтий: шлях до фіналу Океанії",
+  "qualLegendIntercont": "Жовтий: шлях до міжконтинентального плей-оф",
+  "qualLegendContention": "Помаранчевий: ще в боротьбі, але поки поза цими місцями"
 }

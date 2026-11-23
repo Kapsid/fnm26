@@ -4599,5 +4599,14 @@
   "ncRouteLegendQualified": "Vinder sin kvalifikationsgruppe: direkte kvalificeret, pladsen går videre",
   "ncRouteLegendRunnerUp": "Toer i sin kvalifikationsgruppe: i playoff alligevel, pladsen går videre",
   "ncRouteLegendWaiting": "Den næste, hvis et hold foran falder fra denne vej",
-  "statsTabHistory": "Historik"
+  "statsTabHistory": "Historik",
+  "tourCupDestAfcFourthRound": "Asiens fjerde runde",
+  "tourCupDestCafPlayoff": "det afrikanske play-off",
+  "tourCupDestOfcFinal": "Oceaniens finale",
+  "qualLegendDirect": "Grøn: på vej direkte til slutrunden, som det står nu",
+  "qualLegendAfcStep": "Gul: på vej til Asiens fjerde runde",
+  "qualLegendCafStep": "Gul: på vej til det afrikanske play-off",
+  "qualLegendOfcStep": "Gul: på vej til Oceaniens finale",
+  "qualLegendIntercont": "Gul: på vej til det interkontinentale play-off",
+  "qualLegendContention": "Orange: stadig med, men uden for de pladser lige nu"
 }

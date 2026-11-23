@@ -18493,4 +18493,35 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get statsTabHistory => 'История';
+
+  @override
+  String get tourCupDestAfcFourthRound => 'азиатския четвърти кръг';
+
+  @override
+  String get tourCupDestCafPlayoff => 'африканския плейоф';
+
+  @override
+  String get tourCupDestOfcFinal => 'финала на Океания';
+
+  @override
+  String get qualLegendDirect =>
+      'Зелено: засега се насочва директно към финалите';
+
+  @override
+  String get qualLegendAfcStep =>
+      'Жълто: насочва се към азиатския четвърти кръг';
+
+  @override
+  String get qualLegendCafStep => 'Жълто: насочва се към африканския плейоф';
+
+  @override
+  String get qualLegendOfcStep => 'Жълто: насочва се към финала на Океания';
+
+  @override
+  String get qualLegendIntercont =>
+      'Жълто: насочва се към междуконтиненталния плейоф';
+
+  @override
+  String get qualLegendContention =>
+      'Оранжево: още в играта, но засега извън тези места';
 }

@@ -66,6 +66,8 @@ void main() {
       playoffNations: full.playoffNations,
       relegateCount: full.relegateCount,
       noRelegationGroups: full.noRelegationGroups,
+      directNations: full.directNations,
+      contentionThrough: full.contentionThrough,
     );
     await tester.pumpApp(
       const RoundResultsScreen(careerId: 1),

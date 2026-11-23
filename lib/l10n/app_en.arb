@@ -28402,5 +28402,41 @@
   "statsTabHistory": "History",
   "@statsTabHistory": {
     "description": "Team records, fifth tab: the side's overall over time and the way to the record book, legends and all-time world screens."
+  },
+  "tourCupDestAfcFourthRound": "the Asian fourth round",
+  "@tourCupDestAfcFourthRound": {
+    "description": "World Championship qualifying ladder: where Asia's sides below the direct places go (its own fourth round), written for the slot in tourThirdsAdvance / tourThirdsNextAdvance."
+  },
+  "tourCupDestCafPlayoff": "the African play-off",
+  "@tourCupDestCafPlayoff": {
+    "description": "World Championship qualifying ladder: where Africa's best runners-up go (its own play-off), written for the slot in tourThirdsAdvance / tourThirdsNextAdvance."
+  },
+  "tourCupDestOfcFinal": "the Oceania final",
+  "@tourCupDestOfcFinal": {
+    "description": "World Championship qualifying ladder: where Oceania's group winners go (its own one-off final), written for the slot in tourThirdsAdvance / tourThirdsNextAdvance."
+  },
+  "qualLegendDirect": "Green: on course for the finals, as things stand",
+  "@qualLegendDirect": {
+    "description": "Legend line over a confederation's World Championship qualifying tables: the green stripe."
+  },
+  "qualLegendAfcStep": "Yellow: on course for the Asian fourth round",
+  "@qualLegendAfcStep": {
+    "description": "Legend line over Asia's qualifying tables: the yellow stripe marks sides headed for Asia's fourth round."
+  },
+  "qualLegendCafStep": "Yellow: on course for the African play-off",
+  "@qualLegendCafStep": {
+    "description": "Legend line over Africa's qualifying tables: the yellow stripe marks sides headed for Africa's own play-off."
+  },
+  "qualLegendOfcStep": "Yellow: on course for the Oceania final",
+  "@qualLegendOfcStep": {
+    "description": "Legend line over Oceania's qualifying tables: the yellow stripe marks sides headed for Oceania's one-off final."
+  },
+  "qualLegendIntercont": "Yellow: on course for the intercontinental play-off",
+  "@qualLegendIntercont": {
+    "description": "Legend line over a confederation's qualifying tables: the yellow stripe marks sides headed for the intercontinental play-off."
+  },
+  "qualLegendContention": "Orange: still in the race, but outside those places for now",
+  "@qualLegendContention": {
+    "description": "Legend line over a confederation's qualifying tables: the orange stripe marks sides that can still reach a place but are outside them today."
   }
 }

@@ -18800,4 +18800,33 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get statsTabHistory => 'Historie';
+
+  @override
+  String get tourCupDestAfcFourthRound => 'asijského 4. kola';
+
+  @override
+  String get tourCupDestCafPlayoff => 'africké baráže';
+
+  @override
+  String get tourCupDestOfcFinal => 'finále Oceánie';
+
+  @override
+  String get qualLegendDirect =>
+      'Zeleně: podle aktuálního stavu míří přímo na finálový turnaj';
+
+  @override
+  String get qualLegendAfcStep => 'Žlutě: míří do asijského 4. kola';
+
+  @override
+  String get qualLegendCafStep => 'Žlutě: míří do africké baráže';
+
+  @override
+  String get qualLegendOfcStep => 'Žlutě: míří do finále Oceánie';
+
+  @override
+  String get qualLegendIntercont => 'Žlutě: míří do mezikontinentální baráže';
+
+  @override
+  String get qualLegendContention =>
+      'Oranžově: ještě ve hře, ale zatím mimo tato místa';
 }

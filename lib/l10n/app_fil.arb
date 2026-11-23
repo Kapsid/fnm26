@@ -4599,5 +4599,14 @@
   "ncRouteLegendQualified": "Nangunguna sa qualifying group: direktang pasok, ang puwesto ay mapupunta sa susunod",
   "ncRouteLegendRunnerUp": "Pangalawa sa qualifying group: nasa play-off na rin, ang puwesto ay mapupunta sa susunod",
   "ncRouteLegendWaiting": "Susunod sa pila kung may koponang nauna na mawala sa landas na ito",
-  "statsTabHistory": "Kasaysayan"
+  "statsTabHistory": "Kasaysayan",
+  "tourCupDestAfcFourthRound": "ikaapat na round ng Asia",
+  "tourCupDestCafPlayoff": "African play-off",
+  "tourCupDestOfcFinal": "final ng Oceania",
+  "qualLegendDirect": "Berde: sa ngayon, diretso sa finals",
+  "qualLegendAfcStep": "Dilaw: papunta sa ikaapat na round ng Asia",
+  "qualLegendCafStep": "Dilaw: papunta sa African play-off",
+  "qualLegendOfcStep": "Dilaw: papunta sa final ng Oceania",
+  "qualLegendIntercont": "Dilaw: papunta sa intercontinental play-off",
+  "qualLegendContention": "Kahel: may tsansa pa, pero labas muna sa mga puwestong iyon"
 }

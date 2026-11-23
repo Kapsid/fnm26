@@ -17766,4 +17766,31 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get statsTabHistory => '歴史';
+
+  @override
+  String get tourCupDestAfcFourthRound => 'アジア4次予選';
+
+  @override
+  String get tourCupDestCafPlayoff => 'アフリカのプレーオフ';
+
+  @override
+  String get tourCupDestOfcFinal => 'オセアニア決勝';
+
+  @override
+  String get qualLegendDirect => '緑：現時点で本大会へストレートイン';
+
+  @override
+  String get qualLegendAfcStep => '黄：アジア4次予選へ';
+
+  @override
+  String get qualLegendCafStep => '黄：アフリカのプレーオフへ';
+
+  @override
+  String get qualLegendOfcStep => '黄：オセアニア決勝へ';
+
+  @override
+  String get qualLegendIntercont => '黄：大陸間プレーオフへ';
+
+  @override
+  String get qualLegendContention => 'オレンジ：まだ可能性あり、ただし現時点では圏外';
 }

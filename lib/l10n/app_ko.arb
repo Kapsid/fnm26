@@ -4599,5 +4599,14 @@
   "ncRouteLegendQualified": "예선 조 1위: 본선 직행이라 자리는 다음 팀에게",
   "ncRouteLegendRunnerUp": "예선 조 2위: 어차피 플레이오프에 나가므로 자리는 다음 팀에게",
   "ncRouteLegendWaiting": "앞선 팀이 이 경로에서 빠지면 다음 차례",
-  "statsTabHistory": "역사"
+  "statsTabHistory": "역사",
+  "tourCupDestAfcFourthRound": "아시아 4차 예선",
+  "tourCupDestCafPlayoff": "아프리카 플레이오프",
+  "tourCupDestOfcFinal": "오세아니아 결승",
+  "qualLegendDirect": "초록: 현재 기준 본선 직행",
+  "qualLegendAfcStep": "노랑: 아시아 4차 예선 진출",
+  "qualLegendCafStep": "노랑: 아프리카 플레이오프 진출",
+  "qualLegendOfcStep": "노랑: 오세아니아 결승 진출",
+  "qualLegendIntercont": "노랑: 대륙 간 플레이오프 진출",
+  "qualLegendContention": "주황: 아직 가능성 있음, 현재는 해당 순위 밖"
 }

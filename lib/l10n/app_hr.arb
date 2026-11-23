@@ -4599,5 +4599,14 @@
   "ncRouteLegendQualified": "Vodi u svojoj kvalifikacijskoj skupini: prolazi izravno, njegovo mjesto ide dalje",
   "ncRouteLegendRunnerUp": "Drugi u svojoj kvalifikacijskoj skupini: ionako ide u doigravanje, njegovo mjesto ide dalje",
   "ncRouteLegendWaiting": "Sljedeći na redu ako netko ispred ispadne s ovog puta",
-  "statsTabHistory": "Povijest"
+  "statsTabHistory": "Povijest",
+  "tourCupDestAfcFourthRound": "azijsko četvrto kolo",
+  "tourCupDestCafPlayoff": "afrički play-off",
+  "tourCupDestOfcFinal": "finale Oceanije",
+  "qualLegendDirect": "Zeleno: prema trenutačnom stanju ide izravno u završnicu",
+  "qualLegendAfcStep": "Žuto: ide u azijsko četvrto kolo",
+  "qualLegendCafStep": "Žuto: ide u afrički play-off",
+  "qualLegendOfcStep": "Žuto: ide u finale Oceanije",
+  "qualLegendIntercont": "Žuto: ide u interkontinentalni play-off",
+  "qualLegendContention": "Narančasto: još u igri, ali zasad izvan tih mjesta"
 }

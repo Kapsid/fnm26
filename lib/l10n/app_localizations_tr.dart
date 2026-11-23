@@ -18322,4 +18322,33 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get statsTabHistory => 'Geçmiş';
+
+  @override
+  String get tourCupDestAfcFourthRound => 'Asya dördüncü turuna';
+
+  @override
+  String get tourCupDestCafPlayoff => 'Afrika play-off\'una';
+
+  @override
+  String get tourCupDestOfcFinal => 'Okyanusya finaline';
+
+  @override
+  String get qualLegendDirect =>
+      'Yeşil: şu anki duruma göre doğrudan final turnuvasına';
+
+  @override
+  String get qualLegendAfcStep => 'Sarı: Asya dördüncü turuna gidiyor';
+
+  @override
+  String get qualLegendCafStep => 'Sarı: Afrika play-off\'una gidiyor';
+
+  @override
+  String get qualLegendOfcStep => 'Sarı: Okyanusya finaline gidiyor';
+
+  @override
+  String get qualLegendIntercont => 'Sarı: kıtalar arası play-off\'a gidiyor';
+
+  @override
+  String get qualLegendContention =>
+      'Turuncu: hâlâ yarışta, ama şimdilik bu sıraların dışında';
 }

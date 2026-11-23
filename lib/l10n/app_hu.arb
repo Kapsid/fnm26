@@ -4599,5 +4599,14 @@
   "ncRouteLegendQualified": "Vezeti a selejtezőcsoportját: egyenesen kijut, a helye továbbszáll",
   "ncRouteLegendRunnerUp": "Második a selejtezőcsoportjában: úgyis pótselejtezőt játszik, a helye továbbszáll",
   "ncRouteLegendWaiting": "Következik, ha egy előtte álló csapat kiesik erről az útról",
-  "statsTabHistory": "Történet"
+  "statsTabHistory": "Történet",
+  "tourCupDestAfcFourthRound": "az ázsiai negyedik fordulóba",
+  "tourCupDestCafPlayoff": "az afrikai pótselejtezőbe",
+  "tourCupDestOfcFinal": "az óceániai döntőbe",
+  "qualLegendDirect": "Zöld: a jelenlegi állás szerint egyenesen a döntő tornára jut",
+  "qualLegendAfcStep": "Sárga: az ázsiai negyedik fordulóba tart",
+  "qualLegendCafStep": "Sárga: az afrikai pótselejtezőbe tart",
+  "qualLegendOfcStep": "Sárga: az óceániai döntőbe tart",
+  "qualLegendIntercont": "Sárga: a kontinensek közötti pótselejtezőre tart",
+  "qualLegendContention": "Narancs: még versenyben, de egyelőre ezeken a helyeken kívül"
 }

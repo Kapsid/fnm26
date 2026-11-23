@@ -18096,4 +18096,33 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get statsTabHistory => 'ประวัติ';
+
+  @override
+  String get tourCupDestAfcFourthRound => 'รอบสี่ของเอเชีย';
+
+  @override
+  String get tourCupDestCafPlayoff => 'เพลย์ออฟแอฟริกา';
+
+  @override
+  String get tourCupDestOfcFinal => 'รอบชิงชนะเลิศโอเชียเนีย';
+
+  @override
+  String get qualLegendDirect =>
+      'เขียว: ตามสถานการณ์ตอนนี้ ผ่านเข้ารอบสุดท้ายโดยตรง';
+
+  @override
+  String get qualLegendAfcStep => 'เหลือง: มุ่งสู่รอบสี่ของเอเชีย';
+
+  @override
+  String get qualLegendCafStep => 'เหลือง: มุ่งสู่เพลย์ออฟแอฟริกา';
+
+  @override
+  String get qualLegendOfcStep => 'เหลือง: มุ่งสู่รอบชิงชนะเลิศโอเชียเนีย';
+
+  @override
+  String get qualLegendIntercont => 'เหลือง: มุ่งสู่เพลย์ออฟข้ามทวีป';
+
+  @override
+  String get qualLegendContention =>
+      'ส้ม: ยังมีลุ้น แต่ตอนนี้อยู่นอกตำแหน่งเหล่านั้น';
 }

@@ -18316,4 +18316,33 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get statsTabHistory => 'Riwayat';
+
+  @override
+  String get tourCupDestAfcFourthRound => 'babak keempat Asia';
+
+  @override
+  String get tourCupDestCafPlayoff => 'play-off Afrika';
+
+  @override
+  String get tourCupDestOfcFinal => 'final Oseania';
+
+  @override
+  String get qualLegendDirect =>
+      'Hijau: untuk saat ini, langsung menuju putaran final';
+
+  @override
+  String get qualLegendAfcStep => 'Kuning: menuju babak keempat Asia';
+
+  @override
+  String get qualLegendCafStep => 'Kuning: menuju play-off Afrika';
+
+  @override
+  String get qualLegendOfcStep => 'Kuning: menuju final Oseania';
+
+  @override
+  String get qualLegendIntercont => 'Kuning: menuju play-off antarbenua';
+
+  @override
+  String get qualLegendContention =>
+      'Oranye: masih bersaing, tetapi untuk sementara di luar posisi itu';
 }

@@ -18425,4 +18425,33 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get statsTabHistory => 'Kasaysayan';
+
+  @override
+  String get tourCupDestAfcFourthRound => 'ikaapat na round ng Asia';
+
+  @override
+  String get tourCupDestCafPlayoff => 'African play-off';
+
+  @override
+  String get tourCupDestOfcFinal => 'final ng Oceania';
+
+  @override
+  String get qualLegendDirect => 'Berde: sa ngayon, diretso sa finals';
+
+  @override
+  String get qualLegendAfcStep => 'Dilaw: papunta sa ikaapat na round ng Asia';
+
+  @override
+  String get qualLegendCafStep => 'Dilaw: papunta sa African play-off';
+
+  @override
+  String get qualLegendOfcStep => 'Dilaw: papunta sa final ng Oceania';
+
+  @override
+  String get qualLegendIntercont =>
+      'Dilaw: papunta sa intercontinental play-off';
+
+  @override
+  String get qualLegendContention =>
+      'Kahel: may tsansa pa, pero labas muna sa mga puwestong iyon';
 }
