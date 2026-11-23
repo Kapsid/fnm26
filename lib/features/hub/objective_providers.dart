@@ -181,7 +181,14 @@ MsgKey objectiveFinishKey(
   int ordinal, {
   String? competition,
   bool offTheBottom = false,
+  bool roundOf32 = false,
 }) {
+  // Ordinal 3 is "the knockout rounds", which a 48-team World Championship
+  // starts at the last thirty-two: an exit there is worded as that round
+  // rather than the last sixteen it never reached (see [endedAtRoundOf32]).
+  if (roundOf32 && ordinal == 3 && tier == TournamentTier.world) {
+    return MsgKey.hubStageRoundOf32;
+  }
   // A ladder's lowest league has nothing to stay up in.
   if (tier == TournamentTier.nationsCup &&
       offTheBottom &&
@@ -234,13 +241,33 @@ String objectiveFinishText(
   int ordinal, {
   String? competition,
   bool offTheBottom = false,
+  bool roundOf32 = false,
 }) => _resultLabel(
   l,
   tier,
   ordinal,
   competition: competition,
   offTheBottom: offTheBottom,
+  roundOf32: roundOf32,
 );
+
+/// Whether [nationId]'s World Championship finals in [fixtures] (one cycle's)
+/// went no further than the round of 32. The board's ladder files that and a
+/// last-sixteen exit under one rung (3, the knockout rounds), which is right
+/// for grading but not for saying where the run ended: Nigeria went out in
+/// the last thirty-two and were told they reached the round of 16.
+bool endedAtRoundOf32(List<Fixture> fixtures, int nationId) {
+  bool mine(Fixture f) =>
+      f.homeNationId == nationId || f.awayNationId == nationId;
+  final played = {
+    for (final f in fixtures)
+      if (mine(f)) f.round,
+  };
+  return played.contains('R32') &&
+      !played.any(
+        (r) => const {'R16', 'QF', 'SF', '3RD', 'FINAL'}.contains(r),
+      );
+}
 
 /// The rungs that name the cup say which one: a CONCACAF manager is told to
 /// win the North America Nations Cup, not Europe's.
@@ -767,6 +794,22 @@ cycleObjectivesProvider = FutureProvider.autoDispose
         cycleObjectiveOutcomesProvider(careerId).future,
       );
       final l = ref.watch(appLocalizationsProvider);
+      // Only a World Championship run that stopped at the knockout rung needs
+      // the fixtures, to tell the last 32 from the last 16.
+      var roundOf32 = false;
+      if (outcomes.any(
+        (o) => o.tier == TournamentTier.world && o.actual == 3,
+      )) {
+        final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+        if (career != null) {
+          roundOf32 = endedAtRoundOf32(
+            await ref
+                .watch(competitionRepositoryProvider)
+                .cycleFixturesForNation(careerId, career.nationId),
+            career.nationId,
+          );
+        }
+      }
       return [
         for (final o in outcomes)
           (
@@ -794,6 +837,7 @@ cycleObjectivesProvider = FutureProvider.autoDispose
               o.actual,
               competition: o.competition,
               offTheBottom: o.offTheBottom,
+              roundOf32: roundOf32,
             ),
             offTheBottom: o.offTheBottom,
             graded: o.graded,
@@ -1723,6 +1767,7 @@ String _resultLabel(
   int ordinal, {
   String? competition,
   bool offTheBottom = false,
+  bool roundOf32 = false,
 }) => renderMsgKey(
   l,
   MsgText(
@@ -1731,6 +1776,7 @@ String _resultLabel(
       ordinal,
       competition: competition,
       offTheBottom: offTheBottom,
+      roundOf32: roundOf32,
     ),
   ),
 );
