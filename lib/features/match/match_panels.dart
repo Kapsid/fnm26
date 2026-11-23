@@ -2244,10 +2244,17 @@ class PitchCommentaryLine extends StatefulWidget {
     required this.countAt,
     required this.lineAt,
     this.kickOffLine,
+    this.shootoutLine,
     super.key,
   });
 
   final PitchClock clock;
+
+  /// Once a shootout is under way, the line for its latest kick (empty
+  /// before the first one lands): it replaces the match's own commentary,
+  /// which has nothing more to say and would otherwise stay on the last
+  /// open-play moment. Null outside a shootout.
+  final String? shootoutLine;
 
   /// What is said before the first real moment: the weather the match is
   /// played in ([pitchKickOffLine]), or null for the plain kick-off line.
@@ -2313,7 +2320,9 @@ class _PitchCommentaryLineState extends State<PitchCommentaryLine> {
 
   @override
   Widget build(BuildContext context) {
+    final shootout = widget.shootoutLine;
     final text =
+        shootout ??
         _line ??
         widget.kickOffLine ??
         AppLocalizations.of(context).matchFeedKickOff;
@@ -2327,11 +2336,11 @@ class _PitchCommentaryLineState extends State<PitchCommentaryLine> {
         duration: const Duration(milliseconds: 220),
         child: Text(
           text,
-          key: ValueKey(_serial),
+          key: shootout == null ? ValueKey(_serial) : ValueKey(('pen', text)),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: AppTypography.bodyMedium.copyWith(
-            color: _line == null
+            color: _line == null && shootout == null
                 ? AppColors.onSurfaceVariant
                 : AppColors.onSurface,
           ),
@@ -2350,8 +2359,13 @@ class PitchCommentaryFeed extends StatefulWidget {
     required this.countAt,
     required this.linesAt,
     this.kickOffLine,
+    this.shootoutLines = const [],
     super.key,
   });
+
+  /// The shootout's kicks said so far, oldest first, after the match's own
+  /// lines (see [PitchCommentaryLine.shootoutLine]).
+  final List<String> shootoutLines;
 
   final PitchClock clock;
 
@@ -2412,8 +2426,8 @@ class _PitchCommentaryFeedState extends State<PitchCommentaryFeed> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final kickOff = widget.kickOffLine;
-    final lines = [?kickOff, ..._lines];
-    if (_lines.isEmpty && kickOff == null) {
+    final lines = [?kickOff, ..._lines, ...widget.shootoutLines];
+    if (lines.isEmpty) {
       return Padding(
         padding: const EdgeInsets.all(AppSpacing.sm),
         child: Text(

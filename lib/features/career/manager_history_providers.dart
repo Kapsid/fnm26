@@ -223,8 +223,9 @@ managerHistoryProvider = FutureProvider.autoDispose.family<ManagerHistory?, int>
         final my = home ? f.homeScore! : f.awayScore!;
         final other = home ? f.awayScore! : f.homeScore!;
         played++;
-        gf += my;
-        ga += other;
+        // Goals as scored: not a shootout winner's stored extra goal.
+        gf += home ? f.shownHomeScore! : f.shownAwayScore!;
+        ga += home ? f.shownAwayScore! : f.shownHomeScore!;
         final oppId = home ? f.awayNationId : f.homeNationId;
         final result = (
           code: nations[nationId]?.code ?? '??',

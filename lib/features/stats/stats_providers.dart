@@ -51,8 +51,10 @@ careerStatsProvider = FutureProvider.autoDispose.family<CareerStatsSnapshot, int
     // If (rarely) the manager led both sides across different stints, take the
     // home view — the split still balances out across the career.
     final iAmHome = homeManaged;
-    final my = iAmHome ? f.homeScore! : f.awayScore!;
-    final opp = iAmHome ? f.awayScore! : f.homeScore!;
+    // Goals as scored: a shootout counts through [wonShootout] /
+    // [lostShootout], never as the extra goal the stored score carries.
+    final my = iAmHome ? f.shownHomeScore! : f.shownAwayScore!;
+    final opp = iAmHome ? f.shownAwayScore! : f.shownHomeScore!;
     final neutral = _finalsRounds.contains(f.round);
     final wonShootout =
         f.wentToShootout &&

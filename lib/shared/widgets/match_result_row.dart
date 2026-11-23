@@ -107,7 +107,10 @@ class MatchResultRow extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  played ? '$hs - $as' : '-:-',
+                  // A shootout's level score, the kicks in the tag below.
+                  played
+                      ? '${fixture.shownHomeScore} - ${fixture.shownAwayScore}'
+                      : '-:-',
                   style: AppTypography.labelMedium.copyWith(
                     color: played ? null : AppColors.onSurfaceVariant,
                   ),
