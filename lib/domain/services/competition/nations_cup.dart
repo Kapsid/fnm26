@@ -196,6 +196,32 @@ abstract final class NationsCup {
     return out;
   }
 
+  /// The bottom sides [promoteRelegate] sends down a league, straight from a
+  /// confederation's group tables: only the worst bottoms of a league whose
+  /// boundary has fewer places than groups (League C's four over League D's
+  /// two). A side last in its group but not in here stays up.
+  static Set<int> relegatedOf(
+    Iterable<({String name, List<GroupStanding> standings})> tables,
+  ) {
+    final byTier = <int, List<GroupStanding>>{};
+    final winners = <int, int>{};
+    for (final t in tables) {
+      if (t.standings.length < 2) continue;
+      final tier = tierOfGroupName(t.name);
+      (byTier[tier] ??= []).add(t.standings.last);
+      winners[tier] = (winners[tier] ?? 0) + 1;
+    }
+    final out = <int>{};
+    for (final MapEntry(key: tier, value: bottoms) in byTier.entries) {
+      final places = (winners[tier + 1] ?? 0) < bottoms.length
+          ? winners[tier + 1] ?? 0
+          : bottoms.length;
+      final worstFirst = [...bottoms]..sort((a, b) => _strongerFirst(b, a));
+      out.addAll(worstFirst.take(places).map((s) => s.nationId));
+    }
+    return out;
+  }
+
   /// [ladderUndecided] straight from a confederation's group tables.
   static Set<int> ladderUndecidedOf(
     Iterable<({String name, List<GroupStanding> standings})> tables,
