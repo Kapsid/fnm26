@@ -376,6 +376,46 @@ void main() {
     await _until(tester, () => _seen(tester).clock != '0');
   });
 
+  testWidgets('a new speed whose resumed picture fails both ways is told '
+      'from kick-off and cut to the same minute: the match never freezes', (
+    tester,
+  ) async {
+    Never fail(String how) => throw StateError(how);
+    await _pump(
+      tester,
+      preview: _preview(),
+      salt: 7,
+      prefs: {kMatchViewModePrefsKey: 'pitch'},
+      builder: (b) async =>
+          b.resume != null ? fail('the isolate died') : b.run(),
+      inPlace: (b) =>
+          b.resume != null ? fail('and so did the fallback') : b.run(),
+    );
+    await _until(tester, () => _ready(tester) && _clock(tester).playing);
+    await _seek(tester, _pb(tester).pacer.screenAt(30, 0, within: 0.5));
+    await tester.pump(const Duration(seconds: 3)); // any goal flash clears
+    final before = _pb(tester).positionAt(_clock(tester).value);
+
+    await tester.tap(find.text('1×'));
+    await tester.pump();
+    await _until(
+      tester,
+      () =>
+          !_screen(tester).pitchMode.building &&
+          find.text('2×').evaluate().isNotEmpty,
+    );
+    final pc = _screen(tester).pitchMode;
+    expect(pc.failed, isFalse);
+    expect(pc.playback, isNotNull);
+    expect(find.byKey(const Key('match.pitchFailed')), findsNothing);
+    final after = pc.playback!.positionAt(pc.clock!.value);
+    expect(after.minute, before.minute, reason: 'the same minute, not 0');
+    await _until(tester, () => _clock(tester).playing);
+    final at = _clock(tester).value;
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(_clock(tester).value, greaterThan(at), reason: 'the match plays on');
+  });
+
   testWidgets('when the in-place build fails too, the pitch shows an error '
       'and the way to the Timeline, never an endless spinner', (tester) async {
     await _pump(
