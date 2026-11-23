@@ -68,7 +68,6 @@
   "ceremonyHostTbc": "HOST, KUMPIRMASYON PA",
   "matchHalfTime": "HALF-TIME",
   "matchHalfTimeScore": "Halftime {home} : {away}",
-  "matchAggregateScore": "Kabuuan {home} : {away}",
   "resultAggregate": "kab. {home}-{away}",
   "matchContinue": "Magpatuloy",
   "matchContinuing": "Nagpapatuloy…",

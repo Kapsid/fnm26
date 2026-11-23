@@ -68,7 +68,6 @@
   "ceremonyHostTbc": "ΟΙΚΟΔΕΣΠΟΤΗΣ ΠΡΟΣ ΚΑΘΟΡΙΣΜΟ",
   "matchHalfTime": "ΗΜΙΧΡΟΝΟ",
   "matchHalfTimeScore": "Ημίχρονο {home} : {away}",
-  "matchAggregateScore": "Συνολικά {home} : {away}",
   "resultAggregate": "σύνολο {home}-{away}",
   "matchContinue": "Συνέχεια",
   "matchContinuing": "Συνέχεια…",

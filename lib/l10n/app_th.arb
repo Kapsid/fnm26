@@ -68,7 +68,6 @@
   "ceremonyHostTbc": "รอยืนยันเจ้าภาพ",
   "matchHalfTime": "พักครึ่งเวลา",
   "matchHalfTimeScore": "ครึ่งแรก {home} : {away}",
-  "matchAggregateScore": "สกอร์รวม {home} : {away}",
   "resultAggregate": "รวม {home}-{away}",
   "matchContinue": "ดำเนินการต่อ",
   "matchContinuing": "กำลังดำเนินการ…",

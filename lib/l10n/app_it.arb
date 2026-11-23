@@ -68,7 +68,6 @@
   "ceremonyHostTbc": "PAESE OSPITANTE DA DEFINIRE",
   "matchHalfTime": "INTERVALLO",
   "matchHalfTimeScore": "Primo tempo {home} : {away}",
-  "matchAggregateScore": "Totale {home} : {away}",
   "resultAggregate": "tot. {home}-{away}",
   "matchContinue": "Continua",
   "matchContinuing": "Si riprende…",

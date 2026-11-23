@@ -68,7 +68,6 @@
   "ceremonyHostTbc": "VÄRD ÄNNU EJ BEKRÄFTAD",
   "matchHalfTime": "HALVLEK",
   "matchHalfTimeScore": "Halvtid {home} : {away}",
-  "matchAggregateScore": "Totalt {home} : {away}",
   "resultAggregate": "tot. {home}-{away}",
   "matchContinue": "Fortsätt",
   "matchContinuing": "Fortsätter…",

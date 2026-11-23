@@ -260,11 +260,6 @@ class AppLocalizationsNl extends AppLocalizations {
   }
 
   @override
-  String matchAggregateScore(int home, int away) {
-    return 'Totaal $home : $away';
-  }
-
-  @override
   String resultAggregate(int home, int away) {
     return 'totaal $home-$away';
   }

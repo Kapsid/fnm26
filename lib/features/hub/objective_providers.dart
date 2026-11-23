@@ -489,7 +489,7 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
     final ncStarted = ncReadFixtures.any(
       (f) => f.round == 'NGROUP' && f.hasResult,
     );
-    final actual = !ncStarted
+    var actual = !ncStarted
         ? 0
         : _nationsCupOrdinal(
             standings: myNcGroup.standings,
@@ -514,6 +514,24 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
         confederation: ncConf,
       );
       decided = cupGroups.every((f) => f.hasResult);
+    }
+    // Last in a group is not always relegation: a boundary moves only as
+    // many sides as the smaller league has groups (League C's four bottoms
+    // over League D's two), so the best bottom sides stay up. Graded the way
+    // the ladder moves, once every group of the cup is played.
+    if (decided && !noDrop && actual == 1) {
+      final cupGroups = await comp.fixturesByRound(
+        careerId,
+        'NGROUP',
+        kind: CompetitionKind.nationsLeague,
+        confederation: ncConf,
+        edition: ncEdition,
+      );
+      if (!cupGroups.every((f) => f.hasResult)) {
+        decided = false;
+      } else if (!NationsCup.relegatedOf(ncTables).contains(career.nationId)) {
+        actual = 2;
+      }
     }
     out.add((
       tier: TournamentTier.nationsCup,

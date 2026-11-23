@@ -2410,21 +2410,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               clock: clockLabel,
               live: !ft,
               halfTime: halfTimeLabel,
-              aggregate: switch (preview.firstLeg) {
-                // Seen from tonight's hosts: their goals tonight and their
-                // goals away in the first leg.
-                final first? => l.matchAggregateScore(
-                  homeScore +
-                      (first.awayNationId == homeId
-                          ? first.awayScore ?? 0
-                          : first.homeScore ?? 0),
-                  awayScore +
-                      (first.homeNationId == awayId
-                          ? first.homeScore ?? 0
-                          : first.awayScore ?? 0),
-                ),
-                null => null,
-              },
               wholeNames: tablet,
               compact: bug,
               homeColor: homeC,

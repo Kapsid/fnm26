@@ -68,7 +68,6 @@
   "ceremonyHostTbc": "VERT BEKREFTES SENERE",
   "matchHalfTime": "PAUSE",
   "matchHalfTimeScore": "Pause {home} : {away}",
-  "matchAggregateScore": "Sammenlagt {home} : {away}",
   "resultAggregate": "sml. {home}-{away}",
   "matchContinue": "Fortsett",
   "matchContinuing": "Fortsetter…",

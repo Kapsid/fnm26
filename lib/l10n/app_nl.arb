@@ -68,7 +68,6 @@
   "ceremonyHostTbc": "GASTHEER NOG NIET BEKEND",
   "matchHalfTime": "RUST",
   "matchHalfTimeScore": "Rust {home} : {away}",
-  "matchAggregateScore": "Totaal {home} : {away}",
   "resultAggregate": "totaal {home}-{away}",
   "matchContinue": "Doorgaan",
   "matchContinuing": "Bezig…",

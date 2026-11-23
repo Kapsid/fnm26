@@ -264,11 +264,6 @@ class AppLocalizationsHr extends AppLocalizations {
   }
 
   @override
-  String matchAggregateScore(int home, int away) {
-    return 'Ukupno $home : $away';
-  }
-
-  @override
   String resultAggregate(int home, int away) {
     return 'ukupno $home-$away';
   }

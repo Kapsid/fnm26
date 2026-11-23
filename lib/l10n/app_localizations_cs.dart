@@ -264,11 +264,6 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
-  String matchAggregateScore(int home, int away) {
-    return 'Celkem $home : $away';
-  }
-
-  @override
   String resultAggregate(int home, int away) {
     return 'celkem $home-$away';
   }

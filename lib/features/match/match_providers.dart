@@ -229,7 +229,6 @@ class MatchPreview {
     required this.ground,
     this.homeFans,
     this.secondLegMargin,
-    this.firstLeg,
     this.talkScaleByNation = const {},
     this.atmosphereScale = 1.0,
     this.shootoutWeights,
@@ -311,9 +310,6 @@ class MatchPreview {
   /// when this is a second leg whose first leg is in; else null.
   final int? secondLegMargin;
 
-  /// The tie's first leg, played, when this is its second: the live
-  /// scoreboard keeps the aggregate beside the score.
-  final Fixture? firstLeg;
 
   /// The ninety-minute margin (home less away) at which this match goes to
   /// extra time and penalties: level for a knockout, [secondLegMargin] for a
@@ -685,7 +681,6 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
   // A second leg goes to extra time when it leaves the tie level on
   // aggregate, so the engine is told the first leg's margin.
   int? secondLegMargin;
-  Fixture? firstLeg;
   if (TwoLegged.isSecondLeg(fixture.round)) {
     final first = TwoLegged.firstLegAmong(fixture, [
       for (final c
@@ -699,7 +694,6 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
     ]);
     if (first != null && first.hasResult) {
       secondLegMargin = TwoLegged.levelMargin(first);
-      firstLeg = first;
     }
   }
 
@@ -801,7 +795,6 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
     ground: ground,
     homeFans: fans?.band,
     secondLegMargin: secondLegMargin,
-    firstLeg: firstLeg,
     talkScaleByNation: talkScaleByNation,
     atmosphereScale: atmosphereScale,
     shootoutWeights: shootoutWeights,

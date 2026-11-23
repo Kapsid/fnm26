@@ -68,7 +68,6 @@
   "ceremonyHostTbc": "GAZDĂ NECONFIRMATĂ",
   "matchHalfTime": "PAUZĂ",
   "matchHalfTimeScore": "Pauză {home} : {away}",
-  "matchAggregateScore": "General {home} : {away}",
   "resultAggregate": "gen. {home}-{away}",
   "matchContinue": "Continuați",
   "matchContinuing": "Se continuă…",

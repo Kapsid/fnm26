@@ -274,4 +274,58 @@ void main() {
       );
     });
   });
+
+  group('relegatedOf', () {
+    // League C: four groups, League D: two. Only the two worst of C's four
+    // bottom sides go down; the other two stay up though last in their group.
+    ({String name, List<GroupStanding> standings}) t(
+      String name,
+      int winner,
+      int bottom,
+      int bottomPoints,
+    ) => (
+      name: name,
+      standings: [
+        _row(winner, points: 12),
+        _row(bottom, points: bottomPoints),
+      ],
+    );
+
+    test('only the worst bottoms of a league drop', () {
+      final tables = [
+        t('C1', 1, 11, 4),
+        t('C2', 2, 12, 1),
+        t('C3', 3, 13, 6),
+        t('C4', 4, 14, 0),
+        t('D1', 5, 15, 0),
+        t('D2', 6, 16, 0),
+      ];
+      expect(NationsCup.relegatedOf(tables), {12, 14});
+      // The very same sides the ladder moves.
+      final next = NationsCup.promoteRelegate(
+        tiers: {
+          for (var i = 1; i <= 16; i++)
+            i: i <= 4 || (i >= 11 && i <= 14) ? 2 : 3,
+        },
+        groups: [
+          for (final x in tables)
+            (
+              tier: NationsCup.tierOfGroupName(x.name),
+              winner: x.standings.first,
+              bottom: x.standings.last,
+            ),
+        ],
+      );
+      expect(
+        [
+          for (final id in [11, 12, 13, 14]) next[id],
+        ],
+        [2, 3, 2, 3],
+      );
+    });
+
+    test('the lowest league relegates nobody', () {
+      expect(NationsCup.relegatedOf([t('D1', 5, 15, 0)]), isEmpty);
+    });
+  });
 }
