@@ -555,7 +555,12 @@ class MatchControlBar extends StatelessWidget {
   final int spent;
   final VoidCallback onPlayPause;
   final VoidCallback onSpeed;
-  final VoidCallback onTactics;
+
+  /// Opens the tactics; null once the match is down to its shootout, when
+  /// there is nothing left to change: the tactics key (tired legs and the
+  /// substitution count) leaves the bar rather than crowding it, which cut
+  /// its words off on a phone ("TIRED ×… 0/6").
+  final VoidCallback? onTactics;
 
   /// Jumps the clock to the final whistle, or null when the control is not
   /// offered — the pill is on the bar if and only if this is non-null, and the
@@ -578,7 +583,7 @@ class MatchControlBar extends StatelessWidget {
     // and counts the players who have nothing left, so a fading side is
     // something the manager sees rather than something they only notice in
     // the full-time ratings.
-    final tired = spent > 0 && subsUsed < maxSubs;
+    final tired = onTactics != null && spent > 0 && subsUsed < maxSubs;
     // A phone with the view toggle on the bar: tighter gaps, a tighter speed
     // key and the tactics key's word without its icon, so the word (and
     // always the count) still fits.
@@ -621,17 +626,20 @@ class MatchControlBar extends StatelessWidget {
               toggle,
             ],
             gap,
-            _PillButton(
-              expand: true,
-              onTap: onTactics,
-              alert: tired,
-              child: MatchTacticsPillContent(
-                showIcon: !narrow,
-                subsUsed: subsUsed,
-                spent: spent,
-                maxSubs: maxSubs,
-              ),
-            ),
+            if (onTactics case final open?)
+              _PillButton(
+                expand: true,
+                onTap: open,
+                alert: tired,
+                child: MatchTacticsPillContent(
+                  showIcon: !narrow,
+                  subsUsed: subsUsed,
+                  spent: spent,
+                  maxSubs: maxSubs,
+                ),
+              )
+            else
+              const Spacer(),
             if (onSkip != null) ...[
               gap,
               _PillButton(

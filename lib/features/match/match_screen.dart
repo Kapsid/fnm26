@@ -1210,6 +1210,34 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
         e.playerId,
   };
 
+  /// The commentary for the shootout's first [revealed] kicks, oldest first,
+  /// for the line under the pitch (and the tablet's feed): each kick scored,
+  /// saved, wide or off the woodwork, naming the taker (and the keeper, once
+  /// the pitch has drawn who kept goal).
+  List<String> _shootoutLines(
+    AppLocalizations l,
+    MatchPreview preview,
+    KnockoutOutcome o,
+    int revealed,
+  ) {
+    if (revealed <= 0) return const [];
+    final cast = _stage?.cast;
+    return [
+      for (final k in ShootoutStaging.order(o).take(revealed))
+        shootoutKickLine(
+          l,
+          k.kick,
+          _pc.names,
+          _seed(preview),
+          index: k.index,
+          keeperId: switch (cast) {
+            null => null,
+            final c => k.home ? c.awayKeeperId : c.homeKeeperId,
+          },
+        ),
+    ];
+  }
+
   /// The manager's takers by name, for the shootout strip.
   List<String> _takerNames(MatchPreview preview) => [
     for (final p in _penTakers(preview)) p.name,
@@ -1265,6 +1293,12 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
         ? (o.homeScore + 1, o.awayScore)
         : (o.homeScore, o.awayScore + 1);
   }
+
+  /// The full-time score to SHOW: [_finalScore] without the shootout
+  /// winner's extra goal, so the scoreboard reads the level score that the
+  /// summary, the results and the feed show (see [Fixture.shownHomeScore]).
+  (int, int) _shownScore(MatchPreview preview, MatchResult r) =>
+      fullTimeShownScore(r, _knockoutOutcome(preview, r));
 
   /// Home-team momentum (0–100) at the current minute: a strength baseline over
   /// which pressure *builds toward* the side about to score in the minutes
@@ -2291,10 +2325,13 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             final inExtraTime = _minute > 90 && !_clockDone;
             final inStoppage = _minute == 90 && _added > 0 && !ft;
             // While playing, the score is the running tally of shown goals,
-            // extra time included; at full time it is the true recorded result
-            // (a level knockout settled by a shootout), so the screen never
-            // disagrees with what gets saved.
+            // extra time included; at full time it is the score the result
+            // screens show for what gets saved: a level knockout settled by a
+            // shootout stays level (the kicks are shown beside it), never with
+            // the extra goal the stored result credits the winner with.
+            // [_finalScore] keeps that goal, for who won.
             final (finalHome, finalAway) = _finalScore(preview, r);
+            final (shownHome, shownAway) = _shownScore(preview, r);
             final liveHome = shown
                 .where((e) => e.type == MatchEventType.goal)
                 .where((e) => e.teamNationId == homeId)
@@ -2302,8 +2339,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             final liveAway =
                 shown.where((e) => e.type == MatchEventType.goal).length -
                 liveHome;
-            final homeScore = ft ? finalHome : liveHome;
-            final awayScore = ft ? finalAway : liveAway;
+            final homeScore = ft ? shownHome : liveHome;
+            final awayScore = ft ? shownAway : liveAway;
             _setSoundGround(preview);
             _syncSound();
             if (ft && _started) {
@@ -2435,6 +2472,16 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                     awayCode: code(awayId),
                     homeColor: homeC,
                     awayColor: awayC,
+                  )
+                : null;
+            // The kicks, said one by one under the pitch as they land: the
+            // match's own commentary has nothing more to say by then.
+            final shootoutLines = showingShootout || decidedByShootout
+                ? _shootoutLines(
+                    l,
+                    preview,
+                    knockout!,
+                    showingShootout ? _penRevealed : _penTotal,
                   )
                 : null;
             final Widget? shootout = showingShootout || decidedByShootout
@@ -2959,6 +3006,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                         countAt: pb.lineCountAt,
                         linesAt: (t) =>
                             pb.linesUpTo(l, t, _pc.names, _seed(preview)),
+                        shootoutLines: shootoutLines ?? const [],
                       )
                     : null,
                 overlays: overlays,
@@ -3064,6 +3112,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                                 countAt: pb.lineCountAt,
                                 lineAt: (t) =>
                                     pb.lineAt(l, t, _pc.names, _seed(preview)),
+                                shootoutLine: shootoutLines == null
+                                    ? null
+                                    : shootoutLines.lastOrNull ?? '',
                               )
                             else
                               const SizedBox(height: kPitchCommentaryHeight),
@@ -3191,7 +3242,11 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                     spent: _spentCount(preview, r),
                     onPlayPause: _togglePlay,
                     onSpeed: _cycleSpeed,
-                    onTactics: () => _openTactics(preview),
+                    // Down to the shootout: nothing left to change, so no
+                    // tactics key (nor its tired legs and subs count).
+                    onTactics: _isShootout && _clockDone
+                        ? null
+                        : () => _openTactics(preview),
                     // The only wiring of the skip aid: off here is off
                     // everywhere, and the pill is absent rather than dead.
                     onSkip: kShowSkipMatch ? _skip : null,
@@ -3234,3 +3289,11 @@ class _PitchFailed extends StatelessWidget {
     ),
   );
 }
+
+/// The full-time score the match screen shows: the engine's score, or for a
+/// level knockout the score after extra time. A shootout's winner is NOT
+/// given the extra goal the stored result carries (see
+/// [Fixture.shownHomeScore]); the kicks are shown beside the score instead.
+@visibleForTesting
+(int, int) fullTimeShownScore(MatchResult r, KnockoutOutcome? o) =>
+    o == null ? (r.homeScore, r.awayScore) : (o.homeScore, o.awayScore);

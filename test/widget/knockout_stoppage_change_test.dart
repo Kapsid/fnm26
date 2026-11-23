@@ -244,7 +244,7 @@ Future<_Shown> _playOut(
       changed = true;
       final bar = find.byType(MatchControlBar);
       expect(bar, findsOneWidget);
-      tester.widget<MatchControlBar>(bar).onTactics();
+      tester.widget<MatchControlBar>(bar).onTactics!();
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(InMatchTacticsKeys.presetsButton));
       await tester.pumpAndSettle();

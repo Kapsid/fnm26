@@ -10,6 +10,7 @@
 /// re-watched or re-simulated minute reads the same.
 library;
 
+import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_moments.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
@@ -236,6 +237,49 @@ String? pitchKickOffLine(AppLocalizations l, WeatherKind weather) =>
       WeatherKind.haze => l.pitchComKickOffHaze,
       WeatherKind.clear || WeatherKind.rain || WeatherKind.dustStorm => null,
     };
+
+/// The commentary line for one shootout [kick], the [index]th of the
+/// shootout (0-based, across both sides): the penalty wordings open play
+/// uses, scored, saved, wide or off the woodwork. [keeperId] is the keeper
+/// facing it (0 or null when unknown); a taker of 0 (no takers were named)
+/// reads as [AppLocalizations.pitchComSomeone].
+///
+/// Without it the line under the pitch stayed on the last open-play moment
+/// ("Over the bar from Evans.") through every kick.
+String shootoutKickLine(
+  AppLocalizations l,
+  ShootoutKick kick,
+  Map<int, String> names,
+  int seed, {
+  required int index,
+  int? keeperId,
+}) {
+  final p = names[kick.takerId] ?? l.pitchComSomeone;
+  final k = keeperId == null ? null : names[keeperId];
+  final ok = switch (kick.result) {
+    KickResult.scored => [
+      l.pitchComPenaltyGoal1(p),
+      l.pitchComPenaltyGoal2(p),
+      l.pitchComPenaltyGoal3(p),
+    ],
+    KickResult.saved => [
+      if (k != null) l.pitchComPenaltySaved1(p, k),
+      l.pitchComPenaltySaved2(p),
+      if (k != null) l.pitchComPenaltySaved3(p, k),
+    ],
+    KickResult.wide => [
+      l.pitchComPenaltyMissed1(p),
+      l.pitchComPenaltyMissed2(p),
+      l.pitchComPenaltyMissed3(p),
+    ],
+    KickResult.post => [
+      l.pitchComPenaltyWoodwork1(p),
+      l.pitchComPenaltyWoodwork2(p),
+      l.pitchComPenaltyWoodwork3(p),
+    ],
+  };
+  return ok[((seed ^ (index * 7919)) & 0x7fffffff) % ok.length];
+}
 
 /// Whether [m] flows on with no commentary line (see [pitchLine]).
 bool isRoutineMoment(MatchMoment m) => switch (m) {

@@ -87,7 +87,10 @@ void main() {
   ) async {
     for (final round in ['SF', 'CFINAL', 'NSF', '3RD']) {
       await pump(tester, shootout(round));
-      expect(find.text('2 - 1'), findsOneWidget, reason: round);
+      // The level score the kicks were taken from, not the stored 2-1 that
+      // credits the shootout winner an extra goal.
+      expect(find.text('1 - 1'), findsOneWidget, reason: round);
+      expect(find.text('2 - 1'), findsNothing, reason: round);
       expect(find.text('pens 4-3'), findsOneWidget, reason: round);
     }
   });

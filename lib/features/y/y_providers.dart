@@ -138,8 +138,11 @@ final AutoDisposeFutureProviderFamily<List<YJudged>, int> yJudgedProvider =
           opponent: opponent.name,
           nationRank: rankOf(career.nationId),
           opponentRank: rankOf(opponentId),
-          scored: home ? f.homeScore! : f.awayScore!,
-          conceded: home ? f.awayScore! : f.homeScore!,
+          // The level score a shootout was played from, not the stored one
+          // that credits the winner an extra goal ([Fixture.shownHomeScore]):
+          // the feed quotes this scoreline.
+          scored: home ? f.shownHomeScore! : f.shownAwayScore!,
+          conceded: home ? f.shownAwayScore! : f.shownHomeScore!,
           date: f.date,
           key: 'fx:${f.id}',
           competitive: f.round != Rounds.friendly,
