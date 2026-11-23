@@ -305,16 +305,20 @@ void main() {
         expect(find.byKey(MatchSummaryTab.shotMapKey), findsNothing);
         expect(find.byKey(ShotMapView.viewKey), findsOneWidget);
       }
+      // Where a card sits in the list, whatever is scrolled into view: the
+      // list need not hold both cards on screen at once.
+      double at(Key k) {
+        final pos = tester.state<ScrollableState>(list).position.pixels;
+        return top(k) + pos;
+      }
+
+      await _show(tester, find.byKey(MatchSummaryTab.otherMatchesKey));
+      final other = at(MatchSummaryTab.otherMatchesKey);
       await _show(tester, find.byKey(MatchSummaryTab.stadiumKey));
-      expect(
-        top(MatchSummaryTab.otherMatchesKey),
-        lessThan(top(MatchSummaryTab.stadiumKey)),
-      );
+      final stadium = at(MatchSummaryTab.stadiumKey);
+      expect(other, lessThan(stadium));
       await _show(tester, find.byKey(MatchSummaryTab.headlineKey));
-      expect(
-        top(MatchSummaryTab.stadiumKey),
-        lessThan(top(MatchSummaryTab.headlineKey)),
-      );
+      expect(stadium, lessThan(at(MatchSummaryTab.headlineKey)));
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
     });
