@@ -17788,4 +17788,8 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get legendThrough => '緑：現時点で次のラウンドへ進出';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'このキャンペーンの評価対象となる試合のみ。親善試合と他の大会は含みません。';
 }

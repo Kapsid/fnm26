@@ -18518,4 +18518,8 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get legendThrough => 'Зелено: засега продължава в следващия кръг';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'Само мачовете, по които се оценява тази кампания: приятелските мачове и другите турнири не се броят.';
 }

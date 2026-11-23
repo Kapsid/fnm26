@@ -18511,4 +18511,8 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String get legendThrough =>
       'Vihreä: tämänhetkisen tilanteen mukaan jatkoon seuraavalle kierrokselle';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'Vain ottelut, joiden perusteella tämä kampanja arvioidaan: ystävyysottelut ja muut kilpailut eivät ole mukana.';
 }

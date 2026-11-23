@@ -4607,5 +4607,6 @@
   "qualLegendCafStep": "Keltainen: matkalla Afrikan karsintapudotuspeleihin",
   "qualLegendOfcStep": "Keltainen: matkalla Oseanian finaaliin",
   "qualLegendIntercont": "Keltainen: matkalla mannertenvälisiin karsintapudotuspeleihin",
-  "legendThrough": "Vihreä: tämänhetkisen tilanteen mukaan jatkoon seuraavalle kierrokselle"
+  "legendThrough": "Vihreä: tämänhetkisen tilanteen mukaan jatkoon seuraavalle kierrokselle",
+  "campaignRunInNumbersNote": "Vain ottelut, joiden perusteella tämä kampanja arvioidaan: ystävyysottelut ja muut kilpailut eivät ole mukana."
 }

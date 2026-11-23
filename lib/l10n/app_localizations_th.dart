@@ -18119,4 +18119,8 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get legendThrough => 'เขียว: ตามสถานการณ์ตอนนี้ ผ่านเข้ารอบถัดไป';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'เฉพาะนัดที่ใช้ตัดสินแคมเปญนี้ ไม่นับเกมกระชับมิตรและรายการอื่น';
 }

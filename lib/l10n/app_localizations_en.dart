@@ -18476,4 +18476,8 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get legendThrough =>
       'Green: going through to the next round, as things stand';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'Only the matches this campaign is judged on: friendlies and other competitions are left out.';
 }

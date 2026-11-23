@@ -4607,5 +4607,6 @@
   "qualLegendCafStep": "Žlutě: míří do africké baráže",
   "qualLegendOfcStep": "Žlutě: míří do finále Oceánie",
   "qualLegendIntercont": "Žlutě: míří do mezikontinentální baráže",
-  "legendThrough": "Zeleně: podle aktuálního stavu postupuje do dalšího kola"
+  "legendThrough": "Zeleně: podle aktuálního stavu postupuje do dalšího kola",
+  "campaignRunInNumbersNote": "Jen zápasy, podle kterých se kampaň hodnotí: přátelská utkání a jiné soutěže se nepočítají."
 }

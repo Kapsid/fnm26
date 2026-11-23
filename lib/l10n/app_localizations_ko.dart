@@ -17832,4 +17832,8 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get legendThrough => '초록: 현재 기준 다음 라운드 진출';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      '이 캠페인의 평가 대상 경기만 포함합니다. 친선 경기와 다른 대회는 제외됩니다.';
 }

@@ -18433,4 +18433,8 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get legendThrough => 'Grønn: videre til neste runde, slik det står nå';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'Bare kampene kampanjen blir bedømt på: vennskapskamper og andre turneringer telles ikke.';
 }

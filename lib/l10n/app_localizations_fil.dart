@@ -18448,4 +18448,8 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get legendThrough => 'Berde: sa ngayon, pasok sa susunod na round';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'Ang mga laban lang na batayan ng paghatol sa kampanyang ito: hindi kasama ang mga friendly at ibang kompetisyon.';
 }

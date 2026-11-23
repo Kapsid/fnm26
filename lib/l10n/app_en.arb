@@ -28426,5 +28426,9 @@
   "legendThrough": "Green: going through to the next round, as things stand",
   "@legendThrough": {
     "description": "Legend line over group tables outside qualifying (finals groups, regional cups, the African zone groups): the green stripe."
+  },
+  "campaignRunInNumbersNote": "Only the matches this campaign is judged on: friendlies and other competitions are left out.",
+  "@campaignRunInNumbersNote": {
+    "description": "Verdict screen, under the run-in-numbers heading: the figures cover only the matches the campaign is judged on, not the whole career."
   }
 }

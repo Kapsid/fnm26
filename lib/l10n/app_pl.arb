@@ -4607,5 +4607,6 @@
   "qualLegendCafStep": "Żółty: w drodze do baraży afrykańskich",
   "qualLegendOfcStep": "Żółty: w drodze do finału Oceanii",
   "qualLegendIntercont": "Żółty: w drodze do baraży interkontynentalnych",
-  "legendThrough": "Zielony: według obecnego stanu awans do następnej rundy"
+  "legendThrough": "Zielony: według obecnego stanu awans do następnej rundy",
+  "campaignRunInNumbersNote": "Tylko mecze, na podstawie których oceniana jest ta kampania: towarzyskie i inne rozgrywki się nie liczą."
 }
