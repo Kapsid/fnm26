@@ -18763,6 +18763,6 @@ class AppLocalizationsUk extends AppLocalizations {
       'Жовтий: шлях до міжконтинентального плей-оф';
 
   @override
-  String get qualLegendContention =>
-      'Помаранчевий: ще в боротьбі, але поки поза цими місцями';
+  String get legendThrough =>
+      'Зелений: за поточним станом проходить до наступного раунду';
 }

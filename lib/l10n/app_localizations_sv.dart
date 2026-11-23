@@ -18423,6 +18423,6 @@ class AppLocalizationsSv extends AppLocalizations {
       'Gul: på väg till den interkontinentala play-offen';
 
   @override
-  String get qualLegendContention =>
-      'Orange: fortfarande med, men utanför de platserna just nu';
+  String get legendThrough =>
+      'Grön: vidare till nästa omgång, som det ser ut nu';
 }

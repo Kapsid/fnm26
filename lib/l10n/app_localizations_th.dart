@@ -18118,6 +18118,5 @@ class AppLocalizationsTh extends AppLocalizations {
   String get qualLegendIntercont => 'เหลือง: มุ่งสู่เพลย์ออฟข้ามทวีป';
 
   @override
-  String get qualLegendContention =>
-      'ส้ม: ยังมีลุ้น แต่ตอนนี้อยู่นอกตำแหน่งเหล่านั้น';
+  String get legendThrough => 'เขียว: ตามสถานการณ์ตอนนี้ ผ่านเข้ารอบถัดไป';
 }

@@ -93,7 +93,6 @@ void main() {
         1,
         reason: "League A's bottom side is relegated, so one row is red",
       );
-      expect(ncHub.groupContentionPos, isNull);
 
       // And the table stays hidden until the draw has actually been watched.
       expect(

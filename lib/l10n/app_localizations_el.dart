@@ -18527,6 +18527,6 @@ class AppLocalizationsEl extends AppLocalizations {
   String get qualLegendIntercont => 'Κίτρινο: πηγαίνει στα διηπειρωτικά μπαράζ';
 
   @override
-  String get qualLegendContention =>
-      'Πορτοκαλί: ακόμη μέσα, αλλά προς το παρόν εκτός αυτών των θέσεων';
+  String get legendThrough =>
+      'Πράσινο: με τα σημερινά δεδομένα, προκρίνεται στον επόμενο γύρο';
 }

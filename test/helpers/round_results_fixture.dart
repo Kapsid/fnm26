@@ -61,12 +61,11 @@ RoundResultsView fourGroupsView() {
     nations: {for (var i = 1; i <= 16; i++) i: nation(id: i)},
     playerNationId: 1,
     directCount: 2,
-    contentionPos: 3,
     playoffNations: const <int>{},
     relegateCount: 0,
     noRelegationGroups: const <String>{},
     directNations: const <int>{},
-    contentionThrough: null,
+    zone: null,
   );
 }
 
@@ -99,12 +98,11 @@ RoundResultsView knockoutView() {
     nations: {for (var i = 1; i <= 4; i++) i: nation(id: i)},
     playerNationId: 1,
     directCount: 2,
-    contentionPos: null,
     playoffNations: const <int>{},
     relegateCount: 0,
     noRelegationGroups: const <String>{},
     directNations: const <int>{},
-    contentionThrough: null,
+    zone: null,
   );
 }
 
@@ -114,10 +112,9 @@ RoundResultsView emptyRoundView() => (
   nations: {for (var i = 1; i <= 4; i++) i: nation(id: i)},
   playerNationId: 1,
   directCount: 2,
-  contentionPos: null,
   playoffNations: const <int>{},
   relegateCount: 0,
   noRelegationGroups: const <String>{},
   directNations: const <int>{},
-  contentionThrough: null,
+  zone: null,
 );

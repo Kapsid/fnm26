@@ -174,6 +174,7 @@ class _RoundResultsTabletLayout extends ConsumerWidget {
     return ListView(
       children: [
         heading,
+        roundZoneLegend(l, view),
         for (var i = 0; i < groups.length; i += 2)
           Padding(
             padding: const EdgeInsets.only(bottom: AppSpacing.md - 4),
@@ -251,10 +252,8 @@ class _GroupResultsPanel extends StatelessWidget {
                     isPlayer:
                         group.standings[i].nationId == view.playerNationId,
                     directCount: view.directCount,
-                    contentionPos: view.contentionPos,
                     playoffNations: view.playoffNations,
                     directNations: view.directNations,
-                    contentionThrough: view.contentionThrough,
                     relegated:
                         relegateCount > 0 &&
                         i + 1 > group.standings.length - relegateCount,

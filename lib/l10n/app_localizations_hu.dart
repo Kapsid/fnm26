@@ -18375,6 +18375,6 @@ class AppLocalizationsHu extends AppLocalizations {
       'Sárga: a kontinensek közötti pótselejtezőre tart';
 
   @override
-  String get qualLegendContention =>
-      'Narancs: még versenyben, de egyelőre ezeken a helyeken kívül';
+  String get legendThrough =>
+      'Zöld: a jelenlegi állás szerint továbbjut a következő körbe';
 }

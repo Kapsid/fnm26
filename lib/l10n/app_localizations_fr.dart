@@ -18611,6 +18611,6 @@ class AppLocalizationsFr extends AppLocalizations {
       'Jaune : en route pour le barrage intercontinental';
 
   @override
-  String get qualLegendContention =>
-      'Orange : encore dans la course, mais hors de ces places pour l\'instant';
+  String get legendThrough =>
+      'Vert : qualifié pour le tour suivant, en l\'état';
 }

@@ -18280,6 +18280,5 @@ class AppLocalizationsVi extends AppLocalizations {
   String get qualLegendIntercont => 'Vàng: hướng tới play-off liên lục địa';
 
   @override
-  String get qualLegendContention =>
-      'Cam: vẫn còn cơ hội, nhưng tạm thời ngoài các vị trí đó';
+  String get legendThrough => 'Xanh lá: theo hiện tại, đi tiếp vào vòng sau';
 }

@@ -18517,6 +18517,5 @@ class AppLocalizationsBg extends AppLocalizations {
       'Жълто: насочва се към междуконтиненталния плейоф';
 
   @override
-  String get qualLegendContention =>
-      'Оранжево: още в играта, но засега извън тези места';
+  String get legendThrough => 'Зелено: засега продължава в следващия кръг';
 }

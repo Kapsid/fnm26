@@ -27888,11 +27888,11 @@ abstract class AppLocalizations {
   /// **'Yellow: on course for the intercontinental play-off'**
   String get qualLegendIntercont;
 
-  /// Legend line over a confederation's qualifying tables: the orange stripe marks sides that can still reach a place but are outside them today.
+  /// Legend line over group tables outside qualifying (finals groups, regional cups, the African zone groups): the green stripe.
   ///
   /// In en, this message translates to:
-  /// **'Orange: still in the race, but outside those places for now'**
-  String get qualLegendContention;
+  /// **'Green: going through to the next round, as things stand'**
+  String get legendThrough;
 }
 
 class _AppLocalizationsDelegate

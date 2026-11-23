@@ -62,12 +62,11 @@ void main() {
       nations: {...full.nations}..remove(5),
       playerNationId: full.playerNationId,
       directCount: full.directCount,
-      contentionPos: full.contentionPos,
       playoffNations: full.playoffNations,
       relegateCount: full.relegateCount,
       noRelegationGroups: full.noRelegationGroups,
       directNations: full.directNations,
-      contentionThrough: full.contentionThrough,
+      zone: full.zone,
     );
     await tester.pumpApp(
       const RoundResultsScreen(careerId: 1),

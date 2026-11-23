@@ -18859,6 +18859,5 @@ class AppLocalizationsRo extends AppLocalizations {
   String get qualLegendIntercont => 'Galben: spre barajul intercontinental';
 
   @override
-  String get qualLegendContention =>
-      'Portocaliu: încă în cursă, dar deocamdată în afara acestor locuri';
+  String get legendThrough => 'Verde: deocamdată, merge în turul următor';
 }

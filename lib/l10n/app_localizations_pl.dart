@@ -18626,6 +18626,6 @@ class AppLocalizationsPl extends AppLocalizations {
       'Żółty: w drodze do baraży interkontynentalnych';
 
   @override
-  String get qualLegendContention =>
-      'Pomarańczowy: wciąż w grze, ale na razie poza tymi miejscami';
+  String get legendThrough =>
+      'Zielony: według obecnego stanu awans do następnej rundy';
 }

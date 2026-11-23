@@ -18344,6 +18344,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get qualLegendIntercont => 'Sarı: kıtalar arası play-off\'a gidiyor';
 
   @override
-  String get qualLegendContention =>
-      'Turuncu: hâlâ yarışta, ama şimdilik bu sıraların dışında';
+  String get legendThrough =>
+      'Yeşil: şu anki duruma göre bir sonraki tura çıkıyor';
 }

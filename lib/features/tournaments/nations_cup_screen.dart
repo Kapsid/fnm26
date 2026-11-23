@@ -22,6 +22,7 @@ import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/features/tournaments/best_thirds.dart';
 import 'package:fnm/features/tournaments/nations_cup_providers.dart';
 import 'package:fnm/features/tournaments/tournament_history.dart';
+import 'package:fnm/features/tournaments/zone_legend.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -340,6 +341,10 @@ mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
       name: name,
       code: code,
       isLowestLeague: true,
+      ladder: {
+        for (final s in runnersUp.take(NationsCups.runnersUpThrough))
+          s.nationId,
+      },
     );
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
@@ -350,7 +355,18 @@ mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
             color: AppColors.onSurfaceVariant,
           ),
         ),
-        const SizedBox(height: AppSpacing.md),
+        const SizedBox(height: AppSpacing.sm),
+        ZoneLegend(
+          lines: zoneLegendLines(
+            l,
+            zoneSpec(
+              kind: CompetitionKind.nationsLeague,
+              confederation: v.confederation,
+            ),
+            {AppColors.positive},
+          ),
+        ),
+        const SizedBox(height: AppSpacing.sm),
         for (final zone in order) ...[
           Text(
             zone == myZone
@@ -503,6 +519,7 @@ class _GroupCard extends StatelessWidget {
     required this.code,
     required this.isLowestLeague,
     this.undecided = const {},
+    this.ladder = const {},
   });
 
   final int careerId;
@@ -518,8 +535,12 @@ class _GroupCard extends StatelessWidget {
   /// The lowest league has nowhere to fall, so its bottom side isn't relegated.
   final bool isLowestLeague;
 
-  /// Winners and bottom sides still short of a move: amber, not green or red.
+  /// Winners and bottom sides the ladder leaves in place: unmarked.
   final Set<int> undecided;
+
+  /// The African zones' runners-up through to the Round of 16 as things
+  /// stand: green, like the ladder card under the tables.
+  final Set<int> ladder;
 
   @override
   Widget build(BuildContext context) {
@@ -546,10 +567,12 @@ class _GroupCard extends StatelessWidget {
 
   Widget _row(int pos, GroupStanding s, int total) {
     final isPlayer = s.nationId == playerNationId;
-    // Winner (green) is promoted; the bottom side (red) relegated — or, in an
+    // Winner (green) is promoted; the bottom side (red) relegated, or, in an
     // African zone group, the winner (green) reaches the Round of 16 and the
-    // runner-up (amber) may follow. Shared
-    // with the hub's group table so the two never disagree.
+    // two best runners-up (green) follow. A winner or bottom side the
+    // ladder leaves in place is unmarked: every mark is where a side is
+    // headed as things stand (owner, 1.1.2). Shared with the hub's group
+    // table so the two never disagree.
     final adv = GroupAdvancement.forGroup(
       kind: CompetitionKind.nationsLeague,
       confederation: confederation,
@@ -560,11 +583,9 @@ class _GroupCard extends StatelessWidget {
     final moves =
         pos <= adv.direct || (adv.relegate > 0 && pos > total - adv.relegate);
     final zone = moves && undecided.contains(s.nationId)
-        ? AppColors.warning
-        : pos <= adv.direct
+        ? null
+        : pos <= adv.direct || ladder.contains(s.nationId)
         ? AppColors.positive
-        : pos == adv.contention
-        ? AppColors.warning
         : adv.relegate > 0 && pos > total - adv.relegate
         ? AppColors.error
         : null;
@@ -839,7 +860,7 @@ class _LeagueLegend extends StatelessWidget {
           top ? l.ncLegendWinnerFinalsFour : l.ncLegendWinnerUp,
         ),
         if (!lowest) line(stripe(AppColors.error), l.ncLegendLastDown),
-        if (uncertain) line(stripe(AppColors.warning), l.ncLegendMayMove),
+        if (uncertain) line(stripe(Colors.transparent), l.ncLegendMayMove),
       ],
     );
   }

@@ -17787,5 +17787,5 @@ class AppLocalizationsJa extends AppLocalizations {
   String get qualLegendIntercont => '黄：大陸間プレーオフへ';
 
   @override
-  String get qualLegendContention => 'オレンジ：まだ可能性あり、ただし現時点では圏外';
+  String get legendThrough => '緑：現時点で次のラウンドへ進出';
 }

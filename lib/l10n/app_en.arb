@@ -28423,8 +28423,8 @@
   "@qualLegendIntercont": {
     "description": "Legend line over a confederation's qualifying tables: the yellow stripe marks sides headed for the intercontinental play-off."
   },
-  "qualLegendContention": "Orange: still in the race, but outside those places for now",
-  "@qualLegendContention": {
-    "description": "Legend line over a confederation's qualifying tables: the orange stripe marks sides that can still reach a place but are outside them today."
+  "legendThrough": "Green: going through to the next round, as things stand",
+  "@legendThrough": {
+    "description": "Legend line over group tables outside qualifying (finals groups, regional cups, the African zone groups): the green stripe."
   }
 }

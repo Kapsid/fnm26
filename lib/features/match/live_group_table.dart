@@ -9,6 +9,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/services/match/same_day_results.dart';
+import 'package:fnm/features/tournaments/zone_legend.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/flag_disc.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -83,8 +84,8 @@ class LiveGroupTableCard extends StatelessWidget {
   });
 
   /// The group's places as the normal table marks them (see the hub's
-  /// group table): the outright qualifiers (green), the one place in
-  /// contention (amber), the play-off nations (yellow) and the drop (red).
+  /// group table): the sides through as things stand (green), the play-off
+  /// nations (yellow) and the drop (red), with the same key under it.
   /// Null: no marks.
   final LiveTableZones? zones;
 
@@ -200,6 +201,22 @@ class LiveGroupTableCard extends StatelessWidget {
                 );
               },
             ),
+          if (zones?.zone case final z?) ...[
+            const SizedBox(height: AppSpacing.xs),
+            ZoneLegend(
+              lines: zoneLegendLines(
+                l,
+                z,
+                {
+                  for (final (i, s) in now.indexed)
+                    ?zones!.colorAt(i + 1, s.nationId, count: now.length),
+                },
+                note: now.any((s) => zones!.undecided.contains(s.nationId))
+                    ? l.ncLegendMayMove
+                    : null,
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -210,17 +227,15 @@ class LiveGroupTableCard extends StatelessWidget {
 class LiveTableZones {
   const LiveTableZones({
     required this.direct,
-    this.contention,
     this.relegate = 0,
     this.playoffNations = const {},
     this.directNations = const {},
+    this.undecided = const {},
+    this.zone,
   });
 
   /// Places that go through outright.
   final int direct;
-
-  /// The one place in contention (best runner-up, best third, play-off).
-  final int? contention;
 
   /// Bottom places that go down.
   final int relegate;
@@ -232,15 +247,22 @@ class LiveTableZones {
   /// their place is only partly covered (Asia's best six winners): green.
   final Set<int> directNations;
 
+  /// Nations Cup winners and bottom sides the ladder leaves where they are:
+  /// unmarked, as on the hub.
+  final Set<int> undecided;
+
+  /// What the colours mean, for the key under the table.
+  final ZoneSpec? zone;
+
   /// The mark for [place] (1-based) held by [nationId] in a table of
   /// [count], in the hub table's order of precedence; null for none.
   Color? colorAt(int place, int nationId, {required int count}) =>
-      place <= direct || directNations.contains(nationId)
+      undecided.contains(nationId)
+      ? null
+      : place <= direct || directNations.contains(nationId)
       ? AppColors.positive
       : playoffNations.contains(nationId)
       ? AppColors.playoff
-      : place == contention
-      ? AppColors.warning
       : relegate > 0 && place > count - relegate
       ? AppColors.error
       : null;

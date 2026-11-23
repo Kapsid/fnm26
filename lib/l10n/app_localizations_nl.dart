@@ -18531,6 +18531,6 @@ class AppLocalizationsNl extends AppLocalizations {
       'Geel: op weg naar de intercontinentale play-off';
 
   @override
-  String get qualLegendContention =>
-      'Oranje: nog in de race, maar voorlopig buiten die plaatsen';
+  String get legendThrough =>
+      'Groen: zoals het nu staat door naar de volgende ronde';
 }

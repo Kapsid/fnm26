@@ -18773,6 +18773,6 @@ class AppLocalizationsHr extends AppLocalizations {
   String get qualLegendIntercont => 'Žuto: ide u interkontinentalni play-off';
 
   @override
-  String get qualLegendContention =>
-      'Narančasto: još u igri, ali zasad izvan tih mjesta';
+  String get legendThrough =>
+      'Zeleno: prema trenutačnom stanju prolazi u sljedeći krug';
 }

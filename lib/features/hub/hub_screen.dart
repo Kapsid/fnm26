@@ -45,6 +45,7 @@ import 'package:fnm/features/onboarding/tour_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/tournaments/wc_host_theme.dart';
+import 'package:fnm/features/tournaments/zone_legend.dart';
 import 'package:fnm/features/y/y_providers.dart';
 import 'package:fnm/features/y/y_screen.dart' show yPostBody;
 import 'package:fnm/l10n/app_localizations.dart';
@@ -429,8 +430,7 @@ class _HubScreenState extends ConsumerState<HubScreen> {
                       group: hub.group!,
                       playerNationId: hub.career.nationId,
                       directCount: hub.groupDirectCount,
-                      contentionPos: hub.groupContentionPos,
-                      contentionThrough: hub.groupContentionThrough,
+                      zone: hub.groupZone,
                       playoffNations: hub.groupPlayoffNations,
                       directNations: hub.groupDirectNations,
                       relegateCount: hub.groupRelegateCount,
@@ -988,8 +988,7 @@ class _GroupTable extends StatelessWidget {
     required this.group,
     required this.playerNationId,
     required this.directCount,
-    required this.contentionPos,
-    this.contentionThrough,
+    this.zone,
     this.playoffNations = const {},
     this.directNations = const {},
     required this.code,
@@ -1004,14 +1003,12 @@ class _GroupTable extends StatelessWidget {
   final GroupTable group;
   final int playerNationId;
 
-  /// Positions that advance outright (green) and the single "in contention"
-  /// (amber) position, matching the tournament detail screens.
+  /// Positions that advance outright (green), matching the tournament
+  /// detail screens.
   final int directCount;
-  final int? contentionPos;
 
-  /// The last position in contention when several are (see
-  /// [HubData.groupContentionThrough]).
-  final int? contentionThrough;
+  /// What the colours mean, for the key under the table; null for none.
+  final ZoneSpec? zone;
 
   /// Nations whose place leads to the intercontinental play-off (yellow).
   final Set<int> playoffNations;
@@ -1025,7 +1022,8 @@ class _GroupTable extends StatelessWidget {
   /// group's last side.
   final int relegateCount;
 
-  /// Nations Cup winners and bottom sides still short of a move (amber).
+  /// Nations Cup winners and bottom sides that would not move if the tables
+  /// ended now: unmarked, with a note in the key saying why.
   final Set<int> undecided;
 
   final String Function(int) code;
@@ -1074,6 +1072,22 @@ class _GroupTable extends StatelessWidget {
         const Divider(),
         for (var i = 0; i < group.standings.length; i++)
           _standingRow(i + 1, group.standings[i]),
+        if (zone case final z?) ...[
+          const SizedBox(height: AppSpacing.sm),
+          ZoneLegend(
+            lines: zoneLegendLines(
+              l,
+              z,
+              {
+                for (var i = 0; i < group.standings.length; i++)
+                  ?_zoneColor(i + 1, group.standings[i]),
+              },
+              note: group.standings.any((s) => undecided.contains(s.nationId))
+                  ? l.ncLegendMayMove
+                  : null,
+            ),
+          ),
+        ],
       ],
     );
     return framed
@@ -1081,30 +1095,31 @@ class _GroupTable extends StatelessWidget {
         : InkWell(onTap: onTap, child: content);
   }
 
-  Widget _standingRow(int pos, GroupStanding s) {
-    final isPlayer = s.nationId == playerNationId;
-    // Greens the outright qualifiers, ambers the single "in contention" spot
-    // (best runner-up / best third / play-off) and reds the relegation places,
-    // using the same format the tournament detail screens compute, so the two
-    // never disagree.
+  Color? _zoneColor(int pos, GroupStanding s) {
+    // Greens the sides through as things stand (outright, or on a
+    // cross-group ladder), yellows the play-off sides and reds the
+    // relegation places, using the same format the tournament detail
+    // screens compute, so the two never disagree. No "still in the race"
+    // stripe: every mark is where a side is headed now (owner, 1.1.2).
     final direct = pos <= directCount || directNations.contains(s.nationId);
-    final inContention =
-        contentionPos != null &&
-        pos >= contentionPos! &&
-        pos <= (contentionThrough ?? contentionPos!);
     final relegated =
         relegateCount > 0 && pos > group.standings.length - relegateCount;
-    final zoneColor = (direct || relegated) && undecided.contains(s.nationId)
-        ? AppColors.warning
+    // A Nations Cup winner or bottom side the ladder leaves where it is
+    // goes unmarked: it is not moving as things stand.
+    return undecided.contains(s.nationId)
+        ? null
         : direct
         ? AppColors.positive
         : playoffNations.contains(s.nationId)
         ? AppColors.playoff
-        : inContention
-        ? AppColors.warning
         : relegated
         ? AppColors.error
         : null;
+  }
+
+  Widget _standingRow(int pos, GroupStanding s) {
+    final isPlayer = s.nationId == playerNationId;
+    final zoneColor = _zoneColor(pos, s);
     final gd = s.goalDifference;
     return Container(
       decoration: BoxDecoration(
@@ -1127,7 +1142,9 @@ class _GroupTable extends StatelessWidget {
                 color:
                     zoneColor ??
                     (isPlayer ? AppColors.primary : AppColors.onSurfaceVariant),
-                fontWeight: direct ? FontWeight.w700 : FontWeight.w500,
+                fontWeight: zoneColor == AppColors.positive
+                    ? FontWeight.w700
+                    : FontWeight.w500,
               ),
             ),
           ),

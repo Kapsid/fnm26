@@ -18575,6 +18575,6 @@ class AppLocalizationsDe extends AppLocalizations {
       'Gelb: auf Kurs zum interkontinentalen Play-off';
 
   @override
-  String get qualLegendContention =>
-      'Orange: noch im Rennen, aber vorerst außerhalb dieser Plätze';
+  String get legendThrough =>
+      'Grün: nach aktuellem Stand in der nächsten Runde';
 }

@@ -4607,5 +4607,5 @@
   "qualLegendCafStep": "Jaune : en route pour le barrage africain",
   "qualLegendOfcStep": "Jaune : en route pour la finale de l'Océanie",
   "qualLegendIntercont": "Jaune : en route pour le barrage intercontinental",
-  "qualLegendContention": "Orange : encore dans la course, mais hors de ces places pour l'instant"
+  "legendThrough": "Vert : qualifié pour le tour suivant, en l'état"
 }

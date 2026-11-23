@@ -122,12 +122,11 @@ void main() {
       nations: {...v.nations}..remove(4),
       playerNationId: v.playerNationId,
       directCount: v.directCount,
-      contentionPos: v.contentionPos,
       playoffNations: v.playoffNations,
       relegateCount: v.relegateCount,
       noRelegationGroups: v.noRelegationGroups,
       directNations: v.directNations,
-      contentionThrough: v.contentionThrough,
+      zone: v.zone,
     );
     await tester.pumpApp(
       const TabletShellScope(child: RoundResultsScreen(careerId: 1)),

@@ -12,9 +12,10 @@ import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
 
 /// How a group's places resolve — which positions advance outright (direct,
-/// shown green), the single "in contention" position (contention, shown amber:
-/// a best runner-up, best third or play-off spot), and how many bottom places
-/// go down (relegate, shown red). Shared by the hub group summary and the
+/// shown green), the position a cross-group ladder decides (contention: a
+/// best runner-up, best third or play-off spot, whose sides are green only
+/// while they hold a place, see [GroupAdvancement.ladderNations]), and how
+/// many bottom places go down (relegate, shown red). Shared by the hub group summary and the
 /// tournament detail screens so they never disagree.
 typedef Advancement = ({int direct, int? contention, int relegate});
 
@@ -93,8 +94,8 @@ abstract final class GroupAdvancement {
   /// calendar2 rhythm reaches further. Its six group places over eight groups
   /// go to the best winners, and the step takes the next six, the last two
   /// winners and the four best runners-up, so first AND second place are
-  /// both live. The hub and the cup's own tables paint every position from
-  /// `contention` to this one amber.
+  /// both live. The cup's ladder cards cover every position from
+  /// `contention` to this one.
   static int? worldCupContentionThrough(
     Confederation confederation,
     int groupCount, {
@@ -347,6 +348,48 @@ abstract final class GroupAdvancement {
       case CompetitionKind.worldCupQualifyingPlayoff:
         return (direct: 2, contention: null, relegate: 0);
     }
+  }
+
+  /// The sides that, as things stand, take the places a cross-group ladder
+  /// decides outside World Cup qualifying (which has
+  /// [worldCupDirectNations]): the best thirds at a finals, the best
+  /// fourth-placed sides in a deep continental qualifying, the two best
+  /// runners-up of the African zone groups. Tables paint them green, the
+  /// same as the ladder card under them, and the rest of that position
+  /// plain: every mark shows where a side is headed now, never a "maybe".
+  static Set<int> ladderNations({
+    required CompetitionKind kind,
+    required Confederation confederation,
+    required int groupCount,
+    required int continentalSize,
+    required List<List<GroupStanding>> groups,
+    int continentalHosts = 0,
+    bool continentalPlayoffRoute = false,
+  }) {
+    final (int? pos, int qualify) = switch (kind) {
+      CompetitionKind.continentalQualifying when !continentalPlayoffRoute =>
+        () {
+          final adv = continentalQualifying(
+            (continentalSize - continentalHosts).clamp(1, continentalSize),
+            groupCount,
+          );
+          return (adv.contention, adv.contentionQualify);
+        }(),
+      CompetitionKind.worldCupFinals || CompetitionKind.continentalFinals => (
+        finalsGroup(groupCount, continentalSize).contention,
+        WorldCupFinals.bestThirdsFor(groupCount),
+      ),
+      CompetitionKind.nationsLeague
+          when NationsCups.forConfederation(confederation)?.format ==
+              NationsCupFormat.zones =>
+        (2, 2),
+      _ => (null, 0),
+    };
+    if (pos == null || qualify <= 0) return const {};
+    return {
+      for (final s in CrossGroup.tier(groups, pos - 1).take(qualify))
+        s.nationId,
+    };
   }
 
   /// An English ordinal for a table position ("2nd", "3rd", "4th").

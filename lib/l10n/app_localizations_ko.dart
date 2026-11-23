@@ -17831,5 +17831,5 @@ class AppLocalizationsKo extends AppLocalizations {
   String get qualLegendIntercont => '노랑: 대륙 간 플레이오프 진출';
 
   @override
-  String get qualLegendContention => '주황: 아직 가능성 있음, 현재는 해당 순위 밖';
+  String get legendThrough => '초록: 현재 기준 다음 라운드 진출';
 }

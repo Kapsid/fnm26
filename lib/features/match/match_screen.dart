@@ -2651,10 +2651,11 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                         hubGroup.groupId == preview.fixture.groupId
                     ? LiveTableZones(
                         direct: hub.groupDirectCount,
-                        contention: hub.groupContentionPos,
                         relegate: hub.groupRelegateCount,
                         playoffNations: hub.groupPlayoffNations,
                         directNations: hub.groupDirectNations,
+                        undecided: hub.groupUndecided,
+                        zone: hub.groupZone,
                       )
                     : null,
               );

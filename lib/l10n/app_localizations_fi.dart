@@ -18509,6 +18509,6 @@ class AppLocalizationsFi extends AppLocalizations {
       'Keltainen: matkalla mannertenvälisiin karsintapudotuspeleihin';
 
   @override
-  String get qualLegendContention =>
-      'Oranssi: yhä mukana, mutta toistaiseksi näiden paikkojen ulkopuolella';
+  String get legendThrough =>
+      'Vihreä: tämänhetkisen tilanteen mukaan jatkoon seuraavalle kierrokselle';
 }

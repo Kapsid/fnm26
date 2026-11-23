@@ -14,7 +14,8 @@ import '../helpers/seeded_save.dart';
 /// last two winners "to the intercontinental play-off" when they go to Asia's
 /// fourth round. Now the screen has a colour key, the winners' ladder names
 /// the fourth round, a runners-up ladder shows who joins them, and the
-/// player's group paints its winner as that ladder does.
+/// player's group paints each side where it is headed as things stand, with
+/// no orange "maybe".
 void main() {
   final ids = [
     for (final n in realNations)
@@ -80,10 +81,9 @@ void main() {
       find.text('Yellow: on course for the Asian fourth round'),
       findsOneWidget,
     );
-    expect(
-      find.text('Orange: still in the race, but outside those places for now'),
-      findsOneWidget,
-    );
+    // No "still in the race" colour: every mark is where a side is headed
+    // as things stand (owner, 1.1.2).
+    expect(find.textContaining('Orange'), findsNothing);
 
     // The player's group A winner: green exactly when it is one of the best
     // six winners, yellow when it is one of the fourth round's six.
@@ -98,6 +98,19 @@ void main() {
     expect(
       stripeOf(t, winner),
       direct.contains(ids.first) ? AppColors.positive : AppColors.playoff,
+    );
+    // Its runner-up: yellow when in the fourth round's six right now, else
+    // unmarked, never orange.
+    final playoff = GroupAdvancement.worldCupPlayoffNations(
+      Confederation.asia,
+      tables,
+      hosts: 0,
+      confedSteps: true,
+    );
+    final second = groups.first.standings[1].nationId;
+    expect(
+      stripeOf(t, realNationsById[second]!.name),
+      playoff.contains(second) ? AppColors.playoff : Colors.transparent,
     );
 
     final list = find.byWidget(
@@ -120,7 +133,7 @@ void main() {
     await t.pumpWidget(const SizedBox());
   });
 
-  testWidgets('without the step Asia keeps its old ladder and no orange key', (
+  testWidgets('without the step Asia keeps its old ladder', (
     t,
   ) async {
     final save = await seedSave(

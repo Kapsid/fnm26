@@ -18339,6 +18339,5 @@ class AppLocalizationsHi extends AppLocalizations {
   String get qualLegendIntercont => 'पीला: अंतर-महाद्वीपीय प्ले-ऑफ़ की ओर';
 
   @override
-  String get qualLegendContention =>
-      'नारंगी: अभी दौड़ में, पर फ़िलहाल इन स्थानों से बाहर';
+  String get legendThrough => 'हरा: अभी की स्थिति में अगले दौर में';
 }

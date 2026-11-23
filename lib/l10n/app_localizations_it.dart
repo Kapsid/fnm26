@@ -18522,6 +18522,5 @@ class AppLocalizationsIt extends AppLocalizations {
       'Giallo: diretta allo spareggio intercontinentale';
 
   @override
-  String get qualLegendContention =>
-      'Arancione: ancora in corsa, ma per ora fuori da quei posti';
+  String get legendThrough => 'Verde: per ora, passa al turno successivo';
 }

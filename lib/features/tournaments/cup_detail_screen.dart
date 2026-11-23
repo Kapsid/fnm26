@@ -24,10 +24,11 @@ import 'package:fnm/domain/services/competition/qualification_format.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/tournaments/all_time_scorers_legend.dart';
 import 'package:fnm/features/tournaments/best_thirds.dart';
+import 'package:fnm/features/tournaments/zone_legend.dart';
 import 'package:fnm/features/tournaments/confed_playoffs_view.dart';
 import 'package:fnm/features/tournaments/cup_detail_providers.dart';
 import 'package:fnm/features/tournaments/continental_detail_screen.dart'
-    show PlayoffCourseFooter, PlayoffStripeLegend;
+    show PlayoffCourseFooter;
 import 'package:fnm/features/tournaments/euro_playoff_draw_screen.dart';
 import 'package:fnm/features/tournaments/intercontinental_playoff_bracket.dart';
 import 'package:fnm/features/tournaments/wc_playoff_draw_screen.dart';
@@ -525,7 +526,17 @@ class _QualifyingState extends State<_Qualifying> {
 
   /// [conf]'s group tables, the manager's own first: stacked with a gap under
   /// each on a phone, in columns on a tablet.
-  List<Widget> _groupCards(
+  /// The marks on [conf]'s tables: the positions through outright, the sides
+  /// green beyond them and the sides yellow, with the step and paths they
+  /// were worked out under. Shared by the tables and their key.
+  ({
+    int directCount,
+    Set<int> direct,
+    Set<int> playoff,
+    bool steps,
+    int paths,
+  })
+  _marks(
     Confederation conf,
     Map<Confederation, List<ConfederationGroupTable>> byConf,
   ) {
@@ -536,13 +547,6 @@ class _QualifyingState extends State<_Qualifying> {
     // position live): coloured exactly as the hub colours them.
     final steps = widget.confedSteps && conf != Confederation.europe;
     final adv = GroupAdvancement.worldCupQualifying(
-      conf,
-      byConf[conf]!.length,
-      hosts: hosts,
-      playoffPaths: paths,
-      confedSteps: steps,
-    );
-    final through = GroupAdvancement.worldCupContentionThrough(
       conf,
       byConf[conf]!.length,
       hosts: hosts,
@@ -574,19 +578,64 @@ class _QualifyingState extends State<_Qualifying> {
       playoffPaths: paths,
       confedSteps: steps,
     );
+    return (
+      directCount: adv.direct,
+      direct: direct,
+      playoff: playoff,
+      steps: steps,
+      paths: paths,
+    );
+  }
+
+  /// The colour key for [conf]'s tables: a line for each colour they show.
+  Widget _legend(
+    Confederation conf,
+    Map<Confederation, List<ConfederationGroupTable>> byConf,
+    AppLocalizations l,
+  ) {
+    final m = _marks(conf, byConf);
+    final painted = <Color>{};
+    for (final g in byConf[conf]!) {
+      for (var i = 0; i < g.standings.length; i++) {
+        final id = g.standings[i].nationId;
+        if (i + 1 <= m.directCount || m.direct.contains(id)) {
+          painted.add(AppColors.positive);
+        } else if (m.playoff.contains(id)) {
+          painted.add(AppColors.playoff);
+        }
+      }
+    }
+    return ZoneLegend(
+      lines: zoneLegendLines(
+        l,
+        zoneSpec(
+          kind: CompetitionKind.worldCupQualifying,
+          confederation: conf,
+          wcStep: m.steps,
+          wcPaths: m.paths > 0,
+          allRunnersUp: widget.allRunnersUp,
+        ),
+        painted,
+      ),
+    );
+  }
+
+  List<Widget> _groupCards(
+    Confederation conf,
+    Map<Confederation, List<ConfederationGroupTable>> byConf,
+  ) {
+    final m = _marks(conf, byConf);
     final cards = [
       for (final g in _mineFirst(byConf[conf]!, widget.playerNationId))
         _GroupCard(
-          playoffNations: playoff,
-          directNations: direct,
+          playoffNations: m.playoff,
+          directNations: m.direct,
           careerId: widget.careerId,
           group: g,
           playerNationId: widget.playerNationId,
           code: widget.code,
           name: widget.name,
-          directCount: adv.direct,
-          contentionPos: adv.contention,
-          contentionThrough: through,
+          directCount: m.directCount,
         ),
     ];
     if (widget.grid) {
@@ -624,18 +673,7 @@ class _QualifyingState extends State<_Qualifying> {
               ),
             ),
           ),
-          if (conf == Confederation.europe && widget.europePlayoffPaths > 0)
-            PlayoffStripeLegend(allRunnersUp: widget.allRunnersUp)
-          else if (conf != Confederation.europe)
-            _QualifyingLegend(
-              lines: _legendLines(
-                conf,
-                byConf[conf]!,
-                l,
-                hosts: widget.hostBerths[conf] ?? 0,
-                confedSteps: widget.confedSteps,
-              ),
-            ),
+          _legend(conf, byConf, l),
           ..._groupCards(conf, byConf),
           // The cross-group ladder for the CONTESTED position — usually the
           // second-placed teams ranked against each other, but the group
@@ -874,124 +912,6 @@ List<_Ladder> _contentionLadders(
   ];
 }
 
-/// The lines of the colour key over [conf]'s qualifying tables, each only
-/// where a side is painted that colour today, so the key never names a
-/// colour the tables do not show.
-List<(Color, String)> _legendLines(
-  Confederation conf,
-  List<ConfederationGroupTable> groups,
-  AppLocalizations l, {
-  required int hosts,
-  bool confedSteps = false,
-}) {
-  final tables = [for (final g in groups) g.standings];
-  final steps = GroupAdvancement.worldCupHasStep(
-    conf,
-    hosts: hosts,
-    confedSteps: confedSteps,
-  );
-  final adv = GroupAdvancement.worldCupQualifying(
-    conf,
-    groups.length,
-    hosts: hosts,
-    confedSteps: confedSteps,
-  );
-  final through = GroupAdvancement.worldCupContentionThrough(
-    conf,
-    groups.length,
-    hosts: hosts,
-    confedSteps: confedSteps,
-  );
-  final direct = GroupAdvancement.worldCupDirectNations(
-    conf,
-    tables,
-    hosts: hosts,
-    confedSteps: confedSteps,
-  );
-  final playoff = GroupAdvancement.worldCupPlayoffNations(
-    conf,
-    tables,
-    hosts: hosts,
-    confedSteps: confedSteps,
-  );
-  var green = false;
-  var yellow = false;
-  var orange = false;
-  for (final t in tables) {
-    for (var i = 0; i < t.length; i++) {
-      final pos = i + 1;
-      final id = t[i].nationId;
-      if (pos <= adv.direct || direct.contains(id)) {
-        green = true;
-      } else if (playoff.contains(id)) {
-        yellow = true;
-      } else if (adv.contention != null &&
-          pos >= adv.contention! &&
-          pos <= (through ?? adv.contention!)) {
-        orange = true;
-      }
-    }
-  }
-  return [
-    if (green) (AppColors.positive, l.qualLegendDirect),
-    if (yellow)
-      (
-        AppColors.playoff,
-        steps
-            ? switch (conf) {
-                Confederation.asia => l.qualLegendAfcStep,
-                Confederation.africa => l.qualLegendCafStep,
-                Confederation.oceania => l.qualLegendOfcStep,
-                _ => l.qualLegendIntercont,
-              }
-            : l.qualLegendIntercont,
-      ),
-    if (orange) (AppColors.warning, l.qualLegendContention),
-  ];
-}
-
-/// The colour key over a confederation's qualifying tables: a stripe and a
-/// line for each colour they show.
-class _QualifyingLegend extends StatelessWidget {
-  const _QualifyingLegend({required this.lines});
-
-  final List<(Color, String)> lines;
-
-  static const Key legendKey = Key('qualifying.colourLegend');
-
-  @override
-  Widget build(BuildContext context) {
-    if (lines.isEmpty) return const SizedBox.shrink();
-    return Padding(
-      key: legendKey,
-      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          for (final (color, text) in lines)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 2),
-              child: Row(
-                children: [
-                  Container(width: 3, height: 14, color: color),
-                  const SizedBox(width: AppSpacing.sm),
-                  Expanded(
-                    child: Text(
-                      text,
-                      style: AppTypography.labelSmall.copyWith(
-                        color: AppColors.onSurfaceVariant,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
 /// The cross-group ladder for the position a confederation's qualifying is
 /// actually decided on: every group's team at that position, ranked, with how
 /// many advance and to where. Returns null when there are too few groups to
@@ -1078,8 +998,6 @@ class _GroupCard extends StatelessWidget {
     required this.code,
     required this.name,
     this.directCount = 2,
-    this.contentionPos,
-    this.contentionThrough,
     this.playoffNations = const {},
     this.directNations = const {},
     this.matches = const [],
@@ -1094,15 +1012,7 @@ class _GroupCard extends StatelessWidget {
   /// Leading positions shown with a green "advancing" (guaranteed) marker.
   final int directCount;
 
-  /// A single position marked amber — "in contention" (best runner-up / best
-  /// third / play-off place), not yet safe. Null when there is no such spot.
-  final int? contentionPos;
-
-  /// The last position in contention when several are (Asia's step).
-  final int? contentionThrough;
-
-  /// Nations whose current place leads to the intercontinental play-off: marked
-  /// yellow, over the amber "in contention" stripe.
+  /// Nations whose current place leads to a play-off: marked yellow.
   final Set<int> playoffNations;
 
   /// Nations on course for the finals straight from the groups although
@@ -1143,16 +1053,12 @@ class _GroupCard extends StatelessWidget {
   Widget _row(int pos, GroupStanding s) {
     final isPlayer = s.nationId == playerNationId;
     final advancing = pos <= directCount || directNations.contains(s.nationId);
-    final inContention =
-        contentionPos != null &&
-        pos >= contentionPos! &&
-        pos <= (contentionThrough ?? contentionPos!);
+    // Where each side is headed as things stand, nothing for "still in the
+    // race" (owner, 1.1.2).
     final accent = advancing
         ? AppColors.positive
         : playoffNations.contains(s.nationId)
         ? AppColors.playoff
-        : inContention
-        ? AppColors.warning
         : null;
     final gd = s.goalDifference;
     return Container(
@@ -1292,13 +1198,26 @@ class _FinalsGroups extends StatelessWidget {
       playerNationId: playerNationId,
       code: code,
       name: name,
-      contentionPos: qualifyThirds > 0 ? 3 : null,
+      // The best thirds as things stand are green, like the ladder below.
+      directNations: {
+        for (final s in thirds.take(qualifyThirds)) s.nationId,
+      },
       matches: matchesOf(g),
     );
 
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
+        ZoneLegend(
+          lines: zoneLegendLines(
+            l,
+            zoneSpec(
+              kind: CompetitionKind.worldCupFinals,
+              confederation: Confederation.europe,
+            ),
+            {AppColors.positive},
+          ),
+        ),
         if (grid) ...[
           ColumnFlow(children: [for (final g in ordered) card(g)]),
           const SizedBox(height: AppSpacing.md),

@@ -4607,5 +4607,5 @@
   "qualLegendCafStep": "Giallo: diretta allo spareggio africano",
   "qualLegendOfcStep": "Giallo: diretta alla finale dell'Oceania",
   "qualLegendIntercont": "Giallo: diretta allo spareggio intercontinentale",
-  "qualLegendContention": "Arancione: ancora in corsa, ma per ora fuori da quei posti"
+  "legendThrough": "Verde: per ora, passa al turno successivo"
 }

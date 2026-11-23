@@ -18394,6 +18394,6 @@ class AppLocalizationsMs extends AppLocalizations {
   String get qualLegendIntercont => 'Kuning: menuju play-off antara benua';
 
   @override
-  String get qualLegendContention =>
-      'Jingga: masih bersaing, tetapi buat masa ini di luar tempat itu';
+  String get legendThrough =>
+      'Hijau: buat masa ini, mara ke pusingan seterusnya';
 }

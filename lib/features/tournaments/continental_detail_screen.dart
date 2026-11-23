@@ -30,6 +30,7 @@ import 'package:fnm/features/tournaments/tournament_history.dart';
 import 'package:fnm/features/tournaments/tournament_holders_row.dart';
 import 'package:fnm/features/tournaments/tournament_stats.dart';
 import 'package:fnm/features/tournaments/tournament_summary.dart';
+import 'package:fnm/features/tournaments/zone_legend.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -471,6 +472,11 @@ class _Groups extends StatelessWidget {
     final contended = contentionPos == null
         ? const <GroupStanding>[]
         : crossGroupTier(tables, contentionPos! - 1);
+    // The contested position's sides through as things stand: green, like
+    // the ladder card under the tables.
+    final ladder = {
+      for (final s in contended.take(contentionQualify)) s.nationId,
+    };
 
     // The player's own group first, the rest in their drawn order.
     final ordered = [
@@ -492,7 +498,7 @@ class _Groups extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.sm),
           for (var i = 0; i < g.standings.length; i++)
-            _row(i + 1, g.standings[i]),
+            _row(i + 1, g.standings[i], ladder),
         ],
       ),
     );
@@ -500,6 +506,16 @@ class _Groups extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
+        ZoneLegend(
+          lines: zoneLegendLines(
+            l,
+            zoneSpec(
+              kind: CompetitionKind.continentalQualifying,
+              confederation: Confederation.europe,
+            ),
+            {AppColors.positive},
+          ),
+        ),
         if (grid) ...[
           ColumnFlow(children: [for (final g in ordered) card(g)]),
           const SizedBox(height: AppSpacing.sm),
@@ -546,14 +562,12 @@ class _Groups extends StatelessWidget {
     );
   }
 
-  Widget _row(int pos, GroupStanding s) {
+  Widget _row(int pos, GroupStanding s, Set<int> ladder) {
     final isPlayer = s.nationId == playerNationId;
-    final advancing = pos <= directCount;
-    final inContention = pos == contentionPos;
-    final accent = advancing
+    // Where each side is headed as things stand, nothing for "still in the
+    // race" (owner, 1.1.2).
+    final accent = pos <= directCount || ladder.contains(s.nationId)
         ? AppColors.positive
-        : inContention
-        ? AppColors.warning
         : null;
     final gd = s.goalDifference;
     return Container(
@@ -678,6 +692,9 @@ class _ContFinalsGroupsState extends State<_ContFinalsGroups> {
     final tables = [for (final g in groups) g.standings];
     final uneven = CrossGroup.isUneven(tables);
     final thirds = crossGroupTier(tables, 2);
+    final ladder = widget.contentionPos == null
+        ? const <int>{}
+        : {for (final s in thirds.take(widget.thirdsQualify)) s.nationId};
 
     List<Fixture> matchesOf(FinalsGroupTable g) {
       final ids = {for (final s in g.standings) s.nationId};
@@ -712,7 +729,7 @@ class _ContFinalsGroupsState extends State<_ContFinalsGroups> {
           ],
           const SizedBox(height: AppSpacing.sm),
           for (var i = 0; i < g.standings.length; i++)
-            _row(i + 1, g.standings[i]),
+            _row(i + 1, g.standings[i], ladder),
         ],
       ),
     );
@@ -720,6 +737,16 @@ class _ContFinalsGroupsState extends State<_ContFinalsGroups> {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
+        ZoneLegend(
+          lines: zoneLegendLines(
+            l,
+            zoneSpec(
+              kind: CompetitionKind.continentalFinals,
+              confederation: Confederation.europe,
+            ),
+            {AppColors.positive},
+          ),
+        ),
         if (widget.grid) ...[
           ColumnFlow(children: [for (final g in ordered) card(g)]),
           const SizedBox(height: AppSpacing.md),
@@ -745,14 +772,12 @@ class _ContFinalsGroupsState extends State<_ContFinalsGroups> {
     );
   }
 
-  Widget _row(int pos, GroupStanding s) {
+  Widget _row(int pos, GroupStanding s, Set<int> ladder) {
     final isPlayer = s.nationId == widget.playerNationId;
-    final advancing = pos <= widget.directCount;
-    final inContention = pos == widget.contentionPos;
-    final accent = advancing
+    // Where each side is headed as things stand: the best thirds through
+    // right now are green like the ladder under the tables, the rest plain.
+    final accent = pos <= widget.directCount || ladder.contains(s.nationId)
         ? AppColors.positive
-        : inContention
-        ? AppColors.warning
         : null;
     final gd = s.goalDifference;
     return Container(

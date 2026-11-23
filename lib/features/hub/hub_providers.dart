@@ -35,6 +35,7 @@ import 'package:fnm/domain/services/squad/friendly_rotation.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
+import 'package:fnm/features/tournaments/zone_legend.dart';
 import 'package:fnm/domain/services/competition/host_bidding.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/kickoff_keys.dart';
@@ -185,8 +186,7 @@ class HubData {
     this.nextDrawWatched = true,
     this.groupDrawWatched = true,
     this.groupDirectCount = 2,
-    this.groupContentionPos,
-    this.groupContentionThrough,
+    this.groupZone,
     this.groupPlayoffNations = const {},
     this.groupDirectNations = const {},
     this.groupRelegateCount = 0,
@@ -204,15 +204,11 @@ class HubData {
   /// table stays "to be drawn" until it has.
   final bool groupDrawWatched;
 
-  /// How many positions in [group] advance outright (green) and the single
-  /// "in contention" position (amber best-third / play-off), if any.
+  /// How many positions in [group] advance outright (green).
   final int groupDirectCount;
-  final int? groupContentionPos;
 
-  /// The last position in contention, when more than one is (Asia's step on
-  /// calendar2, see [GroupAdvancement.worldCupContentionThrough]); null means
-  /// [groupContentionPos] alone.
-  final int? groupContentionThrough;
+  /// What [group]'s colours mean, for the key under its table.
+  final ZoneSpec? groupZone;
 
   /// Nations in [group]'s confederation currently on course for the
   /// intercontinental play-off (yellow), World Championship qualifying only.
@@ -307,8 +303,7 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
   // group, from its competition's exact format — plus whether that group's own
   // draw has been watched (the table stays hidden until it has).
   var groupDirect = 2;
-  int? groupContention;
-  int? groupContentionThrough;
+  ZoneSpec? groupZone;
   var groupPlayoff = const <int>{};
   var groupDirectNations = const <int>{};
   var groupRelegate = 0;
@@ -379,16 +374,24 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
       worldCupConfedSteps: wcCal2,
     );
     groupDirect = adv.direct;
-    groupContention = adv.contention;
+    // Europe's real UEFA shape sends EVERY runner-up to the paths, exactly
+    // as the cup's own tables mark them.
+    final wcAllRunnersUp =
+        wcPaths > 0 &&
+        conf == Confederation.europe &&
+        await isEuroQuali2(compRepo, careerId, career.cyclePointer);
+    groupZone = zoneSpec(
+      kind: group.kind,
+      confederation: conf,
+      wcStep: wcCal2 && conf != Confederation.europe,
+      wcPaths: wcPaths > 0,
+      allRunnersUp: wcAllRunnersUp,
+      topLeague:
+          group.kind == CompetitionKind.nationsLeague &&
+          NationsCup.tierOfGroupName(group.name) == 0,
+    );
     groupRelegate = adv.relegate;
     if (group.kind == CompetitionKind.worldCupQualifying) {
-      groupContentionThrough = GroupAdvancement.worldCupContentionThrough(
-        conf,
-        group.groupCount,
-        hosts: wcHosts,
-        playoffPaths: wcPaths,
-        confedSteps: wcCal2,
-      );
       final tables = [
         for (final t in await compRepo.allGroupTablesByConfederation(
           careerId,
@@ -401,6 +404,7 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
         hosts: wcHosts,
         playoffPaths: wcPaths,
         confedSteps: wcCal2,
+        allRunnersUp: wcAllRunnersUp,
       );
       groupDirectNations = GroupAdvancement.worldCupDirectNations(
         conf,
@@ -408,6 +412,19 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
         hosts: wcHosts,
         playoffPaths: wcPaths,
         confedSteps: wcCal2,
+      );
+    } else {
+      // Best thirds and the like: the sides holding the ladder's places now
+      // are green, exactly as the ladder card under the full tables.
+      final siblings = await compRepo.siblingGroupTables(group.groupId);
+      groupDirectNations = GroupAdvancement.ladderNations(
+        kind: group.kind,
+        confederation: conf,
+        groupCount: group.groupCount,
+        continentalSize: size,
+        groups: [for (final t in siblings) t.standings],
+        continentalHosts: contShape?.hosts ?? 0,
+        continentalPlayoffRoute: contShape?.playoffRoute ?? false,
       );
     }
     final gk = groupDrawKind(group.kind);
@@ -433,8 +450,7 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
     nextDrawWatched: nextDrawWatched,
     groupDrawWatched: groupDrawWatched,
     groupDirectCount: groupDirect,
-    groupContentionPos: groupContention,
-    groupContentionThrough: groupContentionThrough,
+    groupZone: groupZone,
     groupPlayoffNations: groupPlayoff,
     groupDirectNations: groupDirectNations,
     groupRelegateCount: groupRelegate,

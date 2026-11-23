@@ -18543,6 +18543,5 @@ class AppLocalizationsPt extends AppLocalizations {
       'Amarelo: a caminho do play-off intercontinental';
 
   @override
-  String get qualLegendContention =>
-      'Laranja: ainda na luta, mas por agora fora desses lugares';
+  String get legendThrough => 'Verde: por agora, segue para a fase seguinte';
 }

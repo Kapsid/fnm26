@@ -18437,6 +18437,6 @@ class AppLocalizationsDa extends AppLocalizations {
       'Gul: på vej til det interkontinentale play-off';
 
   @override
-  String get qualLegendContention =>
-      'Orange: stadig med, men uden for de pladser lige nu';
+  String get legendThrough =>
+      'Grøn: går videre til næste runde, som det står nu';
 }

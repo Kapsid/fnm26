@@ -18432,6 +18432,5 @@ class AppLocalizationsNb extends AppLocalizations {
       'Gul: på vei til den interkontinentale playoffen';
 
   @override
-  String get qualLegendContention =>
-      'Oransje: fortsatt med, men utenfor de plassene foreløpig';
+  String get legendThrough => 'Grønn: videre til neste runde, slik det står nå';
 }

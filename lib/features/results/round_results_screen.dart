@@ -28,6 +28,7 @@ import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/features/tournaments/wc_host_berths.dart';
+import 'package:fnm/features/tournaments/zone_legend.dart';
 
 part 'round_results_tablet_layout.dart';
 
@@ -38,7 +39,6 @@ typedef RoundResultsView = ({
   Map<int, Nation> nations,
   int playerNationId,
   int directCount,
-  int? contentionPos,
   Set<int> playoffNations,
   int relegateCount,
   Set<String> noRelegationGroups,
@@ -48,147 +48,238 @@ typedef RoundResultsView = ({
   /// see `GroupAdvancement.worldCupDirectNations`).
   Set<int> directNations,
 
-  /// The last position in contention when several are (Asia's step on
-  /// calendar2); null means [contentionPos] alone.
-  int? contentionThrough,
+  /// What the colours mean, for the key over the tables; null for none.
+  ZoneSpec? zone,
 });
+
+/// The mark on a results table row, exactly as the hub's table marks it:
+/// where the side is headed as things stand, never a "still in the race"
+/// stripe. A Nations Cup winner or bottom side the ladder leaves in place
+/// ([undecided]) is unmarked.
+Color? roundZoneColor({
+  required int pos,
+  required int nationId,
+  required int directCount,
+  required Set<int> directNations,
+  required Set<int> playoffNations,
+  required bool relegated,
+  required bool undecided,
+}) => undecided
+    ? null
+    : pos <= directCount || directNations.contains(nationId)
+    ? AppColors.positive
+    : playoffNations.contains(nationId)
+    ? AppColors.playoff
+    : relegated
+    ? AppColors.error
+    : null;
+
+/// The key over a round's group tables: a line for each colour they show.
+Widget roundZoneLegend(AppLocalizations l, RoundResultsView view) {
+  final results = view.results;
+  final zone = view.zone;
+  if (results == null || zone == null || results.groups.isEmpty) {
+    return const SizedBox.shrink();
+  }
+  final undecided = roundUndecided(results);
+  final painted = <Color>{};
+  for (final g in results.groups) {
+    final relegate = view.noRelegationGroups.contains(g.name)
+        ? 0
+        : view.relegateCount;
+    for (var i = 0; i < g.standings.length; i++) {
+      final id = g.standings[i].nationId;
+      final c = roundZoneColor(
+        pos: i + 1,
+        nationId: id,
+        directCount: view.directCount,
+        directNations: view.directNations,
+        playoffNations: view.playoffNations,
+        relegated: relegate > 0 && i + 1 > g.standings.length - relegate,
+        undecided: undecided.contains(id),
+      );
+      if (c != null) painted.add(c);
+    }
+  }
+  return ZoneLegend(
+    lines: zoneLegendLines(
+      l,
+      zone,
+      painted,
+      note:
+          results.groups.any(
+            (g) => g.standings.any((s) => undecided.contains(s.nationId)),
+          )
+          ? l.ncLegendMayMove
+          : null,
+    ),
+  );
+}
 
 /// The last round the manager played, grouped, with the zones each table
 /// colours. Public so a test can hand the screen a round without playing one.
 final AutoDisposeFutureProviderFamily<RoundResultsView?, int>
-roundResultsViewProvider = FutureProvider.autoDispose.family<RoundResultsView?, int>((
-  ref,
-  careerId,
-) async {
-  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
-  if (career == null) return null;
-  final results = await ref
-      .watch(competitionRepositoryProvider)
-      .lastRoundResults(careerId, career.nationId);
-  final nations = {
-    for (final n
-        in await ref.watch(nationRepositoryProvider).forCareer(careerId))
-      n.id: n,
-  };
+roundResultsViewProvider = FutureProvider.autoDispose
+    .family<RoundResultsView?, int>((
+      ref,
+      careerId,
+    ) async {
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      if (career == null) return null;
+      final results = await ref
+          .watch(competitionRepositoryProvider)
+          .lastRoundResults(careerId, career.nationId);
+      final nations = {
+        for (final n
+            in await ref.watch(nationRepositoryProvider).forCareer(careerId))
+          n.id: n,
+      };
 
-  // The advancing (green), in-contention (amber) and relegated (red) positions
-  // for this competition, so the results tables match the hub and detail
-  // screens.
-  var direct = 2;
-  int? contention;
-  var playoff = const <int>{};
-  var directNations = const <int>{};
-  int? contentionThrough;
-  var relegate = 0;
-  final noRelegation = <String>{};
-  if (results != null && results.groupCount > 0) {
-    final conf =
-        nations[career.nationId]?.confederation ?? Confederation.europe;
-    final size = ContinentalCups.byConfederation[conf]?.size ?? 24;
-    // World Cup hosts' places come out of their own confederation's
-    // allocation, exactly as the hub cuts it.
-    final wcHosts = results.kind == CompetitionKind.worldCupQualifying
-        ? (await worldCupHostBerthsFor(ref, careerId))[conf] ?? 0
-        : 0;
-    // Africa's, Asia's and Oceania's own steps and Europe's paths, on the
-    // calendar2 rhythm, exactly as the hub reads them.
-    final wcCal2 =
-        results.kind == CompetitionKind.worldCupQualifying &&
-        await isCalendar2(
-          ref.watch(competitionRepositoryProvider),
-          careerId,
-          career.cyclePointer,
-        );
-    final wcPaths = results.kind != CompetitionKind.worldCupQualifying
-        ? 0
-        : UefaWcPlayoffs.pathsFor(
-            calendar2: wcCal2,
-            confederation: conf,
-            hosts: wcHosts,
-            groupCount: results.groupCount,
-          );
-    // A continental qualifying table: hosts take berths, and Europe's
-    // places past the top two go to the play-offs on the calendar2 rhythm,
-    // exactly as the championship's own screen colours it.
-    final contShape = results.kind == CompetitionKind.continentalQualifying
-        ? await continentalQualifyingShape(
-            ref.watch(competitionRepositoryProvider),
-            careerId: careerId,
-            cycle: career.cyclePointer,
-            rngSeed: career.rngSeed,
-            confederation: conf,
-            nations: nations.values,
-          )
-        : null;
-    final adv = GroupAdvancement.forGroup(
-      kind: results.kind,
-      confederation: conf,
-      groupCount: results.groupCount,
-      continentalSize: size,
-      worldCupHosts: wcHosts,
-      worldCupPlayoffPaths: wcPaths,
-      continentalHosts: contShape?.hosts ?? 0,
-      continentalPlayoffRoute: contShape?.playoffRoute ?? false,
-      worldCupConfedSteps: wcCal2,
-    );
-    direct = adv.direct;
-    contention = adv.contention;
-    if (results.kind == CompetitionKind.worldCupQualifying) {
-      final tables = [for (final g in results.groups) g.standings];
-      playoff = GroupAdvancement.worldCupPlayoffNations(
-        conf,
-        tables,
-        hosts: wcHosts,
-        playoffPaths: wcPaths,
-        confedSteps: wcCal2,
-      );
-      directNations = GroupAdvancement.worldCupDirectNations(
-        conf,
-        tables,
-        hosts: wcHosts,
-        playoffPaths: wcPaths,
-        confedSteps: wcCal2,
-      );
-      contentionThrough = GroupAdvancement.worldCupContentionThrough(
-        conf,
-        results.groupCount,
-        hosts: wcHosts,
-        playoffPaths: wcPaths,
-        confedSteps: wcCal2,
-      );
-    }
-    relegate = adv.relegate;
-    // The Nations Cup's lowest league has nowhere to fall — its groups show no
-    // relegation zone, exactly as the hub and the Nations Cup screen decide.
-    if (results.kind == CompetitionKind.nationsLeague) {
-      final tiers = await ref
-          .watch(careerRepositoryProvider)
-          .nationsCupTiers(careerId);
-      for (final g in results.groups) {
-        final lowest = NationsCup.isLowestLeague(
-          groupName: g.name,
-          tiers: tiers,
+      // The advancing (green), play-off (yellow) and relegated (red) marks for
+      // this competition, so the results tables match the hub and detail
+      // screens.
+      var direct = 2;
+      var playoff = const <int>{};
+      var directNations = const <int>{};
+      ZoneSpec? zone;
+      var relegate = 0;
+      final noRelegation = <String>{};
+      if (results != null && results.groupCount > 0) {
+        final conf =
+            nations[career.nationId]?.confederation ?? Confederation.europe;
+        final size = ContinentalCups.byConfederation[conf]?.size ?? 24;
+        // World Cup hosts' places come out of their own confederation's
+        // allocation, exactly as the hub cuts it.
+        final wcHosts = results.kind == CompetitionKind.worldCupQualifying
+            ? (await worldCupHostBerthsFor(ref, careerId))[conf] ?? 0
+            : 0;
+        // Africa's, Asia's and Oceania's own steps and Europe's paths, on the
+        // calendar2 rhythm, exactly as the hub reads them.
+        final wcCal2 =
+            results.kind == CompetitionKind.worldCupQualifying &&
+            await isCalendar2(
+              ref.watch(competitionRepositoryProvider),
+              careerId,
+              career.cyclePointer,
+            );
+        final wcPaths = results.kind != CompetitionKind.worldCupQualifying
+            ? 0
+            : UefaWcPlayoffs.pathsFor(
+                calendar2: wcCal2,
+                confederation: conf,
+                hosts: wcHosts,
+                groupCount: results.groupCount,
+              );
+        // A continental qualifying table: hosts take berths, and Europe's
+        // places past the top two go to the play-offs on the calendar2 rhythm,
+        // exactly as the championship's own screen colours it.
+        final contShape = results.kind == CompetitionKind.continentalQualifying
+            ? await continentalQualifyingShape(
+                ref.watch(competitionRepositoryProvider),
+                careerId: careerId,
+                cycle: career.cyclePointer,
+                rngSeed: career.rngSeed,
+                confederation: conf,
+                nations: nations.values,
+              )
+            : null;
+        final adv = GroupAdvancement.forGroup(
+          kind: results.kind,
           confederation: conf,
-          confederationOf: (id) => nations[id]?.confederation,
+          groupCount: results.groupCount,
+          continentalSize: size,
+          worldCupHosts: wcHosts,
+          worldCupPlayoffPaths: wcPaths,
+          continentalHosts: contShape?.hosts ?? 0,
+          continentalPlayoffRoute: contShape?.playoffRoute ?? false,
+          worldCupConfedSteps: wcCal2,
         );
-        if (lowest) noRelegation.add(g.name);
+        direct = adv.direct;
+        // Europe's real UEFA shape sends EVERY runner-up to the paths, exactly
+        // as the hub and the cup's own tables mark them.
+        final wcAllRunnersUp =
+            wcPaths > 0 &&
+            conf == Confederation.europe &&
+            await isEuroQuali2(
+              ref.watch(competitionRepositoryProvider),
+              careerId,
+              career.cyclePointer,
+            );
+        final mine = results.groups
+            .where((g) => g.standings.any((s) => s.nationId == career.nationId))
+            .firstOrNull;
+        zone = zoneSpec(
+          kind: results.kind,
+          confederation: conf,
+          wcStep: wcCal2 && conf != Confederation.europe,
+          wcPaths: wcPaths > 0,
+          allRunnersUp: wcAllRunnersUp,
+          topLeague:
+              results.kind == CompetitionKind.nationsLeague &&
+              mine != null &&
+              NationsCup.tierOfGroupName(mine.name) == 0,
+        );
+        if (results.kind == CompetitionKind.worldCupQualifying) {
+          final tables = [for (final g in results.groups) g.standings];
+          playoff = GroupAdvancement.worldCupPlayoffNations(
+            conf,
+            tables,
+            hosts: wcHosts,
+            playoffPaths: wcPaths,
+            confedSteps: wcCal2,
+            allRunnersUp: wcAllRunnersUp,
+          );
+          directNations = GroupAdvancement.worldCupDirectNations(
+            conf,
+            tables,
+            hosts: wcHosts,
+            playoffPaths: wcPaths,
+            confedSteps: wcCal2,
+          );
+        } else {
+          // Best thirds and the like: the sides holding the ladder's places now
+          // are green, exactly as the hub and detail screens paint them.
+          directNations = GroupAdvancement.ladderNations(
+            kind: results.kind,
+            confederation: conf,
+            groupCount: results.groupCount,
+            continentalSize: size,
+            groups: [for (final g in results.groups) g.standings],
+            continentalHosts: contShape?.hosts ?? 0,
+            continentalPlayoffRoute: contShape?.playoffRoute ?? false,
+          );
+        }
+        relegate = adv.relegate;
+        // The Nations Cup's lowest league has nowhere to fall — its groups show no
+        // relegation zone, exactly as the hub and the Nations Cup screen decide.
+        if (results.kind == CompetitionKind.nationsLeague) {
+          final tiers = await ref
+              .watch(careerRepositoryProvider)
+              .nationsCupTiers(careerId);
+          for (final g in results.groups) {
+            final lowest = NationsCup.isLowestLeague(
+              groupName: g.name,
+              tiers: tiers,
+              confederation: conf,
+              confederationOf: (id) => nations[id]?.confederation,
+            );
+            if (lowest) noRelegation.add(g.name);
+          }
+        }
       }
-    }
-  }
 
-  return (
-    results: results,
-    nations: nations,
-    playerNationId: career.nationId,
-    directCount: direct,
-    contentionPos: contention,
-    playoffNations: playoff,
-    relegateCount: relegate,
-    noRelegationGroups: noRelegation,
-    directNations: directNations,
-    contentionThrough: contentionThrough,
-  );
-});
+      return (
+        results: results,
+        nations: nations,
+        playerNationId: career.nationId,
+        directCount: direct,
+        playoffNations: playoff,
+        relegateCount: relegate,
+        noRelegationGroups: noRelegation,
+        directNations: directNations,
+        zone: zone,
+      );
+    });
 
 /// The Nations Cup winners and bottom sides a short boundary leaves where
 /// they are (amber, "may move"): see [NationsCup.ladderUndecided]. Empty for
@@ -325,16 +416,15 @@ class RoundResultsScreen extends ConsumerWidget {
                     ],
                   ),
                 )
-              else
+              else ...[
+                roundZoneLegend(l, view),
                 for (final g in results.groups)
                   _GroupBlock(
                     group: g,
                     playerNationId: view.playerNationId,
                     directCount: view.directCount,
-                    contentionPos: view.contentionPos,
                     playoffNations: view.playoffNations,
                     directNations: view.directNations,
-                    contentionThrough: view.contentionThrough,
                     relegateCount: view.noRelegationGroups.contains(g.name)
                         ? 0
                         : view.relegateCount,
@@ -343,6 +433,7 @@ class RoundResultsScreen extends ConsumerWidget {
                     name: name,
                     careerId: careerId,
                   ),
+              ],
               const SizedBox(height: AppSpacing.xl),
             ],
           );
@@ -368,7 +459,6 @@ class _GroupBlock extends StatelessWidget {
     required this.group,
     required this.playerNationId,
     required this.directCount,
-    required this.contentionPos,
     required this.playoffNations,
     required this.relegateCount,
     required this.code,
@@ -376,22 +466,20 @@ class _GroupBlock extends StatelessWidget {
     required this.careerId,
     this.undecided = const {},
     this.directNations = const {},
-    this.contentionThrough,
   });
 
   final int careerId;
   final RoundResultGroup group;
 
-  /// Nations Cup winners and bottom sides still short of a move (amber).
+  /// Nations Cup winners and bottom sides the ladder leaves in place
+  /// (unmarked).
   final Set<int> undecided;
   final int playerNationId;
   final int directCount;
-  final int? contentionPos;
   final Set<int> playoffNations;
 
-  /// See [RoundResultsView]'s `directNations` and `contentionThrough`.
+  /// See [RoundResultsView]'s `directNations`.
   final Set<int> directNations;
-  final int? contentionThrough;
 
   /// How many bottom places go down (red) — the Nations Cup relegates each
   /// group's last side (bar the lowest league's).
@@ -431,10 +519,8 @@ class _GroupBlock extends StatelessWidget {
                 standing: group.standings[i],
                 isPlayer: group.standings[i].nationId == playerNationId,
                 directCount: directCount,
-                contentionPos: contentionPos,
                 playoffNations: playoffNations,
                 directNations: directNations,
-                contentionThrough: contentionThrough,
                 relegated:
                     relegateCount > 0 &&
                     i + 1 > group.standings.length - relegateCount,
@@ -577,7 +663,6 @@ class _StandingRow extends StatelessWidget {
     required this.standing,
     required this.isPlayer,
     required this.directCount,
-    required this.contentionPos,
     required this.playoffNations,
     required this.relegated,
     required this.name,
@@ -585,7 +670,6 @@ class _StandingRow extends StatelessWidget {
     required this.careerId,
     this.undecided = false,
     this.directNations = const {},
-    this.contentionThrough,
   });
 
   final int careerId;
@@ -593,40 +677,31 @@ class _StandingRow extends StatelessWidget {
   final GroupStanding standing;
   final bool isPlayer;
   final int directCount;
-  final int? contentionPos;
   final Set<int> playoffNations;
 
-  /// See [RoundResultsView]'s `directNations` and `contentionThrough`.
+  /// See [RoundResultsView]'s `directNations`.
   final Set<int> directNations;
-  final int? contentionThrough;
 
   /// Whether this position drops a league (Nations Cup groups).
   final bool relegated;
 
-  /// A Nations Cup winner or bottom side not yet sure to move: amber.
+  /// A Nations Cup winner or bottom side the ladder leaves in place:
+  /// unmarked.
   final bool undecided;
   final String Function(int) name;
   final String Function(int) code;
 
   @override
   Widget build(BuildContext context) {
-    final advancing =
-        pos <= directCount || directNations.contains(standing.nationId);
-    final inContention =
-        contentionPos != null &&
-        pos >= contentionPos! &&
-        pos <= (contentionThrough ?? contentionPos!);
-    final accent = (advancing || relegated) && undecided
-        ? AppColors.warning
-        : advancing
-        ? AppColors.positive
-        : playoffNations.contains(standing.nationId)
-        ? AppColors.playoff
-        : inContention
-        ? AppColors.warning
-        : relegated
-        ? AppColors.error
-        : null;
+    final accent = roundZoneColor(
+      pos: pos,
+      nationId: standing.nationId,
+      directCount: directCount,
+      directNations: directNations,
+      playoffNations: playoffNations,
+      relegated: relegated,
+      undecided: undecided,
+    );
     return Container(
       decoration: BoxDecoration(
         color: isPlayer ? AppColors.surfaceContainerHigh : null,

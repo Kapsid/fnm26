@@ -18822,6 +18822,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get qualLegendIntercont => 'Žlutě: míří do mezikontinentální baráže';
 
   @override
-  String get qualLegendContention =>
-      'Oranžově: ještě ve hře, ale zatím mimo tato místa';
+  String get legendThrough =>
+      'Zeleně: podle aktuálního stavu postupuje do dalšího kola';
 }

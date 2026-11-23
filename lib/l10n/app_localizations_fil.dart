@@ -18447,6 +18447,5 @@ class AppLocalizationsFil extends AppLocalizations {
       'Dilaw: papunta sa intercontinental play-off';
 
   @override
-  String get qualLegendContention =>
-      'Kahel: may tsansa pa, pero labas muna sa mga puwestong iyon';
+  String get legendThrough => 'Berde: sa ngayon, pasok sa susunod na round';
 }
