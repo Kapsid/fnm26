@@ -216,6 +216,7 @@ List<Widget> _cupTabViews(
       careerId: careerId,
       playoffs: data.playoffs,
       code: code,
+      name: name,
       playerNationId: data.playerNationId,
     ),
     if (data.hasFinals && !data.finalsDrawWatched)
@@ -326,12 +327,14 @@ class _PlayoffTab extends ConsumerWidget {
   const _PlayoffTab({
     required this.careerId,
     required this.code,
+    required this.name,
     required this.playerNationId,
     this.playoffs,
   });
 
   final int careerId;
   final String Function(int) code;
+  final String Function(int) name;
   final int playerNationId;
 
   /// The calendar2 play-offs (Europe's paths and the intercontinental
@@ -353,6 +356,7 @@ class _PlayoffTab extends ConsumerWidget {
             code: code,
             playerNationId: playerNationId,
             careerId: careerId,
+            name: name,
           );
     if (playoffs != null || stepsView != null) {
       return ListView(
