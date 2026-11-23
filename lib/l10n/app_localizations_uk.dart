@@ -18765,4 +18765,8 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get legendThrough =>
       'Зелений: за поточним станом проходить до наступного раунду';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'Лише матчі, за якими оцінюють цю кампанію: товариські матчі та інші турніри не враховуються.';
 }

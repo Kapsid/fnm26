@@ -27893,6 +27893,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Green: going through to the next round, as things stand'**
   String get legendThrough;
+
+  /// Verdict screen, under the run-in-numbers heading: the figures cover only the matches the campaign is judged on, not the whole career.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the matches this campaign is judged on: friendlies and other competitions are left out.'**
+  String get campaignRunInNumbersNote;
 }
 
 class _AppLocalizationsDelegate

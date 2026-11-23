@@ -4607,5 +4607,6 @@
   "qualLegendCafStep": "Jaune : en route pour le barrage africain",
   "qualLegendOfcStep": "Jaune : en route pour la finale de l'Océanie",
   "qualLegendIntercont": "Jaune : en route pour le barrage intercontinental",
-  "legendThrough": "Vert : qualifié pour le tour suivant, en l'état"
+  "legendThrough": "Vert : qualifié pour le tour suivant, en l'état",
+  "campaignRunInNumbersNote": "Seulement les matchs sur lesquels cette campagne est jugée : les amicaux et les autres compétitions ne comptent pas."
 }

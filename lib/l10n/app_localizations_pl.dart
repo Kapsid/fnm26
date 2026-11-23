@@ -18628,4 +18628,8 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get legendThrough =>
       'Zielony: według obecnego stanu awans do następnej rundy';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'Tylko mecze, na podstawie których oceniana jest ta kampania: towarzyskie i inne rozgrywki się nie liczą.';
 }

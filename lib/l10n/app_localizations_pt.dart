@@ -18544,4 +18544,8 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get legendThrough => 'Verde: por agora, segue para a fase seguinte';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'Só os jogos pelos quais esta campanha é julgada: amigáveis e outras competições não contam.';
 }

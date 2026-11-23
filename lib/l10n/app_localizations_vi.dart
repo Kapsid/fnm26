@@ -18281,4 +18281,8 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get legendThrough => 'Xanh lá: theo hiện tại, đi tiếp vào vòng sau';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'Chỉ các trận dùng để đánh giá chiến dịch này: không tính giao hữu và các giải đấu khác.';
 }

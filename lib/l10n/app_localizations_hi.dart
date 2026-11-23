@@ -18340,4 +18340,8 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get legendThrough => 'हरा: अभी की स्थिति में अगले दौर में';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'केवल वे मैच जिन पर यह अभियान आँका जाता है: मैत्री मैच और अन्य प्रतियोगिताएँ शामिल नहीं हैं।';
 }

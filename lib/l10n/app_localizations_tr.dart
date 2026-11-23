@@ -18346,4 +18346,8 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get legendThrough =>
       'Yeşil: şu anki duruma göre bir sonraki tura çıkıyor';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'Yalnızca bu kampanyanın değerlendirildiği maçlar: hazırlık maçları ve diğer turnuvalar sayılmaz.';
 }

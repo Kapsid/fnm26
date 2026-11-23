@@ -107,6 +107,8 @@ import 'package:fnm/features/career/manager_history_providers.dart'
     show managerHistoryProvider;
 import 'package:fnm/features/career/nation_offers_providers.dart'
     show rolloverVerdictProvider;
+import 'package:fnm/domain/services/achievements/board_satisfaction.dart'
+    show TournamentTier;
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';

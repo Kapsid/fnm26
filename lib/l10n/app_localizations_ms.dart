@@ -18396,4 +18396,8 @@ class AppLocalizationsMs extends AppLocalizations {
   @override
   String get legendThrough =>
       'Hijau: buat masa ini, mara ke pusingan seterusnya';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'Hanya perlawanan yang menjadi ukuran kempen ini: perlawanan persahabatan dan pertandingan lain tidak dikira.';
 }

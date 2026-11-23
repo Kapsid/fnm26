@@ -4607,5 +4607,6 @@
   "qualLegendCafStep": "Galben: spre barajul african",
   "qualLegendOfcStep": "Galben: spre finala Oceaniei",
   "qualLegendIntercont": "Galben: spre barajul intercontinental",
-  "legendThrough": "Verde: deocamdată, merge în turul următor"
+  "legendThrough": "Verde: deocamdată, merge în turul următor",
+  "campaignRunInNumbersNote": "Doar meciurile după care este judecată această campanie: amicalele și celelalte competiții nu se pun."
 }

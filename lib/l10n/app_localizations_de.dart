@@ -18577,4 +18577,8 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get legendThrough =>
       'Grün: nach aktuellem Stand in der nächsten Runde';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'Nur die Spiele, nach denen diese Kampagne bewertet wird: Freundschaftsspiele und andere Wettbewerbe zählen nicht.';
 }

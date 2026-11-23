@@ -240,6 +240,15 @@ class _CampaignVerdictScreenState extends ConsumerState<CampaignVerdictScreen> {
               color: AppColors.onSurfaceVariant,
             ),
           ),
+          // The figures are the campaign's own competition, not the career:
+          // a run of a dozen matches read as wrong next to 143 played.
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            l.campaignRunInNumbersNote,
+            style: AppTypography.bodySmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
           const SizedBox(height: AppSpacing.sm),
           _row(l.statsPlayed, '${n.played}'),
           _row(l.statsWinDrawLoss, '${n.won}–${n.drawn}–${n.lost}'),

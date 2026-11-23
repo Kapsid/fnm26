@@ -4607,5 +4607,6 @@
   "qualLegendCafStep": "Sárga: az afrikai pótselejtezőbe tart",
   "qualLegendOfcStep": "Sárga: az óceániai döntőbe tart",
   "qualLegendIntercont": "Sárga: a kontinensek közötti pótselejtezőre tart",
-  "legendThrough": "Zöld: a jelenlegi állás szerint továbbjut a következő körbe"
+  "legendThrough": "Zöld: a jelenlegi állás szerint továbbjut a következő körbe",
+  "campaignRunInNumbersNote": "Csak azok a meccsek, amelyek alapján a kampányt megítélik: a barátságos meccsek és más sorozatok nem számítanak."
 }

@@ -4607,5 +4607,6 @@
   "qualLegendCafStep": "Gelb: auf Kurs zum afrikanischen Play-off",
   "qualLegendOfcStep": "Gelb: auf Kurs zum Ozeanien-Finale",
   "qualLegendIntercont": "Gelb: auf Kurs zum interkontinentalen Play-off",
-  "legendThrough": "Grün: nach aktuellem Stand in der nächsten Runde"
+  "legendThrough": "Grün: nach aktuellem Stand in der nächsten Runde",
+  "campaignRunInNumbersNote": "Nur die Spiele, nach denen diese Kampagne bewertet wird: Freundschaftsspiele und andere Wettbewerbe zählen nicht."
 }
