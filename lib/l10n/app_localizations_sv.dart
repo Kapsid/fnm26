@@ -12241,6 +12241,40 @@ class AppLocalizationsSv extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Medarrangör';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Ansök tillsammans med en annan nation i din konfederation. Båda nationernas arenor räknas, en stark granne stärker ansökan, och vinner ni arrangerar båda nationerna och kvalificerar sig automatiskt. Bidraget delas, så din del blir mindre.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Dina arenor räcker inte ensamma. Välj en medarrangör för en gemensam ansökan.';
+
+  @override
+  String get hostBidPartnerAlone => 'Ansök ensam';
+
+  @override
+  String get hostBidPartnerAgrees => 'Redo att arrangera tillsammans';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Tackar nej: ansöker hellre ensam.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Tackar nej: för långt bort för en gemensam ansökan.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Tackar nej: kan inte finansiera sin del den här gången.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Vinner du arrangerar du tillsammans med $nation: båda nationerna kvalificerar sig automatiskt och du får ett engångsbidrag på $amount, din del, till nästa budget.';
+  }
+
+  @override
   String get hostBidChance => 'Chans till värdskap';
 
   @override
@@ -12418,6 +12452,15 @@ class AppLocalizationsSv extends AppLocalizations {
       'Ansökan inlämnad. Värdlandet tillkännages när den nya cykeln börjar.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Gemensam ansökan med $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'För liten för att arrangera ensam, men en gemensam ansökan med en medarrangör är öppen.';
+
+  @override
   String get hostBidDeclinedNote => 'Du valde att inte söka den här gången.';
 
   @override
@@ -12513,6 +12556,16 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Vi blir värdar för turneringen och är automatiskt kvalificerade som värdland. Ett engångsstöd på $amount finns redan i förbundets medel, redo för den här cykelns budget.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts arrangerar turneringen tillsammans, och vi är automatiskt kvalificerade som värdnation. Vår del av bidraget, $amount, finns nu i förbundets medel, och du kan fördela den på den här cykelns avdelningar direkt från översikten.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts arrangerar turneringen tillsammans, och vi är automatiskt kvalificerade som värdnation. Vår del av bidraget, $amount, finns redan i förbundets medel, redo för den här cykelns budget.';
   }
 
   @override

@@ -12314,6 +12314,40 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Συνδιοργανωτής';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Κάνε υποψηφιότητα μαζί με άλλη χώρα της συνομοσπονδίας σου. Μετρούν τα γήπεδα και των δύο, ένας δυνατός γείτονας ενισχύει την υποψηφιότητα και, αν κερδίσεις, διοργανώνουν και οι δύο χώρες και προκρίνονται αυτόματα. Η επιχορήγηση μοιράζεται, οπότε το μερίδιό σου είναι μικρότερο.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Τα γήπεδά σου δεν αρκούν μόνα τους. Διάλεξε συνδιοργανωτή για κοινή υποψηφιότητα.';
+
+  @override
+  String get hostBidPartnerAlone => 'Υποψηφιότητα μόνοι';
+
+  @override
+  String get hostBidPartnerAgrees => 'Έτοιμη για συνδιοργάνωση';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Αρνείται: προτιμά να κάνει υποψηφιότητα μόνη.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Αρνείται: πολύ μακριά για κοινή υποψηφιότητα.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Αρνείται: αυτή τη φορά δεν μπορεί να χρηματοδοτήσει το μερίδιό της.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Αν κερδίσεις, διοργανώνεις μαζί με $nation: και οι δύο χώρες προκρίνονται αυτόματα και λαμβάνεις εφάπαξ επιχορήγηση $amount, το μερίδιό σου, για τον επόμενο προϋπολογισμό.';
+  }
+
+  @override
   String get hostBidChance => 'Πιθανότητα διοργάνωσης';
 
   @override
@@ -12493,6 +12527,15 @@ class AppLocalizationsEl extends AppLocalizations {
       'Η υποψηφιότητα κατατέθηκε. Ο διοργανωτής ανακοινώνεται με την έναρξη του νέου κύκλου.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Κοινή υποψηφιότητα με $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Πολύ μικρή για να διοργανώσει μόνη, αλλά είναι ανοιχτή μια κοινή υποψηφιότητα με συνδιοργανωτή.';
+
+  @override
   String get hostBidDeclinedNote =>
       'Αυτή τη φορά επιλέξατε να μην είστε υποψήφιοι.';
 
@@ -12583,6 +12626,16 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Θα διοργανώσουμε το τουρνουά και προκρινόμαστε αυτόματα ως διοργανωτές. Μια εφάπαξ ενίσχυση $amount είναι ήδη στα κεφάλαια της ομοσπονδίας, έτοιμη για τον προϋπολογισμό αυτού του κύκλου.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts θα διοργανώσουν μαζί το τουρνουά, και προκρινόμαστε αυτόματα ως διοργανωτές. Το μερίδιό μας από την επιχορήγηση, $amount, είναι πλέον στα κεφάλαια της ομοσπονδίας και μπορείς να το κατανείμεις στα τμήματα αυτού του κύκλου κατευθείαν από την αρχική.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts θα διοργανώσουν μαζί το τουρνουά, και προκρινόμαστε αυτόματα ως διοργανωτές. Το μερίδιό μας από την επιχορήγηση, $amount, είναι ήδη στα κεφάλαια της ομοσπονδίας, έτοιμο για τον προϋπολογισμό αυτού του κύκλου.';
   }
 
   @override

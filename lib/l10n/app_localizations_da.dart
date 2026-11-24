@@ -12247,6 +12247,39 @@ class AppLocalizationsDa extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Medværtsnation';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Byd sammen med en anden nation i dit konføderationsområde. Begge nationers stadioner tæller, en stærk nabo styrker buddet, og vinder I, er begge nationer værter og kvalificerer sig automatisk. Tilskuddet deles, så din del bliver mindre.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Dine stadioner rækker ikke alene. Vælg en medværtsnation til et fælles bud.';
+
+  @override
+  String get hostBidPartnerAlone => 'Byd alene';
+
+  @override
+  String get hostBidPartnerAgrees => 'Klar til at være medvært';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid => 'Siger nej: byder hellere alene.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Siger nej: for langt væk til et fælles bud.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Siger nej: kan ikke finansiere sin del denne gang.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Vinder du, er du vært sammen med $nation: begge nationer kvalificerer sig automatisk, og du får et engangstilskud på $amount, din del, til næste budget.';
+  }
+
+  @override
   String get hostBidChance => 'Chance for værtskab';
 
   @override
@@ -12426,6 +12459,15 @@ class AppLocalizationsDa extends AppLocalizations {
       'Ansøgning indsendt. Værtslandet offentliggøres, når den nye cyklus begynder.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Fælles bud med $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'For lille til at være vært alene, men et fælles bud med en medværtsnation er åbent.';
+
+  @override
   String get hostBidDeclinedNote => 'Du valgte ikke at søge denne gang.';
 
   @override
@@ -12521,6 +12563,16 @@ class AppLocalizationsDa extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Vi bliver værter for turneringen og er automatisk kvalificeret som værtsland. Et engangstilskud på $amount er allerede i forbundets midler, klar til denne cyklus\' budget.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts er værter for turneringen sammen, og vi er automatisk kvalificeret som vært. Vores del af tilskuddet, $amount, er nu i forbundets midler, og du kan fordele det på denne cyklus\' afdelinger direkte fra oversigten.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts er værter for turneringen sammen, og vi er automatisk kvalificeret som vært. Vores del af tilskuddet, $amount, er allerede i forbundets midler, klar til denne cyklus\' budget.';
   }
 
   @override

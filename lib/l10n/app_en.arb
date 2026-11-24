@@ -18856,6 +18856,50 @@
       }
     }
   },
+  "hostBidPartnerTitle": "Co-host",
+  "@hostBidPartnerTitle": {
+    "description": "Host bid screen: heading of the co-host partner choice (a joint bid with another nation)."
+  },
+  "hostBidPartnerBlurb": "Bid together with another nation of your confederation. Both nations' stadiums count, a strong neighbour helps your case, and if you win both nations host and qualify automatically. The grant is shared, so your part is smaller.",
+  "@hostBidPartnerBlurb": {
+    "description": "Host bid screen: how a joint bid with a co-host works."
+  },
+  "hostBidPartnerNeeded": "Your stadiums fall short alone. Choose a co-host to bid jointly.",
+  "@hostBidPartnerNeeded": {
+    "description": "Host bid screen: the nation's stadiums are too small alone; a joint bid is the only way to bid."
+  },
+  "hostBidPartnerAlone": "Bid alone",
+  "@hostBidPartnerAlone": {
+    "description": "Host bid screen: option to bid without a co-host."
+  },
+  "hostBidPartnerAgrees": "Ready to co-host",
+  "@hostBidPartnerAgrees": {
+    "description": "Host bid screen: under a candidate co-host nation, it agrees to bid jointly."
+  },
+  "hostBidPartnerDeclinesOwnBid": "Declines: it would rather bid on its own.",
+  "@hostBidPartnerDeclinesOwnBid": {
+    "description": "Host bid screen: under a candidate co-host nation, it declines because it prefers its own bid."
+  },
+  "hostBidPartnerDeclinesTooFar": "Declines: too far away for a joint bid.",
+  "@hostBidPartnerDeclinesTooFar": {
+    "description": "Host bid screen: under a candidate co-host nation, it declines because it is not a neighbour."
+  },
+  "hostBidPartnerDeclinesFunds": "Declines: it can't fund its share this time.",
+  "@hostBidPartnerDeclinesFunds": {
+    "description": "Host bid screen: under a candidate co-host nation, it declines because it cannot fund its share."
+  },
+  "hostBidPrizeJoint": "Win, and you host together with {nation}: both nations qualify automatically, and you receive a one-off grant of {amount}, your share, for the next budget.",
+  "@hostBidPrizeJoint": {
+    "description": "Host bid screen: what winning a joint bid brings. nation is the co-host, amount is money like €7M (the manager's share of the grant).",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "hostBidChance": "Chance to host",
   "@hostBidChance": {
     "description": "Host bid screen: label above the chance bar."
@@ -19141,6 +19185,19 @@
   "@hostBidLodged": {
     "description": "Hosting-bids card: a bid for this edition is already in."
   },
+  "hostBidJointWith": "Joint bid with {nation}.",
+  "@hostBidJointWith": {
+    "description": "Hosting-bids card: the lodged bid is a joint one with this co-host nation.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "hostBidJointOnlyOpen": "Too small to host alone, but a joint bid with a co-host is open.",
+  "@hostBidJointOnlyOpen": {
+    "description": "Hosting-bids card: the nation's stadiums are too small to host alone, but it can bid jointly with a co-host."
+  },
   "hostBidDeclinedNote": "You chose not to bid this time.",
   "@hostBidDeclinedNote": {
     "description": "Hosting-bids card: the manager turned this bid down."
@@ -19273,6 +19330,30 @@
   "@hostBidWonBodyBudget": {
     "description": "News body: a hosting bid decided at the start of a new cycle was won; the grant is in the funds for this cycle's budget.",
     "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "hostBidWonJointBody": "{hosts} will host the tournament together, and we qualify automatically as hosts. Our share of the hosting grant, {amount}, is now in the federation's funds, and you can assign it to this cycle's departments straight from the hub.",
+  "@hostBidWonJointBody": {
+    "description": "Inbox body: our joint host bid won; hosts are both host nations joined by &; amount is our share of the grant.",
+    "placeholders": {
+      "hosts": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "hostBidWonJointBodyBudget": "{hosts} will host the tournament together, and we qualify automatically as hosts. Our share of the hosting grant, {amount}, is already in the federation's funds, ready for this cycle's budget.",
+  "@hostBidWonJointBodyBudget": {
+    "description": "News body: a joint hosting bid decided at the start of a new cycle was won; hosts are both host nations joined by &; amount is our share of the grant.",
+    "placeholders": {
+      "hosts": {
+        "type": "String"
+      },
       "amount": {
         "type": "String"
       }

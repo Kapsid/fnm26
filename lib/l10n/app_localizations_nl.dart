@@ -12312,6 +12312,40 @@ class AppLocalizationsNl extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Medeorganisator';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Stel je samen kandidaat met een ander land uit je confederatie. De stadions van beide landen tellen mee, een sterke buur versterkt je kandidatuur en bij winst organiseren beide landen en plaatsen ze zich automatisch. De bijdrage wordt gedeeld, dus jouw deel is kleiner.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Je stadions volstaan alleen niet. Kies een medeorganisator voor een gezamenlijke kandidatuur.';
+
+  @override
+  String get hostBidPartnerAlone => 'Alleen kandidaat';
+
+  @override
+  String get hostBidPartnerAgrees => 'Klaar om mee te organiseren';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Weigert: stelt zich liever alleen kandidaat.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Weigert: te ver weg voor een gezamenlijke kandidatuur.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Weigert: kan zijn deel deze keer niet betalen.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Win je, dan organiseer je samen met $nation: beide landen plaatsen zich automatisch en je krijgt een eenmalige bijdrage van $amount, jouw deel, voor het volgende budget.';
+  }
+
+  @override
   String get hostBidChance => 'Kans op het gastlandschap';
 
   @override
@@ -12490,6 +12524,15 @@ class AppLocalizationsNl extends AppLocalizations {
       'Kandidatuur ingediend. Het gastland wordt bekendgemaakt als de nieuwe cyclus begint.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Gezamenlijke kandidatuur met $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Te klein om alleen te organiseren, maar een gezamenlijke kandidatuur met een medeorganisator staat open.';
+
+  @override
   String get hostBidDeclinedNote =>
       'Je hebt deze keer afgezien van een kandidatuur.';
 
@@ -12587,6 +12630,16 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'We organiseren het toernooi en zijn als gastland automatisch geplaatst. Een eenmalige bijdrage van $amount staat al in de middelen van de bond, klaar voor het budget van deze cyclus.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts organiseren het toernooi samen, en wij zijn als gastland automatisch geplaatst. Ons deel van de bijdrage, $amount, staat nu op de rekening van de bond, en je kunt het meteen vanuit het overzicht over de afdelingen van deze cyclus verdelen.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts organiseren het toernooi samen, en wij zijn als gastland automatisch geplaatst. Ons deel van de bijdrage, $amount, staat al op de rekening van de bond, klaar voor het budget van deze cyclus.';
   }
 
   @override

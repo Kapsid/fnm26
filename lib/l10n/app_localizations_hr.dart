@@ -12574,6 +12574,39 @@ class AppLocalizationsHr extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Suorganizator';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Kandidiraj se zajedno s drugom državom svoje konfederacije. Računaju se stadioni obiju zemalja, jak susjed jača kandidaturu, a ako pobijedite, obje zemlje su domaćini i automatski se kvalificiraju. Potpora se dijeli, pa je tvoj dio manji.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Tvoji stadioni sami nisu dovoljni. Odaberi suorganizatora za zajedničku kandidaturu.';
+
+  @override
+  String get hostBidPartnerAlone => 'Kandidiraj se sam';
+
+  @override
+  String get hostBidPartnerAgrees => 'Spreman na suorganizaciju';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid => 'Odbija: radije se kandidira sam.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Odbija: predaleko za zajedničku kandidaturu.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Odbija: ovaj put ne može financirati svoj dio.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Ako pobijediš, domaćin si zajedno s državom $nation: obje zemlje automatski se kvalificiraju, a dobivaš jednokratnu potporu od $amount, svoj dio, za sljedeći proračun.';
+  }
+
+  @override
   String get hostBidChance => 'Šansa za domaćinstvo';
 
   @override
@@ -12752,6 +12785,15 @@ class AppLocalizationsHr extends AppLocalizations {
       'Kandidatura predana. Domaćin se objavljuje na početku novog ciklusa.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Zajednička kandidatura s državom $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Premalo za samostalno domaćinstvo, ali zajednička kandidatura sa suorganizatorom je otvorena.';
+
+  @override
   String get hostBidDeclinedNote => 'Ovaj put ste odlučili ne kandidirati se.';
 
   @override
@@ -12841,6 +12883,16 @@ class AppLocalizationsHr extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Bit ćemo domaćini turnira i kao domaćin automatski smo plasirani. Jednokratna potpora od $amount već je u sredstvima saveza, spremna za proračun ovog ciklusa.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts zajedno će biti domaćini turnira, a mi se kao domaćin automatski kvalificiramo. Naš dio potpore, $amount, sada je u sredstvima saveza i možeš ga odmah s početnog zaslona rasporediti odjelima ovog ciklusa.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts zajedno će biti domaćini turnira, a mi se kao domaćin automatski kvalificiramo. Naš dio potpore, $amount, već je u sredstvima saveza, spreman za proračun ovog ciklusa.';
   }
 
   @override

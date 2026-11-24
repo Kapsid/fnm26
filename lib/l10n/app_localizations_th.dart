@@ -12020,6 +12020,39 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'เจ้าภาพร่วม';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'ยื่นเสนอตัวร่วมกับชาติอื่นในสมาพันธ์เดียวกัน สนามของทั้งสองชาติจะถูกนับรวม เพื่อนบ้านที่แข็งแกร่งช่วยให้การเสนอตัวน่าสนใจขึ้น และถ้าชนะ ทั้งสองชาติจะเป็นเจ้าภาพและได้สิทธิ์ผ่านเข้ารอบโดยอัตโนมัติ เงินสนับสนุนต้องแบ่งกัน ส่วนของคุณจึงน้อยลง';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'สนามของคุณเพียงลำพังยังไม่พอ เลือกเจ้าภาพร่วมเพื่อยื่นเสนอตัวร่วมกัน';
+
+  @override
+  String get hostBidPartnerAlone => 'เสนอตัวเพียงลำพัง';
+
+  @override
+  String get hostBidPartnerAgrees => 'พร้อมเป็นเจ้าภาพร่วม';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid => 'ปฏิเสธ: อยากเสนอตัวเองเพียงลำพัง';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'ปฏิเสธ: อยู่ไกลเกินไปสำหรับการเสนอตัวร่วม';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'ปฏิเสธ: ครั้งนี้ไม่มีงบสำหรับส่วนของตน';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'ถ้าชนะ คุณจะเป็นเจ้าภาพร่วมกับ $nation ทั้งสองชาติผ่านเข้ารอบโดยอัตโนมัติ และคุณจะได้รับเงินสนับสนุนครั้งเดียว $amount ซึ่งเป็นส่วนของคุณ สำหรับงบประมาณถัดไป';
+  }
+
+  @override
   String get hostBidChance => 'โอกาสได้เป็นเจ้าภาพ';
 
   @override
@@ -12195,6 +12228,15 @@ class AppLocalizationsTh extends AppLocalizations {
       'ยื่นเสนอตัวแล้ว จะประกาศเจ้าภาพเมื่อเริ่มรอบใหม่';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'เสนอตัวร่วมกับ $nation';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'เล็กเกินไปที่จะเป็นเจ้าภาพเพียงลำพัง แต่ยังเสนอตัวร่วมกับเจ้าภาพร่วมได้';
+
+  @override
   String get hostBidDeclinedNote => 'ครั้งนี้คุณเลือกไม่เสนอตัว';
 
   @override
@@ -12281,6 +12323,16 @@ class AppLocalizationsTh extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'เราจะเป็นเจ้าภาพการแข่งขันและได้สิทธิ์เข้าร่วมอัตโนมัติในฐานะเจ้าภาพ เงินสนับสนุนครั้งเดียว $amount เข้ามาในเงินทุนของสมาคมแล้ว พร้อมสำหรับงบประมาณรอบนี้';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts จะร่วมกันเป็นเจ้าภาพการแข่งขัน และเราได้สิทธิ์ผ่านเข้ารอบโดยอัตโนมัติในฐานะเจ้าภาพ ส่วนแบ่งเงินสนับสนุนของเรา $amount อยู่ในกองทุนของสมาคมแล้ว และคุณจัดสรรให้แผนกต่าง ๆ ของรอบนี้ได้ทันทีจากหน้าหลัก';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts จะร่วมกันเป็นเจ้าภาพการแข่งขัน และเราได้สิทธิ์ผ่านเข้ารอบโดยอัตโนมัติในฐานะเจ้าภาพ ส่วนแบ่งเงินสนับสนุนของเรา $amount อยู่ในกองทุนของสมาคมแล้ว พร้อมสำหรับงบประมาณของรอบนี้';
   }
 
   @override

@@ -12239,6 +12239,40 @@ class AppLocalizationsFil extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Kasamang host';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Mag-bid kasama ang ibang bansa sa iyong confederation. Bilang ang mga stadium ng dalawang bansa, nakatutulong ang malakas na kapitbahay, at kapag nanalo kayo, parehong host ang dalawang bansa at awtomatikong kwalipikado. Hati ang grant, kaya mas maliit ang bahagi mo.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Kulang ang mga stadium mo kung mag-isa. Pumili ng kasamang host para sa magkasanib na bid.';
+
+  @override
+  String get hostBidPartnerAlone => 'Mag-bid nang mag-isa';
+
+  @override
+  String get hostBidPartnerAgrees => 'Handang maging kasamang host';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Tumanggi: mas gusto nitong mag-bid nang mag-isa.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Tumanggi: masyadong malayo para sa magkasanib na bid.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Tumanggi: hindi nito kayang pondohan ang bahagi nito ngayon.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Manalo, at magho-host ka kasama ang $nation: parehong awtomatikong kwalipikado ang dalawang bansa, at makatatanggap ka ng isang beses na grant na $amount, ang bahagi mo, para sa susunod na budget.';
+  }
+
+  @override
   String get hostBidChance => 'Tsansang mag-host';
 
   @override
@@ -12418,6 +12452,15 @@ class AppLocalizationsFil extends AppLocalizations {
       'Naisumite na ang bid. Iaanunsyo ang host sa pagsisimula ng bagong cycle.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Magkasanib na bid kasama ang $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Masyadong maliit para mag-host nang mag-isa, pero bukas ang magkasanib na bid kasama ang isang kasamang host.';
+
+  @override
   String get hostBidDeclinedNote => 'Pinili mong huwag mag-bid ngayon.';
 
   @override
@@ -12506,6 +12549,16 @@ class AppLocalizationsFil extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Tayo ang magho-host ng torneo at awtomatikong kasali bilang host. Nasa pondo na ng federasyon ang isang beses na grant na $amount, handa para sa budget ng cycle na ito.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return 'Magkasamang magho-host ng torneo ang $hosts, at awtomatiko tayong kwalipikado bilang host. Nasa pondo na ng federation ang bahagi natin sa grant, $amount, at maaari mo itong italaga sa mga departamento ng cycle na ito mula mismo sa hub.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return 'Magkasamang magho-host ng torneo ang $hosts, at awtomatiko tayong kwalipikado bilang host. Nasa pondo na ng federation ang bahagi natin sa grant, $amount, handa para sa budget ng cycle na ito.';
   }
 
   @override

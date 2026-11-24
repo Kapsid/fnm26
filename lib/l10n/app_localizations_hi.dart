@@ -12170,6 +12170,40 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'सह-मेज़बान';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'अपने महासंघ के किसी दूसरे देश के साथ मिलकर बोली लगाएँ। दोनों देशों के स्टेडियम गिने जाते हैं, एक मज़बूत पड़ोसी आपकी दावेदारी को मज़बूत करता है, और जीतने पर दोनों देश मेज़बानी करते हैं और अपने आप क्वालीफ़ाई करते हैं। अनुदान बँटता है, इसलिए आपका हिस्सा छोटा होता है।';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'आपके स्टेडियम अकेले काफ़ी नहीं हैं। संयुक्त बोली के लिए एक सह-मेज़बान चुनें।';
+
+  @override
+  String get hostBidPartnerAlone => 'अकेले बोली लगाएँ';
+
+  @override
+  String get hostBidPartnerAgrees => 'सह-मेज़बानी के लिए तैयार';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'इनकार: वह अकेले बोली लगाना पसंद करेगा।';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'इनकार: संयुक्त बोली के लिए बहुत दूर है।';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'इनकार: इस बार वह अपना हिस्सा नहीं जुटा सकता।';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'जीतें, और आप $nation के साथ मिलकर मेज़बानी करेंगे: दोनों देश अपने आप क्वालीफ़ाई करेंगे, और आपको अगले बजट के लिए $amount का एकमुश्त अनुदान मिलेगा, जो आपका हिस्सा है।';
+  }
+
+  @override
   String get hostBidChance => 'मेज़बानी का मौका';
 
   @override
@@ -12348,6 +12382,15 @@ class AppLocalizationsHi extends AppLocalizations {
       'दावेदारी दर्ज हुई। मेज़बान की घोषणा नया चक्र शुरू होते ही होगी।';
 
   @override
+  String hostBidJointWith(String nation) {
+    return '$nation के साथ संयुक्त बोली।';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'अकेले मेज़बानी के लिए बहुत छोटा, लेकिन सह-मेज़बान के साथ संयुक्त बोली खुली है।';
+
+  @override
   String get hostBidDeclinedNote =>
       'इस बार आपने दावेदारी न करने का फ़ैसला किया।';
 
@@ -12437,6 +12480,16 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'हम टूर्नामेंट की मेज़बानी करेंगे और मेज़बान के तौर पर अपने आप क्वालिफ़ाई करते हैं। $amount का एकमुश्त अनुदान फ़ेडरेशन की धनराशि में आ चुका है, इस चक्र के बजट के लिए तैयार।';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts मिलकर टूर्नामेंट की मेज़बानी करेंगे, और हम मेज़बान के रूप में अपने आप क्वालीफ़ाई करते हैं। अनुदान में हमारा हिस्सा, $amount, अब महासंघ के कोष में है, और आप इसे सीधे हब से इस चक्र के विभागों में बाँट सकते हैं।';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts मिलकर टूर्नामेंट की मेज़बानी करेंगे, और हम मेज़बान के रूप में अपने आप क्वालीफ़ाई करते हैं। अनुदान में हमारा हिस्सा, $amount, पहले से महासंघ के कोष में है, इस चक्र के बजट के लिए तैयार।';
   }
 
   @override

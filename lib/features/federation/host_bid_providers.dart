@@ -21,6 +21,7 @@ import 'package:fnm/domain/services/competition/venues.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
+import 'package:fnm/domain/services/nation/nation_geography.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/federation_service.dart';
@@ -87,6 +88,8 @@ class HostBidOffer {
     required this.size,
     required this.today,
     required this.freeFunds,
+    this.partners = const [],
+    this.soloAllowed = true,
   });
 
   final int careerId;
@@ -123,11 +126,59 @@ class HostBidOffer {
         : HostBidOdds.maxLevels;
   }
 
-  HostBidQuote quote(int levels) =>
-      HostBidOdds.quote(size: size, today: today, levels: levels);
+  /// The nations that could co-host the bid, the likeliest partners first
+  /// (neighbours, then the nearest in the ranking). Each says whether it
+  /// would agree (see [CoHostAnswer]). Empty when no nation could.
+  final List<HostBidPartnerOption> partners;
+
+  /// The nation may bid alone. False when its grounds fall short alone but a
+  /// joint bid with one of [partners] reaches the edition's requirements:
+  /// then a partner must be chosen.
+  final bool soloAllowed;
+
+  /// The quote of a bid of [levels], alone or (with [partner]) jointly.
+  HostBidQuote quote(int levels, {HostBidPartnerOption? partner}) =>
+      partner == null
+      ? HostBidOdds.quote(size: size, today: today, levels: levels)
+      : HostBidOdds.jointQuote(
+          size: partner.size,
+          today: today,
+          levels: levels,
+          partnerRank: partner.nation.ranking,
+          neighbour: partner.neighbour,
+        );
+
+  /// The grant a won bid of [levels] pays, alone or jointly.
+  int bonus(int levels, {HostBidPartnerOption? partner}) => partner == null
+      ? HostBidOdds.bonusFor(levels)
+      : HostBidOdds.jointBonusFor(levels);
 
   /// The canonical stored competition name, for the news.
   String get storedName => _storedName(comp, nation.confederation);
+}
+
+/// A nation the manager may ask to co-host a bid.
+class HostBidPartnerOption {
+  const HostBidPartnerOption({
+    required this.nation,
+    required this.size,
+    required this.neighbour,
+    this.decline,
+  });
+
+  final Nation nation;
+
+  /// [HostBidOdds.sizeScore] of BOTH nations' grounds together.
+  final double size;
+
+  /// It shares the bidding nation's subregion.
+  final bool neighbour;
+
+  /// Why it turns the bid down, or null when it agrees.
+  final CoHostDecline? decline;
+
+  /// It agrees to co-host.
+  bool get agrees => decline == null;
 }
 
 /// Where one tournament's bid stands for a career: what its next edition
@@ -153,11 +204,15 @@ class HostBidStatus {
     this.bar,
     this.barShortfall,
     this.pledge,
+    this.pledgePartner,
   });
 
   final HostBidComp comp;
   final int editionCycle;
   final int year;
+
+  /// The co-host the lodged bid names, or null for a bid made alone.
+  final Nation? pledgePartner;
 
   /// The nation that would bid.
   final Nation nation;
@@ -550,11 +605,12 @@ hostBidStatusProvider = FutureProvider.autoDispose
           .watch(nationRepositoryProvider)
           .forCareer(careerId);
       final nationId = arg.nationId ?? career.nationId;
-      Nation? me;
+      Nation? found;
       for (final n in nations) {
-        if (n.id == nationId) me = n;
+        if (n.id == nationId) found = n;
       }
-      if (me == null) return const [];
+      if (found == null) return const [];
+      final me = found;
       final windowOpen = await comp.worldChampion(careerId) != null;
       // Which of this cycle's hosts the manager has been shown: by their
       // ceremony, by the finals draw that names them, or by the cycle being
@@ -604,16 +660,20 @@ hostBidStatusProvider = FutureProvider.autoDispose
       }
       final statuses = <HostBidStatus>[];
 
-      HostBidStatus status({
+      final byId = {for (final n in nations) n.id: n};
+
+      Future<HostBidStatus> status({
         required HostBidComp c,
         required int year,
         required ({bool eligible, double today}) standing,
         required bool recent,
         required bool backToBack,
         required bool pending,
+        required ({bool eligible, double today}) Function(int nationId)
+        standingOf,
         Confederation? barred,
-      }) {
-        final req = HostingRequirements.of(c, me!.confederation);
+      }) async {
+        final req = HostingRequirements.of(c, me.confederation);
         final short = HostingRequirements.shortfall(seats, req);
         final lodged = _lodged(kinds, c, edition, me.id);
         final settled = _settled(kinds, c, edition, me.id);
@@ -622,12 +682,35 @@ hostBidStatusProvider = FutureProvider.autoDispose
         final check = barChecks[c];
         final below =
             check != null && !HostStadiumRules.meets(check.seats, check.bar);
-        final ok =
-            short.grounds == 0 &&
-            short.bigGrounds == 0 &&
-            !below &&
+        final estateOk = short.grounds == 0 && short.bigGrounds == 0 && !below;
+        final open =
+            windowOpen &&
             standing.eligible &&
-            !otherLodged;
+            !otherLodged &&
+            !settled &&
+            funds >= HostBidOdds.levelPrice;
+        final partners = open
+            ? await coHostOptions(
+                ref,
+                careerId: careerId,
+                comp: c,
+                editionCycle: edition,
+                lead: me,
+                leadToday: standing.today,
+                leadSeats: seats,
+                leadBarSeats: check?.seats,
+                bar: check?.bar,
+                seed: career.rngSeed,
+                nations: nations,
+                standingOf: standingOf,
+              )
+            : const <HostBidPartnerOption>[];
+        final partnerId = HostBidPartnerMarker.partnerIn(
+          kinds,
+          c,
+          edition,
+          me.id,
+        );
         return HostBidStatus(
           comp: c,
           editionCycle: edition,
@@ -645,9 +728,12 @@ hostBidStatusProvider = FutureProvider.autoDispose
           barShortfall: check?.shortfall,
           lodged: lodged,
           pledge: lodged ? _bidOf(kinds, c, edition, me.id) : null,
+          pledgePartner: lodged && partnerId != null ? byId[partnerId] : null,
           declined: _declined(kinds, c, edition, me.id),
           windowOpen: windowOpen,
-          offer: windowOpen && ok && !settled && funds >= HostBidOdds.levelPrice
+          // Short alone, the bid is still open jointly when a partner's
+          // grounds make up the difference (every partner listed does).
+          offer: open && (estateOk || partners.any((o) => o.agrees))
               ? HostBidOffer(
                   careerId: careerId,
                   comp: c,
@@ -657,6 +743,8 @@ hostBidStatusProvider = FutureProvider.autoDispose
                   size: size,
                   today: standing.today,
                   freeFunds: funds,
+                  partners: partners,
+                  soloAllowed: estateOk,
                 )
               : null,
         );
@@ -674,7 +762,7 @@ hostBidStatusProvider = FutureProvider.autoDispose
           managerNationId: me.id,
         );
         statuses.add(
-          status(
+          await status(
             c: HostBidComp.continental,
             year: CareerService.continentalFinalsYear(edition),
             standing: (eligible: standing.eligible, today: standing.today),
@@ -687,6 +775,17 @@ hostBidStatusProvider = FutureProvider.autoDispose
             // Its rules read this cycle's continental and World
             // Championship hosts.
             pending: !contKnown || !wcKnown,
+            standingOf: (id) {
+              final st = WorldCupHosts.continentalBidStanding(
+                confederation: me.confederation,
+                cycle: edition,
+                seed: career.rngSeed,
+                nations: nations,
+                nationId: id,
+                managerNationId: me.id,
+              );
+              return (eligible: st.eligible, today: st.today);
+            },
           ),
         );
       }
@@ -699,7 +798,7 @@ hostBidStatusProvider = FutureProvider.autoDispose
         managerNationId: me.id,
       );
       statuses.add(
-        status(
+        await status(
           c: HostBidComp.worldChampionship,
           year: year,
           standing: (eligible: wc.eligible, today: wc.today),
@@ -711,10 +810,154 @@ hostBidStatusProvider = FutureProvider.autoDispose
           // own bid: always known to him.
           backToBack: wc.previousSlotHost,
           pending: !wcKnown,
+          standingOf: (id) {
+            final st = WorldCupHosts.worldCupBidStanding(
+              year: year,
+              nations: nations,
+              seed: career.rngSeed,
+              nationId: id,
+              managerNationId: me.id,
+            );
+            return (eligible: st.eligible, today: st.today);
+          },
         ),
       );
       return statuses;
     });
+
+/// The most co-host partners a bid offers to choose from.
+const int maxCoHostOptions = 6;
+
+/// How many of the likeliest partners are looked at to find them.
+const int _coHostLookahead = 16;
+
+/// The nations [lead] could ask to co-host [comp]'s [editionCycle], the
+/// likeliest first: members of its confederation, neighbours (the same
+/// subregion) before the rest, then the nearest in the ranking. A nation is
+/// listed only when it may stand for the edition itself ([standingOf]) and
+/// the two estates together reach the edition's requirements: the older
+/// [HostingRequirements] on [leadSeats] and, under the stadium bars, [bar]
+/// on [leadBarSeats], each host bringing at least
+/// `HostStadiumRules.minGroundsPerCoHost` grounds of the bar's size, as the
+/// AI's joint bids must. Each says whether it would agree ([CoHostAnswer]).
+Future<List<HostBidPartnerOption>> coHostOptions(
+  Ref ref, {
+  required int careerId,
+  required HostBidComp comp,
+  required int editionCycle,
+  required Nation lead,
+  required double leadToday,
+  required List<int> leadSeats,
+  required List<int>? leadBarSeats,
+  required HostBar? bar,
+  required int seed,
+  required List<Nation> nations,
+  required ({bool eligible, double today}) Function(int nationId) standingOf,
+}) async {
+  String sub(Nation n) =>
+      NationGeography.subregionFor(n.code, n.confederation.name);
+  bool brings(List<int> seats) =>
+      bar == null ||
+      seats.where((s) => s >= bar.otherSeats).length >=
+          HostStadiumRules.minGroundsPerCoHost;
+  if (leadBarSeats != null && !brings(leadBarSeats)) return const [];
+  final leadSub = sub(lead);
+  final pool = [
+    for (final n in nations)
+      if (n.id != lead.id && n.confederation == lead.confederation) n,
+  ];
+  int order(Nation a, Nation b) {
+    final na = sub(a) == leadSub ? 0 : 1;
+    final nb = sub(b) == leadSub ? 0 : 1;
+    if (na != nb) return na.compareTo(nb);
+    final da = (a.ranking - lead.ranking).abs();
+    final db = (b.ranking - lead.ranking).abs();
+    if (da != db) return da.compareTo(db);
+    return a.id.compareTo(b.id);
+  }
+
+  pool.sort(order);
+  final req = HostingRequirements.of(comp, lead.confederation);
+  final leadVenues = await nationStadiumsFor(
+    ref,
+    careerId,
+    lead.id,
+    atCycle: editionCycle,
+  );
+  final out = <HostBidPartnerOption>[];
+  for (final p in pool.take(_coHostLookahead)) {
+    if (out.length >= maxCoHostOptions) break;
+    final standing = standingOf(p.id);
+    if (!standing.eligible) continue;
+    final set = await nationalSetFor(
+      ref,
+      careerId,
+      p.id,
+      atCycle: editionCycle,
+    );
+    if (!HostingRequirements.meets([
+      ...leadSeats,
+      for (final s in set) s.capacity,
+    ], req)) {
+      continue;
+    }
+    if (bar != null && leadBarSeats != null) {
+      final check = await hostBarCheck(ref, careerId, p, comp, editionCycle);
+      if (!brings(check.seats) ||
+          !HostStadiumRules.meets([...leadBarSeats, ...check.seats], bar)) {
+        continue;
+      }
+    }
+    final neighbour = sub(p) == leadSub;
+    out.add(
+      HostBidPartnerOption(
+        nation: p,
+        size: HostBidOdds.sizeScore([
+          ...leadVenues,
+          ...await nationStadiumsFor(
+            ref,
+            careerId,
+            p.id,
+            atCycle: editionCycle,
+          ),
+        ]),
+        neighbour: neighbour,
+        decline: CoHostAnswer.of(
+          seed: seed,
+          comp: comp,
+          editionCycle: editionCycle,
+          leadId: lead.id,
+          partnerId: p.id,
+          leadToday: leadToday,
+          partnerToday: standing.today,
+          neighbour: neighbour,
+        ),
+      ),
+    );
+  }
+  return out;
+}
+
+/// Whether [lead] and [partner]'s qualifying grounds together fall short of
+/// [comp]'s stadium bar in [editionCycle] (see [belowHostBar]), or either
+/// brings fewer than `HostStadiumRules.minGroundsPerCoHost` of its size.
+Future<bool> jointBelowHostBar(
+  Ref ref,
+  int careerId,
+  Nation lead,
+  Nation partner,
+  HostBidComp comp,
+  int editionCycle,
+) async {
+  final a = await hostBarCheck(ref, careerId, lead, comp, editionCycle);
+  final b = await hostBarCheck(ref, careerId, partner, comp, editionCycle);
+  bool brings(List<int> seats) =>
+      seats.where((s) => s >= a.bar.otherSeats).length >=
+      HostStadiumRules.minGroundsPerCoHost;
+  return !brings(a.seats) ||
+      !brings(b.seats) ||
+      !HostStadiumRules.meets([...a.seats, ...b.seats], a.bar);
+}
 
 /// One tournament of the current cycle and its hosts, for the Federation
 /// screen's Hosting card.
@@ -871,8 +1114,23 @@ class HostBidService {
   /// pledges twice), and every pledge together fits what the federation will
   /// have free after the rollover (balance, income and stadium income, less
   /// the wages), so the rollover can always pay.
-  Future<bool> place(HostBidOffer offer, int levels) async {
+  ///
+  /// With [partnerId] the bid is a joint one with that nation, which must be
+  /// one of [HostBidOffer.partners] that agrees: a partner marker
+  /// ([HostBidPartnerMarker]) is written beside the pledge, and the chance
+  /// frozen is the joint quote's. Without one, an offer open only jointly
+  /// ([HostBidOffer.soloAllowed] false) is refused.
+  Future<bool> place(HostBidOffer offer, int levels, {int? partnerId}) async {
     if (levels < 1 || levels > offer.maxLevels) return false;
+    HostBidPartnerOption? partner;
+    if (partnerId != null) {
+      for (final o in offer.partners) {
+        if (o.nation.id == partnerId) partner = o;
+      }
+      if (partner == null || !partner.agrees) return false;
+    } else if (!offer.soloAllowed) {
+      return false;
+    }
     final careers = _ref.read(careerRepositoryProvider);
     final comp = _ref.read(competitionRepositoryProvider);
     final careerId = offer.careerId;
@@ -882,7 +1140,7 @@ class HostBidService {
       editionCycle: offer.editionCycle,
       nationId: offer.nation.id,
       levels: levels,
-      permille: HostBidOdds.permilleOf(offer.quote(levels)),
+      permille: HostBidOdds.permilleOf(offer.quote(levels, partner: partner)),
     );
     final before = await careers.byId(careerId);
     if (before == null) return false;
@@ -913,15 +1171,25 @@ class HostBidService {
           money.wages -
           _pledged(kinds, offer.editionCycle, offer.nation.id);
       if (free < cost) return;
-      // Under the stadium bars, never a bid whose grounds fall short.
+      // Under the stadium bars, never a bid whose grounds fall short: a
+      // joint bid's, both nations' together.
       if (await stadiumRulesFor(comp, careerId, offer.editionCycle) &&
-          await belowHostBar(
-            _ref,
-            careerId,
-            offer.nation,
-            offer.comp,
-            offer.editionCycle,
-          )) {
+          await (partner == null
+              ? belowHostBar(
+                  _ref,
+                  careerId,
+                  offer.nation,
+                  offer.comp,
+                  offer.editionCycle,
+                )
+              : jointBelowHostBar(
+                  _ref,
+                  careerId,
+                  offer.nation,
+                  partner.nation,
+                  offer.comp,
+                  offer.editionCycle,
+                ))) {
         return;
       }
       await comp.markDrawWatched(
@@ -929,6 +1197,18 @@ class HostBidService {
         offer.editionCycle,
         marker.encodePledge(),
       );
+      if (partner != null) {
+        await comp.markDrawWatched(
+          careerId,
+          offer.editionCycle,
+          HostBidPartnerMarker(
+            comp: offer.comp,
+            editionCycle: offer.editionCycle,
+            nationId: offer.nation.id,
+            partnerId: partner.nation.id,
+          ).encode(),
+        );
+      }
       // Lodged by this build: the edition is still held to the bars.
       await comp.markDrawWatched(
         careerId,
@@ -1001,10 +1281,26 @@ class HostBidService {
       // (the offer refuses one; this is the backstop): it lapses quietly,
       // nothing charged, and its grounds never stage the finals.
       final pledger = nations[p.nationId];
+      final partner =
+          nations[HostBidPartnerMarker.partnerIn(
+            kinds,
+            p.comp,
+            editionCycle,
+            p.nationId,
+          )];
       if (bars &&
           pledger != null &&
           p.nationId == nationId &&
-          await belowHostBar(_ref, careerId, pledger, p.comp, editionCycle)) {
+          await (partner == null
+              ? belowHostBar(_ref, careerId, pledger, p.comp, editionCycle)
+              : jointBelowHostBar(
+                  _ref,
+                  careerId,
+                  pledger,
+                  partner,
+                  p.comp,
+                  editionCycle,
+                ))) {
         await comp.markDrawWatched(
           careerId,
           editionCycle,
@@ -1120,7 +1416,20 @@ class HostBidService {
         .forCareer(careerId);
     final l = _ref.read(appLocalizationsProvider);
     for (final b in due) {
-      await _decide(comp, l, careerId, b, nations, atRollover: atRollover);
+      await _decide(
+        comp,
+        l,
+        careerId,
+        b,
+        nations,
+        atRollover: atRollover,
+        partnerId: HostBidPartnerMarker.partnerIn(
+          kinds,
+          b.comp,
+          b.editionCycle,
+          b.nationId,
+        ),
+      );
     }
     _invalidate(careerId);
     return true;
@@ -1145,6 +1454,7 @@ class HostBidService {
     HostBidMarker bid,
     List<Nation> nations, {
     required bool atRollover,
+    int? partnerId,
   }) async {
     Nation? bidder;
     for (final n in nations) {
@@ -1173,7 +1483,13 @@ class HostBidService {
         );
     }
     final won = hosts.contains(bid.nationId);
-    final bonus = won ? HostBidOdds.bonusFor(bid.levels) : 0;
+    // A joint bid that won shares the hosting, and the grant with it.
+    final joint = won && partnerId != null && hosts.contains(partnerId);
+    final bonus = !won
+        ? 0
+        : joint
+        ? HostBidOdds.jointBonusFor(bid.levels)
+        : HostBidOdds.bonusFor(bid.levels);
     final resultKind = HostBidding.resultKind(
       bid.comp,
       bid.editionCycle,
@@ -1217,7 +1533,14 @@ class HostBidService {
       title: won
           ? MsgText(MsgKey.hostBidWonTitle, [compPart, year])
           : MsgText(MsgKey.hostBidLostTitle, [compPart, year]),
-      body: won
+      body: joint
+          ? MsgText(
+              atRollover
+                  ? MsgKey.hostBidWonJointBodyBudget
+                  : MsgKey.hostBidWonJointBody,
+              [hostNames, formatEuros(bonus)],
+            )
+          : won
           ? MsgText(
               // Decided in the rollover, the grant is in the money the new
               // budget splits; an old bid decided in January opened the

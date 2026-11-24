@@ -12164,6 +12164,40 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Ortak ev sahibi';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Konfederasyonundaki başka bir ülkeyle birlikte aday ol. İki ülkenin stadyumları da sayılır, güçlü bir komşu adaylığını güçlendirir ve kazanırsan iki ülke de ev sahibi olur ve doğrudan katılır. Hibe paylaşılır, bu yüzden senin payın daha küçüktür.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Stadyumların tek başına yetmiyor. Ortak adaylık için bir ortak ev sahibi seç.';
+
+  @override
+  String get hostBidPartnerAlone => 'Tek başına aday ol';
+
+  @override
+  String get hostBidPartnerAgrees => 'Ortak ev sahipliğine hazır';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Reddediyor: tek başına aday olmayı tercih ediyor.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Reddediyor: ortak adaylık için çok uzak.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Reddediyor: bu kez kendi payını karşılayamıyor.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Kazanırsan $nation ile birlikte ev sahibi olursun: iki ülke de doğrudan katılır ve bir sonraki bütçe için payın olan $amount tutarında tek seferlik bir hibe alırsın.';
+  }
+
+  @override
   String get hostBidChance => 'Ev sahipliği şansı';
 
   @override
@@ -12341,6 +12375,15 @@ class AppLocalizationsTr extends AppLocalizations {
       'Adaylık sunuldu. Ev sahibi yeni dönem başlarken açıklanır.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return '$nation ile ortak adaylık.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Tek başına ev sahipliği için yetersiz, ama bir ortakla ortak adaylık açık.';
+
+  @override
   String get hostBidDeclinedNote => 'Bu kez aday olmamayı seçtiniz.';
 
   @override
@@ -12429,6 +12472,16 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Turnuvaya ev sahipliği yapacağız ve ev sahibi olarak otomatik katılıyoruz. $amount tutarındaki tek seferlik destek federasyonun bütçesinde, bu dönemin dağıtımına hazır.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return 'Turnuvaya $hosts birlikte ev sahipliği yapacak ve ev sahibi olarak doğrudan katılıyoruz. Hibedeki payımız olan $amount şimdi federasyonun fonlarında; onu doğrudan ana ekrandan bu döngünün departmanlarına dağıtabilirsin.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return 'Turnuvaya $hosts birlikte ev sahipliği yapacak ve ev sahibi olarak doğrudan katılıyoruz. Hibedeki payımız olan $amount zaten federasyonun fonlarında ve bu döngünün bütçesi için hazır.';
   }
 
   @override
