@@ -5190,5 +5190,35 @@
    "city": "Plzeň",
    "seats": 11700
   }
+ ],
+ "216": [
+  {
+   "city": "Arlington",
+   "seats": 80000
+  },
+  {
+   "city": "Houston",
+   "seats": 72000
+  },
+  {
+   "city": "San Antonio",
+   "seats": 64000
+  },
+  {
+   "city": "Houston",
+   "seats": 22000
+  },
+  {
+   "city": "Austin",
+   "seats": 20500
+  },
+  {
+   "city": "Frisco",
+   "seats": 20000
+  },
+  {
+   "city": "El Paso",
+   "seats": 9500
+  }
  ]
 }

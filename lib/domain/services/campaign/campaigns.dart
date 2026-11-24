@@ -354,6 +354,36 @@ abstract final class Campaigns {
     rngSeed: 215,
   );
 
+  /// The Lone Star: the Republic of Texas, a nation the world does not
+  /// have, takes Anguilla's place in North America for four cycles. Built
+  /// the way The Three Legs was: its own stored pool of Texas-born players,
+  /// the same youth pyramid, newgens and aging as any nation's. Unlike the
+  /// minnows' runs it does not start at the bottom: a squad of Texas-born
+  /// professionals is a mid-table North American side (see
+  /// `DormantNations.texas`), so the century becomes four cycles, enough
+  /// for one generation to grow up. Pro, and a settled run may be moved
+  /// into the saves (one nation swapped for another). The stars are a North
+  /// America Cup, a World Championship, then winning either. The United
+  /// States keep their squad: Czechoslovakia's donors were nations taken out
+  /// of the world, and the stored players carry no birthplace to tell a
+  /// Texan from anyone else. Seed 221 keeps Texas from hosting either
+  /// championship in all four cycles (216, the first searched, made it the
+  /// United States' co-host in the third) and draws it into a qualifying
+  /// group of six with the United States in it: the union it left in this
+  /// world, met on the pitch (campaign_seeds_test.dart). 217 was the first to keep both
+  /// promises; 221 was picked for that meeting. Its strength was not tuned
+  /// on the lab (campaign_lab_test.dart); the badge is the design's call.
+  static const texas = CampaignDef(
+    id: 'texas',
+    nationId: 216, // DormantNations.texasId
+    dormantNationId: 216,
+    goal: CampaignGoal.qualifyBothThenTitle,
+    cycles: 4,
+    needsPro: true,
+    difficulty: CampaignDifficulty.medium,
+    rngSeed: 221,
+  );
+
   static const List<CampaignDef> all = [
     transplant,
     grudge,
@@ -364,6 +394,7 @@ abstract final class Campaigns {
     zanzibar,
     isleOfMan,
     czechoslovakia,
+    texas,
   ];
 
   static CampaignDef? byId(String id) {

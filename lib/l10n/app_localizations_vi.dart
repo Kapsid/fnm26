@@ -18177,6 +18177,30 @@ class AppLocalizationsVi extends AppLocalizations {
   String get campaignStars3Czechoslovakia => 'Vô địch Giải vô địch thế giới';
 
   @override
+  String get campaignTexasTitle => 'Ngôi sao cô đơn';
+
+  @override
+  String get campaignTexasTwist =>
+      'Cộng hòa Texas thế chỗ Anguilla ở Bắc Mỹ, trong bốn chu kỳ';
+
+  @override
+  String get campaignTexasIntro =>
+      'Texas từng là một nước cộng hòa độc lập trong chín năm trước khi gia nhập Hoa Kỳ, và ngày nay đào tạo nhiều cầu thủ hơn phần lớn các quốc gia: ba học viện của giải hạng cao nhất, một trong những nền bóng đá trẻ rộng nhất thế giới và cầu thủ Texas ở mọi giải đấu. Trong thế giới này, Cộng hòa Texas thi đấu cho chính mình, thế chỗ Anguilla ở Bắc Mỹ. Mọi cầu thủ đều sinh ra ở Texas, tại Houston, Dallas, San Antonio, Austin hay El Paso, và đội hình là một đội tầm trung của khu vực: đủ giỏi để gây khó dễ cho bất kỳ ai, nhưng chưa đủ để khiến người khác phải e sợ. Bạn có bốn chu kỳ để giành vé dự Cúp Bắc Mỹ, rồi Giải vô địch thế giới và, nếu dám mơ, vô địch một trong hai giải.';
+
+  @override
+  String get campaignTexasGoal => 'Giành vé dự một kỳ Cúp Bắc Mỹ';
+
+  @override
+  String get campaignStars1Texas => 'Giành vé dự một kỳ Cúp Bắc Mỹ';
+
+  @override
+  String get campaignStars2Texas => 'Giành vé dự một kỳ Giải vô địch thế giới';
+
+  @override
+  String get campaignStars3Texas =>
+      'Vô địch Cúp Bắc Mỹ hoặc Giải vô địch thế giới';
+
+  @override
   String get wcPlayoffCourseNote =>
       'Mọi đội nhất bảng giành vé trực tiếp. Các suất cuối thuộc về play-off giữa những đội nhì bảng tốt nhất (màu vàng trong các bảng) và những đội nhất bảng tốt nhất của Nations Cup chưa giành vé. Từ Nations Cup, hiện tại:';
 

@@ -444,6 +444,111 @@ void main() {
     });
   });
 
+  group('Texas seed data', () {
+    test('ids sit in their own fixed ranges', () {
+      final pool = texasPool();
+      expect(pool, hasLength(23 + PoolGenerator.extraPerNation));
+      expect(pool.every((p) => p.nationId == 216), isTrue);
+      expect(
+        [for (final p in texasSquad) p.id],
+        [for (var i = 21601; i <= 21623; i++) i],
+      );
+      expect(
+        [for (final p in pool.skip(23)) p.id],
+        [for (var i = 20216000; i <= 20216079; i++) i],
+      );
+      final taken = {
+        for (final p in PoolGenerator.expand(_base)) p.id,
+        for (final p in dormantPool())
+          if (p.nationId != 216) p.id,
+      };
+      expect(pool.where((p) => taken.contains(p.id)), isEmpty);
+    });
+
+    test("the squad copies Jamaica's positions and ages, scaled by the "
+        'factor', () {
+      final base = _base.where((p) => p.nationId == 87).toList();
+      expect(
+        [for (final p in texasSquad) p.position],
+        [for (final p in base) p.position],
+      );
+      expect(
+        [for (final p in texasSquad) p.age],
+        [for (final p in base) p.age],
+      );
+      for (var i = 0; i < base.length; i++) {
+        int scaled(int v) => (v * texasAttributeFactor).round().clamp(25, 99);
+        final a = base[i].attributes;
+        final z = texasSquad[i].attributes;
+        expect(z.physical, scaled(a.physical), reason: 'slot $i');
+        expect(z.technical, scaled(a.technical), reason: 'slot $i');
+        expect(z.stamina, scaled(a.stamina), reason: 'slot $i');
+      }
+    });
+
+    test("Texas starts mid-table in North America, in Anguilla's place, far "
+        "above Anguilla's squad", () {
+      double mean(List<Player> ps) =>
+          ps.fold<int>(0, (s, p) => s + p.overall) / ps.length;
+      double of(int id) => mean(_base.where((p) => p.nationId == id).toList());
+      final texas = mean(texasSquad);
+      // About a tenth below Jamaica's, the squad it copies.
+      expect(texas / of(87), inInclusiveRange(0.85, 0.95));
+      // Far above Anguilla's, whose place it takes.
+      expect(texas / of(66), greaterThan(1.3));
+      // Below the region's big three.
+      for (final big in [88, 99, 74]) {
+        expect(texas, lessThan(of(big)), reason: 'nation $big');
+      }
+      // Its rank sits among the North American sides of its strength:
+      // between Haiti (87th) and Guatemala (95th).
+      final rank = DormantNations.texas.ranking;
+      expect(rank, greaterThan(_nations.firstWhere((n) => n.id == 85).ranking));
+      expect(rank, lessThan(_nations.firstWhere((n) => n.id == 83).ranking));
+      final row = _nations.firstWhere((n) => n.id == 66);
+      expect(DormantNations.texas.confederation, row.confederation);
+      expect(DormantNations.replaces[216], 66);
+      expect(DormantNations.alsoReplaces[216], isNull);
+    });
+
+    test('the Dart name pools mirror country_names.json', () {
+      expect(_names[216]!.first, texasFirstNames);
+      expect(_names[216]!.sur, texasSurnames);
+    });
+
+    test('Texas is in neither seed file', () {
+      expect(
+        _nations.where(
+          (n) => n.id == 216 || n.code == DormantNations.texas.code,
+        ),
+        isEmpty,
+      );
+      expect(_base.where((p) => p.nationId == 216), isEmpty);
+    });
+
+    test("no stored Texas name is any seeded player's", () {
+      final seeded = {for (final p in _base) p.name};
+      expect(texasPool().where((p) => seeded.contains(p.name)), isEmpty);
+    });
+
+    test('a fresh database gets Texas and its 103 players', () async {
+      final db = createTestDatabase();
+      addTearDown(db.close);
+      await SeedLoader(db, _source(players: _base)).ensureSeeded();
+      expect(
+        await _count(db, 'SELECT COUNT(*) AS c FROM nations WHERE id = 216'),
+        1,
+      );
+      expect(
+        await _count(
+          db,
+          'SELECT COUNT(*) AS c FROM players WHERE nation_id = 216',
+        ),
+        103,
+      );
+    });
+  });
+
   group('Belarus seed data', () {
     test('ids sit in their own fixed ranges, the squad on its old 601-623', () {
       final pool = belarusPool();

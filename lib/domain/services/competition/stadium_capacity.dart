@@ -60,6 +60,9 @@ const Map<int, int> nationalStadiumCapacity = {
   // Czechoslovakia (dormant): Bratislava's Tehelné pole, the larger of the
   // two national grounds.
   215: 22500,
+  // Texas (dormant): the 80,000-seat ground in Arlington, between Dallas
+  // and Fort Worth.
+  216: 80000,
   // Belarus (dormant, in new careers from 1.0.9): the Dinamo Stadium in
   // Minsk, rebuilt in 2018 for about 22,000.
   6: 22000,

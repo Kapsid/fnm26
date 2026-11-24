@@ -18756,6 +18756,30 @@ class AppLocalizationsRo extends AppLocalizations {
   String get campaignStars3Czechoslovakia => 'Câștigarea Campionatului Mondial';
 
   @override
+  String get campaignTexasTitle => 'Steaua singuratică';
+
+  @override
+  String get campaignTexasTwist =>
+      'Republica Texas ia locul Anguillei în America de Nord, timp de patru cicluri';
+
+  @override
+  String get campaignTexasIntro =>
+      'Texasul a fost timp de nouă ani o republică independentă înainte să se alăture Statelor Unite, iar azi formează mai mulți fotbaliști decât majoritatea țărilor: trei academii din prima ligă, una dintre cele mai largi baze de juniori din lume și texani în fiecare campionat. În această lume Republica Texas joacă pentru ea însăși, în locul Anguillei în America de Nord. Fiecare jucător s-a născut în Texas, la Houston, Dallas, San Antonio, Austin sau El Paso, iar lotul este o echipă de mijlocul clasamentului în regiune: destul de bună cât să-i pună probleme oricui, dar încă nu destul cât să fie temută. Aveți patru cicluri ca să ajungeți la o Cupă a Americii de Nord, apoi la un Campionat Mondial și, dacă îndrăzniți să visați, să câștigați una dintre cele două competiții.';
+
+  @override
+  String get campaignTexasGoal => 'Calificarea la o Cupă a Americii de Nord';
+
+  @override
+  String get campaignStars1Texas => 'Calificarea la o Cupă a Americii de Nord';
+
+  @override
+  String get campaignStars2Texas => 'Calificarea la un Campionat Mondial';
+
+  @override
+  String get campaignStars3Texas =>
+      'Câștigarea Cupei Americii de Nord sau a Campionatului Mondial';
+
+  @override
   String get wcPlayoffCourseNote =>
       'Fiecare câștigătoare de grupă se califică direct. Ultimele locuri se joacă în baraj între cele mai bune ocupante ale locului doi (cu galben în grupe) și cele mai bune câștigătoare de grupă din Cupa Națiunilor care nu s-au calificat. Din Cupa Națiunilor, situația acum:';
 

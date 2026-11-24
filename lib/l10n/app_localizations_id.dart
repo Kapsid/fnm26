@@ -18235,6 +18235,30 @@ class AppLocalizationsId extends AppLocalizations {
   String get campaignStars3Czechoslovakia => 'Juara Kejuaraan Dunia';
 
   @override
+  String get campaignTexasTitle => 'Bintang Tunggal';
+
+  @override
+  String get campaignTexasTwist =>
+      'Republik Texas menggantikan Anguilla di Amerika Utara, selama empat siklus';
+
+  @override
+  String get campaignTexasIntro =>
+      'Texas pernah menjadi republik merdeka selama sembilan tahun sebelum bergabung dengan Amerika Serikat, dan kini menghasilkan lebih banyak pemain sepak bola daripada kebanyakan negara: tiga akademi klub kasta tertinggi, salah satu pembinaan usia muda terluas di dunia, dan pemain Texas di setiap liga. Di dunia ini Republik Texas bermain untuk dirinya sendiri, menggantikan tempat Anguilla di Amerika Utara. Setiap pemain lahir di Texas, di Houston, Dallas, San Antonio, Austin, atau El Paso, dan skuadnya adalah tim papan tengah di kawasan ini: cukup bagus untuk merepotkan siapa pun, tetapi belum cukup untuk ditakuti. Anda punya empat siklus untuk lolos ke Piala Amerika Utara, lalu ke Kejuaraan Dunia, dan, jika berani bermimpi, menjuarai salah satunya.';
+
+  @override
+  String get campaignTexasGoal => 'Lolos ke sebuah Piala Amerika Utara';
+
+  @override
+  String get campaignStars1Texas => 'Lolos ke sebuah Piala Amerika Utara';
+
+  @override
+  String get campaignStars2Texas => 'Lolos ke sebuah Kejuaraan Dunia';
+
+  @override
+  String get campaignStars3Texas =>
+      'Juara Piala Amerika Utara atau Kejuaraan Dunia';
+
+  @override
   String get wcPlayoffCourseNote =>
       'Setiap juara grup lolos langsung. Tempat terakhir diperebutkan di play-off oleh runner-up terbaik (kuning di grup) dan juara grup terbaik Piala Bangsa-Bangsa yang belum lolos. Dari Piala Bangsa-Bangsa, saat ini:';
 

@@ -270,6 +270,7 @@ abstract final class NationNames {
     'ZAN': 'Zanzibar',
     'IMN': 'Ostrov Man',
     'TCH': 'Československo',
+    'TEX': 'Texas',
     'ZIM': 'Zimbabwe',
   };
 
@@ -507,6 +508,7 @@ abstract final class NationNames {
     'ZAN': 'Zanzibaru',
     'IMN': 'Ostrovu Man',
     'TCH': 'Československu',
+    'TEX': 'Texasu',
     'ZIM': 'Zimbabwe',
   };
 

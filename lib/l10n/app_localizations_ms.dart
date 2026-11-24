@@ -18290,6 +18290,30 @@ class AppLocalizationsMs extends AppLocalizations {
   String get campaignStars3Czechoslovakia => 'Menangi Kejohanan Dunia';
 
   @override
+  String get campaignTexasTitle => 'Bintang Tunggal';
+
+  @override
+  String get campaignTexasTwist =>
+      'Republik Texas mengambil tempat Anguilla di Amerika Utara, selama empat kitaran';
+
+  @override
+  String get campaignTexasIntro =>
+      'Texas pernah menjadi republik sendiri selama sembilan tahun sebelum menyertai Amerika Syarikat, dan hari ini ia melahirkan lebih ramai pemain bola sepak berbanding kebanyakan negara: tiga akademi liga tertinggi, antara asas bola sepak remaja yang paling luas di dunia dan pemain Texas dalam setiap liga. Dalam dunia ini Republik Texas bermain untuk dirinya sendiri, di tempat Anguilla di Amerika Utara. Setiap pemain dilahirkan di Texas, di Houston, Dallas, San Antonio, Austin atau El Paso, dan skuadnya ialah pasukan pertengahan carta di rantau ini: cukup bagus untuk menyusahkan sesiapa sahaja, tetapi belum cukup untuk digeruni. Anda ada empat kitaran untuk mara ke Piala Amerika Utara, kemudian Kejohanan Dunia dan, jika anda berani bermimpi, menjuarai salah satunya.';
+
+  @override
+  String get campaignTexasGoal => 'Layak ke Piala Amerika Utara';
+
+  @override
+  String get campaignStars1Texas => 'Layak ke Piala Amerika Utara';
+
+  @override
+  String get campaignStars2Texas => 'Layak ke Kejohanan Dunia';
+
+  @override
+  String get campaignStars3Texas =>
+      'Menangi Piala Amerika Utara atau Kejohanan Dunia';
+
+  @override
   String get wcPlayoffCourseNote =>
       'Setiap juara kumpulan layak terus. Tempat terakhir direbut dalam play-off oleh naib juara terbaik (kuning dalam kumpulan) dan juara kumpulan terbaik Piala Negara-Negara yang belum layak. Daripada Piala Negara-Negara, setakat ini:';
 

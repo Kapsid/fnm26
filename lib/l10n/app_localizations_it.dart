@@ -18419,6 +18419,31 @@ class AppLocalizationsIt extends AppLocalizations {
   String get campaignStars3Czechoslovakia => 'Vincere il Campionato del mondo';
 
   @override
+  String get campaignTexasTitle => 'La stella solitaria';
+
+  @override
+  String get campaignTexasTwist =>
+      'La Repubblica del Texas prende il posto di Anguilla in Nord America, per quattro cicli';
+
+  @override
+  String get campaignTexasIntro =>
+      'Il Texas è stato una repubblica indipendente per nove anni prima di entrare negli Stati Uniti, e oggi forma più calciatori della maggior parte delle nazioni: tre accademie di massima serie, uno dei vivai giovanili più ampi al mondo e texani in ogni campionato. In questo mondo la Repubblica del Texas gioca per sé, al posto di Anguilla in Nord America. Ogni giocatore è nato in Texas, a Houston, Dallas, San Antonio, Austin o El Paso, e la rosa è una squadra di metà classifica della regione: abbastanza forte da mettere in difficoltà chiunque, non ancora abbastanza da far paura. Hai quattro cicli per arrivare a una Coppa del Nord America, poi a un Campionato del mondo e, se osi sognare, vincerne uno.';
+
+  @override
+  String get campaignTexasGoal => 'Qualificarsi per una Coppa del Nord America';
+
+  @override
+  String get campaignStars1Texas =>
+      'Qualificarsi per una Coppa del Nord America';
+
+  @override
+  String get campaignStars2Texas => 'Qualificarsi per un Campionato del mondo';
+
+  @override
+  String get campaignStars3Texas =>
+      'Vincere la Coppa del Nord America o il Campionato del mondo';
+
+  @override
   String get wcPlayoffCourseNote =>
       'Ogni vincitrice di girone si qualifica direttamente. Gli ultimi posti si assegnano negli spareggi tra le migliori seconde (in giallo nei gironi) e le migliori vincitrici di girone della Coppa delle Nazioni non qualificate. Dalla Coppa delle Nazioni, allo stato attuale:';
 

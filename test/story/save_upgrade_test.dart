@@ -33,6 +33,7 @@ import 'driver.dart';
 final Set<int> _newDormant = {
   DormantNations.isleOfManId,
   DormantNations.czechoslovakiaId,
+  DormantNations.texasId,
 };
 
 void main() {
@@ -167,7 +168,8 @@ void main() {
               var now = after[table];
               expect(now, isNotNull, reason: '$table dropped');
               // The one thing an upgrade adds: the dormant nations a later
-              // build ships (1.1.2: the Isle of Man and Czechoslovakia),
+              // build ships (1.1.2: the Isle of Man and Czechoslovakia; then
+              // Texas),
               // their rows and their players' written after the old ones.
               final had = {
                 for (final r in rows)

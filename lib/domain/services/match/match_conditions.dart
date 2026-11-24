@@ -190,6 +190,7 @@ abstract final class MatchClimate {
       'Pachuca': 2400,
     }, // Mexico
     99: {'Denver': 1609}, // United States
+    216: {'El Paso': 1140}, // Texas (dormant)
     101: {'Sétif': 1096, 'Batna': 1040, 'Djelfa': 1140}, // Algeria
     102: {'Huambo': 1700, 'Lubango': 1760, 'Malanje': 1150}, // Angola
     104: {
@@ -472,6 +473,9 @@ abstract final class MatchClimate {
     214: ClimateBand.cool,
     // Czechoslovakia (dormant): Czechia's and Slovakia's climate.
     215: ClimateBand.cool,
+    // Texas (dormant), in Anguilla's place: the Gulf coast's hot, humid
+    // summers (El Paso's desert is its own, below).
+    216: ClimateBand.subtropical,
     // Belarus (dormant, in new careers from 1.0.9): cold winters, warm
     // summers.
     6: ClimateBand.continental,
@@ -492,6 +496,10 @@ abstract final class MatchClimate {
       'Los Angeles': ClimateBand.mediterranean,
       'Phoenix': ClimateBand.desert,
     }, // United States
+    216: {
+      'El Paso': ClimateBand.arid,
+      'Lubbock': ClimateBand.continental,
+    }, // Texas (dormant)
     156: {
       'Melbourne': ClimateBand.cool,
       'Hobart': ClimateBand.cool,

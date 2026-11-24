@@ -18520,6 +18520,30 @@ class AppLocalizationsPl extends AppLocalizations {
   String get campaignStars3Czechoslovakia => 'Wygrać Mistrzostwa Świata';
 
   @override
+  String get campaignTexasTitle => 'Samotna gwiazda';
+
+  @override
+  String get campaignTexasTwist =>
+      'Republika Teksasu zajmuje miejsce Anguilli w Ameryce Północnej, na cztery cykle';
+
+  @override
+  String get campaignTexasIntro =>
+      'Teksas przez dziewięć lat był niepodległą republiką, zanim przyłączył się do Stanów Zjednoczonych, a dziś wychowuje więcej piłkarzy niż większość państw: trzy akademie z najwyższej ligi, jedną z najszerszych baz młodzieżowych na świecie i Teksańczyków w każdej lidze. W tym świecie Republika Teksasu gra dla siebie, na miejscu Anguilli w Ameryce Północnej. Każdy piłkarz urodził się w Teksasie, w Houston, Dallas, San Antonio, Austin lub El Paso, a kadra to średniak regionu: dość dobra, by napsuć krwi każdemu, ale jeszcze nie na tyle, by budzić strach. Masz cztery cykle, by awansować do Pucharu Ameryki Północnej, potem na Mistrzostwa Świata i, jeśli odważysz się marzyć, wygrać jedno z tych trofeów.';
+
+  @override
+  String get campaignTexasGoal => 'Awansować do Pucharu Ameryki Północnej';
+
+  @override
+  String get campaignStars1Texas => 'Awansować do Pucharu Ameryki Północnej';
+
+  @override
+  String get campaignStars2Texas => 'Awansować na Mistrzostwa Świata';
+
+  @override
+  String get campaignStars3Texas =>
+      'Wygrać Puchar Ameryki Północnej lub Mistrzostwa Świata';
+
+  @override
   String get wcPlayoffCourseNote =>
       'Każdy zwycięzca grupy awansuje bezpośrednio. O ostatnie miejsca grają w barażach najlepsze drużyny z drugich miejsc (na żółto w grupach) i najlepsi zwycięzcy grup Pucharu Narodów, którzy nie awansowali. Z Pucharu Narodów, na tę chwilę:';
 
