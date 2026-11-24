@@ -105,7 +105,7 @@ void main() {
     final issues = PackRules.notAllowed(_dirty());
     expect(issues.any(isBlocking), isFalse);
     // Nor is it one of the issues that decide whether a pack is ready.
-    final clean = WorldPack(
+    const clean = WorldPack(
       uuid: 'u',
       name: 'Fuck',
       author: '',
@@ -150,13 +150,13 @@ void main() {
 
   test('a name list left with nothing clean keeps its names masked', () {
     final p = maskedForPlay(
-      WorldPack(
+      const WorldPack(
         uuid: 'u',
         name: 'Lists',
         author: '',
         formatVersion: kPackFormatVersion,
         madeWithVersion: '1.1.0',
-        nameLists: const {
+        nameLists: {
           7: PackNameLists(first: ['Jan'], sur: ['Kurva', 'Chuj']),
         },
       ),

@@ -228,7 +228,7 @@ void main() {
   });
 
   testWidgets(
-    "a rollover whose board verdict will not load is not a dead end",
+    'a rollover whose board verdict will not load is not a dead end',
     (tester) async {
       await pump(
         tester,

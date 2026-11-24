@@ -182,7 +182,7 @@ void main() {
     });
   });
 
-  test('the continental header names the manager\'s own cup', () {
+  test("the continental header names the manager's own cup", () {
     Fixture at(String round) => Fixture(
       id: 1,
       careerId: 1,

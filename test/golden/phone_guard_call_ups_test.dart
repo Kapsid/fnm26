@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fnm/shared/widgets/app_segmented_tabs.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/features/tactics/call_up_screen.dart';
+import 'package:fnm/shared/widgets/app_segmented_tabs.dart';
 
 import '../helpers/seeded_save.dart';
 

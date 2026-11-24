@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/seed/pool_generator.dart';
@@ -16,12 +17,11 @@ import 'package:fnm/domain/services/campaign/campaigns.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
+import 'package:fnm/features/campaign/campaign_record_store.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/career/nation_offers_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
-import 'package:fnm/core/routing/app_router.dart';
-import 'package:fnm/features/campaign/campaign_record_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../helpers/test_database.dart';

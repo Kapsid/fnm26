@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:intl/intl.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/host_bidding.dart';
 import 'package:fnm/domain/services/competition/host_stadium_rules.dart';
 import 'package:fnm/features/federation/host_bid_providers.dart';
 import 'package:fnm/features/federation/host_bid_screen.dart';
+import 'package:intl/intl.dart';
 
 import '../helpers/pump_app.dart';
 

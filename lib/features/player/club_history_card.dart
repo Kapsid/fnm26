@@ -7,11 +7,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/club_label.dart';
 import 'package:fnm/domain/services/club/club_history.dart';
 import 'package:fnm/features/player/club_history_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
-import 'package:fnm/core/util/club_label.dart';
 
 /// Where a player has played, season by season, collapsed into spells.
 ///

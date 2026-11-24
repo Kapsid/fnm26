@@ -72,7 +72,7 @@ void main() {
       offenders,
       isEmpty,
       reason:
-          'an English reader has no idea what Csaplár\'s trap is, so this '
+          "an English reader has no idea what Csaplár's trap is, so this "
           'reads as a confusing sentence rather than a joke:\n  '
           '${offenders.join('\n  ')}',
     );

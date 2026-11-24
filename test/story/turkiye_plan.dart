@@ -164,7 +164,7 @@ Future<String> playTurkiye({
   var slug = '';
   var big = false;
   var firstMatch = true;
-  var firstKo = <int>{};
+  final firstKo = <int>{};
   d.beforeMatch = (p) async {
     final f = p.fixture;
     final home = f.homeNationId == turkiye;

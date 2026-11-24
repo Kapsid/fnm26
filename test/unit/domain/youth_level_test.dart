@@ -16,7 +16,7 @@ void main() {
       expect(YouthLevel.forAge(20), YouthLevel.u21);
     });
 
-    test('twenty-one and over is nobody\'s youth level', () {
+    test("twenty-one and over is nobody's youth level", () {
       expect(YouthLevel.forAge(21), isNull);
       expect(YouthLevel.forAge(30), isNull);
     });

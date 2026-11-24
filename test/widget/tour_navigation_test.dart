@@ -17,7 +17,7 @@ import 'package:go_router/go_router.dart';
 /// happened to be on the hub lit up, and the rest was a caption box counting
 /// to ten.
 void main() {
-  testWidgets('each step takes you to that step\'s screen', (tester) async {
+  testWidgets("each step takes you to that step's screen", (tester) async {
     final visited = <String>[];
 
     GoRoute page(String path) => GoRoute(

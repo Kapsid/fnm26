@@ -51,7 +51,7 @@ void main() {
     PitchSpeed.turbo: (45.0, 90.0),
   };
   // Stoppage 0 keeps the band exact (scale 1).
-  test('a quiet 0-0 lands in each band\'s lower half', () {
+  test("a quiet 0-0 lands in each band's lower half", () {
     for (final e in bands.entries) {
       final t = _secs(PitchPacer(_result(_shots(4), stoppage: 0), e.key));
       final (lo, hi) = e.value;
@@ -348,14 +348,14 @@ void main() {
       zone: PitchZone.midfield,
       cardEventIndex: 1,
     );
-    final r = MatchResult(
+    const r = MatchResult(
       homeScore: 0,
       awayScore: 0,
-      events: const [red, yellow],
+      events: [red, yellow],
       homeShots: 0,
       awayShots: 0,
       homePossession: 50,
-      moments: const [redFoul, yellowFoul],
+      moments: [redFoul, yellowFoul],
     );
     final fast = PitchPacer(r, PitchSpeed.fast);
     expect(fast.momentLength(redFoul), const Duration(seconds: 3));
@@ -425,10 +425,10 @@ void main() {
       playerId: 4,
       playerName: 'Four',
     );
-    final r = MatchResult(
+    const r = MatchResult(
       homeScore: 0,
       awayScore: 0,
-      events: const [injury],
+      events: [injury],
       homeShots: 0,
       awayShots: 0,
       homePossession: 50,
@@ -509,10 +509,10 @@ void main() {
       playerId: 4,
       playerName: 'Four',
     );
-    final bad = MatchResult(
+    const bad = MatchResult(
       homeScore: 0,
       awayScore: 0,
-      events: const [late],
+      events: [late],
       homeShots: 0,
       awayShots: 0,
       homePossession: 50,

@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fnm/shared/widgets/primary_button.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -29,6 +28,7 @@ import 'package:fnm/features/share/share_card_kit.dart';
 import 'package:fnm/features/share/share_data.dart';
 import 'package:fnm/features/share/share_sheet.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/widgets/primary_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helpers/fixtures.dart';
@@ -128,7 +128,7 @@ void main() {
       expect(find.byKey(ShareKeys.button), findsOneWidget);
     });
 
-    testWidgets('the My Career tab\'s big button reads Share my trophies', (
+    testWidgets("the My Career tab's big button reads Share my trophies", (
       tester,
     ) async {
       await tester.pumpWidget(
@@ -301,7 +301,7 @@ void main() {
       trophies: {'world': custom},
     );
 
-    testWidgets('the cabinet card draws the career world\'s picture', (
+    testWidgets("the cabinet card draws the career world's picture", (
       tester,
     ) async {
       final l = lookupAppLocalizations(const Locale('en'));

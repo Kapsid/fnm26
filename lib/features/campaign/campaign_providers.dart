@@ -979,5 +979,5 @@ class CampaignService {
 }
 
 final campaignServiceProvider = Provider<CampaignService>(
-  (ref) => CampaignService(ref),
+  CampaignService.new,
 );

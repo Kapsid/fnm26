@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
+import 'package:fnm/core/util/sponsor_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
@@ -18,7 +19,6 @@ import 'package:fnm/features/editor/pack_home_screen.dart';
 import 'package:fnm/features/editor/players/player_edit_screen.dart';
 import 'package:fnm/features/editor/players/players_ui.dart';
 import 'package:fnm/features/editor/players/squad_edits.dart';
-import 'package:fnm/core/util/sponsor_label.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
 import '../helpers/editor_app.dart';
@@ -278,7 +278,7 @@ void main() {
   });
 
   testWidgets(
-    "renaming that club moves the player with it; deleting it puts him on "
+    'renaming that club moves the player with it; deleting it puts him on '
     'Auto',
     (tester) async {
       final c = await editorContainer(tester);
@@ -352,7 +352,7 @@ void main() {
   );
 
   testWidgets('add a club to a country whose league is new in 1.1.x: it '
-      'joins that country\'s group', (tester) async {
+      "joins that country's group", (tester) async {
     final c = await editorContainer(tester);
     final id = await insertPack(tester, c, testPack('Lonely'));
     await pumpEditorRoute(tester, c, _at(EditorSection.clubs, id));

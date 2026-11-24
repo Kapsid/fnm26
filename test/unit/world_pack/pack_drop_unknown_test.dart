@@ -197,12 +197,15 @@ void main() {
 
     test('unknown deals and voices are kinds too', () {
       expect(
-        PackEditor.kindsOf(UnknownId('addedSponsors.${_a + 1}.deal'), _pack()),
+        PackEditor.kindsOf(
+          const UnknownId('addedSponsors.${_a + 1}.deal'),
+          _pack(),
+        ),
         ['deal:barter'],
       );
       expect(
         PackEditor.kindsOf(
-          UnknownId('addedYAccounts.${_a + 2}.voice'),
+          const UnknownId('addedYAccounts.${_a + 2}.voice'),
           _pack(),
         ),
         ['voice:oracle'],

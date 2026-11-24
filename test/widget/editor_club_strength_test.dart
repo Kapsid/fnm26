@@ -42,7 +42,7 @@ void main() {
   group('AddedEdits and NameEdits', () {
     final pack = testPack('Unit');
 
-    test('a game club\'s strength is set and cleared', () {
+    test("a game club's strength is set and cleared", () {
       final p = NameEdits.withClubStrength(pack, 'Man Blue', 2);
       expect(p.clubStrengths, {'Man Blue': 2});
       expect(
@@ -75,7 +75,7 @@ void main() {
     });
   });
 
-  testWidgets('a league club\'s strength is set in its form and shown on its '
+  testWidgets("a league club's strength is set in its form and shown on its "
       'row; Default clears it', (tester) async {
     final c = await editorContainer(tester);
     final id = await insertPack(tester, c, testPack('Strength'));
@@ -105,7 +105,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 450));
   });
 
-  testWidgets('a new club of the editor\'s gets a strength as it is added, and '
+  testWidgets("a new club of the editor's gets a strength as it is added, and "
       'keeps it when edited', (tester) async {
     final c = await editorContainer(tester);
     final id = await insertPack(tester, c, testPack('Added'));

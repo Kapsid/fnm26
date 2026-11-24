@@ -81,10 +81,10 @@ void main() {
   // alone, and the key says so.
   testWidgets('the key says yellow is the best runners-up', (tester) async {
     await tester.pumpWidget(
-      MaterialApp(
+      const MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: const Scaffold(body: PlayoffStripeLegend()),
+        home: Scaffold(body: PlayoffStripeLegend()),
       ),
     );
     expect(find.textContaining('best runners-up'), findsOneWidget);

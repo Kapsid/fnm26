@@ -18,14 +18,14 @@ import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/match/penalty_order_sheet.dart';
+import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
+    show kMatchViewModePrefsKey;
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
 import 'package:fnm/features/tactics/tactic_preset_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/primary_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
-    show kMatchViewModePrefsKey;
 
 import '../helpers/fixtures.dart';
 import '../helpers/seeded_save.dart' show enL;

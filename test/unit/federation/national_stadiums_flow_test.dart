@@ -461,7 +461,7 @@ void main() {
     expect(await rep(), before + NationalStadiums.builtPoints);
   });
 
-  test('a finals the career\'s nation hosts is staged in its live estate; '
+  test("a finals the career's nation hosts is staged in its live estate; "
       'other hosts and an untouched estate keep the static grounds', () async {
     final w = await _world();
     Future<Map<int, List<Venue>>> estates(List<int> hosts) => w.c.read(

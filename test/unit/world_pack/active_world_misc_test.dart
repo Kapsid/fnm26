@@ -238,7 +238,7 @@ void main() {
         if (i is NameClash) i.path,
     ];
 
-    test('a rename onto another account\'s original name is flagged, '
+    test("a rename onto another account's original name is flagged, "
         'not refused', () {
       expect(clashes({a: ' ${b.toUpperCase()} '}), isEmpty);
       expect(flagged({a: ' ${b.toUpperCase()} '}), ['yAccounts.$a']);

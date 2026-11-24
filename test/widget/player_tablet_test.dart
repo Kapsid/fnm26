@@ -149,7 +149,7 @@ void main() {
     final numbers = [
       for (final c in chips)
         int.parse(
-          (tester
+          tester
               .widgetList<Text>(
                 find.descendant(
                   of: find.byWidget(c),
@@ -157,7 +157,7 @@ void main() {
                 ),
               )
               .last
-              .data)!,
+              .data!,
         ),
     ];
     expect(numbers, [...numbers]..sort((a, b) => b - a));

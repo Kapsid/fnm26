@@ -409,7 +409,7 @@ void main() {
 
 /// A service whose every order is refused (the funds moved, say).
 class _RefusingService extends NationalStadiumService {
-  _RefusingService(Ref ref) : super(ref);
+  _RefusingService(super.ref);
 
   @override
   Future<bool> upgrade(int careerId, StadiumRef stadium) async => false;
@@ -431,7 +431,7 @@ class _RefusingService extends NationalStadiumService {
 
 /// A service that records what it was asked and grants it.
 class _RecordingService extends NationalStadiumService {
-  _RecordingService(Ref ref) : super(ref);
+  _RecordingService(super.ref);
 
   static final List<String> calls = [];
 

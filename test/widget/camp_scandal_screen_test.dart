@@ -11,13 +11,13 @@ import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/squad/camp_scandal.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_event_button.dart';
+import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/squad/camp_scandal_providers.dart';
 import 'package:fnm/features/squad/camp_scandal_screen.dart';
 import 'package:fnm/features/tactics/nomination_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
-import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:go_router/go_router.dart';
 
 /// Records the answer instead of writing it.

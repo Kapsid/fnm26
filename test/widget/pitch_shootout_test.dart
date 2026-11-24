@@ -11,9 +11,11 @@ import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
+import 'package:fnm/domain/services/match/pitch/moment_staging.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/features/match/match_providers.dart';
@@ -26,11 +28,9 @@ import 'package:fnm/features/match/pitch/pitch_playback.dart';
 import 'package:fnm/features/match/pitch/pitch_projection.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/features/match/pitch/shootout_stage.dart';
-import 'package:fnm/domain/services/competition/finals.dart';
-import 'package:fnm/domain/services/match/pitch/moment_staging.dart';
-import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helpers/fixtures.dart';
@@ -474,7 +474,7 @@ void main() {
     expect((end.home, end.away), (o.homePens, o.awayPens));
   });
 
-  testWidgets('the manager\'s own taker order is the order staged', (
+  testWidgets("the manager's own taker order is the order staged", (
     tester,
   ) async {
     final named = await _toShootout(tester, reorder: true);

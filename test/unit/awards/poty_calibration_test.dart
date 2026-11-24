@@ -38,7 +38,7 @@ void main() {
       if (y.year > 2026) y,
   ];
 
-  test('a ballot of the world\'s best: five places when five nations have '
+  test("a ballot of the world's best: five places when five nations have "
       'a man good enough, never two of one nation in a thin year', () {
     for (final y in full) {
       if (y.awardYear.lines.isEmpty) continue;
@@ -244,7 +244,7 @@ void main() {
     }
   });
 
-  test('a weak man\'s numbers count for little', () {
+  test("a weak man's numbers count for little", () {
     expect(PlayerOfYear.standing(90), closeTo(1.25, 0.001));
     expect(PlayerOfYear.standing(85), 1.0);
     // The voters know the great players: belief keeps rising above 85, to

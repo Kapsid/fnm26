@@ -22,11 +22,11 @@ void main() {
   // A test that reads a real career's players (its seed taken from the
   // career) compares them with what the screens show, so it must name the
   // career too. Repository tests with a bare number for a seed are left be.
-  test('no test reads a career\'s players without its careerId', () {
+  test("no test reads a career's players without its careerId", () {
     expect(
       _offenders(
         'test',
-        (args) => args.contains(RegExp(r'saveSeed: [^,)]*rngSeed')),
+        (args) => args.contains(RegExp('saveSeed: [^,)]*rngSeed')),
       ),
       isEmpty,
     );

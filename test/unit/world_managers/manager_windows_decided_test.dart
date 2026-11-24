@@ -24,7 +24,7 @@ void main() {
     round: round,
   );
 
-  test('only a finals tournament\'s own final settles it, once', () {
+  test("only a finals tournament's own final settles it, once", () {
     final windows = ManagerWindows(
       nations: [
         nation(id: 1, name: 'One', confederation: Confederation.asia),

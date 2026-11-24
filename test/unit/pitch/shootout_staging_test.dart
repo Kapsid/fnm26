@@ -37,7 +37,7 @@ void main() {
     }
   });
 
-  test('a save has the keeper in the ball\'s lane', () {
+  test("a save has the keeper in the ball's lane", () {
     var saves = 0;
     for (var seed = 1; seed <= 60; seed++) {
       for (final k in ShootoutStaging.order(_shootout(seed))) {

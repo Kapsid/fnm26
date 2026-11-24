@@ -8,9 +8,9 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
-import 'package:fnm/features/tactics/condition_mark.dart';
 import 'package:fnm/features/player/player_detail_screen.dart'
     show describeTrait;
+import 'package:fnm/features/tactics/condition_mark.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/adaptive_sheet.dart';
 

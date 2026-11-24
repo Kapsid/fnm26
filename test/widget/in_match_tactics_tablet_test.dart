@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fnm/shared/widgets/app_segmented_tabs.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
+import 'package:fnm/shared/widgets/app_segmented_tabs.dart';
 
 import '../helpers/in_match_editor.dart';
 import '../helpers/seeded_save.dart';

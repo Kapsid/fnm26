@@ -100,7 +100,7 @@ void main() {
         expect(bonusAfter[cycle], bonusBefore[cycle], reason: 'cycle $cycle');
       }
       expect(
-        (bonusAfter[next] ?? 0),
+        bonusAfter[next] ?? 0,
         lessThanOrEqualTo(GrowthDifficulty.intakeBonusCap),
       );
       final startsAfter = await comp.careerStartsByPlayer(id);

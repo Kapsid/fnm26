@@ -73,9 +73,9 @@ class PanelBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Material(
     color: AppColors.surfaceContainerLow,
-    shape: RoundedRectangleBorder(
+    shape: const RoundedRectangleBorder(
       borderRadius: AppRadii.baseAll,
-      side: const BorderSide(color: AppColors.outlineVariant),
+      side: BorderSide(color: AppColors.outlineVariant),
     ),
     clipBehavior: Clip.antiAlias,
     child: child,

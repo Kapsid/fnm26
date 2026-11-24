@@ -7,6 +7,8 @@ import 'package:fnm/domain/entities/tactic_preset.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
+import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
+    show kMatchViewModePrefsKey;
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
 import 'package:fnm/features/tactics/tactic_preset_providers.dart';
@@ -14,8 +16,6 @@ import 'package:fnm/features/tactics/tactic_preset_tile.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
-    show kMatchViewModePrefsKey;
 
 import '../helpers/seeded_save.dart';
 import 'match_skip_shootout_test.dart' show levelKnockout;

@@ -17,10 +17,10 @@ import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/match/match_providers.dart';
-import 'package:fnm/features/messages/message_providers.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
     show kMatchViewModePrefsKey;
+import 'package:fnm/features/messages/message_providers.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'driver.dart';
 

@@ -5,8 +5,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
-import 'package:fnm/domain/services/stats/nation_results.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/stats/nation_results.dart';
 
 /// The (career, nationA, nationB) key for a head-to-head query.
 typedef H2HKey = ({int careerId, int nationA, int nationB});

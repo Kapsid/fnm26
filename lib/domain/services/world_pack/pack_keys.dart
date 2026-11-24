@@ -4,13 +4,13 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import '../competition/continental_cups.dart';
 import '../competition/nations_cups.dart';
+import '../competition/regional_cups.dart';
 import '../competition/trophies.dart';
 import '../federation/sponsor_industries.dart';
 import '../federation/sponsors.dart';
 import '../press/y_feed.dart';
 import 'pack_rules.dart';
 import 'world_pack.dart';
-import '../competition/regional_cups.dart';
 
 /// The stored names of the competitions a database can rename that are not
 /// a continent's own: the World Championship first, the two inter-continental

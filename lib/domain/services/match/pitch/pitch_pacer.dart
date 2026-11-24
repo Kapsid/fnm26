@@ -391,7 +391,7 @@ class PitchPacer {
         ? 0
         : _tier(base, std, minor, t);
     switch (m) {
-      case ShotMoment s:
+      case final ShotMoment s:
         final goal = s.outcome == ShotOutcome.goal ? _goalExtra : 0;
         if (_keyShot(s)) {
           if (s.origin != ShotOrigin.penalty) return _shot + goal;
@@ -408,7 +408,7 @@ class PitchPacer {
         final minorShot =
             s.outcome == ShotOutcome.wide || s.outcome == ShotOutcome.blocked;
         return at(_shot, minorShot ? _Tier.minor : _Tier.standard);
-      case SetPieceMoment p:
+      case final SetPieceMoment p:
         if (!_isStaged(p)) return 0;
         // Staged only when it leads to a shot (folded into it).
         if (folded == null) return 0;
@@ -420,7 +420,7 @@ class PitchPacer {
         // Never so short the delivery and its shot cannot be shown.
         final scaled = at(merged, _Tier.standard);
         return scaled < _setPieceFloor ? _setPieceFloor : scaled;
-      case FoulMoment f:
+      case final FoulMoment f:
         final idx = f.cardEventIndex;
         final penalty = _penaltyFouls.contains(f);
         if (idx == null) return penalty ? _penaltyFoul : 0;
@@ -429,7 +429,7 @@ class PitchPacer {
             idx < _events.length &&
             _events[idx].type == MatchEventType.redCard;
         return red || penalty ? _card : at(_card, _Tier.standard);
-      case OffsideMoment o:
+      case final OffsideMoment o:
         return o.endsAttack ? at(_offside, _Tier.minor) : 0;
       case SubMoment _:
         // Always shown: the man going off has to leave while play is

@@ -63,15 +63,16 @@ void main() {
   });
 
   Future<int> create(int nationId, {bool calendar2 = true}) async {
-    final career = (await c
-            .read(careerServiceProvider)
-            .create(
-              nationId: nationId,
-              managerName: 'M',
-              rngSeed: 4242,
-              calendar2: calendar2,
-            ))
-        .valueOrNull!;
+    final career =
+        (await c
+                .read(careerServiceProvider)
+                .create(
+                  nationId: nationId,
+                  managerName: 'M',
+                  rngSeed: 4242,
+                  calendar2: calendar2,
+                ))
+            .valueOrNull!;
     await c
         .read(competitionRepositoryProvider)
         .markDrawWatched(career.id, 0, budgetSetupKind);
@@ -212,15 +213,14 @@ void main() {
 
     // The board reads the stored draw: a direct qualifier is through, an
     // entrant is a rung below, anybody else is out.
-    Future<({int ordinal, bool over})> run(int nation) async =>
-        continentalRun(
-          comp: comp,
-          careerId: id,
-          nationId: nation,
-          confederation: europe,
-          fixtures: await comp.cycleFixturesForNation(id, nation),
-          cycle: 0,
-        );
+    Future<({int ordinal, bool over})> run(int nation) async => continentalRun(
+      comp: comp,
+      careerId: id,
+      nationId: nation,
+      confederation: europe,
+      fixtures: await comp.cycleFixturesForNation(id, nation),
+      cycle: 0,
+    );
     expect(await run(direct.first), (ordinal: 2, over: false));
     final entrant = paths.first.seeds.last;
     expect(await run(entrant), (ordinal: 1, over: false));

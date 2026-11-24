@@ -29,9 +29,9 @@ void main() {
         const ManagerHistoryScreen(careerId: 1),
         overrides: [
           managerHistoryProvider(1).overrideWith(
-            (ref) async => ManagerHistory(
+            (ref) async => const ManagerHistory(
               managerName: 'Tester',
-              cycles: const <ManagerCycle>[],
+              cycles: <ManagerCycle>[],
               played: 0,
               won: 0,
               drawn: 0,

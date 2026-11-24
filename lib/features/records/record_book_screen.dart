@@ -196,7 +196,7 @@ class LegacyTiles extends StatelessWidget {
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           itemCount: entries.length,
-          separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.xs),
+          separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.xs),
           itemBuilder: (context, i) => _LegacyPill(
             icon: entries[i].icon,
             title: entries[i].title,

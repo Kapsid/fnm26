@@ -12,7 +12,7 @@ void main() {
     expect(AwardYear.onWorldScale(5), greaterThan(5));
   });
 
-  test('only the engine side\'s fixtures are rescaled', () {
+  test("only the engine side's fixtures are rescaled", () {
     AwardFixture fx(int id, int home, int away) => (
       id: id,
       competitionId: 1,

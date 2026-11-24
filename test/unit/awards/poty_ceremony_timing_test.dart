@@ -107,7 +107,7 @@ void main() {
         // nothing is ever played on 31 December itself.
         final late = await db
             .customSelect(
-              "SELECT COUNT(*) AS n FROM fixtures WHERE career_id = ? AND "
+              'SELECT COUNT(*) AS n FROM fixtures WHERE career_id = ? AND '
               "strftime('%m-%d', date, 'unixepoch') = '12-31'",
               variables: [Variable<int>(d.careerId)],
             )

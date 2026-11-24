@@ -179,7 +179,7 @@ void main() {
     expect(Campaigns.byId('zanzibar'), def);
   });
 
-  test("The Three Legs: Pro, 25 cycles, can be continued, its dormant world "
+  test('The Three Legs: Pro, 25 cycles, can be continued, its dormant world '
       "in Andorra's place", () {
     const def = Campaigns.isleOfMan;
     expect(def.nationId, 214);

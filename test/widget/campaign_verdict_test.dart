@@ -9,8 +9,8 @@ import 'package:fnm/features/campaign/campaign_hub_card.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/campaign/campaign_record_store.dart';
 import 'package:fnm/features/campaign/campaign_stamp.dart';
-import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/campaign/campaign_verdict_screen.dart';
+import 'package:fnm/features/hub/hub_event.dart';
 
 import '../helpers/seeded_save.dart';
 

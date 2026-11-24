@@ -2,10 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fnm/shared/widgets/app_segmented_tabs.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/app_database.dart';
@@ -17,6 +15,7 @@ import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart';
 import 'package:fnm/features/tournaments/nations_cup_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/widgets/app_segmented_tabs.dart';
 
 import '../helpers/expect_whole.dart';
 import '../helpers/test_database.dart';

@@ -119,7 +119,7 @@ void main() {
     expect(g.groundNationId, 10);
   });
 
-  test('a bigger finals rotates over more of the host\'s grounds', () {
+  test("a bigger finals rotates over more of the host's grounds", () {
     const big = <int, List<String>>{
       99: [
         'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', //
@@ -141,7 +141,7 @@ void main() {
     expect(citiesUsed(16), hasLength(16));
   });
 
-  group('a finals the manager\'s nation hosts uses its live estate', () {
+  group("a finals the manager's nation hosts uses its live estate", () {
     // The estate after the career's works: a built Arena Nova at the top and
     // a downsized ground, biggest first.
     const estate = <Venue>[

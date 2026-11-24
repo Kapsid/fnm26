@@ -70,7 +70,7 @@ void main() {
   });
 
   group('opponentLedger', () {
-    test('tallies every opponent from the nation\'s side', () {
+    test("tallies every opponent from the nation's side", () {
       final ledger = opponentLedger(
         nationResults([
           played(1, 2, 3, as: 0),

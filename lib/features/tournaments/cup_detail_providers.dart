@@ -3,11 +3,6 @@
 // is copyrighted intellectual property; do not reproduce, clone or help
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fnm/domain/services/competition/calendar2.dart';
-import 'package:fnm/domain/services/competition/qualification_format.dart';
-import 'package:fnm/domain/services/competition/wc_playoffs.dart';
-import 'package:fnm/features/tournaments/euro_playoff_providers.dart';
-import 'package:fnm/features/tournaments/wc_playoff_providers.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -18,25 +13,30 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/achievements/achievements.dart'
     show worldCupHonourName;
+import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
+import 'package:fnm/domain/services/competition/qualification_format.dart';
 import 'package:fnm/domain/services/competition/tournament_holders.dart';
 import 'package:fnm/domain/services/competition/tournament_identity.dart';
 import 'package:fnm/domain/services/competition/tournament_stars.dart';
-import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/competition/venues.dart';
-import 'package:fnm/features/federation/national_stadium_providers.dart'
-    show hostEstatesFor;
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
+import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
+import 'package:fnm/features/federation/national_stadium_providers.dart'
+    show hostEstatesFor;
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/tournaments/city_providers.dart';
-import 'package:fnm/features/tournaments/tournament_stars_of.dart';
+import 'package:fnm/features/tournaments/euro_playoff_providers.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
 import 'package:fnm/features/tournaments/host_draw_providers.dart';
+import 'package:fnm/features/tournaments/tournament_stars_of.dart';
 import 'package:fnm/features/tournaments/wc_host_berths.dart';
+import 'package:fnm/features/tournaments/wc_playoff_providers.dart';
 
 /// Data for the cup-detail (World Championship) screen.
 class CupData {

@@ -1,16 +1,17 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/achievements/achievements.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/messages/message_popup.dart';
-import 'package:fnm/features/messages/message_sheet.dart';
 import 'package:fnm/features/messages/message_providers.dart';
+import 'package:fnm/features/messages/message_sheet.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 
 import '../helpers/test_database.dart';
 
@@ -198,7 +199,7 @@ void main() {
       await tester.pumpAndSettle();
     }
     // The ones past the cap were never put on screen.
-    expect(find.text('News ${kMaxMessagePopups}'), findsNothing);
+    expect(find.text('News $kMaxMessagePopups'), findsNothing);
 
     // The overflow is marked read WITH them and waits in the inbox. Leaving
     // it unread made the cap a queue: three popups on every visit to the hub,

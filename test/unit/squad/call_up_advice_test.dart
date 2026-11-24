@@ -141,7 +141,7 @@ void main() {
     expect(_ask(StaffTier.none, _world(1), 1), isNull);
   });
 
-  test('a better assistant names a stronger squad, by the engine\'s own '
+  test("a better assistant names a stronger squad, by the engine's own "
       'measure, over many saves and days', () {
     const runs = 200;
     final total = {for (final t in StaffTier.values) t: 0.0};
@@ -255,7 +255,7 @@ void main() {
     }
   });
 
-  test('keeps the squad size and every line the screen\'s auto-pick keeps', () {
+  test("keeps the squad size and every line the screen's auto-pick keeps", () {
     for (var seed = 1; seed <= 80; seed++) {
       final w = _world(seed);
       final formation = Formation.values[seed % Formation.values.length];
@@ -372,7 +372,7 @@ void main() {
     expect(weaker, greaterThan(30));
   });
 
-  test('reads the window\'s opponents on the ranking', () {
+  test("reads the window's opponents on the ranking", () {
     expect(
       CallUpAdvice.opponentsStronger(
         ownRanking: 20,

@@ -173,7 +173,7 @@ void main() {
     },
   );
 
-  test("a team page shows him for his new nation, not his old one", () async {
+  test('a team page shows him for his new nation, not his old one', () async {
     await naturaliseItalysBest();
     Future<List<int>> topOf(int nationId) async => [
       for (final p in (await c.read(

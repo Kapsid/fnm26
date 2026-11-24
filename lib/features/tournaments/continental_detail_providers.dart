@@ -12,28 +12,28 @@ import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
-import 'package:fnm/domain/services/competition/tournament_stars.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/domain/services/competition/tournament_holders.dart';
 import 'package:fnm/domain/services/competition/tournament_identity.dart';
-import 'package:fnm/domain/services/player/player_lifecycle.dart';
+import 'package:fnm/domain/services/competition/tournament_stars.dart';
 import 'package:fnm/domain/services/competition/venues.dart';
-import 'package:fnm/features/federation/national_stadium_providers.dart'
-    show hostEstatesFor;
+import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
+import 'package:fnm/features/federation/national_stadium_providers.dart'
+    show hostEstatesFor;
 import 'package:fnm/features/hub/hub_event.dart';
+import 'package:fnm/features/ranking/world_ranking_providers.dart';
+import 'package:fnm/features/tournaments/city_providers.dart';
+import 'package:fnm/features/tournaments/cup_detail_providers.dart'
+    show AllTimeScorer, CupPlayerRecord;
 import 'package:fnm/features/tournaments/drawn_groups.dart';
 import 'package:fnm/features/tournaments/euro_playoff_providers.dart';
 import 'package:fnm/features/tournaments/host_draw_providers.dart';
-import 'package:fnm/features/ranking/world_ranking_providers.dart';
-import 'package:fnm/features/tournaments/city_providers.dart';
 import 'package:fnm/features/tournaments/tournament_stars_of.dart';
-import 'package:fnm/features/tournaments/cup_detail_providers.dart'
-    show AllTimeScorer, CupPlayerRecord;
 
 /// Identifies one continental championship within a save.
 typedef ContinentalKey = ({int careerId, Confederation confederation});

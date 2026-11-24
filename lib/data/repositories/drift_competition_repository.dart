@@ -5,24 +5,24 @@
 import 'package:drift/drift.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/repositories/mappers.dart';
-import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/entities/enums.dart';
-import 'package:fnm/domain/services/awards/award_year.dart';
-import 'package:fnm/domain/services/match/big_game_difficulty.dart';
-import 'package:fnm/domain/services/player/growth_difficulty.dart';
-import 'package:fnm/domain/services/awards/awards.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
-import 'package:fnm/domain/services/competition/finals_participation.dart';
-import 'package:fnm/domain/services/competition/real_history.dart';
+import 'package:fnm/domain/services/awards/award_year.dart';
+import 'package:fnm/domain/services/awards/awards.dart';
+import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/cycle_finish.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
+import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/domain/services/competition/real_history.dart';
 import 'package:fnm/domain/services/competition/regional_cups.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/domain/services/competition/tournament_calendar.dart';
+import 'package:fnm/domain/services/match/big_game_difficulty.dart';
+import 'package:fnm/domain/services/player/growth_difficulty.dart';
 
 /// Drift-backed [CompetitionRepository].
 class DriftCompetitionRepository implements CompetitionRepository {

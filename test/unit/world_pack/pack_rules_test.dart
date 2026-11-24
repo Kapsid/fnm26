@@ -205,7 +205,7 @@ void main() {
     expect(b.reason, FieldReason.outOfRange);
   });
 
-  test('a blank nation name or code keeps the game\'s', () {
+  test("a blank nation name or code keeps the game's", () {
     final p = _pack(
       nations: {
         1: (name: '', code: 'CZX'),
@@ -541,7 +541,7 @@ void main() {
     });
 
     test("a badly shaped language is BadField outOfRange; 'xx' and 'cs' "
-        'pass (an unknown language is compatibility\'s)', () {
+        "pass (an unknown language is compatibility's)", () {
       for (final lang in ['x y', 'CS', 'english', 'c', 'pt-BRAZIL', '']) {
         final b = _bad(
           _pack(
@@ -578,7 +578,7 @@ void main() {
       );
     });
 
-    test('a localized value keeps to its root\'s cap', () {
+    test("a localized value keeps to its root's cap", () {
       final p = _pack(
         addedSponsors: [_sponsor(_added)],
         localized: {
@@ -791,7 +791,7 @@ void main() {
     });
   });
 
-  group('a player\'s club fields', () {
+  group("a player's club fields", () {
     PackPlayer withClub(int id, {String? club, String? country}) => PackPlayer(
       id: id,
       name: 'Player $id',

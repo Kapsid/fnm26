@@ -360,14 +360,22 @@ class Promo {
     for (var i = 1; i <= steps; i++) {
       await Future<void>.delayed(Duration(milliseconds: ms ~/ steps));
       await g.moveTo(start + Offset(0, -dy * i / steps));
-      PromoRootState.current.touch(start + Offset(0, -dy * i / steps), down: false);
+      PromoRootState.current.touch(
+        start + Offset(0, -dy * i / steps),
+        down: false,
+      );
     }
     await g.up();
     await wait(after);
   }
 
   /// A horizontal swipe ([dx] positive moves the finger right).
-  Future<void> swipe(double dx, {Offset? from, int ms = 300, double after = 1}) async {
+  Future<void> swipe(
+    double dx, {
+    Offset? from,
+    int ms = 300,
+    double after = 1,
+  }) async {
     final s = screen;
     final start = from ?? Offset(s.width * 0.5, s.height * 0.5);
     final g = await ctl.startGesture(start);

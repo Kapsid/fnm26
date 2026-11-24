@@ -242,14 +242,14 @@ void main() {
         PlayerOfYear.trophyPoints(cup(Confederation.europe), 1),
         lessThan(
           PlayerOfYear.trophyPoints(
-            TrophyResult(
+            const TrophyResult(
               competitionId: 2,
               family: TrophyFamily.worldChampionship,
               confederation: Confederation.europe,
               champion: 1,
               runnerUp: 2,
-              semiFinalists: const [],
-              matchesByNation: const {1: 7},
+              semiFinalists: [],
+              matchesByNation: {1: 7},
             ),
             1,
           ),
@@ -289,7 +289,7 @@ void main() {
       expect(ranked.first.playerId, 1);
     });
 
-    test('the ceiling is never below any position\'s score', () {
+    test("the ceiling is never below any position's score", () {
       final w = _World();
       for (final f in _qualifiers(w, 1)) {
         w.played(f, 1, 1, rating: 7.3, goals: 1, cleanSheet: true);
@@ -405,7 +405,7 @@ void main() {
     });
 
     test(
-      'a year of friendlies is voted on standing, from the world\'s best',
+      "a year of friendlies is voted on standing, from the world's best",
       () {
         final w = _World();
         // The manager's men (nation 2) played friendlies, and well.
@@ -561,7 +561,7 @@ void main() {
       expect(ranked.last.team, 0);
     });
 
-    test('the Golden Ball goes to the tournament\'s best and counts', () {
+    test("the Golden Ball goes to the tournament's best and counts", () {
       final w = _World();
       final ko = _worldChampionship(w);
       for (final f in [ko[0], ko[2]]) {

@@ -4,26 +4,25 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:fnm/core/layout/form_factor.dart';
-import 'package:fnm/core/util/app_date.dart';
-import 'package:fnm/core/util/share_origin.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:fnm/features/career/career_transfer_providers.dart';
-import 'package:fnm/data/db/career_bundle.dart';
-import 'package:fnm/data/db/save_backup.dart';
-import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/diagnostics/app_log.dart';
+import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/core/util/share_origin.dart';
+import 'package:fnm/data/db/career_bundle.dart';
+import 'package:fnm/data/db/save_backup.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/career/career_summary_screen.dart';
+import 'package:fnm/features/career/career_transfer_providers.dart';
 import 'package:fnm/features/nations/career_nations_providers.dart';
 import 'package:fnm/features/paywall/paywall_sheet.dart';
 import 'package:fnm/features/paywall/save_lock.dart';
@@ -33,6 +32,7 @@ import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:share_plus/share_plus.dart';
 
 part 'saves_tablet_layout.dart';
 

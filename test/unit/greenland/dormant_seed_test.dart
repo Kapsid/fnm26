@@ -486,7 +486,7 @@ void main() {
       }
     });
 
-    test("Texas starts a mid-strength side, sixth in North America, in "
+    test('Texas starts a mid-strength side, sixth in North America, in '
         "Anguilla's place, far above Anguilla's squad", () {
       double mean(List<Player> ps) =>
           ps.fold<int>(0, (s, p) => s + p.overall) / ps.length;

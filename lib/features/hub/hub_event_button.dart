@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
+import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
@@ -17,11 +18,12 @@ import 'package:fnm/features/awards/award_providers.dart';
 import 'package:fnm/features/awards/awards_ceremony_screen.dart';
 import 'package:fnm/features/federation/sponsor_providers.dart'
     show sponsorRoundProvider;
-import 'package:fnm/features/messages/message_providers.dart';
+import 'package:fnm/features/hub/assistant_match.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/hub/round_popup.dart';
 import 'package:fnm/features/messages/message_popup.dart';
+import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/features/press/press_copy.dart';
 import 'package:fnm/features/press/press_desk.dart';
@@ -33,8 +35,6 @@ import 'package:fnm/features/squad/grievance_sheet.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/adaptive_sheet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
-import 'package:fnm/core/routing/app_router.dart';
-import 'package:fnm/features/hub/assistant_match.dart';
 import 'package:go_router/go_router.dart';
 
 /// Whether a world-simulating step started by a hub action is running.

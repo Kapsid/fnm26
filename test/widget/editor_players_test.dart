@@ -4,9 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
-import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/player_build.dart';
@@ -682,7 +682,7 @@ void main() {
               name: 'Brno Sokol',
               country: 'cze',
             ),
-            PackClub(
+            const PackClub(
               id: kPackAddedIdBase + 2,
               name: 'Lonely Stars',
               country: lone,

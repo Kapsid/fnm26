@@ -290,12 +290,12 @@ void main() {
           StaffRole.scout: StaffTier.elite,
         }, width: width);
 
-        expectWhole(reading('Fitness Coach'), 'the fitness coach\'s job');
-        expectWhole(reading('Assistant Manager'), 'the assistant\'s job');
-        expectWhole(reading('Chief Scout'), 'the scout\'s job');
+        expectWhole(reading('Fitness Coach'), "the fitness coach's job");
+        expectWhole(reading('Assistant Manager'), "the assistant's job");
+        expectWhole(reading('Chief Scout'), "the scout's job");
         expectWhole(
           reading('22% fewer injuries'),
-          'the fitness coach\'s figure',
+          "the fitness coach's figure",
         );
         expectWhole(reading('10% fewer injuries'), "the assistant's figure");
         expectWhole(
@@ -335,12 +335,12 @@ void main() {
         // English and pass.
         expect(reading('Kondiční trenér'), findsOneWidget);
 
-        expectWhole(reading('Kondiční trenér'), 'the fitness coach\'s job');
-        expectWhole(reading('Asistent trenéra'), 'the assistant\'s job');
-        expectWhole(reading('Hlavní skaut'), 'the scout\'s job');
+        expectWhole(reading('Kondiční trenér'), "the fitness coach's job");
+        expectWhole(reading('Asistent trenéra'), "the assistant's job");
+        expectWhole(reading('Hlavní skaut'), "the scout's job");
         expectWhole(
           reading('O 22 % méně zranění'),
-          'the fitness coach\'s figure',
+          "the fitness coach's figure",
         );
         expectWhole(reading('O 10 % méně zranění'), "the assistant's figure");
         expectWhole(

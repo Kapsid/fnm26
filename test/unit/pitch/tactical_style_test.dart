@@ -474,8 +474,8 @@ void main() {
           drifted.sample(_dur(t)).players,
           fixed.sample(_dur(t)).players,
           reason:
-              'match $seed: the change at $first\' shows before '
-              '${first + 1}\' (t $t)',
+              "match $seed: the change at $first' shows before "
+              "${first + 1}' (t $t)",
         );
       }
       // From it on, the side that changed plays differently.
@@ -487,7 +487,7 @@ void main() {
         final b = fixed.sample(_dur(t)).players;
         differs = a.keys.any((id) => id ~/ 100 == 2 && a[id] != b[id]);
       }
-      expect(differs, isTrue, reason: 'match $seed: drift at $first\' unseen');
+      expect(differs, isTrue, reason: "match $seed: drift at $first' unseen");
       expect(PitchScriptValidator.validate(drifted), isEmpty);
     }
     expect(checked, 5);

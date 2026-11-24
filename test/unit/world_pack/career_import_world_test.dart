@@ -195,7 +195,7 @@ void main() {
   });
 
   testWidgets("a bundle whose world's pool holds another nation's fringe id "
-      'is refused; its own nation\'s imports', (tester) async {
+      "is refused; its own nation's imports", (tester) async {
     await tester.runAsync(() async {
       final d = await _device();
       final ranges = await d.c.read(playerRepositoryProvider).fringeRanges();

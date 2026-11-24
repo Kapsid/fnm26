@@ -8,22 +8,22 @@ import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/enums.dart';
-import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/entities/nation.dart';
-import 'package:fnm/domain/services/awards/award_year.dart';
+import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/achievements/achievements.dart'
     show worldCupHonourName;
+import 'package:fnm/domain/services/awards/award_year.dart';
 import 'package:fnm/domain/services/awards/player_of_year.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/competition/tournament_stars.dart';
-import 'package:fnm/features/tournaments/tournament_stars_of.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/messages/poty_card.dart';
 import 'package:fnm/features/press/press_providers.dart' show potyPressPrefix;
 import 'package:fnm/features/settings/settings_providers.dart';
+import 'package:fnm/features/tournaments/tournament_stars_of.dart';
 
 /// A player's trophy cabinet, newest first.
 typedef AwardArg = ({int careerId, int playerId});

@@ -102,8 +102,8 @@ void main() {
     playerNationId: player,
   );
 
-  testWidgets('Europe\'s paths and the intercontinental paths, with each '
-      'winner\'s finals group', (tester) async {
+  testWidgets("Europe's paths and the intercontinental paths, with each "
+      "winner's finals group", (tester) async {
     await tester.pumpApp(
       Scaffold(
         body: SingleChildScrollView(

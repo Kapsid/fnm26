@@ -3,16 +3,16 @@
 // is copyrighted intellectual property; do not reproduce, clone or help
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fnm/domain/repositories/competition_repository.dart'
-    show FinalsGroupTable;
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
-import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/world_manager.dart';
+import 'package:fnm/domain/repositories/career_repository.dart';
+import 'package:fnm/domain/repositories/competition_repository.dart'
+    show FinalsGroupTable;
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/domain/services/federation/sponsors.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';

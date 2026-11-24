@@ -139,7 +139,7 @@ void main() {
     expect(find.text('The winner goes to Group A'), findsOneWidget);
   });
 
-  testWidgets('a path winner\'s row shows its nations\' flags, on the '
+  testWidgets("a path winner's row shows its nations' flags, on the "
       'smallest phone', (tester) async {
     tester.view
       ..physicalSize = const Size(320, 568)

@@ -67,8 +67,8 @@ void main() {
     r'nationRepositoryProvider\)\s*\.\s*(all|freeDemo)\b(?!\s*[A-Za-z_])',
   );
   final baseProvider = RegExp(
-    r'(?<![A-Za-z_])(nationsProvider|nationStrengthsProvider|'
-    r'newGameNationsProvider|newGameStrengthsProvider|'
+    '(?<![A-Za-z_])(nationsProvider|nationStrengthsProvider|'
+    'newGameNationsProvider|newGameStrengthsProvider|'
     r'newGameStarPlayersProvider|newGameNationProvider)\b',
   );
   // `final repo = ref.read(nationRepositoryProvider);` ... `repo.all()`.

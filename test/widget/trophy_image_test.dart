@@ -31,13 +31,13 @@ void main() {
       'q842iQAAAABJRU5ErkJggg==',
     );
     container.read(activeWorldProvider.notifier).state = ActiveWorld(
-      WorldPack(
+      const WorldPack(
         uuid: 't',
         name: 'T',
         author: '',
         formatVersion: kPackFormatVersion,
         madeWithVersion: '1.1.0',
-        trophies: const {'europe'},
+        trophies: {'europe'},
       ),
       trophies: {'europe': png},
     );
@@ -69,13 +69,13 @@ void main() {
     final container = ProviderContainer();
     addTearDown(container.dispose);
     container.read(activeWorldProvider.notifier).state = ActiveWorld(
-      WorldPack(
+      const WorldPack(
         uuid: 't',
         name: 'T',
         author: '',
         formatVersion: kPackFormatVersion,
         madeWithVersion: '1.1.0',
-        trophies: const {'europe'},
+        trophies: {'europe'},
       ),
       trophies: {
         'europe': Uint8List.fromList([1, 2, 3]),

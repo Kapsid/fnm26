@@ -7,34 +7,34 @@ import 'dart:math' as math;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/data/data_providers.dart';
-import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/domain/entities/tactics.dart';
-import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/confed_playoffs.dart';
-import 'package:fnm/domain/services/squad/friendly_rotation.dart';
+import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/match/ai_counter.dart';
 import 'package:fnm/domain/services/match/ai_substitutions.dart';
 import 'package:fnm/domain/services/match/ai_tactics.dart';
+import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/big_game_difficulty.dart';
 import 'package:fnm/domain/services/match/match_conditions.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/mid_tier_difficulty.dart';
-import 'package:fnm/domain/services/nation/nation_identity.dart';
 import 'package:fnm/domain/services/match/venue.dart';
+import 'package:fnm/domain/services/nation/nation_identity.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
-import 'package:fnm/domain/services/squad/condition.dart';
-import 'package:fnm/domain/services/tactics/best_eleven.dart';
-import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/press/fan_mood.dart';
+import 'package:fnm/domain/services/squad/condition.dart';
+import 'package:fnm/domain/services/squad/friendly_rotation.dart';
+import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
@@ -319,7 +319,6 @@ class MatchPreview {
   /// The first leg's margin a second leg ends level on (see [TwoLegged]),
   /// when this is a second leg whose first leg is in; else null.
   final int? secondLegMargin;
-
 
   /// The ninety-minute margin (home less away) at which this match goes to
   /// extra time and penalties: level for a knockout, [secondLegMargin] for a

@@ -35,10 +35,13 @@ void main() {
 
   test('groups are found from who meets whom', () {
     final groups = afcGroupsOf(fixtures);
-    expect([for (final g in groups) g.sides.toSet()], [
-      {1, 2, 3},
-      {4, 5, 6},
-    ]);
+    expect(
+      [for (final g in groups) g.sides.toSet()],
+      [
+        {1, 2, 3},
+        {4, 5, 6},
+      ],
+    );
   });
 
   testWidgets('both groups are drawn as tables above the matches', (

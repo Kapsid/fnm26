@@ -475,7 +475,7 @@ void main() {
             isEmpty,
             reason:
                 'seed $seed: ${hurt.playerName} was hurt at '
-                '${hurt.minute}\' and kept playing',
+                "${hurt.minute}' and kept playing",
           );
         }
       }

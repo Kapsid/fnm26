@@ -138,7 +138,11 @@ void main() {
         _pack(
           addedClubs: [
             ...ok,
-            PackClub(id: _added + 5000, name: 'Club 5000', country: 'cze'),
+            const PackClub(
+              id: _added + 5000,
+              name: 'Club 5000',
+              country: 'cze',
+            ),
           ],
         ),
         const {},
@@ -181,7 +185,7 @@ void main() {
       addedClubs: [
         ..._many(300),
         PackClub(id: _added + 900, name: '${cze[3]} New', country: 'cze'),
-        PackClub(id: _added + 901, name: 'zagreb city', country: 'cro'),
+        const PackClub(id: _added + 901, name: 'zagreb city', country: 'cro'),
       ],
       clubs: {cze[0]: '${cze[3]} New', cze[1]: ' ', eng[0]: 'Club 8'},
     );

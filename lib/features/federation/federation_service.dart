@@ -4,8 +4,8 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
-import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';

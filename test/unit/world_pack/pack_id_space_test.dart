@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/seed/pool_generator.dart';
-import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/entities/player_ids.dart';
+import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/federation/sponsors.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/player/golden_generation.dart';
@@ -26,7 +26,7 @@ Iterable<String> _allCodes() sync* {
 }
 
 void main() {
-  test(r'no SponsorBrand name, YFeed.namedAccounts entry or league club '
+  test('no SponsorBrand name, YFeed.namedAccounts entry or league club '
       r'matches ^pack\d', () {
     // A pack sponsor is stored as 'pack<id>' (PackSponsor.key); a game name
     // of that shape would be mistaken for one.

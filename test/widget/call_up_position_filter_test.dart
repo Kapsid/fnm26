@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fnm/shared/widgets/app_segmented_tabs.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/core/theme/text_size.dart';
 import 'package:fnm/data/data_providers.dart';
@@ -22,6 +21,7 @@ import 'package:fnm/features/tactics/nomination_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
+import 'package:fnm/shared/widgets/app_segmented_tabs.dart';
 
 import '../helpers/expect_whole.dart';
 import '../helpers/test_database.dart';

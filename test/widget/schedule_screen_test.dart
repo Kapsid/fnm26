@@ -8,8 +8,8 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/match_schedule.dart';
 import 'package:fnm/domain/services/press/conference.dart';
-import 'package:fnm/features/federation/sponsor_providers.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
+import 'package:fnm/features/federation/sponsor_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/hub/schedule_providers.dart';
@@ -374,10 +374,10 @@ Future<void> _pumpScreen(WidgetTester tester, Override schedule) async {
           (ref, id) async => throw StateError('none'),
         ),
       ],
-      child: MaterialApp(
+      child: const MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: const ScheduleScreen(careerId: 1),
+        home: ScheduleScreen(careerId: 1),
       ),
     ),
   );

@@ -156,7 +156,7 @@ void main() {
       );
     });
 
-    test('a 1.1.0 build (schema 53) reads this build\'s backup as newer', () {
+    test("a 1.1.0 build (schema 53) reads this build's backup as newer", () {
       // The gate is the schema version alone. Editor 2 packs break 1.1.0, so
       // this build must stamp a version 1.1.0 does not know.
       const schemaOf110 = 53;

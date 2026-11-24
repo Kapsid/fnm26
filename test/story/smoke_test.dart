@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:flutter/widgets.dart';
 import 'dart:io';
 
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
@@ -13,10 +13,10 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
-import 'package:fnm/features/tournaments/city_providers.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
     show kMatchViewModePrefsKey;
+import 'package:fnm/features/tournaments/city_providers.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helpers/seeded_save.dart' show settle;
 import '../helpers/test_database.dart';

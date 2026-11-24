@@ -370,7 +370,7 @@ void main() {
     },
   );
 
-  test('the real schedule: the first Nations Cup\'s Finals Four falls in '
+  test("the real schedule: the first Nations Cup's Finals Four falls in "
       'June, three years before the World Championship', () async {
     // calendar2: the second's falls in June of the year before it (see
     // calendar2_cycle_test.dart).

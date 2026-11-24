@@ -2958,10 +2958,10 @@ List<Widget> matchMarks({
   if (ownGoals > 0) ...[
     const SizedBox(width: 4),
     for (var i = 0; i < ownGoals; i++)
-      Padding(
+      const Padding(
         key: ownGoalMarkKey,
-        padding: const EdgeInsets.only(left: 1),
-        child: const Icon(
+        padding: EdgeInsets.only(left: 1),
+        child: Icon(
           Icons.sports_soccer,
           size: 13,
           color: AppColors.error,

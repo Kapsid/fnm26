@@ -235,7 +235,7 @@ void main() {
     );
   });
 
-  test('the run starts with Finland\'s golden generation, and the XI is '
+  test("the run starts with Finland's golden generation, and the XI is "
       'picked from it', () async {
     final id = await start();
     expect(

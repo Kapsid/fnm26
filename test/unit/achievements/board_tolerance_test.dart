@@ -47,7 +47,7 @@ void main() {
     });
 
     // Some goals were not realistic for low and mid sides.
-    test('qualifying is asked only inside the confederation\'s places', () {
+    test("qualifying is asked only inside the confederation's places", () {
       // Europe's 20th best, around the world's top 45, has sixteen European
       // places to chase: the qualifying campaign is its brief.
       expect(world(45, 20), 1);

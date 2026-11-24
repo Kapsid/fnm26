@@ -253,7 +253,7 @@ void main() {
           expectLegible(
             tester,
             findName('Papastathopoulos'),
-            "the longest surname in the pool",
+            'the longest surname in the pool',
           );
         },
       );

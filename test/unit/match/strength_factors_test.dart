@@ -215,7 +215,7 @@ void main() {
       );
     });
 
-    test('the scout\'s dossier is its own line, priced off the engine', () {
+    test("the scout's dossier is its own line, priced off the engine", () {
       List<StrengthFactor> withScout(StaffTier tier) => StrengthFactors.of(
         familiarity: 0,
         conditionByPlayer: const {},

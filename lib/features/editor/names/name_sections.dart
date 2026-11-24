@@ -17,19 +17,19 @@ import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/national_stadium_data.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 import 'package:fnm/domain/services/competition/venues.dart';
 import 'package:fnm/domain/services/federation/sponsors.dart';
 import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
-import 'package:fnm/domain/services/world_pack/pack_paths.dart';
 import 'package:fnm/domain/services/world_pack/pack_keys.dart';
+import 'package:fnm/domain/services/world_pack/pack_paths.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/editor/players/players_ui.dart';
 import 'package:fnm/l10n/app_localizations.dart';
-import 'package:fnm/domain/services/competition/regional_cups.dart';
 
 /// The editor sections that rename what the game names: each a list of
 /// (game name, the database's name) rows. Nations are not among them: their
@@ -696,7 +696,7 @@ abstract final class NameEdits {
         for (final x in pack.localized.entries)
           if (!paths.contains(x.key))
             x.key: x.value
-          else if (({...x.value}..remove(lang)) case final rest
+          else if ({...x.value}..remove(lang) case final rest
               when rest.isNotEmpty)
             x.key: rest,
       },

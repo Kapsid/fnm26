@@ -10,24 +10,24 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
-import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
-import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
+import 'package:fnm/features/career/career_providers.dart' show CareerService;
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart'
     show nationsCupDrawKind;
 import 'package:fnm/l10n/app_localizations.dart';
-import 'package:fnm/domain/services/competition/regional_cups.dart';
-import 'package:fnm/features/career/career_providers.dart' show CareerService;
 
 /// One of the board's expectations for the cycle, and — once that tournament is
 /// over — whether it was met. Fully DERIVED (no storage): the target comes from

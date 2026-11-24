@@ -1,8 +1,8 @@
+import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
-import 'package:flutter_test/flutter_test.dart';
 
 /// A standings row for [id] carrying [points], so a boundary with fewer places
 /// than candidates can be checked to pick the right sides.

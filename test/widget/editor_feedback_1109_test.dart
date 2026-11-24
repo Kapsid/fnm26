@@ -47,7 +47,7 @@ void main() {
   final fra = nationIdOf('FRA');
 
   group('a reserve moves into the squad', () {
-    test('SquadEdits.promote moves him, with one id of the pack\'s own', () {
+    test("SquadEdits.promote moves him, with one id of the pack's own", () {
       final squad = testSquad();
       final pool = _reserves(squad, 3);
       final pack = testPack('P', squads: {cze: squad}).copyWith(

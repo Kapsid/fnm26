@@ -43,7 +43,7 @@ const Map<String, String> nationNamesBg = <String, String>{
   'CHA': 'Чад',
   'CHI': 'Чили',
   'CHN': 'Китай',
-  'CIV': 'Кот д\'Ивоар',
+  'CIV': "Кот д'Ивоар",
   'CMR': 'Камерун',
   'COD': 'ДР Конго',
   'COK': 'Острови Кук',

@@ -280,7 +280,7 @@ void main() {
     expect(await count('press_conferences'), 0);
   });
 
-  test('v50 gives a v49 save\'s statements an empty target', () async {
+  test("v50 gives a v49 save's statements an empty target", () async {
     // 49 → 50 adds the stated target a preview conference puts on the record.
     // Purely additive: every statement already said keeps its words.
     final schema = await verifier.schemaAt(49);
