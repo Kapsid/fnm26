@@ -12635,6 +12635,71 @@ class AppLocalizationsMs extends AppLocalizations {
   }
 
   @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival cuba merekrut $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rival telah mendekati $name ($age, $position) untuk menukar pasukan kebangsaan. Dia belum pernah bermain dalam perlawanan rasmi untuk $nation, jadi dia masih bebas menukar. Beri dia minit dalam salah satu daripada $count perlawanan rasmi kita yang seterusnya dan dia terikat dengan kita selama-lamanya. Jika tidak, dia mungkin menerima tawaran mereka.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival terlepas $name';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name telah bermain dalam perlawanan rasmi untuk $nation, jadi $rival tidak lagi boleh memanggilnya. Dia terikat dengan kita selama-lamanya.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name menolak $rival';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name masih belum ada perlawanan rasmi untuk $nation, tetapi dia telah memberitahu $rival bahawa dia mahu menunggu peluangnya bersama kita.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name beralih ke $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name telah menerima tawaran $rival dan akan bermain untuk mereka mulai sekarang. Tanpa perlawanan rasmi untuk $nation, tiada apa yang dapat menahannya.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name telah menerima tawaran $rival. Dia dijanjikan minit untuk $nation yang tidak pernah tiba, dan mulai sekarang dia bermain untuk $rival.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Janjikan dia minit';
+
+  @override
+  String get poachPromisedLabel => 'Minit dijanjikan';
+
+  @override
+  String get poachCallUpsButton => 'Buka panggilan skuad';
+
+  @override
+  String get poachPromiseHint =>
+      'Janji membuatnya menunggu satu lagi perlawanan rasmi, tetapi jika dimungkiri dia lebih cenderung untuk pergi.';
+
+  @override
   String playerIntlRetired(int year) {
     return 'Bersara daripada skuad kebangsaan, $year';
   }

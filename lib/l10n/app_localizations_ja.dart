@@ -12226,6 +12226,70 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rivalが$nameの引き抜きを狙っています';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rivalが$name（$age歳、$position）に代表変更を打診しました。彼はまだ$nationで公式戦に出場していないため、変更が可能です。次の$count試合の公式戦のいずれかで出場機会を与えれば、彼は永久に私たちの代表に縛られます。そうでなければ、相手の誘いを受けるかもしれません。';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rivalは$nameの獲得に失敗';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$nameが$nationで公式戦に出場したため、$rivalはもう彼を招集できません。彼は永久に私たちの選手です。';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$nameが$rivalの誘いを断りました';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$nameはまだ$nationで公式戦の出場がありませんが、$rivalには私たちのもとでチャンスを待ちたいと伝えました。';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$nameが$rivalへ代表変更';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$nameは$rivalの誘いを受け入れ、今後は同国の代表としてプレーします。$nationでの公式戦出場がなかったため、引き止める手立てはありませんでした。';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$nameは$rivalの誘いを受け入れました。$nationでの出場機会を約束されながら、それが果たされることはなく、今後は$rivalの代表としてプレーします。';
+  }
+
+  @override
+  String get poachPromiseButton => '出場機会を約束する';
+
+  @override
+  String get poachPromisedLabel => '出場機会を約束済み';
+
+  @override
+  String get poachCallUpsButton => '招集画面を開く';
+
+  @override
+  String get poachPromiseHint => '約束すれば公式戦をもう1試合待ってくれますが、約束を破ると離れる可能性が高まります。';
+
+  @override
   String playerIntlRetired(int year) {
     return '代表引退（$year年）';
   }

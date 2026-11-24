@@ -13012,6 +13012,71 @@ class AppLocalizationsHr extends AppLocalizations {
   }
 
   @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival pokušava privući igrača $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return 'Reprezentacija $rival obratila se igraču $name ($age, $position) s ponudom da promijeni reprezentaciju. Još nije odigrao natjecateljsku utakmicu za reprezentaciju $nation, pa još uvijek može promijeniti. Daj mu minute u jednoj od naših sljedećih $count natjecateljskih utakmica i zauvijek će biti vezan uz nas. U suprotnom bi mogao prihvatiti njihovu ponudu.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival ostaje bez igrača $name';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name je odigrao natjecateljsku utakmicu za reprezentaciju $nation, pa ga reprezentacija $rival više ne može pozvati. Zauvijek je vezan uz nas.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name odbija ponudu reprezentacije $rival';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name još nema natjecateljski nastup za reprezentaciju $nation, ali je reprezentaciji $rival poručio da želi čekati svoju priliku kod nas.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name prelazi u reprezentaciju $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name je prihvatio ponudu reprezentacije $rival i od sada igra za nju. Bez natjecateljskog nastupa za reprezentaciju $nation ništa ga nije moglo zadržati.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name je prihvatio ponudu reprezentacije $rival. Obećane su mu minute u reprezentaciji $nation koje nikad nisu došle, i od sada igra za reprezentaciju $rival.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Obećaj mu minute';
+
+  @override
+  String get poachPromisedLabel => 'Minute obećane';
+
+  @override
+  String get poachCallUpsButton => 'Otvori pozive';
+
+  @override
+  String get poachPromiseHint =>
+      'Obećanje ga tjera da pričeka još jednu natjecateljsku utakmicu, ali ako ga prekršiš, vjerojatnije će otići.';
+
+  @override
   String playerIntlRetired(int year) {
     return 'Povukao se iz reprezentacije, $year';
   }

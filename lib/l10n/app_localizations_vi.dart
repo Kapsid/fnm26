@@ -12556,6 +12556,71 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival đang tìm cách chiêu mộ $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rival đã tiếp cận $name ($age, $position) để đổi màu áo đội tuyển. Anh ấy chưa chơi trận chính thức nào cho $nation, nên vẫn có thể đổi. Hãy cho anh ấy ra sân trong một trong $count trận chính thức tới của chúng ta và anh ấy sẽ gắn bó với chúng ta mãi mãi. Nếu không, anh ấy có thể nhận lời đề nghị của họ.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival lỡ mất $name';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name đã chơi một trận chính thức cho $nation, nên $rival không thể triệu tập anh ấy nữa. Anh ấy gắn bó với chúng ta mãi mãi.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name từ chối $rival';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name vẫn chưa có trận chính thức nào cho $nation, nhưng anh ấy đã nói với $rival rằng muốn chờ cơ hội ở chỗ chúng ta.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name chuyển sang $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name đã nhận lời đề nghị của $rival và từ nay sẽ chơi cho họ. Không có trận chính thức nào cho $nation, không gì có thể giữ chân anh ấy.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name đã nhận lời đề nghị của $rival. Anh ấy từng được hứa thời gian thi đấu cho $nation nhưng chưa bao giờ có, và từ nay sẽ chơi cho $rival.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Hứa cho anh ấy ra sân';
+
+  @override
+  String get poachPromisedLabel => 'Đã hứa cho ra sân';
+
+  @override
+  String get poachCallUpsButton => 'Mở danh sách triệu tập';
+
+  @override
+  String get poachPromiseHint =>
+      'Lời hứa khiến anh ấy chờ thêm một trận chính thức, nhưng nếu thất hứa, anh ấy dễ ra đi hơn.';
+
+  @override
   String playerIntlRetired(int year) {
     return 'Giã từ đội tuyển, $year';
   }

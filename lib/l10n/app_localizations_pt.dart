@@ -12781,6 +12781,71 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival tenta recrutar $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rival abordou $name ($age, $position) para mudar de seleção. Ele ainda não jogou nenhuma partida oficial por $nation, por isso ainda pode mudar. Dê a ele minutos numa das nossas próximas $count partidas oficiais e ele ficará ligado a nós para sempre. Caso contrário, pode aceitar a oferta deles.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival perde $name';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name já jogou uma partida oficial por $nation, por isso $rival não pode mais convocá-lo. Ele está ligado a nós para sempre.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name recusa $rival';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name continua sem partidas oficiais por $nation, mas disse a $rival que quer esperar pela sua oportunidade conosco.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name troca para $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name aceitou a oferta de $rival e passa a jogar por eles. Sem uma partida oficial por $nation, nada podia segurá-lo.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name aceitou a oferta de $rival. Prometeram a ele minutos por $nation que nunca chegaram, e ele passa a jogar por $rival.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Prometer minutos a ele';
+
+  @override
+  String get poachPromisedLabel => 'Minutos prometidos';
+
+  @override
+  String get poachCallUpsButton => 'Abrir convocações';
+
+  @override
+  String get poachPromiseHint =>
+      'Uma promessa faz com que ele espere mais uma partida oficial, mas, se for quebrada, ele terá mais vontade de sair.';
+
+  @override
   String playerIntlRetired(int year) {
     return 'Aposentado da seleção, $year';
   }

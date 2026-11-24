@@ -19322,6 +19322,91 @@ abstract class AppLocalizations {
   /// **'{name} ({nation}) is available for selection again, at {age}.'**
   String msgIntlComebackNewsBody(String name, String nation, int age);
 
+  /// Inbox: another nation's federation is trying to recruit one of the manager's players who is not yet tied to his nation.
+  ///
+  /// In en, this message translates to:
+  /// **'{rival} are trying to recruit {name}'**
+  String msgPoachTitle(String rival, String name);
+
+  /// Inbox body: a rival federation approached the manager's uncapped player; minutes in one of the next few competitive (non-friendly) matches tie him to the manager's nation.
+  ///
+  /// In en, this message translates to:
+  /// **'{rival} have approached {name} ({age}, {position}) about switching allegiance. He has not played a competitive match for {nation} yet, so he is still free to change. Give him minutes in one of our next {count} competitive matches and he is tied to us for good. If not, he may accept their offer.'**
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  );
+
+  /// Inbox: the approached player got competitive minutes in time and is now tied to the manager's nation.
+  ///
+  /// In en, this message translates to:
+  /// **'{rival} miss out on {name}'**
+  String msgPoachTiedTitle(String name, String rival);
+
+  /// Inbox body: the approached player is now tied to the manager's nation.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has played a competitive match for {nation}, so {rival} can no longer pick him. He is tied to us for good.'**
+  String msgPoachTiedBody(String name, String rival, String nation);
+
+  /// Inbox: the deadline passed without a competitive cap, but the player turned the rival down.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} turns down {rival}'**
+  String msgPoachStayedTitle(String name, String rival);
+
+  /// Inbox body: the player stays although still without a competitive cap.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} still has no competitive cap for {nation}, but he has told {rival} he wants to wait for his chance with us.'**
+  String msgPoachStayedBody(String name, String rival, String nation);
+
+  /// Inbox: the player switched allegiance to the rival nation.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} switches to {rival}'**
+  String msgPoachSwitchedTitle(String name, String rival);
+
+  /// Inbox body: the player switched allegiance because he had no competitive cap for the manager's nation.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has accepted the offer from {rival} and will play for them from now on. Without a competitive cap for {nation}, nothing could hold him.'**
+  String msgPoachSwitchedBody(String name, String rival, String nation);
+
+  /// Inbox body: the player switched allegiance after a promise of minutes was broken.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has accepted the offer from {rival}. He was promised minutes for {nation} that never came, and he will play for {rival} from now on.'**
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation);
+
+  /// Button in the approach message: promise the player minutes. Short.
+  ///
+  /// In en, this message translates to:
+  /// **'Promise him minutes'**
+  String get poachPromiseButton;
+
+  /// Disabled button label once minutes have been promised. Short.
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes promised'**
+  String get poachPromisedLabel;
+
+  /// Button in the approach message: open the call-up screen. Short.
+  ///
+  /// In en, this message translates to:
+  /// **'Open call-ups'**
+  String get poachCallUpsButton;
+
+  /// Hint under the promise button: a promise buys one more competitive match, but breaking it makes him likelier to leave.
+  ///
+  /// In en, this message translates to:
+  /// **'A promise makes him wait one more competitive match, but he is likelier to leave if it is broken.'**
+  String get poachPromiseHint;
+
   /// Player page: a line under the nation for a player who retired from international football in this save. Short.
   ///
   /// In en, this message translates to:

@@ -361,6 +361,7 @@ class DriftCareerRepository implements CareerRepository {
             playerId: row.playerId,
             sourceNationId: row.sourceNationId,
             cycle: row.cycle,
+            targetNationId: null,
           );
   }
 
@@ -382,17 +383,28 @@ class DriftCareerRepository implements CareerRepository {
   ) async {
     final rows =
         await (_db.select(_db.naturalizedPlayers)..where(
-              (t) => t.careerId.equals(careerId) & t.status.equals('accepted'),
+              (t) =>
+                  t.careerId.equals(careerId) &
+                  (t.status.equals('accepted') |
+                      t.status.like('$poachedStatusPrefix%')),
             ))
             .get();
-    return [
-      for (final r in rows)
-        (
-          playerId: r.playerId,
-          sourceNationId: r.sourceNationId,
-          cycle: r.cycle,
-        ),
-    ];
+    final out = <NaturalizationLink>[];
+    for (final r in rows) {
+      // A player lured away by a rival carries the rival in his status; one
+      // this build cannot read is left out rather than sent to nowhere.
+      final target = r.status == 'accepted'
+          ? null
+          : int.tryParse(r.status.substring(poachedStatusPrefix.length));
+      if (r.status != 'accepted' && target == null) continue;
+      out.add((
+        playerId: r.playerId,
+        sourceNationId: r.sourceNationId,
+        cycle: r.cycle,
+        targetNationId: target,
+      ));
+    }
+    return out;
   }
 
   @override

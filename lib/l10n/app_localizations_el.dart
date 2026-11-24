@@ -12752,6 +12752,71 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival: προσπαθούν να αποκτήσουν τον παίκτη $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return 'Η ομοσπονδία $rival προσέγγισε τον παίκτη $name ($age, $position) για να αλλάξει εθνική ομάδα. Δεν έχει παίξει ακόμη επίσημο αγώνα με την εθνική $nation, οπότε μπορεί ακόμη να αλλάξει. Δώστε του λεπτά σε έναν από τους επόμενους $count επίσημους αγώνες μας και θα δεθεί μαζί μας για πάντα. Αλλιώς, ίσως δεχτεί την πρότασή τους.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival: χάνουν τον παίκτη $name';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return 'Ο παίκτης $name έπαιξε επίσημο αγώνα με την εθνική $nation, οπότε η ομοσπονδία $rival δεν μπορεί πια να τον καλέσει. Είναι δεμένος μαζί μας για πάντα.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return 'Ο παίκτης $name απορρίπτει την ομοσπονδία $rival';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return 'Ο παίκτης $name δεν έχει ακόμη επίσημη συμμετοχή με την εθνική $nation, αλλά είπε στην ομοσπονδία $rival ότι θέλει να περιμένει την ευκαιρία του σε εμάς.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return 'Ο παίκτης $name αλλάζει εθνική: $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return 'Ο παίκτης $name δέχτηκε την πρόταση της ομοσπονδίας $rival και θα αγωνίζεται πλέον για αυτήν. Χωρίς επίσημη συμμετοχή με την εθνική $nation, τίποτα δεν μπορούσε να τον κρατήσει.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return 'Ο παίκτης $name δέχτηκε την πρόταση της ομοσπονδίας $rival. Του είχαν υποσχεθεί λεπτά με την εθνική $nation που δεν ήρθαν ποτέ, και θα αγωνίζεται πλέον για την ομοσπονδία $rival.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Υποσχεθείτε του λεπτά';
+
+  @override
+  String get poachPromisedLabel => 'Υποσχέθηκαν λεπτά';
+
+  @override
+  String get poachCallUpsButton => 'Άνοιγμα κλήσεων';
+
+  @override
+  String get poachPromiseHint =>
+      'Μια υπόσχεση τον κάνει να περιμένει έναν ακόμη επίσημο αγώνα, αλλά αν αθετηθεί είναι πιο πιθανό να φύγει.';
+
+  @override
   String playerIntlRetired(int year) {
     return 'Αποσύρθηκε από την εθνική, $year';
   }

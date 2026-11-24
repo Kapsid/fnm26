@@ -118,8 +118,7 @@ Future<List<NaturalizationLink>> naturalizationsInto(
   final stints = await repo.stints(career.id);
   return [
     for (final link in links)
-      if (Stints.nationAt(stints, link.cycle, career.nationId) == nationId)
-        link,
+      if (naturalizedNationOf(link, stints, career.nationId) == nationId) link,
   ];
 }
 

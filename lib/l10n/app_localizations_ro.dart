@@ -13065,6 +13065,71 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival încearcă să-l recruteze pe $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rival l-a abordat pe $name ($age, $position) pentru a schimba echipa națională. Nu a jucat încă niciun meci oficial pentru $nation, așa că încă poate schimba. Dă-i minute într-unul dintre următoarele noastre $count meciuri oficiale și va rămâne legat de noi pentru totdeauna. Altfel, ar putea accepta oferta lor.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival ratează transferul lui $name';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name a jucat un meci oficial pentru $nation, așa că $rival nu-l mai poate convoca. Este legat de noi pentru totdeauna.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name spune nu ofertei venite de la $rival';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name încă nu are niciun meci oficial pentru $nation, dar le-a transmis celor de la $rival că vrea să-și aștepte șansa la noi.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name trece la $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name a acceptat oferta celor de la $rival și va juca pentru ei de acum înainte. Fără un meci oficial pentru $nation, nimic nu-l putea reține.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name a acceptat oferta celor de la $rival. I s-au promis minute pentru $nation care n-au mai venit, iar de acum înainte va juca pentru $rival.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Promite-i minute';
+
+  @override
+  String get poachPromisedLabel => 'Minute promise';
+
+  @override
+  String get poachCallUpsButton => 'Deschide convocările';
+
+  @override
+  String get poachPromiseHint =>
+      'O promisiune îl face să mai aștepte un meci oficial, dar dacă este încălcată, e mai probabil să plece.';
+
+  @override
   String playerIntlRetired(int year) {
     return 'Retras de la națională, $year';
   }

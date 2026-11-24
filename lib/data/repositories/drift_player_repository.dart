@@ -26,6 +26,8 @@ import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/enums.dart' show Confederation, YouthLevel;
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
+import 'package:fnm/domain/repositories/career_repository.dart'
+    show poachedStatusPrefix;
 import 'package:fnm/domain/repositories/player_repository.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/manager/stints.dart';
@@ -761,10 +763,16 @@ class DriftPlayerRepository implements PlayerRepository {
               (t) =>
                   t.careerId.equals(careerId) &
                   t.playerId.equals(playerId) &
-                  t.status.equals('accepted'),
+                  (t.status.equals('accepted') |
+                      t.status.like('$poachedStatusPrefix%')),
             ))
             .getSingleOrNull();
     if (link == null) return null;
+    // Lured away by a rival federation: he plays for the rival, whoever the
+    // manager has been in charge of.
+    if (link.status.startsWith(poachedStatusPrefix)) {
+      return int.tryParse(link.status.substring(poachedStatusPrefix.length));
+    }
     final career = await (_db.select(
       _db.careers,
     )..where((t) => t.id.equals(careerId))).getSingleOrNull();

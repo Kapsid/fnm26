@@ -4,6 +4,7 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/manager/manager_skills.dart';
+import 'package:fnm/domain/services/manager/stints.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/services/press/conference.dart';
 import 'package:fnm/domain/services/press/statement.dart';
@@ -29,11 +30,32 @@ typedef PressAnswerRow = ({
 
 /// A naturalised-player link: a foreign player's original id, the nation they
 /// came from, and the cycle the offer was made.
+///
+/// [targetNationId] is the nation he switched to when that was not the
+/// manager's: a player of the manager's pool lured away by a rival federation
+/// (see `Poaching`). Null for every ordinary naturalisation, which went to
+/// the nation the manager was in charge of in [cycle].
 typedef NaturalizationLink = ({
   int playerId,
   int sourceNationId,
   int cycle,
+  int? targetNationId,
 });
+
+/// The status a naturalisation row carries when a rival federation lured the
+/// player away from the manager's nation: this prefix and the rival's id. Kept
+/// in the existing status column, so no schema change is involved.
+const String poachedStatusPrefix = 'poached:';
+
+/// The nation [link]'s player plays for now: the rival that lured him, or the
+/// nation the manager was in charge of in the offer's cycle ([stints], with
+/// [currentNationId] for a save that has none).
+int naturalizedNationOf(
+  NaturalizationLink link,
+  Map<int, int> stints,
+  int currentNationId,
+) =>
+    link.targetNationId ?? Stints.nationAt(stints, link.cycle, currentNationId);
 
 /// Persists and retrieves save games.
 abstract interface class CareerRepository {
@@ -159,7 +181,8 @@ abstract interface class CareerRepository {
   );
 
   /// Every accepted naturalised player's link (playerId + source nation), so
-  /// the pool can graft them into the manager's nation.
+  /// the pool can graft them into the manager's nation. Players lured away by
+  /// a rival federation are among them, with their `targetNationId`.
   Future<List<NaturalizationLink>> acceptedNaturalizations(int careerId);
 
   /// The saved Nations Cup league of each nation (nationId → tier), empty until

@@ -12797,6 +12797,71 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival wirbt um $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rival hat $name ($age, $position) einen Verbandswechsel angeboten. Er hat noch kein Pflichtspiel für $nation bestritten und darf daher noch wechseln. Setzen Sie ihn in einem unserer nächsten $count Pflichtspiele ein, dann ist er für immer an uns gebunden. Andernfalls nimmt er das Angebot vielleicht an.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival geht bei $name leer aus';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name hat ein Pflichtspiel für $nation bestritten, $rival kann ihn nicht mehr berufen. Er ist für immer an uns gebunden.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name sagt $rival ab';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name hat noch immer kein Pflichtspiel für $nation, hat $rival aber gesagt, dass er auf seine Chance bei uns warten will.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name wechselt zu $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name hat das Angebot von $rival angenommen und spielt ab sofort für sie. Ohne Pflichtspiel für $nation konnte ihn nichts halten.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name hat das Angebot von $rival angenommen. Ihm wurden Einsätze für $nation versprochen, die nie kamen, und er spielt ab sofort für $rival.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Einsatzzeit versprechen';
+
+  @override
+  String get poachPromisedLabel => 'Einsatzzeit versprochen';
+
+  @override
+  String get poachCallUpsButton => 'Kader öffnen';
+
+  @override
+  String get poachPromiseHint =>
+      'Ein Versprechen lässt ihn ein Pflichtspiel länger warten, aber bricht man es, geht er eher.';
+
+  @override
   String playerIntlRetired(int year) {
     return 'Rücktritt aus der Nationalmannschaft, $year';
   }

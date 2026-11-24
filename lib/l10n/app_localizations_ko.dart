@@ -12258,6 +12258,71 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival이(가) $name 영입을 노리고 있습니다';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rival이(가) $name($age세, $position)에게 대표팀 변경을 제안했습니다. 그는 아직 $nation 소속으로 공식 경기에 나선 적이 없어 여전히 바꿀 수 있습니다. 다음 $count번의 공식 경기 중 한 경기에서 출전 시간을 주면 그는 영원히 우리 선수가 됩니다. 그렇지 않으면 그들의 제안을 받아들일 수도 있습니다.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival, $name 영입 실패';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name이(가) $nation 소속으로 공식 경기에 출전해 $rival은(는) 더 이상 그를 소집할 수 없습니다. 그는 영원히 우리 선수입니다.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name, $rival의 제안 거절';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name은(는) 아직 $nation 소속 공식 경기 출전이 없지만, 우리 팀에서 기회를 기다리겠다고 $rival에 전했습니다.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name, $rival(으)로 대표팀 변경';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name이(가) $rival의 제안을 받아들여 앞으로 그쪽에서 뛰게 됩니다. $nation 소속 공식 경기 출전이 없었기에 그를 붙잡을 방법이 없었습니다.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name이(가) $rival의 제안을 받아들였습니다. $nation에서 출전 시간을 약속받았지만 끝내 지켜지지 않았고, 앞으로 $rival에서 뛰게 됩니다.';
+  }
+
+  @override
+  String get poachPromiseButton => '출전 시간 약속하기';
+
+  @override
+  String get poachPromisedLabel => '출전 시간 약속함';
+
+  @override
+  String get poachCallUpsButton => '소집 명단 열기';
+
+  @override
+  String get poachPromiseHint =>
+      '약속하면 공식 경기 한 경기를 더 기다리지만, 약속을 어기면 떠날 가능성이 커집니다.';
+
+  @override
   String playerIntlRetired(int year) {
     return '국가대표 은퇴, $year년';
   }

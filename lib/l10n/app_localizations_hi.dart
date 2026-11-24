@@ -12608,6 +12608,71 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival $name को अपनी ओर खींचने की कोशिश कर रहा है';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rival ने $name ($age, $position) से राष्ट्रीय टीम बदलने के लिए संपर्क किया है। उसने अभी तक $nation के लिए कोई प्रतिस्पर्धी मैच नहीं खेला है, इसलिए वह अब भी बदल सकता है। हमारे अगले $count प्रतिस्पर्धी मैचों में से किसी एक में उसे मिनट दें, तो वह हमेशा के लिए हमसे बंध जाएगा। नहीं तो वह उनका प्रस्ताव मान सकता है।';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival के हाथ से $name निकल गया';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name ने $nation के लिए प्रतिस्पर्धी मैच खेल लिया है, इसलिए $rival अब उसे नहीं बुला सकता। वह हमेशा के लिए हमसे बंध गया है।';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name ने $rival को ना कहा';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name के पास अब भी $nation के लिए कोई प्रतिस्पर्धी मैच नहीं है, लेकिन उसने $rival से कहा है कि वह हमारे साथ अपने मौके का इंतज़ार करना चाहता है।';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name ने $rival को चुना';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name ने $rival का प्रस्ताव मान लिया है और अब से उनके लिए खेलेगा। $nation के लिए प्रतिस्पर्धी मैच के बिना उसे कोई रोक नहीं सकता था।';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name ने $rival का प्रस्ताव मान लिया है। उससे $nation के लिए मिनटों का वादा किया गया था जो कभी नहीं मिले, और अब से वह $rival के लिए खेलेगा।';
+  }
+
+  @override
+  String get poachPromiseButton => 'उसे मिनटों का वादा करें';
+
+  @override
+  String get poachPromisedLabel => 'मिनटों का वादा किया गया';
+
+  @override
+  String get poachCallUpsButton => 'कॉल-अप खोलें';
+
+  @override
+  String get poachPromiseHint =>
+      'वादा उसे एक और प्रतिस्पर्धी मैच तक रुकने देता है, लेकिन वादा टूटने पर उसके जाने की संभावना बढ़ जाती है।';
+
+  @override
   String playerIntlRetired(int year) {
     return 'अंतरराष्ट्रीय फ़ुटबॉल से संन्यास, $year';
   }

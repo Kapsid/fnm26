@@ -12599,6 +12599,71 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival, $name için devrede';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rival, $name ($age, $position) ile milli takım değiştirmesi için görüştü. Henüz $nation formasıyla resmi maça çıkmadı, bu yüzden hâlâ değiştirebilir. Önümüzdeki $count resmi maçımızdan birinde ona süre verin, sonsuza dek bize bağlanır. Aksi halde onların teklifini kabul edebilir.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival, $name yarışını kaybetti';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name, $nation formasıyla resmi maça çıktı, artık $rival onu çağıramaz. Sonsuza dek bize bağlı.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name, $rival teklifini reddetti';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name hâlâ $nation formasıyla resmi maça çıkmadı, ama $rival tarafına bizde şansını beklemek istediğini söyledi.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name, $rival formasını seçti';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name, $rival teklifini kabul etti ve artık onlar için oynayacak. $nation formasıyla resmi maçı olmadığından onu hiçbir şey tutamadı.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name, $rival teklifini kabul etti. Ona $nation formasıyla hiç gelmeyen süreler sözü verilmişti ve artık $rival için oynayacak.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Ona süre sözü ver';
+
+  @override
+  String get poachPromisedLabel => 'Süre sözü verildi';
+
+  @override
+  String get poachCallUpsButton => 'Kadroyu aç';
+
+  @override
+  String get poachPromiseHint =>
+      'Söz, onu bir resmi maç daha bekletir, ama tutulmazsa ayrılma ihtimali artar.';
+
+  @override
   String playerIntlRetired(int year) {
     return 'Milli takımı bıraktı, $year';
   }

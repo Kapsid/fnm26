@@ -12691,6 +12691,71 @@ class AppLocalizationsDa extends AppLocalizations {
   }
 
   @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival forsøger at hente $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rival har kontaktet $name ($age, $position) om at skifte landshold. Han har endnu ikke spillet en tællende kamp for $nation, så han kan stadig skifte. Giv ham spilletid i en af vores næste $count tællende kampe, så er han bundet til os for altid. Ellers kan han sige ja til deres tilbud.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival går glip af $name';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name har spillet en tællende kamp for $nation, så $rival kan ikke længere udtage ham. Han er bundet til os for altid.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name siger nej til $rival';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name har stadig ingen tællende kamp for $nation, men han har sagt til $rival, at han vil vente på sin chance hos os.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name skifter til $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name har sagt ja til tilbuddet fra $rival og spiller for dem fra nu af. Uden en tællende kamp for $nation kunne intet holde på ham.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name har sagt ja til tilbuddet fra $rival. Han blev lovet spilletid for $nation, som aldrig kom, og han spiller for $rival fra nu af.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Lov ham spilletid';
+
+  @override
+  String get poachPromisedLabel => 'Spilletid lovet';
+
+  @override
+  String get poachCallUpsButton => 'Åbn udtagelsen';
+
+  @override
+  String get poachPromiseHint =>
+      'Et løfte får ham til at vente én tællende kamp mere, men brydes det, er han mere tilbøjelig til at rejse.';
+
+  @override
   String playerIntlRetired(int year) {
     return 'Stoppede på landsholdet, $year';
   }
