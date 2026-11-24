@@ -18401,11 +18401,11 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get campaignTexasTwist =>
-      'Cộng hòa Texas thế chỗ Anguilla ở Bắc Mỹ, trong sáu chu kỳ';
+      'Cộng hòa Texas thế chỗ Anguilla ở Bắc Mỹ, trong năm chu kỳ';
 
   @override
   String get campaignTexasIntro =>
-      'Texas từng là một nước cộng hòa độc lập trong chín năm trước khi gia nhập Hoa Kỳ, và ngày nay đào tạo nhiều cầu thủ hơn phần lớn các quốc gia: ba học viện của giải hạng cao nhất, một trong những nền bóng đá trẻ rộng nhất thế giới và cầu thủ Texas ở mọi giải đấu. Trong thế giới này, Cộng hòa Texas thi đấu cho chính mình, thế chỗ Anguilla ở Bắc Mỹ. Mọi cầu thủ đều sinh ra ở Texas, tại Houston, Dallas, San Antonio, Austin hay El Paso, và đội hình là một đội tầm trung của khu vực: đủ giỏi để gây khó dễ cho bất kỳ ai, nhưng chưa đủ để khiến người khác phải e sợ. Bạn có sáu chu kỳ để giành vé dự Cúp Bắc Mỹ, rồi Giải vô địch thế giới và, nếu dám mơ, vô địch một trong hai giải.';
+      'Texas từng là một nước cộng hòa độc lập trong chín năm trước khi gia nhập Hoa Kỳ, và ngày nay đào tạo nhiều cầu thủ hơn phần lớn các quốc gia: ba học viện của giải hạng cao nhất, một trong những nền bóng đá trẻ rộng nhất thế giới và cầu thủ Texas ở mọi giải đấu. Trong thế giới này, Cộng hòa Texas thi đấu cho chính mình, thế chỗ Anguilla ở Bắc Mỹ. Mọi cầu thủ đều sinh ra ở Texas, tại Houston, Dallas, San Antonio, Austin hay El Paso, và đội hình là một đội tầm trung của khu vực: đủ giỏi để gây khó dễ cho bất kỳ ai, nhưng chưa đủ để khiến người khác phải e sợ. Bạn có năm chu kỳ để giành vé dự Cúp Bắc Mỹ, rồi Giải vô địch thế giới và, nếu dám mơ, vô địch một trong hai giải.';
 
   @override
   String get campaignTexasGoal => 'Giành vé dự một kỳ Cúp Bắc Mỹ';

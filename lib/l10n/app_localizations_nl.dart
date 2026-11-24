@@ -18650,11 +18650,11 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get campaignTexasTwist =>
-      'De Republiek Texas neemt de plaats van Anguilla in Noord-Amerika in, voor zes cycli';
+      'De Republiek Texas neemt de plaats van Anguilla in Noord-Amerika in, voor vijf cycli';
 
   @override
   String get campaignTexasIntro =>
-      'Texas was negen jaar lang een zelfstandige republiek voordat het zich bij de Verenigde Staten aansloot, en vandaag levert het meer voetballers af dan de meeste landen: drie academies uit de hoogste divisie, een van de breedste jeugdopleidingen ter wereld en Texanen in elke competitie. In deze wereld speelt de Republiek Texas voor zichzelf, op de plaats van Anguilla in Noord-Amerika. Elke speler is in Texas geboren, in Houston, Dallas, San Antonio, Austin of El Paso, en de selectie is een middenmoter in de regio: goed genoeg om iedereen dwars te zitten, maar nog niet goed genoeg om gevreesd te worden. Je hebt zes cycli om de Beker van Noord-Amerika te halen, daarna een Wereldkampioenschap en, als je durft te dromen, er een te winnen.';
+      'Texas was negen jaar lang een zelfstandige republiek voordat het zich bij de Verenigde Staten aansloot, en vandaag levert het meer voetballers af dan de meeste landen: drie academies uit de hoogste divisie, een van de breedste jeugdopleidingen ter wereld en Texanen in elke competitie. In deze wereld speelt de Republiek Texas voor zichzelf, op de plaats van Anguilla in Noord-Amerika. Elke speler is in Texas geboren, in Houston, Dallas, San Antonio, Austin of El Paso, en de selectie is een middenmoter in de regio: goed genoeg om iedereen dwars te zitten, maar nog niet goed genoeg om gevreesd te worden. Je hebt vijf cycli om de Beker van Noord-Amerika te halen, daarna een Wereldkampioenschap en, als je durft te dromen, er een te winnen.';
 
   @override
   String get campaignTexasGoal => 'Plaats je voor de Beker van Noord-Amerika';

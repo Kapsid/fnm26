@@ -18728,11 +18728,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get campaignTexasTwist =>
-      'La République du Texas prend la place d’Anguilla en Amérique du Nord, pour six cycles';
+      'La République du Texas prend la place d’Anguilla en Amérique du Nord, pour cinq cycles';
 
   @override
   String get campaignTexasIntro =>
-      'Le Texas a été une république indépendante pendant neuf ans avant de rejoindre les États-Unis, et il forme aujourd’hui plus de footballeurs que la plupart des nations : trois académies de première division, l’un des plus vastes viviers de jeunes au monde et des Texans dans tous les championnats. Dans ce monde, la République du Texas joue pour elle-même, à la place d’Anguilla en Amérique du Nord. Chaque joueur est né au Texas, à Houston, Dallas, San Antonio, Austin ou El Paso, et l’effectif est une équipe de milieu de tableau dans la région : assez forte pour inquiéter n’importe qui, pas encore assez pour être crainte. Vous avez six cycles pour atteindre une Coupe d’Amérique du Nord, puis un Championnat du monde et, si vous osez rêver, en remporter un.';
+      'Le Texas a été une république indépendante pendant neuf ans avant de rejoindre les États-Unis, et il forme aujourd’hui plus de footballeurs que la plupart des nations : trois académies de première division, l’un des plus vastes viviers de jeunes au monde et des Texans dans tous les championnats. Dans ce monde, la République du Texas joue pour elle-même, à la place d’Anguilla en Amérique du Nord. Chaque joueur est né au Texas, à Houston, Dallas, San Antonio, Austin ou El Paso, et l’effectif est une équipe de milieu de tableau dans la région : assez forte pour inquiéter n’importe qui, pas encore assez pour être crainte. Vous avez cinq cycles pour atteindre une Coupe d’Amérique du Nord, puis un Championnat du monde et, si vous osez rêver, en remporter un.';
 
   @override
   String get campaignTexasGoal =>

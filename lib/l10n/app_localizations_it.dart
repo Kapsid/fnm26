@@ -18643,11 +18643,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get campaignTexasTwist =>
-      'La Repubblica del Texas prende il posto di Anguilla in Nord America, per sei cicli';
+      'La Repubblica del Texas prende il posto di Anguilla in Nord America, per cinque cicli';
 
   @override
   String get campaignTexasIntro =>
-      'Il Texas è stato una repubblica indipendente per nove anni prima di entrare negli Stati Uniti, e oggi forma più calciatori della maggior parte delle nazioni: tre accademie di massima serie, uno dei vivai giovanili più ampi al mondo e texani in ogni campionato. In questo mondo la Repubblica del Texas gioca per sé, al posto di Anguilla in Nord America. Ogni giocatore è nato in Texas, a Houston, Dallas, San Antonio, Austin o El Paso, e la rosa è una squadra di metà classifica della regione: abbastanza forte da mettere in difficoltà chiunque, non ancora abbastanza da far paura. Hai sei cicli per arrivare a una Coppa del Nord America, poi a un Campionato del mondo e, se osi sognare, vincerne uno.';
+      'Il Texas è stato una repubblica indipendente per nove anni prima di entrare negli Stati Uniti, e oggi forma più calciatori della maggior parte delle nazioni: tre accademie di massima serie, uno dei vivai giovanili più ampi al mondo e texani in ogni campionato. In questo mondo la Repubblica del Texas gioca per sé, al posto di Anguilla in Nord America. Ogni giocatore è nato in Texas, a Houston, Dallas, San Antonio, Austin o El Paso, e la rosa è una squadra di metà classifica della regione: abbastanza forte da mettere in difficoltà chiunque, non ancora abbastanza da far paura. Hai cinque cicli per arrivare a una Coppa del Nord America, poi a un Campionato del mondo e, se osi sognare, vincerne uno.';
 
   @override
   String get campaignTexasGoal => 'Qualificarsi per una Coppa del Nord America';

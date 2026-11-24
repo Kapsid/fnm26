@@ -355,19 +355,19 @@ abstract final class Campaigns {
   );
 
   /// The Lone Star: the Republic of Texas, a nation the world does not
-  /// have, takes Anguilla's place in North America for six cycles. Built
+  /// have, takes Anguilla's place in North America for five cycles. Built
   /// the way The Three Legs was: its own stored pool of Texas-born players,
   /// the same youth pyramid, newgens and aging as any nation's. Unlike the
   /// minnows' runs it does not start at the bottom: a squad of Texas-born
   /// professionals is a mid-strength side, sixth in North America (see
-  /// `DormantNations.texas`), so the century becomes six cycles, enough for
+  /// `DormantNations.texas`), so the century becomes five cycles, enough for
   /// one generation to grow up and the next to arrive. Pro, and a settled
   /// run may be moved into the saves (one nation swapped for another). The
   /// stars are a North America Cup, a World Championship, then winning
   /// either. The United States keep their squad: Czechoslovakia's donors were
   /// nations taken out of the world, and the stored players carry no
   /// birthplace to tell a Texan from anyone else. Seed 221 keeps Texas from
-  /// hosting either championship in all six cycles (216, the first searched,
+  /// hosting either championship in all five cycles (216, the first searched,
   /// made it the United States' co-host in the third). As a top seed of its
   /// qualifying draw it heads a group of its own and does not meet the
   /// United States there (campaign_seeds_test.dart). Its strength was not
@@ -378,7 +378,7 @@ abstract final class Campaigns {
     nationId: 216, // DormantNations.texasId
     dormantNationId: 216,
     goal: CampaignGoal.qualifyBothThenTitle,
-    cycles: 6,
+    cycles: 5,
     needsPro: true,
     difficulty: CampaignDifficulty.medium,
     rngSeed: 221,

@@ -208,7 +208,7 @@ void main() {
     expect(Campaigns.byId('czechoslovakia'), def);
   });
 
-  test('The Lone Star: Pro, six cycles, can be continued, its dormant world '
+  test('The Lone Star: Pro, five cycles, can be continued, its dormant world '
       "in Anguilla's place, the United States untouched", () {
     const def = Campaigns.texas;
     expect(def.nationId, 216);
@@ -220,7 +220,7 @@ void main() {
     expect(def.withBelarus, isFalse);
     expect(def.donorNationIds, isEmpty);
     expect(def.donorNationId, isNull);
-    expect(def.cycles, 6);
+    expect(def.cycles, 5);
     expect(def.needsPro, isTrue);
     expect(def.canContinue, isTrue);
     expect(def.goal, CampaignGoal.qualifyBothThenTitle);

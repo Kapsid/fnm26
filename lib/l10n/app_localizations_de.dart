@@ -18696,11 +18696,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get campaignTexasTwist =>
-      'Die Republik Texas nimmt Anguillas Platz in Nordamerika ein, für sechs Zyklen';
+      'Die Republik Texas nimmt Anguillas Platz in Nordamerika ein, für fünf Zyklen';
 
   @override
   String get campaignTexasIntro =>
-      'Texas war neun Jahre lang eine eigenständige Republik, bevor es den Vereinigten Staaten beitrat, und heute bringt es mehr Fußballer hervor als die meisten Nationen: drei Akademien aus der höchsten Liga, einen der breitesten Nachwuchsbereiche der Welt und Texaner in jeder Liga. In dieser Welt spielt die Republik Texas für sich selbst, auf Anguillas Platz in Nordamerika. Jeder Spieler ist in Texas geboren, in Houston, Dallas, San Antonio, Austin oder El Paso, und der Kader gehört zum Mittelfeld der Region: gut genug, um jeden zu ärgern, aber noch nicht gut genug, um gefürchtet zu werden. Sie haben sechs Zyklen, um einen Nordamerika-Pokal zu erreichen, dann eine Weltmeisterschaft und, wenn Sie zu träumen wagen, einen der beiden Titel zu gewinnen.';
+      'Texas war neun Jahre lang eine eigenständige Republik, bevor es den Vereinigten Staaten beitrat, und heute bringt es mehr Fußballer hervor als die meisten Nationen: drei Akademien aus der höchsten Liga, einen der breitesten Nachwuchsbereiche der Welt und Texaner in jeder Liga. In dieser Welt spielt die Republik Texas für sich selbst, auf Anguillas Platz in Nordamerika. Jeder Spieler ist in Texas geboren, in Houston, Dallas, San Antonio, Austin oder El Paso, und der Kader gehört zum Mittelfeld der Region: gut genug, um jeden zu ärgern, aber noch nicht gut genug, um gefürchtet zu werden. Sie haben fünf Zyklen, um einen Nordamerika-Pokal zu erreichen, dann eine Weltmeisterschaft und, wenn Sie zu träumen wagen, einen der beiden Titel zu gewinnen.';
 
   @override
   String get campaignTexasGoal => 'Für einen Nordamerika-Pokal qualifizieren';

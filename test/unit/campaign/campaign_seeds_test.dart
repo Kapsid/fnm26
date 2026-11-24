@@ -549,9 +549,9 @@ void main() {
     final world = campaignWorld(def, nations);
 
     test('seed 221 keeps Texas from hosting either championship in all '
-        'six cycles of its run', () {
+        'five cycles of its run', () {
       expect(def.rngSeed, 221);
-      expect(def.cycles, 6);
+      expect(def.cycles, 5);
       expect(def.withBelarus, isFalse);
       for (var cycle = 0; cycle < def.cycles; cycle++) {
         final world0 = WorldCupHosts.hostsFor(

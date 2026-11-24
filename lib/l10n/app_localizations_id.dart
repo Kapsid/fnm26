@@ -18459,11 +18459,11 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get campaignTexasTwist =>
-      'Republik Texas menggantikan Anguilla di Amerika Utara, selama enam siklus';
+      'Republik Texas menggantikan Anguilla di Amerika Utara, selama lima siklus';
 
   @override
   String get campaignTexasIntro =>
-      'Texas pernah menjadi republik merdeka selama sembilan tahun sebelum bergabung dengan Amerika Serikat, dan kini menghasilkan lebih banyak pemain sepak bola daripada kebanyakan negara: tiga akademi klub kasta tertinggi, salah satu pembinaan usia muda terluas di dunia, dan pemain Texas di setiap liga. Di dunia ini Republik Texas bermain untuk dirinya sendiri, menggantikan tempat Anguilla di Amerika Utara. Setiap pemain lahir di Texas, di Houston, Dallas, San Antonio, Austin, atau El Paso, dan skuadnya adalah tim papan tengah di kawasan ini: cukup bagus untuk merepotkan siapa pun, tetapi belum cukup untuk ditakuti. Anda punya enam siklus untuk lolos ke Piala Amerika Utara, lalu ke Kejuaraan Dunia, dan, jika berani bermimpi, menjuarai salah satunya.';
+      'Texas pernah menjadi republik merdeka selama sembilan tahun sebelum bergabung dengan Amerika Serikat, dan kini menghasilkan lebih banyak pemain sepak bola daripada kebanyakan negara: tiga akademi klub kasta tertinggi, salah satu pembinaan usia muda terluas di dunia, dan pemain Texas di setiap liga. Di dunia ini Republik Texas bermain untuk dirinya sendiri, menggantikan tempat Anguilla di Amerika Utara. Setiap pemain lahir di Texas, di Houston, Dallas, San Antonio, Austin, atau El Paso, dan skuadnya adalah tim papan tengah di kawasan ini: cukup bagus untuk merepotkan siapa pun, tetapi belum cukup untuk ditakuti. Anda punya lima siklus untuk lolos ke Piala Amerika Utara, lalu ke Kejuaraan Dunia, dan, jika berani bermimpi, menjuarai salah satunya.';
 
   @override
   String get campaignTexasGoal => 'Lolos ke sebuah Piala Amerika Utara';

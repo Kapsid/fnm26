@@ -18893,11 +18893,11 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get campaignTexasTwist =>
-      'Republika Teksas zauzima mjesto Angvile u Sjevernoj Americi, kroz šest ciklusa';
+      'Republika Teksas zauzima mjesto Angvile u Sjevernoj Americi, kroz pet ciklusa';
 
   @override
   String get campaignTexasIntro =>
-      'Teksas je devet godina bio samostalna republika prije nego što se pridružio Sjedinjenim Državama, a danas stvara više nogometaša od većine država: tri akademije iz najviše lige, jednu od najširih omladinskih baza na svijetu i Teksašane u svakoj ligi. U ovom svijetu Republika Teksas igra za sebe, na mjestu Angvile u Sjevernoj Americi. Svaki igrač rođen je u Teksasu, u Houstonu, Dallasu, San Antoniju, Austinu ili El Pasu, a momčad je sredina ljestvice u regiji: dovoljno dobra da namuči svakoga, ali još ne toliko da je se itko boji. Imaš šest ciklusa da stigneš do Kupa Sjeverne Amerike, zatim do Svjetskog prvenstva i, ako se usudiš sanjati, osvojiš jedno od njih.';
+      'Teksas je devet godina bio samostalna republika prije nego što se pridružio Sjedinjenim Državama, a danas stvara više nogometaša od većine država: tri akademije iz najviše lige, jednu od najširih omladinskih baza na svijetu i Teksašane u svakoj ligi. U ovom svijetu Republika Teksas igra za sebe, na mjestu Angvile u Sjevernoj Americi. Svaki igrač rođen je u Teksasu, u Houstonu, Dallasu, San Antoniju, Austinu ili El Pasu, a momčad je sredina ljestvice u regiji: dovoljno dobra da namuči svakoga, ali još ne toliko da je se itko boji. Imaš pet ciklusa da stigneš do Kupa Sjeverne Amerike, zatim do Svjetskog prvenstva i, ako se usudiš sanjati, osvojiš jedno od njih.';
 
   @override
   String get campaignTexasGoal => 'Kvalificiraj se za Kup Sjeverne Amerike';
