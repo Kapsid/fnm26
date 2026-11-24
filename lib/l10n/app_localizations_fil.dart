@@ -5988,6 +5988,18 @@ class AppLocalizationsFil extends AppLocalizations {
   String get tourSharedVenues => 'MGA VENUE';
 
   @override
+  String get tourSharedMapHeading => 'MAPA NG HOST';
+
+  @override
+  String get tourSharedMapFit => 'Ipakita ang buong mapa';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Istadyum ng final';
+
+  @override
+  String get tourSharedMapTapHint => 'I-tap ang marker para sa istadyum';
+
+  @override
   String get tourSharedMascot => 'MASCOT';
 
   @override

@@ -5955,6 +5955,19 @@ class AppLocalizationsHi extends AppLocalizations {
   String get tourSharedVenues => 'स्टेडियम';
 
   @override
+  String get tourSharedMapHeading => 'मेज़बान नक्शा';
+
+  @override
+  String get tourSharedMapFit => 'पूरा नक्शा दिखाएँ';
+
+  @override
+  String get tourSharedMapFinalVenue => 'फ़ाइनल का स्टेडियम';
+
+  @override
+  String get tourSharedMapTapHint =>
+      'स्टेडियम देखने के लिए किसी निशान पर टैप करें';
+
+  @override
   String get tourSharedMascot => 'शुभंकर';
 
   @override

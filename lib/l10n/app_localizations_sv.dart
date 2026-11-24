@@ -6004,6 +6004,18 @@ class AppLocalizationsSv extends AppLocalizations {
   String get tourSharedVenues => 'ARENOR';
 
   @override
+  String get tourSharedMapHeading => 'VÄRDKARTA';
+
+  @override
+  String get tourSharedMapFit => 'Visa hela kartan';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Finalens arena';
+
+  @override
+  String get tourSharedMapTapHint => 'Tryck på en markör för arenan';
+
+  @override
   String get tourSharedMascot => 'MASKOT';
 
   @override

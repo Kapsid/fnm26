@@ -5838,6 +5838,18 @@ class AppLocalizationsJa extends AppLocalizations {
   String get tourSharedVenues => '会場';
 
   @override
+  String get tourSharedMapHeading => '開催国マップ';
+
+  @override
+  String get tourSharedMapFit => '地図全体を表示';
+
+  @override
+  String get tourSharedMapFinalVenue => '決勝の会場';
+
+  @override
+  String get tourSharedMapTapHint => 'マーカーをタップしてスタジアムを表示';
+
+  @override
   String get tourSharedMascot => 'マスコット';
 
   @override

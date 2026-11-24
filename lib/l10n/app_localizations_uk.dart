@@ -6120,6 +6120,19 @@ class AppLocalizationsUk extends AppLocalizations {
   String get tourSharedVenues => 'СТАДІОНИ';
 
   @override
+  String get tourSharedMapHeading => 'МАПА ГОСПОДАРІВ';
+
+  @override
+  String get tourSharedMapFit => 'Показати всю мапу';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Стадіон фіналу';
+
+  @override
+  String get tourSharedMapTapHint =>
+      'Торкніться позначки, щоб побачити стадіон';
+
+  @override
   String get tourSharedMascot => 'ТАЛІСМАН';
 
   @override

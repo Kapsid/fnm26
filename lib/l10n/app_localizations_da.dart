@@ -5993,6 +5993,18 @@ class AppLocalizationsDa extends AppLocalizations {
   String get tourSharedVenues => 'STADIONER';
 
   @override
+  String get tourSharedMapHeading => 'VÆRTSKORT';
+
+  @override
+  String get tourSharedMapFit => 'Vis hele kortet';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Finalens stadion';
+
+  @override
+  String get tourSharedMapTapHint => 'Tryk på en markør for stadion';
+
+  @override
   String get tourSharedMascot => 'MASKOT';
 
   @override

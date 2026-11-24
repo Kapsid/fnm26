@@ -6158,6 +6158,18 @@ class AppLocalizationsHr extends AppLocalizations {
   String get tourSharedVenues => 'STADIONI';
 
   @override
+  String get tourSharedMapHeading => 'KARTA DOMAĆINA';
+
+  @override
+  String get tourSharedMapFit => 'Prikaži cijelu kartu';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Stadion finala';
+
+  @override
+  String get tourSharedMapTapHint => 'Dodirni oznaku za stadion';
+
+  @override
   String get tourSharedMascot => 'MASKOTA';
 
   @override

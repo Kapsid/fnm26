@@ -6026,6 +6026,18 @@ class AppLocalizationsNl extends AppLocalizations {
   String get tourSharedVenues => 'STADIONS';
 
   @override
+  String get tourSharedMapHeading => 'KAART VAN DE GASTLANDEN';
+
+  @override
+  String get tourSharedMapFit => 'Hele kaart tonen';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Stadion van de finale';
+
+  @override
+  String get tourSharedMapTapHint => 'Tik op een markering voor het stadion';
+
+  @override
   String get tourSharedMascot => 'MASCOTTE';
 
   @override

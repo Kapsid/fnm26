@@ -9214,6 +9214,30 @@ abstract class AppLocalizations {
   /// **'VENUES'**
   String get tourSharedVenues;
 
+  /// Tournament summary: heading of the map card showing the host nation(s) and their stadiums.
+  ///
+  /// In en, this message translates to:
+  /// **'HOST MAP'**
+  String get tourSharedMapHeading;
+
+  /// Tournament summary map: tooltip of the button that zooms back out to every host nation.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the whole map'**
+  String get tourSharedMapFit;
+
+  /// Tournament summary map: key for the gold marker, and a tag on the tapped stadium, for the ground that stages the final.
+  ///
+  /// In en, this message translates to:
+  /// **'Venue of the final'**
+  String get tourSharedMapFinalVenue;
+
+  /// Tournament summary map: hint under the map that a marker can be tapped to see the stadium's details.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a marker for the stadium'**
+  String get tourSharedMapTapHint;
+
   /// Label for the edition's official mascot.
   ///
   /// In en, this message translates to:

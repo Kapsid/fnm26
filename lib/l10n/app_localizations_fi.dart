@@ -6045,6 +6045,18 @@ class AppLocalizationsFi extends AppLocalizations {
   String get tourSharedVenues => 'KENTÄT';
 
   @override
+  String get tourSharedMapHeading => 'ISÄNTÄMAIDEN KARTTA';
+
+  @override
+  String get tourSharedMapFit => 'Näytä koko kartta';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Loppuottelun stadion';
+
+  @override
+  String get tourSharedMapTapHint => 'Napauta merkkiä nähdäksesi stadionin';
+
+  @override
   String get tourSharedMascot => 'MAASKOTTI';
 
   @override

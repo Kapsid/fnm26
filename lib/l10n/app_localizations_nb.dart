@@ -6001,6 +6001,18 @@ class AppLocalizationsNb extends AppLocalizations {
   String get tourSharedVenues => 'STADIONER';
 
   @override
+  String get tourSharedMapHeading => 'VERTSKART';
+
+  @override
+  String get tourSharedMapFit => 'Vis hele kartet';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Finalens stadion';
+
+  @override
+  String get tourSharedMapTapHint => 'Trykk på en markør for stadionet';
+
+  @override
   String get tourSharedMascot => 'MASKOT';
 
   @override

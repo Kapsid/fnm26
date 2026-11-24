@@ -9,12 +9,14 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/competition/tournament_identity.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/domain/services/competition/venues.dart';
+import 'package:fnm/features/tournaments/host_map_card.dart';
 import 'package:fnm/features/tournaments/tournament_history.dart';
 import 'package:fnm/features/tournaments/venues_card.dart';
 import 'package:fnm/features/world_pack/trophy_image.dart';
 
-/// The tournament "summary" tab: the host nation(s), their cities and stadiums,
-/// and the edition's mascot and match ball. Shared by the World Cup and the
+/// The tournament "summary" tab: the host nation(s), their cities and stadiums
+/// (listed, and pinned on a map of the hosts), and the edition's mascot and
+/// match ball. Shared by the World Cup and the
 /// continental cups so the host/venue detail lives in one place rather than
 /// crowding the finals groups.
 class TournamentSummaryTab extends StatelessWidget {
@@ -94,13 +96,26 @@ class TournamentSummaryTab extends StatelessWidget {
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         const SizedBox(height: AppSpacing.sm),
-        VenuesCard(
+        // The venues list, with the map of the hosts beside it on a tablet
+        // and under it on a phone.
+        HostMapCard(
           hosts: [
             for (final h in hostIds)
-              (code: code(h), name: name(h), venues: byHost[h] ?? const []),
+              (
+                id: h,
+                code: code(h),
+                name: name(h),
+                venues: byHost[h] ?? const [],
+              ),
           ],
-          mascot: identity?.mascot,
-          ball: identity?.ball,
+          companion: VenuesCard(
+            hosts: [
+              for (final h in hostIds)
+                (code: code(h), name: name(h), venues: byHost[h] ?? const []),
+            ],
+            mascot: identity?.mascot,
+            ball: identity?.ball,
+          ),
         ),
         const SizedBox(height: AppSpacing.xl),
       ],
@@ -120,8 +135,7 @@ class _TrophyBanner extends StatelessWidget {
       child: TrophyImage(
         Trophies.keyForAsset(asset) ?? 'world',
         height: 180,
-        fit: BoxFit.contain,
-        errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+        errorBuilder: (_, _, _) => const SizedBox.shrink(),
       ),
     );
   }

@@ -6171,6 +6171,18 @@ class AppLocalizationsRo extends AppLocalizations {
   String get tourSharedVenues => 'STADIOANE';
 
   @override
+  String get tourSharedMapHeading => 'HARTA GAZDELOR';
+
+  @override
+  String get tourSharedMapFit => 'Arată toată harta';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Stadionul finalei';
+
+  @override
+  String get tourSharedMapTapHint => 'Atinge un marcaj pentru stadion';
+
+  @override
   String get tourSharedMascot => 'MASCOTĂ';
 
   @override

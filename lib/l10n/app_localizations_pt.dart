@@ -6047,6 +6047,18 @@ class AppLocalizationsPt extends AppLocalizations {
   String get tourSharedVenues => 'ESTÁDIOS';
 
   @override
+  String get tourSharedMapHeading => 'MAPA DOS ANFITRIÕES';
+
+  @override
+  String get tourSharedMapFit => 'Mostrar o mapa inteiro';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Estádio da final';
+
+  @override
+  String get tourSharedMapTapHint => 'Toque num marcador para ver o estádio';
+
+  @override
   String get tourSharedMascot => 'MASCOTE';
 
   @override

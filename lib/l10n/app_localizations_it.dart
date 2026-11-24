@@ -6030,6 +6030,18 @@ class AppLocalizationsIt extends AppLocalizations {
   String get tourSharedVenues => 'STADI';
 
   @override
+  String get tourSharedMapHeading => 'MAPPA DEI PAESI OSPITANTI';
+
+  @override
+  String get tourSharedMapFit => 'Mostra tutta la mappa';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Stadio della finale';
+
+  @override
+  String get tourSharedMapTapHint => 'Tocca un segnaposto per vedere lo stadio';
+
+  @override
   String get tourSharedMascot => 'MASCOTTE';
 
   @override

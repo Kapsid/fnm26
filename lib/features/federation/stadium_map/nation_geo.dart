@@ -78,6 +78,79 @@ class NationGeo {
     );
   }
 
+  /// Several nations on one map, as a co-hosted tournament needs: every
+  /// part's outline, cities and insets re-projected into one shared plane
+  /// whose view covers all their views. One part comes back as it is.
+  ///
+  /// An inset that the shared view reaches anyway (Spain's Canaries beside a
+  /// co-hosting Morocco) is folded into the view instead, so no city is drawn
+  /// twice or hidden behind a frame on top of a neighbour. A city named in
+  /// two parts keeps the first part's position.
+  factory NationGeo.merge(List<NationGeo> parts) {
+    assert(parts.isNotEmpty, 'merge needs at least one nation');
+    if (parts.length == 1) return parts.first;
+
+    // Plane to (lon, lat) for one part, and the lon/lat box of a plane rect.
+    Offset lonLat(NationGeo g, Offset p) =>
+        Offset(g.west + p.dx / g.k, g.north - p.dy);
+    Rect degrees(NationGeo g, Rect r) =>
+        Rect.fromPoints(lonLat(g, r.topLeft), lonLat(g, r.bottomRight));
+
+    var box = degrees(parts.first, parts.first.view);
+    for (final g in parts.skip(1)) {
+      box = box.expandToInclude(degrees(g, g.view));
+    }
+    final insetBoxes = <Rect>[];
+    for (final g in parts) {
+      for (final i in g.insets) {
+        insetBoxes.add(degrees(g, i));
+      }
+    }
+    // Fold in the insets the shared view overlaps, until none does.
+    var folded = true;
+    while (folded) {
+      folded = false;
+      for (final i in insetBoxes.toList()) {
+        if (i.overlaps(box)) {
+          box = box.expandToInclude(i);
+          insetBoxes.remove(i);
+          folded = true;
+        }
+      }
+    }
+
+    // Rect.fromPoints above put the smaller latitude on top; in degrees
+    // "top" is the south edge, so north is the box's bottom.
+    final west = box.left;
+    final north = box.bottom;
+    final k = math.cos((box.top + box.bottom) / 2 * math.pi / 180);
+    Offset plane(Offset ll) => Offset((ll.dx - west) * k, north - ll.dy);
+    Rect rect(Rect deg) => Rect.fromPoints(
+      plane(Offset(deg.left, deg.bottom)),
+      plane(Offset(deg.right, deg.top)),
+    );
+
+    final cities = <String, Offset>{};
+    final rings = <List<Offset>>[];
+    for (final g in parts) {
+      for (final r in g.rings) {
+        rings.add([for (final p in r) plane(lonLat(g, p))]);
+      }
+      for (final e in g.cities.entries) {
+        cities.putIfAbsent(e.key, () => plane(lonLat(g, e.value)));
+      }
+    }
+    return NationGeo._(
+      north: north,
+      west: west,
+      k: k,
+      view: rect(box),
+      insets: [for (final i in insetBoxes) rect(i)],
+      rings: rings,
+      cities: cities,
+    );
+  }
+
   /// The latitude and longitude of the plane's origin, and the cosine its
   /// x is scaled by: what a graticule is drawn from.
   final double north;
