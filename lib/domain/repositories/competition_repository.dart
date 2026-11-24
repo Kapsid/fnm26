@@ -448,9 +448,12 @@ abstract interface class CompetitionRepository {
   Future<Map<int, String>> groupNames(int careerId);
 
   /// Every group table across all confederations (for browsing all draws).
+  /// Pass [confederation] to read only that confederation's tables (the same
+  /// rows, in the same order, the unfiltered list holds for it).
   Future<List<ConfederationGroupTable>> allGroupTablesByConfederation(
-    int careerId,
-  );
+    int careerId, {
+    Confederation? confederation,
+  });
 
   /// Fixtures for one confederation's competition, by matchday then date.
   Future<List<Fixture>> fixturesForConfederation(

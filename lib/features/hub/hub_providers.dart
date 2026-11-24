@@ -397,6 +397,7 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
       final tables = [
         for (final t in await compRepo.allGroupTablesByConfederation(
           careerId,
+          confederation: conf,
         ))
           if (t.confederation == conf) t.standings,
       ];
