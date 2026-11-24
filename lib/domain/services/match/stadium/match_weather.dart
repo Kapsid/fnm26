@@ -225,7 +225,10 @@ abstract final class MatchWeather {
         (confederation == Confederation.southAmerica && c != 'CHI') ||
         (confederation == Confederation.northAmerica && lat < 26);
     if (belt) return (wet ? 0.06 : 0.012) * afternoon;
-    if (c == 'USA' && m >= 6 && m <= 8) return 0.04 * afternoon;
+    // Texas (dormant) shares the American summer's afternoon storms.
+    if ((c == 'USA' || c == 'TEX') && m >= 6 && m <= 8) {
+      return 0.04 * afternoon;
+    }
     return 0;
   }
 }

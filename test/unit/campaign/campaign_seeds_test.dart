@@ -541,4 +541,99 @@ void main() {
       expect(mine, hasLength(1));
     });
   });
+
+  group('Texas', () {
+    const def = Campaigns.texas;
+    // Its world: Anguilla out, Texas in (what forCareer gives the run), and
+    // no Belarus: a North American scenario.
+    final world = campaignWorld(def, nations);
+
+    test('seed 221 keeps Texas from hosting either championship in all '
+        'five cycles of its run', () {
+      expect(def.rngSeed, 221);
+      expect(def.cycles, 5);
+      expect(def.withBelarus, isFalse);
+      for (var cycle = 0; cycle < def.cycles; cycle++) {
+        final world0 = WorldCupHosts.hostsFor(
+          year: CareerService.worldCupYear(cycle),
+          nations: world,
+          seed: def.rngSeed,
+        );
+        final northAmerica = WorldCupHosts.continentalHostsFor(
+          confederation: Confederation.northAmerica,
+          cycle: cycle,
+          seed: def.rngSeed,
+          nations: world,
+        );
+        expect(world0, isNot(contains(216)), reason: 'cycle $cycle');
+        expect(northAmerica, isNot(contains(216)), reason: 'cycle $cycle');
+      }
+    });
+
+    test('seed 221 draws Texas, a top seed, into a North American '
+        'qualifying group it heads, Anguilla nowhere', () {
+      final mine = qualifyingGroups(
+        def.rngSeed,
+        world,
+        Confederation.northAmerica,
+      ).where((g) => g.contains(216)).toList();
+      expect(mine, hasLength(1));
+      // It heads its group: every other side in it is ranked below it.
+      final rank = {for (final n in world) n.id: n.ranking};
+      for (final other in mine.single.where((id) => id != 216)) {
+        expect(rank[other]!, greaterThan(rank[216]!), reason: 'nation $other');
+      }
+      expect(mine.single, isNot(contains(99)));
+      expect(world.map((n) => n.id), isNot(contains(66)));
+      // A swap: North America keeps its 35.
+      expect(
+        world.where((n) => n.confederation == Confederation.northAmerica),
+        hasLength(35),
+      );
+    });
+
+    test('a real Texas run stores that draw', () async {
+      SharedPreferences.setMockInitialValues({});
+      final db = createTestDatabase();
+      addTearDown(db.close);
+      final c = greenlandContainer(db);
+      addTearDown(c.dispose);
+      await c.read(seedLoaderProvider).ensureSeeded();
+      final career =
+          (await c
+                  .read(careerServiceProvider)
+                  .create(
+                    nationId: def.nationId,
+                    managerName: 'M',
+                    rngSeed: def.rngSeed,
+                    stadiumHostRules: false,
+                    worldMarkers: [DormantNations.markerFor(216)],
+                  ))
+              .valueOrNull!;
+      final tables = await c
+          .read(competitionRepositoryProvider)
+          .tournamentGroupTables(
+            career.id,
+            CompetitionKind.continentalQualifying,
+            confederation: Confederation.northAmerica,
+          );
+      final stored = [
+        for (final t in tables)
+          [for (final s in t.standings) s.nationId]..sort(),
+      ];
+      final rebuilt = [
+        for (final g in qualifyingGroups(
+          def.rngSeed,
+          world,
+          Confederation.northAmerica,
+        ))
+          [...g]..sort(),
+      ];
+      expect(
+        stored.map((g) => g.join(',')).toSet(),
+        rebuilt.map((g) => g.join(',')).toSet(),
+      );
+      expect(stored.where((g) => g.contains(216)), hasLength(1));
+    });
+  });
 }

@@ -9744,6 +9744,22 @@
   "@tourSharedVenues": {
     "description": "Heading over the list of tournament stadiums."
   },
+  "tourSharedMapHeading": "HOST MAP",
+  "@tourSharedMapHeading": {
+    "description": "Tournament summary: heading of the map card showing the host nation(s) and their stadiums."
+  },
+  "tourSharedMapFit": "Show the whole map",
+  "@tourSharedMapFit": {
+    "description": "Tournament summary map: tooltip of the button that zooms back out to every host nation."
+  },
+  "tourSharedMapFinalVenue": "Venue of the final",
+  "@tourSharedMapFinalVenue": {
+    "description": "Tournament summary map: key for the gold marker, and a tag on the tapped stadium, for the ground that stages the final."
+  },
+  "tourSharedMapTapHint": "Tap a marker for the stadium",
+  "@tourSharedMapTapHint": {
+    "description": "Tournament summary map: hint under the map that a marker can be tapped to see the stadium's details."
+  },
   "tourSharedMascot": "MASCOT",
   "@tourSharedMascot": {
     "description": "Label for the edition's official mascot."
@@ -18840,6 +18856,50 @@
       }
     }
   },
+  "hostBidPartnerTitle": "Co-host",
+  "@hostBidPartnerTitle": {
+    "description": "Host bid screen: heading of the co-host partner choice (a joint bid with another nation)."
+  },
+  "hostBidPartnerBlurb": "Bid together with another nation of your confederation. Both nations' stadiums count, a strong neighbour helps your case, and if you win both nations host and qualify automatically. The grant is shared, so your part is smaller.",
+  "@hostBidPartnerBlurb": {
+    "description": "Host bid screen: how a joint bid with a co-host works."
+  },
+  "hostBidPartnerNeeded": "Your stadiums fall short alone. Choose a co-host to bid jointly.",
+  "@hostBidPartnerNeeded": {
+    "description": "Host bid screen: the nation's stadiums are too small alone; a joint bid is the only way to bid."
+  },
+  "hostBidPartnerAlone": "Bid alone",
+  "@hostBidPartnerAlone": {
+    "description": "Host bid screen: option to bid without a co-host."
+  },
+  "hostBidPartnerAgrees": "Ready to co-host",
+  "@hostBidPartnerAgrees": {
+    "description": "Host bid screen: under a candidate co-host nation, it agrees to bid jointly."
+  },
+  "hostBidPartnerDeclinesOwnBid": "Declines: it would rather bid on its own.",
+  "@hostBidPartnerDeclinesOwnBid": {
+    "description": "Host bid screen: under a candidate co-host nation, it declines because it prefers its own bid."
+  },
+  "hostBidPartnerDeclinesTooFar": "Declines: too far away for a joint bid.",
+  "@hostBidPartnerDeclinesTooFar": {
+    "description": "Host bid screen: under a candidate co-host nation, it declines because it is not a neighbour."
+  },
+  "hostBidPartnerDeclinesFunds": "Declines: it can't fund its share this time.",
+  "@hostBidPartnerDeclinesFunds": {
+    "description": "Host bid screen: under a candidate co-host nation, it declines because it cannot fund its share."
+  },
+  "hostBidPrizeJoint": "Win, and you host together with {nation}: both nations qualify automatically, and you receive a one-off grant of {amount}, your share, for the next budget.",
+  "@hostBidPrizeJoint": {
+    "description": "Host bid screen: what winning a joint bid brings. nation is the co-host, amount is money like €7M (the manager's share of the grant).",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "hostBidChance": "Chance to host",
   "@hostBidChance": {
     "description": "Host bid screen: label above the chance bar."
@@ -19125,6 +19185,19 @@
   "@hostBidLodged": {
     "description": "Hosting-bids card: a bid for this edition is already in."
   },
+  "hostBidJointWith": "Joint bid with {nation}.",
+  "@hostBidJointWith": {
+    "description": "Hosting-bids card: the lodged bid is a joint one with this co-host nation.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "hostBidJointOnlyOpen": "Too small to host alone, but a joint bid with a co-host is open.",
+  "@hostBidJointOnlyOpen": {
+    "description": "Hosting-bids card: the nation's stadiums are too small to host alone, but it can bid jointly with a co-host."
+  },
   "hostBidDeclinedNote": "You chose not to bid this time.",
   "@hostBidDeclinedNote": {
     "description": "Hosting-bids card: the manager turned this bid down."
@@ -19257,6 +19330,30 @@
   "@hostBidWonBodyBudget": {
     "description": "News body: a hosting bid decided at the start of a new cycle was won; the grant is in the funds for this cycle's budget.",
     "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "hostBidWonJointBody": "{hosts} will host the tournament together, and we qualify automatically as hosts. Our share of the hosting grant, {amount}, is now in the federation's funds, and you can assign it to this cycle's departments straight from the hub.",
+  "@hostBidWonJointBody": {
+    "description": "Inbox body: our joint host bid won; hosts are both host nations joined by &; amount is our share of the grant.",
+    "placeholders": {
+      "hosts": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "hostBidWonJointBodyBudget": "{hosts} will host the tournament together, and we qualify automatically as hosts. Our share of the hosting grant, {amount}, is already in the federation's funds, ready for this cycle's budget.",
+  "@hostBidWonJointBodyBudget": {
+    "description": "News body: a joint hosting bid decided at the start of a new cycle was won; hosts are both host nations joined by &; amount is our share of the grant.",
+    "placeholders": {
+      "hosts": {
+        "type": "String"
+      },
       "amount": {
         "type": "String"
       }
@@ -19515,6 +19612,154 @@
         "type": "int"
       }
     }
+  },
+  "msgPoachTitle": "{rival} are trying to recruit {name}",
+  "@msgPoachTitle": {
+    "description": "Inbox: another nation's federation is trying to recruit one of the manager's players who is not yet tied to his nation.",
+    "placeholders": {
+      "rival": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "msgPoachBody": "{rival} have approached {name} ({age}, {position}) about switching allegiance. He has not played a competitive match for {nation} yet, so he is still free to change. Give him minutes in one of our next {count} competitive matches and he is tied to us for good. If not, he may accept their offer.",
+  "@msgPoachBody": {
+    "description": "Inbox body: a rival federation approached the manager's uncapped player; minutes in one of the next few competitive (non-friendly) matches tie him to the manager's nation.",
+    "placeholders": {
+      "rival": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      },
+      "age": {
+        "type": "int"
+      },
+      "position": {
+        "type": "String"
+      },
+      "nation": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "msgPoachTiedTitle": "{rival} miss out on {name}",
+  "@msgPoachTiedTitle": {
+    "description": "Inbox: the approached player got competitive minutes in time and is now tied to the manager's nation.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "rival": {
+        "type": "String"
+      }
+    }
+  },
+  "msgPoachTiedBody": "{name} has played a competitive match for {nation}, so {rival} can no longer pick him. He is tied to us for good.",
+  "@msgPoachTiedBody": {
+    "description": "Inbox body: the approached player is now tied to the manager's nation.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "rival": {
+        "type": "String"
+      },
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "msgPoachStayedTitle": "{name} turns down {rival}",
+  "@msgPoachStayedTitle": {
+    "description": "Inbox: the deadline passed without a competitive cap, but the player turned the rival down.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "rival": {
+        "type": "String"
+      }
+    }
+  },
+  "msgPoachStayedBody": "{name} still has no competitive cap for {nation}, but he has told {rival} he wants to wait for his chance with us.",
+  "@msgPoachStayedBody": {
+    "description": "Inbox body: the player stays although still without a competitive cap.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "rival": {
+        "type": "String"
+      },
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "msgPoachSwitchedTitle": "{name} switches to {rival}",
+  "@msgPoachSwitchedTitle": {
+    "description": "Inbox: the player switched allegiance to the rival nation.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "rival": {
+        "type": "String"
+      }
+    }
+  },
+  "msgPoachSwitchedBody": "{name} has accepted the offer from {rival} and will play for them from now on. Without a competitive cap for {nation}, nothing could hold him.",
+  "@msgPoachSwitchedBody": {
+    "description": "Inbox body: the player switched allegiance because he had no competitive cap for the manager's nation.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "rival": {
+        "type": "String"
+      },
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "msgPoachSwitchedBodyPromise": "{name} has accepted the offer from {rival}. He was promised minutes for {nation} that never came, and he will play for {rival} from now on.",
+  "@msgPoachSwitchedBodyPromise": {
+    "description": "Inbox body: the player switched allegiance after a promise of minutes was broken.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "rival": {
+        "type": "String"
+      },
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "poachPromiseButton": "Promise him minutes",
+  "@poachPromiseButton": {
+    "description": "Button in the approach message: promise the player minutes. Short."
+  },
+  "poachPromisedLabel": "Minutes promised",
+  "@poachPromisedLabel": {
+    "description": "Disabled button label once minutes have been promised. Short."
+  },
+  "poachCallUpsButton": "Open call-ups",
+  "@poachCallUpsButton": {
+    "description": "Button in the approach message: open the call-up screen. Short."
+  },
+  "poachPromiseHint": "A promise makes him wait one more competitive match, but he is likelier to leave if it is broken.",
+  "@poachPromiseHint": {
+    "description": "Hint under the promise button: a promise buys one more competitive match, but breaking it makes him likelier to leave."
   },
   "playerIntlRetired": "Retired from international football, {year}",
   "@playerIntlRetired": {
@@ -24977,6 +25222,174 @@
       }
     }
   },
+  "pitchComPenaltyReboundGoal1": "It's loose! {player} follows it up and buries the rebound!",
+  "@pitchComPenaltyReboundGoal1": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and scores. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundGoal2": "{player} is first to the loose ball and scores at the second attempt!",
+  "@pitchComPenaltyReboundGoal2": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} gets to the loose ball first and scores. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundGoal3": "Second time lucky! {player} pounces on the loose ball and scores!",
+  "@pitchComPenaltyReboundGoal3": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} pounces on it and scores. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundSaved1": "{player} follows it up, but {keeper} saves again!",
+  "@pitchComPenaltyReboundSaved1": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up; the goalkeeper {keeper} saves again. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "keeper": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundSaved2": "{player} gets to the rebound, but it's kept out again!",
+  "@pitchComPenaltyReboundSaved2": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up; it is saved again. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundSaved3": "{keeper} is down quickly to deny {player} on the follow-up!",
+  "@pitchComPenaltyReboundSaved3": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up; the goalkeeper {keeper} saves. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "keeper": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundWide1": "{player} reaches the rebound and drags it wide!",
+  "@pitchComPenaltyReboundWide1": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} gets to the rebound and shoots wide. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundWide2": "{player} is first to the loose ball, but skies it over!",
+  "@pitchComPenaltyReboundWide2": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} gets to the rebound and shoots over the bar. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundWide3": "A golden chance for {player} on the rebound, but it flies wide!",
+  "@pitchComPenaltyReboundWide3": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} gets to the rebound and misses the target. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundBlocked1": "{player} follows it up, but a defender blocks the shot!",
+  "@pitchComPenaltyReboundBlocked1": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and a defender blocks the shot. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundBlocked2": "{player} pounces on the rebound, but it's charged down!",
+  "@pitchComPenaltyReboundBlocked2": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and the shot is charged down. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundBlocked3": "The rebound falls to {player}, whose shot is blocked!",
+  "@pitchComPenaltyReboundBlocked3": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and the shot is blocked. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundWoodwork1": "{player} follows it up and hits the post!",
+  "@pitchComPenaltyReboundWoodwork1": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and hits the post. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundWoodwork2": "Off the woodwork! {player}'s follow-up comes back out!",
+  "@pitchComPenaltyReboundWoodwork2": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and hits the woodwork. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundWoodwork3": "{player} reaches the rebound and rattles the frame of the goal!",
+  "@pitchComPenaltyReboundWoodwork3": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and hits the frame of the goal. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundCleared1": "It's loose in the box, but {defender} hacks it clear!",
+  "@pitchComPenaltyReboundCleared1": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and the defender {defender} clears the loose ball. Variant 1 of 3.",
+    "placeholders": {
+      "defender": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundCleared2": "{defender} beats everyone to the loose ball and clears!",
+  "@pitchComPenaltyReboundCleared2": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and the defender {defender} reaches the loose ball first and clears it. Variant 2 of 3.",
+    "placeholders": {
+      "defender": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundCleared3": "{defender} reacts first and boots the loose ball away!",
+  "@pitchComPenaltyReboundCleared3": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and the defender {defender} reacts first and kicks it away. Variant 3 of 3.",
+    "placeholders": {
+      "defender": {
+        "type": "String"
+      }
+    }
+  },
   "pitchComPenaltyAwarded1": "Penalty! {player} is brought down in the box.",
   "@pitchComPenaltyAwarded1": {
     "description": "Pitch view commentary line: a penalty is given for a foul in the box (no card). {player} is the player fouled, {other} the player who fouled him. Variant 1 of 3.",
@@ -28293,6 +28706,34 @@
   "campaignStars3Czechoslovakia": "Win the World Championship",
   "@campaignStars3Czechoslovakia": {
     "description": "What earns the third star in the Czechoslovakia campaign: win the World Championship, in either cycle."
+  },
+  "campaignTexasTitle": "The Lone Star",
+  "@campaignTexasTitle": {
+    "description": "Campaign title: the Lone Star, the single star of the Texas flag, for four cycles of the Republic of Texas, a nation added to the world for this campaign."
+  },
+  "campaignTexasTwist": "The Republic of Texas take Anguilla's place in North America, for five cycles",
+  "@campaignTexasTwist": {
+    "description": "One-line twist of the Texas campaign: the Republic of Texas in Anguilla's place in North America, for four cycles."
+  },
+  "campaignTexasIntro": "Texas was a republic of its own for nine years before it joined the United States, and today it raises more footballers than most nations: three top-flight academies, one of the deepest youth games anywhere and Texans in every league. In this world the Republic of Texas plays for itself, in Anguilla's place in North America. Every player is Texas-born, from Houston, Dallas, San Antonio, Austin and El Paso, and the squad is a mid-table side of the region: good enough to trouble anyone, not yet good enough to be feared. You have five cycles to reach a World Championship, win the North America Cup and, if you dare to dream, the World Championship itself.",
+  "@campaignTexasIntro": {
+    "description": "Brief screen introduction of the Texas campaign: the Republic of Texas take Anguilla's place in North America as a mid-strength side, every player Texas-born, for five cycles. Names no real player."
+  },
+  "campaignTexasGoal": "Qualify for a World Championship",
+  "@campaignTexasGoal": {
+    "description": "One-line goal of the Texas campaign (its first star): qualify for a World Championship."
+  },
+  "campaignStars1Texas": "Qualify for a World Championship",
+  "@campaignStars1Texas": {
+    "description": "What earns the first star in the Texas campaign: qualify for a World Championship, in any cycle."
+  },
+  "campaignStars2Texas": "Win the North America Cup",
+  "@campaignStars2Texas": {
+    "description": "What earns the second star in the Texas campaign: win the North America Cup, the region's continental championship, in any cycle."
+  },
+  "campaignStars3Texas": "Win the World Championship",
+  "@campaignStars3Texas": {
+    "description": "What earns the third star in the Texas campaign: win the World Championship, in any cycle."
   },
   "wcPlayoffCourseNote": "Every group winner goes straight through. The last places go to play-off paths: the best runners-up (yellow in the groups) and the best Nations Cup group winners who are not through. From the Nations Cup, as things stand:",
   "@wcPlayoffCourseNote": {

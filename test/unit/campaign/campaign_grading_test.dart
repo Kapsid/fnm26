@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/campaign/campaign_grading.dart';
 import 'package:fnm/domain/services/campaign/campaigns.dart';
 import 'package:fnm/domain/services/nation/dormant_nations.dart';
@@ -125,7 +126,7 @@ void main() {
         for (final c in Campaigns.all)
           if (c.dormantNationId != null) c.id,
       ],
-      ['greenland', 'zanzibar', 'isleOfMan', 'czechoslovakia'],
+      ['greenland', 'zanzibar', 'isleOfMan', 'czechoslovakia', 'texas'],
     );
   });
 
@@ -204,7 +205,27 @@ void main() {
     expect(def.needsPro, isTrue);
     expect(def.canContinue, isTrue);
     expect(def.goal, CampaignGoal.qualifyWorldThenTitles);
-    expect(Campaigns.all.last, def);
     expect(Campaigns.byId('czechoslovakia'), def);
+  });
+
+  test('The Lone Star: Pro, five cycles, can be continued, its dormant world '
+      "in Anguilla's place, the United States untouched", () {
+    const def = Campaigns.texas;
+    expect(def.nationId, 216);
+    expect(def.dormantNationId, 216);
+    expect(DormantNations.replaces[216], 66);
+    expect(DormantNations.alsoReplaces[216], isNull);
+    expect(DormantNations.texas.confederation, Confederation.northAmerica);
+    // A North American run: no Belarus, no donors.
+    expect(def.withBelarus, isFalse);
+    expect(def.donorNationIds, isEmpty);
+    expect(def.donorNationId, isNull);
+    expect(def.cycles, 5);
+    expect(def.needsPro, isTrue);
+    expect(def.canContinue, isTrue);
+    expect(def.goal, CampaignGoal.qualifyWorldThenTitles);
+    expect(def.difficulty, CampaignDifficulty.medium);
+    expect(Campaigns.all.last, def);
+    expect(Campaigns.byId('texas'), def);
   });
 }

@@ -215,9 +215,11 @@ void main() {
       'BLR': 'easternEurope',
       'IMN': 'britishIsles',
       'TCH': 'centralEurope',
+      'TEX': 'northAmericaMainland',
     };
-    // Every one a minnow but Czechoslovakia, the 1976 European champions.
-    const pedigree = {'TCH': 2};
+    // Every one a minnow but Czechoslovakia, the 1976 European champions,
+    // and Texas, a tier above.
+    const pedigree = {'TCH': 2, 'TEX': 4};
     for (final n in DormantNations.all) {
       expect(NationNames.csByCode[n.code], isNotNull);
       expect(NationNames.csDativeByCode[n.code], isNotNull);
@@ -259,5 +261,10 @@ void main() {
       NationNames.display('TCH', 'Czechoslovakia', 'de'),
       'Tschechoslowakei',
     );
+    expect(NationNames.display('TEX', 'Texas', 'cs'), 'Texas');
+    expect(NationNames.displayDative('TEX', 'Texas', 'cs'), 'Texasu');
+    expect(NationNames.display('TEX', 'Texas', 'pl'), 'Teksas');
+    expect(NationNames.display('TEX', 'Texas', 'ja'), 'テキサス');
+    expect(NationNames.display('TEX', 'Texas', 'en'), 'Texas');
   });
 }

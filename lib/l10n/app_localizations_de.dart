@@ -6053,6 +6053,19 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tourSharedVenues => 'SPIELORTE';
 
   @override
+  String get tourSharedMapHeading => 'KARTE DER GASTGEBER';
+
+  @override
+  String get tourSharedMapFit => 'Ganze Karte zeigen';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Stadion des Finales';
+
+  @override
+  String get tourSharedMapTapHint =>
+      'Tippe auf eine Markierung für das Stadion';
+
+  @override
   String get tourSharedMascot => 'MASKOTTCHEN';
 
   @override
@@ -12338,6 +12351,40 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Mitausrichter';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Bewirb dich gemeinsam mit einer anderen Nation deiner Konföderation. Die Stadien beider Nationen zählen, ein starker Nachbar stärkt die Bewerbung, und bei einem Sieg richten beide Nationen aus und sind automatisch qualifiziert. Der Zuschuss wird geteilt, dein Anteil ist also kleiner.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Deine Stadien reichen allein nicht aus. Wähle einen Mitausrichter für eine gemeinsame Bewerbung.';
+
+  @override
+  String get hostBidPartnerAlone => 'Allein bewerben';
+
+  @override
+  String get hostBidPartnerAgrees => 'Bereit zur gemeinsamen Ausrichtung';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Lehnt ab: bewirbt sich lieber allein.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Lehnt ab: zu weit entfernt für eine gemeinsame Bewerbung.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Lehnt ab: kann seinen Anteil diesmal nicht finanzieren.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Gewinnst du, richtest du gemeinsam mit $nation aus: Beide Nationen sind automatisch qualifiziert, und du erhältst einen einmaligen Zuschuss von $amount, deinen Anteil, für das nächste Budget.';
+  }
+
+  @override
   String get hostBidChance => 'Chance auf den Zuschlag';
 
   @override
@@ -12517,6 +12564,15 @@ class AppLocalizationsDe extends AppLocalizations {
       'Bewerbung eingereicht. Der Gastgeber wird zu Beginn des neuen Zyklus bekannt gegeben.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Gemeinsame Bewerbung mit $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Für eine Ausrichtung allein zu klein, aber eine gemeinsame Bewerbung mit einem Mitausrichter ist möglich.';
+
+  @override
   String get hostBidDeclinedNote =>
       'Sie haben diesmal auf eine Bewerbung verzichtet.';
 
@@ -12613,6 +12669,16 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Wir richten das Turnier aus und sind als Gastgeber automatisch qualifiziert. Eine einmalige Förderung von $amount ist bereits in den Mitteln des Verbands, bereit für das Budget dieses Zyklus.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts richten das Turnier gemeinsam aus, und wir sind als Gastgeber automatisch qualifiziert. Unser Anteil am Zuschuss, $amount, ist jetzt in den Mitteln des Verbands, und du kannst ihn direkt in der Zentrale den Abteilungen dieses Zyklus zuteilen.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts richten das Turnier gemeinsam aus, und wir sind als Gastgeber automatisch qualifiziert. Unser Anteil am Zuschuss, $amount, ist bereits in den Mitteln des Verbands und steht für das Budget dieses Zyklus bereit.';
   }
 
   @override
@@ -12782,6 +12848,71 @@ class AppLocalizationsDe extends AppLocalizations {
   String msgIntlComebackNewsBody(String name, String nation, int age) {
     return '$name ($nation) steht mit $age wieder für eine Nominierung bereit.';
   }
+
+  @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival wirbt um $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rival hat $name ($age, $position) einen Verbandswechsel angeboten. Er hat noch kein Pflichtspiel für $nation bestritten und darf daher noch wechseln. Setzen Sie ihn in einem unserer nächsten $count Pflichtspiele ein, dann ist er für immer an uns gebunden. Andernfalls nimmt er das Angebot vielleicht an.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival geht bei $name leer aus';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name hat ein Pflichtspiel für $nation bestritten, $rival kann ihn nicht mehr berufen. Er ist für immer an uns gebunden.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name sagt $rival ab';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name hat noch immer kein Pflichtspiel für $nation, hat $rival aber gesagt, dass er auf seine Chance bei uns warten will.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name wechselt zu $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name hat das Angebot von $rival angenommen und spielt ab sofort für sie. Ohne Pflichtspiel für $nation konnte ihn nichts halten.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name hat das Angebot von $rival angenommen. Ihm wurden Einsätze für $nation versprochen, die nie kamen, und er spielt ab sofort für $rival.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Einsatzzeit versprechen';
+
+  @override
+  String get poachPromisedLabel => 'Einsatzzeit versprochen';
+
+  @override
+  String get poachCallUpsButton => 'Kader öffnen';
+
+  @override
+  String get poachPromiseHint =>
+      'Ein Versprechen lässt ihn ein Pflichtspiel länger warten, aber bricht man es, geht er eher.';
 
   @override
   String playerIntlRetired(int year) {
@@ -16367,6 +16498,96 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Der Ball ist frei! $player setzt nach und versenkt den Abpraller!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player ist als Erster am Ball und trifft im zweiten Versuch!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'Im zweiten Anlauf! $player stürzt sich auf den freien Ball und trifft!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player setzt nach, aber $keeper pariert erneut!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player kommt an den Abpraller, aber wieder kein Tor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper ist blitzschnell unten und vereitelt den Nachschuss von $player!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player erreicht den Abpraller und setzt ihn daneben!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player ist als Erster am freien Ball, jagt ihn aber drüber!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Riesenchance für $player beim Nachschuss, aber der Ball fliegt vorbei!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player setzt nach, aber ein Verteidiger blockt den Schuss!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player stürzt sich auf den Abpraller, aber der Schuss wird abgeblockt!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'Der Abpraller landet bei $player, sein Schuss wird geblockt!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player setzt nach und trifft den Pfosten!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Aluminium! Der Nachschuss von $player springt zurück!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player erreicht den Abpraller und lässt das Gebälk erzittern!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Der Ball liegt frei im Strafraum, aber $defender klärt!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender ist als Erster am freien Ball und klärt!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender reagiert am schnellsten und drischt den Ball weg!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Elfmeter! $player wird im Strafraum gefoult.';
   }
@@ -18469,6 +18690,29 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Die Weltmeisterschaft gewinnen';
+
+  @override
+  String get campaignTexasTitle => 'Der einsame Stern';
+
+  @override
+  String get campaignTexasTwist =>
+      'Die Republik Texas nimmt Anguillas Platz in Nordamerika ein, für fünf Zyklen';
+
+  @override
+  String get campaignTexasIntro =>
+      'Texas war neun Jahre lang eine eigenständige Republik, bevor es den Vereinigten Staaten beitrat, und heute bringt es mehr Fußballer hervor als die meisten Nationen: drei Akademien aus der höchsten Liga, einen der breitesten Nachwuchsbereiche der Welt und Texaner in jeder Liga. In dieser Welt spielt die Republik Texas für sich selbst, auf Anguillas Platz in Nordamerika. Jeder Spieler ist in Texas geboren, in Houston, Dallas, San Antonio, Austin oder El Paso, und der Kader gehört zum Mittelfeld der Region: gut genug, um jeden zu ärgern, aber noch nicht gut genug, um gefürchtet zu werden. Sie haben fünf Zyklen, um eine Weltmeisterschaft zu erreichen, den Nordamerika-Pokal zu gewinnen und, wenn Sie zu träumen wagen, die Weltmeisterschaft selbst.';
+
+  @override
+  String get campaignTexasGoal => 'Für eine Weltmeisterschaft qualifizieren';
+
+  @override
+  String get campaignStars1Texas => 'Für eine Weltmeisterschaft qualifizieren';
+
+  @override
+  String get campaignStars2Texas => 'Den Nordamerika-Pokal gewinnen';
+
+  @override
+  String get campaignStars3Texas => 'Die Weltmeisterschaft gewinnen';
 
   @override
   String get wcPlayoffCourseNote =>

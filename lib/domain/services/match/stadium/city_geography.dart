@@ -762,6 +762,18 @@ abstract final class CityGeography {
       'Houston': 'ci',
       'Philadelphia': 'r',
     },
+    'TEX': {
+      'Houston': 'ci',
+      'Dallas': '-',
+      'San Antonio': 'or',
+      'Austin': 'r',
+      'Fort Worth': 'o',
+      'El Paso': 'dm',
+      'Arlington': '-',
+      'Corpus Christi': 'c',
+      'Lubbock': '-',
+      'Frisco': '-',
+    },
 
     // --- Africa ------------------------------------------------------------
     'ALG': {

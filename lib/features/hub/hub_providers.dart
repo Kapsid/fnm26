@@ -52,7 +52,6 @@ import 'package:fnm/domain/services/competition/world_pedigree.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/domain/services/federation/naturalization_rules.dart';
-import 'package:fnm/domain/services/manager/stints.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/match/ai_counter.dart';
 import 'package:fnm/domain/services/match/ai_tactics.dart';
@@ -77,6 +76,7 @@ import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/awards/award_providers.dart';
 import 'package:fnm/features/squad/camp_scandal_providers.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
+import 'package:fnm/features/squad/poaching_providers.dart';
 import 'package:fnm/features/squad/international_retirement_providers.dart';
 import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
@@ -827,7 +827,7 @@ class SeasonService {
         : await _careers.stints(career.id);
     final into = <int, List<NaturalizationLink>>{};
     for (final link in links) {
-      (into[Stints.nationAt(stints, link.cycle, career.nationId)] ??= []).add(
+      (into[naturalizedNationOf(link, stints, career.nationId)] ??= []).add(
         link,
       );
     }
@@ -2529,6 +2529,15 @@ class SeasonService {
     // stopped waiting. Settled before the clock moves, so the squad the next
     // match is picked from is the squad that is actually available.
     await _ref.read(grievanceServiceProvider).settleWalkouts(careerId);
+    // A rival federation's approach to a player not yet tied to the nation:
+    // closed once its deadline has played out (he may have switched), and now
+    // and then a new one. Before the clock moves, like the walkouts: a man
+    // who switched must not be fielded from a pool cached before it.
+    if (await _ref.read(poachingServiceProvider).settle(careerId)) {
+      _poolCache.removeWhere((k, _) => k.$1 == careerId);
+      _naturalized = null;
+      _naturalizedFor = null;
+    }
     // The veterans who announce their international retirement after a
     // finished tournament (and the odd one coming back). Settled before the
     // clock moves for the same reason; a pool cached before it would still

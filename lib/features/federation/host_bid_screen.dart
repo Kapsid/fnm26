@@ -55,7 +55,11 @@ class HostBidScreen extends ConsumerStatefulWidget {
 class _HostBidScreenState extends ConsumerState<HostBidScreen> {
   bool _busy = false;
 
-  Future<void> _settle(HostBidOffer offer, int? levels) async {
+  Future<void> _settle(
+    HostBidOffer offer,
+    int? levels, {
+    int? partnerId,
+  }) async {
     if (_busy) return;
     setState(() => _busy = true);
     // Captured before the first await, as the naturalisation screen does: a
@@ -66,7 +70,7 @@ class _HostBidScreenState extends ConsumerState<HostBidScreen> {
     if (levels == null) {
       await service.decline(offer);
     } else {
-      await service.place(offer, levels);
+      await service.place(offer, levels, partnerId: partnerId);
     }
     container.invalidate(hubDataProvider(widget.careerId));
     if (router.state.uri.path == Routes.hostBid) _leave(router);
@@ -174,7 +178,8 @@ class _HostBidScreenState extends ConsumerState<HostBidScreen> {
         child: HostBidForm(
           offer: offer,
           busy: _busy,
-          onSubmit: (levels) => unawaited(_settle(offer, levels)),
+          onSubmit: (levels, partnerId) =>
+              unawaited(_settle(offer, levels, partnerId: partnerId)),
           onDecline: () => unawaited(_settle(offer, null)),
         ),
       ),
@@ -182,9 +187,10 @@ class _HostBidScreenState extends ConsumerState<HostBidScreen> {
   }
 }
 
-/// The bid itself: heading, how it works, the investment selector, the chance
-/// bar and the two decisions. Pure presentation over [offer], so it can be
-/// pumped on its own.
+/// The bid itself: heading, how it works, the co-host partner (when any
+/// nation could co-host), the investment selector, the chance bar and the
+/// two decisions. Pure presentation over [offer], so it can be pumped on its
+/// own.
 class HostBidForm extends StatefulWidget {
   const HostBidForm({
     required this.offer,
@@ -198,9 +204,15 @@ class HostBidForm extends StatefulWidget {
   static const Key totalKey = Key('hostBid.total');
   static const Key barKey = Key('hostBid.bar');
   static const Key investKey = Key('hostBid.invest');
+  static const Key prizeKey = Key('hostBid.prize');
+  static const Key partnersKey = Key('hostBid.partners');
+  static const Key aloneKey = Key('hostBid.partner.alone');
+  static Key partnerKey(int nationId) => Key('hostBid.partner.$nationId');
 
   final HostBidOffer offer;
-  final ValueChanged<int> onSubmit;
+
+  /// The bid at so many levels, with the chosen co-host (null: alone).
+  final void Function(int levels, int? partnerId) onSubmit;
   final VoidCallback onDecline;
   final bool busy;
 
@@ -212,13 +224,30 @@ class _HostBidFormState extends State<HostBidForm> {
   /// Three levels to start, or what the funds allow.
   late int _levels = widget.offer.maxLevels < 3 ? widget.offer.maxLevels : 3;
 
+  /// The chosen co-host: none (a bid alone) unless the offer is open only
+  /// jointly, when the first partner that agrees is picked.
+  late int? _partnerId = widget.offer.soloAllowed
+      ? null
+      : widget.offer.partners.where((o) => o.agrees).firstOrNull?.nation.id;
+
+  HostBidPartnerOption? get _partner {
+    for (final o in widget.offer.partners) {
+      if (o.nation.id == _partnerId) return o;
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final offer = widget.offer;
     final max = offer.maxLevels;
-    final quote = offer.quote(_levels);
+    final partner = _partner;
+    final quote = offer.quote(_levels, partner: partner);
     final comp = hostBidCompLabel(l, offer);
+    final bidders = partner == null
+        ? offer.nation.name
+        : '${offer.nation.name} & ${partner.nation.name}';
     return Column(
       children: [
         Expanded(
@@ -288,7 +317,7 @@ class _HostBidFormState extends State<HostBidForm> {
                       ),
                       const SizedBox(height: AppSpacing.xs),
                       Text(
-                        l.hostBidCeiling(offer.nation.name, _pct(quote.cap)),
+                        l.hostBidCeiling(bidders, _pct(quote.cap)),
                         style: AppTypography.labelSmall.copyWith(
                           color: AppColors.onSurfaceVariant,
                         ),
@@ -296,6 +325,10 @@ class _HostBidFormState extends State<HostBidForm> {
                     ],
                   ),
                 ),
+                if (offer.partners.isNotEmpty) ...[
+                  const SizedBox(height: AppSpacing.md),
+                  _partners(l, offer),
+                ],
                 const SizedBox(height: AppSpacing.md),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -332,11 +365,20 @@ class _HostBidFormState extends State<HostBidForm> {
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Text(
-                  l.hostBidPrize(
-                    formatEuros(
-                      HostBidOdds.bonusFor(_levels < 1 ? 1 : _levels),
-                    ),
-                  ),
+                  partner == null
+                      ? l.hostBidPrize(
+                          formatEuros(offer.bonus(_levels < 1 ? 1 : _levels)),
+                        )
+                      : l.hostBidPrizeJoint(
+                          partner.nation.name,
+                          formatEuros(
+                            offer.bonus(
+                              _levels < 1 ? 1 : _levels,
+                              partner: partner,
+                            ),
+                          ),
+                        ),
+                  key: HostBidForm.prizeKey,
                   style: AppTypography.bodySmall,
                 ),
                 const SizedBox(height: AppSpacing.xs),
@@ -360,9 +402,12 @@ class _HostBidFormState extends State<HostBidForm> {
                 PrimaryButton(
                   label: l.hostBidSubmit,
                   icon: Icons.how_to_vote_rounded,
-                  onPressed: widget.busy || _levels < 1
+                  onPressed:
+                      widget.busy ||
+                          _levels < 1 ||
+                          (!offer.soloAllowed && partner == null)
                       ? null
-                      : () => widget.onSubmit(_levels),
+                      : () => widget.onSubmit(_levels, partner?.nation.id),
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 OutlinedButton(
@@ -377,6 +422,110 @@ class _HostBidFormState extends State<HostBidForm> {
           ),
         ),
       ],
+    );
+  }
+
+  /// The co-host choice: alone (when the nation may bid alone) or with one
+  /// of the offer's partners. A partner that declines says why and cannot be
+  /// picked.
+  Widget _partners(AppLocalizations l, HostBidOffer offer) {
+    const muted = AppColors.onSurfaceVariant;
+    Widget option({
+      required Key key,
+      required String title,
+      required String? subtitle,
+      required bool selected,
+      required Color subtitleColor,
+      VoidCallback? onTap,
+    }) => InkWell(
+      key: key,
+      onTap: widget.busy ? null : onTap,
+      borderRadius: AppRadii.smAll,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+        child: Row(
+          children: [
+            Icon(
+              selected
+                  ? Icons.radio_button_checked_rounded
+                  : Icons.radio_button_unchecked_rounded,
+              size: 20,
+              color: onTap == null ? AppColors.outline : AppColors.primary,
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: AppTypography.bodyMedium.copyWith(
+                      color: onTap == null ? muted : null,
+                    ),
+                  ),
+                  if (subtitle != null)
+                    Text(
+                      subtitle,
+                      style: AppTypography.labelSmall.copyWith(
+                        color: subtitleColor,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    return AppCard(
+      key: HostBidForm.partnersKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(l.hostBidPartnerTitle, style: AppTypography.labelLarge),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            l.hostBidPartnerBlurb,
+            style: AppTypography.bodySmall.copyWith(color: muted),
+          ),
+          if (!offer.soloAllowed) ...[
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              l.hostBidPartnerNeeded,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.warning,
+              ),
+            ),
+          ],
+          const SizedBox(height: AppSpacing.xs),
+          if (offer.soloAllowed)
+            option(
+              key: HostBidForm.aloneKey,
+              title: l.hostBidPartnerAlone,
+              subtitle: null,
+              selected: _partnerId == null,
+              subtitleColor: muted,
+              onTap: () => setState(() => _partnerId = null),
+            ),
+          for (final o in offer.partners)
+            option(
+              key: HostBidForm.partnerKey(o.nation.id),
+              title: o.nation.name,
+              subtitle: switch (o.decline) {
+                null => l.hostBidPartnerAgrees,
+                CoHostDecline.ownBid => l.hostBidPartnerDeclinesOwnBid,
+                CoHostDecline.tooFar => l.hostBidPartnerDeclinesTooFar,
+                CoHostDecline.funds => l.hostBidPartnerDeclinesFunds,
+              },
+              subtitleColor: o.agrees ? AppColors.positive : AppColors.warning,
+              selected: _partnerId == o.nation.id,
+              onTap: o.agrees
+                  ? () => setState(() => _partnerId = o.nation.id)
+                  : null,
+            ),
+        ],
+      ),
     );
   }
 
@@ -638,6 +787,9 @@ class HostBidStatusRow extends StatelessWidget {
               ),
         AppColors.positive,
       ));
+      if (s.pledgePartner case final partner?) {
+        lines.add((l.hostBidJointWith(partner.name), AppColors.positive));
+      }
     } else if (s.declined) {
       lines.add((l.hostBidDeclinedNote, muted));
     } else if (s.otherBidLodged) {
@@ -655,6 +807,10 @@ class HostBidStatusRow extends StatelessWidget {
         lines.add((l.hostBidOpensLater, AppColors.positive));
       }
     } else {
+      // Too small alone, but open jointly: said first, the shortfall after.
+      if (s.offer case final offer? when !offer.soloAllowed) {
+        lines.add((l.hostBidJointOnlyOpen, AppColors.positive));
+      }
       if (s.barredConfederation != null) {
         lines.add((
           l.hostBidBarredConf(confederationLabel(l, s.barredConfederation!)),

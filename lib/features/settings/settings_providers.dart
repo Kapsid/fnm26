@@ -33,7 +33,7 @@ const double kMatchSoundDefaultVolume = 0.7;
 /// Prefs key for the chosen text size (the option's name; absent = normal).
 const String _kTextSizeKey = 'settings.textSize';
 
-/// Prefs key for the chosen UI language ('en', 'cs', 'fr', 'it', 'pl', 'es', 'de', 'pt', 'tr', 'nl', 'id', 'el', 'sv', 'nb', 'vi', 'bg', 'da', 'fi', 'hu', 'hr', 'uk', 'fil', 'hi', 'ja', 'ko', 'ro', 'th', 'ms', or absent = follow device).
+/// Prefs key for the chosen UI language ('en', 'cs', 'fr', 'it', 'pl', 'es', 'de', 'pt', 'tr', 'nl', 'id', 'el', 'sv', 'nb', 'vi', 'bg', 'da', 'fi', 'hu', 'hr', 'uk', 'fil', 'hi', 'ja', 'ko', 'ro', 'th', 'ms', 'sr', or absent = follow device).
 const String _kLocaleKey = 'settings.locale';
 
 /// Prefs key for the default world New Game starts on: a world pack's uuid
@@ -70,6 +70,7 @@ const List<Locale> supportedAppLocales = [
   Locale('ro'),
   Locale('th'),
   Locale('ms'),
+  Locale('sr'),
 ];
 
 /// Whether match sound effects and haptics are on (default on). Read across the

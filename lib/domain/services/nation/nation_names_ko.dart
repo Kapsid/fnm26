@@ -217,5 +217,6 @@ const Map<String, String> nationNamesKo = <String, String>{
   'ZAN': '잔지바르',
   'IMN': '맨섬',
   'TCH': '체코슬로바키아',
+  'TEX': '텍사스',
   'ZIM': '짐바브웨',
 };

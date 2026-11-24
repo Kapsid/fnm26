@@ -5957,6 +5957,18 @@ class AppLocalizationsTr extends AppLocalizations {
   String get tourSharedVenues => 'STADYUMLAR';
 
   @override
+  String get tourSharedMapHeading => 'EV SAHİBİ HARİTASI';
+
+  @override
+  String get tourSharedMapFit => 'Haritanın tamamını göster';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Finalin stadı';
+
+  @override
+  String get tourSharedMapTapHint => 'Stadı görmek için bir işarete dokun';
+
+  @override
   String get tourSharedMascot => 'MASKOT';
 
   @override
@@ -12152,6 +12164,40 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Ortak ev sahibi';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Konfederasyonundaki başka bir ülkeyle birlikte aday ol. İki ülkenin stadyumları da sayılır, güçlü bir komşu adaylığını güçlendirir ve kazanırsan iki ülke de ev sahibi olur ve doğrudan katılır. Hibe paylaşılır, bu yüzden senin payın daha küçüktür.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Stadyumların tek başına yetmiyor. Ortak adaylık için bir ortak ev sahibi seç.';
+
+  @override
+  String get hostBidPartnerAlone => 'Tek başına aday ol';
+
+  @override
+  String get hostBidPartnerAgrees => 'Ortak ev sahipliğine hazır';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Reddediyor: tek başına aday olmayı tercih ediyor.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Reddediyor: ortak adaylık için çok uzak.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Reddediyor: bu kez kendi payını karşılayamıyor.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Kazanırsan $nation ile birlikte ev sahibi olursun: iki ülke de doğrudan katılır ve bir sonraki bütçe için payın olan $amount tutarında tek seferlik bir hibe alırsın.';
+  }
+
+  @override
   String get hostBidChance => 'Ev sahipliği şansı';
 
   @override
@@ -12329,6 +12375,15 @@ class AppLocalizationsTr extends AppLocalizations {
       'Adaylık sunuldu. Ev sahibi yeni dönem başlarken açıklanır.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return '$nation ile ortak adaylık.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Tek başına ev sahipliği için yetersiz, ama bir ortakla ortak adaylık açık.';
+
+  @override
   String get hostBidDeclinedNote => 'Bu kez aday olmamayı seçtiniz.';
 
   @override
@@ -12417,6 +12472,16 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Turnuvaya ev sahipliği yapacağız ve ev sahibi olarak otomatik katılıyoruz. $amount tutarındaki tek seferlik destek federasyonun bütçesinde, bu dönemin dağıtımına hazır.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return 'Turnuvaya $hosts birlikte ev sahipliği yapacak ve ev sahibi olarak doğrudan katılıyoruz. Hibedeki payımız olan $amount şimdi federasyonun fonlarında; onu doğrudan ana ekrandan bu döngünün departmanlarına dağıtabilirsin.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return 'Turnuvaya $hosts birlikte ev sahipliği yapacak ve ev sahibi olarak doğrudan katılıyoruz. Hibedeki payımız olan $amount zaten federasyonun fonlarında ve bu döngünün bütçesi için hazır.';
   }
 
   @override
@@ -12585,6 +12650,71 @@ class AppLocalizationsTr extends AppLocalizations {
   String msgIntlComebackNewsBody(String name, String nation, int age) {
     return '$name ($nation) $age yaşında yeniden milli takıma çağrılabilir durumda.';
   }
+
+  @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival, $name için devrede';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rival, $name ($age, $position) ile milli takım değiştirmesi için görüştü. Henüz $nation formasıyla resmi maça çıkmadı, bu yüzden hâlâ değiştirebilir. Önümüzdeki $count resmi maçımızdan birinde ona süre verin, sonsuza dek bize bağlanır. Aksi halde onların teklifini kabul edebilir.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival, $name yarışını kaybetti';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name, $nation formasıyla resmi maça çıktı, artık $rival onu çağıramaz. Sonsuza dek bize bağlı.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name, $rival teklifini reddetti';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name hâlâ $nation formasıyla resmi maça çıkmadı, ama $rival tarafına bizde şansını beklemek istediğini söyledi.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name, $rival formasını seçti';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name, $rival teklifini kabul etti ve artık onlar için oynayacak. $nation formasıyla resmi maçı olmadığından onu hiçbir şey tutamadı.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name, $rival teklifini kabul etti. Ona $nation formasıyla hiç gelmeyen süreler sözü verilmişti ve artık $rival için oynayacak.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Ona süre sözü ver';
+
+  @override
+  String get poachPromisedLabel => 'Süre sözü verildi';
+
+  @override
+  String get poachCallUpsButton => 'Kadroyu aç';
+
+  @override
+  String get poachPromiseHint =>
+      'Söz, onu bir resmi maç daha bekletir, ama tutulmazsa ayrılma ihtimali artar.';
 
   @override
   String playerIntlRetired(int year) {
@@ -16148,6 +16278,96 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Top boşta! $player takip ediyor ve dönen topu ağlara gönderiyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player boştaki topa ilk ulaşıyor ve ikinci denemede golü buluyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'İkincisinde oldu! $player boştaki topa atılıyor ve gol!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player takip ediyor, ama $keeper yine kurtarıyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player dönen topa yetişiyor, ama yine geçit yok!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper hemen yerde, $player takipte de gol bulamıyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player dönen topa yetişiyor ve dışarı gönderiyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player boştaki topa ilk ulaşıyor, ama üstten auta gönderiyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Dönen topta $player için müthiş fırsat, ama top dışarıda!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player takip ediyor, ama bir savunmacı şutu blokluyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player dönen topa atılıyor, ama şut bloke ediliyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'Dönen top $player oyuncusuna düşüyor, şutu bloke ediliyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player takip ediyor ve direğe çarpıyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Direk! $player oyuncusunun takip vuruşu geri dönüyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player dönen topa yetişiyor ve kaleyi sarsıyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Top ceza sahasında boşta, ama $defender uzaklaştırıyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender boştaki topa herkesten önce ulaşıp uzaklaştırıyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender ilk tepkiyi veriyor ve boştaki topu uzaklaştırıyor!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Penaltı! $player ceza sahasında yere düşüyor.';
   }
@@ -18240,6 +18460,31 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Dünya Şampiyonası\'nı kazan';
+
+  @override
+  String get campaignTexasTitle => 'Yalnız Yıldız';
+
+  @override
+  String get campaignTexasTwist =>
+      'Teksas Cumhuriyeti beş dönem boyunca Kuzey Amerika\'da Anguilla\'nın yerini alıyor';
+
+  @override
+  String get campaignTexasIntro =>
+      'Teksas, Amerika Birleşik Devletleri\'ne katılmadan önce dokuz yıl boyunca bağımsız bir cumhuriyetti ve bugün çoğu ülkeden daha fazla futbolcu yetiştiriyor: üst ligden üç akademi, dünyanın en geniş altyapı tabanlarından biri ve her ligde Teksaslı oyuncular. Bu dünyada Teksas Cumhuriyeti kendi adına oynuyor, Kuzey Amerika\'da Anguilla\'nın yerinde. Her oyuncu Teksas doğumlu; Houston, Dallas, San Antonio, Austin ya da El Paso\'dan. Kadro bölgenin orta sıra takımlarından biri: herkesi zorlayacak kadar iyi, ama henüz korkulacak kadar değil. Bir Dünya Şampiyonası\'na ulaşmak, Kuzey Amerika Kupası\'nı kazanmak ve hayal kurmaya cesaretin varsa Dünya Şampiyonası\'nın kendisini kazanmak için beş dönemin var.';
+
+  @override
+  String get campaignTexasGoal =>
+      'Bir Dünya Şampiyonası\'na katılma hakkı kazan';
+
+  @override
+  String get campaignStars1Texas =>
+      'Bir Dünya Şampiyonası\'na katılma hakkı kazan';
+
+  @override
+  String get campaignStars2Texas => 'Kuzey Amerika Kupası\'nı kazan';
+
+  @override
+  String get campaignStars3Texas => 'Dünya Şampiyonası\'nı kazan';
 
   @override
   String get wcPlayoffCourseNote =>

@@ -6032,6 +6032,18 @@ class AppLocalizationsEl extends AppLocalizations {
   String get tourSharedVenues => 'ΓΗΠΕΔΑ';
 
   @override
+  String get tourSharedMapHeading => 'ΧΑΡΤΗΣ ΔΙΟΡΓΑΝΩΤΩΝ';
+
+  @override
+  String get tourSharedMapFit => 'Εμφάνιση όλου του χάρτη';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Γήπεδο του τελικού';
+
+  @override
+  String get tourSharedMapTapHint => 'Πάτησε ένα σημάδι για να δεις το γήπεδο';
+
+  @override
   String get tourSharedMascot => 'ΜΑΣΚΟΤ';
 
   @override
@@ -12302,6 +12314,40 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Συνδιοργανωτής';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Κάνε υποψηφιότητα μαζί με άλλη χώρα της συνομοσπονδίας σου. Μετρούν τα γήπεδα και των δύο, ένας δυνατός γείτονας ενισχύει την υποψηφιότητα και, αν κερδίσεις, διοργανώνουν και οι δύο χώρες και προκρίνονται αυτόματα. Η επιχορήγηση μοιράζεται, οπότε το μερίδιό σου είναι μικρότερο.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Τα γήπεδά σου δεν αρκούν μόνα τους. Διάλεξε συνδιοργανωτή για κοινή υποψηφιότητα.';
+
+  @override
+  String get hostBidPartnerAlone => 'Υποψηφιότητα μόνοι';
+
+  @override
+  String get hostBidPartnerAgrees => 'Έτοιμη για συνδιοργάνωση';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Αρνείται: προτιμά να κάνει υποψηφιότητα μόνη.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Αρνείται: πολύ μακριά για κοινή υποψηφιότητα.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Αρνείται: αυτή τη φορά δεν μπορεί να χρηματοδοτήσει το μερίδιό της.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Αν κερδίσεις, διοργανώνεις μαζί με $nation: και οι δύο χώρες προκρίνονται αυτόματα και λαμβάνεις εφάπαξ επιχορήγηση $amount, το μερίδιό σου, για τον επόμενο προϋπολογισμό.';
+  }
+
+  @override
   String get hostBidChance => 'Πιθανότητα διοργάνωσης';
 
   @override
@@ -12481,6 +12527,15 @@ class AppLocalizationsEl extends AppLocalizations {
       'Η υποψηφιότητα κατατέθηκε. Ο διοργανωτής ανακοινώνεται με την έναρξη του νέου κύκλου.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Κοινή υποψηφιότητα με $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Πολύ μικρή για να διοργανώσει μόνη, αλλά είναι ανοιχτή μια κοινή υποψηφιότητα με συνδιοργανωτή.';
+
+  @override
   String get hostBidDeclinedNote =>
       'Αυτή τη φορά επιλέξατε να μην είστε υποψήφιοι.';
 
@@ -12571,6 +12626,16 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Θα διοργανώσουμε το τουρνουά και προκρινόμαστε αυτόματα ως διοργανωτές. Μια εφάπαξ ενίσχυση $amount είναι ήδη στα κεφάλαια της ομοσπονδίας, έτοιμη για τον προϋπολογισμό αυτού του κύκλου.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts θα διοργανώσουν μαζί το τουρνουά, και προκρινόμαστε αυτόματα ως διοργανωτές. Το μερίδιό μας από την επιχορήγηση, $amount, είναι πλέον στα κεφάλαια της ομοσπονδίας και μπορείς να το κατανείμεις στα τμήματα αυτού του κύκλου κατευθείαν από την αρχική.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts θα διοργανώσουν μαζί το τουρνουά, και προκρινόμαστε αυτόματα ως διοργανωτές. Το μερίδιό μας από την επιχορήγηση, $amount, είναι ήδη στα κεφάλαια της ομοσπονδίας, έτοιμο για τον προϋπολογισμό αυτού του κύκλου.';
   }
 
   @override
@@ -12738,6 +12803,71 @@ class AppLocalizationsEl extends AppLocalizations {
   String msgIntlComebackNewsBody(String name, String nation, int age) {
     return 'Ο $name ($nation) είναι ξανά διαθέσιμος για κλήση, στα $age.';
   }
+
+  @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival: προσπαθούν να αποκτήσουν τον παίκτη $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return 'Η ομοσπονδία $rival προσέγγισε τον παίκτη $name ($age, $position) για να αλλάξει εθνική ομάδα. Δεν έχει παίξει ακόμη επίσημο αγώνα με την εθνική $nation, οπότε μπορεί ακόμη να αλλάξει. Δώστε του λεπτά σε έναν από τους επόμενους $count επίσημους αγώνες μας και θα δεθεί μαζί μας για πάντα. Αλλιώς, ίσως δεχτεί την πρότασή τους.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival: χάνουν τον παίκτη $name';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return 'Ο παίκτης $name έπαιξε επίσημο αγώνα με την εθνική $nation, οπότε η ομοσπονδία $rival δεν μπορεί πια να τον καλέσει. Είναι δεμένος μαζί μας για πάντα.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return 'Ο παίκτης $name απορρίπτει την ομοσπονδία $rival';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return 'Ο παίκτης $name δεν έχει ακόμη επίσημη συμμετοχή με την εθνική $nation, αλλά είπε στην ομοσπονδία $rival ότι θέλει να περιμένει την ευκαιρία του σε εμάς.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return 'Ο παίκτης $name αλλάζει εθνική: $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return 'Ο παίκτης $name δέχτηκε την πρόταση της ομοσπονδίας $rival και θα αγωνίζεται πλέον για αυτήν. Χωρίς επίσημη συμμετοχή με την εθνική $nation, τίποτα δεν μπορούσε να τον κρατήσει.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return 'Ο παίκτης $name δέχτηκε την πρόταση της ομοσπονδίας $rival. Του είχαν υποσχεθεί λεπτά με την εθνική $nation που δεν ήρθαν ποτέ, και θα αγωνίζεται πλέον για την ομοσπονδία $rival.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Υποσχεθείτε του λεπτά';
+
+  @override
+  String get poachPromisedLabel => 'Υποσχέθηκαν λεπτά';
+
+  @override
+  String get poachCallUpsButton => 'Άνοιγμα κλήσεων';
+
+  @override
+  String get poachPromiseHint =>
+      'Μια υπόσχεση τον κάνει να περιμένει έναν ακόμη επίσημο αγώνα, αλλά αν αθετηθεί είναι πιο πιθανό να φύγει.';
 
   @override
   String playerIntlRetired(int year) {
@@ -16325,6 +16455,96 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Η μπάλα είναι ελεύθερη! Ο $player συμπληρώνει και τη στέλνει στα δίχτυα!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return 'Ο $player φτάνει πρώτος στη χαμένη μπάλα και σκοράρει στη δεύτερη προσπάθεια!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'Στη δεύτερη προσπάθεια! Ο $player ορμάει στη μπάλα και σκοράρει!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return 'Ο $player συμπληρώνει, αλλά ο $keeper αποκρούει ξανά!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return 'Ο $player φτάνει στην επαναφορά, αλλά ξανά τίποτα!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return 'Ο $keeper αντιδρά γρήγορα και σταματά τη συμπλήρωση του $player!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return 'Ο $player φτάνει στην επαναφορά και τη στέλνει άουτ!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return 'Ο $player φτάνει πρώτος στη μπάλα, αλλά τη στέλνει πάνω από το δοκάρι!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Τεράστια ευκαιρία για τον $player στην επαναφορά, αλλά άουτ!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return 'Ο $player συμπληρώνει, αλλά ένας αμυντικός μπλοκάρει το σουτ!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return 'Ο $player ορμάει στην επαναφορά, αλλά το σουτ κόβεται!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'Η μπάλα καταλήγει στον $player, αλλά το σουτ του μπλοκάρεται!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return 'Ο $player συμπληρώνει και βρίσκει το δοκάρι!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Δοκάρι! Η συμπλήρωση του $player επιστρέφει στο γήπεδο!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return 'Ο $player φτάνει στην επαναφορά και τραντάζει τα δοκάρια!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Η μπάλα είναι ελεύθερη στην περιοχή, αλλά ο $defender διώχνει!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return 'Ο $defender φτάνει πρώτος στη χαμένη μπάλα και διώχνει!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return 'Ο $defender αντιδρά πρώτος και στέλνει τη μπάλα μακριά!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Πέναλτι! Ο $player πέφτει μέσα στην περιοχή.';
   }
@@ -18421,6 +18641,30 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get campaignStars3Czechoslovakia =>
       'Κατάκτηση του Παγκόσμιου Πρωταθλήματος';
+
+  @override
+  String get campaignTexasTitle => 'Το μοναχικό αστέρι';
+
+  @override
+  String get campaignTexasTwist =>
+      'Η Δημοκρατία του Τέξας παίρνει τη θέση της Ανγκουίλα στη Βόρεια Αμερική, για πέντε κύκλους';
+
+  @override
+  String get campaignTexasIntro =>
+      'Το Τέξας ήταν ανεξάρτητη δημοκρατία για εννέα χρόνια πριν ενταχθεί στις Ηνωμένες Πολιτείες, και σήμερα βγάζει περισσότερους ποδοσφαιριστές από τα περισσότερα έθνη: τρεις ακαδημίες της πρώτης κατηγορίας, μία από τις πιο πλατιές βάσεις νέων στον κόσμο και Τεξανούς σε κάθε πρωτάθλημα. Σε αυτόν τον κόσμο η Δημοκρατία του Τέξας παίζει για τον εαυτό της, στη θέση της Ανγκουίλα στη Βόρεια Αμερική. Κάθε παίκτης έχει γεννηθεί στο Τέξας, στο Χιούστον, το Ντάλας, το Σαν Αντόνιο, το Όστιν ή το Ελ Πάσο, και το ρόστερ είναι μια ομάδα μεσαίας κατάταξης στην περιοχή: αρκετά καλή για να δυσκολέψει τον οποιονδήποτε, όχι ακόμη αρκετά για να τη φοβούνται. Έχεις πέντε κύκλους για να φτάσεις σε ένα Παγκόσμιο Πρωτάθλημα, να κατακτήσεις το Πρωτάθλημα Βόρειας Αμερικής και, αν τολμάς να ονειρευτείς, το ίδιο το Παγκόσμιο Πρωτάθλημα.';
+
+  @override
+  String get campaignTexasGoal => 'Πρόκριση σε Παγκόσμιο Πρωτάθλημα';
+
+  @override
+  String get campaignStars1Texas => 'Πρόκριση σε Παγκόσμιο Πρωτάθλημα';
+
+  @override
+  String get campaignStars2Texas =>
+      'Κατάκτηση του Πρωταθλήματος Βόρειας Αμερικής';
+
+  @override
+  String get campaignStars3Texas => 'Κατάκτηση του Παγκόσμιου Πρωταθλήματος';
 
   @override
   String get wcPlayoffCourseNote =>

@@ -117,6 +117,8 @@ abstract final class NationGeography {
     'TRI': 'caribbean',
     'TCA': 'caribbean',
     'USA': 'northAmericaMainland',
+    // Texas, a dormant nation (see DormantNations).
+    'TEX': 'northAmericaMainland',
     'VIR': 'caribbean',
 
     // --- Africa ---

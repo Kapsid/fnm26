@@ -213,6 +213,7 @@ abstract final class NationBackdrops {
     'SKN': (_st, _volc), 'LCA': (_st, _volc), 'VIN': (_st, _volc),
     'SUR': (_la, _hills), 'TRI': (_la, _sea), 'TCA': (_st, _sea),
     'USA': (_gt, _plains), 'VIR': (_st, _sea),
+    'TEX': (_gt, _plains),
     // Africa
     'ALG': (_mi, _atlas), 'ANG': (_af, _sea), 'BEN': (_af, _sea),
     'BOT': (_af, _plains), 'BFA': (_af, _plains), 'BDI': (_af, _hills),

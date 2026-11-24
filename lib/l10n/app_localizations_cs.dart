@@ -6231,6 +6231,18 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tourSharedVenues => 'STADIONY';
 
   @override
+  String get tourSharedMapHeading => 'MAPA POŘADATELŮ';
+
+  @override
+  String get tourSharedMapFit => 'Zobrazit celou mapu';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Stadion finále';
+
+  @override
+  String get tourSharedMapTapHint => 'Klepněte na značku pro stadion';
+
+  @override
   String get tourSharedMascot => 'MASKOT';
 
   @override
@@ -12611,6 +12623,40 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Spolupořadatel';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Kandidujte společně s jiným státem své konfederace. Počítají se stadiony obou zemí, silný soused vaší kandidatuře pomůže a při výhře pořádají obě země a obě postupují automaticky. Dotace se dělí, takže váš díl je menší.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Vaše stadiony samy nestačí. Vyberte spolupořadatele a kandidujte společně.';
+
+  @override
+  String get hostBidPartnerAlone => 'Kandidovat sami';
+
+  @override
+  String get hostBidPartnerAgrees => 'Je připraven spolupořádat';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Odmítá: raději bude kandidovat sám.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Odmítá: na společnou kandidaturu je příliš daleko.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Odmítá: tentokrát nemá na svůj podíl peníze.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Když vyhrajete, budete pořádat společně se zemí $nation: obě země postoupí automaticky a dostanete jednorázový příspěvek $amount, svůj podíl, do příštího rozpočtu.';
+  }
+
+  @override
   String get hostBidChance => 'Šance na pořadatelství';
 
   @override
@@ -12789,6 +12835,15 @@ class AppLocalizationsCs extends AppLocalizations {
       'Kandidatura podána. Pořadatel bude oznámen se začátkem nového cyklu.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Společná kandidatura se zemí $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Na samostatné pořadatelství je to málo, ale společná kandidatura se spolupořadatelem je otevřená.';
+
+  @override
   String get hostBidDeclinedNote => 'Tentokrát jste se rozhodli nekandidovat.';
 
   @override
@@ -12877,6 +12932,16 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Turnaj uspořádáme a jako pořadatel máme jistou účast. Jednorázová dotace $amount už je v prostředcích svazu a čeká na rozpočet tohoto cyklu.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return 'Turnaj společně uspořádají $hosts a jako pořadatel máme jistou účast. Náš podíl na dotaci, $amount, je nyní v prostředcích svazu a můžete jej rovnou z přehledu rozdělit mezi oddělení tohoto cyklu.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return 'Turnaj společně uspořádají $hosts a jako pořadatel máme jistou účast. Náš podíl na dotaci, $amount, už je v prostředcích svazu a čeká na rozpočet tohoto cyklu.';
   }
 
   @override
@@ -13046,6 +13111,71 @@ class AppLocalizationsCs extends AppLocalizations {
   String msgIntlComebackNewsBody(String name, String nation, int age) {
     return '$name ($nation) je ve $age letech znovu k dispozici pro nominaci.';
   }
+
+  @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival se snaží získat hráče $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return 'Reprezentace $rival oslovila hráče $name ($age, $position) s nabídkou změnit reprezentační příslušnost. Za $nation zatím neodehrál žádný soutěžní zápas, takže může přestoupit. Dejte mu minuty v jednom z našich příštích $count soutěžních zápasů a bude k nám natrvalo vázán. Jinak může jejich nabídku přijmout.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival přichází o hráče $name';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name odehrál soutěžní zápas za $nation, takže ho reprezentace $rival už nemůže povolat. Je k nám natrvalo vázán.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name odmítl nabídku reprezentace $rival';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name stále nemá soutěžní start za $nation, ale reprezentaci $rival sdělil, že chce počkat na svou šanci u nás.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name přestupuje do reprezentace $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name přijal nabídku reprezentace $rival a od teď bude hrát za ni. Bez soutěžního startu za $nation ho nic neudrželo.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name přijal nabídku reprezentace $rival. Za $nation mu byly slíbeny minuty, které nikdy nepřišly, a od teď bude hrát za $rival.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Slíbit mu minuty';
+
+  @override
+  String get poachPromisedLabel => 'Minuty slíbeny';
+
+  @override
+  String get poachCallUpsButton => 'Otevřít nominaci';
+
+  @override
+  String get poachPromiseHint =>
+      'Slib ho přiměje počkat o jeden soutěžní zápas déle, ale pokud ho porušíte, spíš odejde.';
 
   @override
   String playerIntlRetired(int year) {
@@ -16625,6 +16755,96 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Míč je volný! $player dorazí odražený míč do sítě!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player je u odraženého míče první a skóruje napodruhé!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'Napodruhé to vyšlo! $player se vrhá na volný míč a skóruje!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player dorážel, ale $keeper chytá i podruhé!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player se dostal k odraženému míči, ale ani tentokrát to neprošlo!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper je rychle na zemi a $player neskóruje ani z dorážky!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player se dostal k dorážce a poslal ji vedle!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player je u volného míče první, ale přestřelil!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Obrovská šance pro $player na dorážku, ale míč letí vedle!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player dorážel, ale obránce střelu zablokoval!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player se vrhá na odražený míč, ale střelu někdo srazil!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'Odražený míč se dostal k $player, jeho střela je zablokovaná!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player dorážel a trefil tyč!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Brankové konstrukce! Dorážka $player se odráží zpátky!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player se dostal k dorážce a otřásl brankovou konstrukcí!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Míč je volný ve vápně, ale $defender ho odkopává!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender je u volného míče první a odkopává!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender reaguje nejrychleji a volný míč odkopává pryč!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Penalta! $player padá ve vápně.';
   }
@@ -18717,6 +18937,29 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Vyhrát mistrovství světa';
+
+  @override
+  String get campaignTexasTitle => 'Osamělá hvězda';
+
+  @override
+  String get campaignTexasTwist =>
+      'Republika Texas zaujímá místo Anguilly v Severní Americe, na pět cyklů';
+
+  @override
+  String get campaignTexasIntro =>
+      'Texas byl devět let samostatnou republikou, než se připojil ke Spojeným státům, a dnes vychovává víc fotbalistů než většina států: tři akademie nejvyšší soutěže, jednu z nejširších mládežnických základen na světě a Texasany v každé lize. V tomto světě hraje Republika Texas sama za sebe, na místě Anguilly v Severní Americe. Každý hráč se narodil v Texasu, v Houstonu, Dallasu, San Antoniu, Austinu nebo El Pasu, a kádr patří do středu tabulky regionu: dost dobrý, aby potrápil kohokoli, ale zatím ne tak dobrý, aby z něj měl někdo strach. Máte pět cyklů, abyste se dostali na mistrovství světa, vyhráli Pohár Severní Ameriky a, pokud si troufnete snít, i samotné mistrovství světa.';
+
+  @override
+  String get campaignTexasGoal => 'Postoupit na mistrovství světa';
+
+  @override
+  String get campaignStars1Texas => 'Postoupit na mistrovství světa';
+
+  @override
+  String get campaignStars2Texas => 'Vyhrát Pohár Severní Ameriky';
+
+  @override
+  String get campaignStars3Texas => 'Vyhrát mistrovství světa';
 
   @override
   String get wcPlayoffCourseNote =>

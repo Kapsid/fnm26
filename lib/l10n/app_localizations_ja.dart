@@ -5838,6 +5838,18 @@ class AppLocalizationsJa extends AppLocalizations {
   String get tourSharedVenues => '会場';
 
   @override
+  String get tourSharedMapHeading => '開催国マップ';
+
+  @override
+  String get tourSharedMapFit => '地図全体を表示';
+
+  @override
+  String get tourSharedMapFinalVenue => '決勝の会場';
+
+  @override
+  String get tourSharedMapTapHint => 'マーカーをタップしてスタジアムを表示';
+
+  @override
   String get tourSharedMascot => 'マスコット';
 
   @override
@@ -11795,6 +11807,36 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => '共同開催国';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      '同じ大陸連盟の別の国と共同で招致します。両国のスタジアムが数えられ、強い隣国は招致を後押しし、勝てば両国が開催国となり自動的に出場権を得ます。助成金は分け合うため、あなたの取り分は小さくなります。';
+
+  @override
+  String get hostBidPartnerNeeded => '単独ではスタジアムが足りません。共同開催国を選んで共同招致してください。';
+
+  @override
+  String get hostBidPartnerAlone => '単独で招致';
+
+  @override
+  String get hostBidPartnerAgrees => '共同開催に前向き';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid => '辞退:単独で招致したい意向です。';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar => '辞退:共同招致には遠すぎます。';
+
+  @override
+  String get hostBidPartnerDeclinesFunds => '辞退:今回は自国の負担分を用意できません。';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return '勝てば$nationと共同開催です。両国とも自動的に出場権を得て、次の予算に向けてあなたの取り分である$amountの一時助成金を受け取ります。';
+  }
+
+  @override
   String get hostBidChance => '開催の可能性';
 
   @override
@@ -11968,6 +12010,14 @@ class AppLocalizationsJa extends AppLocalizations {
   String get hostBidLodged => '招致を申請しました。開催国は新しいサイクルの開始時に発表されます。';
 
   @override
+  String hostBidJointWith(String nation) {
+    return '$nationとの共同招致。';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen => '単独開催には足りませんが、共同開催国との共同招致は可能です。';
+
+  @override
   String get hostBidDeclinedNote => '今回は招致を見送りました。';
 
   @override
@@ -12051,6 +12101,16 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return '大会を開催し、開催国として自動的に出場します。一時金$amountはすでに協会の資金に入っており、今サイクルの予算に使えます。';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hostsが共同で大会を開催し、私たちは開催国として自動的に出場権を得ます。助成金の私たちの取り分$amountはすでに連盟の資金に入っており、ハブから今サイクルの部門にすぐ割り当てられます。';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hostsが共同で大会を開催し、私たちは開催国として自動的に出場権を得ます。助成金の私たちの取り分$amountはすでに連盟の資金に入っており、今サイクルの予算に使えます。';
   }
 
   @override
@@ -12212,6 +12272,70 @@ class AppLocalizationsJa extends AppLocalizations {
   String msgIntlComebackNewsBody(String name, String nation, int age) {
     return '$name（$nation）が$age歳で再び招集可能になりました。';
   }
+
+  @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rivalが$nameの引き抜きを狙っています';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rivalが$name（$age歳、$position）に代表変更を打診しました。彼はまだ$nationで公式戦に出場していないため、変更が可能です。次の$count試合の公式戦のいずれかで出場機会を与えれば、彼は永久に私たちの代表に縛られます。そうでなければ、相手の誘いを受けるかもしれません。';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rivalは$nameの獲得に失敗';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$nameが$nationで公式戦に出場したため、$rivalはもう彼を招集できません。彼は永久に私たちの選手です。';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$nameが$rivalの誘いを断りました';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$nameはまだ$nationで公式戦の出場がありませんが、$rivalには私たちのもとでチャンスを待ちたいと伝えました。';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$nameが$rivalへ代表変更';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$nameは$rivalの誘いを受け入れ、今後は同国の代表としてプレーします。$nationでの公式戦出場がなかったため、引き止める手立てはありませんでした。';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$nameは$rivalの誘いを受け入れました。$nationでの出場機会を約束されながら、それが果たされることはなく、今後は$rivalの代表としてプレーします。';
+  }
+
+  @override
+  String get poachPromiseButton => '出場機会を約束する';
+
+  @override
+  String get poachPromisedLabel => '出場機会を約束済み';
+
+  @override
+  String get poachCallUpsButton => '招集画面を開く';
+
+  @override
+  String get poachPromiseHint => '約束すれば公式戦をもう1試合待ってくれますが、約束を破ると離れる可能性が高まります。';
 
   @override
   String playerIntlRetired(int year) {
@@ -15641,6 +15765,96 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'こぼれ球！$playerが詰めてリバウンドを押し込んだ！';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$playerがいち早くこぼれ球に反応し、2度目で決めた！';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return '2度目の正直！$playerがこぼれ球に飛び込んでゴール！';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$playerが詰めるも、$keeperが再びセーブ！';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$playerがこぼれ球に詰めるも、またも阻まれた！';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeperが素早く反応し、$playerの詰めを阻止！';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$playerがこぼれ球に詰めるも、枠を外した！';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$playerがいち早くこぼれ球に反応するも、ふかしてしまった！';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'こぼれ球に$player、絶好機も枠の外へ！';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$playerが詰めるも、DFがシュートをブロック！';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$playerがこぼれ球に飛び込むも、シュートはブロックされた！';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'こぼれ球は$playerの前に、しかしシュートはブロック！';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$playerが詰めるも、ポストに当たった！';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'ポスト直撃！$playerの詰めは跳ね返された！';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$playerがこぼれ球に詰めるも、ゴールの枠を叩いた！';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'ボックス内にこぼれるも、$defenderがクリア！';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defenderがいち早くこぼれ球に反応してクリア！';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defenderが真っ先に反応し、こぼれ球を大きく蹴り出した！';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'PK！$playerがペナルティエリア内で倒された。';
   }
@@ -17691,6 +17905,28 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => '世界選手権優勝';
+
+  @override
+  String get campaignTexasTitle => 'ローンスター';
+
+  @override
+  String get campaignTexasTwist => 'テキサス共和国がアンギラに代わり北米へ、5サイクル';
+
+  @override
+  String get campaignTexasIntro =>
+      'テキサスはアメリカ合衆国に加わる前の9年間、独立した共和国でした。今では多くの国よりも多くのサッカー選手を育てています。トップリーグのアカデミーが三つ、世界有数の層の厚い育成年代、そしてあらゆるリーグでプレーするテキサス出身の選手たち。この世界ではテキサス共和国が自らの代表として、北米でアンギラの座を占めます。選手は全員テキサス生まれ。ヒューストン、ダラス、サンアントニオ、オースティン、エルパソの出身で、チームは地域の中位クラスです。どんな相手も苦しめられるが、まだ恐れられるほどではない。5サイクルのうちに世界選手権へ出場し、北米カップを制覇。夢を見る勇気があるなら、世界選手権そのものを制しましょう。';
+
+  @override
+  String get campaignTexasGoal => '世界選手権出場';
+
+  @override
+  String get campaignStars1Texas => '世界選手権出場';
+
+  @override
+  String get campaignStars2Texas => '北米カップ優勝';
+
+  @override
+  String get campaignStars3Texas => '世界選手権優勝';
 
   @override
   String get wcPlayoffCourseNote =>

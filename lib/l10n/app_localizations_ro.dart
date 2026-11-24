@@ -6171,6 +6171,18 @@ class AppLocalizationsRo extends AppLocalizations {
   String get tourSharedVenues => 'STADIOANE';
 
   @override
+  String get tourSharedMapHeading => 'HARTA GAZDELOR';
+
+  @override
+  String get tourSharedMapFit => 'Arată toată harta';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Stadionul finalei';
+
+  @override
+  String get tourSharedMapTapHint => 'Atinge un marcaj pentru stadion';
+
+  @override
   String get tourSharedMascot => 'MASCOTĂ';
 
   @override
@@ -12591,6 +12603,40 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Coorganizator';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Candidează împreună cu o altă națională din confederația ta. Contează stadioanele ambelor țări, un vecin puternic întărește candidatura, iar dacă câștigi, ambele țări găzduiesc și se califică automat. Grantul se împarte, deci partea ta e mai mică.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Stadioanele tale nu ajung singure. Alege un coorganizator pentru o candidatură comună.';
+
+  @override
+  String get hostBidPartnerAlone => 'Candidează singur';
+
+  @override
+  String get hostBidPartnerAgrees => 'Gata să coorganizeze';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Refuză: preferă să candideze singur.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Refuză: prea departe pentru o candidatură comună.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Refuză: de data aceasta nu își poate finanța partea.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Dacă câștigi, găzduiești împreună cu $nation: ambele țări se califică automat și primești un grant unic de $amount, partea ta, pentru bugetul următor.';
+  }
+
+  @override
   String get hostBidChance => 'Șansa de a găzdui';
 
   @override
@@ -12771,6 +12817,15 @@ class AppLocalizationsRo extends AppLocalizations {
       'Candidatură depusă. Gazda este anunțată la începutul noului ciclu.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Candidatură comună cu $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Prea puțin pentru a găzdui singur, dar o candidatură comună cu un coorganizator este posibilă.';
+
+  @override
   String get hostBidDeclinedNote => 'De data aceasta ați ales să nu candidați.';
 
   @override
@@ -12860,6 +12915,16 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Vom găzdui turneul și ne calificăm automat ca gazdă. O finanțare unică de $amount este deja în fondurile federației, gata pentru bugetul acestui ciclu.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts vor găzdui împreună turneul, iar noi ne calificăm automat ca gazdă. Partea noastră din grant, $amount, este acum în fondurile federației și o poți repartiza departamentelor din acest ciclu direct din ecranul principal.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts vor găzdui împreună turneul, iar noi ne calificăm automat ca gazdă. Partea noastră din grant, $amount, este deja în fondurile federației, pregătită pentru bugetul acestui ciclu.';
   }
 
   @override
@@ -13051,6 +13116,71 @@ class AppLocalizationsRo extends AppLocalizations {
     );
     return '$name ($nation) este din nou disponibil pentru convocare, la $_temp0.';
   }
+
+  @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival încearcă să-l recruteze pe $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rival l-a abordat pe $name ($age, $position) pentru a schimba echipa națională. Nu a jucat încă niciun meci oficial pentru $nation, așa că încă poate schimba. Dă-i minute într-unul dintre următoarele noastre $count meciuri oficiale și va rămâne legat de noi pentru totdeauna. Altfel, ar putea accepta oferta lor.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival ratează transferul lui $name';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name a jucat un meci oficial pentru $nation, așa că $rival nu-l mai poate convoca. Este legat de noi pentru totdeauna.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name spune nu ofertei venite de la $rival';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name încă nu are niciun meci oficial pentru $nation, dar le-a transmis celor de la $rival că vrea să-și aștepte șansa la noi.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name trece la $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name a acceptat oferta celor de la $rival și va juca pentru ei de acum înainte. Fără un meci oficial pentru $nation, nimic nu-l putea reține.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name a acceptat oferta celor de la $rival. I s-au promis minute pentru $nation care n-au mai venit, iar de acum înainte va juca pentru $rival.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Promite-i minute';
+
+  @override
+  String get poachPromisedLabel => 'Minute promise';
+
+  @override
+  String get poachCallUpsButton => 'Deschide convocările';
+
+  @override
+  String get poachPromiseHint =>
+      'O promisiune îl face să mai aștepte un meci oficial, dar dacă este încălcată, e mai probabil să plece.';
 
   @override
   String playerIntlRetired(int year) {
@@ -16650,6 +16780,96 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Mingea e liberă! $player vine din urmă și înscrie din respingere!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player ajunge primul la mingea liberă și înscrie din a doua încercare!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'A doua oară e cu noroc! $player se aruncă pe mingea liberă și înscrie!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player reia, dar $keeper apără din nou!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player ajunge la respingere, dar e oprit din nou!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper reacționează rapid și îi oprește reluarea lui $player!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player ajunge la respingere și trimite pe lângă!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player ajunge primul la mingea liberă, dar trimite peste poartă!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Ocazie uriașă pentru $player din respingere, dar mingea iese pe lângă!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player reia, dar un fundaș blochează șutul!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player se aruncă pe respingere, dar șutul e blocat!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'Respingerea ajunge la $player, dar șutul lui e blocat!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player reia și nimerește bara!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Bară! Reluarea lui $player revine în teren!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player ajunge la respingere și zguduie cadrul porții!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Mingea e liberă în careu, dar $defender degajează!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender ajunge primul la mingea liberă și degajează!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender reacționează primul și trimite mingea departe!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Penalty! $player cade în careu.';
   }
@@ -18754,6 +18974,29 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Câștigarea Campionatului Mondial';
+
+  @override
+  String get campaignTexasTitle => 'Steaua singuratică';
+
+  @override
+  String get campaignTexasTwist =>
+      'Republica Texas ia locul Anguillei în America de Nord, timp de cinci cicluri';
+
+  @override
+  String get campaignTexasIntro =>
+      'Texasul a fost timp de nouă ani o republică independentă înainte să se alăture Statelor Unite, iar azi formează mai mulți fotbaliști decât majoritatea țărilor: trei academii din prima ligă, una dintre cele mai largi baze de juniori din lume și texani în fiecare campionat. În această lume Republica Texas joacă pentru ea însăși, în locul Anguillei în America de Nord. Fiecare jucător s-a născut în Texas, la Houston, Dallas, San Antonio, Austin sau El Paso, iar lotul este o echipă de mijlocul clasamentului în regiune: destul de bună cât să-i pună probleme oricui, dar încă nu destul cât să fie temută. Aveți cinci cicluri ca să ajungeți la un Campionat Mondial, să câștigați Cupa Americii de Nord și, dacă îndrăzniți să visați, chiar Campionatul Mondial.';
+
+  @override
+  String get campaignTexasGoal => 'Calificarea la un Campionat Mondial';
+
+  @override
+  String get campaignStars1Texas => 'Calificarea la un Campionat Mondial';
+
+  @override
+  String get campaignStars2Texas => 'Câștigarea Cupei Americii de Nord';
+
+  @override
+  String get campaignStars3Texas => 'Câștigarea Campionatului Mondial';
 
   @override
   String get wcPlayoffCourseNote =>

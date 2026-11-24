@@ -55,6 +55,7 @@ abstract final class NationLatitudes {
     'HON': 14.1, 'JAM': 18.0, 'MEX': 19.4, 'MSR': 16.7, 'NCA': 12.1,
     'PAN': 9.0, 'PUR': 18.5, 'SKN': 17.3, 'LCA': 14.0, 'VIN': 13.2,
     'SUR': 5.9, 'TRI': 10.7, 'TCA': 21.5, 'USA': 38.9, 'VIR': 18.3,
+    'TEX': 30.3,
     // Africa
     'ALG': 36.8, 'ANG': -8.8, 'BEN': 6.4, 'BOT': -24.7, 'BFA': 12.4,
     'BDI': -3.4, 'CMR': 3.9, 'CPV': 14.9, 'CTA': 4.4, 'CHA': 12.1,

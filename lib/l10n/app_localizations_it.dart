@@ -6030,6 +6030,18 @@ class AppLocalizationsIt extends AppLocalizations {
   String get tourSharedVenues => 'STADI';
 
   @override
+  String get tourSharedMapHeading => 'MAPPA DEI PAESI OSPITANTI';
+
+  @override
+  String get tourSharedMapFit => 'Mostra tutta la mappa';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Stadio della finale';
+
+  @override
+  String get tourSharedMapTapHint => 'Tocca un segnaposto per vedere lo stadio';
+
+  @override
   String get tourSharedMascot => 'MASCOTTE';
 
   @override
@@ -12298,6 +12310,40 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Co-organizzatore';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Candidati insieme a un\'altra nazione della tua confederazione. Contano gli stadi di entrambe, un vicino forte rafforza la candidatura e, se vinci, organizzano entrambe le nazioni e si qualificano di diritto. Il contributo è condiviso, quindi la tua parte è più piccola.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Da soli i tuoi stadi non bastano. Scegli un co-organizzatore per una candidatura congiunta.';
+
+  @override
+  String get hostBidPartnerAlone => 'Candidatura da soli';
+
+  @override
+  String get hostBidPartnerAgrees => 'Pronto a co-organizzare';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Rifiuta: preferisce candidarsi da solo.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Rifiuta: troppo lontano per una candidatura congiunta.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Rifiuta: questa volta non può finanziare la sua parte.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Se vinci, organizzi insieme a $nation: entrambe le nazioni si qualificano di diritto e ricevi un contributo una tantum di $amount, la tua parte, per il prossimo budget.';
+  }
+
+  @override
   String get hostBidChance => 'Probabilità di ospitare';
 
   @override
@@ -12476,6 +12522,15 @@ class AppLocalizationsIt extends AppLocalizations {
       'Candidatura presentata. Il paese ospitante viene annunciato all\'inizio del nuovo ciclo.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Candidatura congiunta con $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Troppo piccoli per organizzare da soli, ma è aperta una candidatura congiunta con un co-organizzatore.';
+
+  @override
   String get hostBidDeclinedNote =>
       'Questa volta hai scelto di non candidarti.';
 
@@ -12571,6 +12626,16 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Ospiteremo il torneo e siamo qualificati di diritto come paese ospitante. Un contributo una tantum di $amount è già nei fondi della federazione, pronto per il budget di questo ciclo.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts organizzeranno insieme il torneo e ci qualifichiamo di diritto come paese ospitante. La nostra parte del contributo, $amount, è ora nei fondi della federazione e puoi assegnarla ai reparti di questo ciclo direttamente dalla home.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts organizzeranno insieme il torneo e ci qualifichiamo di diritto come paese ospitante. La nostra parte del contributo, $amount, è già nei fondi della federazione, pronta per il budget di questo ciclo.';
   }
 
   @override
@@ -12739,6 +12804,71 @@ class AppLocalizationsIt extends AppLocalizations {
   String msgIntlComebackNewsBody(String name, String nation, int age) {
     return '$name ($nation) è di nuovo convocabile, a $age anni.';
   }
+
+  @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival cerca di convincere $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rival ha contattato $name ($age, $position) per fargli cambiare nazionale. Non ha ancora giocato una partita ufficiale con $nation, quindi è ancora libero di cambiare. Fallo giocare in una delle nostre prossime $count partite ufficiali e sarà legato a noi per sempre. Altrimenti potrebbe accettare la loro offerta.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival perde $name';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name ha giocato una partita ufficiale con $nation, quindi $rival non può più convocarlo. È legato a noi per sempre.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name dice no a $rival';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name non ha ancora presenze ufficiali con $nation, ma ha detto a $rival che vuole aspettare la sua occasione con noi.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name passa a $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name ha accettato l’offerta di $rival e da ora giocherà per loro. Senza una presenza ufficiale con $nation, nulla poteva trattenerlo.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name ha accettato l’offerta di $rival. Gli erano stati promessi minuti con $nation che non sono mai arrivati, e da ora giocherà per $rival.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Promettergli minuti';
+
+  @override
+  String get poachPromisedLabel => 'Minuti promessi';
+
+  @override
+  String get poachCallUpsButton => 'Apri le convocazioni';
+
+  @override
+  String get poachPromiseHint =>
+      'Una promessa lo fa aspettare una partita ufficiale in più, ma se non viene mantenuta è più probabile che se ne vada.';
 
   @override
   String playerIntlRetired(int year) {
@@ -16318,6 +16448,96 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Palla vagante! $player si avventa sulla respinta e la mette dentro!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player arriva per primo sulla palla e segna al secondo tentativo!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'Alla seconda va! $player si avventa sulla palla vagante e segna!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player ribatte, ma $keeper para ancora!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player arriva sulla respinta, ma anche stavolta niente da fare!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper è subito a terra e nega il tap-in a $player!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player arriva sulla respinta e la spedisce fuori!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player arriva per primo sulla palla, ma la spara alta!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Occasione d\'oro per $player sulla respinta, ma il pallone va fuori!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player ribatte, ma un difensore mura il tiro!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player si avventa sulla respinta, ma il tiro viene murato!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'La respinta arriva a $player, ma il suo tiro viene bloccato!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player ribatte e colpisce il palo!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Legno! La ribattuta di $player torna in campo!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player arriva sulla respinta e fa tremare i legni!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Palla vagante in area, ma $defender spazza via!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender arriva per primo sulla palla vagante e spazza!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender reagisce per primo e allontana la palla!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Rigore! $player viene atterrato in area.';
   }
@@ -18417,6 +18637,29 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Vincere il Campionato del mondo';
+
+  @override
+  String get campaignTexasTitle => 'La stella solitaria';
+
+  @override
+  String get campaignTexasTwist =>
+      'La Repubblica del Texas prende il posto di Anguilla in Nord America, per cinque cicli';
+
+  @override
+  String get campaignTexasIntro =>
+      'Il Texas è stato una repubblica indipendente per nove anni prima di entrare negli Stati Uniti, e oggi forma più calciatori della maggior parte delle nazioni: tre accademie di massima serie, uno dei vivai giovanili più ampi al mondo e texani in ogni campionato. In questo mondo la Repubblica del Texas gioca per sé, al posto di Anguilla in Nord America. Ogni giocatore è nato in Texas, a Houston, Dallas, San Antonio, Austin o El Paso, e la rosa è una squadra di metà classifica della regione: abbastanza forte da mettere in difficoltà chiunque, non ancora abbastanza da far paura. Hai cinque cicli per arrivare a un Campionato del mondo, vincere la Coppa del Nord America e, se osi sognare, il Campionato del mondo stesso.';
+
+  @override
+  String get campaignTexasGoal => 'Qualificarsi per un Campionato del mondo';
+
+  @override
+  String get campaignStars1Texas => 'Qualificarsi per un Campionato del mondo';
+
+  @override
+  String get campaignStars2Texas => 'Vincere la Coppa del Nord America';
+
+  @override
+  String get campaignStars3Texas => 'Vincere il Campionato del mondo';
 
   @override
   String get wcPlayoffCourseNote =>

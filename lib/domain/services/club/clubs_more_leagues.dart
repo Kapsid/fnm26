@@ -1443,6 +1443,19 @@ const List<_League> _moreLeagues = [
     'Trnava Wolves',
     'Liberec Lynxes',
   ]),
+  // Texas (dormant): the state's professional sides and its second tier.
+  _League('tex', 3, destination: false, [
+    'Houston Herons',
+    'Dallas Mockingbirds',
+    'Austin Grackles',
+    'San Antonio Javelinas',
+    'Houston Bayou',
+    'Fort Worth Drovers',
+    'El Paso Sun',
+    'Arlington Armadillos',
+    'Corpus Christi Gulls',
+    'Lubbock Plainsmen',
+  ]),
   // Tonga
   _League('tga', 5, destination: false, [
     "Nuku'alofa Foxes",

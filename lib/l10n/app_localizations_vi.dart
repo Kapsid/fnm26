@@ -5960,6 +5960,18 @@ class AppLocalizationsVi extends AppLocalizations {
   String get tourSharedVenues => 'SÂN VẬN ĐỘNG';
 
   @override
+  String get tourSharedMapHeading => 'BẢN ĐỒ NƯỚC CHỦ NHÀ';
+
+  @override
+  String get tourSharedMapFit => 'Xem toàn bộ bản đồ';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Sân vận động trận chung kết';
+
+  @override
+  String get tourSharedMapTapHint => 'Chạm vào điểm đánh dấu để xem sân';
+
+  @override
   String get tourSharedMascot => 'LINH VẬT';
 
   @override
@@ -12110,6 +12122,40 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Đồng chủ nhà';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Cùng một quốc gia khác trong liên đoàn châu lục nộp hồ sơ. Sân vận động của cả hai đều được tính, một láng giềng mạnh giúp hồ sơ thuyết phục hơn, và nếu thắng cả hai cùng đăng cai và được tự động vượt qua vòng loại. Khoản tài trợ được chia sẻ nên phần của bạn nhỏ hơn.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Riêng sân vận động của bạn là chưa đủ. Hãy chọn một đồng chủ nhà để nộp hồ sơ chung.';
+
+  @override
+  String get hostBidPartnerAlone => 'Nộp hồ sơ một mình';
+
+  @override
+  String get hostBidPartnerAgrees => 'Sẵn sàng đồng đăng cai';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Từ chối: muốn tự nộp hồ sơ riêng.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Từ chối: quá xa cho một hồ sơ chung.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Từ chối: lần này không đủ kinh phí cho phần của mình.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Nếu thắng, bạn đăng cai cùng $nation: cả hai được tự động vượt qua vòng loại và bạn nhận khoản tài trợ một lần $amount, phần của bạn, cho ngân sách tới.';
+  }
+
+  @override
   String get hostBidChance => 'Cơ hội đăng cai';
 
   @override
@@ -12287,6 +12333,15 @@ class AppLocalizationsVi extends AppLocalizations {
       'Đã nộp hồ sơ. Nước chủ nhà được công bố khi chu kỳ mới bắt đầu.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Hồ sơ chung với $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Chưa đủ để đăng cai một mình, nhưng có thể nộp hồ sơ chung với một đồng chủ nhà.';
+
+  @override
   String get hostBidDeclinedNote => 'Lần này bạn đã chọn không ứng cử.';
 
   @override
@@ -12374,6 +12429,16 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Chúng ta sẽ đăng cai giải đấu và được tự động góp mặt với tư cách chủ nhà. Khoản hỗ trợ một lần $amount đã vào quỹ liên đoàn, sẵn sàng cho ngân sách chu kỳ này.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts sẽ cùng đăng cai giải đấu, và chúng ta được tự động vượt qua vòng loại với tư cách chủ nhà. Phần tài trợ của chúng ta, $amount, đã có trong quỹ liên đoàn, và bạn có thể phân bổ ngay cho các bộ phận của chu kỳ này từ màn hình chính.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts sẽ cùng đăng cai giải đấu, và chúng ta được tự động vượt qua vòng loại với tư cách chủ nhà. Phần tài trợ của chúng ta, $amount, đã có trong quỹ liên đoàn, sẵn sàng cho ngân sách của chu kỳ này.';
   }
 
   @override
@@ -12542,6 +12607,71 @@ class AppLocalizationsVi extends AppLocalizations {
   String msgIntlComebackNewsBody(String name, String nation, int age) {
     return '$name ($nation) sẵn sàng được triệu tập trở lại ở tuổi $age.';
   }
+
+  @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival đang tìm cách chiêu mộ $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rival đã tiếp cận $name ($age, $position) để đổi màu áo đội tuyển. Anh ấy chưa chơi trận chính thức nào cho $nation, nên vẫn có thể đổi. Hãy cho anh ấy ra sân trong một trong $count trận chính thức tới của chúng ta và anh ấy sẽ gắn bó với chúng ta mãi mãi. Nếu không, anh ấy có thể nhận lời đề nghị của họ.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival lỡ mất $name';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name đã chơi một trận chính thức cho $nation, nên $rival không thể triệu tập anh ấy nữa. Anh ấy gắn bó với chúng ta mãi mãi.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name từ chối $rival';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name vẫn chưa có trận chính thức nào cho $nation, nhưng anh ấy đã nói với $rival rằng muốn chờ cơ hội ở chỗ chúng ta.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name chuyển sang $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name đã nhận lời đề nghị của $rival và từ nay sẽ chơi cho họ. Không có trận chính thức nào cho $nation, không gì có thể giữ chân anh ấy.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name đã nhận lời đề nghị của $rival. Anh ấy từng được hứa thời gian thi đấu cho $nation nhưng chưa bao giờ có, và từ nay sẽ chơi cho $rival.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Hứa cho anh ấy ra sân';
+
+  @override
+  String get poachPromisedLabel => 'Đã hứa cho ra sân';
+
+  @override
+  String get poachCallUpsButton => 'Mở danh sách triệu tập';
+
+  @override
+  String get poachPromiseHint =>
+      'Lời hứa khiến anh ấy chờ thêm một trận chính thức, nhưng nếu thất hứa, anh ấy dễ ra đi hơn.';
 
   @override
   String playerIntlRetired(int year) {
@@ -16083,6 +16213,96 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Bóng bật ra! $player băng vào đá bồi thành bàn!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player nhanh chân nhất tới quả bóng bật ra và ghi bàn ở lần thứ hai!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'Lần thứ hai mới thành công! $player lao vào quả bóng lăn lóc và ghi bàn!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player đá bồi, nhưng $keeper lại cản phá!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player tới được bóng bật ra, nhưng lại bị cản!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper phản xạ nhanh, từ chối cú đá bồi của $player!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player tới được bóng bật ra nhưng đá ra ngoài!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player nhanh chân nhất tới quả bóng, nhưng đá vọt xà!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Cơ hội ngon ăn cho $player từ pha bóng bật ra, nhưng bóng đi chệch!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player đá bồi, nhưng một hậu vệ đã chặn cú sút!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player lao vào đá bồi, nhưng cú sút bị chặn lại!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'Bóng bật ra đến chân $player, nhưng cú sút bị chặn!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player đá bồi và trúng cột dọc!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Trúng khung thành! Cú đá bồi của $player bật ra!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player tới được bóng bật ra và làm rung khung thành!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Bóng lăn lóc trong vòng cấm, nhưng $defender phá ra!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender nhanh chân nhất tới quả bóng bật ra và phá đi!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender phản ứng nhanh nhất và phá bóng ra xa!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Phạt đền! $player bị hạ trong vòng cấm.';
   }
@@ -18175,6 +18395,29 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Vô địch Giải vô địch thế giới';
+
+  @override
+  String get campaignTexasTitle => 'Ngôi sao cô đơn';
+
+  @override
+  String get campaignTexasTwist =>
+      'Cộng hòa Texas thế chỗ Anguilla ở Bắc Mỹ, trong năm chu kỳ';
+
+  @override
+  String get campaignTexasIntro =>
+      'Texas từng là một nước cộng hòa độc lập trong chín năm trước khi gia nhập Hoa Kỳ, và ngày nay đào tạo nhiều cầu thủ hơn phần lớn các quốc gia: ba học viện của giải hạng cao nhất, một trong những nền bóng đá trẻ rộng nhất thế giới và cầu thủ Texas ở mọi giải đấu. Trong thế giới này, Cộng hòa Texas thi đấu cho chính mình, thế chỗ Anguilla ở Bắc Mỹ. Mọi cầu thủ đều sinh ra ở Texas, tại Houston, Dallas, San Antonio, Austin hay El Paso, và đội hình là một đội tầm trung của khu vực: đủ giỏi để gây khó dễ cho bất kỳ ai, nhưng chưa đủ để khiến người khác phải e sợ. Bạn có năm chu kỳ để giành vé dự Giải vô địch thế giới, vô địch Cúp Bắc Mỹ và, nếu dám mơ, vô địch chính Giải vô địch thế giới.';
+
+  @override
+  String get campaignTexasGoal => 'Giành vé dự một kỳ Giải vô địch thế giới';
+
+  @override
+  String get campaignStars1Texas => 'Giành vé dự một kỳ Giải vô địch thế giới';
+
+  @override
+  String get campaignStars2Texas => 'Vô địch Cúp Bắc Mỹ';
+
+  @override
+  String get campaignStars3Texas => 'Vô địch Giải vô địch thế giới';
 
   @override
   String get wcPlayoffCourseNote =>

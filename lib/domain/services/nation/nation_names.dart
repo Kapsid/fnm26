@@ -28,6 +28,7 @@ import 'package:fnm/domain/services/nation/nation_names_ko.dart';
 import 'package:fnm/domain/services/nation/nation_names_ro.dart';
 import 'package:fnm/domain/services/nation/nation_names_th.dart';
 import 'package:fnm/domain/services/nation/nation_names_ms.dart';
+import 'package:fnm/domain/services/nation/nation_names_sr.dart';
 
 /// How a nation's name is WRITTEN, as opposed to what it is called in the seed
 /// data.
@@ -270,6 +271,7 @@ abstract final class NationNames {
     'ZAN': 'Zanzibar',
     'IMN': 'Ostrov Man',
     'TCH': 'Československo',
+    'TEX': 'Texas',
     'ZIM': 'Zimbabwe',
   };
 
@@ -507,6 +509,7 @@ abstract final class NationNames {
     'ZAN': 'Zanzibaru',
     'IMN': 'Ostrovu Man',
     'TCH': 'Československu',
+    'TEX': 'Texasu',
     'ZIM': 'Zimbabwe',
   };
 
@@ -568,6 +571,7 @@ abstract final class NationNames {
       'ro' => nationNamesRo,
       'th' => nationNamesTh,
       'ms' => nationNamesMs,
+      'sr' => nationNamesSr,
       _ => null,
     };
     return table?[key] ?? enByCode[key] ?? seedName;

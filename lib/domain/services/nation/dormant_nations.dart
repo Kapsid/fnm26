@@ -97,12 +97,32 @@ abstract final class DormantNations {
     secondaryColor: '#11457E',
   );
 
+  /// The Republic of Texas, the sixth: the next free id after
+  /// Czechoslovakia. It takes Anguilla's place in North America, but not
+  /// Anguilla's rank: a state of thirty million with three professional
+  /// academies would field a mid-strength side, so it starts 55th, between
+  /// Costa Rica (50th) and Honduras (65th), sharing the place with Slovenia
+  /// as Belarus shares Palestine's. Its colours are the flag's blue and red;
+  /// the white is the away shirt's.
+  static const int texasId = 216;
+
+  static const Nation texas = Nation(
+    id: texasId,
+    name: 'Texas',
+    code: 'TEX',
+    confederation: Confederation.northAmerica,
+    ranking: 55,
+    primaryColor: '#002868',
+    secondaryColor: '#BF0A30',
+  );
+
   static const List<Nation> all = [
     greenland,
     zanzibar,
     belarus,
     isleOfMan,
     czechoslovakia,
+    texas,
   ];
 
   static const Set<int> ids = {
@@ -111,6 +131,7 @@ abstract final class DormantNations {
     belarusId,
     isleOfManId,
     czechoslovakiaId,
+    texasId,
   };
 
   /// Dormant nations that join a world without standing in for anyone: the
@@ -129,6 +150,7 @@ abstract final class DormantNations {
     zanzibarId: 110, // Chad
     isleOfManId: 2, // Andorra
     czechoslovakiaId: 12, // Czechia
+    texasId: 66, // Anguilla
   };
 
   /// Nations a dormant nation takes out of the world as well as the one it

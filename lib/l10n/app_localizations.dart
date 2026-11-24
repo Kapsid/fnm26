@@ -28,6 +28,7 @@ import 'app_localizations_nl.dart';
 import 'app_localizations_pl.dart';
 import 'app_localizations_pt.dart';
 import 'app_localizations_ro.dart';
+import 'app_localizations_sr.dart';
 import 'app_localizations_sv.dart';
 import 'app_localizations_th.dart';
 import 'app_localizations_tr.dart';
@@ -143,6 +144,7 @@ abstract class AppLocalizations {
     Locale('pl'),
     Locale('pt'),
     Locale('ro'),
+    Locale('sr'),
     Locale('sv'),
     Locale('th'),
     Locale('tr'),
@@ -9213,6 +9215,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'VENUES'**
   String get tourSharedVenues;
+
+  /// Tournament summary: heading of the map card showing the host nation(s) and their stadiums.
+  ///
+  /// In en, this message translates to:
+  /// **'HOST MAP'**
+  String get tourSharedMapHeading;
+
+  /// Tournament summary map: tooltip of the button that zooms back out to every host nation.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the whole map'**
+  String get tourSharedMapFit;
+
+  /// Tournament summary map: key for the gold marker, and a tag on the tapped stadium, for the ground that stages the final.
+  ///
+  /// In en, this message translates to:
+  /// **'Venue of the final'**
+  String get tourSharedMapFinalVenue;
+
+  /// Tournament summary map: hint under the map that a marker can be tapped to see the stadium's details.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a marker for the stadium'**
+  String get tourSharedMapTapHint;
 
   /// Label for the edition's official mascot.
   ///
@@ -18663,6 +18689,60 @@ abstract class AppLocalizations {
   /// **'Win, and you host, qualify automatically and receive a one-off grant of {amount} for the next budget.'**
   String hostBidPrize(String amount);
 
+  /// Host bid screen: heading of the co-host partner choice (a joint bid with another nation).
+  ///
+  /// In en, this message translates to:
+  /// **'Co-host'**
+  String get hostBidPartnerTitle;
+
+  /// Host bid screen: how a joint bid with a co-host works.
+  ///
+  /// In en, this message translates to:
+  /// **'Bid together with another nation of your confederation. Both nations\' stadiums count, a strong neighbour helps your case, and if you win both nations host and qualify automatically. The grant is shared, so your part is smaller.'**
+  String get hostBidPartnerBlurb;
+
+  /// Host bid screen: the nation's stadiums are too small alone; a joint bid is the only way to bid.
+  ///
+  /// In en, this message translates to:
+  /// **'Your stadiums fall short alone. Choose a co-host to bid jointly.'**
+  String get hostBidPartnerNeeded;
+
+  /// Host bid screen: option to bid without a co-host.
+  ///
+  /// In en, this message translates to:
+  /// **'Bid alone'**
+  String get hostBidPartnerAlone;
+
+  /// Host bid screen: under a candidate co-host nation, it agrees to bid jointly.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to co-host'**
+  String get hostBidPartnerAgrees;
+
+  /// Host bid screen: under a candidate co-host nation, it declines because it prefers its own bid.
+  ///
+  /// In en, this message translates to:
+  /// **'Declines: it would rather bid on its own.'**
+  String get hostBidPartnerDeclinesOwnBid;
+
+  /// Host bid screen: under a candidate co-host nation, it declines because it is not a neighbour.
+  ///
+  /// In en, this message translates to:
+  /// **'Declines: too far away for a joint bid.'**
+  String get hostBidPartnerDeclinesTooFar;
+
+  /// Host bid screen: under a candidate co-host nation, it declines because it cannot fund its share.
+  ///
+  /// In en, this message translates to:
+  /// **'Declines: it can\'t fund its share this time.'**
+  String get hostBidPartnerDeclinesFunds;
+
+  /// Host bid screen: what winning a joint bid brings. nation is the co-host, amount is money like €7M (the manager's share of the grant).
+  ///
+  /// In en, this message translates to:
+  /// **'Win, and you host together with {nation}: both nations qualify automatically, and you receive a one-off grant of {amount}, your share, for the next budget.'**
+  String hostBidPrizeJoint(String nation, String amount);
+
   /// Host bid screen: label above the chance bar.
   ///
   /// In en, this message translates to:
@@ -18939,6 +19019,18 @@ abstract class AppLocalizations {
   /// **'Bid lodged. The host is announced as the new cycle begins.'**
   String get hostBidLodged;
 
+  /// Hosting-bids card: the lodged bid is a joint one with this co-host nation.
+  ///
+  /// In en, this message translates to:
+  /// **'Joint bid with {nation}.'**
+  String hostBidJointWith(String nation);
+
+  /// Hosting-bids card: the nation's stadiums are too small to host alone, but it can bid jointly with a co-host.
+  ///
+  /// In en, this message translates to:
+  /// **'Too small to host alone, but a joint bid with a co-host is open.'**
+  String get hostBidJointOnlyOpen;
+
   /// Hosting-bids card: the manager turned this bid down.
   ///
   /// In en, this message translates to:
@@ -19049,6 +19141,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We will host the tournament and qualify automatically as hosts. A one-off grant of {amount} is already in the federation\'s funds, ready for this cycle\'s budget.'**
   String hostBidWonBodyBudget(String amount);
+
+  /// Inbox body: our joint host bid won; hosts are both host nations joined by &; amount is our share of the grant.
+  ///
+  /// In en, this message translates to:
+  /// **'{hosts} will host the tournament together, and we qualify automatically as hosts. Our share of the hosting grant, {amount}, is now in the federation\'s funds, and you can assign it to this cycle\'s departments straight from the hub.'**
+  String hostBidWonJointBody(String hosts, String amount);
+
+  /// News body: a joint hosting bid decided at the start of a new cycle was won; hosts are both host nations joined by &; amount is our share of the grant.
+  ///
+  /// In en, this message translates to:
+  /// **'{hosts} will host the tournament together, and we qualify automatically as hosts. Our share of the hosting grant, {amount}, is already in the federation\'s funds, ready for this cycle\'s budget.'**
+  String hostBidWonJointBodyBudget(String hosts, String amount);
 
   /// End-of-cycle income card row: the national stadiums' income.
   ///
@@ -19295,6 +19399,91 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name} ({nation}) is available for selection again, at {age}.'**
   String msgIntlComebackNewsBody(String name, String nation, int age);
+
+  /// Inbox: another nation's federation is trying to recruit one of the manager's players who is not yet tied to his nation.
+  ///
+  /// In en, this message translates to:
+  /// **'{rival} are trying to recruit {name}'**
+  String msgPoachTitle(String rival, String name);
+
+  /// Inbox body: a rival federation approached the manager's uncapped player; minutes in one of the next few competitive (non-friendly) matches tie him to the manager's nation.
+  ///
+  /// In en, this message translates to:
+  /// **'{rival} have approached {name} ({age}, {position}) about switching allegiance. He has not played a competitive match for {nation} yet, so he is still free to change. Give him minutes in one of our next {count} competitive matches and he is tied to us for good. If not, he may accept their offer.'**
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  );
+
+  /// Inbox: the approached player got competitive minutes in time and is now tied to the manager's nation.
+  ///
+  /// In en, this message translates to:
+  /// **'{rival} miss out on {name}'**
+  String msgPoachTiedTitle(String name, String rival);
+
+  /// Inbox body: the approached player is now tied to the manager's nation.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has played a competitive match for {nation}, so {rival} can no longer pick him. He is tied to us for good.'**
+  String msgPoachTiedBody(String name, String rival, String nation);
+
+  /// Inbox: the deadline passed without a competitive cap, but the player turned the rival down.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} turns down {rival}'**
+  String msgPoachStayedTitle(String name, String rival);
+
+  /// Inbox body: the player stays although still without a competitive cap.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} still has no competitive cap for {nation}, but he has told {rival} he wants to wait for his chance with us.'**
+  String msgPoachStayedBody(String name, String rival, String nation);
+
+  /// Inbox: the player switched allegiance to the rival nation.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} switches to {rival}'**
+  String msgPoachSwitchedTitle(String name, String rival);
+
+  /// Inbox body: the player switched allegiance because he had no competitive cap for the manager's nation.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has accepted the offer from {rival} and will play for them from now on. Without a competitive cap for {nation}, nothing could hold him.'**
+  String msgPoachSwitchedBody(String name, String rival, String nation);
+
+  /// Inbox body: the player switched allegiance after a promise of minutes was broken.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has accepted the offer from {rival}. He was promised minutes for {nation} that never came, and he will play for {rival} from now on.'**
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation);
+
+  /// Button in the approach message: promise the player minutes. Short.
+  ///
+  /// In en, this message translates to:
+  /// **'Promise him minutes'**
+  String get poachPromiseButton;
+
+  /// Disabled button label once minutes have been promised. Short.
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes promised'**
+  String get poachPromisedLabel;
+
+  /// Button in the approach message: open the call-up screen. Short.
+  ///
+  /// In en, this message translates to:
+  /// **'Open call-ups'**
+  String get poachCallUpsButton;
+
+  /// Hint under the promise button: a promise buys one more competitive match, but breaking it makes him likelier to leave.
+  ///
+  /// In en, this message translates to:
+  /// **'A promise makes him wait one more competitive match, but he is likelier to leave if it is broken.'**
+  String get poachPromiseHint;
 
   /// Player page: a line under the nation for a player who retired from international football in this save. Short.
   ///
@@ -24516,6 +24705,114 @@ abstract class AppLocalizations {
   /// **'Woodwork! {player} can\'t believe it.'**
   String pitchComPenaltyWoodwork3(String player);
 
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and scores. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s loose! {player} follows it up and buries the rebound!'**
+  String pitchComPenaltyReboundGoal1(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} gets to the loose ball first and scores. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is first to the loose ball and scores at the second attempt!'**
+  String pitchComPenaltyReboundGoal2(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} pounces on it and scores. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Second time lucky! {player} pounces on the loose ball and scores!'**
+  String pitchComPenaltyReboundGoal3(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up; the goalkeeper {keeper} saves again. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} follows it up, but {keeper} saves again!'**
+  String pitchComPenaltyReboundSaved1(String player, String keeper);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up; it is saved again. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} gets to the rebound, but it\'s kept out again!'**
+  String pitchComPenaltyReboundSaved2(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up; the goalkeeper {keeper} saves. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{keeper} is down quickly to deny {player} on the follow-up!'**
+  String pitchComPenaltyReboundSaved3(String player, String keeper);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} gets to the rebound and shoots wide. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} reaches the rebound and drags it wide!'**
+  String pitchComPenaltyReboundWide1(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} gets to the rebound and shoots over the bar. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is first to the loose ball, but skies it over!'**
+  String pitchComPenaltyReboundWide2(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} gets to the rebound and misses the target. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'A golden chance for {player} on the rebound, but it flies wide!'**
+  String pitchComPenaltyReboundWide3(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and a defender blocks the shot. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} follows it up, but a defender blocks the shot!'**
+  String pitchComPenaltyReboundBlocked1(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and the shot is charged down. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} pounces on the rebound, but it\'s charged down!'**
+  String pitchComPenaltyReboundBlocked2(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and the shot is blocked. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'The rebound falls to {player}, whose shot is blocked!'**
+  String pitchComPenaltyReboundBlocked3(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and hits the post. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} follows it up and hits the post!'**
+  String pitchComPenaltyReboundWoodwork1(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and hits the woodwork. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Off the woodwork! {player}\'s follow-up comes back out!'**
+  String pitchComPenaltyReboundWoodwork2(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and hits the frame of the goal. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} reaches the rebound and rattles the frame of the goal!'**
+  String pitchComPenaltyReboundWoodwork3(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and the defender {defender} clears the loose ball. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s loose in the box, but {defender} hacks it clear!'**
+  String pitchComPenaltyReboundCleared1(String defender);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and the defender {defender} reaches the loose ball first and clears it. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{defender} beats everyone to the loose ball and clears!'**
+  String pitchComPenaltyReboundCleared2(String defender);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and the defender {defender} reacts first and kicks it away. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{defender} reacts first and boots the loose ball away!'**
+  String pitchComPenaltyReboundCleared3(String defender);
+
   /// Pitch view commentary line: a penalty is given for a foul in the box (no card). {player} is the player fouled, {other} the player who fouled him. Variant 1 of 3.
   ///
   /// In en, this message translates to:
@@ -27714,6 +28011,48 @@ abstract class AppLocalizations {
   /// **'Win the World Championship'**
   String get campaignStars3Czechoslovakia;
 
+  /// Campaign title: the Lone Star, the single star of the Texas flag, for four cycles of the Republic of Texas, a nation added to the world for this campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'The Lone Star'**
+  String get campaignTexasTitle;
+
+  /// One-line twist of the Texas campaign: the Republic of Texas in Anguilla's place in North America, for four cycles.
+  ///
+  /// In en, this message translates to:
+  /// **'The Republic of Texas take Anguilla\'s place in North America, for five cycles'**
+  String get campaignTexasTwist;
+
+  /// Brief screen introduction of the Texas campaign: the Republic of Texas take Anguilla's place in North America as a mid-strength side, every player Texas-born, for five cycles. Names no real player.
+  ///
+  /// In en, this message translates to:
+  /// **'Texas was a republic of its own for nine years before it joined the United States, and today it raises more footballers than most nations: three top-flight academies, one of the deepest youth games anywhere and Texans in every league. In this world the Republic of Texas plays for itself, in Anguilla\'s place in North America. Every player is Texas-born, from Houston, Dallas, San Antonio, Austin and El Paso, and the squad is a mid-table side of the region: good enough to trouble anyone, not yet good enough to be feared. You have five cycles to reach a World Championship, win the North America Cup and, if you dare to dream, the World Championship itself.'**
+  String get campaignTexasIntro;
+
+  /// One-line goal of the Texas campaign (its first star): qualify for a World Championship.
+  ///
+  /// In en, this message translates to:
+  /// **'Qualify for a World Championship'**
+  String get campaignTexasGoal;
+
+  /// What earns the first star in the Texas campaign: qualify for a World Championship, in any cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Qualify for a World Championship'**
+  String get campaignStars1Texas;
+
+  /// What earns the second star in the Texas campaign: win the North America Cup, the region's continental championship, in any cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Win the North America Cup'**
+  String get campaignStars2Texas;
+
+  /// What earns the third star in the Texas campaign: win the World Championship, in any cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Win the World Championship'**
+  String get campaignStars3Texas;
+
   /// World Championship qualifying, under Europe's groups: who goes to the play-off paths (the best runners-up, in yellow, and the best Nations Cup group winners not through), then the Nations Cup sides on course for them, listed below.
   ///
   /// In en, this message translates to:
@@ -27935,6 +28274,7 @@ class _AppLocalizationsDelegate
     'pl',
     'pt',
     'ro',
+    'sr',
     'sv',
     'th',
     'tr',
@@ -27995,6 +28335,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsPt();
     case 'ro':
       return AppLocalizationsRo();
+    case 'sr':
+      return AppLocalizationsSr();
     case 'sv':
       return AppLocalizationsSv();
     case 'th':

@@ -5976,6 +5976,18 @@ class AppLocalizationsHu extends AppLocalizations {
   String get tourSharedVenues => 'HELYSZÍNEK';
 
   @override
+  String get tourSharedMapHeading => 'A RENDEZŐK TÉRKÉPE';
+
+  @override
+  String get tourSharedMapFit => 'Az egész térkép';
+
+  @override
+  String get tourSharedMapFinalVenue => 'A döntő stadionja';
+
+  @override
+  String get tourSharedMapTapHint => 'Koppints egy jelölőre a stadionért';
+
+  @override
   String get tourSharedMascot => 'MASZKOTT';
 
   @override
@@ -12177,6 +12189,40 @@ class AppLocalizationsHu extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Társrendező';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Pályázz együtt a konföderációd egy másik országával. Mindkét ország stadionjai számítanak, egy erős szomszéd erősíti a pályázatot, és győzelem esetén mindkét ország rendez, és automatikusan kijut. A támogatás megoszlik, így a te részed kisebb.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'A stadionjaid egyedül nem elegendők. Válassz társrendezőt a közös pályázathoz.';
+
+  @override
+  String get hostBidPartnerAlone => 'Pályázat egyedül';
+
+  @override
+  String get hostBidPartnerAgrees => 'Kész a közös rendezésre';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Elutasítja: inkább egyedül pályázik.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Elutasítja: túl messze van a közös pályázathoz.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Elutasítja: ezúttal nem tudja finanszírozni a részét.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Ha nyersz, $nation országgal közösen rendezel: mindkét ország automatikusan kijut, és a következő költségvetésre egyszeri, $amount összegű támogatást kapsz, a saját részedet.';
+  }
+
+  @override
   String get hostBidChance => 'Esély a rendezésre';
 
   @override
@@ -12355,6 +12401,15 @@ class AppLocalizationsHu extends AppLocalizations {
       'Pályázat beadva. A rendezőt az új ciklus kezdetén hirdetik ki.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Közös pályázat: $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Egyedül túl kevés a rendezéshez, de a közös pályázat egy társrendezővel nyitva áll.';
+
+  @override
   String get hostBidDeclinedNote => 'Ezúttal úgy döntöttél, hogy nem pályázol.';
 
   @override
@@ -12443,6 +12498,16 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Mi rendezzük a tornát, és rendezőként automatikusan ott vagyunk. A $amount egyszeri támogatás már a szövetség keretében van, készen a ciklus költségvetésére.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return 'A tornát közösen rendezi: $hosts, és rendezőként automatikusan kijutunk. A támogatásból ránk eső rész, $amount, már a szövetség forrásai között van, és a kezdőképernyőről rögtön szétoszthatod a ciklus részlegei között.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return 'A tornát közösen rendezi: $hosts, és rendezőként automatikusan kijutunk. A támogatásból ránk eső rész, $amount, már a szövetség forrásai között van, készen a ciklus költségvetésére.';
   }
 
   @override
@@ -12611,6 +12676,71 @@ class AppLocalizationsHu extends AppLocalizations {
   String msgIntlComebackNewsBody(String name, String nation, int age) {
     return '$name ($nation) $age évesen ismét behívható.';
   }
+
+  @override
+  String msgPoachTitle(String rival, String name) {
+    return 'A(z) $rival el akarja csábítani $name játékost';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return 'A(z) $rival megkereste $name játékost ($age, $position), hogy váltson válogatottat. Még nem játszott tétmérkőzést a(z) $nation színeiben, így még válthat. Adj neki játékpercet a következő $count tétmérkőzésünk egyikén, és végleg hozzánk kötődik. Ellenkező esetben elfogadhatja az ajánlatukat.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return 'A(z) $rival lemarad $name játékosról';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name tétmérkőzést játszott a(z) $nation színeiben, így a(z) $rival már nem hívhatja be. Végleg hozzánk kötődik.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name elutasította a(z) $rival ajánlatát';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name még mindig nem játszott tétmérkőzést a(z) $nation színeiben, de közölte a(z) $rival szövetségével, hogy nálunk várja a lehetőségét.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name a(z) $rival válogatottjába vált';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name elfogadta a(z) $rival ajánlatát, és mostantól náluk játszik. Tétmérkőzés nélkül a(z) $nation színeiben semmi sem tarthatta meg.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name elfogadta a(z) $rival ajánlatát. Játékperceket ígértek neki a(z) $nation színeiben, amelyek sosem jöttek el, és mostantól a(z) $rival válogatottjában játszik.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Ígérj neki játékpercet';
+
+  @override
+  String get poachPromisedLabel => 'Játékperc megígérve';
+
+  @override
+  String get poachCallUpsButton => 'Keret megnyitása';
+
+  @override
+  String get poachPromiseHint =>
+      'Az ígéret miatt még egy tétmérkőzésnyit vár, de ha megszeged, nagyobb eséllyel távozik.';
 
   @override
   String playerIntlRetired(int year) {
@@ -16181,6 +16311,96 @@ class AppLocalizationsHu extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Szabad a labda! $player követi, és bepótolja a kipattanót!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player ér elsőként a labdához, és másodszorra betalál!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'Másodszorra sikerül! $player rávetődik a szabad labdára, és betalál!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player követi, de $keeper ismét véd!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player odaér a kipattanóhoz, de ismét hárítanak!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper gyorsan reagál, és $player kipattanóját is hárítja!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player odaér a kipattanóhoz, de mellé lő!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player ér elsőként a szabad labdához, de fölé lövi!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Hatalmas helyzet $player előtt a kipattanóból, de mellé megy!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player követi, de egy védő blokkolja a lövést!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player rávetődik a kipattanóra, de a lövést blokkolják!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'A kipattanó $player elé kerül, de a lövését blokkolják!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player követi, és a kapufát találja el!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Kapufa! $player kipattanóból leadott lövése visszapattan!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player odaér a kipattanóhoz, és megreszketteti a kapufát!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Szabad a labda a tizenhatoson belül, de $defender felszabadít!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender ér elsőként a szabad labdához, és felszabadít!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender reagál leggyorsabban, és elrúgja a szabad labdát!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Tizenegyes! $player elesik a tizenhatoson belül.';
   }
@@ -18269,6 +18489,29 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Megnyerni a világbajnokságot';
+
+  @override
+  String get campaignTexasTitle => 'A magányos csillag';
+
+  @override
+  String get campaignTexasTwist =>
+      'A Texasi Köztársaság öt ciklusra átveszi Anguilla helyét Észak-Amerikában';
+
+  @override
+  String get campaignTexasIntro =>
+      'Texas kilenc évig önálló köztársaság volt, mielőtt csatlakozott az Egyesült Államokhoz, és ma több futballistát nevel, mint a legtöbb ország: három élvonalbeli akadémia, a világ egyik legszélesebb utánpótlásbázisa és texasiak minden bajnokságban. Ebben a világban a Texasi Köztársaság a maga nevében játszik, Anguilla helyén Észak-Amerikában. Minden játékos Texasban született, Houstonban, Dallasban, San Antonióban, Austinban vagy El Pasóban, a keret pedig a régió középmezőnyéhez tartozik: elég jó ahhoz, hogy bárkinek gondot okozzon, de még nem elég ahhoz, hogy féljenek tőle. Öt ciklusod van, hogy kijuss egy világbajnokságra, megnyerd az Észak-amerikai Kupát, és ha mersz álmodni, magát a világbajnokságot is.';
+
+  @override
+  String get campaignTexasGoal => 'Kijutni egy világbajnokságra';
+
+  @override
+  String get campaignStars1Texas => 'Kijutni egy világbajnokságra';
+
+  @override
+  String get campaignStars2Texas => 'Megnyerni az Észak-amerikai Kupát';
+
+  @override
+  String get campaignStars3Texas => 'Megnyerni a világbajnokságot';
 
   @override
   String get wcPlayoffCourseNote =>

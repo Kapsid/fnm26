@@ -15,8 +15,8 @@ void main() {
             jsonDecode(f.readAsStringSync()) as Map<String, Object?>,
   };
 
-  test('all 28 languages have both strings', () {
-    expect(arbs.length, 28);
+  test('all 29 languages have both strings', () {
+    expect(arbs.length, 29);
     for (final MapEntry(key: lang, value: arb) in arbs.entries) {
       for (final k in keys) {
         final v = arb[k];

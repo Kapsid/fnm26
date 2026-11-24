@@ -13,10 +13,12 @@ import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/world_managers/manager_news.dart';
 import 'package:fnm/features/messages/manager_changes_report.dart';
+import 'package:fnm/features/messages/poach_actions.dart';
 import 'package:fnm/features/messages/poty_card.dart';
-import 'package:fnm/features/nations/career_nations_providers.dart';
 import 'package:fnm/features/messages/squad_dev_report.dart';
 import 'package:fnm/features/messages/transfer_report.dart';
+import 'package:fnm/features/nations/career_nations_providers.dart';
+import 'package:fnm/features/squad/poaching_providers.dart';
 import 'package:fnm/features/world_managers/world_manager_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -50,6 +52,10 @@ import 'package:go_router/go_router.dart';
       'naturalize' => (
         icon: Icons.how_to_reg_rounded,
         color: AppColors.positive,
+      ),
+      poachCategory => (
+        icon: Icons.person_search_rounded,
+        color: AppColors.warning,
       ),
       'cycle' => (icon: Icons.flag_rounded, color: AppColors.primary),
       'transfer' => (icon: Icons.swap_horiz_rounded, color: AppColors.primary),
@@ -225,6 +231,12 @@ class MessageSheet extends StatelessWidget {
               PotyCard(rows: winners),
             ] else
               Text(words.body, style: AppTypography.bodyMedium),
+            // A rival's approach still open: promise him minutes, or go and
+            // call him up (see [PoachActions]).
+            if (message.category == poachCategory)
+              if (_careerId(context) case final careerId?)
+                if (poachPlayerIdOf(message.spec) case final playerId?)
+                  PoachActions(careerId: careerId, playerId: playerId),
             if (onOpenManager case final open?
                 when message.category == ManagerNews.category)
               if (_careerId(context) case final careerId?)

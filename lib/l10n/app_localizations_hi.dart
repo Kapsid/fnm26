@@ -5955,6 +5955,19 @@ class AppLocalizationsHi extends AppLocalizations {
   String get tourSharedVenues => 'स्टेडियम';
 
   @override
+  String get tourSharedMapHeading => 'मेज़बान नक्शा';
+
+  @override
+  String get tourSharedMapFit => 'पूरा नक्शा दिखाएँ';
+
+  @override
+  String get tourSharedMapFinalVenue => 'फ़ाइनल का स्टेडियम';
+
+  @override
+  String get tourSharedMapTapHint =>
+      'स्टेडियम देखने के लिए किसी निशान पर टैप करें';
+
+  @override
   String get tourSharedMascot => 'शुभंकर';
 
   @override
@@ -12157,6 +12170,40 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'सह-मेज़बान';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'अपने महासंघ के किसी दूसरे देश के साथ मिलकर बोली लगाएँ। दोनों देशों के स्टेडियम गिने जाते हैं, एक मज़बूत पड़ोसी आपकी दावेदारी को मज़बूत करता है, और जीतने पर दोनों देश मेज़बानी करते हैं और अपने आप क्वालीफ़ाई करते हैं। अनुदान बँटता है, इसलिए आपका हिस्सा छोटा होता है।';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'आपके स्टेडियम अकेले काफ़ी नहीं हैं। संयुक्त बोली के लिए एक सह-मेज़बान चुनें।';
+
+  @override
+  String get hostBidPartnerAlone => 'अकेले बोली लगाएँ';
+
+  @override
+  String get hostBidPartnerAgrees => 'सह-मेज़बानी के लिए तैयार';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'इनकार: वह अकेले बोली लगाना पसंद करेगा।';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'इनकार: संयुक्त बोली के लिए बहुत दूर है।';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'इनकार: इस बार वह अपना हिस्सा नहीं जुटा सकता।';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'जीतें, और आप $nation के साथ मिलकर मेज़बानी करेंगे: दोनों देश अपने आप क्वालीफ़ाई करेंगे, और आपको अगले बजट के लिए $amount का एकमुश्त अनुदान मिलेगा, जो आपका हिस्सा है।';
+  }
+
+  @override
   String get hostBidChance => 'मेज़बानी का मौका';
 
   @override
@@ -12335,6 +12382,15 @@ class AppLocalizationsHi extends AppLocalizations {
       'दावेदारी दर्ज हुई। मेज़बान की घोषणा नया चक्र शुरू होते ही होगी।';
 
   @override
+  String hostBidJointWith(String nation) {
+    return '$nation के साथ संयुक्त बोली।';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'अकेले मेज़बानी के लिए बहुत छोटा, लेकिन सह-मेज़बान के साथ संयुक्त बोली खुली है।';
+
+  @override
   String get hostBidDeclinedNote =>
       'इस बार आपने दावेदारी न करने का फ़ैसला किया।';
 
@@ -12424,6 +12480,16 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'हम टूर्नामेंट की मेज़बानी करेंगे और मेज़बान के तौर पर अपने आप क्वालिफ़ाई करते हैं। $amount का एकमुश्त अनुदान फ़ेडरेशन की धनराशि में आ चुका है, इस चक्र के बजट के लिए तैयार।';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts मिलकर टूर्नामेंट की मेज़बानी करेंगे, और हम मेज़बान के रूप में अपने आप क्वालीफ़ाई करते हैं। अनुदान में हमारा हिस्सा, $amount, अब महासंघ के कोष में है, और आप इसे सीधे हब से इस चक्र के विभागों में बाँट सकते हैं।';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts मिलकर टूर्नामेंट की मेज़बानी करेंगे, और हम मेज़बान के रूप में अपने आप क्वालीफ़ाई करते हैं। अनुदान में हमारा हिस्सा, $amount, पहले से महासंघ के कोष में है, इस चक्र के बजट के लिए तैयार।';
   }
 
   @override
@@ -12593,6 +12659,71 @@ class AppLocalizationsHi extends AppLocalizations {
   String msgIntlComebackNewsBody(String name, String nation, int age) {
     return '$name ($nation) $age साल की उम्र में फिर से चयन के लिए उपलब्ध हैं।';
   }
+
+  @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival $name को अपनी ओर खींचने की कोशिश कर रहा है';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rival ने $name ($age, $position) से राष्ट्रीय टीम बदलने के लिए संपर्क किया है। उसने अभी तक $nation के लिए कोई प्रतिस्पर्धी मैच नहीं खेला है, इसलिए वह अब भी बदल सकता है। हमारे अगले $count प्रतिस्पर्धी मैचों में से किसी एक में उसे मिनट दें, तो वह हमेशा के लिए हमसे बंध जाएगा। नहीं तो वह उनका प्रस्ताव मान सकता है।';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival के हाथ से $name निकल गया';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name ने $nation के लिए प्रतिस्पर्धी मैच खेल लिया है, इसलिए $rival अब उसे नहीं बुला सकता। वह हमेशा के लिए हमसे बंध गया है।';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name ने $rival को ना कहा';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name के पास अब भी $nation के लिए कोई प्रतिस्पर्धी मैच नहीं है, लेकिन उसने $rival से कहा है कि वह हमारे साथ अपने मौके का इंतज़ार करना चाहता है।';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name ने $rival को चुना';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name ने $rival का प्रस्ताव मान लिया है और अब से उनके लिए खेलेगा। $nation के लिए प्रतिस्पर्धी मैच के बिना उसे कोई रोक नहीं सकता था।';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name ने $rival का प्रस्ताव मान लिया है। उससे $nation के लिए मिनटों का वादा किया गया था जो कभी नहीं मिले, और अब से वह $rival के लिए खेलेगा।';
+  }
+
+  @override
+  String get poachPromiseButton => 'उसे मिनटों का वादा करें';
+
+  @override
+  String get poachPromisedLabel => 'मिनटों का वादा किया गया';
+
+  @override
+  String get poachCallUpsButton => 'कॉल-अप खोलें';
+
+  @override
+  String get poachPromiseHint =>
+      'वादा उसे एक और प्रतिस्पर्धी मैच तक रुकने देता है, लेकिन वादा टूटने पर उसके जाने की संभावना बढ़ जाती है।';
 
   @override
   String playerIntlRetired(int year) {
@@ -16148,6 +16279,96 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'गेंद ढीली है! $player ने फ़ॉलो-अप किया और रिबाउंड पर गोल दाग दिया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player ढीली गेंद पर सबसे पहले पहुँचे और दूसरी कोशिश में गोल कर दिया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'दूसरी बार में कामयाबी! $player ढीली गेंद पर झपटे और गोल कर दिया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player ने फ़ॉलो-अप किया, पर $keeper ने फिर बचा लिया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player रिबाउंड तक पहुँचे, पर फिर रोक दिया गया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper ने फुर्ती से नीचे जाकर $player का फ़ॉलो-अप रोक दिया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player रिबाउंड तक पहुँचे और गेंद बाहर मार दी!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player ढीली गेंद पर सबसे पहले पहुँचे, पर गेंद ऊपर से निकल गई!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'रिबाउंड पर $player के पास सुनहरा मौका, पर गेंद बाहर चली गई!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player ने फ़ॉलो-अप किया, पर एक डिफ़ेंडर ने शॉट रोक दिया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player रिबाउंड पर झपटे, पर शॉट रोक लिया गया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'रिबाउंड $player के पास गिरा, पर उनका शॉट ब्लॉक हो गया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player ने फ़ॉलो-अप किया और गेंद पोस्ट से टकरा गई!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'पोस्ट से टकराई! $player का फ़ॉलो-अप वापस लौट आया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player रिबाउंड तक पहुँचे और गोल का फ़्रेम हिला दिया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'बॉक्स में गेंद ढीली है, पर $defender ने उसे दूर कर दिया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender ढीली गेंद पर सबसे पहले पहुँचे और उसे दूर कर दिया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender ने सबसे पहले प्रतिक्रिया दी और ढीली गेंद को दूर मार दिया!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'पेनल्टी! $player बॉक्स में गिरा दिया गया।';
   }
@@ -18237,6 +18458,29 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'विश्व चैंपियनशिप जीतें';
+
+  @override
+  String get campaignTexasTitle => 'अकेला सितारा';
+
+  @override
+  String get campaignTexasTwist =>
+      'टेक्सास गणराज्य पाँच चक्रों के लिए उत्तर अमेरिका में एंगुइला की जगह लेता है';
+
+  @override
+  String get campaignTexasIntro =>
+      'टेक्सास संयुक्त राज्य में शामिल होने से पहले नौ साल तक एक स्वतंत्र गणराज्य रहा, और आज वह ज़्यादातर देशों से ज़्यादा फ़ुटबॉलर तैयार करता है: शीर्ष लीग की तीन अकादमियाँ, दुनिया के सबसे बड़े युवा फ़ुटबॉल ढाँचों में से एक, और हर लीग में टेक्सास के खिलाड़ी। इस दुनिया में टेक्सास गणराज्य अपने लिए खेलता है, उत्तर अमेरिका में एंगुइला की जगह। हर खिलाड़ी टेक्सास में जन्मा है, ह्यूस्टन, डैलस, सैन एंटोनियो, ऑस्टिन या एल पासो में, और टीम इस क्षेत्र की तालिका के बीच वाली टीम है: किसी को भी परेशान करने लायक अच्छी, पर अभी इतनी नहीं कि उससे डरा जाए। आपके पास पाँच चक्र हैं: विश्व चैंपियनशिप तक पहुँचें, उत्तर अमेरिका कप जीतें और, अगर सपने देखने की हिम्मत है, तो विश्व चैंपियनशिप भी जीतें।';
+
+  @override
+  String get campaignTexasGoal => 'विश्व चैंपियनशिप के लिए क्वालिफ़ाई करें';
+
+  @override
+  String get campaignStars1Texas => 'विश्व चैंपियनशिप के लिए क्वालिफ़ाई करें';
+
+  @override
+  String get campaignStars2Texas => 'उत्तर अमेरिका कप जीतें';
+
+  @override
+  String get campaignStars3Texas => 'विश्व चैंपियनशिप जीतें';
 
   @override
   String get wcPlayoffCourseNote =>

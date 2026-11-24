@@ -22,7 +22,7 @@ import '../../helpers/test_database.dart';
 
 // The host bid under the stadium bars (host rules v2): a bid lodged by this
 // build keeps its edition under the bars, and a nation short of the bar may
-// not lodge one at all. An older build's pledge keeps its edition on the old
+// not lodge one alone. An older build's pledge keeps its edition on the old
 // rules (also pinned on real old saves in save_upgrade_test).
 
 final List<Nation> _nations =
@@ -141,7 +141,9 @@ void main() {
     expect(s.windowOpen, isTrue);
     expect(s.belowBar, isTrue);
     expect(s.eligible, isFalse);
-    expect(s.offer, isNull);
+    // Not alone: at most jointly, with a co-host whose grounds make up the
+    // difference (host_cohost_flow_test).
+    expect(s.offer?.soloAllowed ?? false, isFalse);
     // Nor through a stale offer: place refuses it inside its transaction.
     final stale = HostBidOffer(
       careerId: w.careerId,

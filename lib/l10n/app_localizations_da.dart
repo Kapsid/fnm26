@@ -5993,6 +5993,18 @@ class AppLocalizationsDa extends AppLocalizations {
   String get tourSharedVenues => 'STADIONER';
 
   @override
+  String get tourSharedMapHeading => 'VÆRTSKORT';
+
+  @override
+  String get tourSharedMapFit => 'Vis hele kortet';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Finalens stadion';
+
+  @override
+  String get tourSharedMapTapHint => 'Tryk på en markør for stadion';
+
+  @override
   String get tourSharedMascot => 'MASKOT';
 
   @override
@@ -12235,6 +12247,39 @@ class AppLocalizationsDa extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Medværtsnation';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Byd sammen med en anden nation i dit konføderationsområde. Begge nationers stadioner tæller, en stærk nabo styrker buddet, og vinder I, er begge nationer værter og kvalificerer sig automatisk. Tilskuddet deles, så din del bliver mindre.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Dine stadioner rækker ikke alene. Vælg en medværtsnation til et fælles bud.';
+
+  @override
+  String get hostBidPartnerAlone => 'Byd alene';
+
+  @override
+  String get hostBidPartnerAgrees => 'Klar til at være medvært';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid => 'Siger nej: byder hellere alene.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Siger nej: for langt væk til et fælles bud.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Siger nej: kan ikke finansiere sin del denne gang.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Vinder du, er du vært sammen med $nation: begge nationer kvalificerer sig automatisk, og du får et engangstilskud på $amount, din del, til næste budget.';
+  }
+
+  @override
   String get hostBidChance => 'Chance for værtskab';
 
   @override
@@ -12414,6 +12459,15 @@ class AppLocalizationsDa extends AppLocalizations {
       'Ansøgning indsendt. Værtslandet offentliggøres, når den nye cyklus begynder.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Fælles bud med $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'For lille til at være vært alene, men et fælles bud med en medværtsnation er åbent.';
+
+  @override
   String get hostBidDeclinedNote => 'Du valgte ikke at søge denne gang.';
 
   @override
@@ -12509,6 +12563,16 @@ class AppLocalizationsDa extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Vi bliver værter for turneringen og er automatisk kvalificeret som værtsland. Et engangstilskud på $amount er allerede i forbundets midler, klar til denne cyklus\' budget.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts er værter for turneringen sammen, og vi er automatisk kvalificeret som vært. Vores del af tilskuddet, $amount, er nu i forbundets midler, og du kan fordele det på denne cyklus\' afdelinger direkte fra oversigten.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts er værter for turneringen sammen, og vi er automatisk kvalificeret som vært. Vores del af tilskuddet, $amount, er allerede i forbundets midler, klar til denne cyklus\' budget.';
   }
 
   @override
@@ -12677,6 +12741,71 @@ class AppLocalizationsDa extends AppLocalizations {
   String msgIntlComebackNewsBody(String name, String nation, int age) {
     return '$name ($nation) er igen til rådighed for udtagelse som $age-årig.';
   }
+
+  @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival forsøger at hente $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rival har kontaktet $name ($age, $position) om at skifte landshold. Han har endnu ikke spillet en tællende kamp for $nation, så han kan stadig skifte. Giv ham spilletid i en af vores næste $count tællende kampe, så er han bundet til os for altid. Ellers kan han sige ja til deres tilbud.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival går glip af $name';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name har spillet en tællende kamp for $nation, så $rival kan ikke længere udtage ham. Han er bundet til os for altid.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name siger nej til $rival';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name har stadig ingen tællende kamp for $nation, men han har sagt til $rival, at han vil vente på sin chance hos os.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name skifter til $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name har sagt ja til tilbuddet fra $rival og spiller for dem fra nu af. Uden en tællende kamp for $nation kunne intet holde på ham.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name har sagt ja til tilbuddet fra $rival. Han blev lovet spilletid for $nation, som aldrig kom, og han spiller for $rival fra nu af.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Lov ham spilletid';
+
+  @override
+  String get poachPromisedLabel => 'Spilletid lovet';
+
+  @override
+  String get poachCallUpsButton => 'Åbn udtagelsen';
+
+  @override
+  String get poachPromiseHint =>
+      'Et løfte får ham til at vente én tællende kamp mere, men brydes det, er han mere tilbøjelig til at rejse.';
 
   @override
   String playerIntlRetired(int year) {
@@ -16244,6 +16373,96 @@ class AppLocalizationsDa extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Bolden er løs! $player følger op og sætter returen i mål!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player er først på den løse bold og scorer i andet forsøg!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'Anden gang heldig! $player kaster sig over den løse bold og scorer!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player følger op, men $keeper redder igen!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player når returen, men den bliver stoppet igen!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper er hurtigt nede og stopper returen fra $player!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player når returen og trækker den forbi!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player er først på den løse bold, men sparker den over!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Kæmpechance for $player på returen, men bolden går forbi!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player følger op, men en forsvarer blokerer skuddet!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player kaster sig over returen, men skuddet bliver blokeret!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'Returen falder til $player, men skuddet blokeres!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player følger op og rammer stolpen!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'På træværket! Returen fra $player springer tilbage!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player når returen og ryster målrammen!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Bolden er løs i feltet, men $defender rydder!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender er først på den løse bold og rydder!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender reagerer hurtigst og sparker den løse bold væk!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Straffespark! $player fældes i feltet.';
   }
@@ -18333,6 +18552,29 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Vind Verdensmesterskabet';
+
+  @override
+  String get campaignTexasTitle => 'Den ensomme stjerne';
+
+  @override
+  String get campaignTexasTwist =>
+      'Republikken Texas tager Anguillas plads i Nordamerika, i fem cyklusser';
+
+  @override
+  String get campaignTexasIntro =>
+      'Texas var en selvstændig republik i ni år, før staten blev en del af USA, og i dag fostrer den flere fodboldspillere end de fleste nationer: tre akademier fra den bedste række, et af verdens bredeste ungdomsmiljøer og texanere i hver eneste liga. I denne verden spiller Republikken Texas for sig selv, på Anguillas plads i Nordamerika. Hver spiller er født i Texas, i Houston, Dallas, San Antonio, Austin eller El Paso, og truppen er et midterhold i regionen: god nok til at give hvem som helst problemer, men endnu ikke god nok til at blive frygtet. Du har fem cyklusser til at nå et Verdensmesterskab, vinde Nordamerika Cup og, hvis du tør drømme, selve Verdensmesterskabet.';
+
+  @override
+  String get campaignTexasGoal => 'Kvalificér dig til et VM';
+
+  @override
+  String get campaignStars1Texas => 'Kvalificér dig til et VM';
+
+  @override
+  String get campaignStars2Texas => 'Vind Nordamerika Cup';
+
+  @override
+  String get campaignStars3Texas => 'Vind Verdensmesterskabet';
 
   @override
   String get wcPlayoffCourseNote =>

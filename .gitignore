@@ -54,3 +54,6 @@ app.*.map.json
 .superpowers/sdd/
 docs/site/editor/
 test/golden/failures/
+
+# Agent worktrees
+.claude/worktrees/

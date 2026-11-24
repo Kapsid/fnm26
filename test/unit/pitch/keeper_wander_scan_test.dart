@@ -13,7 +13,15 @@
 /// substituted for a keeper, live changes of shape (with and without named
 /// places), extra time, and scripts resumed from mid-match at a new speed,
 /// as the match screen does after every change.
+///
+/// The screen also asks for a new picture at every interval (a team talk, a
+/// change at the break) with its clock stopped a microsecond short of the
+/// whistle, and after a goal it has paused on: those resumes are scanned
+/// too, with a keeper held to his own end of the pitch (beyond his area
+/// only as far as a save takes him).
 library;
+
+import 'dart:math' as math;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
@@ -34,6 +42,10 @@ import '../../helpers/pitch_match_lab.dart';
 const double _reach = 0.35 * PitchDims.length;
 
 const double _sampleEvery = 0.1;
+
+/// How far out a keeper may be in a picture resumed at a stop: the edge of
+/// his area and a few strides more, for a save.
+const double _nearReach = 26;
 
 const int _seeds = 120;
 
@@ -163,11 +175,14 @@ List<(PitchScript, String)> _scripts(_Case c, int seed) {
 ({int frames, List<String> wanders}) _scan(
   PitchScript s,
   Set<int> goalkeepers,
-  String label,
-) {
+  String label, {
+  double reach = _reach,
+  double? until,
+}) {
   var frames = 0;
   final wanders = <String>[];
-  for (var t = s.start; t < s.totalSeconds; t += _sampleEvery) {
+  final end = math.min(until ?? s.totalSeconds, s.totalSeconds);
+  for (var t = s.start; t < end; t += _sampleEvery) {
     final f = s.sample(_at(t));
     final minute = s.pacer.matchAt(_at(t)).minute;
     for (final id in {...f.keepers, ...goalkeepers}) {
@@ -178,7 +193,7 @@ List<(PitchScript, String)> _scripts(_Case c, int seed) {
       final team = s.actorList[s.actorIndexOf(id)!].teamNationId;
       final dir = attackDir(home: team == s.homeNationId, minute: minute);
       final depth = xToDepth(pos.x, dir);
-      if (depth <= _reach) continue;
+      if (depth <= reach) continue;
       final w = s.windowAt(t);
       final what = w == null
           ? 'open play'
@@ -215,6 +230,55 @@ void main() {
       reason:
           '${wanders.length} of $frames keeper frames beyond '
           '${_reach.toStringAsFixed(1)} m; the first:\n'
+          '${wanders.take(12).join('\n')}',
+    );
+  }, timeout: const Timeout(Duration(minutes: 5)));
+
+  test('a picture resumed where the screen stops (an interval whistle, a '
+      'goal) starts the next half with both keepers in goal', () {
+    var frames = 0;
+    var stops = 0;
+    final wanders = <String>[];
+    const us = Duration(microseconds: 1);
+    for (var seed = 0; seed < 60; seed++) {
+      final c = _case(seed);
+      final speed = PitchSpeed.values[seed % 3];
+      final s0 = _build(c, speed, seed);
+      final p = s0.pacer;
+      final at = <(Duration, String)>[
+        // The interval whistles, where the screen holds its clock.
+        (p.screenAt(46, 0) - us, 'half time'),
+        if (c.result.extraTime != null) ...[
+          (p.screenAt(91, 0) - us, 'before extra time'),
+          (p.screenAt(106, 0) - us, 'half time in extra time'),
+        ],
+        // A hair before each kick-off after a goal.
+        for (final e in s0.cutKinds.entries)
+          if (e.value == PitchCutKind.kickOff)
+            (_at(e.key) - us, 'kick-off at t ${e.key.toStringAsFixed(1)}'),
+      ];
+      for (final (stop, what) in at) {
+        stops++;
+        final s = _build(c, speed, seed, s0.stateAt(stop));
+        // The first 40 s of the new picture: the run back, if there is one.
+        final r = _scan(
+          s,
+          c.goalkeepers,
+          '${c.label}, resumed at $what',
+          reach: _nearReach,
+          until: s.start + 40,
+        );
+        frames += r.frames;
+        wanders.addAll(r.wanders);
+      }
+    }
+    expect(stops, greaterThan(150), reason: 'too few stops to resume at');
+    expect(
+      wanders,
+      isEmpty,
+      reason:
+          '${wanders.length} of $frames keeper frames beyond '
+          '${_nearReach.toStringAsFixed(1)} m; the first:\n'
           '${wanders.take(12).join('\n')}',
     );
   }, timeout: const Timeout(Duration(minutes: 5)));

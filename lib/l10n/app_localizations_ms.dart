@@ -5976,6 +5976,18 @@ class AppLocalizationsMs extends AppLocalizations {
   String get tourSharedVenues => 'STADIUM';
 
   @override
+  String get tourSharedMapHeading => 'PETA TUAN RUMAH';
+
+  @override
+  String get tourSharedMapFit => 'Tunjukkan seluruh peta';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Stadium perlawanan akhir';
+
+  @override
+  String get tourSharedMapTapHint => 'Ketik penanda untuk melihat stadium';
+
+  @override
   String get tourSharedMascot => 'MASKOT';
 
   @override
@@ -12186,6 +12198,40 @@ class AppLocalizationsMs extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Tuan rumah bersama';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Buat bidaan bersama negara lain dalam konfederasi anda. Stadium kedua-dua negara dikira, jiran yang kuat menguatkan bidaan, dan jika menang kedua-dua negara menjadi tuan rumah dan layak secara automatik. Geran dikongsi, jadi bahagian anda lebih kecil.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Stadium anda tidak mencukupi secara sendirian. Pilih tuan rumah bersama untuk bidaan bersama.';
+
+  @override
+  String get hostBidPartnerAlone => 'Bida sendirian';
+
+  @override
+  String get hostBidPartnerAgrees => 'Sedia menjadi tuan rumah bersama';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Menolak: lebih suka membida sendirian.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Menolak: terlalu jauh untuk bidaan bersama.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Menolak: kali ini tidak mampu membiayai bahagiannya.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Jika menang, anda menjadi tuan rumah bersama $nation: kedua-dua negara layak secara automatik, dan anda menerima geran sekali sahaja sebanyak $amount, bahagian anda, untuk belanjawan seterusnya.';
+  }
+
+  @override
   String get hostBidChance => 'Peluang menjadi tuan rumah';
 
   @override
@@ -12364,6 +12410,15 @@ class AppLocalizationsMs extends AppLocalizations {
       'Bidaan dihantar. Tuan rumah diumumkan apabila kitaran baharu bermula.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Bidaan bersama $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Terlalu kecil untuk menjadi tuan rumah sendirian, tetapi bidaan bersama dengan tuan rumah bersama dibuka.';
+
+  @override
   String get hostBidDeclinedNote =>
       'Kali ini anda memilih untuk tidak membida.';
 
@@ -12454,6 +12509,16 @@ class AppLocalizationsMs extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Kita akan menjadi tuan rumah kejohanan dan layak secara automatik sebagai tuan rumah. Geran sekali bayar sebanyak $amount sudah masuk ke dana persekutuan, sedia untuk bajet kitaran ini.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts akan menjadi tuan rumah kejohanan bersama-sama, dan kita layak secara automatik sebagai tuan rumah. Bahagian geran kita, $amount, kini dalam dana persekutuan, dan anda boleh mengagihkannya kepada jabatan kitaran ini terus dari hab.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts akan menjadi tuan rumah kejohanan bersama-sama, dan kita layak secara automatik sebagai tuan rumah. Bahagian geran kita, $amount, sudah dalam dana persekutuan, sedia untuk belanjawan kitaran ini.';
   }
 
   @override
@@ -12621,6 +12686,71 @@ class AppLocalizationsMs extends AppLocalizations {
   String msgIntlComebackNewsBody(String name, String nation, int age) {
     return '$name ($nation) kembali tersedia untuk dipanggil pada usia $age.';
   }
+
+  @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival cuba merekrut $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rival telah mendekati $name ($age, $position) untuk menukar pasukan kebangsaan. Dia belum pernah bermain dalam perlawanan rasmi untuk $nation, jadi dia masih bebas menukar. Beri dia minit dalam salah satu daripada $count perlawanan rasmi kita yang seterusnya dan dia terikat dengan kita selama-lamanya. Jika tidak, dia mungkin menerima tawaran mereka.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival terlepas $name';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name telah bermain dalam perlawanan rasmi untuk $nation, jadi $rival tidak lagi boleh memanggilnya. Dia terikat dengan kita selama-lamanya.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name menolak $rival';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name masih belum ada perlawanan rasmi untuk $nation, tetapi dia telah memberitahu $rival bahawa dia mahu menunggu peluangnya bersama kita.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name beralih ke $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name telah menerima tawaran $rival dan akan bermain untuk mereka mulai sekarang. Tanpa perlawanan rasmi untuk $nation, tiada apa yang dapat menahannya.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name telah menerima tawaran $rival. Dia dijanjikan minit untuk $nation yang tidak pernah tiba, dan mulai sekarang dia bermain untuk $rival.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Janjikan dia minit';
+
+  @override
+  String get poachPromisedLabel => 'Minit dijanjikan';
+
+  @override
+  String get poachCallUpsButton => 'Buka panggilan skuad';
+
+  @override
+  String get poachPromiseHint =>
+      'Janji membuatnya menunggu satu lagi perlawanan rasmi, tetapi jika dimungkiri dia lebih cenderung untuk pergi.';
 
   @override
   String playerIntlRetired(int year) {
@@ -16190,6 +16320,96 @@ class AppLocalizationsMs extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Bola terlepas! $player menyambar bola lantunan dan menjaringkannya!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player paling pantas ke bola terlepas dan menjaringkan gol pada cubaan kedua!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'Cubaan kedua berhasil! $player menerkam bola terlepas dan menjaringkan gol!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player menyambar sekali lagi, tetapi $keeper menyelamatkan lagi!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player mendapat bola lantunan, tetapi dihalang sekali lagi!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper pantas menjatuhkan diri dan menafikan sambaran $player!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player mendapat bola lantunan dan menyepaknya tersasar!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player paling pantas ke bola terlepas, tetapi menyepaknya melepasi palang!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Peluang keemasan untuk $player daripada bola lantunan, tetapi tersasar!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player menyambar sekali lagi, tetapi seorang pertahanan menyekat rembatan!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player menerkam bola lantunan, tetapi rembatannya disekat!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'Bola lantunan jatuh kepada $player, tetapi rembatannya disekat!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player menyambar sekali lagi dan terkena tiang!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Kena tiang! Sambaran $player melantun kembali!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player mendapat bola lantunan dan menggegarkan bingkai gol!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Bola terlepas dalam kotak, tetapi $defender menyapunya keluar!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender paling pantas ke bola terlepas dan menyapunya keluar!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender bertindak paling pantas dan menendang bola terlepas jauh!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Penalti! $player dijatuhkan di kotak penalti.';
   }
@@ -18288,6 +18508,29 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Menangi Kejohanan Dunia';
+
+  @override
+  String get campaignTexasTitle => 'Bintang Tunggal';
+
+  @override
+  String get campaignTexasTwist =>
+      'Republik Texas mengambil tempat Anguilla di Amerika Utara, selama lima kitaran';
+
+  @override
+  String get campaignTexasIntro =>
+      'Texas pernah menjadi republik sendiri selama sembilan tahun sebelum menyertai Amerika Syarikat, dan hari ini ia melahirkan lebih ramai pemain bola sepak berbanding kebanyakan negara: tiga akademi liga tertinggi, antara asas bola sepak remaja yang paling luas di dunia dan pemain Texas dalam setiap liga. Dalam dunia ini Republik Texas bermain untuk dirinya sendiri, di tempat Anguilla di Amerika Utara. Setiap pemain dilahirkan di Texas, di Houston, Dallas, San Antonio, Austin atau El Paso, dan skuadnya ialah pasukan pertengahan carta di rantau ini: cukup bagus untuk menyusahkan sesiapa sahaja, tetapi belum cukup untuk digeruni. Anda ada lima kitaran untuk mara ke Kejohanan Dunia, menjuarai Piala Amerika Utara dan, jika anda berani bermimpi, Kejohanan Dunia itu sendiri.';
+
+  @override
+  String get campaignTexasGoal => 'Layak ke Kejohanan Dunia';
+
+  @override
+  String get campaignStars1Texas => 'Layak ke Kejohanan Dunia';
+
+  @override
+  String get campaignStars2Texas => 'Menangi Piala Amerika Utara';
+
+  @override
+  String get campaignStars3Texas => 'Menangi Kejohanan Dunia';
 
   @override
   String get wcPlayoffCourseNote =>

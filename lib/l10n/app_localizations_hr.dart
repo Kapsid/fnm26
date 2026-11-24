@@ -6158,6 +6158,18 @@ class AppLocalizationsHr extends AppLocalizations {
   String get tourSharedVenues => 'STADIONI';
 
   @override
+  String get tourSharedMapHeading => 'KARTA DOMAĆINA';
+
+  @override
+  String get tourSharedMapFit => 'Prikaži cijelu kartu';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Stadion finala';
+
+  @override
+  String get tourSharedMapTapHint => 'Dodirni oznaku za stadion';
+
+  @override
   String get tourSharedMascot => 'MASKOTA';
 
   @override
@@ -12562,6 +12574,39 @@ class AppLocalizationsHr extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Suorganizator';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Kandidiraj se zajedno s drugom državom svoje konfederacije. Računaju se stadioni obiju zemalja, jak susjed jača kandidaturu, a ako pobijedite, obje zemlje su domaćini i automatski se kvalificiraju. Potpora se dijeli, pa je tvoj dio manji.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Tvoji stadioni sami nisu dovoljni. Odaberi suorganizatora za zajedničku kandidaturu.';
+
+  @override
+  String get hostBidPartnerAlone => 'Kandidiraj se sam';
+
+  @override
+  String get hostBidPartnerAgrees => 'Spreman na suorganizaciju';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid => 'Odbija: radije se kandidira sam.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Odbija: predaleko za zajedničku kandidaturu.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Odbija: ovaj put ne može financirati svoj dio.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Ako pobijediš, domaćin si zajedno s državom $nation: obje zemlje automatski se kvalificiraju, a dobivaš jednokratnu potporu od $amount, svoj dio, za sljedeći proračun.';
+  }
+
+  @override
   String get hostBidChance => 'Šansa za domaćinstvo';
 
   @override
@@ -12740,6 +12785,15 @@ class AppLocalizationsHr extends AppLocalizations {
       'Kandidatura predana. Domaćin se objavljuje na početku novog ciklusa.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Zajednička kandidatura s državom $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Premalo za samostalno domaćinstvo, ali zajednička kandidatura sa suorganizatorom je otvorena.';
+
+  @override
   String get hostBidDeclinedNote => 'Ovaj put ste odlučili ne kandidirati se.';
 
   @override
@@ -12829,6 +12883,16 @@ class AppLocalizationsHr extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Bit ćemo domaćini turnira i kao domaćin automatski smo plasirani. Jednokratna potpora od $amount već je u sredstvima saveza, spremna za proračun ovog ciklusa.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts zajedno će biti domaćini turnira, a mi se kao domaćin automatski kvalificiramo. Naš dio potpore, $amount, sada je u sredstvima saveza i možeš ga odmah s početnog zaslona rasporediti odjelima ovog ciklusa.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts zajedno će biti domaćini turnira, a mi se kao domaćin automatski kvalificiramo. Naš dio potpore, $amount, već je u sredstvima saveza, spreman za proračun ovog ciklusa.';
   }
 
   @override
@@ -12998,6 +13062,71 @@ class AppLocalizationsHr extends AppLocalizations {
   String msgIntlComebackNewsBody(String name, String nation, int age) {
     return '$name ($nation) je u $age. godini ponovno na raspolaganju izborniku.';
   }
+
+  @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival pokušava privući igrača $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return 'Reprezentacija $rival obratila se igraču $name ($age, $position) s ponudom da promijeni reprezentaciju. Još nije odigrao natjecateljsku utakmicu za reprezentaciju $nation, pa još uvijek može promijeniti. Daj mu minute u jednoj od naših sljedećih $count natjecateljskih utakmica i zauvijek će biti vezan uz nas. U suprotnom bi mogao prihvatiti njihovu ponudu.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival ostaje bez igrača $name';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name je odigrao natjecateljsku utakmicu za reprezentaciju $nation, pa ga reprezentacija $rival više ne može pozvati. Zauvijek je vezan uz nas.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name odbija ponudu reprezentacije $rival';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name još nema natjecateljski nastup za reprezentaciju $nation, ali je reprezentaciji $rival poručio da želi čekati svoju priliku kod nas.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name prelazi u reprezentaciju $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name je prihvatio ponudu reprezentacije $rival i od sada igra za nju. Bez natjecateljskog nastupa za reprezentaciju $nation ništa ga nije moglo zadržati.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name je prihvatio ponudu reprezentacije $rival. Obećane su mu minute u reprezentaciji $nation koje nikad nisu došle, i od sada igra za reprezentaciju $rival.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Obećaj mu minute';
+
+  @override
+  String get poachPromisedLabel => 'Minute obećane';
+
+  @override
+  String get poachCallUpsButton => 'Otvori pozive';
+
+  @override
+  String get poachPromiseHint =>
+      'Obećanje ga tjera da pričeka još jednu natjecateljsku utakmicu, ali ako ga prekršiš, vjerojatnije će otići.';
 
   @override
   String playerIntlRetired(int year) {
@@ -16572,6 +16701,96 @@ class AppLocalizationsHr extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Lopta je slobodna! $player dopunjava i zabija odbijenu loptu!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player prvi stiže do slobodne lopte i zabija iz drugog pokušaja!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'Iz drugog pokušaja! $player se baca na slobodnu loptu i zabija!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player dopunjava, ali $keeper ponovno brani!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player stiže do odbijene lopte, ali opet bez gola!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper brzo reagira i zaustavlja dopunu koju puca $player!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player stiže do odbijene lopte i puca pokraj gola!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player prvi stiže do slobodne lopte, ali puca preko gola!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Zlatna prilika za $player kod dopune, ali lopta ide pokraj!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player dopunjava, ali branič blokira udarac!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player se baca na odbijenu loptu, ali udarac je blokiran!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'Odbijena lopta pada pred $player, ali udarac je blokiran!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player dopunjava i pogađa stativu!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Okvir gola! Dopuna koju puca $player vraća se u igru!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player stiže do odbijene lopte i trese okvir gola!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Lopta je slobodna u kaznenom prostoru, ali $defender izbija!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender prvi stiže do slobodne lopte i izbija!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender najbrže reagira i izbija slobodnu loptu daleko!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Jedanaesterac! $player pada u kaznenom prostoru.';
   }
@@ -18668,6 +18887,29 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'Osvoji Svjetsko prvenstvo';
+
+  @override
+  String get campaignTexasTitle => 'Usamljena zvijezda';
+
+  @override
+  String get campaignTexasTwist =>
+      'Republika Teksas zauzima mjesto Angvile u Sjevernoj Americi, kroz pet ciklusa';
+
+  @override
+  String get campaignTexasIntro =>
+      'Teksas je devet godina bio samostalna republika prije nego što se pridružio Sjedinjenim Državama, a danas stvara više nogometaša od većine država: tri akademije iz najviše lige, jednu od najširih omladinskih baza na svijetu i Teksašane u svakoj ligi. U ovom svijetu Republika Teksas igra za sebe, na mjestu Angvile u Sjevernoj Americi. Svaki igrač rođen je u Teksasu, u Houstonu, Dallasu, San Antoniju, Austinu ili El Pasu, a momčad je sredina ljestvice u regiji: dovoljno dobra da namuči svakoga, ali još ne toliko da je se itko boji. Imaš pet ciklusa da stigneš do Svjetskog prvenstva, osvojiš Kup Sjeverne Amerike i, ako se usudiš sanjati, samo Svjetsko prvenstvo.';
+
+  @override
+  String get campaignTexasGoal => 'Kvalificiraj se na Svjetsko prvenstvo';
+
+  @override
+  String get campaignStars1Texas => 'Kvalificiraj se na Svjetsko prvenstvo';
+
+  @override
+  String get campaignStars2Texas => 'Osvoji Kup Sjeverne Amerike';
+
+  @override
+  String get campaignStars3Texas => 'Osvoji Svjetsko prvenstvo';
 
   @override
   String get wcPlayoffCourseNote =>

@@ -5909,6 +5909,18 @@ class AppLocalizationsTh extends AppLocalizations {
   String get tourSharedVenues => 'สนามแข่งขัน';
 
   @override
+  String get tourSharedMapHeading => 'แผนที่เจ้าภาพ';
+
+  @override
+  String get tourSharedMapFit => 'แสดงแผนที่ทั้งหมด';
+
+  @override
+  String get tourSharedMapFinalVenue => 'สนามนัดชิงชนะเลิศ';
+
+  @override
+  String get tourSharedMapTapHint => 'แตะหมุดเพื่อดูสนาม';
+
+  @override
   String get tourSharedMascot => 'มาสคอต';
 
   @override
@@ -12008,6 +12020,39 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'เจ้าภาพร่วม';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'ยื่นเสนอตัวร่วมกับชาติอื่นในสมาพันธ์เดียวกัน สนามของทั้งสองชาติจะถูกนับรวม เพื่อนบ้านที่แข็งแกร่งช่วยให้การเสนอตัวน่าสนใจขึ้น และถ้าชนะ ทั้งสองชาติจะเป็นเจ้าภาพและได้สิทธิ์ผ่านเข้ารอบโดยอัตโนมัติ เงินสนับสนุนต้องแบ่งกัน ส่วนของคุณจึงน้อยลง';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'สนามของคุณเพียงลำพังยังไม่พอ เลือกเจ้าภาพร่วมเพื่อยื่นเสนอตัวร่วมกัน';
+
+  @override
+  String get hostBidPartnerAlone => 'เสนอตัวเพียงลำพัง';
+
+  @override
+  String get hostBidPartnerAgrees => 'พร้อมเป็นเจ้าภาพร่วม';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid => 'ปฏิเสธ: อยากเสนอตัวเองเพียงลำพัง';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'ปฏิเสธ: อยู่ไกลเกินไปสำหรับการเสนอตัวร่วม';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'ปฏิเสธ: ครั้งนี้ไม่มีงบสำหรับส่วนของตน';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'ถ้าชนะ คุณจะเป็นเจ้าภาพร่วมกับ $nation ทั้งสองชาติผ่านเข้ารอบโดยอัตโนมัติ และคุณจะได้รับเงินสนับสนุนครั้งเดียว $amount ซึ่งเป็นส่วนของคุณ สำหรับงบประมาณถัดไป';
+  }
+
+  @override
   String get hostBidChance => 'โอกาสได้เป็นเจ้าภาพ';
 
   @override
@@ -12183,6 +12228,15 @@ class AppLocalizationsTh extends AppLocalizations {
       'ยื่นเสนอตัวแล้ว จะประกาศเจ้าภาพเมื่อเริ่มรอบใหม่';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'เสนอตัวร่วมกับ $nation';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'เล็กเกินไปที่จะเป็นเจ้าภาพเพียงลำพัง แต่ยังเสนอตัวร่วมกับเจ้าภาพร่วมได้';
+
+  @override
   String get hostBidDeclinedNote => 'ครั้งนี้คุณเลือกไม่เสนอตัว';
 
   @override
@@ -12269,6 +12323,16 @@ class AppLocalizationsTh extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'เราจะเป็นเจ้าภาพการแข่งขันและได้สิทธิ์เข้าร่วมอัตโนมัติในฐานะเจ้าภาพ เงินสนับสนุนครั้งเดียว $amount เข้ามาในเงินทุนของสมาคมแล้ว พร้อมสำหรับงบประมาณรอบนี้';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts จะร่วมกันเป็นเจ้าภาพการแข่งขัน และเราได้สิทธิ์ผ่านเข้ารอบโดยอัตโนมัติในฐานะเจ้าภาพ ส่วนแบ่งเงินสนับสนุนของเรา $amount อยู่ในกองทุนของสมาคมแล้ว และคุณจัดสรรให้แผนกต่าง ๆ ของรอบนี้ได้ทันทีจากหน้าหลัก';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts จะร่วมกันเป็นเจ้าภาพการแข่งขัน และเราได้สิทธิ์ผ่านเข้ารอบโดยอัตโนมัติในฐานะเจ้าภาพ ส่วนแบ่งเงินสนับสนุนของเรา $amount อยู่ในกองทุนของสมาคมแล้ว พร้อมสำหรับงบประมาณของรอบนี้';
   }
 
   @override
@@ -12432,6 +12496,71 @@ class AppLocalizationsTh extends AppLocalizations {
   String msgIntlComebackNewsBody(String name, String nation, int age) {
     return '$name ($nation) พร้อมถูกเรียกติดทีมอีกครั้งในวัย $age ปี';
   }
+
+  @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival กำลังพยายามดึงตัว $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rival ได้ติดต่อ $name ($age, $position) ให้เปลี่ยนทีมชาติ เขายังไม่เคยลงเล่นเกมทางการให้ $nation จึงยังเปลี่ยนได้ ให้เขาได้ลงสนามในหนึ่งใน $count เกมทางการนัดถัดไปของเรา แล้วเขาจะผูกพันกับเราตลอดไป มิฉะนั้นเขาอาจรับข้อเสนอของพวกเขา';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival พลาดการได้ตัว $name';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name ได้ลงเล่นเกมทางการให้ $nation แล้ว $rival จึงเรียกตัวเขาไม่ได้อีก เขาผูกพันกับเราตลอดไป';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name ปฏิเสธ $rival';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name ยังไม่มีเกมทางการให้ $nation แต่เขาบอก $rival แล้วว่าต้องการรอโอกาสกับเรา';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name ย้ายไป $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name รับข้อเสนอของ $rival และจะเล่นให้พวกเขานับจากนี้ เมื่อไม่มีเกมทางการให้ $nation ก็ไม่มีอะไรรั้งเขาไว้ได้';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name รับข้อเสนอของ $rival แล้ว เขาเคยได้รับสัญญาว่าจะได้ลงเล่นให้ $nation แต่ไม่เคยเกิดขึ้น และนับจากนี้เขาจะเล่นให้ $rival';
+  }
+
+  @override
+  String get poachPromiseButton => 'สัญญาว่าจะให้ลงเล่น';
+
+  @override
+  String get poachPromisedLabel => 'สัญญาว่าจะให้ลงเล่นแล้ว';
+
+  @override
+  String get poachCallUpsButton => 'เปิดรายชื่อติดทีม';
+
+  @override
+  String get poachPromiseHint =>
+      'คำสัญญาทำให้เขารอเพิ่มอีกหนึ่งเกมทางการ แต่ถ้าผิดสัญญา เขามีแนวโน้มจะจากไปมากขึ้น';
 
   @override
   String playerIntlRetired(int year) {
@@ -15940,6 +16069,96 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'บอลหลุด! $player ตามซ้ำบอลกระดอนเข้าไป!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player ถึงบอลหลุดก่อนใครและยิงเข้าในจังหวะที่สอง!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'จังหวะที่สองสำเร็จ! $player พุ่งใส่บอลหลุดและยิงเข้าไป!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player ตามซ้ำ แต่ $keeper เซฟได้อีกครั้ง!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player ถึงบอลกระดอน แต่ถูกสกัดไว้อีก!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper ลงไปอย่างรวดเร็วและปัดลูกซ้ำของ $player ออกไป!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player ถึงบอลกระดอน แต่ยิงออกข้าง!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player ถึงบอลหลุดก่อนใคร แต่ยิงข้ามคานไป!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'โอกาสทองของ $player จากบอลกระดอน แต่บอลออกข้าง!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player ตามซ้ำ แต่กองหลังบล็อกลูกยิงไว้ได้!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player พุ่งใส่บอลกระดอน แต่ลูกยิงถูกบล็อก!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'บอลกระดอนตกไปที่ $player แต่ลูกยิงถูกบล็อกไว้!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player ตามซ้ำและชนเสา!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'ชนกรอบประตู! ลูกซ้ำของ $player กระดอนกลับออกมา!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player ถึงบอลกระดอนและยิงสนั่นกรอบประตู!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'บอลหลุดในกรอบเขตโทษ แต่ $defender สกัดออกไป!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender ถึงบอลหลุดก่อนใครและสกัดออกไป!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender ตอบสนองเร็วที่สุดและเตะบอลหลุดทิ้งไปไกล!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'จุดโทษ! $player ถูกเกี่ยวล้มในกรอบเขตโทษ';
   }
@@ -18015,6 +18234,29 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get campaignStars3Czechoslovakia => 'คว้าแชมป์ชิงแชมป์โลก';
+
+  @override
+  String get campaignTexasTitle => 'ดาวโดดเดี่ยว';
+
+  @override
+  String get campaignTexasTwist =>
+      'สาธารณรัฐเท็กซัสเข้ามาแทนที่แองกวิลลาในอเมริกาเหนือ ห้ารอบ';
+
+  @override
+  String get campaignTexasIntro =>
+      'เท็กซัสเคยเป็นสาธารณรัฐอิสระอยู่เก้าปีก่อนจะเข้าร่วมกับสหรัฐอเมริกา และทุกวันนี้ผลิตนักฟุตบอลได้มากกว่าชาติส่วนใหญ่: อะคาเดมีของลีกสูงสุดสามแห่ง ฐานฟุตบอลเยาวชนที่กว้างที่สุดแห่งหนึ่งของโลก และนักเตะชาวเท็กซัสในทุกลีก ในโลกนี้สาธารณรัฐเท็กซัสลงเล่นในนามของตัวเอง แทนที่แองกวิลลาในอเมริกาเหนือ นักเตะทุกคนเกิดในเท็กซัส ทั้งฮิวสตัน ดัลลัส แซนแอนโทนีโอ ออสติน และเอลพาโซ และทีมนี้คือทีมระดับกลางตารางของภูมิภาค: เก่งพอจะสร้างปัญหาให้ใครก็ได้ แต่ยังไม่ถึงขั้นที่ใครจะเกรงกลัว คุณมีห้ารอบ เพื่อไปชิงแชมป์โลก คว้าแชมป์ถ้วยอเมริกาเหนือ และถ้ากล้าฝัน ก็คว้าแชมป์ชิงแชมป์โลกเอง';
+
+  @override
+  String get campaignTexasGoal => 'ผ่านเข้ารอบชิงแชมป์โลก';
+
+  @override
+  String get campaignStars1Texas => 'ผ่านเข้ารอบชิงแชมป์โลก';
+
+  @override
+  String get campaignStars2Texas => 'คว้าแชมป์ถ้วยอเมริกาเหนือ';
+
+  @override
+  String get campaignStars3Texas => 'คว้าแชมป์ชิงแชมป์โลก';
 
   @override
   String get wcPlayoffCourseNote =>

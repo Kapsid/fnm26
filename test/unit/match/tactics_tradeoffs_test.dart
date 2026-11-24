@@ -410,10 +410,12 @@ void main() {
         // that was going in and is scored about three times in four. Again
         // at 10244 (-1.4%) when it rose to about 0.40 a match (2026-11-08).
         // Again at 10464 (+2.1%) for the 1.1.2 engine (2026-11-16): direct
-        // free kicks go in about twice as often.
+        // free kicks go in about twice as often. Again at 10486 (+0.2%) for
+        // penalty rebounds (2026-11-24): now and then a penalty that is not
+        // scored stays live and is put in at the second attempt.
         final n = _lab('neutral');
         final m = _mirror(n, n);
-        expect(m.total * 4000, closeTo(10464, 1e-6));
+        expect(m.total * 4000, closeTo(10486, 1e-6));
       },
     );
     // +0.092 on average (counter +0.127, highPress +0.020, possession +0.171,

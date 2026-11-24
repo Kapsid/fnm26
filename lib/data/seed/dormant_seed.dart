@@ -2686,6 +2686,499 @@ List<Player> czechoslovakiaPool() => [
   ),
 ];
 
+// The Republic of Texas's seed data, the sixth dormant nation (see
+// DormantNations), in Anguilla's place in North America. As Greenland's: in
+// neither seed file, written into every database by the seed loader. The
+// squad copies Jamaica's 23 positions and ages (a North American squad with
+// young players in every line), with Jamaica's per-slot attributes x
+// [texasAttributeFactor] (rounded, at least 25). The names are fictional
+// pairings from the pools below, none a real person's (see realTexasNames).
+// Generated once by a throwaway script and written out so it can be
+// reviewed.
+
+/// The factor on Jamaica's attributes that [texasSquad] was written with.
+/// Texas-born professionals are many (three top-flight academies, one of
+/// the country's deepest youth games), so a side of its own is a mid-strength
+/// one: a little above Jamaica, below Costa Rica, sixth in North America
+/// behind Mexico, the United States, Canada, Costa Rica and Panama. At 1.04
+/// its mean overall sits near the world's fiftieth, where its starting rank
+/// (55th) puts it, and far above Anguilla's, whose place it takes. A test
+/// re-derives the squad from this factor; the seed loader rewrites a stored
+/// squad that differs.
+const double texasAttributeFactor = 1.04;
+
+/// Texas's first names: the state as its players are, Anglo, Tejano and
+/// Mexican-American, African-American, and Houston's Vietnamese and
+/// Nigerian communities. Mirrors `"216".first` in
+/// `assets/data/country_names.json`, and is the fringe's input (see
+/// [texasPool]). Frozen once shipped, for the reason [zanzibarFirstNames]
+/// gives.
+const List<String> texasFirstNames = [
+  'James',
+  'John',
+  'Michael',
+  'William',
+  'David',
+  'Christopher',
+  'Matthew',
+  'Joshua',
+  'Daniel',
+  'Andrew',
+  'Ryan',
+  'Tyler',
+  'Austin',
+  'Dylan',
+  'Cody',
+  'Colton',
+  'Hunter',
+  'Brady',
+  'Garrett',
+  'Travis',
+  'Wyatt',
+  'Cole',
+  'Chase',
+  'Blake',
+  'Caleb',
+  'Landon',
+  'Mason',
+  'Logan',
+  'Bryce',
+  'Trey',
+  'Tanner',
+  'Zachary',
+  'Nathan',
+  'Ethan',
+  'Kyle',
+  'Dustin',
+  'Jace',
+  'Beau',
+  'Reid',
+  'Luke',
+  'José',
+  'Luis',
+  'Juan',
+  'Carlos',
+  'Jesús',
+  'Miguel',
+  'Alejandro',
+  'Diego',
+  'Adrián',
+  'Eduardo',
+  'Javier',
+  'Fernando',
+  'Ricardo',
+  'Rubén',
+  'Mario',
+  'Héctor',
+  'Ángel',
+  'Iván',
+  'Emilio',
+  'Mateo',
+  'Santiago',
+  'Gerardo',
+  'Raúl',
+  'Joaquín',
+  'Rogelio',
+  'Jalen',
+  'DeAndre',
+  'Marcus',
+  'Darius',
+  'Terrell',
+  'Jamal',
+  'Malik',
+  'Andre',
+  'Isaiah',
+  'Cedric',
+  'Minh',
+  'Tuan',
+  'Emeka',
+  'Tobi',
+  'Chidi',
+];
+
+/// Texas's surnames: the commonest of the state's English and Tejano
+/// families (Garza, Treviño, Cantú, Villarreal), the Hill Country's German
+/// and Czech ones, and Houston's Vietnamese and Nigerian ones. Mirrors
+/// `"216".sur`, frozen for the reason [texasFirstNames] gives.
+const List<String> texasSurnames = [
+  'Smith',
+  'Johnson',
+  'Williams',
+  'Brown',
+  'Jones',
+  'Miller',
+  'Davis',
+  'Wilson',
+  'Anderson',
+  'Taylor',
+  'Moore',
+  'White',
+  'Harris',
+  'Thompson',
+  'Jackson',
+  'Walker',
+  'Hall',
+  'Allen',
+  'Young',
+  'King',
+  'Wright',
+  'Scott',
+  'Baker',
+  'Hill',
+  'Mitchell',
+  'Carter',
+  'Parker',
+  'Collins',
+  'Turner',
+  'Brooks',
+  'Bennett',
+  'Coleman',
+  'Jenkins',
+  'Hayes',
+  'Sullivan',
+  'Garcia',
+  'Rodriguez',
+  'Martinez',
+  'Hernandez',
+  'Lopez',
+  'Gonzalez',
+  'Perez',
+  'Sanchez',
+  'Ramirez',
+  'Torres',
+  'Flores',
+  'Rivera',
+  'Reyes',
+  'Morales',
+  'Ortiz',
+  'Gutierrez',
+  'Chavez',
+  'Ramos',
+  'Garza',
+  'Salinas',
+  'Treviño',
+  'Villarreal',
+  'Cantú',
+  'Guerra',
+  'Saenz',
+  'Cavazos',
+  'Benavides',
+  'Peña',
+  'Elizondo',
+  'Hinojosa',
+  'Schulze',
+  'Kothmann',
+  'Hoffmann',
+  'Wendel',
+  'Novak',
+  'Hruska',
+  'Pavlicek',
+  'Nguyen',
+  'Tran',
+  'Pham',
+  'Okafor',
+  'Adeyemi',
+  'Okonkwo',
+  'Kowalski',
+  'Dubois',
+];
+
+/// Texas's 23 base players, ids 21601 to 21623 (`nationId * 100 + n`).
+const List<Player> texasSquad = [
+  Player(
+    id: 21601,
+    nationId: 216,
+    name: 'William Wilson',
+    age: 23,
+    position: PlayerPosition.gk,
+    attributes: PlayerAttributes(
+      physical: 70,
+      technical: 67,
+      stamina: 66,
+    ),
+  ),
+  Player(
+    id: 21602,
+    nationId: 216,
+    name: 'José Cavazos',
+    age: 32,
+    position: PlayerPosition.rb,
+    attributes: PlayerAttributes(
+      physical: 76,
+      technical: 71,
+      stamina: 78,
+    ),
+  ),
+  Player(
+    id: 21603,
+    nationId: 216,
+    name: 'Emeka Hayes',
+    age: 27,
+    position: PlayerPosition.cb,
+    attributes: PlayerAttributes(
+      physical: 80,
+      technical: 71,
+      stamina: 74,
+    ),
+  ),
+  Player(
+    id: 21604,
+    nationId: 216,
+    name: 'Kyle Davis',
+    age: 27,
+    position: PlayerPosition.cb,
+    attributes: PlayerAttributes(
+      physical: 75,
+      technical: 71,
+      stamina: 73,
+    ),
+  ),
+  Player(
+    id: 21605,
+    nationId: 216,
+    name: 'Malik Saenz',
+    age: 26,
+    position: PlayerPosition.lb,
+    attributes: PlayerAttributes(
+      physical: 79,
+      technical: 74,
+      stamina: 80,
+    ),
+  ),
+  Player(
+    id: 21606,
+    nationId: 216,
+    name: 'Bryce Jenkins',
+    age: 20,
+    position: PlayerPosition.dm,
+    attributes: PlayerAttributes(
+      physical: 79,
+      technical: 78,
+      stamina: 80,
+    ),
+  ),
+  Player(
+    id: 21607,
+    nationId: 216,
+    name: 'Jalen Miller',
+    age: 25,
+    position: PlayerPosition.cm,
+    attributes: PlayerAttributes(
+      physical: 75,
+      technical: 77,
+      stamina: 82,
+    ),
+  ),
+  Player(
+    id: 21608,
+    nationId: 216,
+    name: 'Chase Guerra',
+    age: 21,
+    position: PlayerPosition.am,
+    attributes: PlayerAttributes(
+      physical: 72,
+      technical: 76,
+      stamina: 70,
+    ),
+  ),
+  Player(
+    id: 21609,
+    nationId: 216,
+    name: 'Mateo Coleman',
+    age: 18,
+    position: PlayerPosition.rw,
+    attributes: PlayerAttributes(
+      physical: 71,
+      technical: 73,
+      stamina: 71,
+    ),
+  ),
+  Player(
+    id: 21610,
+    nationId: 216,
+    name: 'Hunter Jones',
+    age: 20,
+    position: PlayerPosition.st,
+    attributes: PlayerAttributes(
+      physical: 77,
+      technical: 71,
+      stamina: 71,
+    ),
+  ),
+  Player(
+    id: 21611,
+    nationId: 216,
+    name: 'Rubén Cantú',
+    age: 28,
+    position: PlayerPosition.lw,
+    attributes: PlayerAttributes(
+      physical: 73,
+      technical: 77,
+      stamina: 72,
+    ),
+  ),
+  Player(
+    id: 21612,
+    nationId: 216,
+    name: 'Ryan Bennett',
+    age: 33,
+    position: PlayerPosition.gk,
+    attributes: PlayerAttributes(
+      physical: 64,
+      technical: 61,
+      stamina: 60,
+    ),
+  ),
+  Player(
+    id: 21613,
+    nationId: 216,
+    name: 'Diego Brown',
+    age: 20,
+    position: PlayerPosition.gk,
+    attributes: PlayerAttributes(
+      physical: 61,
+      technical: 56,
+      stamina: 57,
+    ),
+  ),
+  Player(
+    id: 21614,
+    nationId: 216,
+    name: 'David Villarreal',
+    age: 31,
+    position: PlayerPosition.rb,
+    attributes: PlayerAttributes(
+      physical: 71,
+      technical: 64,
+      stamina: 75,
+    ),
+  ),
+  Player(
+    id: 21615,
+    nationId: 216,
+    name: 'Luis Brooks',
+    age: 23,
+    position: PlayerPosition.lb,
+    attributes: PlayerAttributes(
+      physical: 73,
+      technical: 69,
+      stamina: 72,
+    ),
+  ),
+  Player(
+    id: 21616,
+    nationId: 216,
+    name: 'Tobi Williams',
+    age: 18,
+    position: PlayerPosition.cb,
+    attributes: PlayerAttributes(
+      physical: 69,
+      technical: 64,
+      stamina: 63,
+    ),
+  ),
+  Player(
+    id: 21617,
+    nationId: 216,
+    name: 'Dustin Treviño',
+    age: 31,
+    position: PlayerPosition.cm,
+    attributes: PlayerAttributes(
+      physical: 62,
+      technical: 68,
+      stamina: 68,
+    ),
+  ),
+  Player(
+    id: 21618,
+    nationId: 216,
+    name: 'Andre Turner',
+    age: 33,
+    position: PlayerPosition.dm,
+    attributes: PlayerAttributes(
+      physical: 69,
+      technical: 70,
+      stamina: 71,
+    ),
+  ),
+  Player(
+    id: 21619,
+    nationId: 216,
+    name: 'Trey Johnson',
+    age: 32,
+    position: PlayerPosition.lm,
+    attributes: PlayerAttributes(
+      physical: 67,
+      technical: 64,
+      stamina: 70,
+    ),
+  ),
+  Player(
+    id: 21620,
+    nationId: 216,
+    name: 'DeAndre Salinas',
+    age: 25,
+    position: PlayerPosition.rm,
+    attributes: PlayerAttributes(
+      physical: 70,
+      technical: 68,
+      stamina: 71,
+    ),
+  ),
+  Player(
+    id: 21621,
+    nationId: 216,
+    name: 'Blake Collins',
+    age: 31,
+    position: PlayerPosition.st,
+    attributes: PlayerAttributes(
+      physical: 67,
+      technical: 64,
+      stamina: 59,
+    ),
+  ),
+  Player(
+    id: 21622,
+    nationId: 216,
+    name: 'Santiago Smith',
+    age: 28,
+    position: PlayerPosition.rw,
+    attributes: PlayerAttributes(
+      physical: 64,
+      technical: 64,
+      stamina: 60,
+    ),
+  ),
+  Player(
+    id: 21623,
+    nationId: 216,
+    name: 'Brady Garza',
+    age: 32,
+    position: PlayerPosition.am,
+    attributes: PlayerAttributes(
+      physical: 61,
+      technical: 67,
+      stamina: 66,
+    ),
+  ),
+];
+
+/// Where Texas's 80 fringe ids start: a fixed range of its own, for the
+/// reason [greenlandFringeFirstId] gives.
+const int texasFringeFirstId = 20216000;
+
+/// Texas's whole stored pool: the squad plus its generated fringe (ids
+/// 20216000 to 20216079), clubs assigned as [PoolGenerator.expand] does.
+List<Player> texasPool() => [
+  for (final p in texasSquad) PoolGenerator.withClub(p),
+  ...PoolGenerator.fringeFor(
+    nationId: DormantNations.texasId,
+    squad: texasSquad,
+    firstId: texasFringeFirstId,
+    names: (first: texasFirstNames, sur: texasSurnames),
+  ),
+];
+
 /// Every dormant nation's stored pool, in [DormantNations.all] order: what
 /// the app's seed source supplies (see `AssetSeedSource.dormant`).
 List<Player> dormantPool() => [
@@ -2694,4 +3187,5 @@ List<Player> dormantPool() => [
   ...belarusPool(),
   ...isleOfManPool(),
   ...czechoslovakiaPool(),
+  ...texasPool(),
 ];

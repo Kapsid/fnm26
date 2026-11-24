@@ -845,6 +845,11 @@ class MatchEngine {
     // wide side crosses more). Forked like the others, never advancing
     // [rng]; a header and a shot draw the same from the detail stream.
     final crossRng = rng.fork(0xC2055);
+    // Penalty rebounds on a TENTH: whether a penalty that did not go in
+    // stays live, who gets to it and how a follow-up ends. Forked like the
+    // others, and drawn from only after a penalty is saved or hits the
+    // woodwork, so every other match plays exactly as before.
+    final reboundRng = rng.fork(0x9EB0);
     // Moments as they happen, each with the event it points at (a goal, a
     // card, a sub), whose index is settled after the final sort of [events].
     final momentLog = <({MatchMoment moment, MatchEvent? event})>[];
@@ -876,6 +881,7 @@ class MatchEngine {
       bool header = false,
       PitchZone? zone,
       ShotOutcome? outcome,
+      int? reboundClearedById,
     }) {
       // Where it was struck from and how a miss ends, drawn in that order
       // as always (one draw each from the detail stream).
@@ -910,6 +916,7 @@ class MatchEngine {
           outcome: how,
           header: headed,
           origin: origin,
+          reboundClearedById: reboundClearedById,
         ),
         goal,
       );
@@ -1229,6 +1236,14 @@ class MatchEngine {
             )
           : null;
       if (goal != null) events.add(goal);
+      // Saved or off the woodwork, now and then it stays live: the taker
+      // or a team-mate rushing in from the edge of the area follows it up,
+      // or a defender gets there first and clears it. All of it on
+      // [reboundRng].
+      final rebound =
+          outcome == ShotOutcome.saved || outcome == ShotOutcome.woodwork
+          ? _penaltyRebound(reboundRng, atk, def, taker, keeper)
+          : null;
       recordShot(
         minute: minute,
         stoppage: stoppage,
@@ -1240,8 +1255,40 @@ class MatchEngine {
         goal: goal,
         zone: PitchZone.boxCentre,
         outcome: outcome,
+        reboundClearedById: rebound?.clearedBy?.id,
       );
-      return (goal: goal != null, xg: p);
+      final follow = rebound?.shooter;
+      if (rebound == null || follow == null) return (goal: goal != null, xg: p);
+      // The follow-up: a shot of its own, in the side's totals.
+      if (identical(atk, liveHome)) {
+        homeShots++;
+      } else {
+        awayShots++;
+      }
+      final scored = rebound.outcome == ShotOutcome.goal
+          ? MatchEvent(
+              minute: minute,
+              stoppage: stoppage,
+              type: MatchEventType.goal,
+              teamNationId: atk.nationId,
+              playerId: follow.id,
+              playerName: follow.name,
+            )
+          : null;
+      if (scored != null) events.add(scored);
+      recordShot(
+        minute: minute,
+        stoppage: stoppage,
+        atk: atk,
+        def: def,
+        shooter: follow,
+        xg: rebound.xg,
+        origin: ShotOrigin.penaltyRebound,
+        goal: scored,
+        zone: rebound.zone,
+        outcome: rebound.outcome,
+      );
+      return (goal: scored != null, xg: p + rebound.xg);
     }
 
     // A direct free kick for [atk]: [fouled] was brought down at the edge of
@@ -2903,6 +2950,114 @@ class MatchEngine {
     return (_penaltyBase * skill / keeping).clamp(0.5, 0.95);
   }
 
+  /// The share of saved penalties that stay live (parried out rather than
+  /// held), and of those off the woodwork that come back into play: about
+  /// one non-scored penalty in five gives a rebound (none of those wide).
+  static const double _penaltyReboundAfterSave = 0.25;
+  static const double _penaltyReboundAfterWoodwork = 0.3;
+
+  /// Of the rebounds, the share a defender gets to first and clears.
+  static const double _penaltyReboundCleared = 0.25;
+
+  /// An ordinary follow-up's chance of going in: with the clearances, about
+  /// 40% of rebounds end in a goal.
+  static const double _penaltyReboundBase = 0.5;
+
+  /// Whether a penalty [taker] did not score against [keeper] stays live,
+  /// and how it ends: null when it does not (the keeper holds it, it goes
+  /// out); else the defender of [def] who clears it (`clearedBy`), or the
+  /// man of [atk] who follows it up (`shooter`: the taker or a team-mate
+  /// rushing in) with his shot's `outcome`, `zone` and chance (`xg`).
+  /// Every draw is on [rng].
+  ({
+    Player? clearedBy,
+    Player? shooter,
+    ShotOutcome outcome,
+    PitchZone zone,
+    double xg,
+  })?
+  _penaltyRebound(
+    SeededRng rng,
+    _Live atk,
+    _Live def,
+    Player taker,
+    Player? keeper,
+  ) {
+    // Without a keeper it is a miss, never a parry; the woodwork's can.
+    final live = keeper == null
+        ? _penaltyReboundAfterWoodwork / 2
+        : _penaltyReboundAfterSave;
+    if (!rng.chance(live)) return null;
+    final defenders = [
+      for (final p in def.xi)
+        if (p.category != PositionCategory.goalkeeper) p,
+    ];
+    if (defenders.isNotEmpty && rng.chance(_penaltyReboundCleared)) {
+      // The nearest man back: a defender more often than not.
+      double weight(Player p) => switch (p.category) {
+        PositionCategory.defender => 3.0,
+        PositionCategory.midfielder => 1.5,
+        _ => 0.5,
+      };
+      final total = defenders.fold<double>(0, (a, p) => a + weight(p));
+      var roll = rng.nextDouble() * total;
+      var clearer = defenders.last;
+      for (final p in defenders) {
+        roll -= weight(p);
+        if (roll <= 0) {
+          clearer = p;
+          break;
+        }
+      }
+      return (
+        clearedBy: clearer,
+        shooter: null,
+        outcome: ShotOutcome.blocked,
+        zone: PitchZone.sixYard,
+        xg: 0,
+      );
+    }
+    // The taker following up his own kick, or a team-mate first to it.
+    final mates = [
+      for (final p in atk.xi)
+        if (p.id != taker.id && p.category != PositionCategory.goalkeeper) p,
+    ];
+    final shooter = mates.isEmpty || rng.chance(0.45)
+        ? taker
+        : _pickScorer(atk, rng, without: taker.id);
+    final technique = (1 + (shooter.attributes.technical - 70) / 200).clamp(
+      0.85,
+      1.15,
+    );
+    final p = keeper == null
+        ? 0.8
+        : (_penaltyReboundBase * technique).clamp(0.4, 0.66);
+    final zone = rng.chance(0.6) ? PitchZone.sixYard : PitchZone.boxCentre;
+    final roll = rng.nextDouble();
+    final ShotOutcome outcome;
+    if (roll < p) {
+      outcome = ShotOutcome.goal;
+    } else {
+      // Of the misses: kept out by the keeper (back on his feet), charged
+      // down by a man rushing back, off target, off the woodwork.
+      final miss = (roll - p) / (1 - p);
+      outcome = miss < 0.4
+          ? (keeper == null ? ShotOutcome.blocked : ShotOutcome.saved)
+          : miss < 0.68
+          ? ShotOutcome.blocked
+          : miss < 0.92
+          ? ShotOutcome.wide
+          : ShotOutcome.woodwork;
+    }
+    return (
+      clearedBy: null,
+      shooter: shooter,
+      outcome: outcome,
+      zone: zone,
+      xg: p,
+    );
+  }
+
   /// How a penalty scored at [p] ends, from one [roll] in [0, 1): a goal
   /// below [p]; of the rest, about 70% saved, 20% wide, 10% on the
   /// woodwork (with nobody in goal, most of the misses are off target).
@@ -3060,9 +3215,11 @@ class MatchEngine {
 
   /// Picks a scorer, weighting outfield players by finishing and attacking
   /// position.
-  Player _pickScorer(_Live team, SeededRng rng) {
+  Player _pickScorer(_Live team, SeededRng rng, {int? without}) {
     final candidates = team.xi
-        .where((p) => p.category != PositionCategory.goalkeeper)
+        .where(
+          (p) => p.category != PositionCategory.goalkeeper && p.id != without,
+        )
         .toList();
     if (candidates.isEmpty) return team.xi.first;
 
