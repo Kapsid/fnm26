@@ -57,6 +57,28 @@ class ShootoutFrame {
   final bool resultShown;
 }
 
+/// A penalty in the match that stays live, as its close-up shows it: the
+/// keeper's parry (or the post) sends the ball out to [to], the point the
+/// pitch then picks it up from, between the close-up's seconds [t0] and
+/// [t1] (see [ShootoutStaging.frameAt]), rising to [peak] on the way. Read
+/// off the script's own spill (see [InMatchPenalty.spill]), so the ball
+/// leaves the close-up where the pitch has it.
+class ShootoutSpill {
+  const ShootoutSpill({
+    required this.to,
+    required this.t0,
+    required this.t1,
+    required this.peak,
+  });
+
+  /// Where the ball spills to, in the close-up's frame (the goal at
+  /// [ShootoutStaging.goalX], lateral as the taker faces it).
+  final Offset2 to;
+  final double t0;
+  final double t1;
+  final double peak;
+}
+
 /// The men of a shootout, taken from the script of the match it follows:
 /// each side's keeper at the final whistle and every shirt number.
 class ShootoutCast {
@@ -269,10 +291,20 @@ abstract final class ShootoutStaging {
 
   static Offset2 _lerp(Offset2 a, Offset2 b, double u) => Offset2.lerp(a, b, u);
 
-  /// The picture [seconds] into [kick] (0 to [kickSeconds]).
-  static ShootoutFrame frameAt(StagedShootoutKick kick, double seconds) {
+  /// The picture [seconds] into [kick] (0 to [kickSeconds], or to the end
+  /// of [spill] when that is later). With a [spill] (a penalty in the match
+  /// that stays live) the parried ball, or the one off the post, goes out
+  /// along it rather than to [restOf].
+  static ShootoutFrame frameAt(
+    StagedShootoutKick kick,
+    double seconds, {
+    ShootoutSpill? spill,
+  }) {
     final k = kick.kick;
-    final s = seconds.clamp(0.0, kickSeconds);
+    final s = seconds.clamp(
+      0.0,
+      spill == null ? kickSeconds : math.max(kickSeconds, spill.t1),
+    );
     const spot = Offset2(spotX, goalY);
 
     // The taker: from the centre circle to a few steps behind the ball,
@@ -313,6 +345,16 @@ abstract final class ShootoutStaging {
       final u = (s - strikeAt) / flight;
       ball = _lerp(spot, arrive.at, u);
       height = 0.11 + (arrive.height - 0.11) * u;
+    } else if (spill != null) {
+      // Off the keeper's gloves (or the post) and out to where the pitch
+      // picks it up, as the script has it: a moment in his hands first
+      // when the script's kick lands after the close-up's.
+      final from = math.max(resultAt, spill.t0);
+      final u = s <= from
+          ? 0.0
+          : ((s - from) / math.max(spill.t1 - from, 0.05)).clamp(0.0, 1.0);
+      ball = _lerp(arrive.at, spill.to, u);
+      height = arrive.height * (1 - u) + 4 * spill.peak * u * (1 - u);
     } else {
       final u = _ease((s - resultAt) / 0.45);
       ball = _lerp(arrive.at, rest.at, u);
@@ -346,6 +388,8 @@ class InMatchPenalty {
     required this.strike,
     required this.kick,
     required this.cast,
+    this.spill,
+    this.spillEnd,
   });
 
   /// The screen second the ball is struck from the spot.
@@ -354,6 +398,15 @@ class InMatchPenalty {
 
   /// The taker's side and the keeper he faces, with every shirt number.
   final ShootoutCast cast;
+
+  /// A penalty that stays live (followed up or cleared): the ball out of
+  /// the keeper's gloves or off the post, in the close-up's seconds. The
+  /// close-up stays up while it runs out (to [spillEnd]); null otherwise.
+  final ShootoutSpill? spill;
+
+  /// The screen second the close-up hands a live ball back to the pitch:
+  /// most of the way out, before the man who gets there has it.
+  final double? spillEnd;
 
   /// How far into a shootout kick the close-up opens: the taker nearly
   /// set behind the ball, the run-up still to come.
@@ -365,8 +418,10 @@ class InMatchPenalty {
 
   /// The screen seconds the close-up is up between.
   double get from => strike - ShootoutStaging.strikeAt + opensAt;
-  double get to =>
-      strike - ShootoutStaging.strikeAt + ShootoutStaging.kickSeconds;
+  double get to => math.max(
+    strike - ShootoutStaging.strikeAt + ShootoutStaging.kickSeconds,
+    spillEnd ?? 0,
+  );
 
   /// Every penalty [s] plays in the match, in order, each with the kick it
   /// shows. A penalty struck before the script starts (a resume after it)
@@ -459,6 +514,38 @@ class InMatchPenalty {
       diveLane = col == 1 ? (l < 0 ? 2 : 0) : 1;
     }
     final kid = keeperId ?? 0;
+    // A live ball (the record has it followed up or cleared): the spill
+    // the script plays straight after the kick lands.
+    ShootoutSpill? spill;
+    double? spillEnd;
+    final live =
+        m.reboundClearedById != null ||
+        w.moments.any(
+          (x) => x is ShotMoment && x.origin == ShotOrigin.penaltyRebound,
+        );
+    if (live && result != KickResult.scored) {
+      final i = s.ballPhases.indexOf(kick);
+      final next = i < 0 || i + 1 >= s.ballPhases.length
+          ? null
+          : s.ballPhases[i + 1];
+      if (next is FlightPhase &&
+          !next.resting &&
+          (next.t0 - kick.t1).abs() < 0.05 &&
+          next.t1 > next.t0) {
+        final struck = kick.t0;
+        double secs(double t) => t - struck + ShootoutStaging.strikeAt;
+        spill = ShootoutSpill(
+          to: Offset2(
+            xToDepth(next.to.x, dir),
+            ShootoutStaging.goalY + lat(next.to),
+          ),
+          t0: secs(next.t0),
+          t1: secs(next.t1),
+          peak: next.peak,
+        );
+        spillEnd = next.t0 + 0.75 * (next.t1 - next.t0);
+      }
+    }
     return InMatchPenalty(
       strike: kick.t0,
       kick: StagedShootoutKick(
@@ -479,6 +566,8 @@ class InMatchPenalty {
         shirts: {for (final a in s.actorList) a.playerId: a.shirt},
         teams: {for (final a in s.actorList) a.playerId: a.teamNationId},
       ),
+      spill: spill,
+      spillEnd: spillEnd,
     );
   }
 }
