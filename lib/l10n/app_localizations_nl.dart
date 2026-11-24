@@ -16450,6 +16450,96 @@ class AppLocalizationsNl extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'De bal ligt vrij! $player volgt goed en schiet de rebound binnen!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player is als eerste bij de vrije bal en scoort in tweede instantie!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'In tweede instantie raak! $player duikt op de vrije bal en scoort!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player volgt, maar $keeper redt opnieuw!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player komt bij de rebound, maar weer gaat hij er niet in!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper is snel weer bij en houdt de rebound van $player tegen!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player komt bij de rebound en schiet naast!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player is als eerste bij de vrije bal, maar schiet over!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Een dot van een kans voor $player uit de rebound, maar naast!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player volgt, maar een verdediger blokt het schot!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player duikt op de rebound, maar het schot wordt geblokt!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'De rebound valt voor $player, maar zijn schot wordt geblokt!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player volgt en raakt de paal!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Hout! De rebound van $player springt terug het veld in!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player komt bij de rebound en doet het doelhout trillen!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'De bal ligt vrij in de zestien, maar $defender werkt weg!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender is als eerste bij de vrije bal en werkt weg!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender reageert het snelst en trapt de vrije bal weg!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Strafschop! $player wordt neergehaald in het strafschopgebied.';
   }

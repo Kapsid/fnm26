@@ -16279,6 +16279,96 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'गेंद ढीली है! $player ने फ़ॉलो-अप किया और रिबाउंड पर गोल दाग दिया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player ढीली गेंद पर सबसे पहले पहुँचे और दूसरी कोशिश में गोल कर दिया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'दूसरी बार में कामयाबी! $player ढीली गेंद पर झपटे और गोल कर दिया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player ने फ़ॉलो-अप किया, पर $keeper ने फिर बचा लिया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player रिबाउंड तक पहुँचे, पर फिर रोक दिया गया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper ने फुर्ती से नीचे जाकर $player का फ़ॉलो-अप रोक दिया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player रिबाउंड तक पहुँचे और गेंद बाहर मार दी!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player ढीली गेंद पर सबसे पहले पहुँचे, पर गेंद ऊपर से निकल गई!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'रिबाउंड पर $player के पास सुनहरा मौका, पर गेंद बाहर चली गई!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player ने फ़ॉलो-अप किया, पर एक डिफ़ेंडर ने शॉट रोक दिया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player रिबाउंड पर झपटे, पर शॉट रोक लिया गया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'रिबाउंड $player के पास गिरा, पर उनका शॉट ब्लॉक हो गया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player ने फ़ॉलो-अप किया और गेंद पोस्ट से टकरा गई!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'पोस्ट से टकराई! $player का फ़ॉलो-अप वापस लौट आया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player रिबाउंड तक पहुँचे और गोल का फ़्रेम हिला दिया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'बॉक्स में गेंद ढीली है, पर $defender ने उसे दूर कर दिया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender ढीली गेंद पर सबसे पहले पहुँचे और उसे दूर कर दिया!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender ने सबसे पहले प्रतिक्रिया दी और ढीली गेंद को दूर मार दिया!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'पेनल्टी! $player बॉक्स में गिरा दिया गया।';
   }

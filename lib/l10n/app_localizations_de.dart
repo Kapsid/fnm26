@@ -16498,6 +16498,96 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Der Ball ist frei! $player setzt nach und versenkt den Abpraller!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player ist als Erster am Ball und trifft im zweiten Versuch!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'Im zweiten Anlauf! $player stürzt sich auf den freien Ball und trifft!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player setzt nach, aber $keeper pariert erneut!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player kommt an den Abpraller, aber wieder kein Tor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper ist blitzschnell unten und vereitelt den Nachschuss von $player!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player erreicht den Abpraller und setzt ihn daneben!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player ist als Erster am freien Ball, jagt ihn aber drüber!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Riesenchance für $player beim Nachschuss, aber der Ball fliegt vorbei!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player setzt nach, aber ein Verteidiger blockt den Schuss!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player stürzt sich auf den Abpraller, aber der Schuss wird abgeblockt!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'Der Abpraller landet bei $player, sein Schuss wird geblockt!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player setzt nach und trifft den Pfosten!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Aluminium! Der Nachschuss von $player springt zurück!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player erreicht den Abpraller und lässt das Gebälk erzittern!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Der Ball liegt frei im Strafraum, aber $defender klärt!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender ist als Erster am freien Ball und klärt!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender reagiert am schnellsten und drischt den Ball weg!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Elfmeter! $player wird im Strafraum gefoult.';
   }

@@ -58,6 +58,13 @@ MatchResult _play(int seed) => const MatchEngine().play(
 (MatchResult, ShotMoment) _find(bool Function(ShotMoment s) wanted) {
   for (var seed = 0; seed < 400; seed++) {
     final r = _play(seed);
+    // A penalty that stayed live and was followed up (the taker may score
+    // the rebound, and be on the Timeline twice) is not the one asked for.
+    if (r.moments.any(
+      (m) => m is ShotMoment && m.origin == ShotOrigin.penaltyRebound,
+    )) {
+      continue;
+    }
     for (final s in r.moments.whereType<ShotMoment>()) {
       if (s.origin == ShotOrigin.penalty && wanted(s)) return (r, s);
     }

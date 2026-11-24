@@ -15765,6 +15765,96 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'こぼれ球！$playerが詰めてリバウンドを押し込んだ！';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$playerがいち早くこぼれ球に反応し、2度目で決めた！';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return '2度目の正直！$playerがこぼれ球に飛び込んでゴール！';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$playerが詰めるも、$keeperが再びセーブ！';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$playerがこぼれ球に詰めるも、またも阻まれた！';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeperが素早く反応し、$playerの詰めを阻止！';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$playerがこぼれ球に詰めるも、枠を外した！';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$playerがいち早くこぼれ球に反応するも、ふかしてしまった！';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'こぼれ球に$player、絶好機も枠の外へ！';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$playerが詰めるも、DFがシュートをブロック！';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$playerがこぼれ球に飛び込むも、シュートはブロックされた！';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'こぼれ球は$playerの前に、しかしシュートはブロック！';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$playerが詰めるも、ポストに当たった！';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'ポスト直撃！$playerの詰めは跳ね返された！';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$playerがこぼれ球に詰めるも、ゴールの枠を叩いた！';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'ボックス内にこぼれるも、$defenderがクリア！';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defenderがいち早くこぼれ球に反応してクリア！';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defenderが真っ先に反応し、こぼれ球を大きく蹴り出した！';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'PK！$playerがペナルティエリア内で倒された。';
   }

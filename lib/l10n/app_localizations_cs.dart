@@ -16755,6 +16755,96 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Míč je volný! $player dorazí odražený míč do sítě!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player je u odraženého míče první a skóruje napodruhé!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'Napodruhé to vyšlo! $player se vrhá na volný míč a skóruje!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player dorážel, ale $keeper chytá i podruhé!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player se dostal k odraženému míči, ale ani tentokrát to neprošlo!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper je rychle na zemi a $player neskóruje ani z dorážky!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player se dostal k dorážce a poslal ji vedle!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player je u volného míče první, ale přestřelil!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Obrovská šance pro $player na dorážku, ale míč letí vedle!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player dorážel, ale obránce střelu zablokoval!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player se vrhá na odražený míč, ale střelu někdo srazil!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'Odražený míč se dostal k $player, jeho střela je zablokovaná!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player dorážel a trefil tyč!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Brankové konstrukce! Dorážka $player se odráží zpátky!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player se dostal k dorážce a otřásl brankovou konstrukcí!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Míč je volný ve vápně, ale $defender ho odkopává!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender je u volného míče první a odkopává!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender reaguje nejrychleji a volný míč odkopává pryč!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Penalta! $player padá ve vápně.';
   }

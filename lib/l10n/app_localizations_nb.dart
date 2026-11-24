@@ -16369,6 +16369,96 @@ class AppLocalizationsNb extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Ballen er løs! $player følger opp og setter returen i mål!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player er først på den løse ballen og scorer på andre forsøk!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'Andre gang heldig! $player slår til på den løse ballen og scorer!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player følger opp, men $keeper redder igjen!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player når returen, men den stoppes igjen!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper er raskt nede og stopper returen fra $player!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player når returen og drar den utenfor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player er først på den løse ballen, men skyter over!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Kjempesjanse for $player på returen, men ballen går utenfor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player følger opp, men en forsvarer blokkerer skuddet!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player slår til på returen, men skuddet blir blokkert!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'Returen havner hos $player, men skuddet blokkeres!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player følger opp og treffer stolpen!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'I treverket! Returen fra $player spretter tilbake!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player når returen og rister målrammen!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Ballen er løs i feltet, men $defender klarerer!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender er først på den løse ballen og klarerer!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender reagerer raskest og sparker den løse ballen unna!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Straffe! $player felles i boksen.';
   }

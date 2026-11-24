@@ -16069,6 +16069,96 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'บอลหลุด! $player ตามซ้ำบอลกระดอนเข้าไป!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player ถึงบอลหลุดก่อนใครและยิงเข้าในจังหวะที่สอง!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'จังหวะที่สองสำเร็จ! $player พุ่งใส่บอลหลุดและยิงเข้าไป!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player ตามซ้ำ แต่ $keeper เซฟได้อีกครั้ง!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player ถึงบอลกระดอน แต่ถูกสกัดไว้อีก!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper ลงไปอย่างรวดเร็วและปัดลูกซ้ำของ $player ออกไป!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player ถึงบอลกระดอน แต่ยิงออกข้าง!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player ถึงบอลหลุดก่อนใคร แต่ยิงข้ามคานไป!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'โอกาสทองของ $player จากบอลกระดอน แต่บอลออกข้าง!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player ตามซ้ำ แต่กองหลังบล็อกลูกยิงไว้ได้!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player พุ่งใส่บอลกระดอน แต่ลูกยิงถูกบล็อก!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'บอลกระดอนตกไปที่ $player แต่ลูกยิงถูกบล็อกไว้!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player ตามซ้ำและชนเสา!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'ชนกรอบประตู! ลูกซ้ำของ $player กระดอนกลับออกมา!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player ถึงบอลกระดอนและยิงสนั่นกรอบประตู!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'บอลหลุดในกรอบเขตโทษ แต่ $defender สกัดออกไป!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender ถึงบอลหลุดก่อนใครและสกัดออกไป!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender ตอบสนองเร็วที่สุดและเตะบอลหลุดทิ้งไปไกล!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'จุดโทษ! $player ถูกเกี่ยวล้มในกรอบเขตโทษ';
   }

@@ -24705,6 +24705,114 @@ abstract class AppLocalizations {
   /// **'Woodwork! {player} can\'t believe it.'**
   String pitchComPenaltyWoodwork3(String player);
 
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and scores. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s loose! {player} follows it up and buries the rebound!'**
+  String pitchComPenaltyReboundGoal1(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} gets to the loose ball first and scores. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is first to the loose ball and scores at the second attempt!'**
+  String pitchComPenaltyReboundGoal2(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} pounces on it and scores. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Second time lucky! {player} pounces on the loose ball and scores!'**
+  String pitchComPenaltyReboundGoal3(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up; the goalkeeper {keeper} saves again. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} follows it up, but {keeper} saves again!'**
+  String pitchComPenaltyReboundSaved1(String player, String keeper);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up; it is saved again. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} gets to the rebound, but it\'s kept out again!'**
+  String pitchComPenaltyReboundSaved2(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up; the goalkeeper {keeper} saves. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{keeper} is down quickly to deny {player} on the follow-up!'**
+  String pitchComPenaltyReboundSaved3(String player, String keeper);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} gets to the rebound and shoots wide. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} reaches the rebound and drags it wide!'**
+  String pitchComPenaltyReboundWide1(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} gets to the rebound and shoots over the bar. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is first to the loose ball, but skies it over!'**
+  String pitchComPenaltyReboundWide2(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} gets to the rebound and misses the target. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'A golden chance for {player} on the rebound, but it flies wide!'**
+  String pitchComPenaltyReboundWide3(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and a defender blocks the shot. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} follows it up, but a defender blocks the shot!'**
+  String pitchComPenaltyReboundBlocked1(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and the shot is charged down. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} pounces on the rebound, but it\'s charged down!'**
+  String pitchComPenaltyReboundBlocked2(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and the shot is blocked. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'The rebound falls to {player}, whose shot is blocked!'**
+  String pitchComPenaltyReboundBlocked3(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and hits the post. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} follows it up and hits the post!'**
+  String pitchComPenaltyReboundWoodwork1(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and hits the woodwork. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Off the woodwork! {player}\'s follow-up comes back out!'**
+  String pitchComPenaltyReboundWoodwork2(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and hits the frame of the goal. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} reaches the rebound and rattles the frame of the goal!'**
+  String pitchComPenaltyReboundWoodwork3(String player);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and the defender {defender} clears the loose ball. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s loose in the box, but {defender} hacks it clear!'**
+  String pitchComPenaltyReboundCleared1(String defender);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and the defender {defender} reaches the loose ball first and clears it. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{defender} beats everyone to the loose ball and clears!'**
+  String pitchComPenaltyReboundCleared2(String defender);
+
+  /// Pitch view commentary line: a penalty saved or off the woodwork stays live and the defender {defender} reacts first and kicks it away. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{defender} reacts first and boots the loose ball away!'**
+  String pitchComPenaltyReboundCleared3(String defender);
+
   /// Pitch view commentary line: a penalty is given for a foul in the box (no card). {player} is the player fouled, {other} the player who fouled him. Variant 1 of 3.
   ///
   /// In en, this message translates to:

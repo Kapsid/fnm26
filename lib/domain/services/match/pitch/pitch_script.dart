@@ -192,6 +192,13 @@ enum PitchCueKind {
   shot,
   goal,
   rebound,
+
+  /// A penalty's follow-up struck, about the man who got to the loose
+  /// ball (the taker too: his kick has its own [shot] cue).
+  followUp,
+
+  /// A penalty's loose ball cleared, about the defender who got there.
+  clearance,
 }
 
 /// A [PitchCueKind] at screen second [t], about [playerId] (the fouler, the
@@ -319,11 +326,13 @@ class StagedWindow {
   Set<int> get actors => {
     for (final m in moments)
       ...switch (m) {
-        ShotMoment(:final shooterId, :final assistId, :final keeperId) => [
-          shooterId,
-          ?assistId,
-          ?keeperId,
-        ],
+        ShotMoment(
+          :final shooterId,
+          :final assistId,
+          :final keeperId,
+          :final reboundClearedById,
+        ) =>
+          [shooterId, ?assistId, ?keeperId, ?reboundClearedById],
         SetPieceMoment(:final takerId) => [takerId],
         FoulMoment(:final foulerId, :final fouledId) => [foulerId, fouledId],
         OffsideMoment(:final playerId) => [playerId],

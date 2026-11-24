@@ -16466,6 +16466,96 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return '¡Balón suelto! ¡$player aprovecha el rechace y la manda dentro!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '¡$player llega primero al balón suelto y marca a la segunda!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return '¡A la segunda va la vencida! ¡$player caza el balón suelto y marca!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '¡$player remata el rechace, pero $keeper vuelve a parar!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '¡$player llega al rechace, pero se lo vuelven a sacar!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '¡$keeper reacciona rápido y le niega el rechace a $player!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '¡$player llega al rechace y la manda fuera!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '¡$player llega primero al balón suelto, pero la manda por encima!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return '¡Ocasión de oro para $player en el rechace, pero se va fuera!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '¡$player remata el rechace, pero un defensor tapa el disparo!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '¡$player caza el rechace, pero le bloquean el disparo!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return '¡El rechace le cae a $player, pero su disparo es bloqueado!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '¡$player remata el rechace y da en el poste!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return '¡Al palo! ¡El remate de $player vuelve al campo!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '¡$player llega al rechace y hace temblar la portería!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return '¡Balón suelto en el área, pero $defender la despeja!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '¡$defender gana a todos el balón suelto y despeja!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '¡$defender reacciona primero y aleja el balón suelto!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return '¡Penalti! Derriban a $player en el área.';
   }

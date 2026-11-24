@@ -16270,6 +16270,96 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Bola liar! $player menyambar bola muntah dan menceploskannya!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player paling cepat meraih bola liar dan mencetak gol pada kesempatan kedua!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'Berhasil di percobaan kedua! $player menyambar bola liar dan mencetak gol!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player menyambar bola muntah, tetapi $keeper kembali menyelamatkan!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player meraih bola muntah, tetapi lagi-lagi gagal!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper sigap menjatuhkan diri dan menggagalkan sambaran $player!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player meraih bola muntah dan menembak melebar!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player paling cepat meraih bola liar, tetapi tembakannya melambung!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Peluang emas bagi $player dari bola muntah, tetapi melebar!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player menyambar bola muntah, tetapi seorang bek memblok tembakannya!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player menyambar bola muntah, tetapi tembakannya terblok!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'Bola muntah jatuh ke $player, tetapi tembakannya diblok!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player menyambar bola muntah dan mengenai tiang!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Mistar! Sambaran $player memantul kembali!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player meraih bola muntah dan menggetarkan tiang gawang!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Bola liar di kotak penalti, tetapi $defender menyapunya!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender paling cepat meraih bola liar dan menyapunya!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender bereaksi paling cepat dan membuang bola liar!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Penalti! $player dijatuhkan di kotak penalti.';
   }

@@ -234,6 +234,31 @@ Map<String, _Lines> _shotLines() {
       l.pitchComPenaltyWoodwork2(_p),
       l.pitchComPenaltyWoodwork3(_p),
     ],
+    'penaltyRebound goal': (l) => [
+      l.pitchComPenaltyReboundGoal1(_p),
+      l.pitchComPenaltyReboundGoal2(_p),
+      l.pitchComPenaltyReboundGoal3(_p),
+    ],
+    'penaltyRebound saved': (l) => [
+      l.pitchComPenaltyReboundSaved1(_p, _k),
+      l.pitchComPenaltyReboundSaved2(_p),
+      l.pitchComPenaltyReboundSaved3(_p, _k),
+    ],
+    'penaltyRebound wide': (l) => [
+      l.pitchComPenaltyReboundWide1(_p),
+      l.pitchComPenaltyReboundWide2(_p),
+      l.pitchComPenaltyReboundWide3(_p),
+    ],
+    'penaltyRebound blocked': (l) => [
+      l.pitchComPenaltyReboundBlocked1(_p),
+      l.pitchComPenaltyReboundBlocked2(_p),
+      l.pitchComPenaltyReboundBlocked3(_p),
+    ],
+    'penaltyRebound woodwork': (l) => [
+      l.pitchComPenaltyReboundWoodwork1(_p),
+      l.pitchComPenaltyReboundWoodwork2(_p),
+      l.pitchComPenaltyReboundWoodwork3(_p),
+    ],
   };
 }
 

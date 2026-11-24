@@ -7,6 +7,8 @@
 /// shows, where play stops for an interval, and the commentary line.
 library;
 
+import 'dart:math' as math;
+
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_moments.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_pacer.dart';
@@ -185,7 +187,7 @@ class PitchPlayback {
         for (final m in w.moments)
           if (m is ShotMoment) (t: w.start, moment: m, build: true),
       for (final c in lines)
-        if (c.moment case final m?)
+        if (c.moment case final m? when !c.clearance)
           if (!(m is ShotMoment && m.outcome == ShotOutcome.goal))
             (t: c.t, moment: m, build: false),
     ]..sort((x, y) => x.t.compareTo(y.t));
@@ -249,6 +251,7 @@ class PitchPlayback {
       events: result.events,
       score: c.score,
       reboundFrom: c.reboundFrom,
+      clearance: c.clearance,
     );
   }
 
@@ -329,6 +332,16 @@ class PitchPlayback {
       );
     }
 
+    /// When a penalty's follow-up's line comes in: as it goes in when it
+    /// scores, as it is struck otherwise (its own cue: the taker following
+    /// up his own kick has struck twice), or (no cues) at [fallback].
+    double followUpAt(StagedWindow w, ShotMoment m, double fallback) {
+      final scored = m.outcome == ShotOutcome.goal
+          ? cue(w, PitchCueKind.goal, m.shooterId)
+          : null;
+      return scored ?? cue(w, PitchCueKind.followUp, m.shooterId) ?? fallback;
+    }
+
     /// The foul that gave penalty [shot] when it has no window of its own
     /// (no card): its award is said as the kick's window opens.
     FoulMoment? awardOf(ShotMoment shot) {
@@ -357,12 +370,29 @@ class PitchPlayback {
           if (award != null) out.add(_Cue(w.start, moment: award));
         }
         out.add(shotCue(shotAt(w, first, w.start), first, w));
+        final clearer = first.reboundClearedById;
+        if (first.origin == ShotOrigin.penalty && clearer != null) {
+          // Its loose ball cleared: after the kick's line.
+          final kick = shotAt(w, first, w.start);
+          final at = cue(w, PitchCueKind.clearance, clearer);
+          out.add(
+            _Cue(
+              at == null || at < kick ? math.max(kick, (mid + w.end) / 2) : at,
+              moment: first,
+              clearance: true,
+            ),
+          );
+        }
       } else if (!isRoutineMoment(first)) {
         out.add(_Cue(w.start, moment: first));
       }
       // A set piece's folded shot: after the set piece's line.
       for (final m in w.moments.skip(1)) {
-        if (m is ShotMoment) {
+        if (m is ShotMoment && m.origin == ShotOrigin.penaltyRebound) {
+          final kick = shotAt(w, first as ShotMoment, w.start);
+          final at = followUpAt(w, m, (mid + w.end) / 2);
+          out.add(shotCue(at < kick ? kick : at, m, w));
+        } else if (m is ShotMoment) {
           final at = shotAt(w, m, mid);
           out.add(shotCue(at < w.start ? w.start : at, m));
         } else if (!isRoutineMoment(m)) {
@@ -382,7 +412,14 @@ class PitchPlayback {
 
 /// One commentary line's moment (or injury) and when it comes in.
 class _Cue {
-  const _Cue(this.t, {this.moment, this.injury, this.score, this.reboundFrom});
+  const _Cue(
+    this.t, {
+    this.moment,
+    this.injury,
+    this.score,
+    this.reboundFrom,
+    this.clearance = false,
+  });
   final double t;
   final MatchMoment? moment;
   final MatchEvent? injury;
@@ -390,4 +427,7 @@ class _Cue {
 
   /// For a goal drawn as a rebound: whose shot was parried.
   final int? reboundFrom;
+
+  /// A penalty's loose ball cleared ([moment] is the penalty).
+  final bool clearance;
 }

@@ -206,7 +206,9 @@ void main() {
       h = ((h * 31) ^ before) & 0xFFFFFFFF;
     }
     // Measured on main before rebounds were drawn: the same 80 results.
-    // Re-pinned for the 1.1.2 engine (2026-11-16).
-    expect(h, 2860896500);
+    // Re-pinned for the 1.1.2 engine (2026-11-16), and for penalty
+    // rebounds (2026-11-24): only the matches with a penalty followed up
+    // changed (see `penalty_rebound_test.dart`).
+    expect(h, 144682942);
   });
 }

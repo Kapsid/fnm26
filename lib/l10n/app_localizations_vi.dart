@@ -16213,6 +16213,96 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Bóng bật ra! $player băng vào đá bồi thành bàn!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player nhanh chân nhất tới quả bóng bật ra và ghi bàn ở lần thứ hai!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'Lần thứ hai mới thành công! $player lao vào quả bóng lăn lóc và ghi bàn!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player đá bồi, nhưng $keeper lại cản phá!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player tới được bóng bật ra, nhưng lại bị cản!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper phản xạ nhanh, từ chối cú đá bồi của $player!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player tới được bóng bật ra nhưng đá ra ngoài!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player nhanh chân nhất tới quả bóng, nhưng đá vọt xà!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Cơ hội ngon ăn cho $player từ pha bóng bật ra, nhưng bóng đi chệch!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player đá bồi, nhưng một hậu vệ đã chặn cú sút!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player lao vào đá bồi, nhưng cú sút bị chặn lại!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'Bóng bật ra đến chân $player, nhưng cú sút bị chặn!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player đá bồi và trúng cột dọc!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Trúng khung thành! Cú đá bồi của $player bật ra!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player tới được bóng bật ra và làm rung khung thành!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Bóng lăn lóc trong vòng cấm, nhưng $defender phá ra!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender nhanh chân nhất tới quả bóng bật ra và phá đi!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender phản ứng nhanh nhất và phá bóng ra xa!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Phạt đền! $player bị hạ trong vòng cấm.';
   }

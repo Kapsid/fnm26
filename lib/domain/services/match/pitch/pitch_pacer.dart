@@ -76,6 +76,24 @@ class PitchPacer {
         }
       }
     }
+    // A penalty's follow-up (it stayed live and somebody got to it) is
+    // part of the penalty's own moment: its kick, the ball spilling, the
+    // men rushing in and the second shot. The engine logs it straight
+    // after the penalty's shot.
+    for (var i = 0; i + 1 < r.moments.length; i++) {
+      final k = r.moments[i];
+      final f = r.moments[i + 1];
+      if (k is ShotMoment &&
+          k.origin == ShotOrigin.penalty &&
+          f is ShotMoment &&
+          f.origin == ShotOrigin.penaltyRebound &&
+          f.minute == k.minute &&
+          f.stoppage == k.stoppage &&
+          f.teamNationId == k.teamNationId) {
+        _followUps[k] = f;
+      }
+    }
+    final followed = Set<ShotMoment>.identity()..addAll(_followUps.values);
     // The foul that gives a penalty is staged before its kick, card or
     // not: the man brought down in the box, the whistle, then the spot.
     // The engine logs it straight before the penalty's shot.
@@ -97,7 +115,7 @@ class PitchPacer {
     // match is, so the budget stays what it was.
     var unstaged = 0;
     for (final m in r.moments) {
-      if (mergedInto.containsKey(m)) {
+      if (mergedInto.containsKey(m) || followed.contains(m)) {
         _lengths[m] = 0;
         continue;
       }
@@ -209,6 +227,11 @@ class PitchPacer {
   static const double _corner = 3.5;
   static const double _freeKick = 3.5;
   static const double _penalty = 7;
+
+  /// What a penalty that stays live needs on top of its kick: the ball
+  /// spilling, the men rushing in from the edge of the area and the
+  /// follow-up (or the clearance).
+  static const double _penaltyFollowUp = 3;
   static const double _card = 3;
 
   /// The foul that gives a penalty, with no card: the man brought down and
@@ -312,6 +335,9 @@ class PitchPacer {
   /// The fouls that give a penalty (see the constructor).
   final Set<FoulMoment> _penaltyFouls = Set.identity();
 
+  /// Each penalty that stayed live and was followed up, with its follow-up.
+  final Map<ShotMoment, ShotMoment> _followUps = Map.identity();
+
   static bool _fromSetPiece(ShotOrigin o) =>
       o == ShotOrigin.corner ||
       o == ShotOrigin.freeKickCross ||
@@ -368,7 +394,16 @@ class PitchPacer {
       case ShotMoment s:
         final goal = s.outcome == ShotOutcome.goal ? _goalExtra : 0;
         if (_keyShot(s)) {
-          return (s.origin == ShotOrigin.penalty ? _penalty : _shot) + goal;
+          if (s.origin != ShotOrigin.penalty) return _shot + goal;
+          final f = _followUps[s];
+          if (f == null) {
+            // Cleared off the line of fire: the spill and the clearance.
+            final cleared = s.reboundClearedById != null;
+            return _penalty + goal + (cleared ? _penaltyFollowUp - 1 : 0);
+          }
+          return _penalty +
+              _penaltyFollowUp +
+              (f.outcome == ShotOutcome.goal ? _goalExtra : 0);
         }
         final minorShot =
             s.outcome == ShotOutcome.wide || s.outcome == ShotOutcome.blocked;

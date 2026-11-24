@@ -16473,6 +16473,96 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Bola solta! $player aproveita a recarga e manda para dentro!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player chega primeiro à bola solta e marca à segunda tentativa!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'À segunda foi de vez! $player atira-se à bola solta e marca!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player vai à recarga, mas $keeper volta a defender!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player chega à recarga, mas volta a ser travado!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper reage depressa e nega a recarga a $player!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player chega à recarga e atira para fora!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player chega primeiro à bola solta, mas atira por cima!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Oportunidade de ouro para $player na recarga, mas a bola sai!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player vai à recarga, mas um defensor bloqueia o remate!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player atira-se à recarga, mas o remate é bloqueado!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'A bola sobra para $player, mas o remate é travado!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player vai à recarga e acerta no poste!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Ferro! A recarga de $player volta para o campo!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player chega à recarga e faz tremer a baliza!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Bola solta na área, mas $defender afasta!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender chega primeiro à bola solta e afasta!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender reage primeiro e manda a bola para longe!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Penálti! $player é derrubado na área.';
   }
