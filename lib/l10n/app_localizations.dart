@@ -27903,6 +27903,48 @@ abstract class AppLocalizations {
   /// **'Win the World Championship'**
   String get campaignStars3Czechoslovakia;
 
+  /// Campaign title: the Lone Star, the single star of the Texas flag, for four cycles of the Republic of Texas, a nation added to the world for this campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'The Lone Star'**
+  String get campaignTexasTitle;
+
+  /// One-line twist of the Texas campaign: the Republic of Texas in Anguilla's place in North America, for four cycles.
+  ///
+  /// In en, this message translates to:
+  /// **'The Republic of Texas take Anguilla\'s place in North America, for four cycles'**
+  String get campaignTexasTwist;
+
+  /// Brief screen introduction of the Texas campaign: the Republic of Texas take Anguilla's place in North America as a mid-table side of the region, every player Texas-born, for four cycles. Names no real player.
+  ///
+  /// In en, this message translates to:
+  /// **'Texas was a republic of its own for nine years before it joined the United States, and today it raises more footballers than most nations: three top-flight academies, one of the deepest youth games anywhere and Texans in every league. In this world the Republic of Texas plays for itself, in Anguilla\'s place in North America. Every player is Texas-born, from Houston, Dallas, San Antonio, Austin and El Paso, and the squad is a mid-table side of the region: good enough to trouble anyone, not yet good enough to be feared. You have four cycles to reach a North America Cup, then a World Championship and, if you dare to dream, win one of them.'**
+  String get campaignTexasIntro;
+
+  /// One-line goal of the Texas campaign (its first star): qualify for a North America Cup, the region's continental championship.
+  ///
+  /// In en, this message translates to:
+  /// **'Qualify for a North America Cup'**
+  String get campaignTexasGoal;
+
+  /// What earns the first star in the Texas campaign: qualify for a North America Cup, in any cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Qualify for a North America Cup'**
+  String get campaignStars1Texas;
+
+  /// What earns the second star in the Texas campaign: qualify for a World Championship, in any cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Qualify for a World Championship'**
+  String get campaignStars2Texas;
+
+  /// What earns the third star in the Texas campaign: win the North America Cup or the World Championship, in any cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Win the North America Cup or the World Championship'**
+  String get campaignStars3Texas;
+
   /// World Championship qualifying, under Europe's groups: who goes to the play-off paths (the best runners-up, in yellow, and the best Nations Cup group winners not through), then the Nations Cup sides on course for them, listed below.
   ///
   /// In en, this message translates to:

@@ -18799,6 +18799,30 @@ class AppLocalizationsHr extends AppLocalizations {
   String get campaignStars3Czechoslovakia => 'Osvoji Svjetsko prvenstvo';
 
   @override
+  String get campaignTexasTitle => 'Usamljena zvijezda';
+
+  @override
+  String get campaignTexasTwist =>
+      'Republika Teksas zauzima mjesto Angvile u Sjevernoj Americi, kroz četiri ciklusa';
+
+  @override
+  String get campaignTexasIntro =>
+      'Teksas je devet godina bio samostalna republika prije nego što se pridružio Sjedinjenim Državama, a danas stvara više nogometaša od većine država: tri akademije iz najviše lige, jednu od najširih omladinskih baza na svijetu i Teksašane u svakoj ligi. U ovom svijetu Republika Teksas igra za sebe, na mjestu Angvile u Sjevernoj Americi. Svaki igrač rođen je u Teksasu, u Houstonu, Dallasu, San Antoniju, Austinu ili El Pasu, a momčad je sredina ljestvice u regiji: dovoljno dobra da namuči svakoga, ali još ne toliko da je se itko boji. Imaš četiri ciklusa da stigneš do Kupa Sjeverne Amerike, zatim do Svjetskog prvenstva i, ako se usudiš sanjati, osvojiš jedno od njih.';
+
+  @override
+  String get campaignTexasGoal => 'Kvalificiraj se za Kup Sjeverne Amerike';
+
+  @override
+  String get campaignStars1Texas => 'Kvalificiraj se za Kup Sjeverne Amerike';
+
+  @override
+  String get campaignStars2Texas => 'Kvalificiraj se na Svjetsko prvenstvo';
+
+  @override
+  String get campaignStars3Texas =>
+      'Osvoji Kup Sjeverne Amerike ili Svjetsko prvenstvo';
+
+  @override
   String get wcPlayoffCourseNote =>
       'Svaki pobjednik skupine prolazi izravno. Posljednja mjesta osvajaju se u doigravanju najboljih drugoplasiranih (žuto u skupinama) i najboljih pobjednika skupina Nations Cupa koji nisu prošli. Iz Nations Cupa, trenutačno stanje:';
 

@@ -18532,6 +18532,29 @@ class AppLocalizationsFi extends AppLocalizations {
   String get campaignStars3Czechoslovakia => 'Voita MM-kisat';
 
   @override
+  String get campaignTexasTitle => 'Yksinäinen tähti';
+
+  @override
+  String get campaignTexasTwist =>
+      'Texasin tasavalta ottaa Anguillan paikan Pohjois-Amerikassa neljän kauden ajaksi';
+
+  @override
+  String get campaignTexasIntro =>
+      'Texas oli yhdeksän vuotta itsenäinen tasavalta ennen kuin se liittyi Yhdysvaltoihin, ja nykyään se kasvattaa enemmän jalkapalloilijoita kuin useimmat maat: kolme pääsarjan akatemiaa, yhden maailman laajimmista junioripohjista ja teksasilaisia jokaisessa sarjassa. Tässä maailmassa Texasin tasavalta pelaa omissa nimissään, Anguillan paikalla Pohjois-Amerikassa. Jokainen pelaaja on syntynyt Texasissa, Houstonissa, Dallasissa, San Antoniossa, Austinissa tai El Pasossa, ja joukkue kuuluu alueen keskikastiin: tarpeeksi hyvä kiusaamaan ketä tahansa, mutta ei vielä niin hyvä, että sitä pelättäisiin. Sinulla on neljä kautta aikaa selviytyä Pohjois-Amerikan Cupiin, sitten MM-kisoihin ja, jos uskallat unelmoida, voittaa toinen niistä.';
+
+  @override
+  String get campaignTexasGoal => 'Selviä Pohjois-Amerikan Cupiin';
+
+  @override
+  String get campaignStars1Texas => 'Selviä Pohjois-Amerikan Cupiin';
+
+  @override
+  String get campaignStars2Texas => 'Selviä MM-kisoihin';
+
+  @override
+  String get campaignStars3Texas => 'Voita Pohjois-Amerikan Cup tai MM-kisat';
+
+  @override
   String get wcPlayoffCourseNote =>
       'Jokainen lohkovoittaja pääsee suoraan. Viimeiset paikat ratkaistaan jatkokarsinnassa, jossa pelaavat parhaat lohkokakkoset (keltaisella lohkoissa) ja Nations Cupin parhaat lohkovoittajat, jotka eivät ole jo selvinneet. Nations Cupista, tilanne nyt:';
 

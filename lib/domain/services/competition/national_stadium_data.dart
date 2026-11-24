@@ -1398,4 +1398,15 @@ const Map<int, List<(String, int)>> nationalStadiumData = {
     ('Brno', 12000),
     ('Plzeň', 11700),
   ],
+  // Texas (dormant): the big grounds of Arlington, Houston and San
+  // Antonio, the soccer grounds of Houston, Austin and Frisco, El Paso's.
+  216: [
+    ('Arlington', 80000),
+    ('Houston', 72000),
+    ('San Antonio', 64000),
+    ('Houston', 22000),
+    ('Austin', 20500),
+    ('Frisco', 20000),
+    ('El Paso', 9500),
+  ],
 };

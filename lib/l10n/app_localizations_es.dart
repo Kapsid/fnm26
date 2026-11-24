@@ -18562,6 +18562,31 @@ class AppLocalizationsEs extends AppLocalizations {
   String get campaignStars3Czechoslovakia => 'Ganar el Campeonato del Mundo';
 
   @override
+  String get campaignTexasTitle => 'La Estrella Solitaria';
+
+  @override
+  String get campaignTexasTwist =>
+      'La República de Texas ocupa el lugar de Anguila en Norteamérica, durante cuatro ciclos';
+
+  @override
+  String get campaignTexasIntro =>
+      'Texas fue una república independiente durante nueve años antes de unirse a Estados Unidos, y hoy forma más futbolistas que la mayoría de las naciones: tres academias de primera división, una de las canteras más amplias del mundo y texanos en todas las ligas. En este mundo la República de Texas juega por sí misma, en el lugar de Anguila en Norteamérica. Todos sus jugadores han nacido en Texas, en Houston, Dallas, San Antonio, Austin o El Paso, y la plantilla es un equipo de mitad de tabla de la región: lo bastante buena para complicarle la vida a cualquiera, pero aún no tanto como para infundir miedo. Tienes cuatro ciclos para llegar a una Copa de Norteamérica, después a un Campeonato del Mundo y, si te atreves a soñar, ganar uno de ellos.';
+
+  @override
+  String get campaignTexasGoal => 'Clasificarse para una Copa de Norteamérica';
+
+  @override
+  String get campaignStars1Texas =>
+      'Clasificarse para una Copa de Norteamérica';
+
+  @override
+  String get campaignStars2Texas => 'Clasificarse para un Campeonato del Mundo';
+
+  @override
+  String get campaignStars3Texas =>
+      'Ganar la Copa de Norteamérica o el Campeonato del Mundo';
+
+  @override
   String get wcPlayoffCourseNote =>
       'Cada ganador de grupo se clasifica directamente. Las últimas plazas se juegan en una repesca entre los mejores segundos (en amarillo en los grupos) y los mejores ganadores de grupo de la Copa de las Naciones que no se clasificaron. De la Copa de las Naciones, tal como está:';
 

@@ -185,6 +185,10 @@ abstract final class NationIdentity {
     // Czechoslovakia, a dormant nation: European champions in 1976, World
     // Championship finalists twice.
     'TCH': (nickname: null, style: NationStyle.balanced, pedigree: 2),
+    // Texas, a dormant nation: the Lone Star of the flag. No pedigree of its
+    // own, but the deepest youth game in the region: a tier above the
+    // minnows.
+    'TEX': (nickname: 'The Lone Star', style: NationStyle.direct, pedigree: 4),
     // Zanzibar, a dormant nation (see DormantNations).
     'ZAN': (
       nickname: 'Zanzibar Heroes',

@@ -110,6 +110,17 @@ CampaignWords campaignWords(AppLocalizations l, CampaignDef def) =>
           l.campaignStars3Czechoslovakia,
         ],
       ),
+      'texas' => (
+        title: l.campaignTexasTitle,
+        twist: l.campaignTexasTwist,
+        intro: l.campaignTexasIntro,
+        goal: l.campaignTexasGoal,
+        stars: [
+          l.campaignStars1Texas,
+          l.campaignStars2Texas,
+          l.campaignStars3Texas,
+        ],
+      ),
       _ => (
         title: l.campaignTransplantTitle,
         twist: l.campaignTransplantTwist,

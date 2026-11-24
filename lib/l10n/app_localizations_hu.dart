@@ -18401,6 +18401,30 @@ class AppLocalizationsHu extends AppLocalizations {
   String get campaignStars3Czechoslovakia => 'Megnyerni a világbajnokságot';
 
   @override
+  String get campaignTexasTitle => 'A magányos csillag';
+
+  @override
+  String get campaignTexasTwist =>
+      'A Texasi Köztársaság négy ciklusra átveszi Anguilla helyét Észak-Amerikában';
+
+  @override
+  String get campaignTexasIntro =>
+      'Texas kilenc évig önálló köztársaság volt, mielőtt csatlakozott az Egyesült Államokhoz, és ma több futballistát nevel, mint a legtöbb ország: három élvonalbeli akadémia, a világ egyik legszélesebb utánpótlásbázisa és texasiak minden bajnokságban. Ebben a világban a Texasi Köztársaság a maga nevében játszik, Anguilla helyén Észak-Amerikában. Minden játékos Texasban született, Houstonban, Dallasban, San Antonióban, Austinban vagy El Pasóban, a keret pedig a régió középmezőnyéhez tartozik: elég jó ahhoz, hogy bárkinek gondot okozzon, de még nem elég ahhoz, hogy féljenek tőle. Négy ciklusod van, hogy kijuss egy Észak-amerikai Kupára, aztán egy világbajnokságra, és ha mersz álmodni, megnyerd valamelyiket.';
+
+  @override
+  String get campaignTexasGoal => 'Kijutni egy Észak-amerikai Kupára';
+
+  @override
+  String get campaignStars1Texas => 'Kijutni egy Észak-amerikai Kupára';
+
+  @override
+  String get campaignStars2Texas => 'Kijutni egy világbajnokságra';
+
+  @override
+  String get campaignStars3Texas =>
+      'Megnyerni az Észak-amerikai Kupát vagy a világbajnokságot';
+
+  @override
   String get wcPlayoffCourseNote =>
       'Minden csoportgyőztes egyenesen továbbjut. Az utolsó helyekért pótselejtezőt játszanak a legjobb csoportmásodikok (sárgával a csoportokban) és a Nations Cup legjobb, még nem továbbjutott csoportgyőztesei. A Nations Cupból jelenleg:';
 

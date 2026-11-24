@@ -48,12 +48,13 @@ void main() {
     expect(find.text('Finish the Legacy'), findsOneWidget);
     expect(find.text('1 cycle'), findsNWidgets(3));
     await tester.scrollUntilVisible(find.text('Young Finns'), 200);
-    expect(find.text('A FEW CYCLES · 3'), findsOneWidget);
+    expect(find.text('A FEW CYCLES · 4'), findsOneWidget);
     expect(find.text('Best of Guineas'), findsOneWidget);
     expect(find.text('3 cycles'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('Reunited'), 200);
     expect(find.text('2 cycles'), findsOneWidget);
-    expect(find.text('4 cycles'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('The Lone Star'), 200);
+    expect(find.text('4 cycles'), findsNWidgets(2));
     await tester.scrollUntilVisible(find.text('The Three Legs'), 200);
     expect(find.text('THE LONG HAUL · 3'), findsOneWidget);
     expect(find.text('A Greenland Century'), findsOneWidget);

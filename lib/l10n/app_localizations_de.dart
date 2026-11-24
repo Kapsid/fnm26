@@ -18602,6 +18602,30 @@ class AppLocalizationsDe extends AppLocalizations {
   String get campaignStars3Czechoslovakia => 'Die Weltmeisterschaft gewinnen';
 
   @override
+  String get campaignTexasTitle => 'Der einsame Stern';
+
+  @override
+  String get campaignTexasTwist =>
+      'Die Republik Texas nimmt Anguillas Platz in Nordamerika ein, für vier Zyklen';
+
+  @override
+  String get campaignTexasIntro =>
+      'Texas war neun Jahre lang eine eigenständige Republik, bevor es den Vereinigten Staaten beitrat, und heute bringt es mehr Fußballer hervor als die meisten Nationen: drei Akademien aus der höchsten Liga, einen der breitesten Nachwuchsbereiche der Welt und Texaner in jeder Liga. In dieser Welt spielt die Republik Texas für sich selbst, auf Anguillas Platz in Nordamerika. Jeder Spieler ist in Texas geboren, in Houston, Dallas, San Antonio, Austin oder El Paso, und der Kader gehört zum Mittelfeld der Region: gut genug, um jeden zu ärgern, aber noch nicht gut genug, um gefürchtet zu werden. Sie haben vier Zyklen, um einen Nordamerika-Pokal zu erreichen, dann eine Weltmeisterschaft und, wenn Sie zu träumen wagen, einen der beiden Titel zu gewinnen.';
+
+  @override
+  String get campaignTexasGoal => 'Für einen Nordamerika-Pokal qualifizieren';
+
+  @override
+  String get campaignStars1Texas => 'Für einen Nordamerika-Pokal qualifizieren';
+
+  @override
+  String get campaignStars2Texas => 'Für eine Weltmeisterschaft qualifizieren';
+
+  @override
+  String get campaignStars3Texas =>
+      'Den Nordamerika-Pokal oder die Weltmeisterschaft gewinnen';
+
+  @override
   String get wcPlayoffCourseNote =>
       'Jeder Gruppensieger ist direkt qualifiziert. Die letzten Plätze gehen in Play-offs an die besten Gruppenzweiten (gelb in den Gruppen) und die besten Gruppensieger des Nationenpokals, die nicht durch sind. Aus dem Nationenpokal, Stand jetzt:';
 

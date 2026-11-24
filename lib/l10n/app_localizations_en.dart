@@ -18495,6 +18495,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get campaignStars3Czechoslovakia => 'Win the World Championship';
 
   @override
+  String get campaignTexasTitle => 'The Lone Star';
+
+  @override
+  String get campaignTexasTwist =>
+      'The Republic of Texas take Anguilla\'s place in North America, for four cycles';
+
+  @override
+  String get campaignTexasIntro =>
+      'Texas was a republic of its own for nine years before it joined the United States, and today it raises more footballers than most nations: three top-flight academies, one of the deepest youth games anywhere and Texans in every league. In this world the Republic of Texas plays for itself, in Anguilla\'s place in North America. Every player is Texas-born, from Houston, Dallas, San Antonio, Austin and El Paso, and the squad is a mid-table side of the region: good enough to trouble anyone, not yet good enough to be feared. You have four cycles to reach a North America Cup, then a World Championship and, if you dare to dream, win one of them.';
+
+  @override
+  String get campaignTexasGoal => 'Qualify for a North America Cup';
+
+  @override
+  String get campaignStars1Texas => 'Qualify for a North America Cup';
+
+  @override
+  String get campaignStars2Texas => 'Qualify for a World Championship';
+
+  @override
+  String get campaignStars3Texas =>
+      'Win the North America Cup or the World Championship';
+
+  @override
   String get wcPlayoffCourseNote =>
       'Every group winner goes straight through. The last places go to play-off paths: the best runners-up (yellow in the groups) and the best Nations Cup group winners who are not through. From the Nations Cup, as things stand:';
 

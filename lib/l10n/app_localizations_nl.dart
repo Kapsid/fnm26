@@ -18556,6 +18556,30 @@ class AppLocalizationsNl extends AppLocalizations {
   String get campaignStars3Czechoslovakia => 'Win het Wereldkampioenschap';
 
   @override
+  String get campaignTexasTitle => 'De eenzame ster';
+
+  @override
+  String get campaignTexasTwist =>
+      'De Republiek Texas neemt de plaats van Anguilla in Noord-Amerika in, voor vier cycli';
+
+  @override
+  String get campaignTexasIntro =>
+      'Texas was negen jaar lang een zelfstandige republiek voordat het zich bij de Verenigde Staten aansloot, en vandaag levert het meer voetballers af dan de meeste landen: drie academies uit de hoogste divisie, een van de breedste jeugdopleidingen ter wereld en Texanen in elke competitie. In deze wereld speelt de Republiek Texas voor zichzelf, op de plaats van Anguilla in Noord-Amerika. Elke speler is in Texas geboren, in Houston, Dallas, San Antonio, Austin of El Paso, en de selectie is een middenmoter in de regio: goed genoeg om iedereen dwars te zitten, maar nog niet goed genoeg om gevreesd te worden. Je hebt vier cycli om de Beker van Noord-Amerika te halen, daarna een Wereldkampioenschap en, als je durft te dromen, er een te winnen.';
+
+  @override
+  String get campaignTexasGoal => 'Plaats je voor de Beker van Noord-Amerika';
+
+  @override
+  String get campaignStars1Texas => 'Plaats je voor de Beker van Noord-Amerika';
+
+  @override
+  String get campaignStars2Texas => 'Plaats je voor een Wereldkampioenschap';
+
+  @override
+  String get campaignStars3Texas =>
+      'Win de Beker van Noord-Amerika of het Wereldkampioenschap';
+
+  @override
   String get wcPlayoffCourseNote =>
       'Elke groepswinnaar plaatst zich direct. De laatste plaatsen gaan via play-offs naar de beste nummers twee (geel in de groepen) en de beste groepswinnaars van de Nations Cup die nog niet geplaatst zijn. Uit de Nations Cup, zoals het nu staat:';
 

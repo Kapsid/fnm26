@@ -18849,6 +18849,30 @@ class AppLocalizationsCs extends AppLocalizations {
   String get campaignStars3Czechoslovakia => 'Vyhrát mistrovství světa';
 
   @override
+  String get campaignTexasTitle => 'Osamělá hvězda';
+
+  @override
+  String get campaignTexasTwist =>
+      'Republika Texas zaujímá místo Anguilly v Severní Americe, na čtyři cykly';
+
+  @override
+  String get campaignTexasIntro =>
+      'Texas byl devět let samostatnou republikou, než se připojil ke Spojeným státům, a dnes vychovává víc fotbalistů než většina států: tři akademie nejvyšší soutěže, jednu z nejširších mládežnických základen na světě a Texasany v každé lize. V tomto světě hraje Republika Texas sama za sebe, na místě Anguilly v Severní Americe. Každý hráč se narodil v Texasu, v Houstonu, Dallasu, San Antoniu, Austinu nebo El Pasu, a kádr patří do středu tabulky regionu: dost dobrý, aby potrápil kohokoli, ale zatím ne tak dobrý, aby z něj měl někdo strach. Máte čtyři cykly, abyste se dostali na Pohár Severní Ameriky, pak na mistrovství světa a, pokud si troufnete snít, jedno z nich vyhráli.';
+
+  @override
+  String get campaignTexasGoal => 'Postoupit na Pohár Severní Ameriky';
+
+  @override
+  String get campaignStars1Texas => 'Postoupit na Pohár Severní Ameriky';
+
+  @override
+  String get campaignStars2Texas => 'Postoupit na mistrovství světa';
+
+  @override
+  String get campaignStars3Texas =>
+      'Vyhrát Pohár Severní Ameriky nebo mistrovství světa';
+
+  @override
   String get wcPlayoffCourseNote =>
       'Všichni vítězové skupin postupují přímo. O posledních místech rozhodne baráž: nejlepší týmy z druhých míst (žlutě ve skupinách) a nejlepší vítězové skupin Poháru národů, kteří nepostoupili. Z Poháru národů podle aktuálního stavu:';
 

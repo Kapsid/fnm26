@@ -17863,6 +17863,29 @@ class AppLocalizationsKo extends AppLocalizations {
   String get campaignStars3Czechoslovakia => '세계 선수권 우승';
 
   @override
+  String get campaignTexasTitle => '외로운 별';
+
+  @override
+  String get campaignTexasTwist =>
+      '텍사스 공화국이 북중미에서 앵귈라의 자리를 대신한다, 네 번의 대회 주기 동안';
+
+  @override
+  String get campaignTexasIntro =>
+      '텍사스는 미국에 합류하기 전 9년 동안 독립 공화국이었고, 오늘날 대부분의 나라보다 많은 축구 선수를 길러냅니다: 최상위 리그 아카데미 세 곳, 세계에서 손꼽히는 두꺼운 유소년 층, 그리고 모든 리그에서 뛰는 텍사스 출신 선수들. 이 세계에서 텍사스 공화국은 스스로를 대표하며, 북중미에서 앵귈라의 자리를 대신합니다. 모든 선수는 휴스턴, 댈러스, 샌안토니오, 오스틴, 엘패소 등 텍사스 태생이고, 팀은 지역의 중위권 전력입니다: 누구든 괴롭힐 만큼은 강하지만, 아직 두려움의 대상은 아닙니다. 네 번의 대회 주기 안에 북중미컵, 이어서 세계 선수권 본선에 오르고, 감히 꿈꾼다면 그중 하나를 우승하세요.';
+
+  @override
+  String get campaignTexasGoal => '북중미컵 본선 진출';
+
+  @override
+  String get campaignStars1Texas => '북중미컵 본선 진출';
+
+  @override
+  String get campaignStars2Texas => '세계 선수권 본선 진출';
+
+  @override
+  String get campaignStars3Texas => '북중미컵 또는 세계 선수권 우승';
+
+  @override
   String get wcPlayoffCourseNote =>
       '각 조 1위는 바로 진출합니다. 마지막 자리는 성적이 좋은 조 2위 팀(조 순위표에서 노란색)과 아직 진출하지 못한 네이션스컵 상위 조 1위 팀들의 플레이오프로 결정됩니다. 네이션스컵에서는 현재 기준:';
 

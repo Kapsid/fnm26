@@ -18473,6 +18473,31 @@ class AppLocalizationsFil extends AppLocalizations {
   String get campaignStars3Czechoslovakia => 'Ipanalo ang Kampeonato ng Mundo';
 
   @override
+  String get campaignTexasTitle => 'Ang Nag-iisang Bituin';
+
+  @override
+  String get campaignTexasTwist =>
+      'Pumalit ang Republika ng Texas sa puwesto ng Anguilla sa Hilagang Amerika, sa loob ng apat na cycle';
+
+  @override
+  String get campaignTexasIntro =>
+      'Naging sariling republika ang Texas sa loob ng siyam na taon bago ito sumapi sa Estados Unidos, at ngayon ay mas maraming footballer ang hinuhubog nito kaysa sa karamihan ng mga bansa: tatlong akademya ng pinakamataas na liga, isa sa pinakamalawak na youth football sa mundo, at mga Texan sa bawat liga. Sa mundong ito, naglalaro ang Republika ng Texas para sa sarili nito, sa puwesto ng Anguilla sa Hilagang Amerika. Ipinanganak sa Texas ang bawat manlalaro, sa Houston, Dallas, San Antonio, Austin o El Paso, at ang koponan ay nasa gitna ng talaan sa rehiyon: sapat ang galing para pahirapan ang kahit sino, pero hindi pa sapat para katakutan. May apat na cycle ka para makarating sa Copa ng Hilagang Amerika, pagkatapos sa Kampeonato ng Mundo at, kung maglalakas-loob kang mangarap, ipanalo ang isa sa mga ito.';
+
+  @override
+  String get campaignTexasGoal => 'Makapasok sa isang Copa ng Hilagang Amerika';
+
+  @override
+  String get campaignStars1Texas =>
+      'Makapasok sa isang Copa ng Hilagang Amerika';
+
+  @override
+  String get campaignStars2Texas => 'Makapasok sa isang Kampeonato ng Mundo';
+
+  @override
+  String get campaignStars3Texas =>
+      'Ipanalo ang Copa ng Hilagang Amerika o ang Kampeonato ng Mundo';
+
+  @override
   String get wcPlayoffCourseNote =>
       'Diretsong pasok ang bawat nanalo sa grupo. Ang huling mga puwesto ay pag-aagawan sa play-off ng pinakamahuhusay na pumangalawa (dilaw sa mga grupo) at ng pinakamahuhusay na nanalo sa grupo sa Nations Cup na hindi pa pasok. Mula sa Nations Cup, sa ngayon:';
 
