@@ -24977,6 +24977,174 @@
       }
     }
   },
+  "pitchComPenaltyReboundGoal1": "It's loose! {player} follows it up and buries the rebound!",
+  "@pitchComPenaltyReboundGoal1": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and scores. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundGoal2": "{player} is first to the loose ball and scores at the second attempt!",
+  "@pitchComPenaltyReboundGoal2": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} gets to the loose ball first and scores. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundGoal3": "Second time lucky! {player} pounces on the loose ball and scores!",
+  "@pitchComPenaltyReboundGoal3": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} pounces on it and scores. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundSaved1": "{player} follows it up, but {keeper} saves again!",
+  "@pitchComPenaltyReboundSaved1": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up; the goalkeeper {keeper} saves again. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "keeper": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundSaved2": "{player} gets to the rebound, but it's kept out again!",
+  "@pitchComPenaltyReboundSaved2": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up; it is saved again. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundSaved3": "{keeper} is down quickly to deny {player} on the follow-up!",
+  "@pitchComPenaltyReboundSaved3": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up; the goalkeeper {keeper} saves. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "keeper": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundWide1": "{player} reaches the rebound and drags it wide!",
+  "@pitchComPenaltyReboundWide1": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} gets to the rebound and shoots wide. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundWide2": "{player} is first to the loose ball, but skies it over!",
+  "@pitchComPenaltyReboundWide2": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} gets to the rebound and shoots over the bar. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundWide3": "A golden chance for {player} on the rebound, but it flies wide!",
+  "@pitchComPenaltyReboundWide3": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} gets to the rebound and misses the target. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundBlocked1": "{player} follows it up, but a defender blocks the shot!",
+  "@pitchComPenaltyReboundBlocked1": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and a defender blocks the shot. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundBlocked2": "{player} pounces on the rebound, but it's charged down!",
+  "@pitchComPenaltyReboundBlocked2": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and the shot is charged down. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundBlocked3": "The rebound falls to {player}, whose shot is blocked!",
+  "@pitchComPenaltyReboundBlocked3": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and the shot is blocked. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundWoodwork1": "{player} follows it up and hits the post!",
+  "@pitchComPenaltyReboundWoodwork1": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and hits the post. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundWoodwork2": "Off the woodwork! {player}'s follow-up comes back out!",
+  "@pitchComPenaltyReboundWoodwork2": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and hits the woodwork. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundWoodwork3": "{player} reaches the rebound and rattles the frame of the goal!",
+  "@pitchComPenaltyReboundWoodwork3": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and {player} follows it up and hits the frame of the goal. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundCleared1": "It's loose in the box, but {defender} hacks it clear!",
+  "@pitchComPenaltyReboundCleared1": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and the defender {defender} clears the loose ball. Variant 1 of 3.",
+    "placeholders": {
+      "defender": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundCleared2": "{defender} beats everyone to the loose ball and clears!",
+  "@pitchComPenaltyReboundCleared2": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and the defender {defender} reaches the loose ball first and clears it. Variant 2 of 3.",
+    "placeholders": {
+      "defender": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyReboundCleared3": "{defender} reacts first and boots the loose ball away!",
+  "@pitchComPenaltyReboundCleared3": {
+    "description": "Pitch view commentary line: a penalty saved or off the woodwork stays live and the defender {defender} reacts first and kicks it away. Variant 3 of 3.",
+    "placeholders": {
+      "defender": {
+        "type": "String"
+      }
+    }
+  },
   "pitchComPenaltyAwarded1": "Penalty! {player} is brought down in the box.",
   "@pitchComPenaltyAwarded1": {
     "description": "Pitch view commentary line: a penalty is given for a foul in the box (no card). {player} is the player fouled, {other} the player who fouled him. Variant 1 of 3.",

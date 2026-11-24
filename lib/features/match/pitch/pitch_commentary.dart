@@ -33,6 +33,9 @@ import 'package:fnm/l10n/app_localizations.dart';
 /// the shot's `goalEventIndex`; given for every goal (penalties and set
 /// pieces included), the goal's line carries it.
 ///
+/// With [clearance], [m] is a penalty whose loose ball a defender cleared
+/// ([ShotMoment.reboundClearedById]), and the line is the clearance's.
+///
 /// [reboundFrom] is set when the picture drew the goal as a rebound (the
 /// window's `PitchCueKind.rebound` cue): the man whose shot the keeper
 /// parried, the scorer himself when it came back to him. The goal is then
@@ -49,6 +52,7 @@ String? pitchLine(
   required List<MatchEvent> events,
   ({int home, int away})? score,
   int? reboundFrom,
+  bool clearance = false,
 }) {
   if (isRoutineMoment(m)) return null;
   String name(int? id) {
@@ -62,6 +66,14 @@ String? pitchLine(
       : ok[(seed ^ m.seq ^ m.minute ^ m.stoppage) % ok.length];
 
   switch (m) {
+    case ShotMoment(:final reboundClearedById?) when clearance:
+      // The penalty's loose ball, cleared: the defender who got there.
+      final d = name(reboundClearedById);
+      return pick([
+        l.pitchComPenaltyReboundCleared1(d),
+        l.pitchComPenaltyReboundCleared2(d),
+        l.pitchComPenaltyReboundCleared3(d),
+      ]);
     case final ShotMoment s:
       final p = name(s.shooterId);
       final k = s.keeperId == null ? null : name(s.keeperId);
@@ -309,10 +321,11 @@ List<String> _shotVariants(
   String? o,
 ) {
   // A good chance kept out is a big save, whatever it came from (a
-  // penalty or a direct free kick keeps its own lines).
+  // penalty, its follow-up or a direct free kick keeps its own lines).
   if (s.isBigSave &&
       k != null &&
       s.origin != ShotOrigin.penalty &&
+      s.origin != ShotOrigin.penaltyRebound &&
       s.origin != ShotOrigin.directFreeKick) {
     return _bigSaveVariants(l, p, k);
   }
@@ -340,6 +353,35 @@ List<String> _shotVariants(
           l.pitchComPenaltyWoodwork1(p),
           l.pitchComPenaltyWoodwork2(p),
           l.pitchComPenaltyWoodwork3(p),
+        ],
+      };
+    case ShotOrigin.penaltyRebound:
+      // A follow-up from a penalty that stayed live.
+      return switch (s.outcome) {
+        ShotOutcome.goal => [
+          l.pitchComPenaltyReboundGoal1(p),
+          l.pitchComPenaltyReboundGoal2(p),
+          l.pitchComPenaltyReboundGoal3(p),
+        ],
+        ShotOutcome.saved => [
+          if (k != null) l.pitchComPenaltyReboundSaved1(p, k),
+          l.pitchComPenaltyReboundSaved2(p),
+          if (k != null) l.pitchComPenaltyReboundSaved3(p, k),
+        ],
+        ShotOutcome.wide => [
+          l.pitchComPenaltyReboundWide1(p),
+          l.pitchComPenaltyReboundWide2(p),
+          l.pitchComPenaltyReboundWide3(p),
+        ],
+        ShotOutcome.blocked => [
+          l.pitchComPenaltyReboundBlocked1(p),
+          l.pitchComPenaltyReboundBlocked2(p),
+          l.pitchComPenaltyReboundBlocked3(p),
+        ],
+        ShotOutcome.woodwork => [
+          l.pitchComPenaltyReboundWoodwork1(p),
+          l.pitchComPenaltyReboundWoodwork2(p),
+          l.pitchComPenaltyReboundWoodwork3(p),
         ],
       };
     case ShotOrigin.directFreeKick:

@@ -16325,6 +16325,96 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Η μπάλα είναι ελεύθερη! Ο $player συμπληρώνει και τη στέλνει στα δίχτυα!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return 'Ο $player φτάνει πρώτος στη χαμένη μπάλα και σκοράρει στη δεύτερη προσπάθεια!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'Στη δεύτερη προσπάθεια! Ο $player ορμάει στη μπάλα και σκοράρει!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return 'Ο $player συμπληρώνει, αλλά ο $keeper αποκρούει ξανά!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return 'Ο $player φτάνει στην επαναφορά, αλλά ξανά τίποτα!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return 'Ο $keeper αντιδρά γρήγορα και σταματά τη συμπλήρωση του $player!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return 'Ο $player φτάνει στην επαναφορά και τη στέλνει άουτ!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return 'Ο $player φτάνει πρώτος στη μπάλα, αλλά τη στέλνει πάνω από το δοκάρι!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Τεράστια ευκαιρία για τον $player στην επαναφορά, αλλά άουτ!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return 'Ο $player συμπληρώνει, αλλά ένας αμυντικός μπλοκάρει το σουτ!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return 'Ο $player ορμάει στην επαναφορά, αλλά το σουτ κόβεται!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'Η μπάλα καταλήγει στον $player, αλλά το σουτ του μπλοκάρεται!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return 'Ο $player συμπληρώνει και βρίσκει το δοκάρι!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Δοκάρι! Η συμπλήρωση του $player επιστρέφει στο γήπεδο!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return 'Ο $player φτάνει στην επαναφορά και τραντάζει τα δοκάρια!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Η μπάλα είναι ελεύθερη στην περιοχή, αλλά ο $defender διώχνει!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return 'Ο $defender φτάνει πρώτος στη χαμένη μπάλα και διώχνει!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return 'Ο $defender αντιδρά πρώτος και στέλνει τη μπάλα μακριά!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Πέναλτι! Ο $player πέφτει μέσα στην περιοχή.';
   }

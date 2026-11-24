@@ -16650,6 +16650,96 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Mingea e liberă! $player vine din urmă și înscrie din respingere!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player ajunge primul la mingea liberă și înscrie din a doua încercare!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'A doua oară e cu noroc! $player se aruncă pe mingea liberă și înscrie!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player reia, dar $keeper apără din nou!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player ajunge la respingere, dar e oprit din nou!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper reacționează rapid și îi oprește reluarea lui $player!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player ajunge la respingere și trimite pe lângă!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player ajunge primul la mingea liberă, dar trimite peste poartă!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Ocazie uriașă pentru $player din respingere, dar mingea iese pe lângă!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player reia, dar un fundaș blochează șutul!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player se aruncă pe respingere, dar șutul e blocat!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'Respingerea ajunge la $player, dar șutul lui e blocat!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player reia și nimerește bara!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Bară! Reluarea lui $player revine în teren!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player ajunge la respingere și zguduie cadrul porții!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Mingea e liberă în careu, dar $defender degajează!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender ajunge primul la mingea liberă și degajează!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender reacționează primul și trimite mingea departe!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Penalty! $player cade în careu.';
   }

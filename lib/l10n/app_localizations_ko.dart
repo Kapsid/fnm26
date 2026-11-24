@@ -15683,6 +15683,96 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return '공이 흘렀습니다! $player 선수가 쇄도해 리바운드를 밀어 넣습니다!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player 선수가 흐른 공에 가장 먼저 닿아 두 번째 시도에서 골을 넣습니다!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return '두 번째는 성공! $player 선수가 흐른 공을 낚아채 골을 넣습니다!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player 선수가 쇄도하지만 $keeper 골키퍼가 또 막아냅니다!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player 선수가 리바운드에 닿지만 또 막힙니다!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper 골키퍼가 재빨리 몸을 던져 $player 선수의 재차 슈팅을 막아냅니다!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player 선수가 리바운드에 닿지만 골문을 벗어납니다!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player 선수가 흐른 공에 가장 먼저 닿지만 크로스바 위로 날립니다!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return '리바운드에서 $player 선수에게 절호의 기회, 하지만 빗나갑니다!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player 선수가 쇄도하지만 수비수가 슈팅을 막아냅니다!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player 선수가 리바운드를 낚아채지만 슈팅이 막힙니다!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return '리바운드가 $player 선수에게 떨어지지만 슈팅은 블록됩니다!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player 선수가 쇄도해 때린 슈팅이 골대를 맞습니다!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return '골대! $player 선수의 재차 슈팅이 튕겨 나옵니다!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player 선수가 리바운드에 닿아 골대를 강타합니다!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return '박스 안에 공이 흘렀지만 $defender 선수가 걷어냅니다!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender 선수가 흐른 공에 가장 먼저 닿아 걷어냅니다!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender 선수가 가장 먼저 반응해 흐른 공을 멀리 걷어냅니다!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return '페널티킥! $player 선수가 박스 안에서 넘어집니다.';
   }

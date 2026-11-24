@@ -16242,6 +16242,96 @@ class AppLocalizationsFil extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Maluwag ang bola! Sinundan ni $player at ipinasok ang rebound!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return 'Unang nakarating si $player sa maluwag na bola at umiskor sa ikalawang tangka!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'Sa ikalawang tangka! Sinunggaban ni $player ang maluwag na bola at umiskor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return 'Sinundan ni $player, pero sinalo ulit ni $keeper!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return 'Nakuha ni $player ang rebound, pero napigilan ulit!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return 'Mabilis na bumaba si $keeper at pinigilan ang follow-up ni $player!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return 'Nakuha ni $player ang rebound pero lumihis ito!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return 'Unang nakarating si $player sa maluwag na bola, pero lumampas sa crossbar!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Gintong pagkakataon para kay $player sa rebound, pero lumihis!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return 'Sinundan ni $player, pero hinarang ng isang depensa ang tira!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return 'Sinunggaban ni $player ang rebound, pero naharang ang tira!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'Bumagsak ang rebound kay $player, pero naharang ang tira niya!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return 'Sinundan ni $player at tumama sa poste!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Sa kahoy! Bumalik ang follow-up ni $player!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return 'Nakuha ni $player ang rebound at niyanig ang goal!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Maluwag ang bola sa kahon, pero inalis ni $defender!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return 'Unang nakarating si $defender sa maluwag na bola at inalis ito!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return 'Pinakamabilis na kumilos si $defender at sinipa palayo ang bola!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Penalty! Natumba si $player sa loob ng kahon.';
   }

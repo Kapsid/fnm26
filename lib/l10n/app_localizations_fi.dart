@@ -16308,6 +16308,96 @@ class AppLocalizationsFi extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Pallo on irti! $player seuraa ja paikkaa paluupallon maaliin!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player ehtii ensimmäisenä irtopalloon ja maalaa toisella yrityksellä!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'Toinen kerta toden sanoo! $player syöksyy irtopalloon ja maalaa!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player seuraa, mutta $keeper torjuu taas!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player ehtii paluupalloon, mutta taas torjutaan!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper on nopeasti maassa ja torjuu pelaajan $player paikkauksen!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player ehtii paluupalloon ja vetää ohi!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player ehtii ensimmäisenä irtopalloon, mutta laukoo yli!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Kultainen paikka pelaajalle $player paluupallosta, mutta ohi menee!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player seuraa, mutta puolustaja blokkaa laukauksen!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player syöksyy paluupalloon, mutta laukaus blokataan!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'Paluupallo putoaa pelaajalle $player, mutta laukaus blokataan!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player seuraa ja osuu tolppaan!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Rautaa! Pelaajan $player paikkaus kimpoaa takaisin!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player ehtii paluupalloon ja kolauttaa maalikehikkoa!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Pallo on irti boksissa, mutta $defender purkaa!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender ehtii ensimmäisenä irtopalloon ja purkaa!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender reagoi nopeimmin ja potkaisee irtopallon kauas!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Rangaistuspotku! $player kaatuu alueella.';
   }

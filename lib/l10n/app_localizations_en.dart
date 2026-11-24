@@ -16267,6 +16267,96 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'It\'s loose! $player follows it up and buries the rebound!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player is first to the loose ball and scores at the second attempt!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'Second time lucky! $player pounces on the loose ball and scores!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player follows it up, but $keeper saves again!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player gets to the rebound, but it\'s kept out again!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper is down quickly to deny $player on the follow-up!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player reaches the rebound and drags it wide!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player is first to the loose ball, but skies it over!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'A golden chance for $player on the rebound, but it flies wide!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player follows it up, but a defender blocks the shot!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player pounces on the rebound, but it\'s charged down!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'The rebound falls to $player, whose shot is blocked!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player follows it up and hits the post!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Off the woodwork! $player\'s follow-up comes back out!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player reaches the rebound and rattles the frame of the goal!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'It\'s loose in the box, but $defender hacks it clear!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender beats everyone to the loose ball and clears!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender reacts first and boots the loose ball away!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Penalty! $player is brought down in the box.';
   }

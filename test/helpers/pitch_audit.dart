@@ -369,6 +369,16 @@ class PitchAudit {
         }
       }
     }
+    if (m.origin == ShotOrigin.penaltyRebound) {
+      // A penalty's follow-up: struck after the kick, at its own cue (the
+      // taker following up his own kick has struck once already).
+      final c = w.cues
+          .where(
+            (c) => c.kind == PitchCueKind.followUp && c.playerId == m.shooterId,
+          )
+          .firstOrNull;
+      if (c != null) from = c.t - 1e-6;
+    }
     // A goal drawn as a rebound: the shot is the scorer's follow-up, after
     // the first one (his own or a team-mate's) the keeper parried.
     final rebound = m.outcome == ShotOutcome.goal

@@ -16148,6 +16148,96 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Top boşta! $player takip ediyor ve dönen topu ağlara gönderiyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player boştaki topa ilk ulaşıyor ve ikinci denemede golü buluyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'İkincisinde oldu! $player boştaki topa atılıyor ve gol!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player takip ediyor, ama $keeper yine kurtarıyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player dönen topa yetişiyor, ama yine geçit yok!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper hemen yerde, $player takipte de gol bulamıyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player dönen topa yetişiyor ve dışarı gönderiyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player boştaki topa ilk ulaşıyor, ama üstten auta gönderiyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Dönen topta $player için müthiş fırsat, ama top dışarıda!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player takip ediyor, ama bir savunmacı şutu blokluyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player dönen topa atılıyor, ama şut bloke ediliyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'Dönen top $player oyuncusuna düşüyor, şutu bloke ediliyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player takip ediyor ve direğe çarpıyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Direk! $player oyuncusunun takip vuruşu geri dönüyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player dönen topa yetişiyor ve kaleyi sarsıyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Top ceza sahasında boşta, ama $defender uzaklaştırıyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender boştaki topa herkesten önce ulaşıp uzaklaştırıyor!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender ilk tepkiyi veriyor ve boştaki topu uzaklaştırıyor!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Penaltı! $player ceza sahasında yere düşüyor.';
   }

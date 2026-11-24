@@ -44,6 +44,12 @@ enum ShotOrigin {
   directFreeKick,
   penalty,
   longThrow,
+
+  /// A follow-up from close range after a penalty the keeper parried or
+  /// that came back off the woodwork: the ball stayed live and an attacker
+  /// got to it first. Logged straight after its penalty's shot, in the same
+  /// minute. Never in a shootout.
+  penaltyRebound,
 }
 
 /// One real moment of a match. Ordered in `MatchResult.moments` by
@@ -83,6 +89,7 @@ final class ShotMoment extends MatchMoment {
     this.keeperId,
     this.header = false,
     this.goalEventIndex,
+    this.reboundClearedById,
   });
 
   @override
@@ -121,6 +128,12 @@ final class ShotMoment extends MatchMoment {
   /// still the attacker's.
   final int? goalEventIndex;
 
+  /// For a penalty that did not go in: the defender who got to the loose
+  /// ball first and cleared it, when it stayed live and nobody followed it
+  /// up. Null otherwise (a follow-up is a [ShotOrigin.penaltyRebound] shot
+  /// of its own).
+  final int? reboundClearedById;
+
   /// The chance a save has to have been to count as a big one.
   static const double bigSaveXg = 0.15;
 
@@ -143,6 +156,7 @@ final class ShotMoment extends MatchMoment {
     header: header,
     origin: origin,
     goalEventIndex: index,
+    reboundClearedById: reboundClearedById,
   );
 
   @override
@@ -160,7 +174,8 @@ final class ShotMoment extends MatchMoment {
       other.outcome == outcome &&
       other.header == header &&
       other.origin == origin &&
-      other.goalEventIndex == goalEventIndex;
+      other.goalEventIndex == goalEventIndex &&
+      other.reboundClearedById == reboundClearedById;
 
   @override
   int get hashCode => Object.hash(
@@ -177,6 +192,7 @@ final class ShotMoment extends MatchMoment {
     header,
     origin,
     goalEventIndex,
+    reboundClearedById,
   );
 
   @override

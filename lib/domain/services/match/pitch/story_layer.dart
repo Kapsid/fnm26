@@ -1427,8 +1427,17 @@ class _Builder {
             m is ShotMoment &&
             m.origin != ShotOrigin.openPlay &&
             m.origin != ShotOrigin.penalty &&
+            m.origin != ShotOrigin.penaltyRebound &&
             last.moments.first is SetPieceMoment &&
             last.moments.length == 1) {
+          last.moments.add(m);
+        } else if (last != null &&
+            m is ShotMoment &&
+            m.origin == ShotOrigin.penaltyRebound &&
+            last.moments.length == 1 &&
+            last.moments.first is ShotMoment &&
+            (last.moments.first as ShotMoment).origin == ShotOrigin.penalty) {
+          // A penalty's follow-up: staged in the penalty's own window.
           last.moments.add(m);
         }
       }
@@ -1879,10 +1888,20 @@ class _Builder {
     for (final r in [...resets, ...goalRestarts.keys]) {
       if ((r - t0).abs() < 1e-4) t0 = r;
     }
+    // Whether the state already shows the kick-off at [r]: it was read on
+    // it or after it. The screen stops for an interval a microsecond short
+    // of its whistle and asks for the new picture from there (a team talk,
+    // a change at the break), so a state can sit a hair before a kick-off
+    // it does not show yet: that kick-off is still to be taken, with
+    // everybody lined up for the new half. (Taken as shown, the new half
+    // began from where the old one ended with the ends changed, and both
+    // keepers ran the length of the pitch past halfway, their goals empty,
+    // the owner's 2026-11 "a GK runs toward the middle of the pitch".)
+    bool shows(double r) => state.t >= r - 1e-9;
     // Everything due before the resume point has happened: replay it, then
     // put everybody exactly where the state has them.
-    // On an interval's kick-off the state already shows what the interval
-    // brought.
+    // On an interval's kick-off what the interval brings is brought now
+    // (the state shows it, or the kick-off below lines it up).
     final onBreak = resets.any((r) => (r - t0).abs() < 1e-9);
     while (ci < changes.length &&
         (changes[ci].t < t0 - 1e-9 ||
@@ -1898,8 +1917,8 @@ class _Builder {
     }
     for (final r in [...resets, ...goalRestarts.keys]) {
       // A resume landing exactly on a kick-off starts from the kick-off the
-      // state already shows.
-      if (r < t0 + 1e-9) resetDone.add(r);
+      // state already shows; one it does not show yet is taken at once.
+      if (r < t0 - 1e-9 || (r < t0 + 1e-9 && shows(r))) resetDone.add(r);
     }
     for (final a in agents) {
       final p = state.players[a.id];

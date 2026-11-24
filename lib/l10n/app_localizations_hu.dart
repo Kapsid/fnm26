@@ -16181,6 +16181,96 @@ class AppLocalizationsHu extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Szabad a labda! $player követi, és bepótolja a kipattanót!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player ér elsőként a labdához, és másodszorra betalál!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'Másodszorra sikerül! $player rávetődik a szabad labdára, és betalál!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player követi, de $keeper ismét véd!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player odaér a kipattanóhoz, de ismét hárítanak!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper gyorsan reagál, és $player kipattanóját is hárítja!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player odaér a kipattanóhoz, de mellé lő!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player ér elsőként a szabad labdához, de fölé lövi!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Hatalmas helyzet $player előtt a kipattanóból, de mellé megy!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player követi, de egy védő blokkolja a lövést!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player rávetődik a kipattanóra, de a lövést blokkolják!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'A kipattanó $player elé kerül, de a lövését blokkolják!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player követi, és a kapufát találja el!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Kapufa! $player kipattanóból leadott lövése visszapattan!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player odaér a kipattanóhoz, és megreszketteti a kapufát!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Szabad a labda a tizenhatoson belül, de $defender felszabadít!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender ér elsőként a szabad labdához, és felszabadít!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender reagál leggyorsabban, és elrúgja a szabad labdát!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Tizenegyes! $player elesik a tizenhatoson belül.';
   }

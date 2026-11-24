@@ -16407,6 +16407,96 @@ class AppLocalizationsPl extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Piłka jest luźna! $player dobija i pakuje ją do siatki!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player pierwszy dopada do piłki i trafia za drugim podejściem!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'Do dwóch razy sztuka! $player dopada do luźnej piłki i trafia!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player dobija, ale $keeper znów broni!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player dopada do dobitki, ale znów nie ma gola!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper błyskawicznie reaguje i zatrzymuje dobitkę $player!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player dopada do dobitki i posyła ją obok bramki!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player pierwszy dopada do piłki, ale przenosi ją nad poprzeczką!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Wyborna okazja dla $player przy dobitce, ale piłka leci obok!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player dobija, ale obrońca blokuje strzał!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player dopada do dobitki, ale strzał zostaje zablokowany!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'Piłka spada pod nogi $player, ale jego strzał jest zablokowany!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player dobija i trafia w słupek!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Obramowanie! Dobitka $player odbija się od słupka!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player dopada do dobitki i trafia w obramowanie bramki!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Piłka krąży w polu karnym, ale $defender ją wybija!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender pierwszy dopada do luźnej piłki i ją wybija!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender reaguje najszybciej i wybija luźną piłkę!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Rzut karny! $player pada w polu karnym.';
   }

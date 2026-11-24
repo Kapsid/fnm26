@@ -16320,6 +16320,96 @@ class AppLocalizationsBg extends AppLocalizations {
   }
 
   @override
+  String pitchComPenaltyReboundGoal1(String player) {
+    return 'Топката е свободна! $player довършва и вкарва при добиването!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal2(String player) {
+    return '$player пръв стига до свободната топка и бележи от втория опит!';
+  }
+
+  @override
+  String pitchComPenaltyReboundGoal3(String player) {
+    return 'От втория път! $player се хвърля към свободната топка и бележи!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved1(String player, String keeper) {
+    return '$player добива, но $keeper спасява отново!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved2(String player) {
+    return '$player стига до отскока, но пак е спрян!';
+  }
+
+  @override
+  String pitchComPenaltyReboundSaved3(String player, String keeper) {
+    return '$keeper реагира мигновено и спира добиването на $player!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide1(String player) {
+    return '$player стига до отскока и стреля встрани!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide2(String player) {
+    return '$player пръв стига до свободната топка, но я праща над вратата!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWide3(String player) {
+    return 'Златна възможност за $player при добиването, но топката е встрани!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked1(String player) {
+    return '$player добива, но защитник блокира удара!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked2(String player) {
+    return '$player се хвърля към отскока, но ударът е блокиран!';
+  }
+
+  @override
+  String pitchComPenaltyReboundBlocked3(String player) {
+    return 'Отскокът стига до $player, но ударът му е блокиран!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork1(String player) {
+    return '$player добива и уцелва гредата!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork2(String player) {
+    return 'Греда! Добиването на $player се връща в игра!';
+  }
+
+  @override
+  String pitchComPenaltyReboundWoodwork3(String player) {
+    return '$player стига до отскока и разтриса рамката на вратата!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared1(String defender) {
+    return 'Топката е свободна в наказателното поле, но $defender изчиства!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared2(String defender) {
+    return '$defender пръв стига до свободната топка и изчиства!';
+  }
+
+  @override
+  String pitchComPenaltyReboundCleared3(String defender) {
+    return '$defender реагира пръв и изрита свободната топка надалеч!';
+  }
+
+  @override
   String pitchComPenaltyAwarded1(String player) {
     return 'Дузпа! $player пада в наказателното поле.';
   }
