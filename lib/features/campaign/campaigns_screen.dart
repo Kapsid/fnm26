@@ -31,10 +31,10 @@ final Provider<List<CampaignDef>> campaignCatalogProvider = Provider(
 /// How long a campaign runs: the list's sections.
 enum CampaignLength { oneCycle, short, long }
 
-/// One cycle; two to four; five or more.
+/// One cycle; two to five; six or more.
 CampaignLength campaignLength(CampaignDef def) => def.cycles <= 1
     ? CampaignLength.oneCycle
-    : def.cycles <= 4
+    : def.cycles <= 5
     ? CampaignLength.short
     : CampaignLength.long;
 

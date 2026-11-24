@@ -54,7 +54,8 @@ void main() {
     await tester.scrollUntilVisible(find.text('Reunited'), 200);
     expect(find.text('2 cycles'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('The Lone Star'), 200);
-    expect(find.text('4 cycles'), findsNWidgets(2));
+    expect(find.text('4 cycles'), findsOneWidget);
+    expect(find.text('5 cycles'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('The Three Legs'), 200);
     expect(find.text('THE LONG HAUL · 3'), findsOneWidget);
     expect(find.text('A Greenland Century'), findsOneWidget);
@@ -442,7 +443,7 @@ void main() {
   group('a catalogue of 24 campaigns', () {
     // Stand-ins: the words fall back to the Transplant's, which is fine for
     // layout and filtering; the lengths cover every section.
-    const lengths = [1, 2, 3, 4, 5, 25];
+    const lengths = [1, 2, 3, 4, 6, 25];
     final catalogue = [
       for (var i = 0; i < 24; i++)
         CampaignDef(
@@ -472,7 +473,7 @@ void main() {
         await store.record('c6', 0);
       });
       await pumpRoute(tester, save, Routes.campaigns);
-      // 1 cycle: c0, c6, c12, c18. 2 to 4: three in every six. 5 and more:
+      // 1 cycle: c0, c6, c12, c18. 2 to 5: three in every six. 6 and more:
       // two in every six.
       expect(find.text('ONE CYCLE · 4'), findsOneWidget);
       await tester.scrollUntilVisible(
