@@ -12703,6 +12703,71 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival are trying to recruit $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rival have approached $name ($age, $position) about switching allegiance. He has not played a competitive match for $nation yet, so he is still free to change. Give him minutes in one of our next $count competitive matches and he is tied to us for good. If not, he may accept their offer.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival miss out on $name';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name has played a competitive match for $nation, so $rival can no longer pick him. He is tied to us for good.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name turns down $rival';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name still has no competitive cap for $nation, but he has told $rival he wants to wait for his chance with us.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name switches to $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name has accepted the offer from $rival and will play for them from now on. Without a competitive cap for $nation, nothing could hold him.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name has accepted the offer from $rival. He was promised minutes for $nation that never came, and he will play for $rival from now on.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Promise him minutes';
+
+  @override
+  String get poachPromisedLabel => 'Minutes promised';
+
+  @override
+  String get poachCallUpsButton => 'Open call-ups';
+
+  @override
+  String get poachPromiseHint =>
+      'A promise makes him wait one more competitive match, but he is likelier to leave if it is broken.';
+
+  @override
   String playerIntlRetired(int year) {
     return 'Retired from international football, $year';
   }

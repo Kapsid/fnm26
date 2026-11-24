@@ -12613,6 +12613,71 @@ class AppLocalizationsHu extends AppLocalizations {
   }
 
   @override
+  String msgPoachTitle(String rival, String name) {
+    return 'A(z) $rival el akarja csábítani $name játékost';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return 'A(z) $rival megkereste $name játékost ($age, $position), hogy váltson válogatottat. Még nem játszott tétmérkőzést a(z) $nation színeiben, így még válthat. Adj neki játékpercet a következő $count tétmérkőzésünk egyikén, és végleg hozzánk kötődik. Ellenkező esetben elfogadhatja az ajánlatukat.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return 'A(z) $rival lemarad $name játékosról';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name tétmérkőzést játszott a(z) $nation színeiben, így a(z) $rival már nem hívhatja be. Végleg hozzánk kötődik.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name elutasította a(z) $rival ajánlatát';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name még mindig nem játszott tétmérkőzést a(z) $nation színeiben, de közölte a(z) $rival szövetségével, hogy nálunk várja a lehetőségét.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name a(z) $rival válogatottjába vált';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name elfogadta a(z) $rival ajánlatát, és mostantól náluk játszik. Tétmérkőzés nélkül a(z) $nation színeiben semmi sem tarthatta meg.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name elfogadta a(z) $rival ajánlatát. Játékperceket ígértek neki a(z) $nation színeiben, amelyek sosem jöttek el, és mostantól a(z) $rival válogatottjában játszik.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Ígérj neki játékpercet';
+
+  @override
+  String get poachPromisedLabel => 'Játékperc megígérve';
+
+  @override
+  String get poachCallUpsButton => 'Keret megnyitása';
+
+  @override
+  String get poachPromiseHint =>
+      'Az ígéret miatt még egy tétmérkőzésnyit vár, de ha megszeged, nagyobb eséllyel távozik.';
+
+  @override
   String playerIntlRetired(int year) {
     return 'Visszavonult a válogatottságtól, $year';
   }

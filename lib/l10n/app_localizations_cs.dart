@@ -13048,6 +13048,71 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival se snaží získat hráče $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return 'Reprezentace $rival oslovila hráče $name ($age, $position) s nabídkou změnit reprezentační příslušnost. Za $nation zatím neodehrál žádný soutěžní zápas, takže může přestoupit. Dejte mu minuty v jednom z našich příštích $count soutěžních zápasů a bude k nám natrvalo vázán. Jinak může jejich nabídku přijmout.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival přichází o hráče $name';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name odehrál soutěžní zápas za $nation, takže ho reprezentace $rival už nemůže povolat. Je k nám natrvalo vázán.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name odmítl nabídku reprezentace $rival';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name stále nemá soutěžní start za $nation, ale reprezentaci $rival sdělil, že chce počkat na svou šanci u nás.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name přestupuje do reprezentace $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name přijal nabídku reprezentace $rival a od teď bude hrát za ni. Bez soutěžního startu za $nation ho nic neudrželo.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name přijal nabídku reprezentace $rival. Za $nation mu byly slíbeny minuty, které nikdy nepřišly, a od teď bude hrát za $rival.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Slíbit mu minuty';
+
+  @override
+  String get poachPromisedLabel => 'Minuty slíbeny';
+
+  @override
+  String get poachCallUpsButton => 'Otevřít nominaci';
+
+  @override
+  String get poachPromiseHint =>
+      'Slib ho přiměje počkat o jeden soutěžní zápas déle, ale pokud ho porušíte, spíš odejde.';
+
+  @override
   String playerIntlRetired(int year) {
     return 'Ukončil reprezentační kariéru, $year';
   }

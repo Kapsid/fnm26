@@ -12743,6 +12743,71 @@ class AppLocalizationsFi extends AppLocalizations {
   }
 
   @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival yrittää värvätä pelaajan $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rival on lähestynyt pelaajaa $name ($age, $position) maajoukkueen vaihtamiseksi. Hän ei ole vielä pelannut kilpailullista ottelua joukkueessa $nation, joten hän voi yhä vaihtaa. Anna hänelle peliaikaa jossakin seuraavasta $count kilpailullisesta ottelustamme, niin hän on sidottu meihin lopullisesti. Muuten hän saattaa hyväksyä heidän tarjouksensa.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival jää ilman pelaajaa $name';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name on pelannut kilpailullisen ottelun joukkueessa $nation, joten $rival ei voi enää valita häntä. Hän on sidottu meihin lopullisesti.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name kieltäytyy tarjouksesta ($rival)';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name ei ole vieläkään pelannut kilpailullista ottelua joukkueessa $nation, mutta hän on kertonut, ettei lähde ($rival), vaan odottaa tilaisuuttaan meillä.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name vaihtaa maajoukkuetta: $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name hyväksyi tarjouksen ($rival) ja pelaa nyt heille. Ilman kilpailullista ottelua joukkueessa $nation mikään ei voinut pitää häntä.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name hyväksyi tarjouksen ($rival). Hänelle luvattiin peliaikaa joukkueessa $nation, mutta sitä ei koskaan tullut, ja nyt hän pelaa joukkueessa $rival.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Lupaa hänelle peliaikaa';
+
+  @override
+  String get poachPromisedLabel => 'Peliaikaa luvattu';
+
+  @override
+  String get poachCallUpsButton => 'Avaa kokoonpano';
+
+  @override
+  String get poachPromiseHint =>
+      'Lupaus saa hänet odottamaan yhden kilpailullisen ottelun pidempään, mutta jos se rikotaan, hän lähtee todennäköisemmin.';
+
+  @override
   String playerIntlRetired(int year) {
     return 'Lopetti maajoukkueuran, $year';
   }

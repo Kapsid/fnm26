@@ -12664,6 +12664,71 @@ class AppLocalizationsFil extends AppLocalizations {
   }
 
   @override
+  String msgPoachTitle(String rival, String name) {
+    return 'Sinusubukan ng $rival na kunin si $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return 'Nilapitan ng $rival si $name ($age, $position) para lumipat ng pambansang koponan. Hindi pa siya nakakalaro ng opisyal na laban para sa $nation, kaya malaya pa siyang lumipat. Bigyan siya ng minuto sa isa sa susunod nating $count opisyal na laban at nakatali na siya sa atin habambuhay. Kung hindi, maaari niyang tanggapin ang alok nila.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return 'Nawala sa $rival si $name';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return 'Nakapaglaro na si $name ng opisyal na laban para sa $nation, kaya hindi na siya makukuha ng $rival. Nakatali na siya sa atin habambuhay.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return 'Tinanggihan ni $name ang $rival';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return 'Wala pa ring opisyal na laro si $name para sa $nation, pero sinabi niya sa $rival na gusto niyang hintayin ang pagkakataon niya sa atin.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return 'Lumipat si $name sa $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return 'Tinanggap ni $name ang alok ng $rival at maglalaro na siya para sa kanila mula ngayon. Walang opisyal na laro para sa $nation, kaya walang makapigil sa kanya.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return 'Tinanggap ni $name ang alok ng $rival. Pinangakuan siya ng minuto para sa $nation na hindi kailanman dumating, at maglalaro na siya para sa $rival mula ngayon.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Pangakuan siya ng minuto';
+
+  @override
+  String get poachPromisedLabel => 'Naipangako ang minuto';
+
+  @override
+  String get poachCallUpsButton => 'Buksan ang call-ups';
+
+  @override
+  String get poachPromiseHint =>
+      'Dahil sa pangako, maghihintay pa siya ng isa pang opisyal na laban, pero kapag hindi ito natupad, mas malamang na umalis siya.';
+
+  @override
   String playerIntlRetired(int year) {
     return 'Nagretiro sa international football, $year';
   }

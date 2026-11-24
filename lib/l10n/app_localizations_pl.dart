@@ -12803,6 +12803,71 @@ class AppLocalizationsPl extends AppLocalizations {
   }
 
   @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival próbuje pozyskać zawodnika $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return 'Reprezentacja $rival zwróciła się do zawodnika $name ($age, $position) w sprawie zmiany barw narodowych. Nie rozegrał jeszcze żadnego meczu o stawkę dla reprezentacji $nation, więc wciąż może zmienić kraj. Daj mu minuty w jednym z naszych $count najbliższych meczów o stawkę, a zostanie z nami na dobre. W przeciwnym razie może przyjąć ich ofertę.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival traci szansę na zawodnika $name';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name rozegrał mecz o stawkę dla reprezentacji $nation, więc reprezentacja $rival nie może już go powołać. Jest z nami związany na dobre.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name odrzuca ofertę reprezentacji $rival';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name wciąż nie ma meczu o stawkę dla reprezentacji $nation, ale przekazał reprezentacji $rival, że chce poczekać na swoją szansę u nas.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name przechodzi do reprezentacji $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name przyjął ofertę reprezentacji $rival i od teraz będzie grał dla niej. Bez meczu o stawkę dla reprezentacji $nation nic nie mogło go zatrzymać.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name przyjął ofertę reprezentacji $rival. Obiecano mu minuty w reprezentacji $nation, których nigdy nie dostał, i od teraz będzie grał dla reprezentacji $rival.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Obiecaj mu minuty';
+
+  @override
+  String get poachPromisedLabel => 'Minuty obiecane';
+
+  @override
+  String get poachCallUpsButton => 'Otwórz powołania';
+
+  @override
+  String get poachPromiseHint =>
+      'Obietnica sprawi, że poczeka jeden mecz o stawkę dłużej, ale jeśli jej nie dotrzymasz, chętniej odejdzie.';
+
+  @override
   String playerIntlRetired(int year) {
     return 'Zakończył karierę reprezentacyjną, $year';
   }

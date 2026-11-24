@@ -12747,6 +12747,71 @@ class AppLocalizationsNl extends AppLocalizations {
   }
 
   @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival probeert $name binnen te halen';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rival heeft $name ($age, $position) benaderd om van land te wisselen. Hij heeft nog geen officiële interland voor $nation gespeeld en mag dus nog wisselen. Geef hem speeltijd in een van onze volgende $count officiële wedstrijden en hij is voorgoed aan ons gebonden. Zo niet, dan neemt hij hun aanbod misschien aan.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival grijpt naast $name';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name heeft een officiële wedstrijd voor $nation gespeeld, dus $rival kan hem niet meer selecteren. Hij is voorgoed aan ons gebonden.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name zegt nee tegen $rival';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name heeft nog steeds geen officiële interland voor $nation, maar heeft $rival laten weten dat hij bij ons op zijn kans wil wachten.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name kiest voor $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name heeft het aanbod van $rival aangenomen en speelt voortaan voor hen. Zonder officiële interland voor $nation kon niets hem tegenhouden.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name heeft het aanbod van $rival aangenomen. Hem was speeltijd bij $nation beloofd die nooit kwam, en hij speelt voortaan voor $rival.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Beloof hem speeltijd';
+
+  @override
+  String get poachPromisedLabel => 'Speeltijd beloofd';
+
+  @override
+  String get poachCallUpsButton => 'Selectie openen';
+
+  @override
+  String get poachPromiseHint =>
+      'Een belofte laat hem één officiële wedstrijd langer wachten, maar breek je die, dan vertrekt hij eerder.';
+
+  @override
   String playerIntlRetired(int year) {
     return 'Gestopt als international, $year';
   }

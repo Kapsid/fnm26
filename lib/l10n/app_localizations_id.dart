@@ -12575,6 +12575,71 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival berusaha merekrut $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rival telah mendekati $name ($age, $position) untuk pindah tim nasional. Ia belum pernah bermain di laga resmi untuk $nation, jadi ia masih bebas pindah. Beri ia menit bermain di salah satu dari $count laga resmi kita berikutnya dan ia terikat dengan kita selamanya. Jika tidak, ia bisa menerima tawaran mereka.';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival gagal mendapatkan $name';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name sudah bermain di laga resmi untuk $nation, jadi $rival tidak bisa lagi memanggilnya. Ia terikat dengan kita selamanya.';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name menolak $rival';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name masih belum punya caps resmi untuk $nation, tetapi ia sudah memberi tahu $rival bahwa ia ingin menunggu kesempatannya bersama kita.';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name pindah ke $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name menerima tawaran $rival dan akan bermain untuk mereka mulai sekarang. Tanpa caps resmi untuk $nation, tidak ada yang bisa menahannya.';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name menerima tawaran $rival. Ia dijanjikan menit bermain untuk $nation yang tak pernah datang, dan mulai sekarang ia bermain untuk $rival.';
+  }
+
+  @override
+  String get poachPromiseButton => 'Janjikan menit bermain';
+
+  @override
+  String get poachPromisedLabel => 'Menit bermain dijanjikan';
+
+  @override
+  String get poachCallUpsButton => 'Buka pemanggilan';
+
+  @override
+  String get poachPromiseHint =>
+      'Janji membuatnya menunggu satu laga resmi lagi, tetapi jika dilanggar ia lebih mungkin pergi.';
+
+  @override
   String playerIntlRetired(int year) {
     return 'Pensiun dari timnas, $year';
   }

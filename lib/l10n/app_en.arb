@@ -19516,6 +19516,154 @@
       }
     }
   },
+  "msgPoachTitle": "{rival} are trying to recruit {name}",
+  "@msgPoachTitle": {
+    "description": "Inbox: another nation's federation is trying to recruit one of the manager's players who is not yet tied to his nation.",
+    "placeholders": {
+      "rival": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "msgPoachBody": "{rival} have approached {name} ({age}, {position}) about switching allegiance. He has not played a competitive match for {nation} yet, so he is still free to change. Give him minutes in one of our next {count} competitive matches and he is tied to us for good. If not, he may accept their offer.",
+  "@msgPoachBody": {
+    "description": "Inbox body: a rival federation approached the manager's uncapped player; minutes in one of the next few competitive (non-friendly) matches tie him to the manager's nation.",
+    "placeholders": {
+      "rival": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      },
+      "age": {
+        "type": "int"
+      },
+      "position": {
+        "type": "String"
+      },
+      "nation": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "msgPoachTiedTitle": "{rival} miss out on {name}",
+  "@msgPoachTiedTitle": {
+    "description": "Inbox: the approached player got competitive minutes in time and is now tied to the manager's nation.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "rival": {
+        "type": "String"
+      }
+    }
+  },
+  "msgPoachTiedBody": "{name} has played a competitive match for {nation}, so {rival} can no longer pick him. He is tied to us for good.",
+  "@msgPoachTiedBody": {
+    "description": "Inbox body: the approached player is now tied to the manager's nation.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "rival": {
+        "type": "String"
+      },
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "msgPoachStayedTitle": "{name} turns down {rival}",
+  "@msgPoachStayedTitle": {
+    "description": "Inbox: the deadline passed without a competitive cap, but the player turned the rival down.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "rival": {
+        "type": "String"
+      }
+    }
+  },
+  "msgPoachStayedBody": "{name} still has no competitive cap for {nation}, but he has told {rival} he wants to wait for his chance with us.",
+  "@msgPoachStayedBody": {
+    "description": "Inbox body: the player stays although still without a competitive cap.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "rival": {
+        "type": "String"
+      },
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "msgPoachSwitchedTitle": "{name} switches to {rival}",
+  "@msgPoachSwitchedTitle": {
+    "description": "Inbox: the player switched allegiance to the rival nation.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "rival": {
+        "type": "String"
+      }
+    }
+  },
+  "msgPoachSwitchedBody": "{name} has accepted the offer from {rival} and will play for them from now on. Without a competitive cap for {nation}, nothing could hold him.",
+  "@msgPoachSwitchedBody": {
+    "description": "Inbox body: the player switched allegiance because he had no competitive cap for the manager's nation.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "rival": {
+        "type": "String"
+      },
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "msgPoachSwitchedBodyPromise": "{name} has accepted the offer from {rival}. He was promised minutes for {nation} that never came, and he will play for {rival} from now on.",
+  "@msgPoachSwitchedBodyPromise": {
+    "description": "Inbox body: the player switched allegiance after a promise of minutes was broken.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "rival": {
+        "type": "String"
+      },
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "poachPromiseButton": "Promise him minutes",
+  "@poachPromiseButton": {
+    "description": "Button in the approach message: promise the player minutes. Short."
+  },
+  "poachPromisedLabel": "Minutes promised",
+  "@poachPromisedLabel": {
+    "description": "Disabled button label once minutes have been promised. Short."
+  },
+  "poachCallUpsButton": "Open call-ups",
+  "@poachCallUpsButton": {
+    "description": "Button in the approach message: open the call-up screen. Short."
+  },
+  "poachPromiseHint": "A promise makes him wait one more competitive match, but he is likelier to leave if it is broken.",
+  "@poachPromiseHint": {
+    "description": "Hint under the promise button: a promise buys one more competitive match, but breaking it makes him likelier to leave."
+  },
   "playerIntlRetired": "Retired from international football, {year}",
   "@playerIntlRetired": {
     "description": "Player page: a line under the nation for a player who retired from international football in this save. Short.",

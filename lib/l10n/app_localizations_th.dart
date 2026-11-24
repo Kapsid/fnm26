@@ -12434,6 +12434,71 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
+  String msgPoachTitle(String rival, String name) {
+    return '$rival กำลังพยายามดึงตัว $name';
+  }
+
+  @override
+  String msgPoachBody(
+    String rival,
+    String name,
+    int age,
+    String position,
+    String nation,
+    int count,
+  ) {
+    return '$rival ได้ติดต่อ $name ($age, $position) ให้เปลี่ยนทีมชาติ เขายังไม่เคยลงเล่นเกมทางการให้ $nation จึงยังเปลี่ยนได้ ให้เขาได้ลงสนามในหนึ่งใน $count เกมทางการนัดถัดไปของเรา แล้วเขาจะผูกพันกับเราตลอดไป มิฉะนั้นเขาอาจรับข้อเสนอของพวกเขา';
+  }
+
+  @override
+  String msgPoachTiedTitle(String name, String rival) {
+    return '$rival พลาดการได้ตัว $name';
+  }
+
+  @override
+  String msgPoachTiedBody(String name, String rival, String nation) {
+    return '$name ได้ลงเล่นเกมทางการให้ $nation แล้ว $rival จึงเรียกตัวเขาไม่ได้อีก เขาผูกพันกับเราตลอดไป';
+  }
+
+  @override
+  String msgPoachStayedTitle(String name, String rival) {
+    return '$name ปฏิเสธ $rival';
+  }
+
+  @override
+  String msgPoachStayedBody(String name, String rival, String nation) {
+    return '$name ยังไม่มีเกมทางการให้ $nation แต่เขาบอก $rival แล้วว่าต้องการรอโอกาสกับเรา';
+  }
+
+  @override
+  String msgPoachSwitchedTitle(String name, String rival) {
+    return '$name ย้ายไป $rival';
+  }
+
+  @override
+  String msgPoachSwitchedBody(String name, String rival, String nation) {
+    return '$name รับข้อเสนอของ $rival และจะเล่นให้พวกเขานับจากนี้ เมื่อไม่มีเกมทางการให้ $nation ก็ไม่มีอะไรรั้งเขาไว้ได้';
+  }
+
+  @override
+  String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
+    return '$name รับข้อเสนอของ $rival แล้ว เขาเคยได้รับสัญญาว่าจะได้ลงเล่นให้ $nation แต่ไม่เคยเกิดขึ้น และนับจากนี้เขาจะเล่นให้ $rival';
+  }
+
+  @override
+  String get poachPromiseButton => 'สัญญาว่าจะให้ลงเล่น';
+
+  @override
+  String get poachPromisedLabel => 'สัญญาว่าจะให้ลงเล่นแล้ว';
+
+  @override
+  String get poachCallUpsButton => 'เปิดรายชื่อติดทีม';
+
+  @override
+  String get poachPromiseHint =>
+      'คำสัญญาทำให้เขารอเพิ่มอีกหนึ่งเกมทางการ แต่ถ้าผิดสัญญา เขามีแนวโน้มจะจากไปมากขึ้น';
+
+  @override
   String playerIntlRetired(int year) {
     return 'อำลาทีมชาติ ปี $year';
   }
