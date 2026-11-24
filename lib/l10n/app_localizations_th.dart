@@ -5909,6 +5909,18 @@ class AppLocalizationsTh extends AppLocalizations {
   String get tourSharedVenues => 'สนามแข่งขัน';
 
   @override
+  String get tourSharedMapHeading => 'แผนที่เจ้าภาพ';
+
+  @override
+  String get tourSharedMapFit => 'แสดงแผนที่ทั้งหมด';
+
+  @override
+  String get tourSharedMapFinalVenue => 'สนามนัดชิงชนะเลิศ';
+
+  @override
+  String get tourSharedMapTapHint => 'แตะหมุดเพื่อดูสนาม';
+
+  @override
   String get tourSharedMascot => 'มาสคอต';
 
   @override

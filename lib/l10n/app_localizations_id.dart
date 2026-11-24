@@ -5952,6 +5952,18 @@ class AppLocalizationsId extends AppLocalizations {
   String get tourSharedVenues => 'STADION';
 
   @override
+  String get tourSharedMapHeading => 'PETA TUAN RUMAH';
+
+  @override
+  String get tourSharedMapFit => 'Tampilkan seluruh peta';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Stadion final';
+
+  @override
+  String get tourSharedMapTapHint => 'Ketuk penanda untuk melihat stadion';
+
+  @override
   String get tourSharedMascot => 'MASKOT';
 
   @override

@@ -5960,6 +5960,18 @@ class AppLocalizationsVi extends AppLocalizations {
   String get tourSharedVenues => 'SÂN VẬN ĐỘNG';
 
   @override
+  String get tourSharedMapHeading => 'BẢN ĐỒ NƯỚC CHỦ NHÀ';
+
+  @override
+  String get tourSharedMapFit => 'Xem toàn bộ bản đồ';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Sân vận động trận chung kết';
+
+  @override
+  String get tourSharedMapTapHint => 'Chạm vào điểm đánh dấu để xem sân';
+
+  @override
   String get tourSharedMascot => 'LINH VẬT';
 
   @override

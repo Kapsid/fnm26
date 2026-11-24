@@ -6231,6 +6231,18 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tourSharedVenues => 'STADIONY';
 
   @override
+  String get tourSharedMapHeading => 'MAPA POŘADATELŮ';
+
+  @override
+  String get tourSharedMapFit => 'Zobrazit celou mapu';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Stadion finále';
+
+  @override
+  String get tourSharedMapTapHint => 'Klepněte na značku pro stadion';
+
+  @override
   String get tourSharedMascot => 'MASKOT';
 
   @override

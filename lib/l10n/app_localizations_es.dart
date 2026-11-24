@@ -6031,6 +6031,18 @@ class AppLocalizationsEs extends AppLocalizations {
   String get tourSharedVenues => 'SEDES';
 
   @override
+  String get tourSharedMapHeading => 'MAPA DE SEDES';
+
+  @override
+  String get tourSharedMapFit => 'Ver todo el mapa';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Estadio de la final';
+
+  @override
+  String get tourSharedMapTapHint => 'Toca un marcador para ver el estadio';
+
+  @override
   String get tourSharedMascot => 'MASCOTA';
 
   @override

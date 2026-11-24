@@ -5847,6 +5847,18 @@ class AppLocalizationsKo extends AppLocalizations {
   String get tourSharedVenues => '경기장';
 
   @override
+  String get tourSharedMapHeading => '개최국 지도';
+
+  @override
+  String get tourSharedMapFit => '지도 전체 보기';
+
+  @override
+  String get tourSharedMapFinalVenue => '결승전 경기장';
+
+  @override
+  String get tourSharedMapTapHint => '마커를 눌러 경기장 보기';
+
+  @override
   String get tourSharedMascot => '마스코트';
 
   @override

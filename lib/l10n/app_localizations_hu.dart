@@ -5976,6 +5976,18 @@ class AppLocalizationsHu extends AppLocalizations {
   String get tourSharedVenues => 'HELYSZÍNEK';
 
   @override
+  String get tourSharedMapHeading => 'A RENDEZŐK TÉRKÉPE';
+
+  @override
+  String get tourSharedMapFit => 'Az egész térkép';
+
+  @override
+  String get tourSharedMapFinalVenue => 'A döntő stadionja';
+
+  @override
+  String get tourSharedMapTapHint => 'Koppints egy jelölőre a stadionért';
+
+  @override
   String get tourSharedMascot => 'MASZKOTT';
 
   @override

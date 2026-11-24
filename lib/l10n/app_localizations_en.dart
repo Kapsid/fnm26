@@ -6013,6 +6013,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tourSharedVenues => 'VENUES';
 
   @override
+  String get tourSharedMapHeading => 'HOST MAP';
+
+  @override
+  String get tourSharedMapFit => 'Show the whole map';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Venue of the final';
+
+  @override
+  String get tourSharedMapTapHint => 'Tap a marker for the stadium';
+
+  @override
   String get tourSharedMascot => 'MASCOT';
 
   @override

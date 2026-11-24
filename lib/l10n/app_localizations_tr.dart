@@ -5957,6 +5957,18 @@ class AppLocalizationsTr extends AppLocalizations {
   String get tourSharedVenues => 'STADYUMLAR';
 
   @override
+  String get tourSharedMapHeading => 'EV SAHİBİ HARİTASI';
+
+  @override
+  String get tourSharedMapFit => 'Haritanın tamamını göster';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Finalin stadı';
+
+  @override
+  String get tourSharedMapTapHint => 'Stadı görmek için bir işarete dokun';
+
+  @override
   String get tourSharedMascot => 'MASKOT';
 
   @override

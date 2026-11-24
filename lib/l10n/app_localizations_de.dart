@@ -6053,6 +6053,19 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tourSharedVenues => 'SPIELORTE';
 
   @override
+  String get tourSharedMapHeading => 'KARTE DER GASTGEBER';
+
+  @override
+  String get tourSharedMapFit => 'Ganze Karte zeigen';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Stadion des Finales';
+
+  @override
+  String get tourSharedMapTapHint =>
+      'Tippe auf eine Markierung für das Stadion';
+
+  @override
   String get tourSharedMascot => 'MASKOTTCHEN';
 
   @override

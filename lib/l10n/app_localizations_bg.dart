@@ -6030,6 +6030,18 @@ class AppLocalizationsBg extends AppLocalizations {
   String get tourSharedVenues => 'СТАДИОНИ';
 
   @override
+  String get tourSharedMapHeading => 'КАРТА НА ДОМАКИНИТЕ';
+
+  @override
+  String get tourSharedMapFit => 'Покажи цялата карта';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Стадион на финала';
+
+  @override
+  String get tourSharedMapTapHint => 'Докосни маркер, за да видиш стадиона';
+
+  @override
   String get tourSharedMascot => 'ТАЛИСМАН';
 
   @override

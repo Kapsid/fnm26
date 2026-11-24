@@ -6032,6 +6032,18 @@ class AppLocalizationsEl extends AppLocalizations {
   String get tourSharedVenues => 'ΓΗΠΕΔΑ';
 
   @override
+  String get tourSharedMapHeading => 'ΧΑΡΤΗΣ ΔΙΟΡΓΑΝΩΤΩΝ';
+
+  @override
+  String get tourSharedMapFit => 'Εμφάνιση όλου του χάρτη';
+
+  @override
+  String get tourSharedMapFinalVenue => 'Γήπεδο του τελικού';
+
+  @override
+  String get tourSharedMapTapHint => 'Πάτησε ένα σημάδι για να δεις το γήπεδο';
+
+  @override
   String get tourSharedMascot => 'ΜΑΣΚΟΤ';
 
   @override

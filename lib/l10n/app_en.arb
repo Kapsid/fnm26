@@ -9744,6 +9744,22 @@
   "@tourSharedVenues": {
     "description": "Heading over the list of tournament stadiums."
   },
+  "tourSharedMapHeading": "HOST MAP",
+  "@tourSharedMapHeading": {
+    "description": "Tournament summary: heading of the map card showing the host nation(s) and their stadiums."
+  },
+  "tourSharedMapFit": "Show the whole map",
+  "@tourSharedMapFit": {
+    "description": "Tournament summary map: tooltip of the button that zooms back out to every host nation."
+  },
+  "tourSharedMapFinalVenue": "Venue of the final",
+  "@tourSharedMapFinalVenue": {
+    "description": "Tournament summary map: key for the gold marker, and a tag on the tapped stadium, for the ground that stages the final."
+  },
+  "tourSharedMapTapHint": "Tap a marker for the stadium",
+  "@tourSharedMapTapHint": {
+    "description": "Tournament summary map: hint under the map that a marker can be tapped to see the stadium's details."
+  },
   "tourSharedMascot": "MASCOT",
   "@tourSharedMascot": {
     "description": "Label for the edition's official mascot."
