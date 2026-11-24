@@ -403,7 +403,8 @@ const Map<String, List<String>> profanityWords = {
     '=јеб*',
     'говн*',
     '=шупак',
-    '=кучк*',
+    'кучка',
+    'кучко',
     'дроља',
   ],
   'hu': [

@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 /// The world-managers copy is in every language.
 ///
-/// Every key the feature added exists in all 28 ARBs, and outside English none
+/// Every key the feature added exists in all 29 ARBs, and outside English none
 /// is left as the English text. A few strings are rightly the same word in a
 /// language (a loanword, a bare placeholder pair); those are listed by
 /// language below rather than waived everywhere.
@@ -140,8 +140,8 @@ void main() {
         f.uri.pathSegments.last.replaceAll('app_', '').replaceAll('.arb', ''),
   ]..remove('en');
 
-  test('there are 28 languages and every key is in English', () {
-    expect(codes.length + 1, 28);
+  test('there are 29 languages and every key is in English', () {
+    expect(codes.length + 1, 29);
     expect([
       for (final k in keys)
         if (en[k] == null) k,
