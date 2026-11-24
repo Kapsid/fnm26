@@ -120,8 +120,9 @@ void main() {
       base.where((n) => n.confederation == Confederation.northAmerica).length,
     );
 
-    // A North American qualifying group of five or more, the United States
-    // in it (seed 221, campaign_seeds_test.dart).
+    // A North American qualifying group of five or more that Texas heads as
+    // a top seed, the United States elsewhere (seed 221,
+    // campaign_seeds_test.dart).
     final groups = await comp.tournamentGroupTables(
       id,
       CompetitionKind.continentalQualifying,
@@ -132,15 +133,15 @@ void main() {
     );
     expect(mine, hasLength(1));
     expect(mine.single.standings.length, greaterThanOrEqualTo(5));
-    expect(mine.single.standings.map((s) => s.nationId), contains(usa));
+    expect(mine.single.standings.map((s) => s.nationId), isNot(contains(usa)));
 
-    // On day one Texas stands on its own rank, between Haiti and Guatemala,
-    // not at the foot of the table where Anguilla stood.
+    // On day one Texas stands on its own rank, between Costa Rica and
+    // Honduras, not at the foot of the table where Anguilla stood.
     final ranking = (await c.read(worldRankingProvider(id).future))!;
     expect(ranking.nations, hasLength(base.length));
     final at = ranking.nations.indexWhere((n) => n.id == texas);
-    expect(at, greaterThan(ranking.nations.indexWhere((n) => n.id == 85)));
-    expect(at, lessThan(ranking.nations.indexWhere((n) => n.id == 83)));
+    expect(at, greaterThan(ranking.nations.indexWhere((n) => n.id == 76)));
+    expect(at, lessThan(ranking.nations.indexWhere((n) => n.id == 86)));
     expect(at, lessThan(base.indexWhere((n) => n.id == anguilla)));
 
     // The default XI is Texas's own.

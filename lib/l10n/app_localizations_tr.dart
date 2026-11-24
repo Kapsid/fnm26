@@ -18466,11 +18466,11 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get campaignTexasTwist =>
-      'Teksas Cumhuriyeti dört dönem boyunca Kuzey Amerika\'da Anguilla\'nın yerini alıyor';
+      'Teksas Cumhuriyeti altı dönem boyunca Kuzey Amerika\'da Anguilla\'nın yerini alıyor';
 
   @override
   String get campaignTexasIntro =>
-      'Teksas, Amerika Birleşik Devletleri\'ne katılmadan önce dokuz yıl boyunca bağımsız bir cumhuriyetti ve bugün çoğu ülkeden daha fazla futbolcu yetiştiriyor: üst ligden üç akademi, dünyanın en geniş altyapı tabanlarından biri ve her ligde Teksaslı oyuncular. Bu dünyada Teksas Cumhuriyeti kendi adına oynuyor, Kuzey Amerika\'da Anguilla\'nın yerinde. Her oyuncu Teksas doğumlu; Houston, Dallas, San Antonio, Austin ya da El Paso\'dan. Kadro bölgenin orta sıra takımlarından biri: herkesi zorlayacak kadar iyi, ama henüz korkulacak kadar değil. Bir Kuzey Amerika Kupası\'na, ardından bir Dünya Şampiyonası\'na ulaşmak ve hayal kurmaya cesaretin varsa bunlardan birini kazanmak için dört dönemin var.';
+      'Teksas, Amerika Birleşik Devletleri\'ne katılmadan önce dokuz yıl boyunca bağımsız bir cumhuriyetti ve bugün çoğu ülkeden daha fazla futbolcu yetiştiriyor: üst ligden üç akademi, dünyanın en geniş altyapı tabanlarından biri ve her ligde Teksaslı oyuncular. Bu dünyada Teksas Cumhuriyeti kendi adına oynuyor, Kuzey Amerika\'da Anguilla\'nın yerinde. Her oyuncu Teksas doğumlu; Houston, Dallas, San Antonio, Austin ya da El Paso\'dan. Kadro bölgenin orta sıra takımlarından biri: herkesi zorlayacak kadar iyi, ama henüz korkulacak kadar değil. Bir Kuzey Amerika Kupası\'na, ardından bir Dünya Şampiyonası\'na ulaşmak ve hayal kurmaya cesaretin varsa bunlardan birini kazanmak için altı dönemin var.';
 
   @override
   String get campaignTexasGoal =>

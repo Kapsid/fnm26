@@ -18626,11 +18626,11 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get campaignTexasTwist =>
-      'Texasin tasavalta ottaa Anguillan paikan Pohjois-Amerikassa neljän kauden ajaksi';
+      'Texasin tasavalta ottaa Anguillan paikan Pohjois-Amerikassa kuuden kauden ajaksi';
 
   @override
   String get campaignTexasIntro =>
-      'Texas oli yhdeksän vuotta itsenäinen tasavalta ennen kuin se liittyi Yhdysvaltoihin, ja nykyään se kasvattaa enemmän jalkapalloilijoita kuin useimmat maat: kolme pääsarjan akatemiaa, yhden maailman laajimmista junioripohjista ja teksasilaisia jokaisessa sarjassa. Tässä maailmassa Texasin tasavalta pelaa omissa nimissään, Anguillan paikalla Pohjois-Amerikassa. Jokainen pelaaja on syntynyt Texasissa, Houstonissa, Dallasissa, San Antoniossa, Austinissa tai El Pasossa, ja joukkue kuuluu alueen keskikastiin: tarpeeksi hyvä kiusaamaan ketä tahansa, mutta ei vielä niin hyvä, että sitä pelättäisiin. Sinulla on neljä kautta aikaa selviytyä Pohjois-Amerikan Cupiin, sitten MM-kisoihin ja, jos uskallat unelmoida, voittaa toinen niistä.';
+      'Texas oli yhdeksän vuotta itsenäinen tasavalta ennen kuin se liittyi Yhdysvaltoihin, ja nykyään se kasvattaa enemmän jalkapalloilijoita kuin useimmat maat: kolme pääsarjan akatemiaa, yhden maailman laajimmista junioripohjista ja teksasilaisia jokaisessa sarjassa. Tässä maailmassa Texasin tasavalta pelaa omissa nimissään, Anguillan paikalla Pohjois-Amerikassa. Jokainen pelaaja on syntynyt Texasissa, Houstonissa, Dallasissa, San Antoniossa, Austinissa tai El Pasossa, ja joukkue kuuluu alueen keskikastiin: tarpeeksi hyvä kiusaamaan ketä tahansa, mutta ei vielä niin hyvä, että sitä pelättäisiin. Sinulla on kuusi kautta aikaa selviytyä Pohjois-Amerikan Cupiin, sitten MM-kisoihin ja, jos uskallat unelmoida, voittaa toinen niistä.';
 
   @override
   String get campaignTexasGoal => 'Selviä Pohjois-Amerikan Cupiin';

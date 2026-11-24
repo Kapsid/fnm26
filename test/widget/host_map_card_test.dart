@@ -7,6 +7,7 @@ import 'package:fnm/domain/services/competition/venues.dart';
 import 'package:fnm/features/federation/stadium_map/nation_geo.dart';
 import 'package:fnm/features/federation/stadium_map/stadium_map.dart';
 import 'package:fnm/features/tournaments/host_map_card.dart';
+import 'package:fnm/features/tournaments/tournament_summary.dart';
 
 import '../helpers/pump_app.dart';
 
@@ -204,6 +205,38 @@ void main() {
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
       expect(find.byKey(HostMapCard.detailKey), findsOneWidget);
+    });
+  }
+
+  // The summary's heading and its empty state speak the player's language.
+  for (final (ids, want) in [
+    (<int>[], 'Pořadatel a jeho stadiony se objeví po vylosování ročníku.'),
+    ([_esp], 'POŘADATEL'),
+    ([_esp, _por], 'POŘADATELÉ'),
+  ]) {
+    testWidgets('the summary tab reads in Czech (${ids.length} hosts)', (
+      tester,
+    ) async {
+      tester.view.physicalSize = _phone;
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await tester.pumpApp(
+        Scaffold(
+          body: TournamentSummaryTab(
+            hostIds: ids,
+            hostCities: _cities,
+            code: (id) => _codes[id] ?? '??',
+            name: (id) => _codes[id] ?? '??',
+            teamCount: 24,
+          ),
+        ),
+        locale: const Locale('cs'),
+      );
+      await tester.pumpAndSettle();
+      // The venues card under it may name its host the same way.
+      expect(find.text(want), findsWidgets);
+      expect(find.text('HOST'), findsNothing);
+      expect(find.text('HOSTS'), findsNothing);
     });
   }
 }

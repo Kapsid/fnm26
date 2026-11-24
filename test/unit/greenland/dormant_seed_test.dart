@@ -486,25 +486,25 @@ void main() {
       }
     });
 
-    test("Texas starts mid-table in North America, in Anguilla's place, far "
-        "above Anguilla's squad", () {
+    test("Texas starts a mid-strength side, sixth in North America, in "
+        "Anguilla's place, far above Anguilla's squad", () {
       double mean(List<Player> ps) =>
           ps.fold<int>(0, (s, p) => s + p.overall) / ps.length;
       double of(int id) => mean(_base.where((p) => p.nationId == id).toList());
       final texas = mean(texasSquad);
-      // About a tenth below Jamaica's, the squad it copies.
-      expect(texas / of(87), inInclusiveRange(0.85, 0.95));
+      // A little above Jamaica's, the squad it copies.
+      expect(texas / of(87), inInclusiveRange(1.0, 1.08));
       // Far above Anguilla's, whose place it takes.
-      expect(texas / of(66), greaterThan(1.3));
-      // Below the region's big three.
-      for (final big in [88, 99, 74]) {
+      expect(texas / of(66), greaterThan(1.5));
+      // Below the region's big three and Costa Rica, above Panama.
+      for (final big in [88, 99, 74, 76]) {
         expect(texas, lessThan(of(big)), reason: 'nation $big');
       }
-      // Its rank sits among the North American sides of its strength:
-      // between Haiti (87th) and Guatemala (95th).
+      expect(texas, greaterThan(of(91)));
+      // Its rank sits between Costa Rica (50th) and Honduras (65th).
       final rank = DormantNations.texas.ranking;
-      expect(rank, greaterThan(_nations.firstWhere((n) => n.id == 85).ranking));
-      expect(rank, lessThan(_nations.firstWhere((n) => n.id == 83).ranking));
+      expect(rank, greaterThan(_nations.firstWhere((n) => n.id == 76).ranking));
+      expect(rank, lessThan(_nations.firstWhere((n) => n.id == 86).ranking));
       final row = _nations.firstWhere((n) => n.id == 66);
       expect(DormantNations.texas.confederation, row.confederation);
       expect(DormantNations.replaces[216], 66);

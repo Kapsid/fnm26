@@ -18589,11 +18589,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get campaignTexasTwist =>
-      'The Republic of Texas take Anguilla\'s place in North America, for four cycles';
+      'The Republic of Texas take Anguilla\'s place in North America, for six cycles';
 
   @override
   String get campaignTexasIntro =>
-      'Texas was a republic of its own for nine years before it joined the United States, and today it raises more footballers than most nations: three top-flight academies, one of the deepest youth games anywhere and Texans in every league. In this world the Republic of Texas plays for itself, in Anguilla\'s place in North America. Every player is Texas-born, from Houston, Dallas, San Antonio, Austin and El Paso, and the squad is a mid-table side of the region: good enough to trouble anyone, not yet good enough to be feared. You have four cycles to reach a North America Cup, then a World Championship and, if you dare to dream, win one of them.';
+      'Texas was a republic of its own for nine years before it joined the United States, and today it raises more footballers than most nations: three top-flight academies, one of the deepest youth games anywhere and Texans in every league. In this world the Republic of Texas plays for itself, in Anguilla\'s place in North America. Every player is Texas-born, from Houston, Dallas, San Antonio, Austin and El Paso, and the squad is a mid-table side of the region: good enough to trouble anyone, not yet good enough to be feared. You have six cycles to reach a North America Cup, then a World Championship and, if you dare to dream, win one of them.';
 
   @override
   String get campaignTexasGoal => 'Qualify for a North America Cup';

@@ -28020,13 +28020,13 @@ abstract class AppLocalizations {
   /// One-line twist of the Texas campaign: the Republic of Texas in Anguilla's place in North America, for four cycles.
   ///
   /// In en, this message translates to:
-  /// **'The Republic of Texas take Anguilla\'s place in North America, for four cycles'**
+  /// **'The Republic of Texas take Anguilla\'s place in North America, for six cycles'**
   String get campaignTexasTwist;
 
   /// Brief screen introduction of the Texas campaign: the Republic of Texas take Anguilla's place in North America as a mid-table side of the region, every player Texas-born, for four cycles. Names no real player.
   ///
   /// In en, this message translates to:
-  /// **'Texas was a republic of its own for nine years before it joined the United States, and today it raises more footballers than most nations: three top-flight academies, one of the deepest youth games anywhere and Texans in every league. In this world the Republic of Texas plays for itself, in Anguilla\'s place in North America. Every player is Texas-born, from Houston, Dallas, San Antonio, Austin and El Paso, and the squad is a mid-table side of the region: good enough to trouble anyone, not yet good enough to be feared. You have four cycles to reach a North America Cup, then a World Championship and, if you dare to dream, win one of them.'**
+  /// **'Texas was a republic of its own for nine years before it joined the United States, and today it raises more footballers than most nations: three top-flight academies, one of the deepest youth games anywhere and Texans in every league. In this world the Republic of Texas plays for itself, in Anguilla\'s place in North America. Every player is Texas-born, from Houston, Dallas, San Antonio, Austin and El Paso, and the squad is a mid-table side of the region: good enough to trouble anyone, not yet good enough to be feared. You have six cycles to reach a North America Cup, then a World Championship and, if you dare to dream, win one of them.'**
   String get campaignTexasIntro;
 
   /// One-line goal of the Texas campaign (its first star): qualify for a North America Cup, the region's continental championship.

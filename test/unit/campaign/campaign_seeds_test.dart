@@ -549,9 +549,9 @@ void main() {
     final world = campaignWorld(def, nations);
 
     test('seed 221 keeps Texas from hosting either championship in all '
-        'four cycles of its run', () {
+        'six cycles of its run', () {
       expect(def.rngSeed, 221);
-      expect(def.cycles, 4);
+      expect(def.cycles, 6);
       expect(def.withBelarus, isFalse);
       for (var cycle = 0; cycle < def.cycles; cycle++) {
         final world0 = WorldCupHosts.hostsFor(
@@ -570,16 +570,20 @@ void main() {
       }
     });
 
-    test('seed 221 draws Texas into a North American qualifying group of '
-        'six with the United States, Anguilla nowhere', () {
+    test('seed 221 draws Texas, a top seed, into a North American '
+        'qualifying group it heads, Anguilla nowhere', () {
       final mine = qualifyingGroups(
         def.rngSeed,
         world,
         Confederation.northAmerica,
       ).where((g) => g.contains(216)).toList();
       expect(mine, hasLength(1));
-      expect(mine.single.length, 6);
-      expect(mine.single, contains(99));
+      // It heads its group: every other side in it is ranked below it.
+      final rank = {for (final n in world) n.id: n.ranking};
+      for (final other in mine.single.where((id) => id != 216)) {
+        expect(rank[other]!, greaterThan(rank[216]!), reason: 'nation $other');
+      }
+      expect(mine.single, isNot(contains(99)));
       expect(world.map((n) => n.id), isNot(contains(66)));
       // A swap: North America keeps its 35.
       expect(

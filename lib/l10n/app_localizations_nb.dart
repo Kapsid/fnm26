@@ -18553,11 +18553,11 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get campaignTexasTwist =>
-      'Republikken Texas tar Anguillas plass i Nord-Amerika, i fire sykluser';
+      'Republikken Texas tar Anguillas plass i Nord-Amerika, i seks sykluser';
 
   @override
   String get campaignTexasIntro =>
-      'Texas var en selvstendig republikk i ni år før delstaten ble en del av USA, og i dag fostrer den flere fotballspillere enn de fleste nasjoner: tre akademier fra øverste nivå, et av verdens bredeste ungdomsmiljøer og texanere i hver eneste liga. I denne verdenen spiller Republikken Texas for seg selv, på Anguillas plass i Nord-Amerika. Hver spiller er født i Texas, i Houston, Dallas, San Antonio, Austin eller El Paso, og troppen er et midtlag i regionen: god nok til å gi hvem som helst problemer, men ennå ikke god nok til å bli fryktet. Du har fire sykluser på å nå Nord-Amerika-cupen, så et Verdensmesterskap og, om du tør å drømme, vinne ett av dem.';
+      'Texas var en selvstendig republikk i ni år før delstaten ble en del av USA, og i dag fostrer den flere fotballspillere enn de fleste nasjoner: tre akademier fra øverste nivå, et av verdens bredeste ungdomsmiljøer og texanere i hver eneste liga. I denne verdenen spiller Republikken Texas for seg selv, på Anguillas plass i Nord-Amerika. Hver spiller er født i Texas, i Houston, Dallas, San Antonio, Austin eller El Paso, og troppen er et midtlag i regionen: god nok til å gi hvem som helst problemer, men ennå ikke god nok til å bli fryktet. Du har seks sykluser på å nå Nord-Amerika-cupen, så et Verdensmesterskap og, om du tør å drømme, vinne ett av dem.';
 
   @override
   String get campaignTexasGoal => 'Kvalifiser deg til Nord-Amerika-cupen';

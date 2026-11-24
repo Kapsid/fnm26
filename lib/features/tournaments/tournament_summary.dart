@@ -13,6 +13,7 @@ import 'package:fnm/features/tournaments/host_map_card.dart';
 import 'package:fnm/features/tournaments/tournament_history.dart';
 import 'package:fnm/features/tournaments/venues_card.dart';
 import 'package:fnm/features/world_pack/trophy_image.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 
 /// The tournament "summary" tab: the host nation(s), their cities and stadiums
 /// (listed, and pinned on a map of the hosts), and the edition's mascot and
@@ -62,15 +63,13 @@ class TournamentSummaryTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final trophy = trophyAsset;
+    final l = AppLocalizations.of(context);
     if (hostIds.isEmpty) {
       return ListView(
         padding: const EdgeInsets.all(AppSpacing.marginMobile),
         children: [
           if (trophy != null) _TrophyBanner(asset: trophy),
-          const TournamentSoon(
-            message:
-                'The host and its stadiums appear once this edition is drawn.',
-          ),
+          TournamentSoon(message: l.tourSharedSummaryEmpty),
         ],
       );
     }
@@ -92,7 +91,9 @@ class TournamentSummaryTab extends StatelessWidget {
           const SizedBox(height: AppSpacing.md),
         ],
         Text(
-          hostIds.length == 1 ? 'HOST' : 'HOSTS',
+          hostIds.length == 1
+              ? l.tourSharedHostHeading
+              : l.tourSharedHostsHeading,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         const SizedBox(height: AppSpacing.sm),

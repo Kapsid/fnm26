@@ -18567,11 +18567,11 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get campaignTexasTwist =>
-      'Pumalit ang Republika ng Texas sa puwesto ng Anguilla sa Hilagang Amerika, sa loob ng apat na cycle';
+      'Pumalit ang Republika ng Texas sa puwesto ng Anguilla sa Hilagang Amerika, sa loob ng anim na cycle';
 
   @override
   String get campaignTexasIntro =>
-      'Naging sariling republika ang Texas sa loob ng siyam na taon bago ito sumapi sa Estados Unidos, at ngayon ay mas maraming footballer ang hinuhubog nito kaysa sa karamihan ng mga bansa: tatlong akademya ng pinakamataas na liga, isa sa pinakamalawak na youth football sa mundo, at mga Texan sa bawat liga. Sa mundong ito, naglalaro ang Republika ng Texas para sa sarili nito, sa puwesto ng Anguilla sa Hilagang Amerika. Ipinanganak sa Texas ang bawat manlalaro, sa Houston, Dallas, San Antonio, Austin o El Paso, at ang koponan ay nasa gitna ng talaan sa rehiyon: sapat ang galing para pahirapan ang kahit sino, pero hindi pa sapat para katakutan. May apat na cycle ka para makarating sa Copa ng Hilagang Amerika, pagkatapos sa Kampeonato ng Mundo at, kung maglalakas-loob kang mangarap, ipanalo ang isa sa mga ito.';
+      'Naging sariling republika ang Texas sa loob ng siyam na taon bago ito sumapi sa Estados Unidos, at ngayon ay mas maraming footballer ang hinuhubog nito kaysa sa karamihan ng mga bansa: tatlong akademya ng pinakamataas na liga, isa sa pinakamalawak na youth football sa mundo, at mga Texan sa bawat liga. Sa mundong ito, naglalaro ang Republika ng Texas para sa sarili nito, sa puwesto ng Anguilla sa Hilagang Amerika. Ipinanganak sa Texas ang bawat manlalaro, sa Houston, Dallas, San Antonio, Austin o El Paso, at ang koponan ay nasa gitna ng talaan sa rehiyon: sapat ang galing para pahirapan ang kahit sino, pero hindi pa sapat para katakutan. May anim na cycle ka para makarating sa Copa ng Hilagang Amerika, pagkatapos sa Kampeonato ng Mundo at, kung maglalakas-loob kang mangarap, ipanalo ang isa sa mga ito.';
 
   @override
   String get campaignTexasGoal => 'Makapasok sa isang Copa ng Hilagang Amerika';

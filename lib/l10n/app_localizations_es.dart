@@ -18656,11 +18656,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get campaignTexasTwist =>
-      'La República de Texas ocupa el lugar de Anguila en Norteamérica, durante cuatro ciclos';
+      'La República de Texas ocupa el lugar de Anguila en Norteamérica, durante seis ciclos';
 
   @override
   String get campaignTexasIntro =>
-      'Texas fue una república independiente durante nueve años antes de unirse a Estados Unidos, y hoy forma más futbolistas que la mayoría de las naciones: tres academias de primera división, una de las canteras más amplias del mundo y texanos en todas las ligas. En este mundo la República de Texas juega por sí misma, en el lugar de Anguila en Norteamérica. Todos sus jugadores han nacido en Texas, en Houston, Dallas, San Antonio, Austin o El Paso, y la plantilla es un equipo de mitad de tabla de la región: lo bastante buena para complicarle la vida a cualquiera, pero aún no tanto como para infundir miedo. Tienes cuatro ciclos para llegar a una Copa de Norteamérica, después a un Campeonato del Mundo y, si te atreves a soñar, ganar uno de ellos.';
+      'Texas fue una república independiente durante nueve años antes de unirse a Estados Unidos, y hoy forma más futbolistas que la mayoría de las naciones: tres academias de primera división, una de las canteras más amplias del mundo y texanos en todas las ligas. En este mundo la República de Texas juega por sí misma, en el lugar de Anguila en Norteamérica. Todos sus jugadores han nacido en Texas, en Houston, Dallas, San Antonio, Austin o El Paso, y la plantilla es un equipo de mitad de tabla de la región: lo bastante buena para complicarle la vida a cualquiera, pero aún no tanto como para infundir miedo. Tienes seis ciclos para llegar a una Copa de Norteamérica, después a un Campeonato del Mundo y, si te atreves a soñar, ganar uno de ellos.';
 
   @override
   String get campaignTexasGoal => 'Clasificarse para una Copa de Norteamérica';

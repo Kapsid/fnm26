@@ -100,10 +100,10 @@ abstract final class DormantNations {
   /// The Republic of Texas, the sixth: the next free id after
   /// Czechoslovakia. It takes Anguilla's place in North America, but not
   /// Anguilla's rank: a state of thirty million with three professional
-  /// academies would field a side from the middle of the region, not its
-  /// foot, so it starts 92nd, between Haiti and Guatemala (sharing the place
-  /// with Benin, as Belarus shares Palestine's). Its colours are the flag's
-  /// blue and red; the white is the away shirt's.
+  /// academies would field a mid-strength side, so it starts 55th, between
+  /// Costa Rica (50th) and Honduras (65th), sharing the place with Slovenia
+  /// as Belarus shares Palestine's. Its colours are the flag's blue and red;
+  /// the white is the away shirt's.
   static const int texasId = 216;
 
   static const Nation texas = Nation(
@@ -111,7 +111,7 @@ abstract final class DormantNations {
     name: 'Texas',
     code: 'TEX',
     confederation: Confederation.northAmerica,
-    ranking: 92,
+    ranking: 55,
     primaryColor: '#002868',
     secondaryColor: '#BF0A30',
   );

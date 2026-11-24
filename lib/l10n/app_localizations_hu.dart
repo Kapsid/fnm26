@@ -18495,11 +18495,11 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get campaignTexasTwist =>
-      'A Texasi Köztársaság négy ciklusra átveszi Anguilla helyét Észak-Amerikában';
+      'A Texasi Köztársaság hat ciklusra átveszi Anguilla helyét Észak-Amerikában';
 
   @override
   String get campaignTexasIntro =>
-      'Texas kilenc évig önálló köztársaság volt, mielőtt csatlakozott az Egyesült Államokhoz, és ma több futballistát nevel, mint a legtöbb ország: három élvonalbeli akadémia, a világ egyik legszélesebb utánpótlásbázisa és texasiak minden bajnokságban. Ebben a világban a Texasi Köztársaság a maga nevében játszik, Anguilla helyén Észak-Amerikában. Minden játékos Texasban született, Houstonban, Dallasban, San Antonióban, Austinban vagy El Pasóban, a keret pedig a régió középmezőnyéhez tartozik: elég jó ahhoz, hogy bárkinek gondot okozzon, de még nem elég ahhoz, hogy féljenek tőle. Négy ciklusod van, hogy kijuss egy Észak-amerikai Kupára, aztán egy világbajnokságra, és ha mersz álmodni, megnyerd valamelyiket.';
+      'Texas kilenc évig önálló köztársaság volt, mielőtt csatlakozott az Egyesült Államokhoz, és ma több futballistát nevel, mint a legtöbb ország: három élvonalbeli akadémia, a világ egyik legszélesebb utánpótlásbázisa és texasiak minden bajnokságban. Ebben a világban a Texasi Köztársaság a maga nevében játszik, Anguilla helyén Észak-Amerikában. Minden játékos Texasban született, Houstonban, Dallasban, San Antonióban, Austinban vagy El Pasóban, a keret pedig a régió középmezőnyéhez tartozik: elég jó ahhoz, hogy bárkinek gondot okozzon, de még nem elég ahhoz, hogy féljenek tőle. Hat ciklusod van, hogy kijuss egy Észak-amerikai Kupára, aztán egy világbajnokságra, és ha mersz álmodni, megnyerd valamelyiket.';
 
   @override
   String get campaignTexasGoal => 'Kijutni egy Észak-amerikai Kupára';
