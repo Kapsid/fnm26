@@ -18897,20 +18897,19 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get campaignTexasIntro =>
-      'Teksas je devet godina bio samostalna republika prije nego što se pridružio Sjedinjenim Državama, a danas stvara više nogometaša od većine država: tri akademije iz najviše lige, jednu od najširih omladinskih baza na svijetu i Teksašane u svakoj ligi. U ovom svijetu Republika Teksas igra za sebe, na mjestu Angvile u Sjevernoj Americi. Svaki igrač rođen je u Teksasu, u Houstonu, Dallasu, San Antoniju, Austinu ili El Pasu, a momčad je sredina ljestvice u regiji: dovoljno dobra da namuči svakoga, ali još ne toliko da je se itko boji. Imaš pet ciklusa da stigneš do Kupa Sjeverne Amerike, zatim do Svjetskog prvenstva i, ako se usudiš sanjati, osvojiš jedno od njih.';
+      'Teksas je devet godina bio samostalna republika prije nego što se pridružio Sjedinjenim Državama, a danas stvara više nogometaša od većine država: tri akademije iz najviše lige, jednu od najširih omladinskih baza na svijetu i Teksašane u svakoj ligi. U ovom svijetu Republika Teksas igra za sebe, na mjestu Angvile u Sjevernoj Americi. Svaki igrač rođen je u Teksasu, u Houstonu, Dallasu, San Antoniju, Austinu ili El Pasu, a momčad je sredina ljestvice u regiji: dovoljno dobra da namuči svakoga, ali još ne toliko da je se itko boji. Imaš pet ciklusa da stigneš do Svjetskog prvenstva, osvojiš Kup Sjeverne Amerike i, ako se usudiš sanjati, samo Svjetsko prvenstvo.';
 
   @override
-  String get campaignTexasGoal => 'Kvalificiraj se za Kup Sjeverne Amerike';
+  String get campaignTexasGoal => 'Kvalificiraj se na Svjetsko prvenstvo';
 
   @override
-  String get campaignStars1Texas => 'Kvalificiraj se za Kup Sjeverne Amerike';
+  String get campaignStars1Texas => 'Kvalificiraj se na Svjetsko prvenstvo';
 
   @override
-  String get campaignStars2Texas => 'Kvalificiraj se na Svjetsko prvenstvo';
+  String get campaignStars2Texas => 'Osvoji Kup Sjeverne Amerike';
 
   @override
-  String get campaignStars3Texas =>
-      'Osvoji Kup Sjeverne Amerike ili Svjetsko prvenstvo';
+  String get campaignStars3Texas => 'Osvoji Svjetsko prvenstvo';
 
   @override
   String get wcPlayoffCourseNote =>

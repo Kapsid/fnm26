@@ -18549,20 +18549,19 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get campaignTexasIntro =>
-      'Texas var en självständig republik i nio år innan delstaten blev en del av USA, och i dag fostrar den fler fotbollsspelare än de flesta nationer: tre akademier från högsta ligan, en av världens bredaste ungdomsverksamheter och texaner i varje liga. I den här världen spelar Republiken Texas för egen räkning, på Anguillas plats i Nordamerika. Varje spelare är född i Texas, i Houston, Dallas, San Antonio, Austin eller El Paso, och truppen är ett mittenlag i regionen: tillräckligt bra för att ställa till det för vem som helst, men ännu inte tillräckligt bra för att fruktas. Du har fem cykler på dig att nå Nordamerikacupen, sedan ett Världsmästerskap och, om du vågar drömma, vinna ett av dem.';
+      'Texas var en självständig republik i nio år innan delstaten blev en del av USA, och i dag fostrar den fler fotbollsspelare än de flesta nationer: tre akademier från högsta ligan, en av världens bredaste ungdomsverksamheter och texaner i varje liga. I den här världen spelar Republiken Texas för egen räkning, på Anguillas plats i Nordamerika. Varje spelare är född i Texas, i Houston, Dallas, San Antonio, Austin eller El Paso, och truppen är ett mittenlag i regionen: tillräckligt bra för att ställa till det för vem som helst, men ännu inte tillräckligt bra för att fruktas. Du har fem cykler på dig att nå ett Världsmästerskap, vinna Nordamerikacupen och, om du vågar drömma, själva Världsmästerskapet.';
 
   @override
-  String get campaignTexasGoal => 'Kvalificera dig för Nordamerikacupen';
+  String get campaignTexasGoal => 'Kvalificera dig för ett VM';
 
   @override
-  String get campaignStars1Texas => 'Kvalificera dig för Nordamerikacupen';
+  String get campaignStars1Texas => 'Kvalificera dig för ett VM';
 
   @override
-  String get campaignStars2Texas => 'Kvalificera dig för ett VM';
+  String get campaignStars2Texas => 'Vinn Nordamerikacupen';
 
   @override
-  String get campaignStars3Texas =>
-      'Vinn Nordamerikacupen eller Världsmästerskapet';
+  String get campaignStars3Texas => 'Vinn Världsmästerskapet';
 
   @override
   String get wcPlayoffCourseNote =>

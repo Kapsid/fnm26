@@ -18947,20 +18947,19 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get campaignTexasIntro =>
-      'Texas byl devět let samostatnou republikou, než se připojil ke Spojeným státům, a dnes vychovává víc fotbalistů než většina států: tři akademie nejvyšší soutěže, jednu z nejširších mládežnických základen na světě a Texasany v každé lize. V tomto světě hraje Republika Texas sama za sebe, na místě Anguilly v Severní Americe. Každý hráč se narodil v Texasu, v Houstonu, Dallasu, San Antoniu, Austinu nebo El Pasu, a kádr patří do středu tabulky regionu: dost dobrý, aby potrápil kohokoli, ale zatím ne tak dobrý, aby z něj měl někdo strach. Máte pět cyklů, abyste se dostali na Pohár Severní Ameriky, pak na mistrovství světa a, pokud si troufnete snít, jedno z nich vyhráli.';
+      'Texas byl devět let samostatnou republikou, než se připojil ke Spojeným státům, a dnes vychovává víc fotbalistů než většina států: tři akademie nejvyšší soutěže, jednu z nejširších mládežnických základen na světě a Texasany v každé lize. V tomto světě hraje Republika Texas sama za sebe, na místě Anguilly v Severní Americe. Každý hráč se narodil v Texasu, v Houstonu, Dallasu, San Antoniu, Austinu nebo El Pasu, a kádr patří do středu tabulky regionu: dost dobrý, aby potrápil kohokoli, ale zatím ne tak dobrý, aby z něj měl někdo strach. Máte pět cyklů, abyste se dostali na mistrovství světa, vyhráli Pohár Severní Ameriky a, pokud si troufnete snít, i samotné mistrovství světa.';
 
   @override
-  String get campaignTexasGoal => 'Postoupit na Pohár Severní Ameriky';
+  String get campaignTexasGoal => 'Postoupit na mistrovství světa';
 
   @override
-  String get campaignStars1Texas => 'Postoupit na Pohár Severní Ameriky';
+  String get campaignStars1Texas => 'Postoupit na mistrovství světa';
 
   @override
-  String get campaignStars2Texas => 'Postoupit na mistrovství světa';
+  String get campaignStars2Texas => 'Vyhrát Pohár Severní Ameriky';
 
   @override
-  String get campaignStars3Texas =>
-      'Vyhrát Pohár Severní Ameriky nebo mistrovství světa';
+  String get campaignStars3Texas => 'Vyhrát mistrovství světa';
 
   @override
   String get wcPlayoffCourseNote =>

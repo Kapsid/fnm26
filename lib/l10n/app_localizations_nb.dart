@@ -18557,20 +18557,19 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get campaignTexasIntro =>
-      'Texas var en selvstendig republikk i ni år før delstaten ble en del av USA, og i dag fostrer den flere fotballspillere enn de fleste nasjoner: tre akademier fra øverste nivå, et av verdens bredeste ungdomsmiljøer og texanere i hver eneste liga. I denne verdenen spiller Republikken Texas for seg selv, på Anguillas plass i Nord-Amerika. Hver spiller er født i Texas, i Houston, Dallas, San Antonio, Austin eller El Paso, og troppen er et midtlag i regionen: god nok til å gi hvem som helst problemer, men ennå ikke god nok til å bli fryktet. Du har fem sykluser på å nå Nord-Amerika-cupen, så et Verdensmesterskap og, om du tør å drømme, vinne ett av dem.';
+      'Texas var en selvstendig republikk i ni år før delstaten ble en del av USA, og i dag fostrer den flere fotballspillere enn de fleste nasjoner: tre akademier fra øverste nivå, et av verdens bredeste ungdomsmiljøer og texanere i hver eneste liga. I denne verdenen spiller Republikken Texas for seg selv, på Anguillas plass i Nord-Amerika. Hver spiller er født i Texas, i Houston, Dallas, San Antonio, Austin eller El Paso, og troppen er et midtlag i regionen: god nok til å gi hvem som helst problemer, men ennå ikke god nok til å bli fryktet. Du har fem sykluser på å nå et Verdensmesterskap, vinne Nord-Amerika-cupen og, om du tør å drømme, selve Verdensmesterskapet.';
 
   @override
-  String get campaignTexasGoal => 'Kvalifiser deg til Nord-Amerika-cupen';
+  String get campaignTexasGoal => 'Kvalifiser deg til et VM';
 
   @override
-  String get campaignStars1Texas => 'Kvalifiser deg til Nord-Amerika-cupen';
+  String get campaignStars1Texas => 'Kvalifiser deg til et VM';
 
   @override
-  String get campaignStars2Texas => 'Kvalifiser deg til et VM';
+  String get campaignStars2Texas => 'Vinn Nord-Amerika-cupen';
 
   @override
-  String get campaignStars3Texas =>
-      'Vinn Nord-Amerika-cupen eller Verdensmesterskapet';
+  String get campaignStars3Texas => 'Vinn Verdensmesterskapet';
 
   @override
   String get wcPlayoffCourseNote =>

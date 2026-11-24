@@ -18660,21 +18660,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get campaignTexasIntro =>
-      'Texas fue una república independiente durante nueve años antes de unirse a Estados Unidos, y hoy forma más futbolistas que la mayoría de las naciones: tres academias de primera división, una de las canteras más amplias del mundo y texanos en todas las ligas. En este mundo la República de Texas juega por sí misma, en el lugar de Anguila en Norteamérica. Todos sus jugadores han nacido en Texas, en Houston, Dallas, San Antonio, Austin o El Paso, y la plantilla es un equipo de mitad de tabla de la región: lo bastante buena para complicarle la vida a cualquiera, pero aún no tanto como para infundir miedo. Tienes cinco ciclos para llegar a una Copa de Norteamérica, después a un Campeonato del Mundo y, si te atreves a soñar, ganar uno de ellos.';
+      'Texas fue una república independiente durante nueve años antes de unirse a Estados Unidos, y hoy forma más futbolistas que la mayoría de las naciones: tres academias de primera división, una de las canteras más amplias del mundo y texanos en todas las ligas. En este mundo la República de Texas juega por sí misma, en el lugar de Anguila en Norteamérica. Todos sus jugadores han nacido en Texas, en Houston, Dallas, San Antonio, Austin o El Paso, y la plantilla es un equipo de mitad de tabla de la región: lo bastante buena para complicarle la vida a cualquiera, pero aún no tanto como para infundir miedo. Tienes cinco ciclos para llegar a un Campeonato del Mundo, ganar la Copa de Norteamérica y, si te atreves a soñar, el propio Campeonato del Mundo.';
 
   @override
-  String get campaignTexasGoal => 'Clasificarse para una Copa de Norteamérica';
+  String get campaignTexasGoal => 'Clasificarse para un Campeonato del Mundo';
 
   @override
-  String get campaignStars1Texas =>
-      'Clasificarse para una Copa de Norteamérica';
+  String get campaignStars1Texas => 'Clasificarse para un Campeonato del Mundo';
 
   @override
-  String get campaignStars2Texas => 'Clasificarse para un Campeonato del Mundo';
+  String get campaignStars2Texas => 'Ganar la Copa de Norteamérica';
 
   @override
-  String get campaignStars3Texas =>
-      'Ganar la Copa de Norteamérica o el Campeonato del Mundo';
+  String get campaignStars3Texas => 'Ganar el Campeonato del Mundo';
 
   @override
   String get wcPlayoffCourseNote =>

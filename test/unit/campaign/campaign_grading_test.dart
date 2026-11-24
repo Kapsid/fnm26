@@ -223,7 +223,7 @@ void main() {
     expect(def.cycles, 5);
     expect(def.needsPro, isTrue);
     expect(def.canContinue, isTrue);
-    expect(def.goal, CampaignGoal.qualifyBothThenTitle);
+    expect(def.goal, CampaignGoal.qualifyWorldThenTitles);
     expect(def.difficulty, CampaignDifficulty.medium);
     expect(Campaigns.all.last, def);
     expect(Campaigns.byId('texas'), def);

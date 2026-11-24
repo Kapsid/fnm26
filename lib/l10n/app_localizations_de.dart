@@ -18700,20 +18700,19 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get campaignTexasIntro =>
-      'Texas war neun Jahre lang eine eigenständige Republik, bevor es den Vereinigten Staaten beitrat, und heute bringt es mehr Fußballer hervor als die meisten Nationen: drei Akademien aus der höchsten Liga, einen der breitesten Nachwuchsbereiche der Welt und Texaner in jeder Liga. In dieser Welt spielt die Republik Texas für sich selbst, auf Anguillas Platz in Nordamerika. Jeder Spieler ist in Texas geboren, in Houston, Dallas, San Antonio, Austin oder El Paso, und der Kader gehört zum Mittelfeld der Region: gut genug, um jeden zu ärgern, aber noch nicht gut genug, um gefürchtet zu werden. Sie haben fünf Zyklen, um einen Nordamerika-Pokal zu erreichen, dann eine Weltmeisterschaft und, wenn Sie zu träumen wagen, einen der beiden Titel zu gewinnen.';
+      'Texas war neun Jahre lang eine eigenständige Republik, bevor es den Vereinigten Staaten beitrat, und heute bringt es mehr Fußballer hervor als die meisten Nationen: drei Akademien aus der höchsten Liga, einen der breitesten Nachwuchsbereiche der Welt und Texaner in jeder Liga. In dieser Welt spielt die Republik Texas für sich selbst, auf Anguillas Platz in Nordamerika. Jeder Spieler ist in Texas geboren, in Houston, Dallas, San Antonio, Austin oder El Paso, und der Kader gehört zum Mittelfeld der Region: gut genug, um jeden zu ärgern, aber noch nicht gut genug, um gefürchtet zu werden. Sie haben fünf Zyklen, um eine Weltmeisterschaft zu erreichen, den Nordamerika-Pokal zu gewinnen und, wenn Sie zu träumen wagen, die Weltmeisterschaft selbst.';
 
   @override
-  String get campaignTexasGoal => 'Für einen Nordamerika-Pokal qualifizieren';
+  String get campaignTexasGoal => 'Für eine Weltmeisterschaft qualifizieren';
 
   @override
-  String get campaignStars1Texas => 'Für einen Nordamerika-Pokal qualifizieren';
+  String get campaignStars1Texas => 'Für eine Weltmeisterschaft qualifizieren';
 
   @override
-  String get campaignStars2Texas => 'Für eine Weltmeisterschaft qualifizieren';
+  String get campaignStars2Texas => 'Den Nordamerika-Pokal gewinnen';
 
   @override
-  String get campaignStars3Texas =>
-      'Den Nordamerika-Pokal oder die Weltmeisterschaft gewinnen';
+  String get campaignStars3Texas => 'Die Weltmeisterschaft gewinnen';
 
   @override
   String get wcPlayoffCourseNote =>

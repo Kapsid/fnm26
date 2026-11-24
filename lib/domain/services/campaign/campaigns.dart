@@ -363,8 +363,8 @@ abstract final class Campaigns {
   /// `DormantNations.texas`), so the century becomes five cycles, enough for
   /// one generation to grow up and the next to arrive. Pro, and a settled
   /// run may be moved into the saves (one nation swapped for another). The
-  /// stars are a North America Cup, a World Championship, then winning
-  /// either. The United States keep their squad: Czechoslovakia's donors were
+  /// stars are a World Championship, the North America Cup won, then the
+  /// World Championship won. The United States keep their squad: Czechoslovakia's donors were
   /// nations taken out of the world, and the stored players carry no
   /// birthplace to tell a Texan from anyone else. Seed 221 keeps Texas from
   /// hosting either championship in all five cycles (216, the first searched,
@@ -377,7 +377,7 @@ abstract final class Campaigns {
     id: 'texas',
     nationId: 216, // DormantNations.texasId
     dormantNationId: 216,
-    goal: CampaignGoal.qualifyBothThenTitle,
+    goal: CampaignGoal.qualifyWorldThenTitles,
     cycles: 5,
     needsPro: true,
     difficulty: CampaignDifficulty.medium,

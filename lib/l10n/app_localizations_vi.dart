@@ -18405,20 +18405,19 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get campaignTexasIntro =>
-      'Texas từng là một nước cộng hòa độc lập trong chín năm trước khi gia nhập Hoa Kỳ, và ngày nay đào tạo nhiều cầu thủ hơn phần lớn các quốc gia: ba học viện của giải hạng cao nhất, một trong những nền bóng đá trẻ rộng nhất thế giới và cầu thủ Texas ở mọi giải đấu. Trong thế giới này, Cộng hòa Texas thi đấu cho chính mình, thế chỗ Anguilla ở Bắc Mỹ. Mọi cầu thủ đều sinh ra ở Texas, tại Houston, Dallas, San Antonio, Austin hay El Paso, và đội hình là một đội tầm trung của khu vực: đủ giỏi để gây khó dễ cho bất kỳ ai, nhưng chưa đủ để khiến người khác phải e sợ. Bạn có năm chu kỳ để giành vé dự Cúp Bắc Mỹ, rồi Giải vô địch thế giới và, nếu dám mơ, vô địch một trong hai giải.';
+      'Texas từng là một nước cộng hòa độc lập trong chín năm trước khi gia nhập Hoa Kỳ, và ngày nay đào tạo nhiều cầu thủ hơn phần lớn các quốc gia: ba học viện của giải hạng cao nhất, một trong những nền bóng đá trẻ rộng nhất thế giới và cầu thủ Texas ở mọi giải đấu. Trong thế giới này, Cộng hòa Texas thi đấu cho chính mình, thế chỗ Anguilla ở Bắc Mỹ. Mọi cầu thủ đều sinh ra ở Texas, tại Houston, Dallas, San Antonio, Austin hay El Paso, và đội hình là một đội tầm trung của khu vực: đủ giỏi để gây khó dễ cho bất kỳ ai, nhưng chưa đủ để khiến người khác phải e sợ. Bạn có năm chu kỳ để giành vé dự Giải vô địch thế giới, vô địch Cúp Bắc Mỹ và, nếu dám mơ, vô địch chính Giải vô địch thế giới.';
 
   @override
-  String get campaignTexasGoal => 'Giành vé dự một kỳ Cúp Bắc Mỹ';
+  String get campaignTexasGoal => 'Giành vé dự một kỳ Giải vô địch thế giới';
 
   @override
-  String get campaignStars1Texas => 'Giành vé dự một kỳ Cúp Bắc Mỹ';
+  String get campaignStars1Texas => 'Giành vé dự một kỳ Giải vô địch thế giới';
 
   @override
-  String get campaignStars2Texas => 'Giành vé dự một kỳ Giải vô địch thế giới';
+  String get campaignStars2Texas => 'Vô địch Cúp Bắc Mỹ';
 
   @override
-  String get campaignStars3Texas =>
-      'Vô địch Cúp Bắc Mỹ hoặc Giải vô địch thế giới';
+  String get campaignStars3Texas => 'Vô địch Giải vô địch thế giới';
 
   @override
   String get wcPlayoffCourseNote =>

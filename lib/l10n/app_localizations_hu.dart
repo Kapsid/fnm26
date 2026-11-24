@@ -18499,20 +18499,19 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get campaignTexasIntro =>
-      'Texas kilenc évig önálló köztársaság volt, mielőtt csatlakozott az Egyesült Államokhoz, és ma több futballistát nevel, mint a legtöbb ország: három élvonalbeli akadémia, a világ egyik legszélesebb utánpótlásbázisa és texasiak minden bajnokságban. Ebben a világban a Texasi Köztársaság a maga nevében játszik, Anguilla helyén Észak-Amerikában. Minden játékos Texasban született, Houstonban, Dallasban, San Antonióban, Austinban vagy El Pasóban, a keret pedig a régió középmezőnyéhez tartozik: elég jó ahhoz, hogy bárkinek gondot okozzon, de még nem elég ahhoz, hogy féljenek tőle. Öt ciklusod van, hogy kijuss egy Észak-amerikai Kupára, aztán egy világbajnokságra, és ha mersz álmodni, megnyerd valamelyiket.';
+      'Texas kilenc évig önálló köztársaság volt, mielőtt csatlakozott az Egyesült Államokhoz, és ma több futballistát nevel, mint a legtöbb ország: három élvonalbeli akadémia, a világ egyik legszélesebb utánpótlásbázisa és texasiak minden bajnokságban. Ebben a világban a Texasi Köztársaság a maga nevében játszik, Anguilla helyén Észak-Amerikában. Minden játékos Texasban született, Houstonban, Dallasban, San Antonióban, Austinban vagy El Pasóban, a keret pedig a régió középmezőnyéhez tartozik: elég jó ahhoz, hogy bárkinek gondot okozzon, de még nem elég ahhoz, hogy féljenek tőle. Öt ciklusod van, hogy kijuss egy világbajnokságra, megnyerd az Észak-amerikai Kupát, és ha mersz álmodni, magát a világbajnokságot is.';
 
   @override
-  String get campaignTexasGoal => 'Kijutni egy Észak-amerikai Kupára';
+  String get campaignTexasGoal => 'Kijutni egy világbajnokságra';
 
   @override
-  String get campaignStars1Texas => 'Kijutni egy Észak-amerikai Kupára';
+  String get campaignStars1Texas => 'Kijutni egy világbajnokságra';
 
   @override
-  String get campaignStars2Texas => 'Kijutni egy világbajnokságra';
+  String get campaignStars2Texas => 'Megnyerni az Észak-amerikai Kupát';
 
   @override
-  String get campaignStars3Texas =>
-      'Megnyerni az Észak-amerikai Kupát vagy a világbajnokságot';
+  String get campaignStars3Texas => 'Megnyerni a világbajnokságot';
 
   @override
   String get wcPlayoffCourseNote =>

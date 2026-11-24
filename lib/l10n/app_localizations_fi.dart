@@ -18630,19 +18630,19 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get campaignTexasIntro =>
-      'Texas oli yhdeksän vuotta itsenäinen tasavalta ennen kuin se liittyi Yhdysvaltoihin, ja nykyään se kasvattaa enemmän jalkapalloilijoita kuin useimmat maat: kolme pääsarjan akatemiaa, yhden maailman laajimmista junioripohjista ja teksasilaisia jokaisessa sarjassa. Tässä maailmassa Texasin tasavalta pelaa omissa nimissään, Anguillan paikalla Pohjois-Amerikassa. Jokainen pelaaja on syntynyt Texasissa, Houstonissa, Dallasissa, San Antoniossa, Austinissa tai El Pasossa, ja joukkue kuuluu alueen keskikastiin: tarpeeksi hyvä kiusaamaan ketä tahansa, mutta ei vielä niin hyvä, että sitä pelättäisiin. Sinulla on viisi kautta aikaa selviytyä Pohjois-Amerikan Cupiin, sitten MM-kisoihin ja, jos uskallat unelmoida, voittaa toinen niistä.';
+      'Texas oli yhdeksän vuotta itsenäinen tasavalta ennen kuin se liittyi Yhdysvaltoihin, ja nykyään se kasvattaa enemmän jalkapalloilijoita kuin useimmat maat: kolme pääsarjan akatemiaa, yhden maailman laajimmista junioripohjista ja teksasilaisia jokaisessa sarjassa. Tässä maailmassa Texasin tasavalta pelaa omissa nimissään, Anguillan paikalla Pohjois-Amerikassa. Jokainen pelaaja on syntynyt Texasissa, Houstonissa, Dallasissa, San Antoniossa, Austinissa tai El Pasossa, ja joukkue kuuluu alueen keskikastiin: tarpeeksi hyvä kiusaamaan ketä tahansa, mutta ei vielä niin hyvä, että sitä pelättäisiin. Sinulla on viisi kautta aikaa selviytyä MM-kisoihin, voittaa Pohjois-Amerikan Cup ja, jos uskallat unelmoida, itse MM-kisat.';
 
   @override
-  String get campaignTexasGoal => 'Selviä Pohjois-Amerikan Cupiin';
+  String get campaignTexasGoal => 'Selviä MM-kisoihin';
 
   @override
-  String get campaignStars1Texas => 'Selviä Pohjois-Amerikan Cupiin';
+  String get campaignStars1Texas => 'Selviä MM-kisoihin';
 
   @override
-  String get campaignStars2Texas => 'Selviä MM-kisoihin';
+  String get campaignStars2Texas => 'Voita Pohjois-Amerikan Cup';
 
   @override
-  String get campaignStars3Texas => 'Voita Pohjois-Amerikan Cup tai MM-kisat';
+  String get campaignStars3Texas => 'Voita MM-kisat';
 
   @override
   String get wcPlayoffCourseNote =>

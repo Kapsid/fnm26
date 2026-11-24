@@ -17914,19 +17914,19 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get campaignTexasIntro =>
-      'テキサスはアメリカ合衆国に加わる前の9年間、独立した共和国でした。今では多くの国よりも多くのサッカー選手を育てています。トップリーグのアカデミーが三つ、世界有数の層の厚い育成年代、そしてあらゆるリーグでプレーするテキサス出身の選手たち。この世界ではテキサス共和国が自らの代表として、北米でアンギラの座を占めます。選手は全員テキサス生まれ。ヒューストン、ダラス、サンアントニオ、オースティン、エルパソの出身で、チームは地域の中位クラスです。どんな相手も苦しめられるが、まだ恐れられるほどではない。5サイクルのうちに北米カップへ、そして世界選手権へ。夢を見る勇気があるなら、そのどちらかを制しましょう。';
+      'テキサスはアメリカ合衆国に加わる前の9年間、独立した共和国でした。今では多くの国よりも多くのサッカー選手を育てています。トップリーグのアカデミーが三つ、世界有数の層の厚い育成年代、そしてあらゆるリーグでプレーするテキサス出身の選手たち。この世界ではテキサス共和国が自らの代表として、北米でアンギラの座を占めます。選手は全員テキサス生まれ。ヒューストン、ダラス、サンアントニオ、オースティン、エルパソの出身で、チームは地域の中位クラスです。どんな相手も苦しめられるが、まだ恐れられるほどではない。5サイクルのうちに世界選手権へ出場し、北米カップを制覇。夢を見る勇気があるなら、世界選手権そのものを制しましょう。';
 
   @override
-  String get campaignTexasGoal => '北米カップ出場';
+  String get campaignTexasGoal => '世界選手権出場';
 
   @override
-  String get campaignStars1Texas => '北米カップ出場';
+  String get campaignStars1Texas => '世界選手権出場';
 
   @override
-  String get campaignStars2Texas => '世界選手権出場';
+  String get campaignStars2Texas => '北米カップ優勝';
 
   @override
-  String get campaignStars3Texas => '北米カップまたは世界選手権優勝';
+  String get campaignStars3Texas => '世界選手権優勝';
 
   @override
   String get wcPlayoffCourseNote =>

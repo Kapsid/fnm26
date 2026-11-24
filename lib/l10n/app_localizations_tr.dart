@@ -18470,23 +18470,21 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get campaignTexasIntro =>
-      'Teksas, Amerika Birleşik Devletleri\'ne katılmadan önce dokuz yıl boyunca bağımsız bir cumhuriyetti ve bugün çoğu ülkeden daha fazla futbolcu yetiştiriyor: üst ligden üç akademi, dünyanın en geniş altyapı tabanlarından biri ve her ligde Teksaslı oyuncular. Bu dünyada Teksas Cumhuriyeti kendi adına oynuyor, Kuzey Amerika\'da Anguilla\'nın yerinde. Her oyuncu Teksas doğumlu; Houston, Dallas, San Antonio, Austin ya da El Paso\'dan. Kadro bölgenin orta sıra takımlarından biri: herkesi zorlayacak kadar iyi, ama henüz korkulacak kadar değil. Bir Kuzey Amerika Kupası\'na, ardından bir Dünya Şampiyonası\'na ulaşmak ve hayal kurmaya cesaretin varsa bunlardan birini kazanmak için beş dönemin var.';
+      'Teksas, Amerika Birleşik Devletleri\'ne katılmadan önce dokuz yıl boyunca bağımsız bir cumhuriyetti ve bugün çoğu ülkeden daha fazla futbolcu yetiştiriyor: üst ligden üç akademi, dünyanın en geniş altyapı tabanlarından biri ve her ligde Teksaslı oyuncular. Bu dünyada Teksas Cumhuriyeti kendi adına oynuyor, Kuzey Amerika\'da Anguilla\'nın yerinde. Her oyuncu Teksas doğumlu; Houston, Dallas, San Antonio, Austin ya da El Paso\'dan. Kadro bölgenin orta sıra takımlarından biri: herkesi zorlayacak kadar iyi, ama henüz korkulacak kadar değil. Bir Dünya Şampiyonası\'na ulaşmak, Kuzey Amerika Kupası\'nı kazanmak ve hayal kurmaya cesaretin varsa Dünya Şampiyonası\'nın kendisini kazanmak için beş dönemin var.';
 
   @override
   String get campaignTexasGoal =>
-      'Bir Kuzey Amerika Kupası\'na katılma hakkı kazan';
-
-  @override
-  String get campaignStars1Texas =>
-      'Bir Kuzey Amerika Kupası\'na katılma hakkı kazan';
-
-  @override
-  String get campaignStars2Texas =>
       'Bir Dünya Şampiyonası\'na katılma hakkı kazan';
 
   @override
-  String get campaignStars3Texas =>
-      'Kuzey Amerika Kupası\'nı ya da Dünya Şampiyonası\'nı kazan';
+  String get campaignStars1Texas =>
+      'Bir Dünya Şampiyonası\'na katılma hakkı kazan';
+
+  @override
+  String get campaignStars2Texas => 'Kuzey Amerika Kupası\'nı kazan';
+
+  @override
+  String get campaignStars3Texas => 'Dünya Şampiyonası\'nı kazan';
 
   @override
   String get wcPlayoffCourseNote =>

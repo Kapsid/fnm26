@@ -18593,20 +18593,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get campaignTexasIntro =>
-      'Texas was a republic of its own for nine years before it joined the United States, and today it raises more footballers than most nations: three top-flight academies, one of the deepest youth games anywhere and Texans in every league. In this world the Republic of Texas plays for itself, in Anguilla\'s place in North America. Every player is Texas-born, from Houston, Dallas, San Antonio, Austin and El Paso, and the squad is a mid-table side of the region: good enough to trouble anyone, not yet good enough to be feared. You have five cycles to reach a North America Cup, then a World Championship and, if you dare to dream, win one of them.';
+      'Texas was a republic of its own for nine years before it joined the United States, and today it raises more footballers than most nations: three top-flight academies, one of the deepest youth games anywhere and Texans in every league. In this world the Republic of Texas plays for itself, in Anguilla\'s place in North America. Every player is Texas-born, from Houston, Dallas, San Antonio, Austin and El Paso, and the squad is a mid-table side of the region: good enough to trouble anyone, not yet good enough to be feared. You have five cycles to reach a World Championship, win the North America Cup and, if you dare to dream, the World Championship itself.';
 
   @override
-  String get campaignTexasGoal => 'Qualify for a North America Cup';
+  String get campaignTexasGoal => 'Qualify for a World Championship';
 
   @override
-  String get campaignStars1Texas => 'Qualify for a North America Cup';
+  String get campaignStars1Texas => 'Qualify for a World Championship';
 
   @override
-  String get campaignStars2Texas => 'Qualify for a World Championship';
+  String get campaignStars2Texas => 'Win the North America Cup';
 
   @override
-  String get campaignStars3Texas =>
-      'Win the North America Cup or the World Championship';
+  String get campaignStars3Texas => 'Win the World Championship';
 
   @override
   String get wcPlayoffCourseNote =>

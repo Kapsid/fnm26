@@ -28023,34 +28023,34 @@ abstract class AppLocalizations {
   /// **'The Republic of Texas take Anguilla\'s place in North America, for five cycles'**
   String get campaignTexasTwist;
 
-  /// Brief screen introduction of the Texas campaign: the Republic of Texas take Anguilla's place in North America as a mid-table side of the region, every player Texas-born, for four cycles. Names no real player.
+  /// Brief screen introduction of the Texas campaign: the Republic of Texas take Anguilla's place in North America as a mid-strength side, every player Texas-born, for five cycles. Names no real player.
   ///
   /// In en, this message translates to:
-  /// **'Texas was a republic of its own for nine years before it joined the United States, and today it raises more footballers than most nations: three top-flight academies, one of the deepest youth games anywhere and Texans in every league. In this world the Republic of Texas plays for itself, in Anguilla\'s place in North America. Every player is Texas-born, from Houston, Dallas, San Antonio, Austin and El Paso, and the squad is a mid-table side of the region: good enough to trouble anyone, not yet good enough to be feared. You have five cycles to reach a North America Cup, then a World Championship and, if you dare to dream, win one of them.'**
+  /// **'Texas was a republic of its own for nine years before it joined the United States, and today it raises more footballers than most nations: three top-flight academies, one of the deepest youth games anywhere and Texans in every league. In this world the Republic of Texas plays for itself, in Anguilla\'s place in North America. Every player is Texas-born, from Houston, Dallas, San Antonio, Austin and El Paso, and the squad is a mid-table side of the region: good enough to trouble anyone, not yet good enough to be feared. You have five cycles to reach a World Championship, win the North America Cup and, if you dare to dream, the World Championship itself.'**
   String get campaignTexasIntro;
 
-  /// One-line goal of the Texas campaign (its first star): qualify for a North America Cup, the region's continental championship.
-  ///
-  /// In en, this message translates to:
-  /// **'Qualify for a North America Cup'**
-  String get campaignTexasGoal;
-
-  /// What earns the first star in the Texas campaign: qualify for a North America Cup, in any cycle.
-  ///
-  /// In en, this message translates to:
-  /// **'Qualify for a North America Cup'**
-  String get campaignStars1Texas;
-
-  /// What earns the second star in the Texas campaign: qualify for a World Championship, in any cycle.
+  /// One-line goal of the Texas campaign (its first star): qualify for a World Championship.
   ///
   /// In en, this message translates to:
   /// **'Qualify for a World Championship'**
-  String get campaignStars2Texas;
+  String get campaignTexasGoal;
 
-  /// What earns the third star in the Texas campaign: win the North America Cup or the World Championship, in any cycle.
+  /// What earns the first star in the Texas campaign: qualify for a World Championship, in any cycle.
   ///
   /// In en, this message translates to:
-  /// **'Win the North America Cup or the World Championship'**
+  /// **'Qualify for a World Championship'**
+  String get campaignStars1Texas;
+
+  /// What earns the second star in the Texas campaign: win the North America Cup, the region's continental championship, in any cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Win the North America Cup'**
+  String get campaignStars2Texas;
+
+  /// What earns the third star in the Texas campaign: win the World Championship, in any cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Win the World Championship'**
   String get campaignStars3Texas;
 
   /// World Championship qualifying, under Europe's groups: who goes to the play-off paths (the best runners-up, in yellow, and the best Nations Cup group winners not through), then the Nations Cup sides on course for them, listed below.
