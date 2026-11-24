@@ -30,6 +30,7 @@ import 'package:fnm/domain/services/nation/nation_names_ko.dart';
 import 'package:fnm/domain/services/nation/nation_names_ro.dart';
 import 'package:fnm/domain/services/nation/nation_names_th.dart';
 import 'package:fnm/domain/services/nation/nation_names_ms.dart';
+import 'package:fnm/domain/services/nation/nation_names_sr.dart';
 
 /// Every language's table names every nation in the seed.
 ///
@@ -75,6 +76,7 @@ void main() {
     'ro': nationNamesRo,
     'th': nationNamesTh,
     'ms': nationNamesMs,
+    'sr': nationNamesSr,
   };
 
   for (final MapEntry(key: language, value: table) in tables.entries) {

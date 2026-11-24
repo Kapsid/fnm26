@@ -36,6 +36,7 @@ void main() {
     'ro': ['Cupa Mondială', 'Cupa Mondiala'],
     'th': ['ฟุตบอลโลก', 'เวิลด์คัพ'],
     'ms': ['Piala Dunia'],
+    'sr': ['Светски куп', 'Мундијал'],
   };
 
   // Every phrase is checked in every new language: a Dutch translator quoting

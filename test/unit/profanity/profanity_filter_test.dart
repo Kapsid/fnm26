@@ -146,6 +146,7 @@ void main() {
       ],
       'nl': ['klootzak', 'hoer', 'neuken', 'kankerlijer', 'flikker'],
       'hr': ['kurac', 'pička', 'jebem', 'jebote', 'jebiga', 'govno'],
+      'sr': ['курац', 'пичка', 'јебем', 'јеботе', 'говно'],
       'hu': ['geci', 'fasz', 'faszfej', 'picsa', 'baszd meg', 'bazdmeg'],
       'ro': ['pulă', 'muie', 'futui', 'pizda'],
       'sv': ['fitta', 'knulla', 'jävla', 'horunge'],

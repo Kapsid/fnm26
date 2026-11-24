@@ -44,6 +44,7 @@ void main() {
       'ro',
       'th',
       'ms',
+      'sr',
     ])
       if (File('lib/l10n/app_$code.arb').existsSync())
         code: arb('lib/l10n/app_$code.arb'),

@@ -76,8 +76,17 @@ abstract final class AppDate {
       return yearFirst(locale).format(date);
     }
     // German writes its day as an ordinal too (`1. Sep. 2030`), so it takes
-    // the Czech pattern; so do Danish, Norwegian, Finnish and Croatian.
-    final dotted = const {'cs', 'de', 'da', 'nb', 'fi', 'hr'}.contains(locale);
+    // the Czech pattern; so do Danish, Norwegian, Finnish, Croatian
+    // and Serbian.
+    final dotted = const {
+      'cs',
+      'de',
+      'da',
+      'nb',
+      'fi',
+      'hr',
+      'sr',
+    }.contains(locale);
     return DateFormat(dotted ? cs : en, locale).format(date);
   }
 

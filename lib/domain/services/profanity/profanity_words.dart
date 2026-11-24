@@ -393,6 +393,19 @@ const Map<String, List<String>> profanityWords = {
     '=kučk*',
     'drolja',
   ],
+  // Serbian in Cyrillic (its Latin spelling is the Croatian list's).
+  'sr': [
+    'курац',
+    'курца',
+    'курцу',
+    'курчина',
+    '=пичк*',
+    '=јеб*',
+    'говн*',
+    '=шупак',
+    '=кучк*',
+    'дроља',
+  ],
   'hu': [
     'geci',
     'fasz',

@@ -49,6 +49,7 @@ const _locales = [
   'ro',
   'th',
   'ms',
+  'sr',
 ];
 
 void main() {

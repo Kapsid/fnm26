@@ -129,6 +129,7 @@ void main() {
       'ko',
       'ro',
       'ms',
+      'sr',
     },
   };
 

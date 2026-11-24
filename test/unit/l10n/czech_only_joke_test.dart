@@ -108,6 +108,7 @@ void main() {
       'ro',
       'th',
       'ms',
+      'sr',
     ]) {
       final offenders = [
         for (final e in copy(locale).entries)
@@ -184,6 +185,7 @@ void main() {
         'ro',
         'th',
         'ms',
+        'sr',
       ]) {
         final c = copy(locale);
         expect(

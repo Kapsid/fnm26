@@ -52,6 +52,7 @@ const _locales = [
   'ro',
   'th',
   'ms',
+  'sr',
 ];
 
 /// The year the ceremony headings print beside themselves. Four digits wide in
