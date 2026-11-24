@@ -163,7 +163,12 @@ void main() {
       saveSeed: run.rngSeed,
       careerId: id,
     );
-    final usaBase = await players.byNation(usa, saveSeed: run.rngSeed);
+    // The classic pools on purpose: the base world, not this career.
+    final usaBase = await players.byNation(
+      usa,
+      saveSeed: run.rngSeed,
+      newCareerNames: true,
+    );
     Set<int> core(Iterable<int> ids) => {
       for (final i in ids)
         if (i < kFirstFringeId) i,
