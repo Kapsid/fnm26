@@ -92,7 +92,13 @@ abstract final class PackCodec {
   /// The most players a nation's squad holds in a file; a pool holds at
   /// most [PackRules.poolMax].
   static const maxPlayersPerNation = PackRules.squadMax;
-  static const maxTrophies = 9;
+
+  /// One picture per trophy the cabinet holds (11 since the regional
+  /// cups); a fixed 9 refused every file that replaced them all.
+  static int get maxTrophies => Trophies.cabinet.length;
+
+  /// The trophy cap before format 9 (1.1.2 and older).
+  static const legacyMaxTrophies = 9;
 
   /// The most nations a file gives a pool. The game has about 210.
   static const maxPoolNations = 400;
@@ -107,7 +113,13 @@ abstract final class PackCodec {
   /// reads, unless it names managers (format 4), sets an industry or a
   /// handle (5) or adds a reporter or a stadium (6).
   static Uint8List encode(WorldPack p, Map<String, Uint8List> trophies) {
-    final written = p.asWritten;
+    var written = p.asWritten;
+    // A picture past the first nine (the regional cups'): a 1.1.2 build
+    // refuses more than nine, so the file says it is format 9 and such a
+    // build asks for an update instead of calling it broken.
+    if (trophies.length > legacyMaxTrophies && written.formatVersion < 9) {
+      written = written.copyWith(formatVersion: 9);
+    }
     final json = jsonEncode({
       'format': written.formatVersion,
       'pack': written.toJson(),

@@ -184,7 +184,8 @@ abstract final class PackRules {
   /// on a hostile file (1.1.x raised it from 500; an older build refuses a
   /// file over its cap, and says the file is from a newer version first:
   /// see `kPackFormatVersion`).
-  static const addedClubsMax = 5000, addedSponsorsMax = 50, addedYMax = 100;
+  /// Sponsors: 100 from 1.1.3 (format 9; 50 before, [kLegacySponsorsMax]).
+  static const addedClubsMax = 5000, addedSponsorsMax = 100, addedYMax = 100;
 
   /// The most press reporters and stadiums a pack adds (format 6): a press
   /// room several times the game's own, and a few grounds for every nation.

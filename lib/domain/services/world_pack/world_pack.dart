@@ -22,18 +22,24 @@ import '../press/y_feed.dart';
 /// (1.1.1) adds the press reporters and the stadiums a pack adds
 /// ([WorldPack.addedReporters], [WorldPack.addedStadiums]); format 7 (1.1.1)
 /// adds each nation's starting world ranking ([WorldPack.rankings]); format 8
-/// (1.1.2) adds a day-one manager's optional age ([WorldPack.managers]).
-/// [WorldPack.migrate] lifts a format-1 to 7 pack to it, step by step.
+/// (1.1.2) adds a day-one manager's optional age ([WorldPack.managers]);
+/// format 9 (1.1.3) holds more than [kLegacySponsorsMax] added sponsors,
+/// or a picture for every trophy past the first nine (see `PackCodec.encode`).
+/// [WorldPack.migrate] lifts a format-1 to 8 pack to it, step by step.
 ///
 /// A pack is written in the oldest format that holds it ([WorldPack.asWritten]):
 /// format 3 when it names no managers, so a 1.1.x build without managers still
 /// reads it, format 4 when it does, format 5 when it sets an industry or a
 /// handle, format 6 when it adds a reporter or a stadium, format 7 when it
 /// sets a nation's starting world ranking, and format 8 only when it gives a
-/// day-one manager an age. A build
+/// day-one manager an age, format 9 only when it adds more than
+/// [kLegacySponsorsMax] sponsors. A build
 /// that reads only an older format says the file is from a newer version
 /// rather than calling it broken.
-const int kPackFormatVersion = 8;
+const int kPackFormatVersion = 9;
+
+/// The added-sponsor cap before format 9 (1.1.2 and older refuse more).
+const int kLegacySponsorsMax = 50;
 
 /// Ids at or above this belong to players created in a pack.
 const int kPackPlayerIdBase = 800000000;
@@ -697,6 +703,10 @@ class WorldPack {
   final Map<int, int> rankings;
 
   /// Whether the pack uses what only format 8 holds.
+  /// Whether the pack uses what only format 9 holds.
+  bool get _needsFormat9 => addedSponsors.length > kLegacySponsorsMax;
+
+  /// Whether the pack uses what only format 8 holds.
   bool get _needsFormat8 => managers.values.any((m) => m.age != null);
 
   /// Whether the pack uses what only format 7 holds.
@@ -716,11 +726,14 @@ class WorldPack {
   /// and exports it: format 3 (which a 1.1.x build without managers reads)
   /// when it names no managers, 4 when it does, 5 when it sets a sponsor's
   /// industry or a Y handle, 6 when it adds a reporter or a stadium, 7 when
-  /// it sets a starting ranking, and [kPackFormatVersion] (8) only when it
-  /// gives a day-one manager an age.
+  /// it sets a starting ranking, 8 when it gives a day-one manager an age,
+  /// and [kPackFormatVersion] (9) only when it adds more than
+  /// [kLegacySponsorsMax] sponsors.
   WorldPack get asWritten => copyWith(
-    formatVersion: _needsFormat8
+    formatVersion: _needsFormat9
         ? kPackFormatVersion
+        : _needsFormat8
+        ? 8
         : _needsFormat7
         ? 7
         : _needsFormat6
@@ -1031,6 +1044,7 @@ class WorldPack {
     if (v <= 5) out = _from5To6(out, v);
     if (v <= 6) out = _from6To7(out, v);
     if (v <= 7) out = _from7To8(out, v);
+    if (v <= 8) out = _from8To9(out, v);
     return _retiredClubs(out);
   }
 
@@ -1200,6 +1214,16 @@ class WorldPack {
       throw FormatException('Format $from pack has a format 8 manager age');
     }
     return {...json, 'formatVersion': 8};
+  }
+
+  static Map<String, Object?> _from8To9(Map<String, Object?> json, int from) {
+    final sponsors = json['addedSponsors'];
+    if (sponsors is List && sponsors.length > kLegacySponsorsMax) {
+      throw FormatException(
+        'Format $from pack adds more than $kLegacySponsorsMax sponsors',
+      );
+    }
+    return {...json, 'formatVersion': 9};
   }
 
   static ({String name, String nationality, int? age}) _manager(Object? raw) {
