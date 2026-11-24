@@ -40,10 +40,12 @@ careerStatsProvider = FutureProvider.autoDispose.family<CareerStatsSnapshot, int
   final managed = {career.nationId, ...stints.values};
 
   // Goal-by-goal, so a win can be told apart from a win from behind.
-  final timeline = await comp.goalTimeline(careerId);
+  // Only the managed nations' fixtures and their goals: the save's other
+  // matches would be filtered out below anyway.
+  final timeline = await comp.goalTimeline(careerId, forNations: managed);
 
   final matches = <ManagerMatch>[];
-  for (final f in await comp.allFixtures(careerId)) {
+  for (final f in await comp.allFixturesForNations(careerId, managed)) {
     if (!f.hasResult) continue;
     final homeManaged = managed.contains(f.homeNationId);
     final awayManaged = managed.contains(f.awayNationId);

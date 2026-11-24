@@ -343,6 +343,14 @@ abstract interface class CompetitionRepository {
   /// Every fixture in the save, ordered by matchday then date.
   Future<List<Fixture>> allFixtures(int careerId);
 
+  /// The fixtures of [allFixtures] that involve any of [nationIds], in the
+  /// same matchday-then-date order: [allFixtures] filtered in SQL, for a
+  /// reader that would otherwise load the whole save to keep a few nations.
+  Future<List<Fixture>> allFixturesForNations(
+    int careerId,
+    Set<int> nationIds,
+  );
+
   /// Every fixture of [cycle]'s competitions, with each competition's kind
   /// and confederation keyed by its id: one read of the competitions and one
   /// of the fixtures (the world managers' decision points read a cycle so).
@@ -737,8 +745,10 @@ abstract interface class CompetitionRepository {
   /// Pass [fixtureId] to read ONE match's goals rather than the save's — a
   /// caller asking how a single afternoon unfolded should not be handed every
   /// goal a twenty-year career ever scored.
+  /// Pass [forNations] to read only the goals of fixtures in which any of
+  /// those nations played (both sides' goals), in the same per-fixture order.
   Future<Map<int, List<({int nationId, int playerId, int minute})>>>
-  goalTimeline(int careerId, {int? fixtureId});
+  goalTimeline(int careerId, {int? fixtureId, Set<int>? forNations});
 
   /// Persists a match's sendings-off and knocks (both sides). Called once per
   /// played match; re-recording the same fixture replaces its incidents.

@@ -183,6 +183,28 @@ class DriftCompetitionRepository implements CompetitionRepository {
   }
 
   @override
+  Future<List<Fixture>> allFixturesForNations(
+    int careerId,
+    Set<int> nationIds,
+  ) async {
+    if (nationIds.isEmpty) return const [];
+    // Same ordering as [allFixtures]; `id` spells out the insertion-order
+    // tie-break the unindexed full scan there gives implicitly.
+    final query = _db.select(_db.fixtures)
+      ..where(
+        (t) =>
+            t.careerId.equals(careerId) &
+            (t.homeNationId.isIn(nationIds) | t.awayNationId.isIn(nationIds)),
+      )
+      ..orderBy([
+        (t) => OrderingTerm(expression: t.matchday),
+        (t) => OrderingTerm(expression: t.date),
+        (t) => OrderingTerm(expression: t.id),
+      ]);
+    return (await query.get()).map((r) => r.toDomain()).toList();
+  }
+
+  @override
   Future<
     ({
       Map<int, ({CompetitionKind kind, Confederation confederation})>
@@ -1684,17 +1706,38 @@ class DriftCompetitionRepository implements CompetitionRepository {
 
   @override
   Future<Map<int, List<({int nationId, int playerId, int minute})>>>
-  goalTimeline(int careerId, {int? fixtureId}) async {
+  goalTimeline(
+    int careerId, {
+    int? fixtureId,
+    Set<int>? forNations,
+  }) async {
+    if (forNations != null && forNations.isEmpty) return {};
     final rows =
         await (_db.select(_db.goalEvents)
-              ..where(
-                (t) =>
+              ..where((t) {
+                Expression<bool> w =
                     t.careerId.equals(careerId) &
                     (fixtureId == null
                         ? const Constant(true)
-                        : t.fixtureId.equals(fixtureId)),
-              )
-              ..orderBy([(t) => OrderingTerm(expression: t.minute)]))
+                        : t.fixtureId.equals(fixtureId));
+                if (forNations != null) {
+                  final ids = _db.selectOnly(_db.fixtures)
+                    ..addColumns([_db.fixtures.id])
+                    ..where(
+                      _db.fixtures.careerId.equals(careerId) &
+                          (_db.fixtures.homeNationId.isIn(forNations) |
+                              _db.fixtures.awayNationId.isIn(forNations)),
+                    );
+                  w = w & t.fixtureId.isInQuery(ids);
+                }
+                return w;
+              })
+              ..orderBy([
+                (t) => OrderingTerm(expression: t.minute),
+                // The insertion-order tie-break the unindexed scan gives
+                // implicitly, spelled out so a filtered read keeps it.
+                (t) => OrderingTerm(expression: t.id),
+              ]))
             .get();
     final out = <int, List<({int nationId, int playerId, int minute})>>{};
     for (final r in rows) {
