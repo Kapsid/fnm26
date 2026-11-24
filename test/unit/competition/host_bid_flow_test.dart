@@ -277,7 +277,9 @@ void main() {
       w,
     )).firstWhere((s) => s.comp == HostBidComp.continental);
     expect(cont.estateOk, isFalse);
-    expect(cont.offer, isNull);
+    // Not alone: at most jointly, with a co-host whose grounds make up the
+    // difference (see host_cohost_flow_test).
+    expect(cont.offer?.soloAllowed ?? false, isFalse);
     expect(
       cont.shortfall.grounds + cont.shortfall.bigGrounds,
       greaterThan(0),

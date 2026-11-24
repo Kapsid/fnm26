@@ -12177,6 +12177,40 @@ class AppLocalizationsHu extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Társrendező';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Pályázz együtt a konföderációd egy másik országával. Mindkét ország stadionjai számítanak, egy erős szomszéd erősíti a pályázatot, és győzelem esetén mindkét ország rendez, és automatikusan kijut. A támogatás megoszlik, így a te részed kisebb.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'A stadionjaid egyedül nem elegendők. Válassz társrendezőt a közös pályázathoz.';
+
+  @override
+  String get hostBidPartnerAlone => 'Pályázat egyedül';
+
+  @override
+  String get hostBidPartnerAgrees => 'Kész a közös rendezésre';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Elutasítja: inkább egyedül pályázik.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Elutasítja: túl messze van a közös pályázathoz.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Elutasítja: ezúttal nem tudja finanszírozni a részét.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Ha nyersz, $nation országgal közösen rendezel: mindkét ország automatikusan kijut, és a következő költségvetésre egyszeri, $amount összegű támogatást kapsz, a saját részedet.';
+  }
+
+  @override
   String get hostBidChance => 'Esély a rendezésre';
 
   @override
@@ -12355,6 +12389,15 @@ class AppLocalizationsHu extends AppLocalizations {
       'Pályázat beadva. A rendezőt az új ciklus kezdetén hirdetik ki.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Közös pályázat: $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Egyedül túl kevés a rendezéshez, de a közös pályázat egy társrendezővel nyitva áll.';
+
+  @override
   String get hostBidDeclinedNote => 'Ezúttal úgy döntöttél, hogy nem pályázol.';
 
   @override
@@ -12443,6 +12486,16 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Mi rendezzük a tornát, és rendezőként automatikusan ott vagyunk. A $amount egyszeri támogatás már a szövetség keretében van, készen a ciklus költségvetésére.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return 'A tornát közösen rendezi: $hosts, és rendezőként automatikusan kijutunk. A támogatásból ránk eső rész, $amount, már a szövetség forrásai között van, és a kezdőképernyőről rögtön szétoszthatod a ciklus részlegei között.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return 'A tornát közösen rendezi: $hosts, és rendezőként automatikusan kijutunk. A támogatásból ránk eső rész, $amount, már a szövetség forrásai között van, készen a ciklus költségvetésére.';
   }
 
   @override

@@ -115,6 +115,7 @@ class DriftNationRepository implements NationRepository {
               (t) =>
                   t.careerId.equals(careerId) &
                   (t.kind.like('${HostBidMarker.prefix}%') |
+                      t.kind.like('${HostBidPartnerMarker.prefix}%') |
                       t.kind.like('${HostBidding.rulesPrefix}%') |
                       t.kind.like('${HostBidding.rules2Prefix}%') |
                       t.kind.like('${HostBidding.rules3Prefix}%')),
@@ -125,6 +126,7 @@ class DriftNationRepository implements NationRepository {
     final managers = <int, int>{};
     final rules2 = <int>[];
     final rules3 = <int>{};
+    final partners = <HostBidPartnerMarker>[];
     for (final r in rows) {
       if (HostBidding.decodeRules(r.kind) case final rule?) {
         (byNation[rule.nationId] ??= {})[HostBidding.managerKey(rule.cycle)] =
@@ -140,9 +142,23 @@ class DriftNationRepository implements NationRepository {
         rules3.add(cycle);
         continue;
       }
+      if (HostBidPartnerMarker.decode(r.kind) case final p?) {
+        partners.add(p);
+        continue;
+      }
       final m = HostBidMarker.decode(r.kind);
       if (m == null) continue;
       (byNation[m.nationId] ??= {})[m.nationKey] = m.permille;
+    }
+    // A joint bid's partner rides on the lead beside the bid itself, and
+    // only once the bid is paid: a pledge alone is no part of the draw.
+    for (final p in partners) {
+      final bids = byNation[p.nationId];
+      if (bids == null ||
+          !bids.containsKey(HostBidding.nationKey(p.comp, p.editionCycle))) {
+        continue;
+      }
+      bids[HostBidding.partnerKey(p.comp, p.editionCycle)] = p.partnerId;
     }
     // A v2 marker rides on the manager's nation of its cycle (the latest
     // rules marker at or before it), else on the first nation: the host

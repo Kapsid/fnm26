@@ -12338,6 +12338,40 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Mitausrichter';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Bewirb dich gemeinsam mit einer anderen Nation deiner Konföderation. Die Stadien beider Nationen zählen, ein starker Nachbar stärkt die Bewerbung, und bei einem Sieg richten beide Nationen aus und sind automatisch qualifiziert. Der Zuschuss wird geteilt, dein Anteil ist also kleiner.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Deine Stadien reichen allein nicht aus. Wähle einen Mitausrichter für eine gemeinsame Bewerbung.';
+
+  @override
+  String get hostBidPartnerAlone => 'Allein bewerben';
+
+  @override
+  String get hostBidPartnerAgrees => 'Bereit zur gemeinsamen Ausrichtung';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Lehnt ab: bewirbt sich lieber allein.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Lehnt ab: zu weit entfernt für eine gemeinsame Bewerbung.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Lehnt ab: kann seinen Anteil diesmal nicht finanzieren.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Gewinnst du, richtest du gemeinsam mit $nation aus: Beide Nationen sind automatisch qualifiziert, und du erhältst einen einmaligen Zuschuss von $amount, deinen Anteil, für das nächste Budget.';
+  }
+
+  @override
   String get hostBidChance => 'Chance auf den Zuschlag';
 
   @override
@@ -12517,6 +12551,15 @@ class AppLocalizationsDe extends AppLocalizations {
       'Bewerbung eingereicht. Der Gastgeber wird zu Beginn des neuen Zyklus bekannt gegeben.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Gemeinsame Bewerbung mit $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Für eine Ausrichtung allein zu klein, aber eine gemeinsame Bewerbung mit einem Mitausrichter ist möglich.';
+
+  @override
   String get hostBidDeclinedNote =>
       'Sie haben diesmal auf eine Bewerbung verzichtet.';
 
@@ -12613,6 +12656,16 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Wir richten das Turnier aus und sind als Gastgeber automatisch qualifiziert. Eine einmalige Förderung von $amount ist bereits in den Mitteln des Verbands, bereit für das Budget dieses Zyklus.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts richten das Turnier gemeinsam aus, und wir sind als Gastgeber automatisch qualifiziert. Unser Anteil am Zuschuss, $amount, ist jetzt in den Mitteln des Verbands, und du kannst ihn direkt in der Zentrale den Abteilungen dieses Zyklus zuteilen.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts richten das Turnier gemeinsam aus, und wir sind als Gastgeber automatisch qualifiziert. Unser Anteil am Zuschuss, $amount, ist bereits in den Mitteln des Verbands und steht für das Budget dieses Zyklus bereit.';
   }
 
   @override

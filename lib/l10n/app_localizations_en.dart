@@ -12263,6 +12263,40 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Co-host';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Bid together with another nation of your confederation. Both nations\' stadiums count, a strong neighbour helps your case, and if you win both nations host and qualify automatically. The grant is shared, so your part is smaller.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Your stadiums fall short alone. Choose a co-host to bid jointly.';
+
+  @override
+  String get hostBidPartnerAlone => 'Bid alone';
+
+  @override
+  String get hostBidPartnerAgrees => 'Ready to co-host';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Declines: it would rather bid on its own.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Declines: too far away for a joint bid.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Declines: it can\'t fund its share this time.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Win, and you host together with $nation: both nations qualify automatically, and you receive a one-off grant of $amount, your share, for the next budget.';
+  }
+
+  @override
   String get hostBidChance => 'Chance to host';
 
   @override
@@ -12440,6 +12474,15 @@ class AppLocalizationsEn extends AppLocalizations {
       'Bid lodged. The host is announced as the new cycle begins.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Joint bid with $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Too small to host alone, but a joint bid with a co-host is open.';
+
+  @override
   String get hostBidDeclinedNote => 'You chose not to bid this time.';
 
   @override
@@ -12534,6 +12577,16 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'We will host the tournament and qualify automatically as hosts. A one-off grant of $amount is already in the federation\'s funds, ready for this cycle\'s budget.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts will host the tournament together, and we qualify automatically as hosts. Our share of the hosting grant, $amount, is now in the federation\'s funds, and you can assign it to this cycle\'s departments straight from the hub.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts will host the tournament together, and we qualify automatically as hosts. Our share of the hosting grant, $amount, is already in the federation\'s funds, ready for this cycle\'s budget.';
   }
 
   @override

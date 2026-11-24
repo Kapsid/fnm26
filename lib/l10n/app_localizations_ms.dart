@@ -12186,6 +12186,40 @@ class AppLocalizationsMs extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Tuan rumah bersama';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Buat bidaan bersama negara lain dalam konfederasi anda. Stadium kedua-dua negara dikira, jiran yang kuat menguatkan bidaan, dan jika menang kedua-dua negara menjadi tuan rumah dan layak secara automatik. Geran dikongsi, jadi bahagian anda lebih kecil.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Stadium anda tidak mencukupi secara sendirian. Pilih tuan rumah bersama untuk bidaan bersama.';
+
+  @override
+  String get hostBidPartnerAlone => 'Bida sendirian';
+
+  @override
+  String get hostBidPartnerAgrees => 'Sedia menjadi tuan rumah bersama';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Menolak: lebih suka membida sendirian.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Menolak: terlalu jauh untuk bidaan bersama.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Menolak: kali ini tidak mampu membiayai bahagiannya.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Jika menang, anda menjadi tuan rumah bersama $nation: kedua-dua negara layak secara automatik, dan anda menerima geran sekali sahaja sebanyak $amount, bahagian anda, untuk belanjawan seterusnya.';
+  }
+
+  @override
   String get hostBidChance => 'Peluang menjadi tuan rumah';
 
   @override
@@ -12364,6 +12398,15 @@ class AppLocalizationsMs extends AppLocalizations {
       'Bidaan dihantar. Tuan rumah diumumkan apabila kitaran baharu bermula.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Bidaan bersama $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Terlalu kecil untuk menjadi tuan rumah sendirian, tetapi bidaan bersama dengan tuan rumah bersama dibuka.';
+
+  @override
   String get hostBidDeclinedNote =>
       'Kali ini anda memilih untuk tidak membida.';
 
@@ -12454,6 +12497,16 @@ class AppLocalizationsMs extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Kita akan menjadi tuan rumah kejohanan dan layak secara automatik sebagai tuan rumah. Geran sekali bayar sebanyak $amount sudah masuk ke dana persekutuan, sedia untuk bajet kitaran ini.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts akan menjadi tuan rumah kejohanan bersama-sama, dan kita layak secara automatik sebagai tuan rumah. Bahagian geran kita, $amount, kini dalam dana persekutuan, dan anda boleh mengagihkannya kepada jabatan kitaran ini terus dari hab.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts akan menjadi tuan rumah kejohanan bersama-sama, dan kita layak secara automatik sebagai tuan rumah. Bahagian geran kita, $amount, sudah dalam dana persekutuan, sedia untuk belanjawan kitaran ini.';
   }
 
   @override

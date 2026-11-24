@@ -11795,6 +11795,36 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => '共同開催国';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      '同じ大陸連盟の別の国と共同で招致します。両国のスタジアムが数えられ、強い隣国は招致を後押しし、勝てば両国が開催国となり自動的に出場権を得ます。助成金は分け合うため、あなたの取り分は小さくなります。';
+
+  @override
+  String get hostBidPartnerNeeded => '単独ではスタジアムが足りません。共同開催国を選んで共同招致してください。';
+
+  @override
+  String get hostBidPartnerAlone => '単独で招致';
+
+  @override
+  String get hostBidPartnerAgrees => '共同開催に前向き';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid => '辞退:単独で招致したい意向です。';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar => '辞退:共同招致には遠すぎます。';
+
+  @override
+  String get hostBidPartnerDeclinesFunds => '辞退:今回は自国の負担分を用意できません。';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return '勝てば$nationと共同開催です。両国とも自動的に出場権を得て、次の予算に向けてあなたの取り分である$amountの一時助成金を受け取ります。';
+  }
+
+  @override
   String get hostBidChance => '開催の可能性';
 
   @override
@@ -11968,6 +11998,14 @@ class AppLocalizationsJa extends AppLocalizations {
   String get hostBidLodged => '招致を申請しました。開催国は新しいサイクルの開始時に発表されます。';
 
   @override
+  String hostBidJointWith(String nation) {
+    return '$nationとの共同招致。';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen => '単独開催には足りませんが、共同開催国との共同招致は可能です。';
+
+  @override
   String get hostBidDeclinedNote => '今回は招致を見送りました。';
 
   @override
@@ -12051,6 +12089,16 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return '大会を開催し、開催国として自動的に出場します。一時金$amountはすでに協会の資金に入っており、今サイクルの予算に使えます。';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hostsが共同で大会を開催し、私たちは開催国として自動的に出場権を得ます。助成金の私たちの取り分$amountはすでに連盟の資金に入っており、ハブから今サイクルの部門にすぐ割り当てられます。';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hostsが共同で大会を開催し、私たちは開催国として自動的に出場権を得ます。助成金の私たちの取り分$amountはすでに連盟の資金に入っており、今サイクルの予算に使えます。';
   }
 
   @override

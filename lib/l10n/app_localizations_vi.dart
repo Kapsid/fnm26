@@ -12110,6 +12110,40 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Đồng chủ nhà';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Cùng một quốc gia khác trong liên đoàn châu lục nộp hồ sơ. Sân vận động của cả hai đều được tính, một láng giềng mạnh giúp hồ sơ thuyết phục hơn, và nếu thắng cả hai cùng đăng cai và được tự động vượt qua vòng loại. Khoản tài trợ được chia sẻ nên phần của bạn nhỏ hơn.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Riêng sân vận động của bạn là chưa đủ. Hãy chọn một đồng chủ nhà để nộp hồ sơ chung.';
+
+  @override
+  String get hostBidPartnerAlone => 'Nộp hồ sơ một mình';
+
+  @override
+  String get hostBidPartnerAgrees => 'Sẵn sàng đồng đăng cai';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Từ chối: muốn tự nộp hồ sơ riêng.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Từ chối: quá xa cho một hồ sơ chung.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Từ chối: lần này không đủ kinh phí cho phần của mình.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Nếu thắng, bạn đăng cai cùng $nation: cả hai được tự động vượt qua vòng loại và bạn nhận khoản tài trợ một lần $amount, phần của bạn, cho ngân sách tới.';
+  }
+
+  @override
   String get hostBidChance => 'Cơ hội đăng cai';
 
   @override
@@ -12287,6 +12321,15 @@ class AppLocalizationsVi extends AppLocalizations {
       'Đã nộp hồ sơ. Nước chủ nhà được công bố khi chu kỳ mới bắt đầu.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Hồ sơ chung với $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Chưa đủ để đăng cai một mình, nhưng có thể nộp hồ sơ chung với một đồng chủ nhà.';
+
+  @override
   String get hostBidDeclinedNote => 'Lần này bạn đã chọn không ứng cử.';
 
   @override
@@ -12374,6 +12417,16 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Chúng ta sẽ đăng cai giải đấu và được tự động góp mặt với tư cách chủ nhà. Khoản hỗ trợ một lần $amount đã vào quỹ liên đoàn, sẵn sàng cho ngân sách chu kỳ này.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts sẽ cùng đăng cai giải đấu, và chúng ta được tự động vượt qua vòng loại với tư cách chủ nhà. Phần tài trợ của chúng ta, $amount, đã có trong quỹ liên đoàn, và bạn có thể phân bổ ngay cho các bộ phận của chu kỳ này từ màn hình chính.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts sẽ cùng đăng cai giải đấu, và chúng ta được tự động vượt qua vòng loại với tư cách chủ nhà. Phần tài trợ của chúng ta, $amount, đã có trong quỹ liên đoàn, sẵn sàng cho ngân sách của chu kỳ này.';
   }
 
   @override

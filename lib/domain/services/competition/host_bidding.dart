@@ -4,6 +4,8 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'dart:math';
 
+import 'package:fnm/core/rng/seeded_rng.dart';
+import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/competition/venues.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
@@ -110,11 +112,145 @@ class HostBidMarker {
   }
 }
 
+/// The co-host a joint bid names: written beside the pledge of a bid made
+/// with a partner, so a bid lodged alone (every bid of an older build) has
+/// none and is read exactly as before.
+///
+/// `hostBidPartner:<comp>:<editionCycle>:<nationId>:<partnerId>`
+///
+/// Its prefix is neither [HostBidMarker.prefix] nor
+/// [HostBidMarker.pledgePrefix], so no read of the bids ever sees one. It
+/// counts only beside a paid bid of the same nation and edition: the nation
+/// read attaches it to the lead's `Nation.hostBids` under
+/// [HostBidding.partnerKey] only then.
+class HostBidPartnerMarker {
+  const HostBidPartnerMarker({
+    required this.comp,
+    required this.editionCycle,
+    required this.nationId,
+    required this.partnerId,
+  });
+
+  static const String prefix = 'hostBidPartner:';
+
+  final HostBidComp comp;
+  final int editionCycle;
+
+  /// The manager's nation, which leads the bid.
+  final int nationId;
+
+  /// The co-host it bids with.
+  final int partnerId;
+
+  String encode() => '$prefix${comp.code}:$editionCycle:$nationId:$partnerId';
+
+  /// The partner marker [kind] names, or null for any other kind.
+  static HostBidPartnerMarker? decode(String kind) {
+    if (!kind.startsWith(prefix)) return null;
+    final parts = kind.substring(prefix.length).split(':');
+    if (parts.length != 4) return null;
+    final comp = HostBidComp.fromCode(parts[0]);
+    final nums = [for (final p in parts.skip(1)) int.tryParse(p)];
+    if (comp == null || nums.contains(null)) return null;
+    return HostBidPartnerMarker(
+      comp: comp,
+      editionCycle: nums[0]!,
+      nationId: nums[1]!,
+      partnerId: nums[2]!,
+    );
+  }
+
+  /// The partner [kinds] (a career's marker kinds) name for [nationId]'s bid
+  /// for [comp]'s [editionCycle], or null when it bids alone.
+  static int? partnerIn(
+    Iterable<String> kinds,
+    HostBidComp comp,
+    int editionCycle,
+    int nationId,
+  ) {
+    for (final k in kinds) {
+      final m = decode(k);
+      if (m != null &&
+          m.comp == comp &&
+          m.editionCycle == editionCycle &&
+          m.nationId == nationId) {
+        return m.partnerId;
+      }
+    }
+    return null;
+  }
+}
+
+/// Why a nation asked to co-host turns the manager down.
+enum CoHostDecline {
+  /// It is a stronger candidate on its own and would rather bid alone.
+  ownBid,
+
+  /// It is not a neighbour: a joint bid across the continent is a hard sell
+  /// at home.
+  tooFar,
+
+  /// Its federation cannot fund its share of the bid this time.
+  funds,
+}
+
+/// Whether a nation asked to co-host says yes. Deterministic on its own
+/// stream (never the world's), so asking twice gives the same answer and no
+/// other draw of the career moves.
+abstract final class CoHostAnswer {
+  /// The chance a nation stronger alone than the manager's prefers its own
+  /// bid.
+  static const double ownBidChance = 0.55;
+
+  /// The chance a nation outside the lead's subregion finds it too far.
+  static const double tooFarChance = 0.35;
+
+  /// The chance any partner's federation cannot fund its share.
+  static const double fundsChance = 0.12;
+
+  /// Null when [partnerId] agrees to co-host [leadId]'s bid for [comp]'s
+  /// [editionCycle], else why it declines. [leadToday] and [partnerToday]
+  /// are each one's chance in the ordinary draw; [neighbour] says whether
+  /// they share a subregion.
+  static CoHostDecline? of({
+    required int seed,
+    required HostBidComp comp,
+    required int editionCycle,
+    required int leadId,
+    required int partnerId,
+    required double leadToday,
+    required double partnerToday,
+    required bool neighbour,
+  }) {
+    final rng = SeededRng(
+      varietySeed(
+        'coHost:$seed:${comp.code}:$editionCycle:$leadId:$partnerId',
+      ),
+    );
+    // Three rolls, always drawn, so each reason reads its own number.
+    final own = rng.nextDouble();
+    final far = rng.nextDouble();
+    final funds = rng.nextDouble();
+    if (partnerToday > leadToday && own < ownBidChance) {
+      return CoHostDecline.ownBid;
+    }
+    if (!neighbour && far < tooFarChance) return CoHostDecline.tooFar;
+    if (funds < fundsChance) return CoHostDecline.funds;
+    return null;
+  }
+}
+
 /// The marker kinds around a bid, other than the bid itself.
 abstract final class HostBidding {
   /// `Nation.hostBids` key for an edition: `wc:<cycle>` / `cont:<cycle>`.
   static String nationKey(HostBidComp comp, int editionCycle) =>
       '${comp.code}:$editionCycle';
+
+  /// `Nation.hostBids` key carrying a joint bid's partner (its nation id) on
+  /// the lead nation: `wcp:<cycle>` / `contp:<cycle>`. Not a bid key (`wc:`
+  /// / `cont:`), so the bid read never takes it for one.
+  static String partnerKey(HostBidComp comp, int editionCycle) =>
+      '${comp.code}p:$editionCycle';
 
   /// Prefix of the host-rules markers. Its first letters are not
   /// [HostBidMarker.prefix], so no read of the bids ever sees one.
@@ -502,6 +638,56 @@ abstract final class HostBidOdds {
     final invest = (cap - base) * (1 - exp(-l / _levelScale));
     return (base: base, invest: invest, total: base + invest, cap: cap);
   }
+
+  /// How much a joint bid's partner moves the chance, either way: a strong
+  /// partner adds up to [_partnerSpan] / 2, a weak one takes as much away,
+  /// and a partner from outside the lead's subregion costs
+  /// [_distantPenalty] more (federations favour neighbours: shorter travel,
+  /// one region's fans).
+  static double partnerAppeal({
+    required int partnerRank,
+    required bool neighbour,
+  }) {
+    final strength = 1 - ((partnerRank - 1) / _partnerRankSpan).clamp(0.0, 1.0);
+    return _partnerSpan * strength -
+        _partnerSpan / 2 -
+        (neighbour ? 0 : _distantPenalty);
+  }
+
+  static const double _partnerSpan = 0.06;
+  static const double _partnerRankSpan = 60;
+  static const double _distantPenalty = 0.03;
+
+  /// The quote for a joint bid of [levels]: [quote] on [size], the size
+  /// score of BOTH nations' grounds together (see [sizeScore]), with the
+  /// partner's [partnerAppeal] on its base and its ceiling. Never above
+  /// [_capMax] either.
+  static HostBidQuote jointQuote({
+    required double size,
+    required double today,
+    required int levels,
+    required int partnerRank,
+    required bool neighbour,
+  }) {
+    final solo = quote(size: size, today: today, levels: 0);
+    final appeal = partnerAppeal(
+      partnerRank: partnerRank,
+      neighbour: neighbour,
+    );
+    final cap = (solo.cap + appeal).clamp(_baseFloor, _capMax);
+    final base = (solo.base + appeal).clamp(_baseFloor / 2, cap);
+    final l = levels.clamp(0, maxLevels);
+    final invest = (cap - base) * (1 - exp(-l / _levelScale));
+    return (base: base, invest: invest, total: base + invest, cap: cap);
+  }
+
+  /// The share of [bonusFor] a won joint bid pays the manager's
+  /// federation: the hosting is shared, so the grant is too.
+  static const int jointBonusPercent = 75;
+
+  /// The grant a won joint bid of [levels] pays the manager's federation.
+  static int jointBonusFor(int levels) =>
+      bonusFor(levels) * jointBonusPercent ~/ 100;
 
   /// The chance a bid stores, in permille: 1..999.
   static int permilleOf(HostBidQuote q) =>

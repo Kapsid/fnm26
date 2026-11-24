@@ -12513,6 +12513,40 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Співорганізатор';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Подавай заявку разом з іншою країною своєї конфедерації. Рахуються стадіони обох країн, сильний сусід підсилює заявку, а в разі перемоги обидві країни приймають турнір і кваліфікуються автоматично. Грант ділиться, тож твоя частка менша.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Твоїх стадіонів самих не досить. Обери співорганізатора для спільної заявки.';
+
+  @override
+  String get hostBidPartnerAlone => 'Подати заявку самостійно';
+
+  @override
+  String get hostBidPartnerAgrees => 'Готова до спільного проведення';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Відмовляє: воліє подати заявку самостійно.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Відмовляє: надто далеко для спільної заявки.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Відмовляє: цього разу не може профінансувати свою частку.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Переможеш, і приймеш турнір разом із $nation: обидві країни кваліфікуються автоматично, а ти отримаєш одноразовий грант $amount, свою частку, на наступний бюджет.';
+  }
+
+  @override
   String get hostBidChance => 'Шанс на проведення';
 
   @override
@@ -12691,6 +12725,15 @@ class AppLocalizationsUk extends AppLocalizations {
       'Заявку подано. Господаря оголосять на початку нового циклу.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Спільна заявка з $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Замало для самостійного проведення, але спільна заявка зі співорганізатором відкрита.';
+
+  @override
   String get hostBidDeclinedNote =>
       'Цього разу ви вирішили не подавати заявку.';
 
@@ -12780,6 +12823,16 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Ми приймемо турнір і як господарі автоматично беремо в ньому участь. Одноразова дотація $amount уже в коштах федерації і чекає на бюджет цього циклу.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts разом прийматимуть турнір, а ми як господарі кваліфікуємося автоматично. Наша частка гранту, $amount, уже у фондах федерації, і ти можеш розподілити її між відділами цього циклу просто з головного екрана.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts разом прийматимуть турнір, а ми як господарі кваліфікуємося автоматично. Наша частка гранту, $amount, уже у фондах федерації й чекає на бюджет цього циклу.';
   }
 
   @override

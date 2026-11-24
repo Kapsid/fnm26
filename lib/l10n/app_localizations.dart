@@ -18663,6 +18663,60 @@ abstract class AppLocalizations {
   /// **'Win, and you host, qualify automatically and receive a one-off grant of {amount} for the next budget.'**
   String hostBidPrize(String amount);
 
+  /// Host bid screen: heading of the co-host partner choice (a joint bid with another nation).
+  ///
+  /// In en, this message translates to:
+  /// **'Co-host'**
+  String get hostBidPartnerTitle;
+
+  /// Host bid screen: how a joint bid with a co-host works.
+  ///
+  /// In en, this message translates to:
+  /// **'Bid together with another nation of your confederation. Both nations\' stadiums count, a strong neighbour helps your case, and if you win both nations host and qualify automatically. The grant is shared, so your part is smaller.'**
+  String get hostBidPartnerBlurb;
+
+  /// Host bid screen: the nation's stadiums are too small alone; a joint bid is the only way to bid.
+  ///
+  /// In en, this message translates to:
+  /// **'Your stadiums fall short alone. Choose a co-host to bid jointly.'**
+  String get hostBidPartnerNeeded;
+
+  /// Host bid screen: option to bid without a co-host.
+  ///
+  /// In en, this message translates to:
+  /// **'Bid alone'**
+  String get hostBidPartnerAlone;
+
+  /// Host bid screen: under a candidate co-host nation, it agrees to bid jointly.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to co-host'**
+  String get hostBidPartnerAgrees;
+
+  /// Host bid screen: under a candidate co-host nation, it declines because it prefers its own bid.
+  ///
+  /// In en, this message translates to:
+  /// **'Declines: it would rather bid on its own.'**
+  String get hostBidPartnerDeclinesOwnBid;
+
+  /// Host bid screen: under a candidate co-host nation, it declines because it is not a neighbour.
+  ///
+  /// In en, this message translates to:
+  /// **'Declines: too far away for a joint bid.'**
+  String get hostBidPartnerDeclinesTooFar;
+
+  /// Host bid screen: under a candidate co-host nation, it declines because it cannot fund its share.
+  ///
+  /// In en, this message translates to:
+  /// **'Declines: it can\'t fund its share this time.'**
+  String get hostBidPartnerDeclinesFunds;
+
+  /// Host bid screen: what winning a joint bid brings. nation is the co-host, amount is money like €7M (the manager's share of the grant).
+  ///
+  /// In en, this message translates to:
+  /// **'Win, and you host together with {nation}: both nations qualify automatically, and you receive a one-off grant of {amount}, your share, for the next budget.'**
+  String hostBidPrizeJoint(String nation, String amount);
+
   /// Host bid screen: label above the chance bar.
   ///
   /// In en, this message translates to:
@@ -18939,6 +18993,18 @@ abstract class AppLocalizations {
   /// **'Bid lodged. The host is announced as the new cycle begins.'**
   String get hostBidLodged;
 
+  /// Hosting-bids card: the lodged bid is a joint one with this co-host nation.
+  ///
+  /// In en, this message translates to:
+  /// **'Joint bid with {nation}.'**
+  String hostBidJointWith(String nation);
+
+  /// Hosting-bids card: the nation's stadiums are too small to host alone, but it can bid jointly with a co-host.
+  ///
+  /// In en, this message translates to:
+  /// **'Too small to host alone, but a joint bid with a co-host is open.'**
+  String get hostBidJointOnlyOpen;
+
   /// Hosting-bids card: the manager turned this bid down.
   ///
   /// In en, this message translates to:
@@ -19049,6 +19115,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We will host the tournament and qualify automatically as hosts. A one-off grant of {amount} is already in the federation\'s funds, ready for this cycle\'s budget.'**
   String hostBidWonBodyBudget(String amount);
+
+  /// Inbox body: our joint host bid won; hosts are both host nations joined by &; amount is our share of the grant.
+  ///
+  /// In en, this message translates to:
+  /// **'{hosts} will host the tournament together, and we qualify automatically as hosts. Our share of the hosting grant, {amount}, is now in the federation\'s funds, and you can assign it to this cycle\'s departments straight from the hub.'**
+  String hostBidWonJointBody(String hosts, String amount);
+
+  /// News body: a joint hosting bid decided at the start of a new cycle was won; hosts are both host nations joined by &; amount is our share of the grant.
+  ///
+  /// In en, this message translates to:
+  /// **'{hosts} will host the tournament together, and we qualify automatically as hosts. Our share of the hosting grant, {amount}, is already in the federation\'s funds, ready for this cycle\'s budget.'**
+  String hostBidWonJointBodyBudget(String hosts, String amount);
 
   /// End-of-cycle income card row: the national stadiums' income.
   ///

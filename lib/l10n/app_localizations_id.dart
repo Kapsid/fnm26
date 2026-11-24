@@ -12138,6 +12138,40 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Tuan rumah bersama';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Ajukan tawaran bersama negara lain di konfederasimu. Stadion kedua negara dihitung, tetangga yang kuat memperkuat tawaranmu, dan jika menang kedua negara menjadi tuan rumah dan lolos otomatis. Hibahnya dibagi, jadi bagianmu lebih kecil.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Stadionmu tidak cukup sendirian. Pilih tuan rumah bersama untuk tawaran gabungan.';
+
+  @override
+  String get hostBidPartnerAlone => 'Ajukan sendiri';
+
+  @override
+  String get hostBidPartnerAgrees => 'Siap menjadi tuan rumah bersama';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Menolak: lebih memilih mengajukan sendiri.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Menolak: terlalu jauh untuk tawaran gabungan.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Menolak: kali ini tidak sanggup mendanai bagiannya.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Jika menang, kamu menjadi tuan rumah bersama $nation: kedua negara lolos otomatis, dan kamu menerima hibah satu kali sebesar $amount, bagianmu, untuk anggaran berikutnya.';
+  }
+
+  @override
   String get hostBidChance => 'Peluang menjadi tuan rumah';
 
   @override
@@ -12317,6 +12351,15 @@ class AppLocalizationsId extends AppLocalizations {
       'Pencalonan diajukan. Tuan rumah diumumkan saat siklus baru dimulai.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Tawaran gabungan dengan $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Terlalu kecil untuk menjadi tuan rumah sendiri, tetapi tawaran gabungan dengan tuan rumah bersama terbuka.';
+
+  @override
   String get hostBidDeclinedNote =>
       'Kali ini Anda memilih tidak mencalonkan diri.';
 
@@ -12406,6 +12449,16 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Kita akan menjadi tuan rumah dan otomatis lolos sebagai tuan rumah. Dana hibah sekali bayar sebesar $amount sudah masuk ke dana federasi, siap untuk anggaran siklus ini.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts akan menjadi tuan rumah turnamen bersama, dan kita lolos otomatis sebagai tuan rumah. Bagian hibah kita, $amount, kini ada di dana federasi, dan kamu bisa langsung membaginya ke departemen siklus ini dari beranda.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts akan menjadi tuan rumah turnamen bersama, dan kita lolos otomatis sebagai tuan rumah. Bagian hibah kita, $amount, sudah ada di dana federasi, siap untuk anggaran siklus ini.';
   }
 
   @override

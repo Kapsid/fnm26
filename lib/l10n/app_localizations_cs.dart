@@ -12611,6 +12611,40 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Spolupořadatel';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Kandidujte společně s jiným státem své konfederace. Počítají se stadiony obou zemí, silný soused vaší kandidatuře pomůže a při výhře pořádají obě země a obě postupují automaticky. Dotace se dělí, takže váš díl je menší.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Vaše stadiony samy nestačí. Vyberte spolupořadatele a kandidujte společně.';
+
+  @override
+  String get hostBidPartnerAlone => 'Kandidovat sami';
+
+  @override
+  String get hostBidPartnerAgrees => 'Je připraven spolupořádat';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Odmítá: raději bude kandidovat sám.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Odmítá: na společnou kandidaturu je příliš daleko.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Odmítá: tentokrát nemá na svůj podíl peníze.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Když vyhrajete, budete pořádat společně se zemí $nation: obě země postoupí automaticky a dostanete jednorázový příspěvek $amount, svůj podíl, do příštího rozpočtu.';
+  }
+
+  @override
   String get hostBidChance => 'Šance na pořadatelství';
 
   @override
@@ -12789,6 +12823,15 @@ class AppLocalizationsCs extends AppLocalizations {
       'Kandidatura podána. Pořadatel bude oznámen se začátkem nového cyklu.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Společná kandidatura se zemí $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Na samostatné pořadatelství je to málo, ale společná kandidatura se spolupořadatelem je otevřená.';
+
+  @override
   String get hostBidDeclinedNote => 'Tentokrát jste se rozhodli nekandidovat.';
 
   @override
@@ -12877,6 +12920,16 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Turnaj uspořádáme a jako pořadatel máme jistou účast. Jednorázová dotace $amount už je v prostředcích svazu a čeká na rozpočet tohoto cyklu.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return 'Turnaj společně uspořádají $hosts a jako pořadatel máme jistou účast. Náš podíl na dotaci, $amount, je nyní v prostředcích svazu a můžete jej rovnou z přehledu rozdělit mezi oddělení tohoto cyklu.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return 'Turnaj společně uspořádají $hosts a jako pořadatel máme jistou účast. Náš podíl na dotaci, $amount, už je v prostředcích svazu a čeká na rozpočet tohoto cyklu.';
   }
 
   @override

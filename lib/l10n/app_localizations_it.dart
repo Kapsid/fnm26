@@ -12298,6 +12298,40 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Co-organizzatore';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Candidati insieme a un\'altra nazione della tua confederazione. Contano gli stadi di entrambe, un vicino forte rafforza la candidatura e, se vinci, organizzano entrambe le nazioni e si qualificano di diritto. Il contributo è condiviso, quindi la tua parte è più piccola.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Da soli i tuoi stadi non bastano. Scegli un co-organizzatore per una candidatura congiunta.';
+
+  @override
+  String get hostBidPartnerAlone => 'Candidatura da soli';
+
+  @override
+  String get hostBidPartnerAgrees => 'Pronto a co-organizzare';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Rifiuta: preferisce candidarsi da solo.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Rifiuta: troppo lontano per una candidatura congiunta.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Rifiuta: questa volta non può finanziare la sua parte.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Se vinci, organizzi insieme a $nation: entrambe le nazioni si qualificano di diritto e ricevi un contributo una tantum di $amount, la tua parte, per il prossimo budget.';
+  }
+
+  @override
   String get hostBidChance => 'Probabilità di ospitare';
 
   @override
@@ -12476,6 +12510,15 @@ class AppLocalizationsIt extends AppLocalizations {
       'Candidatura presentata. Il paese ospitante viene annunciato all\'inizio del nuovo ciclo.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Candidatura congiunta con $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Troppo piccoli per organizzare da soli, ma è aperta una candidatura congiunta con un co-organizzatore.';
+
+  @override
   String get hostBidDeclinedNote =>
       'Questa volta hai scelto di non candidarti.';
 
@@ -12571,6 +12614,16 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Ospiteremo il torneo e siamo qualificati di diritto come paese ospitante. Un contributo una tantum di $amount è già nei fondi della federazione, pronto per il budget di questo ciclo.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts organizzeranno insieme il torneo e ci qualifichiamo di diritto come paese ospitante. La nostra parte del contributo, $amount, è ora nei fondi della federazione e puoi assegnarla ai reparti di questo ciclo direttamente dalla home.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts organizzeranno insieme il torneo e ci qualifichiamo di diritto come paese ospitante. La nostra parte del contributo, $amount, è già nei fondi della federazione, pronta per il budget di questo ciclo.';
   }
 
   @override

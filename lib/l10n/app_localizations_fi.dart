@@ -12309,6 +12309,40 @@ class AppLocalizationsFi extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Kanssajärjestäjä';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Hae yhdessä toisen oman maanosaliittosi maan kanssa. Molempien maiden stadionit lasketaan, vahva naapuri vahvistaa hakemusta, ja voittaessanne molemmat maat isännöivät ja pääsevät suoraan mukaan. Avustus jaetaan, joten osuutesi on pienempi.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Stadionisi eivät yksin riitä. Valitse kanssajärjestäjä yhteishakemusta varten.';
+
+  @override
+  String get hostBidPartnerAlone => 'Hae yksin';
+
+  @override
+  String get hostBidPartnerAgrees => 'Valmis järjestämään yhdessä';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Kieltäytyy: hakee mieluummin yksin.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Kieltäytyy: liian kaukana yhteishakemukseen.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Kieltäytyy: ei pysty rahoittamaan osuuttaan tällä kertaa.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Jos voitat, isännöit yhdessä maan $nation kanssa: molemmat maat pääsevät suoraan mukaan, ja saat seuraavaan budjettiin kertaluonteisen $amount avustuksen, oman osuutesi.';
+  }
+
+  @override
   String get hostBidChance => 'Mahdollisuus isännyyteen';
 
   @override
@@ -12485,6 +12519,15 @@ class AppLocalizationsFi extends AppLocalizations {
       'Haku jätetty. Isäntä julkistetaan uuden kauden alkaessa.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Yhteishakemus maan $nation kanssa.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Liian vähän isännöintiin yksin, mutta yhteishakemus kanssajärjestäjän kanssa on mahdollinen.';
+
+  @override
   String get hostBidDeclinedNote => 'Päätit olla hakematta tällä kertaa.';
 
   @override
@@ -12572,6 +12615,16 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Isännöimme turnauksen ja pääsemme isäntänä suoraan mukaan. $amount kertaluonteinen tuki on jo liiton varoissa ja valmiina tämän kauden budjettiin.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts isännöivät turnauksen yhdessä, ja pääsemme isäntänä suoraan mukaan. Osuutemme avustuksesta, $amount, on nyt liiton varoissa, ja voit jakaa sen tämän syklin osastoille suoraan etusivulta.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts isännöivät turnauksen yhdessä, ja pääsemme isäntänä suoraan mukaan. Osuutemme avustuksesta, $amount, on jo liiton varoissa valmiina tämän syklin budjettiin.';
   }
 
   @override

@@ -11826,6 +11826,37 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => '공동 개최국';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      '같은 대륙 연맹의 다른 나라와 함께 유치 신청을 합니다. 두 나라의 경기장이 모두 반영되고, 강한 이웃은 유치 경쟁력을 높이며, 이기면 두 나라가 함께 개최하고 자동으로 본선에 진출합니다. 지원금은 나누므로 내 몫은 줄어듭니다.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      '단독으로는 경기장이 부족합니다. 공동 개최국을 골라 공동 유치를 신청하세요.';
+
+  @override
+  String get hostBidPartnerAlone => '단독 유치';
+
+  @override
+  String get hostBidPartnerAgrees => '공동 개최 의향 있음';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid => '거절: 단독 유치를 원합니다.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar => '거절: 공동 유치를 하기에는 너무 멉니다.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds => '거절: 이번에는 자국 부담분을 마련할 수 없습니다.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return '이기면 $nation와 공동 개최합니다. 두 나라 모두 자동으로 본선에 진출하고, 다음 예산에 쓸 내 몫인 $amount의 일회성 지원금을 받습니다.';
+  }
+
+  @override
   String get hostBidChance => '개최 확률';
 
   @override
@@ -11999,6 +12030,14 @@ class AppLocalizationsKo extends AppLocalizations {
   String get hostBidLodged => '유치 신청 완료. 개최국은 새 주기가 시작될 때 발표됩니다.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return '$nation와 공동 유치.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen => '단독 개최에는 부족하지만 공동 개최국과의 공동 유치는 가능합니다.';
+
+  @override
   String get hostBidDeclinedNote => '이번에는 유치를 신청하지 않기로 했습니다.';
 
   @override
@@ -12083,6 +12122,16 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return '우리가 대회를 개최하며 개최국으로서 자동 출전합니다. 일회성 지원금 $amount 전액이 이미 협회 자금에 들어와 이번 주기 예산에 쓸 수 있습니다.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts가 함께 대회를 개최하며, 우리는 개최국으로서 자동으로 본선에 진출합니다. 지원금 중 우리 몫인 $amount가 이제 협회 자금에 들어왔고, 허브에서 바로 이번 주기의 부서에 배정할 수 있습니다.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts가 함께 대회를 개최하며, 우리는 개최국으로서 자동으로 본선에 진출합니다. 지원금 중 우리 몫인 $amount가 이미 협회 자금에 들어와 이번 주기 예산에 쓸 수 있습니다.';
   }
 
   @override

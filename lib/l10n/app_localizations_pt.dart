@@ -12328,6 +12328,40 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get hostBidPartnerTitle => 'Coanfitrião';
+
+  @override
+  String get hostBidPartnerBlurb =>
+      'Candidate-se em conjunto com outra seleção da sua confederação. Contam os estádios das duas, um vizinho forte reforça a candidatura e, se vencer, as duas organizam e classificam-se automaticamente. O apoio é dividido, por isso a sua parte é menor.';
+
+  @override
+  String get hostBidPartnerNeeded =>
+      'Os seus estádios não chegam sozinhos. Escolha um coanfitrião para uma candidatura conjunta.';
+
+  @override
+  String get hostBidPartnerAlone => 'Candidatar-se sozinho';
+
+  @override
+  String get hostBidPartnerAgrees => 'Pronto para coorganizar';
+
+  @override
+  String get hostBidPartnerDeclinesOwnBid =>
+      'Recusa: prefere candidatar-se sozinho.';
+
+  @override
+  String get hostBidPartnerDeclinesTooFar =>
+      'Recusa: longe demais para uma candidatura conjunta.';
+
+  @override
+  String get hostBidPartnerDeclinesFunds =>
+      'Recusa: desta vez não consegue financiar a sua parte.';
+
+  @override
+  String hostBidPrizeJoint(String nation, String amount) {
+    return 'Se vencer, organiza em conjunto com $nation: as duas seleções classificam-se automaticamente e recebe um apoio único de $amount, a sua parte, para o próximo orçamento.';
+  }
+
+  @override
   String get hostBidChance => 'Chance de ser sede';
 
   @override
@@ -12505,6 +12539,15 @@ class AppLocalizationsPt extends AppLocalizations {
       'Candidatura apresentada. A sede é anunciada quando começa o novo ciclo.';
 
   @override
+  String hostBidJointWith(String nation) {
+    return 'Candidatura conjunta com $nation.';
+  }
+
+  @override
+  String get hostBidJointOnlyOpen =>
+      'Pequeno demais para organizar sozinho, mas há uma candidatura conjunta com um coanfitrião em aberto.';
+
+  @override
   String get hostBidDeclinedNote => 'Desta vez optou por não se candidatar.';
 
   @override
@@ -12600,6 +12643,16 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String hostBidWonBodyBudget(String amount) {
     return 'Vamos receber o torneio e estamos qualificados automaticamente como anfitriões. Um apoio único de $amount já está nos fundos da federação, pronto para o orçamento deste ciclo.';
+  }
+
+  @override
+  String hostBidWonJointBody(String hosts, String amount) {
+    return '$hosts vão organizar o torneio em conjunto, e estamos classificados automaticamente como anfitriões. A nossa parte do apoio, $amount, já está nos fundos da federação e pode atribuí-la aos departamentos deste ciclo diretamente a partir do início.';
+  }
+
+  @override
+  String hostBidWonJointBodyBudget(String hosts, String amount) {
+    return '$hosts vão organizar o torneio em conjunto, e estamos classificados automaticamente como anfitriões. A nossa parte do apoio, $amount, já está nos fundos da federação, pronta para o orçamento deste ciclo.';
   }
 
   @override

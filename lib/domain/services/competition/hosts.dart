@@ -53,6 +53,11 @@ typedef ContBidStanding = ({
   bool previousSlotHost,
 });
 
+/// A bid the manager's federation lodged, as the host draw reads it: the
+/// bidding nation, the chance it froze, and the co-host of a joint bid (null
+/// for a bid made alone).
+typedef _Lodged = ({int nationId, double chance, int? partner});
+
 /// One host decision of the chain (see [WorldCupHosts._chainTo]): the
 /// candidatures as the ceremony shows them, and the winning bid.
 class _Draw {
@@ -341,6 +346,13 @@ abstract final class WorldCupHosts {
         final eligible =
             lodgedC != null &&
             _contEligible(lodgedC.nationId, nations, conf, exclude);
+        final jointOk =
+            eligible &&
+            _partnerEligible(
+              lodgedC,
+              nations,
+              (id) => _contEligible(id, nations, conf, exclude),
+            );
         final hosts = bids.isEmpty
             ? const <int>[]
             : _decide(
@@ -348,6 +360,7 @@ abstract final class WorldCupHosts {
                 _contSeed(conf, c, seed),
                 lodgedC,
                 eligible: eligible,
+                partnerEligible: jointOk,
               );
         final settled = bars == null
             ? null
@@ -362,7 +375,12 @@ abstract final class WorldCupHosts {
                 seed,
               );
         contDraws[conf] = _Draw(
-          bids: _withLodged(bids, lodgedC, eligible: eligible),
+          bids: _withLodged(
+            bids,
+            lodgedC,
+            eligible: eligible,
+            partnerEligible: jointOk,
+          ),
           hosts: hosts,
           plan: settled?.plan,
           broken: settled?.broken ?? const {},
@@ -420,6 +438,13 @@ abstract final class WorldCupHosts {
       final wcEligible =
           lodgedW != null &&
           _wcEligible(lodgedW.nationId, nations, usedBarred, usedExclude);
+      final wcJointOk =
+          wcEligible &&
+          _partnerEligible(
+            lodgedW,
+            nations,
+            (id) => _wcEligible(id, nations, usedBarred, usedExclude),
+          );
       final List<int> wcHosts;
       if (wcBids.isEmpty) {
         final all = [...nations]
@@ -432,6 +457,7 @@ abstract final class WorldCupHosts {
           _wcSeed(year, seed),
           lodgedW,
           eligible: wcEligible,
+          partnerEligible: wcJointOk,
         );
       }
       final wcSettled = wcBars == null
@@ -446,7 +472,12 @@ abstract final class WorldCupHosts {
             );
       chain.wc.add(
         _Draw(
-          bids: _withLodged(wcBids, lodgedW, eligible: wcEligible),
+          bids: _withLodged(
+            wcBids,
+            lodgedW,
+            eligible: wcEligible,
+            partnerEligible: wcJointOk,
+          ),
           hosts: wcHosts,
           plan: wcSettled?.plan,
           broken: wcSettled?.broken ?? const {},
@@ -1062,18 +1093,24 @@ abstract final class WorldCupHosts {
   /// Salt for the second roll a lodged bid gets (see [_decide]).
   static const int _bidRollSalt = 0xB1D5EED;
 
-  /// The bid the manager's federation lodged for the edition [key] names, read
+  /// The bid the manager's federation lodged for [comp]'s [cycle], read
   /// off the nation carrying it (see `Nation.hostBids`), or null — always null
   /// outside a career that bid, so every draw below is then exactly the draw
   /// it always was.
-  static ({int nationId, double chance})? _lodged(
+  static _Lodged? _lodged(
     List<Nation> nations,
-    String key,
+    HostBidComp comp,
+    int cycle,
   ) {
+    final key = HostBidding.nationKey(comp, cycle);
     for (final n in nations) {
       final p = n.hostBids[key];
       if (p != null && p > 0 && p < 1000) {
-        return (nationId: n.id, chance: p / 1000);
+        return (
+          nationId: n.id,
+          chance: p / 1000,
+          partner: n.hostBids[HostBidding.partnerKey(comp, cycle)],
+        );
       }
     }
     return null;
@@ -1104,39 +1141,100 @@ abstract final class WorldCupHosts {
   ///
   /// A bidder not on the ballot stands alone; one already in a joint
   /// candidature wins with its partners.
+  ///
+  /// A joint bid (the lodged bid names a partner, and [partnerEligible]) is
+  /// drawn the same way over the ballot [_jointBallot] makes of [bids]: the
+  /// bidder and its partner stand together in the bidder's place, and the
+  /// partner leaves the bid it stood in. Only a career that made a joint bid
+  /// ever takes this path, so every other draw is exactly as it was.
   static HostBid _decide(
     List<HostBid> bids,
     int seed,
-    ({int nationId, double chance})? lodged, {
+    _Lodged? lodged, {
     required bool eligible,
+    bool partnerEligible = false,
   }) {
-    final drawn = _pickBid(bids, seed);
-    if (lodged == null || !eligible) return drawn;
+    if (lodged == null || !eligible) return _pickBid(bids, seed);
     final id = lodged.nationId;
+    final partner = partnerEligible ? lodged.partner : null;
+    final ballot = partner == null ? bids : _jointBallot(bids, id, partner);
+    final drawn = _pickBid(ballot, seed);
     if (drawn.contains(id)) return drawn;
-    final p0 = _shareOf(bids, id);
+    final p0 = _shareOf(ballot, id);
     if (lodged.chance <= p0 || p0 >= 1) return drawn;
     final q = (lodged.chance - p0) / (1 - p0);
     if (SeededRng(seed ^ _bidRollSalt).nextDouble() >= q) return drawn;
-    for (final b in bids) {
+    for (final b in ballot) {
       if (b.contains(id)) return b;
     }
-    return [id];
+    return partner == null ? [id] : [id, partner];
+  }
+
+  /// [bids] with [lead] and [partner] standing as one joint bid: in the
+  /// place of the bid [lead] stood in (its other partners stand down), or at
+  /// the bottom when [lead] was not on the ballot. [partner] leaves the bid
+  /// it stood in, which stays on the ballot without it unless it was alone.
+  static List<HostBid> _jointBallot(List<HostBid> bids, int lead, int partner) {
+    final joint = <int>[lead, partner];
+    final out = <HostBid>[];
+    var placed = false;
+    for (final b in bids) {
+      if (b.contains(lead)) {
+        if (!placed) out.add(joint);
+        placed = true;
+        continue;
+      }
+      if (b.contains(partner)) {
+        final rest = [
+          for (final id in b)
+            if (id != partner) id,
+        ];
+        if (rest.isNotEmpty) out.add(rest);
+        continue;
+      }
+      out.add(b);
+    }
+    if (!placed) out.add(joint);
+    return out;
   }
 
   /// [bids] as the ceremony shows them: with an eligible bidder that is not on
-  /// the ballot added at the bottom, standing alone.
+  /// the ballot added at the bottom, standing alone, and a joint bid (when
+  /// [partnerEligible]) standing as [_jointBallot] places it.
   static List<HostBid> _withLodged(
     List<HostBid> bids,
-    ({int nationId, double chance})? lodged, {
+    _Lodged? lodged, {
     required bool eligible,
+    bool partnerEligible = false,
   }) {
     if (lodged == null || !eligible) return bids;
+    if (partnerEligible && lodged.partner != null) {
+      return _jointBallot(bids, lodged.nationId, lodged.partner!);
+    }
     if (bids.any((b) => b.contains(lodged.nationId))) return bids;
     return [
       ...bids,
       [lodged.nationId],
     ];
+  }
+
+  /// Whether a joint bid's partner may co-host [lodged]'s edition: another
+  /// nation of the bidder's confederation, standing under the same
+  /// exclusions ([mayStand]) as the bidder.
+  static bool _partnerEligible(
+    _Lodged? lodged,
+    List<Nation> nations,
+    bool Function(int id) mayStand,
+  ) {
+    final p = lodged?.partner;
+    if (lodged == null || p == null || p == lodged.nationId) return false;
+    Confederation? leadConf;
+    Confederation? partnerConf;
+    for (final n in nations) {
+      if (n.id == lodged.nationId) leadConf = n.confederation;
+      if (n.id == p) partnerConf = n.confederation;
+    }
+    return leadConf != null && leadConf == partnerConf && mayStand(p);
   }
 
   /// The edition cycle of the World Cup in [year], or null for a year that is
@@ -1147,16 +1245,13 @@ abstract final class WorldCupHosts {
   }
 
   /// The bid lodged for the World Cup in [year], if any.
-  static ({int nationId, double chance})? _lodgedWc(
+  static _Lodged? _lodgedWc(
     int year,
     List<Nation> nations,
   ) {
     final c = _wcCycleOf(year);
     if (c == null) return null;
-    return _lodged(
-      nations,
-      HostBidding.nationKey(HostBidComp.worldChampionship, c),
-    );
+    return _lodged(nations, HostBidComp.worldChampionship, c);
   }
 
   /// Whether [nationId] may stand for the World Cup under the two exclusions.
@@ -1464,10 +1559,10 @@ abstract final class WorldCupHosts {
   /// The bid lodged for the continental championship of [cycle], if any. Each
   /// career bids only for its own confederation's, so the nation carrying it
   /// says which.
-  static ({int nationId, double chance})? _lodgedCont(
+  static _Lodged? _lodgedCont(
     int cycle,
     List<Nation> nations,
-  ) => _lodged(nations, HostBidding.nationKey(HostBidComp.continental, cycle));
+  ) => _lodged(nations, HostBidComp.continental, cycle);
 
   /// Whether [nationId] may stand for [confederation]'s championship.
   static bool _contEligible(
