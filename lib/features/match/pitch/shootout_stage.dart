@@ -43,6 +43,10 @@ abstract interface class ShootoutView implements Listenable {
 
   /// The two sides' keepers and every shirt number.
   ShootoutCast get cast;
+
+  /// A penalty in the match that stays live: where the parried ball (or
+  /// the one off the post) goes out to. Null for a shootout's kicks.
+  ShootoutSpill? get spill;
 }
 
 /// Runs a shootout's kicks on a ticker. Repaints its listeners every frame.
@@ -86,6 +90,8 @@ class ShootoutStageController extends ChangeNotifier implements ShootoutView {
   double get seconds => _seconds;
   @override
   StagedShootoutKick? get kick => _index < kicks.length ? kicks[_index] : null;
+  @override
+  ShootoutSpill? get spill => null;
   bool get running => _ticker.isActive;
 
   /// Plays the kicks from [index] on, each from its start.
@@ -182,6 +188,9 @@ class PenaltyCloseUp extends ChangeNotifier implements ShootoutView {
   StagedShootoutKick? get kick => _on?.kick;
 
   @override
+  ShootoutSpill? get spill => _on?.spill;
+
+  @override
   double get seconds => _seconds;
 
   @override
@@ -255,7 +264,7 @@ class ShootoutPainter extends CustomPainter {
     final cast = stage.cast;
     final k = kick.kick;
     final s = stage.seconds;
-    final f = ShootoutStaging.frameAt(kick, s);
+    final f = ShootoutStaging.frameAt(kick, s, spill: stage.spill);
     final light = lightAt(minute);
     final night = light.flood;
     final w = size.width;
