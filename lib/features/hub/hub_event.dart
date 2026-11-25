@@ -1324,31 +1324,28 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
     //     manager must reshape the side THEMSELVES before the match. Without
     //     this, the preview quietly auto-filled the gap with a best XI, so a
     //     ban or injury never actually cost the manager a decision.
-    final tactic = await ref
-        .watch(tacticsRepositoryProvider)
-        .tacticForCareer(careerId);
-    final lineupIds = (tactic?.lineup ?? const <int?>[])
+    //     Read from the same data the tactics screen shows, so every player
+    //     it counts out is one the screen flags OUT: counted from the raw
+    //     absences over the saved XI, a starter the screen did not list (one
+    //     outside the squad, or out of the pool) sent the manager to a
+    //     lineup with nobody marked, and the event never went away.
+    final data = await ref.watch(tacticDataProvider(careerId).future);
+    final lineupIds = (data?.tactic.lineup ?? const <int?>[])
         .whereType<int>()
         .toList();
-    if (lineupIds.isNotEmpty) {
-      final absences = await ref
-          .watch(absenceRepositoryProvider)
-          .forCareer(careerId);
-      final out = lineupIds
-          .where((id) => !(absences[id]?.isAvailable ?? true))
-          .length;
+    if (data != null && lineupIds.isNotEmpty) {
+      final out = data.unavailableStarters.length;
+      // A name the pool cannot resolve at all is drawn as an empty place.
+      final named = lineupIds.where(data.byId.containsKey).length;
       // Short is only a decision while a fit man could fill the gap. With ten
       // fit men named (allowed: a man banned for one game of a three-match
       // camp still counts at the call-up), no reshape makes eleven, and
       // asking for one sent the manager back to tactics for ever.
       var full = 11;
-      if (out == 0 && lineupIds.length < full) {
-        final fit = (await ref.watch(
-          tacticDataProvider(careerId).future,
-        ))?.pool.length;
-        if (fit != null && fit < full) full = fit;
+      if (out == 0 && named < full && data.pool.length < full) {
+        full = data.pool.length;
       }
-      if (out > 0 || lineupIds.length < full) {
+      if (out > 0 || named < full) {
         return HubEvent(
           kind: HubEventKind.callUp,
           label: l.hubEventReshapeXi,
@@ -1356,7 +1353,7 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
           route: '${Routes.tactics}?careerId=$careerId',
           subtitle: out > 0
               ? l.hubEventReshapeOutSub(out)
-              : l.hubEventReshapeShortSub(full - lineupIds.length),
+              : l.hubEventReshapeShortSub(full - named),
         );
       }
     }

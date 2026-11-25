@@ -145,4 +145,38 @@ void main() {
     await settle(tester);
     expect(find.text(enL.hubEventReshapeXi), findsNothing);
   });
+
+  // "The game tells me to adjust my starting XI because a player is
+  // suspended, but on the lineup screen nobody is marked suspended." The
+  // saved XI still named a banned man the squad no longer held: the hub
+  // counted him out, the lineup screen listed only the squad's absentees.
+  testWidgets('a banned starter outside the squad is named on the lineup', (
+    tester,
+  ) async {
+    final save = await seedSave(tester);
+    late String bannedName;
+    final fixAt = await banAStarter(tester, save);
+    await tester.runAsync(() async {
+      final c = save.container;
+      final sub = c.listen(tacticDataProvider(save.careerId).future, (_, _) {});
+      final data = (await sub.read())!;
+      sub.close();
+      final bannedId = data.tactic.lineup[fixAt.slot]!;
+      bannedName = data.byId[bannedId]!.name;
+      // The squad without him, the saved XI unchanged.
+      final squad = {
+        for (final p in data.byId.values)
+          if (p.id != bannedId) p.id,
+      };
+      await c.read(squadRepositoryProvider).setCallUps(save.careerId, squad);
+    });
+    await pumpRoute(tester, save, '${Routes.hub}?careerId=${save.careerId}');
+    expect(find.text(enL.hubEventReshapeXi), findsOneWidget);
+    save.container
+        .read(routerProvider)
+        .go('${Routes.tactics}?careerId=${save.careerId}');
+    await settle(tester);
+    expect(find.text(enL.tacticsReplaceStarters(1)), findsOneWidget);
+    expect(find.textContaining(bannedName), findsWidgets);
+  });
 }

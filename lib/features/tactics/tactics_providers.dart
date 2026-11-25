@@ -175,16 +175,25 @@ tacticDataProvider = FutureProvider.autoDispose.family<TacticData?, int>((
       : stored;
   final called = availableSquad(fullPool, callUps);
   final pool = selectable(called, absences);
+  // Resolve over the full pool so the XI renders even if a player was just
+  // dropped from the squad (the squad service repairs the lineup on save).
+  final byId = {for (final p in fullPool) p.id: p};
+  final calledIds = {for (final p in called) p.id};
+  bool out(Player p) => !(absences[p.id]?.isAvailable ?? true);
   return TacticData(
     tactic: tactic,
     pool: pool,
-    // Resolve over the full pool so the XI renders even if a player was just
-    // dropped from the squad (the squad service repairs the lineup on save).
-    byId: {for (final p in fullPool) p.id: p},
+    byId: byId,
     absences: absences,
-    unavailable: called
-        .where((p) => !(absences[p.id]?.isAvailable ?? true))
-        .toList(),
+    // The squad's banned and injured, and any banned or injured starter the
+    // saved XI still names from outside it: the hub asks for the XI to be
+    // reshaped over every one of them, so every one is flagged here.
+    unavailable: [
+      ...called.where(out),
+      for (final id in {...tactic.lineup.whereType<int>()})
+        if (!calledIds.contains(id))
+          if (byId[id] case final p? when out(p)) p,
+    ],
   );
 });
 
