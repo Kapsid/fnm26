@@ -545,8 +545,8 @@ void main() {
       expect(theirWc.barredConfederation, Confederation.europe);
     });
 
-    test('c) a campaign keeps its designed world: no rules marker, the hosts '
-        'the old rules gave it', () async {
+    test('c) a campaign run follows the current rules and the stadium bars '
+        'from its first cycle, and its nation hosts nothing', () async {
       SharedPreferences.setMockInitialValues(<String, Object>{});
       final db = createTestDatabase();
       final c = ProviderContainer(
@@ -564,21 +564,35 @@ void main() {
           .read(campaignServiceProvider)
           .start(def, managerName: 'M');
       final comp = c.read(competitionRepositoryProvider);
-      final rules = [
-        for (final r in await comp.watchedKindsWithPrefix(
-          HostBidding.rulesPrefix,
-        ))
-          if (r.careerId == career.id) r.kind,
-      ];
-      expect(rules, isEmpty);
+      for (final kind in [
+        HostBidding.rulesKind(0, def.nationId),
+        HostBidding.rules2Kind(0),
+        HostBidding.rules3Kind(0),
+      ]) {
+        expect(
+          await comp.hasWatchedDraw(career.id, 0, kind),
+          isTrue,
+          reason: kind,
+        );
+      }
+      expect(
+        await comp.hasWatchedDraw(career.id, 0, HostBidding.rules2OffKind),
+        isFalse,
+      );
       final world = await c.read(nationRepositoryProvider).forCareer(career.id);
+      expect(WorldCupHosts.isV2(0, world), isTrue);
       expect(
         WorldCupHosts.hostsFor(year: 2030, nations: world, seed: def.rngSeed),
-        LegacyWorldCupHosts.hostsFor(
+        isNot(contains(def.nationId)),
+      );
+      // Its tournaments are staged only in grounds that reach their bars.
+      expect(
+        WorldCupHosts.worldCupGroundPlan(
           year: 2030,
           nations: world,
           seed: def.rngSeed,
         ),
+        isNotNull,
       );
     });
   });

@@ -104,8 +104,11 @@ extension SeasonRollover on SeasonService {
       if (await _comp.hasWatchedDraw(careerId, next, cycleBankedKind)) return;
       // The new cycle's hosts are decided now, under the current rules, for
       // the nation the manager takes into it (see `HostBidding.rulesKind`).
-      // A campaign run keeps the rules its seed was searched under.
-      if (campaign == null) {
+      // A campaign run keeps the rules its seed was searched under: the
+      // current rules and the stadium bars when it was started under them
+      // (it holds the bars' marker at cycle 0), else the older ones.
+      if (campaign == null ||
+          await _comp.hasWatchedDraw(careerId, 0, HostBidding.rules2Kind(0))) {
         await _comp.markDrawWatched(
           careerId,
           next,

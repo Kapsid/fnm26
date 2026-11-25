@@ -756,10 +756,14 @@ class CampaignService {
           // 1.0.6 ranking keep that one: their snapshot already holds it, or
           // the seed loader freezes it.
           freezeStartingRanks: true,
-          // A run's world is the one its seed was searched on: its hosts are
-          // drawn as they were before the stadium bars, or the curated
-          // groups and paths move (see campaign_seeds_test).
-          stadiumHostRules: false,
+          // Its hosts follow the current rules and the stadium bars, as an
+          // ordinary career's: no tournament is handed to a nation whose
+          // grounds cannot stage it. The run's nation never hosts (a run
+          // offers no host bid), and the seeds were searched under these
+          // rules (see campaign_seeds_test). A run started before them keeps
+          // the rules it was made under (no marker at cycle 0).
+          currentHostRules: true,
+          stadiumHostRules: true,
           // A custom database, when one was chosen: its squads and names,
           // never its ranking (create keeps a run's designed one).
           worldPackId: worldPackId,

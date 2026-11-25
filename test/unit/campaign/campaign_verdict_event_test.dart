@@ -53,13 +53,8 @@ void main() {
         // (CampaignDef.withBelarus), or the two calendars part ways and the
         // comparison means nothing.
         newCareerNations: Campaigns.grudge.withBelarus,
-        // A campaign run's hosts: drawn without the stadium bars, and on
-        // the rules its seed was searched under (the manager's nation may
-        // host unbid): with the current rules the two worlds stage the
-        // World Championship in different countries, and the qualifying
-        // pools part ways.
-        currentHostRules: false,
-        stadiumHostRules: false,
+        // A campaign run's hosts follow the current rules and the stadium
+        // bars, as an ordinary career's do.
       );
       // Less the general sponsor's stops: a campaign run has no sponsor (it
       // is played on the money it was set), and declining one changes

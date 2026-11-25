@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/campaign/campaigns.dart';
+import 'package:fnm/domain/services/competition/host_bidding.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -60,6 +61,16 @@ void main() {
       (await c.read(activeCampaignProvider(d.careerId).future))?.def.id,
       'guineas',
     );
+    // Its second cycle's hosts follow the current rules and the stadium
+    // bars too, as its first cycle's did.
+    final comp = c.read(competitionRepositoryProvider);
+    for (final kind in [
+      HostBidding.rulesKind(1, Campaigns.guineas.nationId),
+      HostBidding.rules2Kind(1),
+      HostBidding.rules3Kind(1),
+    ]) {
+      expect(await comp.hasWatchedDraw(d.careerId, 1, kind), isTrue);
+    }
 
     // The end of the second, and last: the verdict, then the list.
     await decideWorldChampionship(c, d.careerId);

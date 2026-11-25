@@ -9,6 +9,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/campaign/campaigns.dart';
+import 'package:fnm/domain/services/competition/host_bidding.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
@@ -68,15 +69,33 @@ List<List<int>> qualifyingGroups(
 /// The world a run of [def] started now is drawn from: the seed's nations,
 /// its dormant nation in place of the one it replaces, and Belarus for a
 /// European scenario ([CampaignDef.withBelarus]), as an ordinary career has.
-List<Nation> campaignWorld(CampaignDef def, List<Nation> nations) =>
-    DormantNations.worldFrom(
-      nations,
-      {
-        if (def.withBelarus) DormantNations.belarusId,
-        ?def.dormantNationId,
-      },
-      dormant: (id) => DormantNations.all.firstWhere((n) => n.id == id),
-    );
+///
+/// A run's hosts follow the current rules and the stadium bars (the lighter
+/// ones) in every cycle: the markers its creation and rollovers stamp, on
+/// the run's nation.
+List<Nation> campaignWorld(CampaignDef def, List<Nation> nations) => [
+  for (final n in DormantNations.worldFrom(
+    nations,
+    {
+      if (def.withBelarus) DormantNations.belarusId,
+      ?def.dormantNationId,
+    },
+    dormant: (id) => DormantNations.all.firstWhere((n) => n.id == id),
+  ))
+    if (n.id == def.nationId)
+      n.copyWith(
+        hostBids: {
+          ...n.hostBids,
+          for (var c = 0; c < def.cycles + 1; c++) ...{
+            HostBidding.managerKey(c): 1,
+            HostBidding.rules2Key(c): 1,
+            HostBidding.rules3Key(c): 1,
+          },
+        },
+      )
+    else
+      n,
+];
 
 void main() {
   // A new campaign run starts on the current starting ranking, the one in
@@ -109,7 +128,7 @@ void main() {
         confederation: Confederation.africa,
         cycle: cycle,
         seed: def.rngSeed,
-        nations: nations,
+        nations: campaignWorld(def, nations),
       );
       expect(hosts, isNot(contains(def.nationId)), reason: 'cycle $cycle');
     }
@@ -153,7 +172,7 @@ void main() {
     const def = Campaigns.guineas;
     final groups = qualifyingGroups(
       def.rngSeed,
-      nations,
+      campaignWorld(def, nations),
       Confederation.africa,
     );
     expect(
@@ -197,7 +216,7 @@ void main() {
                   nationId: 19,
                   managerName: 'M',
                   rngSeed: Campaigns.grudge.rngSeed,
-                  stadiumHostRules: false,
+                  currentHostRules: true,
                   newCareerNations: Campaigns.grudge.withBelarus,
                 ))
             .valueOrNull!;
@@ -256,7 +275,8 @@ void main() {
                   nationId: def.nationId,
                   managerName: 'M',
                   rngSeed: def.rngSeed,
-                  stadiumHostRules: false,
+                  currentHostRules: true,
+                  newCareerNations: def.withBelarus,
                 ))
             .valueOrNull!;
     final tables = await c
@@ -278,7 +298,7 @@ void main() {
     final rebuilt = [
       for (final g in qualifyingGroups(
         def.rngSeed,
-        nations,
+        campaignWorld(def, nations),
         Confederation.africa,
       ))
         [...g]..sort(),
@@ -338,7 +358,7 @@ void main() {
                     nationId: def.nationId,
                     managerName: 'M',
                     rngSeed: def.rngSeed,
-                    stadiumHostRules: false,
+                    currentHostRules: true,
                     worldMarkers: [DormantNations.markerFor(212)],
                     // A run's world: Belarus in, as for every European run.
                     newCareerNations: def.withBelarus,
@@ -369,11 +389,7 @@ void main() {
   group('Zanzibar', () {
     const def = Campaigns.zanzibar;
     // Its world: Chad out, Zanzibar in (what forCareer gives the run).
-    final world = DormantNations.worldFrom(
-      nations,
-      {DormantNations.zanzibarId},
-      dormant: (_) => DormantNations.zanzibar,
-    );
+    final world = campaignWorld(def, nations);
 
     test('seed 213 keeps Zanzibar from hosting either championship in all '
         '25 cycles of its century', () {
@@ -421,7 +437,8 @@ void main() {
                     nationId: def.nationId,
                     managerName: 'M',
                     rngSeed: def.rngSeed,
-                    stadiumHostRules: false,
+                    currentHostRules: true,
+                    newCareerNations: def.withBelarus,
                     worldMarkers: [DormantNations.markerFor(213)],
                   ))
               .valueOrNull!;
@@ -606,7 +623,7 @@ void main() {
                     nationId: def.nationId,
                     managerName: 'M',
                     rngSeed: def.rngSeed,
-                    stadiumHostRules: false,
+                    currentHostRules: true,
                     worldMarkers: [DormantNations.markerFor(216)],
                   ))
               .valueOrNull!;
