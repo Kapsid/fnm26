@@ -411,7 +411,7 @@ class ConferenceService {
               minAge: PlayerLifecycle.callUpMinAge,
               includeIntlRetired: true,
             ) +
-        await naturalizedPlayersFor(_ref, career);
+        await naturalizedPlayersFor(_ref, career, includeIntlRetired: true);
     final names = {
       for (final p in pool)
         if (ids.contains(p.id)) p.id: p.name,

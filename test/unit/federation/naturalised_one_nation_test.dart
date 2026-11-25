@@ -10,6 +10,7 @@ import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
+import 'package:fnm/domain/services/player/international_retirement.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
@@ -17,6 +18,7 @@ import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/nations/nation_now_providers.dart';
 import 'package:fnm/features/tactics/nation_squad_providers.dart';
+import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../helpers/test_database.dart';
@@ -113,6 +115,49 @@ void main() {
     final next = (await comp.nextFixtureForNation(career.id, _sanMarino))!;
     expect(next.awayNationId, _italy, reason: 'the friendly must come first');
   }
+
+  test(
+    'a naturalised player who retires internationally is not called up',
+    () async {
+      // A report: a man announced his international retirement and was still
+      // in the call-up list. The wave counts naturalised men, but their path
+      // into the pool only checked retirement from football.
+      await naturaliseItalysBest();
+      final ref = c.read(_refProvider);
+      expect(
+        (await naturalizedPlayersFor(ref, career)).map((p) => p.id),
+        contains(star.id),
+      );
+      final years = CareerService.agingYears(career);
+      await c.read(internationalRetirementRepositoryProvider).addMarkers(
+        career.id,
+        career.cyclePointer,
+        [
+          InternationalRetirement.retiredKind(
+            star.id,
+            years,
+            career.inGameDate,
+            nationId: _sanMarino,
+          ),
+        ],
+      );
+      expect(
+        (await naturalizedPlayersFor(ref, career)).map((p) => p.id),
+        isNot(contains(star.id)),
+      );
+      final squad = await c.read(squadDataProvider(career.id).future);
+      expect(squad!.pool.map((p) => p.id), isNot(contains(star.id)));
+      // Readers that want the retired too (names in old news) still get him.
+      expect(
+        (await naturalizedPlayersFor(
+          ref,
+          career,
+          includeIntlRetired: true,
+        )).map((p) => p.id),
+        contains(star.id),
+      );
+    },
+  );
 
   test('a naturalised player leaves the pool of the nation he left', () async {
     await naturaliseItalysBest();
