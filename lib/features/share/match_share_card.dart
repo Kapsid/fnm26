@@ -163,16 +163,49 @@ class MatchShareCard extends StatelessWidget {
             children: [
               _Header(data: data, story: story, accent: accent),
               SizedBox(height: story ? 28 : 22),
-              const Spacer(),
-              _Scoreline(data: data, story: story, accent: accent),
-              SizedBox(height: story ? 32 : 26),
-              if (data.goals.isNotEmpty) _Scorers(data: data, story: story),
-              const Spacer(),
+              // The score and the scorers share the room between the header
+              // and the footer, centred in it as the two spacers around them
+              // used to. The scorers keep their size while they fit and are
+              // scaled down when they would not: a long list, a long name
+              // wrapping, and a header and footer both full, used to push the
+              // footer off the card.
+              Expanded(
+                child: LayoutBuilder(
+                  builder: (context, box) => Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _Scoreline(data: data, story: story, accent: accent),
+                      if (data.goals.isNotEmpty) ...[
+                        SizedBox(height: story ? 32 : 26),
+                        Flexible(
+                          child: LayoutBuilder(
+                            builder: (context, room) => FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.topCenter,
+                              child: SizedBox(
+                                width: box.maxWidth,
+                                child: _Scorers(
+                                  data: data,
+                                  story: story,
+                                  maxHeight: room.maxHeight,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
               SizedBox(height: story ? 28 : 18),
               if (data.star != null ||
                   data.homePossession != null ||
                   data.homeShots != null)
-                _Footer(data: data, story: story),
+                // More than three scorers a side: a story's footer is set
+                // as the square's (the same width), side by side, for the
+                // scorers' room.
+                _Footer(data: data, story: story && _mostScorers(data) <= 3),
               SizedBox(height: story ? 44 : 22),
               ShareWatermark(format: format),
               SizedBox(height: story ? 0 : 34),
@@ -425,54 +458,127 @@ class _PensPill extends StatelessWidget {
   );
 }
 
+/// The most distinct scorers either side has.
+int _mostScorers(MatchShareData data) {
+  final home = {
+    for (final g in data.goals)
+      if (g.home) g.scorer,
+  };
+  final away = {
+    for (final g in data.goals)
+      if (!g.home) g.scorer,
+  };
+  return home.length > away.length ? home.length : away.length;
+}
+
 /// Each side's scorers under its own flag: a name, then every minute he
 /// scored in.
+///
+/// Every goal is on the card, however many. A scorer a row while the rows
+/// fit [maxHeight]; past that, each side's scorers run on as one wrapped
+/// line (a 6-0 on a story card with its footer full, say), and only past
+/// that is the block scaled down. It used to stop at the fourth scorer, so a
+/// 0-6 showed four of the six goals.
 class _Scorers extends StatelessWidget {
-  const _Scorers({required this.data, required this.story});
+  const _Scorers({
+    required this.data,
+    required this.story,
+    required this.maxHeight,
+  });
 
   final MatchShareData data;
   final bool story;
 
+  /// The height the block may take.
+  final double maxHeight;
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final maxRows = story ? 6 : 4;
     String minute(ShareGoal g) => g.penalty
         ? '${g.minuteLabel} ${l.matchGoalPenalty}'
         : g.ownGoal
         ? '${g.minuteLabel} ${l.matchGoalOwnGoal}'
         : g.minuteLabel;
-    List<Widget> column({required bool home}) {
+    List<(String, String)> scorersOf({required bool home}) {
       final byScorer = <String, List<ShareGoal>>{};
       for (final g in data.goals.where((g) => g.home == home)) {
         byScorer.putIfAbsent(g.scorer, () => []).add(g);
       }
-      final rows = byScorer.entries.toList();
       return [
-        for (final e in rows.take(maxRows))
+        for (final e in byScorer.entries)
+          (e.key, e.value.map(minute).join(', ')),
+      ];
+    }
+
+    final sides = (home: scorersOf(home: true), away: scorersOf(home: false));
+    final rows = sides.home.length > sides.away.length
+        ? sides.home.length
+        : sides.away.length;
+    // Four rows a side at full size (six on a story); more are set smaller.
+    final compact = rows > (story ? 6 : 4);
+    final nameSize = story ? (compact ? 25.0 : 29.0) : (compact ? 20.0 : 24.0);
+    final minuteSize = story
+        ? (compact ? 21.0 : 24.0)
+        : (compact ? 17.0 : 20.0);
+    final gap = story ? (compact ? 8.0 : 12.0) : (compact ? 4.0 : 8.0);
+    // One line a row (a long name may wrap to a second, which the scaling
+    // around it absorbs). The rows are kept while they would be scaled to no
+    // less than three quarters; past that they run on.
+    final runOn = rows * (nameSize * 1.25 + gap) * 0.75 > maxHeight;
+
+    final nameStyle = AppTypography.titleMedium.copyWith(
+      fontSize: nameSize,
+      height: 1.25,
+      color: AppColors.onSurface,
+    );
+    TextSpan minutes(String text) => TextSpan(
+      text: text,
+      style: AppTypography.labelMedium.copyWith(
+        fontSize: minuteSize,
+        color: AppColors.outline,
+      ),
+    );
+
+    List<Widget> column({required bool home}) {
+      final mine = home ? sides.home : sides.away;
+      if (mine.isEmpty) return const [];
+      final align = home ? TextAlign.right : TextAlign.left;
+      if (runOn) {
+        return [
+          Text.rich(
+            TextSpan(
+              children: [
+                for (var i = 0; i < mine.length; i++) ...[
+                  if (i > 0) minutes('  ·  '),
+                  // A scorer and his minutes never split over two lines.
+                  TextSpan(text: mine[i].$1.replaceAll(' ', '\u00A0')),
+                  minutes(
+                    '\u00A0\u00A0${mine[i].$2.replaceAll(' ', '\u00A0')}',
+                  ),
+                ],
+              ],
+            ),
+            textAlign: align,
+            style: nameStyle,
+          ),
+        ];
+      }
+      return [
+        for (final (name, mins) in mine)
           Padding(
-            padding: EdgeInsets.only(bottom: story ? 12 : 8),
+            padding: EdgeInsets.only(bottom: gap),
             child: Text.rich(
               TextSpan(
                 children: [
-                  TextSpan(text: e.key),
-                  TextSpan(
-                    text: '  ${e.value.map(minute).join(', ')}',
-                    style: AppTypography.labelMedium.copyWith(
-                      fontSize: story ? 24 : 20,
-                      color: AppColors.outline,
-                    ),
-                  ),
+                  TextSpan(text: name),
+                  minutes('  $mins'),
                 ],
               ),
-              textAlign: home ? TextAlign.right : TextAlign.left,
+              textAlign: align,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: AppTypography.titleMedium.copyWith(
-                fontSize: story ? 29 : 24,
-                height: 1.25,
-                color: AppColors.onSurface,
-              ),
+              style: nameStyle,
             ),
           ),
       ];

@@ -418,6 +418,61 @@ void main() {
     expect(pngSize(png!), (1080, 1080));
   });
 
+  // A 0-6 shared as a square card listed four of the six scorers: every goal
+  // must be on the card, in either format, however many there are.
+  for (final format in ShareFormat.values) {
+    for (final count in [6, 9]) {
+      testWidgets('${format.name}: all $count away scorers are on the card', (
+        tester,
+      ) async {
+        final size = format == ShareFormat.square
+            ? const Size(1080, 1080)
+            : const Size(1080, 1920);
+        tester.view.physicalSize = size;
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+        final names = [for (var i = 0; i < count; i++) 'Scorer Number$i'];
+        await tester.pumpWidget(
+          app(
+            MatchShareCard(
+              format: format,
+              data: MatchShareData(
+                home: const ShareSide(
+                  name: 'Czechia',
+                  code: 'CZE',
+                  color: Color(0xFFD7141A),
+                  goals: 0,
+                ),
+                away: ShareSide(
+                  name: 'Brazil',
+                  code: 'BRA',
+                  color: const Color(0xFFFEDD00),
+                  goals: count,
+                ),
+                competition: 'World Championship',
+                dateLabel: '19 July 2030',
+                goals: [
+                  for (var i = 0; i < count; i++)
+                    ShareGoal(
+                      scorer: names[i],
+                      minute: 10 + i * 8,
+                      home: false,
+                      penalty: i == 0,
+                    ),
+                ],
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+        for (final n in names) {
+          expect(find.textContaining(n), findsOneWidget, reason: n);
+        }
+      });
+    }
+  }
+
   testWidgets('the full-time bar has Share beside Continue', (tester) async {
     tester.view
       ..physicalSize = const Size(400, 900)
