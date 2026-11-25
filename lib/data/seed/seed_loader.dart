@@ -32,39 +32,7 @@ class SeedLoader {
   /// found the table populated and looked fine). The seed batch now uses
   /// `insertOrIgnore`, so a duplicate row from a concurrent seeder is skipped
   /// rather than throwing the whole insert away — the race resolves silently.
-  ///
-  /// The work runs once per database and source: every later call (there
-  /// are dozens per screen) shares the first call's future and answers
-  /// `false`, since it seeded nothing itself. A failed run is forgotten, so
-  /// the next call tries again; a new database (a restore restarts the app
-  /// on a fresh connection) starts afresh; [invalidate] forces a re-run on
-  /// the same one.
-  Future<bool> ensureSeeded() {
-    final done = _completed[_db];
-    if (done != null && identical(done.source, _source)) {
-      return done.run.then((_) => false);
-    }
-    final run = _ensureSeeded();
-    _completed[_db] = (source: _source, run: run);
-    run.then<void>(
-      (_) {},
-      onError: (Object _) {
-        // Only forget this run: a newer one may have replaced it since.
-        if (identical(_completed[_db]?.run, run)) _completed[_db] = null;
-      },
-    );
-    return run;
-  }
-
-  /// The [ensureSeeded] run each database has had, and for which source.
-  static final Expando<({SeedSource source, Future<bool> run})> _completed =
-      Expando();
-
-  /// Makes the next [ensureSeeded] on [db] run the reconcile again, for a
-  /// writer that changes [db]'s nations or players behind the loader's back.
-  static void invalidate(AppDatabase db) => _completed[db] = null;
-
-  Future<bool> _ensureSeeded() async {
+  Future<bool> ensureSeeded() async {
     final existing = await (_db.select(
       _db.nations,
     )..limit(1)).getSingleOrNull();
@@ -100,10 +68,6 @@ class SeedLoader {
         );
     });
     await _ensureDormant();
-    // What the next call used to do on finding the table full: confirm the
-    // starting ranking matches the source (it does, just inserted), so
-    // [rankingReconciled] holds for the rest of the launch as before.
-    await _reconcileRanking();
     return true;
   }
 
