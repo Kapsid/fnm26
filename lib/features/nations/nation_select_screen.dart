@@ -395,10 +395,11 @@ class _PickBar extends StatelessWidget {
     final l = AppLocalizations.of(context);
     final s = strength;
     final p = star;
+    // The rank and overall, then the star on a line of his own: on one
+    // line a long name ("Christian Pulisic") was cut to "Christian Puli…".
     final facts = [
       '#${nation.ranking}',
       if (s != null) '${l.teamOverall} ${s.overall}',
-      if (p != null) '${p.name} ${p.overall}',
     ].join(' · ');
     return DecoratedBox(
       key: NationSelectScreen.previewKey,
@@ -452,6 +453,29 @@ class _PickBar extends StatelessWidget {
                             color: AppColors.outline,
                           ),
                         ),
+                        if (p != null) ...[
+                          const SizedBox(height: 2),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.star_rounded,
+                                size: 14,
+                                color: AppColors.primary,
+                              ),
+                              const SizedBox(width: 4),
+                              Flexible(
+                                child: Text(
+                                  '${p.name} ${p.overall}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTypography.labelSmall.copyWith(
+                                    color: AppColors.outline,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ],
                     ),
                   ),

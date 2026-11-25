@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
@@ -83,5 +84,41 @@ void main() {
 
     expect(find.text('Germany'), findsOneWidget);
     expect(find.text('France'), findsNothing);
+  });
+
+  // The bar under a picked nation ran the rank, the overall and the star on
+  // one line, so a long name was cut ("Christian Puli…"). The star has a
+  // line of his own now.
+  testWidgets('the picked bar shows a long star name whole on a phone', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(360, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final star = player(
+      id: 102,
+      nationId: 2,
+      name: 'Maximilian Featherstonehaugh',
+    );
+    await tester.pumpApp(
+      const NationSelectScreen(),
+      overrides: [
+        nationsProvider.overrideWith((ref) async => nations),
+        newGameStarPlayersProvider.overrideWith((ref, _) async => {2: star}),
+        newGameStrengthsProvider.overrideWith(
+          (ref, _) async => {2: (overall: 78, tier: 5, best: star)},
+        ),
+      ],
+    );
+    await tester.pump();
+    await tester.tap(find.byKey(NationSelectScreen.tileKey(2)));
+    await tester.pump();
+    final line = find.text('${star.name} ${star.overall}');
+    expect(line, findsOneWidget);
+    final paragraph = tester.renderObject<RenderParagraph>(
+      find.descendant(of: line, matching: find.byType(RichText)),
+    );
+    expect(paragraph.didExceedMaxLines, isFalse);
+    expect(tester.takeException(), isNull);
   });
 }
