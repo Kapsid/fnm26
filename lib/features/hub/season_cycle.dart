@@ -621,15 +621,7 @@ extension SeasonCycle on SeasonService {
     if (tiers.isNotEmpty && tables.isNotEmpty) {
       tiers = NationsCup.promoteRelegate(
         tiers: tiers,
-        groups: [
-          for (final t in tables)
-            if (t.standings.length >= 2)
-              (
-                tier: NationsCup.tierOfGroupName(t.name),
-                winner: t.standings.first,
-                bottom: t.standings.last,
-              ),
-        ],
+        groups: NationsCup.ladderGroupsOf(tables),
       );
       final confOf = {
         for (final n in (await _nationsById(careerId)).values)

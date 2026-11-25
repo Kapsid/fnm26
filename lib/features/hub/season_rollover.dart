@@ -203,15 +203,7 @@ extension SeasonRollover on SeasonService {
           edition: Calendar2.gradedEdition(conf, calendar2: closingCal2),
         );
         if (ncTables.isEmpty) continue;
-        final groups = [
-          for (final t in ncTables)
-            if (t.standings.length >= 2)
-              (
-                tier: NationsCup.tierOfGroupName(t.name),
-                winner: t.standings.first,
-                bottom: t.standings.last,
-              ),
-        ];
+        final groups = NationsCup.ladderGroupsOf(ncTables);
         ncTiers = NationsCup.promoteRelegate(tiers: ncTiers, groups: groups);
         moved = true;
       }

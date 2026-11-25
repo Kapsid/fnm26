@@ -4,6 +4,7 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
+import 'package:fnm/domain/services/competition/cross_group.dart';
 import 'package:fnm/domain/entities/nation.dart';
 
 /// One finished league group, as the ladder reads it: which league it belongs
@@ -225,15 +226,52 @@ abstract final class NationsCup {
   /// [ladderUndecided] straight from a confederation's group tables.
   static Set<int> ladderUndecidedOf(
     Iterable<({String name, List<GroupStanding> standings})> tables,
-  ) => ladderUndecided([
-    for (final t in tables)
-      if (t.standings.length >= 2)
+  ) => ladderUndecided(ladderGroupsOf(tables));
+
+  /// The [LadderGroup]s of a confederation's group [tables], as
+  /// [promoteRelegate] and [ladderUndecided] compare them.
+  ///
+  /// The group winners of a league are compared across its groups, and a
+  /// league's groups are not always the same size: North America's League B
+  /// holds nineteen, four groups of four and one of three. Compared on raw
+  /// points, the three-team group's winner (four matches) could never catch a
+  /// four-team group's (six), and so almost never went up. So, as every
+  /// cross-group ladder does ([CrossGroup]), a winner in a bigger group is
+  /// judged without his results against the sides finishing below the
+  /// smallest group's last place: every winner over the same matches. The
+  /// bottom sides are compared as they stand: uneven groups only ever happen
+  /// in a confederation's lowest league (the remainder), which relegates no
+  /// one.
+  static List<LadderGroup> ladderGroupsOf(
+    Iterable<({String name, List<GroupStanding> standings})> tables,
+  ) {
+    final played = [
+      for (final t in tables)
+        if (t.standings.length >= 2) t,
+    ];
+    final byTier =
+        <int, List<({String name, List<GroupStanding> standings})>>{};
+    for (final t in played) {
+      (byTier[tierOfGroupName(t.name)] ??= []).add(t);
+    }
+    final fairWinner = <String, GroupStanding>{};
+    for (final league in byTier.values) {
+      final adjusted = CrossGroup.comparable([
+        for (final t in league) t.standings,
+      ]);
+      for (var i = 0; i < league.length; i++) {
+        fairWinner[league[i].name] = adjusted[i].first;
+      }
+    }
+    return [
+      for (final t in played)
         (
           tier: tierOfGroupName(t.name),
-          winner: t.standings.first,
+          winner: fairWinner[t.name] ?? t.standings.first,
           bottom: t.standings.last,
         ),
-  ]);
+    ];
+  }
 
   /// Orders two rows best-first: points, then goal difference, then goals.
   static int _strongerFirst(GroupStanding a, GroupStanding b) {

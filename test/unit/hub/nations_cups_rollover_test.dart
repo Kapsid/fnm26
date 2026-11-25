@@ -89,17 +89,11 @@ void main() {
           CompetitionKind.nationsLeague,
           confederation: conf,
         );
+    // Every winner compared over the same matches (League B's groups are
+    // uneven in North America), as the rollover compares them.
     return NationsCup.promoteRelegate(
       tiers: tiers,
-      groups: [
-        for (final t in tables)
-          if (t.standings.length >= 2)
-            (
-              tier: NationsCup.tierOfGroupName(t.name),
-              winner: t.standings.first,
-              bottom: t.standings.last,
-            ),
-      ],
+      groups: NationsCup.ladderGroupsOf(tables),
     );
   }
 
