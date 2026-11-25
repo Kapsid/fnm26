@@ -135,13 +135,13 @@ void main() {
     expect(mine.single.standings.length, greaterThanOrEqualTo(5));
     expect(mine.single.standings.map((s) => s.nationId), isNot(contains(usa)));
 
-    // On day one Texas stands on its own rank, between Costa Rica and
-    // Honduras, not at the foot of the table where Anguilla stood.
+    // On day one Texas stands on its own rank, between Honduras and
+    // Jamaica, not at the foot of the table where Anguilla stood.
     final ranking = (await c.read(worldRankingProvider(id).future))!;
     expect(ranking.nations, hasLength(base.length));
     final at = ranking.nations.indexWhere((n) => n.id == texas);
-    expect(at, greaterThan(ranking.nations.indexWhere((n) => n.id == 76)));
-    expect(at, lessThan(ranking.nations.indexWhere((n) => n.id == 86)));
+    expect(at, greaterThan(ranking.nations.indexWhere((n) => n.id == 86)));
+    expect(at, lessThan(ranking.nations.indexWhere((n) => n.id == 87)));
     expect(at, lessThan(base.indexWhere((n) => n.id == anguilla)));
 
     // The default XI is Texas's own.
