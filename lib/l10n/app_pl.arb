@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "NA RAZIE · {result}",
   "boardObjectivesEmpty": "Zarząd nie wyznaczył celu na ten cykl.",
   "tourContBestWinners": "NAJLEPSI ZWYCIĘZCY GRUP",
+  "tourNcWinnersUp": "Awans do Dywizji {league}: czołowe {count}",
   "tourContBestThirds": "NAJLEPSZE TRZECIE DRUŻYNY",
   "tourContBestPlaced": "NAJLEPSZE DRUŻYNY Z {position}. MIEJSC",
   "squadDevPageOf": "{page}/{pages} · zawodnicy: {total}",

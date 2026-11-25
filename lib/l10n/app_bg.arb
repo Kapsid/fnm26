@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "ДОСЕГА · {result}",
   "boardObjectivesEmpty": "Съветът не е поставил цел за този цикъл.",
   "tourContBestWinners": "НАЙ-ДОБРИ ПОБЕДИТЕЛИ В ГРУПИ",
+  "tourNcWinnersUp": "Първите {count} се изкачват в Лига {league}",
   "tourContBestThirds": "НАЙ-ДОБРИ ТРЕТИ",
   "tourContBestPlaced": "НАЙ-ДОБРИ ОТБОРИ ОТ МЯСТО {position}",
   "squadDevPageOf": "{page}/{pages} · {total, plural, one{1 играч} other{{total} играча}}",

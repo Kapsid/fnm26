@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "จนถึงตอนนี้ · {result}",
   "boardObjectivesEmpty": "บอร์ดยังไม่ได้ตั้งเป้าหมายสำหรับรอบนี้",
   "tourContBestWinners": "แชมป์กลุ่มที่ดีที่สุด",
+  "tourNcWinnersUp": "{count} อันดับแรกเลื่อนชั้นสู่ลีก {league}",
   "tourContBestThirds": "อันดับ 3 ที่ดีที่สุด",
   "tourContBestPlaced": "อันดับ {position} ที่ดีที่สุด",
   "squadDevPageOf": "{page}/{pages} · {total} คน",

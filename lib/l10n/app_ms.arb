@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "SETAKAT INI · {result}",
   "boardObjectivesEmpty": "Lembaga belum menetapkan objektif untuk kitaran ini.",
   "tourContBestWinners": "JUARA KUMPULAN TERBAIK",
+  "tourNcWinnersUp": "{count} teratas naik ke Liga {league}",
   "tourContBestThirds": "TEMPAT KETIGA TERBAIK",
   "tourContBestPlaced": "TEMPAT KE-{position} TERBAIK",
   "squadDevPageOf": "{page}/{pages} · {total} pemain",

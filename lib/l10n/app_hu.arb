@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "EDDIG · {result}",
   "boardObjectivesEmpty": "A vezetőség erre a ciklusra nem tűzött ki célt.",
   "tourContBestWinners": "LEGJOBB CSOPORTGYŐZTESEK",
+  "tourNcWinnersUp": "Az első {count} feljut a(z) {league} ligába",
   "tourContBestThirds": "LEGJOBB HARMADIKAK",
   "tourContBestPlaced": "LEGJOBB {position}. HELYEZETTEK",
   "squadDevPageOf": "{page}/{pages} · {total} játékos",

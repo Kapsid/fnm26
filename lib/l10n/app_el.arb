@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "ΜΕΧΡΙ ΤΩΡΑ · {result}",
   "boardObjectivesEmpty": "Η διοίκηση δεν έχει θέσει στόχο για αυτόν τον κύκλο.",
   "tourContBestWinners": "ΚΑΛΥΤΕΡΟΙ ΝΙΚΗΤΕΣ ΟΜΙΛΩΝ",
+  "tourNcWinnersUp": "Οι {count} πρώτοι ανεβαίνουν στη Λίγκα {league}",
   "tourContBestThirds": "ΚΑΛΥΤΕΡΟΙ ΤΡΙΤΟΙ",
   "tourContBestPlaced": "ΚΑΛΥΤΕΡΟΙ ΣΤΗ ΘΕΣΗ {position}",
   "squadDevPageOf": "{page}/{pages} · {total, plural, one{1 παίκτης} other{{total} παίκτες}}",

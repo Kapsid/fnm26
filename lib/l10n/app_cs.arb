@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "ZATÍM · {result}",
   "boardObjectivesEmpty": "Vedení pro tento cyklus nestanovilo cíl.",
   "tourContBestWinners": "NEJLEPŠÍ VÍTĚZOVÉ SKUPIN",
+  "tourNcWinnersUp": "Nejlepších {count} postupuje do ligy {league}",
   "tourContBestThirds": "NEJLEPŠÍ TŘETÍ",
   "tourContBestPlaced": "NEJLEPŠÍ NA {position}. MÍSTĚ",
   "squadDevPageOf": "{page}/{pages} · {total, plural, one{1 hráč} few{{total} hráči} other{{total} hráčů}}",

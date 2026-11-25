@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "HITTILLS · {result}",
   "boardObjectivesEmpty": "Styrelsen har inte satt något mål för den här cykeln.",
   "tourContBestWinners": "BÄSTA GRUPPVINNARE",
+  "tourNcWinnersUp": "De {count} bästa flyttas upp till Liga {league}",
   "tourContBestThirds": "BÄSTA TREDJEPLACERADE",
   "tourContBestPlaced": "BÄSTA PLACERADE PÅ PLATS {position}",
   "squadDevPageOf": "{page}/{pages} · {total} spelare",

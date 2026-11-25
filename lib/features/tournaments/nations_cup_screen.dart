@@ -288,9 +288,56 @@ mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
                 card(g),
                 const SizedBox(height: AppSpacing.md),
               ],
+            // Below the tables: the league's winners ranked against each
+            // other, when fewer go up than there are groups (North
+            // America's League B: five winners, four places).
+            ?_winnersLadder(l, v, shown, name, code),
           ],
         );
       },
+    );
+  }
+
+  /// The group winners of [shown] (one league) ranked as the ladder ranks
+  /// them ([NationsCup.ladderGroupsOf]: over the same matches when the
+  /// groups are uneven), the promotion places marked; null when every
+  /// winner goes up, or the league is the top one.
+  Widget? _winnersLadder(
+    AppLocalizations l,
+    NationsCupData v,
+    List<FinalsGroupTable> shown,
+    String Function(int) name,
+    String Function(int) code,
+  ) {
+    final played = [
+      for (final g in shown)
+        if (g.standings.length >= 2) g,
+    ];
+    if (played.isEmpty) return null;
+    final tier = NationsCup.tierOfGroupName(played.first.name);
+    if (tier == 0) return null;
+    final above = v.groups
+        .where((g) => NationsCup.tierOfGroupName(g.name) == tier - 1)
+        .length;
+    final places = above < played.length ? above : played.length;
+    if (places >= played.length) return null;
+    final standings = [for (final g in played) g.standings];
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.xl),
+      child: BestThirdsCard(
+        thirds: CrossGroup.tier(standings, 0),
+        qualifyCount: places,
+        playerNationId: v.playerNationId,
+        code: code,
+        name: name,
+        title: contentionLadderTitle(l, 1),
+        summary: l.tourNcWinnersUp(
+          places,
+          NationsCup.leagueLetter(tier - 1),
+        ),
+        adjustedForGroupSize: CrossGroup.isUneven(standings),
+        careerId: careerId,
+      ),
     );
   }
 

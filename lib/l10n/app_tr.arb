@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "ŞİMDİLİK · {result}",
   "boardObjectivesEmpty": "Yönetim bu dönem için hedef belirlemedi.",
   "tourContBestWinners": "EN İYİ GRUP BİRİNCİLERİ",
+  "tourNcWinnersUp": "İlk {count} takım yükselir: Lig {league}",
   "tourContBestThirds": "EN İYİ ÜÇÜNCÜLER",
   "tourContBestPlaced": "EN İYİ {position}. SIRADAKİLER",
   "squadDevPageOf": "{page}/{pages} · {total} oyuncu",

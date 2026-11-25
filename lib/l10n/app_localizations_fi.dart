@@ -6851,6 +6851,11 @@ class AppLocalizationsFi extends AppLocalizations {
   String get tourContBestWinners => 'PARHAAT LOHKOVOITTAJAT';
 
   @override
+  String tourNcWinnersUp(int count, String league) {
+    return 'Parhaat $count nousevat liigaan $league';
+  }
+
+  @override
   String get tourContBestThirds => 'PARHAAT KOLMOSET';
 
   @override

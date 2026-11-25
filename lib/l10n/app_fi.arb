@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "TÄHÄN MENNESSÄ · {result}",
   "boardObjectivesEmpty": "Hallitus ei ole asettanut tavoitetta tälle kaudelle.",
   "tourContBestWinners": "PARHAAT LOHKOVOITTAJAT",
+  "tourNcWinnersUp": "Parhaat {count} nousevat liigaan {league}",
   "tourContBestThirds": "PARHAAT KOLMOSET",
   "tourContBestPlaced": "PARHAAT {position}. SIJAN JOUKKUEET",
   "squadDevPageOf": "{page}/{pages} · {total, plural, one{1 pelaaja} other{{total} pelaajaa}}",

@@ -6768,6 +6768,11 @@ class AppLocalizationsHu extends AppLocalizations {
   String get tourContBestWinners => 'LEGJOBB CSOPORTGYŐZTESEK';
 
   @override
+  String tourNcWinnersUp(int count, String league) {
+    return 'Az első $count feljut a(z) $league ligába';
+  }
+
+  @override
   String get tourContBestThirds => 'LEGJOBB HARMADIKAK';
 
   @override

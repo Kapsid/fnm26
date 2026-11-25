@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "HIỆN TẠI · {result}",
   "boardObjectivesEmpty": "Ban lãnh đạo chưa đặt mục tiêu cho chu kỳ này.",
   "tourContBestWinners": "CÁC ĐỘI NHẤT BẢNG XUẤT SẮC NHẤT",
+  "tourNcWinnersUp": "{count} đội đứng đầu thăng hạng lên Hạng {league}",
   "tourContBestThirds": "CÁC ĐỘI HẠNG BA XUẤT SẮC NHẤT",
   "tourContBestPlaced": "CÁC ĐỘI HẠNG {position} XUẤT SẮC NHẤT",
   "squadDevPageOf": "{page}/{pages} · {total} cầu thủ",

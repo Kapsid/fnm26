@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "BISHER · {result}",
   "boardObjectivesEmpty": "Das Präsidium hat für diesen Zyklus kein Ziel gesetzt.",
   "tourContBestWinners": "BESTE GRUPPENSIEGER",
+  "tourNcWinnersUp": "Die besten {count} steigen in Liga {league} auf",
   "tourContBestThirds": "BESTE GRUPPENDRITTE",
   "tourContBestPlaced": "BESTE {position}. PLATZIERTE",
   "squadDevPageOf": "{page}/{pages} · {total} Spieler",

@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "ПОКИ ЩО · {result}",
   "boardObjectivesEmpty": "Рада не поставила завдань на цей цикл.",
   "tourContBestWinners": "НАЙКРАЩІ ПЕРЕМОЖЦІ ГРУП",
+  "tourNcWinnersUp": "Перші {count} підвищуються до Ліги {league}",
   "tourContBestThirds": "НАЙКРАЩІ ТРЕТІ МІСЦЯ",
   "tourContBestPlaced": "НАЙКРАЩІ НА {position}-МУ МІСЦІ",
   "squadDevPageOf": "{page}/{pages} · гравців: {total}",

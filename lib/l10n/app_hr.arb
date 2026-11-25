@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "DO SADA · {result}",
   "boardObjectivesEmpty": "Odbor nije postavio cilj za ovaj ciklus.",
   "tourContBestWinners": "NAJBOLJI POBJEDNICI SKUPINA",
+  "tourNcWinnersUp": "Prvih {count} ulazi u Ligu {league}",
   "tourContBestThirds": "NAJBOLJE TREĆEPLASIRANE",
   "tourContBestPlaced": "NAJBOLJI {position}. PLASIRANI",
   "squadDevPageOf": "{page}/{pages} · {total, plural, one{{total} igrač} few{{total} igrača} other{{total} igrača}}",

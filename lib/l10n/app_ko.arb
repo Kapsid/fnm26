@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "현재까지 · {result}",
   "boardObjectivesEmpty": "이사회가 이번 주기의 목표를 정하지 않았습니다.",
   "tourContBestWinners": "성적 상위 조 1위 팀",
+  "tourNcWinnersUp": "상위 {count}팀 리그 {league} 승격",
   "tourContBestThirds": "성적 상위 조 3위 팀",
   "tourContBestPlaced": "성적 상위 조 {position}위 팀",
   "squadDevPageOf": "{page}/{pages} · 선수 {total}명",

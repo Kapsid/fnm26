@@ -6687,6 +6687,11 @@ class AppLocalizationsTh extends AppLocalizations {
   String get tourContBestWinners => 'แชมป์กลุ่มที่ดีที่สุด';
 
   @override
+  String tourNcWinnersUp(int count, String league) {
+    return '$count อันดับแรกเลื่อนชั้นสู่ลีก $league';
+  }
+
+  @override
   String get tourContBestThirds => 'อันดับ 3 ที่ดีที่สุด';
 
   @override

@@ -10590,6 +10590,12 @@ abstract class AppLocalizations {
   /// **'BEST GROUP WINNERS'**
   String get tourContBestWinners;
 
+  /// Under a Nations Cup league whose group winners outnumber the places above: how many of the ranked winners are promoted and into which league. {league} is a letter (A, B...).
+  ///
+  /// In en, this message translates to:
+  /// **'Top {count} go up to League {league}'**
+  String tourNcWinnersUp(int count, String league);
+
   /// Ladder card heading for the best third-placed sides.
   ///
   /// In en, this message translates to:

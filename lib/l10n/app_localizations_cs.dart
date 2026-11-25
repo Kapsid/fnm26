@@ -7032,6 +7032,11 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tourContBestWinners => 'NEJLEPŠÍ VÍTĚZOVÉ SKUPIN';
 
   @override
+  String tourNcWinnersUp(int count, String league) {
+    return 'Nejlepších $count postupuje do ligy $league';
+  }
+
+  @override
   String get tourContBestThirds => 'NEJLEPŠÍ TŘETÍ';
 
   @override

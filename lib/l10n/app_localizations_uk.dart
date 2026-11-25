@@ -6929,6 +6929,11 @@ class AppLocalizationsUk extends AppLocalizations {
   String get tourContBestWinners => 'НАЙКРАЩІ ПЕРЕМОЖЦІ ГРУП';
 
   @override
+  String tourNcWinnersUp(int count, String league) {
+    return 'Перші $count підвищуються до Ліги $league';
+  }
+
+  @override
   String get tourContBestThirds => 'НАЙКРАЩІ ТРЕТІ МІСЦЯ';
 
   @override

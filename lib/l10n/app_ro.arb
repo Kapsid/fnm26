@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "PÂNĂ ACUM · {result}",
   "boardObjectivesEmpty": "Federația nu a stabilit niciun obiectiv pentru acest ciclu.",
   "tourContBestWinners": "CELE MAI BUNE CÂȘTIGĂTOARE DE GRUPĂ",
+  "tourNcWinnersUp": "Primele {count} promovează în Liga {league}",
   "tourContBestThirds": "CELE MAI BUNE LOCURI TREI",
   "tourContBestPlaced": "CELE MAI BUNE DE PE LOCUL {position}",
   "squadDevPageOf": "{page}/{pages} · {total, plural, one{1 jucător} few{{total} jucători} other{{total} de jucători}}",

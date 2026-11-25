@@ -6771,6 +6771,11 @@ class AppLocalizationsMs extends AppLocalizations {
   String get tourContBestWinners => 'JUARA KUMPULAN TERBAIK';
 
   @override
+  String tourNcWinnersUp(int count, String league) {
+    return '$count teratas naik ke Liga $league';
+  }
+
+  @override
   String get tourContBestThirds => 'TEMPAT KETIGA TERBAIK';
 
   @override

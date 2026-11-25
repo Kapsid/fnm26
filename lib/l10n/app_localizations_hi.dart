@@ -6745,6 +6745,11 @@ class AppLocalizationsHi extends AppLocalizations {
   String get tourContBestWinners => 'सर्वश्रेष्ठ ग्रुप विजेता';
 
   @override
+  String tourNcWinnersUp(int count, String league) {
+    return 'शीर्ष $count लीग $league में पदोन्नत होंगे';
+  }
+
+  @override
   String get tourContBestThirds => 'सर्वश्रेष्ठ तीसरे स्थान की टीमें';
 
   @override

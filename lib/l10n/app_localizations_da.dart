@@ -6798,6 +6798,11 @@ class AppLocalizationsDa extends AppLocalizations {
   String get tourContBestWinners => 'BEDSTE GRUPPEVINDERE';
 
   @override
+  String tourNcWinnersUp(int count, String league) {
+    return 'Top $count rykker op i Liga $league';
+  }
+
+  @override
   String get tourContBestThirds => 'BEDSTE TREERE';
 
   @override

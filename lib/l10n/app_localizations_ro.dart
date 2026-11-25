@@ -6980,6 +6980,11 @@ class AppLocalizationsRo extends AppLocalizations {
   String get tourContBestWinners => 'CELE MAI BUNE CÂȘTIGĂTOARE DE GRUPĂ';
 
   @override
+  String tourNcWinnersUp(int count, String league) {
+    return 'Primele $count promovează în Liga $league';
+  }
+
+  @override
   String get tourContBestThirds => 'CELE MAI BUNE LOCURI TREI';
 
   @override

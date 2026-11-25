@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "SEJAUH INI · {result}",
   "boardObjectivesEmpty": "Dewan belum menetapkan target untuk siklus ini.",
   "tourContBestWinners": "JUARA GRUP TERBAIK",
+  "tourNcWinnersUp": "{count} teratas promosi ke Liga {league}",
   "tourContBestThirds": "PERINGKAT KETIGA TERBAIK",
   "tourContBestPlaced": "PERINGKAT KE-{position} TERBAIK",
   "squadDevPageOf": "{page}/{pages} · {total} pemain",

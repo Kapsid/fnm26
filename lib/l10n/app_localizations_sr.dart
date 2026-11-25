@@ -6963,6 +6963,11 @@ class AppLocalizationsSr extends AppLocalizations {
   String get tourContBestWinners => 'НАЈБОЉИ ПОБЕДНИЦИ ГРУПА';
 
   @override
+  String tourNcWinnersUp(int count, String league) {
+    return 'Првих $count иде у Лигу $league';
+  }
+
+  @override
   String get tourContBestThirds => 'НАЈБОЉИ ТРЕЋЕПЛАСИРАНИ';
 
   @override

@@ -135,6 +135,42 @@ void main() {
     expect(find.text('Top 2 advance to the Round of 16'), findsOneWidget);
   });
 
+  // North America's League B: five group winners for four places. Ranked
+  // against each other under the tables, as the ladder ranks them.
+  testWidgets("North America's League B ranks its group winners", (
+    tester,
+  ) async {
+    await pumpScreen(tester, confederation: Confederation.northAmerica);
+    await tester.tap(find.text('League B'));
+    await tester.pumpAndSettle();
+    final list = find.byWidget(
+      tester.widget<Scrollable>(
+        find
+            .ancestor(
+              of: find.text('LEAGUE B'),
+              matching: find.byType(Scrollable),
+            )
+            .first,
+      ),
+    );
+    await tester.scrollUntilVisible(
+      find.text('BEST GROUP WINNERS'),
+      400,
+      scrollable: list,
+    );
+    expect(find.text('BEST GROUP WINNERS'), findsOneWidget);
+    expect(find.text('Top 4 go up to League A'), findsOneWidget);
+    // One group of three: the comparison says how it is made.
+    expect(find.textContaining('Groups are uneven'), findsOneWidget);
+  });
+
+  testWidgets('League A, where every winner plays on, has no such table', (
+    tester,
+  ) async {
+    await pumpScreen(tester, confederation: Confederation.northAmerica);
+    expect(find.text('BEST GROUP WINNERS'), findsNothing);
+  });
+
   testWidgets('history is reachable while the cup is running', (tester) async {
     await pumpScreen(tester);
 

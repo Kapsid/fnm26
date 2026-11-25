@@ -1737,6 +1737,7 @@
   "boardObjectiveSoFar": "ДО САДА · {result}",
   "boardObjectivesEmpty": "Управа није поставила циљ за овај циклус.",
   "tourContBestWinners": "НАЈБОЉИ ПОБЕДНИЦИ ГРУПА",
+  "tourNcWinnersUp": "Првих {count} иде у Лигу {league}",
   "tourContBestThirds": "НАЈБОЉИ ТРЕЋЕПЛАСИРАНИ",
   "tourContBestPlaced": "НАЈБОЉИ {position}. ПЛАСИРАНИ",
   "squadDevPageOf": "{page}/{pages} · {total, plural, one{{total} играч} few{{total} играча} other{{total} играча}}",
@@ -2888,7 +2889,6 @@
   "campaignProgressRival": "{rival}: {position}",
   "campaignProgressFinals": "Завршница: {stage}",
   "campaignRunInNumbers": "Поход у бројкама",
-  "campaignRunInNumbersNote": "Само утакмице по којима се ова кампања оцењује: пријатељске утакмице и друга такмичења се не рачунају.",
   "campaignRunMeetings": "Добијени мечеви: {won} од {played}",
   "campaignPlace": "{which, select, first{1.} second{2.} third{3.} other{{n}.}}",
   "campaignGuineasTitle": "Најбоља Гвинеја",
@@ -4663,5 +4663,6 @@
   "qualLegendCafStep": "Жуто: иде у афрички бараж",
   "qualLegendOfcStep": "Жуто: иде у финале Океаније",
   "qualLegendIntercont": "Жуто: иде у интерконтинентални бараж",
-  "legendThrough": "Зелено: према тренутном стању пролази у следећу рунду"
+  "legendThrough": "Зелено: према тренутном стању пролази у следећу рунду",
+  "campaignRunInNumbersNote": "Само утакмице по којима се ова кампања оцењује: пријатељске утакмице и друга такмичења се не рачунају."
 }

@@ -6850,6 +6850,11 @@ class AppLocalizationsPt extends AppLocalizations {
   String get tourContBestWinners => 'MELHORES VENCEDORES DE GRUPO';
 
   @override
+  String tourNcWinnersUp(int count, String league) {
+    return 'Os $count melhores sobem para a Liga $league';
+  }
+
+  @override
   String get tourContBestThirds => 'MELHORES TERCEIROS COLOCADOS';
 
   @override

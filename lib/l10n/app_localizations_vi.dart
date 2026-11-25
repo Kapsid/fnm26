@@ -6747,6 +6747,11 @@ class AppLocalizationsVi extends AppLocalizations {
   String get tourContBestWinners => 'CÁC ĐỘI NHẤT BẢNG XUẤT SẮC NHẤT';
 
   @override
+  String tourNcWinnersUp(int count, String league) {
+    return '$count đội đứng đầu thăng hạng lên Hạng $league';
+  }
+
+  @override
   String get tourContBestThirds => 'CÁC ĐỘI HẠNG BA XUẤT SẮC NHẤT';
 
   @override

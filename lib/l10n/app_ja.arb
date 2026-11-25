@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "現時点 · {result}",
   "boardObjectivesEmpty": "協会は今サイクルの目標を設定していません。",
   "tourContBestWinners": "各組1位の成績上位",
+  "tourNcWinnersUp": "上位{count}チームがリーグ{league}へ昇格",
   "tourContBestThirds": "各組3位の成績上位",
   "tourContBestPlaced": "各組{position}位の成績上位",
   "squadDevPageOf": "{page}/{pages} · {total}人",

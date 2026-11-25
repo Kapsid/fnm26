@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "SA NGAYON · {result}",
   "boardObjectivesEmpty": "Wala pang inilatag na layunin ang board para sa cycle na ito.",
   "tourContBestWinners": "PINAKAMAHUSAY NA NANGUNA SA GRUPO",
+  "tourNcWinnersUp": "Aakyat sa League {league} ang nangungunang {count}",
   "tourContBestThirds": "PINAKAMAHUSAY NA IKATLO",
   "tourContBestPlaced": "PINAKAMAHUSAY NA IKA-{position} PUWESTO",
   "squadDevPageOf": "{page}/{pages} · {total} manlalaro",

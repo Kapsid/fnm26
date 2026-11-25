@@ -6786,6 +6786,11 @@ class AppLocalizationsFil extends AppLocalizations {
   String get tourContBestWinners => 'PINAKAMAHUSAY NA NANGUNA SA GRUPO';
 
   @override
+  String tourNcWinnersUp(int count, String league) {
+    return 'Aakyat sa League $league ang nangungunang $count';
+  }
+
+  @override
   String get tourContBestThirds => 'PINAKAMAHUSAY NA IKATLO';
 
   @override

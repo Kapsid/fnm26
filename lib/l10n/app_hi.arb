@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "अब तक · {result}",
   "boardObjectivesEmpty": "बोर्ड ने इस चक्र के लिए कोई लक्ष्य तय नहीं किया है।",
   "tourContBestWinners": "सर्वश्रेष्ठ ग्रुप विजेता",
+  "tourNcWinnersUp": "शीर्ष {count} लीग {league} में पदोन्नत होंगे",
   "tourContBestThirds": "सर्वश्रेष्ठ तीसरे स्थान की टीमें",
   "tourContBestPlaced": "सर्वश्रेष्ठ नंबर {position} टीमें",
   "squadDevPageOf": "{page}/{pages} · {total} खिलाड़ी",

@@ -6615,6 +6615,11 @@ class AppLocalizationsKo extends AppLocalizations {
   String get tourContBestWinners => '성적 상위 조 1위 팀';
 
   @override
+  String tourNcWinnersUp(int count, String league) {
+    return '상위 $count팀 리그 $league 승격';
+  }
+
+  @override
   String get tourContBestThirds => '성적 상위 조 3위 팀';
 
   @override

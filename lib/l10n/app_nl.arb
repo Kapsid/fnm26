@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "TOT NU TOE · {result}",
   "boardObjectivesEmpty": "Het bestuur heeft voor deze cyclus geen doel gesteld.",
   "tourContBestWinners": "BESTE GROEPSWINNAARS",
+  "tourNcWinnersUp": "De beste {count} promoveren naar Divisie {league}",
   "tourContBestThirds": "BESTE NUMMERS DRIE",
   "tourContBestPlaced": "BESTE NUMMERS {position}",
   "squadDevPageOf": "{page}/{pages} · {total, plural, one{1 speler} other{{total} spelers}}",

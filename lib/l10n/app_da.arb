@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "INDTIL VIDERE · {result}",
   "boardObjectivesEmpty": "Bestyrelsen har ikke sat noget mål for denne cyklus.",
   "tourContBestWinners": "BEDSTE GRUPPEVINDERE",
+  "tourNcWinnersUp": "Top {count} rykker op i Liga {league}",
   "tourContBestThirds": "BEDSTE TREERE",
   "tourContBestPlaced": "BEDSTE NR. {position}",
   "squadDevPageOf": "{page}/{pages} · {total, plural, one{1 spiller} other{{total} spillere}}",

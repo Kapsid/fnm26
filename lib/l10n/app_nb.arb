@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "HITTIL · {result}",
   "boardObjectivesEmpty": "Styret har ikke satt noe mål for denne syklusen.",
   "tourContBestWinners": "BESTE GRUPPEVINNERE",
+  "tourNcWinnersUp": "Topp {count} rykker opp til Liga {league}",
   "tourContBestThirds": "BESTE TREERE",
   "tourContBestPlaced": "BESTE {position}.-PLASSERTE",
   "squadDevPageOf": "{page}/{pages} · {total, plural, one{1 spiller} other{{total} spillere}}",

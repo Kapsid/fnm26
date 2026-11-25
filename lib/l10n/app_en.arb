@@ -10843,6 +10843,18 @@
   "@tourContBestWinners": {
     "description": "Ladder card heading when the contested place is first — fewer berths than groups."
   },
+  "tourNcWinnersUp": "Top {count} go up to League {league}",
+  "@tourNcWinnersUp": {
+    "description": "Under a Nations Cup league whose group winners outnumber the places above: how many of the ranked winners are promoted and into which league. {league} is a letter (A, B...).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "league": {
+        "type": "String"
+      }
+    }
+  },
   "tourContBestThirds": "BEST THIRD-PLACED",
   "@tourContBestThirds": {
     "description": "Ladder card heading for the best third-placed sides."

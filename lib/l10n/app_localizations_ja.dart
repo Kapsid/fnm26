@@ -6604,6 +6604,11 @@ class AppLocalizationsJa extends AppLocalizations {
   String get tourContBestWinners => '各組1位の成績上位';
 
   @override
+  String tourNcWinnersUp(int count, String league) {
+    return '上位$countチームがリーグ$leagueへ昇格';
+  }
+
+  @override
   String get tourContBestThirds => '各組3位の成績上位';
 
   @override

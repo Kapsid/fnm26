@@ -6740,6 +6740,11 @@ class AppLocalizationsId extends AppLocalizations {
   String get tourContBestWinners => 'JUARA GRUP TERBAIK';
 
   @override
+  String tourNcWinnersUp(int count, String league) {
+    return '$count teratas promosi ke Liga $league';
+  }
+
+  @override
   String get tourContBestThirds => 'PERINGKAT KETIGA TERBAIK';
 
   @override

@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "POR AHORA · {result}",
   "boardObjectivesEmpty": "La directiva no ha fijado ningún objetivo para este ciclo.",
   "tourContBestWinners": "MEJORES PRIMEROS",
+  "tourNcWinnersUp": "Los {count} mejores ascienden a la Liga {league}",
   "tourContBestThirds": "MEJORES TERCEROS",
   "tourContBestPlaced": "MEJORES {position}.º CLASIFICADOS",
   "squadDevPageOf": "{page}/{pages} · {total, plural, one{1 jugador} other{{total} jugadores}}",

@@ -1734,6 +1734,7 @@
   "boardObjectiveSoFar": "FINORA · {result}",
   "boardObjectivesEmpty": "La federazione non ha fissato un obiettivo per questo ciclo.",
   "tourContBestWinners": "MIGLIORI PRIME DEI GIRONI",
+  "tourNcWinnersUp": "Le prime {count} salgono nella Lega {league}",
   "tourContBestThirds": "MIGLIORI TERZE",
   "tourContBestPlaced": "MIGLIORI CLASSIFICATE AL {position}° POSTO",
   "squadDevPageOf": "{page}/{pages} · {total, plural, one{1 giocatore} other{{total} giocatori}}",
