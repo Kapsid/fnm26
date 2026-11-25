@@ -2699,13 +2699,12 @@ List<Player> czechoslovakiaPool() => [
 /// The factor on Jamaica's attributes that [texasSquad] was written with.
 /// Texas-born professionals are many (three top-flight academies, one of
 /// the country's deepest youth games), so a side of its own is a
-/// mid-strength one, if not yet a leading one: a little below Jamaica and
-/// Panama, above Honduras, seventh in North America. At 0.97 its mean
-/// overall sits near the world's sixty-fifth, where its starting rank (66th)
-/// puts it, and far above Anguilla's, whose place it takes. A test re-derives
-/// the squad from this factor; the seed loader rewrites a stored squad that
-/// differs.
-const double texasAttributeFactor = 0.97;
+/// mid-strength one, if not yet a leading one: about Honduras's level,
+/// below Jamaica and Panama. At 0.93 its best eleven rates 69 over the whole
+/// stored pool (67 over the squad), near its starting rank (66th), and far
+/// above Anguilla's, whose place it takes. A test re-derives the squad from
+/// this factor; the seed loader rewrites a stored squad that differs.
+const double texasAttributeFactor = 0.93;
 
 /// Texas's first names: the state as its players are, Anglo, Tejano and
 /// Mexican-American, African-American, and Houston's Vietnamese and
@@ -2892,9 +2891,9 @@ const List<Player> texasSquad = [
     age: 23,
     position: PlayerPosition.gk,
     attributes: PlayerAttributes(
-      physical: 65,
-      technical: 62,
-      stamina: 61,
+      physical: 62,
+      technical: 60,
+      stamina: 59,
     ),
   ),
   Player(
@@ -2904,9 +2903,9 @@ const List<Player> texasSquad = [
     age: 32,
     position: PlayerPosition.rb,
     attributes: PlayerAttributes(
-      physical: 71,
-      technical: 66,
-      stamina: 73,
+      physical: 68,
+      technical: 63,
+      stamina: 70,
     ),
   ),
   Player(
@@ -2916,9 +2915,9 @@ const List<Player> texasSquad = [
     age: 27,
     position: PlayerPosition.cb,
     attributes: PlayerAttributes(
-      physical: 75,
-      technical: 66,
-      stamina: 69,
+      physical: 72,
+      technical: 63,
+      stamina: 66,
     ),
   ),
   Player(
@@ -2928,9 +2927,9 @@ const List<Player> texasSquad = [
     age: 27,
     position: PlayerPosition.cb,
     attributes: PlayerAttributes(
-      physical: 70,
-      technical: 66,
-      stamina: 68,
+      physical: 67,
+      technical: 63,
+      stamina: 65,
     ),
   ),
   Player(
@@ -2940,9 +2939,9 @@ const List<Player> texasSquad = [
     age: 26,
     position: PlayerPosition.lb,
     attributes: PlayerAttributes(
-      physical: 74,
-      technical: 69,
-      stamina: 75,
+      physical: 71,
+      technical: 66,
+      stamina: 72,
     ),
   ),
   Player(
@@ -2952,9 +2951,9 @@ const List<Player> texasSquad = [
     age: 20,
     position: PlayerPosition.dm,
     attributes: PlayerAttributes(
-      physical: 74,
-      technical: 73,
-      stamina: 75,
+      physical: 71,
+      technical: 70,
+      stamina: 72,
     ),
   ),
   Player(
@@ -2964,9 +2963,9 @@ const List<Player> texasSquad = [
     age: 25,
     position: PlayerPosition.cm,
     attributes: PlayerAttributes(
-      physical: 70,
-      technical: 72,
-      stamina: 77,
+      physical: 67,
+      technical: 69,
+      stamina: 73,
     ),
   ),
   Player(
@@ -2976,9 +2975,9 @@ const List<Player> texasSquad = [
     age: 21,
     position: PlayerPosition.am,
     attributes: PlayerAttributes(
-      physical: 67,
-      technical: 71,
-      stamina: 65,
+      physical: 64,
+      technical: 68,
+      stamina: 62,
     ),
   ),
   Player(
@@ -2988,9 +2987,9 @@ const List<Player> texasSquad = [
     age: 18,
     position: PlayerPosition.rw,
     attributes: PlayerAttributes(
-      physical: 66,
-      technical: 68,
-      stamina: 66,
+      physical: 63,
+      technical: 65,
+      stamina: 63,
     ),
   ),
   Player(
@@ -3000,9 +2999,9 @@ const List<Player> texasSquad = [
     age: 20,
     position: PlayerPosition.st,
     attributes: PlayerAttributes(
-      physical: 72,
-      technical: 66,
-      stamina: 66,
+      physical: 69,
+      technical: 63,
+      stamina: 63,
     ),
   ),
   Player(
@@ -3012,9 +3011,9 @@ const List<Player> texasSquad = [
     age: 28,
     position: PlayerPosition.lw,
     attributes: PlayerAttributes(
-      physical: 68,
-      technical: 72,
-      stamina: 67,
+      physical: 65,
+      technical: 69,
+      stamina: 64,
     ),
   ),
   Player(
@@ -3024,9 +3023,9 @@ const List<Player> texasSquad = [
     age: 33,
     position: PlayerPosition.gk,
     attributes: PlayerAttributes(
-      physical: 60,
-      technical: 57,
-      stamina: 56,
+      physical: 58,
+      technical: 55,
+      stamina: 54,
     ),
   ),
   Player(
@@ -3036,9 +3035,9 @@ const List<Player> texasSquad = [
     age: 20,
     position: PlayerPosition.gk,
     attributes: PlayerAttributes(
-      physical: 57,
-      technical: 52,
-      stamina: 53,
+      physical: 55,
+      technical: 50,
+      stamina: 51,
     ),
   ),
   Player(
@@ -3048,9 +3047,9 @@ const List<Player> texasSquad = [
     age: 31,
     position: PlayerPosition.rb,
     attributes: PlayerAttributes(
-      physical: 66,
-      technical: 60,
-      stamina: 70,
+      physical: 63,
+      technical: 58,
+      stamina: 67,
     ),
   ),
   Player(
@@ -3060,9 +3059,9 @@ const List<Player> texasSquad = [
     age: 23,
     position: PlayerPosition.lb,
     attributes: PlayerAttributes(
-      physical: 68,
-      technical: 64,
-      stamina: 67,
+      physical: 65,
+      technical: 61,
+      stamina: 64,
     ),
   ),
   Player(
@@ -3072,9 +3071,9 @@ const List<Player> texasSquad = [
     age: 18,
     position: PlayerPosition.cb,
     attributes: PlayerAttributes(
-      physical: 64,
-      technical: 60,
-      stamina: 59,
+      physical: 61,
+      technical: 58,
+      stamina: 57,
     ),
   ),
   Player(
@@ -3084,9 +3083,9 @@ const List<Player> texasSquad = [
     age: 31,
     position: PlayerPosition.cm,
     attributes: PlayerAttributes(
-      physical: 58,
-      technical: 63,
-      stamina: 63,
+      physical: 56,
+      technical: 60,
+      stamina: 60,
     ),
   ),
   Player(
@@ -3096,9 +3095,9 @@ const List<Player> texasSquad = [
     age: 33,
     position: PlayerPosition.dm,
     attributes: PlayerAttributes(
-      physical: 64,
-      technical: 65,
-      stamina: 66,
+      physical: 61,
+      technical: 62,
+      stamina: 63,
     ),
   ),
   Player(
@@ -3108,9 +3107,9 @@ const List<Player> texasSquad = [
     age: 32,
     position: PlayerPosition.lm,
     attributes: PlayerAttributes(
-      physical: 62,
-      technical: 60,
-      stamina: 65,
+      physical: 60,
+      technical: 58,
+      stamina: 62,
     ),
   ),
   Player(
@@ -3120,9 +3119,9 @@ const List<Player> texasSquad = [
     age: 25,
     position: PlayerPosition.rm,
     attributes: PlayerAttributes(
-      physical: 65,
-      technical: 63,
-      stamina: 66,
+      physical: 62,
+      technical: 60,
+      stamina: 63,
     ),
   ),
   Player(
@@ -3132,9 +3131,9 @@ const List<Player> texasSquad = [
     age: 31,
     position: PlayerPosition.st,
     attributes: PlayerAttributes(
-      physical: 62,
-      technical: 60,
-      stamina: 55,
+      physical: 60,
+      technical: 58,
+      stamina: 53,
     ),
   ),
   Player(
@@ -3144,9 +3143,9 @@ const List<Player> texasSquad = [
     age: 28,
     position: PlayerPosition.rw,
     attributes: PlayerAttributes(
-      physical: 60,
-      technical: 60,
-      stamina: 56,
+      physical: 58,
+      technical: 58,
+      stamina: 54,
     ),
   ),
   Player(
@@ -3156,9 +3155,9 @@ const List<Player> texasSquad = [
     age: 32,
     position: PlayerPosition.am,
     attributes: PlayerAttributes(
-      physical: 57,
-      technical: 62,
-      stamina: 61,
+      physical: 55,
+      technical: 60,
+      stamina: 59,
     ),
   ),
 ];

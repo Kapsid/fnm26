@@ -14,6 +14,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/nation/dormant_nations.dart';
+import 'package:fnm/domain/services/rating/overall_rating.dart';
 
 import '../../helpers/test_database.dart';
 
@@ -486,21 +487,24 @@ void main() {
       }
     });
 
-    test("Texas starts a mid-strength side, seventh in North America, in "
+    test("Texas starts a mid-strength side, about Honduras's level, in "
         "Anguilla's place, far above Anguilla's squad", () {
       double mean(List<Player> ps) =>
           ps.fold<int>(0, (s, p) => s + p.overall) / ps.length;
       double of(int id) => mean(_base.where((p) => p.nationId == id).toList());
       final texas = mean(texasSquad);
       // A little below Jamaica's, the squad it copies.
-      expect(texas / of(87), inInclusiveRange(0.93, 1.0));
+      expect(texas / of(87), inInclusiveRange(0.88, 0.97));
+      // The best eleven of its whole pool: 69.
+      expect(squadOverall(texasPool()), 69);
       // Far above Anguilla's, whose place it takes.
       expect(texas / of(66), greaterThan(1.4));
-      // Below the region's big three, Costa Rica and Panama, above Honduras.
+      // Below the region's big three, Costa Rica and Panama, about level
+      // with Honduras.
       for (final big in [88, 99, 74, 76, 91]) {
         expect(texas, lessThan(of(big)), reason: 'nation $big');
       }
-      expect(texas, greaterThan(of(86)));
+      expect(texas / of(86), inInclusiveRange(0.95, 1.05));
       // Its rank sits between Honduras (65th) and Jamaica (70th).
       final rank = DormantNations.texas.ranking;
       expect(rank, greaterThan(_nations.firstWhere((n) => n.id == 86).ranking));
