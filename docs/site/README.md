@@ -7,11 +7,11 @@ in this folder is exactly what goes on the host.
 
 The site speaks every language the game ships (`lib/l10n/app_*.arb`).
 English sits at the root, because that is where the App Store listing points.
-The other 27 each sit in their own folder, named by the app's locale code,
+The other 28 each sit in their own folder, named by the app's locale code,
 page for page:
 
     index.html     cs/index.html     bg/ cs/ da/ de/ el/ es/ fi/ fil/ fr/ hi/ hr/ hu/ id/ it/
-    privacy.html   cs/privacy.html   ja/ ko/ ms/ nb/ nl/ pl/ pt/ ro/ sv/ th/ tr/ uk/ vi/
+    privacy.html   cs/privacy.html   ja/ ko/ ms/ nb/ nl/ pl/ pt/ ro/ sr/ sv/ th/ tr/ uk/ vi/
     support.html   cs/support.html   (the same three files in each)
     404.html       (one, shared, every language)
 
@@ -24,13 +24,13 @@ A language with its own screenshots holds a `shots/` folder and
 without them uses the ENGLISH artwork (`../shots/`, `../hero-*.jpg`) with its
 own captions and alt text. `shots/README.md` lists which languages have their
 own set and how the sets were made (since the 28-language site, all of
-them do). Only `cs/` has localised store badges;
+them do, except `sr/`, which still shows the English set). Only `cs/` has localised store badges;
 every other language uses the English badges and `og-image.jpg`.
 
 ### The language menu
 
 Every page carries a small pill at the top right (globe, the current
-language's own name, a chevron) that opens a menu of all 28 languages, each
+language's own name, a chevron) that opens a menu of all 29 languages, each
 in its own name (Deutsch, 日本語, Ελληνικά ...), ordered by that name: Latin
 script first, then Greek, Cyrillic, Devanagari, Thai, Hangul and Japanese.
 The names are the app's own endonyms (`settings_screen.dart`). Every entry
@@ -42,7 +42,7 @@ works with no JavaScript at all. A one-line script after it only closes it on
 an outside tap or Escape. The menu is two columns (14 rows), its width capped
 at the viewport minus the gutters, so it fits a 320px phone. The block is
 identical on every page except for the paths and which entry is current:
-**if you add a page, add all 28 versions and give each the full menu**, or
+**if you add a page, add all 29 versions and give each the full menu**, or
 the menu will quietly drop somebody on the wrong page.
 
 ### Scripts the font does not cover
@@ -91,7 +91,7 @@ files are actually up.
 Upload the WHOLE folder to the host's web root, usually `www/` or
 `public_html/`. There is nothing to install and nothing to run.
 
-**Upload all 28 language trees together.** The language folders depend on
+**Upload all 29 language trees together.** The language folders depend on
 assets that live one level up, and every tree points at every other; uploading
 one without the others leaves live links to pages that are not there.
 
@@ -135,16 +135,16 @@ Two things that go wrong with FTP in particular:
   sv, tr, uk, vi; formal in hi (आप), id (Anda) and ro (dumneavoastră); polite
   neutral in ja, ko, ms and th. "Unlimited" stays "Unlimited" except where the
   app translates it (el Απεριόριστο, hi अनलिमिटेड, ja 無制限版, ko 무제한, ms Tanpa Had).
-- The privacy policy is a legal text: the 27 translations say exactly what
+- The privacy policy is a legal text: the 28 translations say exactly what
   the English says. Change the English first, then every translation, and
-  move the date on all 28.
+  move the date on all 29.
 
 ## The store badges
 
 Both stores are LIVE. The hero's App Store badge links to
 https://apps.apple.com/app/football-nations-manager/id6814666162 and the
 Google Play badge to https://play.google.com/store/apps/details?id=com.fnm.fnm ,
-in all 28 home pages. The greyed-out `.store-soon` /
+in all 29 home pages. The greyed-out `.store-soon` /
 `.stamp` CSS is no longer used by any page. The Google badge has had its built-in clear
 space trimmed off, so both badges are set to the same height and genuinely
 match; do not replace that file with a fresh download without trimming it
@@ -162,13 +162,13 @@ that has its own artwork, the English pair otherwise.
 ### Search and sharing
 
 `robots.txt`, `sitemap.xml` and a `SoftwareApplication` block of JSON-LD on
-every home page, with `inLanguage` listing the 28 site languages. The sitemap
-(84 URLs) lists each page once per language and names all 28 alternates plus
-`x-default` (English); every page's `<head>` carries the same 29
-`hreflang` links and an `og:locale` with the other 27 as
+every home page, with `inLanguage` listing the 29 site languages. The sitemap
+(87 URLs) lists each page once per language and names all 29 alternates plus
+`x-default` (English); every page's `<head>` carries the same 30
+`hreflang` links and an `og:locale` with the other 28 as
 `og:locale:alternate` (`pt_BR`, `nb_NO`, `fil_PH`, `el_GR`, `ko_KR`, `ja_JP`,
 `hi_IN`, `ms_MY`, `uk_UA`, `vi_VN`, `sv_SE`, `da_DK` and so on). That is what
-tells a search engine these are one page in 28 languages and not duplicates.
+tells a search engine these are one page in 29 languages and not duplicates.
 
 `og-image.jpg` and `og-image-cs.jpg` are the 1200x630 share cards. They exist
 because `og:image` used to point at `icon.png`, which is 180x180, while
@@ -182,10 +182,10 @@ is treated as a mismatch.
 
 Two things to keep in mind whenever you edit:
 
-- **Bump `?v=` on the stylesheet link** in every page, all 85 of them (28
+- **Bump `?v=` on the stylesheet link** in every page, all 88 of them (29
   languages times three, plus the 404). `.htaccess` tells
   browsers to hold CSS for an hour, and without the bump that hour is exactly
   how long your change stays invisible. It is at `?v=19` now.
-- **The language trees move together.** A new page needs all 28 versions,
-  29 hreflang lines, a sitemap entry per language and a menu entry in
+- **The language trees move together.** A new page needs all 29 versions,
+  30 hreflang lines, a sitemap entry per language and a menu entry in
   each, and nothing here will catch a half-done set.
