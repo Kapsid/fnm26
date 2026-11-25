@@ -7,8 +7,8 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
-import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
+import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 

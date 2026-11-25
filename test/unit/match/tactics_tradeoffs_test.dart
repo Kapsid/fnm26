@@ -223,7 +223,7 @@ void main() {
       final ba = mult(_lab('parkTheBus'), _lab('allOutAttack'));
       expect(ab, ba);
     });
-    test('the multiplier rises with one side\'s mentality', () {
+    test("the multiplier rises with one side's mentality", () {
       double at(int m) => MatchEngine.openness(
         home: TacticalInstructions(mentality: m),
         away: const TacticalInstructions(),

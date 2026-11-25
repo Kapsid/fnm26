@@ -7,14 +7,14 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fnm/core/util/app_date.dart';
-import 'package:fnm/core/util/caps.dart';
-import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/theme/text_size.dart';
+import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/core/util/caps.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';

@@ -9,15 +9,15 @@ import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
-import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/career/nation_offers_providers.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
-import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/squad/youth_watch_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,7 +32,7 @@ import '../../helpers/test_database.dart';
 /// manager arrives at a new job with an empty team and no way to fix it.
 void main() {
   test(
-    'switching nation gives the manager the new nation\'s squad',
+    "switching nation gives the manager the new nation's squad",
     () async {
       SharedPreferences.setMockInitialValues({});
       final db = createTestDatabase();
@@ -274,7 +274,7 @@ void main() {
       expect(
         await loadYouthMarks(career.id),
         isEmpty,
-        reason: 'a watchlist of another nation\'s boys must not survive a move',
+        reason: "a watchlist of another nation's boys must not survive a move",
       );
 
       // And the manager must be able to field a team.
@@ -290,7 +290,7 @@ void main() {
       expect(
         named.toSet().difference(toIds),
         isEmpty,
-        reason: 'the XI must name the new nation\'s players',
+        reason: "the XI must name the new nation's players",
       );
 
       // A new job opens on a clean slate with its new board: not the old
@@ -299,7 +299,7 @@ void main() {
       expect(
         moved.lastCycleBoard,
         isNull,
-        reason: 'the old board\'s closing mood must not follow him',
+        reason: "the old board's closing mood must not follow him",
       );
       expect(
         (await container.read(pressEffectProvider(career.id).future)).board,
@@ -356,12 +356,12 @@ void main() {
       expect(
         await container.read(satisfactionProvider(career.id).future),
         greaterThanOrEqualTo(BoardSatisfaction.neutral),
-        reason: 'a carry-over stored before the fix is not this job\'s',
+        reason: "a carry-over stored before the fix is not this job's",
       );
       expect(
         await container.read(pendingNaturalizationProvider(career.id).future),
         isNull,
-        reason: 'the old federation\'s offer is not put to the new one',
+        reason: "the old federation's offer is not put to the new one",
       );
       expect(
         await careerRepo.pendingNaturalization(career.id),

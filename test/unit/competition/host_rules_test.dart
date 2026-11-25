@@ -474,7 +474,7 @@ void main() {
       );
     });
 
-    test('a) before the reveal the card never judges by this cycle\'s '
+    test("a) before the reveal the card never judges by this cycle's "
         'hosts; after it, it does, and agrees with b)', () async {
       // A European manager in a world whose 2030 host is European: the
       // rotation would bar every European nation from 2034, which is a

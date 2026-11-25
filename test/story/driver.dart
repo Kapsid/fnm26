@@ -17,14 +17,13 @@ import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/services/campaign/campaigns.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
-import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
-import 'package:fnm/domain/services/competition/kickoff_keys.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
-import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/manager/manager_skills.dart';
+import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/penalty_takers.dart';
 import 'package:fnm/domain/services/nation/dormant_nations.dart';
 import 'package:fnm/domain/services/press/conference.dart';
@@ -35,15 +34,17 @@ import 'package:fnm/features/awards/award_providers.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/career/nation_offers_providers.dart';
-import 'package:fnm/features/federation/sponsor_providers.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
 import 'package:fnm/features/federation/federation_service.dart';
+import 'package:fnm/features/federation/sponsor_providers.dart';
 import 'package:fnm/features/friendlies/friendlies_providers.dart';
 import 'package:fnm/features/friendlies/warm_up_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
+import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
+    show kMatchViewModePrefsKey;
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/squad/camp_scandal_providers.dart';
 import 'package:fnm/features/squad/captain_providers.dart';
@@ -57,10 +58,7 @@ import 'package:fnm/features/tournaments/city_providers.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
 import 'package:fnm/features/tournaments/host_draw_providers.dart';
 import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
-    show kMatchViewModePrefsKey;
 
 import '../helpers/test_database.dart';
 

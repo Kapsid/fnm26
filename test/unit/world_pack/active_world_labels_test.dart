@@ -4,11 +4,11 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/util/match_stage.dart';
-import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/repositories/mappers.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
@@ -84,7 +84,7 @@ void main() {
     );
     final en = _l('en');
 
-    test('a renamed competition reads by the world\'s name', () {
+    test("a renamed competition reads by the world's name", () {
       ActiveWorld.current = _world;
       expect(MatchStage.labelCompact(en, f('GROUP')), 'BURGER CUP');
       expect(
@@ -107,7 +107,7 @@ void main() {
       );
     });
 
-    test('the game\'s own world is unchanged', () {
+    test("the game's own world is unchanged", () {
       expect(
         MatchStage.labelCompact(en, f('GROUP')),
         en.resultsCategoryWorldCupFinals.toUpperCase(),

@@ -9,6 +9,7 @@ import 'package:fnm/domain/services/federation/sponsors.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/domain/services/world_pack/pack_paths.dart';
+import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 
 const _v1Fixture = 'test/unit/world_pack/fixtures/v1_pack.json';
@@ -273,13 +274,42 @@ void main() {
     }
   });
 
-  test('migrate refuses format 9', () {
+  test('migrate refuses format 10', () {
     final json = _pack().toJson();
-    expect(kPackFormatVersion, 8);
+    expect(kPackFormatVersion, 9);
     expect(
-      () => WorldPack.migrate({...json, 'formatVersion': 9}),
+      () => WorldPack.migrate({...json, 'formatVersion': 10}),
       throwsFormatException,
     );
+  });
+
+  group('format 9: more than 50 added sponsors', () {
+    WorldPack withSponsors(int n) => _v2Pack().copyWith(
+      addedSponsors: [
+        for (var i = 0; i < n; i++)
+          PackSponsor(
+            id: kPackAddedIdBase + i,
+            name: 'Sponsor $i',
+            deal: SponsorDeal.values.first,
+            industry: SponsorBrand.values.first.name,
+          ),
+      ],
+    );
+
+    test('only more than 50 sponsors is written as format 9', () {
+      expect(PackRules.addedSponsorsMax, 100);
+      expect(withSponsors(50).asWritten.formatVersion, lessThan(9));
+      expect(withSponsors(51).asWritten.formatVersion, 9);
+    });
+
+    test('a format-8 pack with more than 50 sponsors is refused', () {
+      final json = {
+        ...jsonDecode(jsonEncode(withSponsors(51).asWritten.toJson()))
+            as Map<String, Object?>,
+        'formatVersion': 8,
+      };
+      expect(() => WorldPack.migrate(json), throwsFormatException);
+    });
   });
 
   group('format 8: day-one manager ages', () {
@@ -312,7 +342,7 @@ void main() {
         'age': 58,
       });
       final back = WorldPack.fromJson(WorldPack.migrate(json));
-      expect(back, p);
+      expect(back, p.copyWith(formatVersion: kPackFormatVersion));
       expect(back.managers[7]!.age, 58);
       expect(back.managers[9]!.age, isNull);
     });
@@ -329,7 +359,7 @@ void main() {
       final back = WorldPack.fromJson(
         WorldPack.migrate(jsonDecode(jsonEncode(v7)) as Map<String, Object?>),
       );
-      expect(back.formatVersion, 8);
+      expect(back.formatVersion, kPackFormatVersion);
       expect(back.managers[7], (
         name: 'Ota Brnak',
         nationality: 'CZE',

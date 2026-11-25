@@ -10,6 +10,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/util/caps.dart';
+import 'package:fnm/core/util/club_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/squad/absence_outlook.dart';
@@ -17,15 +18,14 @@ import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/features/player/player_detail_screen.dart'
     show PlayerTraitGlyphs;
 import 'package:fnm/features/tactics/absence_providers.dart';
+import 'package:fnm/features/tactics/call_up_screen.dart';
 import 'package:fnm/features/tactics/condition_mark.dart';
 import 'package:fnm/features/tactics/nation_squad_providers.dart';
-import 'package:fnm/features/tactics/call_up_screen.dart';
 import 'package:fnm/features/tactics/squad_legend_sheet.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:fnm/core/util/club_label.dart';
 
 /// The Squad destination on a tablet: every eligible player in a sortable,
 /// full-width table with four views of the same rows. A row opens the

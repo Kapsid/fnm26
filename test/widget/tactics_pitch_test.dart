@@ -69,7 +69,7 @@ void main() {
             byId: byId,
             onTapSlot: (_) {},
             onSwap: onSwap,
-            onBenchIn: onBenchIn ?? (_, __) {},
+            onBenchIn: onBenchIn ?? (_, _) {},
             onMoveToSpace: onMoveToSpace,
           ),
         ),
@@ -109,8 +109,8 @@ void main() {
             lineup: lineup,
             byId: squad,
             onTapSlot: (_) {},
-            onSwap: (_, __) {},
-            onBenchIn: (_, __) {},
+            onSwap: (_, _) {},
+            onBenchIn: (_, _) {},
           ),
         ),
       );
@@ -205,7 +205,7 @@ void main() {
       expect(label.width, lessThanOrEqualTo(320 * 0.16));
     });
 
-    testWidgets('nothing a node draws ever lands on another player\'s ball', (
+    testWidgets("nothing a node draws ever lands on another player's ball", (
       tester,
     ) async {
       // The manager's complaint, in his own words: "if balls are close
@@ -260,8 +260,8 @@ void main() {
                     // Energy on, so the second rim badge is in play too.
                     energyByPlayer: {for (var i = 0; i < 11; i++) 100 + i: 60},
                     onTapSlot: (_) {},
-                    onSwap: (_, __) {},
-                    onBenchIn: (_, __) {},
+                    onSwap: (_, _) {},
+                    onBenchIn: (_, _) {},
                   ),
                 ),
               );
@@ -368,8 +368,8 @@ void main() {
                   lineup: lineup,
                   byId: squad,
                   onTapSlot: (_) {},
-                  onSwap: (_, __) {},
-                  onBenchIn: (_, __) {},
+                  onSwap: (_, _) {},
+                  onBenchIn: (_, _) {},
                 ),
               ),
               locale: locale,
@@ -501,7 +501,7 @@ void main() {
                 lineup: lineup,
                 byId: byId,
                 onTapSlot: (_) {},
-                onSwap: (_, __) {},
+                onSwap: (_, _) {},
                 onBenchIn: (slot, id) => subs.add((slot, id)),
               ),
             ),
@@ -560,7 +560,7 @@ void main() {
     double? movedY;
     await tester.pumpApp(
       harness(
-        onSwap: (_, __) {},
+        onSwap: (_, _) {},
         onMoveToSpace: (slot, dropY) {
           movedSlot = slot;
           movedY = dropY;

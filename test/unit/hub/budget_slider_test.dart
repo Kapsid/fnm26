@@ -84,7 +84,7 @@ void main() {
       );
     });
 
-    test('never above the department\'s top level', () {
+    test("never above the department's top level", () {
       expect(
         affordableLevel(
           wanted: 10,

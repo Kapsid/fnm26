@@ -1,32 +1,32 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/config/ui_language.dart';
 import 'package:fnm/core/layout/form_factor.dart';
+import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/core/theme/app_theme.dart';
+import 'package:fnm/data/repositories/drift_player_repository.dart';
+import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
+import 'package:fnm/domain/services/world_pack/pack_paths.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
+import 'package:fnm/features/editor/editor_language.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/editor/names/added_items.dart'
     show editorFormSheetCloseKey;
 import 'package:fnm/features/editor/names/name_section_screen.dart';
-import 'package:fnm/l10n/app_localizations.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:fnm/core/config/ui_language.dart';
-import 'package:fnm/data/repositories/drift_player_repository.dart';
-import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/features/editor/names/name_sections.dart';
-import 'package:fnm/features/editor/editor_language.dart';
-import 'package:fnm/domain/services/world_pack/pack_paths.dart';
-import 'package:fnm/core/routing/app_router.dart';
-import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/features/editor/pack_home_screen.dart';
 import 'package:fnm/features/editor/pack_issue_text.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 
 import '../helpers/editor_app.dart';
 import '../helpers/seeded_save.dart';

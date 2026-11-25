@@ -4,7 +4,6 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fnm/features/world_pack/trophy_image.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -20,6 +19,7 @@ import 'package:fnm/features/career/manager_history_providers.dart';
 import 'package:fnm/features/share/share_cabinet_button.dart';
 import 'package:fnm/features/stats/stats_providers.dart';
 import 'package:fnm/features/stats/team_overall_history.dart';
+import 'package:fnm/features/world_pack/trophy_image.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -337,7 +337,7 @@ class _TrophySlot extends StatelessWidget {
                   trophyKey,
                   height: 56,
                   fit: BoxFit.contain,
-                  errorBuilder: (_, __, ___) => Icon(
+                  errorBuilder: (_, _, _) => Icon(
                     Icons.emoji_events,
                     color: won ? AppColors.primary : AppColors.onSurfaceVariant,
                   ),

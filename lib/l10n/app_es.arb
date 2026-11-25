@@ -4662,5 +4662,6 @@
   "qualLegendCafStep": "Amarillo: rumbo a la repesca africana",
   "qualLegendOfcStep": "Amarillo: rumbo a la final de Oceanía",
   "qualLegendIntercont": "Amarillo: rumbo a la repesca intercontinental",
-  "legendThrough": "Verde: por ahora, pasa a la siguiente ronda"
+  "legendThrough": "Verde: por ahora, pasa a la siguiente ronda",
+  "campaignRunInNumbersNote": "Solo los partidos por los que se juzga esta campaña: no cuentan los amistosos ni otras competiciones."
 }

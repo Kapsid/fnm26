@@ -5,24 +5,24 @@
 import 'package:drift/drift.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/repositories/mappers.dart';
-import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/entities/enums.dart';
-import 'package:fnm/domain/services/awards/award_year.dart';
-import 'package:fnm/domain/services/match/big_game_difficulty.dart';
-import 'package:fnm/domain/services/player/growth_difficulty.dart';
-import 'package:fnm/domain/services/awards/awards.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
-import 'package:fnm/domain/services/competition/finals_participation.dart';
-import 'package:fnm/domain/services/competition/real_history.dart';
+import 'package:fnm/domain/services/awards/award_year.dart';
+import 'package:fnm/domain/services/awards/awards.dart';
+import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/cycle_finish.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
+import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/domain/services/competition/real_history.dart';
 import 'package:fnm/domain/services/competition/regional_cups.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/domain/services/competition/tournament_calendar.dart';
+import 'package:fnm/domain/services/match/big_game_difficulty.dart';
+import 'package:fnm/domain/services/player/growth_difficulty.dart';
 
 /// Drift-backed [CompetitionRepository].
 class DriftCompetitionRepository implements CompetitionRepository {
@@ -178,6 +178,28 @@ class DriftCompetitionRepository implements CompetitionRepository {
       ..orderBy([
         (t) => OrderingTerm(expression: t.matchday),
         (t) => OrderingTerm(expression: t.date),
+      ]);
+    return (await query.get()).map((r) => r.toDomain()).toList();
+  }
+
+  @override
+  Future<List<Fixture>> allFixturesForNations(
+    int careerId,
+    Set<int> nationIds,
+  ) async {
+    if (nationIds.isEmpty) return const [];
+    // Same ordering as [allFixtures]; `id` spells out the insertion-order
+    // tie-break the unindexed full scan there gives implicitly.
+    final query = _db.select(_db.fixtures)
+      ..where(
+        (t) =>
+            t.careerId.equals(careerId) &
+            (t.homeNationId.isIn(nationIds) | t.awayNationId.isIn(nationIds)),
+      )
+      ..orderBy([
+        (t) => OrderingTerm(expression: t.matchday),
+        (t) => OrderingTerm(expression: t.date),
+        (t) => OrderingTerm(expression: t.id),
       ]);
     return (await query.get()).map((r) => r.toDomain()).toList();
   }
@@ -582,23 +604,13 @@ class DriftCompetitionRepository implements CompetitionRepository {
               ..orderBy([(t) => OrderingTerm(expression: t.name)]))
             .get();
 
+    final contents = await _groupContents([for (final g in groups) g.id]);
     final result = <RoundResultGroup>[];
     for (final g in groups) {
-      final members = await (_db.select(
-        _db.groupMembers,
-      )..where((t) => t.groupId.equals(g.id))).get();
-      final fixtures = await (_db.select(
-        _db.fixtures,
-      )..where((t) => t.groupId.equals(g.id))).get();
-      final standings = GroupStanding.table(
-        members.map((m) => m.nationId).toList(),
-        fixtures.map((r) => r.toDomain()).toList(),
-      );
+      final (:members, :fixtures) = contents[g.id]!;
+      final standings = GroupStanding.table(members, fixtures);
       final roundFixtures =
-          fixtures
-              .where((f) => f.matchday == matchday && f.played)
-              .map((r) => r.toDomain())
-              .toList()
+          fixtures.where((f) => f.matchday == matchday && f.played).toList()
             ..sort((a, b) => a.id.compareTo(b.id));
       result.add((name: g.name, standings: standings, fixtures: roundFixtures));
     }
@@ -651,8 +663,9 @@ class DriftCompetitionRepository implements CompetitionRepository {
 
   @override
   Future<List<ConfederationGroupTable>> allGroupTablesByConfederation(
-    int careerId,
-  ) async {
+    int careerId, {
+    Confederation? confederation,
+  }) async {
     final cycle = await _cycle(careerId);
     final comps =
         await (_db.select(_db.competitions)
@@ -660,36 +673,77 @@ class DriftCompetitionRepository implements CompetitionRepository {
                 (t) =>
                     t.careerId.equals(careerId) &
                     t.cycle.equals(cycle) &
-                    t.kind.equalsValue(CompetitionKind.worldCupQualifying),
+                    t.kind.equalsValue(CompetitionKind.worldCupQualifying) &
+                    (confederation == null
+                        ? const Constant(true)
+                        : t.confederation.equalsValue(confederation)),
               )
               ..orderBy([(t) => OrderingTerm(expression: t.id)]))
             .get();
+    if (comps.isEmpty) return [];
+
+    final groupsByComp = <int, List<QualifyingGroupRow>>{};
+    for (final g
+        in await (_db.select(_db.qualifyingGroups)
+              ..where(
+                (t) => t.competitionId.isIn([for (final c in comps) c.id]),
+              )
+              ..orderBy([(t) => OrderingTerm(expression: t.name)]))
+            .get()) {
+      (groupsByComp[g.competitionId] ??= []).add(g);
+    }
+    final contents = await _groupContents([
+      for (final gs in groupsByComp.values)
+        for (final g in gs) g.id,
+    ]);
 
     final result = <ConfederationGroupTable>[];
     for (final comp in comps) {
-      final groups =
-          await (_db.select(_db.qualifyingGroups)
-                ..where((t) => t.competitionId.equals(comp.id))
-                ..orderBy([(t) => OrderingTerm(expression: t.name)]))
-              .get();
-      for (final group in groups) {
-        final members = await (_db.select(
-          _db.groupMembers,
-        )..where((t) => t.groupId.equals(group.id))).get();
-        final fixtures = await (_db.select(
-          _db.fixtures,
-        )..where((t) => t.groupId.equals(group.id))).get();
+      for (final group
+          in groupsByComp[comp.id] ?? const <QualifyingGroupRow>[]) {
+        final (:members, :fixtures) = contents[group.id]!;
         result.add((
           confederation: comp.confederation,
           groupName: group.name,
-          standings: GroupStanding.table(
-            members.map((m) => m.nationId).toList(),
-            fixtures.map((r) => r.toDomain()).toList(),
-          ),
+          standings: GroupStanding.table(members, fixtures),
         ));
       }
     }
     return result;
+  }
+
+  /// Every group of [groupIds] with its members and its fixtures, in two
+  /// queries rather than two per group. Each group's lists come in the order
+  /// its own per-group reads gave them: members by nation id (the order the
+  /// `(group_id, nation_id)` primary-key index hands them out), fixtures by
+  /// row id (insertion order), since [GroupStanding.table] breaks ties on
+  /// input order. Every id asked for has an entry, empty when it has no rows.
+  Future<Map<int, ({List<int> members, List<Fixture> fixtures})>>
+  _groupContents(List<int> groupIds) async {
+    final out = {
+      for (final id in groupIds) id: (members: <int>[], fixtures: <Fixture>[]),
+    };
+    if (groupIds.isEmpty) return out;
+    final members =
+        await (_db.select(_db.groupMembers)
+              ..where((t) => t.groupId.isIn(groupIds))
+              ..orderBy([
+                (t) => OrderingTerm(expression: t.groupId),
+                (t) => OrderingTerm(expression: t.nationId),
+              ]))
+            .get();
+    for (final m in members) {
+      out[m.groupId]!.members.add(m.nationId);
+    }
+    final fixtures =
+        await (_db.select(_db.fixtures)
+              ..where((t) => t.groupId.isIn(groupIds))
+              ..orderBy([(t) => OrderingTerm(expression: t.id)]))
+            .get();
+    for (final f in fixtures) {
+      out[f.groupId!]!.fixtures.add(f.toDomain());
+    }
+    return out;
   }
 
   @override
@@ -747,24 +801,17 @@ class DriftCompetitionRepository implements CompetitionRepository {
               ..orderBy([(t) => OrderingTerm(expression: t.name)]))
             .get();
 
+    final contents = await _groupContents([for (final g in groups) g.id]);
     final tables = <GroupTable>[];
     for (final group in groups) {
-      final members = await (_db.select(
-        _db.groupMembers,
-      )..where((t) => t.groupId.equals(group.id))).get();
-      final fixtures = await (_db.select(
-        _db.fixtures,
-      )..where((t) => t.groupId.equals(group.id))).get();
+      final (:members, :fixtures) = contents[group.id]!;
       tables.add((
         groupId: group.id,
         name: group.name,
         competition: comp.name,
         kind: comp.kind,
         groupCount: groups.length,
-        standings: GroupStanding.table(
-          members.map((m) => m.nationId).toList(),
-          fixtures.map((r) => r.toDomain()).toList(),
-        ),
+        standings: GroupStanding.table(members, fixtures),
       ));
     }
     return tables;
@@ -1351,20 +1398,13 @@ class DriftCompetitionRepository implements CompetitionRepository {
               ..where((t) => t.competitionId.equals(comp.id))
               ..orderBy([(t) => OrderingTerm(expression: t.name)]))
             .get();
+    final contents = await _groupContents([for (final g in groups) g.id]);
     final tables = <FinalsGroupTable>[];
     for (final group in groups) {
-      final members = await (_db.select(
-        _db.groupMembers,
-      )..where((t) => t.groupId.equals(group.id))).get();
-      final fixtures = await (_db.select(
-        _db.fixtures,
-      )..where((t) => t.groupId.equals(group.id))).get();
+      final (:members, :fixtures) = contents[group.id]!;
       tables.add((
         name: group.name,
-        standings: GroupStanding.table(
-          members.map((m) => m.nationId).toList(),
-          fixtures.map((r) => r.toDomain()).toList(),
-        ),
+        standings: GroupStanding.table(members, fixtures),
       ));
     }
     return tables;
@@ -1684,17 +1724,38 @@ class DriftCompetitionRepository implements CompetitionRepository {
 
   @override
   Future<Map<int, List<({int nationId, int playerId, int minute})>>>
-  goalTimeline(int careerId, {int? fixtureId}) async {
+  goalTimeline(
+    int careerId, {
+    int? fixtureId,
+    Set<int>? forNations,
+  }) async {
+    if (forNations != null && forNations.isEmpty) return {};
     final rows =
         await (_db.select(_db.goalEvents)
-              ..where(
-                (t) =>
+              ..where((t) {
+                Expression<bool> w =
                     t.careerId.equals(careerId) &
                     (fixtureId == null
                         ? const Constant(true)
-                        : t.fixtureId.equals(fixtureId)),
-              )
-              ..orderBy([(t) => OrderingTerm(expression: t.minute)]))
+                        : t.fixtureId.equals(fixtureId));
+                if (forNations != null) {
+                  final ids = _db.selectOnly(_db.fixtures)
+                    ..addColumns([_db.fixtures.id])
+                    ..where(
+                      _db.fixtures.careerId.equals(careerId) &
+                          (_db.fixtures.homeNationId.isIn(forNations) |
+                              _db.fixtures.awayNationId.isIn(forNations)),
+                    );
+                  w = w & t.fixtureId.isInQuery(ids);
+                }
+                return w;
+              })
+              ..orderBy([
+                (t) => OrderingTerm(expression: t.minute),
+                // The insertion-order tie-break the unindexed scan gives
+                // implicitly, spelled out so a filtered read keeps it.
+                (t) => OrderingTerm(expression: t.id),
+              ]))
             .get();
     final out = <int, List<({int nationId, int playerId, int minute})>>{};
     for (final r in rows) {

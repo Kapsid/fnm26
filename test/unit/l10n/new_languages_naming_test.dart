@@ -108,7 +108,7 @@ void main() {
   // the string. The adjective ("ranking mundial", "RANKING MUNDIAL",
   // "Campeonato Mundial") passes.
   final mundialNoun = RegExp(
-    r'(?<!(Campeonatos?|Campe[ãa]o|Campeã|Campeões|Campeãs|Campeon[ae]s?) )'
+    '(?<!(Campeonatos?|Campe[ãa]o|Campeã|Campeões|Campeãs|Campeon[ae]s?) )'
     r'\bMundial(es)?\b',
   );
   // Letters, not `\b`, mark the word edges: `\b` knows only ASCII, so it

@@ -9,6 +9,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/services/manager/stints.dart';
+import 'package:fnm/domain/services/player/international_retirement.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
@@ -126,8 +127,16 @@ Future<List<NaturalizationLink>> naturalizationsInto(
 /// foreign player resolved live from their original id (so their name and
 /// attributes stay their own), then re-homed to the manager's nation so they
 /// slot into the squad, call-ups and match pool alongside home-grown players.
-Future<List<Player>> naturalizedPlayersFor(Ref ref, Career career) =>
-    naturalizedPlayersInto(ref, career, career.nationId);
+Future<List<Player>> naturalizedPlayersFor(
+  Ref ref,
+  Career career, {
+  bool includeIntlRetired = false,
+}) => naturalizedPlayersInto(
+  ref,
+  career,
+  career.nationId,
+  includeIntlRetired: includeIntlRetired,
+);
 
 /// The naturalised players who play for [nationId] in [career]: the accepted
 /// links that went to it (see [naturalizationsInto]), resolved and re-homed
@@ -135,14 +144,21 @@ Future<List<Player>> naturalizedPlayersFor(Ref ref, Career career) =>
 Future<List<Player>> naturalizedPlayersInto(
   Ref ref,
   Career career,
-  int nationId,
-) async {
+  int nationId, {
+  bool includeIntlRetired = false,
+}) async {
   final links = await naturalizationsInto(
     ref.read(careerRepositoryProvider),
     career,
     nationId,
   );
-  return resolveNaturalized(ref, career, links, nationId);
+  return resolveNaturalized(
+    ref,
+    career,
+    links,
+    nationId,
+    includeIntlRetired: includeIntlRetired,
+  );
 }
 
 /// Resolves [links] into the players who now play for [nationId].
@@ -162,10 +178,17 @@ Future<List<Player>> resolveNaturalized(
   Iterable<NaturalizationLink> links,
   int nationId, {
   int? agingYears,
+  bool includeIntlRetired = false,
 }) async {
   if (links.isEmpty) return const [];
   final repo = ref.read(playerRepositoryProvider);
   final years = agingYears ?? CareerService.agingYears(career);
+  // A naturalised man can announce his international retirement like anyone
+  // in the squad (the wave counts him): he leaves the selectable pool exactly
+  // as a home-grown one does, unless the caller wants the retired too.
+  final intlRetired = includeIntlRetired
+      ? const <int, IntlRetirement>{}
+      : await repo.internationalRetirements(career.id);
   final youthBonus = await ref.read(
     youthBonusByCycleProvider(career.id).future,
   );
@@ -184,7 +207,9 @@ Future<List<Player>> resolveNaturalized(
     // the pool); re-home them to the nation he switched to for selection. The
     // test is his own retirement age, exactly as the pool's is — a flat cut-off
     // both dropped men still playing and kept men who had finished.
-    if (p != null && !PlayerLifecycle.hasRetiredAt(p.id, p.age, years)) {
+    if (p != null &&
+        !PlayerLifecycle.hasRetiredAt(p.id, p.age, years) &&
+        !(intlRetired[p.id]?.isRetiredAt(years) ?? false)) {
       out.add(p.copyWith(nationId: nationId));
     }
   }

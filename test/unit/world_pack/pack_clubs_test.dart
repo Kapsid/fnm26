@@ -377,7 +377,7 @@ void main() {
       expect(p.clubCountry, code);
     });
 
-    test('an added club named like another country\'s renamed club keeps '
+    test("an added club named like another country's renamed club keeps "
         'its own name in a career', () async {
       final c = await world();
       final packs = c.read(worldPackRepositoryProvider);

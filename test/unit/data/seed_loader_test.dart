@@ -30,7 +30,7 @@ void main() {
     final didSeed = await loaderWith().ensureSeeded();
 
     expect(didSeed, isTrue);
-    expect((await DriftNationRepository(db).all()), hasLength(1));
+    expect(await DriftNationRepository(db).all(), hasLength(1));
     // The pool also carries the nation's backfilled youth intakes, which are
     // generated rather than seeded; only the seeded row came from the source.
     final pool = await DriftPlayerRepository(db).byNation(1);
@@ -45,6 +45,6 @@ void main() {
     final secondRun = await loaderWith().ensureSeeded();
 
     expect(secondRun, isFalse);
-    expect((await DriftNationRepository(db).all()), hasLength(1));
+    expect(await DriftNationRepository(db).all(), hasLength(1));
   });
 }

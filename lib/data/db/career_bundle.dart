@@ -467,7 +467,7 @@ abstract final class CareerBundle {
 
   /// A name that says which career it holds.
   static String suggestedFileName(String managerName, DateTime on) {
-    final safe = managerName.replaceAll(RegExp(r'[^A-Za-z0-9]+'), '-');
+    final safe = managerName.replaceAll(RegExp('[^A-Za-z0-9]+'), '-');
     return 'fnm-$safe-${on.year}-${on.month.toString().padLeft(2, '0')}'
         '-${on.day.toString().padLeft(2, '0')}.$extension';
   }

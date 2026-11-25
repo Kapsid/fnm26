@@ -193,7 +193,7 @@ void main() {
   });
 
   test(
-    'a qualifying campaign is not credited with somebody else\'s cup',
+    "a qualifying campaign is not credited with somebody else's cup",
     () async {
       // The Nations Cup runs ALONGSIDE continental qualifying. A rule as loose
       // as "a tournament started after this campaign ended" would read the

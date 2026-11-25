@@ -4662,5 +4662,6 @@
   "qualLegendCafStep": "Giallo: diretta allo spareggio africano",
   "qualLegendOfcStep": "Giallo: diretta alla finale dell'Oceania",
   "qualLegendIntercont": "Giallo: diretta allo spareggio intercontinentale",
-  "legendThrough": "Verde: per ora, passa al turno successivo"
+  "legendThrough": "Verde: per ora, passa al turno successivo",
+  "campaignRunInNumbersNote": "Solo le partite su cui viene giudicata questa campagna: amichevoli e altre competizioni non contano."
 }

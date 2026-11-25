@@ -4,28 +4,27 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fnm/shared/widgets/app_bottom_nav.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/caps.dart';
+import 'package:fnm/core/util/club_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/squad/absence_outlook.dart';
 import 'package:fnm/features/player/player_detail_screen.dart'
     show PlayerTraitGlyphs;
 import 'package:fnm/features/squad/captain_providers.dart';
-import 'package:fnm/features/tactics/call_up_screen.dart';
-import 'package:fnm/features/tactics/squad_legend_sheet.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
+import 'package:fnm/features/tactics/call_up_screen.dart';
 import 'package:fnm/features/tactics/condition_mark.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/tactics/nation_squad_providers.dart';
+import 'package:fnm/features/tactics/squad_legend_sheet.dart';
 import 'package:fnm/features/tactics/squad_pulse.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:fnm/core/util/club_label.dart';
 
 /// How the pool is ordered.
 enum _SquadSort { rating, caps, goals, age, name }

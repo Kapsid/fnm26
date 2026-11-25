@@ -146,7 +146,7 @@ void main() {
   });
 
   test('the localized cap is the whole database, opening no section', () {
-    final pack = WorldPack(
+    const pack = WorldPack(
       uuid: 'u',
       name: 'My World',
       author: '',
@@ -164,7 +164,7 @@ void main() {
     expect(t.detail, l.editorIssueValue);
   });
 
-  test("an unknown trait, deal or voice names its player or item", () {
+  test('an unknown trait, deal or voice names its player or item', () {
     final pack = WorldPack(
       uuid: 'u',
       name: 'n',
@@ -190,7 +190,7 @@ void main() {
     expect(said('addedSponsors.$_a.deal'), l.editorIssueUnknownEntry('Brand'));
   });
 
-  test('a day-one manager\'s problems open the Managers section on the '
+  test("a day-one manager's problems open the Managers section on the "
       'nation', () {
     final pack = WorldPack(
       uuid: 'u',

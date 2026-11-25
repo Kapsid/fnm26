@@ -51,9 +51,15 @@ class DriftInternationalRetirementRepository
     for (final c in comps) {
       final fs = byComp[c.id];
       if (fs == null || fs.isEmpty) continue;
-      final finished = fs.every(
-        (f) => f.played && f.homeScore != null && f.awayScore != null,
-      );
+      // Every fixture played is not enough: knockout rounds are drawn one
+      // at a time, so between the round of 16 and the quarter-finals every
+      // fixture that exists is played while the tournament is still on.
+      // Only a played final ends it.
+      final finished =
+          fs.any((f) => _finalRounds.contains(f.round)) &&
+          fs.every(
+            (f) => f.played && f.homeScore != null && f.awayScore != null,
+          );
       if (!finished) continue;
       // The final is the last fixture of a finals tournament (the World
       // Championship's third-place play-off comes two days before it).
@@ -77,6 +83,10 @@ class DriftInternationalRetirementRepository
     out.sort((a, b) => a.endedOn.compareTo(b.endedOn));
     return out;
   }
+
+  /// The round a finals tournament ends with: the World Championship's
+  /// final and a continental championship's.
+  static const _finalRounds = {'FINAL', 'CFINAL'};
 
   static int? _winner(FixtureRow f) {
     final h = f.homeScore!;

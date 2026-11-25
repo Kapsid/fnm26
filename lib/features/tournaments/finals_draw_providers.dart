@@ -9,12 +9,12 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
-import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/features/career/career_providers.dart';
-import 'package:fnm/features/tournaments/drawn_groups.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
+import 'package:fnm/features/tournaments/drawn_groups.dart';
 import 'package:fnm/features/tournaments/wc_host_berths.dart';
 import 'package:fnm/features/tournaments/wc_playoff_providers.dart';
 

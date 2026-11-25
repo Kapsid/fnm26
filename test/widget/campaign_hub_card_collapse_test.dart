@@ -82,7 +82,7 @@ void main() {
           locale: locale,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: Scaffold(
+          home: const Scaffold(
             body: SingleChildScrollView(child: CampaignHubCard(careerId: 1)),
           ),
         ),

@@ -18,79 +18,79 @@ import 'package:fnm/core/theme/kit_colors.dart';
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/core/util/nation_label.dart';
+import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactic_preset.dart';
 import 'package:fnm/domain/entities/tactics.dart';
-import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/confed_playoffs.dart';
+import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
-import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/card_status.dart';
 import 'package:fnm/domain/services/match/live_rating.dart';
-import 'package:fnm/domain/services/match/stadium/ground_character.dart';
-import 'package:fnm/domain/services/match/stadium/kick_off.dart';
-import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_moments.dart';
 import 'package:fnm/domain/services/match/penalty_takers.dart';
-import 'package:fnm/domain/services/match/same_day_results.dart';
 import 'package:fnm/domain/services/match/pitch/moment_staging.dart'
     show ShootoutCast, ShootoutStaging;
+import 'package:fnm/domain/services/match/same_day_results.dart';
+import 'package:fnm/domain/services/match/stadium/ground_character.dart';
+import 'package:fnm/domain/services/match/stadium/kick_off.dart';
+import 'package:fnm/domain/services/match/stadium/match_weather.dart';
+import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/press/fan_mood.dart';
-import 'package:fnm/features/federation/national_stadium_providers.dart'
-    show groundWorksProvider;
 import 'package:fnm/features/achievements/achievement_popup.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
+import 'package:fnm/features/federation/national_stadium_providers.dart'
+    show groundWorksProvider;
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/match/full_time_tabs.dart';
+import 'package:fnm/features/match/ground_card.dart';
+import 'package:fnm/features/match/live_group_table.dart';
 import 'package:fnm/features/match/match_feedback.dart';
 import 'package:fnm/features/match/match_flow_charts.dart';
-import 'package:fnm/features/match/ground_card.dart';
-import 'package:fnm/features/match/penalty_order_sheet.dart';
 import 'package:fnm/features/match/match_providers.dart';
-import 'package:fnm/features/match/live_group_table.dart';
-import 'package:fnm/features/match/shot_map.dart';
-import 'package:fnm/features/match/same_day_providers.dart';
+import 'package:fnm/features/match/penalty_order_sheet.dart';
 import 'package:fnm/features/match/pitch/match_dressing.dart';
 import 'package:fnm/features/match/pitch/pitch_clock.dart';
 import 'package:fnm/features/match/pitch/pitch_commentary.dart';
-import 'package:fnm/features/match/pitch/pitch_mode_controller.dart';
 import 'package:fnm/features/match/pitch/pitch_match_view.dart';
+import 'package:fnm/features/match/pitch/pitch_mode_controller.dart';
 import 'package:fnm/features/match/pitch/pitch_playback.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/features/match/pitch/shootout_stage.dart';
+import 'package:fnm/features/match/same_day_providers.dart';
 import 'package:fnm/features/match/score_bug_theme.dart';
+import 'package:fnm/features/match/shot_map.dart';
 import 'package:fnm/features/match/sound/match_audio.dart';
 import 'package:fnm/features/match/sound/match_sound_director.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
+import 'package:fnm/features/share/match_share_card.dart';
+import 'package:fnm/features/share/share_data.dart';
+import 'package:fnm/features/share/share_sheet.dart';
+import 'package:fnm/features/shell/detail_pane_host.dart' show openPlayer;
 import 'package:fnm/features/tactics/in_match_tactics.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
 import 'package:fnm/features/tactics/tactic_preset_providers.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart'
     show energyColor, surnameOf, TacticsPitch;
-import 'package:fnm/data/data_providers.dart';
-import 'package:fnm/features/share/match_share_card.dart';
-import 'package:fnm/features/share/share_data.dart';
-import 'package:fnm/features/share/share_sheet.dart';
-import 'package:fnm/features/shell/detail_pane_host.dart' show openPlayer;
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
+part 'match_elsewhere_banner.dart';
+part 'match_event_flash.dart';
 part 'match_frame.dart';
 part 'match_panels.dart';
-part 'match_event_flash.dart';
-part 'match_score_bug.dart';
-part 'match_tablet_layout.dart';
 part 'match_red_card_banner.dart';
-part 'match_elsewhere_banner.dart';
-part 'match_tv_header.dart';
+part 'match_score_bug.dart';
 part 'match_summary_tab.dart';
+part 'match_tablet_layout.dart';
+part 'match_tv_header.dart';
 
 /// The maximum substitutions a manager may make in a match.
 const int kMaxSubs = 5;
@@ -1210,6 +1210,34 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
         e.playerId,
   };
 
+  /// The commentary for the shootout's first [revealed] kicks, oldest first,
+  /// for the line under the pitch (and the tablet's feed): each kick scored,
+  /// saved, wide or off the woodwork, naming the taker (and the keeper, once
+  /// the pitch has drawn who kept goal).
+  List<String> _shootoutLines(
+    AppLocalizations l,
+    MatchPreview preview,
+    KnockoutOutcome o,
+    int revealed,
+  ) {
+    if (revealed <= 0) return const [];
+    final cast = _stage?.cast;
+    return [
+      for (final k in ShootoutStaging.order(o).take(revealed))
+        shootoutKickLine(
+          l,
+          k.kick,
+          _pc.names,
+          _seed(preview),
+          index: k.index,
+          keeperId: switch (cast) {
+            null => null,
+            final c => k.home ? c.awayKeeperId : c.homeKeeperId,
+          },
+        ),
+    ];
+  }
+
   /// The manager's takers by name, for the shootout strip.
   List<String> _takerNames(MatchPreview preview) => [
     for (final p in _penTakers(preview)) p.name,
@@ -1265,6 +1293,12 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
         ? (o.homeScore + 1, o.awayScore)
         : (o.homeScore, o.awayScore + 1);
   }
+
+  /// The full-time score to SHOW: [_finalScore] without the shootout
+  /// winner's extra goal, so the scoreboard reads the level score that the
+  /// summary, the results and the feed show (see [Fixture.shownHomeScore]).
+  (int, int) _shownScore(MatchPreview preview, MatchResult r) =>
+      fullTimeShownScore(r, _knockoutOutcome(preview, r));
 
   /// Home-team momentum (0–100) at the current minute: a strength baseline over
   /// which pressure *builds toward* the side about to score in the minutes
@@ -2291,10 +2325,13 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             final inExtraTime = _minute > 90 && !_clockDone;
             final inStoppage = _minute == 90 && _added > 0 && !ft;
             // While playing, the score is the running tally of shown goals,
-            // extra time included; at full time it is the true recorded result
-            // (a level knockout settled by a shootout), so the screen never
-            // disagrees with what gets saved.
+            // extra time included; at full time it is the score the result
+            // screens show for what gets saved: a level knockout settled by a
+            // shootout stays level (the kicks are shown beside it), never with
+            // the extra goal the stored result credits the winner with.
+            // [_finalScore] keeps that goal, for who won.
             final (finalHome, finalAway) = _finalScore(preview, r);
+            final (shownHome, shownAway) = _shownScore(preview, r);
             final liveHome = shown
                 .where((e) => e.type == MatchEventType.goal)
                 .where((e) => e.teamNationId == homeId)
@@ -2302,8 +2339,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             final liveAway =
                 shown.where((e) => e.type == MatchEventType.goal).length -
                 liveHome;
-            final homeScore = ft ? finalHome : liveHome;
-            final awayScore = ft ? finalAway : liveAway;
+            final homeScore = ft ? shownHome : liveHome;
+            final awayScore = ft ? shownAway : liveAway;
             _setSoundGround(preview);
             _syncSound();
             if (ft && _started) {
@@ -2437,6 +2474,16 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                     awayColor: awayC,
                   )
                 : null;
+            // The kicks, said one by one under the pitch as they land: the
+            // match's own commentary has nothing more to say by then.
+            final shootoutLines = showingShootout || decidedByShootout
+                ? _shootoutLines(
+                    l,
+                    preview,
+                    knockout!,
+                    showingShootout ? _penRevealed : _penTotal,
+                  )
+                : null;
             final Widget? shootout = showingShootout || decidedByShootout
                 ? _ShootoutStrip(
                     outcome: knockout!,
@@ -2470,7 +2517,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               awayCode: code(awayId),
               homeNationId: homeId,
               ground: preview.ground,
-              neutral: preview.neutralVenue,
+              neutral: preview.neutralGround,
               groundCode: code(preview.ground.groundNationId),
               homeFans: preview.homeFans,
               // The 2D TV's own kick-off and weather, whichever view.
@@ -2959,6 +3006,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                         countAt: pb.lineCountAt,
                         linesAt: (t) =>
                             pb.linesUpTo(l, t, _pc.names, _seed(preview)),
+                        shootoutLines: shootoutLines ?? const [],
                       )
                     : null,
                 overlays: overlays,
@@ -2982,7 +3030,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                         awayReds: awayReds,
                         ground: GroundStrip(
                           ground: preview.ground,
-                          neutral: preview.neutralVenue,
+                          neutral: preview.neutralGround,
                           groundNationCode: code(
                             preview.ground.groundNationId,
                           ),
@@ -3064,6 +3112,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                                 countAt: pb.lineCountAt,
                                 lineAt: (t) =>
                                     pb.lineAt(l, t, _pc.names, _seed(preview)),
+                                shootoutLine: shootoutLines == null
+                                    ? null
+                                    : shootoutLines.lastOrNull ?? '',
                               )
                             else
                               const SizedBox(height: kPitchCommentaryHeight),
@@ -3191,7 +3242,11 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                     spent: _spentCount(preview, r),
                     onPlayPause: _togglePlay,
                     onSpeed: _cycleSpeed,
-                    onTactics: () => _openTactics(preview),
+                    // Down to the shootout: nothing left to change, so no
+                    // tactics key (nor its tired legs and subs count).
+                    onTactics: _isShootout && _clockDone
+                        ? null
+                        : () => _openTactics(preview),
                     // The only wiring of the skip aid: off here is off
                     // everywhere, and the pill is absent rather than dead.
                     onSkip: kShowSkipMatch ? _skip : null,
@@ -3234,3 +3289,11 @@ class _PitchFailed extends StatelessWidget {
     ),
   );
 }
+
+/// The full-time score the match screen shows: the engine's score, or for a
+/// level knockout the score after extra time. A shootout's winner is NOT
+/// given the extra goal the stored result carries (see
+/// [Fixture.shownHomeScore]); the kicks are shown beside the score instead.
+@visibleForTesting
+(int, int) fullTimeShownScore(MatchResult r, KnockoutOutcome? o) =>
+    o == null ? (r.homeScore, r.awayScore) : (o.homeScore, o.awayScore);

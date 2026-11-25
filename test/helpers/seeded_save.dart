@@ -16,6 +16,8 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
+import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
+    show kMatchViewModePrefsKey;
 import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/tournaments/city_providers.dart';
 import 'package:fnm/features/tournaments/qualifying_draw_providers.dart';
@@ -23,8 +25,6 @@ import 'package:fnm/features/world_managers/world_manager_providers.dart'
     show worldManagerStyleEnabledProvider;
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
-    show kMatchViewModePrefsKey;
 
 import 'test_database.dart';
 

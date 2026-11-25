@@ -8,9 +8,9 @@ import 'package:fnm/features/records/all_time_records_screen.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 
+import '../helpers/active_column_check.dart';
 import '../helpers/competition_fixtures.dart';
 import '../helpers/history_fixtures.dart';
-import '../helpers/active_column_check.dart';
 import '../helpers/seeded_save.dart';
 
 Future<SeededSave> _open(WidgetTester tester, Size size) async {

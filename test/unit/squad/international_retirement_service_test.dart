@@ -292,6 +292,7 @@ Future<int> _insertFinishedFinals(
   int champion, {
   int cycle = 9,
   bool finished = true,
+  bool throughQuarters = false,
 }) async {
   final compId = await db
       .into(db.competitions)
@@ -308,6 +309,7 @@ Future<int> _insertFinishedFinals(
     int home,
     int away,
     DateTime date, {
+    required String round,
     bool homeWins = true,
     bool played = true,
   }) => db
@@ -320,6 +322,7 @@ Future<int> _insertFinishedFinals(
           date: date,
           homeNationId: home,
           awayNationId: away,
+          round: Value(round),
           homeScore: Value(played ? (homeWins ? 2 : 0) : null),
           awayScore: Value(played ? (homeWins ? 0 : 1) : null),
           played: Value(played),
@@ -327,16 +330,20 @@ Future<int> _insertFinishedFinals(
       );
   final n = nationIds;
   for (var i = 0; i < 8; i += 2) {
-    await fixture(n[i], n[i + 1], DateTime(2034, 7, 1));
+    await fixture(n[i], n[i + 1], DateTime(2034, 7, 1), round: 'QF');
   }
-  await fixture(n[0], n[2], DateTime(2034, 7, 8));
-  await fixture(n[4], n[6], DateTime(2034, 7, 8));
+  // [throughQuarters]: the quarter-finals played and the semi-finals not yet
+  // drawn, so every fixture that exists is played mid-tournament.
+  if (throughQuarters) return compId;
+  await fixture(n[0], n[2], DateTime(2034, 7, 8), round: 'SF');
+  await fixture(n[4], n[6], DateTime(2034, 7, 8), round: 'SF');
   // Third place two days BEFORE the final: the final is still the last.
-  await fixture(n[2], n[6], DateTime(2034, 7, 17));
+  await fixture(n[2], n[6], DateTime(2034, 7, 17), round: '3RD');
   await fixture(
     n[4],
     champion,
     DateTime(2034, 7, 19),
+    round: 'FINAL',
     homeWins: false,
     played: finished,
   );
@@ -363,6 +370,16 @@ void _moreTests() {
         eight[0],
         cycle: 10,
         finished: false,
+      );
+      // Every fixture played but the next round not drawn yet (a report:
+      // retirements before a Euro quarter-final): still on, not finished.
+      await _insertFinishedFinals(
+        db,
+        s.career.id,
+        eight,
+        eight[0],
+        cycle: 11,
+        throughQuarters: true,
       );
       final store = s.container.read(internationalRetirementRepositoryProvider);
       final finals = await store.finishedFinals(s.career.id);

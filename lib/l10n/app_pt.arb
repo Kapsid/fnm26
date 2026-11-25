@@ -4662,5 +4662,6 @@
   "qualLegendCafStep": "Amarelo: a caminho do play-off africano",
   "qualLegendOfcStep": "Amarelo: a caminho da final da Oceânia",
   "qualLegendIntercont": "Amarelo: a caminho do play-off intercontinental",
-  "legendThrough": "Verde: por agora, segue para a fase seguinte"
+  "legendThrough": "Verde: por agora, segue para a fase seguinte",
+  "campaignRunInNumbersNote": "Só os jogos pelos quais esta campanha é julgada: amigáveis e outras competições não contam."
 }

@@ -8,11 +8,11 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
-import 'package:fnm/domain/services/competition/regional_cups.dart';
 
 /// Which nation's vitrine to show, within a given save.
 typedef NationVitrineArg = ({int careerId, int nationId});

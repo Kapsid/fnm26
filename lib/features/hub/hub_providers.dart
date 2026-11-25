@@ -23,19 +23,19 @@ import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
-import 'package:fnm/domain/services/stats/spot_lines.dart';
-import 'package:fnm/domain/services/press/playoff_draw_note.dart';
 import 'package:fnm/domain/repositories/tactic_familiarity_repository.dart';
+import 'package:fnm/domain/services/achievements/board_satisfaction.dart'
+    show TournamentTier;
+import 'package:fnm/domain/services/cloud/cloud_backup_policy.dart';
+import 'package:fnm/domain/services/club/clubs.dart';
+import 'package:fnm/domain/services/club/transfer_window.dart';
 import 'package:fnm/domain/services/competition/calendar2.dart';
+import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
-import 'package:fnm/domain/services/competition/wc_playoffs.dart';
-import 'package:fnm/domain/services/competition/confed_playoffs.dart';
-import 'package:fnm/domain/services/squad/friendly_rotation.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
-import 'package:fnm/features/tournaments/zone_legend.dart';
 import 'package:fnm/domain/services/competition/host_bidding.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/kickoff_keys.dart';
@@ -43,23 +43,24 @@ import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
-import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/competition/regional_cups.dart';
 import 'package:fnm/domain/services/competition/regional_history.dart';
+import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/competition/tournament_calendar.dart';
-import 'package:fnm/domain/services/match/ai_substitutions.dart';
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/domain/services/competition/world_pedigree.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/domain/services/federation/naturalization_rules.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/match/ai_counter.dart';
+import 'package:fnm/domain/services/match/ai_substitutions.dart';
 import 'package:fnm/domain/services/match/ai_tactics.dart';
 import 'package:fnm/domain/services/match/background_match.dart';
 import 'package:fnm/domain/services/match/big_game_difficulty.dart';
 import 'package:fnm/domain/services/match/goal_attribution.dart';
-import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_conditions.dart';
+import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_simulator.dart';
 import 'package:fnm/domain/services/match/mid_tier_difficulty.dart';
 import 'package:fnm/domain/services/match/same_day_results.dart';
@@ -67,29 +68,37 @@ import 'package:fnm/domain/services/match/venue.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
 import 'package:fnm/domain/services/player/discipline.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
-import 'package:fnm/domain/services/squad/nomination.dart';
+import 'package:fnm/domain/services/press/playoff_draw_note.dart';
 import 'package:fnm/domain/services/ranking/elo.dart';
+import 'package:fnm/domain/services/squad/friendly_rotation.dart';
+import 'package:fnm/domain/services/squad/nomination.dart';
+import 'package:fnm/domain/services/stats/spot_lines.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/domain/services/tactics/team_chemistry.dart';
+import 'package:fnm/features/achievements/achievement_providers.dart';
+import 'package:fnm/features/achievements/challenge_providers.dart'
+    show challengesViewProvider;
+import 'package:fnm/features/awards/award_providers.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
-import 'package:fnm/features/awards/award_providers.dart';
-import 'package:fnm/features/squad/camp_scandal_providers.dart';
-import 'package:fnm/features/squad/grievance_providers.dart';
-import 'package:fnm/features/squad/poaching_providers.dart';
-import 'package:fnm/features/squad/international_retirement_providers.dart';
+import 'package:fnm/features/career/career_summary_providers.dart'
+    show careerSummaryProvider;
+import 'package:fnm/features/career/manager_history_providers.dart'
+    show managerHistoryProvider;
+import 'package:fnm/features/career/nation_offers_providers.dart'
+    show rolloverVerdictProvider;
+import 'package:fnm/features/cloud/cloud_backup_providers.dart';
 import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/federation/federation_service.dart';
-import 'package:fnm/features/federation/youth_hand.dart';
-import 'package:fnm/features/federation/sponsor_providers.dart';
 import 'package:fnm/features/federation/host_bid_providers.dart';
 import 'package:fnm/features/federation/national_stadium_providers.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
+import 'package:fnm/features/federation/sponsor_providers.dart';
+import 'package:fnm/features/federation/youth_hand.dart';
 import 'package:fnm/features/friendlies/friendlies_providers.dart'
     show friendliesPlanProvider;
 import 'package:fnm/features/friendlies/warm_up_providers.dart';
-import 'package:fnm/features/press/pundit_prediction_service.dart';
 import 'package:fnm/features/hub/draw_reveal.dart';
 import 'package:fnm/features/hub/hub_event.dart'
     show
@@ -98,23 +107,19 @@ import 'package:fnm/features/hub/hub_event.dart'
         continentalQualDrawKind,
         nextEventProvider,
         worldCupQualDrawKind;
-import 'package:fnm/features/achievements/achievement_providers.dart';
-import 'package:fnm/features/achievements/challenge_providers.dart'
-    show challengesViewProvider;
-import 'package:fnm/features/career/career_summary_providers.dart'
-    show careerSummaryProvider;
-import 'package:fnm/features/career/manager_history_providers.dart'
-    show managerHistoryProvider;
-import 'package:fnm/features/career/nation_offers_providers.dart'
-    show rolloverVerdictProvider;
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
+import 'package:fnm/features/match/match_ground.dart';
 import 'package:fnm/features/match/match_providers.dart';
-import 'package:fnm/domain/services/cloud/cloud_backup_policy.dart';
-import 'package:fnm/features/cloud/cloud_backup_providers.dart';
+import 'package:fnm/features/messages/message_providers.dart';
+import 'package:fnm/features/messages/transfer_report.dart';
+import 'package:fnm/features/nations/nation_now_providers.dart';
+import 'package:fnm/features/nations/nation_vitrine_providers.dart';
+import 'package:fnm/features/player/player_detail_screen.dart'
+    show invalidatePlayerDetails;
 import 'package:fnm/features/press/press_desk.dart';
 import 'package:fnm/features/press/press_providers.dart';
-import 'package:fnm/features/tactics/condition_providers.dart';
+import 'package:fnm/features/press/pundit_prediction_service.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/records/all_time_records_providers.dart'
     show allTimeRecordsProvider;
@@ -126,50 +131,47 @@ import 'package:fnm/features/records/record_book_providers.dart'
     show recordBookProvider;
 import 'package:fnm/features/records/rivalry_providers.dart'
     show rivalryProvider;
+import 'package:fnm/features/results/results_providers.dart';
+import 'package:fnm/features/settings/settings_providers.dart';
+import 'package:fnm/features/squad/camp_scandal_providers.dart';
+import 'package:fnm/features/squad/grievance_providers.dart';
+import 'package:fnm/features/squad/international_retirement_providers.dart';
+import 'package:fnm/features/squad/poaching_providers.dart';
 import 'package:fnm/features/squad/training_camp_providers.dart';
 import 'package:fnm/features/squad/youth_providers.dart';
 import 'package:fnm/features/squad/youth_watch_providers.dart';
-import 'package:fnm/features/tactics/absence_providers.dart';
-import 'package:fnm/features/tactics/nation_squad_providers.dart';
-import 'package:fnm/features/tactics/tactics_providers.dart';
-import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/stats/stats_providers.dart'
     show careerStatsProvider, teamOverallHistoryProvider, teamStatsProvider;
-import 'package:fnm/features/nations/nation_now_providers.dart';
-import 'package:fnm/features/nations/nation_vitrine_providers.dart';
-import 'package:fnm/features/player/player_detail_screen.dart'
-    show invalidatePlayerDetails;
-import 'package:fnm/features/results/results_providers.dart';
-import 'package:fnm/features/match/match_ground.dart';
+import 'package:fnm/features/tactics/absence_providers.dart';
+import 'package:fnm/features/tactics/condition_providers.dart';
+import 'package:fnm/features/tactics/nation_squad_providers.dart';
+import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/features/tournaments/continental_clash_providers.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/features/tournaments/cup_detail_providers.dart';
+import 'package:fnm/features/tournaments/euro_playoff_providers.dart';
 import 'package:fnm/features/tournaments/intercontinental_playoff_providers.dart';
 import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart'
     show nationsCupDrawKind;
 import 'package:fnm/features/tournaments/nations_cup_providers.dart';
-import 'package:fnm/features/tournaments/tournaments_providers.dart';
 import 'package:fnm/features/tournaments/playoff_paths.dart';
-import 'package:fnm/features/tournaments/wc_host_theme.dart';
+import 'package:fnm/features/tournaments/tournaments_providers.dart';
 import 'package:fnm/features/tournaments/wc_host_berths.dart';
+import 'package:fnm/features/tournaments/wc_host_theme.dart';
+import 'package:fnm/features/tournaments/zone_legend.dart';
 import 'package:fnm/features/world_managers/manager_windows.dart';
 import 'package:fnm/features/world_managers/world_manager_markers.dart';
 import 'package:fnm/features/world_managers/world_manager_providers.dart';
 import 'package:fnm/features/y/y_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
-import 'package:fnm/domain/services/club/clubs.dart';
-import 'package:fnm/domain/services/club/transfer_window.dart';
-import 'package:fnm/features/messages/message_providers.dart';
-import 'package:fnm/features/messages/transfer_report.dart';
-import 'package:fnm/features/tournaments/euro_playoff_providers.dart';
 
+part 'season_confed_playoffs.dart';
 part 'season_cycle.dart';
 part 'season_euro_playoffs.dart';
 part 'season_finals.dart';
-part 'season_wc_playoffs.dart';
-part 'season_confed_playoffs.dart';
 part 'season_regional_cups.dart';
 part 'season_rollover.dart';
+part 'season_wc_playoffs.dart';
 
 /// Everything the Hub screen needs for a save, in one fetch.
 class HubData {
@@ -395,6 +397,7 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
       final tables = [
         for (final t in await compRepo.allGroupTablesByConfederation(
           careerId,
+          confederation: conf,
         ))
           if (t.confederation == conf) t.standings,
       ];

@@ -4,13 +4,13 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/util/caps.dart';
-import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/settings/settings_providers.dart';
 
 /// Watched-draw keys for the host-selection ceremonies.
 const worldCupHostDrawKind = 'wcHostDraw';

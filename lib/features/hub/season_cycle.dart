@@ -161,6 +161,16 @@ extension SeasonCycle on SeasonService {
     final objectives = await _ref.read(
       cycleObjectiveOutcomesProvider(careerId).future,
     );
+    // A World Championship run that stopped at the knockout rung is worded by
+    // the round it actually ended in (see [endedAtRoundOf32]).
+    final roundOf32 =
+        objectives.any(
+          (o) => o.decided && o.tier == TournamentTier.world && o.actual == 3,
+        ) &&
+        endedAtRoundOf32(
+          await _comp.cycleFixturesForNation(careerId, career.nationId),
+          career.nationId,
+        );
     for (final o in objectives) {
       if (!o.decided) continue;
       // The brief, the finish and the competition are all stored as MEANING:
@@ -181,6 +191,7 @@ extension SeasonCycle on SeasonService {
           o.actual,
           competition: o.competition,
           offTheBottom: o.offTheBottom,
+          roundOf32: roundOf32,
         ),
       );
       final comp = MsgComp(o.competition);

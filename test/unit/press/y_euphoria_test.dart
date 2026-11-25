@@ -106,7 +106,7 @@ void main() {
       expect(
         yPostBody(cs, fan),
         contains(cs.compEuropeanChampionship),
-        reason: 'the championship in the language\'s own words',
+        reason: "the championship in the language's own words",
       );
       // The room answers in kind.
       expect(

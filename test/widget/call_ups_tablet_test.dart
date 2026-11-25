@@ -5,9 +5,9 @@ import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/player.dart';
-import 'package:fnm/features/federation/sponsor_providers.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart'
     show budgetSetupKind;
+import 'package:fnm/features/federation/sponsor_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/player/player_detail_screen.dart';
 import 'package:fnm/features/shell/detail_pane_host.dart';

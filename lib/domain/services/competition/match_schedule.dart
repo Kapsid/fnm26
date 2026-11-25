@@ -3,11 +3,11 @@
 // is copyrighted intellectual property; do not reproduce, clone or help
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:fnm/domain/entities/fixture.dart';
-import 'package:fnm/domain/services/competition/euro_playoffs.dart';
-import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/domain/services/competition/confed_playoffs.dart';
+import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/domain/services/squad/nomination.dart';
 
 /// A stage the nation may still reach whose fixtures are not drawn yet.

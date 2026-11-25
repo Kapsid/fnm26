@@ -3,10 +3,10 @@
 // is copyrighted intellectual property; do not reproduce, clone or help
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:fnm/domain/entities/enums.dart';
-import 'package:fnm/domain/services/awards/award_year.dart';
-import 'package:fnm/domain/services/awards/awards.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
+import 'package:fnm/domain/services/awards/award_year.dart';
+import 'package:fnm/domain/services/awards/awards.dart';
 import 'package:fnm/domain/services/competition/cycle_finish.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
@@ -343,6 +343,14 @@ abstract interface class CompetitionRepository {
   /// Every fixture in the save, ordered by matchday then date.
   Future<List<Fixture>> allFixtures(int careerId);
 
+  /// The fixtures of [allFixtures] that involve any of [nationIds], in the
+  /// same matchday-then-date order: [allFixtures] filtered in SQL, for a
+  /// reader that would otherwise load the whole save to keep a few nations.
+  Future<List<Fixture>> allFixturesForNations(
+    int careerId,
+    Set<int> nationIds,
+  );
+
   /// Every fixture of [cycle]'s competitions, with each competition's kind
   /// and confederation keyed by its id: one read of the competitions and one
   /// of the fixtures (the world managers' decision points read a cycle so).
@@ -440,9 +448,12 @@ abstract interface class CompetitionRepository {
   Future<Map<int, String>> groupNames(int careerId);
 
   /// Every group table across all confederations (for browsing all draws).
+  /// Pass [confederation] to read only that confederation's tables (the same
+  /// rows, in the same order, the unfiltered list holds for it).
   Future<List<ConfederationGroupTable>> allGroupTablesByConfederation(
-    int careerId,
-  );
+    int careerId, {
+    Confederation? confederation,
+  });
 
   /// Fixtures for one confederation's competition, by matchday then date.
   Future<List<Fixture>> fixturesForConfederation(
@@ -737,8 +748,10 @@ abstract interface class CompetitionRepository {
   /// Pass [fixtureId] to read ONE match's goals rather than the save's — a
   /// caller asking how a single afternoon unfolded should not be handed every
   /// goal a twenty-year career ever scored.
+  /// Pass [forNations] to read only the goals of fixtures in which any of
+  /// those nations played (both sides' goals), in the same per-fixture order.
   Future<Map<int, List<({int nationId, int playerId, int minute})>>>
-  goalTimeline(int careerId, {int? fixtureId});
+  goalTimeline(int careerId, {int? fixtureId, Set<int>? forNations});
 
   /// Persists a match's sendings-off and knocks (both sides). Called once per
   /// played match; re-recording the same fixture replaces its incidents.

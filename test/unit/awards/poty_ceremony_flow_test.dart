@@ -5,12 +5,12 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/db/career_bundle.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/features/awards/award_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/messages/poty_card.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
-import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/features/tournaments/cup_detail_providers.dart';
 import 'package:fnm/features/tournaments/tournament_stars_of.dart';
@@ -307,7 +307,7 @@ void main() {
     );
   });
 
-  test('a World Championship\'s honours are fixed the night of the final, '
+  test("a World Championship's honours are fixed the night of the final, "
       'and the vote on 31 December reads the same rows', () async {
     final comp = c.read(competitionRepositoryProvider);
     // To the final: the hub then offers the next cycle.

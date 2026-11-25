@@ -59,12 +59,12 @@ void main() {
       expect(r.awayPlan, (formation: Formation.f433, instructions: sheet));
     });
 
-    test('a decoy switched away from at 1\' is not the plan', () {
+    test("a decoy switched away from at 1' is not the plan", () {
       final r = playWithSwitchAt(1);
       expect(r.homePlan, (formation: Formation.f4231, instructions: live));
     });
 
-    test('a switch at 60\' leaves the sheet plan dominant', () {
+    test("a switch at 60' leaves the sheet plan dominant", () {
       final r = playWithSwitchAt(60);
       expect(r.homePlan, (formation: Formation.f433, instructions: sheet));
     });
@@ -151,7 +151,7 @@ void main() {
       expect(
         (touched.homeScore, touched.awayScore, touched.homeXg, touched.awayXg),
         (plain.homeScore, plain.awayScore, plain.homeXg, plain.awayXg),
-        reason: 'seed $seed: red to a ${off.name} at ${red.first.minute}\'',
+        reason: "seed $seed: red to a ${off.name} at ${red.first.minute}'",
       );
       checked++;
     }

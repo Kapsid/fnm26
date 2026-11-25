@@ -14,12 +14,12 @@ import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/features/career/career_providers.dart';
-import 'package:fnm/features/squad/grievance_providers.dart';
 import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/match/match_providers.dart';
+import 'package:fnm/features/squad/grievance_providers.dart';
 import 'package:fnm/features/tactics/player_roles_providers.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
 

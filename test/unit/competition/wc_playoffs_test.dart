@@ -411,7 +411,7 @@ void main() {
     });
   });
 
-  group('GroupAdvancement with Europe\'s paths', () {
+  group("GroupAdvancement with Europe's paths", () {
     test('winners direct, no ladder, the best runners-up painted', () {
       final adv = GroupAdvancement.worldCupQualifying(
         Confederation.europe,

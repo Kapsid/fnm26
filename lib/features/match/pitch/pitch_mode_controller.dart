@@ -203,6 +203,9 @@ class PitchModeController {
       resume: state,
     );
     PitchPlayback? pb;
+    // Set when the picture had to be told from kick-off after all: the
+    // clock then goes to where the old one stood (a cut, never a freeze).
+    var fromKickOff = false;
     try {
       try {
         pb = await _builder(job);
@@ -211,7 +214,25 @@ class PitchModeController {
         // died): build in place rather than leave the pitch on its spinner.
         debugPrint('Pitch script build off the UI thread failed: $e\n$st');
         if (_disposed || generation != _generation) return false;
-        pb = _inPlace(job);
+        try {
+          pb = _inPlace(job);
+        } on Object catch (e, st) {
+          // The same job fails the same way in place. Told from where the
+          // old picture stood, the failure may be the resume's: tell it
+          // from kick-off and cut to the same moment of the match.
+          if (state == null) rethrow;
+          debugPrint('Pitch script resumed build failed in place: $e\n$st');
+          pb = _inPlace(
+            PitchBuild(
+              result: result,
+              lineups: lineups,
+              speedStep: speedStep,
+              seed: seed,
+              isFinal: isFinal,
+            ),
+          );
+          fromKickOff = true;
+        }
       }
     } on Object catch (e, st) {
       debugPrint('Pitch script build in place failed too: $e\n$st');
@@ -241,7 +262,17 @@ class PitchModeController {
       ..pacer = pb.pacer
       ..speed = pitchRateForStep(speedStep);
     _busy = false;
-    jump(state != null ? pb.start : place(pb));
+    jump(
+      state == null
+          ? place(pb)
+          : fromKickOff
+          ? pb.pacer.screenAt(
+              state.minute,
+              state.stoppage,
+              within: state.within,
+            )
+          : pb.start,
+    );
     return true;
   }
 

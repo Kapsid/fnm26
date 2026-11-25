@@ -272,19 +272,19 @@ void main() {
   });
 
   test('unknown traits, deals and voices are UnknownId', () {
-    final pl = PackPlayer(
+    const pl = PackPlayer(
       id: 7,
       name: 'P',
       age: 25,
       position: PlayerPosition.cm,
-      attributes: const PlayerAttributes(
+      attributes: PlayerAttributes(
         physical: 60,
         technical: 60,
         stamina: 60,
       ),
       potential: 90,
-      traits: const [],
-      unknownTraits: const ['flyingKick'],
+      traits: [],
+      unknownTraits: ['flyingKick'],
     );
     final p = _pack(
       squads: {

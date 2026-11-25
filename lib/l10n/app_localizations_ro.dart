@@ -19103,4 +19103,8 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get legendThrough => 'Verde: deocamdată, merge în turul următor';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'Doar meciurile după care este judecată această campanie: amicalele și celelalte competiții nu se pun.';
 }

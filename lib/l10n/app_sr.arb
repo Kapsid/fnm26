@@ -2888,6 +2888,7 @@
   "campaignProgressRival": "{rival}: {position}",
   "campaignProgressFinals": "Завршница: {stage}",
   "campaignRunInNumbers": "Поход у бројкама",
+  "campaignRunInNumbersNote": "Само утакмице по којима се ова кампања оцењује: пријатељске утакмице и друга такмичења се не рачунају.",
   "campaignRunMeetings": "Добијени мечеви: {won} од {played}",
   "campaignPlace": "{which, select, first{1.} second{2.} third{3.} other{{n}.}}",
   "campaignGuineasTitle": "Најбоља Гвинеја",

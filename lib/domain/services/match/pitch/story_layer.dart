@@ -43,6 +43,7 @@
 /// the men (`_roleShape`). None of it touches an outcome.
 library;
 
+import 'dart:developer' as developer;
 import 'dart:math' as math;
 import 'dart:typed_data';
 
@@ -524,10 +525,66 @@ class _Hold implements StagedPlan {
   }
 }
 
+/// A staged plan that can never stop the picture: the first error it
+/// throws hands the rest of its window to [_Hold] (everyone holds, the
+/// ball goes where the moment needs it), and the match plays on. One
+/// moment shown plainly, never a whole match without a picture.
+class _Guarded implements StagedPlan {
+  _Guarded(this._context, this._plan);
+
+  final StagingContext _context;
+  StagedPlan _plan;
+  bool _failed = false;
+
+  /// Whether the staged plan failed and holds now stand in for it.
+  bool get holding => _failed;
+
+  T _run<T>(T Function(StagedPlan p) f) {
+    if (_failed) return f(_plan);
+    try {
+      return f(_plan);
+    } on Object catch (e, st) {
+      _failed = true;
+      _plan = _Hold(_context);
+      StoryLayer._report(e, st);
+      return f(_plan);
+    }
+  }
+
+  @override
+  PlayerDrive? drive(int playerId, double t, ScriptState now) =>
+      _run((p) => p.drive(playerId, t, now));
+
+  @override
+  BallAction? ball(double t, ScriptState now) => _run((p) => p.ball(t, now));
+
+  @override
+  bool settled(double t, ScriptState now) => _run((p) => p.settled(t, now));
+}
+
 /// Builds a match's [PitchScript].
 abstract final class StoryLayer {
   /// The keyframe spacing, in screen seconds.
   static const double step = 0.25;
+
+  /// Told of every error a moment's staging throws. The moment is then
+  /// shown plainly ([NeutralHold]) and the build goes on; tests set this
+  /// to see the errors the picture swallows.
+  static void Function(Object error, StackTrace stack)? onStagingError;
+
+  static void _report(Object error, StackTrace stack) {
+    final hook = onStagingError;
+    if (hook != null) {
+      hook(error, stack);
+    } else {
+      developer.log(
+        'A moment could not be staged; it is shown plainly',
+        name: 'fnm.pitch',
+        error: error,
+        stackTrace: stack,
+      );
+    }
+  }
 
   /// The whole match's picture: quiet time told by the story layer, each
   /// staged moment's window filled by [stager].
@@ -1176,35 +1233,42 @@ class _Builder {
     w.entry = _state(t);
     activeWindow = w;
     final m = pacer.matchAt(_dur(t)).minute;
-    activePlan = stager.stage(
-      StagingContext(
-        window: w,
-        entry: w.entry,
-        lineups: lineups,
-        homeDir: attackDir(home: true, minute: m),
-        departing: {
-          for (final a in agents)
-            if (a.walkStart != null || _departsWithin(a, t, 10)) a.id,
-        },
-        seed: (seed ^ ((index + 1) * 0x9E3779B1)) & 0xFFFFFFFF,
-        homePossessionShare: _share(0),
-        next: index < windows.length ? windows[index] : null,
-        ahead: [
-          for (var k = index; k < windows.length; k++)
-            if (windows[k].start - w.end <= LeadIn.taker) windows[k],
-        ],
-        events: result.events,
-        instructions: {
-          for (final side in sides) side.team.nationId: side.instr,
-        },
-        resuming: resumeAt != null && (t - resumeAt!).abs() < 1e-9,
-        buildUp: w.moments.isEmpty ? 0 : pacer.buildUpOf(w.moments.first),
-        hardEnd: [
-          for (final r in [...resets, total])
-            if (r >= w.end - 1e-9 && r <= w.end + _spill) r,
-        ].fold(double.infinity, math.min),
-      ),
+    final context = StagingContext(
+      window: w,
+      entry: w.entry,
+      lineups: lineups,
+      homeDir: attackDir(home: true, minute: m),
+      departing: {
+        for (final a in agents)
+          if (a.walkStart != null || _departsWithin(a, t, 10)) a.id,
+      },
+      seed: (seed ^ ((index + 1) * 0x9E3779B1)) & 0xFFFFFFFF,
+      homePossessionShare: _share(0),
+      next: index < windows.length ? windows[index] : null,
+      ahead: [
+        for (var k = index; k < windows.length; k++)
+          if (windows[k].start - w.end <= LeadIn.taker) windows[k],
+      ],
+      events: result.events,
+      instructions: {
+        for (final side in sides) side.team.nationId: side.instr,
+      },
+      resuming: resumeAt != null && (t - resumeAt!).abs() < 1e-9,
+      buildUp: w.moments.isEmpty ? 0 : pacer.buildUpOf(w.moments.first),
+      hardEnd: [
+        for (final r in [...resets, total])
+          if (r >= w.end - 1e-9 && r <= w.end + _spill) r,
+      ].fold(double.infinity, math.min),
     );
+    // A moment that cannot be staged is shown plainly; the match plays on.
+    StagedPlan plan;
+    try {
+      plan = stager.stage(context);
+    } on Object catch (e, st) {
+      StoryLayer._report(e, st);
+      plan = _Hold(context);
+    }
+    activePlan = plan is _Hold ? plan : _Guarded(context, plan);
   }
 
   /// Whether [w]'s plan plays on past its end into the quiet time after
@@ -1933,6 +1997,21 @@ class _Builder {
         ..facing = state.facing[a.id] ?? 0
         ..vel = state.velocity[a.id] ?? Offset2.zero;
       if (state.walking.contains(a.id)) {
+        if (a.walkStart == null) {
+          // The old picture had him set off before this one's pacing does
+          // (a moment it cut short, or did not show, ends sooner): he sets
+          // off now, through the usual door, so his place is handed on to
+          // whoever replaces him. Only marked walking, he kept his slot,
+          // his own departure later found him already on his way and did
+          // nothing, and his substitute never found room to step on: a
+          // moment naming the substitute then staged a man who was not
+          // there (a null check deep in the staging, the build failed).
+          _startWalk(
+            a,
+            t0,
+            replaced: planned.values.any((p) => p.$1 == a.index),
+          );
+        }
         // Wherever the replay left him, he heads for the boundary nearest
         // where he actually is.
         a.walkStart ??= departures[a.id] ?? t0;
@@ -2775,7 +2854,10 @@ class _Builder {
     final ball = _ballNow(t0);
     _updateBackLines(minute, ball);
     final plan = activePlan;
-    final state = inWindow && plan is! _Hold ? _state(t0) : null;
+    final state =
+        inWindow && plan is! _Hold && !(plan is _Guarded && plan.holding)
+        ? _state(t0)
+        : null;
 
     sprinting.clear();
     // In an attack being staged the side it belongs to has the ball, so

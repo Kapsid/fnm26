@@ -35,3 +35,10 @@ linter:
     # rule's older-analyzer behaviour false-positives on the first normal
     # dependency. Our dependency lists are kept alphabetical by convention.
     sort_pub_dependencies: false
+    # Off: fires on every `[Name]` in a doc comment the analyzer cannot
+    # resolve from that file (part files, other libraries), ~240 false alarms.
+    comment_references: false
+    # Off: each `// ignore:` already sits next to the reason in our code.
+    document_ignores: false
+    # Off: `static const a = 1, b = 2;` groups related caps on purpose.
+    avoid_multiple_declarations_per_line: false

@@ -244,7 +244,7 @@ void main() {
     expect(own, findsOneWidget);
   });
 
-  testWidgets("and during the ceremony, when his place comes", (tester) async {
+  testWidgets('and during the ceremony, when his place comes', (tester) async {
     final l = await _pump(tester);
     // Intro, then fifth and fourth: third is the manager's man.
     await tester.pump(const Duration(milliseconds: 1800));

@@ -45,7 +45,7 @@ void main() {
       expect(adjusted[1][0].points, b[0].points);
     });
 
-    test('drops results against the bigger group\'s bottom side', () {
+    test("drops results against the bigger group's bottom side", () {
       // Group A has six teams, group B five. In A everyone beats everyone
       // below them, so 1 wins all ten (30 pts) and 6 finishes last.
       final a = GroupStanding.table([

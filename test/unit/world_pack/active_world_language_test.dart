@@ -256,7 +256,7 @@ void main() {
     expect(de.addedYName(y.id, world: 'lang'), isNull);
 
     ActiveWorld.current = cs;
-    final s = Sponsor.added(sponsor, world: 'lang');
+    const s = Sponsor.added(sponsor, world: 'lang');
     expect(sponsorBrandName(_l('cs'), s), 'Gril s.r.o.');
     expect(sponsorFlavour(_l('cs'), s), 'Z grilu.');
     ActiveWorld.current = de;

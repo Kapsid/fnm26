@@ -11,24 +11,24 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/data/data_providers.dart';
-import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/calendar2.dart';
+import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/features/friendlies/other_friendlies_providers.dart';
+import 'package:fnm/features/tournaments/continental_detail_providers.dart';
+import 'package:fnm/features/tournaments/wc_host_berths.dart';
+import 'package:fnm/features/tournaments/zone_legend.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:fnm/features/tournaments/continental_detail_providers.dart';
-import 'package:fnm/features/tournaments/wc_host_berths.dart';
-import 'package:fnm/features/tournaments/zone_legend.dart';
 
 part 'round_results_tablet_layout.dart';
 

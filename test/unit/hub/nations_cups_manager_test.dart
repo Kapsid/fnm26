@@ -126,7 +126,7 @@ void main() {
       expect(nc.single.target, inInclusiveRange(3, 7));
     });
 
-    test('is sent to watch his cup\'s Finals Eight', () async {
+    test("is sent to watch his cup's Finals Eight", () async {
       final s = await open('ZAM');
       await finalsUnderWay(
         s.c,
@@ -142,7 +142,7 @@ void main() {
     });
   });
 
-  test('a European manager is not sent to watch Africa\'s finals', () async {
+  test("a European manager is not sent to watch Africa's finals", () async {
     final s = await open('GER');
     await finalsUnderWay(
       s.c,
@@ -233,7 +233,7 @@ void main() {
   });
 
   test(
-    'a manager who moves Europe to CONCACAF follows CONCACAF\'s cup',
+    "a manager who moves Europe to CONCACAF follows CONCACAF's cup",
     () async {
       final s = await open('GER');
       final before = await s.c.read(

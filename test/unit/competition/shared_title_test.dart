@@ -17,7 +17,7 @@ import '../../helpers/test_database.dart';
 /// used to have no European title at all.
 void main() {
   test(
-    'the 1976 European Championship is Czechia\'s and Slovakia\'s',
+    "the 1976 European Championship is Czechia's and Slovakia's",
     () async {
       final db = createTestDatabase();
       addTearDown(db.close);

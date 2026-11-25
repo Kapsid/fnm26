@@ -18780,4 +18780,8 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get legendThrough => 'Verde: por ahora, pasa a la siguiente ronda';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'Solo los partidos por los que se juzga esta campaña: no cuentan los amistosos ni otras competiciones.';
 }

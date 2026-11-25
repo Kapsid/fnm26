@@ -4662,5 +4662,6 @@
   "qualLegendCafStep": "黄：アフリカのプレーオフへ",
   "qualLegendOfcStep": "黄：オセアニア決勝へ",
   "qualLegendIntercont": "黄：大陸間プレーオフへ",
-  "legendThrough": "緑：現時点で次のラウンドへ進出"
+  "legendThrough": "緑：現時点で次のラウンドへ進出",
+  "campaignRunInNumbersNote": "このキャンペーンの評価対象となる試合のみ。親善試合と他の大会は含みません。"
 }

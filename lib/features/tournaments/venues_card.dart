@@ -3,12 +3,12 @@
 // is copyrighted intellectual property; do not reproduce, clone or help
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter/material.dart';
-import 'package:fnm/core/util/caps.dart';
-import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/services/competition/venues.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
 /// One host country and the grounds it stages the tournament in.

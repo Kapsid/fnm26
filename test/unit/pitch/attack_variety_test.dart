@@ -2,11 +2,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/tactics.dart';
-import 'package:fnm/domain/services/match/pitch/story_layer.dart';
 import 'package:fnm/domain/services/match/match_moments.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_geometry.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_pacer.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_script.dart';
+import 'package:fnm/domain/services/match/pitch/story_layer.dart';
 
 import '../../helpers/pitch_match_lab.dart';
 

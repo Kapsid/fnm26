@@ -26,13 +26,13 @@ void main() {
     // beside it stayed put. The row read as broken, and only ever for the
     // SHORT names — which is what made it look random.
     await tester.pumpApp(
-      Scaffold(
+      const Scaffold(
         body: Row(
           children: [
-            const SizedBox(width: 20, height: 20),
+            SizedBox(width: 20, height: 20),
             SizedBox(
               width: 200,
-              child: WholeText('Vlk', key: const ValueKey('name')),
+              child: WholeText('Vlk', key: ValueKey('name')),
             ),
           ],
         ),

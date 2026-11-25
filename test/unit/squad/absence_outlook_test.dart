@@ -61,7 +61,7 @@ void main() {
     expect(o.weeks, 14);
   });
 
-  test('the opponent is read from the squad\'s side of the fixture', () {
+  test("the opponent is read from the squad's side of the fixture", () {
     final o = AbsenceOutlooks.forAbsence(
       const PlayerAbsence(playerId: 9, banMatches: 1),
       upcoming: upcoming,

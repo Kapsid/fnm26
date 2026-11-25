@@ -19017,4 +19017,8 @@ class AppLocalizationsHr extends AppLocalizations {
   @override
   String get legendThrough =>
       'Zeleno: prema trenutačnom stanju prolazi u sljedeći krug';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'Samo utakmice po kojima se ova kampanja ocjenjuje: prijateljske utakmice i druga natjecanja se ne broje.';
 }

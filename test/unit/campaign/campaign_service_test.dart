@@ -114,7 +114,7 @@ void main() {
     expect(third.isSuccess, isFalse);
   });
 
-  test('the transplant is six of the donor\'s best, naturalised', () async {
+  test("the transplant is six of the donor's best, naturalised", () async {
     final career = await container
         .read(campaignServiceProvider)
         .start(Campaigns.transplant, managerName: 'Me');

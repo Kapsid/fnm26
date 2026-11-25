@@ -18,11 +18,11 @@ import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/home/home_next_line_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
+import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
+    show kMatchViewModePrefsKey;
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
-    show kMatchViewModePrefsKey;
 
 import '../helpers/test_database.dart';
 

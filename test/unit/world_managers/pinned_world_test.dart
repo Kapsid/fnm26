@@ -4,8 +4,9 @@ import 'dart:io';
 import 'package:drift/drift.dart' show Variable;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/features/hub/hub_providers.dart'
+    show regionalCupsEnabledProvider;
 import 'package:fnm/features/world_managers/world_manager_providers.dart';
-import 'package:fnm/features/hub/hub_providers.dart' show regionalCupsEnabledProvider;
 
 import '../../story/driver.dart';
 

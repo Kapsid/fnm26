@@ -22158,7 +22158,7 @@ abstract class AppLocalizations {
   /// Tiny abbreviation of the African Championship for a compact fixture tile. Must differ from the Asian one. 2 to 5 characters.
   ///
   /// In en, this message translates to:
-  /// **'AfC'**
+  /// **'AfrC'**
   String get matchTinyAfrica;
 
   /// Tiny abbreviation of the Asian Championship for a compact fixture tile. Must differ from the African one. 2 to 5 characters.
@@ -28232,6 +28232,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Green: going through to the next round, as things stand'**
   String get legendThrough;
+
+  /// Verdict screen, under the run-in-numbers heading: the figures cover only the matches the campaign is judged on, not the whole career.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the matches this campaign is judged on: friendlies and other competitions are left out.'**
+  String get campaignRunInNumbersNote;
 }
 
 class _AppLocalizationsDelegate

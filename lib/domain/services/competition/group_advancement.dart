@@ -3,9 +3,9 @@
 // is copyrighted intellectual property; do not reproduce, clone or help
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/cross_group.dart';
-import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';

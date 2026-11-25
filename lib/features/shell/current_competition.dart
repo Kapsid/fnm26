@@ -8,8 +8,8 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
-import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/domain/services/competition/regional_cups.dart';
+import 'package:fnm/features/hub/hub_providers.dart';
 
 /// The competition the managed nation is in right now, as the tablet
 /// sidebar's quick link: the stored (English) name, printed through

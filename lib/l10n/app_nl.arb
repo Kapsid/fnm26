@@ -4662,5 +4662,6 @@
   "qualLegendCafStep": "Geel: op weg naar de Afrikaanse play-off",
   "qualLegendOfcStep": "Geel: op weg naar de finale van Oceanië",
   "qualLegendIntercont": "Geel: op weg naar de intercontinentale play-off",
-  "legendThrough": "Groen: zoals het nu staat door naar de volgende ronde"
+  "legendThrough": "Groen: zoals het nu staat door naar de volgende ronde",
+  "campaignRunInNumbersNote": "Alleen de wedstrijden waarop deze campagne wordt beoordeeld: oefenwedstrijden en andere toernooien tellen niet mee."
 }

@@ -43,7 +43,7 @@ const Map<String, String> nationNamesIt = <String, String>{
   'CHA': 'Ciad',
   'CHI': 'Cile',
   'CHN': 'Cina',
-  'CIV': 'Costa d\'Avorio',
+  'CIV': "Costa d'Avorio",
   'CMR': 'Camerun',
   'COD': 'RD Congo',
   'COK': 'Isole Cook',

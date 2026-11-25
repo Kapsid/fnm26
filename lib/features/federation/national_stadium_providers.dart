@@ -8,9 +8,9 @@ import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/venues.dart';
 import 'package:fnm/domain/services/federation/national_stadiums.dart';
+import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/match/attendance.dart' show MatchGround;
 import 'package:fnm/domain/services/match/stadium/ground_character.dart';
-import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/press/fan_mood.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart'
     show budgetSetupKind;

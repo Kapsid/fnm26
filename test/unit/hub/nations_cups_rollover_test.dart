@@ -148,7 +148,7 @@ void main() {
   );
 
   test(
-    "rollover repairs a stored CONCACAF League C the calendar never played",
+    'rollover repairs a stored CONCACAF League C the calendar never played',
     () async {
       final s = await setUp();
       final careers = s.container.read(careerRepositoryProvider);

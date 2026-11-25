@@ -120,7 +120,7 @@ void main() {
     }
   });
 
-  test('Best of Guineas: Equatorial Guinea hosts neither cycle\'s African '
+  test("Best of Guineas: Equatorial Guinea hosts neither cycle's African "
       'Championship', () {
     const def = Campaigns.guineas;
     for (var cycle = 0; cycle < def.cycles; cycle++) {

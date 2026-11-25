@@ -206,7 +206,9 @@ void main() {
       // A full round robin of real sides, three matchdays.
       for (final g in draw.groups) {
         expect(g.fixtures, hasLength(6));
-        final sides = {for (final f in g.fixtures) ...[f.$2, f.$3]};
+        final sides = {
+          for (final f in g.fixtures) ...[f.$2, f.$3],
+        };
         expect(sides, g.nationIds.toSet());
         expect({for (final f in g.fixtures) f.$1}, {1, 2, 3});
       }

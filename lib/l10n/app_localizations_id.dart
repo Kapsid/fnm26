@@ -18583,4 +18583,8 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get legendThrough =>
       'Hijau: untuk saat ini, lolos ke babak berikutnya';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'Hanya pertandingan yang menjadi dasar penilaian kampanye ini: laga persahabatan dan kompetisi lain tidak dihitung.';
 }

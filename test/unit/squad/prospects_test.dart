@@ -27,7 +27,7 @@ void main() {
     expect(list.map((p) => p.player.id), isNot(contains(4)));
   });
 
-  test('the year\'s improvement is reported', () {
+  test("the year's improvement is reported", () {
     final list = Prospects.watchlist(
       [kid(1, rating: 68)],
       previousPool: [kid(1, rating: 62)],

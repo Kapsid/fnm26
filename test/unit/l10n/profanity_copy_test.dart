@@ -46,7 +46,7 @@ void main() {
   test('French quotes and colons take a no-break space', () {
     for (final k in keys) {
       final v = arbs['fr']![k]! as String;
-      expect(RegExp(r'[^ ]:').hasMatch(v), isFalse, reason: k);
+      expect(RegExp('[^ ]:').hasMatch(v), isFalse, reason: k);
       if (v.contains('«')) expect(v, contains('« {name} »'), reason: k);
     }
   });

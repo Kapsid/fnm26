@@ -5,7 +5,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fnm/features/world_pack/trophy_image.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -24,6 +23,7 @@ import 'package:fnm/features/tournaments/cup_detail_screen.dart';
 import 'package:fnm/features/tournaments/nations_cup_screen.dart';
 import 'package:fnm/features/tournaments/regional_cup_screen.dart';
 import 'package:fnm/features/tournaments/tournaments_providers.dart';
+import 'package:fnm/features/world_pack/trophy_image.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -567,7 +567,7 @@ class _ChampionshipTile extends StatelessWidget {
                     trophy,
                     height: _trophy,
                     fit: BoxFit.contain,
-                    errorBuilder: (_, __, ___) => Center(child: icon),
+                    errorBuilder: (_, _, _) => Center(child: icon),
                   ),
                 );
               }(),

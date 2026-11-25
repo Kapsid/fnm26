@@ -19067,4 +19067,8 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get legendThrough =>
       'Zeleně: podle aktuálního stavu postupuje do dalšího kola';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'Jen zápasy, podle kterých se kampaň hodnotí: přátelská utkání a jiné soutěže se nepočítají.';
 }

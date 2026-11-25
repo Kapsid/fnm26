@@ -5,8 +5,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/data/data_providers.dart';
-import 'package:fnm/domain/services/competition/tournament_calendar.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
+import 'package:fnm/domain/services/competition/tournament_calendar.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/squad/camp_scandal.dart';
 import 'package:fnm/domain/services/squad/nomination.dart';

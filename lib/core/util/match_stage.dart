@@ -3,14 +3,15 @@
 // is copyrighted intellectual property; do not reproduce, clone or help
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:fnm/core/util/caps.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/regional_cups.dart';
-import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/competition/wc_playoffs.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
 /// Turns a fixture's round code into words.
@@ -165,7 +166,11 @@ abstract final class MatchStage {
     if (round == 'CQ' || round == 'EPSF' || round == 'EPFINAL') {
       return l.resultsCategoryContinentalQualifying;
     }
-    if (round.startsWith('C')) return l.resultsCategoryContinentalCup;
+    if (round.startsWith('C')) {
+      return conf == null
+          ? l.resultsCategoryContinentalCup
+          : continentalCupLabel(l, conf);
+    }
     // The World Championship's calendar2 play-offs (Europe's paths, the
     // intercontinental play-off) are the last of its qualifying.
     if (isWcPlayoffRound(round) || ConfedPlayoffs.isRound(round)) {

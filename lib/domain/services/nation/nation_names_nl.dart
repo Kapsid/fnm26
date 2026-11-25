@@ -18,7 +18,7 @@ const Map<String, String> nationNamesNl = <String, String>{
   'AUS': 'Australië',
   'AUT': 'Oostenrijk',
   'AZE': 'Azerbeidzjan',
-  'BAH': 'Bahama\'s',
+  'BAH': "Bahama's",
   'BAN': 'Bangladesh',
   'BDI': 'Burundi',
   'BEL': 'België',

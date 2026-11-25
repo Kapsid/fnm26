@@ -4662,5 +4662,6 @@
   "qualLegendCafStep": "Gul: på vej til det afrikanske play-off",
   "qualLegendOfcStep": "Gul: på vej til Oceaniens finale",
   "qualLegendIntercont": "Gul: på vej til det interkontinentale play-off",
-  "legendThrough": "Grøn: går videre til næste runde, som det står nu"
+  "legendThrough": "Grøn: går videre til næste runde, som det står nu",
+  "campaignRunInNumbersNote": "Kun de kampe, kampagnen bedømmes på: venskabskampe og andre turneringer tæller ikke med."
 }

@@ -260,10 +260,13 @@ void main() {
           rng: SeededRng(seed),
           extraTimeAtMargin: margin,
         );
-        expect((at.homeScore, at.awayScore), (
-          plain.homeScore,
-          plain.awayScore,
-        ));
+        expect(
+          (at.homeScore, at.awayScore),
+          (
+            plain.homeScore,
+            plain.awayScore,
+          ),
+        );
         expect(at.extraTime, isNotNull);
         final off = const MatchEngine().play(
           home: home,

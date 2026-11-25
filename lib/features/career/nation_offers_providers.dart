@@ -13,6 +13,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/domain/services/federation/national_stadiums.dart';
 import 'package:fnm/domain/services/manager/job_market.dart';
@@ -24,7 +25,6 @@ import 'package:fnm/features/federation/national_stadium_providers.dart'
     show stadiumWorks;
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
-import 'package:fnm/domain/services/competition/regional_cups.dart';
 
 /// How many smaller nations from other continents join the offers at the end
 /// of a cycle, on top of the three read off the manager's standing.

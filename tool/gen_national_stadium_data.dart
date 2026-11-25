@@ -27,10 +27,10 @@ void main() {
     ..writeln('// fails if the two ever disagree.')
     ..writeln()
     ..writeln(
-      '/// Every nation\'s real top grounds, biggest first, up to ten: the city',
+      "/// Every nation's real top grounds, biggest first, up to ten: the city",
     )
     ..writeln(
-      '/// each stands in (one of the nation\'s venue cities) and its approximate',
+      "/// each stands in (one of the nation's venue cities) and its approximate",
     )
     ..writeln(
       '/// real capacity. A city may appear twice (London, Lima, Abidjan). See',

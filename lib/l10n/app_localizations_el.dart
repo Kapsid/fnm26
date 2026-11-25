@@ -18773,4 +18773,8 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get legendThrough =>
       'Πράσινο: με τα σημερινά δεδομένα, προκρίνεται στον επόμενο γύρο';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'Μόνο οι αγώνες με τους οποίους κρίνεται αυτή η αποστολή: τα φιλικά και οι άλλες διοργανώσεις δεν μετράνε.';
 }

@@ -4662,5 +4662,6 @@
   "qualLegendCafStep": "Sarı: Afrika play-off'una gidiyor",
   "qualLegendOfcStep": "Sarı: Okyanusya finaline gidiyor",
   "qualLegendIntercont": "Sarı: kıtalar arası play-off'a gidiyor",
-  "legendThrough": "Yeşil: şu anki duruma göre bir sonraki tura çıkıyor"
+  "legendThrough": "Yeşil: şu anki duruma göre bir sonraki tura çıkıyor",
+  "campaignRunInNumbersNote": "Yalnızca bu kampanyanın değerlendirildiği maçlar: hazırlık maçları ve diğer turnuvalar sayılmaz."
 }

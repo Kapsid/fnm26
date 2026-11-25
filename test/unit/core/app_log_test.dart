@@ -81,6 +81,6 @@ void main() {
       returnsNormally,
     );
     await AppLog.debugFlush();
-    expect(() => AppLog.read(), returnsNormally);
+    expect(AppLog.read, returnsNormally);
   });
 }

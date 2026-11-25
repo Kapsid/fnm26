@@ -18620,4 +18620,8 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get legendThrough =>
       'Zöld: a jelenlegi állás szerint továbbjut a következő körbe';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'Csak azok a meccsek, amelyek alapján a kampányt megítélik: a barátságos meccsek és más sorozatok nem számítanak.';
 }

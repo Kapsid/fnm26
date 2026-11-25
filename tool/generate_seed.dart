@@ -19,7 +19,8 @@ import 'seed/nations_data.dart';
 
 void main() {
   // FIFA ranking: sort by strength (desc), tie-break by name for stability.
-  final ranked = [...fifaNations]..sort((a, b) {
+  final ranked = [...fifaNations]
+    ..sort((a, b) {
       final byStrength = b.strength.compareTo(a.strength);
       return byStrength != 0 ? byStrength : a.name.compareTo(b.name);
     });
@@ -51,10 +52,11 @@ void main() {
     for (var slot = 0; slot < _squad.length; slot++) {
       final role = _squad[slot];
       final delta = role.isStarter
-          ? 2 - role.order * 0.4 // starters: +2 … -2
+          ? 2 -
+                role.order *
+                    0.4 // starters: +2 … -2
           : -4 - role.order * 0.7; // bench: -4 … -12
-      final target =
-          (base + delta + rng.rangeInt(-2, 2)).round().clamp(28, 94);
+      final target = (base + delta + rng.rangeInt(-2, 2)).round().clamp(28, 94);
 
       players.add(
         _player(

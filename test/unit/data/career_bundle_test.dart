@@ -611,7 +611,7 @@ void main() {
         )
         .map((r) => r.read<int>('n'))
         .getSingle();
-    expect(ownsCompetition, 1, reason: 'the fixture names another save\'s cup');
+    expect(ownsCompetition, 1, reason: "the fixture names another save's cup");
 
     // And the group hangs off that same competition, not the original's.
     final groupCompetition = await db

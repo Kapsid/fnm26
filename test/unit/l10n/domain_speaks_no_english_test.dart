@@ -124,10 +124,10 @@ const List<String> _displayCapsWords = [
 /// round code is never followed by one).
 final RegExp _displayLiteral = RegExp(
   r"(?:=>|return)\s+'([A-Z][a-z][^']*)'"
-  r"|'((?:[A-Z0-9]{2,}(?:[ ·]+[A-Z0-9]{2,})+"
+  "|'((?:[A-Z0-9]{2,}(?:[ ·]+[A-Z0-9]{2,})+"
   '|${_displayCapsWords.join('|')}'
-  r"|[A-Z]{3,}[ ·:]+\$"
-  r")[^']*)'",
+  r'|[A-Z]{3,}[ ·:]+\$'
+  ")[^']*)'",
 );
 
 /// Canonical strings: stored in saves or compared in logic, so they are

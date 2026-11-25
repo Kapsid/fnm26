@@ -4,11 +4,11 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/cycle_finish.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
-import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/career/career_providers.dart';
 
@@ -223,8 +223,9 @@ managerHistoryProvider = FutureProvider.autoDispose.family<ManagerHistory?, int>
         final my = home ? f.homeScore! : f.awayScore!;
         final other = home ? f.awayScore! : f.homeScore!;
         played++;
-        gf += my;
-        ga += other;
+        // Goals as scored: not a shootout winner's stored extra goal.
+        gf += home ? f.shownHomeScore! : f.shownAwayScore!;
+        ga += home ? f.shownAwayScore! : f.shownHomeScore!;
         final oppId = home ? f.awayNationId : f.homeNationId;
         final result = (
           code: nations[nationId]?.code ?? '??',

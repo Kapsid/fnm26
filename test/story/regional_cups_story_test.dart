@@ -5,18 +5,16 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/domain/services/competition/regional_cups.dart';
 import 'package:fnm/domain/services/competition/regional_history.dart';
 import 'package:fnm/features/career/career_providers.dart';
-import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
+import 'package:fnm/features/hub/draw_reveal.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart' show seasonServiceProvider;
 import 'package:fnm/features/hub/objective_providers.dart';
-
-import 'package:fnm/features/hub/draw_reveal.dart';
-
-import 'package:fnm/domain/entities/enums.dart';
 
 import 'driver.dart';
 
@@ -145,7 +143,7 @@ void main() {
     final comp = c.read(competitionRepositoryProvider);
     // As an older build left it: no regional honours at all.
     await db.customStatement(
-      "DELETE FROM honours WHERE competition IN "
+      'DELETE FROM honours WHERE competition IN '
       "('Gulf Cup', 'Southeast Asian Championship')",
     );
     expect(

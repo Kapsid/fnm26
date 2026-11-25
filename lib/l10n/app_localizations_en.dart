@@ -14666,7 +14666,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get matchTinyNorthAmerica => 'NAC';
 
   @override
-  String get matchTinyAfrica => 'AfC';
+  String get matchTinyAfrica => 'AfrC';
 
   @override
   String get matchTinyAsia => 'AsC';
@@ -18719,4 +18719,8 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get legendThrough =>
       'Green: going through to the next round, as things stand';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'Only the matches this campaign is judged on: friendlies and other competitions are left out.';
 }

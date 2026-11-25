@@ -18856,4 +18856,8 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get legendThrough =>
       'Vert : qualifié pour le tour suivant, en l\'état';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'Seulement les matchs sur lesquels cette campagne est jugée : les amicaux et les autres compétitions ne comptent pas.';
 }

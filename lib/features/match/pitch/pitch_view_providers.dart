@@ -453,7 +453,7 @@ PitchStadium pitchStadiumForPreview(
     awayShare: AwayFanShare.estimate(
       home: home,
       away: away,
-      neutral: preview.neutralVenue,
+      neutral: preview.neutralGround,
       tournament: dressing.dressed,
       distanceKm: AwayFanShare.proxyDistanceKm(home, away),
     ),

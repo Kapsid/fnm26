@@ -4,7 +4,6 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fnm/shared/widgets/app_segmented_tabs.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/core/theme/app_colors.dart';
@@ -23,7 +22,6 @@ import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/features/match/match_feedback.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
-import 'package:fnm/features/tactics/tactics_pitch.dart' show surnameOf;
 import 'package:fnm/features/match/penalty_order_sheet.dart';
 import 'package:fnm/features/match/pitch/pitch_clock.dart';
 import 'package:fnm/features/match/pitch/pitch_match_view.dart';
@@ -33,7 +31,9 @@ import 'package:fnm/features/match/pitch/pitch_projection.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/features/match/score_bug_theme.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
+import 'package:fnm/features/tactics/tactics_pitch.dart' show surnameOf;
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/widgets/app_segmented_tabs.dart';
 import 'package:fnm/shared/widgets/primary_button.dart';
 import 'package:fnm/shared/widgets/rating_badge.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -376,6 +376,46 @@ void main() {
     await _until(tester, () => _seen(tester).clock != '0');
   });
 
+  testWidgets('a new speed whose resumed picture fails both ways is told '
+      'from kick-off and cut to the same minute: the match never freezes', (
+    tester,
+  ) async {
+    Never fail(String how) => throw StateError(how);
+    await _pump(
+      tester,
+      preview: _preview(),
+      salt: 7,
+      prefs: {kMatchViewModePrefsKey: 'pitch'},
+      builder: (b) async =>
+          b.resume != null ? fail('the isolate died') : b.run(),
+      inPlace: (b) =>
+          b.resume != null ? fail('and so did the fallback') : b.run(),
+    );
+    await _until(tester, () => _ready(tester) && _clock(tester).playing);
+    await _seek(tester, _pb(tester).pacer.screenAt(30, 0, within: 0.5));
+    await tester.pump(const Duration(seconds: 3)); // any goal flash clears
+    final before = _pb(tester).positionAt(_clock(tester).value);
+
+    await tester.tap(find.text('1×'));
+    await tester.pump();
+    await _until(
+      tester,
+      () =>
+          !_screen(tester).pitchMode.building &&
+          find.text('2×').evaluate().isNotEmpty,
+    );
+    final pc = _screen(tester).pitchMode;
+    expect(pc.failed, isFalse);
+    expect(pc.playback, isNotNull);
+    expect(find.byKey(const Key('match.pitchFailed')), findsNothing);
+    final after = pc.playback!.positionAt(pc.clock!.value);
+    expect(after.minute, before.minute, reason: 'the same minute, not 0');
+    await _until(tester, () => _clock(tester).playing);
+    final at = _clock(tester).value;
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(_clock(tester).value, greaterThan(at), reason: 'the match plays on');
+  });
+
   testWidgets('when the in-place build fails too, the pitch shows an error '
       'and the way to the Timeline, never an endless spinner', (tester) async {
     await _pump(
@@ -541,7 +581,7 @@ void main() {
   // A friendly's allowance is its bench: half time said "0/5" while the
   // bar under the pitch and the editor allowed the whole bench.
   for (final round in ['FRIENDLY', 'CQ']) {
-    testWidgets('half time counts the subs against the match\'s own '
+    testWidgets("half time counts the subs against the match's own "
         'allowance ($round)', (tester) async {
       final preview = _preview(round: round);
       await _pump(

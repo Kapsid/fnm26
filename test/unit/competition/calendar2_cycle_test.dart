@@ -4,10 +4,10 @@ library;
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:drift/drift.dart' hide isNotNull, isNull;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/data_providers.dart';
-import 'package:drift/drift.dart' hide isNotNull, isNull;
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/enums.dart';

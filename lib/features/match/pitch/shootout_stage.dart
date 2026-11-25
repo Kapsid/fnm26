@@ -20,16 +20,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:fnm/core/theme/app_colors.dart';
+import 'package:fnm/core/theme/kit_colors.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/match/pitch/moment_staging.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_geometry.dart';
-import 'package:fnm/features/match/pitch/actors_painter.dart';
-import 'package:fnm/features/match/pitch/pitch_projection.dart';
-import 'package:fnm/core/theme/kit_colors.dart';
-import 'package:fnm/features/match/pitch/stadium_looks.dart';
-import 'package:fnm/features/match/pitch/stadium_painter.dart';
-import 'package:fnm/features/match/pitch/token_painter.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
+import 'package:fnm/features/match/pitch/actors_painter.dart';
+import 'package:fnm/features/match/pitch/token_painter.dart';
 
 /// What the shootout's close-up draws: one kick, how far into it, and its
 /// men. A shootout's own kicks ([ShootoutStageController]) and a penalty in

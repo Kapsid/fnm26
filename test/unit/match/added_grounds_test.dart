@@ -198,7 +198,7 @@ void main() {
     });
 
     test('a work on an added ground lands on it alone', () {
-      final work = StadiumWork.resize(
+      const work = StadiumWork.resize(
         nationId: _england,
         cycle: 1,
         stadium: (city: 'Smallbury#+${_base + 1}', built: false),

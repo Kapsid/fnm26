@@ -9,19 +9,19 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/achievements/achievements.dart';
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
-import 'package:fnm/domain/services/competition/nations_cups.dart';
-import 'package:fnm/features/federation/career_pool.dart';
-import 'package:fnm/features/y/y_providers.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 import 'package:fnm/domain/services/competition/tournament_stars.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/stats/stats_providers.dart';
+import 'package:fnm/features/y/y_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
-import 'package:fnm/domain/services/competition/regional_cups.dart';
 
 /// The localised (title, description) for an achievement, resolved from its
 /// stable [AchievementDef.id]. Falls back to the catalogue's English if an id

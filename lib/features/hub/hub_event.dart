@@ -6,52 +6,52 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/core/routing/app_router.dart';
-import 'package:fnm/domain/services/competition/tournament_calendar.dart';
-import 'package:fnm/domain/services/competition/calendar2.dart';
-import 'package:fnm/domain/services/competition/euro_playoffs.dart';
-import 'package:fnm/domain/services/competition/wc_playoffs.dart';
-import 'package:fnm/domain/services/competition/confed_playoffs.dart';
-import 'package:fnm/domain/services/competition/nations_cups.dart';
-import 'package:fnm/core/util/match_stage.dart';
-import 'package:fnm/domain/services/competition/regional_cups.dart';
 import 'package:fnm/core/util/competition_label.dart';
+import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
-import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/campaign/campaigns.dart';
+import 'package:fnm/domain/services/competition/calendar2.dart';
+import 'package:fnm/domain/services/competition/confed_playoffs.dart';
+import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/kickoff_keys.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
+import 'package:fnm/domain/services/competition/tournament_calendar.dart';
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/domain/services/squad/nomination.dart';
-import 'package:fnm/features/press/press_copy.dart';
-import 'package:fnm/features/press/press_providers.dart';
-import 'package:fnm/features/squad/grievance_providers.dart';
-
-export 'package:fnm/domain/services/competition/kickoff_keys.dart'
-    show continentalKickoffKind, worldCupKickoffKind;
-import 'package:fnm/domain/services/campaign/campaigns.dart';
 import 'package:fnm/features/awards/award_providers.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
-import 'package:fnm/features/career/nation_offers_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
-import 'package:fnm/features/federation/naturalization_providers.dart';
-import 'package:fnm/features/squad/injury_cover_providers.dart';
-import 'package:fnm/features/squad/camp_scandal_providers.dart';
+import 'package:fnm/features/career/nation_offers_providers.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
 import 'package:fnm/features/federation/host_bid_providers.dart';
+import 'package:fnm/features/federation/naturalization_providers.dart';
 import 'package:fnm/features/federation/sponsor_providers.dart';
 import 'package:fnm/features/friendlies/friendlies_providers.dart';
 import 'package:fnm/features/friendlies/warm_up_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
+import 'package:fnm/features/press/press_copy.dart';
+import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
+import 'package:fnm/features/squad/camp_scandal_providers.dart';
+import 'package:fnm/features/squad/grievance_providers.dart';
+import 'package:fnm/features/squad/injury_cover_providers.dart';
 import 'package:fnm/features/squad/training_camp_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
 import 'package:fnm/features/tournaments/host_draw_providers.dart';
 import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+
+export 'package:fnm/domain/services/competition/kickoff_keys.dart'
+    show continentalKickoffKind, worldCupKickoffKind;
 
 /// The kinds of thing the hub's main action can be — the game is a timeline of
 /// these events rather than a single "continue".

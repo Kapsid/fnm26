@@ -4,19 +4,19 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/util/competition_label.dart';
+import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/domain/services/competition/regional_cups.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/stats/nation_results.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
-import 'package:fnm/domain/services/competition/regional_cups.dart';
-import 'package:fnm/core/util/match_stage.dart';
 
 /// One line of a nation's record book: a player, his tally, and whether he is
 /// still playing — the same rule the pool retires on, so a record book reads

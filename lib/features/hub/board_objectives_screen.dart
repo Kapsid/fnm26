@@ -329,8 +329,8 @@ List<({CycleObjective? objective, ObjectiveGap? gap})> objectiveRows(
   // A stable sort: two rows of one tier keep the order they came in.
   final indexed = rows.indexed.toList()
     ..sort((a, b) {
-      final ta = (a.$2.objective?.tier ?? a.$2.gap!.tier);
-      final tb = (b.$2.objective?.tier ?? b.$2.gap!.tier);
+      final ta = a.$2.objective?.tier ?? a.$2.gap!.tier;
+      final tb = b.$2.objective?.tier ?? b.$2.gap!.tier;
       final byTier = order(ta).compareTo(order(tb));
       return byTier != 0 ? byTier : a.$1.compareTo(b.$1);
     });

@@ -103,7 +103,7 @@ void main() {
       expect(ClubService.leagueStars('eng').first, 5);
     });
 
-    test('a world sets a game club\'s stars and an added club\'s own', () {
+    test("a world sets a game club's stars and an added club's own", () {
       final world = ClubWorld(
         added: const {
           'cze': ['Added One', 'Added Two'],

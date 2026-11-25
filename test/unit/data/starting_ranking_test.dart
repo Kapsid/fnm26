@@ -190,9 +190,9 @@ void main() {
       });
       final rows = await _seedRows(db);
       expect(
-        (await (db.select(
+        await (db.select(
           db.seedRankings,
-        )..where((t) => t.careerId.equals(fresh))).get()),
+        )..where((t) => t.careerId.equals(fresh))).get(),
         isEmpty,
       );
 

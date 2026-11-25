@@ -154,7 +154,7 @@ void main() {
     );
   }
 
-  test('the manager\'s own matches: 0.34-0.46 penalties a match over 2,000, '
+  test("the manager's own matches: 0.34-0.46 penalties a match over 2,000, "
       'about 3 in 4 scored, the home side given 53-62% of them', () {
     final u = userPath(seeds: 2000, salt: 0x9E11);
     // ignore: avoid_print, a measurement worth reading when it moves

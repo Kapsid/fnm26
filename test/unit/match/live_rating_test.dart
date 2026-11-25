@@ -121,7 +121,7 @@ void main() {
       }
     });
 
-    test('two matches identical to 60\' read the same to 60\', however '
+    test("two matches identical to 60' read the same to 60', however "
         'they end', () {
       final collapse = [
         ..._early,

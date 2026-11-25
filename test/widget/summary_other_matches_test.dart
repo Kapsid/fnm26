@@ -7,10 +7,10 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/domain/services/match/same_day_results.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
+import 'package:fnm/features/match/pitch/pitch_match_view.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/features/match/same_day_providers.dart';
 import 'package:fnm/features/match/shot_map.dart';
-import 'package:fnm/features/match/pitch/pitch_match_view.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
 import '../helpers/seeded_save.dart';
@@ -194,7 +194,7 @@ void main() {
           expect(
             find.byKey(MatchSummaryTab.freshScoreKey(o.fixture.id)),
             o.goalsBetween(m - 4, m).isEmpty ? findsNothing : findsOneWidget,
-            reason: 'at $m\'',
+            reason: "at $m'",
           );
         }
       }

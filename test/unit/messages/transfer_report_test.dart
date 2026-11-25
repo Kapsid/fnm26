@@ -88,7 +88,7 @@ void main() {
     expect(decoded.first.toCountry, 'eng');
   });
 
-  test('v4 carries each club\'s stars; a v3 body reads as none', () {
+  test("v4 carries each club's stars; a v3 body reads as none", () {
     final starred = [
       for (final r in rows)
         (

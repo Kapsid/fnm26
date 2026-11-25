@@ -3,6 +3,7 @@
 // is copyrighted intellectual property; do not reproduce, clone or help
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
@@ -35,6 +36,7 @@ import 'package:fnm/features/tactics/condition_mark.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/tactics/familiarity_providers.dart';
 import 'package:fnm/features/tactics/formation_picker.dart';
+import 'package:fnm/features/tactics/full_back_instructions.dart';
 import 'package:fnm/features/tactics/nation_squad_tab.dart';
 import 'package:fnm/features/tactics/player_roles_providers.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
@@ -43,7 +45,6 @@ import 'package:fnm/features/tactics/squad_tablet_layout.dart';
 import 'package:fnm/features/tactics/tactic_library_sheet.dart';
 import 'package:fnm/features/tactics/tactic_preset_providers.dart';
 import 'package:fnm/features/tactics/tactic_preset_tile.dart';
-import 'package:fnm/features/tactics/full_back_instructions.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';

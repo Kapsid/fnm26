@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/club_label.dart';
 import 'package:fnm/features/messages/paged_report.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
-import 'package:fnm/core/util/club_label.dart';
 
 /// One move in the window's transfer report.
 typedef TransferRow = ({

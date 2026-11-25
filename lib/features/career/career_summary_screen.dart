@@ -4,12 +4,12 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fnm/core/util/career_label.dart';
-import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/career_label.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/features/career/career_summary_providers.dart';
 import 'package:fnm/features/manager/manager_age_widgets.dart';
 import 'package:fnm/features/share/share_cabinet_button.dart';
@@ -375,7 +375,7 @@ class _TitlesList extends StatelessWidget {
                         horizontal: AppSpacing.sm,
                         vertical: 1,
                       ),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: AppColors.secondaryContainer,
                         borderRadius: AppRadii.smAll,
                       ),

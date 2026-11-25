@@ -18668,4 +18668,8 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get legendThrough =>
       'Grön: vidare till nästa omgång, som det ser ut nu';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'Bara matcherna som kampanjen bedöms på: vänskapsmatcher och andra turneringar räknas inte.';
 }

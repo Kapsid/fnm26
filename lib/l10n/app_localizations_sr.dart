@@ -19043,4 +19043,8 @@ class AppLocalizationsSr extends AppLocalizations {
   @override
   String get legendThrough =>
       'Зелено: према тренутном стању пролази у следећу рунду';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'Само утакмице по којима се ова кампања оцењује: пријатељске утакмице и друга такмичења се не рачунају.';
 }

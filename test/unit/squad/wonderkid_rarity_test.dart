@@ -44,11 +44,11 @@ void main() {
       inInclusiveRange(14, 25),
       reason:
           'one wonderkid in every ${oneIn.toStringAsFixed(1)} intake children '
-          '(${flagged} of ${children.length})',
+          '($flagged of ${children.length})',
     );
   });
 
-  test('the stars a manager SEES are still the scout\'s guess', () {
+  test("the stars a manager SEES are still the scout's guess", () {
     // The badge is honest; the number beside it is not, and must not become
     // so — not knowing is what makes watching a boy come through a decision.
     final children = intakes(nations: 8);

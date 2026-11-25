@@ -523,7 +523,7 @@ void main() {
     expect(checked, 3, reason: 'too few injuries to test');
   });
 
-  test('a formation change at 60\' redraws the shape from 60\'', () {
+  test("a formation change at 60' redraws the shape from 60'", () {
     final home = _team(1, 75, Formation.f532, const TacticalInstructions());
     final away = _team(2, 75, Formation.f433, const TacticalInstructions());
     final change = TacticalChange(
@@ -791,7 +791,7 @@ void main() {
     expect(second.arrivals.containsKey(160), isTrue);
   });
 
-  test('extra time swaps ends again after 105\'', () {
+  test("extra time swaps ends again after 105'", () {
     expect(attackDir(home: true, minute: 100), 1);
     expect(attackDir(home: true, minute: 106), -1);
     for (var seed = 0; seed < 60; seed += 3) {

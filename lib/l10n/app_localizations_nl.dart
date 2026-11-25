@@ -18776,4 +18776,8 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get legendThrough =>
       'Groen: zoals het nu staat door naar de volgende ronde';
+
+  @override
+  String get campaignRunInNumbersNote =>
+      'Alleen de wedstrijden waarop deze campagne wordt beoordeeld: oefenwedstrijden en andere toernooien tellen niet mee.';
 }

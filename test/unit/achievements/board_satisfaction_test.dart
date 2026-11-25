@@ -415,4 +415,3 @@ void main() {
     expect(boardRemarkFor(MatchOutcome.loss, 0), BoardRemark.concerned);
   });
 }
-

@@ -29,7 +29,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   test(
-    'a non-qualifier is still offered their continent\'s finals draw',
+    "a non-qualifier is still offered their continent's finals draw",
     () async {
       final db = createTestDatabase();
       final nations =

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fnm/shared/widgets/app_segmented_tabs.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -8,6 +7,7 @@ import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/features/tournaments/continental_detail_screen.dart';
 import 'package:fnm/features/tournaments/tournament_bracket.dart';
+import 'package:fnm/shared/widgets/app_segmented_tabs.dart';
 
 import '../helpers/competition_fixtures.dart';
 import '../helpers/seeded_save.dart';

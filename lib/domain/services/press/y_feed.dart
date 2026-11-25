@@ -3,14 +3,14 @@
 // is copyrighted intellectual property; do not reproduce, clone or help
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:fnm/core/util/text_variety.dart';
+import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/press/expectation.dart';
 import 'package:fnm/domain/services/press/fan_mood.dart';
 import 'package:fnm/domain/services/press/half_time_swing.dart';
-import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/domain/services/press/persona.dart';
+import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/domain/services/press/statement.dart';
-import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/squad/camp_scandal.dart';
 import 'package:fnm/domain/services/world_managers/manager_relation.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
@@ -1600,7 +1600,7 @@ abstract final class YFeed {
     // thread — every post drawing one would bury the feed under its own
     // replies, and a match is one conversation, not five.
     if (posts.isEmpty) return posts;
-    return distinctWording([
+    final thread = distinctWording([
       ...posts,
       ...repliesTo(
         posts.first,
@@ -1620,6 +1620,97 @@ abstract final class YFeed {
         heat: heat,
       ),
     ]);
+    return pointsAtStake(m.stakes) ? thread : withoutPoints(thread);
+  }
+
+  /// Whether a match of [stakes] is played for league points: a qualifier, a
+  /// Nations Cup league game or a finals group game. A knockout tie, a final
+  /// and a friendly are not, and "three points" after a cup final is nonsense
+  /// (promo-reel run, 2026-11).
+  static bool pointsAtStake(YStakes stakes) =>
+      stakes == YStakes.qualifier || stakes == YStakes.finals;
+
+  /// The wordings, by ARB slot, that talk about league points: a result line
+  /// of [template] ...
+  static const Map<YTemplate, Set<int>> pointsWordings = {
+    YTemplate.winRoutine: {14},
+    YTemplate.winTight: {5, 14},
+    YTemplate.drew: {0, 3, 4, 9, 13},
+    YTemplate.drewHeroic: {3, 4, 7, 8, 10},
+    YTemplate.drewShame: {3, 4},
+    YTemplate.drewGiant: {1, 4, 5, 7},
+  };
+
+  /// ... and a reply in a mood.
+  static const Map<YMood, Set<int>> pointsReplies = {
+    YMood.relief: {2, 3, 14},
+    YMood.shrug: {13},
+  };
+
+  /// Whether [p], as it would be worded, talks about league points.
+  static bool talksOfPoints(YPost p) {
+    final mood = p.template == YTemplate.reaction
+        ? (p.mood ?? YMood.shrug)
+        : null;
+    final slots = mood != null
+        ? pointsReplies[mood]
+        : pointsWordings[p.template];
+    if (slots == null) return false;
+    final total = mood != null
+        ? reactionVariantsFor(mood)
+        : variantsFor(p.template);
+    final slot = YCast.arbSlot(
+      variant: p.variant % total,
+      original: mood != null ? reactionVariantCount : deepVariantCount,
+      total: total,
+    );
+    return slots.contains(slot);
+  }
+
+  /// [posts] with every wording that talks about league points moved on to
+  /// another in the same tone band that does not, and that no other post of
+  /// the event already uses where that can be helped.
+  static List<YPost> withoutPoints(List<YPost> posts) {
+    String groupOf(YPost p) => p.template == YTemplate.reaction
+        ? 'm:${(p.mood ?? YMood.shrug).name}'
+        : 't:${p.template.name}';
+    final used = <String, Set<int>>{};
+    for (final p in posts) {
+      (used[groupOf(p)] ??= <int>{}).add(p.variant);
+    }
+    return [
+      for (final p in posts)
+        if (!talksOfPoints(p))
+          p
+        else
+          () {
+            final total = p.template == YTemplate.reaction
+                ? reactionVariantsFor(p.mood ?? YMood.shrug)
+                : variantsFor(p.template);
+            final v = p.variant % total;
+            var (offset, size) = (0, total);
+            for (final tone in YTone.values) {
+              final (o, s) = YCast.band(tone, total);
+              if (v >= o && v < o + s) (offset, size) = (o, s);
+            }
+            final taken = used[groupOf(p)]!;
+            int? free;
+            int? fallback;
+            for (var i = 1; i < size; i++) {
+              final c = offset + (v - offset + i) % size;
+              if (talksOfPoints(_withVariant(p, c))) continue;
+              fallback ??= c;
+              if (!taken.contains(c)) {
+                free = c;
+                break;
+              }
+            }
+            final pick = free ?? fallback;
+            if (pick == null) return p;
+            taken.add(pick);
+            return _withVariant(p, pick);
+          }(),
+    ];
   }
 
   /// How many posts an event of [heat] is worth: the old five for an ordinary
@@ -1970,6 +2061,13 @@ abstract final class YFeed {
       );
     }
     if (!finalsRounds.contains(core)) return null;
+    // A knockout tie WON is not an exit. The next round's tie is drawn only
+    // once the round is over, so for a while a side that has just gone
+    // through has nothing left on its schedule, and reading that as "out"
+    // posted an obituary after every quarter-final won (promo-reel run,
+    // 2026-11). The third-place match is the one tie that ends a run either
+    // way.
+    if (won && core != 'GROUP' && core != '3RD') return null;
     // A knockout defeat is an exit and says so on its own. A GROUP table is
     // not: a side with no fixtures left may have topped the group and be
     // waiting on a draw nobody has made yet, or have gone up a league while

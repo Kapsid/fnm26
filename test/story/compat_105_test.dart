@@ -13,11 +13,11 @@ import 'package:fnm/features/federation/host_bid_providers.dart';
 import 'package:fnm/features/federation/national_stadium_providers.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
+import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
+    show kMatchViewModePrefsKey;
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/features/tournaments/city_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
-    show kMatchViewModePrefsKey;
 
 import 'driver.dart';
 

@@ -525,7 +525,7 @@ void main() {
     },
   );
 
-  test('ClubService.leagueClubs lists a country\'s league, none for an '
+  test("ClubService.leagueClubs lists a country's league, none for an "
       'unknown country', () {
     expect(ClubService.leagueClubs('cze'), contains('Klokani Praha'));
     expect(ClubService.leagueClubs('CZE'), contains('Klokani Praha'));

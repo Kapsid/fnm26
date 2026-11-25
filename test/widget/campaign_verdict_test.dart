@@ -9,8 +9,8 @@ import 'package:fnm/features/campaign/campaign_hub_card.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/campaign/campaign_record_store.dart';
 import 'package:fnm/features/campaign/campaign_stamp.dart';
-import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/campaign/campaign_verdict_screen.dart';
+import 'package:fnm/features/hub/hub_event.dart';
 
 import '../helpers/seeded_save.dart';
 
@@ -113,6 +113,15 @@ void main() {
         findsNWidgets(2),
       );
       expect(find.text('The run in numbers'.toUpperCase()), findsOneWidget);
+      // The figures are the campaign's own matches, not the career's, and
+      // say so (promo-reel run: 12 here read as wrong next to 143 played).
+      expect(
+        find.text(
+          'Only the matches this campaign is judged on: friendlies and other '
+          'competitions are left out.',
+        ),
+        findsOneWidget,
+      );
       expect(find.text('Meetings won: 1 of 2'), findsOneWidget);
 
       await tester.tap(find.byKey(CampaignVerdictScreen.continueKey));

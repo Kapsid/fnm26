@@ -58,7 +58,7 @@ void main() {
   for (final locale in [const Locale('en'), const Locale('cs')]) {
     for (final width in [360.0, 400.0]) {
       testWidgets(
-        '${locale.languageCode}: the wall\'s controls fit at ${width.toInt()}px',
+        "${locale.languageCode}: the wall's controls fit at ${width.toInt()}px",
         (tester) async {
           await pumpControls(tester, locale, width);
           expect(tester.takeException(), isNull);

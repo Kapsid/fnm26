@@ -43,6 +43,8 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/build/
+/android/.gradle/
 
 # Upload keystore backup + its passwords. Never commit.
 /secrets/
@@ -50,8 +52,7 @@ app.*.map.json
 *.keystore
 
 # Brainstorm mockups (visual companion)
-.superpowers/brainstorm/
-.superpowers/sdd/
+.superpowers/
 docs/site/editor/
 test/golden/failures/
 

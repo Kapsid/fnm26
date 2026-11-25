@@ -9,8 +9,8 @@ import 'package:fnm/features/records/record_book_screen.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 
-import '../helpers/history_fixtures.dart';
 import '../helpers/active_column_check.dart';
+import '../helpers/history_fixtures.dart';
 import '../helpers/seeded_save.dart';
 
 Future<SeededSave> _open(

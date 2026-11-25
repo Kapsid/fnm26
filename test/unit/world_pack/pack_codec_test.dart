@@ -13,6 +13,7 @@ import 'package:fnm/data/seed/pool_generator.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
+import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/domain/services/federation/sponsors.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
@@ -190,20 +191,60 @@ void main() {
     expect(await reason(_file(raw)), PackRejection.badData);
   });
 
-  test('more than nine trophies, or an unknown key, is badData', () async {
+  test(
+    'more trophies than the cabinet, or an unknown key, is badData',
+    () async {
+      expect(
+        await reason(
+          _file(
+            _raw(
+              _pack(),
+              trophies: {
+                for (var i = 0; i <= PackCodec.maxTrophies; i++) 'k$i': '',
+              },
+            ),
+          ),
+        ),
+        PackRejection.badData,
+      );
+      expect(
+        await reason(_file(_raw(_pack(), trophies: {'nonsense': ''}))),
+        PackRejection.badData,
+      );
+    },
+  );
+
+  test('a picture for every cabinet trophy passes the cap', () async {
+    // The regional cups made the cabinet 11; the cap used to be 9.
+    expect(PackCodec.maxTrophies, Trophies.cabinet.length);
+    expect(Trophies.cabinet.length, greaterThan(9));
+    final junk = base64Encode(utf8.encode('not an image'));
     expect(
       await reason(
         _file(
-          _raw(_pack(), trophies: {for (var i = 0; i < 10; i++) 'k$i': ''}),
+          _raw(
+            _pack(),
+            trophies: {for (final t in Trophies.cabinet) t.key: junk},
+          ),
         ),
       ),
-      PackRejection.badData,
-    );
-    expect(
-      await reason(_file(_raw(_pack(), trophies: {'nonsense': ''}))),
-      PackRejection.badData,
+      // Past the cap and the key check: only the image itself fails.
+      PackRejection.badTrophy,
     );
   });
+
+  test(
+    'more than nine trophies writes format 9, so 1.1.2 asks for an update',
+    () {
+      final eleven = {
+        for (final t in Trophies.cabinet) t.key: Uint8List.fromList([1]),
+      };
+      String fmt(Map<String, Uint8List> t) =>
+          '${(jsonDecode(utf8.decode(gzip.decode(PackCodec.encode(_pack(), t)))) as Map)['format']}';
+      expect(fmt(eleven), '9');
+      expect(fmt(Map.fromEntries(eleven.entries.take(9))), isNot('9'));
+    },
+  );
 
   test('a trophy that is not an image is badTrophy', () async {
     final junk = base64Encode(utf8.encode('not an image'));

@@ -78,7 +78,7 @@ void main() {
     everyValueDistinct(
       'confederation',
       Confederation.values,
-      (l, c) => confederationLabel(l, c),
+      confederationLabel,
     );
   });
 

@@ -4662,5 +4662,6 @@
   "qualLegendCafStep": "노랑: 아프리카 플레이오프 진출",
   "qualLegendOfcStep": "노랑: 오세아니아 결승 진출",
   "qualLegendIntercont": "노랑: 대륙 간 플레이오프 진출",
-  "legendThrough": "초록: 현재 기준 다음 라운드 진출"
+  "legendThrough": "초록: 현재 기준 다음 라운드 진출",
+  "campaignRunInNumbersNote": "이 캠페인의 평가 대상 경기만 포함합니다. 친선 경기와 다른 대회는 제외됩니다."
 }

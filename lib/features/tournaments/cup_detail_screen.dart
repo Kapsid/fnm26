@@ -4,35 +4,32 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fnm/core/util/caps.dart';
-import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/caps.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/cross_group.dart';
-import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
-import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
+import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/features/tournaments/all_time_scorers_legend.dart';
 import 'package:fnm/features/tournaments/best_thirds.dart';
-import 'package:fnm/features/tournaments/zone_legend.dart';
 import 'package:fnm/features/tournaments/confed_playoffs_view.dart';
-import 'package:fnm/features/tournaments/cup_detail_providers.dart';
 import 'package:fnm/features/tournaments/continental_detail_screen.dart'
     show PlayoffCourseFooter;
+import 'package:fnm/features/tournaments/cup_detail_providers.dart';
 import 'package:fnm/features/tournaments/euro_playoff_draw_screen.dart';
 import 'package:fnm/features/tournaments/intercontinental_playoff_bracket.dart';
-import 'package:fnm/features/tournaments/wc_playoff_draw_screen.dart';
-import 'package:fnm/features/tournaments/wc_playoff_providers.dart';
 import 'package:fnm/features/tournaments/intercontinental_playoff_providers.dart';
 import 'package:fnm/features/tournaments/tournament_awards.dart';
 import 'package:fnm/features/tournaments/tournament_bracket.dart';
@@ -40,6 +37,9 @@ import 'package:fnm/features/tournaments/tournament_holders_row.dart';
 import 'package:fnm/features/tournaments/tournament_stats.dart';
 import 'package:fnm/features/tournaments/tournament_summary.dart';
 import 'package:fnm/features/tournaments/wc_host_theme.dart';
+import 'package:fnm/features/tournaments/wc_playoff_draw_screen.dart';
+import 'package:fnm/features/tournaments/wc_playoff_providers.dart';
+import 'package:fnm/features/tournaments/zone_legend.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -1411,14 +1411,14 @@ class _ScorersState extends State<_Scorers> {
           ),
         ),
         if (showAllTime)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
+          const Padding(
+            padding: EdgeInsets.fromLTRB(
               AppSpacing.marginMobile,
               0,
               AppSpacing.marginMobile,
               AppSpacing.sm,
             ),
-            child: const AllTimeScorersLegend(),
+            child: AllTimeScorersLegend(),
           ),
         if (rows.isEmpty)
           Expanded(

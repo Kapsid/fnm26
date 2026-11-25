@@ -210,8 +210,10 @@ Future<void> runScenes(Promo p) async {
   // 05 Call-ups and squad selection.
   await p.clip(
     '05_callups$sfx',
-    setup: () =>
-        open('callup', (p.info('callup')['route'] as String?) ?? r(Routes.callUps)),
+    setup: () => open(
+      'callup',
+      (p.info('callup')['route'] as String?) ?? r(Routes.callUps),
+    ),
     body: () async {
       await p.wait(2);
       await p.tap(p.text('Best quality'), after: 2.2);
@@ -348,8 +350,10 @@ Future<void> runScenes(Promo p) async {
   // 11 Draw ceremony.
   await p.clip(
     '11_draw$sfx',
-    setup: () =>
-        open('draw', (p.info('draw')['route'] as String?) ?? r(Routes.finalsDraw)),
+    setup: () => open(
+      'draw',
+      (p.info('draw')['route'] as String?) ?? r(Routes.finalsDraw),
+    ),
     body: () async {
       await p.wait(2);
       await p.tap(p.type('PrimaryButton'), after: 1);
@@ -377,8 +381,10 @@ Future<void> runScenes(Promo p) async {
   // 13 Trophy cabinet, records, player history.
   await p.clip(
     '13a_trophy_cabinet$sfx',
-    setup: () =>
-        open(saveFor('13a_trophy_cabinet', 'awards_post'), r(Routes.careerSummary)),
+    setup: () => open(
+      saveFor('13a_trophy_cabinet', 'awards_post'),
+      r(Routes.careerSummary),
+    ),
     body: () async {
       await p.wait(3);
       await p.flick(300, after: 2.2);
@@ -464,7 +470,10 @@ Future<void> runScenes(Promo p) async {
     body: () async {
       await p.wait(2);
       for (final lang in ['Deutsch', 'Español', 'Français', 'Português']) {
-        await p.tap(find.byKey(const Key('settings-language-tile')), after: 1.2);
+        await p.tap(
+          find.byKey(const Key('settings-language-tile')),
+          after: 1.2,
+        );
         await p.tap(p.text(lang).last, after: 2);
       }
       for (final code in ['ja', 'ko']) {

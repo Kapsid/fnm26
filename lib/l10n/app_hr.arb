@@ -4662,5 +4662,6 @@
   "qualLegendCafStep": "Žuto: ide u afrički play-off",
   "qualLegendOfcStep": "Žuto: ide u finale Oceanije",
   "qualLegendIntercont": "Žuto: ide u interkontinentalni play-off",
-  "legendThrough": "Zeleno: prema trenutačnom stanju prolazi u sljedeći krug"
+  "legendThrough": "Zeleno: prema trenutačnom stanju prolazi u sljedeći krug",
+  "campaignRunInNumbersNote": "Samo utakmice po kojima se ova kampanja ocjenjuje: prijateljske utakmice i druga natjecanja se ne broje."
 }

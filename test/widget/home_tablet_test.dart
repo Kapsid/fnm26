@@ -179,8 +179,8 @@ void main() {
       ),
     );
     await settle(tester);
-    expect((await _career(tester, save, second)), isNull);
-    expect((await _career(tester, save, save.careerId)), isNotNull);
+    expect(await _career(tester, save, second), isNull);
+    expect(await _career(tester, save, save.careerId), isNotNull);
     await tester.tap(find.byKey(TabletScreenHeader.backKey));
     await settle(tester);
     expect(_uri(save).path, Routes.home);
