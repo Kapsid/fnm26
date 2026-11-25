@@ -309,13 +309,10 @@ void main() {
       isFalse,
     );
 
-    // The score on screen is the one about to be recorded: the bug's own
-    // figures, and the shootout line.
-    final homeWon = outcome.homeWon;
-    final shownHome = et.homeScore + (homeWon ? 1 : 0);
-    final shownAway = et.awayScore + (homeWon ? 0 : 1);
+    // The board shows the level score after extra time (1.1.3: no longer the
+    // winner one goal up), and the shootout line says who went through.
     final board = tester.widget<MatchScoreboard>(find.byType(MatchScoreboard));
-    expect((board.homeScore, board.awayScore), (shownHome, shownAway));
+    expect((board.homeScore, board.awayScore), (et.homeScore, et.awayScore));
     expect([
       for (final t in tester.widgetList<Text>(
         find.descendant(
@@ -324,7 +321,7 @@ void main() {
         ),
       ))
         t.data,
-    ], containsAllInOrder(['$shownHome', '$shownAway']));
+    ], containsAllInOrder(['${et.homeScore}', '${et.awayScore}']));
     expect(
       find.text(enL.matchShootoutScore(outcome.homePens, outcome.awayPens)),
       findsOneWidget,
