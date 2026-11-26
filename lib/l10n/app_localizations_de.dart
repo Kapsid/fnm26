@@ -7052,6 +7052,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get matchClockPenalties => 'ELFMETERSCHIESSEN';
 
   @override
+  String get pitchScoreboardGoal => 'TOR';
+
+  @override
   String get matchClockFullTimePenalties => 'ENDE · i.E.';
 
   @override

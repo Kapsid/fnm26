@@ -1780,6 +1780,7 @@
   "matchClockFullTime": "KONIEC",
   "matchClockAfterExtraTime": "PO DOGRYWCE",
   "matchClockPenalties": "RZUTY KARNE",
+  "pitchScoreboardGoal": "GOL",
   "matchClockFullTimePenalties": "KONIEC · KARNE",
   "hubEventPressConference": "Stań przed mediami",
   "hubEventPressConferenceSub": "Media z całego świata chcą porozmawiać przed twoim następnym meczem",

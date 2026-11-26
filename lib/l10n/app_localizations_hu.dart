@@ -6957,6 +6957,9 @@ class AppLocalizationsHu extends AppLocalizations {
   String get matchClockPenalties => '11-ESEK';
 
   @override
+  String get pitchScoreboardGoal => 'GÓL';
+
+  @override
   String get matchClockFullTimePenalties => 'LEFÚJÁS · 11-ESEK';
 
   @override

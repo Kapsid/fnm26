@@ -7033,6 +7033,9 @@ class AppLocalizationsNl extends AppLocalizations {
   String get matchClockPenalties => 'STRAFSCHOPPEN';
 
   @override
+  String get pitchScoreboardGoal => 'DOELPUNT';
+
+  @override
   String get matchClockFullTimePenalties => 'EINDSIGNAAL · PENALTY\'S';
 
   @override

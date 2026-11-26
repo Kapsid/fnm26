@@ -7040,6 +7040,9 @@ class AppLocalizationsEl extends AppLocalizations {
   String get matchClockPenalties => 'ΠΕΝΑΛΤΙ';
 
   @override
+  String get pitchScoreboardGoal => 'ΓΚΟΛ';
+
+  @override
   String get matchClockFullTimePenalties => 'ΤΕΛΟΣ · ΠΕΝΑΛΤΙ';
 
   @override

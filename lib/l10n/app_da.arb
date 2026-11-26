@@ -1780,6 +1780,7 @@
   "matchClockFullTime": "SLUTFLØJT",
   "matchClockAfterExtraTime": "EFTER FORLÆNGET SPILLETID",
   "matchClockPenalties": "STRAFFESPARK",
+  "pitchScoreboardGoal": "MÅL",
   "matchClockFullTimePenalties": "SLUTFLØJT · STRAFFE",
   "hubEventPressConference": "Mød pressen",
   "hubEventPressConferenceSub": "Verdens medier vil tale med dig før din næste kamp",

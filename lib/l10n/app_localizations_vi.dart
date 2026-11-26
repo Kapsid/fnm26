@@ -6936,6 +6936,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get matchClockPenalties => 'LUÂN LƯU';
 
   @override
+  String get pitchScoreboardGoal => 'BÀN THẮNG';
+
+  @override
   String get matchClockFullTimePenalties => 'HẾT GIỜ · LUÂN LƯU';
 
   @override

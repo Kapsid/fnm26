@@ -1780,6 +1780,7 @@
   "matchClockFullTime": "LOPPUVIHELLYS",
   "matchClockAfterExtraTime": "JATKOAJAN JÄLKEEN",
   "matchClockPenalties": "RANKKARIT",
+  "pitchScoreboardGoal": "MAALI",
   "matchClockFullTimePenalties": "LOPPU · RANKKARIT",
   "hubEventPressConference": "Kohtaa media",
   "hubEventPressConferenceSub": "Maailman media haluaa sanasen ennen seuraavaa ottelua",

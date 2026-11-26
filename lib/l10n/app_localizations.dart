@@ -10866,6 +10866,12 @@ abstract class AppLocalizations {
   /// **'PENALTIES'**
   String get matchClockPenalties;
 
+  /// Pitch view: the word the big video screen at the ground flashes, in capitals, beside the scorer's name for a few seconds after a goal.
+  ///
+  /// In en, this message translates to:
+  /// **'GOAL'**
+  String get pitchScoreboardGoal;
+
   /// The clock plate when a tie was settled on penalties. Keep it short: the plate sits between the two crests and grows to fit.
   ///
   /// In en, this message translates to:

@@ -1780,6 +1780,7 @@
   "matchClockFullTime": "경기 종료",
   "matchClockAfterExtraTime": "연장 종료",
   "matchClockPenalties": "승부차기",
+  "pitchScoreboardGoal": "골",
   "matchClockFullTimePenalties": "종료 · 승부차기",
   "hubEventPressConference": "기자회견",
   "hubEventPressConferenceSub": "다음 경기 전 세계 언론이 이야기를 듣고 싶어 합니다",

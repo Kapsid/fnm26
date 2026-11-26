@@ -6933,6 +6933,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get matchClockPenalties => 'PENALTILAR';
 
   @override
+  String get pitchScoreboardGoal => 'GOL';
+
+  @override
   String get matchClockFullTimePenalties => 'SON · PENALTILAR';
 
   @override

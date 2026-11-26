@@ -6801,6 +6801,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get matchClockPenalties => '승부차기';
 
   @override
+  String get pitchScoreboardGoal => '골';
+
+  @override
   String get matchClockFullTimePenalties => '종료 · 승부차기';
 
   @override

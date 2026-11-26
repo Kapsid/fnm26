@@ -6999,6 +6999,9 @@ class AppLocalizationsDa extends AppLocalizations {
   String get matchClockPenalties => 'STRAFFESPARK';
 
   @override
+  String get pitchScoreboardGoal => 'MÅL';
+
+  @override
   String get matchClockFullTimePenalties => 'SLUTFLØJT · STRAFFE';
 
   @override

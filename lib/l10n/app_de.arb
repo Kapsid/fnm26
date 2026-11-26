@@ -1780,6 +1780,7 @@
   "matchClockFullTime": "ABPFIFF",
   "matchClockAfterExtraTime": "NACH VERLÄNGERUNG",
   "matchClockPenalties": "ELFMETERSCHIESSEN",
+  "pitchScoreboardGoal": "TOR",
   "matchClockFullTimePenalties": "ENDE · i.E.",
   "hubEventPressConference": "Vor die Presse treten",
   "hubEventPressConferenceSub": "Die Weltpresse will Sie vor Ihrem nächsten Spiel sprechen",

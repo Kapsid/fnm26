@@ -7067,6 +7067,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get matchClockPenalties => 'TIRS AU BUT';
 
   @override
+  String get pitchScoreboardGoal => 'BUT';
+
+  @override
   String get matchClockFullTimePenalties => 'FIN DU MATCH · TIRS AU BUT';
 
   @override

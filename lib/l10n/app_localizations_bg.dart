@@ -7035,6 +7035,9 @@ class AppLocalizationsBg extends AppLocalizations {
   String get matchClockPenalties => 'ДУЗПИ';
 
   @override
+  String get pitchScoreboardGoal => 'ГОЛ';
+
+  @override
   String get matchClockFullTimePenalties => 'КРАЙ · ДУЗПИ';
 
   @override

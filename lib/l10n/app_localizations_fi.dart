@@ -7052,6 +7052,9 @@ class AppLocalizationsFi extends AppLocalizations {
   String get matchClockPenalties => 'RANKKARIT';
 
   @override
+  String get pitchScoreboardGoal => 'MAALI';
+
+  @override
   String get matchClockFullTimePenalties => 'LOPPU · RANKKARIT';
 
   @override

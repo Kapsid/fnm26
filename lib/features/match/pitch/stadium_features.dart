@@ -668,9 +668,11 @@ extension _StadiumFeatures on StadiumPainter {
 
   /// Where the big screens stand: one over the far left corner, or a giant
   /// one over each end of an American-football bowl. Each is (bottom left,
-  /// bottom right, top right, top left) on screen.
+  /// bottom right, top right, top left) on screen. Every big ground has
+  /// one (its video scoreboard, see `ScoreboardTier`); a smaller ground has
+  /// a board of its own instead.
   List<List<Offset>> get _screenQuads {
-    if (!_sig.bigScreen) return const [];
+    if (spec.scale != GroundScale.big) return const [];
     final top = _tier(spec.tiers - 1);
     final y = -_farFront - top.o1 * StadiumPainter._farDepthScale - 1;
     final z0 = _farRoofTop * StadiumPainter._standRise + 1.5;
@@ -741,6 +743,32 @@ extension _StadiumFeatures on StadiumPainter {
       }
       canvas.restore();
     }
+  }
+
+  /// A compact ground's digital scoreboard: a black board on two posts
+  /// over the far left corner's bank. The live layer lights its figures.
+  void _digitalBoard(Canvas canvas) {
+    if (ScoreboardTier.of(spec.scale) != ScoreboardTier.digital) return;
+    final q = _digitalBoardQuad;
+    final post = Paint()
+      ..strokeWidth = math.max(0.8, _ppm(-_farFront) * 0.2)
+      ..color = AppColors.outlineVariant;
+    for (final f in [0.18, 0.82]) {
+      final b = Offset.lerp(q[0], q[1], f)!;
+      canvas.drawLine(b, b.translate(0, (q[0].dy - q[3].dy) * 0.9), post);
+    }
+    canvas
+      ..drawPath(
+        StadiumPainter._poly(q),
+        Paint()..color = const Color(0xFF0D0F11),
+      )
+      ..drawPath(
+        StadiumPainter._poly(q),
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 0.8
+          ..color = const Color(0xFF4A5056),
+      );
   }
 
   /// The screens, and the windows behind an open end, light up at night.
@@ -881,23 +909,15 @@ extension _StadiumFeatures on StadiumPainter {
   /// on two posts, its number plates blank white tiles (no figure, no
   /// word).
   void _scoreboard(Canvas canvas) {
-    const s = _Seg.left;
-    const t0 = 0.7;
-    const t1 = 0.86;
-    const o = 9.5;
-    const z0 = 4.2;
-    const z1 = 8.4;
+    final q = _manualBoardQuad;
     Offset at(double u, double v) =>
-        _standPoint(s, t0 + (t1 - t0) * u, o, z0 + (z1 - z0) * v);
+        Offset.lerp(Offset.lerp(q[0], q[1], u), Offset.lerp(q[3], q[2], u), v)!;
     final post = Paint()
-      ..strokeWidth = math.max(0.8, _ppm(_segY(s, t0, o)) * 0.22)
+      ..strokeWidth = math.max(0.8, _ppm(18) * 0.22)
       ..color = const Color(0xFF3E3A34);
     for (final u in [0.12, 0.88]) {
-      canvas.drawLine(
-        _standPoint(s, t0 + (t1 - t0) * u, o, 3.1),
-        at(u, 0),
-        post,
-      );
+      final b = at(u, 0);
+      canvas.drawLine(b, b.translate(0, (q[0].dy - q[3].dy) * 0.4), post);
     }
     final face = StadiumPainter._poly([at(0, 0), at(1, 0), at(1, 1), at(0, 1)]);
     canvas

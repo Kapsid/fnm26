@@ -1780,6 +1780,7 @@
   "matchClockFullTime": "FULL-TIME",
   "matchClockAfterExtraTime": "PAGKATAPOS NG EXTRA TIME",
   "matchClockPenalties": "PENALTY",
+  "pitchScoreboardGoal": "GOL",
   "matchClockFullTimePenalties": "FULL-TIME · PENALTY",
   "hubEventPressConference": "Harapin ang media",
   "hubEventPressConferenceSub": "Gusto kang makausap ng media ng buong mundo bago ang susunod mong laro",

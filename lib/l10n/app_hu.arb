@@ -1780,6 +1780,7 @@
   "matchClockFullTime": "LEFÚJÁS",
   "matchClockAfterExtraTime": "HOSSZABBÍTÁS UTÁN",
   "matchClockPenalties": "11-ESEK",
+  "pitchScoreboardGoal": "GÓL",
   "matchClockFullTimePenalties": "LEFÚJÁS · 11-ESEK",
   "hubEventPressConference": "Sajtótájékoztató",
   "hubEventPressConferenceSub": "A világsajtó szólni akar hozzád a következő meccs előtt",

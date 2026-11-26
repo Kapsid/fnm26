@@ -1780,6 +1780,7 @@
   "matchClockFullTime": "試合終了",
   "matchClockAfterExtraTime": "延長戦終了",
   "matchClockPenalties": "PK戦",
+  "pitchScoreboardGoal": "ゴール",
   "matchClockFullTimePenalties": "試合終了 · PK戦",
   "hubEventPressConference": "記者会見に臨む",
   "hubEventPressConferenceSub": "次の試合を前に、世界中のメディアが話を聞きたがっています",

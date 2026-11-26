@@ -7122,6 +7122,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get matchClockPenalties => 'ПЕНАЛЬТІ';
 
   @override
+  String get pitchScoreboardGoal => 'ГОЛ';
+
+  @override
   String get matchClockFullTimePenalties => 'ФІНАЛЬНИЙ СВИСТОК · ПЕНАЛЬТІ';
 
   @override

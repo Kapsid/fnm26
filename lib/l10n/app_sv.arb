@@ -1780,6 +1780,7 @@
   "matchClockFullTime": "FULL TID",
   "matchClockAfterExtraTime": "EFTER FÖRLÄNGNING",
   "matchClockPenalties": "STRAFFAR",
+  "pitchScoreboardGoal": "MÅL",
   "matchClockFullTimePenalties": "FULL TID · STRAFFAR",
   "hubEventPressConference": "Möt pressen",
   "hubEventPressConferenceSub": "Världens media vill ha ett ord före din nästa match",

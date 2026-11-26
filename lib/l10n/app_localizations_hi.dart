@@ -6934,6 +6934,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get matchClockPenalties => 'पेनल्टी';
 
   @override
+  String get pitchScoreboardGoal => 'गोल';
+
+  @override
   String get matchClockFullTimePenalties => 'फ़ुल टाइम · पेनल्टी';
 
   @override

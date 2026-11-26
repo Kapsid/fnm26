@@ -57,6 +57,7 @@ import 'package:fnm/features/match/penalty_order_sheet.dart';
 import 'package:fnm/features/match/pitch/match_dressing.dart';
 import 'package:fnm/features/match/pitch/pitch_clock.dart';
 import 'package:fnm/features/match/pitch/pitch_commentary.dart';
+import 'package:fnm/features/match/pitch/ground_live.dart';
 import 'package:fnm/features/match/pitch/pitch_match_view.dart';
 import 'package:fnm/features/match/pitch/pitch_mode_controller.dart';
 import 'package:fnm/features/match/pitch/pitch_playback.dart';
@@ -2901,6 +2902,22 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                         names: _pc.names,
                         onReady: _syncPitchClock,
                         shootout: _stage,
+                        // The ground's own scoreboard reads the header's
+                        // figures: the same score, the same clock.
+                        board: PitchScoreboard(
+                          homeCode: code(homeId),
+                          awayCode: code(awayId),
+                          home: homeScore,
+                          away: awayScore,
+                          clock: clockLabel,
+                          scorer: goalsSoFar.isEmpty
+                              ? null
+                              : surnameOf(goalsSoFar.last.playerName),
+                          scorerHome: goalsSoFar.isEmpty
+                              ? null
+                              : goalsSoFar.last.teamNationId == homeId,
+                          goalLabel: l.pitchScoreboardGoal,
+                        ),
                       ),
                       // A sending-off: its banner down from under the
                       // score, unless a goal's is out.

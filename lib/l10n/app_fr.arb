@@ -1780,6 +1780,7 @@
   "matchClockFullTime": "FIN DU MATCH",
   "matchClockAfterExtraTime": "APRÈS PROLONGATION",
   "matchClockPenalties": "TIRS AU BUT",
+  "pitchScoreboardGoal": "BUT",
   "matchClockFullTimePenalties": "FIN DU MATCH · TIRS AU BUT",
   "hubEventPressConference": "Face à la presse",
   "hubEventPressConferenceSub": "Les médias du monde entier veulent vous parler avant votre prochain match",

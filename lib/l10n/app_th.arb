@@ -1780,6 +1780,7 @@
   "matchClockFullTime": "จบเกม",
   "matchClockAfterExtraTime": "หลังต่อเวลาพิเศษ",
   "matchClockPenalties": "ดวลจุดโทษ",
+  "pitchScoreboardGoal": "ประตู",
   "matchClockFullTimePenalties": "จบเกม · จุดโทษ",
   "hubEventPressConference": "เผชิญหน้าสื่อ",
   "hubEventPressConferenceSub": "สื่อทั่วโลกอยากคุยกับคุณก่อนเกมถัดไป",

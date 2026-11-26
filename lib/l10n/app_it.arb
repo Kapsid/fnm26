@@ -1780,6 +1780,7 @@
   "matchClockFullTime": "FINALE",
   "matchClockAfterExtraTime": "DOPO I SUPPLEMENTARI",
   "matchClockPenalties": "RIGORI",
+  "pitchScoreboardGoal": "GOL",
   "matchClockFullTimePenalties": "FINALE · RIGORI",
   "hubEventPressConference": "Affronta la stampa",
   "hubEventPressConferenceSub": "I media di tutto il mondo vogliono parlarti prima della prossima partita",

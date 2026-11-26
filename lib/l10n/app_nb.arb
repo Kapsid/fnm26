@@ -1780,6 +1780,7 @@
   "matchClockFullTime": "FULL TID",
   "matchClockAfterExtraTime": "ETTER EKSTRAOMGANGER",
   "matchClockPenalties": "STRAFFER",
+  "pitchScoreboardGoal": "MÅL",
   "matchClockFullTimePenalties": "FULL TID · STRAFFER",
   "hubEventPressConference": "Møt pressen",
   "hubEventPressConferenceSub": "Verdenspressen vil ha et ord før din neste kamp",

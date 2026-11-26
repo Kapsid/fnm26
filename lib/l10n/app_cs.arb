@@ -1780,6 +1780,7 @@
   "matchClockFullTime": "KONEC",
   "matchClockAfterExtraTime": "PO PRODLOUŽENÍ",
   "matchClockPenalties": "PENALTY",
+  "pitchScoreboardGoal": "GÓL",
   "matchClockFullTimePenalties": "KONEC · PENALTY",
   "hubEventPressConference": "Předstoupit před novináře",
   "hubEventPressConferenceSub": "Světová média chtějí slovo před dalším zápasem",

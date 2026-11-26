@@ -7185,6 +7185,9 @@ class AppLocalizationsRo extends AppLocalizations {
   String get matchClockPenalties => 'PENALTY-URI';
 
   @override
+  String get pitchScoreboardGoal => 'GOL';
+
+  @override
   String get matchClockFullTimePenalties => 'FINAL · PENALTY-URI';
 
   @override

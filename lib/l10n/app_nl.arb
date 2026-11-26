@@ -1780,6 +1780,7 @@
   "matchClockFullTime": "EINDSIGNAAL",
   "matchClockAfterExtraTime": "NA VERLENGING",
   "matchClockPenalties": "STRAFSCHOPPEN",
+  "pitchScoreboardGoal": "DOELPUNT",
   "matchClockFullTimePenalties": "EINDSIGNAAL · PENALTY'S",
   "hubEventPressConference": "Sta de pers te woord",
   "hubEventPressConferenceSub": "De wereldpers wil je spreken voor je volgende wedstrijd",

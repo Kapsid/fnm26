@@ -6927,6 +6927,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get matchClockPenalties => 'ADU PENALTI';
 
   @override
+  String get pitchScoreboardGoal => 'GOL';
+
+  @override
   String get matchClockFullTimePenalties => 'AKHIR · ADU PENALTI';
 
   @override

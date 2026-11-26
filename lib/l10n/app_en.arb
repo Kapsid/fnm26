@@ -11107,6 +11107,10 @@
   "@matchClockPenalties": {
     "description": "The clock plate while the shootout is being taken."
   },
+  "pitchScoreboardGoal": "GOAL",
+  "@pitchScoreboardGoal": {
+    "description": "Pitch view: the word the big video screen at the ground flashes, in capitals, beside the scorer's name for a few seconds after a goal."
+  },
   "matchClockFullTimePenalties": "FULL TIME · PENALTIES",
   "@matchClockFullTimePenalties": {
     "description": "The clock plate when a tie was settled on penalties. Keep it short: the plate sits between the two crests and grows to fit."

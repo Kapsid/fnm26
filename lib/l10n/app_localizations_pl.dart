@@ -7087,6 +7087,9 @@ class AppLocalizationsPl extends AppLocalizations {
   String get matchClockPenalties => 'RZUTY KARNE';
 
   @override
+  String get pitchScoreboardGoal => 'GOL';
+
+  @override
   String get matchClockFullTimePenalties => 'KONIEC · KARNE';
 
   @override

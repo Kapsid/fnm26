@@ -1780,6 +1780,7 @@
   "matchClockFullTime": "FINAL",
   "matchClockAfterExtraTime": "DUPĂ PRELUNGIRI",
   "matchClockPenalties": "PENALTY-URI",
+  "pitchScoreboardGoal": "GOL",
   "matchClockFullTimePenalties": "FINAL · PENALTY-URI",
   "hubEventPressConference": "Înfruntați presa",
   "hubEventPressConferenceSub": "Presa internațională vrea o declarație înaintea următorului meci",

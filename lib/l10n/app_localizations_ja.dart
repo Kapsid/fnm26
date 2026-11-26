@@ -6789,6 +6789,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get matchClockPenalties => 'PK戦';
 
   @override
+  String get pitchScoreboardGoal => 'ゴール';
+
+  @override
   String get matchClockFullTimePenalties => '試合終了 · PK戦';
 
   @override

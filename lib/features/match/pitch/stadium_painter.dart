@@ -17,6 +17,7 @@ import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/domain/services/match/stadium/ground_character.dart';
 import 'package:fnm/domain/services/match/stadium/ground_look.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
+import 'package:fnm/domain/services/match/stadium/scoreboard.dart';
 import 'package:fnm/domain/services/match/stadium/stadium_signature.dart';
 import 'package:fnm/domain/services/match/stadium/stadium_spec.dart';
 import 'package:fnm/features/match/pitch/backdrop_painter.dart';
@@ -25,6 +26,7 @@ import 'package:fnm/features/match/pitch/match_dressing.dart';
 import 'package:fnm/features/match/pitch/pitch_projection.dart';
 import 'package:fnm/features/match/pitch/scene_look.dart';
 
+part 'stadium_anchors.dart';
 part 'stadium_features.dart';
 
 /// The ground the Pitch view plays in, drawn once per look: the sky and the
@@ -182,6 +184,7 @@ class StadiumPainter extends CustomPainter {
     _scaffolding(canvas);
     _roofCrown(canvas);
     _screens(canvas);
+    _digitalBoard(canvas);
     _snowOnRoofs(canvas);
     _boards(canvas, near: false);
     _grass(canvas);
@@ -221,6 +224,17 @@ class StadiumPainter extends CustomPainter {
     _nearShade(canvas, size);
     canvas.restore();
   }
+
+  /// Where the ground's live parts sit on screen: the scoreboard, the far
+  /// LED boards, the stands' slices (see [GroundAnchors]).
+  GroundAnchors get anchors => GroundAnchors(
+    tier: ScoreboardTier.of(spec.scale),
+    boards: _boardQuads,
+    led: _ledPanels,
+    slices: _slices,
+    mainFlag: _mainFlagQuad,
+    homeEnd: _homeEndQuad,
+  );
 
   /// Whether either side's fans put on a show in the stands ([paintShow]).
   bool get hasShow =>

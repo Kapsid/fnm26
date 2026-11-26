@@ -7004,6 +7004,9 @@ class AppLocalizationsNb extends AppLocalizations {
   String get matchClockPenalties => 'STRAFFER';
 
   @override
+  String get pitchScoreboardGoal => 'MÅL';
+
+  @override
   String get matchClockFullTimePenalties => 'FULL TID · STRAFFER';
 
   @override

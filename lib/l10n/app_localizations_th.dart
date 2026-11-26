@@ -6876,6 +6876,9 @@ class AppLocalizationsTh extends AppLocalizations {
   String get matchClockPenalties => 'ดวลจุดโทษ';
 
   @override
+  String get pitchScoreboardGoal => 'ประตู';
+
+  @override
   String get matchClockFullTimePenalties => 'จบเกม · จุดโทษ';
 
   @override
