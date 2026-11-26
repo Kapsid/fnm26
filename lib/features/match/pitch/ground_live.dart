@@ -88,16 +88,26 @@ class PitchScoreboard {
 /// clock's screen time, so it stops when play does and a match always
 /// plays them out the same way.
 class GroundLive extends ChangeNotifier {
-  GroundLive({required this.kits});
+  GroundLive({required this.kits, List<String> sponsors = const []})
+    : _sponsors = sponsors;
 
   ({KitPair home, KitPair away}) kits;
+
+  /// The brands the LED boards cycle through, as printed.
+  List<String> get sponsors => _sponsors;
+  List<String> _sponsors;
+  set sponsors(List<String> s) {
+    if (listEquals(s, _sponsors)) return;
+    _sponsors = s;
+    _refresh(force: true);
+  }
 
   /// Where the live parts sit on screen; null until the ground is baked.
   GroundAnchors? get anchors => _anchors;
   GroundAnchors? _anchors;
   set anchors(GroundAnchors? a) {
     _anchors = a;
-    _key = null;
+    _refresh(force: true);
   }
 
   PitchScoreboard? get board => _board;
@@ -181,6 +191,7 @@ class LiveGroundPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final a = live.anchors;
     if (a == null) return;
+    LedBoards.paint(canvas, a.led, live, _textOf);
     final b = live.board;
     if (b != null) {
       for (final q in a.boards) {
@@ -479,4 +490,55 @@ abstract final class BoardPainter {
   static Color _inkOn(Color c) => c.computeLuminance() > 0.45
       ? const Color(0xFF111316)
       : const Color(0xFFF7F8FA);
+}
+
+/// The LED boards along the far touchline: each panel a brand, the brands
+/// stepping one panel along every [GroundLive.ledStep] seconds; for a few
+/// seconds after a goal every panel flashes the scorers' colours.
+abstract final class LedBoards {
+  /// The panels' backgrounds, picked by the brand.
+  static const List<Color> _grounds = [
+    Color(0xFF0E2A47),
+    Color(0xFF3A0F18),
+    Color(0xFF0F3A2A),
+    Color(0xFF26292D),
+    Color(0xFF3D2A05),
+    Color(0xFF2A1240),
+  ];
+
+  static void paint(
+    Canvas canvas,
+    List<List<Offset>> panels,
+    GroundLive live,
+    BoardText text,
+  ) {
+    if (panels.isEmpty) return;
+    final flash = live.flashColours;
+    final names = live.sponsors;
+    if (flash == null && names.isEmpty) return;
+    final frame = ((live.sinceGoal ?? 0) * 4).floor();
+    final step = (live.t / GroundLive.ledStep).floor();
+    final fill = Paint();
+    for (var i = 0; i < panels.length; i++) {
+      final q = panels[i];
+      final path = Path()..addPolygon(q, true);
+      if (flash != null) {
+        fill.color = (i + frame).isEven ? flash.$1 : flash.$2;
+        canvas.drawPath(path, fill);
+        continue;
+      }
+      final k = (i + step) % names.length;
+      final name = names[k];
+      fill.color = _grounds[(k * 7 + name.length) % _grounds.length];
+      canvas.drawPath(path, fill);
+      BoardPainter.inQuad(canvas, q, (size) {
+        BoardPainter.centred(
+          canvas,
+          text(name, size.height * 0.62, const Color(0xFFF1F3F5)),
+          size.center(Offset.zero),
+          size.width * 0.9,
+        );
+      });
+    }
+  }
 }

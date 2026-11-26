@@ -108,14 +108,19 @@ extension _StadiumAnchors on StadiumPainter {
     const panel = 6.0;
     final count = ((xs1 - xs0) / panel).ceil();
     const h = StadiumPainter._boardHeight;
+    double x(int i) => xs0 + (xs1 - xs0) * i / count;
+    // Not behind the dugouts, which stand in front of the boards.
+    bool hidden(int i) =>
+        (x(i) < 46 && x(i + 1) > 37) || (x(i) < 68 && x(i + 1) > 59);
     return [
       for (var i = 0; i < count; i++)
-        [
-          _p(xs0 + (xs1 - xs0) * i / count, y),
-          _p(xs0 + (xs1 - xs0) * (i + 1) / count, y),
-          _p(xs0 + (xs1 - xs0) * (i + 1) / count, y, h),
-          _p(xs0 + (xs1 - xs0) * i / count, y, h),
-        ],
+        if (!hidden(i))
+          [
+            _p(xs0 + (xs1 - xs0) * i / count, y),
+            _p(xs0 + (xs1 - xs0) * (i + 1) / count, y),
+            _p(xs0 + (xs1 - xs0) * (i + 1) / count, y, h),
+            _p(xs0 + (xs1 - xs0) * i / count, y, h),
+          ],
     ];
   }
 

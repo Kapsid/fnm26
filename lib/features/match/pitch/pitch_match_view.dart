@@ -141,7 +141,10 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
 
   /// The ground's live parts: the scoreboard, the LED boards, the nets and
   /// the fans' moments (see [GroundLive]).
-  late final GroundLive _live = GroundLive(kits: widget.stadium.kits);
+  late final GroundLive _live = GroundLive(
+    kits: widget.stadium.kits,
+    sponsors: widget.stadium.sponsors,
+  );
   late final LiveGroundPainter _livePainter = LiveGroundPainter(_live);
 
   /// The live parts (for tests).
@@ -215,7 +218,9 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
     if (old.board != widget.board) {
       _live.setBoard(widget.board, at: _seconds);
     }
-    _live.kits = widget.stadium.kits;
+    _live
+      ..kits = widget.stadium.kits
+      ..sponsors = widget.stadium.sponsors;
     if (!identical(old.script, widget.script) ||
         !identical(old.stadium, widget.stadium)) {
       _lightKey = null;

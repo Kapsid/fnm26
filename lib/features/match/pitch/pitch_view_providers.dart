@@ -83,6 +83,7 @@ class PitchStadium {
     required this.date,
     required this.kickOff,
     this.dressing = MatchDressing.none,
+    this.sponsors = const [],
   });
 
   /// The ground of [ground] for [home] against [away] on [date], kicking
@@ -105,6 +106,7 @@ class PitchStadium {
     WeatherKind weather = WeatherKind.clear,
     (Color, Color)? groundColours,
     GroundWorks works = GroundWorks.none,
+    List<String> sponsors = const [],
   }) {
     final code = groundNationCode ?? home.code;
     final confed = groundConfederation ?? home.confederation;
@@ -131,6 +133,7 @@ class PitchStadium {
         weather,
         groundColours,
         works,
+        sponsors.join('|'),
       ),
       spec: StadiumSpec.from(
         ground,
@@ -149,6 +152,7 @@ class PitchStadium {
       date: date,
       kickOff: kickOff,
       dressing: dressing,
+      sponsors: sponsors,
     );
   }
 
@@ -168,6 +172,9 @@ class PitchStadium {
   final DateTime date;
   final KickOffTime kickOff;
   final MatchDressing dressing;
+
+  /// The brands on the ground's boards, as printed (see `GroundSponsors`).
+  final List<String> sponsors;
 
   /// The light at match minute [minute] (+[stoppage]); before kick-off,
   /// the first minute's.
@@ -228,6 +235,7 @@ class PitchStadiumBaker {
       flag: flag,
       light: light,
       dressing: stadium.dressing,
+      sponsors: stadium.sponsors,
     ).paint(canvas, size);
     final picture = recorder.endRecording();
     lastRecordMs = sw.elapsedMicroseconds / 1000;
@@ -438,6 +446,7 @@ PitchStadium pitchStadiumForPreview(
   MatchPreview preview, {
   WeatherKind? weather,
   GroundWorks works = GroundWorks.none,
+  List<String> sponsors = const [],
 }) {
   final f = preview.fixture;
   final shown = matchConditionsShown(preview, weather: weather);
@@ -464,6 +473,7 @@ PitchStadium pitchStadiumForPreview(
     dressing: dressing,
     weather: shown.weather,
     works: works,
+    sponsors: sponsors,
     groundColours: groundNation == null
         ? null
         : (

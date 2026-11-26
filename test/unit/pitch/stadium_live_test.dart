@@ -4,8 +4,10 @@ import 'dart:ui' as ui;
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/domain/services/federation/sponsors.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/domain/services/match/stadium/ground_character.dart';
+import 'package:fnm/domain/services/match/stadium/ground_sponsors.dart';
 import 'package:fnm/domain/services/match/stadium/kick_off.dart';
 import 'package:fnm/domain/services/match/stadium/scoreboard.dart';
 import 'package:fnm/features/match/pitch/ground_live.dart';
@@ -48,6 +50,7 @@ Future<void> _scene(
     projection,
     light: light,
     dressing: stadium.dressing,
+    sponsors: stadium.sponsors,
   );
   live.anchors = painter.anchors;
   const dpr = 2.0;
@@ -85,6 +88,25 @@ PitchScoreboard _board({int home = 2, int away = 1, String clock = '67'}) =>
       scorer: 'NOVOTNY',
       scorerHome: true,
     );
+
+/// [s] with the boards carrying a ground's pick of the game's brands.
+PitchStadium _sponsored(PitchStadium s, {Sponsor? career}) => PitchStadium(
+  key: s.key,
+  spec: s.spec,
+  kits: s.kits,
+  latitude: s.latitude,
+  date: s.date,
+  kickOff: s.kickOff,
+  dressing: s.dressing,
+  sponsors: [
+    for (final b in GroundSponsors.forGround(
+      stadium: 'Mock Mid Arena',
+      groundCode: 'CZE',
+      career: career,
+    ))
+      b.id.toUpperCase(),
+  ],
+);
 
 void main() {
   setUpAll(_loadFonts);
@@ -174,6 +196,68 @@ void main() {
         );
         live.dispose();
       }
+    });
+  });
+
+  group('sponsors', () {
+    test('a ground always carries the same brands, the career first', () {
+      List<String> ids(Sponsor? career) => [
+        for (final b in GroundSponsors.forGround(
+          stadium: 'Arena',
+          groundCode: 'ESP',
+          career: career,
+        ))
+          b.id,
+      ];
+      expect(ids(null), ids(null));
+      expect(ids(null), hasLength(GroundSponsors.count));
+      final mine = ids(SponsorBrand.milkwell);
+      expect(mine.first, 'milkwell');
+      expect(mine.toSet(), hasLength(mine.length));
+      expect(
+        ids(null),
+        isNot(
+          GroundSponsors.forGround(
+            stadium: 'Other Ground',
+            groundCode: 'ESP',
+          ).map((b) => b.id).toList(),
+        ),
+      );
+    });
+
+    test('no dubious brand, and the Czech jokes only in Czechia', () {
+      for (final code in ['ESP', 'CZE', 'BRA']) {
+        for (var i = 0; i < 40; i++) {
+          for (final b in GroundSponsors.forGround(
+            stadium: 'Ground $i',
+            groundCode: code,
+          )) {
+            expect(b.risky, isFalse);
+            if (code != 'CZE') expect(b.czechOnly, isFalse);
+          }
+        }
+      }
+    });
+
+    testWidgets('the boards carry them and the LEDs flash a goal', (
+      tester,
+    ) async {
+      final m = pitchMatch(seed: 5);
+      final stadium = _sponsored(
+        pitchStadiumFor(m, capacity: 42000),
+        career: SponsorBrand.velocell,
+      );
+      final live = GroundLive(kits: stadium.kits, sponsors: stadium.sponsors)
+        ..setBoard(_board(home: 1), at: 0)
+        ..tick(3);
+      await _scene(tester, 'sponsors_led', stadium, live: live);
+      live
+        ..setBoard(_board(), at: 10)
+        ..tick(11);
+      expect(live.flashColours, isNotNull);
+      await _scene(tester, 'sponsors_led_goal_flash', stadium, live: live);
+      expect(live.anchors!.led, isNotEmpty);
+      live.dispose();
     });
   });
 }

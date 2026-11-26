@@ -3,8 +3,10 @@
 // is copyrighted intellectual property; do not reproduce, clone or help
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'dart:math' as math;
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_svg/flutter_svg.dart';
@@ -56,6 +58,7 @@ class StadiumPainter extends CustomPainter {
     this.flag,
     this.light = PitchLight.day,
     this.dressing = MatchDressing.none,
+    this.sponsors = const [],
   }) : look = SceneLook.at(light);
 
   final StadiumSpec spec;
@@ -67,6 +70,11 @@ class StadiumPainter extends CustomPainter {
   final PitchLight light;
   final MatchDressing dressing;
   final SceneLook look;
+
+  /// The brands on the boards, as printed (see `GroundSponsors`): the ends'
+  /// boards and a few on the stands carry them. Empty leaves the boards
+  /// blank.
+  final List<String> sponsors;
 
   // --- The ground's plan, in metres -----------------------------------------
 
@@ -178,6 +186,7 @@ class StadiumPainter extends CustomPainter {
       Color.lerp(const Color(0xFFFFFFFF), look.grade, 1 - 0.5 * look.flood)!,
     );
     _standTiers(canvas);
+    _standBoards(canvas);
     ungrade();
     grade(look.grade);
     _standRoofs(canvas);
@@ -325,6 +334,7 @@ class StadiumPainter extends CustomPainter {
       old.flag != flag ||
       old.light != light ||
       old.dressing != dressing ||
+      !listEquals(old.sponsors, sponsors) ||
       old.projection.viewport != projection.viewport ||
       old.projection.cam != projection.cam ||
       old.projection.tilt != projection.tilt;
@@ -1072,9 +1082,15 @@ class StadiumPainter extends CustomPainter {
     final band = dressing.dressed ? _dressTone(dressing.colour) : null;
     var n = 0;
     double lerp(double a, double b, double t) => a + (b - a) * t;
-    for (final ((ax, ay), (bx, by)) in runs) {
+    final names = <String, TextPainter>{};
+    for (var r = 0; r < runs.length; r++) {
+      final ((ax, ay), (bx, by)) = runs[r];
       final len = math.sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay));
       final count = (len / panel).ceil();
+      // The ends' boards carry the sponsors' names, every other panel,
+      // read as a fan facing them would (the far touchline's are LED
+      // boards, lit by the live layer; the near ones face away).
+      final named = !near && r < 2 && sponsors.isNotEmpty;
       for (var i = 0; i < count; i++, n++) {
         final f0 = i / count, f1 = (i + 1) / count;
         final x0 = lerp(ax, bx, f0), y0 = lerp(ay, by, f0);
@@ -1089,8 +1105,29 @@ class StadiumPainter extends CustomPainter {
           face(0, _boardHeight),
           Paint()..color = tones[n % tones.length],
         );
-        // No brand: a quiet bar where a name would be.
         final zb = band != null ? 0.26 : 0.42, zt = band != null ? 0.4 : 0.58;
+        if (named && i.isEven) {
+          final name = sponsors[(i ~/ 2 + r * 3) % sponsors.length];
+          final z0 = band != null ? 0.08 : 0.2, z1 = band != null ? 0.58 : 0.8;
+          // Read left to right: near to far on the home end, far to near
+          // on the away end.
+          final q = r == 0
+              ? [
+                  _p(x0, y0, _boardHeight * z0),
+                  _p(x1, y1, _boardHeight * z0),
+                  _p(x1, y1, _boardHeight * z1),
+                  _p(x0, y0, _boardHeight * z1),
+                ]
+              : [
+                  _p(x1, y1, _boardHeight * z0),
+                  _p(x0, y0, _boardHeight * z0),
+                  _p(x0, y0, _boardHeight * z1),
+                  _p(x1, y1, _boardHeight * z1),
+                ];
+          _nameInQuad(canvas, q, name, names);
+          continue;
+        }
+        // No brand here: a quiet bar where a name would be.
         canvas.drawPath(
           _poly([
             _p(lerp(x0, x1, 0.3), lerp(y0, y1, 0.3), _boardHeight * zb),
@@ -1109,6 +1146,78 @@ class StadiumPainter extends CustomPainter {
           ..color = accent.withValues(alpha: 0.4),
       );
     }
+  }
+
+  /// A few sponsors' boards on the main stand: along the fascia under its
+  /// second tier, or along its front wall when it has one tier.
+  void _standBoards(Canvas canvas) {
+    if (sponsors.isEmpty) return;
+    const s = _Seg.far;
+    final upper = spec.tiers > 1 ? _tier(1) : null;
+    final o = upper?.o0 ?? 0.0;
+    final z1 = upper?.z0 ?? _frontWall;
+    final z0 = z1 - (upper == null ? _frontWall : _fascia) * 0.8;
+    final names = <String, TextPainter>{};
+    var k = 0;
+    for (final u in const [0.16, 0.5, 0.84]) {
+      const half = 0.05;
+      final q = [
+        _standPoint(s, u - half, o - 0.05, z0),
+        _standPoint(s, u + half, o - 0.05, z0),
+        _standPoint(s, u + half, o - 0.05, z1),
+        _standPoint(s, u - half, o - 0.05, z1),
+      ];
+      canvas.drawPath(_poly(q), Paint()..color = const Color(0xFF1B2733));
+      _nameInQuad(
+        canvas,
+        q,
+        sponsors[(k++ + 1) % sponsors.length],
+        names,
+      );
+    }
+  }
+
+  /// [name] in light letters across the face [q] (bottom left, bottom
+  /// right, top right, top left), fitted to it.
+  static void _nameInQuad(
+    Canvas canvas,
+    List<Offset> q,
+    String name,
+    Map<String, TextPainter> cache,
+  ) {
+    final tl = q[3], tr = q[2], bl = q[0];
+    final ux = tr - tl, uy = bl - tl;
+    final w = ux.distance, h = uy.distance;
+    if (w < 3 || h < 1) return;
+    final tp = cache[name] ??= TextPainter(
+      text: TextSpan(
+        text: name,
+        style: const TextStyle(
+          fontSize: 20,
+          height: 1,
+          fontWeight: FontWeight.w800,
+          fontFamily: 'Hanken Grotesk',
+          color: Color(0xD9E6E9EC),
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+      maxLines: 1,
+    )..layout();
+    final k = math.min(w * 0.9 / tp.width, h / tp.height);
+    canvas
+      ..save()
+      ..transform(
+        Float64List.fromList([
+          ux.dx / w, ux.dy / w, 0, 0, //
+          uy.dx / h, uy.dy / h, 0, 0,
+          0, 0, 1, 0,
+          tl.dx, tl.dy, 0, 1,
+        ]),
+      )
+      ..translate(w / 2, h / 2)
+      ..scale(k);
+    tp.paint(canvas, Offset(-tp.width / 2, -tp.height / 2));
+    canvas.restore();
   }
 
   /// A finals tournament's band along the top of every board (gold at the
