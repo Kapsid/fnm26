@@ -7,8 +7,10 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fnm/core/theme/kit_colors.dart';
+import 'package:fnm/domain/services/match/stadium/choreo.dart';
 import 'package:fnm/domain/services/match/stadium/ground_look.dart';
 import 'package:fnm/domain/services/match/stadium/scoreboard.dart';
+import 'package:fnm/features/match/pitch/crowd_live.dart';
 import 'package:fnm/features/match/pitch/net_ripple.dart';
 import 'package:fnm/features/match/pitch/pitch_projection.dart';
 import 'package:fnm/features/match/pitch/stadium_painter.dart';
@@ -110,7 +112,61 @@ class GroundLive extends ChangeNotifier {
   GroundAnchors? _anchors;
   set anchors(GroundAnchors? a) {
     _anchors = a;
+    _torches = a == null
+        ? null
+        : CrowdMoments.torchSpots(a.slices, a.slices.length * 7919);
     _refresh(force: true);
+  }
+
+  (Float32List, Float32List)? _torches;
+
+  /// The match minute on the clock, and how far the floodlights are up
+  /// (0 by day, 1 at night): set each tick by the view.
+  int minute = 0;
+  double flood = 0;
+
+  /// Whether a penalty shootout is being taken.
+  bool shootout = false;
+
+  /// The flag a big match's home fans hold up (the card mosaic and the
+  /// giant flag, see `Choreo`); null when they stage none.
+  ui.Image? choreoFlag;
+
+  /// How much of the card mosaic and of the giant flag is up now.
+  double get mosaic => choreoFlag == null ? 0 : Choreo.mosaicAt(minute);
+  double get giantFlag {
+    if (choreoFlag == null) return 0;
+    final f = Choreo.flagAt(minute);
+    // With no home end to hold it, the mosaic is on the main stand first.
+    return _anchors?.homeEnd == null ? f * (1 - mosaic) : f;
+  }
+
+  /// The home side's lead on the board.
+  int get homeLead => (_board?.home ?? 0) - (_board?.away ?? 0);
+
+  /// Where a Mexican wave's crest is round the ground (0 to 1), or null
+  /// when there is none: the home fans start one when their side is
+  /// comfortably ahead, every [waveEvery] seconds, and it takes [waveFor]
+  /// to go round.
+  double? get waveAt {
+    final lead = homeLead;
+    if (!(lead >= 3 || (lead >= 2 && minute >= 70))) return null;
+    if (_board == null || minute >= 120 || shootout) return null;
+    final s = sinceGoal;
+    if (s != null && s < CrowdMoments.length) return null;
+    final phase = t % waveEvery;
+    if (phase >= waveFor) return null;
+    return phase / waveFor;
+  }
+
+  static const double waveEvery = 70, waveFor = 16;
+
+  /// How strongly phone torches light the stands: at an evening match,
+  /// late in a home win, or while a shootout is taken.
+  double get torches {
+    if (flood < 0.5) return 0;
+    if (shootout) return 1;
+    return minute >= 80 && homeLead > 0 && minute < 121 ? 1 : 0;
   }
 
   /// The projection the ground is drawn through, and its goals' style:
@@ -181,6 +237,15 @@ class GroundLive extends ChangeNotifier {
       since != null && since < scorerSeconds,
       // A moving net is drawn every frame.
       net != null ? t : null,
+      (mosaic * 20).round(),
+      giantFlag > 0.01 ? (t * 6).floor() : -1,
+      (giantFlag * 20).round(),
+      switch (waveAt) {
+        final w? => (w * 80).floor(),
+        null => -1,
+      },
+      since != null && since < CrowdMoments.length ? (since * 8).floor() : -1,
+      torches > 0 ? (t * 3).floor() : -1,
     );
     if (!force && key == _key) return;
     _key = key;
@@ -207,6 +272,37 @@ class LiveGroundPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final a = live.anchors;
     if (a == null) return;
+    final flag = live.choreoFlag;
+    if (flag != null) {
+      CrowdMoments.mosaic(
+        canvas,
+        a.homeEnd ?? a.mainFlag,
+        flag,
+        live.mosaic,
+      );
+      CrowdMoments.giantFlag(canvas, a.mainFlag, flag, live.giantFlag, live.t);
+    }
+    final wave = live.waveAt;
+    if (wave != null) CrowdMoments.wave(canvas, a.slices, wave);
+    final since = live.sinceGoal;
+    if (since != null) {
+      CrowdMoments.celebrate(
+        canvas,
+        a.slices,
+        live.goalHome ? live.kits.home : live.kits.away,
+        away: !live.goalHome,
+        since: since,
+      );
+    }
+    final torches = live._torches;
+    if (torches != null && live.torches > 0) {
+      CrowdMoments.torches(
+        canvas,
+        torches,
+        (live.t * 3).floor(),
+        live.torches,
+      );
+    }
     final net = live.net;
     final projection = live.projection;
     if (net != null && projection != null) {

@@ -62,6 +62,7 @@ class StadiumPainter extends CustomPainter {
     this.light = PitchLight.day,
     this.dressing = MatchDressing.none,
     this.sponsors = const [],
+    this.standShadow = true,
   }) : look = SceneLook.at(light);
 
   final StadiumSpec spec;
@@ -78,6 +79,11 @@ class StadiumPainter extends CustomPainter {
   /// boards and a few on the stands carry them. Empty leaves the boards
   /// blank.
   final List<String> sponsors;
+
+  /// Whether the far stand's shadow is drawn on the grass. The Pitch view
+  /// bakes its looks without it and lays it over them itself
+  /// ([paintStandShadow]), moved with the sun minute by minute.
+  final bool standShadow;
 
   // --- The ground's plan, in metres -----------------------------------------
 
@@ -204,7 +210,7 @@ class StadiumPainter extends CustomPainter {
     _grass(canvas);
     _wetGrass(canvas);
     _gridironLines(canvas);
-    _standShadow(canvas);
+    if (standShadow) _standShadow(canvas);
     _markings(canvas);
     _dugouts(canvas);
     _photographers(canvas);
@@ -230,6 +236,7 @@ class StadiumPainter extends CustomPainter {
     // What gives off its own light, over the grade.
     _crowdGlow(canvas);
     _pools(canvas);
+    _beams(canvas);
     _lamps(canvas);
     _flags(canvas);
     _roofEdgeLight(canvas);
@@ -249,6 +256,17 @@ class StadiumPainter extends CustomPainter {
     mainFlag: _mainFlagQuad,
     homeEnd: _homeEndQuad,
   );
+
+  /// The far stand's shadow on the grass alone, in this painter's light:
+  /// the Pitch view lays it over its baked looks each match minute, so it
+  /// creeps across the pitch as the afternoon goes on.
+  void paintStandShadow(Canvas canvas, Size size) {
+    canvas
+      ..save()
+      ..clipRect(Offset.zero & size);
+    _standShadow(canvas);
+    canvas.restore();
+  }
 
   /// Whether either side's fans put on a show in the stands ([paintShow]).
   bool get hasShow =>
@@ -1443,6 +1461,51 @@ class StadiumPainter extends CustomPainter {
       );
     }
     canvas.restore();
+  }
+
+  /// The floodlights' beams at night: a faint cone of light from each lamp
+  /// bank down onto the pitch, plainer in the wet or the murk, where the
+  /// light catches the rain, the snow or the fog.
+  void _beams(Canvas canvas) {
+    final f = look.flood;
+    if (f < 0.25) return;
+    final murk = switch (spec.weather) {
+      WeatherKind.fog ||
+      WeatherKind.heavyRain ||
+      WeatherKind.thunderstorm ||
+      WeatherKind.snow ||
+      WeatherKind.windy => 2.0,
+      WeatherKind.rain || WeatherKind.drizzle || WeatherKind.dustStorm => 1.5,
+      _ => 1.0,
+    };
+    final alpha = 0.055 * f * murk;
+    const c = PitchDims.centre;
+    final heads = <(Offset, double)>[];
+    if (_roofEdgeLamps) {
+      final top = _topOf(_Seg.far);
+      for (final u in const [0.15, 0.5, 0.85]) {
+        heads.add((_standPoint(_Seg.far, u, top.o1, top.z1 + 2), u));
+      }
+    } else {
+      for (final (x, y) in _pylons ? towers : towers.take(2)) {
+        heads.add((_p(x, y, _towerHeight), x < c.x ? 0.0 : 1.0));
+      }
+    }
+    for (final (head, u) in heads) {
+      // A cone from the lamps to an ellipse on the grass toward the middle.
+      final gx = PitchDims.length * (0.25 + 0.5 * u);
+      final a = _p(gx - 22, c.y + 6), b = _p(gx + 22, c.y + 6);
+      final mid = _p(gx, c.y + 6);
+      canvas.drawPath(
+        _poly([head, b, mid.translate(0, 6), a]),
+        Paint()
+          ..blendMode = BlendMode.screen
+          ..shader = ui.Gradient.linear(head, mid, [
+            const Color(0xFFFFF6DE).withValues(alpha: alpha * 1.2),
+            const Color(0xFFFFF6DE).withValues(alpha: 0),
+          ]),
+      );
+    }
   }
 
   void _markings(Canvas canvas) {
