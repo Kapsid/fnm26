@@ -16700,6 +16700,54 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
+  String get pitchVarCheck => 'Έλεγχος VAR';
+
+  @override
+  String get pitchVarConfirmed => 'Το γκολ μετράει';
+
+  @override
+  String get pitchVarDisallowedOffside => 'Ακυρώθηκε το γκολ: οφσάιντ';
+
+  @override
+  String get pitchVarDisallowedFoul => 'Ακυρώθηκε το γκολ: φάουλ';
+
+  @override
+  String get pitchComVarCheck1 =>
+      'Περιμένετε. Ο διαιτητής βάζει το χέρι στο αυτί: το VAR ελέγχει το γκολ.';
+
+  @override
+  String pitchComVarCheck2(String player) {
+    return 'Ο $player πανηγυρίζει, αλλά το VAR εξετάζει τη φάση.';
+  }
+
+  @override
+  String get pitchComVarConfirmed1 =>
+      'Το VAR δεν βρίσκει τίποτα. Το γκολ μετράει!';
+
+  @override
+  String pitchComVarConfirmed2(String player) {
+    return 'Ελέγχθηκε και επιβεβαιώθηκε: ο $player κρατά το γκολ του.';
+  }
+
+  @override
+  String get pitchComVarOffside1 =>
+      'Δεν μετράει! Το VAR βρίσκει οφσάιντ στην επίθεση.';
+
+  @override
+  String pitchComVarOffside2(String player) {
+    return 'Ακυρώθηκε! Το VAR βρίσκει οφσάιντ και ο $player μένει χωρίς γκολ.';
+  }
+
+  @override
+  String get pitchComVarFoul1 =>
+      'Δεν μετράει! Το VAR βλέπει φάουλ στην επίθεση.';
+
+  @override
+  String pitchComVarFoul2(String player) {
+    return 'Ακυρώθηκε! Το VAR βλέπει φάουλ και ο $player μένει χωρίς γκολ.';
+  }
+
+  @override
   String pitchComSub1(String player, String other) {
     return 'Αλλαγή: μπαίνει ο $player, βγαίνει ο $other.';
   }
@@ -17506,6 +17554,12 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get matchGoalOwnGoal => 'ΑΥΤ';
+
+  @override
+  String get matchGoalVarOffside => 'VAR: οφσάιντ';
+
+  @override
+  String get matchGoalVarFoul => 'VAR: φάουλ';
 
   @override
   String pitchComOwnGoal1(String defender) {

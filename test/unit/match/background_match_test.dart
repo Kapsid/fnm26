@@ -163,6 +163,7 @@ void main() {
               injuries++;
             case MatchEventType.goal:
             case MatchEventType.substitution:
+            case MatchEventType.disallowedGoal:
               break;
           }
         }

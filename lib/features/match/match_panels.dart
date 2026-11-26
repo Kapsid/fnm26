@@ -14,6 +14,11 @@ typedef InPlayPenalty = ({
   bool scored,
 });
 
+/// Why the video referee chalked off [e] (a `MatchEventType.disallowedGoal`),
+/// as the Timeline and the TV strip say it: "VAR: offside", "VAR: foul".
+String varCallLabel(AppLocalizations l, MatchEvent e) =>
+    e.varReview == VarReview.foul ? l.matchGoalVarFoul : l.matchGoalVarOffside;
+
 /// The penalties in [r] the clock has reached. A scored one is reached with
 /// its goal ([eventReached]: a goal still on its way in on the 2D TV is
 /// held back with it); one that did not go in has no event, so it is
@@ -301,6 +306,12 @@ class _TimelineRow extends StatelessWidget {
       MatchEventType.redCard => CardMark(
         event.secondYellow ? MatchCard.secondYellow : MatchCard.red,
       ),
+      // A goal the video referee chalked off: his screen, not a ball.
+      MatchEventType.disallowedGoal => const Icon(
+        Icons.tv,
+        size: 16,
+        color: AppColors.onSurfaceVariant,
+      ),
     };
     final label = switch (event.type) {
       MatchEventType.substitution =>
@@ -311,6 +322,9 @@ class _TimelineRow extends StatelessWidget {
       MatchEventType.goal when event.ownGoal =>
         '${_abbrevName(event.playerName)} '
             '(${AppLocalizations.of(context).matchGoalOwnGoal})',
+      MatchEventType.disallowedGoal =>
+        '${_abbrevName(event.playerName)} '
+            '(${varCallLabel(AppLocalizations.of(context), event)})',
       // A dismissal carries the name alone. The CARD says which one it was —
       // two overlapping cards for a second booking, one red for a straight
       // one — so naming it again in text said nothing the icon had not
@@ -1212,6 +1226,8 @@ class MatchLineups extends StatelessWidget {
           if (e.secondaryPlayerId == id) wentOff = true;
         case MatchEventType.injury:
           if (e.playerId == id) injured = true;
+        case MatchEventType.disallowedGoal:
+          break;
       }
     }
     Widget counted(Widget icon, int n, Key key) => Row(

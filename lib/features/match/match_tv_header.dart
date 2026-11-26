@@ -530,6 +530,12 @@ class _TvEventStrip extends StatelessWidget {
         case MatchEventType.substitution:
           lead = mark(const _SubMark(size: 16));
           body = _EventLine(event: e, style: strong);
+        case MatchEventType.disallowedGoal:
+          // The video referee's screen, and whose goal it would have been.
+          lead = mark(
+            const Icon(Icons.tv, size: 16, color: AppColors.onSurfaceVariant),
+          );
+          body = who(initialledName(e.playerName), how: varCallLabel(l, e));
       }
     }
     return Container(

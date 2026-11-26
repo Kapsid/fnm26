@@ -3414,8 +3414,10 @@ class SeasonService {
           yellowsBy.update(e.playerId, (v) => v + 1, ifAbsent: () => 1);
         case MatchEventType.redCard:
           redsBy.update(e.playerId, (v) => v + 1, ifAbsent: () => 1);
+        // A goal chalked off counts for nobody.
         case MatchEventType.substitution:
         case MatchEventType.injury:
+        case MatchEventType.disallowedGoal:
           break;
       }
     }

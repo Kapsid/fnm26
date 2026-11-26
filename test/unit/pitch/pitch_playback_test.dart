@@ -94,6 +94,12 @@ void main() {
             final cue = w.cues.where((c) => c.kind == PitchCueKind.goal);
             if (cue.isEmpty) continue;
             goals++;
+            // A goal chalked off shows on the video referee's call.
+            if (m.outcome == ShotOutcome.disallowed) {
+              final v = pb.varChecks.firstWhere((v) => identical(v.shot, m));
+              expect(pb.revealAt(m.goalEventIndex!), v.decisionAt);
+              continue;
+            }
             expect(pb.revealAt(m.goalEventIndex!), cue.first.t);
           }
           if (m is FoulMoment && m.cardEventIndex != null) {
@@ -220,7 +226,7 @@ void main() {
             seed,
             events: r.events,
           );
-          if (first.outcome != ShotOutcome.goal) {
+          if (!first.outcome.inNet) {
             expect(lineAt(strike.first.t), shotLine);
             penalties++;
           }
@@ -234,7 +240,7 @@ void main() {
             lineAt(w.start),
             pitchLine(_l, first, names, seed, events: r.events),
           );
-          if (shot.outcome != ShotOutcome.goal) {
+          if (!shot.outcome.inNet) {
             expect(
               lineAt(strike.first.t),
               pitchLine(_l, shot, names, seed, events: r.events),

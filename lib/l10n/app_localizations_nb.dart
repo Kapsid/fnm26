@@ -16614,6 +16614,53 @@ class AppLocalizationsNb extends AppLocalizations {
   }
 
   @override
+  String get pitchVarCheck => 'VAR-sjekk';
+
+  @override
+  String get pitchVarConfirmed => 'Målet godkjent';
+
+  @override
+  String get pitchVarDisallowedOffside => 'Målet annullert: offside';
+
+  @override
+  String get pitchVarDisallowedFoul => 'Målet annullert: regelbrudd';
+
+  @override
+  String get pitchComVarCheck1 =>
+      'Vent litt. Dommeren holder hånden mot øret: VAR sjekker målet.';
+
+  @override
+  String pitchComVarCheck2(String player) {
+    return '$player jubler, men VAR ser på situasjonen.';
+  }
+
+  @override
+  String get pitchComVarConfirmed1 => 'VAR finner ingenting. Målet står!';
+
+  @override
+  String pitchComVarConfirmed2(String player) {
+    return 'Sjekket og godkjent: $player får beholde målet.';
+  }
+
+  @override
+  String get pitchComVarOffside1 =>
+      'Ikke mål! VAR finner offside i oppspillet.';
+
+  @override
+  String pitchComVarOffside2(String player) {
+    return 'Annullert! VAR finner offside, og $player mister målet.';
+  }
+
+  @override
+  String get pitchComVarFoul1 =>
+      'Ikke mål! VAR ser et regelbrudd i oppspillet.';
+
+  @override
+  String pitchComVarFoul2(String player) {
+    return 'Annullert! VAR ser et regelbrudd, og $player mister målet.';
+  }
+
+  @override
   String pitchComSub1(String player, String other) {
     return 'Bytte: $player inn, $other ut.';
   }
@@ -17416,6 +17463,12 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get matchGoalOwnGoal => 'SM';
+
+  @override
+  String get matchGoalVarOffside => 'VAR: offside';
+
+  @override
+  String get matchGoalVarFoul => 'VAR: regelbrudd';
 
   @override
   String pitchComOwnGoal1(String defender) {

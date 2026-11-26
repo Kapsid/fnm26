@@ -105,7 +105,15 @@ void main() {
         );
       }
       for (final s in shotsOf(r)) {
-        if (s.outcome != ShotOutcome.goal) expect(s.goalEventIndex, isNull);
+        // A goal chalked off points at its disallowed goal.
+        if (s.outcome == ShotOutcome.disallowed) {
+          expect(
+            r.events[s.goalEventIndex!].type,
+            MatchEventType.disallowedGoal,
+          );
+        } else if (s.outcome != ShotOutcome.goal) {
+          expect(s.goalEventIndex, isNull);
+        }
       }
     }
   });

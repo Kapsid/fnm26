@@ -110,6 +110,7 @@ void main() {
             reds.add(e.playerId);
           case MatchEventType.substitution:
           case MatchEventType.injury:
+          case MatchEventType.disallowedGoal:
             break;
         }
       }

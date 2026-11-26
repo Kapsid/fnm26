@@ -149,7 +149,7 @@ class PitchPacer {
     final goals = [
       for (final m in r.moments)
         if (m is ShotMoment &&
-            m.outcome == ShotOutcome.goal &&
+            m.outcome.inNet &&
             m.origin == ShotOrigin.openPlay &&
             !mergedInto.containsKey(m))
           m,
@@ -241,6 +241,28 @@ class PitchPacer {
   static const double _offside = 2.5;
   static const double _injurySeconds = 3;
   static const double _goalExtra = 2.5;
+
+  /// What a goal the video referee checks adds on top of [_goalExtra]: the
+  /// referee's finger to his ear while the check runs, then his call.
+  static const double varExtra = 3.5;
+
+  /// The time a shot that ends in the net adds to its moment: the
+  /// celebration, and the check when the video referee holds one (a goal
+  /// he confirms, or one he chalks off).
+  double _inNetExtra(ShotMoment s) {
+    if (!s.outcome.inNet) return 0;
+    return _goalExtra + (varCheckOf(_events, s) == null ? 0 : varExtra);
+  }
+
+  /// The video referee's call on [s]'s goal (see [MatchEvent.varReview]),
+  /// or null when [s] did not go in or nobody checked it.
+  static VarReview? varCheckOf(List<MatchEvent> events, ShotMoment s) {
+    final g = s.goalEventIndex;
+    if (!s.outcome.inNet || g == null || g < 0 || g >= events.length) {
+      return null;
+    }
+    return events[g].varReview;
+  }
 
   /// An open-play goal's build-up: time for the attack to be played from
   /// wherever the ball is. Without it a third of open-play goals were
@@ -358,7 +380,7 @@ class PitchPacer {
   };
 
   static bool _keyShot(ShotMoment s) =>
-      s.outcome == ShotOutcome.goal ||
+      s.outcome.inNet ||
       s.origin == ShotOrigin.penalty ||
       s.outcome == ShotOutcome.woodwork ||
       s.isBigSave;
@@ -392,7 +414,7 @@ class PitchPacer {
         : _tier(base, std, minor, t);
     switch (m) {
       case final ShotMoment s:
-        final goal = s.outcome == ShotOutcome.goal ? _goalExtra : 0;
+        final goal = _inNetExtra(s);
         if (_keyShot(s)) {
           if (s.origin != ShotOrigin.penalty) return _shot + goal;
           final f = _followUps[s];
@@ -415,7 +437,7 @@ class PitchPacer {
         final base = _setPieceSeconds(p);
         final merged = base + _mergeExtra;
         if (_keyShot(folded)) {
-          return merged + (folded.outcome == ShotOutcome.goal ? _goalExtra : 0);
+          return merged + _inNetExtra(folded);
         }
         // Never so short the delivery and its shot cannot be shown.
         final scaled = at(merged, _Tier.standard);

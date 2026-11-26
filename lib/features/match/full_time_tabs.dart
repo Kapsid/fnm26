@@ -60,6 +60,8 @@ PlayerMatchLine playerMatchLine(MatchResult r, int playerId) {
         }
       case MatchEventType.injury:
         if (e.playerId == playerId && e.minute < off) off = e.minute;
+      case MatchEventType.disallowedGoal:
+        break;
     }
   }
   final shots = r.moments.whereType<ShotMoment>().toList();
@@ -80,7 +82,8 @@ PlayerMatchLine playerMatchLine(MatchResult r, int playerId) {
               .where(
                 (s) =>
                     s.outcome == ShotOutcome.goal ||
-                    s.outcome == ShotOutcome.saved,
+                    s.outcome == ShotOutcome.saved ||
+                    s.outcome == ShotOutcome.disallowed,
               )
               .length
         : null,

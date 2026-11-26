@@ -23,7 +23,8 @@ class _Shot {
   bool afterDone = false;
   double? landedAt;
 
-  bool get goal => m.outcome == ShotOutcome.goal;
+  /// In the net: a goal, or one the video referee chalks off afterwards.
+  bool get goal => m.outcome.inNet;
 
   /// Struck, arrived, and the ball in the net or with somebody.
   bool settledNow(ScriptState now) =>
@@ -31,7 +32,7 @@ class _Shot {
 
   /// How long its ending needs after the ball arrives, in screen seconds.
   double get tail => switch (m.outcome) {
-    ShotOutcome.goal => 1.2,
+    ShotOutcome.goal || ShotOutcome.disallowed => 1.2,
     ShotOutcome.saved => 0.2,
     ShotOutcome.wide => 0.7,
     ShotOutcome.woodwork => 0.8,
@@ -133,7 +134,7 @@ class _Shot {
     }
 
     switch (m.outcome) {
-      case ShotOutcome.goal:
+      case ShotOutcome.goal || ShotOutcome.disallowed:
         final sign = kLat > 0.4
             ? -1.0
             : kLat < -0.4
@@ -318,7 +319,7 @@ class _Shot {
     if (now.flight != null) return null;
     landedAt ??= t;
     switch (m.outcome) {
-      case ShotOutcome.goal:
+      case ShotOutcome.goal || ShotOutcome.disallowed:
         p.cue(t, PitchCueKind.goal, m.shooterId);
         return null;
       case ShotOutcome.saved:
@@ -455,7 +456,7 @@ class _OpenShotPlan extends _Plan {
     zone = _strikePoint(this, m.zone);
     final e = c.entry;
     final a = m.assistId;
-    if (m.outcome == ShotOutcome.goal &&
+    if (m.outcome.inNet &&
         a != null &&
         a != m.shooterId &&
         onPitch(e, a) &&
@@ -604,7 +605,7 @@ class _OpenShotPlan extends _Plan {
   /// The latest the shot can still be worked and struck in its window.
   double get strikeBy {
     final flight = switch (m.outcome) {
-      ShotOutcome.goal => 1.1,
+      ShotOutcome.goal || ShotOutcome.disallowed => 1.1,
       ShotOutcome.blocked => 0.3,
       ShotOutcome.saved => 0.7,
       _ => 0.9,
@@ -724,7 +725,7 @@ class _OpenShotPlan extends _Plan {
     // (a step's grace, and a goal half a second before its cut).
     final toGoal = now.ball.distanceTo(goal);
     final flight = switch (m.outcome) {
-      ShotOutcome.goal => toGoal / 30 + 0.5,
+      ShotOutcome.goal || ShotOutcome.disallowed => toGoal / 30 + 0.5,
       ShotOutcome.blocked => 0.2,
       ShotOutcome.saved => math.max(toGoal / 21, 0.42),
       _ => toGoal / 30,

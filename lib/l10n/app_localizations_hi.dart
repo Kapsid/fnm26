@@ -16524,6 +16524,52 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
+  String get pitchVarCheck => 'VAR जाँच';
+
+  @override
+  String get pitchVarConfirmed => 'गोल की पुष्टि';
+
+  @override
+  String get pitchVarDisallowedOffside => 'गोल रद्द: ऑफ़साइड';
+
+  @override
+  String get pitchVarDisallowedFoul => 'गोल रद्द: फ़ाउल';
+
+  @override
+  String get pitchComVarCheck1 =>
+      'रुकिए। रेफ़री ने कान पर हाथ रखा है: VAR गोल की जाँच कर रहा है।';
+
+  @override
+  String pitchComVarCheck2(String player) {
+    return '$player जश्न मना रहे हैं, लेकिन VAR स्थिति देख रहा है।';
+  }
+
+  @override
+  String get pitchComVarConfirmed1 => 'VAR को कुछ नहीं मिला। गोल बरकरार!';
+
+  @override
+  String pitchComVarConfirmed2(String player) {
+    return 'जाँच हुई और पुष्टि हो गई: $player का गोल गिना जाएगा।';
+  }
+
+  @override
+  String get pitchComVarOffside1 =>
+      'कोई गोल नहीं! VAR को हमले में ऑफ़साइड मिला।';
+
+  @override
+  String pitchComVarOffside2(String player) {
+    return 'रद्द! VAR को ऑफ़साइड मिला, और $player का गोल नहीं गिना जाएगा।';
+  }
+
+  @override
+  String get pitchComVarFoul1 => 'कोई गोल नहीं! VAR ने हमले में फ़ाउल देखा।';
+
+  @override
+  String pitchComVarFoul2(String player) {
+    return 'रद्द! VAR ने फ़ाउल देखा, और $player का गोल नहीं गिना जाएगा।';
+  }
+
+  @override
   String pitchComSub1(String player, String other) {
     return 'बदलाव: $player अंदर, $other बाहर।';
   }
@@ -17323,6 +17369,12 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get matchGoalOwnGoal => 'आगो';
+
+  @override
+  String get matchGoalVarOffside => 'VAR: ऑफ़साइड';
+
+  @override
+  String get matchGoalVarFoul => 'VAR: फ़ाउल';
 
   @override
   String pitchComOwnGoal1(String defender) {

@@ -474,7 +474,7 @@ class InMatchPenalty {
     double lat(Offset2 q) => (q.y - PitchDims.width / 2) * dir;
     int column(double l) => l < -1.25 ? 0 : (l > 1.25 ? 2 : 1);
     final result = switch (m.outcome) {
-      ShotOutcome.goal => KickResult.scored,
+      ShotOutcome.goal || ShotOutcome.disallowed => KickResult.scored,
       ShotOutcome.saved || ShotOutcome.blocked => KickResult.saved,
       ShotOutcome.wide => KickResult.wide,
       ShotOutcome.woodwork => KickResult.post,

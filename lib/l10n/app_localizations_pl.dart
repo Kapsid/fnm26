@@ -16782,6 +16782,53 @@ class AppLocalizationsPl extends AppLocalizations {
   }
 
   @override
+  String get pitchVarCheck => 'Weryfikacja VAR';
+
+  @override
+  String get pitchVarConfirmed => 'Gol uznany';
+
+  @override
+  String get pitchVarDisallowedOffside => 'Gol nieuznany: spalony';
+
+  @override
+  String get pitchVarDisallowedFoul => 'Gol nieuznany: faul';
+
+  @override
+  String get pitchComVarCheck1 =>
+      'Chwila. Sędzia trzyma rękę przy uchu: VAR sprawdza gola.';
+
+  @override
+  String pitchComVarCheck2(String player) {
+    return '$player się cieszy, ale VAR analizuje sytuację.';
+  }
+
+  @override
+  String get pitchComVarConfirmed1 =>
+      'VAR niczego nie znalazł. Gol jest ważny!';
+
+  @override
+  String pitchComVarConfirmed2(String player) {
+    return 'Sprawdzone i potwierdzone: $player może się cieszyć z gola.';
+  }
+
+  @override
+  String get pitchComVarOffside1 =>
+      'Nie ma gola! VAR wychwycił spalonego w akcji.';
+
+  @override
+  String pitchComVarOffside2(String player) {
+    return 'Nieuznany! VAR dopatrzył się spalonego i $player traci gola.';
+  }
+
+  @override
+  String get pitchComVarFoul1 => 'Nie ma gola! VAR wychwycił faul w akcji.';
+
+  @override
+  String pitchComVarFoul2(String player) {
+    return 'Nieuznany! VAR dopatrzył się faulu i $player traci gola.';
+  }
+
+  @override
   String pitchComSub1(String player, String other) {
     return 'Zmiana: $player wchodzi, $other schodzi.';
   }
@@ -17590,6 +17637,12 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get matchGoalOwnGoal => 'SAM';
+
+  @override
+  String get matchGoalVarOffside => 'VAR: spalony';
+
+  @override
+  String get matchGoalVarFoul => 'VAR: faul';
 
   @override
   String pitchComOwnGoal1(String defender) {

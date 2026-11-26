@@ -17000,6 +17000,51 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String get pitchVarCheck => 'Kontrola VAR';
+
+  @override
+  String get pitchVarConfirmed => 'Gól platí';
+
+  @override
+  String get pitchVarDisallowedOffside => 'Gól neuznán: ofsajd';
+
+  @override
+  String get pitchVarDisallowedFoul => 'Gól neuznán: faul';
+
+  @override
+  String get pitchComVarCheck1 =>
+      'Moment. Rozhodčí si drží ruku u ucha: VAR kontroluje gól.';
+
+  @override
+  String pitchComVarCheck2(String player) {
+    return '$player slaví, ale VAR si situaci prohlíží.';
+  }
+
+  @override
+  String get pitchComVarConfirmed1 => 'VAR nic nenašel. Gól platí!';
+
+  @override
+  String pitchComVarConfirmed2(String player) {
+    return 'Zkontrolováno a potvrzeno: $player si gól nechává.';
+  }
+
+  @override
+  String get pitchComVarOffside1 => 'Gól neplatí! VAR našel v akci ofsajd.';
+
+  @override
+  String pitchComVarOffside2(String player) {
+    return 'Neuznáno! VAR našel ofsajd a $player přichází o gól.';
+  }
+
+  @override
+  String get pitchComVarFoul1 => 'Gól neplatí! VAR odhalil v akci faul.';
+
+  @override
+  String pitchComVarFoul2(String player) {
+    return 'Neuznáno! VAR odhalil faul a $player přichází o gól.';
+  }
+
+  @override
   String pitchComSub1(String player, String other) {
     return 'Střídání: $player přichází, $other odchází.';
   }
@@ -17800,6 +17845,12 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get matchGoalOwnGoal => 'VL';
+
+  @override
+  String get matchGoalVarOffside => 'VAR: ofsajd';
+
+  @override
+  String get matchGoalVarFoul => 'VAR: faul';
 
   @override
   String pitchComOwnGoal1(String defender) {

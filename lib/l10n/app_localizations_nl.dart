@@ -16695,6 +16695,54 @@ class AppLocalizationsNl extends AppLocalizations {
   }
 
   @override
+  String get pitchVarCheck => 'VAR-check';
+
+  @override
+  String get pitchVarConfirmed => 'Doelpunt goedgekeurd';
+
+  @override
+  String get pitchVarDisallowedOffside => 'Doelpunt afgekeurd: buitenspel';
+
+  @override
+  String get pitchVarDisallowedFoul => 'Doelpunt afgekeurd: overtreding';
+
+  @override
+  String get pitchComVarCheck1 =>
+      'Even wachten. De scheidsrechter houdt zijn hand bij zijn oor: de VAR bekijkt het doelpunt.';
+
+  @override
+  String pitchComVarCheck2(String player) {
+    return '$player juicht, maar de VAR bekijkt de situatie.';
+  }
+
+  @override
+  String get pitchComVarConfirmed1 =>
+      'De VAR ziet niets verkeerds. Het doelpunt telt!';
+
+  @override
+  String pitchComVarConfirmed2(String player) {
+    return 'Gecontroleerd en goedgekeurd: $player houdt zijn doelpunt.';
+  }
+
+  @override
+  String get pitchComVarOffside1 =>
+      'Geen doelpunt! De VAR ziet buitenspel in de aanloop.';
+
+  @override
+  String pitchComVarOffside2(String player) {
+    return 'Afgekeurd! De VAR ziet buitenspel en $player is zijn doelpunt kwijt.';
+  }
+
+  @override
+  String get pitchComVarFoul1 =>
+      'Geen doelpunt! De VAR ziet een overtreding in de aanloop.';
+
+  @override
+  String pitchComVarFoul2(String player) {
+    return 'Afgekeurd! De VAR ziet een overtreding en $player is zijn doelpunt kwijt.';
+  }
+
+  @override
   String pitchComSub1(String player, String other) {
     return 'Wissel: $player erin, $other eruit.';
   }
@@ -17503,6 +17551,12 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get matchGoalOwnGoal => 'ED';
+
+  @override
+  String get matchGoalVarOffside => 'VAR: buitenspel';
+
+  @override
+  String get matchGoalVarFoul => 'VAR: overtreding';
 
   @override
   String pitchComOwnGoal1(String defender) {

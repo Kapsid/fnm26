@@ -472,6 +472,7 @@ void main() {
             off[e.playerId] = at;
           case MatchEventType.goal:
           case MatchEventType.yellowCard:
+          case MatchEventType.disallowedGoal:
             break;
         }
       }

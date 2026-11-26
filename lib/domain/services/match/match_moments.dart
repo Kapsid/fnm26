@@ -34,7 +34,22 @@ enum PitchZone {
 }
 
 /// How a shot ended.
-enum ShotOutcome { goal, saved, wide, blocked, woodwork }
+///
+/// [disallowed] is a shot that went in and was chalked off by the video
+/// referee: its `goalEventIndex` points at the
+/// `MatchEventType.disallowedGoal` event. The picture draws it into the
+/// net; no tally counts it as a goal (it is a shot on target).
+enum ShotOutcome {
+  goal,
+  saved,
+  wide,
+  blocked,
+  woodwork,
+  disallowed;
+
+  /// Whether the ball ended in the net: a goal, or one chalked off.
+  bool get inNet => this == goal || this == disallowed;
+}
 
 /// Where a shot came from.
 enum ShotOrigin {
@@ -123,7 +138,8 @@ final class ShotMoment extends MatchMoment {
   final ShotOrigin origin;
 
   /// The index into `MatchResult.events` of the goal this shot scored, when
-  /// [outcome] is [ShotOutcome.goal]; null otherwise. An own goal's event
+  /// [outcome] is [ShotOutcome.goal] (of the goal chalked off, when it is
+  /// [ShotOutcome.disallowed]); null otherwise. An own goal's event
   /// names the defender who turned it in ([MatchEvent.ownGoal]); the shot is
   /// still the attacker's.
   final int? goalEventIndex;

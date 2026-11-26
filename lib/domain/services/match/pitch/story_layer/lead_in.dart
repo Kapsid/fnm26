@@ -189,7 +189,7 @@ int? _wantedOnBall(StagedWindow w) {
     ) =>
       origin == ShotOrigin.penalty
           ? null
-          : outcome == ShotOutcome.goal && assistId != null
+          : outcome.inNet && assistId != null
           ? assistId
           : shooterId,
     FoulMoment(:final fouledId) => fouledId,

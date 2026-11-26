@@ -16054,6 +16054,50 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String get pitchVarCheck => 'VAR 판독';
+
+  @override
+  String get pitchVarConfirmed => '골 인정';
+
+  @override
+  String get pitchVarDisallowedOffside => '골 취소: 오프사이드';
+
+  @override
+  String get pitchVarDisallowedFoul => '골 취소: 반칙';
+
+  @override
+  String get pitchComVarCheck1 => '잠시만요. 주심이 귀에 손을 대고 있습니다. VAR이 골을 확인 중입니다.';
+
+  @override
+  String pitchComVarCheck2(String player) {
+    return '$player 선수가 기뻐하지만 VAR이 상황을 확인하고 있습니다.';
+  }
+
+  @override
+  String get pitchComVarConfirmed1 => 'VAR 확인 결과 문제없습니다. 골이 인정됩니다!';
+
+  @override
+  String pitchComVarConfirmed2(String player) {
+    return '확인 완료: $player 선수의 골이 인정됩니다.';
+  }
+
+  @override
+  String get pitchComVarOffside1 => '노골! VAR이 공격 과정에서 오프사이드를 찾아냅니다.';
+
+  @override
+  String pitchComVarOffside2(String player) {
+    return '취소! VAR이 오프사이드를 선언하며 $player 선수의 골이 무효가 됩니다.';
+  }
+
+  @override
+  String get pitchComVarFoul1 => '노골! VAR이 공격 과정에서 반칙을 잡아냅니다.';
+
+  @override
+  String pitchComVarFoul2(String player) {
+    return '취소! VAR이 반칙을 선언하며 $player 선수의 골이 무효가 됩니다.';
+  }
+
+  @override
   String pitchComSub1(String player, String other) {
     return '선수 교체: $player 투입, $other 아웃.';
   }
@@ -16834,6 +16878,12 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get matchGoalOwnGoal => '자책';
+
+  @override
+  String get matchGoalVarOffside => 'VAR: 오프사이드';
+
+  @override
+  String get matchGoalVarFoul => 'VAR: 반칙';
 
   @override
   String pitchComOwnGoal1(String defender) {

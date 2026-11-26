@@ -264,7 +264,18 @@ enum MatchEventType {
   /// down unless a substitute comes on — and are sidelined for the games that
   /// follow.
   injury,
+
+  /// A goal chalked off by the video referee: the ball went in, the check
+  /// found an offside or a foul in the build-up ([MatchEvent.varReview]
+  /// says which), and the score never counted it. [MatchEvent.playerId] is
+  /// the man whose goal it would have been. Never a goal in any tally.
+  disallowedGoal,
 }
+
+/// What the video referee (VAR) made of a goal he checked: it stands
+/// ([confirmed]), or it is chalked off for [offside] or a [foul] in the
+/// build-up (a [MatchEventType.disallowedGoal]).
+enum VarReview { confirmed, offside, foul }
 
 /// A timed match event.
 class MatchEvent {
@@ -284,6 +295,7 @@ class MatchEvent {
     this.setPiece = false,
     this.longThrow = false,
     this.ownGoal = false,
+    this.varReview,
   });
 
   final int minute;
@@ -332,6 +344,32 @@ class MatchEvent {
   /// the other side who put it into his own net. Never assisted, never a
   /// goal of his in any tally (see `MatchTally`, `GoalRecord`).
   final bool ownGoal;
+
+  /// For a [MatchEventType.goal] the video referee checked,
+  /// [VarReview.confirmed]; for a [MatchEventType.disallowedGoal], why it was chalked
+  /// off. Null for every goal nobody checked and every other event. In
+  /// memory only: a stored result keeps its goals, never their checks.
+  final VarReview? varReview;
+
+  /// This goal as the video referee left it: checked and standing, or
+  /// chalked off for [review].
+  MatchEvent reviewed(VarReview review) => MatchEvent(
+    minute: minute,
+    stoppage: stoppage,
+    type: review == VarReview.confirmed
+        ? MatchEventType.goal
+        : MatchEventType.disallowedGoal,
+    teamNationId: teamNationId,
+    playerId: playerId,
+    playerName: playerName,
+    assistPlayerId: assistPlayerId,
+    assistName: assistName,
+    penalty: penalty,
+    setPiece: setPiece,
+    longThrow: longThrow,
+    ownGoal: ownGoal,
+    varReview: review,
+  );
 }
 
 /// A single player's performance mark for one match (`3.0`–`10.0`), derived
@@ -754,6 +792,11 @@ class MatchEngine {
   /// [extraTimeAtMargin] plays them instead when the ninety ends on that
   /// margin (home less away): a second leg that leaves its tie level on
   /// aggregate (`TwoLegged.levelMargin`); 0 is [extraTimeIfLevel].
+  /// [videoReferee] lets the video referee check goals (see
+  /// [MatchEventType.disallowedGoal]). Off, every goal stands unchecked and
+  /// the match is the one a seed gave before VAR: with it on, the only
+  /// difference is that a goal now and then is chalked off (and the match
+  /// plays on from the score as it then stands).
   MatchResult play({
     required MatchTeam home,
     required MatchTeam away,
@@ -772,6 +815,7 @@ class MatchEngine {
     bool extraTimeIfLevel = false,
     int? extraTimeAtMargin,
     MatchConditions conditions = MatchConditions.none,
+    bool videoReferee = true,
   }) {
     // What the weather does to the match: every factor exactly 1.0 under a
     // clear sky, so such a match draws exactly what it always drew.
@@ -850,6 +894,11 @@ class MatchEngine {
     // others, and drawn from only after a penalty is saved or hits the
     // woodwork, so every other match plays exactly as before.
     final reboundRng = rng.fork(0x9EB0);
+    // The video referee on an ELEVENTH: which goals he checks and the rare
+    // one he chalks off (see [varReview]). Forked like the others, never
+    // advancing [rng], and drawn from only once a goal has gone in, so a
+    // match with no goal chalked off plays exactly as before.
+    final varRng = rng.fork(0x7A5E);
     // Moments as they happen, each with the event it points at (a goal, a
     // card, a sub), whose index is settled after the final sort of [events].
     final momentLog = <({MatchMoment moment, MatchEvent? event})>[];
@@ -892,7 +941,11 @@ class MatchEngine {
               : _shotZone(xg, detailRng, goal: goal != null));
       final how =
           outcome ??
-          (goal != null ? ShotOutcome.goal : _missOutcome(xg, detailRng));
+          (goal == null
+              ? _missOutcome(xg, detailRng)
+              : goal.type == MatchEventType.disallowedGoal
+              ? ShotOutcome.disallowed
+              : ShotOutcome.goal);
       // An open-play cross met with the head is never charged down by a man
       // in front of it: a blocked one was struck with the foot.
       final headed =
@@ -944,6 +997,24 @@ class MatchEngine {
         longThrow: goal.longThrow,
         ownGoal: true,
       );
+    }
+
+    // The video referee's look at [goal], an open-play or set-piece goal
+    // that has just gone in: most stand unchecked; on [varCheckShare] of
+    // them he checks, and on [varDenyShare] of his checks he finds an
+    // offside or a foul in the build-up and the goal is chalked off (a
+    // [MatchEventType.disallowedGoal]: the caller never counts it). Never
+    // a penalty, and an own goal is only ever checked and confirmed. Every
+    // draw is on [varRng], three at most a goal.
+    MatchEvent varReview(MatchEvent goal) {
+      if (!videoReferee) return goal;
+      if (goal.penalty || !varRng.chance(varCheckShare)) return goal;
+      if (goal.ownGoal || !varRng.chance(varDenyShare)) {
+        return goal.reviewed(VarReview.confirmed);
+      }
+      // A cross into a crowded box is a foul as often as an offside.
+      final offside = varRng.chance(goal.setPiece ? 0.45 : 0.65);
+      return goal.reviewed(offside ? VarReview.offside : VarReview.foul);
     }
 
     // Records a dead ball [atk] takes: a corner, a free kick or a long throw.
@@ -1634,20 +1705,22 @@ class MatchEngine {
           homeXg += baseP; // xG is the CHANCE quality, before the finish
           MatchEvent? goal;
           if (finished) {
-            homeScore++;
             events.add(
-              goal = ownGoalOr(
-                _goal(
-                  manageMinute,
-                  liveHome,
-                  shooter,
-                  assistRng,
-                  stoppage: stoppage,
+              goal = varReview(
+                ownGoalOr(
+                  _goal(
+                    manageMinute,
+                    liveHome,
+                    shooter,
+                    assistRng,
+                    stoppage: stoppage,
+                  ),
+                  liveAway,
+                  cross: false,
                 ),
-                liveAway,
-                cross: false,
               ),
             );
+            if (goal.type == MatchEventType.goal) homeScore++;
           }
           recordShot(
             minute: manageMinute,
@@ -1721,20 +1794,22 @@ class MatchEngine {
           awayXg += baseP;
           MatchEvent? goal;
           if (finished) {
-            awayScore++;
             events.add(
-              goal = ownGoalOr(
-                _goal(
-                  manageMinute,
-                  liveAway,
-                  shooter,
-                  assistRng,
-                  stoppage: stoppage,
+              goal = varReview(
+                ownGoalOr(
+                  _goal(
+                    manageMinute,
+                    liveAway,
+                    shooter,
+                    assistRng,
+                    stoppage: stoppage,
+                  ),
+                  liveHome,
+                  cross: false,
                 ),
-                liveHome,
-                cross: false,
               ),
             );
+            if (goal.type == MatchEventType.goal) awayScore++;
           }
           recordShot(
             minute: manageMinute,
@@ -1766,9 +1841,9 @@ class MatchEngine {
       homeXg += homeSp.xg;
       final homeSpGoal = homeSp.goal == null
           ? null
-          : ownGoalOr(homeSp.goal!, liveAway, cross: true);
+          : varReview(ownGoalOr(homeSp.goal!, liveAway, cross: true));
       if (homeSpGoal != null) {
-        homeScore++;
+        if (homeSpGoal.type == MatchEventType.goal) homeScore++;
         events.add(homeSpGoal);
       }
       if (homeSp.shot) {
@@ -1809,9 +1884,9 @@ class MatchEngine {
       awayXg += awaySp.xg;
       final awaySpGoal = awaySp.goal == null
           ? null
-          : ownGoalOr(awaySp.goal!, liveHome, cross: true);
+          : varReview(ownGoalOr(awaySp.goal!, liveHome, cross: true));
       if (awaySpGoal != null) {
-        awayScore++;
+        if (awaySpGoal.type == MatchEventType.goal) awayScore++;
         events.add(awaySpGoal);
       }
       if (awaySp.shot) {
@@ -1856,9 +1931,9 @@ class MatchEngine {
         homeXg += lt.xg;
         final ltGoal = lt.goal == null
             ? null
-            : ownGoalOr(lt.goal!, liveAway, cross: true);
+            : varReview(ownGoalOr(lt.goal!, liveAway, cross: true));
         if (ltGoal != null) {
-          homeScore++;
+          if (ltGoal.type == MatchEventType.goal) homeScore++;
           events.add(ltGoal);
         }
         if (lt.shot) {
@@ -1898,9 +1973,9 @@ class MatchEngine {
         awayXg += lt.xg;
         final ltGoal = lt.goal == null
             ? null
-            : ownGoalOr(lt.goal!, liveHome, cross: true);
+            : varReview(ownGoalOr(lt.goal!, liveHome, cross: true));
         if (ltGoal != null) {
-          awayScore++;
+          if (ltGoal.type == MatchEventType.goal) awayScore++;
           events.add(ltGoal);
         }
         if (lt.shot) {
@@ -3193,6 +3268,14 @@ class MatchEngine {
   /// what international football sees.
   static const double ownGoalFromShot = 0.025;
   static const double ownGoalFromCross = 0.07;
+
+  /// The share of open-play and set-piece goals the video referee checks,
+  /// and the share of his checks that chalk the goal off: about one goal in
+  /// five held for a look, one in seventy-five or so taken away, a goal
+  /// chalked off every thirty matches or so. Rare, so the goals a match
+  /// stay what international football sees: nothing compensates for them.
+  static const double varCheckShare = 0.2;
+  static const double varDenyShare = 0.065;
 
   /// The man of [def] whose touch put the ball into his own net: mostly a
   /// centre-half or a full-back, now and then a midfielder tracking back,

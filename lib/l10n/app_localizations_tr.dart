@@ -16523,6 +16523,51 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get pitchVarCheck => 'VAR kontrolü';
+
+  @override
+  String get pitchVarConfirmed => 'Gol onaylandı';
+
+  @override
+  String get pitchVarDisallowedOffside => 'Gol iptal: ofsayt';
+
+  @override
+  String get pitchVarDisallowedFoul => 'Gol iptal: faul';
+
+  @override
+  String get pitchComVarCheck1 =>
+      'Bir dakika. Hakem elini kulağına götürdü: VAR golü kontrol ediyor.';
+
+  @override
+  String pitchComVarCheck2(String player) {
+    return '$player sevinçli, ama VAR pozisyonu inceliyor.';
+  }
+
+  @override
+  String get pitchComVarConfirmed1 => 'VAR bir sorun bulmadı. Gol geçerli!';
+
+  @override
+  String pitchComVarConfirmed2(String player) {
+    return 'İncelendi ve onaylandı: $player golünü koruyor.';
+  }
+
+  @override
+  String get pitchComVarOffside1 => 'Gol yok! VAR atakta ofsayt buldu.';
+
+  @override
+  String pitchComVarOffside2(String player) {
+    return 'İptal! VAR ofsayt buldu ve $player golden oluyor.';
+  }
+
+  @override
+  String get pitchComVarFoul1 => 'Gol yok! VAR atakta faul gördü.';
+
+  @override
+  String pitchComVarFoul2(String player) {
+    return 'İptal! VAR faul gördü ve $player golden oluyor.';
+  }
+
+  @override
   String pitchComSub1(String player, String other) {
     return 'Oyuncu değişikliği: $player giriyor, $other çıkıyor.';
   }
@@ -17325,6 +17370,12 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get matchGoalOwnGoal => 'KK';
+
+  @override
+  String get matchGoalVarOffside => 'VAR: ofsayt';
+
+  @override
+  String get matchGoalVarFoul => 'VAR: faul';
 
   @override
   String pitchComOwnGoal1(String defender) {

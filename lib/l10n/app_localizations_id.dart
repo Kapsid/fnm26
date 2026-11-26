@@ -16515,6 +16515,53 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
+  String get pitchVarCheck => 'Pemeriksaan VAR';
+
+  @override
+  String get pitchVarConfirmed => 'Gol disahkan';
+
+  @override
+  String get pitchVarDisallowedOffside => 'Gol dianulir: offside';
+
+  @override
+  String get pitchVarDisallowedFoul => 'Gol dianulir: pelanggaran';
+
+  @override
+  String get pitchComVarCheck1 =>
+      'Tunggu dulu. Wasit memegang telinganya: VAR sedang memeriksa gol.';
+
+  @override
+  String pitchComVarCheck2(String player) {
+    return '$player merayakan, tetapi VAR sedang meninjau situasinya.';
+  }
+
+  @override
+  String get pitchComVarConfirmed1 => 'VAR tidak menemukan masalah. Gol sah!';
+
+  @override
+  String pitchComVarConfirmed2(String player) {
+    return 'Diperiksa dan disahkan: gol $player tetap dihitung.';
+  }
+
+  @override
+  String get pitchComVarOffside1 =>
+      'Tidak ada gol! VAR menemukan offside dalam proses serangan.';
+
+  @override
+  String pitchComVarOffside2(String player) {
+    return 'Dianulir! VAR menemukan offside dan $player kehilangan golnya.';
+  }
+
+  @override
+  String get pitchComVarFoul1 =>
+      'Tidak ada gol! VAR melihat pelanggaran dalam proses serangan.';
+
+  @override
+  String pitchComVarFoul2(String player) {
+    return 'Dianulir! VAR melihat pelanggaran dan $player kehilangan golnya.';
+  }
+
+  @override
   String pitchComSub1(String player, String other) {
     return 'Pergantian: $player masuk, $other keluar.';
   }
@@ -17325,6 +17372,12 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get matchGoalOwnGoal => 'BD';
+
+  @override
+  String get matchGoalVarOffside => 'VAR: offside';
+
+  @override
+  String get matchGoalVarFoul => 'VAR: pelanggaran';
 
   @override
   String pitchComOwnGoal1(String defender) {

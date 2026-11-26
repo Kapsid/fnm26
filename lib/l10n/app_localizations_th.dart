@@ -16314,6 +16314,51 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
+  String get pitchVarCheck => 'ตรวจสอบ VAR';
+
+  @override
+  String get pitchVarConfirmed => 'ยืนยันประตู';
+
+  @override
+  String get pitchVarDisallowedOffside => 'ไม่ให้ประตู: ล้ำหน้า';
+
+  @override
+  String get pitchVarDisallowedFoul => 'ไม่ให้ประตู: ฟาวล์';
+
+  @override
+  String get pitchComVarCheck1 =>
+      'เดี๋ยวก่อน ผู้ตัดสินเอามือแตะหู VAR กำลังตรวจสอบประตูนี้';
+
+  @override
+  String pitchComVarCheck2(String player) {
+    return '$player ฉลองแล้ว แต่ VAR กำลังตรวจสอบจังหวะนี้';
+  }
+
+  @override
+  String get pitchComVarConfirmed1 => 'VAR ไม่พบปัญหา ประตูนี้นับ!';
+
+  @override
+  String pitchComVarConfirmed2(String player) {
+    return 'ตรวจสอบแล้วยืนยัน: ประตูของ $player นับ';
+  }
+
+  @override
+  String get pitchComVarOffside1 => 'ไม่ให้ประตู! VAR พบการล้ำหน้าในจังหวะบุก';
+
+  @override
+  String pitchComVarOffside2(String player) {
+    return 'ยกเลิก! VAR ชี้ล้ำหน้า $player เสียประตูไป';
+  }
+
+  @override
+  String get pitchComVarFoul1 => 'ไม่ให้ประตู! VAR พบการฟาวล์ในจังหวะบุก';
+
+  @override
+  String pitchComVarFoul2(String player) {
+    return 'ยกเลิก! VAR ชี้ฟาวล์ $player เสียประตูไป';
+  }
+
+  @override
   String pitchComSub1(String player, String other) {
     return 'เปลี่ยนตัว: $player เข้า $other ออก';
   }
@@ -17110,6 +17155,12 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get matchGoalOwnGoal => 'OG';
+
+  @override
+  String get matchGoalVarOffside => 'VAR: ล้ำหน้า';
+
+  @override
+  String get matchGoalVarFoul => 'VAR: ฟาวล์';
 
   @override
   String pitchComOwnGoal1(String defender) {

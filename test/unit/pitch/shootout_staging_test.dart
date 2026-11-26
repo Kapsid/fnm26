@@ -141,7 +141,7 @@ void main() {
         expect(kick.takerId, m.shooterId);
         expect(p.kick.home, m.teamNationId == s.homeNationId);
         expect(kick.result, switch (m.outcome) {
-          ShotOutcome.goal => KickResult.scored,
+          ShotOutcome.goal || ShotOutcome.disallowed => KickResult.scored,
           ShotOutcome.saved || ShotOutcome.blocked => KickResult.saved,
           ShotOutcome.wide => KickResult.wide,
           ShotOutcome.woodwork => KickResult.post,

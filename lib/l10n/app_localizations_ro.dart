@@ -17025,6 +17025,52 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
+  String get pitchVarCheck => 'Verificare VAR';
+
+  @override
+  String get pitchVarConfirmed => 'Gol validat';
+
+  @override
+  String get pitchVarDisallowedOffside => 'Gol anulat: ofsaid';
+
+  @override
+  String get pitchVarDisallowedFoul => 'Gol anulat: fault';
+
+  @override
+  String get pitchComVarCheck1 =>
+      'Un moment. Arbitrul ține mâna la ureche: VAR verifică golul.';
+
+  @override
+  String pitchComVarCheck2(String player) {
+    return '$player sărbătorește, dar VAR analizează faza.';
+  }
+
+  @override
+  String get pitchComVarConfirmed1 =>
+      'VAR nu găsește nimic. Golul rămâne valabil!';
+
+  @override
+  String pitchComVarConfirmed2(String player) {
+    return 'Verificat și confirmat: $player își păstrează golul.';
+  }
+
+  @override
+  String get pitchComVarOffside1 => 'Nu e gol! VAR găsește un ofsaid în fază.';
+
+  @override
+  String pitchComVarOffside2(String player) {
+    return 'Anulat! VAR găsește un ofsaid și $player rămâne fără gol.';
+  }
+
+  @override
+  String get pitchComVarFoul1 => 'Nu e gol! VAR vede un fault în fază.';
+
+  @override
+  String pitchComVarFoul2(String player) {
+    return 'Anulat! VAR vede un fault și $player rămâne fără gol.';
+  }
+
+  @override
   String pitchComSub1(String player, String other) {
     return 'Schimbare: intră $player, iese $other.';
   }
@@ -17828,6 +17874,12 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get matchGoalOwnGoal => 'AG';
+
+  @override
+  String get matchGoalVarOffside => 'VAR: ofsaid';
+
+  @override
+  String get matchGoalVarFoul => 'VAR: fault';
 
   @override
   String pitchComOwnGoal1(String defender) {

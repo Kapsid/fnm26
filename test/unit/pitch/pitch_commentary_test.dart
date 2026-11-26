@@ -268,17 +268,19 @@ Map<String, (MatchMoment, _Lines)> _stagedKinds() {
   final shots = _shotLines();
   return {
     for (final origin in ShotOrigin.values)
-      for (final outcome in ShotOutcome.values) ...{
-        'shot ${origin.name} ${outcome.name}': (
-          _shot(origin, outcome),
-          shots['${origin.name} ${outcome.name}']!,
-        ),
-        if (origin == ShotOrigin.openPlay)
-          'header ${outcome.name}': (
-            _shot(origin, outcome, header: true),
-            shots['header ${outcome.name}']!,
+      // A goal chalked off is said as the goal it looked (its own test).
+      for (final outcome in ShotOutcome.values)
+        if (outcome != ShotOutcome.disallowed) ...{
+          'shot ${origin.name} ${outcome.name}': (
+            _shot(origin, outcome),
+            shots['${origin.name} ${outcome.name}']!,
           ),
-      },
+          if (origin == ShotOrigin.openPlay)
+            'header ${outcome.name}': (
+              _shot(origin, outcome, header: true),
+              shots['header ${outcome.name}']!,
+            ),
+        },
     'corner': (
       _setPiece(SetPieceKind.corner),
       (l) => [
@@ -475,6 +477,36 @@ void main() {
         l.pitchComInjury2(_p),
         l.pitchComInjury3(_p),
       }, reason: loc.key);
+    }
+  });
+
+  test('a goal chalked off goes in with the goal wording, never a score', () {
+    for (final loc in _locales.entries) {
+      final l = loc.value;
+      for (final origin in [ShotOrigin.openPlay, ShotOrigin.corner]) {
+        final goal = {
+          for (var seed = 0; seed < 64; seed++)
+            pitchLine(
+              l,
+              _shot(origin, ShotOutcome.goal),
+              _names,
+              seed,
+              events: _cards,
+            ),
+        };
+        final off = {
+          for (var seed = 0; seed < 64; seed++)
+            pitchLine(
+              l,
+              _shot(origin, ShotOutcome.disallowed),
+              _names,
+              seed,
+              events: _cards,
+              score: (home: 1, away: 0),
+            ),
+        };
+        expect(off, goal, reason: '${loc.key} ${origin.name}');
+      }
     }
   });
 

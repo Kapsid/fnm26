@@ -267,7 +267,12 @@ void main() {
     // About one in eight goes in (raised from 7%, 1.1.2): a goal from one
     // about every seven matches.
     expect(goals / total, closeTo(0.13, 0.03));
-    expect(outcomes.keys, containsAll(ShotOutcome.values));
+    // Every outcome but a goal chalked off: the video referee never checks
+    // one scored straight from a direct free kick.
+    expect(
+      outcomes.keys,
+      containsAll(ShotOutcome.values.where((o) => o != ShotOutcome.disallowed)),
+    );
   });
 
   test('the same match plays the same penalties and free kicks', () {

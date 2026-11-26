@@ -16010,6 +16010,50 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get pitchVarCheck => 'VARチェック';
+
+  @override
+  String get pitchVarConfirmed => 'ゴール確定';
+
+  @override
+  String get pitchVarDisallowedOffside => 'ゴール取り消し：オフサイド';
+
+  @override
+  String get pitchVarDisallowedFoul => 'ゴール取り消し：ファウル';
+
+  @override
+  String get pitchComVarCheck1 => 'お待ちください。主審が耳に手を当てている。VARがゴールを確認中だ。';
+
+  @override
+  String pitchComVarCheck2(String player) {
+    return '$playerが喜ぶが、VARが場面を確認している。';
+  }
+
+  @override
+  String get pitchComVarConfirmed1 => 'VARは問題なしと判断。ゴールは認められた！';
+
+  @override
+  String pitchComVarConfirmed2(String player) {
+    return '確認の結果、$playerのゴールは認められた。';
+  }
+
+  @override
+  String get pitchComVarOffside1 => 'ノーゴール！VARが攻撃の過程でオフサイドを確認。';
+
+  @override
+  String pitchComVarOffside2(String player) {
+    return '取り消し！VARがオフサイドを確認し、$playerのゴールは幻に。';
+  }
+
+  @override
+  String get pitchComVarFoul1 => 'ノーゴール！VARが攻撃の過程でファウルを確認。';
+
+  @override
+  String pitchComVarFoul2(String player) {
+    return '取り消し！VARがファウルを確認し、$playerのゴールは幻に。';
+  }
+
+  @override
   String pitchComSub1(String player, String other) {
     return '選手交代：$playerが入り、$otherが下がる。';
   }
@@ -16789,6 +16833,12 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get matchGoalOwnGoal => 'OG';
+
+  @override
+  String get matchGoalVarOffside => 'VAR：オフサイド';
+
+  @override
+  String get matchGoalVarFoul => 'VAR：ファウル';
 
   @override
   String pitchComOwnGoal1(String defender) {
