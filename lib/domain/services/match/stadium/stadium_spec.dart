@@ -8,11 +8,13 @@ import 'package:fnm/core/theme/kit_colors.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
+import 'package:fnm/domain/services/match/match_conditions.dart';
 import 'package:fnm/domain/services/match/stadium/backdrop.dart';
 import 'package:fnm/domain/services/match/stadium/city_geography.dart';
 import 'package:fnm/domain/services/match/stadium/crowd_culture.dart';
 import 'package:fnm/domain/services/match/stadium/ground_character.dart';
 import 'package:fnm/domain/services/match/stadium/ground_look.dart';
+import 'package:fnm/domain/services/match/stadium/ground_setting.dart';
 import 'package:fnm/domain/services/match/stadium/landmarks.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/domain/services/match/stadium/nation_latitudes.dart';
@@ -49,6 +51,7 @@ class StadiumSpec {
     this.partRoof = false,
     this.works = GroundWorks.none,
     this.shore = ShoreLook.none,
+    this.setting = GroundSetting.standard,
   });
 
   /// The spec for [g] between [home] and [away] in the country
@@ -87,9 +90,21 @@ class StadiumSpec {
     // The city's own geography, where the table knows it; else the
     // country's look.
     final features = CityGeography.of(groundNationCode, g.city);
-    final horizon = features == null
-        ? countryHorizon
-        : CityGeography.horizonFor(countryHorizon, features, confed);
+    final setting = GroundSetting.of(
+      stadium: g.stadium,
+      nationCode: groundNationCode,
+      confederation: confed,
+      capacity: g.capacity,
+      features: features ?? const {},
+      altitude: MatchClimate.altitudeOf(g.groundNationId, g.city),
+      built: works.built,
+    );
+    final horizon = setting.horizonFor(
+      features == null
+          ? countryHorizon
+          : CityGeography.horizonFor(countryHorizon, features, confed),
+      confed,
+    );
     return StadiumSpec(
       tiers: character.tiers,
       openCorners:
@@ -141,6 +156,7 @@ class StadiumSpec {
         features: features,
         horizon: horizon,
       ),
+      setting: setting,
     );
   }
 
@@ -159,6 +175,7 @@ class StadiumSpec {
     WeatherKind? weather,
     Set<CityFeature>? features,
     ShoreLook? shore,
+    GroundSetting? setting,
   }) => StadiumSpec(
     tiers: tiers,
     openCorners: signature == null
@@ -186,6 +203,7 @@ class StadiumSpec {
     partRoof: partRoof,
     works: works,
     shore: shore ?? this.shore,
+    setting: setting ?? this.setting,
   );
 
   final int tiers;
@@ -245,4 +263,8 @@ class StadiumSpec {
   /// What the region's climate lays over the backdrop: the arctic's ice, a
   /// tropical island's beach, the boats on the water.
   final ShoreLook shore;
+
+  /// Where the ground stands: on open ground, cut into a hillside, on the
+  /// shore, or on a small island (see [GroundSetting]).
+  final GroundSetting setting;
 }

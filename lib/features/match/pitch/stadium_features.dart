@@ -31,7 +31,10 @@ extension _StadiumFeatures on StadiumPainter {
 
   /// The home end built up into one steep wall of fans.
   bool _isWall(_Seg s) =>
-      _sig.bowl == BowlShape.endWall && s == _Seg.left && spec.tiers > 1;
+      _sig.bowl == BowlShape.endWall &&
+      s == _Seg.left &&
+      spec.tiers > 1 &&
+      spec.setting == GroundSetting.standard;
 
   /// The wall's tiers: short in plan and steep, so the end rises like a
   /// cliff of fans rather than running out of the frame.
@@ -218,7 +221,10 @@ extension _StadiumFeatures on StadiumPainter {
   /// The city blocks behind a soccer-specific ground's open end: each its
   /// span along the end (0 to 1), height in metres and tone.
   List<({double u0, double u1, double h, int tone})> get _openEndBlocks {
-    if (_sig.bowl != BowlShape.openEnd) return const [];
+    if (_sig.bowl != BowlShape.openEnd ||
+        spec.setting == GroundSetting.seaside) {
+      return const [];
+    }
     final r = math.Random(varietySeed('open-end:${spec.flagCode}'));
     final out = <({double u0, double u1, double h, int tone})>[];
     var u = 0.0;
@@ -836,8 +842,7 @@ extension _StadiumFeatures on StadiumPainter {
 
   /// An old ground's home end: no stand, a grass bank rising away from the
   /// goal, a fence along its foot and the old manual scoreboard on it.
-  void _openEndBank(Canvas canvas) {
-    const s = _Seg.left;
+  void _openEndBank(Canvas canvas, _Seg s, {bool scoreboard = true}) {
     canvas.drawPath(
       StadiumPainter._band(
         (t) => _standPoint(s, t, -0.5, 0),
@@ -851,7 +856,13 @@ extension _StadiumFeatures on StadiumPainter {
         ),
     );
     // Its few standing fans, scattered thin along the top.
-    final r = math.Random(varietySeed('bank:${spec.flagCode}'));
+    final r = math.Random(
+      varietySeed(
+        s == _Seg.left
+            ? 'bank:${spec.flagCode}'
+            : 'bank:${spec.flagCode}:${s.name}',
+      ),
+    );
     final fan = Paint();
     for (var i = 0; i < 70 * spec.fill; i++) {
       final t = 0.08 + r.nextDouble() * 0.9;
@@ -861,7 +872,7 @@ extension _StadiumFeatures on StadiumPainter {
       canvas.drawCircle(c, math.max(0.8, _ppm(_segY(s, t, o)) * 0.32), fan);
     }
     _fence(canvas, s, 0.05, 1);
-    _scoreboard(canvas);
+    if (scoreboard) _scoreboard(canvas);
   }
 
   static Color _fanTone(Color kit, double roll) => roll < 0.55

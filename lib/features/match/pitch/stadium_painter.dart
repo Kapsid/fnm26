@@ -3,7 +3,6 @@
 // is copyrighted intellectual property; do not reproduce, clone or help
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'dart:math' as math;
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart' show listEquals;
@@ -14,15 +13,18 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/kit_colors.dart';
 import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_geometry.dart';
+import 'package:fnm/domain/services/match/stadium/backdrop.dart';
 import 'package:fnm/domain/services/match/stadium/crowd_culture.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/domain/services/match/stadium/ground_character.dart';
 import 'package:fnm/domain/services/match/stadium/ground_look.dart';
+import 'package:fnm/domain/services/match/stadium/ground_setting.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/domain/services/match/stadium/scoreboard.dart';
 import 'package:fnm/domain/services/match/stadium/stadium_signature.dart';
 import 'package:fnm/domain/services/match/stadium/stadium_spec.dart';
 import 'package:fnm/features/match/pitch/backdrop_painter.dart';
+import 'package:fnm/features/match/pitch/board_names.dart';
 import 'package:fnm/features/match/pitch/crowd_painter.dart';
 import 'package:fnm/features/match/pitch/match_dressing.dart';
 import 'package:fnm/features/match/pitch/pitch_projection.dart';
@@ -30,6 +32,7 @@ import 'package:fnm/features/match/pitch/scene_look.dart';
 
 part 'stadium_anchors.dart';
 part 'stadium_features.dart';
+part 'stadium_settings.dart';
 
 /// The ground the Pitch view plays in, drawn once per look: the sky and the
 /// land behind it, the stands and their crowd, the boards, the grass with
@@ -176,7 +179,9 @@ class StadiumPainter extends CustomPainter {
     }
 
     grade(look.grade);
+    _hillside(canvas);
     _apronGround(canvas);
+    _seaEnd(canvas);
     _track(canvas);
     _openEndSkyline(canvas);
     _crane(canvas);
@@ -395,7 +400,18 @@ class StadiumPainter extends CustomPainter {
     }
   }
 
-  List<_Seg> get _segments => spec.scale == GroundScale.old
+  List<_Seg> get _segments => switch (spec.setting) {
+    // One main stand, grass banks round the rest.
+    GroundSetting.smallIsland => const [_Seg.far],
+    // The home end open to the water.
+    GroundSetting.seaside => [
+      for (final s in _builtSegments)
+        if (s != _Seg.left && s != _Seg.cornerLeft) s,
+    ],
+    _ => _builtSegments,
+  };
+
+  List<_Seg> get _builtSegments => spec.scale == GroundScale.old
       // An old ground's home end is open: a grass bank, no stand.
       ? const [_Seg.far, _Seg.right]
       : spec.openCorners
@@ -481,11 +497,20 @@ class StadiumPainter extends CustomPainter {
   /// old ground's open end, its fences and its scoreboard).
   void _standTiers(Canvas canvas) {
     final seats = _seatTone(spec.homeColour);
-    if (spec.scale != GroundScale.big) {
-      _grassBank(canvas, _Seg.cornerLeft);
+    if (spec.scale != GroundScale.big ||
+        spec.setting == GroundSetting.smallIsland) {
+      if (spec.setting != GroundSetting.seaside) {
+        _grassBank(canvas, _Seg.cornerLeft);
+      }
       _grassBank(canvas, _Seg.cornerRight);
     }
-    if (spec.scale == GroundScale.old) _openEndBank(canvas);
+    if (spec.setting == GroundSetting.smallIsland) {
+      _openEndBank(canvas, _Seg.left);
+      _openEndBank(canvas, _Seg.right, scoreboard: false);
+    } else if (spec.scale == GroundScale.old &&
+        spec.setting != GroundSetting.seaside) {
+      _openEndBank(canvas, _Seg.left);
+    }
     final crowd = CrowdPainter(home: spec.homeColour, away: spec.awayColour);
     final most = _order.map(_tiersOf).reduce(math.max);
     for (var k = 0; k < most; k++) {
@@ -775,7 +800,7 @@ class StadiumPainter extends CustomPainter {
                 _Seg.far,
                 if (spec.tiers > 1) ...[_Seg.left, _Seg.right],
               ]) {
-      if (_isTerraceEnd(s) || _pylons) continue;
+      if (_isTerraceEnd(s) || _pylons || !_segments.contains(s)) continue;
       final top = _topOf(s);
       final lamps = switch (s) {
         _Seg.far => edge ? 15 : 9,
@@ -1082,7 +1107,7 @@ class StadiumPainter extends CustomPainter {
     final band = dressing.dressed ? _dressTone(dressing.colour) : null;
     var n = 0;
     double lerp(double a, double b, double t) => a + (b - a) * t;
-    final names = <String, TextPainter>{};
+    final names = BoardNames();
     for (var r = 0; r < runs.length; r++) {
       final ((ax, ay), (bx, by)) = runs[r];
       final len = math.sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay));
@@ -1124,7 +1149,7 @@ class StadiumPainter extends CustomPainter {
                   _p(x0, y0, _boardHeight * z1),
                   _p(x1, y1, _boardHeight * z1),
                 ];
-          _nameInQuad(canvas, q, name, names);
+          names.paint(canvas, q, name);
           continue;
         }
         // No brand here: a quiet bar where a name would be.
@@ -1157,7 +1182,7 @@ class StadiumPainter extends CustomPainter {
     final o = upper?.o0 ?? 0.0;
     final z1 = upper?.z0 ?? _frontWall;
     final z0 = z1 - (upper == null ? _frontWall : _fascia) * 0.8;
-    final names = <String, TextPainter>{};
+    final names = BoardNames();
     var k = 0;
     for (final u in const [0.16, 0.5, 0.84]) {
       const half = 0.05;
@@ -1168,56 +1193,8 @@ class StadiumPainter extends CustomPainter {
         _standPoint(s, u - half, o - 0.05, z1),
       ];
       canvas.drawPath(_poly(q), Paint()..color = const Color(0xFF1B2733));
-      _nameInQuad(
-        canvas,
-        q,
-        sponsors[(k++ + 1) % sponsors.length],
-        names,
-      );
+      names.paint(canvas, q, sponsors[(k++ + 1) % sponsors.length]);
     }
-  }
-
-  /// [name] in light letters across the face [q] (bottom left, bottom
-  /// right, top right, top left), fitted to it.
-  static void _nameInQuad(
-    Canvas canvas,
-    List<Offset> q,
-    String name,
-    Map<String, TextPainter> cache,
-  ) {
-    final tl = q[3], tr = q[2], bl = q[0];
-    final ux = tr - tl, uy = bl - tl;
-    final w = ux.distance, h = uy.distance;
-    if (w < 3 || h < 1) return;
-    final tp = cache[name] ??= TextPainter(
-      text: TextSpan(
-        text: name,
-        style: const TextStyle(
-          fontSize: 20,
-          height: 1,
-          fontWeight: FontWeight.w800,
-          fontFamily: 'Hanken Grotesk',
-          color: Color(0xD9E6E9EC),
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-      maxLines: 1,
-    )..layout();
-    final k = math.min(w * 0.9 / tp.width, h / tp.height);
-    canvas
-      ..save()
-      ..transform(
-        Float64List.fromList([
-          ux.dx / w, ux.dy / w, 0, 0, //
-          uy.dx / h, uy.dy / h, 0, 0,
-          0, 0, 1, 0,
-          tl.dx, tl.dy, 0, 1,
-        ]),
-      )
-      ..translate(w / 2, h / 2)
-      ..scale(k);
-    tp.paint(canvas, Offset(-tp.width / 2, -tp.height / 2));
-    canvas.restore();
   }
 
   /// A finals tournament's band along the top of every board (gold at the
