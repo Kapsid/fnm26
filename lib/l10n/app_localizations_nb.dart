@@ -1450,6 +1450,57 @@ class AppLocalizationsNb extends AppLocalizations {
   String get hubCycleComplete => 'Syklusen er fullført.';
 
   @override
+  String hubReviewTitle(int from, int to) {
+    return 'Syklusen $from–$to i tilbakeblikk';
+  }
+
+  @override
+  String get hubReviewEyebrow => 'Dine fire år';
+
+  @override
+  String get hubReviewTournaments => 'Turneringer';
+
+  @override
+  String get hubReviewPlayers => 'Spillere';
+
+  @override
+  String get hubReviewMostCaps => 'Flest kamper';
+
+  @override
+  String get hubReviewBestRated => 'Beste snittkarakter';
+
+  @override
+  String hubReviewDebutants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count spillere debuterte',
+      one: '$count spiller debuterte',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubReviewRankMove(int from, int to) {
+    return 'Fra nr. $from til nr. $to';
+  }
+
+  @override
+  String hubReviewObjectives(int met, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$met av $total styremål nådd',
+      one: '$met av $total styremål nådd',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hubReviewNoMatches =>
+      'Det ble ikke spilt noen kamper i denne syklusen.';
+
+  @override
   String get hubYourJob => 'JOBBEN DIN';
 
   @override

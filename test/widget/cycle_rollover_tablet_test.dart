@@ -8,6 +8,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/features/career/nation_offers_providers.dart';
+import 'package:fnm/features/hub/cycle_review_view.dart';
 import 'package:fnm/features/hub/cycle_rollover_screen.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
@@ -101,9 +102,18 @@ Future<RolloverVerdict> _verdict(WidgetTester tester, SeededSave save) async {
   return v;
 }
 
-Future<void> _continue(WidgetTester tester) async {
+/// One Continue: the champion on to the review, or the review on to the
+/// board.
+Future<void> _next(WidgetTester tester) async {
   await tester.tap(find.widgetWithText(PrimaryButton, enL.hubContinue));
   await settle(tester);
+}
+
+/// From the champion, past the review of the four years, to the board.
+Future<void> _continue(WidgetTester tester) async {
+  await _next(tester);
+  expect(find.byKey(CycleReviewKeys.view), findsOneWidget);
+  await _next(tester);
 }
 
 /// The roll button, on either layout.
@@ -169,8 +179,20 @@ void main() {
         greaterThan(tester.getRect(champions).right),
       );
       expect(find.text(enL.hubBackToSaves), findsOneWidget);
-      // Step 1: the verdict left, the jobs right.
-      await _continue(tester);
+      // Step 1: the four years, the headline left, Continue right.
+      await _next(tester);
+      expect(tester.takeException(), isNull);
+      final headline = find.text(enL.hubReviewTitle(2026, 2030));
+      expect(headline, findsOneWidget);
+      expect(
+        tester
+            .getRect(find.widgetWithText(PrimaryButton, enL.hubContinue))
+            .left,
+        greaterThan(tester.getRect(headline).right),
+      );
+      expect(find.text(enL.hubBackToSaves), findsOneWidget);
+      // Step 2: the verdict left, the jobs right.
+      await _next(tester);
       expect(tester.takeException(), isNull);
       expect(
         tester.getRect(find.text(enL.hubOffersOnTable)).left,
@@ -181,7 +203,7 @@ void main() {
         ),
       );
       expect(find.text(enL.hubBackToSaves), findsOneWidget);
-      // Step 2: the money left, the roll right.
+      // Step 3: the money left, the roll right.
       await tester.tap(find.byType(PrimaryButton).last);
       await settle(tester);
       expect(tester.takeException(), isNull);

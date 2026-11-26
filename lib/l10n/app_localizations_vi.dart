@@ -1416,6 +1416,54 @@ class AppLocalizationsVi extends AppLocalizations {
   String get hubCycleComplete => 'Chu kỳ đã hoàn tất.';
 
   @override
+  String hubReviewTitle(int from, int to) {
+    return 'Nhìn lại chu kỳ $from–$to';
+  }
+
+  @override
+  String get hubReviewEyebrow => 'Bốn năm của bạn';
+
+  @override
+  String get hubReviewTournaments => 'Giải đấu';
+
+  @override
+  String get hubReviewPlayers => 'Cầu thủ';
+
+  @override
+  String get hubReviewMostCaps => 'Ra sân nhiều nhất';
+
+  @override
+  String get hubReviewBestRated => 'Điểm trung bình cao nhất';
+
+  @override
+  String hubReviewDebutants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count cầu thủ ra mắt',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubReviewRankMove(int from, int to) {
+    return 'Từ hạng $from lên hạng $to';
+  }
+
+  @override
+  String hubReviewObjectives(int met, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: 'Đạt $met/$total mục tiêu của ban lãnh đạo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hubReviewNoMatches => 'Không có trận đấu nào trong chu kỳ này.';
+
+  @override
   String get hubYourJob => 'CÔNG VIỆC CỦA BẠN';
 
   @override

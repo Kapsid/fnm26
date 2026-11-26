@@ -1437,6 +1437,58 @@ class AppLocalizationsRo extends AppLocalizations {
   String get hubCycleComplete => 'Ciclul s-a încheiat.';
 
   @override
+  String hubReviewTitle(int from, int to) {
+    return 'Ciclul $from–$to în retrospectivă';
+  }
+
+  @override
+  String get hubReviewEyebrow => 'Cei patru ani ai dvs.';
+
+  @override
+  String get hubReviewTournaments => 'Turnee';
+
+  @override
+  String get hubReviewPlayers => 'Jucători';
+
+  @override
+  String get hubReviewMostCaps => 'Cele mai multe meciuri';
+
+  @override
+  String get hubReviewBestRated => 'Cea mai bună notă medie';
+
+  @override
+  String hubReviewDebutants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count de jucători au debutat',
+      few: '$count jucători au debutat',
+      one: '$count jucător a debutat',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubReviewRankMove(int from, int to) {
+    return 'De pe locul $from pe locul $to';
+  }
+
+  @override
+  String hubReviewObjectives(int met, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$met din $total de obiective ale conducerii îndeplinite',
+      few: '$met din $total obiective ale conducerii îndeplinite',
+      one: '$met din $total obiectiv al conducerii îndeplinit',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hubReviewNoMatches => 'În acest ciclu nu s-a jucat niciun meci.';
+
+  @override
   String get hubYourJob => 'POSTUL DVS.';
 
   @override

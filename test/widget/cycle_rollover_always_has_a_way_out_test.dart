@@ -15,6 +15,8 @@ import 'package:fnm/domain/services/entitlement/entitlement_service.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/career/nation_offers_providers.dart';
 import 'package:fnm/features/federation/federation_service.dart';
+import 'package:fnm/features/hub/cycle_review_providers.dart';
+import 'package:fnm/features/hub/cycle_review_view.dart';
 import 'package:fnm/features/hub/cycle_rollover_screen.dart';
 import 'package:fnm/features/paywall/premium_gate_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -169,10 +171,10 @@ void main() {
     return careerId;
   }
 
-  /// Walks champion → board → finances, which is how the manager reaches the
-  /// button that rolls the save.
+  /// Walks champion → review → board → finances, which is how the manager
+  /// reaches the button that rolls the save.
   Future<void> toTheEnd(WidgetTester tester) async {
-    for (var step = 0; step < 2; step++) {
+    for (var step = 0; step < 3; step++) {
       expect(
         liveControls(tester),
         greaterThan(0),
@@ -239,9 +241,12 @@ void main() {
           ),
         ],
       );
-      // Champion step, then the board step, which is the one that fails.
-      await tester.tap(find.byType(PrimaryButton).first);
-      await settle(tester);
+      // Champion step, the review, then the board step, which is the one
+      // that fails.
+      for (var step = 0; step < 2; step++) {
+        await tester.tap(find.byType(PrimaryButton).first);
+        await settle(tester);
+      }
 
       expect(
         liveControls(tester),
@@ -253,6 +258,34 @@ void main() {
       expect(find.text('SAVES'), findsOneWidget);
     },
   );
+
+  testWidgets('a review that will not load never holds the rollover up', (
+    tester,
+  ) async {
+    await pump(
+      tester,
+      cyclePointer: 0,
+      extra: [
+        cycleReviewProvider.overrideWith(
+          (ref, id) async => throw StateError('no review'),
+        ),
+      ],
+    );
+    await tester.tap(find.byType(PrimaryButton).first);
+    await settle(tester);
+    expect(find.byKey(CycleReviewKeys.view), findsOneWidget);
+    expect(
+      liveControls(tester),
+      greaterThan(0),
+      reason: 'a failed review left the screen with nothing to press',
+    );
+    // On to the board and the money, as if it had loaded.
+    for (var step = 0; step < 2; step++) {
+      await tester.tap(find.byType(PrimaryButton).first);
+      await settle(tester);
+    }
+    expect(find.text('Back to your saves'), findsOneWidget);
+  });
 
   testWidgets('the wall over a store with nothing to sell still lets him out', (
     tester,

@@ -1421,6 +1421,57 @@ class AppLocalizationsHu extends AppLocalizations {
   String get hubCycleComplete => 'A ciklus véget ért.';
 
   @override
+  String hubReviewTitle(int from, int to) {
+    return 'A $from–$to ciklus áttekintése';
+  }
+
+  @override
+  String get hubReviewEyebrow => 'A négy éved';
+
+  @override
+  String get hubReviewTournaments => 'Tornák';
+
+  @override
+  String get hubReviewPlayers => 'Játékosok';
+
+  @override
+  String get hubReviewMostCaps => 'Legtöbb pályára lépés';
+
+  @override
+  String get hubReviewBestRated => 'Legjobb átlagosztályzat';
+
+  @override
+  String hubReviewDebutants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count játékos mutatkozott be',
+      one: '$count játékos mutatkozott be',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubReviewRankMove(int from, int to) {
+    return '$from. helyről $to. helyre';
+  }
+
+  @override
+  String hubReviewObjectives(int met, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: 'A vezetőség $total céljából $met teljesült',
+      one: 'A vezetőség $total céljából $met teljesült',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hubReviewNoMatches =>
+      'Ebben a ciklusban nem játszottatok mérkőzést.';
+
+  @override
   String get hubYourJob => 'A MUNKÁD';
 
   @override

@@ -1473,6 +1473,59 @@ class AppLocalizationsHr extends AppLocalizations {
   String get hubCycleComplete => 'Ciklus je završen.';
 
   @override
+  String hubReviewTitle(int from, int to) {
+    return 'Ciklus $from–$to u pregledu';
+  }
+
+  @override
+  String get hubReviewEyebrow => 'Tvoje četiri godine';
+
+  @override
+  String get hubReviewTournaments => 'Turniri';
+
+  @override
+  String get hubReviewPlayers => 'Igrači';
+
+  @override
+  String get hubReviewMostCaps => 'Najviše nastupa';
+
+  @override
+  String get hubReviewBestRated => 'Najbolja prosječna ocjena';
+
+  @override
+  String hubReviewDebutants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count igrača je debitiralo',
+      few: '$count igrača su debitirala',
+      one: '$count igrač je debitirao',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubReviewRankMove(int from, int to) {
+    return 'S $from. na $to. mjesto';
+  }
+
+  @override
+  String hubReviewObjectives(int met, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: 'Ispunjeno $met od $total ciljeva uprave',
+      few: 'Ispunjeno $met od $total cilja uprave',
+      one: 'Ispunjeno $met od $total cilja uprave',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hubReviewNoMatches =>
+      'U ovom ciklusu nije odigrana nijedna utakmica.';
+
+  @override
   String get hubYourJob => 'TVOJ POSAO';
 
   @override

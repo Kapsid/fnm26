@@ -1365,6 +1365,54 @@ class AppLocalizationsJa extends AppLocalizations {
   String get hubCycleComplete => 'サイクルが終了しました。';
 
   @override
+  String hubReviewTitle(int from, int to) {
+    return '$from–$to年サイクルの振り返り';
+  }
+
+  @override
+  String get hubReviewEyebrow => 'あなたの4年間';
+
+  @override
+  String get hubReviewTournaments => '大会';
+
+  @override
+  String get hubReviewPlayers => '選手';
+
+  @override
+  String get hubReviewMostCaps => '最多出場';
+
+  @override
+  String get hubReviewBestRated => '最高平均評価';
+
+  @override
+  String hubReviewDebutants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count人が代表デビュー',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubReviewRankMove(int from, int to) {
+    return '$from位から$to位へ';
+  }
+
+  @override
+  String hubReviewObjectives(int met, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '理事会の目標$total件中$met件を達成',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hubReviewNoMatches => 'このサイクルでは試合がありませんでした。';
+
+  @override
   String get hubYourJob => 'あなたの職';
 
   @override

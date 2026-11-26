@@ -1468,6 +1468,56 @@ class AppLocalizationsFi extends AppLocalizations {
   String get hubCycleComplete => 'Kausi on päättynyt.';
 
   @override
+  String hubReviewTitle(int from, int to) {
+    return 'Kausi $from–$to katsauksessa';
+  }
+
+  @override
+  String get hubReviewEyebrow => 'Neljä vuottasi';
+
+  @override
+  String get hubReviewTournaments => 'Turnaukset';
+
+  @override
+  String get hubReviewPlayers => 'Pelaajat';
+
+  @override
+  String get hubReviewMostCaps => 'Eniten otteluita';
+
+  @override
+  String get hubReviewBestRated => 'Paras keskiarvo';
+
+  @override
+  String hubReviewDebutants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pelaajaa teki debyyttinsä',
+      one: '$count pelaaja teki debyyttinsä',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubReviewRankMove(int from, int to) {
+    return 'Sijalta $from sijalle $to';
+  }
+
+  @override
+  String hubReviewObjectives(int met, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$met/$total johtokunnan tavoitteesta saavutettu',
+      one: '$met/$total johtokunnan tavoite saavutettu',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hubReviewNoMatches => 'Tällä kaudella ei pelattu yhtään ottelua.';
+
+  @override
   String get hubYourJob => 'TEHTÄVÄSI';
 
   @override

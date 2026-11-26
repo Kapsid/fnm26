@@ -1475,6 +1475,58 @@ class AppLocalizationsCs extends AppLocalizations {
   String get hubCycleComplete => 'Cyklus je u konce.';
 
   @override
+  String hubReviewTitle(int from, int to) {
+    return 'Cyklus $from–$to v kostce';
+  }
+
+  @override
+  String get hubReviewEyebrow => 'Vaše čtyři roky';
+
+  @override
+  String get hubReviewTournaments => 'Turnaje';
+
+  @override
+  String get hubReviewPlayers => 'Hráči';
+
+  @override
+  String get hubReviewMostCaps => 'Nejvíc startů';
+
+  @override
+  String get hubReviewBestRated => 'Nejlepší průměrná známka';
+
+  @override
+  String hubReviewDebutants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count hráčů debutovalo',
+      few: '$count hráči debutovali',
+      one: '$count hráč debutoval',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubReviewRankMove(int from, int to) {
+    return 'Z $from. na $to. místo';
+  }
+
+  @override
+  String hubReviewObjectives(int met, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: 'Splněno $met z $total cílů vedení',
+      few: 'Splněno $met z $total cílů vedení',
+      one: 'Splněno $met z $total cíle vedení',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hubReviewNoMatches => 'V tomto cyklu se neodehrál žádný zápas.';
+
+  @override
   String get hubYourJob => 'VAŠE MÍSTO';
 
   @override

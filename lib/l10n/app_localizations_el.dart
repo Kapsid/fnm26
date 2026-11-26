@@ -1460,6 +1460,57 @@ class AppLocalizationsEl extends AppLocalizations {
   String get hubCycleComplete => 'Ο κύκλος ολοκληρώθηκε.';
 
   @override
+  String hubReviewTitle(int from, int to) {
+    return 'Ο κύκλος $from–$to σε ανασκόπηση';
+  }
+
+  @override
+  String get hubReviewEyebrow => 'Τα τέσσερα χρόνια σου';
+
+  @override
+  String get hubReviewTournaments => 'Διοργανώσεις';
+
+  @override
+  String get hubReviewPlayers => 'Παίκτες';
+
+  @override
+  String get hubReviewMostCaps => 'Περισσότερες συμμετοχές';
+
+  @override
+  String get hubReviewBestRated => 'Καλύτερη μέση βαθμολογία';
+
+  @override
+  String hubReviewDebutants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count παίκτες έκαναν ντεμπούτο',
+      one: '$count παίκτης έκανε ντεμπούτο',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubReviewRankMove(int from, int to) {
+    return 'Από το #$from στο #$to';
+  }
+
+  @override
+  String hubReviewObjectives(int met, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: 'Επιτεύχθηκαν $met από $total στόχους της διοίκησης',
+      one: 'Επιτεύχθηκαν $met από $total στόχο της διοίκησης',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hubReviewNoMatches =>
+      'Δεν έγινε κανένας αγώνας σε αυτόν τον κύκλο.';
+
+  @override
   String get hubYourJob => 'Η ΔΟΥΛΕΙΑ ΣΟΥ';
 
   @override

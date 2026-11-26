@@ -31,6 +31,8 @@ import 'package:fnm/features/federation/host_bid_screen.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
 import 'package:fnm/features/federation/sponsor_card.dart';
 import 'package:fnm/features/hub/board_objectives_screen.dart';
+import 'package:fnm/features/hub/cycle_review_providers.dart';
+import 'package:fnm/features/hub/cycle_review_view.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/manager/manager_age_widgets.dart';
@@ -77,7 +79,8 @@ final AutoDisposeFutureProviderFamily<_RolloverView?, int> _rolloverProvider =
       );
     });
 
-/// The end-of-cycle event: crowns the World Cup winner, delivers the board's
+/// The end-of-cycle event: crowns the World Cup winner, looks back on the
+/// manager's own four years, delivers the board's
 /// verdict (with job offers or the sack), then rolls into the next cycle.
 class CycleRolloverScreen extends ConsumerStatefulWidget {
   const CycleRolloverScreen({required this.careerId, super.key});
@@ -99,7 +102,14 @@ class CycleRolloverScreen extends ConsumerStatefulWidget {
 }
 
 class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
-  int _step = 0; // 0 = champion, 1 = board verdict & offers, 2 = income
+  /// The steps, in order: the champion, the review of the manager's own four
+  /// years, the board's verdict with the offers, and the income banked.
+  static const int _champion = 0;
+  static const int _review = 1;
+  static const int _board = 2;
+  static const int _invest = 3;
+
+  int _step = _champion;
   int? _selected; // chosen offer nation id (null = stay)
   bool _busy = false;
 
@@ -313,8 +323,9 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
         loading: _waiting,
         error: (e, _) => _failed(l.hubCouldNotLoad('$e')),
         data: (view) => switch (_step) {
-          0 => _championStep(view),
-          1 => _boardStep(view),
+          _champion => _championStep(view),
+          _review => _reviewStep(),
+          _board => _boardStep(view),
           _ => _investStep(view),
         },
       ),
@@ -367,10 +378,78 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
             PrimaryButton(
               label: l.hubContinue,
               icon: Icons.arrow_forward_rounded,
-              onPressed: () => setState(() => _step = 1),
+              onPressed: () => setState(() => _step = _review),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  /// The review's headline and the sections read first: the verdict, the
+  /// record and the competitions. Each hides itself when it has nothing to
+  /// show; the step is never held up by them.
+  List<Widget> _reviewLead(CycleReview? r, {double flagSize = 44}) => [
+    if (r != null) ...[
+      CycleReviewHeadline(review: r, flagSize: flagSize),
+      const SizedBox(height: AppSpacing.md),
+      CycleReviewVerdict(review: r),
+      CycleReviewEmpty(review: r),
+      CycleReviewRecord(review: r),
+      CycleReviewTournaments(review: r),
+    ],
+  ];
+
+  /// The rest of the review: the results, the players and the ranking.
+  List<Widget> _reviewRest(CycleReview? r) => [
+    if (r != null) ...[
+      CycleReviewResults(review: r, careerId: widget.careerId),
+      CycleReviewPlayers(review: r, careerId: widget.careerId),
+      CycleReviewRanking(review: r),
+    ],
+  ];
+
+  /// The button on to the board, for either layout.
+  Widget _reviewContinue() => PrimaryButton(
+    label: AppLocalizations.of(context).hubContinue,
+    icon: Icons.arrow_forward_rounded,
+    onPressed: () => _goTo(_board),
+  );
+
+  /// The review of the manager's four years, between the champion and the
+  /// board. A review that is still loading or could not be read shows only
+  /// the way on: the rollover is never held up by it.
+  Widget _reviewStep() {
+    final reviewAsync = ref.watch(cycleReviewProvider(widget.careerId));
+    final review = reviewAsync.valueOrNull;
+    return SafeArea(
+      key: CycleReviewKeys.view,
+      child: Column(
+        children: [
+          Expanded(
+            child: reviewAsync.isLoading && review == null
+                ? const Center(child: CircularProgressIndicator())
+                : ListView(
+                    padding: const EdgeInsets.all(AppSpacing.marginMobile),
+                    children: [..._reviewLead(review), ..._reviewRest(review)],
+                  ),
+          ),
+          SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.marginMobile),
+              child: Row(
+                children: [
+                  if (review != null) ...[
+                    CycleReviewShareButton(review: review),
+                    const SizedBox(width: AppSpacing.sm),
+                  ],
+                  Expanded(child: _reviewContinue()),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -390,7 +469,7 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                 child: PrimaryButton(
                   label: l.hubContinue,
                   icon: Icons.arrow_forward_rounded,
-                  onPressed: () => setState(() => _step = 2),
+                  onPressed: () => setState(() => _step = _invest),
                 ),
               ),
             );
@@ -465,7 +544,9 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                           )
                         : l.hubTakeTheJob,
                     icon: Icons.arrow_forward_rounded,
-                    onPressed: !ready ? null : () => setState(() => _step = 2),
+                    onPressed: !ready
+                        ? null
+                        : () => setState(() => _step = _invest),
                   ),
                 ),
               ),

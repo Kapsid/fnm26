@@ -1469,6 +1469,56 @@ class AppLocalizationsBg extends AppLocalizations {
   String get hubCycleComplete => 'Цикълът приключи.';
 
   @override
+  String hubReviewTitle(int from, int to) {
+    return 'Цикълът $from–$to в обзор';
+  }
+
+  @override
+  String get hubReviewEyebrow => 'Твоите четири години';
+
+  @override
+  String get hubReviewTournaments => 'Турнири';
+
+  @override
+  String get hubReviewPlayers => 'Играчи';
+
+  @override
+  String get hubReviewMostCaps => 'Най-много мачове';
+
+  @override
+  String get hubReviewBestRated => 'Най-добра средна оценка';
+
+  @override
+  String hubReviewDebutants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count играчи дебютираха',
+      one: '$count играч дебютира',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubReviewRankMove(int from, int to) {
+    return 'От №$from на №$to';
+  }
+
+  @override
+  String hubReviewObjectives(int met, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: 'Изпълнени $met от $total цели на борда',
+      one: 'Изпълнени $met от $total цел на борда',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hubReviewNoMatches => 'В този цикъл не са изиграни мачове.';
+
+  @override
   String get hubYourJob => 'ТВОЯТ ПОСТ';
 
   @override

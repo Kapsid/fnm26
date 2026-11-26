@@ -400,7 +400,7 @@ class RankTeamCard extends ConsumerWidget {
               child: SizedBox(
                 width: 80,
                 height: 36,
-                child: CustomPaint(painter: _SparklinePainter(history)),
+                child: CustomPaint(painter: RankSparklinePainter(history)),
               ),
             ),
           ],
@@ -459,8 +459,8 @@ Color _movementColor(int delta) => delta == 0
     : AppColors.error;
 
 /// A bare trend line of the recent ranking releases: rank 1 at the top.
-class _SparklinePainter extends CustomPainter {
-  _SparklinePainter(this.points);
+class RankSparklinePainter extends CustomPainter {
+  RankSparklinePainter(this.points);
 
   final List<RankHistoryPoint> points;
 
@@ -494,7 +494,8 @@ class _SparklinePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _SparklinePainter old) => old.points != points;
+  bool shouldRepaint(covariant RankSparklinePainter old) =>
+      old.points != points;
 }
 
 /// One nation's line in the world ranking table: its place, how far it has

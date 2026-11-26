@@ -2540,6 +2540,66 @@ abstract class AppLocalizations {
   /// **'The cycle is complete.'**
   String get hubCycleComplete;
 
+  /// Heading of the end-of-cycle review: the years the cycle ran.
+  ///
+  /// In en, this message translates to:
+  /// **'Cycle {from}–{to} in review'**
+  String hubReviewTitle(int from, int to);
+
+  /// Small caption over the end-of-cycle review heading (shown in capitals).
+  ///
+  /// In en, this message translates to:
+  /// **'Your four years'**
+  String get hubReviewEyebrow;
+
+  /// End-of-cycle review section: how far the nation went in each competition.
+  ///
+  /// In en, this message translates to:
+  /// **'Tournaments'**
+  String get hubReviewTournaments;
+
+  /// End-of-cycle review section: the cycle's leading players.
+  ///
+  /// In en, this message translates to:
+  /// **'Players'**
+  String get hubReviewPlayers;
+
+  /// End-of-cycle review: the player who played the most matches this cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Most appearances'**
+  String get hubReviewMostCaps;
+
+  /// End-of-cycle review: the player with the best average match rating this cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Best average rating'**
+  String get hubReviewBestRated;
+
+  /// End-of-cycle review: how many players made their debut for the nation this cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{{count} player won his first cap} other{{count} players won their first cap}}'**
+  String hubReviewDebutants(int count);
+
+  /// End-of-cycle review: the nation's world ranking when the cycle opened and now.
+  ///
+  /// In en, this message translates to:
+  /// **'From #{from} to #{to}'**
+  String hubReviewRankMove(int from, int to);
+
+  /// End-of-cycle review's one-line verdict: how many of the board's objectives for the cycle were met.
+  ///
+  /// In en, this message translates to:
+  /// **'{total, plural, one{{met} of {total} board objective met} other{{met} of {total} board objectives met}}'**
+  String hubReviewObjectives(int met, int total);
+
+  /// End-of-cycle review when the nation played no match in the cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'No matches were played this cycle.'**
+  String get hubReviewNoMatches;
+
   /// Heading over the manager's current job.
   ///
   /// In en, this message translates to:

@@ -92,9 +92,12 @@ Future<JobDossier> _dossier(
   return d;
 }
 
+/// The champion, then the review of the four years, then the offers.
 Future<void> _toOffers(WidgetTester tester) async {
-  await tester.tap(find.byType(PrimaryButton).first);
-  await settle(tester);
+  for (var step = 0; step < 2; step++) {
+    await tester.tap(find.byType(PrimaryButton).first);
+    await settle(tester);
+  }
 }
 
 Future<void> _scout(WidgetTester tester, int nationId) async {

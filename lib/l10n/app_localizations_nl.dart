@@ -1462,6 +1462,56 @@ class AppLocalizationsNl extends AppLocalizations {
   String get hubCycleComplete => 'De cyclus is voltooid.';
 
   @override
+  String hubReviewTitle(int from, int to) {
+    return 'De cyclus $from–$to in vogelvlucht';
+  }
+
+  @override
+  String get hubReviewEyebrow => 'Jouw vier jaar';
+
+  @override
+  String get hubReviewTournaments => 'Toernooien';
+
+  @override
+  String get hubReviewPlayers => 'Spelers';
+
+  @override
+  String get hubReviewMostCaps => 'Meeste interlands';
+
+  @override
+  String get hubReviewBestRated => 'Beste gemiddelde cijfer';
+
+  @override
+  String hubReviewDebutants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count spelers maakten hun debuut',
+      one: '$count speler maakte zijn debuut',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubReviewRankMove(int from, int to) {
+    return 'Van #$from naar #$to';
+  }
+
+  @override
+  String hubReviewObjectives(int met, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$met van $total bestuursdoelen gehaald',
+      one: '$met van $total bestuursdoel gehaald',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hubReviewNoMatches => 'Deze cyclus is er geen wedstrijd gespeeld.';
+
+  @override
   String get hubYourJob => 'JOUW BAAN';
 
   @override

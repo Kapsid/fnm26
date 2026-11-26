@@ -1466,6 +1466,56 @@ class AppLocalizationsEs extends AppLocalizations {
   String get hubCycleComplete => 'El ciclo ha terminado.';
 
   @override
+  String hubReviewTitle(int from, int to) {
+    return 'Repaso del ciclo $from–$to';
+  }
+
+  @override
+  String get hubReviewEyebrow => 'Tus cuatro años';
+
+  @override
+  String get hubReviewTournaments => 'Torneos';
+
+  @override
+  String get hubReviewPlayers => 'Jugadores';
+
+  @override
+  String get hubReviewMostCaps => 'Más partidos';
+
+  @override
+  String get hubReviewBestRated => 'Mejor nota media';
+
+  @override
+  String hubReviewDebutants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count jugadores debutaron',
+      one: '$count jugador debutó',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubReviewRankMove(int from, int to) {
+    return 'Del n.º $from al n.º $to';
+  }
+
+  @override
+  String hubReviewObjectives(int met, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$met de $total objetivos de la directiva cumplidos',
+      one: '$met de $total objetivo de la directiva cumplido',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hubReviewNoMatches => 'No se jugó ningún partido en este ciclo.';
+
+  @override
   String get hubYourJob => 'TU CARGO';
 
   @override
