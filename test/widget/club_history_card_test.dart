@@ -116,6 +116,57 @@ void main() {
     },
   );
 
+  testWidgets('a retired player\'s card closes on his retirement', (
+    tester,
+  ) async {
+    // He retired after 2040: his last club's span is shut, and the card
+    // says his club career ended rather than leaving it open.
+    await tester.pumpApp(
+      const Scaffold(body: ClubHistoryCard(careerId: 1, playerId: 42)),
+      overrides: [
+        withSpells(const [
+          (
+            club: 'Prague Green',
+            country: 'cze',
+            fromYear: 2030,
+            toYear: 2040,
+            stars: 0,
+          ),
+        ]),
+        clubCareerEndProvider(arg).overrideWith((ref) async => 2041),
+      ],
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(ClubHistoryCard.retiredKey), findsOneWidget);
+    expect(find.text('RETIRED'), findsOneWidget);
+    expect(find.text('2041'), findsOneWidget);
+    expect(find.text('2030–2040'), findsOneWidget);
+    expect(find.text('2030–'), findsNothing);
+  });
+
+  testWidgets('a player still playing has no closing row', (tester) async {
+    await tester.pumpApp(
+      const Scaffold(body: ClubHistoryCard(careerId: 1, playerId: 42)),
+      overrides: [
+        withSpells(const [
+          (
+            club: 'Prague Green',
+            country: 'cze',
+            fromYear: 2030,
+            toYear: 2040,
+            stars: 0,
+          ),
+        ]),
+        clubCareerEndProvider(arg).overrideWith((ref) async => null),
+      ],
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(ClubHistoryCard.retiredKey), findsNothing);
+    expect(find.text('2030–'), findsOneWidget);
+  });
+
   testWidgets('no stars for a club whose strength is not known', (
     tester,
   ) async {

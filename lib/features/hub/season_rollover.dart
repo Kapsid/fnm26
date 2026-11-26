@@ -448,6 +448,9 @@ extension SeasonRollover on SeasonService {
     Future<void> Function() step,
   ) async {
     final from = (await _careers.byId(careerId))?.inGameDate.year;
+    // Before the clock moves: the seasons this step enters read their
+    // clubs under the 1.1.4 rule (see CareerService.settleClubs).
+    await _ref.read(careerServiceProvider).settleClubs(careerId);
     await step();
     if (from == null) return;
     final career = await _careers.byId(careerId);

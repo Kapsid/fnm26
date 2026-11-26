@@ -3192,6 +3192,9 @@ class SeasonService {
   }) async {
     final career = await _careers.byId(careerId);
     if (career == null) return;
+    // Before this match's transfer windows are read (see
+    // CareerService.settleClubs).
+    await _ref.read(careerServiceProvider).settleClubs(careerId);
     _simCareer = career.id;
     _simSeed = career.rngSeed;
     _simYears = CareerService.agingYears(career);

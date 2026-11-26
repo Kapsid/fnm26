@@ -9,7 +9,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/repositories/player_repository.dart'
-    show clubExportsKind, clubStrengthKind;
+    show clubExportsKind, clubSettledKind, clubStrengthKind;
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
@@ -149,7 +149,7 @@ void main() {
                   .create(nationId: 1, managerName: 'M', rngSeed: _goldenSeed))
               .valueOrNull!;
       // A career as every build before club strength made it: without the
-      // mark, nor the later export rule's. Read by a fresh app (container),
+      // mark, nor the later export rule's, nor the 1.1.4 club rule's. Read by a fresh app (container),
       // as an upgraded build opens an old save. The golden was written
       // before club strength existed (and is never rewritten for it): every
       // club stays where it was. Re-pinned once in 1.1.2, for the wonderkids
@@ -158,7 +158,11 @@ void main() {
       await (db.delete(db.drawsWatched)..where(
             (t) =>
                 t.careerId.equals(career.id) &
-                t.kind.isIn(const [clubStrengthKind, clubExportsKind]),
+                t.kind.isIn(const [
+                  clubStrengthKind,
+                  clubExportsKind,
+                  clubSettledKind,
+                ]),
           ))
           .go();
       final c = greenlandContainer(db);
@@ -369,7 +373,9 @@ void main() {
     timeout: const Timeout.factor(4),
     () async {
       final c = await _world();
-      // A young player whose deal ends within a few years.
+      // A young player whose deal ends within a few years. A career created
+      // now runs its contracts on the 1.1.4 clock from its first season on
+      // (clubSettledKind, see ClubService.contractAt's settledAge).
       final plain = await _packCareer(c);
       final squad = plain.pack.squads[_andorra]!;
       final candidates = [
@@ -379,8 +385,16 @@ void main() {
               p: p,
               years: [
                 for (var k = 1; k <= 6; k++)
-                  if (ClubService.contractAt(p.id, p.age + k).index !=
-                      ClubService.contractAt(p.id, p.age).index)
+                  if (ClubService.contractAt(
+                        p.id,
+                        p.age + k,
+                        settledAge: p.age,
+                      ).index !=
+                      ClubService.contractAt(
+                        p.id,
+                        p.age,
+                        settledAge: p.age,
+                      ).index)
                     k,
               ],
             ),

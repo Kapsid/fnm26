@@ -79,6 +79,21 @@ abstract final class PlayerLifecycle {
       age - agingYears + retireAgingAt(agingYears) >=
       retirementAgeFor(playerId);
 
+  /// The last season (aging year) a player of [age] [agingYears] into the
+  /// save was still playing, by [hasRetiredAt]; null while he still is. A
+  /// player retired from the save's first season on gives 0.
+  ///
+  /// Where his club career ends: a retired man is looked up by identity for
+  /// as long as the save runs (his records still name him), and his club
+  /// must stay the one he finished at rather than go on moving without him.
+  static int? lastPlayingSeason(int playerId, int age, int agingYears) {
+    if (!hasRetiredAt(playerId, age, agingYears)) return null;
+    for (var y = agingYears - 1; y > 0; y--) {
+      if (!hasRetiredAt(playerId, age - (agingYears - y), y)) return y;
+    }
+    return 0;
+  }
+
   /// The age a player enters the world. Nobody is ever created older than this
   /// — a seventeen-year-old in this game was an eleven-year-old six years ago,
   /// and the manager could have watched him the whole way.
@@ -612,6 +627,62 @@ abstract final class PlayerLifecycle {
       );
     }
     return null;
+  }
+
+  /// The players [seasonById] names (player id to aging year), each as he
+  /// was in that season: what [poolAt] or [newgenById] gives for him then,
+  /// minus the pool's filters. Ids [seeded] does not hold, or a newgen not
+  /// yet taken in by then, are left out.
+  ///
+  /// For a pool read that needs some of its players as they were in an
+  /// earlier season (the season each signed his deal, see
+  /// `ClubService.clubSeason`) without building a whole pool per season:
+  /// each intake is drawn once, however many of its boys are asked for.
+  static Map<int, Player> playersAt(
+    List<Player> seeded,
+    Map<int, int> seasonById, {
+    Map<int, double> youthBonusByCycle = const {},
+    Map<int, int> careerStartsByPlayer = const {},
+    int clubSeed = 0,
+  }) {
+    final out = <int, Player>{};
+    if (seasonById.isEmpty) return out;
+    Player developed(Player aged, int season) => withCareerDev(
+      aged,
+      careerStartsByPlayer[aged.id] ?? 0,
+      markedStarts: markedStartsOf(careerStartsByPlayer, aged.id),
+      minutesFactor: minutesFactorFor(aged, season, clubSeed),
+    );
+    final intakes = <(int, int), Map<int, Player>>{};
+    for (final p in seeded) {
+      if (seasonById[p.id] case final season?) {
+        out[p.id] = developed(PlayerAging.agedYears(p, season), season);
+      }
+    }
+    for (final MapEntry(key: id, value: season) in seasonById.entries) {
+      if (!isNewgenId(id)) continue;
+      final rem = id - _idBase;
+      final intakeYear =
+          (rem % _nationStride) ~/ _cycleStride - _bornYearOffset;
+      if (intakeYear < -backfillYears || intakeYear > season) continue;
+      final nationId = rem ~/ _nationStride;
+      final boys = intakes[(nationId, intakeYear)] ??= {
+        for (final g in _intake(
+          seeded,
+          nationId,
+          intakeYear,
+          youthBonus: youthBonusByCycle[cycleOfIntake(intakeYear)] ?? 0.0,
+        ))
+          g.id: g,
+      };
+      final g = boys[id];
+      if (g == null) continue;
+      out[id] = developed(
+        PlayerAging.agedYears(g, season - intakeYear),
+        season,
+      );
+    }
+    return out;
   }
 
   /// The deterministic batch of newgens a nation takes in at [intakeYear], as
