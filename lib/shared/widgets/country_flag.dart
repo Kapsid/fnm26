@@ -16,11 +16,21 @@ class CountryFlag extends StatelessWidget {
   /// FIFA 3-letter code (e.g. `BRA`); assets are named `assets/flags/bra.svg`.
   final String code;
 
+  /// Where a flag is anchored when it is cropped (a disc, a square). Most
+  /// crop about their centre; a flag whose defining feature is at the hoist
+  /// is anchored there, or the crop loses it: the United Arab Emirates' red
+  /// band is the hoist quarter, and a centred disc showed only its three
+  /// stripes.
+  static const Map<String, Alignment> cropAnchors = {
+    'UAE': Alignment.centerLeft,
+  };
+
   @override
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       'assets/flags/${code.toLowerCase()}.svg',
       fit: BoxFit.cover,
+      alignment: cropAnchors[code.toUpperCase()] ?? Alignment.center,
       placeholderBuilder: (_) => _fallback(),
     );
   }

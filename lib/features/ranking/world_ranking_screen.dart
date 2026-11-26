@@ -588,12 +588,15 @@ class RankRow extends StatelessWidget {
               ),
               child: Row(
                 children: [
+                  // Room for three digits at the reader's text size; a
+                  // tighter fit shrinks the number rather than cut it (a
+                  // fixed 30 showed 194th as "19" under a larger text size).
                   SizedBox(
-                    width: 30,
-                    child: Text(
-                      '$rank',
-                      maxLines: 1,
-                      style: nameStyle,
+                    width: MediaQuery.textScalerOf(context).scale(30),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text('$rank', maxLines: 1, style: nameStyle),
                     ),
                   ),
                   SizedBox(

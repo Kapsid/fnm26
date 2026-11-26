@@ -70,6 +70,38 @@ void main() {
         child: rankRow(movement, isPlayer: isPlayer, name: name),
       );
 
+  // "Some nations show 19 instead of 194" (owner, 1.1.4): the rank sat in a
+  // fixed 30px cell, and three digits under a larger text size were cut.
+  for (final scale in [1.0, 1.3, 1.6]) {
+    testWidgets('a three-digit rank is whole at text size $scale', (
+      tester,
+    ) async {
+      tester.platformDispatcher.textScaleFactorTestValue = scale;
+      addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+      await pumpAt(
+        tester,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: RankRow(
+            nation: nation(194, 'Turks and Caicos Islands'),
+            rank: 194,
+            points: 812,
+            movement: -12,
+            isPlayer: false,
+            onTap: () {},
+          ),
+        ),
+        width: 360,
+        locale: 'en',
+      );
+      final paragraph = tester.renderObject<RenderParagraph>(
+        find.descendant(of: find.text('194'), matching: find.byType(RichText)),
+      );
+      expect(paragraph.didExceedMaxLines, isFalse);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
   group('a nation movement is on the row', () {
     testWidgets('a climb draws an up arrow and the number of places', (
       tester,
