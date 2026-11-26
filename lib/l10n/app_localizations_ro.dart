@@ -5755,6 +5755,26 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
+  String ySentOffAgain0(String name, String minute, String count) {
+    return 'Încă un roșu, $name în minutul $minute, și am rămas $count. Băieții care sunt încă pe teren au tot sprijinul meu.';
+  }
+
+  @override
+  String ySentOffAgain1(String name, String minute, String count) {
+    return 'Încă un roșu: $name, minutul $minute. Pe teren au rămas $count.';
+  }
+
+  @override
+  String ySentOffAgain2(String name, String minute, String count) {
+    return 'Încă un roșu. $name iese în minutul $minute și am rămas $count. Incredibil.';
+  }
+
+  @override
+  String ySentOffAgain3(String name, String minute, String count) {
+    return 'Și $name, în minutul $minute. Au rămas $count jucători. Conduce cineva echipa asta?';
+  }
+
+  @override
   String get yBoardPressure0 =>
       'Federația a amuțit. Nu e niciodată un semn bun.';
 

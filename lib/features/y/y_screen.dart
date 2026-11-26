@@ -592,6 +592,10 @@ String yPostBody(AppLocalizations l, YPost p) {
     (YTemplate.sentOff, 5) => l.ySentOff5(a0, a1),
     (YTemplate.sentOff, 6) => l.ySentOff6(a0, a1),
     (YTemplate.sentOff, 7) => l.ySentOff7(a0, a1),
+    (YTemplate.sentOffAgain, 0) => l.ySentOffAgain0(a0, a1, a2),
+    (YTemplate.sentOffAgain, 1) => l.ySentOffAgain1(a0, a1, a2),
+    (YTemplate.sentOffAgain, 2) => l.ySentOffAgain2(a0, a1, a2),
+    (YTemplate.sentOffAgain, 3) => l.ySentOffAgain3(a0, a1, a2),
     // The two whose Czech is not a translation of its English: see the copy's
     // own note. Nothing here knows that; it asks for wording n and prints what
     // the language hands back.

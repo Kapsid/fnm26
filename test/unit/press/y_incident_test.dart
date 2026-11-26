@@ -128,9 +128,95 @@ void main() {
     );
   });
 
+  group('a second red in the same match (owner, 1.1.4)', () {
+    List<YPost> red(int minute, String name, int menLeft) => YFeed.forIncident(
+      incident: PressSubjectIncident(
+        type: MatchEventType.redCard,
+        minute: minute,
+        playerId: minute,
+        name: name,
+        menLeft: menLeft,
+      ),
+      date: DateTime(2030, 6, 10),
+      key: 'red:fx:7:$minute',
+      nation: nation,
+      seed: 1,
+    );
+
+    test('the first red reads as a first red, the second says nine', () {
+      final first = red(34, 'Hayes', 10);
+      final second = red(71, 'Morrow', 9);
+      final firstReports = first.where((p) => p.replyTo == null).toList();
+      final secondReports = second.where((p) => p.replyTo == null).toList();
+      expect(
+        firstReports.map((p) => p.template).toSet(),
+        {YTemplate.sentOff},
+      );
+      expect(
+        secondReports.map((p) => p.template).toSet(),
+        {YTemplate.sentOffAgain},
+        reason: 'a side already down to ten was told it had ten men again',
+      );
+      for (final p in secondReports) {
+        expect(p.args, ['Morrow', '71', '9']);
+        expect(p.variant, lessThan(YFeed.variantsFor(YTemplate.sentOffAgain)));
+      }
+      expect(
+        second.any((p) => p.replyTo != null && p.mood == YMood.fury),
+        isTrue,
+      );
+    });
+
+    test('a third red counts down again', () {
+      final third = red(80, 'Pike', 8).where((p) => p.replyTo == null);
+      expect(third.every((p) => p.template == YTemplate.sentOffAgain), isTrue);
+      expect(third.first.args.last, '8');
+    });
+
+    test('a single red is exactly what it was before', () {
+      // menLeft defaults to ten, so the posts must be identical to the ones
+      // an incident without it draws.
+      String sig(List<YPost> ps) => [
+        for (final p in ps)
+          '${p.voice}|${p.template}|${p.variant}|${p.args}|${p.mood}',
+      ].join(';');
+      for (final seed in [1, 7, 42]) {
+        final before = YFeed.forIncident(
+          incident: incident,
+          date: DateTime(2030, 6, 10),
+          key: key,
+          nation: nation,
+          seed: seed,
+        );
+        final explicit = YFeed.forIncident(
+          incident: const PressSubjectIncident(
+            type: MatchEventType.redCard,
+            minute: 34,
+            playerId: 44,
+            name: 'Hayes',
+            menLeft: 10,
+          ),
+          date: DateTime(2030, 6, 10),
+          key: key,
+          nation: nation,
+          seed: seed,
+        );
+        expect(sig(explicit), sig(before));
+        expect(
+          before
+              .where((p) => p.replyTo == null)
+              .every((p) => p.template == YTemplate.sentOff),
+          isTrue,
+        );
+        expect(before.first.args, ['Hayes', '34']);
+      }
+    });
+  });
+
   test('every wording of a sending-off is real words', () {
     // The screen throws on a variant with nothing behind it; this is the
     // arithmetic that decides how many there are.
     expect(YFeed.variantsFor(YTemplate.sentOff), YFeed.midVariantCount);
+    expect(YFeed.variantsFor(YTemplate.sentOffAgain), YFeed.variantCount);
   });
 }

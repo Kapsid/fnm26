@@ -5549,6 +5549,26 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
+  String ySentOffAgain0(String name, String minute, String count) {
+    return 'एक और रेड, $name को $minute मिनट पर, और हम $count रह गए। मैदान पर बचे हर खिलाड़ी के साथ मैं पूरी तरह खड़ा हूँ।';
+  }
+
+  @override
+  String ySentOffAgain1(String name, String minute, String count) {
+    return 'एक और रेड: $name, $minute मिनट। मैदान पर बस $count खिलाड़ी बचे।';
+  }
+
+  @override
+  String ySentOffAgain2(String name, String minute, String count) {
+    return 'एक और रेड। $name $minute मिनट पर बाहर, और हम $count रह गए। अविश्वसनीय।';
+  }
+
+  @override
+  String ySentOffAgain3(String name, String minute, String count) {
+    return 'अब $name भी, $minute मिनट पर। बस $count खिलाड़ी बचे। क्या कोई इस टीम को चला भी रहा है?';
+  }
+
+  @override
   String get yBoardPressure0 =>
       'बोर्ड बहुत शांत हो गया है। यह कभी अच्छा संकेत नहीं होता।';
 

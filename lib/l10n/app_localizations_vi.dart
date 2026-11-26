@@ -5559,6 +5559,26 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String ySentOffAgain0(String name, String minute, String count) {
+    return 'Thêm một thẻ đỏ, $name ở phút $minute, và chúng ta chỉ còn $count người. Những anh em còn trên sân có toàn bộ sự ủng hộ của tôi.';
+  }
+
+  @override
+  String ySentOffAgain1(String name, String minute, String count) {
+    return 'Thêm một thẻ đỏ: $name, phút $minute. Trên sân chỉ còn $count người.';
+  }
+
+  @override
+  String ySentOffAgain2(String name, String minute, String count) {
+    return 'Thêm một thẻ đỏ. $name rời sân ở phút $minute và chúng ta chỉ còn $count người. Không thể tin nổi.';
+  }
+
+  @override
+  String ySentOffAgain3(String name, String minute, String count) {
+    return 'Cả $name nữa, ở phút $minute. Còn $count cầu thủ. Có ai thực sự điều hành đội này không?';
+  }
+
+  @override
   String get yBoardPressure0 =>
       'Ban lãnh đạo bỗng im lặng hẳn. Đó chưa bao giờ là dấu hiệu tốt.';
 

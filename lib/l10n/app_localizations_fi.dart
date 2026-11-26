@@ -5642,6 +5642,26 @@ class AppLocalizationsFi extends AppLocalizations {
   }
 
   @override
+  String ySentOffAgain0(String name, String minute, String count) {
+    return 'Taas punainen, $name $minute. minuutilla, ja meitä on enää $count. Kentälle jääneet pojat saavat minulta täyden tuen.';
+  }
+
+  @override
+  String ySentOffAgain1(String name, String minute, String count) {
+    return 'Taas punainen: $name, $minute. minuutti. Kentällä enää $count pelaajaa.';
+  }
+
+  @override
+  String ySentOffAgain2(String name, String minute, String count) {
+    return 'Taas punainen. $name lähtee $minute. minuutilla, ja meitä on enää $count. Uskomatonta.';
+  }
+
+  @override
+  String ySentOffAgain3(String name, String minute, String count) {
+    return 'Myös $name, $minute. minuutilla. $count pelaajaa jäljellä. Johtaako tätä joukkuetta kukaan?';
+  }
+
+  @override
   String get yBoardPressure0 =>
       'Hallitus on hiljentynyt kovasti. Se ei ole koskaan hyvä merkki.';
 

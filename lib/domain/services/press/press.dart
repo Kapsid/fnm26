@@ -157,6 +157,7 @@ final class PressSubjectIncident extends PressSubject {
     this.name,
     this.ours = true,
     this.fromLastMatch = true,
+    this.menLeft = 10,
   });
 
   final MatchEventType type;
@@ -167,6 +168,10 @@ final class PressSubjectIncident extends PressSubject {
 
   /// Whether it happened in the match the country is still talking about.
   final bool fromLastMatch;
+
+  /// For a sending-off: how many of ours were left on the pitch after it.
+  /// Ten after the first red of a match, nine after the second, and so on.
+  final int menLeft;
 }
 
 abstract final class Press {

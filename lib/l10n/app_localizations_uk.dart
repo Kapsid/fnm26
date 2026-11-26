@@ -5697,6 +5697,26 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
+  String ySentOffAgain0(String name, String minute, String count) {
+    return 'Ще одна червона, $name на $minute хвилині, і нас лишилося $count. Хлопці, які ще на полі, мають усю мою підтримку.';
+  }
+
+  @override
+  String ySentOffAgain1(String name, String minute, String count) {
+    return 'Ще одна червона: $name, $minute хвилина. На полі лишилося $count.';
+  }
+
+  @override
+  String ySentOffAgain2(String name, String minute, String count) {
+    return 'Ще одна червона. $name іде з поля на $minute хвилині, і нас лишилося $count. Неймовірно.';
+  }
+
+  @override
+  String ySentOffAgain3(String name, String minute, String count) {
+    return 'І $name теж, на $minute хвилині. Лишилося $count гравців. Цією командою взагалі хтось керує?';
+  }
+
+  @override
   String get yBoardPressure0 => 'Рада дуже притихла. Це ніколи не добрий знак.';
 
   @override

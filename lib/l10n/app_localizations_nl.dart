@@ -5622,6 +5622,26 @@ class AppLocalizationsNl extends AppLocalizations {
   }
 
   @override
+  String ySentOffAgain0(String name, String minute, String count) {
+    return 'Weer rood, $name in minuut $minute, en we staan nog met $count. De jongens die er nog staan hebben al mijn steun.';
+  }
+
+  @override
+  String ySentOffAgain1(String name, String minute, String count) {
+    return 'Weer rood: $name, minuut $minute. Nog $count man op het veld.';
+  }
+
+  @override
+  String ySentOffAgain2(String name, String minute, String count) {
+    return 'Weer rood. $name moet eraf in minuut $minute en we staan nog met $count. Ongelofelijk.';
+  }
+
+  @override
+  String ySentOffAgain3(String name, String minute, String count) {
+    return '$name ook nog, in minuut $minute. Nog $count spelers over. Heeft iemand hier eigenlijk de leiding?';
+  }
+
+  @override
   String get yBoardPressure0 =>
       'Het bestuur is erg stil geworden. Dat is nooit een goed teken.';
 

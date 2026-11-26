@@ -5653,6 +5653,26 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String ySentOffAgain0(String name, String minute, String count) {
+    return 'Encore un rouge, $name à la ${minute}e, et nous voilà à $count. Ceux qui restent sur le terrain ont tout mon soutien.';
+  }
+
+  @override
+  String ySentOffAgain1(String name, String minute, String count) {
+    return 'Encore un rouge : $name, ${minute}e minute. Plus que $count sur le terrain.';
+  }
+
+  @override
+  String ySentOffAgain2(String name, String minute, String count) {
+    return 'Encore un rouge. $name sort à la ${minute}e et on se retrouve à $count. Incroyable.';
+  }
+
+  @override
+  String ySentOffAgain3(String name, String minute, String count) {
+    return '$name aussi, à la ${minute}e. Plus que $count joueurs. Quelqu’un dirige cette équipe, au moins ?';
+  }
+
+  @override
   String get yBoardPressure0 =>
       'La direction est devenue très silencieuse. Jamais bon signe.';
 

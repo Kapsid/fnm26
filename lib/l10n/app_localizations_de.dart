@@ -5647,6 +5647,26 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String ySentOffAgain0(String name, String minute, String count) {
+    return 'Noch eine Rote, $name nach $minute Minuten, und wir sind nur noch $count. Die Jungs, die noch draußen stehen, haben meine volle Unterstützung.';
+  }
+
+  @override
+  String ySentOffAgain1(String name, String minute, String count) {
+    return 'Noch eine Rote: $name, $minute. Minute. Nur noch $count auf dem Platz.';
+  }
+
+  @override
+  String ySentOffAgain2(String name, String minute, String count) {
+    return 'Noch eine Rote. $name fliegt nach $minute Minuten und wir sind nur noch $count. Unfassbar.';
+  }
+
+  @override
+  String ySentOffAgain3(String name, String minute, String count) {
+    return 'Jetzt auch $name, nach $minute Minuten. Noch $count Mann auf dem Platz. Hat hier eigentlich irgendwer das Sagen?';
+  }
+
+  @override
   String get yBoardPressure0 =>
       'Das Präsidium ist sehr still geworden. Das ist nie ein gutes Zeichen.';
 

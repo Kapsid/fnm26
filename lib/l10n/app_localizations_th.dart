@@ -5516,6 +5516,26 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
+  String ySentOffAgain0(String name, String minute, String count) {
+    return 'ใบแดงอีกใบ $name นาทีที่ $minute เหลือกันแค่ $count คน ใครที่ยังอยู่ในสนาม ผมเชียร์สุดใจ';
+  }
+
+  @override
+  String ySentOffAgain1(String name, String minute, String count) {
+    return 'ใบแดงอีกใบ: $name นาทีที่ $minute เหลือในสนาม $count คน';
+  }
+
+  @override
+  String ySentOffAgain2(String name, String minute, String count) {
+    return 'ใบแดงอีกใบ $name โดนไล่ออกนาทีที่ $minute เหลือกันแค่ $count คน ไม่อยากจะเชื่อ';
+  }
+
+  @override
+  String ySentOffAgain3(String name, String minute, String count) {
+    return '$name อีกคน นาทีที่ $minute เหลือ $count คน มีใครคุมทีมนี้อยู่จริงๆ ไหม';
+  }
+
+  @override
   String get yBoardPressure0 => 'บอร์ดเงียบผิดปกติ ไม่เคยเป็นสัญญาณที่ดี';
 
   @override
