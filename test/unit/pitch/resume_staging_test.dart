@@ -43,7 +43,14 @@ void main() {
     const seed = 9;
     final m = labMatch(seed);
     final s0 = labScript(m, PitchSpeed.turbo, seed: seed);
-    final from = s0.stateAt(_at(s0.totalSeconds / 2));
+    // Read while he walks and before 150 is on (it was the screen's
+    // half-way point until the video referee's checks moved the timings,
+    // 1.1.4).
+    var from = s0.stateAt(_at(s0.totalSeconds / 2));
+    for (var t = s0.departures[110]!; t < s0.totalSeconds; t += 0.05) {
+      from = s0.stateAt(_at(t));
+      if (from.walking.contains(110) && !from.players.containsKey(150)) break;
+    }
     expect(from.walking, contains(110), reason: 'the case the test needs');
     expect(from.players.containsKey(150), isFalse);
 

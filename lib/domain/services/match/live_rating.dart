@@ -40,8 +40,10 @@ final class MatchTally {
           t.yellows.add(e.playerId);
         case MatchEventType.redCard:
           t.reds.add(e.playerId);
+        // A goal chalked off is nobody's goal.
         case MatchEventType.substitution:
         case MatchEventType.injury:
+        case MatchEventType.disallowedGoal:
           break;
       }
     }

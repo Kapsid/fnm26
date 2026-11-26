@@ -11,6 +11,7 @@ import 'dart:math' as math;
 
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_moments.dart';
+import 'package:fnm/domain/services/match/pitch/match_officials.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_pacer.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_script.dart';
 import 'package:fnm/domain/services/match/pitch/story_layer.dart';
@@ -32,9 +33,9 @@ import 'package:fnm/l10n/app_localizations.dart';
 /// score, the Timeline and the goal flash never run ahead of the picture.
 /// Nothing here decides an outcome: every event is the engine's.
 class PitchPlayback {
-  PitchPlayback(this.script)
-    : _reveal = _revealTimes(script),
-      _lines = _commentaryCues(script) {
+  PitchPlayback(this.script) : varChecks = VarCheckShow.of(script) {
+    _reveal = _revealTimes(script, varChecks);
+    _lines = _commentaryCues(script, varChecks);
     _crowd = _crowdCues(script, _lines);
   }
 
@@ -60,8 +61,12 @@ class PitchPlayback {
   );
 
   final PitchScript script;
-  final List<double> _reveal;
-  final List<_Cue> _lines;
+
+  /// The goals the video referee checks on the picture, in time order (see
+  /// `VarCheckShow`): the screen shows "VAR check" and the call over them.
+  final List<VarCheckShow> varChecks;
+  late final List<double> _reveal;
+  late final List<_Cue> _lines;
   late final List<({double t, MatchMoment moment, bool build})> _crowd;
 
   MatchResult get result => script.result;
@@ -111,7 +116,10 @@ class PitchPlayback {
   /// [Duration] is rounded to the microsecond.
   static const double _slack = 1e-6;
 
-  static List<double> _revealTimes(PitchScript s) {
+  static List<double> _revealTimes(
+    PitchScript s,
+    List<VarCheckShow> checks,
+  ) {
     final r = s.result;
     final out = <double>[
       for (final e in r.events) _secs(s.pacer.screenAt(e.minute, e.stoppage)),
@@ -146,6 +154,11 @@ class PitchPlayback {
         final i = r.events.indexWhere((e) => identical(e, injury));
         if (i >= 0) out[i] = w.end;
       }
+    }
+    // A goal chalked off shows as the video referee gives the call; one
+    // he confirms stood from the moment it went in.
+    for (final v in checks) {
+      if (v.disallowed && valid(v.eventIndex)) out[v.eventIndex] = v.decisionAt;
     }
     // Never outside its own minute: the minute rule and the screen time
     // must agree on which minute an event belongs to. (The first instant of
@@ -243,6 +256,18 @@ class PitchPlayback {
   ) {
     final injury = c.injury;
     if (injury != null) return pitchInjuryLine(l, injury, names, seed);
+    final check = c.check;
+    if (check != null) {
+      return pitchVarLine(
+        l,
+        check,
+        c.decided ? VarStage.decided : VarStage.checking,
+        result.events,
+        names,
+        seed,
+        score: c.score,
+      );
+    }
     return pitchLine(
       l,
       c.moment!,
@@ -278,7 +303,10 @@ class PitchPlayback {
     return found;
   }
 
-  static List<_Cue> _commentaryCues(PitchScript s) {
+  static List<_Cue> _commentaryCues(
+    PitchScript s,
+    List<VarCheckShow> checks,
+  ) {
     final r = s.result;
     final inWindow = Set<MatchMoment>.identity();
     for (final w in s.windows) {
@@ -309,7 +337,7 @@ class PitchPlayback {
     /// When a shot's line comes in: as it goes in when it scores, as it is
     /// struck otherwise, or (a window with no cues) at [fallback].
     double shotAt(StagedWindow w, ShotMoment m, double fallback) {
-      final scored = m.outcome == ShotOutcome.goal
+      final scored = m.outcome.inNet
           ? cue(w, PitchCueKind.goal, m.shooterId)
           : null;
       return scored ?? cue(w, PitchCueKind.shot, m.shooterId) ?? fallback;
@@ -400,6 +428,19 @@ class PitchPlayback {
         }
       }
     }
+    // The video referee's check, and his call with the score as it stands.
+    for (final v in checks) {
+      out
+        ..add(_Cue(v.checkFrom, check: v))
+        ..add(
+          _Cue(
+            v.decisionAt,
+            check: v,
+            decided: true,
+            score: scoreAfter(v.eventIndex),
+          ),
+        );
+    }
     // Stable: lines of one window keep their order on a tie.
     final indexed = [for (var i = 0; i < out.length; i++) (i, out[i])]
       ..sort((a, b) {
@@ -419,8 +460,15 @@ class _Cue {
     this.score,
     this.reboundFrom,
     this.clearance = false,
+    this.check,
+    this.decided = false,
   });
   final double t;
+
+  /// A video referee's check: its line as it starts, or with [decided]
+  /// his call.
+  final VarCheckShow? check;
+  final bool decided;
   final MatchMoment? moment;
   final MatchEvent? injury;
   final ({int home, int away})? score;

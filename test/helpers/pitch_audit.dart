@@ -424,7 +424,8 @@ class PitchAudit {
     }
     final keeperAt = s.keepersAt(shot.t1 - 1e-3);
     switch (m.outcome) {
-      case ShotOutcome.goal:
+      // A goal chalked off goes in just the same.
+      case ShotOutcome.goal || ShotOutcome.disallowed:
         if (shot.toActor != null ||
             crossLat == null ||
             crossLat.abs() > PitchDims.goalHalfWidth - 0.11 ||
@@ -472,7 +473,9 @@ class PitchAudit {
           if (kicker == null || team(kicker) == m.teamNationId) {
             fail(w.end, 'the scorers kick off');
           }
-          if (ko != null &&
+          // A goal chalked off restarts with the keeper's free kick.
+          if (m.outcome == ShotOutcome.goal &&
+              ko != null &&
               s
                       .ballAt(w.end + 1e-7, phase: ko)
                       .$1

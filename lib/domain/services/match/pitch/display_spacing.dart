@@ -281,9 +281,7 @@ abstract final class Declutter {
     final w = s.windowAt(flight.t0);
     if (w == null) return null;
     for (final m in w.moments) {
-      if (m is ShotMoment &&
-          m.outcome == ShotOutcome.goal &&
-          m.shooterId == shooter) {
+      if (m is ShotMoment && m.outcome.inNet && m.shooterId == shooter) {
         final k = m.keeperId;
         return k == null ? null : s.actorIndexOf(k);
       }

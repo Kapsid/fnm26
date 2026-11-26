@@ -16637,6 +16637,54 @@ class AppLocalizationsFil extends AppLocalizations {
   }
 
   @override
+  String get pitchVarCheck => 'VAR check';
+
+  @override
+  String get pitchVarConfirmed => 'Kumpirmado ang goal';
+
+  @override
+  String get pitchVarDisallowedOffside => 'Hindi binilang ang goal: offside';
+
+  @override
+  String get pitchVarDisallowedFoul => 'Hindi binilang ang goal: foul';
+
+  @override
+  String get pitchComVarCheck1 =>
+      'Sandali. Nakahawak sa tainga ang referee: sinusuri ng VAR ang goal.';
+
+  @override
+  String pitchComVarCheck2(String player) {
+    return 'Nagdiriwang si $player, pero sinusuri ng VAR ang sitwasyon.';
+  }
+
+  @override
+  String get pitchComVarConfirmed1 =>
+      'Walang nakitang problema ang VAR. Bilang ang goal!';
+
+  @override
+  String pitchComVarConfirmed2(String player) {
+    return 'Nasuri at kumpirmado: kay $player pa rin ang goal.';
+  }
+
+  @override
+  String get pitchComVarOffside1 =>
+      'Walang goal! May nakitang offside ang VAR sa atake.';
+
+  @override
+  String pitchComVarOffside2(String player) {
+    return 'Hindi binilang! May offside ayon sa VAR, at nawalan ng goal si $player.';
+  }
+
+  @override
+  String get pitchComVarFoul1 =>
+      'Walang goal! May nakitang foul ang VAR sa atake.';
+
+  @override
+  String pitchComVarFoul2(String player) {
+    return 'Hindi binilang! May foul ayon sa VAR, at nawalan ng goal si $player.';
+  }
+
+  @override
   String pitchComSub1(String player, String other) {
     return 'Palit: pumasok si $player, lumabas si $other.';
   }
@@ -17445,6 +17493,12 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get matchGoalOwnGoal => 'SG';
+
+  @override
+  String get matchGoalVarOffside => 'VAR: offside';
+
+  @override
+  String get matchGoalVarFoul => 'VAR: foul';
 
   @override
   String pitchComOwnGoal1(String defender) {

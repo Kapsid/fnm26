@@ -41,7 +41,8 @@ Map<int, MatchCard> cardStatusFor(
             : MatchCard.red;
       case MatchEventType.goal ||
           MatchEventType.substitution ||
-          MatchEventType.injury:
+          MatchEventType.injury ||
+          MatchEventType.disallowedGoal:
         break;
     }
   }

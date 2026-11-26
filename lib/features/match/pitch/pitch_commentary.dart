@@ -13,6 +13,7 @@ library;
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_moments.dart';
+import 'package:fnm/domain/services/match/pitch/match_officials.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
@@ -213,6 +214,44 @@ String? pitchLine(
   }
 }
 
+/// The commentary line for a video referee's check [v] at [stage]: the
+/// check itself as it starts, then the call (the goal stands, or it is
+/// chalked off for offside or a foul), with [score] (the score as it stands
+/// after the call, home first) when given. [events] is the match's own
+/// `MatchResult.events`; the man whose goal it is must be in [names]
+/// (asserted in debug). The wording is variant
+/// `(seed ^ minute ^ stoppage ^ seq) % n`, like [pitchLine]'s.
+String pitchVarLine(
+  AppLocalizations l,
+  VarCheckShow v,
+  VarStage stage,
+  List<MatchEvent> events,
+  Map<int, String> names,
+  int seed, {
+  ({int home, int away})? score,
+}) {
+  final i = v.eventIndex;
+  final id = i >= 0 && i < events.length ? events[i].playerId : null;
+  assert(id == null || names.containsKey(id), 'no name for player $id');
+  final p = (id == null ? null : names[id]) ?? l.pitchComSomeone;
+  final m = v.shot;
+  String pick(List<String> ok) =>
+      ok[(seed ^ m.seq ^ m.minute ^ m.stoppage) % ok.length];
+  if (stage == VarStage.checking) {
+    return pick([l.pitchComVarCheck1, l.pitchComVarCheck2(p)]);
+  }
+  final line = pick(switch (v.review) {
+    VarReview.confirmed => [
+      l.pitchComVarConfirmed1,
+      l.pitchComVarConfirmed2(p),
+    ],
+    VarReview.offside => [l.pitchComVarOffside1, l.pitchComVarOffside2(p)],
+    VarReview.foul => [l.pitchComVarFoul1, l.pitchComVarFoul2(p)],
+  });
+  if (score == null) return line;
+  return l.pitchComGoalScore(line, score.home, score.away);
+}
+
 /// The commentary line for an injury [e] (a staged window of its own, with
 /// no moment behind it): variant
 /// `(seed ^ e.minute ^ e.stoppage ^ e.playerId) % 3`. The injured man must
@@ -376,7 +415,7 @@ List<String> _shotVariants(
   switch (s.origin) {
     case ShotOrigin.penalty:
       return switch (s.outcome) {
-        ShotOutcome.goal => [
+        ShotOutcome.goal || ShotOutcome.disallowed => [
           l.pitchComPenaltyGoal1(p),
           l.pitchComPenaltyGoal2(p),
           l.pitchComPenaltyGoal3(p),
@@ -402,7 +441,7 @@ List<String> _shotVariants(
     case ShotOrigin.penaltyRebound:
       // A follow-up from a penalty that stayed live.
       return switch (s.outcome) {
-        ShotOutcome.goal => [
+        ShotOutcome.goal || ShotOutcome.disallowed => [
           l.pitchComPenaltyReboundGoal1(p),
           l.pitchComPenaltyReboundGoal2(p),
           l.pitchComPenaltyReboundGoal3(p),
@@ -430,7 +469,7 @@ List<String> _shotVariants(
       };
     case ShotOrigin.directFreeKick:
       return switch (s.outcome) {
-        ShotOutcome.goal => [
+        ShotOutcome.goal || ShotOutcome.disallowed => [
           l.pitchComDirectFreeKickGoal1(p),
           l.pitchComDirectFreeKickGoal2(p),
           l.pitchComDirectFreeKickGoal3(p),
@@ -458,7 +497,7 @@ List<String> _shotVariants(
       };
     case ShotOrigin.corner || ShotOrigin.freeKickCross || ShotOrigin.longThrow:
       return switch (s.outcome) {
-        ShotOutcome.goal => [
+        ShotOutcome.goal || ShotOutcome.disallowed => [
           l.pitchComSetPieceGoal1(p),
           if (o != null) l.pitchComSetPieceGoal2(p, o),
           l.pitchComSetPieceGoal3(p),
@@ -486,7 +525,7 @@ List<String> _shotVariants(
       };
     case ShotOrigin.openPlay when s.header:
       return switch (s.outcome) {
-        ShotOutcome.goal => [
+        ShotOutcome.goal || ShotOutcome.disallowed => [
           l.pitchComHeaderGoal1(p),
           l.pitchComHeaderGoal2(p),
           l.pitchComHeaderGoal3(p),
@@ -514,7 +553,7 @@ List<String> _shotVariants(
       };
     case ShotOrigin.openPlay:
       return switch (s.outcome) {
-        ShotOutcome.goal => [
+        ShotOutcome.goal || ShotOutcome.disallowed => [
           l.pitchComShotGoal1(p),
           l.pitchComShotGoal2(p),
           l.pitchComShotGoal3(p),

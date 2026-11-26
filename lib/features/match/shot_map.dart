@@ -225,7 +225,8 @@ class _ShotMapPainter extends CustomPainter {
                 ..style = PaintingStyle.stroke
                 ..strokeWidth = 2,
             );
-        case ShotOutcome.saved:
+        // A goal chalked off is drawn as the shot on target it was.
+        case ShotOutcome.saved || ShotOutcome.disallowed:
           canvas.drawCircle(
             c,
             r,

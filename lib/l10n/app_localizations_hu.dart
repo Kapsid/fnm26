@@ -16576,6 +16576,54 @@ class AppLocalizationsHu extends AppLocalizations {
   }
 
   @override
+  String get pitchVarCheck => 'VAR-ellenőrzés';
+
+  @override
+  String get pitchVarConfirmed => 'A gól érvényes';
+
+  @override
+  String get pitchVarDisallowedOffside => 'Érvénytelen gól: les';
+
+  @override
+  String get pitchVarDisallowedFoul => 'Érvénytelen gól: szabálytalanság';
+
+  @override
+  String get pitchComVarCheck1 =>
+      'Egy pillanat. A játékvezető a füléhez emeli a kezét: a VAR ellenőrzi a gólt.';
+
+  @override
+  String pitchComVarCheck2(String player) {
+    return '$player ünnepel, de a VAR megnézi a helyzetet.';
+  }
+
+  @override
+  String get pitchComVarConfirmed1 =>
+      'A VAR nem talált semmit. A gól érvényes!';
+
+  @override
+  String pitchComVarConfirmed2(String player) {
+    return 'Ellenőrizve és megerősítve: $player gólja érvényes.';
+  }
+
+  @override
+  String get pitchComVarOffside1 =>
+      'Nincs gól! A VAR lest talált a támadásban.';
+
+  @override
+  String pitchComVarOffside2(String player) {
+    return 'Érvénytelen! A VAR lest talált, $player gólja nem számít.';
+  }
+
+  @override
+  String get pitchComVarFoul1 =>
+      'Nincs gól! A VAR szabálytalanságot látott a támadásban.';
+
+  @override
+  String pitchComVarFoul2(String player) {
+    return 'Érvénytelen! A VAR szabálytalanságot látott, $player gólja nem számít.';
+  }
+
+  @override
   String pitchComSub1(String player, String other) {
     return 'Csere: $player beáll, $other lemegy.';
   }
@@ -17380,6 +17428,12 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get matchGoalOwnGoal => 'ÖG';
+
+  @override
+  String get matchGoalVarOffside => 'VAR: les';
+
+  @override
+  String get matchGoalVarFoul => 'VAR: szabálytalanság';
 
   @override
   String pitchComOwnGoal1(String defender) {

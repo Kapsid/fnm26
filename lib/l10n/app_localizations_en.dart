@@ -16662,6 +16662,52 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get pitchVarCheck => 'VAR check';
+
+  @override
+  String get pitchVarConfirmed => 'Goal confirmed';
+
+  @override
+  String get pitchVarDisallowedOffside => 'Goal disallowed: offside';
+
+  @override
+  String get pitchVarDisallowedFoul => 'Goal disallowed: foul';
+
+  @override
+  String get pitchComVarCheck1 =>
+      'Hold on. The referee has a finger to his ear: VAR is checking the goal.';
+
+  @override
+  String pitchComVarCheck2(String player) {
+    return '$player is celebrating, but VAR is taking a look.';
+  }
+
+  @override
+  String get pitchComVarConfirmed1 => 'VAR is happy. The goal stands!';
+
+  @override
+  String pitchComVarConfirmed2(String player) {
+    return 'Checked and confirmed: $player keeps his goal.';
+  }
+
+  @override
+  String get pitchComVarOffside1 =>
+      'No goal! VAR finds an offside in the build-up.';
+
+  @override
+  String pitchComVarOffside2(String player) {
+    return 'Ruled out! VAR finds an offside and $player is denied.';
+  }
+
+  @override
+  String get pitchComVarFoul1 => 'No goal! VAR spots a foul in the build-up.';
+
+  @override
+  String pitchComVarFoul2(String player) {
+    return 'Ruled out! VAR spots a foul and $player is denied.';
+  }
+
+  @override
   String pitchComSub1(String player, String other) {
     return 'Substitution: $player on, $other off.';
   }
@@ -17467,6 +17513,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get matchGoalOwnGoal => 'OG';
+
+  @override
+  String get matchGoalVarOffside => 'VAR: offside';
+
+  @override
+  String get matchGoalVarFoul => 'VAR: foul';
 
   @override
   String pitchComOwnGoal1(String defender) {

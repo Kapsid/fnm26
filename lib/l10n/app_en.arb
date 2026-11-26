@@ -25765,6 +25765,74 @@
       }
     }
   },
+  "pitchVarCheck": "VAR check",
+  "@pitchVarCheck": {
+    "description": "Pitch view overlay: the video referee is checking a goal that has just gone in."
+  },
+  "pitchVarConfirmed": "Goal confirmed",
+  "@pitchVarConfirmed": {
+    "description": "Pitch view overlay: the video referee's check is over and the goal stands."
+  },
+  "pitchVarDisallowedOffside": "Goal disallowed: offside",
+  "@pitchVarDisallowedOffside": {
+    "description": "Pitch view overlay: the video referee's check chalked the goal off for offside."
+  },
+  "pitchVarDisallowedFoul": "Goal disallowed: foul",
+  "@pitchVarDisallowedFoul": {
+    "description": "Pitch view overlay: the video referee's check chalked the goal off for a foul in the build-up."
+  },
+  "pitchComVarCheck1": "Hold on. The referee has a finger to his ear: VAR is checking the goal.",
+  "@pitchComVarCheck1": {
+    "description": "Pitch view commentary line: the video referee (VAR) starts checking a goal. Variant 1 of 2."
+  },
+  "pitchComVarCheck2": "{player} is celebrating, but VAR is taking a look.",
+  "@pitchComVarCheck2": {
+    "description": "Pitch view commentary line: the video referee (VAR) starts checking a goal. {player} is the scorer. Variant 2 of 2.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComVarConfirmed1": "VAR is happy. The goal stands!",
+  "@pitchComVarConfirmed1": {
+    "description": "Pitch view commentary line: the VAR check is over and the goal stands. Variant 1 of 2."
+  },
+  "pitchComVarConfirmed2": "Checked and confirmed: {player} keeps his goal.",
+  "@pitchComVarConfirmed2": {
+    "description": "Pitch view commentary line: the VAR check is over and the goal stands. {player} is the scorer. Variant 2 of 2.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComVarOffside1": "No goal! VAR finds an offside in the build-up.",
+  "@pitchComVarOffside1": {
+    "description": "Pitch view commentary line: the VAR check chalks the goal off for offside. Variant 1 of 2."
+  },
+  "pitchComVarOffside2": "Ruled out! VAR finds an offside and {player} is denied.",
+  "@pitchComVarOffside2": {
+    "description": "Pitch view commentary line: the VAR check chalks the goal off for offside. {player} is the man whose goal it would have been. Variant 2 of 2.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComVarFoul1": "No goal! VAR spots a foul in the build-up.",
+  "@pitchComVarFoul1": {
+    "description": "Pitch view commentary line: the VAR check chalks the goal off for a foul in the build-up. Variant 1 of 2."
+  },
+  "pitchComVarFoul2": "Ruled out! VAR spots a foul and {player} is denied.",
+  "@pitchComVarFoul2": {
+    "description": "Pitch view commentary line: the VAR check chalks the goal off for a foul in the build-up. {player} is the man whose goal it would have been. Variant 2 of 2.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
   "pitchComSub1": "Substitution: {player} on, {other} off.",
   "@pitchComSub1": {
     "description": "Pitch view commentary line: a substitution. {player} comes on, {other} goes off. Variant 1 of 3.",
@@ -27012,6 +27080,14 @@
   "matchGoalOwnGoal": "OG",
   "@matchGoalOwnGoal": {
     "description": "Short tag after an own goal's minute or scorer in compact lists (the match timeline, the share card), like PEN for a penalty. Keep it two or three letters where the language allows."
+  },
+  "matchGoalVarOffside": "VAR: offside",
+  "@matchGoalVarOffside": {
+    "description": "Timeline and TV strip: a goal the video referee (VAR) chalked off for offside, shown after the would-be scorer's name."
+  },
+  "matchGoalVarFoul": "VAR: foul",
+  "@matchGoalVarFoul": {
+    "description": "Timeline and TV strip: a goal the video referee (VAR) chalked off for a foul in the build-up, shown after the would-be scorer's name."
   },
   "pitchComOwnGoal1": "Own goal! {defender} turns it into his own net.",
   "@pitchComOwnGoal1": {

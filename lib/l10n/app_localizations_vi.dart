@@ -16478,6 +16478,54 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String get pitchVarCheck => 'Kiểm tra VAR';
+
+  @override
+  String get pitchVarConfirmed => 'Bàn thắng được công nhận';
+
+  @override
+  String get pitchVarDisallowedOffside => 'Bàn thắng bị hủy: việt vị';
+
+  @override
+  String get pitchVarDisallowedFoul => 'Bàn thắng bị hủy: phạm lỗi';
+
+  @override
+  String get pitchComVarCheck1 =>
+      'Khoan đã. Trọng tài đưa tay lên tai: VAR đang kiểm tra bàn thắng.';
+
+  @override
+  String pitchComVarCheck2(String player) {
+    return '$player ăn mừng, nhưng VAR đang xem lại tình huống.';
+  }
+
+  @override
+  String get pitchComVarConfirmed1 =>
+      'VAR không phát hiện vấn đề gì. Bàn thắng được công nhận!';
+
+  @override
+  String pitchComVarConfirmed2(String player) {
+    return 'Đã kiểm tra và xác nhận: $player giữ được bàn thắng.';
+  }
+
+  @override
+  String get pitchComVarOffside1 =>
+      'Không có bàn thắng! VAR phát hiện việt vị trong pha tấn công.';
+
+  @override
+  String pitchComVarOffside2(String player) {
+    return 'Bị hủy! VAR phát hiện việt vị, $player mất bàn thắng.';
+  }
+
+  @override
+  String get pitchComVarFoul1 =>
+      'Không có bàn thắng! VAR phát hiện phạm lỗi trong pha tấn công.';
+
+  @override
+  String pitchComVarFoul2(String player) {
+    return 'Bị hủy! VAR phát hiện phạm lỗi, $player mất bàn thắng.';
+  }
+
+  @override
   String pitchComSub1(String player, String other) {
     return 'Thay người: $player vào sân, $other ra.';
   }
@@ -17282,6 +17330,12 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get matchGoalOwnGoal => 'PLN';
+
+  @override
+  String get matchGoalVarOffside => 'VAR: việt vị';
+
+  @override
+  String get matchGoalVarFoul => 'VAR: phạm lỗi';
 
   @override
   String pitchComOwnGoal1(String defender) {

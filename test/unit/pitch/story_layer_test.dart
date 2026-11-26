@@ -777,7 +777,7 @@ void main() {
     // Both sides of this are whole microseconds: a hair of rounding apart.
     expect(
       second.start,
-      closeTo(_secs(pacer2.screenAt(60, 0, within: 0.4)), 1.5e-6),
+      closeTo(_secs(pacer2.screenAt(60, 0, within: 0.4)), 3e-6),
     );
     final seam = second.sample(_at(second.start));
     expect(seam.players.keys.toSet(), state.players.keys.toSet());

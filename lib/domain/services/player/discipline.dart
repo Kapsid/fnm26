@@ -104,6 +104,7 @@ abstract final class Discipline {
           );
         case MatchEventType.goal:
         case MatchEventType.substitution:
+        case MatchEventType.disallowedGoal:
           break;
       }
     }

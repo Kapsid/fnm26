@@ -11,6 +11,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/util/text_variety.dart';
+import 'package:fnm/domain/services/match/pitch/match_officials.dart';
 import 'package:fnm/domain/services/match/pitch/moment_staging.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_geometry.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_script.dart';
@@ -26,6 +27,7 @@ import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/features/match/pitch/referee_painter.dart';
 import 'package:fnm/features/match/pitch/shootout_stage.dart';
 import 'package:fnm/features/match/pitch/stadium_looks.dart';
+import 'package:fnm/features/match/pitch/var_check_overlay.dart';
 import 'package:fnm/features/match/pitch/weather_painter.dart';
 
 /// The live Pitch view: the match's ground, baked once, and over it the
@@ -443,7 +445,7 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
   Widget _actorsPainted(Size drawSize) => RepaintBoundary(
     child: CustomPaint(
       painter: _actorsFor(drawSize),
-      // A sending-off's referee, over the players.
+      // The referee and his assistants, over the players.
       foregroundPainter: _refereeFor(drawSize),
     ),
   );
@@ -455,6 +457,7 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
     if (r != null &&
         identical(r.script, widget.script) &&
         identical(r.clock, widget.clock) &&
+        r.kit == RefereePainter.kitFor(widget.stadium.kits) &&
         r.projection.viewport == size) {
       return r;
     }
@@ -462,7 +465,19 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
       script: widget.script,
       clock: widget.clock,
       projection: PitchMatchView.projectionFor(size),
+      kits: widget.stadium.kits,
     );
+  }
+
+  /// The goals the video referee checks in the script on show.
+  ({PitchScript script, List<VarCheckShow> checks})? _varChecks;
+
+  List<VarCheckShow> _varChecksNow() {
+    final v = _varChecks;
+    if (v != null && identical(v.script, widget.script)) return v.checks;
+    final checks = VarCheckShow.of(widget.script);
+    _varChecks = (script: widget.script, checks: checks);
+    return checks;
   }
 
   WeatherOverlay _weatherFor() {
@@ -543,6 +558,9 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
                     ],
                   ),
                 ),
+              // The video referee's caption, over the top of the pitch.
+              if (looks != null && !looks.isEmpty)
+                VarCheckOverlay(checks: _varChecksNow(), clock: widget.clock),
               ValueListenableBuilder<double?>(
                 valueListenable: _confetti,
                 builder: (context, t, _) => t == null

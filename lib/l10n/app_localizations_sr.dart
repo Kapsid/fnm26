@@ -16984,6 +16984,52 @@ class AppLocalizationsSr extends AppLocalizations {
   }
 
   @override
+  String get pitchVarCheck => 'ВАР провера';
+
+  @override
+  String get pitchVarConfirmed => 'Гол признат';
+
+  @override
+  String get pitchVarDisallowedOffside => 'Гол поништен: офсајд';
+
+  @override
+  String get pitchVarDisallowedFoul => 'Гол поништен: прекршај';
+
+  @override
+  String get pitchComVarCheck1 =>
+      'Тренутак. Судија држи руку на уву: ВАР проверава гол.';
+
+  @override
+  String pitchComVarCheck2(String player) {
+    return '$player слави, али ВАР прегледа ситуацију.';
+  }
+
+  @override
+  String get pitchComVarConfirmed1 => 'ВАР није ништа пронашао. Гол важи!';
+
+  @override
+  String pitchComVarConfirmed2(String player) {
+    return 'Проверено и потврђено: $player задржава свој гол.';
+  }
+
+  @override
+  String get pitchComVarOffside1 =>
+      'Нема гола! ВАР је пронашао офсајд у акцији.';
+
+  @override
+  String pitchComVarOffside2(String player) {
+    return 'Поништено! ВАР је пронашао офсајд и $player остаје без гола.';
+  }
+
+  @override
+  String get pitchComVarFoul1 => 'Нема гола! ВАР је уочио прекршај у акцији.';
+
+  @override
+  String pitchComVarFoul2(String player) {
+    return 'Поништено! ВАР је уочио прекршај и $player остаје без гола.';
+  }
+
+  @override
   String pitchComSub1(String player, String other) {
     return 'Измена: $player улази, $other излази.';
   }
@@ -17783,6 +17829,12 @@ class AppLocalizationsSr extends AppLocalizations {
 
   @override
   String get matchGoalOwnGoal => 'АГ';
+
+  @override
+  String get matchGoalVarOffside => 'ВАР: офсајд';
+
+  @override
+  String get matchGoalVarFoul => 'ВАР: прекршај';
 
   @override
   String pitchComOwnGoal1(String defender) {

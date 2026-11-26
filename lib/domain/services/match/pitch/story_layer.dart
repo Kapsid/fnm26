@@ -983,8 +983,13 @@ class _Builder {
   /// The last man to touch the ball, by agent index.
   int? lastTouch;
 
-  /// Kick-offs after goals: screen second -> the side kicking off.
+  /// Kick-offs after goals: screen second -> the side kicking off. A goal
+  /// the video referee chalks off restarts with the defending side's free
+  /// kick instead, its keeper on the ball: that side plus [_freeKickAfterVar].
   final Map<double, int> goalRestarts = {};
+
+  /// Added to a [goalRestarts] side for a chalked-off goal's free kick.
+  static const int _freeKickAfterVar = 2;
 
   /// Every screen second the picture cuts at (see `PitchScript.cuts`), and
   /// what kind of cut it is.
@@ -1088,9 +1093,15 @@ class _Builder {
           _offAtCut();
           _processArrivals(t);
           // At the loop's own time, which may round a hair past it.
-          _kickoff(t, e.value);
-          _record(t);
-          cuts[t] = PitchCutKind.kickOff;
+          if (e.value >= _freeKickAfterVar) {
+            _keeperFreeKick(t, e.value - _freeKickAfterVar);
+            _record(t);
+            cuts[t] = PitchCutKind.setPiece;
+          } else {
+            _kickoff(t, e.value);
+            _record(t);
+            cuts[t] = PitchCutKind.kickOff;
+          }
         }
       }
       // Kick-offs, with whatever the interval brought.
@@ -1322,13 +1333,18 @@ class _Builder {
     for (final w in windows) {
       ShotMoment? goal;
       for (final m in w.moments) {
-        if (m is ShotMoment && m.outcome == ShotOutcome.goal) goal = m;
+        if (m is ShotMoment && m.outcome.inNet) goal = m;
       }
       if (goal == null) continue;
       final at = w.end;
       if (at >= total - 1e-6) continue;
       if (resets.any((r) => (r - at).abs() < 1e-6)) continue;
-      goalRestarts[at] = goal.teamNationId == lineups.home.nationId ? 1 : 0;
+      // The conceding side kicks off; after a goal chalked off, the side
+      // it was scored against takes a free kick.
+      final against = goal.teamNationId == lineups.home.nationId ? 1 : 0;
+      goalRestarts[at] = goal.outcome == ShotOutcome.disallowed
+          ? against + _freeKickAfterVar
+          : against;
     }
   }
 
@@ -1585,7 +1601,9 @@ class _Builder {
               }
             }),
           );
-        case MatchEventType.goal || MatchEventType.yellowCard:
+        case MatchEventType.goal ||
+            MatchEventType.yellowCard ||
+            MatchEventType.disallowedGoal:
           break;
       }
     }
@@ -2140,7 +2158,89 @@ class _Builder {
     kicker!
       ..pos = Offset2(centre.x - kdir * ballLead, centre.y)
       ..facing = kdir > 0 ? 0 : math.pi;
-    // Spread anybody standing too close.
+    _spreadAround(kicker);
+    carrier = kicker.index;
+    lastTouch = kicker.index;
+    phaseStart = t;
+    possession = kicking;
+    spellStart = t;
+    nextAction = t + 0.6;
+    spellEnd = t + _spellLength(kicking, t);
+    spellDepth = _depthTarget(kicking, minute);
+    cameraX = centre.x;
+  }
+
+  /// The free kick after a goal the video referee chalked off: the picture
+  /// cuts from the check to side [s]'s keeper on the ball a few metres out
+  /// from his goal, both sides in their shapes around it and the side that
+  /// had scored back outside the box.
+  void _keeperFreeKick(double t, int s) {
+    restart = null;
+    _cutFlight(t);
+    _closePhase(t);
+    restAt = null;
+    restHeight = 0;
+    final minute = pacer.matchAt(_dur(t)).minute;
+    final dir = _dir(s, minute);
+    final ball = Offset2(depthToX(_varFreeKickDepth, dir), PitchDims.width / 2);
+    possession = s;
+    for (final side in sides) {
+      side.followDrift(minute);
+    }
+    _updateBackLines(minute, ball);
+    for (var k = 0; k < 2; k++) {
+      final targets = _anchors(k, minute, t, ball, k == s);
+      for (final a in agents) {
+        if (!a.present || a.side != k || a.walkStart != null) continue;
+        var p = targets[a.index] ?? a.pos;
+        // The side that had scored waits outside the box.
+        if (k != s && xToDepth(p.x, dir) < PitchDims.boxDepth + 2) {
+          p = Offset2(depthToX(PitchDims.boxDepth + 2, dir), p.y);
+        }
+        a
+          ..pos = _clampPitch(p)
+          ..vel = Offset2.zero
+          ..facing = dir > 0 ? 0 : math.pi;
+      }
+    }
+    // The taker: the side's keeper, else whoever stands nearest the ball.
+    _Agent? taker;
+    for (final a in agents) {
+      if (!a.present || a.side != s || a.walkStart != null) continue;
+      if (a.slot == sides[s].gkSlot) {
+        taker = a;
+        break;
+      }
+      if (taker == null ||
+          a.pos.distanceTo(ball) < taker.pos.distanceTo(ball)) {
+        taker = a;
+      }
+    }
+    if (taker == null) {
+      _kickoff(t, s);
+      return;
+    }
+    taker
+      ..pos = Offset2(ball.x - dir * ballLead, ball.y)
+      ..facing = dir > 0 ? 0 : math.pi;
+    _spreadAround(taker);
+    carrier = taker.index;
+    lastTouch = taker.index;
+    phaseStart = t;
+    spellStart = t;
+    nextAction = t + 0.8;
+    spellEnd = t + _spellLength(s, t);
+    spellDepth = _depthTarget(s, minute);
+    cameraX = ball.x;
+  }
+
+  /// How far out from his goal the keeper takes the free kick after a
+  /// goal chalked off.
+  static const double _varFreeKickDepth = 9;
+
+  /// Spreads anybody standing too close to another man, [fixed] apart.
+  void _spreadAround(_Agent fixed) {
+    final kicker = fixed;
     for (var it = 0; it < 60; it++) {
       var moved = false;
       for (final a in agents) {
@@ -2158,15 +2258,6 @@ class _Builder {
       }
       if (!moved) break;
     }
-    carrier = kicker.index;
-    lastTouch = kicker.index;
-    phaseStart = t;
-    possession = kicking;
-    spellStart = t;
-    nextAction = t + 0.6;
-    spellEnd = t + _spellLength(kicking, t);
-    spellDepth = _depthTarget(kicking, minute);
-    cameraX = centre.x;
   }
 
   // --- the ball ------------------------------------------------------------

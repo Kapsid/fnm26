@@ -237,7 +237,7 @@ void main() {
             final pn = names[f.shooterId]!;
             final kn = names[f.keeperId] ?? '';
             final want = switch (f.outcome) {
-              ShotOutcome.goal => [
+              ShotOutcome.goal || ShotOutcome.disallowed => [
                 en.pitchComPenaltyReboundGoal1(pn),
                 en.pitchComPenaltyReboundGoal2(pn),
                 en.pitchComPenaltyReboundGoal3(pn),

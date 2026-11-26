@@ -16738,6 +16738,54 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get pitchVarCheck => 'Revisão do VAR';
+
+  @override
+  String get pitchVarConfirmed => 'Golo confirmado';
+
+  @override
+  String get pitchVarDisallowedOffside => 'Golo anulado: fora de jogo';
+
+  @override
+  String get pitchVarDisallowedFoul => 'Golo anulado: falta';
+
+  @override
+  String get pitchComVarCheck1 =>
+      'Calma. O árbitro leva a mão ao ouvido: o VAR está a verificar o golo.';
+
+  @override
+  String pitchComVarCheck2(String player) {
+    return '$player festeja, mas o VAR está a rever o lance.';
+  }
+
+  @override
+  String get pitchComVarConfirmed1 =>
+      'O VAR não encontra nada. O golo é válido!';
+
+  @override
+  String pitchComVarConfirmed2(String player) {
+    return 'Verificado e confirmado: $player mantém o seu golo.';
+  }
+
+  @override
+  String get pitchComVarOffside1 =>
+      'Não há golo! O VAR deteta um fora de jogo na jogada.';
+
+  @override
+  String pitchComVarOffside2(String player) {
+    return 'Anulado! O VAR deteta um fora de jogo e $player fica sem o golo.';
+  }
+
+  @override
+  String get pitchComVarFoul1 =>
+      'Não há golo! O VAR deteta uma falta na jogada.';
+
+  @override
+  String pitchComVarFoul2(String player) {
+    return 'Anulado! O VAR deteta uma falta e $player fica sem o golo.';
+  }
+
+  @override
   String pitchComSub1(String player, String other) {
     return 'Substituição: entra $player, sai $other.';
   }
@@ -17539,6 +17587,12 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get matchGoalOwnGoal => 'AG';
+
+  @override
+  String get matchGoalVarOffside => 'VAR: fora de jogo';
+
+  @override
+  String get matchGoalVarFoul => 'VAR: falta';
 
   @override
   String pitchComOwnGoal1(String defender) {

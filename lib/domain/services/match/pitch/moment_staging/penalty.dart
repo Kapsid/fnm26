@@ -42,7 +42,7 @@ class _PenaltyPlan extends _Plan {
     final r = rng;
     final side = r.chance(0.5) ? 1.0 : -1.0;
     switch (m.outcome) {
-      case ShotOutcome.goal:
+      case ShotOutcome.goal || ShotOutcome.disallowed:
         lane = side * (1.6 + 1.5 * r.nextDouble());
         dive = r.chance(0.55)
             ? -side * (1.5 + r.nextDouble())

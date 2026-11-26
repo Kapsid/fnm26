@@ -16763,6 +16763,53 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get pitchVarCheck => 'VAR-Check';
+
+  @override
+  String get pitchVarConfirmed => 'Tor bestätigt';
+
+  @override
+  String get pitchVarDisallowedOffside => 'Tor aberkannt: Abseits';
+
+  @override
+  String get pitchVarDisallowedFoul => 'Tor aberkannt: Foul';
+
+  @override
+  String get pitchComVarCheck1 =>
+      'Moment. Der Schiedsrichter hat die Hand am Ohr: Der VAR prüft das Tor.';
+
+  @override
+  String pitchComVarCheck2(String player) {
+    return '$player jubelt, aber der VAR schaut sich die Szene an.';
+  }
+
+  @override
+  String get pitchComVarConfirmed1 => 'Der VAR findet nichts. Das Tor zählt!';
+
+  @override
+  String pitchComVarConfirmed2(String player) {
+    return 'Geprüft und bestätigt: $player behält sein Tor.';
+  }
+
+  @override
+  String get pitchComVarOffside1 =>
+      'Kein Tor! Der VAR findet ein Abseits im Spielaufbau.';
+
+  @override
+  String pitchComVarOffside2(String player) {
+    return 'Aberkannt! Der VAR findet ein Abseits, und $player ist sein Tor los.';
+  }
+
+  @override
+  String get pitchComVarFoul1 =>
+      'Kein Tor! Der VAR sieht ein Foul im Spielaufbau.';
+
+  @override
+  String pitchComVarFoul2(String player) {
+    return 'Aberkannt! Der VAR sieht ein Foul, und $player ist sein Tor los.';
+  }
+
+  @override
   String pitchComSub1(String player, String other) {
     return 'Wechsel: $player kommt, $other geht.';
   }
@@ -17570,6 +17617,12 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get matchGoalOwnGoal => 'ET';
+
+  @override
+  String get matchGoalVarOffside => 'VAR: Abseits';
+
+  @override
+  String get matchGoalVarFoul => 'VAR: Foul';
 
   @override
   String pitchComOwnGoal1(String defender) {

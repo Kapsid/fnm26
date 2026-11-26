@@ -91,6 +91,7 @@ Map<String, double?> measureCell(
         case MatchEventType.injury:
           inj++;
         case MatchEventType.substitution:
+        case MatchEventType.disallowedGoal:
           break;
       }
     }

@@ -16703,6 +16703,52 @@ class AppLocalizationsFi extends AppLocalizations {
   }
 
   @override
+  String get pitchVarCheck => 'VAR-tarkistus';
+
+  @override
+  String get pitchVarConfirmed => 'Maali hyväksytty';
+
+  @override
+  String get pitchVarDisallowedOffside => 'Maali hylätty: paitsio';
+
+  @override
+  String get pitchVarDisallowedFoul => 'Maali hylätty: rike';
+
+  @override
+  String get pitchComVarCheck1 =>
+      'Hetkinen. Tuomari pitää kättä korvallaan: VAR tarkistaa maalin.';
+
+  @override
+  String pitchComVarCheck2(String player) {
+    return '$player juhlii, mutta VAR katsoo tilanteen.';
+  }
+
+  @override
+  String get pitchComVarConfirmed1 => 'VAR ei löydä mitään. Maali pysyy!';
+
+  @override
+  String pitchComVarConfirmed2(String player) {
+    return 'Tarkistettu ja vahvistettu: $player saa pitää maalinsa.';
+  }
+
+  @override
+  String get pitchComVarOffside1 =>
+      'Ei maalia! VAR löytää hyökkäyksestä paitsion.';
+
+  @override
+  String pitchComVarOffside2(String player) {
+    return 'Hylätty! VAR löytää paitsion, ja $player menettää maalinsa.';
+  }
+
+  @override
+  String get pitchComVarFoul1 => 'Ei maalia! VAR näkee hyökkäyksessä rikkeen.';
+
+  @override
+  String pitchComVarFoul2(String player) {
+    return 'Hylätty! VAR näkee rikkeen, ja $player menettää maalinsa.';
+  }
+
+  @override
   String pitchComSub1(String player, String other) {
     return 'Vaihto: $player sisään, $other ulos.';
   }
@@ -17509,6 +17555,12 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get matchGoalOwnGoal => 'OM';
+
+  @override
+  String get matchGoalVarOffside => 'VAR: paitsio';
+
+  @override
+  String get matchGoalVarFoul => 'VAR: rike';
 
   @override
   String pitchComOwnGoal1(String defender) {

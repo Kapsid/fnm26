@@ -25023,6 +25023,78 @@ abstract class AppLocalizations {
   /// **'{player} is caught offside.'**
   String pitchComOffside3(String player);
 
+  /// Pitch view overlay: the video referee is checking a goal that has just gone in.
+  ///
+  /// In en, this message translates to:
+  /// **'VAR check'**
+  String get pitchVarCheck;
+
+  /// Pitch view overlay: the video referee's check is over and the goal stands.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal confirmed'**
+  String get pitchVarConfirmed;
+
+  /// Pitch view overlay: the video referee's check chalked the goal off for offside.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal disallowed: offside'**
+  String get pitchVarDisallowedOffside;
+
+  /// Pitch view overlay: the video referee's check chalked the goal off for a foul in the build-up.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal disallowed: foul'**
+  String get pitchVarDisallowedFoul;
+
+  /// Pitch view commentary line: the video referee (VAR) starts checking a goal. Variant 1 of 2.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold on. The referee has a finger to his ear: VAR is checking the goal.'**
+  String get pitchComVarCheck1;
+
+  /// Pitch view commentary line: the video referee (VAR) starts checking a goal. {player} is the scorer. Variant 2 of 2.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is celebrating, but VAR is taking a look.'**
+  String pitchComVarCheck2(String player);
+
+  /// Pitch view commentary line: the VAR check is over and the goal stands. Variant 1 of 2.
+  ///
+  /// In en, this message translates to:
+  /// **'VAR is happy. The goal stands!'**
+  String get pitchComVarConfirmed1;
+
+  /// Pitch view commentary line: the VAR check is over and the goal stands. {player} is the scorer. Variant 2 of 2.
+  ///
+  /// In en, this message translates to:
+  /// **'Checked and confirmed: {player} keeps his goal.'**
+  String pitchComVarConfirmed2(String player);
+
+  /// Pitch view commentary line: the VAR check chalks the goal off for offside. Variant 1 of 2.
+  ///
+  /// In en, this message translates to:
+  /// **'No goal! VAR finds an offside in the build-up.'**
+  String get pitchComVarOffside1;
+
+  /// Pitch view commentary line: the VAR check chalks the goal off for offside. {player} is the man whose goal it would have been. Variant 2 of 2.
+  ///
+  /// In en, this message translates to:
+  /// **'Ruled out! VAR finds an offside and {player} is denied.'**
+  String pitchComVarOffside2(String player);
+
+  /// Pitch view commentary line: the VAR check chalks the goal off for a foul in the build-up. Variant 1 of 2.
+  ///
+  /// In en, this message translates to:
+  /// **'No goal! VAR spots a foul in the build-up.'**
+  String get pitchComVarFoul1;
+
+  /// Pitch view commentary line: the VAR check chalks the goal off for a foul in the build-up. {player} is the man whose goal it would have been. Variant 2 of 2.
+  ///
+  /// In en, this message translates to:
+  /// **'Ruled out! VAR spots a foul and {player} is denied.'**
+  String pitchComVarFoul2(String player);
+
   /// Pitch view commentary line: a substitution. {player} comes on, {other} goes off. Variant 1 of 3.
   ///
   /// In en, this message translates to:
@@ -26324,6 +26396,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'OG'**
   String get matchGoalOwnGoal;
+
+  /// Timeline and TV strip: a goal the video referee (VAR) chalked off for offside, shown after the would-be scorer's name.
+  ///
+  /// In en, this message translates to:
+  /// **'VAR: offside'**
+  String get matchGoalVarOffside;
+
+  /// Timeline and TV strip: a goal the video referee (VAR) chalked off for a foul in the build-up, shown after the would-be scorer's name.
+  ///
+  /// In en, this message translates to:
+  /// **'VAR: foul'**
+  String get matchGoalVarFoul;
 
   /// Pitch view commentary line: an own goal. {defender} is the defending player who put the ball into his own net. Variant 1 of 3.
   ///
