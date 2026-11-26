@@ -1420,6 +1420,55 @@ class AppLocalizationsId extends AppLocalizations {
   String get hubCycleComplete => 'Siklus telah selesai.';
 
   @override
+  String hubReviewTitle(int from, int to) {
+    return 'Ulasan siklus $from–$to';
+  }
+
+  @override
+  String get hubReviewEyebrow => 'Empat tahun Anda';
+
+  @override
+  String get hubReviewTournaments => 'Turnamen';
+
+  @override
+  String get hubReviewPlayers => 'Pemain';
+
+  @override
+  String get hubReviewMostCaps => 'Penampilan terbanyak';
+
+  @override
+  String get hubReviewBestRated => 'Rata-rata nilai terbaik';
+
+  @override
+  String hubReviewDebutants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pemain melakoni debut',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubReviewRankMove(int from, int to) {
+    return 'Dari #$from ke #$to';
+  }
+
+  @override
+  String hubReviewObjectives(int met, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$met dari $total target dewan tercapai',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hubReviewNoMatches =>
+      'Tidak ada pertandingan yang dimainkan di siklus ini.';
+
+  @override
   String get hubYourJob => 'JABATAN ANDA';
 
   @override

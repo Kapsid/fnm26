@@ -2154,6 +2154,82 @@
   "@hubCycleComplete": {
     "description": "Message that the cycle has ended."
   },
+  "hubReviewTitle": "Cycle {from}–{to} in review",
+  "@hubReviewTitle": {
+    "description": "Heading of the end-of-cycle review: the years the cycle ran.",
+    "placeholders": {
+      "from": {
+        "type": "int",
+        "example": "2026"
+      },
+      "to": {
+        "type": "int",
+        "example": "2030"
+      }
+    }
+  },
+  "hubReviewEyebrow": "Your four years",
+  "@hubReviewEyebrow": {
+    "description": "Small caption over the end-of-cycle review heading (shown in capitals)."
+  },
+  "hubReviewTournaments": "Tournaments",
+  "@hubReviewTournaments": {
+    "description": "End-of-cycle review section: how far the nation went in each competition."
+  },
+  "hubReviewPlayers": "Players",
+  "@hubReviewPlayers": {
+    "description": "End-of-cycle review section: the cycle's leading players."
+  },
+  "hubReviewMostCaps": "Most appearances",
+  "@hubReviewMostCaps": {
+    "description": "End-of-cycle review: the player who played the most matches this cycle."
+  },
+  "hubReviewBestRated": "Best average rating",
+  "@hubReviewBestRated": {
+    "description": "End-of-cycle review: the player with the best average match rating this cycle."
+  },
+  "hubReviewDebutants": "{count, plural, one{{count} player won his first cap} other{{count} players won their first cap}}",
+  "@hubReviewDebutants": {
+    "description": "End-of-cycle review: how many players made their debut for the nation this cycle.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "4"
+      }
+    }
+  },
+  "hubReviewRankMove": "From #{from} to #{to}",
+  "@hubReviewRankMove": {
+    "description": "End-of-cycle review: the nation's world ranking when the cycle opened and now.",
+    "placeholders": {
+      "from": {
+        "type": "int",
+        "example": "14"
+      },
+      "to": {
+        "type": "int",
+        "example": "9"
+      }
+    }
+  },
+  "hubReviewObjectives": "{total, plural, one{{met} of {total} board objective met} other{{met} of {total} board objectives met}}",
+  "@hubReviewObjectives": {
+    "description": "End-of-cycle review's one-line verdict: how many of the board's objectives for the cycle were met.",
+    "placeholders": {
+      "met": {
+        "type": "int",
+        "example": "2"
+      },
+      "total": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "hubReviewNoMatches": "No matches were played this cycle.",
+  "@hubReviewNoMatches": {
+    "description": "End-of-cycle review when the nation played no match in the cycle."
+  },
   "hubYourJob": "YOUR JOB",
   "@hubYourJob": {
     "description": "Heading over the manager's current job."

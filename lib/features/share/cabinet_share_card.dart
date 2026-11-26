@@ -115,7 +115,7 @@ class CabinetShareCard extends StatelessWidget {
               _Identity(data: data, story: story),
               if (story && record != null && record.played > 0) ...[
                 const SizedBox(height: 40),
-                _RecordStrip(record: record),
+                ShareRecordStrip(record: record),
               ],
               SizedBox(height: story ? 36 : 18),
               Expanded(
@@ -179,9 +179,10 @@ class _FlagStack extends StatelessWidget {
   }
 }
 
-/// The career in four numbers: played, won, drawn, lost.
-class _RecordStrip extends StatelessWidget {
-  const _RecordStrip({required this.record});
+/// A record in four numbers: played, won, drawn, lost (the cabinet's
+/// career, the end-of-cycle card's four years).
+class ShareRecordStrip extends StatelessWidget {
+  const ShareRecordStrip({required this.record, super.key});
 
   final ShareRecord record;
 

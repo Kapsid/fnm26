@@ -1370,6 +1370,54 @@ class AppLocalizationsKo extends AppLocalizations {
   String get hubCycleComplete => '대회 주기가 끝났습니다.';
 
   @override
+  String hubReviewTitle(int from, int to) {
+    return '$from–$to 사이클 돌아보기';
+  }
+
+  @override
+  String get hubReviewEyebrow => '당신의 4년';
+
+  @override
+  String get hubReviewTournaments => '대회';
+
+  @override
+  String get hubReviewPlayers => '선수';
+
+  @override
+  String get hubReviewMostCaps => '최다 출전';
+
+  @override
+  String get hubReviewBestRated => '최고 평균 평점';
+
+  @override
+  String hubReviewDebutants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count명이 대표팀 데뷔',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubReviewRankMove(int from, int to) {
+    return '$from위에서 $to위로';
+  }
+
+  @override
+  String hubReviewObjectives(int met, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '이사회 목표 $total개 중 $met개 달성',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hubReviewNoMatches => '이번 사이클에는 치른 경기가 없습니다.';
+
+  @override
   String get hubYourJob => '현재 직책';
 
   @override

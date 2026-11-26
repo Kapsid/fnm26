@@ -5,7 +5,8 @@
 part of 'cycle_rollover_screen.dart';
 
 /// The end of a cycle on a landscape tablet, step by step as on the phone:
-/// the champion beside the final's story; the board's verdict and graded
+/// the champion beside the final's story; the four years in review beside
+/// their players and ranking; the board's verdict and graded
 /// briefs beside the jobs on offer; the money banked beside the button that
 /// rolls the save on. Every step, pick and button is the screen State's
 /// ([_CycleRolloverScreenState._step], `_selected`, `_begin`), so a resize
@@ -29,8 +30,16 @@ class _RolloverTabletLayout extends StatelessWidget {
             loading: state._waiting,
             error: (e, _) => state._failed(l.hubCouldNotLoad('$e')),
             data: (view) => switch (state._step) {
-              0 => _ChampionStepTablet(state: state, view: view),
-              1 => _BoardStepTablet(state: state),
+              _CycleRolloverScreenState._champion => _ChampionStepTablet(
+                state: state,
+                view: view,
+              ),
+              _CycleRolloverScreenState._review => _ReviewStepTablet(
+                state: state,
+              ),
+              _CycleRolloverScreenState._board => _BoardStepTablet(
+                state: state,
+              ),
               _ => _IncomeStepTablet(state: state, view: view),
             },
           ),
@@ -106,7 +115,8 @@ class _ChampionStepTablet extends StatelessWidget {
                   PrimaryButton(
                     label: l.hubContinue,
                     icon: Icons.arrow_forward_rounded,
-                    onPressed: () => state._goTo(1),
+                    onPressed: () =>
+                        state._goTo(_CycleRolloverScreenState._review),
                   ),
                   state._backToSaves(),
                 ],
@@ -119,7 +129,52 @@ class _ChampionStepTablet extends StatelessWidget {
   }
 }
 
-/// Step 1: the verdict and the graded briefs on the left; the job he has
+/// The review of his four years: the headline, the verdict, the record and
+/// the competitions on the left; the results, the players and the ranking
+/// over Share and Continue on the right.
+class _ReviewStepTablet extends ConsumerWidget {
+  const _ReviewStepTablet({required this.state});
+
+  final _CycleRolloverScreenState state;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final reviewAsync = ref.watch(
+      cycleReviewProvider(state.widget.careerId),
+    );
+    final review = reviewAsync.valueOrNull;
+    final loading = reviewAsync.isLoading && review == null;
+    return Row(
+      key: CycleReviewKeys.view,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(
+          child: loading
+              ? const Center(child: CircularProgressIndicator())
+              : ListView(children: state._reviewLead(review, flagSize: 56)),
+        ),
+        const SizedBox(width: AppSpacing.lg),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(child: ListView(children: state._reviewRest(review))),
+              const SizedBox(height: AppSpacing.sm),
+              if (review != null) ...[
+                CycleReviewShareButton(review: review),
+                const SizedBox(height: AppSpacing.sm),
+              ],
+              state._reviewContinue(),
+              state._backToSaves(),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Step 2: the verdict and the graded briefs on the left; the job he has
 /// and the jobs on offer over the button on the right.
 class _BoardStepTablet extends ConsumerWidget {
   const _BoardStepTablet({required this.state});
@@ -143,7 +198,8 @@ class _BoardStepTablet extends ConsumerWidget {
                 PrimaryButton(
                   label: l.hubContinue,
                   icon: Icons.arrow_forward_rounded,
-                  onPressed: () => state._goTo(2),
+                  onPressed: () =>
+                      state._goTo(_CycleRolloverScreenState._invest),
                 ),
                 state._backToSaves(),
               ],
@@ -250,7 +306,9 @@ class _BoardStepTablet extends ConsumerWidget {
                           )
                         : l.hubTakeTheJob,
                     icon: Icons.arrow_forward_rounded,
-                    onPressed: !ready ? null : () => state._goTo(2),
+                    onPressed: !ready
+                        ? null
+                        : () => state._goTo(_CycleRolloverScreenState._invest),
                   ),
                   state._backToSaves(),
                 ],
@@ -263,7 +321,7 @@ class _BoardStepTablet extends ConsumerWidget {
   }
 }
 
-/// Step 2: the money banked on the left; the roll (or, on a free save that
+/// Step 3: the money banked on the left; the roll (or, on a free save that
 /// has had its cycle, the way past the wall) on the right.
 class _IncomeStepTablet extends ConsumerWidget {
   const _IncomeStepTablet({required this.state, required this.view});

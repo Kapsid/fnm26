@@ -1417,6 +1417,60 @@ class AppLocalizationsUk extends AppLocalizations {
   String get hubCycleComplete => 'Цикл завершено.';
 
   @override
+  String hubReviewTitle(int from, int to) {
+    return 'Цикл $from–$to в огляді';
+  }
+
+  @override
+  String get hubReviewEyebrow => 'Твої чотири роки';
+
+  @override
+  String get hubReviewTournaments => 'Турніри';
+
+  @override
+  String get hubReviewPlayers => 'Гравці';
+
+  @override
+  String get hubReviewMostCaps => 'Найбільше матчів';
+
+  @override
+  String get hubReviewBestRated => 'Найкраща середня оцінка';
+
+  @override
+  String hubReviewDebutants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count гравця дебютували',
+      many: '$count гравців дебютували',
+      few: '$count гравці дебютували',
+      one: '$count гравець дебютував',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubReviewRankMove(int from, int to) {
+    return 'З $from-го на $to-те місце';
+  }
+
+  @override
+  String hubReviewObjectives(int met, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: 'Виконано $met з $total цілі правління',
+      many: 'Виконано $met з $total цілей правління',
+      few: 'Виконано $met з $total цілей правління',
+      one: 'Виконано $met з $total цілі правління',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hubReviewNoMatches => 'У цьому циклі не зіграно жодного матчу.';
+
+  @override
   String get hubYourJob => 'ТВОЯ РОБОТА';
 
   @override

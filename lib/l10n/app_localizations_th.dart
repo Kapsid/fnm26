@@ -1403,6 +1403,54 @@ class AppLocalizationsTh extends AppLocalizations {
   String get hubCycleComplete => 'รอบนี้สิ้นสุดแล้ว';
 
   @override
+  String hubReviewTitle(int from, int to) {
+    return 'สรุปรอบ $from–$to';
+  }
+
+  @override
+  String get hubReviewEyebrow => 'สี่ปีของคุณ';
+
+  @override
+  String get hubReviewTournaments => 'ทัวร์นาเมนต์';
+
+  @override
+  String get hubReviewPlayers => 'ผู้เล่น';
+
+  @override
+  String get hubReviewMostCaps => 'ลงเล่นมากที่สุด';
+
+  @override
+  String get hubReviewBestRated => 'คะแนนเฉลี่ยดีที่สุด';
+
+  @override
+  String hubReviewDebutants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'ผู้เล่น $count คนได้ประเดิมสนาม',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubReviewRankMove(int from, int to) {
+    return 'จากอันดับ $from เป็นอันดับ $to';
+  }
+
+  @override
+  String hubReviewObjectives(int met, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: 'ทำเป้าหมายของบอร์ดสำเร็จ $met จาก $total ข้อ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hubReviewNoMatches => 'ไม่มีการแข่งขันในรอบนี้';
+
+  @override
   String get hubYourJob => 'งานของคุณ';
 
   @override

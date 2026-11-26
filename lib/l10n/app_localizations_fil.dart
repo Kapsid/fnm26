@@ -1423,6 +1423,56 @@ class AppLocalizationsFil extends AppLocalizations {
   String get hubCycleComplete => 'Tapos na ang cycle.';
 
   @override
+  String hubReviewTitle(int from, int to) {
+    return 'Pagbabalik-tanaw sa siklong $from–$to';
+  }
+
+  @override
+  String get hubReviewEyebrow => 'Ang apat na taon mo';
+
+  @override
+  String get hubReviewTournaments => 'Mga torneo';
+
+  @override
+  String get hubReviewPlayers => 'Mga manlalaro';
+
+  @override
+  String get hubReviewMostCaps => 'Pinakamaraming laro';
+
+  @override
+  String get hubReviewBestRated => 'Pinakamataas na average na rating';
+
+  @override
+  String hubReviewDebutants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count manlalaro ang nag-debut',
+      one: '$count manlalaro ang nag-debut',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubReviewRankMove(int from, int to) {
+    return 'Mula #$from hanggang #$to';
+  }
+
+  @override
+  String hubReviewObjectives(int met, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$met sa $total layunin ng board ang naabot',
+      one: '$met sa $total layunin ng board ang naabot',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hubReviewNoMatches => 'Walang larong nilaro sa siklong ito.';
+
+  @override
   String get hubYourJob => 'ANG TRABAHO MO';
 
   @override

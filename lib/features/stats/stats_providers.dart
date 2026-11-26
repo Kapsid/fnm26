@@ -4,6 +4,7 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
@@ -52,34 +53,9 @@ careerStatsProvider = FutureProvider.autoDispose.family<CareerStatsSnapshot, int
     if (!homeManaged && !awayManaged) continue;
     // If (rarely) the manager led both sides across different stints, take the
     // home view — the split still balances out across the career.
-    final iAmHome = homeManaged;
-    // Goals as scored: a shootout counts through [wonShootout] /
-    // [lostShootout], never as the extra goal the stored score carries.
-    final my = iAmHome ? f.shownHomeScore! : f.shownAwayScore!;
-    final opp = iAmHome ? f.shownAwayScore! : f.shownHomeScore!;
-    final neutral = _finalsRounds.contains(f.round);
-    final wonShootout =
-        f.wentToShootout &&
-        (iAmHome
-            ? f.homePenalties! > f.awayPenalties!
-            : f.awayPenalties! > f.homePenalties!);
-    final lostShootout = f.wentToShootout && !wonShootout;
-
-    matches.add((
-      date: f.date,
-      nationId: iAmHome ? f.homeNationId : f.awayNationId,
-      goalsFor: my,
-      goalsAgainst: opp,
-      competitive: f.round != 'FRIENDLY',
-      home: iAmHome && !neutral,
-      neutral: neutral,
-      wonShootout: wonShootout,
-      lostShootout: lostShootout,
-      trailed: _everTrailed(
-        timeline[f.id],
-        mineId: iAmHome ? f.homeNationId : f.awayNationId,
-      ),
-    ));
+    matches.add(
+      managerMatchOf(f, iAmHome: homeManaged, timeline: timeline[f.id]),
+    );
   }
 
   // Player feats come from the manager's own players' rating lines (rating rows
@@ -100,6 +76,44 @@ careerStatsProvider = FutureProvider.autoDispose.family<CareerStatsSnapshot, int
 
   return CareerStats.compute(matches, lines);
 });
+
+/// [f] (a played fixture) as the manager's side saw it: [iAmHome] says which
+/// side that was, [timeline] is the match's goals in order, when known.
+///
+/// Goals as scored: a shootout counts through `wonShootout` /
+/// `lostShootout`, never as the extra goal the stored score carries. Shared
+/// by the career's stats and the end-of-cycle review, so a cycle's record and
+/// the career's are counted one way.
+ManagerMatch managerMatchOf(
+  Fixture f, {
+  required bool iAmHome,
+  List<({int nationId, int playerId, int minute})>? timeline,
+}) {
+  final my = iAmHome ? f.shownHomeScore! : f.shownAwayScore!;
+  final opp = iAmHome ? f.shownAwayScore! : f.shownHomeScore!;
+  final neutral = _finalsRounds.contains(f.round);
+  final wonShootout =
+      f.wentToShootout &&
+      (iAmHome
+          ? f.homePenalties! > f.awayPenalties!
+          : f.awayPenalties! > f.homePenalties!);
+  final lostShootout = f.wentToShootout && !wonShootout;
+  return (
+    date: f.date,
+    nationId: iAmHome ? f.homeNationId : f.awayNationId,
+    goalsFor: my,
+    goalsAgainst: opp,
+    competitive: f.round != 'FRIENDLY',
+    home: iAmHome && !neutral,
+    neutral: neutral,
+    wonShootout: wonShootout,
+    lostShootout: lostShootout,
+    trailed: _everTrailed(
+      timeline,
+      mineId: iAmHome ? f.homeNationId : f.awayNationId,
+    ),
+  );
+}
 
 /// Whether the side [mineId] was behind at any point of a match, from its
 /// goal [timeline].

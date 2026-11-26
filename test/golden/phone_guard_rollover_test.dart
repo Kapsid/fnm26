@@ -39,6 +39,8 @@ void main() {
   ]) {
     testWidgets(name, (tester) async {
       await open(tester, size);
+      // Past the review of the four years.
+      await next(tester);
       await next(tester);
       expect(find.text(enL.hubOffersOnTable), findsOneWidget);
       await expectAppGolden('goldens/$name.png');
@@ -51,6 +53,7 @@ void main() {
   ]) {
     testWidgets(name, (tester) async {
       await open(tester, size);
+      await next(tester);
       await next(tester);
       await next(tester);
       expect(find.text(enL.hubFederationFinances), findsOneWidget);

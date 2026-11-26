@@ -1414,6 +1414,56 @@ class AppLocalizationsHi extends AppLocalizations {
   String get hubCycleComplete => 'चक्र पूरा हो गया।';
 
   @override
+  String hubReviewTitle(int from, int to) {
+    return 'चक्र $from–$to की समीक्षा';
+  }
+
+  @override
+  String get hubReviewEyebrow => 'आपके चार साल';
+
+  @override
+  String get hubReviewTournaments => 'टूर्नामेंट';
+
+  @override
+  String get hubReviewPlayers => 'खिलाड़ी';
+
+  @override
+  String get hubReviewMostCaps => 'सबसे ज़्यादा मैच';
+
+  @override
+  String get hubReviewBestRated => 'सबसे अच्छी औसत रेटिंग';
+
+  @override
+  String hubReviewDebutants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count खिलाड़ियों ने पदार्पण किया',
+      one: '$count खिलाड़ी ने पदार्पण किया',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubReviewRankMove(int from, int to) {
+    return '#$from से #$to तक';
+  }
+
+  @override
+  String hubReviewObjectives(int met, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: 'बोर्ड के $total में से $met लक्ष्य पूरे',
+      one: 'बोर्ड के $total में से $met लक्ष्य पूरा',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hubReviewNoMatches => 'इस चक्र में कोई मैच नहीं खेला गया।';
+
+  @override
   String get hubYourJob => 'आपकी नौकरी';
 
   @override

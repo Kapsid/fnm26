@@ -1416,6 +1416,56 @@ class AppLocalizationsTr extends AppLocalizations {
   String get hubCycleComplete => 'Dönem tamamlandı.';
 
   @override
+  String hubReviewTitle(int from, int to) {
+    return '$from–$to döngüsüne bakış';
+  }
+
+  @override
+  String get hubReviewEyebrow => 'Dört yılın';
+
+  @override
+  String get hubReviewTournaments => 'Turnuvalar';
+
+  @override
+  String get hubReviewPlayers => 'Oyuncular';
+
+  @override
+  String get hubReviewMostCaps => 'En çok maç';
+
+  @override
+  String get hubReviewBestRated => 'En iyi ortalama not';
+
+  @override
+  String hubReviewDebutants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count oyuncu ilk maçına çıktı',
+      one: '$count oyuncu ilk maçına çıktı',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hubReviewRankMove(int from, int to) {
+    return '$from. sıradan $to. sıraya';
+  }
+
+  @override
+  String hubReviewObjectives(int met, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: 'Yönetimin $total hedefinden $met tanesi tuttu',
+      one: 'Yönetimin $total hedefinden $met tanesi tuttu',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hubReviewNoMatches => 'Bu döngüde hiç maç oynanmadı.';
+
+  @override
   String get hubYourJob => 'GÖREVİN';
 
   @override
