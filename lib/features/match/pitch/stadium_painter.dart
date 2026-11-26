@@ -20,6 +20,7 @@ import 'package:fnm/domain/services/match/stadium/ground_character.dart';
 import 'package:fnm/domain/services/match/stadium/ground_look.dart';
 import 'package:fnm/domain/services/match/stadium/ground_setting.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
+import 'package:fnm/domain/services/match/stadium/pitch_wear.dart';
 import 'package:fnm/domain/services/match/stadium/scoreboard.dart';
 import 'package:fnm/domain/services/match/stadium/stadium_signature.dart';
 import 'package:fnm/domain/services/match/stadium/stadium_spec.dart';
@@ -208,6 +209,7 @@ class StadiumPainter extends CustomPainter {
     _snowOnRoofs(canvas);
     _boards(canvas, near: false);
     _grass(canvas);
+    _wear(canvas);
     _wetGrass(canvas);
     _gridironLines(canvas);
     if (standShadow) _standShadow(canvas);
@@ -1508,6 +1510,54 @@ class StadiumPainter extends CustomPainter {
     }
   }
 
+  /// The ground's own seed for its wear.
+  int get _wearSeed => varietySeed(
+    'wear:${spec.flagCode}:${spec.mowing.name}:${spec.goalStyle.name}:'
+    '${spec.tiers}:${spec.landmark.name}',
+  );
+
+  /// A lesser ground's pitch: worn goalmouths, a few patchy or sandy
+  /// spots. Subtle, and the same at every match there (see [PitchWear]).
+  void _wear(Canvas canvas) {
+    final wear = PitchWear.of(
+      spec.scale,
+      built: spec.works.built,
+      seed: _wearSeed,
+    );
+    if (wear.isEmpty) return;
+    canvas
+      ..save()
+      ..clipPath(_field);
+    for (final w in wear) {
+      final c = _p(w.x, w.y);
+      final rx = (_p(w.x + w.rx, w.y).dx - c.dx).abs();
+      final ry = (_p(w.x, w.y + w.ry).dy - c.dy).abs();
+      if (rx < 0.5 || ry < 0.5) continue;
+      final tone = w.sandy ? const Color(0xFF8C7A52) : const Color(0xFF5E5232);
+      canvas
+        ..save()
+        ..translate(c.dx, c.dy)
+        ..scale(1, ry / rx)
+        ..drawCircle(
+          Offset.zero,
+          rx,
+          Paint()
+            ..shader = ui.Gradient.radial(
+              Offset.zero,
+              rx,
+              [
+                tone.withValues(alpha: w.strength),
+                tone.withValues(alpha: w.strength * 0.5),
+                tone.withValues(alpha: 0),
+              ],
+              const [0, 0.55, 1],
+            ),
+        )
+        ..restore();
+    }
+    canvas.restore();
+  }
+
   void _markings(Canvas canvas) {
     const l = PitchDims.length, w = PitchDims.width;
     const box = PitchDims.boxDepth, boxH = PitchDims.boxHalfWidth;
@@ -1526,6 +1576,16 @@ class StadiumPainter extends CustomPainter {
     // across the pitch (a goal line, a box's side) is a gentle curve on
     // screen, not the chord between its ends. Drawn as a chord, the goal
     // line missed the goal mouth by a metre or two.
+    // A lesser ground's lines are marked by hand: a few centimetres off
+    // true here and there (see [PitchWear]).
+    final wob = PitchWear.lineWobble(spec.scale, built: spec.works.built);
+    final phase = _wearSeed % 1000 / 160;
+    Offset at(double x, double y) => wob == 0
+        ? _p(x, y)
+        : _p(
+            x + wob * math.sin(y * 0.41 + x * 0.07 + phase),
+            y + wob * math.sin(x * 0.37 + phase * 1.7),
+          );
     Path pts(List<(double, double)> ps, {bool close = false}) {
       final all = [...ps, if (close) ps.first];
       final out = <Offset>[];
@@ -1535,11 +1595,11 @@ class StadiumPainter extends CustomPainter {
         const steps = 16;
         for (var k = 0; k < steps; k++) {
           final t = k / steps;
-          out.add(_p(ax + (bx - ax) * t, ay + (by - ay) * t));
+          out.add(at(ax + (bx - ax) * t, ay + (by - ay) * t));
         }
       }
       final (lx, ly) = all.last;
-      out.add(_p(lx, ly));
+      out.add(at(lx, ly));
       return _poly(out, close: close);
     }
 
@@ -1548,7 +1608,7 @@ class StadiumPainter extends CustomPainter {
       const n = 48;
       for (var i = 0; i <= n; i++) {
         final a = a0 + (a1 - a0) * i / n;
-        final o = _p(cx + r * math.cos(a), cy + r * math.sin(a));
+        final o = at(cx + r * math.cos(a), cy + r * math.sin(a));
         i == 0 ? path.moveTo(o.dx, o.dy) : path.lineTo(o.dx, o.dy);
       }
       return path;
