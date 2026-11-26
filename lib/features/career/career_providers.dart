@@ -17,6 +17,7 @@ import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/repositories/player_repository.dart'
     show
         clubExportsKind,
+        clubSettledKind,
         clubStrengthKind,
         namePoolsV2Kind,
         namePoolsV3Kind,
@@ -489,6 +490,9 @@ class CareerService {
     await comp.markDrawWatched(career.id, 0, clubStrengthKind);
     // And its exports lean to their own region's leagues.
     await comp.markDrawWatched(career.id, 0, clubExportsKind);
+    // And each club stands from the season a deal is signed, from its first
+    // season on (see clubSettledKind).
+    await comp.markDrawWatched(career.id, 0, clubSettledKind);
     await comp.markDrawWatched(career.id, 0, briefRulesV2Kind);
     await comp.markDrawWatched(career.id, 0, briefRulesV3Kind);
     await comp.markDrawWatched(career.id, 0, briefRulesV4Kind);
@@ -1199,12 +1203,27 @@ class CareerService {
         );
   }
 
+  /// Stamps career [id] with the 1.1.4 club rule (`clubSettledKind`) from
+  /// the season after the one it stands in, unless it already carries it.
+  /// Every season it has shown, the current one included, keeps the clubs
+  /// it showed; from the next one on, a club stands for the whole of a
+  /// deal. Asked when a save is opened and before every step of its clock,
+  /// so no season is ever read under one rule and then the other.
+  Future<void> settleClubs(int id) async {
+    final career = await _ref.read(careerRepositoryProvider).byId(id);
+    if (career == null) return;
+    await _ref
+        .read(playerRepositoryProvider)
+        .settleClubsFrom(id, agingYears(career) + 1);
+  }
+
   /// Records that a save was just opened, so the saves list can show "last
   /// played" and put the most recent one first — and starts the clock that
   /// counts how long it is played for.
   Future<void> markPlayed(int id) async {
     final repo = _ref.read(careerRepositoryProvider);
     await repo.touch(id, DateTime.now());
+    await settleClubs(id);
     // A save from before 1.1.0's Y fix may hold a read watermark in the future
     // (stamped at a "tournament soon" post's date), which hid every friendly
     // before it from the badge. It is pulled back to the career's day here,

@@ -63,6 +63,19 @@ const clubStrengthKind = 'clubStrength1';
 /// created; a career without it keeps every club it had.
 const clubExportsKind = 'clubExports1';
 
+/// The 1.1.4 club rule: a player's club is read off the season he SIGNED
+/// his current deal (a boy's off his first season at the academy), so it
+/// stands until he next moves. Before it, the club was read off every
+/// season's rating, and a rating sitting on the edge of a band or a tier
+/// flipped him between the same two clubs window after window (A, B, A, B).
+///
+/// Unlike the cycle-0 marks above, this one's `cycle` column holds an AGING
+/// YEAR: the first season the rule applies to (0 for a career created with
+/// it). A career from before it is stamped the first time it is opened or
+/// stepped, with the season after the one it stands in, so every season it
+/// has already shown reads exactly as it did. See `ClubService.clubSeason`.
+const clubSettledKind = 'clubSettled1';
+
 /// Read access to the player reference data.
 ///
 /// `agingYears` ages the returned players by that many years (0 = the base seed
@@ -124,6 +137,11 @@ abstract interface class PlayerRepository {
     Map<int, double> youthBonusByCycle,
     Map<int, int> careerStartsByPlayer,
   });
+
+  /// Stamps [careerId] with [clubSettledKind] from aging year [fromAging],
+  /// unless it already carries the mark (a mark already there is never
+  /// moved: the seasons it settled stay settled).
+  Future<void> settleClubsFrom(int careerId, int fromAging);
 
   /// The international retirements (and comebacks) [careerId] has seen, by
   /// player id. [byNation] already leaves out whoever is retired at the year

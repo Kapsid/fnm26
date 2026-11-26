@@ -5,6 +5,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/services/club/club_history.dart';
+import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 
@@ -49,6 +50,10 @@ clubHistoryProvider = FutureProvider.autoDispose
         );
         // Null before a newgen has come through — his career simply starts later.
         if (p == null) continue;
+        // And it ends when he retires: he has no club after that, so the
+        // card stops at the last season he played rather than going on
+        // moving him without a game to his name.
+        if (PlayerLifecycle.hasRetiredAt(p.id, p.age, y)) break;
         seasons.add((
           year: CareerService.cycleStart.year + y,
           club: p.club,
@@ -58,3 +63,28 @@ clubHistoryProvider = FutureProvider.autoDispose
       }
       return ClubHistory.spells(seasons);
     });
+
+/// The calendar year a player's club career ended, or null while he is
+/// still playing ([PlayerLifecycle.hasRetiredAt], his career's end, not an
+/// international retirement: a man who has only stopped playing for his
+/// country goes on at his club). The club history card closes on it.
+final AutoDisposeFutureProviderFamily<int?, ClubHistoryArg>
+clubCareerEndProvider = FutureProvider.autoDispose.family<int?, ClubHistoryArg>(
+  (ref, arg) async {
+    await ref.watch(seedLoaderProvider).ensureSeeded();
+    final career = await ref.watch(careerRepositoryProvider).byId(arg.careerId);
+    if (career == null) return null;
+    final years = CareerService.agingYears(career);
+    final p = await ref
+        .watch(playerRepositoryProvider)
+        .byId(
+          arg.playerId,
+          agingYears: years,
+          saveSeed: career.rngSeed,
+          careerId: career.id,
+        );
+    if (p == null) return null;
+    final last = PlayerLifecycle.lastPlayingSeason(p.id, p.age, years);
+    return last == null ? null : CareerService.cycleStart.year + last + 1;
+  },
+);

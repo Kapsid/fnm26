@@ -9,7 +9,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/repositories/player_repository.dart'
-    show clubStrengthKind;
+    show clubSettledKind, clubStrengthKind;
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/domain/services/federation/sponsors.dart';
@@ -195,9 +195,13 @@ void main() {
       // Both read as careers from before club strength (no mark), by a
       // fresh app, as an upgraded build opens an old save: the pin was
       // written before club strength and pins what those careers show.
-      await (db.delete(
-        db.drawsWatched,
-      )..where((t) => t.kind.equals(clubStrengthKind))).go();
+      // Nor do they carry the 1.1.4 club rule's mark (clubSettledKind),
+      // which a career from then is stamped with only once it is opened,
+      // from the season after the one it stands in.
+      await (db.delete(db.drawsWatched)..where(
+            (t) => t.kind.isIn(const [clubStrengthKind, clubSettledKind]),
+          ))
+          .go();
       final old = greenlandContainer(db);
       addTearDown(old.dispose);
       final defaultReads = await _players(old, plain.id);

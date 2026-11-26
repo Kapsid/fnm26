@@ -184,6 +184,7 @@ void invalidatePlayerDetails(Ref ref) {
   ref
     ..invalidate(_playerDetailProvider)
     ..invalidate(clubHistoryProvider)
+    ..invalidate(clubCareerEndProvider)
     ..invalidate(playerAwardsProvider);
 }
 

@@ -88,6 +88,13 @@ abstract final class ClubService {
   /// Added clubs only relabel where a player lands: his country, and so his
   /// league's [tierOfCountry], are never changed by them. Empty, every
   /// result is exactly the default world's.
+  ///
+  /// [settledAge] and [avoidReturns] are the 1.1.4 club rule's
+  /// (`clubSettledKind`, see [clubSeason]): the age he was in the first
+  /// season the rule covers, which runs his contracts on its renewal rate
+  /// ([contractAt]); and, for a deal he signs this season, whether it
+  /// steers clear of the clubs he has left. Both off, every result is the
+  /// draw a career from before the rule has always read.
   static ClubSide clubForSeed(
     Player p,
     int saveSeed, {
@@ -98,28 +105,114 @@ abstract final class ClubService {
     bool strength = false,
     List<String> homeRegion = const [],
     bool exports = false,
+    bool avoidReturns = false,
+    int? settledAge,
   }) {
     final clubs =
         world ?? (added.isEmpty ? ClubWorld.none : ClubWorld(added: added));
+    ClubSide draw(int age, int redraw) => _draw(
+      p,
+      saveSeed,
+      redraw: redraw,
+      age: age,
+      settledAge: settledAge,
+      homeCode: homeCode,
+      homeCities: homeCities,
+      clubs: clubs,
+      strength: strength,
+      homeRegion: homeRegion,
+      exports: exports,
+    );
+    final first = draw(p.age, 0);
+    if (!avoidReturns) return first;
+    // A club he has already left is a homecoming, and a homecoming is the
+    // exception: the clubs of his last few deals are drawn again (each as
+    // he would have been drawn on signing it), and a draw that lands on one
+    // is drawn again, unless this deal is the one in [_homecomingPercent]
+    // that really does take him back.
+    final contract = contractAt(p.id, p.age, settledAge: settledAge);
+    if (contract.index == 0 || contract.joined != p.age) return first;
+    final former = <ClubSide>{};
+    var age = contract.joined - 1;
+    for (var left = _returnMemory; left > 0; left--) {
+      if (age < PlayerLifecycle.intakeAge) break;
+      final then = contractAt(p.id, age, settledAge: settledAge);
+      // A deal's club as it was drawn when he signed it; a boy's as his
+      // first season at the academy drew it.
+      final signed = age < _firstContractAge
+          ? PlayerLifecycle.intakeAge
+          : then.joined;
+      former.add(draw(signed, 0));
+      age = then.index > 0
+          ? then.joined - 1
+          : age >= _firstContractAge
+          ? _firstContractAge - 1
+          : -1;
+    }
+    if (!former.contains(first)) return first;
+    final homecoming =
+        _hash(p.id * 0x632BE5AB ^ saveSeed ^ (contract.index * 0x3C6EF372)) %
+        100;
+    if (homecoming < _homecomingPercent) return first;
+    for (var redraw = 1; redraw <= _returnRedraws; redraw++) {
+      final next = draw(p.age, redraw);
+      if (!former.contains(next)) return next;
+    }
+    return first;
+  }
+
+  /// How many of his previous deals a new one avoids going back to.
+  static const int _returnMemory = 3;
+
+  /// The share of new deals that land on a former club and are allowed to
+  /// take him back there: the homecoming, uncommon but real.
+  static const int _homecomingPercent = 15;
+
+  /// How many times a draw that lands on a former club is drawn again
+  /// before it is let stand (a small league can hold nothing else).
+  static const int _returnRedraws = 4;
+
+  /// One draw of [clubForSeed], for [p] as he was at [age] (his own age,
+  /// or the age he signed an earlier deal at: his level then is read back
+  /// off his rating now). [redraw] 0 is the draw itself, and each other
+  /// value an independent second opinion on which club of the same league.
+  static ClubSide _draw(
+    Player p,
+    int saveSeed, {
+    required int redraw,
+    required int age,
+    required int? settledAge,
+    required String homeCode,
+    required List<String> homeCities,
+    required ClubWorld clubs,
+    required bool strength,
+    required List<String> homeRegion,
+    required bool exports,
+  }) {
     // Which contract he is on. Every draw below is salted with it, so the club
     // is settled once and then STANDS until the deal runs out — see
     // [contractIndex].
-    final contract = contractAt(p.id, p.age);
+    final contract = contractAt(p.id, age, settledAge: settledAge);
     final deal = contract.index;
     // Read off the player he was when he JOINED: a move is a decision taken
     // then, and a riser who outgrows his club waits for his deal to run out
     // (a renewal keeps him where he is). His own predictable climb is taken
     // back out; for an ordinary player that is exactly the age curve, and a
     // superstar's rating IS his climb, so his level then is read off it.
-    int levelAt(int age) {
+    int levelAt(int then) {
       final signed = PlayerLifecycle.isSuperstar(p.id)
-          ? PlayerLifecycle.superstarLevel(p.id, age).toDouble()
-          : p.overall - PlayerAging.expectedGain(p.id, age, p.age);
-      return clubLevel(signed.round(), age, signedAt: age);
+          ? PlayerLifecycle.superstarLevel(p.id, then).toDouble()
+          : p.overall - PlayerAging.expectedGain(p.id, then, p.age);
+      return clubLevel(signed.round(), then, signedAt: then);
     }
 
     final level = levelAt(contract.joined);
     final h = _hash(p.id ^ (saveSeed * 0x9E3779B1) ^ (deal * 0x2545F491));
+    // Which club of the league: [h] itself, or a second opinion on it when
+    // the draw is asked again. Only the club, never the league or the
+    // country, so a redraw (and a world's added clubs, which only relabel)
+    // leaves where he plays exactly where it was.
+    final pick = redraw == 0 ? h : _hash(h ^ (redraw * 0x5851F42D));
     final band = standingBand(level);
     // The home/abroad draw runs on its OWN mix of the id. Reusing `h ~/ 7` for
     // it drew a mean percentile of 61 rather than 50 across every squad
@@ -134,12 +227,12 @@ abstract final class ClubService {
     // Home or abroad is asked again at every new deal, renewals included: a
     // player who has outgrown his own league leaves it when his deal is up.
     // Which club, at home or abroad, stays the one he joined.
-    final dealAge = p.age < _firstContractAge ? p.age : contract.since;
+    final dealAge = age < _firstContractAge ? age : contract.since;
     if (homeCode.isNotEmpty &&
         _staysHome(levelAt(dealAge), dealAge, homeCode, stayRoll)) {
       final home = strength
-          ? _strongHome(homeCode, homeCities, h, band, level, clubs)
-          : _homeClub(homeCode, homeCities, h, band, clubs);
+          ? _strongHome(homeCode, homeCities, pick, band, level, clubs)
+          : _homeClub(homeCode, homeCities, pick, band, clubs);
       if (home != null) return home;
     }
     // Where an export lands. The elite leagues buy DEPTH, not just stars: a
@@ -172,12 +265,12 @@ abstract final class ClubService {
         : pool[h % pool.length];
     if (strength) {
       return (
-        name: clubs._pick(league.country, level, h)!,
+        name: clubs._pick(league.country, level, pick)!,
         country: league.country,
       );
     }
     final list = clubs._legacyList(league);
-    final club = list[(h ~/ pool.length + band) % list.length];
+    final club = list[(pick ~/ pool.length + band) % list.length];
     return (name: club, country: league.country);
   }
 
@@ -352,7 +445,13 @@ abstract final class ClubService {
   /// early: the bid nobody expected, the fallout, the relegation. That is the
   /// unscheduled transfer, and it has to be decided INSIDE this walk rather
   /// than sprung on a single season, or the move would un-happen the next year.
-  static ClubContract contractAt(int playerId, int age) {
+  ///
+  /// [settledAge] is the age he was in the first season a career's clubs
+  /// settle (`clubSettledKind`, see [clubSeason]): a deal that runs out at
+  /// it or later is renewed [_settledRenewalPercent] of the time rather
+  /// than [_renewalPercent]. Every deal before it is decided exactly as it
+  /// was, so the seasons a career has shown keep their contracts.
+  static ClubContract contractAt(int playerId, int age, {int? settledAge}) {
     var index = 0;
     var deal = 0;
     var start = _firstContractAge;
@@ -376,8 +475,10 @@ abstract final class ClubService {
       // Most footballers sign again where they already are. Without this every
       // expiry was a transfer and a career came out as eight clubs; with it a
       // career reads as the three to six a real one does.
-      if (_hash(playerId * 0x7FEB352D ^ deal * 0x846CA68B) % 100 >=
-          _renewalPercent) {
+      final renewal = settledAge != null && start >= settledAge
+          ? _settledRenewalPercent
+          : _renewalPercent;
+      if (_hash(playerId * 0x7FEB352D ^ deal * 0x846CA68B) % 100 >= renewal) {
         index++;
         joined = start;
       }
@@ -389,6 +490,41 @@ abstract final class ClubService {
       since: age < _firstContractAge ? age : start,
       joined: joined,
     );
+  }
+
+  /// The season (an aging year) a player's club is read off, [agingYears]
+  /// into a career whose clubs settle from [settledFrom] (`clubSettledKind`).
+  ///
+  /// The draw above is salted with his contract, but its level is read off
+  /// the rating of the season it is asked in, and a rating moves a point or
+  /// so every year for reasons that have nothing to do with a transfer. Where
+  /// that point crossed a band or a tier edge, the club flipped and flipped
+  /// back with it: the same two clubs, A, B, A, B, window after window, on
+  /// one unbroken deal. A club is a decision taken when he signs, so under
+  /// the rule it is read off the season he JOINED on his current deal (a
+  /// boy's off his first season at the academy, at [PlayerLifecycle.intakeAge])
+  /// and then stands until his next move. A renewal keeps him where he is.
+  ///
+  /// Never earlier than [settledFrom]: a deal signed before the rule reads
+  /// its club off [settledFrom] itself, the first season the rule covers, so
+  /// a career that already showed its earlier seasons keeps every club it
+  /// showed. A season before [settledFrom] reads itself, as it always did.
+  static int clubSeason(
+    int playerId,
+    int age,
+    int agingYears,
+    int settledFrom,
+  ) {
+    if (agingYears < settledFrom) return agingYears;
+    final signedAge = age < _firstContractAge
+        ? PlayerLifecycle.intakeAge
+        : contractAt(
+            playerId,
+            age,
+            settledAge: age - (agingYears - settledFrom),
+          ).joined;
+    final signed = agingYears - (age - signedAge);
+    return signed > settledFrom ? signed : settledFrom;
   }
 
   /// The age a player signs his first professional deal. Below it he is at his
@@ -404,6 +540,12 @@ abstract final class ClubService {
 
   /// The chance that an expiring deal is simply signed again at the same club.
   static const int _renewalPercent = 60;
+
+  /// [_renewalPercent] under the 1.1.4 club rule ([clubSeason]). The old
+  /// rule's moves were a third noise (a rating crossing an edge and back),
+  /// and with them gone a pool moved 14% a year where a real one moves 15
+  /// to 25%: a few more deals that run out now end in a move.
+  static const int _settledRenewalPercent = 50;
 
   /// A player's standing WITHIN their league, in [standingBandWidth]-point
   /// bands.

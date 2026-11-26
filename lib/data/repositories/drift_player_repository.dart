@@ -9,6 +9,7 @@ import 'package:drift/drift.dart'
         BaseAggregate,
         BooleanExpressionOperators,
         ComparableExpr,
+        InsertMode,
         StringExpressionOperators;
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter/services.dart' show rootBundle;
@@ -292,19 +293,32 @@ class DriftPlayerRepository implements PlayerRepository {
       careerId,
       newCareer: newCareerNames,
     );
-    return [
-      for (final p in selectable)
-        _finish(
-          name(p),
-          saveSeed,
-          homeCode: home.code,
-          homeCities: home.cities,
-          homeRegion: home.region,
-          world: world,
-          strength: strength,
-          exports: exports,
-        ),
-    ];
+    Player finish(
+      Player p, {
+      int? settledAge,
+      bool avoidReturns = false,
+    }) => _finish(
+      p,
+      saveSeed,
+      settledAge: settledAge,
+      homeCode: home.code,
+      homeCities: home.cities,
+      homeRegion: home.region,
+      world: world,
+      strength: strength,
+      exports: exports,
+      avoidReturns: avoidReturns,
+    );
+    return _settledClubs(
+      [for (final p in selectable) name(p)],
+      careerId: careerId,
+      seeded: seeded,
+      agingYears: agingYears,
+      saveSeed: saveSeed,
+      youthBonusByCycle: youthBonusByCycle,
+      careerStartsByPlayer: careerStartsByPlayer,
+      finish: finish,
+    );
   }
 
   @override
@@ -399,19 +413,161 @@ class DriftPlayerRepository implements PlayerRepository {
     final home = await _home(nationId);
     final strength = await _drawsByStrength(careerId);
     final exports = await _exportsByRegion(careerId);
+    Player finish(
+      Player p, {
+      int? settledAge,
+      bool avoidReturns = false,
+    }) => _finish(
+      p,
+      saveSeed,
+      settledAge: settledAge,
+      homeCode: home.code,
+      homeCities: home.cities,
+      homeRegion: home.region,
+      world: world,
+      strength: strength,
+      exports: exports,
+      avoidReturns: avoidReturns,
+    );
+    return _settledClubs(
+      [for (final p in pool) name(p)],
+      careerId: careerId,
+      seeded: seeded,
+      agingYears: agingYears,
+      saveSeed: saveSeed,
+      youthBonusByCycle: youthBonusByCycle,
+      careerStartsByPlayer: careerStartsByPlayer,
+      finish: finish,
+    );
+  }
+
+  /// [players] (a pool read at [agingYears], named) given their clubs by
+  /// [finish]: each off his own season, or, in a career whose clubs settle
+  /// ([clubSettledKind]), off the season [ClubService.clubSeason] names,
+  /// read as he was then. A deal he signed in a season the rule covers
+  /// avoids taking him back to a club he has left
+  /// ([ClubService.clubForSeed]'s `avoidReturns`).
+  Future<List<Player>> _settledClubs(
+    List<Player> players, {
+    required int? careerId,
+    required List<Player> seeded,
+    required int agingYears,
+    required int saveSeed,
+    required Map<int, double> youthBonusByCycle,
+    required Map<int, int> careerStartsByPlayer,
+    required Player Function(Player, {int? settledAge, bool avoidReturns})
+    finish,
+  }) async {
+    final from = await _clubsSettledFrom(careerId);
+    if (from == null || agingYears < from) {
+      return [for (final p in players) finish(p)];
+    }
+    final seasons = {
+      for (final p in players)
+        p.id: ClubService.clubSeason(p.id, p.age, agingYears, from),
+    };
+    final want = {
+      for (final MapEntry(key: id, value: season) in seasons.entries)
+        if (season != agingYears) id: season,
+    };
+    final then = PlayerLifecycle.playersAt(
+      seeded,
+      want,
+      youthBonusByCycle: youthBonusByCycle,
+      careerStartsByPlayer: careerStartsByPlayer,
+      clubSeed: saveSeed,
+    );
+    for (final MapEntry(key: id, value: season) in want.entries) {
+      if (!GoldenGeneration.isGoldenId(id)) continue;
+      if (GoldenGeneration.byId(
+            id,
+            season,
+            careerStartsByPlayer: careerStartsByPlayer,
+            clubSeed: saveSeed,
+          )
+          case final g?) {
+        then[id] = g;
+      }
+    }
     return [
-      for (final p in pool)
-        _finish(
-          name(p),
-          saveSeed,
-          homeCode: home.code,
-          homeCities: home.cities,
-          homeRegion: home.region,
-          world: world,
-          strength: strength,
-          exports: exports,
-        ),
+      for (final p in players)
+        () {
+          final season = seasons[p.id]!;
+          // His age in the first season the rule covers, which settles his
+          // contracts from then on (see ClubService.contractAt).
+          final settledAge = p.age - (agingYears - from);
+          final at = season == agingYears ? p : then[p.id];
+          if (at == null) return finish(p, settledAge: settledAge);
+          final avoid = _signsIn(at.id, at.age, season, from);
+          return _withClubOf(
+            p,
+            finish(at, settledAge: settledAge, avoidReturns: avoid),
+          );
+        }(),
     ];
+  }
+
+  /// Whether player [id], [age] in [season], signed a new deal at another
+  /// club that season, in a season the club rule settles from [from] on:
+  /// the deals whose club avoids his former ones. Never the save's first
+  /// season, which every career shows before it is created.
+  static bool _signsIn(int id, int age, int season, int from) {
+    if (season < from || season == 0) return false;
+    final c = ClubService.contractAt(
+      id,
+      age,
+      settledAge: age - (season - from),
+    );
+    return c.index > 0 && c.joined == age;
+  }
+
+  /// [p] at the club [at] (the same player, read in another season) is at.
+  /// [at] is finished ([_finish]), so its world traits, which only the id
+  /// decides, are [p]'s too.
+  static Player _withClubOf(Player p, Player at) => p.copyWith(
+    club: at.club,
+    clubCountry: at.clubCountry,
+    clubStars: at.clubStars,
+    fixedTraits: at.fixedTraits,
+  );
+
+  /// The first season [careerId]'s clubs settle from ([clubSettledKind]),
+  /// once known; only a yes is kept, as the mark is stamped on an old save
+  /// the first time it is opened, after reads that found none.
+  final Map<int, int> _clubsSettled = {};
+
+  /// The first season (aging year) [careerId]'s clubs settle from, or null
+  /// for no career or one not yet stamped ([clubSettledKind]).
+  Future<int?> _clubsSettledFrom(int? careerId) async {
+    if (careerId == null) return null;
+    if (_clubsSettled[careerId] case final known?) return known;
+    final t = _db.drawsWatched;
+    final first = t.cycle.min();
+    final from =
+        await (_db.selectOnly(t)
+              ..addColumns([first])
+              ..where(
+                t.careerId.equals(careerId) & t.kind.equals(clubSettledKind),
+              ))
+            .map((r) => r.read(first))
+            .getSingle();
+    if (from != null) _clubsSettled[careerId] = from;
+    return from;
+  }
+
+  @override
+  Future<void> settleClubsFrom(int careerId, int fromAging) async {
+    if (await _clubsSettledFrom(careerId) != null) return;
+    await _db
+        .into(_db.drawsWatched)
+        .insert(
+          DrawWatchedRow(
+            careerId: careerId,
+            cycle: fromAging,
+            kind: clubSettledKind,
+          ),
+          mode: InsertMode.insertOrIgnore,
+        );
   }
 
   /// The last layer of every read: attaches the player's (cosmetic) club and
@@ -443,6 +599,8 @@ class DriftPlayerRepository implements PlayerRepository {
     bool strength = false,
     List<String> homeRegion = const [],
     bool exports = false,
+    bool avoidReturns = false,
+    int? settledAge,
   }) {
     final clubs = world?.clubWorld ?? ClubWorld.none;
     var c = ClubService.clubForSeed(
@@ -454,12 +612,18 @@ class DriftPlayerRepository implements PlayerRepository {
       strength: strength,
       homeRegion: homeRegion,
       exports: exports,
+      avoidReturns: avoidReturns,
+      settledAge: settledAge,
     );
     final dayOne = world?.packPlayer(p.id);
     if (dayOne != null &&
         dayOne.club != null &&
-        ClubService.contractAt(p.id, p.age).index ==
-            ClubService.contractAt(p.id, dayOne.age).index) {
+        ClubService.contractAt(p.id, p.age, settledAge: settledAge).index ==
+            ClubService.contractAt(
+              p.id,
+              dayOne.age,
+              settledAge: settledAge,
+            ).index) {
       c = (name: dayOne.club!, country: dayOne.clubCountry ?? '');
     }
     final stars = ClubService.starsOf(c, world: clubs);
@@ -739,9 +903,62 @@ class DriftPlayerRepository implements PlayerRepository {
       careerStartsByPlayer: careerStartsByPlayer,
       newCareerNames: newCareerNames,
     );
-    if (p == null || careerId == null) return p;
+    if (p == null) return null;
+    final settled = await _clubAtSettledSeason(
+      p,
+      agingYears: agingYears,
+      saveSeed: saveSeed,
+      careerId: careerId,
+      youthBonusByCycle: youthBonusByCycle,
+      careerStartsByPlayer: careerStartsByPlayer,
+      newCareerNames: newCareerNames,
+    );
+    if (careerId == null) return settled;
     final into = await _naturalizedInto(careerId, id);
-    return into == null ? p : p.copyWith(nationId: into);
+    return into == null ? settled : settled.copyWith(nationId: into);
+  }
+
+  /// [p] (read by identity at [agingYears]) at the club of the season his
+  /// club is read off: the last season he played once he has retired
+  /// ([PlayerLifecycle.lastPlayingSeason]), so a retired man's club career
+  /// ends where he finished it; and, in a career whose clubs settle
+  /// ([clubSettledKind]), the season he signed his deal
+  /// ([ClubService.clubSeason]), exactly as the pools read it.
+  Future<Player> _clubAtSettledSeason(
+    Player p, {
+    required int agingYears,
+    required int saveSeed,
+    required int? careerId,
+    required Map<int, double> youthBonusByCycle,
+    required Map<int, int> careerStartsByPlayer,
+    required bool newCareerNames,
+  }) async {
+    var season =
+        PlayerLifecycle.lastPlayingSeason(p.id, p.age, agingYears) ??
+        agingYears;
+    final from = await _clubsSettledFrom(careerId);
+    var avoid = false;
+    if (from != null) {
+      season = ClubService.clubSeason(
+        p.id,
+        p.age - (agingYears - season),
+        season,
+        from,
+      );
+      avoid = _signsIn(p.id, p.age - (agingYears - season), season, from);
+    }
+    if (season == agingYears && !avoid) return p;
+    final then = await _byIdAsBorn(
+      p.id,
+      agingYears: season,
+      saveSeed: saveSeed,
+      careerId: careerId,
+      youthBonusByCycle: youthBonusByCycle,
+      careerStartsByPlayer: careerStartsByPlayer,
+      newCareerNames: newCareerNames,
+      avoidReturns: avoid,
+    );
+    return then == null ? p : _withClubOf(p, then);
   }
 
   /// The nation [playerId] switched to in [careerId], or null if he never
@@ -796,6 +1013,7 @@ class DriftPlayerRepository implements PlayerRepository {
     required Map<int, double> youthBonusByCycle,
     required Map<int, int> careerStartsByPlayer,
     bool newCareerNames = false,
+    bool avoidReturns = false,
   }) async {
     final world = await _worldFor(careerId);
     final strength = await _drawsByStrength(
@@ -806,6 +1024,11 @@ class DriftPlayerRepository implements PlayerRepository {
       careerId,
       newCareer: newCareerNames,
     );
+    // His age in the first season the 1.1.4 club rule covers, once this
+    // season is one of them (see ClubService.contractAt).
+    final from = await _clubsSettledFrom(careerId);
+    int? settledAge(Player p) =>
+        from == null || agingYears < from ? null : p.age - (agingYears - from);
     if (GoldenGeneration.isGoldenId(id)) {
       // A cohort member is resolved from his id alone, like a newgen: only a
       // marked career ever fields him, so no marker is needed to name him.
@@ -828,12 +1051,14 @@ class DriftPlayerRepository implements PlayerRepository {
           newCareerNames: newCareerNames,
         ))(p),
         saveSeed,
+        settledAge: settledAge(p),
         homeCode: home.code,
         homeCities: home.cities,
         homeRegion: home.region,
         world: world,
         strength: strength,
         exports: exports,
+        avoidReturns: avoidReturns,
       );
     }
     if (PlayerLifecycle.isNewgenId(id)) {
@@ -859,12 +1084,14 @@ class DriftPlayerRepository implements PlayerRepository {
           newCareerNames: newCareerNames,
         ))(p),
         saveSeed,
+        settledAge: settledAge(p),
         homeCode: home.code,
         homeCities: home.cities,
         homeRegion: home.region,
         world: world,
         strength: strength,
         exports: exports,
+        avoidReturns: avoidReturns,
       );
     }
     // A career on a custom world reads its core players from the world: an
@@ -915,12 +1142,14 @@ class DriftPlayerRepository implements PlayerRepository {
         newCareerNames: newCareerNames,
       ))(aged),
       saveSeed,
+      settledAge: settledAge(aged),
       homeCode: home.code,
       homeCities: home.cities,
       homeRegion: home.region,
       world: world,
       strength: strength,
       exports: exports,
+      avoidReturns: avoidReturns,
     );
   }
 

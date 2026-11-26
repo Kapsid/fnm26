@@ -25,6 +25,9 @@ class ClubHistoryCard extends ConsumerWidget {
     super.key,
   });
 
+  /// The closing row of a retired player's card.
+  static const Key retiredKey = Key('clubHistory.retired');
+
   final int careerId;
   final int playerId;
 
@@ -49,12 +52,52 @@ class ClubHistoryCard extends ConsumerWidget {
     // simply absent, with nothing to say it was absent on purpose. A one-club
     // career is a career, and saying so is the answer to "has he ever moved?".
     if (spells.isEmpty) return const SizedBox.shrink();
+    // The year his club career ended, once he has retired: the card closes
+    // on it rather than leaving his last club open.
+    final ended = ref
+        .watch(
+          clubCareerEndProvider((careerId: careerId, playerId: playerId)),
+        )
+        .valueOrNull;
 
     return ProfileBlock(
       title: l.playerClubHistory,
       padding: EdgeInsets.zero,
       child: Column(
         children: [
+          if (ended != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.sm,
+              ),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 74,
+                    child: Text(
+                      '$ended',
+                      style: AppTypography.labelSmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                  const _MoveMark(isMove: false),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      l.squadDevRetired,
+                      key: ClubHistoryCard.retiredKey,
+                      style: AppTypography.labelSmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           // Newest first — where he is now, then how he got here.
           for (var i = spells.length - 1; i >= 0; i--)
             Padding(
@@ -67,7 +110,7 @@ class ClubHistoryCard extends ConsumerWidget {
                   SizedBox(
                     width: 74,
                     child: Text(
-                      spells.length == 1
+                      spells.length == 1 && ended == null
                           // He is still there, so the span is open.
                           ? '${spells[i].fromYear}–'
                           : spells[i].fromYear == spells[i].toYear
