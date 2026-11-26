@@ -21,6 +21,7 @@ import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/features/match/pitch/actors_painter.dart';
 import 'package:fnm/features/match/pitch/confetti_painter.dart';
 import 'package:fnm/features/match/pitch/ground_live.dart';
+import 'package:fnm/features/match/pitch/net_ripple.dart';
 import 'package:fnm/features/match/pitch/pitch_clock.dart';
 import 'package:fnm/features/match/pitch/pitch_projection.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
@@ -181,7 +182,9 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
       if (t > 14) _confettiTicker.stop();
     });
     _penalty = _penaltyFor(widget.script);
-    _live.setBoard(widget.board, at: _seconds);
+    _live
+      ..setBoard(widget.board, at: _seconds)
+      ..nets = NetRipples.of(widget.script);
     widget.clock.addListener(_onClock);
     _onClock();
   }
@@ -211,6 +214,7 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
       widget.clock.addListener(_onClock);
     }
     if (!identical(old.script, widget.script)) {
+      _live.nets = NetRipples.of(widget.script);
       _penalty?.dispose();
       _penalty = _penaltyFor(widget.script);
       _penaltyPainter = null;
@@ -347,6 +351,9 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
       looks.add(mode, img);
       if (first) {
         first = false;
+        _live
+          ..projection = projection
+          ..goalStyle = want.stadium.spec.goalStyle;
         _live.anchors = StadiumPainter(
           want.stadium.spec,
           projection,

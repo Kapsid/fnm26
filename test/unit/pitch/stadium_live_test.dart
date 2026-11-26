@@ -10,7 +10,9 @@ import 'package:fnm/domain/services/match/stadium/ground_character.dart';
 import 'package:fnm/domain/services/match/stadium/ground_sponsors.dart';
 import 'package:fnm/domain/services/match/stadium/kick_off.dart';
 import 'package:fnm/domain/services/match/stadium/scoreboard.dart';
+import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/features/match/pitch/ground_live.dart';
+import 'package:fnm/features/match/pitch/net_ripple.dart';
 import 'package:fnm/features/match/pitch/pitch_match_view.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/features/match/pitch/stadium_painter.dart';
@@ -257,6 +259,58 @@ void main() {
       expect(live.flashColours, isNotNull);
       await _scene(tester, 'sponsors_led_goal_flash', stadium, live: live);
       expect(live.anchors!.led, isNotEmpty);
+      live.dispose();
+    });
+  });
+
+  group('nets', () {
+    test('every goal strikes the back netting once, in time order', () {
+      for (final seed in [3, 5, 7, 11]) {
+        final m = pitchMatch(seed: seed);
+        final hits = NetRipples.of(m.script);
+        final goals = m.script.result.events
+            .where((e) => e.type == MatchEventType.goal)
+            .length;
+        expect(
+          hits.where((h) => !h.side).length,
+          goals,
+          reason: 'seed $seed',
+        );
+        for (var i = 1; i < hits.length; i++) {
+          expect(hits[i].t, greaterThanOrEqualTo(hits[i - 1].t));
+        }
+      }
+    });
+
+    test('a struck net bulges out, swings back and settles', () {
+      expect(NetRipples.envelope(0), 0);
+      expect(NetRipples.envelope(0.15), greaterThan(0.5));
+      expect(NetRipples.envelope(0.6), lessThan(0));
+      expect(NetRipples.envelope(NetRipples.duration), 0);
+      const hit = NetHit(t: 10, left: true, y: 34, z: 1, side: false);
+      expect(NetRipples.activeAt(const [hit], 9.9), isNull);
+      expect(NetRipples.activeAt(const [hit], 10.5), hit);
+      expect(NetRipples.activeAt(const [hit], 12.3), isNull);
+    });
+
+    testWidgets('a bulging net and a rippling side net paint', (
+      tester,
+    ) async {
+      final m = pitchMatch(seed: 5);
+      final stadium = pitchStadiumFor(m, capacity: 42000);
+      final live = GroundLive(kits: stadium.kits)
+        ..projection = PitchMatchView.projectionFor(const Size(1024, 680))
+        ..goalStyle = stadium.spec.goalStyle
+        ..nets = const [
+          NetHit(t: 10, left: true, y: 33, z: 1.2, side: false),
+          NetHit(t: 20, left: false, y: 37.66, z: 0.8, side: true),
+        ]
+        ..tick(10.14);
+      expect(live.net, isNotNull);
+      await _scene(tester, 'net_bulge', stadium, live: live);
+      live.tick(20.12);
+      expect(live.net!.side, isTrue);
+      await _scene(tester, 'net_side_ripple', stadium, live: live);
       live.dispose();
     });
   });

@@ -7,7 +7,10 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fnm/core/theme/kit_colors.dart';
+import 'package:fnm/domain/services/match/stadium/ground_look.dart';
 import 'package:fnm/domain/services/match/stadium/scoreboard.dart';
+import 'package:fnm/features/match/pitch/net_ripple.dart';
+import 'package:fnm/features/match/pitch/pitch_projection.dart';
 import 'package:fnm/features/match/pitch/stadium_painter.dart';
 
 /// What the ground's scoreboard shows: the live score and clock exactly as
@@ -110,6 +113,17 @@ class GroundLive extends ChangeNotifier {
     _refresh(force: true);
   }
 
+  /// The projection the ground is drawn through, and its goals' style:
+  /// for the nets. Set with [anchors].
+  PitchProjection? projection;
+  GoalStyle goalStyle = GoalStyle.sloped;
+
+  /// Every net the picture's ball strikes (see [NetRipples.of]).
+  List<NetHit> nets = const [];
+
+  /// The net moving now, if any.
+  NetHit? get net => NetRipples.activeAt(nets, t);
+
   PitchScoreboard? get board => _board;
   PitchScoreboard? _board;
 
@@ -165,6 +179,8 @@ class GroundLive extends ChangeNotifier {
       (t / ledStep).floor(),
       since != null && since < flashSeconds ? (since * 4).floor() : -1,
       since != null && since < scorerSeconds,
+      // A moving net is drawn every frame.
+      net != null ? t : null,
     );
     if (!force && key == _key) return;
     _key = key;
@@ -191,6 +207,11 @@ class LiveGroundPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final a = live.anchors;
     if (a == null) return;
+    final net = live.net;
+    final projection = live.projection;
+    if (net != null && projection != null) {
+      NetRipples.paint(canvas, projection, live.goalStyle, net, live.t);
+    }
     LedBoards.paint(canvas, a.led, live, _textOf);
     final b = live.board;
     if (b != null) {
