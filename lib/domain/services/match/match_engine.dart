@@ -16,6 +16,7 @@ import 'package:fnm/domain/services/match/match_conditions.dart';
 import 'package:fnm/domain/services/match/match_moments.dart';
 import 'package:fnm/domain/services/match/match_simulator.dart';
 import 'package:fnm/domain/services/match/penalty_takers.dart';
+import 'package:fnm/domain/services/match/role_tilt.dart';
 import 'package:fnm/domain/services/match/shape_profile.dart';
 import 'package:fnm/domain/services/match/weather_play.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
@@ -41,9 +42,22 @@ class MatchTeam {
     this.switches = SlotSwitches.none,
     this.throwInStyle = ThrowInStyle.neutral,
     this.throwInTakerId,
+    this.slotRoles = SlotRoles.none,
+    this.arrows = SlotArrows.none,
   });
 
   final int nationId;
+
+  /// Each slot's role, keyed by the index in [xi] (which is the slot, the XI
+  /// being in slot order). The manager's side only; none for every AI side.
+  /// A role the slot's place does not offer is ignored. With none set, the
+  /// engine reads [roles] alone, exactly as before slot roles existed; see
+  /// [RoleTilt].
+  final SlotRoles slotRoles;
+
+  /// Each slot's movement arrow, keyed like [slotRoles]; the full-backs' are
+  /// [fullBacks]. None for every AI side.
+  final SlotArrows arrows;
 
   /// How the side takes its throw-ins (see [ThrowInStyle],
   /// [MatchEngine.throwInLift] and [MatchEngine.longThrowPerMinute]). The
@@ -150,9 +164,19 @@ class TacticalChange {
     this.fullBacks,
     this.switches = SlotSwitches.none,
     this.throwIn,
+    this.roles,
+    this.arrows,
   });
 
   final int teamNationId;
+
+  /// Each man in [xi]'s slot role from this minute on, one per entry, or
+  /// null to keep every man who stays on his role (and give a newcomer none).
+  final List<PlayerRole>? roles;
+
+  /// Each man in [xi]'s movement arrow from this minute on (a full-back's
+  /// is [fullBacks]), one per entry, or null as for [roles].
+  final List<MoveArrow>? arrows;
 
   /// The throw-in style and taker from this minute on, or null to keep the
   /// side's current ones. A null taker inside hands the throws back to the
@@ -514,7 +538,45 @@ class _Live {
       throwInStyle = team.throwInStyle,
       throwInTakerId = team.throwInTakerId,
       penaltyTakerId = team.penaltyTakerId,
-      deadBallTakerId = team.deadBallTakerId;
+      deadBallTakerId = team.deadBallTakerId {
+    final places = team.positions;
+    for (var i = 0; i < xi.length; i++) {
+      final place = i < places.length ? places[i] : xi[i].position;
+      roleList.add(team.slotRoles.at(i, place));
+      arrowList.add(team.arrows.at(i, place));
+    }
+    refreshPlan();
+  }
+
+  /// Each man on the pitch's slot role and arrow, parallel to [xi] and
+  /// [slots]: a substitute takes over the slot's, a sending-off removes the
+  /// entry with the man. All [PlayerRole.none] and [MoveArrow.none] for a
+  /// side without any (every AI side).
+  final List<PlayerRole> roleList = [];
+  final List<MoveArrow> arrowList = [];
+
+  /// Whether any slot role or arrow is set right now; while it is not, the
+  /// engine reads nothing new at all (see [RoleTilt]).
+  bool hasPlan = false;
+
+  /// Re-reads [hasPlan] after the lists change.
+  void refreshPlan() {
+    hasPlan =
+        roleList.any((r) => r != PlayerRole.none) ||
+        arrowList.any((a) => a != MoveArrow.none);
+  }
+
+  /// The side's role-and-arrow tilt this minute (neutral without a plan).
+  TeamTilt get tilt => hasPlan
+      ? RoleTilt.of(xi: xi, slots: slots, roles: roleList, arrows: arrowList)
+      : TeamTilt.neutral;
+
+  /// The arrow the man [id] carries, or [MoveArrow.none].
+  MoveArrow arrowOf(int id) {
+    if (!hasPlan) return MoveArrow.none;
+    final i = xi.indexWhere((p) => p.id == id);
+    return i >= 0 && i < arrowList.length ? arrowList[i] : MoveArrow.none;
+  }
 
   final MatchTeam team;
 
@@ -655,9 +717,17 @@ class _Live {
 
   double energyOf(int id) => energy[id] ?? 100.0;
 
-  /// The tactical role assigned to [id], or [PlayerRole.none]. Fixed for the
-  /// match (roles are set before kick-off and carried by player id).
-  PlayerRole roleOf(int id) => team.roles[id] ?? PlayerRole.none;
+  /// The tactical role [id] plays: his slot's role when it has one, else the
+  /// one the legacy per-player store gave him, else [PlayerRole.none].
+  PlayerRole roleOf(int id) {
+    if (hasPlan) {
+      final i = xi.indexWhere((p) => p.id == id);
+      if (i >= 0 && i < roleList.length && roleList[i] != PlayerRole.none) {
+        return roleList[i];
+      }
+    }
+    return team.roles[id] ?? PlayerRole.none;
+  }
 
   int get nationId => team.nationId;
 }
@@ -1546,7 +1616,17 @@ class MatchEngine {
       final homeControl = _control(liveHome);
       final awayControl = _control(liveAway);
       final controlTotal = homeControl + awayControl;
-      final homeShare = controlTotal <= 0 ? 0.5 : homeControl / controlTotal;
+      var homeShare = controlTotal <= 0 ? 0.5 : homeControl / controlTotal;
+
+      // The slot roles and movement arrows (see [RoleTilt]): read only when
+      // either side has one set, so a match without any draws exactly the
+      // numbers it always drew.
+      final rolesInPlay = liveHome.hasPlan || liveAway.hasPlan;
+      final homeTilt = liveHome.tilt;
+      final awayTilt = liveAway.tilt;
+      if (rolesInPlay) {
+        homeShare = RoleTilt.shiftedShare(homeShare, homeTilt, awayTilt);
+      }
 
       // How open the game is this minute, and how committed each side is: one
       // reading for both chance rolls (neither depends on the score).
@@ -1555,14 +1635,18 @@ class MatchEngine {
       final open = opennessOf(homeCommit, awayCommit);
       // The full-backs' arrows: each side's chance rate answers its own
       // arrows (attack) and the other side's (exposure).
-      final homeFlanks = fullBackLift(
+      var homeFlanks = fullBackLift(
         own: liveHome.fullBackNet,
         opponent: liveAway.fullBackNet,
       );
-      final awayFlanks = fullBackLift(
+      var awayFlanks = fullBackLift(
         own: liveAway.fullBackNet,
         opponent: liveHome.fullBackNet,
       );
+      if (rolesInPlay) {
+        homeFlanks *= RoleTilt.chanceLift(homeTilt, awayTilt);
+        awayFlanks *= RoleTilt.chanceLift(awayTilt, homeTilt);
+      }
       // The throw-in styles: exactly 1.0 when both are neutral.
       final homeThrows = throwInLift(
         own: liveHome.throwInStyle,
@@ -2223,11 +2307,34 @@ class MatchEngine {
     // off so a change can never field an ineligible player.
     final newXi = <Player>[];
     final newSlots = <PlayerPosition>[];
+    final newRoles = <PlayerRole>[];
+    final newArrows = <MoveArrow>[];
+    final roleBefore = {
+      for (var i = 0; i < live.xi.length && i < live.roleList.length; i++)
+        live.xi[i].id: live.roleList[i],
+    };
+    final arrowBefore = {
+      for (var i = 0; i < live.xi.length && i < live.arrowList.length; i++)
+        live.xi[i].id: live.arrowList[i],
+    };
     for (var i = 0; i < c.xi.length; i++) {
       final p = c.xi[i];
       if (live.sentOff.contains(p.id)) continue;
+      final place = c.slotOf(i);
       newXi.add(p);
-      newSlots.add(c.slotOf(i));
+      newSlots.add(place);
+      final role = c.roles != null
+          ? (i < c.roles!.length ? c.roles![i] : PlayerRole.none)
+          : (roleBefore[p.id] ?? PlayerRole.none);
+      final arrow = c.arrows != null
+          ? (i < c.arrows!.length ? c.arrows![i] : MoveArrow.none)
+          : (arrowBefore[p.id] ?? MoveArrow.none);
+      newRoles.add(role.availableAt(place) ? role : PlayerRole.none);
+      newArrows.add(
+        arrow.availableAt(place) && FullBackPushes.sideOf(place) == null
+            ? arrow
+            : MoveArrow.none,
+      );
     }
 
     // Timeline: pair each incoming player with a player who dropped off.
@@ -2258,6 +2365,13 @@ class MatchEngine {
       // moment the manager touched anything.
       ..shape = ShapeProfile.of(c.switches.apply(c.formation))
       ..instructions = c.instructions;
+    live.roleList
+      ..clear()
+      ..addAll(newRoles);
+    live.arrowList
+      ..clear()
+      ..addAll(newArrows);
+    live.refreshPlan();
     if (c.fullBacks case final f?) live.fullBacks = f;
     if (c.throwIn case final t?) {
       live
@@ -2380,6 +2494,9 @@ class MatchEngine {
     if (idx == -1) return;
     live.xi.removeAt(idx);
     if (idx < live.slots.length) live.slots.removeAt(idx);
+    if (idx < live.roleList.length) live.roleList.removeAt(idx);
+    if (idx < live.arrowList.length) live.arrowList.removeAt(idx);
+    live.refreshPlan();
   }
 
   /// A side's collective fatigue as a rate multiplier: 1.0 with fresh legs,
@@ -2773,8 +2890,12 @@ class MatchEngine {
         PositionCategory.defender => 3.0,
         PositionCategory.goalkeeper => 0.2,
       };
-      return (p.attributes.technical + positional) *
+      final w =
+          (p.attributes.technical + positional) *
           team.roleOf(p.id).assistWeight;
+      return team.hasPlan
+          ? w * RoleTilt.arrowAssistWeight(team.arrowOf(p.id))
+          : w;
     }
 
     final total = candidates.fold<double>(0, (sum, p) => sum + weight(p));
@@ -3237,9 +3358,13 @@ class MatchEngine {
         PositionCategory.defender => 0.55,
         PositionCategory.goalkeeper => 0.0,
       };
-      return (p.attributes.technical + 20) *
+      final w =
+          (p.attributes.technical + 20) *
           positional *
           team.roleOf(p.id).scorerWeight;
+      return team.hasPlan
+          ? w * RoleTilt.arrowScorerWeight(team.arrowOf(p.id))
+          : w;
     }
 
     final total = candidates.fold<double>(0, (sum, p) => sum + weight(p));
@@ -4211,7 +4336,8 @@ class MatchEngine {
     // (`tactics_tradeoffs_test.dart`).
     final workload =
         (1 + (i.tempo - 50) / 250 + (i.pressing - 50) / 200) * shortHanded;
-    for (final p in t.xi) {
+    for (var k = 0; k < t.xi.length; k++) {
+      final p = t.xi[k];
       if (t.sentOff.contains(p.id)) continue;
       final stamina = p.attributes.stamina.clamp(20, 99);
       final base = p.position.category == PositionCategory.goalkeeper
@@ -4230,7 +4356,17 @@ class MatchEngine {
           ageFactor *
           ironMan *
           t.conditionsDrain;
-      t.energy[p.id] = (t.energyOf(p.id) - drain).clamp(0.0, 100.0);
+      // A wing-back's or pressing forward's extra running (see [RoleTilt]);
+      // read only when the side has a role or arrow set at all.
+      final extra = t.hasPlan
+          ? RoleTilt.drainOf(
+              k < t.roleList.length ? t.roleList[k] : PlayerRole.none,
+              k < t.arrowList.length ? t.arrowList[k] : MoveArrow.none,
+              k < t.slots.length ? t.slots[k] : p.position,
+            )
+          : 0.0;
+      final spent = extra == 0 ? drain : drain * (1 + extra);
+      t.energy[p.id] = (t.energyOf(p.id) - spent).clamp(0.0, 100.0);
     }
   }
 }
