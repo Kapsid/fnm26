@@ -17,6 +17,10 @@ import 'package:fnm/shared/widgets/flag_disc.dart';
 /// Keys the tests find the tiles by.
 abstract final class CallUpMatchTileKeys {
   static Key tile(int fixtureId) => Key('callUp.matchTile.$fixtureId');
+
+  /// The blank disc of a match whose draw is still to be watched.
+  static Key undrawn(int fixtureId) =>
+      Key('callUp.matchTile.undrawn.$fixtureId');
 }
 
 /// The matches a call-up covers, as small tiles side by side.
@@ -36,12 +40,18 @@ class CallUpMatchTiles extends StatelessWidget {
     required this.matches,
     required this.nations,
     required this.playerNationId,
+    this.revealed,
     super.key,
   });
 
   final List<Fixture> matches;
   final Map<int, Nation> nations;
   final int playerNationId;
+
+  /// Whether a match's opponent may be named: one whose draw the manager has
+  /// not watched yet reads "Draw to come" beside a blank disc, as on the
+  /// schedule, or the call-up would give the draw away. Null names all.
+  final bool Function(Fixture)? revealed;
 
   /// The narrowest a tile is allowed before the row takes one fewer.
   static const double _minTileWidth = 96;
@@ -87,6 +97,7 @@ class CallUpMatchTiles extends StatelessWidget {
                               nations: nations,
                               playerNationId: playerNationId,
                               conf: conf,
+                              revealed: revealed?.call(rows[r][i]) ?? true,
                             )
                           : const SizedBox.shrink(),
                     ),
@@ -107,12 +118,16 @@ class _MatchTile extends StatelessWidget {
     required this.nations,
     required this.playerNationId,
     required this.conf,
+    required this.revealed,
   });
 
   final Fixture fixture;
   final Map<int, Nation> nations;
   final int playerNationId;
   final Confederation conf;
+
+  /// Whether the opponent may be named (see [CallUpMatchTiles.revealed]).
+  final bool revealed;
 
   /// The tag is set in the sans face, not the monospaced label face: a third
   /// of a phone is too narrow for "10. ford." at the largest text size in a
@@ -180,14 +195,28 @@ class _MatchTile extends StatelessWidget {
           const SizedBox(height: 3),
           Row(
             children: [
-              FlagDisc(opp?.code ?? '??', size: 16),
+              if (revealed)
+                FlagDisc(opp?.code ?? '??', size: 16)
+              else
+                Container(
+                  key: CallUpMatchTileKeys.undrawn(f.id),
+                  width: 16,
+                  height: 16,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.surfaceContainerHighest,
+                    border: Border.all(color: AppColors.outlineVariant),
+                  ),
+                ),
               const SizedBox(width: AppSpacing.xs),
               Flexible(
                 child: Text(
-                  opp?.shortCode ?? '??',
-                  style: AppTypography.labelMedium.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+                  revealed ? opp?.shortCode ?? '??' : l.topBarDrawPending,
+                  style: revealed
+                      ? AppTypography.labelMedium.copyWith(
+                          fontWeight: FontWeight.w700,
+                        )
+                      : meta,
                 ),
               ),
             ],

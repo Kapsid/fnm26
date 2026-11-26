@@ -280,7 +280,11 @@ class _CallUpTabletLayout extends StatelessWidget {
             ),
           ),
           if (window != null && window!.matches.isNotEmpty)
-            _CoverageBanner(window: window!, locked: locked),
+            _CoverageBanner(
+              window: window!,
+              locked: locked,
+              watchedDraws: state._watchedDraws,
+            ),
           if (!locked)
             Padding(
               padding: const EdgeInsets.all(AppSpacing.sm),

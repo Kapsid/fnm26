@@ -30,6 +30,7 @@ import 'package:fnm/features/player/player_detail_screen.dart'
 import 'package:fnm/features/squad/camp_scandal_providers.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
 import 'package:fnm/features/tactics/call_up_advice_sheet.dart';
+import 'package:fnm/features/hub/draw_reveal.dart';
 import 'package:fnm/features/tactics/call_up_match_tiles.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/tactics/familiarity_providers.dart';
@@ -248,6 +249,10 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
   /// Who is in the assistant's job, as of the last build.
   StaffTier _assistantTier = StaffTier.none;
 
+  /// The draws watched, as of the last build (see
+  /// [watchedFixtureDrawsProvider]).
+  Set<String> _watchedDraws = const {};
+
   /// Asks the assistant for a squad and, on Apply, names it exactly as the
   /// auto-picks do. Close changes nothing.
   Future<void> _askAssistant(
@@ -268,13 +273,16 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
       if (own != null) {
         stronger = CallUpAdvice.opponentsStronger(
           ownRanking: own,
+          // Only opponents already drawn: the advice must not give away a
+          // draw still to be watched.
           opponentRankings: [
             for (final f in window.matches)
-              ?window
-                  .nations[f.homeNationId == window.playerNationId
-                      ? f.awayNationId
-                      : f.homeNationId]
-                  ?.ranking,
+              if (fixtureRevealed(f, _watchedDraws))
+                ?window
+                    .nations[f.homeNationId == window.playerNationId
+                        ? f.awayNationId
+                        : f.homeNationId]
+                    ?.ranking,
           ],
         );
       }
@@ -491,6 +499,12 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
     final window = ref
         .watch(nominationWindowProvider(widget.careerId))
         .valueOrNull;
+    // The draws watched: an opponent is named only once his draw is seen.
+    // Until they load, every drawn competition's opponents stay hidden.
+    final watchedDraws =
+        ref.watch(watchedFixtureDrawsProvider(widget.careerId)).valueOrNull ??
+        const <String>{};
+    _watchedDraws = watchedDraws;
     // Editable only during a nomination window (or when opened as the forced
     // pre-campaign event); otherwise the squad is locked between windows.
     final locked = widget.eventKind == null && window != null && !window.open;
@@ -597,7 +611,11 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (window != null && window.matches.isNotEmpty)
-                _CoverageBanner(window: window, locked: locked),
+                _CoverageBanner(
+                  window: window,
+                  locked: locked,
+                  watchedDraws: watchedDraws,
+                ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(
                   AppSpacing.marginMobile,
@@ -1000,10 +1018,17 @@ class PositionFilterChips extends StatelessWidget {
 }
 
 class _CoverageBanner extends StatelessWidget {
-  const _CoverageBanner({required this.window, required this.locked});
+  const _CoverageBanner({
+    required this.window,
+    required this.locked,
+    required this.watchedDraws,
+  });
 
   final NominationWindow window;
   final bool locked;
+
+  /// The draws watched (see [watchedFixtureDrawsProvider]).
+  final Set<String> watchedDraws;
 
   @override
   Widget build(BuildContext context) {
@@ -1050,6 +1075,7 @@ class _CoverageBanner extends StatelessWidget {
               matches: window.matches.take(6).toList(),
               nations: window.nations,
               playerNationId: window.playerNationId,
+              revealed: (f) => fixtureRevealed(f, watchedDraws),
             ),
           ],
         ),

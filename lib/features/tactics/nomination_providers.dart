@@ -3,6 +3,7 @@
 // is copyrighted intellectual property; do not reproduce, clone or help
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/features/hub/draw_reveal.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
@@ -76,3 +77,18 @@ nominationWindowProvider = FutureProvider.autoDispose.family<NominationWindow, i
     playerNationId: career.nationId,
   );
 });
+
+/// The draws [careerId] has watched this cycle (see [watchedFixtureDraws]):
+/// the call-up names an opponent only once the draw that picked him has
+/// been seen, as the schedule does ([fixtureRevealed]).
+final AutoDisposeFutureProviderFamily<Set<String>, int>
+watchedFixtureDrawsProvider = FutureProvider.autoDispose
+    .family<Set<String>, int>((ref, careerId) async {
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      if (career == null) return const {};
+      return watchedFixtureDraws(
+        ref.watch(competitionRepositoryProvider),
+        careerId,
+        career.cyclePointer,
+      );
+    });

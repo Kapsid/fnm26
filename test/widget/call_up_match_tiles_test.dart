@@ -7,6 +7,8 @@ import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/features/hub/draw_reveal.dart';
+import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/tactics/call_up_match_tiles.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/app_card.dart';
@@ -56,6 +58,7 @@ void main() {
     required double width,
     String code = 'en',
     double textScale = 1,
+    bool Function(Fixture)? revealed,
   }) async {
     tester.view
       ..devicePixelRatio = 1
@@ -83,6 +86,7 @@ void main() {
                 matches: matches,
                 nations: nations,
                 playerNationId: me,
+                revealed: revealed,
               ),
             ),
           ),
@@ -253,4 +257,44 @@ void main() {
       expectTilesWhole(tester, '$code at 320 x$kMaxAppTextScale');
     });
   }
+
+  // "Opening the squad before the draw spoils the matches" (owner, 1.1.4):
+  // a match whose draw is unwatched names no opponent, as on the schedule.
+  testWidgets('an undrawn opponent reads "Draw to come", a friendly is named', (
+    tester,
+  ) async {
+    // Only the continental qualifier (CQ) is still to be drawn.
+    final undrawn = matches.firstWhere((f) => f.round == 'CQ');
+    await pumpTiles(
+      tester,
+      width: 360,
+      revealed: (f) => fixtureRevealed(f, {worldCupQualDrawKind}),
+    );
+    expect(find.byKey(CallUpMatchTileKeys.undrawn(undrawn.id)), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(CallUpMatchTileKeys.tile(undrawn.id)),
+        matching: find.text('Draw to come'),
+      ),
+      findsOneWidget,
+    );
+    final opp =
+        nations[undrawn.homeNationId == me
+            ? undrawn.awayNationId
+            : undrawn.homeNationId]!;
+    expect(
+      find.descendant(
+        of: find.byKey(CallUpMatchTileKeys.tile(undrawn.id)),
+        matching: find.text(opp.shortCode),
+      ),
+      findsNothing,
+    );
+    // The friendly is never hidden.
+    final friendly = matches.firstWhere((f) => f.round == 'FRIENDLY');
+    expect(
+      find.byKey(CallUpMatchTileKeys.undrawn(friendly.id)),
+      findsNothing,
+    );
+    expectTilesWhole(tester, 'undrawn');
+  });
 }
