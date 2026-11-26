@@ -28,6 +28,7 @@ import 'package:fnm/features/tactics/tactic_preset_tile.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/adaptive_sheet.dart';
+import 'package:fnm/shared/widgets/rating_badge.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
 /// The tactical setup a manager confirms from the in-match editor: the shape,
@@ -93,6 +94,7 @@ Future<InMatchTacticsResult?> showInMatchTactics(
   Set<int> sentOffIds = const {},
   Map<int, MatchCard> cardsByPlayer = const {},
   Map<int, int> energyByPlayer = const {},
+  Map<int, double> ratingByPlayer = const {},
   Map<int, int> cameOnAt = const {},
   Map<int, int> wentOffAt = const {},
   List<Color>? teamColors,
@@ -118,6 +120,7 @@ Future<InMatchTacticsResult?> showInMatchTactics(
         sentOffIds: sentOffIds,
         cardsByPlayer: cardsByPlayer,
         energyByPlayer: energyByPlayer,
+        ratingByPlayer: ratingByPlayer,
         cameOnAt: cameOnAt,
         wentOffAt: wentOffAt,
         teamColors: teamColors,
@@ -145,6 +148,7 @@ class _InMatchTacticsEditor extends StatefulWidget {
     this.sentOffIds = const {},
     this.cardsByPlayer = const {},
     this.energyByPlayer = const {},
+    this.ratingByPlayer = const {},
     this.cameOnAt = const {},
     this.wentOffAt = const {},
     this.teamColors,
@@ -171,6 +175,11 @@ class _InMatchTacticsEditor extends StatefulWidget {
   /// Live remaining energy (0–100) per player id, shown on the pitch and bench
   /// so the manager can see who's tiring before making a sub.
   final Map<int, int> energyByPlayer;
+
+  /// How each player is rating in the match so far (the line-ups' live
+  /// mark), shown beside his energy in the on-pitch list so the manager can
+  /// see who is having a poor game before taking him off.
+  final Map<int, double> ratingByPlayer;
 
   /// Players hurt this match and not yet replaced — flagged orange on the pitch
   /// so the manager knows exactly who to take off.
@@ -1053,6 +1062,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                       player: p,
                       detail: _pitchDetail(l, p.id),
                       energy: widget.energyByPlayer[p.id],
+                      rating: widget.ratingByPlayer[p.id],
                       card: widget.cardsByPlayer[p.id],
                       selected: comingOff?.id == p.id,
                       // Picking a man to come off moves the sheet to the
@@ -1966,6 +1976,7 @@ class _OnPitchRow extends StatelessWidget {
     required this.selected,
     required this.onTap,
     this.card,
+    this.rating,
   });
 
   final Player player;
@@ -1978,6 +1989,9 @@ class _OnPitchRow extends StatelessWidget {
 
   /// His remaining energy, or null when energy is not being tracked.
   final int? energy;
+
+  /// His match rating so far, or null when there is none yet.
+  final double? rating;
 
   /// Whether the manager has tapped him to come off and is now choosing who
   /// replaces him.
@@ -2044,6 +2058,10 @@ class _OnPitchRow extends StatelessWidget {
                   ],
                 ),
               ),
+              if (rating case final r?) ...[
+                const SizedBox(width: AppSpacing.sm),
+                RatingBadge(r, compact: true),
+              ],
               if (energy != null) ...[
                 const SizedBox(width: AppSpacing.sm),
                 _EnergyGauge(energy!),

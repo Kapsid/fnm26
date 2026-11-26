@@ -61,6 +61,7 @@ void main() {
     Map<int, int> cameOnAt = const {},
     Map<int, int> wentOffAt = const {},
     Map<int, int> energyByPlayer = const {},
+    Map<int, double> ratingByPlayer = const {},
     int maxSubs = 5,
     double width = 400,
     double height = 2600,
@@ -97,6 +98,7 @@ void main() {
                     cameOnAt: cameOnAt,
                     wentOffAt: wentOffAt,
                     energyByPlayer: energyByPlayer,
+                    ratingByPlayer: ratingByPlayer,
                   ),
                   child: const Text('open'),
                 ),
@@ -183,6 +185,23 @@ void main() {
       findsOneWidget,
       reason: 'a substitute must say at what minute he came on',
     );
+  });
+
+  // "Tactics should show the current rating in a match, to see how a player
+  // is playing" (owner, 1.1.4): the on-pitch list carries each man's live
+  // mark beside his energy.
+  testWidgets("the on-pitch list shows each man's live rating", (
+    tester,
+  ) async {
+    final l = await openSheet(
+      tester,
+      energyByPlayer: {for (var i = 1; i <= 16; i++) i: 60},
+      ratingByPlayer: {for (var i = 1; i <= 11; i++) i: 6.0 + i / 10},
+    );
+    await showPitchTab(tester, l);
+    // Player 3 is on the pitch from the start: 6.3, to one decimal.
+    expect(find.text('6.3'), findsWidgets);
+    expect(find.text('7.1'), findsWidgets);
   });
 
   testWidgets('the energy percentage is no longer a bare number', (

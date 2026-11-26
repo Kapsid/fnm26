@@ -1946,6 +1946,43 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
 
   /// Opens the full in-match tactics editor and, if the manager confirms,
   /// records the change and re-simulates the rest of the match with it applied.
+  /// The running match ratings as of the clock: built from the events the
+  /// clock has reached alone, so no mark shows what the match has not earned
+  /// yet (see [LiveRatings.asOf]). The line-ups and the in-match tactics
+  /// read the same figures.
+  Map<int, double> _liveRatings(
+    MatchPreview preview,
+    MatchResult r,
+    List<MatchEvent> shown,
+  ) {
+    final homeId = preview.homeTeam.nationId;
+    final candidates = <int, Player>{
+      for (final p in [
+        ...preview.homeTeam.xi,
+        ...preview.awayTeam.xi,
+        ...preview.bench,
+        ...preview.opponentBench,
+        ..._currentXi(preview),
+      ])
+        p.id: p,
+    };
+    return LiveRatings.asOf(
+      players: [
+        for (final p in candidates.values)
+          (id: p.id, nationId: p.nationId, category: p.category),
+      ],
+      starterIds: {
+        for (final p in preview.homeTeam.xi) p.id,
+        for (final p in preview.awayTeam.xi) p.id,
+      },
+      events: shown,
+      moments: r.moments,
+      homeNationId: homeId,
+      minute: _minute,
+      added: _added,
+    );
+  }
+
   Future<void> _openTactics(MatchPreview preview) async {
     final wasPlaying = _playing;
     if (_playing) _togglePlay();
@@ -1985,6 +2022,11 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       sentOffIds: _sentOffIds(),
       cardsByPlayer: _cardsNow(),
       energyByPlayer: energyNow,
+      // How each man is playing so far, as the line-ups rate him.
+      ratingByPlayer: () {
+        final r = _result ?? preview.result;
+        return _liveRatings(preview, r, r.events.where(_reached).toList());
+      }(),
       // So the squad list can say who started and who came on when, rather
       // than leaving the manager to work it out from the discs on the pitch.
       cameOnAt: minutes.on,
@@ -2545,36 +2587,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             // The ratings: the stored marks at the whistle, and before it a
             // running mark built from the clock's events alone, so the tab
             // never shows a mark the match has not earned yet.
-            final Map<int, double> lineupRatings;
-            if (ft) {
-              lineupRatings = {for (final x in r.ratings) x.playerId: x.rating};
-            } else {
-              final candidates = <int, Player>{
-                for (final p in [
-                  ...preview.homeTeam.xi,
-                  ...preview.awayTeam.xi,
-                  ...preview.bench,
-                  ...preview.opponentBench,
-                  ..._currentXi(preview),
-                ])
-                  p.id: p,
-              };
-              lineupRatings = LiveRatings.asOf(
-                players: [
-                  for (final p in candidates.values)
-                    (id: p.id, nationId: p.nationId, category: p.category),
-                ],
-                starterIds: {
-                  for (final p in preview.homeTeam.xi) p.id,
-                  for (final p in preview.awayTeam.xi) p.id,
-                },
-                events: shown,
-                moments: r.moments,
-                homeNationId: homeId,
-                minute: _minute,
-                added: _added,
-              );
-            }
+            final Map<int, double> lineupRatings = ft
+                ? {for (final x in r.ratings) x.playerId: x.rating}
+                : _liveRatings(preview, r, shown);
             final lineupList = MatchLineups(
               home: preview.playerIsHome
                   ? _currentXi(preview)
