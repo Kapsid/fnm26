@@ -398,7 +398,7 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
         identical(a.clock, widget.clock) &&
         mapEquals(a.names, widget.names) &&
         a.kits == widget.stadium.kits &&
-        a.breath == (widget.stadium.weather == WeatherKind.frostyNight) &&
+        a.breath == _breath &&
         a.projection.viewport == size) {
       return a;
     }
@@ -410,9 +410,14 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
       names: widget.names,
       lightAt: widget.stadium.lightAt,
       isPlaying: () => widget.clock.playing,
-      breath: widget.stadium.weather == WeatherKind.frostyNight,
+      breath: _breath,
     );
   }
+
+  /// Breath in the air: a frosty night, or a hard frost by day.
+  bool get _breath =>
+      widget.stadium.weather == WeatherKind.frostyNight ||
+      widget.stadium.weather == WeatherKind.frost;
 
   ShootoutPainter? _shootoutPainter;
 

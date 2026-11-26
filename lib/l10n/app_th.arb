@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "ลมแรง",
   "matchWeatherDustStorm": "พายุฝุ่น",
   "matchWeatherFrostyNight": "คืนหนาวจัด",
+  "matchWeatherDrizzle": "ฝนปรอย",
+  "matchWeatherFrost": "น้ำค้างแข็ง",
   "editorFilterToFix": "ต้องแก้ไข",
   "editorNothingToFix": "ไม่มีอะไรต้องแก้ไขที่นี่",
   "editorPromoteTooltip": "ย้ายเข้าทีม",

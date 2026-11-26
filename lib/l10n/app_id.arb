@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "Berangin",
   "matchWeatherDustStorm": "Badai debu",
   "matchWeatherFrostyNight": "Malam membeku",
+  "matchWeatherDrizzle": "Gerimis",
+  "matchWeatherFrost": "Embun beku",
   "editorFilterToFix": "Perlu diperbaiki",
   "editorNothingToFix": "Tidak ada yang perlu diperbaiki di sini.",
   "editorPromoteTooltip": "Pindahkan ke skuad",

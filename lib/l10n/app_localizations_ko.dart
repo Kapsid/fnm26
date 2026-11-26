@@ -8094,6 +8094,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get matchWeatherFrostyNight => '서리 내린 밤';
 
   @override
+  String get matchWeatherDrizzle => '이슬비';
+
+  @override
+  String get matchWeatherFrost => '서리';
+
+  @override
   String get matchPlayerOfTheMatch => '경기 최우수 선수';
 
   @override
@@ -16822,6 +16828,10 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get pitchComKickOffFrost => '서리 내린 밤, 딱딱한 그라운드. 패스가 쉽지 않을 겁니다.';
+
+  @override
+  String get pitchComKickOffFrostDay =>
+      '낮은 겨울 햇살 아래 서리가 내린 그라운드. 패스가 쉽지 않을 겁니다.';
 
   @override
   String get pitchComKickOffGale => '강풍 속에 킥오프. 롱볼이 바람에 흘러갈 겁니다.';

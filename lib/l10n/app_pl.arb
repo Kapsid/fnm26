@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "Wietrznie",
   "matchWeatherDustStorm": "Burza piaskowa",
   "matchWeatherFrostyNight": "Mroźna noc",
+  "matchWeatherDrizzle": "Mżawka",
+  "matchWeatherFrost": "Mróz",
   "editorFilterToFix": "Do poprawy",
   "editorNothingToFix": "Tutaj nie ma nic do poprawy.",
   "editorPromoteTooltip": "Przenieś do kadry",

@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "Větrno",
   "matchWeatherDustStorm": "Prachová bouře",
   "matchWeatherFrostyNight": "Mrazivá noc",
+  "matchWeatherDrizzle": "Mrholení",
+  "matchWeatherFrost": "Mráz",
   "editorFilterToFix": "K opravě",
   "editorNothingToFix": "Tady není co opravovat.",
   "editorPromoteTooltip": "Přesunout do kádru",

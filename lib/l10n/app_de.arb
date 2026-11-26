@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "Stürmisch",
   "matchWeatherDustStorm": "Sandsturm",
   "matchWeatherFrostyNight": "Frostige Nacht",
+  "matchWeatherDrizzle": "Nieselregen",
+  "matchWeatherFrost": "Frost",
   "editorFilterToFix": "Zu beheben",
   "editorNothingToFix": "Hier muss nichts behoben werden.",
   "editorPromoteTooltip": "In den Kader holen",

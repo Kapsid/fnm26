@@ -239,7 +239,9 @@ void main() {
     test('follows climate and date', () {
       final engAutumn = count('ENG', DateTime(2026, 10, 10));
       int wet(Map<WeatherKind, int> n) =>
-          n[WeatherKind.rain]! + n[WeatherKind.heavyRain]!;
+          n[WeatherKind.rain]! +
+          n[WeatherKind.drizzle]! +
+          n[WeatherKind.heavyRain]!;
       expect(wet(engAutumn), greaterThan(110));
       expect(engAutumn[WeatherKind.snow], 0);
       expect(engAutumn[WeatherKind.haze], 0);

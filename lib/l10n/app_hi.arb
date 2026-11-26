@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "तेज़ हवा",
   "matchWeatherDustStorm": "धूल भरी आंधी",
   "matchWeatherFrostyNight": "पाले वाली रात",
+  "matchWeatherDrizzle": "बूंदाबांदी",
+  "matchWeatherFrost": "पाला",
   "editorFilterToFix": "ठीक करना बाकी",
   "editorNothingToFix": "यहाँ ठीक करने के लिए कुछ नहीं है।",
   "editorPromoteTooltip": "दस्ते में लाएँ",

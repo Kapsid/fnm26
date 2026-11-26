@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "Vjetrovito",
   "matchWeatherDustStorm": "Pješčana oluja",
   "matchWeatherFrostyNight": "Mrazna noć",
+  "matchWeatherDrizzle": "Rosulja",
+  "matchWeatherFrost": "Mraz",
   "editorFilterToFix": "Za popraviti",
   "editorNothingToFix": "Ovdje nema ničega za popraviti.",
   "editorPromoteTooltip": "Premjesti u momčad",

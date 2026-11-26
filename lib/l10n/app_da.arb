@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "Blæsende",
   "matchWeatherDustStorm": "Sandstorm",
   "matchWeatherFrostyNight": "Frostklar nat",
+  "matchWeatherDrizzle": "Støvregn",
+  "matchWeatherFrost": "Frost",
   "editorFilterToFix": "Skal rettes",
   "editorNothingToFix": "Intet skal rettes her.",
   "editorPromoteTooltip": "Flyt til truppen",

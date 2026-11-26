@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "Ventania",
   "matchWeatherDustStorm": "Tempestade de areia",
   "matchWeatherFrostyNight": "Noite gelada",
+  "matchWeatherDrizzle": "Garoa",
+  "matchWeatherFrost": "Geada",
   "editorFilterToFix": "A corrigir",
   "editorNothingToFix": "Não há nada a corrigir aqui.",
   "editorPromoteTooltip": "Mover para o elenco",

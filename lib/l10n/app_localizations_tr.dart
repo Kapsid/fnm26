@@ -8256,6 +8256,12 @@ class AppLocalizationsTr extends AppLocalizations {
   String get matchWeatherFrostyNight => 'Ayazlı gece';
 
   @override
+  String get matchWeatherDrizzle => 'Çisenti';
+
+  @override
+  String get matchWeatherFrost => 'Don';
+
+  @override
   String get matchPlayerOfTheMatch => 'MAÇIN ADAMI';
 
   @override
@@ -17310,6 +17316,10 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get pitchComKickOffFrost =>
       'Ayaz bir gece ve sert bir zemin. Pas yapmak kolay olmayacak.';
+
+  @override
+  String get pitchComKickOffFrostDay =>
+      'Alçak kış güneşinin altında sert don. Pas yapmak kolay olmayacak.';
 
   @override
   String get pitchComKickOffGale =>

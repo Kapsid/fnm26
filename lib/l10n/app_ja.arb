@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "強風",
   "matchWeatherDustStorm": "砂嵐",
   "matchWeatherFrostyNight": "凍てつく夜",
+  "matchWeatherDrizzle": "霧雨",
+  "matchWeatherFrost": "霜",
   "editorFilterToFix": "要修正",
   "editorNothingToFix": "ここで修正が必要なものはありません。",
   "editorPromoteTooltip": "チームに入れる",

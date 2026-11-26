@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "Tuulista",
   "matchWeatherDustStorm": "Hiekkamyrsky",
   "matchWeatherFrostyNight": "Pakkasyö",
+  "matchWeatherDrizzle": "Tihkusade",
+  "matchWeatherFrost": "Pakkanen",
   "editorFilterToFix": "Korjattavat",
   "editorNothingToFix": "Täällä ei ole mitään korjattavaa.",
   "editorPromoteTooltip": "Siirrä joukkueeseen",

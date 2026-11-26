@@ -8205,6 +8205,12 @@ class AppLocalizationsVi extends AppLocalizations {
   String get matchWeatherFrostyNight => 'Đêm giá rét';
 
   @override
+  String get matchWeatherDrizzle => 'Mưa phùn';
+
+  @override
+  String get matchWeatherFrost => 'Sương giá';
+
+  @override
   String get matchPlayerOfTheMatch => 'CẦU THỦ HAY NHẤT TRẬN';
 
   @override
@@ -17247,6 +17253,10 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get pitchComKickOffFrost =>
       'Một đêm giá rét và mặt sân cứng. Chuyền bóng sẽ không dễ.';
+
+  @override
+  String get pitchComKickOffFrostDay =>
+      'Sương giá dày dưới ánh nắng mùa đông thấp. Chuyền bóng sẽ không dễ.';
 
   @override
   String get pitchComKickOffGale =>

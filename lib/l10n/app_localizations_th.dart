@@ -8183,6 +8183,12 @@ class AppLocalizationsTh extends AppLocalizations {
   String get matchWeatherFrostyNight => 'คืนหนาวจัด';
 
   @override
+  String get matchWeatherDrizzle => 'ฝนปรอย';
+
+  @override
+  String get matchWeatherFrost => 'น้ำค้างแข็ง';
+
+  @override
   String get matchPlayerOfTheMatch => 'ผู้เล่นยอดเยี่ยมประจำเกม';
 
   @override
@@ -17096,6 +17102,10 @@ class AppLocalizationsTh extends AppLocalizations {
   @override
   String get pitchComKickOffFrost =>
       'คืนที่หนาวจัดและสนามแข็ง การส่งบอลจะไม่ง่าย';
+
+  @override
+  String get pitchComKickOffFrostDay =>
+      'น้ำค้างแข็งจัดใต้แสงแดดฤดูหนาวที่อยู่ต่ำ การจ่ายบอลจะไม่ง่าย';
 
   @override
   String get pitchComKickOffGale => 'เริ่มเกมท่ามกลางลมแรง บอลยาวจะเฉออกนอกทาง';

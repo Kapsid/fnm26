@@ -247,7 +247,11 @@ String? pitchKickOffLine(AppLocalizations l, WeatherKind weather) =>
       WeatherKind.windy => l.pitchComKickOffGale,
       WeatherKind.fog => l.pitchComKickOffFog,
       WeatherKind.haze => l.pitchComKickOffHaze,
-      WeatherKind.clear || WeatherKind.rain || WeatherKind.dustStorm => null,
+      WeatherKind.clear ||
+      WeatherKind.rain ||
+      WeatherKind.drizzle ||
+      WeatherKind.frost ||
+      WeatherKind.dustStorm => null,
     };
 
 /// The commentary line for one shootout [kick], the [index]th of the

@@ -8303,6 +8303,12 @@ class AppLocalizationsFil extends AppLocalizations {
   String get matchWeatherFrostyNight => 'Napakalamig na gabi';
 
   @override
+  String get matchWeatherDrizzle => 'Ambon';
+
+  @override
+  String get matchWeatherFrost => 'Hamog na yelo';
+
+  @override
   String get matchPlayerOfTheMatch => 'MANLALARO NG LARO';
 
   @override
@@ -17410,6 +17416,10 @@ class AppLocalizationsFil extends AppLocalizations {
   @override
   String get pitchComKickOffFrost =>
       'Nagyeyelong gabi at matigas na pitch. Hindi magiging madali ang pasa.';
+
+  @override
+  String get pitchComKickOffFrostDay =>
+      'Matinding hamog na yelo sa ilalim ng mababang araw ng taglamig. Hindi magiging madali ang pagpasa.';
 
   @override
   String get pitchComKickOffGale =>

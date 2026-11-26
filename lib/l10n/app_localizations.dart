@@ -12735,6 +12735,18 @@ abstract class AppLocalizations {
   /// **'Frosty night'**
   String get matchWeatherFrostyNight;
 
+  /// Venue card: the weather the match is played in, drizzle under a low grey overcast sky.
+  ///
+  /// In en, this message translates to:
+  /// **'Drizzle'**
+  String get matchWeatherDrizzle;
+
+  /// Venue card: the weather the match is played in, a hard frost by day under a low winter sun (the pitch white with frost).
+  ///
+  /// In en, this message translates to:
+  /// **'Frost'**
+  String get matchWeatherFrost;
+
   /// Live match: man-of-the-match heading.
   ///
   /// In en, this message translates to:
@@ -26276,6 +26288,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A frosty night and a hard pitch. Passing won\'t be easy.'**
   String get pitchComKickOffFrost;
+
+  /// Pitch view commentary, the first line at kick-off when the match is played by day in a hard frost under a low winter sun, on a hard pitch.
+  ///
+  /// In en, this message translates to:
+  /// **'A hard frost under a low winter sun. Passing won\'t be easy.'**
+  String get pitchComKickOffFrostDay;
 
   /// Pitch view commentary, the first line at kick-off when the match is played in a strong wind.
   ///

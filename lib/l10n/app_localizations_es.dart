@@ -8392,6 +8392,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get matchWeatherFrostyNight => 'Noche helada';
 
   @override
+  String get matchWeatherDrizzle => 'Llovizna';
+
+  @override
+  String get matchWeatherFrost => 'Helada';
+
+  @override
   String get matchPlayerOfTheMatch => 'MEJOR JUGADOR DEL PARTIDO';
 
   @override
@@ -17498,6 +17504,10 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get pitchComKickOffFrost =>
       'Una noche helada y un césped duro. Los pases no serán fáciles.';
+
+  @override
+  String get pitchComKickOffFrostDay =>
+      'Una fuerte helada bajo un sol de invierno bajo. Pasar el balón no será fácil.';
 
   @override
   String get pitchComKickOffGale =>

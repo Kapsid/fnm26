@@ -8282,6 +8282,12 @@ class AppLocalizationsHu extends AppLocalizations {
   String get matchWeatherFrostyNight => 'Fagyos éjszaka';
 
   @override
+  String get matchWeatherDrizzle => 'Szitálás';
+
+  @override
+  String get matchWeatherFrost => 'Fagy';
+
+  @override
   String get matchPlayerOfTheMatch => 'A MÉRKŐZÉS EMBERE';
 
   @override
@@ -17345,6 +17351,10 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get pitchComKickOffFrost =>
       'Fagyos este és kemény pálya. Nem lesz könnyű passzolni.';
+
+  @override
+  String get pitchComKickOffFrostDay =>
+      'Kemény fagy, alacsonyan járó téli nap. Nem lesz könnyű passzolni.';
 
   @override
   String get pitchComKickOffGale =>

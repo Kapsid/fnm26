@@ -2087,6 +2087,8 @@
   "matchWeatherWindy": "Ветровито",
   "matchWeatherDustStorm": "Пешчана олуја",
   "matchWeatherFrostyNight": "Мразна ноћ",
+  "matchWeatherDrizzle": "Росуља",
+  "matchWeatherFrost": "Мраз",
   "matchPlayerOfTheMatch": "ИГРАЧ УТАКМИЦЕ",
   "ratingPlayerOfTheMatch": "Играч утакмице",
   "ratingSemantics": "Оцена {rating}",

@@ -8620,6 +8620,12 @@ class AppLocalizationsCs extends AppLocalizations {
   String get matchWeatherFrostyNight => 'Mrazivá noc';
 
   @override
+  String get matchWeatherDrizzle => 'Mrholení';
+
+  @override
+  String get matchWeatherFrost => 'Mráz';
+
+  @override
   String get matchPlayerOfTheMatch => 'HRÁČ ZÁPASU';
 
   @override
@@ -17785,6 +17791,10 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get pitchComKickOffFrost =>
       'Mrazivý večer a tvrdý trávník. Přihrávky nebudou snadné.';
+
+  @override
+  String get pitchComKickOffFrostDay =>
+      'Tuhý mráz a nízké zimní slunce. Přihrávat nebude snadné.';
 
   @override
   String get pitchComKickOffGale =>

@@ -8258,6 +8258,12 @@ class AppLocalizationsHi extends AppLocalizations {
   String get matchWeatherFrostyNight => 'पाले वाली रात';
 
   @override
+  String get matchWeatherDrizzle => 'बूंदाबांदी';
+
+  @override
+  String get matchWeatherFrost => 'पाला';
+
+  @override
   String get matchPlayerOfTheMatch => 'मैन ऑफ़ द मैच';
 
   @override
@@ -17308,6 +17314,10 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get pitchComKickOffFrost =>
       'पाले वाली रात और सख़्त पिच। पास देना आसान नहीं होगा।';
+
+  @override
+  String get pitchComKickOffFrostDay =>
+      'सर्दियों की नीची धूप में कड़ा पाला। पास देना आसान नहीं होगा।';
 
   @override
   String get pitchComKickOffGale =>

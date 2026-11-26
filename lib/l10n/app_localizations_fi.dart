@@ -8401,6 +8401,12 @@ class AppLocalizationsFi extends AppLocalizations {
   String get matchWeatherFrostyNight => 'Pakkasyö';
 
   @override
+  String get matchWeatherDrizzle => 'Tihkusade';
+
+  @override
+  String get matchWeatherFrost => 'Pakkanen';
+
+  @override
   String get matchPlayerOfTheMatch => 'OTTELUN PARAS PELAAJA';
 
   @override
@@ -17474,6 +17480,10 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String get pitchComKickOffFrost =>
       'Pakkasilta ja kova kenttä. Syöttäminen ei ole helppoa.';
+
+  @override
+  String get pitchComKickOffFrostDay =>
+      'Kova pakkanen ja matala talviaurinko. Syöttäminen ei ole helppoa.';
 
   @override
   String get pitchComKickOffGale =>

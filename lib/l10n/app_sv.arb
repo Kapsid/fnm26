@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "Blåsigt",
   "matchWeatherDustStorm": "Sandstorm",
   "matchWeatherFrostyNight": "Frostig natt",
+  "matchWeatherDrizzle": "Duggregn",
+  "matchWeatherFrost": "Frost",
   "editorFilterToFix": "Att åtgärda",
   "editorNothingToFix": "Inget behöver åtgärdas här.",
   "editorPromoteTooltip": "Flytta till truppen",

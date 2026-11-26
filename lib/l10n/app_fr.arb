@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "Venteux",
   "matchWeatherDustStorm": "Tempête de sable",
   "matchWeatherFrostyNight": "Nuit glaciale",
+  "matchWeatherDrizzle": "Bruine",
+  "matchWeatherFrost": "Gel",
   "editorFilterToFix": "À corriger",
   "editorNothingToFix": "Rien à corriger ici.",
   "editorPromoteTooltip": "Passer dans l’effectif",

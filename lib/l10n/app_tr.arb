@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "Rüzgârlı",
   "matchWeatherDustStorm": "Kum fırtınası",
   "matchWeatherFrostyNight": "Ayazlı gece",
+  "matchWeatherDrizzle": "Çisenti",
+  "matchWeatherFrost": "Don",
   "editorFilterToFix": "Düzeltilecekler",
   "editorNothingToFix": "Burada düzeltilecek bir şey yok.",
   "editorPromoteTooltip": "Kadroya al",

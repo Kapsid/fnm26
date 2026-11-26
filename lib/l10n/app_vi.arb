@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "Gió mạnh",
   "matchWeatherDustStorm": "Bão cát",
   "matchWeatherFrostyNight": "Đêm giá rét",
+  "matchWeatherDrizzle": "Mưa phùn",
+  "matchWeatherFrost": "Sương giá",
   "editorFilterToFix": "Cần sửa",
   "editorNothingToFix": "Ở đây không có gì cần sửa.",
   "editorPromoteTooltip": "Chuyển vào đội hình",

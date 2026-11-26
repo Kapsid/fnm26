@@ -1162,8 +1162,25 @@ extension _StadiumFeatures on StadiumPainter {
   /// Frost on a cold clear night: a pale rime creeping in from the pitch's
   /// edges, the middle (where the men run) still green.
   void _frostEdges(Canvas canvas) {
-    if (spec.weather != WeatherKind.frostyNight) return;
+    final day = spec.weather == WeatherKind.frost;
+    if (spec.weather != WeatherKind.frostyNight && !day) return;
     final field = _field;
+    if (day) {
+      // A hard frost by day: the whole pitch white-tinged, palest where
+      // the low sun has not reached (toward the far stand).
+      canvas.drawPath(
+        field,
+        Paint()
+          ..shader = ui.Gradient.linear(
+            _p(PitchDims.length / 2, StadiumPainter._gy0),
+            _p(PitchDims.length / 2, StadiumPainter._gy1),
+            [
+              const Color(0xFFE4ECF2).withValues(alpha: 0.2),
+              const Color(0xFFE4ECF2).withValues(alpha: 0.09),
+            ],
+          ),
+      );
+    }
     final rime = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = _ppm(PitchDims.width / 2) * 4.5
@@ -1287,6 +1304,31 @@ extension _StadiumFeatures on StadiumPainter {
         wash(_dustOchre, 0.62, 0.9);
       case WeatherKind.frostyNight:
         wash(const Color(0xFF0E1A33), 0.28, 0.06);
+      case WeatherKind.drizzle:
+        // A low, flat grey overcast: grey all over, barely lighter low down.
+        wash(
+          Color.lerp(look.skyMid, const Color(0xFF7D848B), 0.7)!,
+          0.86,
+          0.68,
+        );
+      case WeatherKind.frost:
+        // A cold, clear winter sky, and the low sun's warm glow along the
+        // horizon.
+        wash(const Color(0xFFB8CCE2), 0.22, 0.05);
+        canvas.drawRect(
+          Rect.fromLTRB(0, horizon - 60, size.width, horizon + 2),
+          Paint()
+            ..shader = ui.Gradient.linear(
+              Offset(0, horizon - 60),
+              Offset(0, horizon + 2),
+              [
+                const Color(0x00F3C58C),
+                const Color(
+                  0xFFF3C58C,
+                ).withValues(alpha: 0.34 * (1 - look.flood)),
+              ],
+            ),
+        );
     }
   }
 

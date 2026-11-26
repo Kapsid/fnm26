@@ -13287,6 +13287,14 @@
   "@matchWeatherFrostyNight": {
     "description": "Venue card: the weather the match is played in, a clear, frosty night."
   },
+  "matchWeatherDrizzle": "Drizzle",
+  "@matchWeatherDrizzle": {
+    "description": "Venue card: the weather the match is played in, drizzle under a low grey overcast sky."
+  },
+  "matchWeatherFrost": "Frost",
+  "@matchWeatherFrost": {
+    "description": "Venue card: the weather the match is played in, a hard frost by day under a low winter sun (the pitch white with frost)."
+  },
   "matchPlayerOfTheMatch": "PLAYER OF THE MATCH",
   "@matchPlayerOfTheMatch": {
     "description": "Live match: man-of-the-match heading."

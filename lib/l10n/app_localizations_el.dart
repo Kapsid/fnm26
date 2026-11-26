@@ -8376,6 +8376,12 @@ class AppLocalizationsEl extends AppLocalizations {
   String get matchWeatherFrostyNight => 'Παγωμένη νύχτα';
 
   @override
+  String get matchWeatherDrizzle => 'Ψιχάλα';
+
+  @override
+  String get matchWeatherFrost => 'Παγωνιά';
+
+  @override
   String get matchPlayerOfTheMatch => 'ΚΟΡΥΦΑΙΟΣ ΤΟΥ ΑΓΩΝΑ';
 
   @override
@@ -17491,6 +17497,10 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get pitchComKickOffFrost =>
       'Παγωμένη νύχτα και σκληρός αγωνιστικός χώρος. Οι πάσες δεν θα είναι εύκολες.';
+
+  @override
+  String get pitchComKickOffFrostDay =>
+      'Δυνατή παγωνιά κάτω από χαμηλό χειμωνιάτικο ήλιο. Οι πάσες δεν θα είναι εύκολες.';
 
   @override
   String get pitchComKickOffGale =>

@@ -8078,6 +8078,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get matchWeatherFrostyNight => '凍てつく夜';
 
   @override
+  String get matchWeatherDrizzle => '霧雨';
+
+  @override
+  String get matchWeatherFrost => '霜';
+
+  @override
   String get matchPlayerOfTheMatch => 'マン・オブ・ザ・マッチ';
 
   @override
@@ -16777,6 +16783,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get pitchComKickOffFrost => '凍える夜、硬いピッチ。パス回しは簡単ではないでしょう。';
+
+  @override
+  String get pitchComKickOffFrostDay => '低い冬の日差しの下、霜の降りたピッチ。パスは簡単ではないだろう。';
 
   @override
   String get pitchComKickOffGale => '強風の中でキックオフ。ロングボールは流されそうです。';

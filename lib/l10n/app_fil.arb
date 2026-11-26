@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "Mahangin",
   "matchWeatherDustStorm": "Bagyong alikabok",
   "matchWeatherFrostyNight": "Napakalamig na gabi",
+  "matchWeatherDrizzle": "Ambon",
+  "matchWeatherFrost": "Hamog na yelo",
   "editorFilterToFix": "Kailangang ayusin",
   "editorNothingToFix": "Walang kailangang ayusin dito.",
   "editorPromoteTooltip": "Ilipat sa squad",

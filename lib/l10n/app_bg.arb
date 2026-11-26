@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "Силен вятър",
   "matchWeatherDustStorm": "Пясъчна буря",
   "matchWeatherFrostyNight": "Мразовита нощ",
+  "matchWeatherDrizzle": "Ръмеж",
+  "matchWeatherFrost": "Слана",
   "editorFilterToFix": "За поправяне",
   "editorNothingToFix": "Тук няма нищо за поправяне.",
   "editorPromoteTooltip": "Премести в състава",

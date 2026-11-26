@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "Harde wind",
   "matchWeatherDustStorm": "Zandstorm",
   "matchWeatherFrostyNight": "IJzige nacht",
+  "matchWeatherDrizzle": "Motregen",
+  "matchWeatherFrost": "Vorst",
   "editorFilterToFix": "Te herstellen",
   "editorNothingToFix": "Hier hoeft niets hersteld te worden.",
   "editorPromoteTooltip": "Naar de selectie",

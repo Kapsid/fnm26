@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "Δυνατός άνεμος",
   "matchWeatherDustStorm": "Αμμοθύελλα",
   "matchWeatherFrostyNight": "Παγωμένη νύχτα",
+  "matchWeatherDrizzle": "Ψιχάλα",
+  "matchWeatherFrost": "Παγωνιά",
   "editorFilterToFix": "Προς διόρθωση",
   "editorNothingToFix": "Δεν υπάρχει τίποτα προς διόρθωση εδώ.",
   "editorPromoteTooltip": "Μετακίνηση στην ομάδα",

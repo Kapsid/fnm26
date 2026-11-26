@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "Viento fuerte",
   "matchWeatherDustStorm": "Tormenta de arena",
   "matchWeatherFrostyNight": "Noche helada",
+  "matchWeatherDrizzle": "Llovizna",
+  "matchWeatherFrost": "Helada",
   "editorFilterToFix": "Por arreglar",
   "editorNothingToFix": "Aquí no hay nada que arreglar.",
   "editorPromoteTooltip": "Pasar a la plantilla",

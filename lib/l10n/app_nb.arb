@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "Kraftig vind",
   "matchWeatherDustStorm": "Sandstorm",
   "matchWeatherFrostyNight": "Frostnatt",
+  "matchWeatherDrizzle": "Yr",
+  "matchWeatherFrost": "Frost",
   "editorFilterToFix": "Må rettes",
   "editorNothingToFix": "Ingenting må rettes her.",
   "editorPromoteTooltip": "Flytt til troppen",

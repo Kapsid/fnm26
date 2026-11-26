@@ -8618,6 +8618,12 @@ class AppLocalizationsRo extends AppLocalizations {
   String get matchWeatherFrostyNight => 'Noapte geroasă';
 
   @override
+  String get matchWeatherDrizzle => 'Burniță';
+
+  @override
+  String get matchWeatherFrost => 'Îngheț';
+
+  @override
   String get matchPlayerOfTheMatch => 'OMUL MECIULUI';
 
   @override
@@ -17813,6 +17819,10 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get pitchComKickOffFrost =>
       'O noapte geroasă și un teren tare. Pasele nu vor fi ușoare.';
+
+  @override
+  String get pitchComKickOffFrostDay =>
+      'Îngheț puternic sub un soare jos de iarnă. Pasele nu vor fi ușoare.';
 
   @override
   String get pitchComKickOffGale =>

@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "Vânt puternic",
   "matchWeatherDustStorm": "Furtună de praf",
   "matchWeatherFrostyNight": "Noapte geroasă",
+  "matchWeatherDrizzle": "Burniță",
+  "matchWeatherFrost": "Îngheț",
   "editorFilterToFix": "De corectat",
   "editorNothingToFix": "Aici nu e nimic de corectat.",
   "editorPromoteTooltip": "Mută în lot",

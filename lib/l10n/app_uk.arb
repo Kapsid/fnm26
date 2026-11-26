@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "Вітряно",
   "matchWeatherDustStorm": "Пилова буря",
   "matchWeatherFrostyNight": "Морозна ніч",
+  "matchWeatherDrizzle": "Мряка",
+  "matchWeatherFrost": "Мороз",
   "editorFilterToFix": "Потребує виправлення",
   "editorNothingToFix": "Тут нічого виправляти.",
   "editorPromoteTooltip": "Перемістити до складу",

@@ -8362,6 +8362,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get matchWeatherFrostyNight => 'Frosty night';
 
   @override
+  String get matchWeatherDrizzle => 'Drizzle';
+
+  @override
+  String get matchWeatherFrost => 'Frost';
+
+  @override
   String get matchPlayerOfTheMatch => 'PLAYER OF THE MATCH';
 
   @override
@@ -17432,6 +17438,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get pitchComKickOffFrost =>
       'A frosty night and a hard pitch. Passing won\'t be easy.';
+
+  @override
+  String get pitchComKickOffFrostDay =>
+      'A hard frost under a low winter sun. Passing won\'t be easy.';
 
   @override
   String get pitchComKickOffGale =>

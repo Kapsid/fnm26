@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "Ventoso",
   "matchWeatherDustStorm": "Tempesta di sabbia",
   "matchWeatherFrostyNight": "Notte gelida",
+  "matchWeatherDrizzle": "Pioggerella",
+  "matchWeatherFrost": "Gelo",
   "editorFilterToFix": "Da sistemare",
   "editorNothingToFix": "Qui non c’è niente da sistemare.",
   "editorPromoteTooltip": "Sposta in rosa",

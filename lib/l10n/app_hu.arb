@@ -4140,6 +4140,8 @@
   "matchWeatherWindy": "Szeles",
   "matchWeatherDustStorm": "Homokvihar",
   "matchWeatherFrostyNight": "Fagyos éjszaka",
+  "matchWeatherDrizzle": "Szitálás",
+  "matchWeatherFrost": "Fagy",
   "editorFilterToFix": "Javítandó",
   "editorNothingToFix": "Itt nincs mit javítani.",
   "editorPromoteTooltip": "Áthelyezés a keretbe",
