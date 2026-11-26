@@ -5581,6 +5581,26 @@ class AppLocalizationsFil extends AppLocalizations {
   }
 
   @override
+  String ySentOffAgain0(String name, String minute, String count) {
+    return 'Isa pang pula, kay $name sa $minute minuto, at $count na lang tayo. Buong suporta ko sa mga natitira sa laro.';
+  }
+
+  @override
+  String ySentOffAgain1(String name, String minute, String count) {
+    return 'Isa pang pula: $name, $minute minuto. $count na lang sa laro.';
+  }
+
+  @override
+  String ySentOffAgain2(String name, String minute, String count) {
+    return 'Isa pang pula. Palabas si $name sa $minute minuto at $count na lang tayo. Hindi kapani-paniwala.';
+  }
+
+  @override
+  String ySentOffAgain3(String name, String minute, String count) {
+    return 'Pati si $name, sa $minute minuto. $count na lang ang natitira. May namamahala ba talaga sa koponang ito?';
+  }
+
+  @override
   String get yBoardPressure0 =>
       'Tumahimik nang husto ang board. Hindi kailanman magandang senyales iyan.';
 

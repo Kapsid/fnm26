@@ -9254,6 +9254,66 @@
       }
     }
   },
+  "ySentOffAgain0": "Another red, {name} on {minute} minutes, and we are down to {count}. Every one of the lads still out there has my voice.",
+  "@ySentOffAgain0": {
+    "description": "Y post about a second (or later) sending-off of ours in the same match, warm. {name} is the player sent off, {minute} the match minute, {count} how many of our players are left on the pitch, as a digit (9 after a second red, 8 after a third).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "ySentOffAgain1": "Another red: {name}, {minute} minutes. Down to {count} on the pitch.",
+  "@ySentOffAgain1": {
+    "description": "Y post about a second (or later) sending-off of ours in the same match, flat. {name} is the player sent off, {minute} the match minute, {count} how many of our players are left on the pitch, as a digit (9 after a second red, 8 after a third).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "ySentOffAgain2": "Another red. {name} walks on {minute} minutes and we are down to {count}. Unbelievable.",
+  "@ySentOffAgain2": {
+    "description": "Y post about a second (or later) sending-off of ours in the same match, sour. {name} is the player sent off, {minute} the match minute, {count} how many of our players are left on the pitch, as a digit (9 after a second red, 8 after a third).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "ySentOffAgain3": "{name} as well, on {minute} minutes. {count} men left. Is anybody actually in charge of this team?",
+  "@ySentOffAgain3": {
+    "description": "Y post about a second (or later) sending-off of ours in the same match, sour. {name} is the player sent off, {minute} the match minute, {count} how many of our players are left on the pitch, as a digit (9 after a second red, 8 after a third).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
   "yBoardPressure0": "The board have gone very quiet. That is never a good sign.",
   "@yBoardPressure0": {
     "description": "Y post about the board losing patience. Variant 0."

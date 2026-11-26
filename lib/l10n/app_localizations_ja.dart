@@ -5450,6 +5450,26 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String ySentOffAgain0(String name, String minute, String count) {
+    return 'また退場、$minute分に$name。これで$count人。ピッチに残ってる選手たちを全力で応援する。';
+  }
+
+  @override
+  String ySentOffAgain1(String name, String minute, String count) {
+    return 'また退場。$minute分、$name。ピッチに残るのは$count人。';
+  }
+
+  @override
+  String ySentOffAgain2(String name, String minute, String count) {
+    return 'また退場。$minute分に$nameが退場で、これで$count人。信じられない。';
+  }
+
+  @override
+  String ySentOffAgain3(String name, String minute, String count) {
+    return '$nameまで、$minute分に。残り$count人。このチーム、誰か本当に指揮してるのか？';
+  }
+
+  @override
   String get yBoardPressure0 => '協会がすっかり静かになった。いい兆候だったためしがない。';
 
   @override

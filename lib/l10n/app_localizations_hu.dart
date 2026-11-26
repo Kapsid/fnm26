@@ -5571,6 +5571,26 @@ class AppLocalizationsHu extends AppLocalizations {
   }
 
   @override
+  String ySentOffAgain0(String name, String minute, String count) {
+    return 'Újabb piros, $name, $minute. perc, és már csak $count emberünk maradt. A pályán maradt fiúk minden támogatásomat élvezik.';
+  }
+
+  @override
+  String ySentOffAgain1(String name, String minute, String count) {
+    return 'Újabb piros: $name, $minute. perc. Már csak $count játékos a pályán.';
+  }
+
+  @override
+  String ySentOffAgain2(String name, String minute, String count) {
+    return 'Újabb piros. $minute. perc, $name megy le, és már csak $count emberünk maradt. Hihetetlen.';
+  }
+
+  @override
+  String ySentOffAgain3(String name, String minute, String count) {
+    return 'Most $name is, $minute. perc. $count ember maradt. Irányítja egyáltalán valaki ezt a csapatot?';
+  }
+
+  @override
   String get yBoardPressure0 =>
       'A vezetőség nagyon elhallgatott. Ez sosem jó jel.';
 

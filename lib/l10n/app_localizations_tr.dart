@@ -5553,6 +5553,26 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String ySentOffAgain0(String name, String minute, String count) {
+    return 'Bir kırmızı daha, $name $minute. dakikada, ve sahada $count kişi kaldık. Sahada kalan çocukların sonuna kadar arkasındayım.';
+  }
+
+  @override
+  String ySentOffAgain1(String name, String minute, String count) {
+    return 'Bir kırmızı daha: $name, $minute. dakika. Sahada $count oyuncu kaldı.';
+  }
+
+  @override
+  String ySentOffAgain2(String name, String minute, String count) {
+    return 'Bir kırmızı daha. $name $minute. dakikada oyundan atıldı ve $count kişi kaldık. İnanılmaz.';
+  }
+
+  @override
+  String ySentOffAgain3(String name, String minute, String count) {
+    return 'Şimdi de $name gitti, $minute. dakikada. $count oyuncu kaldı. Bu takımı yöneten biri var mı?';
+  }
+
+  @override
   String get yBoardPressure0 =>
       'Yönetim çok sessizleşti. Bu hiçbir zaman iyi işaret değildir.';
 

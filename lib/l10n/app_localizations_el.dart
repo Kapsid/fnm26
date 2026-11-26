@@ -5625,6 +5625,26 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
+  String ySentOffAgain0(String name, String minute, String count) {
+    return 'Κι άλλη κόκκινη, ο $name στο $minute\', και μείναμε $count. Τα παιδιά που είναι ακόμα μέσα έχουν όλη μου τη στήριξη.';
+  }
+
+  @override
+  String ySentOffAgain1(String name, String minute, String count) {
+    return 'Κι άλλη κόκκινη: $name, $minute\'. Στο γήπεδο μένουν $count.';
+  }
+
+  @override
+  String ySentOffAgain2(String name, String minute, String count) {
+    return 'Κι άλλη κόκκινη. Ο $name βγαίνει στο $minute\' και μείναμε $count. Απίστευτο.';
+  }
+
+  @override
+  String ySentOffAgain3(String name, String minute, String count) {
+    return 'Και ο $name, στο $minute\'. Μένουν $count παίκτες. Διοικεί κανείς αυτή την ομάδα;';
+  }
+
+  @override
   String get yBoardPressure0 =>
       'Η διοίκηση έχει σωπάσει εντελώς. Ποτέ καλό σημάδι.';
 

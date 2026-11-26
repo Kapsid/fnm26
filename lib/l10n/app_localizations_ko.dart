@@ -5459,6 +5459,26 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String ySentOffAgain0(String name, String minute, String count) {
+    return '또 퇴장, $minute분 $name. 이제 $count명이다. 그라운드에 남은 선수들 끝까지 응원한다.';
+  }
+
+  @override
+  String ySentOffAgain1(String name, String minute, String count) {
+    return '또 퇴장: $minute분 $name. 경기장에 남은 건 $count명.';
+  }
+
+  @override
+  String ySentOffAgain2(String name, String minute, String count) {
+    return '또 퇴장. $minute분에 $name까지 나가고 이제 $count명이다. 믿을 수가 없다.';
+  }
+
+  @override
+  String ySentOffAgain3(String name, String minute, String count) {
+    return '$name까지, $minute분에. 남은 건 $count명. 이 팀 누가 제대로 이끌긴 하나?';
+  }
+
+  @override
   String get yBoardPressure0 => '협회가 아주 조용해졌다. 좋은 신호였던 적이 없다.';
 
   @override

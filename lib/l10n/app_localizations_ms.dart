@@ -5574,6 +5574,26 @@ class AppLocalizationsMs extends AppLocalizations {
   }
 
   @override
+  String ySentOffAgain0(String name, String minute, String count) {
+    return 'Satu lagi kad merah, $name pada minit ke-$minute, dan kita tinggal $count orang. Pemain yang masih di padang ada sokongan penuh saya.';
+  }
+
+  @override
+  String ySentOffAgain1(String name, String minute, String count) {
+    return 'Satu lagi kad merah: $name, minit ke-$minute. Tinggal $count pemain di padang.';
+  }
+
+  @override
+  String ySentOffAgain2(String name, String minute, String count) {
+    return 'Satu lagi kad merah. $name keluar pada minit ke-$minute dan kita tinggal $count orang. Tak masuk akal.';
+  }
+
+  @override
+  String ySentOffAgain3(String name, String minute, String count) {
+    return '$name pun sama, pada minit ke-$minute. Tinggal $count pemain. Ada sesiapa yang benar-benar mengurus pasukan ini?';
+  }
+
+  @override
   String get yBoardPressure0 =>
       'Lembaga sudah sangat senyap. Itu tidak pernah petanda baik.';
 

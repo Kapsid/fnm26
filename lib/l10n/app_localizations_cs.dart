@@ -5814,6 +5814,26 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String ySentOffAgain0(String name, String minute, String count) {
+    return 'Další červená, $name v $minute. minutě, a na hřišti nám zbývá $count hráčů. Těm, co tam zůstali, fandím ze všech sil.';
+  }
+
+  @override
+  String ySentOffAgain1(String name, String minute, String count) {
+    return 'Další červená: $name, $minute. minuta. Na hřišti jich zbývá $count.';
+  }
+
+  @override
+  String ySentOffAgain2(String name, String minute, String count) {
+    return 'Další červená. $name jde ven v $minute. minutě a hrajeme jen v $count. Neuvěřitelné.';
+  }
+
+  @override
+  String ySentOffAgain3(String name, String minute, String count) {
+    return 'I $name, v $minute. minutě. Zbývá $count hráčů. Vede tenhle tým vůbec někdo?';
+  }
+
+  @override
   String get yBoardPressure0 =>
       'Vedení podezřele ztichlo. To nikdy nevěstí nic dobrého.';
 

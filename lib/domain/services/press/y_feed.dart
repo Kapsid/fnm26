@@ -148,6 +148,11 @@ enum YTemplate {
   /// and never that it was lost a man short.
   sentOff,
 
+  /// A second (or third) of ours walking in the same match: [sentOff]'s
+  /// wordings say "ten men", which a side already down to ten is not. Its
+  /// third argument is how many are left on the pitch.
+  sentOffAgain,
+
   /// Two goals down at half time, and it finished level or won.
   ///
   /// The pair below read the match the way [sentOff] does rather than the
@@ -2221,14 +2226,23 @@ abstract final class YFeed {
     // A post that cannot name him would be the generality the feed already
     // had too much of.
     if (name == null) return const [];
-    final args = [name, '${incident.minute}'];
+    // A second red in the same match is not "ten men" again: it gets its own
+    // wordings, which say how many are left. The first keeps [sentOff]
+    // exactly, so a feed with one red reads as it always did.
+    final again = incident.menLeft <= 9;
+    final template = again ? YTemplate.sentOffAgain : YTemplate.sentOff;
+    final args = [
+      name,
+      '${incident.minute}',
+      if (again) '${incident.menLeft}',
+    ];
     final posts = [
       for (final voice in const [YVoice.fan, YVoice.expro])
         () {
           final persona = personaFor(voice, nation, seed, key);
           return _post(
             voice: voice,
-            template: YTemplate.sentOff,
+            template: template,
             args: args,
             date: date,
             key: key,
@@ -2754,7 +2768,7 @@ abstract final class YFeed {
     YTemplate.boardPressure => YMood.despair,
     // A knock is bad luck and a red card is somebody's fault, which is the
     // difference between the room despairing and the room turning on him.
-    YTemplate.sentOff => YMood.fury,
+    YTemplate.sentOff || YTemplate.sentOffAgain => YMood.fury,
     // Coming from two down is the best afternoon there is short of a trophy;
     // losing from two up is the one the room does not forgive.
     YTemplate.turnedItRound => YMood.elation,

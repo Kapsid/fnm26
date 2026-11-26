@@ -458,8 +458,18 @@ Future<YTimeline> _feedOf(
         hurt.add(p.name);
       }
     }
-    for (final i in incidents[fixtureId] ?? const <MatchIncident>[]) {
-      if (i.type != MatchEventType.redCard) continue;
+    // Counted in minute order so the second red of a match reads "down to
+    // nine" rather than "ten men" again (owner, 1.1.4). The incidents are our
+    // nation's only (see above), so every red here is one of ours. Counted
+    // before a missing player is skipped, so the count stays right even when
+    // one of them cannot be named.
+    final reds = [
+      for (final i in incidents[fixtureId] ?? const <MatchIncident>[])
+        if (i.type == MatchEventType.redCard) i,
+    ]..sort((a, b) => a.minute.compareTo(b.minute));
+    var redsSoFar = 0;
+    for (final i in reds) {
+      redsSoFar++;
       final p = await playerRepo.byId(
         i.playerId,
         agingYears: aging,
@@ -474,6 +484,7 @@ Future<YTimeline> _feedOf(
             minute: i.minute,
             playerId: i.playerId,
             name: p.name,
+            menLeft: 11 - redsSoFar,
           ),
           date: j.date,
           key: 'red:${j.key}:${i.playerId}',

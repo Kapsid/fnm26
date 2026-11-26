@@ -8610,6 +8610,30 @@ abstract class AppLocalizations {
   /// **'A red for {name} on {minute} minutes, and I am supposed to believe this is progress.'**
   String ySentOff7(String name, String minute);
 
+  /// Y post about a second (or later) sending-off of ours in the same match, warm. {name} is the player sent off, {minute} the match minute, {count} how many of our players are left on the pitch, as a digit (9 after a second red, 8 after a third).
+  ///
+  /// In en, this message translates to:
+  /// **'Another red, {name} on {minute} minutes, and we are down to {count}. Every one of the lads still out there has my voice.'**
+  String ySentOffAgain0(String name, String minute, String count);
+
+  /// Y post about a second (or later) sending-off of ours in the same match, flat. {name} is the player sent off, {minute} the match minute, {count} how many of our players are left on the pitch, as a digit (9 after a second red, 8 after a third).
+  ///
+  /// In en, this message translates to:
+  /// **'Another red: {name}, {minute} minutes. Down to {count} on the pitch.'**
+  String ySentOffAgain1(String name, String minute, String count);
+
+  /// Y post about a second (or later) sending-off of ours in the same match, sour. {name} is the player sent off, {minute} the match minute, {count} how many of our players are left on the pitch, as a digit (9 after a second red, 8 after a third).
+  ///
+  /// In en, this message translates to:
+  /// **'Another red. {name} walks on {minute} minutes and we are down to {count}. Unbelievable.'**
+  String ySentOffAgain2(String name, String minute, String count);
+
+  /// Y post about a second (or later) sending-off of ours in the same match, sour. {name} is the player sent off, {minute} the match minute, {count} how many of our players are left on the pitch, as a digit (9 after a second red, 8 after a third).
+  ///
+  /// In en, this message translates to:
+  /// **'{name} as well, on {minute} minutes. {count} men left. Is anybody actually in charge of this team?'**
+  String ySentOffAgain3(String name, String minute, String count);
+
   /// Y post about the board losing patience. Variant 0.
   ///
   /// In en, this message translates to:

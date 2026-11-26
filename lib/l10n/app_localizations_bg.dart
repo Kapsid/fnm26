@@ -5628,6 +5628,26 @@ class AppLocalizationsBg extends AppLocalizations {
   }
 
   @override
+  String ySentOffAgain0(String name, String minute, String count) {
+    return 'Още един червен, $name в $minute. минута, и оставаме $count. Момчетата, които са още на терена, имат цялата ми подкрепа.';
+  }
+
+  @override
+  String ySentOffAgain1(String name, String minute, String count) {
+    return 'Още един червен: $name, $minute. минута. На терена остават $count.';
+  }
+
+  @override
+  String ySentOffAgain2(String name, String minute, String count) {
+    return 'Още един червен. $name излиза в $minute. минута и оставаме $count. Невероятно.';
+  }
+
+  @override
+  String ySentOffAgain3(String name, String minute, String count) {
+    return 'И $name, в $minute. минута. Остават $count играчи. Изобщо води ли някой този отбор?';
+  }
+
+  @override
   String get yBoardPressure0 =>
       'Съветът замлъкна. Това никога не е добър знак.';
 

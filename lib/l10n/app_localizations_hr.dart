@@ -5747,6 +5747,26 @@ class AppLocalizationsHr extends AppLocalizations {
   }
 
   @override
+  String ySentOffAgain0(String name, String minute, String count) {
+    return 'Još jedan crveni, $name u $minute. minuti, i ostajemo s $count. Dečki koji su još na terenu imaju svu moju podršku.';
+  }
+
+  @override
+  String ySentOffAgain1(String name, String minute, String count) {
+    return 'Još jedan crveni: $name, $minute. minuta. Na terenu ih je ostalo $count.';
+  }
+
+  @override
+  String ySentOffAgain2(String name, String minute, String count) {
+    return 'Još jedan crveni. $name odlazi u $minute. minuti i ostajemo s $count. Nevjerojatno.';
+  }
+
+  @override
+  String ySentOffAgain3(String name, String minute, String count) {
+    return 'I $name, u $minute. minuti. Ostalo je $count igrača. Vodi li itko ovu momčad?';
+  }
+
+  @override
   String get yBoardPressure0 =>
       'Odbor je jako utihnuo. To nikad nije dobar znak.';
 

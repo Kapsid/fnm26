@@ -5586,6 +5586,26 @@ class AppLocalizationsDa extends AppLocalizations {
   }
 
   @override
+  String ySentOffAgain0(String name, String minute, String count) {
+    return 'Endnu et rødt kort, $name efter $minute minutter, og vi er nede på $count. Drengene, der stadig er derude, har min fulde opbakning.';
+  }
+
+  @override
+  String ySentOffAgain1(String name, String minute, String count) {
+    return 'Endnu et rødt kort: $name, $minute minutter. Kun $count tilbage på banen.';
+  }
+
+  @override
+  String ySentOffAgain2(String name, String minute, String count) {
+    return 'Endnu et rødt. $name ryger ud efter $minute minutter, og vi er nede på $count. Utroligt.';
+  }
+
+  @override
+  String ySentOffAgain3(String name, String minute, String count) {
+    return 'Også $name, efter $minute minutter. $count mand tilbage. Er der overhovedet nogen, der styrer det her hold?';
+  }
+
+  @override
   String get yBoardPressure0 =>
       'Bestyrelsen er blevet meget stille. Det er aldrig et godt tegn.';
 

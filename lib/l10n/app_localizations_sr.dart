@@ -5751,6 +5751,26 @@ class AppLocalizationsSr extends AppLocalizations {
   }
 
   @override
+  String ySentOffAgain0(String name, String minute, String count) {
+    return 'Још један црвени, $name у $minute. минуту, и остајемо са $count. Момци који су још на терену имају сву моју подршку.';
+  }
+
+  @override
+  String ySentOffAgain1(String name, String minute, String count) {
+    return 'Још један црвени: $name, $minute. минут. На терену их је остало $count.';
+  }
+
+  @override
+  String ySentOffAgain2(String name, String minute, String count) {
+    return 'Још један црвени. $name излази у $minute. минуту и остајемо са $count. Невероватно.';
+  }
+
+  @override
+  String ySentOffAgain3(String name, String minute, String count) {
+    return 'И $name, у $minute. минуту. Остало је $count играча. Да ли ико води овај тим?';
+  }
+
+  @override
   String get yBoardPressure0 =>
       'Управа је јако утихнула. То никад није добар знак.';
 
