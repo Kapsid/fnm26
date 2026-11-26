@@ -88,6 +88,13 @@ enum LandmarkKind {
   morroCastle,
   clerigos,
   victoriaMemorial,
+  // The fourth set (1.1.4): generic silhouettes for a whole country, where
+  // its city has none of its own (see [Landmarks.forGround]).
+  /// A Mesoamerican step pyramid (Mexico, Guatemala, Honduras).
+  stepPyramid,
+
+  /// Temple towers and golden stupas (Cambodia, Thailand, Myanmar, Laos).
+  templeStupas,
 }
 
 abstract final class Landmarks {
@@ -95,6 +102,27 @@ abstract final class Landmarks {
   /// ignored ("Reykjavík", "reykjavik" and "REYKJAVIK" are one city).
   static LandmarkKind forCity(String city) =>
       _byCity[fold(city)] ?? LandmarkKind.none;
+
+  /// The landmark behind a ground in [city] in the country [nationCode]:
+  /// the city's own ([forCity]), else the country's generic one
+  /// ([byNation]), else none.
+  static LandmarkKind forGround(String city, String nationCode) {
+    final own = forCity(city);
+    if (own != LandmarkKind.none) return own;
+    return byNation[nationCode.toUpperCase()] ?? LandmarkKind.none;
+  }
+
+  /// The generic silhouette a country's grounds show when their city has
+  /// no landmark of its own.
+  static const Map<String, LandmarkKind> byNation = {
+    'MEX': LandmarkKind.stepPyramid,
+    'GUA': LandmarkKind.stepPyramid,
+    'HON': LandmarkKind.stepPyramid,
+    'CAM': LandmarkKind.templeStupas,
+    'THA': LandmarkKind.templeStupas,
+    'MYA': LandmarkKind.templeStupas,
+    'LAO': LandmarkKind.templeStupas,
+  };
 
   /// Whether [kind] may appear in promo and store captures. The modern
   /// silhouettes whose owners guard their image (a trademarked tower, a

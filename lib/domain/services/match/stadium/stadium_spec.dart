@@ -116,7 +116,7 @@ class StadiumSpec {
       awayShare: awayShare,
       neutral: groundNationCode.toUpperCase() != home.code.toUpperCase(),
       flagCode: groundNationCode,
-      landmark: Landmarks.forCity(g.city),
+      landmark: Landmarks.forGround(g.city, groundNationCode),
       mowing: MowingPattern.forStadium(g.stadium),
       goalStyle: GoalStyle.forGround(
         stadium: g.stadium,

@@ -25,8 +25,8 @@ void main() {
       expect(Landmarks.forCity('Tórshavn'), LandmarkKind.none);
     });
 
-    test('there are eighty landmarks', () {
-      expect(LandmarkKind.values.length - 1, 80);
+    test('there are eighty-two landmarks (two of them by country)', () {
+      expect(LandmarkKind.values.length - 1, 82);
     });
 
     // The second set, keyed on the spellings the game's data uses.
