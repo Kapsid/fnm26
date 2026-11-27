@@ -348,12 +348,19 @@ class _OffsidePlan extends _Plan {
             );
         if (passer != null) {
           cutPasser = passer;
-          // The cut puts him beyond their line, the passer behind it.
+          // The cut puts him beyond their line, the passer behind it, and
+          // the two of them in the same channel: a ball through of fifteen
+          // to twenty metres, there inside the moment. Left to the shape
+          // he could stand forty metres across, and in a moment of a second
+          // (his own change due straight after it) the ball was still on
+          // its way when he set off for the bench.
+          final lat = latOf(now.players[passer]!).clamp(-16.0, 16.0);
           return cutToPhase(
             now,
             passer,
-            at(73, latOf(now.players[passer]!).clamp(-16.0, 16.0)),
+            at(73, lat),
             offside: pid,
+            extra: {pid: at(80, lat > 0 ? lat - 8 : lat + 8)},
           );
         }
       }

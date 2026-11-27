@@ -986,6 +986,11 @@ class _Builder {
 
   // Ball state.
   int? carrier;
+
+  /// The keeper whose error is already rolled for while he has the ball,
+  /// and the roll (see [_decide]).
+  int? howlerKeeper;
+  bool howlerRoll = false;
   _Flight? flight;
 
   /// The ball lying still (in the net, out of play, on a dead-ball spot)
@@ -1091,11 +1096,7 @@ class _Builder {
       if (activeWindow != null &&
           t >= activeWindow!.end - 1e-9 &&
           !_spills(activeWindow!, activePlan, t)) {
-        activeWindow!.exit = _state(t);
-        activeWindow = null;
-        activePlan = null;
-        spellEnd = t + _spellLength(possession, t);
-        nextAction = math.max(nextAction, t + 0.15);
+        _closeWindow(t);
       }
       // A kick-off after a goal: the picture cuts from the celebration to
       // the sides lined up, the conceding side on the ball.
@@ -1144,6 +1145,11 @@ class _Builder {
         final w = windows[wi];
         wi++;
         if (w.end <= t + 1e-9) continue;
+        // The window before it still open: their two ends a rounding apart
+        // (a microsecond: the screen times are whole microseconds, a goal's
+        // window end and the next moment's start are read separately). It
+        // closes here, so every window hands play back with its exit.
+        if (activeWindow != null) _closeWindow(t);
         _openWindow(w, t, wi);
       }
       _reseed(t);
@@ -1228,6 +1234,16 @@ class _Builder {
       start: start,
       confettiAt: isFinal ? total : null,
     );
+  }
+
+  /// Closes the window in play at [t]: its exit is the state play resumes
+  /// from.
+  void _closeWindow(double t) {
+    activeWindow!.exit = _state(t);
+    activeWindow = null;
+    activePlan = null;
+    spellEnd = t + _spellLength(possession, t);
+    nextAction = math.max(nextAction, t + 0.15);
   }
 
   void _openWindow(StagedWindow w, double t, int index) {
@@ -1513,9 +1529,15 @@ class _Builder {
       for (final m in moments) {
         final len = _secs(pacer.momentLength(m));
         if (len > 0) {
-          last = StagedWindow(start: cur, end: cur + len, moments: [m]);
+          // The minute's moments fill it to its end, give or take the
+          // microsecond each length is rounded to: never a hair into the
+          // next minute's first moment.
+          final to = cur + len > end && cur + len - end < 1e-5
+              ? end
+              : cur + len;
+          last = StagedWindow(start: cur, end: to, moments: [m]);
           windows.add(last);
-          cur += len;
+          cur = to;
         } else if (last != null &&
             m is ShotMoment &&
             m.origin != ShotOrigin.openPlay &&
@@ -2333,7 +2355,18 @@ class _Builder {
     final keeper = a.slot == sides[a.side].gkSlot;
     // Now and then he does get it wrong: a keeper's error, a few in a
     // hundred of his passes (owner, 2026-11-20: at most 1-2%).
-    final howler = keeper && giveAway && rng.nextDouble() < _keeperHowler;
+    // Rolled once a time he has the ball, not at every look he takes: he
+    // may look again every quarter of a second until the pass fits, and
+    // rolled at each look his errors ran at three times the rate.
+    if (!keeper) howlerKeeper = null;
+    var howler = false;
+    if (keeper && giveAway) {
+      if (howlerKeeper != c) {
+        howlerKeeper = c;
+        howlerRoll = rng.nextDouble() < _keeperHowler;
+      }
+      howler = howlerRoll;
+    }
     if (howler) {
       target = _pickInterceptor(a, t, short: quick);
       intercept = true;

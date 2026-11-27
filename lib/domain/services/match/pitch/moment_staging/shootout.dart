@@ -416,12 +416,14 @@ class InMatchPenalty {
   /// at screen second [t].
   double secondsAt(double t) => t - strike + ShootoutStaging.strikeAt;
 
-  /// The screen seconds the close-up is up between.
+  /// The screen seconds the close-up is up between. A live ball hands
+  /// over at [spillEnd], however soon: kept up to the shootout kick's full
+  /// length after a short spill, the close-up still covered the pitch as
+  /// the man who got to the ball struck the follow-up.
   double get from => strike - ShootoutStaging.strikeAt + opensAt;
-  double get to => math.max(
-    strike - ShootoutStaging.strikeAt + ShootoutStaging.kickSeconds,
-    spillEnd ?? 0,
-  );
+  double get to =>
+      spillEnd ??
+      strike - ShootoutStaging.strikeAt + ShootoutStaging.kickSeconds;
 
   /// Every penalty [s] plays in the match, in order, each with the kick it
   /// shows. A penalty struck before the script starts (a resume after it)

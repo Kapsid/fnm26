@@ -387,12 +387,18 @@ abstract final class Declutter {
   /// held where he is (1: not moved at all); [contact] how far two are in
   /// touch (1: they may overlap up to [contactRoom]); [presence] how far a
   /// man is in the picture yet (0 to 1).
+  ///
+  /// [passes] was 40 until 1.1.4: over 80 lab matches, four in five of the
+  /// pairs still piled up after it had neither man pinned nor at
+  /// [maxNudge]: a crowd (a box at a shot) the shrinking steps ran out of
+  /// passes to part. With 80, 1.52% of the display test's frames pile up,
+  /// not 2.09%.
   static Map<int, Offset2> of(
     Map<int, Offset2> at, {
     Map<int, double> pinned = const {},
     double Function(int a, int b)? contact,
     Map<int, double> presence = const {},
-    int passes = 40,
+    int passes = 80,
   }) {
     final ids = at.keys.toList()..sort();
     final n = ids.length;

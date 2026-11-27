@@ -157,7 +157,10 @@ void main() {
         for (final c in w.cues) {
           if (c.kind != PitchCueKind.offsideFlag) continue;
           final show = o.flags.firstWhere((x) => x.at == c.t);
-          if (show.until <= c.t + 0.3) continue;
+          // Read at +0.3 s, so only a flag still held then: one a cut takes
+          // away sooner is already on its way down (it comes down over
+          // [OffsideFlagShow.lift] before the cut).
+          if (show.until - OffsideFlagShow.lift <= c.t + 0.3) continue;
           final f = o.frameAt(c.t + 0.3);
           final why = 'match $seed flag at ${c.t}';
           final man = s.sample(_at(c.t)).players[c.playerId]!;
