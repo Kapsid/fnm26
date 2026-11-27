@@ -25,6 +25,7 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactic_preset.dart';
+import 'package:fnm/domain/entities/player_role.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
@@ -79,6 +80,7 @@ import 'package:fnm/features/share/share_data.dart';
 import 'package:fnm/features/share/share_sheet.dart';
 import 'package:fnm/features/shell/detail_pane_host.dart' show openPlayer;
 import 'package:fnm/features/tactics/in_match_tactics.dart';
+import 'package:fnm/features/tactics/pitch_plan.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
 import 'package:fnm/features/tactics/tactic_preset_providers.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart'
@@ -245,6 +247,11 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
 
   /// The places changed within [_liveFormation] (see [SlotSwitches]).
   SlotSwitches _liveSwitches = SlotSwitches.none;
+
+  /// The live slot roles and movement arrows: the team sheet's, until the
+  /// in-match editor changes them.
+  SlotRoles _liveRoles = SlotRoles.none;
+  SlotArrows _liveArrows = SlotArrows.none;
 
   /// True while the full-time result is being committed and the world is being
   /// simulated forward. Debug builds can take several seconds here, so the
@@ -1863,6 +1870,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     _liveInstructions = team.instructions;
     _liveFullBacks = team.fullBacks;
     _liveSwitches = team.switches;
+    _liveRoles = team.slotRoles;
+    _liveArrows = team.arrows;
     _playerNationId = preview.playerNationId;
     _liveReady = true;
   }
@@ -2033,6 +2042,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       instructions: _liveInstructions,
       fullBacks: _liveFullBacks,
       switches: _liveSwitches,
+      roles: _liveRoles,
+      arrows: _liveArrows,
       pool: _playerPool(preview),
       startingIds: team.xi.map((p) => p.id).toSet(),
       maxSubs: _maxSubsFor(preview),
@@ -2136,11 +2147,16 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     // where the manager moved it rather than sliding to the last slot.
     final xi = <Player>[];
     final slots = <PlayerPosition>[];
+    final roles = <PlayerRole>[];
+    final arrows = <MoveArrow>[];
     for (var i = 0; i < r.lineup.length; i++) {
       final p = byId[r.lineup[i]];
       if (p == null) continue;
       xi.add(p);
       slots.add(r.positions[i]);
+      // Each man's slot role and run, beside him, as the engine reads them.
+      roles.add(r.roles.at(i, r.positions[i]));
+      arrows.add(r.arrows.at(i, r.positions[i]));
     }
     // Take effect from the NEXT minute, never the one just played. A change
     // stamped on the current minute made the re-sim replay that minute with the
@@ -2162,6 +2178,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       _liveInstructions = r.instructions;
       _liveFullBacks = r.fullBacks;
       _liveSwitches = r.switches;
+      _liveRoles = r.roles;
+      _liveArrows = r.arrows;
       _takers = r.takers;
       _throwIn = r.throwIn;
       // Any hurt player taken off is no longer flagged as an unaddressed injury.
@@ -2176,6 +2194,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
           switches: r.switches,
           xi: xi,
           slots: slots,
+          roles: roles,
+          arrows: arrows,
           // From this minute on, never retroactively: the penalty already
           // taken stays taken by whoever took it.
           takers: takersChanged ? r.takers : null,
@@ -2247,6 +2267,19 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               instructions: _liveInstructions,
               fullBacks: _liveFullBacks,
               switches: _liveSwitches,
+              roles: [
+                for (var s = 0; s < _liveLineup.length; s++)
+                  _liveRoles.at(s, _liveSwitches.apply(_liveFormation)[s]),
+              ],
+              arrows: pitchArrowsOf(
+                Tactic(
+                  formation: _liveFormation,
+                  lineup: _liveLineup,
+                  fullBacks: _liveFullBacks,
+                  switches: _liveSwitches,
+                  arrows: _liveArrows,
+                ),
+              ),
               lineup: _liveLineup,
               byId: byId,
               teamColors: n == null

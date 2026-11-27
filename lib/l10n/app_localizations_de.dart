@@ -1368,6 +1368,65 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get roleFitGood => 'Passt gut';
+
+  @override
+  String get roleFitFair => 'Geht';
+
+  @override
+  String get roleFitPoor => 'Passt schlecht';
+
+  @override
+  String get arrowNone => 'Position halten';
+
+  @override
+  String get arrowForward => 'Nach vorne';
+
+  @override
+  String get arrowBack => 'Tiefer stehen';
+
+  @override
+  String get arrowInside => 'Nach innen ziehen';
+
+  @override
+  String get arrowOutside => 'Breit bleiben';
+
+  @override
+  String get arrowForwardInside => 'Nach vorne innen';
+
+  @override
+  String get arrowForwardOutside => 'Nach vorne außen';
+
+  @override
+  String get tacticsPitchModePlayers => 'Spieler';
+
+  @override
+  String get tacticsPitchModeRoles => 'Rollen & Laufwege';
+
+  @override
+  String get tacticsPitchRolesHint =>
+      'Tippen Sie auf einen Spieler für seine Rolle. Halten und ziehen Sie für den Laufweg.';
+
+  @override
+  String get tacticsPlanRoleHeading => 'ROLLE';
+
+  @override
+  String get tacticsPlanMovementHeading => 'LAUFWEG';
+
+  @override
+  String tacticsPlanTitle(String position, String name) {
+    return '$position · $name';
+  }
+
+  @override
+  String tacticsArrowSet(String name, String movement) {
+    return '$name: $movement';
+  }
+
+  @override
+  String get tacticsKeeperNoRun => 'Für den Torwart gibt es keinen Laufweg.';
+
+  @override
   String get tacticsPenaltyTaker => 'ELFMETERSCHÜTZE';
 
   @override
@@ -9763,6 +9822,110 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get roleBallPlayingDefenderBlurb => 'Baut das Spiel von hinten auf.';
+
+  @override
+  String get roleLineKeeper => 'Linienkeeper';
+
+  @override
+  String get roleSweeperKeeper => 'Mitspielender Torwart';
+
+  @override
+  String get roleStopper => 'Vorstopper';
+
+  @override
+  String get roleCoveringDefender => 'Absichernder Verteidiger';
+
+  @override
+  String get roleDefensiveFullBack => 'Defensiver Außenverteidiger';
+
+  @override
+  String get roleWingBack => 'Flügelverteidiger';
+
+  @override
+  String get roleInvertedFullBack => 'Inverser Außenverteidiger';
+
+  @override
+  String get roleAnchor => 'Anker';
+
+  @override
+  String get roleDeepPlaymaker => 'Tiefer Spielmacher';
+
+  @override
+  String get roleBoxToBox => 'Box-to-Box';
+
+  @override
+  String get roleShadowStriker => 'Hängende Spitze';
+
+  @override
+  String get roleTouchlineWinger => 'Klassischer Flügelspieler';
+
+  @override
+  String get roleDefensiveWinger => 'Defensiver Flügelspieler';
+
+  @override
+  String get roleFalseNine => 'Falsche Neun';
+
+  @override
+  String get rolePressingForward => 'Pressingstürmer';
+
+  @override
+  String get roleLineKeeperBlurb =>
+      'Bleibt auf der Linie. Sicherer, langsamer im Aufbau.';
+
+  @override
+  String get roleSweeperKeeperBlurb =>
+      'Räumt hinter der Abwehr ab und leitet Angriffe ein.';
+
+  @override
+  String get roleStopperBlurb =>
+      'Rückt heraus, um früh zu erobern. Kopfballstark.';
+
+  @override
+  String get roleCoveringDefenderBlurb =>
+      'Lässt sich fallen und sichert den Raum dahinter.';
+
+  @override
+  String get roleDefensiveFullBackBlurb =>
+      'Bleibt hinten und sichert die Seite.';
+
+  @override
+  String get roleWingBackBlurb =>
+      'Hinterläuft und flankt. Spult viele Kilometer ab.';
+
+  @override
+  String get roleInvertedFullBackBlurb =>
+      'Rückt ins Mittelfeld ein und hilft beim Ballbesitz.';
+
+  @override
+  String get roleAnchorBlurb => 'Schirmt die Abwehr ab. Trifft selten.';
+
+  @override
+  String get roleDeepPlaymakerBlurb =>
+      'Lenkt das Spiel aus der Tiefe. Mehr Vorlagen.';
+
+  @override
+  String get roleBoxToBoxBlurb =>
+      'Das ganze Spiel rauf und runter. Braucht Ausdauer.';
+
+  @override
+  String get roleShadowStrikerBlurb =>
+      'Kommt spät in den Strafraum. Mehr Tore.';
+
+  @override
+  String get roleTouchlineWingerBlurb =>
+      'Klebt an der Linie und flankt. Mehr Vorlagen.';
+
+  @override
+  String get roleDefensiveWingerBlurb =>
+      'Arbeitet nach hinten und schützt den Außenverteidiger.';
+
+  @override
+  String get roleFalseNineBlurb =>
+      'Lässt sich fallen und verbindet das Spiel. Bereitet mehr vor, als er trifft.';
+
+  @override
+  String get rolePressingForwardBlurb =>
+      'Führt das Pressing vorne an. Ermüdet schneller.';
 
   @override
   String get federationDeptYouth => 'Nachwuchsakademie';

@@ -1311,6 +1311,65 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String get roleFitGood => 'Phù hợp';
+
+  @override
+  String get roleFitFair => 'Tạm được';
+
+  @override
+  String get roleFitPoor => 'Không hợp';
+
+  @override
+  String get arrowNone => 'Giữ vị trí';
+
+  @override
+  String get arrowForward => 'Dâng lên';
+
+  @override
+  String get arrowBack => 'Lùi sâu hơn';
+
+  @override
+  String get arrowInside => 'Bó vào trong';
+
+  @override
+  String get arrowOutside => 'Dạt biên';
+
+  @override
+  String get arrowForwardInside => 'Dâng lên và bó vào';
+
+  @override
+  String get arrowForwardOutside => 'Dâng lên và dạt biên';
+
+  @override
+  String get tacticsPitchModePlayers => 'Cầu thủ';
+
+  @override
+  String get tacticsPitchModeRoles => 'Vai trò & di chuyển';
+
+  @override
+  String get tacticsPitchRolesHint =>
+      'Chạm cầu thủ để chọn vai trò. Giữ và kéo để vẽ hướng di chuyển.';
+
+  @override
+  String get tacticsPlanRoleHeading => 'VAI TRÒ';
+
+  @override
+  String get tacticsPlanMovementHeading => 'DI CHUYỂN';
+
+  @override
+  String tacticsPlanTitle(String position, String name) {
+    return '$position · $name';
+  }
+
+  @override
+  String tacticsArrowSet(String name, String movement) {
+    return '$name: $movement';
+  }
+
+  @override
+  String get tacticsKeeperNoRun => 'Thủ môn không có hướng di chuyển để chọn.';
+
+  @override
   String get tacticsPenaltyTaker => 'NGƯỜI ĐÁ PHẠT ĐỀN';
 
   @override
@@ -9554,6 +9613,105 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get roleBallPlayingDefenderBlurb =>
       'Khởi đầu các pha bóng từ phía sau.';
+
+  @override
+  String get roleLineKeeper => 'Thủ môn bám vạch';
+
+  @override
+  String get roleSweeperKeeper => 'Thủ môn quét';
+
+  @override
+  String get roleStopper => 'Trung vệ dâng cao';
+
+  @override
+  String get roleCoveringDefender => 'Trung vệ bọc lót';
+
+  @override
+  String get roleDefensiveFullBack => 'Hậu vệ biên phòng ngự';
+
+  @override
+  String get roleWingBack => 'Hậu vệ chạy cánh';
+
+  @override
+  String get roleInvertedFullBack => 'Hậu vệ biên bó vào trong';
+
+  @override
+  String get roleAnchor => 'Tiền vệ mỏ neo';
+
+  @override
+  String get roleDeepPlaymaker => 'Tiền vệ kiến thiết lùi sâu';
+
+  @override
+  String get roleBoxToBox => 'Tiền vệ box-to-box';
+
+  @override
+  String get roleShadowStriker => 'Tiền đạo ẩn';
+
+  @override
+  String get roleTouchlineWinger => 'Tiền vệ cánh bám biên';
+
+  @override
+  String get roleDefensiveWinger => 'Tiền vệ cánh phòng ngự';
+
+  @override
+  String get roleFalseNine => 'Số 9 ảo';
+
+  @override
+  String get rolePressingForward => 'Tiền đạo pressing';
+
+  @override
+  String get roleLineKeeperBlurb =>
+      'Bám vạch vôi. An toàn hơn, phát động chậm hơn.';
+
+  @override
+  String get roleSweeperKeeperBlurb =>
+      'Băng ra quét phía sau hàng thủ và phát động tấn công.';
+
+  @override
+  String get roleStopperBlurb =>
+      'Dâng lên đoạt bóng sớm. Mạnh trong không chiến.';
+
+  @override
+  String get roleCoveringDefenderBlurb =>
+      'Lùi sâu bọc lót khoảng trống phía sau.';
+
+  @override
+  String get roleDefensiveFullBackBlurb => 'Ở lại phía sau và giữ cánh.';
+
+  @override
+  String get roleWingBackBlurb => 'Chồng biên và tạt bóng. Chạy rất nhiều.';
+
+  @override
+  String get roleInvertedFullBackBlurb => 'Bó vào giữa sân để giúp giữ bóng.';
+
+  @override
+  String get roleAnchorBlurb => 'Che chắn hàng thủ. Hiếm khi ghi bàn.';
+
+  @override
+  String get roleDeepPlaymakerBlurb =>
+      'Điều tiết lối chơi từ tuyến dưới. Nhiều kiến tạo hơn.';
+
+  @override
+  String get roleBoxToBoxBlurb => 'Lên công về thủ cả trận. Cần thể lực.';
+
+  @override
+  String get roleShadowStrikerBlurb =>
+      'Băng vào vòng cấm muộn. Nhiều bàn thắng hơn.';
+
+  @override
+  String get roleTouchlineWingerBlurb =>
+      'Bám biên và tạt bóng. Nhiều kiến tạo hơn.';
+
+  @override
+  String get roleDefensiveWingerBlurb => 'Lùi về hỗ trợ hậu vệ biên.';
+
+  @override
+  String get roleFalseNineBlurb =>
+      'Lùi xuống làm tường kết nối. Kiến tạo nhiều hơn ghi bàn.';
+
+  @override
+  String get rolePressingForwardBlurb =>
+      'Dẫn đầu pressing từ phía trên. Mau mệt hơn.';
 
   @override
   String get federationDeptYouth => 'Học viện trẻ';

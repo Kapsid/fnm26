@@ -32,10 +32,12 @@ class LibraryTactic {
     this.deadBallSlot,
     this.throwInStyle,
     this.throwInSlot,
+    this.arrows,
   });
 
-  /// Captures [tactic] as a library entry called [name], reading the roles and
-  /// set-piece takers of whoever currently fills each slot.
+  /// Captures [tactic] as a library entry called [name], reading each slot's
+  /// role (its slot role, or the legacy per-player [roles] of whoever fills
+  /// it) and the set-piece takers of whoever currently fills each slot.
   ///
   /// A taker who is not in the eleven has no slot to remember, so he is left
   /// as automatic, which is what the tactics screen does with him anyway.
@@ -62,10 +64,11 @@ class LibraryTactic {
       switches: tactic.switches.validFor(tactic.formation),
       rolesBySlot: {
         for (var slot = 0; slot < tactic.lineup.length; slot++)
-          if (roles[tactic.lineup[slot]] case final role?
+          if (tactic.effectiveRoleAt(slot, roles) case final role
               when role != PlayerRole.none)
             slot: role,
       },
+      arrows: tactic.arrows,
       penaltySlot: slotOf(penaltyTaker),
       deadBallSlot: slotOf(deadBallTaker),
       throwInStyle: tactic.throwInStyle,
@@ -145,6 +148,10 @@ class LibraryTactic {
           ? ThrowInStyleX.parse(json['throwInStyle'])
           : null,
       throwInSlot: slot(json['throwInSlot']),
+      // Absent in an entry saved before movement arrows existed.
+      arrows: json.containsKey('arrows')
+          ? SlotArrows.fromJson(json['arrows'])
+          : null,
     );
   }
 
@@ -178,6 +185,11 @@ class LibraryTactic {
   /// The slot whose player takes the throw-ins; null = automatic.
   final int? throwInSlot;
 
+  /// Each slot's movement arrow (the full-backs' are [fullBacks]), or null
+  /// for an entry saved before arrows existed, which, loaded, leaves the
+  /// save's own alone.
+  final SlotArrows? arrows;
+
   LibraryTactic copyWith({int? id, String? name}) => LibraryTactic(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -191,6 +203,7 @@ class LibraryTactic {
     deadBallSlot: deadBallSlot,
     throwInStyle: throwInStyle,
     throwInSlot: throwInSlot,
+    arrows: arrows,
   );
 
   /// The stored document: everything but the name and id, which have columns.
@@ -213,6 +226,7 @@ class LibraryTactic {
     'deadBallSlot': deadBallSlot,
     if (throwInStyle case final style?) 'throwInStyle': style.name,
     if (throwInSlot != null) 'throwInSlot': throwInSlot,
+    if (arrows case final a?) 'arrows': a.toJson(),
   });
 
   /// Fits this tactic's per-slot choices onto [lineup] (the eleven the new

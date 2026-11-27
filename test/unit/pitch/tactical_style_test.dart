@@ -35,12 +35,16 @@ MatchTeam _side(
   TacticalInstructions i, {
   Map<int, PlayerRole> roles = const {},
   FullBackPushes fullBacks = FullBackPushes.neutral,
+  SlotRoles slotRoles = SlotRoles.none,
+  SlotArrows arrows = SlotArrows.none,
 }) => MatchTeam(
   nationId: nation,
   formation: f,
   instructions: i,
   roles: roles,
   fullBacks: fullBacks,
+  slotRoles: slotRoles,
+  arrows: arrows,
   xi: [
     for (var k = 0; k < 11; k++)
       player(
@@ -58,11 +62,15 @@ class _Style {
     this.instr, {
     this.roles = const {},
     this.fullBacks = FullBackPushes.neutral,
+    this.slotRoles = SlotRoles.none,
+    this.arrows = SlotArrows.none,
   });
 
   final TacticalInstructions instr;
   final Map<int, PlayerRole> roles;
   final FullBackPushes fullBacks;
+  final SlotRoles slotRoles;
+  final SlotArrows arrows;
 
   late final List<PitchScript> scripts = [
     for (var seed = 0; seed < _matches; seed++) _build(seed),
@@ -77,6 +85,8 @@ class _Style {
       instr,
       roles: roles,
       fullBacks: fullBacks,
+      slotRoles: slotRoles,
+      arrows: arrows,
     );
     final away = _side(
       2,
@@ -116,6 +126,19 @@ final _overlapping = _Style(
     right: FullBackPush.up,
   ),
 );
+
+/// Both central midfielders with a forward arrow (slots 6 and 7: 106, 107).
+final _runningMidfield = _Style(
+  const TacticalInstructions(),
+  arrows: const SlotArrows({6: MoveArrow.forward, 7: MoveArrow.forward}),
+);
+
+/// A pressing forward up front (slot 9).
+final _pressingNine = _Style(
+  const TacticalInstructions(),
+  slotRoles: const SlotRoles({9: PlayerRole.pressingForward}),
+);
+
 final _insideForwards = _Style(
   const TacticalInstructions(),
   roles: const {
@@ -385,6 +408,44 @@ void main() {
       'target man ${target.toStringAsFixed(1)} m',
     );
     expect(target - nine, greaterThanOrEqualTo(10));
+  });
+
+  test(
+    'a forward arrow takes a midfielder higher up the pitch on the ball',
+    () {
+      final (running, _) = _inPossession(_runningMidfield, [106, 107]);
+      final (plain, _) = _inPossession(_balanced, [106, 107]);
+      // ignore: avoid_print
+      print(
+        'central midfielders on the ball: forward arrows '
+        '${running.toStringAsFixed(1)} m, none ${plain.toStringAsFixed(1)} m',
+      );
+      // The line (and the ball) caps how far he gets: a few metres, every time.
+      expect(running - plain, greaterThanOrEqualTo(2.5));
+    },
+  );
+
+  test('a pressing forward defends higher than a striker with no role', () {
+    double outOfPossession(_Style style) {
+      final depths = <double>[];
+      for (final s in style.scripts) {
+        final r = _Read(s);
+        for (final (f, homeBall) in r.carried()) {
+          if (homeBall) continue;
+          if (r.at(f, _st) case final p?) depths.add(r.depth(p, true, f.t));
+        }
+      }
+      return _mean(depths);
+    }
+
+    final pressing = outOfPossession(_pressingNine);
+    final plain = outOfPossession(_balanced);
+    // ignore: avoid_print
+    print(
+      'striker without the ball: pressing forward '
+      '${pressing.toStringAsFixed(1)} m, none ${plain.toStringAsFixed(1)} m',
+    );
+    expect(pressing - plain, greaterThanOrEqualTo(3));
   });
 
   test('inside forwards come in off the flank; wide wingers hold the width', () {

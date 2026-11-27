@@ -1992,6 +1992,94 @@
       }
     }
   },
+  "roleFitGood": "Good fit",
+  "@roleFitGood": {
+    "description": "How well a role suits the player: his attributes fit it."
+  },
+  "roleFitFair": "Fair fit",
+  "@roleFitFair": {
+    "description": "How well a role suits the player: neither strength nor weakness."
+  },
+  "roleFitPoor": "Poor fit",
+  "@roleFitPoor": {
+    "description": "How well a role suits the player: it asks for his weakest attribute."
+  },
+  "arrowNone": "Hold position",
+  "@arrowNone": {
+    "description": "A player's movement on the tactics pitch: no run, he keeps his place."
+  },
+  "arrowForward": "Get forward",
+  "@arrowForward": {
+    "description": "A player's movement on the tactics pitch: runs forward."
+  },
+  "arrowBack": "Sit deeper",
+  "@arrowBack": {
+    "description": "A player's movement on the tactics pitch: sits deeper."
+  },
+  "arrowInside": "Come inside",
+  "@arrowInside": {
+    "description": "A player's movement on the tactics pitch: comes inside off his flank."
+  },
+  "arrowOutside": "Stay wide",
+  "@arrowOutside": {
+    "description": "A player's movement on the tactics pitch: stays wide on the touchline."
+  },
+  "arrowForwardInside": "Forward and inside",
+  "@arrowForwardInside": {
+    "description": "A player's movement on the tactics pitch: runs forward and inside."
+  },
+  "arrowForwardOutside": "Forward and wide",
+  "@arrowForwardOutside": {
+    "description": "A player's movement on the tactics pitch: runs forward and wide."
+  },
+  "tacticsPitchModePlayers": "Players",
+  "@tacticsPitchModePlayers": {
+    "description": "Toggle above the tactics pitch: the pitch edits who plays where."
+  },
+  "tacticsPitchModeRoles": "Roles & runs",
+  "@tacticsPitchModeRoles": {
+    "description": "Toggle above the tactics pitch: the pitch edits each player's role and run."
+  },
+  "tacticsPitchRolesHint": "Tap a player to set a role. Hold and drag to draw a run.",
+  "@tacticsPitchRolesHint": {
+    "description": "Hint above the tactics pitch while it edits roles and runs."
+  },
+  "tacticsPlanRoleHeading": "ROLE",
+  "@tacticsPlanRoleHeading": {
+    "description": "Heading of the role list in a player's role and run sheet."
+  },
+  "tacticsPlanMovementHeading": "MOVEMENT",
+  "@tacticsPlanMovementHeading": {
+    "description": "Heading of the movement choices in a player's role and run sheet."
+  },
+  "tacticsPlanTitle": "{position} · {name}",
+  "@tacticsPlanTitle": {
+    "description": "Title of a player's role and run sheet: his position and name.",
+    "placeholders": {
+      "position": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tacticsArrowSet": "{name}: {movement}",
+  "@tacticsArrowSet": {
+    "description": "Note after a run is drawn on the tactics pitch: the player and his movement.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "movement": {
+        "type": "String"
+      }
+    }
+  },
+  "tacticsKeeperNoRun": "A keeper has no run to set.",
+  "@tacticsKeeperNoRun": {
+    "description": "In a player's role and run sheet: a goalkeeper has no movement to set."
+  },
   "tacticsPenaltyTaker": "PENALTY TAKER",
   "@tacticsPenaltyTaker": {
     "description": "Heading of the penalty-taker picker."
@@ -15182,6 +15270,126 @@
   "roleBallWinnerBlurb": "Breaks up play rather than finishing it.",
   "roleInvertedWingerBlurb": "Cuts inside to shoot. More goals.",
   "roleBallPlayingDefenderBlurb": "Starts moves from the back.",
+  "roleLineKeeper": "Line keeper",
+  "@roleLineKeeper": {
+    "description": "A tactical role for a goalkeeper slot: stays on his line."
+  },
+  "roleSweeperKeeper": "Sweeper keeper",
+  "@roleSweeperKeeper": {
+    "description": "A tactical role for a goalkeeper slot: sweeps behind the defence."
+  },
+  "roleStopper": "Stopper",
+  "@roleStopper": {
+    "description": "A tactical role for a centre-back slot: steps out to win the ball."
+  },
+  "roleCoveringDefender": "Covering defender",
+  "@roleCoveringDefender": {
+    "description": "A tactical role for a centre-back slot: covers the space behind."
+  },
+  "roleDefensiveFullBack": "Defensive full-back",
+  "@roleDefensiveFullBack": {
+    "description": "A tactical role for a full-back slot: stays home."
+  },
+  "roleWingBack": "Wing-back",
+  "@roleWingBack": {
+    "description": "A tactical role for a full-back slot: lives on the overlap."
+  },
+  "roleInvertedFullBack": "Inverted full-back",
+  "@roleInvertedFullBack": {
+    "description": "A tactical role for a full-back slot: tucks into midfield."
+  },
+  "roleAnchor": "Anchor",
+  "@roleAnchor": {
+    "description": "A tactical role for a holding midfielder slot: sits in front of the defence."
+  },
+  "roleDeepPlaymaker": "Deep-lying playmaker",
+  "@roleDeepPlaymaker": {
+    "description": "A tactical role for a holding midfielder slot: dictates play from deep."
+  },
+  "roleBoxToBox": "Box-to-box",
+  "@roleBoxToBox": {
+    "description": "A tactical role for a central midfielder slot: covers the whole pitch."
+  },
+  "roleShadowStriker": "Shadow striker",
+  "@roleShadowStriker": {
+    "description": "A tactical role for an attacking midfielder slot: arrives late to score."
+  },
+  "roleTouchlineWinger": "Touchline winger",
+  "@roleTouchlineWinger": {
+    "description": "A tactical role for a wide slot: holds the touchline and crosses."
+  },
+  "roleDefensiveWinger": "Defensive winger",
+  "@roleDefensiveWinger": {
+    "description": "A tactical role for a wide slot: tracks back."
+  },
+  "roleFalseNine": "False nine",
+  "@roleFalseNine": {
+    "description": "A tactical role for a striker slot: drops off the line to link play."
+  },
+  "rolePressingForward": "Pressing forward",
+  "@rolePressingForward": {
+    "description": "A tactical role for a striker slot: leads the press."
+  },
+  "roleLineKeeperBlurb": "Stays on the line. Safer, slower to start play.",
+  "@roleLineKeeperBlurb": {
+    "description": "What a tactical role does, one line, in the role picker."
+  },
+  "roleSweeperKeeperBlurb": "Sweeps behind the defence and starts moves.",
+  "@roleSweeperKeeperBlurb": {
+    "description": "What a tactical role does, one line, in the role picker."
+  },
+  "roleStopperBlurb": "Steps out to win it early. Strong in the air.",
+  "@roleStopperBlurb": {
+    "description": "What a tactical role does, one line, in the role picker."
+  },
+  "roleCoveringDefenderBlurb": "Drops off to cover the space behind.",
+  "@roleCoveringDefenderBlurb": {
+    "description": "What a tactical role does, one line, in the role picker."
+  },
+  "roleDefensiveFullBackBlurb": "Stays home and guards the flank.",
+  "@roleDefensiveFullBackBlurb": {
+    "description": "What a tactical role does, one line, in the role picker."
+  },
+  "roleWingBackBlurb": "Overlaps and crosses. Covers a lot of ground.",
+  "@roleWingBackBlurb": {
+    "description": "What a tactical role does, one line, in the role picker."
+  },
+  "roleInvertedFullBackBlurb": "Tucks into midfield to help keep the ball.",
+  "@roleInvertedFullBackBlurb": {
+    "description": "What a tactical role does, one line, in the role picker."
+  },
+  "roleAnchorBlurb": "Shields the back line. Rarely scores.",
+  "@roleAnchorBlurb": {
+    "description": "What a tactical role does, one line, in the role picker."
+  },
+  "roleDeepPlaymakerBlurb": "Dictates play from deep. More assists.",
+  "@roleDeepPlaymakerBlurb": {
+    "description": "What a tactical role does, one line, in the role picker."
+  },
+  "roleBoxToBoxBlurb": "Up and down all match. Needs stamina.",
+  "@roleBoxToBoxBlurb": {
+    "description": "What a tactical role does, one line, in the role picker."
+  },
+  "roleShadowStrikerBlurb": "Arrives late in the box. More goals.",
+  "@roleShadowStrikerBlurb": {
+    "description": "What a tactical role does, one line, in the role picker."
+  },
+  "roleTouchlineWingerBlurb": "Hugs the touchline and crosses. More assists.",
+  "@roleTouchlineWingerBlurb": {
+    "description": "What a tactical role does, one line, in the role picker."
+  },
+  "roleDefensiveWingerBlurb": "Tracks back to protect the full-back.",
+  "@roleDefensiveWingerBlurb": {
+    "description": "What a tactical role does, one line, in the role picker."
+  },
+  "roleFalseNineBlurb": "Drops off to link play. Creates more than scores.",
+  "@roleFalseNineBlurb": {
+    "description": "What a tactical role does, one line, in the role picker."
+  },
+  "rolePressingForwardBlurb": "Leads the press from the front. Tires faster.",
+  "@rolePressingForwardBlurb": {
+    "description": "What a tactical role does, one line, in the role picker."
+  },
   "federationDeptYouth": "Youth Academy",
   "@federationDeptYouth": {
     "description": "A federation department the manager invests in."

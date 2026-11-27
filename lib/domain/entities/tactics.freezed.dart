@@ -299,7 +299,10 @@ mixin _$Tactic {
  Formation get formation; List<int?> get lineup;// length 11, slot order matches the formation
  TacticalInstructions get instructions; Playstyle get playstyle; FullBackPushes get fullBacks;/// Places changed within the formation (see [SlotSwitches]).
  SlotSwitches get switches;/// How the side takes its throw-ins (see [ThrowInStyle]).
- ThrowInStyle get throwInStyle;
+ ThrowInStyle get throwInStyle;/// Each slot's role (see [SlotRoles]); none set plays as before.
+ SlotRoles get roles;/// Each slot's movement arrow, the full-backs' apart: theirs are
+/// [fullBacks] (see [SlotArrows] and [arrowAt]).
+ SlotArrows get arrows;
 /// Create a copy of Tactic
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -310,16 +313,16 @@ $TacticCopyWith<Tactic> get copyWith => _$TacticCopyWithImpl<Tactic>(this as Tac
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Tactic&&(identical(other.formation, formation) || other.formation == formation)&&const DeepCollectionEquality().equals(other.lineup, lineup)&&(identical(other.instructions, instructions) || other.instructions == instructions)&&(identical(other.playstyle, playstyle) || other.playstyle == playstyle)&&(identical(other.fullBacks, fullBacks) || other.fullBacks == fullBacks)&&(identical(other.switches, switches) || other.switches == switches)&&(identical(other.throwInStyle, throwInStyle) || other.throwInStyle == throwInStyle));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Tactic&&(identical(other.formation, formation) || other.formation == formation)&&const DeepCollectionEquality().equals(other.lineup, lineup)&&(identical(other.instructions, instructions) || other.instructions == instructions)&&(identical(other.playstyle, playstyle) || other.playstyle == playstyle)&&(identical(other.fullBacks, fullBacks) || other.fullBacks == fullBacks)&&(identical(other.switches, switches) || other.switches == switches)&&(identical(other.throwInStyle, throwInStyle) || other.throwInStyle == throwInStyle)&&(identical(other.roles, roles) || other.roles == roles)&&(identical(other.arrows, arrows) || other.arrows == arrows));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,formation,const DeepCollectionEquality().hash(lineup),instructions,playstyle,fullBacks,switches,throwInStyle);
+int get hashCode => Object.hash(runtimeType,formation,const DeepCollectionEquality().hash(lineup),instructions,playstyle,fullBacks,switches,throwInStyle,roles,arrows);
 
 @override
 String toString() {
-  return 'Tactic(formation: $formation, lineup: $lineup, instructions: $instructions, playstyle: $playstyle, fullBacks: $fullBacks, switches: $switches, throwInStyle: $throwInStyle)';
+  return 'Tactic(formation: $formation, lineup: $lineup, instructions: $instructions, playstyle: $playstyle, fullBacks: $fullBacks, switches: $switches, throwInStyle: $throwInStyle, roles: $roles, arrows: $arrows)';
 }
 
 
@@ -330,7 +333,7 @@ abstract mixin class $TacticCopyWith<$Res>  {
   factory $TacticCopyWith(Tactic value, $Res Function(Tactic) _then) = _$TacticCopyWithImpl;
 @useResult
 $Res call({
- Formation formation, List<int?> lineup, TacticalInstructions instructions, Playstyle playstyle, FullBackPushes fullBacks, SlotSwitches switches, ThrowInStyle throwInStyle
+ Formation formation, List<int?> lineup, TacticalInstructions instructions, Playstyle playstyle, FullBackPushes fullBacks, SlotSwitches switches, ThrowInStyle throwInStyle, SlotRoles roles, SlotArrows arrows
 });
 
 
@@ -347,7 +350,7 @@ class _$TacticCopyWithImpl<$Res>
 
 /// Create a copy of Tactic
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? formation = null,Object? lineup = null,Object? instructions = null,Object? playstyle = null,Object? fullBacks = null,Object? switches = null,Object? throwInStyle = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? formation = null,Object? lineup = null,Object? instructions = null,Object? playstyle = null,Object? fullBacks = null,Object? switches = null,Object? throwInStyle = null,Object? roles = null,Object? arrows = null,}) {
   return _then(_self.copyWith(
 formation: null == formation ? _self.formation : formation // ignore: cast_nullable_to_non_nullable
 as Formation,lineup: null == lineup ? _self.lineup : lineup // ignore: cast_nullable_to_non_nullable
@@ -356,7 +359,9 @@ as TacticalInstructions,playstyle: null == playstyle ? _self.playstyle : playsty
 as Playstyle,fullBacks: null == fullBacks ? _self.fullBacks : fullBacks // ignore: cast_nullable_to_non_nullable
 as FullBackPushes,switches: null == switches ? _self.switches : switches // ignore: cast_nullable_to_non_nullable
 as SlotSwitches,throwInStyle: null == throwInStyle ? _self.throwInStyle : throwInStyle // ignore: cast_nullable_to_non_nullable
-as ThrowInStyle,
+as ThrowInStyle,roles: null == roles ? _self.roles : roles // ignore: cast_nullable_to_non_nullable
+as SlotRoles,arrows: null == arrows ? _self.arrows : arrows // ignore: cast_nullable_to_non_nullable
+as SlotArrows,
   ));
 }
 /// Create a copy of Tactic
@@ -450,10 +455,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Formation formation,  List<int?> lineup,  TacticalInstructions instructions,  Playstyle playstyle,  FullBackPushes fullBacks,  SlotSwitches switches,  ThrowInStyle throwInStyle)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Formation formation,  List<int?> lineup,  TacticalInstructions instructions,  Playstyle playstyle,  FullBackPushes fullBacks,  SlotSwitches switches,  ThrowInStyle throwInStyle,  SlotRoles roles,  SlotArrows arrows)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Tactic() when $default != null:
-return $default(_that.formation,_that.lineup,_that.instructions,_that.playstyle,_that.fullBacks,_that.switches,_that.throwInStyle);case _:
+return $default(_that.formation,_that.lineup,_that.instructions,_that.playstyle,_that.fullBacks,_that.switches,_that.throwInStyle,_that.roles,_that.arrows);case _:
   return orElse();
 
 }
@@ -471,10 +476,10 @@ return $default(_that.formation,_that.lineup,_that.instructions,_that.playstyle,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Formation formation,  List<int?> lineup,  TacticalInstructions instructions,  Playstyle playstyle,  FullBackPushes fullBacks,  SlotSwitches switches,  ThrowInStyle throwInStyle)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Formation formation,  List<int?> lineup,  TacticalInstructions instructions,  Playstyle playstyle,  FullBackPushes fullBacks,  SlotSwitches switches,  ThrowInStyle throwInStyle,  SlotRoles roles,  SlotArrows arrows)  $default,) {final _that = this;
 switch (_that) {
 case _Tactic():
-return $default(_that.formation,_that.lineup,_that.instructions,_that.playstyle,_that.fullBacks,_that.switches,_that.throwInStyle);case _:
+return $default(_that.formation,_that.lineup,_that.instructions,_that.playstyle,_that.fullBacks,_that.switches,_that.throwInStyle,_that.roles,_that.arrows);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -491,10 +496,10 @@ return $default(_that.formation,_that.lineup,_that.instructions,_that.playstyle,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Formation formation,  List<int?> lineup,  TacticalInstructions instructions,  Playstyle playstyle,  FullBackPushes fullBacks,  SlotSwitches switches,  ThrowInStyle throwInStyle)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Formation formation,  List<int?> lineup,  TacticalInstructions instructions,  Playstyle playstyle,  FullBackPushes fullBacks,  SlotSwitches switches,  ThrowInStyle throwInStyle,  SlotRoles roles,  SlotArrows arrows)?  $default,) {final _that = this;
 switch (_that) {
 case _Tactic() when $default != null:
-return $default(_that.formation,_that.lineup,_that.instructions,_that.playstyle,_that.fullBacks,_that.switches,_that.throwInStyle);case _:
+return $default(_that.formation,_that.lineup,_that.instructions,_that.playstyle,_that.fullBacks,_that.switches,_that.throwInStyle,_that.roles,_that.arrows);case _:
   return null;
 
 }
@@ -506,7 +511,7 @@ return $default(_that.formation,_that.lineup,_that.instructions,_that.playstyle,
 
 
 class _Tactic extends Tactic {
-  const _Tactic({required this.formation, required final  List<int?> lineup, this.instructions = const TacticalInstructions(), this.playstyle = Playstyle.custom, this.fullBacks = FullBackPushes.neutral, this.switches = SlotSwitches.none, this.throwInStyle = ThrowInStyle.neutral}): _lineup = lineup,super._();
+  const _Tactic({required this.formation, required final  List<int?> lineup, this.instructions = const TacticalInstructions(), this.playstyle = Playstyle.custom, this.fullBacks = FullBackPushes.neutral, this.switches = SlotSwitches.none, this.throwInStyle = ThrowInStyle.neutral, this.roles = SlotRoles.none, this.arrows = SlotArrows.none}): _lineup = lineup,super._();
   
 
 @override final  Formation formation;
@@ -525,6 +530,11 @@ class _Tactic extends Tactic {
 @override@JsonKey() final  SlotSwitches switches;
 /// How the side takes its throw-ins (see [ThrowInStyle]).
 @override@JsonKey() final  ThrowInStyle throwInStyle;
+/// Each slot's role (see [SlotRoles]); none set plays as before.
+@override@JsonKey() final  SlotRoles roles;
+/// Each slot's movement arrow, the full-backs' apart: theirs are
+/// [fullBacks] (see [SlotArrows] and [arrowAt]).
+@override@JsonKey() final  SlotArrows arrows;
 
 /// Create a copy of Tactic
 /// with the given fields replaced by the non-null parameter values.
@@ -536,16 +546,16 @@ _$TacticCopyWith<_Tactic> get copyWith => __$TacticCopyWithImpl<_Tactic>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Tactic&&(identical(other.formation, formation) || other.formation == formation)&&const DeepCollectionEquality().equals(other._lineup, _lineup)&&(identical(other.instructions, instructions) || other.instructions == instructions)&&(identical(other.playstyle, playstyle) || other.playstyle == playstyle)&&(identical(other.fullBacks, fullBacks) || other.fullBacks == fullBacks)&&(identical(other.switches, switches) || other.switches == switches)&&(identical(other.throwInStyle, throwInStyle) || other.throwInStyle == throwInStyle));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Tactic&&(identical(other.formation, formation) || other.formation == formation)&&const DeepCollectionEquality().equals(other._lineup, _lineup)&&(identical(other.instructions, instructions) || other.instructions == instructions)&&(identical(other.playstyle, playstyle) || other.playstyle == playstyle)&&(identical(other.fullBacks, fullBacks) || other.fullBacks == fullBacks)&&(identical(other.switches, switches) || other.switches == switches)&&(identical(other.throwInStyle, throwInStyle) || other.throwInStyle == throwInStyle)&&(identical(other.roles, roles) || other.roles == roles)&&(identical(other.arrows, arrows) || other.arrows == arrows));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,formation,const DeepCollectionEquality().hash(_lineup),instructions,playstyle,fullBacks,switches,throwInStyle);
+int get hashCode => Object.hash(runtimeType,formation,const DeepCollectionEquality().hash(_lineup),instructions,playstyle,fullBacks,switches,throwInStyle,roles,arrows);
 
 @override
 String toString() {
-  return 'Tactic(formation: $formation, lineup: $lineup, instructions: $instructions, playstyle: $playstyle, fullBacks: $fullBacks, switches: $switches, throwInStyle: $throwInStyle)';
+  return 'Tactic(formation: $formation, lineup: $lineup, instructions: $instructions, playstyle: $playstyle, fullBacks: $fullBacks, switches: $switches, throwInStyle: $throwInStyle, roles: $roles, arrows: $arrows)';
 }
 
 
@@ -556,7 +566,7 @@ abstract mixin class _$TacticCopyWith<$Res> implements $TacticCopyWith<$Res> {
   factory _$TacticCopyWith(_Tactic value, $Res Function(_Tactic) _then) = __$TacticCopyWithImpl;
 @override @useResult
 $Res call({
- Formation formation, List<int?> lineup, TacticalInstructions instructions, Playstyle playstyle, FullBackPushes fullBacks, SlotSwitches switches, ThrowInStyle throwInStyle
+ Formation formation, List<int?> lineup, TacticalInstructions instructions, Playstyle playstyle, FullBackPushes fullBacks, SlotSwitches switches, ThrowInStyle throwInStyle, SlotRoles roles, SlotArrows arrows
 });
 
 
@@ -573,7 +583,7 @@ class __$TacticCopyWithImpl<$Res>
 
 /// Create a copy of Tactic
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? formation = null,Object? lineup = null,Object? instructions = null,Object? playstyle = null,Object? fullBacks = null,Object? switches = null,Object? throwInStyle = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? formation = null,Object? lineup = null,Object? instructions = null,Object? playstyle = null,Object? fullBacks = null,Object? switches = null,Object? throwInStyle = null,Object? roles = null,Object? arrows = null,}) {
   return _then(_Tactic(
 formation: null == formation ? _self.formation : formation // ignore: cast_nullable_to_non_nullable
 as Formation,lineup: null == lineup ? _self._lineup : lineup // ignore: cast_nullable_to_non_nullable
@@ -582,7 +592,9 @@ as TacticalInstructions,playstyle: null == playstyle ? _self.playstyle : playsty
 as Playstyle,fullBacks: null == fullBacks ? _self.fullBacks : fullBacks // ignore: cast_nullable_to_non_nullable
 as FullBackPushes,switches: null == switches ? _self.switches : switches // ignore: cast_nullable_to_non_nullable
 as SlotSwitches,throwInStyle: null == throwInStyle ? _self.throwInStyle : throwInStyle // ignore: cast_nullable_to_non_nullable
-as ThrowInStyle,
+as ThrowInStyle,roles: null == roles ? _self.roles : roles // ignore: cast_nullable_to_non_nullable
+as SlotRoles,arrows: null == arrows ? _self.arrows : arrows // ignore: cast_nullable_to_non_nullable
+as SlotArrows,
   ));
 }
 

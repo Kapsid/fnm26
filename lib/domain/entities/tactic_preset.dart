@@ -17,7 +17,17 @@ class TacticPreset {
     this.fullBacks = FullBackPushes.neutral,
     this.switches = SlotSwitches.none,
     this.throwInStyle,
+    this.roles,
+    this.arrows,
   });
+
+  /// Each slot's role, or null for a preset saved before slot roles existed
+  /// (applied, it leaves the save's own roles alone).
+  final SlotRoles? roles;
+
+  /// Each slot's movement arrow (the full-backs' are [fullBacks]), or null
+  /// for a preset saved before arrows existed.
+  final SlotArrows? arrows;
 
   final String name;
   final Formation formation;
@@ -46,6 +56,8 @@ class TacticPreset {
     if (!fullBacks.isNeutral) 'fullBacks': fullBacks.toJson(),
     if (!switches.isEmpty) 'switches': switches.toJson(),
     if (throwInStyle case final style?) 'throwInStyle': style.name,
+    if (roles case final r?) 'roles': r.toJson(),
+    if (arrows case final a?) 'arrows': a.toJson(),
   };
 
   static TacticPreset? fromJson(Map<String, dynamic> json) {
@@ -75,6 +87,12 @@ class TacticPreset {
       switches: SlotSwitches.fromJson(json['switches']).validFor(formation),
       throwInStyle: json.containsKey('throwInStyle')
           ? ThrowInStyleX.parse(json['throwInStyle'])
+          : null,
+      roles: json.containsKey('roles')
+          ? SlotRoles.fromJson(json['roles'])
+          : null,
+      arrows: json.containsKey('arrows')
+          ? SlotArrows.fromJson(json['arrows'])
           : null,
     );
   }

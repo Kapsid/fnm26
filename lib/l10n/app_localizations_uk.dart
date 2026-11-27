@@ -1312,6 +1312,65 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
+  String get roleFitGood => 'Підходить';
+
+  @override
+  String get roleFitFair => 'Прийнятно';
+
+  @override
+  String get roleFitPoor => 'Не підходить';
+
+  @override
+  String get arrowNone => 'Тримати позицію';
+
+  @override
+  String get arrowForward => 'Уперед';
+
+  @override
+  String get arrowBack => 'Глибше';
+
+  @override
+  String get arrowInside => 'Усередину';
+
+  @override
+  String get arrowOutside => 'Ширше';
+
+  @override
+  String get arrowForwardInside => 'Уперед і всередину';
+
+  @override
+  String get arrowForwardOutside => 'Уперед і ширше';
+
+  @override
+  String get tacticsPitchModePlayers => 'Гравці';
+
+  @override
+  String get tacticsPitchModeRoles => 'Ролі та рухи';
+
+  @override
+  String get tacticsPitchRolesHint =>
+      'Торкніться гравця, щоб вибрати роль. Утримуйте й тягніть, щоб намалювати рух.';
+
+  @override
+  String get tacticsPlanRoleHeading => 'РОЛЬ';
+
+  @override
+  String get tacticsPlanMovementHeading => 'РУХ';
+
+  @override
+  String tacticsPlanTitle(String position, String name) {
+    return '$position · $name';
+  }
+
+  @override
+  String tacticsArrowSet(String name, String movement) {
+    return '$name: $movement';
+  }
+
+  @override
+  String get tacticsKeeperNoRun => 'Воротареві рух не задається.';
+
+  @override
   String get tacticsPenaltyTaker => 'ВИКОНАВЕЦЬ ПЕНАЛЬТІ';
 
   @override
@@ -9954,6 +10013,108 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get roleBallPlayingDefenderBlurb => 'Починає атаки з тилу.';
+
+  @override
+  String get roleLineKeeper => 'Воротар на лінії';
+
+  @override
+  String get roleSweeperKeeper => 'Воротар-ліберо';
+
+  @override
+  String get roleStopper => 'Стопер';
+
+  @override
+  String get roleCoveringDefender => 'Страхувальний захисник';
+
+  @override
+  String get roleDefensiveFullBack => 'Оборонний крайній захисник';
+
+  @override
+  String get roleWingBack => 'Вінгбек';
+
+  @override
+  String get roleInvertedFullBack => 'Інвертований крайній захисник';
+
+  @override
+  String get roleAnchor => 'Якір';
+
+  @override
+  String get roleDeepPlaymaker => 'Глибинний плеймейкер';
+
+  @override
+  String get roleBoxToBox => 'Бокс-ту-бокс';
+
+  @override
+  String get roleShadowStriker => 'Тіньовий нападник';
+
+  @override
+  String get roleTouchlineWinger => 'Вінгер біля бровки';
+
+  @override
+  String get roleDefensiveWinger => 'Оборонний вінгер';
+
+  @override
+  String get roleFalseNine => 'Фальшива дев\'ятка';
+
+  @override
+  String get rolePressingForward => 'Пресингуючий нападник';
+
+  @override
+  String get roleLineKeeperBlurb =>
+      'Тримається лінії. Надійніше, повільніше починає атаки.';
+
+  @override
+  String get roleSweeperKeeperBlurb => 'Підчищає за захистом і починає атаки.';
+
+  @override
+  String get roleStopperBlurb =>
+      'Виходить, щоб відібрати м’яч рано. Сильний у повітрі.';
+
+  @override
+  String get roleCoveringDefenderBlurb =>
+      'Відходить назад і страхує простір за спиною.';
+
+  @override
+  String get roleDefensiveFullBackBlurb =>
+      'Залишається позаду і стереже фланг.';
+
+  @override
+  String get roleWingBackBlurb => 'Підключається і навішує. Багато бігає.';
+
+  @override
+  String get roleInvertedFullBackBlurb =>
+      'Зміщується в центр поля, щоб допомогти тримати м’яч.';
+
+  @override
+  String get roleAnchorBlurb => 'Прикриває захист. Рідко забиває.';
+
+  @override
+  String get roleDeepPlaymakerBlurb =>
+      'Керує грою з глибини. Більше результативних передач.';
+
+  @override
+  String get roleBoxToBoxBlurb =>
+      'Увесь матч угору й униз. Потрібна витривалість.';
+
+  @override
+  String get roleShadowStrikerBlurb =>
+      'Пізно вривається в штрафний. Більше голів.';
+
+  @override
+  String get roleTouchlineWingerBlurb =>
+      'Тримається бровки й навішує. Більше результативних передач.';
+
+  @override
+  String get roleDefensiveWingerBlurb =>
+      'Повертається, щоб прикрити крайнього захисника.';
+
+  @override
+  String get roleFalseNineBlurb =>
+      'Відходить назад, щоб зв’язувати гру. Більше створює, ніж забиває.';
+
+  @override
+  String get rolePressingForwardBlurb =>
+      'Веде пресинг попереду. Швидше втомлюється.';
 
   @override
   String get federationDeptYouth => 'Академія молоді';

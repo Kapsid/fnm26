@@ -38,6 +38,7 @@ import 'package:fnm/features/tactics/familiarity_providers.dart';
 import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/features/tactics/full_back_instructions.dart';
 import 'package:fnm/features/tactics/nation_squad_tab.dart';
+import 'package:fnm/features/tactics/pitch_plan.dart';
 import 'package:fnm/features/tactics/player_roles_providers.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
 import 'package:fnm/features/tactics/slot_switch_strip.dart';
@@ -308,6 +309,18 @@ class TacticsScreen extends ConsumerWidget {
                           ),
                           child: _outStartersCard(l, data, outlooks),
                         ),
+                      PitchPlanBar(
+                        rolesMode: ref.watch(tacticsRolesModeProvider),
+                        onChanged: (on) =>
+                            ref.read(tacticsRolesModeProvider.notifier).state =
+                                on,
+                        padding: const EdgeInsets.fromLTRB(
+                          AppSpacing.marginMobile,
+                          AppSpacing.sm,
+                          AppSpacing.marginMobile,
+                          AppSpacing.xs,
+                        ),
+                      ),
                       AspectRatio(
                         aspectRatio: 3 / 4,
                         child: _pitch(
@@ -494,12 +507,22 @@ class TacticsScreen extends ConsumerWidget {
     required Set<int> injuredIds,
   }) {
     final tactic = data.tactic;
+    final legacy =
+        ref.watch(playerRolesProvider(careerId)).valueOrNull ??
+        const <int, PlayerRole>{};
+    final rolesMode = ref.watch(tacticsRolesModeProvider);
     return TacticsPitch(
       injuredIds: injuredIds,
       formation: tactic.formation,
       instructions: tactic.instructions,
       fullBacks: tactic.fullBacks,
       switches: tactic.switches,
+      roles: pitchRolesOf(tactic, legacy),
+      arrows: pitchArrowsOf(tactic),
+      rolesMode: rolesMode,
+      onPlanSlot: (slot) => _planSlot(context, ref, data, slot, legacy),
+      onDrawArrow: (slot, arrow) =>
+          _drawArrow(context, service, data, slot, arrow),
       onCycleFullBack: (side) => service.cycleFullBack(careerId, side),
       lineup: tactic.lineup,
       byId: data.byId,
@@ -532,6 +555,56 @@ class TacticsScreen extends ConsumerWidget {
         );
       },
     );
+  }
+
+  /// Opens [slot]'s role-and-run sheet; each pick is saved as it is made.
+  Future<void> _planSlot(
+    BuildContext context,
+    WidgetRef ref,
+    TacticData data,
+    int slot,
+    Map<int, PlayerRole> legacy,
+  ) {
+    final tactic = data.tactic;
+    final service = ref.read(tacticServiceProvider);
+    return showSlotPlanSheet(
+      context,
+      position: tactic.positions[slot],
+      player: data.byId[tactic.lineup[slot]],
+      role: tactic.effectiveRoleAt(slot, legacy),
+      arrow: tactic.arrowAt(slot),
+      onRole: (r) => unawaited(service.setSlotRole(careerId, slot, r)),
+      onArrow: (a) => unawaited(service.setSlotArrow(careerId, slot, a)),
+    );
+  }
+
+  /// Saves a run drawn on the pitch, and says what it now is, with the one
+  /// before it a tap away.
+  Future<void> _drawArrow(
+    BuildContext context,
+    TacticService service,
+    TacticData data,
+    int slot,
+    MoveArrow arrow,
+  ) async {
+    final before = data.tactic.arrowAt(slot);
+    if (arrow == before) return;
+    final messenger = ScaffoldMessenger.of(context);
+    final l = AppLocalizations.of(context);
+    final name = data.byId[data.tactic.lineup[slot]]?.name ?? '';
+    await service.setSlotArrow(careerId, slot, arrow);
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(l.tacticsArrowSet(name, moveArrowLabel(l, arrow))),
+          action: SnackBarAction(
+            label: l.editorUndo,
+            onPressed: () =>
+                unawaited(service.setSlotArrow(careerId, slot, before)),
+          ),
+        ),
+      );
   }
 
   /// Names the starters who cannot play the next match, and why.
@@ -644,7 +717,10 @@ class TacticsScreen extends ConsumerWidget {
       for (final p in xi)
         _PlayerTacticRow(
           player: p,
-          role: roles[p.id] ?? PlayerRole.none,
+          role: switch (data.tactic.lineup.indexOf(p.id)) {
+            -1 => roles[p.id] ?? PlayerRole.none,
+            final slot => data.tactic.effectiveRoleAt(slot, roles),
+          },
           isPenaltyTaker: namedPenalty == p.id,
           isDeadBallTaker: namedDeadBall == p.id,
           isAutoPenalty: namedPenalty == null && penaltyId == p.id,
@@ -654,7 +730,10 @@ class TacticsScreen extends ConsumerWidget {
           onToggleThrowIn: () => ref
               .read(throwInTakerStoreProvider)
               .set(careerId, namedThrowIn == p.id ? null : p.id),
-          onRole: () => _pickRole(context, ref, p),
+          onRole: () => switch (data.tactic.lineup.indexOf(p.id)) {
+            -1 => _pickRole(context, ref, p),
+            final slot => _planSlot(context, ref, data, slot, roles),
+          },
           onTogglePenalty: () => ref
               .read(setPieceTakersStoreProvider)
               .set(
@@ -1287,6 +1366,8 @@ class _PresetsSheetState extends ConsumerState<_PresetsSheet> {
             fullBacks: widget.tactic.fullBacks,
             switches: widget.tactic.switches,
             throwInStyle: widget.tactic.throwInStyle,
+            roles: widget.tactic.roles,
+            arrows: widget.tactic.arrows,
           ),
         );
     if (mounted) {
@@ -1319,6 +1400,8 @@ class _PresetsSheetState extends ConsumerState<_PresetsSheet> {
           fullBacks: preset.fullBacks,
           switches: preset.switches,
           throwInStyle: preset.throwInStyle,
+          roles: preset.roles,
+          arrows: preset.arrows,
         );
     if (mounted) {
       final l = AppLocalizations.of(context);

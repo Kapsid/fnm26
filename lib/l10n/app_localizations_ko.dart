@@ -1266,6 +1266,64 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String get roleFitGood => '잘 맞음';
+
+  @override
+  String get roleFitFair => '보통';
+
+  @override
+  String get roleFitPoor => '잘 안 맞음';
+
+  @override
+  String get arrowNone => '위치 유지';
+
+  @override
+  String get arrowForward => '전진';
+
+  @override
+  String get arrowBack => '더 내려서기';
+
+  @override
+  String get arrowInside => '안으로 좁히기';
+
+  @override
+  String get arrowOutside => '측면 넓게';
+
+  @override
+  String get arrowForwardInside => '전진 후 안으로';
+
+  @override
+  String get arrowForwardOutside => '전진 후 바깥으로';
+
+  @override
+  String get tacticsPitchModePlayers => '선수';
+
+  @override
+  String get tacticsPitchModeRoles => '역할과 움직임';
+
+  @override
+  String get tacticsPitchRolesHint => '선수를 탭해 역할을 정하고, 길게 눌러 끌어 움직임을 그리세요.';
+
+  @override
+  String get tacticsPlanRoleHeading => '역할';
+
+  @override
+  String get tacticsPlanMovementHeading => '움직임';
+
+  @override
+  String tacticsPlanTitle(String position, String name) {
+    return '$position · $name';
+  }
+
+  @override
+  String tacticsArrowSet(String name, String movement) {
+    return '$name: $movement';
+  }
+
+  @override
+  String get tacticsKeeperNoRun => '골키퍼는 움직임을 정하지 않습니다.';
+
+  @override
   String get tacticsPenaltyTaker => '페널티 키커';
 
   @override
@@ -9387,6 +9445,96 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get roleBallPlayingDefenderBlurb => '후방에서 공격을 시작합니다.';
+
+  @override
+  String get roleLineKeeper => '라인 키퍼';
+
+  @override
+  String get roleSweeperKeeper => '스위퍼 키퍼';
+
+  @override
+  String get roleStopper => '스토퍼';
+
+  @override
+  String get roleCoveringDefender => '커버링 수비수';
+
+  @override
+  String get roleDefensiveFullBack => '수비형 풀백';
+
+  @override
+  String get roleWingBack => '윙백';
+
+  @override
+  String get roleInvertedFullBack => '인버티드 풀백';
+
+  @override
+  String get roleAnchor => '앵커';
+
+  @override
+  String get roleDeepPlaymaker => '딥 라잉 플레이메이커';
+
+  @override
+  String get roleBoxToBox => '박스 투 박스';
+
+  @override
+  String get roleShadowStriker => '섀도 스트라이커';
+
+  @override
+  String get roleTouchlineWinger => '터치라인 윙어';
+
+  @override
+  String get roleDefensiveWinger => '수비형 윙어';
+
+  @override
+  String get roleFalseNine => '폴스 나인';
+
+  @override
+  String get rolePressingForward => '압박형 공격수';
+
+  @override
+  String get roleLineKeeperBlurb => '골라인을 지킨다. 더 안정적이지만 빌드업이 느리다.';
+
+  @override
+  String get roleSweeperKeeperBlurb => '수비 뒷공간을 쓸고 공격을 시작한다.';
+
+  @override
+  String get roleStopperBlurb => '앞으로 나와 일찍 공을 끊는다. 공중볼에 강하다.';
+
+  @override
+  String get roleCoveringDefenderBlurb => '내려서서 뒷공간을 커버한다.';
+
+  @override
+  String get roleDefensiveFullBackBlurb => '뒤에 남아 측면을 지킨다.';
+
+  @override
+  String get roleWingBackBlurb => '오버래핑과 크로스. 활동량이 많다.';
+
+  @override
+  String get roleInvertedFullBackBlurb => '중원으로 좁혀 들어와 점유를 돕는다.';
+
+  @override
+  String get roleAnchorBlurb => '수비 라인을 보호한다. 득점은 드물다.';
+
+  @override
+  String get roleDeepPlaymakerBlurb => '깊은 곳에서 경기를 조율한다. 도움이 늘어난다.';
+
+  @override
+  String get roleBoxToBoxBlurb => '경기 내내 오르내린다. 체력이 필요하다.';
+
+  @override
+  String get roleShadowStrikerBlurb => '늦게 박스로 침투한다. 골이 늘어난다.';
+
+  @override
+  String get roleTouchlineWingerBlurb => '터치라인에 붙어 크로스. 도움이 늘어난다.';
+
+  @override
+  String get roleDefensiveWingerBlurb => '내려와서 풀백을 보호한다.';
+
+  @override
+  String get roleFalseNineBlurb => '내려와 연계한다. 득점보다 기회 창출이 많다.';
+
+  @override
+  String get rolePressingForwardBlurb => '최전방에서 압박을 이끈다. 빨리 지친다.';
 
   @override
   String get federationDeptYouth => '유소년 아카데미';

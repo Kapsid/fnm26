@@ -346,8 +346,12 @@ void main() {
       expect(tb.lineup, isNot(contains(striker)), reason: "B fields B's men");
       final rolesB = await c.read(playerRolesStoreProvider).load(b);
       final takersB = await c.read(setPieceTakersStoreProvider).load(b);
-      expect(rolesB[tb.lineup[9]], PlayerRole.poacher);
-      expect(rolesB[tb.lineup[6]], PlayerRole.playmaker);
+      // Since slot roles (1.1.4) a loaded entry's roles go onto the slots,
+      // and whoever plays there carries no per-player role on top.
+      expect(tb.roleAt(9), PlayerRole.poacher);
+      expect(tb.roleAt(6), PlayerRole.playmaker);
+      expect(rolesB[tb.lineup[9]], isNull);
+      expect(rolesB[tb.lineup[6]], isNull);
       expect(takersB.penalty, tb.lineup[9]);
       expect(takersB.deadBall, tb.lineup[6]);
       expect(fit.skipped, 0);

@@ -1263,6 +1263,64 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get roleFitGood => '適性あり';
+
+  @override
+  String get roleFitFair => 'まずまず';
+
+  @override
+  String get roleFitPoor => '適性なし';
+
+  @override
+  String get arrowNone => 'ポジションを保つ';
+
+  @override
+  String get arrowForward => '前へ出る';
+
+  @override
+  String get arrowBack => '低い位置を取る';
+
+  @override
+  String get arrowInside => '中へ入る';
+
+  @override
+  String get arrowOutside => 'ワイドに張る';
+
+  @override
+  String get arrowForwardInside => '前へ、中へ';
+
+  @override
+  String get arrowForwardOutside => '前へ、外へ';
+
+  @override
+  String get tacticsPitchModePlayers => '選手';
+
+  @override
+  String get tacticsPitchModeRoles => '役割と動き';
+
+  @override
+  String get tacticsPitchRolesHint => '選手をタップで役割、長押ししてドラッグで動きを描く。';
+
+  @override
+  String get tacticsPlanRoleHeading => '役割';
+
+  @override
+  String get tacticsPlanMovementHeading => '動き';
+
+  @override
+  String tacticsPlanTitle(String position, String name) {
+    return '$position · $name';
+  }
+
+  @override
+  String tacticsArrowSet(String name, String movement) {
+    return '$name：$movement';
+  }
+
+  @override
+  String get tacticsKeeperNoRun => 'GKに動きの指示はありません。';
+
+  @override
   String get tacticsPenaltyTaker => 'PKキッカー';
 
   @override
@@ -9371,6 +9429,96 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get roleBallPlayingDefenderBlurb => '最終ラインから攻撃を組み立てる。';
+
+  @override
+  String get roleLineKeeper => 'ライン型GK';
+
+  @override
+  String get roleSweeperKeeper => 'スイーパーGK';
+
+  @override
+  String get roleStopper => 'ストッパー';
+
+  @override
+  String get roleCoveringDefender => 'カバーリングDF';
+
+  @override
+  String get roleDefensiveFullBack => '守備的SB';
+
+  @override
+  String get roleWingBack => 'ウイングバック';
+
+  @override
+  String get roleInvertedFullBack => '偽SB';
+
+  @override
+  String get roleAnchor => 'アンカー';
+
+  @override
+  String get roleDeepPlaymaker => 'ディープ・プレーメーカー';
+
+  @override
+  String get roleBoxToBox => 'ボックス・トゥ・ボックス';
+
+  @override
+  String get roleShadowStriker => 'シャドーストライカー';
+
+  @override
+  String get roleTouchlineWinger => 'タッチライン型ウイング';
+
+  @override
+  String get roleDefensiveWinger => '守備的ウイング';
+
+  @override
+  String get roleFalseNine => 'ゼロトップ';
+
+  @override
+  String get rolePressingForward => 'プレッシングFW';
+
+  @override
+  String get roleLineKeeperBlurb => 'ゴールラインに留まる。安定するが、攻撃の始動は遅い。';
+
+  @override
+  String get roleSweeperKeeperBlurb => '最終ラインの背後をカバーし、攻撃を組み立てる。';
+
+  @override
+  String get roleStopperBlurb => '前に出て早めにボールを奪う。空中戦に強い。';
+
+  @override
+  String get roleCoveringDefenderBlurb => '下がって背後のスペースをカバーする。';
+
+  @override
+  String get roleDefensiveFullBackBlurb => '後方に残ってサイドを守る。';
+
+  @override
+  String get roleWingBackBlurb => 'オーバーラップしてクロスを上げる。運動量が多い。';
+
+  @override
+  String get roleInvertedFullBackBlurb => '中盤に入ってボール保持を助ける。';
+
+  @override
+  String get roleAnchorBlurb => '最終ラインの前で盾になる。得点は少ない。';
+
+  @override
+  String get roleDeepPlaymakerBlurb => '低い位置から試合を操る。アシストが増える。';
+
+  @override
+  String get roleBoxToBoxBlurb => '試合中ずっと上下動する。スタミナが必要。';
+
+  @override
+  String get roleShadowStrikerBlurb => '遅れてボックスに飛び込む。得点が増える。';
+
+  @override
+  String get roleTouchlineWingerBlurb => 'タッチライン沿いからクロス。アシストが増える。';
+
+  @override
+  String get roleDefensiveWingerBlurb => '戻ってサイドバックを守る。';
+
+  @override
+  String get roleFalseNineBlurb => '下がって攻撃をつなぐ。得点よりチャンスメイク。';
+
+  @override
+  String get rolePressingForwardBlurb => '前線からプレスを主導する。疲れやすい。';
 
   @override
   String get federationDeptYouth => 'ユースアカデミー';

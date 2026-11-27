@@ -491,6 +491,11 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
     // position off these, so a switched slot is fitted, marked and counted as
     // what it now is.
     switches: tactic?.switches ?? SlotSwitches.none,
+    // Each slot's role and movement arrow, read by slot: the eleven is laid
+    // out in slot order whether it is the saved one or the auto-filled one.
+    // None set (every save from before them) plays exactly as before.
+    slotRoles: tactic?.roles ?? SlotRoles.none,
+    arrows: tactic?.arrows ?? SlotArrows.none,
     // Both the saved lineup and the auto-filled fallback are laid out in
     // the tactic's shape (f433 when there's no saved tactic).
     formation: playerFormation,

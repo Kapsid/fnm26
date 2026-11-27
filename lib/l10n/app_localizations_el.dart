@@ -1355,6 +1355,66 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
+  String get roleFitGood => 'Του ταιριάζει';
+
+  @override
+  String get roleFitFair => 'Μέτρια';
+
+  @override
+  String get roleFitPoor => 'Δεν του ταιριάζει';
+
+  @override
+  String get arrowNone => 'Κράτα θέση';
+
+  @override
+  String get arrowForward => 'Ανέβα μπροστά';
+
+  @override
+  String get arrowBack => 'Πιο πίσω';
+
+  @override
+  String get arrowInside => 'Μπες στο κέντρο';
+
+  @override
+  String get arrowOutside => 'Μείνε ανοιχτά';
+
+  @override
+  String get arrowForwardInside => 'Μπροστά και μέσα';
+
+  @override
+  String get arrowForwardOutside => 'Μπροστά και έξω';
+
+  @override
+  String get tacticsPitchModePlayers => 'Παίκτες';
+
+  @override
+  String get tacticsPitchModeRoles => 'Ρόλοι και κινήσεις';
+
+  @override
+  String get tacticsPitchRolesHint =>
+      'Πάτα έναν παίκτη για τον ρόλο. Κράτα και σύρε για να σχεδιάσεις κίνηση.';
+
+  @override
+  String get tacticsPlanRoleHeading => 'ΡΟΛΟΣ';
+
+  @override
+  String get tacticsPlanMovementHeading => 'ΚΙΝΗΣΗ';
+
+  @override
+  String tacticsPlanTitle(String position, String name) {
+    return '$position · $name';
+  }
+
+  @override
+  String tacticsArrowSet(String name, String movement) {
+    return '$name: $movement';
+  }
+
+  @override
+  String get tacticsKeeperNoRun =>
+      'Ο τερματοφύλακας δεν έχει κίνηση να οριστεί.';
+
+  @override
   String get tacticsPenaltyTaker => 'ΕΚΤΕΛΕΣΤΗΣ ΠΕΝΑΛΤΙ';
 
   @override
@@ -9738,6 +9798,108 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get roleBallPlayingDefenderBlurb => 'Ξεκινά τις φάσεις από πίσω.';
+
+  @override
+  String get roleLineKeeper => 'Τερματοφύλακας γραμμής';
+
+  @override
+  String get roleSweeperKeeper => 'Τερματοφύλακας λίμπερο';
+
+  @override
+  String get roleStopper => 'Στόπερ';
+
+  @override
+  String get roleCoveringDefender => 'Αμυντικός κάλυψης';
+
+  @override
+  String get roleDefensiveFullBack => 'Αμυντικός μπακ';
+
+  @override
+  String get roleWingBack => 'Γουίνγκ μπακ';
+
+  @override
+  String get roleInvertedFullBack => 'Ανάστροφος μπακ';
+
+  @override
+  String get roleAnchor => 'Άγκυρα';
+
+  @override
+  String get roleDeepPlaymaker => 'Οργανωτής από πίσω';
+
+  @override
+  String get roleBoxToBox => 'Μέσος box-to-box';
+
+  @override
+  String get roleShadowStriker => 'Σκιώδης επιθετικός';
+
+  @override
+  String get roleTouchlineWinger => 'Εξτρέμ της γραμμής';
+
+  @override
+  String get roleDefensiveWinger => 'Αμυντικό εξτρέμ';
+
+  @override
+  String get roleFalseNine => 'Ψευδοεννιάρι';
+
+  @override
+  String get rolePressingForward => 'Επιθετικός πρέσινγκ';
+
+  @override
+  String get roleLineKeeperBlurb =>
+      'Μένει στη γραμμή. Πιο σίγουρος, πιο αργός στην ανάπτυξη.';
+
+  @override
+  String get roleSweeperKeeperBlurb =>
+      'Καλύπτει πίσω από την άμυνα και ξεκινά τις επιθέσεις.';
+
+  @override
+  String get roleStopperBlurb =>
+      'Βγαίνει μπροστά για να κλέψει νωρίς. Δυνατός στον αέρα.';
+
+  @override
+  String get roleCoveringDefenderBlurb =>
+      'Πέφτει πίσω για να καλύψει τον χώρο στην πλάτη.';
+
+  @override
+  String get roleDefensiveFullBackBlurb =>
+      'Μένει πίσω και φυλάει την πλευρά του.';
+
+  @override
+  String get roleWingBackBlurb => 'Κάνει overlap και σέντρες. Τρέχει πολύ.';
+
+  @override
+  String get roleInvertedFullBackBlurb =>
+      'Μπαίνει στο κέντρο για να βοηθήσει στην κατοχή.';
+
+  @override
+  String get roleAnchorBlurb => 'Προστατεύει την άμυνα. Σπάνια σκοράρει.';
+
+  @override
+  String get roleDeepPlaymakerBlurb =>
+      'Κατευθύνει το παιχνίδι από πίσω. Περισσότερες ασίστ.';
+
+  @override
+  String get roleBoxToBoxBlurb => 'Ανεβοκατεβαίνει όλο το ματς. Θέλει αντοχή.';
+
+  @override
+  String get roleShadowStrikerBlurb =>
+      'Μπαίνει αργά στην περιοχή. Περισσότερα γκολ.';
+
+  @override
+  String get roleTouchlineWingerBlurb =>
+      'Κολλάει στη γραμμή και σεντράρει. Περισσότερες ασίστ.';
+
+  @override
+  String get roleDefensiveWingerBlurb =>
+      'Γυρίζει πίσω να προστατέψει τον μπακ.';
+
+  @override
+  String get roleFalseNineBlurb =>
+      'Πέφτει πίσω για να δέσει το παιχνίδι. Δημιουργεί περισσότερο απ’ όσο σκοράρει.';
+
+  @override
+  String get rolePressingForwardBlurb =>
+      'Ξεκινά το πρέσινγκ από μπροστά. Κουράζεται πιο γρήγορα.';
 
   @override
   String get federationDeptYouth => 'Ακαδημία Νέων';

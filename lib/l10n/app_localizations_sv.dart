@@ -1347,6 +1347,65 @@ class AppLocalizationsSv extends AppLocalizations {
   }
 
   @override
+  String get roleFitGood => 'Passar bra';
+
+  @override
+  String get roleFitFair => 'Godtagbar';
+
+  @override
+  String get roleFitPoor => 'Passar dåligt';
+
+  @override
+  String get arrowNone => 'Håll positionen';
+
+  @override
+  String get arrowForward => 'Gå framåt';
+
+  @override
+  String get arrowBack => 'Ligg djupare';
+
+  @override
+  String get arrowInside => 'Gå inåt';
+
+  @override
+  String get arrowOutside => 'Håll bredden';
+
+  @override
+  String get arrowForwardInside => 'Framåt och inåt';
+
+  @override
+  String get arrowForwardOutside => 'Framåt och utåt';
+
+  @override
+  String get tacticsPitchModePlayers => 'Spelare';
+
+  @override
+  String get tacticsPitchModeRoles => 'Roller och löpningar';
+
+  @override
+  String get tacticsPitchRolesHint =>
+      'Tryck på en spelare för roll. Håll och dra för att rita en löpning.';
+
+  @override
+  String get tacticsPlanRoleHeading => 'ROLL';
+
+  @override
+  String get tacticsPlanMovementHeading => 'RÖRELSE';
+
+  @override
+  String tacticsPlanTitle(String position, String name) {
+    return '$position · $name';
+  }
+
+  @override
+  String tacticsArrowSet(String name, String movement) {
+    return '$name: $movement';
+  }
+
+  @override
+  String get tacticsKeeperNoRun => 'En målvakt har ingen löpning att välja.';
+
+  @override
   String get tacticsPenaltyTaker => 'STRAFFSKYTT';
 
   @override
@@ -9680,6 +9739,107 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get roleBallPlayingDefenderBlurb => 'Startar anfall bakifrån.';
+
+  @override
+  String get roleLineKeeper => 'Linjemålvakt';
+
+  @override
+  String get roleSweeperKeeper => 'Libero-målvakt';
+
+  @override
+  String get roleStopper => 'Stopper';
+
+  @override
+  String get roleCoveringDefender => 'Täckande mittback';
+
+  @override
+  String get roleDefensiveFullBack => 'Defensiv ytterback';
+
+  @override
+  String get roleWingBack => 'Wingback';
+
+  @override
+  String get roleInvertedFullBack => 'Inverterad ytterback';
+
+  @override
+  String get roleAnchor => 'Ankare';
+
+  @override
+  String get roleDeepPlaymaker => 'Djupliggande spelfördelare';
+
+  @override
+  String get roleBoxToBox => 'Box-to-box';
+
+  @override
+  String get roleShadowStriker => 'Skuggspets';
+
+  @override
+  String get roleTouchlineWinger => 'Ytter vid linjen';
+
+  @override
+  String get roleDefensiveWinger => 'Defensiv ytter';
+
+  @override
+  String get roleFalseNine => 'Falsk nia';
+
+  @override
+  String get rolePressingForward => 'Pressande anfallare';
+
+  @override
+  String get roleLineKeeperBlurb =>
+      'Stannar på linjen. Säkrare, långsammare uppspel.';
+
+  @override
+  String get roleSweeperKeeperBlurb =>
+      'Städar bakom försvaret och startar anfall.';
+
+  @override
+  String get roleStopperBlurb =>
+      'Kliver ut för att vinna bollen tidigt. Stark i luften.';
+
+  @override
+  String get roleCoveringDefenderBlurb =>
+      'Faller tillbaka och täcker ytan bakom.';
+
+  @override
+  String get roleDefensiveFullBackBlurb => 'Stannar hemma och vaktar sin kant.';
+
+  @override
+  String get roleWingBackBlurb =>
+      'Överlappar och slår inlägg. Springer mycket.';
+
+  @override
+  String get roleInvertedFullBackBlurb =>
+      'Går in centralt och hjälper till att hålla bollen.';
+
+  @override
+  String get roleAnchorBlurb => 'Skyddar backlinjen. Gör sällan mål.';
+
+  @override
+  String get roleDeepPlaymakerBlurb => 'Styr spelet från djupet. Fler assist.';
+
+  @override
+  String get roleBoxToBoxBlurb => 'Upp och ner hela matchen. Kräver ork.';
+
+  @override
+  String get roleShadowStrikerBlurb =>
+      'Kommer sent in i straffområdet. Fler mål.';
+
+  @override
+  String get roleTouchlineWingerBlurb =>
+      'Håller sig vid linjen och slår inlägg. Fler assist.';
+
+  @override
+  String get roleDefensiveWingerBlurb =>
+      'Följer med hem och skyddar ytterbacken.';
+
+  @override
+  String get roleFalseNineBlurb =>
+      'Faller ner och knyter ihop spelet. Skapar mer än han gör mål.';
+
+  @override
+  String get rolePressingForwardBlurb =>
+      'Leder pressen längst fram. Tröttnar fortare.';
 
   @override
   String get federationDeptYouth => 'Ungdomsakademi';

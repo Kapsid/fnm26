@@ -2615,6 +2615,32 @@ class _MatchFullTimeLineupsState extends State<MatchFullTimeLineups> {
                     instructions: team.instructions,
                     fullBacks: team.fullBacks,
                     switches: team.switches,
+                    // The roles and runs the side lined up with: each slot's
+                    // own, or a man's legacy one.
+                    roles: [
+                      for (var s = 0; s < team.xi.length; s++)
+                        switch (team.slotRoles.at(
+                          s,
+                          s < team.positions.length
+                              ? team.positions[s]
+                              : team.xi[s].position,
+                        )) {
+                          PlayerRole.none =>
+                            team.roles[team.xi[s].id] ?? PlayerRole.none,
+                          final own => own,
+                        },
+                    ],
+                    arrows: [
+                      for (var s = 0; s < team.xi.length; s++)
+                        s < team.positions.length
+                            ? SlotArrows.effectiveAt(
+                                team.arrows,
+                                team.fullBacks,
+                                team.positions,
+                                s,
+                              )
+                            : MoveArrow.none,
+                    ],
                     lineup: [for (final p in team.xi) p.id],
                     byId: byId,
                     teamColors: side.kit,

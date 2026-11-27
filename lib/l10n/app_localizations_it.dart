@@ -1356,6 +1356,65 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String get roleFitGood => 'Adatto';
+
+  @override
+  String get roleFitFair => 'Discreto';
+
+  @override
+  String get roleFitPoor => 'Poco adatto';
+
+  @override
+  String get arrowNone => 'Tieni la posizione';
+
+  @override
+  String get arrowForward => 'Inserirsi';
+
+  @override
+  String get arrowBack => 'Stare più basso';
+
+  @override
+  String get arrowInside => 'Accentrarsi';
+
+  @override
+  String get arrowOutside => 'Restare largo';
+
+  @override
+  String get arrowForwardInside => 'Avanti e dentro';
+
+  @override
+  String get arrowForwardOutside => 'Avanti e largo';
+
+  @override
+  String get tacticsPitchModePlayers => 'Giocatori';
+
+  @override
+  String get tacticsPitchModeRoles => 'Compiti e movimenti';
+
+  @override
+  String get tacticsPitchRolesHint =>
+      'Tocca un giocatore per il compito. Tieni premuto e trascina per il movimento.';
+
+  @override
+  String get tacticsPlanRoleHeading => 'COMPITO';
+
+  @override
+  String get tacticsPlanMovementHeading => 'MOVIMENTO';
+
+  @override
+  String tacticsPlanTitle(String position, String name) {
+    return '$position · $name';
+  }
+
+  @override
+  String tacticsArrowSet(String name, String movement) {
+    return '$name: $movement';
+  }
+
+  @override
+  String get tacticsKeeperNoRun => 'Il portiere non ha movimenti da impostare.';
+
+  @override
   String get tacticsPenaltyTaker => 'RIGORISTA';
 
   @override
@@ -9729,6 +9788,106 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get roleBallPlayingDefenderBlurb => 'Avvia l\'azione da dietro.';
+
+  @override
+  String get roleLineKeeper => 'Portiere tra i pali';
+
+  @override
+  String get roleSweeperKeeper => 'Portiere libero';
+
+  @override
+  String get roleStopper => 'Stopper';
+
+  @override
+  String get roleCoveringDefender => 'Difensore di copertura';
+
+  @override
+  String get roleDefensiveFullBack => 'Terzino bloccato';
+
+  @override
+  String get roleWingBack => 'Esterno a tutta fascia';
+
+  @override
+  String get roleInvertedFullBack => 'Terzino invertito';
+
+  @override
+  String get roleAnchor => 'Frangiflutti';
+
+  @override
+  String get roleDeepPlaymaker => 'Regista arretrato';
+
+  @override
+  String get roleBoxToBox => 'Box-to-box';
+
+  @override
+  String get roleShadowStriker => 'Incursore';
+
+  @override
+  String get roleTouchlineWinger => 'Ala pura';
+
+  @override
+  String get roleDefensiveWinger => 'Ala di sacrificio';
+
+  @override
+  String get roleFalseNine => 'Falso nove';
+
+  @override
+  String get rolePressingForward => 'Attaccante di pressing';
+
+  @override
+  String get roleLineKeeperBlurb =>
+      'Resta tra i pali. Più sicuro, imposta più lento.';
+
+  @override
+  String get roleSweeperKeeperBlurb =>
+      'Copre la profondità dietro la difesa e avvia l’azione.';
+
+  @override
+  String get roleStopperBlurb =>
+      'Esce in anticipo per recuperare palla. Forte di testa.';
+
+  @override
+  String get roleCoveringDefenderBlurb =>
+      'Si abbassa a coprire lo spazio alle spalle.';
+
+  @override
+  String get roleDefensiveFullBackBlurb => 'Resta dietro e protegge la fascia.';
+
+  @override
+  String get roleWingBackBlurb => 'Sovrappone e crossa. Copre tanto campo.';
+
+  @override
+  String get roleInvertedFullBackBlurb =>
+      'Entra in mezzo al campo per aiutare il possesso.';
+
+  @override
+  String get roleAnchorBlurb => 'Protegge la difesa. Segna di rado.';
+
+  @override
+  String get roleDeepPlaymakerBlurb => 'Detta i tempi da dietro. Più assist.';
+
+  @override
+  String get roleBoxToBoxBlurb =>
+      'Su e giù per tutta la partita. Serve resistenza.';
+
+  @override
+  String get roleShadowStrikerBlurb =>
+      'Si inserisce in area in ritardo. Più gol.';
+
+  @override
+  String get roleTouchlineWingerBlurb =>
+      'Sta largo sulla linea e crossa. Più assist.';
+
+  @override
+  String get roleDefensiveWingerBlurb => 'Rientra a proteggere il terzino.';
+
+  @override
+  String get roleFalseNineBlurb =>
+      'Arretra a legare il gioco. Crea più che segnare.';
+
+  @override
+  String get rolePressingForwardBlurb =>
+      'Guida il pressing davanti. Si stanca prima.';
 
   @override
   String get federationDeptYouth => 'Settore giovanile';
