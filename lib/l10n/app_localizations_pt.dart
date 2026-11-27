@@ -1405,6 +1405,12 @@ class AppLocalizationsPt extends AppLocalizations {
       'Toque num jogador para definir a função. Segure e arraste para desenhar o movimento.';
 
   @override
+  String get tacticsRunLegendRole => 'Movimento natural da função';
+
+  @override
+  String get tacticsRunLegendManual => 'A sua instrução';
+
+  @override
   String get tacticsPlanRoleHeading => 'FUNÇÃO';
 
   @override

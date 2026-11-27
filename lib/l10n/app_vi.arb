@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "Cầu thủ",
   "tacticsPitchModeRoles": "Vai trò & di chuyển",
   "tacticsPitchRolesHint": "Chạm cầu thủ để chọn vai trò. Giữ và kéo để vẽ hướng di chuyển.",
+  "tacticsRunLegendRole": "Hướng chạy tự nhiên của vai trò",
+  "tacticsRunLegendManual": "Chỉ đạo của bạn",
   "tacticsPlanRoleHeading": "VAI TRÒ",
   "tacticsPlanMovementHeading": "DI CHUYỂN",
   "tacticsPlanTitle": "{position} · {name}",

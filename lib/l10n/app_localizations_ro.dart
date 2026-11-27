@@ -1373,6 +1373,12 @@ class AppLocalizationsRo extends AppLocalizations {
       'Atinge un jucător pentru rol. Ține apăsat și trage pentru a desena mișcarea.';
 
   @override
+  String get tacticsRunLegendRole => 'Mișcarea firească a rolului';
+
+  @override
+  String get tacticsRunLegendManual => 'Instrucțiunea ta';
+
+  @override
   String get tacticsPlanRoleHeading => 'ROL';
 
   @override

@@ -2450,6 +2450,18 @@ abstract class AppLocalizations {
   /// **'Tap a player to set a role. Hold and drag to draw a run.'**
   String get tacticsPitchRolesHint;
 
+  /// Legend under the tactics pitch (and the no-arrow choice in a player's run sheet): a dashed, lighter arrow is the natural run of the player's role.
+  ///
+  /// In en, this message translates to:
+  /// **'Role\'s natural run'**
+  String get tacticsRunLegendRole;
+
+  /// Legend under the tactics pitch: a solid arrow is a movement the manager set for the player.
+  ///
+  /// In en, this message translates to:
+  /// **'Your instruction'**
+  String get tacticsRunLegendManual;
+
   /// Heading of the role list in a player's role and run sheet.
   ///
   /// In en, this message translates to:

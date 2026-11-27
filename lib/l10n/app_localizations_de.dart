@@ -1411,6 +1411,12 @@ class AppLocalizationsDe extends AppLocalizations {
       'Tippen Sie auf einen Spieler für seine Rolle. Halten und ziehen Sie für den Laufweg.';
 
   @override
+  String get tacticsRunLegendRole => 'Natürlicher Laufweg der Rolle';
+
+  @override
+  String get tacticsRunLegendManual => 'Ihre Anweisung';
+
+  @override
   String get tacticsPlanRoleHeading => 'ROLLE';
 
   @override

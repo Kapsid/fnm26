@@ -1398,6 +1398,12 @@ class AppLocalizationsEl extends AppLocalizations {
       'Πάτα έναν παίκτη για τον ρόλο. Κράτα και σύρε για να σχεδιάσεις κίνηση.';
 
   @override
+  String get tacticsRunLegendRole => 'Φυσική κίνηση του ρόλου';
+
+  @override
+  String get tacticsRunLegendManual => 'Η οδηγία σου';
+
+  @override
   String get tacticsPlanRoleHeading => 'ΡΟΛΟΣ';
 
   @override

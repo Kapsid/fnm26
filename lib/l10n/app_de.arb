@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "Spieler",
   "tacticsPitchModeRoles": "Rollen & Laufwege",
   "tacticsPitchRolesHint": "Tippen Sie auf einen Spieler für seine Rolle. Halten und ziehen Sie für den Laufweg.",
+  "tacticsRunLegendRole": "Natürlicher Laufweg der Rolle",
+  "tacticsRunLegendManual": "Ihre Anweisung",
   "tacticsPlanRoleHeading": "ROLLE",
   "tacticsPlanMovementHeading": "LAUFWEG",
   "tacticsPlanTitle": "{position} · {name}",

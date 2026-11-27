@@ -1357,6 +1357,12 @@ class AppLocalizationsPl extends AppLocalizations {
       'Dotknij zawodnika, by ustawić rolę. Przytrzymaj i przeciągnij, by narysować ruch.';
 
   @override
+  String get tacticsRunLegendRole => 'Naturalny ruch roli';
+
+  @override
+  String get tacticsRunLegendManual => 'Twoje polecenie';
+
+  @override
   String get tacticsPlanRoleHeading => 'ROLA';
 
   @override

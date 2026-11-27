@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "Joueurs",
   "tacticsPitchModeRoles": "Rôles et courses",
   "tacticsPitchRolesHint": "Touchez un joueur pour son rôle. Maintenez et glissez pour tracer sa course.",
+  "tacticsRunLegendRole": "Course naturelle du rôle",
+  "tacticsRunLegendManual": "Votre consigne",
   "tacticsPlanRoleHeading": "RÔLE",
   "tacticsPlanMovementHeading": "DÉPLACEMENT",
   "tacticsPlanTitle": "{position} · {name}",

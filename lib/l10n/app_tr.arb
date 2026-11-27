@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "Oyuncular",
   "tacticsPitchModeRoles": "Roller ve koşular",
   "tacticsPitchRolesHint": "Rol için oyuncuya dokun. Koşu çizmek için basılı tutup sürükle.",
+  "tacticsRunLegendRole": "Rolün doğal koşusu",
+  "tacticsRunLegendManual": "Senin talimatın",
   "tacticsPlanRoleHeading": "ROL",
   "tacticsPlanMovementHeading": "HAREKET",
   "tacticsPlanTitle": "{position} · {name}",

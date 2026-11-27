@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "Jucători",
   "tacticsPitchModeRoles": "Roluri și mișcări",
   "tacticsPitchRolesHint": "Atinge un jucător pentru rol. Ține apăsat și trage pentru a desena mișcarea.",
+  "tacticsRunLegendRole": "Mișcarea firească a rolului",
+  "tacticsRunLegendManual": "Instrucțiunea ta",
   "tacticsPlanRoleHeading": "ROL",
   "tacticsPlanMovementHeading": "MIȘCARE",
   "tacticsPlanTitle": "{position} · {name}",

@@ -1399,6 +1399,12 @@ class AppLocalizationsIt extends AppLocalizations {
       'Tocca un giocatore per il compito. Tieni premuto e trascina per il movimento.';
 
   @override
+  String get tacticsRunLegendRole => 'Movimento naturale del compito';
+
+  @override
+  String get tacticsRunLegendManual => 'Tua istruzione';
+
+  @override
   String get tacticsPlanRoleHeading => 'COMPITO';
 
   @override

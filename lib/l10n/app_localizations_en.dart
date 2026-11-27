@@ -1396,6 +1396,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'Tap a player to set a role. Hold and drag to draw a run.';
 
   @override
+  String get tacticsRunLegendRole => 'Role\'s natural run';
+
+  @override
+  String get tacticsRunLegendManual => 'Your instruction';
+
+  @override
   String get tacticsPlanRoleHeading => 'ROLE';
 
   @override

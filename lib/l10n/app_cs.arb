@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "Hráči",
   "tacticsPitchModeRoles": "Role a náběhy",
   "tacticsPitchRolesHint": "Klepnutím nastavíte roli. Podržením a tažením nakreslíte náběh.",
+  "tacticsRunLegendRole": "Přirozený pohyb role",
+  "tacticsRunLegendManual": "Váš pokyn",
   "tacticsPlanRoleHeading": "ROLE",
   "tacticsPlanMovementHeading": "POHYB",
   "tacticsPlanTitle": "{position} · {name}",

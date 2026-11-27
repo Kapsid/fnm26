@@ -4,6 +4,7 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'dart:math';
 
+import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
@@ -656,28 +657,99 @@ class TacticsPitch extends StatelessWidget {
               );
             }
 
-            final runs = <({Offset from, MoveArrow arrow, int flank})>[
-              for (var slot = 0; slot < 11 && slot < arrows.length; slot++)
-                if (arrows[slot] != MoveArrow.none &&
-                    !deadSlots.contains(slot) &&
-                    lineup[slot] != null)
-                  (
-                    from: centreOf(slot),
-                    arrow: arrows[slot],
-                    flank: flankOf(positions[slot]),
-                  ),
-            ];
+            // Each slot's run: the arrow set on it, else its role's natural
+            // run (see [PitchRun]). The two are drawn in layers of their own,
+            // the roles' lighter ones underneath.
+            final manualRuns = <PitchRunMark>[];
+            final roleRuns = <PitchRunMark>[];
+            final runOf = <int, PitchRun>{};
+            final dirsOf = <int, List<Offset>>{};
+            for (var slot = 0; slot < 11; slot++) {
+              if (deadSlots.contains(slot) || lineup[slot] == null) continue;
+              final run = pitchRunOf(
+                slot < roles.length ? roles[slot] : PlayerRole.none,
+                slot < arrows.length ? arrows[slot] : MoveArrow.none,
+              );
+              runOf[slot] = run;
+              dirsOf[slot] = pitchRunDirections(
+                run,
+                flankOf(positions[slot]),
+              );
+            }
+            // How far a role's run from [slot] may go [d]-wards before it
+            // meets a team-mate's ball, or his run coming the other way: a
+            // run that points at a man stops short of him (halfway, when
+            // his own role run points back), so two runs never cross into
+            // one muddle. Set arrows keep their length; a role run gives way
+            // to them.
+            final r = m.disc / 2;
+            final head = pitchRunHead(m.disc);
+            double roomFor(int slot, Offset d) {
+              final start = centreOf(slot) + d * (r + 1);
+              var room = double.infinity;
+              for (final o in runOf.keys) {
+                if (o == slot) continue;
+                final v = centreOf(o) - start;
+                final t = v.dx * d.dx + v.dy * d.dy;
+                if (t <= 0) continue;
+                final perp = (v - d * t).distance;
+                final reach = r + head * 0.5;
+                if (perp > reach) continue;
+                final enter = t - sqrt(reach * reach - perp * perp);
+                var free = enter - 3;
+                for (final e in dirsOf[o]!) {
+                  if (e.dx * d.dx + e.dy * d.dy > -0.7) continue;
+                  final his = runOf[o]!;
+                  free = his.isManual
+                      ? min(free, enter - pitchRunExtent(his, m.disc) - 4)
+                      : min(free, enter / 2 - 2);
+                }
+                room = min(room, free);
+              }
+              return room;
+            }
+
+            for (final e in runOf.entries) {
+              final run = e.value;
+              if (run.isNone) continue;
+              final slot = e.key;
+              (run.isManual ? manualRuns : roleRuns).add((
+                slot: slot,
+                from: centreOf(slot),
+                run: run,
+                flank: flankOf(positions[slot]),
+                room: run.isManual
+                    ? const <double>[]
+                    : [for (final d in dirsOf[slot]!) roomFor(slot, d)],
+              ));
+            }
 
             return Stack(
               children: [
                 // The runs, under the discs: a disc in the way covers the
-                // line, never the other way round.
-                if (runs.isNotEmpty)
+                // line, never the other way round, and none of them takes a
+                // touch, so every disc and full-back mark stays reachable.
+                if (roleRuns.isNotEmpty)
+                  Positioned.fill(
+                    child: IgnorePointer(
+                      child: CustomPaint(
+                        key: PitchPlanKeys.roleRuns,
+                        painter: PitchRunsPainter(
+                          runs: roleRuns,
+                          disc: m.disc,
+                        ),
+                      ),
+                    ),
+                  ),
+                if (manualRuns.isNotEmpty)
                   Positioned.fill(
                     child: IgnorePointer(
                       child: CustomPaint(
                         key: PitchPlanKeys.arrows,
-                        painter: _RunsPainter(runs: runs, disc: m.disc),
+                        painter: PitchRunsPainter(
+                          runs: manualRuns,
+                          disc: m.disc,
+                        ),
                       ),
                     ),
                   ),
@@ -1993,19 +2065,8 @@ class _RoleTag extends StatelessWidget {
   }
 }
 
-/// How far a run reaches beyond its man's disc, in discs.
-const double _runLength = 0.72;
-
-/// The direction [arrow] is drawn in for a man on [flank], as a unit vector
-/// on the screen (attacking up).
-Offset _runDirection(MoveArrow arrow, int flank) {
-  final (x, y) = arrow.vector(flank);
-  final len = sqrt(x * x + y * y);
-  return len == 0 ? Offset.zero : Offset(x / len, y / len);
-}
-
-/// Draws one run: a line from the rim of the disc centred at [from] the way
-/// [arrow] goes, with a head on the end.
+/// Draws one set run: a line from the rim of the disc centred at [from] the
+/// way [arrow] goes, with a head on the end.
 void _paintRun(
   Canvas canvas,
   Offset from,
@@ -2013,51 +2074,60 @@ void _paintRun(
   int flank,
   double disc, {
   double opacity = 0.9,
-}) {
-  final dir = _runDirection(arrow, flank);
-  if (dir == Offset.zero) return;
-  final start = from + dir * (disc / 2 + 1);
-  final end = start + dir * (disc * _runLength);
-  final colour = moveArrowColor(arrow).withValues(alpha: opacity);
-  final line = Paint()
-    ..color = colour
-    ..strokeWidth = (disc * 0.07).clamp(2.5, 4.5)
-    ..strokeCap = StrokeCap.round
-    ..style = PaintingStyle.stroke;
-  final head = (disc * 0.2).clamp(7.0, 13.0);
-  final normal = Offset(-dir.dy, dir.dx);
-  final tip = end + dir * head * 0.3;
-  final left = end - dir * head + normal * head * 0.6;
-  final right = end - dir * head - normal * head * 0.6;
-  final path = Path()
-    ..moveTo(tip.dx, tip.dy)
-    ..lineTo(left.dx, left.dy)
-    ..lineTo(right.dx, right.dy)
-    ..close();
-  canvas
-    ..drawLine(start, end - dir * head * 0.5, line)
-    ..drawPath(path, Paint()..color = colour);
-}
+}) => paintPitchRun(
+  canvas,
+  from,
+  PitchRun.manual(arrow),
+  flank,
+  disc: disc,
+  opacity: opacity,
+);
 
-/// Every set run on the pitch, under the discs.
-class _RunsPainter extends CustomPainter {
-  _RunsPainter({required this.runs, required this.disc});
+/// One run drawn on the pitch: whose [slot], from the centre of his disc
+/// ([from]), which [run], his [flank], and the [room] it has each way (see
+/// [paintPitchRun]).
+typedef PitchRunMark = ({
+  int slot,
+  Offset from,
+  PitchRun run,
+  int flank,
+  List<double> room,
+});
 
-  final List<({Offset from, MoveArrow arrow, int flank})> runs;
+/// The runs on the pitch, under the discs: one layer of set arrows, or one
+/// of the roles' natural runs (see [PitchRun]).
+class PitchRunsPainter extends CustomPainter {
+  PitchRunsPainter({required this.runs, required this.disc});
+
+  final List<PitchRunMark> runs;
   final double disc;
 
   @override
   void paint(Canvas canvas, Size size) {
     for (final r in runs) {
-      _paintRun(canvas, r.from, r.arrow, r.flank, disc);
+      paintPitchRun(
+        canvas,
+        r.from,
+        r.run,
+        r.flank,
+        disc: disc,
+        room: r.room,
+      );
     }
   }
 
   @override
-  bool shouldRepaint(covariant _RunsPainter old) {
+  bool shouldRepaint(covariant PitchRunsPainter old) {
     if (old.disc != disc || old.runs.length != runs.length) return true;
     for (var i = 0; i < runs.length; i++) {
-      if (runs[i] != old.runs[i]) return true;
+      final (a, b) = (runs[i], old.runs[i]);
+      if (a.slot != b.slot ||
+          a.from != b.from ||
+          a.run != b.run ||
+          a.flank != b.flank ||
+          !listEquals(a.room, b.room)) {
+        return true;
+      }
     }
     return false;
   }

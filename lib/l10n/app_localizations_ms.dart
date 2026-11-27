@@ -1358,6 +1358,12 @@ class AppLocalizationsMs extends AppLocalizations {
       'Ketik pemain untuk memilih peranan. Tahan dan seret untuk melukis larian.';
 
   @override
+  String get tacticsRunLegendRole => 'Larian semula jadi peranan';
+
+  @override
+  String get tacticsRunLegendManual => 'Arahan anda';
+
+  @override
   String get tacticsPlanRoleHeading => 'PERANAN';
 
   @override

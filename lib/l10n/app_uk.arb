@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "Гравці",
   "tacticsPitchModeRoles": "Ролі та рухи",
   "tacticsPitchRolesHint": "Торкніться гравця, щоб вибрати роль. Утримуйте й тягніть, щоб намалювати рух.",
+  "tacticsRunLegendRole": "Природний рух ролі",
+  "tacticsRunLegendManual": "Ваша вказівка",
   "tacticsPlanRoleHeading": "РОЛЬ",
   "tacticsPlanMovementHeading": "РУХ",
   "tacticsPlanTitle": "{position} · {name}",

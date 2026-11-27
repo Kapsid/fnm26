@@ -1305,6 +1305,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get tacticsPitchRolesHint => '選手をタップで役割、長押ししてドラッグで動きを描く。';
 
   @override
+  String get tacticsRunLegendRole => '役割の自然な動き';
+
+  @override
+  String get tacticsRunLegendManual => 'あなたの指示';
+
+  @override
   String get tacticsPlanRoleHeading => '役割';
 
   @override

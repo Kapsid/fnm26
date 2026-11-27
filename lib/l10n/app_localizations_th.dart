@@ -1341,6 +1341,12 @@ class AppLocalizationsTh extends AppLocalizations {
       'แตะผู้เล่นเพื่อเลือกบทบาท กดค้างแล้วลากเพื่อวาดการวิ่ง';
 
   @override
+  String get tacticsRunLegendRole => 'การวิ่งตามธรรมชาติของบทบาท';
+
+  @override
+  String get tacticsRunLegendManual => 'คำสั่งของคุณ';
+
+  @override
   String get tacticsPlanRoleHeading => 'บทบาท';
 
   @override

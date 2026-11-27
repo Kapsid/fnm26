@@ -1358,6 +1358,12 @@ class AppLocalizationsId extends AppLocalizations {
       'Ketuk pemain untuk memilih peran. Tahan dan seret untuk menggambar pergerakan.';
 
   @override
+  String get tacticsRunLegendRole => 'Pergerakan alami peran';
+
+  @override
+  String get tacticsRunLegendManual => 'Instruksi Anda';
+
+  @override
   String get tacticsPlanRoleHeading => 'PERAN';
 
   @override

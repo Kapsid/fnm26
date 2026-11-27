@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "Jogadores",
   "tacticsPitchModeRoles": "Funções e movimentos",
   "tacticsPitchRolesHint": "Toque num jogador para definir a função. Segure e arraste para desenhar o movimento.",
+  "tacticsRunLegendRole": "Movimento natural da função",
+  "tacticsRunLegendManual": "A sua instrução",
   "tacticsPlanRoleHeading": "FUNÇÃO",
   "tacticsPlanMovementHeading": "MOVIMENTAÇÃO",
   "tacticsPlanTitle": "{position} · {name}",

@@ -59,6 +59,8 @@ Future<EditorOutcome> openEditor(
   List<MatchEvent> events = const [],
   Map<int, double> ratingByPlayer = const {},
   double textScale = 1,
+  SlotRoles roles = SlotRoles.none,
+  SlotArrows arrows = SlotArrows.none,
 }) async {
   final outcome = EditorOutcome();
   tester.view.physicalSize = size;
@@ -101,6 +103,8 @@ Future<EditorOutcome> openEditor(
                       ratingByPlayer: ratingByPlayer,
                       tabletLayout: tabletLayout,
                       presets: presets,
+                      roles: roles,
+                      arrows: arrows,
                     );
                   },
                   child: const Text('open'),

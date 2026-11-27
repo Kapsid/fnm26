@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "선수",
   "tacticsPitchModeRoles": "역할과 움직임",
   "tacticsPitchRolesHint": "선수를 탭해 역할을 정하고, 길게 눌러 끌어 움직임을 그리세요.",
+  "tacticsRunLegendRole": "역할의 기본 움직임",
+  "tacticsRunLegendManual": "직접 지시",
   "tacticsPlanRoleHeading": "역할",
   "tacticsPlanMovementHeading": "움직임",
   "tacticsPlanTitle": "{position} · {name}",

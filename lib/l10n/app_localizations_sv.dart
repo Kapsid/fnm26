@@ -1390,6 +1390,12 @@ class AppLocalizationsSv extends AppLocalizations {
       'Tryck på en spelare för roll. Håll och dra för att rita en löpning.';
 
   @override
+  String get tacticsRunLegendRole => 'Rollens naturliga löpning';
+
+  @override
+  String get tacticsRunLegendManual => 'Din instruktion';
+
+  @override
   String get tacticsPlanRoleHeading => 'ROLL';
 
   @override

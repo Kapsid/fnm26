@@ -1354,6 +1354,12 @@ class AppLocalizationsVi extends AppLocalizations {
       'Chạm cầu thủ để chọn vai trò. Giữ và kéo để vẽ hướng di chuyển.';
 
   @override
+  String get tacticsRunLegendRole => 'Hướng chạy tự nhiên của vai trò';
+
+  @override
+  String get tacticsRunLegendManual => 'Chỉ đạo của bạn';
+
+  @override
   String get tacticsPlanRoleHeading => 'VAI TRÒ';
 
   @override

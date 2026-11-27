@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "Játékosok",
   "tacticsPitchModeRoles": "Szerepek és mozgás",
   "tacticsPitchRolesHint": "Koppints egy játékosra a szerephez. Tartsd nyomva és húzd a mozgáshoz.",
+  "tacticsRunLegendRole": "A szerep természetes mozgása",
+  "tacticsRunLegendManual": "A te utasításod",
   "tacticsPlanRoleHeading": "SZEREP",
   "tacticsPlanMovementHeading": "MOZGÁS",
   "tacticsPlanTitle": "{position} · {name}",

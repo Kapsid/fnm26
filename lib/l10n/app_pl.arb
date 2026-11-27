@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "Zawodnicy",
   "tacticsPitchModeRoles": "Role i ruchy",
   "tacticsPitchRolesHint": "Dotknij zawodnika, by ustawić rolę. Przytrzymaj i przeciągnij, by narysować ruch.",
+  "tacticsRunLegendRole": "Naturalny ruch roli",
+  "tacticsRunLegendManual": "Twoje polecenie",
   "tacticsPlanRoleHeading": "ROLA",
   "tacticsPlanMovementHeading": "RUCH",
   "tacticsPlanTitle": "{position} · {name}",

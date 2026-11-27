@@ -1371,6 +1371,12 @@ class AppLocalizationsDa extends AppLocalizations {
       'Tryk på en spiller for rolle. Hold og træk for at tegne et løb.';
 
   @override
+  String get tacticsRunLegendRole => 'Rollens naturlige løb';
+
+  @override
+  String get tacticsRunLegendManual => 'Din instruks';
+
+  @override
   String get tacticsPlanRoleHeading => 'ROLLE';
 
   @override

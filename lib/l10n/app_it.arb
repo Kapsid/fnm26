@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "Giocatori",
   "tacticsPitchModeRoles": "Compiti e movimenti",
   "tacticsPitchRolesHint": "Tocca un giocatore per il compito. Tieni premuto e trascina per il movimento.",
+  "tacticsRunLegendRole": "Movimento naturale del compito",
+  "tacticsRunLegendManual": "Tua istruzione",
   "tacticsPlanRoleHeading": "COMPITO",
   "tacticsPlanMovementHeading": "MOVIMENTO",
   "tacticsPlanTitle": "{position} · {name}",

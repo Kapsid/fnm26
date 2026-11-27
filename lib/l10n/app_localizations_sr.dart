@@ -1410,6 +1410,12 @@ class AppLocalizationsSr extends AppLocalizations {
       'Додирни играча за улогу. Држи и повуци да нацрташ кретање.';
 
   @override
+  String get tacticsRunLegendRole => 'Природно кретање улоге';
+
+  @override
+  String get tacticsRunLegendManual => 'Твоје упутство';
+
+  @override
   String get tacticsPlanRoleHeading => 'УЛОГА';
 
   @override
