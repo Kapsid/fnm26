@@ -207,8 +207,11 @@ void main() {
       if ((h - a).abs() <= 15) {
         expect(pens / n, inInclusiveRange(0.33, 0.50), reason: '$h v $a');
       }
+      // The top was 0.66 until the lull after a goal (1.1.4), which moved
+      // 85 v 85 here from 0.596 to 0.664 on these 220-odd kicks; over
+      // 4000 matches it is 0.573 -> 0.591 (70 v 70: 0.590 -> 0.609).
       if (h == a) {
-        expect(home / pens, inInclusiveRange(0.52, 0.66), reason: '$h v $a');
+        expect(home / pens, inInclusiveRange(0.52, 0.68), reason: '$h v $a');
       }
     }
   });

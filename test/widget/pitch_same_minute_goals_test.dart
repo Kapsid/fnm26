@@ -9,7 +9,7 @@ import '../helpers/fixtures.dart';
 /// The final review's C1: one player scoring twice in the same minute gave
 /// both goals one key, so the first one shown held the second back for
 /// ever and the Pitch clock pinned at the first goal. Reproduced on the
-/// real controller with the reviewer's match, read the way the screen
+/// real controller with a match like the reviewer's, read the way the screen
 /// reads it.
 void main() {
   testWidgets('two goals by one player in one minute: the clock plays past '
@@ -19,7 +19,7 @@ void main() {
     final result = const MatchEngine().play(
       home: home,
       away: away,
-      rng: SeededRng.forFixture(0x1234, 3608),
+      rng: SeededRng.forFixture(0x1234, 631),
       extraTimeIfLevel: true,
     );
     final events = result.events;
@@ -29,9 +29,12 @@ void main() {
     ];
     final pair = [
       for (final i in goals)
-        if (events[i].minute == 55 && events[i].playerId == 109) i,
+        if (events[i].minute == 56 && events[i].playerId == 209) i,
     ];
-    expect(pair, hasLength(2), reason: 'the reviewer saw 109 score twice');
+    // The reviewer's match was fixture 3608 (109 twice at 55'). Since the
+    // lull after a goal (1.1.4) a second goal in the same minute is rare:
+    // fixture 631 has 209 twice at 56', open play then a set piece.
+    expect(pair, hasLength(2), reason: '209 scores twice at 56');
 
     // The screen's reading of the clock, cut down to what C1 is about.
     var minute = 0;

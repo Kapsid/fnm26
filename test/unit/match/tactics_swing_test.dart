@@ -352,9 +352,14 @@ void main() {
       // into a cost: what opens a game now is mostly mentality and shape,
       // through `MatchEngine.openness`, which this pair barely moves (its
       // presses cancel). The band keeps the old relative room.
+      //
+      // The lull after a goal (1.1.4) trims part of any rise in the chance
+      // rate (more goals, more lulls): +0.054 here, and over 8000 seeds
+      // +0.078 (about four standard errors clear of nothing) against +0.110
+      // before. The floor went from 0.08 to 0.04.
       expect(
         lift,
-        inInclusiveRange(0.08, 0.20),
+        inInclusiveRange(0.04, 0.20),
         reason:
             'committing forward should visibly open the game up, without '
             'turning every match into a basketball score',

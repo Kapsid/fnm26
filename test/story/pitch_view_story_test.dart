@@ -111,8 +111,10 @@ MatchResult _liveResim(MatchPreview p, int salt) => playWithAiExtraTimeSub(
   fixtureId: p.fixture.id,
 );
 
-/// A level semi-final with goals in it (so there is something to stage) and
-/// nothing in the last minutes (the shootout follows the whistle cleanly).
+/// A level semi-final with goals in it (so there is something to stage),
+/// nothing in the last minutes (the shootout follows the whistle cleanly)
+/// and no knock to one of the manager's own (it opens the squad, and the
+/// seeks below would stop on it).
 int _salt(MatchPreview p) {
   for (var salt = 1; salt < 6000; salt++) {
     final r = _liveResim(p, salt);
@@ -120,7 +122,12 @@ int _salt(MatchPreview p) {
     if (et != null &&
         et.homeScore == et.awayScore &&
         et.homeScore >= 1 &&
-        !r.events.any((e) => e.minute >= 119)) {
+        !r.events.any((e) => e.minute >= 119) &&
+        !r.events.any(
+          (e) =>
+              e.type == MatchEventType.injury &&
+              e.teamNationId == p.playerNationId,
+        )) {
       return salt;
     }
   }
@@ -236,7 +243,11 @@ void main() {
       }
     }
     expect(staged, containsAll(goals));
-    expect(goalCues, goals.length);
+    // A goal the video referee chalks off goes in first: its net ripples too.
+    final chalkedOff = r.events
+        .where((e) => e.type == MatchEventType.disallowedGoal)
+        .length;
+    expect(goalCues, goals.length + chalkedOff);
 
     // Through half-time and extra time to the shootout.
     Future<void> through(Duration whistle, String heading) async {

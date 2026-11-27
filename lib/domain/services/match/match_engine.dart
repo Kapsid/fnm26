@@ -828,7 +828,15 @@ class MatchEngine {
   /// ties extra time settles against 66.9% of decided ninety-minute games.
   /// Sweep: 0.8 gives 40.3% (80 v 80, fails the 0.06 band), 1.0 gives
   /// 46.7/49.5%, 1.05 48.4/50.1%, 1.15 53.1/52.4%.
-  static const double extraTimeChanceFactor = 1.1;
+  ///
+  /// Back to 1.0 in 1.1.4 with the lull after a goal ([_lullAfterGoal]):
+  /// its give-back already lifts every chance rate by a tenth, and extra
+  /// time, which starts level and mostly goalless, keeps nearly all of it,
+  /// so 1.1 on top settled 56.9% of 80 v 80 ties. At 1.0: 53.5% (background
+  /// 50.2%) and 51.1% of 84 v 76 (background 51.2%); the 84-rated side wins
+  /// 55.4% of the ties extra time settles against 67.4% of decided
+  /// ninety-minute games.
+  static const double extraTimeChanceFactor = 1.0;
 
   /// [injuryFactorByNation] scales a team's per-minute injury rate (1.0 = base;
   /// below 1.0 = a nation's medical/sports-science investment keeping players
@@ -1288,6 +1296,9 @@ class MatchEngine {
 
     var homeScore = 0;
     var awayScore = 0;
+    // The LULL after a goal (see [_lullAfterGoal]): how far both sides'
+    // chance rates are held down this minute. 0 = open play as normal.
+    var lull = 0.0;
     var homeShots = 0;
     var awayShots = 0;
     var homeXg = 0.0;
@@ -1648,6 +1659,7 @@ class MatchEngine {
       // Last minute's momentum fades a touch before this minute's ratings use it.
       liveHome.decayMomentum();
       liveAway.decayMomentum();
+      lull *= _lullFade;
 
       // Home advantage (+3 attack / +2 defence) goes to the side actually
       // playing at home — nobody at a neutral finals unless it's the host — plus
@@ -1680,6 +1692,15 @@ class MatchEngine {
       // Snapshot the score so a goal this minute can swing momentum afterwards.
       final homeBefore = homeScore;
       final awayBefore = awayScore;
+      // Both sides' chance rates under the lull: what is left of the last
+      // goal's, or the full lull once a goal has gone in this very minute
+      // (the kick-off, the celebration, a side regrouping: no goal straight
+      // back the same minute). Multiplies a rate only, never adds a draw, so
+      // every stream stays in step.
+      bool scoredThisMinute() =>
+          homeScore + awayScore > homeBefore + awayBefore;
+      double settle() =>
+          _lullGiveBack * (1 - (scoredThisMinute() ? _lullAfterGoal : lull));
 
       // Possession share: the side that keeps the ball more creates a little
       // more and lets the other have less — so a patient, passing side is
@@ -1742,6 +1763,7 @@ class MatchEngine {
             homeFlanks *
             homeThrows *
             _blowoutDamping(homeScore, awayScore) *
+            settle() *
             _scorelineOpenness(
               open,
               homeScore - awayScore,
@@ -1833,6 +1855,7 @@ class MatchEngine {
             awayFlanks *
             awayThrows *
             _blowoutDamping(awayScore, homeScore) *
+            settle() *
             _scorelineOpenness(
               open,
               awayScore - homeScore,
@@ -1918,7 +1941,11 @@ class MatchEngine {
         manageMinute,
         setPieceRng,
         stoppage: stoppage,
-        damping: legs * weather.tempo * _blowoutDamping(homeScore, awayScore),
+        damping:
+            legs *
+            weather.tempo *
+            _blowoutDamping(homeScore, awayScore) *
+            settle(),
         delivery: weather.delivery,
       );
       if (homeSp.shot) homeShots++;
@@ -1961,7 +1988,11 @@ class MatchEngine {
         manageMinute,
         setPieceRng,
         stoppage: stoppage,
-        damping: legs * weather.tempo * _blowoutDamping(awayScore, homeScore),
+        damping:
+            legs *
+            weather.tempo *
+            _blowoutDamping(awayScore, homeScore) *
+            settle(),
         delivery: weather.delivery,
       );
       if (awaySp.shot) awayShots++;
@@ -2008,7 +2039,11 @@ class MatchEngine {
           manageMinute,
           longThrowRng,
           stoppage: stoppage,
-          damping: legs * weather.tempo * _blowoutDamping(homeScore, awayScore),
+          damping:
+              legs *
+              weather.tempo *
+              _blowoutDamping(homeScore, awayScore) *
+              settle(),
           delivery: weather.delivery,
         );
         if (lt.shot) homeShots++;
@@ -2050,7 +2085,11 @@ class MatchEngine {
           manageMinute,
           longThrowRng,
           stoppage: stoppage,
-          damping: legs * weather.tempo * _blowoutDamping(awayScore, homeScore),
+          damping:
+              legs *
+              weather.tempo *
+              _blowoutDamping(awayScore, homeScore) *
+              settle(),
           delivery: weather.delivery,
         );
         if (lt.shot) awayShots++;
@@ -2094,6 +2133,7 @@ class MatchEngine {
       if (awayScore > awayBefore) {
         _swingMomentum(liveAway, liveHome, awayScore - awayBefore);
       }
+      if (scoredThisMinute()) lull = _lullAfterGoal;
 
       recordTexture(
         minute: manageMinute,
@@ -2298,6 +2338,24 @@ class MatchEngine {
       },
     );
   }
+
+  /// How far a goal holds BOTH sides' chance rates down: the rest of the
+  /// minute it went in by [_lullAfterGoal], then fading by [_lullFade] a
+  /// minute (0.71 the next minute, 0.53, 0.40, 0.30, ...). Real goals are
+  /// spaced out: after one there is a kick-off, a celebration and a side
+  /// regrouping, so a reply or a second inside a couple of minutes is
+  /// uncommon and three inside five is rare.
+  ///
+  /// Until 1.1.4 the minute model was memoryless and goals bunched: 18% of
+  /// consecutive goals came within five minutes of each other (football:
+  /// 8-10%) and one match in fifty had three inside five minutes. Its
+  /// momentum swing (below) added a little to that, but most of it was the
+  /// missing pause. With the lull those are 10% and about one match in 700.
+  /// [_lullGiveBack] spreads the goals the lull holds off over every
+  /// minute, so a match scores as many as it did.
+  static const double _lullAfterGoal = 0.95;
+  static const double _lullFade = 0.75;
+  static const double _lullGiveBack = 1.1;
 
   /// Applies a momentum swing when [scoring] beats [conceding] for [n] goal(s)
   /// this minute: the scorers push on (attack up), the conceders reel (defence

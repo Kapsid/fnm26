@@ -164,6 +164,6 @@ void main() {
 
   test('the chance factor is the calibrated value', () {
     // Set by extra_time_calibration_test.dart; change both together.
-    expect(MatchEngine.extraTimeChanceFactor, 1.1);
+    expect(MatchEngine.extraTimeChanceFactor, 1.0);
   });
 }

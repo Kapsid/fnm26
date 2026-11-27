@@ -188,8 +188,9 @@ MatchResult _liveResim(MatchPreview p, int salt) => playWithAiExtraTimeSub(
   fixtureId: p.fixture.id,
 );
 
-int _salt(MatchPreview p, bool Function(MatchResult r) wanted) {
-  for (var salt = 1; salt < 4000; salt++) {
+/// The first salt from [from] whose match has what [wanted] asks for.
+int _salt(MatchPreview p, bool Function(MatchResult r) wanted, {int from = 1}) {
+  for (var salt = from; salt < from + 4000; salt++) {
     if (wanted(_liveResim(p, salt))) return salt;
   }
   throw StateError('no salt found');
@@ -1438,10 +1439,13 @@ void main() {
         for (final b in goals) {
           final x = r.events[a];
           final y = r.events[b];
+          // For one side: a goal and then an own goal by the same man
+          // (salt 6149, at 41') is one goal each way.
           if (a < b &&
               x.minute == y.minute &&
               x.stoppage == y.stoppage &&
-              x.playerId == y.playerId) {
+              x.playerId == y.playerId &&
+              x.teamNationId == y.teamNationId) {
             return [a, b];
           }
         }
@@ -1449,7 +1453,9 @@ void main() {
       return const [];
     }
 
-    final salt = _salt(preview, (r) => twice(r).isNotEmpty);
+    // Since the lull after a goal (1.1.4) a second goal in the same minute
+    // is rare: the first salt with one man scoring twice is 27494 (45').
+    final salt = _salt(preview, (r) => twice(r).isNotEmpty, from: 27494);
     await _pump(
       tester,
       preview: preview,

@@ -209,7 +209,8 @@ void main() {
     // Re-pinned for the 1.1.2 engine (2026-11-16), and for penalty
     // rebounds (2026-11-24): only the matches with a penalty followed up
     // changed (see `penalty_rebound_test.dart`). Again for the video
-    // referee (1.1.4): a goal now and then chalked off.
-    expect(h, 2422214623);
+    // referee (1.1.4): a goal now and then chalked off. And for the lull
+    // after a goal (1.1.4): every chance rate moved.
+    expect(h, 3726831394);
   });
 }

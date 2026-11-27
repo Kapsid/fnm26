@@ -414,10 +414,12 @@ void main() {
         // penalty rebounds (2026-11-24): now and then a penalty that is not
         // scored stays live and is put in at the second attempt. Again at
         // 10378 (-1.0%) for the video referee (1.1.4): now and then a goal
-        // is chalked off.
+        // is chalked off. Again at 10522 (+1.4%) for the lull after a goal
+        // (1.1.4): goals are spaced out, and the rate given back between
+        // them leaves the total where it was.
         final n = _lab('neutral');
         final m = _mirror(n, n);
-        expect(m.total * 4000, closeTo(10378, 1e-6));
+        expect(m.total * 4000, closeTo(10522, 1e-6));
       },
     );
     // +0.092 on average (counter +0.127, highPress +0.020, possession +0.171,
