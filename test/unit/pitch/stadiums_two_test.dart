@@ -358,10 +358,11 @@ void main() {
         expect(known, contains(city), reason: city);
         expect(Landmarks.forCity(city), kind, reason: city);
       }
-      // Every new kind has a city.
-      final newKinds = LandmarkKind.values.skip(
-        LandmarkKind.ararat.index,
-      );
+      // Every new kind of the third set has a city (the fourth set, from
+      // stepPyramid on, stands for whole countries: see Landmarks.byNation).
+      final newKinds = LandmarkKind.values
+          .skip(LandmarkKind.ararat.index)
+          .take(LandmarkKind.stepPyramid.index - LandmarkKind.ararat.index);
       expect(third.values.toSet(), newKinds.toSet());
       expect(newKinds.length, 26);
     });
