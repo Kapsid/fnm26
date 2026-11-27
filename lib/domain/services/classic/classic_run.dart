@@ -706,6 +706,10 @@ class ClassicTournament {
     var id = run.fixtures.fold<int>(0, (m, f) => math.max(m, f.id)) + 1;
     for (var i = 0; i < pairs.length; i++) {
       final (home, away) = pairs[i];
+      // Dealt on the turn of the id after this fixture's, as it always was.
+      final venue = round == ClassicFormat.finalRound
+          ? edition.finalVenue
+          : ClassicFormat.venueFor(edition, home, away, (id + 1) * 3 + i);
       run.fixtures.add(
         ClassicFixture(
           id: id++,
@@ -714,9 +718,8 @@ class ClassicTournament {
           home: home,
           away: away,
           matchday: i + 1,
-          city: round == ClassicFormat.finalRound
-              ? edition.finalCity
-              : ClassicFormat.cityFor(edition, home, away, id * 3 + i),
+          city: edition.cities[venue].city,
+          venue: venue,
         ),
       );
     }

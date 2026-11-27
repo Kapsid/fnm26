@@ -19257,11 +19257,12 @@ class AppLocalizationsSv extends AppLocalizations {
       'Vinn upplagan med vilken nation som helst.';
 
   @override
-  String get classicMedalCollection => 'Varje nation';
+  String get classicMedalCollection => 'Samlare';
 
   @override
-  String get classicMedalCollectionHow =>
-      'Vinn upplagan med varje nation i fältet.';
+  String classicMedalCollectionHow(int count) {
+    return 'Vinn upplagan med $count olika nationer.';
+  }
 
   @override
   String get classicMedalContinents => 'Varje kontinent';
@@ -19357,4 +19358,58 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'Återställ det här laget';
+
+  @override
+  String get editorClassicStadiums => 'Värdarenor';
+
+  @override
+  String get editorClassicStadiumName => 'Arenans namn';
+
+  @override
+  String get editorClassicCity => 'Stad';
+
+  @override
+  String get editorClassicCapacity => 'Kapacitet';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return 'Mellan $min och $max platser.';
+  }
+
+  @override
+  String get editorClassicHostNation => 'Värdland';
+
+  @override
+  String get editorClassicAddStadium => 'Lägg till en arena';
+
+  @override
+  String get editorClassicRemoveStadium => 'Ta bort den här arenan';
+
+  @override
+  String get editorClassicOpeningVenue => 'Öppningsmatch';
+
+  @override
+  String get editorClassicFinalVenue => 'Final';
+
+  @override
+  String get editorClassicResetStadiums => 'Återställ arenorna';
+
+  @override
+  String get editorClassicAddPlayer => 'Lägg till en spelare';
+
+  @override
+  String get editorClassicRemovePlayer => 'Ta bort den här spelaren';
+
+  @override
+  String get editorClassicResetSquad => 'Återställ truppen';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return '$min till $max spelare, varav minst $keepers målvakter.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'Truppen behöver minst $count målvakter.';
+  }
 }

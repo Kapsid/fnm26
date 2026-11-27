@@ -19461,11 +19461,12 @@ class AppLocalizationsPl extends AppLocalizations {
   String get classicMedalChampionHow => 'Wygraj edycję dowolną reprezentacją.';
 
   @override
-  String get classicMedalCollection => 'Każda reprezentacja';
+  String get classicMedalCollection => 'Kolekcjoner';
 
   @override
-  String get classicMedalCollectionHow =>
-      'Wygraj edycję każdą jej uczestniczką.';
+  String classicMedalCollectionHow(int count) {
+    return 'Wygraj edycję $count różnymi reprezentacjami.';
+  }
 
   @override
   String get classicMedalContinents => 'Każdy kontynent';
@@ -19563,4 +19564,58 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'Przywróć tę drużynę';
+
+  @override
+  String get editorClassicStadiums => 'Stadiony gospodarza';
+
+  @override
+  String get editorClassicStadiumName => 'Nazwa stadionu';
+
+  @override
+  String get editorClassicCity => 'Miasto';
+
+  @override
+  String get editorClassicCapacity => 'Pojemność';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return 'Od $min do $max miejsc.';
+  }
+
+  @override
+  String get editorClassicHostNation => 'Kraj gospodarz';
+
+  @override
+  String get editorClassicAddStadium => 'Dodaj stadion';
+
+  @override
+  String get editorClassicRemoveStadium => 'Usuń ten stadion';
+
+  @override
+  String get editorClassicOpeningVenue => 'Mecz otwarcia';
+
+  @override
+  String get editorClassicFinalVenue => 'Finał';
+
+  @override
+  String get editorClassicResetStadiums => 'Przywróć stadiony';
+
+  @override
+  String get editorClassicAddPlayer => 'Dodaj zawodnika';
+
+  @override
+  String get editorClassicRemovePlayer => 'Usuń tego zawodnika';
+
+  @override
+  String get editorClassicResetSquad => 'Przywróć kadrę';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return 'Od $min do $max zawodników, w tym co najmniej $keepers bramkarzy.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'Kadra potrzebuje co najmniej $count bramkarzy.';
+  }
 }

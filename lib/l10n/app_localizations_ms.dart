@@ -19228,11 +19228,12 @@ class AppLocalizationsMs extends AppLocalizations {
       'Menangi edisi ini dengan mana-mana pasukan.';
 
   @override
-  String get classicMedalCollection => 'Setiap pasukan';
+  String get classicMedalCollection => 'Pengumpul';
 
   @override
-  String get classicMedalCollectionHow =>
-      'Menangi edisi ini dengan setiap pasukan penyertanya.';
+  String classicMedalCollectionHow(int count) {
+    return 'Menangi edisi ini dengan $count pasukan berbeza.';
+  }
 
   @override
   String get classicMedalContinents => 'Setiap benua';
@@ -19330,4 +19331,58 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'Set semula pasukan ini';
+
+  @override
+  String get editorClassicStadiums => 'Stadium tuan rumah';
+
+  @override
+  String get editorClassicStadiumName => 'Nama stadium';
+
+  @override
+  String get editorClassicCity => 'Bandar';
+
+  @override
+  String get editorClassicCapacity => 'Kapasiti';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return 'Antara $min dan $max tempat duduk.';
+  }
+
+  @override
+  String get editorClassicHostNation => 'Negara tuan rumah';
+
+  @override
+  String get editorClassicAddStadium => 'Tambah stadium';
+
+  @override
+  String get editorClassicRemoveStadium => 'Buang stadium ini';
+
+  @override
+  String get editorClassicOpeningVenue => 'Perlawanan pembukaan';
+
+  @override
+  String get editorClassicFinalVenue => 'Final';
+
+  @override
+  String get editorClassicResetStadiums => 'Set semula stadium';
+
+  @override
+  String get editorClassicAddPlayer => 'Tambah pemain';
+
+  @override
+  String get editorClassicRemovePlayer => 'Buang pemain ini';
+
+  @override
+  String get editorClassicResetSquad => 'Set semula skuad';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return '$min hingga $max pemain, sekurang-kurangnya $keepers daripadanya penjaga gol.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'Skuad memerlukan sekurang-kurangnya $count penjaga gol.';
+  }
 }

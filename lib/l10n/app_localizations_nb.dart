@@ -19259,11 +19259,12 @@ class AppLocalizationsNb extends AppLocalizations {
       'Vinn utgaven med hvilken som helst nasjon.';
 
   @override
-  String get classicMedalCollection => 'Hver nasjon';
+  String get classicMedalCollection => 'Samler';
 
   @override
-  String get classicMedalCollectionHow =>
-      'Vinn utgaven med hver nasjon i feltet.';
+  String classicMedalCollectionHow(int count) {
+    return 'Vinn utgaven med $count ulike nasjoner.';
+  }
 
   @override
   String get classicMedalContinents => 'Hvert kontinent';
@@ -19358,4 +19359,58 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'Tilbakestill dette laget';
+
+  @override
+  String get editorClassicStadiums => 'Vertsstadioner';
+
+  @override
+  String get editorClassicStadiumName => 'Stadionnavn';
+
+  @override
+  String get editorClassicCity => 'By';
+
+  @override
+  String get editorClassicCapacity => 'Kapasitet';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return 'Mellom $min og $max plasser.';
+  }
+
+  @override
+  String get editorClassicHostNation => 'Vertsland';
+
+  @override
+  String get editorClassicAddStadium => 'Legg til et stadion';
+
+  @override
+  String get editorClassicRemoveStadium => 'Fjern dette stadionet';
+
+  @override
+  String get editorClassicOpeningVenue => 'Åpningskamp';
+
+  @override
+  String get editorClassicFinalVenue => 'Finale';
+
+  @override
+  String get editorClassicResetStadiums => 'Tilbakestill stadionene';
+
+  @override
+  String get editorClassicAddPlayer => 'Legg til en spiller';
+
+  @override
+  String get editorClassicRemovePlayer => 'Fjern denne spilleren';
+
+  @override
+  String get editorClassicResetSquad => 'Tilbakestill troppen';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return '$min til $max spillere, minst $keepers av dem keepere.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'Troppen trenger minst $count keepere.';
+  }
 }

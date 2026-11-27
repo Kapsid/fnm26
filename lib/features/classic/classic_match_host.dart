@@ -13,11 +13,11 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/achievements/achievements.dart';
+import 'package:fnm/domain/services/classic/classic_edition.dart';
 import 'package:fnm/domain/services/classic/classic_format.dart';
 import 'package:fnm/domain/services/classic/classic_run.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
-import 'package:fnm/domain/services/competition/venues.dart';
 import 'package:fnm/domain/services/match/ai_substitutions.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
@@ -64,21 +64,22 @@ Fixture classicMatchFixture(ClassicFixture f) => f.toFixture().copyWith(
   round: f.isGroup ? kClassicGroupRound : f.round,
 );
 
-/// The ground [f] is played at: a fictional stadium in its host city (the
-/// game's own name for the city's ground), filled for the occasion.
+/// The ground [f] is played at: its host stadium (the editor's, when it
+/// changed the edition's stadiums; else a fictional stadium in the host
+/// city under the game's own name for the city's ground), filled for the
+/// occasion.
 MatchGround classicMatchGround(ClassicTournament t, ClassicFixture f) {
-  final edition = t.edition;
-  final city = edition.cities.where((c) => c.city == f.city).firstOrNull;
-  final host = city?.host ?? edition.hosts.first;
-  final capacity = city?.seats ?? 45000;
+  final venue = ClassicFormat.venueOf(t.edition, f);
+  final host = venue.host;
+  final capacity = venue.seats;
   // A knockout sells out; a group match fills most of the place.
   final fill = f.isGroup
       ? 0.84 + SeededRng(t.run.seed ^ (f.id * 0x9E37)).nextInt(15) / 100
       : 1.0;
   final attendance = (capacity * fill).round().clamp(0, capacity);
   return (
-    stadium: VenueGenerator.gameGroundName(host, f.city),
-    city: f.city,
+    stadium: classicGroundName(venue),
+    city: venue.city,
     groundNationId: host,
     capacity: capacity,
     attendance: attendance,

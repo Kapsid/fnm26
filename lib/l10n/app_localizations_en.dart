@@ -19302,11 +19302,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get classicMedalChampionHow => 'Win the edition with any nation.';
 
   @override
-  String get classicMedalCollection => 'Every nation';
+  String get classicMedalCollection => 'Collector';
 
   @override
-  String get classicMedalCollectionHow =>
-      'Win the edition with every nation in its field.';
+  String classicMedalCollectionHow(int count) {
+    return 'Win the edition with $count different nations.';
+  }
 
   @override
   String get classicMedalContinents => 'Every continent';
@@ -19403,4 +19404,58 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'Reset this team';
+
+  @override
+  String get editorClassicStadiums => 'Host stadiums';
+
+  @override
+  String get editorClassicStadiumName => 'Stadium name';
+
+  @override
+  String get editorClassicCity => 'City';
+
+  @override
+  String get editorClassicCapacity => 'Capacity';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return 'Between $min and $max seats.';
+  }
+
+  @override
+  String get editorClassicHostNation => 'Host country';
+
+  @override
+  String get editorClassicAddStadium => 'Add a stadium';
+
+  @override
+  String get editorClassicRemoveStadium => 'Remove this stadium';
+
+  @override
+  String get editorClassicOpeningVenue => 'Opening match';
+
+  @override
+  String get editorClassicFinalVenue => 'Final';
+
+  @override
+  String get editorClassicResetStadiums => 'Reset the stadiums';
+
+  @override
+  String get editorClassicAddPlayer => 'Add a player';
+
+  @override
+  String get editorClassicRemovePlayer => 'Remove this player';
+
+  @override
+  String get editorClassicResetSquad => 'Reset the squad';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return '$min to $max players, at least $keepers of them goalkeepers.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'The squad needs at least $count goalkeepers.';
+  }
 }

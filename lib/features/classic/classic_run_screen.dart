@@ -21,7 +21,6 @@ import 'package:fnm/domain/services/classic/classic_format.dart';
 import 'package:fnm/domain/services/classic/classic_medals.dart';
 import 'package:fnm/domain/services/classic/classic_run.dart';
 import 'package:fnm/domain/services/competition/cross_group.dart';
-import 'package:fnm/domain/services/competition/venues.dart';
 import 'package:fnm/features/classic/classic_labels.dart';
 import 'package:fnm/features/classic/classic_providers.dart';
 import 'package:fnm/features/classic/classic_widgets.dart';
@@ -193,13 +192,8 @@ class _NextCard extends ConsumerWidget {
     final f = t.nextMatch;
     if (f == null) return const SizedBox.shrink();
     final edition = t.edition;
-    final host = edition.cities
-        .firstWhere(
-          (c) => c.city == f.city,
-          orElse: () => edition.cities.first,
-        )
-        .host;
-    final ground = VenueGenerator.gameGroundName(host, f.city);
+    final venue = ClassicFormat.venueOf(edition, f);
+    final ground = classicGroundName(venue);
     final stage = f.isGroup
         ? '${l.tourCupGroupName(f.group!)} · ${l.classicMatchday(f.matchday)}'
         : classicStageLabel(l, f.round);
@@ -230,7 +224,7 @@ class _NextCard extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
-            '$stage\n${_dateLabel(l, f.date)} · ${f.city} · $ground',
+            '$stage\n${_dateLabel(l, f.date)} · ${venue.city} · $ground',
             textAlign: TextAlign.center,
             style: AppTypography.bodySmall.copyWith(
               color: AppColors.onSurfaceVariant,

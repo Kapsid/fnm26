@@ -102,6 +102,11 @@ abstract final class ClassicMedals {
     };
   }
 
+  /// How many different nations the collection medal of [edition] needs
+  /// to win it with: ten, or twelve in a field of 48.
+  static int collectionTarget(ClassicEdition edition) =>
+      edition.hasRoundOf32 ? 12 : 10;
+
   /// The confederations [edition]'s field comes from.
   static Set<Confederation> confederationsOf(
     ClassicEdition edition,
@@ -132,12 +137,13 @@ abstract final class ClassicMedals {
       for (final n in wonWith) ?confederationOf(n),
     };
     final underdog = underdogs(edition);
+    final collection = collectionTarget(edition);
     int flag(bool b) => b ? 1 : 0;
     return {
       EditionMedal.champion: (progress: flag(wins.isNotEmpty), target: 1),
       EditionMedal.collection: (
-        progress: wonWith.intersection(field).length,
-        target: field.length,
+        progress: wonWith.intersection(field).length.clamp(0, collection),
+        target: collection,
       ),
       EditionMedal.continents: (
         progress: wonConfeds.intersection(confeds).length,

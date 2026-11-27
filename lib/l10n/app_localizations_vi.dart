@@ -19109,11 +19109,12 @@ class AppLocalizationsVi extends AppLocalizations {
       'Vô địch kỳ giải với bất kỳ đội tuyển nào.';
 
   @override
-  String get classicMedalCollection => 'Mọi đội tuyển';
+  String get classicMedalCollection => 'Nhà sưu tầm';
 
   @override
-  String get classicMedalCollectionHow =>
-      'Vô địch kỳ giải với từng đội tuyển tham dự.';
+  String classicMedalCollectionHow(int count) {
+    return 'Vô địch kỳ giải với $count đội tuyển khác nhau.';
+  }
 
   @override
   String get classicMedalContinents => 'Mọi châu lục';
@@ -19211,4 +19212,58 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'Đặt lại đội này';
+
+  @override
+  String get editorClassicStadiums => 'Sân vận động chủ nhà';
+
+  @override
+  String get editorClassicStadiumName => 'Tên sân';
+
+  @override
+  String get editorClassicCity => 'Thành phố';
+
+  @override
+  String get editorClassicCapacity => 'Sức chứa';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return 'Từ $min đến $max chỗ ngồi.';
+  }
+
+  @override
+  String get editorClassicHostNation => 'Nước chủ nhà';
+
+  @override
+  String get editorClassicAddStadium => 'Thêm sân';
+
+  @override
+  String get editorClassicRemoveStadium => 'Xóa sân này';
+
+  @override
+  String get editorClassicOpeningVenue => 'Trận khai mạc';
+
+  @override
+  String get editorClassicFinalVenue => 'Chung kết';
+
+  @override
+  String get editorClassicResetStadiums => 'Đặt lại các sân';
+
+  @override
+  String get editorClassicAddPlayer => 'Thêm cầu thủ';
+
+  @override
+  String get editorClassicRemovePlayer => 'Xóa cầu thủ này';
+
+  @override
+  String get editorClassicResetSquad => 'Đặt lại đội hình';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return 'Từ $min đến $max cầu thủ, trong đó ít nhất $keepers thủ môn.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'Đội hình cần ít nhất $count thủ môn.';
+  }
 }

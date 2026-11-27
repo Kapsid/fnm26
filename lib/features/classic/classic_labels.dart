@@ -65,11 +65,14 @@ String classicEditionLabel(
 String classicStageLabel(AppLocalizations l, String round) =>
     MatchStage.stage(l, round == ClassicFormat.groupRound ? 'GROUP' : round);
 
-/// A medal's name, how to earn it and its icon.
+/// A medal's name, how to earn it and its icon. [collectionTarget] is the
+/// number of nations the collection medal asks for at the edition
+/// (`ClassicMedals.collectionTarget`).
 ({String name, String how, IconData icon}) editionMedalWords(
   AppLocalizations l,
-  EditionMedal m,
-) => switch (m) {
+  EditionMedal m, {
+  int collectionTarget = 10,
+}) => switch (m) {
   EditionMedal.champion => (
     name: l.classicMedalChampion,
     how: l.classicMedalChampionHow,
@@ -77,7 +80,7 @@ String classicStageLabel(AppLocalizations l, String round) =>
   ),
   EditionMedal.collection => (
     name: l.classicMedalCollection,
-    how: l.classicMedalCollectionHow,
+    how: l.classicMedalCollectionHow(collectionTarget),
     icon: Icons.flag_rounded,
   ),
   EditionMedal.continents => (

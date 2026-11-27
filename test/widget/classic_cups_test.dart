@@ -334,7 +334,17 @@ void main() {
     );
     // Champion, giant-killer (Panama, pot four) and unbeaten in 2018.
     expect(find.text('3 of 7 medals'), findsOneWidget);
-    expect(find.text('1/32'), findsOneWidget);
+    // One nation of the ten the collection asks for.
+    expect(find.text('1/10'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(
+          ClassicMedalsScreen.editionMedalKey(2018, EditionMedal.collection),
+        ),
+        matching: find.text('Win the edition with 10 different nations.'),
+      ),
+      findsOneWidget,
+    );
     await tester.scrollUntilVisible(
       find.text('Needs Unlimited').first,
       200,

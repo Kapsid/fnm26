@@ -29769,13 +29769,18 @@
   "@classicMedalChampionHow": {
     "description": "How to earn the medal."
   },
-  "classicMedalCollection": "Every nation",
+  "classicMedalCollection": "Collector",
   "@classicMedalCollection": {
     "description": "Medal name."
   },
-  "classicMedalCollectionHow": "Win the edition with every nation in its field.",
+  "classicMedalCollectionHow": "Win the edition with {count} different nations.",
   "@classicMedalCollectionHow": {
-    "description": "How to earn the medal."
+    "description": "How to earn the medal. count is 10, or 12 for the 48-team edition.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "classicMedalContinents": "Every continent",
   "@classicMedalContinents": {
@@ -29892,5 +29897,95 @@
   "editorClassicReset": "Reset this team",
   "@editorClassicReset": {
     "description": "Editor: drop every edit of this team."
+  },
+  "editorClassicStadiums": "Host stadiums",
+  "@editorClassicStadiums": {
+    "description": "Editor: an edition's host stadiums (a section and its title)."
+  },
+  "editorClassicStadiumName": "Stadium name",
+  "@editorClassicStadiumName": {
+    "description": "Editor: a host stadium's name field."
+  },
+  "editorClassicCity": "City",
+  "@editorClassicCity": {
+    "description": "Editor: a host stadium's city field."
+  },
+  "editorClassicCapacity": "Capacity",
+  "@editorClassicCapacity": {
+    "description": "Editor: a host stadium's seat count field."
+  },
+  "editorClassicCapacityRange": "Between {min} and {max} seats.",
+  "@editorClassicCapacityRange": {
+    "description": "Editor: the seat counts a host stadium may have (formatted numbers).",
+    "placeholders": {
+      "min": {
+        "type": "String",
+        "example": "5,000"
+      },
+      "max": {
+        "type": "String",
+        "example": "150,000"
+      }
+    }
+  },
+  "editorClassicHostNation": "Host country",
+  "@editorClassicHostNation": {
+    "description": "Editor: which host nation a stadium is in (editions with co-hosts)."
+  },
+  "editorClassicAddStadium": "Add a stadium",
+  "@editorClassicAddStadium": {
+    "description": "Editor: add a host stadium to the edition."
+  },
+  "editorClassicRemoveStadium": "Remove this stadium",
+  "@editorClassicRemoveStadium": {
+    "description": "Editor: tooltip, take a host stadium out of the edition."
+  },
+  "editorClassicOpeningVenue": "Opening match",
+  "@editorClassicOpeningVenue": {
+    "description": "Editor: the stadium of the opening match."
+  },
+  "editorClassicFinalVenue": "Final",
+  "@editorClassicFinalVenue": {
+    "description": "Editor: the stadium of the final."
+  },
+  "editorClassicResetStadiums": "Reset the stadiums",
+  "@editorClassicResetStadiums": {
+    "description": "Editor: drop every edit of the edition's host stadiums."
+  },
+  "editorClassicAddPlayer": "Add a player",
+  "@editorClassicAddPlayer": {
+    "description": "Editor: add a player to the squad."
+  },
+  "editorClassicRemovePlayer": "Remove this player",
+  "@editorClassicRemovePlayer": {
+    "description": "Editor: tooltip, take a player out of the squad."
+  },
+  "editorClassicResetSquad": "Reset the squad",
+  "@editorClassicResetSquad": {
+    "description": "Editor: the squad as generated again; strength and kit kept."
+  },
+  "editorClassicSquadRule": "{min} to {max} players, at least {keepers} of them goalkeepers.",
+  "@editorClassicSquadRule": {
+    "description": "Editor: how big a squad may be. min is 16, max 23 or 26, keepers 2.",
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      },
+      "keepers": {
+        "type": "int"
+      }
+    }
+  },
+  "editorClassicKeepersNeeded": "The squad needs at least {count} goalkeepers.",
+  "@editorClassicKeepersNeeded": {
+    "description": "Editor: a goalkeeper cannot change position; count is 2.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

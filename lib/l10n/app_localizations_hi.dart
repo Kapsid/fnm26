@@ -19171,11 +19171,12 @@ class AppLocalizationsHi extends AppLocalizations {
   String get classicMedalChampionHow => 'किसी भी टीम के साथ यह संस्करण जीतें।';
 
   @override
-  String get classicMedalCollection => 'हर टीम';
+  String get classicMedalCollection => 'संग्राहक';
 
   @override
-  String get classicMedalCollectionHow =>
-      'इसमें भाग लेने वाली हर टीम के साथ संस्करण जीतें।';
+  String classicMedalCollectionHow(int count) {
+    return '$count अलग-अलग टीमों के साथ संस्करण जीतें।';
+  }
 
   @override
   String get classicMedalContinents => 'हर महाद्वीप';
@@ -19270,4 +19271,58 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'इस टीम को रीसेट करें';
+
+  @override
+  String get editorClassicStadiums => 'मेज़बान स्टेडियम';
+
+  @override
+  String get editorClassicStadiumName => 'स्टेडियम का नाम';
+
+  @override
+  String get editorClassicCity => 'शहर';
+
+  @override
+  String get editorClassicCapacity => 'क्षमता';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return '$min से $max सीटों के बीच।';
+  }
+
+  @override
+  String get editorClassicHostNation => 'मेज़बान देश';
+
+  @override
+  String get editorClassicAddStadium => 'स्टेडियम जोड़ें';
+
+  @override
+  String get editorClassicRemoveStadium => 'यह स्टेडियम हटाएँ';
+
+  @override
+  String get editorClassicOpeningVenue => 'उद्घाटन मैच';
+
+  @override
+  String get editorClassicFinalVenue => 'फ़ाइनल';
+
+  @override
+  String get editorClassicResetStadiums => 'स्टेडियम रीसेट करें';
+
+  @override
+  String get editorClassicAddPlayer => 'खिलाड़ी जोड़ें';
+
+  @override
+  String get editorClassicRemovePlayer => 'यह खिलाड़ी हटाएँ';
+
+  @override
+  String get editorClassicResetSquad => 'स्क्वॉड रीसेट करें';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return '$min से $max खिलाड़ी, जिनमें कम से कम $keepers गोलकीपर हों।';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'स्क्वॉड में कम से कम $count गोलकीपर चाहिए।';
+  }
 }

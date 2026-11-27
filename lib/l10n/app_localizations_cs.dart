@@ -19646,11 +19646,12 @@ class AppLocalizationsCs extends AppLocalizations {
   String get classicMedalChampionHow => 'Vyhrajte ročník s jakýmkoli týmem.';
 
   @override
-  String get classicMedalCollection => 'Každý tým';
+  String get classicMedalCollection => 'Sběratel';
 
   @override
-  String get classicMedalCollectionHow =>
-      'Vyhrajte ročník s každým týmem, který se ho účastnil.';
+  String classicMedalCollectionHow(int count) {
+    return 'Vyhrajte ročník s $count různými týmy.';
+  }
 
   @override
   String get classicMedalContinents => 'Každý kontinent';
@@ -19748,4 +19749,58 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'Obnovit tento tým';
+
+  @override
+  String get editorClassicStadiums => 'Stadiony pořadatele';
+
+  @override
+  String get editorClassicStadiumName => 'Název stadionu';
+
+  @override
+  String get editorClassicCity => 'Město';
+
+  @override
+  String get editorClassicCapacity => 'Kapacita';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return 'Mezi $min a $max místy.';
+  }
+
+  @override
+  String get editorClassicHostNation => 'Pořadatelská země';
+
+  @override
+  String get editorClassicAddStadium => 'Přidat stadion';
+
+  @override
+  String get editorClassicRemoveStadium => 'Odebrat tento stadion';
+
+  @override
+  String get editorClassicOpeningVenue => 'Zahajovací zápas';
+
+  @override
+  String get editorClassicFinalVenue => 'Finále';
+
+  @override
+  String get editorClassicResetStadiums => 'Obnovit stadiony';
+
+  @override
+  String get editorClassicAddPlayer => 'Přidat hráče';
+
+  @override
+  String get editorClassicRemovePlayer => 'Odebrat tohoto hráče';
+
+  @override
+  String get editorClassicResetSquad => 'Obnovit soupisku';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return '$min až $max hráčů, z toho alespoň $keepers brankáři.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'Soupiska potřebuje alespoň $count brankáře.';
+  }
 }

@@ -19364,11 +19364,12 @@ class AppLocalizationsEl extends AppLocalizations {
       'Κέρδισε τη διοργάνωση με οποιαδήποτε εθνική.';
 
   @override
-  String get classicMedalCollection => 'Κάθε εθνική';
+  String get classicMedalCollection => 'Συλλέκτης';
 
   @override
-  String get classicMedalCollectionHow =>
-      'Κέρδισε τη διοργάνωση με κάθε συμμετέχουσα εθνική.';
+  String classicMedalCollectionHow(int count) {
+    return 'Κέρδισε τη διοργάνωση με $count διαφορετικές εθνικές.';
+  }
 
   @override
   String get classicMedalContinents => 'Κάθε ήπειρος';
@@ -19467,4 +19468,58 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'Επαναφορά αυτής της ομάδας';
+
+  @override
+  String get editorClassicStadiums => 'Γήπεδα διοργάνωσης';
+
+  @override
+  String get editorClassicStadiumName => 'Όνομα γηπέδου';
+
+  @override
+  String get editorClassicCity => 'Πόλη';
+
+  @override
+  String get editorClassicCapacity => 'Χωρητικότητα';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return 'Από $min έως $max θέσεις.';
+  }
+
+  @override
+  String get editorClassicHostNation => 'Χώρα διοργάνωσης';
+
+  @override
+  String get editorClassicAddStadium => 'Πρόσθεσε γήπεδο';
+
+  @override
+  String get editorClassicRemoveStadium => 'Αφαίρεσε αυτό το γήπεδο';
+
+  @override
+  String get editorClassicOpeningVenue => 'Εναρκτήριος αγώνας';
+
+  @override
+  String get editorClassicFinalVenue => 'Τελικός';
+
+  @override
+  String get editorClassicResetStadiums => 'Επαναφορά γηπέδων';
+
+  @override
+  String get editorClassicAddPlayer => 'Πρόσθεσε παίκτη';
+
+  @override
+  String get editorClassicRemovePlayer => 'Αφαίρεσε αυτόν τον παίκτη';
+
+  @override
+  String get editorClassicResetSquad => 'Επαναφορά ρόστερ';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return '$min έως $max παίκτες, τουλάχιστον $keepers από αυτούς τερματοφύλακες.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'Το ρόστερ χρειάζεται τουλάχιστον $count τερματοφύλακες.';
+  }
 }

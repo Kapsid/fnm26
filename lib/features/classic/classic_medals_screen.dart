@@ -142,7 +142,11 @@ class _EditionMedals extends ConsumerWidget {
           for (final m in EditionMedal.values)
             _MedalRow(
               key: ClassicMedalsScreen.editionMedalKey(edition.year, m),
-              words: editionMedalWords(l, m),
+              words: editionMedalWords(
+                l,
+                m,
+                collectionTarget: ClassicMedals.collectionTarget(edition),
+              ),
               progress: medals[m]!,
               locked: locked,
             ),

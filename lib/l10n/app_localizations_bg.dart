@@ -19343,11 +19343,12 @@ class AppLocalizationsBg extends AppLocalizations {
       'Спечели изданието с който и да е отбор.';
 
   @override
-  String get classicMedalCollection => 'Всеки отбор';
+  String get classicMedalCollection => 'Колекционер';
 
   @override
-  String get classicMedalCollectionHow =>
-      'Спечели изданието с всеки участващ отбор.';
+  String classicMedalCollectionHow(int count) {
+    return 'Спечели изданието с $count различни отбора.';
+  }
 
   @override
   String get classicMedalContinents => 'Всеки континент';
@@ -19444,4 +19445,58 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'Върни този отбор';
+
+  @override
+  String get editorClassicStadiums => 'Стадиони домакини';
+
+  @override
+  String get editorClassicStadiumName => 'Име на стадиона';
+
+  @override
+  String get editorClassicCity => 'Град';
+
+  @override
+  String get editorClassicCapacity => 'Капацитет';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return 'Между $min и $max места.';
+  }
+
+  @override
+  String get editorClassicHostNation => 'Страна домакин';
+
+  @override
+  String get editorClassicAddStadium => 'Добави стадион';
+
+  @override
+  String get editorClassicRemoveStadium => 'Премахни този стадион';
+
+  @override
+  String get editorClassicOpeningVenue => 'Откриващ мач';
+
+  @override
+  String get editorClassicFinalVenue => 'Финал';
+
+  @override
+  String get editorClassicResetStadiums => 'Върни стадионите';
+
+  @override
+  String get editorClassicAddPlayer => 'Добави играч';
+
+  @override
+  String get editorClassicRemovePlayer => 'Премахни този играч';
+
+  @override
+  String get editorClassicResetSquad => 'Върни състава';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return 'От $min до $max играчи, поне $keepers от тях вратари.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'Съставът се нуждае от поне $count вратари.';
+  }
 }

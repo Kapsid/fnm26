@@ -28,7 +28,7 @@ void main() {
     test('nothing earned with no runs', () {
       final m = medals2018(const []);
       expect(m.values.every((p) => !p.earned), isTrue);
-      expect(m[EditionMedal.collection], (progress: 0, target: 32));
+      expect(m[EditionMedal.collection], (progress: 0, target: 10));
       // 2018: Europe, South America, North America, Africa, Asia.
       expect(m[EditionMedal.continents], (progress: 0, target: 5));
     });
@@ -49,15 +49,50 @@ void main() {
       );
     });
 
-    test('collection counts each nation once, to the whole field', () {
+    test('collection: ten different nations, each counted once', () {
       final wins = [
         for (final t in e2018.teams)
           ClassicRecord(year: 2018, nationId: t.nationId, champion: true),
       ];
       final some = medals2018([...wins.take(7), wins.first]);
-      expect(some[EditionMedal.collection], (progress: 7, target: 32));
+      expect(some[EditionMedal.collection], (progress: 7, target: 10));
       expect(some[EditionMedal.collection]!.earned, isFalse);
-      expect(medals2018(wins)[EditionMedal.collection]!.earned, isTrue);
+      // A defeat, or a win at another edition, adds no nation.
+      final nine = medals2018([
+        ...wins.take(9),
+        ClassicRecord(year: 2018, nationId: wins[9].nationId, champion: false),
+        ClassicRecord(year: 2014, nationId: wins[10].nationId, champion: true),
+      ]);
+      expect(nine[EditionMedal.collection], (progress: 9, target: 10));
+      final ten = medals2018(wins.take(10).toList());
+      expect(ten[EditionMedal.collection], (progress: 10, target: 10));
+      expect(ten[EditionMedal.collection]!.earned, isTrue);
+      // More nations than needed still read as done, never past the target.
+      expect(medals2018(wins)[EditionMedal.collection], (
+        progress: 10,
+        target: 10,
+      ));
+    });
+
+    test('collection in 2026, a field of 48: twelve nations', () {
+      final e2026 = world.edition(2026);
+      expect(e2026.teams, hasLength(48));
+      expect(ClassicMedals.collectionTarget(e2026), 12);
+      final wins = [
+        for (final t in e2026.teams)
+          ClassicRecord(year: 2026, nationId: t.nationId, champion: true),
+      ];
+      Map<EditionMedal, MedalProgress> m(int n) => ClassicMedals.edition(
+        e2026,
+        wins.take(n).toList(),
+        world.confederationOf,
+      );
+      expect(m(10)[EditionMedal.collection], (progress: 10, target: 12));
+      expect(m(10)[EditionMedal.collection]!.earned, isFalse);
+      expect(m(12)[EditionMedal.collection]!.earned, isTrue);
+      for (final y in [2022, 2018, 2014, 2010, 2006, 2002]) {
+        expect(ClassicMedals.collectionTarget(world.edition(y)), 10);
+      }
     });
 
     test('continents: a winner from each confederation present', () {
@@ -195,10 +230,17 @@ void main() {
           ),
       ];
       expect(overall(all)[OverallMedal.perfectionist]!.earned, isTrue);
+      // Nine nations short of the collection's ten: not every medal.
+      final nine = all.take(9).toList();
       expect(
-        overall(all.take(31).toList())[OverallMedal.perfectionist]!.earned,
+        ClassicMedals.edition(
+          e,
+          nine,
+          world.confederationOf,
+        )[EditionMedal.collection]!.earned,
         isFalse,
       );
+      expect(overall(nine)[OverallMedal.perfectionist]!.earned, isFalse);
     });
   });
 

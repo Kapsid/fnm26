@@ -29154,14 +29154,14 @@ abstract class AppLocalizations {
   /// Medal name.
   ///
   /// In en, this message translates to:
-  /// **'Every nation'**
+  /// **'Collector'**
   String get classicMedalCollection;
 
-  /// How to earn the medal.
+  /// How to earn the medal. count is 10, or 12 for the 48-team edition.
   ///
   /// In en, this message translates to:
-  /// **'Win the edition with every nation in its field.'**
-  String get classicMedalCollectionHow;
+  /// **'Win the edition with {count} different nations.'**
+  String classicMedalCollectionHow(int count);
 
   /// Medal name.
   ///
@@ -29336,6 +29336,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reset this team'**
   String get editorClassicReset;
+
+  /// Editor: an edition's host stadiums (a section and its title).
+  ///
+  /// In en, this message translates to:
+  /// **'Host stadiums'**
+  String get editorClassicStadiums;
+
+  /// Editor: a host stadium's name field.
+  ///
+  /// In en, this message translates to:
+  /// **'Stadium name'**
+  String get editorClassicStadiumName;
+
+  /// Editor: a host stadium's city field.
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get editorClassicCity;
+
+  /// Editor: a host stadium's seat count field.
+  ///
+  /// In en, this message translates to:
+  /// **'Capacity'**
+  String get editorClassicCapacity;
+
+  /// Editor: the seat counts a host stadium may have (formatted numbers).
+  ///
+  /// In en, this message translates to:
+  /// **'Between {min} and {max} seats.'**
+  String editorClassicCapacityRange(String min, String max);
+
+  /// Editor: which host nation a stadium is in (editions with co-hosts).
+  ///
+  /// In en, this message translates to:
+  /// **'Host country'**
+  String get editorClassicHostNation;
+
+  /// Editor: add a host stadium to the edition.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a stadium'**
+  String get editorClassicAddStadium;
+
+  /// Editor: tooltip, take a host stadium out of the edition.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this stadium'**
+  String get editorClassicRemoveStadium;
+
+  /// Editor: the stadium of the opening match.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening match'**
+  String get editorClassicOpeningVenue;
+
+  /// Editor: the stadium of the final.
+  ///
+  /// In en, this message translates to:
+  /// **'Final'**
+  String get editorClassicFinalVenue;
+
+  /// Editor: drop every edit of the edition's host stadiums.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset the stadiums'**
+  String get editorClassicResetStadiums;
+
+  /// Editor: add a player to the squad.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a player'**
+  String get editorClassicAddPlayer;
+
+  /// Editor: tooltip, take a player out of the squad.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this player'**
+  String get editorClassicRemovePlayer;
+
+  /// Editor: the squad as generated again; strength and kit kept.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset the squad'**
+  String get editorClassicResetSquad;
+
+  /// Editor: how big a squad may be. min is 16, max 23 or 26, keepers 2.
+  ///
+  /// In en, this message translates to:
+  /// **'{min} to {max} players, at least {keepers} of them goalkeepers.'**
+  String editorClassicSquadRule(int min, int max, int keepers);
+
+  /// Editor: a goalkeeper cannot change position; count is 2.
+  ///
+  /// In en, this message translates to:
+  /// **'The squad needs at least {count} goalkeepers.'**
+  String editorClassicKeepersNeeded(int count);
 }
 
 class _AppLocalizationsDelegate

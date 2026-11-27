@@ -19265,11 +19265,12 @@ class AppLocalizationsDa extends AppLocalizations {
       'Vind udgaven med en hvilken som helst nation.';
 
   @override
-  String get classicMedalCollection => 'Hver nation';
+  String get classicMedalCollection => 'Samler';
 
   @override
-  String get classicMedalCollectionHow =>
-      'Vind udgaven med hver nation i feltet.';
+  String classicMedalCollectionHow(int count) {
+    return 'Vind udgaven med $count forskellige nationer.';
+  }
 
   @override
   String get classicMedalContinents => 'Hvert kontinent';
@@ -19365,4 +19366,58 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'Nulstil dette hold';
+
+  @override
+  String get editorClassicStadiums => 'Værtsstadioner';
+
+  @override
+  String get editorClassicStadiumName => 'Stadionnavn';
+
+  @override
+  String get editorClassicCity => 'By';
+
+  @override
+  String get editorClassicCapacity => 'Kapacitet';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return 'Mellem $min og $max pladser.';
+  }
+
+  @override
+  String get editorClassicHostNation => 'Værtsland';
+
+  @override
+  String get editorClassicAddStadium => 'Tilføj et stadion';
+
+  @override
+  String get editorClassicRemoveStadium => 'Fjern dette stadion';
+
+  @override
+  String get editorClassicOpeningVenue => 'Åbningskamp';
+
+  @override
+  String get editorClassicFinalVenue => 'Finale';
+
+  @override
+  String get editorClassicResetStadiums => 'Nulstil stadionerne';
+
+  @override
+  String get editorClassicAddPlayer => 'Tilføj en spiller';
+
+  @override
+  String get editorClassicRemovePlayer => 'Fjern denne spiller';
+
+  @override
+  String get editorClassicResetSquad => 'Nulstil truppen';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return '$min til $max spillere, heraf mindst $keepers målmænd.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'Truppen skal have mindst $count målmænd.';
+  }
 }

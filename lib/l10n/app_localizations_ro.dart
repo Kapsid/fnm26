@@ -19692,11 +19692,12 @@ class AppLocalizationsRo extends AppLocalizations {
   String get classicMedalChampionHow => 'Câștigă ediția cu orice națională.';
 
   @override
-  String get classicMedalCollection => 'Fiecare națională';
+  String get classicMedalCollection => 'Colecționar';
 
   @override
-  String get classicMedalCollectionHow =>
-      'Câștigă ediția cu fiecare națională participantă.';
+  String classicMedalCollectionHow(int count) {
+    return 'Câștigă ediția cu $count naționale diferite.';
+  }
 
   @override
   String get classicMedalContinents => 'Fiecare continent';
@@ -19794,4 +19795,58 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'Resetează această echipă';
+
+  @override
+  String get editorClassicStadiums => 'Stadioane gazdă';
+
+  @override
+  String get editorClassicStadiumName => 'Numele stadionului';
+
+  @override
+  String get editorClassicCity => 'Oraș';
+
+  @override
+  String get editorClassicCapacity => 'Capacitate';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return 'Între $min și $max de locuri.';
+  }
+
+  @override
+  String get editorClassicHostNation => 'Țara gazdă';
+
+  @override
+  String get editorClassicAddStadium => 'Adaugă un stadion';
+
+  @override
+  String get editorClassicRemoveStadium => 'Elimină acest stadion';
+
+  @override
+  String get editorClassicOpeningVenue => 'Meciul de deschidere';
+
+  @override
+  String get editorClassicFinalVenue => 'Finala';
+
+  @override
+  String get editorClassicResetStadiums => 'Resetează stadioanele';
+
+  @override
+  String get editorClassicAddPlayer => 'Adaugă un jucător';
+
+  @override
+  String get editorClassicRemovePlayer => 'Elimină acest jucător';
+
+  @override
+  String get editorClassicResetSquad => 'Resetează lotul';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return 'Între $min și $max de jucători, dintre care cel puțin $keepers portari.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'Lotul are nevoie de cel puțin $count portari.';
+  }
 }

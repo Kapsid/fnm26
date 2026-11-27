@@ -18634,10 +18634,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get classicMedalChampionHow => '어떤 대표팀으로든 대회를 우승하세요.';
 
   @override
-  String get classicMedalCollection => '모든 대표팀';
+  String get classicMedalCollection => '수집가';
 
   @override
-  String get classicMedalCollectionHow => '참가한 모든 대표팀으로 대회를 우승하세요.';
+  String classicMedalCollectionHow(int count) {
+    return '서로 다른 $count개 대표팀으로 대회를 우승하세요.';
+  }
 
   @override
   String get classicMedalContinents => '모든 대륙';
@@ -18727,4 +18729,58 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get editorClassicReset => '이 팀 초기화';
+
+  @override
+  String get editorClassicStadiums => '개최 경기장';
+
+  @override
+  String get editorClassicStadiumName => '경기장 이름';
+
+  @override
+  String get editorClassicCity => '도시';
+
+  @override
+  String get editorClassicCapacity => '수용 인원';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return '$min~$max석 사이여야 합니다.';
+  }
+
+  @override
+  String get editorClassicHostNation => '개최국';
+
+  @override
+  String get editorClassicAddStadium => '경기장 추가';
+
+  @override
+  String get editorClassicRemoveStadium => '이 경기장 삭제';
+
+  @override
+  String get editorClassicOpeningVenue => '개막전';
+
+  @override
+  String get editorClassicFinalVenue => '결승';
+
+  @override
+  String get editorClassicResetStadiums => '경기장 초기화';
+
+  @override
+  String get editorClassicAddPlayer => '선수 추가';
+
+  @override
+  String get editorClassicRemovePlayer => '이 선수 삭제';
+
+  @override
+  String get editorClassicResetSquad => '스쿼드 초기화';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return '$min~$max명, 그중 골키퍼 $keepers명 이상.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return '스쿼드에는 골키퍼가 $count명 이상 필요합니다.';
+  }
 }

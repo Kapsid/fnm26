@@ -18,8 +18,8 @@ Seven editions: 2026, 2022, 2018, 2014, 2010, 2006 and 2002.
 The career is a four-year cycle; some evenings a manager wants one
 tournament, now. Real draws make the run instantly readable ("Group of death
 with Spain and the Netherlands"), and the medals turn seven tournaments into
-dozens of goals worth returning for: win with every nation, rewrite history,
-win with a minnow from every confederation.
+dozens of goals worth returning for: win with ten different nations,
+rewrite history, win with a minnow from every confederation.
 
 ## Goals
 
@@ -181,7 +181,9 @@ No schema change. Shared preferences, like campaign records:
 - `classic_wins_v1`: every finished run (edition, nation, champion, unbeaten,
   beat the real champion, golden boot, eliminated), the source of medals.
 - `classic_edits_v1`: the editor overlay (per edition and nation: strength,
-  kit, and per player name, position, ratings, age).
+  kit, the squad's order with its removed and added players, and per player
+  name, position, ratings, age; per edition, under `venues:<year>`, the host
+  stadiums with the opening match's and the final's).
 
 ## Medals
 
@@ -190,7 +192,7 @@ Per edition:
 | Medal | Earned by |
 |---|---|
 | Champion | Win the edition with any nation |
-| Collection | Win with each nation (shown as 7 of 32) |
+| Collection | Win with 10 different nations, 12 in 2026 (shown as 7/10) |
 | Continents | Win with a nation from each confederation present |
 | Giant-killer | Win with a pot-4 nation, or one in the bottom third by strength |
 | Rewrite history | Knock out the edition's real champion |
@@ -223,6 +225,24 @@ A Classic Cups section in the editor: editions → teams → team page
 (strength sliders, kit colours, players) → player page (name, position,
 ratings, age). Edits are an overlay over the generated squad; "Reset" drops
 the overlay of one team. User-typed names are the user's content.
+
+Squads: players are added, removed and reordered. A squad holds at most
+the edition's size (23, 26 in 2026) and at least 16 (the call-up's floor)
+with two goalkeepers; a goalkeeper of the last two cannot change position.
+Generated players keep their slot (and id) underneath; added ones take slots
+from 100. "Reset the squad" drops the squad edits and keeps strength and
+kit.
+
+Host stadiums, per edition: name, city, capacity (5,000 to 150,000) and,
+with co-hosts, the host country; stadiums added and removed (at least one);
+the opening match's and the final's stadium chosen. Fixtures record their
+stadium; a run's matches (the run hub's next match, the pre-match screen and
+the live match) are played at the edited stadiums. The shipped data is
+unchanged: no ground names, the game's own names at runtime, and an
+unchanged ground keeps the game's name in the overlay too.
+
+Every edition is editable, the Unlimited ones too: the editor gates no
+content elsewhere, and playing an Unlimited edition still needs Unlimited.
 
 ## Copy
 

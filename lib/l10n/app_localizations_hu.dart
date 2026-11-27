@@ -19211,11 +19211,12 @@ class AppLocalizationsHu extends AppLocalizations {
       'Nyerd meg a kiírást bármelyik válogatottal.';
 
   @override
-  String get classicMedalCollection => 'Minden válogatott';
+  String get classicMedalCollection => 'Gyűjtő';
 
   @override
-  String get classicMedalCollectionHow =>
-      'Nyerd meg a kiírást a mezőny minden válogatottjával.';
+  String classicMedalCollectionHow(int count) {
+    return 'Nyerd meg a kiírást $count különböző válogatottal.';
+  }
 
   @override
   String get classicMedalContinents => 'Minden kontinens';
@@ -19311,4 +19312,58 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'A csapat visszaállítása';
+
+  @override
+  String get editorClassicStadiums => 'Rendező stadionok';
+
+  @override
+  String get editorClassicStadiumName => 'Stadion neve';
+
+  @override
+  String get editorClassicCity => 'Város';
+
+  @override
+  String get editorClassicCapacity => 'Befogadóképesség';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return '$min és $max férőhely között.';
+  }
+
+  @override
+  String get editorClassicHostNation => 'Rendező ország';
+
+  @override
+  String get editorClassicAddStadium => 'Stadion hozzáadása';
+
+  @override
+  String get editorClassicRemoveStadium => 'Stadion eltávolítása';
+
+  @override
+  String get editorClassicOpeningVenue => 'Nyitómérkőzés';
+
+  @override
+  String get editorClassicFinalVenue => 'Döntő';
+
+  @override
+  String get editorClassicResetStadiums => 'Stadionok visszaállítása';
+
+  @override
+  String get editorClassicAddPlayer => 'Játékos hozzáadása';
+
+  @override
+  String get editorClassicRemovePlayer => 'Játékos eltávolítása';
+
+  @override
+  String get editorClassicResetSquad => 'Keret visszaállítása';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return '$min–$max játékos, köztük legalább $keepers kapus.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'A keretbe legalább $count kapus kell.';
+  }
 }

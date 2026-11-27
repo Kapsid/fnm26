@@ -19364,11 +19364,12 @@ class AppLocalizationsNl extends AppLocalizations {
   String get classicMedalChampionHow => 'Win de editie met welk land dan ook.';
 
   @override
-  String get classicMedalCollection => 'Elk land';
+  String get classicMedalCollection => 'Verzamelaar';
 
   @override
-  String get classicMedalCollectionHow =>
-      'Win de editie met elk land uit het deelnemersveld.';
+  String classicMedalCollectionHow(int count) {
+    return 'Win de editie met $count verschillende landen.';
+  }
 
   @override
   String get classicMedalContinents => 'Elk continent';
@@ -19464,4 +19465,58 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'Dit team herstellen';
+
+  @override
+  String get editorClassicStadiums => 'Speelstadions';
+
+  @override
+  String get editorClassicStadiumName => 'Naam van het stadion';
+
+  @override
+  String get editorClassicCity => 'Stad';
+
+  @override
+  String get editorClassicCapacity => 'Capaciteit';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return 'Tussen $min en $max plaatsen.';
+  }
+
+  @override
+  String get editorClassicHostNation => 'Gastland';
+
+  @override
+  String get editorClassicAddStadium => 'Stadion toevoegen';
+
+  @override
+  String get editorClassicRemoveStadium => 'Dit stadion verwijderen';
+
+  @override
+  String get editorClassicOpeningVenue => 'Openingswedstrijd';
+
+  @override
+  String get editorClassicFinalVenue => 'Finale';
+
+  @override
+  String get editorClassicResetStadiums => 'Stadions herstellen';
+
+  @override
+  String get editorClassicAddPlayer => 'Speler toevoegen';
+
+  @override
+  String get editorClassicRemovePlayer => 'Deze speler verwijderen';
+
+  @override
+  String get editorClassicResetSquad => 'Selectie herstellen';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return '$min tot $max spelers, van wie minstens $keepers keepers.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'De selectie heeft minstens $count keepers nodig.';
+  }
 }

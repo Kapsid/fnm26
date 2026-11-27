@@ -18935,11 +18935,12 @@ class AppLocalizationsTh extends AppLocalizations {
   String get classicMedalChampionHow => 'คว้าแชมป์ครั้งนี้ด้วยทีมชาติใดก็ได้';
 
   @override
-  String get classicMedalCollection => 'ทุกทีมชาติ';
+  String get classicMedalCollection => 'นักสะสม';
 
   @override
-  String get classicMedalCollectionHow =>
-      'คว้าแชมป์ครั้งนี้ด้วยทุกทีมที่เข้าร่วม';
+  String classicMedalCollectionHow(int count) {
+    return 'คว้าแชมป์ครั้งนี้ด้วย $count ทีมที่ต่างกัน';
+  }
 
   @override
   String get classicMedalContinents => 'ทุกทวีป';
@@ -19035,4 +19036,58 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'รีเซ็ตทีมนี้';
+
+  @override
+  String get editorClassicStadiums => 'สนามเจ้าภาพ';
+
+  @override
+  String get editorClassicStadiumName => 'ชื่อสนาม';
+
+  @override
+  String get editorClassicCity => 'เมือง';
+
+  @override
+  String get editorClassicCapacity => 'ความจุ';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return 'ระหว่าง $min ถึง $max ที่นั่ง';
+  }
+
+  @override
+  String get editorClassicHostNation => 'ประเทศเจ้าภาพ';
+
+  @override
+  String get editorClassicAddStadium => 'เพิ่มสนาม';
+
+  @override
+  String get editorClassicRemoveStadium => 'ลบสนามนี้';
+
+  @override
+  String get editorClassicOpeningVenue => 'นัดเปิดสนาม';
+
+  @override
+  String get editorClassicFinalVenue => 'นัดชิงชนะเลิศ';
+
+  @override
+  String get editorClassicResetStadiums => 'รีเซ็ตสนาม';
+
+  @override
+  String get editorClassicAddPlayer => 'เพิ่มผู้เล่น';
+
+  @override
+  String get editorClassicRemovePlayer => 'ลบผู้เล่นคนนี้';
+
+  @override
+  String get editorClassicResetSquad => 'รีเซ็ตทีม';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return '$min ถึง $max คน โดยเป็นผู้รักษาประตูอย่างน้อย $keepers คน';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'ทีมต้องมีผู้รักษาประตูอย่างน้อย $count คน';
+  }
 }

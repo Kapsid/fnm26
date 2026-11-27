@@ -18587,10 +18587,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get classicMedalChampionHow => 'どの代表でもいいので大会を制覇する。';
 
   @override
-  String get classicMedalCollection => 'すべての代表';
+  String get classicMedalCollection => 'コレクター';
 
   @override
-  String get classicMedalCollectionHow => '出場したすべての代表で大会を制覇する。';
+  String classicMedalCollectionHow(int count) {
+    return '異なる$countの代表で大会を制覇する。';
+  }
 
   @override
   String get classicMedalContinents => 'すべての大陸';
@@ -18679,4 +18681,58 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'このチームをリセット';
+
+  @override
+  String get editorClassicStadiums => '開催スタジアム';
+
+  @override
+  String get editorClassicStadiumName => 'スタジアム名';
+
+  @override
+  String get editorClassicCity => '都市';
+
+  @override
+  String get editorClassicCapacity => '収容人数';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return '$min〜$max席の範囲で入力してください。';
+  }
+
+  @override
+  String get editorClassicHostNation => '開催国';
+
+  @override
+  String get editorClassicAddStadium => 'スタジアムを追加';
+
+  @override
+  String get editorClassicRemoveStadium => 'このスタジアムを削除';
+
+  @override
+  String get editorClassicOpeningVenue => '開幕戦';
+
+  @override
+  String get editorClassicFinalVenue => '決勝';
+
+  @override
+  String get editorClassicResetStadiums => 'スタジアムをリセット';
+
+  @override
+  String get editorClassicAddPlayer => '選手を追加';
+
+  @override
+  String get editorClassicRemovePlayer => 'この選手を削除';
+
+  @override
+  String get editorClassicResetSquad => 'スカッドをリセット';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return '$min〜$max人、うちGKを$keepers人以上。';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'スカッドにはGKが$count人以上必要です。';
+  }
 }

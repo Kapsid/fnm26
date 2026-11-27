@@ -19367,11 +19367,12 @@ class AppLocalizationsEs extends AppLocalizations {
       'Gana la edición con cualquier selección.';
 
   @override
-  String get classicMedalCollection => 'Todas las selecciones';
+  String get classicMedalCollection => 'Coleccionista';
 
   @override
-  String get classicMedalCollectionHow =>
-      'Gana la edición con cada selección participante.';
+  String classicMedalCollectionHow(int count) {
+    return 'Gana la edición con $count selecciones distintas.';
+  }
 
   @override
   String get classicMedalContinents => 'Todos los continentes';
@@ -19470,4 +19471,58 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'Restablecer esta selección';
+
+  @override
+  String get editorClassicStadiums => 'Estadios sede';
+
+  @override
+  String get editorClassicStadiumName => 'Nombre del estadio';
+
+  @override
+  String get editorClassicCity => 'Ciudad';
+
+  @override
+  String get editorClassicCapacity => 'Aforo';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return 'Entre $min y $max asientos.';
+  }
+
+  @override
+  String get editorClassicHostNation => 'País anfitrión';
+
+  @override
+  String get editorClassicAddStadium => 'Añadir un estadio';
+
+  @override
+  String get editorClassicRemoveStadium => 'Quitar este estadio';
+
+  @override
+  String get editorClassicOpeningVenue => 'Partido inaugural';
+
+  @override
+  String get editorClassicFinalVenue => 'Final';
+
+  @override
+  String get editorClassicResetStadiums => 'Restablecer los estadios';
+
+  @override
+  String get editorClassicAddPlayer => 'Añadir un jugador';
+
+  @override
+  String get editorClassicRemovePlayer => 'Quitar este jugador';
+
+  @override
+  String get editorClassicResetSquad => 'Restablecer la plantilla';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return 'De $min a $max jugadores, al menos $keepers de ellos porteros.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'La plantilla necesita al menos $count porteros.';
+  }
 }

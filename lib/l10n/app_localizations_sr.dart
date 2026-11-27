@@ -19626,11 +19626,12 @@ class AppLocalizationsSr extends AppLocalizations {
       'Освоји издање са било којом репрезентацијом.';
 
   @override
-  String get classicMedalCollection => 'Свака репрезентација';
+  String get classicMedalCollection => 'Колекционар';
 
   @override
-  String get classicMedalCollectionHow =>
-      'Освоји издање са сваком репрезентацијом која је учествовала.';
+  String classicMedalCollectionHow(int count) {
+    return 'Освоји издање са $count различитих репрезентација.';
+  }
 
   @override
   String get classicMedalContinents => 'Сваки континент';
@@ -19727,4 +19728,58 @@ class AppLocalizationsSr extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'Врати овај тим';
+
+  @override
+  String get editorClassicStadiums => 'Стадиони домаћина';
+
+  @override
+  String get editorClassicStadiumName => 'Назив стадиона';
+
+  @override
+  String get editorClassicCity => 'Град';
+
+  @override
+  String get editorClassicCapacity => 'Капацитет';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return 'Између $min и $max места.';
+  }
+
+  @override
+  String get editorClassicHostNation => 'Земља домаћин';
+
+  @override
+  String get editorClassicAddStadium => 'Додај стадион';
+
+  @override
+  String get editorClassicRemoveStadium => 'Уклони овај стадион';
+
+  @override
+  String get editorClassicOpeningVenue => 'Утакмица отварања';
+
+  @override
+  String get editorClassicFinalVenue => 'Финале';
+
+  @override
+  String get editorClassicResetStadiums => 'Врати стадионе';
+
+  @override
+  String get editorClassicAddPlayer => 'Додај играча';
+
+  @override
+  String get editorClassicRemovePlayer => 'Уклони овог играча';
+
+  @override
+  String get editorClassicResetSquad => 'Врати састав';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return 'Од $min до $max играча, од тога најмање $keepers голмана.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'Саставу су потребна најмање $count голмана.';
+  }
 }

@@ -19340,11 +19340,12 @@ class AppLocalizationsFi extends AppLocalizations {
   String get classicMedalChampionHow => 'Voita turnaus millä tahansa maalla.';
 
   @override
-  String get classicMedalCollection => 'Jokainen maa';
+  String get classicMedalCollection => 'Keräilijä';
 
   @override
-  String get classicMedalCollectionHow =>
-      'Voita turnaus jokaisella siihen osallistuneella maalla.';
+  String classicMedalCollectionHow(int count) {
+    return 'Voita turnaus $count eri maalla.';
+  }
 
   @override
   String get classicMedalContinents => 'Jokainen maanosa';
@@ -19442,4 +19443,58 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'Palauta tämä joukkue';
+
+  @override
+  String get editorClassicStadiums => 'Isäntästadionit';
+
+  @override
+  String get editorClassicStadiumName => 'Stadionin nimi';
+
+  @override
+  String get editorClassicCity => 'Kaupunki';
+
+  @override
+  String get editorClassicCapacity => 'Kapasiteetti';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return '$min–$max paikkaa.';
+  }
+
+  @override
+  String get editorClassicHostNation => 'Isäntämaa';
+
+  @override
+  String get editorClassicAddStadium => 'Lisää stadion';
+
+  @override
+  String get editorClassicRemoveStadium => 'Poista tämä stadion';
+
+  @override
+  String get editorClassicOpeningVenue => 'Avausottelu';
+
+  @override
+  String get editorClassicFinalVenue => 'Finaali';
+
+  @override
+  String get editorClassicResetStadiums => 'Palauta stadionit';
+
+  @override
+  String get editorClassicAddPlayer => 'Lisää pelaaja';
+
+  @override
+  String get editorClassicRemovePlayer => 'Poista tämä pelaaja';
+
+  @override
+  String get editorClassicResetSquad => 'Palauta joukkue';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return '$min–$max pelaajaa, joista vähintään $keepers maalivahtia.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'Joukkueeseen tarvitaan vähintään $count maalivahtia.';
+  }
 }

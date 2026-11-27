@@ -144,17 +144,40 @@ class ClassicWorld {
     );
   }
 
-  /// The squad of [nationId] at [year], the editor's player edits applied.
+  /// The squad of [nationId] at [year], the editor's squad applied: its
+  /// order, its removed and added players and each player's edit.
   List<Player> squad(int year, int nationId) =>
       _squads[(year, nationId)] ??= () {
         final base = generatedSquad(year, nationId);
         final e = edits.of(year, nationId);
-        if (e == null || e.players.isEmpty) return base;
+        if (e == null || !e.changesSquad) return base;
         return [
-          for (var i = 0; i < base.length; i++)
-            e.players[i]?.apply(base[i]) ?? base[i],
+          for (final slot in e.slots(base.length))
+            if (slot >= 0 && slot < base.length)
+              e.players[slot]?.apply(base[slot]) ?? base[slot]
+            else if (slot >= ClassicTeamEdit.addedBase)
+              ?e.players[slot]?.create(
+                id: ClassicSquads.idFor(year, nationId, slot),
+                nationId: nationId,
+              ),
         ];
       }();
+
+  /// The squad's slots in its order (see [ClassicTeamEdit.order]), one per
+  /// player of [squad].
+  List<int> squadSlots(int year, int nationId) {
+    final generated = ClassicSquads.sizeFor(year);
+    final e = edits.of(year, nationId);
+    if (e == null || !e.changesSquad) {
+      return [for (var i = 0; i < generated; i++) i];
+    }
+    return [
+      for (final slot in e.slots(generated))
+        if (slot >= 0 && slot < generated ||
+            slot >= ClassicTeamEdit.addedBase && e.players[slot] != null)
+          slot,
+    ];
+  }
 
   /// Every squad of [year], by nation.
   Map<int, List<Player>> squads(int year) => {

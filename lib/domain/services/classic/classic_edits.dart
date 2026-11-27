@@ -42,6 +42,22 @@ class ClassicPlayerEdit {
   final int? stamina;
   final int? age;
 
+  /// A player the editor added to a squad, made from this edit alone: what
+  /// it leaves unset takes a plain default.
+  Player create({required int id, required int nationId}) => Player(
+    id: id,
+    nationId: nationId,
+    name: name ?? '',
+    age: age ?? 25,
+    position: position ?? PlayerPosition.cm,
+    attributes: PlayerAttributes(
+      physical: physical ?? 60,
+      technical: technical ?? 60,
+      stamina: stamina ?? 60,
+    ),
+    club: '',
+  );
+
   Player apply(Player p) => p.copyWith(
     name: name ?? p.name,
     position: position ?? p.position,
@@ -72,6 +88,7 @@ class ClassicTeamEdit {
     this.primaryColor,
     this.secondaryColor,
     this.players = const {},
+    this.order,
   });
 
   factory ClassicTeamEdit.fromJson(Map<String, Object?> j) => ClassicTeamEdit(
@@ -86,7 +103,12 @@ class ClassicTeamEdit {
           (e.value as Map).cast<String, Object?>(),
         ),
     },
+    order: (j['order'] as List?)?.cast<int>(),
   );
+
+  /// The first squad slot of a player the editor added: clear of every
+  /// generated place (a squad is at most 26).
+  static const int addedBase = 100;
 
   final int? overall;
   final int? star;
@@ -96,8 +118,51 @@ class ClassicTeamEdit {
   final String? primaryColor;
   final String? secondaryColor;
 
-  /// Player edits by the player's place in the squad.
+  /// Player edits by the player's slot: his place in the generated squad,
+  /// or, from [addedBase], a player the editor added (made from the edit).
   final Map<int, ClassicPlayerEdit> players;
+
+  /// The squad's slots in the editor's order, or null for the generated
+  /// squad in its own order. A generated slot left out is a removed player.
+  final List<int>? order;
+
+  /// Whether the squad itself is edited: a player changed, added, removed
+  /// or moved.
+  bool get changesSquad => players.isNotEmpty || order != null;
+
+  /// The slots of the squad, generated ones `0` to [generated] - 1.
+  List<int> slots(int generated) =>
+      order ?? [for (var i = 0; i < generated; i++) i];
+
+  /// The next free slot for an added player.
+  int nextAddedSlot() {
+    var slot = addedBase;
+    final taken = {...players.keys, ...?order};
+    while (taken.contains(slot)) {
+      slot++;
+    }
+    return slot;
+  }
+
+  /// This edit with the squad as generated again (strength and kit kept),
+  /// or null when nothing else is left.
+  ClassicTeamEdit? withoutSquad() {
+    final out = ClassicTeamEdit(
+      overall: overall,
+      star: star,
+      depth: depth,
+      primaryColor: primaryColor,
+      secondaryColor: secondaryColor,
+    );
+    return out.isEmpty ? null : out;
+  }
+
+  /// Whether this edit changes nothing.
+  bool get isEmpty =>
+      !changesStrength &&
+      primaryColor == null &&
+      secondaryColor == null &&
+      !changesSquad;
 
   /// Whether a strength edit is set: the squad is then generated anew from
   /// the edited profile before the player edits apply.
@@ -113,6 +178,7 @@ class ClassicTeamEdit {
     String? primaryColor,
     String? secondaryColor,
     Map<int, ClassicPlayerEdit>? players,
+    List<int>? order,
   }) => ClassicTeamEdit(
     overall: overall ?? this.overall,
     star: star ?? this.star,
@@ -120,6 +186,7 @@ class ClassicTeamEdit {
     primaryColor: primaryColor ?? this.primaryColor,
     secondaryColor: secondaryColor ?? this.secondaryColor,
     players: players ?? this.players,
+    order: order ?? this.order,
   );
 
   Map<String, Object?> toJson() => {
@@ -132,22 +199,164 @@ class ClassicTeamEdit {
       'players': {
         for (final e in players.entries) '${e.key}': e.value.toJson(),
       },
+    if (order != null) 'order': order,
+  };
+}
+
+/// The editor's host stadiums of one edition: the whole list, and which
+/// of them hosts the opening match and the final.
+class ClassicVenuesEdit {
+  const ClassicVenuesEdit({
+    required this.stadiums,
+    this.opening = 0,
+    this.finalAt = 0,
+  });
+
+  factory ClassicVenuesEdit.fromJson(Map<String, Object?> j) =>
+      ClassicVenuesEdit(
+        stadiums: [
+          for (final s
+              in ((j['s'] as List?) ?? const []).cast<Map<String, Object?>>())
+            (
+              host: s['h']! as int,
+              city: s['c']! as String,
+              seats: s['cap']! as int,
+              stadium: s['n'] as String?,
+            ),
+        ],
+        opening: (j['o'] as int?) ?? 0,
+        finalAt: (j['f'] as int?) ?? 0,
+      );
+
+  /// [edition]'s own stadiums as a starting point for the editor.
+  factory ClassicVenuesEdit.of(ClassicEdition edition) => ClassicVenuesEdit(
+    stadiums: [...edition.cities],
+    opening: edition.openingVenue,
+    finalAt: edition.finalVenue,
+  );
+
+  /// The smallest and largest ground the editor takes.
+  static const int minSeats = 5000;
+  static const int maxSeats = 150000;
+
+  /// The longest stadium or city name the editor takes.
+  static const int maxName = 40;
+
+  final List<ClassicCity> stadiums;
+
+  /// The opening match's and the final's stadium, indices into [stadiums].
+  final int opening;
+  final int finalAt;
+
+  /// Whether a stadium of [name] in [city] with [seats] seats is one the
+  /// editor takes: both names given and not too long, a sane size.
+  static bool validStadium({
+    required String name,
+    required String city,
+    required int? seats,
+  }) =>
+      name.trim().isNotEmpty &&
+      name.trim().length <= maxName &&
+      city.trim().isNotEmpty &&
+      city.trim().length <= maxName &&
+      seats != null &&
+      seats >= minSeats &&
+      seats <= maxSeats;
+
+  /// Whether the whole list is one an edition can be played at: at least
+  /// one stadium, each valid (a generated name counts as given), and the
+  /// opening match and the final at one of them.
+  bool get valid =>
+      stadiums.isNotEmpty &&
+      opening >= 0 &&
+      opening < stadiums.length &&
+      finalAt >= 0 &&
+      finalAt < stadiums.length &&
+      stadiums.every(
+        (s) => validStadium(
+          name: s.stadium ?? s.city,
+          city: s.city,
+          seats: s.seats,
+        ),
+      );
+
+  /// This list with [stadium] at [index], or added at the end when [index]
+  /// is null.
+  ClassicVenuesEdit withStadium(int? index, ClassicCity stadium) =>
+      ClassicVenuesEdit(
+        stadiums: [
+          for (var i = 0; i < stadiums.length; i++)
+            if (i == index) stadium else stadiums[i],
+          if (index == null) stadium,
+        ],
+        opening: opening,
+        finalAt: finalAt,
+      );
+
+  /// This list without the stadium at [index] (never the last one): the
+  /// opening match or the final held there moves to the first stadium.
+  ClassicVenuesEdit without(int index) {
+    if (stadiums.length <= 1) return this;
+    int shift(int at) => at == index ? 0 : (at > index ? at - 1 : at);
+    return ClassicVenuesEdit(
+      stadiums: [...stadiums]..removeAt(index),
+      opening: shift(opening),
+      finalAt: shift(finalAt),
+    );
+  }
+
+  ClassicVenuesEdit copyWith({int? opening, int? finalAt}) => ClassicVenuesEdit(
+    stadiums: stadiums,
+    opening: opening ?? this.opening,
+    finalAt: finalAt ?? this.finalAt,
+  );
+
+  Map<String, Object?> toJson() => {
+    's': [
+      for (final s in stadiums)
+        {
+          'h': s.host,
+          'c': s.city,
+          'cap': s.seats,
+          if (s.stadium != null) 'n': s.stadium,
+        },
+    ],
+    'o': opening,
+    'f': finalAt,
   };
 }
 
 /// The editor's overlay over every edition: what the generated data is read
-/// through. Keyed `"<year>:<nationId>"`.
+/// through. Teams keyed `"<year>:<nationId>"`, host stadiums
+/// `"venues:<year>"`.
 class ClassicEdits {
-  const ClassicEdits([this.teams = const {}]);
+  const ClassicEdits([this.teams = const {}, this.venues = const {}]);
 
-  factory ClassicEdits.fromJson(Map<String, Object?> j) => ClassicEdits({
-    for (final e in j.entries)
-      e.key: ClassicTeamEdit.fromJson(
-        (e.value! as Map).cast<String, Object?>(),
-      ),
-  });
+  factory ClassicEdits.fromJson(Map<String, Object?> j) => ClassicEdits(
+    {
+      for (final e in j.entries)
+        if (!e.key.startsWith(_venuesPrefix))
+          e.key: ClassicTeamEdit.fromJson(
+            (e.value! as Map).cast<String, Object?>(),
+          ),
+    },
+    {
+      for (final e in j.entries)
+        if (e.key.startsWith(_venuesPrefix))
+          int.parse(
+            e.key.substring(_venuesPrefix.length),
+          ): ClassicVenuesEdit.fromJson(
+            (e.value! as Map).cast<String, Object?>(),
+          ),
+    },
+  );
+
+  static const String _venuesPrefix = 'venues:';
 
   final Map<String, ClassicTeamEdit> teams;
+
+  /// The host stadiums by edition year.
+  final Map<int, ClassicVenuesEdit> venues;
 
   static String keyFor(int year, int nationId) => '$year:$nationId';
 
@@ -161,19 +370,41 @@ class ClassicEdits {
     } else {
       out[keyFor(year, nationId)] = edit;
     }
-    return ClassicEdits(out);
+    return ClassicEdits(out, venues);
   }
 
-  /// [edition] with every edited team's strength.
-  ClassicEdition applyTo(ClassicEdition edition) => edition.withTeams([
-    for (final t in edition.teams)
-      switch (of(edition.year, t.nationId)) {
-        null => t,
-        final e => e.apply(t),
-      },
-  ]);
+  /// These edits with [edit] for [year]'s host stadiums (null drops them).
+  ClassicEdits withVenues(int year, ClassicVenuesEdit? edit) {
+    final out = {...venues};
+    if (edit == null) {
+      out.remove(year);
+    } else {
+      out[year] = edit;
+    }
+    return ClassicEdits(teams, out);
+  }
+
+  /// [edition] with every edited team's strength and its edited stadiums
+  /// (a list the editor would not take is ignored).
+  ClassicEdition applyTo(ClassicEdition edition) {
+    final withTeams = edition.withTeams([
+      for (final t in edition.teams)
+        switch (of(edition.year, t.nationId)) {
+          null => t,
+          final e => e.apply(t),
+        },
+    ]);
+    final v = venues[edition.year];
+    if (v == null || !v.valid) return withTeams;
+    return withTeams.withVenues(
+      v.stadiums,
+      opening: v.opening,
+      finalAt: v.finalAt,
+    );
+  }
 
   Map<String, Object?> toJson() => {
     for (final e in teams.entries) e.key: e.value.toJson(),
+    for (final e in venues.entries) '$_venuesPrefix${e.key}': e.value.toJson(),
   };
 }

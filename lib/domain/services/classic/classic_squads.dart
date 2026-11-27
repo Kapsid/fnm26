@@ -71,6 +71,38 @@ abstract final class ClassicSquads {
   /// The squad size of [year]: 26 in 2026, 23 before.
   static int sizeFor(int year) => year >= 2026 ? 26 : 23;
 
+  /// The fewest players an edited squad keeps: the call-up's floor, an XI
+  /// and a bench to cover injuries and bans.
+  static const int minSize = 16;
+
+  /// The fewest goalkeepers an edited squad keeps: one to start, one to
+  /// cover him.
+  static const int minKeepers = 2;
+
+  static int keepersIn(List<Player> squad) =>
+      squad.where((p) => p.position == PlayerPosition.gk).length;
+
+  /// Whether the editor may add a player to [squad] at [year]: never past
+  /// the edition's squad size.
+  static bool canAdd(int year, List<Player> squad) =>
+      squad.length < sizeFor(year);
+
+  /// Whether the editor may take [p] out of [squad]: never below [minSize]
+  /// players or [minKeepers] goalkeepers.
+  static bool canRemove(List<Player> squad, Player p) =>
+      squad.length > minSize && keepsKeepers(squad, p, null);
+
+  /// Whether [squad] still has [minKeepers] goalkeepers once [p] plays at
+  /// [to] (null: once he is gone).
+  static bool keepsKeepers(
+    List<Player> squad,
+    Player p,
+    PlayerPosition? to,
+  ) =>
+      p.position != PlayerPosition.gk ||
+      to == PlayerPosition.gk ||
+      keepersIn(squad) > minKeepers;
+
   /// The positions of a squad of [year], XI first.
   static List<PlayerPosition> positionsFor(int year) => [
     ..._starters,

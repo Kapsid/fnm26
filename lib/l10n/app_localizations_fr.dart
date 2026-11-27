@@ -19448,11 +19448,12 @@ class AppLocalizationsFr extends AppLocalizations {
       'Remportez l\'édition avec n\'importe quelle nation.';
 
   @override
-  String get classicMedalCollection => 'Toutes les nations';
+  String get classicMedalCollection => 'Collectionneur';
 
   @override
-  String get classicMedalCollectionHow =>
-      'Remportez l\'édition avec chaque nation de son plateau.';
+  String classicMedalCollectionHow(int count) {
+    return 'Remportez l\'édition avec $count nations différentes.';
+  }
 
   @override
   String get classicMedalContinents => 'Tous les continents';
@@ -19551,4 +19552,58 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'Réinitialiser cette équipe';
+
+  @override
+  String get editorClassicStadiums => 'Stades hôtes';
+
+  @override
+  String get editorClassicStadiumName => 'Nom du stade';
+
+  @override
+  String get editorClassicCity => 'Ville';
+
+  @override
+  String get editorClassicCapacity => 'Capacité';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return 'Entre $min et $max places.';
+  }
+
+  @override
+  String get editorClassicHostNation => 'Pays hôte';
+
+  @override
+  String get editorClassicAddStadium => 'Ajouter un stade';
+
+  @override
+  String get editorClassicRemoveStadium => 'Retirer ce stade';
+
+  @override
+  String get editorClassicOpeningVenue => 'Match d\'ouverture';
+
+  @override
+  String get editorClassicFinalVenue => 'Finale';
+
+  @override
+  String get editorClassicResetStadiums => 'Réinitialiser les stades';
+
+  @override
+  String get editorClassicAddPlayer => 'Ajouter un joueur';
+
+  @override
+  String get editorClassicRemovePlayer => 'Retirer ce joueur';
+
+  @override
+  String get editorClassicResetSquad => 'Réinitialiser l\'effectif';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return 'De $min à $max joueurs, dont au moins $keepers gardiens.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'L\'effectif doit compter au moins $count gardiens.';
+  }
 }

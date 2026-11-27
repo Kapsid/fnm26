@@ -19355,11 +19355,12 @@ class AppLocalizationsIt extends AppLocalizations {
       'Vinci l\'edizione con una nazionale qualsiasi.';
 
   @override
-  String get classicMedalCollection => 'Ogni nazionale';
+  String get classicMedalCollection => 'Collezionista';
 
   @override
-  String get classicMedalCollectionHow =>
-      'Vinci l\'edizione con ogni nazionale partecipante.';
+  String classicMedalCollectionHow(int count) {
+    return 'Vinci l\'edizione con $count nazionali diverse.';
+  }
 
   @override
   String get classicMedalContinents => 'Ogni continente';
@@ -19457,4 +19458,58 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'Ripristina questa squadra';
+
+  @override
+  String get editorClassicStadiums => 'Stadi ospitanti';
+
+  @override
+  String get editorClassicStadiumName => 'Nome dello stadio';
+
+  @override
+  String get editorClassicCity => 'Città';
+
+  @override
+  String get editorClassicCapacity => 'Capienza';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return 'Tra $min e $max posti.';
+  }
+
+  @override
+  String get editorClassicHostNation => 'Paese ospitante';
+
+  @override
+  String get editorClassicAddStadium => 'Aggiungi uno stadio';
+
+  @override
+  String get editorClassicRemoveStadium => 'Rimuovi questo stadio';
+
+  @override
+  String get editorClassicOpeningVenue => 'Partita inaugurale';
+
+  @override
+  String get editorClassicFinalVenue => 'Finale';
+
+  @override
+  String get editorClassicResetStadiums => 'Ripristina gli stadi';
+
+  @override
+  String get editorClassicAddPlayer => 'Aggiungi un giocatore';
+
+  @override
+  String get editorClassicRemovePlayer => 'Rimuovi questo giocatore';
+
+  @override
+  String get editorClassicResetSquad => 'Ripristina la rosa';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return 'Da $min a $max giocatori, di cui almeno $keepers portieri.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'La rosa ha bisogno di almeno $count portieri.';
+  }
 }

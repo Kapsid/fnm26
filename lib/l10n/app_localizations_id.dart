@@ -19168,11 +19168,12 @@ class AppLocalizationsId extends AppLocalizations {
   String get classicMedalChampionHow => 'Juarai edisi ini dengan tim mana pun.';
 
   @override
-  String get classicMedalCollection => 'Setiap tim';
+  String get classicMedalCollection => 'Kolektor';
 
   @override
-  String get classicMedalCollectionHow =>
-      'Juarai edisi ini dengan setiap tim pesertanya.';
+  String classicMedalCollectionHow(int count) {
+    return 'Juarai edisi ini dengan $count tim berbeda.';
+  }
 
   @override
   String get classicMedalContinents => 'Setiap benua';
@@ -19269,4 +19270,58 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'Atur ulang tim ini';
+
+  @override
+  String get editorClassicStadiums => 'Stadion tuan rumah';
+
+  @override
+  String get editorClassicStadiumName => 'Nama stadion';
+
+  @override
+  String get editorClassicCity => 'Kota';
+
+  @override
+  String get editorClassicCapacity => 'Kapasitas';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return 'Antara $min dan $max kursi.';
+  }
+
+  @override
+  String get editorClassicHostNation => 'Negara tuan rumah';
+
+  @override
+  String get editorClassicAddStadium => 'Tambah stadion';
+
+  @override
+  String get editorClassicRemoveStadium => 'Hapus stadion ini';
+
+  @override
+  String get editorClassicOpeningVenue => 'Laga pembuka';
+
+  @override
+  String get editorClassicFinalVenue => 'Final';
+
+  @override
+  String get editorClassicResetStadiums => 'Atur ulang stadion';
+
+  @override
+  String get editorClassicAddPlayer => 'Tambah pemain';
+
+  @override
+  String get editorClassicRemovePlayer => 'Hapus pemain ini';
+
+  @override
+  String get editorClassicResetSquad => 'Atur ulang skuad';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return '$min hingga $max pemain, minimal $keepers di antaranya kiper.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'Skuad butuh minimal $count kiper.';
+  }
 }

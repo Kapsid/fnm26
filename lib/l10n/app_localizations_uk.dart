@@ -19598,11 +19598,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get classicMedalChampionHow => 'Виграй видання з будь-якою збірною.';
 
   @override
-  String get classicMedalCollection => 'Кожна збірна';
+  String get classicMedalCollection => 'Колекціонер';
 
   @override
-  String get classicMedalCollectionHow =>
-      'Виграй видання з кожною його учасницею.';
+  String classicMedalCollectionHow(int count) {
+    return 'Виграй видання з $count різними збірними.';
+  }
 
   @override
   String get classicMedalContinents => 'Кожен континент';
@@ -19700,4 +19701,58 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'Скинути цю команду';
+
+  @override
+  String get editorClassicStadiums => 'Стадіони господарів';
+
+  @override
+  String get editorClassicStadiumName => 'Назва стадіону';
+
+  @override
+  String get editorClassicCity => 'Місто';
+
+  @override
+  String get editorClassicCapacity => 'Місткість';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return 'Від $min до $max місць.';
+  }
+
+  @override
+  String get editorClassicHostNation => 'Країна-господарка';
+
+  @override
+  String get editorClassicAddStadium => 'Додати стадіон';
+
+  @override
+  String get editorClassicRemoveStadium => 'Прибрати цей стадіон';
+
+  @override
+  String get editorClassicOpeningVenue => 'Матч відкриття';
+
+  @override
+  String get editorClassicFinalVenue => 'Фінал';
+
+  @override
+  String get editorClassicResetStadiums => 'Скинути стадіони';
+
+  @override
+  String get editorClassicAddPlayer => 'Додати гравця';
+
+  @override
+  String get editorClassicRemovePlayer => 'Прибрати цього гравця';
+
+  @override
+  String get editorClassicResetSquad => 'Скинути склад';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return 'Від $min до $max гравців, серед них щонайменше $keepers воротарі.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'Складу потрібні щонайменше $count воротарі.';
+  }
 }

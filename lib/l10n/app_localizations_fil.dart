@@ -19283,11 +19283,12 @@ class AppLocalizationsFil extends AppLocalizations {
       'Ipanalo ang edisyon gamit ang kahit anong koponan.';
 
   @override
-  String get classicMedalCollection => 'Bawat koponan';
+  String get classicMedalCollection => 'Kolektor';
 
   @override
-  String get classicMedalCollectionHow =>
-      'Ipanalo ang edisyon gamit ang bawat kalahok na koponan.';
+  String classicMedalCollectionHow(int count) {
+    return 'Ipanalo ang edisyon gamit ang $count magkakaibang koponan.';
+  }
 
   @override
   String get classicMedalContinents => 'Bawat kontinente';
@@ -19386,4 +19387,58 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'I-reset ang koponang ito';
+
+  @override
+  String get editorClassicStadiums => 'Mga host na istadyum';
+
+  @override
+  String get editorClassicStadiumName => 'Pangalan ng istadyum';
+
+  @override
+  String get editorClassicCity => 'Lungsod';
+
+  @override
+  String get editorClassicCapacity => 'Kapasidad';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return 'Mula $min hanggang $max na upuan.';
+  }
+
+  @override
+  String get editorClassicHostNation => 'Bansang host';
+
+  @override
+  String get editorClassicAddStadium => 'Magdagdag ng istadyum';
+
+  @override
+  String get editorClassicRemoveStadium => 'Alisin ang istadyum na ito';
+
+  @override
+  String get editorClassicOpeningVenue => 'Pambungad na laban';
+
+  @override
+  String get editorClassicFinalVenue => 'Final';
+
+  @override
+  String get editorClassicResetStadiums => 'I-reset ang mga istadyum';
+
+  @override
+  String get editorClassicAddPlayer => 'Magdagdag ng manlalaro';
+
+  @override
+  String get editorClassicRemovePlayer => 'Alisin ang manlalarong ito';
+
+  @override
+  String get editorClassicResetSquad => 'I-reset ang squad';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return '$min hanggang $max na manlalaro, at hindi bababa sa $keepers ang goalkeeper.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'Kailangan ng squad ang hindi bababa sa $count na goalkeeper.';
+  }
 }

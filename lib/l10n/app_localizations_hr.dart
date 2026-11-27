@@ -19601,11 +19601,12 @@ class AppLocalizationsHr extends AppLocalizations {
       'Osvoji izdanje s bilo kojom reprezentacijom.';
 
   @override
-  String get classicMedalCollection => 'Svaka reprezentacija';
+  String get classicMedalCollection => 'Kolekcionar';
 
   @override
-  String get classicMedalCollectionHow =>
-      'Osvoji izdanje sa svakom reprezentacijom koja je sudjelovala.';
+  String classicMedalCollectionHow(int count) {
+    return 'Osvoji izdanje s $count različitih reprezentacija.';
+  }
 
   @override
   String get classicMedalContinents => 'Svaki kontinent';
@@ -19702,4 +19703,58 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'Vrati ovu momčad';
+
+  @override
+  String get editorClassicStadiums => 'Stadioni domaćina';
+
+  @override
+  String get editorClassicStadiumName => 'Naziv stadiona';
+
+  @override
+  String get editorClassicCity => 'Grad';
+
+  @override
+  String get editorClassicCapacity => 'Kapacitet';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return 'Između $min i $max mjesta.';
+  }
+
+  @override
+  String get editorClassicHostNation => 'Zemlja domaćin';
+
+  @override
+  String get editorClassicAddStadium => 'Dodaj stadion';
+
+  @override
+  String get editorClassicRemoveStadium => 'Ukloni ovaj stadion';
+
+  @override
+  String get editorClassicOpeningVenue => 'Utakmica otvaranja';
+
+  @override
+  String get editorClassicFinalVenue => 'Finale';
+
+  @override
+  String get editorClassicResetStadiums => 'Vrati stadione';
+
+  @override
+  String get editorClassicAddPlayer => 'Dodaj igrača';
+
+  @override
+  String get editorClassicRemovePlayer => 'Ukloni ovog igrača';
+
+  @override
+  String get editorClassicResetSquad => 'Vrati momčad';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return 'Od $min do $max igrača, od toga najmanje $keepers vratara.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'Momčadi trebaju najmanje $count vratara.';
+  }
 }

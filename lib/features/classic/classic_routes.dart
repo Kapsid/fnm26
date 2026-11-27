@@ -56,6 +56,7 @@ List<GoRoute> classicGoRoutes() {
       builder: (context, state) => ClassicEditorScreen(
         year: int.tryParse(state.uri.queryParameters['year'] ?? ''),
         nationId: int.tryParse(state.uri.queryParameters['nation'] ?? ''),
+        stadiums: state.uri.queryParameters['stadiums'] == '1',
       ),
     ),
   ];

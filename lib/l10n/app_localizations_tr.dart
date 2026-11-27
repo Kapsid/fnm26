@@ -19178,11 +19178,12 @@ class AppLocalizationsTr extends AppLocalizations {
       'Turnuvayı herhangi bir milli takımla kazan.';
 
   @override
-  String get classicMedalCollection => 'Her takım';
+  String get classicMedalCollection => 'Koleksiyoncu';
 
   @override
-  String get classicMedalCollectionHow =>
-      'Turnuvayı katılan her milli takımla kazan.';
+  String classicMedalCollectionHow(int count) {
+    return 'Turnuvayı $count farklı milli takımla kazan.';
+  }
 
   @override
   String get classicMedalContinents => 'Her kıta';
@@ -19279,4 +19280,58 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'Bu takımı sıfırla';
+
+  @override
+  String get editorClassicStadiums => 'Ev sahibi stadyumlar';
+
+  @override
+  String get editorClassicStadiumName => 'Stadyum adı';
+
+  @override
+  String get editorClassicCity => 'Şehir';
+
+  @override
+  String get editorClassicCapacity => 'Kapasite';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return '$min ile $max koltuk arasında.';
+  }
+
+  @override
+  String get editorClassicHostNation => 'Ev sahibi ülke';
+
+  @override
+  String get editorClassicAddStadium => 'Stadyum ekle';
+
+  @override
+  String get editorClassicRemoveStadium => 'Bu stadyumu kaldır';
+
+  @override
+  String get editorClassicOpeningVenue => 'Açılış maçı';
+
+  @override
+  String get editorClassicFinalVenue => 'Final';
+
+  @override
+  String get editorClassicResetStadiums => 'Stadyumları sıfırla';
+
+  @override
+  String get editorClassicAddPlayer => 'Oyuncu ekle';
+
+  @override
+  String get editorClassicRemovePlayer => 'Bu oyuncuyu kaldır';
+
+  @override
+  String get editorClassicResetSquad => 'Kadroyu sıfırla';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return '$min ile $max oyuncu, en az $keepers tanesi kaleci.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'Kadroda en az $count kaleci olmalı.';
+  }
 }

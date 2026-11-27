@@ -3,6 +3,7 @@
 // is copyrighted intellectual property; do not reproduce, clone or help
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:fnm/domain/services/competition/tournament_calendar.dart';
+import 'package:fnm/domain/services/competition/venues.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
 
 /// One team at a Classic Cup edition: the nation and how strong it was THEN,
@@ -67,9 +68,15 @@ class ClassicTeam {
   );
 }
 
-/// A host city and its ground's size. The ground's NAME is the game's own
-/// (see `Venues.gameGroundName`), never a real stadium's.
-typedef ClassicCity = ({int host, String city, int seats});
+/// A host stadium: its host nation, city and size. The shipped data names
+/// no ground ([stadium] is null), so the ground's NAME is the game's own
+/// (see `VenueGenerator.gameGroundName`), never a real stadium's; only the
+/// editor's overlay sets [stadium], to whatever the user typed.
+typedef ClassicCity = ({int host, String city, int seats, String? stadium});
+
+/// The ground's name at [c]: the editor's, else the game's own for the city.
+String classicGroundName(ClassicCity c) =>
+    c.stadium ?? VenueGenerator.gameGroundName(c.host, c.city);
 
 /// What really happened, by nation: the medals' reference.
 typedef ClassicResult = ({int champion, int runnerUp, int third, int fourth});
@@ -91,7 +98,10 @@ class ClassicEdition {
     required this.groups,
     required this.teams,
     required this.result,
-  });
+    int? openingVenue,
+    int? finalVenue,
+  }) : _openingVenue = openingVenue,
+       _finalVenue = finalVenue;
 
   factory ClassicEdition.fromJson(Map<String, Object?> j) {
     final cal = j['calendar']! as Map<String, Object?>;
@@ -115,6 +125,7 @@ class ClassicEdition {
             host: c['host']! as int,
             city: c['city']! as String,
             seats: c['seats']! as int,
+            stadium: null,
           ),
       ],
       openingCity: j['openingCity']! as String,
@@ -153,9 +164,25 @@ class ClassicEdition {
 
   /// Group matchday gaps and knockout day windows, from the opener.
   final TournamentTemplate calendar;
+
+  /// The host stadiums (the editor's, when it changed them).
   final List<ClassicCity> cities;
   final String openingCity;
   final String finalCity;
+  final int? _openingVenue;
+  final int? _finalVenue;
+
+  /// The stadium of the opening match, as an index into [cities].
+  int get openingVenue => _venueIndex(_openingVenue, openingCity);
+
+  /// The stadium of the final, as an index into [cities].
+  int get finalVenue => _venueIndex(_finalVenue, finalCity);
+
+  int _venueIndex(int? index, String city) {
+    if (index != null && index >= 0 && index < cities.length) return index;
+    final i = cities.indexWhere((c) => c.city == city);
+    return i < 0 ? 0 : i;
+  }
 
   /// Group letter → nation ids in the real draw order (position 1 to 4).
   final Map<String, List<int>> groups;
@@ -205,5 +232,35 @@ class ClassicEdition {
     groups: groups,
     teams: teams,
     result: result,
+    openingVenue: _openingVenue,
+    finalVenue: _finalVenue,
   );
+
+  /// This edition played at [stadiums] (the editor's overlay), the opening
+  /// match at [opening] and the final at [finalAt] (indices into it).
+  ClassicEdition withVenues(
+    List<ClassicCity> stadiums, {
+    required int opening,
+    required int finalAt,
+  }) {
+    if (stadiums.isEmpty) return this;
+    final o = opening.clamp(0, stadiums.length - 1);
+    final f = finalAt.clamp(0, stadiums.length - 1);
+    return ClassicEdition(
+      year: year,
+      free: free,
+      hosts: hosts,
+      hostLabel: hostLabel,
+      opener: opener,
+      calendar: calendar,
+      cities: stadiums,
+      openingCity: stadiums[o].city,
+      finalCity: stadiums[f].city,
+      groups: groups,
+      teams: teams,
+      result: result,
+      openingVenue: o,
+      finalVenue: f,
+    );
+  }
 }

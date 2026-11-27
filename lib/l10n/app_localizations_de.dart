@@ -19416,11 +19416,12 @@ class AppLocalizationsDe extends AppLocalizations {
       'Gewinne die Ausgabe mit einer beliebigen Nation.';
 
   @override
-  String get classicMedalCollection => 'Jede Nation';
+  String get classicMedalCollection => 'Sammler';
 
   @override
-  String get classicMedalCollectionHow =>
-      'Gewinne die Ausgabe mit jeder Nation ihres Teilnehmerfelds.';
+  String classicMedalCollectionHow(int count) {
+    return 'Gewinne die Ausgabe mit $count verschiedenen Nationen.';
+  }
 
   @override
   String get classicMedalContinents => 'Jeder Kontinent';
@@ -19518,4 +19519,58 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get editorClassicReset => 'Dieses Team zurücksetzen';
+
+  @override
+  String get editorClassicStadiums => 'Austragungsstadien';
+
+  @override
+  String get editorClassicStadiumName => 'Name des Stadions';
+
+  @override
+  String get editorClassicCity => 'Stadt';
+
+  @override
+  String get editorClassicCapacity => 'Kapazität';
+
+  @override
+  String editorClassicCapacityRange(String min, String max) {
+    return 'Zwischen $min und $max Plätzen.';
+  }
+
+  @override
+  String get editorClassicHostNation => 'Gastgeberland';
+
+  @override
+  String get editorClassicAddStadium => 'Stadion hinzufügen';
+
+  @override
+  String get editorClassicRemoveStadium => 'Dieses Stadion entfernen';
+
+  @override
+  String get editorClassicOpeningVenue => 'Eröffnungsspiel';
+
+  @override
+  String get editorClassicFinalVenue => 'Finale';
+
+  @override
+  String get editorClassicResetStadiums => 'Stadien zurücksetzen';
+
+  @override
+  String get editorClassicAddPlayer => 'Spieler hinzufügen';
+
+  @override
+  String get editorClassicRemovePlayer => 'Diesen Spieler entfernen';
+
+  @override
+  String get editorClassicResetSquad => 'Kader zurücksetzen';
+
+  @override
+  String editorClassicSquadRule(int min, int max, int keepers) {
+    return '$min bis $max Spieler, davon mindestens $keepers Torhüter.';
+  }
+
+  @override
+  String editorClassicKeepersNeeded(int count) {
+    return 'Der Kader braucht mindestens $count Torhüter.';
+  }
 }

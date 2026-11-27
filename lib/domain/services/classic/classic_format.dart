@@ -18,6 +18,7 @@ class ClassicFixture {
     required this.home,
     required this.away,
     required this.city,
+    this.venue,
     this.group,
     this.matchday = 0,
     this.homeScore,
@@ -34,6 +35,7 @@ class ClassicFixture {
     home: j['h']! as int,
     away: j['a']! as int,
     city: j['c']! as String,
+    venue: j['v'] as int?,
     group: j['g'] as String?,
     matchday: (j['md'] as int?) ?? 0,
     homeScore: j['hs'] as int?,
@@ -51,6 +53,10 @@ class ClassicFixture {
   final int home;
   final int away;
   final String city;
+
+  /// The host stadium, as an index into the edition's `cities` when the
+  /// fixture was made (null in runs stored before stadiums were editable).
+  final int? venue;
   final String? group;
   final int matchday;
   int? homeScore;
@@ -88,6 +94,7 @@ class ClassicFixture {
     'h': home,
     'a': away,
     'c': city,
+    if (venue != null) 'v': venue,
     if (group != null) 'g': group,
     if (matchday != 0) 'md': matchday,
     if (homeScore != null) 'hs': homeScore,
@@ -179,6 +186,9 @@ abstract final class ClassicFormat {
           final home = members[a];
           final away = members[b];
           final opener = md == 1 && gi == 0 && a == 0;
+          final venue = opener
+              ? edition.openingVenue
+              : venueFor(edition, home, away, cityTurn++);
           out.add(
             ClassicFixture(
               id: id++,
@@ -188,9 +198,8 @@ abstract final class ClassicFormat {
               date: date,
               home: home,
               away: away,
-              city: opener
-                  ? edition.openingCity
-                  : cityFor(edition, home, away, cityTurn++),
+              city: edition.cities[venue].city,
+              venue: venue,
             ),
           );
         }
@@ -201,20 +210,39 @@ abstract final class ClassicFormat {
 
   /// A host city for a match between [home] and [away]: a host plays in its
   /// own country; anybody else is dealt round every city in turn.
-  static String cityFor(ClassicEdition edition, int home, int away, int turn) {
+  static String cityFor(ClassicEdition edition, int home, int away, int turn) =>
+      edition.cities[venueFor(edition, home, away, turn)].city;
+
+  /// [cityFor]'s stadium, as an index into the edition's `cities`.
+  static int venueFor(ClassicEdition edition, int home, int away, int turn) {
     final host = edition.hosts.contains(home)
         ? home
         : edition.hosts.contains(away)
         ? away
         : null;
-    final pool = host == null
-        ? edition.cities
-        : [
-            for (final c in edition.cities)
-              if (c.host == host) c,
-          ];
-    if (pool.isEmpty) return edition.finalCity;
-    return pool[turn % pool.length].city;
+    final pool = [
+      for (var i = 0; i < edition.cities.length; i++)
+        if (host == null || edition.cities[i].host == host) i,
+    ];
+    if (pool.isEmpty) return edition.finalVenue;
+    return pool[turn % pool.length];
+  }
+
+  /// The stadium [f] is played at in [edition] as it stands now: the one it
+  /// was dealt, else the first in its city, else (its stadium edited away
+  /// since) the one it would be dealt now.
+  static ClassicCity venueOf(ClassicEdition edition, ClassicFixture f) {
+    final cities = edition.cities;
+    final v = f.venue;
+    final dealt = v != null && v >= 0 && v < cities.length ? v : null;
+    if (dealt != null && cities[dealt].city == f.city) return cities[dealt];
+    for (final c in cities) {
+      if (c.city == f.city) return c;
+    }
+    if (dealt != null) return cities[dealt];
+    return cities[f.round == finalRound
+        ? edition.finalVenue
+        : venueFor(edition, f.home, f.away, f.id)];
   }
 
   /// One group's table, by the game's own rules (points, then the
