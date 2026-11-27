@@ -18875,11 +18875,11 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get campaignVaticanTwist =>
-      'Vatikanstaten tager San Marinos plads i Europa, uden ende';
+      'Vatikanstaten tager San Marinos plads i Europa, i halvtreds cyklusser';
 
   @override
   String get campaignVaticanIntro =>
-      'Verdens mindste stat har et par hundrede borgere, de fleste gejstlige, en garde af schweiziske hellebardister og ikke én fodboldspiller, der fortjener navnet. I denne verden spiller Vatikanstaten alligevel, på San Marinos plads i Europa, og holdet er langt svagere, end San Marino nogensinde var: biskopper, seminarister, museumsvagter og gardister på fridag, en bane inden for murene med plads til 1.500 og en gang imellem en hjemmekamp på et lånt stadion i Rom. Rejsen har ingen ende, så ingen frist, kun mirakler at udrette: vind en kvalkamp, slut ikke sidst i en kvalifikationsgruppe og, hvis himlen lytter, nå et play-off.';
+      'Verdens mindste stat har et par hundrede borgere, de fleste gejstlige, en garde af schweiziske hellebardister og ikke én fodboldspiller, der fortjener navnet. I denne verden spiller Vatikanstaten alligevel, på San Marinos plads i Europa, og holdet er langt svagere, end San Marino nogensinde var: biskopper, seminarister, museumsvagter og gardister på fridag, en bane inden for murene med plads til 1.500 og en gang imellem en hjemmekamp på et lånt stadion i Rom. Halvtreds cyklusser er lang tid, men der skal mirakler til alligevel: vind en kvalkamp, slut ikke sidst i en kvalifikationsgruppe og, hvis himlen lytter, nå et play-off.';
 
   @override
   String get campaignVaticanGoal => 'Vind en kvalkamp';

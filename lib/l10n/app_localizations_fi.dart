@@ -18946,11 +18946,11 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get campaignVaticanTwist =>
-      'Vatikaani ottaa San Marinon paikan Euroopassa, ilman loppua';
+      'Vatikaani ottaa San Marinon paikan Euroopassa viidenkymmenen kauden ajaksi';
 
   @override
   String get campaignVaticanIntro =>
-      'Maailman pienimmässä valtiossa on muutama sata kansalaista, useimmat heistä pappeja, sveitsiläisten hilparimiesten kaarti eikä yhtäkään nimensä arvoista jalkapalloilijaa. Tässä maailmassa Vatikaani pelaa silti, San Marinon paikalla Euroopassa, ja se on paljon heikompi kuin San Marino koskaan oli: piispoja, pappisseminaarin opiskelijoita, museovartijoita ja vapaavuorossa olevia kaartilaisia, kenttä muurien sisällä 1 500 katsojalle ja silloin tällöin kotiottelu lainatulla stadionilla Roomassa. Matkalla ei ole loppua, joten ei myöskään takarajaa, vain ihmeitä tehtäväksi: voita karsintaottelu, älä jää karsintalohkon viimeiseksi ja, jos taivas kuulee, selviä jatkokarsintaan.';
+      'Maailman pienimmässä valtiossa on muutama sata kansalaista, useimmat heistä pappeja, sveitsiläisten hilparimiesten kaarti eikä yhtäkään nimensä arvoista jalkapalloilijaa. Tässä maailmassa Vatikaani pelaa silti, San Marinon paikalla Euroopassa, ja se on paljon heikompi kuin San Marino koskaan oli: piispoja, pappisseminaarin opiskelijoita, museovartijoita ja vapaavuorossa olevia kaartilaisia, kenttä muurien sisällä 1 500 katsojalle ja silloin tällöin kotiottelu lainatulla stadionilla Roomassa. Viisikymmentä kautta on pitkä aika, mutta ihmeitä tarvitaan silti: voita karsintaottelu, älä jää karsintalohkon viimeiseksi ja, jos taivas kuulee, selviä jatkokarsintaan.';
 
   @override
   String get campaignVaticanGoal => 'Voita karsintaottelu';

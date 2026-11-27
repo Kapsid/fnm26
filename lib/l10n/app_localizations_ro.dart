@@ -19303,11 +19303,11 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get campaignVaticanTwist =>
-      'Vaticanul ia locul San Marinoului în Europa, fără sfârșit';
+      'Vaticanul ia locul San Marinoului în Europa, timp de cincizeci de cicluri';
 
   @override
   String get campaignVaticanIntro =>
-      'Cel mai mic stat din lume are câteva sute de cetățeni, cei mai mulți clerici, o gardă de halebardieri elvețieni și niciun fotbalist demn de acest nume. În această lume Vaticanul joacă totuși, în locul San Marinoului în Europa, și este mult mai slab decât a fost vreodată San Marino: episcopi, seminariști, supraveghetori de muzeu și gardieni în timpul liber, un teren în interiorul zidurilor pentru 1.500 de spectatori și din când în când un meci de acasă pe un stadion împrumutat la Roma. Drumul nu are sfârșit, deci nici termen, doar minuni de făcut: câștigați un meci din preliminarii, evitați ultimul loc într-o grupă preliminară și, dacă cerul ascultă, ajungeți la un baraj.';
+      'Cel mai mic stat din lume are câteva sute de cetățeni, cei mai mulți clerici, o gardă de halebardieri elvețieni și niciun fotbalist demn de acest nume. În această lume Vaticanul joacă totuși, în locul San Marinoului în Europa, și este mult mai slab decât a fost vreodată San Marino: episcopi, seminariști, supraveghetori de muzeu și gardieni în timpul liber, un teren în interiorul zidurilor pentru 1.500 de spectatori și din când în când un meci de acasă pe un stadion împrumutat la Roma. Cincizeci de cicluri înseamnă mult timp, dar tot e nevoie de minuni: câștigați un meci din preliminarii, evitați ultimul loc într-o grupă preliminară și, dacă cerul ascultă, ajungeți la un baraj.';
 
   @override
   String get campaignVaticanGoal => 'Câștigarea unui meci din preliminarii';

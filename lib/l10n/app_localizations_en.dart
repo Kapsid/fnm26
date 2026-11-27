@@ -18907,11 +18907,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get campaignVaticanTwist =>
-      'Vatican City takes San Marino\'s place in Europe, with no end';
+      'Vatican City takes San Marino\'s place in Europe for fifty cycles';
 
   @override
   String get campaignVaticanIntro =>
-      'The smallest state in the world has a few hundred citizens, most of them clergy, a guard of Swiss halberdiers and not one footballer worth the name. In this world Vatican City plays anyway, in San Marino\'s place in Europe, and it is far worse than San Marino ever was: bishops, seminarians, museum attendants and off-duty guards, a pitch inside the walls with room for 1,500 and the odd home game on a borrowed ground in Rome. The run has no end, so there is no deadline, only miracles to work: win a qualifying match, finish a qualifying group off the bottom and, if heaven is listening, reach a play-off.';
+      'The smallest state in the world has a few hundred citizens, most of them clergy, a guard of Swiss halberdiers and not one footballer worth the name. In this world Vatican City plays anyway, in San Marino\'s place in Europe, and it is far worse than San Marino ever was: bishops, seminarians, museum attendants and off-duty guards, a pitch inside the walls with room for 1,500 and the odd home game on a borrowed ground in Rome. Fifty cycles is a long time, but it takes miracles all the same: win a qualifying match, finish a qualifying group off the bottom and, if heaven is listening, reach a play-off.';
 
   @override
   String get campaignVaticanGoal => 'Win a qualifying match';

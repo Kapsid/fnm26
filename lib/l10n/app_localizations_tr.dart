@@ -18785,11 +18785,11 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get campaignVaticanTwist =>
-      'Vatikan, sonu olmadan Avrupa\'da San Marino\'nun yerini alıyor';
+      'Vatikan elli dönem boyunca Avrupa\'da San Marino\'nun yerini alıyor';
 
   @override
   String get campaignVaticanIntro =>
-      'Dünyanın en küçük devletinin birkaç yüz vatandaşı var, çoğu din adamı; bir İsviçreli teberdar muhafız birliği var ve adını hak eden tek bir futbolcusu yok. Bu dünyada Vatikan yine de oynuyor, Avrupa\'da San Marino\'nun yerinde, ve San Marino\'nun hiçbir zaman olmadığı kadar zayıf: piskoposlar, ilahiyat öğrencileri, müze görevlileri ve izindeki muhafızlar, surların içinde 1.500 kişilik bir saha ve arada bir Roma\'da ödünç alınmış bir statta iç saha maçı. Bu yolun sonu yok, yani bir son tarih de yok, yalnızca gerçekleştirilecek mucizeler var: bir eleme maçı kazan, bir eleme grubunu son sırada bitirme ve gökler seni duyuyorsa bir play-off\'a kal.';
+      'Dünyanın en küçük devletinin birkaç yüz vatandaşı var, çoğu din adamı; bir İsviçreli teberdar muhafız birliği var ve adını hak eden tek bir futbolcusu yok. Bu dünyada Vatikan yine de oynuyor, Avrupa\'da San Marino\'nun yerinde, ve San Marino\'nun hiçbir zaman olmadığı kadar zayıf: piskoposlar, ilahiyat öğrencileri, müze görevlileri ve izindeki muhafızlar, surların içinde 1.500 kişilik bir saha ve arada bir Roma\'da ödünç alınmış bir statta iç saha maçı. Elli dönem uzun bir süre, ama yine de mucizeler gerekiyor: bir eleme maçı kazan, bir eleme grubunu son sırada bitirme ve gökler seni duyuyorsa bir play-off\'a kal.';
 
   @override
   String get campaignVaticanGoal => 'Bir eleme maçı kazan';

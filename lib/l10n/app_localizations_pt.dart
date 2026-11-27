@@ -18982,11 +18982,11 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get campaignVaticanTwist =>
-      'O Vaticano ocupa o lugar de San Marino na Europa, sem fim';
+      'O Vaticano ocupa o lugar de San Marino na Europa, por cinquenta ciclos';
 
   @override
   String get campaignVaticanIntro =>
-      'O menor estado do mundo tem algumas centenas de cidadãos, a maioria clérigos, uma guarda de alabardeiros suíços e nenhum jogador de futebol digno do nome. Neste mundo o Vaticano joga mesmo assim, no lugar de San Marino na Europa, e é muito pior do que San Marino jamais foi: bispos, seminaristas, vigilantes de museu e guardas de folga, um campo dentro das muralhas com lugar para 1.500 e um ou outro jogo em casa num estádio emprestado em Roma. A jornada não tem fim, então não há prazo, só milagres a operar: vencer um jogo das eliminatórias, não terminar em último num grupo das eliminatórias e, se o céu estiver ouvindo, chegar a um play-off.';
+      'O menor estado do mundo tem algumas centenas de cidadãos, a maioria clérigos, uma guarda de alabardeiros suíços e nenhum jogador de futebol digno do nome. Neste mundo o Vaticano joga mesmo assim, no lugar de San Marino na Europa, e é muito pior do que San Marino jamais foi: bispos, seminaristas, vigilantes de museu e guardas de folga, um campo dentro das muralhas com lugar para 1.500 e um ou outro jogo em casa num estádio emprestado em Roma. Cinquenta ciclos é muito tempo, mas mesmo assim vai ser preciso fazer milagres: vencer um jogo das eliminatórias, não terminar em último num grupo das eliminatórias e, se o céu estiver ouvindo, chegar a um play-off.';
 
   @override
   String get campaignVaticanGoal => 'Vencer um jogo das eliminatórias';

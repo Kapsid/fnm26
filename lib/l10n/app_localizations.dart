@@ -28533,22 +28533,22 @@ abstract class AppLocalizations {
   /// **'Win the World Championship'**
   String get campaignStars3Texas;
 
-  /// Campaign title: Hail Mary, the prayer and the desperate last throw, for a run with no end of Vatican City, a nation added to the world for this campaign and the weakest side in it.
+  /// Campaign title: Hail Mary, the prayer and the desperate last throw, for a fifty-cycle run of Vatican City, a nation added to the world for this campaign and the weakest side in it.
   ///
   /// In en, this message translates to:
   /// **'Hail Mary'**
   String get campaignVaticanTitle;
 
-  /// One-line twist of the Vatican City campaign: Vatican City in San Marino's place in Europe, for a run with no end.
+  /// One-line twist of the Vatican City campaign: Vatican City in San Marino's place in Europe, for a run of fifty cycles.
   ///
   /// In en, this message translates to:
-  /// **'Vatican City takes San Marino\'s place in Europe, with no end'**
+  /// **'Vatican City takes San Marino\'s place in Europe for fifty cycles'**
   String get campaignVaticanTwist;
 
-  /// Brief screen introduction of the Vatican City campaign: the smallest state in the world takes San Marino's place in Europe as a side far worse than San Marino, its players clergy, seminarians and guards, its home games on a tiny pitch inside the walls or a borrowed ground in Rome, for a run with no end. Names no real person.
+  /// Brief screen introduction of the Vatican City campaign: the smallest state in the world takes San Marino's place in Europe as a side far worse than San Marino, its players clergy, seminarians and guards, its home games on a tiny pitch inside the walls or a borrowed ground in Rome, for a run of fifty cycles. Names no real person.
   ///
   /// In en, this message translates to:
-  /// **'The smallest state in the world has a few hundred citizens, most of them clergy, a guard of Swiss halberdiers and not one footballer worth the name. In this world Vatican City plays anyway, in San Marino\'s place in Europe, and it is far worse than San Marino ever was: bishops, seminarians, museum attendants and off-duty guards, a pitch inside the walls with room for 1,500 and the odd home game on a borrowed ground in Rome. The run has no end, so there is no deadline, only miracles to work: win a qualifying match, finish a qualifying group off the bottom and, if heaven is listening, reach a play-off.'**
+  /// **'The smallest state in the world has a few hundred citizens, most of them clergy, a guard of Swiss halberdiers and not one footballer worth the name. In this world Vatican City plays anyway, in San Marino\'s place in Europe, and it is far worse than San Marino ever was: bishops, seminarians, museum attendants and off-duty guards, a pitch inside the walls with room for 1,500 and the odd home game on a borrowed ground in Rome. Fifty cycles is a long time, but it takes miracles all the same: win a qualifying match, finish a qualifying group off the bottom and, if heaven is listening, reach a play-off.'**
   String get campaignVaticanIntro;
 
   /// One-line goal of the Vatican City campaign (its first star): win one qualifying match, continental or World Championship.

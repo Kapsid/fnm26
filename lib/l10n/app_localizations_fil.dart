@@ -18892,11 +18892,11 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get campaignVaticanTwist =>
-      'Pumalit ang Lungsod ng Vaticano sa puwesto ng San Marino sa Europa, nang walang katapusan';
+      'Pumalit ang Lungsod ng Vaticano sa puwesto ng San Marino sa Europa, sa loob ng limampung cycle';
 
   @override
   String get campaignVaticanIntro =>
-      'Ang pinakamaliit na estado sa mundo ay may ilang daang mamamayan, karamihan ay mga pari, isang bantay ng mga Swisong may halberd at wala ni isang manlalarong karapat-dapat sa pangalang iyon. Sa mundong ito, naglalaro pa rin ang Lungsod ng Vaticano, sa puwesto ng San Marino sa Europa, at mas mahina pa ito kaysa sa San Marino kailanman: mga obispo, seminarista, bantay ng museo at mga guwardiyang walang duty, isang palaruan sa loob ng mga pader para sa 1,500 at paminsan-minsang laro sa bahay sa isang hiniram na istadyum sa Roma. Walang katapusan ang paglalakbay, kaya walang deadline, mga himala lamang ang dapat gawin: manalo sa isang laban ng kwalipikasyon, huwag matapos sa huli sa isang grupo ng kwalipikasyon at, kung nakikinig ang langit, makarating sa isang play-off.';
+      'Ang pinakamaliit na estado sa mundo ay may ilang daang mamamayan, karamihan ay mga pari, isang bantay ng mga Swisong may halberd at wala ni isang manlalarong karapat-dapat sa pangalang iyon. Sa mundong ito, naglalaro pa rin ang Lungsod ng Vaticano, sa puwesto ng San Marino sa Europa, at mas mahina pa ito kaysa sa San Marino kailanman: mga obispo, seminarista, bantay ng museo at mga guwardiyang walang duty, isang palaruan sa loob ng mga pader para sa 1,500 at paminsan-minsang laro sa bahay sa isang hiniram na istadyum sa Roma. Mahabang panahon ang limampung cycle, pero kakailanganin pa rin ng mga himala: manalo sa isang laban ng kwalipikasyon, huwag matapos sa huli sa isang grupo ng kwalipikasyon at, kung nakikinig ang langit, makarating sa isang play-off.';
 
   @override
   String get campaignVaticanGoal => 'Manalo sa isang laban ng kwalipikasyon';
