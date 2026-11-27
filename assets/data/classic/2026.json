@@ -1,0 +1,641 @@
+{
+ "year": 2026,
+ "free": true,
+ "hosts": [
+  99,
+  74,
+  88
+ ],
+ "hostLabel": "northAmerica",
+ "opener": "2026-06-11",
+ "calendar": {
+  "gaps": [
+   6,
+   5
+  ],
+  "knockouts": {
+   "R32": [
+    18,
+    22
+   ],
+   "R16": [
+    23,
+    26
+   ],
+   "QF": [
+    28,
+    30
+   ],
+   "SF": [
+    33,
+    34
+   ],
+   "3RD": [
+    37,
+    37
+   ],
+   "FINAL": [
+    38,
+    38
+   ]
+  }
+ },
+ "cities": [
+  {
+   "host": 99,
+   "city": "East Rutherford",
+   "seats": 82000
+  },
+  {
+   "host": 99,
+   "city": "Arlington",
+   "seats": 80000
+  },
+  {
+   "host": 99,
+   "city": "Atlanta",
+   "seats": 71000
+  },
+  {
+   "host": 99,
+   "city": "Kansas City",
+   "seats": 73000
+  },
+  {
+   "host": 99,
+   "city": "Houston",
+   "seats": 72000
+  },
+  {
+   "host": 99,
+   "city": "Santa Clara",
+   "seats": 68000
+  },
+  {
+   "host": 99,
+   "city": "Inglewood",
+   "seats": 70000
+  },
+  {
+   "host": 99,
+   "city": "Philadelphia",
+   "seats": 69000
+  },
+  {
+   "host": 99,
+   "city": "Seattle",
+   "seats": 69000
+  },
+  {
+   "host": 99,
+   "city": "Foxborough",
+   "seats": 65000
+  },
+  {
+   "host": 99,
+   "city": "Miami",
+   "seats": 65000
+  },
+  {
+   "host": 74,
+   "city": "Toronto",
+   "seats": 45000
+  },
+  {
+   "host": 74,
+   "city": "Vancouver",
+   "seats": 54000
+  },
+  {
+   "host": 88,
+   "city": "Mexico City",
+   "seats": 83000
+  },
+  {
+   "host": 88,
+   "city": "Guadalajara",
+   "seats": 48000
+  },
+  {
+   "host": 88,
+   "city": "Monterrey",
+   "seats": 53000
+  }
+ ],
+ "openingCity": "Mexico City",
+ "finalCity": "East Rutherford",
+ "groups": {
+  "A": [
+   88,
+   146,
+   190,
+   12
+  ],
+  "B": [
+   74,
+   8,
+   187,
+   52
+  ],
+  "C": [
+   58,
+   135,
+   85,
+   46
+  ],
+  "D": [
+   99,
+   62,
+   156,
+   53
+  ],
+  "E": [
+   20,
+   78,
+   125,
+   61
+  ],
+  "F": [
+   36,
+   170,
+   51,
+   151
+  ],
+  "G": [
+   7,
+   115,
+   168,
+   205
+  ],
+  "H": [
+   50,
+   108,
+   188,
+   64
+  ],
+  "I": [
+   18,
+   142,
+   169,
+   39
+  ],
+  "J": [
+   56,
+   101,
+   4,
+   171
+  ],
+  "K": [
+   41,
+   113,
+   198,
+   60
+  ],
+  "L": [
+   14,
+   10,
+   122,
+   91
+  ]
+ },
+ "teams": [
+  {
+   "nation": 88,
+   "code": "MEX",
+   "overall": 79,
+   "star": 82,
+   "depth": 72,
+   "style": "balanced",
+   "pot": 1
+  },
+  {
+   "nation": 146,
+   "code": "RSA",
+   "overall": 72,
+   "star": 76,
+   "depth": 65,
+   "style": "balanced",
+   "pot": 3
+  },
+  {
+   "nation": 190,
+   "code": "KOR",
+   "overall": 77,
+   "star": 83,
+   "depth": 70,
+   "style": "highPress",
+   "pot": 2
+  },
+  {
+   "nation": 12,
+   "code": "CZE",
+   "overall": 77,
+   "star": 81,
+   "depth": 70,
+   "style": "balanced",
+   "pot": 4
+  },
+  {
+   "nation": 74,
+   "code": "CAN",
+   "overall": 76,
+   "star": 82,
+   "depth": 69,
+   "style": "balanced",
+   "pot": 1
+  },
+  {
+   "nation": 8,
+   "code": "BIH",
+   "overall": 74,
+   "star": 80,
+   "depth": 67,
+   "style": "balanced",
+   "pot": 4
+  },
+  {
+   "nation": 187,
+   "code": "QAT",
+   "overall": 70,
+   "star": 74,
+   "depth": 63,
+   "style": "balanced",
+   "pot": 3
+  },
+  {
+   "nation": 52,
+   "code": "SUI",
+   "overall": 80,
+   "star": 83,
+   "depth": 73,
+   "style": "defensive",
+   "pot": 2
+  },
+  {
+   "nation": 58,
+   "code": "BRA",
+   "overall": 85,
+   "star": 89,
+   "depth": 80,
+   "style": "flair",
+   "pot": 1
+  },
+  {
+   "nation": 135,
+   "code": "MAR",
+   "overall": 82,
+   "star": 86,
+   "depth": 75,
+   "style": "defensive",
+   "pot": 2
+  },
+  {
+   "nation": 85,
+   "code": "HAI",
+   "overall": 65,
+   "star": 70,
+   "depth": 58,
+   "style": "balanced",
+   "pot": 4
+  },
+  {
+   "nation": 46,
+   "code": "SCO",
+   "overall": 76,
+   "star": 80,
+   "depth": 69,
+   "style": "direct",
+   "pot": 3
+  },
+  {
+   "nation": 99,
+   "code": "USA",
+   "overall": 79,
+   "star": 82,
+   "depth": 72,
+   "style": "direct",
+   "pot": 1
+  },
+  {
+   "nation": 62,
+   "code": "PAR",
+   "overall": 76,
+   "star": 79,
+   "depth": 69,
+   "style": "defensive",
+   "pot": 3
+  },
+  {
+   "nation": 156,
+   "code": "AUS",
+   "overall": 74,
+   "star": 77,
+   "depth": 67,
+   "style": "balanced",
+   "pot": 2
+  },
+  {
+   "nation": 53,
+   "code": "TUR",
+   "overall": 79,
+   "star": 84,
+   "depth": 72,
+   "style": "flair",
+   "pot": 4
+  },
+  {
+   "nation": 20,
+   "code": "GER",
+   "overall": 85,
+   "star": 88,
+   "depth": 80,
+   "style": "highPress",
+   "pot": 1
+  },
+  {
+   "nation": 78,
+   "code": "CUW",
+   "overall": 65,
+   "star": 69,
+   "depth": 58,
+   "style": "balanced",
+   "pot": 4
+  },
+  {
+   "nation": 125,
+   "code": "CIV",
+   "overall": 77,
+   "star": 82,
+   "depth": 70,
+   "style": "physical",
+   "pot": 3
+  },
+  {
+   "nation": 61,
+   "code": "ECU",
+   "overall": 78,
+   "star": 82,
+   "depth": 71,
+   "style": "balanced",
+   "pot": 2
+  },
+  {
+   "nation": 36,
+   "code": "NED",
+   "overall": 85,
+   "star": 88,
+   "depth": 80,
+   "style": "possession",
+   "pot": 1
+  },
+  {
+   "nation": 170,
+   "code": "JPN",
+   "overall": 80,
+   "star": 83,
+   "depth": 73,
+   "style": "possession",
+   "pot": 2
+  },
+  {
+   "nation": 51,
+   "code": "SWE",
+   "overall": 79,
+   "star": 86,
+   "depth": 72,
+   "style": "direct",
+   "pot": 4
+  },
+  {
+   "nation": 151,
+   "code": "TUN",
+   "overall": 72,
+   "star": 75,
+   "depth": 65,
+   "style": "balanced",
+   "pot": 3
+  },
+  {
+   "nation": 7,
+   "code": "BEL",
+   "overall": 82,
+   "star": 87,
+   "depth": 75,
+   "style": "counter",
+   "pot": 1
+  },
+  {
+   "nation": 115,
+   "code": "EGY",
+   "overall": 75,
+   "star": 84,
+   "depth": 68,
+   "style": "balanced",
+   "pot": 3
+  },
+  {
+   "nation": 168,
+   "code": "IRN",
+   "overall": 74,
+   "star": 77,
+   "depth": 67,
+   "style": "defensive",
+   "pot": 2
+  },
+  {
+   "nation": 205,
+   "code": "NZL",
+   "overall": 69,
+   "star": 73,
+   "depth": 62,
+   "style": "balanced",
+   "pot": 4
+  },
+  {
+   "nation": 50,
+   "code": "ESP",
+   "overall": 89,
+   "star": 92,
+   "depth": 84,
+   "style": "possession",
+   "pot": 1
+  },
+  {
+   "nation": 108,
+   "code": "CPV",
+   "overall": 69,
+   "star": 73,
+   "depth": 62,
+   "style": "balanced",
+   "pot": 4
+  },
+  {
+   "nation": 188,
+   "code": "KSA",
+   "overall": 70,
+   "star": 73,
+   "depth": 63,
+   "style": "counter",
+   "pot": 3
+  },
+  {
+   "nation": 64,
+   "code": "URU",
+   "overall": 80,
+   "star": 85,
+   "depth": 73,
+   "style": "defensive",
+   "pot": 2
+  },
+  {
+   "nation": 18,
+   "code": "FRA",
+   "overall": 89,
+   "star": 93,
+   "depth": 84,
+   "style": "balanced",
+   "pot": 1
+  },
+  {
+   "nation": 142,
+   "code": "SEN",
+   "overall": 79,
+   "star": 83,
+   "depth": 72,
+   "style": "physical",
+   "pot": 2
+  },
+  {
+   "nation": 169,
+   "code": "IRQ",
+   "overall": 71,
+   "star": 75,
+   "depth": 64,
+   "style": "balanced",
+   "pot": 4
+  },
+  {
+   "nation": 39,
+   "code": "NOR",
+   "overall": 81,
+   "star": 90,
+   "depth": 74,
+   "style": "direct",
+   "pot": 3
+  },
+  {
+   "nation": 56,
+   "code": "ARG",
+   "overall": 87,
+   "star": 91,
+   "depth": 82,
+   "style": "flair",
+   "pot": 1
+  },
+  {
+   "nation": 101,
+   "code": "ALG",
+   "overall": 76,
+   "star": 81,
+   "depth": 69,
+   "style": "balanced",
+   "pot": 3
+  },
+  {
+   "nation": 4,
+   "code": "AUT",
+   "overall": 79,
+   "star": 82,
+   "depth": 72,
+   "style": "highPress",
+   "pot": 2
+  },
+  {
+   "nation": 171,
+   "code": "JOR",
+   "overall": 70,
+   "star": 74,
+   "depth": 63,
+   "style": "balanced",
+   "pot": 4
+  },
+  {
+   "nation": 41,
+   "code": "POR",
+   "overall": 86,
+   "star": 90,
+   "depth": 81,
+   "style": "flair",
+   "pot": 1
+  },
+  {
+   "nation": 113,
+   "code": "COD",
+   "overall": 74,
+   "star": 78,
+   "depth": 67,
+   "style": "balanced",
+   "pot": 4
+  },
+  {
+   "nation": 198,
+   "code": "UZB",
+   "overall": 72,
+   "star": 76,
+   "depth": 65,
+   "style": "balanced",
+   "pot": 3
+  },
+  {
+   "nation": 60,
+   "code": "COL",
+   "overall": 81,
+   "star": 85,
+   "depth": 74,
+   "style": "flair",
+   "pot": 2
+  },
+  {
+   "nation": 14,
+   "code": "ENG",
+   "overall": 88,
+   "star": 91,
+   "depth": 83,
+   "style": "direct",
+   "pot": 1
+  },
+  {
+   "nation": 10,
+   "code": "CRO",
+   "overall": 82,
+   "star": 86,
+   "depth": 75,
+   "style": "possession",
+   "pot": 2
+  },
+  {
+   "nation": 122,
+   "code": "GHA",
+   "overall": 75,
+   "star": 79,
+   "depth": 68,
+   "style": "physical",
+   "pot": 4
+  },
+  {
+   "nation": 91,
+   "code": "PAN",
+   "overall": 70,
+   "star": 73,
+   "depth": 63,
+   "style": "balanced",
+   "pot": 3
+  }
+ ],
+ "result": {
+  "champion": 50,
+  "runnerUp": 56,
+  "third": 14,
+  "fourth": 18
+ }
+}

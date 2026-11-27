@@ -1,0 +1,416 @@
+{
+ "year": 2006,
+ "free": true,
+ "hosts": [
+  20
+ ],
+ "hostLabel": "germany",
+ "opener": "2006-06-09",
+ "calendar": {
+  "gaps": [
+   5,
+   6
+  ],
+  "knockouts": {
+   "R16": [
+    15,
+    18
+   ],
+   "QF": [
+    21,
+    22
+   ],
+   "SF": [
+    25,
+    26
+   ],
+   "3RD": [
+    29,
+    29
+   ],
+   "FINAL": [
+    30,
+    30
+   ]
+  }
+ },
+ "cities": [
+  {
+   "host": 20,
+   "city": "Berlin",
+   "seats": 72000
+  },
+  {
+   "host": 20,
+   "city": "Munich",
+   "seats": 66000
+  },
+  {
+   "host": 20,
+   "city": "Dortmund",
+   "seats": 65000
+  },
+  {
+   "host": 20,
+   "city": "Stuttgart",
+   "seats": 52000
+  },
+  {
+   "host": 20,
+   "city": "Hamburg",
+   "seats": 50000
+  },
+  {
+   "host": 20,
+   "city": "Gelsenkirchen",
+   "seats": 52000
+  },
+  {
+   "host": 20,
+   "city": "Frankfurt",
+   "seats": 48000
+  },
+  {
+   "host": 20,
+   "city": "Cologne",
+   "seats": 45000
+  },
+  {
+   "host": 20,
+   "city": "Hanover",
+   "seats": 43000
+  },
+  {
+   "host": 20,
+   "city": "Leipzig",
+   "seats": 43000
+  },
+  {
+   "host": 20,
+   "city": "Kaiserslautern",
+   "seats": 46000
+  },
+  {
+   "host": 20,
+   "city": "Nuremberg",
+   "seats": 41000
+  }
+ ],
+ "openingCity": "Munich",
+ "finalCity": "Berlin",
+ "groups": {
+  "A": [
+   20,
+   76,
+   40,
+   61
+  ],
+  "B": [
+   14,
+   62,
+   97,
+   51
+  ],
+  "C": [
+   56,
+   125,
+   47,
+   36
+  ],
+  "D": [
+   88,
+   168,
+   102,
+   41
+  ],
+  "E": [
+   26,
+   122,
+   99,
+   12
+  ],
+  "F": [
+   58,
+   10,
+   156,
+   170
+  ],
+  "G": [
+   18,
+   52,
+   190,
+   150
+  ],
+  "H": [
+   50,
+   54,
+   151,
+   188
+  ]
+ },
+ "teams": [
+  {
+   "nation": 20,
+   "code": "GER",
+   "overall": 84,
+   "star": 88,
+   "depth": 79,
+   "style": "highPress"
+  },
+  {
+   "nation": 76,
+   "code": "CRC",
+   "overall": 72,
+   "star": 76,
+   "depth": 65,
+   "style": "balanced"
+  },
+  {
+   "nation": 40,
+   "code": "POL",
+   "overall": 76,
+   "star": 80,
+   "depth": 69,
+   "style": "balanced"
+  },
+  {
+   "nation": 61,
+   "code": "ECU",
+   "overall": 75,
+   "star": 79,
+   "depth": 68,
+   "style": "balanced"
+  },
+  {
+   "nation": 14,
+   "code": "ENG",
+   "overall": 86,
+   "star": 90,
+   "depth": 81,
+   "style": "direct"
+  },
+  {
+   "nation": 62,
+   "code": "PAR",
+   "overall": 76,
+   "star": 80,
+   "depth": 69,
+   "style": "defensive"
+  },
+  {
+   "nation": 97,
+   "code": "TRI",
+   "overall": 66,
+   "star": 71,
+   "depth": 59,
+   "style": "balanced"
+  },
+  {
+   "nation": 51,
+   "code": "SWE",
+   "overall": 80,
+   "star": 84,
+   "depth": 73,
+   "style": "direct"
+  },
+  {
+   "nation": 56,
+   "code": "ARG",
+   "overall": 87,
+   "star": 91,
+   "depth": 82,
+   "style": "flair"
+  },
+  {
+   "nation": 125,
+   "code": "CIV",
+   "overall": 81,
+   "star": 86,
+   "depth": 74,
+   "style": "physical"
+  },
+  {
+   "nation": 47,
+   "code": "SRB",
+   "overall": 78,
+   "star": 82,
+   "depth": 71,
+   "style": "balanced",
+   "display": "serbiaMontenegro"
+  },
+  {
+   "nation": 36,
+   "code": "NED",
+   "overall": 84,
+   "star": 88,
+   "depth": 79,
+   "style": "possession"
+  },
+  {
+   "nation": 88,
+   "code": "MEX",
+   "overall": 79,
+   "star": 83,
+   "depth": 72,
+   "style": "balanced"
+  },
+  {
+   "nation": 168,
+   "code": "IRN",
+   "overall": 73,
+   "star": 77,
+   "depth": 66,
+   "style": "defensive"
+  },
+  {
+   "nation": 102,
+   "code": "ANG",
+   "overall": 69,
+   "star": 73,
+   "depth": 62,
+   "style": "balanced"
+  },
+  {
+   "nation": 41,
+   "code": "POR",
+   "overall": 85,
+   "star": 90,
+   "depth": 80,
+   "style": "flair"
+  },
+  {
+   "nation": 26,
+   "code": "ITA",
+   "overall": 87,
+   "star": 91,
+   "depth": 82,
+   "style": "defensive"
+  },
+  {
+   "nation": 122,
+   "code": "GHA",
+   "overall": 77,
+   "star": 81,
+   "depth": 70,
+   "style": "physical"
+  },
+  {
+   "nation": 99,
+   "code": "USA",
+   "overall": 77,
+   "star": 80,
+   "depth": 70,
+   "style": "direct"
+  },
+  {
+   "nation": 12,
+   "code": "CZE",
+   "overall": 83,
+   "star": 87,
+   "depth": 76,
+   "style": "balanced"
+  },
+  {
+   "nation": 58,
+   "code": "BRA",
+   "overall": 89,
+   "star": 94,
+   "depth": 84,
+   "style": "flair"
+  },
+  {
+   "nation": 10,
+   "code": "CRO",
+   "overall": 80,
+   "star": 84,
+   "depth": 73,
+   "style": "possession"
+  },
+  {
+   "nation": 156,
+   "code": "AUS",
+   "overall": 77,
+   "star": 81,
+   "depth": 70,
+   "style": "balanced"
+  },
+  {
+   "nation": 170,
+   "code": "JPN",
+   "overall": 76,
+   "star": 79,
+   "depth": 69,
+   "style": "possession"
+  },
+  {
+   "nation": 18,
+   "code": "FRA",
+   "overall": 86,
+   "star": 91,
+   "depth": 81,
+   "style": "balanced"
+  },
+  {
+   "nation": 52,
+   "code": "SUI",
+   "overall": 78,
+   "star": 81,
+   "depth": 71,
+   "style": "defensive"
+  },
+  {
+   "nation": 190,
+   "code": "KOR",
+   "overall": 76,
+   "star": 80,
+   "depth": 69,
+   "style": "highPress"
+  },
+  {
+   "nation": 150,
+   "code": "TOG",
+   "overall": 68,
+   "star": 73,
+   "depth": 61,
+   "style": "balanced"
+  },
+  {
+   "nation": 50,
+   "code": "ESP",
+   "overall": 85,
+   "star": 89,
+   "depth": 80,
+   "style": "possession"
+  },
+  {
+   "nation": 54,
+   "code": "UKR",
+   "overall": 79,
+   "star": 85,
+   "depth": 72,
+   "style": "balanced"
+  },
+  {
+   "nation": 151,
+   "code": "TUN",
+   "overall": 72,
+   "star": 76,
+   "depth": 65,
+   "style": "balanced"
+  },
+  {
+   "nation": 188,
+   "code": "KSA",
+   "overall": 69,
+   "star": 73,
+   "depth": 62,
+   "style": "counter"
+  }
+ ],
+ "result": {
+  "champion": 26,
+  "runnerUp": 18,
+  "third": 20,
+  "fourth": 41
+ }
+}

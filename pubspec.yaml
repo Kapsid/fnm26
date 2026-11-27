@@ -127,6 +127,7 @@ flutter:
   assets:
     - assets/images/
     - assets/data/
+    - assets/data/classic/
     - assets/geo/
     - assets/flags/
     - assets/trophies/

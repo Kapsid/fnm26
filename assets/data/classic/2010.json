@@ -1,0 +1,400 @@
+{
+ "year": 2010,
+ "free": false,
+ "hosts": [
+  146
+ ],
+ "hostLabel": "southAfrica",
+ "opener": "2010-06-11",
+ "calendar": {
+  "gaps": [
+   5,
+   6
+  ],
+  "knockouts": {
+   "R16": [
+    15,
+    18
+   ],
+   "QF": [
+    21,
+    22
+   ],
+   "SF": [
+    25,
+    26
+   ],
+   "3RD": [
+    29,
+    29
+   ],
+   "FINAL": [
+    30,
+    30
+   ]
+  }
+ },
+ "cities": [
+  {
+   "host": 146,
+   "city": "Johannesburg",
+   "seats": 94000
+  },
+  {
+   "host": 146,
+   "city": "Cape Town",
+   "seats": 64000
+  },
+  {
+   "host": 146,
+   "city": "Durban",
+   "seats": 69000
+  },
+  {
+   "host": 146,
+   "city": "Pretoria",
+   "seats": 50000
+  },
+  {
+   "host": 146,
+   "city": "Port Elizabeth",
+   "seats": 46000
+  },
+  {
+   "host": 146,
+   "city": "Bloemfontein",
+   "seats": 45000
+  },
+  {
+   "host": 146,
+   "city": "Rustenburg",
+   "seats": 42000
+  },
+  {
+   "host": 146,
+   "city": "Polokwane",
+   "seats": 45000
+  },
+  {
+   "host": 146,
+   "city": "Nelspruit",
+   "seats": 43000
+  }
+ ],
+ "openingCity": "Johannesburg",
+ "finalCity": "Johannesburg",
+ "groups": {
+  "A": [
+   146,
+   88,
+   64,
+   18
+  ],
+  "B": [
+   56,
+   139,
+   190,
+   22
+  ],
+  "C": [
+   14,
+   99,
+   101,
+   49
+  ],
+  "D": [
+   20,
+   156,
+   47,
+   122
+  ],
+  "E": [
+   36,
+   13,
+   170,
+   107
+  ],
+  "F": [
+   26,
+   62,
+   205,
+   48
+  ],
+  "G": [
+   58,
+   182,
+   125,
+   41
+  ],
+  "H": [
+   50,
+   52,
+   86,
+   59
+  ]
+ },
+ "teams": [
+  {
+   "nation": 146,
+   "code": "RSA",
+   "overall": 72,
+   "star": 76,
+   "depth": 65,
+   "style": "balanced"
+  },
+  {
+   "nation": 88,
+   "code": "MEX",
+   "overall": 79,
+   "star": 82,
+   "depth": 72,
+   "style": "balanced"
+  },
+  {
+   "nation": 64,
+   "code": "URU",
+   "overall": 81,
+   "star": 86,
+   "depth": 74,
+   "style": "defensive"
+  },
+  {
+   "nation": 18,
+   "code": "FRA",
+   "overall": 83,
+   "star": 87,
+   "depth": 76,
+   "style": "balanced"
+  },
+  {
+   "nation": 56,
+   "code": "ARG",
+   "overall": 86,
+   "star": 92,
+   "depth": 81,
+   "style": "flair"
+  },
+  {
+   "nation": 139,
+   "code": "NGA",
+   "overall": 75,
+   "star": 80,
+   "depth": 68,
+   "style": "physical"
+  },
+  {
+   "nation": 190,
+   "code": "KOR",
+   "overall": 77,
+   "star": 81,
+   "depth": 70,
+   "style": "highPress"
+  },
+  {
+   "nation": 22,
+   "code": "GRE",
+   "overall": 76,
+   "star": 79,
+   "depth": 69,
+   "style": "defensive"
+  },
+  {
+   "nation": 14,
+   "code": "ENG",
+   "overall": 84,
+   "star": 88,
+   "depth": 79,
+   "style": "direct"
+  },
+  {
+   "nation": 99,
+   "code": "USA",
+   "overall": 77,
+   "star": 81,
+   "depth": 70,
+   "style": "direct"
+  },
+  {
+   "nation": 101,
+   "code": "ALG",
+   "overall": 72,
+   "star": 76,
+   "depth": 65,
+   "style": "balanced"
+  },
+  {
+   "nation": 49,
+   "code": "SVN",
+   "overall": 74,
+   "star": 77,
+   "depth": 67,
+   "style": "balanced"
+  },
+  {
+   "nation": 20,
+   "code": "GER",
+   "overall": 85,
+   "star": 88,
+   "depth": 80,
+   "style": "highPress"
+  },
+  {
+   "nation": 156,
+   "code": "AUS",
+   "overall": 75,
+   "star": 78,
+   "depth": 68,
+   "style": "balanced"
+  },
+  {
+   "nation": 47,
+   "code": "SRB",
+   "overall": 78,
+   "star": 82,
+   "depth": 71,
+   "style": "balanced"
+  },
+  {
+   "nation": 122,
+   "code": "GHA",
+   "overall": 78,
+   "star": 82,
+   "depth": 71,
+   "style": "physical"
+  },
+  {
+   "nation": 36,
+   "code": "NED",
+   "overall": 86,
+   "star": 90,
+   "depth": 81,
+   "style": "possession"
+  },
+  {
+   "nation": 13,
+   "code": "DEN",
+   "overall": 78,
+   "star": 81,
+   "depth": 71,
+   "style": "balanced"
+  },
+  {
+   "nation": 170,
+   "code": "JPN",
+   "overall": 76,
+   "star": 80,
+   "depth": 69,
+   "style": "possession"
+  },
+  {
+   "nation": 107,
+   "code": "CMR",
+   "overall": 77,
+   "star": 83,
+   "depth": 70,
+   "style": "physical"
+  },
+  {
+   "nation": 26,
+   "code": "ITA",
+   "overall": 82,
+   "star": 85,
+   "depth": 75,
+   "style": "defensive"
+  },
+  {
+   "nation": 62,
+   "code": "PAR",
+   "overall": 78,
+   "star": 81,
+   "depth": 71,
+   "style": "defensive"
+  },
+  {
+   "nation": 205,
+   "code": "NZL",
+   "overall": 68,
+   "star": 72,
+   "depth": 61,
+   "style": "balanced"
+  },
+  {
+   "nation": 48,
+   "code": "SVK",
+   "overall": 75,
+   "star": 79,
+   "depth": 68,
+   "style": "balanced"
+  },
+  {
+   "nation": 58,
+   "code": "BRA",
+   "overall": 87,
+   "star": 91,
+   "depth": 82,
+   "style": "flair"
+  },
+  {
+   "nation": 182,
+   "code": "PRK",
+   "overall": 66,
+   "star": 70,
+   "depth": 59,
+   "style": "balanced"
+  },
+  {
+   "nation": 125,
+   "code": "CIV",
+   "overall": 80,
+   "star": 85,
+   "depth": 73,
+   "style": "physical"
+  },
+  {
+   "nation": 41,
+   "code": "POR",
+   "overall": 84,
+   "star": 92,
+   "depth": 79,
+   "style": "flair"
+  },
+  {
+   "nation": 50,
+   "code": "ESP",
+   "overall": 89,
+   "star": 92,
+   "depth": 84,
+   "style": "possession"
+  },
+  {
+   "nation": 52,
+   "code": "SUI",
+   "overall": 77,
+   "star": 80,
+   "depth": 70,
+   "style": "defensive"
+  },
+  {
+   "nation": 86,
+   "code": "HON",
+   "overall": 71,
+   "star": 75,
+   "depth": 64,
+   "style": "balanced"
+  },
+  {
+   "nation": 59,
+   "code": "CHI",
+   "overall": 79,
+   "star": 83,
+   "depth": 72,
+   "style": "highPress"
+  }
+ ],
+ "result": {
+  "champion": 50,
+  "runnerUp": 36,
+  "third": 20,
+  "fourth": 64
+ }
+}
