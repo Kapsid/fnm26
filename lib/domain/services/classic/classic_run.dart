@@ -308,6 +308,28 @@ class ClassicTournament {
     );
   }
 
+  /// [nationId]'s side for [f] as it walks out: the manager's own pick and
+  /// shape (his squad tab's), or the AI's tactics and best eleven for
+  /// anybody else, with everyone else free to play on the bench. The live
+  /// match screen plays the manager's match from these.
+  ({MatchTeam team, List<Player> bench}) sideFor(
+    ClassicFixture f,
+    int nationId,
+  ) => _side(
+    nationId,
+    nationId == f.home ? f.away : f.home,
+    f.id,
+    mine: nationId == me,
+  );
+
+  /// The host whose crowd [f] is played in front of: a host nation playing
+  /// in its own country, else nobody (a neutral ground).
+  int? venueHostOf(ClassicFixture f) => edition.hosts.contains(f.home)
+      ? f.home
+      : edition.hosts.contains(f.away)
+      ? f.away
+      : null;
+
   /// Plays [f] with the engine. [salt] varies the manager's own match from
   /// attempt to attempt (the live match's randomness); the other matches
   /// are fixed by the run's seed.
@@ -329,11 +351,7 @@ class ClassicTournament {
         rng: rng.fork(0x52),
       ),
     ];
-    final host = edition.hosts.contains(f.home)
-        ? f.home
-        : edition.hosts.contains(f.away)
-        ? f.away
-        : null;
+    final host = venueHostOf(f);
     final knockout = !f.isGroup;
     final result = const MatchEngine().play(
       home: home.team,

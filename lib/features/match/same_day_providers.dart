@@ -5,7 +5,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/match/same_day_results.dart';
-import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/features/match/live_match_season.dart';
 
 /// The other matches of [Fixture]'s group or round on its day, with the
 /// results the save holds or will hold for them (see
@@ -15,7 +15,7 @@ final AutoDisposeFutureProviderFamily<List<SameDayResult>, Fixture>
 sameDayResultsProvider = FutureProvider.autoDispose
     .family<List<SameDayResult>, Fixture>(
       (ref, ours) =>
-          ref.read(seasonServiceProvider).sameDayResults(ours.careerId, ours),
+          ref.read(liveMatchSeasonProvider).sameDayResults(ours.careerId, ours),
     );
 
 /// [f] as [sameDayResultsProvider] is keyed: the schedule, not the result.
@@ -37,5 +37,5 @@ final AutoDisposeFutureProviderFamily<
 groupBeforeProvider = FutureProvider.autoDispose
     .family<({List<int> members, List<Fixture> before})?, Fixture>(
       (ref, ours) =>
-          ref.read(seasonServiceProvider).groupBefore(ours.careerId, ours),
+          ref.read(liveMatchSeasonProvider).groupBefore(ours.careerId, ours),
     );

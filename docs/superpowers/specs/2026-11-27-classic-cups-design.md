@@ -36,8 +36,8 @@ win with a minnow from every confederation.
 ## Non-goals (first version)
 
 - Qualifying, board, transfers, growth, press, world managers.
-- The career's own match screen and call-up screens (they read a career
-  save end to end; see "Reuse" for what is reused instead).
+- The career's match preview and call-up screens (they read a career save
+  end to end; see "Reuse" for what is reused instead).
 - Cloud sync of medals.
 
 ## Anti-goals (licensing, hard rules)
@@ -154,12 +154,24 @@ pairing, shootouts), `GroupStanding.table`, `CrossGroup` ranking,
 round labels, the name pools and real-name guards, the paywall. Saves: none
 of the career tables; see Storage.
 
-Not reused in this first version: the career's live match screen, its 2D
-pitch view, the call-up and tactics screens, the draw ceremony and the share
-cards. Each reads a career save end to end (fixtures, call-ups, absences,
-world managers by `careerId`); Classic Cups has its own light match screen
-(the engine's whole match run on a clock, with the score bug and the feed)
-and its own squad tab instead.
+The manager's match is the career's live match screen (`MatchScreen`):
+the Timeline and the Pitch view, the in-match tactics editor and
+substitutions, half time, extra time, the shootout and its taker sheet, the
+ground, weather, commentary, VAR and the full-time tabs.
+`ClassicMatchHost` (`lib/features/classic/classic_match_host.dart`) wraps it
+in a `ProviderScope` whose overrides (`classicMatchOverrides`, all in one
+place) feed it the run's match as a `MatchPreview` (the squad tab's XI and
+shape, both benches, the opponent's AI tactics and planned changes, the host
+city's ground) under the sentinel career id `kClassicCareerId` (-1), commit
+through a `ClassicSeasonService` (a `LiveMatchSeason`) into the run, and give
+every career-scoped provider the screen reads (hub data, ground works, the
+sponsor, achievements, the takers' stores, the speed store, player pages) a
+safe answer, so no save table is read or written. The view mode, the
+session's speed and the sound settings stay the device's.
+
+Not reused: the career's match preview and pre-match tactics screens, the
+call-up screen, the draw ceremony. Each reads a career save end to end;
+Classic Cups keeps its own squad tab for the XI and shape.
 
 ## Storage
 

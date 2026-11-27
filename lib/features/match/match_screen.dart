@@ -10,7 +10,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/config/testing_flags.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
-import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
@@ -56,6 +55,7 @@ import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/match/full_time_tabs.dart';
 import 'package:fnm/features/match/ground_card.dart';
 import 'package:fnm/features/match/live_group_table.dart';
+import 'package:fnm/features/match/live_match_season.dart';
 import 'package:fnm/features/match/match_feedback.dart';
 import 'package:fnm/features/match/match_flow_charts.dart';
 import 'package:fnm/features/match/match_providers.dart';
@@ -1395,7 +1395,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     final l = AppLocalizations.of(context);
     final ground = preview.ground.groundNationId;
     final career = ground == preview.playerNationId
-        ? ref.read(_careerSponsorProvider(widget.careerId)).valueOrNull
+        ? ref.read(matchCareerSponsorProvider(widget.careerId)).valueOrNull
         : null;
     return [
       for (final s in GroundSponsors.forGround(
@@ -1798,7 +1798,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     setState(() => _committing = true);
     try {
       await ref
-          .read(seasonServiceProvider)
+          .read(liveMatchSeasonProvider)
           .playPlayerMatch(
             widget.careerId,
             preview.fixture,
@@ -1833,7 +1833,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       }
       if (mounted) {
         // Show the round's other results (grouped) before returning to the hub.
-        context.go('${Routes.roundResults}?careerId=${widget.careerId}');
+        context.go(ref.read(matchFullTimeRouteProvider)(widget.careerId));
       }
     } catch (e, st) {
       debugPrint('Continue failed: $e\n$st');
@@ -2359,7 +2359,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             // Loaded ahead of kick-off for the Pitch view's ground.
             ref
               ..watch(_groundWorksOf(preview))
-              ..watch(_careerSponsorProvider(widget.careerId));
+              ..watch(matchCareerSponsorProvider(widget.careerId));
             _ensureLiveSetup(preview);
             final r = _result!;
             _stoppage = r.stoppage;
@@ -2796,7 +2796,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                       nationName: who.name,
                       age: who.age,
                     ),
-              onOpenPlayer: motm == null
+              onOpenPlayer: motm == null || !ref.watch(matchPlayerPagesProvider)
                   ? null
                   : () => openPlayer(
                       context,
@@ -3396,7 +3396,8 @@ class _PitchFailed extends StatelessWidget {
 /// The sponsor [careerId]'s federation signed this cycle, for the boards
 /// at its own ground; null when none is signed or the round cannot be read
 /// (the boards then carry the game's other brands).
-final _careerSponsorProvider = FutureProvider.autoDispose.family<Sponsor?, int>(
+final AutoDisposeFutureProviderFamily<Sponsor?, int>
+matchCareerSponsorProvider = FutureProvider.autoDispose.family<Sponsor?, int>(
   (ref, careerId) async {
     try {
       final round = await ref.watch(sponsorRoundProvider(careerId).future);

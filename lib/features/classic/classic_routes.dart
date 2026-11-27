@@ -6,7 +6,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/features/classic/classic_cups_screen.dart';
 import 'package:fnm/features/classic/classic_edition_screen.dart';
 import 'package:fnm/features/classic/classic_editor_screen.dart';
-import 'package:fnm/features/classic/classic_match_screen.dart';
+import 'package:fnm/features/classic/classic_match_host.dart';
 import 'package:fnm/features/classic/classic_medals_screen.dart';
 import 'package:fnm/features/classic/classic_run_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -30,7 +30,7 @@ List<GoRoute> classicGoRoutes() {
     ),
     GoRoute(
       path: Routes.classicMatch,
-      builder: (context, state) => ClassicMatchScreen(year: year(state)),
+      builder: (context, state) => ClassicMatchHost(year: year(state)),
     ),
     GoRoute(
       path: Routes.classicMedals,

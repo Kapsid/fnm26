@@ -6,7 +6,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/domain/services/classic/classic_medals.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
-import 'package:fnm/features/classic/classic_match_screen.dart';
 import 'package:fnm/features/classic/classic_providers.dart';
 
 import '../helpers/classic_world.dart';
@@ -64,9 +63,8 @@ void main() {
           .read(classicPlayServiceProvider)
           .start(2006, id('ITA')),
     );
+    // The career's live match screen, at kick-off.
     await pumpRoute(tester, save, '${Routes.classicMatch}?year=2006');
-    await tester.tap(find.byKey(ClassicMatchScreen.skipKey));
-    await tester.pump();
     await expectAppGolden('goldens/classic_match_phone.png');
   });
 

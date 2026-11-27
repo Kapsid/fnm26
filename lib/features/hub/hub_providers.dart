@@ -112,6 +112,7 @@ import 'package:fnm/features/hub/hub_event.dart'
         worldCupQualDrawKind;
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
+import 'package:fnm/features/match/live_match_season.dart' show LiveMatchSeason;
 import 'package:fnm/features/match/match_ground.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/messages/message_providers.dart';
@@ -640,7 +641,7 @@ Future<DateTime?> pendingKickoffDay(
 /// Drives the whole-world simulation: quick-sims due matches, advances the
 /// date, and progresses the cycle (qualifying → finals draw → knockout →
 /// champion). Knockout ties are always resolved to a winner.
-class SeasonService {
+class SeasonService implements LiveMatchSeason {
   SeasonService(this._ref);
 
   final Ref _ref;
@@ -1787,6 +1788,7 @@ class SeasonService {
   /// [ours]'s group as it stood before its day: its sides and every group
   /// match already played on an earlier day (both from the sides' own
   /// fixtures, a group being a round robin). Null outside a group.
+  @override
   Future<({List<int> members, List<Fixture> before})?> groupBefore(
     int careerId,
     Fixture ours,
@@ -1816,6 +1818,7 @@ class SeasonService {
     return (members: members.toList()..sort(), before: byId.values.toList());
   }
 
+  @override
   Future<List<SameDayResult>> sameDayResults(int careerId, Fixture ours) async {
     final out = <SameDayResult>[];
     await _exclusive(() async {
@@ -3225,6 +3228,7 @@ class SeasonService {
   /// is drawn here from the fixture's own seed, as it always was.
   ///
   /// Queued, never dropped — the result would be lost. See [_exclusive].
+  @override
   Future<void> playPlayerMatch(
     int careerId,
     Fixture fixture,
