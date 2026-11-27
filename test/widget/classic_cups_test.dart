@@ -10,6 +10,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/app_database.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player_role.dart';
 import 'package:fnm/domain/entities/tactic_preset.dart';
@@ -447,19 +448,19 @@ void main() {
       await tester.tap(find.text('4-4-2').last);
       await settle(tester);
 
-      // A role and a run for the slot-10 striker.
-      final pitch = find.byKey(const ValueKey('pitchDisc10'));
+      // A role and a run for the slot-10 striker, on the one pitch: his
+      // role badge opens the sheet, his arrow mark sets the run.
+      expect(find.byType(SegmentedButton<bool>), findsNothing);
+      final badge = find.byKey(PitchPlanKeys.badge(10));
       await tester.fling(
         find.byType(ListView).first,
         const Offset(0, 2000),
         3000,
       );
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(PitchPlanKeys.rolesMode));
+      await tester.ensureVisible(badge);
       await tester.pumpAndSettle();
-      await tester.ensureVisible(pitch);
-      await tester.pumpAndSettle();
-      await tester.tap(pitch);
+      await tester.tap(badge);
       await tester.pumpAndSettle();
       expect(find.byKey(PitchPlanKeys.sheet), findsOneWidget);
       final role = PlayerRole.values.firstWhere(
@@ -469,16 +470,11 @@ void main() {
       );
       await tester.tap(find.byKey(PitchPlanKeys.role(role)));
       await tester.pumpAndSettle();
-      final arrow = MoveArrow.values.firstWhere(
-        (a) =>
-            a != MoveArrow.none &&
-            find.byKey(PitchPlanKeys.arrow(a)).evaluate().isNotEmpty,
-      );
-      await tester.ensureVisible(find.byKey(PitchPlanKeys.arrow(arrow)));
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(PitchPlanKeys.arrow(arrow)));
-      await tester.pumpAndSettle();
       await tester.tap(find.byKey(PitchPlanKeys.close));
+      await settle(tester);
+      // A striker's first run, on one tap of his arrow mark.
+      final arrow = MoveArrowX.optionsFor(PlayerPosition.st).first;
+      await tester.tap(find.byKey(PitchPlanKeys.runMark(10)));
       await settle(tester);
 
       // A man from the bench into slot 9, picked by tap as in a career.
@@ -487,8 +483,6 @@ void main() {
         const Offset(0, 2000),
         3000,
       );
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(PitchPlanKeys.playersMode));
       await tester.pumpAndSettle();
       await tester.ensureVisible(find.byKey(const ValueKey('pitchDisc9')));
       await tester.pumpAndSettle();

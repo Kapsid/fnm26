@@ -1380,20 +1380,24 @@ class AppLocalizationsSv extends AppLocalizations {
   String get arrowForwardOutside => 'Framåt och utåt';
 
   @override
-  String get tacticsPitchModePlayers => 'Spelare';
-
-  @override
-  String get tacticsPitchModeRoles => 'Roller och löpningar';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'Tryck på en spelare för roll. Håll och dra för att rita en löpning.';
-
-  @override
   String get tacticsRunLegendRole => 'Rollens naturliga löpning';
 
   @override
   String get tacticsRunLegendManual => 'Din instruktion';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'Tryck på en spelares märke för roll och på hans pil för löpning.';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'Roll: $role. Tryck för att ändra.';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'Löpning: $run. Tryck för att ändra.';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'ROLL';

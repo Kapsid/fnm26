@@ -1401,20 +1401,24 @@ class AppLocalizationsDe extends AppLocalizations {
   String get arrowForwardOutside => 'Nach vorne außen';
 
   @override
-  String get tacticsPitchModePlayers => 'Spieler';
-
-  @override
-  String get tacticsPitchModeRoles => 'Rollen & Laufwege';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'Tippen Sie auf einen Spieler für seine Rolle. Halten und ziehen Sie für den Laufweg.';
-
-  @override
   String get tacticsRunLegendRole => 'Natürlicher Laufweg der Rolle';
 
   @override
   String get tacticsRunLegendManual => 'Ihre Anweisung';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'Tippen Sie auf das Abzeichen eines Spielers für seine Rolle, auf seinen Pfeil für den Laufweg.';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'Rolle: $role. Zum Ändern tippen.';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'Laufweg: $run. Zum Ändern tippen.';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'ROLLE';

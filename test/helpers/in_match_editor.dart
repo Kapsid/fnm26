@@ -61,6 +61,8 @@ Future<EditorOutcome> openEditor(
   double textScale = 1,
   SlotRoles roles = SlotRoles.none,
   SlotArrows arrows = SlotArrows.none,
+  Formation formation = Formation.f442,
+  Map<int, int> energyByPlayer = const {},
 }) async {
   final outcome = EditorOutcome();
   tester.view.physicalSize = size;
@@ -91,7 +93,7 @@ Future<EditorOutcome> openEditor(
                     outcome.result = await showInMatchTactics(
                       inner,
                       minute: 70,
-                      formation: Formation.f442,
+                      formation: formation,
                       lineup: lineup ?? [for (var i = 1; i <= 11; i++) i],
                       instructions: const TacticalInstructions(),
                       pool: squad,
@@ -99,6 +101,7 @@ Future<EditorOutcome> openEditor(
                       maxSubs: 5,
                       sentOffIds: sentOffIds,
                       cardsByPlayer: cardsByPlayer,
+                      energyByPlayer: energyByPlayer,
                       events: events,
                       ratingByPlayer: ratingByPlayer,
                       tabletLayout: tabletLayout,

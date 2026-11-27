@@ -2036,18 +2036,6 @@
   "@arrowForwardOutside": {
     "description": "A player's movement on the tactics pitch: runs forward and wide."
   },
-  "tacticsPitchModePlayers": "Players",
-  "@tacticsPitchModePlayers": {
-    "description": "Toggle above the tactics pitch: the pitch edits who plays where."
-  },
-  "tacticsPitchModeRoles": "Roles & runs",
-  "@tacticsPitchModeRoles": {
-    "description": "Toggle above the tactics pitch: the pitch edits each player's role and run."
-  },
-  "tacticsPitchRolesHint": "Tap a player to set a role. Hold and drag to draw a run.",
-  "@tacticsPitchRolesHint": {
-    "description": "Hint above the tactics pitch while it edits roles and runs."
-  },
   "tacticsRunLegendRole": "Role's natural run",
   "@tacticsRunLegendRole": {
     "description": "Legend under the tactics pitch (and the no-arrow choice in a player's run sheet): a dashed, lighter arrow is the natural run of the player's role."
@@ -2055,6 +2043,28 @@
   "tacticsRunLegendManual": "Your instruction",
   "@tacticsRunLegendManual": {
     "description": "Legend under the tactics pitch: a solid arrow is a movement the manager set for the player."
+  },
+  "tacticsPitchPlanHint": "Tap a player's badge to set his role, his arrow to set his run.",
+  "@tacticsPitchPlanHint": {
+    "description": "Hint under the tactics pitch: the small badge on each player's disc opens his role sheet, and the small arrow mark on it moves his run on, one run per tap."
+  },
+  "tacticsRoleBadgeSemantics": "Role: {role}. Tap to change.",
+  "@tacticsRoleBadgeSemantics": {
+    "description": "Screen-reader label of the role badge on a player's disc on the tactics pitch; tapping it opens his role sheet.",
+    "placeholders": {
+      "role": {
+        "type": "String"
+      }
+    }
+  },
+  "tacticsRunMarkSemantics": "Run: {run}. Tap to change.",
+  "@tacticsRunMarkSemantics": {
+    "description": "Screen-reader label of the arrow mark on a player's disc on the tactics pitch; each tap moves his run on to the next one his place offers.",
+    "placeholders": {
+      "run": {
+        "type": "String"
+      }
+    }
   },
   "tacticsPlanRoleHeading": "ROLE",
   "@tacticsPlanRoleHeading": {
@@ -2078,7 +2088,7 @@
   },
   "tacticsArrowSet": "{name}: {movement}",
   "@tacticsArrowSet": {
-    "description": "Note after a run is drawn on the tactics pitch: the player and his movement.",
+    "description": "Note after a player's arrow mark is tapped on the tactics pitch: the player and the run he now makes.",
     "placeholders": {
       "name": {
         "type": "String"

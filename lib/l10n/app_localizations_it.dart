@@ -1389,20 +1389,24 @@ class AppLocalizationsIt extends AppLocalizations {
   String get arrowForwardOutside => 'Avanti e largo';
 
   @override
-  String get tacticsPitchModePlayers => 'Giocatori';
-
-  @override
-  String get tacticsPitchModeRoles => 'Compiti e movimenti';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'Tocca un giocatore per il compito. Tieni premuto e trascina per il movimento.';
-
-  @override
   String get tacticsRunLegendRole => 'Movimento naturale del compito';
 
   @override
   String get tacticsRunLegendManual => 'Tua istruzione';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'Tocca il badge di un giocatore per il compito, la sua freccia per il movimento.';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'Compito: $role. Tocca per cambiare.';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'Movimento: $run. Tocca per cambiare.';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'COMPITO';

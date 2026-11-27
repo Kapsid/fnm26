@@ -1348,20 +1348,24 @@ class AppLocalizationsMs extends AppLocalizations {
   String get arrowForwardOutside => 'Mara dan melebar';
 
   @override
-  String get tacticsPitchModePlayers => 'Pemain';
-
-  @override
-  String get tacticsPitchModeRoles => 'Peranan & larian';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'Ketik pemain untuk memilih peranan. Tahan dan seret untuk melukis larian.';
-
-  @override
   String get tacticsRunLegendRole => 'Larian semula jadi peranan';
 
   @override
   String get tacticsRunLegendManual => 'Arahan anda';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'Ketik lencana pemain untuk memilih peranan, dan anak panahnya untuk larian.';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'Peranan: $role. Ketik untuk menukar.';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'Larian: $run. Ketik untuk menukar.';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'PERANAN';

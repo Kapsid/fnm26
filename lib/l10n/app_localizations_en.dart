@@ -1386,20 +1386,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get arrowForwardOutside => 'Forward and wide';
 
   @override
-  String get tacticsPitchModePlayers => 'Players';
-
-  @override
-  String get tacticsPitchModeRoles => 'Roles & runs';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'Tap a player to set a role. Hold and drag to draw a run.';
-
-  @override
   String get tacticsRunLegendRole => 'Role\'s natural run';
 
   @override
   String get tacticsRunLegendManual => 'Your instruction';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'Tap a player\'s badge to set his role, his arrow to set his run.';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'Role: $role. Tap to change.';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'Run: $run. Tap to change.';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'ROLE';

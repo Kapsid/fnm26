@@ -323,18 +323,7 @@ class TacticsScreen extends ConsumerWidget {
                           ),
                           child: _outStartersCard(l, data, outlooks),
                         ),
-                      PitchPlanBar(
-                        rolesMode: ref.watch(tacticsRolesModeProvider),
-                        onChanged: (on) =>
-                            ref.read(tacticsRolesModeProvider.notifier).state =
-                                on,
-                        padding: const EdgeInsets.fromLTRB(
-                          AppSpacing.marginMobile,
-                          AppSpacing.sm,
-                          AppSpacing.marginMobile,
-                          AppSpacing.xs,
-                        ),
-                      ),
+                      const SizedBox(height: AppSpacing.sm),
                       AspectRatio(
                         aspectRatio: 3 / 4,
                         child: _pitch(
@@ -345,6 +334,16 @@ class TacticsScreen extends ConsumerWidget {
                           teamColors: teamColors,
                           absentIds: absentIds,
                           injuredIds: injuredIds,
+                        ),
+                      ),
+                      // What the two kinds of run line are, and how to set
+                      // a role and a run from the discs.
+                      const PitchRunLegend(
+                        padding: EdgeInsets.fromLTRB(
+                          AppSpacing.marginMobile,
+                          AppSpacing.xs,
+                          AppSpacing.marginMobile,
+                          0,
                         ),
                       ),
                       Padding(
@@ -515,7 +514,9 @@ class TacticsScreen extends ConsumerWidget {
   }
 
   /// The starting XI on the pitch, with every gesture the line-up has: tap a
-  /// slot to pick, drag to swap or reshape, drop a substitute on.
+  /// slot to pick, drag to swap or reshape, drop a substitute on; and on
+  /// each disc a role badge that opens his role sheet and an arrow mark that
+  /// moves his run on one tap.
   Widget _pitch(
     BuildContext context,
     WidgetRef ref,
@@ -529,7 +530,6 @@ class TacticsScreen extends ConsumerWidget {
     final legacy =
         ref.watch(playerRolesProvider(careerId)).valueOrNull ??
         const <int, PlayerRole>{};
-    final rolesMode = ref.watch(tacticsRolesModeProvider);
     return TacticsPitch(
       injuredIds: injuredIds,
       formation: tactic.formation,
@@ -538,10 +538,8 @@ class TacticsScreen extends ConsumerWidget {
       switches: tactic.switches,
       roles: pitchRolesOf(tactic, legacy),
       arrows: pitchArrowsOf(tactic),
-      rolesMode: rolesMode,
       onPlanSlot: (slot) => _planSlot(context, ref, data, slot, legacy),
-      onDrawArrow: (slot, arrow) =>
-          _drawArrow(context, service, data, slot, arrow),
+      onCycleArrow: (slot) => service.cycleSlotArrow(careerId, slot),
       onCycleFullBack: (side) => service.cycleFullBack(careerId, side),
       lineup: tactic.lineup,
       byId: data.byId,
@@ -595,35 +593,6 @@ class TacticsScreen extends ConsumerWidget {
       onRole: (r) => unawaited(service.setSlotRole(careerId, slot, r)),
       onArrow: (a) => unawaited(service.setSlotArrow(careerId, slot, a)),
     );
-  }
-
-  /// Saves a run drawn on the pitch, and says what it now is, with the one
-  /// before it a tap away.
-  Future<void> _drawArrow(
-    BuildContext context,
-    TacticService service,
-    TacticData data,
-    int slot,
-    MoveArrow arrow,
-  ) async {
-    final before = data.tactic.arrowAt(slot);
-    if (arrow == before) return;
-    final messenger = ScaffoldMessenger.of(context);
-    final l = AppLocalizations.of(context);
-    final name = data.byId[data.tactic.lineup[slot]]?.name ?? '';
-    await service.setSlotArrow(careerId, slot, arrow);
-    messenger
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(l.tacticsArrowSet(name, moveArrowLabel(l, arrow))),
-          action: SnackBarAction(
-            label: l.editorUndo,
-            onPressed: () =>
-                unawaited(service.setSlotArrow(careerId, slot, before)),
-          ),
-        ),
-      );
   }
 
   /// Names the starters who cannot play the next match, and why.

@@ -274,9 +274,6 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
   late SlotRoles _roles = widget.roles;
   late SlotArrows _arrows = widget.arrows;
 
-  /// Whether the pitch edits roles and runs rather than who plays where.
-  bool _rolesMode = false;
-
   /// The setup as a [Tactic], for the role and arrow rules it carries.
   Tactic get _asTactic => Tactic(
     formation: _formation,
@@ -313,27 +310,11 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     });
   }
 
-  /// A run drawn on the pitch: set, and said, with the one before it a tap
-  /// away.
-  void _drawArrow(int slot, MoveArrow arrow) {
-    final before = _asTactic.arrowAt(slot);
-    if (arrow == before) return;
-    _setArrow(slot, arrow);
-    final l = AppLocalizations.of(context);
-    final name = _byId[_lineup[slot]]?.name ?? '';
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(l.tacticsArrowSet(name, moveArrowLabel(l, arrow))),
-          action: SnackBarAction(
-            label: l.editorUndo,
-            onPressed: () {
-              if (mounted) _setArrow(slot, before);
-            },
-          ),
-        ),
-      );
+  /// A tap on [slot]'s arrow mark: his run moved on to the next one his
+  /// place offers ([nextPitchArrow]), answered with the run he now has.
+  MoveArrow _cycleArrow(int slot) {
+    _setArrow(slot, nextPitchArrow(_positions[slot], _asTactic.arrowAt(slot)));
+    return _asTactic.arrowAt(slot);
   }
 
   Future<void> _planSlot(int slot) {
@@ -349,13 +330,12 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     );
   }
 
-  /// The switch between editing who plays where and the roles and runs.
-  Widget _planBar() => PitchPlanBar(
-    rolesMode: _rolesMode,
-    onChanged: (on) => setState(() => _rolesMode = on),
-    padding: const EdgeInsets.fromLTRB(
+  /// What the two kinds of run line are, and how to set a role and a run
+  /// from the discs: under the pitch, always shown.
+  Widget _legend() => const PitchRunLegend(
+    padding: EdgeInsets.fromLTRB(
       AppSpacing.marginMobile,
-      AppSpacing.sm,
+      AppSpacing.xs,
       AppSpacing.marginMobile,
       AppSpacing.xs,
     ),
@@ -965,8 +945,9 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
         // used to be repeated here, above the pitch, so the same row of shape
         // chips appeared twice in one sheet — two controls for one setting,
         // which reads as a bug whichever one you touch.
-        _planBar(),
+        const SizedBox(height: AppSpacing.sm),
         AspectRatio(aspectRatio: 3 / 4, child: _pitchView()),
+        _legend(),
         _lineupLists(
           onPitch: onPitch,
           available: available,
@@ -985,15 +966,11 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     switches: _switches,
     roles: pitchRolesOf(_asTactic),
     arrows: pitchArrowsOf(_asTactic),
-    rolesMode: _rolesMode,
     onPlanSlot: (slot) {
       if (_dead.contains(slot)) return;
       unawaited(_planSlot(slot));
     },
-    onDrawArrow: (slot, arrow) {
-      if (_dead.contains(slot)) return;
-      _drawArrow(slot, arrow);
-    },
+    onCycleArrow: (slot) async => _cycleArrow(slot),
     onCycleFullBack: (side) async {
       setState(() => _fullBacks = _fullBacks.cycled(side));
       return _fullBacks.of(side);
@@ -1293,7 +1270,6 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
             padding: const EdgeInsets.all(AppSpacing.md),
             child: Column(
               children: [
-                _planBar(),
                 Expanded(
                   child: Center(
                     child: AspectRatio(
@@ -1302,6 +1278,8 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                     ),
                   ),
                 ),
+                const SizedBox(height: AppSpacing.xs),
+                const PitchRunLegend(),
               ],
             ),
           ),

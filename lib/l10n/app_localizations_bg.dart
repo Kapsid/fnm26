@@ -1396,20 +1396,24 @@ class AppLocalizationsBg extends AppLocalizations {
   String get arrowForwardOutside => 'Напред и навън';
 
   @override
-  String get tacticsPitchModePlayers => 'Играчи';
-
-  @override
-  String get tacticsPitchModeRoles => 'Роли и движение';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'Докосни играч за роля. Задръж и дръпни, за да начертаеш движение.';
-
-  @override
   String get tacticsRunLegendRole => 'Естествено движение на ролята';
 
   @override
   String get tacticsRunLegendManual => 'Вашата инструкция';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'Докосни значката на играч за роля, а стрелката му за движение.';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'Роля: $role. Докосни, за да промениш.';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'Движение: $run. Докосни, за да промениш.';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'РОЛЯ';

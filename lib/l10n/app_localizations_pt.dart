@@ -1395,20 +1395,24 @@ class AppLocalizationsPt extends AppLocalizations {
   String get arrowForwardOutside => 'Avançar por fora';
 
   @override
-  String get tacticsPitchModePlayers => 'Jogadores';
-
-  @override
-  String get tacticsPitchModeRoles => 'Funções e movimentos';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'Toque num jogador para definir a função. Segure e arraste para desenhar o movimento.';
-
-  @override
   String get tacticsRunLegendRole => 'Movimento natural da função';
 
   @override
   String get tacticsRunLegendManual => 'A sua instrução';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'Toque no emblema de um jogador para a função e na seta dele para o movimento.';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'Função: $role. Toque para alterar.';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'Movimento: $run. Toque para alterar.';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'FUNÇÃO';

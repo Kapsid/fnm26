@@ -1296,19 +1296,23 @@ class AppLocalizationsJa extends AppLocalizations {
   String get arrowForwardOutside => '前へ、外へ';
 
   @override
-  String get tacticsPitchModePlayers => '選手';
-
-  @override
-  String get tacticsPitchModeRoles => '役割と動き';
-
-  @override
-  String get tacticsPitchRolesHint => '選手をタップで役割、長押ししてドラッグで動きを描く。';
-
-  @override
   String get tacticsRunLegendRole => '役割の自然な動き';
 
   @override
   String get tacticsRunLegendManual => 'あなたの指示';
+
+  @override
+  String get tacticsPitchPlanHint => '選手のバッジをタップで役割、矢印をタップで動きを設定。';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return '役割：$role。タップで変更。';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return '動き：$run。タップで変更。';
+  }
 
   @override
   String get tacticsPlanRoleHeading => '役割';

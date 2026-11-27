@@ -1345,20 +1345,24 @@ class AppLocalizationsUk extends AppLocalizations {
   String get arrowForwardOutside => 'Уперед і ширше';
 
   @override
-  String get tacticsPitchModePlayers => 'Гравці';
-
-  @override
-  String get tacticsPitchModeRoles => 'Ролі та рухи';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'Торкніться гравця, щоб вибрати роль. Утримуйте й тягніть, щоб намалювати рух.';
-
-  @override
   String get tacticsRunLegendRole => 'Природний рух ролі';
 
   @override
   String get tacticsRunLegendManual => 'Ваша вказівка';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'Торкніться значка гравця, щоб вибрати роль, і його стрілки, щоб вибрати рух.';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'Роль: $role. Торкніться, щоб змінити.';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'Рух: $run. Торкніться, щоб змінити.';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'РОЛЬ';

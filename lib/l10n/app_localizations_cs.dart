@@ -1403,20 +1403,24 @@ class AppLocalizationsCs extends AppLocalizations {
   String get arrowForwardOutside => 'Dopředu a do šířky';
 
   @override
-  String get tacticsPitchModePlayers => 'Hráči';
-
-  @override
-  String get tacticsPitchModeRoles => 'Role a náběhy';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'Klepnutím nastavíte roli. Podržením a tažením nakreslíte náběh.';
-
-  @override
   String get tacticsRunLegendRole => 'Přirozený pohyb role';
 
   @override
   String get tacticsRunLegendManual => 'Váš pokyn';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'Klepnutím na odznak hráče nastavíte roli, na jeho šipku náběh.';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'Role: $role. Klepnutím změníte.';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'Náběh: $run. Klepnutím změníte.';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'ROLE';

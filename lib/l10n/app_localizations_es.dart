@@ -1394,20 +1394,24 @@ class AppLocalizationsEs extends AppLocalizations {
   String get arrowForwardOutside => 'Adelante y abierto';
 
   @override
-  String get tacticsPitchModePlayers => 'Jugadores';
-
-  @override
-  String get tacticsPitchModeRoles => 'Roles y desmarques';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'Toca a un jugador para su rol. Mantén y arrastra para dibujar su desmarque.';
-
-  @override
   String get tacticsRunLegendRole => 'Desmarque natural del rol';
 
   @override
   String get tacticsRunLegendManual => 'Tu instrucción';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'Toca la insignia de un jugador para su rol y su flecha para su desmarque.';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'Rol: $role. Toca para cambiarlo.';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'Desmarque: $run. Toca para cambiarlo.';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'ROL';

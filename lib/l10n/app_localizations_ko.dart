@@ -1299,19 +1299,23 @@ class AppLocalizationsKo extends AppLocalizations {
   String get arrowForwardOutside => '전진 후 바깥으로';
 
   @override
-  String get tacticsPitchModePlayers => '선수';
-
-  @override
-  String get tacticsPitchModeRoles => '역할과 움직임';
-
-  @override
-  String get tacticsPitchRolesHint => '선수를 탭해 역할을 정하고, 길게 눌러 끌어 움직임을 그리세요.';
-
-  @override
   String get tacticsRunLegendRole => '역할의 기본 움직임';
 
   @override
   String get tacticsRunLegendManual => '직접 지시';
+
+  @override
+  String get tacticsPitchPlanHint => '선수 배지를 탭해 역할을, 화살표를 탭해 움직임을 정하세요.';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return '역할: $role. 탭해서 변경';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return '움직임: $run. 탭해서 변경';
+  }
 
   @override
   String get tacticsPlanRoleHeading => '역할';

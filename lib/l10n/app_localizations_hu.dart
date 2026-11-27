@@ -1349,20 +1349,24 @@ class AppLocalizationsHu extends AppLocalizations {
   String get arrowForwardOutside => 'Előre és kifelé';
 
   @override
-  String get tacticsPitchModePlayers => 'Játékosok';
-
-  @override
-  String get tacticsPitchModeRoles => 'Szerepek és mozgás';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'Koppints egy játékosra a szerephez. Tartsd nyomva és húzd a mozgáshoz.';
-
-  @override
   String get tacticsRunLegendRole => 'A szerep természetes mozgása';
 
   @override
   String get tacticsRunLegendManual => 'A te utasításod';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'Koppints egy játékos jelvényére a szerephez, a nyilára a mozgáshoz.';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'Szerep: $role. Koppints a módosításhoz.';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'Mozgás: $run. Koppints a módosításhoz.';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'SZEREP';

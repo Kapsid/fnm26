@@ -4,10 +4,12 @@ import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/entities/player_role.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/match/card_status.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/features/match/match_screen.dart';
+import 'package:fnm/features/tactics/pitch_plan.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/card_mark.dart';
 import 'package:fnm/shared/widgets/rating_badge.dart';
@@ -173,5 +175,58 @@ void main() {
       ),
       findsOneWidget,
     );
+  });
+
+  testWidgets('after the whistle: just the players, no roles or runs', (
+    tester,
+  ) async {
+    // 4-3-3 with a role and a run on nearly everyone, both full-backs
+    // pushed on: none of it is drawn on the full-time pitch.
+    const f = Formation.f433;
+    final base = team(f);
+    final t = MatchTeam(
+      nationId: base.nationId,
+      formation: f,
+      instructions: base.instructions,
+      xi: base.xi,
+      fullBacks: const FullBackPushes(
+        left: FullBackPush.up,
+        right: FullBackPush.down,
+      ),
+      slotRoles: const SlotRoles({
+        0: PlayerRole.sweeperKeeper,
+        2: PlayerRole.ballPlayingDefender,
+        5: PlayerRole.anchor,
+        6: PlayerRole.boxToBox,
+        7: PlayerRole.playmaker,
+        8: PlayerRole.invertedWinger,
+        9: PlayerRole.falseNine,
+        10: PlayerRole.touchlineWinger,
+      }),
+      arrows: const SlotArrows({
+        6: MoveArrow.forward,
+        8: MoveArrow.forwardInside,
+      }),
+      roles: {base.xi[3].id: PlayerRole.stopper},
+    );
+    await pump(tester, t, t.xi[4].id, goals: {t.xi[9].id: 1});
+    expect(tester.takeException(), isNull);
+    final pitch = find.byKey(MatchFullTimeLineups.pitchKey);
+    expect(pitch, findsOneWidget);
+    Finder on(Key k) => find.descendant(of: pitch, matching: find.byKey(k));
+    // No run layers, dashed or solid.
+    expect(on(PitchPlanKeys.roleRuns), findsNothing);
+    expect(on(PitchPlanKeys.arrows), findsNothing);
+    for (var slot = 0; slot < 11; slot++) {
+      // No role glyph or badge, no arrow mark, no full-back push mark.
+      expect(on(PitchPlanKeys.tag(slot)), findsNothing, reason: '$slot');
+      expect(on(PitchPlanKeys.badge(slot)), findsNothing, reason: '$slot');
+      expect(on(PitchPlanKeys.runMark(slot)), findsNothing, reason: '$slot');
+      expect(on(ValueKey('pitchFullBack$slot')), findsNothing);
+      // The players and their marks as before.
+      expect(on(ValueKey('pitchRating$slot')), findsOneWidget);
+    }
+    expect(on(const ValueKey('pitchGoals9')), findsOneWidget);
+    expect(on(const ValueKey('pitchCard4')), findsOneWidget);
   });
 }

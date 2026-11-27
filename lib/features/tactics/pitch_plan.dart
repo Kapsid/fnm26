@@ -5,7 +5,6 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
@@ -19,24 +18,28 @@ import 'package:fnm/shared/tablet/adaptive_sheet.dart';
 
 /// Keys the roles-and-runs pieces of the tactics pitch carry, for tests.
 abstract final class PitchPlanKeys {
-  static const Key bar = ValueKey('pitchPlan.bar');
   static const Key hint = ValueKey('pitchPlan.hint');
-  static const Key playersMode = ValueKey('pitchPlan.mode.players');
-  static const Key rolesMode = ValueKey('pitchPlan.mode.roles');
   static const Key sheet = ValueKey('pitchPlan.sheet');
   static const Key close = ValueKey('pitchPlan.close');
   static Key role(PlayerRole r) => ValueKey('pitchPlan.role.${r.name}');
   static Key fit(PlayerRole r) => ValueKey('pitchPlan.fit.${r.name}');
   static Key arrow(MoveArrow a) => ValueKey('pitchPlan.arrow.${a.name}');
+
+  /// The glyph of a set role on a man's disc.
   static Key tag(int slot) => ValueKey('pitchRoleTag$slot');
-  static Key planNode(int slot) => ValueKey('pitchPlanNode$slot');
+
+  /// The tappable role badge on a man's disc, which opens his role sheet.
+  static Key badge(int slot) => ValueKey('pitchRoleBadge$slot');
+
+  /// The arrow mark on an outfield man's disc (the full-backs' is
+  /// `pitchFullBack<slot>`), which moves his run on one tap.
+  static Key runMark(int slot) => ValueKey('pitchRunMark$slot');
   static const Key arrows = ValueKey('pitchPlan.arrows');
 
   /// The layer of the roles' natural runs, under the set arrows.
   static const Key roleRuns = ValueKey('pitchPlan.roleRuns');
   static const Key legend = ValueKey('pitchPlan.legend');
   static Key runGlyph(int slot) => ValueKey('pitchPlan.runGlyph.$slot');
-  static const Key preview = ValueKey('pitchPlan.preview');
 }
 
 /// What the pitch draws from one slot's disc: the movement arrow the manager
@@ -335,9 +338,13 @@ class _GlyphPainter extends CustomPainter {
 }
 
 /// Says what the two kinds of line on the pitch are: a dashed one is the
-/// role's natural run, a solid one the manager's instruction.
+/// role's natural run, a solid one the manager's instruction, and how to set
+/// each from the discs: the badge for a role, the arrow for a run. Compact,
+/// for under the pitch, where it is always shown.
 class PitchRunLegend extends StatelessWidget {
-  const PitchRunLegend({super.key});
+  const PitchRunLegend({this.padding = EdgeInsets.zero, super.key});
+
+  final EdgeInsets padding;
 
   @override
   Widget build(BuildContext context) {
@@ -352,33 +359,51 @@ class PitchRunLegend extends StatelessWidget {
         ExcludeSemantics(
           child: RotatedBox(
             quarterTurns: 1,
-            child: PitchRunGlyph(run: run, flank: 0, size: 26),
+            child: PitchRunGlyph(run: run, flank: 0, size: 22),
           ),
         ),
         const SizedBox(width: 4),
         Flexible(child: Text(text, style: style)),
       ],
     );
-    return Wrap(
-      key: PitchPlanKeys.legend,
-      spacing: AppSpacing.md,
-      runSpacing: 2,
-      children: [
-        item(const PitchRun.role(RoleRun.forward), l.tacticsRunLegendRole),
-        item(
-          const PitchRun.manual(MoveArrow.forward),
-          l.tacticsRunLegendManual,
-        ),
-      ],
+    return Padding(
+      padding: padding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Wrap(
+            key: PitchPlanKeys.legend,
+            spacing: AppSpacing.md,
+            runSpacing: 0,
+            children: [
+              item(
+                const PitchRun.role(RoleRun.forward),
+                l.tacticsRunLegendRole,
+              ),
+              item(
+                const PitchRun.manual(MoveArrow.forward),
+                l.tacticsRunLegendManual,
+              ),
+            ],
+          ),
+          Text(l.tacticsPitchPlanHint, key: PitchPlanKeys.hint, style: style),
+        ],
+      ),
     );
   }
 }
 
-/// Whether the tactics screen's pitch edits roles and runs (true) or who
-/// plays where (false). Shared by the phone and tablet layouts so turning
-/// the device keeps the mode; reset when the screen closes.
-final AutoDisposeStateProvider<bool> tacticsRolesModeProvider =
-    StateProvider.autoDispose<bool>((_) => false);
+/// The run after [now] for a man playing [position], as a tap on his arrow
+/// mark moves it: none, then each run the place offers
+/// ([MoveArrowX.optionsFor]) in turn, then none again. A run the place does
+/// not offer starts the round again from the first.
+MoveArrow nextPitchArrow(PlayerPosition position, MoveArrow now) {
+  final round = [MoveArrow.none, ...MoveArrowX.optionsFor(position)];
+  final at = round.indexOf(now);
+  if (round.length == 1) return MoveArrow.none;
+  return round[at < 0 ? 1 : (at + 1) % round.length];
+}
 
 /// The role each slot of [tactic] plays as the pitch shows it: its slot role,
 /// or the legacy per-player role [legacy] gave its man (see
@@ -461,77 +486,9 @@ Widget moveArrowGlyph(
   );
 }
 
-/// The switch above the tactics pitch between editing who plays where
-/// ([rolesMode] false) and each man's role and run ([rolesMode] true), with
-/// the hint for the second underneath.
-class PitchPlanBar extends StatelessWidget {
-  const PitchPlanBar({
-    required this.rolesMode,
-    required this.onChanged,
-    this.padding = EdgeInsets.zero,
-    super.key,
-  });
-
-  final bool rolesMode;
-  final ValueChanged<bool> onChanged;
-  final EdgeInsets padding;
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    return Padding(
-      key: PitchPlanKeys.bar,
-      padding: padding,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // A two-way switch rather than a tab strip: it changes what the
-          // pitch below does, not which page is shown.
-          SegmentedButton<bool>(
-            showSelectedIcon: false,
-            segments: [
-              ButtonSegment(
-                value: false,
-                icon: const Icon(Icons.groups_rounded),
-                label: Text(
-                  l.tacticsPitchModePlayers,
-                  key: PitchPlanKeys.playersMode,
-                ),
-              ),
-              ButtonSegment(
-                value: true,
-                icon: const Icon(Icons.alt_route_rounded),
-                label: Text(
-                  l.tacticsPitchModeRoles,
-                  key: PitchPlanKeys.rolesMode,
-                ),
-              ),
-            ],
-            selected: {rolesMode},
-            onSelectionChanged: (v) => onChanged(v.first),
-          ),
-          if (rolesMode) ...[
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              l.tacticsPitchRolesHint,
-              key: PitchPlanKeys.hint,
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 2),
-            const PitchRunLegend(),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-/// Opens the role-and-run sheet for one slot: the roles its place offers,
-/// each with what it does and how well it suits [player], and the runs it
-/// offers. Each pick is applied at once through [onRole] / [onArrow] and the
+/// Opens the role-and-run sheet for one slot, from his role badge: the roles
+/// its place offers, each with what it does and how well it suits [player],
+/// and the runs it offers. Each pick is applied at once through [onRole] / [onArrow] and the
 /// sheet stays open, so the manager can set both and close it.
 Future<void> showSlotPlanSheet(
   BuildContext context, {

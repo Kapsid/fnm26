@@ -1361,20 +1361,24 @@ class AppLocalizationsDa extends AppLocalizations {
   String get arrowForwardOutside => 'Frem og ud';
 
   @override
-  String get tacticsPitchModePlayers => 'Spillere';
-
-  @override
-  String get tacticsPitchModeRoles => 'Roller og løb';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'Tryk på en spiller for rolle. Hold og træk for at tegne et løb.';
-
-  @override
   String get tacticsRunLegendRole => 'Rollens naturlige løb';
 
   @override
   String get tacticsRunLegendManual => 'Din instruks';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'Tryk på en spillers mærke for rolle og på hans pil for løb.';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'Rolle: $role. Tryk for at ændre.';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'Løb: $run. Tryk for at ændre.';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'ROLLE';

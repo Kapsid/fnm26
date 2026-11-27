@@ -1400,20 +1400,24 @@ class AppLocalizationsHr extends AppLocalizations {
   String get arrowForwardOutside => 'Naprijed i van';
 
   @override
-  String get tacticsPitchModePlayers => 'Igrači';
-
-  @override
-  String get tacticsPitchModeRoles => 'Uloge i kretanje';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'Dodirni igrača za ulogu. Drži i povuci da nacrtaš kretanje.';
-
-  @override
   String get tacticsRunLegendRole => 'Prirodno kretanje uloge';
 
   @override
   String get tacticsRunLegendManual => 'Tvoja uputa';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'Dodirni značku igrača za ulogu, a njegovu strelicu za kretanje.';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'Uloga: $role. Dodirni za promjenu.';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'Kretanje: $run. Dodirni za promjenu.';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'ULOGA';

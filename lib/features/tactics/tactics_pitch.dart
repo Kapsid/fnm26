@@ -398,9 +398,8 @@ class TacticsPitch extends StatelessWidget {
     this.switches = SlotSwitches.none,
     this.roles = const [],
     this.arrows = const [],
-    this.rolesMode = false,
     this.onPlanSlot,
-    this.onDrawArrow,
+    this.onCycleArrow,
     super.key,
   });
 
@@ -415,18 +414,18 @@ class TacticsPitch extends StatelessWidget {
   /// the way he runs; the full-backs' are their push arrows.
   final List<MoveArrow> arrows;
 
-  /// Whether the pitch edits roles and runs rather than who plays where: a
-  /// tap opens [onPlanSlot] instead of the player picker, and a hold-and-drag
-  /// draws a run ([onDrawArrow]) instead of moving the man. Swaps, reshapes
-  /// and substitutes are off meanwhile.
-  final bool rolesMode;
-
-  /// A slot tapped in [rolesMode].
+  /// A slot's role badge tapped: the owner opens its role sheet. Non-null
+  /// gives every filled disc a tappable badge (a dim one for no role); null
+  /// leaves the badges read-only, drawn only for a role that is set. The
+  /// disc itself keeps the line-up gestures either way.
   final ValueChanged<int>? onPlanSlot;
 
-  /// A run drawn from a slot in [rolesMode]: the nearest arrow its place
-  /// offers to the way the finger went ([MoveArrowX.nearest]).
-  final void Function(int slot, MoveArrow arrow)? onDrawArrow;
+  /// A slot's arrow mark tapped: the owner moves his run on to the next one
+  /// his place offers (none, then each of [MoveArrowX.optionsFor], then none
+  /// again) and answers with the run he now has. The same mark, in the same
+  /// place, as the full-backs' push ([onCycleFullBack]), which keeps its
+  /// own. Null shows no mark on the other outfield players.
+  final Future<MoveArrow> Function(int slot)? onCycleArrow;
 
   /// Places changed within [formation] (see [SlotSwitches]). Each disc is
   /// fitted, labelled and marked as the place it now plays; a changed one has
@@ -756,8 +755,7 @@ class TacticsPitch extends StatelessWidget {
                 // BEHIND every player node: a drop that lands on a team-mate
                 // must still reach his own target, so today's swap-and-reshape
                 // gesture is untouched. This one only catches open space.
-                if (!rolesMode &&
-                    (onMoveToSpace != null || onSwitchSlot != null))
+                if (onMoveToSpace != null || onSwitchSlot != null)
                   Positioned.fill(
                     child: _SpaceDropTarget(
                       // Where the dragged DISC is, in layout units: the
@@ -827,6 +825,20 @@ class TacticsPitch extends StatelessWidget {
                         side != null &&
                         !deadSlots.contains(slot) &&
                         (cycle != null || push != FullBackPush.neutral);
+                    // Every other outfield man's run, on the same mark in
+                    // the same place, when the pitch edits them.
+                    final runCycle = onCycleArrow;
+                    final showRun =
+                        side == null &&
+                        runCycle != null &&
+                        byId[lineup[slot]] != null &&
+                        !deadSlots.contains(slot) &&
+                        MoveArrowX.optionsFor(positions[slot]).isNotEmpty;
+                    // A scorer's ball takes the arrow's shoulder.
+                    final shoulderFree =
+                        (goalsByPlayer[lineup[slot]] ?? 0) == 0 &&
+                        (ownGoalsByPlayer[lineup[slot]] ?? 0) == 0 &&
+                        (assistsByPlayer[lineup[slot]] ?? 0) == 0;
                     return Align(
                       alignment: Alignment(
                         pos.$1 * 2 - 1,
@@ -852,29 +864,26 @@ class TacticsPitch extends StatelessWidget {
                         ownGoals: ownGoalsByPlayer[lineup[slot]] ?? 0,
                         assists: assistsByPlayer[lineup[slot]] ?? 0,
                         teamColors: teamColors,
-                        // A scorer's ball takes the arrow's shoulder.
-                        fullBackSide:
-                            showArrow &&
-                                (goalsByPlayer[lineup[slot]] ?? 0) == 0 &&
-                                (ownGoalsByPlayer[lineup[slot]] ?? 0) == 0 &&
-                                (assistsByPlayer[lineup[slot]] ?? 0) == 0
-                            ? side
-                            : null,
+                        fullBackSide: showArrow && shoulderFree ? side : null,
                         push: showArrow ? push : null,
-                        onCyclePush: showArrow && cycle != null && !rolesMode
+                        onCyclePush: showArrow && cycle != null
                             ? () => cycle(side)
+                            : null,
+                        run: showRun && shoulderFree
+                            ? (slot < arrows.length
+                                  ? arrows[slot]
+                                  : MoveArrow.none)
+                            : null,
+                        onCycleRun: showRun && shoulderFree
+                            ? () => runCycle(slot)
                             : null,
                         role: slot < roles.length
                             ? roles[slot]
                             : PlayerRole.none,
                         flank: flankOf(positions[slot]),
-                        planMode: rolesMode,
                         onPlan: onPlanSlot == null
                             ? null
                             : () => onPlanSlot!(slot),
-                        onDrawArrow: onDrawArrow == null
-                            ? null
-                            : (a) => onDrawArrow!(slot, a),
                         onTap: () => onTapSlot(slot),
                         onSwap: onSwap,
                         onBenchIn: onBenchIn,
@@ -1097,9 +1106,9 @@ class _PlayerNode extends StatelessWidget {
     this.switched = false,
     this.role = PlayerRole.none,
     this.flank = 0,
-    this.planMode = false,
     this.onPlan,
-    this.onDrawArrow,
+    this.run,
+    this.onCycleRun,
   });
 
   final int slot;
@@ -1111,10 +1120,16 @@ class _PlayerNode extends StatelessWidget {
   /// "inside" is when a run is drawn.
   final int flank;
 
-  /// Whether the pitch edits roles and runs (see [TacticsPitch.rolesMode]).
-  final bool planMode;
+  /// Opens the slot's role sheet from his role badge; null leaves the badge
+  /// read-only (and drawn only for a set role).
   final VoidCallback? onPlan;
-  final ValueChanged<MoveArrow>? onDrawArrow;
+
+  /// His run, on the full-backs' arrow mark, for any other outfield man;
+  /// null draws no mark.
+  final MoveArrow? run;
+
+  /// Moves [run] on one tap and answers with the run he now has.
+  final Future<MoveArrow> Function()? onCycleRun;
 
   /// Whether this slot plays a place changed within the formation (see
   /// [SlotSwitches]); its position badge is drawn in [switchedAccent].
@@ -1191,19 +1206,6 @@ class _PlayerNode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    if (planMode) {
-      final node = _node(l);
-      if (dead) return node;
-      return _PlanGesture(
-        key: PitchPlanKeys.planNode(slot),
-        options: MoveArrowX.optionsFor(position),
-        flank: flank,
-        disc: metrics.disc,
-        onTap: onPlan,
-        onArrow: player == null ? null : onDrawArrow,
-        child: node,
-      );
-    }
     return DragTarget<Object>(
       // A dead slot takes no substitute off the bench: nobody comes on for a
       // man sent off. It does take a team-mate dragged across from another
@@ -1426,26 +1428,24 @@ class _PlayerNode extends StatelessWidget {
                 fontSize: _rimFontSize(metrics.disc),
               ),
             ),
-            // His card, on the shoulder of the ball: below the position
-            // badge and outside the interior's name line, inside his own
-            // node so it can never sit on the next man's ball.
-            if (p != null && card != null && !dead)
+            // His role and his card, on the rim at the upper right, the
+            // mirror of the arrow mark, inside his own node: the role's glyph
+            // in a small ball, drawn on the card itself when he carries one.
+            // On an editable pitch every man wears one (a dim one for no
+            // role) and a tap on it opens his role sheet (see [_RoleBadge]).
+            if (p != null &&
+                !dead &&
+                (role != PlayerRole.none || onPlan != null || card != null))
               Positioned(
-                key: ValueKey('pitchCard$slot'),
-                top: overhang + metrics.disc * 0.16,
+                top: 0,
                 right: 0,
-                child: CardMark(card!, size: metrics.disc * 0.30, onKit: true),
-              ),
-            // His role, on the card's shoulder when he carries no card: a
-            // glyph in a small ball, inside his own node like the card.
-            if (p != null && card == null && !dead && role != PlayerRole.none)
-              Positioned(
-                top: overhang + metrics.disc * 0.16,
-                right: 0,
-                child: _RoleTag(
-                  key: PitchPlanKeys.tag(slot),
+                child: _RoleBadge(
+                  slot: slot,
                   role: role,
-                  size: metrics.disc * 0.30,
+                  card: card,
+                  disc: metrics.disc,
+                  node: metrics.node,
+                  onTap: onPlan,
                 ),
               ),
             // His goals and assists, on the other shoulder from the card: a
@@ -1468,7 +1468,26 @@ class _PlayerNode extends StatelessWidget {
                   size: metrics.disc * 0.32,
                 ),
               ),
-            // The full-back's arrow, on the other shoulder from the card:
+            // His run, on the same mark as a full-back's push, in the same
+            // place.
+            if (run case final now?)
+              Positioned(
+                top: _arrowCorner(overhang, metrics.disc),
+                left: _arrowCorner(
+                  (metrics.node - metrics.disc) / 2,
+                  metrics.disc,
+                ),
+                child: _RunMark(
+                  key: PitchPlanKeys.runMark(slot),
+                  arrow: now,
+                  flank: flank,
+                  options: MoveArrowX.optionsFor(position),
+                  disc: metrics.disc,
+                  name: p?.name ?? '',
+                  onTap: onCycleRun,
+                ),
+              ),
+            // The full-back's arrow, on the other shoulder from his role:
             // inside his own node, so it never reaches a team-mate's ball.
             if ((fullBackSide, push) case (final side?, final state?))
               Positioned(
@@ -2037,51 +2056,267 @@ Color energyColor(int energy) => energy >= 75
     ? AppColors.warning
     : AppColors.error;
 
-/// A role's glyph on its man's disc ([roleIcon]), named for screen readers.
-class _RoleTag extends StatelessWidget {
-  const _RoleTag({required this.role, required this.size, super.key});
+/// The touch area of a role badge: a circle this wide, at least, so a thumb
+/// finds it on a phone's small ball.
+const double _kBadgeTarget = 32;
 
+/// A role's badge on its man's disc: the role's glyph ([roleIcon]) in a
+/// small ball on the rim at the upper right, the mirror of the arrow mark on
+/// the other shoulder. On an editable pitch ([onTap] non-null) it is a
+/// button that opens the slot's role sheet, drawn dim with a plus for a man
+/// with no role; read-only it is drawn only for a set role.
+///
+/// The touch area is a circle [_kBadgeTarget] across (more on a tablet),
+/// laid in the top-right corner of the node: it holds the whole ball, stays
+/// inside the node (which clips), and keeps clear of the disc's centre and
+/// of the arrow mark, so a tap on the man still picks or moves him.
+class _RoleBadge extends StatelessWidget {
+  const _RoleBadge({
+    required this.slot,
+    required this.role,
+    required this.card,
+    required this.disc,
+    required this.node,
+    required this.onTap,
+  });
+
+  final int slot;
   final PlayerRole role;
-  final double size;
+
+  /// The card he carries in a live match: the badge is drawn as the card,
+  /// with his role's glyph on it.
+  final MatchCard? card;
+  final double disc;
+  final double node;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final d = size.clamp(14.0, 22.0);
-    return Semantics(
-      label: playerRoleLabel(l, role),
-      child: Container(
-        width: d,
-        height: d,
+    final mark = _arrowMark(disc);
+    final target = max(_kBadgeTarget, mark * 1.35);
+    final c = card;
+    final set = role != PlayerRole.none;
+    // Where the ball sits, from the node's top-right corner, and its size.
+    final double right;
+    final double top;
+    final double width;
+    final double height;
+    final Widget ball;
+    if (c != null) {
+      // The card where it has always been, on the shoulder below the
+      // position badge, and the role's glyph on it in the ink a card reads
+      // in; no plus on a card, where it would read as part of the booking.
+      final size = disc * 0.30;
+      width = c == MatchCard.secondYellow ? size * 22 / 16 : size;
+      height = size;
+      right = 0;
+      top = _badgeOverhang + disc * 0.16;
+      ball = SizedBox(
+        key: set ? PitchPlanKeys.tag(slot) : null,
+        width: width,
+        height: height,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            KeyedSubtree(
+              key: ValueKey('pitchCard$slot'),
+              child: CardMark(c, size: size, onKit: true),
+            ),
+            if (set)
+              Icon(
+                roleIcon(role),
+                size: size * 0.6,
+                color: c == MatchCard.yellow ? Colors.black : Colors.white,
+              ),
+          ],
+        ),
+      );
+    } else {
+      // On the rim at 45 degrees, never so close to the corner that the
+      // node cuts the ball.
+      final rim = disc / 2 * (1 - sqrt1_2);
+      width = mark;
+      height = mark;
+      right = max(0, (node - disc) / 2 + rim - mark / 2);
+      top = max(0, _badgeOverhang + rim - mark / 2);
+      ball = Container(
+        key: set ? PitchPlanKeys.tag(slot) : null,
+        width: mark,
+        height: mark,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: AppColors.surfaceContainerLowest,
-          border: Border.all(color: AppColors.primary, width: 1.2),
+          border: Border.all(
+            color: set ? AppColors.primary : AppColors.outlineVariant,
+            width: 1.5,
+          ),
         ),
         alignment: Alignment.center,
-        child: Icon(roleIcon(role), size: d * 0.68, color: AppColors.primary),
+        child: Icon(
+          set ? roleIcon(role) : Icons.add_rounded,
+          size: mark * 0.7,
+          color: set
+              ? AppColors.primary
+              : AppColors.onSurfaceVariant.withValues(alpha: 0.7),
+        ),
+      );
+    }
+    final tap = onTap;
+    if (tap == null) {
+      return SizedBox(
+        width: right + width,
+        height: top + height,
+        child: Stack(
+          children: [
+            Positioned(
+              right: right,
+              top: top,
+              child: Semantics(
+                container: true,
+                label: set ? playerRoleLabel(l, role) : null,
+                child: ExcludeSemantics(child: ball),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    // Its own node, apart from the player's, as the arrow mark is.
+    return Semantics(
+      container: true,
+      button: true,
+      label: l.tacticsRoleBadgeSemantics(playerRoleLabel(l, role)),
+      onTap: tap,
+      excludeSemantics: true,
+      child: SizedBox.square(
+        key: PitchPlanKeys.badge(slot),
+        dimension: target,
+        child: Stack(
+          children: [
+            Positioned(right: right, top: top, child: ball),
+            // The touch area: the round target, drawn nothing. ClipOval
+            // clips the hit test, so the corners of the square stay the
+            // man's own ball, and a tap there is his.
+            Positioned.fill(
+              child: ClipOval(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: tap,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-/// Draws one set run: a line from the rim of the disc centred at [from] the
-/// way [arrow] goes, with a head on the end.
-void _paintRun(
-  Canvas canvas,
-  Offset from,
-  MoveArrow arrow,
-  int flank,
-  double disc, {
-  double opacity = 0.9,
-}) => paintPitchRun(
-  canvas,
-  from,
-  PitchRun.manual(arrow),
-  flank,
-  disc: disc,
-  opacity: opacity,
-);
+/// A man's run on his disc, on the full-back push's own mark and in its
+/// place (the rim at the upper left): a dim mark for no run, or an arrow the
+/// way his run goes, in its colour. A tap moves it on to the next run his
+/// place offers ([nextPitchArrow]) and says which, as the push does.
+class _RunMark extends StatelessWidget {
+  const _RunMark({
+    required this.arrow,
+    required this.flank,
+    required this.options,
+    required this.disc,
+    required this.name,
+    required this.onTap,
+    super.key,
+  });
+
+  final MoveArrow arrow;
+  final int flank;
+  final List<MoveArrow> options;
+  final double disc;
+  final String name;
+  final Future<MoveArrow> Function()? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final mark = _arrowMark(disc);
+    final none = arrow == MoveArrow.none;
+    final Widget icon;
+    if (none) {
+      // What a tap can do: up only, up or back, or every way for a wide man.
+      final glyph = options.length > 2
+          ? Icons.open_with_rounded
+          : options.length == 2
+          ? Icons.unfold_more_rounded
+          : Icons.arrow_upward_rounded;
+      icon = Icon(
+        glyph,
+        size: mark * 0.78,
+        color: AppColors.onSurfaceVariant.withValues(alpha: 0.7),
+      );
+    } else {
+      final (x, y) = arrow.vector(flank);
+      icon = Transform.rotate(
+        angle: atan2(x, -y),
+        child: Icon(
+          Icons.arrow_upward_rounded,
+          size: mark * 0.78,
+          color: AppColors.surfaceContainerLowest,
+        ),
+      );
+    }
+    final colour = moveArrowColor(arrow);
+    final badge = Container(
+      width: mark,
+      height: mark,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: none ? AppColors.surfaceContainerLowest : colour,
+        border: Border.all(
+          color: none ? AppColors.outlineVariant : colour,
+          width: 1.5,
+        ),
+      ),
+      alignment: Alignment.center,
+      child: icon,
+    );
+    final label = l.tacticsRunMarkSemantics(moveArrowLabel(l, arrow));
+    final tap = onTap;
+    if (tap == null) {
+      return Semantics(
+        container: true,
+        label: label,
+        child: ExcludeSemantics(child: badge),
+      );
+    }
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    Future<void> cycle() async {
+      final now = await tap();
+      messenger
+        ?..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(l.tacticsArrowSet(name, moveArrowLabel(l, now))),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+    }
+
+    return Semantics(
+      container: true,
+      button: true,
+      label: label,
+      onTap: cycle,
+      excludeSemantics: true,
+      child: ClipOval(
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: cycle,
+          child: badge,
+        ),
+      ),
+    );
+  }
+}
 
 /// One run drawn on the pitch: whose [slot], from the centre of his disc
 /// ([from]), which [run], his [flank], and the [room] it has each way (see
@@ -2131,173 +2366,6 @@ class PitchRunsPainter extends CustomPainter {
     }
     return false;
   }
-}
-
-/// A disc on a pitch editing roles and runs: a tap opens the slot's sheet,
-/// and a brief hold then a drag draws his run, snapped to the nearest one
-/// his place offers, with the arrow and its name shown while it is held.
-///
-/// A hold first, as for moving a man ([kDragHoldDelay]): the pitch lives in
-/// a scroll view, and a plain drag would lose to it.
-class _PlanGesture extends StatefulWidget {
-  const _PlanGesture({
-    required this.options,
-    required this.flank,
-    required this.disc,
-    required this.onTap,
-    required this.onArrow,
-    required this.child,
-    super.key,
-  });
-
-  final List<MoveArrow> options;
-  final int flank;
-  final double disc;
-  final VoidCallback? onTap;
-  final ValueChanged<MoveArrow>? onArrow;
-  final Widget child;
-
-  @override
-  State<_PlanGesture> createState() => _PlanGestureState();
-}
-
-class _PlanGestureState extends State<_PlanGesture> {
-  /// The run the finger points at now, or null while it is too close to the
-  /// disc to mean one (released there, nothing changes).
-  MoveArrow? _aim;
-  bool _holding = false;
-
-  void _move(Offset delta) {
-    final aim = MoveArrowX.nearest(
-      widget.options,
-      delta.dx,
-      delta.dy,
-      widget.flank,
-      minLength: widget.disc * 0.45,
-    );
-    if (aim != _aim) setState(() => _aim = aim);
-  }
-
-  void _stop() => setState(() {
-    _holding = false;
-    _aim = null;
-  });
-
-  void _start(LongPressStartDetails _) => setState(() {
-    _holding = true;
-    _aim = null;
-  });
-
-  void _moved(LongPressMoveUpdateDetails d) => _move(d.offsetFromOrigin);
-
-  void _end(LongPressEndDetails _) {
-    final picked = _aim;
-    _stop();
-    if (picked != null) widget.onArrow?.call(picked);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final canDraw = widget.onArrow != null && widget.options.isNotEmpty;
-    final aim = _aim;
-    return RawGestureDetector(
-      behavior: HitTestBehavior.opaque,
-      gestures: {
-        TapGestureRecognizer:
-            GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(
-              TapGestureRecognizer.new,
-              (r) => r.onTap = widget.onTap,
-            ),
-        if (canDraw)
-          LongPressGestureRecognizer:
-              GestureRecognizerFactoryWithHandlers<LongPressGestureRecognizer>(
-                () => LongPressGestureRecognizer(duration: kDragHoldDelay),
-                (r) {
-                  r
-                    ..onLongPressStart = _start
-                    ..onLongPressMoveUpdate = _moved
-                    ..onLongPressEnd = _end
-                    ..onLongPressCancel = _stop;
-                },
-              ),
-      },
-      child: Stack(
-        clipBehavior: Clip.none,
-        alignment: Alignment.center,
-        children: [
-          widget.child,
-          if (_holding)
-            Positioned.fill(
-              child: IgnorePointer(
-                child: CustomPaint(
-                  key: PitchPlanKeys.preview,
-                  painter: _AimPainter(
-                    aim: aim,
-                    flank: widget.flank,
-                    disc: widget.disc,
-                  ),
-                ),
-              ),
-            ),
-          if (_holding && aim != null)
-            Positioned(
-              bottom: -AppSpacing.lg,
-              child: IgnorePointer(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.sm,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(AppRadii.full),
-                    border: Border.all(color: moveArrowColor(aim)),
-                  ),
-                  child: Text(
-                    moveArrowLabel(l, aim),
-                    maxLines: 1,
-                    softWrap: false,
-                    style: AppTypography.labelSmall.copyWith(
-                      color: moveArrowColor(aim),
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-/// The run being drawn: a ring round the held disc, and the arrow it aims.
-class _AimPainter extends CustomPainter {
-  _AimPainter({required this.aim, required this.flank, required this.disc});
-
-  final MoveArrow? aim;
-  final int flank;
-  final double disc;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final c = size.center(Offset.zero);
-    canvas.drawCircle(
-      c,
-      disc / 2 + 3,
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2
-        ..color = AppColors.primary.withValues(alpha: 0.8),
-    );
-    final a = aim;
-    if (a != null) _paintRun(canvas, c, a, flank, disc, opacity: 1);
-  }
-
-  @override
-  bool shouldRepaint(covariant _AimPainter old) =>
-      old.aim != aim || old.disc != disc || old.flank != flank;
 }
 
 class _PitchPainter extends CustomPainter {

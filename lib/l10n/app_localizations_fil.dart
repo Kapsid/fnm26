@@ -1350,20 +1350,24 @@ class AppLocalizationsFil extends AppLocalizations {
   String get arrowForwardOutside => 'Umabante sa gilid';
 
   @override
-  String get tacticsPitchModePlayers => 'Mga manlalaro';
-
-  @override
-  String get tacticsPitchModeRoles => 'Role at takbo';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'I-tap ang manlalaro para sa role. Hawakan at i-drag para gumuhit ng takbo.';
-
-  @override
   String get tacticsRunLegendRole => 'Natural na takbo ng role';
 
   @override
   String get tacticsRunLegendManual => 'Utos mo';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'I-tap ang badge ng manlalaro para sa role, at ang arrow niya para sa takbo.';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'Role: $role. I-tap para baguhin.';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'Takbo: $run. I-tap para baguhin.';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'ROLE';

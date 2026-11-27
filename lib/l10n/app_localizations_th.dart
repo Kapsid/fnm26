@@ -1331,20 +1331,24 @@ class AppLocalizationsTh extends AppLocalizations {
   String get arrowForwardOutside => 'ดันขึ้นแล้วออกกว้าง';
 
   @override
-  String get tacticsPitchModePlayers => 'ผู้เล่น';
-
-  @override
-  String get tacticsPitchModeRoles => 'บทบาทและการวิ่ง';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'แตะผู้เล่นเพื่อเลือกบทบาท กดค้างแล้วลากเพื่อวาดการวิ่ง';
-
-  @override
   String get tacticsRunLegendRole => 'การวิ่งตามธรรมชาติของบทบาท';
 
   @override
   String get tacticsRunLegendManual => 'คำสั่งของคุณ';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'แตะป้ายของผู้เล่นเพื่อเลือกบทบาท แตะลูกศรเพื่อเลือกการวิ่ง';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'บทบาท: $role แตะเพื่อเปลี่ยน';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'การวิ่ง: $run แตะเพื่อเปลี่ยน';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'บทบาท';

@@ -1393,20 +1393,24 @@ class AppLocalizationsFr extends AppLocalizations {
   String get arrowForwardOutside => 'En avant sur l’aile';
 
   @override
-  String get tacticsPitchModePlayers => 'Joueurs';
-
-  @override
-  String get tacticsPitchModeRoles => 'Rôles et courses';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'Touchez un joueur pour son rôle. Maintenez et glissez pour tracer sa course.';
-
-  @override
   String get tacticsRunLegendRole => 'Course naturelle du rôle';
 
   @override
   String get tacticsRunLegendManual => 'Votre consigne';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'Touchez le badge d’un joueur pour son rôle, sa flèche pour sa course.';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'Rôle : $role. Touchez pour changer.';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'Course : $run. Touchez pour changer.';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'RÔLE';

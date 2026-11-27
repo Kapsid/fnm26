@@ -1396,20 +1396,24 @@ class AppLocalizationsFi extends AppLocalizations {
   String get arrowForwardOutside => 'Eteen ja laitaan';
 
   @override
-  String get tacticsPitchModePlayers => 'Pelaajat';
-
-  @override
-  String get tacticsPitchModeRoles => 'Roolit ja juoksut';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'Napauta pelaajaa valitaksesi roolin. Pidä ja vedä piirtääksesi juoksun.';
-
-  @override
   String get tacticsRunLegendRole => 'Roolin luontainen juoksu';
 
   @override
   String get tacticsRunLegendManual => 'Oma ohjeesi';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'Napauta pelaajan merkkiä valitaksesi roolin ja nuolta valitaksesi juoksun.';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'Rooli: $role. Vaihda napauttamalla.';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'Juoksu: $run. Vaihda napauttamalla.';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'ROOLI';

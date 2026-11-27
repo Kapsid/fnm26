@@ -1348,20 +1348,24 @@ class AppLocalizationsId extends AppLocalizations {
   String get arrowForwardOutside => 'Maju dan melebar';
 
   @override
-  String get tacticsPitchModePlayers => 'Pemain';
-
-  @override
-  String get tacticsPitchModeRoles => 'Peran & pergerakan';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'Ketuk pemain untuk memilih peran. Tahan dan seret untuk menggambar pergerakan.';
-
-  @override
   String get tacticsRunLegendRole => 'Pergerakan alami peran';
 
   @override
   String get tacticsRunLegendManual => 'Instruksi Anda';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'Ketuk lencana pemain untuk memilih peran, dan panahnya untuk pergerakan.';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'Peran: $role. Ketuk untuk mengubah.';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'Pergerakan: $run. Ketuk untuk mengubah.';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'PERAN';

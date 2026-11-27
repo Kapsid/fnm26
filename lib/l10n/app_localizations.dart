@@ -2432,24 +2432,6 @@ abstract class AppLocalizations {
   /// **'Forward and wide'**
   String get arrowForwardOutside;
 
-  /// Toggle above the tactics pitch: the pitch edits who plays where.
-  ///
-  /// In en, this message translates to:
-  /// **'Players'**
-  String get tacticsPitchModePlayers;
-
-  /// Toggle above the tactics pitch: the pitch edits each player's role and run.
-  ///
-  /// In en, this message translates to:
-  /// **'Roles & runs'**
-  String get tacticsPitchModeRoles;
-
-  /// Hint above the tactics pitch while it edits roles and runs.
-  ///
-  /// In en, this message translates to:
-  /// **'Tap a player to set a role. Hold and drag to draw a run.'**
-  String get tacticsPitchRolesHint;
-
   /// Legend under the tactics pitch (and the no-arrow choice in a player's run sheet): a dashed, lighter arrow is the natural run of the player's role.
   ///
   /// In en, this message translates to:
@@ -2461,6 +2443,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your instruction'**
   String get tacticsRunLegendManual;
+
+  /// Hint under the tactics pitch: the small badge on each player's disc opens his role sheet, and the small arrow mark on it moves his run on, one run per tap.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a player\'s badge to set his role, his arrow to set his run.'**
+  String get tacticsPitchPlanHint;
+
+  /// Screen-reader label of the role badge on a player's disc on the tactics pitch; tapping it opens his role sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Role: {role}. Tap to change.'**
+  String tacticsRoleBadgeSemantics(String role);
+
+  /// Screen-reader label of the arrow mark on a player's disc on the tactics pitch; each tap moves his run on to the next one his place offers.
+  ///
+  /// In en, this message translates to:
+  /// **'Run: {run}. Tap to change.'**
+  String tacticsRunMarkSemantics(String run);
 
   /// Heading of the role list in a player's role and run sheet.
   ///
@@ -2480,7 +2480,7 @@ abstract class AppLocalizations {
   /// **'{position} · {name}'**
   String tacticsPlanTitle(String position, String name);
 
-  /// Note after a run is drawn on the tactics pitch: the player and his movement.
+  /// Note after a player's arrow mark is tapped on the tactics pitch: the player and the run he now makes.
   ///
   /// In en, this message translates to:
   /// **'{name}: {movement}'**

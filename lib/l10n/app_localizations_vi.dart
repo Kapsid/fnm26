@@ -1344,20 +1344,24 @@ class AppLocalizationsVi extends AppLocalizations {
   String get arrowForwardOutside => 'Dâng lên và dạt biên';
 
   @override
-  String get tacticsPitchModePlayers => 'Cầu thủ';
-
-  @override
-  String get tacticsPitchModeRoles => 'Vai trò & di chuyển';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'Chạm cầu thủ để chọn vai trò. Giữ và kéo để vẽ hướng di chuyển.';
-
-  @override
   String get tacticsRunLegendRole => 'Hướng chạy tự nhiên của vai trò';
 
   @override
   String get tacticsRunLegendManual => 'Chỉ đạo của bạn';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'Chạm huy hiệu của cầu thủ để chọn vai trò, chạm mũi tên để chọn hướng di chuyển.';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'Vai trò: $role. Chạm để đổi.';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'Di chuyển: $run. Chạm để đổi.';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'VAI TRÒ';

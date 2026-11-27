@@ -1344,20 +1344,24 @@ class AppLocalizationsTr extends AppLocalizations {
   String get arrowForwardOutside => 'İleri ve dışa';
 
   @override
-  String get tacticsPitchModePlayers => 'Oyuncular';
-
-  @override
-  String get tacticsPitchModeRoles => 'Roller ve koşular';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'Rol için oyuncuya dokun. Koşu çizmek için basılı tutup sürükle.';
-
-  @override
   String get tacticsRunLegendRole => 'Rolün doğal koşusu';
 
   @override
   String get tacticsRunLegendManual => 'Senin talimatın';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'Rol için oyuncunun rozetine, koşu için okuna dokun.';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'Rol: $role. Değiştirmek için dokun.';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'Koşu: $run. Değiştirmek için dokun.';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'ROL';

@@ -1388,20 +1388,24 @@ class AppLocalizationsEl extends AppLocalizations {
   String get arrowForwardOutside => 'Μπροστά και έξω';
 
   @override
-  String get tacticsPitchModePlayers => 'Παίκτες';
-
-  @override
-  String get tacticsPitchModeRoles => 'Ρόλοι και κινήσεις';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'Πάτα έναν παίκτη για τον ρόλο. Κράτα και σύρε για να σχεδιάσεις κίνηση.';
-
-  @override
   String get tacticsRunLegendRole => 'Φυσική κίνηση του ρόλου';
 
   @override
   String get tacticsRunLegendManual => 'Η οδηγία σου';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'Πάτα το σήμα ενός παίκτη για τον ρόλο και το βέλος του για την κίνηση.';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'Ρόλος: $role. Πάτα για αλλαγή.';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'Κίνηση: $run. Πάτα για αλλαγή.';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'ΡΟΛΟΣ';

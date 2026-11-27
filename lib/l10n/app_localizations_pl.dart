@@ -1347,20 +1347,24 @@ class AppLocalizationsPl extends AppLocalizations {
   String get arrowForwardOutside => 'Do przodu i do boku';
 
   @override
-  String get tacticsPitchModePlayers => 'Zawodnicy';
-
-  @override
-  String get tacticsPitchModeRoles => 'Role i ruchy';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'Dotknij zawodnika, by ustawić rolę. Przytrzymaj i przeciągnij, by narysować ruch.';
-
-  @override
   String get tacticsRunLegendRole => 'Naturalny ruch roli';
 
   @override
   String get tacticsRunLegendManual => 'Twoje polecenie';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'Dotknij plakietki zawodnika, by ustawić rolę, a jego strzałki, by ustawić ruch.';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'Rola: $role. Dotknij, by zmienić.';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'Ruch: $run. Dotknij, by zmienić.';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'ROLA';

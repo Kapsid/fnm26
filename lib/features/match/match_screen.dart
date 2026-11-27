@@ -2267,21 +2267,30 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             child: TacticsPitch(
               formation: _liveFormation,
               instructions: _liveInstructions,
-              fullBacks: _liveFullBacks,
+              // After the whistle the pitch is the line-up as it finished:
+              // the players and their marks, no roles, runs or arrows.
+              fullBacks: _fullTime ? FullBackPushes.neutral : _liveFullBacks,
               switches: _liveSwitches,
-              roles: [
-                for (var s = 0; s < _liveLineup.length; s++)
-                  _liveRoles.at(s, _liveSwitches.apply(_liveFormation)[s]),
-              ],
-              arrows: pitchArrowsOf(
-                Tactic(
-                  formation: _liveFormation,
-                  lineup: _liveLineup,
-                  fullBacks: _liveFullBacks,
-                  switches: _liveSwitches,
-                  arrows: _liveArrows,
-                ),
-              ),
+              roles: _fullTime
+                  ? const []
+                  : [
+                      for (var s = 0; s < _liveLineup.length; s++)
+                        _liveRoles.at(
+                          s,
+                          _liveSwitches.apply(_liveFormation)[s],
+                        ),
+                    ],
+              arrows: _fullTime
+                  ? const []
+                  : pitchArrowsOf(
+                      Tactic(
+                        formation: _liveFormation,
+                        lineup: _liveLineup,
+                        fullBacks: _liveFullBacks,
+                        switches: _liveSwitches,
+                        arrows: _liveArrows,
+                      ),
+                    ),
               lineup: _liveLineup,
               byId: byId,
               teamColors: n == null

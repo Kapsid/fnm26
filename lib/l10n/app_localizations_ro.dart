@@ -1363,20 +1363,24 @@ class AppLocalizationsRo extends AppLocalizations {
   String get arrowForwardOutside => 'Înainte și pe bandă';
 
   @override
-  String get tacticsPitchModePlayers => 'Jucători';
-
-  @override
-  String get tacticsPitchModeRoles => 'Roluri și mișcări';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'Atinge un jucător pentru rol. Ține apăsat și trage pentru a desena mișcarea.';
-
-  @override
   String get tacticsRunLegendRole => 'Mișcarea firească a rolului';
 
   @override
   String get tacticsRunLegendManual => 'Instrucțiunea ta';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'Atinge insigna unui jucător pentru rol și săgeata lui pentru mișcare.';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'Rol: $role. Atinge pentru a schimba.';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'Mișcare: $run. Atinge pentru a schimba.';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'ROL';

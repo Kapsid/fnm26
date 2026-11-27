@@ -1390,20 +1390,24 @@ class AppLocalizationsNl extends AppLocalizations {
   String get arrowForwardOutside => 'Naar voren en buiten';
 
   @override
-  String get tacticsPitchModePlayers => 'Spelers';
-
-  @override
-  String get tacticsPitchModeRoles => 'Rollen en loopacties';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'Tik op een speler voor zijn rol. Houd vast en sleep voor een loopactie.';
-
-  @override
   String get tacticsRunLegendRole => 'Natuurlijke loopactie van de rol';
 
   @override
   String get tacticsRunLegendManual => 'Jouw instructie';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'Tik op de badge van een speler voor zijn rol en op zijn pijl voor zijn loopactie.';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'Rol: $role. Tik om te wijzigen.';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'Loopactie: $run. Tik om te wijzigen.';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'ROL';

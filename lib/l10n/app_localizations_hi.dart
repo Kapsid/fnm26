@@ -1342,20 +1342,24 @@ class AppLocalizationsHi extends AppLocalizations {
   String get arrowForwardOutside => 'आगे और बाहर';
 
   @override
-  String get tacticsPitchModePlayers => 'खिलाड़ी';
-
-  @override
-  String get tacticsPitchModeRoles => 'भूमिका और रन';
-
-  @override
-  String get tacticsPitchRolesHint =>
-      'भूमिका के लिए खिलाड़ी पर टैप करें। रन बनाने के लिए पकड़कर खींचें।';
-
-  @override
   String get tacticsRunLegendRole => 'भूमिका का स्वाभाविक रन';
 
   @override
   String get tacticsRunLegendManual => 'आपका निर्देश';
+
+  @override
+  String get tacticsPitchPlanHint =>
+      'भूमिका के लिए खिलाड़ी के बैज पर, और रन के लिए उसके तीर पर टैप करें।';
+
+  @override
+  String tacticsRoleBadgeSemantics(String role) {
+    return 'भूमिका: $role। बदलने के लिए टैप करें।';
+  }
+
+  @override
+  String tacticsRunMarkSemantics(String run) {
+    return 'रन: $run। बदलने के लिए टैप करें।';
+  }
 
   @override
   String get tacticsPlanRoleHeading => 'भूमिका';

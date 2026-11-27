@@ -103,15 +103,11 @@ void main() {
     expect(_layer(tester, PitchPlanKeys.arrows), {
       10: const PitchRun.manual(MoveArrow.forwardInside),
     });
-    await _shot(tester, 'career_tactics_players_mode');
-
-    // In the roles mode the legend says which line is which.
-    await tester.tap(find.byKey(PitchPlanKeys.rolesMode));
-    await settle(tester);
+    // One pitch: the legend under it always says which line is which.
     expect(find.byKey(PitchPlanKeys.legend), findsOneWidget);
     expect(find.text(enL.tacticsRunLegendRole), findsOneWidget);
     expect(find.text(enL.tacticsRunLegendManual), findsOneWidget);
-    await _shot(tester, 'career_tactics_roles_mode');
+    await _shot(tester, 'career_tactics');
 
     // Taking the arrow off brings the role's run back.
     await change((t) => t.withArrow(10, MoveArrow.none));
