@@ -134,7 +134,7 @@ abstract final class CrowdMoments {
   /// The scorers' fans [since] seconds after a goal (for up to [length]
   /// seconds): their stands bouncing in their colours, scarves twirling
   /// over their heads and coloured smoke rising from their end.
-  static const double length = 7;
+  static const double length = 4.5;
 
   static void celebrate(
     Canvas canvas,
@@ -145,7 +145,8 @@ abstract final class CrowdMoments {
   }) {
     if (since < 0 || since >= length) return;
     final fade = since < length - 1.5 ? 1.0 : (length - since) / 1.5;
-    final beat = (since * 8).floor();
+    // A slow, soft pulse (1.1.4 tuning: the 8-a-second strobe was too much).
+    final beat = (since * 2).floor();
     final bounce = Paint()..blendMode = BlendMode.screen;
     final scarf = Paint()
       ..strokeCap = StrokeCap.round
@@ -158,7 +159,7 @@ abstract final class CrowdMoments {
       final s = theirs[i];
       final up = (beat + i).isEven;
       bounce.color = kit.primary.withValues(
-        alpha: (up ? 0.32 : 0.1) * fade,
+        alpha: (up ? 0.16 : 0.08) * fade,
       );
       canvas.drawPath(s.path, bounce);
       if (i.isEven) {
@@ -226,7 +227,7 @@ abstract final class CrowdMoments {
     for (final (pts, on) in [(a, phase.isEven), (b, phase.isOdd)]) {
       glow.color = const Color(
         0xFFF6F7FF,
-      ).withValues(alpha: (on ? 0.95 : 0.45) * strength);
+      ).withValues(alpha: (on ? 0.7 : 0.5) * strength);
       canvas.drawRawPoints(ui.PointMode.points, pts, glow);
     }
   }

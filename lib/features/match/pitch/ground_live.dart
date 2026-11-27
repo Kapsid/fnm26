@@ -159,14 +159,14 @@ class GroundLive extends ChangeNotifier {
     return phase / waveFor;
   }
 
-  static const double waveEvery = 70, waveFor = 16;
+  static const double waveEvery = 150, waveFor = 16;
 
   /// How strongly phone torches light the stands: at an evening match,
   /// late in a home win, or while a shootout is taken.
   double get torches {
     if (flood < 0.5) return 0;
     if (shootout) return 1;
-    return minute >= 80 && homeLead > 0 && minute < 121 ? 1 : 0;
+    return minute >= 85 && homeLead > 0 && minute < 121 ? 1 : 0;
   }
 
   /// The projection the ground is drawn through, and its goals' style:
@@ -233,7 +233,7 @@ class GroundLive extends ChangeNotifier {
       _board,
       _anchors,
       (t / ledStep).floor(),
-      since != null && since < flashSeconds ? (since * 4).floor() : -1,
+      -1, // the boards no longer flash a goal (1.1.4 tuning)
       since != null && since < scorerSeconds,
       // A moving net is drawn every frame.
       net != null ? t : null,
@@ -244,8 +244,8 @@ class GroundLive extends ChangeNotifier {
         final w? => (w * 80).floor(),
         null => -1,
       },
-      since != null && since < CrowdMoments.length ? (since * 8).floor() : -1,
-      torches > 0 ? (t * 3).floor() : -1,
+      since != null && since < CrowdMoments.length ? (since * 2).floor() : -1,
+      torches > 0 ? t.floor() : -1,
     );
     if (!force && key == _key) return;
     _key = key;
@@ -299,7 +299,7 @@ class LiveGroundPainter extends CustomPainter {
       CrowdMoments.torches(
         canvas,
         torches,
-        (live.t * 3).floor(),
+        live.t.floor(),
         live.torches,
       );
     }
@@ -472,11 +472,8 @@ abstract final class BoardPainter {
   ) {
     final r = Offset.zero & s;
     canvas.drawRect(r.deflate(s.height * 0.06), Paint()..color = _ledBlack);
-    final since = live.sinceGoal;
-    final blink =
-        since != null &&
-        since < GroundLive.flashSeconds &&
-        (since * 4).floor().isOdd;
+    // No blinking on a goal (1.1.4 tuning).
+    const blink = false;
     final top = s.height * 0.32, bottom = s.height * 0.74;
     final fs = s.height * 0.32;
     centred(
@@ -576,13 +573,9 @@ abstract final class BoardPainter {
     final scorer = b.scorer;
     if (scorer != null && since != null && since < GroundLive.scorerSeconds) {
       final k = (b.scorerHome ?? live.goalHome) ? home : away;
-      final pulse =
-          since < GroundLive.flashSeconds && (since * 4).floor().isOdd;
-      canvas.drawRect(
-        lower,
-        Paint()..color = pulse ? k.secondary : k.primary,
-      );
-      final ink = _inkOn(pulse ? k.secondary : k.primary);
+      // Steady in the scorer's colour, no blinking (1.1.4 tuning).
+      canvas.drawRect(lower, Paint()..color = k.primary);
+      final ink = _inkOn(k.primary);
       centred(
         canvas,
         text(
@@ -630,20 +623,14 @@ abstract final class LedBoards {
     BoardText text,
   ) {
     if (panels.isEmpty) return;
-    final flash = live.flashColours;
+    // The boards keep their sponsors through a goal: no flash (1.1.4).
     final names = live.sponsors;
-    if (flash == null && names.isEmpty) return;
-    final frame = ((live.sinceGoal ?? 0) * 4).floor();
+    if (names.isEmpty) return;
     final step = (live.t / GroundLive.ledStep).floor();
     final fill = Paint();
     for (var i = 0; i < panels.length; i++) {
       final q = panels[i];
       final path = Path()..addPolygon(q, true);
-      if (flash != null) {
-        fill.color = (i + frame).isEven ? flash.$1 : flash.$2;
-        canvas.drawPath(path, fill);
-        continue;
-      }
       final k = (i + step) % names.length;
       final name = names[k];
       fill.color = _grounds[(k * 7 + name.length) % _grounds.length];

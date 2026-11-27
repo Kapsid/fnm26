@@ -156,11 +156,11 @@ class WeatherOverlay {
 
   /// How strong a lightning flash gets at its brightest: a wash over the
   /// sky and the stands, never a white-out.
-  static const double _flashPeak = 0.3;
+  static const double _flashPeak = 0.18;
 
   /// One flash per window of this many seconds at most, two in three
   /// windows: under three a minute.
-  static const double _flashWindow = 24;
+  static const double _flashWindow = 40;
 
   /// How bright the lightning is at [seconds], 0 to 1: a quick flash, a
   /// weaker second one just after, each eased in and out.
