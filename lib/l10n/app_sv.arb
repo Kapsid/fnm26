@@ -97,6 +97,7 @@
   "commonRetry": "Försök igen",
   "commonSomethingWentWrong": "Något gick fel",
   "commonCrashBox": "Något gick fel här.\nInställningar → Diagnostik har detaljerna.",
+  "hubSimulatingMatchday": "Simulerar omgången…",
   "hubCouldNotAdvance": "Det gick inte att spela vidare i världen: {error}",
   "settingsDiagnosticsTitle": "Diagnostik",
   "settingsDiagnosticsBlurb": "Fel som registrerats på den här enheten. Inget skickas någonstans.",

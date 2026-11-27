@@ -734,6 +734,12 @@ abstract class AppLocalizations {
   /// **'Something went wrong here.\nSettings → Diagnostics has the details.'**
   String get commonCrashBox;
 
+  /// The banner on the hub while a step of the world that takes a moment (an advance, a tournament round) is being simulated.
+  ///
+  /// In en, this message translates to:
+  /// **'Simulating matchday…'**
+  String get hubSimulatingMatchday;
+
   /// Snackbar when a hub action that simulates the world fails.
   ///
   /// In en, this message translates to:

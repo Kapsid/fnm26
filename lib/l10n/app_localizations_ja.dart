@@ -326,6 +326,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get commonCrashBox => 'ここで問題が発生しました。\n詳細は 設定 → 診断 で確認できます。';
 
   @override
+  String get hubSimulatingMatchday => '節をシミュレーション中…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'ワールドを進められませんでした: $error';
   }

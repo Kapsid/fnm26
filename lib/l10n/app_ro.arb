@@ -97,6 +97,7 @@
   "commonRetry": "Reîncercați",
   "commonSomethingWentWrong": "Ceva nu a mers bine",
   "commonCrashBox": "Ceva nu a mers bine aici.\nDetaliile sunt în Setări → Diagnosticare.",
+  "hubSimulatingMatchday": "Se simulează etapa…",
   "hubCouldNotAdvance": "Lumea nu a putut avansa: {error}",
   "settingsDiagnosticsTitle": "Diagnosticare",
   "settingsDiagnosticsBlurb": "Erori înregistrate pe acest dispozitiv. Nu se trimite nimic nicăieri.",

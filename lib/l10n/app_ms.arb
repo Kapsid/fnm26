@@ -97,6 +97,7 @@
   "commonRetry": "Cuba lagi",
   "commonSomethingWentWrong": "Ada sesuatu yang tidak kena",
   "commonCrashBox": "Ada sesuatu yang tidak kena di sini.\nTetapan → Diagnostik mempunyai butirannya.",
+  "hubSimulatingMatchday": "Mensimulasikan hari perlawanan…",
   "hubCouldNotAdvance": "Dunia tidak dapat diteruskan: {error}",
   "settingsDiagnosticsTitle": "Diagnostik",
   "settingsDiagnosticsBlurb": "Ralat yang direkodkan pada peranti ini. Tiada apa-apa yang dihantar.",

@@ -33,6 +33,7 @@ import 'package:fnm/features/federation/investment_editor.dart';
 import 'package:fnm/features/hub/board_objectives_screen.dart';
 import 'package:fnm/features/hub/hub_event_button.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/features/hub/hub_sim_banner.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/hub/schedule_widgets.dart';
 import 'package:fnm/features/manager/manager_age_widgets.dart';
@@ -261,10 +262,14 @@ class _HubScreenState extends ConsumerState<HubScreen> {
     }
 
     // The popups above run for both layouts; only the drawing differs.
+    // The banner a long step shows (see [HubSimulatingOverlay]), over both.
     if (TabletShellScope.isActive(context)) {
-      return _HubTabletLayout(
+      return HubSimulatingOverlay(
         careerId: careerId,
-        onOpenGroup: (hub) => _openGroup(context, hub),
+        child: _HubTabletLayout(
+          careerId: careerId,
+          onOpenGroup: (hub) => _openGroup(context, hub),
+        ),
       );
     }
 
@@ -332,120 +337,123 @@ class _HubScreenState extends ConsumerState<HubScreen> {
         careerId: careerId,
         current: AppTab.hub,
       ),
-      body: dataAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => AppErrorState(
-          message: l.hubCouldNotLoadSave('').trim(),
-          onRetry: () => ref.invalidate(hubDataProvider(careerId)),
-        ),
-        data: (hub) {
-          if (hub == null) {
-            return Center(child: Text(l.hubSaveNotFound));
-          }
-          final nation = hub.nations[hub.career.nationId];
-          final date = AppDate.dayMonthYear(context, hub.career.inGameDate);
-          String code(int id) => hub.nations[id]?.code ?? '??';
-          String name(int id) => hub.nations[id]?.name ?? l.hubUnknown;
-          // The same figure the world ranking screen shows, read from the same
-          // provider: two screens quoting different movement for one nation is
-          // a bug the manager reports as "which one is right?".
-          final playerRank = ref
-              .watch(playerRankProvider(careerId))
-              .valueOrNull;
+      body: HubSimulatingOverlay(
+        careerId: careerId,
+        child: dataAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => AppErrorState(
+            message: l.hubCouldNotLoadSave('').trim(),
+            onRetry: () => ref.invalidate(hubDataProvider(careerId)),
+          ),
+          data: (hub) {
+            if (hub == null) {
+              return Center(child: Text(l.hubSaveNotFound));
+            }
+            final nation = hub.nations[hub.career.nationId];
+            final date = AppDate.dayMonthYear(context, hub.career.inGameDate);
+            String code(int id) => hub.nations[id]?.code ?? '??';
+            String name(int id) => hub.nations[id]?.name ?? l.hubUnknown;
+            // The same figure the world ranking screen shows, read from the same
+            // provider: two screens quoting different movement for one nation is
+            // a bug the manager reports as "which one is right?".
+            final playerRank = ref
+                .watch(playerRankProvider(careerId))
+                .valueOrNull;
 
-          // A Builder for the body's own context: the dock's clearance is
-          // read from the padding the Scaffold gives its body.
-          return Builder(
-            builder: (context) => ListView(
-              padding: AppBottomNav.padScroll(
-                context,
-                const EdgeInsets.all(AppSpacing.marginMobile),
+            // A Builder for the body's own context: the dock's clearance is
+            // read from the padding the Scaffold gives its body.
+            return Builder(
+              builder: (context) => ListView(
+                padding: AppBottomNav.padScroll(
+                  context,
+                  const EdgeInsets.all(AppSpacing.marginMobile),
+                ),
+                children: [
+                  HubHeader(
+                    code: nation?.code ?? '??',
+                    nationName: nation?.name ?? '…',
+                    managerName: hub.career.managerName,
+                    date: date,
+                    rank: playerRank?.rank,
+                    movement: playerRank?.movement ?? 0,
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  // Host-nation strip while a finals is under way — the World Cup,
+                  // or the continental championship when that's the live one.
+                  if (host?.active ?? false) ...[
+                    WcHostBanner(theme: host!, code: code),
+                    const SizedBox(height: AppSpacing.md),
+                  ] else if (contHost?.active ?? false) ...[
+                    WcHostBanner(theme: contHost!, code: code),
+                    const SizedBox(height: AppSpacing.md),
+                  ],
+                  if (hub.championNationId != null) ...[
+                    _ChampionBanner(
+                      name: name(hub.championNationId!),
+                      code: code(hub.championNationId!),
+                      onView: () =>
+                          context.go('${Routes.cup}?careerId=$careerId'),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                  ],
+                  // The press, when they have something to ask. A card, not a
+                  // forced step: it waits, and it goes away on its own if the
+                  // manager would rather not talk.
+                  HubBoardTiles(
+                    key: TourKeys.hubBoard,
+                    careerId: careerId,
+                    onBoard: () => context.go(
+                      '${Routes.boardObjectives}?careerId=$careerId',
+                    ),
+                    onFunds: () =>
+                        context.go('${Routes.finances}?careerId=$careerId'),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  // The primary action is whatever the next timeline event is
+                  // (a draw, the next match, a tournament to follow, or rollover).
+                  // Keyed: the banners above it come and go (the host's strip
+                  // leaves with a tournament's final), and the button must stay
+                  // the same one through the step that removes them.
+                  HubEventButton(
+                    key: const ValueKey('hub.eventButton'),
+                    careerId: careerId,
+                  ),
+                  // A campaign career's goal and progress; nothing for a normal one.
+                  CampaignHubCard(careerId: careerId, gapAbove: true),
+                  // A save from before ages: the one-time, skippable question.
+                  // Under the event button, so it never stands before Continue.
+                  ManagerAgeQuestionCard(careerId: careerId, gapAbove: true),
+                  if (hub.championNationId == null) ...[
+                    const SizedBox(height: AppSpacing.md),
+                    _Upcoming(careerId: careerId),
+                  ],
+                  const SizedBox(height: AppSpacing.md),
+                  // Always show the next group — but only reveal the table once its
+                  // own draw has been watched; before then it's "to be drawn".
+                  if (hub.group != null)
+                    if (hub.groupDrawWatched)
+                      _GroupTable(
+                        careerId: careerId,
+                        group: hub.group!,
+                        playerNationId: hub.career.nationId,
+                        directCount: hub.groupDirectCount,
+                        zone: hub.groupZone,
+                        playoffNations: hub.groupPlayoffNations,
+                        directNations: hub.groupDirectNations,
+                        relegateCount: hub.groupRelegateCount,
+                        undecided: hub.groupUndecided,
+                        code: code,
+                        name: name,
+                        onTap: () => _openGroup(context, hub),
+                      )
+                    else
+                      _GroupPlaceholder(competition: hub.group!.competition),
+                  const SizedBox(height: AppSpacing.lg),
+                ],
               ),
-              children: [
-                HubHeader(
-                  code: nation?.code ?? '??',
-                  nationName: nation?.name ?? '…',
-                  managerName: hub.career.managerName,
-                  date: date,
-                  rank: playerRank?.rank,
-                  movement: playerRank?.movement ?? 0,
-                ),
-                const SizedBox(height: AppSpacing.md),
-                // Host-nation strip while a finals is under way — the World Cup,
-                // or the continental championship when that's the live one.
-                if (host?.active ?? false) ...[
-                  WcHostBanner(theme: host!, code: code),
-                  const SizedBox(height: AppSpacing.md),
-                ] else if (contHost?.active ?? false) ...[
-                  WcHostBanner(theme: contHost!, code: code),
-                  const SizedBox(height: AppSpacing.md),
-                ],
-                if (hub.championNationId != null) ...[
-                  _ChampionBanner(
-                    name: name(hub.championNationId!),
-                    code: code(hub.championNationId!),
-                    onView: () =>
-                        context.go('${Routes.cup}?careerId=$careerId'),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                ],
-                // The press, when they have something to ask. A card, not a
-                // forced step: it waits, and it goes away on its own if the
-                // manager would rather not talk.
-                HubBoardTiles(
-                  key: TourKeys.hubBoard,
-                  careerId: careerId,
-                  onBoard: () => context.go(
-                    '${Routes.boardObjectives}?careerId=$careerId',
-                  ),
-                  onFunds: () =>
-                      context.go('${Routes.finances}?careerId=$careerId'),
-                ),
-                const SizedBox(height: AppSpacing.md),
-                // The primary action is whatever the next timeline event is
-                // (a draw, the next match, a tournament to follow, or rollover).
-                // Keyed: the banners above it come and go (the host's strip
-                // leaves with a tournament's final), and the button must stay
-                // the same one through the step that removes them.
-                HubEventButton(
-                  key: const ValueKey('hub.eventButton'),
-                  careerId: careerId,
-                ),
-                // A campaign career's goal and progress; nothing for a normal one.
-                CampaignHubCard(careerId: careerId, gapAbove: true),
-                // A save from before ages: the one-time, skippable question.
-                // Under the event button, so it never stands before Continue.
-                ManagerAgeQuestionCard(careerId: careerId, gapAbove: true),
-                if (hub.championNationId == null) ...[
-                  const SizedBox(height: AppSpacing.md),
-                  _Upcoming(careerId: careerId),
-                ],
-                const SizedBox(height: AppSpacing.md),
-                // Always show the next group — but only reveal the table once its
-                // own draw has been watched; before then it's "to be drawn".
-                if (hub.group != null)
-                  if (hub.groupDrawWatched)
-                    _GroupTable(
-                      careerId: careerId,
-                      group: hub.group!,
-                      playerNationId: hub.career.nationId,
-                      directCount: hub.groupDirectCount,
-                      zone: hub.groupZone,
-                      playoffNations: hub.groupPlayoffNations,
-                      directNations: hub.groupDirectNations,
-                      relegateCount: hub.groupRelegateCount,
-                      undecided: hub.groupUndecided,
-                      code: code,
-                      name: name,
-                      onTap: () => _openGroup(context, hub),
-                    )
-                  else
-                    _GroupPlaceholder(competition: hub.group!.competition),
-                const SizedBox(height: AppSpacing.lg),
-              ],
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

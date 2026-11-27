@@ -97,6 +97,7 @@
   "commonRetry": "Δοκίμασε ξανά",
   "commonSomethingWentWrong": "Κάτι πήγε στραβά",
   "commonCrashBox": "Κάτι πήγε στραβά εδώ.\nΡυθμίσεις → Διαγνωστικά για λεπτομέρειες.",
+  "hubSimulatingMatchday": "Προσομοίωση αγωνιστικής…",
   "hubCouldNotAdvance": "Δεν ήταν δυνατή η προώθηση του κόσμου: {error}",
   "settingsDiagnosticsTitle": "Διαγνωστικά",
   "settingsDiagnosticsBlurb": "Σφάλματα που καταγράφηκαν σε αυτή τη συσκευή. Τίποτα δεν στέλνεται πουθενά.",

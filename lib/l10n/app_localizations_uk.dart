@@ -357,6 +357,9 @@ class AppLocalizationsUk extends AppLocalizations {
       'Тут щось пішло не так.\nДеталі: Налаштування → Діагностика.';
 
   @override
+  String get hubSimulatingMatchday => 'Симулюємо тур…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'Не вдалося прокрутити світ: $error';
   }

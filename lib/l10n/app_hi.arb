@@ -97,6 +97,7 @@
   "commonRetry": "दोबारा कोशिश करें",
   "commonSomethingWentWrong": "कुछ गड़बड़ हो गई",
   "commonCrashBox": "यहाँ कुछ गड़बड़ हो गई।\nसेटिंग्स → डायग्नोस्टिक्स में ब्योरा है।",
+  "hubSimulatingMatchday": "मैचडे का सिमुलेशन हो रहा है…",
   "hubCouldNotAdvance": "दुनिया को आगे नहीं बढ़ा सके: {error}",
   "settingsDiagnosticsTitle": "डायग्नोस्टिक्स",
   "settingsDiagnosticsBlurb": "इस डिवाइस पर दर्ज त्रुटियाँ। कुछ भी कहीं नहीं भेजा जाता।",

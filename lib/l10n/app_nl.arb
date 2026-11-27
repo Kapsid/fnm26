@@ -97,6 +97,7 @@
   "commonRetry": "Opnieuw",
   "commonSomethingWentWrong": "Er ging iets mis",
   "commonCrashBox": "Hier ging iets mis.\nInstellingen → Diagnostiek heeft de details.",
+  "hubSimulatingMatchday": "Speeldag wordt gesimuleerd…",
   "hubCouldNotAdvance": "De wereld kon niet verder: {error}",
   "settingsDiagnosticsTitle": "Diagnostiek",
   "settingsDiagnosticsBlurb": "Fouten die op dit apparaat zijn vastgelegd. Er wordt niets verstuurd.",

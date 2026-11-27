@@ -361,6 +361,9 @@ class AppLocalizationsHr extends AppLocalizations {
       'Ovdje je nešto pošlo po zlu.\nPojedinosti su u Postavke → Dijagnostika.';
 
   @override
+  String get hubSimulatingMatchday => 'Simuliram kolo…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'Svijet se nije mogao pomaknuti dalje: $error';
   }

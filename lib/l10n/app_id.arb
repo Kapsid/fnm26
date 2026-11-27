@@ -97,6 +97,7 @@
   "commonRetry": "Coba lagi",
   "commonSomethingWentWrong": "Terjadi kesalahan",
   "commonCrashBox": "Terjadi kesalahan di sini.\nPengaturan → Diagnostik berisi detailnya.",
+  "hubSimulatingMatchday": "Menyimulasikan pekan pertandingan…",
   "hubCouldNotAdvance": "Gagal memajukan dunia: {error}",
   "settingsDiagnosticsTitle": "Diagnostik",
   "settingsDiagnosticsBlurb": "Kesalahan yang tercatat di perangkat ini. Tidak ada yang dikirim ke mana pun.",

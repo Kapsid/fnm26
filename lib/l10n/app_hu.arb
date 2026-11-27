@@ -97,6 +97,7 @@
   "commonRetry": "Újra",
   "commonSomethingWentWrong": "Valami elromlott",
   "commonCrashBox": "Itt valami elromlott.\nA Beállítások → Diagnosztika részletezi.",
+  "hubSimulatingMatchday": "Forduló szimulálása…",
   "hubCouldNotAdvance": "Nem sikerült léptetni a világot: {error}",
   "settingsDiagnosticsTitle": "Diagnosztika",
   "settingsDiagnosticsBlurb": "Az ezen az eszközön rögzített hibák. Semmi sem kerül elküldésre.",

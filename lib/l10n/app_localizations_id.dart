@@ -359,6 +359,9 @@ class AppLocalizationsId extends AppLocalizations {
       'Terjadi kesalahan di sini.\nPengaturan → Diagnostik berisi detailnya.';
 
   @override
+  String get hubSimulatingMatchday => 'Menyimulasikan pekan pertandingan…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'Gagal memajukan dunia: $error';
   }

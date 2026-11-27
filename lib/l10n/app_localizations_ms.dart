@@ -360,6 +360,9 @@ class AppLocalizationsMs extends AppLocalizations {
       'Ada sesuatu yang tidak kena di sini.\nTetapan → Diagnostik mempunyai butirannya.';
 
   @override
+  String get hubSimulatingMatchday => 'Mensimulasikan hari perlawanan…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'Dunia tidak dapat diteruskan: $error';
   }

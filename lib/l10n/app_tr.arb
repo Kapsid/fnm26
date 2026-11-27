@@ -97,6 +97,7 @@
   "commonRetry": "Tekrar dene",
   "commonSomethingWentWrong": "Bir şeyler ters gitti",
   "commonCrashBox": "Burada bir şeyler ters gitti.\nAyarlar → Tanılama'da ayrıntılar var.",
+  "hubSimulatingMatchday": "Hafta simüle ediliyor…",
   "hubCouldNotAdvance": "Dünya ilerletilemedi: {error}",
   "settingsDiagnosticsTitle": "Tanılama",
   "settingsDiagnosticsBlurb": "Bu cihazda kaydedilen hatalar. Hiçbir yere gönderilmez.",

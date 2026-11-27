@@ -360,6 +360,9 @@ class AppLocalizationsBg extends AppLocalizations {
       'Тук нещо се обърка.\nНастройки → Диагностика има подробности.';
 
   @override
+  String get hubSimulatingMatchday => 'Симулиране на кръга…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'Светът не можа да продължи напред: $error';
   }

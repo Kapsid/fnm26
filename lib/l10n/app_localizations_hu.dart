@@ -360,6 +360,9 @@ class AppLocalizationsHu extends AppLocalizations {
       'Itt valami elromlott.\nA Beállítások → Diagnosztika részletezi.';
 
   @override
+  String get hubSimulatingMatchday => 'Forduló szimulálása…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'Nem sikerült léptetni a világot: $error';
   }

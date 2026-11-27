@@ -367,6 +367,9 @@ class AppLocalizationsDe extends AppLocalizations {
       'Hier ist etwas schiefgelaufen.\nDetails unter Einstellungen → Diagnose.';
 
   @override
+  String get hubSimulatingMatchday => 'Spieltag wird simuliert…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'Die Welt konnte nicht fortgesetzt werden: $error';
   }

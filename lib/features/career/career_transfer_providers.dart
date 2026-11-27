@@ -62,7 +62,7 @@ class CareerTransferService {
         ),
       ),
     );
-    await file.writeAsBytes(CareerBundle.encode(bundle));
+    await file.writeAsBytes(await CareerBundle.encodeOffUi(bundle));
     return file;
   }
 
@@ -89,7 +89,10 @@ class CareerTransferService {
     // Written beside and renamed over, so a backup cut short never replaces
     // the good one with half a file.
     final partial = File('${file.path}.partial');
-    await partial.writeAsBytes(CareerBundle.encode(bundle), flush: true);
+    await partial.writeAsBytes(
+      await CareerBundle.encodeOffUi(bundle),
+      flush: true,
+    );
     return partial.rename(file.path);
   }
 

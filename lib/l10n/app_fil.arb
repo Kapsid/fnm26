@@ -97,6 +97,7 @@
   "commonRetry": "Subukan muli",
   "commonSomethingWentWrong": "May nagkamali",
   "commonCrashBox": "May nagkamali rito.\nNasa Mga setting → Diagnostics ang detalye.",
+  "hubSimulatingMatchday": "Sinisimulate ang matchday…",
   "hubCouldNotAdvance": "Hindi napausad ang mundo: {error}",
   "settingsDiagnosticsTitle": "Diagnostics",
   "settingsDiagnosticsBlurb": "Mga error na naitala sa device na ito. Walang ipinapadala kahit saan.",

@@ -356,6 +356,9 @@ class AppLocalizationsTr extends AppLocalizations {
       'Burada bir şeyler ters gitti.\nAyarlar → Tanılama\'da ayrıntılar var.';
 
   @override
+  String get hubSimulatingMatchday => 'Hafta simüle ediliyor…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'Dünya ilerletilemedi: $error';
   }

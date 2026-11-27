@@ -360,6 +360,9 @@ class AppLocalizationsCs extends AppLocalizations {
       'Tady se něco pokazilo.\nPodrobnosti najdete v Nastavení → Diagnostika.';
 
   @override
+  String get hubSimulatingMatchday => 'Simuluji kolo…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'Svět se nepodařilo posunout: $error';
   }
