@@ -19192,4 +19192,92 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Seulement les matchs sur lesquels cette campagne est jugée : les amicaux et les autres compétitions ne comptent pas.';
+
+  @override
+  String get resultsStagePlayoff => 'BARRAGE';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return 'Barrages $cup : Duel $path';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return 'Un duel aller-retour contre $opponent en mars, l\'aller à domicile, le retour à l\'extérieur. L\'équipe en tête au cumul va en phase finale.';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return 'Un duel aller-retour contre $opponent en mars, l\'aller à l\'extérieur, le retour à domicile. L\'équipe en tête au cumul va en phase finale.';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return 'Qualifiés comme pays hôte : $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'La place directe vous a échappé, mais comme pays hôte vous prenez l\'une des places réservées aux hôtes. $cup : vous êtes qualifiés pour la phase finale.';
+  }
+
+  @override
+  String get euro28LegendPlayoff =>
+      'Jaune : un deuxième en route vers les barrages, en l\'état actuel';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return 'Les pays hôtes ($hosts) jouent aussi les qualifications : s\'ils échouent, une place leur est réservée.';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return 'Les pays hôtes ($hosts) jouent aussi les qualifications : deux places sont réservées aux deux meilleurs d\'entre eux qui échouent.';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'les barrages';
+
+  @override
+  String get euro28CourseTitle => 'Barrages, en l\'état actuel';
+
+  @override
+  String get euro28CourseNote =>
+      'Les vainqueurs de groupe et les huit meilleurs deuxièmes sont qualifiés directement. Les autres deuxièmes vont en barrages, avec les meilleurs vainqueurs de groupe de la Coupe des nations non qualifiés. En l\'état actuel :';
+
+  @override
+  String get euro28CourseFooter =>
+      'Pourquoi ils sont là : d\'abord les deuxièmes non qualifiés, puis les meilleurs vainqueurs de groupe de la Coupe des nations pas encore qualifiés, puis ses meilleures équipes suivantes. Ce n\'est que la situation du jour : elle change après chaque journée.';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return 'Duel $path';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'Votre duel';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return 'Cumul : $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return 'Vainqueur du Duel $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return 'Votre groupe si vous gagnez le Duel $path : groupe $group';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      'Les vainqueurs de groupe et les huit meilleurs deuxièmes sont qualifiés. Les quatre dernières places se jouent en mars en duels aller-retour : les quatre meilleures équipes sont têtes de série et reçoivent au retour.';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return 'Les vainqueurs de groupe et les huit meilleurs deuxièmes sont qualifiés, et les pays hôtes qui ont échoué prennent les places qui leur sont réservées. Les $count dernières places se jouent en mars en voies de quatre équipes : demi-finales en match sec chez l\'équipe la mieux classée, puis une finale unique.';
+  }
 }

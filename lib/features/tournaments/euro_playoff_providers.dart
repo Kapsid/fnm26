@@ -12,6 +12,7 @@ import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
+import 'package:fnm/domain/services/competition/euro_qualifying28.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/wc_playoffs.dart';
 import 'package:fnm/features/career/career_providers.dart' show CareerService;
@@ -27,7 +28,16 @@ class EuroPlayoffData {
     required this.nations,
     required this.playerNationId,
     this.finalsDrawWatched = true,
+    this.euro28 = false,
   });
+
+  /// Whether the cycle plays the EURO 2028 shape (see [Euro28]): the
+  /// screens explain the play-offs its way.
+  final bool euro28;
+
+  /// Whether the play-offs are two-legged ties (the EURO 2028 shape's four
+  /// places) rather than four-team paths.
+  bool get ties => paths.isNotEmpty && paths.every(EuroPlayoffs.isTie);
 
   /// Whether the EURO's own draw has been watched. Its groups are stored the
   /// day the play-offs are drawn, but until that ceremony a path's group is
@@ -56,6 +66,24 @@ class EuroPlayoffData {
         (f) =>
             f.round == EuroPlayoffs.semiRound &&
             f.homeNationId == path.seeds[index],
+      )
+      .firstOrNull;
+
+  /// A two-legged [tie]'s first leg (at the unseeded side), or null.
+  Fixture? legOne(PlayoffPath tie) => fixtures
+      .where(
+        (f) =>
+            f.round == EuroPlayoffs.legOneRound &&
+            tie.seeds.contains(f.homeNationId),
+      )
+      .firstOrNull;
+
+  /// A two-legged [tie]'s second leg (at the seeded side), or null.
+  Fixture? legTwo(PlayoffPath tie) => fixtures
+      .where(
+        (f) =>
+            f.round == EuroPlayoffs.legTwoRound &&
+            tie.seeds.contains(f.homeNationId),
       )
       .firstOrNull;
 
@@ -141,6 +169,7 @@ Future<EuroPlayoffData?> readEuroPlayoffs(
     ),
     nations: nations,
     playerNationId: playerNationId,
+    euro28: await isEuro28(comp, careerId, cycle),
     // Only the manager's own continent's draw is watched; anyone else's
     // counts as drawn.
     finalsDrawWatched:
@@ -199,6 +228,18 @@ Future<({List<PlayoffPath> paths, bool drawn})> euroPlayoffCourse(
     for (final n in nations.values)
       if (n.confederation == europe) n.id,
   ]..sort((a, b) => nations[a]!.ranking.compareTo(nations[b]!.ranking));
+  if (await isEuro28(comp, careerId, cycle)) {
+    return (
+      paths: Euro28.onCoursePaths(
+        groups: groups,
+        ncTables: tables,
+        hosts: hosts,
+        size: ContinentalCups.byConfederation[europe]!.size,
+        fallback: fallback,
+      ),
+      drawn: false,
+    );
+  }
   return (
     paths: EuroPlayoffs.onCoursePaths(
       groups: groups,
@@ -211,23 +252,64 @@ Future<({List<PlayoffPath> paths, bool drawn})> euroPlayoffCourse(
   );
 }
 
-/// Every side of [euroPlayoffCourse]'s paths.
+/// Every side of [euroPlayoffCourse]'s paths. In the EURO 2028 shape before
+/// qualifying is drawn, the Nations Cup's sides who would take a play-off
+/// place as its tables stand (see [Euro28.onCourseNationsCup]).
 Future<Set<int>> euroPlayoffMarks(
   CompetitionRepository comp, {
   required int careerId,
   required int cycle,
   required int rngSeed,
   required Map<int, Nation> nations,
-}) async => {
-  for (final p in (await euroPlayoffCourse(
-    comp,
-    careerId: careerId,
-    cycle: cycle,
-    rngSeed: rngSeed,
-    nations: nations,
-  )).paths)
-    ...p.seeds,
-};
+}) async {
+  final course = {
+    for (final p in (await euroPlayoffCourse(
+      comp,
+      careerId: careerId,
+      cycle: cycle,
+      rngSeed: rngSeed,
+      nations: nations,
+    )).paths)
+      ...p.seeds,
+  };
+  if (course.isNotEmpty ||
+      !await isCalendar2(comp, careerId, cycle) ||
+      !await isEuro28(comp, careerId, cycle)) {
+    return course;
+  }
+  const europe = Confederation.europe;
+  if (await comp.hasTournament(
+    careerId,
+    CompetitionKind.continentalQualifying,
+    confederation: europe,
+  )) {
+    return course;
+  }
+  final fallback = [
+    for (final n in nations.values)
+      if (n.confederation == europe) n.id,
+  ]..sort((a, b) => nations[a]!.ranking.compareTo(nations[b]!.ranking));
+  return Euro28.onCourseNationsCup(
+    groups: const [],
+    ncTables: [
+      for (final t in await comp.tournamentGroupTables(
+        careerId,
+        CompetitionKind.nationsLeague,
+        confederation: europe,
+        edition: Calendar2.firstEdition,
+      ))
+        (name: t.name, standings: t.standings),
+    ],
+    hosts: WorldCupHosts.continentalHostsFor(
+      confederation: europe,
+      cycle: cycle,
+      seed: rngSeed,
+      nations: nations.values.toList(),
+    ),
+    size: ContinentalCups.byConfederation[europe]!.size,
+    fallback: fallback,
+  );
+}
 
 /// The sides of the cycle's SECOND Nations Cup on course for the World
 /// Championship play-off paths (pot 4, see [UefaWcPlayoffs.entrants]), as

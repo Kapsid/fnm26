@@ -62,6 +62,8 @@ void main() {
     await db.close();
   });
 
+  // The calendar2 play-offs of the Euro 2024 model: a cycle opened before
+  // the EURO 2028 shape (`Euro28.kind`, see euro28_flow_test.dart).
   Future<int> create(int nationId, {bool calendar2 = true}) async {
     final career =
         (await c
@@ -71,6 +73,7 @@ void main() {
                   managerName: 'M',
                   rngSeed: 4242,
                   calendar2: calendar2,
+                  euro28: false,
                 ))
             .valueOrNull!;
     await c

@@ -19439,4 +19439,92 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Doar meciurile după care este judecată această campanie: amicalele și celelalte competiții nu se pun.';
+
+  @override
+  String get resultsStagePlayoff => 'BARAJ';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return 'Baraj $cup: Dubla $path';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return 'O dublă cu $opponent în martie: primul meci acasă, al doilea în deplasare. Echipa mai bună la general merge la turneul final.';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return 'O dublă cu $opponent în martie: primul meci în deplasare, al doilea acasă. Echipa mai bună la general merge la turneul final.';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return 'Calificați ca gazdă: $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'Locul direct a scăpat, dar ca gazdă ocupați unul dintre locurile rezervate gazdelor. V-ați calificat la turneul final: $cup.';
+  }
+
+  @override
+  String get euro28LegendPlayoff =>
+      'Galben: o ocupantă a locului doi spre baraj, conform situației actuale';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return 'Gazdele ($hosts) joacă și ele preliminariile: dacă ratează, au un loc rezervat.';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return 'Gazdele ($hosts) joacă și ele preliminariile: două locuri sunt rezervate celor mai bune două care ratează.';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'baraj';
+
+  @override
+  String get euro28CourseTitle => 'Baraj, conform situației actuale';
+
+  @override
+  String get euro28CourseNote =>
+      'Câștigătoarele grupelor și cele mai bune opt ocupante ale locului doi se califică direct. Celelalte locuri doi merg la baraj, alături de cele mai bune câștigătoare de grupă din Cupa Națiunilor care nu s-au calificat. Conform situației actuale:';
+
+  @override
+  String get euro28CourseFooter =>
+      'De ce sunt aici: întâi locurile doi care nu s-au calificat, apoi cele mai bune câștigătoare de grupă din Cupa Națiunilor încă necalificate, apoi următoarele cele mai bune echipe ale ei. E doar situația de azi: se schimbă după fiecare etapă.';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return 'Dubla $path';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'Dubla ta';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return 'La general: $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return 'Câștigătoarea dublei $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return 'Grupa ta dacă câștigi dubla $path: grupa $group';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      'Câștigătoarele grupelor și cele mai bune opt ocupante ale locului doi s-au calificat. Ultimele patru locuri se decid în martie în duble tur-retur: cele mai bune patru echipe sunt capi de serie și joacă returul acasă.';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return 'Câștigătoarele grupelor și cele mai bune opt ocupante ale locului doi s-au calificat, iar gazdele care au ratat ocupă locurile rezervate lor. Ultimele $count locuri se decid în martie în trasee de câte patru echipe: semifinale într-un singur meci la echipa mai bine clasată, apoi o finală unică.';
+  }
 }

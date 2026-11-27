@@ -18974,4 +18974,92 @@ class AppLocalizationsMs extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Hanya perlawanan yang menjadi ukuran kempen ini: perlawanan persahabatan dan pertandingan lain tidak dikira.';
+
+  @override
+  String get resultsStagePlayoff => 'PLAY-OFF';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return 'Play-off $cup: Saingan $path';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return 'Saingan dua perlawanan menentang $opponent pada Mac: perlawanan pertama di tempat sendiri, kedua di tempat lawan. Pasukan yang mendahului secara agregat ke pusingan akhir.';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return 'Saingan dua perlawanan menentang $opponent pada Mac: perlawanan pertama di tempat lawan, kedua di tempat sendiri. Pasukan yang mendahului secara agregat ke pusingan akhir.';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return 'Layak sebagai tuan rumah: $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'Tempat terus terlepas, tetapi sebagai tuan rumah anda mengambil salah satu tempat yang dikhaskan untuk tuan rumah. Anda telah layak ke pusingan akhir $cup.';
+  }
+
+  @override
+  String get euro28LegendPlayoff =>
+      'Kuning: naib juara yang menuju play-off, mengikut keadaan semasa';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return 'Tuan rumah ($hosts) turut bermain kelayakan: jika gagal, satu tempat dikhaskan untuk mereka.';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return 'Tuan rumah ($hosts) turut bermain kelayakan: dua tempat dikhaskan untuk dua terbaik yang gagal.';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'play-off';
+
+  @override
+  String get euro28CourseTitle => 'Play-off, mengikut keadaan semasa';
+
+  @override
+  String get euro28CourseNote =>
+      'Juara kumpulan dan lapan naib juara terbaik layak terus. Naib juara lain ke play-off, bersama juara kumpulan terbaik Piala Negara-Negara yang belum layak. Mengikut keadaan semasa:';
+
+  @override
+  String get euro28CourseFooter =>
+      'Mengapa mereka di sini: dahulu naib juara yang terlepas, kemudian juara kumpulan terbaik Piala Negara-Negara yang belum layak, kemudian pasukan terbaik seterusnya. Ini hanya keadaan hari ini: ia berubah selepas setiap pusingan.';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return 'Saingan $path';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'Saingan anda';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return 'Agregat: $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return 'Pemenang Saingan $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return 'Kumpulan anda jika menang Saingan $path: Kumpulan $group';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      'Juara kumpulan dan lapan naib juara terbaik sudah layak. Empat tempat terakhir ditentukan pada Mac dalam saingan dua perlawanan, di tempat sendiri dan tempat lawan: empat pasukan terbaik menjadi pilihan dan bermain perlawanan kedua di tempat sendiri.';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return 'Juara kumpulan dan lapan naib juara terbaik sudah layak, dan tuan rumah yang gagal mengambil tempat yang dikhaskan untuk mereka. $count tempat terakhir ditentukan pada Mac dalam laluan empat pasukan: separuh akhir satu perlawanan di tempat pasukan berkedudukan lebih tinggi, kemudian satu perlawanan akhir.';
+  }
 }

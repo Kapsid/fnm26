@@ -78,11 +78,64 @@ extension SeasonEuroPlayoffs on SeasonService {
       kind: kind,
       confederation: europe,
     );
+    final legOnes = await _comp.fixturesByRound(
+      careerId,
+      EuroPlayoffs.legOneRound,
+      kind: kind,
+      confederation: europe,
+    );
+    final legTwos = await _comp.fixturesByRound(
+      careerId,
+      EuroPlayoffs.legTwoRound,
+      kind: kind,
+      confederation: europe,
+    );
     final wcYear = SeasonService.finalsYear(cycle);
+    final euro28 = await isEuro28(_comp, careerId, cycle);
     final me = career.nationId;
     final cupName = ContinentalCups.byConfederation[europe]!.name;
+
+    // A path's or a tie's winner into the slot its placeholder was drawn
+    // into, and the manager told how it ended for him.
+    Future<void> resolve(String letter, int winner, Fixture last) async {
+      final key = EuroPlayoffs.placeholderKey(letter);
+      final slot = finalsSlots
+          .where((s) => s.placeholderKey == key)
+          .firstOrNull;
+      if (slot == null || slot.resolvedNationId != null) return;
+      await _comp.resolveDrawSlot(
+        careerId: careerId,
+        cycle: cycle,
+        kind: CompetitionKind.continentalFinals,
+        confederation: europe,
+        placeholderKey: key,
+        nationId: winner,
+      );
+      if (!isManagers) return;
+      if (winner == me) {
+        await _fileEuroQualified(careerId, wcYear, cupName, year: wcYear - 2);
+      } else if (last.homeNationId == me || last.awayNationId == me) {
+        await _fileEuroMiss(careerId, wcYear, year: wcYear - 2);
+      }
+    }
+
     for (final path in paths) {
       final members = path.seeds.toSet();
+      // A two-legged tie (the EURO 2028 shape's four places): both legs are
+      // on the calendar from the draw, and the tie goes on aggregate.
+      if (EuroPlayoffs.isTie(path)) {
+        final first = legOnes
+            .where((f) => members.contains(f.homeNationId))
+            .firstOrNull;
+        final second = legTwos
+            .where((f) => members.contains(f.homeNationId))
+            .firstOrNull;
+        if (first == null || second == null) continue;
+        final winner = TwoLegged.winner(first, second);
+        if (winner == null) continue;
+        await resolve(path.letter, winner, second);
+        continue;
+      }
       final pathSemis = [
         for (final f in semis)
           if (members.contains(f.homeNationId)) f,
@@ -119,33 +172,17 @@ extension SeasonEuroPlayoffs on SeasonService {
           confederation: europe,
           pairings: [(host, visitor)],
           date: SeasonCycle._notBeforeToday(
-            Calendar2.euroPlayoffs(wcYear).finalDay,
+            (euro28
+                    ? Calendar2.euro28Playoffs(wcYear)
+                    : Calendar2.euroPlayoffs(wcYear))
+                .finalDay,
             career.inGameDate,
           ),
         );
         continue;
       }
       if (!pathFinal.hasResult) continue;
-      final winner = SeasonService._winner(pathFinal);
-      final key = EuroPlayoffs.placeholderKey(path.letter);
-      final slot = finalsSlots
-          .where((s) => s.placeholderKey == key)
-          .firstOrNull;
-      if (slot == null || slot.resolvedNationId != null) continue;
-      await _comp.resolveDrawSlot(
-        careerId: careerId,
-        cycle: cycle,
-        kind: CompetitionKind.continentalFinals,
-        confederation: europe,
-        placeholderKey: key,
-        nationId: winner,
-      );
-      if (!isManagers) continue;
-      if (winner == me) {
-        await _fileEuroQualified(careerId, wcYear, cupName, year: wcYear - 2);
-      } else if (pathFinal.homeNationId == me || pathFinal.awayNationId == me) {
-        await _fileEuroMiss(careerId, wcYear, year: wcYear - 2);
-      }
+      await resolve(path.letter, SeasonService._winner(pathFinal), pathFinal);
     }
 
     finalsSlots = await _comp.drawSlots(
@@ -211,16 +248,37 @@ extension SeasonEuroPlayoffs on SeasonService {
     SeededRng venueRng() =>
         SeededRng(career.rngSeed ^ (cycle * 0x5E11) ^ 0xE0F0);
 
-    final settled = EuroPlayoffs.settle(
-      groups: groups,
-      tables: ncTables,
-      hosts: hosts.toSet(),
-      size: cont.size,
-      rng: venueRng,
-      fallback: fallback,
-    );
-    final direct = settled.direct;
-    final paths = settled.paths;
+    // The EURO 2028 shape (see [Euro28]): the hosts played qualifying, and
+    // only those who missed out take a held place (two at most).
+    final euro28 = await isEuro28(_comp, careerId, cycle);
+    final e28 = !euro28
+        ? null
+        : Euro28.settle(
+            groups: groups,
+            ncTables: ncTables,
+            hosts: hosts,
+            size: cont.size,
+            rng: SeededRng(career.rngSeed ^ (cycle * 0x5E11) ^ 0xE28),
+            fallback: fallback,
+          );
+    final old = euro28
+        ? null
+        : EuroPlayoffs.settle(
+            groups: groups,
+            tables: ncTables,
+            hosts: hosts.toSet(),
+            size: cont.size,
+            rng: venueRng,
+            fallback: fallback,
+          );
+    final direct = e28?.direct ?? old!.direct;
+    final paths = e28?.paths ?? old!.paths;
+    final held =
+        e28?.hostPlaces ??
+        [
+          for (final h in hosts)
+            if (!direct.contains(h)) h,
+        ];
     if (paths.isEmpty) {
       await _generateContinentalFinals(
         careerId,
@@ -229,16 +287,19 @@ extension SeasonEuroPlayoffs on SeasonService {
       );
       return false;
     }
-    if (direct.length < berths - paths.length) return false;
+    if (!euro28 && direct.length < berths - paths.length) return false;
+    if (euro28 && direct.length + held.length + paths.length < cont.size) {
+      return false;
+    }
 
     // The EURO's groups, each path's winner a ball in pot 4: placeholders
     // rank below every nation, path A's first.
     final field = [
       ...direct,
-      for (final h in hosts)
-        if (!direct.contains(h)) h,
+      ...held,
       for (var i = 0; i < paths.length; i++) EuroPlayoffs.pseudoId(i),
     ].take(cont.size).toList();
+    final ties = paths.every(EuroPlayoffs.isTie);
     await _ref
         .read(seedRankingRepositoryProvider)
         .snapshot(
@@ -254,7 +315,10 @@ extension SeasonEuroPlayoffs on SeasonService {
           EuroPlayoffs.pseudoId(i): 100000 + i,
       },
       rngSeed: career.rngSeed ^ (cycle * 0x71) ^ 0xC0FF,
-      hosts: hosts,
+      hosts: [
+        for (final h in hosts)
+          if (field.contains(h)) h,
+      ],
       perGroup: cont.groupSize,
     );
     if (draw.groups.isEmpty) return false;
@@ -293,46 +357,94 @@ extension SeasonEuroPlayoffs on SeasonService {
       ],
     );
     final wcYear = SeasonService.finalsYear(cycle);
-    await _comp.createKnockout(
-      careerId: careerId,
-      cycle: cycle,
-      confederation: europe,
-      kind: CompetitionKind.continentalPlayoff,
-      name: '${cont.name}${EuroPlayoffs.nameSuffix}',
-      pairings: [for (final p in paths) ...EuroPlayoffs.semis(p)],
-      date: Calendar2.euroPlayoffs(wcYear).semis,
-      firstRound: EuroPlayoffs.semiRound,
-    );
+    final dates = euro28
+        ? Calendar2.euro28Playoffs(wcYear)
+        : Calendar2.euroPlayoffs(wcYear);
+    final name = '${cont.name}${EuroPlayoffs.nameSuffix}';
+    if (ties) {
+      // Four two-legged ties: both legs on the calendar from the draw.
+      await _comp.createKnockout(
+        careerId: careerId,
+        cycle: cycle,
+        confederation: europe,
+        kind: CompetitionKind.continentalPlayoff,
+        name: name,
+        pairings: [for (final p in paths) EuroPlayoffs.firstLeg(p)],
+        date: dates.semis,
+        firstRound: EuroPlayoffs.legOneRound,
+      );
+      await _comp.addKnockoutFixtures(
+        careerId: careerId,
+        round: EuroPlayoffs.legTwoRound,
+        kind: CompetitionKind.continentalPlayoff,
+        confederation: europe,
+        pairings: [for (final p in paths) EuroPlayoffs.secondLeg(p)],
+        date: dates.finalDay,
+      );
+    } else {
+      await _comp.createKnockout(
+        careerId: careerId,
+        cycle: cycle,
+        confederation: europe,
+        kind: CompetitionKind.continentalPlayoff,
+        name: name,
+        pairings: [for (final p in paths) ...EuroPlayoffs.semis(p)],
+        date: dates.semis,
+        firstRound: EuroPlayoffs.semiRound,
+      );
+    }
 
     if (!isManagers) return true;
     // The news of where the manager stands, the day it is known.
     final me = career.nationId;
+    final cup = MsgComp(cont.name);
     if (direct.contains(me)) {
       await _fileEuroQualified(careerId, wcYear, cont.name, year: wcYear - 3);
       return true;
     }
-    if (hosts.contains(me)) return true;
+    if (euro28 && held.contains(me)) {
+      // Missed out in the group, through on a place held for the hosts.
+      await _comp.addTextMessage(
+        l: _l,
+        careerId: careerId,
+        dedupKey: 'qual:cont:${wcYear - 2}',
+        category: 'qualify',
+        title: MsgText(MsgKey.newsEuroHostPlaceTitle, [cup]),
+        body: MsgText(MsgKey.newsEuroHostPlaceBody, [cup]),
+        year: wcYear - 3,
+      );
+      return true;
+    }
+    if (!euro28 && hosts.contains(me)) return true;
     final mine = paths.where((p) => p.seeds.contains(me)).firstOrNull;
     if (mine == null) {
       await _fileEuroMiss(careerId, wcYear, year: wcYear - 3);
       return true;
     }
-    final (home, away) = EuroPlayoffs.semis(
-      mine,
-    ).firstWhere((s) => s.$1 == me || s.$2 == me);
+    final tie = EuroPlayoffs.isTie(mine);
+    final (home, away) = tie
+        ? EuroPlayoffs.firstLeg(mine)
+        : EuroPlayoffs.semis(
+            mine,
+          ).firstWhere((s) => s.$1 == me || s.$2 == me);
     final atHome = home == me;
     final opponent = nations[atHome ? away : home]?.name ?? _l.msgANation;
-    final cup = MsgComp(cont.name);
     await _comp.addTextMessage(
       l: _l,
       careerId: careerId,
       dedupKey: 'europlayoff:$wcYear',
       category: 'draw',
-      title: MsgText(MsgKey.newsEuroPlayoffPathTitle, [cup, mine.letter]),
+      title: MsgText(
+        tie ? MsgKey.newsEuroPlayoffTieTitle : MsgKey.newsEuroPlayoffPathTitle,
+        [cup, mine.letter],
+      ),
       body: MsgText(
-        atHome
-            ? MsgKey.newsEuroPlayoffPathBodyHome
-            : MsgKey.newsEuroPlayoffPathBodyAway,
+        switch ((tie, atHome)) {
+          (true, true) => MsgKey.newsEuroPlayoffTieBodyHome,
+          (true, false) => MsgKey.newsEuroPlayoffTieBodyAway,
+          (false, true) => MsgKey.newsEuroPlayoffPathBodyHome,
+          (false, false) => MsgKey.newsEuroPlayoffPathBodyAway,
+        },
         [opponent],
       ),
       year: wcYear - 3,

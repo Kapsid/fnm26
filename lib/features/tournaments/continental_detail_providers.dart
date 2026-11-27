@@ -11,6 +11,7 @@ import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
+import 'package:fnm/domain/services/competition/euro_qualifying28.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
@@ -72,6 +73,7 @@ class ContinentalData {
     this.myNationIds = const {},
     this.playoffs,
     this.playoffRoute = false,
+    this.euro28 = false,
     this.playoffCourse = const [],
     this.pendingDraw,
     this.pendingLetters = const {},
@@ -85,6 +87,12 @@ class ContinentalData {
   /// calendar2 rhythm): only the top two of each qualifying group go
   /// straight through, and nobody qualifies as a best third.
   final bool playoffRoute;
+
+  /// Whether Europe's qualifying runs in the EURO 2028 shape (see
+  /// [Euro28]): the winners and the eight best runners-up through, the
+  /// other runners-up to the play-offs, the hosts playing with a held place
+  /// should they miss out.
+  final bool euro28;
 
   /// Europe's play-off paths as they stand (see [euroPlayoffCourse]),
   /// listed under the qualifying tables: their sides are read off the first
@@ -477,10 +485,34 @@ continentalQualifyingDrawProvider = FutureProvider.autoDispose
         confederation: key.confederation,
       );
       if (storedGroups.isNotEmpty) {
+        // The EURO 2028 shape seeds its pots off the first Nations Cup (see
+        // [Euro28.potOrder]): a ball's pot is its place in that order.
+        final euro28 =
+            key.confederation == Confederation.europe &&
+            await isCalendar2(comp, key.careerId, career.cyclePointer) &&
+            await isEuro28(comp, key.careerId, career.cyclePointer);
+        final potRank = !euro28
+            ? rankById
+            : {
+                for (final (i, id) in (await CareerService.euro28PotOrder(
+                  comp: comp,
+                  careerId: key.careerId,
+                  members:
+                      [
+                        for (final n in all)
+                          if (n.confederation == Confederation.europe) n,
+                      ]..sort(
+                        (a, b) => (rankById[a.id] ?? a.ranking).compareTo(
+                          rankById[b.id] ?? b.ranking,
+                        ),
+                      ),
+                )).indexed)
+                  id: i + 1,
+              };
         return ContinentalDrawData(
           draw: FinalsDraw(
             groups: [
-              for (final g in drawnGroups(storedGroups, rankById: rankById))
+              for (final g in drawnGroups(storedGroups, rankById: potRank))
                 FinalsGroupDraw(
                   name: g.name,
                   nationIds: g.nationIds,
@@ -905,6 +937,10 @@ continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, 
     playoffRoute:
         key.confederation == Confederation.europe &&
         await isCalendar2(comp, key.careerId, career.cyclePointer),
+    euro28:
+        key.confederation == Confederation.europe &&
+        await isCalendar2(comp, key.careerId, career.cyclePointer) &&
+        await isEuro28(comp, key.careerId, career.cyclePointer),
     pendingDraw: pendingDraw?.draw,
     pendingLetters: pendingDraw?.letters ?? const {},
     name: config.name,
@@ -956,23 +992,34 @@ continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, 
 
 /// What shapes a continental qualifying table for [confederation] this
 /// cycle, so the hub and the round results colour it as this screen does:
-/// how many hosts take berths, and whether the places past the top two go
-/// to Europe's play-offs (calendar2) rather than the best runners-up.
-Future<({int hosts, bool playoffRoute})> continentalQualifyingShape(
+/// how many hosts take berths, whether the places past the top two go to
+/// Europe's play-offs (calendar2) rather than the best runners-up, and
+/// whether Europe plays the EURO 2028 shape ([euro28], see [Euro28]: the
+/// winners and the best runners-up through, the hosts playing, [hostIds]
+/// on a held place should they miss out).
+Future<({int hosts, bool playoffRoute, bool euro28, List<int> hostIds})>
+continentalQualifyingShape(
   CompetitionRepository comp, {
   required int careerId,
   required int cycle,
   required int rngSeed,
   required Confederation confederation,
   required Iterable<Nation> nations,
-}) async => (
-  hosts: WorldCupHosts.continentalHostsFor(
+}) async {
+  final hostIds = WorldCupHosts.continentalHostsFor(
     confederation: confederation,
     cycle: cycle,
     seed: rngSeed,
     nations: nations.toList(),
-  ).length,
-  playoffRoute:
+  );
+  final cal2 =
       confederation == Confederation.europe &&
-      await isCalendar2(comp, careerId, cycle),
-);
+      await isCalendar2(comp, careerId, cycle);
+  final euro28 = cal2 && await isEuro28(comp, careerId, cycle);
+  return (
+    hosts: hostIds.length,
+    playoffRoute: cal2 && !euro28,
+    euro28: euro28,
+    hostIds: hostIds,
+  );
+}

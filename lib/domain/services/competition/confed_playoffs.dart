@@ -7,6 +7,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
 import 'package:fnm/domain/services/competition/regional_cups.dart';
@@ -23,13 +24,14 @@ import 'package:fnm/domain/services/competition/regional_cups.dart';
 abstract final class TwoLegged {
   /// The second legs' round codes. A first leg is an ordinary match (a draw
   /// stands); only the second leg can need extra time.
-  /// Asia's fifth round, and the regional cups' two-legged semi-finals and
-  /// finals.
+  /// Asia's fifth round, Europe's two-legged play-off ties (`Euro28`), and
+  /// the regional cups' two-legged semi-finals and finals.
   static final Set<String> secondLegs = {...firstLegOf.keys};
 
   /// Each second leg's first leg.
   static final Map<String, String> firstLegOf = {
     ConfedPlayoffs.afc5Leg2: ConfedPlayoffs.afc5Leg1,
+    EuroPlayoffs.legTwoRound: EuroPlayoffs.legOneRound,
     ...RegionalCups.firstLegOf,
   };
 

@@ -10,6 +10,7 @@ import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/db/career_bundle.dart';
 import 'package:fnm/data/db/save_backup.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/services/competition/euro_qualifying28.dart';
 import 'package:fnm/domain/services/competition/host_bidding.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/nation/dormant_nations.dart';
@@ -387,6 +388,24 @@ void main() {
                   r.from + 1,
                   mgrRolloverKind,
                 ),
+                isTrue,
+              );
+            },
+            timeout: const Timeout(Duration(minutes: 10)),
+          );
+
+          test(
+            'the EURO 2028 shape waits for the next cycle',
+            () async {
+              final r = await rollOnce();
+              final comp = r.c.read(competitionRepositoryProvider);
+              expect(
+                await isEuro28(comp, manifest.careerId, r.from),
+                isFalse,
+                reason: 'the upgrade cycle keeps the shape it opened with',
+              );
+              expect(
+                await isEuro28(comp, manifest.careerId, r.from + 1),
                 isTrue,
               );
             },

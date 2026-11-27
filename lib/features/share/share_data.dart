@@ -76,6 +76,11 @@ import 'package:fnm/l10n/app_localizations.dart';
       round: round == 'EPFINAL' ? l.resultsStageFinal : l.resultsStageSemiFinal,
       trophy: null,
     ),
+    'EPL1' || 'EPL2' => (
+      competition: l.compPlayoffs(continentalCupLabel(l, cont)),
+      round: round == 'EPL1' ? l.matchTinyFirstLeg : l.matchTinySecondLeg,
+      trophy: null,
+    ),
     'NL' || 'NGROUP' => (
       competition: MatchStage.category(l, round),
       round: null,

@@ -19345,4 +19345,92 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Лише матчі, за якими оцінюють цю кампанію: товариські матчі та інші турніри не враховуються.';
+
+  @override
+  String get resultsStagePlayoff => 'ПЛЕЙ-ОФ';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return '$cup, плей-оф: Пара $path';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return 'Двоматчеве протистояння з $opponent у березні: перший матч удома, другий на виїзді. До фінальної частини виходить той, хто кращий за сумою двох матчів.';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return 'Двоматчеве протистояння з $opponent у березні: перший матч на виїзді, другий удома. До фінальної частини виходить той, хто кращий за сумою двох матчів.';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return 'Вихід як господар: $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'Пряму путівку втрачено, але як господар ти отримуєш одне з місць, зарезервованих для господарів. Твоя збірна пробилася до фінальної частини: $cup.';
+  }
+
+  @override
+  String get euro28LegendPlayoff =>
+      'Жовтий: друга команда, що прямує до плей-оф, за поточним станом';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return 'Господарі ($hosts) також грають у кваліфікації: якщо не пройдуть, для них зарезервовано місце.';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return 'Господарі ($hosts) також грають у кваліфікації: два місця зарезервовано для двох найкращих, хто не пройде.';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'плей-оф';
+
+  @override
+  String get euro28CourseTitle => 'Плей-оф, за поточним станом';
+
+  @override
+  String get euro28CourseNote =>
+      'Переможці груп і вісім найкращих других команд виходять напряму. Решта других команд іде до плей-оф разом із найкращими переможцями груп Nations Cup, які не пройшли. За поточним станом:';
+
+  @override
+  String get euro28CourseFooter =>
+      'Чому вони тут: спершу другі команди, які не пройшли, потім найкращі переможці груп Nations Cup, які ще не пройшли, потім його наступні найкращі команди. Це лише сьогоднішній стан: він змінюється після кожного туру.';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return 'Пара $path';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'Твоя пара';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return 'За сумою: $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return 'Переможець пари $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return 'Твоя група, якщо виграєш пару $path: група $group';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      'Переможці груп і вісім найкращих других команд пройшли. Останні чотири місця розіграють у березні у двоматчевих парах удома та на виїзді: чотири найкращі команди посіяні й грають другий матч удома.';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return 'Переможці груп і вісім найкращих других команд пройшли, а господарі, які не пройшли, займають зарезервовані для них місця. Останні $count місця розіграють у березні в шляхах по чотири команди: півфінал в одному матчі в кращої за рейтингом команди, потім єдиний фінал.';
+  }
 }

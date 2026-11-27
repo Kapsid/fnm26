@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/cross_group.dart';
+import 'package:fnm/domain/services/competition/euro_qualifying28.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
@@ -291,6 +292,10 @@ abstract final class GroupAdvancement {
     bool worldCupConfedSteps = false,
     int continentalHosts = 0,
     bool continentalPlayoffRoute = false,
+
+    /// Europe's qualifying in the EURO 2028 shape (see [Euro28]): the
+    /// winners go through, and the best runners-up on the ladder.
+    bool continentalEuro28 = false,
   }) {
     switch (kind) {
       case CompetitionKind.worldCupQualifying:
@@ -302,6 +307,8 @@ abstract final class GroupAdvancement {
           confedSteps: worldCupConfedSteps,
         );
         return (direct: adv.direct, contention: adv.contention, relegate: 0);
+      case CompetitionKind.continentalQualifying when continentalEuro28:
+        return (direct: 1, contention: 2, relegate: 0);
       case CompetitionKind.continentalQualifying:
         // Europe on the calendar2 rhythm: the top two go through and the rest
         // of the places are won in the play-offs, not by the best thirds.
@@ -365,7 +372,25 @@ abstract final class GroupAdvancement {
     required List<List<GroupStanding>> groups,
     int continentalHosts = 0,
     bool continentalPlayoffRoute = false,
+
+    /// Europe's qualifying in the EURO 2028 shape (see [Euro28]): the best
+    /// runners-up through as things stand, and [euro28Hosts] who would take
+    /// a held place.
+    bool continentalEuro28 = false,
+    List<int> euro28Hosts = const [],
   }) {
+    if (kind == CompetitionKind.continentalQualifying && continentalEuro28) {
+      final through = Euro28.runnersUpThrough(groups);
+      final direct = Euro28.direct(groups);
+      return {
+        for (final s in Euro28.runnersUp(groups).take(through)) s.nationId,
+        ...Euro28.hostPlaces(
+          groups: groups,
+          hosts: euro28Hosts,
+          direct: direct,
+        ),
+      };
+    }
     final (int? pos, int qualify) = switch (kind) {
       CompetitionKind.continentalQualifying when !continentalPlayoffRoute =>
         () {
@@ -389,6 +414,27 @@ abstract final class GroupAdvancement {
     return {
       for (final s in CrossGroup.tier(groups, pos - 1).take(qualify))
         s.nationId,
+    };
+  }
+
+  /// Europe's qualifying in the EURO 2028 shape: the runners-up headed for
+  /// the play-offs as things stand (those the ladder leaves out, less any
+  /// host who would take a held place). The Nations Cup's sides are never
+  /// marked in the tables.
+  static Set<int> euro28PlayoffNations(
+    List<List<GroupStanding>> groups, {
+    List<int> hosts = const [],
+  }) {
+    final direct = Euro28.direct(groups);
+    final held = Euro28.hostPlaces(
+      groups: groups,
+      hosts: hosts,
+      direct: direct,
+    );
+    return {
+      for (final s in Euro28.runnersUp(groups))
+        if (!direct.contains(s.nationId) && !held.contains(s.nationId))
+          s.nationId,
     };
   }
 

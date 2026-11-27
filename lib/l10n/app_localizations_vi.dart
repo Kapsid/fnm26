@@ -18853,4 +18853,92 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Chỉ các trận dùng để đánh giá chiến dịch này: không tính giao hữu và các giải đấu khác.';
+
+  @override
+  String get resultsStagePlayoff => 'PLAY-OFF';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return 'Play-off $cup: Cặp đấu $path';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return 'Cặp đấu hai lượt với $opponent vào tháng 3: lượt đi trên sân nhà, lượt về trên sân khách. Đội hơn về tổng tỉ số sẽ dự vòng chung kết.';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return 'Cặp đấu hai lượt với $opponent vào tháng 3: lượt đi trên sân khách, lượt về trên sân nhà. Đội hơn về tổng tỉ số sẽ dự vòng chung kết.';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return 'Giành vé với tư cách chủ nhà: $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'Bạn đã lỡ suất trực tiếp, nhưng với tư cách chủ nhà bạn nhận một trong các suất dành cho chủ nhà. Bạn đã giành quyền dự vòng chung kết $cup.';
+  }
+
+  @override
+  String get euro28LegendPlayoff =>
+      'Vàng: đội nhì bảng đang hướng tới play-off, theo tình hình hiện tại';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return 'Các nước chủ nhà ($hosts) cũng đá vòng loại: nếu trượt, họ vẫn có một suất dành sẵn.';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return 'Các nước chủ nhà ($hosts) cũng đá vòng loại: có hai suất dành cho hai đội tốt nhất trong số những đội trượt.';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'vòng play-off';
+
+  @override
+  String get euro28CourseTitle => 'Play-off, theo tình hình hiện tại';
+
+  @override
+  String get euro28CourseNote =>
+      'Các đội nhất bảng và tám đội nhì bảng tốt nhất giành vé trực tiếp. Các đội nhì bảng còn lại dự play-off, cùng các đội nhất bảng tốt nhất của Nations Cup chưa giành vé. Theo tình hình hiện tại:';
+
+  @override
+  String get euro28CourseFooter =>
+      'Vì sao họ ở đây: trước hết là các đội nhì bảng lỡ vé, sau đó là các đội nhất bảng tốt nhất của Nations Cup chưa giành vé, rồi đến các đội tốt nhất tiếp theo. Đây chỉ là tình hình hôm nay: thay đổi sau mỗi lượt trận.';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return 'Cặp đấu $path';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'Cặp đấu của bạn';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return 'Tổng tỉ số: $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return 'Đội thắng cặp đấu $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return 'Bảng của bạn nếu thắng cặp đấu $path: bảng $group';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      'Các đội nhất bảng và tám đội nhì bảng tốt nhất đã giành vé. Bốn suất cuối được định đoạt vào tháng 3 qua các cặp đấu hai lượt sân nhà và sân khách: bốn đội mạnh nhất là hạt giống và đá lượt về trên sân nhà.';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return 'Các đội nhất bảng và tám đội nhì bảng tốt nhất đã giành vé, và các đội chủ nhà bị trượt nhận suất dành cho họ. $count suất cuối được định đoạt vào tháng 3 ở các nhánh bốn đội: bán kết một trận trên sân đội xếp hạng cao hơn, rồi một trận chung kết duy nhất.';
+  }
 }

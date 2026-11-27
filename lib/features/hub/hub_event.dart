@@ -180,6 +180,8 @@ String _callUpLabel(AppLocalizations l, Fixture f) {
     'NGROUP' => l.hubCallUpNationsCup,
     EuroPlayoffs.semiRound ||
     EuroPlayoffs.finalRound ||
+    EuroPlayoffs.legOneRound ||
+    EuroPlayoffs.legTwoRound ||
     UefaWcPlayoffs.semiRound ||
     UefaWcPlayoffs.finalRound ||
     IcPlayoffs.semiRound ||

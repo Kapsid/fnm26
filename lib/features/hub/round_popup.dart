@@ -55,6 +55,8 @@ const _knockoutRounds = <String, ({int order, String label})>{
   'NFINAL': (order: 3, label: 'Final'),
   'EPSF': (order: 0, label: 'Semi-finals'),
   'EPFINAL': (order: 1, label: 'Final'),
+  'EPL1': (order: 0, label: 'First leg'),
+  'EPL2': (order: 1, label: 'Second leg'),
   'UPSF': (order: 0, label: 'Semi-finals'),
   'UPFINAL': (order: 1, label: 'Final'),
   'ICSF': (order: 0, label: 'Semi-finals'),
@@ -141,7 +143,12 @@ latestRoundPopupProvider = FutureProvider.autoDispose.family<RoundPopup?, int>((
           (
             kind: CompetitionKind.continentalPlayoff,
             name: '$continentalName${EuroPlayoffs.nameSuffix}',
-            rounds: const [EuroPlayoffs.semiRound, EuroPlayoffs.finalRound],
+            rounds: const [
+              EuroPlayoffs.semiRound,
+              EuroPlayoffs.finalRound,
+              EuroPlayoffs.legOneRound,
+              EuroPlayoffs.legTwoRound,
+            ],
             confederation: conf,
           ),
         // The World Championship's play-offs (a calendar2 cycle), watched by

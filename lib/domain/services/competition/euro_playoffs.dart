@@ -6,6 +6,7 @@ import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/cross_group.dart';
+import 'package:fnm/domain/services/competition/euro_qualifying28.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
@@ -44,8 +45,31 @@ abstract final class EuroPlayoffs {
   /// The path finals' round code.
   static const String finalRound = 'EPFINAL';
 
-  /// Both round codes.
-  static const Set<String> rounds = {semiRound, finalRound};
+  /// A two-legged tie's first leg ([Euro28]'s four-place play-offs): an
+  /// ordinary match, a draw stands.
+  static const String legOneRound = 'EPL1';
+
+  /// A two-legged tie's second leg: level on aggregate, extra time and
+  /// penalties (see `TwoLegged`).
+  static const String legTwoRound = 'EPL2';
+
+  /// Every play-off round code: the paths' and the ties'.
+  static const Set<String> rounds = {
+    semiRound,
+    finalRound,
+    legOneRound,
+    legTwoRound,
+  };
+
+  /// Whether [path] is a two-legged tie (two sides, see [Euro28]) rather
+  /// than a four-team path.
+  static bool isTie(PlayoffPath path) => path.seeds.length == 2;
+
+  /// A tie's first leg as (home, away): at the unseeded side.
+  static (int, int) firstLeg(PlayoffPath tie) => (tie.seeds[1], tie.seeds[0]);
+
+  /// A tie's second leg as (home, away): at the seeded side.
+  static (int, int) secondLeg(PlayoffPath tie) => (tie.seeds[0], tie.seeds[1]);
 
   /// The play-off competition's stored name is the cup's with this after it
   /// ("European Championship Play-offs").
@@ -311,7 +335,7 @@ abstract final class EuroPlayoffs {
   ];
 
   /// The paths [slots] store (see [toSlots]), in letter order. A path that
-  /// is not four sides is left out.
+  /// is not four sides (or two, a [Euro28] tie) is left out.
   static List<PlayoffPath> fromSlots(List<DrawSlot> slots) {
     final byLetter = <String, List<DrawSlot>>{};
     for (final s in slots) {
@@ -325,7 +349,7 @@ abstract final class EuroPlayoffs {
         for (final r in rows)
           if (r.nationId != null && r.position < finalHostPosition) r.nationId!,
       ];
-      if (seeds.length != 4) continue;
+      if (seeds.length != 4 && seeds.length != 2) continue;
       final host = rows
           .map((r) => finalHostOf(r.placeholderKey))
           .whereType<int>()

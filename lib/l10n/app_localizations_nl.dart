@@ -19110,4 +19110,92 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Alleen de wedstrijden waarop deze campagne wordt beoordeeld: oefenwedstrijden en andere toernooien tellen niet mee.';
+
+  @override
+  String get resultsStagePlayoff => 'PLAY-OFF';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return 'Play-offs $cup: Duel $path';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return 'Een duel over twee wedstrijden tegen $opponent in maart: de eerste thuis, de tweede uit. Wie over twee wedstrijden voor staat, gaat naar de eindronde.';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return 'Een duel over twee wedstrijden tegen $opponent in maart: de eerste uit, de tweede thuis. Wie over twee wedstrijden voor staat, gaat naar de eindronde.';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return 'Geplaatst als gastland: $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'De directe plek is gemist, maar als gastland krijg je een van de plekken die voor de gastlanden zijn vrijgehouden. Je hebt je gekwalificeerd voor de eindronde van $cup.';
+  }
+
+  @override
+  String get euro28LegendPlayoff =>
+      'Geel: een nummer twee op weg naar de play-offs, zoals het nu staat';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return 'De gastlanden ($hosts) spelen ook de kwalificatie: grijpen ze mis, dan is er een plek voor ze vrijgehouden.';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return 'De gastlanden ($hosts) spelen ook de kwalificatie: twee plekken zijn vrijgehouden voor de beste twee die misgrijpen.';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'de play-offs';
+
+  @override
+  String get euro28CourseTitle => 'Play-offs, zoals het nu staat';
+
+  @override
+  String get euro28CourseNote =>
+      'De groepswinnaars en de acht beste nummers twee gaan rechtstreeks door. De andere nummers twee gaan naar de play-offs, met de beste groepswinnaars van de Nations Cup die niet door zijn. Zoals het nu staat:';
+
+  @override
+  String get euro28CourseFooter =>
+      'Waarom ze hier staan: eerst de nummers twee die niet doorgaan, dan de beste groepswinnaars van de Nations Cup die nog niet door zijn, dan de volgende beste ploegen. Dit is alleen de stand van vandaag: die verandert na elke speelronde.';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return 'Duel $path';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'Jouw duel';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return 'Totaal: $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return 'Winnaar duel $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return 'Jouw groep als je duel $path wint: groep $group';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      'De groepswinnaars en de acht beste nummers twee zijn geplaatst. De laatste vier plekken worden in maart beslist in duels over twee wedstrijden, thuis en uit: de vier beste ploegen zijn geplaatst en spelen de return thuis.';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return 'De groepswinnaars en de acht beste nummers twee zijn geplaatst, en gastlanden die misgrepen nemen de plekken die voor ze vrijgehouden zijn. De laatste $count plekken worden in maart beslist in paden van vier ploegen: een halve finale in één wedstrijd bij de hoogst geplaatste, daarna een eenmalige finale.';
+  }
 }

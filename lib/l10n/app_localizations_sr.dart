@@ -19372,4 +19372,92 @@ class AppLocalizationsSr extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Само утакмице по којима се ова кампања оцењује: пријатељске утакмице и друга такмичења се не рачунају.';
+
+  @override
+  String get resultsStagePlayoff => 'БАРАЖ';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return '$cup, бараж: Дуел $path';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return 'Дуел у две утакмице против репрезентације $opponent у марту: прва код куће, друга у гостима. На завршни турнир иде ко буде бољи у збиру.';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return 'Дуел у две утакмице против репрезентације $opponent у марту: прва у гостима, друга код куће. На завршни турнир иде ко буде бољи у збиру.';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return 'Пролаз као домаћин: $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'Директно место је измакло, али као домаћин добијаш једно од места резервисаних за домаћине. Пласирао си се на завршни турнир: $cup.';
+  }
+
+  @override
+  String get euro28LegendPlayoff =>
+      'Жуто: другопласирани који иде у бараж, према тренутном стању';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return 'Домаћини ($hosts) такође играју квалификације: ако не успеју, за њих је резервисано место.';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return 'Домаћини ($hosts) такође играју квалификације: два места су резервисана за два најбоља која не успеју.';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'бараж';
+
+  @override
+  String get euro28CourseTitle => 'Бараж, према тренутном стању';
+
+  @override
+  String get euro28CourseNote =>
+      'Победници група и осам најбољих другопласираних пролазе директно. Остали другопласирани иду у бараж, са најбољим победницима група Купа нација који нису прошли. Према тренутном стању:';
+
+  @override
+  String get euro28CourseFooter =>
+      'Зашто су овде: прво другопласирани који нису прошли, затим најбољи победници група Купа нација који још нису прошли, затим његови следећи најбољи тимови. Ово је само данашње стање: мења се после сваког кола.';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return 'Дуел $path';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'Твој дуел';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return 'Укупно: $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return 'Победник дуела $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return 'Твоја група ако победиш у дуелу $path: група $group';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      'Победници група и осам најбољих другопласираних су прошли. Последња четири места одлучују се у марту у дуелима код куће и у гостима: четири најбоља тима су носиоци и реванш играју код куће.';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return 'Победници група и осам најбољих другопласираних су прошли, а домаћини који нису успели узимају места резервисана за њих. Последња $count места одлучују се у марту на путевима од по четири тима: полуфинале у једној утакмици код боље рангираног, затим једно финале.';
+  }
 }
