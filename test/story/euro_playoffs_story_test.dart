@@ -35,7 +35,7 @@ import 'driver.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   const europe = Confederation.europe;
-  const entrantSeed = 45;
+  const entrantSeed = 94; // 45 before the 1.1.4 goal lull
   const entrantIndex = 24;
   const watcherSeed = 31;
 
