@@ -247,11 +247,22 @@ class _ClassicPlayerRoles extends PlayerRolesStore {
 /// style and its dials, each slot's role and run, the set-piece takers and
 /// the presets, all kept in the run. The screen is fed the run through
 /// [classicTacticsOverrides] in a scope of its own; Play match goes on to
-/// the live match.
+/// the pre-match screen, and from there to the live match.
 class ClassicTacticsHost extends ConsumerStatefulWidget {
-  const ClassicTacticsHost({required this.year, super.key});
+  const ClassicTacticsHost({
+    required this.year,
+    this.fromPreMatch = false,
+    super.key,
+  });
 
   final int year;
+
+  /// Whether the pre-match screen pushed these (its Tactics button), so Play
+  /// match goes back to it rather than opening it again.
+  final bool fromPreMatch;
+
+  /// The query flag the pre-match screen opens these with.
+  static const String fromPreMatchParam = 'from=prematch';
 
   /// The Play match button at the screen's foot.
   static const Key playKey = Key('classic.tactics.play');
@@ -300,8 +311,11 @@ class _ClassicTacticsHostState extends ConsumerState<ClassicTacticsHost> {
                     key: ClassicTacticsHost.playKey,
                     label: AppLocalizations.of(context).classicPlayMatch,
                     icon: Icons.sports_soccer_rounded,
-                    onPressed: () =>
-                        context.go('${Routes.classicMatch}?year=$year'),
+                    // The pre-match screen, as a career's tactics lead to:
+                    // back to it when it opened these, afresh when not.
+                    onPressed: () => widget.fromPreMatch && context.canPop()
+                        ? context.pop()
+                        : context.go('${Routes.classicPreMatch}?year=$year'),
                   ),
                 ),
               ),

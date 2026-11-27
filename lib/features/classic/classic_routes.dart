@@ -8,6 +8,7 @@ import 'package:fnm/features/classic/classic_edition_screen.dart';
 import 'package:fnm/features/classic/classic_editor_screen.dart';
 import 'package:fnm/features/classic/classic_match_host.dart';
 import 'package:fnm/features/classic/classic_medals_screen.dart';
+import 'package:fnm/features/classic/classic_prematch_host.dart';
 import 'package:fnm/features/classic/classic_run_screen.dart';
 import 'package:fnm/features/classic/classic_tactics_host.dart';
 import 'package:go_router/go_router.dart';
@@ -30,12 +31,19 @@ List<GoRoute> classicGoRoutes() {
       builder: (context, state) => ClassicRunScreen(year: year(state)),
     ),
     GoRoute(
+      path: Routes.classicPreMatch,
+      builder: (context, state) => ClassicPreMatchHost(year: year(state)),
+    ),
+    GoRoute(
       path: Routes.classicMatch,
       builder: (context, state) => ClassicMatchHost(year: year(state)),
     ),
     GoRoute(
       path: Routes.classicTactics,
-      builder: (context, state) => ClassicTacticsHost(year: year(state)),
+      builder: (context, state) => ClassicTacticsHost(
+        year: year(state),
+        fromPreMatch: state.uri.queryParameters['from'] == 'prematch',
+      ),
     ),
     GoRoute(
       path: Routes.classicMedals,

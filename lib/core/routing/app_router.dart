@@ -320,6 +320,10 @@ abstract final class Routes {
   /// A Classic Cup run's next match, live. Expects `?year=`.
   static const classicMatch = '/classic/match';
 
+  /// A Classic Cup run's next match before kick-off, on the career's
+  /// pre-match screen. Expects `?year=`.
+  static const classicPreMatch = '/classic/prematch';
+
   /// A Classic Cup run's tactics, on the career's tactics screen. Expects
   /// `?year=`.
   static const classicTactics = '/classic/tactics';
@@ -386,6 +390,7 @@ abstract final class Routes {
     classic,
     classicEdition,
     classicRun,
+    classicPreMatch,
     classicMatch,
     classicTactics,
     classicMedals,

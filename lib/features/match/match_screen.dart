@@ -2763,6 +2763,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                   .watch(hubDataProvider(widget.careerId))
                   .valueOrNull;
               final hubGroup = hub?.group;
+              final hostZones = ref.watch(liveTableZonesProvider);
               liveTable = LiveGroupTableCard(
                 now: t.now,
                 placeBefore: t.placeBefore,
@@ -2771,10 +2772,11 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                 // sides by their codes, which always fit.
                 name: tablet ? code : name,
                 highlightId: preview.playerNationId,
-                zones:
-                    hub != null &&
-                        hubGroup != null &&
-                        hubGroup.groupId == preview.fixture.groupId
+                zones: hostZones != null
+                    ? hostZones(t.now)
+                    : hub != null &&
+                          hubGroup != null &&
+                          hubGroup.groupId == preview.fixture.groupId
                     ? LiveTableZones(
                         direct: hub.groupDirectCount,
                         relegate: hub.groupRelegateCount,

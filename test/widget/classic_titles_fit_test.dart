@@ -58,6 +58,11 @@ const List<_Shot> _screens = [
   (name: 'run2002scorers', route: '${Routes.classicRun}?year=2002', tab: 3),
   (name: 'run2026result', route: '${Routes.classicRun}?year=2026', tab: -1),
   (name: 'tactics2002', route: '${Routes.classicTactics}?year=2002', tab: -1),
+  (
+    name: 'prematch2002',
+    route: '${Routes.classicPreMatch}?year=2002',
+    tab: -1,
+  ),
   (name: 'medals', route: Routes.classicMedals, tab: -1),
   (name: 'medals2002', route: '${Routes.classicMedals}?year=2002', tab: -1),
   (name: 'medals2026', route: '${Routes.classicMedals}?year=2026', tab: -1),

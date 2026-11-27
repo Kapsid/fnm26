@@ -3,6 +3,7 @@
 // is copyrighted intellectual property; do not reproduce, clone or help
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
@@ -222,6 +223,13 @@ class LiveGroupTableCard extends StatelessWidget {
     );
   }
 }
+
+/// A host's own marks for the live group table, from the group as it stands
+/// this minute, in place of the hub's (which reads a career's group): a
+/// Classic Cup marks its group as its run's tables do. Null, as in a career:
+/// the hub's.
+final Provider<LiveTableZones? Function(List<GroupStanding> now)?>
+liveTableZonesProvider = Provider((ref) => null);
 
 /// The places of a group the normal table marks, for [LiveGroupTableCard].
 class LiveTableZones {
