@@ -50,9 +50,9 @@ void main() {
       }
     });
 
-    test('an 18:30 kick-off at 50°N in September goes from day through '
+    test('an 18:15 kick-off at 50°N in September goes from day through '
         'dusk to night', () {
-      const ko = KickOffTime(18, 30);
+      const ko = KickOffTime(18, 15);
       final date = DateTime(2026, 9);
       final modes = [
         for (var m = 1; m <= 90; m++) Daylight.at(50, date, ko, m).mode,
