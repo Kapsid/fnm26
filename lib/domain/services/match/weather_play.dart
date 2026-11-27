@@ -36,11 +36,10 @@ class WeatherPlay {
     this.backgroundGoals = 1,
   });
 
-  /// Nothing: clear skies, light rain, a dust storm, and the 1.1.4 kinds
-  /// (drizzle, a frost by day). Those two are drawn only out of what was a
-  /// clear sky or light rain, so they play exactly as that day did: no
-  /// match played in them moves by a single draw, and no save's world
-  /// plays any differently (see `MatchWeather._refined`).
+  /// Nothing: clear skies, light rain, a dust storm, and drizzle (1.1.4).
+  /// Drizzle is drawn only out of what was a clear sky or light rain, so it
+  /// plays exactly as that day did (see `MatchWeather._refined`). A frost by
+  /// day, drawn the same way, plays a little (see [frost]).
   static const WeatherPlay none = WeatherPlay();
 
   /// How an open-play chance converts: on every shot.
@@ -123,10 +122,10 @@ class WeatherPlay {
     WeatherKind.snow || WeatherKind.frostyNight => snow,
     WeatherKind.windy => gale,
     WeatherKind.fog => fog,
+    WeatherKind.frost => frost,
     WeatherKind.clear ||
     WeatherKind.rain ||
     WeatherKind.drizzle ||
-    WeatherKind.frost ||
     WeatherKind.haze ||
     WeatherKind.dustStorm => none,
   };
@@ -145,6 +144,15 @@ class WeatherPlay {
     tempo: 0.987,
     passing: 0.99,
     backgroundGoals: _snowGoals,
+  );
+
+  /// A hard frost under a low winter sun (1.1.4): a hard, skiddy pitch, a
+  /// touch slower and a few more slips; about half of what snow does.
+  static const WeatherPlay frost = WeatherPlay(
+    tempo: 0.994,
+    passing: 0.995,
+    fouls: 1.1,
+    backgroundGoals: _frostGoals,
   );
 
   /// A gale.
@@ -169,4 +177,5 @@ class WeatherPlay {
   static const double _snowGoals = 0.978;
   static const double _galeGoals = 0.974;
   static const double _fogGoals = 0.98;
+  static const double _frostGoals = 0.99;
 }

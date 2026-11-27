@@ -319,11 +319,19 @@ void main() {
       expect(_shares('EGY', [4, 5])[WeatherKind.dustStorm], greaterThan(0));
     });
 
-    test('drizzle and a frost by day play as the day they came from', () {
+    test('drizzle plays as the day it came from; a frost by day plays a '
+        'little', () {
       // Drawn only out of a clear sky or light rain, both of which play as
-      // nothing: no match moves by a single draw.
+      // nothing: no drizzly match moves by a single draw.
       expect(WeatherPlay.of(WeatherKind.drizzle), WeatherPlay.none);
-      expect(WeatherPlay.of(WeatherKind.frost), WeatherPlay.none);
+      // A hard pitch: a touch slower, under half of what snow takes.
+      final frost = WeatherPlay.of(WeatherKind.frost);
+      expect(frost.matters, isTrue);
+      expect(frost.backgroundGoals, lessThan(1));
+      expect(
+        1 - frost.backgroundGoals,
+        lessThan(1 - WeatherPlay.snow.backgroundGoals),
+      );
       expect(WeatherKind.drizzle.isRain, isTrue);
       // Appended: the old kinds keep their places.
       expect(WeatherKind.values.indexOf(WeatherKind.frostyNight), 9);

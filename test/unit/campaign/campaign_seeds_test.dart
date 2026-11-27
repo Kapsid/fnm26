@@ -660,13 +660,12 @@ void main() {
     // run).
     final world = campaignWorld(def, nations);
 
-    // The run has no end; the promise is kept for its first century.
     test('seed 217 keeps Vatican City from hosting either championship in '
-        'the first 25 cycles of its run', () {
+        'any of the fifty cycles of its run', () {
       expect(def.rngSeed, 217);
-      expect(def.unlimited, isTrue);
+      expect(def.cycles, 50);
       expect(def.withBelarus, isTrue);
-      for (var cycle = 0; cycle < 25; cycle++) {
+      for (var cycle = 0; cycle < def.cycles; cycle++) {
         final world0 = WorldCupHosts.hostsFor(
           year: CareerService.worldCupYear(cycle),
           nations: world,

@@ -347,27 +347,4 @@ void main() {
     // name.
     expect((await repo.byId(vatican))?.name, 'Vatican City');
   });
-
-  test('abandoning a run with no end banks the stars it has reached', () async {
-    final c = storyContainer();
-    addTearDown(c.dispose);
-    final d = await StoryDriver.startCampaign(c, def);
-    final id = d.careerId;
-    final comp = c.read(competitionRepositoryProvider);
-    await drawEuroQualifyingNow(c, id);
-    final first = (await comp.allFixtures(id)).firstWhere(
-      (f) => names(f, vatican) && f.round == 'CQ',
-    );
-    await comp.recordResult(
-      fixtureId: first.id,
-      homeScore: first.homeNationId == vatican ? 2 : 1,
-      awayScore: first.homeNationId == vatican ? 1 : 2,
-    );
-    c.invalidate(hubDataProvider(id));
-    final now = (await c.read(campaignProgressProvider(id).future))!;
-    expect(now.reached, 1);
-    expect(now.settled, isFalse);
-    await c.read(campaignServiceProvider).abandon(id);
-    expect(await c.read(campaignBestProvider('vatican').future), 1);
-  });
 }

@@ -269,7 +269,7 @@ void main() {
     );
   });
 
-  test('Hail Mary: Pro, hard, no end, can be continued, its dormant world in '
+  test('Hail Mary: Pro, hard, fifty cycles, can be continued, its dormant world in '
       "San Marino's place", () {
     const def = Campaigns.vatican;
     expect(def.nationId, 217);
@@ -281,15 +281,15 @@ void main() {
     expect(def.withBelarus, isTrue);
     expect(def.donorNationIds, isEmpty);
     expect(def.donorNationId, isNull);
-    // No end: the largest number of cycles, which the screens never show.
-    expect(def.cycles, CampaignDef.unlimitedCycles);
-    expect(def.unlimited, isTrue);
+    // Fifty cycles (no campaign runs without an end since 1.1.4).
+    expect(def.cycles, 50);
+    expect(def.unlimited, isFalse);
     expect(
       [
         for (final c in Campaigns.all)
           if (c.unlimited) c.id,
       ],
-      ['vatican'],
+      isEmpty,
     );
     expect(def.needsPro, isTrue);
     expect(def.canContinue, isTrue);

@@ -80,6 +80,7 @@ void main() {
     WeatherKind.snow,
     WeatherKind.windy,
     WeatherKind.fog,
+    WeatherKind.frost,
   ];
 
   final engineRatio = <WeatherKind, double>{};

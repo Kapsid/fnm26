@@ -403,9 +403,8 @@ abstract final class Campaigns {
   );
 
   /// Hail Mary: Vatican City, a nation the world does not have, takes San
-  /// Marino's place in Europe with no end to the run (see
-  /// [CampaignDef.unlimitedCycles]), from the very bottom of the world
-  /// ranking. Built the way A Greenland Century was: its own stored pool of
+  /// Marino's place in Europe for fifty cycles, from the very bottom of the
+  /// world ranking. Built the way A Greenland Century was: its own stored pool of
   /// players (clergy, guards and staff, the names invented), the same youth
   /// pyramid, newgens and aging as any nation's. Its squad is San Marino's
   /// at 0.78 (see `vaticanAttributeFactor`): the weakest side in the world,
@@ -413,7 +412,7 @@ abstract final class Campaigns {
   /// the saves (one minnow swapped for another). The stars are a hopeless
   /// side's: win a qualifying match, finish a qualifying group off the
   /// bottom, reach a play-off. Seed 217, the first searched, keeps Vatican
-  /// City from hosting either championship in the first 25 cycles of the run
+  /// City from hosting either championship in any of the fifty cycles
   /// and draws it into a European qualifying group of six
   /// (campaign_seeds_test.dart). Its strength was not tuned on the lab
   /// (campaign_lab_test.dart); the badge is the design's call.
@@ -423,7 +422,7 @@ abstract final class Campaigns {
     nationId: 217, // DormantNations.vaticanId
     dormantNationId: 217,
     goal: CampaignGoal.winThenOffBottomThenPlayoff,
-    cycles: CampaignDef.unlimitedCycles,
+    cycles: 50,
     needsPro: true,
     difficulty: CampaignDifficulty.hard,
     rngSeed: 217,
