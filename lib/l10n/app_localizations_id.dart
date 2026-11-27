@@ -359,6 +359,9 @@ class AppLocalizationsId extends AppLocalizations {
       'Terjadi kesalahan di sini.\nPengaturan → Diagnostik berisi detailnya.';
 
   @override
+  String get hubSimulatingMatchday => 'Menyimulasikan pekan pertandingan…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'Gagal memajukan dunia: $error';
   }
@@ -18941,4 +18944,92 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Hanya pertandingan yang menjadi dasar penilaian kampanye ini: laga persahabatan dan kompetisi lain tidak dihitung.';
+
+  @override
+  String get resultsStagePlayoff => 'PLAY-OFF';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return 'Play-off $cup: Laga $path';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return 'Laga dua leg melawan $opponent pada Maret: leg pertama kandang, leg kedua tandang. Tim yang unggul agregat lolos ke putaran final.';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return 'Laga dua leg melawan $opponent pada Maret: leg pertama tandang, leg kedua kandang. Tim yang unggul agregat lolos ke putaran final.';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return 'Lolos sebagai tuan rumah: $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'Tempat langsung lepas, tetapi sebagai tuan rumah Anda mengambil salah satu tempat yang disediakan untuk tuan rumah. Anda lolos ke putaran final $cup.';
+  }
+
+  @override
+  String get euro28LegendPlayoff =>
+      'Kuning: runner-up yang menuju play-off, sesuai keadaan saat ini';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return 'Tuan rumah ($hosts) juga ikut kualifikasi: jika gagal, satu tempat disediakan untuk mereka.';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return 'Tuan rumah ($hosts) juga ikut kualifikasi: dua tempat disediakan untuk dua terbaik yang gagal.';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'babak play-off';
+
+  @override
+  String get euro28CourseTitle => 'Play-off, sesuai keadaan saat ini';
+
+  @override
+  String get euro28CourseNote =>
+      'Juara grup dan delapan runner-up terbaik lolos langsung. Runner-up lainnya ke play-off, bersama juara grup terbaik Piala Bangsa-Bangsa yang belum lolos. Sesuai keadaan saat ini:';
+
+  @override
+  String get euro28CourseFooter =>
+      'Mengapa mereka di sini: pertama runner-up yang gagal lolos, lalu juara grup terbaik Piala Bangsa-Bangsa yang belum lolos, lalu tim terbaik berikutnya. Ini hanya keadaan hari ini: berubah setiap babak.';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return 'Laga $path';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'Laga Anda';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return 'Agregat: $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return 'Pemenang Laga $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return 'Grupmu jika menang di Laga $path: Grup $group';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      'Juara grup dan delapan runner-up terbaik sudah lolos. Empat tempat terakhir diperebutkan pada Maret dalam laga dua leg, kandang dan tandang: empat tim terbaik menjadi unggulan dan memainkan leg kedua di kandang.';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return 'Juara grup dan delapan runner-up terbaik sudah lolos, dan tuan rumah yang gagal mengambil tempat yang disediakan untuk mereka. $count tempat terakhir diperebutkan pada Maret di jalur berisi empat tim: semifinal satu leg di kandang tim berperingkat lebih tinggi, lalu final tunggal.';
+  }
 }

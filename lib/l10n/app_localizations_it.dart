@@ -369,6 +369,9 @@ class AppLocalizationsIt extends AppLocalizations {
       'Qualcosa è andato storto.\nImpostazioni → Diagnostica ha i dettagli.';
 
   @override
+  String get hubSimulatingMatchday => 'Simulazione della giornata…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'Impossibile far avanzare il mondo: $error';
   }
@@ -19127,4 +19130,92 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Solo le partite su cui viene giudicata questa campagna: amichevoli e altre competizioni non contano.';
+
+  @override
+  String get resultsStagePlayoff => 'SPAREGGIO';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return 'Spareggi $cup: Sfida $path';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return 'Una sfida di andata e ritorno contro $opponent a marzo: l\'andata in casa, il ritorno in trasferta. Chi è avanti nel conto totale va alla fase finale.';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return 'Una sfida di andata e ritorno contro $opponent a marzo: l\'andata in trasferta, il ritorno in casa. Chi è avanti nel conto totale va alla fase finale.';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return 'Qualificati come paese ospitante: $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'Il posto diretto è sfumato, ma come paese ospitante prendi uno dei posti riservati agli ospitanti. Ti sei qualificato alla fase finale: $cup.';
+  }
+
+  @override
+  String get euro28LegendPlayoff =>
+      'Giallo: una seconda verso gli spareggi, allo stato attuale';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return 'Anche gli ospitanti ($hosts) giocano le qualificazioni: se falliscono, hanno un posto riservato.';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return 'Anche gli ospitanti ($hosts) giocano le qualificazioni: due posti sono riservati ai due migliori tra quelli che falliscono.';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'gli spareggi';
+
+  @override
+  String get euro28CourseTitle => 'Spareggi, allo stato attuale';
+
+  @override
+  String get euro28CourseNote =>
+      'Le vincitrici dei gironi e le otto migliori seconde si qualificano direttamente. Le altre seconde vanno agli spareggi, con le migliori vincitrici di girone della Coppa delle Nazioni non qualificate. Allo stato attuale:';
+
+  @override
+  String get euro28CourseFooter =>
+      'Perché sono qui: prima le seconde rimaste fuori, poi le migliori vincitrici di girone della Coppa delle Nazioni non ancora qualificate, poi le sue migliori squadre successive. È solo la situazione di oggi: cambia dopo ogni giornata.';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return 'Sfida $path';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'La tua sfida';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return 'Totale: $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return 'Vincente della Sfida $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return 'Il tuo girone se vinci la Sfida $path: girone $group';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      'Le vincitrici dei gironi e le otto migliori seconde sono qualificate. Gli ultimi quattro posti si decidono a marzo in sfide di andata e ritorno: le quattro migliori squadre sono teste di serie e giocano il ritorno in casa.';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return 'Le vincitrici dei gironi e le otto migliori seconde sono qualificate, e gli ospitanti rimasti fuori prendono i posti riservati a loro. Gli ultimi $count posti si decidono a marzo in percorsi da quattro squadre: semifinali in gara unica in casa della meglio classificata, poi una finale secca.';
+  }
 }

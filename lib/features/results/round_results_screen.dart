@@ -192,6 +192,7 @@ roundResultsViewProvider = FutureProvider.autoDispose
           worldCupPlayoffPaths: wcPaths,
           continentalHosts: contShape?.hosts ?? 0,
           continentalPlayoffRoute: contShape?.playoffRoute ?? false,
+          continentalEuro28: contShape?.euro28 ?? false,
           worldCupConfedSteps: wcCal2,
         );
         direct = adv.direct;
@@ -214,6 +215,7 @@ roundResultsViewProvider = FutureProvider.autoDispose
           wcStep: wcCal2 && conf != Confederation.europe,
           wcPaths: wcPaths > 0,
           allRunnersUp: wcAllRunnersUp,
+          euro28: contShape?.euro28 ?? false,
           topLeague:
               results.kind == CompetitionKind.nationsLeague &&
               mine != null &&
@@ -247,7 +249,16 @@ roundResultsViewProvider = FutureProvider.autoDispose
             groups: [for (final g in results.groups) g.standings],
             continentalHosts: contShape?.hosts ?? 0,
             continentalPlayoffRoute: contShape?.playoffRoute ?? false,
+            continentalEuro28: contShape?.euro28 ?? false,
+            euro28Hosts: contShape?.hostIds ?? const [],
           );
+          // The EURO 2028 shape: the runners-up the ladder leaves out are
+          // headed for the play-offs.
+          if (contShape?.euro28 ?? false) {
+            playoff = GroupAdvancement.euro28PlayoffNations([
+              for (final g in results.groups) g.standings,
+            ], hosts: contShape!.hostIds);
+          }
         }
         relegate = adv.relegate;
         // The Nations Cup's lowest league has nowhere to fall — its groups show no

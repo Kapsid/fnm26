@@ -354,6 +354,9 @@ class AppLocalizationsHi extends AppLocalizations {
       'यहाँ कुछ गड़बड़ हो गई।\nसेटिंग्स → डायग्नोस्टिक्स में ब्योरा है।';
 
   @override
+  String get hubSimulatingMatchday => 'मैचडे का सिमुलेशन हो रहा है…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'दुनिया को आगे नहीं बढ़ा सके: $error';
   }
@@ -18943,4 +18946,92 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'केवल वे मैच जिन पर यह अभियान आँका जाता है: मैत्री मैच और अन्य प्रतियोगिताएँ शामिल नहीं हैं।';
+
+  @override
+  String get resultsStagePlayoff => 'प्ले-ऑफ़';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return '$cup प्ले-ऑफ़: मुक़ाबला $path';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return 'मार्च में $opponent के खिलाफ दो मैचों का मुक़ाबला: पहला घर पर, दूसरा बाहर। कुल स्कोर में आगे रहने वाली टीम फ़ाइनल्स में जाएगी।';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return 'मार्च में $opponent के खिलाफ दो मैचों का मुक़ाबला: पहला बाहर, दूसरा घर पर। कुल स्कोर में आगे रहने वाली टीम फ़ाइनल्स में जाएगी।';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return 'मेज़बान के रूप में पहुँचे: $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'सीधी जगह हाथ से निकल गई, लेकिन मेज़बान होने के नाते आपको मेज़बानों के लिए रखी गई जगहों में से एक मिलती है। आपने $cup फ़ाइनल्स के लिए क्वालिफ़ाई कर लिया है।';
+  }
+
+  @override
+  String get euro28LegendPlayoff =>
+      'पीला: प्ले-ऑफ़ की ओर बढ़ती उपविजेता टीम, मौजूदा स्थिति के अनुसार';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return 'मेज़बान ($hosts) भी क्वालिफ़ाइंग खेलते हैं: चूक जाएँ तो उनके लिए एक जगह रखी गई है।';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return 'मेज़बान ($hosts) भी क्वालिफ़ाइंग खेलते हैं: चूकने वालों में से सबसे अच्छे दो के लिए दो जगहें रखी गई हैं।';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'प्ले-ऑफ़';
+
+  @override
+  String get euro28CourseTitle => 'प्ले-ऑफ़, मौजूदा स्थिति के अनुसार';
+
+  @override
+  String get euro28CourseNote =>
+      'ग्रुप विजेता और आठ सर्वश्रेष्ठ उपविजेता सीधे क्वालिफ़ाई करते हैं। बाकी उपविजेता प्ले-ऑफ़ में जाते हैं, साथ में नेशंस कप के वे सर्वश्रेष्ठ ग्रुप विजेता जो क्वालिफ़ाई नहीं कर पाए। मौजूदा स्थिति:';
+
+  @override
+  String get euro28CourseFooter =>
+      'ये यहाँ क्यों हैं: पहले वे उपविजेता जो चूक गए, फिर नेशंस कप के सर्वश्रेष्ठ ग्रुप विजेता जो अभी क्वालिफ़ाई नहीं हुए, फिर उसकी अगली सर्वश्रेष्ठ टीमें। यह केवल आज की स्थिति है: हर राउंड के बाद बदलती है।';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return 'मुक़ाबला $path';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'आपका मुक़ाबला';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return 'कुल स्कोर: $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return 'मुक़ाबला $path का विजेता';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return 'मुक़ाबला $path जीतने पर आपका ग्रुप: ग्रुप $group';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      'ग्रुप विजेता और आठ सर्वश्रेष्ठ उपविजेता क्वालिफ़ाई कर चुके हैं। आखिरी चार जगहें मार्च में घर और बाहर के दो मैचों वाले मुक़ाबलों में तय होती हैं: चार सर्वश्रेष्ठ टीमें सीडेड हैं और दूसरा मैच घर पर खेलती हैं।';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return 'ग्रुप विजेता और आठ सर्वश्रेष्ठ उपविजेता क्वालिफ़ाई कर चुके हैं, और चूकने वाले मेज़बान अपने लिए रखी गई जगहें लेते हैं। आखिरी $count जगहें मार्च में चार टीमों के पाथ में तय होती हैं: ऊँची रैंक वाली टीम के मैदान पर एक मैच का सेमीफ़ाइनल, फिर एक ही मैच का फ़ाइनल।';
+  }
 }

@@ -91,16 +91,23 @@ class ScheduleGenerator {
     /// [balancedDoubleRoundRobin]): a calendar2 cycle's draws. Off keeps
     /// every other draw exactly as it was.
     bool balancedHomeAway = false,
+
+    /// Groups already drawn (nation ids, in pot order), played as they are
+    /// instead of drawing [nations] here: Europe's EURO 2028 shape, drawn by
+    /// `Euro28.drawGroups`. Null keeps every other draw exactly as it was.
+    List<List<int>>? drawnGroups,
   }) {
     final rng = SeededRng(rngSeed ^ 0x5151A);
     final format = QualificationFormat.forConfederation(confederation);
-    final groups = _draw(
-      nations,
-      groupSize ?? format.targetGroupSize,
-      rng,
-      rankById,
-      groupCount: groupCount,
-    );
+    final groups =
+        drawnGroups ??
+        _draw(
+          nations,
+          groupSize ?? format.targetGroupSize,
+          rng,
+          rankById,
+          groupCount: groupCount,
+        );
 
     // One shared matchday→date map sized to the largest group.
     final maxRounds = groups

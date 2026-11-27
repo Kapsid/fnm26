@@ -467,6 +467,10 @@
   "@commonCrashBox": {
     "description": "Shown in place of a widget subtree that failed to build."
   },
+  "hubSimulatingMatchday": "Simulating matchday…",
+  "@hubSimulatingMatchday": {
+    "description": "The banner on the hub while a step of the world that takes a moment (an advance, a tournament round) is being simulated."
+  },
   "hubCouldNotAdvance": "Could not advance the world: {error}",
   "@hubCouldNotAdvance": {
     "description": "Snackbar when a hub action that simulates the world fails.",
@@ -29388,5 +29392,151 @@
   "campaignRunInNumbersNote": "Only the matches this campaign is judged on: friendlies and other competitions are left out.",
   "@campaignRunInNumbersNote": {
     "description": "Verdict screen, under the run-in-numbers heading: the figures cover only the matches the campaign is judged on, not the whole career."
+  },
+  "resultsStagePlayoff": "PLAY-OFF",
+  "@resultsStagePlayoff": {
+    "description": "Round label of a two-legged European play-off tie, followed by its leg (\"PLAY-OFF, 1st leg\")."
+  },
+  "newsEuroPlayoffTieTitle": "{cup} play-offs: Tie {path}",
+  "@newsEuroPlayoffTieTitle": {
+    "description": "Inbox title: the manager's nation was drawn into a two-legged play-off tie for the continental finals (path is a letter A to D).",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      },
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "newsEuroPlayoffTieBodyHome": "A two-legged tie against {opponent} in March: the first leg at home, the second away. The side ahead on aggregate goes to the finals.",
+  "@newsEuroPlayoffTieBodyHome": {
+    "description": "Inbox body: a two-legged play-off tie, first leg at home.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "newsEuroPlayoffTieBodyAway": "A two-legged tie against {opponent} in March: the first leg away, the second at home. The side ahead on aggregate goes to the finals.",
+  "@newsEuroPlayoffTieBodyAway": {
+    "description": "Inbox body: a two-legged play-off tie, first leg away.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "newsEuroHostPlaceTitle": "Through as hosts: {cup}",
+  "@newsEuroHostPlaceTitle": {
+    "description": "Inbox title: a host nation that missed direct qualification takes one of the places held for the hosts.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      }
+    }
+  },
+  "newsEuroHostPlaceBody": "You missed out on a direct place, but as hosts you take one of the places held for them. You have qualified for the {cup} finals.",
+  "@newsEuroHostPlaceBody": {
+    "description": "Inbox body: a host nation that missed direct qualification takes one of the places held for the hosts.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      }
+    }
+  },
+  "euro28LegendPlayoff": "Yellow: a runner-up headed for the play-offs, as things stand",
+  "@euro28LegendPlayoff": {
+    "description": "Legend line over Europe's qualifying tables for the continental finals: the yellow stripe marks the runners-up outside the best eight, headed for the play-offs."
+  },
+  "euro28LegendHosts": "The hosts ({hosts}) play qualifying too: should they miss out, a place is held for them.",
+  "@euro28LegendHosts": {
+    "description": "Note under the legend of Europe's qualifying tables: the hosts (a list of names) play qualifying, and a place is held for any who miss out (one or two hosts).",
+    "placeholders": {
+      "hosts": {
+        "type": "String"
+      }
+    }
+  },
+  "euro28LegendHostsMany": "The hosts ({hosts}) play qualifying too: two places are held for the best two who miss out.",
+  "@euro28LegendHostsMany": {
+    "description": "Note under the legend of Europe's qualifying tables: three or more hosts (a list of names) play qualifying, and two places are held for the best two who miss out.",
+    "placeholders": {
+      "hosts": {
+        "type": "String"
+      }
+    }
+  },
+  "euro28DestPlayoffs": "the play-offs",
+  "@euro28DestPlayoffs": {
+    "description": "Destination in the runners-up ladder card (\"The next 4 go to the play-offs\")."
+  },
+  "euro28CourseTitle": "Play-offs, as things stand",
+  "@euro28CourseTitle": {
+    "description": "Heading of the card under Europe's qualifying tables listing the play-off paths or ties as things stand."
+  },
+  "euro28CourseNote": "The group winners and the eight best runners-up go straight through. The other runners-up go to the play-offs, with the best Nations Cup group winners who are not through. As things stand:",
+  "@euro28CourseNote": {
+    "description": "Intro of the card under Europe's qualifying tables listing the play-offs as things stand."
+  },
+  "euro28CourseFooter": "Why they are here: the runners-up who miss out come first, then the Nations Cup's best group winners not yet through, then its next best sides. This is only how things stand today: it changes after every round.",
+  "@euro28CourseFooter": {
+    "description": "Footnote of the play-offs card: who takes the play-off places, and that it changes after every round."
+  },
+  "euroPlayoffTie": "Tie {path}",
+  "@euroPlayoffTie": {
+    "description": "Heading of one two-legged play-off tie (path is a letter A to D).",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "euroPlayoffYourTie": "Your tie",
+  "@euroPlayoffYourTie": {
+    "description": "Tag on the manager's own play-off tie."
+  },
+  "euroPlayoffAggregate": "Aggregate: {score}",
+  "@euroPlayoffAggregate": {
+    "description": "Under a two-legged tie: the aggregate score, as \"3-2\".",
+    "placeholders": {
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "euroPlayoffTieWinnerPlaceholder": "Tie {path} winner",
+  "@euroPlayoffTieWinnerPlaceholder": {
+    "description": "A slot in the finals draw for a play-off tie's winner (path is a letter A to D).",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "euroPlayoffYourGroupIfWinTie": "Your group if you win Tie {path}: Group {group}",
+  "@euroPlayoffYourGroupIfWinTie": {
+    "description": "Banner on the finals draw for a manager still in a two-legged play-off tie.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      },
+      "group": {
+        "type": "String"
+      }
+    }
+  },
+  "euro28PlayoffIntroTies": "The group winners and the eight best runners-up are through. The last four places are won in two-legged ties in March, home and away: the four best sides are seeded and play the second leg at home.",
+  "@euro28PlayoffIntroTies": {
+    "description": "Intro of the play-off draw when the last four places go to two-legged ties."
+  },
+  "euro28PlayoffIntroPaths": "The group winners and the eight best runners-up are through, and hosts who missed out take the places held for them. The last {count} places are won in four-team paths in March: one-leg semi-finals at the higher-ranked side, then a one-off final.",
+  "@euro28PlayoffIntroPaths": {
+    "description": "Intro of the play-off draw when the last places (count is 2 or 3) go to four-team paths.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

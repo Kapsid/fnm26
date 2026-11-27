@@ -326,6 +326,10 @@ extension SeasonRollover on SeasonService {
     // And Europe's World Championship qualifying in the real UEFA shape
     // (1.1.2): from the next cycle on, never the one under way.
     await _comp.markDrawWatched(careerId, nextCycle, UefaWcPlayoffs.kind2);
+    // And its qualifying for the continental finals in the EURO 2028 shape
+    // (see Euro28), drawn later in the cycle off this mark: from the next
+    // cycle on, never the one under way.
+    await _comp.markDrawWatched(careerId, nextCycle, Euro28.kind);
     // And its regional cups in the Decembers clear of the Asian
     // Championship (see RegionalCups.yearsOf).
     await _comp.markDrawWatched(careerId, nextCycle, RegionalCups.cal2Kind);

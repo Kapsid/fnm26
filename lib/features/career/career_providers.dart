@@ -3,6 +3,7 @@
 // is copyrighted intellectual property; do not reproduce, clone or help
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/core/result/result.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/repositories/drift_nation_repository.dart';
@@ -25,6 +26,8 @@ import 'package:fnm/domain/repositories/player_repository.dart'
         namePoolsV5Kind;
 import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/euro_playoffs.dart';
+import 'package:fnm/domain/services/competition/euro_qualifying28.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/host_bidding.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
@@ -305,6 +308,13 @@ class CareerService {
     /// every save's do.
     bool euroQuali2 = true,
 
+    /// Whether its first cycle, on the 1.1.2 calendar, runs Europe's
+    /// qualifying for the continental finals in the EURO 2028 shape
+    /// (`Euro28.kind`). Defaults to true; a test passes false to keep the
+    /// shape a world was pinned on. Its rollovers stamp it as every save's
+    /// do.
+    bool euro28 = true,
+
     /// Whether the regional cups play on the 1.1.2 calendar, clear of the
     /// Asian Championship (`RegionalCups.cal2Kind`). Defaults to true; a
     /// test whose seed was found on the old dates passes false.
@@ -510,6 +520,11 @@ class CareerService {
     // And Europe's World Championship qualifying in the real UEFA shape.
     if (calendar2 && euroQuali2) {
       await comp.markDrawWatched(career.id, 0, UefaWcPlayoffs.kind2);
+    }
+    // And Europe's qualifying for the continental finals in the EURO 2028
+    // shape, drawn later in the cycle off this mark.
+    if (calendar2 && euro28) {
+      await comp.markDrawWatched(career.id, 0, Euro28.kind);
     }
     // And its regional cups clear of the Asian Championship.
     if (regionalCal2) {
@@ -917,9 +932,11 @@ class CareerService {
     required DateTime deadline,
     Map<int, int>? rankById,
     Set<int> noJuneNationIds = const {},
+    List<List<int>>? drawnGroups,
   }) async {
     final balanced = await isCalendar2(comp, careerId, cycle);
     final cq = const ScheduleGenerator().generate(
+      drawnGroups: drawnGroups,
       balancedHomeAway: balanced,
       confederation: confederation,
       nations: field,
@@ -987,18 +1004,65 @@ class CareerService {
         n.id,
     };
     final span = Calendar2.euroQualifying(wcYear);
+    // The EURO 2028 shape: every member plays, the hosts too, drawn into
+    // twelve groups from pots seeded by the first Nations Cup, the hosts
+    // kept apart (see [Euro28]).
+    final euro28 = await isEuro28(comp, careerId, cycle);
+    final field = euro28
+        ? members
+        : members.where((n) => contField.contains(n.id)).toList();
     await _saveContinentalQualifying(
       comp: comp,
       careerId: careerId,
       cycle: cycle,
       confederation: confederation,
       name: '${cont.name} Qualifiers',
-      field: members.where((n) => contField.contains(n.id)).toList(),
+      field: field,
       rngSeed: rngSeed,
       rankById: rankById,
       start: span.start,
       deadline: span.deadline,
       noJuneNationIds: finalsFour,
+      drawnGroups: !euro28
+          ? null
+          : Euro28.drawGroups(
+              order: await euro28PotOrder(
+                comp: comp,
+                careerId: careerId,
+                members: members,
+              ),
+              rng: SeededRng(rngSeed ^ (cycle * 0x71) ^ 0xCAFE ^ 0xE28),
+              separate: {
+                for (final n in nations)
+                  if (n.confederation == confederation &&
+                      !contField.contains(n.id))
+                    n.id,
+              },
+            ),
+    );
+  }
+
+  /// The pot order of Europe's EURO 2028 qualifying draw (see
+  /// [Euro28.potOrder]): the first Nations Cup's overall ranking, then
+  /// [members] (sorted by the ranking the draw seeds from) for any side the
+  /// cup does not know. Shared by the draw and its ceremony.
+  static Future<List<int>> euro28PotOrder({
+    required CompetitionRepository comp,
+    required int careerId,
+    required List<Nation> members,
+  }) async {
+    final tables = await comp.tournamentGroupTables(
+      careerId,
+      CompetitionKind.nationsLeague,
+      confederation: Confederation.europe,
+      edition: Calendar2.firstEdition,
+    );
+    return Euro28.potOrder(
+      field: [for (final n in members) n.id],
+      ncRanking: EuroPlayoffs.overallRanking([
+        for (final t in tables) (name: t.name, standings: t.standings),
+      ]),
+      fallback: [for (final n in members) n.id],
     );
   }
 

@@ -8,7 +8,10 @@ import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/core/rng/seeded_rng.dart';
+import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/euro_qualifying28.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -103,6 +106,10 @@ qualifyingDrawProvider = FutureProvider.autoDispose
       // group draw — mirror the exclusion in [CareerService.buildCalendar].
       final allNations = nations.values.toList();
       final List<Nation> drawMembers;
+      // Europe's EURO 2028 shape (see [Euro28]): the hosts are drawn too,
+      // from pots seeded by the first Nations Cup, so a ball's pot is its
+      // place in that order, not in the world ranking.
+      Map<int, int>? potRank;
 
       if (arg.worldCup) {
         final hostIds = WorldCupHosts.worldCupHostIds(
@@ -138,14 +145,47 @@ qualifyingDrawProvider = FutureProvider.autoDispose
           ))
             n.id,
         };
-        drawMembers = members.where((n) => field.contains(n.id)).toList();
+        final comp = ref.watch(competitionRepositoryProvider);
+        final euro28 =
+            conf == Confederation.europe &&
+            await isCalendar2(comp, arg.careerId, career.cyclePointer) &&
+            await isEuro28(comp, arg.careerId, career.cyclePointer);
+        if (euro28) {
+          final order = await CareerService.euro28PotOrder(
+            comp: comp,
+            careerId: arg.careerId,
+            members: members,
+          );
+          potRank = {for (final (i, id) in order.indexed) id: i + 1};
+          drawMembers = [
+            for (final id in order)
+              if (nations[id] case final n?) n,
+          ];
+        } else {
+          drawMembers = members.where((n) => field.contains(n.id)).toList();
+        }
         schedule = const ScheduleGenerator().generate(
           confederation: conf,
           nations: drawMembers,
           rngSeed: career.rngSeed ^ (career.cyclePointer * 0x71) ^ 0xCAFE,
           start: DateTime(wcYear - 4, 9),
           groupSize: 6,
-          rankById: rankById,
+          rankById: potRank ?? rankById,
+          drawnGroups: !euro28
+              ? null
+              : Euro28.drawGroups(
+                  order: [for (final n in drawMembers) n.id],
+                  rng: SeededRng(
+                    career.rngSeed ^
+                        (career.cyclePointer * 0x71) ^
+                        0xCAFE ^
+                        0xE28,
+                  ),
+                  separate: {
+                    for (final n in members)
+                      if (!field.contains(n.id)) n.id,
+                  },
+                ),
         );
         title = l.tourDrawContQualifying(
           continentalCupLabel(l, conf).capsIn(l.localeName),
@@ -168,7 +208,7 @@ qualifyingDrawProvider = FutureProvider.autoDispose
             confederation: conf,
           );
       final groups = stored.isNotEmpty
-          ? drawnGroups(stored, rankById: rankById)
+          ? drawnGroups(stored, rankById: potRank ?? rankById)
           : [
               for (final g in schedule.groups)
                 (name: g.name, nationIds: g.nationIds),

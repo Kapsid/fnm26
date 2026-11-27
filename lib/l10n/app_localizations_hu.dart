@@ -360,6 +360,9 @@ class AppLocalizationsHu extends AppLocalizations {
       'Itt valami elromlott.\nA Beállítások → Diagnosztika részletezi.';
 
   @override
+  String get hubSimulatingMatchday => 'Forduló szimulálása…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'Nem sikerült léptetni a világot: $error';
   }
@@ -18984,4 +18987,92 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Csak azok a meccsek, amelyek alapján a kampányt megítélik: a barátságos meccsek és más sorozatok nem számítanak.';
+
+  @override
+  String get resultsStagePlayoff => 'PÓTSELEJTEZŐ';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return '$cup, pótselejtező: $path párharc';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return 'Kétmeccses párharc $opponent ellen márciusban: az első otthon, a második idegenben. Az összesítésben jobb jut ki a tornára.';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return 'Kétmeccses párharc $opponent ellen márciusban: az első idegenben, a második otthon. Az összesítésben jobb jut ki a tornára.';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return 'Rendezőként kijutva: $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'A közvetlen hely nem jött össze, de rendezőként megkapod a rendezőknek fenntartott helyek egyikét. Kijutottál a döntőre ($cup).';
+  }
+
+  @override
+  String get euro28LegendPlayoff =>
+      'Sárga: csoportmásodik, a pótselejtező felé tart, a jelenlegi állás szerint';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return 'A rendezők ($hosts) is játszanak a selejtezőben: ha elbuknak, egy hely fenn van tartva nekik.';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return 'A rendezők ($hosts) is játszanak a selejtezőben: két hely a két legjobb elbukónak van fenntartva.';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'a pótselejtezőbe';
+
+  @override
+  String get euro28CourseTitle => 'Pótselejtező, a jelenlegi állás szerint';
+
+  @override
+  String get euro28CourseNote =>
+      'A csoportgyőztesek és a nyolc legjobb második közvetlenül kijut. A többi második a pótselejtezőbe megy, a Nations Cup legjobb, ki nem jutott csoportgyőzteseivel. A jelenlegi állás szerint:';
+
+  @override
+  String get euro28CourseFooter =>
+      'Miért vannak itt: először a ki nem jutott másodikok, aztán a Nations Cup legjobb, még ki nem jutott csoportgyőztesei, aztán a következő legjobb csapatai. Ez csak a mai állás: minden forduló után változik.';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return '$path párharc';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'A te párharcod';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return 'Összesítés: $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return 'A(z) $path párharc győztese';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return 'A csoportod, ha megnyered a(z) $path párharcot: $group csoport';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      'A csoportgyőztesek és a nyolc legjobb második kijutott. Az utolsó négy helyről márciusban kétmeccses, oda-vissza párharcok döntenek: a négy legjobb csapat kiemelt, és a visszavágót otthon játssza.';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return 'A csoportgyőztesek és a nyolc legjobb második kijutott, az elbukott rendezők pedig a nekik fenntartott helyeket kapják. Az utolsó $count helyről márciusban négycsapatos ágak döntenek: egymeccses elődöntő a jobban rangsorolt csapatnál, majd egyetlen döntő.';
+  }
 }

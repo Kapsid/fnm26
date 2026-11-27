@@ -8,6 +8,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/regional_cups.dart';
 import 'package:fnm/domain/services/competition/wc_playoffs.dart';
@@ -78,8 +79,8 @@ abstract final class MatchStage {
         'AFFINAL' ||
         'OFINAL' => l.matchTinyFinal,
         'AQ4' => l.matchTinyFourthRound,
-        'AQ5L1' => l.matchTinyFirstLeg,
-        'AQ5L2' => l.matchTinySecondLeg,
+        'AQ5L1' || 'EPL1' => l.matchTinyFirstLeg,
+        'AQ5L2' || 'EPL2' => l.matchTinySecondLeg,
         '3RD' || 'C3RD' => l.matchTinyThirdPlace,
         _ => round,
       };
@@ -117,6 +118,8 @@ abstract final class MatchStage {
     'OFINAL' => l.resultsStageFinal,
     'AQ4' => l.resultsStageFourthRound,
     'AQ5L1' || 'AQ5L2' => l.resultsStageFifthRound,
+    'EPL1' => '${l.resultsStagePlayoff}, ${l.matchTinyFirstLeg}',
+    'EPL2' => '${l.resultsStagePlayoff}, ${l.matchTinySecondLeg}',
     _ => round,
   };
 
@@ -163,7 +166,7 @@ abstract final class MatchStage {
     // qualifier and the final of the tournament it leads to read identically
     // on the hub, and the word "qualifying" appeared nowhere on either.
     // Europe's play-offs are the last of its qualifying (EPSF, EPFINAL).
-    if (round == 'CQ' || round == 'EPSF' || round == 'EPFINAL') {
+    if (round == 'CQ' || EuroPlayoffs.rounds.contains(round)) {
       return l.resultsCategoryContinentalQualifying;
     }
     if (round.startsWith('C')) {
@@ -206,7 +209,7 @@ abstract final class MatchStage {
           ? null
           : world.competition(NationsCups.forConfederation(nc)!.name);
     }
-    if (round == 'CQ' || round == 'EPSF' || round == 'EPFINAL') {
+    if (round == 'CQ' || EuroPlayoffs.rounds.contains(round)) {
       return qualifiers(cup?.name);
     }
     if (round.startsWith('C')) {
@@ -283,8 +286,8 @@ abstract final class MatchStage {
       'AFFINAL' ||
       'OFINAL' => l.matchTinyFinal,
       'AQ4' => l.matchTinyFourthRound,
-      'AQ5L1' => l.matchTinyFirstLeg,
-      'AQ5L2' => l.matchTinySecondLeg,
+      'AQ5L1' || 'EPL1' => l.matchTinyFirstLeg,
+      'AQ5L2' || 'EPL2' => l.matchTinySecondLeg,
       '3RD' || 'C3RD' => l.matchTinyThirdPlace,
       _ => null,
     };
@@ -313,7 +316,7 @@ abstract final class MatchStage {
       'FFINAL' => (competition: l.matchTinyClash, stage: null),
       'POSF' ||
       'POFINAL' => (competition: l.matchTinyPlayoff, stage: knockout(round)),
-      'EPSF' || 'EPFINAL' => (
+      'EPSF' || 'EPFINAL' || 'EPL1' || 'EPL2' => (
         competition: l.matchTinyQualifying(cup),
         stage: knockout(round),
       ),

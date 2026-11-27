@@ -367,6 +367,9 @@ class AppLocalizationsDe extends AppLocalizations {
       'Hier ist etwas schiefgelaufen.\nDetails unter Einstellungen → Diagnose.';
 
   @override
+  String get hubSimulatingMatchday => 'Spieltag wird simuliert…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'Die Welt konnte nicht fortgesetzt werden: $error';
   }
@@ -19186,4 +19189,92 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Nur die Spiele, nach denen diese Kampagne bewertet wird: Freundschaftsspiele und andere Wettbewerbe zählen nicht.';
+
+  @override
+  String get resultsStagePlayoff => 'PLAY-OFF';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return '$cup, Play-offs: Duell $path';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return 'Ein Duell mit Hin- und Rückspiel gegen $opponent im März: das Hinspiel zu Hause, das Rückspiel auswärts. Wer in der Summe vorn liegt, fährt zur Endrunde.';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return 'Ein Duell mit Hin- und Rückspiel gegen $opponent im März: das Hinspiel auswärts, das Rückspiel zu Hause. Wer in der Summe vorn liegt, fährt zur Endrunde.';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return 'Als Gastgeber dabei: $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'Der direkte Platz wurde verpasst, aber als Gastgeber nehmen Sie einen der für die Gastgeber reservierten Plätze ein. Sie haben sich für die Endrunde von $cup qualifiziert.';
+  }
+
+  @override
+  String get euro28LegendPlayoff =>
+      'Gelb: ein Gruppenzweiter auf dem Weg in die Play-offs, nach aktuellem Stand';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return 'Die Gastgeber ($hosts) spielen auch die Qualifikation: Scheitern sie, ist ein Platz für sie reserviert.';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return 'Die Gastgeber ($hosts) spielen auch die Qualifikation: Zwei Plätze sind für die besten zwei reserviert, die scheitern.';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'die Play-offs';
+
+  @override
+  String get euro28CourseTitle => 'Play-offs, nach aktuellem Stand';
+
+  @override
+  String get euro28CourseNote =>
+      'Die Gruppensieger und die acht besten Gruppenzweiten sind direkt dabei. Die übrigen Zweiten gehen in die Play-offs, mit den besten Gruppensiegern des Nationenpokals, die nicht qualifiziert sind. Nach aktuellem Stand:';
+
+  @override
+  String get euro28CourseFooter =>
+      'Warum sie hier stehen: zuerst die Zweiten, die es nicht direkt schaffen, dann die besten Gruppensieger des Nationenpokals, die noch nicht qualifiziert sind, dann seine nächstbesten Teams. Das ist nur der heutige Stand: Er ändert sich nach jeder Runde.';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return 'Duell $path';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'Dein Duell';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return 'Gesamt: $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return 'Sieger Duell $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return 'Deine Gruppe bei einem Sieg im Duell $path: Gruppe $group';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      'Die Gruppensieger und die acht besten Gruppenzweiten sind qualifiziert. Die letzten vier Plätze werden im März in Duellen mit Hin- und Rückspiel vergeben: Die vier besten Teams sind gesetzt und haben im Rückspiel Heimrecht.';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return 'Die Gruppensieger und die acht besten Gruppenzweiten sind qualifiziert, und gescheiterte Gastgeber nehmen die für sie reservierten Plätze ein. Die letzten $count Plätze werden im März in Wegen mit vier Teams vergeben: Halbfinale mit nur einem Spiel beim höher eingestuften Team, dann ein einzelnes Finale.';
+  }
 }

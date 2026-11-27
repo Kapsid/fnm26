@@ -10,6 +10,7 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
@@ -72,7 +73,11 @@ class EuroPlayoffDrawScreen extends ConsumerWidget {
                       padding: const EdgeInsets.all(AppSpacing.marginMobile),
                       children: [
                         Text(
-                          l.euroPlayoffIntro,
+                          !data.euro28
+                              ? l.euroPlayoffIntro
+                              : data.ties
+                              ? l.euro28PlayoffIntroTies
+                              : l.euro28PlayoffIntroPaths(data.paths.length),
                           style: AppTypography.bodySmall.copyWith(
                             color: AppColors.onSurfaceVariant,
                           ),
@@ -146,6 +151,7 @@ class _PathCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (EuroPlayoffs.isTie(path)) return _tieCard();
     final mine = path.seeds.contains(data.playerNationId);
     final group = data.groupOfPath(path.letter);
     final fin = data.finalOf(path);
@@ -230,6 +236,93 @@ class _PathCard extends StatelessWidget {
     );
   }
 
+  /// A two-legged tie (the EURO 2028 shape's four places): both legs, the
+  /// winner on aggregate marked on the second.
+  Widget _tieCard() {
+    final mine = path.seeds.contains(data.playerNationId);
+    final group = data.groupOfPath(path.letter);
+    final first = data.legOne(path);
+    final second = data.legTwo(path);
+    final winner = first == null || second == null
+        ? null
+        : TwoLegged.winner(first, second);
+    final (h1, a1) = EuroPlayoffs.firstLeg(path);
+    final (h2, a2) = EuroPlayoffs.secondLeg(path);
+    final aggregate = first == null || second == null || winner == null
+        ? null
+        : TwoLegged.aggregate(first, second);
+    return Container(
+      key: Key('euroPlayoff.tie.${path.letter}'),
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: mine
+            ? AppColors.surfaceContainerHigh
+            : AppColors.surfaceContainer,
+        borderRadius: AppRadii.baseAll,
+        border: Border.all(
+          color: mine ? AppColors.primary : AppColors.outlineVariant,
+          width: mine ? 1.5 : 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l.euroPlayoffTie(path.letter),
+                  style: AppTypography.labelMedium.copyWith(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              if (mine)
+                Text(
+                  l.euroPlayoffYourTie,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.primary,
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          _label(l.matchTinyFirstLeg),
+          _tie(home: h1, away: a1, fixture: first, decided: false),
+          const SizedBox(height: AppSpacing.sm),
+          _label(l.matchTinySecondLeg),
+          _tie(
+            home: h2,
+            away: a2,
+            fixture: second,
+            isFinal: true,
+            winnerId: winner,
+          ),
+          if (aggregate case (final h, final a))
+            Padding(
+              padding: const EdgeInsets.only(top: AppSpacing.xs),
+              child: Text(
+                l.euroPlayoffAggregate('$h-$a'),
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+            ),
+          if (group != null) ...[
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              l.euroPlayoffWinnerToGroup(group),
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
   Widget _label(String text) => Text(
     text,
     style: AppTypography.labelSmall.copyWith(
@@ -242,13 +335,20 @@ class _PathCard extends StatelessWidget {
     required int away,
     Fixture? fixture,
     bool isFinal = false,
+
+    /// Whether the match decides anything on its own: a first leg does not.
+    bool decided = true,
+
+    /// The winner when it is not this match's (a tie on aggregate).
+    int? winnerId,
   }) {
     final played = fixture != null && fixture.hasResult;
-    final winner = !played
+    final winner = !played || !decided
         ? null
-        : fixture.homeScore! >= fixture.awayScore!
-        ? fixture.homeNationId
-        : fixture.awayNationId;
+        : winnerId ??
+              (fixture.homeScore! >= fixture.awayScore!
+                  ? fixture.homeNationId
+                  : fixture.awayNationId);
     Widget side(int id, int? score) {
       final isPlayer = id == data.playerNationId;
       final won = winner == id;
@@ -336,8 +436,13 @@ class EuroPendingGroups extends StatelessWidget {
     this.labels = const {},
     this.seeds = const {},
     this.grid = false,
+    this.ties = false,
     super.key,
   });
+
+  /// Whether the placeholders are two-legged ties' winners ("Tie B
+  /// winner") rather than paths'.
+  final bool ties;
 
   /// A placeholder's path nations, as codes, by its id: the row shows its
   /// mark and their flags ("D 🏳/🏳/🏳/🏳") in place of "Path D winner".
@@ -448,7 +553,13 @@ class EuroPendingGroups extends StatelessWidget {
                             letter == null
                                 ? name(id)
                                 : labels[id] ??
-                                      l.euroPlayoffWinnerPlaceholder(letter),
+                                      (ties
+                                          ? l.euroPlayoffTieWinnerPlaceholder(
+                                              letter,
+                                            )
+                                          : l.euroPlayoffWinnerPlaceholder(
+                                              letter,
+                                            )),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: style,

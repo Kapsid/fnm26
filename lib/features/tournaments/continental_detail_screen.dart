@@ -17,6 +17,7 @@ import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/cross_group.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
+import 'package:fnm/domain/services/competition/euro_qualifying28.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
@@ -235,7 +236,16 @@ List<Widget> _continentalTabViews(
     // best-thirds) come through qualifying.
     // On the calendar2 rhythm the top two go through and the rest of the
     // places are won in the play-offs, not by the best thirds.
-    final adv = data.playoffRoute
+    final tables = [for (final g in data.qualifyingGroups) g.standings];
+    // The EURO 2028 shape: the winners through, the best runners-up on the
+    // ladder under the tables, the rest of them to the play-offs.
+    final adv = data.euro28
+        ? (
+            direct: 1,
+            contention: 2,
+            contentionQualify: Euro28.runnersUpThrough(tables),
+          )
+        : data.playoffRoute
         ? (direct: 2, contention: null, contentionQualify: 0)
         : GroupAdvancement.continentalQualifying(
             (size - data.hostCount).clamp(1, size),
@@ -250,6 +260,8 @@ List<Widget> _continentalTabViews(
       contentionQualify: adv.contentionQualify,
       playoffCourse: data.playoffRoute ? data.playoffCourse : const [],
       playoffs: data.playoffs,
+      euro28: data.euro28,
+      hostIds: data.hostIds,
       // The contested places lead to the finals here, not to a
       // knockout round.
       contentionDestination: l.tourCupDestFinals,
@@ -322,6 +334,7 @@ List<Widget> _continentalTabViews(
         },
         playerNationId: data.playerNationId,
         playerPathLetter: data.playoffs?.playerPath?.letter,
+        ties: data.playoffs?.ties ?? false,
         code: code,
         name: name,
         grid: grid,
@@ -420,11 +433,21 @@ class _Groups extends StatelessWidget {
     this.grid = false,
     this.playoffCourse = const [],
     this.playoffs,
+    this.euro28 = false,
+    this.hostIds = const [],
   });
 
   final int careerId;
   final List<FinalsGroupTable> groups;
   final int playerNationId;
+
+  /// The EURO 2028 shape (see [Euro28]): yellow for the runners-up headed
+  /// for the play-offs, green for a host on a held place, and a line on the
+  /// hosts under the key.
+  final bool euro28;
+
+  /// The championship's hosts, once revealed.
+  final List<int> hostIds;
 
   /// Europe's play-offs once drawn (and watched): played under the groups
   /// they come from, and kept there once the finals are on.
@@ -474,9 +497,20 @@ class _Groups extends StatelessWidget {
         : crossGroupTier(tables, contentionPos! - 1);
     // The contested position's sides through as things stand: green, like
     // the ladder card under the tables.
-    final ladder = {
-      for (final s in contended.take(contentionQualify)) s.nationId,
-    };
+    final ladder = euro28
+        ? GroupAdvancement.ladderNations(
+            kind: CompetitionKind.continentalQualifying,
+            confederation: Confederation.europe,
+            groupCount: tables.length,
+            continentalSize: 24,
+            groups: tables,
+            continentalEuro28: true,
+            euro28Hosts: hostIds,
+          )
+        : {for (final s in contended.take(contentionQualify)) s.nationId};
+    final playoff = euro28
+        ? GroupAdvancement.euro28PlayoffNations(tables, hosts: hostIds)
+        : const <int>{};
 
     // The player's own group first, the rest in their drawn order.
     final ordered = [
@@ -498,11 +532,12 @@ class _Groups extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.sm),
           for (var i = 0; i < g.standings.length; i++)
-            _row(i + 1, g.standings[i], ladder),
+            _row(i + 1, g.standings[i], ladder, playoff),
         ],
       ),
     );
 
+    String hostNames() => [for (final h in hostIds) name(h)].join(', ');
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
@@ -512,8 +547,14 @@ class _Groups extends StatelessWidget {
             zoneSpec(
               kind: CompetitionKind.continentalQualifying,
               confederation: Confederation.europe,
+              euro28: euro28,
             ),
-            {AppColors.positive},
+            {AppColors.positive, if (playoff.isNotEmpty) AppColors.playoff},
+            note: euro28 && hostIds.isNotEmpty
+                ? hostIds.length > Euro28.maxHostPlaces
+                      ? l.euro28LegendHostsMany(hostNames())
+                      : l.euro28LegendHosts(hostNames())
+                : null,
           ),
         ),
         if (grid) ...[
@@ -541,6 +582,11 @@ class _Groups extends StatelessWidget {
             playerNationId: playerNationId,
             code: code,
             name: name,
+            euro28: euro28,
+            runnersUp: {
+              for (final t in tables)
+                if (t.length > 1) t[1].nationId,
+            },
           ),
           const SizedBox(height: AppSpacing.sm),
         ],
@@ -556,18 +602,29 @@ class _Groups extends StatelessWidget {
               title: contentionLadderTitle(l, pos),
               adjustedForGroupSize: uneven,
               careerId: careerId,
+              // The EURO 2028 shape: the runners-up the ladder leaves out
+              // go to the play-offs.
+              playoffNations: playoff,
+              playoffDestination: euro28 ? l.euro28DestPlayoffs : null,
             ),
         const SizedBox(height: AppSpacing.xl),
       ],
     );
   }
 
-  Widget _row(int pos, GroupStanding s, Set<int> ladder) {
+  Widget _row(
+    int pos,
+    GroupStanding s,
+    Set<int> ladder, [
+    Set<int> playoff = const {},
+  ]) {
     final isPlayer = s.nationId == playerNationId;
     // Where each side is headed as things stand, nothing for "still in the
     // race" (owner, 1.1.2).
     final accent = pos <= directCount || ladder.contains(s.nationId)
         ? AppColors.positive
+        : playoff.contains(s.nationId)
+        ? AppColors.playoff
         : null;
     final gd = s.goalDifference;
     return Container(
@@ -856,7 +913,17 @@ class _PlayoffCourseCard extends StatelessWidget {
     required this.playerNationId,
     required this.code,
     required this.name,
+    this.euro28 = false,
+    this.runnersUp = const {},
   });
+
+  /// The EURO 2028 shape: the runners-up and the Nations Cup's sides, in
+  /// paths or two-legged ties, each tagged with its way in.
+  final bool euro28;
+
+  /// The qualifying groups' runners-up, as they stand (the EURO 2028
+  /// shape's tags: a runner-up, or a side in through the Nations Cup).
+  final Set<int> runnersUp;
 
   final List<PlayoffPath> paths;
   final int playerNationId;
@@ -874,7 +941,9 @@ class _PlayoffCourseCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            l.euroPlayoffCourseTitle.capsIn(l.localeName),
+            (euro28 ? l.euro28CourseTitle : l.euroPlayoffCourseTitle).capsIn(
+              l.localeName,
+            ),
             style: AppTypography.labelSmall.copyWith(
               color: AppColors.primary,
               fontWeight: FontWeight.w800,
@@ -882,7 +951,7 @@ class _PlayoffCourseCard extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
-            l.euroPlayoffCourseNote,
+            euro28 ? l.euro28CourseNote : l.euroPlayoffCourseNote,
             style: AppTypography.bodySmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),
@@ -890,7 +959,9 @@ class _PlayoffCourseCard extends StatelessWidget {
           for (final p in paths) ...[
             const SizedBox(height: AppSpacing.sm),
             Text(
-              l.euroPlayoffPath(p.letter),
+              EuroPlayoffs.isTie(p)
+                  ? l.euroPlayoffTie(p.letter)
+                  : l.euroPlayoffPath(p.letter),
               style: AppTypography.labelMedium.copyWith(
                 color: AppColors.primary,
               ),
@@ -915,11 +986,35 @@ class _PlayoffCourseCard extends StatelessWidget {
                         ),
                       ),
                     ),
+                    if (euro28)
+                      Text(
+                        runnersUp.contains(id)
+                            ? l.ncRouteTagRunnerUp
+                            : l.compNationsCup,
+                        key: Key('continental.playoffCourse.tag.$id'),
+                        style: AppTypography.labelSmall.copyWith(
+                          color: runnersUp.contains(id)
+                              ? AppColors.playoff
+                              : AppColors.onSurfaceVariant,
+                        ),
+                      ),
                   ],
                 ),
               ),
           ],
-          const PlayoffCourseFooter(),
+          if (euro28)
+            Padding(
+              padding: const EdgeInsets.only(top: AppSpacing.sm),
+              child: Text(
+                l.euro28CourseFooter,
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            )
+          else
+            const PlayoffCourseFooter(),
         ],
       ),
     );

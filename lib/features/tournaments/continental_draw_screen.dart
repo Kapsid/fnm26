@@ -116,7 +116,9 @@ class _ContinentalDrawScreenState extends ConsumerState<ContinentalDrawScreen> {
               for (final e in data.placeholderLetters.entries)
                 e.key: (
                   letter: e.value,
-                  label: l.euroPlayoffWinnerPlaceholder(e.value),
+                  label: data.pathSeeds[e.value]?.length == 2
+                      ? l.euroPlayoffTieWinnerPlaceholder(e.value)
+                      : l.euroPlayoffWinnerPlaceholder(e.value),
                 ),
             },
             placeholderSeeds: {
@@ -146,7 +148,9 @@ class _ContinentalDrawScreenState extends ConsumerState<ContinentalDrawScreen> {
                 ),
                 color: AppColors.primary.withValues(alpha: 0.12),
                 child: Text(
-                  l.euroPlayoffYourGroupIfWin(pathLetter, pathGroup),
+                  data.pathSeeds[pathLetter]?.length == 2
+                      ? l.euroPlayoffYourGroupIfWinTie(pathLetter, pathGroup)
+                      : l.euroPlayoffYourGroupIfWin(pathLetter, pathGroup),
                   textAlign: TextAlign.center,
                   style: AppTypography.labelMedium.copyWith(
                     color: AppColors.primary,

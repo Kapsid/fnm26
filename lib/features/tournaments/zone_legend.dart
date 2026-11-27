@@ -26,6 +26,10 @@ typedef ZoneSpec = ({
   bool wcPaths,
   bool allRunnersUp,
 
+  /// Europe's qualifying for the continental finals in the EURO 2028 shape
+  /// (`Euro28`): yellow is a runner-up headed for the play-offs.
+  bool euro28,
+
   /// The Nations Cup's top league: its winners go to the Finals Four.
   bool topLeague,
 });
@@ -36,6 +40,7 @@ ZoneSpec zoneSpec({
   bool wcStep = false,
   bool wcPaths = false,
   bool allRunnersUp = false,
+  bool euro28 = false,
   bool topLeague = false,
 }) => (
   kind: kind,
@@ -43,6 +48,7 @@ ZoneSpec zoneSpec({
   wcStep: wcStep,
   wcPaths: wcPaths,
   allRunnersUp: allRunnersUp,
+  euro28: euro28,
   topLeague: topLeague,
 );
 
@@ -66,7 +72,10 @@ List<(Color?, String)> zoneLegendLines(
       spec.topLeague ? l.ncLegendWinnerFinalsFour : l.ncLegendWinnerUp,
     _ => l.legendThrough,
   };
-  final yellow = spec.kind != CompetitionKind.worldCupQualifying
+  final yellow =
+      spec.kind == CompetitionKind.continentalQualifying && spec.euro28
+      ? l.euro28LegendPlayoff
+      : spec.kind != CompetitionKind.worldCupQualifying
       ? null
       : spec.wcPaths
       ? (spec.allRunnersUp ? l.playoffCourseLegendAll : l.playoffCourseLegend)

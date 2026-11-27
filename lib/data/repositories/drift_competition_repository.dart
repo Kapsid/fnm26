@@ -1669,17 +1669,22 @@ class DriftCompetitionRepository implements CompetitionRepository {
     // Every rating row belonging to a fixture of this competition. The join is
     // on the fixture rather than a competition column on PlayerRatings, which
     // keeps the rating rows competition-agnostic.
-    final query =
-        _db.select(_db.playerRatings).join([
-          innerJoin(
-            _db.fixtures,
-            _db.fixtures.id.equalsExp(_db.playerRatings.fixtureId),
-          ),
-        ])..where(
-          _db.playerRatings.careerId.equals(careerId) &
-              _db.fixtures.competitionId.equals(competitionId),
-        );
-    final rows = await query.get();
+    //
+    // Only the columns a line sums, read raw: a qualifying campaign is
+    // thousands of rated appearances, and mapping each into a whole rating
+    // row and a whole fixture row ran as one long block on the UI isolate. The
+    // order is the primary key's (fixture, player), the index the join walks.
+    final rows = await _db
+        .customSelect(
+          'SELECT r.player_id, r.nation_id, r.rating, r.goals, r.assists, '
+          'r.motm, r.clean_sheet FROM player_ratings r '
+          'INNER JOIN fixtures f ON f.id = r.fixture_id '
+          'WHERE r.career_id = ? AND f.competition_id = ? '
+          'ORDER BY r.fixture_id, r.player_id',
+          variables: [Variable<int>(careerId), Variable<int>(competitionId)],
+          readsFrom: {_db.playerRatings, _db.fixtures},
+        )
+        .get();
 
     final acc =
         <
@@ -1695,16 +1700,18 @@ class DriftCompetitionRepository implements CompetitionRepository {
           })
         >{};
     for (final r in rows) {
-      final p = r.readTable(_db.playerRatings);
-      final was = acc[p.playerId];
-      acc[p.playerId] = (
-        nationId: p.nationId,
+      final d = r.data;
+      final playerId = _sqlInt(d['player_id']);
+      final was = acc[playerId];
+      acc[playerId] = (
+        nationId: _sqlInt(d['nation_id']),
         apps: (was?.apps ?? 0) + 1,
-        sum: (was?.sum ?? 0) + p.rating,
-        goals: (was?.goals ?? 0) + p.goals,
-        assists: (was?.assists ?? 0) + p.assists,
-        motms: (was?.motms ?? 0) + (p.motm ? 1 : 0),
-        cleanSheets: (was?.cleanSheets ?? 0) + (p.cleanSheet ? 1 : 0),
+        sum: (was?.sum ?? 0) + (d['rating']! as num).toDouble(),
+        goals: (was?.goals ?? 0) + _sqlInt(d['goals']),
+        assists: (was?.assists ?? 0) + _sqlInt(d['assists']),
+        motms: (was?.motms ?? 0) + (_sqlBool(d['motm']) ? 1 : 0),
+        cleanSheets:
+            (was?.cleanSheets ?? 0) + (_sqlBool(d['clean_sheet']) ? 1 : 0),
       );
     }
     return [
@@ -1876,33 +1883,42 @@ class DriftCompetitionRepository implements CompetitionRepository {
     final compIds = comps.map((c) => c.id).toSet();
     if (compIds.isEmpty) return [];
 
-    final rows = await (_db.select(
-      _db.goalEvents,
-    )..where((t) => t.careerId.equals(careerId))).get();
-
-    final tally = <int, ({int nationId, int goals})>{};
-    for (final r in rows) {
-      if (!compIds.contains(r.competitionId)) continue;
-      if (isOwnGoal(r.playerId)) continue;
-      final cur = tally[r.playerId];
-      tally[r.playerId] = (
-        nationId: r.nationId,
-        goals: (cur?.goals ?? 0) + 1,
-      );
-    }
-
-    final list =
-        tally.entries
-            .map(
-              (e) => (
-                playerId: e.key,
-                nationId: e.value.nationId,
-                goals: e.value.goals,
-              ),
-            )
-            .toList()
-          ..sort((a, b) => b.goals.compareTo(a.goals));
+    final list = await _scorerTally(careerId, compIds)
+      ..sort((a, b) => b.goals.compareTo(a.goals));
     return list.take(limit).toList();
+  }
+
+  /// Every scorer of [compIds] in [careerId] with his goals (own goals left
+  /// out) and the nation of his latest goal, in the order of his first goal:
+  /// the tally a walk over the goal events in id order builds, counted in SQL.
+  ///
+  /// The goals of a whole save are tens of thousands of rows, and the
+  /// achievements and the records read this after every match: pulling them
+  /// all across to count them was a long block on the UI isolate, growing
+  /// with the save.
+  Future<List<ScorerTally>> _scorerTally(int careerId, Set<int> compIds) async {
+    final rows = await _db
+        .customSelect(
+          'SELECT a.player_id, a.goals, g.nation_id FROM ( '
+          'SELECT player_id, COUNT(*) AS goals, MIN(id) AS first_id, '
+          'MAX(id) AS last_id FROM goal_events '
+          'WHERE career_id = ? AND player_id >= 0 '
+          'AND competition_id IN (${_sqlIntList(compIds)}) '
+          'GROUP BY player_id) a '
+          'INNER JOIN goal_events g ON g.id = a.last_id '
+          'ORDER BY a.first_id',
+          variables: [Variable<int>(careerId)],
+          readsFrom: {_db.goalEvents},
+        )
+        .get();
+    return [
+      for (final r in rows)
+        (
+          playerId: _sqlInt(r.data['player_id']),
+          nationId: _sqlInt(r.data['nation_id']),
+          goals: _sqlInt(r.data['goals']),
+        ),
+    ];
   }
 
   @override
@@ -1935,32 +1951,8 @@ class DriftCompetitionRepository implements CompetitionRepository {
         .toSet();
     if (compIds.isEmpty) return [];
 
-    final rows = await (_db.select(
-      _db.goalEvents,
-    )..where((t) => t.careerId.equals(careerId))).get();
-
-    final tally = <int, ({int nationId, int goals})>{};
-    for (final r in rows) {
-      if (!compIds.contains(r.competitionId)) continue;
-      if (isOwnGoal(r.playerId)) continue;
-      final cur = tally[r.playerId];
-      tally[r.playerId] = (
-        nationId: r.nationId,
-        goals: (cur?.goals ?? 0) + 1,
-      );
-    }
-
-    final list =
-        tally.entries
-            .map(
-              (e) => (
-                playerId: e.key,
-                nationId: e.value.nationId,
-                goals: e.value.goals,
-              ),
-            )
-            .toList()
-          ..sort((a, b) => b.goals.compareTo(a.goals));
+    final list = await _scorerTally(careerId, compIds)
+      ..sort((a, b) => b.goals.compareTo(a.goals));
     return list.take(limit).toList();
   }
 
@@ -2458,12 +2450,22 @@ class DriftCompetitionRepository implements CompetitionRepository {
     // actually playing. While a finals is in progress, nothing banks: any
     // competition whose last fixture falls after that tournament kicked off
     // waits until the tournament is over.
+    //
+    // THE SUMS ARE TAKEN IN SQL. This read runs for every squad screen and
+    // every lineup, and the table it sums gains a row per man per tournament
+    // for the whole life of the save: pulling every row across, and every
+    // fixture of the save twice more to date the competitions, was tens of
+    // thousands of rows mapped on the UI isolate each time, growing with the
+    // save. The maps come back the same, entries in the same order: each
+    // player in the order the old scan met him, by the primary key's
+    // (competition, player) — his first counted competition, then his id.
     final unfinished = await _unfinishedCompetitionIds(careerId);
-    final freezeFrom = await _finalsInProgressSince(careerId);
-    final lastFixtureByComp = await _lastFixtureDateByCompetition(careerId);
-    final rows = await (_db.select(
-      _db.tournamentAppearances,
-    )..where((t) => t.careerId.equals(careerId))).get();
+    final freezeFrom = await _finalsInProgressSince(careerId, unfinished);
+    final excluded = {
+      ...unfinished,
+      if (freezeFrom != null)
+        ...await _competitionsEndingAfter(careerId, freezeFrom),
+    };
     // Which of them were banked in a cycle on the 1.1.2 difficulty (see
     // `GrowthDifficulty`): a competition's starts belong to its cycle. With
     // no such cycle nothing is marked and the bump grows as before.
@@ -2485,96 +2487,120 @@ class DriftCompetitionRepository implements CompetitionRepository {
             )..where((t) => t.careerId.equals(careerId))).get())
               if (markedCycles.contains(c.cycle)) c.id,
           };
-    final byPlayer = <int, int>{};
-    final marked = <int, int>{};
-    for (final r in rows) {
-      if (r.starts <= 0) continue;
-      if (unfinished.contains(r.competitionId)) continue;
-      if (freezeFrom != null) {
-        final last = lastFixtureByComp[r.competitionId];
-        if (last != null && last.isAfter(freezeFrom)) continue;
-      }
-      byPlayer.update(
-        r.playerId,
-        (v) => v + r.starts,
-        ifAbsent: () => r.starts,
+    final isMarked = markedComps.isEmpty
+        ? '0'
+        : 'competition_id IN (${_sqlIntList(markedComps)})';
+    final notExcluded = excluded.isEmpty
+        ? ''
+        : ' AND competition_id NOT IN (${_sqlIntList(excluded)})';
+    final rows = await _db
+        .customSelect(
+          'SELECT player_id, SUM(starts) AS s, MIN(competition_id) AS c, '
+          'SUM(CASE WHEN $isMarked THEN starts ELSE 0 END) AS ms, '
+          'MIN(CASE WHEN $isMarked THEN competition_id END) AS mc '
+          'FROM tournament_appearances '
+          'WHERE career_id = ? AND starts > 0$notExcluded '
+          'GROUP BY player_id',
+          variables: [Variable<int>(careerId)],
+          readsFrom: {_db.tournamentAppearances},
+        )
+        .get();
+    final all = [
+      for (final r in rows)
+        (
+          player: _sqlInt(r.data['player_id']),
+          starts: _sqlInt(r.data['s']),
+          first: _sqlInt(r.data['c']),
+          markedStarts: _sqlInt(r.data['ms']),
+          markedFirst: r.data['mc'] == null ? null : _sqlInt(r.data['mc']),
+        ),
+    ];
+    int inScanOrder(int a, int pa, int b, int pb) =>
+        a != b ? a.compareTo(b) : pa.compareTo(pb);
+    all.sort((a, b) => inScanOrder(a.first, a.player, b.first, b.player));
+    final byPlayer = <int, int>{for (final r in all) r.player: r.starts};
+    final markedRows = all.where((r) => r.markedFirst != null).toList()
+      ..sort(
+        (a, b) =>
+            inScanOrder(a.markedFirst!, a.player, b.markedFirst!, b.player),
       );
-      if (markedComps.contains(r.competitionId)) {
-        marked.update(
-          r.playerId,
-          (v) => v + r.starts,
-          ifAbsent: () => r.starts,
-        );
-      }
-    }
+    final marked = <int, int>{
+      for (final r in markedRows) r.player: r.markedStarts,
+    };
     return CareerStarts(byPlayer, marked: marked);
   }
 
   /// When the earliest finals tournament that is currently IN PROGRESS kicked
-  /// off, or null if no finals is running.
+  /// off, or null if no finals is running. [unfinished] is
+  /// [_unfinishedCompetitionIds]: a finals in progress is one of them.
   ///
   /// Only a finals counts. Qualifying campaigns run for the best part of a
   /// season and always have unplayed fixtures somewhere, so treating them as
   /// "in progress" would freeze development permanently.
-  Future<DateTime?> _finalsInProgressSince(int careerId) async {
+  Future<DateTime?> _finalsInProgressSince(
+    int careerId,
+    Set<int> unfinished,
+  ) async {
     const finalsKinds = {
       CompetitionKind.worldCupFinals,
       CompetitionKind.continentalFinals,
     };
+    if (unfinished.isEmpty) return null;
     final comps = await (_db.select(
       _db.competitions,
     )..where((t) => t.careerId.equals(careerId))).get();
-    final finalsIds = {
+    final running = {
       for (final c in comps)
-        if (finalsKinds.contains(c.kind)) c.id,
+        if (finalsKinds.contains(c.kind) && unfinished.contains(c.id)) c.id,
     };
-    if (finalsIds.isEmpty) return null;
-    final fixtures = await (_db.select(
-      _db.fixtures,
-    )..where((t) => t.careerId.equals(careerId))).get();
-    DateTime? earliest;
-    final played = <int, DateTime>{};
-    final hasUnplayed = <int>{};
-    for (final f in fixtures) {
-      if (!finalsIds.contains(f.competitionId)) continue;
-      if (f.played) {
-        final at = played[f.competitionId];
-        if (at == null || f.date.isBefore(at)) played[f.competitionId] = f.date;
-      } else {
-        hasUnplayed.add(f.competitionId);
-      }
-    }
-    for (final entry in played.entries) {
-      if (!hasUnplayed.contains(entry.key)) continue; // already settled
-      if (earliest == null || entry.value.isBefore(earliest)) {
-        earliest = entry.value;
-      }
-    }
-    return earliest;
+    if (running.isEmpty) return null;
+    // The earliest played fixture of any of them (one that has not kicked
+    // off yet has none, and counts for nothing).
+    final earliest = _db.fixtures.date.min();
+    final row =
+        await (_db.selectOnly(_db.fixtures)
+              ..addColumns([earliest])
+              ..where(
+                _db.fixtures.careerId.equals(careerId) &
+                    _db.fixtures.played.equals(true) &
+                    _db.fixtures.competitionId.isIn(running),
+              ))
+            .getSingle();
+    return row.read(earliest);
   }
 
-  /// The date of each competition's last fixture — when its game time banks.
-  Future<Map<int, DateTime>> _lastFixtureDateByCompetition(int careerId) async {
-    final rows = await (_db.select(
-      _db.fixtures,
-    )..where((t) => t.careerId.equals(careerId))).get();
-    final out = <int, DateTime>{};
-    for (final f in rows) {
-      final at = out[f.competitionId];
-      if (at == null || f.date.isAfter(at)) out[f.competitionId] = f.date;
-    }
-    return out;
+  /// The competitions of [careerId] whose last fixture falls after [after]:
+  /// their game time waits for the finals in progress (see
+  /// [careerStartsByPlayer]).
+  Future<List<int>> _competitionsEndingAfter(
+    int careerId,
+    DateTime after,
+  ) async {
+    final last = _db.fixtures.date.max();
+    final rows =
+        await (_db.selectOnly(_db.fixtures)
+              ..addColumns([_db.fixtures.competitionId])
+              ..where(_db.fixtures.careerId.equals(careerId))
+              ..groupBy(
+                [_db.fixtures.competitionId],
+                having: last.isBiggerThanValue(after),
+              ))
+            .get();
+    return [for (final r in rows) r.read(_db.fixtures.competitionId)!];
   }
 
   /// Competitions in this save that still have an unplayed fixture — i.e. are
   /// in progress rather than settled.
   Future<Set<int>> _unfinishedCompetitionIds(int careerId) async {
     final rows =
-        await (_db.select(_db.fixtures)..where(
-              (t) => t.careerId.equals(careerId) & t.played.equals(false),
-            ))
+        await (_db.selectOnly(_db.fixtures, distinct: true)
+              ..addColumns([_db.fixtures.competitionId])
+              ..where(
+                _db.fixtures.careerId.equals(careerId) &
+                    _db.fixtures.played.equals(false),
+              ))
             .get();
-    return {for (final f in rows) f.competitionId};
+    return {for (final r in rows) r.read(_db.fixtures.competitionId)!};
   }
 
   @override
@@ -2887,31 +2913,54 @@ class DriftCompetitionRepository implements CompetitionRepository {
   }) async {
     final list = lines.toList();
     if (list.isEmpty) return;
+    // The statement `insertAllOnConflictUpdate` writes, prepared once and fed
+    // its rows: every match in the world rates both squads, and generating
+    // the insert for each man (its SQL text rebuilt, its companion checked)
+    // was the busiest part of simulating the world's fixtures on the UI
+    // isolate. Same statement, same values, so the same rows.
     await _db.batch((b) {
-      b.insertAllOnConflictUpdate(_db.playerRatings, [
-        for (final r in list)
-          PlayerRatingsCompanion.insert(
-            careerId: careerId,
-            fixtureId: fixtureId,
-            playerId: r.playerId,
-            nationId: Value(r.nationId),
-            rating: r.rating,
-            goals: Value(r.goals),
-            assists: Value(r.assists),
-            cleanSheet: Value(r.cleanSheet),
-            motm: Value(r.motm),
-            yellows: Value(r.yellows),
-            reds: Value(r.reds),
-            penTaken: Value(spot[r.playerId]?.penTaken ?? 0),
-            penScored: Value(spot[r.playerId]?.penScored ?? 0),
-            onTargetFaced: Value(spot[r.playerId]?.onTargetFaced ?? 0),
-            saves: Value(spot[r.playerId]?.saves ?? 0),
-            penFaced: Value(spot[r.playerId]?.penFaced ?? 0),
-            penSaved: Value(spot[r.playerId]?.penSaved ?? 0),
-          ),
-      ]);
+      for (final r in list) {
+        final s = spot[r.playerId];
+        final row = <Object?>[
+          careerId,
+          fixtureId,
+          r.playerId,
+          r.nationId,
+          r.rating,
+          r.goals,
+          r.assists,
+          if (r.cleanSheet) 1 else 0,
+          if (r.motm) 1 else 0,
+          r.yellows,
+          r.reds,
+          s?.penTaken ?? 0,
+          s?.penScored ?? 0,
+          s?.onTargetFaced ?? 0,
+          s?.saves ?? 0,
+          s?.penFaced ?? 0,
+          s?.penSaved ?? 0,
+        ];
+        b.customStatement(_ratingUpsertSql, [...row, ...row], _ratingUpdates);
+      }
     });
   }
+
+  static const String _ratingUpsertSql =
+      'INSERT INTO "player_ratings" ("career_id", "fixture_id", "player_id", '
+      '"nation_id", "rating", "goals", "assists", "clean_sheet", "motm", '
+      '"yellows", "reds", "pen_taken", "pen_scored", "on_target_faced", '
+      '"saves", "pen_faced", "pen_saved") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '
+      '?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT("career_id", "fixture_id", '
+      '"player_id") DO UPDATE SET "career_id" = ?, "fixture_id" = ?, '
+      '"player_id" = ?, "nation_id" = ?, "rating" = ?, "goals" = ?, '
+      '"assists" = ?, "clean_sheet" = ?, "motm" = ?, "yellows" = ?, '
+      '"reds" = ?, "pen_taken" = ?, "pen_scored" = ?, "on_target_faced" = ?, '
+      '"saves" = ?, "pen_faced" = ?, "pen_saved" = ?';
+
+  late final List<TableUpdate> _ratingUpdates = [
+    TableUpdate.onTable(_db.playerRatings, kind: UpdateKind.insert),
+    TableUpdate.onTable(_db.playerRatings, kind: UpdateKind.update),
+  ];
 
   @override
   Future<SpotTotals> playerSpotTotals(int careerId, int playerId) async {
@@ -3394,30 +3443,42 @@ class DriftCompetitionRepository implements CompetitionRepository {
       ));
     }
     final ids = {for (final f in fixtures) f.id};
-    final ratingQuery =
-        _db.select(_db.playerRatings).join([
-          innerJoin(
-            _db.fixtures,
-            _db.fixtures.id.equalsExp(_db.playerRatings.fixtureId),
-          ),
-        ])..where(
-          _db.playerRatings.careerId.equals(careerId) &
-              _db.fixtures.date.isBiggerOrEqualValue(from) &
-              _db.fixtures.date.isSmallerThanValue(to),
-        );
+    // Only the eight columns an appearance carries. A year is every rated man
+    // of every match in the world, tens of thousands of rows, and mapping each
+    // into a whole rating row AND a whole fixture row (forty-odd columns, a
+    // string key built and hashed for every one) ran as one synchronous block
+    // on the UI isolate: the longest stall of a step, on the first step of
+    // every year. The rows and their order are the same: the order is the
+    // primary key's (fixture, player), which is the index the old join walked.
+    final ratingRows = await _db
+        .customSelect(
+          'SELECT r.fixture_id, r.player_id, r.nation_id, r.rating, '
+          'r.goals, r.assists, r.clean_sheet, r.motm FROM player_ratings r '
+          'INNER JOIN fixtures f ON f.id = r.fixture_id '
+          'WHERE r.career_id = ? AND f.date >= ? AND f.date < ? '
+          'ORDER BY r.fixture_id, r.player_id',
+          variables: [
+            Variable<int>(careerId),
+            Variable<DateTime>(from),
+            Variable<DateTime>(to),
+          ],
+          readsFrom: {_db.playerRatings, _db.fixtures},
+        )
+        .get();
     final appearances = <AwardAppearance>[];
-    for (final row in await ratingQuery.get()) {
-      final r = row.readTable(_db.playerRatings);
-      if (!ids.contains(r.fixtureId)) continue;
+    for (final row in ratingRows) {
+      final d = row.data;
+      final fixtureId = _sqlInt(d['fixture_id']);
+      if (!ids.contains(fixtureId)) continue;
       appearances.add((
-        fixtureId: r.fixtureId,
-        playerId: r.playerId,
-        nationId: r.nationId,
-        rating: r.rating,
-        goals: r.goals,
-        assists: r.assists,
-        cleanSheet: r.cleanSheet,
-        motm: r.motm,
+        fixtureId: fixtureId,
+        playerId: _sqlInt(d['player_id']),
+        nationId: _sqlInt(d['nation_id']),
+        rating: (d['rating']! as num).toDouble(),
+        goals: _sqlInt(d['goals']),
+        assists: _sqlInt(d['assists']),
+        cleanSheet: _sqlBool(d['clean_sheet']),
+        motm: _sqlBool(d['motm']),
       ));
     }
     return (fixtures: fixtures, appearances: appearances);
@@ -3543,3 +3604,21 @@ List<int> _hostIds(HonourRow row) {
       if (int.tryParse(part.trim()) case final id?) id,
   ];
 }
+
+/// A raw SQL boolean as drift reads one (an integer 0/1 natively, possibly a
+/// bool on the web), for the lean `customSelect` reads that skip the row
+/// classes.
+bool _sqlBool(Object? v) => v != null && v != 0 && v != false;
+
+/// A raw SQL integer as drift reads one.
+int _sqlInt(Object? v) => switch (v) {
+  int() => v,
+  BigInt() => v.toInt(),
+  double() => v.toInt(),
+  _ => int.parse(v.toString()),
+};
+
+/// [ids] as a comma-separated list of integer literals, for an `IN (...)`.
+/// Integers cannot carry SQL, and a long career's competitions would outrun
+/// the host-parameter limit as `?` slots.
+String _sqlIntList(Iterable<int> ids) => ids.join(', ');

@@ -34,6 +34,7 @@ import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
+import 'package:fnm/domain/services/competition/euro_qualifying28.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
@@ -375,6 +376,7 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
       worldCupPlayoffPaths: wcPaths,
       continentalHosts: contShape?.hosts ?? 0,
       continentalPlayoffRoute: contShape?.playoffRoute ?? false,
+      continentalEuro28: contShape?.euro28 ?? false,
       worldCupConfedSteps: wcCal2,
     );
     groupDirect = adv.direct;
@@ -390,6 +392,7 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
       wcStep: wcCal2 && conf != Confederation.europe,
       wcPaths: wcPaths > 0,
       allRunnersUp: wcAllRunnersUp,
+      euro28: contShape?.euro28 ?? false,
       topLeague:
           group.kind == CompetitionKind.nationsLeague &&
           NationsCup.tierOfGroupName(group.name) == 0,
@@ -422,15 +425,26 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
       // Best thirds and the like: the sides holding the ladder's places now
       // are green, exactly as the ladder card under the full tables.
       final siblings = await compRepo.siblingGroupTables(group.groupId);
+      final tables = [for (final t in siblings) t.standings];
       groupDirectNations = GroupAdvancement.ladderNations(
         kind: group.kind,
         confederation: conf,
         groupCount: group.groupCount,
         continentalSize: size,
-        groups: [for (final t in siblings) t.standings],
+        groups: tables,
         continentalHosts: contShape?.hosts ?? 0,
         continentalPlayoffRoute: contShape?.playoffRoute ?? false,
+        continentalEuro28: contShape?.euro28 ?? false,
+        euro28Hosts: contShape?.hostIds ?? const [],
       );
+      // The EURO 2028 shape: the runners-up the ladder leaves out are
+      // headed for the play-offs.
+      if (contShape?.euro28 ?? false) {
+        groupPlayoff = GroupAdvancement.euro28PlayoffNations(
+          tables,
+          hosts: contShape!.hostIds,
+        );
+      }
     }
     final gk = groupDrawKind(group.kind);
     if (gk != null) {

@@ -663,6 +663,8 @@ Future<bool> _groupPlayedOut(
 const Set<String> campaignPlayoffRounds = {
   'EPSF',
   'EPFINAL',
+  'EPL1',
+  'EPL2',
   'UPSF',
   'UPFINAL',
   'POSF',

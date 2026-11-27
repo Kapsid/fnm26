@@ -13,6 +13,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/domain/services/competition/calendar2.dart';
+import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
@@ -1098,6 +1099,24 @@ Future<({int ordinal, bool over})?> _storedDrawRun({
     ),
   ).where((p) => p.seeds.contains(nationId)).firstOrNull;
   if (path == null) return (ordinal: 0, over: true);
+  // A two-legged tie (the EURO 2028 shape) is lost on aggregate, never on a
+  // first leg.
+  if (EuroPlayoffs.isTie(path)) {
+    Fixture? leg(String round) => fixtures
+        .where(
+          (f) =>
+              f.round == round &&
+              path.seeds.contains(f.homeNationId) &&
+              path.seeds.contains(f.awayNationId),
+        )
+        .firstOrNull;
+    final first = leg(EuroPlayoffs.legOneRound);
+    final second = leg(EuroPlayoffs.legTwoRound);
+    final winner = first == null || second == null
+        ? null
+        : TwoLegged.winner(first, second);
+    return (ordinal: 1, over: winner != null && winner != nationId);
+  }
   final beaten = fixtures.any(
     (f) =>
         EuroPlayoffs.rounds.contains(f.round) &&

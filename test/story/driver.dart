@@ -271,6 +271,11 @@ class StoryDriver {
     bool calendar2 = true,
     bool euroQuali2 = true,
     bool difficulty2 = true,
+
+    /// Europe's qualifying for the continental finals in the EURO 2028
+    /// shape (`Euro28.kind`) from cycle 0. Off by default: the stories were
+    /// found on the shape before it, and every rollover stamps it anyway.
+    bool euro28 = false,
   }) async {
     await c.read(seedLoaderProvider).ensureSeeded();
     final career =
@@ -287,6 +292,7 @@ class StoryDriver {
                   tournamentSpacing: tournamentSpacing,
                   calendar2: calendar2,
                   euroQuali2: euroQuali2,
+                  euro28: euro28,
                   difficulty2: difficulty2,
                 ))
             .valueOrNull!;

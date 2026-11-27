@@ -5,6 +5,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart' show visibleForTesting;
+import 'package:fnm/core/util/off_ui.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/db/raw_sqlite.dart';
 import 'package:path/path.dart' as p;
@@ -187,20 +188,37 @@ abstract final class SaveBackup {
     await dir.create(recursive: true);
     final partial = File('${out.path}.partial');
     if (partial.existsSync()) await partial.delete();
-    // Read-write, never create: a WAL left by the last session is read
-    // rather than refused, as a read-only open can be.
-    final db = sqlite3.open(live.path, mode: OpenMode.readWrite);
-    try {
-      db.execute('VACUUM INTO ?', [partial.path]);
-    } finally {
-      db.close();
-    }
-    if (inspect(partial.path).rejection != null) {
+    // On a background isolate: VACUUM INTO rewrites the whole save, and a
+    // long career's took seconds on a slow phone, held on the UI isolate
+    // while the app was opening — long enough for Android to report it not
+    // responding. Only the two paths cross; the copy is the same file.
+    final livePath = live.path;
+    final partialPath = partial.path;
+    final readable = await runOffUi(
+      () => _vacuumInto(livePath, partialPath),
+      debugName: 'pre-upgrade copy',
+    );
+    if (!readable) {
       await partial.delete();
       throw FileSystemException('pre-upgrade copy unreadable', out.path);
     }
     await partial.rename(out.path);
     return out;
+  }
+
+  /// Copies the save at [livePath] into [toPath] with VACUUM INTO, and says
+  /// whether the copy reads back as a save ([inspect]). Synchronous, for
+  /// [runOffUi].
+  static bool _vacuumInto(String livePath, String toPath) {
+    // Read-write, never create: a WAL left by the last session is read
+    // rather than refused, as a read-only open can be.
+    final db = sqlite3.open(livePath, mode: OpenMode.readWrite);
+    try {
+      db.execute('VACUUM INTO ?', [toPath]);
+    } finally {
+      db.close();
+    }
+    return inspect(toPath).rejection == null;
   }
 
   /// The copy [writePreUpgradeCopy] took of [live] at the version [live] is

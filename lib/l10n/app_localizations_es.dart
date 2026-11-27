@@ -364,6 +364,9 @@ class AppLocalizationsEs extends AppLocalizations {
       'Algo ha fallado aquí.\nEn Ajustes → Diagnóstico tienes los detalles.';
 
   @override
+  String get hubSimulatingMatchday => 'Simulando la jornada…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'No se pudo avanzar el mundo: $error';
   }
@@ -19138,4 +19141,92 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Solo los partidos por los que se juzga esta campaña: no cuentan los amistosos ni otras competiciones.';
+
+  @override
+  String get resultsStagePlayoff => 'REPESCA';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return 'Repesca de $cup: Eliminatoria $path';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return 'Una eliminatoria a doble partido ante $opponent en marzo: la ida en casa y la vuelta fuera. El que gane en el global va a la fase final.';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return 'Una eliminatoria a doble partido ante $opponent en marzo: la ida fuera y la vuelta en casa. El que gane en el global va a la fase final.';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return 'Clasificado como anfitrión: $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'Se escapó la plaza directa, pero como anfitrión ocupas una de las plazas reservadas a los anfitriones. Te has clasificado para la fase final de $cup.';
+  }
+
+  @override
+  String get euro28LegendPlayoff =>
+      'Amarillo: un segundo rumbo a la repesca, según la situación actual';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return 'Los anfitriones ($hosts) también juegan la clasificación: si se quedan fuera, tienen una plaza reservada.';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return 'Los anfitriones ($hosts) también juegan la clasificación: hay dos plazas reservadas para los dos mejores que se queden fuera.';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'la repesca';
+
+  @override
+  String get euro28CourseTitle => 'Repesca, según la situación actual';
+
+  @override
+  String get euro28CourseNote =>
+      'Los ganadores de grupo y los ocho mejores segundos se clasifican directamente. Los demás segundos van a la repesca, con los mejores ganadores de grupo de la Copa de las Naciones que no se han clasificado. Según la situación actual:';
+
+  @override
+  String get euro28CourseFooter =>
+      'Por qué están aquí: primero los segundos que se quedan fuera, después los mejores ganadores de grupo de la Copa de las Naciones aún sin clasificar y después sus siguientes mejores equipos. Es solo la situación de hoy: cambia tras cada jornada.';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return 'Eliminatoria $path';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'Tu eliminatoria';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return 'Global: $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return 'Ganador de la Eliminatoria $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return 'Tu grupo si ganas la Eliminatoria $path: Grupo $group';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      'Los ganadores de grupo y los ocho mejores segundos están clasificados. Las cuatro últimas plazas se deciden en marzo en eliminatorias a doble partido: los cuatro mejores equipos son cabezas de serie y juegan la vuelta en casa.';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return 'Los ganadores de grupo y los ocho mejores segundos están clasificados, y los anfitriones que se quedaron fuera ocupan sus plazas reservadas. Las últimas $count plazas se deciden en marzo en rutas de cuatro equipos: semifinales a partido único en casa del mejor clasificado y después una final a partido único.';
+  }
 }
