@@ -97,6 +97,7 @@
   "commonRetry": "Riprova",
   "commonSomethingWentWrong": "Qualcosa è andato storto",
   "commonCrashBox": "Qualcosa è andato storto.\nImpostazioni → Diagnostica ha i dettagli.",
+  "hubSimulatingMatchday": "Simulazione della giornata…",
   "hubCouldNotAdvance": "Impossibile far avanzare il mondo: {error}",
   "settingsDiagnosticsTitle": "Diagnostica",
   "settingsDiagnosticsBlurb": "Errori registrati su questo dispositivo. Non viene inviato nulla.",

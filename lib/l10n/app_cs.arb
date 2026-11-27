@@ -97,6 +97,7 @@
   "commonRetry": "Zkusit znovu",
   "commonSomethingWentWrong": "Něco se pokazilo",
   "commonCrashBox": "Tady se něco pokazilo.\nPodrobnosti najdete v Nastavení → Diagnostika.",
+  "hubSimulatingMatchday": "Simuluji kolo…",
   "hubCouldNotAdvance": "Svět se nepodařilo posunout: {error}",
   "settingsDiagnosticsTitle": "Diagnostika",
   "settingsDiagnosticsBlurb": "Chyby zaznamenané v tomto zařízení. Nikam se neodesílají.",

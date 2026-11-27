@@ -97,6 +97,7 @@
   "commonRetry": "Опитай пак",
   "commonSomethingWentWrong": "Нещо се обърка",
   "commonCrashBox": "Тук нещо се обърка.\nНастройки → Диагностика има подробности.",
+  "hubSimulatingMatchday": "Симулиране на кръга…",
   "hubCouldNotAdvance": "Светът не можа да продължи напред: {error}",
   "settingsDiagnosticsTitle": "Диагностика",
   "settingsDiagnosticsBlurb": "Грешките, записани на това устройство. Нищо не се изпраща никъде.",

@@ -467,6 +467,10 @@
   "@commonCrashBox": {
     "description": "Shown in place of a widget subtree that failed to build."
   },
+  "hubSimulatingMatchday": "Simulating matchday…",
+  "@hubSimulatingMatchday": {
+    "description": "The banner on the hub while a step of the world that takes a moment (an advance, a tournament round) is being simulated."
+  },
   "hubCouldNotAdvance": "Could not advance the world: {error}",
   "@hubCouldNotAdvance": {
     "description": "Snackbar when a hub action that simulates the world fails.",

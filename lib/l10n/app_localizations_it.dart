@@ -369,6 +369,9 @@ class AppLocalizationsIt extends AppLocalizations {
       'Qualcosa è andato storto.\nImpostazioni → Diagnostica ha i dettagli.';
 
   @override
+  String get hubSimulatingMatchday => 'Simulazione della giornata…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'Impossibile far avanzare il mondo: $error';
   }

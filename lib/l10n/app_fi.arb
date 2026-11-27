@@ -97,6 +97,7 @@
   "commonRetry": "Yritä uudelleen",
   "commonSomethingWentWrong": "Jokin meni pieleen",
   "commonCrashBox": "Jokin meni pieleen tässä.\nAsetukset → Diagnostiikka näyttää tiedot.",
+  "hubSimulatingMatchday": "Simuloidaan ottelupäivää…",
   "hubCouldNotAdvance": "Maailman eteenpäin vieminen ei onnistunut: {error}",
   "settingsDiagnosticsTitle": "Diagnostiikka",
   "settingsDiagnosticsBlurb": "Tälle laitteelle tallennetut virheet. Mitään ei lähetetä minnekään.",

@@ -97,6 +97,7 @@
   "commonRetry": "Ponów",
   "commonSomethingWentWrong": "Coś poszło nie tak",
   "commonCrashBox": "Coś tu poszło nie tak.\nSzczegóły w Ustawienia → Diagnostyka.",
+  "hubSimulatingMatchday": "Symulowanie kolejki…",
   "hubCouldNotAdvance": "Nie udało się przesunąć świata: {error}",
   "settingsDiagnosticsTitle": "Diagnostyka",
   "settingsDiagnosticsBlurb": "Błędy zapisane na tym urządzeniu. Nic nie jest nigdzie wysyłane.",

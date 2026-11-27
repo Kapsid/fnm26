@@ -355,6 +355,9 @@ class AppLocalizationsDa extends AppLocalizations {
       'Noget gik galt her.\nIndstillinger → Diagnostik har detaljerne.';
 
   @override
+  String get hubSimulatingMatchday => 'Simulerer kamprunden…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'Kunne ikke spole verden frem: $error';
   }

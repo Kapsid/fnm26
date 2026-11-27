@@ -356,6 +356,9 @@ class AppLocalizationsPl extends AppLocalizations {
       'Coś tu poszło nie tak.\nSzczegóły w Ustawienia → Diagnostyka.';
 
   @override
+  String get hubSimulatingMatchday => 'Symulowanie kolejki…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'Nie udało się przesunąć świata: $error';
   }

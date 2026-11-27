@@ -97,6 +97,7 @@
   "commonRetry": "再試行",
   "commonSomethingWentWrong": "問題が発生しました",
   "commonCrashBox": "ここで問題が発生しました。\n詳細は 設定 → 診断 で確認できます。",
+  "hubSimulatingMatchday": "節をシミュレーション中…",
   "hubCouldNotAdvance": "ワールドを進められませんでした: {error}",
   "settingsDiagnosticsTitle": "診断",
   "settingsDiagnosticsBlurb": "この端末で記録されたエラーです。外部には一切送信されません。",

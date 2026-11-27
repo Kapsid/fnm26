@@ -353,6 +353,9 @@ class AppLocalizationsRo extends AppLocalizations {
       'Ceva nu a mers bine aici.\nDetaliile sunt în Setări → Diagnosticare.';
 
   @override
+  String get hubSimulatingMatchday => 'Se simulează etapa…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'Lumea nu a putut avansa: $error';
   }

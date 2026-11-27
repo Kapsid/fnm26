@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:drift/drift.dart';
+import 'package:fnm/core/util/off_ui.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/repositories/drift_nation_repository.dart';
 import 'package:fnm/data/seed/legacy_seed_ranking.dart';
@@ -407,6 +408,14 @@ abstract final class CareerBundle {
   /// career is mostly fixtures and ratings, which compress to a fraction.
   static List<int> encode(Map<String, Object?> bundle) =>
       gzip.encode(utf8.encode(jsonEncode(bundle)));
+
+  /// [encode], away from the UI isolate (see `runOffUi`). A long career is
+  /// hundreds of thousands of rows: encoding, UTF-8 and gzip in one go held
+  /// the UI isolate for seconds on a slow phone, as each cycle's backup was
+  /// written, long enough for Android to call the app not responding. The
+  /// bytes are the same.
+  static Future<List<int>> encodeOffUi(Map<String, Object?> bundle) =>
+      runOffUi(() => encode(bundle), debugName: 'career bundle encode');
 
   /// Reads a bundle back, or says why it cannot be used.
   static ({Map<String, Object?>? bundle, BundleRejection? rejection}) decode(

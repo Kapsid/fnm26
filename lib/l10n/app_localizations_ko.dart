@@ -326,6 +326,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get commonCrashBox => '이곳에서 문제가 발생했습니다.\n설정 → 진단에서 자세한 내용을 확인하세요.';
 
   @override
+  String get hubSimulatingMatchday => '라운드 시뮬레이션 중…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return '세계를 진행할 수 없습니다: $error';
   }

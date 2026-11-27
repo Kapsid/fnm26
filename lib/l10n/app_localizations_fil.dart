@@ -360,6 +360,9 @@ class AppLocalizationsFil extends AppLocalizations {
       'May nagkamali rito.\nNasa Mga setting → Diagnostics ang detalye.';
 
   @override
+  String get hubSimulatingMatchday => 'Sinisimulate ang matchday…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'Hindi napausad ang mundo: $error';
   }

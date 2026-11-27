@@ -97,6 +97,7 @@
   "commonRetry": "Thử lại",
   "commonSomethingWentWrong": "Đã xảy ra lỗi",
   "commonCrashBox": "Đã xảy ra lỗi ở đây.\nCài đặt → Chẩn đoán có chi tiết.",
+  "hubSimulatingMatchday": "Đang mô phỏng vòng đấu…",
   "hubCouldNotAdvance": "Không thể chạy tiếp thế giới: {error}",
   "settingsDiagnosticsTitle": "Chẩn đoán",
   "settingsDiagnosticsBlurb": "Các lỗi được ghi lại trên thiết bị này. Không có gì được gửi đi đâu cả.",

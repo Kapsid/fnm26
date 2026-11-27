@@ -356,6 +356,9 @@ class AppLocalizationsVi extends AppLocalizations {
       'Đã xảy ra lỗi ở đây.\nCài đặt → Chẩn đoán có chi tiết.';
 
   @override
+  String get hubSimulatingMatchday => 'Đang mô phỏng vòng đấu…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'Không thể chạy tiếp thế giới: $error';
   }

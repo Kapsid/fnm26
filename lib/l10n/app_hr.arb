@@ -97,6 +97,7 @@
   "commonRetry": "Pokušaj ponovno",
   "commonSomethingWentWrong": "Nešto je pošlo po zlu",
   "commonCrashBox": "Ovdje je nešto pošlo po zlu.\nPojedinosti su u Postavke → Dijagnostika.",
+  "hubSimulatingMatchday": "Simuliram kolo…",
   "hubCouldNotAdvance": "Svijet se nije mogao pomaknuti dalje: {error}",
   "settingsDiagnosticsTitle": "Dijagnostika",
   "settingsDiagnosticsBlurb": "Pogreške zabilježene na ovom uređaju. Ništa se nikamo ne šalje.",

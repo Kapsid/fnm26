@@ -97,6 +97,7 @@
   "commonRetry": "Покушај поново",
   "commonSomethingWentWrong": "Нешто је пошло наопако",
   "commonCrashBox": "Овде је нешто пошло наопако.\nДетаљи су у Подешавања → Дијагностика.",
+  "hubSimulatingMatchday": "Симулирам коло…",
   "hubCouldNotAdvance": "Свет није могао да се помери даље: {error}",
   "settingsDiagnosticsTitle": "Дијагностика",
   "settingsDiagnosticsBlurb": "Грешке забележене на овом уређају. Ништа се никуда не шаље.",

@@ -368,6 +368,9 @@ class AppLocalizationsEl extends AppLocalizations {
       'Κάτι πήγε στραβά εδώ.\nΡυθμίσεις → Διαγνωστικά για λεπτομέρειες.';
 
   @override
+  String get hubSimulatingMatchday => 'Προσομοίωση αγωνιστικής…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'Δεν ήταν δυνατή η προώθηση του κόσμου: $error';
   }

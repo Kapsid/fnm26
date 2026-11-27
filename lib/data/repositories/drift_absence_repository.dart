@@ -13,6 +13,10 @@ class DriftAbsenceRepository implements AbsenceRepository {
 
   final AppDatabase _db;
 
+  static const String _insertSql =
+      'INSERT INTO "player_absences" ("career_id", "player_id", "yellows", '
+      '"ban_matches", "injury_matches") VALUES (?, ?, ?, ?, ?)';
+
   @override
   Future<Map<int, PlayerAbsence>> forCareer(int careerId) async {
     final rows = await (_db.select(
@@ -35,18 +39,22 @@ class DriftAbsenceRepository implements AbsenceRepository {
       await (_db.delete(
         _db.playerAbsences,
       )..where((t) => t.careerId.equals(careerId))).go();
+      // One prepared statement and its rows, not a generated insert per row:
+      // every nation's absences are rewritten here at the end of each world
+      // advance, a couple of thousand rows, and building a drift insert
+      // statement for each of them (its SQL written, its companion checked)
+      // ran as one block on the UI isolate. The statement is the very one
+      // `batch.insert` writes, so the table ends the same, row for row.
+      final inserted = [
+        TableUpdate.onTable(_db.playerAbsences, kind: UpdateKind.insert),
+      ];
       await _db.batch((b) {
         for (final a in absences) {
           if (!a.isNotable) continue;
-          b.insert(
-            _db.playerAbsences,
-            PlayerAbsencesCompanion.insert(
-              careerId: careerId,
-              playerId: a.playerId,
-              yellows: Value(a.yellows),
-              banMatches: Value(a.banMatches),
-              injuryMatches: Value(a.injuryMatches),
-            ),
+          b.customStatement(
+            _insertSql,
+            [careerId, a.playerId, a.yellows, a.banMatches, a.injuryMatches],
+            inserted,
           );
         }
       });

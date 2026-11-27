@@ -367,6 +367,9 @@ class AppLocalizationsFr extends AppLocalizations {
       'Une erreur est survenue ici.\nParamètres → Diagnostic contient les détails.';
 
   @override
+  String get hubSimulatingMatchday => 'Simulation de la journée…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'Impossible de faire avancer le monde : $error';
   }

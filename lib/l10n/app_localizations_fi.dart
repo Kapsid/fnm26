@@ -365,6 +365,9 @@ class AppLocalizationsFi extends AppLocalizations {
       'Jokin meni pieleen tässä.\nAsetukset → Diagnostiikka näyttää tiedot.';
 
   @override
+  String get hubSimulatingMatchday => 'Simuloidaan ottelupäivää…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'Maailman eteenpäin vieminen ei onnistunut: $error';
   }

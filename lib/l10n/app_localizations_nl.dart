@@ -359,6 +359,9 @@ class AppLocalizationsNl extends AppLocalizations {
       'Hier ging iets mis.\nInstellingen → Diagnostiek heeft de details.';
 
   @override
+  String get hubSimulatingMatchday => 'Speeldag wordt gesimuleerd…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'De wereld kon niet verder: $error';
   }

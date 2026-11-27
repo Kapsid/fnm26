@@ -97,6 +97,7 @@
   "commonRetry": "Prøv igjen",
   "commonSomethingWentWrong": "Noe gikk galt",
   "commonCrashBox": "Noe gikk galt her.\nInnstillinger → Diagnostikk har detaljene.",
+  "hubSimulatingMatchday": "Simulerer kamprunden…",
   "hubCouldNotAdvance": "Kunne ikke føre verden videre: {error}",
   "settingsDiagnosticsTitle": "Diagnostikk",
   "settingsDiagnosticsBlurb": "Feil registrert på denne enheten. Ingenting sendes noe sted.",

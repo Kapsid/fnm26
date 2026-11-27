@@ -97,6 +97,7 @@
   "commonRetry": "Réessayer",
   "commonSomethingWentWrong": "Une erreur est survenue",
   "commonCrashBox": "Une erreur est survenue ici.\nParamètres → Diagnostic contient les détails.",
+  "hubSimulatingMatchday": "Simulation de la journée…",
   "hubCouldNotAdvance": "Impossible de faire avancer le monde : {error}",
   "settingsDiagnosticsTitle": "Diagnostic",
   "settingsDiagnosticsBlurb": "Erreurs enregistrées sur cet appareil. Rien n’est envoyé nulle part.",

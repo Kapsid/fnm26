@@ -97,6 +97,7 @@
   "commonRetry": "Reintentar",
   "commonSomethingWentWrong": "Algo ha fallado",
   "commonCrashBox": "Algo ha fallado aquí.\nEn Ajustes → Diagnóstico tienes los detalles.",
+  "hubSimulatingMatchday": "Simulando la jornada…",
   "hubCouldNotAdvance": "No se pudo avanzar el mundo: {error}",
   "settingsDiagnosticsTitle": "Diagnóstico",
   "settingsDiagnosticsBlurb": "Errores registrados en este dispositivo. No se envía nada a ningún sitio.",

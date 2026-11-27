@@ -349,6 +349,9 @@ class AppLocalizationsTh extends AppLocalizations {
       'เกิดข้อผิดพลาดตรงนี้\nดูรายละเอียดได้ที่ การตั้งค่า → การวินิจฉัย';
 
   @override
+  String get hubSimulatingMatchday => 'กำลังจำลองนัดการแข่งขัน…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'จำลองโลกต่อไม่ได้: $error';
   }

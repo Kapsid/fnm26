@@ -97,6 +97,7 @@
   "commonRetry": "ลองอีกครั้ง",
   "commonSomethingWentWrong": "เกิดข้อผิดพลาด",
   "commonCrashBox": "เกิดข้อผิดพลาดตรงนี้\nดูรายละเอียดได้ที่ การตั้งค่า → การวินิจฉัย",
+  "hubSimulatingMatchday": "กำลังจำลองนัดการแข่งขัน…",
   "hubCouldNotAdvance": "จำลองโลกต่อไม่ได้: {error}",
   "settingsDiagnosticsTitle": "การวินิจฉัย",
   "settingsDiagnosticsBlurb": "ข้อผิดพลาดที่บันทึกไว้ในอุปกรณ์นี้ ไม่มีการส่งข้อมูลไปที่ใด",

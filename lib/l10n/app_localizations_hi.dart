@@ -354,6 +354,9 @@ class AppLocalizationsHi extends AppLocalizations {
       'यहाँ कुछ गड़बड़ हो गई।\nसेटिंग्स → डायग्नोस्टिक्स में ब्योरा है।';
 
   @override
+  String get hubSimulatingMatchday => 'मैचडे का सिमुलेशन हो रहा है…';
+
+  @override
   String hubCouldNotAdvance(String error) {
     return 'दुनिया को आगे नहीं बढ़ा सके: $error';
   }

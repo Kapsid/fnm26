@@ -97,6 +97,7 @@
   "commonRetry": "Повторити",
   "commonSomethingWentWrong": "Щось пішло не так",
   "commonCrashBox": "Тут щось пішло не так.\nДеталі: Налаштування → Діагностика.",
+  "hubSimulatingMatchday": "Симулюємо тур…",
   "hubCouldNotAdvance": "Не вдалося прокрутити світ: {error}",
   "settingsDiagnosticsTitle": "Діагностика",
   "settingsDiagnosticsBlurb": "Помилки, записані на цьому пристрої. Нічого нікуди не надсилається.",

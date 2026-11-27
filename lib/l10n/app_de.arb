@@ -97,6 +97,7 @@
   "commonRetry": "Erneut versuchen",
   "commonSomethingWentWrong": "Etwas ist schiefgelaufen",
   "commonCrashBox": "Hier ist etwas schiefgelaufen.\nDetails unter Einstellungen → Diagnose.",
+  "hubSimulatingMatchday": "Spieltag wird simuliert…",
   "hubCouldNotAdvance": "Die Welt konnte nicht fortgesetzt werden: {error}",
   "settingsDiagnosticsTitle": "Diagnose",
   "settingsDiagnosticsBlurb": "Auf diesem Gerät aufgezeichnete Fehler. Es wird nichts gesendet.",

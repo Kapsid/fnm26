@@ -97,6 +97,7 @@
   "commonRetry": "다시 시도",
   "commonSomethingWentWrong": "문제가 발생했습니다",
   "commonCrashBox": "이곳에서 문제가 발생했습니다.\n설정 → 진단에서 자세한 내용을 확인하세요.",
+  "hubSimulatingMatchday": "라운드 시뮬레이션 중…",
   "hubCouldNotAdvance": "세계를 진행할 수 없습니다: {error}",
   "settingsDiagnosticsTitle": "진단",
   "settingsDiagnosticsBlurb": "이 기기에 기록된 오류입니다. 어디에도 전송되지 않습니다.",
