@@ -389,6 +389,7 @@ class TacticsPitch extends StatelessWidget {
     this.ratingByPlayer = const {},
     this.goalsByPlayer = const {},
     this.ownGoalsByPlayer = const {},
+    this.assistsByPlayer = const {},
     this.motmId,
     this.teamColors,
     this.fullBacks = FullBackPushes.neutral,
@@ -476,6 +477,10 @@ class TacticsPitch extends StatelessWidget {
   /// Own goals each player put past his own keeper, shown as a red ball on
   /// the same shoulder as [goalsByPlayer]'s (empty draws nothing).
   final Map<int, int> ownGoalsByPlayer;
+
+  /// Assists each player made, a handshake on the same shoulder chip as his
+  /// goals (empty draws nothing).
+  final Map<int, int> assistsByPlayer;
 
   /// The card each player is carrying in a live match — see [cardStatusFor],
   /// which the substitution lists read too, so the pitch and the lists can
@@ -773,12 +778,14 @@ class TacticsPitch extends StatelessWidget {
                         card: cardsByPlayer[lineup[slot]],
                         goals: goalsByPlayer[lineup[slot]] ?? 0,
                         ownGoals: ownGoalsByPlayer[lineup[slot]] ?? 0,
+                        assists: assistsByPlayer[lineup[slot]] ?? 0,
                         teamColors: teamColors,
                         // A scorer's ball takes the arrow's shoulder.
                         fullBackSide:
                             showArrow &&
                                 (goalsByPlayer[lineup[slot]] ?? 0) == 0 &&
-                                (ownGoalsByPlayer[lineup[slot]] ?? 0) == 0
+                                (ownGoalsByPlayer[lineup[slot]] ?? 0) == 0 &&
+                                (assistsByPlayer[lineup[slot]] ?? 0) == 0
                             ? side
                             : null,
                         push: showArrow ? push : null,
@@ -1011,6 +1018,7 @@ class _PlayerNode extends StatelessWidget {
     this.card,
     this.goals = 0,
     this.ownGoals = 0,
+    this.assists = 0,
     this.fullBackSide,
     this.push,
     this.onCyclePush,
@@ -1083,6 +1091,9 @@ class _PlayerNode extends StatelessWidget {
 
   /// The own goals he put past his own keeper (0 draws nothing).
   final int ownGoals;
+
+  /// The goals he set up (0 draws nothing).
+  final int assists;
 
   /// Whether the assigned player is banned or injured for the next match.
   final bool absent;
@@ -1365,16 +1376,23 @@ class _PlayerNode extends StatelessWidget {
                   size: metrics.disc * 0.30,
                 ),
               ),
-            // His goals, on the other shoulder from the card: a ball, and
-            // how many when more than one.
-            if (p != null && goals + ownGoals > 0 && !dead)
+            // His goals and assists, on the other shoulder from the card: a
+            // ball, a handshake, and how many when more than one. Never left
+            // of the node's own edge: the node's Stack clips there, and the
+            // chip used to start a couple of points past it (the node is
+            // barely wider than the disc), cutting the ball in half-moon.
+            if (p != null && goals + ownGoals + assists > 0 && !dead)
               Positioned(
                 key: ValueKey('pitchGoals$slot'),
                 top: overhang + metrics.disc * 0.12,
-                left: (metrics.node - metrics.disc) / 2 - metrics.disc * 0.06,
+                left: max(
+                  0,
+                  (metrics.node - metrics.disc) / 2 - metrics.disc * 0.06,
+                ),
                 child: _GoalMark(
                   goals: goals,
                   ownGoals: ownGoals,
+                  assists: assists,
                   size: metrics.disc * 0.32,
                 ),
               ),
@@ -2443,39 +2461,48 @@ class _GoalMark extends StatelessWidget {
     required this.goals,
     required this.size,
     this.ownGoals = 0,
+    this.assists = 0,
   });
 
   final int goals;
+
+  /// Assists: a handshake after the balls (with its count from two).
+  final int assists;
 
   /// Own goals: a red ball after the goals' one (with its count from two).
   final int ownGoals;
   final double size;
 
-  Widget _ball(int count, Color color) => Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Icon(Icons.sports_soccer, size: size * 0.82, color: color),
-      if (count > 1)
-        Padding(
-          padding: EdgeInsets.only(left: size * 0.06),
-          child: Text(
-            '$count',
-            style: TextStyle(
-              fontSize: size * 0.62,
-              height: 1,
-              fontWeight: FontWeight.w800,
-              color: color,
+  Widget _ball(int count, Color color, {IconData icon = Icons.sports_soccer}) =>
+      Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: size * 0.82, color: color),
+          if (count > 1)
+            Padding(
+              padding: EdgeInsets.only(left: size * 0.06),
+              child: Text(
+                '$count',
+                style: TextStyle(
+                  fontSize: size * 0.62,
+                  height: 1,
+                  fontWeight: FontWeight.w800,
+                  color: color,
+                ),
+              ),
             ),
-          ),
-        ),
-    ],
-  );
+        ],
+      );
 
   @override
   Widget build(BuildContext context) => Container(
     height: size,
     padding: EdgeInsets.symmetric(
-      horizontal: goals > 1 || ownGoals > 1 || (goals > 0 && ownGoals > 0)
+      horizontal:
+          goals > 1 ||
+              ownGoals > 1 ||
+              assists > 1 ||
+              [goals, ownGoals, assists].where((n) => n > 0).length > 1
           ? size * 0.12
           : 0,
     ),
@@ -2494,6 +2521,15 @@ class _GoalMark extends StatelessWidget {
           KeyedSubtree(
             key: const ValueKey('pitchOwnGoal'),
             child: _ball(ownGoals, const Color(0xFFD32F2F)),
+          ),
+        if (assists > 0)
+          KeyedSubtree(
+            key: const ValueKey('pitchAssist'),
+            child: _ball(
+              assists,
+              Colors.black87,
+              icon: Icons.handshake_rounded,
+            ),
           ),
       ],
     ),
