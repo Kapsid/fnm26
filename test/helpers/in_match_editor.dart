@@ -8,6 +8,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactic_preset.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/match/card_status.dart';
+import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
@@ -54,6 +55,10 @@ Future<EditorOutcome> openEditor(
   Set<int> sentOffIds = const {},
   Map<int, MatchCard> cardsByPlayer = const {},
   List<int?>? lineup,
+  List<Player>? players,
+  List<MatchEvent> events = const [],
+  Map<int, double> ratingByPlayer = const {},
+  double textScale = 1,
 }) async {
   final outcome = EditorOutcome();
   tester.view.physicalSize = size;
@@ -61,7 +66,7 @@ Future<EditorOutcome> openEditor(
   addTearDown(tester.view.reset);
   await tester.binding.setSurfaceSize(size);
   addTearDown(() => tester.binding.setSurfaceSize(null));
-  final players = editorSquad();
+  final squad = players ?? editorSquad();
   await tester.pumpWidget(
     RepaintBoundary(
       key: kAppRoot,
@@ -70,6 +75,12 @@ Future<EditorOutcome> openEditor(
           theme: AppTheme.theme,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(
+              context,
+            ).copyWith(textScaler: TextScaler.linear(textScale)),
+            child: child!,
+          ),
           home: Builder(
             builder: (inner) => Scaffold(
               body: Center(
@@ -81,11 +92,13 @@ Future<EditorOutcome> openEditor(
                       formation: Formation.f442,
                       lineup: lineup ?? [for (var i = 1; i <= 11; i++) i],
                       instructions: const TacticalInstructions(),
-                      pool: players,
+                      pool: squad,
                       startingIds: {for (var i = 1; i <= 11; i++) i},
                       maxSubs: 5,
                       sentOffIds: sentOffIds,
                       cardsByPlayer: cardsByPlayer,
+                      events: events,
+                      ratingByPlayer: ratingByPlayer,
                       tabletLayout: tabletLayout,
                       presets: presets,
                     );
