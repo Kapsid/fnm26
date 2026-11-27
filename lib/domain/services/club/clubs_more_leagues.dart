@@ -1456,6 +1456,18 @@ const List<_League> _moreLeagues = [
     'Corpus Christi Gulls',
     'Lubbock Plainsmen',
   ]),
+  // Vatican City (dormant): the clubs of its offices, its guard and its
+  // seminaries, as its own small league has them.
+  _League('vat', 5, destination: false, [
+    'Swiss Guard Halberdiers',
+    'Borgo Pio Keys',
+    'Belvedere Rovers',
+    'Sistine Lions',
+    'Vatican Gardens',
+    'Porta Angelica',
+    'Seminary United',
+    'Castel Gandolfo Doves',
+  ]),
   // Tonga
   _League('tga', 5, destination: false, [
     "Nuku'alofa Foxes",

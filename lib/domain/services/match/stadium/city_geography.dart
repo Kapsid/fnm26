@@ -468,6 +468,10 @@ abstract final class CityGeography {
       'Domagnano': '-',
       'Fiorentino': '-',
     },
+    'VAT': {
+      'Vatican City': 'o',
+      'Rome': 'ro',
+    },
     'SCO': {
       'Glasgow': 'ri',
       'Edinburgh': 'co',

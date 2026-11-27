@@ -1409,4 +1409,7 @@ const Map<int, List<(String, int)>> nationalStadiumData = {
     ('Frisco', 20000),
     ('El Paso', 9500),
   ],
+  // Vatican City (dormant): a borrowed ground in Rome, then its own pitch
+  // inside the walls.
+  217: [('Rome', 3000), ('Vatican City', 1500)],
 };

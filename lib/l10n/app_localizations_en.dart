@@ -18613,6 +18613,38 @@ class AppLocalizationsEn extends AppLocalizations {
   String get campaignStars3Texas => 'Win the World Championship';
 
   @override
+  String get campaignVaticanTitle => 'Hail Mary';
+
+  @override
+  String get campaignVaticanTwist =>
+      'Vatican City takes San Marino\'s place in Europe, with no end';
+
+  @override
+  String get campaignVaticanIntro =>
+      'The smallest state in the world has a few hundred citizens, most of them clergy, a guard of Swiss halberdiers and not one footballer worth the name. In this world Vatican City plays anyway, in San Marino\'s place in Europe, and it is far worse than San Marino ever was: bishops, seminarians, museum attendants and off-duty guards, a pitch inside the walls with room for 1,500 and the odd home game on a borrowed ground in Rome. The run has no end, so there is no deadline, only miracles to work: win a qualifying match, finish a qualifying group off the bottom and, if heaven is listening, reach a play-off.';
+
+  @override
+  String get campaignVaticanGoal => 'Win a qualifying match';
+
+  @override
+  String get campaignStars1Vatican => 'Win a qualifying match';
+
+  @override
+  String get campaignStars2Vatican =>
+      'Finish a qualifying group off the bottom';
+
+  @override
+  String get campaignStars3Vatican => 'Reach a play-off';
+
+  @override
+  String get campaignNoEnd => 'No end';
+
+  @override
+  String homeCampaignCycleNoEnd(int cycle) {
+    return 'Cycle $cycle';
+  }
+
+  @override
   String get wcPlayoffCourseNote =>
       'Every group winner goes straight through. The last places go to play-off paths: the best runners-up (yellow in the groups) and the best Nations Cup group winners who are not through. From the Nations Cup, as things stand:';
 

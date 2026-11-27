@@ -272,6 +272,7 @@ abstract final class NationNames {
     'IMN': 'Ostrov Man',
     'TCH': 'Československo',
     'TEX': 'Texas',
+    'VAT': 'Vatikán',
     'ZIM': 'Zimbabwe',
   };
 
@@ -510,6 +511,7 @@ abstract final class NationNames {
     'IMN': 'Ostrovu Man',
     'TCH': 'Československu',
     'TEX': 'Texasu',
+    'VAT': 'Vatikánu',
     'ZIM': 'Zimbabwe',
   };
 

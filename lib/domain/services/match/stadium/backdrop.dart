@@ -194,6 +194,7 @@ abstract final class NationBackdrops {
     'GRL': (_st, _fjords),
     'IMN': (_st, _sea),
     'TCH': (_oe, _hills),
+    'VAT': (_oe, _hills),
     'RUS': (_sb, _plains),
     // South America
     'ARG': (_la, _plains), 'BOL': (_la, _andes), 'BRA': (_la, _sea),

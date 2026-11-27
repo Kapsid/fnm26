@@ -28059,6 +28059,60 @@ abstract class AppLocalizations {
   /// **'Win the World Championship'**
   String get campaignStars3Texas;
 
+  /// Campaign title: Hail Mary, the prayer and the desperate last throw, for a run with no end of Vatican City, a nation added to the world for this campaign and the weakest side in it.
+  ///
+  /// In en, this message translates to:
+  /// **'Hail Mary'**
+  String get campaignVaticanTitle;
+
+  /// One-line twist of the Vatican City campaign: Vatican City in San Marino's place in Europe, for a run with no end.
+  ///
+  /// In en, this message translates to:
+  /// **'Vatican City takes San Marino\'s place in Europe, with no end'**
+  String get campaignVaticanTwist;
+
+  /// Brief screen introduction of the Vatican City campaign: the smallest state in the world takes San Marino's place in Europe as a side far worse than San Marino, its players clergy, seminarians and guards, its home games on a tiny pitch inside the walls or a borrowed ground in Rome, for a run with no end. Names no real person.
+  ///
+  /// In en, this message translates to:
+  /// **'The smallest state in the world has a few hundred citizens, most of them clergy, a guard of Swiss halberdiers and not one footballer worth the name. In this world Vatican City plays anyway, in San Marino\'s place in Europe, and it is far worse than San Marino ever was: bishops, seminarians, museum attendants and off-duty guards, a pitch inside the walls with room for 1,500 and the odd home game on a borrowed ground in Rome. The run has no end, so there is no deadline, only miracles to work: win a qualifying match, finish a qualifying group off the bottom and, if heaven is listening, reach a play-off.'**
+  String get campaignVaticanIntro;
+
+  /// One-line goal of the Vatican City campaign (its first star): win one qualifying match, continental or World Championship.
+  ///
+  /// In en, this message translates to:
+  /// **'Win a qualifying match'**
+  String get campaignVaticanGoal;
+
+  /// What earns the first star in the Vatican City campaign: win a qualifying match (continental or World Championship qualifying), in any cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Win a qualifying match'**
+  String get campaignStars1Vatican;
+
+  /// What earns the second star in the Vatican City campaign: finish a qualifying group anywhere but last, in any cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish a qualifying group off the bottom'**
+  String get campaignStars2Vatican;
+
+  /// What earns the third star in the Vatican City campaign: reach a play-off (a European Championship or World Championship play-off path), in any cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reach a play-off'**
+  String get campaignStars3Vatican;
+
+  /// Campaigns list tile: the length badge of a campaign that has no end (it runs until its goal is reached or the manager stops), in place of a number of cycles. Short.
+  ///
+  /// In en, this message translates to:
+  /// **'No end'**
+  String get campaignNoEnd;
+
+  /// After a campaign's title on the home screen's continue card: which cycle a campaign with no end is on (no total to show).
+  ///
+  /// In en, this message translates to:
+  /// **'Cycle {cycle}'**
+  String homeCampaignCycleNoEnd(int cycle);
+
   /// World Championship qualifying, under Europe's groups: who goes to the play-off paths (the best runners-up, in yellow, and the best Nations Cup group winners not through), then the Nations Cup sides on course for them, listed below.
   ///
   /// In en, this message translates to:

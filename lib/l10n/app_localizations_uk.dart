@@ -18907,6 +18907,38 @@ class AppLocalizationsUk extends AppLocalizations {
   String get campaignStars3Texas => 'Виграти Чемпіонат світу';
 
   @override
+  String get campaignVaticanTitle => 'Аве Марія';
+
+  @override
+  String get campaignVaticanTwist =>
+      'Ватикан займає місце Сан-Марино в Європі, без кінця';
+
+  @override
+  String get campaignVaticanIntro =>
+      'Найменша держава світу має кілька сотень громадян, здебільшого духовенство, гвардію швейцарських алебардників і жодного футболіста, гідного цього імені. У цьому світі Ватикан однаково грає, на місці Сан-Марино в Європі, і він набагато слабший, ніж Сан-Марино будь-коли був: єпископи, семінаристи, доглядачі музеїв і гвардійці у вихідний, поле за мурами на 1500 глядачів і зрідка домашній матч на позиченому стадіоні в Римі. Ця дорога не має кінця, тож немає й терміну, лише дива, які треба створити: виграти кваліфікаційний матч, не фінішувати останніми в кваліфікаційній групі і, якщо небо слухає, вийти в плей-оф.';
+
+  @override
+  String get campaignVaticanGoal => 'Виграти кваліфікаційний матч';
+
+  @override
+  String get campaignStars1Vatican => 'Виграти кваліфікаційний матч';
+
+  @override
+  String get campaignStars2Vatican =>
+      'Не фінішувати останніми в кваліфікаційній групі';
+
+  @override
+  String get campaignStars3Vatican => 'Вийти в плей-оф';
+
+  @override
+  String get campaignNoEnd => 'Без кінця';
+
+  @override
+  String homeCampaignCycleNoEnd(int cycle) {
+    return 'Цикл $cycle';
+  }
+
+  @override
   String get wcPlayoffCourseNote =>
       'Кожен переможець групи виходить напряму. Останні місця розігрують у плей-оф найкращі команди з других місць (жовтим у групах) і найкращі переможці груп Nations Cup, які не пройшли. З Nations Cup, станом на зараз:';
 

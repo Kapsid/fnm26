@@ -18687,6 +18687,38 @@ class AppLocalizationsPt extends AppLocalizations {
   String get campaignStars3Texas => 'Vencer o Campeonato Mundial';
 
   @override
+  String get campaignVaticanTitle => 'Ave Maria';
+
+  @override
+  String get campaignVaticanTwist =>
+      'O Vaticano ocupa o lugar de San Marino na Europa, sem fim';
+
+  @override
+  String get campaignVaticanIntro =>
+      'O menor estado do mundo tem algumas centenas de cidadãos, a maioria clérigos, uma guarda de alabardeiros suíços e nenhum jogador de futebol digno do nome. Neste mundo o Vaticano joga mesmo assim, no lugar de San Marino na Europa, e é muito pior do que San Marino jamais foi: bispos, seminaristas, vigilantes de museu e guardas de folga, um campo dentro das muralhas com lugar para 1.500 e um ou outro jogo em casa num estádio emprestado em Roma. A jornada não tem fim, então não há prazo, só milagres a operar: vencer um jogo das eliminatórias, não terminar em último num grupo das eliminatórias e, se o céu estiver ouvindo, chegar a um play-off.';
+
+  @override
+  String get campaignVaticanGoal => 'Vencer um jogo das eliminatórias';
+
+  @override
+  String get campaignStars1Vatican => 'Vencer um jogo das eliminatórias';
+
+  @override
+  String get campaignStars2Vatican =>
+      'Não terminar em último num grupo das eliminatórias';
+
+  @override
+  String get campaignStars3Vatican => 'Chegar a um play-off';
+
+  @override
+  String get campaignNoEnd => 'Sem fim';
+
+  @override
+  String homeCampaignCycleNoEnd(int cycle) {
+    return 'Ciclo $cycle';
+  }
+
+  @override
   String get wcPlayoffCourseNote =>
       'Cada vencedor de grupo apura-se diretamente. Os últimos lugares decidem-se num play-off entre os melhores segundos (a amarelo nos grupos) e os melhores vencedores de grupo da Copa das Nações ainda não apurados. Da Copa das Nações, neste momento:';
 

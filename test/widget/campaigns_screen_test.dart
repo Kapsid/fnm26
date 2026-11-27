@@ -57,10 +57,14 @@ void main() {
     expect(find.text('4 cycles'), findsOneWidget);
     expect(find.text('5 cycles'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('The Three Legs'), 200);
-    expect(find.text('THE LONG HAUL · 3'), findsOneWidget);
+    expect(find.text('THE LONG HAUL · 4'), findsOneWidget);
     expect(find.text('A Greenland Century'), findsOneWidget);
     expect(find.text('Zanzibar Rising'), findsOneWidget);
     expect(find.text('25 cycles'), findsNWidgets(3));
+    // A run with no end says so, never its number of cycles.
+    await tester.scrollUntilVisible(find.text('Hail Mary'), 200);
+    expect(find.text('No end'), findsOneWidget);
+    expect(find.text('999 cycles'), findsNothing);
     expect(find.byKey(CampaignTile.starsKey), findsNothing);
     expect(find.byKey(CampaignTile.inProgressKey), findsNothing);
   });

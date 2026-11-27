@@ -18680,6 +18680,38 @@ class AppLocalizationsEs extends AppLocalizations {
   String get campaignStars3Texas => 'Ganar el Campeonato del Mundo';
 
   @override
+  String get campaignVaticanTitle => 'Ave María';
+
+  @override
+  String get campaignVaticanTwist =>
+      'La Ciudad del Vaticano ocupa el lugar de San Marino en Europa, sin final';
+
+  @override
+  String get campaignVaticanIntro =>
+      'El estado más pequeño del mundo tiene unos cientos de ciudadanos, casi todos clérigos, una guardia de alabarderos suizos y ni un solo futbolista digno de ese nombre. En este mundo la Ciudad del Vaticano juega de todos modos, en el lugar de San Marino en Europa, y es mucho peor de lo que San Marino fue jamás: obispos, seminaristas, vigilantes de museo y guardias fuera de servicio, un campo dentro de las murallas con sitio para 1.500 y algún partido en casa en un estadio prestado en Roma. El camino no tiene final, así que no hay plazo, solo milagros por obrar: ganar un partido de clasificación, no acabar último en un grupo de clasificación y, si el cielo escucha, llegar a una repesca.';
+
+  @override
+  String get campaignVaticanGoal => 'Ganar un partido de clasificación';
+
+  @override
+  String get campaignStars1Vatican => 'Ganar un partido de clasificación';
+
+  @override
+  String get campaignStars2Vatican =>
+      'No acabar último en un grupo de clasificación';
+
+  @override
+  String get campaignStars3Vatican => 'Llegar a una repesca';
+
+  @override
+  String get campaignNoEnd => 'Sin final';
+
+  @override
+  String homeCampaignCycleNoEnd(int cycle) {
+    return 'Ciclo $cycle';
+  }
+
+  @override
   String get wcPlayoffCourseNote =>
       'Cada ganador de grupo se clasifica directamente. Las últimas plazas se juegan en una repesca entre los mejores segundos (en amarillo en los grupos) y los mejores ganadores de grupo de la Copa de las Naciones que no se clasificaron. De la Copa de las Naciones, tal como está:';
 

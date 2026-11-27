@@ -70,7 +70,9 @@ _Resumable _campaignResumable(
     nationCode: nationCode,
     name: title,
     // A one-cycle campaign has no progress worth stating.
-    subtitle: def.cycles > 1
+    subtitle: def.unlimited
+        ? '$title · ${l.homeCampaignCycleNoEnd(cycle)}'
+        : def.cycles > 1
         ? '$title · ${l.homeCampaignCycleOnly(cycle, def.cycles)}'
         : title,
     locked: locked,

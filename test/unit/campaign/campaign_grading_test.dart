@@ -126,7 +126,14 @@ void main() {
         for (final c in Campaigns.all)
           if (c.dormantNationId != null) c.id,
       ],
-      ['greenland', 'zanzibar', 'isleOfMan', 'czechoslovakia', 'texas'],
+      [
+        'greenland',
+        'zanzibar',
+        'isleOfMan',
+        'czechoslovakia',
+        'texas',
+        'vatican',
+      ],
     );
   });
 
@@ -225,7 +232,71 @@ void main() {
     expect(def.canContinue, isTrue);
     expect(def.goal, CampaignGoal.qualifyWorldThenTitles);
     expect(def.difficulty, CampaignDifficulty.medium);
-    expect(Campaigns.all.last, def);
+    expect(Campaigns.all, contains(def));
     expect(Campaigns.byId('texas'), def);
+  });
+
+  test('winThenOffBottomThenPlayoffStars: the highest tier reached', () {
+    for (final won in [false, true]) {
+      for (final offBottom in [false, true]) {
+        for (final playoff in [false, true]) {
+          expect(
+            winThenOffBottomThenPlayoffStars(
+              wonQualifier: won,
+              offBottom: offBottom,
+              reachedPlayoff: playoff,
+            ),
+            playoff
+                ? 3
+                : offBottom
+                ? 2
+                : won
+                ? 1
+                : 0,
+            reason: 'won $won offBottom $offBottom playoff $playoff',
+          );
+        }
+      }
+    }
+    // A play-off reached through the Nations Cup, with no qualifier won.
+    expect(
+      winThenOffBottomThenPlayoffStars(
+        wonQualifier: false,
+        offBottom: false,
+        reachedPlayoff: true,
+      ),
+      3,
+    );
+  });
+
+  test('Hail Mary: Pro, hard, no end, can be continued, its dormant world in '
+      "San Marino's place", () {
+    const def = Campaigns.vatican;
+    expect(def.nationId, 217);
+    expect(def.dormantNationId, 217);
+    expect(DormantNations.replaces[217], 45);
+    expect(DormantNations.alsoReplaces[217], isNull);
+    expect(DormantNations.vatican.confederation, Confederation.europe);
+    // A European run: Belarus in, no donors.
+    expect(def.withBelarus, isTrue);
+    expect(def.donorNationIds, isEmpty);
+    expect(def.donorNationId, isNull);
+    // No end: the largest number of cycles, which the screens never show.
+    expect(def.cycles, CampaignDef.unlimitedCycles);
+    expect(def.unlimited, isTrue);
+    expect(
+      [
+        for (final c in Campaigns.all)
+          if (c.unlimited) c.id,
+      ],
+      ['vatican'],
+    );
+    expect(def.needsPro, isTrue);
+    expect(def.canContinue, isTrue);
+    expect(def.goal, CampaignGoal.winThenOffBottomThenPlayoff);
+    expect(def.difficulty, CampaignDifficulty.hard);
+    expect(def.rngSeed, 217);
+    expect(Campaigns.all.last, def);
+    expect(Campaigns.byId('vatican'), def);
   });
 }

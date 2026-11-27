@@ -19004,6 +19004,38 @@ class AppLocalizationsRo extends AppLocalizations {
   String get campaignStars3Texas => 'Câștigarea Campionatului Mondial';
 
   @override
+  String get campaignVaticanTitle => 'Ave Maria';
+
+  @override
+  String get campaignVaticanTwist =>
+      'Vaticanul ia locul San Marinoului în Europa, fără sfârșit';
+
+  @override
+  String get campaignVaticanIntro =>
+      'Cel mai mic stat din lume are câteva sute de cetățeni, cei mai mulți clerici, o gardă de halebardieri elvețieni și niciun fotbalist demn de acest nume. În această lume Vaticanul joacă totuși, în locul San Marinoului în Europa, și este mult mai slab decât a fost vreodată San Marino: episcopi, seminariști, supraveghetori de muzeu și gardieni în timpul liber, un teren în interiorul zidurilor pentru 1.500 de spectatori și din când în când un meci de acasă pe un stadion împrumutat la Roma. Drumul nu are sfârșit, deci nici termen, doar minuni de făcut: câștigați un meci din preliminarii, evitați ultimul loc într-o grupă preliminară și, dacă cerul ascultă, ajungeți la un baraj.';
+
+  @override
+  String get campaignVaticanGoal => 'Câștigarea unui meci din preliminarii';
+
+  @override
+  String get campaignStars1Vatican => 'Câștigarea unui meci din preliminarii';
+
+  @override
+  String get campaignStars2Vatican =>
+      'Evitarea ultimului loc într-o grupă preliminară';
+
+  @override
+  String get campaignStars3Vatican => 'Calificarea la un baraj';
+
+  @override
+  String get campaignNoEnd => 'Fără sfârșit';
+
+  @override
+  String homeCampaignCycleNoEnd(int cycle) {
+    return 'Ciclul $cycle';
+  }
+
+  @override
   String get wcPlayoffCourseNote =>
       'Fiecare câștigătoare de grupă se califică direct. Ultimele locuri se joacă în baraj între cele mai bune ocupante ale locului doi (cu galben în grupe) și cele mai bune câștigătoare de grupă din Cupa Națiunilor care nu s-au calificat. Din Cupa Națiunilor, situația acum:';
 

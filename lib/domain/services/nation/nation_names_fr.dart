@@ -218,5 +218,6 @@ const Map<String, String> nationNamesFr = <String, String>{
   'IMN': 'Île de Man',
   'TCH': 'Tchécoslovaquie',
   'TEX': 'Texas',
+  'VAT': 'Vatican',
   'ZIM': 'Zimbabwe',
 };

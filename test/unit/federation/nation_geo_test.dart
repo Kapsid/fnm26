@@ -21,6 +21,7 @@ void main() {
     214, // The Isle of Man, likewise.
     215, // Czechoslovakia, likewise.
     216, // Texas, likewise.
+    217, // Vatican City, likewise.
   ];
   final seed = (_json('assets/data/country_cities.json')! as Map).map(
     (k, v) => MapEntry(int.parse(k as String), (v as List).cast<String>()),
@@ -34,8 +35,8 @@ void main() {
     _json(nationGeoAsset(id))! as Map<String, Object?>,
   );
 
-  test('215 nations, one map each, and nothing else', () {
-    expect(nations, hasLength(215));
+  test('216 nations, one map each, and nothing else', () {
+    expect(nations, hasLength(216));
     final files = Directory(
       'assets/geo',
     ).listSync().map((f) => f.uri.pathSegments.last).toSet();

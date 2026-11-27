@@ -18483,6 +18483,37 @@ class AppLocalizationsId extends AppLocalizations {
   String get campaignStars3Texas => 'Juara Kejuaraan Dunia';
 
   @override
+  String get campaignVaticanTitle => 'Salam Maria';
+
+  @override
+  String get campaignVaticanTwist =>
+      'Vatikan menggantikan San Marino di Eropa, tanpa akhir';
+
+  @override
+  String get campaignVaticanIntro =>
+      'Negara terkecil di dunia punya beberapa ratus warga, kebanyakan rohaniwan, pasukan pengawal tombak dari Swiss, dan tak satu pun pesepak bola yang layak disebut begitu. Di dunia ini Vatikan tetap bermain, menggantikan San Marino di Eropa, dan jauh lebih lemah daripada San Marino kapan pun: para uskup, frater, penjaga museum, dan pengawal yang sedang libur, sebuah lapangan di dalam tembok untuk 1.500 penonton dan sesekali laga kandang di stadion pinjaman di Roma. Perjalanan ini tak berujung, jadi tak ada tenggat, hanya mukjizat yang harus diwujudkan: menangi satu laga kualifikasi, jangan finis di dasar grup kualifikasi, dan, jika surga mendengar, lolos ke play-off.';
+
+  @override
+  String get campaignVaticanGoal => 'Menangi satu laga kualifikasi';
+
+  @override
+  String get campaignStars1Vatican => 'Menangi satu laga kualifikasi';
+
+  @override
+  String get campaignStars2Vatican => 'Tidak finis di dasar grup kualifikasi';
+
+  @override
+  String get campaignStars3Vatican => 'Lolos ke play-off';
+
+  @override
+  String get campaignNoEnd => 'Tanpa akhir';
+
+  @override
+  String homeCampaignCycleNoEnd(int cycle) {
+    return 'Siklus $cycle';
+  }
+
+  @override
   String get wcPlayoffCourseNote =>
       'Setiap juara grup lolos langsung. Tempat terakhir diperebutkan di play-off oleh runner-up terbaik (kuning di grup) dan juara grup terbaik Piala Bangsa-Bangsa yang belum lolos. Dari Piala Bangsa-Bangsa, saat ini:';
 

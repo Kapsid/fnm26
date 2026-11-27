@@ -18937,6 +18937,38 @@ class AppLocalizationsSr extends AppLocalizations {
   String get campaignStars3Texas => 'Освоји Светско првенство';
 
   @override
+  String get campaignVaticanTitle => 'Аве Марија';
+
+  @override
+  String get campaignVaticanTwist =>
+      'Ватикан заузима место Сан Марина у Европи, без краја';
+
+  @override
+  String get campaignVaticanIntro =>
+      'Најмања држава на свету има неколико стотина грађана, углавном свештеника, гарду швајцарских хелебардиста и ниједног фудбалера достојног тог имена. У овом свету Ватикан ипак игра, на месту Сан Марина у Европи, и много је слабији него што је Сан Марино икада био: бискупи, богослови, чувари музеја и гардисти ван службе, игралиште унутар зидина за 1.500 гледалаца и понекад домаћа утакмица на позајмљеном стадиону у Риму. Пут нема краја, па нема ни рока, само чуда која треба учинити: победи у квалификационој утакмици, не заврши последњи у квалификационој групи и, ако небо слуша, стигни до баража.';
+
+  @override
+  String get campaignVaticanGoal => 'Победи у квалификационој утакмици';
+
+  @override
+  String get campaignStars1Vatican => 'Победи у квалификационој утакмици';
+
+  @override
+  String get campaignStars2Vatican =>
+      'Не заврши последњи у квалификационој групи';
+
+  @override
+  String get campaignStars3Vatican => 'Стигни до баража';
+
+  @override
+  String get campaignNoEnd => 'Без краја';
+
+  @override
+  String homeCampaignCycleNoEnd(int cycle) {
+    return 'Циклус $cycle';
+  }
+
+  @override
   String get wcPlayoffCourseNote =>
       'Сваки победник групе пролази директно. Последња места се освајају у баражу најбољих другопласираних (жуто у групама) и најбољих победника група Купа нација који нису прошли. Из Купа нација, тренутно стање:';
 

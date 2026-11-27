@@ -37,6 +37,12 @@ enum CampaignGoal {
   /// cycle. The stars nest: each needs every title before it (see
   /// `titleTrebleStars`).
   titleTreble,
+
+  /// For a side with no hope of a finals: win a qualifying match (continental
+  /// or world), finish a qualifying group off the bottom, reach a play-off.
+  /// One star each, the highest reached counts, across all the campaign's
+  /// cycles (see `winThenOffBottomThenPlayoffStars`).
+  winThenOffBottomThenPlayoff,
 }
 
 /// How hard a campaign plays, from the calibration lab
@@ -97,6 +103,9 @@ class CampaignDef {
   /// Czechia and Slovakia). Their own nations are out of the run's world
   /// (see `DormantNations.alsoReplaces`).
   final List<int> donorNationIds;
+
+  /// How many cycles the run lasts; [unlimitedCycles] for a run with no end
+  /// (see [unlimited]).
   final int cycles;
   final bool needsPro;
   final CampaignDifficulty difficulty;
@@ -131,6 +140,15 @@ class CampaignDef {
   /// that world (campaign_seeds_test.dart). A run begun before keeps the
   /// world it was started on: the marker is written at creation only.
   final bool withBelarus;
+
+  /// The [cycles] of a campaign with no end. Not a number anyone reaches (a
+  /// cycle is four years: this is four thousand), so a run of it only ends
+  /// when its third star is in, or when the manager moves it into the saves
+  /// or abandons it. The screens say "no end", never the number.
+  static const int unlimitedCycles = 999;
+
+  /// Whether the run has no end (see [unlimitedCycles]).
+  bool get unlimited => cycles >= unlimitedCycles;
 
   /// Every nation the campaign's story and goal name: its own, its rivals,
   /// its opening friendly's and its donor. A custom database that renames
@@ -384,6 +402,33 @@ abstract final class Campaigns {
     rngSeed: 221,
   );
 
+  /// Hail Mary: Vatican City, a nation the world does not have, takes San
+  /// Marino's place in Europe with no end to the run (see
+  /// [CampaignDef.unlimitedCycles]), from the very bottom of the world
+  /// ranking. Built the way A Greenland Century was: its own stored pool of
+  /// players (clergy, guards and staff, the names invented), the same youth
+  /// pyramid, newgens and aging as any nation's. Its squad is San Marino's
+  /// at 0.78 (see `vaticanAttributeFactor`): the weakest side in the world,
+  /// nine below San Marino. Pro, hard, and a settled run may be moved into
+  /// the saves (one minnow swapped for another). The stars are a hopeless
+  /// side's: win a qualifying match, finish a qualifying group off the
+  /// bottom, reach a play-off. Seed 217, the first searched, keeps Vatican
+  /// City from hosting either championship in the first 25 cycles of the run
+  /// and draws it into a European qualifying group of six
+  /// (campaign_seeds_test.dart). Its strength was not tuned on the lab
+  /// (campaign_lab_test.dart); the badge is the design's call.
+  static const vatican = CampaignDef(
+    withBelarus: true,
+    id: 'vatican',
+    nationId: 217, // DormantNations.vaticanId
+    dormantNationId: 217,
+    goal: CampaignGoal.winThenOffBottomThenPlayoff,
+    cycles: CampaignDef.unlimitedCycles,
+    needsPro: true,
+    difficulty: CampaignDifficulty.hard,
+    rngSeed: 217,
+  );
+
   static const List<CampaignDef> all = [
     transplant,
     grudge,
@@ -395,6 +440,7 @@ abstract final class Campaigns {
     isleOfMan,
     czechoslovakia,
     texas,
+    vatican,
   ];
 
   static CampaignDef? byId(String id) {

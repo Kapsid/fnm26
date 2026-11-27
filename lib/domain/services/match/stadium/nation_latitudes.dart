@@ -42,7 +42,7 @@ abstract final class NationLatitudes {
     'IRL': 53.3, 'ROU': 44.4, 'SMR': 43.9, 'SCO': 55.9, 'SRB': 44.8,
     'SVK': 48.1, 'SVN': 46.1, 'ESP': 40.4, 'SWE': 59.3, 'SUI': 46.9,
     'TUR': 41.0, 'UKR': 50.5, 'WAL': 51.5, 'BLR': 53.9, 'GRL': 64.2,
-    'IMN': 54.2, 'TCH': 50.1,
+    'IMN': 54.2, 'TCH': 50.1, 'VAT': 41.9,
     'RUS': 55.8,
     // South America
     'ARG': -34.6, 'BOL': -16.5, 'BRA': -22.9, 'CHI': -33.4, 'COL': 4.7,

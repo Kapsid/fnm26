@@ -18577,6 +18577,37 @@ class AppLocalizationsNb extends AppLocalizations {
   String get campaignStars3Texas => 'Vinn Verdensmesterskapet';
 
   @override
+  String get campaignVaticanTitle => 'Ave Maria';
+
+  @override
+  String get campaignVaticanTwist =>
+      'Vatikanstaten tar San Marinos plass i Europa, uten ende';
+
+  @override
+  String get campaignVaticanIntro =>
+      'Verdens minste stat har noen hundre innbyggere, de fleste geistlige, en garde av sveitsiske hellebardierer og ikke én fotballspiller som fortjener navnet. I denne verdenen spiller Vatikanstaten likevel, på San Marinos plass i Europa, og laget er langt svakere enn San Marino noen gang var: biskoper, seminarister, museumsvakter og gardister på fritid, en bane innenfor murene med plass til 1 500 og en og annen hjemmekamp på en lånt arena i Roma. Reisen har ingen ende, så ingen frist, bare mirakler å utrette: vinn en kvalikkamp, ikke bli sist i en kvalifiseringsgruppe og, om himmelen lytter, nå en playoff.';
+
+  @override
+  String get campaignVaticanGoal => 'Vinn en kvalikkamp';
+
+  @override
+  String get campaignStars1Vatican => 'Vinn en kvalikkamp';
+
+  @override
+  String get campaignStars2Vatican => 'Ikke bli sist i en kvalifiseringsgruppe';
+
+  @override
+  String get campaignStars3Vatican => 'Nå en playoff';
+
+  @override
+  String get campaignNoEnd => 'Uten ende';
+
+  @override
+  String homeCampaignCycleNoEnd(int cycle) {
+    return 'Syklus $cycle';
+  }
+
+  @override
   String get wcPlayoffCourseNote =>
       'Hver gruppevinner går rett videre. De siste plassene går til playoff for de beste toerne (gule i gruppene) og Nations Cups beste gruppevinnere som ikke er videre. Fra Nations Cup, slik det står nå:';
 

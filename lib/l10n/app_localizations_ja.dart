@@ -17934,6 +17934,36 @@ class AppLocalizationsJa extends AppLocalizations {
   String get campaignStars3Texas => '世界選手権優勝';
 
   @override
+  String get campaignVaticanTitle => 'アヴェ・マリア';
+
+  @override
+  String get campaignVaticanTwist => 'バチカンがサンマリノに代わり欧州へ、終わりなし';
+
+  @override
+  String get campaignVaticanIntro =>
+      '世界最小の国の市民は数百人、その多くは聖職者で、スイス人の矛槍兵の衛兵隊はいても、サッカー選手と呼べる者は一人もいません。この世界ではそれでもバチカンが欧州でサンマリノの座を占めてピッチに立ちますが、その力はサンマリノのどの時代よりもはるかに劣ります。司教、神学生、美術館の係員、非番の衛兵たち。城壁の内側に1,500人収容のピッチがあり、ときどきローマで借りたグラウンドでホームゲームを行います。この旅に終わりはなく、期限もありません。あるのは起こすべき奇跡だけです。予選で1勝すること、予選グループで最下位を回避すること、そして天が聞き届けてくれるなら、プレーオフに進出することです。';
+
+  @override
+  String get campaignVaticanGoal => '予選で1勝';
+
+  @override
+  String get campaignStars1Vatican => '予選で1勝';
+
+  @override
+  String get campaignStars2Vatican => '予選グループで最下位を回避';
+
+  @override
+  String get campaignStars3Vatican => 'プレーオフ進出';
+
+  @override
+  String get campaignNoEnd => '終わりなし';
+
+  @override
+  String homeCampaignCycleNoEnd(int cycle) {
+    return 'サイクル $cycle';
+  }
+
+  @override
   String get wcPlayoffCourseNote =>
       '各グループの1位はストレートインします。残りの枠は、成績上位のグループ2位（グループ表で黄色）と、まだ出場が決まっていないネーションズカップの上位グループ1位によるプレーオフで争われます。ネーションズカップからは、現時点で：';
 

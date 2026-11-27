@@ -216,6 +216,7 @@ void main() {
       'IMN': 'britishIsles',
       'TCH': 'centralEurope',
       'TEX': 'northAmericaMainland',
+      'VAT': 'italyMalta',
     };
     // Every one a minnow but Czechoslovakia, the 1976 European champions,
     // and Texas, a tier above.
@@ -266,5 +267,16 @@ void main() {
     expect(NationNames.display('TEX', 'Texas', 'pl'), 'Teksas');
     expect(NationNames.display('TEX', 'Texas', 'ja'), 'テキサス');
     expect(NationNames.display('TEX', 'Texas', 'en'), 'Texas');
+    expect(NationNames.display('VAT', 'Vatican City', 'cs'), 'Vatikán');
+    expect(
+      NationNames.displayDative('VAT', 'Vatican City', 'cs'),
+      'Vatikánu',
+    );
+    expect(NationNames.display('VAT', 'Vatican City', 'pl'), 'Watykan');
+    expect(
+      NationNames.display('VAT', 'Vatican City', 'it'),
+      'Città del Vaticano',
+    );
+    expect(NationNames.display('VAT', 'Vatican City', 'en'), 'Vatican City');
   });
 }

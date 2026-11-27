@@ -18264,6 +18264,37 @@ class AppLocalizationsTh extends AppLocalizations {
   String get campaignStars3Texas => 'คว้าแชมป์ชิงแชมป์โลก';
 
   @override
+  String get campaignVaticanTitle => 'วันทามารีย์';
+
+  @override
+  String get campaignVaticanTwist =>
+      'นครรัฐวาติกันเข้ามาแทนที่ซานมารีโนในยุโรป แบบไม่มีวันจบ';
+
+  @override
+  String get campaignVaticanIntro =>
+      'รัฐที่เล็กที่สุดในโลกมีพลเมืองเพียงไม่กี่ร้อยคน ส่วนใหญ่เป็นนักบวช มีทหารรักษาการณ์ชาวสวิสถือง้าว แต่ไม่มีนักฟุตบอลที่สมชื่อแม้แต่คนเดียว ในโลกนี้นครรัฐวาติกันยังคงลงเล่น แทนที่ซานมารีโนในยุโรป และอ่อนแอกว่าซานมารีโนในยุคใดก็ตาม: บิชอป นักศึกษาสามเณร เจ้าหน้าที่พิพิธภัณฑ์ และทหารรักษาการณ์นอกเวลางาน สนามในกำแพงเมืองที่จุได้ 1,500 คน และบางครั้งก็เล่นเกมเหย้าในสนามที่ยืมมาในกรุงโรม เส้นทางนี้ไม่มีวันจบ จึงไม่มีกำหนดเวลา มีเพียงปาฏิหาริย์ที่ต้องสร้าง: ชนะเกมรอบคัดเลือกหนึ่งนัด ไม่จบอันดับสุดท้ายของกลุ่มรอบคัดเลือก และหากสวรรค์รับฟัง ก็ผ่านเข้าสู่เพลย์ออฟ';
+
+  @override
+  String get campaignVaticanGoal => 'ชนะเกมรอบคัดเลือกหนึ่งนัด';
+
+  @override
+  String get campaignStars1Vatican => 'ชนะเกมรอบคัดเลือกหนึ่งนัด';
+
+  @override
+  String get campaignStars2Vatican => 'ไม่จบอันดับสุดท้ายของกลุ่มรอบคัดเลือก';
+
+  @override
+  String get campaignStars3Vatican => 'ผ่านเข้าสู่เพลย์ออฟ';
+
+  @override
+  String get campaignNoEnd => 'ไม่มีวันจบ';
+
+  @override
+  String homeCampaignCycleNoEnd(int cycle) {
+    return 'รอบที่ $cycle';
+  }
+
+  @override
   String get wcPlayoffCourseNote =>
       'แชมป์ทุกกลุ่มผ่านเข้ารอบทันที ที่นั่งสุดท้ายตัดสินจากเพลย์ออฟของรองแชมป์กลุ่มที่ดีที่สุด (สีเหลืองในกลุ่ม) และแชมป์กลุ่มที่ดีที่สุดในเนชันส์คัพที่ยังไม่ผ่าน จากเนชันส์คัพ ณ ตอนนี้:';
 
