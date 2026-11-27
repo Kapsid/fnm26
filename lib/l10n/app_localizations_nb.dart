@@ -19008,4 +19008,92 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Bare kampene kampanjen blir bedømt på: vennskapskamper og andre turneringer telles ikke.';
+
+  @override
+  String get resultsStagePlayoff => 'PLAYOFF';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return '$cup, play-off: Oppgjør $path';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return 'Et oppgjør over to kamper mot $opponent i mars: første kamp hjemme, andre borte. Laget som leder sammenlagt går til sluttspillet.';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return 'Et oppgjør over to kamper mot $opponent i mars: første kamp borte, andre hjemme. Laget som leder sammenlagt går til sluttspillet.';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return 'Videre som vertsnasjon: $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'Den direkte plassen glapp, men som vertsnasjon tar du en av plassene som holdes av til vertene. Du har kvalifisert deg til sluttspillet i $cup.';
+  }
+
+  @override
+  String get euro28LegendPlayoff =>
+      'Gul: en toer på vei mot playoff, slik det står nå';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return 'Vertsnasjonene ($hosts) spiller også kvalifisering: ryker de ut, holdes en plass av til dem.';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return 'Vertsnasjonene ($hosts) spiller også kvalifisering: to plasser holdes av til de to beste som ryker ut.';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'playoff';
+
+  @override
+  String get euro28CourseTitle => 'Playoff, slik det står nå';
+
+  @override
+  String get euro28CourseNote =>
+      'Gruppevinnerne og de åtte beste toerne går rett videre. De andre toerne går til playoff, sammen med de beste gruppevinnerne fra Nations Cup som ikke er videre. Slik det står nå:';
+
+  @override
+  String get euro28CourseFooter =>
+      'Hvorfor de er her: først toerne som ikke går videre, så de beste gruppevinnerne fra Nations Cup som ennå ikke er videre, så de nest beste lagene. Dette er bare stillingen i dag: den endrer seg etter hver runde.';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return 'Oppgjør $path';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'Ditt oppgjør';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return 'Sammenlagt: $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return 'Vinner av oppgjør $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return 'Gruppen din hvis du vinner oppgjør $path: gruppe $group';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      'Gruppevinnerne og de åtte beste toerne er videre. De fire siste plassene avgjøres i mars i oppgjør over to kamper, hjemme og borte: de fire beste lagene er seedet og spiller returkampen hjemme.';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return 'Gruppevinnerne og de åtte beste toerne er videre, og vertsnasjoner som røk ut, tar plassene som holdes av til dem. De siste $count plassene avgjøres i mars i stier med fire lag: en semifinale over én kamp hos det høyest rangerte laget, deretter en enkeltfinale.';
+  }
 }

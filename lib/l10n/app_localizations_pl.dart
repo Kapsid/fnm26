@@ -19212,4 +19212,92 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Tylko mecze, na podstawie których oceniana jest ta kampania: towarzyskie i inne rozgrywki się nie liczą.';
+
+  @override
+  String get resultsStagePlayoff => 'BARAŻ';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return 'Baraże $cup: dwumecz $path';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return 'Dwumecz z $opponent w marcu: pierwszy mecz u siebie, rewanż na wyjeździe. Do turnieju finałowego awansuje lepszy w dwumeczu.';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return 'Dwumecz z $opponent w marcu: pierwszy mecz na wyjeździe, rewanż u siebie. Do turnieju finałowego awansuje lepszy w dwumeczu.';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return 'Awans jako gospodarz: $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'Bezpośredni awans uciekł, ale jako gospodarz zajmujesz jedno z miejsc zarezerwowanych dla gospodarzy. Awansowałeś do turnieju finałowego. Rozgrywki: $cup.';
+  }
+
+  @override
+  String get euro28LegendPlayoff =>
+      'Żółty: drużyna z drugiego miejsca zmierzająca do baraży, według obecnego stanu';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return 'Gospodarze ($hosts) też grają w eliminacjach: jeśli odpadną, mają zarezerwowane miejsce.';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return 'Gospodarze ($hosts) też grają w eliminacjach: dwa miejsca są zarezerwowane dla dwóch najlepszych, którzy odpadną.';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'baraży';
+
+  @override
+  String get euro28CourseTitle => 'Baraże, według obecnego stanu';
+
+  @override
+  String get euro28CourseNote =>
+      'Zwycięzcy grup i osiem najlepszych drużyn z drugich miejsc awansują bezpośrednio. Pozostałe drugie drużyny idą do baraży, razem z najlepszymi zwycięzcami grup Pucharu Narodów, którzy nie awansowali. Według obecnego stanu:';
+
+  @override
+  String get euro28CourseFooter =>
+      'Dlaczego tu są: najpierw drużyny z drugich miejsc, które nie awansowały, potem najlepsi zwycięzcy grup Pucharu Narodów, którzy jeszcze nie awansowali, potem jego kolejne najlepsze drużyny. To tylko dzisiejszy stan: zmienia się po każdej kolejce.';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return 'Dwumecz $path';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'Twój dwumecz';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return 'W dwumeczu: $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return 'Zwycięzca dwumeczu $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return 'Twoja grupa, jeśli wygrasz dwumecz $path: grupa $group';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      'Zwycięzcy grup i osiem najlepszych drużyn z drugich miejsc awansowali. Ostatnie cztery miejsca rozstrzygną się w marcu w dwumeczach u siebie i na wyjeździe: cztery najlepsze drużyny są rozstawione i rewanż grają u siebie.';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return 'Zwycięzcy grup i osiem najlepszych drużyn z drugich miejsc awansowali, a gospodarze, którzy odpadli, zajmują zarezerwowane dla nich miejsca. Ostatnie $count miejsca rozstrzygną się w marcu na ścieżkach po cztery drużyny: półfinał w jednym meczu u wyżej notowanej drużyny, potem jeden finał.';
+  }
 }

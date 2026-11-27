@@ -10,7 +10,9 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/domain/services/competition/calendar2.dart';
+import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
+import 'package:fnm/domain/services/competition/euro_qualifying28.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
@@ -20,25 +22,24 @@ import 'package:fnm/features/tournaments/nations_cup_providers.dart';
 
 import 'driver.dart';
 
-/// Europe's play-offs on the calendar2 rhythm, played through the hub.
+/// Europe's play-offs on the calendar2 rhythm, played through the hub, in
+/// both shapes a cycle can have: the Euro 2024 model (a cycle opened before
+/// `Euro28.kind`, its paths one per Nations Cup league) and the EURO 2028
+/// shape (the winners and the eight best runners-up through, the other
+/// runners-up and the Nations Cup's best in paths or two-legged ties).
 ///
-/// [entrant] misses direct qualification for the EURO, is drawn into a path
-/// from its first Nations Cup league, sees its path winner's ball in the
-/// December finals draw, plays its semi-final and final in March, and lands
-/// in the exact slot its placeholder was drawn into. [watcher] qualifies
-/// directly (its brief locked in at the draw) and steps the play-offs from
-/// the stands.
+/// The entrant misses direct qualification for the EURO, is drawn into the
+/// play-offs, sees its winner's ball in the finals draw, plays its ties in
+/// March, and lands in the exact slot its placeholder was drawn into. The
+/// watcher qualifies directly (its brief locked in at the draw) and steps
+/// the play-offs from the stands.
 ///
 /// Found with a seed search; if a change to the world moves them, re-find a
-/// side that goes through a path (the first expectation says which half
+/// side that goes through (the first expectation that fails says which half
 /// broke).
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   const europe = Confederation.europe;
-  // 94 before the 1.1.4 openness blend, 45 before the 1.1.4 goal lull.
-  const entrantSeed = 104;
-  const entrantIndex = 24;
-  const watcherSeed = 31;
 
   Future<List<DrawSlot>> slotsOf(
     CompetitionRepository comp,
@@ -46,7 +47,12 @@ void main() {
     CompetitionKind kind,
   ) => comp.drawSlots(id, 0, kind, confederation: europe);
 
-  test('a side through a path takes its December slot', () async {
+  Future<void> entrantStory(
+    int seed,
+    int index, {
+    required bool euro28,
+    bool? ties,
+  }) async {
     final db = storyDb();
     final c = storyContainer(db);
     addTearDown(c.dispose);
@@ -54,11 +60,12 @@ void main() {
       for (final n in storyNations)
         if (n.confederation == europe) n,
     ]..sort((a, b) => a.ranking.compareTo(b.ranking));
-    final me = europeans[entrantIndex].id;
-    final d = await StoryDriver.start(c, entrantSeed, nationId: me);
+    final me = europeans[index].id;
+    final d = await StoryDriver.start(c, seed, nationId: me, euro28: euro28);
     final id = d.careerId;
     final comp = c.read(competitionRepositoryProvider);
     final careers = c.read(careerRepositoryProvider);
+    expect(await isEuro28(comp, id, 0), euro28);
     final seen = <(HubEventKind, String?, DateTime)>[];
     d.beforeEvent = (e) async {
       seen.add((e.kind, e.route, (await careers.byId(id))!.inGameDate));
@@ -72,9 +79,9 @@ void main() {
       cycle: 0,
     );
 
-    // To the end of qualifying: the paths are drawn and stored. On the way
-    // the tables mark the sides on course for them: a full path's worth,
-    // none of them a group's top two.
+    // To the end of qualifying: the play-offs are drawn and stored. On the
+    // way the tables mark the sides on course for them: whole paths or
+    // ties, none of them a side going straight through.
     final nations = {
       for (final n in await c.read(nationRepositoryProvider).forCareer(id))
         n.id: n,
@@ -99,16 +106,22 @@ void main() {
         markedMidway = true;
         final marked = await marks();
         expect(marked, isNotEmpty, reason: 'nothing marked mid-qualifying');
-        expect(marked.length % 4, 0, reason: 'whole paths');
-        for (final t in await comp.tournamentGroupTables(
-          id,
-          CompetitionKind.continentalQualifying,
-          confederation: europe,
-        )) {
-          for (final s in t.standings.take(2)) {
-            expect(marked, isNot(contains(s.nationId)));
-          }
-        }
+        expect(marked.length % (euro28 ? 2 : 4), 0, reason: 'whole paths');
+        final groups = [
+          for (final t in await comp.tournamentGroupTables(
+            id,
+            CompetitionKind.continentalQualifying,
+            confederation: europe,
+          ))
+            t.standings,
+        ];
+        final through = euro28
+            ? Euro28.direct(groups)
+            : [
+                for (final g in groups)
+                  for (final s in g.take(2)) s.nationId,
+              ];
+        expect(marked.intersection(through.toSet()), isEmpty);
       }
       await d.step(stopAtRollover: true);
     }
@@ -116,18 +129,22 @@ void main() {
     final drawnOn = (await careers.byId(id))!.inGameDate;
     expect(drawnOn.year, 2027);
     expect(drawnOn.month, 11);
-    // Once drawn, the marks are the paths' own sides.
-    expect(await marks(), {
-      for (final p in EuroPlayoffs.fromSlots(
-        await slotsOf(comp, id, CompetitionKind.continentalPlayoff),
-      ))
-        ...p.seeds,
-    });
-    final path = EuroPlayoffs.fromSlots(
+    // Once drawn, the marks are the play-offs' own sides.
+    final drawn = EuroPlayoffs.fromSlots(
       await slotsOf(comp, id, CompetitionKind.continentalPlayoff),
-    ).where((p) => p.seeds.contains(me)).firstOrNull;
+    );
+    expect(await marks(), {for (final p in drawn) ...p.seeds});
+    if (ties != null) {
+      expect(
+        drawn.every(EuroPlayoffs.isTie),
+        ties,
+        reason: 'the play-offs changed shape (re-find)',
+      );
+    }
+    final path = drawn.where((p) => p.seeds.contains(me)).firstOrNull;
     expect(path, isNotNull, reason: 'the entrant is in a path (re-find)');
-    final key = EuroPlayoffs.placeholderKey(path!.letter);
+    final tie = EuroPlayoffs.isTie(path!);
+    final key = EuroPlayoffs.placeholderKey(path.letter);
     final placeholder = (await slotsOf(
       comp,
       id,
@@ -149,6 +166,8 @@ void main() {
     // may give away the group its winner was drawn into.
     final before = await c.read(euroPlayoffProvider(id).future);
     expect(before!.groupOfPath(path.letter), isNull);
+    expect(before.euro28, euro28);
+    expect(before.ties, tie);
     // The Nations Cup still shows the edition that seeded the paths, not
     // the next one's undrawn (hidden) tables.
     final cup = await c.read(
@@ -173,7 +192,7 @@ void main() {
     expect(draw, isNotNull);
     expect(draw!.playerPathLetter, path.letter);
     expect(draw.playerPathGroup, placeholder.groupName);
-    // The path's ball carries its four nations' flags.
+    // The path's ball carries its nations' flags.
     expect(draw.pathSeeds[path.letter], path.seeds);
     await d.step();
     // Watched: now the path card may name the group.
@@ -196,15 +215,24 @@ void main() {
       for (final f in await comp.cycleFixturesForNation(id, me))
         if (EuroPlayoffs.rounds.contains(f.round)) f,
     ]..sort((a, b) => a.date.compareTo(b.date));
-    final plan = Calendar2.euroPlayoffs(CareerService.worldCupYear(0));
-    expect(mine.map((f) => f.round), [
-      EuroPlayoffs.semiRound,
-      EuroPlayoffs.finalRound,
-    ], reason: 'won the semi (re-find if not)');
+    final wcYear = CareerService.worldCupYear(0);
+    final plan = euro28
+        ? Calendar2.euro28Playoffs(wcYear)
+        : Calendar2.euroPlayoffs(wcYear);
+    expect(
+      mine.map((f) => f.round),
+      tie
+          ? [EuroPlayoffs.legOneRound, EuroPlayoffs.legTwoRound]
+          : [EuroPlayoffs.semiRound, EuroPlayoffs.finalRound],
+      reason: 'won the semi (re-find if not)',
+    );
     expect(mine.first.date, plan.semis);
     expect(mine.last.date, plan.finalDay);
-    final semi = mine.first;
-    expect(semi.homeNationId == me, path.seeds.indexOf(me) < 2);
+    final opener = mine.first;
+    expect(
+      opener.homeNationId == me,
+      tie ? path.seeds.indexOf(me) == 1 : path.seeds.indexOf(me) < 2,
+    );
     expect(mine.every((f) => f.hasResult), isTrue);
     // Played by the manager: a call-up and a match on the hub before each.
     expect(
@@ -228,7 +256,9 @@ void main() {
 
     // Won the path: in the exact slot its placeholder was drawn into.
     final f = mine.last;
-    final won = f.homeNationId == me
+    final won = tie
+        ? TwoLegged.winner(mine.first, f) == me
+        : f.homeNationId == me
         ? f.homeScore! > f.awayScore!
         : f.awayScore! > f.homeScore!;
     expect(won, isTrue, reason: 'won the path final (re-find if not)');
@@ -277,14 +307,13 @@ void main() {
     expect(keys, contains('europlayoff:2030'));
     expect(keys, contains('qual:cont:2028'));
     expect(keys.where((k) => k.startsWith('contmiss:')), isEmpty);
-  }, timeout: const Timeout(Duration(minutes: 30)));
+  }
 
-  test('a direct qualifier is locked in at the draw and watches the '
-      'play-offs', () async {
+  Future<void> watcherStory(int seed, {required bool euro28}) async {
     final db = storyDb();
     final c = storyContainer(db);
     addTearDown(c.dispose);
-    final d = await StoryDriver.start(c, watcherSeed);
+    final d = await StoryDriver.start(c, seed, euro28: euro28);
     final id = d.careerId;
     final comp = c.read(competitionRepositoryProvider);
     final careers = c.read(careerRepositoryProvider);
@@ -340,9 +369,13 @@ void main() {
             e.$3.month == 3)
           e.$3,
     ];
-    // The clock stopped on the semi-finals' day, where the watch was offered,
-    // and the next step played the finals on theirs, which made the EURO.
-    final plan = Calendar2.euroPlayoffs(CareerService.worldCupYear(0));
+    // The clock stopped on the semi-finals' (or first legs') day, where the
+    // watch was offered, and the next step played the finals (or second
+    // legs) on theirs, which made the EURO.
+    final wcYear = CareerService.worldCupYear(0);
+    final plan = euro28
+        ? Calendar2.euro28Playoffs(wcYear)
+        : Calendar2.euroPlayoffs(wcYear);
     expect(watched, contains(plan.semis));
     expect((await careers.byId(id))!.inGameDate, plan.finalDay);
     final playoffs = [
@@ -376,5 +409,39 @@ void main() {
           .map((s) => s.nationId),
       contains(england),
     );
-  }, timeout: const Timeout(Duration(minutes: 30)));
+  }
+
+  group('the Euro 2024 model (a cycle opened before the EURO 2028 shape)', () {
+    test(
+      'a side through a path takes its December slot',
+      // 94 before the 1.1.4 openness blend, 45 before the 1.1.4 goal lull.
+      () => entrantStory(104, 24, euro28: false),
+      timeout: const Timeout(Duration(minutes: 30)),
+    );
+    test(
+      'a direct qualifier is locked in at the draw and watches the play-offs',
+      () => watcherStory(31, euro28: false),
+      timeout: const Timeout(Duration(minutes: 30)),
+    );
+  });
+
+  group('the EURO 2028 shape', () {
+    test(
+      'a side through a four-team path takes its slot',
+      // Three hosts, one of them out on a held place: three paths.
+      () => entrantStory(27, 20, euro28: true, ties: false),
+      timeout: const Timeout(Duration(minutes: 30)),
+    );
+    test(
+      'a side through a two-legged tie takes its slot',
+      // Every host through directly: four ties.
+      () => entrantStory(21, 24, euro28: true, ties: true),
+      timeout: const Timeout(Duration(minutes: 30)),
+    );
+    test(
+      'a direct qualifier is locked in at the draw and watches the ties',
+      () => watcherStory(31, euro28: true),
+      timeout: const Timeout(Duration(minutes: 30)),
+    );
+  });
 }

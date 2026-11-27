@@ -129,6 +129,16 @@ abstract final class Calendar2 {
     finalDay: DateTime(wcYear - 2, 3, 26),
   );
 
+  /// Europe's play-offs on the EURO 2028 shape (see `Euro28`): every path's
+  /// semi-finals, or every tie's first leg, on 25 March of the finals' year,
+  /// and the path finals, or the second legs, on 28 March. Drawn, with the
+  /// finals' groups, the day Euro qualifying is played out, as
+  /// [euroPlayoffs] are.
+  static ({DateTime semis, DateTime finalDay}) euro28Playoffs(int wcYear) => (
+    semis: DateTime(wcYear - 2, 3, 25),
+    finalDay: DateTime(wcYear - 2, 3, 28),
+  );
+
   /// The World Championship's play-offs (see `UefaWcPlayoffs` and
   /// `IcPlayoffs`): Europe's paths and the intercontinental play-off share
   /// the late-March window of the finals' year, every semi-final on 26

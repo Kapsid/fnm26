@@ -19398,4 +19398,92 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Jen zápasy, podle kterých se kampaň hodnotí: přátelská utkání a jiné soutěže se nepočítají.';
+
+  @override
+  String get resultsStagePlayoff => 'BARÁŽ';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return 'Baráž $cup: dvojzápas $path';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return 'Dvojzápas proti $opponent v březnu: první zápas doma, druhý venku. Na závěrečný turnaj jde ten, kdo má lepší celkové skóre.';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return 'Dvojzápas proti $opponent v březnu: první zápas venku, druhý doma. Na závěrečný turnaj jde ten, kdo má lepší celkové skóre.';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return 'Postup jako pořadatel: $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'Přímý postup vám utekl, ale jako pořadatel dostáváte jedno z míst vyhrazených pořadatelům. Postoupili jste na turnaj $cup.';
+  }
+
+  @override
+  String get euro28LegendPlayoff =>
+      'Žlutě: tým na druhém místě, který míří do baráže, podle aktuálního stavu';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return 'Pořadatelé ($hosts) hrají kvalifikaci také: pokud neuspějí, mají vyhrazené místo.';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return 'Pořadatelé ($hosts) hrají kvalifikaci také: dvě místa jsou vyhrazena pro dva nejlepší z těch, kdo neuspějí.';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'baráže';
+
+  @override
+  String get euro28CourseTitle => 'Baráž, podle aktuálního stavu';
+
+  @override
+  String get euro28CourseNote =>
+      'Vítězové skupin a osm nejlepších týmů na druhých místech postupují přímo. Ostatní druzí jdou do baráže spolu s nejlepšími vítězi skupin Poháru národů, kteří nepostoupili. Podle aktuálního stavu:';
+
+  @override
+  String get euro28CourseFooter =>
+      'Proč jsou tady: nejdřív druzí, kteří nepostoupili, pak nejlepší vítězové skupin Poháru národů, kteří ještě nepostoupili, pak jeho další nejlepší týmy. Je to jen dnešní stav: mění se po každém kole.';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return 'Dvojzápas $path';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'Váš dvojzápas';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return 'Celkové skóre: $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return 'Vítěz dvojzápasu $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return 'Vaše skupina, pokud vyhrajete dvojzápas $path: skupina $group';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      'Vítězové skupin a osm nejlepších týmů na druhých místech postupují. Poslední čtyři místa se hrají v březnu ve dvojzápasech doma a venku: čtyři nejlepší týmy jsou nasazené a druhý zápas hrají doma.';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return 'Vítězové skupin a osm nejlepších týmů na druhých místech postupují a pořadatelé, kteří neuspěli, dostávají vyhrazená místa. Poslední $count místa se hrají v březnu v cestách po čtyřech týmech: semifinále v jednom zápase u výše postaveného týmu, pak jediné finále.';
+  }
 }

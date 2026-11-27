@@ -19123,4 +19123,92 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Só os jogos pelos quais esta campanha é julgada: amigáveis e outras competições não contam.';
+
+  @override
+  String get resultsStagePlayoff => 'PLAY-OFF';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return 'Play-off da $cup: Confronto $path';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return 'Um confronto em dois jogos contra $opponent em março: a ida em casa e a volta fora. Quem estiver à frente no agregado vai à fase final.';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return 'Um confronto em dois jogos contra $opponent em março: a ida fora e a volta em casa. Quem estiver à frente no agregado vai à fase final.';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return 'Classificado como anfitrião: $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'A vaga direta escapou, mas como anfitrião você fica com uma das vagas reservadas aos anfitriões. Você se classificou para a fase final de $cup.';
+  }
+
+  @override
+  String get euro28LegendPlayoff =>
+      'Amarelo: um segundo colocado a caminho do play-off, como as coisas estão';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return 'Os anfitriões ($hosts) também jogam as eliminatórias: se ficarem de fora, há uma vaga reservada para eles.';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return 'Os anfitriões ($hosts) também jogam as eliminatórias: há duas vagas reservadas para os dois melhores que ficarem de fora.';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'o play-off';
+
+  @override
+  String get euro28CourseTitle => 'Play-off, como as coisas estão';
+
+  @override
+  String get euro28CourseNote =>
+      'Os vencedores dos grupos e os oito melhores segundos colocados se classificam direto. Os outros segundos vão ao play-off, com os melhores vencedores de grupo da Copa das Nações que não se classificaram. Como as coisas estão:';
+
+  @override
+  String get euro28CourseFooter =>
+      'Por que estão aqui: primeiro os segundos colocados que ficaram de fora, depois os melhores vencedores de grupo da Copa das Nações ainda não classificados, depois as suas melhores equipes seguintes. É só a situação de hoje: muda a cada rodada.';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return 'Confronto $path';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'Seu confronto';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return 'Agregado: $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return 'Vencedor do Confronto $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return 'Seu grupo se vencer o Confronto $path: Grupo $group';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      'Os vencedores dos grupos e os oito melhores segundos colocados estão classificados. As quatro últimas vagas são decididas em março em confrontos de ida e volta: as quatro melhores equipes são cabeças de chave e jogam a volta em casa.';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return 'Os vencedores dos grupos e os oito melhores segundos colocados estão classificados, e os anfitriões que ficaram de fora ficam com as vagas reservadas a eles. As últimas $count vagas são decididas em março em caminhos de quatro equipes: semifinais em jogo único na casa da mais bem classificada, depois uma final única.';
+  }
 }

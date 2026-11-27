@@ -19033,4 +19033,92 @@ class AppLocalizationsFil extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Ang mga laban lang na batayan ng paghatol sa kampanyang ito: hindi kasama ang mga friendly at ibang kompetisyon.';
+
+  @override
+  String get resultsStagePlayoff => 'PLAY-OFF';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return 'Play-off ng $cup: Tie $path';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return 'Isang tie na dalawang laro laban sa $opponent sa Marso: ang una sa bahay, ang ikalawa sa labas. Ang nangunguna sa kabuuang iskor ang pupunta sa finals.';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return 'Isang tie na dalawang laro laban sa $opponent sa Marso: ang una sa labas, ang ikalawa sa bahay. Ang nangunguna sa kabuuang iskor ang pupunta sa finals.';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return 'Pasok bilang host: $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'Hindi ka nakakuha ng direktang puwesto, pero bilang host makukuha mo ang isa sa mga puwestong nakalaan sa mga host. Nag-qualify ka na sa finals ng $cup.';
+  }
+
+  @override
+  String get euro28LegendPlayoff =>
+      'Dilaw: pumangalawa na papunta sa play-off, sa kasalukuyang lagay';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return 'Naglalaro rin sa qualifying ang mga host ($hosts): kung hindi sila makapasok, may puwestong nakalaan sa kanila.';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return 'Naglalaro rin sa qualifying ang mga host ($hosts): may dalawang puwestong nakalaan sa dalawang pinakamahusay na hindi makapasok.';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'ang play-off';
+
+  @override
+  String get euro28CourseTitle => 'Play-off, sa kasalukuyang lagay';
+
+  @override
+  String get euro28CourseNote =>
+      'Direktang pasok ang mga nanalo sa group at ang walong pinakamahusay na pumangalawa. Ang ibang pumangalawa ay pupunta sa play-off, kasama ang pinakamahusay na nanalo sa group ng Nations Cup na hindi pa pasok. Sa kasalukuyang lagay:';
+
+  @override
+  String get euro28CourseFooter =>
+      'Bakit sila narito: una ang mga pumangalawa na hindi pasok, sunod ang pinakamahusay na nanalo sa group ng Nations Cup na hindi pa pasok, saka ang susunod nitong pinakamahusay na koponan. Ito lang ang lagay ngayon: nagbabago ito pagkatapos ng bawat round.';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return 'Tie $path';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'Ang tie mo';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return 'Kabuuan: $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return 'Panalo sa Tie $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return 'Ang group mo kung mananalo ka sa Tie $path: Group $group';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      'Pasok na ang mga nanalo sa group at ang walong pinakamahusay na pumangalawa. Ang huling apat na puwesto ay pagpapasyahan sa Marso sa mga tie na dalawang laro, sa bahay at sa labas: naka-seed ang apat na pinakamahusay at sa bahay nila ang ikalawang laro.';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return 'Pasok na ang mga nanalo sa group at ang walong pinakamahusay na pumangalawa, at ang mga host na hindi nakapasok ay kukuha ng mga puwestong nakalaan sa kanila. Ang huling $count puwesto ay pagpapasyahan sa Marso sa mga landas na may apat na koponan: isang laro na semi-final sa mas mataas ang ranggo, saka isang laro na final.';
+  }
 }

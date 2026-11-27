@@ -19114,4 +19114,92 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Μόνο οι αγώνες με τους οποίους κρίνεται αυτή η αποστολή: τα φιλικά και οι άλλες διοργανώσεις δεν μετράνε.';
+
+  @override
+  String get resultsStagePlayoff => 'ΜΠΑΡΑΖ';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return '$cup, μπαράζ: Ζευγάρι $path';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return 'Διπλός αγώνας με την ομάδα $opponent τον Μάρτιο: ο πρώτος εντός έδρας, ο δεύτερος εκτός. Στην τελική φάση πηγαίνει όποιος υπερισχύει στο σύνολο.';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return 'Διπλός αγώνας με την ομάδα $opponent τον Μάρτιο: ο πρώτος εκτός έδρας, ο δεύτερος εντός. Στην τελική φάση πηγαίνει όποιος υπερισχύει στο σύνολο.';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return 'Πρόκριση ως διοργανωτής: $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'Έχασες την απευθείας πρόκριση, αλλά ως διοργανωτής παίρνεις μία από τις θέσεις που κρατούνται για τους διοργανωτές. $cup: προκρίθηκες στην τελική φάση.';
+  }
+
+  @override
+  String get euro28LegendPlayoff =>
+      'Κίτρινο: δεύτερη ομάδα προς τα μπαράζ, με τα σημερινά δεδομένα';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return 'Οι διοργανωτές ($hosts) παίζουν κι αυτοί στα προκριματικά: αν αποτύχουν, τους κρατείται μια θέση.';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return 'Οι διοργανωτές ($hosts) παίζουν κι αυτοί στα προκριματικά: δύο θέσεις κρατούνται για τους δύο καλύτερους που αποτυγχάνουν.';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'τα μπαράζ';
+
+  @override
+  String get euro28CourseTitle => 'Μπαράζ, με τα σημερινά δεδομένα';
+
+  @override
+  String get euro28CourseNote =>
+      'Οι νικητές των ομίλων και οι οκτώ καλύτεροι δεύτεροι προκρίνονται απευθείας. Οι υπόλοιποι δεύτεροι πάνε στα μπαράζ, μαζί με τους καλύτερους νικητές ομίλων του Κυπέλλου Εθνών που δεν προκρίθηκαν. Με τα σημερινά δεδομένα:';
+
+  @override
+  String get euro28CourseFooter =>
+      'Γιατί είναι εδώ: πρώτα οι δεύτεροι που μένουν εκτός, μετά οι καλύτεροι νικητές ομίλων του Κυπέλλου Εθνών που δεν έχουν προκριθεί, μετά οι επόμενες καλύτερες ομάδες του. Είναι μόνο η σημερινή εικόνα: αλλάζει μετά από κάθε αγωνιστική.';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return 'Ζευγάρι $path';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'Το ζευγάρι σου';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return 'Σύνολο: $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return 'Νικητής ζευγαριού $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return 'Ο όμιλός σου αν κερδίσεις το ζευγάρι $path: όμιλος $group';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      'Οι νικητές των ομίλων και οι οκτώ καλύτεροι δεύτεροι έχουν προκριθεί. Οι τέσσερις τελευταίες θέσεις κρίνονται τον Μάρτιο σε διπλούς αγώνες, εντός και εκτός: οι τέσσερις καλύτερες ομάδες είναι ισχυρές και παίζουν τον δεύτερο αγώνα εντός έδρας.';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return 'Οι νικητές των ομίλων και οι οκτώ καλύτεροι δεύτεροι έχουν προκριθεί, και οι διοργανωτές που απέτυχαν παίρνουν τις θέσεις που τους κρατούνται. Οι τελευταίες $count θέσεις κρίνονται τον Μάρτιο σε διαδρομές τεσσάρων ομάδων: ημιτελικός σε έναν αγώνα στην έδρα της καλύτερης, μετά ένας μοναδικός τελικός.';
+  }
 }

@@ -18924,4 +18924,92 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Yalnızca bu kampanyanın değerlendirildiği maçlar: hazırlık maçları ve diğer turnuvalar sayılmaz.';
+
+  @override
+  String get resultsStagePlayoff => 'PLAY-OFF';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return '$cup play-off: $path Eşleşmesi';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return 'Mart ayında $opponent ile iki maçlık eşleşme: ilk maç evinde, ikincisi deplasmanda. Toplam skorda önde olan final turnuvasına gider.';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return 'Mart ayında $opponent ile iki maçlık eşleşme: ilk maç deplasmanda, ikincisi evinde. Toplam skorda önde olan final turnuvasına gider.';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return 'Ev sahibi olarak finallerde: $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'Doğrudan bileti kaçırdın ama ev sahibi olarak ev sahiplerine ayrılan yerlerden birini alıyorsun. $cup final turnuvasına katılma hakkı kazandın.';
+  }
+
+  @override
+  String get euro28LegendPlayoff =>
+      'Sarı: play-off yolundaki bir grup ikincisi, şu anki duruma göre';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return 'Ev sahipleri ($hosts) de elemelerde oynuyor: kaçırırlarsa onlara bir yer ayrılmış.';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return 'Ev sahipleri ($hosts) de elemelerde oynuyor: kaçıranların en iyi ikisine iki yer ayrılmış.';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'play-off';
+
+  @override
+  String get euro28CourseTitle => 'Play-off, şu anki duruma göre';
+
+  @override
+  String get euro28CourseNote =>
+      'Grup birincileri ve en iyi sekiz grup ikincisi doğrudan katılır. Diğer ikinciler, katılım hakkı kazanamamış en iyi Uluslar Kupası grup birincileriyle play-off oynar. Şu anki duruma göre:';
+
+  @override
+  String get euro28CourseFooter =>
+      'Neden buradalar: önce doğrudan katılamayan ikinciler, sonra henüz katılım hakkı kazanamamış en iyi Uluslar Kupası grup birincileri, sonra kupanın sıradaki en iyi takımları. Bu yalnızca bugünkü durum: her turdan sonra değişir.';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return '$path Eşleşmesi';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'Senin eşleşmen';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return 'Toplam: $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return '$path Eşleşmesi galibi';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return '$path Eşleşmesini kazanırsan grubun: $group Grubu';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      'Grup birincileri ve en iyi sekiz grup ikincisi katılım hakkı kazandı. Son dört yer martta iç sahada ve deplasmanda iki maçlık eşleşmelerle belirlenir: en iyi dört takım seribaşıdır ve rövanşı evinde oynar.';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return 'Grup birincileri ve en iyi sekiz grup ikincisi katılım hakkı kazandı, kaçıran ev sahipleri de onlara ayrılan yerleri alır. Son $count yer martta dört takımlı yollarda belirlenir: daha üst sıradaki takımın evinde tek maçlık yarı final, ardından tek maçlık final.';
+  }
 }

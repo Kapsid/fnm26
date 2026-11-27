@@ -701,6 +701,10 @@ extension SeasonCycle on SeasonService {
     final conf = await _managerConfederation(careerId);
     final contOpen =
         conf == null ||
+        // The EURO 2028 shape draws the hosts too: a host is in the draw and
+        // watches it like anybody else.
+        (conf == Confederation.europe &&
+            await isEuro28(_comp, careerId, cycle)) ||
         await _comp.hasWatchedDraw(careerId, cycle, continentalQualDrawKind) ||
         !await _comp.hasTournament(
           careerId,

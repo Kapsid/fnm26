@@ -18388,4 +18388,91 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       '이 캠페인의 평가 대상 경기만 포함합니다. 친선 경기와 다른 대회는 제외됩니다.';
+
+  @override
+  String get resultsStagePlayoff => '플레이오프';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return '$cup 플레이오프: 대진 $path';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return '3월에 $opponent와(과) 홈 앤드 어웨이 두 경기를 치릅니다. 1차전은 홈, 2차전은 원정. 합계에서 앞선 팀이 본선에 갑니다.';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return '3월에 $opponent와(과) 홈 앤드 어웨이 두 경기를 치릅니다. 1차전은 원정, 2차전은 홈. 합계에서 앞선 팀이 본선에 갑니다.';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return '개최국 자격 진출: $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return '직행 티켓은 놓쳤지만 개최국으로서 개최국 몫으로 남겨 둔 자리 하나를 얻었습니다. $cup 본선 진출에 성공했습니다.';
+  }
+
+  @override
+  String get euro28LegendPlayoff => '노란색: 현재 플레이오프로 향하는 2위 팀';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return '개최국($hosts)도 예선을 치릅니다: 탈락하면 자리 하나가 남겨져 있습니다.';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return '개최국($hosts)도 예선을 치릅니다: 탈락한 개최국 중 상위 두 팀에게 두 자리가 남겨져 있습니다.';
+  }
+
+  @override
+  String get euro28DestPlayoffs => '플레이오프';
+
+  @override
+  String get euro28CourseTitle => '플레이오프, 현재 기준';
+
+  @override
+  String get euro28CourseNote =>
+      '조 1위와 성적 상위 2위 8팀이 본선에 직행합니다. 나머지 2위 팀은 아직 진출하지 못한 네이션스컵 조 1위 상위 팀들과 함께 플레이오프에 나갑니다. 현재 기준:';
+
+  @override
+  String get euro28CourseFooter =>
+      '여기 있는 이유: 먼저 직행하지 못한 2위 팀, 그다음 아직 진출하지 못한 네이션스컵 조 1위 상위 팀, 그다음 그 대회의 차상위 팀입니다. 오늘 기준일 뿐이며 매 라운드 바뀝니다.';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return '대진 $path';
+  }
+
+  @override
+  String get euroPlayoffYourTie => '내 대진';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return '합계: $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return '대진 $path 승자';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return '대진 $path에서 이기면 내 조: $group조';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      '조 1위와 성적 상위 2위 8팀이 진출했습니다. 마지막 네 자리는 3월 홈 앤드 어웨이 두 경기로 가립니다. 상위 네 팀은 시드를 받고 2차전을 홈에서 치릅니다.';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return '조 1위와 성적 상위 2위 8팀이 진출했고, 탈락한 개최국은 남겨 둔 자리를 차지합니다. 마지막 $count자리는 3월에 네 팀으로 된 패스에서 가립니다. 순위가 높은 팀의 홈에서 단판 4강전, 이어서 단판 결승전입니다.';
+  }
 }

@@ -19090,4 +19090,92 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Vain ottelut, joiden perusteella tämä kampanja arvioidaan: ystävyysottelut ja muut kilpailut eivät ole mukana.';
+
+  @override
+  String get resultsStagePlayoff => 'JATKOKARSINTA';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return '$cup, jatkokarsinta: ottelupari $path';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return 'Kaksiosainen ottelupari joukkuetta $opponent vastaan maaliskuussa: ensimmäinen kotona, toinen vieraissa. Yhteismaaleissa parempi pääsee lopputurnaukseen.';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return 'Kaksiosainen ottelupari joukkuetta $opponent vastaan maaliskuussa: ensimmäinen vieraissa, toinen kotona. Yhteismaaleissa parempi pääsee lopputurnaukseen.';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return 'Mukana isäntänä: $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'Suora paikka jäi saamatta, mutta isäntänä saat yhden isännille varatuista paikoista. Olet selvittänyt tiesi kisan $cup lopputurnaukseen.';
+  }
+
+  @override
+  String get euro28LegendPlayoff =>
+      'Keltainen: lohkokakkonen matkalla jatkokarsintaan, nykytilanteen mukaan';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return 'Isännät ($hosts) pelaavat myös karsinnat: jos ne eivät selviä, niille on varattu paikka.';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return 'Isännät ($hosts) pelaavat myös karsinnat: kaksi paikkaa on varattu kahdelle parhaalle, jotka eivät selviä.';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'jatkokarsintaan';
+
+  @override
+  String get euro28CourseTitle => 'Jatkokarsinta, nykytilanteen mukaan';
+
+  @override
+  String get euro28CourseNote =>
+      'Lohkovoittajat ja kahdeksan parasta kakkosta pääsevät suoraan. Muut kakkoset menevät jatkokarsintaan Nations Cupin parhaiden lohkovoittajien kanssa, jotka eivät ole selvinneet. Nykytilanteen mukaan:';
+
+  @override
+  String get euro28CourseFooter =>
+      'Miksi ne ovat tässä: ensin kakkoset, jotka eivät pääse suoraan, sitten Nations Cupin parhaat lohkovoittajat, jotka eivät vielä ole selvinneet, sitten sen seuraavaksi parhaat joukkueet. Tämä on vain tämänhetkinen tilanne: se muuttuu jokaisen kierroksen jälkeen.';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return 'Ottelupari $path';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'Sinun otteluparisi';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return 'Yhteismaalit: $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return 'Otteluparin $path voittaja';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return 'Lohkosi, jos voitat otteluparin $path: lohko $group';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      'Lohkovoittajat ja kahdeksan parasta kakkosta ovat selvinneet. Neljä viimeistä paikkaa ratkaistaan maaliskuussa kaksiosaisissa otteluissa koti- ja vieraskentällä: neljä parasta joukkuetta on sijoitettu ja pelaa toisen ottelun kotona.';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return 'Lohkovoittajat ja kahdeksan parasta kakkosta ovat selvinneet, ja karsiutuneet isännät saavat niille varatut paikat. Viimeiset $count paikkaa ratkaistaan maaliskuussa neljän joukkueen poluilla: yhden ottelun välierä paremmin sijoittuneen kotona, sitten yksittäinen finaali.';
+  }
 }

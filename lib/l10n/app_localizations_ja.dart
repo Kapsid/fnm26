@@ -18341,4 +18341,91 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'このキャンペーンの評価対象となる試合のみ。親善試合と他の大会は含みません。';
+
+  @override
+  String get resultsStagePlayoff => 'プレーオフ';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return '$cupプレーオフ：対戦$path';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return '3月に$opponentとホーム＆アウェーの2試合で対戦。第1戦はホーム、第2戦はアウェー。合計スコアで上回ったチームが本大会へ。';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return '3月に$opponentとホーム＆アウェーの2試合で対戦。第1戦はアウェー、第2戦はホーム。合計スコアで上回ったチームが本大会へ。';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return '開催国枠で出場：$cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'ストレートインは逃したが、開催国として開催国枠の一つを得た。$cup本大会への出場権を獲得しました。';
+  }
+
+  @override
+  String get euro28LegendPlayoff => '黄色：現時点でプレーオフに回る2位チーム';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return '開催国（$hosts）も予選に出場：敗退しても枠が一つ確保されている。';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return '開催国（$hosts）も予選に出場：敗退した中で上位2か国に枠が確保されている。';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'プレーオフ';
+
+  @override
+  String get euro28CourseTitle => 'プレーオフ（現時点）';
+
+  @override
+  String get euro28CourseNote =>
+      '各組の1位と2位の上位8チームがストレートイン。残りの2位チームは、本大会に届かなかったネーションズカップのグループ首位の上位チームとともにプレーオフへ。現時点では：';
+
+  @override
+  String get euro28CourseFooter =>
+      'ここにいる理由：まず出場を逃した2位チーム、次にまだ出場を決めていないネーションズカップのグループ首位の上位チーム、その次に同大会の上位チーム。あくまで現時点の状況で、毎節変わる。';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return '対戦$path';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'あなたの対戦';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return '合計：$score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return '対戦$pathの勝者';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return '対戦$pathを勝ち抜いた場合のグループ：グループ$group';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      '各組の1位と2位の上位8チームは出場決定。残り4枠は3月のホーム＆アウェーの2試合制で決まる。上位4チームはシードされ、第2戦をホームで戦う。';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return '各組の1位と2位の上位8チームは出場決定、敗退した開催国は確保された枠に入る。残り$count枠は3月の4チームによるパスで決まる。準決勝は上位チームのホームで一発勝負、その後は一発勝負の決勝。';
+  }
 }

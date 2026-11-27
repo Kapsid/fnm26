@@ -19094,4 +19094,92 @@ class AppLocalizationsBg extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Само мачовете, по които се оценява тази кампания: приятелските мачове и другите турнири не се броят.';
+
+  @override
+  String get resultsStagePlayoff => 'ПЛЕЙОФ';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return '$cup, плейоф: Двубой $path';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return 'Двубой в два мача срещу $opponent през март: първият у дома, вторият като гост. Отборът с по-добър общ резултат отива на финалите.';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return 'Двубой в два мача срещу $opponent през март: първият като гост, вторият у дома. Отборът с по-добър общ резултат отива на финалите.';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return 'Класиране като домакин: $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'Пропуснахте директно място, но като домакин заемате едно от местата, запазени за домакините. Класирахте се за финалите на турнира $cup.';
+  }
+
+  @override
+  String get euro28LegendPlayoff =>
+      'Жълто: втори в групата, на път за плейофите, към момента';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return 'Домакините ($hosts) също играят в квалификациите: ако не се класират, за тях има запазено място.';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return 'Домакините ($hosts) също играят в квалификациите: две места са запазени за най-добрите двама, които не се класират.';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'плейофите';
+
+  @override
+  String get euro28CourseTitle => 'Плейофи, към момента';
+
+  @override
+  String get euro28CourseNote =>
+      'Победителите в групите и осемте най-добри втори се класират директно. Останалите втори отиват на плейофите заедно с най-добрите победители в групи от Nations Cup, които не са се класирали. Към момента:';
+
+  @override
+  String get euro28CourseFooter =>
+      'Защо са тук: първо вторите, които не се класират, после най-добрите победители в групи от Nations Cup, които още не са се класирали, после следващите най-добри. Това е само положението днес: променя се след всеки кръг.';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return 'Двубой $path';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'Вашият двубой';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return 'Общ резултат: $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return 'Победителят от двубой $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return 'Вашата група, ако спечелите двубой $path: група $group';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      'Победителите в групите и осемте най-добри втори са класирани. Последните четири места се определят в двубои в два мача през март, у дома и като гост: четирите най-добри отбора са поставени и играят втория мач у дома.';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return 'Победителите в групите и осемте най-добри втори са класирани, а домакините, които не успяха, заемат запазените за тях места. Последните $count места се определят в пътища от по четири отбора през март: полуфинал в един мач при по-високо класирания, после единичен финал.';
+  }
 }

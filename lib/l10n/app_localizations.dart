@@ -28778,6 +28778,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Only the matches this campaign is judged on: friendlies and other competitions are left out.'**
   String get campaignRunInNumbersNote;
+
+  /// Round label of a two-legged European play-off tie, followed by its leg ("PLAY-OFF, 1st leg").
+  ///
+  /// In en, this message translates to:
+  /// **'PLAY-OFF'**
+  String get resultsStagePlayoff;
+
+  /// Inbox title: the manager's nation was drawn into a two-legged play-off tie for the continental finals (path is a letter A to D).
+  ///
+  /// In en, this message translates to:
+  /// **'{cup} play-offs: Tie {path}'**
+  String newsEuroPlayoffTieTitle(String cup, String path);
+
+  /// Inbox body: a two-legged play-off tie, first leg at home.
+  ///
+  /// In en, this message translates to:
+  /// **'A two-legged tie against {opponent} in March: the first leg at home, the second away. The side ahead on aggregate goes to the finals.'**
+  String newsEuroPlayoffTieBodyHome(String opponent);
+
+  /// Inbox body: a two-legged play-off tie, first leg away.
+  ///
+  /// In en, this message translates to:
+  /// **'A two-legged tie against {opponent} in March: the first leg away, the second at home. The side ahead on aggregate goes to the finals.'**
+  String newsEuroPlayoffTieBodyAway(String opponent);
+
+  /// Inbox title: a host nation that missed direct qualification takes one of the places held for the hosts.
+  ///
+  /// In en, this message translates to:
+  /// **'Through as hosts: {cup}'**
+  String newsEuroHostPlaceTitle(String cup);
+
+  /// Inbox body: a host nation that missed direct qualification takes one of the places held for the hosts.
+  ///
+  /// In en, this message translates to:
+  /// **'You missed out on a direct place, but as hosts you take one of the places held for them. You have qualified for the {cup} finals.'**
+  String newsEuroHostPlaceBody(String cup);
+
+  /// Legend line over Europe's qualifying tables for the continental finals: the yellow stripe marks the runners-up outside the best eight, headed for the play-offs.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow: a runner-up headed for the play-offs, as things stand'**
+  String get euro28LegendPlayoff;
+
+  /// Note under the legend of Europe's qualifying tables: the hosts (a list of names) play qualifying, and a place is held for any who miss out (one or two hosts).
+  ///
+  /// In en, this message translates to:
+  /// **'The hosts ({hosts}) play qualifying too: should they miss out, a place is held for them.'**
+  String euro28LegendHosts(String hosts);
+
+  /// Note under the legend of Europe's qualifying tables: three or more hosts (a list of names) play qualifying, and two places are held for the best two who miss out.
+  ///
+  /// In en, this message translates to:
+  /// **'The hosts ({hosts}) play qualifying too: two places are held for the best two who miss out.'**
+  String euro28LegendHostsMany(String hosts);
+
+  /// Destination in the runners-up ladder card ("The next 4 go to the play-offs").
+  ///
+  /// In en, this message translates to:
+  /// **'the play-offs'**
+  String get euro28DestPlayoffs;
+
+  /// Heading of the card under Europe's qualifying tables listing the play-off paths or ties as things stand.
+  ///
+  /// In en, this message translates to:
+  /// **'Play-offs, as things stand'**
+  String get euro28CourseTitle;
+
+  /// Intro of the card under Europe's qualifying tables listing the play-offs as things stand.
+  ///
+  /// In en, this message translates to:
+  /// **'The group winners and the eight best runners-up go straight through. The other runners-up go to the play-offs, with the best Nations Cup group winners who are not through. As things stand:'**
+  String get euro28CourseNote;
+
+  /// Footnote of the play-offs card: who takes the play-off places, and that it changes after every round.
+  ///
+  /// In en, this message translates to:
+  /// **'Why they are here: the runners-up who miss out come first, then the Nations Cup\'s best group winners not yet through, then its next best sides. This is only how things stand today: it changes after every round.'**
+  String get euro28CourseFooter;
+
+  /// Heading of one two-legged play-off tie (path is a letter A to D).
+  ///
+  /// In en, this message translates to:
+  /// **'Tie {path}'**
+  String euroPlayoffTie(String path);
+
+  /// Tag on the manager's own play-off tie.
+  ///
+  /// In en, this message translates to:
+  /// **'Your tie'**
+  String get euroPlayoffYourTie;
+
+  /// Under a two-legged tie: the aggregate score, as "3-2".
+  ///
+  /// In en, this message translates to:
+  /// **'Aggregate: {score}'**
+  String euroPlayoffAggregate(String score);
+
+  /// A slot in the finals draw for a play-off tie's winner (path is a letter A to D).
+  ///
+  /// In en, this message translates to:
+  /// **'Tie {path} winner'**
+  String euroPlayoffTieWinnerPlaceholder(String path);
+
+  /// Banner on the finals draw for a manager still in a two-legged play-off tie.
+  ///
+  /// In en, this message translates to:
+  /// **'Your group if you win Tie {path}: Group {group}'**
+  String euroPlayoffYourGroupIfWinTie(String path, String group);
+
+  /// Intro of the play-off draw when the last four places go to two-legged ties.
+  ///
+  /// In en, this message translates to:
+  /// **'The group winners and the eight best runners-up are through. The last four places are won in two-legged ties in March, home and away: the four best sides are seeded and play the second leg at home.'**
+  String get euro28PlayoffIntroTies;
+
+  /// Intro of the play-off draw when the last places (count is 2 or 3) go to four-team paths.
+  ///
+  /// In en, this message translates to:
+  /// **'The group winners and the eight best runners-up are through, and hosts who missed out take the places held for them. The last {count} places are won in four-team paths in March: one-leg semi-finals at the higher-ranked side, then a one-off final.'**
+  String euro28PlayoffIntroPaths(int count);
 }
 
 class _AppLocalizationsDelegate

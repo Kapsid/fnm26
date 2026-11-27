@@ -19054,4 +19054,92 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Only the matches this campaign is judged on: friendlies and other competitions are left out.';
+
+  @override
+  String get resultsStagePlayoff => 'PLAY-OFF';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return '$cup play-offs: Tie $path';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return 'A two-legged tie against $opponent in March: the first leg at home, the second away. The side ahead on aggregate goes to the finals.';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return 'A two-legged tie against $opponent in March: the first leg away, the second at home. The side ahead on aggregate goes to the finals.';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return 'Through as hosts: $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'You missed out on a direct place, but as hosts you take one of the places held for them. You have qualified for the $cup finals.';
+  }
+
+  @override
+  String get euro28LegendPlayoff =>
+      'Yellow: a runner-up headed for the play-offs, as things stand';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return 'The hosts ($hosts) play qualifying too: should they miss out, a place is held for them.';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return 'The hosts ($hosts) play qualifying too: two places are held for the best two who miss out.';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'the play-offs';
+
+  @override
+  String get euro28CourseTitle => 'Play-offs, as things stand';
+
+  @override
+  String get euro28CourseNote =>
+      'The group winners and the eight best runners-up go straight through. The other runners-up go to the play-offs, with the best Nations Cup group winners who are not through. As things stand:';
+
+  @override
+  String get euro28CourseFooter =>
+      'Why they are here: the runners-up who miss out come first, then the Nations Cup\'s best group winners not yet through, then its next best sides. This is only how things stand today: it changes after every round.';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return 'Tie $path';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'Your tie';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return 'Aggregate: $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return 'Tie $path winner';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return 'Your group if you win Tie $path: Group $group';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      'The group winners and the eight best runners-up are through. The last four places are won in two-legged ties in March, home and away: the four best sides are seeded and play the second leg at home.';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return 'The group winners and the eight best runners-up are through, and hosts who missed out take the places held for them. The last $count places are won in four-team paths in March: one-leg semi-finals at the higher-ranked side, then a one-off final.';
+  }
 }

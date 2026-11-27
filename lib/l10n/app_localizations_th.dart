@@ -18686,4 +18686,92 @@ class AppLocalizationsTh extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'เฉพาะนัดที่ใช้ตัดสินแคมเปญนี้ ไม่นับเกมกระชับมิตรและรายการอื่น';
+
+  @override
+  String get resultsStagePlayoff => 'เพลย์ออฟ';
+
+  @override
+  String newsEuroPlayoffTieTitle(String cup, String path) {
+    return 'เพลย์ออฟ $cup: คู่ $path';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyHome(String opponent) {
+    return 'เกมสองนัดพบ $opponent ในเดือนมีนาคม นัดแรกในบ้าน นัดที่สองนอกบ้าน ทีมที่สกอร์รวมดีกว่าได้ไปรอบสุดท้าย';
+  }
+
+  @override
+  String newsEuroPlayoffTieBodyAway(String opponent) {
+    return 'เกมสองนัดพบ $opponent ในเดือนมีนาคม นัดแรกนอกบ้าน นัดที่สองในบ้าน ทีมที่สกอร์รวมดีกว่าได้ไปรอบสุดท้าย';
+  }
+
+  @override
+  String newsEuroHostPlaceTitle(String cup) {
+    return 'ผ่านเข้ารอบในฐานะเจ้าภาพ: $cup';
+  }
+
+  @override
+  String newsEuroHostPlaceBody(String cup) {
+    return 'พลาดโควตาตรง แต่ในฐานะเจ้าภาพคุณได้หนึ่งในโควตาที่สงวนไว้ให้เจ้าภาพ คุณผ่านเข้ารอบสุดท้าย $cup แล้ว';
+  }
+
+  @override
+  String get euro28LegendPlayoff =>
+      'สีเหลือง: ทีมอันดับสองที่กำลังไปเพลย์ออฟ ตามสถานการณ์ปัจจุบัน';
+
+  @override
+  String euro28LegendHosts(String hosts) {
+    return 'เจ้าภาพ ($hosts) ลงเล่นรอบคัดเลือกด้วย: หากตกรอบ มีโควตาสงวนไว้ให้หนึ่งที่';
+  }
+
+  @override
+  String euro28LegendHostsMany(String hosts) {
+    return 'เจ้าภาพ ($hosts) ลงเล่นรอบคัดเลือกด้วย: มีสองโควตาสงวนไว้ให้สองทีมที่ดีที่สุดที่ตกรอบ';
+  }
+
+  @override
+  String get euro28DestPlayoffs => 'รอบเพลย์ออฟ';
+
+  @override
+  String get euro28CourseTitle => 'เพลย์ออฟ ตามสถานการณ์ปัจจุบัน';
+
+  @override
+  String get euro28CourseNote =>
+      'แชมป์กลุ่มและอันดับสองที่ดีที่สุดแปดทีมผ่านเข้ารอบโดยตรง อันดับสองที่เหลือไปเล่นเพลย์ออฟ พร้อมแชมป์กลุ่มที่ดีที่สุดของเนชันส์คัพที่ยังไม่ผ่านเข้ารอบ ตามสถานการณ์ปัจจุบัน:';
+
+  @override
+  String get euro28CourseFooter =>
+      'ทำไมจึงอยู่ที่นี่: อันดับแรกคืออันดับสองที่พลาดโควตา ตามด้วยแชมป์กลุ่มที่ดีที่สุดของเนชันส์คัพที่ยังไม่ผ่านเข้ารอบ แล้วจึงเป็นทีมที่ดีที่สุดถัดไป นี่เป็นเพียงสถานการณ์วันนี้: เปลี่ยนไปทุกนัด';
+
+  @override
+  String euroPlayoffTie(String path) {
+    return 'คู่ $path';
+  }
+
+  @override
+  String get euroPlayoffYourTie => 'คู่ของคุณ';
+
+  @override
+  String euroPlayoffAggregate(String score) {
+    return 'สกอร์รวม: $score';
+  }
+
+  @override
+  String euroPlayoffTieWinnerPlaceholder(String path) {
+    return 'ผู้ชนะคู่ $path';
+  }
+
+  @override
+  String euroPlayoffYourGroupIfWinTie(String path, String group) {
+    return 'กลุ่มของคุณถ้าชนะคู่ $path: กลุ่ม $group';
+  }
+
+  @override
+  String get euro28PlayoffIntroTies =>
+      'แชมป์กลุ่มและอันดับสองที่ดีที่สุดแปดทีมผ่านเข้ารอบแล้ว สี่โควตาสุดท้ายตัดสินในเดือนมีนาคมด้วยเกมเหย้าเยือนสองนัด: สี่ทีมที่ดีที่สุดเป็นทีมวางและเล่นนัดที่สองในบ้าน';
+
+  @override
+  String euro28PlayoffIntroPaths(int count) {
+    return 'แชมป์กลุ่มและอันดับสองที่ดีที่สุดแปดทีมผ่านเข้ารอบแล้ว และเจ้าภาพที่ตกรอบได้โควตาที่สงวนไว้ $count โควตาสุดท้ายตัดสินในเดือนมีนาคมในสายละสี่ทีม: รอบรองชนะเลิศนัดเดียวในบ้านของทีมที่อันดับสูงกว่า จากนั้นเป็นนัดชิงชนะเลิศนัดเดียว';
+  }
 }
