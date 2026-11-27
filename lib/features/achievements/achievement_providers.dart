@@ -7,6 +7,7 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/achievements/achievements.dart';
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
@@ -14,6 +15,7 @@ import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/regional_cups.dart';
 import 'package:fnm/domain/services/competition/tournament_stars.dart';
+import 'package:fnm/domain/services/manager/stints.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
@@ -447,6 +449,9 @@ class AchievementService {
   /// order follows the catalogue.
   Future<List<AchievementDef>> checkAndRecord(int careerId) async {
     final comp = _ref.read(competitionRepositoryProvider);
+    // An older save's wrong unlocks are taken back before anything is
+    // evaluated, so no screen shows them again (once per save).
+    await repairTenureUnlocks(careerId);
     final stats = await computeStats(careerId);
     if (stats == null) return const [];
     final earned = AchievementCatalog.earnedIds(stats);
@@ -466,6 +471,64 @@ class AchievementService {
     return newly;
   }
 
+  /// Achievements read off the current cycle's finals alone (its scorer
+  /// charts and Team of the Tournament). Those cannot be re-derived for a
+  /// cycle gone by, and were never affected: a manager only moves at a
+  /// rollover, before the new cycle's finals exist.
+  static const Set<String> currentCycleOnly = {
+    'wc_marksman',
+    'mega_goldenboot',
+    'mega_allstar',
+  };
+
+  /// Once per save: takes back the achievements a manager who changed
+  /// nation was handed for his new nation's history, before 1.1.x counted
+  /// only his own matches (see [computeStats]).
+  ///
+  /// Re-evaluates the catalogue under the fixed rules and revokes any stored
+  /// unlock they no longer grant, except [currentCycleOnly]. Every other
+  /// achievement is a tally or a fact over the save's whole stored history,
+  /// so a legitimate one is always granted again. Left alone, and only
+  /// marked done:
+  /// - a career that never changed nation (nothing was ever wrong);
+  /// - one whose stints do not cover every cycle it has played (a save that
+  ///   moved before stints were recorded): which side he had then cannot be
+  ///   told, and taking back something he earned is worse than keeping one
+  ///   he did not.
+  ///
+  /// Returns the ids revoked.
+  Future<Set<String>> repairTenureUnlocks(int careerId) async {
+    final comp = _ref.read(competitionRepositoryProvider);
+    if (await comp.hasWatchedDraw(careerId, 0, achievementTenureKind)) {
+      return const {};
+    }
+    final career = await _ref.read(careerRepositoryProvider).byId(careerId);
+    if (career == null) return const {};
+    final stints = await _ref.read(careerRepositoryProvider).stints(careerId);
+    final moved = {career.nationId, ...stints.values}.length > 1;
+    final complete = [
+      for (var c = 0; c <= career.cyclePointer; c++) c,
+    ].every(stints.containsKey);
+    var revoked = const <String>{};
+    if (moved && complete) {
+      final stats = await computeStats(careerId);
+      if (stats != null) {
+        final earned = AchievementCatalog.earnedIds(stats);
+        final catalogued = {for (final a in AchievementCatalog.all) a.id};
+        revoked = {
+          for (final id in await comp.earnedAchievements(careerId))
+            if (catalogued.contains(id) &&
+                !earned.contains(id) &&
+                !currentCycleOnly.contains(id))
+              id,
+        };
+        await comp.revokeAchievements(careerId, revoked);
+      }
+    }
+    await comp.markDrawWatched(careerId, 0, achievementTenureKind);
+    return revoked;
+  }
+
   /// Builds the achievement stat snapshot for [careerId], or null if the save
   /// is gone.
   Future<AchievementStats?> computeStats(int careerId) async {
@@ -479,17 +542,29 @@ class AchievementService {
         n.id: n,
     };
 
-    final fixtures = await comp.fixturesForNation(careerId, nationId);
+    // Only what the manager did himself: the matches he was in charge for,
+    // with whichever nation he had that day (see [managedFixturesOf]). Reading
+    // the current nation's whole record instead handed a manager who moved
+    // its history from before he arrived (a tester moved to Morocco and was
+    // given its African title and five AI-played shootouts on the spot),
+    // and took his old job's results away from him.
+    final stints = await _ref.read(careerRepositoryProvider).stints(careerId);
+    final led = await comp.fixturesForNations(careerId, {
+      nationId,
+      ...stints.values,
+    });
+    final mine = managedFixturesOf(led, stints, nationId);
     var matches = 0;
     var wins = 0;
     var biggestMargin = 0;
     var reachedWc = false;
     var reachedCont = false;
-    for (final f in fixtures) {
+    for (final (:fixture, nationId: led) in mine) {
+      final f = fixture;
       if (f.round == 'GROUP') reachedWc = true;
       if (f.round == 'CGROUP') reachedCont = true;
       if (!f.hasResult) continue;
-      final isHome = f.homeNationId == nationId;
+      final isHome = f.homeNationId == led;
       final my = isHome ? f.homeScore! : f.awayScore!;
       final other = isHome ? f.awayScore! : f.homeScore!;
       matches++;
@@ -498,27 +573,39 @@ class AchievementService {
         if (my - other > biggestMargin) biggestMargin = my - other;
       }
     }
+    // The current job's matches, for the World Championship's All-Star XI.
+    final fixtures = [
+      for (final m in mine)
+        if (m.nationId == nationId) m.fixture,
+    ];
 
-    // Titles: honour rows won by the player's nation DURING this career — the
-    // pre-seeded real-world history (earlier years) must never count, or a
-    // nation that won a real Euro/World Cup would unlock the title instantly.
+    // Titles: honour rows won DURING this career — the pre-seeded real-world
+    // history (earlier years) must never count, or a nation that won a real
+    // Euro/World Cup would unlock the title instantly — and won by the nation
+    // he was in charge of when its final was played (see [_titleCycle]). A
+    // trophy his new nation lifted before he arrived is not his; one his old
+    // nation lifted under him stays his after he leaves.
     final honours = (await comp.honours(
       careerId,
     )).where((h) => CareerService.isOwnHonourYear(h.year)).toList();
     final titlesWon = {
       for (final h in honours)
-        if (h.championId == nationId) h.competition,
+        if (h.championId ==
+            Stints.nationAt(stints, _titleCycle(h, led), nationId))
+          h.competition,
     };
     // The manager's own confederation — every continent's cup is a competition
     // of the same kind, so anything read off "the continental finals" has to
     // name theirs or it answers for somebody else's tournament.
     final playerConfederation = nations[nationId]?.confederation;
-    final ownContinental =
-        ContinentalCups.byConfederation[playerConfederation]?.name;
+    // The sweep is a World Championship and a continental title in one
+    // career: each credited title was his confederation's when he won it,
+    // whichever job he holds now.
     final wonWcAndCont =
         titlesWon.contains(worldCupHonourName) &&
-        ownContinental != null &&
-        titlesWon.contains(ownContinental);
+        ContinentalCups.byConfederation.values.any(
+          (c) => titlesWon.contains(c.name),
+        );
 
     // World Cup marksman / golden boot (from the finals scorer charts).
     final wcScorers = await comp.topScorers(
@@ -586,6 +673,36 @@ class AchievementService {
       shootoutsWon: cs.shootoutsWon,
       bestPlayerRating: cs.bestPlayerRating,
     );
+  }
+
+  /// The cycle [h]'s final was played in: the one open on the day of the
+  /// last competitive match its champion and runner-up played that year
+  /// among [fixtures], every fixture of the nations he has led (the final,
+  /// for any title he could be credited with), else the cycle
+  /// [CareerService.cycleForYear] files the year under.
+  ///
+  /// The final is the moment a title is decided, so it is the moment that
+  /// says whose it is: a manager is credited with a trophy only if he was in
+  /// charge of the champion for its final. Jobs change only at a rollover, so
+  /// in practice that is "for the tournament", but the honour row carries a
+  /// year, not a date, and a December regional cup in a World Championship
+  /// year belongs to the cycle that opened that September, not the one the
+  /// year alone would name.
+  static int _titleCycle(Honour h, List<Fixture> fixtures) {
+    DateTime? last;
+    for (final f in fixtures) {
+      if (!f.hasResult || f.date.year != h.year || f.round == 'FRIENDLY') {
+        continue;
+      }
+      final pair = {f.homeNationId, f.awayNationId};
+      if (!pair.contains(h.championId) || !pair.contains(h.runnerUpId)) {
+        continue;
+      }
+      if (last == null || f.date.isAfter(last)) last = f.date;
+    }
+    return last == null
+        ? CareerService.cycleForYear(h.year)
+        : CareerService.cycleAt(last);
   }
 
   /// Whether a player of [nationId] is in the current World Cup finals Team of

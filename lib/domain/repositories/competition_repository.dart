@@ -1008,7 +1008,9 @@ abstract interface class CompetitionRepository {
   /// Rating rows now exist for EVERY match in the world (the tactical engine
   /// writes the manager's, `BackgroundMatch` derives the rest), so pass the
   /// nations actually being asked about; passing the manager's own stint
-  /// nations gives their career feats as before.
+  /// nations gives their career feats as before. Each line names its
+  /// [fixtureId] and the [nationId] the player played for, so a reader can
+  /// keep only the matches the manager was actually in charge for.
   Future<
     List<
       ({
@@ -1019,6 +1021,8 @@ abstract interface class CompetitionRepository {
         bool motm,
         int yellows,
         int reds,
+        int fixtureId,
+        int nationId,
       })
     >
   >
@@ -1127,4 +1131,9 @@ abstract interface class CompetitionRepository {
 
   /// Marks [achievementId] earned in [year] (no-op if already recorded).
   Future<void> recordAchievement(int careerId, String achievementId, int year);
+
+  /// Takes back [achievementIds] from this save: only for a repair of unlocks
+  /// a since-fixed rule handed out wrongly (see
+  /// `AchievementService.repairTenureUnlocks`). Unknown ids are ignored.
+  Future<void> revokeAchievements(int careerId, Set<String> achievementIds);
 }
