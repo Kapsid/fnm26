@@ -71,15 +71,15 @@ void main() {
       final live = GroundLive(kits: pitchStadiumFor(m).kits)
         ..setBoard(board(1, 0), at: 0)
         ..minute = 75
-        ..tick(140 + 3);
+        ..tick(GroundLive.waveEvery * 2 + 3);
       expect(live.waveAt, isNull, reason: 'one goal is not comfortable');
       live.setBoard(board(3, 0), at: 100);
-      live.tick(140 + 3);
+      live.tick(GroundLive.waveEvery * 2 + 3);
       expect(live.waveAt, isNotNull);
       // Not in the seconds after a goal, and only part of each minute.
       live.tick(100.5);
       expect(live.waveAt, isNull);
-      live.tick(140 + GroundLive.waveFor + 2);
+      live.tick(GroundLive.waveEvery * 2 + GroundLive.waveFor + 2);
       expect(live.waveAt, isNull);
       live.dispose();
     });
