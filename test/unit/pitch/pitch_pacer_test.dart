@@ -145,13 +145,14 @@ void main() {
     );
     final q = PitchPacer(_result([corner, header, routine]), PitchSpeed.slow);
     // 3.5 s for the corner and 1.5 s for its shot (6 s until the owner's
-    // 2026-11 "too many corners").
-    expect(q.momentLength(corner), const Duration(milliseconds: 5000));
+    // 2026-11 "too many corners"), at 75% at slow since 1.1.4 (fewer stops
+    // between the shots): 3.75 s.
+    expect(q.momentLength(corner), const Duration(milliseconds: 3750));
     expect(q.momentLength(header), Duration.zero);
     expect(q.momentLength(routine), Duration.zero);
     expect(
       q.screenAt(6, 0) - q.screenAt(5, 0),
-      const Duration(milliseconds: 5000),
+      const Duration(milliseconds: 3750),
     );
   });
 
@@ -223,7 +224,8 @@ void main() {
     for (final k in [goal, wood]) {
       expect(lens.map((p) => p.momentLength(k)).toSet().length, 1);
     }
-    expect(lens[0].momentLength(wide), const Duration(milliseconds: 3500));
+    // At slow a minor stop of open play plays at 65% (1.1.4).
+    expect(lens[0].momentLength(wide), const Duration(milliseconds: 2275));
     expect(lens[1].momentLength(wide), const Duration(milliseconds: 1750));
     expect(lens[2].momentLength(wide), const Duration(milliseconds: 1050));
     // At the quickest (5x) a minor moment is left out altogether.
@@ -365,6 +367,69 @@ void main() {
     );
     expect(fast.momentLength(yellowFoul), const Duration(milliseconds: 1350));
   });
+
+  // 1.1.4: open play's own stops are trimmed at slow, the time going to the
+  // open play around them; cards and the key moments keep their length,
+  // and the match its length.
+  test(
+    'at slow open play\'s stops are trimmed, cards and key moments kept',
+    () {
+      const yellow = MatchEvent(
+        minute: 31,
+        type: MatchEventType.yellowCard,
+        teamNationId: 2,
+        playerId: 8,
+        playerName: 'Eight',
+      );
+      const yellowFoul = FoulMoment(
+        minute: 31,
+        stoppage: 0,
+        seq: 0,
+        teamNationId: 1,
+        foulerId: 8,
+        fouledId: 3,
+        zone: PitchZone.midfield,
+        cardEventIndex: 0,
+      );
+      final saved = _shots(1, from: 10).single;
+      final big = ShotMoment(
+        minute: 12,
+        stoppage: 0,
+        seq: 0,
+        teamNationId: 1,
+        shooterId: 1,
+        zone: PitchZone.boxCentre,
+        xg: 0.5,
+        outcome: ShotOutcome.saved,
+        origin: ShotOrigin.openPlay,
+      );
+      final goal = _shots(1, outcome: ShotOutcome.goal, from: 20).single;
+      final r = MatchResult(
+        homeScore: 1,
+        awayScore: 0,
+        events: const [yellow],
+        homeShots: 3,
+        awayShots: 0,
+        homePossession: 50,
+        stoppage: 0,
+        moments: [saved, big, goal, yellowFoul],
+      );
+      final slow = PitchPacer(r, PitchSpeed.slow);
+      expect(slow.momentLength(saved), const Duration(milliseconds: 2625));
+      expect(big.isBigSave, isTrue);
+      expect(slow.momentLength(big), const Duration(milliseconds: 3500));
+      expect(slow.momentLength(yellowFoul), const Duration(seconds: 3));
+      expect(
+        slow.momentLength(goal).inMilliseconds,
+        greaterThanOrEqualTo(6000),
+      );
+      // The trimmed seconds are open play's: the match is as long as its
+      // band says.
+      expect(_secs(slow), inInclusiveRange(180, 240 * 1.12));
+      final fast = PitchPacer(r, PitchSpeed.fast);
+      expect(fast.momentLength(saved), const Duration(milliseconds: 1575));
+    },
+  );
 
   test("a penalty's foul is staged before the kick, card or not", () {
     const foul = FoulMoment(

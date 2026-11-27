@@ -506,7 +506,12 @@ extension _BallMechanics on _Builder {
         t >= side.counterUntil &&
         rng.nextDouble() < 0.14) {
       hold *= 2.2;
+    } else if (t >= side.counterUntil) {
+      // With a man close he may take him on (see `_maybeDribble`).
+      hold *= _maybeDribble(t, to);
     }
+    // A defender meeting a cross heads it clear at once.
+    if (clearer == to.index) hold = 0;
     // A pressing side gives him no time on it.
     final press = sides[1 - to.side].instr.pressing;
     if (press > 60) hold *= 1 - (press - 60) / 100;
@@ -522,6 +527,9 @@ extension _BallMechanics on _Builder {
     double? arriveAt,
     double? peak,
     bool quick = false,
+    bool pass = true,
+    double fromHeight = 0,
+    double toHeight = 0,
   }) {
     final plan = _planFlight(t, from, to, intercept: intercept, quick: quick);
     final fastest = t + plan.$1.distanceTo(plan.$4) / 30;
@@ -535,6 +543,9 @@ extension _BallMechanics on _Builder {
       toActor: to.index,
       peak: peak ?? plan.$3,
       lead: plan.$4,
+      pass: pass,
+      fromHeight: fromHeight,
+      toHeight: toHeight,
     );
     carrier = null;
     restAt = null;

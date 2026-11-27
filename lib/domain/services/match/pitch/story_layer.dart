@@ -64,6 +64,7 @@ import 'package:fnm/domain/services/match/pitch/switched_layout.dart';
 
 part 'story_layer/ball.dart';
 part 'story_layer/lead_in.dart';
+part 'story_layer/open_play.dart';
 part 'story_layer/restart.dart';
 
 /// How far ahead of a moment (screen seconds) the men it needs start to
@@ -715,12 +716,21 @@ const double _spill = 3;
 /// 2026-11 "players walk off the pitch and play continues".
 const double _departureSpill = 9;
 
+/// The longest play stays stopped past a substitution's window for the man
+/// replaced to walk off: then the picture cuts, and he left while the
+/// camera was away (1.1.4: a long walk to the touchline was the longest
+/// stop of a match). A red card or an injury still waits for the line.
+const double _subSpill = 1.2;
+
 /// How long before a moment the side it belongs to keeps the ball it has.
 const double _handover = 1.3;
 
 /// How long before a moment the ball changes hands, at the latest, when it
 /// has to and the side on it is owed ball time.
 const double _lateHandover = 0.75;
+
+/// How soon after a moment a keeper holding the ball plays it on.
+const double _keeperRelease = 0.3;
 const double _keeperMaxDepth = 24.5;
 
 /// The nearest his own goal line an outfield man is sent in a staged
@@ -1041,6 +1051,14 @@ class _Builder {
   final List<int> recentOnBall = [];
   int? lastPasser;
 
+  /// Open play's incidents (see `_OpenPlay`): the defender who heads a
+  /// cross clear as it reaches him, and the man taking his marker on, which
+  /// way round him and until when.
+  int? clearer;
+  int? dribbler;
+  double dribbleUntil = -1;
+  double dribbleSign = 1;
+
   StagedWindow? activeWindow;
   StagedPlan? activePlan;
 
@@ -1096,7 +1114,24 @@ class _Builder {
       if (activeWindow != null &&
           t >= activeWindow!.end - 1e-9 &&
           !_spills(activeWindow!, activePlan, t)) {
+        // A man replaced still on his way off: the picture cuts, and he is
+        // gone when it comes back (see [_subSpill]).
+        if (_onlySubsWalking(activeWindow!) &&
+            agents.any((a) => a.present && a.walkStart != null) &&
+            !cuts.containsKey(t) &&
+            t > start + 1e-9) {
+          _offAtCut();
+          _record(t);
+          cuts[t] = PitchCutKind.phase;
+        }
         _closeWindow(t);
+        // A keeper who ended the moment with the ball in his hands (a save,
+        // a cross claimed, a goal kick come back) plays it on soon after,
+        // not standing over it (1.1.4: too many stops between the shots).
+        final c = carrier;
+        if (c != null && agents[c].slot == sides[agents[c].side].gkSlot) {
+          nextAction = math.min(nextAction, t + _keeperRelease);
+        }
       }
       // A kick-off after a goal: the picture cuts from the celebration to
       // the sides lined up, the conceding side on the ball.
@@ -1317,7 +1352,12 @@ class _Builder {
   bool _spills(StagedWindow w, StagedPlan? plan, double t) {
     if (plan == null) return false;
     final sending = _sendingOff(w, t);
-    if (t >= w.end + (sending ? _departureSpill : _spill) - 1e-9) return false;
+    final limit = !sending
+        ? _spill
+        : _onlySubsWalking(w)
+        ? _subSpill
+        : _departureSpill;
+    if (t >= w.end + limit - 1e-9) return false;
     if (goalRestarts.containsKey(w.end)) return false;
     for (var k = wi; k < windows.length; k++) {
       final o = windows[k];
@@ -1328,6 +1368,21 @@ class _Builder {
       if (r > t - 1e-9 && r < t + 0.3) return false;
     }
     return sending || !plan.settled(t, _state(t));
+  }
+
+  /// Whether [w] is a substitution and every man still walking off is one
+  /// a substitute replaces.
+  bool _onlySubsWalking(StagedWindow w) {
+    if (w.injury != null || w.moments.isEmpty) return false;
+    if (w.moments.first is! SubMoment) return false;
+    for (final a in agents) {
+      if (!a.present || a.walkStart == null) continue;
+      if (!planned.values.any((p) => p.$1 == a.index)) return false;
+      // A keeper replaced waits for the line as before: somebody minds
+      // goal until the new one steps on.
+      if (a.namedKeeper || a.vacatedSlot == sides[a.side].gkSlot) return false;
+    }
+    return true;
   }
 
   /// Whether a man [w] sends off (a red card, an injury, a substitution),
@@ -2076,6 +2131,28 @@ class _Builder {
           ..walkTarget = null;
       }
     }
+    // A substitute the old picture already had on (his man still walking
+    // off) whom this one's pacing has not brought on yet: he steps into
+    // his place now, where the state has him. (Left without one, a keeper
+    // coming on for a keeper never took goal, and an outfielder minded it
+    // from wherever play had left him.)
+    for (final a in agents) {
+      final p = state.players[a.id];
+      final plan = planned[a.index];
+      if (p == null || plan == null || a.slot != null) continue;
+      if (a.walkStart != null || arrivals.containsKey(a.id)) continue;
+      a
+        ..present = false
+        ..appeared = false;
+      _arrive(_Arrival(a, plan.$2, plan.$1, t0), t0, force: true);
+      queue.removeWhere((q) => q.on == a);
+      a
+        ..present = true
+        ..appeared = true
+        ..pos = p
+        ..facing = state.facing[a.id] ?? 0
+        ..vel = state.velocity[a.id] ?? Offset2.zero;
+    }
     final f = state.flight;
     final dt = t0 - state.t;
     carrier = state.carrierId == null ? null : indexOf[state.carrierId];
@@ -2328,6 +2405,9 @@ class _Builder {
     final latest = stop - (buildUp > 0 ? buildUp : _lateHandover);
     final handoverDue = handover && (t >= latest - 1e-9 || ahead > 0);
     if (handover && !handoverDue) wakeAt = latest;
+    // A cross met in the box is headed clear at once.
+    if (clearer == c && _clearance(t, a)) return;
+    clearer = null;
     if (t < nextAction - 1e-9 && !handoverDue) return;
     // The ball goes out, and the side the next moment belongs to restarts
     // it: the throw-in or goal kick that opens the build-up.
@@ -2373,6 +2453,10 @@ class _Builder {
     } else if (giveAway && keeper && !handoverDue) {
       final minute = pacer.matchAt(_dur(t)).minute;
       target = _pickReceiver(a, t, minute, lead?.$2);
+    } else if (giveAway &&
+        !keeper &&
+        _turnover(t, a, handover && !handoverDue ? latest : stop)) {
+      return;
     } else if (giveAway) {
       target = keeper
           ? (_pickInterceptor(a, t, long: true) ??
@@ -3356,6 +3440,8 @@ class _Builder {
       final targetDepth = lead != null && lead.$1 == a.side
           ? math.min(xToDepth(lead.$2.x, dir), 86)
           : spellDepth;
+      final dribble = _dribbleDrive(a, t, dir);
+      if (dribble != null) return dribble;
       if (t < side.counterUntil && (lead == null || lead.$1 == a.side)) {
         // On the break: straight at goal, at speed (on into his side's own
         // moment, when that is the next one).

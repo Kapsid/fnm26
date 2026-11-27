@@ -276,6 +276,11 @@ class PitchPacer {
   /// How far over its budget the screen may run for the goals' build-ups.
   static const double _buildUpOverrun = 0.12;
 
+  /// The share of their full length open play's standard and minor stops
+  /// get at the slowest speed (see [_seconds]).
+  static const double _slowPlayStandard = 0.75;
+  static const double _slowPlayMinor = 0.65;
+
   static const double _longThrow = 3.5;
   static const double _mergeExtra = 1.5;
 
@@ -331,6 +336,9 @@ class PitchPacer {
   ///   slow / mid / fast;
   /// - minor moments (wide and blocked shots, attack-ending offsides, subs)
   ///   at 100% / 50% / 30%;
+  /// - except that at slow open play's own stops (the shots and set pieces
+  ///   above, and offsides) play at 75% (standard) / 65% (minor): yellow
+  ///   cards and subs keep 100% there;
   ///
   /// and no moment drops below one second. A penalty's foul is a key moment
   /// too, card or not: it is staged before the kick. A goal adds 2.5 s, and one from open play 4 s more for its build-up. A set piece
@@ -412,6 +420,18 @@ class PitchPacer {
         speed == PitchSpeed.turbo && t == _Tier.minor
         ? 0
         : _tier(base, std, minor, t);
+    // Open play's own stops (a shot that is not a key one, a set piece and
+    // its shot, an attack-ending offside) at the slowest: trimmed so the
+    // ball is not left lying or held after them, the time going to the
+    // open play around them (1.1.4 feedback: too many stops between
+    // shots). Cards, subs and every key moment keep their length.
+    final (playStd, playMinor) = speed == PitchSpeed.slow
+        ? (_slowPlayStandard, _slowPlayMinor)
+        : (std, minor);
+    double play(double base, _Tier t) =>
+        speed == PitchSpeed.turbo && t == _Tier.minor
+        ? 0
+        : _tier(base, playStd, playMinor, t);
     switch (m) {
       case final ShotMoment s:
         final goal = _inNetExtra(s);
@@ -429,7 +449,7 @@ class PitchPacer {
         }
         final minorShot =
             s.outcome == ShotOutcome.wide || s.outcome == ShotOutcome.blocked;
-        return at(_shot, minorShot ? _Tier.minor : _Tier.standard);
+        return play(_shot, minorShot ? _Tier.minor : _Tier.standard);
       case final SetPieceMoment p:
         if (!_isStaged(p)) return 0;
         // Staged only when it leads to a shot (folded into it).
@@ -440,7 +460,7 @@ class PitchPacer {
           return merged + _inNetExtra(folded);
         }
         // Never so short the delivery and its shot cannot be shown.
-        final scaled = at(merged, _Tier.standard);
+        final scaled = play(merged, _Tier.standard);
         return scaled < _setPieceFloor ? _setPieceFloor : scaled;
       case final FoulMoment f:
         final idx = f.cardEventIndex;
@@ -452,7 +472,7 @@ class PitchPacer {
             _events[idx].type == MatchEventType.redCard;
         return red || penalty ? _card : at(_card, _Tier.standard);
       case final OffsideMoment o:
-        return o.endsAttack ? at(_offside, _Tier.minor) : 0;
+        return o.endsAttack ? play(_offside, _Tier.minor) : 0;
       case SubMoment _:
         // Always shown: the man going off has to leave while play is
         // stopped, at the quickest too.

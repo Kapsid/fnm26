@@ -65,7 +65,10 @@ abstract class _DeadBallPlan extends _Plan {
 
   void setTimes({required double shotPart}) {
     latest = math.max(start + 0.3, end - shotPart);
-    earliest = math.min(start + 0.5 * (len - shotPart), latest);
+    // Taken once it is ready, not left lying a while first (1.1.4: too
+    // many stops between the shots); one that scores keeps its old wait.
+    final wait = shotMoment?.outcome == ShotOutcome.goal ? 0.5 : 0.3;
+    earliest = math.min(start + wait * (len - shotPart), latest);
   }
 
   /// Where each man the set piece needs stands for it.
