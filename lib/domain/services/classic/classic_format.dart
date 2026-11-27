@@ -318,6 +318,17 @@ abstract final class ClassicFormat {
     return {for (final s in thirds) groupOf[s.nationId]!: s.nationId};
   }
 
+  /// The third-placed teams through as things stand in [tables] (A first):
+  /// the eight best of a 48-team group stage, ranked as [bestThirds] ranks
+  /// them, and once the groups are done the eight that go. None in a
+  /// 32-team finals, where only the top two go.
+  static Set<int> thirdsThrough(
+    ClassicEdition edition,
+    List<List<GroupStanding>> tables,
+  ) => edition.hasRoundOf32
+      ? bestThirds(edition, tables).values.toSet()
+      : const <int>{};
+
   /// The 2026 round of 32 (matches 73 to 88), in bracket order: each
   /// consecutive pair of ties meets in the official round-of-16 match, and
   /// the round of 16 pairs up the same way (see [pairWinners]).

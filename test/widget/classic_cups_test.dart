@@ -28,6 +28,7 @@ import 'package:fnm/features/classic/classic_providers.dart';
 import 'package:fnm/features/classic/classic_run_screen.dart';
 import 'package:fnm/features/classic/classic_tactics_host.dart';
 import 'package:fnm/features/home/home_screen.dart';
+import 'package:fnm/features/match/match_preview_screen.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/match/penalty_order_sheet.dart';
@@ -380,6 +381,9 @@ void main() {
       await _open(tester, c, '${Routes.classicRun}?year=2014');
       await tester.tap(find.byKey(ClassicRunScreen.playKey));
       await settle(tester);
+      // The pre-match screen first, as in a career; Kick off is the match.
+      await tester.tap(find.byKey(MatchPreviewScreen.kickOffKey));
+      await settle(tester);
       expect(find.byType(ClassicMatchHost), findsOneWidget);
       expect(find.byType(MatchScreen), findsOneWidget);
       final probe = tester.state(find.byType(MatchScreen)) as MatchScreenProbe;
@@ -510,6 +514,9 @@ void main() {
       // Play: the live match is fed exactly that.
       await tester.tap(find.byKey(ClassicTacticsHost.playKey));
       await settle(tester);
+      // The pre-match screen first, as in a career; Kick off is the match.
+      await tester.tap(find.byKey(MatchPreviewScreen.kickOffKey));
+      await settle(tester);
       expect(find.byType(MatchScreen), findsOneWidget);
       final preview = (await ProviderScope.containerOf(
         tester.element(find.byType(MatchScreen)),
@@ -538,6 +545,9 @@ void main() {
       );
       await _open(tester, c, '${Routes.classicRun}?year=2018');
       await tester.tap(find.byKey(ClassicRunScreen.playKey));
+      await settle(tester);
+      // The pre-match screen first, as in a career; Kick off is the match.
+      await tester.tap(find.byKey(MatchPreviewScreen.kickOffKey));
       await settle(tester);
       final probe = tester.state(find.byType(MatchScreen)) as MatchScreenProbe;
       probe.switchMode();
@@ -594,6 +604,9 @@ void main() {
 
       await _open(tester, c, '${Routes.classicRun}?year=2014');
       await tester.tap(find.byKey(ClassicRunScreen.playKey));
+      await settle(tester);
+      // The pre-match screen first, as in a career; Kick off is the match.
+      await tester.tap(find.byKey(MatchPreviewScreen.kickOffKey));
       await settle(tester);
       expect(find.byType(MatchScreen), findsOneWidget);
       final shown = await _playOut(tester);

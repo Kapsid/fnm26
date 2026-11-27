@@ -9,12 +9,14 @@ part of 'match_preview_screen.dart';
 class _MatchPreviewTabletLayout extends ConsumerWidget {
   const _MatchPreviewTabletLayout({
     required this.screen,
+    required this.screenHost,
     required this.host,
     required this.themedRounds,
     required this.accent,
   });
 
   final MatchPreviewScreen screen;
+  final MatchPreviewHost screenHost;
   final WcHostTheme? host;
   final Set<String> themedRounds;
   final Color accent;
@@ -65,6 +67,7 @@ class _MatchPreviewTabletLayout extends ConsumerWidget {
             preview: preview,
             forcedWeather: ref.watch(pitchForcedWeatherProvider),
             careerId: careerId,
+            career: screenHost.career,
             l10n: l10n,
             host: host,
             themedRounds: themedRounds,
@@ -112,10 +115,10 @@ class _MatchPreviewTabletLayout extends ConsumerWidget {
                       Expanded(
                         child: ListView(
                           children: [
-                            SquadSetupWarning(careerId: careerId),
+                            if (p.career) SquadSetupWarning(careerId: careerId),
                             p.headline(),
                             const SizedBox(height: AppSpacing.lg),
-                            p.strength(),
+                            if (p.career) p.strength(),
                             p.xiHeader(),
                             const SizedBox(height: AppSpacing.sm),
                             p.xiCard(),
@@ -130,7 +133,10 @@ class _MatchPreviewTabletLayout extends ConsumerWidget {
                             Expanded(
                               child: ListView(
                                 children: [
-                                  p.briefing(capitals: true),
+                                  if (p.career)
+                                    p.briefing(capitals: true)
+                                  else
+                                    p.opponent(),
                                   const SizedBox(height: AppSpacing.lg),
                                   p.groundTitle(),
                                   const SizedBox(height: AppSpacing.sm),
@@ -196,6 +202,7 @@ class _MatchPreviewTabletLayout extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         OutlinedButton.icon(
+          key: MatchPreviewScreen.tacticsKey,
           onPressed: () => screen._openTactics(context, ref),
           icon: const Icon(Icons.tune, size: 20),
           label: Text(l10n.matchTactics, maxLines: 1),
@@ -211,10 +218,13 @@ class _MatchPreviewTabletLayout extends ConsumerWidget {
         ),
         const SizedBox(height: AppSpacing.sm),
         PrimaryButton(
+          key: MatchPreviewScreen.kickOffKey,
           label: l10n.matchKickOff,
           icon: Icons.sports_soccer,
           height: _actionHeight,
-          onPressed: () => context.go('${Routes.match}?careerId=$careerId'),
+          onPressed: () => context.go(
+            screenHost.kickOffRoute ?? '${Routes.match}?careerId=$careerId',
+          ),
         ),
       ],
     ),

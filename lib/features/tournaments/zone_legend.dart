@@ -52,6 +52,13 @@ ZoneSpec zoneSpec({
   topLeague: topLeague,
 );
 
+/// The marks of a finals group stage: through (green), as a career's
+/// finals groups and a Classic Cup's groups are keyed.
+final ZoneSpec finalsGroupZoneSpec = zoneSpec(
+  kind: CompetitionKind.worldCupFinals,
+  confederation: Confederation.europe,
+);
+
 /// The key's lines for [spec], one per colour in [painted] (so it never
 /// names a colour the tables do not show), green, yellow, red in that order,
 /// then [note] unmarked when given.

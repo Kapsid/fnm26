@@ -10,6 +10,7 @@ import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/data/classic/classic_world.dart';
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/achievements/achievements.dart';
 import 'package:fnm/domain/services/classic/classic_format.dart';
@@ -28,6 +29,7 @@ import 'package:fnm/features/classic/classic_providers.dart';
 import 'package:fnm/features/federation/national_stadium_providers.dart'
     show groundWorksProvider;
 import 'package:fnm/features/hub/hub_providers.dart' show hubDataProvider;
+import 'package:fnm/features/match/live_group_table.dart';
 import 'package:fnm/features/match/live_match_season.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
@@ -35,6 +37,7 @@ import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
     show firstMatchViewAskProvider;
 import 'package:fnm/features/match/same_day_providers.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
+import 'package:fnm/features/tournaments/zone_legend.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
 /// The career id a Classic Cup match is played under. No career row ever
@@ -284,6 +287,31 @@ class ClassicSeasonService implements LiveMatchSeason {
   }
 }
 
+/// The live group table's marks for the manager's Classic group match [f],
+/// from his group as it stands this minute ([now]) and every other group as
+/// the run has it: as the run's Groups tab and a career's finals groups mark
+/// them, the top two green and, in a 48-team stage, the best thirds as
+/// things stand with them.
+LiveTableZones classicLiveZones(
+  ClassicTournament t,
+  ClassicFixture f,
+  List<GroupStanding> now,
+) {
+  final edition = t.edition;
+  final tables = [
+    for (final g in edition.groupNames)
+      if (g == f.group)
+        now
+      else
+        ClassicFormat.table(edition, g, t.run.fixtures),
+  ];
+  return LiveTableZones(
+    direct: 2,
+    directNations: ClassicFormat.thirdsThrough(edition, tables),
+    zone: finalsGroupZoneSpec,
+  );
+}
+
 /// Every override that lets the career's live match screen play a Classic
 /// match, in one place: the match and where it commits, and a safe answer
 /// for each provider the screen reads a career through (none of them may
@@ -305,6 +333,10 @@ List<Override> classicMatchOverrides({
   ),
   groupBeforeProvider.overrideWith(
     (ref, ours) => season.groupBefore(kClassicCareerId, ours),
+  ),
+  // The group's marks, the run's own (a career reads its hub's).
+  liveTableZonesProvider.overrideWithValue(
+    (now) => classicLiveZones(season.tournament, season.fixture, now),
   ),
   // A fresh draw each time the match is played, as in a career.
   matchAttemptSaltProvider.overrideWithValue(salt),

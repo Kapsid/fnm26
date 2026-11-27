@@ -28,6 +28,7 @@ import 'package:fnm/domain/services/tactics/position_fit.dart';
 import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/match/conditions_note.dart';
 import 'package:fnm/features/match/ground_card.dart';
+import 'package:fnm/features/match/match_preview_host.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/features/match/scout_report_view.dart';
@@ -73,6 +74,13 @@ class MatchPreviewScreen extends ConsumerWidget {
 
   static const Key tabletLayoutKey = Key('matchPreview.tabletLayout');
 
+  /// The Kick off and Tactics buttons, on either layout.
+  static const Key kickOffKey = Key('matchPreview.kickOff');
+  static const Key tacticsKey = Key('matchPreview.tactics');
+
+  /// The opponent card a host without a career's briefing shows instead.
+  static const Key opponentKey = Key('matchPreview.opponent');
+
   /// Height of both buttons in the bottom bar, the outlined button's own
   /// minimum, so Kick-off and Tactics read as a matched pair.
   static const double _barButtonHeight = 48;
@@ -80,7 +88,10 @@ class MatchPreviewScreen extends ConsumerWidget {
   Future<void> _openTactics(BuildContext context, WidgetRef ref) async {
     // Push (don't replace) so returning lands back on the preview, then refresh
     // it to pick up the new lineup.
-    await context.push('${Routes.tactics}?careerId=$careerId');
+    final host = ref.read(matchPreviewHostProvider);
+    await context.push(
+      host.tacticsRoute ?? '${Routes.tactics}?careerId=$careerId',
+    );
     // The preview may have been left while tactics was open.
     if (!context.mounted) return;
     ref.invalidate(matchPreviewProvider(careerId));
@@ -94,10 +105,14 @@ class MatchPreviewScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final previewAsync = ref.watch(matchPreviewProvider(careerId));
-    final wcHost = ref.watch(wcHostThemeProvider(careerId)).valueOrNull;
-    final contHost = ref
-        .watch(continentalHostThemeProvider(careerId))
-        .valueOrNull;
+    final screenHost = ref.watch(matchPreviewHostProvider);
+    // A finals skin is a career's: another host plays no career's finals.
+    final wcHost = screenHost.career
+        ? ref.watch(wcHostThemeProvider(careerId)).valueOrNull
+        : null;
+    final contHost = screenHost.career
+        ? ref.watch(continentalHostThemeProvider(careerId)).valueOrNull
+        : null;
     // Whichever finals is live re-skins this screen; the World Cup wins if both
     // somehow are. [themedRounds] is that tournament's own set of rounds, so
     // the banner only appears on a match actually being played in it.
@@ -112,6 +127,7 @@ class MatchPreviewScreen extends ConsumerWidget {
     if (TabletShellScope.isActive(context)) {
       return _MatchPreviewTabletLayout(
         screen: this,
+        screenHost: screenHost,
         host: host,
         themedRounds: themedRounds,
         accent: accent,
@@ -122,7 +138,9 @@ class MatchPreviewScreen extends ConsumerWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.primary),
-          onPressed: () => context.go('${Routes.hub}?careerId=$careerId'),
+          onPressed: () => context.go(
+            screenHost.exitRoute ?? '${Routes.hub}?careerId=$careerId',
+          ),
         ),
         title: Text(
           l10n.matchPreviewTitle,
@@ -144,6 +162,7 @@ class MatchPreviewScreen extends ConsumerWidget {
             preview: preview,
             forcedWeather: ref.watch(pitchForcedWeatherProvider),
             careerId: careerId,
+            career: screenHost.career,
             l10n: l10n,
             host: host,
             themedRounds: themedRounds,
@@ -174,16 +193,16 @@ class MatchPreviewScreen extends ConsumerWidget {
               // Both the armband and the set-piece takers default to "let the
               // engine decide", which is fine to play with and terrible to
               // never be told about.
-              SquadSetupWarning(careerId: careerId),
+              if (p.career) SquadSetupWarning(careerId: careerId),
               p.headline(),
               const SizedBox(height: AppSpacing.lg),
-              p.briefing(),
+              if (p.career) p.briefing() else p.opponent(),
               const SizedBox(height: AppSpacing.lg),
               p.groundTitle(),
               const SizedBox(height: AppSpacing.sm),
               p.ground(),
               const SizedBox(height: AppSpacing.lg),
-              p.strength(),
+              if (p.career) p.strength(),
               p.xiHeader(),
               const SizedBox(height: AppSpacing.sm),
               p.xiCard(),
@@ -210,16 +229,20 @@ class MatchPreviewScreen extends ConsumerWidget {
             children: [
               Expanded(
                 child: PrimaryButton(
+                  key: kickOffKey,
                   label: l10n.matchKickOff,
                   icon: Icons.sports_soccer,
                   height: _barButtonHeight,
-                  onPressed: () =>
-                      context.go('${Routes.match}?careerId=$careerId'),
+                  onPressed: () => context.go(
+                    screenHost.kickOffRoute ??
+                        '${Routes.match}?careerId=$careerId',
+                  ),
                 ),
               ),
               const SizedBox(width: AppSpacing.sm),
               Expanded(
                 child: OutlinedButton.icon(
+                  key: tacticsKey,
                   onPressed: () => _openTactics(context, ref),
                   icon: const Icon(Icons.tune, size: 18),
                   label: FittedBox(
@@ -258,6 +281,7 @@ class _PreviewParts {
     required this.l10n,
     required WcHostTheme? host,
     required Set<String> themedRounds,
+    this.career = true,
     WeatherKind? forcedWeather,
   }) : hosted = host != null && themedRounds.contains(preview.fixture.round),
        shown = matchConditionsShown(preview, weather: forcedWeather);
@@ -268,6 +292,9 @@ class _PreviewParts {
   final MatchPreview preview;
   final int careerId;
   final AppLocalizations l10n;
+
+  /// Whether the career's own parts are drawn (see [MatchPreviewHost]).
+  final bool career;
 
   /// Whether this match is played in the live finals, under its host's skin.
   final bool hosted;
@@ -293,7 +320,8 @@ class _PreviewParts {
     awayCode: code(fixture.awayNationId),
     awayOverall: squadOverall(preview.awayTeam.xi),
     date: fixture.date,
-    careerId: careerId,
+    // A nation's page is a career's: without one the flags open nothing.
+    careerId: career ? careerId : null,
     homeNationId: fixture.homeNationId,
     awayNationId: fixture.awayNationId,
   );
@@ -320,6 +348,43 @@ class _PreviewParts {
     saveSeed: preview.saveSeed,
     fixtureDate: fixture.date,
   );
+
+  /// The opponent without a career's briefing: who they are and their danger
+  /// men, read off the eleven they field, with no record or scout behind it.
+  Widget opponent() {
+    final opp = preview.nations[oppNationId];
+    final keyMen = _keyMen(
+      preview.playerIsHome ? preview.awayTeam.xi : preview.homeTeam.xi,
+    );
+    return AppCard(
+      key: MatchPreviewScreen.opponentKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _OpponentTitle(
+            code: code(oppNationId),
+            name: name(oppNationId),
+            nickname: opp == null
+                ? null
+                : NationIdentity.nicknameFor(opp, l10n.localeName),
+          ),
+          if (keyMen.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              l10n.matchDossierKeyMen,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+                letterSpacing: 1,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            for (final p in keyMen)
+              _KeyManRow(player: p, saveSeed: preview.saveSeed),
+          ],
+        ],
+      ),
+    );
+  }
 
   Widget groundTitle() => Text(
     l10n.matchGroundTitle,
@@ -739,34 +804,10 @@ class _DossierBody extends ConsumerWidget {
         NationTap(
           careerId: careerId,
           nationId: oppNationId,
-          child: Row(
-            children: [
-              FlagDisc(oppCode, size: 18),
-              const SizedBox(width: 6),
-              Expanded(
-                child: Text(
-                  oppName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTypography.labelMedium,
-                ),
-              ),
-              if (oppNickname case final nick?)
-                Flexible(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 6),
-                    child: Text(
-                      '“$nick”',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTypography.labelSmall.copyWith(
-                        color: AppColors.onSurfaceVariant,
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                  ),
-                ),
-            ],
+          child: _OpponentTitle(
+            code: oppCode,
+            name: oppName,
+            nickname: oppNickname,
           ),
         ),
         const SizedBox(height: AppSpacing.md),
@@ -836,6 +877,47 @@ class _DossierBody extends ConsumerWidget {
       ],
     );
   }
+}
+
+/// The opponent's flag, name and nickname, at the head of the dossier and of
+/// the opponent card.
+class _OpponentTitle extends StatelessWidget {
+  const _OpponentTitle({required this.code, required this.name, this.nickname});
+
+  final String code;
+  final String name;
+  final String? nickname;
+
+  @override
+  Widget build(BuildContext context) => Row(
+    children: [
+      FlagDisc(code, size: 18),
+      const SizedBox(width: 6),
+      Expanded(
+        child: Text(
+          name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: AppTypography.labelMedium,
+        ),
+      ),
+      if (nickname case final nick?)
+        Flexible(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 6),
+            child: Text(
+              '“$nick”',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ),
+        ),
+    ],
+  );
 }
 
 /// One W/D/L result as a small coloured pip in the form strip.

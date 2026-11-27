@@ -13,18 +13,22 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/data/classic/classic_world.dart';
 import 'package:fnm/domain/entities/formation.dart';
+import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/classic/classic_edition.dart';
 import 'package:fnm/domain/services/classic/classic_format.dart';
 import 'package:fnm/domain/services/classic/classic_medals.dart';
 import 'package:fnm/domain/services/classic/classic_run.dart';
+import 'package:fnm/domain/services/competition/cross_group.dart';
 import 'package:fnm/domain/services/competition/venues.dart';
 import 'package:fnm/features/classic/classic_labels.dart';
 import 'package:fnm/features/classic/classic_providers.dart';
 import 'package:fnm/features/classic/classic_widgets.dart';
 import 'package:fnm/features/tactics/tactics_screen.dart' show playstyleLabel;
+import 'package:fnm/features/tournaments/best_thirds.dart';
 import 'package:fnm/features/tournaments/bracket_tree.dart';
+import 'package:fnm/features/tournaments/zone_legend.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -42,6 +46,12 @@ class ClassicRunScreen extends ConsumerWidget {
   static const Key resultKey = Key('classic.result');
   static const Key groupsTabKey = Key('classic.tab.groups');
   static const Key tacticsTabKey = Key('classic.tab.tactics');
+
+  /// A group table's row for [nationId], on the Groups tab.
+  static Key groupRowKey(int nationId) => Key('classic.groupRow.$nationId');
+
+  /// The best third-placed teams' ladder under a 48-team group stage.
+  static const Key bestThirdsKey = Key('classic.bestThirds');
 
   /// Opens the run's tactics (the career's tactics screen).
   static const Key tacticsKey = Key('classic.tactics');
@@ -244,7 +254,7 @@ class _NextCard extends ConsumerWidget {
             label: l.classicPlayMatch,
             icon: Icons.sports_soccer_rounded,
             onPressed: () =>
-                context.go('${Routes.classicMatch}?year=${edition.year}'),
+                context.go('${Routes.classicPreMatch}?year=${edition.year}'),
           ),
         ],
       ),
@@ -392,9 +402,28 @@ class _GroupsTab extends StatelessWidget {
     final edition = t.edition;
     final mine = edition.groupOf(t.me);
     final order = [mine, ...edition.groupNames.where((g) => g != mine)];
+    // Marked as a career's finals groups are: the top two and, in a 48-team
+    // stage, the best thirds as things stand, green ("through"); nothing for
+    // the rest.
+    final tables = ClassicFormat.tables(edition, t.run.fixtures);
+    final tableOf = {
+      for (final (i, g) in edition.groupNames.indexed) g: tables[i],
+    };
+    final thirdsThrough = ClassicFormat.thirdsThrough(edition, tables);
+    final thirds = edition.hasRoundOf32
+        ? CrossGroup.tier(tables, 2)
+        : const <GroupStanding>[];
+    String name(int id) => classicNationName(l, world, id, edition: edition);
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
+        ZoneLegend(
+          lines: zoneLegendLines(
+            l,
+            finalsGroupZoneSpec,
+            {AppColors.positive},
+          ),
+        ),
         for (final g in order)
           Padding(
             padding: const EdgeInsets.only(bottom: AppSpacing.sm),
@@ -410,22 +439,13 @@ class _GroupsTab extends StatelessWidget {
                       fontWeight: FontWeight.w800,
                     ),
                   ),
-                  for (final (i, s) in ClassicFormat.table(
-                    edition,
-                    g,
-                    t.run.fixtures,
-                  ).indexed)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 3),
+                  for (final (i, s) in tableOf[g]!.indexed)
+                    _GroupRow(
+                      key: ClassicRunScreen.groupRowKey(s.nationId),
+                      place: i + 1,
+                      through: i < 2 || thirdsThrough.contains(s.nationId),
                       child: Row(
                         children: [
-                          SizedBox(
-                            width: 18,
-                            child: Text(
-                              '${i + 1}',
-                              style: AppTypography.labelSmall,
-                            ),
-                          ),
                           ClassicFlag(
                             classicCode(world, s.nationId),
                             width: 22,
@@ -464,6 +484,16 @@ class _GroupsTab extends StatelessWidget {
               ),
             ),
           ),
+        // The career's ladder of the thirds, under a 48-team stage.
+        if (thirds.length > thirdsThrough.length && thirdsThrough.isNotEmpty)
+          BestThirdsCard(
+            key: ClassicRunScreen.bestThirdsKey,
+            thirds: thirds,
+            qualifyCount: thirdsThrough.length,
+            playerNationId: t.me,
+            code: (id) => classicCode(world, id),
+            name: name,
+          ),
       ],
     );
   }
@@ -478,6 +508,52 @@ class _GroupsTab extends StatelessWidget {
       ),
     ),
   );
+}
+
+/// One row of a Classic group table, marked as a career's finals group row
+/// is: a green stripe down its side and a green place when [through] (as
+/// things stand), nothing otherwise.
+class _GroupRow extends StatelessWidget {
+  const _GroupRow({
+    required this.place,
+    required this.through,
+    required this.child,
+    super.key,
+  });
+
+  final int place;
+  final bool through;
+
+  /// The rest of the row: the flag, the name and the numbers.
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final accent = through ? AppColors.positive : null;
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          left: BorderSide(color: accent ?? Colors.transparent, width: 3),
+        ),
+      ),
+      padding: const EdgeInsets.only(top: 3, bottom: 3, left: 4),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 18,
+            child: Text(
+              '$place',
+              style: AppTypography.labelSmall.copyWith(
+                color: accent,
+                fontWeight: accent != null ? FontWeight.w700 : FontWeight.w500,
+              ),
+            ),
+          ),
+          Expanded(child: child),
+        ],
+      ),
+    );
+  }
 }
 
 class _FixtureLine extends StatelessWidget {
