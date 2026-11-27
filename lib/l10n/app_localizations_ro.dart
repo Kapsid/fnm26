@@ -19337,20 +19337,19 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get campaignVaticanIntro =>
-      'Cel mai mic stat din lume are câteva sute de cetățeni, cei mai mulți clerici, o gardă de halebardieri elvețieni și niciun fotbalist demn de acest nume. În această lume Vaticanul joacă totuși, în locul San Marinoului în Europa, și este mult mai slab decât a fost vreodată San Marino: episcopi, seminariști, supraveghetori de muzeu și gardieni în timpul liber, un teren în interiorul zidurilor pentru 1.500 de spectatori și din când în când un meci de acasă pe un stadion împrumutat la Roma. Cincizeci de cicluri înseamnă mult timp, dar tot e nevoie de minuni: câștigați un meci din preliminarii, evitați ultimul loc într-o grupă preliminară și, dacă cerul ascultă, ajungeți la un baraj.';
+      'Cel mai mic stat din lume are câteva sute de cetățeni, cei mai mulți clerici, o gardă de halebardieri elvețieni și niciun fotbalist demn de acest nume. În această lume Vaticanul joacă totuși, în locul San Marinoului în Europa, și este mult mai slab decât a fost vreodată San Marino: episcopi, seminariști, supraveghetori de muzeu și gardieni în timpul liber, un teren în interiorul zidurilor pentru 1.500 de spectatori și din când în când un meci de acasă pe un stadion împrumutat la Roma. Cincizeci de cicluri înseamnă mult timp, dar tot e nevoie de minuni: ajungeți la un Campionat European, apoi la un Campionat Mondial și, dacă cerul ascultă, câștigați-l.';
 
   @override
-  String get campaignVaticanGoal => 'Câștigarea unui meci din preliminarii';
+  String get campaignVaticanGoal => 'Calificarea la un Campionat European';
 
   @override
-  String get campaignStars1Vatican => 'Câștigarea unui meci din preliminarii';
+  String get campaignStars1Vatican => 'Calificarea la un Campionat European';
 
   @override
-  String get campaignStars2Vatican =>
-      'Evitarea ultimului loc într-o grupă preliminară';
+  String get campaignStars2Vatican => 'Calificarea la un Campionat Mondial';
 
   @override
-  String get campaignStars3Vatican => 'Calificarea la un baraj';
+  String get campaignStars3Vatican => 'Câștigarea Campionatului Mondial';
 
   @override
   String get campaignNoEnd => 'Fără sfârșit';

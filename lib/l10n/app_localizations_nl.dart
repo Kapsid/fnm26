@@ -19005,20 +19005,20 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get campaignVaticanIntro =>
-      'De kleinste staat ter wereld telt een paar honderd burgers, de meesten geestelijken, een garde van Zwitserse hellebaardiers en geen enkele voetballer die die naam verdient. In deze wereld speelt Vaticaanstad toch, op de plaats van San Marino in Europa, en het is veel zwakker dan San Marino ooit was: bisschoppen, seminaristen, museumsuppoosten en gardisten buiten dienst, een veld binnen de muren voor 1.500 toeschouwers en af en toe een thuiswedstrijd in een geleend stadion in Rome. Vijftig cycli is een lange tijd, maar er zijn toch wonderen nodig: win een kwalificatiewedstrijd, eindig in een kwalificatiegroep niet als laatste en, als de hemel luistert, bereik een play-off.';
+      'De kleinste staat ter wereld telt een paar honderd burgers, de meesten geestelijken, een garde van Zwitserse hellebaardiers en geen enkele voetballer die die naam verdient. In deze wereld speelt Vaticaanstad toch, op de plaats van San Marino in Europa, en het is veel zwakker dan San Marino ooit was: bisschoppen, seminaristen, museumsuppoosten en gardisten buiten dienst, een veld binnen de muren voor 1.500 toeschouwers en af en toe een thuiswedstrijd in een geleend stadion in Rome. Vijftig cycli is een lange tijd, maar er zijn toch wonderen nodig: bereik een Europees Kampioenschap, daarna een Wereldkampioenschap en, als de hemel luistert, win er een.';
 
   @override
-  String get campaignVaticanGoal => 'Win een kwalificatiewedstrijd';
+  String get campaignVaticanGoal => 'Plaats je voor een Europees Kampioenschap';
 
   @override
-  String get campaignStars1Vatican => 'Win een kwalificatiewedstrijd';
+  String get campaignStars1Vatican =>
+      'Plaats je voor een Europees Kampioenschap';
 
   @override
-  String get campaignStars2Vatican =>
-      'Eindig in een kwalificatiegroep niet als laatste';
+  String get campaignStars2Vatican => 'Plaats je voor een Wereldkampioenschap';
 
   @override
-  String get campaignStars3Vatican => 'Bereik een play-off';
+  String get campaignStars3Vatican => 'Win het Wereldkampioenschap';
 
   @override
   String get campaignNoEnd => 'Zonder einde';

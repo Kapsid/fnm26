@@ -236,67 +236,37 @@ void main() {
     expect(Campaigns.byId('texas'), def);
   });
 
-  test('winThenOffBottomThenPlayoffStars: the highest tier reached', () {
-    for (final won in [false, true]) {
-      for (final offBottom in [false, true]) {
-        for (final playoff in [false, true]) {
-          expect(
-            winThenOffBottomThenPlayoffStars(
-              wonQualifier: won,
-              offBottom: offBottom,
-              reachedPlayoff: playoff,
-            ),
-            playoff
-                ? 3
-                : offBottom
-                ? 2
-                : won
-                ? 1
-                : 0,
-            reason: 'won $won offBottom $offBottom playoff $playoff',
-          );
-        }
-      }
-    }
-    // A play-off reached through the Nations Cup, with no qualifier won.
-    expect(
-      winThenOffBottomThenPlayoffStars(
-        wonQualifier: false,
-        offBottom: false,
-        reachedPlayoff: true,
-      ),
-      3,
-    );
-  });
-
-  test('Hail Mary: Pro, hard, fifty cycles, can be continued, its dormant world in '
-      "San Marino's place", () {
-    const def = Campaigns.vatican;
-    expect(def.nationId, 217);
-    expect(def.dormantNationId, 217);
-    expect(DormantNations.replaces[217], 45);
-    expect(DormantNations.alsoReplaces[217], isNull);
-    expect(DormantNations.vatican.confederation, Confederation.europe);
-    // A European run: Belarus in, no donors.
-    expect(def.withBelarus, isTrue);
-    expect(def.donorNationIds, isEmpty);
-    expect(def.donorNationId, isNull);
-    // Fifty cycles (no campaign runs without an end since 1.1.4).
-    expect(def.cycles, 50);
-    expect(def.unlimited, isFalse);
-    expect(
-      [
-        for (final c in Campaigns.all)
-          if (c.unlimited) c.id,
-      ],
-      isEmpty,
-    );
-    expect(def.needsPro, isTrue);
-    expect(def.canContinue, isTrue);
-    expect(def.goal, CampaignGoal.winThenOffBottomThenPlayoff);
-    expect(def.difficulty, CampaignDifficulty.hard);
-    expect(def.rngSeed, 217);
-    expect(Campaigns.all.last, def);
-    expect(Campaigns.byId('vatican'), def);
-  });
+  test(
+    'Hail Mary: Pro, hard, fifty cycles, can be continued, its dormant world in '
+    "San Marino's place",
+    () {
+      const def = Campaigns.vatican;
+      expect(def.nationId, 217);
+      expect(def.dormantNationId, 217);
+      expect(DormantNations.replaces[217], 45);
+      expect(DormantNations.alsoReplaces[217], isNull);
+      expect(DormantNations.vatican.confederation, Confederation.europe);
+      // A European run: Belarus in, no donors.
+      expect(def.withBelarus, isTrue);
+      expect(def.donorNationIds, isEmpty);
+      expect(def.donorNationId, isNull);
+      // Fifty cycles (no campaign runs without an end since 1.1.4).
+      expect(def.cycles, 50);
+      expect(def.unlimited, isFalse);
+      expect(
+        [
+          for (final c in Campaigns.all)
+            if (c.unlimited) c.id,
+        ],
+        isEmpty,
+      );
+      expect(def.needsPro, isTrue);
+      expect(def.canContinue, isTrue);
+      expect(def.goal, CampaignGoal.qualifyBothThenWorldTitle);
+      expect(def.difficulty, CampaignDifficulty.hard);
+      expect(def.rngSeed, 217);
+      expect(Campaigns.all.last, def);
+      expect(Campaigns.byId('vatican'), def);
+    },
+  );
 }

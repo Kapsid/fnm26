@@ -18909,20 +18909,19 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get campaignVaticanIntro =>
-      'Verdens mindste stat har et par hundrede borgere, de fleste gejstlige, en garde af schweiziske hellebardister og ikke én fodboldspiller, der fortjener navnet. I denne verden spiller Vatikanstaten alligevel, på San Marinos plads i Europa, og holdet er langt svagere, end San Marino nogensinde var: biskopper, seminarister, museumsvagter og gardister på fridag, en bane inden for murene med plads til 1.500 og en gang imellem en hjemmekamp på et lånt stadion i Rom. Halvtreds cyklusser er lang tid, men der skal mirakler til alligevel: vind en kvalkamp, slut ikke sidst i en kvalifikationsgruppe og, hvis himlen lytter, nå et play-off.';
+      'Verdens mindste stat har et par hundrede borgere, de fleste gejstlige, en garde af schweiziske hellebardister og ikke én fodboldspiller, der fortjener navnet. I denne verden spiller Vatikanstaten alligevel, på San Marinos plads i Europa, og holdet er langt svagere, end San Marino nogensinde var: biskopper, seminarister, museumsvagter og gardister på fridag, en bane inden for murene med plads til 1.500 og en gang imellem en hjemmekamp på et lånt stadion i Rom. Halvtreds cyklusser er lang tid, men der skal mirakler til alligevel: nå et Europamesterskab, siden et VM og, hvis himlen lytter, vind det.';
 
   @override
-  String get campaignVaticanGoal => 'Vind en kvalkamp';
+  String get campaignVaticanGoal => 'Kvalificér dig til et Europamesterskab';
 
   @override
-  String get campaignStars1Vatican => 'Vind en kvalkamp';
+  String get campaignStars1Vatican => 'Kvalificér dig til et Europamesterskab';
 
   @override
-  String get campaignStars2Vatican =>
-      'Slut ikke sidst i en kvalifikationsgruppe';
+  String get campaignStars2Vatican => 'Kvalificér dig til et VM';
 
   @override
-  String get campaignStars3Vatican => 'Nå et play-off';
+  String get campaignStars3Vatican => 'Vind Verdensmesterskabet';
 
   @override
   String get campaignNoEnd => 'Uden ende';

@@ -18853,20 +18853,19 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get campaignVaticanIntro =>
-      'A világ legkisebb államának néhány száz polgára van, többségük pap, egy svájci alabárdosokból álló gárdája, és egyetlen olyan futballistája sincs, aki megérdemelné ezt a nevet. Ebben a világban a Vatikán mégis pályára lép, San Marino helyén Európában, és sokkal gyengébb, mint San Marino valaha volt: püspökök, kispapok, múzeumi teremőrök és szabadnapos gárdisták, egy pálya a falakon belül 1500 nézőnek, és néha egy hazai meccs egy kölcsönkapott római stadionban. Ötven ciklus hosszú idő, de csodák így is kellenek: megnyerni egy selejtezőt, nem utolsóként zárni egy selejtezőcsoportot, és ha az ég is meghallgat, pótselejtezőre jutni.';
+      'A világ legkisebb államának néhány száz polgára van, többségük pap, egy svájci alabárdosokból álló gárdája, és egyetlen olyan futballistája sincs, aki megérdemelné ezt a nevet. Ebben a világban a Vatikán mégis pályára lép, San Marino helyén Európában, és sokkal gyengébb, mint San Marino valaha volt: püspökök, kispapok, múzeumi teremőrök és szabadnapos gárdisták, egy pálya a falakon belül 1500 nézőnek, és néha egy hazai meccs egy kölcsönkapott római stadionban. Ötven ciklus hosszú idő, de csodák így is kellenek: kijutni egy Európa-bajnokságra, aztán egy világbajnokságra, és ha az ég is meghallgat, meg is nyerni egyet.';
 
   @override
-  String get campaignVaticanGoal => 'Megnyerni egy selejtezőt';
+  String get campaignVaticanGoal => 'Kijutni egy Európa-bajnokságra';
 
   @override
-  String get campaignStars1Vatican => 'Megnyerni egy selejtezőt';
+  String get campaignStars1Vatican => 'Kijutni egy Európa-bajnokságra';
 
   @override
-  String get campaignStars2Vatican =>
-      'Nem utolsóként zárni egy selejtezőcsoportot';
+  String get campaignStars2Vatican => 'Kijutni egy világbajnokságra';
 
   @override
-  String get campaignStars3Vatican => 'Pótselejtezőre jutni';
+  String get campaignStars3Vatican => 'Megnyerni a világbajnokságot';
 
   @override
   String get campaignNoEnd => 'Vég nélkül';

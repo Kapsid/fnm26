@@ -19244,20 +19244,19 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get campaignVaticanIntro =>
-      'Najmanja država na svijetu ima nekoliko stotina građana, većinom svećenika, gardu švicarskih helebardista i nijednog nogometaša vrijednog tog imena. U ovom svijetu Vatikan ipak igra, na mjestu San Marina u Europi, i mnogo je slabiji nego što je San Marino ikad bio: biskupi, sjemeništarci, čuvari muzeja i gardisti izvan službe, igralište unutar zidina za 1500 gledatelja i ponekad domaća utakmica na posuđenom stadionu u Rimu. Pedeset ciklusa dugo je vrijeme, ali čuda su svejedno potrebna: pobijedi u kvalifikacijskoj utakmici, ne završi posljednji u kvalifikacijskoj skupini i, ako nebo sluša, izbori play-off.';
+      'Najmanja država na svijetu ima nekoliko stotina građana, većinom svećenika, gardu švicarskih helebardista i nijednog nogometaša vrijednog tog imena. U ovom svijetu Vatikan ipak igra, na mjestu San Marina u Europi, i mnogo je slabiji nego što je San Marino ikad bio: biskupi, sjemeništarci, čuvari muzeja i gardisti izvan službe, igralište unutar zidina za 1500 gledatelja i ponekad domaća utakmica na posuđenom stadionu u Rimu. Pedeset ciklusa dugo je vrijeme, ali čuda su svejedno potrebna: izbori nastup na Europskom prvenstvu, zatim na Svjetskom prvenstvu i, ako nebo sluša, osvoji ga.';
 
   @override
-  String get campaignVaticanGoal => 'Pobijedi u kvalifikacijskoj utakmici';
+  String get campaignVaticanGoal => 'Kvalificiraj se na Europsko prvenstvo';
 
   @override
-  String get campaignStars1Vatican => 'Pobijedi u kvalifikacijskoj utakmici';
+  String get campaignStars1Vatican => 'Kvalificiraj se na Europsko prvenstvo';
 
   @override
-  String get campaignStars2Vatican =>
-      'Ne završi posljednji u kvalifikacijskoj skupini';
+  String get campaignStars2Vatican => 'Kvalificiraj se na Svjetsko prvenstvo';
 
   @override
-  String get campaignStars3Vatican => 'Izbori play-off';
+  String get campaignStars3Vatican => 'Osvoji Svjetsko prvenstvo';
 
   @override
   String get campaignNoEnd => 'Bez kraja';

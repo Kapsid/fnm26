@@ -19085,20 +19085,21 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get campaignVaticanIntro =>
-      'Le plus petit État du monde compte quelques centaines de citoyens, pour la plupart des clercs, une garde de hallebardiers suisses et pas un seul footballeur digne de ce nom. Dans ce monde, le Vatican joue quand même, à la place de Saint-Marin en Europe, et il est bien plus faible que Saint-Marin ne l’a jamais été : des évêques, des séminaristes, des gardiens de musée et des gardes en repos, un terrain dans les murs pour 1 500 spectateurs et, de temps en temps, un match à domicile dans un stade prêté à Rome. Cinquante cycles, c’est long, mais il faudra quand même des miracles : gagner un match de qualification, ne pas finir dernier d’un groupe de qualification et, si le ciel vous entend, atteindre les barrages.';
+      'Le plus petit État du monde compte quelques centaines de citoyens, pour la plupart des clercs, une garde de hallebardiers suisses et pas un seul footballeur digne de ce nom. Dans ce monde, le Vatican joue quand même, à la place de Saint-Marin en Europe, et il est bien plus faible que Saint-Marin ne l’a jamais été : des évêques, des séminaristes, des gardiens de musée et des gardes en repos, un terrain dans les murs pour 1 500 spectateurs et, de temps en temps, un match à domicile dans un stade prêté à Rome. Cinquante cycles, c’est long, mais il faudra quand même des miracles : atteindre un Championnat d’Europe, puis un Championnat du monde et, si le ciel vous entend, en gagner un.';
 
   @override
-  String get campaignVaticanGoal => 'Gagner un match de qualification';
+  String get campaignVaticanGoal => 'Se qualifier pour un Championnat d’Europe';
 
   @override
-  String get campaignStars1Vatican => 'Gagner un match de qualification';
+  String get campaignStars1Vatican =>
+      'Se qualifier pour un Championnat d’Europe';
 
   @override
   String get campaignStars2Vatican =>
-      'Ne pas finir dernier d’un groupe de qualification';
+      'Se qualifier pour un Championnat du monde';
 
   @override
-  String get campaignStars3Vatican => 'Atteindre les barrages';
+  String get campaignStars3Vatican => 'Gagner le Championnat du monde';
 
   @override
   String get campaignNoEnd => 'Sans fin';

@@ -18819,19 +18819,22 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get campaignVaticanIntro =>
-      'Dünyanın en küçük devletinin birkaç yüz vatandaşı var, çoğu din adamı; bir İsviçreli teberdar muhafız birliği var ve adını hak eden tek bir futbolcusu yok. Bu dünyada Vatikan yine de oynuyor, Avrupa\'da San Marino\'nun yerinde, ve San Marino\'nun hiçbir zaman olmadığı kadar zayıf: piskoposlar, ilahiyat öğrencileri, müze görevlileri ve izindeki muhafızlar, surların içinde 1.500 kişilik bir saha ve arada bir Roma\'da ödünç alınmış bir statta iç saha maçı. Elli dönem uzun bir süre, ama yine de mucizeler gerekiyor: bir eleme maçı kazan, bir eleme grubunu son sırada bitirme ve gökler seni duyuyorsa bir play-off\'a kal.';
+      'Dünyanın en küçük devletinin birkaç yüz vatandaşı var, çoğu din adamı; bir İsviçreli teberdar muhafız birliği var ve adını hak eden tek bir futbolcusu yok. Bu dünyada Vatikan yine de oynuyor, Avrupa\'da San Marino\'nun yerinde, ve San Marino\'nun hiçbir zaman olmadığı kadar zayıf: piskoposlar, ilahiyat öğrencileri, müze görevlileri ve izindeki muhafızlar, surların içinde 1.500 kişilik bir saha ve arada bir Roma\'da ödünç alınmış bir statta iç saha maçı. Elli dönem uzun bir süre, ama yine de mucizeler gerekiyor: bir Avrupa Şampiyonası\'na katıl, ardından bir Dünya Şampiyonası\'na ve gökler seni duyuyorsa onu kazan.';
 
   @override
-  String get campaignVaticanGoal => 'Bir eleme maçı kazan';
+  String get campaignVaticanGoal =>
+      'Bir Avrupa Şampiyonası\'na katılma hakkı kazan';
 
   @override
-  String get campaignStars1Vatican => 'Bir eleme maçı kazan';
+  String get campaignStars1Vatican =>
+      'Bir Avrupa Şampiyonası\'na katılma hakkı kazan';
 
   @override
-  String get campaignStars2Vatican => 'Bir eleme grubunu son sırada bitirme';
+  String get campaignStars2Vatican =>
+      'Bir Dünya Şampiyonası\'na katılma hakkı kazan';
 
   @override
-  String get campaignStars3Vatican => 'Bir play-off\'a kal';
+  String get campaignStars3Vatican => 'Dünya Şampiyonası\'nı kazan';
 
   @override
   String get campaignNoEnd => 'Sonsuz';

@@ -18812,19 +18812,19 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get campaignVaticanIntro =>
-      'Negara terkecil di dunia punya beberapa ratus warga, kebanyakan rohaniwan, pasukan pengawal tombak dari Swiss, dan tak satu pun pesepak bola yang layak disebut begitu. Di dunia ini Vatikan tetap bermain, menggantikan San Marino di Eropa, dan jauh lebih lemah daripada San Marino kapan pun: para uskup, frater, penjaga museum, dan pengawal yang sedang libur, sebuah lapangan di dalam tembok untuk 1.500 penonton dan sesekali laga kandang di stadion pinjaman di Roma. Lima puluh siklus memang waktu yang panjang, tetapi tetap saja butuh mukjizat: menangi satu laga kualifikasi, jangan finis di dasar grup kualifikasi, dan, jika surga mendengar, lolos ke play-off.';
+      'Negara terkecil di dunia punya beberapa ratus warga, kebanyakan rohaniwan, pasukan pengawal tombak dari Swiss, dan tak satu pun pesepak bola yang layak disebut begitu. Di dunia ini Vatikan tetap bermain, menggantikan San Marino di Eropa, dan jauh lebih lemah daripada San Marino kapan pun: para uskup, frater, penjaga museum, dan pengawal yang sedang libur, sebuah lapangan di dalam tembok untuk 1.500 penonton dan sesekali laga kandang di stadion pinjaman di Roma. Lima puluh siklus memang waktu yang panjang, tetapi tetap saja butuh mukjizat: lolos ke sebuah Kejuaraan Eropa, lalu ke sebuah Kejuaraan Dunia, dan, jika surga mendengar, menjuarainya.';
 
   @override
-  String get campaignVaticanGoal => 'Menangi satu laga kualifikasi';
+  String get campaignVaticanGoal => 'Lolos ke sebuah Kejuaraan Eropa';
 
   @override
-  String get campaignStars1Vatican => 'Menangi satu laga kualifikasi';
+  String get campaignStars1Vatican => 'Lolos ke sebuah Kejuaraan Eropa';
 
   @override
-  String get campaignStars2Vatican => 'Tidak finis di dasar grup kualifikasi';
+  String get campaignStars2Vatican => 'Lolos ke sebuah Kejuaraan Dunia';
 
   @override
-  String get campaignStars3Vatican => 'Lolos ke play-off';
+  String get campaignStars3Vatican => 'Juara Kejuaraan Dunia';
 
   @override
   String get campaignNoEnd => 'Tanpa akhir';

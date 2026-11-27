@@ -10,7 +10,6 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/campaign/campaigns.dart';
 import 'package:fnm/domain/services/nation/dormant_nations.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
-import 'package:fnm/features/campaign/campaign_record_store.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/career/career_transfer_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
@@ -24,8 +23,8 @@ import '../../helpers/calendar2_draws.dart';
 import '../../story/driver.dart';
 
 /// Hail Mary's world: Vatican City in San Marino's place in Europe, from the
-/// very first draw through the next cycle, its hopeless side's stars, a
-/// career bundle, a cloud backup's description and a move into the saves.
+/// very first draw through the next cycle, its stars (a European
+/// Championship, a World Championship, the world title), a career bundle, a cloud backup's description and a move into the saves.
 /// Mirrors isle_of_man_world_test.dart and texas_world_test.dart.
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
@@ -162,66 +161,68 @@ void main() {
     expect(progress.settled, isFalse);
   });
 
-  test('the stars climb: a qualifier won, a group off the bottom, a play-off '
-      'reached, and only then is the run settled', () async {
+  test('the stars climb: a European Championship place, a World '
+      'Championship place, the world title, and only then is the run '
+      'settled', () async {
     final c = storyContainer();
     addTearDown(c.dispose);
     final d = await StoryDriver.startCampaign(c, def);
     final id = d.careerId;
     final comp = c.read(competitionRepositoryProvider);
-    await drawEuroQualifyingNow(c, id);
     Future<CampaignProgress> progress() async {
       c.invalidate(hubDataProvider(id));
       final now = await c.read(campaignProgressProvider(id).future);
       return now!;
     }
 
-    final all = await comp.allFixtures(id);
-    final mine = [
-      for (final f in all)
-        if (names(f, vatican) && f.round == 'CQ') f,
-    ];
-    expect(mine, isNotEmpty);
-    final groupId = mine.first.groupId!;
-    Future<void> win(Fixture f) => comp.recordResult(
-      fixtureId: f.id,
-      homeScore: f.homeNationId == vatican ? 1 : 0,
-      awayScore: f.homeNationId == vatican ? 0 : 1,
-    );
-
-    // Nothing won yet.
+    // Nothing reached yet.
     expect((await progress()).reached, 0);
 
-    // One qualifier won: the first star, the group still being played.
-    await win(mine.first);
+    // Into a European Championship: the first star, the run still open.
+    await comp.createKnockout(
+      careerId: id,
+      cycle: 0,
+      confederation: Confederation.europe,
+      kind: CompetitionKind.continentalFinals,
+      name: 'European Championship',
+      pairings: [(vatican, 26)],
+      date: DateTime(CareerService.continentalFinalsYear(0), 6, 29),
+      firstRound: 'CR16',
+    );
     var now = await progress();
     expect(now.reached, 1);
     expect(now.settled, isFalse);
     expect(now.stars, 0);
 
-    // The whole group played out, Vatican City off the bottom: the second.
-    for (final f in all) {
-      if (f.groupId != groupId || f.id == mine.first.id) continue;
-      if (names(f, vatican)) {
-        await win(f);
-      } else {
-        await comp.recordResult(fixtureId: f.id, homeScore: 0, awayScore: 0);
-      }
-    }
-    now = await progress();
-    expect(now.reached, 2);
-    expect(now.settled, isFalse);
-
-    // A play-off tie: the third star, and nothing left to reach.
+    // Into a World Championship: the second, still open.
     await comp.createKnockout(
       careerId: id,
       cycle: 0,
       confederation: Confederation.europe,
-      kind: CompetitionKind.continentalPlayoff,
-      name: 'European Championship Play-offs',
-      pairings: [(32, vatican)],
-      date: DateTime(CareerService.continentalFinalsYear(0), 3, 26),
-      firstRound: 'EPSF',
+      kind: CompetitionKind.worldCupFinals,
+      name: 'World Championship',
+      pairings: [(vatican, 1)],
+      date: DateTime(CareerService.worldCupYear(0), 7, 1),
+      firstRound: 'R16',
+    );
+    now = await progress();
+    expect(now.reached, 2);
+    expect(now.settled, isFalse);
+    expect(now.stars, 0);
+
+    // The world title: the third star, and nothing left to reach.
+    await comp.addKnockoutFixtures(
+      careerId: id,
+      round: 'FINAL',
+      pairings: [(vatican, 26)],
+      date: DateTime(CareerService.worldCupYear(0), 7, 19),
+      kind: CompetitionKind.worldCupFinals,
+    );
+    final fin = await comp.fixturesByRound(id, 'FINAL');
+    await comp.recordResult(
+      fixtureId: fin.single.id,
+      homeScore: 1,
+      awayScore: 0,
     );
     now = await progress();
     expect(now.reached, 3);

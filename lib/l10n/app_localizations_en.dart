@@ -18941,20 +18941,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get campaignVaticanIntro =>
-      'The smallest state in the world has a few hundred citizens, most of them clergy, a guard of Swiss halberdiers and not one footballer worth the name. In this world Vatican City plays anyway, in San Marino\'s place in Europe, and it is far worse than San Marino ever was: bishops, seminarians, museum attendants and off-duty guards, a pitch inside the walls with room for 1,500 and the odd home game on a borrowed ground in Rome. Fifty cycles is a long time, but it takes miracles all the same: win a qualifying match, finish a qualifying group off the bottom and, if heaven is listening, reach a play-off.';
+      'The smallest state in the world has a few hundred citizens, most of them clergy, a guard of Swiss halberdiers and not one footballer worth the name. In this world Vatican City plays anyway, in San Marino\'s place in Europe, and it is far worse than San Marino ever was: bishops, seminarians, museum attendants and off-duty guards, a pitch inside the walls with room for 1,500 and the odd home game on a borrowed ground in Rome. Fifty cycles is a long time, but it takes miracles all the same: reach a European Championship, then a World Championship and, if heaven is listening, win one.';
 
   @override
-  String get campaignVaticanGoal => 'Win a qualifying match';
+  String get campaignVaticanGoal => 'Qualify for a European Championship';
 
   @override
-  String get campaignStars1Vatican => 'Win a qualifying match';
+  String get campaignStars1Vatican => 'Qualify for a European Championship';
 
   @override
-  String get campaignStars2Vatican =>
-      'Finish a qualifying group off the bottom';
+  String get campaignStars2Vatican => 'Qualify for a World Championship';
 
   @override
-  String get campaignStars3Vatican => 'Reach a play-off';
+  String get campaignStars3Vatican => 'Win the World Championship';
 
   @override
   String get campaignNoEnd => 'No end';

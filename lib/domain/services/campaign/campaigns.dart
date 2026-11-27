@@ -38,12 +38,6 @@ enum CampaignGoal {
   /// `titleTrebleStars`).
   titleTreble,
 
-  /// For a side with no hope of a finals: win a qualifying match (continental
-  /// or world), finish a qualifying group off the bottom, reach a play-off.
-  /// One star each, the highest reached counts, across all the campaign's
-  /// cycles (see `winThenOffBottomThenPlayoffStars`).
-  winThenOffBottomThenPlayoff,
-
   /// For the World Championship's own host: get out of the group (reach the
   /// format's first knockout round, the last 32 or the last 16), then reach
   /// the quarter-final, then the semi-final, all at the campaign's one World
@@ -445,27 +439,26 @@ abstract final class Campaigns {
 
   /// Hail Mary: Vatican City, a nation the world does not have, takes San
   /// Marino's place in Europe for fifty cycles, from the very bottom of the
-  /// world ranking. Built the way A Greenland Century was: its own stored pool of
-  /// players (clergy, guards and staff, the names invented), the same youth
-  /// pyramid, newgens and aging as any nation's. Its squad is San Marino's
-  /// at 0.78 (see `vaticanAttributeFactor`): the weakest side in the world,
-  /// nine below San Marino. Pro, hard, and a settled run may be moved into
-  /// the saves (one minnow swapped for another). The stars are a hopeless
-  /// side's: win a qualifying match, finish a qualifying group off the
-  /// bottom, reach a play-off. Seed 217, the first searched, keeps Vatican
-  /// City from hosting either championship in any of the fifty cycles
-  /// (campaign_seeds_test.dart). It was picked for a European qualifying
-  /// group of six; in the EURO 2028 shape it plays a group of five, as every
-  /// side of the Nations Cup's bottom league does whatever the seed, so
-  /// "off the bottom" means fourth of five or better. Its strength was not
-  /// tuned on the lab
-  /// (campaign_lab_test.dart); the badge is the design's call.
+  /// world ranking. Built the way A Greenland Century was: its own stored
+  /// pool of players (clergy, guards and staff, the names invented), the
+  /// same youth pyramid, newgens and aging as any nation's. Its squad is San
+  /// Marino's at 0.78 (see `vaticanAttributeFactor`): the weakest side in
+  /// the world, nine below San Marino. Pro, hard, and a settled run may be
+  /// moved into the saves (one minnow swapped for another). The stars are
+  /// Zanzibar Rising's: qualify for a European Championship, qualify for a
+  /// World Championship, win the World Championship, the highest reached
+  /// across the fifty cycles (it settles at the world title or at the end
+  /// of the last cycle). Seed 217, the first searched, keeps Vatican City
+  /// from hosting either championship in any of the fifty cycles, so every
+  /// place must be won through qualifying (campaign_seeds_test.dart). Its
+  /// strength was not tuned on the lab (campaign_lab_test.dart); the badge
+  /// is the design's call.
   static const vatican = CampaignDef(
     withBelarus: true,
     id: 'vatican',
     nationId: 217, // DormantNations.vaticanId
     dormantNationId: 217,
-    goal: CampaignGoal.winThenOffBottomThenPlayoff,
+    goal: CampaignGoal.qualifyBothThenWorldTitle,
     cycles: 50,
     needsPro: true,
     difficulty: CampaignDifficulty.hard,

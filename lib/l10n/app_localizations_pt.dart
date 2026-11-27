@@ -19016,20 +19016,21 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get campaignVaticanIntro =>
-      'O menor estado do mundo tem algumas centenas de cidadãos, a maioria clérigos, uma guarda de alabardeiros suíços e nenhum jogador de futebol digno do nome. Neste mundo o Vaticano joga mesmo assim, no lugar de San Marino na Europa, e é muito pior do que San Marino jamais foi: bispos, seminaristas, vigilantes de museu e guardas de folga, um campo dentro das muralhas com lugar para 1.500 e um ou outro jogo em casa num estádio emprestado em Roma. Cinquenta ciclos é muito tempo, mas mesmo assim vai ser preciso fazer milagres: vencer um jogo das eliminatórias, não terminar em último num grupo das eliminatórias e, se o céu estiver ouvindo, chegar a um play-off.';
+      'O menor estado do mundo tem algumas centenas de cidadãos, a maioria clérigos, uma guarda de alabardeiros suíços e nenhum jogador de futebol digno do nome. Neste mundo o Vaticano joga mesmo assim, no lugar de San Marino na Europa, e é muito pior do que San Marino jamais foi: bispos, seminaristas, vigilantes de museu e guardas de folga, um campo dentro das muralhas com lugar para 1.500 e um ou outro jogo em casa num estádio emprestado em Roma. Cinquenta ciclos é muito tempo, mas mesmo assim vai ser preciso fazer milagres: chegar a um Campeonato Europeu, depois a um Campeonato Mundial e, se o céu estiver ouvindo, vencer um.';
 
   @override
-  String get campaignVaticanGoal => 'Vencer um jogo das eliminatórias';
+  String get campaignVaticanGoal => 'Classificar-se para um Campeonato Europeu';
 
   @override
-  String get campaignStars1Vatican => 'Vencer um jogo das eliminatórias';
+  String get campaignStars1Vatican =>
+      'Classificar-se para um Campeonato Europeu';
 
   @override
   String get campaignStars2Vatican =>
-      'Não terminar em último num grupo das eliminatórias';
+      'Classificar-se para um Campeonato Mundial';
 
   @override
-  String get campaignStars3Vatican => 'Chegar a um play-off';
+  String get campaignStars3Vatican => 'Vencer o Campeonato Mundial';
 
   @override
   String get campaignNoEnd => 'Sem fim';

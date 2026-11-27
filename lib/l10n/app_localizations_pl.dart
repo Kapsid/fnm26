@@ -19102,20 +19102,19 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get campaignVaticanIntro =>
-      'Najmniejsze państwo świata ma kilkuset obywateli, w większości duchownych, gwardię szwajcarskich halabardników i ani jednego piłkarza godnego tego miana. W tym świecie Watykan i tak gra, na miejscu San Marino w Europie, i jest dużo słabszy, niż San Marino kiedykolwiek było: biskupi, klerycy, kustosze muzeów i gwardziści po służbie, boisko w murach na 1500 widzów i od czasu do czasu mecz u siebie na pożyczonym stadionie w Rzymie. Pięćdziesiąt cykli to dużo czasu, ale i tak potrzeba cudów: wygrać mecz eliminacji, nie zająć ostatniego miejsca w grupie eliminacyjnej i, jeśli niebo słucha, awansować do barażu.';
+      'Najmniejsze państwo świata ma kilkuset obywateli, w większości duchownych, gwardię szwajcarskich halabardników i ani jednego piłkarza godnego tego miana. W tym świecie Watykan i tak gra, na miejscu San Marino w Europie, i jest dużo słabszy, niż San Marino kiedykolwiek było: biskupi, klerycy, kustosze muzeów i gwardziści po służbie, boisko w murach na 1500 widzów i od czasu do czasu mecz u siebie na pożyczonym stadionie w Rzymie. Pięćdziesiąt cykli to dużo czasu, ale i tak potrzeba cudów: awansować na Mistrzostwa Europy, potem na Mistrzostwa Świata i, jeśli niebo słucha, je wygrać.';
 
   @override
-  String get campaignVaticanGoal => 'Wygrać mecz eliminacji';
+  String get campaignVaticanGoal => 'Awansować na Mistrzostwa Europy';
 
   @override
-  String get campaignStars1Vatican => 'Wygrać mecz eliminacji';
+  String get campaignStars1Vatican => 'Awansować na Mistrzostwa Europy';
 
   @override
-  String get campaignStars2Vatican =>
-      'Nie zająć ostatniego miejsca w grupie eliminacyjnej';
+  String get campaignStars2Vatican => 'Awansować na Mistrzostwa Świata';
 
   @override
-  String get campaignStars3Vatican => 'Awansować do barażu';
+  String get campaignStars3Vatican => 'Wygrać Mistrzostwa Świata';
 
   @override
   String get campaignNoEnd => 'Bez końca';

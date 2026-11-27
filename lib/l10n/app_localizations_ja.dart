@@ -18244,19 +18244,19 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get campaignVaticanIntro =>
-      '世界最小の国の市民は数百人、その多くは聖職者で、スイス人の矛槍兵の衛兵隊はいても、サッカー選手と呼べる者は一人もいません。この世界ではそれでもバチカンが欧州でサンマリノの座を占めてピッチに立ちますが、その力はサンマリノのどの時代よりもはるかに劣ります。司教、神学生、美術館の係員、非番の衛兵たち。城壁の内側に1,500人収容のピッチがあり、ときどきローマで借りたグラウンドでホームゲームを行います。50サイクルは長い時間ですが、それでも奇跡は欠かせません。予選で1勝すること、予選グループで最下位を回避すること、そして天が聞き届けてくれるなら、プレーオフに進出することです。';
+      '世界最小の国の市民は数百人、その多くは聖職者で、スイス人の矛槍兵の衛兵隊はいても、サッカー選手と呼べる者は一人もいません。この世界ではそれでもバチカンが欧州でサンマリノの座を占めてピッチに立ちますが、その力はサンマリノのどの時代よりもはるかに劣ります。司教、神学生、美術館の係員、非番の衛兵たち。城壁の内側に1,500人収容のピッチがあり、ときどきローマで借りたグラウンドでホームゲームを行います。50サイクルは長い時間ですが、それでも奇跡は欠かせません。欧州選手権に出場すること、次に世界選手権に出場すること、そして天が聞き届けてくれるなら、世界の頂点に立つことです。';
 
   @override
-  String get campaignVaticanGoal => '予選で1勝';
+  String get campaignVaticanGoal => '欧州選手権出場';
 
   @override
-  String get campaignStars1Vatican => '予選で1勝';
+  String get campaignStars1Vatican => '欧州選手権出場';
 
   @override
-  String get campaignStars2Vatican => '予選グループで最下位を回避';
+  String get campaignStars2Vatican => '世界選手権出場';
 
   @override
-  String get campaignStars3Vatican => 'プレーオフ進出';
+  String get campaignStars3Vatican => '世界選手権優勝';
 
   @override
   String get campaignNoEnd => '終わりなし';

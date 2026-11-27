@@ -48,8 +48,7 @@ typedef CampaignRunNumbers = ({
 /// World Championship its nation hosts.
 bool campaignRunCounts(CampaignGoal goal, String? round) {
   if (goal == CampaignGoal.qualifyBothThenTitle ||
-      goal == CampaignGoal.qualifyBothThenWorldTitle ||
-      goal == CampaignGoal.winThenOffBottomThenPlayoff) {
+      goal == CampaignGoal.qualifyBothThenWorldTitle) {
     return round != 'FRIENDLY';
   }
   if (round == null) return false;

@@ -18926,20 +18926,19 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get campaignVaticanIntro =>
-      'Ang pinakamaliit na estado sa mundo ay may ilang daang mamamayan, karamihan ay mga pari, isang bantay ng mga Swisong may halberd at wala ni isang manlalarong karapat-dapat sa pangalang iyon. Sa mundong ito, naglalaro pa rin ang Lungsod ng Vaticano, sa puwesto ng San Marino sa Europa, at mas mahina pa ito kaysa sa San Marino kailanman: mga obispo, seminarista, bantay ng museo at mga guwardiyang walang duty, isang palaruan sa loob ng mga pader para sa 1,500 at paminsan-minsang laro sa bahay sa isang hiniram na istadyum sa Roma. Mahabang panahon ang limampung cycle, pero kakailanganin pa rin ng mga himala: manalo sa isang laban ng kwalipikasyon, huwag matapos sa huli sa isang grupo ng kwalipikasyon at, kung nakikinig ang langit, makarating sa isang play-off.';
+      'Ang pinakamaliit na estado sa mundo ay may ilang daang mamamayan, karamihan ay mga pari, isang bantay ng mga Swisong may halberd at wala ni isang manlalarong karapat-dapat sa pangalang iyon. Sa mundong ito, naglalaro pa rin ang Lungsod ng Vaticano, sa puwesto ng San Marino sa Europa, at mas mahina pa ito kaysa sa San Marino kailanman: mga obispo, seminarista, bantay ng museo at mga guwardiyang walang duty, isang palaruan sa loob ng mga pader para sa 1,500 at paminsan-minsang laro sa bahay sa isang hiniram na istadyum sa Roma. Mahabang panahon ang limampung cycle, pero kakailanganin pa rin ng mga himala: makarating sa isang Kampeonato ng Europa, saka sa isang Kampeonato ng Mundo at, kung nakikinig ang langit, ipanalo ang isa.';
 
   @override
-  String get campaignVaticanGoal => 'Manalo sa isang laban ng kwalipikasyon';
+  String get campaignVaticanGoal => 'Makapasok sa isang Kampeonato ng Europa';
 
   @override
-  String get campaignStars1Vatican => 'Manalo sa isang laban ng kwalipikasyon';
+  String get campaignStars1Vatican => 'Makapasok sa isang Kampeonato ng Europa';
 
   @override
-  String get campaignStars2Vatican =>
-      'Huwag matapos sa huli sa isang grupo ng kwalipikasyon';
+  String get campaignStars2Vatican => 'Makapasok sa isang Kampeonato ng Mundo';
 
   @override
-  String get campaignStars3Vatican => 'Makarating sa isang play-off';
+  String get campaignStars3Vatican => 'Ipanalo ang Kampeonato ng Mundo';
 
   @override
   String get campaignNoEnd => 'Walang katapusan';

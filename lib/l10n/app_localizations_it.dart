@@ -18998,20 +18998,20 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get campaignVaticanIntro =>
-      'Lo stato più piccolo del mondo ha qualche centinaio di cittadini, quasi tutti religiosi, una guardia di alabardieri svizzeri e nemmeno un calciatore degno di questo nome. In questo mondo la Città del Vaticano gioca lo stesso, al posto di San Marino in Europa, ed è molto più debole di quanto San Marino sia mai stato: vescovi, seminaristi, custodi dei musei e guardie fuori servizio, un campo dentro le mura da 1.500 posti e ogni tanto una partita in casa su un campo prestato a Roma. Cinquanta cicli sono tanti, ma servono comunque dei miracoli: vincere una partita di qualificazione, non finire ultimi in un girone di qualificazione e, se il cielo ti ascolta, raggiungere gli spareggi.';
+      'Lo stato più piccolo del mondo ha qualche centinaio di cittadini, quasi tutti religiosi, una guardia di alabardieri svizzeri e nemmeno un calciatore degno di questo nome. In questo mondo la Città del Vaticano gioca lo stesso, al posto di San Marino in Europa, ed è molto più debole di quanto San Marino sia mai stato: vescovi, seminaristi, custodi dei musei e guardie fuori servizio, un campo dentro le mura da 1.500 posti e ogni tanto una partita in casa su un campo prestato a Roma. Cinquanta cicli sono tanti, ma servono comunque dei miracoli: raggiungere un Campionato europeo, poi un Campionato del mondo e, se il cielo ti ascolta, vincerne uno.';
 
   @override
-  String get campaignVaticanGoal => 'Vincere una partita di qualificazione';
+  String get campaignVaticanGoal => 'Qualificarsi per un Campionato europeo';
 
   @override
-  String get campaignStars1Vatican => 'Vincere una partita di qualificazione';
+  String get campaignStars1Vatican => 'Qualificarsi per un Campionato europeo';
 
   @override
   String get campaignStars2Vatican =>
-      'Non finire ultimi in un girone di qualificazione';
+      'Qualificarsi per un Campionato del mondo';
 
   @override
-  String get campaignStars3Vatican => 'Raggiungere gli spareggi';
+  String get campaignStars3Vatican => 'Vincere il Campionato del mondo';
 
   @override
   String get campaignNoEnd => 'Senza fine';

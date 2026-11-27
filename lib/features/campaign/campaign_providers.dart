@@ -388,22 +388,6 @@ campaignProgressProvider = FutureProvider.autoDispose
         }
       }
 
-      // A hopeless side's three tiers, across the campaign's cycles: read only
-      // for the goal that asks them (see [campaignHopelessTiers]).
-      final hopeless = def.goal == CampaignGoal.winThenOffBottomThenPlayoff
-          ? await campaignHopelessTiers(
-              comp: comp,
-              nationId: def.nationId,
-              span: await campaignSpanFixtures(
-                comp,
-                careerId,
-                def,
-                cyclePointer,
-                fixtures,
-              ),
-            )
-          : null;
-
       final aboveRival =
           myPosition != null &&
           rivalPosition != null &&
@@ -445,12 +429,6 @@ campaignProgressProvider = FutureProvider.autoDispose
           wonWorld: worldRuns.any((r) => r.ordinal >= 7),
           wonNationsCup: (nationsCupRun?.ordinal ?? 0) >= 7,
         ),
-        CampaignGoal.winThenOffBottomThenPlayoff =>
-          winThenOffBottomThenPlayoffStars(
-            wonQualifier: hopeless!.wonQualifier,
-            offBottom: hopeless.offBottom,
-            reachedPlayoff: hopeless.reachedPlayoff,
-          ),
         CampaignGoal.hostOutOfGroupThenQuarterThenSemi => hostOutOfGroupStars(
           worldRuns.last.ordinal,
         ),
@@ -485,8 +463,6 @@ campaignProgressProvider = FutureProvider.autoDispose
         CampaignGoal.qualifyWorldThenTitles => reached == 3,
         CampaignGoal.qualifyBothThenTitle => reached == 3,
         CampaignGoal.qualifyBothThenWorldTitle => reached == 3,
-        // A run with no end has nothing else to end it.
-        CampaignGoal.winThenOffBottomThenPlayoff => reached == 3,
         // Every star needs the continental title first: losing it ends the
         // run there and then. Otherwise it runs to the World Championship,
         // the last title of the cycle (the end-of-cycle rule below).
@@ -655,79 +631,6 @@ Future<bool> _groupPlayedOut(
     }
   }
   return any;
-}
-
-/// The round codes of every play-off a nation can be in: Europe's for its
-/// championship (`EuroPlayoffs`) and for the World Championship
-/// (`UefaWcPlayoffs`), and the intercontinental one.
-const Set<String> campaignPlayoffRounds = {
-  'EPSF',
-  'EPFINAL',
-  'EPL1',
-  'EPL2',
-  'UPSF',
-  'UPFINAL',
-  'POSF',
-  'POFINAL',
-  'ICSF',
-  'ICFINAL',
-};
-
-/// Whether [f] is a qualifying group match: a continental qualifier (`CQ`)
-/// or a World Championship qualifier (a group fixture with no round code).
-/// Not the Nations Cup, whose group games carry their own codes.
-bool campaignIsQualifier(Fixture f) =>
-    f.groupId != null && (f.round == null || f.round == 'CQ');
-
-/// A hopeless side's three tiers (see
-/// `CampaignGoal.winThenOffBottomThenPlayoff`) over [span], the nation's
-/// fixtures across the campaign's cycles so far: a qualifying match won, a
-/// qualifying group finished (every side in it has played all its games)
-/// off the bottom, a play-off match. The group tables are read only while
-/// no play-off has been reached, and only until a finish off the bottom is
-/// found.
-Future<({bool wonQualifier, bool offBottom, bool reachedPlayoff})>
-campaignHopelessTiers({
-  required CompetitionRepository comp,
-  required int nationId,
-  required List<Fixture> span,
-}) async {
-  final reachedPlayoff = span.any(
-    (f) => campaignPlayoffRounds.contains(f.round),
-  );
-  final wonQualifier = span.any(
-    (f) => campaignIsQualifier(f) && campaignNationWon(f, nationId),
-  );
-  var offBottom = false;
-  if (!reachedPlayoff) {
-    final groups = {
-      for (final f in span)
-        if (campaignIsQualifier(f)) f.groupId!,
-    };
-    for (final g in groups) {
-      if (span.any((f) => f.groupId == g && !f.hasResult)) continue;
-      final table = (await comp.siblingGroupTables(g))
-          .where((t) => t.standings.any((s) => s.nationId == nationId))
-          .firstOrNull;
-      if (table == null || table.standings.length < 2) continue;
-      final played = table.standings
-          .firstWhere((s) => s.nationId == nationId)
-          .played;
-      // The others still to play: the table is not final yet.
-      if (played == 0 || table.standings.any((s) => s.played != played)) {
-        continue;
-      }
-      if (table.standings.last.nationId != nationId) {
-        offBottom = true;
-        break;
-      }
-    }
-  }
-  return (
-    wonQualifier: wonQualifier,
-    offBottom: offBottom,
-    reachedPlayoff: reachedPlayoff,
-  );
 }
 
 /// campaign id -> its unmoved run. A moved campaign is an ordinary save and

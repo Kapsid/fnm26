@@ -18291,19 +18291,19 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get campaignVaticanIntro =>
-      '세계에서 가장 작은 나라의 시민은 수백 명뿐이고, 대부분이 성직자입니다. 스위스 미늘창 근위대는 있어도 축구 선수라 부를 만한 사람은 한 명도 없습니다. 이 세계에서 바티칸은 그래도 유럽에서 산마리노의 자리를 대신해 경기에 나서지만, 산마리노가 가장 약했던 시절보다도 훨씬 약합니다. 주교, 신학생, 박물관 직원, 비번인 근위병들, 성벽 안에 있는 1,500석 규모의 경기장, 그리고 가끔은 로마에서 빌린 경기장에서 치르는 홈 경기. 50번의 대회 주기는 긴 시간이지만, 그래도 기적이 필요합니다. 예선 경기에서 1승을 거두고, 예선 조 최하위에서 벗어나고, 하늘이 듣고 있다면 플레이오프에 진출하세요.';
+      '세계에서 가장 작은 나라의 시민은 수백 명뿐이고, 대부분이 성직자입니다. 스위스 미늘창 근위대는 있어도 축구 선수라 부를 만한 사람은 한 명도 없습니다. 이 세계에서 바티칸은 그래도 유럽에서 산마리노의 자리를 대신해 경기에 나서지만, 산마리노가 가장 약했던 시절보다도 훨씬 약합니다. 주교, 신학생, 박물관 직원, 비번인 근위병들, 성벽 안에 있는 1,500석 규모의 경기장, 그리고 가끔은 로마에서 빌린 경기장에서 치르는 홈 경기. 50번의 대회 주기는 긴 시간이지만, 그래도 기적이 필요합니다. 유럽 선수권 본선에 오르고, 이어서 세계 선수권 본선에 오르고, 하늘이 듣고 있다면 세계 선수권에서 우승하세요.';
 
   @override
-  String get campaignVaticanGoal => '예선 경기 1승';
+  String get campaignVaticanGoal => '유럽 선수권 본선 진출';
 
   @override
-  String get campaignStars1Vatican => '예선 경기 1승';
+  String get campaignStars1Vatican => '유럽 선수권 본선 진출';
 
   @override
-  String get campaignStars2Vatican => '예선 조 최하위 탈출';
+  String get campaignStars2Vatican => '세계 선수권 본선 진출';
 
   @override
-  String get campaignStars3Vatican => '플레이오프 진출';
+  String get campaignStars3Vatican => '세계 선수권 우승';
 
   @override
   String get campaignNoEnd => '끝없음';

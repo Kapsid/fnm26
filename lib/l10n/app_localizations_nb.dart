@@ -18904,19 +18904,19 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get campaignVaticanIntro =>
-      'Verdens minste stat har noen hundre innbyggere, de fleste geistlige, en garde av sveitsiske hellebardierer og ikke én fotballspiller som fortjener navnet. I denne verdenen spiller Vatikanstaten likevel, på San Marinos plass i Europa, og laget er langt svakere enn San Marino noen gang var: biskoper, seminarister, museumsvakter og gardister på fritid, en bane innenfor murene med plass til 1 500 og en og annen hjemmekamp på en lånt arena i Roma. Femti sykluser er lang tid, men det trengs mirakler likevel: vinn en kvalikkamp, ikke bli sist i en kvalifiseringsgruppe og, om himmelen lytter, nå en playoff.';
+      'Verdens minste stat har noen hundre innbyggere, de fleste geistlige, en garde av sveitsiske hellebardierer og ikke én fotballspiller som fortjener navnet. I denne verdenen spiller Vatikanstaten likevel, på San Marinos plass i Europa, og laget er langt svakere enn San Marino noen gang var: biskoper, seminarister, museumsvakter og gardister på fritid, en bane innenfor murene med plass til 1 500 og en og annen hjemmekamp på en lånt arena i Roma. Femti sykluser er lang tid, men det trengs mirakler likevel: nå et Europamesterskap, så et VM og, om himmelen lytter, vinn det.';
 
   @override
-  String get campaignVaticanGoal => 'Vinn en kvalikkamp';
+  String get campaignVaticanGoal => 'Kvalifiser deg til et Europamesterskap';
 
   @override
-  String get campaignStars1Vatican => 'Vinn en kvalikkamp';
+  String get campaignStars1Vatican => 'Kvalifiser deg til et Europamesterskap';
 
   @override
-  String get campaignStars2Vatican => 'Ikke bli sist i en kvalifiseringsgruppe';
+  String get campaignStars2Vatican => 'Kvalifiser deg til et VM';
 
   @override
-  String get campaignStars3Vatican => 'Nå en playoff';
+  String get campaignStars3Vatican => 'Vinn Verdensmesterskapet';
 
   @override
   String get campaignNoEnd => 'Uten ende';

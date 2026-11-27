@@ -905,6 +905,9 @@ void main() {
 
     test('seed 217 keeps Vatican City from hosting either championship in '
         'any of the fifty cycles of its run', () {
+      // A host would be handed a place, and so a star, without qualifying:
+      // its first two stars are a European and a World Championship place.
+      expect(def.goal, CampaignGoal.qualifyBothThenWorldTitle);
       expect(def.rngSeed, 217);
       expect(def.cycles, 50);
       expect(def.withBelarus, isTrue);

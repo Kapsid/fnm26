@@ -19291,20 +19291,19 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get campaignVaticanIntro =>
-      'Nejmenší stát světa má pár stovek občanů, většinou duchovních, gardu švýcarských halapartníků a ani jednoho fotbalistu, který by si to jméno zasloužil. V tomto světě Vatikán hraje i tak, na místě San Marina v Evropě, a je mnohem horší, než kdy San Marino bylo: biskupové, seminaristé, kustodi z muzeí a gardisté po službě, hřiště za hradbami pro 1 500 diváků a sem tam domácí zápas na vypůjčeném stadionu v Římě. Padesát cyklů je dlouhá doba, ale bez zázraků se to stejně neobejde: vyhrát kvalifikační zápas, neskončit v kvalifikační skupině poslední a, pokud nebe naslouchá, dostat se do baráže.';
+      'Nejmenší stát světa má pár stovek občanů, většinou duchovních, gardu švýcarských halapartníků a ani jednoho fotbalistu, který by si to jméno zasloužil. V tomto světě Vatikán hraje i tak, na místě San Marina v Evropě, a je mnohem horší, než kdy San Marino bylo: biskupové, seminaristé, kustodi z muzeí a gardisté po službě, hřiště za hradbami pro 1 500 diváků a sem tam domácí zápas na vypůjčeném stadionu v Římě. Padesát cyklů je dlouhá doba, ale bez zázraků se to stejně neobejde: dostat se na mistrovství Evropy, pak na mistrovství světa a, pokud nebe naslouchá, ho i vyhrát.';
 
   @override
-  String get campaignVaticanGoal => 'Vyhrát kvalifikační zápas';
+  String get campaignVaticanGoal => 'Postoupit na mistrovství Evropy';
 
   @override
-  String get campaignStars1Vatican => 'Vyhrát kvalifikační zápas';
+  String get campaignStars1Vatican => 'Postoupit na mistrovství Evropy';
 
   @override
-  String get campaignStars2Vatican =>
-      'Neskončit v kvalifikační skupině poslední';
+  String get campaignStars2Vatican => 'Postoupit na mistrovství světa';
 
   @override
-  String get campaignStars3Vatican => 'Dostat se do baráže';
+  String get campaignStars3Vatican => 'Vyhrát mistrovství světa';
 
   @override
   String get campaignNoEnd => 'Bez konce';
