@@ -18029,6 +18029,10 @@ class AppLocalizationsSr extends AppLocalizations {
       'Ледена ноћ и тврд терен. Додавања неће бити лака.';
 
   @override
+  String get pitchComKickOffFrostDay =>
+      'Ниско зимско сунце и тврд, залеђен терен. Лопта ће клизати.';
+
+  @override
   String get pitchComKickOffGale =>
       'Почетни ударац уз јак ветар. Дуге лопте ће бежати.';
 

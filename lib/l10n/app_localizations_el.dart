@@ -17780,6 +17780,10 @@ class AppLocalizationsEl extends AppLocalizations {
       'Παγωμένη νύχτα και σκληρός αγωνιστικός χώρος. Οι πάσες δεν θα είναι εύκολες.';
 
   @override
+  String get pitchComKickOffFrostDay =>
+      'Χαμηλός χειμωνιάτικος ήλιος και σκληρό, παγωμένο γήπεδο. Η μπάλα θα γλιστράει.';
+
+  @override
   String get pitchComKickOffGale =>
       'Σέντρα με δυνατό άνεμο. Οι μακριές μπαλιές θα ξεφεύγουν.';
 

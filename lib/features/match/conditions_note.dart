@@ -72,14 +72,14 @@ class ConditionsNote extends StatelessWidget {
         WeatherKind.heavyRain => l.matchWeatherPlaysHeavyRain,
         WeatherKind.thunderstorm => l.matchWeatherPlaysStorm,
         WeatherKind.snow => l.matchWeatherPlaysSnow,
-        WeatherKind.frostyNight => l.matchWeatherPlaysFrost,
+        WeatherKind.frostyNight ||
+        WeatherKind.frost => l.matchWeatherPlaysFrost,
         WeatherKind.windy => l.matchWeatherPlaysGale,
         WeatherKind.fog => l.matchWeatherPlaysFog,
         WeatherKind.haze => l.matchWeatherPlaysHaze,
         WeatherKind.clear ||
         WeatherKind.rain ||
         WeatherKind.drizzle ||
-        WeatherKind.frost ||
         WeatherKind.dustStorm => null,
       };
 

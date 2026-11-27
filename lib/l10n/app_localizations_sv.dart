@@ -17677,6 +17677,10 @@ class AppLocalizationsSv extends AppLocalizations {
       'En frostig kväll och en hård plan. Passningsspelet blir inte lätt.';
 
   @override
+  String get pitchComKickOffFrostDay =>
+      'Låg vintersol och en hård, frusen plan. Bollen kommer att glida.';
+
+  @override
   String get pitchComKickOffGale =>
       'Avspark i hård vind. Långa bollar kommer att driva iväg.';
 

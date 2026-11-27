@@ -17634,6 +17634,10 @@ class AppLocalizationsHu extends AppLocalizations {
       'Fagyos este és kemény pálya. Nem lesz könnyű passzolni.';
 
   @override
+  String get pitchComKickOffFrostDay =>
+      'Alacsonyan járó téli nap és kemény, fagyos pálya. A labda csúszni fog.';
+
+  @override
   String get pitchComKickOffGale =>
       'Kezdőrúgás erős szélben. A hosszú labdák elszállnak majd.';
 

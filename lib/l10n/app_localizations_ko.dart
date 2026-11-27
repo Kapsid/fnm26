@@ -17090,6 +17090,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get pitchComKickOffFrost => '서리 내린 밤, 딱딱한 그라운드. 패스가 쉽지 않을 겁니다.';
 
   @override
+  String get pitchComKickOffFrostDay => '낮게 뜬 겨울 햇살에 딱딱하게 언 그라운드. 공이 미끄러질 겁니다.';
+
+  @override
   String get pitchComKickOffGale => '강풍 속에 킥오프. 롱볼이 바람에 흘러갈 겁니다.';
 
   @override

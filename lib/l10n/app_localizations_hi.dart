@@ -17592,6 +17592,10 @@ class AppLocalizationsHi extends AppLocalizations {
       'पाले वाली रात और सख़्त पिच। पास देना आसान नहीं होगा।';
 
   @override
+  String get pitchComKickOffFrostDay =>
+      'सर्दियों की नीची धूप और सख़्त, पाले से जमी पिच। गेंद फिसलेगी।';
+
+  @override
   String get pitchComKickOffGale =>
       'तेज़ हवा में किक-ऑफ़। लंबी गेंदें भटकेंगी।';
 

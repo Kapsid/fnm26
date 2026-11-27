@@ -17594,6 +17594,10 @@ class AppLocalizationsId extends AppLocalizations {
       'Malam beku dan lapangan keras. Mengumpan tidak akan mudah.';
 
   @override
+  String get pitchComKickOffFrostDay =>
+      'Matahari musim dingin yang rendah dan lapangan keras membeku. Bola akan meluncur.';
+
+  @override
   String get pitchComKickOffGale =>
       'Sepak mula di tengah angin kencang. Umpan panjang akan melenceng.';
 

@@ -17765,6 +17765,10 @@ class AppLocalizationsBg extends AppLocalizations {
       'Мразовита вечер и твърд терен. Подаванията няма да са лесни.';
 
   @override
+  String get pitchComKickOffFrostDay =>
+      'Ниско зимно слънце и твърд, заскрежен терен. Топката ще се плъзга.';
+
+  @override
   String get pitchComKickOffGale =>
       'Начален удар при силен вятър. Дългите топки ще се отклоняват.';
 

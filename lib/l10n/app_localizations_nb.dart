@@ -17683,6 +17683,10 @@ class AppLocalizationsNb extends AppLocalizations {
       'En frostkald kveld og en hard bane. Pasningsspillet blir ikke lett.';
 
   @override
+  String get pitchComKickOffFrostDay =>
+      'Lav vintersol og en hard, frossen bane. Ballen kommer til å skli.';
+
+  @override
   String get pitchComKickOffGale =>
       'Avspark i sterk vind. Lange baller kommer til å drive av gårde.';
 

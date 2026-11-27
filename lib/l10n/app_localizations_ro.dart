@@ -18101,6 +18101,10 @@ class AppLocalizationsRo extends AppLocalizations {
       'O noapte geroasă și un teren tare. Pasele nu vor fi ușoare.';
 
   @override
+  String get pitchComKickOffFrostDay =>
+      'Soare jos de iarnă și un teren tare, înghețat. Mingea va aluneca.';
+
+  @override
   String get pitchComKickOffGale =>
       'Lovitura de start pe vânt puternic. Mingile lungi vor devia.';
 

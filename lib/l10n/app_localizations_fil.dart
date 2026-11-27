@@ -17700,6 +17700,10 @@ class AppLocalizationsFil extends AppLocalizations {
       'Nagyeyelong gabi at matigas na pitch. Hindi magiging madali ang pasa.';
 
   @override
+  String get pitchComKickOffFrostDay =>
+      'Mababang araw ng taglamig at matigas, nagyeyelong pitch. Dudulas ang bola.';
+
+  @override
   String get pitchComKickOffGale =>
       'Kick-off sa malakas na hangin. Liligaw ang mga long ball.';
 

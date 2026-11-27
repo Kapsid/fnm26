@@ -17767,6 +17767,10 @@ class AppLocalizationsIt extends AppLocalizations {
       'Una notte gelida e un campo duro. Passarsi la palla non sarà facile.';
 
   @override
+  String get pitchComKickOffFrostDay =>
+      'Sole basso d’inverno e un campo duro e ghiacciato. Il pallone scivolerà.';
+
+  @override
   String get pitchComKickOffGale =>
       'Calcio d’inizio con un vento forte. I lanci lunghi andranno fuori misura.';
 

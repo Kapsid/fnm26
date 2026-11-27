@@ -283,13 +283,13 @@ String? pitchKickOffLine(AppLocalizations l, WeatherKind weather) =>
       WeatherKind.thunderstorm => l.pitchComKickOffStorm,
       WeatherKind.snow => l.pitchComKickOffSnow,
       WeatherKind.frostyNight => l.pitchComKickOffFrost,
+      WeatherKind.frost => l.pitchComKickOffFrostDay,
       WeatherKind.windy => l.pitchComKickOffGale,
       WeatherKind.fog => l.pitchComKickOffFog,
       WeatherKind.haze => l.pitchComKickOffHaze,
       WeatherKind.clear ||
       WeatherKind.rain ||
       WeatherKind.drizzle ||
-      WeatherKind.frost ||
       WeatherKind.dustStorm => null,
     };
 

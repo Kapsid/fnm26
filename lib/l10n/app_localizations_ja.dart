@@ -17045,6 +17045,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get pitchComKickOffFrost => '凍える夜、硬いピッチ。パス回しは簡単ではないでしょう。';
 
   @override
+  String get pitchComKickOffFrostDay => '低い冬の日差しと、硬く凍ったピッチ。ボールが滑りそうだ。';
+
+  @override
   String get pitchComKickOffGale => '強風の中でキックオフ。ロングボールは流されそうです。';
 
   @override

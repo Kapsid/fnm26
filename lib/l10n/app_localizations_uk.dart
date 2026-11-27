@@ -18003,6 +18003,10 @@ class AppLocalizationsUk extends AppLocalizations {
       'Морозний вечір і тверде поле. Передачі даватимуться нелегко.';
 
   @override
+  String get pitchComKickOffFrostDay =>
+      'Низьке зимове сонце й тверде, промерзле поле. М’яч ковзатиме.';
+
+  @override
   String get pitchComKickOffGale =>
       'Стартовий свисток при сильному вітрі. Довгі передачі зноситиме.';
 

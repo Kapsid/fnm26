@@ -17759,6 +17759,10 @@ class AppLocalizationsFi extends AppLocalizations {
       'Pakkasilta ja kova kenttä. Syöttäminen ei ole helppoa.';
 
   @override
+  String get pitchComKickOffFrostDay =>
+      'Matala talviaurinko ja kova, jäinen kenttä. Pallo luistaa.';
+
+  @override
   String get pitchComKickOffGale =>
       'Aloituspotku kovassa tuulessa. Pitkät pallot karkaavat.';
 

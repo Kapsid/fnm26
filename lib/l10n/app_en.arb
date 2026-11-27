@@ -27357,6 +27357,10 @@
   "@pitchComKickOffFrost": {
     "description": "Pitch view commentary, the first line at kick-off when the match is played on a clear, frosty night on a hard pitch."
   },
+  "pitchComKickOffFrostDay": "A low winter sun and a hard, frosty pitch. The ball will skid.",
+  "@pitchComKickOffFrostDay": {
+    "description": "Commentary at kick-off on a frosty day under a low winter sun: a hard, frozen pitch where the ball skids."
+  },
   "pitchComKickOffGale": "Kick-off in a strong wind. Long balls will go astray.",
   "@pitchComKickOffGale": {
     "description": "Pitch view commentary, the first line at kick-off when the match is played in a strong wind."

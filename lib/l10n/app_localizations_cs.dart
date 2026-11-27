@@ -18064,6 +18064,10 @@ class AppLocalizationsCs extends AppLocalizations {
       'Mrazivý večer a tvrdý trávník. Přihrávky nebudou snadné.';
 
   @override
+  String get pitchComKickOffFrostDay =>
+      'Nízké zimní slunce a tvrdý, zmrzlý trávník. Míč bude klouzat.';
+
+  @override
   String get pitchComKickOffGale =>
       'Výkop v silném větru. Dlouhé míče budou létat mimo.';
 

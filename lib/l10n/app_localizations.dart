@@ -26733,6 +26733,12 @@ abstract class AppLocalizations {
   /// **'A frosty night and a hard pitch. Passing won\'t be easy.'**
   String get pitchComKickOffFrost;
 
+  /// Commentary at kick-off on a frosty day under a low winter sun: a hard, frozen pitch where the ball skids.
+  ///
+  /// In en, this message translates to:
+  /// **'A low winter sun and a hard, frosty pitch. The ball will skid.'**
+  String get pitchComKickOffFrostDay;
+
   /// Pitch view commentary, the first line at kick-off when the match is played in a strong wind.
   ///
   /// In en, this message translates to:

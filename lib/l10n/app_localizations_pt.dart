@@ -17788,6 +17788,10 @@ class AppLocalizationsPt extends AppLocalizations {
       'Uma noite gélida e um relvado duro. Os passes não vão ser fáceis.';
 
   @override
+  String get pitchComKickOffFrostDay =>
+      'Sol baixo de inverno e um relvado duro e gelado. A bola vai deslizar.';
+
+  @override
   String get pitchComKickOffGale =>
       'Pontapé de saída com vento forte. As bolas longas vão sair desviadas.';
 

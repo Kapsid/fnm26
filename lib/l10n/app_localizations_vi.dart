@@ -17529,6 +17529,10 @@ class AppLocalizationsVi extends AppLocalizations {
       'Một đêm giá rét và mặt sân cứng. Chuyền bóng sẽ không dễ.';
 
   @override
+  String get pitchComKickOffFrostDay =>
+      'Nắng đông thấp và mặt sân cứng, đóng băng. Bóng sẽ trượt đi.';
+
+  @override
   String get pitchComKickOffGale =>
       'Giao bóng trong gió mạnh. Những đường bóng dài sẽ đi chệch hướng.';
 

@@ -17592,6 +17592,10 @@ class AppLocalizationsTr extends AppLocalizations {
       'Ayaz bir gece ve sert bir zemin. Pas yapmak kolay olmayacak.';
 
   @override
+  String get pitchComKickOffFrostDay =>
+      'Alçak bir kış güneşi ve sert, donmuş bir zemin. Top kayacak.';
+
+  @override
   String get pitchComKickOffGale =>
       'Maç sert rüzgarda başladı. Uzun toplar yolunu şaşıracak.';
 

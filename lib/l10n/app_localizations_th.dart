@@ -17370,6 +17370,10 @@ class AppLocalizationsTh extends AppLocalizations {
       'คืนที่หนาวจัดและสนามแข็ง การส่งบอลจะไม่ง่าย';
 
   @override
+  String get pitchComKickOffFrostDay =>
+      'แดดฤดูหนาวต่ำ ๆ กับสนามแข็งที่จับน้ำแข็ง ลูกบอลจะลื่นไถล';
+
+  @override
   String get pitchComKickOffGale => 'เริ่มเกมท่ามกลางลมแรง บอลยาวจะเฉออกนอกทาง';
 
   @override

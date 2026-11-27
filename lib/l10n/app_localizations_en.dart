@@ -17715,6 +17715,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'A frosty night and a hard pitch. Passing won\'t be easy.';
 
   @override
+  String get pitchComKickOffFrostDay =>
+      'A low winter sun and a hard, frosty pitch. The ball will skid.';
+
+  @override
   String get pitchComKickOffGale =>
       'Kick-off in a strong wind. Long balls will go astray.';
 
