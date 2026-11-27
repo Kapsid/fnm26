@@ -1360,6 +1360,12 @@ class AppLocalizationsFil extends AppLocalizations {
       'I-tap ang manlalaro para sa role. Hawakan at i-drag para gumuhit ng takbo.';
 
   @override
+  String get tacticsRunLegendRole => 'Natural na takbo ng role';
+
+  @override
+  String get tacticsRunLegendManual => 'Utos mo';
+
+  @override
   String get tacticsPlanRoleHeading => 'ROLE';
 
   @override

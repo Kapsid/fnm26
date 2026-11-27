@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "Mga manlalaro",
   "tacticsPitchModeRoles": "Role at takbo",
   "tacticsPitchRolesHint": "I-tap ang manlalaro para sa role. Hawakan at i-drag para gumuhit ng takbo.",
+  "tacticsRunLegendRole": "Natural na takbo ng role",
+  "tacticsRunLegendManual": "Utos mo",
   "tacticsPlanRoleHeading": "ROLE",
   "tacticsPlanMovementHeading": "GALAW",
   "tacticsPlanTitle": "{position} · {name}",

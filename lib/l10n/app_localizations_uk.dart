@@ -1355,6 +1355,12 @@ class AppLocalizationsUk extends AppLocalizations {
       'Торкніться гравця, щоб вибрати роль. Утримуйте й тягніть, щоб намалювати рух.';
 
   @override
+  String get tacticsRunLegendRole => 'Природний рух ролі';
+
+  @override
+  String get tacticsRunLegendManual => 'Ваша вказівка';
+
+  @override
   String get tacticsPlanRoleHeading => 'РОЛЬ';
 
   @override

@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "Играчи",
   "tacticsPitchModeRoles": "Роли и движение",
   "tacticsPitchRolesHint": "Докосни играч за роля. Задръж и дръпни, за да начертаеш движение.",
+  "tacticsRunLegendRole": "Естествено движение на ролята",
+  "tacticsRunLegendManual": "Вашата инструкция",
   "tacticsPlanRoleHeading": "РОЛЯ",
   "tacticsPlanMovementHeading": "ДВИЖЕНИЕ",
   "tacticsPlanTitle": "{position} · {name}",

@@ -1400,6 +1400,12 @@ class AppLocalizationsNl extends AppLocalizations {
       'Tik op een speler voor zijn rol. Houd vast en sleep voor een loopactie.';
 
   @override
+  String get tacticsRunLegendRole => 'Natuurlijke loopactie van de rol';
+
+  @override
+  String get tacticsRunLegendManual => 'Jouw instructie';
+
+  @override
   String get tacticsPlanRoleHeading => 'ROL';
 
   @override

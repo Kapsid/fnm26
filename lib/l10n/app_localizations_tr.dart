@@ -1354,6 +1354,12 @@ class AppLocalizationsTr extends AppLocalizations {
       'Rol için oyuncuya dokun. Koşu çizmek için basılı tutup sürükle.';
 
   @override
+  String get tacticsRunLegendRole => 'Rolün doğal koşusu';
+
+  @override
+  String get tacticsRunLegendManual => 'Senin talimatın';
+
+  @override
   String get tacticsPlanRoleHeading => 'ROL';
 
   @override

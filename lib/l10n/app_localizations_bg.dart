@@ -1406,6 +1406,12 @@ class AppLocalizationsBg extends AppLocalizations {
       'Докосни играч за роля. Задръж и дръпни, за да начертаеш движение.';
 
   @override
+  String get tacticsRunLegendRole => 'Естествено движение на ролята';
+
+  @override
+  String get tacticsRunLegendManual => 'Вашата инструкция';
+
+  @override
   String get tacticsPlanRoleHeading => 'РОЛЯ';
 
   @override

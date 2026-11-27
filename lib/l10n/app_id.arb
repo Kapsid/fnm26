@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "Pemain",
   "tacticsPitchModeRoles": "Peran & pergerakan",
   "tacticsPitchRolesHint": "Ketuk pemain untuk memilih peran. Tahan dan seret untuk menggambar pergerakan.",
+  "tacticsRunLegendRole": "Pergerakan alami peran",
+  "tacticsRunLegendManual": "Instruksi Anda",
   "tacticsPlanRoleHeading": "PERAN",
   "tacticsPlanMovementHeading": "PERGERAKAN",
   "tacticsPlanTitle": "{position} · {name}",

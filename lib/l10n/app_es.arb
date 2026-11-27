@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "Jugadores",
   "tacticsPitchModeRoles": "Roles y desmarques",
   "tacticsPitchRolesHint": "Toca a un jugador para su rol. Mantén y arrastra para dibujar su desmarque.",
+  "tacticsRunLegendRole": "Desmarque natural del rol",
+  "tacticsRunLegendManual": "Tu instrucción",
   "tacticsPlanRoleHeading": "ROL",
   "tacticsPlanMovementHeading": "MOVIMIENTO",
   "tacticsPlanTitle": "{position} · {name}",

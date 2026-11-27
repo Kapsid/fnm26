@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "Παίκτες",
   "tacticsPitchModeRoles": "Ρόλοι και κινήσεις",
   "tacticsPitchRolesHint": "Πάτα έναν παίκτη για τον ρόλο. Κράτα και σύρε για να σχεδιάσεις κίνηση.",
+  "tacticsRunLegendRole": "Φυσική κίνηση του ρόλου",
+  "tacticsRunLegendManual": "Η οδηγία σου",
   "tacticsPlanRoleHeading": "ΡΟΛΟΣ",
   "tacticsPlanMovementHeading": "ΚΙΝΗΣΗ",
   "tacticsPlanTitle": "{position} · {name}",

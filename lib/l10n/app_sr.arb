@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "Играчи",
   "tacticsPitchModeRoles": "Улоге и кретање",
   "tacticsPitchRolesHint": "Додирни играча за улогу. Држи и повуци да нацрташ кретање.",
+  "tacticsRunLegendRole": "Природно кретање улоге",
+  "tacticsRunLegendManual": "Твоје упутство",
   "tacticsPlanRoleHeading": "УЛОГА",
   "tacticsPlanMovementHeading": "КРЕТАЊЕ",
   "tacticsPlanTitle": "{position} · {name}",

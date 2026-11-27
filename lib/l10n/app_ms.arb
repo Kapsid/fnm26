@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "Pemain",
   "tacticsPitchModeRoles": "Peranan & larian",
   "tacticsPitchRolesHint": "Ketik pemain untuk memilih peranan. Tahan dan seret untuk melukis larian.",
+  "tacticsRunLegendRole": "Larian semula jadi peranan",
+  "tacticsRunLegendManual": "Arahan anda",
   "tacticsPlanRoleHeading": "PERANAN",
   "tacticsPlanMovementHeading": "PERGERAKAN",
   "tacticsPlanTitle": "{position} · {name}",

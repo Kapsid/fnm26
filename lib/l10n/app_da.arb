@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "Spillere",
   "tacticsPitchModeRoles": "Roller og løb",
   "tacticsPitchRolesHint": "Tryk på en spiller for rolle. Hold og træk for at tegne et løb.",
+  "tacticsRunLegendRole": "Rollens naturlige løb",
+  "tacticsRunLegendManual": "Din instruks",
   "tacticsPlanRoleHeading": "ROLLE",
   "tacticsPlanMovementHeading": "BEVÆGELSE",
   "tacticsPlanTitle": "{position} · {name}",

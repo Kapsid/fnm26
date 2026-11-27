@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "खिलाड़ी",
   "tacticsPitchModeRoles": "भूमिका और रन",
   "tacticsPitchRolesHint": "भूमिका के लिए खिलाड़ी पर टैप करें। रन बनाने के लिए पकड़कर खींचें।",
+  "tacticsRunLegendRole": "भूमिका का स्वाभाविक रन",
+  "tacticsRunLegendManual": "आपका निर्देश",
   "tacticsPlanRoleHeading": "भूमिका",
   "tacticsPlanMovementHeading": "मूवमेंट",
   "tacticsPlanTitle": "{position} · {name}",

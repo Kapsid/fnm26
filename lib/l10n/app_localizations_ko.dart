@@ -1308,6 +1308,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get tacticsPitchRolesHint => '선수를 탭해 역할을 정하고, 길게 눌러 끌어 움직임을 그리세요.';
 
   @override
+  String get tacticsRunLegendRole => '역할의 기본 움직임';
+
+  @override
+  String get tacticsRunLegendManual => '직접 지시';
+
+  @override
   String get tacticsPlanRoleHeading => '역할';
 
   @override

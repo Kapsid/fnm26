@@ -2048,6 +2048,14 @@
   "@tacticsPitchRolesHint": {
     "description": "Hint above the tactics pitch while it edits roles and runs."
   },
+  "tacticsRunLegendRole": "Role's natural run",
+  "@tacticsRunLegendRole": {
+    "description": "Legend under the tactics pitch (and the no-arrow choice in a player's run sheet): a dashed, lighter arrow is the natural run of the player's role."
+  },
+  "tacticsRunLegendManual": "Your instruction",
+  "@tacticsRunLegendManual": {
+    "description": "Legend under the tactics pitch: a solid arrow is a movement the manager set for the player."
+  },
   "tacticsPlanRoleHeading": "ROLE",
   "@tacticsPlanRoleHeading": {
     "description": "Heading of the role list in a player's role and run sheet."

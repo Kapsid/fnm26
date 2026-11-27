@@ -287,6 +287,19 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     arrows: _arrows,
   );
 
+  /// What [slot] shows as its run, on the pitch and in the on-pitch list:
+  /// its arrow, else its role's natural run (see [PitchRun]).
+  ({PitchRun run, int flank}) _runOf(int slot) {
+    final t = _asTactic;
+    if (slot < 0 || slot >= t.lineup.length) {
+      return (run: PitchRun.none, flank: 0);
+    }
+    return (
+      run: pitchRunOf(t.roleAt(slot), t.arrowAt(slot)),
+      flank: flankOf(t.positions[slot]),
+    );
+  }
+
   void _setRole(int slot, PlayerRole role) {
     final next = _asTactic.withRole(slot, role);
     setState(() => _roles = next.roles);
@@ -1187,6 +1200,8 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                   for (final p in onPitch)
                     _OnPitchRow(
                       player: p,
+                      slot: _lineup.indexOf(p.id),
+                      run: _runOf(_lineup.indexOf(p.id)),
                       detail: _pitchDetail(l, p.id),
                       energy: widget.energyByPlayer[p.id],
                       rating: widget.ratingByPlayer[p.id],
@@ -2109,6 +2124,8 @@ class _Chip extends StatelessWidget {
 class _OnPitchRow extends StatelessWidget {
   const _OnPitchRow({
     required this.player,
+    required this.slot,
+    required this.run,
     required this.detail,
     required this.energy,
     required this.selected,
@@ -2119,6 +2136,13 @@ class _OnPitchRow extends StatelessWidget {
   });
 
   final Player player;
+
+  /// His slot in the eleven, or -1.
+  final int slot;
+
+  /// The run his slot shows on the pitch (its arrow, else its role's), drawn
+  /// small beside his name the same way.
+  final ({PitchRun run, int flank}) run;
 
   /// His goals and assists so far, beside his name (his card is [card]).
   final PlayerMatchTally tally;
@@ -2213,6 +2237,15 @@ class _OnPitchRow extends StatelessWidget {
                   ],
                 ),
               ),
+              if (!run.run.isNone) ...[
+                const SizedBox(width: AppSpacing.sm),
+                PitchRunGlyph(
+                  key: PitchPlanKeys.runGlyph(slot),
+                  run: run.run,
+                  flank: run.flank,
+                  size: 24,
+                ),
+              ],
               if (rating case final r?) ...[
                 const SizedBox(width: AppSpacing.sm),
                 RatingBadge(r, compact: true),

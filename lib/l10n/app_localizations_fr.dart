@@ -1403,6 +1403,12 @@ class AppLocalizationsFr extends AppLocalizations {
       'Touchez un joueur pour son rôle. Maintenez et glissez pour tracer sa course.';
 
   @override
+  String get tacticsRunLegendRole => 'Course naturelle du rôle';
+
+  @override
+  String get tacticsRunLegendManual => 'Votre consigne';
+
+  @override
   String get tacticsPlanRoleHeading => 'RÔLE';
 
   @override

@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "Igrači",
   "tacticsPitchModeRoles": "Uloge i kretanje",
   "tacticsPitchRolesHint": "Dodirni igrača za ulogu. Drži i povuci da nacrtaš kretanje.",
+  "tacticsRunLegendRole": "Prirodno kretanje uloge",
+  "tacticsRunLegendManual": "Tvoja uputa",
   "tacticsPlanRoleHeading": "ULOGA",
   "tacticsPlanMovementHeading": "KRETANJE",
   "tacticsPlanTitle": "{position} · {name}",

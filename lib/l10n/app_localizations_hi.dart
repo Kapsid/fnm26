@@ -1352,6 +1352,12 @@ class AppLocalizationsHi extends AppLocalizations {
       'भूमिका के लिए खिलाड़ी पर टैप करें। रन बनाने के लिए पकड़कर खींचें।';
 
   @override
+  String get tacticsRunLegendRole => 'भूमिका का स्वाभाविक रन';
+
+  @override
+  String get tacticsRunLegendManual => 'आपका निर्देश';
+
+  @override
   String get tacticsPlanRoleHeading => 'भूमिका';
 
   @override

@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "Pelaajat",
   "tacticsPitchModeRoles": "Roolit ja juoksut",
   "tacticsPitchRolesHint": "Napauta pelaajaa valitaksesi roolin. Pidä ja vedä piirtääksesi juoksun.",
+  "tacticsRunLegendRole": "Roolin luontainen juoksu",
+  "tacticsRunLegendManual": "Oma ohjeesi",
   "tacticsPlanRoleHeading": "ROOLI",
   "tacticsPlanMovementHeading": "LIIKKUMINEN",
   "tacticsPlanTitle": "{position} · {name}",

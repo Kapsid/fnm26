@@ -1404,6 +1404,12 @@ class AppLocalizationsEs extends AppLocalizations {
       'Toca a un jugador para su rol. Mantén y arrastra para dibujar su desmarque.';
 
   @override
+  String get tacticsRunLegendRole => 'Desmarque natural del rol';
+
+  @override
+  String get tacticsRunLegendManual => 'Tu instrucción';
+
+  @override
   String get tacticsPlanRoleHeading => 'ROL';
 
   @override

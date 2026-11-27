@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "選手",
   "tacticsPitchModeRoles": "役割と動き",
   "tacticsPitchRolesHint": "選手をタップで役割、長押ししてドラッグで動きを描く。",
+  "tacticsRunLegendRole": "役割の自然な動き",
+  "tacticsRunLegendManual": "あなたの指示",
   "tacticsPlanRoleHeading": "役割",
   "tacticsPlanMovementHeading": "動き",
   "tacticsPlanTitle": "{position} · {name}",

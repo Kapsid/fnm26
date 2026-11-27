@@ -1406,6 +1406,12 @@ class AppLocalizationsFi extends AppLocalizations {
       'Napauta pelaajaa valitaksesi roolin. Pidä ja vedä piirtääksesi juoksun.';
 
   @override
+  String get tacticsRunLegendRole => 'Roolin luontainen juoksu';
+
+  @override
+  String get tacticsRunLegendManual => 'Oma ohjeesi';
+
+  @override
   String get tacticsPlanRoleHeading => 'ROOLI';
 
   @override

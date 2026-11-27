@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "Spelare",
   "tacticsPitchModeRoles": "Roller och löpningar",
   "tacticsPitchRolesHint": "Tryck på en spelare för roll. Håll och dra för att rita en löpning.",
+  "tacticsRunLegendRole": "Rollens naturliga löpning",
+  "tacticsRunLegendManual": "Din instruktion",
   "tacticsPlanRoleHeading": "ROLL",
   "tacticsPlanMovementHeading": "RÖRELSE",
   "tacticsPlanTitle": "{position} · {name}",

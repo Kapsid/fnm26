@@ -1413,6 +1413,12 @@ class AppLocalizationsCs extends AppLocalizations {
       'Klepnutím nastavíte roli. Podržením a tažením nakreslíte náběh.';
 
   @override
+  String get tacticsRunLegendRole => 'Přirozený pohyb role';
+
+  @override
+  String get tacticsRunLegendManual => 'Váš pokyn';
+
+  @override
   String get tacticsPlanRoleHeading => 'ROLE';
 
   @override

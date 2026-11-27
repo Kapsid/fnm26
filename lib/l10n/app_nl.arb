@@ -383,6 +383,8 @@
   "tacticsPitchModePlayers": "Spelers",
   "tacticsPitchModeRoles": "Rollen en loopacties",
   "tacticsPitchRolesHint": "Tik op een speler voor zijn rol. Houd vast en sleep voor een loopactie.",
+  "tacticsRunLegendRole": "Natuurlijke loopactie van de rol",
+  "tacticsRunLegendManual": "Jouw instructie",
   "tacticsPlanRoleHeading": "ROL",
   "tacticsPlanMovementHeading": "BEWEGING",
   "tacticsPlanTitle": "{position} · {name}",

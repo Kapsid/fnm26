@@ -1359,6 +1359,12 @@ class AppLocalizationsHu extends AppLocalizations {
       'Koppints egy játékosra a szerephez. Tartsd nyomva és húzd a mozgáshoz.';
 
   @override
+  String get tacticsRunLegendRole => 'A szerep természetes mozgása';
+
+  @override
+  String get tacticsRunLegendManual => 'A te utasításod';
+
+  @override
   String get tacticsPlanRoleHeading => 'SZEREP';
 
   @override
