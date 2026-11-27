@@ -21,61 +21,71 @@ const _finalsRounds = {
   'NGROUP', 'NR16', 'NQF', 'NSF', 'NFINAL',
 };
 
-/// The manager's whole-career [CareerStatsSnapshot], built from every match any
-/// of their nations played (a career can span several after job switches). The
+/// The manager's whole-career [CareerStatsSnapshot], built from every match he
+/// was in charge for, with whichever nation he had at the time (a career can
+/// span several after job switches; see [managedNationOn]). The
 /// heavy lifting is the pure [CareerStats.compute]; this just gathers the rows.
 final AutoDisposeFutureProviderFamily<CareerStatsSnapshot, int>
-careerStatsProvider = FutureProvider.autoDispose.family<CareerStatsSnapshot, int>((
-  ref,
-  careerId,
-) async {
-  await ref.watch(seedLoaderProvider).ensureSeeded();
-  final careerRepo = ref.watch(careerRepositoryProvider);
-  final career = await careerRepo.byId(careerId);
-  if (career == null) return const CareerStatsSnapshot();
-  final comp = ref.watch(competitionRepositoryProvider);
+careerStatsProvider = FutureProvider.autoDispose
+    .family<CareerStatsSnapshot, int>((
+      ref,
+      careerId,
+    ) async {
+      await ref.watch(seedLoaderProvider).ensureSeeded();
+      final careerRepo = ref.watch(careerRepositoryProvider);
+      final career = await careerRepo.byId(careerId);
+      if (career == null) return const CareerStatsSnapshot();
+      final comp = ref.watch(competitionRepositoryProvider);
 
-  // Every nation the manager has led (their current one plus any earlier
-  // stints), so a match counts as theirs whichever nation they had at the time.
-  final stints = await careerRepo.stints(careerId);
-  final managed = {career.nationId, ...stints.values};
+      // Every nation the manager has led (their current one plus any earlier
+      // stints), so a match counts as theirs whichever nation they had at the
+      // time — and only while they had it. A nation's games before he arrived
+      // (or after he left) are its own history, not his: reading them in handed
+      // a manager who moved to Morocco its AI-played shootouts on day one.
+      final stints = await careerRepo.stints(careerId);
+      final managed = {career.nationId, ...stints.values};
 
-  // Goal-by-goal, so a win can be told apart from a win from behind.
-  // Only the managed nations' fixtures and their goals: the save's other
-  // matches would be filtered out below anyway.
-  final timeline = await comp.goalTimeline(careerId, forNations: managed);
+      // Goal-by-goal, so a win can be told apart from a win from behind.
+      // Only the managed nations' fixtures and their goals: the save's other
+      // matches would be filtered out below anyway.
+      final timeline = await comp.goalTimeline(careerId, forNations: managed);
 
-  final matches = <ManagerMatch>[];
-  for (final f in await comp.allFixturesForNations(careerId, managed)) {
-    if (!f.hasResult) continue;
-    final homeManaged = managed.contains(f.homeNationId);
-    final awayManaged = managed.contains(f.awayNationId);
-    if (!homeManaged && !awayManaged) continue;
-    // If (rarely) the manager led both sides across different stints, take the
-    // home view — the split still balances out across the career.
-    matches.add(
-      managerMatchOf(f, iAmHome: homeManaged, timeline: timeline[f.id]),
-    );
-  }
+      final matches = <ManagerMatch>[];
+      // Fixture id → the nation he led in it, for his players' lines below.
+      final ledIn = <int, int>{};
+      for (final f in await comp.allFixturesForNations(careerId, managed)) {
+        if (!f.hasResult) continue;
+        final led = managedNationOn(stints, f.date, career.nationId);
+        if (f.homeNationId != led && f.awayNationId != led) continue;
+        ledIn[f.id] = led;
+        matches.add(
+          managerMatchOf(
+            f,
+            iAmHome: f.homeNationId == led,
+            timeline: timeline[f.id],
+          ),
+        );
+      }
 
-  // Player feats come from the manager's own players' rating lines (rating rows
-  // are only stored for the manager's matches, so filtering by their nations
-  // gives their squad's feats).
-  final lines = [
-    for (final l in await comp.careerPlayerLines(careerId, managed))
-      (
-        playerId: l.playerId,
-        goals: l.goals,
-        assists: l.assists,
-        rating: l.rating,
-        motm: l.motm,
-        yellows: l.yellows,
-        reds: l.reds,
-      ),
-  ];
+      // Player feats come from the manager's own players' rating lines: every
+      // match in the world is rated, so only his side's lines in the matches he
+      // was in charge for are his squad's feats.
+      final lines = [
+        for (final l in await comp.careerPlayerLines(careerId, managed))
+          if (ledIn[l.fixtureId] == l.nationId)
+            (
+              playerId: l.playerId,
+              goals: l.goals,
+              assists: l.assists,
+              rating: l.rating,
+              motm: l.motm,
+              yellows: l.yellows,
+              reds: l.reds,
+            ),
+      ];
 
-  return CareerStats.compute(matches, lines);
-});
+      return CareerStats.compute(matches, lines);
+    });
 
 /// [f] (a played fixture) as the manager's side saw it: [iAmHome] says which
 /// side that was, [timeline] is the match's goals in order, when known.

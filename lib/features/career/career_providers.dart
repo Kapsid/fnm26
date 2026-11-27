@@ -10,6 +10,7 @@ import 'package:fnm/data/repositories/drift_nation_repository.dart';
 import 'package:fnm/data/repositories/world_pack_repository.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/tactics.dart';
@@ -125,6 +126,13 @@ final FutureProviderFamily<Career?, int> careerByIdProvider =
     );
 
 /// Creates and deletes save games, enforcing the slot limit.
+/// Marks a save whose achievements count only the manager's own matches and
+/// titles (see `AchievementService.repairTenureUnlocks`): stamped on a new
+/// career, which never held an unlock the older rule handed out, and on an
+/// older save once its repair has run. Cycle 0's watched events, so no
+/// schema change.
+const achievementTenureKind = 'achTenure1';
+
 /// Marks a cycle opened by 1.0.6 or later, whose qualifying is played in fluid
 /// windows of two to four matches (see `WindowPlan`). Stored with the cycle's
 /// watched events, so no schema change; a cycle already under way in a save
@@ -487,6 +495,8 @@ class CareerService {
     // And from every pool in full, names appended since a pool first
     // shipped included (see namePoolsV3Kind).
     await comp.markDrawWatched(career.id, 0, namePoolsV3Kind);
+    // Its achievements were only ever counted on the manager's own watch.
+    await comp.markDrawWatched(career.id, 0, achievementTenureKind);
     // And from the current lists where a pool's names were replaced (see
     // namePoolsV4Kind). Both must land before briefRulesV2Kind: the
     // repository settles a career's pools on that mark.
@@ -1335,3 +1345,34 @@ Future<({int arrivalCycle, DateTime since})> currentSpell(
   );
   return (arrivalCycle: arrival, since: CareerService.cycleOpens(arrival));
 }
+
+/// The nation the manager was in charge of on [date], read off his [stints]
+/// (cycle → nation, see `CareerRepository.stints`); [current] (the career's
+/// nation today) for a cycle no stint covers, as for a save older than
+/// stints.
+///
+/// A manager only ever changes job at a rollover, so the cycle a day falls in
+/// (see [CareerService.cycleAt]) settles whose side he was on. This is what
+/// keeps a career's record HIS: a match of a nation he led only counts if he
+/// led it that day, never the games it played before he arrived or after he
+/// left.
+int managedNationOn(Map<int, int> stints, DateTime date, int current) =>
+    Stints.nationAt(stints, CareerService.cycleAt(date), current);
+
+/// The fixtures of [fixtures] the manager was in charge for, in their order,
+/// each with the nation he led in it: those where the side he had on the day
+/// (see [managedNationOn]) is one of the two.
+///
+/// Pass every fixture of the nations of his [stints] (and [current], his
+/// nation today). A career that never moved keeps every fixture of its
+/// nation, exactly as a plain `fixturesForNation` read did.
+List<({Fixture fixture, int nationId})> managedFixturesOf(
+  Iterable<Fixture> fixtures,
+  Map<int, int> stints,
+  int current,
+) => [
+  for (final f in fixtures)
+    if (managedNationOn(stints, f.date, current) case final led
+        when f.homeNationId == led || f.awayNationId == led)
+      (fixture: f, nationId: led),
+];

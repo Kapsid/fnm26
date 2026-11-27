@@ -3091,6 +3091,8 @@ class DriftCompetitionRepository implements CompetitionRepository {
         bool motm,
         int yellows,
         int reds,
+        int fixtureId,
+        int nationId,
       })
     >
   >
@@ -3113,6 +3115,8 @@ class DriftCompetitionRepository implements CompetitionRepository {
           motm: r.motm,
           yellows: r.yellows,
           reds: r.reds,
+          fixtureId: r.fixtureId,
+          nationId: r.nationId,
         ),
     ];
   }
@@ -3585,6 +3589,20 @@ class DriftCompetitionRepository implements CompetitionRepository {
           ),
           mode: InsertMode.insertOrIgnore,
         );
+  }
+
+  @override
+  Future<void> revokeAchievements(
+    int careerId,
+    Set<String> achievementIds,
+  ) async {
+    if (achievementIds.isEmpty) return;
+    await (_db.delete(_db.achievements)..where(
+          (t) =>
+              t.careerId.equals(careerId) &
+              t.achievementId.isIn(achievementIds.toList()),
+        ))
+        .go();
   }
 }
 
