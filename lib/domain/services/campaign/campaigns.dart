@@ -92,6 +92,7 @@ class CampaignDef {
     this.dormantNationId,
     this.withBelarus = false,
     this.worldHostNationIds = const [],
+    this.euro28 = true,
   });
 
   final String id;
@@ -166,6 +167,12 @@ class CampaignDef {
   /// drawn (every campaign but one).
   final List<int> worldHostNationIds;
 
+  /// Whether the run's first cycle plays Europe's EURO qualifying in the
+  /// EURO 2028 shape, as a new career does (`Euro28.kind`). False only for
+  /// a run whose brief needs a pairing the old draw fixes from the seed
+  /// (the Grudge); its later cycles take the new shape all the same.
+  final bool euro28;
+
   /// The [cycles] of a campaign with no end. Not a number anyone reaches (a
   /// cycle is four years: this is four thousand), so a run of it only ends
   /// when its third star is in, or when the manager moves it into the saves
@@ -216,20 +223,17 @@ abstract final class Campaigns {
   /// close rival by design (campaign_lab_test.dart; on the 1.0.6 ranking
   /// Armenia were bottom of the group nearly every run, Türkiye and Ukraine
   /// almost never caught). On the real starting ranking (Albania 66th,
-  /// Georgia 71st) seed 240 drew the two together in the old groups of six;
-  /// it does not in the EURO 2028 shape.
+  /// Georgia 71st) seed 240 draws the two together with neither hosting the
+  /// European Championship: Netherlands, Austria, Albania, Georgia,
+  /// Armenia, Andorra on the world with Belarus (campaign_seeds_test.dart).
+  /// Of the seeds that do, it is the one the lab plays closest to the 1.0.6
+  /// run's rate (about 30% of autopilot runs finish above Albania).
   ///
-  /// Seed 9271 (searched from 1 to 12,000, the only one of the 56 that pair
-  /// them on the unplayed cup to do so in an autopilot run too) draws them
-  /// together with neither hosting the European Championship: Albania,
-  /// Armenia, Georgia and the Netherlands in the autopilot run
-  /// (campaign_verdict_event_test.dart), a group of five on the unplayed
-  /// cup (campaign_seeds_test.dart). Both sit in the Nations Cup's League B,
-  /// whose results set the pots: a managed run that finishes elsewhere in
-  /// its cup group than the autopilot does is in general drawn apart from
-  /// Albania (about 3% of random cups pair them, for any seed), and then no
-  /// star can be earned. Not yet re-tuned on the lab: its autopilot run
-  /// finishes third of four, below Albania.
+  /// The run plays its qualifying in the format before EURO 2028 ([euro28]
+  /// false): under that one the pots follow the Nations Cup the manager
+  /// plays, so no seed can promise the pairing (about 3-7% of cups pair
+  /// them), and the brief is the pairing. A run continued past its cycle
+  /// plays the next one in the EURO 2028 shape, as any career does.
   static const grudge = CampaignDef(
     withBelarus: true,
     id: 'grudge',
@@ -239,7 +243,8 @@ abstract final class Campaigns {
     cycles: 1,
     needsPro: false,
     difficulty: CampaignDifficulty.medium,
-    rngSeed: 9271,
+    rngSeed: 240,
+    euro28: false,
   );
 
   /// Equatorial Guinea, the smallest of Africa's Guineas, must beat Guinea

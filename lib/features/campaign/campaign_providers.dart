@@ -852,6 +852,8 @@ class CampaignService {
           countsTowardSlots: false,
           // Europe's scenarios include Belarus, as an ordinary career does.
           newCareerNations: def.withBelarus,
+          // The EURO 2028 shape, unless the brief needs the old draw.
+          euro28: def.euro28,
           // Inside create, before the calendar is drawn: a dormant nation's
           // world must be the one every draw is made from.
           worldMarkers: [

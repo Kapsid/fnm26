@@ -246,6 +246,10 @@ List<Nation> campaignWorld(CampaignDef def, List<Nation> nations) => [
       n,
 ];
 
+/// A seed whose EURO 2028 draw (unplayed cup) pairs Georgia with Albania on
+/// a European career's world: the predictor's check against a real career.
+const int _euro28PairingSeed = 9271;
+
 void main() {
   // A new campaign run starts on the current starting ranking, the one in
   // nations.json (see CampaignService.start).
@@ -364,14 +368,14 @@ void main() {
     );
   });
 
-  // On the unplayed cup: the draw these tests (and campaign_progress_test)
-  // read. The autopilot run's draw, made on the played cup, is pinned by
-  // campaign_verdict_event_test; a managed run's can differ (see
-  // Campaigns.grudge).
+  // In the format before EURO 2028, which the Grudge keeps (its euro28 is
+  // false): the seed fixes the draw.
   test('Grudge draws Georgia and Albania into the same qualifying group', () {
-    final groups = euroQualifyingGroups(
+    expect(Campaigns.grudge.euro28, isFalse);
+    final groups = qualifyingGroups(
       Campaigns.grudge.rngSeed,
       campaignWorld(Campaigns.grudge, nations),
+      Confederation.europe,
     );
     expect(groups.where((g) => g.contains(19) && g.contains(1)), hasLength(1));
   });
@@ -392,7 +396,9 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     final db = createTestDatabase();
     addTearDown(db.close);
-    // A Grudge run's world: Belarus in (the dormant source supplies it).
+    // A European career on a Grudge-like world (Belarus in), in the EURO
+    // 2028 shape: seed 9271 pairs Georgia with Albania there on the
+    // unplayed cup. (The Grudge itself keeps the older draw; see below.)
     final c = greenlandContainer(db);
     addTearDown(c.dispose);
     await c.read(seedLoaderProvider).ensureSeeded();
@@ -402,7 +408,7 @@ void main() {
                 .create(
                   nationId: 19,
                   managerName: 'M',
-                  rngSeed: Campaigns.grudge.rngSeed,
+                  rngSeed: _euro28PairingSeed,
                   currentHostRules: true,
                   newCareerNations: Campaigns.grudge.withBelarus,
                 ))
@@ -425,8 +431,56 @@ void main() {
     );
     final rebuilt = [
       for (final g in euroQualifyingGroups(
+        _euro28PairingSeed,
+        campaignWorld(Campaigns.grudge, nations),
+      ))
+        [...g]..sort(),
+    ];
+    expect(
+      stored.map((g) => g.join(',')).toSet(),
+      rebuilt.map((g) => g.join(',')).toSet(),
+    );
+  });
+
+  test('a real Grudge run stores the older draw its seed promises', () async {
+    SharedPreferences.setMockInitialValues({});
+    final db = createTestDatabase();
+    addTearDown(db.close);
+    final c = greenlandContainer(db);
+    addTearDown(c.dispose);
+    await c.read(seedLoaderProvider).ensureSeeded();
+    final career =
+        (await c
+                .read(careerServiceProvider)
+                .create(
+                  nationId: 19,
+                  managerName: 'M',
+                  rngSeed: Campaigns.grudge.rngSeed,
+                  currentHostRules: true,
+                  newCareerNations: Campaigns.grudge.withBelarus,
+                  euro28: Campaigns.grudge.euro28,
+                ))
+            .valueOrNull!;
+    await drawEuroQualifyingNow(c, career.id);
+    final tables = await c
+        .read(competitionRepositoryProvider)
+        .tournamentGroupTables(
+          career.id,
+          CompetitionKind.continentalQualifying,
+          confederation: Confederation.europe,
+        );
+    final stored = [
+      for (final t in tables) [for (final s in t.standings) s.nationId]..sort(),
+    ];
+    expect(
+      stored.where((g) => g.contains(19) && g.contains(1)),
+      hasLength(1),
+    );
+    final rebuilt = [
+      for (final g in qualifyingGroups(
         Campaigns.grudge.rngSeed,
         campaignWorld(Campaigns.grudge, nations),
+        Confederation.europe,
       ))
         [...g]..sort(),
     ];
