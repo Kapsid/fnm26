@@ -60,4 +60,23 @@ void main() {
       balancedDoubleRoundRobin(teams, rng: SeededRng(9)),
     );
   });
+
+  test(
+    'the stored patterns are what the full search finds, for every size',
+    () {
+      for (var n = 3; n <= 6; n++) {
+        expect(balancedPatterns[n], searchBalancedPattern(n), reason: 'n=$n');
+      }
+    },
+  );
+
+  test('a draw never searches on the device: a group of six is instant', () {
+    final teams = [11, 22, 33, 44, 55, 66];
+    final sw = Stopwatch()..start();
+    for (var s = 0; s < 50; s++) {
+      balancedDoubleRoundRobin(teams, rng: SeededRng(s));
+    }
+    // 50 groups of six searched took about five seconds here (1.1.2).
+    expect(sw.elapsedMilliseconds, lessThan(200));
+  });
 }

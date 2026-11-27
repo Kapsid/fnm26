@@ -80,46 +80,88 @@ List<List<Pairing>> balancedDoubleRoundRobin(
   final n = teamIds.length;
   if (n < 3 || n > 6) return plain;
   final first = plain.sublist(0, plain.length ~/ 2);
-  final pairs = [
-    for (var r = 0; r < first.length; r++)
-      for (var j = 0; j < first[r].length; j++) (r, j),
+  // The search depends on the group's size only (the rounds are built from
+  // positions; the ids are only names), so its answer is a constant per
+  // size: searched once in balanced_round_robin_test.dart, which holds the
+  // table to the search. Searching on the device took a second or more a
+  // group of six on slow phones, many groups in one draw: the app froze
+  // (Android "input dispatching timed out", 1.1.2).
+  final (orderIndex, bits) = balancedPatterns[n]!;
+  return applyBalancedPattern(first, n, orderIndex, bits);
+}
+
+/// The best second-leg order and first-leg flips for a group of each size
+/// (see [searchBalancedPattern]).
+const Map<int, (int, int)> balancedPatterns = {
+  3: _p3,
+  4: _p4,
+  5: _p5,
+  6: _p6,
+};
+
+/// The second leg's round orders tried for a group of [n] with [k] rounds a
+/// leg: as mirrored, then each rotation (enough for a group of four).
+List<List<int>> _orders(int n, int k) => [
+  for (var shift = 0; shift < (n == 4 ? k : 1); shift++)
+    [for (var i = 0; i < k; i++) (i + shift) % k],
+];
+
+List<(int, int)> _pairSlots(List<List<Pairing>> first) => [
+  for (var r = 0; r < first.length; r++)
+    for (var j = 0; j < first[r].length; j++) (r, j),
+];
+
+/// Both legs from [first] with the pairings [bits] names flipped, the second
+/// leg in the order [orderIndex] names.
+List<List<Pairing>> applyBalancedPattern(
+  List<List<Pairing>> first,
+  int n,
+  int orderIndex,
+  int bits,
+) {
+  final pairs = _pairSlots(first);
+  final order = _orders(n, first.length)[orderIndex];
+  final leg = [
+    for (final round in first) [...round],
   ];
-  // The second leg's round orders tried: as mirrored, then each rotation
-  // (enough for a group of four).
-  final k = first.length;
-  final orders = [
-    for (var shift = 0; shift < (n == 4 ? k : 1); shift++)
-      [for (var i = 0; i < k; i++) (i + shift) % k],
+  for (var p = 0; p < pairs.length; p++) {
+    if (bits & (1 << p) == 0) continue;
+    final (r, j) = pairs[p];
+    final (h, a) = leg[r][j];
+    leg[r][j] = (a, h);
+  }
+  return [
+    ...leg,
+    for (final i in order) [for (final (h, a) in leg[i]) (a, h)],
   ];
+}
+
+/// The exhaustive search behind [balancedPatterns], for a group of [n]:
+/// every orientation of the first leg's pairings and (for four) every
+/// rotation of the second leg, the first best in a fixed order. Returns the
+/// order's index and the flipped pairings' bits.
+(int, int) searchBalancedPattern(int n) {
+  final ids = [for (var i = 0; i < n; i++) i];
+  final first = _singleRoundRobin(ids);
+  final pairs = _pairSlots(first);
+  final orders = _orders(n, first.length);
   ({int worst, int breaks})? best;
-  List<List<Pairing>>? bestRounds;
-  for (final order in orders) {
+  var bestAt = (0, 0);
+  for (var o = 0; o < orders.length; o++) {
     for (var bits = 0; bits < (1 << pairs.length); bits++) {
-      final leg = [
-        for (final round in first) [...round],
-      ];
-      for (var p = 0; p < pairs.length; p++) {
-        if (bits & (1 << p) == 0) continue;
-        final (r, j) = pairs[p];
-        final (h, a) = leg[r][j];
-        leg[r][j] = (a, h);
-      }
-      final rounds = [
-        ...leg,
-        for (final i in order) [for (final (h, a) in leg[i]) (a, h)],
-      ];
-      final score = _homeAwayScore(rounds, teamIds);
+      final rounds = applyBalancedPattern(first, n, o, bits);
+      final score = _homeAwayScore(rounds, ids);
       if (best == null ||
           score.worst < best.worst ||
           (score.worst == best.worst && score.breaks < best.breaks)) {
         best = score;
-        bestRounds = rounds;
+        bestAt = (o, bits);
         if (score.worst <= 2 && score.breaks <= n - 2) break;
       }
     }
     if (best != null && best.worst <= 2) break;
   }
-  return bestRounds ?? plain;
+  return bestAt;
 }
 
 /// The longest home or away run any side has in [rounds], and the breaks
@@ -150,3 +192,9 @@ List<List<Pairing>> balancedDoubleRoundRobin(
   }
   return (worst: worst, breaks: breaks);
 }
+
+// [searchBalancedPattern] for each size, held to it by the test.
+const (int, int) _p3 = (0, 0);
+const (int, int) _p4 = (1, 1);
+const (int, int) _p5 = (0, 2);
+const (int, int) _p6 = (0, 10283);
