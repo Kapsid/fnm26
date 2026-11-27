@@ -34,6 +34,7 @@ class HomeScreen extends ConsumerWidget {
   static const Key tabletLayoutKey = Key('home.tabletLayout');
   static const Key campaignsKey = Key('home.campaigns');
   static const Key campaignContinueKey = Key('home.campaignContinue');
+  static const Key classicKey = Key('home.classic');
   static const Key editorKey = Key('home.editor');
 
   /// The way back into the last normal save: the big card or the slim one.

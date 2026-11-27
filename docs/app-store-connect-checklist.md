@@ -70,9 +70,11 @@ differently. The full per-storefront table is shown when you pick the price —
 read it there rather than converting by hand.
 
 Then fill in, per language you support:
-- **Display name and description.** These must say the SAME two things the in-app
-  wall says: **endless cycles** and **more saves**. Nothing about nations — those
-  are free for everyone. A buyer or reviewer reading two different promises is a
+- **Display name and description.** These must say the SAME things the in-app
+  wall says: **endless cycles**, **more saves** and **every Classic Cup** (the
+  2002, 2010 and 2022 World Championships to replay; 2006, 2014, 2018 and 2026
+  are free). Nothing about nations — those are free for everyone. Never "World
+  Cup": the game says World Championship. A buyer or reviewer reading two different promises is a
   rejection risk and, worse, a refund.
 - **Review screenshot.** Required, and easy to miss. A screenshot of your actual
   purchase screen. Take it from a real build rather than mocking one.

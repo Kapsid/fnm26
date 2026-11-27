@@ -19090,4 +19090,232 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Vain ottelut, joiden perusteella tämä kampanja arvioidaan: ystävyysottelut ja muut kilpailut eivät ole mukana.';
+
+  @override
+  String get classicCupsTitle => 'Klassikkoturnaukset';
+
+  @override
+  String get classicCupsIntro =>
+      'Pelaa todellinen MM-turnaus uudelleen: isännät, arvonta ja formaatti. Valitse mikä tahansa maa ja vie se loppuun asti.';
+
+  @override
+  String classicEditionLabel(String year, String hosts) {
+    return 'MM-kisat $year · $hosts';
+  }
+
+  @override
+  String classicHostsTwo(String first, String second) {
+    return '$first ja $second';
+  }
+
+  @override
+  String classicHostsThree(String first, String second, String third) {
+    return '$first, $second ja $third';
+  }
+
+  @override
+  String classicTeamsCount(int count) {
+    return 'Joukkueita: $count';
+  }
+
+  @override
+  String classicRealChampion(String nation) {
+    return 'Todellinen mestari: $nation';
+  }
+
+  @override
+  String classicMedalsProgress(int earned, int total) {
+    return 'Mitalit: $earned/$total';
+  }
+
+  @override
+  String get classicPickNation => 'Valitse maa';
+
+  @override
+  String get classicStart => 'Aloita turnaus';
+
+  @override
+  String get classicAbandonConfirm =>
+      'Luovutetaanko tämä turnaus? Kaikki tähän mennessä pelatut ottelut menetetään.';
+
+  @override
+  String classicRunWith(String nation) {
+    return 'Käynnissä oleva turnaus: $nation';
+  }
+
+  @override
+  String get classicLockedNote =>
+      'Tämä turnaus kuuluu Unlimitediin. Voit tutustua isäntiin ja arvontaan jo nyt; pelaamiseen tarvitset Unlimitedin.';
+
+  @override
+  String classicPot(int pot) {
+    return 'Kori $pot';
+  }
+
+  @override
+  String get classicWonHere => 'Voitettu jo tällä maalla';
+
+  @override
+  String get classicNextMatch => 'Seuraava ottelu';
+
+  @override
+  String get classicPlayMatch => 'Pelaa ottelu';
+
+  @override
+  String get classicTabGroups => 'Lohkot';
+
+  @override
+  String classicMatchday(int number) {
+    return '$number. kierros';
+  }
+
+  @override
+  String get classicBestXi => 'Paras avauskokoonpano';
+
+  @override
+  String get classicChampionTitle => 'Maailmanmestarit!';
+
+  @override
+  String classicChampionBody(String nation, String year) {
+    return '$nation: MM-kisojen $year voittaja.';
+  }
+
+  @override
+  String get classicOutTitle => 'Pudonnut';
+
+  @override
+  String classicOutBody(String stage, String nation) {
+    return '$stage: tähän päättyy matka. Joukkue: $nation.';
+  }
+
+  @override
+  String get classicMedalsEarned => 'Ansaitut mitalit';
+
+  @override
+  String get classicNoRun =>
+      'Ei käynnissä olevaa turnausta. Valitse maa aloittaaksesi.';
+
+  @override
+  String classicPensShort(int home, int away) {
+    return 'rangaistuspotkut $home-$away';
+  }
+
+  @override
+  String get classicMedalsTitle => 'Mitalit';
+
+  @override
+  String get classicMedalsAll => 'Kaikki turnaukset';
+
+  @override
+  String get classicMedalLocked => 'Vaatii Unlimitedin';
+
+  @override
+  String get classicMedalChampion => 'Mestari';
+
+  @override
+  String get classicMedalChampionHow => 'Voita turnaus millä tahansa maalla.';
+
+  @override
+  String get classicMedalCollection => 'Jokainen maa';
+
+  @override
+  String get classicMedalCollectionHow =>
+      'Voita turnaus jokaisella siihen osallistuneella maalla.';
+
+  @override
+  String get classicMedalContinents => 'Jokainen maanosa';
+
+  @override
+  String get classicMedalContinentsHow =>
+      'Voita se maalla jokaisesta mukana olleesta liitosta.';
+
+  @override
+  String get classicMedalGiantKiller => 'Jättiläisten kaataja';
+
+  @override
+  String get classicMedalGiantKillerHow =>
+      'Voita se altavastaajalla: joukkueella viimeisestä korista tai kentän heikoimmasta kolmanneksesta.';
+
+  @override
+  String get classicMedalRewrite => 'Kirjoita historia uusiksi';
+
+  @override
+  String get classicMedalRewriteHow =>
+      'Pudota maa, joka oikeasti voitti tämän turnauksen.';
+
+  @override
+  String get classicMedalUnbeaten => 'Tappioton';
+
+  @override
+  String get classicMedalUnbeatenHow =>
+      'Voita turnaus häviämättä yhtään ottelua.';
+
+  @override
+  String get classicMedalGoldenBootHow =>
+      'Anna yhden pelaajistasi nousta turnauksen maalikuninkaaksi.';
+
+  @override
+  String get classicMedalGrandSlam => 'Grand slam';
+
+  @override
+  String get classicMedalGrandSlamHow => 'Voita kaikki seitsemän turnausta.';
+
+  @override
+  String get classicMedalSevenFlags => 'Seitsemän lippua';
+
+  @override
+  String get classicMedalSevenFlagsHow => 'Voita seitsemällä eri maalla.';
+
+  @override
+  String get classicMedalConfederations => 'Kuusi liittoa';
+
+  @override
+  String get classicMedalConfederationsHow =>
+      'Voita maalla jokaisesta kuudesta maanosaliitosta.';
+
+  @override
+  String get classicMedalOneNation => 'Yksi maa, joka aikakausi';
+
+  @override
+  String get classicMedalOneNationHow =>
+      'Voita jokainen turnaus samalla maalla.';
+
+  @override
+  String get classicMedalPerfect => 'Perfektionisti';
+
+  @override
+  String get classicMedalPerfectHow =>
+      'Ansaitse yhden turnauksen kaikki mitalit.';
+
+  @override
+  String get classicNationRussia => 'Venäjä';
+
+  @override
+  String get classicNationSerbiaMontenegro => 'Serbia ja Montenegro';
+
+  @override
+  String get paywallBenefitClassicCups =>
+      'Kaikki klassikkoturnaukset: pelaa myös vuosien 2002, 2010 ja 2022 MM-kisat uudelleen todellisilla arvonnoilla.';
+
+  @override
+  String get editorClassicBlurb =>
+      'Kaikkien menneiden MM-kisojen joukkueet: vahvuus, peliasut ja pelaajat.';
+
+  @override
+  String get editorClassicStar => 'Paras pelaaja';
+
+  @override
+  String get editorClassicDepth => 'Penkki';
+
+  @override
+  String get editorClassicKit => 'Peliasun värit';
+
+  @override
+  String get editorClassicPrimary => 'Paita';
+
+  @override
+  String get editorClassicSecondary => 'Reunukset';
+
+  @override
+  String get editorClassicReset => 'Palauta tämä joukkue';
 }

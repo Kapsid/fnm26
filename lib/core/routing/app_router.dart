@@ -23,6 +23,7 @@ import 'package:fnm/features/career/manager_history_screen.dart';
 import 'package:fnm/features/career/new_game_screen.dart';
 import 'package:fnm/features/career/saves_screen.dart';
 import 'package:fnm/features/career/unemployed_start_screen.dart';
+import 'package:fnm/features/classic/classic_routes.dart';
 import 'package:fnm/features/dev/style_gallery_screen.dart';
 import 'package:fnm/features/editor/editor_language.dart';
 import 'package:fnm/features/editor/editor_list_screen.dart';
@@ -307,6 +308,24 @@ abstract final class Routes {
   /// A settled campaign's verdict. Expects `?careerId=`.
   static const campaignVerdict = '/campaign-verdict';
 
+  /// Classic Cups: the past World Championships to replay.
+  static const classic = '/classic';
+
+  /// One Classic Cup edition, its draw and its nations. Expects `?year=`.
+  static const classicEdition = '/classic/edition';
+
+  /// A Classic Cup run's home. Expects `?year=`.
+  static const classicRun = '/classic/run';
+
+  /// A Classic Cup run's next match, live. Expects `?year=`.
+  static const classicMatch = '/classic/match';
+
+  /// The Classic Cups medals; `?year=` for one edition's only.
+  static const classicMedals = '/classic/medals';
+
+  /// The editor's Classic Cups section; `?year=&nation=` for one team.
+  static const editorClassic = '/editor/classic';
+
   /// The database editor: the custom databases (world packs) on this device.
   static const editor = '/editor';
 
@@ -358,6 +377,15 @@ abstract final class Routes {
   /// Routes drawn full screen on a tablet, outside the sidebar and top bar:
   /// the menus before a save is open, the screens with no save behind them,
   /// and the big occasions (a match, a draw, a kickoff, a new cycle).
+  /// Every Classic Cups route (all full screen, none inside a save).
+  static const List<String> classicRoutes = [
+    classic,
+    classicEdition,
+    classicRun,
+    classicMatch,
+    classicMedals,
+  ];
+
   static const Set<String> fullScreen = {
     home,
     nations,
@@ -380,6 +408,7 @@ abstract final class Routes {
     campaigns,
     campaignBrief,
     campaignVerdict,
+    ...classicRoutes,
     saveLocked,
     editor,
     editorPack,
@@ -424,6 +453,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             int.tryParse(state.uri.queryParameters['careerId'] ?? '') ?? 0,
       ),
     ),
+    ...classicGoRoutes(),
     GoRoute(
       path: Routes.saveLocked,
       builder: (context, state) => SaveLockedScreen(

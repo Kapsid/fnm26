@@ -370,8 +370,8 @@ class _SlimContinueCard extends StatelessWidget {
   );
 }
 
-/// New Game (tall, silver) beside Saves and Campaigns, then Editor and
-/// Settings.
+/// New Game (tall, silver) beside Saves, Campaigns and Classic Cups, then
+/// Editor and Settings.
 class _HomeTiles extends StatelessWidget {
   const _HomeTiles({
     required this.hasSave,
@@ -428,6 +428,15 @@ class _HomeTiles extends StatelessWidget {
                         icon: Icons.emoji_events_outlined,
                         label: l.homeCampaigns,
                         onTap: () => context.go(Routes.campaigns),
+                      ),
+                    ),
+                    SizedBox(height: gap),
+                    Expanded(
+                      child: _MenuTile(
+                        key: HomeScreen.classicKey,
+                        icon: Icons.history_rounded,
+                        label: l.classicCupsTitle,
+                        onTap: () => context.go(Routes.classic),
                       ),
                     ),
                   ],
@@ -536,7 +545,8 @@ class _NewGameTile extends StatelessWidget {
   );
 }
 
-/// Saves or Campaigns: the label at the bottom left, its icon at the right.
+/// Saves, Campaigns or Classic Cups: the label at the left, its icon at the
+/// right.
 class _MenuTile extends StatelessWidget {
   const _MenuTile({
     required this.icon,
@@ -553,19 +563,25 @@ class _MenuTile extends StatelessWidget {
   Widget build(BuildContext context) => _Cell(
     onTap: onTap,
     child: Padding(
-      padding: const EdgeInsets.all(14),
+      // Three tiles share the tall column, so each keeps its padding slim.
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-            child: Text(
-              label,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: AppTypography.titleMedium.copyWith(
-                fontWeight: FontWeight.w700,
-                height: 22 / 18,
-                color: AppColors.onSurface,
+            // A long label (a language's "Classic Cups") shrinks to fit
+            // rather than losing its end.
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                label,
+                maxLines: 1,
+                style: AppTypography.titleMedium.copyWith(
+                  fontWeight: FontWeight.w700,
+                  height: 22 / 18,
+                  color: AppColors.onSurface,
+                ),
               ),
             ),
           ),

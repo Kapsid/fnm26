@@ -19008,4 +19008,230 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Bare kampene kampanjen blir bedømt på: vennskapskamper og andre turneringer telles ikke.';
+
+  @override
+  String get classicCupsTitle => 'Klassiske turneringer';
+
+  @override
+  String get classicCupsIntro =>
+      'Spill et ekte verdensmesterskap på nytt: vertene, trekningen, formatet. Velg hvilken som helst nasjon og før den helt til topps.';
+
+  @override
+  String classicEditionLabel(String year, String hosts) {
+    return 'Verdensmesterskapet $year · $hosts';
+  }
+
+  @override
+  String classicHostsTwo(String first, String second) {
+    return '$first og $second';
+  }
+
+  @override
+  String classicHostsThree(String first, String second, String third) {
+    return '$first, $second og $third';
+  }
+
+  @override
+  String classicTeamsCount(int count) {
+    return '$count lag';
+  }
+
+  @override
+  String classicRealChampion(String nation) {
+    return 'Ekte mester: $nation';
+  }
+
+  @override
+  String classicMedalsProgress(int earned, int total) {
+    return '$earned av $total medaljer';
+  }
+
+  @override
+  String get classicPickNation => 'Velg en nasjon';
+
+  @override
+  String get classicStart => 'Start turneringen';
+
+  @override
+  String get classicAbandonConfirm =>
+      'Gi opp dette forsøket? Alle kamper spilt hittil går tapt.';
+
+  @override
+  String classicRunWith(String nation) {
+    return 'Forsøk i gang med $nation';
+  }
+
+  @override
+  String get classicLockedNote =>
+      'Denne utgaven hører til Unlimited. Se vertene og trekningen nå; for å spille den trenger du Unlimited.';
+
+  @override
+  String classicPot(int pot) {
+    return 'Seedingsgruppe $pot';
+  }
+
+  @override
+  String get classicWonHere => 'Allerede vunnet med denne nasjonen';
+
+  @override
+  String get classicNextMatch => 'Neste kamp';
+
+  @override
+  String get classicPlayMatch => 'Spill kampen';
+
+  @override
+  String get classicTabGroups => 'Grupper';
+
+  @override
+  String classicMatchday(int number) {
+    return 'Serierunde $number';
+  }
+
+  @override
+  String get classicBestXi => 'Beste ellever';
+
+  @override
+  String get classicChampionTitle => 'Verdensmestere!';
+
+  @override
+  String classicChampionBody(String nation, String year) {
+    return '$nation vinner Verdensmesterskapet $year.';
+  }
+
+  @override
+  String get classicOutTitle => 'Slått ut';
+
+  @override
+  String classicOutBody(String stage, String nation) {
+    return '$stage: her slutter veien for $nation.';
+  }
+
+  @override
+  String get classicMedalsEarned => 'Vunne medaljer';
+
+  @override
+  String get classicNoRun =>
+      'Ingen forsøk i gang. Velg en nasjon for å starte et.';
+
+  @override
+  String classicPensShort(int home, int away) {
+    return '$home-$away etter straffespark';
+  }
+
+  @override
+  String get classicMedalsTitle => 'Medaljer';
+
+  @override
+  String get classicMedalsAll => 'Alle utgaver';
+
+  @override
+  String get classicMedalLocked => 'Krever Unlimited';
+
+  @override
+  String get classicMedalChampion => 'Mester';
+
+  @override
+  String get classicMedalChampionHow =>
+      'Vinn utgaven med hvilken som helst nasjon.';
+
+  @override
+  String get classicMedalCollection => 'Hver nasjon';
+
+  @override
+  String get classicMedalCollectionHow =>
+      'Vinn utgaven med hver nasjon i feltet.';
+
+  @override
+  String get classicMedalContinents => 'Hvert kontinent';
+
+  @override
+  String get classicMedalContinentsHow =>
+      'Vinn den med en nasjon fra hvert representert forbund.';
+
+  @override
+  String get classicMedalGiantKiller => 'Kjempedreper';
+
+  @override
+  String get classicMedalGiantKillerHow =>
+      'Vinn den med en outsider: et lag fra siste seedingsgruppe eller den svakeste tredjedelen av feltet.';
+
+  @override
+  String get classicMedalRewrite => 'Skriv historien på nytt';
+
+  @override
+  String get classicMedalRewriteHow =>
+      'Slå ut nasjonen som virkelig vant denne utgaven.';
+
+  @override
+  String get classicMedalUnbeaten => 'Ubeseiret';
+
+  @override
+  String get classicMedalUnbeatenHow => 'Vinn utgaven uten å tape en kamp.';
+
+  @override
+  String get classicMedalGoldenBootHow =>
+      'La en av spillerne dine bli turneringens toppscorer.';
+
+  @override
+  String get classicMedalGrandSlam => 'Grand slam';
+
+  @override
+  String get classicMedalGrandSlamHow => 'Vinn alle sju utgavene.';
+
+  @override
+  String get classicMedalSevenFlags => 'Sju flagg';
+
+  @override
+  String get classicMedalSevenFlagsHow => 'Vinn med sju forskjellige nasjoner.';
+
+  @override
+  String get classicMedalConfederations => 'Seks forbund';
+
+  @override
+  String get classicMedalConfederationsHow =>
+      'Vinn med en nasjon fra hvert av de seks kontinentale forbundene.';
+
+  @override
+  String get classicMedalOneNation => 'Én nasjon, hver epoke';
+
+  @override
+  String get classicMedalOneNationHow => 'Vinn hver utgave med samme nasjon.';
+
+  @override
+  String get classicMedalPerfect => 'Perfeksjonist';
+
+  @override
+  String get classicMedalPerfectHow => 'Vinn alle medaljene i én utgave.';
+
+  @override
+  String get classicNationRussia => 'Russland';
+
+  @override
+  String get classicNationSerbiaMontenegro => 'Serbia og Montenegro';
+
+  @override
+  String get paywallBenefitClassicCups =>
+      'Alle klassiske turneringer: spill også verdensmesterskapene i 2002, 2010 og 2022 på nytt, med de ekte trekningene.';
+
+  @override
+  String get editorClassicBlurb =>
+      'Lagene fra alle tidligere verdensmesterskap: styrke, drakter og spillere.';
+
+  @override
+  String get editorClassicStar => 'Beste spiller';
+
+  @override
+  String get editorClassicDepth => 'Benk';
+
+  @override
+  String get editorClassicKit => 'Draktfarger';
+
+  @override
+  String get editorClassicPrimary => 'Drakt';
+
+  @override
+  String get editorClassicSecondary => 'Detaljer';
+
+  @override
+  String get editorClassicReset => 'Tilbakestill dette laget';
 }

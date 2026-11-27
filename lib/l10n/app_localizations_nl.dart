@@ -19114,4 +19114,230 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Alleen de wedstrijden waarop deze campagne wordt beoordeeld: oefenwedstrijden en andere toernooien tellen niet mee.';
+
+  @override
+  String get classicCupsTitle => 'Klassieke toernooien';
+
+  @override
+  String get classicCupsIntro =>
+      'Speel een echt Wereldkampioenschap opnieuw: de gastlanden, de loting, het format. Kies elk land dat je wilt en leid het helemaal naar de top.';
+
+  @override
+  String classicEditionLabel(String year, String hosts) {
+    return 'Wereldkampioenschap $year · $hosts';
+  }
+
+  @override
+  String classicHostsTwo(String first, String second) {
+    return '$first en $second';
+  }
+
+  @override
+  String classicHostsThree(String first, String second, String third) {
+    return '$first, $second en $third';
+  }
+
+  @override
+  String classicTeamsCount(int count) {
+    return '$count teams';
+  }
+
+  @override
+  String classicRealChampion(String nation) {
+    return 'Echte kampioen: $nation';
+  }
+
+  @override
+  String classicMedalsProgress(int earned, int total) {
+    return '$earned van $total medailles';
+  }
+
+  @override
+  String get classicPickNation => 'Kies een land';
+
+  @override
+  String get classicStart => 'Toernooi starten';
+
+  @override
+  String get classicAbandonConfirm =>
+      'Deze poging opgeven? Alle tot nu toe gespeelde wedstrijden gaan verloren.';
+
+  @override
+  String classicRunWith(String nation) {
+    return 'Lopende poging met $nation';
+  }
+
+  @override
+  String get classicLockedNote =>
+      'Deze editie hoort bij Unlimited. Bekijk nu al de gastlanden en de loting; spelen kan met Unlimited.';
+
+  @override
+  String classicPot(int pot) {
+    return 'Pot $pot';
+  }
+
+  @override
+  String get classicWonHere => 'Al gewonnen met dit land';
+
+  @override
+  String get classicNextMatch => 'Volgende wedstrijd';
+
+  @override
+  String get classicPlayMatch => 'Wedstrijd spelen';
+
+  @override
+  String get classicTabGroups => 'Groepen';
+
+  @override
+  String classicMatchday(int number) {
+    return 'Speelronde $number';
+  }
+
+  @override
+  String get classicBestXi => 'Beste elftal';
+
+  @override
+  String get classicChampionTitle => 'Wereldkampioen!';
+
+  @override
+  String classicChampionBody(String nation, String year) {
+    return '$nation wint het Wereldkampioenschap $year.';
+  }
+
+  @override
+  String get classicOutTitle => 'Uitgeschakeld';
+
+  @override
+  String classicOutBody(String stage, String nation) {
+    return '$stage: hier eindigt de reis voor $nation.';
+  }
+
+  @override
+  String get classicMedalsEarned => 'Behaalde medailles';
+
+  @override
+  String get classicNoRun =>
+      'Geen lopende poging. Kies een land om er een te beginnen.';
+
+  @override
+  String classicPensShort(int home, int away) {
+    return '$home-$away na strafschoppen';
+  }
+
+  @override
+  String get classicMedalsTitle => 'Medailles';
+
+  @override
+  String get classicMedalsAll => 'Alle edities';
+
+  @override
+  String get classicMedalLocked => 'Vereist Unlimited';
+
+  @override
+  String get classicMedalChampion => 'Kampioen';
+
+  @override
+  String get classicMedalChampionHow => 'Win de editie met welk land dan ook.';
+
+  @override
+  String get classicMedalCollection => 'Elk land';
+
+  @override
+  String get classicMedalCollectionHow =>
+      'Win de editie met elk land uit het deelnemersveld.';
+
+  @override
+  String get classicMedalContinents => 'Elk continent';
+
+  @override
+  String get classicMedalContinentsHow =>
+      'Win haar met een land uit elke aanwezige confederatie.';
+
+  @override
+  String get classicMedalGiantKiller => 'Reuzendoder';
+
+  @override
+  String get classicMedalGiantKillerHow =>
+      'Win haar met een outsider: een team uit de laatste pot of het zwakste derde van het veld.';
+
+  @override
+  String get classicMedalRewrite => 'Geschiedenis herschrijven';
+
+  @override
+  String get classicMedalRewriteHow =>
+      'Schakel het land uit dat deze editie echt heeft gewonnen.';
+
+  @override
+  String get classicMedalUnbeaten => 'Ongeslagen';
+
+  @override
+  String get classicMedalUnbeatenHow =>
+      'Win de editie zonder een wedstrijd te verliezen.';
+
+  @override
+  String get classicMedalGoldenBootHow =>
+      'Laat een van je spelers topscorer van het toernooi worden.';
+
+  @override
+  String get classicMedalGrandSlam => 'Grand slam';
+
+  @override
+  String get classicMedalGrandSlamHow => 'Win alle zeven edities.';
+
+  @override
+  String get classicMedalSevenFlags => 'Zeven vlaggen';
+
+  @override
+  String get classicMedalSevenFlagsHow => 'Win met zeven verschillende landen.';
+
+  @override
+  String get classicMedalConfederations => 'Zes confederaties';
+
+  @override
+  String get classicMedalConfederationsHow =>
+      'Win met een land uit elk van de zes confederaties.';
+
+  @override
+  String get classicMedalOneNation => 'Eén land, elk tijdperk';
+
+  @override
+  String get classicMedalOneNationHow => 'Win elke editie met hetzelfde land.';
+
+  @override
+  String get classicMedalPerfect => 'Perfectionist';
+
+  @override
+  String get classicMedalPerfectHow => 'Haal alle medailles van één editie.';
+
+  @override
+  String get classicNationRussia => 'Rusland';
+
+  @override
+  String get classicNationSerbiaMontenegro => 'Servië en Montenegro';
+
+  @override
+  String get paywallBenefitClassicCups =>
+      'Elk klassiek toernooi: speel ook de Wereldkampioenschappen van 2002, 2010 en 2022 opnieuw, met hun echte lotingen.';
+
+  @override
+  String get editorClassicBlurb =>
+      'De teams van alle vorige Wereldkampioenschappen: sterkte, tenues en spelers.';
+
+  @override
+  String get editorClassicStar => 'Beste speler';
+
+  @override
+  String get editorClassicDepth => 'Bank';
+
+  @override
+  String get editorClassicKit => 'Tenuekleuren';
+
+  @override
+  String get editorClassicPrimary => 'Shirt';
+
+  @override
+  String get editorClassicSecondary => 'Accent';
+
+  @override
+  String get editorClassicReset => 'Dit team herstellen';
 }

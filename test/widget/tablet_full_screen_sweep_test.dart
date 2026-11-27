@@ -3,10 +3,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
+import 'package:fnm/features/classic/classic_providers.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
 import 'package:fnm/shared/widgets/app_error_state.dart';
 
+import '../helpers/classic_world.dart';
 import '../helpers/editor_app.dart';
 import '../helpers/seeded_save.dart';
 
@@ -25,7 +27,13 @@ void main() {
 }
 
 Future<void> _sweepFullScreen(WidgetTester tester, Size size) async {
-  final save = await seedSave(tester, formFactor: FormFactor.tablet);
+  final save = await seedSave(
+    tester,
+    formFactor: FormFactor.tablet,
+    overrides: [
+      classicBaseWorldProvider.overrideWith((ref) async => loadClassicWorld()),
+    ],
+  );
   final id = save.careerId;
   final me = save.nations.firstWhere((n) => n.id == save.nationId);
   // A database for the editor's routes: one nation a player short, so its
@@ -54,6 +62,11 @@ Future<void> _sweepFullScreen(WidgetTester tester, Size size) async {
     Routes.campaigns: '',
     Routes.campaignBrief: '?id=transplant',
     Routes.campaignVerdict: '?careerId=$id',
+    Routes.classic: '',
+    Routes.classicEdition: '?year=2018',
+    Routes.classicRun: '?year=2018',
+    Routes.classicMatch: '?year=2018',
+    Routes.classicMedals: '',
     Routes.editor: '',
     Routes.editorPack: '?id=$packId',
     for (final section in Routes.editorSections)

@@ -59,6 +59,7 @@ void main() {
         l.paywallBenefitEndless,
         l.paywallBenefitSaves,
         l.paywallBenefitCarryOn,
+        l.paywallBenefitClassicCups,
         l.paywallBenefitNoAds,
         l.gateLead,
       ]) {

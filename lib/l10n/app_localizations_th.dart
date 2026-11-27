@@ -18686,4 +18686,229 @@ class AppLocalizationsTh extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'เฉพาะนัดที่ใช้ตัดสินแคมเปญนี้ ไม่นับเกมกระชับมิตรและรายการอื่น';
+
+  @override
+  String get classicCupsTitle => 'ทัวร์นาเมนต์คลาสสิก';
+
+  @override
+  String get classicCupsIntro =>
+      'เล่นชิงแชมป์โลกของจริงอีกครั้ง ทั้งเจ้าภาพ การจับสลาก และรูปแบบการแข่งขัน เลือกทีมชาติใดก็ได้แล้วพาไปให้ถึงที่สุด';
+
+  @override
+  String classicEditionLabel(String year, String hosts) {
+    return 'ชิงแชมป์โลก $year · $hosts';
+  }
+
+  @override
+  String classicHostsTwo(String first, String second) {
+    return '$first และ $second';
+  }
+
+  @override
+  String classicHostsThree(String first, String second, String third) {
+    return '$first, $second และ $third';
+  }
+
+  @override
+  String classicTeamsCount(int count) {
+    return '$count ทีม';
+  }
+
+  @override
+  String classicRealChampion(String nation) {
+    return 'แชมป์ตัวจริง: $nation';
+  }
+
+  @override
+  String classicMedalsProgress(int earned, int total) {
+    return 'เหรียญ $earned จาก $total';
+  }
+
+  @override
+  String get classicPickNation => 'เลือกทีมชาติ';
+
+  @override
+  String get classicStart => 'เริ่มทัวร์นาเมนต์';
+
+  @override
+  String get classicAbandonConfirm =>
+      'ละทิ้งการเล่นรอบนี้หรือไม่ นัดที่เล่นไปแล้วทั้งหมดจะหายไป';
+
+  @override
+  String classicRunWith(String nation) {
+    return 'กำลังเล่นกับ $nation';
+  }
+
+  @override
+  String get classicLockedNote =>
+      'ทัวร์นาเมนต์นี้อยู่ใน Unlimited ดูเจ้าภาพและผลจับสลากได้เลย แต่ต้องมี Unlimited จึงจะเล่นได้';
+
+  @override
+  String classicPot(int pot) {
+    return 'โถ $pot';
+  }
+
+  @override
+  String get classicWonHere => 'เคยคว้าแชมป์กับทีมนี้แล้ว';
+
+  @override
+  String get classicNextMatch => 'นัดถัดไป';
+
+  @override
+  String get classicPlayMatch => 'ลงเล่นนัดนี้';
+
+  @override
+  String get classicTabGroups => 'กลุ่ม';
+
+  @override
+  String classicMatchday(int number) {
+    return 'นัดที่ $number';
+  }
+
+  @override
+  String get classicBestXi => 'ผู้เล่น 11 คนที่ดีที่สุด';
+
+  @override
+  String get classicChampionTitle => 'แชมป์โลก!';
+
+  @override
+  String classicChampionBody(String nation, String year) {
+    return '$nation คว้าแชมป์ชิงแชมป์โลก $year';
+  }
+
+  @override
+  String get classicOutTitle => 'ตกรอบ';
+
+  @override
+  String classicOutBody(String stage, String nation) {
+    return '$stage: เส้นทางของ $nation จบลงตรงนี้';
+  }
+
+  @override
+  String get classicMedalsEarned => 'เหรียญที่ได้รับ';
+
+  @override
+  String get classicNoRun => 'ไม่มีการเล่นค้างอยู่ เลือกทีมชาติเพื่อเริ่มเล่น';
+
+  @override
+  String classicPensShort(int home, int away) {
+    return 'ดวลจุดโทษ $home-$away';
+  }
+
+  @override
+  String get classicMedalsTitle => 'เหรียญรางวัล';
+
+  @override
+  String get classicMedalsAll => 'ทุกครั้งที่จัด';
+
+  @override
+  String get classicMedalLocked => 'ต้องมี Unlimited';
+
+  @override
+  String get classicMedalChampion => 'แชมป์';
+
+  @override
+  String get classicMedalChampionHow => 'คว้าแชมป์ครั้งนี้ด้วยทีมชาติใดก็ได้';
+
+  @override
+  String get classicMedalCollection => 'ทุกทีมชาติ';
+
+  @override
+  String get classicMedalCollectionHow =>
+      'คว้าแชมป์ครั้งนี้ด้วยทุกทีมที่เข้าร่วม';
+
+  @override
+  String get classicMedalContinents => 'ทุกทวีป';
+
+  @override
+  String get classicMedalContinentsHow =>
+      'คว้าแชมป์ด้วยทีมจากทุกสมาพันธ์ที่เข้าร่วม';
+
+  @override
+  String get classicMedalGiantKiller => 'ล้มยักษ์';
+
+  @override
+  String get classicMedalGiantKillerHow =>
+      'คว้าแชมป์ด้วยทีมรองบ่อน: ทีมจากโถสุดท้ายหรือหนึ่งในสามที่อ่อนที่สุดของทัวร์นาเมนต์';
+
+  @override
+  String get classicMedalRewrite => 'เขียนประวัติศาสตร์ใหม่';
+
+  @override
+  String get classicMedalRewriteHow =>
+      'เขี่ยทีมที่เป็นแชมป์ตัวจริงของครั้งนี้ตกรอบ';
+
+  @override
+  String get classicMedalUnbeaten => 'ไร้พ่าย';
+
+  @override
+  String get classicMedalUnbeatenHow => 'คว้าแชมป์ครั้งนี้โดยไม่แพ้เลยสักนัด';
+
+  @override
+  String get classicMedalGoldenBootHow =>
+      'ให้ผู้เล่นของคุณคนหนึ่งเป็นดาวซัลโวของทัวร์นาเมนต์';
+
+  @override
+  String get classicMedalGrandSlam => 'แกรนด์สแลม';
+
+  @override
+  String get classicMedalGrandSlamHow => 'คว้าแชมป์ครบทั้งเจ็ดครั้ง';
+
+  @override
+  String get classicMedalSevenFlags => 'เจ็ดธงชาติ';
+
+  @override
+  String get classicMedalSevenFlagsHow => 'คว้าแชมป์กับเจ็ดทีมชาติที่ต่างกัน';
+
+  @override
+  String get classicMedalConfederations => 'หกสมาพันธ์';
+
+  @override
+  String get classicMedalConfederationsHow =>
+      'คว้าแชมป์กับทีมจากทั้งหกสมาพันธ์';
+
+  @override
+  String get classicMedalOneNation => 'ทีมเดียว ทุกยุคสมัย';
+
+  @override
+  String get classicMedalOneNationHow => 'คว้าแชมป์ทุกครั้งด้วยทีมชาติเดียวกัน';
+
+  @override
+  String get classicMedalPerfect => 'สมบูรณ์แบบ';
+
+  @override
+  String get classicMedalPerfectHow =>
+      'ได้เหรียญครบทุกเหรียญของการแข่งขันครั้งเดียว';
+
+  @override
+  String get classicNationRussia => 'รัสเซีย';
+
+  @override
+  String get classicNationSerbiaMontenegro => 'เซอร์เบียและมอนเตเนโกร';
+
+  @override
+  String get paywallBenefitClassicCups =>
+      'ทัวร์นาเมนต์คลาสสิกทุกรายการ: เล่นชิงแชมป์โลกปี 2002, 2010 และ 2022 อีกครั้งด้วยผลจับสลากจริง';
+
+  @override
+  String get editorClassicBlurb =>
+      'ทีมจากชิงแชมป์โลกทุกครั้งที่ผ่านมา: ความแข็งแกร่ง ชุดแข่ง และผู้เล่น';
+
+  @override
+  String get editorClassicStar => 'ผู้เล่นที่ดีที่สุด';
+
+  @override
+  String get editorClassicDepth => 'ม้านั่งสำรอง';
+
+  @override
+  String get editorClassicKit => 'สีชุดแข่ง';
+
+  @override
+  String get editorClassicPrimary => 'เสื้อ';
+
+  @override
+  String get editorClassicSecondary => 'ขอบเสื้อ';
+
+  @override
+  String get editorClassicReset => 'รีเซ็ตทีมนี้';
 }

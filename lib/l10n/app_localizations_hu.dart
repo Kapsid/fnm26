@@ -18961,4 +18961,231 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Csak azok a meccsek, amelyek alapján a kampányt megítélik: a barátságos meccsek és más sorozatok nem számítanak.';
+
+  @override
+  String get classicCupsTitle => 'Klasszikus tornák';
+
+  @override
+  String get classicCupsIntro =>
+      'Játssz újra egy valódi világbajnokságot: a rendezőivel, a sorsolásával, a lebonyolításával. Válassz bármelyik válogatottat, és vidd el egészen a csúcsig.';
+
+  @override
+  String classicEditionLabel(String year, String hosts) {
+    return 'Világbajnokság $year · $hosts';
+  }
+
+  @override
+  String classicHostsTwo(String first, String second) {
+    return '$first és $second';
+  }
+
+  @override
+  String classicHostsThree(String first, String second, String third) {
+    return '$first, $second és $third';
+  }
+
+  @override
+  String classicTeamsCount(int count) {
+    return '$count csapat';
+  }
+
+  @override
+  String classicRealChampion(String nation) {
+    return 'Valódi bajnok: $nation';
+  }
+
+  @override
+  String classicMedalsProgress(int earned, int total) {
+    return '$earned/$total érem';
+  }
+
+  @override
+  String get classicPickNation => 'Válassz válogatottat';
+
+  @override
+  String get classicStart => 'A torna indítása';
+
+  @override
+  String get classicAbandonConfirm =>
+      'Feladod ezt a próbálkozást? Az eddig lejátszott összes meccs elvész.';
+
+  @override
+  String classicRunWith(String nation) {
+    return 'Folyamatban: $nation';
+  }
+
+  @override
+  String get classicLockedNote =>
+      'Ez a kiírás az Unlimited része. A rendezőket és a sorsolást már most megnézheted; játszani Unlimiteddel lehet.';
+
+  @override
+  String classicPot(int pot) {
+    return '$pot. kalap';
+  }
+
+  @override
+  String get classicWonHere => 'Ezzel a válogatottal már megnyerted';
+
+  @override
+  String get classicNextMatch => 'Következő meccs';
+
+  @override
+  String get classicPlayMatch => 'Meccs lejátszása';
+
+  @override
+  String get classicTabGroups => 'Csoportok';
+
+  @override
+  String classicMatchday(int number) {
+    return '$number. forduló';
+  }
+
+  @override
+  String get classicBestXi => 'Legjobb tizenegy';
+
+  @override
+  String get classicChampionTitle => 'Világbajnokok!';
+
+  @override
+  String classicChampionBody(String nation, String year) {
+    return '$nation: világbajnok, $year.';
+  }
+
+  @override
+  String get classicOutTitle => 'Kiesett';
+
+  @override
+  String classicOutBody(String stage, String nation) {
+    return '$stage: itt véget ér az út. Csapat: $nation.';
+  }
+
+  @override
+  String get classicMedalsEarned => 'Megszerzett érmek';
+
+  @override
+  String get classicNoRun =>
+      'Nincs folyamatban lévő torna. Válassz válogatottat a kezdéshez.';
+
+  @override
+  String classicPensShort(int home, int away) {
+    return 'tizenegyesek: $home-$away';
+  }
+
+  @override
+  String get classicMedalsTitle => 'Érmek';
+
+  @override
+  String get classicMedalsAll => 'Minden kiírás';
+
+  @override
+  String get classicMedalLocked => 'Unlimited szükséges';
+
+  @override
+  String get classicMedalChampion => 'Bajnok';
+
+  @override
+  String get classicMedalChampionHow =>
+      'Nyerd meg a kiírást bármelyik válogatottal.';
+
+  @override
+  String get classicMedalCollection => 'Minden válogatott';
+
+  @override
+  String get classicMedalCollectionHow =>
+      'Nyerd meg a kiírást a mezőny minden válogatottjával.';
+
+  @override
+  String get classicMedalContinents => 'Minden kontinens';
+
+  @override
+  String get classicMedalContinentsHow =>
+      'Nyerd meg egy-egy válogatottal minden résztvevő szövetségből.';
+
+  @override
+  String get classicMedalGiantKiller => 'Óriásölő';
+
+  @override
+  String get classicMedalGiantKillerHow =>
+      'Nyerd meg egy esélytelennel: az utolsó kalapból vagy a mezőny leggyengébb harmadából.';
+
+  @override
+  String get classicMedalRewrite => 'Írd újra a történelmet';
+
+  @override
+  String get classicMedalRewriteHow =>
+      'Ejtsd ki azt a válogatottat, amely valójában megnyerte ezt a kiírást.';
+
+  @override
+  String get classicMedalUnbeaten => 'Veretlen';
+
+  @override
+  String get classicMedalUnbeatenHow => 'Nyerd meg a kiírást vereség nélkül.';
+
+  @override
+  String get classicMedalGoldenBootHow =>
+      'Legyen az egyik játékosod a torna gólkirálya.';
+
+  @override
+  String get classicMedalGrandSlam => 'Grand slam';
+
+  @override
+  String get classicMedalGrandSlamHow => 'Nyerd meg mind a hét kiírást.';
+
+  @override
+  String get classicMedalSevenFlags => 'Hét zászló';
+
+  @override
+  String get classicMedalSevenFlagsHow => 'Nyerj hét különböző válogatottal.';
+
+  @override
+  String get classicMedalConfederations => 'Hat szövetség';
+
+  @override
+  String get classicMedalConfederationsHow =>
+      'Nyerj egy-egy válogatottal mind a hat kontinentális szövetségből.';
+
+  @override
+  String get classicMedalOneNation => 'Egy válogatott, minden korszak';
+
+  @override
+  String get classicMedalOneNationHow =>
+      'Nyerd meg az összes kiírást ugyanazzal a válogatottal.';
+
+  @override
+  String get classicMedalPerfect => 'Perfekcionista';
+
+  @override
+  String get classicMedalPerfectHow => 'Szerezd meg egy kiírás összes érmét.';
+
+  @override
+  String get classicNationRussia => 'Oroszország';
+
+  @override
+  String get classicNationSerbiaMontenegro => 'Szerbia és Montenegró';
+
+  @override
+  String get paywallBenefitClassicCups =>
+      'Minden klasszikus torna: játszd újra a 2002-es, a 2010-es és a 2022-es világbajnokságot is, a valódi sorsolásokkal.';
+
+  @override
+  String get editorClassicBlurb =>
+      'Az összes korábbi világbajnokság csapatai: erő, mezek és játékosok.';
+
+  @override
+  String get editorClassicStar => 'Legjobb játékos';
+
+  @override
+  String get editorClassicDepth => 'Kispad';
+
+  @override
+  String get editorClassicKit => 'Mezszínek';
+
+  @override
+  String get editorClassicPrimary => 'Mez';
+
+  @override
+  String get editorClassicSecondary => 'Díszítés';
+
+  @override
+  String get editorClassicReset => 'A csapat visszaállítása';
 }

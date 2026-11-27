@@ -18978,4 +18978,233 @@ class AppLocalizationsMs extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Hanya perlawanan yang menjadi ukuran kempen ini: perlawanan persahabatan dan pertandingan lain tidak dikira.';
+
+  @override
+  String get classicCupsTitle => 'Kejohanan Klasik';
+
+  @override
+  String get classicCupsIntro =>
+      'Main semula Kejohanan Dunia yang sebenar: tuan rumahnya, cabutan undinya, formatnya. Pilih mana-mana pasukan kebangsaan dan bawanya hingga ke puncak.';
+
+  @override
+  String classicEditionLabel(String year, String hosts) {
+    return 'Kejohanan Dunia $year · $hosts';
+  }
+
+  @override
+  String classicHostsTwo(String first, String second) {
+    return '$first & $second';
+  }
+
+  @override
+  String classicHostsThree(String first, String second, String third) {
+    return '$first, $second & $third';
+  }
+
+  @override
+  String classicTeamsCount(int count) {
+    return '$count pasukan';
+  }
+
+  @override
+  String classicRealChampion(String nation) {
+    return 'Juara sebenar: $nation';
+  }
+
+  @override
+  String classicMedalsProgress(int earned, int total) {
+    return '$earned daripada $total pingat';
+  }
+
+  @override
+  String get classicPickNation => 'Pilih pasukan kebangsaan';
+
+  @override
+  String get classicStart => 'Mulakan kejohanan';
+
+  @override
+  String get classicAbandonConfirm =>
+      'Tinggalkan cubaan ini? Semua perlawanan yang telah dimainkan akan hilang.';
+
+  @override
+  String classicRunWith(String nation) {
+    return 'Cubaan sedang berjalan bersama $nation';
+  }
+
+  @override
+  String get classicLockedNote =>
+      'Edisi ini termasuk dalam Unlimited. Lihat tuan rumah dan cabutan undinya sekarang; untuk bermain anda perlukan Unlimited.';
+
+  @override
+  String classicPot(int pot) {
+    return 'Pot $pot';
+  }
+
+  @override
+  String get classicWonHere => 'Sudah dimenangi dengan pasukan ini';
+
+  @override
+  String get classicNextMatch => 'Perlawanan seterusnya';
+
+  @override
+  String get classicPlayMatch => 'Main perlawanan';
+
+  @override
+  String get classicTabGroups => 'Kumpulan';
+
+  @override
+  String classicMatchday(int number) {
+    return 'Hari perlawanan $number';
+  }
+
+  @override
+  String get classicBestXi => 'Sebelas terbaik';
+
+  @override
+  String get classicChampionTitle => 'Juara dunia!';
+
+  @override
+  String classicChampionBody(String nation, String year) {
+    return '$nation menjuarai Kejohanan Dunia $year.';
+  }
+
+  @override
+  String get classicOutTitle => 'Tersingkir';
+
+  @override
+  String classicOutBody(String stage, String nation) {
+    return '$stage: perjalanan $nation berakhir di sini.';
+  }
+
+  @override
+  String get classicMedalsEarned => 'Pingat yang diraih';
+
+  @override
+  String get classicNoRun =>
+      'Tiada cubaan sedang berjalan. Pilih pasukan kebangsaan untuk bermula.';
+
+  @override
+  String classicPensShort(int home, int away) {
+    return '$home-$away menerusi sepakan penalti';
+  }
+
+  @override
+  String get classicMedalsTitle => 'Pingat';
+
+  @override
+  String get classicMedalsAll => 'Semua edisi';
+
+  @override
+  String get classicMedalLocked => 'Perlukan Unlimited';
+
+  @override
+  String get classicMedalChampion => 'Juara';
+
+  @override
+  String get classicMedalChampionHow =>
+      'Menangi edisi ini dengan mana-mana pasukan.';
+
+  @override
+  String get classicMedalCollection => 'Setiap pasukan';
+
+  @override
+  String get classicMedalCollectionHow =>
+      'Menangi edisi ini dengan setiap pasukan penyertanya.';
+
+  @override
+  String get classicMedalContinents => 'Setiap benua';
+
+  @override
+  String get classicMedalContinentsHow =>
+      'Menanginya dengan pasukan dari setiap konfederasi yang menyertai.';
+
+  @override
+  String get classicMedalGiantKiller => 'Penumpas gergasi';
+
+  @override
+  String get classicMedalGiantKillerHow =>
+      'Menanginya dengan pasukan bukan pilihan: dari pot terakhir atau satu pertiga terlemah peserta.';
+
+  @override
+  String get classicMedalRewrite => 'Tulis semula sejarah';
+
+  @override
+  String get classicMedalRewriteHow =>
+      'Singkirkan pasukan yang benar-benar menjuarai edisi ini.';
+
+  @override
+  String get classicMedalUnbeaten => 'Tanpa kalah';
+
+  @override
+  String get classicMedalUnbeatenHow =>
+      'Menangi edisi ini tanpa tewas sekali pun.';
+
+  @override
+  String get classicMedalGoldenBootHow =>
+      'Jadikan salah seorang pemain anda penjaring terbanyak kejohanan.';
+
+  @override
+  String get classicMedalGrandSlam => 'Grand slam';
+
+  @override
+  String get classicMedalGrandSlamHow => 'Menangi ketujuh-tujuh edisi.';
+
+  @override
+  String get classicMedalSevenFlags => 'Tujuh bendera';
+
+  @override
+  String get classicMedalSevenFlagsHow =>
+      'Menang bersama tujuh pasukan berbeza.';
+
+  @override
+  String get classicMedalConfederations => 'Enam konfederasi';
+
+  @override
+  String get classicMedalConfederationsHow =>
+      'Menang dengan pasukan dari setiap satu daripada enam konfederasi.';
+
+  @override
+  String get classicMedalOneNation => 'Satu pasukan, setiap era';
+
+  @override
+  String get classicMedalOneNationHow =>
+      'Menangi setiap edisi dengan pasukan yang sama.';
+
+  @override
+  String get classicMedalPerfect => 'Perfeksionis';
+
+  @override
+  String get classicMedalPerfectHow => 'Raih semua pingat satu edisi.';
+
+  @override
+  String get classicNationRussia => 'Rusia';
+
+  @override
+  String get classicNationSerbiaMontenegro => 'Serbia dan Montenegro';
+
+  @override
+  String get paywallBenefitClassicCups =>
+      'Setiap kejohanan klasik: main semula juga Kejohanan Dunia 2002, 2010 dan 2022, dengan cabutan undi sebenar.';
+
+  @override
+  String get editorClassicBlurb =>
+      'Pasukan setiap Kejohanan Dunia yang lalu: kekuatan, jersi dan pemain.';
+
+  @override
+  String get editorClassicStar => 'Pemain terbaik';
+
+  @override
+  String get editorClassicDepth => 'Simpanan';
+
+  @override
+  String get editorClassicKit => 'Warna jersi';
+
+  @override
+  String get editorClassicPrimary => 'Jersi';
+
+  @override
+  String get editorClassicSecondary => 'Hiasan';
+
+  @override
+  String get editorClassicReset => 'Set semula pasukan ini';
 }

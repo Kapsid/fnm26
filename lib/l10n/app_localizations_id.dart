@@ -18918,4 +18918,231 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Hanya pertandingan yang menjadi dasar penilaian kampanye ini: laga persahabatan dan kompetisi lain tidak dihitung.';
+
+  @override
+  String get classicCupsTitle => 'Turnamen Klasik';
+
+  @override
+  String get classicCupsIntro =>
+      'Mainkan ulang Kejuaraan Dunia sungguhan: tuan rumahnya, undiannya, formatnya. Pilih tim nasional mana pun dan bawa sampai puncak.';
+
+  @override
+  String classicEditionLabel(String year, String hosts) {
+    return 'Kejuaraan Dunia $year · $hosts';
+  }
+
+  @override
+  String classicHostsTwo(String first, String second) {
+    return '$first & $second';
+  }
+
+  @override
+  String classicHostsThree(String first, String second, String third) {
+    return '$first, $second & $third';
+  }
+
+  @override
+  String classicTeamsCount(int count) {
+    return '$count tim';
+  }
+
+  @override
+  String classicRealChampion(String nation) {
+    return 'Juara sebenarnya: $nation';
+  }
+
+  @override
+  String classicMedalsProgress(int earned, int total) {
+    return '$earned dari $total medali';
+  }
+
+  @override
+  String get classicPickNation => 'Pilih tim nasional';
+
+  @override
+  String get classicStart => 'Mulai turnamen';
+
+  @override
+  String get classicAbandonConfirm =>
+      'Tinggalkan percobaan ini? Semua pertandingan yang sudah dimainkan akan hilang.';
+
+  @override
+  String classicRunWith(String nation) {
+    return 'Percobaan berjalan bersama $nation';
+  }
+
+  @override
+  String get classicLockedNote =>
+      'Edisi ini termasuk dalam Unlimited. Lihat tuan rumah dan undiannya sekarang; untuk memainkannya perlu Unlimited.';
+
+  @override
+  String classicPot(int pot) {
+    return 'Pot $pot';
+  }
+
+  @override
+  String get classicWonHere => 'Sudah juara dengan tim ini';
+
+  @override
+  String get classicNextMatch => 'Pertandingan berikutnya';
+
+  @override
+  String get classicPlayMatch => 'Mainkan pertandingan';
+
+  @override
+  String get classicTabGroups => 'Grup';
+
+  @override
+  String classicMatchday(int number) {
+    return 'Matchday $number';
+  }
+
+  @override
+  String get classicBestXi => 'Sebelas terbaik';
+
+  @override
+  String get classicChampionTitle => 'Juara dunia!';
+
+  @override
+  String classicChampionBody(String nation, String year) {
+    return '$nation menjuarai Kejuaraan Dunia $year.';
+  }
+
+  @override
+  String get classicOutTitle => 'Tersingkir';
+
+  @override
+  String classicOutBody(String stage, String nation) {
+    return '$stage: perjalanan $nation berakhir di sini.';
+  }
+
+  @override
+  String get classicMedalsEarned => 'Medali yang diraih';
+
+  @override
+  String get classicNoRun =>
+      'Tidak ada percobaan berjalan. Pilih tim nasional untuk memulai.';
+
+  @override
+  String classicPensShort(int home, int away) {
+    return '$home-$away lewat adu penalti';
+  }
+
+  @override
+  String get classicMedalsTitle => 'Medali';
+
+  @override
+  String get classicMedalsAll => 'Semua edisi';
+
+  @override
+  String get classicMedalLocked => 'Perlu Unlimited';
+
+  @override
+  String get classicMedalChampion => 'Juara';
+
+  @override
+  String get classicMedalChampionHow => 'Juarai edisi ini dengan tim mana pun.';
+
+  @override
+  String get classicMedalCollection => 'Setiap tim';
+
+  @override
+  String get classicMedalCollectionHow =>
+      'Juarai edisi ini dengan setiap tim pesertanya.';
+
+  @override
+  String get classicMedalContinents => 'Setiap benua';
+
+  @override
+  String get classicMedalContinentsHow =>
+      'Juarai dengan tim dari setiap konfederasi yang ikut.';
+
+  @override
+  String get classicMedalGiantKiller => 'Penakluk raksasa';
+
+  @override
+  String get classicMedalGiantKillerHow =>
+      'Juarai dengan tim kuda hitam: dari pot terakhir atau sepertiga terlemah peserta.';
+
+  @override
+  String get classicMedalRewrite => 'Tulis ulang sejarah';
+
+  @override
+  String get classicMedalRewriteHow =>
+      'Singkirkan tim yang benar-benar menjuarai edisi ini.';
+
+  @override
+  String get classicMedalUnbeaten => 'Tak terkalahkan';
+
+  @override
+  String get classicMedalUnbeatenHow =>
+      'Juarai edisi ini tanpa kalah sekali pun.';
+
+  @override
+  String get classicMedalGoldenBootHow =>
+      'Jadikan salah satu pemainmu pencetak gol terbanyak turnamen.';
+
+  @override
+  String get classicMedalGrandSlam => 'Grand slam';
+
+  @override
+  String get classicMedalGrandSlamHow => 'Juarai ketujuh edisi.';
+
+  @override
+  String get classicMedalSevenFlags => 'Tujuh bendera';
+
+  @override
+  String get classicMedalSevenFlagsHow => 'Juara bersama tujuh tim berbeda.';
+
+  @override
+  String get classicMedalConfederations => 'Enam konfederasi';
+
+  @override
+  String get classicMedalConfederationsHow =>
+      'Juara dengan tim dari masing-masing enam konfederasi.';
+
+  @override
+  String get classicMedalOneNation => 'Satu tim, setiap era';
+
+  @override
+  String get classicMedalOneNationHow =>
+      'Juarai setiap edisi dengan tim yang sama.';
+
+  @override
+  String get classicMedalPerfect => 'Perfeksionis';
+
+  @override
+  String get classicMedalPerfectHow => 'Raih semua medali dari satu edisi.';
+
+  @override
+  String get classicNationRussia => 'Rusia';
+
+  @override
+  String get classicNationSerbiaMontenegro => 'Serbia dan Montenegro';
+
+  @override
+  String get paywallBenefitClassicCups =>
+      'Setiap turnamen klasik: mainkan ulang juga Kejuaraan Dunia 2002, 2010, dan 2022, lengkap dengan undian aslinya.';
+
+  @override
+  String get editorClassicBlurb =>
+      'Tim dari setiap Kejuaraan Dunia masa lalu: kekuatan, seragam, dan pemain.';
+
+  @override
+  String get editorClassicStar => 'Pemain terbaik';
+
+  @override
+  String get editorClassicDepth => 'Cadangan';
+
+  @override
+  String get editorClassicKit => 'Warna seragam';
+
+  @override
+  String get editorClassicPrimary => 'Kaus';
+
+  @override
+  String get editorClassicSecondary => 'Aksen';
+
+  @override
+  String get editorClassicReset => 'Atur ulang tim ini';
 }

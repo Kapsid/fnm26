@@ -19162,4 +19162,233 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get campaignRunInNumbersNote =>
       'Nur die Spiele, nach denen diese Kampagne bewertet wird: Freundschaftsspiele und andere Wettbewerbe zählen nicht.';
+
+  @override
+  String get classicCupsTitle => 'Klassische Turniere';
+
+  @override
+  String get classicCupsIntro =>
+      'Spiel eine echte Weltmeisterschaft nach: ihre Gastgeber, ihre Auslosung, ihr Format. Wähle eine beliebige Nation und führe sie bis ganz nach oben.';
+
+  @override
+  String classicEditionLabel(String year, String hosts) {
+    return 'Weltmeisterschaft $year · $hosts';
+  }
+
+  @override
+  String classicHostsTwo(String first, String second) {
+    return '$first & $second';
+  }
+
+  @override
+  String classicHostsThree(String first, String second, String third) {
+    return '$first, $second & $third';
+  }
+
+  @override
+  String classicTeamsCount(int count) {
+    return '$count Teams';
+  }
+
+  @override
+  String classicRealChampion(String nation) {
+    return 'Echter Weltmeister: $nation';
+  }
+
+  @override
+  String classicMedalsProgress(int earned, int total) {
+    return '$earned von $total Medaillen';
+  }
+
+  @override
+  String get classicPickNation => 'Wähle eine Nation';
+
+  @override
+  String get classicStart => 'Turnier starten';
+
+  @override
+  String get classicAbandonConfirm =>
+      'Diesen Durchgang abbrechen? Alle bisher gespielten Partien gehen verloren.';
+
+  @override
+  String classicRunWith(String nation) {
+    return 'Laufender Durchgang mit $nation';
+  }
+
+  @override
+  String get classicLockedNote =>
+      'Diese Ausgabe gehört zu Unlimited. Gastgeber und Auslosung kannst du dir jetzt ansehen, spielen kannst du sie mit Unlimited.';
+
+  @override
+  String classicPot(int pot) {
+    return 'Topf $pot';
+  }
+
+  @override
+  String get classicWonHere => 'Mit dieser Nation schon gewonnen';
+
+  @override
+  String get classicNextMatch => 'Nächstes Spiel';
+
+  @override
+  String get classicPlayMatch => 'Spiel starten';
+
+  @override
+  String get classicTabGroups => 'Gruppen';
+
+  @override
+  String classicMatchday(int number) {
+    return 'Spieltag $number';
+  }
+
+  @override
+  String get classicBestXi => 'Beste Elf';
+
+  @override
+  String get classicChampionTitle => 'Weltmeister!';
+
+  @override
+  String classicChampionBody(String nation, String year) {
+    return '$nation gewinnt die Weltmeisterschaft $year.';
+  }
+
+  @override
+  String get classicOutTitle => 'Ausgeschieden';
+
+  @override
+  String classicOutBody(String stage, String nation) {
+    return '$stage: Hier endet der Weg für $nation.';
+  }
+
+  @override
+  String get classicMedalsEarned => 'Gewonnene Medaillen';
+
+  @override
+  String get classicNoRun =>
+      'Kein laufender Durchgang. Wähle eine Nation, um einen zu beginnen.';
+
+  @override
+  String classicPensShort(int home, int away) {
+    return '$home:$away im Elfmeterschießen';
+  }
+
+  @override
+  String get classicMedalsTitle => 'Medaillen';
+
+  @override
+  String get classicMedalsAll => 'Alle Ausgaben';
+
+  @override
+  String get classicMedalLocked => 'Erfordert Unlimited';
+
+  @override
+  String get classicMedalChampion => 'Weltmeister';
+
+  @override
+  String get classicMedalChampionHow =>
+      'Gewinne die Ausgabe mit einer beliebigen Nation.';
+
+  @override
+  String get classicMedalCollection => 'Jede Nation';
+
+  @override
+  String get classicMedalCollectionHow =>
+      'Gewinne die Ausgabe mit jeder Nation ihres Teilnehmerfelds.';
+
+  @override
+  String get classicMedalContinents => 'Jeder Kontinent';
+
+  @override
+  String get classicMedalContinentsHow =>
+      'Gewinne sie mit einer Nation aus jeder vertretenen Konföderation.';
+
+  @override
+  String get classicMedalGiantKiller => 'Favoritenschreck';
+
+  @override
+  String get classicMedalGiantKillerHow =>
+      'Gewinne sie mit einem Außenseiter: einem Team aus dem letzten Topf oder dem schwächsten Drittel des Felds.';
+
+  @override
+  String get classicMedalRewrite => 'Geschichte neu schreiben';
+
+  @override
+  String get classicMedalRewriteHow =>
+      'Wirf die Nation raus, die diese Ausgabe wirklich gewonnen hat.';
+
+  @override
+  String get classicMedalUnbeaten => 'Ungeschlagen';
+
+  @override
+  String get classicMedalUnbeatenHow =>
+      'Gewinne die Ausgabe, ohne ein Spiel zu verlieren.';
+
+  @override
+  String get classicMedalGoldenBootHow =>
+      'Einer deiner Spieler wird Torschützenkönig des Turniers.';
+
+  @override
+  String get classicMedalGrandSlam => 'Grand Slam';
+
+  @override
+  String get classicMedalGrandSlamHow => 'Gewinne alle sieben Ausgaben.';
+
+  @override
+  String get classicMedalSevenFlags => 'Sieben Flaggen';
+
+  @override
+  String get classicMedalSevenFlagsHow =>
+      'Gewinne mit sieben verschiedenen Nationen.';
+
+  @override
+  String get classicMedalConfederations => 'Sechs Konföderationen';
+
+  @override
+  String get classicMedalConfederationsHow =>
+      'Gewinne mit einer Nation aus jeder der sechs Konföderationen.';
+
+  @override
+  String get classicMedalOneNation => 'Eine Nation, jede Ära';
+
+  @override
+  String get classicMedalOneNationHow =>
+      'Gewinne jede Ausgabe mit derselben Nation.';
+
+  @override
+  String get classicMedalPerfect => 'Perfektionist';
+
+  @override
+  String get classicMedalPerfectHow => 'Hole alle Medaillen einer Ausgabe.';
+
+  @override
+  String get classicNationRussia => 'Russland';
+
+  @override
+  String get classicNationSerbiaMontenegro => 'Serbien und Montenegro';
+
+  @override
+  String get paywallBenefitClassicCups =>
+      'Jedes klassische Turnier: Spiel auch die Weltmeisterschaften 2002, 2010 und 2022 nach, mit ihren echten Auslosungen.';
+
+  @override
+  String get editorClassicBlurb =>
+      'Die Teams aller vergangenen Weltmeisterschaften: Stärke, Trikots und Spieler.';
+
+  @override
+  String get editorClassicStar => 'Bester Spieler';
+
+  @override
+  String get editorClassicDepth => 'Bank';
+
+  @override
+  String get editorClassicKit => 'Trikotfarben';
+
+  @override
+  String get editorClassicPrimary => 'Trikot';
+
+  @override
+  String get editorClassicSecondary => 'Besatz';
+
+  @override
+  String get editorClassicReset => 'Dieses Team zurücksetzen';
 }
