@@ -1311,6 +1311,65 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get roleFitGood => 'Uygun';
+
+  @override
+  String get roleFitFair => 'İdare eder';
+
+  @override
+  String get roleFitPoor => 'Uygun değil';
+
+  @override
+  String get arrowNone => 'Pozisyonu koru';
+
+  @override
+  String get arrowForward => 'İleri çık';
+
+  @override
+  String get arrowBack => 'Daha geride dur';
+
+  @override
+  String get arrowInside => 'İçe kat et';
+
+  @override
+  String get arrowOutside => 'Geniş kal';
+
+  @override
+  String get arrowForwardInside => 'İleri ve içe';
+
+  @override
+  String get arrowForwardOutside => 'İleri ve dışa';
+
+  @override
+  String get tacticsPitchModePlayers => 'Oyuncular';
+
+  @override
+  String get tacticsPitchModeRoles => 'Roller ve koşular';
+
+  @override
+  String get tacticsPitchRolesHint =>
+      'Rol için oyuncuya dokun. Koşu çizmek için basılı tutup sürükle.';
+
+  @override
+  String get tacticsPlanRoleHeading => 'ROL';
+
+  @override
+  String get tacticsPlanMovementHeading => 'HAREKET';
+
+  @override
+  String tacticsPlanTitle(String position, String name) {
+    return '$position · $name';
+  }
+
+  @override
+  String tacticsArrowSet(String name, String movement) {
+    return '$name: $movement';
+  }
+
+  @override
+  String get tacticsKeeperNoRun => 'Kaleci için koşu ayarlanmaz.';
+
+  @override
   String get tacticsPenaltyTaker => 'PENALTI ATICISI';
 
   @override
@@ -9516,6 +9575,106 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get roleBallPlayingDefenderBlurb => 'Hücumları geriden başlatır.';
+
+  @override
+  String get roleLineKeeper => 'Çizgi kalecisi';
+
+  @override
+  String get roleSweeperKeeper => 'Libero kaleci';
+
+  @override
+  String get roleStopper => 'Stoper';
+
+  @override
+  String get roleCoveringDefender => 'Kapatan stoper';
+
+  @override
+  String get roleDefensiveFullBack => 'Savunmacı bek';
+
+  @override
+  String get roleWingBack => 'Kanat bek';
+
+  @override
+  String get roleInvertedFullBack => 'İçe kat eden bek';
+
+  @override
+  String get roleAnchor => 'Çapa';
+
+  @override
+  String get roleDeepPlaymaker => 'Derin oyun kurucu';
+
+  @override
+  String get roleBoxToBox => 'Box-to-box';
+
+  @override
+  String get roleShadowStriker => 'Gölge forvet';
+
+  @override
+  String get roleTouchlineWinger => 'Çizgi kanadı';
+
+  @override
+  String get roleDefensiveWinger => 'Savunmacı kanat';
+
+  @override
+  String get roleFalseNine => 'Sahte dokuz';
+
+  @override
+  String get rolePressingForward => 'Pres yapan forvet';
+
+  @override
+  String get roleLineKeeperBlurb =>
+      'Çizgide kalır. Daha güvenli, oyunu daha yavaş başlatır.';
+
+  @override
+  String get roleSweeperKeeperBlurb =>
+      'Savunmanın arkasını süpürür ve atakları başlatır.';
+
+  @override
+  String get roleStopperBlurb =>
+      'Topu erken kazanmak için çıkar. Hava toplarında güçlü.';
+
+  @override
+  String get roleCoveringDefenderBlurb =>
+      'Geride kalıp arkadaki boşluğu kapatır.';
+
+  @override
+  String get roleDefensiveFullBackBlurb => 'Geride kalır ve kanadı korur.';
+
+  @override
+  String get roleWingBackBlurb => 'Bindirme yapar ve orta açar. Çok koşar.';
+
+  @override
+  String get roleInvertedFullBackBlurb =>
+      'Topa sahip olmak için orta sahaya kayar.';
+
+  @override
+  String get roleAnchorBlurb =>
+      'Savunmanın önünde kalkan olur. Nadiren gol atar.';
+
+  @override
+  String get roleDeepPlaymakerBlurb => 'Oyunu geriden yönetir. Daha çok asist.';
+
+  @override
+  String get roleBoxToBoxBlurb => 'Maç boyunca iner çıkar. Dayanıklılık ister.';
+
+  @override
+  String get roleShadowStrikerBlurb =>
+      'Ceza sahasına geriden gelir. Daha çok gol.';
+
+  @override
+  String get roleTouchlineWingerBlurb =>
+      'Çizgiye yapışır ve orta açar. Daha çok asist.';
+
+  @override
+  String get roleDefensiveWingerBlurb => 'Bek’i korumak için geri döner.';
+
+  @override
+  String get roleFalseNineBlurb =>
+      'Geriye gelip oyunu bağlar. Gol atmaktan çok üretir.';
+
+  @override
+  String get rolePressingForwardBlurb =>
+      'Presi önden başlatır. Daha çabuk yorulur.';
 
   @override
   String get federationDeptYouth => 'Gençlik Akademisi';

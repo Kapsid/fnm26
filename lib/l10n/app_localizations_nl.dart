@@ -1357,6 +1357,65 @@ class AppLocalizationsNl extends AppLocalizations {
   }
 
   @override
+  String get roleFitGood => 'Past goed';
+
+  @override
+  String get roleFitFair => 'Redelijk';
+
+  @override
+  String get roleFitPoor => 'Past slecht';
+
+  @override
+  String get arrowNone => 'Positie houden';
+
+  @override
+  String get arrowForward => 'Naar voren';
+
+  @override
+  String get arrowBack => 'Dieper zakken';
+
+  @override
+  String get arrowInside => 'Naar binnen trekken';
+
+  @override
+  String get arrowOutside => 'Breed blijven';
+
+  @override
+  String get arrowForwardInside => 'Naar voren en binnen';
+
+  @override
+  String get arrowForwardOutside => 'Naar voren en buiten';
+
+  @override
+  String get tacticsPitchModePlayers => 'Spelers';
+
+  @override
+  String get tacticsPitchModeRoles => 'Rollen en loopacties';
+
+  @override
+  String get tacticsPitchRolesHint =>
+      'Tik op een speler voor zijn rol. Houd vast en sleep voor een loopactie.';
+
+  @override
+  String get tacticsPlanRoleHeading => 'ROL';
+
+  @override
+  String get tacticsPlanMovementHeading => 'BEWEGING';
+
+  @override
+  String tacticsPlanTitle(String position, String name) {
+    return '$position · $name';
+  }
+
+  @override
+  String tacticsArrowSet(String name, String movement) {
+    return '$name: $movement';
+  }
+
+  @override
+  String get tacticsKeeperNoRun => 'Een keeper heeft geen loopactie.';
+
+  @override
   String get tacticsPenaltyTaker => 'PENALTYNEMER';
 
   @override
@@ -9656,6 +9715,107 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get roleBallPlayingDefenderBlurb => 'Begint de aanval achterin.';
+
+  @override
+  String get roleLineKeeper => 'Lijnkeeper';
+
+  @override
+  String get roleSweeperKeeper => 'Meevoetballende keeper';
+
+  @override
+  String get roleStopper => 'Stopper';
+
+  @override
+  String get roleCoveringDefender => 'Afdekkende verdediger';
+
+  @override
+  String get roleDefensiveFullBack => 'Verdedigende back';
+
+  @override
+  String get roleWingBack => 'Wingback';
+
+  @override
+  String get roleInvertedFullBack => 'Inschuivende back';
+
+  @override
+  String get roleAnchor => 'Anker';
+
+  @override
+  String get roleDeepPlaymaker => 'Diepe spelmaker';
+
+  @override
+  String get roleBoxToBox => 'Box-to-box';
+
+  @override
+  String get roleShadowStriker => 'Schaduwspits';
+
+  @override
+  String get roleTouchlineWinger => 'Klassieke vleugelspeler';
+
+  @override
+  String get roleDefensiveWinger => 'Verdedigende vleugelspeler';
+
+  @override
+  String get roleFalseNine => 'Valse negen';
+
+  @override
+  String get rolePressingForward => 'Jagende spits';
+
+  @override
+  String get roleLineKeeperBlurb =>
+      'Blijft op de lijn. Veiliger, trager in de opbouw.';
+
+  @override
+  String get roleSweeperKeeperBlurb =>
+      'Ruimt achter de verdediging op en start aanvallen.';
+
+  @override
+  String get roleStopperBlurb =>
+      'Stapt uit om de bal vroeg te winnen. Sterk in de lucht.';
+
+  @override
+  String get roleCoveringDefenderBlurb =>
+      'Zakt terug om de ruimte erachter af te dekken.';
+
+  @override
+  String get roleDefensiveFullBackBlurb => 'Blijft achter en bewaakt de flank.';
+
+  @override
+  String get roleWingBackBlurb => 'Overlapt en voorzet. Legt veel meters af.';
+
+  @override
+  String get roleInvertedFullBackBlurb =>
+      'Schuift in naar het middenveld om de bal te houden.';
+
+  @override
+  String get roleAnchorBlurb => 'Beschermt de verdediging. Scoort zelden.';
+
+  @override
+  String get roleDeepPlaymakerBlurb =>
+      'Dicteert het spel van achteruit. Meer assists.';
+
+  @override
+  String get roleBoxToBoxBlurb =>
+      'De hele wedstrijd op en neer. Vraagt uithoudingsvermogen.';
+
+  @override
+  String get roleShadowStrikerBlurb => 'Komt laat de zestien in. Meer goals.';
+
+  @override
+  String get roleTouchlineWingerBlurb =>
+      'Blijft aan de lijn en geeft voorzetten. Meer assists.';
+
+  @override
+  String get roleDefensiveWingerBlurb =>
+      'Werkt terug om zijn back te beschermen.';
+
+  @override
+  String get roleFalseNineBlurb =>
+      'Zakt terug om het spel te verbinden. Creëert meer dan hij scoort.';
+
+  @override
+  String get rolePressingForwardBlurb =>
+      'Leidt de druk van voren. Raakt sneller vermoeid.';
 
   @override
   String get federationDeptYouth => 'Jeugdacademie';

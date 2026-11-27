@@ -1330,6 +1330,65 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
+  String get roleFitGood => 'Potrivit';
+
+  @override
+  String get roleFitFair => 'Acceptabil';
+
+  @override
+  String get roleFitPoor => 'Nepotrivit';
+
+  @override
+  String get arrowNone => 'Păstrează poziția';
+
+  @override
+  String get arrowForward => 'Urcă în atac';
+
+  @override
+  String get arrowBack => 'Mai retras';
+
+  @override
+  String get arrowInside => 'Spre interior';
+
+  @override
+  String get arrowOutside => 'Stai pe bandă';
+
+  @override
+  String get arrowForwardInside => 'Înainte și spre interior';
+
+  @override
+  String get arrowForwardOutside => 'Înainte și pe bandă';
+
+  @override
+  String get tacticsPitchModePlayers => 'Jucători';
+
+  @override
+  String get tacticsPitchModeRoles => 'Roluri și mișcări';
+
+  @override
+  String get tacticsPitchRolesHint =>
+      'Atinge un jucător pentru rol. Ține apăsat și trage pentru a desena mișcarea.';
+
+  @override
+  String get tacticsPlanRoleHeading => 'ROL';
+
+  @override
+  String get tacticsPlanMovementHeading => 'MIȘCARE';
+
+  @override
+  String tacticsPlanTitle(String position, String name) {
+    return '$position · $name';
+  }
+
+  @override
+  String tacticsArrowSet(String name, String movement) {
+    return '$name: $movement';
+  }
+
+  @override
+  String get tacticsKeeperNoRun => 'Portarul nu are o mișcare de setat.';
+
+  @override
   String get tacticsPenaltyTaker => 'EXECUTANT PENALTY';
 
   @override
@@ -9950,6 +10009,109 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get roleBallPlayingDefenderBlurb => 'Inițiază atacurile din spate.';
+
+  @override
+  String get roleLineKeeper => 'Portar de linie';
+
+  @override
+  String get roleSweeperKeeper => 'Portar libero';
+
+  @override
+  String get roleStopper => 'Stoper';
+
+  @override
+  String get roleCoveringDefender => 'Fundaș de acoperire';
+
+  @override
+  String get roleDefensiveFullBack => 'Fundaș lateral defensiv';
+
+  @override
+  String get roleWingBack => 'Fundaș aripă';
+
+  @override
+  String get roleInvertedFullBack => 'Fundaș lateral inversat';
+
+  @override
+  String get roleAnchor => 'Ancoră';
+
+  @override
+  String get roleDeepPlaymaker => 'Playmaker retras';
+
+  @override
+  String get roleBoxToBox => 'Box-to-box';
+
+  @override
+  String get roleShadowStriker => 'Vârf din umbră';
+
+  @override
+  String get roleTouchlineWinger => 'Extremă de bandă';
+
+  @override
+  String get roleDefensiveWinger => 'Extremă defensivă';
+
+  @override
+  String get roleFalseNine => 'Vârf fals';
+
+  @override
+  String get rolePressingForward => 'Atacant de pressing';
+
+  @override
+  String get roleLineKeeperBlurb =>
+      'Stă pe linie. Mai sigur, pornește jocul mai încet.';
+
+  @override
+  String get roleSweeperKeeperBlurb =>
+      'Acoperă spatele apărării și pornește atacurile.';
+
+  @override
+  String get roleStopperBlurb =>
+      'Iese să recupereze devreme. Puternic în jocul aerian.';
+
+  @override
+  String get roleCoveringDefenderBlurb =>
+      'Se retrage să acopere spațiul din spate.';
+
+  @override
+  String get roleDefensiveFullBackBlurb =>
+      'Rămâne în spate și păzește flancul.';
+
+  @override
+  String get roleWingBackBlurb => 'Urcă pe flanc și centrează. Aleargă mult.';
+
+  @override
+  String get roleInvertedFullBackBlurb =>
+      'Intră la mijloc ca să ajute la posesie.';
+
+  @override
+  String get roleAnchorBlurb => 'Protejează apărarea. Înscrie rar.';
+
+  @override
+  String get roleDeepPlaymakerBlurb =>
+      'Dictează jocul din adâncime. Mai multe pase decisive.';
+
+  @override
+  String get roleBoxToBoxBlurb =>
+      'Urcă și coboară tot meciul. Are nevoie de rezistență.';
+
+  @override
+  String get roleShadowStrikerBlurb =>
+      'Intră târziu în careu. Mai multe goluri.';
+
+  @override
+  String get roleTouchlineWingerBlurb =>
+      'Stă lipit de tușă și centrează. Mai multe pase decisive.';
+
+  @override
+  String get roleDefensiveWingerBlurb =>
+      'Se întoarce să-și protejeze fundașul lateral.';
+
+  @override
+  String get roleFalseNineBlurb =>
+      'Coboară să lege jocul. Creează mai mult decât înscrie.';
+
+  @override
+  String get rolePressingForwardBlurb =>
+      'Conduce pressingul din față. Obosește mai repede.';
 
   @override
   String get federationDeptYouth => 'Academia de juniori';

@@ -9,6 +9,7 @@ import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/library_tactic.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_absence.dart';
+import 'package:fnm/domain/entities/player_role.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
@@ -378,10 +379,11 @@ class TacticService {
   /// changed within the old one are reset.
   Future<void> setFormation(int careerId, Formation formation) => _update(
     careerId,
-    (t, pool) => t.copyWith(
+    // Roles and arrows go with the men who keep their place in the eleven
+    // (see [Tactic.carriedTo]).
+    (t, pool) => t.carriedTo(
       formation: formation,
       lineup: defaultEleven(formation, pool),
-      switches: SlotSwitches.none,
     ),
   );
 
@@ -396,11 +398,11 @@ class TacticService {
       final fitPool = current.length >= 11
           ? current
           : [...current, ...pool.where((p) => !ids.contains(p.id))];
-      return t.copyWith(
+      // A reshape is a change of structure; switches reset with it. Each
+      // man's role and arrow go with him to his new slot.
+      return t.carriedTo(
         formation: formation,
         lineup: defaultEleven(formation, fitPool),
-        // A reshape is a change of structure; switches reset with it.
-        switches: SlotSwitches.none,
       );
     },
   );
@@ -436,6 +438,8 @@ class TacticService {
     FullBackPushes fullBacks = FullBackPushes.neutral,
     SlotSwitches switches = SlotSwitches.none,
     ThrowInStyle? throwInStyle,
+    SlotRoles? roles,
+    SlotArrows? arrows,
   }) => _update(careerId, (t, pool) {
     // The preset's own switches belong to its shape, so they replace the
     // current ones outright (an old preset with none plays its shape as
@@ -450,8 +454,38 @@ class TacticService {
       switches: valid,
       // A preset from before throw-ins says nothing about them.
       throwInStyle: throwInStyle ?? t.throwInStyle,
+      // Nor does one from before slot roles and arrows: the save's own stay
+      // (and play only where the preset's shape offers them).
+      roles: roles ?? t.roles,
+      arrows: arrows ?? t.arrows,
     );
   });
+
+  /// Gives [slot] the role [role] ([PlayerRole.none] clears it), and clears
+  /// the legacy per-player role of the man playing there, so the slot's is
+  /// the only one he has. A role the slot's place does not offer is refused.
+  Future<void> setSlotRole(int careerId, int slot, PlayerRole role) async {
+    int? occupant;
+    await _update(careerId, (t, _) {
+      occupant = slot >= 0 && slot < t.lineup.length ? t.lineup[slot] : null;
+      return t.withRole(slot, role);
+    });
+    final id = occupant;
+    if (id != null) {
+      await _ref
+          .read(playerRolesStoreProvider)
+          .setRole(
+            careerId,
+            id,
+            PlayerRole.none,
+          );
+    }
+  }
+
+  /// Sets [slot]'s movement arrow ([MoveArrow.none] clears it). A
+  /// full-back's is his [FullBackPushes] arrow (see [Tactic.withArrow]).
+  Future<void> setSlotArrow(int careerId, int slot, MoveArrow arrow) =>
+      _update(careerId, (t, _) => t.withArrow(slot, arrow));
 
   /// Sets how the side takes its throw-ins (the Roles & set pieces tab).
   Future<void> setThrowInStyle(int careerId, ThrowInStyle style) =>
@@ -517,6 +551,7 @@ class TacticService {
         slots: switches.apply(library.formation),
       );
       fit = library.fit(lineup, {for (final p in pool) p.id: p});
+      final places = switches.apply(library.formation);
       return t.copyWith(
         formation: library.formation,
         lineup: lineup,
@@ -525,11 +560,19 @@ class TacticService {
         fullBacks: t.fullBacks.overlaidWith(library.fullBacks),
         switches: switches,
         throwInStyle: library.throwInStyle ?? t.throwInStyle,
+        // The entry's roles are the slots' now, wherever the place offers
+        // them; an entry from before arrows existed leaves the save's own.
+        roles: SlotRoles(library.rolesBySlot).validFor(places),
+        arrows: library.arrows ?? t.arrows,
       );
     });
     final result = fit;
     if (result == null) return null;
-    await _ref.read(playerRolesStoreProvider).setRoles(careerId, result.roles);
+    // The roles now live on the slots, so whoever plays there carries none
+    // of the old per-player ones on top.
+    await _ref.read(playerRolesStoreProvider).setRoles(careerId, {
+      for (final id in result.roles.keys) id: PlayerRole.none,
+    });
     await _ref
         .read(setPieceTakersStoreProvider)
         .setBoth(

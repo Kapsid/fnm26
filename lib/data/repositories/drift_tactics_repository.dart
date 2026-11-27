@@ -5,6 +5,7 @@
 import 'package:drift/drift.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/player_role.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/repositories/tactics_repository.dart';
 
@@ -53,7 +54,48 @@ class DriftTacticsRepository implements TacticsRepository {
       fullBacks: await _fullBacks(careerId),
       switches: (await _switches(careerId)).validFor(row.formation),
       throwInStyle: await _throwInStyle(careerId),
+      roles: SlotRoles.fromJson(await _slotMarks(careerId, roleMarkPrefix)),
+      arrows: SlotArrows.fromJson(await _slotMarks(careerId, arrowMarkPrefix)),
     );
+  }
+
+  /// The prefix of the cycle-0 `draws_watched` marks that hold each slot's
+  /// role ([SlotRoles]): `slotRole.9.poacher` says slot 9 plays as a poacher.
+  ///
+  /// Markers for the same reason as the full-back arrows and the switches: no
+  /// schema change, and they travel in every backup and career bundle. A save
+  /// from before slot roles existed has none, and every slot plays neutral.
+  static const String roleMarkPrefix = 'slotRole.';
+
+  /// The prefix of the marks that hold each slot's movement arrow
+  /// ([SlotArrows]): `slotArrow.8.forwardInside`. The full-backs' are their
+  /// `fullBack.` marks, as before.
+  static const String arrowMarkPrefix = 'slotArrow.';
+
+  static String roleMark(int slot, PlayerRole role) =>
+      '$roleMarkPrefix$slot.${role.name}';
+
+  static String arrowMark(int slot, MoveArrow arrow) =>
+      '$arrowMarkPrefix$slot.${arrow.name}';
+
+  /// The `slot.value` marks under [prefix], as slot to value.
+  Future<Map<String, String>> _slotMarks(int careerId, String prefix) async {
+    final kinds =
+        await (_db.selectOnly(_db.drawsWatched)
+              ..addColumns([_db.drawsWatched.kind])
+              ..where(
+                _db.drawsWatched.careerId.equals(careerId) &
+                    _db.drawsWatched.cycle.equals(0) &
+                    _db.drawsWatched.kind.like('$prefix%'),
+              ))
+            .map((r) => r.read(_db.drawsWatched.kind))
+            .get();
+    final bySlot = <String, String>{};
+    for (final kind in kinds.whereType<String>()) {
+      final parts = kind.substring(prefix.length).split('.');
+      if (parts.length == 2) bySlot[parts[0]] = parts[1];
+    }
+    return bySlot;
   }
 
   /// The prefix of the cycle-0 `draws_watched` mark that holds the throw-in
@@ -257,6 +299,40 @@ class DriftTacticsRepository implements TacticsRepository {
                 t.kind.like('$throwInStyleMarkPrefix%'),
           ))
           .go();
+      for (final prefix in const [roleMarkPrefix, arrowMarkPrefix]) {
+        await (_db.delete(_db.drawsWatched)..where(
+              (t) =>
+                  t.careerId.equals(careerId) &
+                  t.cycle.equals(0) &
+                  t.kind.like('$prefix%'),
+            ))
+            .go();
+      }
+      // Every stored role and arrow, the ones the shape cannot use right now
+      // included: like the full-backs' arrows, they are kept, and come back
+      // into play when the shape does.
+      for (final e in tactic.roles.bySlot.entries) {
+        await _db
+            .into(_db.drawsWatched)
+            .insertOnConflictUpdate(
+              DrawsWatchedCompanion.insert(
+                careerId: careerId,
+                cycle: 0,
+                kind: roleMark(e.key, e.value),
+              ),
+            );
+      }
+      for (final e in tactic.arrows.bySlot.entries) {
+        await _db
+            .into(_db.drawsWatched)
+            .insertOnConflictUpdate(
+              DrawsWatchedCompanion.insert(
+                careerId: careerId,
+                cycle: 0,
+                kind: arrowMark(e.key, e.value),
+              ),
+            );
+      }
       if (tactic.throwInStyle != ThrowInStyle.neutral) {
         await _db
             .into(_db.drawsWatched)

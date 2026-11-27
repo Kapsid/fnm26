@@ -1316,6 +1316,65 @@ class AppLocalizationsHu extends AppLocalizations {
   }
 
   @override
+  String get roleFitGood => 'Illik hozzá';
+
+  @override
+  String get roleFitFair => 'Elmegy';
+
+  @override
+  String get roleFitPoor => 'Nem illik hozzá';
+
+  @override
+  String get arrowNone => 'Tartsa a posztját';
+
+  @override
+  String get arrowForward => 'Előre';
+
+  @override
+  String get arrowBack => 'Mélyebben';
+
+  @override
+  String get arrowInside => 'Befelé húzódni';
+
+  @override
+  String get arrowOutside => 'Szélen maradni';
+
+  @override
+  String get arrowForwardInside => 'Előre és befelé';
+
+  @override
+  String get arrowForwardOutside => 'Előre és kifelé';
+
+  @override
+  String get tacticsPitchModePlayers => 'Játékosok';
+
+  @override
+  String get tacticsPitchModeRoles => 'Szerepek és mozgás';
+
+  @override
+  String get tacticsPitchRolesHint =>
+      'Koppints egy játékosra a szerephez. Tartsd nyomva és húzd a mozgáshoz.';
+
+  @override
+  String get tacticsPlanRoleHeading => 'SZEREP';
+
+  @override
+  String get tacticsPlanMovementHeading => 'MOZGÁS';
+
+  @override
+  String tacticsPlanTitle(String position, String name) {
+    return '$position · $name';
+  }
+
+  @override
+  String tacticsArrowSet(String name, String movement) {
+    return '$name: $movement';
+  }
+
+  @override
+  String get tacticsKeeperNoRun => 'A kapusnak nincs beállítható mozgása.';
+
+  @override
   String get tacticsPenaltyTaker => 'TIZENEGYES-RÚGÓ';
 
   @override
@@ -9548,6 +9607,109 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get roleBallPlayingDefenderBlurb =>
       'A hátsó sorból építi a támadásokat.';
+
+  @override
+  String get roleLineKeeper => 'Vonalkapus';
+
+  @override
+  String get roleSweeperKeeper => 'Söprögető kapus';
+
+  @override
+  String get roleStopper => 'Stopper';
+
+  @override
+  String get roleCoveringDefender => 'Biztosító védő';
+
+  @override
+  String get roleDefensiveFullBack => 'Védekező szélső hátvéd';
+
+  @override
+  String get roleWingBack => 'Wingback';
+
+  @override
+  String get roleInvertedFullBack => 'Befelé húzódó szélső hátvéd';
+
+  @override
+  String get roleAnchor => 'Horgony';
+
+  @override
+  String get roleDeepPlaymaker => 'Mélységi irányító';
+
+  @override
+  String get roleBoxToBox => 'Box-to-box';
+
+  @override
+  String get roleShadowStriker => 'Árnyékcsatár';
+
+  @override
+  String get roleTouchlineWinger => 'Alapvonalig menő szélső';
+
+  @override
+  String get roleDefensiveWinger => 'Védekező szélső';
+
+  @override
+  String get roleFalseNine => 'Hamis kilences';
+
+  @override
+  String get rolePressingForward => 'Letámadó csatár';
+
+  @override
+  String get roleLineKeeperBlurb =>
+      'A gólvonalon marad. Biztosabb, lassabban indít.';
+
+  @override
+  String get roleSweeperKeeperBlurb =>
+      'Söpör a védelem mögött, és támadásokat indít.';
+
+  @override
+  String get roleStopperBlurb =>
+      'Kilép, hogy korán megszerezze a labdát. Erős a levegőben.';
+
+  @override
+  String get roleCoveringDefenderBlurb =>
+      'Visszahúzódik, és biztosítja a mögötte lévő területet.';
+
+  @override
+  String get roleDefensiveFullBackBlurb => 'Hátul marad, és őrzi a szélét.';
+
+  @override
+  String get roleWingBackBlurb =>
+      'Megindul a szélen és beível. Rengeteget fut.';
+
+  @override
+  String get roleInvertedFullBackBlurb =>
+      'Behúzódik a középpályára, hogy segítse a labdabirtoklást.';
+
+  @override
+  String get roleAnchorBlurb => 'Védi a védelmet. Ritkán szerez gólt.';
+
+  @override
+  String get roleDeepPlaymakerBlurb =>
+      'Mélyről irányítja a játékot. Több gólpassz.';
+
+  @override
+  String get roleBoxToBoxBlurb =>
+      'Egész meccsen fel-alá fut. Állóképesség kell hozzá.';
+
+  @override
+  String get roleShadowStrikerBlurb =>
+      'Későn érkezik a tizenhatoson belülre. Több gól.';
+
+  @override
+  String get roleTouchlineWingerBlurb =>
+      'Az oldalvonal mellett marad és beível. Több gólpassz.';
+
+  @override
+  String get roleDefensiveWingerBlurb =>
+      'Visszazár, hogy védje a szélső hátvédet.';
+
+  @override
+  String get roleFalseNineBlurb =>
+      'Visszalép és összeköti a játékot. Többet készít elő, mint amennyit lő.';
+
+  @override
+  String get rolePressingForwardBlurb =>
+      'Elöl vezeti a letámadást. Hamarabb elfárad.';
 
   @override
   String get federationDeptYouth => 'Utánpótlás-akadémia';

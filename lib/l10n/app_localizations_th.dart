@@ -1298,6 +1298,65 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
+  String get roleFitGood => 'เหมาะ';
+
+  @override
+  String get roleFitFair => 'พอใช้';
+
+  @override
+  String get roleFitPoor => 'ไม่เหมาะ';
+
+  @override
+  String get arrowNone => 'ยืนตำแหน่ง';
+
+  @override
+  String get arrowForward => 'ดันขึ้น';
+
+  @override
+  String get arrowBack => 'ถอยต่ำลง';
+
+  @override
+  String get arrowInside => 'หุบเข้าใน';
+
+  @override
+  String get arrowOutside => 'ยืนกว้าง';
+
+  @override
+  String get arrowForwardInside => 'ดันขึ้นแล้วหุบใน';
+
+  @override
+  String get arrowForwardOutside => 'ดันขึ้นแล้วออกกว้าง';
+
+  @override
+  String get tacticsPitchModePlayers => 'ผู้เล่น';
+
+  @override
+  String get tacticsPitchModeRoles => 'บทบาทและการวิ่ง';
+
+  @override
+  String get tacticsPitchRolesHint =>
+      'แตะผู้เล่นเพื่อเลือกบทบาท กดค้างแล้วลากเพื่อวาดการวิ่ง';
+
+  @override
+  String get tacticsPlanRoleHeading => 'บทบาท';
+
+  @override
+  String get tacticsPlanMovementHeading => 'การเคลื่อนที่';
+
+  @override
+  String tacticsPlanTitle(String position, String name) {
+    return '$position · $name';
+  }
+
+  @override
+  String tacticsArrowSet(String name, String movement) {
+    return '$name: $movement';
+  }
+
+  @override
+  String get tacticsKeeperNoRun => 'ผู้รักษาประตูไม่มีการวิ่งให้ตั้ง';
+
+  @override
   String get tacticsPenaltyTaker => 'ผู้ยิงจุดโทษ';
 
   @override
@@ -9425,6 +9484,100 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get roleBallPlayingDefenderBlurb => 'เริ่มเกมจากแนวหลัง';
+
+  @override
+  String get roleLineKeeper => 'ผู้รักษาประตูยืนเส้น';
+
+  @override
+  String get roleSweeperKeeper => 'ผู้รักษาประตูกวาด';
+
+  @override
+  String get roleStopper => 'สต็อปเปอร์';
+
+  @override
+  String get roleCoveringDefender => 'กองหลังคุมพื้นที่';
+
+  @override
+  String get roleDefensiveFullBack => 'แบ็กเน้นรับ';
+
+  @override
+  String get roleWingBack => 'วิงแบ็ก';
+
+  @override
+  String get roleInvertedFullBack => 'แบ็กหุบใน';
+
+  @override
+  String get roleAnchor => 'ตัวยึดแดนกลาง';
+
+  @override
+  String get roleDeepPlaymaker => 'เพลย์เมกเกอร์ตัวต่ำ';
+
+  @override
+  String get roleBoxToBox => 'บ็อกซ์ทูบ็อกซ์';
+
+  @override
+  String get roleShadowStriker => 'กองหน้าเงา';
+
+  @override
+  String get roleTouchlineWinger => 'ปีกเลียบเส้น';
+
+  @override
+  String get roleDefensiveWinger => 'ปีกเน้นรับ';
+
+  @override
+  String get roleFalseNine => 'ฟอลส์ไนน์';
+
+  @override
+  String get rolePressingForward => 'กองหน้าเพรสซิ่ง';
+
+  @override
+  String get roleLineKeeperBlurb =>
+      'ยืนอยู่บนเส้น ปลอดภัยกว่า แต่เริ่มเกมช้ากว่า';
+
+  @override
+  String get roleSweeperKeeperBlurb => 'กวาดพื้นที่หลังแนวรับและเริ่มเกมบุก';
+
+  @override
+  String get roleStopperBlurb => 'ดันขึ้นไปตัดบอลแต่เนิ่นๆ เล่นลูกกลางอากาศดี';
+
+  @override
+  String get roleCoveringDefenderBlurb => 'ถอยลงคุมพื้นที่ด้านหลัง';
+
+  @override
+  String get roleDefensiveFullBackBlurb => 'อยู่หลังและเฝ้าแนวริมเส้น';
+
+  @override
+  String get roleWingBackBlurb => 'ทับซ้อนขึ้นไปเปิดบอล วิ่งเยอะ';
+
+  @override
+  String get roleInvertedFullBackBlurb => 'หุบเข้ากลางสนามช่วยครองบอล';
+
+  @override
+  String get roleAnchorBlurb => 'คุ้มกันแนวหลัง ยิงประตูได้น้อย';
+
+  @override
+  String get roleDeepPlaymakerBlurb => 'คุมจังหวะเกมจากแดนลึก แอสซิสต์มากขึ้น';
+
+  @override
+  String get roleBoxToBoxBlurb => 'วิ่งขึ้นลงทั้งเกม ต้องมีความฟิต';
+
+  @override
+  String get roleShadowStrikerBlurb =>
+      'สอดขึ้นเข้ากรอบเขตโทษทีหลัง ยิงประตูมากขึ้น';
+
+  @override
+  String get roleTouchlineWingerBlurb =>
+      'เลียบเส้นข้างแล้วเปิดบอล แอสซิสต์มากขึ้น';
+
+  @override
+  String get roleDefensiveWingerBlurb => 'ถอยลงช่วยคุ้มกันแบ็ก';
+
+  @override
+  String get roleFalseNineBlurb => 'ถอยลงมาเชื่อมเกม สร้างโอกาสมากกว่ายิงเอง';
+
+  @override
+  String get rolePressingForwardBlurb =>
+      'นำการเพรสซิ่งจากแนวหน้า เหนื่อยเร็วขึ้น';
 
   @override
   String get federationDeptYouth => 'อะคาเดมีเยาวชน';

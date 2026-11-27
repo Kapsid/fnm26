@@ -1309,6 +1309,65 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
+  String get roleFitGood => 'उपयुक्त';
+
+  @override
+  String get roleFitFair => 'ठीक-ठाक';
+
+  @override
+  String get roleFitPoor => 'अनुपयुक्त';
+
+  @override
+  String get arrowNone => 'जगह पर रहो';
+
+  @override
+  String get arrowForward => 'आगे बढ़ो';
+
+  @override
+  String get arrowBack => 'पीछे रहो';
+
+  @override
+  String get arrowInside => 'अंदर आओ';
+
+  @override
+  String get arrowOutside => 'चौड़े रहो';
+
+  @override
+  String get arrowForwardInside => 'आगे और अंदर';
+
+  @override
+  String get arrowForwardOutside => 'आगे और बाहर';
+
+  @override
+  String get tacticsPitchModePlayers => 'खिलाड़ी';
+
+  @override
+  String get tacticsPitchModeRoles => 'भूमिका और रन';
+
+  @override
+  String get tacticsPitchRolesHint =>
+      'भूमिका के लिए खिलाड़ी पर टैप करें। रन बनाने के लिए पकड़कर खींचें।';
+
+  @override
+  String get tacticsPlanRoleHeading => 'भूमिका';
+
+  @override
+  String get tacticsPlanMovementHeading => 'मूवमेंट';
+
+  @override
+  String tacticsPlanTitle(String position, String name) {
+    return '$position · $name';
+  }
+
+  @override
+  String tacticsArrowSet(String name, String movement) {
+    return '$name: $movement';
+  }
+
+  @override
+  String get tacticsKeeperNoRun => 'गोलकीपर के लिए कोई रन तय नहीं होता।';
+
+  @override
   String get tacticsPenaltyTaker => 'पेनल्टी टेकर';
 
   @override
@@ -9523,6 +9582,107 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get roleBallPlayingDefenderBlurb => 'पीछे से हमले शुरू करते हैं।';
+
+  @override
+  String get roleLineKeeper => 'लाइन कीपर';
+
+  @override
+  String get roleSweeperKeeper => 'स्वीपर कीपर';
+
+  @override
+  String get roleStopper => 'स्टॉपर';
+
+  @override
+  String get roleCoveringDefender => 'कवरिंग डिफेंडर';
+
+  @override
+  String get roleDefensiveFullBack => 'डिफेंसिव फुल-बैक';
+
+  @override
+  String get roleWingBack => 'विंग-बैक';
+
+  @override
+  String get roleInvertedFullBack => 'इनवर्टेड फुल-बैक';
+
+  @override
+  String get roleAnchor => 'एंकर';
+
+  @override
+  String get roleDeepPlaymaker => 'डीप प्लेमेकर';
+
+  @override
+  String get roleBoxToBox => 'बॉक्स-टू-बॉक्स';
+
+  @override
+  String get roleShadowStriker => 'शैडो स्ट्राइकर';
+
+  @override
+  String get roleTouchlineWinger => 'टचलाइन विंगर';
+
+  @override
+  String get roleDefensiveWinger => 'डिफेंसिव विंगर';
+
+  @override
+  String get roleFalseNine => 'फॉल्स नाइन';
+
+  @override
+  String get rolePressingForward => 'प्रेसिंग फॉरवर्ड';
+
+  @override
+  String get roleLineKeeperBlurb =>
+      'लाइन पर रहता है। ज़्यादा सुरक्षित, खेल धीरे शुरू करता है।';
+
+  @override
+  String get roleSweeperKeeperBlurb =>
+      'डिफेंस के पीछे की जगह संभालता है और मूव शुरू करता है।';
+
+  @override
+  String get roleStopperBlurb => 'जल्दी गेंद छीनने आगे आता है। हवा में मज़बूत।';
+
+  @override
+  String get roleCoveringDefenderBlurb => 'पीछे हटकर पीछे की जगह कवर करता है।';
+
+  @override
+  String get roleDefensiveFullBackBlurb =>
+      'पीछे रहकर फ़्लैंक की रखवाली करता है।';
+
+  @override
+  String get roleWingBackBlurb =>
+      'ओवरलैप करता है और क्रॉस देता है। बहुत दौड़ता है।';
+
+  @override
+  String get roleInvertedFullBackBlurb =>
+      'मिडफ़ील्ड में आकर गेंद रखने में मदद करता है।';
+
+  @override
+  String get roleAnchorBlurb => 'बैक लाइन की ढाल। कम ही गोल करता है।';
+
+  @override
+  String get roleDeepPlaymakerBlurb => 'गहराई से खेल चलाता है। ज़्यादा असिस्ट।';
+
+  @override
+  String get roleBoxToBoxBlurb =>
+      'पूरे मैच ऊपर-नीचे दौड़ता है। स्टैमिना चाहिए।';
+
+  @override
+  String get roleShadowStrikerBlurb =>
+      'देर से बॉक्स में पहुँचता है। ज़्यादा गोल।';
+
+  @override
+  String get roleTouchlineWingerBlurb =>
+      'टचलाइन पर रहकर क्रॉस देता है। ज़्यादा असिस्ट।';
+
+  @override
+  String get roleDefensiveWingerBlurb =>
+      'फुल-बैक को बचाने के लिए पीछे लौटता है।';
+
+  @override
+  String get roleFalseNineBlurb =>
+      'पीछे आकर खेल जोड़ता है। गोल से ज़्यादा मौके बनाता है।';
+
+  @override
+  String get rolePressingForwardBlurb =>
+      'आगे से प्रेस की अगुवाई करता है। जल्दी थकता है।';
 
   @override
   String get federationDeptYouth => 'यूथ एकेडमी';

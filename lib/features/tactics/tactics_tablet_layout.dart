@@ -100,6 +100,13 @@ class _TacticsTabletLayout extends ConsumerWidget {
                         screen._outStartersCard(l, data, outlooks),
                       ],
                       const SizedBox(height: AppSpacing.sm),
+                      PitchPlanBar(
+                        rolesMode: ref.watch(tacticsRolesModeProvider),
+                        onChanged: (on) =>
+                            ref.read(tacticsRolesModeProvider.notifier).state =
+                                on,
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
                       Expanded(
                         child: Center(
                           child: AspectRatio(

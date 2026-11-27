@@ -97,10 +97,13 @@ typedef LineupPlayer = ({int playerId, PlayerPosition slot, int shirt});
 
 /// One side as the Pitch view lines it up.
 ///
-/// [roles] (player id -> role) and [fullBacks] are the team sheet's: the
-/// picture reads them for the roles' movement (a target man up on the last
-/// line, an inside forward off the flank, a full-back pushed on overlapping
-/// his winger). The AI's sides set neither.
+/// [roles] (player id -> role), [arrows] (player id -> movement arrow) and
+/// [fullBacks] are the team sheet's: the picture reads them for the roles'
+/// movement (a target man up on the last line, an inside forward off the
+/// flank, a full-back pushed on overlapping his winger, a midfielder with a
+/// forward arrow arriving in the box). The AI's sides set none of them.
+/// [roles] holds each slot's role on the man playing it, over the legacy
+/// per-player ones.
 typedef TeamSide = ({
   int nationId,
   Formation formation,
@@ -110,6 +113,7 @@ typedef TeamSide = ({
   TacticalInstructions instructions,
   MatchPlan plan,
   Map<int, PlayerRole> roles,
+  Map<int, MoveArrow> arrows,
   FullBackPushes fullBacks,
 });
 
@@ -143,6 +147,14 @@ TeamSide teamSideOf(
 }) {
   final positions = team.positions;
   final xi = <LineupPlayer>[];
+  final roles = <int, PlayerRole>{...team.roles};
+  final arrows = <int, MoveArrow>{};
+  for (var i = 0; i < team.xi.length && i < positions.length; i++) {
+    final role = team.slotRoles.at(i, positions[i]);
+    if (role != PlayerRole.none) roles[team.xi[i].id] = role;
+    final arrow = team.arrows.at(i, positions[i]);
+    if (arrow != MoveArrow.none) arrows[team.xi[i].id] = arrow;
+  }
   var next = 2;
   for (var i = 0; i < team.xi.length && i < positions.length; i++) {
     final gk = team.formation.positions[i] == PlayerPosition.gk;
@@ -160,7 +172,8 @@ TeamSide teamSideOf(
     bench: bench,
     instructions: team.instructions,
     plan: plan ?? (formation: team.formation, instructions: team.instructions),
-    roles: team.roles,
+    roles: roles,
+    arrows: arrows,
     fullBacks: team.fullBacks,
   );
 }
@@ -2675,6 +2688,8 @@ class _Builder {
     final pos = side.positions;
     PlayerRole roleOf(int slot) =>
         side.team.roles[agents[side.owner[slot]!].id] ?? PlayerRole.none;
+    MoveArrow arrowOf(int slot) =>
+        side.team.arrows[agents[side.owner[slot]!].id] ?? MoveArrow.none;
     bool isWinger(PlayerPosition p) =>
         p == PlayerPosition.lw ||
         p == PlayerPosition.rw ||
@@ -2706,10 +2721,16 @@ class _Builder {
       final push = side.team.fullBacks.of(
         flank < 0 ? FullBackSide.left : FullBackSide.right,
       );
+      // A wing-back's job is the overlap; a defensive full-back's is not.
+      final role = roleOf(slot);
+      if (role == PlayerRole.defensiveFullBack ||
+          role == PlayerRole.invertedFullBack) {
+        return push == FullBackPush.up;
+      }
       return push == FullBackPush.up ||
           (push == FullBackPush.neutral &&
-              instr.width >= 65 &&
-              instr.mentality >= 55);
+              (role == PlayerRole.wingBack ||
+                  (instr.width >= 65 && instr.mentality >= 55)));
     }
 
     final strikers = [
@@ -2728,11 +2749,16 @@ class _Builder {
             p == PlayerPosition.lb ? FullBackSide.left : FullBackSide.right,
           );
           final overlap = overlaps(flank);
+          final fbRole = roleOf(i);
           final invert =
               push == FullBackPush.neutral &&
-              instr.width <= 35 &&
-              instr.directness <= 40;
-          if (push == FullBackPush.down) {
+              (fbRole == PlayerRole.invertedFullBack ||
+                  (fbRole == PlayerRole.none &&
+                      instr.width <= 35 &&
+                      instr.directness <= 40));
+          if (push == FullBackPush.down ||
+              (push == FullBackPush.neutral &&
+                  fbRole == PlayerRole.defensiveFullBack)) {
             depth = math.min(depth, side.backLine + 2);
           } else if (inPossession && overlap) {
             final w = wingerFor(flank);
@@ -2783,7 +2809,9 @@ class _Builder {
           }
         case PlayerPosition.st when strikers.length == 1:
           final role = roleOf(i);
-          final falseNine = role == PlayerRole.none && instr.directness <= 45;
+          final falseNine =
+              role == PlayerRole.falseNine ||
+              (role == PlayerRole.none && instr.directness <= 45);
           if (!inPossession) {
             // A false nine defends from the midfield line.
             if (falseNine) depth -= 8;
@@ -2808,6 +2836,18 @@ class _Builder {
         default:
           break;
       }
+      // The rest of the slot roles, and the movement arrows, on top: each a
+      // few metres' tendency, never a new place (see [_tendency]).
+      (depth, lat) = _tendency(
+        roleOf(i),
+        arrowOf(i),
+        p,
+        depth: depth,
+        lat: lat,
+        inPossession: inPossession,
+        backLine: side.backLine,
+        cap: cap,
+      );
       // On the break the forwards and the wide men sprint beyond the ball
       // at once, for the ball played forward early.
       if (breaking && (p.category == PositionCategory.forward || isWinger(p))) {
@@ -2817,6 +2857,61 @@ class _Builder {
       }
       places[i] = (depth, lat);
     }
+  }
+
+  /// How far a slot role (beyond the ones [_roleShape] plays out itself) and
+  /// a movement arrow move a man from the place the shape gives him:
+  /// [depth] up the pitch and [lat] across it (negative left), attacking up.
+  /// A man with neither stays exactly where he was.
+  static (double, double) _tendency(
+    PlayerRole role,
+    MoveArrow arrow,
+    PlayerPosition p, {
+    required double depth,
+    required double lat,
+    required bool inPossession,
+    required double backLine,
+    required double cap,
+  }) {
+    if (role == PlayerRole.none && arrow == MoveArrow.none) {
+      return (depth, lat);
+    }
+    var d = depth;
+    var l = lat;
+    switch (role) {
+      case PlayerRole.boxToBox:
+        d += inPossession ? 8 : -3;
+      case PlayerRole.shadowStriker when inPossession:
+        d = math.max(d, cap - 4);
+      case PlayerRole.poacher when inPossession:
+        d = math.max(d, cap - 1);
+      case PlayerRole.pressingForward when !inPossession:
+        d += 7;
+      case PlayerRole.defensiveWinger when !inPossession:
+        d -= 7;
+      case PlayerRole.touchlineWinger when inPossession:
+        l = l.sign * math.max(l.abs(), 28.0);
+      case PlayerRole.anchor || PlayerRole.deepPlaymaker:
+        d = math.min(d, backLine + (inPossession ? 4 : 8));
+      case PlayerRole.stopper when !inPossession:
+        d += 3;
+      case PlayerRole.coveringDefender when !inPossession:
+        d -= 4;
+      case PlayerRole.ballPlayingDefender when inPossession:
+        d += 4;
+      default:
+        break;
+    }
+    final flank = flankOf(p);
+    final (vx, vy) = arrow.vector(flank);
+    if (arrow == MoveArrow.back) {
+      d -= inPossession ? 3 : 7;
+    } else if (inPossession && arrow != MoveArrow.none) {
+      // vy is negative forward on the tactics board; here up is +depth.
+      d += -vy * 9;
+      l += vx * 9;
+    }
+    return (math.min(d, cap - 0.5), l.clamp(-32.0, 32.0));
   }
 
   void _updateBackLines(int minute, Offset2 ball) {

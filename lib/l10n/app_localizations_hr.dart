@@ -1367,6 +1367,65 @@ class AppLocalizationsHr extends AppLocalizations {
   }
 
   @override
+  String get roleFitGood => 'Odgovara';
+
+  @override
+  String get roleFitFair => 'Prihvatljivo';
+
+  @override
+  String get roleFitPoor => 'Ne odgovara';
+
+  @override
+  String get arrowNone => 'Drži poziciju';
+
+  @override
+  String get arrowForward => 'Naprijed';
+
+  @override
+  String get arrowBack => 'Igraj dublje';
+
+  @override
+  String get arrowInside => 'Prema unutra';
+
+  @override
+  String get arrowOutside => 'Drži širinu';
+
+  @override
+  String get arrowForwardInside => 'Naprijed i unutra';
+
+  @override
+  String get arrowForwardOutside => 'Naprijed i van';
+
+  @override
+  String get tacticsPitchModePlayers => 'Igrači';
+
+  @override
+  String get tacticsPitchModeRoles => 'Uloge i kretanje';
+
+  @override
+  String get tacticsPitchRolesHint =>
+      'Dodirni igrača za ulogu. Drži i povuci da nacrtaš kretanje.';
+
+  @override
+  String get tacticsPlanRoleHeading => 'ULOGA';
+
+  @override
+  String get tacticsPlanMovementHeading => 'KRETANJE';
+
+  @override
+  String tacticsPlanTitle(String position, String name) {
+    return '$position · $name';
+  }
+
+  @override
+  String tacticsArrowSet(String name, String movement) {
+    return '$name: $movement';
+  }
+
+  @override
+  String get tacticsKeeperNoRun => 'Vrataru se ne zadaje kretanje.';
+
+  @override
   String get tacticsPenaltyTaker => 'IZVOĐAČ JEDANAESTERACA';
 
   @override
@@ -9929,6 +9988,102 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get roleBallPlayingDefenderBlurb => 'Gradi napade iz obrane.';
+
+  @override
+  String get roleLineKeeper => 'Vratar na crti';
+
+  @override
+  String get roleSweeperKeeper => 'Vratar libero';
+
+  @override
+  String get roleStopper => 'Stoper';
+
+  @override
+  String get roleCoveringDefender => 'Pokrivajući branič';
+
+  @override
+  String get roleDefensiveFullBack => 'Obrambeni bočni branič';
+
+  @override
+  String get roleWingBack => 'Krilni bek';
+
+  @override
+  String get roleInvertedFullBack => 'Invertirani bočni branič';
+
+  @override
+  String get roleAnchor => 'Sidro';
+
+  @override
+  String get roleDeepPlaymaker => 'Duboki kreator igre';
+
+  @override
+  String get roleBoxToBox => 'Box-to-box';
+
+  @override
+  String get roleShadowStriker => 'Skriveni napadač';
+
+  @override
+  String get roleTouchlineWinger => 'Krilo uz aut-liniju';
+
+  @override
+  String get roleDefensiveWinger => 'Obrambeno krilo';
+
+  @override
+  String get roleFalseNine => 'Lažna devetka';
+
+  @override
+  String get rolePressingForward => 'Napadač koji presira';
+
+  @override
+  String get roleLineKeeperBlurb =>
+      'Ostaje na crti. Sigurniji, sporije pokreće igru.';
+
+  @override
+  String get roleSweeperKeeperBlurb => 'Čisti iza obrane i pokreće napade.';
+
+  @override
+  String get roleStopperBlurb => 'Izlazi da rano osvoji loptu. Jak u zraku.';
+
+  @override
+  String get roleCoveringDefenderBlurb => 'Povlači se i pokriva prostor iza.';
+
+  @override
+  String get roleDefensiveFullBackBlurb => 'Ostaje straga i čuva svoju stranu.';
+
+  @override
+  String get roleWingBackBlurb => 'Preklapa i centrira. Puno trči.';
+
+  @override
+  String get roleInvertedFullBackBlurb =>
+      'Ulazi u vezni red i pomaže zadržati loptu.';
+
+  @override
+  String get roleAnchorBlurb => 'Štiti obrambenu liniju. Rijetko zabija.';
+
+  @override
+  String get roleDeepPlaymakerBlurb => 'Vodi igru iz dubine. Više asistencija.';
+
+  @override
+  String get roleBoxToBoxBlurb =>
+      'Gore-dolje cijelu utakmicu. Treba izdržljivost.';
+
+  @override
+  String get roleShadowStrikerBlurb =>
+      'Kasno ulijeće u šesnaesterac. Više golova.';
+
+  @override
+  String get roleTouchlineWingerBlurb =>
+      'Drži se aut-linije i centrira. Više asistencija.';
+
+  @override
+  String get roleDefensiveWingerBlurb => 'Vraća se štititi bočnog braniča.';
+
+  @override
+  String get roleFalseNineBlurb =>
+      'Povlači se i povezuje igru. Više stvara nego zabija.';
+
+  @override
+  String get rolePressingForwardBlurb => 'Vodi pres sprijeda. Brže se umara.';
 
   @override
   String get federationDeptYouth => 'Akademija mladih';

@@ -1370,6 +1370,65 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String get roleFitGood => 'Sedí mu';
+
+  @override
+  String get roleFitFair => 'Ujde';
+
+  @override
+  String get roleFitPoor => 'Nesedí mu';
+
+  @override
+  String get arrowNone => 'Držet pozici';
+
+  @override
+  String get arrowForward => 'Jít dopředu';
+
+  @override
+  String get arrowBack => 'Hrát hlouběji';
+
+  @override
+  String get arrowInside => 'Zatahovat dovnitř';
+
+  @override
+  String get arrowOutside => 'Držet šířku';
+
+  @override
+  String get arrowForwardInside => 'Dopředu a dovnitř';
+
+  @override
+  String get arrowForwardOutside => 'Dopředu a do šířky';
+
+  @override
+  String get tacticsPitchModePlayers => 'Hráči';
+
+  @override
+  String get tacticsPitchModeRoles => 'Role a náběhy';
+
+  @override
+  String get tacticsPitchRolesHint =>
+      'Klepnutím nastavíte roli. Podržením a tažením nakreslíte náběh.';
+
+  @override
+  String get tacticsPlanRoleHeading => 'ROLE';
+
+  @override
+  String get tacticsPlanMovementHeading => 'POHYB';
+
+  @override
+  String tacticsPlanTitle(String position, String name) {
+    return '$position · $name';
+  }
+
+  @override
+  String tacticsArrowSet(String name, String movement) {
+    return '$name: $movement';
+  }
+
+  @override
+  String get tacticsKeeperNoRun => 'Brankáři se náběh nenastavuje.';
+
+  @override
   String get tacticsPenaltyTaker => 'EXEKUTOR PENALT';
 
   @override
@@ -9976,6 +10035,101 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get roleBallPlayingDefenderBlurb => 'Rozehrává akce od zadních řad.';
+
+  @override
+  String get roleLineKeeper => 'Brankář na čáře';
+
+  @override
+  String get roleSweeperKeeper => 'Brankář libero';
+
+  @override
+  String get roleStopper => 'Stoper';
+
+  @override
+  String get roleCoveringDefender => 'Kryjící obránce';
+
+  @override
+  String get roleDefensiveFullBack => 'Defenzivní krajní obránce';
+
+  @override
+  String get roleWingBack => 'Wingbek';
+
+  @override
+  String get roleInvertedFullBack => 'Invertovaný krajní obránce';
+
+  @override
+  String get roleAnchor => 'Kotva';
+
+  @override
+  String get roleDeepPlaymaker => 'Hluboký tvůrce hry';
+
+  @override
+  String get roleBoxToBox => 'Box-to-box';
+
+  @override
+  String get roleShadowStriker => 'Stínový útočník';
+
+  @override
+  String get roleTouchlineWinger => 'Křídelník u lajny';
+
+  @override
+  String get roleDefensiveWinger => 'Bránící křídelník';
+
+  @override
+  String get roleFalseNine => 'Falešná devítka';
+
+  @override
+  String get rolePressingForward => 'Presující útočník';
+
+  @override
+  String get roleLineKeeperBlurb =>
+      'Drží se na čáře. Jistější, pomaleji rozehrává.';
+
+  @override
+  String get roleSweeperKeeperBlurb => 'Uklízí za obranou a zakládá útoky.';
+
+  @override
+  String get roleStopperBlurb => 'Vystupuje a bere míč brzy. Silný ve vzduchu.';
+
+  @override
+  String get roleCoveringDefenderBlurb => 'Couvá a kryje prostor za obranou.';
+
+  @override
+  String get roleDefensiveFullBackBlurb => 'Zůstává vzadu a hlídá svou stranu.';
+
+  @override
+  String get roleWingBackBlurb => 'Obíhá a centruje. Naběhá hodně kilometrů.';
+
+  @override
+  String get roleInvertedFullBackBlurb =>
+      'Zatahuje do středu pole a pomáhá držet míč.';
+
+  @override
+  String get roleAnchorBlurb => 'Chrání obrannou linii. Skóruje zřídka.';
+
+  @override
+  String get roleDeepPlaymakerBlurb => 'Řídí hru z hloubky. Víc asistencí.';
+
+  @override
+  String get roleBoxToBoxBlurb => 'Celý zápas nahoru a dolů. Potřebuje výdrž.';
+
+  @override
+  String get roleShadowStrikerBlurb => 'Dobíhá pozdě do vápna. Víc gólů.';
+
+  @override
+  String get roleTouchlineWingerBlurb =>
+      'Drží se lajny a centruje. Víc asistencí.';
+
+  @override
+  String get roleDefensiveWingerBlurb => 'Vrací se a kryje krajního obránce.';
+
+  @override
+  String get roleFalseNineBlurb =>
+      'Couvá a spojuje hru. Víc tvoří, než střílí.';
+
+  @override
+  String get rolePressingForwardBlurb =>
+      'Vede presink zepředu. Rychleji se unaví.';
 
   @override
   String get federationDeptYouth => 'Mládežnická akademie';

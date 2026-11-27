@@ -1317,6 +1317,65 @@ class AppLocalizationsFil extends AppLocalizations {
   }
 
   @override
+  String get roleFitGood => 'Bagay';
+
+  @override
+  String get roleFitFair => 'Puwede na';
+
+  @override
+  String get roleFitPoor => 'Hindi bagay';
+
+  @override
+  String get arrowNone => 'Manatili sa puwesto';
+
+  @override
+  String get arrowForward => 'Umabante';
+
+  @override
+  String get arrowBack => 'Umatras';
+
+  @override
+  String get arrowInside => 'Pumasok sa gitna';
+
+  @override
+  String get arrowOutside => 'Manatili sa gilid';
+
+  @override
+  String get arrowForwardInside => 'Umabante at pumasok';
+
+  @override
+  String get arrowForwardOutside => 'Umabante sa gilid';
+
+  @override
+  String get tacticsPitchModePlayers => 'Mga manlalaro';
+
+  @override
+  String get tacticsPitchModeRoles => 'Role at takbo';
+
+  @override
+  String get tacticsPitchRolesHint =>
+      'I-tap ang manlalaro para sa role. Hawakan at i-drag para gumuhit ng takbo.';
+
+  @override
+  String get tacticsPlanRoleHeading => 'ROLE';
+
+  @override
+  String get tacticsPlanMovementHeading => 'GALAW';
+
+  @override
+  String tacticsPlanTitle(String position, String name) {
+    return '$position · $name';
+  }
+
+  @override
+  String tacticsArrowSet(String name, String movement) {
+    return '$name: $movement';
+  }
+
+  @override
+  String get tacticsKeeperNoRun => 'Walang takbong itatakda sa goalkeeper.';
+
+  @override
   String get tacticsPenaltyTaker => 'PENALTY TAKER';
 
   @override
@@ -9582,6 +9641,111 @@ class AppLocalizationsFil extends AppLocalizations {
   @override
   String get roleBallPlayingDefenderBlurb =>
       'Nagsisimula ng atake mula sa likod.';
+
+  @override
+  String get roleLineKeeper => 'Line keeper';
+
+  @override
+  String get roleSweeperKeeper => 'Sweeper keeper';
+
+  @override
+  String get roleStopper => 'Stopper';
+
+  @override
+  String get roleCoveringDefender => 'Covering defender';
+
+  @override
+  String get roleDefensiveFullBack => 'Defensive full-back';
+
+  @override
+  String get roleWingBack => 'Wing-back';
+
+  @override
+  String get roleInvertedFullBack => 'Inverted full-back';
+
+  @override
+  String get roleAnchor => 'Anchor';
+
+  @override
+  String get roleDeepPlaymaker => 'Deep-lying playmaker';
+
+  @override
+  String get roleBoxToBox => 'Box-to-box';
+
+  @override
+  String get roleShadowStriker => 'Shadow striker';
+
+  @override
+  String get roleTouchlineWinger => 'Touchline winger';
+
+  @override
+  String get roleDefensiveWinger => 'Defensive winger';
+
+  @override
+  String get roleFalseNine => 'False nine';
+
+  @override
+  String get rolePressingForward => 'Pressing forward';
+
+  @override
+  String get roleLineKeeperBlurb =>
+      'Nananatili sa linya. Mas ligtas, mas mabagal magsimula ng atake.';
+
+  @override
+  String get roleSweeperKeeperBlurb =>
+      'Nagwawalis sa likod ng depensa at nagsisimula ng atake.';
+
+  @override
+  String get roleStopperBlurb =>
+      'Lumalabas para agawin agad ang bola. Malakas sa ere.';
+
+  @override
+  String get roleCoveringDefenderBlurb =>
+      'Umaatras para bantayan ang espasyo sa likod.';
+
+  @override
+  String get roleDefensiveFullBackBlurb =>
+      'Nananatili sa likod at binabantayan ang gilid.';
+
+  @override
+  String get roleWingBackBlurb =>
+      'Nag-o-overlap at nagkro-cross. Malawak ang tinatakbo.';
+
+  @override
+  String get roleInvertedFullBackBlurb =>
+      'Pumapasok sa gitna para tumulong humawak ng bola.';
+
+  @override
+  String get roleAnchorBlurb =>
+      'Pinoprotektahan ang depensa. Bihirang makaiskor.';
+
+  @override
+  String get roleDeepPlaymakerBlurb =>
+      'Kinokontrol ang laro mula sa likod. Mas maraming assist.';
+
+  @override
+  String get roleBoxToBoxBlurb =>
+      'Akyat-baba buong laro. Kailangan ng stamina.';
+
+  @override
+  String get roleShadowStrikerBlurb =>
+      'Dumarating nang huli sa kahon. Mas maraming gol.';
+
+  @override
+  String get roleTouchlineWingerBlurb =>
+      'Nakadikit sa gilid at nagkro-cross. Mas maraming assist.';
+
+  @override
+  String get roleDefensiveWingerBlurb =>
+      'Bumabalik para protektahan ang full-back.';
+
+  @override
+  String get roleFalseNineBlurb =>
+      'Umaatras para ikonekta ang laro. Mas lumilikha kaysa umiiskor.';
+
+  @override
+  String get rolePressingForwardBlurb =>
+      'Nangunguna sa pressing sa harap. Mas mabilis mapagod.';
 
   @override
   String get federationDeptYouth => 'Youth Academy';

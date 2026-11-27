@@ -19,6 +19,7 @@ import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/entities/player_role.dart';
 import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
@@ -56,6 +57,7 @@ import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/match/ai_counter.dart';
 import 'package:fnm/domain/services/match/ai_substitutions.dart';
 import 'package:fnm/domain/services/match/ai_tactics.dart';
+import 'package:fnm/domain/services/match/role_tilt.dart';
 import 'package:fnm/domain/services/match/background_match.dart';
 import 'package:fnm/domain/services/match/big_game_difficulty.dart';
 import 'package:fnm/domain/services/match/goal_attribution.dart';
@@ -2149,8 +2151,14 @@ class SeasonService {
     // The scout's dossier is a flat rating lift, the same points the live
     // engine adds to each fielded man (`MatchTeam.ratingBonus`), so it goes in
     // beside the plan, before the chemistry lift.
+    // The slots' roles and arrows, as the played engine feels them (see
+    // [RoleTilt.skipEffect]): exactly nothing for a tactic with none set.
+    final roles = _skippedRoleEffect(setup.tactic, xi);
     final plan =
-        strength + effect.ratingDelta + Staff.dossierBonus(setup.scout);
+        strength +
+        effect.ratingDelta +
+        Staff.dossierBonus(setup.scout) +
+        roles.ratingDelta;
     // Chemistry as a LIFT, not a multiplier on the whole rating: 80 x 1.04
     // was +3.2 points here, about three times what the same chemistry wins a
     // side when the match is played out, so skipping beat playing. 30 points
@@ -2179,7 +2187,36 @@ class SeasonService {
       ),
       // The throw-in style as one openness, the same way as the arrows; the
       // neutral default is exactly 1 and multiplies nothing.
-      openness: effect.openness * flanks * throws,
+      openness: effect.openness * flanks * throws * roles.openness,
+    );
+  }
+
+  /// [RoleTilt.skipEffect] for [tactic]'s slot roles and arrows, played by
+  /// the men of [xi] who stand in its slots.
+  static ({double ratingDelta, double openness}) _skippedRoleEffect(
+    Tactic? tactic,
+    List<Player> xi,
+  ) {
+    if (tactic == null || (tactic.roles.isEmpty && tactic.arrows.isEmpty)) {
+      return (ratingDelta: 0.0, openness: 1.0);
+    }
+    final byId = {for (final p in xi) p.id: p};
+    final places = tactic.positions;
+    final men = <Player>[];
+    final slots = <PlayerPosition>[];
+    final roles = <PlayerRole>[];
+    final arrows = <MoveArrow>[];
+    for (var s = 0; s < tactic.lineup.length && s < places.length; s++) {
+      final p = byId[tactic.lineup[s]];
+      if (p == null) continue;
+      men.add(p);
+      slots.add(places[s]);
+      roles.add(tactic.roleAt(s));
+      arrows.add(tactic.arrows.at(s, places[s]));
+    }
+    return RoleTilt.skipEffect(
+      RoleTilt.of(xi: men, slots: slots, roles: roles, arrows: arrows),
+      openPlayShare: MatchEngine.kOpenPlayShare,
     );
   }
 

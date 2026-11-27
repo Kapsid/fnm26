@@ -1314,6 +1314,65 @@ class AppLocalizationsPl extends AppLocalizations {
   }
 
   @override
+  String get roleFitGood => 'Pasuje';
+
+  @override
+  String get roleFitFair => 'Może być';
+
+  @override
+  String get roleFitPoor => 'Słabo pasuje';
+
+  @override
+  String get arrowNone => 'Trzymaj pozycję';
+
+  @override
+  String get arrowForward => 'Do przodu';
+
+  @override
+  String get arrowBack => 'Grać głębiej';
+
+  @override
+  String get arrowInside => 'Schodzić do środka';
+
+  @override
+  String get arrowOutside => 'Trzymać szerokość';
+
+  @override
+  String get arrowForwardInside => 'Do przodu i do środka';
+
+  @override
+  String get arrowForwardOutside => 'Do przodu i do boku';
+
+  @override
+  String get tacticsPitchModePlayers => 'Zawodnicy';
+
+  @override
+  String get tacticsPitchModeRoles => 'Role i ruchy';
+
+  @override
+  String get tacticsPitchRolesHint =>
+      'Dotknij zawodnika, by ustawić rolę. Przytrzymaj i przeciągnij, by narysować ruch.';
+
+  @override
+  String get tacticsPlanRoleHeading => 'ROLA';
+
+  @override
+  String get tacticsPlanMovementHeading => 'RUCH';
+
+  @override
+  String tacticsPlanTitle(String position, String name) {
+    return '$position · $name';
+  }
+
+  @override
+  String tacticsArrowSet(String name, String movement) {
+    return '$name: $movement';
+  }
+
+  @override
+  String get tacticsKeeperNoRun => 'Bramkarzowi nie ustawia się ruchu.';
+
+  @override
   String get tacticsPenaltyTaker => 'WYKONAWCA KARNYCH';
 
   @override
@@ -9718,6 +9777,107 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get roleBallPlayingDefenderBlurb => 'Rozpoczyna akcje od tyłu.';
+
+  @override
+  String get roleLineKeeper => 'Bramkarz na linii';
+
+  @override
+  String get roleSweeperKeeper => 'Bramkarz libero';
+
+  @override
+  String get roleStopper => 'Stoper';
+
+  @override
+  String get roleCoveringDefender => 'Obrońca asekurujący';
+
+  @override
+  String get roleDefensiveFullBack => 'Defensywny boczny obrońca';
+
+  @override
+  String get roleWingBack => 'Wahadłowy';
+
+  @override
+  String get roleInvertedFullBack => 'Odwrócony boczny obrońca';
+
+  @override
+  String get roleAnchor => 'Kotwica';
+
+  @override
+  String get roleDeepPlaymaker => 'Rozgrywający z głębi';
+
+  @override
+  String get roleBoxToBox => 'Box-to-box';
+
+  @override
+  String get roleShadowStriker => 'Cofnięty napastnik';
+
+  @override
+  String get roleTouchlineWinger => 'Skrzydłowy przy linii';
+
+  @override
+  String get roleDefensiveWinger => 'Defensywny skrzydłowy';
+
+  @override
+  String get roleFalseNine => 'Fałszywa dziewiątka';
+
+  @override
+  String get rolePressingForward => 'Napastnik pressujący';
+
+  @override
+  String get roleLineKeeperBlurb =>
+      'Trzyma się linii. Pewniej, ale wolniej rozpoczyna akcje.';
+
+  @override
+  String get roleSweeperKeeperBlurb =>
+      'Asekuruje za obroną i rozpoczyna akcje.';
+
+  @override
+  String get roleStopperBlurb => 'Wychodzi wysoko po piłkę. Mocny w powietrzu.';
+
+  @override
+  String get roleCoveringDefenderBlurb =>
+      'Cofa się, by asekurować przestrzeń za plecami.';
+
+  @override
+  String get roleDefensiveFullBackBlurb =>
+      'Zostaje z tyłu i pilnuje swojej strony.';
+
+  @override
+  String get roleWingBackBlurb =>
+      'Obiega i dośrodkowuje. Pokonuje mnóstwo metrów.';
+
+  @override
+  String get roleInvertedFullBackBlurb =>
+      'Schodzi do środka pola, by pomóc utrzymać piłkę.';
+
+  @override
+  String get roleAnchorBlurb => 'Osłania linię obrony. Rzadko strzela.';
+
+  @override
+  String get roleDeepPlaymakerBlurb => 'Dyktuje grę z głębi. Więcej asyst.';
+
+  @override
+  String get roleBoxToBoxBlurb =>
+      'Biega od pola karnego do pola karnego. Potrzebuje kondycji.';
+
+  @override
+  String get roleShadowStrikerBlurb =>
+      'Wbiega w pole karne z drugiej linii. Więcej goli.';
+
+  @override
+  String get roleTouchlineWingerBlurb =>
+      'Trzyma się linii i dośrodkowuje. Więcej asyst.';
+
+  @override
+  String get roleDefensiveWingerBlurb => 'Wraca, by chronić bocznego obrońcę.';
+
+  @override
+  String get roleFalseNineBlurb =>
+      'Cofa się, by łączyć grę. Więcej kreuje, niż strzela.';
+
+  @override
+  String get rolePressingForwardBlurb =>
+      'Prowadzi pressing z przodu. Szybciej się męczy.';
 
   @override
   String get federationDeptYouth => 'Akademia';

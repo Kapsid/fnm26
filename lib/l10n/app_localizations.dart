@@ -2366,6 +2366,114 @@ abstract class AppLocalizations {
   /// **'ROLE · {name}'**
   String tacticsRolePlayer(String name);
 
+  /// How well a role suits the player: his attributes fit it.
+  ///
+  /// In en, this message translates to:
+  /// **'Good fit'**
+  String get roleFitGood;
+
+  /// How well a role suits the player: neither strength nor weakness.
+  ///
+  /// In en, this message translates to:
+  /// **'Fair fit'**
+  String get roleFitFair;
+
+  /// How well a role suits the player: it asks for his weakest attribute.
+  ///
+  /// In en, this message translates to:
+  /// **'Poor fit'**
+  String get roleFitPoor;
+
+  /// A player's movement on the tactics pitch: no run, he keeps his place.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold position'**
+  String get arrowNone;
+
+  /// A player's movement on the tactics pitch: runs forward.
+  ///
+  /// In en, this message translates to:
+  /// **'Get forward'**
+  String get arrowForward;
+
+  /// A player's movement on the tactics pitch: sits deeper.
+  ///
+  /// In en, this message translates to:
+  /// **'Sit deeper'**
+  String get arrowBack;
+
+  /// A player's movement on the tactics pitch: comes inside off his flank.
+  ///
+  /// In en, this message translates to:
+  /// **'Come inside'**
+  String get arrowInside;
+
+  /// A player's movement on the tactics pitch: stays wide on the touchline.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay wide'**
+  String get arrowOutside;
+
+  /// A player's movement on the tactics pitch: runs forward and inside.
+  ///
+  /// In en, this message translates to:
+  /// **'Forward and inside'**
+  String get arrowForwardInside;
+
+  /// A player's movement on the tactics pitch: runs forward and wide.
+  ///
+  /// In en, this message translates to:
+  /// **'Forward and wide'**
+  String get arrowForwardOutside;
+
+  /// Toggle above the tactics pitch: the pitch edits who plays where.
+  ///
+  /// In en, this message translates to:
+  /// **'Players'**
+  String get tacticsPitchModePlayers;
+
+  /// Toggle above the tactics pitch: the pitch edits each player's role and run.
+  ///
+  /// In en, this message translates to:
+  /// **'Roles & runs'**
+  String get tacticsPitchModeRoles;
+
+  /// Hint above the tactics pitch while it edits roles and runs.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a player to set a role. Hold and drag to draw a run.'**
+  String get tacticsPitchRolesHint;
+
+  /// Heading of the role list in a player's role and run sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'ROLE'**
+  String get tacticsPlanRoleHeading;
+
+  /// Heading of the movement choices in a player's role and run sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'MOVEMENT'**
+  String get tacticsPlanMovementHeading;
+
+  /// Title of a player's role and run sheet: his position and name.
+  ///
+  /// In en, this message translates to:
+  /// **'{position} · {name}'**
+  String tacticsPlanTitle(String position, String name);
+
+  /// Note after a run is drawn on the tactics pitch: the player and his movement.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}: {movement}'**
+  String tacticsArrowSet(String name, String movement);
+
+  /// In a player's role and run sheet: a goalkeeper has no movement to set.
+  ///
+  /// In en, this message translates to:
+  /// **'A keeper has no run to set.'**
+  String get tacticsKeeperNoRun;
+
   /// Heading of the penalty-taker picker.
   ///
   /// In en, this message translates to:
@@ -14810,6 +14918,186 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Starts moves from the back.'**
   String get roleBallPlayingDefenderBlurb;
+
+  /// A tactical role for a goalkeeper slot: stays on his line.
+  ///
+  /// In en, this message translates to:
+  /// **'Line keeper'**
+  String get roleLineKeeper;
+
+  /// A tactical role for a goalkeeper slot: sweeps behind the defence.
+  ///
+  /// In en, this message translates to:
+  /// **'Sweeper keeper'**
+  String get roleSweeperKeeper;
+
+  /// A tactical role for a centre-back slot: steps out to win the ball.
+  ///
+  /// In en, this message translates to:
+  /// **'Stopper'**
+  String get roleStopper;
+
+  /// A tactical role for a centre-back slot: covers the space behind.
+  ///
+  /// In en, this message translates to:
+  /// **'Covering defender'**
+  String get roleCoveringDefender;
+
+  /// A tactical role for a full-back slot: stays home.
+  ///
+  /// In en, this message translates to:
+  /// **'Defensive full-back'**
+  String get roleDefensiveFullBack;
+
+  /// A tactical role for a full-back slot: lives on the overlap.
+  ///
+  /// In en, this message translates to:
+  /// **'Wing-back'**
+  String get roleWingBack;
+
+  /// A tactical role for a full-back slot: tucks into midfield.
+  ///
+  /// In en, this message translates to:
+  /// **'Inverted full-back'**
+  String get roleInvertedFullBack;
+
+  /// A tactical role for a holding midfielder slot: sits in front of the defence.
+  ///
+  /// In en, this message translates to:
+  /// **'Anchor'**
+  String get roleAnchor;
+
+  /// A tactical role for a holding midfielder slot: dictates play from deep.
+  ///
+  /// In en, this message translates to:
+  /// **'Deep-lying playmaker'**
+  String get roleDeepPlaymaker;
+
+  /// A tactical role for a central midfielder slot: covers the whole pitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Box-to-box'**
+  String get roleBoxToBox;
+
+  /// A tactical role for an attacking midfielder slot: arrives late to score.
+  ///
+  /// In en, this message translates to:
+  /// **'Shadow striker'**
+  String get roleShadowStriker;
+
+  /// A tactical role for a wide slot: holds the touchline and crosses.
+  ///
+  /// In en, this message translates to:
+  /// **'Touchline winger'**
+  String get roleTouchlineWinger;
+
+  /// A tactical role for a wide slot: tracks back.
+  ///
+  /// In en, this message translates to:
+  /// **'Defensive winger'**
+  String get roleDefensiveWinger;
+
+  /// A tactical role for a striker slot: drops off the line to link play.
+  ///
+  /// In en, this message translates to:
+  /// **'False nine'**
+  String get roleFalseNine;
+
+  /// A tactical role for a striker slot: leads the press.
+  ///
+  /// In en, this message translates to:
+  /// **'Pressing forward'**
+  String get rolePressingForward;
+
+  /// What a tactical role does, one line, in the role picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Stays on the line. Safer, slower to start play.'**
+  String get roleLineKeeperBlurb;
+
+  /// What a tactical role does, one line, in the role picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Sweeps behind the defence and starts moves.'**
+  String get roleSweeperKeeperBlurb;
+
+  /// What a tactical role does, one line, in the role picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Steps out to win it early. Strong in the air.'**
+  String get roleStopperBlurb;
+
+  /// What a tactical role does, one line, in the role picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Drops off to cover the space behind.'**
+  String get roleCoveringDefenderBlurb;
+
+  /// What a tactical role does, one line, in the role picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Stays home and guards the flank.'**
+  String get roleDefensiveFullBackBlurb;
+
+  /// What a tactical role does, one line, in the role picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Overlaps and crosses. Covers a lot of ground.'**
+  String get roleWingBackBlurb;
+
+  /// What a tactical role does, one line, in the role picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Tucks into midfield to help keep the ball.'**
+  String get roleInvertedFullBackBlurb;
+
+  /// What a tactical role does, one line, in the role picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Shields the back line. Rarely scores.'**
+  String get roleAnchorBlurb;
+
+  /// What a tactical role does, one line, in the role picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Dictates play from deep. More assists.'**
+  String get roleDeepPlaymakerBlurb;
+
+  /// What a tactical role does, one line, in the role picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Up and down all match. Needs stamina.'**
+  String get roleBoxToBoxBlurb;
+
+  /// What a tactical role does, one line, in the role picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Arrives late in the box. More goals.'**
+  String get roleShadowStrikerBlurb;
+
+  /// What a tactical role does, one line, in the role picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Hugs the touchline and crosses. More assists.'**
+  String get roleTouchlineWingerBlurb;
+
+  /// What a tactical role does, one line, in the role picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracks back to protect the full-back.'**
+  String get roleDefensiveWingerBlurb;
+
+  /// What a tactical role does, one line, in the role picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Drops off to link play. Creates more than scores.'**
+  String get roleFalseNineBlurb;
+
+  /// What a tactical role does, one line, in the role picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Leads the press from the front. Tires faster.'**
+  String get rolePressingForwardBlurb;
 
   /// A federation department the manager invests in.
   ///

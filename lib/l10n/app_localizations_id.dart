@@ -1315,6 +1315,65 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
+  String get roleFitGood => 'Cocok';
+
+  @override
+  String get roleFitFair => 'Lumayan';
+
+  @override
+  String get roleFitPoor => 'Kurang cocok';
+
+  @override
+  String get arrowNone => 'Jaga posisi';
+
+  @override
+  String get arrowForward => 'Maju ke depan';
+
+  @override
+  String get arrowBack => 'Bermain lebih dalam';
+
+  @override
+  String get arrowInside => 'Masuk ke tengah';
+
+  @override
+  String get arrowOutside => 'Tetap melebar';
+
+  @override
+  String get arrowForwardInside => 'Maju dan ke tengah';
+
+  @override
+  String get arrowForwardOutside => 'Maju dan melebar';
+
+  @override
+  String get tacticsPitchModePlayers => 'Pemain';
+
+  @override
+  String get tacticsPitchModeRoles => 'Peran & pergerakan';
+
+  @override
+  String get tacticsPitchRolesHint =>
+      'Ketuk pemain untuk memilih peran. Tahan dan seret untuk menggambar pergerakan.';
+
+  @override
+  String get tacticsPlanRoleHeading => 'PERAN';
+
+  @override
+  String get tacticsPlanMovementHeading => 'PERGERAKAN';
+
+  @override
+  String tacticsPlanTitle(String position, String name) {
+    return '$position · $name';
+  }
+
+  @override
+  String tacticsArrowSet(String name, String movement) {
+    return '$name: $movement';
+  }
+
+  @override
+  String get tacticsKeeperNoRun => 'Kiper tidak punya pergerakan untuk diatur.';
+
+  @override
   String get tacticsPenaltyTaker => 'EKSEKUTOR PENALTI';
 
   @override
@@ -9510,6 +9569,107 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get roleBallPlayingDefenderBlurb => 'Memulai serangan dari belakang.';
+
+  @override
+  String get roleLineKeeper => 'Kiper garis';
+
+  @override
+  String get roleSweeperKeeper => 'Kiper sweeper';
+
+  @override
+  String get roleStopper => 'Stopper';
+
+  @override
+  String get roleCoveringDefender => 'Bek penutup';
+
+  @override
+  String get roleDefensiveFullBack => 'Bek sayap bertahan';
+
+  @override
+  String get roleWingBack => 'Wing-back';
+
+  @override
+  String get roleInvertedFullBack => 'Bek sayap terbalik';
+
+  @override
+  String get roleAnchor => 'Jangkar';
+
+  @override
+  String get roleDeepPlaymaker => 'Playmaker dalam';
+
+  @override
+  String get roleBoxToBox => 'Box-to-box';
+
+  @override
+  String get roleShadowStriker => 'Penyerang bayangan';
+
+  @override
+  String get roleTouchlineWinger => 'Sayap murni';
+
+  @override
+  String get roleDefensiveWinger => 'Sayap bertahan';
+
+  @override
+  String get roleFalseNine => 'Penyerang palsu';
+
+  @override
+  String get rolePressingForward => 'Penyerang penekan';
+
+  @override
+  String get roleLineKeeperBlurb =>
+      'Bertahan di garis. Lebih aman, lebih lambat memulai serangan.';
+
+  @override
+  String get roleSweeperKeeperBlurb =>
+      'Menyapu di belakang pertahanan dan memulai serangan.';
+
+  @override
+  String get roleStopperBlurb => 'Maju merebut bola lebih awal. Kuat di udara.';
+
+  @override
+  String get roleCoveringDefenderBlurb => 'Mundur menutup ruang di belakang.';
+
+  @override
+  String get roleDefensiveFullBackBlurb =>
+      'Tetap di belakang dan menjaga sisi.';
+
+  @override
+  String get roleWingBackBlurb =>
+      'Melakukan overlap dan umpan silang. Banyak berlari.';
+
+  @override
+  String get roleInvertedFullBackBlurb =>
+      'Masuk ke lini tengah untuk membantu penguasaan bola.';
+
+  @override
+  String get roleAnchorBlurb =>
+      'Melindungi lini belakang. Jarang mencetak gol.';
+
+  @override
+  String get roleDeepPlaymakerBlurb =>
+      'Mengatur permainan dari belakang. Lebih banyak assist.';
+
+  @override
+  String get roleBoxToBoxBlurb => 'Naik turun sepanjang laga. Butuh stamina.';
+
+  @override
+  String get roleShadowStrikerBlurb =>
+      'Datang terlambat ke kotak penalti. Lebih banyak gol.';
+
+  @override
+  String get roleTouchlineWingerBlurb =>
+      'Menempel garis dan mengirim umpan silang. Lebih banyak assist.';
+
+  @override
+  String get roleDefensiveWingerBlurb => 'Turun membantu melindungi bek sayap.';
+
+  @override
+  String get roleFalseNineBlurb =>
+      'Turun menghubungkan permainan. Lebih banyak mencipta daripada mencetak gol.';
+
+  @override
+  String get rolePressingForwardBlurb =>
+      'Memimpin pressing dari depan. Lebih cepat lelah.';
 
   @override
   String get federationDeptYouth => 'Akademi Muda';

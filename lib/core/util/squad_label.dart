@@ -4,6 +4,7 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player_role.dart';
+import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
 /// Writing positions, roles and squad morale in the manager's own language.
@@ -42,6 +43,21 @@ String playerRoleLabel(AppLocalizations l, PlayerRole r) => switch (r) {
   PlayerRole.ballWinner => l.roleBallWinner,
   PlayerRole.invertedWinger => l.roleInvertedWinger,
   PlayerRole.ballPlayingDefender => l.roleBallPlayingDefender,
+  PlayerRole.lineKeeper => l.roleLineKeeper,
+  PlayerRole.sweeperKeeper => l.roleSweeperKeeper,
+  PlayerRole.stopper => l.roleStopper,
+  PlayerRole.coveringDefender => l.roleCoveringDefender,
+  PlayerRole.defensiveFullBack => l.roleDefensiveFullBack,
+  PlayerRole.wingBack => l.roleWingBack,
+  PlayerRole.invertedFullBack => l.roleInvertedFullBack,
+  PlayerRole.anchor => l.roleAnchor,
+  PlayerRole.deepPlaymaker => l.roleDeepPlaymaker,
+  PlayerRole.boxToBox => l.roleBoxToBox,
+  PlayerRole.shadowStriker => l.roleShadowStriker,
+  PlayerRole.touchlineWinger => l.roleTouchlineWinger,
+  PlayerRole.defensiveWinger => l.roleDefensiveWinger,
+  PlayerRole.falseNine => l.roleFalseNine,
+  PlayerRole.pressingForward => l.rolePressingForward,
 };
 
 /// One line on what a tactical role does, under its name in the picker.
@@ -53,6 +69,39 @@ String playerRoleBlurb(AppLocalizations l, PlayerRole r) => switch (r) {
   PlayerRole.ballWinner => l.roleBallWinnerBlurb,
   PlayerRole.invertedWinger => l.roleInvertedWingerBlurb,
   PlayerRole.ballPlayingDefender => l.roleBallPlayingDefenderBlurb,
+  PlayerRole.lineKeeper => l.roleLineKeeperBlurb,
+  PlayerRole.sweeperKeeper => l.roleSweeperKeeperBlurb,
+  PlayerRole.stopper => l.roleStopperBlurb,
+  PlayerRole.coveringDefender => l.roleCoveringDefenderBlurb,
+  PlayerRole.defensiveFullBack => l.roleDefensiveFullBackBlurb,
+  PlayerRole.wingBack => l.roleWingBackBlurb,
+  PlayerRole.invertedFullBack => l.roleInvertedFullBackBlurb,
+  PlayerRole.anchor => l.roleAnchorBlurb,
+  PlayerRole.deepPlaymaker => l.roleDeepPlaymakerBlurb,
+  PlayerRole.boxToBox => l.roleBoxToBoxBlurb,
+  PlayerRole.shadowStriker => l.roleShadowStrikerBlurb,
+  PlayerRole.touchlineWinger => l.roleTouchlineWingerBlurb,
+  PlayerRole.defensiveWinger => l.roleDefensiveWingerBlurb,
+  PlayerRole.falseNine => l.roleFalseNineBlurb,
+  PlayerRole.pressingForward => l.rolePressingForwardBlurb,
+};
+
+/// How well a role suits a player, as the picker's chip says it.
+String roleFitLabel(AppLocalizations l, RoleFit f) => switch (f) {
+  RoleFit.good => l.roleFitGood,
+  RoleFit.fair => l.roleFitFair,
+  RoleFit.poor => l.roleFitPoor,
+};
+
+/// A movement arrow's name on the tactics pitch.
+String moveArrowLabel(AppLocalizations l, MoveArrow a) => switch (a) {
+  MoveArrow.none => l.arrowNone,
+  MoveArrow.forward => l.arrowForward,
+  MoveArrow.back => l.arrowBack,
+  MoveArrow.inside => l.arrowInside,
+  MoveArrow.outside => l.arrowOutside,
+  MoveArrow.forwardInside => l.arrowForwardInside,
+  MoveArrow.forwardOutside => l.arrowForwardOutside,
 };
 
 /// A morale value (0–100) as the one word the hub badge shows.

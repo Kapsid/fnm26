@@ -1363,6 +1363,65 @@ class AppLocalizationsFi extends AppLocalizations {
   }
 
   @override
+  String get roleFitGood => 'Sopii';
+
+  @override
+  String get roleFitFair => 'Kohtalainen';
+
+  @override
+  String get roleFitPoor => 'Ei sovi';
+
+  @override
+  String get arrowNone => 'Pysy paikallaan';
+
+  @override
+  String get arrowForward => 'Nouse ylös';
+
+  @override
+  String get arrowBack => 'Pelaa syvemmältä';
+
+  @override
+  String get arrowInside => 'Leikkaa sisään';
+
+  @override
+  String get arrowOutside => 'Pysy laidassa';
+
+  @override
+  String get arrowForwardInside => 'Eteen ja sisään';
+
+  @override
+  String get arrowForwardOutside => 'Eteen ja laitaan';
+
+  @override
+  String get tacticsPitchModePlayers => 'Pelaajat';
+
+  @override
+  String get tacticsPitchModeRoles => 'Roolit ja juoksut';
+
+  @override
+  String get tacticsPitchRolesHint =>
+      'Napauta pelaajaa valitaksesi roolin. Pidä ja vedä piirtääksesi juoksun.';
+
+  @override
+  String get tacticsPlanRoleHeading => 'ROOLI';
+
+  @override
+  String get tacticsPlanMovementHeading => 'LIIKKUMINEN';
+
+  @override
+  String tacticsPlanTitle(String position, String name) {
+    return '$position · $name';
+  }
+
+  @override
+  String tacticsArrowSet(String name, String movement) {
+    return '$name: $movement';
+  }
+
+  @override
+  String get tacticsKeeperNoRun => 'Maalivahdille ei valita juoksua.';
+
+  @override
   String get tacticsPenaltyTaker => 'RANGAISTUSPOTKUN POTKIJA';
 
   @override
@@ -9675,6 +9734,108 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get roleBallPlayingDefenderBlurb => 'Aloittaa hyökkäykset takaa.';
+
+  @override
+  String get roleLineKeeper => 'Maaliviivavahti';
+
+  @override
+  String get roleSweeperKeeper => 'Pelaava maalivahti';
+
+  @override
+  String get roleStopper => 'Stopperi';
+
+  @override
+  String get roleCoveringDefender => 'Peittävä puolustaja';
+
+  @override
+  String get roleDefensiveFullBack => 'Puolustava laitapuolustaja';
+
+  @override
+  String get roleWingBack => 'Wingback';
+
+  @override
+  String get roleInvertedFullBack => 'Sisäänkääntyvä laitapuolustaja';
+
+  @override
+  String get roleAnchor => 'Ankkuri';
+
+  @override
+  String get roleDeepPlaymaker => 'Syvä pelinrakentaja';
+
+  @override
+  String get roleBoxToBox => 'Box-to-box';
+
+  @override
+  String get roleShadowStriker => 'Varjohyökkääjä';
+
+  @override
+  String get roleTouchlineWinger => 'Leveä laitapelaaja';
+
+  @override
+  String get roleDefensiveWinger => 'Puolustava laitapelaaja';
+
+  @override
+  String get roleFalseNine => 'Valeysi';
+
+  @override
+  String get rolePressingForward => 'Prässäävä hyökkääjä';
+
+  @override
+  String get roleLineKeeperBlurb =>
+      'Pysyy viivalla. Varmempi, hitaampi avaamaan peliä.';
+
+  @override
+  String get roleSweeperKeeperBlurb =>
+      'Siivoaa puolustuksen takaa ja aloittaa hyökkäykset.';
+
+  @override
+  String get roleStopperBlurb =>
+      'Nousee voittamaan pallon aikaisin. Vahva ilmassa.';
+
+  @override
+  String get roleCoveringDefenderBlurb => 'Putoaa peittämään tilan takana.';
+
+  @override
+  String get roleDefensiveFullBackBlurb => 'Pysyy takana ja vartioi laitaa.';
+
+  @override
+  String get roleWingBackBlurb =>
+      'Ohittaa ulkokautta ja keskittää. Juoksee paljon.';
+
+  @override
+  String get roleInvertedFullBackBlurb =>
+      'Kääntyy keskikentälle auttamaan pallonhallinnassa.';
+
+  @override
+  String get roleAnchorBlurb =>
+      'Suojaa puolustuslinjaa. Tekee harvoin maaleja.';
+
+  @override
+  String get roleDeepPlaymakerBlurb =>
+      'Ohjaa peliä syvältä. Enemmän syöttöpisteitä.';
+
+  @override
+  String get roleBoxToBoxBlurb =>
+      'Ylös ja alas koko ottelun. Vaatii kestävyyttä.';
+
+  @override
+  String get roleShadowStrikerBlurb =>
+      'Saapuu myöhään boksiin. Enemmän maaleja.';
+
+  @override
+  String get roleTouchlineWingerBlurb =>
+      'Pysyy rajalla ja keskittää. Enemmän syöttöpisteitä.';
+
+  @override
+  String get roleDefensiveWingerBlurb => 'Palaa suojaamaan laitapuolustajaa.';
+
+  @override
+  String get roleFalseNineBlurb =>
+      'Putoaa sitomaan peliä. Luo enemmän kuin tekee maaleja.';
+
+  @override
+  String get rolePressingForwardBlurb =>
+      'Johtaa prässiä edestä. Väsyy nopeammin.';
 
   @override
   String get federationDeptYouth => 'Nuorisoakatemia';

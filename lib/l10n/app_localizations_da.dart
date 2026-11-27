@@ -1328,6 +1328,65 @@ class AppLocalizationsDa extends AppLocalizations {
   }
 
   @override
+  String get roleFitGood => 'Passer godt';
+
+  @override
+  String get roleFitFair => 'Acceptabel';
+
+  @override
+  String get roleFitPoor => 'Passer dårligt';
+
+  @override
+  String get arrowNone => 'Hold positionen';
+
+  @override
+  String get arrowForward => 'Gå frem';
+
+  @override
+  String get arrowBack => 'Ligge dybere';
+
+  @override
+  String get arrowInside => 'Træk ind';
+
+  @override
+  String get arrowOutside => 'Hold bredden';
+
+  @override
+  String get arrowForwardInside => 'Frem og ind';
+
+  @override
+  String get arrowForwardOutside => 'Frem og ud';
+
+  @override
+  String get tacticsPitchModePlayers => 'Spillere';
+
+  @override
+  String get tacticsPitchModeRoles => 'Roller og løb';
+
+  @override
+  String get tacticsPitchRolesHint =>
+      'Tryk på en spiller for rolle. Hold og træk for at tegne et løb.';
+
+  @override
+  String get tacticsPlanRoleHeading => 'ROLLE';
+
+  @override
+  String get tacticsPlanMovementHeading => 'BEVÆGELSE';
+
+  @override
+  String tacticsPlanTitle(String position, String name) {
+    return '$position · $name';
+  }
+
+  @override
+  String tacticsArrowSet(String name, String movement) {
+    return '$name: $movement';
+  }
+
+  @override
+  String get tacticsKeeperNoRun => 'En målmand har intet løb at vælge.';
+
+  @override
   String get tacticsPenaltyTaker => 'STRAFFESPARKSSKYTTE';
 
   @override
@@ -9603,6 +9662,104 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get roleBallPlayingDefenderBlurb => 'Starter angreb bagfra.';
+
+  @override
+  String get roleLineKeeper => 'Stregmålmand';
+
+  @override
+  String get roleSweeperKeeper => 'Fejende målmand';
+
+  @override
+  String get roleStopper => 'Stopper';
+
+  @override
+  String get roleCoveringDefender => 'Dækkende forsvarer';
+
+  @override
+  String get roleDefensiveFullBack => 'Defensiv back';
+
+  @override
+  String get roleWingBack => 'Wingback';
+
+  @override
+  String get roleInvertedFullBack => 'Inverteret back';
+
+  @override
+  String get roleAnchor => 'Anker';
+
+  @override
+  String get roleDeepPlaymaker => 'Dyb playmaker';
+
+  @override
+  String get roleBoxToBox => 'Box-to-box';
+
+  @override
+  String get roleShadowStriker => 'Skyggeangriber';
+
+  @override
+  String get roleTouchlineWinger => 'Kantspiller ved linjen';
+
+  @override
+  String get roleDefensiveWinger => 'Defensiv kantspiller';
+
+  @override
+  String get roleFalseNine => 'Falsk nier';
+
+  @override
+  String get rolePressingForward => 'Presangriber';
+
+  @override
+  String get roleLineKeeperBlurb =>
+      'Bliver på stregen. Sikrere, langsommere i opspillet.';
+
+  @override
+  String get roleSweeperKeeperBlurb => 'Fejer bag forsvaret og starter angreb.';
+
+  @override
+  String get roleStopperBlurb =>
+      'Går ud for at vinde bolden tidligt. Stærk i luften.';
+
+  @override
+  String get roleCoveringDefenderBlurb =>
+      'Falder tilbage og dækker rummet bagved.';
+
+  @override
+  String get roleDefensiveFullBackBlurb => 'Bliver hjemme og passer på kanten.';
+
+  @override
+  String get roleWingBackBlurb => 'Overlapper og slår indlæg. Løber meget.';
+
+  @override
+  String get roleInvertedFullBackBlurb =>
+      'Går ind centralt og hjælper med at holde bolden.';
+
+  @override
+  String get roleAnchorBlurb => 'Beskytter forsvarskæden. Scorer sjældent.';
+
+  @override
+  String get roleDeepPlaymakerBlurb =>
+      'Styrer spillet fra dybden. Flere assister.';
+
+  @override
+  String get roleBoxToBoxBlurb => 'Op og ned hele kampen. Kræver udholdenhed.';
+
+  @override
+  String get roleShadowStrikerBlurb => 'Kommer sent ind i feltet. Flere mål.';
+
+  @override
+  String get roleTouchlineWingerBlurb =>
+      'Holder sig ved linjen og slår indlæg. Flere assister.';
+
+  @override
+  String get roleDefensiveWingerBlurb => 'Arbejder hjem og beskytter backen.';
+
+  @override
+  String get roleFalseNineBlurb =>
+      'Falder ned og binder spillet sammen. Skaber mere, end han scorer.';
+
+  @override
+  String get rolePressingForwardBlurb =>
+      'Leder presset fra fronten. Bliver hurtigere træt.';
 
   @override
   String get federationDeptYouth => 'Ungdomsakademi';

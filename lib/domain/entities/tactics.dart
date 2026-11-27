@@ -167,6 +167,16 @@ abstract class Tactic with _$Tactic {
         : roles.at(slot, p[slot]);
   }
 
+  /// The role [slot] plays with the legacy per-player store [legacy] (player
+  /// id to role, from before slot roles) read as a fallback: its slot role
+  /// when it has one, else the one its man was given there.
+  PlayerRole effectiveRoleAt(int slot, Map<int, PlayerRole> legacy) {
+    final own = roleAt(slot);
+    if (own != PlayerRole.none) return own;
+    final id = slot >= 0 && slot < lineup.length ? lineup[slot] : null;
+    return id == null ? PlayerRole.none : legacy[id] ?? PlayerRole.none;
+  }
+
   /// The movement arrow [slot] carries. A full-back's is his
   /// [FullBackPushes] arrow, read as [MoveArrow.forward] (pushed on) or
   /// [MoveArrow.back] (held back): one arrow, stored where it always was, so
@@ -442,9 +452,6 @@ class SlotRoles {
   int get hashCode => Object.hashAllUnordered(
     bySlot.entries.map((e) => Object.hash(e.key, e.value)),
   );
-
-  @override
-  String toString() => 'SlotRoles(${toJson()})';
 }
 
 /// Each slot's movement arrow ([MoveArrow]), the full-backs' apart: theirs
@@ -531,9 +538,6 @@ class SlotArrows {
   int get hashCode => Object.hashAllUnordered(
     bySlot.entries.map((e) => Object.hash(e.key, e.value)),
   );
-
-  @override
-  String toString() => 'SlotArrows(${toJson()})';
 }
 
 /// How a side takes its throw-ins.

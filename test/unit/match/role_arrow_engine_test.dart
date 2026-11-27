@@ -338,6 +338,114 @@ void main() {
     });
   });
 
+  group('in the match', () {
+    const engine = MatchEngine();
+    TacticalChange change(int minute, {List<PlayerRole>? roles}) {
+      final t = _team(1);
+      return TacticalChange(
+        teamNationId: 1,
+        minute: minute,
+        formation: Formation.f433,
+        instructions: const TacticalInstructions(),
+        xi: t.xi,
+        roles: roles,
+      );
+    }
+
+    final attacking = [
+      for (var i = 0; i < 11; i++) _attacking[i] ?? PlayerRole.none,
+    ];
+
+    test('a live change brings roles in from its minute, not before', () {
+      var shotsPlain = 0;
+      var shotsChanged = 0;
+      for (var i = 0; i < 400; i++) {
+        final plain = engine.play(
+          home: _team(1),
+          away: _team(2),
+          rng: SeededRng.forFixture(0xC4A, i),
+          neutralVenue: true,
+        );
+        final late = engine.play(
+          home: _team(1),
+          away: _team(2),
+          rng: SeededRng.forFixture(0xC4A, i),
+          neutralVenue: true,
+          changes: [change(80, roles: attacking)],
+        );
+        // Nothing before the 80th minute moves.
+        int before(MatchResult r) =>
+            r.events.where((e) => e.minute < 80).length;
+        expect(before(late), before(plain), reason: 'seed $i');
+        final early = engine.play(
+          home: _team(1),
+          away: _team(2),
+          rng: SeededRng.forFixture(0xC4A, i),
+          neutralVenue: true,
+          changes: [change(1, roles: attacking)],
+        );
+        shotsPlain += plain.homeShots;
+        shotsChanged += early.homeShots;
+      }
+      expect(shotsChanged / shotsPlain, greaterThan(1.01));
+    });
+
+    test('a change that names no roles keeps the ones on the pitch', () {
+      for (var i = 0; i < 30; i++) {
+        final kept = engine.play(
+          home: _team(1, roles: const SlotRoles(_attacking)),
+          away: _team(2),
+          rng: SeededRng.forFixture(0xC4B, i),
+          changes: [change(30)],
+        );
+        final unchanged = engine.play(
+          home: _team(1, roles: const SlotRoles(_attacking)),
+          away: _team(2),
+          rng: SeededRng.forFixture(0xC4B, i),
+        );
+        expect(kept.homeScore, unchanged.homeScore, reason: 'seed $i');
+        expect(kept.homeShots, unchanged.homeShots, reason: 'seed $i');
+      }
+    });
+
+    test('a substitute takes over the slot role', () {
+      // The poacher's role (slot 9) belongs to the slot: whoever comes on
+      // there plays it, so his share of the goals stays a poacher's.
+      final sub = player(
+        id: 199,
+        nationId: 1,
+        position: PlayerPosition.st,
+        attributes: _attrs(72, 72, 72),
+      );
+      var subGoals = 0;
+      var subGoalsNoRole = 0;
+      for (var i = 0; i < 600; i++) {
+        for (final roles in [
+          const SlotRoles({9: PlayerRole.poacher}),
+          SlotRoles.none,
+        ]) {
+          final r = engine.play(
+            home: _team(1, roles: roles),
+            away: _team(2),
+            rng: SeededRng.forFixture(0xC4C, i),
+            subs: [
+              Substitution(teamNationId: 1, minute: 1, offId: 109, on: sub),
+            ],
+          );
+          final goals = r.events
+              .where((e) => e.type == MatchEventType.goal && e.playerId == 199)
+              .length;
+          if (roles.isEmpty) {
+            subGoalsNoRole += goals;
+          } else {
+            subGoals += goals;
+          }
+        }
+      }
+      expect(subGoals, greaterThan(subGoalsNoRole * 1.2));
+    });
+  });
+
   test('a skipped match feels the tilt too, in the same direction', () {
     final xi = _team(1).xi;
     final attacking = RoleTilt.of(
