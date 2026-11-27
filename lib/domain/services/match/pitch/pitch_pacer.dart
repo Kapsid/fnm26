@@ -113,6 +113,33 @@ class PitchPacer {
     // a restart is shown only when it leads to an action). Its time goes
     // to the open play around it: it still counts toward how eventful the
     // match is, so the budget stays what it was.
+    // The moments leading straight into a card (in its minute before it,
+    // or in the minute before) keep their full length (see [_seconds]):
+    // the card's moment opens from the play it always did, its whistle
+    // and its card on time. (1.1.4: trimmed, they cut the referee's card
+    // short half as often again.)
+    var cardSlot = -10;
+    for (var i = r.moments.length - 1; i >= 0; i--) {
+      final m = r.moments[i];
+      final slot = _slotOf(m.minute, m.stoppage, slotCount);
+      if (m is FoulMoment && m.cardEventIndex != null) {
+        cardSlot = slot;
+      } else if (cardSlot - slot <= 1 && cardSlot >= slot) {
+        _nearCard.add(m);
+      }
+    }
+    // And the moments straight after one (in its minute, or the next): a
+    // shorter one more often needs the picture to cut to it, which cuts
+    // the referee's card short.
+    cardSlot = -10;
+    for (final m in r.moments) {
+      final slot = _slotOf(m.minute, m.stoppage, slotCount);
+      if (m is FoulMoment && m.cardEventIndex != null) {
+        cardSlot = slot;
+      } else if (slot - cardSlot <= 1) {
+        _nearCard.add(m);
+      }
+    }
     var unstaged = 0;
     for (final m in r.moments) {
       if (mergedInto.containsKey(m) || followed.contains(m)) {
@@ -338,7 +365,8 @@ class PitchPacer {
   ///   at 100% / 50% / 30%;
   /// - except that at slow open play's own stops (the shots and set pieces
   ///   above, and offsides) play at 75% (standard) / 65% (minor): yellow
-  ///   cards and subs keep 100% there;
+  ///   cards and subs keep 100% there, and so does whatever comes
+  ///   straight before or after a card (in its minute, or the next);
   ///
   /// and no moment drops below one second. A penalty's foul is a key moment
   /// too, card or not: it is staged before the kick. A goal adds 2.5 s, and one from open play 4 s more for its build-up. A set piece
@@ -361,6 +389,9 @@ class PitchPacer {
   final PitchSpeed _speed;
   final List<MatchEvent> _events;
   final Map<MatchMoment, double> _lengths = Map.identity();
+
+  /// The moments straight before or after a card (see the constructor).
+  final Set<MatchMoment> _nearCard = Set.identity();
 
   /// The fouls that give a penalty (see the constructor).
   final Set<FoulMoment> _penaltyFouls = Set.identity();
@@ -425,7 +456,10 @@ class PitchPacer {
     // ball is not left lying or held after them, the time going to the
     // open play around them (1.1.4 feedback: too many stops between
     // shots). Cards, subs and every key moment keep their length.
-    final (playStd, playMinor) = speed == PitchSpeed.slow
+    final (
+      playStd,
+      playMinor,
+    ) = speed == PitchSpeed.slow && !_nearCard.contains(m)
         ? (_slowPlayStandard, _slowPlayMinor)
         : (std, minor);
     double play(double base, _Tier t) =>

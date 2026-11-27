@@ -12,7 +12,8 @@ import '../../helpers/pitch_match_lab.dart';
 /// moving slower than 2.5 m/s (lying still, or a man standing over it).
 /// The stops that are meant to be there (a goal and its celebration, a
 /// card, a penalty and its foul, an injury, a red card's walk) are left
-/// out: they are staged as they always were.
+/// out, and so is a goal VAR chalks off (its check): they are staged as
+/// they always were.
 typedef _Dead = ({double perMatch, double mean, double max, double length});
 
 _Dead _deadTime(PitchSpeed speed) {
@@ -30,7 +31,7 @@ _Dead _deadTime(PitchSpeed speed) {
       if (w.moments.any(
         (m) =>
             m is ShotMoment &&
-            (m.outcome == ShotOutcome.goal || m.origin == ShotOrigin.penalty),
+            (m.outcome.inNet || m.origin == ShotOrigin.penalty),
       )) {
         return true;
       }
@@ -93,10 +94,12 @@ void main() {
     final d = _deadTime(PitchSpeed.slow);
     // ignore: avoid_print
     print('slow dead time $d');
-    // 18.8 s a match before 1.1.4, its longest 7.5 s; now about 7 s and
-    // under 4 s. The match is no longer for it.
-    expect(d.perMatch, lessThan(10));
-    expect(d.mean, lessThan(1.8));
+    // Before (with the 1.1.4 lull fixes): 22.0 s a match, a stop 1.93 s
+    // on average, the longest 7.5 s; now about 9.8 s, 1.81 s and 4.7 s
+    // (what leads into or out of a card keeps its full length). The match
+    // is no longer for it.
+    expect(d.perMatch, lessThan(10.5));
+    expect(d.mean, lessThan(1.85));
     expect(d.max, lessThan(5));
     expect(d.length, inInclusiveRange(240, 265));
   });
@@ -105,10 +108,11 @@ void main() {
     final d = _deadTime(PitchSpeed.fast);
     // ignore: avoid_print
     print('fast dead time $d');
-    // 6.7 s a match before 1.1.4, its longest 10.3 s (a substitute's walk).
+    // Before: 7.0 s a match, 1.90 s a stop, the longest 7.9 s (a
+    // substitute's walk); now about 5.3 s, 1.71 s and 3.6 s.
     expect(d.perMatch, lessThan(5.5));
     expect(d.mean, lessThan(2));
-    expect(d.max, lessThan(8));
+    expect(d.max, lessThan(5));
   });
 
   test('the quiet play has tackles, crosses headed clear and dribbles', () {
@@ -157,11 +161,13 @@ void main() {
       'per match: tackles ${tackles / n}, crosses ${crosses / n}, '
       'dribbles ${dribbles / n}, passes ${passes / n}',
     );
-    // Before 1.1.4: a tackle a match, no cross headed clear, 5.5 dribbles
-    // and 33 passes.
+    // Before: under a tackle a match, no cross headed clear, 4.5 dribbles
+    // and 32 passes; now about 4.3, 1.5, 6.2 and 38. (Only forwards, wide
+    // men and the attacking midfielder take a man on, and nobody a moment
+    // is about to name.)
     expect(tackles / n, greaterThan(4));
     expect(crosses / n, greaterThan(1));
-    expect(dribbles / n, greaterThan(6.5));
+    expect(dribbles / n, greaterThan(5.5));
     expect(passes / n, greaterThan(35));
   });
 }

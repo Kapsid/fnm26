@@ -33,7 +33,12 @@ extension _OpenPlay on _Builder {
   /// The side on the ball gives it up now (see `_decide`): by a tackle or a
   /// cleared cross when one fits. True when one has begun.
   bool _turnover(double t, _Agent a, double stop) {
-    if (activeWindow != null) return false;
+    // Never in a moment's lead-in: the ball is led into it as before (a
+    // cross and its clearance still in the air as a foul opened left the
+    // man fouled fetching it, the whistle late and the card cut short).
+    if (activeWindow != null || _nextStop(t) - t < _fillerClear(t)) {
+      return false;
+    }
     final minute = pacer.matchAt(_Builder._dur(t)).minute;
     final dir = _dir(a.side, minute);
     final ball = _ballPoint(a);
@@ -150,7 +155,23 @@ extension _OpenPlay on _Builder {
   /// As [to] takes the ball in open play with an opponent close: now and
   /// then he takes him on. Returns how much longer he keeps it.
   double _maybeDribble(double t, _Agent to) {
-    if (activeWindow != null || to.slot == sides[to.side].gkSlot) return 1;
+    if (activeWindow != null) return 1;
+    // The men who take a man on: the forwards, the wide men and the
+    // attacking midfielder. Everybody else plays his role on the ball (a
+    // midfielder's forward run is his arrow's, not a dribble's).
+    final side = sides[to.side];
+    final slot = to.slot;
+    if (slot == null || slot >= side.positions.length) return 1;
+    final attacker = switch (side.positions[slot]) {
+      PlayerPosition.st ||
+      PlayerPosition.lw ||
+      PlayerPosition.rw ||
+      PlayerPosition.lm ||
+      PlayerPosition.rm ||
+      PlayerPosition.am => true,
+      _ => false,
+    };
+    if (!attacker || _namedAhead(t, to)) return 1;
     var near = double.infinity;
     Offset2? at;
     for (final o in agents) {
@@ -178,9 +199,30 @@ extension _OpenPlay on _Builder {
     return 1.9;
   }
 
+  /// How far ahead of the next moment open play's incidents stop: its
+  /// lead-in, a foul's the longer one (its fouler closes in on his man).
+  double _fillerClear(double t) {
+    final w = _upcoming(t, LeadIn.taker).firstOrNull;
+    final m = w == null || w.moments.isEmpty ? null : w.moments.first;
+    return m is FoulMoment ? LeadIn.foul : LeadIn.ball;
+  }
+
+  /// Whether a moment opening soon names [a] (the man to be fouled, the
+  /// shooter): he is not off on a dribble as it opens, so its men meet
+  /// where it needs them (a fouler chasing a man running clear blew his
+  /// whistle late, and a red card was cut short by the next moment).
+  bool _namedAhead(double t, _Agent a) => _upcoming(
+    t,
+    LeadIn.foul,
+  ).any((w) => w.actors.contains(a.id));
+
   /// Where a man taking his marker on runs: ahead and round him.
   (Offset2, double, int)? _dribbleDrive(_Agent a, double t, int dir) {
     if (dribbler != a.index || t >= dribbleUntil) return null;
+    if (_namedAhead(t, a)) {
+      dribbleUntil = -1;
+      return null;
+    }
     final perp = Offset2(0, dir.toDouble());
     final tgt = _Builder._clampPitch(
       a.pos + Offset2(dir * 6.0, 0) + perp * (dribbleSign * 3.0),
