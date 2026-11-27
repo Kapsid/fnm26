@@ -379,7 +379,12 @@ void main() {
             ? enL.matchClockFullTimePenalties
             : enL.matchClockAfterExtraTime,
       );
-      expect((shown.home, shown.away), _stored(season));
+      // A shootout shows the level score on the board (the pens are their
+      // own line); otherwise the board reads what was stored.
+      expect(
+        (shown.home, shown.away),
+        ko.wentToShootout ? (et.homeScore, et.awayScore) : _stored(season),
+      );
     },
   );
 }
