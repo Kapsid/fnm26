@@ -52,10 +52,17 @@ enum CampaignDifficulty { medium, hard }
 
 /// One hand-built scenario: a fixed world ([rngSeed]), a nation, a goal.
 ///
-/// The seed is part of the design. It pins the qualifying draw and the hosts,
-/// so a scenario can promise things a random world cannot (the rival shares
-/// the group; the nation is not handed a place as host). The guard tests in
-/// `campaign_seeds_test.dart` fail if a seed stops delivering them.
+/// The seed is part of the design. It pins the hosts and most qualifying
+/// draws, so a scenario can promise things a random world cannot (the rival
+/// shares the group; the nation is not handed a place as host). The guard
+/// tests in `campaign_seeds_test.dart` fail if a seed stops delivering them.
+///
+/// Europe's EURO 2028 qualifying draw (`Euro28`, every run since it came
+/// in) is the exception: its pots are the first Nations Cup's overall
+/// ranking, played in the same cycle, so a seed pins it only as far as no
+/// result can move a side. The cup's bottom league is always the last pot,
+/// drawn into the groups of five; any other pairing holds only for the
+/// cup's results the seed search assumed (see `campaign_seeds_test.dart`).
 class CampaignDef {
   const CampaignDef({
     required this.id,
@@ -190,13 +197,20 @@ abstract final class Campaigns {
   /// close rival by design (campaign_lab_test.dart; on the 1.0.6 ranking
   /// Armenia were bottom of the group nearly every run, Türkiye and Ukraine
   /// almost never caught). On the real starting ranking (Albania 66th,
-  /// Georgia 71st) seed 240 draws the two together with neither hosting the
-  /// European Championship: Netherlands, Austria, Albania, Georgia,
-  /// Kazakhstan, Andorra (campaign_seeds_test.dart); on the world with
-  /// Belarus (runs from 1.1.2) Armenia takes Kazakhstan's place. Of the seeds that do,
-  /// it is the one the lab plays closest to the 1.0.6 run's rate (about 30%
-  /// of autopilot runs finish above Albania, as seed 10 did on the old
-  /// ranking); the first, seed 24, fell to 15%.
+  /// Georgia 71st) seed 240 drew the two together in the old groups of six;
+  /// it does not in the EURO 2028 shape.
+  ///
+  /// Seed 9271 (searched from 1 to 12,000, the only one of the 56 that pair
+  /// them on the unplayed cup to do so in an autopilot run too) draws them
+  /// together with neither hosting the European Championship: Albania,
+  /// Armenia, Georgia and the Netherlands in the autopilot run
+  /// (campaign_verdict_event_test.dart), a group of five on the unplayed
+  /// cup (campaign_seeds_test.dart). Both sit in the Nations Cup's League B,
+  /// whose results set the pots: a managed run that finishes elsewhere in
+  /// its cup group than the autopilot does is in general drawn apart from
+  /// Albania (about 3% of random cups pair them, for any seed), and then no
+  /// star can be earned. Not yet re-tuned on the lab: its autopilot run
+  /// finishes third of four, below Albania.
   static const grudge = CampaignDef(
     withBelarus: true,
     id: 'grudge',
@@ -206,7 +220,7 @@ abstract final class Campaigns {
     cycles: 1,
     needsPro: false,
     difficulty: CampaignDifficulty.medium,
-    rngSeed: 240,
+    rngSeed: 9271,
   );
 
   /// Equatorial Guinea, the smallest of Africa's Guineas, must beat Guinea
@@ -265,8 +279,10 @@ abstract final class Campaigns {
   /// world is a fair one: one minnow swapped for another). The stars are
   /// the owner's: qualify for a European Championship, qualify for a World
   /// Championship, win either. Seed 212, the first searched, keeps Greenland
-  /// from hosting either championship in all 25 cycles and draws it into a
-  /// European qualifying group of six (campaign_seeds_test.dart). Greenland's
+  /// from hosting either championship in all 25 cycles (campaign_seeds_test
+  /// .dart). In the EURO 2028 shape it is drawn into a European qualifying
+  /// group of five whatever the seed: the Nations Cup's bottom league, where
+  /// it starts, is the draw's last pot. Greenland's
   /// strength was tuned on the lab (campaign_lab_test.dart).
   static const greenland = CampaignDef(
     withBelarus: true,
@@ -332,9 +348,10 @@ abstract final class Campaigns {
   /// Pro, and a settled run may be moved into the saves (one minnow swapped
   /// for another). The stars are a European Championship, a World
   /// Championship, then winning either. Seed 214, the first searched, keeps
-  /// the Isle of Man from hosting either championship in all 25 cycles and
-  /// draws it into a European qualifying group of six
-  /// (campaign_seeds_test.dart). Its strength was tuned on the lab
+  /// the Isle of Man from hosting either championship in all 25 cycles
+  /// (campaign_seeds_test.dart). In the EURO 2028 shape it is drawn into a
+  /// European qualifying group of five, as every side of the Nations Cup's
+  /// bottom league is. Its strength was tuned on the lab
   /// (campaign_lab_test.dart).
   static const isleOfMan = CampaignDef(
     withBelarus: true,
@@ -413,8 +430,11 @@ abstract final class Campaigns {
   /// side's: win a qualifying match, finish a qualifying group off the
   /// bottom, reach a play-off. Seed 217, the first searched, keeps Vatican
   /// City from hosting either championship in any of the fifty cycles
-  /// and draws it into a European qualifying group of six
-  /// (campaign_seeds_test.dart). Its strength was not tuned on the lab
+  /// (campaign_seeds_test.dart). It was picked for a European qualifying
+  /// group of six; in the EURO 2028 shape it plays a group of five, as every
+  /// side of the Nations Cup's bottom league does whatever the seed, so
+  /// "off the bottom" means fourth of five or better. Its strength was not
+  /// tuned on the lab
   /// (campaign_lab_test.dart); the badge is the design's call.
   static const vatican = CampaignDef(
     withBelarus: true,

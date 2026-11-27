@@ -3,14 +3,20 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/campaign/campaigns.dart';
+import 'package:fnm/domain/services/competition/calendar2.dart';
+import 'package:fnm/domain/services/competition/euro_playoffs.dart';
+import 'package:fnm/domain/services/competition/euro_qualifying28.dart';
 import 'package:fnm/domain/services/competition/host_bidding.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
+import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/nation/dormant_nations.dart';
@@ -26,13 +32,150 @@ List<T> _load<T>(String f, T Function(Map<String, Object?>) from) =>
         .map((e) => from(e as Map<String, Object?>))
         .toList();
 
-/// The European qualifying draw of cycle 0 for [seed], rebuilt exactly as
-/// `CareerService.buildCalendar` does it (the fourth test pins it to the real
+/// The European qualifying draw of cycle 0 for [seed], as a new career
+/// (and so every campaign run) stores it: the EURO 2028 shape ([Euro28]),
+/// drawn with the real [Euro28.drawGroups] from pots in the first Nations
+/// Cup's overall ranking with its league phase not yet played, the order
+/// `drawEuroQualifyingNow` reads (the fourth test pins it to the real
 /// thing, so a change there breaks this helper loudly).
+///
+/// A real run's draw is made once that league phase is played, on its
+/// results: only the bottom pot (League D, Europe's last six) is the same
+/// whatever happens. See [euroQualifyingPotOrder].
 List<List<int>> euroQualifyingGroups(int seed, List<Nation> nations) =>
-    qualifyingGroups(seed, nations, Confederation.europe);
+    euroQualifyingGroupsFor(
+      seed,
+      nations,
+      euroQualifyingPotOrder(seed, nations),
+    );
 
-/// [euroQualifyingGroups] for any qualifying confederation.
+/// The EURO 2028 qualifying groups of cycle 0 for [seed] drawn from the pot
+/// order [order] (see [Euro28.potOrder]): the hosts kept apart, as
+/// `CareerService.buildEuroQualifying` draws them.
+List<List<int>> euroQualifyingGroupsFor(
+  int seed,
+  List<Nation> nations,
+  List<int> order,
+) {
+  const europe = Confederation.europe;
+  final field = {
+    for (final n in WorldCupHosts.continentalQualifiers(
+      confederation: europe,
+      cycle: 0,
+      seed: seed,
+      nations: nations,
+    ))
+      n.id,
+  };
+  return Euro28.drawGroups(
+    order: order,
+    rng: SeededRng(seed ^ (0 * 0x71) ^ 0xCAFE ^ 0xE28),
+    separate: {
+      for (final n in nations)
+        if (n.confederation == europe && !field.contains(n.id)) n.id,
+    },
+  );
+}
+
+/// Europe's first Nations Cup of cycle 0 for [seed], league by league: the
+/// groups as `CareerService.buildNationsCup` draws them (on the ranking's
+/// ladder, groups of four), each in its stored order.
+List<({String name, List<int> nationIds})> firstNationsCupGroups(
+  int seed,
+  List<Nation> nations,
+) {
+  const europe = Confederation.europe;
+  final members = nations.where((n) => n.confederation == europe).toList()
+    ..sort((a, b) => a.ranking.compareTo(b.ranking));
+  final tiers = NationsCup.seedTiers(nations, (n) => n.ranking);
+  final ladder = NationsCup.mergeRemainders({
+    for (final n in members) n.id: tiers[n.id] ?? 0,
+  }, (_) => europe);
+  final byTier = <int, List<Nation>>{};
+  for (final n in members) {
+    (byTier[ladder[n.id]!] ??= []).add(n);
+  }
+  final confTerm = (europe.index * 7) ^ (Calendar2.firstEdition * 0xED17);
+  return [
+    for (final tier in byTier.keys.toList()..sort())
+      if (byTier[tier]!.length >= 4)
+        for (final (i, g)
+            in const ScheduleGenerator()
+                .generate(
+                  balancedHomeAway: true,
+                  confederation: europe,
+                  nations: byTier[tier]!,
+                  rngSeed: seed ^ 0x5A17 ^ (tier * 0x9E37) ^ confTerm,
+                  start: DateTime(2026, 9),
+                  groupSize: 4,
+                )
+                .groups
+                .indexed)
+          (
+            name: '${NationsCup.leagueLetter(tier)}${i + 1}',
+            nationIds: g.nationIds,
+          ),
+  ];
+}
+
+/// The pot order of the EURO 2028 qualifying draw of cycle 0 for [seed]
+/// (see `CareerService.euro28PotOrder`), the first Nations Cup unplayed:
+/// [Euro28.potOrder] over its overall ranking with every record level, so
+/// each league reads place by place across its groups, each group's sides
+/// in the order the repository stores them (by nation id). [standings]
+/// replaces the cup's tables (a played league phase, for a what-if).
+List<int> euroQualifyingPotOrder(
+  int seed,
+  List<Nation> nations, {
+  List<NcTable>? standings,
+}) {
+  final members =
+      nations.where((n) => n.confederation == Confederation.europe).toList()
+        ..sort((a, b) => a.ranking.compareTo(b.ranking));
+  final tables =
+      standings ??
+      [
+        for (final g in firstNationsCupGroups(seed, nations))
+          (
+            name: g.name,
+            standings: GroupStanding.table([...g.nationIds]..sort(), const []),
+          ),
+      ];
+  return Euro28.potOrder(
+    field: [for (final n in members) n.id],
+    ncRanking: EuroPlayoffs.overallRanking(tables),
+    fallback: [for (final n in members) n.id],
+  );
+}
+
+/// Whether [id] is drawn into a EURO 2028 qualifying group of five in
+/// cycle 0 for [seed] whatever the first Nations Cup's results: it plays in
+/// the cup's bottom league, that league is exactly the draw's last, short
+/// pot (Europe's 54 less four pots of twelve: six), and a short pot fills
+/// the first groups, the six of five. The cup's overall ranking puts a
+/// lower league's sides below every higher league's, so no result moves a
+/// side out of that pot.
+bool inBottomPotOfFive(int seed, List<Nation> nations, int id) {
+  final cup = firstNationsCupGroups(seed, nations);
+  final bottom = cup
+      .map((g) => NationsCup.tierOfGroupName(g.name))
+      .reduce((a, b) => a > b ? a : b);
+  final league = [
+    for (final g in cup)
+      if (NationsCup.tierOfGroupName(g.name) == bottom) ...g.nationIds,
+  ];
+  final field = nations
+      .where((n) => n.confederation == Confederation.europe)
+      .length;
+  final sizes = Euro28.groupSizes(field);
+  final shortPot = field % Euro28.groupCount(field);
+  return league.contains(id) &&
+      league.length == shortPot &&
+      sizes.take(shortPot).every((n) => n == 5);
+}
+
+/// The old draw (groups of six, the hosts out) for a confederation that
+/// still qualifies that way.
 List<List<int>> qualifyingGroups(
   int seed,
   List<Nation> nations,
@@ -183,6 +326,10 @@ void main() {
     );
   });
 
+  // On the unplayed cup: the draw these tests (and campaign_progress_test)
+  // read. The autopilot run's draw, made on the played cup, is pinned by
+  // campaign_verdict_event_test; a managed run's can differ (see
+  // Campaigns.grudge).
   test('Grudge draws Georgia and Albania into the same qualifying group', () {
     final groups = euroQualifyingGroups(
       Campaigns.grudge.rngSeed,
@@ -191,6 +338,8 @@ void main() {
     expect(groups.where((g) => g.contains(19) && g.contains(1)), hasLength(1));
   });
 
+  // Every European side plays EURO 2028 qualifying, the hosts too: this
+  // holds for any seed now, and is kept as the brief's premise.
   test('Transplant: San Marino is in the qualifying draw', () {
     expect(
       euroQualifyingGroups(
@@ -334,14 +483,15 @@ void main() {
       }
     });
 
-    test('seed 212 draws Greenland into a European qualifying group of five '
-        'or more', () {
+    test('seed 212 draws Greenland into a European qualifying group of '
+        'five, whatever the first Nations Cup', () {
       final mine = euroQualifyingGroups(
         def.rngSeed,
         world,
       ).where((g) => g.contains(212)).toList();
       expect(mine, hasLength(1));
-      expect(mine.single.length, greaterThanOrEqualTo(5));
+      expect(mine.single.length, 5);
+      expect(inBottomPotOfFive(def.rngSeed, world, 212), isTrue);
     });
 
     test('a real Greenland run stores that draw', () async {
@@ -495,13 +645,14 @@ void main() {
     });
 
     test('seed 214 draws the Isle of Man into a European qualifying group '
-        'of six, Andorra nowhere', () {
+        'of five, whatever the first Nations Cup, Andorra nowhere', () {
       final mine = euroQualifyingGroups(
         def.rngSeed,
         world,
       ).where((g) => g.contains(214)).toList();
       expect(mine, hasLength(1));
-      expect(mine.single.length, 6);
+      expect(mine.single.length, 5);
+      expect(inBottomPotOfFive(def.rngSeed, world, 214), isTrue);
       expect(world.map((n) => n.id), isNot(contains(2)));
       // Europe's real 54: the Nations Cup's bottom league is two groups of
       // three.
@@ -683,13 +834,14 @@ void main() {
     });
 
     test('seed 217 draws Vatican City into a European qualifying group of '
-        'six, San Marino nowhere', () {
+        'five, whatever the first Nations Cup, San Marino nowhere', () {
       final mine = euroQualifyingGroups(
         def.rngSeed,
         world,
       ).where((g) => g.contains(217)).toList();
       expect(mine, hasLength(1));
-      expect(mine.single.length, 6);
+      expect(mine.single.length, 5);
+      expect(inBottomPotOfFive(def.rngSeed, world, 217), isTrue);
       expect(world.map((n) => n.id), isNot(contains(45)));
       // A swap, with Belarus: Europe's 54.
       expect(

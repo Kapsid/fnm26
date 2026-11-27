@@ -55,6 +55,9 @@ void main() {
         newCareerNations: Campaigns.grudge.withBelarus,
         // A campaign run's hosts follow the current rules and the stadium
         // bars, as an ordinary career's do.
+        // And its Euro qualifying is the EURO 2028 shape, as a new career's
+        // is (CareerService.create stamps it).
+        euro28: true,
       );
       // Less the general sponsor's stops: a campaign run has no sponsor (it
       // is played on the money it was set), and declining one changes
@@ -137,12 +140,27 @@ void main() {
       // placeholder per play-off path and created after the March
       // play-offs: a side drawn straight in, or in neither the draw nor a
       // path, knows at the draw (the step after it, as before calendar2); a
-      // path's entrant only once its path is decided. Seed 240's Georgia
-      // finishes above Albania but outside the top two, a play-off
-      // entrant (a semi won on 21 March, the path final on the 26th). A side
-      // beaten there is then offered send-off friendlies by the qualified
-      // (hub order 1b-i, ahead of the verdict): those may come first.
+      // path's entrant only once its path is decided. Seed 9271's autopilot
+      // Georgia finishes third of four, below the Netherlands and Albania,
+      // and is no play-off entrant: no stars, known at the draw. (Seed 240's
+      // finished above Albania, a play-off entrant.) A side beaten in a path
+      // is then offered send-off friendlies by the qualified (hub order
+      // 1b-i, ahead of the verdict): those may come first.
       expect(verdictAt, isNotNull);
+      // The autopilot run's draw, made on its played Nations Cup, pairs
+      // Georgia with Albania: the seed's promise (see Campaigns.grudge).
+      final qualifying = await comp.tournamentGroupTables(
+        d.careerId,
+        CompetitionKind.continentalQualifying,
+        confederation: Confederation.europe,
+      );
+      expect(
+        qualifying
+            .singleWhere((t) => t.standings.any((s) => s.nationId == georgia))
+            .standings
+            .map((s) => s.nationId),
+        contains(Campaigns.grudge.rivalNationId),
+      );
       expect(
         firstAfterContinentalDraw,
         isNotNull,
