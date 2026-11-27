@@ -116,6 +116,24 @@ abstract final class DormantNations {
     secondaryColor: '#BF0A30',
   );
 
+  /// Vatican City, the seventh: the next free id after Texas. It takes San
+  /// Marino's place in Europe and its place on the starting ranking, the
+  /// very last (209th), as Greenland does: the smallest state in the world,
+  /// a few hundred citizens, most of them clergy, and a side far weaker than
+  /// San Marino's (see `vaticanAttributeFactor`). Its colours are the flag's
+  /// yellow and white.
+  static const int vaticanId = 217;
+
+  static const Nation vatican = Nation(
+    id: vaticanId,
+    name: 'Vatican City',
+    code: 'VAT',
+    confederation: Confederation.europe,
+    ranking: 209,
+    primaryColor: '#FFE000',
+    secondaryColor: '#FFFFFF',
+  );
+
   static const List<Nation> all = [
     greenland,
     zanzibar,
@@ -123,6 +141,7 @@ abstract final class DormantNations {
     isleOfMan,
     czechoslovakia,
     texas,
+    vatican,
   ];
 
   static const Set<int> ids = {
@@ -132,6 +151,7 @@ abstract final class DormantNations {
     isleOfManId,
     czechoslovakiaId,
     texasId,
+    vaticanId,
   };
 
   /// Dormant nations that join a world without standing in for anyone: the
@@ -151,6 +171,7 @@ abstract final class DormantNations {
     isleOfManId: 2, // Andorra
     czechoslovakiaId: 12, // Czechia
     texasId: 66, // Anguilla
+    vaticanId: 45, // San Marino, as for Greenland
   };
 
   /// Nations a dormant nation takes out of the world as well as the one it

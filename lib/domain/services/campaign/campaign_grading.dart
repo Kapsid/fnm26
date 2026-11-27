@@ -99,3 +99,21 @@ int titleTrebleStars({
     : wonNationsCup
     ? 3
     : 2;
+
+/// Stars for a side with no hope of a finals, each tier judged across all
+/// the campaign's cycles: a qualifying match won (continental or world) is
+/// one, a qualifying group finished off the bottom two, a play-off reached
+/// three. The highest tier reached counts on its own (as in
+/// [qualifyBothThenTitleStars]): a play-off reached through the Nations Cup
+/// is three stars without a qualifier won.
+int winThenOffBottomThenPlayoffStars({
+  required bool wonQualifier,
+  required bool offBottom,
+  required bool reachedPlayoff,
+}) => reachedPlayoff
+    ? 3
+    : offBottom
+    ? 2
+    : wonQualifier
+    ? 1
+    : 0;

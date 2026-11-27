@@ -189,6 +189,9 @@ abstract final class NationIdentity {
     // own, but the deepest youth game in the region: a tier above the
     // minnows.
     'TEX': (nickname: 'The Lone Star', style: NationStyle.direct, pedigree: 4),
+    // Vatican City, a dormant nation: the smallest of the minnows, which
+    // can only keep the ball out and pray.
+    'VAT': (nickname: null, style: NationStyle.defensive, pedigree: 5),
     // Zanzibar, a dormant nation (see DormantNations).
     'ZAN': (
       nickname: 'Zanzibar Heroes',

@@ -19016,6 +19016,38 @@ class AppLocalizationsDe extends AppLocalizations {
   String get campaignStars3Texas => 'Die Weltmeisterschaft gewinnen';
 
   @override
+  String get campaignVaticanTitle => 'Ave Maria';
+
+  @override
+  String get campaignVaticanTwist =>
+      'Die Vatikanstadt nimmt San Marinos Platz in Europa ein, ohne Ende';
+
+  @override
+  String get campaignVaticanIntro =>
+      'Der kleinste Staat der Welt hat ein paar hundert Bürger, die meisten davon Geistliche, eine Garde Schweizer Hellebardiere und keinen einzigen Fußballer, der den Namen verdient. In dieser Welt spielt die Vatikanstadt trotzdem, auf San Marinos Platz in Europa, und sie ist viel schwächer, als San Marino je war: Bischöfe, Seminaristen, Museumsaufseher und Gardisten nach Dienstschluss, ein Platz innerhalb der Mauern für 1.500 Zuschauer und ab und zu ein Heimspiel auf einem geliehenen Platz in Rom. Der Weg hat kein Ende, also keine Frist, nur Wunder, die zu vollbringen sind: ein Qualifikationsspiel gewinnen, eine Qualigruppe nicht als Letzter beenden und, wenn der Himmel zuhört, ein Play-off erreichen.';
+
+  @override
+  String get campaignVaticanGoal => 'Ein Qualifikationsspiel gewinnen';
+
+  @override
+  String get campaignStars1Vatican => 'Ein Qualifikationsspiel gewinnen';
+
+  @override
+  String get campaignStars2Vatican =>
+      'Eine Qualigruppe nicht als Letzter beenden';
+
+  @override
+  String get campaignStars3Vatican => 'Ein Play-off erreichen';
+
+  @override
+  String get campaignNoEnd => 'Ohne Ende';
+
+  @override
+  String homeCampaignCycleNoEnd(int cycle) {
+    return 'Zyklus $cycle';
+  }
+
+  @override
   String get wcPlayoffCourseNote =>
       'Jeder Gruppensieger ist direkt qualifiziert. Die letzten Plätze gehen in Play-offs an die besten Gruppenzweiten (gelb in den Gruppen) und die besten Gruppensieger des Nationenpokals, die nicht durch sind. Aus dem Nationenpokal, Stand jetzt:';
 

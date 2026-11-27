@@ -218,5 +218,6 @@ const Map<String, String> nationNamesEl = <String, String>{
   'IMN': 'Νήσος του Μαν',
   'TCH': 'Τσεχοσλοβακία',
   'TEX': 'Τέξας',
+  'VAT': 'Βατικανό',
   'ZIM': 'Ζιμπάμπουε',
 };

@@ -121,6 +121,17 @@ CampaignWords campaignWords(AppLocalizations l, CampaignDef def) =>
           l.campaignStars3Texas,
         ],
       ),
+      'vatican' => (
+        title: l.campaignVaticanTitle,
+        twist: l.campaignVaticanTwist,
+        intro: l.campaignVaticanIntro,
+        goal: l.campaignVaticanGoal,
+        stars: [
+          l.campaignStars1Vatican,
+          l.campaignStars2Vatican,
+          l.campaignStars3Vatican,
+        ],
+      ),
       _ => (
         title: l.campaignTransplantTitle,
         twist: l.campaignTransplantTwist,
@@ -133,6 +144,11 @@ CampaignWords campaignWords(AppLocalizations l, CampaignDef def) =>
         ],
       ),
     };
+
+/// How long [def] lasts, as its badge says it: "4 cycles", or "No end" for
+/// a run without one (see [CampaignDef.unlimited]).
+String campaignLengthLabel(AppLocalizations l, CampaignDef def) =>
+    def.unlimited ? l.campaignNoEnd : l.campaignCycles(def.cycles);
 
 /// Whether starting [def] must open the paywall instead: a Pro campaign, and
 /// a manager without Pro. The run would be refused below the UI anyway (see

@@ -18967,6 +18967,38 @@ class AppLocalizationsNl extends AppLocalizations {
   String get campaignStars3Texas => 'Win het Wereldkampioenschap';
 
   @override
+  String get campaignVaticanTitle => 'Weesgegroet';
+
+  @override
+  String get campaignVaticanTwist =>
+      'Vaticaanstad neemt de plaats van San Marino in Europa in, zonder einde';
+
+  @override
+  String get campaignVaticanIntro =>
+      'De kleinste staat ter wereld telt een paar honderd burgers, de meesten geestelijken, een garde van Zwitserse hellebaardiers en geen enkele voetballer die die naam verdient. In deze wereld speelt Vaticaanstad toch, op de plaats van San Marino in Europa, en het is veel zwakker dan San Marino ooit was: bisschoppen, seminaristen, museumsuppoosten en gardisten buiten dienst, een veld binnen de muren voor 1.500 toeschouwers en af en toe een thuiswedstrijd in een geleend stadion in Rome. De reis heeft geen einde, dus geen deadline, alleen wonderen om te verrichten: win een kwalificatiewedstrijd, eindig in een kwalificatiegroep niet als laatste en, als de hemel luistert, bereik een play-off.';
+
+  @override
+  String get campaignVaticanGoal => 'Win een kwalificatiewedstrijd';
+
+  @override
+  String get campaignStars1Vatican => 'Win een kwalificatiewedstrijd';
+
+  @override
+  String get campaignStars2Vatican =>
+      'Eindig in een kwalificatiegroep niet als laatste';
+
+  @override
+  String get campaignStars3Vatican => 'Bereik een play-off';
+
+  @override
+  String get campaignNoEnd => 'Zonder einde';
+
+  @override
+  String homeCampaignCycleNoEnd(int cycle) {
+    return 'Cyclus $cycle';
+  }
+
+  @override
   String get wcPlayoffCourseNote =>
       'Elke groepswinnaar plaatst zich direct. De laatste plaatsen gaan via play-offs naar de beste nummers twee (geel in de groepen) en de beste groepswinnaars van de Nations Cup die nog niet geplaatst zijn. Uit de Nations Cup, zoals het nu staat:';
 

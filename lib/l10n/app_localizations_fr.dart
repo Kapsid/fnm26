@@ -19047,6 +19047,38 @@ class AppLocalizationsFr extends AppLocalizations {
   String get campaignStars3Texas => 'Gagner le Championnat du monde';
 
   @override
+  String get campaignVaticanTitle => 'Je vous salue Marie';
+
+  @override
+  String get campaignVaticanTwist =>
+      'Le Vatican prend la place de Saint-Marin en Europe, sans fin';
+
+  @override
+  String get campaignVaticanIntro =>
+      'Le plus petit État du monde compte quelques centaines de citoyens, pour la plupart des clercs, une garde de hallebardiers suisses et pas un seul footballeur digne de ce nom. Dans ce monde, le Vatican joue quand même, à la place de Saint-Marin en Europe, et il est bien plus faible que Saint-Marin ne l’a jamais été : des évêques, des séminaristes, des gardiens de musée et des gardes en repos, un terrain dans les murs pour 1 500 spectateurs et, de temps en temps, un match à domicile dans un stade prêté à Rome. L’aventure n’a pas de fin, donc pas d’échéance, seulement des miracles à accomplir : gagner un match de qualification, ne pas finir dernier d’un groupe de qualification et, si le ciel vous entend, atteindre les barrages.';
+
+  @override
+  String get campaignVaticanGoal => 'Gagner un match de qualification';
+
+  @override
+  String get campaignStars1Vatican => 'Gagner un match de qualification';
+
+  @override
+  String get campaignStars2Vatican =>
+      'Ne pas finir dernier d’un groupe de qualification';
+
+  @override
+  String get campaignStars3Vatican => 'Atteindre les barrages';
+
+  @override
+  String get campaignNoEnd => 'Sans fin';
+
+  @override
+  String homeCampaignCycleNoEnd(int cycle) {
+    return 'Cycle $cycle';
+  }
+
+  @override
   String get wcPlayoffCourseNote =>
       'Chaque vainqueur de groupe est qualifié directement. Les dernières places se jouent en barrages entre les meilleurs deuxièmes (en jaune dans les groupes) et les meilleurs vainqueurs de groupe de la Coupe des nations non qualifiés. Depuis la Coupe des nations, en l\'état :';
 

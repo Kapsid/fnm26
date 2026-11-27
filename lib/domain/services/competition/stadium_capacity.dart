@@ -63,6 +63,9 @@ const Map<int, int> nationalStadiumCapacity = {
   // Texas (dormant): the 80,000-seat ground in Arlington, between Dallas
   // and Fort Worth.
   216: 80000,
+  // Vatican City (dormant): no room inside the walls for a real ground, so
+  // a borrowed one of about 3,000 in Rome; its own pitch seats 1,500.
+  217: 3000,
   // Belarus (dormant, in new careers from 1.0.9): the Dinamo Stadium in
   // Minsk, rebuilt in 2018 for about 22,000.
   6: 22000,

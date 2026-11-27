@@ -18815,6 +18815,38 @@ class AppLocalizationsHu extends AppLocalizations {
   String get campaignStars3Texas => 'Megnyerni a világbajnokságot';
 
   @override
+  String get campaignVaticanTitle => 'Üdvözlégy';
+
+  @override
+  String get campaignVaticanTwist =>
+      'A Vatikán átveszi San Marino helyét Európában, vég nélkül';
+
+  @override
+  String get campaignVaticanIntro =>
+      'A világ legkisebb államának néhány száz polgára van, többségük pap, egy svájci alabárdosokból álló gárdája, és egyetlen olyan futballistája sincs, aki megérdemelné ezt a nevet. Ebben a világban a Vatikán mégis pályára lép, San Marino helyén Európában, és sokkal gyengébb, mint San Marino valaha volt: püspökök, kispapok, múzeumi teremőrök és szabadnapos gárdisták, egy pálya a falakon belül 1500 nézőnek, és néha egy hazai meccs egy kölcsönkapott római stadionban. Az útnak nincs vége, így határidő sincs, csak csodák, amelyeket véghez kell vinni: megnyerni egy selejtezőt, nem utolsóként zárni egy selejtezőcsoportot, és ha az ég is meghallgat, pótselejtezőre jutni.';
+
+  @override
+  String get campaignVaticanGoal => 'Megnyerni egy selejtezőt';
+
+  @override
+  String get campaignStars1Vatican => 'Megnyerni egy selejtezőt';
+
+  @override
+  String get campaignStars2Vatican =>
+      'Nem utolsóként zárni egy selejtezőcsoportot';
+
+  @override
+  String get campaignStars3Vatican => 'Pótselejtezőre jutni';
+
+  @override
+  String get campaignNoEnd => 'Vég nélkül';
+
+  @override
+  String homeCampaignCycleNoEnd(int cycle) {
+    return '$cycle. ciklus';
+  }
+
+  @override
   String get wcPlayoffCourseNote =>
       'Minden csoportgyőztes egyenesen továbbjut. Az utolsó helyekért pótselejtezőt játszanak a legjobb csoportmásodikok (sárgával a csoportokban) és a Nations Cup legjobb, még nem továbbjutott csoportgyőztesei. A Nations Cupból jelenleg:';
 

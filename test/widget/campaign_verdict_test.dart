@@ -295,6 +295,7 @@ void main() {
     for (final goal in CampaignGoal.values) {
       if (goal == CampaignGoal.qualifyBothThenTitle ||
           goal == CampaignGoal.qualifyBothThenWorldTitle ||
+          goal == CampaignGoal.winThenOffBottomThenPlayoff ||
           goal == CampaignGoal.titleTreble) {
         continue;
       }
@@ -363,6 +364,18 @@ void main() {
     }
     expect(
       campaignRunCounts(CampaignGoal.qualifyBothThenWorldTitle, 'FRIENDLY'),
+      isFalse,
+    );
+    // Hail Mary the same: every competitive match, play-offs included.
+    for (final round in [null, 'CQ', 'NGROUP', 'EPSF', 'UPFINAL', 'R16']) {
+      expect(
+        campaignRunCounts(CampaignGoal.winThenOffBottomThenPlayoff, round),
+        isTrue,
+        reason: '$round',
+      );
+    }
+    expect(
+      campaignRunCounts(CampaignGoal.winThenOffBottomThenPlayoff, 'FRIENDLY'),
       isFalse,
     );
     // Finish the Legacy: its three titles, both championships' finals and

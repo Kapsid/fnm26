@@ -18960,6 +18960,38 @@ class AppLocalizationsIt extends AppLocalizations {
   String get campaignStars3Texas => 'Vincere il Campionato del mondo';
 
   @override
+  String get campaignVaticanTitle => 'Ave Maria';
+
+  @override
+  String get campaignVaticanTwist =>
+      'La Città del Vaticano prende il posto di San Marino in Europa, senza fine';
+
+  @override
+  String get campaignVaticanIntro =>
+      'Lo stato più piccolo del mondo ha qualche centinaio di cittadini, quasi tutti religiosi, una guardia di alabardieri svizzeri e nemmeno un calciatore degno di questo nome. In questo mondo la Città del Vaticano gioca lo stesso, al posto di San Marino in Europa, ed è molto più debole di quanto San Marino sia mai stato: vescovi, seminaristi, custodi dei musei e guardie fuori servizio, un campo dentro le mura da 1.500 posti e ogni tanto una partita in casa su un campo prestato a Roma. Il cammino non ha fine, quindi nessuna scadenza, solo miracoli da compiere: vincere una partita di qualificazione, non finire ultimi in un girone di qualificazione e, se il cielo ti ascolta, raggiungere gli spareggi.';
+
+  @override
+  String get campaignVaticanGoal => 'Vincere una partita di qualificazione';
+
+  @override
+  String get campaignStars1Vatican => 'Vincere una partita di qualificazione';
+
+  @override
+  String get campaignStars2Vatican =>
+      'Non finire ultimi in un girone di qualificazione';
+
+  @override
+  String get campaignStars3Vatican => 'Raggiungere gli spareggi';
+
+  @override
+  String get campaignNoEnd => 'Senza fine';
+
+  @override
+  String homeCampaignCycleNoEnd(int cycle) {
+    return 'Ciclo $cycle';
+  }
+
+  @override
   String get wcPlayoffCourseNote =>
       'Ogni vincitrice di girone si qualifica direttamente. Gli ultimi posti si assegnano negli spareggi tra le migliori seconde (in giallo nei gironi) e le migliori vincitrici di girone della Coppa delle Nazioni non qualificate. Dalla Coppa delle Nazioni, allo stato attuale:';
 

@@ -553,6 +553,125 @@ void main() {
     });
   });
 
+  group('Vatican City seed data', () {
+    test('ids sit in their own fixed ranges', () {
+      final pool = vaticanPool();
+      expect(pool, hasLength(23 + PoolGenerator.extraPerNation));
+      expect(pool.every((p) => p.nationId == 217), isTrue);
+      expect(
+        [for (final p in vaticanSquad) p.id],
+        [for (var i = 21701; i <= 21723; i++) i],
+      );
+      expect(
+        [for (final p in pool.skip(23)) p.id],
+        [for (var i = 20217000; i <= 20217079; i++) i],
+      );
+      final taken = {
+        for (final p in PoolGenerator.expand(_base)) p.id,
+        for (final p in dormantPool())
+          if (p.nationId != 217) p.id,
+      };
+      expect(pool.where((p) => taken.contains(p.id)), isEmpty);
+    });
+
+    test("the squad copies San Marino's positions and ages, scaled by the "
+        'factor', () {
+      final base = _base.where((p) => p.nationId == 45).toList();
+      expect(
+        [for (final p in vaticanSquad) p.position],
+        [for (final p in base) p.position],
+      );
+      expect(
+        [for (final p in vaticanSquad) p.age],
+        [for (final p in base) p.age],
+      );
+      for (var i = 0; i < base.length; i++) {
+        int scaled(int v) => (v * vaticanAttributeFactor).round().clamp(25, 99);
+        final a = base[i].attributes;
+        final z = vaticanSquad[i].attributes;
+        expect(z.physical, scaled(a.physical), reason: 'slot $i');
+        expect(z.technical, scaled(a.technical), reason: 'slot $i');
+        expect(z.stamina, scaled(a.stamina), reason: 'slot $i');
+      }
+    });
+
+    test('Vatican City is rated 35, nine below San Marino, the weakest side '
+        "in the world, last on the ranking, in San Marino's place", () {
+      final deep = PoolGenerator.expand(_base);
+      final byNation = <int, List<Player>>{};
+      for (final p in deep) {
+        (byNation[p.nationId] ??= []).add(p);
+      }
+      // The best eleven of the whole stored pool: 35, against San Marino's
+      // 44 (its 23 and its fringe, as every nation is stored).
+      expect(squadOverall(vaticanPool()), 35);
+      expect(squadOverall(byNation[45]!), 44);
+      // Over the 23 alone: 33 against San Marino's 43.
+      expect(squadOverall(vaticanSquad), 33);
+      expect(squadOverall(_base.where((p) => p.nationId == 45).toList()), 43);
+      // Below every nation in the world, the weakest included.
+      final weakest = byNation.values
+          .map(squadOverall)
+          .reduce((a, b) => a < b ? a : b);
+      expect(squadOverall(vaticanPool()), lessThan(weakest));
+      for (final d in dormantPool().map((p) => p.nationId).toSet()) {
+        if (d == 217) continue;
+        expect(
+          squadOverall(dormantPool().where((p) => p.nationId == d).toList()),
+          greaterThan(35),
+          reason: 'dormant $d',
+        );
+      }
+      // The very bottom of the starting ranking, San Marino's place.
+      final row = _nations.firstWhere((n) => n.id == 45);
+      expect(
+        DormantNations.vatican.ranking,
+        _nations.map((n) => n.ranking).reduce((a, b) => a > b ? a : b),
+      );
+      expect(DormantNations.vatican.ranking, row.ranking);
+      expect(DormantNations.vatican.confederation, row.confederation);
+      expect(DormantNations.replaces[217], 45);
+      expect(DormantNations.alsoReplaces[217], isNull);
+    });
+
+    test('the Dart name pools mirror country_names.json', () {
+      expect(_names[217]!.first, vaticanFirstNames);
+      expect(_names[217]!.sur, vaticanSurnames);
+    });
+
+    test('Vatican City is in neither seed file', () {
+      expect(
+        _nations.where(
+          (n) => n.id == 217 || n.code == DormantNations.vatican.code,
+        ),
+        isEmpty,
+      );
+      expect(_base.where((p) => p.nationId == 217), isEmpty);
+    });
+
+    test("no stored Vatican City name is any seeded player's", () {
+      final seeded = {for (final p in _base) p.name};
+      expect(vaticanPool().where((p) => seeded.contains(p.name)), isEmpty);
+    });
+
+    test('a fresh database gets Vatican City and its 103 players', () async {
+      final db = createTestDatabase();
+      addTearDown(db.close);
+      await SeedLoader(db, _source(players: _base)).ensureSeeded();
+      expect(
+        await _count(db, 'SELECT COUNT(*) AS c FROM nations WHERE id = 217'),
+        1,
+      );
+      expect(
+        await _count(
+          db,
+          'SELECT COUNT(*) AS c FROM players WHERE nation_id = 217',
+        ),
+        103,
+      );
+    });
+  });
+
   group('Belarus seed data', () {
     test('ids sit in their own fixed ranges, the squad on its old 601-623', () {
       final pool = belarusPool();

@@ -227,6 +227,7 @@ ProviderContainer _storyContainer(
             ..._labIsleOfMan,
             ...czechoslovakiaSquad,
             ...texasSquad,
+            ...vaticanSquad,
           ],
         ),
       ),

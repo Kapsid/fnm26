@@ -31,7 +31,7 @@ final Provider<List<CampaignDef>> campaignCatalogProvider = Provider(
 /// How long a campaign runs: the list's sections.
 enum CampaignLength { oneCycle, short, long }
 
-/// One cycle; two to five; six or more.
+/// One cycle; two to five; six or more (a run with no end among them).
 CampaignLength campaignLength(CampaignDef def) => def.cycles <= 1
     ? CampaignLength.oneCycle
     : def.cycles <= 5
@@ -333,7 +333,7 @@ class CampaignTile extends ConsumerWidget {
                   runSpacing: AppSpacing.xs,
                   children: [
                     CampaignBadge(
-                      label: l.campaignCycles(def.cycles),
+                      label: campaignLengthLabel(l, def),
                       color: AppColors.onSurfaceVariant,
                     ),
                     CampaignBadge(
@@ -500,7 +500,7 @@ class CampaignSquare extends StatelessWidget {
                           runSpacing: AppSpacing.xs,
                           children: [
                             CampaignBadge(
-                              label: l.campaignCycles(def.cycles),
+                              label: campaignLengthLabel(l, def),
                               color: AppColors.onSurfaceVariant,
                             ),
                             CampaignBadge(

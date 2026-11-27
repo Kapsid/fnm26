@@ -653,4 +653,92 @@ void main() {
       expect(stored.where((g) => g.contains(216)), hasLength(1));
     });
   });
+
+  group('Vatican City', () {
+    const def = Campaigns.vatican;
+    // Its world: San Marino out, Vatican City in, Belarus in (a European
+    // run).
+    final world = campaignWorld(def, nations);
+
+    // The run has no end; the promise is kept for its first century.
+    test('seed 217 keeps Vatican City from hosting either championship in '
+        'the first 25 cycles of its run', () {
+      expect(def.rngSeed, 217);
+      expect(def.unlimited, isTrue);
+      expect(def.withBelarus, isTrue);
+      for (var cycle = 0; cycle < 25; cycle++) {
+        final world0 = WorldCupHosts.hostsFor(
+          year: CareerService.worldCupYear(cycle),
+          nations: world,
+          seed: def.rngSeed,
+        );
+        final euro = WorldCupHosts.continentalHostsFor(
+          confederation: Confederation.europe,
+          cycle: cycle,
+          seed: def.rngSeed,
+          nations: world,
+        );
+        expect(world0, isNot(contains(217)), reason: 'cycle $cycle');
+        expect(euro, isNot(contains(217)), reason: 'cycle $cycle');
+      }
+    });
+
+    test('seed 217 draws Vatican City into a European qualifying group of '
+        'six, San Marino nowhere', () {
+      final mine = euroQualifyingGroups(
+        def.rngSeed,
+        world,
+      ).where((g) => g.contains(217)).toList();
+      expect(mine, hasLength(1));
+      expect(mine.single.length, 6);
+      expect(world.map((n) => n.id), isNot(contains(45)));
+      // A swap, with Belarus: Europe's 54.
+      expect(
+        world.where((n) => n.confederation == Confederation.europe),
+        hasLength(54),
+      );
+    });
+
+    test('a real Vatican City run stores that draw', () async {
+      SharedPreferences.setMockInitialValues({});
+      final db = createTestDatabase();
+      addTearDown(db.close);
+      final c = greenlandContainer(db);
+      addTearDown(c.dispose);
+      await c.read(seedLoaderProvider).ensureSeeded();
+      final career =
+          (await c
+                  .read(careerServiceProvider)
+                  .create(
+                    nationId: def.nationId,
+                    managerName: 'M',
+                    rngSeed: def.rngSeed,
+                    currentHostRules: true,
+                    worldMarkers: [DormantNations.markerFor(217)],
+                    newCareerNations: def.withBelarus,
+                  ))
+              .valueOrNull!;
+      await drawEuroQualifyingNow(c, career.id);
+      final tables = await c
+          .read(competitionRepositoryProvider)
+          .tournamentGroupTables(
+            career.id,
+            CompetitionKind.continentalQualifying,
+            confederation: Confederation.europe,
+          );
+      final stored = [
+        for (final t in tables)
+          [for (final s in t.standings) s.nationId]..sort(),
+      ];
+      final rebuilt = [
+        for (final g in euroQualifyingGroups(def.rngSeed, world))
+          [...g]..sort(),
+      ];
+      expect(
+        stored.map((g) => g.join(',')).toSet(),
+        rebuilt.map((g) => g.join(',')).toSet(),
+      );
+      expect(stored.where((g) => g.contains(217)), hasLength(1));
+    });
+  });
 }

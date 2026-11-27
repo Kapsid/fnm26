@@ -731,6 +731,80 @@ const Set<String> realTexasNames = {
   'Willie Nelson',
 };
 
+/// Real people whose names no Vatican City player may be given, in the
+/// two-name form the game prints: the popes by their own names, the
+/// best-known cardinals and saints of the century, the Italian and Roman
+/// players and coaches the Italian pools could pair, and the famous holders
+/// of the pools' names (a singer, a painter, a skier, a cardinal of Minsk).
+/// The namer steps over every one for Vatican City (see
+/// [guardedNamesByNation]).
+const Set<String> realVaticanNames = {
+  'Achille Ratti',
+  'Agostino Casaroli',
+  'Albino Luciani',
+  'Angelo Bagnasco',
+  'Angelo Becciu',
+  'Angelo Branduardi',
+  'Angelo Comastri',
+  'Angelo Ogbonna',
+  'Angelo Peruzzi',
+  'Angelo Roncalli',
+  'Angelo Sodano',
+  'Damiano Tommasi',
+  'Domenico Berardi',
+  'Domenico Savio',
+  'Enrico Chiesa',
+  'Eugenio Pacelli',
+  'Federico Chiesa',
+  'Francesco Forgione',
+  'Gaetano Thiene',
+  'Gennaro Gattuso',
+  'Giacomo Bonaventura',
+  'Giacomo Della Chiesa',
+  'Giacomo Puccini',
+  'Gioacchino Pecci',
+  'Giovanni Montini',
+  'Giuseppe Sarto',
+  'Iga Świątek',
+  'Jorge Bergoglio',
+  'Joseph Ratzinger',
+  'Karol Wojtyła',
+  'Kazimierz Świątek',
+  'Laurent Koscielny',
+  'Lorenzo Cherubini',
+  'Lorenzo Insigne',
+  'Lorenzo Lucca',
+  'Lorenzo Monaco',
+  'Lorenzo Pellegrini',
+  'Luigi Cherubini',
+  'Maksymilian Kolbe',
+  'Massimo Ambrosini',
+  'Matteo Pessina',
+  'Matteo Zuppi',
+  'Michele Padovano',
+  'Michele Santoro',
+  'Pietro Anastasi',
+  'Pietro Gasparri',
+  'Pietro Parolin',
+  'Pio Laghi',
+  'Pirmin Zurbriggen',
+  'Raffaele Palladino',
+  'Robert Prevost',
+  'Salvatore Esposito',
+  'Salvatore Schillaci',
+  'Simon Ammann',
+  'Simone Inzaghi',
+  'Simone Perrotta',
+  'Stanisław Dziwisz',
+  'Stefano Pioli',
+  'Stefano Sensi',
+  'Tarcisio Bertone',
+  'Tommaso Campanella',
+  'Tommaso Pobega',
+  'Vincenzo Grifo',
+  'Vincenzo Montella',
+};
+
 /// The real-name guard per nation, applied by the namer only to dormant
 /// nations (see `DormantNations`): widening it to an ordinary nation would
 /// rename players in that nation's existing saves.
@@ -741,6 +815,7 @@ const Map<int, Set<String>> guardedNamesByNation = {
   214: realIsleOfManNames,
   215: realCzechoslovakiaNames,
   216: realTexasNames,
+  217: realVaticanNames,
 };
 
 /// The extra real-name guard per nation for careers on the full pools (see

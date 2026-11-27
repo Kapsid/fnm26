@@ -19064,6 +19064,38 @@ class AppLocalizationsPl extends AppLocalizations {
   String get campaignStars3Texas => 'Wygrać Mistrzostwa Świata';
 
   @override
+  String get campaignVaticanTitle => 'Zdrowaś Maryjo';
+
+  @override
+  String get campaignVaticanTwist =>
+      'Watykan zajmuje miejsce San Marino w Europie, bez końca';
+
+  @override
+  String get campaignVaticanIntro =>
+      'Najmniejsze państwo świata ma kilkuset obywateli, w większości duchownych, gwardię szwajcarskich halabardników i ani jednego piłkarza godnego tego miana. W tym świecie Watykan i tak gra, na miejscu San Marino w Europie, i jest dużo słabszy, niż San Marino kiedykolwiek było: biskupi, klerycy, kustosze muzeów i gwardziści po służbie, boisko w murach na 1500 widzów i od czasu do czasu mecz u siebie na pożyczonym stadionie w Rzymie. Ta droga nie ma końca, więc nie ma terminu, są tylko cuda do zdziałania: wygrać mecz eliminacji, nie zająć ostatniego miejsca w grupie eliminacyjnej i, jeśli niebo słucha, awansować do barażu.';
+
+  @override
+  String get campaignVaticanGoal => 'Wygrać mecz eliminacji';
+
+  @override
+  String get campaignStars1Vatican => 'Wygrać mecz eliminacji';
+
+  @override
+  String get campaignStars2Vatican =>
+      'Nie zająć ostatniego miejsca w grupie eliminacyjnej';
+
+  @override
+  String get campaignStars3Vatican => 'Awansować do barażu';
+
+  @override
+  String get campaignNoEnd => 'Bez końca';
+
+  @override
+  String homeCampaignCycleNoEnd(int cycle) {
+    return 'Cykl $cycle';
+  }
+
+  @override
   String get wcPlayoffCourseNote =>
       'Każdy zwycięzca grupy awansuje bezpośrednio. O ostatnie miejsca grają w barażach najlepsze drużyny z drugich miejsc (na żółto w grupach) i najlepsi zwycięzcy grup Pucharu Narodów, którzy nie awansowali. Z Pucharu Narodów, na tę chwilę:';
 

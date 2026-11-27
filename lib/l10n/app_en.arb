@@ -29179,6 +29179,47 @@
   "@campaignStars3Texas": {
     "description": "What earns the third star in the Texas campaign: win the World Championship, in any cycle."
   },
+  "campaignVaticanTitle": "Hail Mary",
+  "@campaignVaticanTitle": {
+    "description": "Campaign title: Hail Mary, the prayer and the desperate last throw, for a run with no end of Vatican City, a nation added to the world for this campaign and the weakest side in it."
+  },
+  "campaignVaticanTwist": "Vatican City takes San Marino's place in Europe, with no end",
+  "@campaignVaticanTwist": {
+    "description": "One-line twist of the Vatican City campaign: Vatican City in San Marino's place in Europe, for a run with no end."
+  },
+  "campaignVaticanIntro": "The smallest state in the world has a few hundred citizens, most of them clergy, a guard of Swiss halberdiers and not one footballer worth the name. In this world Vatican City plays anyway, in San Marino's place in Europe, and it is far worse than San Marino ever was: bishops, seminarians, museum attendants and off-duty guards, a pitch inside the walls with room for 1,500 and the odd home game on a borrowed ground in Rome. The run has no end, so there is no deadline, only miracles to work: win a qualifying match, finish a qualifying group off the bottom and, if heaven is listening, reach a play-off.",
+  "@campaignVaticanIntro": {
+    "description": "Brief screen introduction of the Vatican City campaign: the smallest state in the world takes San Marino's place in Europe as a side far worse than San Marino, its players clergy, seminarians and guards, its home games on a tiny pitch inside the walls or a borrowed ground in Rome, for a run with no end. Names no real person."
+  },
+  "campaignVaticanGoal": "Win a qualifying match",
+  "@campaignVaticanGoal": {
+    "description": "One-line goal of the Vatican City campaign (its first star): win one qualifying match, continental or World Championship."
+  },
+  "campaignStars1Vatican": "Win a qualifying match",
+  "@campaignStars1Vatican": {
+    "description": "What earns the first star in the Vatican City campaign: win a qualifying match (continental or World Championship qualifying), in any cycle."
+  },
+  "campaignStars2Vatican": "Finish a qualifying group off the bottom",
+  "@campaignStars2Vatican": {
+    "description": "What earns the second star in the Vatican City campaign: finish a qualifying group anywhere but last, in any cycle."
+  },
+  "campaignStars3Vatican": "Reach a play-off",
+  "@campaignStars3Vatican": {
+    "description": "What earns the third star in the Vatican City campaign: reach a play-off (a European Championship or World Championship play-off path), in any cycle."
+  },
+  "campaignNoEnd": "No end",
+  "@campaignNoEnd": {
+    "description": "Campaigns list tile: the length badge of a campaign that has no end (it runs until its goal is reached or the manager stops), in place of a number of cycles. Short."
+  },
+  "homeCampaignCycleNoEnd": "Cycle {cycle}",
+  "@homeCampaignCycleNoEnd": {
+    "description": "After a campaign's title on the home screen's continue card: which cycle a campaign with no end is on (no total to show).",
+    "placeholders": {
+      "cycle": {
+        "type": "int"
+      }
+    }
+  },
   "wcPlayoffCourseNote": "Every group winner goes straight through. The last places go to play-off paths: the best runners-up (yellow in the groups) and the best Nations Cup group winners who are not through. From the Nations Cup, as things stand:",
   "@wcPlayoffCourseNote": {
     "description": "World Championship qualifying, under Europe's groups: who goes to the play-off paths (the best runners-up, in yellow, and the best Nations Cup group winners not through), then the Nations Cup sides on course for them, listed below."

@@ -29,6 +29,8 @@ abstract final class NationGeography {
     // The Isle of Man and Czechoslovakia, dormant nations.
     'IMN': 'britishIsles',
     'TCH': 'centralEurope',
+    // Vatican City, a dormant nation: inside Rome.
+    'VAT': 'italyMalta',
     'FIN': 'scandinavia',
     'FRA': 'westEurope',
     'GEO': 'caucasus',

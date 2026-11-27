@@ -18779,6 +18779,38 @@ class AppLocalizationsHi extends AppLocalizations {
   String get campaignStars3Texas => 'विश्व चैंपियनशिप जीतें';
 
   @override
+  String get campaignVaticanTitle => 'आख़िरी प्रार्थना';
+
+  @override
+  String get campaignVaticanTwist =>
+      'वेटिकन सिटी यूरोप में सैन मरीनो की जगह लेता है, बिना किसी अंत के';
+
+  @override
+  String get campaignVaticanIntro =>
+      'दुनिया के सबसे छोटे देश में कुछ सौ नागरिक हैं, ज़्यादातर पादरी, स्विस भालाधारियों का एक गार्ड दस्ता, और एक भी ऐसा फ़ुटबॉलर नहीं जो इस नाम के लायक़ हो। इस दुनिया में वेटिकन सिटी फिर भी खेलता है, यूरोप में सैन मरीनो की जगह, और वह सैन मरीनो से कहीं ज़्यादा कमज़ोर है: बिशप, सेमिनरी के छात्र, संग्रहालयों के कर्मचारी और छुट्टी पर आए गार्ड, दीवारों के भीतर 1,500 दर्शकों वाला एक मैदान और कभी-कभार रोम में उधार के मैदान पर घरेलू मैच। इस सफ़र का कोई अंत नहीं, इसलिए कोई समय-सीमा भी नहीं, बस चमत्कार करने हैं: एक क्वालिफ़ाइंग मैच जीतें, क्वालिफ़ाइंग ग्रुप में आख़िरी स्थान से ऊपर रहें और, अगर ऊपरवाला सुन रहा हो, प्ले-ऑफ़ तक पहुँचें।';
+
+  @override
+  String get campaignVaticanGoal => 'एक क्वालिफ़ाइंग मैच जीतें';
+
+  @override
+  String get campaignStars1Vatican => 'एक क्वालिफ़ाइंग मैच जीतें';
+
+  @override
+  String get campaignStars2Vatican =>
+      'क्वालिफ़ाइंग ग्रुप में आख़िरी स्थान से ऊपर रहें';
+
+  @override
+  String get campaignStars3Vatican => 'प्ले-ऑफ़ तक पहुँचें';
+
+  @override
+  String get campaignNoEnd => 'कोई अंत नहीं';
+
+  @override
+  String homeCampaignCycleNoEnd(int cycle) {
+    return 'चक्र $cycle';
+  }
+
+  @override
   String get wcPlayoffCourseNote =>
       'हर ग्रुप विजेता सीधे क्वालीफ़ाई करता है। आख़िरी जगहें प्ले-ऑफ़ से तय होती हैं: सबसे अच्छे उपविजेता (ग्रुपों में पीले) और नेशंस कप के वे सबसे अच्छे ग्रुप विजेता जो सीधे नहीं पहुँचे। नेशंस कप से, अभी की स्थिति:';
 

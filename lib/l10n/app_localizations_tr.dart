@@ -18781,6 +18781,37 @@ class AppLocalizationsTr extends AppLocalizations {
   String get campaignStars3Texas => 'Dünya Şampiyonası\'nı kazan';
 
   @override
+  String get campaignVaticanTitle => 'Son Dua';
+
+  @override
+  String get campaignVaticanTwist =>
+      'Vatikan, sonu olmadan Avrupa\'da San Marino\'nun yerini alıyor';
+
+  @override
+  String get campaignVaticanIntro =>
+      'Dünyanın en küçük devletinin birkaç yüz vatandaşı var, çoğu din adamı; bir İsviçreli teberdar muhafız birliği var ve adını hak eden tek bir futbolcusu yok. Bu dünyada Vatikan yine de oynuyor, Avrupa\'da San Marino\'nun yerinde, ve San Marino\'nun hiçbir zaman olmadığı kadar zayıf: piskoposlar, ilahiyat öğrencileri, müze görevlileri ve izindeki muhafızlar, surların içinde 1.500 kişilik bir saha ve arada bir Roma\'da ödünç alınmış bir statta iç saha maçı. Bu yolun sonu yok, yani bir son tarih de yok, yalnızca gerçekleştirilecek mucizeler var: bir eleme maçı kazan, bir eleme grubunu son sırada bitirme ve gökler seni duyuyorsa bir play-off\'a kal.';
+
+  @override
+  String get campaignVaticanGoal => 'Bir eleme maçı kazan';
+
+  @override
+  String get campaignStars1Vatican => 'Bir eleme maçı kazan';
+
+  @override
+  String get campaignStars2Vatican => 'Bir eleme grubunu son sırada bitirme';
+
+  @override
+  String get campaignStars3Vatican => 'Bir play-off\'a kal';
+
+  @override
+  String get campaignNoEnd => 'Sonsuz';
+
+  @override
+  String homeCampaignCycleNoEnd(int cycle) {
+    return 'Döngü $cycle';
+  }
+
+  @override
   String get wcPlayoffCourseNote =>
       'Her grup birincisi doğrudan katılır. Son yerler, en iyi grup ikincileri (gruplarda sarı) ile Uluslar Kupası\'nın henüz katılamamış en iyi grup birincileri arasındaki play-off ile belirlenir. Uluslar Kupası\'ndan, şu anki duruma göre:';
 
