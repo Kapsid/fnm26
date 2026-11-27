@@ -61,6 +61,7 @@ import 'package:fnm/domain/services/match/pitch/pitch_geometry.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_pacer.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_script.dart';
 import 'package:fnm/domain/services/match/pitch/switched_layout.dart';
+import 'package:meta/meta.dart' show visibleForTesting;
 
 part 'story_layer/ball.dart';
 part 'story_layer/lead_in.dart';
@@ -586,6 +587,13 @@ abstract final class StoryLayer {
   /// to see the errors the picture swallows.
   static void Function(Object error, StackTrace stack)? onStagingError;
 
+  /// Told the screen time of every keeper's error the quiet play stages
+  /// (his rare pass straight to an opponent, see `_keeperHowler`), as the
+  /// ball leaves his boot. For the keeper-giveaway scan, which tells these
+  /// apart from a picture that just hands the ball over.
+  @visibleForTesting
+  static void Function(double t)? debugOnKeeperError;
+
   static void _report(Object error, StackTrace stack) {
     final hook = onStagingError;
     if (hook != null) {
@@ -731,6 +739,15 @@ const double _lateHandover = 0.75;
 
 /// How soon after a moment a keeper holding the ball plays it on.
 const double _keeperRelease = 0.3;
+
+/// How long a man his keeper has played the ball to has on it before his
+/// side has to give it up, time allowing.
+const double _keeperBallSettle = 0.9;
+
+/// How near the next moment a keeper whose side has to give the ball up
+/// before it plays it for a team-mate to lose in a challenge (see
+/// `_keeperDuel`), rather than to one who would have to lose it at once.
+const double _duelAhead = 3.5;
 const double _keeperMaxDepth = 24.5;
 
 /// The nearest his own goal line an outfield man is sent in a staged
@@ -1056,6 +1073,17 @@ class _Builder {
   /// way round him and until when.
   int? clearer;
   int? dribbler;
+
+  /// A keeper's long ball that has to be lost (see `_keeperDuel`): the
+  /// team-mate it is for, and his marker, who wins it off him as it lands.
+  int? duelFor;
+  int? duelBy;
+  bool duelAerial = false;
+
+  /// The team-mate his keeper last played the ball to, and when it reached
+  /// him (see [_keeperBallSettle]).
+  int? fromKeeper;
+  double fromKeeperAt = -1;
   double dribbleUntil = -1;
   double dribbleSign = 1;
 
@@ -2403,11 +2431,20 @@ class _Builder {
     // move is theirs to play up the pitch.
     final buildUp = _buildUpAhead(t);
     final latest = stop - (buildUp > 0 ? buildUp : _lateHandover);
-    final handoverDue = handover && (t >= latest - 1e-9 || ahead > 0);
+    // A man his keeper has just played it to is given a moment on it
+    // before his side loses it, unless time is up: else the picture showed
+    // the keeper's pass as good as going to the other side.
+    final settling = fromKeeper == c && t < fromKeeperAt + _keeperBallSettle;
+    final handoverDue =
+        handover && (t >= latest - 1e-9 || (ahead > 0 && !settling));
     if (handover && !handoverDue) wakeAt = latest;
     // A cross met in the box is headed clear at once.
     if (clearer == c && _clearance(t, a)) return;
     clearer = null;
+    // A keeper's long ball contested as it lands: the marker wins it.
+    if (duelFor == c && _winDuel(t, a)) return;
+    duelFor = null;
+    duelBy = null;
     if (t < nextAction - 1e-9 && !handoverDue) return;
     // The ball goes out, and the side the next moment belongs to restarts
     // it: the throw-in or goal kick that opens the build-up.
@@ -2425,7 +2462,8 @@ class _Builder {
     // In a short quiet spell the ball changes hands quickly or not at all.
     final quick = handoverDue || stop - t < 1.5;
     final giveAway =
-        handoverDue || (!keep && !handover && _spellOver(t, ahead));
+        handoverDue ||
+        (!keep && !handover && !settling && _spellOver(t, ahead));
     // A keeper never rolls the ball to a forward. With time to spare he
     // plays it out to his own men and they lose it, as a side does; when it
     // must change hands now he kicks it long, and it is won in midfield.
@@ -2453,15 +2491,22 @@ class _Builder {
     } else if (giveAway && keeper && !handoverDue) {
       final minute = pacer.matchAt(_dur(t)).minute;
       target = _pickReceiver(a, t, minute, lead?.$2);
+    } else if (keeper && (giveAway || (handover && stop - t < _duelAhead))) {
+      // It must change hands now, or soon with too little time for his
+      // men to lose it in their own time: he kicks it for a team-mate,
+      // and the man marking him wins it as it comes down. Never a kick to
+      // an opponent (1.1.4: the 2D keeper "passes to the other side", and
+      // a ball played out to a man who gave it away at once looked the
+      // same); with no such ball on, he plays it to a team-mate.
+      if (_keeperDuel(t, a, stop)) return;
+      final minute = pacer.matchAt(_dur(t)).minute;
+      target = _pickReceiver(a, t, minute, lead?.$2);
     } else if (giveAway &&
         !keeper &&
         _turnover(t, a, handover && !handoverDue ? latest : stop)) {
       return;
     } else if (giveAway) {
-      target = keeper
-          ? (_pickInterceptor(a, t, long: true) ??
-                _pickInterceptor(a, t, short: quick))
-          : _pickInterceptor(a, t, short: quick);
+      target = _pickInterceptor(a, t, short: quick);
       intercept = true;
     } else {
       final minute = pacer.matchAt(_dur(t)).minute;
@@ -2498,6 +2543,7 @@ class _Builder {
           : t + 0.25;
       return;
     }
+    if (howler) StoryLayer.debugOnKeeperError?.call(t);
     _startFlight(t, a, target, intercept: intercept, quick: intercept && quick);
   }
 
@@ -2697,20 +2743,15 @@ class _Builder {
     );
   }
 
-  /// The opponent who wins a pass from [a]: one in its path, 9 to 32
-  /// metres off ([short]: at most 16). [long]: a keeper's long kick, won in
-  /// midfield, 35 to 65 metres up the pitch.
   /// The chance that a keeper who must give the ball up hands it straight
   /// to a forward: about one in three of his passes is such a moment, so
   /// this puts his errors at 1-2% of his passes.
   static const double _keeperHowler = 0.02;
 
-  _Agent? _pickInterceptor(
-    _Agent a,
-    double t, {
-    bool short = false,
-    bool long = false,
-  }) {
+  /// The opponent who wins a pass from [a]: one in its path, 9 to 32
+  /// metres off ([short]: at most 16). A keeper's kick is never one (bar
+  /// his rare error): see `_keeperDuel`.
+  _Agent? _pickInterceptor(_Agent a, double t, {bool short = false}) {
     final s = a.side;
     final minute = pacer.matchAt(_dur(t)).minute;
     final dir = _dir(s, minute);
@@ -2722,17 +2763,6 @@ class _Builder {
       if (!o.present || o.side == s || o.walkStart != null) continue;
       if (_departsWithin(o, t, 6)) continue;
       final d = o.pos.distanceTo(ball);
-      if (long) {
-        final up = xToDepth(o.pos.x, dir) - ballDepth;
-        if (d < 35 || d > 65 || up < 25) continue;
-        if (o.slot == sides[o.side].gkSlot) continue;
-        final score = -(d - 45).abs() / 8 + rng.nextDouble();
-        if (score > bestScore) {
-          bestScore = score;
-          best = o;
-        }
-        continue;
-      }
       if (d < 9 || d > 32) continue;
       if (o.slot == sides[o.side].gkSlot && ballDepth < 75) continue;
       final ahead = xToDepth(o.pos.x, dir) - ballDepth;
@@ -3483,6 +3513,14 @@ class _Builder {
       final left = math.max(0.15, f.t1 - t);
       final need = a.pos.distanceTo(f.lead) / left;
       return (f.lead, math.min(8, need + 1), 2);
+    }
+    // The marker of a keeper's long ball goes with his man to meet it,
+    // goal side of him.
+    if (f != null && duelBy == a.index && f.toActor == duelFor) {
+      final ownGoal = Offset2(depthToX(0, dir), PitchDims.width / 2);
+      final spot = f.lead + (ownGoal - f.lead).unit * _duelGap;
+      final left = math.max(0.15, f.t1 - t);
+      return (spot, math.min(8, a.pos.distanceTo(spot) / left + 1), 2);
     }
     if (isKeeper) return (anchor, 5.5, 2);
     final role = _leadRole(a, t, minute);
