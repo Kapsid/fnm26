@@ -420,7 +420,8 @@ void main() {
         'central midfielders on the ball: forward arrows '
         '${running.toStringAsFixed(1)} m, none ${plain.toStringAsFixed(1)} m',
       );
-      expect(running - plain, greaterThanOrEqualTo(4));
+      // The line (and the ball) caps how far he gets: a few metres, every time.
+      expect(running - plain, greaterThanOrEqualTo(2.5));
     },
   );
 

@@ -2886,7 +2886,7 @@ class _Builder {
       case PlayerRole.poacher when inPossession:
         d = math.max(d, cap - 1);
       case PlayerRole.pressingForward when !inPossession:
-        d += 7;
+        d += 10;
       case PlayerRole.defensiveWinger when !inPossession:
         d -= 7;
       case PlayerRole.touchlineWinger when inPossession:
@@ -2908,8 +2908,8 @@ class _Builder {
       d -= inPossession ? 3 : 7;
     } else if (inPossession && arrow != MoveArrow.none) {
       // vy is negative forward on the tactics board; here up is +depth.
-      d += -vy * 9;
-      l += vx * 9;
+      d += -vy * 14;
+      l += vx * 10;
     }
     return (math.min(d, cap - 0.5), l.clamp(-32.0, 32.0));
   }
