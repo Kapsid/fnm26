@@ -120,8 +120,9 @@ void main() {
       base.where((n) => n.confederation == Confederation.europe).length + 1,
     );
 
-    // A European qualifying group of six (seed 217,
-    // campaign_seeds_test.dart). On calendar2 the qualifying draw comes
+    // A European qualifying group of five, as for every side of the
+    // Nations Cup's bottom league in the EURO 2028 shape
+    // (campaign_seeds_test.dart). On calendar2 the qualifying draw comes
     // after the first Nations Cup.
     await drawEuroQualifyingNow(c, id);
     final groups = await comp.tournamentGroupTables(
@@ -133,7 +134,7 @@ void main() {
       (g) => g.standings.any((s) => s.nationId == vatican),
     );
     expect(mine, hasLength(1));
-    expect(mine.single.standings, hasLength(6));
+    expect(mine.single.standings, hasLength(5));
 
     // On day one Vatican City stands last, where San Marino would.
     final ranking = (await c.read(worldRankingProvider(id).future))!;

@@ -8,13 +8,13 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/host_bidding.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
-import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../helpers/calendar2_draws.dart';
 import '../../helpers/test_database.dart';
+import '../campaign/campaign_seeds_test.dart' show euroQualifyingGroups;
 import 'greenland_fixtures.dart';
 
 /// The guard: Greenland being in the database changes nothing about a normal
@@ -23,38 +23,11 @@ import 'greenland_fixtures.dart';
 /// Every normal career is built twice, once on a database that holds the
 /// dormant data and once on one that does not, and the two must match.
 
-/// The European qualifying draw of cycle 0, rebuilt exactly as
-/// `CareerService.buildCalendar` does it (as `campaign_seeds_test.dart` does).
-List<List<int>> _euroQualifyingGroups(int seed, List<Nation> nations) {
-  const conf = Confederation.europe;
-  final members = nations.where((n) => n.confederation == conf).toList()
-    ..sort((a, b) => a.ranking.compareTo(b.ranking));
-  final field = {
-    for (final n in WorldCupHosts.continentalQualifiers(
-      confederation: conf,
-      cycle: 0,
-      seed: seed,
-      nations: nations,
-    ))
-      n.id,
-  };
-  final cq = const ScheduleGenerator().generate(
-    confederation: conf,
-    nations: members.where((n) => field.contains(n.id)).toList(),
-    rngSeed: seed ^ 0 ^ 0xCAFE,
-    start: DateTime(2026, 9),
-    groupSize: 6,
-    windows: (
-      start: DateTime(2026, 9),
-      deadline: DateTime(2027, 6, 30),
-      seed: seed ^ 0xCAFE ^ 0xF1D0,
-      fillAll: false,
-    ),
-  );
-  return [
-    for (final g in cq.groups) [...g.nationIds]..sort(),
-  ];
-}
+/// The European qualifying draw of cycle 0 a new career stores (the EURO
+/// 2028 shape, see `campaign_seeds_test.dart`), each group sorted.
+List<List<int>> _euroQualifyingGroups(int seed, List<Nation> nations) => [
+  for (final g in euroQualifyingGroups(seed, nations)) [...g]..sort(),
+];
 
 Future<({ProviderContainer c, Career career})> _start(
   int seed,
