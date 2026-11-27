@@ -96,6 +96,8 @@ abstract final class LandmarkPaths {
     LandmarkKind.morroCastle => _morroCastle(),
     LandmarkKind.clerigos => _clerigos(),
     LandmarkKind.victoriaMemorial => _victoriaMemorial(),
+    LandmarkKind.stepPyramid => _stepPyramid(),
+    LandmarkKind.templeStupas => _templeStupas(),
   };
 
   /// Whether a landmark is a building with windows that light up at night
@@ -145,6 +147,8 @@ abstract final class LandmarkPaths {
     LandmarkKind.morroCastle ||
     LandmarkKind.clerigos ||
     LandmarkKind.victoriaMemorial ||
+    LandmarkKind.stepPyramid ||
+    LandmarkKind.templeStupas ||
     LandmarkKind.none => false,
     _ => true,
   };
@@ -1823,5 +1827,48 @@ abstract final class LandmarkPaths {
       _rect(x - 0.07, -0.44, x + 0.07, -0.26),
       _dome(x, -0.44, 0.14, 0.1),
     ],
+  ]);
+
+  // --- The fourth set (1.1.4): generic silhouettes by the country --------
+
+  /// A step pyramid of the old Mesoamerican kind (Mexico, Guatemala,
+  /// Honduras): stacked terraces, a stair up the front, a small temple on
+  /// top. No one pyramid's shape.
+  static Path _stepPyramid() => _union([
+    for (var i = 0; i < 6; i++)
+      _rect(-0.9 + i * 0.12, -0.13 * (i + 1), 0.9 - i * 0.12, -0.13 * i),
+    _poly([(-0.12, 0), (-0.06, -0.78), (0.06, -0.78), (0.12, 0)]),
+    _rect(-0.2, -0.98, 0.2, -0.78),
+    _rect(-0.24, -1, 0.24, -0.96),
+  ]);
+
+  /// Temple towers and golden stupas of mainland Southeast Asia (Cambodia,
+  /// Thailand, Myanmar, Laos): a tall bell-shaped stupa on its terraces,
+  /// two smaller ones and a corn-cob tower either side. No one temple's
+  /// shape.
+  static Path _templeStupas() => _union([
+    _rect(-0.95, -0.08, 0.95),
+    _rect(-0.6, -0.16, 0.6, -0.07),
+    Path()
+      ..moveTo(-0.3, -0.16)
+      ..cubicTo(-0.28, -0.34, -0.14, -0.42, -0.1, -0.48)
+      ..lineTo(0.1, -0.48)
+      ..cubicTo(0.14, -0.42, 0.28, -0.34, 0.3, -0.16)
+      ..close(),
+    Path()
+      ..moveTo(-0.09, -0.48)
+      ..cubicTo(-0.05, -0.62, -0.02, -0.82, 0, -1)
+      ..cubicTo(0.02, -0.82, 0.05, -0.62, 0.09, -0.48)
+      ..close(),
+    for (final x in [-0.46, 0.46]) ...[
+      _poly([
+        (x - 0.12, -0.08),
+        (x - 0.07, -0.28),
+        (x, -0.42),
+        (x + 0.07, -0.28),
+        (x + 0.12, -0.08),
+      ]),
+    ],
+    for (final x in [-0.8, 0.8]) _bud(x, -0.08, 0.16, -0.5, 4),
   ]);
 }

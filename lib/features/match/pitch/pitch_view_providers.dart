@@ -19,6 +19,7 @@ import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_pacer.dart';
 import 'package:fnm/domain/services/match/pitch/story_layer.dart';
 import 'package:fnm/domain/services/match/stadium/away_fan_share.dart';
+import 'package:fnm/domain/services/match/stadium/choreo.dart';
 import 'package:fnm/domain/services/match/stadium/crowd_culture.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/domain/services/match/stadium/ground_character.dart';
@@ -83,6 +84,8 @@ class PitchStadium {
     required this.date,
     required this.kickOff,
     this.dressing = MatchDressing.none,
+    this.sponsors = const [],
+    this.choreo,
   });
 
   /// The ground of [ground] for [home] against [away] on [date], kicking
@@ -105,6 +108,8 @@ class PitchStadium {
     WeatherKind weather = WeatherKind.clear,
     (Color, Color)? groundColours,
     GroundWorks works = GroundWorks.none,
+    List<String> sponsors = const [],
+    String? choreo,
   }) {
     final code = groundNationCode ?? home.code;
     final confed = groundConfederation ?? home.confederation;
@@ -131,6 +136,8 @@ class PitchStadium {
         weather,
         groundColours,
         works,
+        sponsors.join('|'),
+        choreo,
       ),
       spec: StadiumSpec.from(
         ground,
@@ -149,6 +156,8 @@ class PitchStadium {
       date: date,
       kickOff: kickOff,
       dressing: dressing,
+      sponsors: sponsors,
+      choreo: choreo,
     );
   }
 
@@ -168,6 +177,14 @@ class PitchStadium {
   final DateTime date;
   final KickOffTime kickOff;
   final MatchDressing dressing;
+
+  /// The brands on the ground's boards, as printed (see `GroundSponsors`).
+  final List<String> sponsors;
+
+  /// The flag (a nation code) a big match's home fans hold up: a card
+  /// mosaic before kick-off and a giant flag over the main stand through
+  /// the first half (see `Choreo`). Null when they stage none.
+  final String? choreo;
 
   /// The light at match minute [minute] (+[stoppage]); before kick-off,
   /// the first minute's.
@@ -228,6 +245,10 @@ class PitchStadiumBaker {
       flag: flag,
       light: light,
       dressing: stadium.dressing,
+      sponsors: stadium.sponsors,
+      // The view lays the far stand's shadow over the looks itself, moved
+      // with the sun (see `PitchMatchView`).
+      standShadow: false,
     ).paint(canvas, size);
     final picture = recorder.endRecording();
     lastRecordMs = sw.elapsedMicroseconds / 1000;
@@ -438,6 +459,7 @@ PitchStadium pitchStadiumForPreview(
   MatchPreview preview, {
   WeatherKind? weather,
   GroundWorks works = GroundWorks.none,
+  List<String> sponsors = const [],
 }) {
   final f = preview.fixture;
   final shown = matchConditionsShown(preview, weather: weather);
@@ -464,6 +486,17 @@ PitchStadium pitchStadiumForPreview(
     dressing: dressing,
     weather: shown.weather,
     works: works,
+    sponsors: sponsors,
+    choreo:
+        Choreo.stages(
+          round: f.round,
+          homeCode: home.code,
+          awayCode: away.code,
+          homeRank: home.ranking,
+          neutral: preview.neutralGround,
+        )
+        ? home.code
+        : null,
     groundColours: groundNation == null
         ? null
         : (

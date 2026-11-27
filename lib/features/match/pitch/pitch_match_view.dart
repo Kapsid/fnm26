@@ -21,12 +21,16 @@ import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/features/match/pitch/actors_painter.dart';
 import 'package:fnm/features/match/pitch/confetti_painter.dart';
+import 'package:fnm/features/match/pitch/ground_live.dart';
+import 'package:fnm/features/match/pitch/net_ripple.dart';
 import 'package:fnm/features/match/pitch/pitch_clock.dart';
 import 'package:fnm/features/match/pitch/pitch_projection.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/features/match/pitch/referee_painter.dart';
+import 'package:fnm/features/match/pitch/scene_look.dart';
 import 'package:fnm/features/match/pitch/shootout_stage.dart';
 import 'package:fnm/features/match/pitch/stadium_looks.dart';
+import 'package:fnm/features/match/pitch/stadium_painter.dart';
 import 'package:fnm/features/match/pitch/var_check_overlay.dart';
 import 'package:fnm/features/match/pitch/weather_painter.dart';
 
@@ -63,6 +67,7 @@ class PitchMatchView extends ConsumerStatefulWidget {
     this.names = const {},
     this.onReady,
     this.shootout,
+    this.board,
     super.key,
   });
 
@@ -81,6 +86,10 @@ class PitchMatchView extends ConsumerStatefulWidget {
   /// its [ShootoutStageController.active] is up the camera moves in on one
   /// goal and the kicks are drawn in place of the match's players.
   final ShootoutStageController? shootout;
+
+  /// What the ground's scoreboard shows: the score and the clock as the
+  /// match screen's header reads them (null draws the board blank).
+  final PitchScoreboard? board;
 
   /// How far in the camera sits: a touch wide of the pitch, so the near
   /// corners and both end stands keep clear of the frame's edges.
@@ -134,6 +143,18 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
   final _showOpacity = ValueNotifier<double>(0);
   WeatherOverlay? _weather;
 
+  /// The ground's live parts: the scoreboard, the LED boards, the nets and
+  /// the fans' moments (see [GroundLive]).
+  late final GroundLive _live = GroundLive(
+    kits: widget.stadium.kits,
+    sponsors: widget.stadium.sponsors,
+  );
+  late final LiveGroundPainter _livePainter = LiveGroundPainter(_live);
+
+  /// The live parts (for tests).
+  @visibleForTesting
+  GroundLive get debugLive => _live;
+
   /// Completes once all three looks are baked (for tests).
   @visibleForTesting
   Future<void> get debugBaked => _baked.future;
@@ -164,9 +185,14 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
       if (t > 14) _confettiTicker.stop();
     });
     _penalty = _penaltyFor(widget.script);
+    _live
+      ..setBoard(widget.board, at: _seconds)
+      ..nets = NetRipples.of(widget.script);
     widget.clock.addListener(_onClock);
     _onClock();
   }
+
+  double get _seconds => widget.clock.value.inMicroseconds / 1e6;
 
   /// The match's own penalties, shown in the shootout's close-up; null when
   /// it has none.
@@ -191,10 +217,17 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
       widget.clock.addListener(_onClock);
     }
     if (!identical(old.script, widget.script)) {
+      _live.nets = NetRipples.of(widget.script);
       _penalty?.dispose();
       _penalty = _penaltyFor(widget.script);
       _penaltyPainter = null;
     }
+    if (old.board != widget.board) {
+      _live.setBoard(widget.board, at: _seconds);
+    }
+    _live
+      ..kits = widget.stadium.kits
+      ..sponsors = widget.stadium.sponsors;
     if (!identical(old.script, widget.script) ||
         !identical(old.stadium, widget.stadium)) {
       _lightKey = null;
@@ -216,6 +249,8 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
     _showOpacity.dispose();
     _weather?.dispose();
     _penalty?.dispose();
+    _live.choreoFlag?.dispose();
+    _live.dispose();
     super.dispose();
   }
 
@@ -235,9 +270,14 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
       _lightKey = key;
       _light.value = widget.stadium.lightAt(m.minute, stoppage: m.stoppage);
       _showOpacity.value = widget.stadium.showOpacityAt(m.minute);
+      _live
+        ..minute = m.minute
+        ..flood = SceneLook.at(_light.value).flood;
     }
+    _live.shootout = widget.shootout?.active.value ?? false;
     final at = widget.script.confettiAt;
     final t = widget.clock.value.inMicroseconds / 1e6;
+    _live.tick(t);
     _penalty?.update(t);
     if (at != null && t >= at - 1e-6) {
       if (_confetti.value == null && !_confettiTicker.isActive) {
@@ -319,6 +359,14 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
       looks.add(mode, img);
       if (first) {
         first = false;
+        _live
+          ..projection = projection
+          ..goalStyle = want.stadium.spec.goalStyle;
+        _live.anchors = StadiumPainter(
+          want.stadium.spec,
+          projection,
+          dressing: want.stadium.dressing,
+        ).anchors;
         final old = _looks;
         setState(() => _looks = looks);
         old?.dispose();
@@ -331,6 +379,18 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
       if (!identical(_looks, looks)) looks.dispose();
       return;
     }
+    final choreo = want.stadium.choreo;
+    final choreoFlag = choreo == null
+        ? null
+        : await StadiumPainter.rasterFlag(choreo, size: const Size(60, 40));
+    if (stale()) {
+      choreoFlag?.dispose();
+      if (!identical(_looks, looks)) looks.dispose();
+      return;
+    }
+    final oldChoreo = _live.choreoFlag;
+    _live.choreoFlag = choreoFlag;
+    oldChoreo?.dispose();
     final show = await baker.show(
       want.stadium,
       projection,
@@ -358,7 +418,7 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
         identical(a.clock, widget.clock) &&
         mapEquals(a.names, widget.names) &&
         a.kits == widget.stadium.kits &&
-        a.breath == (widget.stadium.weather == WeatherKind.frostyNight) &&
+        a.breath == _breath &&
         a.projection.viewport == size) {
       return a;
     }
@@ -370,9 +430,14 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
       names: widget.names,
       lightAt: widget.stadium.lightAt,
       isPlaying: () => widget.clock.playing,
-      breath: widget.stadium.weather == WeatherKind.frostyNight,
+      breath: _breath,
     );
   }
+
+  /// Breath in the air: a frosty night, or a hard frost by day.
+  bool get _breath =>
+      widget.stadium.weather == WeatherKind.frostyNight ||
+      widget.stadium.weather == WeatherKind.frost;
 
   ShootoutPainter? _shootoutPainter;
 
@@ -536,12 +601,24 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
                           ),
                         ),
                       ),
+                      RepaintBoundary(
+                        child: CustomPaint(
+                          painter: _ShadowLayer(
+                            widget.stadium,
+                            PitchMatchView.projectionFor(drawSize),
+                            _light,
+                          ),
+                        ),
+                      ),
                       if (_show != null)
                         RepaintBoundary(
                           child: CustomPaint(
                             painter: _ShowLayer(_show!, _showOpacity),
                           ),
                         ),
+                      RepaintBoundary(
+                        child: CustomPaint(painter: _livePainter),
+                      ),
                       _actorsLayer(drawSize),
                       if (_weatherFor().animates)
                         IgnorePointer(
@@ -614,6 +691,31 @@ class _StadiumLayer extends CustomPainter {
   @override
   bool shouldRepaint(covariant _StadiumLayer old) =>
       !identical(old.looks, looks) || !identical(old.light, light);
+}
+
+/// The far stand's shadow on the grass in the light of the minute on the
+/// clock: it creeps across the pitch as an afternoon goes on. Repainted
+/// only when the light moves (once a match minute).
+class _ShadowLayer extends CustomPainter {
+  _ShadowLayer(this.stadium, this.projection, this.light)
+    : super(repaint: light);
+
+  final PitchStadium stadium;
+  final PitchProjection projection;
+  final ValueListenable<PitchLight> light;
+
+  @override
+  void paint(Canvas canvas, Size size) => StadiumPainter(
+    stadium.spec,
+    projection,
+    light: light.value,
+  ).paintStandShadow(canvas, size);
+
+  @override
+  bool shouldRepaint(covariant _ShadowLayer old) =>
+      old.stadium != stadium ||
+      old.projection.viewport != projection.viewport ||
+      !identical(old.light, light);
 }
 
 /// The fans' show, faded with the match minute.

@@ -5,6 +5,7 @@
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
+import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,20 +13,27 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/kit_colors.dart';
 import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_geometry.dart';
+import 'package:fnm/domain/services/match/stadium/backdrop.dart';
 import 'package:fnm/domain/services/match/stadium/crowd_culture.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/domain/services/match/stadium/ground_character.dart';
 import 'package:fnm/domain/services/match/stadium/ground_look.dart';
+import 'package:fnm/domain/services/match/stadium/ground_setting.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
+import 'package:fnm/domain/services/match/stadium/pitch_wear.dart';
+import 'package:fnm/domain/services/match/stadium/scoreboard.dart';
 import 'package:fnm/domain/services/match/stadium/stadium_signature.dart';
 import 'package:fnm/domain/services/match/stadium/stadium_spec.dart';
 import 'package:fnm/features/match/pitch/backdrop_painter.dart';
+import 'package:fnm/features/match/pitch/board_names.dart';
 import 'package:fnm/features/match/pitch/crowd_painter.dart';
 import 'package:fnm/features/match/pitch/match_dressing.dart';
 import 'package:fnm/features/match/pitch/pitch_projection.dart';
 import 'package:fnm/features/match/pitch/scene_look.dart';
 
+part 'stadium_anchors.dart';
 part 'stadium_features.dart';
+part 'stadium_settings.dart';
 
 /// The ground the Pitch view plays in, drawn once per look: the sky and the
 /// land behind it, the stands and their crowd, the boards, the grass with
@@ -54,6 +62,8 @@ class StadiumPainter extends CustomPainter {
     this.flag,
     this.light = PitchLight.day,
     this.dressing = MatchDressing.none,
+    this.sponsors = const [],
+    this.standShadow = true,
   }) : look = SceneLook.at(light);
 
   final StadiumSpec spec;
@@ -65,6 +75,16 @@ class StadiumPainter extends CustomPainter {
   final PitchLight light;
   final MatchDressing dressing;
   final SceneLook look;
+
+  /// The brands on the boards, as printed (see `GroundSponsors`): the ends'
+  /// boards and a few on the stands carry them. Empty leaves the boards
+  /// blank.
+  final List<String> sponsors;
+
+  /// Whether the far stand's shadow is drawn on the grass. The Pitch view
+  /// bakes its looks without it and lays it over them itself
+  /// ([paintStandShadow]), moved with the sun minute by minute.
+  final bool standShadow;
 
   // --- The ground's plan, in metres -----------------------------------------
 
@@ -166,7 +186,9 @@ class StadiumPainter extends CustomPainter {
     }
 
     grade(look.grade);
+    _hillside(canvas);
     _apronGround(canvas);
+    _seaEnd(canvas);
     _track(canvas);
     _openEndSkyline(canvas);
     _crane(canvas);
@@ -176,18 +198,21 @@ class StadiumPainter extends CustomPainter {
       Color.lerp(const Color(0xFFFFFFFF), look.grade, 1 - 0.5 * look.flood)!,
     );
     _standTiers(canvas);
+    _standBoards(canvas);
     ungrade();
     grade(look.grade);
     _standRoofs(canvas);
     _scaffolding(canvas);
     _roofCrown(canvas);
     _screens(canvas);
+    _digitalBoard(canvas);
     _snowOnRoofs(canvas);
     _boards(canvas, near: false);
     _grass(canvas);
+    _wear(canvas);
     _wetGrass(canvas);
     _gridironLines(canvas);
-    _standShadow(canvas);
+    if (standShadow) _standShadow(canvas);
     _markings(canvas);
     _dugouts(canvas);
     _photographers(canvas);
@@ -213,12 +238,35 @@ class StadiumPainter extends CustomPainter {
     // What gives off its own light, over the grade.
     _crowdGlow(canvas);
     _pools(canvas);
+    _beams(canvas);
     _lamps(canvas);
     _flags(canvas);
     _roofEdgeLight(canvas);
     _screenGlow(canvas);
     _heatHaze(canvas, size, horizon);
     _nearShade(canvas, size);
+    canvas.restore();
+  }
+
+  /// Where the ground's live parts sit on screen: the scoreboard, the far
+  /// LED boards, the stands' slices (see [GroundAnchors]).
+  GroundAnchors get anchors => GroundAnchors(
+    tier: ScoreboardTier.of(spec.scale),
+    boards: _boardQuads,
+    led: _ledPanels,
+    slices: _slices,
+    mainFlag: _mainFlagQuad,
+    homeEnd: _homeEndQuad,
+  );
+
+  /// The far stand's shadow on the grass alone, in this painter's light:
+  /// the Pitch view lays it over its baked looks each match minute, so it
+  /// creeps across the pitch as the afternoon goes on.
+  void paintStandShadow(Canvas canvas, Size size) {
+    canvas
+      ..save()
+      ..clipRect(Offset.zero & size);
+    _standShadow(canvas);
     canvas.restore();
   }
 
@@ -311,6 +359,7 @@ class StadiumPainter extends CustomPainter {
       old.flag != flag ||
       old.light != light ||
       old.dressing != dressing ||
+      !listEquals(old.sponsors, sponsors) ||
       old.projection.viewport != projection.viewport ||
       old.projection.cam != projection.cam ||
       old.projection.tilt != projection.tilt;
@@ -371,7 +420,18 @@ class StadiumPainter extends CustomPainter {
     }
   }
 
-  List<_Seg> get _segments => spec.scale == GroundScale.old
+  List<_Seg> get _segments => switch (spec.setting) {
+    // One main stand, grass banks round the rest.
+    GroundSetting.smallIsland => const [_Seg.far],
+    // The home end open to the water.
+    GroundSetting.seaside => [
+      for (final s in _builtSegments)
+        if (s != _Seg.left && s != _Seg.cornerLeft) s,
+    ],
+    _ => _builtSegments,
+  };
+
+  List<_Seg> get _builtSegments => spec.scale == GroundScale.old
       // An old ground's home end is open: a grass bank, no stand.
       ? const [_Seg.far, _Seg.right]
       : spec.openCorners
@@ -457,11 +517,20 @@ class StadiumPainter extends CustomPainter {
   /// old ground's open end, its fences and its scoreboard).
   void _standTiers(Canvas canvas) {
     final seats = _seatTone(spec.homeColour);
-    if (spec.scale != GroundScale.big) {
-      _grassBank(canvas, _Seg.cornerLeft);
+    if (spec.scale != GroundScale.big ||
+        spec.setting == GroundSetting.smallIsland) {
+      if (spec.setting != GroundSetting.seaside) {
+        _grassBank(canvas, _Seg.cornerLeft);
+      }
       _grassBank(canvas, _Seg.cornerRight);
     }
-    if (spec.scale == GroundScale.old) _openEndBank(canvas);
+    if (spec.setting == GroundSetting.smallIsland) {
+      _openEndBank(canvas, _Seg.left);
+      _openEndBank(canvas, _Seg.right, scoreboard: false);
+    } else if (spec.scale == GroundScale.old &&
+        spec.setting != GroundSetting.seaside) {
+      _openEndBank(canvas, _Seg.left);
+    }
     final crowd = CrowdPainter(home: spec.homeColour, away: spec.awayColour);
     final most = _order.map(_tiersOf).reduce(math.max);
     for (var k = 0; k < most; k++) {
@@ -751,7 +820,7 @@ class StadiumPainter extends CustomPainter {
                 _Seg.far,
                 if (spec.tiers > 1) ...[_Seg.left, _Seg.right],
               ]) {
-      if (_isTerraceEnd(s) || _pylons) continue;
+      if (_isTerraceEnd(s) || _pylons || !_segments.contains(s)) continue;
       final top = _topOf(s);
       final lamps = switch (s) {
         _Seg.far => edge ? 15 : 9,
@@ -1058,9 +1127,15 @@ class StadiumPainter extends CustomPainter {
     final band = dressing.dressed ? _dressTone(dressing.colour) : null;
     var n = 0;
     double lerp(double a, double b, double t) => a + (b - a) * t;
-    for (final ((ax, ay), (bx, by)) in runs) {
+    final names = BoardNames();
+    for (var r = 0; r < runs.length; r++) {
+      final ((ax, ay), (bx, by)) = runs[r];
       final len = math.sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay));
       final count = (len / panel).ceil();
+      // The ends' boards carry the sponsors' names, every other panel,
+      // read as a fan facing them would (the far touchline's are LED
+      // boards, lit by the live layer; the near ones face away).
+      final named = !near && r < 2 && sponsors.isNotEmpty;
       for (var i = 0; i < count; i++, n++) {
         final f0 = i / count, f1 = (i + 1) / count;
         final x0 = lerp(ax, bx, f0), y0 = lerp(ay, by, f0);
@@ -1075,8 +1150,29 @@ class StadiumPainter extends CustomPainter {
           face(0, _boardHeight),
           Paint()..color = tones[n % tones.length],
         );
-        // No brand: a quiet bar where a name would be.
         final zb = band != null ? 0.26 : 0.42, zt = band != null ? 0.4 : 0.58;
+        if (named && i.isEven) {
+          final name = sponsors[(i ~/ 2 + r * 3) % sponsors.length];
+          final z0 = band != null ? 0.08 : 0.2, z1 = band != null ? 0.58 : 0.8;
+          // Read left to right: near to far on the home end, far to near
+          // on the away end.
+          final q = r == 0
+              ? [
+                  _p(x0, y0, _boardHeight * z0),
+                  _p(x1, y1, _boardHeight * z0),
+                  _p(x1, y1, _boardHeight * z1),
+                  _p(x0, y0, _boardHeight * z1),
+                ]
+              : [
+                  _p(x1, y1, _boardHeight * z0),
+                  _p(x0, y0, _boardHeight * z0),
+                  _p(x0, y0, _boardHeight * z1),
+                  _p(x1, y1, _boardHeight * z1),
+                ];
+          names.paint(canvas, q, name);
+          continue;
+        }
+        // No brand here: a quiet bar where a name would be.
         canvas.drawPath(
           _poly([
             _p(lerp(x0, x1, 0.3), lerp(y0, y1, 0.3), _boardHeight * zb),
@@ -1094,6 +1190,30 @@ class StadiumPainter extends CustomPainter {
           ..strokeWidth = 0.7
           ..color = accent.withValues(alpha: 0.4),
       );
+    }
+  }
+
+  /// A few sponsors' boards on the main stand: along the fascia under its
+  /// second tier, or along its front wall when it has one tier.
+  void _standBoards(Canvas canvas) {
+    if (sponsors.isEmpty) return;
+    const s = _Seg.far;
+    final upper = spec.tiers > 1 ? _tier(1) : null;
+    final o = upper?.o0 ?? 0.0;
+    final z1 = upper?.z0 ?? _frontWall;
+    final z0 = z1 - (upper == null ? _frontWall : _fascia) * 0.8;
+    final names = BoardNames();
+    var k = 0;
+    for (final u in const [0.16, 0.5, 0.84]) {
+      const half = 0.05;
+      final q = [
+        _standPoint(s, u - half, o - 0.05, z0),
+        _standPoint(s, u + half, o - 0.05, z0),
+        _standPoint(s, u + half, o - 0.05, z1),
+        _standPoint(s, u - half, o - 0.05, z1),
+      ];
+      canvas.drawPath(_poly(q), Paint()..color = const Color(0xFF1B2733));
+      names.paint(canvas, q, sponsors[(k++ + 1) % sponsors.length]);
     }
   }
 
@@ -1345,6 +1465,99 @@ class StadiumPainter extends CustomPainter {
     canvas.restore();
   }
 
+  /// The floodlights' beams at night: a faint cone of light from each lamp
+  /// bank down onto the pitch, plainer in the wet or the murk, where the
+  /// light catches the rain, the snow or the fog.
+  void _beams(Canvas canvas) {
+    final f = look.flood;
+    if (f < 0.25) return;
+    final murk = switch (spec.weather) {
+      WeatherKind.fog ||
+      WeatherKind.heavyRain ||
+      WeatherKind.thunderstorm ||
+      WeatherKind.snow ||
+      WeatherKind.windy => 2.0,
+      WeatherKind.rain || WeatherKind.drizzle || WeatherKind.dustStorm => 1.5,
+      _ => 1.0,
+    };
+    final alpha = 0.055 * f * murk;
+    const c = PitchDims.centre;
+    final heads = <(Offset, double)>[];
+    if (_roofEdgeLamps) {
+      final top = _topOf(_Seg.far);
+      for (final u in const [0.15, 0.5, 0.85]) {
+        heads.add((_standPoint(_Seg.far, u, top.o1, top.z1 + 2), u));
+      }
+    } else {
+      for (final (x, y) in _pylons ? towers : towers.take(2)) {
+        heads.add((_p(x, y, _towerHeight), x < c.x ? 0.0 : 1.0));
+      }
+    }
+    for (final (head, u) in heads) {
+      // A cone from the lamps to an ellipse on the grass toward the middle.
+      final gx = PitchDims.length * (0.25 + 0.5 * u);
+      final a = _p(gx - 22, c.y + 6), b = _p(gx + 22, c.y + 6);
+      final mid = _p(gx, c.y + 6);
+      canvas.drawPath(
+        _poly([head, b, mid.translate(0, 6), a]),
+        Paint()
+          ..blendMode = BlendMode.screen
+          ..shader = ui.Gradient.linear(head, mid, [
+            const Color(0xFFFFF6DE).withValues(alpha: alpha * 1.2),
+            const Color(0xFFFFF6DE).withValues(alpha: 0),
+          ]),
+      );
+    }
+  }
+
+  /// The ground's own seed for its wear.
+  int get _wearSeed => varietySeed(
+    'wear:${spec.flagCode}:${spec.mowing.name}:${spec.goalStyle.name}:'
+    '${spec.tiers}:${spec.landmark.name}',
+  );
+
+  /// A lesser ground's pitch: worn goalmouths, a few patchy or sandy
+  /// spots. Subtle, and the same at every match there (see [PitchWear]).
+  void _wear(Canvas canvas) {
+    final wear = PitchWear.of(
+      spec.scale,
+      built: spec.works.built,
+      seed: _wearSeed,
+    );
+    if (wear.isEmpty) return;
+    canvas
+      ..save()
+      ..clipPath(_field);
+    for (final w in wear) {
+      final c = _p(w.x, w.y);
+      final rx = (_p(w.x + w.rx, w.y).dx - c.dx).abs();
+      final ry = (_p(w.x, w.y + w.ry).dy - c.dy).abs();
+      if (rx < 0.5 || ry < 0.5) continue;
+      final tone = w.sandy ? const Color(0xFF8C7A52) : const Color(0xFF5E5232);
+      canvas
+        ..save()
+        ..translate(c.dx, c.dy)
+        ..scale(1, ry / rx)
+        ..drawCircle(
+          Offset.zero,
+          rx,
+          Paint()
+            ..shader = ui.Gradient.radial(
+              Offset.zero,
+              rx,
+              [
+                tone.withValues(alpha: w.strength),
+                tone.withValues(alpha: w.strength * 0.5),
+                tone.withValues(alpha: 0),
+              ],
+              const [0, 0.55, 1],
+            ),
+        )
+        ..restore();
+    }
+    canvas.restore();
+  }
+
   void _markings(Canvas canvas) {
     const l = PitchDims.length, w = PitchDims.width;
     const box = PitchDims.boxDepth, boxH = PitchDims.boxHalfWidth;
@@ -1363,6 +1576,16 @@ class StadiumPainter extends CustomPainter {
     // across the pitch (a goal line, a box's side) is a gentle curve on
     // screen, not the chord between its ends. Drawn as a chord, the goal
     // line missed the goal mouth by a metre or two.
+    // A lesser ground's lines are marked by hand: a few centimetres off
+    // true here and there (see [PitchWear]).
+    final wob = PitchWear.lineWobble(spec.scale, built: spec.works.built);
+    final phase = _wearSeed % 1000 / 160;
+    Offset at(double x, double y) => wob == 0
+        ? _p(x, y)
+        : _p(
+            x + wob * math.sin(y * 0.41 + x * 0.07 + phase),
+            y + wob * math.sin(x * 0.37 + phase * 1.7),
+          );
     Path pts(List<(double, double)> ps, {bool close = false}) {
       final all = [...ps, if (close) ps.first];
       final out = <Offset>[];
@@ -1372,11 +1595,11 @@ class StadiumPainter extends CustomPainter {
         const steps = 16;
         for (var k = 0; k < steps; k++) {
           final t = k / steps;
-          out.add(_p(ax + (bx - ax) * t, ay + (by - ay) * t));
+          out.add(at(ax + (bx - ax) * t, ay + (by - ay) * t));
         }
       }
       final (lx, ly) = all.last;
-      out.add(_p(lx, ly));
+      out.add(at(lx, ly));
       return _poly(out, close: close);
     }
 
@@ -1385,7 +1608,7 @@ class StadiumPainter extends CustomPainter {
       const n = 48;
       for (var i = 0; i <= n; i++) {
         final a = a0 + (a1 - a0) * i / n;
-        final o = _p(cx + r * math.cos(a), cy + r * math.sin(a));
+        final o = at(cx + r * math.cos(a), cy + r * math.sin(a));
         i == 0 ? path.moveTo(o.dx, o.dy) : path.lineTo(o.dx, o.dy);
       }
       return path;

@@ -7028,6 +7028,9 @@ class AppLocalizationsHu extends AppLocalizations {
   String get matchClockPenalties => '11-ESEK';
 
   @override
+  String get pitchScoreboardGoal => 'GÓL';
+
+  @override
   String get matchClockFullTimePenalties => 'LEFÚJÁS · 11-ESEK';
 
   @override
@@ -8348,6 +8351,12 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get matchWeatherFrostyNight => 'Fagyos éjszaka';
+
+  @override
+  String get matchWeatherDrizzle => 'Szitálás';
+
+  @override
+  String get matchWeatherFrost => 'Fagy';
 
   @override
   String get matchPlayerOfTheMatch => 'A MÉRKŐZÉS EMBERE';

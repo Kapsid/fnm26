@@ -7004,6 +7004,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get matchClockPenalties => 'LUÂN LƯU';
 
   @override
+  String get pitchScoreboardGoal => 'BÀN THẮNG';
+
+  @override
   String get matchClockFullTimePenalties => 'HẾT GIỜ · LUÂN LƯU';
 
   @override
@@ -8268,6 +8271,12 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get matchWeatherFrostyNight => 'Đêm giá rét';
+
+  @override
+  String get matchWeatherDrizzle => 'Mưa phùn';
+
+  @override
+  String get matchWeatherFrost => 'Sương giá';
 
   @override
   String get matchPlayerOfTheMatch => 'CẦU THỦ HAY NHẤT TRẬN';

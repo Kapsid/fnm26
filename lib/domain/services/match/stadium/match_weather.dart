@@ -7,6 +7,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/match/stadium/kick_off.dart';
 import 'package:fnm/domain/services/match/stadium/nation_latitudes.dart';
+import 'package:meta/meta.dart' show visibleForTesting;
 
 /// The weather a match is played in: what the Pitch view draws, and (since
 /// 1.2) what the match plays in. Both simulators read it through
@@ -41,11 +42,22 @@ enum WeatherKind {
   dustStorm,
 
   /// A clear, frosty night: rime at the pitch edges, breath in the air.
-  frostyNight;
+  frostyNight,
+
+  /// Drizzle under a low grey overcast (1.1.4): the north of Europe's
+  /// commonest wet day. Plays as light rain does: as nothing.
+  drizzle,
+
+  /// A hard frost under a low winter sun (1.1.4): the pitch white-tinged,
+  /// long shadows, breath in the air. Shown only: it is drawn out of what
+  /// was a clear afternoon, and plays as that afternoon did (see
+  /// `WeatherPlay.none`).
+  frost;
 
   /// Whether rain falls (of any strength).
   bool get isRain =>
       this == rain ||
+      this == drizzle ||
       this == heavyRain ||
       this == thunderstorm ||
       this == windy;
@@ -117,6 +129,110 @@ abstract final class MatchWeather {
   /// time (fog and frost come in the evening, storms in the afternoon; null
   /// is taken as mid-afternoon).
   static WeatherKind of({
+    required String code,
+    required Confederation confederation,
+    required DateTime date,
+    required int fixtureId,
+    double? kickOffHours,
+  }) {
+    final drawn = _drawn(
+      code: code,
+      confederation: confederation,
+      date: date,
+      fixtureId: fixtureId,
+      kickOffHours: kickOffHours,
+    );
+    return _refined(
+      drawn,
+      code: code,
+      confederation: confederation,
+      date: date,
+      fixtureId: fixtureId,
+      kickOffHours: kickOffHours,
+    );
+  }
+
+  /// North Africa, where a spring desert wind (the sirocco, the khamsin)
+  /// fills the air with dust.
+  static const Set<String> northAfrica = {'MAR', 'ALG', 'TUN', 'LBY', 'EGY'};
+
+  /// The 1.1.4 kinds, laid over what [_drawn] drew on a roll of their own
+  /// (a new salt, so the first draw is exactly what it always was):
+  ///
+  /// - drizzle takes half of the light rain in the north of Europe (both
+  ///   play as nothing) and a few of its clear days;
+  /// - a frost under a low winter sun takes a few clear afternoons in the
+  ///   cold north from November to February;
+  /// - a spring dust storm takes a few clear days in North Africa.
+  ///
+  /// Only clear and light rain are ever replaced: a match drawn into any
+  /// other weather keeps it, and a clear or light-rain match these rules
+  /// pass over keeps it too.
+  static WeatherKind _refined(
+    WeatherKind drawn, {
+    required String code,
+    required Confederation confederation,
+    required DateTime date,
+    required int fixtureId,
+    double? kickOffHours,
+  }) {
+    if (drawn != WeatherKind.clear && drawn != WeatherKind.rain) return drawn;
+    final c = code.toUpperCase();
+    final lat = NationLatitudes.ofCode(c, confederation);
+    final m = lat >= 0 ? date.month : (date.month + 5) % 12 + 1;
+    final h = kickOffHours ?? 15;
+    final roll =
+        varietySeed(
+          'weather114:$fixtureId:$c:${date.year}-${date.month}-${date.day}',
+        ) %
+        1000 /
+        1000;
+    final northEurope =
+        wetNorth.contains(c) ||
+        (confederation == Confederation.europe && lat >= 47);
+    if (drawn == WeatherKind.rain) {
+      return northEurope && roll < 0.5 ? WeatherKind.drizzle : drawn;
+    }
+    // A clear day.
+    var edge = 0.0;
+    bool band(double p) {
+      edge += p;
+      return roll < edge;
+    }
+
+    if (northAfrica.contains(c) && m >= 3 && m <= 6) {
+      return band(0.06) ? WeatherKind.dustStorm : drawn;
+    }
+    final winter = m >= 11 || m <= 2;
+    if (lat >= 44 && winter && h < 17.5 && band(0.08)) {
+      return WeatherKind.frost;
+    }
+    if (northEurope && band(wetNorth.contains(c) ? 0.1 : 0.06)) {
+      return WeatherKind.drizzle;
+    }
+    return drawn;
+  }
+
+  /// The weather as drawn before 1.1.4: never changed, so every match it
+  /// drew keeps its draw (see [_refined]).
+  /// The weather as drawn before 1.1.4, for the tests that hold every old
+  /// draw in place.
+  @visibleForTesting
+  static WeatherKind drawnBefore114({
+    required String code,
+    required Confederation confederation,
+    required DateTime date,
+    required int fixtureId,
+    double? kickOffHours,
+  }) => _drawn(
+    code: code,
+    confederation: confederation,
+    date: date,
+    fixtureId: fixtureId,
+    kickOffHours: kickOffHours,
+  );
+
+  static WeatherKind _drawn({
     required String code,
     required Confederation confederation,
     required DateTime date,

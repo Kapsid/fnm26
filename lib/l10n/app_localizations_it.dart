@@ -7113,6 +7113,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get matchClockPenalties => 'RIGORI';
 
   @override
+  String get pitchScoreboardGoal => 'GOL';
+
+  @override
   String get matchClockFullTimePenalties => 'FINALE · RIGORI';
 
   @override
@@ -8442,6 +8445,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get matchWeatherFrostyNight => 'Notte gelida';
+
+  @override
+  String get matchWeatherDrizzle => 'Pioggerella';
+
+  @override
+  String get matchWeatherFrost => 'Gelo';
 
   @override
   String get matchPlayerOfTheMatch => 'MIGLIORE IN CAMPO';

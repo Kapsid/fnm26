@@ -7241,6 +7241,9 @@ class AppLocalizationsSr extends AppLocalizations {
   String get matchClockPenalties => 'ПЕНАЛИ';
 
   @override
+  String get pitchScoreboardGoal => 'ГОЛ';
+
+  @override
   String get matchClockFullTimePenalties => 'КРАЈ · ПЕНАЛИ';
 
   @override
@@ -8630,6 +8633,12 @@ class AppLocalizationsSr extends AppLocalizations {
 
   @override
   String get matchWeatherFrostyNight => 'Мразна ноћ';
+
+  @override
+  String get matchWeatherDrizzle => 'Росуља';
+
+  @override
+  String get matchWeatherFrost => 'Мраз';
 
   @override
   String get matchPlayerOfTheMatch => 'ИГРАЧ УТАКМИЦЕ';

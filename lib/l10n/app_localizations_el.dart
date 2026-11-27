@@ -7111,6 +7111,9 @@ class AppLocalizationsEl extends AppLocalizations {
   String get matchClockPenalties => 'ΠΕΝΑΛΤΙ';
 
   @override
+  String get pitchScoreboardGoal => 'ΓΚΟΛ';
+
+  @override
   String get matchClockFullTimePenalties => 'ΤΕΛΟΣ · ΠΕΝΑΛΤΙ';
 
   @override
@@ -8442,6 +8445,12 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get matchWeatherFrostyNight => 'Παγωμένη νύχτα';
+
+  @override
+  String get matchWeatherDrizzle => 'Ψιχάλα';
+
+  @override
+  String get matchWeatherFrost => 'Παγωνιά';
 
   @override
   String get matchPlayerOfTheMatch => 'ΚΟΡΥΦΑΙΟΣ ΤΟΥ ΑΓΩΝΑ';

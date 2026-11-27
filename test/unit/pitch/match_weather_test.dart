@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
+import 'package:fnm/domain/services/match/weather_play.dart';
 import 'package:fnm/features/match/pitch/weather_painter.dart';
 
 import '../../helpers/pitch_view_fixture.dart';
@@ -212,7 +213,8 @@ void main() {
         final still =
             k == WeatherKind.clear ||
             k == WeatherKind.haze ||
-            k == WeatherKind.frostyNight;
+            k == WeatherKind.frostyNight ||
+            k == WeatherKind.frost;
         expect(WeatherOverlay(k).animates, !still, reason: k.name);
       }
     });
@@ -236,6 +238,99 @@ void main() {
           w.dispose();
         }
       }
+    });
+  });
+
+  group('the 1.1.4 kinds', () {
+    test('every old draw stands, but for the clear and light rain they '
+        'replace', () {
+      const replaceable = {WeatherKind.clear, WeatherKind.rain};
+      const fresh = {
+        WeatherKind.drizzle,
+        WeatherKind.frost,
+        WeatherKind.dustStorm,
+      };
+      var moved = 0;
+      for (final code in [
+        'ENG', 'POL', 'NOR', 'GER', 'MAR', 'EGY', 'QAT', 'MLI', 'BRA', //
+        'THA', 'USA', 'NZL', 'ESP', 'ISL',
+      ]) {
+        final conf = pitchNation(code).confederation;
+        for (var id = 1; id <= 600; id++) {
+          final date = DateTime(2026, 1 + id % 12, 1 + id % 28);
+          final hours = const [13.0, 15.0, 18.0, 20.75][id % 4];
+          final now = MatchWeather.of(
+            code: code,
+            confederation: conf,
+            date: date,
+            fixtureId: id,
+            kickOffHours: hours,
+          );
+          final old = MatchWeather.drawnBefore114(
+            code: code,
+            confederation: conf,
+            date: date,
+            fixtureId: id,
+            kickOffHours: hours,
+          );
+          if (now == old) continue;
+          moved++;
+          expect(replaceable, contains(old), reason: '$code $id');
+          expect(fresh, contains(now), reason: '$code $id');
+          // Light rain only ever turns to drizzle.
+          if (old == WeatherKind.rain) expect(now, WeatherKind.drizzle);
+        }
+      }
+      expect(moved, greaterThan(0));
+    });
+
+    test('drizzle is the north of Europe\'s, common there', () {
+      final eng = _shares('ENG', _all)[WeatherKind.drizzle]!;
+      expect(eng, inInclusiveRange(0.12, 0.35));
+      expect(_shares('NOR', _all)[WeatherKind.drizzle]!, greaterThan(0.08));
+      for (final code in ['ESP', 'BRA', 'THA', 'QAT', 'USA']) {
+        expect(_shares(code, _all)[WeatherKind.drizzle], 0, reason: code);
+      }
+    });
+
+    test('a frost by day: northern winter afternoons only', () {
+      final pol = _shares(
+        'POL',
+        _winter,
+        hours: const [13, 15],
+      )[WeatherKind.frost]!;
+      expect(pol, inInclusiveRange(0.025, 0.11));
+      // Never in the evening (that is the frosty night), never in summer,
+      // never in the south.
+      expect(
+        _shares('POL', _winter, hours: const [20.75])[WeatherKind.frost],
+        0,
+      );
+      expect(_shares('POL', [6, 7, 8])[WeatherKind.frost], 0);
+      for (final code in ['ESP', 'BRA', 'THA', 'MEX']) {
+        expect(_shares(code, _all)[WeatherKind.frost], 0, reason: code);
+      }
+    });
+
+    test('a spring dust storm in North Africa', () {
+      final mar = _shares('MAR', [3, 4, 5, 6])[WeatherKind.dustStorm]!;
+      expect(mar, inInclusiveRange(0.025, 0.11));
+      expect(_shares('MAR', [9, 10, 11, 12])[WeatherKind.dustStorm], 0);
+      expect(_shares('EGY', [4, 5])[WeatherKind.dustStorm], greaterThan(0));
+    });
+
+    test('drizzle and a frost by day play as the day they came from', () {
+      // Drawn only out of a clear sky or light rain, both of which play as
+      // nothing: no match moves by a single draw.
+      expect(WeatherPlay.of(WeatherKind.drizzle), WeatherPlay.none);
+      expect(WeatherPlay.of(WeatherKind.frost), WeatherPlay.none);
+      expect(WeatherKind.drizzle.isRain, isTrue);
+      // Appended: the old kinds keep their places.
+      expect(WeatherKind.values.indexOf(WeatherKind.frostyNight), 9);
+      expect(WeatherKind.values.sublist(10), [
+        WeatherKind.drizzle,
+        WeatherKind.frost,
+      ]);
     });
   });
 }

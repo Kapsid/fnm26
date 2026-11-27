@@ -7196,6 +7196,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get matchClockPenalties => 'ПЕНАЛЬТІ';
 
   @override
+  String get pitchScoreboardGoal => 'ГОЛ';
+
+  @override
   String get matchClockFullTimePenalties => 'ФІНАЛЬНИЙ СВИСТОК · ПЕНАЛЬТІ';
 
   @override
@@ -8555,6 +8558,12 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get matchWeatherFrostyNight => 'Морозна ніч';
+
+  @override
+  String get matchWeatherDrizzle => 'Мряка';
+
+  @override
+  String get matchWeatherFrost => 'Мороз';
 
   @override
   String get matchPlayerOfTheMatch => 'ГРАВЕЦЬ МАТЧУ';

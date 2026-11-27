@@ -76,7 +76,11 @@ class ConditionsNote extends StatelessWidget {
         WeatherKind.windy => l.matchWeatherPlaysGale,
         WeatherKind.fog => l.matchWeatherPlaysFog,
         WeatherKind.haze => l.matchWeatherPlaysHaze,
-        WeatherKind.clear || WeatherKind.rain || WeatherKind.dustStorm => null,
+        WeatherKind.clear ||
+        WeatherKind.rain ||
+        WeatherKind.drizzle ||
+        WeatherKind.frost ||
+        WeatherKind.dustStorm => null,
       };
 
   @override

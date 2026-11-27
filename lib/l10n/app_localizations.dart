@@ -10950,6 +10950,12 @@ abstract class AppLocalizations {
   /// **'PENALTIES'**
   String get matchClockPenalties;
 
+  /// Pitch view: the word the big video screen at the ground flashes, in capitals, beside the scorer's name for a few seconds after a goal.
+  ///
+  /// In en, this message translates to:
+  /// **'GOAL'**
+  String get pitchScoreboardGoal;
+
   /// The clock plate when a tie was settled on penalties. Keep it short: the plate sits between the two crests and grows to fit.
   ///
   /// In en, this message translates to:
@@ -12812,6 +12818,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Frosty night'**
   String get matchWeatherFrostyNight;
+
+  /// Venue card: the weather the match is played in, drizzle under a low grey overcast sky.
+  ///
+  /// In en, this message translates to:
+  /// **'Drizzle'**
+  String get matchWeatherDrizzle;
+
+  /// Venue card: the weather the match is played in, a hard frost by day under a low winter sun (the pitch white with frost).
+  ///
+  /// In en, this message translates to:
+  /// **'Frost'**
+  String get matchWeatherFrost;
 
   /// Live match: man-of-the-match heading.
   ///

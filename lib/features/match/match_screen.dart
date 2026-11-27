@@ -18,6 +18,7 @@ import 'package:fnm/core/theme/kit_colors.dart';
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/core/util/nation_label.dart';
+import 'package:fnm/core/util/sponsor_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
@@ -28,6 +29,7 @@ import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/competition/confed_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
+import 'package:fnm/domain/services/federation/sponsors.dart' show Sponsor;
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/card_status.dart';
 import 'package:fnm/domain/services/match/live_rating.dart';
@@ -38,6 +40,7 @@ import 'package:fnm/domain/services/match/pitch/moment_staging.dart'
     show ShootoutCast, ShootoutStaging;
 import 'package:fnm/domain/services/match/same_day_results.dart';
 import 'package:fnm/domain/services/match/stadium/ground_character.dart';
+import 'package:fnm/domain/services/match/stadium/ground_sponsors.dart';
 import 'package:fnm/domain/services/match/stadium/kick_off.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
@@ -46,6 +49,8 @@ import 'package:fnm/features/achievements/achievement_popup.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/federation/national_stadium_providers.dart'
     show groundWorksProvider;
+import 'package:fnm/features/federation/sponsor_providers.dart'
+    show sponsorRoundProvider;
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/match/full_time_tabs.dart';
 import 'package:fnm/features/match/ground_card.dart';
@@ -54,6 +59,7 @@ import 'package:fnm/features/match/match_feedback.dart';
 import 'package:fnm/features/match/match_flow_charts.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/penalty_order_sheet.dart';
+import 'package:fnm/features/match/pitch/ground_live.dart';
 import 'package:fnm/features/match/pitch/match_dressing.dart';
 import 'package:fnm/features/match/pitch/pitch_clock.dart';
 import 'package:fnm/features/match/pitch/pitch_commentary.dart';
@@ -1375,6 +1381,25 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     MatchPreview preview,
   ) => groundWorksProvider((careerId: widget.careerId, ground: preview.ground));
 
+  /// The brands on the ground's boards, as printed: the federation's own
+  /// sponsor at its own ground, then the ground's pick of the game's
+  /// fictional brands (cosmetic only).
+  List<String> _boardSponsors(MatchPreview preview) {
+    final l = AppLocalizations.of(context);
+    final ground = preview.ground.groundNationId;
+    final career = ground == preview.playerNationId
+        ? ref.read(_careerSponsorProvider(widget.careerId)).valueOrNull
+        : null;
+    return [
+      for (final s in GroundSponsors.forGround(
+        stadium: preview.ground.stadium,
+        groundCode: preview.nations[ground]?.code ?? '',
+        career: career,
+      ))
+        sponsorBrandName(l, s).toUpperCase(),
+    ];
+  }
+
   Future<void> _rebuildPitch(
     MatchPreview preview, {
     bool resume = false,
@@ -1387,6 +1412,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       // What his federation has done to the ground, read while the preview
       // was up (cosmetic only: a ground still loading looks as it was).
       works: ref.read(_groundWorksOf(preview)).valueOrNull ?? GroundWorks.none,
+      sponsors: _boardSponsors(preview),
     );
     if (_pc.names.isEmpty) _pc.names = pitchNamesForPreview(preview);
     final clock = _pitchClock;
@@ -2296,7 +2322,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             _result ??= _attemptSalt == 0 ? preview.result : _resim(preview);
             _livePreview = preview;
             // Loaded ahead of kick-off for the Pitch view's ground.
-            ref.watch(_groundWorksOf(preview));
+            ref
+              ..watch(_groundWorksOf(preview))
+              ..watch(_careerSponsorProvider(widget.careerId));
             _ensureLiveSetup(preview);
             final r = _result!;
             _stoppage = r.stoppage;
@@ -2916,6 +2944,22 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                         names: _pc.names,
                         onReady: _syncPitchClock,
                         shootout: _stage,
+                        // The ground's own scoreboard reads the header's
+                        // figures: the same score, the same clock.
+                        board: PitchScoreboard(
+                          homeCode: code(homeId),
+                          awayCode: code(awayId),
+                          home: homeScore,
+                          away: awayScore,
+                          clock: clockLabel,
+                          scorer: goalsSoFar.isEmpty
+                              ? null
+                              : surnameOf(goalsSoFar.last.playerName),
+                          scorerHome: goalsSoFar.isEmpty
+                              ? null
+                              : goalsSoFar.last.teamNationId == homeId,
+                          goalLabel: l.pitchScoreboardGoal,
+                        ),
                       ),
                       // A sending-off: its banner down from under the
                       // score, unless a goal's is out.
@@ -3312,3 +3356,17 @@ class _PitchFailed extends StatelessWidget {
 @visibleForTesting
 (int, int) fullTimeShownScore(MatchResult r, KnockoutOutcome? o) =>
     o == null ? (r.homeScore, r.awayScore) : (o.homeScore, o.awayScore);
+
+/// The sponsor [careerId]'s federation signed this cycle, for the boards
+/// at its own ground; null when none is signed or the round cannot be read
+/// (the boards then carry the game's other brands).
+final _careerSponsorProvider = FutureProvider.autoDispose.family<Sponsor?, int>(
+  (ref, careerId) async {
+    try {
+      final round = await ref.watch(sponsorRoundProvider(careerId).future);
+      return round?.chosen?.brand;
+    } on Object {
+      return null;
+    }
+  },
+);

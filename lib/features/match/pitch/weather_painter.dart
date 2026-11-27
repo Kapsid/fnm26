@@ -46,6 +46,7 @@ class WeatherOverlay {
   /// Whether rain or snow falls in this weather.
   bool get falls => switch (kind) {
     WeatherKind.rain ||
+    WeatherKind.drizzle ||
     WeatherKind.heavyRain ||
     WeatherKind.thunderstorm ||
     WeatherKind.windy ||
@@ -61,6 +62,7 @@ class WeatherOverlay {
   /// logical pixel of view height.
   Offset get _velocity => switch (kind) {
     WeatherKind.rain => const Offset(-0.32, 1.9),
+    WeatherKind.drizzle => const Offset(-0.18, 1.1),
     WeatherKind.heavyRain ||
     WeatherKind.thunderstorm => const Offset(-0.42, 2.5),
     WeatherKind.windy =>
@@ -273,6 +275,9 @@ class WeatherOverlay {
     switch (kind) {
       case WeatherKind.rain:
         streaks(900, 7, 16, const Offset(-0.17, 1), 0.16, 0.36);
+      case WeatherKind.drizzle:
+        // Fine, faint and many: drizzle more than rain.
+        streaks(1500, 3, 6, const Offset(-0.12, 1), 0.1, 0.22);
       case WeatherKind.heavyRain:
       case WeatherKind.thunderstorm:
         streaks(380, 11, 22, const Offset(-0.17, 1), 0.2, 0.42);
@@ -364,6 +369,7 @@ class WeatherOverlay {
       case WeatherKind.clear:
       case WeatherKind.haze:
       case WeatherKind.frostyNight:
+      case WeatherKind.frost:
         return;
     }
   }

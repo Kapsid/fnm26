@@ -160,6 +160,8 @@ class GroundCard extends StatelessWidget {
                   WeatherKind.windy => Icons.air_rounded,
                   WeatherKind.dustStorm => Icons.grain_rounded,
                   WeatherKind.frostyNight => Icons.severe_cold_rounded,
+                  WeatherKind.drizzle => Icons.cloud_rounded,
+                  WeatherKind.frost => Icons.severe_cold_rounded,
                 },
                 size: 16,
                 color: AppColors.onSurfaceVariant,
@@ -254,6 +256,8 @@ class GroundCard extends StatelessWidget {
     WeatherKind.windy => l.matchWeatherWindy,
     WeatherKind.dustStorm => l.matchWeatherDustStorm,
     WeatherKind.frostyNight => l.matchWeatherFrostyNight,
+    WeatherKind.drizzle => l.matchWeatherDrizzle,
+    WeatherKind.frost => l.matchWeatherFrost,
   };
 
   /// `62431` → `62,431`.

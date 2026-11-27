@@ -6944,6 +6944,9 @@ class AppLocalizationsTh extends AppLocalizations {
   String get matchClockPenalties => 'ดวลจุดโทษ';
 
   @override
+  String get pitchScoreboardGoal => 'ประตู';
+
+  @override
   String get matchClockFullTimePenalties => 'จบเกม · จุดโทษ';
 
   @override
@@ -8246,6 +8249,12 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get matchWeatherFrostyNight => 'คืนหนาวจัด';
+
+  @override
+  String get matchWeatherDrizzle => 'ฝนปรอย';
+
+  @override
+  String get matchWeatherFrost => 'น้ำค้างแข็ง';
 
   @override
   String get matchPlayerOfTheMatch => 'ผู้เล่นยอดเยี่ยมประจำเกม';

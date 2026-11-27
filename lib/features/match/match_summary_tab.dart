@@ -591,5 +591,7 @@ class MatchSummaryTab extends StatelessWidget {
     WeatherKind.windy => Icons.air_rounded,
     WeatherKind.dustStorm => Icons.grain_rounded,
     WeatherKind.frostyNight => Icons.severe_cold_rounded,
+    WeatherKind.drizzle => Icons.cloud_rounded,
+    WeatherKind.frost => Icons.severe_cold_rounded,
   };
 }

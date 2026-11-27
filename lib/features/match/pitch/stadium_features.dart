@@ -31,7 +31,10 @@ extension _StadiumFeatures on StadiumPainter {
 
   /// The home end built up into one steep wall of fans.
   bool _isWall(_Seg s) =>
-      _sig.bowl == BowlShape.endWall && s == _Seg.left && spec.tiers > 1;
+      _sig.bowl == BowlShape.endWall &&
+      s == _Seg.left &&
+      spec.tiers > 1 &&
+      spec.setting == GroundSetting.standard;
 
   /// The wall's tiers: short in plan and steep, so the end rises like a
   /// cliff of fans rather than running out of the frame.
@@ -218,7 +221,10 @@ extension _StadiumFeatures on StadiumPainter {
   /// The city blocks behind a soccer-specific ground's open end: each its
   /// span along the end (0 to 1), height in metres and tone.
   List<({double u0, double u1, double h, int tone})> get _openEndBlocks {
-    if (_sig.bowl != BowlShape.openEnd) return const [];
+    if (_sig.bowl != BowlShape.openEnd ||
+        spec.setting == GroundSetting.seaside) {
+      return const [];
+    }
     final r = math.Random(varietySeed('open-end:${spec.flagCode}'));
     final out = <({double u0, double u1, double h, int tone})>[];
     var u = 0.0;
@@ -668,9 +674,11 @@ extension _StadiumFeatures on StadiumPainter {
 
   /// Where the big screens stand: one over the far left corner, or a giant
   /// one over each end of an American-football bowl. Each is (bottom left,
-  /// bottom right, top right, top left) on screen.
+  /// bottom right, top right, top left) on screen. Every big ground has
+  /// one (its video scoreboard, see `ScoreboardTier`); a smaller ground has
+  /// a board of its own instead.
   List<List<Offset>> get _screenQuads {
-    if (!_sig.bigScreen) return const [];
+    if (spec.scale != GroundScale.big) return const [];
     final top = _tier(spec.tiers - 1);
     final y = -_farFront - top.o1 * StadiumPainter._farDepthScale - 1;
     final z0 = _farRoofTop * StadiumPainter._standRise + 1.5;
@@ -743,6 +751,32 @@ extension _StadiumFeatures on StadiumPainter {
     }
   }
 
+  /// A compact ground's digital scoreboard: a black board on two posts
+  /// over the far left corner's bank. The live layer lights its figures.
+  void _digitalBoard(Canvas canvas) {
+    if (ScoreboardTier.of(spec.scale) != ScoreboardTier.digital) return;
+    final q = _digitalBoardQuad;
+    final post = Paint()
+      ..strokeWidth = math.max(0.8, _ppm(-_farFront) * 0.2)
+      ..color = AppColors.outlineVariant;
+    for (final f in [0.18, 0.82]) {
+      final b = Offset.lerp(q[0], q[1], f)!;
+      canvas.drawLine(b, b.translate(0, (q[0].dy - q[3].dy) * 0.9), post);
+    }
+    canvas
+      ..drawPath(
+        StadiumPainter._poly(q),
+        Paint()..color = const Color(0xFF0D0F11),
+      )
+      ..drawPath(
+        StadiumPainter._poly(q),
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 0.8
+          ..color = const Color(0xFF4A5056),
+      );
+  }
+
   /// The screens, and the windows behind an open end, light up at night.
   void _screenGlow(Canvas canvas) {
     final f = look.flood;
@@ -808,8 +842,7 @@ extension _StadiumFeatures on StadiumPainter {
 
   /// An old ground's home end: no stand, a grass bank rising away from the
   /// goal, a fence along its foot and the old manual scoreboard on it.
-  void _openEndBank(Canvas canvas) {
-    const s = _Seg.left;
+  void _openEndBank(Canvas canvas, _Seg s, {bool scoreboard = true}) {
     canvas.drawPath(
       StadiumPainter._band(
         (t) => _standPoint(s, t, -0.5, 0),
@@ -823,7 +856,13 @@ extension _StadiumFeatures on StadiumPainter {
         ),
     );
     // Its few standing fans, scattered thin along the top.
-    final r = math.Random(varietySeed('bank:${spec.flagCode}'));
+    final r = math.Random(
+      varietySeed(
+        s == _Seg.left
+            ? 'bank:${spec.flagCode}'
+            : 'bank:${spec.flagCode}:${s.name}',
+      ),
+    );
     final fan = Paint();
     for (var i = 0; i < 70 * spec.fill; i++) {
       final t = 0.08 + r.nextDouble() * 0.9;
@@ -833,7 +872,7 @@ extension _StadiumFeatures on StadiumPainter {
       canvas.drawCircle(c, math.max(0.8, _ppm(_segY(s, t, o)) * 0.32), fan);
     }
     _fence(canvas, s, 0.05, 1);
-    _scoreboard(canvas);
+    if (scoreboard) _scoreboard(canvas);
   }
 
   static Color _fanTone(Color kit, double roll) => roll < 0.55
@@ -881,23 +920,15 @@ extension _StadiumFeatures on StadiumPainter {
   /// on two posts, its number plates blank white tiles (no figure, no
   /// word).
   void _scoreboard(Canvas canvas) {
-    const s = _Seg.left;
-    const t0 = 0.7;
-    const t1 = 0.86;
-    const o = 9.5;
-    const z0 = 4.2;
-    const z1 = 8.4;
+    final q = _manualBoardQuad;
     Offset at(double u, double v) =>
-        _standPoint(s, t0 + (t1 - t0) * u, o, z0 + (z1 - z0) * v);
+        Offset.lerp(Offset.lerp(q[0], q[1], u), Offset.lerp(q[3], q[2], u), v)!;
     final post = Paint()
-      ..strokeWidth = math.max(0.8, _ppm(_segY(s, t0, o)) * 0.22)
+      ..strokeWidth = math.max(0.8, _ppm(18) * 0.22)
       ..color = const Color(0xFF3E3A34);
     for (final u in [0.12, 0.88]) {
-      canvas.drawLine(
-        _standPoint(s, t0 + (t1 - t0) * u, o, 3.1),
-        at(u, 0),
-        post,
-      );
+      final b = at(u, 0);
+      canvas.drawLine(b, b.translate(0, (q[0].dy - q[3].dy) * 0.4), post);
     }
     final face = StadiumPainter._poly([at(0, 0), at(1, 0), at(1, 1), at(0, 1)]);
     canvas
@@ -1131,8 +1162,25 @@ extension _StadiumFeatures on StadiumPainter {
   /// Frost on a cold clear night: a pale rime creeping in from the pitch's
   /// edges, the middle (where the men run) still green.
   void _frostEdges(Canvas canvas) {
-    if (spec.weather != WeatherKind.frostyNight) return;
+    final day = spec.weather == WeatherKind.frost;
+    if (spec.weather != WeatherKind.frostyNight && !day) return;
     final field = _field;
+    if (day) {
+      // A hard frost by day: the whole pitch white-tinged, palest where
+      // the low sun has not reached (toward the far stand).
+      canvas.drawPath(
+        field,
+        Paint()
+          ..shader = ui.Gradient.linear(
+            _p(PitchDims.length / 2, StadiumPainter._gy0),
+            _p(PitchDims.length / 2, StadiumPainter._gy1),
+            [
+              const Color(0xFFE4ECF2).withValues(alpha: 0.2),
+              const Color(0xFFE4ECF2).withValues(alpha: 0.09),
+            ],
+          ),
+      );
+    }
     final rime = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = _ppm(PitchDims.width / 2) * 4.5
@@ -1256,6 +1304,31 @@ extension _StadiumFeatures on StadiumPainter {
         wash(_dustOchre, 0.62, 0.9);
       case WeatherKind.frostyNight:
         wash(const Color(0xFF0E1A33), 0.28, 0.06);
+      case WeatherKind.drizzle:
+        // A low, flat grey overcast: grey all over, barely lighter low down.
+        wash(
+          Color.lerp(look.skyMid, const Color(0xFF7D848B), 0.7)!,
+          0.86,
+          0.68,
+        );
+      case WeatherKind.frost:
+        // A cold, clear winter sky, and the low sun's warm glow along the
+        // horizon.
+        wash(const Color(0xFFB8CCE2), 0.22, 0.05);
+        canvas.drawRect(
+          Rect.fromLTRB(0, horizon - 60, size.width, horizon + 2),
+          Paint()
+            ..shader = ui.Gradient.linear(
+              Offset(0, horizon - 60),
+              Offset(0, horizon + 2),
+              [
+                const Color(0x00F3C58C),
+                const Color(
+                  0xFFF3C58C,
+                ).withValues(alpha: 0.34 * (1 - look.flood)),
+              ],
+            ),
+        );
     }
   }
 

@@ -52,6 +52,11 @@ abstract final class CityGeography {
     return null;
   }
 
+  /// Whether [nationCode] is a small island nation (every city of it on
+  /// the coast).
+  static bool isIsland(String nationCode) =>
+      _islands.contains(nationCode.toUpperCase());
+
   /// The far layer behind a ground in a city with [features], in a country
   /// whose own is [country] (of [confederation]): the country's, unless the
   /// features say otherwise. Snowy peaks for a mountain city, the sea for a

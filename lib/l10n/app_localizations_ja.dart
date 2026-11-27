@@ -6857,6 +6857,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get matchClockPenalties => 'PK戦';
 
   @override
+  String get pitchScoreboardGoal => 'ゴール';
+
+  @override
   String get matchClockFullTimePenalties => '試合終了 · PK戦';
 
   @override
@@ -8141,6 +8144,12 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get matchWeatherFrostyNight => '凍てつく夜';
+
+  @override
+  String get matchWeatherDrizzle => '霧雨';
+
+  @override
+  String get matchWeatherFrost => '霜';
 
   @override
   String get matchPlayerOfTheMatch => 'マン・オブ・ザ・マッチ';

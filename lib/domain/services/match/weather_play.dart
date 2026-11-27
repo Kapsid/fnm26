@@ -36,7 +36,11 @@ class WeatherPlay {
     this.backgroundGoals = 1,
   });
 
-  /// Nothing: clear skies, light rain, a dust storm.
+  /// Nothing: clear skies, light rain, a dust storm, and the 1.1.4 kinds
+  /// (drizzle, a frost by day). Those two are drawn only out of what was a
+  /// clear sky or light rain, so they play exactly as that day did: no
+  /// match played in them moves by a single draw, and no save's world
+  /// plays any differently (see `MatchWeather._refined`).
   static const WeatherPlay none = WeatherPlay();
 
   /// How an open-play chance converts: on every shot.
@@ -121,6 +125,8 @@ class WeatherPlay {
     WeatherKind.fog => fog,
     WeatherKind.clear ||
     WeatherKind.rain ||
+    WeatherKind.drizzle ||
+    WeatherKind.frost ||
     WeatherKind.haze ||
     WeatherKind.dustStorm => none,
   };

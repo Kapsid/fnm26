@@ -7122,6 +7122,9 @@ class AppLocalizationsFi extends AppLocalizations {
   String get matchClockPenalties => 'RANKKARIT';
 
   @override
+  String get pitchScoreboardGoal => 'MAALI';
+
+  @override
   String get matchClockFullTimePenalties => 'LOPPU · RANKKARIT';
 
   @override
@@ -8466,6 +8469,12 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get matchWeatherFrostyNight => 'Pakkasyö';
+
+  @override
+  String get matchWeatherDrizzle => 'Tihkusade';
+
+  @override
+  String get matchWeatherFrost => 'Pakkanen';
 
   @override
   String get matchPlayerOfTheMatch => 'OTTELUN PARAS PELAAJA';
