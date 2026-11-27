@@ -12751,6 +12751,29 @@ class AppLocalizationsVi extends AppLocalizations {
   String get campaignStars3Legacy => 'Và Nations Cup';
 
   @override
+  String get campaignHomeSoilTitle => 'Trên sân nhà';
+
+  @override
+  String get campaignHomeSoilTwist =>
+      'Thụy Điển đăng cai Giải vô địch thế giới cùng Đan Mạch và Na Uy, trong một chu kỳ';
+
+  @override
+  String get campaignHomeSoilGoal => 'Vượt qua vòng bảng trên sân nhà';
+
+  @override
+  String get campaignHomeSoilIntro =>
+      'Giải vô địch thế giới đến với phương Bắc. Thụy Điển dẫn đầu hồ sơ đăng cai, cùng Đan Mạch và Na Uy, và cả đất nước chờ đợi một mùa hè đáng nhớ. Đội hình chăm chỉ nhưng chỉ ở mức trung bình, và chủ nhà nào cũng nhớ đến chủ nhà từng bị loại ở vòng bảng ngay trước khán giả của mình. Đừng là chủ nhà đó: vượt qua vòng bảng, rồi vào tứ kết và, nếu phương Bắc thật sự tin, vào bán kết.';
+
+  @override
+  String get campaignStars1HomeSoil => 'Vượt qua vòng bảng';
+
+  @override
+  String get campaignStars2HomeSoil => 'Vào tứ kết';
+
+  @override
+  String get campaignStars3HomeSoil => 'Vào bán kết';
+
+  @override
   String get campaignSectionOneCycle => 'Một chu kỳ';
 
   @override

@@ -19832,6 +19832,34 @@
   "@campaignStars3Legacy": {
     "description": "What earns the third star in the Finish the Legacy campaign: the European Championship, the World Championship AND the Nations Cup."
   },
+  "campaignHomeSoilTitle": "Home Soil",
+  "@campaignHomeSoilTitle": {
+    "description": "Campaign title: Sweden, an average side, host the World Championship (with Denmark and Norway) and must not be the host knocked out in the group stage. Short."
+  },
+  "campaignHomeSoilTwist": "Sweden host the World Championship with Denmark and Norway, for one cycle",
+  "@campaignHomeSoilTwist": {
+    "description": "One-line twist of the Home Soil campaign: Sweden host the World Championship with co-hosts Denmark and Norway, for one cycle."
+  },
+  "campaignHomeSoilGoal": "Get out of the group on home soil",
+  "@campaignHomeSoilGoal": {
+    "description": "One-line goal of the Home Soil campaign (its first star): get out of the World Championship group stage as hosts."
+  },
+  "campaignHomeSoilIntro": "The World Championship comes north. Sweden lead the bid, with Denmark and Norway beside them, and the whole country expects a summer to remember. The squad is honest but no better than average, and every host remembers the one that went out in the group stage in front of its own crowd. Do not be that host: get out of the group, then reach the quarter-final and, if the north really believes, the semi-final.",
+  "@campaignHomeSoilIntro": {
+    "description": "Brief screen introduction of the Home Soil campaign: the World Championship comes to the Nordic countries, Sweden leading with Denmark and Norway; an average squad must not be the host that goes out in the group stage; then reach the quarter-final and the semi-final. Names no real player. Use only the name World Championship."
+  },
+  "campaignStars1HomeSoil": "Get out of the group",
+  "@campaignStars1HomeSoil": {
+    "description": "What earns the first star in the Home Soil campaign: get out of the World Championship group stage (reach the first knockout round)."
+  },
+  "campaignStars2HomeSoil": "Reach the quarter-final",
+  "@campaignStars2HomeSoil": {
+    "description": "What earns the second star in the Home Soil campaign: reach the World Championship quarter-final."
+  },
+  "campaignStars3HomeSoil": "Reach the semi-final",
+  "@campaignStars3HomeSoil": {
+    "description": "What earns the third star in the Home Soil campaign: reach the World Championship semi-final."
+  },
   "campaignSectionOneCycle": "One cycle",
   "@campaignSectionOneCycle": {
     "description": "Campaigns list: section heading for the campaigns that last one cycle. Short."

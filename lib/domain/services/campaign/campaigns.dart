@@ -43,6 +43,14 @@ enum CampaignGoal {
   /// One star each, the highest reached counts, across all the campaign's
   /// cycles (see `winThenOffBottomThenPlayoffStars`).
   winThenOffBottomThenPlayoff,
+
+  /// For the World Championship's own host: get out of the group (reach the
+  /// format's first knockout round, the last 32 or the last 16), then reach
+  /// the quarter-final, then the semi-final, all at the campaign's one World
+  /// Championship. One star each, the deepest round reached counts (see
+  /// `hostOutOfGroupStars`); going out in the group is the failure. Settled
+  /// the moment the tournament is over for the nation.
+  hostOutOfGroupThenQuarterThenSemi,
 }
 
 /// How hard a campaign plays, from the calibration lab
@@ -76,6 +84,7 @@ class CampaignDef {
     this.goldenGeneration = false,
     this.dormantNationId,
     this.withBelarus = false,
+    this.worldHostNationIds = const [],
   });
 
   final String id;
@@ -141,6 +150,15 @@ class CampaignDef {
   /// world it was started on: the marker is written at creation only.
   final bool withBelarus;
 
+  /// The nations handed the World Championship of the run's first cycle,
+  /// the lead host first, whatever the host draw would have named: stamped
+  /// at creation, before the calendar is drawn, as
+  /// `HostBidding.forcedWcKind` markers (see `WorldCupHosts.forcedWorldHosts`).
+  /// They sit out its qualifying as every host does, and host no
+  /// championship the summer before it. Empty for a run whose hosts are
+  /// drawn (every campaign but one).
+  final List<int> worldHostNationIds;
+
   /// The [cycles] of a campaign with no end. Not a number anyone reaches (a
   /// cycle is four years: this is four thousand), so a run of it only ends
   /// when its third star is in, or when the manager moves it into the saves
@@ -160,6 +178,7 @@ class CampaignDef {
     ?friendlyNationId,
     ?donorNationId,
     ...donorNationIds,
+    ...worldHostNationIds,
   };
 }
 
@@ -428,10 +447,37 @@ abstract final class Campaigns {
     rngSeed: 217,
   );
 
+  /// Home Soil: Sweden, an average side by design (its real squad, ranked
+  /// 36th), handed the World Championship of its one cycle with Denmark and
+  /// Norway as co-hosts. No Nordic ground reaches the World Championship's
+  /// final bar (60,000 seats; the biggest, in Stockholm, holds 50,000), so
+  /// no seed can make Sweden a host under the stadium bars, alone or with
+  /// its neighbours; and the run's nation never hosts by the draw (no bid
+  /// is offered in a campaign). The hosts are therefore handed over
+  /// ([CampaignDef.worldHostNationIds]): Sweden leads, Denmark and Norway
+  /// bring the grounds Sweden lacks, and the edition is staged in the five
+  /// real Nordic grounds of 25,000 seats or more, with no ground invented
+  /// (campaign_home_soil_test.dart). Free, as a one-cycle run, and medium.
+  /// Get out of the group, then reach the quarter-final, then the
+  /// semi-final: the host knocked out in the group stage fails it. Seed
+  /// 1958, the year Sweden hosted and reached the final.
+  static const homeSoil = CampaignDef(
+    withBelarus: true,
+    id: 'homeSoil',
+    nationId: 51, // Sweden
+    worldHostNationIds: [51, 13, 39], // Sweden, Denmark, Norway
+    goal: CampaignGoal.hostOutOfGroupThenQuarterThenSemi,
+    cycles: 1,
+    needsPro: false,
+    difficulty: CampaignDifficulty.medium,
+    rngSeed: 1958,
+  );
+
   static const List<CampaignDef> all = [
     transplant,
     grudge,
     legacy,
+    homeSoil,
     guineas,
     youngFinns,
     greenland,

@@ -13167,6 +13167,29 @@ class AppLocalizationsUk extends AppLocalizations {
   String get campaignStars3Legacy => 'І Nations Cup';
 
   @override
+  String get campaignHomeSoilTitle => 'На рідній землі';
+
+  @override
+  String get campaignHomeSoilTwist =>
+      'Швеція приймає Чемпіонат світу разом із Данією та Норвегією, на один цикл';
+
+  @override
+  String get campaignHomeSoilGoal => 'Вийти з групи на рідній землі';
+
+  @override
+  String get campaignHomeSoilIntro =>
+      'Чемпіонат світу приходить на північ. Швеція очолює заявку, поруч із нею Данія та Норвегія, і вся країна чекає на незабутнє літо. Склад чесний, але не кращий за середній, а кожен господар пам’ятає того, хто вилетів на груповому етапі перед власними вболівальниками. Не будьте цим господарем: вийдіть із групи, потім дійдіть до чвертьфіналу і, якщо північ справді вірить, до півфіналу.';
+
+  @override
+  String get campaignStars1HomeSoil => 'Вийти з групи';
+
+  @override
+  String get campaignStars2HomeSoil => 'Дійти до чвертьфіналу';
+
+  @override
+  String get campaignStars3HomeSoil => 'Дійти до півфіналу';
+
+  @override
   String get campaignSectionOneCycle => 'Один цикл';
 
   @override

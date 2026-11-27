@@ -13016,6 +13016,29 @@ class AppLocalizationsFr extends AppLocalizations {
   String get campaignStars3Legacy => 'Et la Coupe des Nations';
 
   @override
+  String get campaignHomeSoilTitle => 'Sur nos terres';
+
+  @override
+  String get campaignHomeSoilTwist =>
+      'La Suède accueille le Championnat du monde avec le Danemark et la Norvège, pour un cycle';
+
+  @override
+  String get campaignHomeSoilGoal => 'Sortir de la phase de groupes à domicile';
+
+  @override
+  String get campaignHomeSoilIntro =>
+      'Le Championnat du monde monte vers le nord. La Suède mène la candidature, aux côtés du Danemark et de la Norvège, et tout le pays attend un été inoubliable. L’effectif est honnête, sans plus, et chaque pays hôte se souvient de celui qui a été éliminé en phase de groupes devant son propre public. Ne soyez pas celui-là : sortez du groupe, puis atteignez les quarts de finale et, si le Nord y croit vraiment, les demi-finales.';
+
+  @override
+  String get campaignStars1HomeSoil => 'Sortir de la phase de groupes';
+
+  @override
+  String get campaignStars2HomeSoil => 'Atteindre les quarts de finale';
+
+  @override
+  String get campaignStars3HomeSoil => 'Atteindre les demi-finales';
+
+  @override
   String get campaignSectionOneCycle => 'Un cycle';
 
   @override

@@ -13245,6 +13245,29 @@ class AppLocalizationsRo extends AppLocalizations {
   String get campaignStars3Legacy => 'Și a Cupei Națiunilor';
 
   @override
+  String get campaignHomeSoilTitle => 'Pe teren propriu';
+
+  @override
+  String get campaignHomeSoilTwist =>
+      'Suedia găzduiește Campionatul Mondial alături de Danemarca și Norvegia, pentru un ciclu';
+
+  @override
+  String get campaignHomeSoilGoal => 'Treci de grupe pe teren propriu';
+
+  @override
+  String get campaignHomeSoilIntro =>
+      'Campionatul Mondial vine în nord. Suedia conduce candidatura, cu Danemarca și Norvegia alături, iar întreaga țară așteaptă o vară de neuitat. Lotul e cinstit, dar nu mai bun decât media, iar orice gazdă își amintește de cea eliminată în faza grupelor în fața propriului public. Nu fi acea gazdă: treci de grupe, apoi ajungi în sferturi și, dacă nordul chiar crede, în semifinale.';
+
+  @override
+  String get campaignStars1HomeSoil => 'Calificarea din grupă';
+
+  @override
+  String get campaignStars2HomeSoil => 'Atingerea sferturilor';
+
+  @override
+  String get campaignStars3HomeSoil => 'Atingerea semifinalelor';
+
+  @override
   String get campaignSectionOneCycle => 'Un ciclu';
 
   @override

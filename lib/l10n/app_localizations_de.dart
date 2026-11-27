@@ -12999,6 +12999,30 @@ class AppLocalizationsDe extends AppLocalizations {
   String get campaignStars3Legacy => 'Dazu den Pokal der Nationen';
 
   @override
+  String get campaignHomeSoilTitle => 'Heimspiel';
+
+  @override
+  String get campaignHomeSoilTwist =>
+      'Schweden richtet mit Dänemark und Norwegen die Weltmeisterschaft aus, für einen Zyklus';
+
+  @override
+  String get campaignHomeSoilGoal =>
+      'Bei der eigenen Weltmeisterschaft die Gruppe überstehen';
+
+  @override
+  String get campaignHomeSoilIntro =>
+      'Die Weltmeisterschaft kommt in den Norden. Schweden führt die Bewerbung an, Dänemark und Norwegen an seiner Seite, und das ganze Land erwartet einen Sommer, den man nicht vergisst. Der Kader ist ehrlich, aber nur Durchschnitt, und jeder Gastgeber erinnert sich an den einen, der vor eigenem Publikum in der Gruppenphase ausschied. Sei nicht dieser Gastgeber: Übersteh die Gruppe, erreiche dann das Viertelfinale und, wenn der Norden wirklich daran glaubt, das Halbfinale.';
+
+  @override
+  String get campaignStars1HomeSoil => 'Die Gruppe überstehen';
+
+  @override
+  String get campaignStars2HomeSoil => 'Viertelfinale erreichen';
+
+  @override
+  String get campaignStars3HomeSoil => 'Halbfinale erreichen';
+
+  @override
   String get campaignSectionOneCycle => 'Ein Zyklus';
 
   @override

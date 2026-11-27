@@ -14,6 +14,7 @@ import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/campaign/campaign_grading.dart';
 import 'package:fnm/domain/services/campaign/campaigns.dart';
 import 'package:fnm/domain/services/competition/calendar2.dart';
+import 'package:fnm/domain/services/competition/host_bidding.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
@@ -145,8 +146,10 @@ bool countsAsSave(CampaignTag? tag) => tag == null || tag.moved;
 /// cycle played so far, first cycle first, and `worldRuns` the World
 /// Championship run of each (read only for a
 /// [CampaignGoal.qualifyWorldThenTitles], a
-/// [CampaignGoal.qualifyBothThenTitle] or a
-/// [CampaignGoal.qualifyBothThenWorldTitle], empty for every other goal).
+/// [CampaignGoal.qualifyBothThenTitle], a
+/// [CampaignGoal.qualifyBothThenWorldTitle], a [CampaignGoal.titleTreble] or
+/// a [CampaignGoal.hostOutOfGroupThenQuarterThenSemi], empty for every other
+/// goal).
 /// `nationsCupRun` is this cycle's Nations Cup (see [campaignNationsCupRun]),
 /// read only for a [CampaignGoal.titleTreble] and null for every other goal.
 /// `reached` is the grade the run stands at now, settled or not; `stars` only
@@ -304,7 +307,8 @@ campaignProgressProvider = FutureProvider.autoDispose
           def.goal == CampaignGoal.qualifyWorldThenTitles ||
           def.goal == CampaignGoal.qualifyBothThenTitle ||
           def.goal == CampaignGoal.qualifyBothThenWorldTitle ||
-          def.goal == CampaignGoal.titleTreble;
+          def.goal == CampaignGoal.titleTreble ||
+          def.goal == CampaignGoal.hostOutOfGroupThenQuarterThenSemi;
       final cycleRuns = <({int ordinal, bool over})>[];
       final worldRuns = <({int ordinal, bool over})>[];
       // Read once: a century-long campaign has up to 24 past cycles.
@@ -447,6 +451,9 @@ campaignProgressProvider = FutureProvider.autoDispose
             offBottom: hopeless.offBottom,
             reachedPlayoff: hopeless.reachedPlayoff,
           ),
+        CampaignGoal.hostOutOfGroupThenQuarterThenSemi => hostOutOfGroupStars(
+          worldRuns.last.ordinal,
+        ),
       };
       var settled = switch (def.goal) {
         CampaignGoal.qualifyContinental => run.over,
@@ -485,6 +492,10 @@ campaignProgressProvider = FutureProvider.autoDispose
         // the last title of the cycle (the end-of-cycle rule below).
         CampaignGoal.titleTreble =>
           reached == 3 || (run.over && run.ordinal < 7),
+        // Judged the moment the World Championship is over for the host:
+        // out in the group (a failure), knocked out later, or the final
+        // played. A semi-final reached is three stars but plays on.
+        CampaignGoal.hostOutOfGroupThenQuarterThenSemi => worldRuns.last.over,
       };
       // A cycle is over. At the end of the campaign's LAST cycle whatever is
       // still open is judged as it stands; at the end of any cycle a manager
@@ -843,6 +854,10 @@ class CampaignService {
           // world must be the one every draw is made from.
           worldMarkers: [
             if (def.dormantNationId case final d?) DormantNations.markerFor(d),
+            // And a World Championship handed to its hosts: its qualifying
+            // is drawn without them.
+            for (var i = 0; i < def.worldHostNationIds.length; i++)
+              HostBidding.forcedWcKind(0, def.worldHostNationIds[i], i),
           ],
           // A run starts on the current starting ranking, the same one a
           // new career gets, frozen into the run (its cycle-0 snapshot) so
@@ -856,7 +871,9 @@ class CampaignService {
           // grounds cannot stage it. The run's nation never hosts (a run
           // offers no host bid), and the seeds were searched under these
           // rules (see campaign_seeds_test). A run started before them keeps
-          // the rules it was made under (no marker at cycle 0).
+          // the rules it was made under (no marker at cycle 0). The one
+          // exception is a World Championship the run hands its hosts
+          // ([CampaignDef.worldHostNationIds], stamped above).
           currentHostRules: true,
           stadiumHostRules: true,
           // A custom database, when one was chosen: its squads and names,

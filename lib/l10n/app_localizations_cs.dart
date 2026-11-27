@@ -13254,6 +13254,29 @@ class AppLocalizationsCs extends AppLocalizations {
   String get campaignStars3Legacy => 'A k tomu Pohár národů';
 
   @override
+  String get campaignHomeSoilTitle => 'Na domácí půdě';
+
+  @override
+  String get campaignHomeSoilTwist =>
+      'Švédsko pořádá mistrovství světa s Dánskem a Norskem, na jeden cyklus';
+
+  @override
+  String get campaignHomeSoilGoal => 'Postoupit ze skupiny na domácí půdě';
+
+  @override
+  String get campaignHomeSoilIntro =>
+      'Mistrovství světa míří na sever. Švédsko vede kandidaturu, po boku Dánsko a Norsko, a celá země čeká léto, na které se nezapomíná. Kádr je poctivý, ale jen průměrný, a každý pořadatel si pamatuje toho, kdo vypadl ve skupině před vlastními fanoušky. Nebuďte tím pořadatelem: postupte ze skupiny, pak se probojujte do čtvrtfinále a, pokud sever opravdu věří, do semifinále.';
+
+  @override
+  String get campaignStars1HomeSoil => 'Postoupit ze skupiny';
+
+  @override
+  String get campaignStars2HomeSoil => 'Dostat se do čtvrtfinále';
+
+  @override
+  String get campaignStars3HomeSoil => 'Dostat se do semifinále';
+
+  @override
   String get campaignSectionOneCycle => 'Jeden cyklus';
 
   @override

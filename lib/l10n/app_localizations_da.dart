@@ -12887,6 +12887,29 @@ class AppLocalizationsDa extends AppLocalizations {
   String get campaignStars3Legacy => 'Og Nations Cup';
 
   @override
+  String get campaignHomeSoilTitle => 'På hjemmebane';
+
+  @override
+  String get campaignHomeSoilTwist =>
+      'Sverige er vært for Verdensmesterskabet med Danmark og Norge, i én cyklus';
+
+  @override
+  String get campaignHomeSoilGoal => 'Gå videre fra gruppen på hjemmebane';
+
+  @override
+  String get campaignHomeSoilIntro =>
+      'Verdensmesterskabet kommer mod nord. Sverige står i spidsen for værtskabet med Danmark og Norge ved sin side, og hele landet venter en sommer, man husker. Truppen er hæderlig, men ikke bedre end gennemsnittet, og enhver vært husker den, der røg ud i gruppespillet foran sit eget publikum. Bliv ikke den vært: gå videre fra gruppen, nå derefter kvartfinalen og, hvis Norden virkelig tror på det, semifinalen.';
+
+  @override
+  String get campaignStars1HomeSoil => 'Gå videre fra gruppen';
+
+  @override
+  String get campaignStars2HomeSoil => 'Nå kvartfinalen';
+
+  @override
+  String get campaignStars3HomeSoil => 'Nå semifinalen';
+
+  @override
   String get campaignSectionOneCycle => 'Én cyklus';
 
   @override

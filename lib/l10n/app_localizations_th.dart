@@ -12639,6 +12639,29 @@ class AppLocalizationsTh extends AppLocalizations {
   String get campaignStars3Legacy => 'และเนชันส์คัพ';
 
   @override
+  String get campaignHomeSoilTitle => 'ศึกบนแผ่นดินเกิด';
+
+  @override
+  String get campaignHomeSoilTwist =>
+      'สวีเดนเป็นเจ้าภาพชิงแชมป์โลกร่วมกับเดนมาร์กและนอร์เวย์ เป็นเวลาหนึ่งรอบ';
+
+  @override
+  String get campaignHomeSoilGoal => 'ผ่านรอบแบ่งกลุ่มบนแผ่นดินตัวเอง';
+
+  @override
+  String get campaignHomeSoilIntro =>
+      'ชิงแชมป์โลกกำลังมาถึงดินแดนทางเหนือ สวีเดนเป็นผู้นำการเป็นเจ้าภาพ โดยมีเดนมาร์กและนอร์เวย์อยู่เคียงข้าง และทั้งประเทศต่างรอคอยฤดูร้อนที่น่าจดจำ ทีมชุดนี้ซื่อตรงแต่ฝีเท้าแค่ระดับกลาง และเจ้าภาพทุกชาติจำได้ดีถึงเจ้าภาพที่ตกรอบแบ่งกลุ่มต่อหน้าแฟนบอลของตัวเอง อย่าเป็นเจ้าภาพชาตินั้น ผ่านรอบแบ่งกลุ่มให้ได้ จากนั้นไปให้ถึงรอบ 8 ทีม และถ้าดินแดนทางเหนือเชื่อมั่นจริง ก็ไปให้ถึงรอบรองชนะเลิศ';
+
+  @override
+  String get campaignStars1HomeSoil => 'ผ่านรอบแบ่งกลุ่ม';
+
+  @override
+  String get campaignStars2HomeSoil => 'เข้ารอบ 8 ทีม';
+
+  @override
+  String get campaignStars3HomeSoil => 'เข้ารอบรองชนะเลิศ';
+
+  @override
   String get campaignSectionOneCycle => 'หนึ่งรอบ';
 
   @override

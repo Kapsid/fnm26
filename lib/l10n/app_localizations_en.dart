@@ -12913,6 +12913,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get campaignStars3Legacy => 'And the Nations Cup';
 
   @override
+  String get campaignHomeSoilTitle => 'Home Soil';
+
+  @override
+  String get campaignHomeSoilTwist =>
+      'Sweden host the World Championship with Denmark and Norway, for one cycle';
+
+  @override
+  String get campaignHomeSoilGoal => 'Get out of the group on home soil';
+
+  @override
+  String get campaignHomeSoilIntro =>
+      'The World Championship comes north. Sweden lead the bid, with Denmark and Norway beside them, and the whole country expects a summer to remember. The squad is honest but no better than average, and every host remembers the one that went out in the group stage in front of its own crowd. Do not be that host: get out of the group, then reach the quarter-final and, if the north really believes, the semi-final.';
+
+  @override
+  String get campaignStars1HomeSoil => 'Get out of the group';
+
+  @override
+  String get campaignStars2HomeSoil => 'Reach the quarter-final';
+
+  @override
+  String get campaignStars3HomeSoil => 'Reach the semi-final';
+
+  @override
   String get campaignSectionOneCycle => 'One cycle';
 
   @override

@@ -13207,6 +13207,29 @@ class AppLocalizationsHr extends AppLocalizations {
   String get campaignStars3Legacy => 'I Nations Cup';
 
   @override
+  String get campaignHomeSoilTitle => 'Na domaćem tlu';
+
+  @override
+  String get campaignHomeSoilTwist =>
+      'Švedska s Danskom i Norveškom domaćin je Svjetskog prvenstva, kroz jedan ciklus';
+
+  @override
+  String get campaignHomeSoilGoal => 'Prođi skupinu na domaćem tlu';
+
+  @override
+  String get campaignHomeSoilIntro =>
+      'Svjetsko prvenstvo dolazi na sjever. Švedska predvodi kandidaturu, uz Dansku i Norvešku, a cijela zemlja očekuje ljeto za pamćenje. Momčad je poštena, ali ne bolja od prosjeka, a svaki domaćin pamti onoga koji je ispao u skupini pred vlastitom publikom. Ne budi taj domaćin: prođi skupinu, zatim stigni do četvrtfinala i, ako sjever doista vjeruje, do polufinala.';
+
+  @override
+  String get campaignStars1HomeSoil => 'Prođi skupinu';
+
+  @override
+  String get campaignStars2HomeSoil => 'Stigni do četvrtfinala';
+
+  @override
+  String get campaignStars3HomeSoil => 'Stigni do polufinala';
+
+  @override
   String get campaignSectionOneCycle => 'Jedan ciklus';
 
   @override

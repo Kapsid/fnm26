@@ -12954,6 +12954,29 @@ class AppLocalizationsFi extends AppLocalizations {
   String get campaignStars3Legacy => 'Ja Nations Cup';
 
   @override
+  String get campaignHomeSoilTitle => 'Kotikentällä';
+
+  @override
+  String get campaignHomeSoilTwist =>
+      'Ruotsi isännöi MM-kisoja Tanskan ja Norjan kanssa yhden kauden ajan';
+
+  @override
+  String get campaignHomeSoilGoal => 'Selviä lohkosta kotikisoissa';
+
+  @override
+  String get campaignHomeSoilIntro =>
+      'MM-kisat tulevat pohjoiseen. Ruotsi johtaa isännyyttä Tanskan ja Norjan rinnalla, ja koko maa odottaa kesää, joka muistetaan. Joukkue on rehellinen mutta vain keskitasoa, ja jokainen isäntä muistaa sen, joka putosi lohkovaiheessa oman yleisönsä edessä. Älä ole se isäntä: selviä lohkosta, pääse sitten puolivälieriin ja, jos pohjoinen todella uskoo, välieriin.';
+
+  @override
+  String get campaignStars1HomeSoil => 'Selviä lohkosta';
+
+  @override
+  String get campaignStars2HomeSoil => 'Pääse puolivälieriin';
+
+  @override
+  String get campaignStars3HomeSoil => 'Pääse välieriin';
+
+  @override
   String get campaignSectionOneCycle => 'Yksi kausi';
 
   @override

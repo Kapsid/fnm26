@@ -19664,6 +19664,48 @@ abstract class AppLocalizations {
   /// **'And the Nations Cup'**
   String get campaignStars3Legacy;
 
+  /// Campaign title: Sweden, an average side, host the World Championship (with Denmark and Norway) and must not be the host knocked out in the group stage. Short.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Soil'**
+  String get campaignHomeSoilTitle;
+
+  /// One-line twist of the Home Soil campaign: Sweden host the World Championship with co-hosts Denmark and Norway, for one cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sweden host the World Championship with Denmark and Norway, for one cycle'**
+  String get campaignHomeSoilTwist;
+
+  /// One-line goal of the Home Soil campaign (its first star): get out of the World Championship group stage as hosts.
+  ///
+  /// In en, this message translates to:
+  /// **'Get out of the group on home soil'**
+  String get campaignHomeSoilGoal;
+
+  /// Brief screen introduction of the Home Soil campaign: the World Championship comes to the Nordic countries, Sweden leading with Denmark and Norway; an average squad must not be the host that goes out in the group stage; then reach the quarter-final and the semi-final. Names no real player. Use only the name World Championship.
+  ///
+  /// In en, this message translates to:
+  /// **'The World Championship comes north. Sweden lead the bid, with Denmark and Norway beside them, and the whole country expects a summer to remember. The squad is honest but no better than average, and every host remembers the one that went out in the group stage in front of its own crowd. Do not be that host: get out of the group, then reach the quarter-final and, if the north really believes, the semi-final.'**
+  String get campaignHomeSoilIntro;
+
+  /// What earns the first star in the Home Soil campaign: get out of the World Championship group stage (reach the first knockout round).
+  ///
+  /// In en, this message translates to:
+  /// **'Get out of the group'**
+  String get campaignStars1HomeSoil;
+
+  /// What earns the second star in the Home Soil campaign: reach the World Championship quarter-final.
+  ///
+  /// In en, this message translates to:
+  /// **'Reach the quarter-final'**
+  String get campaignStars2HomeSoil;
+
+  /// What earns the third star in the Home Soil campaign: reach the World Championship semi-final.
+  ///
+  /// In en, this message translates to:
+  /// **'Reach the semi-final'**
+  String get campaignStars3HomeSoil;
+
   /// Campaigns list: section heading for the campaigns that last one cycle. Short.
   ///
   /// In en, this message translates to:

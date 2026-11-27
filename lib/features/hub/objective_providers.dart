@@ -16,6 +16,7 @@ import 'package:fnm/domain/services/competition/calendar2.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
+import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
@@ -633,7 +634,15 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
           ).finalsBerths,
         )
       : (target: wcUsual, graded: false);
-  final wcTarget = wcBrief.target;
+  // A host handed the World Championship by its scenario (see
+  // `WorldCupHosts.forcedWorldHosts`) is in it from the start: the board
+  // asks it, as the scenario does, to get out of the group at the least.
+  // No ordinary career is ever handed one, so no other brief moves.
+  final handedHost = WorldCupHosts.forcedWorldHosts(
+    career.cyclePointer,
+    nations,
+  ).contains(career.nationId);
+  final wcTarget = handedHost && wcBrief.target < 3 ? 3 : wcBrief.target;
   // A calendar2 World Championship is drawn (and stored) the day qualifying
   // ends, months before its finals exist: read the draw until then.
   final wcDrawn = await _storedWorldDrawRun(
@@ -673,7 +682,7 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
       met: wcDecided && wcActual >= wcTarget,
       actual: wcActual,
       offTheBottom: false,
-      graded: wcBrief.graded,
+      graded: wcBrief.graded && !handedHost,
     ));
   }
 

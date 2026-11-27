@@ -13229,6 +13229,29 @@ class AppLocalizationsSr extends AppLocalizations {
   String get campaignStars3Legacy => 'И Куп нација';
 
   @override
+  String get campaignHomeSoilTitle => 'На свом терену';
+
+  @override
+  String get campaignHomeSoilTwist =>
+      'Шведска са Данском и Норвешком домаћин је Светског првенства, кроз један циклус';
+
+  @override
+  String get campaignHomeSoilGoal => 'Прођи групу на свом терену';
+
+  @override
+  String get campaignHomeSoilIntro =>
+      'Светско првенство долази на север. Шведска предводи кандидатуру, уз Данску и Норвешку, а цела земља очекује лето за памћење. Тим је поштен, али не бољи од просека, а сваки домаћин памти оног који је испао у групи пред својом публиком. Не буди тај домаћин: прођи групу, затим стигни до четвртфинала и, ако север заиста верује, до полуфинала.';
+
+  @override
+  String get campaignStars1HomeSoil => 'Прођи групу';
+
+  @override
+  String get campaignStars2HomeSoil => 'Стигни до четвртфинала';
+
+  @override
+  String get campaignStars3HomeSoil => 'Стигни до полуфинала';
+
+  @override
   String get campaignSectionOneCycle => 'Један циклус';
 
   @override
