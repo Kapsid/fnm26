@@ -332,7 +332,8 @@ void main() {
       // is a fair-ish bargain rather than free. What they move is how OPEN the
       // game is. A side playing a high line at a quick tempo against one
       // sitting deep and slow produces a more stretched, higher-scoring match
-      // than two sides with nothing chosen.
+      // than two sides with nothing chosen, and two sides BOTH pushing up and
+      // playing quickly more stretched still.
       final base = swing(
         familiarity: 0,
         predictability: 0,
@@ -345,27 +346,43 @@ void main() {
         plan: _forward,
         counterPlan: _cautious,
       );
-      final lift = onesided.goalsPerGame - base.goalsPerGame;
-      // Measures +0.111 goals a match on a 2.52 baseline (+0.20 before the
-      // 2026-10-16 tactics impact build). The line and tempo terms were cut
-      // to a third there, and the line's defensive term turned from a gain
-      // into a cost: what opens a game now is mostly mentality and shape,
-      // through `MatchEngine.openness`, which this pair barely moves (its
-      // presses cancel). The band keeps the old relative room.
+      final bothForward = swing(
+        familiarity: 0,
+        predictability: 0,
+        plan: _forward,
+        counterPlan: _forward,
+      );
+      final lift = bothForward.goalsPerGame - base.goalsPerGame;
+      // History, for the one-sided pair (forward against cautious): +0.20
+      // before the 2026-10-16 tactics impact build, +0.111 after it (the line
+      // and tempo terms were cut to a third, and the line's defensive term
+      // turned from a gain into a cost), and +0.054 with the lull after a
+      // goal (1.1.4), on a floor of 0.04.
       //
-      // The lull after a goal (1.1.4) trims part of any rise in the chance
-      // rate (more goals, more lulls): +0.054 here, and over 8000 seeds
-      // +0.078 (about four standard errors clear of nothing) against +0.110
-      // before. The floor went from 0.08 to 0.04.
+      // The 1.1.4 openness blend took that pair to about nothing (-0.004
+      // here, +0.015 over 4000 seeds). Much of its lift was never the line
+      // and tempo: the cautious side's press at 70 is a small forward
+      // commitment, and under the old max it alone opened the game for both,
+      // while the forward side's press at 30 is a small caution. With the
+      // blend a lone commitment opens the game half as much, and the two
+      // presses now roughly cancel the line and tempo's stretch.
+      //
+      // So the case now measures what the flat dials do when BOTH sides move
+      // them: two sides on the same high line, quick tempo and light press
+      // trade the gains of their own dials against the holes in each other's.
+      // Measures +0.243 on a 2.665 baseline (+0.271 over 4000 seeds); with the
+      // presses left at 50 it is about +0.40, so the light press shuts part of
+      // what the line and tempo open.
       expect(
         lift,
-        inInclusiveRange(0.04, 0.20),
+        inInclusiveRange(0.12, 0.40),
         reason:
-            'committing forward should visibly open the game up, without '
-            'turning every match into a basketball score',
+            'two sides committing forward on the flat dials should visibly '
+            'open the game up, without turning every match into a basketball '
+            'score',
       );
       // The bargain stays fair: committing forward is favourable, never a
-      // free win. Measures +0.19.
+      // free win. Measures +0.165 (+0.19 before the 1.1.4 openness blend).
       expect(onesided.goalDiffPerGame.abs(), lessThan(0.30));
     });
 

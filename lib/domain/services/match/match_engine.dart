@@ -774,18 +774,27 @@ class _Live {
 /// are per unit off neutral: a mentality or press at 100 is one unit, an extra
 /// attacker off the 4-3-3 count is one unit.
 ///
-/// [kOpenUp] is what the bolder side's full commitment adds to both chance
-/// rates; [kOpenDown] what two fully cautious sides take off. Tuned on
-/// 2026-10-16 (0.45 -> 0.42, 0.3 -> 0.6) with the max-and-mean combination in
-/// [MatchEngine.openness]: one all-out side lifts the lab's total goals by
+/// [kOpenUp] is what two fully committed sides add to both chance rates
+/// (one alone adds [kOpenBlend] of it); [kOpenDown] what two fully cautious
+/// sides take off. Tuned on 2026-10-16 (0.45 -> 0.42, 0.3 -> 0.6) with the
+/// max-and-mean combination then in [MatchEngine.openness]: one all-out side lifts the lab's total goals by
 /// about 45%, an all-out mirror by about 80%, and parking the bus cuts them by
-/// about a third. Closing needed the bigger weight because it is averaged over
-/// both sides where opening is not.
+/// about a third. Closing needed the bigger weight because it was averaged over
+/// both sides where opening was not. Those lone-side figures predate the 1.1.4
+/// openness blend ([kOpenBlend]), which halves a lone side's opening; the
+/// mirror and the bus are unchanged.
 const double kOpenMentality = 0.6;
 const double kOpenPressing = 0.25;
 const double kOpenAttackers = 0.25;
 const double kOpenUp = 0.42;
 const double kOpenDown = 0.6;
+
+/// How much of a game's opening comes from the bolder side's commitment; the
+/// rest comes from the less committed side's (1.1.4 openness blend). At 0.5
+/// the opening is the mean of the two forward commitments: a game opens fully
+/// only when BOTH sides commit forward, and one bold side opens it half as
+/// much. Two equally bold sides open it exactly as the old max did.
+const double kOpenBlend = 0.5;
 
 /// A deterministic, lightweight tactical match engine. It derives attack and
 /// defence ratings from each team's XI and instructions, then plays out 90
@@ -2754,7 +2763,9 @@ class MatchEngine {
 
   /// [openness] from the two sides' [commitment]s.
   static double opennessOf(double home, double away) {
-    final opening = max(max(home, away), 0.0);
+    final bolder = max(max(home, away), 0.0);
+    final lesser = max(min(home, away), 0.0);
+    final opening = kOpenBlend * bolder + (1 - kOpenBlend) * lesser;
     final closing = (min(home, 0.0) + min(away, 0.0)) / 2;
     return 1 + opening * kOpenUp + closing * kOpenDown;
   }
@@ -2767,20 +2778,30 @@ class MatchEngine {
   /// side's commitment (mentality, pressing, extra attackers off the 4-3-3)
   /// is clamped to +-1. Neutral against neutral is exactly 1.0.
   ///
-  /// It takes ONE side to open a game and BOTH to shut it: the bolder side's
-  /// forward commitment sets how open it is (the max), and the two sides'
-  /// caution is averaged. Until 2026-10-16 both were averaged, and that made
-  /// an all-out mirror pay twice: each side's flat attacking lift already
+  /// It takes BOTH sides to open a game fully and BOTH to shut it. Since the
+  /// 1.1.4 openness blend the opening is [kOpenBlend] of the bolder side's
+  /// forward commitment plus the rest of the less committed side's (each
+  /// floored at neutral), and the two sides' caution is averaged. Before
+  /// 1.1.4 the bolder side alone set it (the max), so one player on
+  /// gegenpress or all-out opened the whole game against an AI that tops out
+  /// near commitment 0.3: 3.9 and 4.5 goals a game on 75 v 75, against about
+  /// 2.9 for default. The blend takes those to about 3.6 and 4.0, and leaves
+  /// two equally bold sides exactly where the max had them.
+  ///
+  /// The max itself came in on 2026-10-16. Until then both were averaged,
+  /// and that made an all-out mirror pay twice: each side's flat attacking lift already
   /// meets the other's flat defensive hole, so a second bold side on top
   /// doubled the multiplier as well, and the mirror ran to 8 goals a game
   /// with one in seven a four-goal rout. With the max, a lone all-out side
-  /// opens the game about as much as two do, and what the second adds is its
-  /// own flat terms. A bold side against a cautious one is open by the bold
+  /// opened the game about as much as two did, and what the second added was
+  /// its own flat terms; the blend keeps that mirror where the max had it. A
+  /// bold side against a cautious one is open by [kOpenBlend] of the bold
   /// side's commitment less half the cautious one's.
   ///
   /// The range is 1 - [kOpenDown] .. 1 + [kOpenUp] = 0.4 .. 1.42 by
-  /// construction; the top needs one side at full commitment, the bottom
-  /// both. In play the scoreline bends it further (see [_scorelineOpenness]).
+  /// construction; the top and the bottom each need both sides at full
+  /// commitment. In play the scoreline bends it further (see
+  /// [_scorelineOpenness]).
   static double openness({
     required TacticalInstructions home,
     required TacticalInstructions away,

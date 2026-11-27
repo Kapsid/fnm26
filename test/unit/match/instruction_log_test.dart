@@ -113,5 +113,6 @@ void main() {
 
 // Re-pinned for the 1.1.2 engine (free kicks, styles, open-play headers),
 // and for the lull after a goal (1.1.4: every chance rate moved, and extra
-// time's chance factor went back to 1.0).
-const _before = 'c87267bf';
+// time's chance factor went back to 1.0), and for the 1.1.4 openness blend
+// (one bold side opens a game half as much as two).
+const _before = 'f3cf1002';

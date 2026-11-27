@@ -725,8 +725,22 @@ void main() {
           (p) => p is FlightPhase && !p.resting && p.t0 < cut && p.t1 >= cut,
         );
         if (!pending) continue;
-        found++;
         final pi = s.actorIndexOf(m.playerId)!;
+        // The ball already reached him before the cut: nothing of his was
+        // pending, the flight in the air is a later one (often his own pass
+        // on). Seed 0 has one since the 1.1.4 openness blend: the pass to him
+        // lands at the start of his window, he carries and lays it off, and a
+        // cut just after the window catches that lay-off in the air.
+        final already = s.ballPhases.any(
+          (p) =>
+              p is FlightPhase &&
+              !p.resting &&
+              p.toActor == pi &&
+              p.t0 >= w.start - 1e-9 &&
+              p.t1 <= cut,
+        );
+        if (already) continue;
+        found++;
         final played = s.ballPhases.any(
           (p) =>
               p is FlightPhase &&

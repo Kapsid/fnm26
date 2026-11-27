@@ -210,7 +210,8 @@ void main() {
     // rebounds (2026-11-24): only the matches with a penalty followed up
     // changed (see `penalty_rebound_test.dart`). Again for the video
     // referee (1.1.4): a goal now and then chalked off. And for the lull
-    // after a goal (1.1.4): every chance rate moved.
-    expect(h, 3726831394);
+    // after a goal (1.1.4): every chance rate moved. And for the 1.1.4
+    // openness blend: a lone bold side opens a game half as much.
+    expect(h, 657441104);
   });
 }

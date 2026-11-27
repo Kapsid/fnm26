@@ -35,7 +35,8 @@ import 'driver.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   const europe = Confederation.europe;
-  const entrantSeed = 94; // 45 before the 1.1.4 goal lull
+  // 94 before the 1.1.4 openness blend, 45 before the 1.1.4 goal lull.
+  const entrantSeed = 104;
   const entrantIndex = 24;
   const watcherSeed = 31;
 

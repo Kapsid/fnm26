@@ -247,14 +247,26 @@ void main() {
       expect(both(bold, 6), closeTo(1 + kOpenUp, 1e-9));
       expect(both(meek, 0), closeTo(1 - kOpenDown, 1e-9));
     });
-    test('one bold side opens a game, it takes both to shut it', () {
-      // The bolder side's commitment sets how open the game is, so a second
-      // all-out side adds nothing to the MULTIPLIER (it adds its own flat
-      // terms). Caution is averaged: one bus closes the game halfway.
+    test('one bold side opens a game somewhat, two open it fully; it takes '
+        'both to shut it', () {
+      // The 1.1.4 openness blend: the opening is the mean of the two sides'
+      // forward commitments ([kOpenBlend] = 0.5), so a lone all-out side
+      // opens the game half as much as an all-out mirror does (1.1533 against
+      // 1.3066). Under the old max a lone all-out side opened it exactly as
+      // much as two (both 1.3066), and a bold player against an AI that tops
+      // out near commitment 0.3 opened the whole game by himself. The mirror
+      // is unchanged. Caution is averaged as before: one bus closes the game
+      // halfway.
       final allOut = _lab('allOutAttack');
       final bus = _lab('parkTheBus');
       final n = _lab('neutral');
-      expect(mult(allOut, n), closeTo(mult(allOut, allOut), 1e-9));
+      final one = mult(allOut, n);
+      final two = mult(allOut, allOut);
+      expect(two, closeTo(1.3066, 1e-4), reason: 'the mirror opens fully');
+      expect(one, closeTo(1.1533, 1e-4));
+      expect(one - 1, closeTo((two - 1) * kOpenBlend, 1e-9));
+      expect(one, greaterThan(1.1), reason: 'one bold side still opens it');
+      expect(two, greaterThan(one + 0.1), reason: 'two open it clearly more');
       expect(mult(bus, n), closeTo((1 + mult(bus, bus)) / 2, 1e-9));
     });
     test('neutral against neutral is exactly 1.0', () {
@@ -272,8 +284,12 @@ void main() {
 
   group('mentality trade-off', () {
     test('all-out mentality concedes clearly more', () {
-      // Concedes 1.65 a game against 1.29 (1.28x), and that is close to all
-      // it gains: it scores 1.67 (2026-10-17). Before the 2026-10-16 build
+      // Concedes 1.534 a game against 1.315 (1.166x), and that is close to
+      // all it gains: it scores 1.552. Under the 1.1.4 openness blend a lone
+      // bold side opens the game half as much, so it both scores and concedes
+      // less than it did: 1.656 for and 1.632 against (1.24x) just before,
+      // and 1.67 and 1.65 (1.28x) on 2026-10-17. The bar went from 1.2x to
+      // 1.15x; going forward must still clearly cost. Before the 2026-10-16 build
       // the same mentality conceded 1.257x but scored far more than it let
       // in, because its flat attacking gain was twice its defensive cost; the
       // second assertion is the one that would catch that coming back.
@@ -281,7 +297,7 @@ void main() {
       final mirror = _plan(const TacticalInstructions(mentality: 50));
       expect(
         allOut.goalsAgainst,
-        greaterThanOrEqualTo(mirror.goalsAgainst * 1.2),
+        greaterThanOrEqualTo(mirror.goalsAgainst * 1.15),
       );
       final gained = allOut.goalsFor - mirror.goalsFor;
       final conceded = allOut.goalsAgainst - mirror.goalsAgainst;
@@ -302,16 +318,23 @@ void main() {
   });
 
   group('pressing trade-off', () {
-    test('a high press creates more and concedes more', () {
-      // 1.353 for and 1.362 against (2026-10-17), on a base of 1.290 each
-      // way: the press bites the neutral build-up and the neutral side finds
-      // the space behind it (both read with the neutral exposure), and the
-      // press opens the game. Before the 2026-10-16 tuning it conceded LESS
-      // than the base.
+    test('a high press concedes more, and creates about what it gives up '
+        'in build-up', () {
+      // 1.314 for and 1.342 against, on a base of 1.315 each way, under the
+      // 1.1.4 openness blend. The press bites the neutral build-up and the
+      // neutral side finds the space behind it (both read with the neutral
+      // exposure); its own commitment opens the game for both sides, but a
+      // lone press now opens it half as much as before, so the extra chances
+      // no longer outrun what the press costs its own build-up. Just before
+      // the blend it read 1.356 for and 1.376 against (+0.040 and +0.061),
+      // and it was pinned to create and concede at least 0.03 more each way.
+      // Before the 2026-10-16 tuning it conceded LESS than the base. What
+      // must hold: a press is never a free defensive gain, and never a
+      // scoring loss.
       final base = _plan(const TacticalInstructions());
       final press = _plan(const TacticalInstructions(pressing: 90));
-      expect(press.goalsFor, greaterThan(base.goalsFor + 0.03));
-      expect(press.goalsAgainst, greaterThan(base.goalsAgainst + 0.03));
+      expect(press.goalsFor, greaterThan(base.goalsFor - 0.02));
+      expect(press.goalsAgainst, greaterThan(base.goalsAgainst + 0.015));
     });
     test('a press is punished by direct pace', () {
       const press = TacticalInstructions(pressing: 90, defensiveLine: 80);
