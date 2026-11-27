@@ -67,6 +67,7 @@ Future<void> _sweepFullScreen(WidgetTester tester, Size size) async {
     Routes.classicRun: '?year=2018',
     Routes.classicMatch: '?year=2018',
     Routes.classicMedals: '',
+    Routes.editorClassic: '?year=2006&nation=47',
     Routes.editor: '',
     Routes.editorPack: '?id=$packId',
     for (final section in Routes.editorSections)

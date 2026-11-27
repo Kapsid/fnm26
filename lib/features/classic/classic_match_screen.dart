@@ -237,7 +237,7 @@ class _ClassicMatchScreenState extends ConsumerState<ClassicMatchScreen> {
                               right: AppSpacing.xs,
                             ),
                             child: ChoiceChip(
-                              label: Text('${'>' * s}'),
+                              label: Text('>' * s),
                               selected: _speed == s,
                               onSelected: (_) {
                                 setState(() => _speed = s);
@@ -282,6 +282,9 @@ class _ClassicMatchScreenState extends ConsumerState<ClassicMatchScreen> {
   ) => Column(
     children: [
       ClassicFlag(classicCode(world, id), width: 40),
+      const SizedBox(height: 4),
+      // The kit, as the editor may have changed it.
+      ClassicKitSwatch(world.kitOf(t.edition.year, id)),
       const SizedBox(height: 4),
       Text(
         classicNationName(l, world, id, edition: t.edition),

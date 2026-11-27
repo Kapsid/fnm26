@@ -384,6 +384,7 @@ abstract final class Routes {
     classicRun,
     classicMatch,
     classicMedals,
+    editorClassic,
   ];
 
   static const Set<String> fullScreen = {

@@ -236,9 +236,10 @@ class ClassicTournament {
     final slots = run.lineup.formation.positions;
     final chosen = <int?>[
       for (var i = 0; i < 11; i++)
-        i < run.lineup.xi.length && byId.containsKey(run.lineup.xi[i])
-            ? run.lineup.xi[i]
-            : null,
+        if (i < run.lineup.xi.length && byId.containsKey(run.lineup.xi[i]))
+          run.lineup.xi[i]
+        else
+          null,
     ];
     final rest = [
       for (final p in pool)

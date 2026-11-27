@@ -20,6 +20,7 @@ import 'package:fnm/core/util/share_origin.dart';
 import 'package:fnm/domain/services/profanity/profanity_filter.dart';
 import 'package:fnm/domain/services/world_pack/pack_codec.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
+import 'package:fnm/features/classic/classic_editor_screen.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/editor/editor_ui.dart';
 import 'package:fnm/features/editor/pack_name_dialog.dart';
@@ -386,6 +387,7 @@ class _PackList extends StatelessWidget {
           intro,
           const SizedBox(height: AppSpacing.lg),
           const _EmptyState(),
+          const ClassicEditorRow(),
           const _WebEditorRow(),
         ],
       ),
@@ -417,6 +419,7 @@ class _PackList extends StatelessWidget {
                     ),
                 ],
               ),
+              const ClassicEditorRow(),
               const _WebEditorRow(),
             ],
           );

@@ -201,6 +201,7 @@ void main() {
           run: run,
           squads: world.squads(2002),
         );
+        // ignore: cascade_invocations
         t.playOut();
         expect(t.complete, isTrue);
         expect(run.finished, isTrue);

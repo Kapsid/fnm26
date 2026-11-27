@@ -172,3 +172,28 @@ AppBar classicAppBar(
   centerTitle: true,
   actions: actions,
 );
+
+/// A team's kit as two bands: the shirt over its trim.
+class ClassicKitSwatch extends StatelessWidget {
+  const ClassicKitSwatch(this.kit, {super.key});
+
+  final ({String primary, String secondary}) kit;
+
+  static Color _hex(String hex) =>
+      Color(int.parse(hex.replaceFirst('#', ''), radix: 16) | 0xFF000000);
+
+  @override
+  Widget build(BuildContext context) => ClipRRect(
+    borderRadius: BorderRadius.circular(2),
+    child: SizedBox(
+      width: 28,
+      height: 6,
+      child: Row(
+        children: [
+          Expanded(flex: 3, child: ColoredBox(color: _hex(kit.primary))),
+          Expanded(child: ColoredBox(color: _hex(kit.secondary))),
+        ],
+      ),
+    ),
+  );
+}

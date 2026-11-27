@@ -5,6 +5,7 @@
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/features/classic/classic_cups_screen.dart';
 import 'package:fnm/features/classic/classic_edition_screen.dart';
+import 'package:fnm/features/classic/classic_editor_screen.dart';
 import 'package:fnm/features/classic/classic_match_screen.dart';
 import 'package:fnm/features/classic/classic_medals_screen.dart';
 import 'package:fnm/features/classic/classic_run_screen.dart';
@@ -35,6 +36,13 @@ List<GoRoute> classicGoRoutes() {
       path: Routes.classicMedals,
       builder: (context, state) => ClassicMedalsScreen(
         year: int.tryParse(state.uri.queryParameters['year'] ?? ''),
+      ),
+    ),
+    GoRoute(
+      path: Routes.editorClassic,
+      builder: (context, state) => ClassicEditorScreen(
+        year: int.tryParse(state.uri.queryParameters['year'] ?? ''),
+        nationId: int.tryParse(state.uri.queryParameters['nation'] ?? ''),
       ),
     ),
   ];

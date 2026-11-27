@@ -100,8 +100,10 @@ never aged down.
   meets a third from A, B, C, D or F). The game's own World Championship
   seeds its round of 32 by rank and has no slotting table, so Classic Cups
   adds one: a deterministic matching over the official eligibility sets.
-- Group ties: points, goal difference, goals scored, head to head, then a
-  seeded lot.
+- Group ties: the game's own table (`GroupStanding.table`): points, then
+  the head-to-head between the sides level, then goal difference and goals.
+  That is the 2026 rule; 2002 to 2022 put goal difference before the
+  head-to-head, a difference that only shows in rare three-way ties.
 - Knockouts: extra time and penalties through the engine
   (`extraTimeIfLevel`) and `WorldCupFinals.decideKnockout`.
 - Dates: `TournamentCalendar.groupDate` and `knockoutDates` with the
@@ -133,8 +135,10 @@ everyone until the editor changes it.
 - **Match:** the engine plays the whole match; the screen runs it on a clock
   (speed control), with the score bug, the event feed and the full-time
   summary. The other matches of the day are simulated with the same engine.
-- **End:** champion or elimination screen, medals earned, back to the
-  edition page.
+- **End:** the run's home turns into its result card (champion, or the
+  round the road ended), with the edition's medals, then back to the
+  edition page. The rest of the tournament is played out so the champion
+  and the golden boot are settled.
 
 Injuries: an injury rules a man out for 1 to 3 matches. Suspensions: a red
 card is a one-match ban; two yellows in separate matches are a one-match ban;
@@ -142,11 +146,20 @@ single yellows are wiped after the quarter-finals.
 
 ## Reuse
 
-The match engine (`MatchEngine.play`), `bestEleven`, `AiTactics`,
-`WorldCupFinals` knockout helpers, `CrossGroup` ranking,
-`TournamentCalendar`, `BracketTree`, `CountryFlag`, `Venues`, nation display
-names, the playstyle labels, the paywall. Saves: none of the career tables;
-see Storage.
+The match engine (`MatchEngine.play`), `AiSubstitutions`, `bestEleven`,
+`AiTactics`, the `WorldCupFinals` knockout helpers (round of 16, winners'
+pairing, shootouts), `GroupStanding.table`, `CrossGroup` ranking,
+`TournamentCalendar`, `BracketTree`, `CountryFlag`, the grounds' names
+(`VenueGenerator.gameGroundName`), nation display names, the playstyle and
+round labels, the name pools and real-name guards, the paywall. Saves: none
+of the career tables; see Storage.
+
+Not reused in this first version: the career's live match screen, its 2D
+pitch view, the call-up and tactics screens, the draw ceremony and the share
+cards. Each reads a career save end to end (fixtures, call-ups, absences,
+world managers by `careerId`); Classic Cups has its own light match screen
+(the engine's whole match run on a clock, with the score bug and the feed)
+and its own squad tab instead.
 
 ## Storage
 
@@ -213,3 +226,7 @@ Serbian through the shared `extra.json`. "Classic Cups" translated naturally.
 - Venue per group match is dealt across the host cities, opener and final
   in their real cities; exact per-match venues are not reproduced.
 - One run per edition at a time.
+- Russia's classic-only name pool (common Russian given names and
+  surnames) has no real-name list of its own: adding one would mean writing
+  real players' names, which the brief forbids. It still steps over every
+  existing list. Worth a look by the owner.

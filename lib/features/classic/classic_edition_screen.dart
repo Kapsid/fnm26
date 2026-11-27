@@ -111,7 +111,9 @@ class _EditionBody extends ConsumerWidget {
           const SizedBox(height: AppSpacing.xs),
           Text(
             '${l.classicTeamsCount(edition.fieldSize)} · '
-            '${l.classicRealChampion(classicNationName(l, world, edition.result.champion))}',
+            '${l.classicRealChampion(
+              classicNationName(l, world, edition.result.champion),
+            )}',
             style: AppTypography.bodySmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),

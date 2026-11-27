@@ -144,7 +144,9 @@ class _EditionCard extends ConsumerWidget {
                 const SizedBox(height: 2),
                 Text(
                   '${l.classicTeamsCount(edition.fieldSize)} · '
-                  '${l.classicRealChampion(classicNationName(l, world, champion))}',
+                  '${l.classicRealChampion(
+                    classicNationName(l, world, champion),
+                  )}',
                   style: AppTypography.bodySmall.copyWith(
                     color: AppColors.onSurfaceVariant,
                   ),
