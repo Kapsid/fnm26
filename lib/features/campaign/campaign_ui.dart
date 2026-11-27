@@ -66,6 +66,17 @@ CampaignWords campaignWords(AppLocalizations l, CampaignDef def) =>
           l.campaignStars3Legacy,
         ],
       ),
+      'homeSoil' => (
+        title: l.campaignHomeSoilTitle,
+        twist: l.campaignHomeSoilTwist,
+        intro: l.campaignHomeSoilIntro,
+        goal: l.campaignHomeSoilGoal,
+        stars: [
+          l.campaignStars1HomeSoil,
+          l.campaignStars2HomeSoil,
+          l.campaignStars3HomeSoil,
+        ],
+      ),
       'greenland' => (
         title: l.campaignGreenlandTitle,
         twist: l.campaignGreenlandTwist,

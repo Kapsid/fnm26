@@ -137,8 +137,10 @@ class _CampaignHubCardState extends ConsumerState<CampaignHubCard> {
         goal == CampaignGoal.titleTreble;
     // A goal judged across its cycles lists each cycle's championship.
     final perCycle = titles || goal == CampaignGoal.beatRivalsThenContinental;
+    // A host's World Championship is the whole of its goal: its one line.
+    final host = goal == CampaignGoal.hostOutOfGroupThenQuarterThenSemi;
     final cups = perCycle ? _cupTexts(l, progress) : const <String>[];
-    final worlds = titles ? _worldTexts(l, progress) : const <String>[];
+    final worlds = titles || host ? _worldTexts(l, progress) : const <String>[];
     // The Nations Cup comes between the two championships of the cycle.
     final nationsCup = _nationsCupText(l, progress);
     final nationsCupOver = progress.nationsCupRun?.over ?? true;
@@ -153,8 +155,9 @@ class _CampaignHubCardState extends ConsumerState<CampaignHubCard> {
         : null;
     // The championship of the moment: this cycle's continental one until it
     // is over for the nation, then its World Championship.
-    final summary =
-        nationsCup != null && progress.cycleRuns.last.over && !nationsCupOver
+    final summary = host && worlds.isNotEmpty
+        ? worlds.last
+        : nationsCup != null && progress.cycleRuns.last.over && !nationsCupOver
         ? nationsCup
         : worlds.isNotEmpty && progress.cycleRuns.last.over
         ? worlds.last
@@ -252,7 +255,10 @@ class _CampaignHubCardState extends ConsumerState<CampaignHubCard> {
                     children: [
                       const SizedBox(height: AppSpacing.xs),
                       Text(words.goal, style: AppTypography.titleMedium),
-                      if (myPosition != null)
+                      if (host)
+                        for (var c = 0; c < worlds.length; c++)
+                          line(CampaignHubCard.worldCycleKey(c), worlds[c])
+                      else if (myPosition != null)
                         line(
                           CampaignHubCard.qualifyingKey,
                           l.campaignProgressQualifying(
@@ -277,7 +283,7 @@ class _CampaignHubCardState extends ConsumerState<CampaignHubCard> {
                         ]
                       else if (perCycle)
                         ..._rivalsAndCups(ref, cups, progress, line)
-                      else if (finals != null)
+                      else if (finals != null && !host)
                         line(CampaignHubCard.finalsKey, finals),
                     ],
                   ),

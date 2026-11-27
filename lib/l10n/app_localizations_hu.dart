@@ -12830,6 +12830,29 @@ class AppLocalizationsHu extends AppLocalizations {
   String get campaignStars3Legacy => 'És a Nations Cupot';
 
   @override
+  String get campaignHomeSoilTitle => 'Hazai pályán';
+
+  @override
+  String get campaignHomeSoilTwist =>
+      'Svédország Dániával és Norvégiával rendezi a világbajnokságot, egy cikluson át';
+
+  @override
+  String get campaignHomeSoilGoal => 'Továbbjutni a csoportból hazai pályán';
+
+  @override
+  String get campaignHomeSoilIntro =>
+      'A világbajnokság északra jön. Svédország vezeti a pályázatot, Dániával és Norvégiával az oldalán, és az egész ország emlékezetes nyárra számít. A keret becsületes, de csak átlagos, és minden rendező emlékszik arra, amelyik a saját közönsége előtt esett ki a csoportkörben. Ne te légy az a rendező: juss tovább a csoportból, aztán a negyeddöntőbe, és ha észak tényleg hisz benne, az elődöntőbe.';
+
+  @override
+  String get campaignStars1HomeSoil => 'Továbbjutni a csoportból';
+
+  @override
+  String get campaignStars2HomeSoil => 'Bejutni a negyeddöntőbe';
+
+  @override
+  String get campaignStars3HomeSoil => 'Bejutni az elődöntőbe';
+
+  @override
   String get campaignSectionOneCycle => 'Egy ciklus';
 
   @override

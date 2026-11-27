@@ -118,7 +118,8 @@ class DriftNationRepository implements NationRepository {
                       t.kind.like('${HostBidPartnerMarker.prefix}%') |
                       t.kind.like('${HostBidding.rulesPrefix}%') |
                       t.kind.like('${HostBidding.rules2Prefix}%') |
-                      t.kind.like('${HostBidding.rules3Prefix}%')),
+                      t.kind.like('${HostBidding.rules3Prefix}%') |
+                      t.kind.like('${HostBidding.forcedWcPrefix}%')),
             ))
             .get();
     if (rows.isEmpty) return world;
@@ -144,6 +145,12 @@ class DriftNationRepository implements NationRepository {
       }
       if (HostBidPartnerMarker.decode(r.kind) case final p?) {
         partners.add(p);
+        continue;
+      }
+      // A forced World Championship host rides on the nation it names.
+      if (HostBidding.decodeForcedWc(r.kind) case final f?) {
+        (byNation[f.nationId] ??= {})[HostBidding.forcedWcKey(f.cycle)] =
+            f.order + 1;
         continue;
       }
       final m = HostBidMarker.decode(r.kind);

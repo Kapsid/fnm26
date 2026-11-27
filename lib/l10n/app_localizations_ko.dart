@@ -12447,6 +12447,28 @@ class AppLocalizationsKo extends AppLocalizations {
   String get campaignStars3Legacy => '그리고 네이션스컵';
 
   @override
+  String get campaignHomeSoilTitle => '안방의 무게';
+
+  @override
+  String get campaignHomeSoilTwist => '스웨덴이 덴마크, 노르웨이와 함께 개최하는 세계 선수권, 한 주기 동안';
+
+  @override
+  String get campaignHomeSoilGoal => '안방에서 조별 리그 통과';
+
+  @override
+  String get campaignHomeSoilIntro =>
+      '세계 선수권이 북유럽으로 옵니다. 스웨덴이 유치를 이끌고 덴마크와 노르웨이가 함께하며, 온 나라가 잊지 못할 여름을 기대하고 있습니다. 스쿼드는 성실하지만 평균 수준일 뿐이고, 모든 개최국은 자국 관중 앞에서 조별 리그에서 탈락한 개최국을 기억합니다. 그런 개최국이 되지 마세요. 조별 리그를 통과하고, 이어서 8강에, 북유럽이 정말로 믿는다면 4강에 오르세요.';
+
+  @override
+  String get campaignStars1HomeSoil => '조별 리그 통과';
+
+  @override
+  String get campaignStars2HomeSoil => '8강 진출';
+
+  @override
+  String get campaignStars3HomeSoil => '4강 진출';
+
+  @override
   String get campaignSectionOneCycle => '한 주기';
 
   @override

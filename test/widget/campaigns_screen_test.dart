@@ -42,11 +42,17 @@ void main() {
       find.byKey(CampaignsScreen.sectionKey(CampaignLength.oneCycle)),
       findsOneWidget,
     );
-    expect(find.text('ONE CYCLE · 3'), findsOneWidget);
+    expect(find.text('ONE CYCLE · 4'), findsOneWidget);
     expect(find.text('The Transplant'), findsOneWidget);
     expect(find.text('Grudge'), findsOneWidget);
     expect(find.text('Finish the Legacy'), findsOneWidget);
-    expect(find.text('1 cycle'), findsNWidgets(3));
+    // Home Soil, the last of the one-cycle runs, after Finish the Legacy.
+    await tester.scrollUntilVisible(find.text('Home Soil'), 200);
+    expect(
+      tester.getTopLeft(tile('homeSoil')).dy,
+      greaterThan(tester.getTopLeft(tile('legacy')).dy),
+    );
+    expect(find.text('1 cycle'), findsNWidgets(4));
     await tester.scrollUntilVisible(find.text('Young Finns'), 200);
     expect(find.text('A FEW CYCLES · 4'), findsOneWidget);
     expect(find.text('Best of Guineas'), findsOneWidget);

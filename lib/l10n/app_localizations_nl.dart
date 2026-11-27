@@ -12959,6 +12959,29 @@ class AppLocalizationsNl extends AppLocalizations {
   String get campaignStars3Legacy => 'En de Nations Cup';
 
   @override
+  String get campaignHomeSoilTitle => 'Thuisgrond';
+
+  @override
+  String get campaignHomeSoilTwist =>
+      'Zweden organiseert het Wereldkampioenschap met Denemarken en Noorwegen, voor één cyclus';
+
+  @override
+  String get campaignHomeSoilGoal => 'Overleef de groep op eigen bodem';
+
+  @override
+  String get campaignHomeSoilIntro =>
+      'Het Wereldkampioenschap komt naar het noorden. Zweden leidt de kandidatuur, met Denemarken en Noorwegen aan zijn zijde, en het hele land verwacht een zomer om nooit te vergeten. De selectie is eerlijk, maar niet beter dan gemiddeld, en elk gastland herinnert zich het gastland dat voor eigen publiek in de groepsfase strandde. Wees niet dat gastland: overleef de groep, bereik daarna de kwartfinale en, als het noorden er echt in gelooft, de halve finale.';
+
+  @override
+  String get campaignStars1HomeSoil => 'Overleef de groep';
+
+  @override
+  String get campaignStars2HomeSoil => 'Bereik de kwartfinale';
+
+  @override
+  String get campaignStars3HomeSoil => 'Bereik de halve finale';
+
+  @override
   String get campaignSectionOneCycle => 'Eén cyclus';
 
   @override

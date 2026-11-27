@@ -117,3 +117,16 @@ int winThenOffBottomThenPlayoffStars({
     : wonQualifier
     ? 1
     : 0;
+
+/// Stars for a World Championship host, off [worldOrdinal], the deepest
+/// round it reached there on the board's scale (2 group, 3 the last 32 or
+/// the last 16, 4 quarter-final, 5 semi-final or the third-place match, 6
+/// final, 7 champions): out of the group is one, the quarter-final two, the
+/// semi-final three. The group stage alone, or no finals yet, is none.
+int hostOutOfGroupStars(int worldOrdinal) => worldOrdinal >= 5
+    ? 3
+    : worldOrdinal >= 4
+    ? 2
+    : worldOrdinal >= 3
+    ? 1
+    : 0;

@@ -326,6 +326,35 @@ abstract final class HostBidding {
   /// [rules2Key] on the same nation.
   static String rules3Key(int cycle) => 'r3:$cycle';
 
+  /// Prefix of the forced World Championship host markers. It starts with
+  /// none of [rulesPrefix], [rules2Prefix], [rules3Prefix] or a bid's
+  /// prefixes, so no other read sees one.
+  static const String forcedWcPrefix = 'hostForcedWc:';
+
+  /// Stamped (row cycle = [cycle]) at a save's creation when a designed
+  /// scenario hands [cycle]'s World Championship to [nationId] (a campaign's
+  /// `CampaignDef.worldHostNationIds`): the edition's hosts are then those
+  /// nations, [order] 0 the lead, whatever the draw would have named (see
+  /// `WorldCupHosts`). No ordinary save is ever stamped with one.
+  static String forcedWcKind(int cycle, int nationId, int order) =>
+      '$forcedWcPrefix$cycle:$nationId:$order';
+
+  /// The cycle, nation and order a forced-host marker names, or null for any
+  /// other kind.
+  static ({int cycle, int nationId, int order})? decodeForcedWc(String kind) {
+    if (!kind.startsWith(forcedWcPrefix)) return null;
+    final parts = kind.substring(forcedWcPrefix.length).split(':');
+    if (parts.length != 3) return null;
+    final nums = [for (final p in parts) int.tryParse(p)];
+    if (nums.contains(null)) return null;
+    return (cycle: nums[0]!, nationId: nums[1]!, order: nums[2]!);
+  }
+
+  /// `Nation.hostBids` key carrying a [forcedWcKind] marker on the nation it
+  /// names, its order plus one as the value: `wcf:<cycle>`. Not a bid key
+  /// (`wc:` / `cont:`), a partner key (`wcp:`) nor a rules key.
+  static String forcedWcKey(int cycle) => 'wcf:$cycle';
+
   /// Whether [kinds] (a career's marker kinds) hold a bid or a pledge lodged
   /// by an older build for an edition of [editionCycle]: such an edition is
   /// not stamped with [rules2Kind], so the bid is decided under the rules it

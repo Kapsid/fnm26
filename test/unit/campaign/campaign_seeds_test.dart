@@ -72,7 +72,9 @@ List<List<int>> qualifyingGroups(
 ///
 /// A run's hosts follow the current rules and the stadium bars (the lighter
 /// ones) in every cycle: the markers its creation and rollovers stamp, on
-/// the run's nation.
+/// the run's nation. A World Championship the run hands its hosts
+/// ([CampaignDef.worldHostNationIds]) rides on each of them, as the
+/// creation stamps it.
 List<Nation> campaignWorld(CampaignDef def, List<Nation> nations) => [
   for (final n in DormantNations.worldFrom(
     nations,
@@ -82,15 +84,19 @@ List<Nation> campaignWorld(CampaignDef def, List<Nation> nations) => [
     },
     dormant: (id) => DormantNations.all.firstWhere((n) => n.id == id),
   ))
-    if (n.id == def.nationId)
+    if (n.id == def.nationId || def.worldHostNationIds.contains(n.id))
       n.copyWith(
         hostBids: {
           ...n.hostBids,
-          for (var c = 0; c < def.cycles + 1; c++) ...{
-            HostBidding.managerKey(c): 1,
-            HostBidding.rules2Key(c): 1,
-            HostBidding.rules3Key(c): 1,
-          },
+          if (n.id == def.nationId)
+            for (var c = 0; c < def.cycles + 1; c++) ...{
+              HostBidding.managerKey(c): 1,
+              HostBidding.rules2Key(c): 1,
+              HostBidding.rules3Key(c): 1,
+            },
+          if (def.worldHostNationIds.contains(n.id))
+            HostBidding.forcedWcKey(0):
+                def.worldHostNationIds.indexOf(n.id) + 1,
         },
       )
     else
@@ -118,6 +124,38 @@ void main() {
         expect(hosts, isNot(contains(rival)), reason: '${c.id} rival');
       }
     }
+  });
+
+  test('Home Soil: Sweden leads the World Championship hosts, with Denmark '
+      'and Norway, and none of them hosts the European Championship', () {
+    const def = Campaigns.homeSoil;
+    final w = campaignWorld(def, nations);
+    expect(
+      WorldCupHosts.hostsFor(
+        year: CareerService.worldCupYear(0),
+        nations: w,
+        seed: def.rngSeed,
+      ),
+      def.worldHostNationIds,
+    );
+    expect(def.worldHostNationIds.first, def.nationId);
+    final euro = WorldCupHosts.continentalHostsFor(
+      confederation: Confederation.europe,
+      cycle: 0,
+      seed: def.rngSeed,
+      nations: w,
+    );
+    for (final id in def.worldHostNationIds) {
+      expect(euro, isNot(contains(id)), reason: '$id');
+    }
+    // Without the handed hosts the draw does not name Sweden: its grounds
+    // reach no bar, so no seed alone could make it a host.
+    final drawn = WorldCupHosts.hostsFor(
+      year: CareerService.worldCupYear(0),
+      nations: campaignWorld(Campaigns.legacy, nations),
+      seed: def.rngSeed,
+    );
+    expect(drawn, isNot(contains(def.nationId)));
   });
 
   test("Best of Guineas: Equatorial Guinea hosts neither cycle's African "
