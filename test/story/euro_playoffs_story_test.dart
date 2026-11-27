@@ -434,8 +434,9 @@ void main() {
     );
     test(
       'a side through a two-legged tie takes its slot',
-      // Every host through directly: four ties.
-      () => entrantStory(21, 24, euro28: true, ties: true),
+      // Every host through directly: four ties. (21 before the 1.1.4
+      // openness blend.)
+      () => entrantStory(23, 24, euro28: true, ties: true),
       timeout: const Timeout(Duration(minutes: 30)),
     );
     test(
