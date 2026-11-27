@@ -4,6 +4,7 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/shared/tablet/adaptive_sheet.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -359,7 +360,7 @@ Future<void> showClassicNationSheet(
   required ClassicWorld world,
   required ClassicEdition edition,
   required int nationId,
-}) => showModalBottomSheet<void>(
+}) => showAdaptiveSheet<void>(
   context: context,
   backgroundColor: AppColors.surfaceContainer,
   isScrollControlled: true,

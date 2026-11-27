@@ -4,6 +4,7 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/shared/tablet/adaptive_sheet.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -414,7 +415,7 @@ class _TeamEditor extends ConsumerWidget {
     int index,
     Player p,
   ) async {
-    final edit = await showModalBottomSheet<ClassicPlayerEdit>(
+    final edit = await showAdaptiveSheet<ClassicPlayerEdit>(
       context: context,
       isScrollControlled: true,
       backgroundColor: AppColors.surfaceContainer,

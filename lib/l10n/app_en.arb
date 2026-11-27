@@ -29557,7 +29557,7 @@
   },
   "classicEditionLabel": "World Championship {year} · {hosts}",
   "@classicEditionLabel": {
-    "description": "An edition of the World Championship. Never \"World Cup\".",
+    "description": "An edition of the World Championship. Always the World Championship, never the trademarked name.",
     "placeholders": {
       "year": {
         "type": "String"

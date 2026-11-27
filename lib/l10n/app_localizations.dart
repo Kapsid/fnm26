@@ -28971,7 +28971,7 @@ abstract class AppLocalizations {
   /// **'Replay a real World Championship: its hosts, its draw, its format. Pick any nation and take it all the way.'**
   String get classicCupsIntro;
 
-  /// An edition of the World Championship. Never "World Cup".
+  /// An edition of the World Championship. Always the World Championship, never the trademarked name.
   ///
   /// In en, this message translates to:
   /// **'World Championship {year} · {hosts}'**
